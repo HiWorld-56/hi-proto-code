@@ -88,8 +88,8 @@ type MerchantClient interface {
 	GetUserMqtt(ctx context.Context, in *GetUserMqttReq, opts ...grpc.CallOption) (*GetUserMqttResp, error)
 	// ── 商户互授权 ──
 	ListGrants(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListGrantsResp, error)
-	AddGrant(ctx context.Context, in *GrantReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	RemoveGrant(ctx context.Context, in *GrantReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	AddGrant(ctx context.Context, in *AddGrantReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	RemoveGrant(ctx context.Context, in *RemoveGrantReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type merchantClient struct {
@@ -220,7 +220,7 @@ func (c *merchantClient) ListGrants(ctx context.Context, in *emptypb.Empty, opts
 	return out, nil
 }
 
-func (c *merchantClient) AddGrant(ctx context.Context, in *GrantReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *merchantClient) AddGrant(ctx context.Context, in *AddGrantReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Merchant_AddGrant_FullMethodName, in, out, cOpts...)
@@ -230,7 +230,7 @@ func (c *merchantClient) AddGrant(ctx context.Context, in *GrantReq, opts ...grp
 	return out, nil
 }
 
-func (c *merchantClient) RemoveGrant(ctx context.Context, in *GrantReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *merchantClient) RemoveGrant(ctx context.Context, in *RemoveGrantReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Merchant_RemoveGrant_FullMethodName, in, out, cOpts...)
@@ -291,8 +291,8 @@ type MerchantServer interface {
 	GetUserMqtt(context.Context, *GetUserMqttReq) (*GetUserMqttResp, error)
 	// ── 商户互授权 ──
 	ListGrants(context.Context, *emptypb.Empty) (*ListGrantsResp, error)
-	AddGrant(context.Context, *GrantReq) (*emptypb.Empty, error)
-	RemoveGrant(context.Context, *GrantReq) (*emptypb.Empty, error)
+	AddGrant(context.Context, *AddGrantReq) (*emptypb.Empty, error)
+	RemoveGrant(context.Context, *RemoveGrantReq) (*emptypb.Empty, error)
 }
 
 // UnimplementedMerchantServer should be embedded to have
@@ -338,10 +338,10 @@ func (UnimplementedMerchantServer) GetUserMqtt(context.Context, *GetUserMqttReq)
 func (UnimplementedMerchantServer) ListGrants(context.Context, *emptypb.Empty) (*ListGrantsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListGrants not implemented")
 }
-func (UnimplementedMerchantServer) AddGrant(context.Context, *GrantReq) (*emptypb.Empty, error) {
+func (UnimplementedMerchantServer) AddGrant(context.Context, *AddGrantReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method AddGrant not implemented")
 }
-func (UnimplementedMerchantServer) RemoveGrant(context.Context, *GrantReq) (*emptypb.Empty, error) {
+func (UnimplementedMerchantServer) RemoveGrant(context.Context, *RemoveGrantReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method RemoveGrant not implemented")
 }
 func (UnimplementedMerchantServer) testEmbeddedByValue() {}
@@ -581,7 +581,7 @@ func _Merchant_ListGrants_Handler(srv interface{}, ctx context.Context, dec func
 }
 
 func _Merchant_AddGrant_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GrantReq)
+	in := new(AddGrantReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -593,13 +593,13 @@ func _Merchant_AddGrant_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: Merchant_AddGrant_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MerchantServer).AddGrant(ctx, req.(*GrantReq))
+		return srv.(MerchantServer).AddGrant(ctx, req.(*AddGrantReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Merchant_RemoveGrant_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GrantReq)
+	in := new(RemoveGrantReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -611,7 +611,7 @@ func _Merchant_RemoveGrant_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: Merchant_RemoveGrant_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MerchantServer).RemoveGrant(ctx, req.(*GrantReq))
+		return srv.(MerchantServer).RemoveGrant(ctx, req.(*RemoveGrantReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1271,25 +1271,46 @@ const (
 	MerchantGranted_GetUser_FullMethodName      = "/hi.did.MerchantGranted/GetUser"
 	MerchantGranted_ListUsers_FullMethodName    = "/hi.did.MerchantGranted/ListUsers"
 	MerchantGranted_ListGreeters_FullMethodName = "/hi.did.MerchantGranted/ListGreeters"
+	MerchantGranted_AddUsers_FullMethodName     = "/hi.did.MerchantGranted/AddUsers"
 )
 
 // MerchantGrantedClient is the client API for MerchantGranted service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// 跨商户读用户数据(**整个 service 走 requireGrant**)。
+// 跨商户访问用户数据(**整个 service 的每个方法都先过授权校验**)。
 //
 // 与 Merchant 拆开而不是共用一个 `merchant` 字段:那样"空=自己免 grant / 非空=别家走
 // grant"是**两条鉴权分支挤在一个方法里**,handler 里分支写岔就是静默跨商户读。
 // 拆开之后,"要不要 grant"由 service 决定,不由某个字段的空值决定 ——
 // 范式同 Merchant/MerchantManage、Gateway/GatewayAdmin。
 //
-// 授权方向:商户 A 执行 AddGrant(grantee=B) 后,B 才能用这里的方法读 A 名下的用户。
+// 授权方向:商户 A 执行 AddGrant(grantee=B) 后,B 才能用这里的方法访问 A 名下的用户。
 // 判据是 hi_merchant_grant 里 (merchant=A, grantee=B) 一行,授权方永远取自 token。
+//
+// ⚠️ **有没有那一行不够,还要看那一行给了哪些授权项**(MerchantGrantScope):
+//
+//	三个读方法要 READ_USERS,AddUsers 要 ADD_USERS。授权项与方法的对应关系写死在
+//	handler 的方法入口,**不由入参决定** —— 与"要不要 grant 由 service 决定"同一个道理:
+//	让调用方传"我要用哪一项",等于让它自己声明权限。
 type MerchantGrantedClient interface {
 	GetUser(ctx context.Context, in *GrantedGetUserReq, opts ...grpc.CallOption) (*UserExtensionUnit, error)
 	ListUsers(ctx context.Context, in *GrantedListUsersReq, opts ...grpc.CallOption) (*ListUsersResp, error)
 	ListGreeters(ctx context.Context, in *GrantedListGreetersReq, opts ...grpc.CallOption) (*ListUsersResp, error)
+	// 把用户加到别家商户名下(须 ADD_USERS)。
+	//
+	// 用途:club 的用户在 app 里"加入某商户" —— 链路是
+	//
+	//	app --用户token--> club后台 --club的ExtendToken--> did.MerchantGranted.AddUsers。
+	//
+	// 到了 did 这一侧,主体是**club 这个商户**,目标商户是入参里的 merchant,
+	// 所以它和三个读方法是同一类事(跨商户),只是要的授权项不同,不单开 service。
+	//
+	// ⚠️ 用户是谁由 club 侧从**登录 token** 解出后填进 users,did 这一侧无从校验 ——
+	//
+	//	这正是 ADD_USERS 要单独一项、且默认不给的原因:给了这一项,就等于允许 grantee
+	//	替任意用户决定"加入我名下"。
+	AddUsers(ctx context.Context, in *GrantedAddUsersReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type merchantGrantedClient struct {
@@ -1330,23 +1351,53 @@ func (c *merchantGrantedClient) ListGreeters(ctx context.Context, in *GrantedLis
 	return out, nil
 }
 
+func (c *merchantGrantedClient) AddUsers(ctx context.Context, in *GrantedAddUsersReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, MerchantGranted_AddUsers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MerchantGrantedServer is the server API for MerchantGranted service.
 // All implementations should embed UnimplementedMerchantGrantedServer
 // for forward compatibility.
 //
-// 跨商户读用户数据(**整个 service 走 requireGrant**)。
+// 跨商户访问用户数据(**整个 service 的每个方法都先过授权校验**)。
 //
 // 与 Merchant 拆开而不是共用一个 `merchant` 字段:那样"空=自己免 grant / 非空=别家走
 // grant"是**两条鉴权分支挤在一个方法里**,handler 里分支写岔就是静默跨商户读。
 // 拆开之后,"要不要 grant"由 service 决定,不由某个字段的空值决定 ——
 // 范式同 Merchant/MerchantManage、Gateway/GatewayAdmin。
 //
-// 授权方向:商户 A 执行 AddGrant(grantee=B) 后,B 才能用这里的方法读 A 名下的用户。
+// 授权方向:商户 A 执行 AddGrant(grantee=B) 后,B 才能用这里的方法访问 A 名下的用户。
 // 判据是 hi_merchant_grant 里 (merchant=A, grantee=B) 一行,授权方永远取自 token。
+//
+// ⚠️ **有没有那一行不够,还要看那一行给了哪些授权项**(MerchantGrantScope):
+//
+//	三个读方法要 READ_USERS,AddUsers 要 ADD_USERS。授权项与方法的对应关系写死在
+//	handler 的方法入口,**不由入参决定** —— 与"要不要 grant 由 service 决定"同一个道理:
+//	让调用方传"我要用哪一项",等于让它自己声明权限。
 type MerchantGrantedServer interface {
 	GetUser(context.Context, *GrantedGetUserReq) (*UserExtensionUnit, error)
 	ListUsers(context.Context, *GrantedListUsersReq) (*ListUsersResp, error)
 	ListGreeters(context.Context, *GrantedListGreetersReq) (*ListUsersResp, error)
+	// 把用户加到别家商户名下(须 ADD_USERS)。
+	//
+	// 用途:club 的用户在 app 里"加入某商户" —— 链路是
+	//
+	//	app --用户token--> club后台 --club的ExtendToken--> did.MerchantGranted.AddUsers。
+	//
+	// 到了 did 这一侧,主体是**club 这个商户**,目标商户是入参里的 merchant,
+	// 所以它和三个读方法是同一类事(跨商户),只是要的授权项不同,不单开 service。
+	//
+	// ⚠️ 用户是谁由 club 侧从**登录 token** 解出后填进 users,did 这一侧无从校验 ——
+	//
+	//	这正是 ADD_USERS 要单独一项、且默认不给的原因:给了这一项,就等于允许 grantee
+	//	替任意用户决定"加入我名下"。
+	AddUsers(context.Context, *GrantedAddUsersReq) (*emptypb.Empty, error)
 }
 
 // UnimplementedMerchantGrantedServer should be embedded to have
@@ -1364,6 +1415,9 @@ func (UnimplementedMerchantGrantedServer) ListUsers(context.Context, *GrantedLis
 }
 func (UnimplementedMerchantGrantedServer) ListGreeters(context.Context, *GrantedListGreetersReq) (*ListUsersResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListGreeters not implemented")
+}
+func (UnimplementedMerchantGrantedServer) AddUsers(context.Context, *GrantedAddUsersReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method AddUsers not implemented")
 }
 func (UnimplementedMerchantGrantedServer) testEmbeddedByValue() {}
 
@@ -1439,6 +1493,24 @@ func _MerchantGranted_ListGreeters_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MerchantGranted_AddUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GrantedAddUsersReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MerchantGrantedServer).AddUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MerchantGranted_AddUsers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MerchantGrantedServer).AddUsers(ctx, req.(*GrantedAddUsersReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MerchantGranted_ServiceDesc is the grpc.ServiceDesc for MerchantGranted service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1457,6 +1529,10 @@ var MerchantGranted_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListGreeters",
 			Handler:    _MerchantGranted_ListGreeters_Handler,
+		},
+		{
+			MethodName: "AddUsers",
+			Handler:    _MerchantGranted_AddUsers_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

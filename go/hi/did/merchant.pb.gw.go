@@ -333,9 +333,6 @@ func request_Merchant_ListGrants_0(ctx context.Context, marshaler runtime.Marsha
 		protoReq emptypb.Empty
 		metadata runtime.ServerMetadata
 	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
@@ -348,16 +345,13 @@ func local_request_Merchant_ListGrants_0(ctx context.Context, marshaler runtime.
 		protoReq emptypb.Empty
 		metadata runtime.ServerMetadata
 	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
 	msg, err := server.ListGrants(ctx, &protoReq)
 	return msg, metadata, err
 }
 
 func request_Merchant_AddGrant_0(ctx context.Context, marshaler runtime.Marshaler, client MerchantClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq GrantReq
+		protoReq AddGrantReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -372,7 +366,7 @@ func request_Merchant_AddGrant_0(ctx context.Context, marshaler runtime.Marshale
 
 func local_request_Merchant_AddGrant_0(ctx context.Context, marshaler runtime.Marshaler, server MerchantServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq GrantReq
+		protoReq AddGrantReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -384,7 +378,7 @@ func local_request_Merchant_AddGrant_0(ctx context.Context, marshaler runtime.Ma
 
 func request_Merchant_RemoveGrant_0(ctx context.Context, marshaler runtime.Marshaler, client MerchantClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq GrantReq
+		protoReq RemoveGrantReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -399,7 +393,7 @@ func request_Merchant_RemoveGrant_0(ctx context.Context, marshaler runtime.Marsh
 
 func local_request_Merchant_RemoveGrant_0(ctx context.Context, marshaler runtime.Marshaler, server MerchantServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq GrantReq
+		protoReq RemoveGrantReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -663,6 +657,33 @@ func local_request_MerchantGranted_ListGreeters_0(ctx context.Context, marshaler
 	return msg, metadata, err
 }
 
+func request_MerchantGranted_AddUsers_0(ctx context.Context, marshaler runtime.Marshaler, client MerchantGrantedClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq GrantedAddUsersReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	msg, err := client.AddUsers(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_MerchantGranted_AddUsers_0(ctx context.Context, marshaler runtime.Marshaler, server MerchantGrantedServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq GrantedAddUsersReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.AddUsers(ctx, &protoReq)
+	return msg, metadata, err
+}
+
 // RegisterMerchantHandlerServer registers the http handlers for service Merchant to "mux".
 // UnaryRPC     :call MerchantServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
@@ -889,13 +910,13 @@ func RegisterMerchantHandlerServer(ctx context.Context, mux *runtime.ServeMux, s
 		}
 		forward_Merchant_GetUserMqtt_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_Merchant_ListGrants_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodGet, pattern_Merchant_ListGrants_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Merchant/ListGrants", runtime.WithHTTPPathPattern("/hi.did.Merchant/ListGrants"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Merchant/ListGrants", runtime.WithHTTPPathPattern("/api/v1/merchant/list_grants"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -915,7 +936,7 @@ func RegisterMerchantHandlerServer(ctx context.Context, mux *runtime.ServeMux, s
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Merchant/AddGrant", runtime.WithHTTPPathPattern("/hi.did.Merchant/AddGrant"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Merchant/AddGrant", runtime.WithHTTPPathPattern("/api/v1/merchant/add_grant"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -935,7 +956,7 @@ func RegisterMerchantHandlerServer(ctx context.Context, mux *runtime.ServeMux, s
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Merchant/RemoveGrant", runtime.WithHTTPPathPattern("/hi.did.Merchant/RemoveGrant"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Merchant/RemoveGrant", runtime.WithHTTPPathPattern("/api/v1/merchant/remove_grant"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1185,6 +1206,26 @@ func RegisterMerchantGrantedHandlerServer(ctx context.Context, mux *runtime.Serv
 		}
 		forward_MerchantGranted_ListGreeters_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
+	mux.Handle(http.MethodPost, pattern_MerchantGranted_AddUsers_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.MerchantGranted/AddUsers", runtime.WithHTTPPathPattern("/api/v1/merchant_granted/add_users"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_MerchantGranted_AddUsers_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_MerchantGranted_AddUsers_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
 
 	return nil
 }
@@ -1412,11 +1453,11 @@ func RegisterMerchantHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 		}
 		forward_Merchant_GetUserMqtt_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_Merchant_ListGrants_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodGet, pattern_Merchant_ListGrants_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Merchant/ListGrants", runtime.WithHTTPPathPattern("/hi.did.Merchant/ListGrants"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Merchant/ListGrants", runtime.WithHTTPPathPattern("/api/v1/merchant/list_grants"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1433,7 +1474,7 @@ func RegisterMerchantHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Merchant/AddGrant", runtime.WithHTTPPathPattern("/hi.did.Merchant/AddGrant"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Merchant/AddGrant", runtime.WithHTTPPathPattern("/api/v1/merchant/add_grant"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1450,7 +1491,7 @@ func RegisterMerchantHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Merchant/RemoveGrant", runtime.WithHTTPPathPattern("/hi.did.Merchant/RemoveGrant"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Merchant/RemoveGrant", runtime.WithHTTPPathPattern("/api/v1/merchant/remove_grant"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1478,9 +1519,9 @@ var (
 	pattern_Merchant_AddUsers_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "add_users"}, ""))
 	pattern_Merchant_RemoveUsers_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "remove_users"}, ""))
 	pattern_Merchant_GetUserMqtt_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Merchant", "GetUserMqtt"}, ""))
-	pattern_Merchant_ListGrants_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Merchant", "ListGrants"}, ""))
-	pattern_Merchant_AddGrant_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Merchant", "AddGrant"}, ""))
-	pattern_Merchant_RemoveGrant_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Merchant", "RemoveGrant"}, ""))
+	pattern_Merchant_ListGrants_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "list_grants"}, ""))
+	pattern_Merchant_AddGrant_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "add_grant"}, ""))
+	pattern_Merchant_RemoveGrant_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant", "remove_grant"}, ""))
 )
 
 var (
@@ -1900,6 +1941,23 @@ func RegisterMerchantGrantedHandlerClient(ctx context.Context, mux *runtime.Serv
 		}
 		forward_MerchantGranted_ListGreeters_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
+	mux.Handle(http.MethodPost, pattern_MerchantGranted_AddUsers_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.MerchantGranted/AddUsers", runtime.WithHTTPPathPattern("/api/v1/merchant_granted/add_users"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_MerchantGranted_AddUsers_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_MerchantGranted_AddUsers_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
 	return nil
 }
 
@@ -1907,10 +1965,12 @@ var (
 	pattern_MerchantGranted_GetUser_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant_granted", "get_user"}, ""))
 	pattern_MerchantGranted_ListUsers_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant_granted", "list_users"}, ""))
 	pattern_MerchantGranted_ListGreeters_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant_granted", "list_greeters"}, ""))
+	pattern_MerchantGranted_AddUsers_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "merchant_granted", "add_users"}, ""))
 )
 
 var (
 	forward_MerchantGranted_GetUser_0      = runtime.ForwardResponseMessage
 	forward_MerchantGranted_ListUsers_0    = runtime.ForwardResponseMessage
 	forward_MerchantGranted_ListGreeters_0 = runtime.ForwardResponseMessage
+	forward_MerchantGranted_AddUsers_0     = runtime.ForwardResponseMessage
 )

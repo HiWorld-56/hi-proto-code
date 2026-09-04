@@ -87,12 +87,12 @@ class MerchantStub(object):
                 _registered_method=True)
         self.AddGrant = channel.unary_unary(
                 '/hi.did.Merchant/AddGrant',
-                request_serializer=hi_dot_did_dot_merchant__pb2.GrantReq.SerializeToString,
+                request_serializer=hi_dot_did_dot_merchant__pb2.AddGrantReq.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
         self.RemoveGrant = channel.unary_unary(
                 '/hi.did.Merchant/RemoveGrant',
-                request_serializer=hi_dot_did_dot_merchant__pb2.GrantReq.SerializeToString,
+                request_serializer=hi_dot_did_dot_merchant__pb2.RemoveGrantReq.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
 
@@ -279,12 +279,12 @@ def add_MerchantServicer_to_server(servicer, server):
             ),
             'AddGrant': grpc.unary_unary_rpc_method_handler(
                     servicer.AddGrant,
-                    request_deserializer=hi_dot_did_dot_merchant__pb2.GrantReq.FromString,
+                    request_deserializer=hi_dot_did_dot_merchant__pb2.AddGrantReq.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'RemoveGrant': grpc.unary_unary_rpc_method_handler(
                     servicer.RemoveGrant,
-                    request_deserializer=hi_dot_did_dot_merchant__pb2.GrantReq.FromString,
+                    request_deserializer=hi_dot_did_dot_merchant__pb2.RemoveGrantReq.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
     }
@@ -646,7 +646,7 @@ class Merchant(object):
             request,
             target,
             '/hi.did.Merchant/AddGrant',
-            hi_dot_did_dot_merchant__pb2.GrantReq.SerializeToString,
+            hi_dot_did_dot_merchant__pb2.AddGrantReq.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,
@@ -673,7 +673,7 @@ class Merchant(object):
             request,
             target,
             '/hi.did.Merchant/RemoveGrant',
-            hi_dot_did_dot_merchant__pb2.GrantReq.SerializeToString,
+            hi_dot_did_dot_merchant__pb2.RemoveGrantReq.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,
@@ -1200,15 +1200,20 @@ class OrderNotify(object):
 
 
 class MerchantGrantedStub(object):
-    """跨商户读用户数据(**整个 service 走 requireGrant**)。
+    """跨商户访问用户数据(**整个 service 的每个方法都先过授权校验**)。
 
     与 Merchant 拆开而不是共用一个 `merchant` 字段:那样"空=自己免 grant / 非空=别家走
     grant"是**两条鉴权分支挤在一个方法里**,handler 里分支写岔就是静默跨商户读。
     拆开之后,"要不要 grant"由 service 决定,不由某个字段的空值决定 ——
     范式同 Merchant/MerchantManage、Gateway/GatewayAdmin。
 
-    授权方向:商户 A 执行 AddGrant(grantee=B) 后,B 才能用这里的方法读 A 名下的用户。
+    授权方向:商户 A 执行 AddGrant(grantee=B) 后,B 才能用这里的方法访问 A 名下的用户。
     判据是 hi_merchant_grant 里 (merchant=A, grantee=B) 一行,授权方永远取自 token。
+
+    ⚠️ **有没有那一行不够,还要看那一行给了哪些授权项**(MerchantGrantScope):
+    三个读方法要 READ_USERS,AddUsers 要 ADD_USERS。授权项与方法的对应关系写死在
+    handler 的方法入口,**不由入参决定** —— 与"要不要 grant 由 service 决定"同一个道理:
+    让调用方传"我要用哪一项",等于让它自己声明权限。
     """
 
     def __init__(self, channel):
@@ -1232,18 +1237,28 @@ class MerchantGrantedStub(object):
                 request_serializer=hi_dot_did_dot_merchant__pb2.GrantedListGreetersReq.SerializeToString,
                 response_deserializer=hi_dot_did_dot_merchant__pb2.ListUsersResp.FromString,
                 _registered_method=True)
+        self.AddUsers = channel.unary_unary(
+                '/hi.did.MerchantGranted/AddUsers',
+                request_serializer=hi_dot_did_dot_merchant__pb2.GrantedAddUsersReq.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                _registered_method=True)
 
 
 class MerchantGrantedServicer(object):
-    """跨商户读用户数据(**整个 service 走 requireGrant**)。
+    """跨商户访问用户数据(**整个 service 的每个方法都先过授权校验**)。
 
     与 Merchant 拆开而不是共用一个 `merchant` 字段:那样"空=自己免 grant / 非空=别家走
     grant"是**两条鉴权分支挤在一个方法里**,handler 里分支写岔就是静默跨商户读。
     拆开之后,"要不要 grant"由 service 决定,不由某个字段的空值决定 ——
     范式同 Merchant/MerchantManage、Gateway/GatewayAdmin。
 
-    授权方向:商户 A 执行 AddGrant(grantee=B) 后,B 才能用这里的方法读 A 名下的用户。
+    授权方向:商户 A 执行 AddGrant(grantee=B) 后,B 才能用这里的方法访问 A 名下的用户。
     判据是 hi_merchant_grant 里 (merchant=A, grantee=B) 一行,授权方永远取自 token。
+
+    ⚠️ **有没有那一行不够,还要看那一行给了哪些授权项**(MerchantGrantScope):
+    三个读方法要 READ_USERS,AddUsers 要 ADD_USERS。授权项与方法的对应关系写死在
+    handler 的方法入口,**不由入参决定** —— 与"要不要 grant 由 service 决定"同一个道理:
+    让调用方传"我要用哪一项",等于让它自己声明权限。
     """
 
     def GetUser(self, request, context):
@@ -1260,6 +1275,22 @@ class MerchantGrantedServicer(object):
 
     def ListGreeters(self, request, context):
         """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def AddUsers(self, request, context):
+        """把用户加到别家商户名下(须 ADD_USERS)。
+
+        用途:club 的用户在 app 里"加入某商户" —— 链路是
+        app --用户token--> club后台 --club的ExtendToken--> did.MerchantGranted.AddUsers。
+        到了 did 这一侧,主体是**club 这个商户**,目标商户是入参里的 merchant,
+        所以它和三个读方法是同一类事(跨商户),只是要的授权项不同,不单开 service。
+
+        ⚠️ 用户是谁由 club 侧从**登录 token** 解出后填进 users,did 这一侧无从校验 ——
+        这正是 ADD_USERS 要单独一项、且默认不给的原因:给了这一项,就等于允许 grantee
+        替任意用户决定"加入我名下"。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -1282,6 +1313,11 @@ def add_MerchantGrantedServicer_to_server(servicer, server):
                     request_deserializer=hi_dot_did_dot_merchant__pb2.GrantedListGreetersReq.FromString,
                     response_serializer=hi_dot_did_dot_merchant__pb2.ListUsersResp.SerializeToString,
             ),
+            'AddUsers': grpc.unary_unary_rpc_method_handler(
+                    servicer.AddUsers,
+                    request_deserializer=hi_dot_did_dot_merchant__pb2.GrantedAddUsersReq.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
             'hi.did.MerchantGranted', rpc_method_handlers)
@@ -1291,15 +1327,20 @@ def add_MerchantGrantedServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class MerchantGranted(object):
-    """跨商户读用户数据(**整个 service 走 requireGrant**)。
+    """跨商户访问用户数据(**整个 service 的每个方法都先过授权校验**)。
 
     与 Merchant 拆开而不是共用一个 `merchant` 字段:那样"空=自己免 grant / 非空=别家走
     grant"是**两条鉴权分支挤在一个方法里**,handler 里分支写岔就是静默跨商户读。
     拆开之后,"要不要 grant"由 service 决定,不由某个字段的空值决定 ——
     范式同 Merchant/MerchantManage、Gateway/GatewayAdmin。
 
-    授权方向:商户 A 执行 AddGrant(grantee=B) 后,B 才能用这里的方法读 A 名下的用户。
+    授权方向:商户 A 执行 AddGrant(grantee=B) 后,B 才能用这里的方法访问 A 名下的用户。
     判据是 hi_merchant_grant 里 (merchant=A, grantee=B) 一行,授权方永远取自 token。
+
+    ⚠️ **有没有那一行不够,还要看那一行给了哪些授权项**(MerchantGrantScope):
+    三个读方法要 READ_USERS,AddUsers 要 ADD_USERS。授权项与方法的对应关系写死在
+    handler 的方法入口,**不由入参决定** —— 与"要不要 grant 由 service 决定"同一个道理:
+    让调用方传"我要用哪一项",等于让它自己声明权限。
     """
 
     @staticmethod
@@ -1373,6 +1414,33 @@ class MerchantGranted(object):
             '/hi.did.MerchantGranted/ListGreeters',
             hi_dot_did_dot_merchant__pb2.GrantedListGreetersReq.SerializeToString,
             hi_dot_did_dot_merchant__pb2.ListUsersResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def AddUsers(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.did.MerchantGranted/AddUsers',
+            hi_dot_did_dot_merchant__pb2.GrantedAddUsersReq.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,
             insecure,

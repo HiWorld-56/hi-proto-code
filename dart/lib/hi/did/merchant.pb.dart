@@ -17,8 +17,11 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../common.pb.dart' as $2;
 import 'base.pb.dart' as $3;
+import 'merchant.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
+
+export 'merchant.pbenum.dart';
 
 /// 商户节点信息。
 ///
@@ -652,54 +655,65 @@ class UserExtensionUnit extends $pb.GeneratedMessage {
   UserExtensionInfo ensureInfo() => $_ensure(1);
 }
 
-/// ── 商户互授权 ───────────────────────────────────────────────────────
-/// 我(=ExtendToken 认出的商户)允许 grantee 访问我的数据。
-/// ⚠️ 入参里**没有授权方 did** —— 授权方永远取自 token,故商户只能改自己的授权列表。
-class GrantReq extends $pb.GeneratedMessage {
-  factory GrantReq({
+/// 授权/改授权项。**upsert**:同一个 grantee 重复调 = 改这一行。
+///
+/// ⚠️ scopes 是**覆盖式**写入,不是并入 —— 要撤掉其中一项,重发"剩下的那些项";
+///    整行撤销走 RemoveGrant。两种写法各有各的方法,不靠某个字段的空值分叉。
+/// ⚠️ scopes 不许为空:空集合的语义是"什么都不许",那等于 RemoveGrant,
+///    两条路走到同一个结果正是分支写岔的来源。服务端按 min_items 拒掉。
+class AddGrantReq extends $pb.GeneratedMessage {
+  factory AddGrantReq({
     $core.String? grantee,
     $core.String? note,
+    $core.Iterable<MerchantGrantScope>? scopes,
   }) {
     final result = create();
     if (grantee != null) result.grantee = grantee;
     if (note != null) result.note = note;
+    if (scopes != null) result.scopes.addAll(scopes);
     return result;
   }
 
-  GrantReq._();
+  AddGrantReq._();
 
-  factory GrantReq.fromBuffer($core.List<$core.int> data,
+  factory AddGrantReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory GrantReq.fromJson($core.String json,
+  factory AddGrantReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GrantReq',
+      _omitMessageNames ? '' : 'AddGrantReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'grantee')
     ..aOS(2, _omitFieldNames ? '' : 'note')
+    ..pc<MerchantGrantScope>(
+        3, _omitFieldNames ? '' : 'scopes', $pb.PbFieldType.KE,
+        valueOf: MerchantGrantScope.valueOf,
+        enumValues: MerchantGrantScope.values,
+        defaultEnumValue: MerchantGrantScope.MERCHANT_GRANT_SCOPE_UNSPECIFIED)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GrantReq clone() => deepCopy();
+  AddGrantReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GrantReq copyWith(void Function(GrantReq) updates) =>
-      super.copyWith((message) => updates(message as GrantReq)) as GrantReq;
+  AddGrantReq copyWith(void Function(AddGrantReq) updates) =>
+      super.copyWith((message) => updates(message as AddGrantReq))
+          as AddGrantReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static GrantReq create() => GrantReq._();
+  static AddGrantReq create() => AddGrantReq._();
   @$core.override
-  GrantReq createEmptyInstance() => create();
+  AddGrantReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static GrantReq getDefault() =>
-      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<GrantReq>(create);
-  static GrantReq? _defaultInstance;
+  static AddGrantReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<AddGrantReq>(create);
+  static AddGrantReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get grantee => $_getSZ(0);
@@ -718,6 +732,67 @@ class GrantReq extends $pb.GeneratedMessage {
   $core.bool hasNote() => $_has(1);
   @$pb.TagNumber(2)
   void clearNote() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $pb.PbList<MerchantGrantScope> get scopes => $_getList(2);
+}
+
+/// 撤销对 grantee 的**整行**授权。
+/// ⚠️ **没有 scopes** —— 撤单项走 AddGrant 重发剩下的项。原先与 AddGrant 共用一个
+///    GrantReq,note 在这边从来就是被忽略的死字段;加了 scopes 之后再共用,
+///    就成了"同一个字段在两个方法里两种语义",拆开。
+class RemoveGrantReq extends $pb.GeneratedMessage {
+  factory RemoveGrantReq({
+    $core.String? grantee,
+  }) {
+    final result = create();
+    if (grantee != null) result.grantee = grantee;
+    return result;
+  }
+
+  RemoveGrantReq._();
+
+  factory RemoveGrantReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RemoveGrantReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RemoveGrantReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'grantee')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoveGrantReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoveGrantReq copyWith(void Function(RemoveGrantReq) updates) =>
+      super.copyWith((message) => updates(message as RemoveGrantReq))
+          as RemoveGrantReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RemoveGrantReq create() => RemoveGrantReq._();
+  @$core.override
+  RemoveGrantReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static RemoveGrantReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RemoveGrantReq>(create);
+  static RemoveGrantReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get grantee => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set grantee($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasGrantee() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearGrantee() => $_clearField(1);
 }
 
 class GrantUnit extends $pb.GeneratedMessage {
@@ -725,11 +800,13 @@ class GrantUnit extends $pb.GeneratedMessage {
     $2.Entity? grantee,
     $core.String? note,
     $fixnum.Int64? createdAt,
+    $core.Iterable<MerchantGrantScope>? scopes,
   }) {
     final result = create();
     if (grantee != null) result.grantee = grantee;
     if (note != null) result.note = note;
     if (createdAt != null) result.createdAt = createdAt;
+    if (scopes != null) result.scopes.addAll(scopes);
     return result;
   }
 
@@ -750,6 +827,11 @@ class GrantUnit extends $pb.GeneratedMessage {
         subBuilder: $2.Entity.create)
     ..aOS(2, _omitFieldNames ? '' : 'note')
     ..aInt64(3, _omitFieldNames ? '' : 'createdAt')
+    ..pc<MerchantGrantScope>(
+        4, _omitFieldNames ? '' : 'scopes', $pb.PbFieldType.KE,
+        valueOf: MerchantGrantScope.valueOf,
+        enumValues: MerchantGrantScope.values,
+        defaultEnumValue: MerchantGrantScope.MERCHANT_GRANT_SCOPE_UNSPECIFIED)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -798,6 +880,9 @@ class GrantUnit extends $pb.GeneratedMessage {
   $core.bool hasCreatedAt() => $_has(2);
   @$pb.TagNumber(3)
   void clearCreatedAt() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $pb.PbList<MerchantGrantScope> get scopes => $_getList(3);
 }
 
 class ListGrantsResp extends $pb.GeneratedMessage {
@@ -1128,6 +1213,68 @@ class GrantedListUsersReq extends $pb.GeneratedMessage {
   void clearPagination() => $_clearField(3);
   @$pb.TagNumber(3)
   $2.Pagination ensurePagination() => $_ensure(2);
+}
+
+/// 把用户加到**别家商户**名下(MerchantGranted.AddUsers)。
+/// 需要目标商户授予 MERCHANT_GRANT_SCOPE_ADD_USERS,只有 READ_USERS 是调不动的。
+class GrantedAddUsersReq extends $pb.GeneratedMessage {
+  factory GrantedAddUsersReq({
+    $core.String? merchant,
+    $core.Iterable<$core.String>? users,
+  }) {
+    final result = create();
+    if (merchant != null) result.merchant = merchant;
+    if (users != null) result.users.addAll(users);
+    return result;
+  }
+
+  GrantedAddUsersReq._();
+
+  factory GrantedAddUsersReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GrantedAddUsersReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GrantedAddUsersReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'merchant')
+    ..pPS(2, _omitFieldNames ? '' : 'users')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GrantedAddUsersReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GrantedAddUsersReq copyWith(void Function(GrantedAddUsersReq) updates) =>
+      super.copyWith((message) => updates(message as GrantedAddUsersReq))
+          as GrantedAddUsersReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GrantedAddUsersReq create() => GrantedAddUsersReq._();
+  @$core.override
+  GrantedAddUsersReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GrantedAddUsersReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GrantedAddUsersReq>(create);
+  static GrantedAddUsersReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get merchant => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set merchant($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasMerchant() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearMerchant() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<$core.String> get users => $_getList(1);
 }
 
 class GrantedListGreetersReq extends $pb.GeneratedMessage {

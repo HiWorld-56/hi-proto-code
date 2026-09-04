@@ -54,6 +54,19 @@ class MerchantClient extends $grpc.Client {
     return $createUnaryCall(_$listGreeters, request, options: options);
   }
 
+  /// 用户把自己加入某商户。链路:app --用户token--> club后台 --club的ExtendToken-->
+  /// did.MerchantGranted.AddUsers(merchant=目标商户, users=[登录用户]).
+  ///
+  /// club 侧同样不叠鉴权(与 ListGreeters 一致):真正的门在 did 侧 ——
+  /// 目标商户必须把 **MERCHANT_GRANT_SCOPE_ADD_USERS** 这一项授权给 club,
+  /// 没给就是 PermissionDenied,不是静默成功。
+  $grpc.ResponseFuture<$0.Empty> join(
+    $2.JoinMerchantReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$join, request, options: options);
+  }
+
   // method descriptors
 
   static final _$list = $grpc.ClientMethod<$0.Empty, $1.MerchantListResp>(
@@ -65,6 +78,10 @@ class MerchantClient extends $grpc.Client {
           '/hi.club.Merchant/ListGreeters',
           ($2.ListGreetersReq value) => value.writeToBuffer(),
           $1.ListUsersResp.fromBuffer);
+  static final _$join = $grpc.ClientMethod<$2.JoinMerchantReq, $0.Empty>(
+      '/hi.club.Merchant/Join',
+      ($2.JoinMerchantReq value) => value.writeToBuffer(),
+      $0.Empty.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.Merchant')
@@ -86,6 +103,13 @@ abstract class MerchantServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $2.ListGreetersReq.fromBuffer(value),
         ($1.ListUsersResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$2.JoinMerchantReq, $0.Empty>(
+        'Join',
+        join_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $2.JoinMerchantReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
   }
 
   $async.Future<$1.MerchantListResp> list_Pre(
@@ -103,6 +127,14 @@ abstract class MerchantServiceBase extends $grpc.Service {
 
   $async.Future<$1.ListUsersResp> listGreeters(
       $grpc.ServiceCall call, $2.ListGreetersReq request);
+
+  $async.Future<$0.Empty> join_Pre($grpc.ServiceCall $call,
+      $async.Future<$2.JoinMerchantReq> $request) async {
+    return join($call, await $request);
+  }
+
+  $async.Future<$0.Empty> join(
+      $grpc.ServiceCall call, $2.JoinMerchantReq request);
 }
 
 /// 商户管理(超管)。原 `Merchant.ListAll` —— 超管方法蹲在用户面 service 里(混档),

@@ -48,3 +48,28 @@ final $typed_data.Uint8List listGreetersReqDescriptor = $convert.base64Decode(
     'Cg9MaXN0R3JlZXRlcnNSZXESMAoIbWVyY2hhbnQYASABKAlCD7pIDMgBAXIHMgVeXFMrJEgAUg'
     'htZXJjaGFudIgBARIuCgpwYWdpbmF0aW9uGAIgASgLMg4uaGkuUGFnaW5hdGlvblIKcGFnaW5h'
     'dGlvbkILCglfbWVyY2hhbnQ=');
+
+@$core.Deprecated('Use joinMerchantReqDescriptor instead')
+const JoinMerchantReq$json = {
+  '1': 'JoinMerchantReq',
+  '2': [
+    {
+      '1': 'merchant',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'merchant',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_merchant'},
+  ],
+};
+
+/// Descriptor for `JoinMerchantReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List joinMerchantReqDescriptor = $convert.base64Decode(
+    'Cg9Kb2luTWVyY2hhbnRSZXESMAoIbWVyY2hhbnQYASABKAlCD7pIDMgBAXIHMgVeXFMrJEgAUg'
+    'htZXJjaGFudIgBAUILCglfbWVyY2hhbnQ=');

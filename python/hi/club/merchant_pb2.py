@@ -29,7 +29,7 @@ from hi.did import merchant_pb2 as hi_dot_did_dot_merchant__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x16hi/club/merchant.proto\x12\x07hi.club\x1a\x1b\x62uf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/merchant.proto\x1a\x10hi/options.proto\"\x80\x01\n\x0fListGreetersReq\x12\x30\n\x08merchant\x18\x01 \x01(\tB\x0f\xbaH\x0cr\x07\x32\x05^\\S+$\xc8\x01\x01H\x00R\x08merchant\x88\x01\x01\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npaginationB\x0b\n\t_merchant2\x93\x01\n\x08Merchant\x12?\n\x04List\x12\x16.google.protobuf.Empty\x1a\x18.hi.did.MerchantListResp\"\x05\x8a\xb5\x18\x01\x02\x12\x46\n\x0cListGreeters\x12\x18.hi.club.ListGreetersReq\x1a\x15.hi.did.ListUsersResp\"\x05\x8a\xb5\x18\x01\x02\x32I\n\x0eMerchantManage\x12\x37\n\x04List\x12\x0e.hi.Pagination\x1a\x18.hi.did.MerchantListResp\"\x05\x8a\xb5\x18\x01\x04\x42+Z)github.com/HiWorld-56/hi-proto/go/hi/clubb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x16hi/club/merchant.proto\x12\x07hi.club\x1a\x1b\x62uf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/merchant.proto\x1a\x10hi/options.proto\"\x80\x01\n\x0fListGreetersReq\x12\x30\n\x08merchant\x18\x01 \x01(\tB\x0f\xbaH\x0cr\x07\x32\x05^\\S+$\xc8\x01\x01H\x00R\x08merchant\x88\x01\x01\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npaginationB\x0b\n\t_merchant\"P\n\x0fJoinMerchantReq\x12\x30\n\x08merchant\x18\x01 \x01(\tB\x0f\xbaH\x0cr\x07\x32\x05^\\S+$\xc8\x01\x01H\x00R\x08merchant\x88\x01\x01\x42\x0b\n\t_merchant2\xd4\x01\n\x08Merchant\x12?\n\x04List\x12\x16.google.protobuf.Empty\x1a\x18.hi.did.MerchantListResp\"\x05\x8a\xb5\x18\x01\x02\x12\x46\n\x0cListGreeters\x12\x18.hi.club.ListGreetersReq\x1a\x15.hi.did.ListUsersResp\"\x05\x8a\xb5\x18\x01\x02\x12?\n\x04Join\x12\x18.hi.club.JoinMerchantReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x32I\n\x0eMerchantManage\x12\x37\n\x04List\x12\x0e.hi.Pagination\x1a\x18.hi.did.MerchantListResp\"\x05\x8a\xb5\x18\x01\x04\x42+Z)github.com/HiWorld-56/hi-proto/go/hi/clubb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -39,16 +39,22 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._serialized_options = b'Z)github.com/HiWorld-56/hi-proto/go/hi/club'
   _globals['_LISTGREETERSREQ'].fields_by_name['merchant']._loaded_options = None
   _globals['_LISTGREETERSREQ'].fields_by_name['merchant']._serialized_options = b'\272H\014r\0072\005^\\S+$\310\001\001'
+  _globals['_JOINMERCHANTREQ'].fields_by_name['merchant']._loaded_options = None
+  _globals['_JOINMERCHANTREQ'].fields_by_name['merchant']._serialized_options = b'\272H\014r\0072\005^\\S+$\310\001\001'
   _globals['_MERCHANT'].methods_by_name['List']._loaded_options = None
   _globals['_MERCHANT'].methods_by_name['List']._serialized_options = b'\212\265\030\001\002'
   _globals['_MERCHANT'].methods_by_name['ListGreeters']._loaded_options = None
   _globals['_MERCHANT'].methods_by_name['ListGreeters']._serialized_options = b'\212\265\030\001\002'
+  _globals['_MERCHANT'].methods_by_name['Join']._loaded_options = None
+  _globals['_MERCHANT'].methods_by_name['Join']._serialized_options = b'\212\265\030\001\002'
   _globals['_MERCHANTMANAGE'].methods_by_name['List']._loaded_options = None
   _globals['_MERCHANTMANAGE'].methods_by_name['List']._serialized_options = b'\212\265\030\001\004'
   _globals['_LISTGREETERSREQ']._serialized_start=152
   _globals['_LISTGREETERSREQ']._serialized_end=280
-  _globals['_MERCHANT']._serialized_start=283
-  _globals['_MERCHANT']._serialized_end=430
-  _globals['_MERCHANTMANAGE']._serialized_start=432
-  _globals['_MERCHANTMANAGE']._serialized_end=505
+  _globals['_JOINMERCHANTREQ']._serialized_start=282
+  _globals['_JOINMERCHANTREQ']._serialized_end=362
+  _globals['_MERCHANT']._serialized_start=365
+  _globals['_MERCHANT']._serialized_end=577
+  _globals['_MERCHANTMANAGE']._serialized_start=579
+  _globals['_MERCHANTMANAGE']._serialized_end=652
 # @@protoc_insertion_point(module_scope)

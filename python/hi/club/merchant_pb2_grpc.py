@@ -28,6 +28,11 @@ class MerchantStub(object):
                 request_serializer=hi_dot_club_dot_merchant__pb2.ListGreetersReq.SerializeToString,
                 response_deserializer=hi_dot_did_dot_merchant__pb2.ListUsersResp.FromString,
                 _registered_method=True)
+        self.Join = channel.unary_unary(
+                '/hi.club.Merchant/Join',
+                request_serializer=hi_dot_club_dot_merchant__pb2.JoinMerchantReq.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                _registered_method=True)
 
 
 class MerchantServicer(object):
@@ -50,6 +55,18 @@ class MerchantServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def Join(self, request, context):
+        """用户把自己加入某商户。链路:app --用户token--> club后台 --club的ExtendToken-->
+        did.MerchantGranted.AddUsers(merchant=目标商户, users=[登录用户]).
+
+        club 侧同样不叠鉴权(与 ListGreeters 一致):真正的门在 did 侧 ——
+        目标商户必须把 **MERCHANT_GRANT_SCOPE_ADD_USERS** 这一项授权给 club,
+        没给就是 PermissionDenied,不是静默成功。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_MerchantServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -62,6 +79,11 @@ def add_MerchantServicer_to_server(servicer, server):
                     servicer.ListGreeters,
                     request_deserializer=hi_dot_club_dot_merchant__pb2.ListGreetersReq.FromString,
                     response_serializer=hi_dot_did_dot_merchant__pb2.ListUsersResp.SerializeToString,
+            ),
+            'Join': grpc.unary_unary_rpc_method_handler(
+                    servicer.Join,
+                    request_deserializer=hi_dot_club_dot_merchant__pb2.JoinMerchantReq.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -119,6 +141,33 @@ class Merchant(object):
             '/hi.club.Merchant/ListGreeters',
             hi_dot_club_dot_merchant__pb2.ListGreetersReq.SerializeToString,
             hi_dot_did_dot_merchant__pb2.ListUsersResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def Join(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.Merchant/Join',
+            hi_dot_club_dot_merchant__pb2.JoinMerchantReq.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,
             insecure,

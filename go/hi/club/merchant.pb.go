@@ -83,6 +83,57 @@ func (x *ListGreetersReq) GetPagination() *hi.Pagination {
 	return nil
 }
 
+// 用户把**自己**加入某商户。
+//
+// ⚠️ **没有 user 字段,且永远不要加** —— 用户 did 恒取自登录 token。
+//
+//	加了它,任何登录用户都能把别人塞进任意商户名下,而这个动作在 did 那一侧
+//	是以 **club 这个商户**的身份做的、did 无从分辨真正的发起人。
+//	身份必须来自 token,不能来自入参(同 hi.did.Merchant.Get 那个越权教训)。
+type JoinMerchantReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Merchant      *string                `protobuf:"bytes,1,opt,name=merchant,proto3,oneof" json:"merchant,omitempty"` // 要加入的商户 did
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *JoinMerchantReq) Reset() {
+	*x = JoinMerchantReq{}
+	mi := &file_hi_club_merchant_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *JoinMerchantReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*JoinMerchantReq) ProtoMessage() {}
+
+func (x *JoinMerchantReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_merchant_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use JoinMerchantReq.ProtoReflect.Descriptor instead.
+func (*JoinMerchantReq) Descriptor() ([]byte, []int) {
+	return file_hi_club_merchant_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *JoinMerchantReq) GetMerchant() string {
+	if x != nil && x.Merchant != nil {
+		return *x.Merchant
+	}
+	return ""
+}
+
 var File_hi_club_merchant_proto protoreflect.FileDescriptor
 
 const file_hi_club_merchant_proto_rawDesc = "" +
@@ -93,10 +144,14 @@ const file_hi_club_merchant_proto_rawDesc = "" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
 	"paginationB\v\n" +
-	"\t_merchant2\x93\x01\n" +
+	"\t_merchant\"P\n" +
+	"\x0fJoinMerchantReq\x120\n" +
+	"\bmerchant\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\bmerchant\x88\x01\x01B\v\n" +
+	"\t_merchant2\xd4\x01\n" +
 	"\bMerchant\x12?\n" +
 	"\x04List\x12\x16.google.protobuf.Empty\x1a\x18.hi.did.MerchantListResp\"\x05\x8a\xb5\x18\x01\x02\x12F\n" +
-	"\fListGreeters\x12\x18.hi.club.ListGreetersReq\x1a\x15.hi.did.ListUsersResp\"\x05\x8a\xb5\x18\x01\x022I\n" +
+	"\fListGreeters\x12\x18.hi.club.ListGreetersReq\x1a\x15.hi.did.ListUsersResp\"\x05\x8a\xb5\x18\x01\x02\x12?\n" +
+	"\x04Join\x12\x18.hi.club.JoinMerchantReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x022I\n" +
 	"\x0eMerchantManage\x127\n" +
 	"\x04List\x12\x0e.hi.Pagination\x1a\x18.hi.did.MerchantListResp\"\x05\x8a\xb5\x18\x01\x04B\x84\x01\n" +
 	"\vcom.hi.clubB\rMerchantProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
@@ -113,24 +168,27 @@ func file_hi_club_merchant_proto_rawDescGZIP() []byte {
 	return file_hi_club_merchant_proto_rawDescData
 }
 
-var file_hi_club_merchant_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_hi_club_merchant_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_hi_club_merchant_proto_goTypes = []any{
 	(*ListGreetersReq)(nil),      // 0: hi.club.ListGreetersReq
-	(*hi.Pagination)(nil),        // 1: hi.Pagination
-	(*emptypb.Empty)(nil),        // 2: google.protobuf.Empty
-	(*did.MerchantListResp)(nil), // 3: hi.did.MerchantListResp
-	(*did.ListUsersResp)(nil),    // 4: hi.did.ListUsersResp
+	(*JoinMerchantReq)(nil),      // 1: hi.club.JoinMerchantReq
+	(*hi.Pagination)(nil),        // 2: hi.Pagination
+	(*emptypb.Empty)(nil),        // 3: google.protobuf.Empty
+	(*did.MerchantListResp)(nil), // 4: hi.did.MerchantListResp
+	(*did.ListUsersResp)(nil),    // 5: hi.did.ListUsersResp
 }
 var file_hi_club_merchant_proto_depIdxs = []int32{
-	1, // 0: hi.club.ListGreetersReq.pagination:type_name -> hi.Pagination
-	2, // 1: hi.club.Merchant.List:input_type -> google.protobuf.Empty
+	2, // 0: hi.club.ListGreetersReq.pagination:type_name -> hi.Pagination
+	3, // 1: hi.club.Merchant.List:input_type -> google.protobuf.Empty
 	0, // 2: hi.club.Merchant.ListGreeters:input_type -> hi.club.ListGreetersReq
-	1, // 3: hi.club.MerchantManage.List:input_type -> hi.Pagination
-	3, // 4: hi.club.Merchant.List:output_type -> hi.did.MerchantListResp
-	4, // 5: hi.club.Merchant.ListGreeters:output_type -> hi.did.ListUsersResp
-	3, // 6: hi.club.MerchantManage.List:output_type -> hi.did.MerchantListResp
-	4, // [4:7] is the sub-list for method output_type
-	1, // [1:4] is the sub-list for method input_type
+	1, // 3: hi.club.Merchant.Join:input_type -> hi.club.JoinMerchantReq
+	2, // 4: hi.club.MerchantManage.List:input_type -> hi.Pagination
+	4, // 5: hi.club.Merchant.List:output_type -> hi.did.MerchantListResp
+	5, // 6: hi.club.Merchant.ListGreeters:output_type -> hi.did.ListUsersResp
+	3, // 7: hi.club.Merchant.Join:output_type -> google.protobuf.Empty
+	4, // 8: hi.club.MerchantManage.List:output_type -> hi.did.MerchantListResp
+	5, // [5:9] is the sub-list for method output_type
+	1, // [1:5] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
 	1, // [1:1] is the sub-list for extension extendee
 	0, // [0:1] is the sub-list for field type_name
@@ -142,13 +200,14 @@ func file_hi_club_merchant_proto_init() {
 		return
 	}
 	file_hi_club_merchant_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_club_merchant_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_merchant_proto_rawDesc), len(file_hi_club_merchant_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

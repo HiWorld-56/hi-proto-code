@@ -1224,17 +1224,33 @@ pub struct UserExtensionUnit {
     #[prost(message, optional, tag = "2")]
     pub info: ::core::option::Option<UserExtensionInfo>,
 }
-/// ── 商户互授权 ───────────────────────────────────────────────────────
-/// 我(=ExtendToken 认出的商户)允许 grantee 访问我的数据。
-/// ⚠️ 入参里**没有授权方 did** —— 授权方永远取自 token,故商户只能改自己的授权列表。
+/// 授权/改授权项。**upsert**:同一个 grantee 重复调 = 改这一行。
+///
+/// ⚠️ scopes 是**覆盖式**写入,不是并入 —— 要撤掉其中一项,重发"剩下的那些项";
+/// 整行撤销走 RemoveGrant。两种写法各有各的方法,不靠某个字段的空值分叉。
+/// ⚠️ scopes 不许为空:空集合的语义是"什么都不许",那等于 RemoveGrant,
+/// 两条路走到同一个结果正是分支写岔的来源。服务端按 min_items 拒掉。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GrantReq {
+pub struct AddGrantReq {
     /// 被授权方商户 did
     #[prost(string, optional, tag = "1")]
     pub grantee: ::core::option::Option<::prost::alloc::string::String>,
     /// 备注,给人看的
     #[prost(string, optional, tag = "2")]
     pub note: ::core::option::Option<::prost::alloc::string::String>,
+    /// 授权项;覆盖式,至少一项
+    #[prost(enumeration = "MerchantGrantScope", repeated, packed = "false", tag = "3")]
+    pub scopes: ::prost::alloc::vec::Vec<i32>,
+}
+/// 撤销对 grantee 的**整行**授权。
+/// ⚠️ **没有 scopes** —— 撤单项走 AddGrant 重发剩下的项。原先与 AddGrant 共用一个
+/// GrantReq,note 在这边从来就是被忽略的死字段;加了 scopes 之后再共用,
+/// 就成了"同一个字段在两个方法里两种语义",拆开。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct RemoveGrantReq {
+    /// 被授权方商户 did
+    #[prost(string, optional, tag = "1")]
+    pub grantee: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GrantUnit {
@@ -1246,6 +1262,9 @@ pub struct GrantUnit {
     /// ms
     #[prost(int64, optional, tag = "3")]
     pub created_at: ::core::option::Option<i64>,
+    /// 授权项
+    #[prost(enumeration = "MerchantGrantScope", repeated, packed = "false", tag = "4")]
+    pub scopes: ::prost::alloc::vec::Vec<i32>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListGrantsResp {
@@ -1296,6 +1315,17 @@ pub struct GrantedListUsersReq {
     pub user: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "3")]
     pub pagination: ::core::option::Option<super::Pagination>,
+}
+/// 把用户加到**别家商户**名下(MerchantGranted.AddUsers)。
+/// 需要目标商户授予 MERCHANT_GRANT_SCOPE_ADD_USERS,只有 READ_USERS 是调不动的。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GrantedAddUsersReq {
+    /// 目标商户(须授予"加用户"这一项给我)
+    #[prost(string, optional, tag = "1")]
+    pub merchant: ::core::option::Option<::prost::alloc::string::String>,
+    /// 用户 did:加到 merchant 名下
+    #[prost(string, repeated, tag = "2")]
+    pub users: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GrantedListGreetersReq {
@@ -1443,6 +1473,50 @@ pub struct OrderEventResp {
     pub event: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
     pub payload: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 授权项(位图)。商户 A 授权给商户 B 时,一项项给,不是"授了就是全授"。
+///
+/// 照 MerchantPermission(见 admin.proto)的位图写法,**不另造机制** —— 区别只在轴:
+/// · MerchantPermission:超管 → 商户,给的是**全局能力**(如能不能读用户 mqtt 凭证);
+/// · MerchantGrantScope:商户 A → 商户 B,给的是**对 A 自己这份数据**的操作范围。
+///
+/// ⚠️ 存量语义:本枚举落地之前,`hi_merchant_grant` 里每一行的含义都是"可读我名下的用户"。
+/// 迁移必须把存量行回填成 READ_USERS(bit0),**不能留 0** —— 留 0 会让所有现存的跨商户读
+/// 当场失效,而症状只是 PermissionDenied,看不出是迁移干的。
+///
+/// ⚠️ 加新项时**只加枚举值,不动旧值的号** —— 这个号是**落库的位**,改一个就是把库里
+/// 存量行的含义整体挪位,且零报错(见 CLAUDE.md「落库的枚举写死数字」)。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum MerchantGrantScope {
+    /// 占位:漏传的语义是"空集合",不是这个值
+    Unspecified = 0,
+    /// bit0:读我名下的用户(MerchantGranted.GetUser/ListUsers/ListGreeters)
+    ReadUsers = 1,
+    /// bit1:把用户加到我名下(MerchantGranted.AddUsers)
+    AddUsers = 2,
+}
+impl MerchantGrantScope {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "MERCHANT_GRANT_SCOPE_UNSPECIFIED",
+            Self::ReadUsers => "MERCHANT_GRANT_SCOPE_READ_USERS",
+            Self::AddUsers => "MERCHANT_GRANT_SCOPE_ADD_USERS",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "MERCHANT_GRANT_SCOPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "MERCHANT_GRANT_SCOPE_READ_USERS" => Some(Self::ReadUsers),
+            "MERCHANT_GRANT_SCOPE_ADD_USERS" => Some(Self::AddUsers),
+            _ => None,
+        }
+    }
 }
 /// Generated client implementations.
 pub mod merchant_client {
@@ -1812,7 +1886,7 @@ pub mod merchant_client {
         }
         pub async fn add_grant(
             &mut self,
-            request: impl tonic::IntoRequest<super::GrantReq>,
+            request: impl tonic::IntoRequest<super::AddGrantReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -1830,7 +1904,7 @@ pub mod merchant_client {
         }
         pub async fn remove_grant(
             &mut self,
-            request: impl tonic::IntoRequest<super::GrantReq>,
+            request: impl tonic::IntoRequest<super::RemoveGrantReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -2415,15 +2489,20 @@ pub mod merchant_granted_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// 跨商户读用户数据(**整个 service 走 requireGrant**)。
+    /// 跨商户访问用户数据(**整个 service 的每个方法都先过授权校验**)。
     ///
     /// 与 Merchant 拆开而不是共用一个 `merchant` 字段:那样"空=自己免 grant / 非空=别家走
     /// grant"是**两条鉴权分支挤在一个方法里**,handler 里分支写岔就是静默跨商户读。
     /// 拆开之后,"要不要 grant"由 service 决定,不由某个字段的空值决定 ——
     /// 范式同 Merchant/MerchantManage、Gateway/GatewayAdmin。
     ///
-    /// 授权方向:商户 A 执行 AddGrant(grantee=B) 后,B 才能用这里的方法读 A 名下的用户。
+    /// 授权方向:商户 A 执行 AddGrant(grantee=B) 后,B 才能用这里的方法访问 A 名下的用户。
     /// 判据是 hi_merchant_grant 里 (merchant=A, grantee=B) 一行,授权方永远取自 token。
+    ///
+    /// ⚠️ **有没有那一行不够,还要看那一行给了哪些授权项**(MerchantGrantScope):
+    /// 三个读方法要 READ_USERS,AddUsers 要 ADD_USERS。授权项与方法的对应关系写死在
+    /// handler 的方法入口,**不由入参决定** —— 与"要不要 grant 由 service 决定"同一个道理:
+    /// 让调用方传"我要用哪一项",等于让它自己声明权限。
     #[derive(Debug, Clone)]
     pub struct MerchantGrantedClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -2568,6 +2647,37 @@ pub mod merchant_granted_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.did.MerchantGranted", "ListGreeters"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 把用户加到别家商户名下(须 ADD_USERS)。
+        ///
+        /// 用途:club 的用户在 app 里"加入某商户" —— 链路是
+        /// app --用户token--> club后台 --club的ExtendToken--> did.MerchantGranted.AddUsers。
+        /// 到了 did 这一侧,主体是**club 这个商户**,目标商户是入参里的 merchant,
+        /// 所以它和三个读方法是同一类事(跨商户),只是要的授权项不同,不单开 service。
+        ///
+        /// ⚠️ 用户是谁由 club 侧从**登录 token** 解出后填进 users,did 这一侧无从校验 ——
+        /// 这正是 ADD_USERS 要单独一项、且默认不给的原因:给了这一项,就等于允许 grantee
+        /// 替任意用户决定"加入我名下"。
+        pub async fn add_users(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GrantedAddUsersReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.MerchantGranted/AddUsers",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.MerchantGranted", "AddUsers"));
             self.inner.unary(req, path, codec).await
         }
     }

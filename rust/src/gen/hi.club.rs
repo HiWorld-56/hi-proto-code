@@ -2938,6 +2938,18 @@ pub struct ListGreetersReq {
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
+/// 用户把**自己**加入某商户。
+///
+/// ⚠️ **没有 user 字段,且永远不要加** —— 用户 did 恒取自登录 token。
+/// 加了它,任何登录用户都能把别人塞进任意商户名下,而这个动作在 did 那一侧
+/// 是以 **club 这个商户**的身份做的、did 无从分辨真正的发起人。
+/// 身份必须来自 token,不能来自入参(同 hi.did.Merchant.Get 那个越权教训)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct JoinMerchantReq {
+    /// 要加入的商户 did
+    #[prost(string, optional, tag = "1")]
+    pub merchant: ::core::option::Option<::prost::alloc::string::String>,
+}
 /// Generated client implementations.
 pub mod merchant_client {
     #![allow(
@@ -3077,6 +3089,30 @@ pub mod merchant_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.Merchant", "ListGreeters"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 用户把自己加入某商户。链路:app --用户token--> club后台 --club的ExtendToken-->
+        /// did.MerchantGranted.AddUsers(merchant=目标商户, users=\[登录用户\]).
+        ///
+        /// club 侧同样不叠鉴权(与 ListGreeters 一致):真正的门在 did 侧 ——
+        /// 目标商户必须把 **MERCHANT_GRANT_SCOPE_ADD_USERS** 这一项授权给 club,
+        /// 没给就是 PermissionDenied,不是静默成功。
+        pub async fn join(
+            &mut self,
+            request: impl tonic::IntoRequest<super::JoinMerchantReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Merchant/Join");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Merchant", "Join"));
             self.inner.unary(req, path, codec).await
         }
     }

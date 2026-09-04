@@ -149,14 +149,14 @@ class MerchantClient extends $grpc.Client {
   }
 
   $grpc.ResponseFuture<$0.Empty> addGrant(
-    $1.GrantReq request, {
+    $1.AddGrantReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$addGrant, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.Empty> removeGrant(
-    $1.GrantReq request, {
+    $1.RemoveGrantReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$removeGrant, request, options: options);
@@ -217,13 +217,13 @@ class MerchantClient extends $grpc.Client {
       '/hi.did.Merchant/ListGrants',
       ($0.Empty value) => value.writeToBuffer(),
       $1.ListGrantsResp.fromBuffer);
-  static final _$addGrant = $grpc.ClientMethod<$1.GrantReq, $0.Empty>(
+  static final _$addGrant = $grpc.ClientMethod<$1.AddGrantReq, $0.Empty>(
       '/hi.did.Merchant/AddGrant',
-      ($1.GrantReq value) => value.writeToBuffer(),
+      ($1.AddGrantReq value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
-  static final _$removeGrant = $grpc.ClientMethod<$1.GrantReq, $0.Empty>(
+  static final _$removeGrant = $grpc.ClientMethod<$1.RemoveGrantReq, $0.Empty>(
       '/hi.did.Merchant/RemoveGrant',
-      ($1.GrantReq value) => value.writeToBuffer(),
+      ($1.RemoveGrantReq value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
 }
 
@@ -316,19 +316,19 @@ abstract class MerchantServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
         ($1.ListGrantsResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.GrantReq, $0.Empty>(
+    $addMethod($grpc.ServiceMethod<$1.AddGrantReq, $0.Empty>(
         'AddGrant',
         addGrant_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.GrantReq.fromBuffer(value),
+        ($core.List<$core.int> value) => $1.AddGrantReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.GrantReq, $0.Empty>(
+    $addMethod($grpc.ServiceMethod<$1.RemoveGrantReq, $0.Empty>(
         'RemoveGrant',
         removeGrant_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.GrantReq.fromBuffer(value),
+        ($core.List<$core.int> value) => $1.RemoveGrantReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
   }
 
@@ -429,19 +429,20 @@ abstract class MerchantServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $0.Empty request);
 
   $async.Future<$0.Empty> addGrant_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.GrantReq> $request) async {
+      $grpc.ServiceCall $call, $async.Future<$1.AddGrantReq> $request) async {
     return addGrant($call, await $request);
   }
 
-  $async.Future<$0.Empty> addGrant($grpc.ServiceCall call, $1.GrantReq request);
+  $async.Future<$0.Empty> addGrant(
+      $grpc.ServiceCall call, $1.AddGrantReq request);
 
-  $async.Future<$0.Empty> removeGrant_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.GrantReq> $request) async {
+  $async.Future<$0.Empty> removeGrant_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.RemoveGrantReq> $request) async {
     return removeGrant($call, await $request);
   }
 
   $async.Future<$0.Empty> removeGrant(
-      $grpc.ServiceCall call, $1.GrantReq request);
+      $grpc.ServiceCall call, $1.RemoveGrantReq request);
 }
 
 /// 商户公开信息(免鉴权)。主体=商户对外可见的那部分。
@@ -751,15 +752,20 @@ abstract class OrderNotifyServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $1.MerchantNotifyReq request);
 }
 
-/// 跨商户读用户数据(**整个 service 走 requireGrant**)。
+/// 跨商户访问用户数据(**整个 service 的每个方法都先过授权校验**)。
 ///
 /// 与 Merchant 拆开而不是共用一个 `merchant` 字段:那样"空=自己免 grant / 非空=别家走
 /// grant"是**两条鉴权分支挤在一个方法里**,handler 里分支写岔就是静默跨商户读。
 /// 拆开之后,"要不要 grant"由 service 决定,不由某个字段的空值决定 ——
 /// 范式同 Merchant/MerchantManage、Gateway/GatewayAdmin。
 ///
-/// 授权方向:商户 A 执行 AddGrant(grantee=B) 后,B 才能用这里的方法读 A 名下的用户。
+/// 授权方向:商户 A 执行 AddGrant(grantee=B) 后,B 才能用这里的方法访问 A 名下的用户。
 /// 判据是 hi_merchant_grant 里 (merchant=A, grantee=B) 一行,授权方永远取自 token。
+///
+/// ⚠️ **有没有那一行不够,还要看那一行给了哪些授权项**(MerchantGrantScope):
+///    三个读方法要 READ_USERS,AddUsers 要 ADD_USERS。授权项与方法的对应关系写死在
+///    handler 的方法入口,**不由入参决定** —— 与"要不要 grant 由 service 决定"同一个道理:
+///    让调用方传"我要用哪一项",等于让它自己声明权限。
 @$pb.GrpcServiceName('hi.did.MerchantGranted')
 class MerchantGrantedClient extends $grpc.Client {
   /// The hostname for this service.
@@ -793,6 +799,23 @@ class MerchantGrantedClient extends $grpc.Client {
     return $createUnaryCall(_$listGreeters, request, options: options);
   }
 
+  /// 把用户加到别家商户名下(须 ADD_USERS)。
+  ///
+  /// 用途:club 的用户在 app 里"加入某商户" —— 链路是
+  ///   app --用户token--> club后台 --club的ExtendToken--> did.MerchantGranted.AddUsers。
+  /// 到了 did 这一侧,主体是**club 这个商户**,目标商户是入参里的 merchant,
+  /// 所以它和三个读方法是同一类事(跨商户),只是要的授权项不同,不单开 service。
+  ///
+  /// ⚠️ 用户是谁由 club 侧从**登录 token** 解出后填进 users,did 这一侧无从校验 ——
+  ///    这正是 ADD_USERS 要单独一项、且默认不给的原因:给了这一项,就等于允许 grantee
+  ///    替任意用户决定"加入我名下"。
+  $grpc.ResponseFuture<$0.Empty> addUsers(
+    $1.GrantedAddUsersReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$addUsers, request, options: options);
+  }
+
   // method descriptors
 
   static final _$getUser =
@@ -810,6 +833,10 @@ class MerchantGrantedClient extends $grpc.Client {
           '/hi.did.MerchantGranted/ListGreeters',
           ($1.GrantedListGreetersReq value) => value.writeToBuffer(),
           $1.ListUsersResp.fromBuffer);
+  static final _$addUsers = $grpc.ClientMethod<$1.GrantedAddUsersReq, $0.Empty>(
+      '/hi.did.MerchantGranted/AddUsers',
+      ($1.GrantedAddUsersReq value) => value.writeToBuffer(),
+      $0.Empty.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.did.MerchantGranted')
@@ -840,6 +867,14 @@ abstract class MerchantGrantedServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $1.GrantedListGreetersReq.fromBuffer(value),
         ($1.ListUsersResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.GrantedAddUsersReq, $0.Empty>(
+        'AddUsers',
+        addUsers_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $1.GrantedAddUsersReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
   }
 
   $async.Future<$1.UserExtensionUnit> getUser_Pre($grpc.ServiceCall $call,
@@ -865,4 +900,12 @@ abstract class MerchantGrantedServiceBase extends $grpc.Service {
 
   $async.Future<$1.ListUsersResp> listGreeters(
       $grpc.ServiceCall call, $1.GrantedListGreetersReq request);
+
+  $async.Future<$0.Empty> addUsers_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.GrantedAddUsersReq> $request) async {
+    return addUsers($call, await $request);
+  }
+
+  $async.Future<$0.Empty> addUsers(
+      $grpc.ServiceCall call, $1.GrantedAddUsersReq request);
 }

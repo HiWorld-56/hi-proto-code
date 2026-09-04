@@ -15,6 +15,22 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use merchantGrantScopeDescriptor instead')
+const MerchantGrantScope$json = {
+  '1': 'MerchantGrantScope',
+  '2': [
+    {'1': 'MERCHANT_GRANT_SCOPE_UNSPECIFIED', '2': 0},
+    {'1': 'MERCHANT_GRANT_SCOPE_READ_USERS', '2': 1},
+    {'1': 'MERCHANT_GRANT_SCOPE_ADD_USERS', '2': 2},
+  ],
+};
+
+/// Descriptor for `MerchantGrantScope`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List merchantGrantScopeDescriptor = $convert.base64Decode(
+    'ChJNZXJjaGFudEdyYW50U2NvcGUSJAogTUVSQ0hBTlRfR1JBTlRfU0NPUEVfVU5TUEVDSUZJRU'
+    'QQABIjCh9NRVJDSEFOVF9HUkFOVF9TQ09QRV9SRUFEX1VTRVJTEAESIgoeTUVSQ0hBTlRfR1JB'
+    'TlRfU0NPUEVfQUREX1VTRVJTEAI=');
+
 @$core.Deprecated('Use merchantInfoDescriptor instead')
 const MerchantInfo$json = {
   '1': 'MerchantInfo',
@@ -361,9 +377,9 @@ final $typed_data.Uint8List userExtensionUnitDescriptor = $convert.base64Decode(
     'VyEjMKBGluZm8YAiABKAsyGS5oaS5kaWQuVXNlckV4dGVuc2lvbkluZm9CBJC1GAJSBGluZm86'
     'BJi1GAI=');
 
-@$core.Deprecated('Use grantReqDescriptor instead')
-const GrantReq$json = {
-  '1': 'GrantReq',
+@$core.Deprecated('Use addGrantReqDescriptor instead')
+const AddGrantReq$json = {
+  '1': 'AddGrantReq',
   '2': [
     {
       '1': 'grantee',
@@ -376,6 +392,15 @@ const GrantReq$json = {
       '17': true
     },
     {'1': 'note', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'note', '17': true},
+    {
+      '1': 'scopes',
+      '3': 3,
+      '4': 3,
+      '5': 14,
+      '6': '.hi.did.MerchantGrantScope',
+      '8': {},
+      '10': 'scopes'
+    },
   ],
   '8': [
     {'1': '_grantee'},
@@ -383,10 +408,37 @@ const GrantReq$json = {
   ],
 };
 
-/// Descriptor for `GrantReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List grantReqDescriptor = $convert.base64Decode(
-    'CghHcmFudFJlcRIuCgdncmFudGVlGAEgASgJQg+6SAzIAQFyBzIFXlxTKyRIAFIHZ3JhbnRlZY'
-    'gBARIXCgRub3RlGAIgASgJSAFSBG5vdGWIAQFCCgoIX2dyYW50ZWVCBwoFX25vdGU=');
+/// Descriptor for `AddGrantReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List addGrantReqDescriptor = $convert.base64Decode(
+    'CgtBZGRHcmFudFJlcRIuCgdncmFudGVlGAEgASgJQg+6SAzIAQFyBzIFXlxTKyRIAFIHZ3Jhbn'
+    'RlZYgBARIXCgRub3RlGAIgASgJSAFSBG5vdGWIAQESPAoGc2NvcGVzGAMgAygOMhouaGkuZGlk'
+    'Lk1lcmNoYW50R3JhbnRTY29wZUIIukgFkgECCAFSBnNjb3Blc0IKCghfZ3JhbnRlZUIHCgVfbm'
+    '90ZQ==');
+
+@$core.Deprecated('Use removeGrantReqDescriptor instead')
+const RemoveGrantReq$json = {
+  '1': 'RemoveGrantReq',
+  '2': [
+    {
+      '1': 'grantee',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'grantee',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_grantee'},
+  ],
+};
+
+/// Descriptor for `RemoveGrantReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List removeGrantReqDescriptor = $convert.base64Decode(
+    'Cg5SZW1vdmVHcmFudFJlcRIuCgdncmFudGVlGAEgASgJQg+6SAzIAQFyBzIFXlxTKyRIAFIHZ3'
+    'JhbnRlZYgBAUIKCghfZ3JhbnRlZQ==');
 
 @$core.Deprecated('Use grantUnitDescriptor instead')
 const GrantUnit$json = {
@@ -421,6 +473,15 @@ const GrantUnit$json = {
       '10': 'createdAt',
       '17': true
     },
+    {
+      '1': 'scopes',
+      '3': 4,
+      '4': 3,
+      '5': 14,
+      '6': '.hi.did.MerchantGrantScope',
+      '8': {},
+      '10': 'scopes'
+    },
   ],
   '7': {},
   '8': [
@@ -433,7 +494,8 @@ const GrantUnit$json = {
 final $typed_data.Uint8List grantUnitDescriptor = $convert.base64Decode(
     'CglHcmFudFVuaXQSKgoHZ3JhbnRlZRgBIAEoCzIKLmhpLkVudGl0eUIEkLUYAVIHZ3JhbnRlZR'
     'IdCgRub3RlGAIgASgJQgSQtRgDSABSBG5vdGWIAQESKAoKY3JlYXRlZF9hdBgDIAEoA0IEkLUY'
-    'A0gBUgljcmVhdGVkQXSIAQE6BJi1GANCBwoFX25vdGVCDQoLX2NyZWF0ZWRfYXQ=');
+    'A0gBUgljcmVhdGVkQXSIAQESOAoGc2NvcGVzGAQgAygOMhouaGkuZGlkLk1lcmNoYW50R3Jhbn'
+    'RTY29wZUIEkLUYA1IGc2NvcGVzOgSYtRgDQgcKBV9ub3RlQg0KC19jcmVhdGVkX2F0');
 
 @$core.Deprecated('Use listGrantsRespDescriptor instead')
 const ListGrantsResp$json = {
@@ -579,6 +641,33 @@ final $typed_data.Uint8List grantedListUsersReqDescriptor = $convert.base64Decod
     'RIAFIIbWVyY2hhbnSIAQESFwoEdXNlchgCIAEoCUgBUgR1c2VyiAEBEi4KCnBhZ2luYXRpb24Y'
     'AyABKAsyDi5oaS5QYWdpbmF0aW9uUgpwYWdpbmF0aW9uQgsKCV9tZXJjaGFudEIHCgVfdXNlcg'
     '==');
+
+@$core.Deprecated('Use grantedAddUsersReqDescriptor instead')
+const GrantedAddUsersReq$json = {
+  '1': 'GrantedAddUsersReq',
+  '2': [
+    {
+      '1': 'merchant',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'merchant',
+      '17': true
+    },
+    {'1': 'users', '3': 2, '4': 3, '5': 9, '8': {}, '10': 'users'},
+  ],
+  '8': [
+    {'1': '_merchant'},
+  ],
+};
+
+/// Descriptor for `GrantedAddUsersReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List grantedAddUsersReqDescriptor = $convert.base64Decode(
+    'ChJHcmFudGVkQWRkVXNlcnNSZXESMAoIbWVyY2hhbnQYASABKAlCD7pIDMgBAXIHMgVeXFMrJE'
+    'gAUghtZXJjaGFudIgBARIeCgV1c2VycxgCIAMoCUIIukgFkgECCAFSBXVzZXJzQgsKCV9tZXJj'
+    'aGFudA==');
 
 @$core.Deprecated('Use grantedListGreetersReqDescriptor instead')
 const GrantedListGreetersReq$json = {

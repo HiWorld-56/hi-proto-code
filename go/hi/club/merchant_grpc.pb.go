@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	Merchant_List_FullMethodName         = "/hi.club.Merchant/List"
 	Merchant_ListGreeters_FullMethodName = "/hi.club.Merchant/ListGreeters"
+	Merchant_Join_FullMethodName         = "/hi.club.Merchant/Join"
 )
 
 // MerchantClient is the client API for Merchant service.
@@ -38,6 +39,13 @@ type MerchantClient interface {
 	// 必须由目标商户先授权给 club(did 侧 requireGrant 校验)。
 	// club 侧不再叠鉴权:所有登录用户都能调。
 	ListGreeters(ctx context.Context, in *ListGreetersReq, opts ...grpc.CallOption) (*did.ListUsersResp, error)
+	// 用户把自己加入某商户。链路:app --用户token--> club后台 --club的ExtendToken-->
+	// did.MerchantGranted.AddUsers(merchant=目标商户, users=[登录用户]).
+	//
+	// club 侧同样不叠鉴权(与 ListGreeters 一致):真正的门在 did 侧 ——
+	// 目标商户必须把 **MERCHANT_GRANT_SCOPE_ADD_USERS** 这一项授权给 club,
+	// 没给就是 PermissionDenied,不是静默成功。
+	Join(ctx context.Context, in *JoinMerchantReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type merchantClient struct {
@@ -68,6 +76,16 @@ func (c *merchantClient) ListGreeters(ctx context.Context, in *ListGreetersReq, 
 	return out, nil
 }
 
+func (c *merchantClient) Join(ctx context.Context, in *JoinMerchantReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Merchant_Join_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MerchantServer is the server API for Merchant service.
 // All implementations should embed UnimplementedMerchantServer
 // for forward compatibility.
@@ -80,6 +98,13 @@ type MerchantServer interface {
 	// 必须由目标商户先授权给 club(did 侧 requireGrant 校验)。
 	// club 侧不再叠鉴权:所有登录用户都能调。
 	ListGreeters(context.Context, *ListGreetersReq) (*did.ListUsersResp, error)
+	// 用户把自己加入某商户。链路:app --用户token--> club后台 --club的ExtendToken-->
+	// did.MerchantGranted.AddUsers(merchant=目标商户, users=[登录用户]).
+	//
+	// club 侧同样不叠鉴权(与 ListGreeters 一致):真正的门在 did 侧 ——
+	// 目标商户必须把 **MERCHANT_GRANT_SCOPE_ADD_USERS** 这一项授权给 club,
+	// 没给就是 PermissionDenied,不是静默成功。
+	Join(context.Context, *JoinMerchantReq) (*emptypb.Empty, error)
 }
 
 // UnimplementedMerchantServer should be embedded to have
@@ -94,6 +119,9 @@ func (UnimplementedMerchantServer) List(context.Context, *emptypb.Empty) (*did.M
 }
 func (UnimplementedMerchantServer) ListGreeters(context.Context, *ListGreetersReq) (*did.ListUsersResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListGreeters not implemented")
+}
+func (UnimplementedMerchantServer) Join(context.Context, *JoinMerchantReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Join not implemented")
 }
 func (UnimplementedMerchantServer) testEmbeddedByValue() {}
 
@@ -151,6 +179,24 @@ func _Merchant_ListGreeters_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Merchant_Join_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(JoinMerchantReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MerchantServer).Join(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Merchant_Join_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MerchantServer).Join(ctx, req.(*JoinMerchantReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Merchant_ServiceDesc is the grpc.ServiceDesc for Merchant service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -165,6 +211,10 @@ var Merchant_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListGreeters",
 			Handler:    _Merchant_ListGreeters_Handler,
+		},
+		{
+			MethodName: "Join",
+			Handler:    _Merchant_Join_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
