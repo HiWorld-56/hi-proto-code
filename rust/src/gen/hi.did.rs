@@ -3234,12 +3234,12 @@ pub struct InviteCodeVerifyReq {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MerchantManageListReq {
-    /// 按商户名称精确查询;不传=不筛
+    /// 按商户名称模糊查询;不传=不筛
     #[prost(string, optional, tag = "1")]
     pub name: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
-    /// 按商户 DID 精确查询;不传=不筛
+    /// 按商户 DID 模糊查询;不传=不筛
     #[prost(string, optional, tag = "3")]
     pub did: ::core::option::Option<::prost::alloc::string::String>,
 }

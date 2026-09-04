@@ -337,9 +337,9 @@ func (x *InviteCodeVerifyReq) GetDid() string {
 
 type MerchantManageListReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          *string                `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"` // 按商户名称精确查询;不传=不筛
+	Name          *string                `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"` // 按商户名称模糊查询;不传=不筛
 	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
-	Did           *string                `protobuf:"bytes,3,opt,name=did,proto3,oneof" json:"did,omitempty"` // 按商户 DID 精确查询;不传=不筛
+	Did           *string                `protobuf:"bytes,3,opt,name=did,proto3,oneof" json:"did,omitempty"` // 按商户 DID 模糊查询;不传=不筛
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
