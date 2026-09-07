@@ -13475,7 +13475,7 @@ impl serde::Serialize for MarketSellerMaster {
         if self.update.is_some() {
             len += 1;
         }
-        if self.user_moment.is_some() {
+        if self.moment.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.club.MarketSellerMaster", len)?;
@@ -13496,8 +13496,8 @@ impl serde::Serialize for MarketSellerMaster {
             #[allow(clippy::needless_borrows_for_generic_args)]
             struct_ser.serialize_field("update", ToString::to_string(&v).as_str())?;
         }
-        if let Some(v) = self.user_moment.as_ref() {
-            struct_ser.serialize_field("userMoment", v)?;
+        if let Some(v) = self.moment.as_ref() {
+            struct_ser.serialize_field("moment", v)?;
         }
         struct_ser.end()
     }
@@ -13514,8 +13514,7 @@ impl<'de> serde::Deserialize<'de> for MarketSellerMaster {
             "name",
             "avatar",
             "update",
-            "user_moment",
-            "userMoment",
+            "moment",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -13525,7 +13524,7 @@ impl<'de> serde::Deserialize<'de> for MarketSellerMaster {
             Name,
             Avatar,
             Update,
-            UserMoment,
+            Moment,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -13552,7 +13551,7 @@ impl<'de> serde::Deserialize<'de> for MarketSellerMaster {
                             "name" => Ok(GeneratedField::Name),
                             "avatar" => Ok(GeneratedField::Avatar),
                             "update" => Ok(GeneratedField::Update),
-                            "userMoment" | "user_moment" => Ok(GeneratedField::UserMoment),
+                            "moment" => Ok(GeneratedField::Moment),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -13577,7 +13576,7 @@ impl<'de> serde::Deserialize<'de> for MarketSellerMaster {
                 let mut name__ = None;
                 let mut avatar__ = None;
                 let mut update__ = None;
-                let mut user_moment__ = None;
+                let mut moment__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Type => {
@@ -13612,11 +13611,11 @@ impl<'de> serde::Deserialize<'de> for MarketSellerMaster {
                                 map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
-                        GeneratedField::UserMoment => {
-                            if user_moment__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("userMoment"));
+                        GeneratedField::Moment => {
+                            if moment__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("moment"));
                             }
-                            user_moment__ = map_.next_value()?;
+                            moment__ = map_.next_value()?;
                         }
                     }
                 }
@@ -13626,7 +13625,7 @@ impl<'de> serde::Deserialize<'de> for MarketSellerMaster {
                     name: name__,
                     avatar: avatar__,
                     update: update__,
-                    user_moment: user_moment__,
+                    moment: moment__,
                 })
             }
         }

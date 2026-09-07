@@ -864,13 +864,13 @@ const MarketSellerMaster$json = {
       '17': true
     },
     {
-      '1': 'user_moment',
+      '1': 'moment',
       '3': 6,
       '4': 1,
       '5': 9,
       '8': {},
       '9': 4,
-      '10': 'userMoment',
+      '10': 'moment',
       '17': true
     },
   ],
@@ -880,7 +880,7 @@ const MarketSellerMaster$json = {
     {'1': '_name'},
     {'1': '_avatar'},
     {'1': '_update'},
-    {'1': '_user_moment'},
+    {'1': '_moment'},
   ],
 };
 
@@ -889,9 +889,8 @@ final $typed_data.Uint8List marketSellerMasterDescriptor = $convert.base64Decode
     'ChJNYXJrZXRTZWxsZXJNYXN0ZXISHQoEdHlwZRgBIAEoCUIEkLUYAUgAUgR0eXBliAEBEhYKA2'
     'RpZBgCIAEoCUIEkLUYAVIDZGlkEh0KBG5hbWUYAyABKAlCBJC1GAFIAVIEbmFtZYgBARIhCgZh'
     'dmF0YXIYBCABKAlCBJC1GAFIAlIGYXZhdGFyiAEBEiEKBnVwZGF0ZRgFIAEoA0IEkLUYAUgDUg'
-    'Z1cGRhdGWIAQESKgoLdXNlcl9tb21lbnQYBiABKAlCBJC1GAFIBFIKdXNlck1vbWVudIgBAToE'
-    'mLUYAUIHCgVfdHlwZUIHCgVfbmFtZUIJCgdfYXZhdGFyQgkKB191cGRhdGVCDgoMX3VzZXJfbW'
-    '9tZW50');
+    'Z1cGRhdGWIAQESIQoGbW9tZW50GAYgASgJQgSQtRgBSARSBm1vbWVudIgBAToEmLUYAUIHCgVf'
+    'dHlwZUIHCgVfbmFtZUIJCgdfYXZhdGFyQgkKB191cGRhdGVCCQoHX21vbWVudA==');
 
 @$core.Deprecated('Use marketSellerDescriptor instead')
 const MarketSeller$json = {

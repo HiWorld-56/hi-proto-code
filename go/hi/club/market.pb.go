@@ -1286,7 +1286,7 @@ type MarketSellerMaster struct {
 	Update *int64                 `protobuf:"varint,5,opt,name=update,proto3,oneof" json:"update,omitempty"`
 	// 有在售挂牌的用户主人在目录中公开的动态,取自 hi_chat_user_moment。
 	// 仅 type=user 时返回;未设置或已清空时不传。其它用户动态接口仍保持关系可见。
-	UserMoment    *string `protobuf:"bytes,6,opt,name=user_moment,json=userMoment,proto3,oneof" json:"user_moment,omitempty"`
+	Moment        *string `protobuf:"bytes,6,opt,name=moment,proto3,oneof" json:"moment,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1356,9 +1356,9 @@ func (x *MarketSellerMaster) GetUpdate() int64 {
 	return 0
 }
 
-func (x *MarketSellerMaster) GetUserMoment() string {
-	if x != nil && x.UserMoment != nil {
-		return *x.UserMoment
+func (x *MarketSellerMaster) GetMoment() string {
+	if x != nil && x.Moment != nil {
+		return *x.Moment
 	}
 	return ""
 }
@@ -4188,20 +4188,19 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\v_auto_renewB\f\n" +
 	"\n" +
 	"_initiatorB\x0e\n" +
-	"\f_plugin_uuid\"\x9a\x02\n" +
+	"\f_plugin_uuid\"\x8c\x02\n" +
 	"\x12MarketSellerMaster\x12\x1d\n" +
 	"\x04type\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x04type\x88\x01\x01\x12\x16\n" +
 	"\x03did\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01R\x03did\x12\x1d\n" +
 	"\x04name\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x04name\x88\x01\x01\x12!\n" +
 	"\x06avatar\x18\x04 \x01(\tB\x04\x90\xb5\x18\x01H\x02R\x06avatar\x88\x01\x01\x12!\n" +
-	"\x06update\x18\x05 \x01(\x03B\x04\x90\xb5\x18\x01H\x03R\x06update\x88\x01\x01\x12*\n" +
-	"\vuser_moment\x18\x06 \x01(\tB\x04\x90\xb5\x18\x01H\x04R\n" +
-	"userMoment\x88\x01\x01:\x04\x98\xb5\x18\x01B\a\n" +
+	"\x06update\x18\x05 \x01(\x03B\x04\x90\xb5\x18\x01H\x03R\x06update\x88\x01\x01\x12!\n" +
+	"\x06moment\x18\x06 \x01(\tB\x04\x90\xb5\x18\x01H\x04R\x06moment\x88\x01\x01:\x04\x98\xb5\x18\x01B\a\n" +
 	"\x05_typeB\a\n" +
 	"\x05_nameB\t\n" +
 	"\a_avatarB\t\n" +
-	"\a_updateB\x0e\n" +
-	"\f_user_moment\"\xbb\x01\n" +
+	"\a_updateB\t\n" +
+	"\a_moment\"\xbb\x01\n" +
 	"\fMarketSeller\x129\n" +
 	"\x06master\x18\x01 \x01(\v2\x1b.hi.club.MarketSellerMasterB\x04\x90\xb5\x18\x01R\x06master\x12(\n" +
 	"\x06agents\x18\x02 \x03(\v2\n" +

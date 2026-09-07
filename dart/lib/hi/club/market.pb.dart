@@ -966,7 +966,7 @@ class MarketSellerMaster extends $pb.GeneratedMessage {
     $core.String? name,
     $core.String? avatar,
     $fixnum.Int64? update,
-    $core.String? userMoment,
+    $core.String? moment,
   }) {
     final result = create();
     if (type != null) result.type = type;
@@ -974,7 +974,7 @@ class MarketSellerMaster extends $pb.GeneratedMessage {
     if (name != null) result.name = name;
     if (avatar != null) result.avatar = avatar;
     if (update != null) result.update = update;
-    if (userMoment != null) result.userMoment = userMoment;
+    if (moment != null) result.moment = moment;
     return result;
   }
 
@@ -996,7 +996,7 @@ class MarketSellerMaster extends $pb.GeneratedMessage {
     ..aOS(3, _omitFieldNames ? '' : 'name')
     ..aOS(4, _omitFieldNames ? '' : 'avatar')
     ..aInt64(5, _omitFieldNames ? '' : 'update')
-    ..aOS(6, _omitFieldNames ? '' : 'userMoment')
+    ..aOS(6, _omitFieldNames ? '' : 'moment')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1066,13 +1066,13 @@ class MarketSellerMaster extends $pb.GeneratedMessage {
   /// 有在售挂牌的用户主人在目录中公开的动态,取自 hi_chat_user_moment。
   /// 仅 type=user 时返回;未设置或已清空时不传。其它用户动态接口仍保持关系可见。
   @$pb.TagNumber(6)
-  $core.String get userMoment => $_getSZ(5);
+  $core.String get moment => $_getSZ(5);
   @$pb.TagNumber(6)
-  set userMoment($core.String value) => $_setString(5, value);
+  set moment($core.String value) => $_setString(5, value);
   @$pb.TagNumber(6)
-  $core.bool hasUserMoment() => $_has(5);
+  $core.bool hasMoment() => $_has(5);
   @$pb.TagNumber(6)
-  void clearUserMoment() => $_clearField(6);
+  void clearMoment() => $_clearField(6);
 }
 
 class MarketSeller extends $pb.GeneratedMessage {

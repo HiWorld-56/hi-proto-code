@@ -6500,7 +6500,7 @@ pub struct MarketSellerMaster {
     /// 有在售挂牌的用户主人在目录中公开的动态,取自 hi_chat_user_moment。
     /// 仅 type=user 时返回;未设置或已清空时不传。其它用户动态接口仍保持关系可见。
     #[prost(string, optional, tag = "6")]
-    pub user_moment: ::core::option::Option<::prost::alloc::string::String>,
+    pub moment: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MarketSeller {
