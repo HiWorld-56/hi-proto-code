@@ -16,8 +16,8 @@ class MarketDirectoryStub(object):
 
     市场公开目录(免鉴权):逛市场不需要登录。
 
-    ⚠️ **公开面不吐 master did。** `AgentDirectory.GetAgentMaster` 当初就是因为
-    「不该随便让人反查某机器人的主人」被删掉的。挂牌页只吐机器人 Entity + 公开文案。
+    ListSellers 公开有在售挂牌的主人资料及用户动态;其它挂牌页只吐机器人 Entity + 公开文案。
+    不提供任意机器人 DID 反查主人的接口。
     """
 
     def __init__(self, channel):
@@ -57,8 +57,8 @@ class MarketDirectoryServicer(object):
 
     市场公开目录(免鉴权):逛市场不需要登录。
 
-    ⚠️ **公开面不吐 master did。** `AgentDirectory.GetAgentMaster` 当初就是因为
-    「不该随便让人反查某机器人的主人」被删掉的。挂牌页只吐机器人 Entity + 公开文案。
+    ListSellers 公开有在售挂牌的主人资料及用户动态;其它挂牌页只吐机器人 Entity + 公开文案。
+    不提供任意机器人 DID 反查主人的接口。
     """
 
     def SearchListings(self, request, context):
@@ -125,8 +125,8 @@ class MarketDirectory(object):
 
     市场公开目录(免鉴权):逛市场不需要登录。
 
-    ⚠️ **公开面不吐 master did。** `AgentDirectory.GetAgentMaster` 当初就是因为
-    「不该随便让人反查某机器人的主人」被删掉的。挂牌页只吐机器人 Entity + 公开文案。
+    ListSellers 公开有在售挂牌的主人资料及用户动态;其它挂牌页只吐机器人 Entity + 公开文案。
+    不提供任意机器人 DID 反查主人的接口。
     """
 
     @staticmethod

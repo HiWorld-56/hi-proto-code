@@ -957,9 +957,127 @@ class MarketGrantView extends $pb.GeneratedMessage {
 /// ⚠️ **只公开"有在售挂牌"的那些机器人的主人** —— 开店即自愿露出。
 ///    这不是一个"任意 did → 查它主人"的反查口子(那个当年正是因为泄露归属被删掉的);
 ///    没挂牌的机器人不会出现在这里。
+/// 卖家目录中的主人资料。保留 Entity 的字段布局,动态仅在这个公开目录视图扩展,
+/// 不加入跨业务共用的 hi.Entity,也不复用含本人私有字段的 UserInfo。
+class MarketSellerMaster extends $pb.GeneratedMessage {
+  factory MarketSellerMaster({
+    $core.String? type,
+    $core.String? did,
+    $core.String? name,
+    $core.String? avatar,
+    $fixnum.Int64? update,
+    $core.String? userMoment,
+  }) {
+    final result = create();
+    if (type != null) result.type = type;
+    if (did != null) result.did = did;
+    if (name != null) result.name = name;
+    if (avatar != null) result.avatar = avatar;
+    if (update != null) result.update = update;
+    if (userMoment != null) result.userMoment = userMoment;
+    return result;
+  }
+
+  MarketSellerMaster._();
+
+  factory MarketSellerMaster.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MarketSellerMaster.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MarketSellerMaster',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'type')
+    ..aOS(2, _omitFieldNames ? '' : 'did')
+    ..aOS(3, _omitFieldNames ? '' : 'name')
+    ..aOS(4, _omitFieldNames ? '' : 'avatar')
+    ..aInt64(5, _omitFieldNames ? '' : 'update')
+    ..aOS(6, _omitFieldNames ? '' : 'userMoment')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MarketSellerMaster clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MarketSellerMaster copyWith(void Function(MarketSellerMaster) updates) =>
+      super.copyWith((message) => updates(message as MarketSellerMaster))
+          as MarketSellerMaster;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MarketSellerMaster create() => MarketSellerMaster._();
+  @$core.override
+  MarketSellerMaster createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MarketSellerMaster getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MarketSellerMaster>(create);
+  static MarketSellerMaster? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get type => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set type($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasType() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearType() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get did => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set did($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasDid() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearDid() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get name => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set name($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasName() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearName() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get avatar => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set avatar($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasAvatar() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearAvatar() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $fixnum.Int64 get update => $_getI64(4);
+  @$pb.TagNumber(5)
+  set update($fixnum.Int64 value) => $_setInt64(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasUpdate() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearUpdate() => $_clearField(5);
+
+  /// 有在售挂牌的用户主人在目录中公开的动态,取自 hi_chat_user_moment。
+  /// 仅 type=user 时返回;未设置或已清空时不传。其它用户动态接口仍保持关系可见。
+  @$pb.TagNumber(6)
+  $core.String get userMoment => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set userMoment($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasUserMoment() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearUserMoment() => $_clearField(6);
+}
+
 class MarketSeller extends $pb.GeneratedMessage {
   factory MarketSeller({
-    $1.Entity? master,
+    MarketSellerMaster? master,
     $core.Iterable<$1.Entity>? agents,
     $core.int? listingCount,
   }) {
@@ -983,8 +1101,8 @@ class MarketSeller extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'MarketSeller',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOM<$1.Entity>(1, _omitFieldNames ? '' : 'master',
-        subBuilder: $1.Entity.create)
+    ..aOM<MarketSellerMaster>(1, _omitFieldNames ? '' : 'master',
+        subBuilder: MarketSellerMaster.create)
     ..pPM<$1.Entity>(2, _omitFieldNames ? '' : 'agents',
         subBuilder: $1.Entity.create)
     ..aI(3, _omitFieldNames ? '' : 'listingCount')
@@ -1010,15 +1128,15 @@ class MarketSeller extends $pb.GeneratedMessage {
   static MarketSeller? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $1.Entity get master => $_getN(0);
+  MarketSellerMaster get master => $_getN(0);
   @$pb.TagNumber(1)
-  set master($1.Entity value) => $_setField(1, value);
+  set master(MarketSellerMaster value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasMaster() => $_has(0);
   @$pb.TagNumber(1)
   void clearMaster() => $_clearField(1);
   @$pb.TagNumber(1)
-  $1.Entity ensureMaster() => $_ensure(0);
+  MarketSellerMaster ensureMaster() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $pb.PbList<$1.Entity> get agents => $_getList(1);

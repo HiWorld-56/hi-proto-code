@@ -6483,11 +6483,30 @@ pub struct MarketGrantView {
 /// ⚠️ **只公开"有在售挂牌"的那些机器人的主人** —— 开店即自愿露出。
 /// 这不是一个"任意 did → 查它主人"的反查口子(那个当年正是因为泄露归属被删掉的);
 /// 没挂牌的机器人不会出现在这里。
+/// 卖家目录中的主人资料。保留 Entity 的字段布局,动态仅在这个公开目录视图扩展,
+/// 不加入跨业务共用的 hi.Entity,也不复用含本人私有字段的 UserInfo。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MarketSellerMaster {
+    #[prost(string, optional, tag = "1")]
+    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, tag = "2")]
+    pub did: ::prost::alloc::string::String,
+    #[prost(string, optional, tag = "3")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub avatar: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "5")]
+    pub update: ::core::option::Option<i64>,
+    /// 有在售挂牌的用户主人在目录中公开的动态,取自 hi_chat_user_moment。
+    /// 仅 type=user 时返回;未设置或已清空时不传。其它用户动态接口仍保持关系可见。
+    #[prost(string, optional, tag = "6")]
+    pub user_moment: ::core::option::Option<::prost::alloc::string::String>,
+}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MarketSeller {
-    /// 卖家(主人)
+    /// 卖家(主人);无主机器人不传
     #[prost(message, optional, tag = "1")]
-    pub master: ::core::option::Option<super::Entity>,
+    pub master: ::core::option::Option<MarketSellerMaster>,
     /// 他名下**有在售挂牌**的摊位
     #[prost(message, repeated, tag = "2")]
     pub agents: ::prost::alloc::vec::Vec<super::Entity>,
@@ -7550,8 +7569,8 @@ pub mod market_directory_client {
     use tonic::codegen::http::Uri;
     /// 市场公开目录(免鉴权):逛市场不需要登录。
     ///
-    /// ⚠️ **公开面不吐 master did。** `AgentDirectory.GetAgentMaster` 当初就是因为
-    /// 「不该随便让人反查某机器人的主人」被删掉的。挂牌页只吐机器人 Entity + 公开文案。
+    /// ListSellers 公开有在售挂牌的主人资料及用户动态;其它挂牌页只吐机器人 Entity + 公开文案。
+    /// 不提供任意机器人 DID 反查主人的接口。
     #[derive(Debug, Clone)]
     pub struct MarketDirectoryClient<T> {
         inner: tonic::client::Grpc<T>,

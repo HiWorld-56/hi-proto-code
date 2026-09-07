@@ -33,9 +33,8 @@ const (
 //
 // 市场公开目录(免鉴权):逛市场不需要登录。
 //
-// ⚠️ **公开面不吐 master did。** `AgentDirectory.GetAgentMaster` 当初就是因为
-//
-//	「不该随便让人反查某机器人的主人」被删掉的。挂牌页只吐机器人 Entity + 公开文案。
+// ListSellers 公开有在售挂牌的主人资料及用户动态;其它挂牌页只吐机器人 Entity + 公开文案。
+// 不提供任意机器人 DID 反查主人的接口。
 type MarketDirectoryClient interface {
 	SearchListings(ctx context.Context, in *SearchListingsReq, opts ...grpc.CallOption) (*SearchListingsResp, error)
 	ListSellers(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*ListSellersResp, error)
@@ -97,9 +96,8 @@ func (c *marketDirectoryClient) GetListing(ctx context.Context, in *GetListingRe
 //
 // 市场公开目录(免鉴权):逛市场不需要登录。
 //
-// ⚠️ **公开面不吐 master did。** `AgentDirectory.GetAgentMaster` 当初就是因为
-//
-//	「不该随便让人反查某机器人的主人」被删掉的。挂牌页只吐机器人 Entity + 公开文案。
+// ListSellers 公开有在售挂牌的主人资料及用户动态;其它挂牌页只吐机器人 Entity + 公开文案。
+// 不提供任意机器人 DID 反查主人的接口。
 type MarketDirectoryServer interface {
 	SearchListings(context.Context, *SearchListingsReq) (*SearchListingsResp, error)
 	ListSellers(context.Context, *hi.Pagination) (*ListSellersResp, error)

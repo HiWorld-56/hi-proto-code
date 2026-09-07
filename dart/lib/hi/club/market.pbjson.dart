@@ -818,6 +818,81 @@ final $typed_data.Uint8List marketGrantViewDescriptor = $convert.base64Decode(
     'lkZWRfYXRCDwoNX2luc3RhbGxlZF9hdEINCgtfYXV0b19yZW5ld0IMCgpfaW5pdGlhdG9yQg4K'
     'DF9wbHVnaW5fdXVpZA==');
 
+@$core.Deprecated('Use marketSellerMasterDescriptor instead')
+const MarketSellerMaster$json = {
+  '1': 'MarketSellerMaster',
+  '2': [
+    {
+      '1': 'type',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'type',
+      '17': true
+    },
+    {'1': 'did', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'did'},
+    {
+      '1': 'name',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'name',
+      '17': true
+    },
+    {
+      '1': 'avatar',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'avatar',
+      '17': true
+    },
+    {
+      '1': 'update',
+      '3': 5,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 3,
+      '10': 'update',
+      '17': true
+    },
+    {
+      '1': 'user_moment',
+      '3': 6,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 4,
+      '10': 'userMoment',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_type'},
+    {'1': '_name'},
+    {'1': '_avatar'},
+    {'1': '_update'},
+    {'1': '_user_moment'},
+  ],
+};
+
+/// Descriptor for `MarketSellerMaster`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List marketSellerMasterDescriptor = $convert.base64Decode(
+    'ChJNYXJrZXRTZWxsZXJNYXN0ZXISHQoEdHlwZRgBIAEoCUIEkLUYAUgAUgR0eXBliAEBEhYKA2'
+    'RpZBgCIAEoCUIEkLUYAVIDZGlkEh0KBG5hbWUYAyABKAlCBJC1GAFIAVIEbmFtZYgBARIhCgZh'
+    'dmF0YXIYBCABKAlCBJC1GAFIAlIGYXZhdGFyiAEBEiEKBnVwZGF0ZRgFIAEoA0IEkLUYAUgDUg'
+    'Z1cGRhdGWIAQESKgoLdXNlcl9tb21lbnQYBiABKAlCBJC1GAFIBFIKdXNlck1vbWVudIgBAToE'
+    'mLUYAUIHCgVfdHlwZUIHCgVfbmFtZUIJCgdfYXZhdGFyQgkKB191cGRhdGVCDgoMX3VzZXJfbW'
+    '9tZW50');
+
 @$core.Deprecated('Use marketSellerDescriptor instead')
 const MarketSeller$json = {
   '1': 'MarketSeller',
@@ -827,7 +902,7 @@ const MarketSeller$json = {
       '3': 1,
       '4': 1,
       '5': 11,
-      '6': '.hi.Entity',
+      '6': '.hi.club.MarketSellerMaster',
       '8': {},
       '10': 'master'
     },
@@ -859,10 +934,10 @@ const MarketSeller$json = {
 
 /// Descriptor for `MarketSeller`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List marketSellerDescriptor = $convert.base64Decode(
-    'CgxNYXJrZXRTZWxsZXISKAoGbWFzdGVyGAEgASgLMgouaGkuRW50aXR5QgSQtRgBUgZtYXN0ZX'
-    'ISKAoGYWdlbnRzGAIgAygLMgouaGkuRW50aXR5QgSQtRgBUgZhZ2VudHMSLgoNbGlzdGluZ19j'
-    'b3VudBgDIAEoBUIEkLUYAUgAUgxsaXN0aW5nQ291bnSIAQE6BJi1GAFCEAoOX2xpc3RpbmdfY2'
-    '91bnQ=');
+    'CgxNYXJrZXRTZWxsZXISOQoGbWFzdGVyGAEgASgLMhsuaGkuY2x1Yi5NYXJrZXRTZWxsZXJNYX'
+    'N0ZXJCBJC1GAFSBm1hc3RlchIoCgZhZ2VudHMYAiADKAsyCi5oaS5FbnRpdHlCBJC1GAFSBmFn'
+    'ZW50cxIuCg1saXN0aW5nX2NvdW50GAMgASgFQgSQtRgBSABSDGxpc3RpbmdDb3VudIgBAToEmL'
+    'UYAUIQCg5fbGlzdGluZ19jb3VudA==');
 
 @$core.Deprecated('Use listSellersRespDescriptor instead')
 const ListSellersResp$json = {
