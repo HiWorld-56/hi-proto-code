@@ -92,6 +92,80 @@ class ListGreetersReq extends $pb.GeneratedMessage {
   $3.Pagination ensurePagination() => $_ensure(1);
 }
 
+/// 列某商户名下的用户。
+///
+/// ⚠️ merchant **必填**,与 did 侧同名字段不同语义:did 那边"不传=自己",因为调用者本身
+///    就是商户(ExtendToken 解出);club 的调用者是普通用户、不是商户,"自己"无从谈起。
+///    故这里不照搬 hi.did.ListUsersReq —— 同名字段两种语义,是最容易出事的复用。
+class ListMerchantUsersReq extends $pb.GeneratedMessage {
+  factory ListMerchantUsersReq({
+    $core.String? merchant,
+    $3.Pagination? pagination,
+  }) {
+    final result = create();
+    if (merchant != null) result.merchant = merchant;
+    if (pagination != null) result.pagination = pagination;
+    return result;
+  }
+
+  ListMerchantUsersReq._();
+
+  factory ListMerchantUsersReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListMerchantUsersReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListMerchantUsersReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'merchant')
+    ..aOM<$3.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $3.Pagination.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListMerchantUsersReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListMerchantUsersReq copyWith(void Function(ListMerchantUsersReq) updates) =>
+      super.copyWith((message) => updates(message as ListMerchantUsersReq))
+          as ListMerchantUsersReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListMerchantUsersReq create() => ListMerchantUsersReq._();
+  @$core.override
+  ListMerchantUsersReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListMerchantUsersReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListMerchantUsersReq>(create);
+  static ListMerchantUsersReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get merchant => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set merchant($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasMerchant() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearMerchant() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $3.Pagination get pagination => $_getN(1);
+  @$pb.TagNumber(2)
+  set pagination($3.Pagination value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPagination() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPagination() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $3.Pagination ensurePagination() => $_ensure(1);
+}
+
 /// 用户把**自己**加入某商户。
 ///
 /// ⚠️ **没有 user 字段,且永远不要加** —— 用户 did 恒取自登录 token。

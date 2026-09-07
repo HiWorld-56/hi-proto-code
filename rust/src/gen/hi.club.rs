@@ -2938,6 +2938,19 @@ pub struct ListGreetersReq {
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
+/// 列某商户名下的用户。
+///
+/// ⚠️ merchant **必填**,与 did 侧同名字段不同语义:did 那边"不传=自己",因为调用者本身
+/// 就是商户(ExtendToken 解出);club 的调用者是普通用户、不是商户,"自己"无从谈起。
+/// 故这里不照搬 hi.did.ListUsersReq —— 同名字段两种语义,是最容易出事的复用。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListMerchantUsersReq {
+    /// 目标商户 did
+    #[prost(string, optional, tag = "1")]
+    pub merchant: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
 /// 用户把**自己**加入某商户。
 ///
 /// ⚠️ **没有 user 字段,且永远不要加** —— 用户 did 恒取自登录 token。
@@ -3089,6 +3102,30 @@ pub mod merchant_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.Merchant", "ListGreeters"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_users(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListMerchantUsersReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::did::ListUsersResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Merchant/ListUsers",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Merchant", "ListUsers"));
             self.inner.unary(req, path, codec).await
         }
         /// 用户把自己加入某商户。链路:app --用户token--> club后台 --club的ExtendToken-->

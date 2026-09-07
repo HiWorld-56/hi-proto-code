@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	Merchant_List_FullMethodName         = "/hi.club.Merchant/List"
 	Merchant_ListGreeters_FullMethodName = "/hi.club.Merchant/ListGreeters"
+	Merchant_ListUsers_FullMethodName    = "/hi.club.Merchant/ListUsers"
 	Merchant_Join_FullMethodName         = "/hi.club.Merchant/Join"
 )
 
@@ -39,6 +40,7 @@ type MerchantClient interface {
 	// 必须由目标商户先授权给 club(did 侧 requireGrant 校验)。
 	// club 侧不再叠鉴权:所有登录用户都能调。
 	ListGreeters(ctx context.Context, in *ListGreetersReq, opts ...grpc.CallOption) (*did.ListUsersResp, error)
+	ListUsers(ctx context.Context, in *ListMerchantUsersReq, opts ...grpc.CallOption) (*did.ListUsersResp, error)
 	// 用户把自己加入某商户。链路:app --用户token--> club后台 --club的ExtendToken-->
 	// did.MerchantGranted.AddUsers(merchant=目标商户, users=[登录用户]).
 	//
@@ -76,6 +78,16 @@ func (c *merchantClient) ListGreeters(ctx context.Context, in *ListGreetersReq, 
 	return out, nil
 }
 
+func (c *merchantClient) ListUsers(ctx context.Context, in *ListMerchantUsersReq, opts ...grpc.CallOption) (*did.ListUsersResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(did.ListUsersResp)
+	err := c.cc.Invoke(ctx, Merchant_ListUsers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *merchantClient) Join(ctx context.Context, in *JoinMerchantReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -98,6 +110,7 @@ type MerchantServer interface {
 	// 必须由目标商户先授权给 club(did 侧 requireGrant 校验)。
 	// club 侧不再叠鉴权:所有登录用户都能调。
 	ListGreeters(context.Context, *ListGreetersReq) (*did.ListUsersResp, error)
+	ListUsers(context.Context, *ListMerchantUsersReq) (*did.ListUsersResp, error)
 	// 用户把自己加入某商户。链路:app --用户token--> club后台 --club的ExtendToken-->
 	// did.MerchantGranted.AddUsers(merchant=目标商户, users=[登录用户]).
 	//
@@ -119,6 +132,9 @@ func (UnimplementedMerchantServer) List(context.Context, *emptypb.Empty) (*did.M
 }
 func (UnimplementedMerchantServer) ListGreeters(context.Context, *ListGreetersReq) (*did.ListUsersResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListGreeters not implemented")
+}
+func (UnimplementedMerchantServer) ListUsers(context.Context, *ListMerchantUsersReq) (*did.ListUsersResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListUsers not implemented")
 }
 func (UnimplementedMerchantServer) Join(context.Context, *JoinMerchantReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Join not implemented")
@@ -179,6 +195,24 @@ func _Merchant_ListGreeters_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Merchant_ListUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListMerchantUsersReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MerchantServer).ListUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Merchant_ListUsers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MerchantServer).ListUsers(ctx, req.(*ListMerchantUsersReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Merchant_Join_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(JoinMerchantReq)
 	if err := dec(in); err != nil {
@@ -211,6 +245,10 @@ var Merchant_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListGreeters",
 			Handler:    _Merchant_ListGreeters_Handler,
+		},
+		{
+			MethodName: "ListUsers",
+			Handler:    _Merchant_ListUsers_Handler,
 		},
 		{
 			MethodName: "Join",

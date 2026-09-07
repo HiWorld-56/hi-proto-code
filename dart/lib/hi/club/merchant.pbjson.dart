@@ -49,6 +49,40 @@ final $typed_data.Uint8List listGreetersReqDescriptor = $convert.base64Decode(
     'htZXJjaGFudIgBARIuCgpwYWdpbmF0aW9uGAIgASgLMg4uaGkuUGFnaW5hdGlvblIKcGFnaW5h'
     'dGlvbkILCglfbWVyY2hhbnQ=');
 
+@$core.Deprecated('Use listMerchantUsersReqDescriptor instead')
+const ListMerchantUsersReq$json = {
+  '1': 'ListMerchantUsersReq',
+  '2': [
+    {
+      '1': 'merchant',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'merchant',
+      '17': true
+    },
+    {
+      '1': 'pagination',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Pagination',
+      '10': 'pagination'
+    },
+  ],
+  '8': [
+    {'1': '_merchant'},
+  ],
+};
+
+/// Descriptor for `ListMerchantUsersReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listMerchantUsersReqDescriptor = $convert.base64Decode(
+    'ChRMaXN0TWVyY2hhbnRVc2Vyc1JlcRIwCghtZXJjaGFudBgBIAEoCUIPukgMyAEBcgcyBV5cUy'
+    'skSABSCG1lcmNoYW50iAEBEi4KCnBhZ2luYXRpb24YAiABKAsyDi5oaS5QYWdpbmF0aW9uUgpw'
+    'YWdpbmF0aW9uQgsKCV9tZXJjaGFudA==');
+
 @$core.Deprecated('Use joinMerchantReqDescriptor instead')
 const JoinMerchantReq$json = {
   '1': 'JoinMerchantReq',

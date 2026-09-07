@@ -54,6 +54,13 @@ class MerchantClient extends $grpc.Client {
     return $createUnaryCall(_$listGreeters, request, options: options);
   }
 
+  $grpc.ResponseFuture<$1.ListUsersResp> listUsers(
+    $2.ListMerchantUsersReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listUsers, request, options: options);
+  }
+
   /// 用户把自己加入某商户。链路:app --用户token--> club后台 --club的ExtendToken-->
   /// did.MerchantGranted.AddUsers(merchant=目标商户, users=[登录用户]).
   ///
@@ -77,6 +84,11 @@ class MerchantClient extends $grpc.Client {
       $grpc.ClientMethod<$2.ListGreetersReq, $1.ListUsersResp>(
           '/hi.club.Merchant/ListGreeters',
           ($2.ListGreetersReq value) => value.writeToBuffer(),
+          $1.ListUsersResp.fromBuffer);
+  static final _$listUsers =
+      $grpc.ClientMethod<$2.ListMerchantUsersReq, $1.ListUsersResp>(
+          '/hi.club.Merchant/ListUsers',
+          ($2.ListMerchantUsersReq value) => value.writeToBuffer(),
           $1.ListUsersResp.fromBuffer);
   static final _$join = $grpc.ClientMethod<$2.JoinMerchantReq, $0.Empty>(
       '/hi.club.Merchant/Join',
@@ -103,6 +115,14 @@ abstract class MerchantServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $2.ListGreetersReq.fromBuffer(value),
         ($1.ListUsersResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$2.ListMerchantUsersReq, $1.ListUsersResp>(
+        'ListUsers',
+        listUsers_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $2.ListMerchantUsersReq.fromBuffer(value),
+        ($1.ListUsersResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$2.JoinMerchantReq, $0.Empty>(
         'Join',
         join_Pre,
@@ -127,6 +147,14 @@ abstract class MerchantServiceBase extends $grpc.Service {
 
   $async.Future<$1.ListUsersResp> listGreeters(
       $grpc.ServiceCall call, $2.ListGreetersReq request);
+
+  $async.Future<$1.ListUsersResp> listUsers_Pre($grpc.ServiceCall $call,
+      $async.Future<$2.ListMerchantUsersReq> $request) async {
+    return listUsers($call, await $request);
+  }
+
+  $async.Future<$1.ListUsersResp> listUsers(
+      $grpc.ServiceCall call, $2.ListMerchantUsersReq request);
 
   $async.Future<$0.Empty> join_Pre($grpc.ServiceCall $call,
       $async.Future<$2.JoinMerchantReq> $request) async {

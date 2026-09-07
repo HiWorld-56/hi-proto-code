@@ -28,6 +28,11 @@ class MerchantStub(object):
                 request_serializer=hi_dot_club_dot_merchant__pb2.ListGreetersReq.SerializeToString,
                 response_deserializer=hi_dot_did_dot_merchant__pb2.ListUsersResp.FromString,
                 _registered_method=True)
+        self.ListUsers = channel.unary_unary(
+                '/hi.club.Merchant/ListUsers',
+                request_serializer=hi_dot_club_dot_merchant__pb2.ListMerchantUsersReq.SerializeToString,
+                response_deserializer=hi_dot_did_dot_merchant__pb2.ListUsersResp.FromString,
+                _registered_method=True)
         self.Join = channel.unary_unary(
                 '/hi.club.Merchant/Join',
                 request_serializer=hi_dot_club_dot_merchant__pb2.JoinMerchantReq.SerializeToString,
@@ -55,6 +60,12 @@ class MerchantServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ListUsers(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def Join(self, request, context):
         """用户把自己加入某商户。链路:app --用户token--> club后台 --club的ExtendToken-->
         did.MerchantGranted.AddUsers(merchant=目标商户, users=[登录用户]).
@@ -78,6 +89,11 @@ def add_MerchantServicer_to_server(servicer, server):
             'ListGreeters': grpc.unary_unary_rpc_method_handler(
                     servicer.ListGreeters,
                     request_deserializer=hi_dot_club_dot_merchant__pb2.ListGreetersReq.FromString,
+                    response_serializer=hi_dot_did_dot_merchant__pb2.ListUsersResp.SerializeToString,
+            ),
+            'ListUsers': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListUsers,
+                    request_deserializer=hi_dot_club_dot_merchant__pb2.ListMerchantUsersReq.FromString,
                     response_serializer=hi_dot_did_dot_merchant__pb2.ListUsersResp.SerializeToString,
             ),
             'Join': grpc.unary_unary_rpc_method_handler(
@@ -140,6 +156,33 @@ class Merchant(object):
             target,
             '/hi.club.Merchant/ListGreeters',
             hi_dot_club_dot_merchant__pb2.ListGreetersReq.SerializeToString,
+            hi_dot_did_dot_merchant__pb2.ListUsersResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ListUsers(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.Merchant/ListUsers',
+            hi_dot_club_dot_merchant__pb2.ListMerchantUsersReq.SerializeToString,
             hi_dot_did_dot_merchant__pb2.ListUsersResp.FromString,
             options,
             channel_credentials,
