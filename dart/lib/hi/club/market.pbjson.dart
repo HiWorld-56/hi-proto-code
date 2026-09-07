@@ -818,79 +818,40 @@ final $typed_data.Uint8List marketGrantViewDescriptor = $convert.base64Decode(
     'lkZWRfYXRCDwoNX2luc3RhbGxlZF9hdEINCgtfYXV0b19yZW5ld0IMCgpfaW5pdGlhdG9yQg4K'
     'DF9wbHVnaW5fdXVpZA==');
 
-@$core.Deprecated('Use marketSellerMasterDescriptor instead')
-const MarketSellerMaster$json = {
-  '1': 'MarketSellerMaster',
+@$core.Deprecated('Use marketStallDescriptor instead')
+const MarketStall$json = {
+  '1': 'MarketStall',
   '2': [
     {
-      '1': 'type',
+      '1': 'agent',
       '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'agent'
+    },
+    {
+      '1': 'moment',
+      '3': 2,
       '4': 1,
       '5': 9,
       '8': {},
       '9': 0,
-      '10': 'type',
-      '17': true
-    },
-    {'1': 'did', '3': 2, '4': 1, '5': 9, '8': {}, '10': 'did'},
-    {
-      '1': 'name',
-      '3': 3,
-      '4': 1,
-      '5': 9,
-      '8': {},
-      '9': 1,
-      '10': 'name',
-      '17': true
-    },
-    {
-      '1': 'avatar',
-      '3': 4,
-      '4': 1,
-      '5': 9,
-      '8': {},
-      '9': 2,
-      '10': 'avatar',
-      '17': true
-    },
-    {
-      '1': 'update',
-      '3': 5,
-      '4': 1,
-      '5': 3,
-      '8': {},
-      '9': 3,
-      '10': 'update',
-      '17': true
-    },
-    {
-      '1': 'moment',
-      '3': 6,
-      '4': 1,
-      '5': 9,
-      '8': {},
-      '9': 4,
       '10': 'moment',
       '17': true
     },
   ],
   '7': {},
   '8': [
-    {'1': '_type'},
-    {'1': '_name'},
-    {'1': '_avatar'},
-    {'1': '_update'},
     {'1': '_moment'},
   ],
 };
 
-/// Descriptor for `MarketSellerMaster`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List marketSellerMasterDescriptor = $convert.base64Decode(
-    'ChJNYXJrZXRTZWxsZXJNYXN0ZXISHQoEdHlwZRgBIAEoCUIEkLUYAUgAUgR0eXBliAEBEhYKA2'
-    'RpZBgCIAEoCUIEkLUYAVIDZGlkEh0KBG5hbWUYAyABKAlCBJC1GAFIAVIEbmFtZYgBARIhCgZh'
-    'dmF0YXIYBCABKAlCBJC1GAFIAlIGYXZhdGFyiAEBEiEKBnVwZGF0ZRgFIAEoA0IEkLUYAUgDUg'
-    'Z1cGRhdGWIAQESIQoGbW9tZW50GAYgASgJQgSQtRgBSARSBm1vbWVudIgBAToEmLUYAUIHCgVf'
-    'dHlwZUIHCgVfbmFtZUIJCgdfYXZhdGFyQgkKB191cGRhdGVCCQoHX21vbWVudA==');
+/// Descriptor for `MarketStall`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List marketStallDescriptor = $convert.base64Decode(
+    'CgtNYXJrZXRTdGFsbBImCgVhZ2VudBgBIAEoCzIKLmhpLkVudGl0eUIEkLUYAVIFYWdlbnQSIQ'
+    'oGbW9tZW50GAIgASgJQgSQtRgBSABSBm1vbWVudIgBAToEmLUYAUIJCgdfbW9tZW50');
 
 @$core.Deprecated('Use marketSellerDescriptor instead')
 const MarketSeller$json = {
@@ -901,42 +862,54 @@ const MarketSeller$json = {
       '3': 1,
       '4': 1,
       '5': 11,
-      '6': '.hi.club.MarketSellerMaster',
+      '6': '.hi.Entity',
       '8': {},
       '10': 'master'
     },
     {
-      '1': 'agents',
+      '1': 'moment',
       '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'moment',
+      '17': true
+    },
+    {
+      '1': 'stalls',
+      '3': 3,
       '4': 3,
       '5': 11,
-      '6': '.hi.Entity',
+      '6': '.hi.club.MarketStall',
       '8': {},
-      '10': 'agents'
+      '10': 'stalls'
     },
     {
       '1': 'listing_count',
-      '3': 3,
+      '3': 4,
       '4': 1,
       '5': 5,
       '8': {},
-      '9': 0,
+      '9': 1,
       '10': 'listingCount',
       '17': true
     },
   ],
   '7': {},
   '8': [
+    {'1': '_moment'},
     {'1': '_listing_count'},
   ],
 };
 
 /// Descriptor for `MarketSeller`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List marketSellerDescriptor = $convert.base64Decode(
-    'CgxNYXJrZXRTZWxsZXISOQoGbWFzdGVyGAEgASgLMhsuaGkuY2x1Yi5NYXJrZXRTZWxsZXJNYX'
-    'N0ZXJCBJC1GAFSBm1hc3RlchIoCgZhZ2VudHMYAiADKAsyCi5oaS5FbnRpdHlCBJC1GAFSBmFn'
-    'ZW50cxIuCg1saXN0aW5nX2NvdW50GAMgASgFQgSQtRgBSABSDGxpc3RpbmdDb3VudIgBAToEmL'
-    'UYAUIQCg5fbGlzdGluZ19jb3VudA==');
+    'CgxNYXJrZXRTZWxsZXISKAoGbWFzdGVyGAEgASgLMgouaGkuRW50aXR5QgSQtRgBUgZtYXN0ZX'
+    'ISIQoGbW9tZW50GAIgASgJQgSQtRgBSABSBm1vbWVudIgBARIyCgZzdGFsbHMYAyADKAsyFC5o'
+    'aS5jbHViLk1hcmtldFN0YWxsQgSQtRgBUgZzdGFsbHMSLgoNbGlzdGluZ19jb3VudBgEIAEoBU'
+    'IEkLUYAUgBUgxsaXN0aW5nQ291bnSIAQE6BJi1GAFCCQoHX21vbWVudEIQCg5fbGlzdGluZ19j'
+    'b3VudA==');
 
 @$core.Deprecated('Use listSellersRespDescriptor instead')
 const ListSellersResp$json = {

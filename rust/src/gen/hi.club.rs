@@ -6520,35 +6520,28 @@ pub struct MarketGrantView {
 /// ⚠️ **只公开"有在售挂牌"的那些机器人的主人** —— 开店即自愿露出。
 /// 这不是一个"任意 did → 查它主人"的反查口子(那个当年正是因为泄露归属被删掉的);
 /// 没挂牌的机器人不会出现在这里。
-/// 卖家目录中的主人资料。保留 Entity 的字段布局,动态仅在这个公开目录视图扩展,
-/// 不加入跨业务共用的 hi.Entity,也不复用含本人私有字段的 UserInfo。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MarketSellerMaster {
-    #[prost(string, optional, tag = "1")]
-    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, tag = "2")]
-    pub did: ::prost::alloc::string::String,
-    #[prost(string, optional, tag = "3")]
-    pub name: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "4")]
-    pub avatar: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(int64, optional, tag = "5")]
-    pub update: ::core::option::Option<i64>,
-    /// 有在售挂牌的用户主人在目录中公开的动态,取自 hi_chat_user_moment。
-    /// 仅 type=user 时返回;未设置或已清空时不传。其它用户动态接口仍保持关系可见。
-    #[prost(string, optional, tag = "6")]
+pub struct MarketStall {
+    /// 摊主
+    #[prost(message, optional, tag = "1")]
+    pub agent: ::core::option::Option<super::Entity>,
+    /// 摊主动态
+    #[prost(string, optional, tag = "2")]
     pub moment: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MarketSeller {
     /// 卖家(主人);无主机器人不传
     #[prost(message, optional, tag = "1")]
-    pub master: ::core::option::Option<MarketSellerMaster>,
+    pub master: ::core::option::Option<super::Entity>,
+    /// 卖家动态
+    #[prost(string, optional, tag = "2")]
+    pub moment: ::core::option::Option<::prost::alloc::string::String>,
     /// 他名下**有在售挂牌**的摊位
-    #[prost(message, repeated, tag = "2")]
-    pub agents: ::prost::alloc::vec::Vec<super::Entity>,
+    #[prost(message, repeated, tag = "3")]
+    pub stalls: ::prost::alloc::vec::Vec<MarketStall>,
     /// 在售挂牌总数
-    #[prost(int32, optional, tag = "3")]
+    #[prost(int32, optional, tag = "4")]
     pub listing_count: ::core::option::Option<i32>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]

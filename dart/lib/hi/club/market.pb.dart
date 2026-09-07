@@ -957,133 +957,86 @@ class MarketGrantView extends $pb.GeneratedMessage {
 /// ⚠️ **只公开"有在售挂牌"的那些机器人的主人** —— 开店即自愿露出。
 ///    这不是一个"任意 did → 查它主人"的反查口子(那个当年正是因为泄露归属被删掉的);
 ///    没挂牌的机器人不会出现在这里。
-/// 卖家目录中的主人资料。保留 Entity 的字段布局,动态仅在这个公开目录视图扩展,
-/// 不加入跨业务共用的 hi.Entity,也不复用含本人私有字段的 UserInfo。
-class MarketSellerMaster extends $pb.GeneratedMessage {
-  factory MarketSellerMaster({
-    $core.String? type,
-    $core.String? did,
-    $core.String? name,
-    $core.String? avatar,
-    $fixnum.Int64? update,
+class MarketStall extends $pb.GeneratedMessage {
+  factory MarketStall({
+    $1.Entity? agent,
     $core.String? moment,
   }) {
     final result = create();
-    if (type != null) result.type = type;
-    if (did != null) result.did = did;
-    if (name != null) result.name = name;
-    if (avatar != null) result.avatar = avatar;
-    if (update != null) result.update = update;
+    if (agent != null) result.agent = agent;
     if (moment != null) result.moment = moment;
     return result;
   }
 
-  MarketSellerMaster._();
+  MarketStall._();
 
-  factory MarketSellerMaster.fromBuffer($core.List<$core.int> data,
+  factory MarketStall.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory MarketSellerMaster.fromJson($core.String json,
+  factory MarketStall.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'MarketSellerMaster',
+      _omitMessageNames ? '' : 'MarketStall',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'type')
-    ..aOS(2, _omitFieldNames ? '' : 'did')
-    ..aOS(3, _omitFieldNames ? '' : 'name')
-    ..aOS(4, _omitFieldNames ? '' : 'avatar')
-    ..aInt64(5, _omitFieldNames ? '' : 'update')
-    ..aOS(6, _omitFieldNames ? '' : 'moment')
+    ..aOM<$1.Entity>(1, _omitFieldNames ? '' : 'agent',
+        subBuilder: $1.Entity.create)
+    ..aOS(2, _omitFieldNames ? '' : 'moment')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MarketSellerMaster clone() => deepCopy();
+  MarketStall clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MarketSellerMaster copyWith(void Function(MarketSellerMaster) updates) =>
-      super.copyWith((message) => updates(message as MarketSellerMaster))
-          as MarketSellerMaster;
+  MarketStall copyWith(void Function(MarketStall) updates) =>
+      super.copyWith((message) => updates(message as MarketStall))
+          as MarketStall;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static MarketSellerMaster create() => MarketSellerMaster._();
+  static MarketStall create() => MarketStall._();
   @$core.override
-  MarketSellerMaster createEmptyInstance() => create();
+  MarketStall createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static MarketSellerMaster getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<MarketSellerMaster>(create);
-  static MarketSellerMaster? _defaultInstance;
+  static MarketStall getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MarketStall>(create);
+  static MarketStall? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get type => $_getSZ(0);
+  $1.Entity get agent => $_getN(0);
   @$pb.TagNumber(1)
-  set type($core.String value) => $_setString(0, value);
+  set agent($1.Entity value) => $_setField(1, value);
   @$pb.TagNumber(1)
-  $core.bool hasType() => $_has(0);
+  $core.bool hasAgent() => $_has(0);
   @$pb.TagNumber(1)
-  void clearType() => $_clearField(1);
+  void clearAgent() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $1.Entity ensureAgent() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $core.String get did => $_getSZ(1);
+  $core.String get moment => $_getSZ(1);
   @$pb.TagNumber(2)
-  set did($core.String value) => $_setString(1, value);
+  set moment($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasDid() => $_has(1);
+  $core.bool hasMoment() => $_has(1);
   @$pb.TagNumber(2)
-  void clearDid() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.String get name => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set name($core.String value) => $_setString(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasName() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearName() => $_clearField(3);
-
-  @$pb.TagNumber(4)
-  $core.String get avatar => $_getSZ(3);
-  @$pb.TagNumber(4)
-  set avatar($core.String value) => $_setString(3, value);
-  @$pb.TagNumber(4)
-  $core.bool hasAvatar() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearAvatar() => $_clearField(4);
-
-  @$pb.TagNumber(5)
-  $fixnum.Int64 get update => $_getI64(4);
-  @$pb.TagNumber(5)
-  set update($fixnum.Int64 value) => $_setInt64(4, value);
-  @$pb.TagNumber(5)
-  $core.bool hasUpdate() => $_has(4);
-  @$pb.TagNumber(5)
-  void clearUpdate() => $_clearField(5);
-
-  /// 有在售挂牌的用户主人在目录中公开的动态,取自 hi_chat_user_moment。
-  /// 仅 type=user 时返回;未设置或已清空时不传。其它用户动态接口仍保持关系可见。
-  @$pb.TagNumber(6)
-  $core.String get moment => $_getSZ(5);
-  @$pb.TagNumber(6)
-  set moment($core.String value) => $_setString(5, value);
-  @$pb.TagNumber(6)
-  $core.bool hasMoment() => $_has(5);
-  @$pb.TagNumber(6)
-  void clearMoment() => $_clearField(6);
+  void clearMoment() => $_clearField(2);
 }
 
 class MarketSeller extends $pb.GeneratedMessage {
   factory MarketSeller({
-    MarketSellerMaster? master,
-    $core.Iterable<$1.Entity>? agents,
+    $1.Entity? master,
+    $core.String? moment,
+    $core.Iterable<MarketStall>? stalls,
     $core.int? listingCount,
   }) {
     final result = create();
     if (master != null) result.master = master;
-    if (agents != null) result.agents.addAll(agents);
+    if (moment != null) result.moment = moment;
+    if (stalls != null) result.stalls.addAll(stalls);
     if (listingCount != null) result.listingCount = listingCount;
     return result;
   }
@@ -1101,11 +1054,12 @@ class MarketSeller extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'MarketSeller',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOM<MarketSellerMaster>(1, _omitFieldNames ? '' : 'master',
-        subBuilder: MarketSellerMaster.create)
-    ..pPM<$1.Entity>(2, _omitFieldNames ? '' : 'agents',
+    ..aOM<$1.Entity>(1, _omitFieldNames ? '' : 'master',
         subBuilder: $1.Entity.create)
-    ..aI(3, _omitFieldNames ? '' : 'listingCount')
+    ..aOS(2, _omitFieldNames ? '' : 'moment')
+    ..pPM<MarketStall>(3, _omitFieldNames ? '' : 'stalls',
+        subBuilder: MarketStall.create)
+    ..aI(4, _omitFieldNames ? '' : 'listingCount')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1128,27 +1082,36 @@ class MarketSeller extends $pb.GeneratedMessage {
   static MarketSeller? _defaultInstance;
 
   @$pb.TagNumber(1)
-  MarketSellerMaster get master => $_getN(0);
+  $1.Entity get master => $_getN(0);
   @$pb.TagNumber(1)
-  set master(MarketSellerMaster value) => $_setField(1, value);
+  set master($1.Entity value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasMaster() => $_has(0);
   @$pb.TagNumber(1)
   void clearMaster() => $_clearField(1);
   @$pb.TagNumber(1)
-  MarketSellerMaster ensureMaster() => $_ensure(0);
+  $1.Entity ensureMaster() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $pb.PbList<$1.Entity> get agents => $_getList(1);
+  $core.String get moment => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set moment($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMoment() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMoment() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $core.int get listingCount => $_getIZ(2);
-  @$pb.TagNumber(3)
-  set listingCount($core.int value) => $_setSignedInt32(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasListingCount() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearListingCount() => $_clearField(3);
+  $pb.PbList<MarketStall> get stalls => $_getList(2);
+
+  @$pb.TagNumber(4)
+  $core.int get listingCount => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set listingCount($core.int value) => $_setSignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasListingCount() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearListingCount() => $_clearField(4);
 }
 
 class ListSellersResp extends $pb.GeneratedMessage {
