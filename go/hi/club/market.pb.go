@@ -1276,8 +1276,9 @@ func (x *MarketGrantView) GetPluginUuid() string {
 //	没挂牌的机器人不会出现在这里。
 type MarketStall struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         *hi.Entity             `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`         // 摊主
-	Moment        *string                `protobuf:"bytes,2,opt,name=moment,proto3,oneof" json:"moment,omitempty"` // 摊主动态
+	Agent         *hi.Entity             `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`                                          // 摊主
+	Moment        *string                `protobuf:"bytes,2,opt,name=moment,proto3,oneof" json:"moment,omitempty"`                                  // 摊主动态
+	ListingCount  *int32                 `protobuf:"varint,4,opt,name=listing_count,json=listingCount,proto3,oneof" json:"listing_count,omitempty"` // 摊主在售挂牌数
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1326,12 +1327,19 @@ func (x *MarketStall) GetMoment() string {
 	return ""
 }
 
+func (x *MarketStall) GetListingCount() int32 {
+	if x != nil && x.ListingCount != nil {
+		return *x.ListingCount
+	}
+	return 0
+}
+
 type MarketSeller struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Master        *hi.Entity             `protobuf:"bytes,1,opt,name=master,proto3" json:"master,omitempty"`                                        // 卖家(主人);无主机器人不传
 	Moment        *string                `protobuf:"bytes,2,opt,name=moment,proto3,oneof" json:"moment,omitempty"`                                  // 卖家动态
 	Stalls        []*MarketStall         `protobuf:"bytes,3,rep,name=stalls,proto3" json:"stalls,omitempty"`                                        // 他名下**有在售挂牌**的摊位
-	ListingCount  *int32                 `protobuf:"varint,4,opt,name=listing_count,json=listingCount,proto3,oneof" json:"listing_count,omitempty"` // 在售挂牌总数
+	ListingCount  *int32                 `protobuf:"varint,4,opt,name=listing_count,json=listingCount,proto3,oneof" json:"listing_count,omitempty"` // 在售挂牌总数 = 摊主挂牌数总和
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4159,12 +4167,14 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\v_auto_renewB\f\n" +
 	"\n" +
 	"_initiatorB\x0e\n" +
-	"\f_plugin_uuid\"i\n" +
+	"\f_plugin_uuid\"\xab\x01\n" +
 	"\vMarketStall\x12&\n" +
 	"\x05agent\x18\x01 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\x05agent\x12!\n" +
-	"\x06moment\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x06moment\x88\x01\x01:\x04\x98\xb5\x18\x01B\t\n" +
-	"\a_moment\"\xe2\x01\n" +
+	"\x06moment\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x06moment\x88\x01\x01\x12.\n" +
+	"\rlisting_count\x18\x04 \x01(\x05B\x04\x90\xb5\x18\x01H\x01R\flistingCount\x88\x01\x01:\x04\x98\xb5\x18\x01B\t\n" +
+	"\a_momentB\x10\n" +
+	"\x0e_listing_count\"\xe2\x01\n" +
 	"\fMarketSeller\x12(\n" +
 	"\x06master\x18\x01 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\x06master\x12!\n" +

@@ -961,10 +961,12 @@ class MarketStall extends $pb.GeneratedMessage {
   factory MarketStall({
     $1.Entity? agent,
     $core.String? moment,
+    $core.int? listingCount,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
     if (moment != null) result.moment = moment;
+    if (listingCount != null) result.listingCount = listingCount;
     return result;
   }
 
@@ -984,6 +986,7 @@ class MarketStall extends $pb.GeneratedMessage {
     ..aOM<$1.Entity>(1, _omitFieldNames ? '' : 'agent',
         subBuilder: $1.Entity.create)
     ..aOS(2, _omitFieldNames ? '' : 'moment')
+    ..aI(4, _omitFieldNames ? '' : 'listingCount')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1024,6 +1027,15 @@ class MarketStall extends $pb.GeneratedMessage {
   $core.bool hasMoment() => $_has(1);
   @$pb.TagNumber(2)
   void clearMoment() => $_clearField(2);
+
+  @$pb.TagNumber(4)
+  $core.int get listingCount => $_getIZ(2);
+  @$pb.TagNumber(4)
+  set listingCount($core.int value) => $_setSignedInt32(2, value);
+  @$pb.TagNumber(4)
+  $core.bool hasListingCount() => $_has(2);
+  @$pb.TagNumber(4)
+  void clearListingCount() => $_clearField(4);
 }
 
 class MarketSeller extends $pb.GeneratedMessage {

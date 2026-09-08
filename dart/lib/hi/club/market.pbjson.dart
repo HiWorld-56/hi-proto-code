@@ -841,17 +841,30 @@ const MarketStall$json = {
       '10': 'moment',
       '17': true
     },
+    {
+      '1': 'listing_count',
+      '3': 4,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '9': 1,
+      '10': 'listingCount',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
     {'1': '_moment'},
+    {'1': '_listing_count'},
   ],
 };
 
 /// Descriptor for `MarketStall`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List marketStallDescriptor = $convert.base64Decode(
     'CgtNYXJrZXRTdGFsbBImCgVhZ2VudBgBIAEoCzIKLmhpLkVudGl0eUIEkLUYAVIFYWdlbnQSIQ'
-    'oGbW9tZW50GAIgASgJQgSQtRgBSABSBm1vbWVudIgBAToEmLUYAUIJCgdfbW9tZW50');
+    'oGbW9tZW50GAIgASgJQgSQtRgBSABSBm1vbWVudIgBARIuCg1saXN0aW5nX2NvdW50GAQgASgF'
+    'QgSQtRgBSAFSDGxpc3RpbmdDb3VudIgBAToEmLUYAUIJCgdfbW9tZW50QhAKDl9saXN0aW5nX2'
+    'NvdW50');
 
 @$core.Deprecated('Use marketSellerDescriptor instead')
 const MarketSeller$json = {

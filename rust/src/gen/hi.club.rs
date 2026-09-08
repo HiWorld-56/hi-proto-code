@@ -6528,6 +6528,9 @@ pub struct MarketStall {
     /// 摊主动态
     #[prost(string, optional, tag = "2")]
     pub moment: ::core::option::Option<::prost::alloc::string::String>,
+    /// 摊主在售挂牌数
+    #[prost(int32, optional, tag = "4")]
+    pub listing_count: ::core::option::Option<i32>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MarketSeller {
@@ -6540,7 +6543,7 @@ pub struct MarketSeller {
     /// 他名下**有在售挂牌**的摊位
     #[prost(message, repeated, tag = "3")]
     pub stalls: ::prost::alloc::vec::Vec<MarketStall>,
-    /// 在售挂牌总数
+    /// 在售挂牌总数 = 摊主挂牌数总和
     #[prost(int32, optional, tag = "4")]
     pub listing_count: ::core::option::Option<i32>,
 }
