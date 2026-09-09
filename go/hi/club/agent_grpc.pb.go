@@ -563,6 +563,7 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 
 const (
 	AgentDirectory_ListOnline_FullMethodName = "/hi.club.AgentDirectory/ListOnline"
+	AgentDirectory_GetMoment_FullMethodName  = "/hi.club.AgentDirectory/GetMoment"
 )
 
 // AgentDirectoryClient is the client API for AgentDirectory service.
@@ -585,6 +586,7 @@ const (
 // (Agent.List 是**另起**的用户自服务方法,数据取自 club 自己的 relation,与上面这个无继承关系。)
 type AgentDirectoryClient interface {
 	ListOnline(ctx context.Context, in *ListOnlineReq, opts ...grpc.CallOption) (*ListOnlineResp, error)
+	GetMoment(ctx context.Context, in *GetAgentMomentReq, opts ...grpc.CallOption) (*GetAgentMomentResp, error)
 }
 
 type agentDirectoryClient struct {
@@ -599,6 +601,16 @@ func (c *agentDirectoryClient) ListOnline(ctx context.Context, in *ListOnlineReq
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListOnlineResp)
 	err := c.cc.Invoke(ctx, AgentDirectory_ListOnline_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentDirectoryClient) GetMoment(ctx context.Context, in *GetAgentMomentReq, opts ...grpc.CallOption) (*GetAgentMomentResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAgentMomentResp)
+	err := c.cc.Invoke(ctx, AgentDirectory_GetMoment_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -625,6 +637,7 @@ func (c *agentDirectoryClient) ListOnline(ctx context.Context, in *ListOnlineReq
 // (Agent.List 是**另起**的用户自服务方法,数据取自 club 自己的 relation,与上面这个无继承关系。)
 type AgentDirectoryServer interface {
 	ListOnline(context.Context, *ListOnlineReq) (*ListOnlineResp, error)
+	GetMoment(context.Context, *GetAgentMomentReq) (*GetAgentMomentResp, error)
 }
 
 // UnimplementedAgentDirectoryServer should be embedded to have
@@ -636,6 +649,9 @@ type UnimplementedAgentDirectoryServer struct{}
 
 func (UnimplementedAgentDirectoryServer) ListOnline(context.Context, *ListOnlineReq) (*ListOnlineResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListOnline not implemented")
+}
+func (UnimplementedAgentDirectoryServer) GetMoment(context.Context, *GetAgentMomentReq) (*GetAgentMomentResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetMoment not implemented")
 }
 func (UnimplementedAgentDirectoryServer) testEmbeddedByValue() {}
 
@@ -675,6 +691,24 @@ func _AgentDirectory_ListOnline_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AgentDirectory_GetMoment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAgentMomentReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentDirectoryServer).GetMoment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AgentDirectory_GetMoment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentDirectoryServer).GetMoment(ctx, req.(*GetAgentMomentReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AgentDirectory_ServiceDesc is the grpc.ServiceDesc for AgentDirectory service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -685,6 +719,10 @@ var AgentDirectory_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListOnline",
 			Handler:    _AgentDirectory_ListOnline_Handler,
+		},
+		{
+			MethodName: "GetMoment",
+			Handler:    _AgentDirectory_GetMoment_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

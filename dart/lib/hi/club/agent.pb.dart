@@ -615,6 +615,121 @@ class SetAgentMomentReq extends $pb.GeneratedMessage {
   void clearMoment() => $_clearField(2);
 }
 
+/// 查看机器人的**动态**(个性签名那一栏)。
+///
+/// ⭐ 与 SetMoment 对称:写入口在 club,读入口也在 club,不穿透 hi.ai。
+///    动态存在 `hi_chat_user_moment`,人和机器人同一张表。
+///
+/// ⚠️ 这是**公开接口**(AUTH_NONE):任何人可以查看任何机器人的动态。
+///    动态本身就是公开信息(在 MarketStall 中是 VIS_PUBLIC)。
+class GetAgentMomentReq extends $pb.GeneratedMessage {
+  factory GetAgentMomentReq({
+    $core.String? agent,
+  }) {
+    final result = create();
+    if (agent != null) result.agent = agent;
+    return result;
+  }
+
+  GetAgentMomentReq._();
+
+  factory GetAgentMomentReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetAgentMomentReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetAgentMomentReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'agent')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetAgentMomentReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetAgentMomentReq copyWith(void Function(GetAgentMomentReq) updates) =>
+      super.copyWith((message) => updates(message as GetAgentMomentReq))
+          as GetAgentMomentReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetAgentMomentReq create() => GetAgentMomentReq._();
+  @$core.override
+  GetAgentMomentReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GetAgentMomentReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetAgentMomentReq>(create);
+  static GetAgentMomentReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get agent => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set agent($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAgent() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAgent() => $_clearField(1);
+}
+
+class GetAgentMomentResp extends $pb.GeneratedMessage {
+  factory GetAgentMomentResp({
+    $core.String? moment,
+  }) {
+    final result = create();
+    if (moment != null) result.moment = moment;
+    return result;
+  }
+
+  GetAgentMomentResp._();
+
+  factory GetAgentMomentResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetAgentMomentResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetAgentMomentResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'moment')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetAgentMomentResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetAgentMomentResp copyWith(void Function(GetAgentMomentResp) updates) =>
+      super.copyWith((message) => updates(message as GetAgentMomentResp))
+          as GetAgentMomentResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetAgentMomentResp create() => GetAgentMomentResp._();
+  @$core.override
+  GetAgentMomentResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GetAgentMomentResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetAgentMomentResp>(create);
+  static GetAgentMomentResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get moment => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set moment($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasMoment() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearMoment() => $_clearField(1);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

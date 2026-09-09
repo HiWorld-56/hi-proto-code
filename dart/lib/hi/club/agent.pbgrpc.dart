@@ -407,6 +407,13 @@ class AgentDirectoryClient extends $grpc.Client {
     return $createUnaryCall(_$listOnline, request, options: options);
   }
 
+  $grpc.ResponseFuture<$1.GetAgentMomentResp> getMoment(
+    $1.GetAgentMomentReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$getMoment, request, options: options);
+  }
+
   // method descriptors
 
   static final _$listOnline =
@@ -414,6 +421,11 @@ class AgentDirectoryClient extends $grpc.Client {
           '/hi.club.AgentDirectory/ListOnline',
           ($1.ListOnlineReq value) => value.writeToBuffer(),
           $1.ListOnlineResp.fromBuffer);
+  static final _$getMoment =
+      $grpc.ClientMethod<$1.GetAgentMomentReq, $1.GetAgentMomentResp>(
+          '/hi.club.AgentDirectory/GetMoment',
+          ($1.GetAgentMomentReq value) => value.writeToBuffer(),
+          $1.GetAgentMomentResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.AgentDirectory')
@@ -428,6 +440,13 @@ abstract class AgentDirectoryServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.ListOnlineReq.fromBuffer(value),
         ($1.ListOnlineResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.GetAgentMomentReq, $1.GetAgentMomentResp>(
+        'GetMoment',
+        getMoment_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.GetAgentMomentReq.fromBuffer(value),
+        ($1.GetAgentMomentResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$1.ListOnlineResp> listOnline_Pre(
@@ -437,6 +456,14 @@ abstract class AgentDirectoryServiceBase extends $grpc.Service {
 
   $async.Future<$1.ListOnlineResp> listOnline(
       $grpc.ServiceCall call, $1.ListOnlineReq request);
+
+  $async.Future<$1.GetAgentMomentResp> getMoment_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.GetAgentMomentReq> $request) async {
+    return getMoment($call, await $request);
+  }
+
+  $async.Future<$1.GetAgentMomentResp> getMoment(
+      $grpc.ServiceCall call, $1.GetAgentMomentReq request);
 }
 
 /// 机器人管理(**超管**)。与 Agent(用户自服务)**主体不同,故拆 service** ——

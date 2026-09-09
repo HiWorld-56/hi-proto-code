@@ -2151,6 +2151,25 @@ pub struct SetAgentMomentReq {
     #[prost(string, optional, tag = "2")]
     pub moment: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 查看机器人的**动态**(个性签名那一栏)。
+///
+/// ⭐ 与 SetMoment 对称:写入口在 club,读入口也在 club,不穿透 hi.ai。
+/// 动态存在 `hi_chat_user_moment`,人和机器人同一张表。
+///
+/// ⚠️ 这是**公开接口**(AUTH_NONE):任何人可以查看任何机器人的动态。
+/// 动态本身就是公开信息(在 MarketStall 中是 VIS_PUBLIC)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetAgentMomentReq {
+    /// 机器人 did
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetAgentMomentResp {
+    /// 动态;空 = 没有设置
+    #[prost(string, optional, tag = "1")]
+    pub moment: ::core::option::Option<::prost::alloc::string::String>,
+}
 /// Generated client implementations.
 pub mod agent_client {
     #![allow(
@@ -2615,6 +2634,30 @@ pub mod agent_directory_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.AgentDirectory", "ListOnline"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get_moment(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetAgentMomentReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetAgentMomentResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.AgentDirectory/GetMoment",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.AgentDirectory", "GetMoment"));
             self.inner.unary(req, path, codec).await
         }
     }

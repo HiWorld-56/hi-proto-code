@@ -246,3 +246,54 @@ final $typed_data.Uint8List setAgentMomentReqDescriptor = $convert.base64Decode(
     'ChFTZXRBZ2VudE1vbWVudFJlcRIqCgVhZ2VudBgBIAEoCUIPukgMyAEBcgcyBV5cUyskSABSBW'
     'FnZW50iAEBEhsKBm1vbWVudBgCIAEoCUgBUgZtb21lbnSIAQFCCAoGX2FnZW50QgkKB19tb21l'
     'bnQ=');
+
+@$core.Deprecated('Use getAgentMomentReqDescriptor instead')
+const GetAgentMomentReq$json = {
+  '1': 'GetAgentMomentReq',
+  '2': [
+    {
+      '1': 'agent',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'agent',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_agent'},
+  ],
+};
+
+/// Descriptor for `GetAgentMomentReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getAgentMomentReqDescriptor = $convert.base64Decode(
+    'ChFHZXRBZ2VudE1vbWVudFJlcRIqCgVhZ2VudBgBIAEoCUIPukgMyAEBcgcyBV5cUyskSABSBW'
+    'FnZW50iAEBQggKBl9hZ2VudA==');
+
+@$core.Deprecated('Use getAgentMomentRespDescriptor instead')
+const GetAgentMomentResp$json = {
+  '1': 'GetAgentMomentResp',
+  '2': [
+    {
+      '1': 'moment',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'moment',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_moment'},
+  ],
+};
+
+/// Descriptor for `GetAgentMomentResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getAgentMomentRespDescriptor = $convert.base64Decode(
+    'ChJHZXRBZ2VudE1vbWVudFJlc3ASIQoGbW9tZW50GAEgASgJQgSQtRgBSABSBm1vbWVudIgBAT'
+    'oEmLUYAUIJCgdfbW9tZW50');

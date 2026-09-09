@@ -618,7 +618,6 @@ type EditAgentReq struct {
 	Avatar        *string                `protobuf:"bytes,5,opt,name=avatar,proto3,oneof" json:"avatar,omitempty"`
 	Config        *AgentConfig           `protobuf:"bytes,2,opt,name=config,proto3" json:"config,omitempty"`
 	Note          *string                `protobuf:"bytes,3,opt,name=note,proto3,oneof" json:"note,omitempty"`
-	Moment        *string                `protobuf:"bytes,6,opt,name=moment,proto3,oneof" json:"moment,omitempty"` // 机器人动态(存 hi_chat_user_moment,公开可见)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -684,13 +683,6 @@ func (x *EditAgentReq) GetConfig() *AgentConfig {
 func (x *EditAgentReq) GetNote() string {
 	if x != nil && x.Note != nil {
 		return *x.Note
-	}
-	return ""
-}
-
-func (x *EditAgentReq) GetMoment() string {
-	if x != nil && x.Moment != nil {
-		return *x.Moment
 	}
 	return ""
 }
@@ -1214,19 +1206,17 @@ const file_hi_ai_agent_proto_rawDesc = "" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x120\n" +
 	"\x06config\x18\x02 \x01(\v2\x12.hi.ai.AgentConfigB\x04\x90\xb5\x18\x03R\x06config\x12*\n" +
 	"\acreator\x18\x03 \x01(\v2\n" +
-	".hi.EntityB\x04\x90\xb5\x18\x01R\acreator:\x04\x98\xb5\x18\x03\"\xf3\x01\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\acreator:\x04\x98\xb5\x18\x03\"\xcb\x01\n" +
 	"\fEditAgentReq\x12\x19\n" +
 	"\x05agent\x18\x01 \x01(\tH\x00R\x05agent\x88\x01\x01\x12\x17\n" +
 	"\x04name\x18\x04 \x01(\tH\x01R\x04name\x88\x01\x01\x12\x1b\n" +
 	"\x06avatar\x18\x05 \x01(\tH\x02R\x06avatar\x88\x01\x01\x12*\n" +
 	"\x06config\x18\x02 \x01(\v2\x12.hi.ai.AgentConfigR\x06config\x12\x17\n" +
-	"\x04note\x18\x03 \x01(\tH\x03R\x04note\x88\x01\x01\x12\x1b\n" +
-	"\x06moment\x18\x06 \x01(\tH\x04R\x06moment\x88\x01\x01B\b\n" +
+	"\x04note\x18\x03 \x01(\tH\x03R\x04note\x88\x01\x01B\b\n" +
 	"\x06_agentB\a\n" +
 	"\x05_nameB\t\n" +
 	"\a_avatarB\a\n" +
-	"\x05_noteB\t\n" +
-	"\a_moment\"q\n" +
+	"\x05_note\"q\n" +
 	"\x0eListAgentsResp\x12\x1f\n" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12.\n" +
 	"\x06agents\x18\x02 \x03(\v2\x10.hi.ai.AgentInfoB\x04\x90\xb5\x18\x03R\x06agents:\x04\x98\xb5\x18\x03B\b\n" +

@@ -2879,9 +2879,6 @@ pub struct EditAgentReq {
     pub config: ::core::option::Option<AgentConfig>,
     #[prost(string, optional, tag = "3")]
     pub note: ::core::option::Option<::prost::alloc::string::String>,
-    /// 机器人动态(存 hi_chat_user_moment,公开可见)
-    #[prost(string, optional, tag = "6")]
-    pub moment: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 商户档的列表:**不带 marked**。标记是超管的概念(见 AgentBrief),
 /// 商户看自己的机器人不需要、也拿不到别人的标记。

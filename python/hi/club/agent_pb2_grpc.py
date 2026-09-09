@@ -591,6 +591,11 @@ class AgentDirectoryStub(object):
                 request_serializer=hi_dot_club_dot_agent__pb2.ListOnlineReq.SerializeToString,
                 response_deserializer=hi_dot_club_dot_agent__pb2.ListOnlineResp.FromString,
                 _registered_method=True)
+        self.GetMoment = channel.unary_unary(
+                '/hi.club.AgentDirectory/GetMoment',
+                request_serializer=hi_dot_club_dot_agent__pb2.GetAgentMomentReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_agent__pb2.GetAgentMomentResp.FromString,
+                _registered_method=True)
 
 
 class AgentDirectoryServicer(object):
@@ -615,6 +620,12 @@ class AgentDirectoryServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetMoment(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_AgentDirectoryServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -622,6 +633,11 @@ def add_AgentDirectoryServicer_to_server(servicer, server):
                     servicer.ListOnline,
                     request_deserializer=hi_dot_club_dot_agent__pb2.ListOnlineReq.FromString,
                     response_serializer=hi_dot_club_dot_agent__pb2.ListOnlineResp.SerializeToString,
+            ),
+            'GetMoment': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetMoment,
+                    request_deserializer=hi_dot_club_dot_agent__pb2.GetAgentMomentReq.FromString,
+                    response_serializer=hi_dot_club_dot_agent__pb2.GetAgentMomentResp.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -664,6 +680,33 @@ class AgentDirectory(object):
             '/hi.club.AgentDirectory/ListOnline',
             hi_dot_club_dot_agent__pb2.ListOnlineReq.SerializeToString,
             hi_dot_club_dot_agent__pb2.ListOnlineResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetMoment(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.AgentDirectory/GetMoment',
+            hi_dot_club_dot_agent__pb2.GetAgentMomentReq.SerializeToString,
+            hi_dot_club_dot_agent__pb2.GetAgentMomentResp.FromString,
             options,
             channel_credentials,
             insecure,

@@ -521,6 +521,103 @@ func (x *SetAgentMomentReq) GetMoment() string {
 	return ""
 }
 
+// 查看机器人的**动态**(个性签名那一栏)。
+//
+// ⭐ 与 SetMoment 对称:写入口在 club,读入口也在 club,不穿透 hi.ai。
+//
+//	动态存在 `hi_chat_user_moment`,人和机器人同一张表。
+//
+// ⚠️ 这是**公开接口**(AUTH_NONE):任何人可以查看任何机器人的动态。
+//
+//	动态本身就是公开信息(在 MarketStall 中是 VIS_PUBLIC)。
+type GetAgentMomentReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Agent         *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"` // 机器人 did
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetAgentMomentReq) Reset() {
+	*x = GetAgentMomentReq{}
+	mi := &file_hi_club_agent_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAgentMomentReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAgentMomentReq) ProtoMessage() {}
+
+func (x *GetAgentMomentReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_agent_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAgentMomentReq.ProtoReflect.Descriptor instead.
+func (*GetAgentMomentReq) Descriptor() ([]byte, []int) {
+	return file_hi_club_agent_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *GetAgentMomentReq) GetAgent() string {
+	if x != nil && x.Agent != nil {
+		return *x.Agent
+	}
+	return ""
+}
+
+type GetAgentMomentResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Moment        *string                `protobuf:"bytes,1,opt,name=moment,proto3,oneof" json:"moment,omitempty"` // 动态;空 = 没有设置
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetAgentMomentResp) Reset() {
+	*x = GetAgentMomentResp{}
+	mi := &file_hi_club_agent_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAgentMomentResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAgentMomentResp) ProtoMessage() {}
+
+func (x *GetAgentMomentResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_agent_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAgentMomentResp.ProtoReflect.Descriptor instead.
+func (*GetAgentMomentResp) Descriptor() ([]byte, []int) {
+	return file_hi_club_agent_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *GetAgentMomentResp) GetMoment() string {
+	if x != nil && x.Moment != nil {
+		return *x.Moment
+	}
+	return ""
+}
+
 var File_hi_club_agent_proto protoreflect.FileDescriptor
 
 const file_hi_club_agent_proto_rawDesc = "" +
@@ -565,6 +662,12 @@ const file_hi_club_agent_proto_rawDesc = "" +
 	"\x05agent\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x05agent\x88\x01\x01\x12\x1b\n" +
 	"\x06moment\x18\x02 \x01(\tH\x01R\x06moment\x88\x01\x01B\b\n" +
 	"\x06_agentB\t\n" +
+	"\a_moment\"I\n" +
+	"\x11GetAgentMomentReq\x12*\n" +
+	"\x05agent\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x05agent\x88\x01\x01B\b\n" +
+	"\x06_agent\"H\n" +
+	"\x12GetAgentMomentResp\x12!\n" +
+	"\x06moment\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x06moment\x88\x01\x01:\x04\x98\xb5\x18\x01B\t\n" +
 	"\a_moment2\xa1\x06\n" +
 	"\x05Agent\x12<\n" +
 	"\x04List\x12\x14.hi.ai.ListAgentsReq\x1a\x17.hi.club.ListAgentsResp\"\x05\x8a\xb5\x18\x01\x02\x12K\n" +
@@ -581,10 +684,11 @@ const file_hi_club_agent_proto_rawDesc = "" +
 	"\n" +
 	"BindStatus\x12\x16.hi.club.BindStatusReq\x1a\x17.hi.club.BindStatusResp\"\x05\x8a\xb5\x18\x01\x02\x12?\n" +
 	"\bTransfer\x12\x14.hi.club.TransferReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12F\n" +
-	"\tSetMoment\x12\x1a.hi.club.SetAgentMomentReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x022V\n" +
+	"\tSetMoment\x12\x1a.hi.club.SetAgentMomentReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x022\xa3\x01\n" +
 	"\x0eAgentDirectory\x12D\n" +
 	"\n" +
-	"ListOnline\x12\x16.hi.club.ListOnlineReq\x1a\x17.hi.club.ListOnlineResp\"\x05\x8a\xb5\x18\x01\x012T\n" +
+	"ListOnline\x12\x16.hi.club.ListOnlineReq\x1a\x17.hi.club.ListOnlineResp\"\x05\x8a\xb5\x18\x01\x01\x12K\n" +
+	"\tGetMoment\x12\x1a.hi.club.GetAgentMomentReq\x1a\x1b.hi.club.GetAgentMomentResp\"\x05\x8a\xb5\x18\x01\x012T\n" +
 	"\vAgentManage\x12E\n" +
 	"\x04List\x12\x1d.hi.club.ListAgentsByUsersReq\x1a\x17.hi.club.ListAgentsResp\"\x05\x8a\xb5\x18\x01\x04B\x81\x01\n" +
 	"\vcom.hi.clubB\n" +
@@ -602,7 +706,7 @@ func file_hi_club_agent_proto_rawDescGZIP() []byte {
 	return file_hi_club_agent_proto_rawDescData
 }
 
-var file_hi_club_agent_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_hi_club_agent_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_hi_club_agent_proto_goTypes = []any{
 	(*MasterBindReq)(nil),         // 0: hi.club.MasterBindReq
 	(*BindStatusReq)(nil),         // 1: hi.club.BindStatusReq
@@ -613,57 +717,61 @@ var file_hi_club_agent_proto_goTypes = []any{
 	(*ListAgentsByUsersReq)(nil),  // 6: hi.club.ListAgentsByUsersReq
 	(*ListAgentsResp)(nil),        // 7: hi.club.ListAgentsResp
 	(*SetAgentMomentReq)(nil),     // 8: hi.club.SetAgentMomentReq
-	(*hi.Entity)(nil),             // 9: hi.Entity
-	(*hi.Pagination)(nil),         // 10: hi.Pagination
-	(*ai.AgentInfo)(nil),          // 11: hi.ai.AgentInfo
-	(*ai.ListAgentsReq)(nil),      // 12: hi.ai.ListAgentsReq
-	(*ai.CreateAssistantReq)(nil), // 13: hi.ai.CreateAssistantReq
-	(*ai.EditAgentReq)(nil),       // 14: hi.ai.EditAgentReq
-	(*ai.DeleteAgentReq)(nil),     // 15: hi.ai.DeleteAgentReq
-	(*ai.GetAgentReq)(nil),        // 16: hi.ai.GetAgentReq
-	(*ai.AgentUsageReq)(nil),      // 17: hi.ai.AgentUsageReq
-	(*emptypb.Empty)(nil),         // 18: google.protobuf.Empty
-	(*ai.CreateAgentResp)(nil),    // 19: hi.ai.CreateAgentResp
-	(*ai.GetAgentResp)(nil),       // 20: hi.ai.GetAgentResp
-	(*ai.AgentUsageResp)(nil),     // 21: hi.ai.AgentUsageResp
-	(*ai.DefaultConfigResp)(nil),  // 22: hi.ai.DefaultConfigResp
+	(*GetAgentMomentReq)(nil),     // 9: hi.club.GetAgentMomentReq
+	(*GetAgentMomentResp)(nil),    // 10: hi.club.GetAgentMomentResp
+	(*hi.Entity)(nil),             // 11: hi.Entity
+	(*hi.Pagination)(nil),         // 12: hi.Pagination
+	(*ai.AgentInfo)(nil),          // 13: hi.ai.AgentInfo
+	(*ai.ListAgentsReq)(nil),      // 14: hi.ai.ListAgentsReq
+	(*ai.CreateAssistantReq)(nil), // 15: hi.ai.CreateAssistantReq
+	(*ai.EditAgentReq)(nil),       // 16: hi.ai.EditAgentReq
+	(*ai.DeleteAgentReq)(nil),     // 17: hi.ai.DeleteAgentReq
+	(*ai.GetAgentReq)(nil),        // 18: hi.ai.GetAgentReq
+	(*ai.AgentUsageReq)(nil),      // 19: hi.ai.AgentUsageReq
+	(*emptypb.Empty)(nil),         // 20: google.protobuf.Empty
+	(*ai.CreateAgentResp)(nil),    // 21: hi.ai.CreateAgentResp
+	(*ai.GetAgentResp)(nil),       // 22: hi.ai.GetAgentResp
+	(*ai.AgentUsageResp)(nil),     // 23: hi.ai.AgentUsageResp
+	(*ai.DefaultConfigResp)(nil),  // 24: hi.ai.DefaultConfigResp
 }
 var file_hi_club_agent_proto_depIdxs = []int32{
-	9,  // 0: hi.club.BindStatusResp.master:type_name -> hi.Entity
-	10, // 1: hi.club.ListOnlineReq.pagination:type_name -> hi.Pagination
-	9,  // 2: hi.club.ListOnlineResp.infos:type_name -> hi.Entity
-	10, // 3: hi.club.ListAgentsByUsersReq.pagination:type_name -> hi.Pagination
-	11, // 4: hi.club.ListAgentsResp.agents:type_name -> hi.ai.AgentInfo
-	12, // 5: hi.club.Agent.List:input_type -> hi.ai.ListAgentsReq
-	13, // 6: hi.club.Agent.CreateAssistant:input_type -> hi.ai.CreateAssistantReq
-	14, // 7: hi.club.Agent.Edit:input_type -> hi.ai.EditAgentReq
-	15, // 8: hi.club.Agent.Delete:input_type -> hi.ai.DeleteAgentReq
-	16, // 9: hi.club.Agent.Get:input_type -> hi.ai.GetAgentReq
-	17, // 10: hi.club.Agent.GetUsage:input_type -> hi.ai.AgentUsageReq
-	18, // 11: hi.club.Agent.GetDefaultConfig:input_type -> google.protobuf.Empty
+	11, // 0: hi.club.BindStatusResp.master:type_name -> hi.Entity
+	12, // 1: hi.club.ListOnlineReq.pagination:type_name -> hi.Pagination
+	11, // 2: hi.club.ListOnlineResp.infos:type_name -> hi.Entity
+	12, // 3: hi.club.ListAgentsByUsersReq.pagination:type_name -> hi.Pagination
+	13, // 4: hi.club.ListAgentsResp.agents:type_name -> hi.ai.AgentInfo
+	14, // 5: hi.club.Agent.List:input_type -> hi.ai.ListAgentsReq
+	15, // 6: hi.club.Agent.CreateAssistant:input_type -> hi.ai.CreateAssistantReq
+	16, // 7: hi.club.Agent.Edit:input_type -> hi.ai.EditAgentReq
+	17, // 8: hi.club.Agent.Delete:input_type -> hi.ai.DeleteAgentReq
+	18, // 9: hi.club.Agent.Get:input_type -> hi.ai.GetAgentReq
+	19, // 10: hi.club.Agent.GetUsage:input_type -> hi.ai.AgentUsageReq
+	20, // 11: hi.club.Agent.GetDefaultConfig:input_type -> google.protobuf.Empty
 	0,  // 12: hi.club.Agent.BindMaster:input_type -> hi.club.MasterBindReq
 	0,  // 13: hi.club.Agent.UnbindMaster:input_type -> hi.club.MasterBindReq
 	1,  // 14: hi.club.Agent.BindStatus:input_type -> hi.club.BindStatusReq
 	3,  // 15: hi.club.Agent.Transfer:input_type -> hi.club.TransferReq
 	8,  // 16: hi.club.Agent.SetMoment:input_type -> hi.club.SetAgentMomentReq
 	4,  // 17: hi.club.AgentDirectory.ListOnline:input_type -> hi.club.ListOnlineReq
-	6,  // 18: hi.club.AgentManage.List:input_type -> hi.club.ListAgentsByUsersReq
-	7,  // 19: hi.club.Agent.List:output_type -> hi.club.ListAgentsResp
-	19, // 20: hi.club.Agent.CreateAssistant:output_type -> hi.ai.CreateAgentResp
-	9,  // 21: hi.club.Agent.Edit:output_type -> hi.Entity
-	18, // 22: hi.club.Agent.Delete:output_type -> google.protobuf.Empty
-	20, // 23: hi.club.Agent.Get:output_type -> hi.ai.GetAgentResp
-	21, // 24: hi.club.Agent.GetUsage:output_type -> hi.ai.AgentUsageResp
-	22, // 25: hi.club.Agent.GetDefaultConfig:output_type -> hi.ai.DefaultConfigResp
-	18, // 26: hi.club.Agent.BindMaster:output_type -> google.protobuf.Empty
-	18, // 27: hi.club.Agent.UnbindMaster:output_type -> google.protobuf.Empty
-	2,  // 28: hi.club.Agent.BindStatus:output_type -> hi.club.BindStatusResp
-	18, // 29: hi.club.Agent.Transfer:output_type -> google.protobuf.Empty
-	18, // 30: hi.club.Agent.SetMoment:output_type -> google.protobuf.Empty
-	5,  // 31: hi.club.AgentDirectory.ListOnline:output_type -> hi.club.ListOnlineResp
-	7,  // 32: hi.club.AgentManage.List:output_type -> hi.club.ListAgentsResp
-	19, // [19:33] is the sub-list for method output_type
-	5,  // [5:19] is the sub-list for method input_type
+	9,  // 18: hi.club.AgentDirectory.GetMoment:input_type -> hi.club.GetAgentMomentReq
+	6,  // 19: hi.club.AgentManage.List:input_type -> hi.club.ListAgentsByUsersReq
+	7,  // 20: hi.club.Agent.List:output_type -> hi.club.ListAgentsResp
+	21, // 21: hi.club.Agent.CreateAssistant:output_type -> hi.ai.CreateAgentResp
+	11, // 22: hi.club.Agent.Edit:output_type -> hi.Entity
+	20, // 23: hi.club.Agent.Delete:output_type -> google.protobuf.Empty
+	22, // 24: hi.club.Agent.Get:output_type -> hi.ai.GetAgentResp
+	23, // 25: hi.club.Agent.GetUsage:output_type -> hi.ai.AgentUsageResp
+	24, // 26: hi.club.Agent.GetDefaultConfig:output_type -> hi.ai.DefaultConfigResp
+	20, // 27: hi.club.Agent.BindMaster:output_type -> google.protobuf.Empty
+	20, // 28: hi.club.Agent.UnbindMaster:output_type -> google.protobuf.Empty
+	2,  // 29: hi.club.Agent.BindStatus:output_type -> hi.club.BindStatusResp
+	20, // 30: hi.club.Agent.Transfer:output_type -> google.protobuf.Empty
+	20, // 31: hi.club.Agent.SetMoment:output_type -> google.protobuf.Empty
+	5,  // 32: hi.club.AgentDirectory.ListOnline:output_type -> hi.club.ListOnlineResp
+	10, // 33: hi.club.AgentDirectory.GetMoment:output_type -> hi.club.GetAgentMomentResp
+	7,  // 34: hi.club.AgentManage.List:output_type -> hi.club.ListAgentsResp
+	20, // [20:35] is the sub-list for method output_type
+	5,  // [5:20] is the sub-list for method input_type
 	5,  // [5:5] is the sub-list for extension type_name
 	5,  // [5:5] is the sub-list for extension extendee
 	0,  // [0:5] is the sub-list for field type_name
@@ -681,13 +789,15 @@ func file_hi_club_agent_proto_init() {
 	file_hi_club_agent_proto_msgTypes[5].OneofWrappers = []any{}
 	file_hi_club_agent_proto_msgTypes[7].OneofWrappers = []any{}
 	file_hi_club_agent_proto_msgTypes[8].OneofWrappers = []any{}
+	file_hi_club_agent_proto_msgTypes[9].OneofWrappers = []any{}
+	file_hi_club_agent_proto_msgTypes[10].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_agent_proto_rawDesc), len(file_hi_club_agent_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   9,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   3,
 		},
