@@ -807,6 +807,7 @@ class EditAgentReq extends $pb.GeneratedMessage {
     $core.String? note,
     $core.String? name,
     $core.String? avatar,
+    $core.String? moment,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
@@ -814,6 +815,7 @@ class EditAgentReq extends $pb.GeneratedMessage {
     if (note != null) result.note = note;
     if (name != null) result.name = name;
     if (avatar != null) result.avatar = avatar;
+    if (moment != null) result.moment = moment;
     return result;
   }
 
@@ -836,6 +838,7 @@ class EditAgentReq extends $pb.GeneratedMessage {
     ..aOS(3, _omitFieldNames ? '' : 'note')
     ..aOS(4, _omitFieldNames ? '' : 'name')
     ..aOS(5, _omitFieldNames ? '' : 'avatar')
+    ..aOS(6, _omitFieldNames ? '' : 'moment')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -903,6 +906,15 @@ class EditAgentReq extends $pb.GeneratedMessage {
   $core.bool hasAvatar() => $_has(4);
   @$pb.TagNumber(5)
   void clearAvatar() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.String get moment => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set moment($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasMoment() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearMoment() => $_clearField(6);
 }
 
 /// 商户档的列表:**不带 marked**。标记是超管的概念(见 AgentBrief),

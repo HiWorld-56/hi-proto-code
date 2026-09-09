@@ -439,12 +439,14 @@ const EditAgentReq$json = {
       '10': 'config'
     },
     {'1': 'note', '3': 3, '4': 1, '5': 9, '9': 3, '10': 'note', '17': true},
+    {'1': 'moment', '3': 6, '4': 1, '5': 9, '9': 4, '10': 'moment', '17': true},
   ],
   '8': [
     {'1': '_agent'},
     {'1': '_name'},
     {'1': '_avatar'},
     {'1': '_note'},
+    {'1': '_moment'},
   ],
 };
 
@@ -452,8 +454,9 @@ const EditAgentReq$json = {
 final $typed_data.Uint8List editAgentReqDescriptor = $convert.base64Decode(
     'CgxFZGl0QWdlbnRSZXESGQoFYWdlbnQYASABKAlIAFIFYWdlbnSIAQESFwoEbmFtZRgEIAEoCU'
     'gBUgRuYW1liAEBEhsKBmF2YXRhchgFIAEoCUgCUgZhdmF0YXKIAQESKgoGY29uZmlnGAIgASgL'
-    'MhIuaGkuYWkuQWdlbnRDb25maWdSBmNvbmZpZxIXCgRub3RlGAMgASgJSANSBG5vdGWIAQFCCA'
-    'oGX2FnZW50QgcKBV9uYW1lQgkKB19hdmF0YXJCBwoFX25vdGU=');
+    'MhIuaGkuYWkuQWdlbnRDb25maWdSBmNvbmZpZxIXCgRub3RlGAMgASgJSANSBG5vdGWIAQESGw'
+    'oGbW9tZW50GAYgASgJSARSBm1vbWVudIgBAUIICgZfYWdlbnRCBwoFX25hbWVCCQoHX2F2YXRh'
+    'ckIHCgVfbm90ZUIJCgdfbW9tZW50');
 
 @$core.Deprecated('Use listAgentsRespDescriptor instead')
 const ListAgentsResp$json = {
