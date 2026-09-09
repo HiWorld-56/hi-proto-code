@@ -1395,6 +1395,8 @@ func (x *MarketSellerUser) GetMoment() string {
 // ⚠️ `is_merchant` 与"支持币种多不多"是两件事:没授权给 club 的商户,这里也只发常规币种,
 //
 //	但它仍然 `is_merchant = true`。前端标"非商户"只能看这个字段,不许照币种/用户数猜。
+//	判据取自 `ListCoins` 的三种结果:NotFound = 非商户;PermissionDenied = 是商户但没授权;
+//	OK = 是商户且拿到了币种。
 type MarketSeller struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 卖家(主人)。**不传 = 空卖家**(全部无主机器人聚成的那一档),不是"这一行坏了"。
