@@ -9,6 +9,7 @@ package club
 import (
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	hi "github.com/HiWorld-56/hi-proto/go/hi"
+	did "github.com/HiWorld-56/hi-proto/go/hi/did"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -1265,15 +1266,7 @@ func (x *MarketGrantView) GetPluginUuid() string {
 	return ""
 }
 
-// ListSellersResp 卖家目录:**谁在卖** + 他有哪些摊位。
-//
-// 逛市场的顺序是「人 → 摊位 → 货」:先看见是谁在卖,再进他的摊位,再看待售的插件。
-// 直接铺一页插件的话,买家没法判断"这东西是谁出的"，而插件是要装进自己机器人里的三方代码。
-//
-// ⚠️ **只公开"有在售挂牌"的那些机器人的主人** —— 开店即自愿露出。
-//
-//	这不是一个"任意 did → 查它主人"的反查口子(那个当年正是因为泄露归属被删掉的);
-//	没挂牌的机器人不会出现在这里。
+// MarketStall 摊位 = 一台**有在售挂牌**的机器人。只在详情页的「摊位」tab 出现。
 type MarketStall struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Agent         *hi.Entity             `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`                                          // 摊主
@@ -1334,19 +1327,90 @@ func (x *MarketStall) GetListingCount() int32 {
 	return 0
 }
 
-type MarketSeller struct {
+// MarketSellerUser 卖家(商户)名下的一个用户 —— 只有基本资料 + 动态,没有任何金额。
+// 用户在这个商户下的余额/消费是**商户自己的账**,与"谁在卖插件"无关,不从这里出。
+type MarketSellerUser struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Master        *hi.Entity             `protobuf:"bytes,1,opt,name=master,proto3" json:"master,omitempty"`                                        // 卖家(主人);无主机器人不传
-	Moment        *string                `protobuf:"bytes,2,opt,name=moment,proto3,oneof" json:"moment,omitempty"`                                  // 卖家动态
-	Stalls        []*MarketStall         `protobuf:"bytes,3,rep,name=stalls,proto3" json:"stalls,omitempty"`                                        // 他名下**有在售挂牌**的摊位
-	ListingCount  *int32                 `protobuf:"varint,4,opt,name=listing_count,json=listingCount,proto3,oneof" json:"listing_count,omitempty"` // 在售挂牌总数 = 摊主挂牌数总和
+	User          *hi.Entity             `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`           // 用户(name/avatar)
+	Moment        *string                `protobuf:"bytes,2,opt,name=moment,proto3,oneof" json:"moment,omitempty"` // 用户动态(club 自己的 hi_chat_user_moment)
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MarketSellerUser) Reset() {
+	*x = MarketSellerUser{}
+	mi := &file_hi_club_market_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MarketSellerUser) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MarketSellerUser) ProtoMessage() {}
+
+func (x *MarketSellerUser) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_market_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MarketSellerUser.ProtoReflect.Descriptor instead.
+func (*MarketSellerUser) Descriptor() ([]byte, []int) {
+	return file_hi_club_market_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *MarketSellerUser) GetUser() *hi.Entity {
+	if x != nil {
+		return x.User
+	}
+	return nil
+}
+
+func (x *MarketSellerUser) GetMoment() string {
+	if x != nil && x.Moment != nil {
+		return *x.Moment
+	}
+	return ""
+}
+
+// MarketSeller 卖家资料 —— 目录里的一行,也是详情页的头部(GetSeller 回的就是它)。
+//
+// support_coins = 这个卖家收得了的币种,从 hi-did 现取,判据是 `is_merchant`:
+//
+//	· 非商户(含空卖家)= 常规币种(`hi.did.Base.ListCoins` 里 category=public 的那些);
+//	· 商户 = 常规币种 + 他自己配的自定义币种(`hi.did.MerchantInfo.custom_tokens`)。
+//
+// 商户那一半走**授权**取:`hi.did.MerchantGranted.ListCoins`,要目标商户授权过 club
+// (`MERCHANT_GRANT_SCOPE_READ_MERCHANT`)—— 与 club 读别家商户用户是同一条路。
+// **不许拿 club 自己的 ExtendToken 去冒充那个商户查**,那是"借用别家凭据",零报错。
+//
+// ⚠️ `is_merchant` 与"支持币种多不多"是两件事:没授权给 club 的商户,这里也只发常规币种,
+//
+//	但它仍然 `is_merchant = true`。前端标"非商户"只能看这个字段,不许照币种/用户数猜。
+type MarketSeller struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 卖家(主人)。**不传 = 空卖家**(全部无主机器人聚成的那一档),不是"这一行坏了"。
+	Master        *hi.Entity  `protobuf:"bytes,1,opt,name=master,proto3" json:"master,omitempty"`
+	Moment        *string     `protobuf:"bytes,2,opt,name=moment,proto3,oneof" json:"moment,omitempty"`                                  // 卖家动态
+	StallsCount   *int32      `protobuf:"varint,3,opt,name=stalls_count,json=stallsCount,proto3,oneof" json:"stalls_count,omitempty"`    // 他名下**有在售挂牌**的摊位数
+	ListingCount  *int32      `protobuf:"varint,4,opt,name=listing_count,json=listingCount,proto3,oneof" json:"listing_count,omitempty"` // 在售挂牌总数 = 各摊主挂牌数之和
+	SupportCoins  []*did.Coin `protobuf:"bytes,5,rep,name=support_coins,json=supportCoins,proto3" json:"support_coins,omitempty"`        // 支持的支付币种;非商户 = 常规币种
+	IsMerchant    *bool       `protobuf:"varint,6,opt,name=is_merchant,json=isMerchant,proto3,oneof" json:"is_merchant,omitempty"`       // 是不是 hi-did 商户;前端按它标"非商户"
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *MarketSeller) Reset() {
 	*x = MarketSeller{}
-	mi := &file_hi_club_market_proto_msgTypes[6]
+	mi := &file_hi_club_market_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1358,7 +1422,7 @@ func (x *MarketSeller) String() string {
 func (*MarketSeller) ProtoMessage() {}
 
 func (x *MarketSeller) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[6]
+	mi := &file_hi_club_market_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1371,7 +1435,7 @@ func (x *MarketSeller) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MarketSeller.ProtoReflect.Descriptor instead.
 func (*MarketSeller) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{6}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *MarketSeller) GetMaster() *hi.Entity {
@@ -1388,11 +1452,11 @@ func (x *MarketSeller) GetMoment() string {
 	return ""
 }
 
-func (x *MarketSeller) GetStalls() []*MarketStall {
-	if x != nil {
-		return x.Stalls
+func (x *MarketSeller) GetStallsCount() int32 {
+	if x != nil && x.StallsCount != nil {
+		return *x.StallsCount
 	}
-	return nil
+	return 0
 }
 
 func (x *MarketSeller) GetListingCount() int32 {
@@ -1400,6 +1464,20 @@ func (x *MarketSeller) GetListingCount() int32 {
 		return *x.ListingCount
 	}
 	return 0
+}
+
+func (x *MarketSeller) GetSupportCoins() []*did.Coin {
+	if x != nil {
+		return x.SupportCoins
+	}
+	return nil
+}
+
+func (x *MarketSeller) GetIsMerchant() bool {
+	if x != nil && x.IsMerchant != nil {
+		return *x.IsMerchant
+	}
+	return false
 }
 
 type ListSellersResp struct {
@@ -1412,7 +1490,7 @@ type ListSellersResp struct {
 
 func (x *ListSellersResp) Reset() {
 	*x = ListSellersResp{}
-	mi := &file_hi_club_market_proto_msgTypes[7]
+	mi := &file_hi_club_market_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1424,7 +1502,7 @@ func (x *ListSellersResp) String() string {
 func (*ListSellersResp) ProtoMessage() {}
 
 func (x *ListSellersResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[7]
+	mi := &file_hi_club_market_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1437,7 +1515,7 @@ func (x *ListSellersResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListSellersResp.ProtoReflect.Descriptor instead.
 func (*ListSellersResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{7}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ListSellersResp) GetTotal() int32 {
@@ -1454,6 +1532,267 @@ func (x *ListSellersResp) GetSellers() []*MarketSeller {
 	return nil
 }
 
+type GetSellerReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Master        *string                `protobuf:"bytes,1,opt,name=master,proto3,oneof" json:"master,omitempty"` // 卖家(主人)did;不传 = 空卖家
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetSellerReq) Reset() {
+	*x = GetSellerReq{}
+	mi := &file_hi_club_market_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetSellerReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetSellerReq) ProtoMessage() {}
+
+func (x *GetSellerReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_market_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetSellerReq.ProtoReflect.Descriptor instead.
+func (*GetSellerReq) Descriptor() ([]byte, []int) {
+	return file_hi_club_market_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *GetSellerReq) GetMaster() string {
+	if x != nil && x.Master != nil {
+		return *x.Master
+	}
+	return ""
+}
+
+type ListSellerStallsReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Master        *string                `protobuf:"bytes,1,opt,name=master,proto3,oneof" json:"master,omitempty"` // 卖家(主人)did;不传 = 空卖家
+	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListSellerStallsReq) Reset() {
+	*x = ListSellerStallsReq{}
+	mi := &file_hi_club_market_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListSellerStallsReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListSellerStallsReq) ProtoMessage() {}
+
+func (x *ListSellerStallsReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_market_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListSellerStallsReq.ProtoReflect.Descriptor instead.
+func (*ListSellerStallsReq) Descriptor() ([]byte, []int) {
+	return file_hi_club_market_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *ListSellerStallsReq) GetMaster() string {
+	if x != nil && x.Master != nil {
+		return *x.Master
+	}
+	return ""
+}
+
+func (x *ListSellerStallsReq) GetPagination() *hi.Pagination {
+	if x != nil {
+		return x.Pagination
+	}
+	return nil
+}
+
+type ListSellerStallsResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Total         *int32                 `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
+	Stalls        []*MarketStall         `protobuf:"bytes,2,rep,name=stalls,proto3" json:"stalls,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListSellerStallsResp) Reset() {
+	*x = ListSellerStallsResp{}
+	mi := &file_hi_club_market_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListSellerStallsResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListSellerStallsResp) ProtoMessage() {}
+
+func (x *ListSellerStallsResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_market_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListSellerStallsResp.ProtoReflect.Descriptor instead.
+func (*ListSellerStallsResp) Descriptor() ([]byte, []int) {
+	return file_hi_club_market_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *ListSellerStallsResp) GetTotal() int32 {
+	if x != nil && x.Total != nil {
+		return *x.Total
+	}
+	return 0
+}
+
+func (x *ListSellerStallsResp) GetStalls() []*MarketStall {
+	if x != nil {
+		return x.Stalls
+	}
+	return nil
+}
+
+type ListSellerUsersReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Master        *string                `protobuf:"bytes,1,opt,name=master,proto3,oneof" json:"master,omitempty"` // 卖家(主人)did;不传 = 空卖家
+	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListSellerUsersReq) Reset() {
+	*x = ListSellerUsersReq{}
+	mi := &file_hi_club_market_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListSellerUsersReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListSellerUsersReq) ProtoMessage() {}
+
+func (x *ListSellerUsersReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_market_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListSellerUsersReq.ProtoReflect.Descriptor instead.
+func (*ListSellerUsersReq) Descriptor() ([]byte, []int) {
+	return file_hi_club_market_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *ListSellerUsersReq) GetMaster() string {
+	if x != nil && x.Master != nil {
+		return *x.Master
+	}
+	return ""
+}
+
+func (x *ListSellerUsersReq) GetPagination() *hi.Pagination {
+	if x != nil {
+		return x.Pagination
+	}
+	return nil
+}
+
+// ListSellerUsersResp 商户名下的用户。
+//
+// 数据源 `hi.did.MerchantGranted.ListUsers` —— club 拿自己的 ExtendToken 跨商户读,
+// 要目标商户授权过 club(`MERCHANT_GRANT_SCOPE_READ_USERS`;新商户建号时默认给)。
+//
+// ⚠️ **空列表不是"非商户"的判据** —— 至少三种成因:非商户、商户名下确实没人、
+//
+//	商户把授权撤了(那一侧返 PermissionDenied,不是空列表)。要标"非商户"看
+//	`MarketSeller.is_merchant`。
+type ListSellerUsersResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Total         *int32                 `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
+	Users         []*MarketSellerUser    `protobuf:"bytes,2,rep,name=users,proto3" json:"users,omitempty"` // 非商户 / 空卖家为空列表
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListSellerUsersResp) Reset() {
+	*x = ListSellerUsersResp{}
+	mi := &file_hi_club_market_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListSellerUsersResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListSellerUsersResp) ProtoMessage() {}
+
+func (x *ListSellerUsersResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_market_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListSellerUsersResp.ProtoReflect.Descriptor instead.
+func (*ListSellerUsersResp) Descriptor() ([]byte, []int) {
+	return file_hi_club_market_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *ListSellerUsersResp) GetTotal() int32 {
+	if x != nil && x.Total != nil {
+		return *x.Total
+	}
+	return 0
+}
+
+func (x *ListSellerUsersResp) GetUsers() []*MarketSellerUser {
+	if x != nil {
+		return x.Users
+	}
+	return nil
+}
+
 type SearchListingsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Keyword       *string                `protobuf:"bytes,1,opt,name=keyword,proto3,oneof" json:"keyword,omitempty"` // 不传 = 不过滤
@@ -1465,7 +1804,7 @@ type SearchListingsReq struct {
 
 func (x *SearchListingsReq) Reset() {
 	*x = SearchListingsReq{}
-	mi := &file_hi_club_market_proto_msgTypes[8]
+	mi := &file_hi_club_market_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1477,7 +1816,7 @@ func (x *SearchListingsReq) String() string {
 func (*SearchListingsReq) ProtoMessage() {}
 
 func (x *SearchListingsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[8]
+	mi := &file_hi_club_market_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1490,7 +1829,7 @@ func (x *SearchListingsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchListingsReq.ProtoReflect.Descriptor instead.
 func (*SearchListingsReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{8}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *SearchListingsReq) GetKeyword() string {
@@ -1524,7 +1863,7 @@ type ListAgentListingsReq struct {
 
 func (x *ListAgentListingsReq) Reset() {
 	*x = ListAgentListingsReq{}
-	mi := &file_hi_club_market_proto_msgTypes[9]
+	mi := &file_hi_club_market_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1536,7 +1875,7 @@ func (x *ListAgentListingsReq) String() string {
 func (*ListAgentListingsReq) ProtoMessage() {}
 
 func (x *ListAgentListingsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[9]
+	mi := &file_hi_club_market_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1549,7 +1888,7 @@ func (x *ListAgentListingsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListAgentListingsReq.ProtoReflect.Descriptor instead.
 func (*ListAgentListingsReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{9}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *ListAgentListingsReq) GetAgent() string {
@@ -1575,7 +1914,7 @@ type GetListingReq struct {
 
 func (x *GetListingReq) Reset() {
 	*x = GetListingReq{}
-	mi := &file_hi_club_market_proto_msgTypes[10]
+	mi := &file_hi_club_market_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1587,7 +1926,7 @@ func (x *GetListingReq) String() string {
 func (*GetListingReq) ProtoMessage() {}
 
 func (x *GetListingReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[10]
+	mi := &file_hi_club_market_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1600,7 +1939,7 @@ func (x *GetListingReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetListingReq.ProtoReflect.Descriptor instead.
 func (*GetListingReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{10}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *GetListingReq) GetUuid() string {
@@ -1620,7 +1959,7 @@ type SearchListingsResp struct {
 
 func (x *SearchListingsResp) Reset() {
 	*x = SearchListingsResp{}
-	mi := &file_hi_club_market_proto_msgTypes[11]
+	mi := &file_hi_club_market_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1632,7 +1971,7 @@ func (x *SearchListingsResp) String() string {
 func (*SearchListingsResp) ProtoMessage() {}
 
 func (x *SearchListingsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[11]
+	mi := &file_hi_club_market_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1645,7 +1984,7 @@ func (x *SearchListingsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchListingsResp.ProtoReflect.Descriptor instead.
 func (*SearchListingsResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{11}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *SearchListingsResp) GetTotal() int32 {
@@ -1671,7 +2010,7 @@ type GetListingResp struct {
 
 func (x *GetListingResp) Reset() {
 	*x = GetListingResp{}
-	mi := &file_hi_club_market_proto_msgTypes[12]
+	mi := &file_hi_club_market_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1683,7 +2022,7 @@ func (x *GetListingResp) String() string {
 func (*GetListingResp) ProtoMessage() {}
 
 func (x *GetListingResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[12]
+	mi := &file_hi_club_market_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1696,7 +2035,7 @@ func (x *GetListingResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetListingResp.ProtoReflect.Descriptor instead.
 func (*GetListingResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{12}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *GetListingResp) GetDetail() *MarketListingDetail {
@@ -1755,7 +2094,7 @@ type CreateListingReq struct {
 
 func (x *CreateListingReq) Reset() {
 	*x = CreateListingReq{}
-	mi := &file_hi_club_market_proto_msgTypes[13]
+	mi := &file_hi_club_market_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1767,7 +2106,7 @@ func (x *CreateListingReq) String() string {
 func (*CreateListingReq) ProtoMessage() {}
 
 func (x *CreateListingReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[13]
+	mi := &file_hi_club_market_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1780,7 +2119,7 @@ func (x *CreateListingReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateListingReq.ProtoReflect.Descriptor instead.
 func (*CreateListingReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{13}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *CreateListingReq) GetAgent() string {
@@ -1875,7 +2214,7 @@ type EditListingReq struct {
 
 func (x *EditListingReq) Reset() {
 	*x = EditListingReq{}
-	mi := &file_hi_club_market_proto_msgTypes[14]
+	mi := &file_hi_club_market_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1887,7 +2226,7 @@ func (x *EditListingReq) String() string {
 func (*EditListingReq) ProtoMessage() {}
 
 func (x *EditListingReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[14]
+	mi := &file_hi_club_market_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1900,7 +2239,7 @@ func (x *EditListingReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EditListingReq.ProtoReflect.Descriptor instead.
 func (*EditListingReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{14}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *EditListingReq) GetUuid() string {
@@ -1962,7 +2301,7 @@ type SetListingStatusReq struct {
 
 func (x *SetListingStatusReq) Reset() {
 	*x = SetListingStatusReq{}
-	mi := &file_hi_club_market_proto_msgTypes[15]
+	mi := &file_hi_club_market_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1974,7 +2313,7 @@ func (x *SetListingStatusReq) String() string {
 func (*SetListingStatusReq) ProtoMessage() {}
 
 func (x *SetListingStatusReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[15]
+	mi := &file_hi_club_market_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1987,7 +2326,7 @@ func (x *SetListingStatusReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetListingStatusReq.ProtoReflect.Descriptor instead.
 func (*SetListingStatusReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{15}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *SetListingStatusReq) GetUuid() string {
@@ -2014,7 +2353,7 @@ type ListMyListingsReq struct {
 
 func (x *ListMyListingsReq) Reset() {
 	*x = ListMyListingsReq{}
-	mi := &file_hi_club_market_proto_msgTypes[16]
+	mi := &file_hi_club_market_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2026,7 +2365,7 @@ func (x *ListMyListingsReq) String() string {
 func (*ListMyListingsReq) ProtoMessage() {}
 
 func (x *ListMyListingsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[16]
+	mi := &file_hi_club_market_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2039,7 +2378,7 @@ func (x *ListMyListingsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListMyListingsReq.ProtoReflect.Descriptor instead.
 func (*ListMyListingsReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{16}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *ListMyListingsReq) GetAgent() string {
@@ -2066,7 +2405,7 @@ type ListMyListingsResp struct {
 
 func (x *ListMyListingsResp) Reset() {
 	*x = ListMyListingsResp{}
-	mi := &file_hi_club_market_proto_msgTypes[17]
+	mi := &file_hi_club_market_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2078,7 +2417,7 @@ func (x *ListMyListingsResp) String() string {
 func (*ListMyListingsResp) ProtoMessage() {}
 
 func (x *ListMyListingsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[17]
+	mi := &file_hi_club_market_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2091,7 +2430,7 @@ func (x *ListMyListingsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListMyListingsResp.ProtoReflect.Descriptor instead.
 func (*ListMyListingsResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{17}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *ListMyListingsResp) GetTotal() int32 {
@@ -2117,7 +2456,7 @@ type CreateListingResp struct {
 
 func (x *CreateListingResp) Reset() {
 	*x = CreateListingResp{}
-	mi := &file_hi_club_market_proto_msgTypes[18]
+	mi := &file_hi_club_market_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2129,7 +2468,7 @@ func (x *CreateListingResp) String() string {
 func (*CreateListingResp) ProtoMessage() {}
 
 func (x *CreateListingResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[18]
+	mi := &file_hi_club_market_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2142,7 +2481,7 @@ func (x *CreateListingResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateListingResp.ProtoReflect.Descriptor instead.
 func (*CreateListingResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{18}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *CreateListingResp) GetUuid() string {
@@ -2176,7 +2515,7 @@ type ApplyReq struct {
 
 func (x *ApplyReq) Reset() {
 	*x = ApplyReq{}
-	mi := &file_hi_club_market_proto_msgTypes[19]
+	mi := &file_hi_club_market_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2188,7 +2527,7 @@ func (x *ApplyReq) String() string {
 func (*ApplyReq) ProtoMessage() {}
 
 func (x *ApplyReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[19]
+	mi := &file_hi_club_market_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2201,7 +2540,7 @@ func (x *ApplyReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ApplyReq.ProtoReflect.Descriptor instead.
 func (*ApplyReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{19}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *ApplyReq) GetListingUuid() string {
@@ -2276,7 +2615,7 @@ type MarketPayment struct {
 
 func (x *MarketPayment) Reset() {
 	*x = MarketPayment{}
-	mi := &file_hi_club_market_proto_msgTypes[20]
+	mi := &file_hi_club_market_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2288,7 +2627,7 @@ func (x *MarketPayment) String() string {
 func (*MarketPayment) ProtoMessage() {}
 
 func (x *MarketPayment) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[20]
+	mi := &file_hi_club_market_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2301,7 +2640,7 @@ func (x *MarketPayment) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MarketPayment.ProtoReflect.Descriptor instead.
 func (*MarketPayment) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{20}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *MarketPayment) GetPayId() string {
@@ -2417,7 +2756,7 @@ type ListTransactionsReq struct {
 
 func (x *ListTransactionsReq) Reset() {
 	*x = ListTransactionsReq{}
-	mi := &file_hi_club_market_proto_msgTypes[21]
+	mi := &file_hi_club_market_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2429,7 +2768,7 @@ func (x *ListTransactionsReq) String() string {
 func (*ListTransactionsReq) ProtoMessage() {}
 
 func (x *ListTransactionsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[21]
+	mi := &file_hi_club_market_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2442,7 +2781,7 @@ func (x *ListTransactionsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListTransactionsReq.ProtoReflect.Descriptor instead.
 func (*ListTransactionsReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{21}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *ListTransactionsReq) GetDid() string {
@@ -2474,7 +2813,7 @@ type ListTransactionsResp struct {
 
 func (x *ListTransactionsResp) Reset() {
 	*x = ListTransactionsResp{}
-	mi := &file_hi_club_market_proto_msgTypes[22]
+	mi := &file_hi_club_market_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2486,7 +2825,7 @@ func (x *ListTransactionsResp) String() string {
 func (*ListTransactionsResp) ProtoMessage() {}
 
 func (x *ListTransactionsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[22]
+	mi := &file_hi_club_market_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2499,7 +2838,7 @@ func (x *ListTransactionsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListTransactionsResp.ProtoReflect.Descriptor instead.
 func (*ListTransactionsResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{22}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *ListTransactionsResp) GetList() []*MarketPayment {
@@ -2530,7 +2869,7 @@ type GetTransactionReq struct {
 
 func (x *GetTransactionReq) Reset() {
 	*x = GetTransactionReq{}
-	mi := &file_hi_club_market_proto_msgTypes[23]
+	mi := &file_hi_club_market_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2542,7 +2881,7 @@ func (x *GetTransactionReq) String() string {
 func (*GetTransactionReq) ProtoMessage() {}
 
 func (x *GetTransactionReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[23]
+	mi := &file_hi_club_market_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2555,7 +2894,7 @@ func (x *GetTransactionReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTransactionReq.ProtoReflect.Descriptor instead.
 func (*GetTransactionReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{23}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *GetTransactionReq) GetPayId() string {
@@ -2625,7 +2964,7 @@ type MarketOrder struct {
 
 func (x *MarketOrder) Reset() {
 	*x = MarketOrder{}
-	mi := &file_hi_club_market_proto_msgTypes[24]
+	mi := &file_hi_club_market_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2637,7 +2976,7 @@ func (x *MarketOrder) String() string {
 func (*MarketOrder) ProtoMessage() {}
 
 func (x *MarketOrder) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[24]
+	mi := &file_hi_club_market_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2650,7 +2989,7 @@ func (x *MarketOrder) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MarketOrder.ProtoReflect.Descriptor instead.
 func (*MarketOrder) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{24}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *MarketOrder) GetOrderId() string {
@@ -2757,7 +3096,7 @@ type IssuePaymentReq struct {
 
 func (x *IssuePaymentReq) Reset() {
 	*x = IssuePaymentReq{}
-	mi := &file_hi_club_market_proto_msgTypes[25]
+	mi := &file_hi_club_market_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2769,7 +3108,7 @@ func (x *IssuePaymentReq) String() string {
 func (*IssuePaymentReq) ProtoMessage() {}
 
 func (x *IssuePaymentReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[25]
+	mi := &file_hi_club_market_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2782,7 +3121,7 @@ func (x *IssuePaymentReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IssuePaymentReq.ProtoReflect.Descriptor instead.
 func (*IssuePaymentReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{25}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *IssuePaymentReq) GetOrderId() string {
@@ -2803,7 +3142,7 @@ type ListPaymentsReq struct {
 
 func (x *ListPaymentsReq) Reset() {
 	*x = ListPaymentsReq{}
-	mi := &file_hi_club_market_proto_msgTypes[26]
+	mi := &file_hi_club_market_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2815,7 +3154,7 @@ func (x *ListPaymentsReq) String() string {
 func (*ListPaymentsReq) ProtoMessage() {}
 
 func (x *ListPaymentsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[26]
+	mi := &file_hi_club_market_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2828,7 +3167,7 @@ func (x *ListPaymentsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListPaymentsReq.ProtoReflect.Descriptor instead.
 func (*ListPaymentsReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{26}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *ListPaymentsReq) GetOrderId() string {
@@ -2847,7 +3186,7 @@ type ListPaymentsResp struct {
 
 func (x *ListPaymentsResp) Reset() {
 	*x = ListPaymentsResp{}
-	mi := &file_hi_club_market_proto_msgTypes[27]
+	mi := &file_hi_club_market_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2859,7 +3198,7 @@ func (x *ListPaymentsResp) String() string {
 func (*ListPaymentsResp) ProtoMessage() {}
 
 func (x *ListPaymentsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[27]
+	mi := &file_hi_club_market_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2872,7 +3211,7 @@ func (x *ListPaymentsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListPaymentsResp.ProtoReflect.Descriptor instead.
 func (*ListPaymentsResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{27}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *ListPaymentsResp) GetList() []*MarketPayment {
@@ -2895,7 +3234,7 @@ type CreateRenewOrderReq struct {
 
 func (x *CreateRenewOrderReq) Reset() {
 	*x = CreateRenewOrderReq{}
-	mi := &file_hi_club_market_proto_msgTypes[28]
+	mi := &file_hi_club_market_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2907,7 +3246,7 @@ func (x *CreateRenewOrderReq) String() string {
 func (*CreateRenewOrderReq) ProtoMessage() {}
 
 func (x *CreateRenewOrderReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[28]
+	mi := &file_hi_club_market_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2920,7 +3259,7 @@ func (x *CreateRenewOrderReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateRenewOrderReq.ProtoReflect.Descriptor instead.
 func (*CreateRenewOrderReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{28}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *CreateRenewOrderReq) GetGrantUuid() string {
@@ -2953,7 +3292,7 @@ type MarketPayInfo struct {
 
 func (x *MarketPayInfo) Reset() {
 	*x = MarketPayInfo{}
-	mi := &file_hi_club_market_proto_msgTypes[29]
+	mi := &file_hi_club_market_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2965,7 +3304,7 @@ func (x *MarketPayInfo) String() string {
 func (*MarketPayInfo) ProtoMessage() {}
 
 func (x *MarketPayInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[29]
+	mi := &file_hi_club_market_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2978,7 +3317,7 @@ func (x *MarketPayInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MarketPayInfo.ProtoReflect.Descriptor instead.
 func (*MarketPayInfo) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{29}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *MarketPayInfo) GetAmount() string {
@@ -3039,7 +3378,7 @@ type ApplyResp struct {
 
 func (x *ApplyResp) Reset() {
 	*x = ApplyResp{}
-	mi := &file_hi_club_market_proto_msgTypes[30]
+	mi := &file_hi_club_market_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3051,7 +3390,7 @@ func (x *ApplyResp) String() string {
 func (*ApplyResp) ProtoMessage() {}
 
 func (x *ApplyResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[30]
+	mi := &file_hi_club_market_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3064,7 +3403,7 @@ func (x *ApplyResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ApplyResp.ProtoReflect.Descriptor instead.
 func (*ApplyResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{30}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *ApplyResp) GetGrantUuid() string {
@@ -3119,7 +3458,7 @@ type DecideGrantReq struct {
 
 func (x *DecideGrantReq) Reset() {
 	*x = DecideGrantReq{}
-	mi := &file_hi_club_market_proto_msgTypes[31]
+	mi := &file_hi_club_market_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3131,7 +3470,7 @@ func (x *DecideGrantReq) String() string {
 func (*DecideGrantReq) ProtoMessage() {}
 
 func (x *DecideGrantReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[31]
+	mi := &file_hi_club_market_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3144,7 +3483,7 @@ func (x *DecideGrantReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DecideGrantReq.ProtoReflect.Descriptor instead.
 func (*DecideGrantReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{31}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *DecideGrantReq) GetGrantUuid() string {
@@ -3175,7 +3514,7 @@ type ListGrantsReq struct {
 
 func (x *ListGrantsReq) Reset() {
 	*x = ListGrantsReq{}
-	mi := &file_hi_club_market_proto_msgTypes[32]
+	mi := &file_hi_club_market_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3187,7 +3526,7 @@ func (x *ListGrantsReq) String() string {
 func (*ListGrantsReq) ProtoMessage() {}
 
 func (x *ListGrantsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[32]
+	mi := &file_hi_club_market_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3200,7 +3539,7 @@ func (x *ListGrantsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListGrantsReq.ProtoReflect.Descriptor instead.
 func (*ListGrantsReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{32}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *ListGrantsReq) GetStatus() GrantStatus {
@@ -3234,7 +3573,7 @@ type ListGrantsResp struct {
 
 func (x *ListGrantsResp) Reset() {
 	*x = ListGrantsResp{}
-	mi := &file_hi_club_market_proto_msgTypes[33]
+	mi := &file_hi_club_market_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3246,7 +3585,7 @@ func (x *ListGrantsResp) String() string {
 func (*ListGrantsResp) ProtoMessage() {}
 
 func (x *ListGrantsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[33]
+	mi := &file_hi_club_market_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3259,7 +3598,7 @@ func (x *ListGrantsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListGrantsResp.ProtoReflect.Descriptor instead.
 func (*ListGrantsResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{33}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *ListGrantsResp) GetTotal() int32 {
@@ -3299,7 +3638,7 @@ type SetAutoRenewReq struct {
 
 func (x *SetAutoRenewReq) Reset() {
 	*x = SetAutoRenewReq{}
-	mi := &file_hi_club_market_proto_msgTypes[34]
+	mi := &file_hi_club_market_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3311,7 +3650,7 @@ func (x *SetAutoRenewReq) String() string {
 func (*SetAutoRenewReq) ProtoMessage() {}
 
 func (x *SetAutoRenewReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[34]
+	mi := &file_hi_club_market_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3324,7 +3663,7 @@ func (x *SetAutoRenewReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetAutoRenewReq.ProtoReflect.Descriptor instead.
 func (*SetAutoRenewReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{34}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *SetAutoRenewReq) GetGrantUuid() string {
@@ -3368,7 +3707,7 @@ type OfferReq struct {
 
 func (x *OfferReq) Reset() {
 	*x = OfferReq{}
-	mi := &file_hi_club_market_proto_msgTypes[35]
+	mi := &file_hi_club_market_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3380,7 +3719,7 @@ func (x *OfferReq) String() string {
 func (*OfferReq) ProtoMessage() {}
 
 func (x *OfferReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[35]
+	mi := &file_hi_club_market_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3393,7 +3732,7 @@ func (x *OfferReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OfferReq.ProtoReflect.Descriptor instead.
 func (*OfferReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{35}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *OfferReq) GetListingUuid() string {
@@ -3423,7 +3762,7 @@ type OfferResp struct {
 
 func (x *OfferResp) Reset() {
 	*x = OfferResp{}
-	mi := &file_hi_club_market_proto_msgTypes[36]
+	mi := &file_hi_club_market_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3435,7 +3774,7 @@ func (x *OfferResp) String() string {
 func (*OfferResp) ProtoMessage() {}
 
 func (x *OfferResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[36]
+	mi := &file_hi_club_market_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3448,7 +3787,7 @@ func (x *OfferResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OfferResp.ProtoReflect.Descriptor instead.
 func (*OfferResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{36}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *OfferResp) GetGrantUuid() string {
@@ -3485,7 +3824,7 @@ type DecideOfferReq struct {
 
 func (x *DecideOfferReq) Reset() {
 	*x = DecideOfferReq{}
-	mi := &file_hi_club_market_proto_msgTypes[37]
+	mi := &file_hi_club_market_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3497,7 +3836,7 @@ func (x *DecideOfferReq) String() string {
 func (*DecideOfferReq) ProtoMessage() {}
 
 func (x *DecideOfferReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[37]
+	mi := &file_hi_club_market_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3510,7 +3849,7 @@ func (x *DecideOfferReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DecideOfferReq.ProtoReflect.Descriptor instead.
 func (*DecideOfferReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{37}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *DecideOfferReq) GetGrantUuid() string {
@@ -3538,7 +3877,7 @@ type MarketManageListListingsReq struct {
 
 func (x *MarketManageListListingsReq) Reset() {
 	*x = MarketManageListListingsReq{}
-	mi := &file_hi_club_market_proto_msgTypes[38]
+	mi := &file_hi_club_market_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3550,7 +3889,7 @@ func (x *MarketManageListListingsReq) String() string {
 func (*MarketManageListListingsReq) ProtoMessage() {}
 
 func (x *MarketManageListListingsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[38]
+	mi := &file_hi_club_market_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3563,7 +3902,7 @@ func (x *MarketManageListListingsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MarketManageListListingsReq.ProtoReflect.Descriptor instead.
 func (*MarketManageListListingsReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{38}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *MarketManageListListingsReq) GetAgent() string {
@@ -3598,7 +3937,7 @@ type MarketManageListGrantsReq struct {
 
 func (x *MarketManageListGrantsReq) Reset() {
 	*x = MarketManageListGrantsReq{}
-	mi := &file_hi_club_market_proto_msgTypes[39]
+	mi := &file_hi_club_market_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3610,7 +3949,7 @@ func (x *MarketManageListGrantsReq) String() string {
 func (*MarketManageListGrantsReq) ProtoMessage() {}
 
 func (x *MarketManageListGrantsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[39]
+	mi := &file_hi_club_market_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3623,7 +3962,7 @@ func (x *MarketManageListGrantsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MarketManageListGrantsReq.ProtoReflect.Descriptor instead.
 func (*MarketManageListGrantsReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{39}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *MarketManageListGrantsReq) GetListingUuid() string {
@@ -3657,7 +3996,7 @@ type ForceDelistReq struct {
 
 func (x *ForceDelistReq) Reset() {
 	*x = ForceDelistReq{}
-	mi := &file_hi_club_market_proto_msgTypes[40]
+	mi := &file_hi_club_market_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3669,7 +4008,7 @@ func (x *ForceDelistReq) String() string {
 func (*ForceDelistReq) ProtoMessage() {}
 
 func (x *ForceDelistReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[40]
+	mi := &file_hi_club_market_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3682,7 +4021,7 @@ func (x *ForceDelistReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ForceDelistReq.ProtoReflect.Descriptor instead.
 func (*ForceDelistReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{40}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *ForceDelistReq) GetUuid() string {
@@ -3715,7 +4054,7 @@ type MarketPullData struct {
 
 func (x *MarketPullData) Reset() {
 	*x = MarketPullData{}
-	mi := &file_hi_club_market_proto_msgTypes[41]
+	mi := &file_hi_club_market_proto_msgTypes[47]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3727,7 +4066,7 @@ func (x *MarketPullData) String() string {
 func (*MarketPullData) ProtoMessage() {}
 
 func (x *MarketPullData) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[41]
+	mi := &file_hi_club_market_proto_msgTypes[47]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3740,7 +4079,7 @@ func (x *MarketPullData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MarketPullData.ProtoReflect.Descriptor instead.
 func (*MarketPullData) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{41}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *MarketPullData) GetNonce() string {
@@ -3783,7 +4122,7 @@ type MarketPendingGrant struct {
 
 func (x *MarketPendingGrant) Reset() {
 	*x = MarketPendingGrant{}
-	mi := &file_hi_club_market_proto_msgTypes[42]
+	mi := &file_hi_club_market_proto_msgTypes[48]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3795,7 +4134,7 @@ func (x *MarketPendingGrant) String() string {
 func (*MarketPendingGrant) ProtoMessage() {}
 
 func (x *MarketPendingGrant) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[42]
+	mi := &file_hi_club_market_proto_msgTypes[48]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3808,7 +4147,7 @@ func (x *MarketPendingGrant) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MarketPendingGrant.ProtoReflect.Descriptor instead.
 func (*MarketPendingGrant) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{42}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{48}
 }
 
 func (x *MarketPendingGrant) GetGrantUuid() string {
@@ -3904,7 +4243,7 @@ type MarketPullResp struct {
 
 func (x *MarketPullResp) Reset() {
 	*x = MarketPullResp{}
-	mi := &file_hi_club_market_proto_msgTypes[43]
+	mi := &file_hi_club_market_proto_msgTypes[49]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3916,7 +4255,7 @@ func (x *MarketPullResp) String() string {
 func (*MarketPullResp) ProtoMessage() {}
 
 func (x *MarketPullResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[43]
+	mi := &file_hi_club_market_proto_msgTypes[49]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3929,7 +4268,7 @@ func (x *MarketPullResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MarketPullResp.ProtoReflect.Descriptor instead.
 func (*MarketPullResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{43}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{49}
 }
 
 func (x *MarketPullResp) GetList() []*MarketPendingGrant {
@@ -3958,7 +4297,7 @@ type MarketNotifyData struct {
 
 func (x *MarketNotifyData) Reset() {
 	*x = MarketNotifyData{}
-	mi := &file_hi_club_market_proto_msgTypes[44]
+	mi := &file_hi_club_market_proto_msgTypes[50]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3970,7 +4309,7 @@ func (x *MarketNotifyData) String() string {
 func (*MarketNotifyData) ProtoMessage() {}
 
 func (x *MarketNotifyData) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_market_proto_msgTypes[44]
+	mi := &file_hi_club_market_proto_msgTypes[50]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3983,7 +4322,7 @@ func (x *MarketNotifyData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MarketNotifyData.ProtoReflect.Descriptor instead.
 func (*MarketNotifyData) Descriptor() ([]byte, []int) {
-	return file_hi_club_market_proto_rawDescGZIP(), []int{44}
+	return file_hi_club_market_proto_rawDescGZIP(), []int{50}
 }
 
 func (x *MarketNotifyData) GetGrantUuid() string {
@@ -4039,7 +4378,7 @@ var File_hi_club_market_proto protoreflect.FileDescriptor
 
 const file_hi_club_market_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/club/market.proto\x12\ahi.club\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xe6\x04\n" +
+	"\x14hi/club/market.proto\x12\ahi.club\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\x1a\x11hi/did/base.proto\"\xe6\x04\n" +
 	"\x12MarketListingBrief\x12\x1d\n" +
 	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x04uuid\x88\x01\x01\x12&\n" +
 	"\x05agent\x18\x02 \x01(\v2\n" +
@@ -4174,18 +4513,51 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\x06moment\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x06moment\x88\x01\x01\x12.\n" +
 	"\rlisting_count\x18\x04 \x01(\x05B\x04\x90\xb5\x18\x01H\x01R\flistingCount\x88\x01\x01:\x04\x98\xb5\x18\x01B\t\n" +
 	"\a_momentB\x10\n" +
-	"\x0e_listing_count\"\xe2\x01\n" +
+	"\x0e_listing_count\"l\n" +
+	"\x10MarketSellerUser\x12$\n" +
+	"\x04user\x18\x01 \x01(\v2\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x04user\x12!\n" +
+	"\x06moment\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x06moment\x88\x01\x01:\x04\x98\xb5\x18\x01B\t\n" +
+	"\a_moment\"\xe2\x02\n" +
 	"\fMarketSeller\x12(\n" +
 	"\x06master\x18\x01 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\x06master\x12!\n" +
-	"\x06moment\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x06moment\x88\x01\x01\x122\n" +
-	"\x06stalls\x18\x03 \x03(\v2\x14.hi.club.MarketStallB\x04\x90\xb5\x18\x01R\x06stalls\x12.\n" +
-	"\rlisting_count\x18\x04 \x01(\x05B\x04\x90\xb5\x18\x01H\x01R\flistingCount\x88\x01\x01:\x04\x98\xb5\x18\x01B\t\n" +
-	"\a_momentB\x10\n" +
-	"\x0e_listing_count\"y\n" +
+	"\x06moment\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x06moment\x88\x01\x01\x12,\n" +
+	"\fstalls_count\x18\x03 \x01(\x05B\x04\x90\xb5\x18\x01H\x01R\vstallsCount\x88\x01\x01\x12.\n" +
+	"\rlisting_count\x18\x04 \x01(\x05B\x04\x90\xb5\x18\x01H\x02R\flistingCount\x88\x01\x01\x127\n" +
+	"\rsupport_coins\x18\x05 \x03(\v2\f.hi.did.CoinB\x04\x90\xb5\x18\x01R\fsupportCoins\x12*\n" +
+	"\vis_merchant\x18\x06 \x01(\bB\x04\x90\xb5\x18\x01H\x03R\n" +
+	"isMerchant\x88\x01\x01:\x04\x98\xb5\x18\x01B\t\n" +
+	"\a_momentB\x0f\n" +
+	"\r_stalls_countB\x10\n" +
+	"\x0e_listing_countB\x0e\n" +
+	"\f_is_merchant\"y\n" +
 	"\x0fListSellersResp\x12\x1f\n" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x01H\x00R\x05total\x88\x01\x01\x125\n" +
 	"\asellers\x18\x02 \x03(\v2\x15.hi.club.MarketSellerB\x04\x90\xb5\x18\x01R\asellers:\x04\x98\xb5\x18\x01B\b\n" +
+	"\x06_total\"D\n" +
+	"\fGetSellerReq\x12)\n" +
+	"\x06master\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$H\x00R\x06master\x88\x01\x01B\t\n" +
+	"\a_master\"{\n" +
+	"\x13ListSellerStallsReq\x12)\n" +
+	"\x06master\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$H\x00R\x06master\x88\x01\x01\x12.\n" +
+	"\n" +
+	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
+	"paginationB\t\n" +
+	"\a_master\"{\n" +
+	"\x14ListSellerStallsResp\x12\x1f\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x01H\x00R\x05total\x88\x01\x01\x122\n" +
+	"\x06stalls\x18\x02 \x03(\v2\x14.hi.club.MarketStallB\x04\x90\xb5\x18\x01R\x06stalls:\x04\x98\xb5\x18\x01B\b\n" +
+	"\x06_total\"z\n" +
+	"\x12ListSellerUsersReq\x12)\n" +
+	"\x06master\x18\x01 \x01(\tB\f\xbaH\tr\a2\x05^\\S+$H\x00R\x06master\x88\x01\x01\x12.\n" +
+	"\n" +
+	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
+	"paginationB\t\n" +
+	"\a_master\"}\n" +
+	"\x13ListSellerUsersResp\x12\x1f\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x01H\x00R\x05total\x88\x01\x01\x125\n" +
+	"\x05users\x18\x02 \x03(\v2\x19.hi.club.MarketSellerUserB\x04\x90\xb5\x18\x01R\x05users:\x04\x98\xb5\x18\x01B\b\n" +
 	"\x06_total\"\x82\x01\n" +
 	"\x11SearchListingsReq\x12\x1d\n" +
 	"\akeyword\x18\x01 \x01(\tH\x00R\akeyword\x88\x01\x01\x12\x12\n" +
@@ -4549,10 +4921,13 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\x1dMARKET_PAYMENT_STATUS_EXPIRED\x10\x02\x12$\n" +
 	" MARKET_PAYMENT_STATUS_SUPERSEDED\x10\x03\x12\"\n" +
 	"\x1eMARKET_PAYMENT_STATUS_REPORTED\x10\x04\x12\"\n" +
-	"\x1eMARKET_PAYMENT_STATUS_REJECTED\x10\x052\xc1\x02\n" +
+	"\x1eMARKET_PAYMENT_STATUS_REJECTED\x10\x052\xb0\x04\n" +
 	"\x0fMarketDirectory\x12P\n" +
 	"\x0eSearchListings\x12\x1a.hi.club.SearchListingsReq\x1a\x1b.hi.club.SearchListingsResp\"\x05\x8a\xb5\x18\x01\x01\x12>\n" +
-	"\vListSellers\x12\x0e.hi.Pagination\x1a\x18.hi.club.ListSellersResp\"\x05\x8a\xb5\x18\x01\x01\x12V\n" +
+	"\vListSellers\x12\x0e.hi.Pagination\x1a\x18.hi.club.ListSellersResp\"\x05\x8a\xb5\x18\x01\x01\x12@\n" +
+	"\tGetSeller\x12\x15.hi.club.GetSellerReq\x1a\x15.hi.club.MarketSeller\"\x05\x8a\xb5\x18\x01\x01\x12V\n" +
+	"\x10ListSellerStalls\x12\x1c.hi.club.ListSellerStallsReq\x1a\x1d.hi.club.ListSellerStallsResp\"\x05\x8a\xb5\x18\x01\x01\x12S\n" +
+	"\x0fListSellerUsers\x12\x1b.hi.club.ListSellerUsersReq\x1a\x1c.hi.club.ListSellerUsersResp\"\x05\x8a\xb5\x18\x01\x01\x12V\n" +
 	"\x11ListAgentListings\x12\x1d.hi.club.ListAgentListingsReq\x1a\x1b.hi.club.SearchListingsResp\"\x05\x8a\xb5\x18\x01\x01\x12D\n" +
 	"\n" +
 	"GetListing\x12\x16.hi.club.GetListingReq\x1a\x17.hi.club.GetListingResp\"\x05\x8a\xb5\x18\x01\x012\xed\n" +
@@ -4600,7 +4975,7 @@ func file_hi_club_market_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_club_market_proto_enumTypes = make([]protoimpl.EnumInfo, 8)
-var file_hi_club_market_proto_msgTypes = make([]protoimpl.MessageInfo, 45)
+var file_hi_club_market_proto_msgTypes = make([]protoimpl.MessageInfo, 51)
 var file_hi_club_market_proto_goTypes = []any{
 	(SettleMode)(0),                     // 0: hi.club.SettleMode
 	(ListingStatus)(0),                  // 1: hi.club.ListingStatus
@@ -4616,165 +4991,183 @@ var file_hi_club_market_proto_goTypes = []any{
 	(*MarketRenewBrief)(nil),            // 11: hi.club.MarketRenewBrief
 	(*MarketGrantView)(nil),             // 12: hi.club.MarketGrantView
 	(*MarketStall)(nil),                 // 13: hi.club.MarketStall
-	(*MarketSeller)(nil),                // 14: hi.club.MarketSeller
-	(*ListSellersResp)(nil),             // 15: hi.club.ListSellersResp
-	(*SearchListingsReq)(nil),           // 16: hi.club.SearchListingsReq
-	(*ListAgentListingsReq)(nil),        // 17: hi.club.ListAgentListingsReq
-	(*GetListingReq)(nil),               // 18: hi.club.GetListingReq
-	(*SearchListingsResp)(nil),          // 19: hi.club.SearchListingsResp
-	(*GetListingResp)(nil),              // 20: hi.club.GetListingResp
-	(*CreateListingReq)(nil),            // 21: hi.club.CreateListingReq
-	(*EditListingReq)(nil),              // 22: hi.club.EditListingReq
-	(*SetListingStatusReq)(nil),         // 23: hi.club.SetListingStatusReq
-	(*ListMyListingsReq)(nil),           // 24: hi.club.ListMyListingsReq
-	(*ListMyListingsResp)(nil),          // 25: hi.club.ListMyListingsResp
-	(*CreateListingResp)(nil),           // 26: hi.club.CreateListingResp
-	(*ApplyReq)(nil),                    // 27: hi.club.ApplyReq
-	(*MarketPayment)(nil),               // 28: hi.club.MarketPayment
-	(*ListTransactionsReq)(nil),         // 29: hi.club.ListTransactionsReq
-	(*ListTransactionsResp)(nil),        // 30: hi.club.ListTransactionsResp
-	(*GetTransactionReq)(nil),           // 31: hi.club.GetTransactionReq
-	(*MarketOrder)(nil),                 // 32: hi.club.MarketOrder
-	(*IssuePaymentReq)(nil),             // 33: hi.club.IssuePaymentReq
-	(*ListPaymentsReq)(nil),             // 34: hi.club.ListPaymentsReq
-	(*ListPaymentsResp)(nil),            // 35: hi.club.ListPaymentsResp
-	(*CreateRenewOrderReq)(nil),         // 36: hi.club.CreateRenewOrderReq
-	(*MarketPayInfo)(nil),               // 37: hi.club.MarketPayInfo
-	(*ApplyResp)(nil),                   // 38: hi.club.ApplyResp
-	(*DecideGrantReq)(nil),              // 39: hi.club.DecideGrantReq
-	(*ListGrantsReq)(nil),               // 40: hi.club.ListGrantsReq
-	(*ListGrantsResp)(nil),              // 41: hi.club.ListGrantsResp
-	(*SetAutoRenewReq)(nil),             // 42: hi.club.SetAutoRenewReq
-	(*OfferReq)(nil),                    // 43: hi.club.OfferReq
-	(*OfferResp)(nil),                   // 44: hi.club.OfferResp
-	(*DecideOfferReq)(nil),              // 45: hi.club.DecideOfferReq
-	(*MarketManageListListingsReq)(nil), // 46: hi.club.MarketManageListListingsReq
-	(*MarketManageListGrantsReq)(nil),   // 47: hi.club.MarketManageListGrantsReq
-	(*ForceDelistReq)(nil),              // 48: hi.club.ForceDelistReq
-	(*MarketPullData)(nil),              // 49: hi.club.MarketPullData
-	(*MarketPendingGrant)(nil),          // 50: hi.club.MarketPendingGrant
-	(*MarketPullResp)(nil),              // 51: hi.club.MarketPullResp
-	(*MarketNotifyData)(nil),            // 52: hi.club.MarketNotifyData
-	(*hi.Entity)(nil),                   // 53: hi.Entity
-	(*hi.Pagination)(nil),               // 54: hi.Pagination
-	(*structpb.Struct)(nil),             // 55: google.protobuf.Struct
-	(*hi.SignedData)(nil),               // 56: hi.SignedData
-	(*emptypb.Empty)(nil),               // 57: google.protobuf.Empty
+	(*MarketSellerUser)(nil),            // 14: hi.club.MarketSellerUser
+	(*MarketSeller)(nil),                // 15: hi.club.MarketSeller
+	(*ListSellersResp)(nil),             // 16: hi.club.ListSellersResp
+	(*GetSellerReq)(nil),                // 17: hi.club.GetSellerReq
+	(*ListSellerStallsReq)(nil),         // 18: hi.club.ListSellerStallsReq
+	(*ListSellerStallsResp)(nil),        // 19: hi.club.ListSellerStallsResp
+	(*ListSellerUsersReq)(nil),          // 20: hi.club.ListSellerUsersReq
+	(*ListSellerUsersResp)(nil),         // 21: hi.club.ListSellerUsersResp
+	(*SearchListingsReq)(nil),           // 22: hi.club.SearchListingsReq
+	(*ListAgentListingsReq)(nil),        // 23: hi.club.ListAgentListingsReq
+	(*GetListingReq)(nil),               // 24: hi.club.GetListingReq
+	(*SearchListingsResp)(nil),          // 25: hi.club.SearchListingsResp
+	(*GetListingResp)(nil),              // 26: hi.club.GetListingResp
+	(*CreateListingReq)(nil),            // 27: hi.club.CreateListingReq
+	(*EditListingReq)(nil),              // 28: hi.club.EditListingReq
+	(*SetListingStatusReq)(nil),         // 29: hi.club.SetListingStatusReq
+	(*ListMyListingsReq)(nil),           // 30: hi.club.ListMyListingsReq
+	(*ListMyListingsResp)(nil),          // 31: hi.club.ListMyListingsResp
+	(*CreateListingResp)(nil),           // 32: hi.club.CreateListingResp
+	(*ApplyReq)(nil),                    // 33: hi.club.ApplyReq
+	(*MarketPayment)(nil),               // 34: hi.club.MarketPayment
+	(*ListTransactionsReq)(nil),         // 35: hi.club.ListTransactionsReq
+	(*ListTransactionsResp)(nil),        // 36: hi.club.ListTransactionsResp
+	(*GetTransactionReq)(nil),           // 37: hi.club.GetTransactionReq
+	(*MarketOrder)(nil),                 // 38: hi.club.MarketOrder
+	(*IssuePaymentReq)(nil),             // 39: hi.club.IssuePaymentReq
+	(*ListPaymentsReq)(nil),             // 40: hi.club.ListPaymentsReq
+	(*ListPaymentsResp)(nil),            // 41: hi.club.ListPaymentsResp
+	(*CreateRenewOrderReq)(nil),         // 42: hi.club.CreateRenewOrderReq
+	(*MarketPayInfo)(nil),               // 43: hi.club.MarketPayInfo
+	(*ApplyResp)(nil),                   // 44: hi.club.ApplyResp
+	(*DecideGrantReq)(nil),              // 45: hi.club.DecideGrantReq
+	(*ListGrantsReq)(nil),               // 46: hi.club.ListGrantsReq
+	(*ListGrantsResp)(nil),              // 47: hi.club.ListGrantsResp
+	(*SetAutoRenewReq)(nil),             // 48: hi.club.SetAutoRenewReq
+	(*OfferReq)(nil),                    // 49: hi.club.OfferReq
+	(*OfferResp)(nil),                   // 50: hi.club.OfferResp
+	(*DecideOfferReq)(nil),              // 51: hi.club.DecideOfferReq
+	(*MarketManageListListingsReq)(nil), // 52: hi.club.MarketManageListListingsReq
+	(*MarketManageListGrantsReq)(nil),   // 53: hi.club.MarketManageListGrantsReq
+	(*ForceDelistReq)(nil),              // 54: hi.club.ForceDelistReq
+	(*MarketPullData)(nil),              // 55: hi.club.MarketPullData
+	(*MarketPendingGrant)(nil),          // 56: hi.club.MarketPendingGrant
+	(*MarketPullResp)(nil),              // 57: hi.club.MarketPullResp
+	(*MarketNotifyData)(nil),            // 58: hi.club.MarketNotifyData
+	(*hi.Entity)(nil),                   // 59: hi.Entity
+	(*did.Coin)(nil),                    // 60: hi.did.Coin
+	(*hi.Pagination)(nil),               // 61: hi.Pagination
+	(*structpb.Struct)(nil),             // 62: google.protobuf.Struct
+	(*hi.SignedData)(nil),               // 63: hi.SignedData
+	(*emptypb.Empty)(nil),               // 64: google.protobuf.Empty
 }
 var file_hi_club_market_proto_depIdxs = []int32{
-	53, // 0: hi.club.MarketListingBrief.agent:type_name -> hi.Entity
+	59, // 0: hi.club.MarketListingBrief.agent:type_name -> hi.Entity
 	0,  // 1: hi.club.MarketListingBrief.settle_mode:type_name -> hi.club.SettleMode
 	2,  // 2: hi.club.MarketListingBrief.kind:type_name -> hi.club.MarketListingKind
 	8,  // 3: hi.club.MarketListingDetail.brief:type_name -> hi.club.MarketListingBrief
 	1,  // 4: hi.club.MarketListingDetail.status:type_name -> hi.club.ListingStatus
-	53, // 5: hi.club.MarketGrantBrief.from_agent:type_name -> hi.Entity
-	53, // 6: hi.club.MarketGrantBrief.to_agent:type_name -> hi.Entity
-	53, // 7: hi.club.MarketGrantBrief.applicant:type_name -> hi.Entity
+	59, // 5: hi.club.MarketGrantBrief.from_agent:type_name -> hi.Entity
+	59, // 6: hi.club.MarketGrantBrief.to_agent:type_name -> hi.Entity
+	59, // 7: hi.club.MarketGrantBrief.applicant:type_name -> hi.Entity
 	0,  // 8: hi.club.MarketGrantBrief.settle_mode:type_name -> hi.club.SettleMode
-	53, // 9: hi.club.MarketGrantView.from_agent:type_name -> hi.Entity
-	53, // 10: hi.club.MarketGrantView.to_agent:type_name -> hi.Entity
-	53, // 11: hi.club.MarketGrantView.applicant:type_name -> hi.Entity
+	59, // 9: hi.club.MarketGrantView.from_agent:type_name -> hi.Entity
+	59, // 10: hi.club.MarketGrantView.to_agent:type_name -> hi.Entity
+	59, // 11: hi.club.MarketGrantView.applicant:type_name -> hi.Entity
 	4,  // 12: hi.club.MarketGrantView.status:type_name -> hi.club.GrantStatus
 	0,  // 13: hi.club.MarketGrantView.settle_mode:type_name -> hi.club.SettleMode
 	3,  // 14: hi.club.MarketGrantView.initiator:type_name -> hi.club.GrantInitiator
-	53, // 15: hi.club.MarketStall.agent:type_name -> hi.Entity
-	53, // 16: hi.club.MarketSeller.master:type_name -> hi.Entity
-	13, // 17: hi.club.MarketSeller.stalls:type_name -> hi.club.MarketStall
-	14, // 18: hi.club.ListSellersResp.sellers:type_name -> hi.club.MarketSeller
-	54, // 19: hi.club.SearchListingsReq.pagination:type_name -> hi.Pagination
-	54, // 20: hi.club.ListAgentListingsReq.pagination:type_name -> hi.Pagination
-	8,  // 21: hi.club.SearchListingsResp.list:type_name -> hi.club.MarketListingBrief
-	9,  // 22: hi.club.GetListingResp.detail:type_name -> hi.club.MarketListingDetail
-	0,  // 23: hi.club.CreateListingReq.settle_mode:type_name -> hi.club.SettleMode
-	2,  // 24: hi.club.CreateListingReq.kind:type_name -> hi.club.MarketListingKind
-	1,  // 25: hi.club.SetListingStatusReq.status:type_name -> hi.club.ListingStatus
-	54, // 26: hi.club.ListMyListingsReq.pagination:type_name -> hi.Pagination
-	9,  // 27: hi.club.ListMyListingsResp.list:type_name -> hi.club.MarketListingDetail
-	55, // 28: hi.club.ApplyReq.params:type_name -> google.protobuf.Struct
-	7,  // 29: hi.club.MarketPayment.status:type_name -> hi.club.MarketPaymentStatus
-	54, // 30: hi.club.ListTransactionsReq.pagination:type_name -> hi.Pagination
-	28, // 31: hi.club.ListTransactionsResp.list:type_name -> hi.club.MarketPayment
-	5,  // 32: hi.club.MarketOrder.kind:type_name -> hi.club.MarketOrderKind
-	6,  // 33: hi.club.MarketOrder.status:type_name -> hi.club.MarketOrderStatus
-	28, // 34: hi.club.MarketOrder.payment:type_name -> hi.club.MarketPayment
-	28, // 35: hi.club.ListPaymentsResp.list:type_name -> hi.club.MarketPayment
-	4,  // 36: hi.club.ApplyResp.status:type_name -> hi.club.GrantStatus
-	37, // 37: hi.club.ApplyResp.pay:type_name -> hi.club.MarketPayInfo
-	32, // 38: hi.club.ApplyResp.order:type_name -> hi.club.MarketOrder
-	4,  // 39: hi.club.ListGrantsReq.status:type_name -> hi.club.GrantStatus
-	54, // 40: hi.club.ListGrantsReq.pagination:type_name -> hi.Pagination
-	3,  // 41: hi.club.ListGrantsReq.initiator:type_name -> hi.club.GrantInitiator
-	12, // 42: hi.club.ListGrantsResp.list:type_name -> hi.club.MarketGrantView
-	4,  // 43: hi.club.OfferResp.status:type_name -> hi.club.GrantStatus
-	1,  // 44: hi.club.MarketManageListListingsReq.status:type_name -> hi.club.ListingStatus
-	54, // 45: hi.club.MarketManageListListingsReq.pagination:type_name -> hi.Pagination
-	4,  // 46: hi.club.MarketManageListGrantsReq.status:type_name -> hi.club.GrantStatus
-	54, // 47: hi.club.MarketManageListGrantsReq.pagination:type_name -> hi.Pagination
-	0,  // 48: hi.club.MarketPendingGrant.settle_mode:type_name -> hi.club.SettleMode
-	55, // 49: hi.club.MarketPendingGrant.params:type_name -> google.protobuf.Struct
-	50, // 50: hi.club.MarketPullResp.list:type_name -> hi.club.MarketPendingGrant
-	55, // 51: hi.club.MarketNotifyData.terms_override:type_name -> google.protobuf.Struct
-	16, // 52: hi.club.MarketDirectory.SearchListings:input_type -> hi.club.SearchListingsReq
-	54, // 53: hi.club.MarketDirectory.ListSellers:input_type -> hi.Pagination
-	17, // 54: hi.club.MarketDirectory.ListAgentListings:input_type -> hi.club.ListAgentListingsReq
-	18, // 55: hi.club.MarketDirectory.GetListing:input_type -> hi.club.GetListingReq
-	21, // 56: hi.club.Market.CreateListing:input_type -> hi.club.CreateListingReq
-	22, // 57: hi.club.Market.EditListing:input_type -> hi.club.EditListingReq
-	23, // 58: hi.club.Market.SetListingStatus:input_type -> hi.club.SetListingStatusReq
-	24, // 59: hi.club.Market.ListMyListings:input_type -> hi.club.ListMyListingsReq
-	40, // 60: hi.club.Market.ListReceivedRequests:input_type -> hi.club.ListGrantsReq
-	39, // 61: hi.club.Market.Approve:input_type -> hi.club.DecideGrantReq
-	39, // 62: hi.club.Market.Reject:input_type -> hi.club.DecideGrantReq
-	39, // 63: hi.club.Market.Revoke:input_type -> hi.club.DecideGrantReq
-	27, // 64: hi.club.Market.Apply:input_type -> hi.club.ApplyReq
-	36, // 65: hi.club.Market.CreateRenewOrder:input_type -> hi.club.CreateRenewOrderReq
-	33, // 66: hi.club.Market.IssuePayment:input_type -> hi.club.IssuePaymentReq
-	34, // 67: hi.club.Market.ListPayments:input_type -> hi.club.ListPaymentsReq
-	29, // 68: hi.club.Market.ListTransactions:input_type -> hi.club.ListTransactionsReq
-	31, // 69: hi.club.Market.GetTransaction:input_type -> hi.club.GetTransactionReq
-	40, // 70: hi.club.Market.ListMyGrants:input_type -> hi.club.ListGrantsReq
-	43, // 71: hi.club.Market.Offer:input_type -> hi.club.OfferReq
-	45, // 72: hi.club.Market.AcceptOffer:input_type -> hi.club.DecideOfferReq
-	45, // 73: hi.club.Market.DeclineOffer:input_type -> hi.club.DecideOfferReq
-	42, // 74: hi.club.Market.SetAutoRenew:input_type -> hi.club.SetAutoRenewReq
-	56, // 75: hi.club.MarketCallback.Pull:input_type -> hi.SignedData
-	56, // 76: hi.club.MarketCallback.Notify:input_type -> hi.SignedData
-	46, // 77: hi.club.MarketManage.ListListings:input_type -> hi.club.MarketManageListListingsReq
-	47, // 78: hi.club.MarketManage.ListGrants:input_type -> hi.club.MarketManageListGrantsReq
-	48, // 79: hi.club.MarketManage.ForceDelist:input_type -> hi.club.ForceDelistReq
-	19, // 80: hi.club.MarketDirectory.SearchListings:output_type -> hi.club.SearchListingsResp
-	15, // 81: hi.club.MarketDirectory.ListSellers:output_type -> hi.club.ListSellersResp
-	19, // 82: hi.club.MarketDirectory.ListAgentListings:output_type -> hi.club.SearchListingsResp
-	20, // 83: hi.club.MarketDirectory.GetListing:output_type -> hi.club.GetListingResp
-	26, // 84: hi.club.Market.CreateListing:output_type -> hi.club.CreateListingResp
-	57, // 85: hi.club.Market.EditListing:output_type -> google.protobuf.Empty
-	57, // 86: hi.club.Market.SetListingStatus:output_type -> google.protobuf.Empty
-	25, // 87: hi.club.Market.ListMyListings:output_type -> hi.club.ListMyListingsResp
-	41, // 88: hi.club.Market.ListReceivedRequests:output_type -> hi.club.ListGrantsResp
-	57, // 89: hi.club.Market.Approve:output_type -> google.protobuf.Empty
-	57, // 90: hi.club.Market.Reject:output_type -> google.protobuf.Empty
-	57, // 91: hi.club.Market.Revoke:output_type -> google.protobuf.Empty
-	38, // 92: hi.club.Market.Apply:output_type -> hi.club.ApplyResp
-	32, // 93: hi.club.Market.CreateRenewOrder:output_type -> hi.club.MarketOrder
-	32, // 94: hi.club.Market.IssuePayment:output_type -> hi.club.MarketOrder
-	35, // 95: hi.club.Market.ListPayments:output_type -> hi.club.ListPaymentsResp
-	30, // 96: hi.club.Market.ListTransactions:output_type -> hi.club.ListTransactionsResp
-	28, // 97: hi.club.Market.GetTransaction:output_type -> hi.club.MarketPayment
-	41, // 98: hi.club.Market.ListMyGrants:output_type -> hi.club.ListGrantsResp
-	44, // 99: hi.club.Market.Offer:output_type -> hi.club.OfferResp
-	57, // 100: hi.club.Market.AcceptOffer:output_type -> google.protobuf.Empty
-	57, // 101: hi.club.Market.DeclineOffer:output_type -> google.protobuf.Empty
-	57, // 102: hi.club.Market.SetAutoRenew:output_type -> google.protobuf.Empty
-	51, // 103: hi.club.MarketCallback.Pull:output_type -> hi.club.MarketPullResp
-	57, // 104: hi.club.MarketCallback.Notify:output_type -> google.protobuf.Empty
-	19, // 105: hi.club.MarketManage.ListListings:output_type -> hi.club.SearchListingsResp
-	41, // 106: hi.club.MarketManage.ListGrants:output_type -> hi.club.ListGrantsResp
-	57, // 107: hi.club.MarketManage.ForceDelist:output_type -> google.protobuf.Empty
-	80, // [80:108] is the sub-list for method output_type
-	52, // [52:80] is the sub-list for method input_type
-	52, // [52:52] is the sub-list for extension type_name
-	52, // [52:52] is the sub-list for extension extendee
-	0,  // [0:52] is the sub-list for field type_name
+	59, // 15: hi.club.MarketStall.agent:type_name -> hi.Entity
+	59, // 16: hi.club.MarketSellerUser.user:type_name -> hi.Entity
+	59, // 17: hi.club.MarketSeller.master:type_name -> hi.Entity
+	60, // 18: hi.club.MarketSeller.support_coins:type_name -> hi.did.Coin
+	15, // 19: hi.club.ListSellersResp.sellers:type_name -> hi.club.MarketSeller
+	61, // 20: hi.club.ListSellerStallsReq.pagination:type_name -> hi.Pagination
+	13, // 21: hi.club.ListSellerStallsResp.stalls:type_name -> hi.club.MarketStall
+	61, // 22: hi.club.ListSellerUsersReq.pagination:type_name -> hi.Pagination
+	14, // 23: hi.club.ListSellerUsersResp.users:type_name -> hi.club.MarketSellerUser
+	61, // 24: hi.club.SearchListingsReq.pagination:type_name -> hi.Pagination
+	61, // 25: hi.club.ListAgentListingsReq.pagination:type_name -> hi.Pagination
+	8,  // 26: hi.club.SearchListingsResp.list:type_name -> hi.club.MarketListingBrief
+	9,  // 27: hi.club.GetListingResp.detail:type_name -> hi.club.MarketListingDetail
+	0,  // 28: hi.club.CreateListingReq.settle_mode:type_name -> hi.club.SettleMode
+	2,  // 29: hi.club.CreateListingReq.kind:type_name -> hi.club.MarketListingKind
+	1,  // 30: hi.club.SetListingStatusReq.status:type_name -> hi.club.ListingStatus
+	61, // 31: hi.club.ListMyListingsReq.pagination:type_name -> hi.Pagination
+	9,  // 32: hi.club.ListMyListingsResp.list:type_name -> hi.club.MarketListingDetail
+	62, // 33: hi.club.ApplyReq.params:type_name -> google.protobuf.Struct
+	7,  // 34: hi.club.MarketPayment.status:type_name -> hi.club.MarketPaymentStatus
+	61, // 35: hi.club.ListTransactionsReq.pagination:type_name -> hi.Pagination
+	34, // 36: hi.club.ListTransactionsResp.list:type_name -> hi.club.MarketPayment
+	5,  // 37: hi.club.MarketOrder.kind:type_name -> hi.club.MarketOrderKind
+	6,  // 38: hi.club.MarketOrder.status:type_name -> hi.club.MarketOrderStatus
+	34, // 39: hi.club.MarketOrder.payment:type_name -> hi.club.MarketPayment
+	34, // 40: hi.club.ListPaymentsResp.list:type_name -> hi.club.MarketPayment
+	4,  // 41: hi.club.ApplyResp.status:type_name -> hi.club.GrantStatus
+	43, // 42: hi.club.ApplyResp.pay:type_name -> hi.club.MarketPayInfo
+	38, // 43: hi.club.ApplyResp.order:type_name -> hi.club.MarketOrder
+	4,  // 44: hi.club.ListGrantsReq.status:type_name -> hi.club.GrantStatus
+	61, // 45: hi.club.ListGrantsReq.pagination:type_name -> hi.Pagination
+	3,  // 46: hi.club.ListGrantsReq.initiator:type_name -> hi.club.GrantInitiator
+	12, // 47: hi.club.ListGrantsResp.list:type_name -> hi.club.MarketGrantView
+	4,  // 48: hi.club.OfferResp.status:type_name -> hi.club.GrantStatus
+	1,  // 49: hi.club.MarketManageListListingsReq.status:type_name -> hi.club.ListingStatus
+	61, // 50: hi.club.MarketManageListListingsReq.pagination:type_name -> hi.Pagination
+	4,  // 51: hi.club.MarketManageListGrantsReq.status:type_name -> hi.club.GrantStatus
+	61, // 52: hi.club.MarketManageListGrantsReq.pagination:type_name -> hi.Pagination
+	0,  // 53: hi.club.MarketPendingGrant.settle_mode:type_name -> hi.club.SettleMode
+	62, // 54: hi.club.MarketPendingGrant.params:type_name -> google.protobuf.Struct
+	56, // 55: hi.club.MarketPullResp.list:type_name -> hi.club.MarketPendingGrant
+	62, // 56: hi.club.MarketNotifyData.terms_override:type_name -> google.protobuf.Struct
+	22, // 57: hi.club.MarketDirectory.SearchListings:input_type -> hi.club.SearchListingsReq
+	61, // 58: hi.club.MarketDirectory.ListSellers:input_type -> hi.Pagination
+	17, // 59: hi.club.MarketDirectory.GetSeller:input_type -> hi.club.GetSellerReq
+	18, // 60: hi.club.MarketDirectory.ListSellerStalls:input_type -> hi.club.ListSellerStallsReq
+	20, // 61: hi.club.MarketDirectory.ListSellerUsers:input_type -> hi.club.ListSellerUsersReq
+	23, // 62: hi.club.MarketDirectory.ListAgentListings:input_type -> hi.club.ListAgentListingsReq
+	24, // 63: hi.club.MarketDirectory.GetListing:input_type -> hi.club.GetListingReq
+	27, // 64: hi.club.Market.CreateListing:input_type -> hi.club.CreateListingReq
+	28, // 65: hi.club.Market.EditListing:input_type -> hi.club.EditListingReq
+	29, // 66: hi.club.Market.SetListingStatus:input_type -> hi.club.SetListingStatusReq
+	30, // 67: hi.club.Market.ListMyListings:input_type -> hi.club.ListMyListingsReq
+	46, // 68: hi.club.Market.ListReceivedRequests:input_type -> hi.club.ListGrantsReq
+	45, // 69: hi.club.Market.Approve:input_type -> hi.club.DecideGrantReq
+	45, // 70: hi.club.Market.Reject:input_type -> hi.club.DecideGrantReq
+	45, // 71: hi.club.Market.Revoke:input_type -> hi.club.DecideGrantReq
+	33, // 72: hi.club.Market.Apply:input_type -> hi.club.ApplyReq
+	42, // 73: hi.club.Market.CreateRenewOrder:input_type -> hi.club.CreateRenewOrderReq
+	39, // 74: hi.club.Market.IssuePayment:input_type -> hi.club.IssuePaymentReq
+	40, // 75: hi.club.Market.ListPayments:input_type -> hi.club.ListPaymentsReq
+	35, // 76: hi.club.Market.ListTransactions:input_type -> hi.club.ListTransactionsReq
+	37, // 77: hi.club.Market.GetTransaction:input_type -> hi.club.GetTransactionReq
+	46, // 78: hi.club.Market.ListMyGrants:input_type -> hi.club.ListGrantsReq
+	49, // 79: hi.club.Market.Offer:input_type -> hi.club.OfferReq
+	51, // 80: hi.club.Market.AcceptOffer:input_type -> hi.club.DecideOfferReq
+	51, // 81: hi.club.Market.DeclineOffer:input_type -> hi.club.DecideOfferReq
+	48, // 82: hi.club.Market.SetAutoRenew:input_type -> hi.club.SetAutoRenewReq
+	63, // 83: hi.club.MarketCallback.Pull:input_type -> hi.SignedData
+	63, // 84: hi.club.MarketCallback.Notify:input_type -> hi.SignedData
+	52, // 85: hi.club.MarketManage.ListListings:input_type -> hi.club.MarketManageListListingsReq
+	53, // 86: hi.club.MarketManage.ListGrants:input_type -> hi.club.MarketManageListGrantsReq
+	54, // 87: hi.club.MarketManage.ForceDelist:input_type -> hi.club.ForceDelistReq
+	25, // 88: hi.club.MarketDirectory.SearchListings:output_type -> hi.club.SearchListingsResp
+	16, // 89: hi.club.MarketDirectory.ListSellers:output_type -> hi.club.ListSellersResp
+	15, // 90: hi.club.MarketDirectory.GetSeller:output_type -> hi.club.MarketSeller
+	19, // 91: hi.club.MarketDirectory.ListSellerStalls:output_type -> hi.club.ListSellerStallsResp
+	21, // 92: hi.club.MarketDirectory.ListSellerUsers:output_type -> hi.club.ListSellerUsersResp
+	25, // 93: hi.club.MarketDirectory.ListAgentListings:output_type -> hi.club.SearchListingsResp
+	26, // 94: hi.club.MarketDirectory.GetListing:output_type -> hi.club.GetListingResp
+	32, // 95: hi.club.Market.CreateListing:output_type -> hi.club.CreateListingResp
+	64, // 96: hi.club.Market.EditListing:output_type -> google.protobuf.Empty
+	64, // 97: hi.club.Market.SetListingStatus:output_type -> google.protobuf.Empty
+	31, // 98: hi.club.Market.ListMyListings:output_type -> hi.club.ListMyListingsResp
+	47, // 99: hi.club.Market.ListReceivedRequests:output_type -> hi.club.ListGrantsResp
+	64, // 100: hi.club.Market.Approve:output_type -> google.protobuf.Empty
+	64, // 101: hi.club.Market.Reject:output_type -> google.protobuf.Empty
+	64, // 102: hi.club.Market.Revoke:output_type -> google.protobuf.Empty
+	44, // 103: hi.club.Market.Apply:output_type -> hi.club.ApplyResp
+	38, // 104: hi.club.Market.CreateRenewOrder:output_type -> hi.club.MarketOrder
+	38, // 105: hi.club.Market.IssuePayment:output_type -> hi.club.MarketOrder
+	41, // 106: hi.club.Market.ListPayments:output_type -> hi.club.ListPaymentsResp
+	36, // 107: hi.club.Market.ListTransactions:output_type -> hi.club.ListTransactionsResp
+	34, // 108: hi.club.Market.GetTransaction:output_type -> hi.club.MarketPayment
+	47, // 109: hi.club.Market.ListMyGrants:output_type -> hi.club.ListGrantsResp
+	50, // 110: hi.club.Market.Offer:output_type -> hi.club.OfferResp
+	64, // 111: hi.club.Market.AcceptOffer:output_type -> google.protobuf.Empty
+	64, // 112: hi.club.Market.DeclineOffer:output_type -> google.protobuf.Empty
+	64, // 113: hi.club.Market.SetAutoRenew:output_type -> google.protobuf.Empty
+	57, // 114: hi.club.MarketCallback.Pull:output_type -> hi.club.MarketPullResp
+	64, // 115: hi.club.MarketCallback.Notify:output_type -> google.protobuf.Empty
+	25, // 116: hi.club.MarketManage.ListListings:output_type -> hi.club.SearchListingsResp
+	47, // 117: hi.club.MarketManage.ListGrants:output_type -> hi.club.ListGrantsResp
+	64, // 118: hi.club.MarketManage.ForceDelist:output_type -> google.protobuf.Empty
+	88, // [88:119] is the sub-list for method output_type
+	57, // [57:88] is the sub-list for method input_type
+	57, // [57:57] is the sub-list for extension type_name
+	57, // [57:57] is the sub-list for extension extendee
+	0,  // [0:57] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_market_proto_init() }
@@ -4794,14 +5187,15 @@ func file_hi_club_market_proto_init() {
 	file_hi_club_market_proto_msgTypes[9].OneofWrappers = []any{}
 	file_hi_club_market_proto_msgTypes[10].OneofWrappers = []any{}
 	file_hi_club_market_proto_msgTypes[11].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[12].OneofWrappers = []any{}
 	file_hi_club_market_proto_msgTypes[13].OneofWrappers = []any{}
 	file_hi_club_market_proto_msgTypes[14].OneofWrappers = []any{}
 	file_hi_club_market_proto_msgTypes[15].OneofWrappers = []any{}
 	file_hi_club_market_proto_msgTypes[16].OneofWrappers = []any{}
 	file_hi_club_market_proto_msgTypes[17].OneofWrappers = []any{}
-	file_hi_club_market_proto_msgTypes[18].OneofWrappers = []any{}
 	file_hi_club_market_proto_msgTypes[19].OneofWrappers = []any{}
 	file_hi_club_market_proto_msgTypes[20].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[21].OneofWrappers = []any{}
 	file_hi_club_market_proto_msgTypes[22].OneofWrappers = []any{}
 	file_hi_club_market_proto_msgTypes[23].OneofWrappers = []any{}
 	file_hi_club_market_proto_msgTypes[24].OneofWrappers = []any{}
@@ -4812,7 +5206,6 @@ func file_hi_club_market_proto_init() {
 	file_hi_club_market_proto_msgTypes[30].OneofWrappers = []any{}
 	file_hi_club_market_proto_msgTypes[31].OneofWrappers = []any{}
 	file_hi_club_market_proto_msgTypes[32].OneofWrappers = []any{}
-	file_hi_club_market_proto_msgTypes[33].OneofWrappers = []any{}
 	file_hi_club_market_proto_msgTypes[34].OneofWrappers = []any{}
 	file_hi_club_market_proto_msgTypes[35].OneofWrappers = []any{}
 	file_hi_club_market_proto_msgTypes[36].OneofWrappers = []any{}
@@ -4822,14 +5215,20 @@ func file_hi_club_market_proto_init() {
 	file_hi_club_market_proto_msgTypes[40].OneofWrappers = []any{}
 	file_hi_club_market_proto_msgTypes[41].OneofWrappers = []any{}
 	file_hi_club_market_proto_msgTypes[42].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[43].OneofWrappers = []any{}
 	file_hi_club_market_proto_msgTypes[44].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[45].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[46].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[47].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[48].OneofWrappers = []any{}
+	file_hi_club_market_proto_msgTypes[50].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_market_proto_rawDesc), len(file_hi_club_market_proto_rawDesc)),
 			NumEnums:      8,
-			NumMessages:   45,
+			NumMessages:   51,
 			NumExtensions: 0,
 			NumServices:   4,
 		},

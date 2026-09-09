@@ -18,6 +18,11 @@ class MarketDirectoryStub(object):
 
     ListSellers 公开有在售挂牌的主人资料及用户动态;其它挂牌页只吐机器人 Entity + 公开文案。
     不提供任意机器人 DID 反查主人的接口。
+
+    ⚠️ **四个卖家方法都免鉴权,所以它们吐出去的就是全网可见的**:摊位(机器人 Entity)
+    与**商户名下的用户名单**。前者本就是"开店即自愿露出";后者是商户自己的用户列表 ——
+    之所以敢公开,是因为它由那个商户**主动授权给 club**(MERCHANT_GRANT_SCOPE_READ_USERS)
+    才拿得到,没授权就是空。要收紧就改成 AUTH_USER,别指望"没人知道这个 did"。
     """
 
     def __init__(self, channel):
@@ -35,6 +40,21 @@ class MarketDirectoryStub(object):
                 '/hi.club.MarketDirectory/ListSellers',
                 request_serializer=hi_dot_common__pb2.Pagination.SerializeToString,
                 response_deserializer=hi_dot_club_dot_market__pb2.ListSellersResp.FromString,
+                _registered_method=True)
+        self.GetSeller = channel.unary_unary(
+                '/hi.club.MarketDirectory/GetSeller',
+                request_serializer=hi_dot_club_dot_market__pb2.GetSellerReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_market__pb2.MarketSeller.FromString,
+                _registered_method=True)
+        self.ListSellerStalls = channel.unary_unary(
+                '/hi.club.MarketDirectory/ListSellerStalls',
+                request_serializer=hi_dot_club_dot_market__pb2.ListSellerStallsReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_market__pb2.ListSellerStallsResp.FromString,
+                _registered_method=True)
+        self.ListSellerUsers = channel.unary_unary(
+                '/hi.club.MarketDirectory/ListSellerUsers',
+                request_serializer=hi_dot_club_dot_market__pb2.ListSellerUsersReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_market__pb2.ListSellerUsersResp.FromString,
                 _registered_method=True)
         self.ListAgentListings = channel.unary_unary(
                 '/hi.club.MarketDirectory/ListAgentListings',
@@ -59,6 +79,11 @@ class MarketDirectoryServicer(object):
 
     ListSellers 公开有在售挂牌的主人资料及用户动态;其它挂牌页只吐机器人 Entity + 公开文案。
     不提供任意机器人 DID 反查主人的接口。
+
+    ⚠️ **四个卖家方法都免鉴权,所以它们吐出去的就是全网可见的**:摊位(机器人 Entity)
+    与**商户名下的用户名单**。前者本就是"开店即自愿露出";后者是商户自己的用户列表 ——
+    之所以敢公开,是因为它由那个商户**主动授权给 club**(MERCHANT_GRANT_SCOPE_READ_USERS)
+    才拿得到,没授权就是空。要收紧就改成 AUTH_USER,别指望"没人知道这个 did"。
     """
 
     def SearchListings(self, request, context):
@@ -68,6 +93,24 @@ class MarketDirectoryServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def ListSellers(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetSeller(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListSellerStalls(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListSellerUsers(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -98,6 +141,21 @@ def add_MarketDirectoryServicer_to_server(servicer, server):
                     request_deserializer=hi_dot_common__pb2.Pagination.FromString,
                     response_serializer=hi_dot_club_dot_market__pb2.ListSellersResp.SerializeToString,
             ),
+            'GetSeller': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetSeller,
+                    request_deserializer=hi_dot_club_dot_market__pb2.GetSellerReq.FromString,
+                    response_serializer=hi_dot_club_dot_market__pb2.MarketSeller.SerializeToString,
+            ),
+            'ListSellerStalls': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListSellerStalls,
+                    request_deserializer=hi_dot_club_dot_market__pb2.ListSellerStallsReq.FromString,
+                    response_serializer=hi_dot_club_dot_market__pb2.ListSellerStallsResp.SerializeToString,
+            ),
+            'ListSellerUsers': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListSellerUsers,
+                    request_deserializer=hi_dot_club_dot_market__pb2.ListSellerUsersReq.FromString,
+                    response_serializer=hi_dot_club_dot_market__pb2.ListSellerUsersResp.SerializeToString,
+            ),
             'ListAgentListings': grpc.unary_unary_rpc_method_handler(
                     servicer.ListAgentListings,
                     request_deserializer=hi_dot_club_dot_market__pb2.ListAgentListingsReq.FromString,
@@ -127,6 +185,11 @@ class MarketDirectory(object):
 
     ListSellers 公开有在售挂牌的主人资料及用户动态;其它挂牌页只吐机器人 Entity + 公开文案。
     不提供任意机器人 DID 反查主人的接口。
+
+    ⚠️ **四个卖家方法都免鉴权,所以它们吐出去的就是全网可见的**:摊位(机器人 Entity)
+    与**商户名下的用户名单**。前者本就是"开店即自愿露出";后者是商户自己的用户列表 ——
+    之所以敢公开,是因为它由那个商户**主动授权给 club**(MERCHANT_GRANT_SCOPE_READ_USERS)
+    才拿得到,没授权就是空。要收紧就改成 AUTH_USER,别指望"没人知道这个 did"。
     """
 
     @staticmethod
@@ -173,6 +236,87 @@ class MarketDirectory(object):
             '/hi.club.MarketDirectory/ListSellers',
             hi_dot_common__pb2.Pagination.SerializeToString,
             hi_dot_club_dot_market__pb2.ListSellersResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetSeller(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.MarketDirectory/GetSeller',
+            hi_dot_club_dot_market__pb2.GetSellerReq.SerializeToString,
+            hi_dot_club_dot_market__pb2.MarketSeller.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ListSellerStalls(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.MarketDirectory/ListSellerStalls',
+            hi_dot_club_dot_market__pb2.ListSellerStallsReq.SerializeToString,
+            hi_dot_club_dot_market__pb2.ListSellerStallsResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ListSellerUsers(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.MarketDirectory/ListSellerUsers',
+            hi_dot_club_dot_market__pb2.ListSellerUsersReq.SerializeToString,
+            hi_dot_club_dot_market__pb2.ListSellerUsersResp.FromString,
             options,
             channel_credentials,
             insecure,

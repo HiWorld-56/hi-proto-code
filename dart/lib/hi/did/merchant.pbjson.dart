@@ -22,6 +22,7 @@ const MerchantGrantScope$json = {
     {'1': 'MERCHANT_GRANT_SCOPE_UNSPECIFIED', '2': 0},
     {'1': 'MERCHANT_GRANT_SCOPE_READ_USERS', '2': 1},
     {'1': 'MERCHANT_GRANT_SCOPE_ADD_USERS', '2': 2},
+    {'1': 'MERCHANT_GRANT_SCOPE_READ_MERCHANT', '2': 4},
   ],
 };
 
@@ -29,7 +30,8 @@ const MerchantGrantScope$json = {
 final $typed_data.Uint8List merchantGrantScopeDescriptor = $convert.base64Decode(
     'ChJNZXJjaGFudEdyYW50U2NvcGUSJAogTUVSQ0hBTlRfR1JBTlRfU0NPUEVfVU5TUEVDSUZJRU'
     'QQABIjCh9NRVJDSEFOVF9HUkFOVF9TQ09QRV9SRUFEX1VTRVJTEAESIgoeTUVSQ0hBTlRfR1JB'
-    'TlRfU0NPUEVfQUREX1VTRVJTEAI=');
+    'TlRfU0NPUEVfQUREX1VTRVJTEAISJgoiTUVSQ0hBTlRfR1JBTlRfU0NPUEVfUkVBRF9NRVJDSE'
+    'FOVBAE');
 
 @$core.Deprecated('Use merchantInfoDescriptor instead')
 const MerchantInfo$json = {
@@ -702,6 +704,63 @@ final $typed_data.Uint8List grantedListGreetersReqDescriptor = $convert.base64De
     'ChZHcmFudGVkTGlzdEdyZWV0ZXJzUmVxEjAKCG1lcmNoYW50GAEgASgJQg+6SAzIAQFyBzIFXl'
     'xTKyRIAFIIbWVyY2hhbnSIAQESLgoKcGFnaW5hdGlvbhgCIAEoCzIOLmhpLlBhZ2luYXRpb25S'
     'CnBhZ2luYXRpb25CCwoJX21lcmNoYW50');
+
+@$core.Deprecated('Use grantedListCoinsReqDescriptor instead')
+const GrantedListCoinsReq$json = {
+  '1': 'GrantedListCoinsReq',
+  '2': [
+    {
+      '1': 'merchant',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'merchant',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_merchant'},
+  ],
+};
+
+/// Descriptor for `GrantedListCoinsReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List grantedListCoinsReqDescriptor = $convert.base64Decode(
+    'ChNHcmFudGVkTGlzdENvaW5zUmVxEjAKCG1lcmNoYW50GAEgASgJQg+6SAzIAQFyBzIFXlxTKy'
+    'RIAFIIbWVyY2hhbnSIAQFCCwoJX21lcmNoYW50');
+
+@$core.Deprecated('Use merchantCoinsRespDescriptor instead')
+const MerchantCoinsResp$json = {
+  '1': 'MerchantCoinsResp',
+  '2': [
+    {
+      '1': 'public_coins',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.did.Coin',
+      '8': {},
+      '10': 'publicCoins'
+    },
+    {
+      '1': 'custom_tokens',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.did.Coin',
+      '8': {},
+      '10': 'customTokens'
+    },
+  ],
+  '7': {},
+};
+
+/// Descriptor for `MerchantCoinsResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List merchantCoinsRespDescriptor = $convert.base64Decode(
+    'ChFNZXJjaGFudENvaW5zUmVzcBI1CgxwdWJsaWNfY29pbnMYASADKAsyDC5oaS5kaWQuQ29pbk'
+    'IEkLUYAlILcHVibGljQ29pbnMSNwoNY3VzdG9tX3Rva2VucxgCIAMoCzIMLmhpLmRpZC5Db2lu'
+    'QgSQtRgCUgxjdXN0b21Ub2tlbnM6BJi1GAI=');
 
 @$core.Deprecated('Use listGreetersReqDescriptor instead')
 const ListGreetersReq$json = {

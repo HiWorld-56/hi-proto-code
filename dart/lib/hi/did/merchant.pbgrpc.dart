@@ -763,9 +763,10 @@ abstract class OrderNotifyServiceBase extends $grpc.Service {
 /// 判据是 hi_merchant_grant 里 (merchant=A, grantee=B) 一行,授权方永远取自 token。
 ///
 /// ⚠️ **有没有那一行不够,还要看那一行给了哪些授权项**(MerchantGrantScope):
-///    三个读方法要 READ_USERS,AddUsers 要 ADD_USERS。授权项与方法的对应关系写死在
-///    handler 的方法入口,**不由入参决定** —— 与"要不要 grant 由 service 决定"同一个道理:
-///    让调用方传"我要用哪一项",等于让它自己声明权限。
+///    三个读用户的方法要 READ_USERS,AddUsers 要 ADD_USERS,ListCoins 要 READ_MERCHANT。
+///    授权项与方法的对应关系写死在 handler 的方法入口,**不由入参决定** ——
+///    与"要不要 grant 由 service 决定"同一个道理:让调用方传"我要用哪一项",
+///    等于让它自己声明权限。
 @$pb.GrpcServiceName('hi.did.MerchantGranted')
 class MerchantGrantedClient extends $grpc.Client {
   /// The hostname for this service.
@@ -797,6 +798,13 @@ class MerchantGrantedClient extends $grpc.Client {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$listGreeters, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$1.MerchantCoinsResp> listCoins(
+    $1.GrantedListCoinsReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listCoins, request, options: options);
   }
 
   /// 把用户加到别家商户名下(须 ADD_USERS)。
@@ -833,6 +841,11 @@ class MerchantGrantedClient extends $grpc.Client {
           '/hi.did.MerchantGranted/ListGreeters',
           ($1.GrantedListGreetersReq value) => value.writeToBuffer(),
           $1.ListUsersResp.fromBuffer);
+  static final _$listCoins =
+      $grpc.ClientMethod<$1.GrantedListCoinsReq, $1.MerchantCoinsResp>(
+          '/hi.did.MerchantGranted/ListCoins',
+          ($1.GrantedListCoinsReq value) => value.writeToBuffer(),
+          $1.MerchantCoinsResp.fromBuffer);
   static final _$addUsers = $grpc.ClientMethod<$1.GrantedAddUsersReq, $0.Empty>(
       '/hi.did.MerchantGranted/AddUsers',
       ($1.GrantedAddUsersReq value) => value.writeToBuffer(),
@@ -867,6 +880,15 @@ abstract class MerchantGrantedServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $1.GrantedListGreetersReq.fromBuffer(value),
         ($1.ListUsersResp value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$1.GrantedListCoinsReq, $1.MerchantCoinsResp>(
+            'ListCoins',
+            listCoins_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $1.GrantedListCoinsReq.fromBuffer(value),
+            ($1.MerchantCoinsResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.GrantedAddUsersReq, $0.Empty>(
         'AddUsers',
         addUsers_Pre,
@@ -900,6 +922,14 @@ abstract class MerchantGrantedServiceBase extends $grpc.Service {
 
   $async.Future<$1.ListUsersResp> listGreeters(
       $grpc.ServiceCall call, $1.GrantedListGreetersReq request);
+
+  $async.Future<$1.MerchantCoinsResp> listCoins_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.GrantedListCoinsReq> $request) async {
+    return listCoins($call, await $request);
+  }
+
+  $async.Future<$1.MerchantCoinsResp> listCoins(
+      $grpc.ServiceCall call, $1.GrantedListCoinsReq request);
 
   $async.Future<$0.Empty> addUsers_Pre($grpc.ServiceCall $call,
       $async.Future<$1.GrantedAddUsersReq> $request) async {

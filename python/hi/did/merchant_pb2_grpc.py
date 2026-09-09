@@ -1211,9 +1211,10 @@ class MerchantGrantedStub(object):
     判据是 hi_merchant_grant 里 (merchant=A, grantee=B) 一行,授权方永远取自 token。
 
     ⚠️ **有没有那一行不够,还要看那一行给了哪些授权项**(MerchantGrantScope):
-    三个读方法要 READ_USERS,AddUsers 要 ADD_USERS。授权项与方法的对应关系写死在
-    handler 的方法入口,**不由入参决定** —— 与"要不要 grant 由 service 决定"同一个道理:
-    让调用方传"我要用哪一项",等于让它自己声明权限。
+    三个读用户的方法要 READ_USERS,AddUsers 要 ADD_USERS,ListCoins 要 READ_MERCHANT。
+    授权项与方法的对应关系写死在 handler 的方法入口,**不由入参决定** ——
+    与"要不要 grant 由 service 决定"同一个道理:让调用方传"我要用哪一项",
+    等于让它自己声明权限。
     """
 
     def __init__(self, channel):
@@ -1237,6 +1238,11 @@ class MerchantGrantedStub(object):
                 request_serializer=hi_dot_did_dot_merchant__pb2.GrantedListGreetersReq.SerializeToString,
                 response_deserializer=hi_dot_did_dot_merchant__pb2.ListUsersResp.FromString,
                 _registered_method=True)
+        self.ListCoins = channel.unary_unary(
+                '/hi.did.MerchantGranted/ListCoins',
+                request_serializer=hi_dot_did_dot_merchant__pb2.GrantedListCoinsReq.SerializeToString,
+                response_deserializer=hi_dot_did_dot_merchant__pb2.MerchantCoinsResp.FromString,
+                _registered_method=True)
         self.AddUsers = channel.unary_unary(
                 '/hi.did.MerchantGranted/AddUsers',
                 request_serializer=hi_dot_did_dot_merchant__pb2.GrantedAddUsersReq.SerializeToString,
@@ -1256,9 +1262,10 @@ class MerchantGrantedServicer(object):
     判据是 hi_merchant_grant 里 (merchant=A, grantee=B) 一行,授权方永远取自 token。
 
     ⚠️ **有没有那一行不够,还要看那一行给了哪些授权项**(MerchantGrantScope):
-    三个读方法要 READ_USERS,AddUsers 要 ADD_USERS。授权项与方法的对应关系写死在
-    handler 的方法入口,**不由入参决定** —— 与"要不要 grant 由 service 决定"同一个道理:
-    让调用方传"我要用哪一项",等于让它自己声明权限。
+    三个读用户的方法要 READ_USERS,AddUsers 要 ADD_USERS,ListCoins 要 READ_MERCHANT。
+    授权项与方法的对应关系写死在 handler 的方法入口,**不由入参决定** ——
+    与"要不要 grant 由 service 决定"同一个道理:让调用方传"我要用哪一项",
+    等于让它自己声明权限。
     """
 
     def GetUser(self, request, context):
@@ -1274,6 +1281,12 @@ class MerchantGrantedServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def ListGreeters(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListCoins(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -1313,6 +1326,11 @@ def add_MerchantGrantedServicer_to_server(servicer, server):
                     request_deserializer=hi_dot_did_dot_merchant__pb2.GrantedListGreetersReq.FromString,
                     response_serializer=hi_dot_did_dot_merchant__pb2.ListUsersResp.SerializeToString,
             ),
+            'ListCoins': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListCoins,
+                    request_deserializer=hi_dot_did_dot_merchant__pb2.GrantedListCoinsReq.FromString,
+                    response_serializer=hi_dot_did_dot_merchant__pb2.MerchantCoinsResp.SerializeToString,
+            ),
             'AddUsers': grpc.unary_unary_rpc_method_handler(
                     servicer.AddUsers,
                     request_deserializer=hi_dot_did_dot_merchant__pb2.GrantedAddUsersReq.FromString,
@@ -1338,9 +1356,10 @@ class MerchantGranted(object):
     判据是 hi_merchant_grant 里 (merchant=A, grantee=B) 一行,授权方永远取自 token。
 
     ⚠️ **有没有那一行不够,还要看那一行给了哪些授权项**(MerchantGrantScope):
-    三个读方法要 READ_USERS,AddUsers 要 ADD_USERS。授权项与方法的对应关系写死在
-    handler 的方法入口,**不由入参决定** —— 与"要不要 grant 由 service 决定"同一个道理:
-    让调用方传"我要用哪一项",等于让它自己声明权限。
+    三个读用户的方法要 READ_USERS,AddUsers 要 ADD_USERS,ListCoins 要 READ_MERCHANT。
+    授权项与方法的对应关系写死在 handler 的方法入口,**不由入参决定** ——
+    与"要不要 grant 由 service 决定"同一个道理:让调用方传"我要用哪一项",
+    等于让它自己声明权限。
     """
 
     @staticmethod
@@ -1414,6 +1433,33 @@ class MerchantGranted(object):
             '/hi.did.MerchantGranted/ListGreeters',
             hi_dot_did_dot_merchant__pb2.GrantedListGreetersReq.SerializeToString,
             hi_dot_did_dot_merchant__pb2.ListUsersResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ListCoins(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.did.MerchantGranted/ListCoins',
+            hi_dot_did_dot_merchant__pb2.GrantedListCoinsReq.SerializeToString,
+            hi_dot_did_dot_merchant__pb2.MerchantCoinsResp.FromString,
             options,
             channel_credentials,
             insecure,

@@ -6512,14 +6512,7 @@ pub struct MarketGrantView {
     #[prost(string, optional, tag = "21")]
     pub plugin_uuid: ::core::option::Option<::prost::alloc::string::String>,
 }
-/// ListSellersResp 卖家目录:**谁在卖** + 他有哪些摊位。
-///
-/// 逛市场的顺序是「人 → 摊位 → 货」:先看见是谁在卖,再进他的摊位,再看待售的插件。
-/// 直接铺一页插件的话,买家没法判断"这东西是谁出的"，而插件是要装进自己机器人里的三方代码。
-///
-/// ⚠️ **只公开"有在售挂牌"的那些机器人的主人** —— 开店即自愿露出。
-/// 这不是一个"任意 did → 查它主人"的反查口子(那个当年正是因为泄露归属被删掉的);
-/// 没挂牌的机器人不会出现在这里。
+/// MarketStall 摊位 = 一台**有在售挂牌**的机器人。只在详情页的「摊位」tab 出现。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MarketStall {
     /// 摊主
@@ -6532,20 +6525,48 @@ pub struct MarketStall {
     #[prost(int32, optional, tag = "4")]
     pub listing_count: ::core::option::Option<i32>,
 }
+/// MarketSellerUser 卖家(商户)名下的一个用户 —— 只有基本资料 + 动态,没有任何金额。
+/// 用户在这个商户下的余额/消费是**商户自己的账**,与"谁在卖插件"无关,不从这里出。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MarketSellerUser {
+    /// 用户(name/avatar)
+    #[prost(message, optional, tag = "1")]
+    pub user: ::core::option::Option<super::Entity>,
+    /// 用户动态(club 自己的 hi_chat_user_moment)
+    #[prost(string, optional, tag = "2")]
+    pub moment: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// MarketSeller 卖家资料 —— 目录里的一行,也是详情页的头部(GetSeller 回的就是它)。
+///
+/// support_coins = 这个卖家收得了的币种,从 hi-did 现取,判据是 `is_merchant`:
+/// · 非商户(含空卖家)= 常规币种(`hi.did.Base.ListCoins` 里 category=public 的那些);
+/// · 商户 = 常规币种 + 他自己配的自定义币种(`hi.did.MerchantInfo.custom_tokens`)。
+/// 商户那一半走**授权**取:`hi.did.MerchantGranted.ListCoins`,要目标商户授权过 club
+/// (`MERCHANT_GRANT_SCOPE_READ_MERCHANT`)—— 与 club 读别家商户用户是同一条路。
+/// **不许拿 club 自己的 ExtendToken 去冒充那个商户查**,那是"借用别家凭据",零报错。
+///
+/// ⚠️ `is_merchant` 与"支持币种多不多"是两件事:没授权给 club 的商户,这里也只发常规币种,
+/// 但它仍然 `is_merchant = true`。前端标"非商户"只能看这个字段,不许照币种/用户数猜。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MarketSeller {
-    /// 卖家(主人);无主机器人不传
+    /// 卖家(主人)。**不传 = 空卖家**(全部无主机器人聚成的那一档),不是"这一行坏了"。
     #[prost(message, optional, tag = "1")]
     pub master: ::core::option::Option<super::Entity>,
     /// 卖家动态
     #[prost(string, optional, tag = "2")]
     pub moment: ::core::option::Option<::prost::alloc::string::String>,
-    /// 他名下**有在售挂牌**的摊位
-    #[prost(message, repeated, tag = "3")]
-    pub stalls: ::prost::alloc::vec::Vec<MarketStall>,
-    /// 在售挂牌总数 = 摊主挂牌数总和
+    /// 他名下**有在售挂牌**的摊位数
+    #[prost(int32, optional, tag = "3")]
+    pub stalls_count: ::core::option::Option<i32>,
+    /// 在售挂牌总数 = 各摊主挂牌数之和
     #[prost(int32, optional, tag = "4")]
     pub listing_count: ::core::option::Option<i32>,
+    /// 支持的支付币种;非商户 = 常规币种
+    #[prost(message, repeated, tag = "5")]
+    pub support_coins: ::prost::alloc::vec::Vec<super::did::Coin>,
+    /// 是不是 hi-did 商户;前端按它标"非商户"
+    #[prost(bool, optional, tag = "6")]
+    pub is_merchant: ::core::option::Option<bool>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListSellersResp {
@@ -6553,6 +6574,51 @@ pub struct ListSellersResp {
     pub total: ::core::option::Option<i32>,
     #[prost(message, repeated, tag = "2")]
     pub sellers: ::prost::alloc::vec::Vec<MarketSeller>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetSellerReq {
+    /// 卖家(主人)did;不传 = 空卖家
+    #[prost(string, optional, tag = "1")]
+    pub master: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListSellerStallsReq {
+    /// 卖家(主人)did;不传 = 空卖家
+    #[prost(string, optional, tag = "1")]
+    pub master: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListSellerStallsResp {
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
+    #[prost(message, repeated, tag = "2")]
+    pub stalls: ::prost::alloc::vec::Vec<MarketStall>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListSellerUsersReq {
+    /// 卖家(主人)did;不传 = 空卖家
+    #[prost(string, optional, tag = "1")]
+    pub master: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+/// ListSellerUsersResp 商户名下的用户。
+///
+/// 数据源 `hi.did.MerchantGranted.ListUsers` —— club 拿自己的 ExtendToken 跨商户读,
+/// 要目标商户授权过 club(`MERCHANT_GRANT_SCOPE_READ_USERS`;新商户建号时默认给)。
+///
+/// ⚠️ **空列表不是"非商户"的判据** —— 至少三种成因:非商户、商户名下确实没人、
+/// 商户把授权撤了(那一侧返 PermissionDenied,不是空列表)。要标"非商户"看
+/// `MarketSeller.is_merchant`。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListSellerUsersResp {
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
+    /// 非商户 / 空卖家为空列表
+    #[prost(message, repeated, tag = "2")]
+    pub users: ::prost::alloc::vec::Vec<MarketSellerUser>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SearchListingsReq {
@@ -7604,6 +7670,11 @@ pub mod market_directory_client {
     ///
     /// ListSellers 公开有在售挂牌的主人资料及用户动态;其它挂牌页只吐机器人 Entity + 公开文案。
     /// 不提供任意机器人 DID 反查主人的接口。
+    ///
+    /// ⚠️ **四个卖家方法都免鉴权,所以它们吐出去的就是全网可见的**:摊位(机器人 Entity)
+    /// 与**商户名下的用户名单**。前者本就是"开店即自愿露出";后者是商户自己的用户列表 ——
+    /// 之所以敢公开,是因为它由那个商户**主动授权给 club**(MERCHANT_GRANT_SCOPE_READ_USERS)
+    /// 才拿得到,没授权就是空。要收紧就改成 AUTH_USER,别指望"没人知道这个 did"。
     #[derive(Debug, Clone)]
     pub struct MarketDirectoryClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -7730,6 +7801,75 @@ pub mod market_directory_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.MarketDirectory", "ListSellers"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get_seller(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetSellerReq>,
+        ) -> std::result::Result<tonic::Response<super::MarketSeller>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.MarketDirectory/GetSeller",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.MarketDirectory", "GetSeller"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_seller_stalls(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListSellerStallsReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListSellerStallsResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.MarketDirectory/ListSellerStalls",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.MarketDirectory", "ListSellerStalls"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_seller_users(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListSellerUsersReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListSellerUsersResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.MarketDirectory/ListSellerUsers",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.MarketDirectory", "ListSellerUsers"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn list_agent_listings(

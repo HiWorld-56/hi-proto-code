@@ -1271,6 +1271,7 @@ const (
 	MerchantGranted_GetUser_FullMethodName      = "/hi.did.MerchantGranted/GetUser"
 	MerchantGranted_ListUsers_FullMethodName    = "/hi.did.MerchantGranted/ListUsers"
 	MerchantGranted_ListGreeters_FullMethodName = "/hi.did.MerchantGranted/ListGreeters"
+	MerchantGranted_ListCoins_FullMethodName    = "/hi.did.MerchantGranted/ListCoins"
 	MerchantGranted_AddUsers_FullMethodName     = "/hi.did.MerchantGranted/AddUsers"
 )
 
@@ -1290,13 +1291,15 @@ const (
 //
 // ⚠️ **有没有那一行不够,还要看那一行给了哪些授权项**(MerchantGrantScope):
 //
-//	三个读方法要 READ_USERS,AddUsers 要 ADD_USERS。授权项与方法的对应关系写死在
-//	handler 的方法入口,**不由入参决定** —— 与"要不要 grant 由 service 决定"同一个道理:
-//	让调用方传"我要用哪一项",等于让它自己声明权限。
+//	三个读用户的方法要 READ_USERS,AddUsers 要 ADD_USERS,ListCoins 要 READ_MERCHANT。
+//	授权项与方法的对应关系写死在 handler 的方法入口,**不由入参决定** ——
+//	与"要不要 grant 由 service 决定"同一个道理:让调用方传"我要用哪一项",
+//	等于让它自己声明权限。
 type MerchantGrantedClient interface {
 	GetUser(ctx context.Context, in *GrantedGetUserReq, opts ...grpc.CallOption) (*UserExtensionUnit, error)
 	ListUsers(ctx context.Context, in *GrantedListUsersReq, opts ...grpc.CallOption) (*ListUsersResp, error)
 	ListGreeters(ctx context.Context, in *GrantedListGreetersReq, opts ...grpc.CallOption) (*ListUsersResp, error)
+	ListCoins(ctx context.Context, in *GrantedListCoinsReq, opts ...grpc.CallOption) (*MerchantCoinsResp, error)
 	// 把用户加到别家商户名下(须 ADD_USERS)。
 	//
 	// 用途:club 的用户在 app 里"加入某商户" —— 链路是
@@ -1351,6 +1354,16 @@ func (c *merchantGrantedClient) ListGreeters(ctx context.Context, in *GrantedLis
 	return out, nil
 }
 
+func (c *merchantGrantedClient) ListCoins(ctx context.Context, in *GrantedListCoinsReq, opts ...grpc.CallOption) (*MerchantCoinsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MerchantCoinsResp)
+	err := c.cc.Invoke(ctx, MerchantGranted_ListCoins_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *merchantGrantedClient) AddUsers(ctx context.Context, in *GrantedAddUsersReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -1377,13 +1390,15 @@ func (c *merchantGrantedClient) AddUsers(ctx context.Context, in *GrantedAddUser
 //
 // ⚠️ **有没有那一行不够,还要看那一行给了哪些授权项**(MerchantGrantScope):
 //
-//	三个读方法要 READ_USERS,AddUsers 要 ADD_USERS。授权项与方法的对应关系写死在
-//	handler 的方法入口,**不由入参决定** —— 与"要不要 grant 由 service 决定"同一个道理:
-//	让调用方传"我要用哪一项",等于让它自己声明权限。
+//	三个读用户的方法要 READ_USERS,AddUsers 要 ADD_USERS,ListCoins 要 READ_MERCHANT。
+//	授权项与方法的对应关系写死在 handler 的方法入口,**不由入参决定** ——
+//	与"要不要 grant 由 service 决定"同一个道理:让调用方传"我要用哪一项",
+//	等于让它自己声明权限。
 type MerchantGrantedServer interface {
 	GetUser(context.Context, *GrantedGetUserReq) (*UserExtensionUnit, error)
 	ListUsers(context.Context, *GrantedListUsersReq) (*ListUsersResp, error)
 	ListGreeters(context.Context, *GrantedListGreetersReq) (*ListUsersResp, error)
+	ListCoins(context.Context, *GrantedListCoinsReq) (*MerchantCoinsResp, error)
 	// 把用户加到别家商户名下(须 ADD_USERS)。
 	//
 	// 用途:club 的用户在 app 里"加入某商户" —— 链路是
@@ -1415,6 +1430,9 @@ func (UnimplementedMerchantGrantedServer) ListUsers(context.Context, *GrantedLis
 }
 func (UnimplementedMerchantGrantedServer) ListGreeters(context.Context, *GrantedListGreetersReq) (*ListUsersResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListGreeters not implemented")
+}
+func (UnimplementedMerchantGrantedServer) ListCoins(context.Context, *GrantedListCoinsReq) (*MerchantCoinsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListCoins not implemented")
 }
 func (UnimplementedMerchantGrantedServer) AddUsers(context.Context, *GrantedAddUsersReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method AddUsers not implemented")
@@ -1493,6 +1511,24 @@ func _MerchantGranted_ListGreeters_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MerchantGranted_ListCoins_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GrantedListCoinsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MerchantGrantedServer).ListCoins(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MerchantGranted_ListCoins_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MerchantGrantedServer).ListCoins(ctx, req.(*GrantedListCoinsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _MerchantGranted_AddUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GrantedAddUsersReq)
 	if err := dec(in); err != nil {
@@ -1529,6 +1565,10 @@ var MerchantGranted_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListGreeters",
 			Handler:    _MerchantGranted_ListGreeters_Handler,
+		},
+		{
+			MethodName: "ListCoins",
+			Handler:    _MerchantGranted_ListCoins_Handler,
 		},
 		{
 			MethodName: "AddUsers",

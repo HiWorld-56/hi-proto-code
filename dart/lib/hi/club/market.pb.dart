@@ -14,9 +14,10 @@ import 'dart:core' as $core;
 
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/struct.pb.dart' as $3;
+import 'package:protobuf/well_known_types/google/protobuf/struct.pb.dart' as $4;
 
 import '../common.pb.dart' as $1;
+import '../did/base.pb.dart' as $3;
 import 'market.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -949,14 +950,7 @@ class MarketGrantView extends $pb.GeneratedMessage {
   void clearPluginUuid() => $_clearField(21);
 }
 
-/// ListSellersResp 卖家目录:**谁在卖** + 他有哪些摊位。
-///
-/// 逛市场的顺序是「人 → 摊位 → 货」:先看见是谁在卖,再进他的摊位,再看待售的插件。
-/// 直接铺一页插件的话,买家没法判断"这东西是谁出的"，而插件是要装进自己机器人里的三方代码。
-///
-/// ⚠️ **只公开"有在售挂牌"的那些机器人的主人** —— 开店即自愿露出。
-///    这不是一个"任意 did → 查它主人"的反查口子(那个当年正是因为泄露归属被删掉的);
-///    没挂牌的机器人不会出现在这里。
+/// MarketStall 摊位 = 一台**有在售挂牌**的机器人。只在详情页的「摊位」tab 出现。
 class MarketStall extends $pb.GeneratedMessage {
   factory MarketStall({
     $1.Entity? agent,
@@ -1038,18 +1032,104 @@ class MarketStall extends $pb.GeneratedMessage {
   void clearListingCount() => $_clearField(4);
 }
 
+/// MarketSellerUser 卖家(商户)名下的一个用户 —— 只有基本资料 + 动态,没有任何金额。
+/// 用户在这个商户下的余额/消费是**商户自己的账**,与"谁在卖插件"无关,不从这里出。
+class MarketSellerUser extends $pb.GeneratedMessage {
+  factory MarketSellerUser({
+    $1.Entity? user,
+    $core.String? moment,
+  }) {
+    final result = create();
+    if (user != null) result.user = user;
+    if (moment != null) result.moment = moment;
+    return result;
+  }
+
+  MarketSellerUser._();
+
+  factory MarketSellerUser.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MarketSellerUser.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MarketSellerUser',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOM<$1.Entity>(1, _omitFieldNames ? '' : 'user',
+        subBuilder: $1.Entity.create)
+    ..aOS(2, _omitFieldNames ? '' : 'moment')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MarketSellerUser clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MarketSellerUser copyWith(void Function(MarketSellerUser) updates) =>
+      super.copyWith((message) => updates(message as MarketSellerUser))
+          as MarketSellerUser;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MarketSellerUser create() => MarketSellerUser._();
+  @$core.override
+  MarketSellerUser createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MarketSellerUser getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MarketSellerUser>(create);
+  static MarketSellerUser? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $1.Entity get user => $_getN(0);
+  @$pb.TagNumber(1)
+  set user($1.Entity value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasUser() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUser() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $1.Entity ensureUser() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.String get moment => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set moment($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMoment() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMoment() => $_clearField(2);
+}
+
+/// MarketSeller 卖家资料 —— 目录里的一行,也是详情页的头部(GetSeller 回的就是它)。
+///
+/// support_coins = 这个卖家收得了的币种,从 hi-did 现取,判据是 `is_merchant`:
+///   · 非商户(含空卖家)= 常规币种(`hi.did.Base.ListCoins` 里 category=public 的那些);
+///   · 商户 = 常规币种 + 他自己配的自定义币种(`hi.did.MerchantInfo.custom_tokens`)。
+/// 商户那一半走**授权**取:`hi.did.MerchantGranted.ListCoins`,要目标商户授权过 club
+/// (`MERCHANT_GRANT_SCOPE_READ_MERCHANT`)—— 与 club 读别家商户用户是同一条路。
+/// **不许拿 club 自己的 ExtendToken 去冒充那个商户查**,那是"借用别家凭据",零报错。
+///
+/// ⚠️ `is_merchant` 与"支持币种多不多"是两件事:没授权给 club 的商户,这里也只发常规币种,
+///    但它仍然 `is_merchant = true`。前端标"非商户"只能看这个字段,不许照币种/用户数猜。
 class MarketSeller extends $pb.GeneratedMessage {
   factory MarketSeller({
     $1.Entity? master,
     $core.String? moment,
-    $core.Iterable<MarketStall>? stalls,
+    $core.int? stallsCount,
     $core.int? listingCount,
+    $core.Iterable<$3.Coin>? supportCoins,
+    $core.bool? isMerchant,
   }) {
     final result = create();
     if (master != null) result.master = master;
     if (moment != null) result.moment = moment;
-    if (stalls != null) result.stalls.addAll(stalls);
+    if (stallsCount != null) result.stallsCount = stallsCount;
     if (listingCount != null) result.listingCount = listingCount;
+    if (supportCoins != null) result.supportCoins.addAll(supportCoins);
+    if (isMerchant != null) result.isMerchant = isMerchant;
     return result;
   }
 
@@ -1069,9 +1149,11 @@ class MarketSeller extends $pb.GeneratedMessage {
     ..aOM<$1.Entity>(1, _omitFieldNames ? '' : 'master',
         subBuilder: $1.Entity.create)
     ..aOS(2, _omitFieldNames ? '' : 'moment')
-    ..pPM<MarketStall>(3, _omitFieldNames ? '' : 'stalls',
-        subBuilder: MarketStall.create)
+    ..aI(3, _omitFieldNames ? '' : 'stallsCount')
     ..aI(4, _omitFieldNames ? '' : 'listingCount')
+    ..pPM<$3.Coin>(5, _omitFieldNames ? '' : 'supportCoins',
+        subBuilder: $3.Coin.create)
+    ..aOB(6, _omitFieldNames ? '' : 'isMerchant')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1093,6 +1175,7 @@ class MarketSeller extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<MarketSeller>(create);
   static MarketSeller? _defaultInstance;
 
+  /// 卖家(主人)。**不传 = 空卖家**(全部无主机器人聚成的那一档),不是"这一行坏了"。
   @$pb.TagNumber(1)
   $1.Entity get master => $_getN(0);
   @$pb.TagNumber(1)
@@ -1114,7 +1197,13 @@ class MarketSeller extends $pb.GeneratedMessage {
   void clearMoment() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $pb.PbList<MarketStall> get stalls => $_getList(2);
+  $core.int get stallsCount => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set stallsCount($core.int value) => $_setSignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasStallsCount() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearStallsCount() => $_clearField(3);
 
   @$pb.TagNumber(4)
   $core.int get listingCount => $_getIZ(3);
@@ -1124,6 +1213,18 @@ class MarketSeller extends $pb.GeneratedMessage {
   $core.bool hasListingCount() => $_has(3);
   @$pb.TagNumber(4)
   void clearListingCount() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $pb.PbList<$3.Coin> get supportCoins => $_getList(4);
+
+  @$pb.TagNumber(6)
+  $core.bool get isMerchant => $_getBF(5);
+  @$pb.TagNumber(6)
+  set isMerchant($core.bool value) => $_setBool(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasIsMerchant() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearIsMerchant() => $_clearField(6);
 }
 
 class ListSellersResp extends $pb.GeneratedMessage {
@@ -1185,6 +1286,328 @@ class ListSellersResp extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(2)
   $pb.PbList<MarketSeller> get sellers => $_getList(1);
+}
+
+class GetSellerReq extends $pb.GeneratedMessage {
+  factory GetSellerReq({
+    $core.String? master,
+  }) {
+    final result = create();
+    if (master != null) result.master = master;
+    return result;
+  }
+
+  GetSellerReq._();
+
+  factory GetSellerReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetSellerReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetSellerReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'master')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetSellerReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetSellerReq copyWith(void Function(GetSellerReq) updates) =>
+      super.copyWith((message) => updates(message as GetSellerReq))
+          as GetSellerReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetSellerReq create() => GetSellerReq._();
+  @$core.override
+  GetSellerReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GetSellerReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetSellerReq>(create);
+  static GetSellerReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get master => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set master($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasMaster() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearMaster() => $_clearField(1);
+}
+
+class ListSellerStallsReq extends $pb.GeneratedMessage {
+  factory ListSellerStallsReq({
+    $core.String? master,
+    $1.Pagination? pagination,
+  }) {
+    final result = create();
+    if (master != null) result.master = master;
+    if (pagination != null) result.pagination = pagination;
+    return result;
+  }
+
+  ListSellerStallsReq._();
+
+  factory ListSellerStallsReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListSellerStallsReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListSellerStallsReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'master')
+    ..aOM<$1.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $1.Pagination.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListSellerStallsReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListSellerStallsReq copyWith(void Function(ListSellerStallsReq) updates) =>
+      super.copyWith((message) => updates(message as ListSellerStallsReq))
+          as ListSellerStallsReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListSellerStallsReq create() => ListSellerStallsReq._();
+  @$core.override
+  ListSellerStallsReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListSellerStallsReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListSellerStallsReq>(create);
+  static ListSellerStallsReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get master => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set master($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasMaster() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearMaster() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $1.Pagination get pagination => $_getN(1);
+  @$pb.TagNumber(2)
+  set pagination($1.Pagination value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPagination() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPagination() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $1.Pagination ensurePagination() => $_ensure(1);
+}
+
+class ListSellerStallsResp extends $pb.GeneratedMessage {
+  factory ListSellerStallsResp({
+    $core.int? total,
+    $core.Iterable<MarketStall>? stalls,
+  }) {
+    final result = create();
+    if (total != null) result.total = total;
+    if (stalls != null) result.stalls.addAll(stalls);
+    return result;
+  }
+
+  ListSellerStallsResp._();
+
+  factory ListSellerStallsResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListSellerStallsResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListSellerStallsResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aI(1, _omitFieldNames ? '' : 'total')
+    ..pPM<MarketStall>(2, _omitFieldNames ? '' : 'stalls',
+        subBuilder: MarketStall.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListSellerStallsResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListSellerStallsResp copyWith(void Function(ListSellerStallsResp) updates) =>
+      super.copyWith((message) => updates(message as ListSellerStallsResp))
+          as ListSellerStallsResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListSellerStallsResp create() => ListSellerStallsResp._();
+  @$core.override
+  ListSellerStallsResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListSellerStallsResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListSellerStallsResp>(create);
+  static ListSellerStallsResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get total => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set total($core.int value) => $_setSignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasTotal() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTotal() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<MarketStall> get stalls => $_getList(1);
+}
+
+class ListSellerUsersReq extends $pb.GeneratedMessage {
+  factory ListSellerUsersReq({
+    $core.String? master,
+    $1.Pagination? pagination,
+  }) {
+    final result = create();
+    if (master != null) result.master = master;
+    if (pagination != null) result.pagination = pagination;
+    return result;
+  }
+
+  ListSellerUsersReq._();
+
+  factory ListSellerUsersReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListSellerUsersReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListSellerUsersReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'master')
+    ..aOM<$1.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $1.Pagination.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListSellerUsersReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListSellerUsersReq copyWith(void Function(ListSellerUsersReq) updates) =>
+      super.copyWith((message) => updates(message as ListSellerUsersReq))
+          as ListSellerUsersReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListSellerUsersReq create() => ListSellerUsersReq._();
+  @$core.override
+  ListSellerUsersReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListSellerUsersReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListSellerUsersReq>(create);
+  static ListSellerUsersReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get master => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set master($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasMaster() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearMaster() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $1.Pagination get pagination => $_getN(1);
+  @$pb.TagNumber(2)
+  set pagination($1.Pagination value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPagination() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPagination() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $1.Pagination ensurePagination() => $_ensure(1);
+}
+
+/// ListSellerUsersResp 商户名下的用户。
+///
+/// 数据源 `hi.did.MerchantGranted.ListUsers` —— club 拿自己的 ExtendToken 跨商户读,
+/// 要目标商户授权过 club(`MERCHANT_GRANT_SCOPE_READ_USERS`;新商户建号时默认给)。
+///
+/// ⚠️ **空列表不是"非商户"的判据** —— 至少三种成因:非商户、商户名下确实没人、
+///    商户把授权撤了(那一侧返 PermissionDenied,不是空列表)。要标"非商户"看
+///    `MarketSeller.is_merchant`。
+class ListSellerUsersResp extends $pb.GeneratedMessage {
+  factory ListSellerUsersResp({
+    $core.int? total,
+    $core.Iterable<MarketSellerUser>? users,
+  }) {
+    final result = create();
+    if (total != null) result.total = total;
+    if (users != null) result.users.addAll(users);
+    return result;
+  }
+
+  ListSellerUsersResp._();
+
+  factory ListSellerUsersResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListSellerUsersResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListSellerUsersResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aI(1, _omitFieldNames ? '' : 'total')
+    ..pPM<MarketSellerUser>(2, _omitFieldNames ? '' : 'users',
+        subBuilder: MarketSellerUser.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListSellerUsersResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListSellerUsersResp copyWith(void Function(ListSellerUsersResp) updates) =>
+      super.copyWith((message) => updates(message as ListSellerUsersResp))
+          as ListSellerUsersResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListSellerUsersResp create() => ListSellerUsersResp._();
+  @$core.override
+  ListSellerUsersResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListSellerUsersResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListSellerUsersResp>(create);
+  static ListSellerUsersResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get total => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set total($core.int value) => $_setSignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasTotal() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTotal() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<MarketSellerUser> get users => $_getList(1);
 }
 
 class SearchListingsReq extends $pb.GeneratedMessage {
@@ -2079,7 +2502,7 @@ class ApplyReq extends $pb.GeneratedMessage {
   factory ApplyReq({
     $core.String? listingUuid,
     $core.String? toAgent,
-    $3.Struct? params,
+    $4.Struct? params,
   }) {
     final result = create();
     if (listingUuid != null) result.listingUuid = listingUuid;
@@ -2103,8 +2526,8 @@ class ApplyReq extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'listingUuid')
     ..aOS(2, _omitFieldNames ? '' : 'toAgent')
-    ..aOM<$3.Struct>(4, _omitFieldNames ? '' : 'params',
-        subBuilder: $3.Struct.create)
+    ..aOM<$4.Struct>(4, _omitFieldNames ? '' : 'params',
+        subBuilder: $4.Struct.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2145,15 +2568,15 @@ class ApplyReq extends $pb.GeneratedMessage {
 
   /// ⚠️ 没有 follow_latest:买完之后在"机器人 → 插件"那一行上自己开关(hi.ai 的 c.follow_latest)。
   @$pb.TagNumber(4)
-  $3.Struct get params => $_getN(2);
+  $4.Struct get params => $_getN(2);
   @$pb.TagNumber(4)
-  set params($3.Struct value) => $_setField(4, value);
+  set params($4.Struct value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasParams() => $_has(2);
   @$pb.TagNumber(4)
   void clearParams() => $_clearField(4);
   @$pb.TagNumber(4)
-  $3.Struct ensureParams() => $_ensure(2);
+  $4.Struct ensureParams() => $_ensure(2);
 }
 
 class MarketPayment extends $pb.GeneratedMessage {
@@ -4123,7 +4546,7 @@ class MarketPendingGrant extends $pb.GeneratedMessage {
     $core.String? price,
     $core.String? coin,
     $fixnum.Int64? duration,
-    $3.Struct? params,
+    $4.Struct? params,
     $fixnum.Int64? createdAt,
   }) {
     final result = create();
@@ -4166,8 +4589,8 @@ class MarketPendingGrant extends $pb.GeneratedMessage {
     ..aOS(8, _omitFieldNames ? '' : 'price')
     ..aOS(9, _omitFieldNames ? '' : 'coin')
     ..aInt64(10, _omitFieldNames ? '' : 'duration')
-    ..aOM<$3.Struct>(11, _omitFieldNames ? '' : 'params',
-        subBuilder: $3.Struct.create)
+    ..aOM<$4.Struct>(11, _omitFieldNames ? '' : 'params',
+        subBuilder: $4.Struct.create)
     ..aInt64(12, _omitFieldNames ? '' : 'createdAt')
     ..hasRequiredFields = false;
 
@@ -4284,15 +4707,15 @@ class MarketPendingGrant extends $pb.GeneratedMessage {
   void clearDuration() => $_clearField(10);
 
   @$pb.TagNumber(11)
-  $3.Struct get params => $_getN(10);
+  $4.Struct get params => $_getN(10);
   @$pb.TagNumber(11)
-  set params($3.Struct value) => $_setField(11, value);
+  set params($4.Struct value) => $_setField(11, value);
   @$pb.TagNumber(11)
   $core.bool hasParams() => $_has(10);
   @$pb.TagNumber(11)
   void clearParams() => $_clearField(11);
   @$pb.TagNumber(11)
-  $3.Struct ensureParams() => $_ensure(10);
+  $4.Struct ensureParams() => $_ensure(10);
 
   @$pb.TagNumber(12)
   $fixnum.Int64 get createdAt => $_getI64(11);
@@ -4362,7 +4785,7 @@ class MarketNotifyData extends $pb.GeneratedMessage {
     $core.String? outerId,
     $core.String? result,
     $core.String? reason,
-    $3.Struct? termsOverride,
+    $4.Struct? termsOverride,
     $core.String? nonce,
     $fixnum.Int64? timestamp,
   }) {
@@ -4394,8 +4817,8 @@ class MarketNotifyData extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'outerId')
     ..aOS(3, _omitFieldNames ? '' : 'result')
     ..aOS(4, _omitFieldNames ? '' : 'reason')
-    ..aOM<$3.Struct>(5, _omitFieldNames ? '' : 'termsOverride',
-        subBuilder: $3.Struct.create)
+    ..aOM<$4.Struct>(5, _omitFieldNames ? '' : 'termsOverride',
+        subBuilder: $4.Struct.create)
     ..aOS(6, _omitFieldNames ? '' : 'nonce')
     ..aInt64(7, _omitFieldNames ? '' : 'timestamp')
     ..hasRequiredFields = false;
@@ -4456,15 +4879,15 @@ class MarketNotifyData extends $pb.GeneratedMessage {
   void clearReason() => $_clearField(4);
 
   @$pb.TagNumber(5)
-  $3.Struct get termsOverride => $_getN(4);
+  $4.Struct get termsOverride => $_getN(4);
   @$pb.TagNumber(5)
-  set termsOverride($3.Struct value) => $_setField(5, value);
+  set termsOverride($4.Struct value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasTermsOverride() => $_has(4);
   @$pb.TagNumber(5)
   void clearTermsOverride() => $_clearField(5);
   @$pb.TagNumber(5)
-  $3.Struct ensureTermsOverride() => $_ensure(4);
+  $4.Struct ensureTermsOverride() => $_ensure(4);
 
   @$pb.TagNumber(6)
   $core.String get nonce => $_getSZ(5);

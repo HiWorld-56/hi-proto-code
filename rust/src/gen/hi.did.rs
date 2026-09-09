@@ -1334,6 +1334,26 @@ pub struct GrantedListGreetersReq {
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
+/// 读**别家商户**支持的币种(MerchantGranted.ListCoins,须 READ_MERCHANT)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GrantedListCoinsReq {
+    /// 目标商户(须先授权给我)
+    #[prost(string, optional, tag = "1")]
+    pub merchant: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 某商户支持的币种。**只有币种**,不带 master/endpoint/scheme 那些 ——
+/// 用途是"这个商户收得了哪些币"(插件市场按卖家显示支持币种),不是商户信息的门面。
+/// 要别的字段就另开方法,别把这里扩成第二个 MerchantInfo:那正是 Merchant.Get
+/// 当年带出 extension_token 的路子(返回体越宽,越容易漏)。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MerchantCoinsResp {
+    /// 公共币种(他勾选的那些)
+    #[prost(message, repeated, tag = "1")]
+    pub public_coins: ::prost::alloc::vec::Vec<Coin>,
+    /// 自定义币种
+    #[prost(message, repeated, tag = "2")]
+    pub custom_tokens: ::prost::alloc::vec::Vec<Coin>,
+}
 /// 列某商户名下的 greeter —— 即扩展表里 level >= 8 的用户。
 /// level 由商户自己在扩展信息(UserExtensionInfo.level)里打;未设(NULL)或低于门槛 = 普通用户。
 /// 门槛在服务端是常量(repo.GreeterMinLevel),不由调用方传 —— greeter 是一类固定人群,
@@ -1495,6 +1515,17 @@ pub enum MerchantGrantScope {
     ReadUsers = 1,
     /// bit1:把用户加到我名下(MerchantGranted.AddUsers)
     AddUsers = 2,
+    /// bit2:读我这个商户自己的配置(目前只有支持币种,MerchantGranted.ListCoins)。
+    ///
+    /// 与 READ_USERS 分开而不是搭它的车:那一项给的是"我名下的**用户**",这一项给的是
+    /// "我这个**商户**自己"—— 两类数据、两个主体。搭车的话,商户撤掉读用户的授权时
+    /// 会连带把币种也撤了,而它根本不知道自己撤了两样。
+    ///
+    /// ⚠️ 这一位是 2026-09-09 加的,**存量授权行里没有它** —— 已有商户对 club 的授权
+    /// 只有 bit0|bit1。不回填的话,插件市场里这些商户只会显示常规币种、
+    /// 自定义币种一个都不出,**且零报错**(拿到的是 PermissionDenied,被当成"没配")。
+    /// 回填 = 给 `hi_merchant_grant` 里 grantee=club 的存量行按位或上 4。
+    ReadMerchant = 4,
 }
 impl MerchantGrantScope {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -1506,6 +1537,7 @@ impl MerchantGrantScope {
             Self::Unspecified => "MERCHANT_GRANT_SCOPE_UNSPECIFIED",
             Self::ReadUsers => "MERCHANT_GRANT_SCOPE_READ_USERS",
             Self::AddUsers => "MERCHANT_GRANT_SCOPE_ADD_USERS",
+            Self::ReadMerchant => "MERCHANT_GRANT_SCOPE_READ_MERCHANT",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -1514,6 +1546,7 @@ impl MerchantGrantScope {
             "MERCHANT_GRANT_SCOPE_UNSPECIFIED" => Some(Self::Unspecified),
             "MERCHANT_GRANT_SCOPE_READ_USERS" => Some(Self::ReadUsers),
             "MERCHANT_GRANT_SCOPE_ADD_USERS" => Some(Self::AddUsers),
+            "MERCHANT_GRANT_SCOPE_READ_MERCHANT" => Some(Self::ReadMerchant),
             _ => None,
         }
     }
@@ -2500,9 +2533,10 @@ pub mod merchant_granted_client {
     /// 判据是 hi_merchant_grant 里 (merchant=A, grantee=B) 一行,授权方永远取自 token。
     ///
     /// ⚠️ **有没有那一行不够,还要看那一行给了哪些授权项**(MerchantGrantScope):
-    /// 三个读方法要 READ_USERS,AddUsers 要 ADD_USERS。授权项与方法的对应关系写死在
-    /// handler 的方法入口,**不由入参决定** —— 与"要不要 grant 由 service 决定"同一个道理:
-    /// 让调用方传"我要用哪一项",等于让它自己声明权限。
+    /// 三个读用户的方法要 READ_USERS,AddUsers 要 ADD_USERS,ListCoins 要 READ_MERCHANT。
+    /// 授权项与方法的对应关系写死在 handler 的方法入口,**不由入参决定** ——
+    /// 与"要不要 grant 由 service 决定"同一个道理:让调用方传"我要用哪一项",
+    /// 等于让它自己声明权限。
     #[derive(Debug, Clone)]
     pub struct MerchantGrantedClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -2647,6 +2681,30 @@ pub mod merchant_granted_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.did.MerchantGranted", "ListGreeters"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_coins(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GrantedListCoinsReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::MerchantCoinsResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.MerchantGranted/ListCoins",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.MerchantGranted", "ListCoins"));
             self.inner.unary(req, path, codec).await
         }
         /// 把用户加到别家商户名下(须 ADD_USERS)。

@@ -2977,6 +2977,97 @@ impl<'de> serde::Deserialize<'de> for GrantedGetUserReq {
         deserializer.deserialize_struct("hi.did.GrantedGetUserReq", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for GrantedListCoinsReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.merchant.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.did.GrantedListCoinsReq", len)?;
+        if let Some(v) = self.merchant.as_ref() {
+            struct_ser.serialize_field("merchant", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for GrantedListCoinsReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "merchant",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Merchant,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "merchant" => Ok(GeneratedField::Merchant),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = GrantedListCoinsReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.did.GrantedListCoinsReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GrantedListCoinsReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut merchant__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Merchant => {
+                            if merchant__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("merchant"));
+                            }
+                            merchant__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(GrantedListCoinsReq {
+                    merchant: merchant__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.did.GrantedListCoinsReq", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for GrantedListGreetersReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -6199,6 +6290,116 @@ impl<'de> serde::Deserialize<'de> for LogoutReq {
         deserializer.deserialize_struct("hi.did.LogoutReq", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for MerchantCoinsResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.public_coins.is_empty() {
+            len += 1;
+        }
+        if !self.custom_tokens.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.did.MerchantCoinsResp", len)?;
+        if !self.public_coins.is_empty() {
+            struct_ser.serialize_field("publicCoins", &self.public_coins)?;
+        }
+        if !self.custom_tokens.is_empty() {
+            struct_ser.serialize_field("customTokens", &self.custom_tokens)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for MerchantCoinsResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "public_coins",
+            "publicCoins",
+            "custom_tokens",
+            "customTokens",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            PublicCoins,
+            CustomTokens,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "publicCoins" | "public_coins" => Ok(GeneratedField::PublicCoins),
+                            "customTokens" | "custom_tokens" => Ok(GeneratedField::CustomTokens),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = MerchantCoinsResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.did.MerchantCoinsResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MerchantCoinsResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut public_coins__ = None;
+                let mut custom_tokens__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::PublicCoins => {
+                            if public_coins__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("publicCoins"));
+                            }
+                            public_coins__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::CustomTokens => {
+                            if custom_tokens__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("customTokens"));
+                            }
+                            custom_tokens__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(MerchantCoinsResp {
+                    public_coins: public_coins__.unwrap_or_default(),
+                    custom_tokens: custom_tokens__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.did.MerchantCoinsResp", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for MerchantExDbResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -6408,6 +6609,7 @@ impl serde::Serialize for MerchantGrantScope {
             Self::Unspecified => "MERCHANT_GRANT_SCOPE_UNSPECIFIED",
             Self::ReadUsers => "MERCHANT_GRANT_SCOPE_READ_USERS",
             Self::AddUsers => "MERCHANT_GRANT_SCOPE_ADD_USERS",
+            Self::ReadMerchant => "MERCHANT_GRANT_SCOPE_READ_MERCHANT",
         };
         serializer.serialize_str(variant)
     }
@@ -6422,6 +6624,7 @@ impl<'de> serde::Deserialize<'de> for MerchantGrantScope {
             "MERCHANT_GRANT_SCOPE_UNSPECIFIED",
             "MERCHANT_GRANT_SCOPE_READ_USERS",
             "MERCHANT_GRANT_SCOPE_ADD_USERS",
+            "MERCHANT_GRANT_SCOPE_READ_MERCHANT",
         ];
 
         struct GeneratedVisitor;
@@ -6465,6 +6668,7 @@ impl<'de> serde::Deserialize<'de> for MerchantGrantScope {
                     "MERCHANT_GRANT_SCOPE_UNSPECIFIED" => Ok(MerchantGrantScope::Unspecified),
                     "MERCHANT_GRANT_SCOPE_READ_USERS" => Ok(MerchantGrantScope::ReadUsers),
                     "MERCHANT_GRANT_SCOPE_ADD_USERS" => Ok(MerchantGrantScope::AddUsers),
+                    "MERCHANT_GRANT_SCOPE_READ_MERCHANT" => Ok(MerchantGrantScope::ReadMerchant),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }

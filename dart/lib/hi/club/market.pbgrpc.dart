@@ -26,6 +26,11 @@ export 'market.pb.dart';
 ///
 /// ListSellers 公开有在售挂牌的主人资料及用户动态;其它挂牌页只吐机器人 Entity + 公开文案。
 /// 不提供任意机器人 DID 反查主人的接口。
+///
+/// ⚠️ **四个卖家方法都免鉴权,所以它们吐出去的就是全网可见的**:摊位(机器人 Entity)
+///    与**商户名下的用户名单**。前者本就是"开店即自愿露出";后者是商户自己的用户列表 ——
+///    之所以敢公开,是因为它由那个商户**主动授权给 club**(MERCHANT_GRANT_SCOPE_READ_USERS)
+///    才拿得到,没授权就是空。要收紧就改成 AUTH_USER,别指望"没人知道这个 did"。
 @$pb.GrpcServiceName('hi.club.MarketDirectory')
 class MarketDirectoryClient extends $grpc.Client {
   /// The hostname for this service.
@@ -50,6 +55,27 @@ class MarketDirectoryClient extends $grpc.Client {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$listSellers, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.MarketSeller> getSeller(
+    $0.GetSellerReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$getSeller, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.ListSellerStallsResp> listSellerStalls(
+    $0.ListSellerStallsReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listSellerStalls, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.ListSellerUsersResp> listSellerUsers(
+    $0.ListSellerUsersReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listSellerUsers, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.SearchListingsResp> listAgentListings(
@@ -78,6 +104,21 @@ class MarketDirectoryClient extends $grpc.Client {
           '/hi.club.MarketDirectory/ListSellers',
           ($1.Pagination value) => value.writeToBuffer(),
           $0.ListSellersResp.fromBuffer);
+  static final _$getSeller =
+      $grpc.ClientMethod<$0.GetSellerReq, $0.MarketSeller>(
+          '/hi.club.MarketDirectory/GetSeller',
+          ($0.GetSellerReq value) => value.writeToBuffer(),
+          $0.MarketSeller.fromBuffer);
+  static final _$listSellerStalls =
+      $grpc.ClientMethod<$0.ListSellerStallsReq, $0.ListSellerStallsResp>(
+          '/hi.club.MarketDirectory/ListSellerStalls',
+          ($0.ListSellerStallsReq value) => value.writeToBuffer(),
+          $0.ListSellerStallsResp.fromBuffer);
+  static final _$listSellerUsers =
+      $grpc.ClientMethod<$0.ListSellerUsersReq, $0.ListSellerUsersResp>(
+          '/hi.club.MarketDirectory/ListSellerUsers',
+          ($0.ListSellerUsersReq value) => value.writeToBuffer(),
+          $0.ListSellerUsersResp.fromBuffer);
   static final _$listAgentListings =
       $grpc.ClientMethod<$0.ListAgentListingsReq, $0.SearchListingsResp>(
           '/hi.club.MarketDirectory/ListAgentListings',
@@ -109,6 +150,31 @@ abstract class MarketDirectoryServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.Pagination.fromBuffer(value),
         ($0.ListSellersResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.GetSellerReq, $0.MarketSeller>(
+        'GetSeller',
+        getSeller_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.GetSellerReq.fromBuffer(value),
+        ($0.MarketSeller value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$0.ListSellerStallsReq, $0.ListSellerStallsResp>(
+            'ListSellerStalls',
+            listSellerStalls_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $0.ListSellerStallsReq.fromBuffer(value),
+            ($0.ListSellerStallsResp value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$0.ListSellerUsersReq, $0.ListSellerUsersResp>(
+            'ListSellerUsers',
+            listSellerUsers_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $0.ListSellerUsersReq.fromBuffer(value),
+            ($0.ListSellerUsersResp value) => value.writeToBuffer()));
     $addMethod(
         $grpc.ServiceMethod<$0.ListAgentListingsReq, $0.SearchListingsResp>(
             'ListAgentListings',
@@ -143,6 +209,32 @@ abstract class MarketDirectoryServiceBase extends $grpc.Service {
 
   $async.Future<$0.ListSellersResp> listSellers(
       $grpc.ServiceCall call, $1.Pagination request);
+
+  $async.Future<$0.MarketSeller> getSeller_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.GetSellerReq> $request) async {
+    return getSeller($call, await $request);
+  }
+
+  $async.Future<$0.MarketSeller> getSeller(
+      $grpc.ServiceCall call, $0.GetSellerReq request);
+
+  $async.Future<$0.ListSellerStallsResp> listSellerStalls_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.ListSellerStallsReq> $request) async {
+    return listSellerStalls($call, await $request);
+  }
+
+  $async.Future<$0.ListSellerStallsResp> listSellerStalls(
+      $grpc.ServiceCall call, $0.ListSellerStallsReq request);
+
+  $async.Future<$0.ListSellerUsersResp> listSellerUsers_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.ListSellerUsersReq> $request) async {
+    return listSellerUsers($call, await $request);
+  }
+
+  $async.Future<$0.ListSellerUsersResp> listSellerUsers(
+      $grpc.ServiceCall call, $0.ListSellerUsersReq request);
 
   $async.Future<$0.SearchListingsResp> listAgentListings_Pre(
       $grpc.ServiceCall $call,

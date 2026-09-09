@@ -23,6 +23,9 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	MarketDirectory_SearchListings_FullMethodName    = "/hi.club.MarketDirectory/SearchListings"
 	MarketDirectory_ListSellers_FullMethodName       = "/hi.club.MarketDirectory/ListSellers"
+	MarketDirectory_GetSeller_FullMethodName         = "/hi.club.MarketDirectory/GetSeller"
+	MarketDirectory_ListSellerStalls_FullMethodName  = "/hi.club.MarketDirectory/ListSellerStalls"
+	MarketDirectory_ListSellerUsers_FullMethodName   = "/hi.club.MarketDirectory/ListSellerUsers"
 	MarketDirectory_ListAgentListings_FullMethodName = "/hi.club.MarketDirectory/ListAgentListings"
 	MarketDirectory_GetListing_FullMethodName        = "/hi.club.MarketDirectory/GetListing"
 )
@@ -35,9 +38,18 @@ const (
 //
 // ListSellers 公开有在售挂牌的主人资料及用户动态;其它挂牌页只吐机器人 Entity + 公开文案。
 // 不提供任意机器人 DID 反查主人的接口。
+//
+// ⚠️ **四个卖家方法都免鉴权,所以它们吐出去的就是全网可见的**:摊位(机器人 Entity)
+//
+//	与**商户名下的用户名单**。前者本就是"开店即自愿露出";后者是商户自己的用户列表 ——
+//	之所以敢公开,是因为它由那个商户**主动授权给 club**(MERCHANT_GRANT_SCOPE_READ_USERS)
+//	才拿得到,没授权就是空。要收紧就改成 AUTH_USER,别指望"没人知道这个 did"。
 type MarketDirectoryClient interface {
 	SearchListings(ctx context.Context, in *SearchListingsReq, opts ...grpc.CallOption) (*SearchListingsResp, error)
 	ListSellers(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*ListSellersResp, error)
+	GetSeller(ctx context.Context, in *GetSellerReq, opts ...grpc.CallOption) (*MarketSeller, error)
+	ListSellerStalls(ctx context.Context, in *ListSellerStallsReq, opts ...grpc.CallOption) (*ListSellerStallsResp, error)
+	ListSellerUsers(ctx context.Context, in *ListSellerUsersReq, opts ...grpc.CallOption) (*ListSellerUsersResp, error)
 	ListAgentListings(ctx context.Context, in *ListAgentListingsReq, opts ...grpc.CallOption) (*SearchListingsResp, error)
 	GetListing(ctx context.Context, in *GetListingReq, opts ...grpc.CallOption) (*GetListingResp, error)
 }
@@ -64,6 +76,36 @@ func (c *marketDirectoryClient) ListSellers(ctx context.Context, in *hi.Paginati
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListSellersResp)
 	err := c.cc.Invoke(ctx, MarketDirectory_ListSellers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *marketDirectoryClient) GetSeller(ctx context.Context, in *GetSellerReq, opts ...grpc.CallOption) (*MarketSeller, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MarketSeller)
+	err := c.cc.Invoke(ctx, MarketDirectory_GetSeller_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *marketDirectoryClient) ListSellerStalls(ctx context.Context, in *ListSellerStallsReq, opts ...grpc.CallOption) (*ListSellerStallsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListSellerStallsResp)
+	err := c.cc.Invoke(ctx, MarketDirectory_ListSellerStalls_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *marketDirectoryClient) ListSellerUsers(ctx context.Context, in *ListSellerUsersReq, opts ...grpc.CallOption) (*ListSellerUsersResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListSellerUsersResp)
+	err := c.cc.Invoke(ctx, MarketDirectory_ListSellerUsers_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -98,9 +140,18 @@ func (c *marketDirectoryClient) GetListing(ctx context.Context, in *GetListingRe
 //
 // ListSellers 公开有在售挂牌的主人资料及用户动态;其它挂牌页只吐机器人 Entity + 公开文案。
 // 不提供任意机器人 DID 反查主人的接口。
+//
+// ⚠️ **四个卖家方法都免鉴权,所以它们吐出去的就是全网可见的**:摊位(机器人 Entity)
+//
+//	与**商户名下的用户名单**。前者本就是"开店即自愿露出";后者是商户自己的用户列表 ——
+//	之所以敢公开,是因为它由那个商户**主动授权给 club**(MERCHANT_GRANT_SCOPE_READ_USERS)
+//	才拿得到,没授权就是空。要收紧就改成 AUTH_USER,别指望"没人知道这个 did"。
 type MarketDirectoryServer interface {
 	SearchListings(context.Context, *SearchListingsReq) (*SearchListingsResp, error)
 	ListSellers(context.Context, *hi.Pagination) (*ListSellersResp, error)
+	GetSeller(context.Context, *GetSellerReq) (*MarketSeller, error)
+	ListSellerStalls(context.Context, *ListSellerStallsReq) (*ListSellerStallsResp, error)
+	ListSellerUsers(context.Context, *ListSellerUsersReq) (*ListSellerUsersResp, error)
 	ListAgentListings(context.Context, *ListAgentListingsReq) (*SearchListingsResp, error)
 	GetListing(context.Context, *GetListingReq) (*GetListingResp, error)
 }
@@ -117,6 +168,15 @@ func (UnimplementedMarketDirectoryServer) SearchListings(context.Context, *Searc
 }
 func (UnimplementedMarketDirectoryServer) ListSellers(context.Context, *hi.Pagination) (*ListSellersResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListSellers not implemented")
+}
+func (UnimplementedMarketDirectoryServer) GetSeller(context.Context, *GetSellerReq) (*MarketSeller, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetSeller not implemented")
+}
+func (UnimplementedMarketDirectoryServer) ListSellerStalls(context.Context, *ListSellerStallsReq) (*ListSellerStallsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListSellerStalls not implemented")
+}
+func (UnimplementedMarketDirectoryServer) ListSellerUsers(context.Context, *ListSellerUsersReq) (*ListSellerUsersResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListSellerUsers not implemented")
 }
 func (UnimplementedMarketDirectoryServer) ListAgentListings(context.Context, *ListAgentListingsReq) (*SearchListingsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListAgentListings not implemented")
@@ -180,6 +240,60 @@ func _MarketDirectory_ListSellers_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MarketDirectory_GetSeller_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSellerReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketDirectoryServer).GetSeller(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MarketDirectory_GetSeller_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketDirectoryServer).GetSeller(ctx, req.(*GetSellerReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MarketDirectory_ListSellerStalls_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListSellerStallsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketDirectoryServer).ListSellerStalls(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MarketDirectory_ListSellerStalls_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketDirectoryServer).ListSellerStalls(ctx, req.(*ListSellerStallsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MarketDirectory_ListSellerUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListSellerUsersReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketDirectoryServer).ListSellerUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MarketDirectory_ListSellerUsers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketDirectoryServer).ListSellerUsers(ctx, req.(*ListSellerUsersReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _MarketDirectory_ListAgentListings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListAgentListingsReq)
 	if err := dec(in); err != nil {
@@ -230,6 +344,18 @@ var MarketDirectory_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListSellers",
 			Handler:    _MarketDirectory_ListSellers_Handler,
+		},
+		{
+			MethodName: "GetSeller",
+			Handler:    _MarketDirectory_GetSeller_Handler,
+		},
+		{
+			MethodName: "ListSellerStalls",
+			Handler:    _MarketDirectory_ListSellerStalls_Handler,
+		},
+		{
+			MethodName: "ListSellerUsers",
+			Handler:    _MarketDirectory_ListSellerUsers_Handler,
 		},
 		{
 			MethodName: "ListAgentListings",

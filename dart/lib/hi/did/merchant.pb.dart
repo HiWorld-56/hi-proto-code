@@ -1347,6 +1347,121 @@ class GrantedListGreetersReq extends $pb.GeneratedMessage {
   $2.Pagination ensurePagination() => $_ensure(1);
 }
 
+/// 读**别家商户**支持的币种(MerchantGranted.ListCoins,须 READ_MERCHANT)。
+class GrantedListCoinsReq extends $pb.GeneratedMessage {
+  factory GrantedListCoinsReq({
+    $core.String? merchant,
+  }) {
+    final result = create();
+    if (merchant != null) result.merchant = merchant;
+    return result;
+  }
+
+  GrantedListCoinsReq._();
+
+  factory GrantedListCoinsReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GrantedListCoinsReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GrantedListCoinsReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'merchant')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GrantedListCoinsReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GrantedListCoinsReq copyWith(void Function(GrantedListCoinsReq) updates) =>
+      super.copyWith((message) => updates(message as GrantedListCoinsReq))
+          as GrantedListCoinsReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GrantedListCoinsReq create() => GrantedListCoinsReq._();
+  @$core.override
+  GrantedListCoinsReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GrantedListCoinsReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GrantedListCoinsReq>(create);
+  static GrantedListCoinsReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get merchant => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set merchant($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasMerchant() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearMerchant() => $_clearField(1);
+}
+
+/// 某商户支持的币种。**只有币种**,不带 master/endpoint/scheme 那些 ——
+/// 用途是"这个商户收得了哪些币"(插件市场按卖家显示支持币种),不是商户信息的门面。
+/// 要别的字段就另开方法,别把这里扩成第二个 MerchantInfo:那正是 Merchant.Get
+/// 当年带出 extension_token 的路子(返回体越宽,越容易漏)。
+class MerchantCoinsResp extends $pb.GeneratedMessage {
+  factory MerchantCoinsResp({
+    $core.Iterable<$3.Coin>? publicCoins,
+    $core.Iterable<$3.Coin>? customTokens,
+  }) {
+    final result = create();
+    if (publicCoins != null) result.publicCoins.addAll(publicCoins);
+    if (customTokens != null) result.customTokens.addAll(customTokens);
+    return result;
+  }
+
+  MerchantCoinsResp._();
+
+  factory MerchantCoinsResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MerchantCoinsResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MerchantCoinsResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..pPM<$3.Coin>(1, _omitFieldNames ? '' : 'publicCoins',
+        subBuilder: $3.Coin.create)
+    ..pPM<$3.Coin>(2, _omitFieldNames ? '' : 'customTokens',
+        subBuilder: $3.Coin.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MerchantCoinsResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MerchantCoinsResp copyWith(void Function(MerchantCoinsResp) updates) =>
+      super.copyWith((message) => updates(message as MerchantCoinsResp))
+          as MerchantCoinsResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MerchantCoinsResp create() => MerchantCoinsResp._();
+  @$core.override
+  MerchantCoinsResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MerchantCoinsResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MerchantCoinsResp>(create);
+  static MerchantCoinsResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<$3.Coin> get publicCoins => $_getList(0);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<$3.Coin> get customTokens => $_getList(1);
+}
+
 /// 列某商户名下的 greeter —— 即扩展表里 level >= 8 的用户。
 /// level 由商户自己在扩展信息(UserExtensionInfo.level)里打;未设(NULL)或低于门槛 = 普通用户。
 /// 门槛在服务端是常量(repo.GreeterMinLevel),不由调用方传 —— greeter 是一类固定人群,
