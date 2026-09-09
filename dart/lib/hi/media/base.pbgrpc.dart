@@ -18,6 +18,7 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $0;
 
 import '../common.pb.dart' as $1;
+import '../did/base.pb.dart' as $2;
 
 export 'base.pb.dart';
 
@@ -69,5 +70,57 @@ abstract class BaseServiceBase extends $grpc.Service {
   }
 
   $async.Future<$1.ServerVersionResp> serverVersion(
+      $grpc.ServiceCall call, $0.Empty request);
+}
+
+/// 超管名单只用于已登录前端显隐管理入口；真正的管理 RPC 仍逐次执行 AUTH_SUPERADMIN 二级验证。
+@$pb.GrpcServiceName('hi.media.SuperAdmin')
+class SuperAdminClient extends $grpc.Client {
+  /// The hostname for this service.
+  static const $core.String defaultHost = '';
+
+  /// OAuth scopes needed for the client.
+  static const $core.List<$core.String> oauthScopes = [
+    '',
+  ];
+
+  SuperAdminClient(super.channel, {super.options, super.interceptors});
+
+  $grpc.ResponseFuture<$2.ListSuperAdminUsersResp> list(
+    $0.Empty request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$list, request, options: options);
+  }
+
+  // method descriptors
+
+  static final _$list =
+      $grpc.ClientMethod<$0.Empty, $2.ListSuperAdminUsersResp>(
+          '/hi.media.SuperAdmin/List',
+          ($0.Empty value) => value.writeToBuffer(),
+          $2.ListSuperAdminUsersResp.fromBuffer);
+}
+
+@$pb.GrpcServiceName('hi.media.SuperAdmin')
+abstract class SuperAdminServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.media.SuperAdmin';
+
+  SuperAdminServiceBase() {
+    $addMethod($grpc.ServiceMethod<$0.Empty, $2.ListSuperAdminUsersResp>(
+        'List',
+        list_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
+        ($2.ListSuperAdminUsersResp value) => value.writeToBuffer()));
+  }
+
+  $async.Future<$2.ListSuperAdminUsersResp> list_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
+    return list($call, await $request);
+  }
+
+  $async.Future<$2.ListSuperAdminUsersResp> list(
       $grpc.ServiceCall call, $0.Empty request);
 }

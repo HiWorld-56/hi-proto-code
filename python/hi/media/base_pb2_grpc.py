@@ -4,6 +4,7 @@ import grpc
 
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi import common_pb2 as hi_dot_common__pb2
+from hi.did import base_pb2 as hi_dot_did_dot_base__pb2
 
 
 class BaseStub(object):
@@ -67,6 +68,81 @@ class Base(object):
             '/hi.media.Base/ServerVersion',
             google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             hi_dot_common__pb2.ServerVersionResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+
+class SuperAdminStub(object):
+    """超管名单只用于已登录前端显隐管理入口；真正的管理 RPC 仍逐次执行 AUTH_SUPERADMIN 二级验证。
+    """
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.List = channel.unary_unary(
+                '/hi.media.SuperAdmin/List',
+                request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+                response_deserializer=hi_dot_did_dot_base__pb2.ListSuperAdminUsersResp.FromString,
+                _registered_method=True)
+
+
+class SuperAdminServicer(object):
+    """超管名单只用于已登录前端显隐管理入口；真正的管理 RPC 仍逐次执行 AUTH_SUPERADMIN 二级验证。
+    """
+
+    def List(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_SuperAdminServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'List': grpc.unary_unary_rpc_method_handler(
+                    servicer.List,
+                    request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                    response_serializer=hi_dot_did_dot_base__pb2.ListSuperAdminUsersResp.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'hi.media.SuperAdmin', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('hi.media.SuperAdmin', rpc_method_handlers)
+
+
+ # This class is part of an EXPERIMENTAL API.
+class SuperAdmin(object):
+    """超管名单只用于已登录前端显隐管理入口；真正的管理 RPC 仍逐次执行 AUTH_SUPERADMIN 二级验证。
+    """
+
+    @staticmethod
+    def List(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.media.SuperAdmin/List',
+            google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            hi_dot_did_dot_base__pb2.ListSuperAdminUsersResp.FromString,
             options,
             channel_credentials,
             insecure,

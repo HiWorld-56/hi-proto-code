@@ -30,6 +30,7 @@ pub mod hi {
     }
     pub mod media {
         include!("hi.media.rs");
+        include!("hi.media.serde.rs");
     }
     pub mod ninja {
         include!("hi.ninja.rs");

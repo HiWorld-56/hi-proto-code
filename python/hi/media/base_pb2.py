@@ -24,10 +24,11 @@ _sym_db = _symbol_database.Default()
 
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi import common_pb2 as hi_dot_common__pb2
+from hi.did import base_pb2 as hi_dot_did_dot_base__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13hi/media/base.proto\x12\x08hi.media\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto2M\n\x04\x42\x61se\x12\x45\n\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionResp\"\x05\x8a\xb5\x18\x01\x01\x42,Z*github.com/HiWorld-56/hi-proto/go/hi/mediab\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13hi/media/base.proto\x12\x08hi.media\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x11hi/did/base.proto\x1a\x10hi/options.proto2M\n\x04\x42\x61se\x12\x45\n\rServerVersion\x12\x16.google.protobuf.Empty\x1a\x15.hi.ServerVersionResp\"\x05\x8a\xb5\x18\x01\x01\x32T\n\nSuperAdmin\x12\x46\n\x04List\x12\x16.google.protobuf.Empty\x1a\x1f.hi.did.ListSuperAdminUsersResp\"\x05\x8a\xb5\x18\x01\x02\x42,Z*github.com/HiWorld-56/hi-proto/go/hi/mediab\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -37,6 +38,10 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._serialized_options = b'Z*github.com/HiWorld-56/hi-proto/go/hi/media'
   _globals['_BASE'].methods_by_name['ServerVersion']._loaded_options = None
   _globals['_BASE'].methods_by_name['ServerVersion']._serialized_options = b'\212\265\030\001\001'
-  _globals['_BASE']._serialized_start=97
-  _globals['_BASE']._serialized_end=174
+  _globals['_SUPERADMIN'].methods_by_name['List']._loaded_options = None
+  _globals['_SUPERADMIN'].methods_by_name['List']._serialized_options = b'\212\265\030\001\002'
+  _globals['_BASE']._serialized_start=116
+  _globals['_BASE']._serialized_end=193
+  _globals['_SUPERADMIN']._serialized_start=195
+  _globals['_SUPERADMIN']._serialized_end=279
 # @@protoc_insertion_point(module_scope)
