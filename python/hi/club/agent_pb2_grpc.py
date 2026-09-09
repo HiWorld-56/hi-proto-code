@@ -72,6 +72,11 @@ class AgentStub(object):
                 request_serializer=hi_dot_club_dot_agent__pb2.TransferReq.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
+        self.SetMoment = channel.unary_unary(
+                '/hi.club.Agent/SetMoment',
+                request_serializer=hi_dot_club_dot_agent__pb2.SetAgentMomentReq.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                _registered_method=True)
 
 
 class AgentServicer(object):
@@ -153,6 +158,13 @@ class AgentServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def SetMoment(self, request, context):
+        """── club 自有:动态 ──
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_AgentServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -209,6 +221,11 @@ def add_AgentServicer_to_server(servicer, server):
             'Transfer': grpc.unary_unary_rpc_method_handler(
                     servicer.Transfer,
                     request_deserializer=hi_dot_club_dot_agent__pb2.TransferReq.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'SetMoment': grpc.unary_unary_rpc_method_handler(
+                    servicer.SetMoment,
+                    request_deserializer=hi_dot_club_dot_agent__pb2.SetAgentMomentReq.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
     }
@@ -508,6 +525,33 @@ class Agent(object):
             target,
             '/hi.club.Agent/Transfer',
             hi_dot_club_dot_agent__pb2.TransferReq.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def SetMoment(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.Agent/SetMoment',
+            hi_dot_club_dot_agent__pb2.SetAgentMomentReq.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,

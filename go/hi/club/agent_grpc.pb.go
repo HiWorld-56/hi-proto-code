@@ -33,6 +33,7 @@ const (
 	Agent_UnbindMaster_FullMethodName     = "/hi.club.Agent/UnbindMaster"
 	Agent_BindStatus_FullMethodName       = "/hi.club.Agent/BindStatus"
 	Agent_Transfer_FullMethodName         = "/hi.club.Agent/Transfer"
+	Agent_SetMoment_FullMethodName        = "/hi.club.Agent/SetMoment"
 )
 
 // AgentClient is the client API for Agent service.
@@ -60,6 +61,8 @@ type AgentClient interface {
 	UnbindMaster(ctx context.Context, in *MasterBindReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	BindStatus(ctx context.Context, in *BindStatusReq, opts ...grpc.CallOption) (*BindStatusResp, error)
 	Transfer(ctx context.Context, in *TransferReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// ── club 自有:动态 ──
+	SetMoment(ctx context.Context, in *SetAgentMomentReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type agentClient struct {
@@ -180,6 +183,16 @@ func (c *agentClient) Transfer(ctx context.Context, in *TransferReq, opts ...grp
 	return out, nil
 }
 
+func (c *agentClient) SetMoment(ctx context.Context, in *SetAgentMomentReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Agent_SetMoment_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AgentServer is the server API for Agent service.
 // All implementations should embed UnimplementedAgentServer
 // for forward compatibility.
@@ -205,6 +218,8 @@ type AgentServer interface {
 	UnbindMaster(context.Context, *MasterBindReq) (*emptypb.Empty, error)
 	BindStatus(context.Context, *BindStatusReq) (*BindStatusResp, error)
 	Transfer(context.Context, *TransferReq) (*emptypb.Empty, error)
+	// ── club 自有:动态 ──
+	SetMoment(context.Context, *SetAgentMomentReq) (*emptypb.Empty, error)
 }
 
 // UnimplementedAgentServer should be embedded to have
@@ -246,6 +261,9 @@ func (UnimplementedAgentServer) BindStatus(context.Context, *BindStatusReq) (*Bi
 }
 func (UnimplementedAgentServer) Transfer(context.Context, *TransferReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Transfer not implemented")
+}
+func (UnimplementedAgentServer) SetMoment(context.Context, *SetAgentMomentReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetMoment not implemented")
 }
 func (UnimplementedAgentServer) testEmbeddedByValue() {}
 
@@ -465,6 +483,24 @@ func _Agent_Transfer_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Agent_SetMoment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetAgentMomentReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).SetMoment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_SetMoment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).SetMoment(ctx, req.(*SetAgentMomentReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Agent_ServiceDesc is the grpc.ServiceDesc for Agent service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -515,6 +551,10 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Transfer",
 			Handler:    _Agent_Transfer_Handler,
+		},
+		{
+			MethodName: "SetMoment",
+			Handler:    _Agent_SetMoment_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

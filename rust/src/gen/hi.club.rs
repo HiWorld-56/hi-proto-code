@@ -2131,6 +2131,26 @@ pub struct ListAgentsResp {
     #[prost(message, repeated, tag = "2")]
     pub agents: ::prost::alloc::vec::Vec<super::ai::AgentInfo>,
 }
+/// 设置机器人的**动态**(个性签名那一栏)。
+///
+/// ⭐ **人和机器人对等:动态两边都有,不按 type 分叉。** 动态是 club 自己的数据
+/// (`hi_chat_user_moment`,人和机器人同一张表),所以写入口也在 club,不穿透 hi.ai。
+///
+/// ⚠️ 为什么不塞进 `Agent.Edit`:那个方法的入参是 **hi.ai.EditAgentReq**(有意复用 ai 的类型,
+/// 见本文件开头)。往里加一个 ai 永远不读的字段,就是在 ai 的契约里埋一颗
+/// "收了却不存"的雷;而为了一个字段在 club 复制一份 EditAgentReq,又正是那段注释说的
+/// "各自复制一份必然漂移"。club 自有的数据走 club 自己的方法 —— 与 BindMaster/Transfer 同一个理由。
+///
+/// 判据是 presence:**不传 = 不动,传空串 = 清空**。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SetAgentMomentReq {
+    /// 机器人 did(必须是你的)
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    /// 动态;不传=不动,传空串=清空
+    #[prost(string, optional, tag = "2")]
+    pub moment: ::core::option::Option<::prost::alloc::string::String>,
+}
 /// Generated client implementations.
 pub mod agent_client {
     #![allow(
@@ -2449,6 +2469,25 @@ pub mod agent_client {
             let path = http::uri::PathAndQuery::from_static("/hi.club.Agent/Transfer");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Agent", "Transfer"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// ── club 自有:动态 ──
+        pub async fn set_moment(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SetAgentMomentReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Agent/SetMoment");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Agent", "SetMoment"));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -6518,7 +6557,7 @@ pub struct MarketStall {
     /// 摊主
     #[prost(message, optional, tag = "1")]
     pub agent: ::core::option::Option<super::Entity>,
-    /// 摊主动态
+    /// 摊主动态(机器人也有动态,与人同一张表)
     #[prost(string, optional, tag = "2")]
     pub moment: ::core::option::Option<::prost::alloc::string::String>,
     /// 摊主在售挂牌数
@@ -6532,7 +6571,7 @@ pub struct MarketSellerUser {
     /// 用户(name/avatar)
     #[prost(message, optional, tag = "1")]
     pub user: ::core::option::Option<super::Entity>,
-    /// 用户动态(club 自己的 hi_chat_user_moment)
+    /// 用户动态(club 自己的 hi_chat_user_moment;人和机器人同一张表)
     #[prost(string, optional, tag = "2")]
     pub moment: ::core::option::Option<::prost::alloc::string::String>,
 }

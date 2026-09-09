@@ -218,3 +218,31 @@ final $typed_data.Uint8List listAgentsRespDescriptor = $convert.base64Decode(
     'Cg5MaXN0QWdlbnRzUmVzcBIfCgV0b3RhbBgBIAEoBUIEkLUYA0gAUgV0b3RhbIgBARIuCgZhZ2'
     'VudHMYAiADKAsyEC5oaS5haS5BZ2VudEluZm9CBJC1GANSBmFnZW50czoEmLUYA0IICgZfdG90'
     'YWw=');
+
+@$core.Deprecated('Use setAgentMomentReqDescriptor instead')
+const SetAgentMomentReq$json = {
+  '1': 'SetAgentMomentReq',
+  '2': [
+    {
+      '1': 'agent',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'agent',
+      '17': true
+    },
+    {'1': 'moment', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'moment', '17': true},
+  ],
+  '8': [
+    {'1': '_agent'},
+    {'1': '_moment'},
+  ],
+};
+
+/// Descriptor for `SetAgentMomentReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setAgentMomentReqDescriptor = $convert.base64Decode(
+    'ChFTZXRBZ2VudE1vbWVudFJlcRIqCgVhZ2VudBgBIAEoCUIPukgMyAEBcgcyBV5cUyskSABSBW'
+    'FnZW50iAEBEhsKBm1vbWVudBgCIAEoCUgBUgZtb21lbnSIAQFCCAoGX2FnZW50QgkKB19tb21l'
+    'bnQ=');

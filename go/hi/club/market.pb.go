@@ -1270,7 +1270,7 @@ func (x *MarketGrantView) GetPluginUuid() string {
 type MarketStall struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Agent         *hi.Entity             `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`                                          // 摊主
-	Moment        *string                `protobuf:"bytes,2,opt,name=moment,proto3,oneof" json:"moment,omitempty"`                                  // 摊主动态
+	Moment        *string                `protobuf:"bytes,2,opt,name=moment,proto3,oneof" json:"moment,omitempty"`                                  // 摊主动态(机器人也有动态,与人同一张表)
 	ListingCount  *int32                 `protobuf:"varint,4,opt,name=listing_count,json=listingCount,proto3,oneof" json:"listing_count,omitempty"` // 摊主在售挂牌数
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1332,7 +1332,7 @@ func (x *MarketStall) GetListingCount() int32 {
 type MarketSellerUser struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	User          *hi.Entity             `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`           // 用户(name/avatar)
-	Moment        *string                `protobuf:"bytes,2,opt,name=moment,proto3,oneof" json:"moment,omitempty"` // 用户动态(club 自己的 hi_chat_user_moment)
+	Moment        *string                `protobuf:"bytes,2,opt,name=moment,proto3,oneof" json:"moment,omitempty"` // 用户动态(club 自己的 hi_chat_user_moment;人和机器人同一张表)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }

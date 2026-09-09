@@ -17693,6 +17693,114 @@ impl<'de> serde::Deserialize<'de> for SearchListingsResp {
         deserializer.deserialize_struct("hi.club.SearchListingsResp", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for SetAgentMomentReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.agent.is_some() {
+            len += 1;
+        }
+        if self.moment.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.SetAgentMomentReq", len)?;
+        if let Some(v) = self.agent.as_ref() {
+            struct_ser.serialize_field("agent", v)?;
+        }
+        if let Some(v) = self.moment.as_ref() {
+            struct_ser.serialize_field("moment", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for SetAgentMomentReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "agent",
+            "moment",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Agent,
+            Moment,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "agent" => Ok(GeneratedField::Agent),
+                            "moment" => Ok(GeneratedField::Moment),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = SetAgentMomentReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.SetAgentMomentReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SetAgentMomentReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut agent__ = None;
+                let mut moment__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Agent => {
+                            if agent__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("agent"));
+                            }
+                            agent__ = map_.next_value()?;
+                        }
+                        GeneratedField::Moment => {
+                            if moment__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("moment"));
+                            }
+                            moment__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(SetAgentMomentReq {
+                    agent: agent__,
+                    moment: moment__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.SetAgentMomentReq", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for SetAutoRenewReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>

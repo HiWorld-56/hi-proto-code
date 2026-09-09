@@ -538,6 +538,83 @@ class ListAgentsResp extends $pb.GeneratedMessage {
   $pb.PbList<$0.AgentInfo> get agents => $_getList(1);
 }
 
+/// 设置机器人的**动态**(个性签名那一栏)。
+///
+/// ⭐ **人和机器人对等:动态两边都有,不按 type 分叉。** 动态是 club 自己的数据
+///    (`hi_chat_user_moment`,人和机器人同一张表),所以写入口也在 club,不穿透 hi.ai。
+///
+/// ⚠️ 为什么不塞进 `Agent.Edit`:那个方法的入参是 **hi.ai.EditAgentReq**(有意复用 ai 的类型,
+///    见本文件开头)。往里加一个 ai 永远不读的字段,就是在 ai 的契约里埋一颗
+///    "收了却不存"的雷;而为了一个字段在 club 复制一份 EditAgentReq,又正是那段注释说的
+///    "各自复制一份必然漂移"。club 自有的数据走 club 自己的方法 —— 与 BindMaster/Transfer 同一个理由。
+///
+/// 判据是 presence:**不传 = 不动,传空串 = 清空**。
+class SetAgentMomentReq extends $pb.GeneratedMessage {
+  factory SetAgentMomentReq({
+    $core.String? agent,
+    $core.String? moment,
+  }) {
+    final result = create();
+    if (agent != null) result.agent = agent;
+    if (moment != null) result.moment = moment;
+    return result;
+  }
+
+  SetAgentMomentReq._();
+
+  factory SetAgentMomentReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SetAgentMomentReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SetAgentMomentReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'agent')
+    ..aOS(2, _omitFieldNames ? '' : 'moment')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetAgentMomentReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetAgentMomentReq copyWith(void Function(SetAgentMomentReq) updates) =>
+      super.copyWith((message) => updates(message as SetAgentMomentReq))
+          as SetAgentMomentReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SetAgentMomentReq create() => SetAgentMomentReq._();
+  @$core.override
+  SetAgentMomentReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static SetAgentMomentReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetAgentMomentReq>(create);
+  static SetAgentMomentReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get agent => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set agent($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAgent() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAgent() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get moment => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set moment($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMoment() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMoment() => $_clearField(2);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

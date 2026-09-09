@@ -122,6 +122,14 @@ class AgentClient extends $grpc.Client {
     return $createUnaryCall(_$transfer, request, options: options);
   }
 
+  /// ── club 自有:动态 ──
+  $grpc.ResponseFuture<$3.Empty> setMoment(
+    $1.SetAgentMomentReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$setMoment, request, options: options);
+  }
+
   // method descriptors
 
   static final _$list = $grpc.ClientMethod<$0.ListAgentsReq, $1.ListAgentsResp>(
@@ -171,6 +179,10 @@ class AgentClient extends $grpc.Client {
   static final _$transfer = $grpc.ClientMethod<$1.TransferReq, $3.Empty>(
       '/hi.club.Agent/Transfer',
       ($1.TransferReq value) => value.writeToBuffer(),
+      $3.Empty.fromBuffer);
+  static final _$setMoment = $grpc.ClientMethod<$1.SetAgentMomentReq, $3.Empty>(
+      '/hi.club.Agent/SetMoment',
+      ($1.SetAgentMomentReq value) => value.writeToBuffer(),
       $3.Empty.fromBuffer);
 }
 
@@ -256,6 +268,13 @@ abstract class AgentServiceBase extends $grpc.Service {
         false,
         false,
         ($core.List<$core.int> value) => $1.TransferReq.fromBuffer(value),
+        ($3.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.SetAgentMomentReq, $3.Empty>(
+        'SetMoment',
+        setMoment_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.SetAgentMomentReq.fromBuffer(value),
         ($3.Empty value) => value.writeToBuffer()));
   }
 
@@ -346,6 +365,14 @@ abstract class AgentServiceBase extends $grpc.Service {
 
   $async.Future<$3.Empty> transfer(
       $grpc.ServiceCall call, $1.TransferReq request);
+
+  $async.Future<$3.Empty> setMoment_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.SetAgentMomentReq> $request) async {
+    return setMoment($call, await $request);
+  }
+
+  $async.Future<$3.Empty> setMoment(
+      $grpc.ServiceCall call, $1.SetAgentMomentReq request);
 }
 
 /// 智能体目录(公开)。从 Agent 拆出 —— 原来这三个免鉴权方法混在 token 档的 Agent 里(混档)。
