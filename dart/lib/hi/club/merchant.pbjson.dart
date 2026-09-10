@@ -83,6 +83,87 @@ final $typed_data.Uint8List listMerchantUsersReqDescriptor = $convert.base64Deco
     'skSABSCG1lcmNoYW50iAEBEi4KCnBhZ2luYXRpb24YAiABKAsyDi5oaS5QYWdpbmF0aW9uUgpw'
     'YWdpbmF0aW9uQgsKCV9tZXJjaGFudA==');
 
+@$core.Deprecated('Use merchantUserUnitDescriptor instead')
+const MerchantUserUnit$json = {
+  '1': 'MerchantUserUnit',
+  '2': [
+    {
+      '1': 'user',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'user'
+    },
+    {
+      '1': 'info',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.did.UserExtensionInfo',
+      '8': {},
+      '10': 'info'
+    },
+    {
+      '1': 'moment',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'moment',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_moment'},
+  ],
+};
+
+/// Descriptor for `MerchantUserUnit`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List merchantUserUnitDescriptor = $convert.base64Decode(
+    'ChBNZXJjaGFudFVzZXJVbml0EiQKBHVzZXIYASABKAsyCi5oaS5FbnRpdHlCBJC1GAFSBHVzZX'
+    'ISMwoEaW5mbxgCIAEoCzIZLmhpLmRpZC5Vc2VyRXh0ZW5zaW9uSW5mb0IEkLUYAlIEaW5mbxIh'
+    'CgZtb21lbnQYAyABKAlCBJC1GAFIAFIGbW9tZW50iAEBOgSYtRgCQgkKB19tb21lbnQ=');
+
+@$core.Deprecated('Use merchantListUsersRespDescriptor instead')
+const MerchantListUsersResp$json = {
+  '1': 'MerchantListUsersResp',
+  '2': [
+    {
+      '1': 'total',
+      '3': 1,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '9': 0,
+      '10': 'total',
+      '17': true
+    },
+    {
+      '1': 'units',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.club.MerchantUserUnit',
+      '8': {},
+      '10': 'units'
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_total'},
+  ],
+};
+
+/// Descriptor for `MerchantListUsersResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List merchantListUsersRespDescriptor = $convert.base64Decode(
+    'ChVNZXJjaGFudExpc3RVc2Vyc1Jlc3ASHwoFdG90YWwYASABKAVCBJC1GAFIAFIFdG90YWyIAQ'
+    'ESNQoFdW5pdHMYAiADKAsyGS5oaS5jbHViLk1lcmNoYW50VXNlclVuaXRCBJC1GAJSBXVuaXRz'
+    'OgSYtRgCQggKBl90b3RhbA==');
+
 @$core.Deprecated('Use joinMerchantReqDescriptor instead')
 const JoinMerchantReq$json = {
   '1': 'JoinMerchantReq',

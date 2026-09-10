@@ -31,7 +31,7 @@ class MerchantStub(object):
         self.ListUsers = channel.unary_unary(
                 '/hi.club.Merchant/ListUsers',
                 request_serializer=hi_dot_club_dot_merchant__pb2.ListMerchantUsersReq.SerializeToString,
-                response_deserializer=hi_dot_did_dot_merchant__pb2.ListUsersResp.FromString,
+                response_deserializer=hi_dot_club_dot_merchant__pb2.MerchantListUsersResp.FromString,
                 _registered_method=True)
         self.Join = channel.unary_unary(
                 '/hi.club.Merchant/Join',
@@ -94,7 +94,7 @@ def add_MerchantServicer_to_server(servicer, server):
             'ListUsers': grpc.unary_unary_rpc_method_handler(
                     servicer.ListUsers,
                     request_deserializer=hi_dot_club_dot_merchant__pb2.ListMerchantUsersReq.FromString,
-                    response_serializer=hi_dot_did_dot_merchant__pb2.ListUsersResp.SerializeToString,
+                    response_serializer=hi_dot_club_dot_merchant__pb2.MerchantListUsersResp.SerializeToString,
             ),
             'Join': grpc.unary_unary_rpc_method_handler(
                     servicer.Join,
@@ -183,7 +183,7 @@ class Merchant(object):
             target,
             '/hi.club.Merchant/ListUsers',
             hi_dot_club_dot_merchant__pb2.ListMerchantUsersReq.SerializeToString,
-            hi_dot_did_dot_merchant__pb2.ListUsersResp.FromString,
+            hi_dot_club_dot_merchant__pb2.MerchantListUsersResp.FromString,
             options,
             channel_credentials,
             insecure,

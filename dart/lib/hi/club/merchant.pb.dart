@@ -15,6 +15,7 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../common.pb.dart' as $3;
+import '../did/merchant.pb.dart' as $1;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -164,6 +165,163 @@ class ListMerchantUsersReq extends $pb.GeneratedMessage {
   void clearPagination() => $_clearField(2);
   @$pb.TagNumber(2)
   $3.Pagination ensurePagination() => $_ensure(1);
+}
+
+/// 商户名下的用户(含动态)。
+///
+/// ⚠️ 不直接复用 hi.did.UserExtensionUnit —— 那个类型只含 user + info,没有 moment。
+///    moment 是 club 自己的数据(hi_chat_user_moment,人和机器人同一张表),
+///    在 club 侧补充,不穿透到 hi.did。
+///
+/// audience = VIS_PARTICIPANT:info(UserExtensionInfo)是 PARTICIPANT 级,
+///    不放 VIS_PUBLIC 消息里。
+class MerchantUserUnit extends $pb.GeneratedMessage {
+  factory MerchantUserUnit({
+    $3.Entity? user,
+    $1.UserExtensionInfo? info,
+    $core.String? moment,
+  }) {
+    final result = create();
+    if (user != null) result.user = user;
+    if (info != null) result.info = info;
+    if (moment != null) result.moment = moment;
+    return result;
+  }
+
+  MerchantUserUnit._();
+
+  factory MerchantUserUnit.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MerchantUserUnit.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MerchantUserUnit',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOM<$3.Entity>(1, _omitFieldNames ? '' : 'user',
+        subBuilder: $3.Entity.create)
+    ..aOM<$1.UserExtensionInfo>(2, _omitFieldNames ? '' : 'info',
+        subBuilder: $1.UserExtensionInfo.create)
+    ..aOS(3, _omitFieldNames ? '' : 'moment')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MerchantUserUnit clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MerchantUserUnit copyWith(void Function(MerchantUserUnit) updates) =>
+      super.copyWith((message) => updates(message as MerchantUserUnit))
+          as MerchantUserUnit;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MerchantUserUnit create() => MerchantUserUnit._();
+  @$core.override
+  MerchantUserUnit createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MerchantUserUnit getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MerchantUserUnit>(create);
+  static MerchantUserUnit? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $3.Entity get user => $_getN(0);
+  @$pb.TagNumber(1)
+  set user($3.Entity value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasUser() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUser() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $3.Entity ensureUser() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $1.UserExtensionInfo get info => $_getN(1);
+  @$pb.TagNumber(2)
+  set info($1.UserExtensionInfo value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasInfo() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearInfo() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $1.UserExtensionInfo ensureInfo() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  $core.String get moment => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set moment($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasMoment() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearMoment() => $_clearField(3);
+}
+
+/// 商户名下的用户列表(含动态)。
+///
+/// 不直接复用 hi.did.ListUsersResp —— 内部的 UserExtensionUnit 没有 moment。
+class MerchantListUsersResp extends $pb.GeneratedMessage {
+  factory MerchantListUsersResp({
+    $core.int? total,
+    $core.Iterable<MerchantUserUnit>? units,
+  }) {
+    final result = create();
+    if (total != null) result.total = total;
+    if (units != null) result.units.addAll(units);
+    return result;
+  }
+
+  MerchantListUsersResp._();
+
+  factory MerchantListUsersResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MerchantListUsersResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MerchantListUsersResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aI(1, _omitFieldNames ? '' : 'total')
+    ..pPM<MerchantUserUnit>(2, _omitFieldNames ? '' : 'units',
+        subBuilder: MerchantUserUnit.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MerchantListUsersResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MerchantListUsersResp copyWith(
+          void Function(MerchantListUsersResp) updates) =>
+      super.copyWith((message) => updates(message as MerchantListUsersResp))
+          as MerchantListUsersResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MerchantListUsersResp create() => MerchantListUsersResp._();
+  @$core.override
+  MerchantListUsersResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MerchantListUsersResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MerchantListUsersResp>(create);
+  static MerchantListUsersResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get total => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set total($core.int value) => $_setSignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasTotal() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTotal() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<MerchantUserUnit> get units => $_getList(1);
 }
 
 /// 用户把**自己**加入某商户。

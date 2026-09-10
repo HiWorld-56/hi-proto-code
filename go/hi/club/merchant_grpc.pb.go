@@ -40,7 +40,7 @@ type MerchantClient interface {
 	// 必须由目标商户先授权给 club(did 侧 requireGrant 校验)。
 	// club 侧不再叠鉴权:所有登录用户都能调。
 	ListGreeters(ctx context.Context, in *ListGreetersReq, opts ...grpc.CallOption) (*did.ListUsersResp, error)
-	ListUsers(ctx context.Context, in *ListMerchantUsersReq, opts ...grpc.CallOption) (*did.ListUsersResp, error)
+	ListUsers(ctx context.Context, in *ListMerchantUsersReq, opts ...grpc.CallOption) (*MerchantListUsersResp, error)
 	// 用户把自己加入某商户。链路:app --用户token--> club后台 --club的ExtendToken-->
 	// did.MerchantGranted.AddUsers(merchant=目标商户, users=[登录用户]).
 	//
@@ -78,9 +78,9 @@ func (c *merchantClient) ListGreeters(ctx context.Context, in *ListGreetersReq, 
 	return out, nil
 }
 
-func (c *merchantClient) ListUsers(ctx context.Context, in *ListMerchantUsersReq, opts ...grpc.CallOption) (*did.ListUsersResp, error) {
+func (c *merchantClient) ListUsers(ctx context.Context, in *ListMerchantUsersReq, opts ...grpc.CallOption) (*MerchantListUsersResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(did.ListUsersResp)
+	out := new(MerchantListUsersResp)
 	err := c.cc.Invoke(ctx, Merchant_ListUsers_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -110,7 +110,7 @@ type MerchantServer interface {
 	// 必须由目标商户先授权给 club(did 侧 requireGrant 校验)。
 	// club 侧不再叠鉴权:所有登录用户都能调。
 	ListGreeters(context.Context, *ListGreetersReq) (*did.ListUsersResp, error)
-	ListUsers(context.Context, *ListMerchantUsersReq) (*did.ListUsersResp, error)
+	ListUsers(context.Context, *ListMerchantUsersReq) (*MerchantListUsersResp, error)
 	// 用户把自己加入某商户。链路:app --用户token--> club后台 --club的ExtendToken-->
 	// did.MerchantGranted.AddUsers(merchant=目标商户, users=[登录用户]).
 	//
@@ -133,7 +133,7 @@ func (UnimplementedMerchantServer) List(context.Context, *emptypb.Empty) (*did.M
 func (UnimplementedMerchantServer) ListGreeters(context.Context, *ListGreetersReq) (*did.ListUsersResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListGreeters not implemented")
 }
-func (UnimplementedMerchantServer) ListUsers(context.Context, *ListMerchantUsersReq) (*did.ListUsersResp, error) {
+func (UnimplementedMerchantServer) ListUsers(context.Context, *ListMerchantUsersReq) (*MerchantListUsersResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListUsers not implemented")
 }
 func (UnimplementedMerchantServer) Join(context.Context, *JoinMerchantReq) (*emptypb.Empty, error) {

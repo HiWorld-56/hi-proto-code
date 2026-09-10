@@ -3033,6 +3033,36 @@ pub struct ListMerchantUsersReq {
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
+/// 商户名下的用户(含动态)。
+///
+/// ⚠️ 不直接复用 hi.did.UserExtensionUnit —— 那个类型只含 user + info,没有 moment。
+/// moment 是 club 自己的数据(hi_chat_user_moment,人和机器人同一张表),
+/// 在 club 侧补充,不穿透到 hi.did。
+///
+/// audience = VIS_PARTICIPANT:info(UserExtensionInfo)是 PARTICIPANT 级,
+/// 不放 VIS_PUBLIC 消息里。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MerchantUserUnit {
+    /// 用户实体(name/avatar)
+    #[prost(message, optional, tag = "1")]
+    pub user: ::core::option::Option<super::Entity>,
+    /// 扩展信息(该商户维护)
+    #[prost(message, optional, tag = "2")]
+    pub info: ::core::option::Option<super::did::UserExtensionInfo>,
+    /// 用户动态(hi_chat_user_moment)
+    #[prost(string, optional, tag = "3")]
+    pub moment: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 商户名下的用户列表(含动态)。
+///
+/// 不直接复用 hi.did.ListUsersResp —— 内部的 UserExtensionUnit 没有 moment。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MerchantListUsersResp {
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
+    #[prost(message, repeated, tag = "2")]
+    pub units: ::prost::alloc::vec::Vec<MerchantUserUnit>,
+}
 /// 用户把**自己**加入某商户。
 ///
 /// ⚠️ **没有 user 字段,且永远不要加** —— 用户 did 恒取自登录 token。
@@ -3190,7 +3220,7 @@ pub mod merchant_client {
             &mut self,
             request: impl tonic::IntoRequest<super::ListMerchantUsersReq>,
         ) -> std::result::Result<
-            tonic::Response<super::super::did::ListUsersResp>,
+            tonic::Response<super::MerchantListUsersResp>,
             tonic::Status,
         > {
             self.inner
