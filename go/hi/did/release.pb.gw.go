@@ -275,7 +275,7 @@ func RegisterReleaseManageHandlerClient(ctx context.Context, mux *runtime.ServeM
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.ReleaseManage/UploadPackage", runtime.WithHTTPPathPattern("/hi.did.ReleaseManage/UploadPackage"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.ReleaseManage/UploadPackage", runtime.WithHTTPPathPattern("/api/v1/release_manage/upload_package"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -309,7 +309,7 @@ func RegisterReleaseManageHandlerClient(ctx context.Context, mux *runtime.ServeM
 }
 
 var (
-	pattern_ReleaseManage_UploadPackage_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.ReleaseManage", "UploadPackage"}, ""))
+	pattern_ReleaseManage_UploadPackage_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "release_manage", "upload_package"}, ""))
 	pattern_ReleaseManage_Publish_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "release_manage", "publish"}, ""))
 )
 
