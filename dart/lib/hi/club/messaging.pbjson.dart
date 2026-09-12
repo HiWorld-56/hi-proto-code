@@ -477,27 +477,3 @@ final $typed_data.Uint8List contentDescriptor = $convert.base64Decode(
     'gDIAEoDUIEkLUYAkgCUgRzaXpliAEBEiUKCGR1cmF0aW9uGAQgASgNQgSQtRgCSANSCGR1cmF0'
     'aW9uiAEBOgSYtRgCQgoKCF9jb250ZW50QgcKBV9uYW1lQgcKBV9zaXplQgsKCV9kdXJhdGlvbj'
     'oEmLUYAkIGCgRraW5kQgcKBV90eXBl');
-
-@$core.Deprecated('Use publishReqDescriptor instead')
-const PublishReq$json = {
-  '1': 'PublishReq',
-  '2': [
-    {'1': 'topic', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'topic', '17': true},
-    {
-      '1': 'payload',
-      '3': 2,
-      '4': 1,
-      '5': 11,
-      '6': '.hi.club.Packet',
-      '10': 'payload'
-    },
-  ],
-  '8': [
-    {'1': '_topic'},
-  ],
-};
-
-/// Descriptor for `PublishReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List publishReqDescriptor = $convert.base64Decode(
-    'CgpQdWJsaXNoUmVxEhkKBXRvcGljGAEgASgJSABSBXRvcGljiAEBEikKB3BheWxvYWQYAiABKA'
-    'syDy5oaS5jbHViLlBhY2tldFIHcGF5bG9hZEIICgZfdG9waWM=');

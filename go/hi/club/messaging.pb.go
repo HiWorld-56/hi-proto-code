@@ -12,7 +12,7 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	anypb "google.golang.org/protobuf/types/known/anypb"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
+	_ "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -304,8 +304,8 @@ func (x *Prompt) GetState() string {
 //
 // · **不许**把 `from` 填成别人。填了这条消息就发不出去 —— 而且在 MQTT 3.1.1 下
 // *发送端连报错都看不到**(QoS2 握手照常走完,只是没有任何人收得到)。
-// · 后端代发(`Publisher.Publish`)同样:`from` 由后端按调用方身份**覆盖**,
-// 入参里带的那份不作数。
+// · **没有"后端代发"这条路**(原来的 `Publisher.Publish` 已删,见文件末尾)——
+// 发包的只可能是持有那条连接的进程,于是这条不变量没有第二个入口要堵。
 //
 // ## `ghost` 是**显示覆盖**,纯前端的事
 //
@@ -736,58 +736,6 @@ func (*Content_Trans) isContent_Kind() {}
 
 func (*Content_Trade) isContent_Kind() {}
 
-type PublishReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Topic         *string                `protobuf:"bytes,1,opt,name=topic,proto3,oneof" json:"topic,omitempty"`
-	Payload       *Packet                `protobuf:"bytes,2,opt,name=payload,proto3" json:"payload,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PublishReq) Reset() {
-	*x = PublishReq{}
-	mi := &file_hi_club_messaging_proto_msgTypes[8]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PublishReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PublishReq) ProtoMessage() {}
-
-func (x *PublishReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_messaging_proto_msgTypes[8]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PublishReq.ProtoReflect.Descriptor instead.
-func (*PublishReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_messaging_proto_rawDescGZIP(), []int{8}
-}
-
-func (x *PublishReq) GetTopic() string {
-	if x != nil && x.Topic != nil {
-		return *x.Topic
-	}
-	return ""
-}
-
-func (x *PublishReq) GetPayload() *Packet {
-	if x != nil {
-		return x.Payload
-	}
-	return nil
-}
-
 type Content_Chat struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Content       *string                `protobuf:"bytes,1,opt,name=content,proto3,oneof" json:"content,omitempty"`
@@ -800,7 +748,7 @@ type Content_Chat struct {
 
 func (x *Content_Chat) Reset() {
 	*x = Content_Chat{}
-	mi := &file_hi_club_messaging_proto_msgTypes[9]
+	mi := &file_hi_club_messaging_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -812,7 +760,7 @@ func (x *Content_Chat) String() string {
 func (*Content_Chat) ProtoMessage() {}
 
 func (x *Content_Chat) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_messaging_proto_msgTypes[9]
+	mi := &file_hi_club_messaging_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -941,14 +889,7 @@ const file_hi_club_messaging_proto_rawDesc = "" +
 	"\x05_sizeB\v\n" +
 	"\t_duration:\x04\x98\xb5\x18\x02B\x06\n" +
 	"\x04kindB\a\n" +
-	"\x05_type\"\\\n" +
-	"\n" +
-	"PublishReq\x12\x19\n" +
-	"\x05topic\x18\x01 \x01(\tH\x00R\x05topic\x88\x01\x01\x12)\n" +
-	"\apayload\x18\x02 \x01(\v2\x0f.hi.club.PacketR\apayloadB\b\n" +
-	"\x06_topic2J\n" +
-	"\tPublisher\x12=\n" +
-	"\aPublish\x12\x13.hi.club.PublishReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02B\x85\x01\n" +
+	"\x05_typeB\x85\x01\n" +
 	"\vcom.hi.clubB\x0eMessagingProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (
@@ -963,7 +904,7 @@ func file_hi_club_messaging_proto_rawDescGZIP() []byte {
 	return file_hi_club_messaging_proto_rawDescData
 }
 
-var file_hi_club_messaging_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_hi_club_messaging_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_hi_club_messaging_proto_goTypes = []any{
 	(*Packet)(nil),          // 0: hi.club.Packet
 	(*Notice)(nil),          // 1: hi.club.Notice
@@ -973,40 +914,35 @@ var file_hi_club_messaging_proto_goTypes = []any{
 	(*Member)(nil),          // 5: hi.club.Member
 	(*MemberExit)(nil),      // 6: hi.club.MemberExit
 	(*Content)(nil),         // 7: hi.club.Content
-	(*PublishReq)(nil),      // 8: hi.club.PublishReq
-	(*Content_Chat)(nil),    // 9: hi.club.Content.Chat
-	(*hi.Entity)(nil),       // 10: hi.Entity
-	(*anypb.Any)(nil),       // 11: google.protobuf.Any
-	(*did.Transaction)(nil), // 12: hi.did.Transaction
-	(*TradeBase)(nil),       // 13: hi.club.TradeBase
-	(*emptypb.Empty)(nil),   // 14: google.protobuf.Empty
+	(*Content_Chat)(nil),    // 8: hi.club.Content.Chat
+	(*hi.Entity)(nil),       // 9: hi.Entity
+	(*anypb.Any)(nil),       // 10: google.protobuf.Any
+	(*did.Transaction)(nil), // 11: hi.did.Transaction
+	(*TradeBase)(nil),       // 12: hi.club.TradeBase
 }
 var file_hi_club_messaging_proto_depIdxs = []int32{
 	1,  // 0: hi.club.Packet.notice:type_name -> hi.club.Notice
 	3,  // 1: hi.club.Packet.message:type_name -> hi.club.Message
-	10, // 2: hi.club.Notice.from:type_name -> hi.Entity
-	11, // 3: hi.club.Notice.extra:type_name -> google.protobuf.Any
-	10, // 4: hi.club.Message.from:type_name -> hi.Entity
+	9,  // 2: hi.club.Notice.from:type_name -> hi.Entity
+	10, // 3: hi.club.Notice.extra:type_name -> google.protobuf.Any
+	9,  // 4: hi.club.Message.from:type_name -> hi.Entity
 	7,  // 5: hi.club.Message.conts:type_name -> hi.club.Content
-	11, // 6: hi.club.Message.extra:type_name -> google.protobuf.Any
-	10, // 7: hi.club.Message.ghost:type_name -> hi.Entity
+	10, // 6: hi.club.Message.extra:type_name -> google.protobuf.Any
+	9,  // 7: hi.club.Message.ghost:type_name -> hi.Entity
 	2,  // 8: hi.club.Message.prompt:type_name -> hi.club.Prompt
-	10, // 9: hi.club.Mention.group:type_name -> hi.Entity
-	10, // 10: hi.club.Mention.list:type_name -> hi.Entity
-	10, // 11: hi.club.Member.group:type_name -> hi.Entity
-	10, // 12: hi.club.Member.user:type_name -> hi.Entity
+	9,  // 9: hi.club.Mention.group:type_name -> hi.Entity
+	9,  // 10: hi.club.Mention.list:type_name -> hi.Entity
+	9,  // 11: hi.club.Member.group:type_name -> hi.Entity
+	9,  // 12: hi.club.Member.user:type_name -> hi.Entity
 	5,  // 13: hi.club.MemberExit.member:type_name -> hi.club.Member
-	9,  // 14: hi.club.Content.chat:type_name -> hi.club.Content.Chat
-	12, // 15: hi.club.Content.trans:type_name -> hi.did.Transaction
-	13, // 16: hi.club.Content.trade:type_name -> hi.club.TradeBase
-	0,  // 17: hi.club.PublishReq.payload:type_name -> hi.club.Packet
-	8,  // 18: hi.club.Publisher.Publish:input_type -> hi.club.PublishReq
-	14, // 19: hi.club.Publisher.Publish:output_type -> google.protobuf.Empty
-	19, // [19:20] is the sub-list for method output_type
-	18, // [18:19] is the sub-list for method input_type
-	18, // [18:18] is the sub-list for extension type_name
-	18, // [18:18] is the sub-list for extension extendee
-	0,  // [0:18] is the sub-list for field type_name
+	8,  // 14: hi.club.Content.chat:type_name -> hi.club.Content.Chat
+	11, // 15: hi.club.Content.trans:type_name -> hi.did.Transaction
+	12, // 16: hi.club.Content.trade:type_name -> hi.club.TradeBase
+	17, // [17:17] is the sub-list for method output_type
+	17, // [17:17] is the sub-list for method input_type
+	17, // [17:17] is the sub-list for extension type_name
+	17, // [17:17] is the sub-list for extension extendee
+	0,  // [0:17] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_messaging_proto_init() }
@@ -1030,16 +966,15 @@ func file_hi_club_messaging_proto_init() {
 		(*Content_Trade)(nil),
 	}
 	file_hi_club_messaging_proto_msgTypes[8].OneofWrappers = []any{}
-	file_hi_club_messaging_proto_msgTypes[9].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_messaging_proto_rawDesc), len(file_hi_club_messaging_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   9,
 			NumExtensions: 0,
-			NumServices:   1,
+			NumServices:   0,
 		},
 		GoTypes:           file_hi_club_messaging_proto_goTypes,
 		DependencyIndexes: file_hi_club_messaging_proto_depIdxs,

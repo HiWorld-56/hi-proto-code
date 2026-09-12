@@ -14,11 +14,11 @@ import 'dart:core' as $core;
 
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/any.pb.dart' as $3;
+import 'package:protobuf/well_known_types/google/protobuf/any.pb.dart' as $1;
 
-import '../common.pb.dart' as $2;
-import '../did/transfer.pb.dart' as $4;
-import 'trade.pb.dart' as $5;
+import '../common.pb.dart' as $0;
+import '../did/transfer.pb.dart' as $2;
+import 'trade.pb.dart' as $3;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -127,11 +127,11 @@ class Notice extends $pb.GeneratedMessage {
   factory Notice({
     $core.String? uuid,
     $core.String? type,
-    $2.Entity? from,
+    $0.Entity? from,
     $fixnum.Int64? timestamp,
     $fixnum.Int64? expiration,
     $core.String? status,
-    $3.Any? extra,
+    $1.Any? extra,
     $core.String? exType,
   }) {
     final result = create();
@@ -161,12 +161,12 @@ class Notice extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'uuid')
     ..aOS(2, _omitFieldNames ? '' : 'type')
-    ..aOM<$2.Entity>(3, _omitFieldNames ? '' : 'from',
-        subBuilder: $2.Entity.create)
+    ..aOM<$0.Entity>(3, _omitFieldNames ? '' : 'from',
+        subBuilder: $0.Entity.create)
     ..aInt64(4, _omitFieldNames ? '' : 'timestamp')
     ..aInt64(5, _omitFieldNames ? '' : 'expiration')
     ..aOS(6, _omitFieldNames ? '' : 'status')
-    ..aOM<$3.Any>(7, _omitFieldNames ? '' : 'extra', subBuilder: $3.Any.create)
+    ..aOM<$1.Any>(7, _omitFieldNames ? '' : 'extra', subBuilder: $1.Any.create)
     ..aOS(8, _omitFieldNames ? '' : 'exType')
     ..hasRequiredFields = false;
 
@@ -210,15 +210,15 @@ class Notice extends $pb.GeneratedMessage {
   /// 详见下面 Message 上方那段。通知没有 ghost,所以这里没有任何回旋余地:
   /// 填成别人,这条通知发不出去(而且发送端看不到报错)。
   @$pb.TagNumber(3)
-  $2.Entity get from => $_getN(2);
+  $0.Entity get from => $_getN(2);
   @$pb.TagNumber(3)
-  set from($2.Entity value) => $_setField(3, value);
+  set from($0.Entity value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasFrom() => $_has(2);
   @$pb.TagNumber(3)
   void clearFrom() => $_clearField(3);
   @$pb.TagNumber(3)
-  $2.Entity ensureFrom() => $_ensure(2);
+  $0.Entity ensureFrom() => $_ensure(2);
 
   @$pb.TagNumber(4)
   $fixnum.Int64 get timestamp => $_getI64(3);
@@ -253,15 +253,15 @@ class Notice extends $pb.GeneratedMessage {
   ///    plugin-load 曾塞 hi.ai.PluginView(SELF,body.url 是私有 bucket 的脚本地址),
   ///    已换成专门的公开摘要 hi.ai.PluginLoaded。合法载荷见上面的类型表。
   @$pb.TagNumber(7)
-  $3.Any get extra => $_getN(6);
+  $1.Any get extra => $_getN(6);
   @$pb.TagNumber(7)
-  set extra($3.Any value) => $_setField(7, value);
+  set extra($1.Any value) => $_setField(7, value);
   @$pb.TagNumber(7)
   $core.bool hasExtra() => $_has(6);
   @$pb.TagNumber(7)
   void clearExtra() => $_clearField(7);
   @$pb.TagNumber(7)
-  $3.Any ensureExtra() => $_ensure(6);
+  $1.Any ensureExtra() => $_ensure(6);
 
   @$pb.TagNumber(8)
   $core.String get exType => $_getSZ(7);
@@ -360,8 +360,8 @@ class Prompt extends $pb.GeneratedMessage {
 ///
 /// · **不许**把 `from` 填成别人。填了这条消息就发不出去 —— 而且在 MQTT 3.1.1 下
 /// *发送端连报错都看不到**(QoS2 握手照常走完,只是没有任何人收得到)。
-/// · 后端代发(`Publisher.Publish`)同样:`from` 由后端按调用方身份**覆盖**,
-/// 入参里带的那份不作数。
+/// · **没有"后端代发"这条路**(原来的 `Publisher.Publish` 已删,见文件末尾)——
+/// 发包的只可能是持有那条连接的进程,于是这条不变量没有第二个入口要堵。
 ///
 /// ## `ghost` 是**显示覆盖**,纯前端的事
 ///
@@ -390,12 +390,12 @@ class Message extends $pb.GeneratedMessage {
   factory Message({
     $core.String? uuid,
     $core.String? type,
-    $2.Entity? from,
+    $0.Entity? from,
     $core.Iterable<Content>? conts,
     $fixnum.Int64? timestamp,
-    $3.Any? extra,
+    $1.Any? extra,
     $core.String? exType,
-    $2.Entity? ghost,
+    $0.Entity? ghost,
     Prompt? prompt,
   }) {
     final result = create();
@@ -426,15 +426,15 @@ class Message extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'uuid')
     ..aOS(2, _omitFieldNames ? '' : 'type')
-    ..aOM<$2.Entity>(3, _omitFieldNames ? '' : 'from',
-        subBuilder: $2.Entity.create)
+    ..aOM<$0.Entity>(3, _omitFieldNames ? '' : 'from',
+        subBuilder: $0.Entity.create)
     ..pPM<Content>(4, _omitFieldNames ? '' : 'conts',
         subBuilder: Content.create)
     ..aInt64(5, _omitFieldNames ? '' : 'timestamp')
-    ..aOM<$3.Any>(6, _omitFieldNames ? '' : 'extra', subBuilder: $3.Any.create)
+    ..aOM<$1.Any>(6, _omitFieldNames ? '' : 'extra', subBuilder: $1.Any.create)
     ..aOS(7, _omitFieldNames ? '' : 'exType')
-    ..aOM<$2.Entity>(8, _omitFieldNames ? '' : 'ghost',
-        subBuilder: $2.Entity.create)
+    ..aOM<$0.Entity>(8, _omitFieldNames ? '' : 'ghost',
+        subBuilder: $0.Entity.create)
     ..aOM<Prompt>(9, _omitFieldNames ? '' : 'prompt', subBuilder: Prompt.create)
     ..hasRequiredFields = false;
 
@@ -475,15 +475,15 @@ class Message extends $pb.GeneratedMessage {
   void clearType() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $2.Entity get from => $_getN(2);
+  $0.Entity get from => $_getN(2);
   @$pb.TagNumber(3)
-  set from($2.Entity value) => $_setField(3, value);
+  set from($0.Entity value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasFrom() => $_has(2);
   @$pb.TagNumber(3)
   void clearFrom() => $_clearField(3);
   @$pb.TagNumber(3)
-  $2.Entity ensureFrom() => $_ensure(2);
+  $0.Entity ensureFrom() => $_ensure(2);
 
   @$pb.TagNumber(4)
   $pb.PbList<Content> get conts => $_getList(3);
@@ -498,15 +498,15 @@ class Message extends $pb.GeneratedMessage {
   void clearTimestamp() => $_clearField(5);
 
   @$pb.TagNumber(6)
-  $3.Any get extra => $_getN(5);
+  $1.Any get extra => $_getN(5);
   @$pb.TagNumber(6)
-  set extra($3.Any value) => $_setField(6, value);
+  set extra($1.Any value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasExtra() => $_has(5);
   @$pb.TagNumber(6)
   void clearExtra() => $_clearField(6);
   @$pb.TagNumber(6)
-  $3.Any ensureExtra() => $_ensure(5);
+  $1.Any ensureExtra() => $_ensure(5);
 
   @$pb.TagNumber(7)
   $core.String get exType => $_getSZ(6);
@@ -518,15 +518,15 @@ class Message extends $pb.GeneratedMessage {
   void clearExType() => $_clearField(7);
 
   @$pb.TagNumber(8)
-  $2.Entity get ghost => $_getN(7);
+  $0.Entity get ghost => $_getN(7);
   @$pb.TagNumber(8)
-  set ghost($2.Entity value) => $_setField(8, value);
+  set ghost($0.Entity value) => $_setField(8, value);
   @$pb.TagNumber(8)
   $core.bool hasGhost() => $_has(7);
   @$pb.TagNumber(8)
   void clearGhost() => $_clearField(8);
   @$pb.TagNumber(8)
-  $2.Entity ensureGhost() => $_ensure(7);
+  $0.Entity ensureGhost() => $_ensure(7);
 
   @$pb.TagNumber(9)
   Prompt get prompt => $_getN(8);
@@ -543,9 +543,9 @@ class Message extends $pb.GeneratedMessage {
 /// ⚠️ 被后端 Go 引用(群消息 @ 解析),proto 里无 rpc 引用,勿当死 message 删。
 class Mention extends $pb.GeneratedMessage {
   factory Mention({
-    $2.Entity? group,
+    $0.Entity? group,
     $core.bool? all,
-    $core.Iterable<$2.Entity>? list,
+    $core.Iterable<$0.Entity>? list,
   }) {
     final result = create();
     if (group != null) result.group = group;
@@ -567,11 +567,11 @@ class Mention extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'Mention',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'group',
-        subBuilder: $2.Entity.create)
+    ..aOM<$0.Entity>(1, _omitFieldNames ? '' : 'group',
+        subBuilder: $0.Entity.create)
     ..aOB(2, _omitFieldNames ? '' : 'all')
-    ..pPM<$2.Entity>(3, _omitFieldNames ? '' : 'list',
-        subBuilder: $2.Entity.create)
+    ..pPM<$0.Entity>(3, _omitFieldNames ? '' : 'list',
+        subBuilder: $0.Entity.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -593,15 +593,15 @@ class Mention extends $pb.GeneratedMessage {
   static Mention? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.Entity get group => $_getN(0);
+  $0.Entity get group => $_getN(0);
   @$pb.TagNumber(1)
-  set group($2.Entity value) => $_setField(1, value);
+  set group($0.Entity value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasGroup() => $_has(0);
   @$pb.TagNumber(1)
   void clearGroup() => $_clearField(1);
   @$pb.TagNumber(1)
-  $2.Entity ensureGroup() => $_ensure(0);
+  $0.Entity ensureGroup() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $core.bool get all => $_getBF(1);
@@ -613,13 +613,13 @@ class Mention extends $pb.GeneratedMessage {
   void clearAll() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $pb.PbList<$2.Entity> get list => $_getList(2);
+  $pb.PbList<$0.Entity> get list => $_getList(2);
 }
 
 class Member extends $pb.GeneratedMessage {
   factory Member({
-    $2.Entity? group,
-    $2.Entity? user,
+    $0.Entity? group,
+    $0.Entity? user,
   }) {
     final result = create();
     if (group != null) result.group = group;
@@ -640,10 +640,10 @@ class Member extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'Member',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'group',
-        subBuilder: $2.Entity.create)
-    ..aOM<$2.Entity>(2, _omitFieldNames ? '' : 'user',
-        subBuilder: $2.Entity.create)
+    ..aOM<$0.Entity>(1, _omitFieldNames ? '' : 'group',
+        subBuilder: $0.Entity.create)
+    ..aOM<$0.Entity>(2, _omitFieldNames ? '' : 'user',
+        subBuilder: $0.Entity.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -665,26 +665,26 @@ class Member extends $pb.GeneratedMessage {
   static Member? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.Entity get group => $_getN(0);
+  $0.Entity get group => $_getN(0);
   @$pb.TagNumber(1)
-  set group($2.Entity value) => $_setField(1, value);
+  set group($0.Entity value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasGroup() => $_has(0);
   @$pb.TagNumber(1)
   void clearGroup() => $_clearField(1);
   @$pb.TagNumber(1)
-  $2.Entity ensureGroup() => $_ensure(0);
+  $0.Entity ensureGroup() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $2.Entity get user => $_getN(1);
+  $0.Entity get user => $_getN(1);
   @$pb.TagNumber(2)
-  set user($2.Entity value) => $_setField(2, value);
+  set user($0.Entity value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasUser() => $_has(1);
   @$pb.TagNumber(2)
   void clearUser() => $_clearField(2);
   @$pb.TagNumber(2)
-  $2.Entity ensureUser() => $_ensure(1);
+  $0.Entity ensureUser() => $_ensure(1);
 }
 
 class MemberExit extends $pb.GeneratedMessage {
@@ -878,8 +878,8 @@ class Content extends $pb.GeneratedMessage {
   factory Content({
     $core.String? type,
     Content_Chat? chat,
-    $4.Transaction? trans,
-    $5.TradeBase? trade,
+    $2.Transaction? trans,
+    $3.TradeBase? trade,
   }) {
     final result = create();
     if (type != null) result.type = type;
@@ -912,10 +912,10 @@ class Content extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'type')
     ..aOM<Content_Chat>(2, _omitFieldNames ? '' : 'chat',
         subBuilder: Content_Chat.create)
-    ..aOM<$4.Transaction>(3, _omitFieldNames ? '' : 'trans',
-        subBuilder: $4.Transaction.create)
-    ..aOM<$5.TradeBase>(4, _omitFieldNames ? '' : 'trade',
-        subBuilder: $5.TradeBase.create)
+    ..aOM<$2.Transaction>(3, _omitFieldNames ? '' : 'trans',
+        subBuilder: $2.Transaction.create)
+    ..aOM<$3.TradeBase>(4, _omitFieldNames ? '' : 'trade',
+        subBuilder: $3.TradeBase.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -966,94 +966,26 @@ class Content extends $pb.GeneratedMessage {
   Content_Chat ensureChat() => $_ensure(1);
 
   @$pb.TagNumber(3)
-  $4.Transaction get trans => $_getN(2);
+  $2.Transaction get trans => $_getN(2);
   @$pb.TagNumber(3)
-  set trans($4.Transaction value) => $_setField(3, value);
+  set trans($2.Transaction value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasTrans() => $_has(2);
   @$pb.TagNumber(3)
   void clearTrans() => $_clearField(3);
   @$pb.TagNumber(3)
-  $4.Transaction ensureTrans() => $_ensure(2);
+  $2.Transaction ensureTrans() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  $5.TradeBase get trade => $_getN(3);
+  $3.TradeBase get trade => $_getN(3);
   @$pb.TagNumber(4)
-  set trade($5.TradeBase value) => $_setField(4, value);
+  set trade($3.TradeBase value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasTrade() => $_has(3);
   @$pb.TagNumber(4)
   void clearTrade() => $_clearField(4);
   @$pb.TagNumber(4)
-  $5.TradeBase ensureTrade() => $_ensure(3);
-}
-
-class PublishReq extends $pb.GeneratedMessage {
-  factory PublishReq({
-    $core.String? topic,
-    Packet? payload,
-  }) {
-    final result = create();
-    if (topic != null) result.topic = topic;
-    if (payload != null) result.payload = payload;
-    return result;
-  }
-
-  PublishReq._();
-
-  factory PublishReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory PublishReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'PublishReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'topic')
-    ..aOM<Packet>(2, _omitFieldNames ? '' : 'payload',
-        subBuilder: Packet.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PublishReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PublishReq copyWith(void Function(PublishReq) updates) =>
-      super.copyWith((message) => updates(message as PublishReq)) as PublishReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static PublishReq create() => PublishReq._();
-  @$core.override
-  PublishReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static PublishReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<PublishReq>(create);
-  static PublishReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get topic => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set topic($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasTopic() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearTopic() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  Packet get payload => $_getN(1);
-  @$pb.TagNumber(2)
-  set payload(Packet value) => $_setField(2, value);
-  @$pb.TagNumber(2)
-  $core.bool hasPayload() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearPayload() => $_clearField(2);
-  @$pb.TagNumber(2)
-  Packet ensurePayload() => $_ensure(1);
+  $3.TradeBase ensureTrade() => $_ensure(3);
 }
 
 const $core.bool _omitFieldNames =
