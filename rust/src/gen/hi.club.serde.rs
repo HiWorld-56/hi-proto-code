@@ -9316,12 +9316,18 @@ impl serde::Serialize for ListRelationsResp {
         if !self.servitor.is_empty() {
             len += 1;
         }
+        if self.master.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.club.ListRelationsResp", len)?;
         if !self.friend.is_empty() {
             struct_ser.serialize_field("friend", &self.friend)?;
         }
         if !self.servitor.is_empty() {
             struct_ser.serialize_field("servitor", &self.servitor)?;
+        }
+        if let Some(v) = self.master.as_ref() {
+            struct_ser.serialize_field("master", v)?;
         }
         struct_ser.end()
     }
@@ -9335,12 +9341,14 @@ impl<'de> serde::Deserialize<'de> for ListRelationsResp {
         const FIELDS: &[&str] = &[
             "friend",
             "servitor",
+            "master",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Friend,
             Servitor,
+            Master,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -9364,6 +9372,7 @@ impl<'de> serde::Deserialize<'de> for ListRelationsResp {
                         match value {
                             "friend" => Ok(GeneratedField::Friend),
                             "servitor" => Ok(GeneratedField::Servitor),
+                            "master" => Ok(GeneratedField::Master),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -9385,6 +9394,7 @@ impl<'de> serde::Deserialize<'de> for ListRelationsResp {
             {
                 let mut friend__ = None;
                 let mut servitor__ = None;
+                let mut master__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Friend => {
@@ -9399,11 +9409,18 @@ impl<'de> serde::Deserialize<'de> for ListRelationsResp {
                             }
                             servitor__ = Some(map_.next_value()?);
                         }
+                        GeneratedField::Master => {
+                            if master__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("master"));
+                            }
+                            master__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(ListRelationsResp {
                     friend: friend__.unwrap_or_default(),
                     servitor: servitor__.unwrap_or_default(),
+                    master: master__,
                 })
             }
         }

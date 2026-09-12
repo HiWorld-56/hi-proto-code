@@ -514,15 +514,18 @@ class RelationInfo extends $pb.GeneratedMessage {
   void clearMoment() => $_clearField(3);
 }
 
-/// 一次拿好友+仆从(同表,一次调用拿全);已删按关系拆开的 ListFriends/ListServitors(重叠)。
+/// 一次拿全我的关系:好友 + 仆从 + 我的主人。
+/// (已删按关系拆开的 ListFriends/ListServitors —— 它们重叠,而且各打一次同一个 rpc。)
 class ListRelationsResp extends $pb.GeneratedMessage {
   factory ListRelationsResp({
     $core.Iterable<RelationInfo>? friend,
     $core.Iterable<RelationInfo>? servitor,
+    RelationInfo? master,
   }) {
     final result = create();
     if (friend != null) result.friend.addAll(friend);
     if (servitor != null) result.servitor.addAll(servitor);
+    if (master != null) result.master = master;
     return result;
   }
 
@@ -542,6 +545,8 @@ class ListRelationsResp extends $pb.GeneratedMessage {
     ..pPM<RelationInfo>(1, _omitFieldNames ? '' : 'friend',
         subBuilder: RelationInfo.create)
     ..pPM<RelationInfo>(2, _omitFieldNames ? '' : 'servitor',
+        subBuilder: RelationInfo.create)
+    ..aOM<RelationInfo>(3, _omitFieldNames ? '' : 'master',
         subBuilder: RelationInfo.create)
     ..hasRequiredFields = false;
 
@@ -569,6 +574,24 @@ class ListRelationsResp extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(2)
   $pb.PbList<RelationInfo> get servitor => $_getList(1);
+
+  /// 🔴 **我的主人。至多一个**(`hi_chat_relation` 每对实体只有一行,kind 要么 friend
+  ///    要么 master),没有就不带这个字段。人通常没有主人,机器人有。
+  ///
+  ///    为什么单独一个字段、而不是塞进上面两半:那两半是「我的好友」和「我的**仆从**」,
+  ///    主人哪一半都不是 —— 漏掉它的后果是实打实的:消费方(core)判单聊"关系还在不在"
+  ///    用的就是这两半,于是**机器人的主人那个聊天窗每次刷新都被标成"关系已解除"**,
+  ///    再往下就是"两周后自动清掉和主人的全部聊天记录"(2026-09-12 在 .66 实测到)。
+  @$pb.TagNumber(3)
+  RelationInfo get master => $_getN(2);
+  @$pb.TagNumber(3)
+  set master(RelationInfo value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasMaster() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearMaster() => $_clearField(3);
+  @$pb.TagNumber(3)
+  RelationInfo ensureMaster() => $_ensure(2);
 }
 
 class AddFriendReq extends $pb.GeneratedMessage {

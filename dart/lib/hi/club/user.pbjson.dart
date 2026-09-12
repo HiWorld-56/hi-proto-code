@@ -278,15 +278,30 @@ const ListRelationsResp$json = {
       '8': {},
       '10': 'servitor'
     },
+    {
+      '1': 'master',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.RelationInfo',
+      '8': {},
+      '9': 0,
+      '10': 'master',
+      '17': true
+    },
   ],
   '7': {},
+  '8': [
+    {'1': '_master'},
+  ],
 };
 
 /// Descriptor for `ListRelationsResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listRelationsRespDescriptor = $convert.base64Decode(
     'ChFMaXN0UmVsYXRpb25zUmVzcBIzCgZmcmllbmQYASADKAsyFS5oaS5jbHViLlJlbGF0aW9uSW'
     '5mb0IEkLUYA1IGZnJpZW5kEjcKCHNlcnZpdG9yGAIgAygLMhUuaGkuY2x1Yi5SZWxhdGlvbklu'
-    'Zm9CBJC1GANSCHNlcnZpdG9yOgSYtRgD');
+    'Zm9CBJC1GANSCHNlcnZpdG9yEjgKBm1hc3RlchgDIAEoCzIVLmhpLmNsdWIuUmVsYXRpb25Jbm'
+    'ZvQgSQtRgDSABSBm1hc3RlcogBAToEmLUYA0IJCgdfbWFzdGVy');
 
 @$core.Deprecated('Use addFriendReqDescriptor instead')
 const AddFriendReq$json = {

@@ -5033,7 +5033,8 @@ pub struct RelationInfo {
     #[prost(string, optional, tag = "3")]
     pub moment: ::core::option::Option<::prost::alloc::string::String>,
 }
-/// 一次拿好友+仆从(同表,一次调用拿全);已删按关系拆开的 ListFriends/ListServitors(重叠)。
+/// 一次拿全我的关系:好友 + 仆从 + 我的主人。
+/// (已删按关系拆开的 ListFriends/ListServitors —— 它们重叠,而且各打一次同一个 rpc。)
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListRelationsResp {
     /// 好友(friend 关系)
@@ -5042,6 +5043,17 @@ pub struct ListRelationsResp {
     /// 仆从(master 关系,人或 agent)
     #[prost(message, repeated, tag = "2")]
     pub servitor: ::prost::alloc::vec::Vec<RelationInfo>,
+    /// 🔴 **我的主人。至多一个**(`hi_chat_relation` 每对实体只有一行,kind 要么 friend
+    /// 要么 master),没有就不带这个字段。人通常没有主人,机器人有。
+    ///
+    /// ```text
+    /// 为什么单独一个字段、而不是塞进上面两半:那两半是「我的好友」和「我的**仆从**」,
+    /// 主人哪一半都不是 —— 漏掉它的后果是实打实的:消费方(core)判单聊"关系还在不在"
+    /// 用的就是这两半,于是**机器人的主人那个聊天窗每次刷新都被标成"关系已解除"**,
+    /// 再往下就是"两周后自动清掉和主人的全部聊天记录"(2026-09-12 在 .66 实测到)。
+    /// ```
+    #[prost(message, optional, tag = "3")]
+    pub master: ::core::option::Option<RelationInfo>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct AddFriendReq {

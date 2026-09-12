@@ -474,11 +474,21 @@ func (x *RelationInfo) GetMoment() string {
 	return ""
 }
 
-// 一次拿好友+仆从(同表,一次调用拿全);已删按关系拆开的 ListFriends/ListServitors(重叠)。
+// 一次拿全我的关系:好友 + 仆从 + 我的主人。
+// (已删按关系拆开的 ListFriends/ListServitors —— 它们重叠,而且各打一次同一个 rpc。)
 type ListRelationsResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Friend        []*RelationInfo        `protobuf:"bytes,1,rep,name=friend,proto3" json:"friend,omitempty"`     // 好友(friend 关系)
-	Servitor      []*RelationInfo        `protobuf:"bytes,2,rep,name=servitor,proto3" json:"servitor,omitempty"` // 仆从(master 关系,人或 agent)
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	Friend   []*RelationInfo        `protobuf:"bytes,1,rep,name=friend,proto3" json:"friend,omitempty"`     // 好友(friend 关系)
+	Servitor []*RelationInfo        `protobuf:"bytes,2,rep,name=servitor,proto3" json:"servitor,omitempty"` // 仆从(master 关系,人或 agent)
+	// 🔴 **我的主人。至多一个**(`hi_chat_relation` 每对实体只有一行,kind 要么 friend
+	//
+	//	要么 master),没有就不带这个字段。人通常没有主人,机器人有。
+	//
+	//	为什么单独一个字段、而不是塞进上面两半:那两半是「我的好友」和「我的**仆从**」,
+	//	主人哪一半都不是 —— 漏掉它的后果是实打实的:消费方(core)判单聊"关系还在不在"
+	//	用的就是这两半,于是**机器人的主人那个聊天窗每次刷新都被标成"关系已解除"**,
+	//	再往下就是"两周后自动清掉和主人的全部聊天记录"(2026-09-12 在 .66 实测到)。
+	Master        *RelationInfo `protobuf:"bytes,3,opt,name=master,proto3,oneof" json:"master,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -523,6 +533,13 @@ func (x *ListRelationsResp) GetFriend() []*RelationInfo {
 func (x *ListRelationsResp) GetServitor() []*RelationInfo {
 	if x != nil {
 		return x.Servitor
+	}
+	return nil
+}
+
+func (x *ListRelationsResp) GetMaster() *RelationInfo {
+	if x != nil {
+		return x.Master
 	}
 	return nil
 }
@@ -1055,10 +1072,12 @@ const file_hi_club_user_proto_rawDesc = "" +
 	"\x06remark\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x06remark\x88\x01\x01\x12!\n" +
 	"\x06moment\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x06moment\x88\x01\x01:\x04\x98\xb5\x18\x03B\t\n" +
 	"\a_remarkB\t\n" +
-	"\a_moment\"\x87\x01\n" +
+	"\a_moment\"\xcc\x01\n" +
 	"\x11ListRelationsResp\x123\n" +
 	"\x06friend\x18\x01 \x03(\v2\x15.hi.club.RelationInfoB\x04\x90\xb5\x18\x03R\x06friend\x127\n" +
-	"\bservitor\x18\x02 \x03(\v2\x15.hi.club.RelationInfoB\x04\x90\xb5\x18\x03R\bservitor:\x04\x98\xb5\x18\x03\"B\n" +
+	"\bservitor\x18\x02 \x03(\v2\x15.hi.club.RelationInfoB\x04\x90\xb5\x18\x03R\bservitor\x128\n" +
+	"\x06master\x18\x03 \x01(\v2\x15.hi.club.RelationInfoB\x04\x90\xb5\x18\x03H\x00R\x06master\x88\x01\x01:\x04\x98\xb5\x18\x03B\t\n" +
+	"\a_master\"B\n" +
 	"\fAddFriendReq\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12\x17\n" +
 	"\x04type\x18\x02 \x01(\tH\x00R\x04type\x88\x01\x01B\a\n" +
@@ -1172,44 +1191,45 @@ var file_hi_club_user_proto_depIdxs = []int32{
 	19, // 3: hi.club.RelationInfo.base:type_name -> hi.Entity
 	7,  // 4: hi.club.ListRelationsResp.friend:type_name -> hi.club.RelationInfo
 	7,  // 5: hi.club.ListRelationsResp.servitor:type_name -> hi.club.RelationInfo
-	0,  // 6: hi.club.AddFriendResp.status:type_name -> hi.club.FriendRequestStatus
-	22, // 7: hi.club.ListGroupsResp.list:type_name -> hi.club.GroupBase
-	19, // 8: hi.club.ListOnlineUsersResp.list:type_name -> hi.Entity
-	23, // 9: hi.club.User.GetCurrent:input_type -> google.protobuf.Empty
-	15, // 10: hi.club.User.Update:input_type -> hi.club.UpdateUserReq
-	2,  // 11: hi.club.User.ListSystemMessages:input_type -> hi.club.ListSystemMessagesReq
-	4,  // 12: hi.club.User.DeleteSystemMessage:input_type -> hi.club.DeleteSystemMessageReq
-	23, // 13: hi.club.User.DeleteAllSystemMessage:input_type -> google.protobuf.Empty
-	5,  // 14: hi.club.User.HandleSystemMessage:input_type -> hi.club.HandleSystemMessageReq
-	6,  // 15: hi.club.User.MarkNoticeProcessed:input_type -> hi.club.MarkNoticeProcessedReq
-	23, // 16: hi.club.User.ListRelations:input_type -> google.protobuf.Empty
-	9,  // 17: hi.club.User.AddFriend:input_type -> hi.club.AddFriendReq
-	11, // 18: hi.club.User.DeleteFriend:input_type -> hi.club.DeleteFriendReq
-	23, // 19: hi.club.User.ListGroups:input_type -> google.protobuf.Empty
-	13, // 20: hi.club.User.GetOther:input_type -> hi.club.GetUserReq
-	23, // 21: hi.club.User.UnprocessedSysMsgCount:input_type -> google.protobuf.Empty
-	16, // 22: hi.club.User.SetRemark:input_type -> hi.club.SetRemarkReq
-	17, // 23: hi.club.UserDirectory.ListOnline:input_type -> hi.club.ListOnlineUsersReq
-	1,  // 24: hi.club.User.GetCurrent:output_type -> hi.club.UserInfo
-	1,  // 25: hi.club.User.Update:output_type -> hi.club.UserInfo
-	3,  // 26: hi.club.User.ListSystemMessages:output_type -> hi.club.SystemMessages
-	23, // 27: hi.club.User.DeleteSystemMessage:output_type -> google.protobuf.Empty
-	23, // 28: hi.club.User.DeleteAllSystemMessage:output_type -> google.protobuf.Empty
-	23, // 29: hi.club.User.HandleSystemMessage:output_type -> google.protobuf.Empty
-	23, // 30: hi.club.User.MarkNoticeProcessed:output_type -> google.protobuf.Empty
-	8,  // 31: hi.club.User.ListRelations:output_type -> hi.club.ListRelationsResp
-	10, // 32: hi.club.User.AddFriend:output_type -> hi.club.AddFriendResp
-	23, // 33: hi.club.User.DeleteFriend:output_type -> google.protobuf.Empty
-	12, // 34: hi.club.User.ListGroups:output_type -> hi.club.ListGroupsResp
-	19, // 35: hi.club.User.GetOther:output_type -> hi.Entity
-	14, // 36: hi.club.User.UnprocessedSysMsgCount:output_type -> hi.club.UnprocessedSysMsgCountResp
-	23, // 37: hi.club.User.SetRemark:output_type -> google.protobuf.Empty
-	18, // 38: hi.club.UserDirectory.ListOnline:output_type -> hi.club.ListOnlineUsersResp
-	24, // [24:39] is the sub-list for method output_type
-	9,  // [9:24] is the sub-list for method input_type
-	9,  // [9:9] is the sub-list for extension type_name
-	9,  // [9:9] is the sub-list for extension extendee
-	0,  // [0:9] is the sub-list for field type_name
+	7,  // 6: hi.club.ListRelationsResp.master:type_name -> hi.club.RelationInfo
+	0,  // 7: hi.club.AddFriendResp.status:type_name -> hi.club.FriendRequestStatus
+	22, // 8: hi.club.ListGroupsResp.list:type_name -> hi.club.GroupBase
+	19, // 9: hi.club.ListOnlineUsersResp.list:type_name -> hi.Entity
+	23, // 10: hi.club.User.GetCurrent:input_type -> google.protobuf.Empty
+	15, // 11: hi.club.User.Update:input_type -> hi.club.UpdateUserReq
+	2,  // 12: hi.club.User.ListSystemMessages:input_type -> hi.club.ListSystemMessagesReq
+	4,  // 13: hi.club.User.DeleteSystemMessage:input_type -> hi.club.DeleteSystemMessageReq
+	23, // 14: hi.club.User.DeleteAllSystemMessage:input_type -> google.protobuf.Empty
+	5,  // 15: hi.club.User.HandleSystemMessage:input_type -> hi.club.HandleSystemMessageReq
+	6,  // 16: hi.club.User.MarkNoticeProcessed:input_type -> hi.club.MarkNoticeProcessedReq
+	23, // 17: hi.club.User.ListRelations:input_type -> google.protobuf.Empty
+	9,  // 18: hi.club.User.AddFriend:input_type -> hi.club.AddFriendReq
+	11, // 19: hi.club.User.DeleteFriend:input_type -> hi.club.DeleteFriendReq
+	23, // 20: hi.club.User.ListGroups:input_type -> google.protobuf.Empty
+	13, // 21: hi.club.User.GetOther:input_type -> hi.club.GetUserReq
+	23, // 22: hi.club.User.UnprocessedSysMsgCount:input_type -> google.protobuf.Empty
+	16, // 23: hi.club.User.SetRemark:input_type -> hi.club.SetRemarkReq
+	17, // 24: hi.club.UserDirectory.ListOnline:input_type -> hi.club.ListOnlineUsersReq
+	1,  // 25: hi.club.User.GetCurrent:output_type -> hi.club.UserInfo
+	1,  // 26: hi.club.User.Update:output_type -> hi.club.UserInfo
+	3,  // 27: hi.club.User.ListSystemMessages:output_type -> hi.club.SystemMessages
+	23, // 28: hi.club.User.DeleteSystemMessage:output_type -> google.protobuf.Empty
+	23, // 29: hi.club.User.DeleteAllSystemMessage:output_type -> google.protobuf.Empty
+	23, // 30: hi.club.User.HandleSystemMessage:output_type -> google.protobuf.Empty
+	23, // 31: hi.club.User.MarkNoticeProcessed:output_type -> google.protobuf.Empty
+	8,  // 32: hi.club.User.ListRelations:output_type -> hi.club.ListRelationsResp
+	10, // 33: hi.club.User.AddFriend:output_type -> hi.club.AddFriendResp
+	23, // 34: hi.club.User.DeleteFriend:output_type -> google.protobuf.Empty
+	12, // 35: hi.club.User.ListGroups:output_type -> hi.club.ListGroupsResp
+	19, // 36: hi.club.User.GetOther:output_type -> hi.Entity
+	14, // 37: hi.club.User.UnprocessedSysMsgCount:output_type -> hi.club.UnprocessedSysMsgCountResp
+	23, // 38: hi.club.User.SetRemark:output_type -> google.protobuf.Empty
+	18, // 39: hi.club.UserDirectory.ListOnline:output_type -> hi.club.ListOnlineUsersResp
+	25, // [25:40] is the sub-list for method output_type
+	10, // [10:25] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_user_proto_init() }
@@ -1226,6 +1246,7 @@ func file_hi_club_user_proto_init() {
 	file_hi_club_user_proto_msgTypes[4].OneofWrappers = []any{}
 	file_hi_club_user_proto_msgTypes[5].OneofWrappers = []any{}
 	file_hi_club_user_proto_msgTypes[6].OneofWrappers = []any{}
+	file_hi_club_user_proto_msgTypes[7].OneofWrappers = []any{}
 	file_hi_club_user_proto_msgTypes[8].OneofWrappers = []any{}
 	file_hi_club_user_proto_msgTypes[9].OneofWrappers = []any{}
 	file_hi_club_user_proto_msgTypes[13].OneofWrappers = []any{}
