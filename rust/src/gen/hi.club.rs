@@ -5118,17 +5118,29 @@ pub struct ListOnlineUsersResp {
     #[prost(message, repeated, tag = "1")]
     pub list: ::prost::alloc::vec::Vec<super::Entity>,
 }
+/// AddFriend 的结果。**五种都是"关系现在处于什么状态",不是"调用出了问题"** ——
+/// 所以它们一律走 status,不走 error。
+///
+/// 🔴 `ALREADY_FRIEND` / `PENDING_EXISTS` 原来是以 error 形式回的(而且 service 层还用
+/// 裸 `fmt.Errorf` 把哨兵丢了,最终落成 `Internal: 添加好友失败`)。那是错的:
+/// "早就是好友了"和"上次申请还没被处理"都是**本来就会发生**的正常结果,调用方要据此
+/// 决定下一步(直接发消息 / 继续等),而不是把它当故障重试或报给用户。
+/// 错误留给真正的非预期:对方不存在、库挂了、没权限。
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum FriendRequestStatus {
     /// 未设置
     Unspecified = 0,
-    /// 好友申请拒绝
+    /// 对方设了自动拒绝,这次申请当场被拒
     Rejected = 1,
-    /// 好友申请已发送
+    /// 申请已发出,等对方处理
     Sent = 2,
-    /// 好友添加成功
+    /// 已是好友(对方自动同意 / 软件机器人免验证)
     Added = 3,
+    /// 早就是好友了(含主从关系),什么都没做
+    AlreadyFriend = 4,
+    /// 上一次的申请还没被处理,这次不重复发
+    PendingExists = 5,
 }
 impl FriendRequestStatus {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -5141,6 +5153,8 @@ impl FriendRequestStatus {
             Self::Rejected => "FRIEND_REQUEST_STATUS_REJECTED",
             Self::Sent => "FRIEND_REQUEST_STATUS_SENT",
             Self::Added => "FRIEND_REQUEST_STATUS_ADDED",
+            Self::AlreadyFriend => "FRIEND_REQUEST_STATUS_ALREADY_FRIEND",
+            Self::PendingExists => "FRIEND_REQUEST_STATUS_PENDING_EXISTS",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -5150,6 +5164,8 @@ impl FriendRequestStatus {
             "FRIEND_REQUEST_STATUS_REJECTED" => Some(Self::Rejected),
             "FRIEND_REQUEST_STATUS_SENT" => Some(Self::Sent),
             "FRIEND_REQUEST_STATUS_ADDED" => Some(Self::Added),
+            "FRIEND_REQUEST_STATUS_ALREADY_FRIEND" => Some(Self::AlreadyFriend),
+            "FRIEND_REQUEST_STATUS_PENDING_EXISTS" => Some(Self::PendingExists),
             _ => None,
         }
     }

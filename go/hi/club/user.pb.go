@@ -23,13 +23,24 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// AddFriend 的结果。**五种都是"关系现在处于什么状态",不是"调用出了问题"** ——
+// 所以它们一律走 status,不走 error。
+//
+// 🔴 `ALREADY_FRIEND` / `PENDING_EXISTS` 原来是以 error 形式回的(而且 service 层还用
+//
+//	裸 `fmt.Errorf` 把哨兵丢了,最终落成 `Internal: 添加好友失败`)。那是错的:
+//	"早就是好友了"和"上次申请还没被处理"都是**本来就会发生**的正常结果,调用方要据此
+//	决定下一步(直接发消息 / 继续等),而不是把它当故障重试或报给用户。
+//	错误留给真正的非预期:对方不存在、库挂了、没权限。
 type FriendRequestStatus int32
 
 const (
-	FriendRequestStatus_FRIEND_REQUEST_STATUS_UNSPECIFIED FriendRequestStatus = 0 // 未设置
-	FriendRequestStatus_FRIEND_REQUEST_STATUS_REJECTED    FriendRequestStatus = 1 // 好友申请拒绝
-	FriendRequestStatus_FRIEND_REQUEST_STATUS_SENT        FriendRequestStatus = 2 // 好友申请已发送
-	FriendRequestStatus_FRIEND_REQUEST_STATUS_ADDED       FriendRequestStatus = 3 // 好友添加成功
+	FriendRequestStatus_FRIEND_REQUEST_STATUS_UNSPECIFIED    FriendRequestStatus = 0 // 未设置
+	FriendRequestStatus_FRIEND_REQUEST_STATUS_REJECTED       FriendRequestStatus = 1 // 对方设了自动拒绝,这次申请当场被拒
+	FriendRequestStatus_FRIEND_REQUEST_STATUS_SENT           FriendRequestStatus = 2 // 申请已发出,等对方处理
+	FriendRequestStatus_FRIEND_REQUEST_STATUS_ADDED          FriendRequestStatus = 3 // 已是好友(对方自动同意 / 软件机器人免验证)
+	FriendRequestStatus_FRIEND_REQUEST_STATUS_ALREADY_FRIEND FriendRequestStatus = 4 // 早就是好友了(含主从关系),什么都没做
+	FriendRequestStatus_FRIEND_REQUEST_STATUS_PENDING_EXISTS FriendRequestStatus = 5 // 上一次的申请还没被处理,这次不重复发
 )
 
 // Enum value maps for FriendRequestStatus.
@@ -39,12 +50,16 @@ var (
 		1: "FRIEND_REQUEST_STATUS_REJECTED",
 		2: "FRIEND_REQUEST_STATUS_SENT",
 		3: "FRIEND_REQUEST_STATUS_ADDED",
+		4: "FRIEND_REQUEST_STATUS_ALREADY_FRIEND",
+		5: "FRIEND_REQUEST_STATUS_PENDING_EXISTS",
 	}
 	FriendRequestStatus_value = map[string]int32{
-		"FRIEND_REQUEST_STATUS_UNSPECIFIED": 0,
-		"FRIEND_REQUEST_STATUS_REJECTED":    1,
-		"FRIEND_REQUEST_STATUS_SENT":        2,
-		"FRIEND_REQUEST_STATUS_ADDED":       3,
+		"FRIEND_REQUEST_STATUS_UNSPECIFIED":    0,
+		"FRIEND_REQUEST_STATUS_REJECTED":       1,
+		"FRIEND_REQUEST_STATUS_SENT":           2,
+		"FRIEND_REQUEST_STATUS_ADDED":          3,
+		"FRIEND_REQUEST_STATUS_ALREADY_FRIEND": 4,
+		"FRIEND_REQUEST_STATUS_PENDING_EXISTS": 5,
 	}
 )
 
@@ -1079,12 +1094,14 @@ const file_hi_club_user_proto_rawDesc = "" +
 	"\x05users\x18\x01 \x03(\tR\x05users\"A\n" +
 	"\x13ListOnlineUsersResp\x12$\n" +
 	"\x04list\x18\x01 \x03(\v2\n" +
-	".hi.EntityB\x04\x90\xb5\x18\x01R\x04list:\x04\x98\xb5\x18\x01*\xa1\x01\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x04list:\x04\x98\xb5\x18\x01*\xf5\x01\n" +
 	"\x13FriendRequestStatus\x12%\n" +
 	"!FRIEND_REQUEST_STATUS_UNSPECIFIED\x10\x00\x12\"\n" +
 	"\x1eFRIEND_REQUEST_STATUS_REJECTED\x10\x01\x12\x1e\n" +
 	"\x1aFRIEND_REQUEST_STATUS_SENT\x10\x02\x12\x1f\n" +
-	"\x1bFRIEND_REQUEST_STATUS_ADDED\x10\x032\xa1\b\n" +
+	"\x1bFRIEND_REQUEST_STATUS_ADDED\x10\x03\x12(\n" +
+	"$FRIEND_REQUEST_STATUS_ALREADY_FRIEND\x10\x04\x12(\n" +
+	"$FRIEND_REQUEST_STATUS_PENDING_EXISTS\x10\x052\xa1\b\n" +
 	"\x04User\x12>\n" +
 	"\n" +
 	"GetCurrent\x12\x16.google.protobuf.Empty\x1a\x11.hi.club.UserInfo\"\x05\x8a\xb5\x18\x01\x02\x12:\n" +

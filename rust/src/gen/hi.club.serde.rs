@@ -3474,6 +3474,8 @@ impl serde::Serialize for FriendRequestStatus {
             Self::Rejected => "FRIEND_REQUEST_STATUS_REJECTED",
             Self::Sent => "FRIEND_REQUEST_STATUS_SENT",
             Self::Added => "FRIEND_REQUEST_STATUS_ADDED",
+            Self::AlreadyFriend => "FRIEND_REQUEST_STATUS_ALREADY_FRIEND",
+            Self::PendingExists => "FRIEND_REQUEST_STATUS_PENDING_EXISTS",
         };
         serializer.serialize_str(variant)
     }
@@ -3489,6 +3491,8 @@ impl<'de> serde::Deserialize<'de> for FriendRequestStatus {
             "FRIEND_REQUEST_STATUS_REJECTED",
             "FRIEND_REQUEST_STATUS_SENT",
             "FRIEND_REQUEST_STATUS_ADDED",
+            "FRIEND_REQUEST_STATUS_ALREADY_FRIEND",
+            "FRIEND_REQUEST_STATUS_PENDING_EXISTS",
         ];
 
         struct GeneratedVisitor;
@@ -3533,6 +3537,8 @@ impl<'de> serde::Deserialize<'de> for FriendRequestStatus {
                     "FRIEND_REQUEST_STATUS_REJECTED" => Ok(FriendRequestStatus::Rejected),
                     "FRIEND_REQUEST_STATUS_SENT" => Ok(FriendRequestStatus::Sent),
                     "FRIEND_REQUEST_STATUS_ADDED" => Ok(FriendRequestStatus::Added),
+                    "FRIEND_REQUEST_STATUS_ALREADY_FRIEND" => Ok(FriendRequestStatus::AlreadyFriend),
+                    "FRIEND_REQUEST_STATUS_PENDING_EXISTS" => Ok(FriendRequestStatus::PendingExists),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }
