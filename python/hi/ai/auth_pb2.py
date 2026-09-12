@@ -23,11 +23,12 @@ _sym_db = _symbol_database.Default()
 
 
 from hi import common_pb2 as hi_dot_common__pb2
+from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi.did import auth_pb2 as hi_dot_did_dot_auth__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10hi/ai/auth.proto\x12\x05hi.ai\x1a\x0fhi/common.proto\x1a\x11hi/did/auth.proto\x1a\x10hi/options.proto2\xc3\x01\n\x04\x41uth\x12=\n\x0cRefreshToken\x12\x17.hi.did.RefreshTokenReq\x1a\r.hi.AuthToken\"\x05\x8a\xb5\x18\x01\x01\x12?\n\rGenerateReqId\x12\x18.hi.did.GenerateReqIdReq\x1a\r.hi.RequestId\"\x05\x8a\xb5\x18\x01\x01\x12;\n\x0cGetReqStatus\x12\r.hi.RequestId\x1a\x15.hi.did.ReqStatusResp\"\x05\x8a\xb5\x18\x01\x01\x42)Z\'github.com/HiWorld-56/hi-proto/go/hi/aib\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10hi/ai/auth.proto\x12\x05hi.ai\x1a\x0fhi/common.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x11hi/did/auth.proto\x1a\x10hi/options.proto2\x85\x02\n\x04\x41uth\x12=\n\x0cRefreshToken\x12\x17.hi.did.RefreshTokenReq\x1a\r.hi.AuthToken\"\x05\x8a\xb5\x18\x01\x01\x12?\n\rGenerateReqId\x12\x18.hi.did.GenerateReqIdReq\x1a\r.hi.RequestId\"\x05\x8a\xb5\x18\x01\x01\x12;\n\x0cGetReqStatus\x12\r.hi.RequestId\x1a\x15.hi.did.ReqStatusResp\"\x05\x8a\xb5\x18\x01\x01\x12@\n\x06Logout\x12\x17.hi.did.RefreshTokenReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x01\x42)Z\'github.com/HiWorld-56/hi-proto/go/hi/aib\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -41,6 +42,8 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_AUTH'].methods_by_name['GenerateReqId']._serialized_options = b'\212\265\030\001\001'
   _globals['_AUTH'].methods_by_name['GetReqStatus']._loaded_options = None
   _globals['_AUTH'].methods_by_name['GetReqStatus']._serialized_options = b'\212\265\030\001\001'
-  _globals['_AUTH']._serialized_start=82
-  _globals['_AUTH']._serialized_end=277
+  _globals['_AUTH'].methods_by_name['Logout']._loaded_options = None
+  _globals['_AUTH'].methods_by_name['Logout']._serialized_options = b'\212\265\030\001\001'
+  _globals['_AUTH']._serialized_start=111
+  _globals['_AUTH']._serialized_end=372
 # @@protoc_insertion_point(module_scope)

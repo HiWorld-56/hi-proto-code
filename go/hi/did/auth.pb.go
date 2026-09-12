@@ -324,52 +324,6 @@ func (x *ReqStatusResp) GetMqtt() *hi.MqttCredentials {
 	return nil
 }
 
-// web3 载荷 schema(不是 rpc 参数):Auth.Logout 把 SignedData.Data 反序列化进它。
-// ⚠️ 只被后端 Go 引用、proto 里无 rpc 引用 —— 勿按"无 rpc 引用"当死 message 删。
-type LogoutReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Did           *hi.DID                `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *LogoutReq) Reset() {
-	*x = LogoutReq{}
-	mi := &file_hi_did_auth_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *LogoutReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*LogoutReq) ProtoMessage() {}
-
-func (x *LogoutReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_auth_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use LogoutReq.ProtoReflect.Descriptor instead.
-func (*LogoutReq) Descriptor() ([]byte, []int) {
-	return file_hi_did_auth_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *LogoutReq) GetDid() *hi.DID {
-	if x != nil {
-		return x.Did
-	}
-	return nil
-}
-
 var File_hi_did_auth_proto protoreflect.FileDescriptor
 
 const file_hi_did_auth_proto_rawDesc = "" +
@@ -399,16 +353,14 @@ const file_hi_did_auth_proto_rawDesc = "" +
 	"\x06status\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x06status\x88\x01\x01\x12)\n" +
 	"\x05token\x18\x03 \x01(\v2\r.hi.AuthTokenB\x04\x90\xb5\x18\x03R\x05token\x12-\n" +
 	"\x04mqtt\x18\x04 \x01(\v2\x13.hi.MqttCredentialsB\x04\x90\xb5\x18\x03R\x04mqtt:\x04\x98\xb5\x18\x03B\t\n" +
-	"\a_status\"&\n" +
-	"\tLogoutReq\x12\x19\n" +
-	"\x03did\x18\x01 \x01(\v2\a.hi.DIDR\x03did2\xeb\x02\n" +
+	"\a_status2\xf4\x02\n" +
 	"\x04Auth\x12=\n" +
 	"\fRefreshToken\x12\x17.hi.did.RefreshTokenReq\x1a\r.hi.AuthToken\"\x05\x8a\xb5\x18\x01\x01\x122\n" +
 	"\x06Verify\x12\x0e.hi.SignedData\x1a\x11.hi.did.LoginResp\"\x05\x8a\xb5\x18\x01\x05\x129\n" +
 	"\rVerifyOffline\x12\x0e.hi.SignedData\x1a\x11.hi.did.LoginResp\"\x05\x8a\xb5\x18\x01\x05\x12?\n" +
 	"\rGenerateReqId\x12\x18.hi.did.GenerateReqIdReq\x1a\r.hi.RequestId\"\x05\x8a\xb5\x18\x01\x01\x12;\n" +
-	"\fGetReqStatus\x12\r.hi.RequestId\x1a\x15.hi.did.ReqStatusResp\"\x05\x8a\xb5\x18\x01\x01\x127\n" +
-	"\x06Logout\x12\x0e.hi.SignedData\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x05Bz\n" +
+	"\fGetReqStatus\x12\r.hi.RequestId\x1a\x15.hi.did.ReqStatusResp\"\x05\x8a\xb5\x18\x01\x01\x12@\n" +
+	"\x06Logout\x12\x17.hi.did.RefreshTokenReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x01Bz\n" +
 	"\n" +
 	"com.hi.didB\tAuthProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 
@@ -424,51 +376,48 @@ func file_hi_did_auth_proto_rawDescGZIP() []byte {
 	return file_hi_did_auth_proto_rawDescData
 }
 
-var file_hi_did_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_hi_did_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_hi_did_auth_proto_goTypes = []any{
 	(*RefreshTokenReq)(nil),    // 0: hi.did.RefreshTokenReq
 	(*LoginReq)(nil),           // 1: hi.did.LoginReq
 	(*LoginResp)(nil),          // 2: hi.did.LoginResp
 	(*GenerateReqIdReq)(nil),   // 3: hi.did.GenerateReqIdReq
 	(*ReqStatusResp)(nil),      // 4: hi.did.ReqStatusResp
-	(*LogoutReq)(nil),          // 5: hi.did.LogoutReq
-	(*hi.ClientInfo)(nil),      // 6: hi.ClientInfo
-	(*hi.Entity)(nil),          // 7: hi.Entity
-	(*hi.AuthToken)(nil),       // 8: hi.AuthToken
-	(*hi.MqttCredentials)(nil), // 9: hi.MqttCredentials
-	(*hi.DID)(nil),             // 10: hi.DID
-	(*hi.SignedData)(nil),      // 11: hi.SignedData
-	(*hi.RequestId)(nil),       // 12: hi.RequestId
-	(*emptypb.Empty)(nil),      // 13: google.protobuf.Empty
+	(*hi.ClientInfo)(nil),      // 5: hi.ClientInfo
+	(*hi.Entity)(nil),          // 6: hi.Entity
+	(*hi.AuthToken)(nil),       // 7: hi.AuthToken
+	(*hi.MqttCredentials)(nil), // 8: hi.MqttCredentials
+	(*hi.SignedData)(nil),      // 9: hi.SignedData
+	(*hi.RequestId)(nil),       // 10: hi.RequestId
+	(*emptypb.Empty)(nil),      // 11: google.protobuf.Empty
 }
 var file_hi_did_auth_proto_depIdxs = []int32{
-	6,  // 0: hi.did.RefreshTokenReq.node:type_name -> hi.ClientInfo
-	6,  // 1: hi.did.LoginReq.node:type_name -> hi.ClientInfo
-	7,  // 2: hi.did.LoginResp.user:type_name -> hi.Entity
-	8,  // 3: hi.did.LoginResp.token:type_name -> hi.AuthToken
-	9,  // 4: hi.did.LoginResp.mqtt:type_name -> hi.MqttCredentials
-	6,  // 5: hi.did.GenerateReqIdReq.node:type_name -> hi.ClientInfo
-	7,  // 6: hi.did.ReqStatusResp.base:type_name -> hi.Entity
-	8,  // 7: hi.did.ReqStatusResp.token:type_name -> hi.AuthToken
-	9,  // 8: hi.did.ReqStatusResp.mqtt:type_name -> hi.MqttCredentials
-	10, // 9: hi.did.LogoutReq.did:type_name -> hi.DID
-	0,  // 10: hi.did.Auth.RefreshToken:input_type -> hi.did.RefreshTokenReq
-	11, // 11: hi.did.Auth.Verify:input_type -> hi.SignedData
-	11, // 12: hi.did.Auth.VerifyOffline:input_type -> hi.SignedData
-	3,  // 13: hi.did.Auth.GenerateReqId:input_type -> hi.did.GenerateReqIdReq
-	12, // 14: hi.did.Auth.GetReqStatus:input_type -> hi.RequestId
-	11, // 15: hi.did.Auth.Logout:input_type -> hi.SignedData
-	8,  // 16: hi.did.Auth.RefreshToken:output_type -> hi.AuthToken
-	2,  // 17: hi.did.Auth.Verify:output_type -> hi.did.LoginResp
-	2,  // 18: hi.did.Auth.VerifyOffline:output_type -> hi.did.LoginResp
-	12, // 19: hi.did.Auth.GenerateReqId:output_type -> hi.RequestId
-	4,  // 20: hi.did.Auth.GetReqStatus:output_type -> hi.did.ReqStatusResp
-	13, // 21: hi.did.Auth.Logout:output_type -> google.protobuf.Empty
-	16, // [16:22] is the sub-list for method output_type
-	10, // [10:16] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	5,  // 0: hi.did.RefreshTokenReq.node:type_name -> hi.ClientInfo
+	5,  // 1: hi.did.LoginReq.node:type_name -> hi.ClientInfo
+	6,  // 2: hi.did.LoginResp.user:type_name -> hi.Entity
+	7,  // 3: hi.did.LoginResp.token:type_name -> hi.AuthToken
+	8,  // 4: hi.did.LoginResp.mqtt:type_name -> hi.MqttCredentials
+	5,  // 5: hi.did.GenerateReqIdReq.node:type_name -> hi.ClientInfo
+	6,  // 6: hi.did.ReqStatusResp.base:type_name -> hi.Entity
+	7,  // 7: hi.did.ReqStatusResp.token:type_name -> hi.AuthToken
+	8,  // 8: hi.did.ReqStatusResp.mqtt:type_name -> hi.MqttCredentials
+	0,  // 9: hi.did.Auth.RefreshToken:input_type -> hi.did.RefreshTokenReq
+	9,  // 10: hi.did.Auth.Verify:input_type -> hi.SignedData
+	9,  // 11: hi.did.Auth.VerifyOffline:input_type -> hi.SignedData
+	3,  // 12: hi.did.Auth.GenerateReqId:input_type -> hi.did.GenerateReqIdReq
+	10, // 13: hi.did.Auth.GetReqStatus:input_type -> hi.RequestId
+	0,  // 14: hi.did.Auth.Logout:input_type -> hi.did.RefreshTokenReq
+	7,  // 15: hi.did.Auth.RefreshToken:output_type -> hi.AuthToken
+	2,  // 16: hi.did.Auth.Verify:output_type -> hi.did.LoginResp
+	2,  // 17: hi.did.Auth.VerifyOffline:output_type -> hi.did.LoginResp
+	10, // 18: hi.did.Auth.GenerateReqId:output_type -> hi.RequestId
+	4,  // 19: hi.did.Auth.GetReqStatus:output_type -> hi.did.ReqStatusResp
+	11, // 20: hi.did.Auth.Logout:output_type -> google.protobuf.Empty
+	15, // [15:21] is the sub-list for method output_type
+	9,  // [9:15] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_hi_did_auth_proto_init() }
@@ -485,7 +434,7 @@ func file_hi_did_auth_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_did_auth_proto_rawDesc), len(file_hi_did_auth_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

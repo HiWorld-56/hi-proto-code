@@ -8,7 +8,9 @@ from hi.did import auth_pb2 as hi_dot_did_dot_auth__pb2
 
 
 class AuthStub(object):
-    """Auth —— 登录/登出。握手类是公开的(此时还没 token),身份确认类是 web3 验签(载荷带签名)。
+    """web3 载荷 schema(不是 rpc 参数):Auth.Logout 把 SignedData.Data 反序列化进它。
+    ⚠️ 只被后端 Go 引用、proto 里无 rpc 引用 —— 勿按"无 rpc 引用"当死 message 删。
+    Auth —— 登录/登出。握手类是公开的(此时还没 token),身份确认类是 web3 验签(载荷带签名)。
     公开 与 web3验签 同处一个 service 是允许的(web3 本质是数据校验,不是方法鉴权)。
 
     ⭐ 客户端**只有 `Verify` 一个入口**(扫码、深链唤起都是它),分叉在后端。
@@ -70,13 +72,15 @@ class AuthStub(object):
                 _registered_method=True)
         self.Logout = channel.unary_unary(
                 '/hi.did.Auth/Logout',
-                request_serializer=hi_dot_common__pb2.SignedData.SerializeToString,
+                request_serializer=hi_dot_did_dot_auth__pb2.RefreshTokenReq.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
 
 
 class AuthServicer(object):
-    """Auth —— 登录/登出。握手类是公开的(此时还没 token),身份确认类是 web3 验签(载荷带签名)。
+    """web3 载荷 schema(不是 rpc 参数):Auth.Logout 把 SignedData.Data 反序列化进它。
+    ⚠️ 只被后端 Go 引用、proto 里无 rpc 引用 —— 勿按"无 rpc 引用"当死 message 删。
+    Auth —— 登录/登出。握手类是公开的(此时还没 token),身份确认类是 web3 验签(载荷带签名)。
     公开 与 web3验签 同处一个 service 是允许的(web3 本质是数据校验,不是方法鉴权)。
 
     ⭐ 客户端**只有 `Verify` 一个入口**(扫码、深链唤起都是它),分叉在后端。
@@ -136,7 +140,13 @@ class AuthServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def Logout(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """登出:删该会话的 refresh/access 行,并释放 PC 独占槽位。**凭 refresh_token 证明归属**,故不鉴权。
+
+        入参与 club / hi-ai 完全一致(都是 RefreshTokenReq)—— 三家登出同形,不要再各写各的。
+        原来这里收的是 `LogoutReq{did}` + web3 验签:载荷里**只有 did、没有 ClientInfo**,
+        于是定位不到具体会话,只能把这个 did 的全部登录态一锅端 ——
+        用户在 PC 上点"退出",手机也跟着掉线。带上 node 才谈得上"登出这一台"。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -171,7 +181,7 @@ def add_AuthServicer_to_server(servicer, server):
             ),
             'Logout': grpc.unary_unary_rpc_method_handler(
                     servicer.Logout,
-                    request_deserializer=hi_dot_common__pb2.SignedData.FromString,
+                    request_deserializer=hi_dot_did_dot_auth__pb2.RefreshTokenReq.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
     }
@@ -183,7 +193,9 @@ def add_AuthServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class Auth(object):
-    """Auth —— 登录/登出。握手类是公开的(此时还没 token),身份确认类是 web3 验签(载荷带签名)。
+    """web3 载荷 schema(不是 rpc 参数):Auth.Logout 把 SignedData.Data 反序列化进它。
+    ⚠️ 只被后端 Go 引用、proto 里无 rpc 引用 —— 勿按"无 rpc 引用"当死 message 删。
+    Auth —— 登录/登出。握手类是公开的(此时还没 token),身份确认类是 web3 验签(载荷带签名)。
     公开 与 web3验签 同处一个 service 是允许的(web3 本质是数据校验,不是方法鉴权)。
 
     ⭐ 客户端**只有 `Verify` 一个入口**(扫码、深链唤起都是它),分叉在后端。
@@ -362,7 +374,7 @@ class Auth(object):
             request,
             target,
             '/hi.did.Auth/Logout',
-            hi_dot_common__pb2.SignedData.SerializeToString,
+            hi_dot_did_dot_auth__pb2.RefreshTokenReq.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,

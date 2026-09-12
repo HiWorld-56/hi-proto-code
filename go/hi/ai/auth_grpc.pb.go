@@ -13,6 +13,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -24,6 +25,7 @@ const (
 	Auth_RefreshToken_FullMethodName  = "/hi.ai.Auth/RefreshToken"
 	Auth_GenerateReqId_FullMethodName = "/hi.ai.Auth/GenerateReqId"
 	Auth_GetReqStatus_FullMethodName  = "/hi.ai.Auth/GetReqStatus"
+	Auth_Logout_FullMethodName        = "/hi.ai.Auth/Logout"
 )
 
 // AuthClient is the client API for Auth service.
@@ -33,6 +35,11 @@ type AuthClient interface {
 	RefreshToken(ctx context.Context, in *did.RefreshTokenReq, opts ...grpc.CallOption) (*hi.AuthToken, error)
 	GenerateReqId(ctx context.Context, in *did.GenerateReqIdReq, opts ...grpc.CallOption) (*hi.RequestId, error)
 	GetReqStatus(ctx context.Context, in *hi.RequestId, opts ...grpc.CallOption) (*did.ReqStatusResp, error)
+	// 登出:删该会话的 refresh/access 行。**凭 refresh_token 证明归属**,故不鉴权。
+	//
+	// 🔴 hi-ai 此前**根本没有登出** —— 会话只能等自己过期(15 天)或被同一台设备的新登录覆盖,
+	// 用户主动退出这件事做不到。与 club / hi-did 同形补上。
+	Logout(ctx context.Context, in *did.RefreshTokenReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type authClient struct {
@@ -73,6 +80,16 @@ func (c *authClient) GetReqStatus(ctx context.Context, in *hi.RequestId, opts ..
 	return out, nil
 }
 
+func (c *authClient) Logout(ctx context.Context, in *did.RefreshTokenReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Auth_Logout_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServer is the server API for Auth service.
 // All implementations should embed UnimplementedAuthServer
 // for forward compatibility.
@@ -80,6 +97,11 @@ type AuthServer interface {
 	RefreshToken(context.Context, *did.RefreshTokenReq) (*hi.AuthToken, error)
 	GenerateReqId(context.Context, *did.GenerateReqIdReq) (*hi.RequestId, error)
 	GetReqStatus(context.Context, *hi.RequestId) (*did.ReqStatusResp, error)
+	// 登出:删该会话的 refresh/access 行。**凭 refresh_token 证明归属**,故不鉴权。
+	//
+	// 🔴 hi-ai 此前**根本没有登出** —— 会话只能等自己过期(15 天)或被同一台设备的新登录覆盖,
+	// 用户主动退出这件事做不到。与 club / hi-did 同形补上。
+	Logout(context.Context, *did.RefreshTokenReq) (*emptypb.Empty, error)
 }
 
 // UnimplementedAuthServer should be embedded to have
@@ -97,6 +119,9 @@ func (UnimplementedAuthServer) GenerateReqId(context.Context, *did.GenerateReqId
 }
 func (UnimplementedAuthServer) GetReqStatus(context.Context, *hi.RequestId) (*did.ReqStatusResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetReqStatus not implemented")
+}
+func (UnimplementedAuthServer) Logout(context.Context, *did.RefreshTokenReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Logout not implemented")
 }
 func (UnimplementedAuthServer) testEmbeddedByValue() {}
 
@@ -172,6 +197,24 @@ func _Auth_GetReqStatus_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Auth_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(did.RefreshTokenReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).Logout(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Auth_Logout_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).Logout(ctx, req.(*did.RefreshTokenReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Auth_ServiceDesc is the grpc.ServiceDesc for Auth service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,6 +233,10 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetReqStatus",
 			Handler:    _Auth_GetReqStatus_Handler,
+		},
+		{
+			MethodName: "Logout",
+			Handler:    _Auth_Logout_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

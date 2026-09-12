@@ -22,6 +22,8 @@ import 'auth.pb.dart' as $0;
 
 export 'auth.pb.dart';
 
+/// web3 载荷 schema(不是 rpc 参数):Auth.Logout 把 SignedData.Data 反序列化进它。
+/// ⚠️ 只被后端 Go 引用、proto 里无 rpc 引用 —— 勿按"无 rpc 引用"当死 message 删。
 /// Auth —— 登录/登出。握手类是公开的(此时还没 token),身份确认类是 web3 验签(载荷带签名)。
 /// 公开 与 web3验签 同处一个 service 是允许的(web3 本质是数据校验,不是方法鉴权)。
 ///
@@ -96,8 +98,14 @@ class AuthClient extends $grpc.Client {
     return $createUnaryCall(_$getReqStatus, request, options: options);
   }
 
+  /// 登出:删该会话的 refresh/access 行,并释放 PC 独占槽位。**凭 refresh_token 证明归属**,故不鉴权。
+  ///
+  /// 入参与 club / hi-ai 完全一致(都是 RefreshTokenReq)—— 三家登出同形,不要再各写各的。
+  /// 原来这里收的是 `LogoutReq{did}` + web3 验签:载荷里**只有 did、没有 ClientInfo**,
+  /// 于是定位不到具体会话,只能把这个 did 的全部登录态一锅端 ——
+  /// 用户在 PC 上点"退出",手机也跟着掉线。带上 node 才谈得上"登出这一台"。
   $grpc.ResponseFuture<$2.Empty> logout(
-    $1.SignedData request, {
+    $0.RefreshTokenReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$logout, request, options: options);
@@ -129,9 +137,9 @@ class AuthClient extends $grpc.Client {
           '/hi.did.Auth/GetReqStatus',
           ($1.RequestId value) => value.writeToBuffer(),
           $0.ReqStatusResp.fromBuffer);
-  static final _$logout = $grpc.ClientMethod<$1.SignedData, $2.Empty>(
+  static final _$logout = $grpc.ClientMethod<$0.RefreshTokenReq, $2.Empty>(
       '/hi.did.Auth/Logout',
-      ($1.SignedData value) => value.writeToBuffer(),
+      ($0.RefreshTokenReq value) => value.writeToBuffer(),
       $2.Empty.fromBuffer);
 }
 
@@ -175,12 +183,12 @@ abstract class AuthServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.RequestId.fromBuffer(value),
         ($0.ReqStatusResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.SignedData, $2.Empty>(
+    $addMethod($grpc.ServiceMethod<$0.RefreshTokenReq, $2.Empty>(
         'Logout',
         logout_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.SignedData.fromBuffer(value),
+        ($core.List<$core.int> value) => $0.RefreshTokenReq.fromBuffer(value),
         ($2.Empty value) => value.writeToBuffer()));
   }
 
@@ -224,10 +232,11 @@ abstract class AuthServiceBase extends $grpc.Service {
   $async.Future<$0.ReqStatusResp> getReqStatus(
       $grpc.ServiceCall call, $1.RequestId request);
 
-  $async.Future<$2.Empty> logout_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.SignedData> $request) async {
+  $async.Future<$2.Empty> logout_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.RefreshTokenReq> $request) async {
     return logout($call, await $request);
   }
 
-  $async.Future<$2.Empty> logout($grpc.ServiceCall call, $1.SignedData request);
+  $async.Future<$2.Empty> logout(
+      $grpc.ServiceCall call, $0.RefreshTokenReq request);
 }

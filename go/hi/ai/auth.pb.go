@@ -11,6 +11,7 @@ import (
 	did "github.com/HiWorld-56/hi-proto/go/hi/did"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	unsafe "unsafe"
 )
@@ -26,11 +27,12 @@ var File_hi_ai_auth_proto protoreflect.FileDescriptor
 
 const file_hi_ai_auth_proto_rawDesc = "" +
 	"\n" +
-	"\x10hi/ai/auth.proto\x12\x05hi.ai\x1a\x0fhi/common.proto\x1a\x11hi/did/auth.proto\x1a\x10hi/options.proto2\xc3\x01\n" +
+	"\x10hi/ai/auth.proto\x12\x05hi.ai\x1a\x0fhi/common.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x11hi/did/auth.proto\x1a\x10hi/options.proto2\x85\x02\n" +
 	"\x04Auth\x12=\n" +
 	"\fRefreshToken\x12\x17.hi.did.RefreshTokenReq\x1a\r.hi.AuthToken\"\x05\x8a\xb5\x18\x01\x01\x12?\n" +
 	"\rGenerateReqId\x12\x18.hi.did.GenerateReqIdReq\x1a\r.hi.RequestId\"\x05\x8a\xb5\x18\x01\x01\x12;\n" +
-	"\fGetReqStatus\x12\r.hi.RequestId\x1a\x15.hi.did.ReqStatusResp\"\x05\x8a\xb5\x18\x01\x01Bt\n" +
+	"\fGetReqStatus\x12\r.hi.RequestId\x1a\x15.hi.did.ReqStatusResp\"\x05\x8a\xb5\x18\x01\x01\x12@\n" +
+	"\x06Logout\x12\x17.hi.did.RefreshTokenReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x01Bt\n" +
 	"\tcom.hi.aiB\tAuthProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/ai\xa2\x02\x03HAX\xaa\x02\x05Hi.Ai\xca\x02\x05Hi\\Ai\xe2\x02\x11Hi\\Ai\\GPBMetadata\xea\x02\x06Hi::Aib\x06proto3"
 
 var file_hi_ai_auth_proto_goTypes = []any{
@@ -39,16 +41,19 @@ var file_hi_ai_auth_proto_goTypes = []any{
 	(*hi.RequestId)(nil),         // 2: hi.RequestId
 	(*hi.AuthToken)(nil),         // 3: hi.AuthToken
 	(*did.ReqStatusResp)(nil),    // 4: hi.did.ReqStatusResp
+	(*emptypb.Empty)(nil),        // 5: google.protobuf.Empty
 }
 var file_hi_ai_auth_proto_depIdxs = []int32{
 	0, // 0: hi.ai.Auth.RefreshToken:input_type -> hi.did.RefreshTokenReq
 	1, // 1: hi.ai.Auth.GenerateReqId:input_type -> hi.did.GenerateReqIdReq
 	2, // 2: hi.ai.Auth.GetReqStatus:input_type -> hi.RequestId
-	3, // 3: hi.ai.Auth.RefreshToken:output_type -> hi.AuthToken
-	2, // 4: hi.ai.Auth.GenerateReqId:output_type -> hi.RequestId
-	4, // 5: hi.ai.Auth.GetReqStatus:output_type -> hi.did.ReqStatusResp
-	3, // [3:6] is the sub-list for method output_type
-	0, // [0:3] is the sub-list for method input_type
+	0, // 3: hi.ai.Auth.Logout:input_type -> hi.did.RefreshTokenReq
+	3, // 4: hi.ai.Auth.RefreshToken:output_type -> hi.AuthToken
+	2, // 5: hi.ai.Auth.GenerateReqId:output_type -> hi.RequestId
+	4, // 6: hi.ai.Auth.GetReqStatus:output_type -> hi.did.ReqStatusResp
+	5, // 7: hi.ai.Auth.Logout:output_type -> google.protobuf.Empty
+	4, // [4:8] is the sub-list for method output_type
+	0, // [0:4] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name

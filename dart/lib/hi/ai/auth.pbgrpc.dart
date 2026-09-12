@@ -15,6 +15,7 @@ import 'dart:core' as $core;
 
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
+import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $2;
 
 import '../common.pb.dart' as $1;
 import '../did/auth.pb.dart' as $0;
@@ -54,6 +55,17 @@ class AuthClient extends $grpc.Client {
     return $createUnaryCall(_$getReqStatus, request, options: options);
   }
 
+  /// 登出:删该会话的 refresh/access 行。**凭 refresh_token 证明归属**,故不鉴权。
+  ///
+  /// 🔴 hi-ai 此前**根本没有登出** —— 会话只能等自己过期(15 天)或被同一台设备的新登录覆盖,
+  /// 用户主动退出这件事做不到。与 club / hi-did 同形补上。
+  $grpc.ResponseFuture<$2.Empty> logout(
+    $0.RefreshTokenReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$logout, request, options: options);
+  }
+
   // method descriptors
 
   static final _$refreshToken =
@@ -71,6 +83,10 @@ class AuthClient extends $grpc.Client {
           '/hi.ai.Auth/GetReqStatus',
           ($1.RequestId value) => value.writeToBuffer(),
           $0.ReqStatusResp.fromBuffer);
+  static final _$logout = $grpc.ClientMethod<$0.RefreshTokenReq, $2.Empty>(
+      '/hi.ai.Auth/Logout',
+      ($0.RefreshTokenReq value) => value.writeToBuffer(),
+      $2.Empty.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.ai.Auth')
@@ -99,6 +115,13 @@ abstract class AuthServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.RequestId.fromBuffer(value),
         ($0.ReqStatusResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.RefreshTokenReq, $2.Empty>(
+        'Logout',
+        logout_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.RefreshTokenReq.fromBuffer(value),
+        ($2.Empty value) => value.writeToBuffer()));
   }
 
   $async.Future<$1.AuthToken> refreshToken_Pre($grpc.ServiceCall $call,
@@ -124,4 +147,12 @@ abstract class AuthServiceBase extends $grpc.Service {
 
   $async.Future<$0.ReqStatusResp> getReqStatus(
       $grpc.ServiceCall call, $1.RequestId request);
+
+  $async.Future<$2.Empty> logout_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.RefreshTokenReq> $request) async {
+    return logout($call, await $request);
+  }
+
+  $async.Future<$2.Empty> logout(
+      $grpc.ServiceCall call, $0.RefreshTokenReq request);
 }

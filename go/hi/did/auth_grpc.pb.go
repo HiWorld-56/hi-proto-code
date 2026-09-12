@@ -33,6 +33,8 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
+// web3 载荷 schema(不是 rpc 参数):Auth.Logout 把 SignedData.Data 反序列化进它。
+// ⚠️ 只被后端 Go 引用、proto 里无 rpc 引用 —— 勿按"无 rpc 引用"当死 message 删。
 // Auth —— 登录/登出。握手类是公开的(此时还没 token),身份确认类是 web3 验签(载荷带签名)。
 // 公开 与 web3验签 同处一个 service 是允许的(web3 本质是数据校验,不是方法鉴权)。
 //
@@ -68,7 +70,13 @@ type AuthClient interface {
 	VerifyOffline(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*LoginResp, error)
 	GenerateReqId(ctx context.Context, in *GenerateReqIdReq, opts ...grpc.CallOption) (*hi.RequestId, error)
 	GetReqStatus(ctx context.Context, in *hi.RequestId, opts ...grpc.CallOption) (*ReqStatusResp, error)
-	Logout(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 登出:删该会话的 refresh/access 行,并释放 PC 独占槽位。**凭 refresh_token 证明归属**,故不鉴权。
+	//
+	// 入参与 club / hi-ai 完全一致(都是 RefreshTokenReq)—— 三家登出同形,不要再各写各的。
+	// 原来这里收的是 `LogoutReq{did}` + web3 验签:载荷里**只有 did、没有 ClientInfo**,
+	// 于是定位不到具体会话,只能把这个 did 的全部登录态一锅端 ——
+	// 用户在 PC 上点"退出",手机也跟着掉线。带上 node 才谈得上"登出这一台"。
+	Logout(ctx context.Context, in *RefreshTokenReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type authClient struct {
@@ -129,7 +137,7 @@ func (c *authClient) GetReqStatus(ctx context.Context, in *hi.RequestId, opts ..
 	return out, nil
 }
 
-func (c *authClient) Logout(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *authClient) Logout(ctx context.Context, in *RefreshTokenReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Auth_Logout_FullMethodName, in, out, cOpts...)
@@ -143,6 +151,8 @@ func (c *authClient) Logout(ctx context.Context, in *hi.SignedData, opts ...grpc
 // All implementations should embed UnimplementedAuthServer
 // for forward compatibility.
 //
+// web3 载荷 schema(不是 rpc 参数):Auth.Logout 把 SignedData.Data 反序列化进它。
+// ⚠️ 只被后端 Go 引用、proto 里无 rpc 引用 —— 勿按"无 rpc 引用"当死 message 删。
 // Auth —— 登录/登出。握手类是公开的(此时还没 token),身份确认类是 web3 验签(载荷带签名)。
 // 公开 与 web3验签 同处一个 service 是允许的(web3 本质是数据校验,不是方法鉴权)。
 //
@@ -178,7 +188,13 @@ type AuthServer interface {
 	VerifyOffline(context.Context, *hi.SignedData) (*LoginResp, error)
 	GenerateReqId(context.Context, *GenerateReqIdReq) (*hi.RequestId, error)
 	GetReqStatus(context.Context, *hi.RequestId) (*ReqStatusResp, error)
-	Logout(context.Context, *hi.SignedData) (*emptypb.Empty, error)
+	// 登出:删该会话的 refresh/access 行,并释放 PC 独占槽位。**凭 refresh_token 证明归属**,故不鉴权。
+	//
+	// 入参与 club / hi-ai 完全一致(都是 RefreshTokenReq)—— 三家登出同形,不要再各写各的。
+	// 原来这里收的是 `LogoutReq{did}` + web3 验签:载荷里**只有 did、没有 ClientInfo**,
+	// 于是定位不到具体会话,只能把这个 did 的全部登录态一锅端 ——
+	// 用户在 PC 上点"退出",手机也跟着掉线。带上 node 才谈得上"登出这一台"。
+	Logout(context.Context, *RefreshTokenReq) (*emptypb.Empty, error)
 }
 
 // UnimplementedAuthServer should be embedded to have
@@ -203,7 +219,7 @@ func (UnimplementedAuthServer) GenerateReqId(context.Context, *GenerateReqIdReq)
 func (UnimplementedAuthServer) GetReqStatus(context.Context, *hi.RequestId) (*ReqStatusResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetReqStatus not implemented")
 }
-func (UnimplementedAuthServer) Logout(context.Context, *hi.SignedData) (*emptypb.Empty, error) {
+func (UnimplementedAuthServer) Logout(context.Context, *RefreshTokenReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Logout not implemented")
 }
 func (UnimplementedAuthServer) testEmbeddedByValue() {}
@@ -317,7 +333,7 @@ func _Auth_GetReqStatus_Handler(srv interface{}, ctx context.Context, dec func(i
 }
 
 func _Auth_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(hi.SignedData)
+	in := new(RefreshTokenReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -329,7 +345,7 @@ func _Auth_Logout_Handler(srv interface{}, ctx context.Context, dec func(interfa
 		FullMethod: Auth_Logout_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).Logout(ctx, req.(*hi.SignedData))
+		return srv.(AuthServer).Logout(ctx, req.(*RefreshTokenReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

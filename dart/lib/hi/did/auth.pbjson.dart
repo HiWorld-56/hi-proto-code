@@ -169,15 +169,3 @@ final $typed_data.Uint8List reqStatusRespDescriptor = $convert.base64Decode(
     'oGc3RhdHVzGAIgASgJQgSQtRgDSABSBnN0YXR1c4gBARIpCgV0b2tlbhgDIAEoCzINLmhpLkF1'
     'dGhUb2tlbkIEkLUYA1IFdG9rZW4SLQoEbXF0dBgEIAEoCzITLmhpLk1xdHRDcmVkZW50aWFsc0'
     'IEkLUYA1IEbXF0dDoEmLUYA0IJCgdfc3RhdHVz');
-
-@$core.Deprecated('Use logoutReqDescriptor instead')
-const LogoutReq$json = {
-  '1': 'LogoutReq',
-  '2': [
-    {'1': 'did', '3': 1, '4': 1, '5': 11, '6': '.hi.DID', '10': 'did'},
-  ],
-};
-
-/// Descriptor for `LogoutReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List logoutReqDescriptor = $convert
-    .base64Decode('CglMb2dvdXRSZXESGQoDZGlkGAEgASgLMgcuaGkuRElEUgNkaWQ=');

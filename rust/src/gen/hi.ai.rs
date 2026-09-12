@@ -4023,6 +4023,28 @@ pub mod auth_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Auth", "GetReqStatus"));
             self.inner.unary(req, path, codec).await
         }
+        /// 登出:删该会话的 refresh/access 行。**凭 refresh_token 证明归属**,故不鉴权。
+        ///
+        /// 🔴 hi-ai 此前**根本没有登出** —— 会话只能等自己过期(15 天)或被同一台设备的新登录覆盖,
+        /// 用户主动退出这件事做不到。与 club / hi-did 同形补上。
+        pub async fn logout(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::did::RefreshTokenReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Auth/Logout");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Auth", "Logout"));
+            self.inner.unary(req, path, codec).await
+        }
     }
 }
 /// Generated client implementations.

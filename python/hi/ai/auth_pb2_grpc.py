@@ -2,6 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
+from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi import common_pb2 as hi_dot_common__pb2
 from hi.did import auth_pb2 as hi_dot_did_dot_auth__pb2
 
@@ -30,6 +31,11 @@ class AuthStub(object):
                 request_serializer=hi_dot_common__pb2.RequestId.SerializeToString,
                 response_deserializer=hi_dot_did_dot_auth__pb2.ReqStatusResp.FromString,
                 _registered_method=True)
+        self.Logout = channel.unary_unary(
+                '/hi.ai.Auth/Logout',
+                request_serializer=hi_dot_did_dot_auth__pb2.RefreshTokenReq.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                _registered_method=True)
 
 
 class AuthServicer(object):
@@ -53,6 +59,16 @@ class AuthServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def Logout(self, request, context):
+        """登出:删该会话的 refresh/access 行。**凭 refresh_token 证明归属**,故不鉴权。
+
+        🔴 hi-ai 此前**根本没有登出** —— 会话只能等自己过期(15 天)或被同一台设备的新登录覆盖,
+        用户主动退出这件事做不到。与 club / hi-did 同形补上。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_AuthServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -70,6 +86,11 @@ def add_AuthServicer_to_server(servicer, server):
                     servicer.GetReqStatus,
                     request_deserializer=hi_dot_common__pb2.RequestId.FromString,
                     response_serializer=hi_dot_did_dot_auth__pb2.ReqStatusResp.SerializeToString,
+            ),
+            'Logout': grpc.unary_unary_rpc_method_handler(
+                    servicer.Logout,
+                    request_deserializer=hi_dot_did_dot_auth__pb2.RefreshTokenReq.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -153,6 +174,33 @@ class Auth(object):
             '/hi.ai.Auth/GetReqStatus',
             hi_dot_common__pb2.RequestId.SerializeToString,
             hi_dot_did_dot_auth__pb2.ReqStatusResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def Logout(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.ai.Auth/Logout',
+            hi_dot_did_dot_auth__pb2.RefreshTokenReq.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,
             insecure,
