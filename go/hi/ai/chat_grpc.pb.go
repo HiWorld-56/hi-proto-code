@@ -23,6 +23,7 @@ const (
 	Chat_NewSession_FullMethodName     = "/hi.ai.Chat/NewSession"
 	Chat_GetHistory_FullMethodName     = "/hi.ai.Chat/GetHistory"
 	Chat_ClearHistory_FullMethodName   = "/hi.ai.Chat/ClearHistory"
+	Chat_AppendHistory_FullMethodName  = "/hi.ai.Chat/AppendHistory"
 	Chat_Converse_FullMethodName       = "/hi.ai.Chat/Converse"
 	Chat_ConverseStream_FullMethodName = "/hi.ai.Chat/ConverseStream"
 	Chat_Resume_FullMethodName         = "/hi.ai.Chat/Resume"
@@ -63,6 +64,7 @@ type ChatClient interface {
 	NewSession(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*NewSessionResp, error)
 	GetHistory(ctx context.Context, in *GetHistoryReq, opts ...grpc.CallOption) (*GetHistoryResp, error)
 	ClearHistory(ctx context.Context, in *ClearHistoryReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	AppendHistory(ctx context.Context, in *AppendHistoryReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// ── 对话:一轮 = 一个循环,中途只在"轮到客户端"时返回 ──
 	Converse(ctx context.Context, in *ChatReq, opts ...grpc.CallOption) (*ChatResp, error)
 	ConverseStream(ctx context.Context, in *ChatReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ConverseStreamResp], error)
@@ -102,6 +104,16 @@ func (c *chatClient) ClearHistory(ctx context.Context, in *ClearHistoryReq, opts
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Chat_ClearHistory_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *chatClient) AppendHistory(ctx context.Context, in *AppendHistoryReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Chat_AppendHistory_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -200,6 +212,7 @@ type ChatServer interface {
 	NewSession(context.Context, *emptypb.Empty) (*NewSessionResp, error)
 	GetHistory(context.Context, *GetHistoryReq) (*GetHistoryResp, error)
 	ClearHistory(context.Context, *ClearHistoryReq) (*emptypb.Empty, error)
+	AppendHistory(context.Context, *AppendHistoryReq) (*emptypb.Empty, error)
 	// ── 对话:一轮 = 一个循环,中途只在"轮到客户端"时返回 ──
 	Converse(context.Context, *ChatReq) (*ChatResp, error)
 	ConverseStream(*ChatReq, grpc.ServerStreamingServer[ConverseStreamResp]) error
@@ -222,6 +235,9 @@ func (UnimplementedChatServer) GetHistory(context.Context, *GetHistoryReq) (*Get
 }
 func (UnimplementedChatServer) ClearHistory(context.Context, *ClearHistoryReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method ClearHistory not implemented")
+}
+func (UnimplementedChatServer) AppendHistory(context.Context, *AppendHistoryReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method AppendHistory not implemented")
 }
 func (UnimplementedChatServer) Converse(context.Context, *ChatReq) (*ChatResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Converse not implemented")
@@ -309,6 +325,24 @@ func _Chat_ClearHistory_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Chat_AppendHistory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AppendHistoryReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ChatServer).AppendHistory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Chat_AppendHistory_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ChatServer).AppendHistory(ctx, req.(*AppendHistoryReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Chat_Converse_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ChatReq)
 	if err := dec(in); err != nil {
@@ -385,6 +419,10 @@ var Chat_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ClearHistory",
 			Handler:    _Chat_ClearHistory_Handler,
+		},
+		{
+			MethodName: "AppendHistory",
+			Handler:    _Chat_AppendHistory_Handler,
 		},
 		{
 			MethodName: "Converse",

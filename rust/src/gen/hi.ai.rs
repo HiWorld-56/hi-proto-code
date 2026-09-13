@@ -249,6 +249,29 @@ pub struct GetHistoryReq {
     #[prost(string, optional, tag = "1")]
     pub cid: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 往会话上下文里补一对问答。
+///
+/// 🔴 **给"机器人自己做完一件事"用的。** 主人交代过「等王总通过就带话给他」,
+/// 机器人到点自己做了 —— 这件事得让模型知道,否则下次对话时它对自己刚做过的事一无所知,
+/// 主人问起来只能瞎猜。
+///
+/// 为什么不走一轮 `Converse`:那要真跑一次模型(慢、花钱),而且它可能把
+/// "做成了"说成别的样子。这里补的是**既成事实**,内容在登记那一刻就写好了。
+///
+/// ⚠️ 上下文只保留最近 30 对,补进来的会挤掉最老的 —— 所以**别拿它记流水账**
+/// (高频的周期任务就不该往这里补,否则机器人会"只记得自己在提醒吃药,
+/// 不记得主人昨天说过什么")。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct AppendHistoryReq {
+    #[prost(string, optional, tag = "1")]
+    pub cid: ::core::option::Option<::prost::alloc::string::String>,
+    /// 摆成"用户问的"那一句,通常是「执行结果查询：\<摘要>」
+    #[prost(string, optional, tag = "2")]
+    pub user: ::core::option::Option<::prost::alloc::string::String>,
+    /// 摆成"机器人答的"那一句,即真正要让它记住的内容
+    #[prost(string, optional, tag = "3")]
+    pub assistant: ::core::option::Option<::prost::alloc::string::String>,
+}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Qa {
     /// assistant
@@ -638,6 +661,24 @@ pub mod chat_client {
             let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/ClearHistory");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "ClearHistory"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn append_history(
+            &mut self,
+            request: impl tonic::IntoRequest<super::AppendHistoryReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/AppendHistory");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "AppendHistory"));
             self.inner.unary(req, path, codec).await
         }
         /// ── 对话:一轮 = 一个循环,中途只在"轮到客户端"时返回 ──

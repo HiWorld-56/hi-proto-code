@@ -60,6 +60,15 @@ class ChatClient extends $grpc.Client {
     return $createUnaryCall(_$clearHistory, request, options: options);
   }
 
+  /// 补一对问答进上下文。机器人到点自己做完一件事之后用它 —— 不这么做的话,
+  /// 模型下次对话时对自己刚做过的事一无所知(见 hi/ai/chat.proto 的 AppendHistoryReq)。
+  $grpc.ResponseFuture<$0.Empty> appendHistory(
+    $1.AppendHistoryReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$appendHistory, request, options: options);
+  }
+
   /// ── 对话:一轮 = 一个循环,中途只在"轮到客户端"时返回(详见 hi/ai/chat.proto)──
   $grpc.ResponseFuture<$1.ChatResp> converse(
     $2.ChatReq request, {
@@ -109,6 +118,11 @@ class ChatClient extends $grpc.Client {
           '/hi.club.Chat/ClearHistory',
           ($1.ClearHistoryReq value) => value.writeToBuffer(),
           $0.Empty.fromBuffer);
+  static final _$appendHistory =
+      $grpc.ClientMethod<$1.AppendHistoryReq, $0.Empty>(
+          '/hi.club.Chat/AppendHistory',
+          ($1.AppendHistoryReq value) => value.writeToBuffer(),
+          $0.Empty.fromBuffer);
   static final _$converse = $grpc.ClientMethod<$2.ChatReq, $1.ChatResp>(
       '/hi.club.Chat/Converse',
       ($2.ChatReq value) => value.writeToBuffer(),
@@ -155,6 +169,13 @@ abstract class ChatServiceBase extends $grpc.Service {
         false,
         false,
         ($core.List<$core.int> value) => $1.ClearHistoryReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.AppendHistoryReq, $0.Empty>(
+        'AppendHistory',
+        appendHistory_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.AppendHistoryReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$2.ChatReq, $1.ChatResp>(
         'Converse',
@@ -212,6 +233,14 @@ abstract class ChatServiceBase extends $grpc.Service {
 
   $async.Future<$0.Empty> clearHistory(
       $grpc.ServiceCall call, $1.ClearHistoryReq request);
+
+  $async.Future<$0.Empty> appendHistory_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.AppendHistoryReq> $request) async {
+    return appendHistory($call, await $request);
+  }
+
+  $async.Future<$0.Empty> appendHistory(
+      $grpc.ServiceCall call, $1.AppendHistoryReq request);
 
   $async.Future<$1.ChatResp> converse_Pre(
       $grpc.ServiceCall $call, $async.Future<$2.ChatReq> $request) async {

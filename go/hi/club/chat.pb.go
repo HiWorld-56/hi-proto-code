@@ -439,13 +439,14 @@ const file_hi_club_chat_proto_rawDesc = "" +
 	"\x12ToolCallResultsReq\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12+\n" +
 	"\x04list\x18\x02 \x03(\v2\x17.hi.club.ToolCallResultR\x04listB\x05\n" +
-	"\x03_id2\xe3\x03\n" +
+	"\x03_id2\xac\x04\n" +
 	"\x04Chat\x12B\n" +
 	"\n" +
 	"NewSession\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.NewSessionResp\"\x05\x8a\xb5\x18\x01\x02\x12B\n" +
 	"\n" +
 	"GetHistory\x12\x14.hi.ai.GetHistoryReq\x1a\x17.hi.club.GetHistoryResp\"\x05\x8a\xb5\x18\x01\x02\x12E\n" +
-	"\fClearHistory\x12\x16.hi.ai.ClearHistoryReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x124\n" +
+	"\fClearHistory\x12\x16.hi.ai.ClearHistoryReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12G\n" +
+	"\rAppendHistory\x12\x17.hi.ai.AppendHistoryReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x124\n" +
 	"\bConverse\x12\x10.hi.club.ChatReq\x1a\x0f.hi.ai.ChatResp\"\x05\x8a\xb5\x18\x01\x02\x12F\n" +
 	"\x0eConverseStream\x12\x10.hi.club.ChatReq\x1a\x19.hi.ai.ConverseStreamResp\"\x05\x8a\xb5\x18\x01\x020\x01\x12=\n" +
 	"\x06Resume\x12\x1b.hi.club.ToolCallResultsReq\x1a\x0f.hi.ai.ChatResp\"\x05\x8a\xb5\x18\x01\x02\x12O\n" +
@@ -476,9 +477,10 @@ var file_hi_club_chat_proto_goTypes = []any{
 	(*emptypb.Empty)(nil),         // 7: google.protobuf.Empty
 	(*ai.GetHistoryReq)(nil),      // 8: hi.ai.GetHistoryReq
 	(*ai.ClearHistoryReq)(nil),    // 9: hi.ai.ClearHistoryReq
-	(*ai.NewSessionResp)(nil),     // 10: hi.ai.NewSessionResp
-	(*ai.ChatResp)(nil),           // 11: hi.ai.ChatResp
-	(*ai.ConverseStreamResp)(nil), // 12: hi.ai.ConverseStreamResp
+	(*ai.AppendHistoryReq)(nil),   // 10: hi.ai.AppendHistoryReq
+	(*ai.NewSessionResp)(nil),     // 11: hi.ai.NewSessionResp
+	(*ai.ChatResp)(nil),           // 12: hi.ai.ChatResp
+	(*ai.ConverseStreamResp)(nil), // 13: hi.ai.ConverseStreamResp
 }
 var file_hi_club_chat_proto_depIdxs = []int32{
 	5,  // 0: hi.club.QA.q:type_name -> hi.club.Content
@@ -490,19 +492,21 @@ var file_hi_club_chat_proto_depIdxs = []int32{
 	7,  // 6: hi.club.Chat.NewSession:input_type -> google.protobuf.Empty
 	8,  // 7: hi.club.Chat.GetHistory:input_type -> hi.ai.GetHistoryReq
 	9,  // 8: hi.club.Chat.ClearHistory:input_type -> hi.ai.ClearHistoryReq
-	2,  // 9: hi.club.Chat.Converse:input_type -> hi.club.ChatReq
-	2,  // 10: hi.club.Chat.ConverseStream:input_type -> hi.club.ChatReq
-	4,  // 11: hi.club.Chat.Resume:input_type -> hi.club.ToolCallResultsReq
-	4,  // 12: hi.club.Chat.ResumeStream:input_type -> hi.club.ToolCallResultsReq
-	10, // 13: hi.club.Chat.NewSession:output_type -> hi.ai.NewSessionResp
-	1,  // 14: hi.club.Chat.GetHistory:output_type -> hi.club.GetHistoryResp
-	7,  // 15: hi.club.Chat.ClearHistory:output_type -> google.protobuf.Empty
-	11, // 16: hi.club.Chat.Converse:output_type -> hi.ai.ChatResp
-	12, // 17: hi.club.Chat.ConverseStream:output_type -> hi.ai.ConverseStreamResp
-	11, // 18: hi.club.Chat.Resume:output_type -> hi.ai.ChatResp
-	12, // 19: hi.club.Chat.ResumeStream:output_type -> hi.ai.ConverseStreamResp
-	13, // [13:20] is the sub-list for method output_type
-	6,  // [6:13] is the sub-list for method input_type
+	10, // 9: hi.club.Chat.AppendHistory:input_type -> hi.ai.AppendHistoryReq
+	2,  // 10: hi.club.Chat.Converse:input_type -> hi.club.ChatReq
+	2,  // 11: hi.club.Chat.ConverseStream:input_type -> hi.club.ChatReq
+	4,  // 12: hi.club.Chat.Resume:input_type -> hi.club.ToolCallResultsReq
+	4,  // 13: hi.club.Chat.ResumeStream:input_type -> hi.club.ToolCallResultsReq
+	11, // 14: hi.club.Chat.NewSession:output_type -> hi.ai.NewSessionResp
+	1,  // 15: hi.club.Chat.GetHistory:output_type -> hi.club.GetHistoryResp
+	7,  // 16: hi.club.Chat.ClearHistory:output_type -> google.protobuf.Empty
+	7,  // 17: hi.club.Chat.AppendHistory:output_type -> google.protobuf.Empty
+	12, // 18: hi.club.Chat.Converse:output_type -> hi.ai.ChatResp
+	13, // 19: hi.club.Chat.ConverseStream:output_type -> hi.ai.ConverseStreamResp
+	12, // 20: hi.club.Chat.Resume:output_type -> hi.ai.ChatResp
+	13, // 21: hi.club.Chat.ResumeStream:output_type -> hi.ai.ConverseStreamResp
+	14, // [14:22] is the sub-list for method output_type
+	6,  // [6:14] is the sub-list for method input_type
 	6,  // [6:6] is the sub-list for extension type_name
 	6,  // [6:6] is the sub-list for extension extendee
 	0,  // [0:6] is the sub-list for field type_name

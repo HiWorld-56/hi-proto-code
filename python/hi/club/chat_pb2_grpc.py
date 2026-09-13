@@ -32,6 +32,11 @@ class ChatStub(object):
                 request_serializer=hi_dot_ai_dot_chat__pb2.ClearHistoryReq.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
+        self.AppendHistory = channel.unary_unary(
+                '/hi.club.Chat/AppendHistory',
+                request_serializer=hi_dot_ai_dot_chat__pb2.AppendHistoryReq.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                _registered_method=True)
         self.Converse = channel.unary_unary(
                 '/hi.club.Chat/Converse',
                 request_serializer=hi_dot_club_dot_chat__pb2.ChatReq.SerializeToString,
@@ -80,6 +85,14 @@ class ChatServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def AppendHistory(self, request, context):
+        """补一对问答进上下文。机器人到点自己做完一件事之后用它 —— 不这么做的话,
+        模型下次对话时对自己刚做过的事一无所知(见 hi/ai/chat.proto 的 AppendHistoryReq)。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def Converse(self, request, context):
         """── 对话:一轮 = 一个循环,中途只在"轮到客户端"时返回(详见 hi/ai/chat.proto)──
         """
@@ -121,6 +134,11 @@ def add_ChatServicer_to_server(servicer, server):
             'ClearHistory': grpc.unary_unary_rpc_method_handler(
                     servicer.ClearHistory,
                     request_deserializer=hi_dot_ai_dot_chat__pb2.ClearHistoryReq.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'AppendHistory': grpc.unary_unary_rpc_method_handler(
+                    servicer.AppendHistory,
+                    request_deserializer=hi_dot_ai_dot_chat__pb2.AppendHistoryReq.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'Converse': grpc.unary_unary_rpc_method_handler(
@@ -225,6 +243,33 @@ class Chat(object):
             target,
             '/hi.club.Chat/ClearHistory',
             hi_dot_ai_dot_chat__pb2.ClearHistoryReq.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def AppendHistory(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.Chat/AppendHistory',
+            hi_dot_ai_dot_chat__pb2.AppendHistoryReq.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,

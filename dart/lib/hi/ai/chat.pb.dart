@@ -245,6 +245,96 @@ class GetHistoryReq extends $pb.GeneratedMessage {
   void clearCid() => $_clearField(1);
 }
 
+/// 往会话上下文里补一对问答。
+///
+/// 🔴 **给"机器人自己做完一件事"用的。** 主人交代过「等王总通过就带话给他」,
+/// 机器人到点自己做了 —— 这件事得让模型知道,否则下次对话时它对自己刚做过的事一无所知,
+/// 主人问起来只能瞎猜。
+///
+/// 为什么不走一轮 `Converse`:那要真跑一次模型(慢、花钱),而且它可能把
+/// "做成了"说成别的样子。这里补的是**既成事实**,内容在登记那一刻就写好了。
+///
+/// ⚠️ 上下文只保留最近 30 对,补进来的会挤掉最老的 —— 所以**别拿它记流水账**
+/// (高频的周期任务就不该往这里补,否则机器人会"只记得自己在提醒吃药,
+///  不记得主人昨天说过什么")。
+class AppendHistoryReq extends $pb.GeneratedMessage {
+  factory AppendHistoryReq({
+    $core.String? cid,
+    $core.String? user,
+    $core.String? assistant,
+  }) {
+    final result = create();
+    if (cid != null) result.cid = cid;
+    if (user != null) result.user = user;
+    if (assistant != null) result.assistant = assistant;
+    return result;
+  }
+
+  AppendHistoryReq._();
+
+  factory AppendHistoryReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory AppendHistoryReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'AppendHistoryReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'cid')
+    ..aOS(2, _omitFieldNames ? '' : 'user')
+    ..aOS(3, _omitFieldNames ? '' : 'assistant')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AppendHistoryReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AppendHistoryReq copyWith(void Function(AppendHistoryReq) updates) =>
+      super.copyWith((message) => updates(message as AppendHistoryReq))
+          as AppendHistoryReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static AppendHistoryReq create() => AppendHistoryReq._();
+  @$core.override
+  AppendHistoryReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static AppendHistoryReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<AppendHistoryReq>(create);
+  static AppendHistoryReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get cid => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set cid($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasCid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCid() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get user => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set user($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasUser() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUser() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get assistant => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set assistant($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasAssistant() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearAssistant() => $_clearField(3);
+}
+
 class QA extends $pb.GeneratedMessage {
   factory QA({
     $core.String? a,

@@ -108,6 +108,35 @@ const GetHistoryReq$json = {
 final $typed_data.Uint8List getHistoryReqDescriptor = $convert.base64Decode(
     'Cg1HZXRIaXN0b3J5UmVxEhUKA2NpZBgBIAEoCUgAUgNjaWSIAQFCBgoEX2NpZA==');
 
+@$core.Deprecated('Use appendHistoryReqDescriptor instead')
+const AppendHistoryReq$json = {
+  '1': 'AppendHistoryReq',
+  '2': [
+    {'1': 'cid', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'cid', '17': true},
+    {'1': 'user', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'user', '17': true},
+    {
+      '1': 'assistant',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '9': 2,
+      '10': 'assistant',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_cid'},
+    {'1': '_user'},
+    {'1': '_assistant'},
+  ],
+};
+
+/// Descriptor for `AppendHistoryReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List appendHistoryReqDescriptor = $convert.base64Decode(
+    'ChBBcHBlbmRIaXN0b3J5UmVxEhUKA2NpZBgBIAEoCUgAUgNjaWSIAQESFwoEdXNlchgCIAEoCU'
+    'gBUgR1c2VyiAEBEiEKCWFzc2lzdGFudBgDIAEoCUgCUglhc3Npc3RhbnSIAQFCBgoEX2NpZEIH'
+    'CgVfdXNlckIMCgpfYXNzaXN0YW50');
+
 @$core.Deprecated('Use qADescriptor instead')
 const QA$json = {
   '1': 'QA',

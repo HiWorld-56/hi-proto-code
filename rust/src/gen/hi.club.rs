@@ -6227,6 +6227,29 @@ pub mod chat_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Chat", "ClearHistory"));
             self.inner.unary(req, path, codec).await
         }
+        /// 补一对问答进上下文。机器人到点自己做完一件事之后用它 —— 不这么做的话,
+        /// 模型下次对话时对自己刚做过的事一无所知(见 hi/ai/chat.proto 的 AppendHistoryReq)。
+        pub async fn append_history(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::ai::AppendHistoryReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Chat/AppendHistory",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Chat", "AppendHistory"));
+            self.inner.unary(req, path, codec).await
+        }
         /// ── 对话:一轮 = 一个循环,中途只在"轮到客户端"时返回(详见 hi/ai/chat.proto)──
         pub async fn converse(
             &mut self,
