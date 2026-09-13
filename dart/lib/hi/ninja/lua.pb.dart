@@ -632,11 +632,13 @@ class HostCallReq extends $pb.GeneratedMessage {
     $core.String? name,
     $core.String? argsJson,
     $core.List<$core.int>? input,
+    LuaCtx? ctx,
   }) {
     final result = create();
     if (name != null) result.name = name;
     if (argsJson != null) result.argsJson = argsJson;
     if (input != null) result.input = input;
+    if (ctx != null) result.ctx = ctx;
     return result;
   }
 
@@ -657,6 +659,7 @@ class HostCallReq extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'argsJson')
     ..a<$core.List<$core.int>>(
         3, _omitFieldNames ? '' : 'input', $pb.PbFieldType.OY)
+    ..aOM<LuaCtx>(4, _omitFieldNames ? '' : 'ctx', subBuilder: LuaCtx.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -704,6 +707,26 @@ class HostCallReq extends $pb.GeneratedMessage {
   $core.bool hasInput() => $_has(2);
   @$pb.TagNumber(3)
   void clearInput() => $_clearField(3);
+
+  /// 🔴 **这次调用是在谁的环境里发生的** —— 执行器把 `InvokeReq.ctx` 原样带回来。
+  ///
+  /// 为什么必须由执行器带:brain 收到这条时**已经不知道它属于哪次 invoke** 了
+  /// (host call 是执行器反过来发起的，走的是另一个 req_id)。而有些能力要认这个环境 ——
+  /// 比如"记一件事等条件到了再做"，登记的就是**此刻这份环境**，触发时照它执行。
+  ///
+  /// ⚠️ 不能让**插件**把环境当参数传进来:lua 脚本是三方代码，它可以填一个假的 asker，
+  ///    把"别人让我做的"说成"主人让我做的"。执行器不是三方代码，它手里那份来自
+  ///    brain 发过去的 InvokeReq，脚本碰不到。
+  @$pb.TagNumber(4)
+  LuaCtx get ctx => $_getN(3);
+  @$pb.TagNumber(4)
+  set ctx(LuaCtx value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasCtx() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearCtx() => $_clearField(4);
+  @$pb.TagNumber(4)
+  LuaCtx ensureCtx() => $_ensure(3);
 }
 
 class HostCallResp extends $pb.GeneratedMessage {

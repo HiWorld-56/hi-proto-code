@@ -1390,6 +1390,9 @@ impl serde::Serialize for HostCallReq {
         if self.input.is_some() {
             len += 1;
         }
+        if self.ctx.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.HostCallReq", len)?;
         if let Some(v) = self.name.as_ref() {
             struct_ser.serialize_field("name", v)?;
@@ -1401,6 +1404,9 @@ impl serde::Serialize for HostCallReq {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
             struct_ser.serialize_field("input", pbjson::private::base64::encode(&v).as_str())?;
+        }
+        if let Some(v) = self.ctx.as_ref() {
+            struct_ser.serialize_field("ctx", v)?;
         }
         struct_ser.end()
     }
@@ -1416,6 +1422,7 @@ impl<'de> serde::Deserialize<'de> for HostCallReq {
             "args_json",
             "argsJson",
             "input",
+            "ctx",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -1423,6 +1430,7 @@ impl<'de> serde::Deserialize<'de> for HostCallReq {
             Name,
             ArgsJson,
             Input,
+            Ctx,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1447,6 +1455,7 @@ impl<'de> serde::Deserialize<'de> for HostCallReq {
                             "name" => Ok(GeneratedField::Name),
                             "argsJson" | "args_json" => Ok(GeneratedField::ArgsJson),
                             "input" => Ok(GeneratedField::Input),
+                            "ctx" => Ok(GeneratedField::Ctx),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -1469,6 +1478,7 @@ impl<'de> serde::Deserialize<'de> for HostCallReq {
                 let mut name__ = None;
                 let mut args_json__ = None;
                 let mut input__ = None;
+                let mut ctx__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Name => {
@@ -1491,12 +1501,19 @@ impl<'de> serde::Deserialize<'de> for HostCallReq {
                                 map_.next_value::<::std::option::Option<::pbjson::private::BytesDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
+                        GeneratedField::Ctx => {
+                            if ctx__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("ctx"));
+                            }
+                            ctx__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(HostCallReq {
                     name: name__,
                     args_json: args_json__,
                     input: input__,
+                    ctx: ctx__,
                 })
             }
         }

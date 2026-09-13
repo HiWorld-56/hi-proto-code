@@ -279,19 +279,31 @@ const HostCallReq$json = {
       '17': true
     },
     {'1': 'input', '3': 3, '4': 1, '5': 12, '9': 2, '10': 'input', '17': true},
+    {
+      '1': 'ctx',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.LuaCtx',
+      '9': 3,
+      '10': 'ctx',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_name'},
     {'1': '_args_json'},
     {'1': '_input'},
+    {'1': '_ctx'},
   ],
 };
 
 /// Descriptor for `HostCallReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List hostCallReqDescriptor = $convert.base64Decode(
     'CgtIb3N0Q2FsbFJlcRIXCgRuYW1lGAEgASgJSABSBG5hbWWIAQESIAoJYXJnc19qc29uGAIgAS'
-    'gJSAFSCGFyZ3NKc29uiAEBEhkKBWlucHV0GAMgASgMSAJSBWlucHV0iAEBQgcKBV9uYW1lQgwK'
-    'Cl9hcmdzX2pzb25CCAoGX2lucHV0');
+    'gJSAFSCGFyZ3NKc29uiAEBEhkKBWlucHV0GAMgASgMSAJSBWlucHV0iAEBEicKA2N0eBgEIAEo'
+    'CzIQLmhpLm5pbmphLkx1YUN0eEgDUgNjdHiIAQFCBwoFX25hbWVCDAoKX2FyZ3NfanNvbkIICg'
+    'ZfaW5wdXRCBgoEX2N0eA==');
 
 @$core.Deprecated('Use hostCallRespDescriptor instead')
 const HostCallResp$json = {

@@ -504,10 +504,21 @@ func (x *CloseReq) GetVersion() string {
 // 🔴 这条是**反向**的：brain 正等着 InvokeResp 的时候，执行器会先发这个过来。
 // 所以两边都得能在等一个回复的同时处理对方的请求，靠 `req_id` 配对。
 type HostCallReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          *string                `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"` // 能力名，与 `.so` 插件那条路同一份白名单
-	ArgsJson      *string                `protobuf:"bytes,2,opt,name=args_json,json=argsJson,proto3,oneof" json:"args_json,omitempty"`
-	Input         []byte                 `protobuf:"bytes,3,opt,name=input,proto3,oneof" json:"input,omitempty"` // 送字节的那几个（upload_image）
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	Name     *string                `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"` // 能力名，与 `.so` 插件那条路同一份白名单
+	ArgsJson *string                `protobuf:"bytes,2,opt,name=args_json,json=argsJson,proto3,oneof" json:"args_json,omitempty"`
+	Input    []byte                 `protobuf:"bytes,3,opt,name=input,proto3,oneof" json:"input,omitempty"` // 送字节的那几个（upload_image）
+	// 🔴 **这次调用是在谁的环境里发生的** —— 执行器把 `InvokeReq.ctx` 原样带回来。
+	//
+	// 为什么必须由执行器带:brain 收到这条时**已经不知道它属于哪次 invoke** 了
+	// (host call 是执行器反过来发起的，走的是另一个 req_id)。而有些能力要认这个环境 ——
+	// 比如"记一件事等条件到了再做"，登记的就是**此刻这份环境**，触发时照它执行。
+	//
+	// ⚠️ 不能让**插件**把环境当参数传进来:lua 脚本是三方代码，它可以填一个假的 asker，
+	//
+	//	把"别人让我做的"说成"主人让我做的"。执行器不是三方代码，它手里那份来自
+	//	brain 发过去的 InvokeReq，脚本碰不到。
+	Ctx           *LuaCtx `protobuf:"bytes,4,opt,name=ctx,proto3,oneof" json:"ctx,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -559,6 +570,13 @@ func (x *HostCallReq) GetArgsJson() string {
 func (x *HostCallReq) GetInput() []byte {
 	if x != nil {
 		return x.Input
+	}
+	return nil
+}
+
+func (x *HostCallReq) GetCtx() *LuaCtx {
+	if x != nil {
+		return x.Ctx
 	}
 	return nil
 }
@@ -930,15 +948,17 @@ const file_hi_ninja_lua_proto_rawDesc = "" +
 	"\aversion\x18\x02 \x01(\tH\x01R\aversion\x88\x01\x01B\a\n" +
 	"\x05_uuidB\n" +
 	"\n" +
-	"\b_version\"\x84\x01\n" +
+	"\b_version\"\xb5\x01\n" +
 	"\vHostCallReq\x12\x17\n" +
 	"\x04name\x18\x01 \x01(\tH\x00R\x04name\x88\x01\x01\x12 \n" +
 	"\targs_json\x18\x02 \x01(\tH\x01R\bargsJson\x88\x01\x01\x12\x19\n" +
-	"\x05input\x18\x03 \x01(\fH\x02R\x05input\x88\x01\x01B\a\n" +
+	"\x05input\x18\x03 \x01(\fH\x02R\x05input\x88\x01\x01\x12'\n" +
+	"\x03ctx\x18\x04 \x01(\v2\x10.hi.ninja.LuaCtxH\x03R\x03ctx\x88\x01\x01B\a\n" +
 	"\x05_nameB\f\n" +
 	"\n" +
 	"_args_jsonB\b\n" +
-	"\x06_input\"\x9c\x01\n" +
+	"\x06_inputB\x06\n" +
+	"\x04_ctx\"\x9c\x01\n" +
 	"\fHostCallResp\x12\x17\n" +
 	"\x04json\x18\x01 \x01(\tH\x00R\x04json\x88\x01\x01\x12\x19\n" +
 	"\x05bytes\x18\x02 \x01(\fH\x01R\x05bytes\x88\x01\x01\x12\x19\n" +
@@ -994,20 +1014,21 @@ var file_hi_ninja_lua_proto_goTypes = []any{
 	(*LuaToBrain)(nil),   // 10: hi.ninja.LuaToBrain
 }
 var file_hi_ninja_lua_proto_depIdxs = []int32{
-	2, // 0: hi.ninja.OpenReq.deps:type_name -> hi.ninja.LuaRock
-	0, // 1: hi.ninja.InvokeReq.ctx:type_name -> hi.ninja.LuaCtx
-	1, // 2: hi.ninja.BrainToLua.open:type_name -> hi.ninja.OpenReq
-	4, // 3: hi.ninja.BrainToLua.invoke:type_name -> hi.ninja.InvokeReq
-	6, // 4: hi.ninja.BrainToLua.close:type_name -> hi.ninja.CloseReq
-	8, // 5: hi.ninja.BrainToLua.host_resp:type_name -> hi.ninja.HostCallResp
-	3, // 6: hi.ninja.LuaToBrain.open:type_name -> hi.ninja.OpenResp
-	5, // 7: hi.ninja.LuaToBrain.invoke:type_name -> hi.ninja.InvokeResp
-	7, // 8: hi.ninja.LuaToBrain.host_call:type_name -> hi.ninja.HostCallReq
-	9, // [9:9] is the sub-list for method output_type
-	9, // [9:9] is the sub-list for method input_type
-	9, // [9:9] is the sub-list for extension type_name
-	9, // [9:9] is the sub-list for extension extendee
-	0, // [0:9] is the sub-list for field type_name
+	2,  // 0: hi.ninja.OpenReq.deps:type_name -> hi.ninja.LuaRock
+	0,  // 1: hi.ninja.InvokeReq.ctx:type_name -> hi.ninja.LuaCtx
+	0,  // 2: hi.ninja.HostCallReq.ctx:type_name -> hi.ninja.LuaCtx
+	1,  // 3: hi.ninja.BrainToLua.open:type_name -> hi.ninja.OpenReq
+	4,  // 4: hi.ninja.BrainToLua.invoke:type_name -> hi.ninja.InvokeReq
+	6,  // 5: hi.ninja.BrainToLua.close:type_name -> hi.ninja.CloseReq
+	8,  // 6: hi.ninja.BrainToLua.host_resp:type_name -> hi.ninja.HostCallResp
+	3,  // 7: hi.ninja.LuaToBrain.open:type_name -> hi.ninja.OpenResp
+	5,  // 8: hi.ninja.LuaToBrain.invoke:type_name -> hi.ninja.InvokeResp
+	7,  // 9: hi.ninja.LuaToBrain.host_call:type_name -> hi.ninja.HostCallReq
+	10, // [10:10] is the sub-list for method output_type
+	10, // [10:10] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_hi_ninja_lua_proto_init() }
