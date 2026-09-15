@@ -1059,6 +1059,147 @@ pub mod media_manage_client {
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UserManageListReq {
+    /// 可选：按用户 DID 模糊查询；不传表示不筛选。
+    #[prost(string, optional, tag = "1")]
+    pub did: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserManageListResp {
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
+    #[prost(message, repeated, tag = "2")]
+    pub users: ::prost::alloc::vec::Vec<user_manage_list_resp::Unit>,
+}
+/// Nested message and enum types in `UserManageListResp`.
+pub mod user_manage_list_resp {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+    pub struct Unit {
+        #[prost(string, optional, tag = "1")]
+        pub did: ::core::option::Option<::prost::alloc::string::String>,
+        /// Unix 秒
+        #[prost(int64, optional, tag = "2")]
+        pub registered_at: ::core::option::Option<i64>,
+    }
+}
+/// Generated client implementations.
+pub mod user_manage_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// HiMedia 本地准入用户目录。只表达用户是否已进入 HiMedia，不代替 HiDID 用户资料。
+    #[derive(Debug, Clone)]
+    pub struct UserManageClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl UserManageClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> UserManageClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> UserManageClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            UserManageClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn list(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UserManageListReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::UserManageListResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.media.UserManage/List");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.media.UserManage", "List"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ImportMediaWorkflowReq {
     #[prost(string, optional, tag = "1")]
     pub request_id: ::core::option::Option<::prost::alloc::string::String>,
@@ -2226,12 +2367,12 @@ pub mod super_admin_client {
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MediaInviteCodeInfo {
+pub struct InviteCodeInfo {
     #[prost(string, optional, tag = "1")]
     pub code: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
     pub note: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(enumeration = "MediaInviteCodeStatus", optional, tag = "3")]
+    #[prost(enumeration = "InviteCodeStatus", optional, tag = "3")]
     pub status: ::core::option::Option<i32>,
     #[prost(string, optional, tag = "4")]
     pub created_by_did: ::core::option::Option<::prost::alloc::string::String>,
@@ -2245,12 +2386,12 @@ pub struct MediaInviteCodeInfo {
     pub used_at: ::core::option::Option<i64>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct CreateMediaInviteCodeResp {
+pub struct InviteCodeCreateResp {
     #[prost(message, optional, tag = "1")]
-    pub invite_code: ::core::option::Option<MediaInviteCodeInfo>,
+    pub invite_code: ::core::option::Option<InviteCodeInfo>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct EditMediaInviteCodeReq {
+pub struct InviteCodeEditReq {
     #[prost(string, optional, tag = "1")]
     pub code: ::core::option::Option<::prost::alloc::string::String>,
     /// 不传=不修改，传空字符串=清空备注。
@@ -2258,21 +2399,21 @@ pub struct EditMediaInviteCodeReq {
     pub note: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListMediaInviteCodesResp {
+pub struct InviteCodeListResp {
     #[prost(int32, optional, tag = "1")]
     pub total: ::core::option::Option<i32>,
     #[prost(message, repeated, tag = "2")]
-    pub invite_codes: ::prost::alloc::vec::Vec<MediaInviteCodeInfo>,
+    pub invite_codes: ::prost::alloc::vec::Vec<InviteCodeInfo>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct DeleteMediaInviteCodeReq {
+pub struct InviteCodeDeleteReq {
     #[prost(string, optional, tag = "1")]
     pub code: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 不接受前端提交 DID。服务端必须从已经完成 HiDID 验签、状态为
 /// invite_required 的 request_id 登录会话中取得准入用户身份。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct VerifyMediaInviteCodeReq {
+pub struct InviteCodeVerifyReq {
     #[prost(string, optional, tag = "1")]
     pub request_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
@@ -2282,38 +2423,38 @@ pub struct VerifyMediaInviteCodeReq {
 /// 邀请码数据，也不会把用户升级为 HiDID 商户。
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
-pub enum MediaInviteCodeStatus {
+pub enum InviteCodeStatus {
     Unspecified = 0,
     Available = 1,
     Used = 2,
     Expired = 3,
 }
-impl MediaInviteCodeStatus {
+impl InviteCodeStatus {
     /// String value of the enum field names used in the ProtoBuf definition.
     ///
     /// The values are not transformed in any way and thus are considered stable
     /// (if the ProtoBuf definition does not change) and safe for programmatic use.
     pub fn as_str_name(&self) -> &'static str {
         match self {
-            Self::Unspecified => "MEDIA_INVITE_CODE_STATUS_UNSPECIFIED",
-            Self::Available => "MEDIA_INVITE_CODE_STATUS_AVAILABLE",
-            Self::Used => "MEDIA_INVITE_CODE_STATUS_USED",
-            Self::Expired => "MEDIA_INVITE_CODE_STATUS_EXPIRED",
+            Self::Unspecified => "INVITE_CODE_STATUS_UNSPECIFIED",
+            Self::Available => "INVITE_CODE_STATUS_AVAILABLE",
+            Self::Used => "INVITE_CODE_STATUS_USED",
+            Self::Expired => "INVITE_CODE_STATUS_EXPIRED",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
     pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
         match value {
-            "MEDIA_INVITE_CODE_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
-            "MEDIA_INVITE_CODE_STATUS_AVAILABLE" => Some(Self::Available),
-            "MEDIA_INVITE_CODE_STATUS_USED" => Some(Self::Used),
-            "MEDIA_INVITE_CODE_STATUS_EXPIRED" => Some(Self::Expired),
+            "INVITE_CODE_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
+            "INVITE_CODE_STATUS_AVAILABLE" => Some(Self::Available),
+            "INVITE_CODE_STATUS_USED" => Some(Self::Used),
+            "INVITE_CODE_STATUS_EXPIRED" => Some(Self::Expired),
             _ => None,
         }
     }
 }
 /// Generated client implementations.
-pub mod media_invite_code_client {
+pub mod invite_code_client {
     #![allow(
         unused_variables,
         dead_code,
@@ -2326,10 +2467,10 @@ pub mod media_invite_code_client {
     /// 邀请码管理属于 HiMedia 超管面。超管身份仍以 HiDID 全局超管名单为权威，
     /// HiMedia 不维护本地管理员名单。
     #[derive(Debug, Clone)]
-    pub struct MediaInviteCodeClient<T> {
+    pub struct InviteCodeClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl MediaInviteCodeClient<tonic::transport::Channel> {
+    impl InviteCodeClient<tonic::transport::Channel> {
         /// Attempt to create a new client by connecting to a given endpoint.
         pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
         where
@@ -2340,7 +2481,7 @@ pub mod media_invite_code_client {
             Ok(Self::new(conn))
         }
     }
-    impl<T> MediaInviteCodeClient<T>
+    impl<T> InviteCodeClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::Body>,
         T::Error: Into<StdError>,
@@ -2358,7 +2499,7 @@ pub mod media_invite_code_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> MediaInviteCodeClient<InterceptedService<T, F>>
+        ) -> InviteCodeClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -2372,7 +2513,7 @@ pub mod media_invite_code_client {
                 http::Request<tonic::body::Body>,
             >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
         {
-            MediaInviteCodeClient::new(InterceptedService::new(inner, interceptor))
+            InviteCodeClient::new(InterceptedService::new(inner, interceptor))
         }
         /// Compress requests with the given encoding.
         ///
@@ -2409,7 +2550,7 @@ pub mod media_invite_code_client {
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,
         ) -> std::result::Result<
-            tonic::Response<super::CreateMediaInviteCodeResp>,
+            tonic::Response<super::InviteCodeCreateResp>,
             tonic::Status,
         > {
             self.inner
@@ -2422,16 +2563,16 @@ pub mod media_invite_code_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.MediaInviteCode/Create",
+                "/hi.media.InviteCode/Create",
             );
             let mut req = request.into_request();
             req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.MediaInviteCode", "Create"));
+                .insert(GrpcMethod::new("hi.media.InviteCode", "Create"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn edit(
             &mut self,
-            request: impl tonic::IntoRequest<super::EditMediaInviteCodeReq>,
+            request: impl tonic::IntoRequest<super::InviteCodeEditReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -2442,19 +2583,16 @@ pub mod media_invite_code_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.MediaInviteCode/Edit",
-            );
+            let path = http::uri::PathAndQuery::from_static("/hi.media.InviteCode/Edit");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.MediaInviteCode", "Edit"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.media.InviteCode", "Edit"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<super::super::Pagination>,
         ) -> std::result::Result<
-            tonic::Response<super::ListMediaInviteCodesResp>,
+            tonic::Response<super::InviteCodeListResp>,
             tonic::Status,
         > {
             self.inner
@@ -2466,17 +2604,14 @@ pub mod media_invite_code_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.MediaInviteCode/List",
-            );
+            let path = http::uri::PathAndQuery::from_static("/hi.media.InviteCode/List");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.MediaInviteCode", "List"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.media.InviteCode", "List"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn delete(
             &mut self,
-            request: impl tonic::IntoRequest<super::DeleteMediaInviteCodeReq>,
+            request: impl tonic::IntoRequest<super::InviteCodeDeleteReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -2488,17 +2623,17 @@ pub mod media_invite_code_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.MediaInviteCode/Delete",
+                "/hi.media.InviteCode/Delete",
             );
             let mut req = request.into_request();
             req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.MediaInviteCode", "Delete"));
+                .insert(GrpcMethod::new("hi.media.InviteCode", "Delete"));
             self.inner.unary(req, path, codec).await
         }
     }
 }
 /// Generated client implementations.
-pub mod media_register_client {
+pub mod register_client {
     #![allow(
         unused_variables,
         dead_code,
@@ -2511,10 +2646,10 @@ pub mod media_register_client {
     /// 注册主体尚未持有 HiMedia token，因此接口公开；有效 request_id 中已经验签的
     /// DID 是其身份边界，邀请码核销成功后才返回 HiMedia token。
     #[derive(Debug, Clone)]
-    pub struct MediaRegisterClient<T> {
+    pub struct RegisterClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl MediaRegisterClient<tonic::transport::Channel> {
+    impl RegisterClient<tonic::transport::Channel> {
         /// Attempt to create a new client by connecting to a given endpoint.
         pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
         where
@@ -2525,7 +2660,7 @@ pub mod media_register_client {
             Ok(Self::new(conn))
         }
     }
-    impl<T> MediaRegisterClient<T>
+    impl<T> RegisterClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::Body>,
         T::Error: Into<StdError>,
@@ -2543,7 +2678,7 @@ pub mod media_register_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> MediaRegisterClient<InterceptedService<T, F>>
+        ) -> RegisterClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -2557,7 +2692,7 @@ pub mod media_register_client {
                 http::Request<tonic::body::Body>,
             >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
         {
-            MediaRegisterClient::new(InterceptedService::new(inner, interceptor))
+            RegisterClient::new(InterceptedService::new(inner, interceptor))
         }
         /// Compress requests with the given encoding.
         ///
@@ -2592,7 +2727,7 @@ pub mod media_register_client {
         }
         pub async fn verify(
             &mut self,
-            request: impl tonic::IntoRequest<super::VerifyMediaInviteCodeReq>,
+            request: impl tonic::IntoRequest<super::InviteCodeVerifyReq>,
         ) -> std::result::Result<
             tonic::Response<super::super::AuthToken>,
             tonic::Status,
@@ -2606,12 +2741,9 @@ pub mod media_register_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.MediaRegister/Verify",
-            );
+            let path = http::uri::PathAndQuery::from_static("/hi.media.Register/Verify");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.MediaRegister", "Verify"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.media.Register", "Verify"));
             self.inner.unary(req, path, codec).await
         }
     }

@@ -24,8 +24,8 @@ export 'invite_code.pb.dart';
 
 /// 邀请码管理属于 HiMedia 超管面。超管身份仍以 HiDID 全局超管名单为权威，
 /// HiMedia 不维护本地管理员名单。
-@$pb.GrpcServiceName('hi.media.MediaInviteCode')
-class MediaInviteCodeClient extends $grpc.Client {
+@$pb.GrpcServiceName('hi.media.InviteCode')
+class InviteCodeClient extends $grpc.Client {
   /// The hostname for this service.
   static const $core.String defaultHost = '';
 
@@ -34,9 +34,9 @@ class MediaInviteCodeClient extends $grpc.Client {
     '',
   ];
 
-  MediaInviteCodeClient(super.channel, {super.options, super.interceptors});
+  InviteCodeClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$1.CreateMediaInviteCodeResp> create(
+  $grpc.ResponseFuture<$1.InviteCodeCreateResp> create(
     $0.Empty request, {
     $grpc.CallOptions? options,
   }) {
@@ -44,13 +44,13 @@ class MediaInviteCodeClient extends $grpc.Client {
   }
 
   $grpc.ResponseFuture<$0.Empty> edit(
-    $1.EditMediaInviteCodeReq request, {
+    $1.InviteCodeEditReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$edit, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.ListMediaInviteCodesResp> list(
+  $grpc.ResponseFuture<$1.InviteCodeListResp> list(
     $2.Pagination request, {
     $grpc.CallOptions? options,
   }) {
@@ -58,7 +58,7 @@ class MediaInviteCodeClient extends $grpc.Client {
   }
 
   $grpc.ResponseFuture<$0.Empty> delete(
-    $1.DeleteMediaInviteCodeReq request, {
+    $1.InviteCodeDeleteReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$delete, request, options: options);
@@ -66,101 +66,98 @@ class MediaInviteCodeClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$create =
-      $grpc.ClientMethod<$0.Empty, $1.CreateMediaInviteCodeResp>(
-          '/hi.media.MediaInviteCode/Create',
-          ($0.Empty value) => value.writeToBuffer(),
-          $1.CreateMediaInviteCodeResp.fromBuffer);
-  static final _$edit = $grpc.ClientMethod<$1.EditMediaInviteCodeReq, $0.Empty>(
-      '/hi.media.MediaInviteCode/Edit',
-      ($1.EditMediaInviteCodeReq value) => value.writeToBuffer(),
+  static final _$create = $grpc.ClientMethod<$0.Empty, $1.InviteCodeCreateResp>(
+      '/hi.media.InviteCode/Create',
+      ($0.Empty value) => value.writeToBuffer(),
+      $1.InviteCodeCreateResp.fromBuffer);
+  static final _$edit = $grpc.ClientMethod<$1.InviteCodeEditReq, $0.Empty>(
+      '/hi.media.InviteCode/Edit',
+      ($1.InviteCodeEditReq value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
   static final _$list =
-      $grpc.ClientMethod<$2.Pagination, $1.ListMediaInviteCodesResp>(
-          '/hi.media.MediaInviteCode/List',
+      $grpc.ClientMethod<$2.Pagination, $1.InviteCodeListResp>(
+          '/hi.media.InviteCode/List',
           ($2.Pagination value) => value.writeToBuffer(),
-          $1.ListMediaInviteCodesResp.fromBuffer);
-  static final _$delete =
-      $grpc.ClientMethod<$1.DeleteMediaInviteCodeReq, $0.Empty>(
-          '/hi.media.MediaInviteCode/Delete',
-          ($1.DeleteMediaInviteCodeReq value) => value.writeToBuffer(),
-          $0.Empty.fromBuffer);
+          $1.InviteCodeListResp.fromBuffer);
+  static final _$delete = $grpc.ClientMethod<$1.InviteCodeDeleteReq, $0.Empty>(
+      '/hi.media.InviteCode/Delete',
+      ($1.InviteCodeDeleteReq value) => value.writeToBuffer(),
+      $0.Empty.fromBuffer);
 }
 
-@$pb.GrpcServiceName('hi.media.MediaInviteCode')
-abstract class MediaInviteCodeServiceBase extends $grpc.Service {
-  $core.String get $name => 'hi.media.MediaInviteCode';
+@$pb.GrpcServiceName('hi.media.InviteCode')
+abstract class InviteCodeServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.media.InviteCode';
 
-  MediaInviteCodeServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.Empty, $1.CreateMediaInviteCodeResp>(
+  InviteCodeServiceBase() {
+    $addMethod($grpc.ServiceMethod<$0.Empty, $1.InviteCodeCreateResp>(
         'Create',
         create_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($1.CreateMediaInviteCodeResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.EditMediaInviteCodeReq, $0.Empty>(
+        ($1.InviteCodeCreateResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.InviteCodeEditReq, $0.Empty>(
         'Edit',
         edit_Pre,
         false,
         false,
-        ($core.List<$core.int> value) =>
-            $1.EditMediaInviteCodeReq.fromBuffer(value),
+        ($core.List<$core.int> value) => $1.InviteCodeEditReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$2.Pagination, $1.ListMediaInviteCodesResp>(
+    $addMethod($grpc.ServiceMethod<$2.Pagination, $1.InviteCodeListResp>(
         'List',
         list_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $2.Pagination.fromBuffer(value),
-        ($1.ListMediaInviteCodesResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.DeleteMediaInviteCodeReq, $0.Empty>(
+        ($1.InviteCodeListResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.InviteCodeDeleteReq, $0.Empty>(
         'Delete',
         delete_Pre,
         false,
         false,
         ($core.List<$core.int> value) =>
-            $1.DeleteMediaInviteCodeReq.fromBuffer(value),
+            $1.InviteCodeDeleteReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
   }
 
-  $async.Future<$1.CreateMediaInviteCodeResp> create_Pre(
+  $async.Future<$1.InviteCodeCreateResp> create_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
     return create($call, await $request);
   }
 
-  $async.Future<$1.CreateMediaInviteCodeResp> create(
+  $async.Future<$1.InviteCodeCreateResp> create(
       $grpc.ServiceCall call, $0.Empty request);
 
   $async.Future<$0.Empty> edit_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.EditMediaInviteCodeReq> $request) async {
+      $async.Future<$1.InviteCodeEditReq> $request) async {
     return edit($call, await $request);
   }
 
   $async.Future<$0.Empty> edit(
-      $grpc.ServiceCall call, $1.EditMediaInviteCodeReq request);
+      $grpc.ServiceCall call, $1.InviteCodeEditReq request);
 
-  $async.Future<$1.ListMediaInviteCodesResp> list_Pre(
+  $async.Future<$1.InviteCodeListResp> list_Pre(
       $grpc.ServiceCall $call, $async.Future<$2.Pagination> $request) async {
     return list($call, await $request);
   }
 
-  $async.Future<$1.ListMediaInviteCodesResp> list(
+  $async.Future<$1.InviteCodeListResp> list(
       $grpc.ServiceCall call, $2.Pagination request);
 
   $async.Future<$0.Empty> delete_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.DeleteMediaInviteCodeReq> $request) async {
+      $async.Future<$1.InviteCodeDeleteReq> $request) async {
     return delete($call, await $request);
   }
 
   $async.Future<$0.Empty> delete(
-      $grpc.ServiceCall call, $1.DeleteMediaInviteCodeReq request);
+      $grpc.ServiceCall call, $1.InviteCodeDeleteReq request);
 }
 
 /// 注册主体尚未持有 HiMedia token，因此接口公开；有效 request_id 中已经验签的
 /// DID 是其身份边界，邀请码核销成功后才返回 HiMedia token。
-@$pb.GrpcServiceName('hi.media.MediaRegister')
-class MediaRegisterClient extends $grpc.Client {
+@$pb.GrpcServiceName('hi.media.Register')
+class RegisterClient extends $grpc.Client {
   /// The hostname for this service.
   static const $core.String defaultHost = '';
 
@@ -169,10 +166,10 @@ class MediaRegisterClient extends $grpc.Client {
     '',
   ];
 
-  MediaRegisterClient(super.channel, {super.options, super.interceptors});
+  RegisterClient(super.channel, {super.options, super.interceptors});
 
   $grpc.ResponseFuture<$2.AuthToken> verify(
-    $1.VerifyMediaInviteCodeReq request, {
+    $1.InviteCodeVerifyReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$verify, request, options: options);
@@ -181,32 +178,32 @@ class MediaRegisterClient extends $grpc.Client {
   // method descriptors
 
   static final _$verify =
-      $grpc.ClientMethod<$1.VerifyMediaInviteCodeReq, $2.AuthToken>(
-          '/hi.media.MediaRegister/Verify',
-          ($1.VerifyMediaInviteCodeReq value) => value.writeToBuffer(),
+      $grpc.ClientMethod<$1.InviteCodeVerifyReq, $2.AuthToken>(
+          '/hi.media.Register/Verify',
+          ($1.InviteCodeVerifyReq value) => value.writeToBuffer(),
           $2.AuthToken.fromBuffer);
 }
 
-@$pb.GrpcServiceName('hi.media.MediaRegister')
-abstract class MediaRegisterServiceBase extends $grpc.Service {
-  $core.String get $name => 'hi.media.MediaRegister';
+@$pb.GrpcServiceName('hi.media.Register')
+abstract class RegisterServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.media.Register';
 
-  MediaRegisterServiceBase() {
-    $addMethod($grpc.ServiceMethod<$1.VerifyMediaInviteCodeReq, $2.AuthToken>(
+  RegisterServiceBase() {
+    $addMethod($grpc.ServiceMethod<$1.InviteCodeVerifyReq, $2.AuthToken>(
         'Verify',
         verify_Pre,
         false,
         false,
         ($core.List<$core.int> value) =>
-            $1.VerifyMediaInviteCodeReq.fromBuffer(value),
+            $1.InviteCodeVerifyReq.fromBuffer(value),
         ($2.AuthToken value) => value.writeToBuffer()));
   }
 
   $async.Future<$2.AuthToken> verify_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.VerifyMediaInviteCodeReq> $request) async {
+      $async.Future<$1.InviteCodeVerifyReq> $request) async {
     return verify($call, await $request);
   }
 
   $async.Future<$2.AuthToken> verify(
-      $grpc.ServiceCall call, $1.VerifyMediaInviteCodeReq request);
+      $grpc.ServiceCall call, $1.InviteCodeVerifyReq request);
 }

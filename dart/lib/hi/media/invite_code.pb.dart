@@ -21,11 +21,11 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 export 'invite_code.pbenum.dart';
 
-class MediaInviteCodeInfo extends $pb.GeneratedMessage {
-  factory MediaInviteCodeInfo({
+class InviteCodeInfo extends $pb.GeneratedMessage {
+  factory InviteCodeInfo({
     $core.String? code,
     $core.String? note,
-    MediaInviteCodeStatus? status,
+    InviteCodeStatus? status,
     $core.String? createdByDid,
     $fixnum.Int64? createdAt,
     $fixnum.Int64? expiresAt,
@@ -44,23 +44,23 @@ class MediaInviteCodeInfo extends $pb.GeneratedMessage {
     return result;
   }
 
-  MediaInviteCodeInfo._();
+  InviteCodeInfo._();
 
-  factory MediaInviteCodeInfo.fromBuffer($core.List<$core.int> data,
+  factory InviteCodeInfo.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory MediaInviteCodeInfo.fromJson($core.String json,
+  factory InviteCodeInfo.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'MediaInviteCodeInfo',
+      _omitMessageNames ? '' : 'InviteCodeInfo',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'code')
     ..aOS(2, _omitFieldNames ? '' : 'note')
-    ..aE<MediaInviteCodeStatus>(3, _omitFieldNames ? '' : 'status',
-        enumValues: MediaInviteCodeStatus.values)
+    ..aE<InviteCodeStatus>(3, _omitFieldNames ? '' : 'status',
+        enumValues: InviteCodeStatus.values)
     ..aOS(4, _omitFieldNames ? '' : 'createdByDid')
     ..aInt64(5, _omitFieldNames ? '' : 'createdAt')
     ..aInt64(6, _omitFieldNames ? '' : 'expiresAt')
@@ -69,23 +69,23 @@ class MediaInviteCodeInfo extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MediaInviteCodeInfo clone() => deepCopy();
+  InviteCodeInfo clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MediaInviteCodeInfo copyWith(void Function(MediaInviteCodeInfo) updates) =>
-      super.copyWith((message) => updates(message as MediaInviteCodeInfo))
-          as MediaInviteCodeInfo;
+  InviteCodeInfo copyWith(void Function(InviteCodeInfo) updates) =>
+      super.copyWith((message) => updates(message as InviteCodeInfo))
+          as InviteCodeInfo;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static MediaInviteCodeInfo create() => MediaInviteCodeInfo._();
+  static InviteCodeInfo create() => InviteCodeInfo._();
   @$core.override
-  MediaInviteCodeInfo createEmptyInstance() => create();
+  InviteCodeInfo createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static MediaInviteCodeInfo getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<MediaInviteCodeInfo>(create);
-  static MediaInviteCodeInfo? _defaultInstance;
+  static InviteCodeInfo getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<InviteCodeInfo>(create);
+  static InviteCodeInfo? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get code => $_getSZ(0);
@@ -106,9 +106,9 @@ class MediaInviteCodeInfo extends $pb.GeneratedMessage {
   void clearNote() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  MediaInviteCodeStatus get status => $_getN(2);
+  InviteCodeStatus get status => $_getN(2);
   @$pb.TagNumber(3)
-  set status(MediaInviteCodeStatus value) => $_setField(3, value);
+  set status(InviteCodeStatus value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasStatus() => $_has(2);
   @$pb.TagNumber(3)
@@ -160,66 +160,65 @@ class MediaInviteCodeInfo extends $pb.GeneratedMessage {
   void clearUsedAt() => $_clearField(8);
 }
 
-class CreateMediaInviteCodeResp extends $pb.GeneratedMessage {
-  factory CreateMediaInviteCodeResp({
-    MediaInviteCodeInfo? inviteCode,
+class InviteCodeCreateResp extends $pb.GeneratedMessage {
+  factory InviteCodeCreateResp({
+    InviteCodeInfo? inviteCode,
   }) {
     final result = create();
     if (inviteCode != null) result.inviteCode = inviteCode;
     return result;
   }
 
-  CreateMediaInviteCodeResp._();
+  InviteCodeCreateResp._();
 
-  factory CreateMediaInviteCodeResp.fromBuffer($core.List<$core.int> data,
+  factory InviteCodeCreateResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory CreateMediaInviteCodeResp.fromJson($core.String json,
+  factory InviteCodeCreateResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'CreateMediaInviteCodeResp',
+      _omitMessageNames ? '' : 'InviteCodeCreateResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
-    ..aOM<MediaInviteCodeInfo>(1, _omitFieldNames ? '' : 'inviteCode',
-        subBuilder: MediaInviteCodeInfo.create)
+    ..aOM<InviteCodeInfo>(1, _omitFieldNames ? '' : 'inviteCode',
+        subBuilder: InviteCodeInfo.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CreateMediaInviteCodeResp clone() => deepCopy();
+  InviteCodeCreateResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CreateMediaInviteCodeResp copyWith(
-          void Function(CreateMediaInviteCodeResp) updates) =>
-      super.copyWith((message) => updates(message as CreateMediaInviteCodeResp))
-          as CreateMediaInviteCodeResp;
+  InviteCodeCreateResp copyWith(void Function(InviteCodeCreateResp) updates) =>
+      super.copyWith((message) => updates(message as InviteCodeCreateResp))
+          as InviteCodeCreateResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static CreateMediaInviteCodeResp create() => CreateMediaInviteCodeResp._();
+  static InviteCodeCreateResp create() => InviteCodeCreateResp._();
   @$core.override
-  CreateMediaInviteCodeResp createEmptyInstance() => create();
+  InviteCodeCreateResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static CreateMediaInviteCodeResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CreateMediaInviteCodeResp>(create);
-  static CreateMediaInviteCodeResp? _defaultInstance;
+  static InviteCodeCreateResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<InviteCodeCreateResp>(create);
+  static InviteCodeCreateResp? _defaultInstance;
 
   @$pb.TagNumber(1)
-  MediaInviteCodeInfo get inviteCode => $_getN(0);
+  InviteCodeInfo get inviteCode => $_getN(0);
   @$pb.TagNumber(1)
-  set inviteCode(MediaInviteCodeInfo value) => $_setField(1, value);
+  set inviteCode(InviteCodeInfo value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasInviteCode() => $_has(0);
   @$pb.TagNumber(1)
   void clearInviteCode() => $_clearField(1);
   @$pb.TagNumber(1)
-  MediaInviteCodeInfo ensureInviteCode() => $_ensure(0);
+  InviteCodeInfo ensureInviteCode() => $_ensure(0);
 }
 
-class EditMediaInviteCodeReq extends $pb.GeneratedMessage {
-  factory EditMediaInviteCodeReq({
+class InviteCodeEditReq extends $pb.GeneratedMessage {
+  factory InviteCodeEditReq({
     $core.String? code,
     $core.String? note,
   }) {
@@ -229,17 +228,17 @@ class EditMediaInviteCodeReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  EditMediaInviteCodeReq._();
+  InviteCodeEditReq._();
 
-  factory EditMediaInviteCodeReq.fromBuffer($core.List<$core.int> data,
+  factory InviteCodeEditReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory EditMediaInviteCodeReq.fromJson($core.String json,
+  factory InviteCodeEditReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'EditMediaInviteCodeReq',
+      _omitMessageNames ? '' : 'InviteCodeEditReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'code')
@@ -247,24 +246,23 @@ class EditMediaInviteCodeReq extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  EditMediaInviteCodeReq clone() => deepCopy();
+  InviteCodeEditReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  EditMediaInviteCodeReq copyWith(
-          void Function(EditMediaInviteCodeReq) updates) =>
-      super.copyWith((message) => updates(message as EditMediaInviteCodeReq))
-          as EditMediaInviteCodeReq;
+  InviteCodeEditReq copyWith(void Function(InviteCodeEditReq) updates) =>
+      super.copyWith((message) => updates(message as InviteCodeEditReq))
+          as InviteCodeEditReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static EditMediaInviteCodeReq create() => EditMediaInviteCodeReq._();
+  static InviteCodeEditReq create() => InviteCodeEditReq._();
   @$core.override
-  EditMediaInviteCodeReq createEmptyInstance() => create();
+  InviteCodeEditReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static EditMediaInviteCodeReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<EditMediaInviteCodeReq>(create);
-  static EditMediaInviteCodeReq? _defaultInstance;
+  static InviteCodeEditReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<InviteCodeEditReq>(create);
+  static InviteCodeEditReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get code => $_getSZ(0);
@@ -286,10 +284,10 @@ class EditMediaInviteCodeReq extends $pb.GeneratedMessage {
   void clearNote() => $_clearField(2);
 }
 
-class ListMediaInviteCodesResp extends $pb.GeneratedMessage {
-  factory ListMediaInviteCodesResp({
+class InviteCodeListResp extends $pb.GeneratedMessage {
+  factory InviteCodeListResp({
     $core.int? total,
-    $core.Iterable<MediaInviteCodeInfo>? inviteCodes,
+    $core.Iterable<InviteCodeInfo>? inviteCodes,
   }) {
     final result = create();
     if (total != null) result.total = total;
@@ -297,43 +295,42 @@ class ListMediaInviteCodesResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  ListMediaInviteCodesResp._();
+  InviteCodeListResp._();
 
-  factory ListMediaInviteCodesResp.fromBuffer($core.List<$core.int> data,
+  factory InviteCodeListResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListMediaInviteCodesResp.fromJson($core.String json,
+  factory InviteCodeListResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListMediaInviteCodesResp',
+      _omitMessageNames ? '' : 'InviteCodeListResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aI(1, _omitFieldNames ? '' : 'total')
-    ..pPM<MediaInviteCodeInfo>(2, _omitFieldNames ? '' : 'inviteCodes',
-        subBuilder: MediaInviteCodeInfo.create)
+    ..pPM<InviteCodeInfo>(2, _omitFieldNames ? '' : 'inviteCodes',
+        subBuilder: InviteCodeInfo.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListMediaInviteCodesResp clone() => deepCopy();
+  InviteCodeListResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListMediaInviteCodesResp copyWith(
-          void Function(ListMediaInviteCodesResp) updates) =>
-      super.copyWith((message) => updates(message as ListMediaInviteCodesResp))
-          as ListMediaInviteCodesResp;
+  InviteCodeListResp copyWith(void Function(InviteCodeListResp) updates) =>
+      super.copyWith((message) => updates(message as InviteCodeListResp))
+          as InviteCodeListResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListMediaInviteCodesResp create() => ListMediaInviteCodesResp._();
+  static InviteCodeListResp create() => InviteCodeListResp._();
   @$core.override
-  ListMediaInviteCodesResp createEmptyInstance() => create();
+  InviteCodeListResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListMediaInviteCodesResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListMediaInviteCodesResp>(create);
-  static ListMediaInviteCodesResp? _defaultInstance;
+  static InviteCodeListResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<InviteCodeListResp>(create);
+  static InviteCodeListResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.int get total => $_getIZ(0);
@@ -345,11 +342,11 @@ class ListMediaInviteCodesResp extends $pb.GeneratedMessage {
   void clearTotal() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $pb.PbList<MediaInviteCodeInfo> get inviteCodes => $_getList(1);
+  $pb.PbList<InviteCodeInfo> get inviteCodes => $_getList(1);
 }
 
-class DeleteMediaInviteCodeReq extends $pb.GeneratedMessage {
-  factory DeleteMediaInviteCodeReq({
+class InviteCodeDeleteReq extends $pb.GeneratedMessage {
+  factory InviteCodeDeleteReq({
     $core.String? code,
   }) {
     final result = create();
@@ -357,41 +354,40 @@ class DeleteMediaInviteCodeReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  DeleteMediaInviteCodeReq._();
+  InviteCodeDeleteReq._();
 
-  factory DeleteMediaInviteCodeReq.fromBuffer($core.List<$core.int> data,
+  factory InviteCodeDeleteReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory DeleteMediaInviteCodeReq.fromJson($core.String json,
+  factory InviteCodeDeleteReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'DeleteMediaInviteCodeReq',
+      _omitMessageNames ? '' : 'InviteCodeDeleteReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'code')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeleteMediaInviteCodeReq clone() => deepCopy();
+  InviteCodeDeleteReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeleteMediaInviteCodeReq copyWith(
-          void Function(DeleteMediaInviteCodeReq) updates) =>
-      super.copyWith((message) => updates(message as DeleteMediaInviteCodeReq))
-          as DeleteMediaInviteCodeReq;
+  InviteCodeDeleteReq copyWith(void Function(InviteCodeDeleteReq) updates) =>
+      super.copyWith((message) => updates(message as InviteCodeDeleteReq))
+          as InviteCodeDeleteReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static DeleteMediaInviteCodeReq create() => DeleteMediaInviteCodeReq._();
+  static InviteCodeDeleteReq create() => InviteCodeDeleteReq._();
   @$core.override
-  DeleteMediaInviteCodeReq createEmptyInstance() => create();
+  InviteCodeDeleteReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static DeleteMediaInviteCodeReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<DeleteMediaInviteCodeReq>(create);
-  static DeleteMediaInviteCodeReq? _defaultInstance;
+  static InviteCodeDeleteReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<InviteCodeDeleteReq>(create);
+  static InviteCodeDeleteReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get code => $_getSZ(0);
@@ -405,8 +401,8 @@ class DeleteMediaInviteCodeReq extends $pb.GeneratedMessage {
 
 /// 不接受前端提交 DID。服务端必须从已经完成 HiDID 验签、状态为
 /// invite_required 的 request_id 登录会话中取得准入用户身份。
-class VerifyMediaInviteCodeReq extends $pb.GeneratedMessage {
-  factory VerifyMediaInviteCodeReq({
+class InviteCodeVerifyReq extends $pb.GeneratedMessage {
+  factory InviteCodeVerifyReq({
     $core.String? requestId,
     $core.String? code,
   }) {
@@ -416,17 +412,17 @@ class VerifyMediaInviteCodeReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  VerifyMediaInviteCodeReq._();
+  InviteCodeVerifyReq._();
 
-  factory VerifyMediaInviteCodeReq.fromBuffer($core.List<$core.int> data,
+  factory InviteCodeVerifyReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory VerifyMediaInviteCodeReq.fromJson($core.String json,
+  factory InviteCodeVerifyReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'VerifyMediaInviteCodeReq',
+      _omitMessageNames ? '' : 'InviteCodeVerifyReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'requestId')
@@ -434,24 +430,23 @@ class VerifyMediaInviteCodeReq extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  VerifyMediaInviteCodeReq clone() => deepCopy();
+  InviteCodeVerifyReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  VerifyMediaInviteCodeReq copyWith(
-          void Function(VerifyMediaInviteCodeReq) updates) =>
-      super.copyWith((message) => updates(message as VerifyMediaInviteCodeReq))
-          as VerifyMediaInviteCodeReq;
+  InviteCodeVerifyReq copyWith(void Function(InviteCodeVerifyReq) updates) =>
+      super.copyWith((message) => updates(message as InviteCodeVerifyReq))
+          as InviteCodeVerifyReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static VerifyMediaInviteCodeReq create() => VerifyMediaInviteCodeReq._();
+  static InviteCodeVerifyReq create() => InviteCodeVerifyReq._();
   @$core.override
-  VerifyMediaInviteCodeReq createEmptyInstance() => create();
+  InviteCodeVerifyReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static VerifyMediaInviteCodeReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<VerifyMediaInviteCodeReq>(create);
-  static VerifyMediaInviteCodeReq? _defaultInstance;
+  static InviteCodeVerifyReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<InviteCodeVerifyReq>(create);
+  static InviteCodeVerifyReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get requestId => $_getSZ(0);

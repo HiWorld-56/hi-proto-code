@@ -37,7 +37,7 @@ var (
 	_ = metadata.Join
 )
 
-func request_MediaInviteCode_Create_0(ctx context.Context, marshaler runtime.Marshaler, client MediaInviteCodeClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_InviteCode_Create_0(ctx context.Context, marshaler runtime.Marshaler, client InviteCodeClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq emptypb.Empty
 		metadata runtime.ServerMetadata
@@ -49,7 +49,7 @@ func request_MediaInviteCode_Create_0(ctx context.Context, marshaler runtime.Mar
 	return msg, metadata, err
 }
 
-func local_request_MediaInviteCode_Create_0(ctx context.Context, marshaler runtime.Marshaler, server MediaInviteCodeServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_InviteCode_Create_0(ctx context.Context, marshaler runtime.Marshaler, server InviteCodeServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq emptypb.Empty
 		metadata runtime.ServerMetadata
@@ -58,9 +58,9 @@ func local_request_MediaInviteCode_Create_0(ctx context.Context, marshaler runti
 	return msg, metadata, err
 }
 
-func request_MediaInviteCode_Edit_0(ctx context.Context, marshaler runtime.Marshaler, client MediaInviteCodeClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_InviteCode_Edit_0(ctx context.Context, marshaler runtime.Marshaler, client InviteCodeClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq EditMediaInviteCodeReq
+		protoReq InviteCodeEditReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -73,9 +73,9 @@ func request_MediaInviteCode_Edit_0(ctx context.Context, marshaler runtime.Marsh
 	return msg, metadata, err
 }
 
-func local_request_MediaInviteCode_Edit_0(ctx context.Context, marshaler runtime.Marshaler, server MediaInviteCodeServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_InviteCode_Edit_0(ctx context.Context, marshaler runtime.Marshaler, server InviteCodeServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq EditMediaInviteCodeReq
+		protoReq InviteCodeEditReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -85,7 +85,7 @@ func local_request_MediaInviteCode_Edit_0(ctx context.Context, marshaler runtime
 	return msg, metadata, err
 }
 
-func request_MediaInviteCode_List_0(ctx context.Context, marshaler runtime.Marshaler, client MediaInviteCodeClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_InviteCode_List_0(ctx context.Context, marshaler runtime.Marshaler, client InviteCodeClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq hi.Pagination
 		metadata runtime.ServerMetadata
@@ -100,7 +100,7 @@ func request_MediaInviteCode_List_0(ctx context.Context, marshaler runtime.Marsh
 	return msg, metadata, err
 }
 
-func local_request_MediaInviteCode_List_0(ctx context.Context, marshaler runtime.Marshaler, server MediaInviteCodeServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_InviteCode_List_0(ctx context.Context, marshaler runtime.Marshaler, server InviteCodeServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq hi.Pagination
 		metadata runtime.ServerMetadata
@@ -112,9 +112,9 @@ func local_request_MediaInviteCode_List_0(ctx context.Context, marshaler runtime
 	return msg, metadata, err
 }
 
-func request_MediaInviteCode_Delete_0(ctx context.Context, marshaler runtime.Marshaler, client MediaInviteCodeClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_InviteCode_Delete_0(ctx context.Context, marshaler runtime.Marshaler, client InviteCodeClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq DeleteMediaInviteCodeReq
+		protoReq InviteCodeDeleteReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -127,9 +127,9 @@ func request_MediaInviteCode_Delete_0(ctx context.Context, marshaler runtime.Mar
 	return msg, metadata, err
 }
 
-func local_request_MediaInviteCode_Delete_0(ctx context.Context, marshaler runtime.Marshaler, server MediaInviteCodeServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_InviteCode_Delete_0(ctx context.Context, marshaler runtime.Marshaler, server InviteCodeServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq DeleteMediaInviteCodeReq
+		protoReq InviteCodeDeleteReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -139,9 +139,9 @@ func local_request_MediaInviteCode_Delete_0(ctx context.Context, marshaler runti
 	return msg, metadata, err
 }
 
-func request_MediaRegister_Verify_0(ctx context.Context, marshaler runtime.Marshaler, client MediaRegisterClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_Register_Verify_0(ctx context.Context, marshaler runtime.Marshaler, client RegisterClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq VerifyMediaInviteCodeReq
+		protoReq InviteCodeVerifyReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -154,9 +154,9 @@ func request_MediaRegister_Verify_0(ctx context.Context, marshaler runtime.Marsh
 	return msg, metadata, err
 }
 
-func local_request_MediaRegister_Verify_0(ctx context.Context, marshaler runtime.Marshaler, server MediaRegisterServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_Register_Verify_0(ctx context.Context, marshaler runtime.Marshaler, server RegisterServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq VerifyMediaInviteCodeReq
+		protoReq InviteCodeVerifyReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -166,129 +166,129 @@ func local_request_MediaRegister_Verify_0(ctx context.Context, marshaler runtime
 	return msg, metadata, err
 }
 
-// RegisterMediaInviteCodeHandlerServer registers the http handlers for service MediaInviteCode to "mux".
-// UnaryRPC     :call MediaInviteCodeServer directly.
+// RegisterInviteCodeHandlerServer registers the http handlers for service InviteCode to "mux".
+// UnaryRPC     :call InviteCodeServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterMediaInviteCodeHandlerFromEndpoint instead.
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterInviteCodeHandlerFromEndpoint instead.
 // GRPC interceptors will not work for this type of registration. To use interceptors, you must use the "runtime.WithMiddlewares" option in the "runtime.NewServeMux" call.
-func RegisterMediaInviteCodeHandlerServer(ctx context.Context, mux *runtime.ServeMux, server MediaInviteCodeServer) error {
-	mux.Handle(http.MethodPost, pattern_MediaInviteCode_Create_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+func RegisterInviteCodeHandlerServer(ctx context.Context, mux *runtime.ServeMux, server InviteCodeServer) error {
+	mux.Handle(http.MethodPost, pattern_InviteCode_Create_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.MediaInviteCode/Create", runtime.WithHTTPPathPattern("/api/v1/media_invite_code/create"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.InviteCode/Create", runtime.WithHTTPPathPattern("/api/v1/invite_code/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_MediaInviteCode_Create_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_InviteCode_Create_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaInviteCode_Create_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_InviteCode_Create_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaInviteCode_Edit_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_InviteCode_Edit_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.MediaInviteCode/Edit", runtime.WithHTTPPathPattern("/api/v1/media_invite_code/edit"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.InviteCode/Edit", runtime.WithHTTPPathPattern("/api/v1/invite_code/edit"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_MediaInviteCode_Edit_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_InviteCode_Edit_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaInviteCode_Edit_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_InviteCode_Edit_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaInviteCode_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_InviteCode_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.MediaInviteCode/List", runtime.WithHTTPPathPattern("/api/v1/media_invite_code/list"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.InviteCode/List", runtime.WithHTTPPathPattern("/api/v1/invite_code/list"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_MediaInviteCode_List_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_InviteCode_List_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaInviteCode_List_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_InviteCode_List_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaInviteCode_Delete_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_InviteCode_Delete_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.MediaInviteCode/Delete", runtime.WithHTTPPathPattern("/api/v1/media_invite_code/delete"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.InviteCode/Delete", runtime.WithHTTPPathPattern("/api/v1/invite_code/delete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_MediaInviteCode_Delete_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_InviteCode_Delete_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaInviteCode_Delete_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_InviteCode_Delete_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil
 }
 
-// RegisterMediaRegisterHandlerServer registers the http handlers for service MediaRegister to "mux".
-// UnaryRPC     :call MediaRegisterServer directly.
+// RegisterRegisterHandlerServer registers the http handlers for service Register to "mux".
+// UnaryRPC     :call RegisterServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterMediaRegisterHandlerFromEndpoint instead.
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterRegisterHandlerFromEndpoint instead.
 // GRPC interceptors will not work for this type of registration. To use interceptors, you must use the "runtime.WithMiddlewares" option in the "runtime.NewServeMux" call.
-func RegisterMediaRegisterHandlerServer(ctx context.Context, mux *runtime.ServeMux, server MediaRegisterServer) error {
-	mux.Handle(http.MethodPost, pattern_MediaRegister_Verify_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+func RegisterRegisterHandlerServer(ctx context.Context, mux *runtime.ServeMux, server RegisterServer) error {
+	mux.Handle(http.MethodPost, pattern_Register_Verify_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.MediaRegister/Verify", runtime.WithHTTPPathPattern("/api/v1/media_register/verify"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.Register/Verify", runtime.WithHTTPPathPattern("/api/v1/register/verify"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_MediaRegister_Verify_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Register_Verify_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaRegister_Verify_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Register_Verify_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil
 }
 
-// RegisterMediaInviteCodeHandlerFromEndpoint is same as RegisterMediaInviteCodeHandler but
+// RegisterInviteCodeHandlerFromEndpoint is same as RegisterInviteCodeHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterMediaInviteCodeHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterInviteCodeHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.NewClient(endpoint, opts...)
 	if err != nil {
 		return err
@@ -307,109 +307,109 @@ func RegisterMediaInviteCodeHandlerFromEndpoint(ctx context.Context, mux *runtim
 			}
 		}()
 	}()
-	return RegisterMediaInviteCodeHandler(ctx, mux, conn)
+	return RegisterInviteCodeHandler(ctx, mux, conn)
 }
 
-// RegisterMediaInviteCodeHandler registers the http handlers for service MediaInviteCode to "mux".
+// RegisterInviteCodeHandler registers the http handlers for service InviteCode to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterMediaInviteCodeHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterMediaInviteCodeHandlerClient(ctx, mux, NewMediaInviteCodeClient(conn))
+func RegisterInviteCodeHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterInviteCodeHandlerClient(ctx, mux, NewInviteCodeClient(conn))
 }
 
-// RegisterMediaInviteCodeHandlerClient registers the http handlers for service MediaInviteCode
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "MediaInviteCodeClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "MediaInviteCodeClient"
+// RegisterInviteCodeHandlerClient registers the http handlers for service InviteCode
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "InviteCodeClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "InviteCodeClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "MediaInviteCodeClient" to call the correct interceptors. This client ignores the HTTP middlewares.
-func RegisterMediaInviteCodeHandlerClient(ctx context.Context, mux *runtime.ServeMux, client MediaInviteCodeClient) error {
-	mux.Handle(http.MethodPost, pattern_MediaInviteCode_Create_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+// "InviteCodeClient" to call the correct interceptors. This client ignores the HTTP middlewares.
+func RegisterInviteCodeHandlerClient(ctx context.Context, mux *runtime.ServeMux, client InviteCodeClient) error {
+	mux.Handle(http.MethodPost, pattern_InviteCode_Create_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.MediaInviteCode/Create", runtime.WithHTTPPathPattern("/api/v1/media_invite_code/create"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.InviteCode/Create", runtime.WithHTTPPathPattern("/api/v1/invite_code/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_MediaInviteCode_Create_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_InviteCode_Create_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaInviteCode_Create_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_InviteCode_Create_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaInviteCode_Edit_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_InviteCode_Edit_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.MediaInviteCode/Edit", runtime.WithHTTPPathPattern("/api/v1/media_invite_code/edit"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.InviteCode/Edit", runtime.WithHTTPPathPattern("/api/v1/invite_code/edit"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_MediaInviteCode_Edit_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_InviteCode_Edit_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaInviteCode_Edit_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_InviteCode_Edit_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaInviteCode_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_InviteCode_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.MediaInviteCode/List", runtime.WithHTTPPathPattern("/api/v1/media_invite_code/list"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.InviteCode/List", runtime.WithHTTPPathPattern("/api/v1/invite_code/list"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_MediaInviteCode_List_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_InviteCode_List_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaInviteCode_List_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_InviteCode_List_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaInviteCode_Delete_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_InviteCode_Delete_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.MediaInviteCode/Delete", runtime.WithHTTPPathPattern("/api/v1/media_invite_code/delete"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.InviteCode/Delete", runtime.WithHTTPPathPattern("/api/v1/invite_code/delete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_MediaInviteCode_Delete_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_InviteCode_Delete_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaInviteCode_Delete_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_InviteCode_Delete_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	return nil
 }
 
 var (
-	pattern_MediaInviteCode_Create_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "media_invite_code", "create"}, ""))
-	pattern_MediaInviteCode_Edit_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "media_invite_code", "edit"}, ""))
-	pattern_MediaInviteCode_List_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "media_invite_code", "list"}, ""))
-	pattern_MediaInviteCode_Delete_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "media_invite_code", "delete"}, ""))
+	pattern_InviteCode_Create_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "invite_code", "create"}, ""))
+	pattern_InviteCode_Edit_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "invite_code", "edit"}, ""))
+	pattern_InviteCode_List_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "invite_code", "list"}, ""))
+	pattern_InviteCode_Delete_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "invite_code", "delete"}, ""))
 )
 
 var (
-	forward_MediaInviteCode_Create_0 = runtime.ForwardResponseMessage
-	forward_MediaInviteCode_Edit_0   = runtime.ForwardResponseMessage
-	forward_MediaInviteCode_List_0   = runtime.ForwardResponseMessage
-	forward_MediaInviteCode_Delete_0 = runtime.ForwardResponseMessage
+	forward_InviteCode_Create_0 = runtime.ForwardResponseMessage
+	forward_InviteCode_Edit_0   = runtime.ForwardResponseMessage
+	forward_InviteCode_List_0   = runtime.ForwardResponseMessage
+	forward_InviteCode_Delete_0 = runtime.ForwardResponseMessage
 )
 
-// RegisterMediaRegisterHandlerFromEndpoint is same as RegisterMediaRegisterHandler but
+// RegisterRegisterHandlerFromEndpoint is same as RegisterRegisterHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterMediaRegisterHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterRegisterHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.NewClient(endpoint, opts...)
 	if err != nil {
 		return err
@@ -428,45 +428,45 @@ func RegisterMediaRegisterHandlerFromEndpoint(ctx context.Context, mux *runtime.
 			}
 		}()
 	}()
-	return RegisterMediaRegisterHandler(ctx, mux, conn)
+	return RegisterRegisterHandler(ctx, mux, conn)
 }
 
-// RegisterMediaRegisterHandler registers the http handlers for service MediaRegister to "mux".
+// RegisterRegisterHandler registers the http handlers for service Register to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterMediaRegisterHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterMediaRegisterHandlerClient(ctx, mux, NewMediaRegisterClient(conn))
+func RegisterRegisterHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterRegisterHandlerClient(ctx, mux, NewRegisterClient(conn))
 }
 
-// RegisterMediaRegisterHandlerClient registers the http handlers for service MediaRegister
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "MediaRegisterClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "MediaRegisterClient"
+// RegisterRegisterHandlerClient registers the http handlers for service Register
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "RegisterClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "RegisterClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "MediaRegisterClient" to call the correct interceptors. This client ignores the HTTP middlewares.
-func RegisterMediaRegisterHandlerClient(ctx context.Context, mux *runtime.ServeMux, client MediaRegisterClient) error {
-	mux.Handle(http.MethodPost, pattern_MediaRegister_Verify_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+// "RegisterClient" to call the correct interceptors. This client ignores the HTTP middlewares.
+func RegisterRegisterHandlerClient(ctx context.Context, mux *runtime.ServeMux, client RegisterClient) error {
+	mux.Handle(http.MethodPost, pattern_Register_Verify_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.MediaRegister/Verify", runtime.WithHTTPPathPattern("/api/v1/media_register/verify"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.Register/Verify", runtime.WithHTTPPathPattern("/api/v1/register/verify"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_MediaRegister_Verify_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Register_Verify_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaRegister_Verify_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Register_Verify_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	return nil
 }
 
 var (
-	pattern_MediaRegister_Verify_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "media_register", "verify"}, ""))
+	pattern_Register_Verify_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "register", "verify"}, ""))
 )
 
 var (
-	forward_MediaRegister_Verify_0 = runtime.ForwardResponseMessage
+	forward_Register_Verify_0 = runtime.ForwardResponseMessage
 )

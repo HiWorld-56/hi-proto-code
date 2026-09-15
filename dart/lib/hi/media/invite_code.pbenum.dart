@@ -16,34 +16,31 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 /// HiMedia 邀请码只控制用户能否进入 HiMedia。它不复用或修改 HiDID、HiAI 的
 /// 邀请码数据，也不会把用户升级为 HiDID 商户。
-class MediaInviteCodeStatus extends $pb.ProtobufEnum {
-  static const MediaInviteCodeStatus MEDIA_INVITE_CODE_STATUS_UNSPECIFIED =
-      MediaInviteCodeStatus._(
-          0, _omitEnumNames ? '' : 'MEDIA_INVITE_CODE_STATUS_UNSPECIFIED');
-  static const MediaInviteCodeStatus MEDIA_INVITE_CODE_STATUS_AVAILABLE =
-      MediaInviteCodeStatus._(
-          1, _omitEnumNames ? '' : 'MEDIA_INVITE_CODE_STATUS_AVAILABLE');
-  static const MediaInviteCodeStatus MEDIA_INVITE_CODE_STATUS_USED =
-      MediaInviteCodeStatus._(
-          2, _omitEnumNames ? '' : 'MEDIA_INVITE_CODE_STATUS_USED');
-  static const MediaInviteCodeStatus MEDIA_INVITE_CODE_STATUS_EXPIRED =
-      MediaInviteCodeStatus._(
-          3, _omitEnumNames ? '' : 'MEDIA_INVITE_CODE_STATUS_EXPIRED');
+class InviteCodeStatus extends $pb.ProtobufEnum {
+  static const InviteCodeStatus INVITE_CODE_STATUS_UNSPECIFIED =
+      InviteCodeStatus._(
+          0, _omitEnumNames ? '' : 'INVITE_CODE_STATUS_UNSPECIFIED');
+  static const InviteCodeStatus INVITE_CODE_STATUS_AVAILABLE =
+      InviteCodeStatus._(
+          1, _omitEnumNames ? '' : 'INVITE_CODE_STATUS_AVAILABLE');
+  static const InviteCodeStatus INVITE_CODE_STATUS_USED =
+      InviteCodeStatus._(2, _omitEnumNames ? '' : 'INVITE_CODE_STATUS_USED');
+  static const InviteCodeStatus INVITE_CODE_STATUS_EXPIRED =
+      InviteCodeStatus._(3, _omitEnumNames ? '' : 'INVITE_CODE_STATUS_EXPIRED');
 
-  static const $core.List<MediaInviteCodeStatus> values =
-      <MediaInviteCodeStatus>[
-    MEDIA_INVITE_CODE_STATUS_UNSPECIFIED,
-    MEDIA_INVITE_CODE_STATUS_AVAILABLE,
-    MEDIA_INVITE_CODE_STATUS_USED,
-    MEDIA_INVITE_CODE_STATUS_EXPIRED,
+  static const $core.List<InviteCodeStatus> values = <InviteCodeStatus>[
+    INVITE_CODE_STATUS_UNSPECIFIED,
+    INVITE_CODE_STATUS_AVAILABLE,
+    INVITE_CODE_STATUS_USED,
+    INVITE_CODE_STATUS_EXPIRED,
   ];
 
-  static final $core.List<MediaInviteCodeStatus?> _byValue =
+  static final $core.List<InviteCodeStatus?> _byValue =
       $pb.ProtobufEnum.$_initByValueList(values, 3);
-  static MediaInviteCodeStatus? valueOf($core.int value) =>
+  static InviteCodeStatus? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
-  const MediaInviteCodeStatus._(super.value, super.name);
+  const InviteCodeStatus._(super.value, super.name);
 }
 
 const $core.bool _omitEnumNames =

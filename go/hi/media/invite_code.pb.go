@@ -26,63 +26,63 @@ const (
 
 // HiMedia 邀请码只控制用户能否进入 HiMedia。它不复用或修改 HiDID、HiAI 的
 // 邀请码数据，也不会把用户升级为 HiDID 商户。
-type MediaInviteCodeStatus int32
+type InviteCodeStatus int32
 
 const (
-	MediaInviteCodeStatus_MEDIA_INVITE_CODE_STATUS_UNSPECIFIED MediaInviteCodeStatus = 0
-	MediaInviteCodeStatus_MEDIA_INVITE_CODE_STATUS_AVAILABLE   MediaInviteCodeStatus = 1
-	MediaInviteCodeStatus_MEDIA_INVITE_CODE_STATUS_USED        MediaInviteCodeStatus = 2
-	MediaInviteCodeStatus_MEDIA_INVITE_CODE_STATUS_EXPIRED     MediaInviteCodeStatus = 3
+	InviteCodeStatus_INVITE_CODE_STATUS_UNSPECIFIED InviteCodeStatus = 0
+	InviteCodeStatus_INVITE_CODE_STATUS_AVAILABLE   InviteCodeStatus = 1
+	InviteCodeStatus_INVITE_CODE_STATUS_USED        InviteCodeStatus = 2
+	InviteCodeStatus_INVITE_CODE_STATUS_EXPIRED     InviteCodeStatus = 3
 )
 
-// Enum value maps for MediaInviteCodeStatus.
+// Enum value maps for InviteCodeStatus.
 var (
-	MediaInviteCodeStatus_name = map[int32]string{
-		0: "MEDIA_INVITE_CODE_STATUS_UNSPECIFIED",
-		1: "MEDIA_INVITE_CODE_STATUS_AVAILABLE",
-		2: "MEDIA_INVITE_CODE_STATUS_USED",
-		3: "MEDIA_INVITE_CODE_STATUS_EXPIRED",
+	InviteCodeStatus_name = map[int32]string{
+		0: "INVITE_CODE_STATUS_UNSPECIFIED",
+		1: "INVITE_CODE_STATUS_AVAILABLE",
+		2: "INVITE_CODE_STATUS_USED",
+		3: "INVITE_CODE_STATUS_EXPIRED",
 	}
-	MediaInviteCodeStatus_value = map[string]int32{
-		"MEDIA_INVITE_CODE_STATUS_UNSPECIFIED": 0,
-		"MEDIA_INVITE_CODE_STATUS_AVAILABLE":   1,
-		"MEDIA_INVITE_CODE_STATUS_USED":        2,
-		"MEDIA_INVITE_CODE_STATUS_EXPIRED":     3,
+	InviteCodeStatus_value = map[string]int32{
+		"INVITE_CODE_STATUS_UNSPECIFIED": 0,
+		"INVITE_CODE_STATUS_AVAILABLE":   1,
+		"INVITE_CODE_STATUS_USED":        2,
+		"INVITE_CODE_STATUS_EXPIRED":     3,
 	}
 )
 
-func (x MediaInviteCodeStatus) Enum() *MediaInviteCodeStatus {
-	p := new(MediaInviteCodeStatus)
+func (x InviteCodeStatus) Enum() *InviteCodeStatus {
+	p := new(InviteCodeStatus)
 	*p = x
 	return p
 }
 
-func (x MediaInviteCodeStatus) String() string {
+func (x InviteCodeStatus) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (MediaInviteCodeStatus) Descriptor() protoreflect.EnumDescriptor {
+func (InviteCodeStatus) Descriptor() protoreflect.EnumDescriptor {
 	return file_hi_media_invite_code_proto_enumTypes[0].Descriptor()
 }
 
-func (MediaInviteCodeStatus) Type() protoreflect.EnumType {
+func (InviteCodeStatus) Type() protoreflect.EnumType {
 	return &file_hi_media_invite_code_proto_enumTypes[0]
 }
 
-func (x MediaInviteCodeStatus) Number() protoreflect.EnumNumber {
+func (x InviteCodeStatus) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use MediaInviteCodeStatus.Descriptor instead.
-func (MediaInviteCodeStatus) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use InviteCodeStatus.Descriptor instead.
+func (InviteCodeStatus) EnumDescriptor() ([]byte, []int) {
 	return file_hi_media_invite_code_proto_rawDescGZIP(), []int{0}
 }
 
-type MediaInviteCodeInfo struct {
+type InviteCodeInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Code          *string                `protobuf:"bytes,1,opt,name=code,proto3,oneof" json:"code,omitempty"`
 	Note          *string                `protobuf:"bytes,2,opt,name=note,proto3,oneof" json:"note,omitempty"`
-	Status        *MediaInviteCodeStatus `protobuf:"varint,3,opt,name=status,proto3,enum=hi.media.MediaInviteCodeStatus,oneof" json:"status,omitempty"`
+	Status        *InviteCodeStatus      `protobuf:"varint,3,opt,name=status,proto3,enum=hi.media.InviteCodeStatus,oneof" json:"status,omitempty"`
 	CreatedByDid  *string                `protobuf:"bytes,4,opt,name=created_by_did,json=createdByDid,proto3,oneof" json:"created_by_did,omitempty"`
 	CreatedAt     *int64                 `protobuf:"varint,5,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
 	ExpiresAt     *int64                 `protobuf:"varint,6,opt,name=expires_at,json=expiresAt,proto3,oneof" json:"expires_at,omitempty"`
@@ -92,20 +92,20 @@ type MediaInviteCodeInfo struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *MediaInviteCodeInfo) Reset() {
-	*x = MediaInviteCodeInfo{}
+func (x *InviteCodeInfo) Reset() {
+	*x = InviteCodeInfo{}
 	mi := &file_hi_media_invite_code_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *MediaInviteCodeInfo) String() string {
+func (x *InviteCodeInfo) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*MediaInviteCodeInfo) ProtoMessage() {}
+func (*InviteCodeInfo) ProtoMessage() {}
 
-func (x *MediaInviteCodeInfo) ProtoReflect() protoreflect.Message {
+func (x *InviteCodeInfo) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_media_invite_code_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -117,88 +117,88 @@ func (x *MediaInviteCodeInfo) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use MediaInviteCodeInfo.ProtoReflect.Descriptor instead.
-func (*MediaInviteCodeInfo) Descriptor() ([]byte, []int) {
+// Deprecated: Use InviteCodeInfo.ProtoReflect.Descriptor instead.
+func (*InviteCodeInfo) Descriptor() ([]byte, []int) {
 	return file_hi_media_invite_code_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *MediaInviteCodeInfo) GetCode() string {
+func (x *InviteCodeInfo) GetCode() string {
 	if x != nil && x.Code != nil {
 		return *x.Code
 	}
 	return ""
 }
 
-func (x *MediaInviteCodeInfo) GetNote() string {
+func (x *InviteCodeInfo) GetNote() string {
 	if x != nil && x.Note != nil {
 		return *x.Note
 	}
 	return ""
 }
 
-func (x *MediaInviteCodeInfo) GetStatus() MediaInviteCodeStatus {
+func (x *InviteCodeInfo) GetStatus() InviteCodeStatus {
 	if x != nil && x.Status != nil {
 		return *x.Status
 	}
-	return MediaInviteCodeStatus_MEDIA_INVITE_CODE_STATUS_UNSPECIFIED
+	return InviteCodeStatus_INVITE_CODE_STATUS_UNSPECIFIED
 }
 
-func (x *MediaInviteCodeInfo) GetCreatedByDid() string {
+func (x *InviteCodeInfo) GetCreatedByDid() string {
 	if x != nil && x.CreatedByDid != nil {
 		return *x.CreatedByDid
 	}
 	return ""
 }
 
-func (x *MediaInviteCodeInfo) GetCreatedAt() int64 {
+func (x *InviteCodeInfo) GetCreatedAt() int64 {
 	if x != nil && x.CreatedAt != nil {
 		return *x.CreatedAt
 	}
 	return 0
 }
 
-func (x *MediaInviteCodeInfo) GetExpiresAt() int64 {
+func (x *InviteCodeInfo) GetExpiresAt() int64 {
 	if x != nil && x.ExpiresAt != nil {
 		return *x.ExpiresAt
 	}
 	return 0
 }
 
-func (x *MediaInviteCodeInfo) GetUsedByDid() string {
+func (x *InviteCodeInfo) GetUsedByDid() string {
 	if x != nil && x.UsedByDid != nil {
 		return *x.UsedByDid
 	}
 	return ""
 }
 
-func (x *MediaInviteCodeInfo) GetUsedAt() int64 {
+func (x *InviteCodeInfo) GetUsedAt() int64 {
 	if x != nil && x.UsedAt != nil {
 		return *x.UsedAt
 	}
 	return 0
 }
 
-type CreateMediaInviteCodeResp struct {
+type InviteCodeCreateResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	InviteCode    *MediaInviteCodeInfo   `protobuf:"bytes,1,opt,name=invite_code,json=inviteCode,proto3" json:"invite_code,omitempty"`
+	InviteCode    *InviteCodeInfo        `protobuf:"bytes,1,opt,name=invite_code,json=inviteCode,proto3" json:"invite_code,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CreateMediaInviteCodeResp) Reset() {
-	*x = CreateMediaInviteCodeResp{}
+func (x *InviteCodeCreateResp) Reset() {
+	*x = InviteCodeCreateResp{}
 	mi := &file_hi_media_invite_code_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CreateMediaInviteCodeResp) String() string {
+func (x *InviteCodeCreateResp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreateMediaInviteCodeResp) ProtoMessage() {}
+func (*InviteCodeCreateResp) ProtoMessage() {}
 
-func (x *CreateMediaInviteCodeResp) ProtoReflect() protoreflect.Message {
+func (x *InviteCodeCreateResp) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_media_invite_code_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -210,19 +210,19 @@ func (x *CreateMediaInviteCodeResp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreateMediaInviteCodeResp.ProtoReflect.Descriptor instead.
-func (*CreateMediaInviteCodeResp) Descriptor() ([]byte, []int) {
+// Deprecated: Use InviteCodeCreateResp.ProtoReflect.Descriptor instead.
+func (*InviteCodeCreateResp) Descriptor() ([]byte, []int) {
 	return file_hi_media_invite_code_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *CreateMediaInviteCodeResp) GetInviteCode() *MediaInviteCodeInfo {
+func (x *InviteCodeCreateResp) GetInviteCode() *InviteCodeInfo {
 	if x != nil {
 		return x.InviteCode
 	}
 	return nil
 }
 
-type EditMediaInviteCodeReq struct {
+type InviteCodeEditReq struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Code  *string                `protobuf:"bytes,1,opt,name=code,proto3,oneof" json:"code,omitempty"`
 	// 不传=不修改，传空字符串=清空备注。
@@ -231,20 +231,20 @@ type EditMediaInviteCodeReq struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *EditMediaInviteCodeReq) Reset() {
-	*x = EditMediaInviteCodeReq{}
+func (x *InviteCodeEditReq) Reset() {
+	*x = InviteCodeEditReq{}
 	mi := &file_hi_media_invite_code_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *EditMediaInviteCodeReq) String() string {
+func (x *InviteCodeEditReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*EditMediaInviteCodeReq) ProtoMessage() {}
+func (*InviteCodeEditReq) ProtoMessage() {}
 
-func (x *EditMediaInviteCodeReq) ProtoReflect() protoreflect.Message {
+func (x *InviteCodeEditReq) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_media_invite_code_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -256,47 +256,47 @@ func (x *EditMediaInviteCodeReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use EditMediaInviteCodeReq.ProtoReflect.Descriptor instead.
-func (*EditMediaInviteCodeReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use InviteCodeEditReq.ProtoReflect.Descriptor instead.
+func (*InviteCodeEditReq) Descriptor() ([]byte, []int) {
 	return file_hi_media_invite_code_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *EditMediaInviteCodeReq) GetCode() string {
+func (x *InviteCodeEditReq) GetCode() string {
 	if x != nil && x.Code != nil {
 		return *x.Code
 	}
 	return ""
 }
 
-func (x *EditMediaInviteCodeReq) GetNote() string {
+func (x *InviteCodeEditReq) GetNote() string {
 	if x != nil && x.Note != nil {
 		return *x.Note
 	}
 	return ""
 }
 
-type ListMediaInviteCodesResp struct {
+type InviteCodeListResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Total         *int32                 `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
-	InviteCodes   []*MediaInviteCodeInfo `protobuf:"bytes,2,rep,name=invite_codes,json=inviteCodes,proto3" json:"invite_codes,omitempty"`
+	InviteCodes   []*InviteCodeInfo      `protobuf:"bytes,2,rep,name=invite_codes,json=inviteCodes,proto3" json:"invite_codes,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListMediaInviteCodesResp) Reset() {
-	*x = ListMediaInviteCodesResp{}
+func (x *InviteCodeListResp) Reset() {
+	*x = InviteCodeListResp{}
 	mi := &file_hi_media_invite_code_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListMediaInviteCodesResp) String() string {
+func (x *InviteCodeListResp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListMediaInviteCodesResp) ProtoMessage() {}
+func (*InviteCodeListResp) ProtoMessage() {}
 
-func (x *ListMediaInviteCodesResp) ProtoReflect() protoreflect.Message {
+func (x *InviteCodeListResp) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_media_invite_code_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -308,46 +308,46 @@ func (x *ListMediaInviteCodesResp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListMediaInviteCodesResp.ProtoReflect.Descriptor instead.
-func (*ListMediaInviteCodesResp) Descriptor() ([]byte, []int) {
+// Deprecated: Use InviteCodeListResp.ProtoReflect.Descriptor instead.
+func (*InviteCodeListResp) Descriptor() ([]byte, []int) {
 	return file_hi_media_invite_code_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *ListMediaInviteCodesResp) GetTotal() int32 {
+func (x *InviteCodeListResp) GetTotal() int32 {
 	if x != nil && x.Total != nil {
 		return *x.Total
 	}
 	return 0
 }
 
-func (x *ListMediaInviteCodesResp) GetInviteCodes() []*MediaInviteCodeInfo {
+func (x *InviteCodeListResp) GetInviteCodes() []*InviteCodeInfo {
 	if x != nil {
 		return x.InviteCodes
 	}
 	return nil
 }
 
-type DeleteMediaInviteCodeReq struct {
+type InviteCodeDeleteReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Code          *string                `protobuf:"bytes,1,opt,name=code,proto3,oneof" json:"code,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *DeleteMediaInviteCodeReq) Reset() {
-	*x = DeleteMediaInviteCodeReq{}
+func (x *InviteCodeDeleteReq) Reset() {
+	*x = InviteCodeDeleteReq{}
 	mi := &file_hi_media_invite_code_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *DeleteMediaInviteCodeReq) String() string {
+func (x *InviteCodeDeleteReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DeleteMediaInviteCodeReq) ProtoMessage() {}
+func (*InviteCodeDeleteReq) ProtoMessage() {}
 
-func (x *DeleteMediaInviteCodeReq) ProtoReflect() protoreflect.Message {
+func (x *InviteCodeDeleteReq) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_media_invite_code_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -359,12 +359,12 @@ func (x *DeleteMediaInviteCodeReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DeleteMediaInviteCodeReq.ProtoReflect.Descriptor instead.
-func (*DeleteMediaInviteCodeReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use InviteCodeDeleteReq.ProtoReflect.Descriptor instead.
+func (*InviteCodeDeleteReq) Descriptor() ([]byte, []int) {
 	return file_hi_media_invite_code_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *DeleteMediaInviteCodeReq) GetCode() string {
+func (x *InviteCodeDeleteReq) GetCode() string {
 	if x != nil && x.Code != nil {
 		return *x.Code
 	}
@@ -373,7 +373,7 @@ func (x *DeleteMediaInviteCodeReq) GetCode() string {
 
 // 不接受前端提交 DID。服务端必须从已经完成 HiDID 验签、状态为
 // invite_required 的 request_id 登录会话中取得准入用户身份。
-type VerifyMediaInviteCodeReq struct {
+type InviteCodeVerifyReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	RequestId     *string                `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
 	Code          *string                `protobuf:"bytes,2,opt,name=code,proto3,oneof" json:"code,omitempty"`
@@ -381,20 +381,20 @@ type VerifyMediaInviteCodeReq struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *VerifyMediaInviteCodeReq) Reset() {
-	*x = VerifyMediaInviteCodeReq{}
+func (x *InviteCodeVerifyReq) Reset() {
+	*x = InviteCodeVerifyReq{}
 	mi := &file_hi_media_invite_code_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *VerifyMediaInviteCodeReq) String() string {
+func (x *InviteCodeVerifyReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*VerifyMediaInviteCodeReq) ProtoMessage() {}
+func (*InviteCodeVerifyReq) ProtoMessage() {}
 
-func (x *VerifyMediaInviteCodeReq) ProtoReflect() protoreflect.Message {
+func (x *InviteCodeVerifyReq) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_media_invite_code_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -406,19 +406,19 @@ func (x *VerifyMediaInviteCodeReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use VerifyMediaInviteCodeReq.ProtoReflect.Descriptor instead.
-func (*VerifyMediaInviteCodeReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use InviteCodeVerifyReq.ProtoReflect.Descriptor instead.
+func (*InviteCodeVerifyReq) Descriptor() ([]byte, []int) {
 	return file_hi_media_invite_code_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *VerifyMediaInviteCodeReq) GetRequestId() string {
+func (x *InviteCodeVerifyReq) GetRequestId() string {
 	if x != nil && x.RequestId != nil {
 		return *x.RequestId
 	}
 	return ""
 }
 
-func (x *VerifyMediaInviteCodeReq) GetCode() string {
+func (x *InviteCodeVerifyReq) GetCode() string {
 	if x != nil && x.Code != nil {
 		return *x.Code
 	}
@@ -429,11 +429,11 @@ var File_hi_media_invite_code_proto protoreflect.FileDescriptor
 
 const file_hi_media_invite_code_proto_rawDesc = "" +
 	"\n" +
-	"\x1ahi/media/invite_code.proto\x12\bhi.media\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xdb\x03\n" +
-	"\x13MediaInviteCodeInfo\x12\x1d\n" +
+	"\x1ahi/media/invite_code.proto\x12\bhi.media\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xd1\x03\n" +
+	"\x0eInviteCodeInfo\x12\x1d\n" +
 	"\x04code\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04code\x88\x01\x01\x12\x1d\n" +
-	"\x04note\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x04note\x88\x01\x01\x12B\n" +
-	"\x06status\x18\x03 \x01(\x0e2\x1f.hi.media.MediaInviteCodeStatusB\x04\x90\xb5\x18\x03H\x02R\x06status\x88\x01\x01\x12/\n" +
+	"\x04note\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x04note\x88\x01\x01\x12=\n" +
+	"\x06status\x18\x03 \x01(\x0e2\x1a.hi.media.InviteCodeStatusB\x04\x90\xb5\x18\x03H\x02R\x06status\x88\x01\x01\x12/\n" +
 	"\x0ecreated_by_did\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\fcreatedByDid\x88\x01\x01\x12(\n" +
 	"\n" +
 	"created_at\x18\x05 \x01(\x03B\x04\x90\xb5\x18\x03H\x04R\tcreatedAt\x88\x01\x01\x12(\n" +
@@ -449,41 +449,42 @@ const file_hi_media_invite_code_proto_rawDesc = "" +
 	"\v_expires_atB\x0e\n" +
 	"\f_used_by_didB\n" +
 	"\n" +
-	"\b_used_at\"g\n" +
-	"\x19CreateMediaInviteCodeResp\x12D\n" +
-	"\vinvite_code\x18\x01 \x01(\v2\x1d.hi.media.MediaInviteCodeInfoB\x04\x90\xb5\x18\x03R\n" +
-	"inviteCode:\x04\x98\xb5\x18\x03\"t\n" +
-	"\x16EditMediaInviteCodeReq\x12%\n" +
+	"\b_used_at\"]\n" +
+	"\x14InviteCodeCreateResp\x12?\n" +
+	"\vinvite_code\x18\x01 \x01(\v2\x18.hi.media.InviteCodeInfoB\x04\x90\xb5\x18\x03R\n" +
+	"inviteCode:\x04\x98\xb5\x18\x03\"o\n" +
+	"\x11InviteCodeEditReq\x12%\n" +
 	"\x04code\x18\x01 \x01(\tB\f\xbaH\t\xc8\x01\x01r\x04\x10\x01\x18 H\x00R\x04code\x88\x01\x01\x12!\n" +
 	"\x04note\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x18\xff\x01H\x01R\x04note\x88\x01\x01B\a\n" +
 	"\x05_codeB\a\n" +
-	"\x05_note\"\x93\x01\n" +
-	"\x18ListMediaInviteCodesResp\x12\x1f\n" +
-	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12F\n" +
-	"\finvite_codes\x18\x02 \x03(\v2\x1d.hi.media.MediaInviteCodeInfoB\x04\x90\xb5\x18\x03R\vinviteCodes:\x04\x98\xb5\x18\x03B\b\n" +
-	"\x06_total\"J\n" +
-	"\x18DeleteMediaInviteCodeReq\x12%\n" +
+	"\x05_note\"\x88\x01\n" +
+	"\x12InviteCodeListResp\x12\x1f\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12A\n" +
+	"\finvite_codes\x18\x02 \x03(\v2\x18.hi.media.InviteCodeInfoB\x04\x90\xb5\x18\x03R\vinviteCodes:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_total\"E\n" +
+	"\x13InviteCodeDeleteReq\x12%\n" +
 	"\x04code\x18\x01 \x01(\tB\f\xbaH\t\xc8\x01\x01r\x04\x10\x01\x18 H\x00R\x04code\x88\x01\x01B\a\n" +
-	"\x05_code\"\x89\x01\n" +
-	"\x18VerifyMediaInviteCodeReq\x12.\n" +
+	"\x05_code\"\x84\x01\n" +
+	"\x13InviteCodeVerifyReq\x12.\n" +
 	"\n" +
 	"request_id\x18\x01 \x01(\tB\n" +
 	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\trequestId\x88\x01\x01\x12%\n" +
 	"\x04code\x18\x02 \x01(\tB\f\xbaH\t\xc8\x01\x01r\x04\x10\x01\x18 H\x01R\x04code\x88\x01\x01B\r\n" +
 	"\v_request_idB\a\n" +
-	"\x05_code*\xb2\x01\n" +
-	"\x15MediaInviteCodeStatus\x12(\n" +
-	"$MEDIA_INVITE_CODE_STATUS_UNSPECIFIED\x10\x00\x12&\n" +
-	"\"MEDIA_INVITE_CODE_STATUS_AVAILABLE\x10\x01\x12!\n" +
-	"\x1dMEDIA_INVITE_CODE_STATUS_USED\x10\x02\x12$\n" +
-	" MEDIA_INVITE_CODE_STATUS_EXPIRED\x10\x032\xb8\x02\n" +
-	"\x0fMediaInviteCode\x12L\n" +
-	"\x06Create\x12\x16.google.protobuf.Empty\x1a#.hi.media.CreateMediaInviteCodeResp\"\x05\x8a\xb5\x18\x01\x04\x12G\n" +
-	"\x04Edit\x12 .hi.media.EditMediaInviteCodeReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12A\n" +
-	"\x04List\x12\x0e.hi.Pagination\x1a\".hi.media.ListMediaInviteCodesResp\"\x05\x8a\xb5\x18\x01\x04\x12K\n" +
-	"\x06Delete\x12\".hi.media.DeleteMediaInviteCodeReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x042S\n" +
-	"\rMediaRegister\x12B\n" +
-	"\x06Verify\x12\".hi.media.VerifyMediaInviteCodeReq\x1a\r.hi.AuthToken\"\x05\x8a\xb5\x18\x01\x01B\x8c\x01\n" +
+	"\x05_code*\x95\x01\n" +
+	"\x10InviteCodeStatus\x12\"\n" +
+	"\x1eINVITE_CODE_STATUS_UNSPECIFIED\x10\x00\x12 \n" +
+	"\x1cINVITE_CODE_STATUS_AVAILABLE\x10\x01\x12\x1b\n" +
+	"\x17INVITE_CODE_STATUS_USED\x10\x02\x12\x1e\n" +
+	"\x1aINVITE_CODE_STATUS_EXPIRED\x10\x032\x9e\x02\n" +
+	"\n" +
+	"InviteCode\x12G\n" +
+	"\x06Create\x12\x16.google.protobuf.Empty\x1a\x1e.hi.media.InviteCodeCreateResp\"\x05\x8a\xb5\x18\x01\x04\x12B\n" +
+	"\x04Edit\x12\x1b.hi.media.InviteCodeEditReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12;\n" +
+	"\x04List\x12\x0e.hi.Pagination\x1a\x1c.hi.media.InviteCodeListResp\"\x05\x8a\xb5\x18\x01\x04\x12F\n" +
+	"\x06Delete\x12\x1d.hi.media.InviteCodeDeleteReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x042I\n" +
+	"\bRegister\x12=\n" +
+	"\x06Verify\x12\x1d.hi.media.InviteCodeVerifyReq\x1a\r.hi.AuthToken\"\x05\x8a\xb5\x18\x01\x01B\x8c\x01\n" +
 	"\fcom.hi.mediaB\x0fInviteCodeProtoP\x01Z*github.com/HiWorld-56/hi-proto/go/hi/media\xa2\x02\x03HMX\xaa\x02\bHi.Media\xca\x02\bHi\\Media\xe2\x02\x14Hi\\Media\\GPBMetadata\xea\x02\tHi::Mediab\x06proto3"
 
 var (
@@ -501,31 +502,31 @@ func file_hi_media_invite_code_proto_rawDescGZIP() []byte {
 var file_hi_media_invite_code_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_hi_media_invite_code_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_hi_media_invite_code_proto_goTypes = []any{
-	(MediaInviteCodeStatus)(0),        // 0: hi.media.MediaInviteCodeStatus
-	(*MediaInviteCodeInfo)(nil),       // 1: hi.media.MediaInviteCodeInfo
-	(*CreateMediaInviteCodeResp)(nil), // 2: hi.media.CreateMediaInviteCodeResp
-	(*EditMediaInviteCodeReq)(nil),    // 3: hi.media.EditMediaInviteCodeReq
-	(*ListMediaInviteCodesResp)(nil),  // 4: hi.media.ListMediaInviteCodesResp
-	(*DeleteMediaInviteCodeReq)(nil),  // 5: hi.media.DeleteMediaInviteCodeReq
-	(*VerifyMediaInviteCodeReq)(nil),  // 6: hi.media.VerifyMediaInviteCodeReq
-	(*emptypb.Empty)(nil),             // 7: google.protobuf.Empty
-	(*hi.Pagination)(nil),             // 8: hi.Pagination
-	(*hi.AuthToken)(nil),              // 9: hi.AuthToken
+	(InviteCodeStatus)(0),        // 0: hi.media.InviteCodeStatus
+	(*InviteCodeInfo)(nil),       // 1: hi.media.InviteCodeInfo
+	(*InviteCodeCreateResp)(nil), // 2: hi.media.InviteCodeCreateResp
+	(*InviteCodeEditReq)(nil),    // 3: hi.media.InviteCodeEditReq
+	(*InviteCodeListResp)(nil),   // 4: hi.media.InviteCodeListResp
+	(*InviteCodeDeleteReq)(nil),  // 5: hi.media.InviteCodeDeleteReq
+	(*InviteCodeVerifyReq)(nil),  // 6: hi.media.InviteCodeVerifyReq
+	(*emptypb.Empty)(nil),        // 7: google.protobuf.Empty
+	(*hi.Pagination)(nil),        // 8: hi.Pagination
+	(*hi.AuthToken)(nil),         // 9: hi.AuthToken
 }
 var file_hi_media_invite_code_proto_depIdxs = []int32{
-	0, // 0: hi.media.MediaInviteCodeInfo.status:type_name -> hi.media.MediaInviteCodeStatus
-	1, // 1: hi.media.CreateMediaInviteCodeResp.invite_code:type_name -> hi.media.MediaInviteCodeInfo
-	1, // 2: hi.media.ListMediaInviteCodesResp.invite_codes:type_name -> hi.media.MediaInviteCodeInfo
-	7, // 3: hi.media.MediaInviteCode.Create:input_type -> google.protobuf.Empty
-	3, // 4: hi.media.MediaInviteCode.Edit:input_type -> hi.media.EditMediaInviteCodeReq
-	8, // 5: hi.media.MediaInviteCode.List:input_type -> hi.Pagination
-	5, // 6: hi.media.MediaInviteCode.Delete:input_type -> hi.media.DeleteMediaInviteCodeReq
-	6, // 7: hi.media.MediaRegister.Verify:input_type -> hi.media.VerifyMediaInviteCodeReq
-	2, // 8: hi.media.MediaInviteCode.Create:output_type -> hi.media.CreateMediaInviteCodeResp
-	7, // 9: hi.media.MediaInviteCode.Edit:output_type -> google.protobuf.Empty
-	4, // 10: hi.media.MediaInviteCode.List:output_type -> hi.media.ListMediaInviteCodesResp
-	7, // 11: hi.media.MediaInviteCode.Delete:output_type -> google.protobuf.Empty
-	9, // 12: hi.media.MediaRegister.Verify:output_type -> hi.AuthToken
+	0, // 0: hi.media.InviteCodeInfo.status:type_name -> hi.media.InviteCodeStatus
+	1, // 1: hi.media.InviteCodeCreateResp.invite_code:type_name -> hi.media.InviteCodeInfo
+	1, // 2: hi.media.InviteCodeListResp.invite_codes:type_name -> hi.media.InviteCodeInfo
+	7, // 3: hi.media.InviteCode.Create:input_type -> google.protobuf.Empty
+	3, // 4: hi.media.InviteCode.Edit:input_type -> hi.media.InviteCodeEditReq
+	8, // 5: hi.media.InviteCode.List:input_type -> hi.Pagination
+	5, // 6: hi.media.InviteCode.Delete:input_type -> hi.media.InviteCodeDeleteReq
+	6, // 7: hi.media.Register.Verify:input_type -> hi.media.InviteCodeVerifyReq
+	2, // 8: hi.media.InviteCode.Create:output_type -> hi.media.InviteCodeCreateResp
+	7, // 9: hi.media.InviteCode.Edit:output_type -> google.protobuf.Empty
+	4, // 10: hi.media.InviteCode.List:output_type -> hi.media.InviteCodeListResp
+	7, // 11: hi.media.InviteCode.Delete:output_type -> google.protobuf.Empty
+	9, // 12: hi.media.Register.Verify:output_type -> hi.AuthToken
 	8, // [8:13] is the sub-list for method output_type
 	3, // [3:8] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name

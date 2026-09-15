@@ -21,219 +21,219 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	MediaInviteCode_Create_FullMethodName = "/hi.media.MediaInviteCode/Create"
-	MediaInviteCode_Edit_FullMethodName   = "/hi.media.MediaInviteCode/Edit"
-	MediaInviteCode_List_FullMethodName   = "/hi.media.MediaInviteCode/List"
-	MediaInviteCode_Delete_FullMethodName = "/hi.media.MediaInviteCode/Delete"
+	InviteCode_Create_FullMethodName = "/hi.media.InviteCode/Create"
+	InviteCode_Edit_FullMethodName   = "/hi.media.InviteCode/Edit"
+	InviteCode_List_FullMethodName   = "/hi.media.InviteCode/List"
+	InviteCode_Delete_FullMethodName = "/hi.media.InviteCode/Delete"
 )
 
-// MediaInviteCodeClient is the client API for MediaInviteCode service.
+// InviteCodeClient is the client API for InviteCode service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
 // 邀请码管理属于 HiMedia 超管面。超管身份仍以 HiDID 全局超管名单为权威，
 // HiMedia 不维护本地管理员名单。
-type MediaInviteCodeClient interface {
-	Create(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*CreateMediaInviteCodeResp, error)
-	Edit(ctx context.Context, in *EditMediaInviteCodeReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	List(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*ListMediaInviteCodesResp, error)
-	Delete(ctx context.Context, in *DeleteMediaInviteCodeReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+type InviteCodeClient interface {
+	Create(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*InviteCodeCreateResp, error)
+	Edit(ctx context.Context, in *InviteCodeEditReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	List(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*InviteCodeListResp, error)
+	Delete(ctx context.Context, in *InviteCodeDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
-type mediaInviteCodeClient struct {
+type inviteCodeClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewMediaInviteCodeClient(cc grpc.ClientConnInterface) MediaInviteCodeClient {
-	return &mediaInviteCodeClient{cc}
+func NewInviteCodeClient(cc grpc.ClientConnInterface) InviteCodeClient {
+	return &inviteCodeClient{cc}
 }
 
-func (c *mediaInviteCodeClient) Create(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*CreateMediaInviteCodeResp, error) {
+func (c *inviteCodeClient) Create(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*InviteCodeCreateResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateMediaInviteCodeResp)
-	err := c.cc.Invoke(ctx, MediaInviteCode_Create_FullMethodName, in, out, cOpts...)
+	out := new(InviteCodeCreateResp)
+	err := c.cc.Invoke(ctx, InviteCode_Create_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *mediaInviteCodeClient) Edit(ctx context.Context, in *EditMediaInviteCodeReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, MediaInviteCode_Edit_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *mediaInviteCodeClient) List(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*ListMediaInviteCodesResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListMediaInviteCodesResp)
-	err := c.cc.Invoke(ctx, MediaInviteCode_List_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *mediaInviteCodeClient) Delete(ctx context.Context, in *DeleteMediaInviteCodeReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *inviteCodeClient) Edit(ctx context.Context, in *InviteCodeEditReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, MediaInviteCode_Delete_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, InviteCode_Edit_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// MediaInviteCodeServer is the server API for MediaInviteCode service.
-// All implementations should embed UnimplementedMediaInviteCodeServer
+func (c *inviteCodeClient) List(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*InviteCodeListResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(InviteCodeListResp)
+	err := c.cc.Invoke(ctx, InviteCode_List_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *inviteCodeClient) Delete(ctx context.Context, in *InviteCodeDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, InviteCode_Delete_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// InviteCodeServer is the server API for InviteCode service.
+// All implementations should embed UnimplementedInviteCodeServer
 // for forward compatibility.
 //
 // 邀请码管理属于 HiMedia 超管面。超管身份仍以 HiDID 全局超管名单为权威，
 // HiMedia 不维护本地管理员名单。
-type MediaInviteCodeServer interface {
-	Create(context.Context, *emptypb.Empty) (*CreateMediaInviteCodeResp, error)
-	Edit(context.Context, *EditMediaInviteCodeReq) (*emptypb.Empty, error)
-	List(context.Context, *hi.Pagination) (*ListMediaInviteCodesResp, error)
-	Delete(context.Context, *DeleteMediaInviteCodeReq) (*emptypb.Empty, error)
+type InviteCodeServer interface {
+	Create(context.Context, *emptypb.Empty) (*InviteCodeCreateResp, error)
+	Edit(context.Context, *InviteCodeEditReq) (*emptypb.Empty, error)
+	List(context.Context, *hi.Pagination) (*InviteCodeListResp, error)
+	Delete(context.Context, *InviteCodeDeleteReq) (*emptypb.Empty, error)
 }
 
-// UnimplementedMediaInviteCodeServer should be embedded to have
+// UnimplementedInviteCodeServer should be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedMediaInviteCodeServer struct{}
+type UnimplementedInviteCodeServer struct{}
 
-func (UnimplementedMediaInviteCodeServer) Create(context.Context, *emptypb.Empty) (*CreateMediaInviteCodeResp, error) {
+func (UnimplementedInviteCodeServer) Create(context.Context, *emptypb.Empty) (*InviteCodeCreateResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
 }
-func (UnimplementedMediaInviteCodeServer) Edit(context.Context, *EditMediaInviteCodeReq) (*emptypb.Empty, error) {
+func (UnimplementedInviteCodeServer) Edit(context.Context, *InviteCodeEditReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
 }
-func (UnimplementedMediaInviteCodeServer) List(context.Context, *hi.Pagination) (*ListMediaInviteCodesResp, error) {
+func (UnimplementedInviteCodeServer) List(context.Context, *hi.Pagination) (*InviteCodeListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
-func (UnimplementedMediaInviteCodeServer) Delete(context.Context, *DeleteMediaInviteCodeReq) (*emptypb.Empty, error) {
+func (UnimplementedInviteCodeServer) Delete(context.Context, *InviteCodeDeleteReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
 }
-func (UnimplementedMediaInviteCodeServer) testEmbeddedByValue() {}
+func (UnimplementedInviteCodeServer) testEmbeddedByValue() {}
 
-// UnsafeMediaInviteCodeServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to MediaInviteCodeServer will
+// UnsafeInviteCodeServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to InviteCodeServer will
 // result in compilation errors.
-type UnsafeMediaInviteCodeServer interface {
-	mustEmbedUnimplementedMediaInviteCodeServer()
+type UnsafeInviteCodeServer interface {
+	mustEmbedUnimplementedInviteCodeServer()
 }
 
-func RegisterMediaInviteCodeServer(s grpc.ServiceRegistrar, srv MediaInviteCodeServer) {
-	// If the following call panics, it indicates UnimplementedMediaInviteCodeServer was
+func RegisterInviteCodeServer(s grpc.ServiceRegistrar, srv InviteCodeServer) {
+	// If the following call panics, it indicates UnimplementedInviteCodeServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&MediaInviteCode_ServiceDesc, srv)
+	s.RegisterService(&InviteCode_ServiceDesc, srv)
 }
 
-func _MediaInviteCode_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _InviteCode_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MediaInviteCodeServer).Create(ctx, in)
+		return srv.(InviteCodeServer).Create(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MediaInviteCode_Create_FullMethodName,
+		FullMethod: InviteCode_Create_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MediaInviteCodeServer).Create(ctx, req.(*emptypb.Empty))
+		return srv.(InviteCodeServer).Create(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MediaInviteCode_Edit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(EditMediaInviteCodeReq)
+func _InviteCode_Edit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(InviteCodeEditReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MediaInviteCodeServer).Edit(ctx, in)
+		return srv.(InviteCodeServer).Edit(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MediaInviteCode_Edit_FullMethodName,
+		FullMethod: InviteCode_Edit_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MediaInviteCodeServer).Edit(ctx, req.(*EditMediaInviteCodeReq))
+		return srv.(InviteCodeServer).Edit(ctx, req.(*InviteCodeEditReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MediaInviteCode_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _InviteCode_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(hi.Pagination)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MediaInviteCodeServer).List(ctx, in)
+		return srv.(InviteCodeServer).List(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MediaInviteCode_List_FullMethodName,
+		FullMethod: InviteCode_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MediaInviteCodeServer).List(ctx, req.(*hi.Pagination))
+		return srv.(InviteCodeServer).List(ctx, req.(*hi.Pagination))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MediaInviteCode_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteMediaInviteCodeReq)
+func _InviteCode_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(InviteCodeDeleteReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MediaInviteCodeServer).Delete(ctx, in)
+		return srv.(InviteCodeServer).Delete(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MediaInviteCode_Delete_FullMethodName,
+		FullMethod: InviteCode_Delete_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MediaInviteCodeServer).Delete(ctx, req.(*DeleteMediaInviteCodeReq))
+		return srv.(InviteCodeServer).Delete(ctx, req.(*InviteCodeDeleteReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// MediaInviteCode_ServiceDesc is the grpc.ServiceDesc for MediaInviteCode service.
+// InviteCode_ServiceDesc is the grpc.ServiceDesc for InviteCode service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var MediaInviteCode_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "hi.media.MediaInviteCode",
-	HandlerType: (*MediaInviteCodeServer)(nil),
+var InviteCode_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.media.InviteCode",
+	HandlerType: (*InviteCodeServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Create",
-			Handler:    _MediaInviteCode_Create_Handler,
+			Handler:    _InviteCode_Create_Handler,
 		},
 		{
 			MethodName: "Edit",
-			Handler:    _MediaInviteCode_Edit_Handler,
+			Handler:    _InviteCode_Edit_Handler,
 		},
 		{
 			MethodName: "List",
-			Handler:    _MediaInviteCode_List_Handler,
+			Handler:    _InviteCode_List_Handler,
 		},
 		{
 			MethodName: "Delete",
-			Handler:    _MediaInviteCode_Delete_Handler,
+			Handler:    _InviteCode_Delete_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -241,105 +241,105 @@ var MediaInviteCode_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	MediaRegister_Verify_FullMethodName = "/hi.media.MediaRegister/Verify"
+	Register_Verify_FullMethodName = "/hi.media.Register/Verify"
 )
 
-// MediaRegisterClient is the client API for MediaRegister service.
+// RegisterClient is the client API for Register service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
 // 注册主体尚未持有 HiMedia token，因此接口公开；有效 request_id 中已经验签的
 // DID 是其身份边界，邀请码核销成功后才返回 HiMedia token。
-type MediaRegisterClient interface {
-	Verify(ctx context.Context, in *VerifyMediaInviteCodeReq, opts ...grpc.CallOption) (*hi.AuthToken, error)
+type RegisterClient interface {
+	Verify(ctx context.Context, in *InviteCodeVerifyReq, opts ...grpc.CallOption) (*hi.AuthToken, error)
 }
 
-type mediaRegisterClient struct {
+type registerClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewMediaRegisterClient(cc grpc.ClientConnInterface) MediaRegisterClient {
-	return &mediaRegisterClient{cc}
+func NewRegisterClient(cc grpc.ClientConnInterface) RegisterClient {
+	return &registerClient{cc}
 }
 
-func (c *mediaRegisterClient) Verify(ctx context.Context, in *VerifyMediaInviteCodeReq, opts ...grpc.CallOption) (*hi.AuthToken, error) {
+func (c *registerClient) Verify(ctx context.Context, in *InviteCodeVerifyReq, opts ...grpc.CallOption) (*hi.AuthToken, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(hi.AuthToken)
-	err := c.cc.Invoke(ctx, MediaRegister_Verify_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Register_Verify_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// MediaRegisterServer is the server API for MediaRegister service.
-// All implementations should embed UnimplementedMediaRegisterServer
+// RegisterServer is the server API for Register service.
+// All implementations should embed UnimplementedRegisterServer
 // for forward compatibility.
 //
 // 注册主体尚未持有 HiMedia token，因此接口公开；有效 request_id 中已经验签的
 // DID 是其身份边界，邀请码核销成功后才返回 HiMedia token。
-type MediaRegisterServer interface {
-	Verify(context.Context, *VerifyMediaInviteCodeReq) (*hi.AuthToken, error)
+type RegisterServer interface {
+	Verify(context.Context, *InviteCodeVerifyReq) (*hi.AuthToken, error)
 }
 
-// UnimplementedMediaRegisterServer should be embedded to have
+// UnimplementedRegisterServer should be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedMediaRegisterServer struct{}
+type UnimplementedRegisterServer struct{}
 
-func (UnimplementedMediaRegisterServer) Verify(context.Context, *VerifyMediaInviteCodeReq) (*hi.AuthToken, error) {
+func (UnimplementedRegisterServer) Verify(context.Context, *InviteCodeVerifyReq) (*hi.AuthToken, error) {
 	return nil, status.Error(codes.Unimplemented, "method Verify not implemented")
 }
-func (UnimplementedMediaRegisterServer) testEmbeddedByValue() {}
+func (UnimplementedRegisterServer) testEmbeddedByValue() {}
 
-// UnsafeMediaRegisterServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to MediaRegisterServer will
+// UnsafeRegisterServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to RegisterServer will
 // result in compilation errors.
-type UnsafeMediaRegisterServer interface {
-	mustEmbedUnimplementedMediaRegisterServer()
+type UnsafeRegisterServer interface {
+	mustEmbedUnimplementedRegisterServer()
 }
 
-func RegisterMediaRegisterServer(s grpc.ServiceRegistrar, srv MediaRegisterServer) {
-	// If the following call panics, it indicates UnimplementedMediaRegisterServer was
+func RegisterRegisterServer(s grpc.ServiceRegistrar, srv RegisterServer) {
+	// If the following call panics, it indicates UnimplementedRegisterServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&MediaRegister_ServiceDesc, srv)
+	s.RegisterService(&Register_ServiceDesc, srv)
 }
 
-func _MediaRegister_Verify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(VerifyMediaInviteCodeReq)
+func _Register_Verify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(InviteCodeVerifyReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MediaRegisterServer).Verify(ctx, in)
+		return srv.(RegisterServer).Verify(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MediaRegister_Verify_FullMethodName,
+		FullMethod: Register_Verify_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MediaRegisterServer).Verify(ctx, req.(*VerifyMediaInviteCodeReq))
+		return srv.(RegisterServer).Verify(ctx, req.(*InviteCodeVerifyReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// MediaRegister_ServiceDesc is the grpc.ServiceDesc for MediaRegister service.
+// Register_ServiceDesc is the grpc.ServiceDesc for Register service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var MediaRegister_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "hi.media.MediaRegister",
-	HandlerType: (*MediaRegisterServer)(nil),
+var Register_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.media.Register",
+	HandlerType: (*RegisterServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Verify",
-			Handler:    _MediaRegister_Verify_Handler,
+			Handler:    _Register_Verify_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

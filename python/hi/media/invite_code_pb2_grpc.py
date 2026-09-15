@@ -7,7 +7,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi.media import invite_code_pb2 as hi_dot_media_dot_invite__code__pb2
 
 
-class MediaInviteCodeStub(object):
+class InviteCodeStub(object):
     """邀请码管理属于 HiMedia 超管面。超管身份仍以 HiDID 全局超管名单为权威，
     HiMedia 不维护本地管理员名单。
     """
@@ -19,28 +19,28 @@ class MediaInviteCodeStub(object):
             channel: A grpc.Channel.
         """
         self.Create = channel.unary_unary(
-                '/hi.media.MediaInviteCode/Create',
+                '/hi.media.InviteCode/Create',
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-                response_deserializer=hi_dot_media_dot_invite__code__pb2.CreateMediaInviteCodeResp.FromString,
+                response_deserializer=hi_dot_media_dot_invite__code__pb2.InviteCodeCreateResp.FromString,
                 _registered_method=True)
         self.Edit = channel.unary_unary(
-                '/hi.media.MediaInviteCode/Edit',
-                request_serializer=hi_dot_media_dot_invite__code__pb2.EditMediaInviteCodeReq.SerializeToString,
+                '/hi.media.InviteCode/Edit',
+                request_serializer=hi_dot_media_dot_invite__code__pb2.InviteCodeEditReq.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
         self.List = channel.unary_unary(
-                '/hi.media.MediaInviteCode/List',
+                '/hi.media.InviteCode/List',
                 request_serializer=hi_dot_common__pb2.Pagination.SerializeToString,
-                response_deserializer=hi_dot_media_dot_invite__code__pb2.ListMediaInviteCodesResp.FromString,
+                response_deserializer=hi_dot_media_dot_invite__code__pb2.InviteCodeListResp.FromString,
                 _registered_method=True)
         self.Delete = channel.unary_unary(
-                '/hi.media.MediaInviteCode/Delete',
-                request_serializer=hi_dot_media_dot_invite__code__pb2.DeleteMediaInviteCodeReq.SerializeToString,
+                '/hi.media.InviteCode/Delete',
+                request_serializer=hi_dot_media_dot_invite__code__pb2.InviteCodeDeleteReq.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
 
 
-class MediaInviteCodeServicer(object):
+class InviteCodeServicer(object):
     """邀请码管理属于 HiMedia 超管面。超管身份仍以 HiDID 全局超管名单为权威，
     HiMedia 不维护本地管理员名单。
     """
@@ -70,37 +70,37 @@ class MediaInviteCodeServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
-def add_MediaInviteCodeServicer_to_server(servicer, server):
+def add_InviteCodeServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'Create': grpc.unary_unary_rpc_method_handler(
                     servicer.Create,
                     request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                    response_serializer=hi_dot_media_dot_invite__code__pb2.CreateMediaInviteCodeResp.SerializeToString,
+                    response_serializer=hi_dot_media_dot_invite__code__pb2.InviteCodeCreateResp.SerializeToString,
             ),
             'Edit': grpc.unary_unary_rpc_method_handler(
                     servicer.Edit,
-                    request_deserializer=hi_dot_media_dot_invite__code__pb2.EditMediaInviteCodeReq.FromString,
+                    request_deserializer=hi_dot_media_dot_invite__code__pb2.InviteCodeEditReq.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'List': grpc.unary_unary_rpc_method_handler(
                     servicer.List,
                     request_deserializer=hi_dot_common__pb2.Pagination.FromString,
-                    response_serializer=hi_dot_media_dot_invite__code__pb2.ListMediaInviteCodesResp.SerializeToString,
+                    response_serializer=hi_dot_media_dot_invite__code__pb2.InviteCodeListResp.SerializeToString,
             ),
             'Delete': grpc.unary_unary_rpc_method_handler(
                     servicer.Delete,
-                    request_deserializer=hi_dot_media_dot_invite__code__pb2.DeleteMediaInviteCodeReq.FromString,
+                    request_deserializer=hi_dot_media_dot_invite__code__pb2.InviteCodeDeleteReq.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'hi.media.MediaInviteCode', rpc_method_handlers)
+            'hi.media.InviteCode', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('hi.media.MediaInviteCode', rpc_method_handlers)
+    server.add_registered_method_handlers('hi.media.InviteCode', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class MediaInviteCode(object):
+class InviteCode(object):
     """邀请码管理属于 HiMedia 超管面。超管身份仍以 HiDID 全局超管名单为权威，
     HiMedia 不维护本地管理员名单。
     """
@@ -119,9 +119,9 @@ class MediaInviteCode(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.MediaInviteCode/Create',
+            '/hi.media.InviteCode/Create',
             google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-            hi_dot_media_dot_invite__code__pb2.CreateMediaInviteCodeResp.FromString,
+            hi_dot_media_dot_invite__code__pb2.InviteCodeCreateResp.FromString,
             options,
             channel_credentials,
             insecure,
@@ -146,8 +146,8 @@ class MediaInviteCode(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.MediaInviteCode/Edit',
-            hi_dot_media_dot_invite__code__pb2.EditMediaInviteCodeReq.SerializeToString,
+            '/hi.media.InviteCode/Edit',
+            hi_dot_media_dot_invite__code__pb2.InviteCodeEditReq.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,
@@ -173,9 +173,9 @@ class MediaInviteCode(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.MediaInviteCode/List',
+            '/hi.media.InviteCode/List',
             hi_dot_common__pb2.Pagination.SerializeToString,
-            hi_dot_media_dot_invite__code__pb2.ListMediaInviteCodesResp.FromString,
+            hi_dot_media_dot_invite__code__pb2.InviteCodeListResp.FromString,
             options,
             channel_credentials,
             insecure,
@@ -200,8 +200,8 @@ class MediaInviteCode(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.MediaInviteCode/Delete',
-            hi_dot_media_dot_invite__code__pb2.DeleteMediaInviteCodeReq.SerializeToString,
+            '/hi.media.InviteCode/Delete',
+            hi_dot_media_dot_invite__code__pb2.InviteCodeDeleteReq.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,
@@ -214,7 +214,7 @@ class MediaInviteCode(object):
             _registered_method=True)
 
 
-class MediaRegisterStub(object):
+class RegisterStub(object):
     """注册主体尚未持有 HiMedia token，因此接口公开；有效 request_id 中已经验签的
     DID 是其身份边界，邀请码核销成功后才返回 HiMedia token。
     """
@@ -226,13 +226,13 @@ class MediaRegisterStub(object):
             channel: A grpc.Channel.
         """
         self.Verify = channel.unary_unary(
-                '/hi.media.MediaRegister/Verify',
-                request_serializer=hi_dot_media_dot_invite__code__pb2.VerifyMediaInviteCodeReq.SerializeToString,
+                '/hi.media.Register/Verify',
+                request_serializer=hi_dot_media_dot_invite__code__pb2.InviteCodeVerifyReq.SerializeToString,
                 response_deserializer=hi_dot_common__pb2.AuthToken.FromString,
                 _registered_method=True)
 
 
-class MediaRegisterServicer(object):
+class RegisterServicer(object):
     """注册主体尚未持有 HiMedia token，因此接口公开；有效 request_id 中已经验签的
     DID 是其身份边界，邀请码核销成功后才返回 HiMedia token。
     """
@@ -244,22 +244,22 @@ class MediaRegisterServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
-def add_MediaRegisterServicer_to_server(servicer, server):
+def add_RegisterServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'Verify': grpc.unary_unary_rpc_method_handler(
                     servicer.Verify,
-                    request_deserializer=hi_dot_media_dot_invite__code__pb2.VerifyMediaInviteCodeReq.FromString,
+                    request_deserializer=hi_dot_media_dot_invite__code__pb2.InviteCodeVerifyReq.FromString,
                     response_serializer=hi_dot_common__pb2.AuthToken.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'hi.media.MediaRegister', rpc_method_handlers)
+            'hi.media.Register', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('hi.media.MediaRegister', rpc_method_handlers)
+    server.add_registered_method_handlers('hi.media.Register', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class MediaRegister(object):
+class Register(object):
     """注册主体尚未持有 HiMedia token，因此接口公开；有效 request_id 中已经验签的
     DID 是其身份边界，邀请码核销成功后才返回 HiMedia token。
     """
@@ -278,8 +278,8 @@ class MediaRegister(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.MediaRegister/Verify',
-            hi_dot_media_dot_invite__code__pb2.VerifyMediaInviteCodeReq.SerializeToString,
+            '/hi.media.Register/Verify',
+            hi_dot_media_dot_invite__code__pb2.InviteCodeVerifyReq.SerializeToString,
             hi_dot_common__pb2.AuthToken.FromString,
             options,
             channel_credentials,

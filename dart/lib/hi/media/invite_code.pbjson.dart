@@ -15,27 +15,26 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
-@$core.Deprecated('Use mediaInviteCodeStatusDescriptor instead')
-const MediaInviteCodeStatus$json = {
-  '1': 'MediaInviteCodeStatus',
+@$core.Deprecated('Use inviteCodeStatusDescriptor instead')
+const InviteCodeStatus$json = {
+  '1': 'InviteCodeStatus',
   '2': [
-    {'1': 'MEDIA_INVITE_CODE_STATUS_UNSPECIFIED', '2': 0},
-    {'1': 'MEDIA_INVITE_CODE_STATUS_AVAILABLE', '2': 1},
-    {'1': 'MEDIA_INVITE_CODE_STATUS_USED', '2': 2},
-    {'1': 'MEDIA_INVITE_CODE_STATUS_EXPIRED', '2': 3},
+    {'1': 'INVITE_CODE_STATUS_UNSPECIFIED', '2': 0},
+    {'1': 'INVITE_CODE_STATUS_AVAILABLE', '2': 1},
+    {'1': 'INVITE_CODE_STATUS_USED', '2': 2},
+    {'1': 'INVITE_CODE_STATUS_EXPIRED', '2': 3},
   ],
 };
 
-/// Descriptor for `MediaInviteCodeStatus`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List mediaInviteCodeStatusDescriptor = $convert.base64Decode(
-    'ChVNZWRpYUludml0ZUNvZGVTdGF0dXMSKAokTUVESUFfSU5WSVRFX0NPREVfU1RBVFVTX1VOU1'
-    'BFQ0lGSUVEEAASJgoiTUVESUFfSU5WSVRFX0NPREVfU1RBVFVTX0FWQUlMQUJMRRABEiEKHU1F'
-    'RElBX0lOVklURV9DT0RFX1NUQVRVU19VU0VEEAISJAogTUVESUFfSU5WSVRFX0NPREVfU1RBVF'
-    'VTX0VYUElSRUQQAw==');
+/// Descriptor for `InviteCodeStatus`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List inviteCodeStatusDescriptor = $convert.base64Decode(
+    'ChBJbnZpdGVDb2RlU3RhdHVzEiIKHklOVklURV9DT0RFX1NUQVRVU19VTlNQRUNJRklFRBAAEi'
+    'AKHElOVklURV9DT0RFX1NUQVRVU19BVkFJTEFCTEUQARIbChdJTlZJVEVfQ09ERV9TVEFUVVNf'
+    'VVNFRBACEh4KGklOVklURV9DT0RFX1NUQVRVU19FWFBJUkVEEAM=');
 
-@$core.Deprecated('Use mediaInviteCodeInfoDescriptor instead')
-const MediaInviteCodeInfo$json = {
-  '1': 'MediaInviteCodeInfo',
+@$core.Deprecated('Use inviteCodeInfoDescriptor instead')
+const InviteCodeInfo$json = {
+  '1': 'InviteCodeInfo',
   '2': [
     {
       '1': 'code',
@@ -62,7 +61,7 @@ const MediaInviteCodeInfo$json = {
       '3': 3,
       '4': 1,
       '5': 14,
-      '6': '.hi.media.MediaInviteCodeStatus',
+      '6': '.hi.media.InviteCodeStatus',
       '8': {},
       '9': 2,
       '10': 'status',
@@ -132,28 +131,28 @@ const MediaInviteCodeInfo$json = {
   ],
 };
 
-/// Descriptor for `MediaInviteCodeInfo`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List mediaInviteCodeInfoDescriptor = $convert.base64Decode(
-    'ChNNZWRpYUludml0ZUNvZGVJbmZvEh0KBGNvZGUYASABKAlCBJC1GANIAFIEY29kZYgBARIdCg'
-    'Rub3RlGAIgASgJQgSQtRgDSAFSBG5vdGWIAQESQgoGc3RhdHVzGAMgASgOMh8uaGkubWVkaWEu'
-    'TWVkaWFJbnZpdGVDb2RlU3RhdHVzQgSQtRgDSAJSBnN0YXR1c4gBARIvCg5jcmVhdGVkX2J5X2'
-    'RpZBgEIAEoCUIEkLUYA0gDUgxjcmVhdGVkQnlEaWSIAQESKAoKY3JlYXRlZF9hdBgFIAEoA0IE'
-    'kLUYA0gEUgljcmVhdGVkQXSIAQESKAoKZXhwaXJlc19hdBgGIAEoA0IEkLUYA0gFUglleHBpcm'
-    'VzQXSIAQESKQoLdXNlZF9ieV9kaWQYByABKAlCBJC1GANIBlIJdXNlZEJ5RGlkiAEBEiIKB3Vz'
-    'ZWRfYXQYCCABKANCBJC1GANIB1IGdXNlZEF0iAEBOgSYtRgDQgcKBV9jb2RlQgcKBV9ub3RlQg'
-    'kKB19zdGF0dXNCEQoPX2NyZWF0ZWRfYnlfZGlkQg0KC19jcmVhdGVkX2F0Qg0KC19leHBpcmVz'
-    'X2F0Qg4KDF91c2VkX2J5X2RpZEIKCghfdXNlZF9hdA==');
+/// Descriptor for `InviteCodeInfo`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List inviteCodeInfoDescriptor = $convert.base64Decode(
+    'Cg5JbnZpdGVDb2RlSW5mbxIdCgRjb2RlGAEgASgJQgSQtRgDSABSBGNvZGWIAQESHQoEbm90ZR'
+    'gCIAEoCUIEkLUYA0gBUgRub3RliAEBEj0KBnN0YXR1cxgDIAEoDjIaLmhpLm1lZGlhLkludml0'
+    'ZUNvZGVTdGF0dXNCBJC1GANIAlIGc3RhdHVziAEBEi8KDmNyZWF0ZWRfYnlfZGlkGAQgASgJQg'
+    'SQtRgDSANSDGNyZWF0ZWRCeURpZIgBARIoCgpjcmVhdGVkX2F0GAUgASgDQgSQtRgDSARSCWNy'
+    'ZWF0ZWRBdIgBARIoCgpleHBpcmVzX2F0GAYgASgDQgSQtRgDSAVSCWV4cGlyZXNBdIgBARIpCg'
+    't1c2VkX2J5X2RpZBgHIAEoCUIEkLUYA0gGUgl1c2VkQnlEaWSIAQESIgoHdXNlZF9hdBgIIAEo'
+    'A0IEkLUYA0gHUgZ1c2VkQXSIAQE6BJi1GANCBwoFX2NvZGVCBwoFX25vdGVCCQoHX3N0YXR1c0'
+    'IRCg9fY3JlYXRlZF9ieV9kaWRCDQoLX2NyZWF0ZWRfYXRCDQoLX2V4cGlyZXNfYXRCDgoMX3Vz'
+    'ZWRfYnlfZGlkQgoKCF91c2VkX2F0');
 
-@$core.Deprecated('Use createMediaInviteCodeRespDescriptor instead')
-const CreateMediaInviteCodeResp$json = {
-  '1': 'CreateMediaInviteCodeResp',
+@$core.Deprecated('Use inviteCodeCreateRespDescriptor instead')
+const InviteCodeCreateResp$json = {
+  '1': 'InviteCodeCreateResp',
   '2': [
     {
       '1': 'invite_code',
       '3': 1,
       '4': 1,
       '5': 11,
-      '6': '.hi.media.MediaInviteCodeInfo',
+      '6': '.hi.media.InviteCodeInfo',
       '8': {},
       '10': 'inviteCode'
     },
@@ -161,15 +160,14 @@ const CreateMediaInviteCodeResp$json = {
   '7': {},
 };
 
-/// Descriptor for `CreateMediaInviteCodeResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List createMediaInviteCodeRespDescriptor =
-    $convert.base64Decode(
-        'ChlDcmVhdGVNZWRpYUludml0ZUNvZGVSZXNwEkQKC2ludml0ZV9jb2RlGAEgASgLMh0uaGkubW'
-        'VkaWEuTWVkaWFJbnZpdGVDb2RlSW5mb0IEkLUYA1IKaW52aXRlQ29kZToEmLUYAw==');
+/// Descriptor for `InviteCodeCreateResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List inviteCodeCreateRespDescriptor = $convert.base64Decode(
+    'ChRJbnZpdGVDb2RlQ3JlYXRlUmVzcBI/CgtpbnZpdGVfY29kZRgBIAEoCzIYLmhpLm1lZGlhLk'
+    'ludml0ZUNvZGVJbmZvQgSQtRgDUgppbnZpdGVDb2RlOgSYtRgD');
 
-@$core.Deprecated('Use editMediaInviteCodeReqDescriptor instead')
-const EditMediaInviteCodeReq$json = {
-  '1': 'EditMediaInviteCodeReq',
+@$core.Deprecated('Use inviteCodeEditReqDescriptor instead')
+const InviteCodeEditReq$json = {
+  '1': 'InviteCodeEditReq',
   '2': [
     {
       '1': 'code',
@@ -198,15 +196,14 @@ const EditMediaInviteCodeReq$json = {
   ],
 };
 
-/// Descriptor for `EditMediaInviteCodeReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List editMediaInviteCodeReqDescriptor = $convert.base64Decode(
-    'ChZFZGl0TWVkaWFJbnZpdGVDb2RlUmVxEiUKBGNvZGUYASABKAlCDLpICcgBAXIEEAEYIEgAUg'
-    'Rjb2RliAEBEiEKBG5vdGUYAiABKAlCCLpIBXIDGP8BSAFSBG5vdGWIAQFCBwoFX2NvZGVCBwoF'
-    'X25vdGU=');
+/// Descriptor for `InviteCodeEditReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List inviteCodeEditReqDescriptor = $convert.base64Decode(
+    'ChFJbnZpdGVDb2RlRWRpdFJlcRIlCgRjb2RlGAEgASgJQgy6SAnIAQFyBBABGCBIAFIEY29kZY'
+    'gBARIhCgRub3RlGAIgASgJQgi6SAVyAxj/AUgBUgRub3RliAEBQgcKBV9jb2RlQgcKBV9ub3Rl');
 
-@$core.Deprecated('Use listMediaInviteCodesRespDescriptor instead')
-const ListMediaInviteCodesResp$json = {
-  '1': 'ListMediaInviteCodesResp',
+@$core.Deprecated('Use inviteCodeListRespDescriptor instead')
+const InviteCodeListResp$json = {
+  '1': 'InviteCodeListResp',
   '2': [
     {
       '1': 'total',
@@ -223,7 +220,7 @@ const ListMediaInviteCodesResp$json = {
       '3': 2,
       '4': 3,
       '5': 11,
-      '6': '.hi.media.MediaInviteCodeInfo',
+      '6': '.hi.media.InviteCodeInfo',
       '8': {},
       '10': 'inviteCodes'
     },
@@ -234,15 +231,15 @@ const ListMediaInviteCodesResp$json = {
   ],
 };
 
-/// Descriptor for `ListMediaInviteCodesResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listMediaInviteCodesRespDescriptor = $convert.base64Decode(
-    'ChhMaXN0TWVkaWFJbnZpdGVDb2Rlc1Jlc3ASHwoFdG90YWwYASABKAVCBJC1GANIAFIFdG90YW'
-    'yIAQESRgoMaW52aXRlX2NvZGVzGAIgAygLMh0uaGkubWVkaWEuTWVkaWFJbnZpdGVDb2RlSW5m'
-    'b0IEkLUYA1ILaW52aXRlQ29kZXM6BJi1GANCCAoGX3RvdGFs');
+/// Descriptor for `InviteCodeListResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List inviteCodeListRespDescriptor = $convert.base64Decode(
+    'ChJJbnZpdGVDb2RlTGlzdFJlc3ASHwoFdG90YWwYASABKAVCBJC1GANIAFIFdG90YWyIAQESQQ'
+    'oMaW52aXRlX2NvZGVzGAIgAygLMhguaGkubWVkaWEuSW52aXRlQ29kZUluZm9CBJC1GANSC2lu'
+    'dml0ZUNvZGVzOgSYtRgDQggKBl90b3RhbA==');
 
-@$core.Deprecated('Use deleteMediaInviteCodeReqDescriptor instead')
-const DeleteMediaInviteCodeReq$json = {
-  '1': 'DeleteMediaInviteCodeReq',
+@$core.Deprecated('Use inviteCodeDeleteReqDescriptor instead')
+const InviteCodeDeleteReq$json = {
+  '1': 'InviteCodeDeleteReq',
   '2': [
     {
       '1': 'code',
@@ -260,15 +257,14 @@ const DeleteMediaInviteCodeReq$json = {
   ],
 };
 
-/// Descriptor for `DeleteMediaInviteCodeReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List deleteMediaInviteCodeReqDescriptor =
-    $convert.base64Decode(
-        'ChhEZWxldGVNZWRpYUludml0ZUNvZGVSZXESJQoEY29kZRgBIAEoCUIMukgJyAEBcgQQARggSA'
-        'BSBGNvZGWIAQFCBwoFX2NvZGU=');
+/// Descriptor for `InviteCodeDeleteReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List inviteCodeDeleteReqDescriptor = $convert.base64Decode(
+    'ChNJbnZpdGVDb2RlRGVsZXRlUmVxEiUKBGNvZGUYASABKAlCDLpICcgBAXIEEAEYIEgAUgRjb2'
+    'RliAEBQgcKBV9jb2Rl');
 
-@$core.Deprecated('Use verifyMediaInviteCodeReqDescriptor instead')
-const VerifyMediaInviteCodeReq$json = {
-  '1': 'VerifyMediaInviteCodeReq',
+@$core.Deprecated('Use inviteCodeVerifyReqDescriptor instead')
+const InviteCodeVerifyReq$json = {
+  '1': 'InviteCodeVerifyReq',
   '2': [
     {
       '1': 'request_id',
@@ -297,8 +293,8 @@ const VerifyMediaInviteCodeReq$json = {
   ],
 };
 
-/// Descriptor for `VerifyMediaInviteCodeReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List verifyMediaInviteCodeReqDescriptor = $convert.base64Decode(
-    'ChhWZXJpZnlNZWRpYUludml0ZUNvZGVSZXESLgoKcmVxdWVzdF9pZBgBIAEoCUIKukgHyAEBcg'
-    'IQAUgAUglyZXF1ZXN0SWSIAQESJQoEY29kZRgCIAEoCUIMukgJyAEBcgQQARggSAFSBGNvZGWI'
-    'AQFCDQoLX3JlcXVlc3RfaWRCBwoFX2NvZGU=');
+/// Descriptor for `InviteCodeVerifyReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List inviteCodeVerifyReqDescriptor = $convert.base64Decode(
+    'ChNJbnZpdGVDb2RlVmVyaWZ5UmVxEi4KCnJlcXVlc3RfaWQYASABKAlCCrpIB8gBAXICEAFIAF'
+    'IJcmVxdWVzdElkiAEBEiUKBGNvZGUYAiABKAlCDLpICcgBAXIEEAEYIEgBUgRjb2RliAEBQg0K'
+    'C19yZXF1ZXN0X2lkQgcKBV9jb2Rl');
