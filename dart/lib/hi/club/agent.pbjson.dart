@@ -127,6 +127,41 @@ final $typed_data.Uint8List listOnlineReqDescriptor = $convert.base64Decode(
     'Cg1MaXN0T25saW5lUmVxEiAKCW93bmVyX2RpZBgBIAEoCUgAUghvd25lckRpZIgBARIuCgpwYW'
     'dpbmF0aW9uGAIgASgLMg4uaGkuUGFnaW5hdGlvblIKcGFnaW5hdGlvbkIMCgpfb3duZXJfZGlk');
 
+@$core.Deprecated('Use onlineAgentInfoDescriptor instead')
+const OnlineAgentInfo$json = {
+  '1': 'OnlineAgentInfo',
+  '2': [
+    {
+      '1': 'agent',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'agent'
+    },
+    {
+      '1': 'moment',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'moment',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_moment'},
+  ],
+};
+
+/// Descriptor for `OnlineAgentInfo`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List onlineAgentInfoDescriptor = $convert.base64Decode(
+    'Cg9PbmxpbmVBZ2VudEluZm8SJgoFYWdlbnQYASABKAsyCi5oaS5FbnRpdHlCBJC1GAFSBWFnZW'
+    '50EiEKBm1vbWVudBgCIAEoCUIEkLUYAUgAUgZtb21lbnSIAQE6BJi1GAFCCQoHX21vbWVudA==');
+
 @$core.Deprecated('Use listOnlineRespDescriptor instead')
 const ListOnlineResp$json = {
   '1': 'ListOnlineResp',
@@ -146,7 +181,7 @@ const ListOnlineResp$json = {
       '3': 2,
       '4': 3,
       '5': 11,
-      '6': '.hi.Entity',
+      '6': '.hi.club.OnlineAgentInfo',
       '8': {},
       '10': 'infos'
     },
@@ -159,8 +194,9 @@ const ListOnlineResp$json = {
 
 /// Descriptor for `ListOnlineResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listOnlineRespDescriptor = $convert.base64Decode(
-    'Cg5MaXN0T25saW5lUmVzcBIfCgV0b3RhbBgBIAEoBUIEkLUYAUgAUgV0b3RhbIgBARImCgVpbm'
-    'ZvcxgCIAMoCzIKLmhpLkVudGl0eUIEkLUYAVIFaW5mb3M6BJi1GAFCCAoGX3RvdGFs');
+    'Cg5MaXN0T25saW5lUmVzcBIfCgV0b3RhbBgBIAEoBUIEkLUYAUgAUgV0b3RhbIgBARI0CgVpbm'
+    'ZvcxgCIAMoCzIYLmhpLmNsdWIuT25saW5lQWdlbnRJbmZvQgSQtRgBUgVpbmZvczoEmLUYAUII'
+    'CgZfdG90YWw=');
 
 @$core.Deprecated('Use listAgentsByUsersReqDescriptor instead')
 const ListAgentsByUsersReq$json = {

@@ -340,10 +340,81 @@ class ListOnlineReq extends $pb.GeneratedMessage {
   $2.Pagination ensurePagination() => $_ensure(1);
 }
 
+/// 在线机器人目录的一项。基础名片与动态分开:Entity 是跨业务共用的身份门面,
+/// moment 是 club 自己的数据,不应为了这个目录塞进公共 Entity。
+class OnlineAgentInfo extends $pb.GeneratedMessage {
+  factory OnlineAgentInfo({
+    $2.Entity? agent,
+    $core.String? moment,
+  }) {
+    final result = create();
+    if (agent != null) result.agent = agent;
+    if (moment != null) result.moment = moment;
+    return result;
+  }
+
+  OnlineAgentInfo._();
+
+  factory OnlineAgentInfo.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory OnlineAgentInfo.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'OnlineAgentInfo',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'agent',
+        subBuilder: $2.Entity.create)
+    ..aOS(2, _omitFieldNames ? '' : 'moment')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  OnlineAgentInfo clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  OnlineAgentInfo copyWith(void Function(OnlineAgentInfo) updates) =>
+      super.copyWith((message) => updates(message as OnlineAgentInfo))
+          as OnlineAgentInfo;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static OnlineAgentInfo create() => OnlineAgentInfo._();
+  @$core.override
+  OnlineAgentInfo createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static OnlineAgentInfo getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<OnlineAgentInfo>(create);
+  static OnlineAgentInfo? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $2.Entity get agent => $_getN(0);
+  @$pb.TagNumber(1)
+  set agent($2.Entity value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAgent() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAgent() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $2.Entity ensureAgent() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.String get moment => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set moment($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMoment() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMoment() => $_clearField(2);
+}
+
 class ListOnlineResp extends $pb.GeneratedMessage {
   factory ListOnlineResp({
     $core.int? total,
-    $core.Iterable<$2.Entity>? infos,
+    $core.Iterable<OnlineAgentInfo>? infos,
   }) {
     final result = create();
     if (total != null) result.total = total;
@@ -365,8 +436,8 @@ class ListOnlineResp extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aI(1, _omitFieldNames ? '' : 'total')
-    ..pPM<$2.Entity>(2, _omitFieldNames ? '' : 'infos',
-        subBuilder: $2.Entity.create)
+    ..pPM<OnlineAgentInfo>(2, _omitFieldNames ? '' : 'infos',
+        subBuilder: OnlineAgentInfo.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -388,7 +459,7 @@ class ListOnlineResp extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<ListOnlineResp>(create);
   static ListOnlineResp? _defaultInstance;
 
-  /// ⚠️ 只吐机器人**公开身份**(Entity:name/avatar/did),不复用 hi.ai.AgentInfo ——
+  /// ⚠️ 只吐机器人**公开身份**(Entity:name/avatar/did)与公开动态,不复用 hi.ai.AgentInfo ——
   ///    后者含 AgentConfig(prompt/模型/记忆)是 owner 私密配置(VIS_SELF),放进公开目录=泄漏。
   ///    此前误用 AgentInfo,由可见性 lint 反向校验查出并收窄为 Entity。
   @$pb.TagNumber(1)
@@ -401,7 +472,7 @@ class ListOnlineResp extends $pb.GeneratedMessage {
   void clearTotal() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $pb.PbList<$2.Entity> get infos => $_getList(1);
+  $pb.PbList<OnlineAgentInfo> get infos => $_getList(1);
 }
 
 /// 超管按用户搜机器人。users 是**过滤条件**(空=不过滤,即全部)——

@@ -287,21 +287,75 @@ func (x *ListOnlineReq) GetPagination() *hi.Pagination {
 	return nil
 }
 
+// 在线机器人目录的一项。基础名片与动态分开:Entity 是跨业务共用的身份门面,
+// moment 是 club 自己的数据,不应为了这个目录塞进公共 Entity。
+type OnlineAgentInfo struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Agent         *hi.Entity             `protobuf:"bytes,1,opt,name=agent,proto3" json:"agent,omitempty"`         // 机器人公开身份(name/avatar/did/type/update)
+	Moment        *string                `protobuf:"bytes,2,opt,name=moment,proto3,oneof" json:"moment,omitempty"` // 机器人动态;未设置或已清空时不传
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OnlineAgentInfo) Reset() {
+	*x = OnlineAgentInfo{}
+	mi := &file_hi_club_agent_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OnlineAgentInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OnlineAgentInfo) ProtoMessage() {}
+
+func (x *OnlineAgentInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_agent_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OnlineAgentInfo.ProtoReflect.Descriptor instead.
+func (*OnlineAgentInfo) Descriptor() ([]byte, []int) {
+	return file_hi_club_agent_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *OnlineAgentInfo) GetAgent() *hi.Entity {
+	if x != nil {
+		return x.Agent
+	}
+	return nil
+}
+
+func (x *OnlineAgentInfo) GetMoment() string {
+	if x != nil && x.Moment != nil {
+		return *x.Moment
+	}
+	return ""
+}
+
 type ListOnlineResp struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// ⚠️ 只吐机器人**公开身份**(Entity:name/avatar/did),不复用 hi.ai.AgentInfo ——
+	// ⚠️ 只吐机器人**公开身份**(Entity:name/avatar/did)与公开动态,不复用 hi.ai.AgentInfo ——
 	//
 	//	后者含 AgentConfig(prompt/模型/记忆)是 owner 私密配置(VIS_SELF),放进公开目录=泄漏。
 	//	此前误用 AgentInfo,由可见性 lint 反向校验查出并收窄为 Entity。
-	Total         *int32       `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
-	Infos         []*hi.Entity `protobuf:"bytes,2,rep,name=infos,proto3" json:"infos,omitempty"`
+	Total         *int32             `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
+	Infos         []*OnlineAgentInfo `protobuf:"bytes,2,rep,name=infos,proto3" json:"infos,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ListOnlineResp) Reset() {
 	*x = ListOnlineResp{}
-	mi := &file_hi_club_agent_proto_msgTypes[5]
+	mi := &file_hi_club_agent_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -313,7 +367,7 @@ func (x *ListOnlineResp) String() string {
 func (*ListOnlineResp) ProtoMessage() {}
 
 func (x *ListOnlineResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_agent_proto_msgTypes[5]
+	mi := &file_hi_club_agent_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -326,7 +380,7 @@ func (x *ListOnlineResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListOnlineResp.ProtoReflect.Descriptor instead.
 func (*ListOnlineResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_agent_proto_rawDescGZIP(), []int{5}
+	return file_hi_club_agent_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ListOnlineResp) GetTotal() int32 {
@@ -336,7 +390,7 @@ func (x *ListOnlineResp) GetTotal() int32 {
 	return 0
 }
 
-func (x *ListOnlineResp) GetInfos() []*hi.Entity {
+func (x *ListOnlineResp) GetInfos() []*OnlineAgentInfo {
 	if x != nil {
 		return x.Infos
 	}
@@ -355,7 +409,7 @@ type ListAgentsByUsersReq struct {
 
 func (x *ListAgentsByUsersReq) Reset() {
 	*x = ListAgentsByUsersReq{}
-	mi := &file_hi_club_agent_proto_msgTypes[6]
+	mi := &file_hi_club_agent_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -367,7 +421,7 @@ func (x *ListAgentsByUsersReq) String() string {
 func (*ListAgentsByUsersReq) ProtoMessage() {}
 
 func (x *ListAgentsByUsersReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_agent_proto_msgTypes[6]
+	mi := &file_hi_club_agent_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -380,7 +434,7 @@ func (x *ListAgentsByUsersReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListAgentsByUsersReq.ProtoReflect.Descriptor instead.
 func (*ListAgentsByUsersReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_agent_proto_rawDescGZIP(), []int{6}
+	return file_hi_club_agent_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ListAgentsByUsersReq) GetUsers() []string {
@@ -414,7 +468,7 @@ type ListAgentsResp struct {
 
 func (x *ListAgentsResp) Reset() {
 	*x = ListAgentsResp{}
-	mi := &file_hi_club_agent_proto_msgTypes[7]
+	mi := &file_hi_club_agent_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -426,7 +480,7 @@ func (x *ListAgentsResp) String() string {
 func (*ListAgentsResp) ProtoMessage() {}
 
 func (x *ListAgentsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_agent_proto_msgTypes[7]
+	mi := &file_hi_club_agent_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -439,7 +493,7 @@ func (x *ListAgentsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListAgentsResp.ProtoReflect.Descriptor instead.
 func (*ListAgentsResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_agent_proto_rawDescGZIP(), []int{7}
+	return file_hi_club_agent_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ListAgentsResp) GetTotal() int32 {
@@ -479,7 +533,7 @@ type SetAgentMomentReq struct {
 
 func (x *SetAgentMomentReq) Reset() {
 	*x = SetAgentMomentReq{}
-	mi := &file_hi_club_agent_proto_msgTypes[8]
+	mi := &file_hi_club_agent_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -491,7 +545,7 @@ func (x *SetAgentMomentReq) String() string {
 func (*SetAgentMomentReq) ProtoMessage() {}
 
 func (x *SetAgentMomentReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_agent_proto_msgTypes[8]
+	mi := &file_hi_club_agent_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -504,7 +558,7 @@ func (x *SetAgentMomentReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetAgentMomentReq.ProtoReflect.Descriptor instead.
 func (*SetAgentMomentReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_agent_proto_rawDescGZIP(), []int{8}
+	return file_hi_club_agent_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *SetAgentMomentReq) GetAgent() string {
@@ -539,7 +593,7 @@ type GetAgentMomentReq struct {
 
 func (x *GetAgentMomentReq) Reset() {
 	*x = GetAgentMomentReq{}
-	mi := &file_hi_club_agent_proto_msgTypes[9]
+	mi := &file_hi_club_agent_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -551,7 +605,7 @@ func (x *GetAgentMomentReq) String() string {
 func (*GetAgentMomentReq) ProtoMessage() {}
 
 func (x *GetAgentMomentReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_agent_proto_msgTypes[9]
+	mi := &file_hi_club_agent_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -564,7 +618,7 @@ func (x *GetAgentMomentReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAgentMomentReq.ProtoReflect.Descriptor instead.
 func (*GetAgentMomentReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_agent_proto_rawDescGZIP(), []int{9}
+	return file_hi_club_agent_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *GetAgentMomentReq) GetAgent() string {
@@ -583,7 +637,7 @@ type GetAgentMomentResp struct {
 
 func (x *GetAgentMomentResp) Reset() {
 	*x = GetAgentMomentResp{}
-	mi := &file_hi_club_agent_proto_msgTypes[10]
+	mi := &file_hi_club_agent_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -595,7 +649,7 @@ func (x *GetAgentMomentResp) String() string {
 func (*GetAgentMomentResp) ProtoMessage() {}
 
 func (x *GetAgentMomentResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_agent_proto_msgTypes[10]
+	mi := &file_hi_club_agent_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -608,7 +662,7 @@ func (x *GetAgentMomentResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAgentMomentResp.ProtoReflect.Descriptor instead.
 func (*GetAgentMomentResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_agent_proto_rawDescGZIP(), []int{10}
+	return file_hi_club_agent_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GetAgentMomentResp) GetMoment() string {
@@ -643,11 +697,15 @@ const file_hi_club_agent_proto_rawDesc = "" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
 	"paginationB\f\n" +
 	"\n" +
-	"_owner_did\"i\n" +
+	"_owner_did\"m\n" +
+	"\x0fOnlineAgentInfo\x12&\n" +
+	"\x05agent\x18\x01 \x01(\v2\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x05agent\x12!\n" +
+	"\x06moment\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x06moment\x88\x01\x01:\x04\x98\xb5\x18\x01B\t\n" +
+	"\a_moment\"w\n" +
 	"\x0eListOnlineResp\x12\x1f\n" +
-	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x01H\x00R\x05total\x88\x01\x01\x12&\n" +
-	"\x05infos\x18\x02 \x03(\v2\n" +
-	".hi.EntityB\x04\x90\xb5\x18\x01R\x05infos:\x04\x98\xb5\x18\x01B\b\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x01H\x00R\x05total\x88\x01\x01\x124\n" +
+	"\x05infos\x18\x02 \x03(\v2\x18.hi.club.OnlineAgentInfoB\x04\x90\xb5\x18\x01R\x05infos:\x04\x98\xb5\x18\x01B\b\n" +
 	"\x06_total\"\\\n" +
 	"\x14ListAgentsByUsersReq\x12\x14\n" +
 	"\x05users\x18\x01 \x03(\tR\x05users\x12.\n" +
@@ -706,75 +764,77 @@ func file_hi_club_agent_proto_rawDescGZIP() []byte {
 	return file_hi_club_agent_proto_rawDescData
 }
 
-var file_hi_club_agent_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_hi_club_agent_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_hi_club_agent_proto_goTypes = []any{
 	(*MasterBindReq)(nil),         // 0: hi.club.MasterBindReq
 	(*BindStatusReq)(nil),         // 1: hi.club.BindStatusReq
 	(*BindStatusResp)(nil),        // 2: hi.club.BindStatusResp
 	(*TransferReq)(nil),           // 3: hi.club.TransferReq
 	(*ListOnlineReq)(nil),         // 4: hi.club.ListOnlineReq
-	(*ListOnlineResp)(nil),        // 5: hi.club.ListOnlineResp
-	(*ListAgentsByUsersReq)(nil),  // 6: hi.club.ListAgentsByUsersReq
-	(*ListAgentsResp)(nil),        // 7: hi.club.ListAgentsResp
-	(*SetAgentMomentReq)(nil),     // 8: hi.club.SetAgentMomentReq
-	(*GetAgentMomentReq)(nil),     // 9: hi.club.GetAgentMomentReq
-	(*GetAgentMomentResp)(nil),    // 10: hi.club.GetAgentMomentResp
-	(*hi.Entity)(nil),             // 11: hi.Entity
-	(*hi.Pagination)(nil),         // 12: hi.Pagination
-	(*ai.AgentInfo)(nil),          // 13: hi.ai.AgentInfo
-	(*ai.ListAgentsReq)(nil),      // 14: hi.ai.ListAgentsReq
-	(*ai.CreateAssistantReq)(nil), // 15: hi.ai.CreateAssistantReq
-	(*ai.EditAgentReq)(nil),       // 16: hi.ai.EditAgentReq
-	(*ai.DeleteAgentReq)(nil),     // 17: hi.ai.DeleteAgentReq
-	(*ai.GetAgentReq)(nil),        // 18: hi.ai.GetAgentReq
-	(*ai.AgentUsageReq)(nil),      // 19: hi.ai.AgentUsageReq
-	(*emptypb.Empty)(nil),         // 20: google.protobuf.Empty
-	(*ai.CreateAgentResp)(nil),    // 21: hi.ai.CreateAgentResp
-	(*ai.GetAgentResp)(nil),       // 22: hi.ai.GetAgentResp
-	(*ai.AgentUsageResp)(nil),     // 23: hi.ai.AgentUsageResp
-	(*ai.DefaultConfigResp)(nil),  // 24: hi.ai.DefaultConfigResp
+	(*OnlineAgentInfo)(nil),       // 5: hi.club.OnlineAgentInfo
+	(*ListOnlineResp)(nil),        // 6: hi.club.ListOnlineResp
+	(*ListAgentsByUsersReq)(nil),  // 7: hi.club.ListAgentsByUsersReq
+	(*ListAgentsResp)(nil),        // 8: hi.club.ListAgentsResp
+	(*SetAgentMomentReq)(nil),     // 9: hi.club.SetAgentMomentReq
+	(*GetAgentMomentReq)(nil),     // 10: hi.club.GetAgentMomentReq
+	(*GetAgentMomentResp)(nil),    // 11: hi.club.GetAgentMomentResp
+	(*hi.Entity)(nil),             // 12: hi.Entity
+	(*hi.Pagination)(nil),         // 13: hi.Pagination
+	(*ai.AgentInfo)(nil),          // 14: hi.ai.AgentInfo
+	(*ai.ListAgentsReq)(nil),      // 15: hi.ai.ListAgentsReq
+	(*ai.CreateAssistantReq)(nil), // 16: hi.ai.CreateAssistantReq
+	(*ai.EditAgentReq)(nil),       // 17: hi.ai.EditAgentReq
+	(*ai.DeleteAgentReq)(nil),     // 18: hi.ai.DeleteAgentReq
+	(*ai.GetAgentReq)(nil),        // 19: hi.ai.GetAgentReq
+	(*ai.AgentUsageReq)(nil),      // 20: hi.ai.AgentUsageReq
+	(*emptypb.Empty)(nil),         // 21: google.protobuf.Empty
+	(*ai.CreateAgentResp)(nil),    // 22: hi.ai.CreateAgentResp
+	(*ai.GetAgentResp)(nil),       // 23: hi.ai.GetAgentResp
+	(*ai.AgentUsageResp)(nil),     // 24: hi.ai.AgentUsageResp
+	(*ai.DefaultConfigResp)(nil),  // 25: hi.ai.DefaultConfigResp
 }
 var file_hi_club_agent_proto_depIdxs = []int32{
-	11, // 0: hi.club.BindStatusResp.master:type_name -> hi.Entity
-	12, // 1: hi.club.ListOnlineReq.pagination:type_name -> hi.Pagination
-	11, // 2: hi.club.ListOnlineResp.infos:type_name -> hi.Entity
-	12, // 3: hi.club.ListAgentsByUsersReq.pagination:type_name -> hi.Pagination
-	13, // 4: hi.club.ListAgentsResp.agents:type_name -> hi.ai.AgentInfo
-	14, // 5: hi.club.Agent.List:input_type -> hi.ai.ListAgentsReq
-	15, // 6: hi.club.Agent.CreateAssistant:input_type -> hi.ai.CreateAssistantReq
-	16, // 7: hi.club.Agent.Edit:input_type -> hi.ai.EditAgentReq
-	17, // 8: hi.club.Agent.Delete:input_type -> hi.ai.DeleteAgentReq
-	18, // 9: hi.club.Agent.Get:input_type -> hi.ai.GetAgentReq
-	19, // 10: hi.club.Agent.GetUsage:input_type -> hi.ai.AgentUsageReq
-	20, // 11: hi.club.Agent.GetDefaultConfig:input_type -> google.protobuf.Empty
-	0,  // 12: hi.club.Agent.BindMaster:input_type -> hi.club.MasterBindReq
-	0,  // 13: hi.club.Agent.UnbindMaster:input_type -> hi.club.MasterBindReq
-	1,  // 14: hi.club.Agent.BindStatus:input_type -> hi.club.BindStatusReq
-	3,  // 15: hi.club.Agent.Transfer:input_type -> hi.club.TransferReq
-	8,  // 16: hi.club.Agent.SetMoment:input_type -> hi.club.SetAgentMomentReq
-	4,  // 17: hi.club.AgentDirectory.ListOnline:input_type -> hi.club.ListOnlineReq
-	9,  // 18: hi.club.AgentDirectory.GetMoment:input_type -> hi.club.GetAgentMomentReq
-	6,  // 19: hi.club.AgentManage.List:input_type -> hi.club.ListAgentsByUsersReq
-	7,  // 20: hi.club.Agent.List:output_type -> hi.club.ListAgentsResp
-	21, // 21: hi.club.Agent.CreateAssistant:output_type -> hi.ai.CreateAgentResp
-	11, // 22: hi.club.Agent.Edit:output_type -> hi.Entity
-	20, // 23: hi.club.Agent.Delete:output_type -> google.protobuf.Empty
-	22, // 24: hi.club.Agent.Get:output_type -> hi.ai.GetAgentResp
-	23, // 25: hi.club.Agent.GetUsage:output_type -> hi.ai.AgentUsageResp
-	24, // 26: hi.club.Agent.GetDefaultConfig:output_type -> hi.ai.DefaultConfigResp
-	20, // 27: hi.club.Agent.BindMaster:output_type -> google.protobuf.Empty
-	20, // 28: hi.club.Agent.UnbindMaster:output_type -> google.protobuf.Empty
-	2,  // 29: hi.club.Agent.BindStatus:output_type -> hi.club.BindStatusResp
-	20, // 30: hi.club.Agent.Transfer:output_type -> google.protobuf.Empty
-	20, // 31: hi.club.Agent.SetMoment:output_type -> google.protobuf.Empty
-	5,  // 32: hi.club.AgentDirectory.ListOnline:output_type -> hi.club.ListOnlineResp
-	10, // 33: hi.club.AgentDirectory.GetMoment:output_type -> hi.club.GetAgentMomentResp
-	7,  // 34: hi.club.AgentManage.List:output_type -> hi.club.ListAgentsResp
-	20, // [20:35] is the sub-list for method output_type
-	5,  // [5:20] is the sub-list for method input_type
-	5,  // [5:5] is the sub-list for extension type_name
-	5,  // [5:5] is the sub-list for extension extendee
-	0,  // [0:5] is the sub-list for field type_name
+	12, // 0: hi.club.BindStatusResp.master:type_name -> hi.Entity
+	13, // 1: hi.club.ListOnlineReq.pagination:type_name -> hi.Pagination
+	12, // 2: hi.club.OnlineAgentInfo.agent:type_name -> hi.Entity
+	5,  // 3: hi.club.ListOnlineResp.infos:type_name -> hi.club.OnlineAgentInfo
+	13, // 4: hi.club.ListAgentsByUsersReq.pagination:type_name -> hi.Pagination
+	14, // 5: hi.club.ListAgentsResp.agents:type_name -> hi.ai.AgentInfo
+	15, // 6: hi.club.Agent.List:input_type -> hi.ai.ListAgentsReq
+	16, // 7: hi.club.Agent.CreateAssistant:input_type -> hi.ai.CreateAssistantReq
+	17, // 8: hi.club.Agent.Edit:input_type -> hi.ai.EditAgentReq
+	18, // 9: hi.club.Agent.Delete:input_type -> hi.ai.DeleteAgentReq
+	19, // 10: hi.club.Agent.Get:input_type -> hi.ai.GetAgentReq
+	20, // 11: hi.club.Agent.GetUsage:input_type -> hi.ai.AgentUsageReq
+	21, // 12: hi.club.Agent.GetDefaultConfig:input_type -> google.protobuf.Empty
+	0,  // 13: hi.club.Agent.BindMaster:input_type -> hi.club.MasterBindReq
+	0,  // 14: hi.club.Agent.UnbindMaster:input_type -> hi.club.MasterBindReq
+	1,  // 15: hi.club.Agent.BindStatus:input_type -> hi.club.BindStatusReq
+	3,  // 16: hi.club.Agent.Transfer:input_type -> hi.club.TransferReq
+	9,  // 17: hi.club.Agent.SetMoment:input_type -> hi.club.SetAgentMomentReq
+	4,  // 18: hi.club.AgentDirectory.ListOnline:input_type -> hi.club.ListOnlineReq
+	10, // 19: hi.club.AgentDirectory.GetMoment:input_type -> hi.club.GetAgentMomentReq
+	7,  // 20: hi.club.AgentManage.List:input_type -> hi.club.ListAgentsByUsersReq
+	8,  // 21: hi.club.Agent.List:output_type -> hi.club.ListAgentsResp
+	22, // 22: hi.club.Agent.CreateAssistant:output_type -> hi.ai.CreateAgentResp
+	12, // 23: hi.club.Agent.Edit:output_type -> hi.Entity
+	21, // 24: hi.club.Agent.Delete:output_type -> google.protobuf.Empty
+	23, // 25: hi.club.Agent.Get:output_type -> hi.ai.GetAgentResp
+	24, // 26: hi.club.Agent.GetUsage:output_type -> hi.ai.AgentUsageResp
+	25, // 27: hi.club.Agent.GetDefaultConfig:output_type -> hi.ai.DefaultConfigResp
+	21, // 28: hi.club.Agent.BindMaster:output_type -> google.protobuf.Empty
+	21, // 29: hi.club.Agent.UnbindMaster:output_type -> google.protobuf.Empty
+	2,  // 30: hi.club.Agent.BindStatus:output_type -> hi.club.BindStatusResp
+	21, // 31: hi.club.Agent.Transfer:output_type -> google.protobuf.Empty
+	21, // 32: hi.club.Agent.SetMoment:output_type -> google.protobuf.Empty
+	6,  // 33: hi.club.AgentDirectory.ListOnline:output_type -> hi.club.ListOnlineResp
+	11, // 34: hi.club.AgentDirectory.GetMoment:output_type -> hi.club.GetAgentMomentResp
+	8,  // 35: hi.club.AgentManage.List:output_type -> hi.club.ListAgentsResp
+	21, // [21:36] is the sub-list for method output_type
+	6,  // [6:21] is the sub-list for method input_type
+	6,  // [6:6] is the sub-list for extension type_name
+	6,  // [6:6] is the sub-list for extension extendee
+	0,  // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_agent_proto_init() }
@@ -787,17 +847,18 @@ func file_hi_club_agent_proto_init() {
 	file_hi_club_agent_proto_msgTypes[3].OneofWrappers = []any{}
 	file_hi_club_agent_proto_msgTypes[4].OneofWrappers = []any{}
 	file_hi_club_agent_proto_msgTypes[5].OneofWrappers = []any{}
-	file_hi_club_agent_proto_msgTypes[7].OneofWrappers = []any{}
+	file_hi_club_agent_proto_msgTypes[6].OneofWrappers = []any{}
 	file_hi_club_agent_proto_msgTypes[8].OneofWrappers = []any{}
 	file_hi_club_agent_proto_msgTypes[9].OneofWrappers = []any{}
 	file_hi_club_agent_proto_msgTypes[10].OneofWrappers = []any{}
+	file_hi_club_agent_proto_msgTypes[11].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_agent_proto_rawDesc), len(file_hi_club_agent_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   11,
+			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   3,
 		},

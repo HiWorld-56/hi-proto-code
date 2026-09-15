@@ -2097,15 +2097,26 @@ pub struct ListOnlineReq {
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
+/// 在线机器人目录的一项。基础名片与动态分开:Entity 是跨业务共用的身份门面,
+/// moment 是 club 自己的数据,不应为了这个目录塞进公共 Entity。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct OnlineAgentInfo {
+    /// 机器人公开身份(name/avatar/did/type/update)
+    #[prost(message, optional, tag = "1")]
+    pub agent: ::core::option::Option<super::Entity>,
+    /// 机器人动态;未设置或已清空时不传
+    #[prost(string, optional, tag = "2")]
+    pub moment: ::core::option::Option<::prost::alloc::string::String>,
+}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListOnlineResp {
-    /// ⚠️ 只吐机器人**公开身份**(Entity:name/avatar/did),不复用 hi.ai.AgentInfo ——
+    /// ⚠️ 只吐机器人**公开身份**(Entity:name/avatar/did)与公开动态,不复用 hi.ai.AgentInfo ——
     /// 后者含 AgentConfig(prompt/模型/记忆)是 owner 私密配置(VIS_SELF),放进公开目录=泄漏。
     /// 此前误用 AgentInfo,由可见性 lint 反向校验查出并收窄为 Entity。
     #[prost(int32, optional, tag = "1")]
     pub total: ::core::option::Option<i32>,
     #[prost(message, repeated, tag = "2")]
-    pub infos: ::prost::alloc::vec::Vec<super::Entity>,
+    pub infos: ::prost::alloc::vec::Vec<OnlineAgentInfo>,
 }
 /// 超管按用户搜机器人。users 是**过滤条件**(空=不过滤,即全部)——
 /// 与"空=换一种语义"不同,这里两种情况是同一根轴上的"筛/不筛"。
