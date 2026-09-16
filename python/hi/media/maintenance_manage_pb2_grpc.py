@@ -3,10 +3,10 @@
 import grpc
 
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
-from hi.media import work_manage_pb2 as hi_dot_media_dot_work__manage__pb2
+from hi.media import maintenance_manage_pb2 as hi_dot_media_dot_maintenance__manage__pb2
 
 
-class MediaManageStub(object):
+class MaintenanceManageStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -15,59 +15,59 @@ class MediaManageStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.GetMaintenance = channel.unary_unary(
-                '/hi.media.MediaManage/GetMaintenance',
+        self.Get = channel.unary_unary(
+                '/hi.media.MaintenanceManage/Get',
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-                response_deserializer=hi_dot_media_dot_work__manage__pb2.GetMediaMaintenanceResp.FromString,
+                response_deserializer=hi_dot_media_dot_maintenance__manage__pb2.GetMaintenanceResp.FromString,
                 _registered_method=True)
-        self.SetMaintenance = channel.unary_unary(
-                '/hi.media.MediaManage/SetMaintenance',
-                request_serializer=hi_dot_media_dot_work__manage__pb2.SetMediaMaintenanceReq.SerializeToString,
-                response_deserializer=hi_dot_media_dot_work__manage__pb2.SetMediaMaintenanceResp.FromString,
+        self.Set = channel.unary_unary(
+                '/hi.media.MaintenanceManage/Set',
+                request_serializer=hi_dot_media_dot_maintenance__manage__pb2.SetMaintenanceReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_maintenance__manage__pb2.SetMaintenanceResp.FromString,
                 _registered_method=True)
 
 
-class MediaManageServicer(object):
+class MaintenanceManageServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def GetMaintenance(self, request, context):
+    def Get(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def SetMaintenance(self, request, context):
+    def Set(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
 
-def add_MediaManageServicer_to_server(servicer, server):
+def add_MaintenanceManageServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'GetMaintenance': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetMaintenance,
+            'Get': grpc.unary_unary_rpc_method_handler(
+                    servicer.Get,
                     request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                    response_serializer=hi_dot_media_dot_work__manage__pb2.GetMediaMaintenanceResp.SerializeToString,
+                    response_serializer=hi_dot_media_dot_maintenance__manage__pb2.GetMaintenanceResp.SerializeToString,
             ),
-            'SetMaintenance': grpc.unary_unary_rpc_method_handler(
-                    servicer.SetMaintenance,
-                    request_deserializer=hi_dot_media_dot_work__manage__pb2.SetMediaMaintenanceReq.FromString,
-                    response_serializer=hi_dot_media_dot_work__manage__pb2.SetMediaMaintenanceResp.SerializeToString,
+            'Set': grpc.unary_unary_rpc_method_handler(
+                    servicer.Set,
+                    request_deserializer=hi_dot_media_dot_maintenance__manage__pb2.SetMaintenanceReq.FromString,
+                    response_serializer=hi_dot_media_dot_maintenance__manage__pb2.SetMaintenanceResp.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'hi.media.MediaManage', rpc_method_handlers)
+            'hi.media.MaintenanceManage', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('hi.media.MediaManage', rpc_method_handlers)
+    server.add_registered_method_handlers('hi.media.MaintenanceManage', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class MediaManage(object):
+class MaintenanceManage(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def GetMaintenance(request,
+    def Get(request,
             target,
             options=(),
             channel_credentials=None,
@@ -80,9 +80,9 @@ class MediaManage(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.MediaManage/GetMaintenance',
+            '/hi.media.MaintenanceManage/Get',
             google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-            hi_dot_media_dot_work__manage__pb2.GetMediaMaintenanceResp.FromString,
+            hi_dot_media_dot_maintenance__manage__pb2.GetMaintenanceResp.FromString,
             options,
             channel_credentials,
             insecure,
@@ -94,7 +94,7 @@ class MediaManage(object):
             _registered_method=True)
 
     @staticmethod
-    def SetMaintenance(request,
+    def Set(request,
             target,
             options=(),
             channel_credentials=None,
@@ -107,9 +107,9 @@ class MediaManage(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.MediaManage/SetMaintenance',
-            hi_dot_media_dot_work__manage__pb2.SetMediaMaintenanceReq.SerializeToString,
-            hi_dot_media_dot_work__manage__pb2.SetMediaMaintenanceResp.FromString,
+            '/hi.media.MaintenanceManage/Set',
+            hi_dot_media_dot_maintenance__manage__pb2.SetMaintenanceReq.SerializeToString,
+            hi_dot_media_dot_maintenance__manage__pb2.SetMaintenanceResp.FromString,
             options,
             channel_credentials,
             insecure,

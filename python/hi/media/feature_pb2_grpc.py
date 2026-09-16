@@ -5,7 +5,7 @@ import grpc
 from hi.media import feature_pb2 as hi_dot_media_dot_feature__pb2
 
 
-class MediaFeatureStub(object):
+class FeatureStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -15,13 +15,13 @@ class MediaFeatureStub(object):
             channel: A grpc.Channel.
         """
         self.Get = channel.unary_unary(
-                '/hi.media.MediaFeature/Get',
-                request_serializer=hi_dot_media_dot_feature__pb2.GetMediaFeatureReq.SerializeToString,
-                response_deserializer=hi_dot_media_dot_feature__pb2.GetMediaFeatureResp.FromString,
+                '/hi.media.Feature/Get',
+                request_serializer=hi_dot_media_dot_feature__pb2.GetFeatureReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_feature__pb2.GetFeatureResp.FromString,
                 _registered_method=True)
 
 
-class MediaFeatureServicer(object):
+class FeatureServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def Get(self, request, context):
@@ -31,22 +31,22 @@ class MediaFeatureServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
-def add_MediaFeatureServicer_to_server(servicer, server):
+def add_FeatureServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'Get': grpc.unary_unary_rpc_method_handler(
                     servicer.Get,
-                    request_deserializer=hi_dot_media_dot_feature__pb2.GetMediaFeatureReq.FromString,
-                    response_serializer=hi_dot_media_dot_feature__pb2.GetMediaFeatureResp.SerializeToString,
+                    request_deserializer=hi_dot_media_dot_feature__pb2.GetFeatureReq.FromString,
+                    response_serializer=hi_dot_media_dot_feature__pb2.GetFeatureResp.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'hi.media.MediaFeature', rpc_method_handlers)
+            'hi.media.Feature', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('hi.media.MediaFeature', rpc_method_handlers)
+    server.add_registered_method_handlers('hi.media.Feature', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class MediaFeature(object):
+class Feature(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -63,9 +63,9 @@ class MediaFeature(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.MediaFeature/Get',
-            hi_dot_media_dot_feature__pb2.GetMediaFeatureReq.SerializeToString,
-            hi_dot_media_dot_feature__pb2.GetMediaFeatureResp.FromString,
+            '/hi.media.Feature/Get',
+            hi_dot_media_dot_feature__pb2.GetFeatureReq.SerializeToString,
+            hi_dot_media_dot_feature__pb2.GetFeatureResp.FromString,
             options,
             channel_credentials,
             insecure,

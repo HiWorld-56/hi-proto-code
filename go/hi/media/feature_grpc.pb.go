@@ -19,99 +19,99 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	MediaFeature_Get_FullMethodName = "/hi.media.MediaFeature/Get"
+	Feature_Get_FullMethodName = "/hi.media.Feature/Get"
 )
 
-// MediaFeatureClient is the client API for MediaFeature service.
+// FeatureClient is the client API for Feature service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type MediaFeatureClient interface {
-	Get(ctx context.Context, in *GetMediaFeatureReq, opts ...grpc.CallOption) (*GetMediaFeatureResp, error)
+type FeatureClient interface {
+	Get(ctx context.Context, in *GetFeatureReq, opts ...grpc.CallOption) (*GetFeatureResp, error)
 }
 
-type mediaFeatureClient struct {
+type featureClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewMediaFeatureClient(cc grpc.ClientConnInterface) MediaFeatureClient {
-	return &mediaFeatureClient{cc}
+func NewFeatureClient(cc grpc.ClientConnInterface) FeatureClient {
+	return &featureClient{cc}
 }
 
-func (c *mediaFeatureClient) Get(ctx context.Context, in *GetMediaFeatureReq, opts ...grpc.CallOption) (*GetMediaFeatureResp, error) {
+func (c *featureClient) Get(ctx context.Context, in *GetFeatureReq, opts ...grpc.CallOption) (*GetFeatureResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetMediaFeatureResp)
-	err := c.cc.Invoke(ctx, MediaFeature_Get_FullMethodName, in, out, cOpts...)
+	out := new(GetFeatureResp)
+	err := c.cc.Invoke(ctx, Feature_Get_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// MediaFeatureServer is the server API for MediaFeature service.
-// All implementations should embed UnimplementedMediaFeatureServer
+// FeatureServer is the server API for Feature service.
+// All implementations should embed UnimplementedFeatureServer
 // for forward compatibility.
-type MediaFeatureServer interface {
-	Get(context.Context, *GetMediaFeatureReq) (*GetMediaFeatureResp, error)
+type FeatureServer interface {
+	Get(context.Context, *GetFeatureReq) (*GetFeatureResp, error)
 }
 
-// UnimplementedMediaFeatureServer should be embedded to have
+// UnimplementedFeatureServer should be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedMediaFeatureServer struct{}
+type UnimplementedFeatureServer struct{}
 
-func (UnimplementedMediaFeatureServer) Get(context.Context, *GetMediaFeatureReq) (*GetMediaFeatureResp, error) {
+func (UnimplementedFeatureServer) Get(context.Context, *GetFeatureReq) (*GetFeatureResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
-func (UnimplementedMediaFeatureServer) testEmbeddedByValue() {}
+func (UnimplementedFeatureServer) testEmbeddedByValue() {}
 
-// UnsafeMediaFeatureServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to MediaFeatureServer will
+// UnsafeFeatureServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to FeatureServer will
 // result in compilation errors.
-type UnsafeMediaFeatureServer interface {
-	mustEmbedUnimplementedMediaFeatureServer()
+type UnsafeFeatureServer interface {
+	mustEmbedUnimplementedFeatureServer()
 }
 
-func RegisterMediaFeatureServer(s grpc.ServiceRegistrar, srv MediaFeatureServer) {
-	// If the following call panics, it indicates UnimplementedMediaFeatureServer was
+func RegisterFeatureServer(s grpc.ServiceRegistrar, srv FeatureServer) {
+	// If the following call panics, it indicates UnimplementedFeatureServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&MediaFeature_ServiceDesc, srv)
+	s.RegisterService(&Feature_ServiceDesc, srv)
 }
 
-func _MediaFeature_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetMediaFeatureReq)
+func _Feature_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFeatureReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MediaFeatureServer).Get(ctx, in)
+		return srv.(FeatureServer).Get(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MediaFeature_Get_FullMethodName,
+		FullMethod: Feature_Get_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MediaFeatureServer).Get(ctx, req.(*GetMediaFeatureReq))
+		return srv.(FeatureServer).Get(ctx, req.(*GetFeatureReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// MediaFeature_ServiceDesc is the grpc.ServiceDesc for MediaFeature service.
+// Feature_ServiceDesc is the grpc.ServiceDesc for Feature service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var MediaFeature_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "hi.media.MediaFeature",
-	HandlerType: (*MediaFeatureServer)(nil),
+var Feature_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.media.Feature",
+	HandlerType: (*FeatureServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Get",
-			Handler:    _MediaFeature_Get_Handler,
+			Handler:    _Feature_Get_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

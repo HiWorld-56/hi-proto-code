@@ -20,8 +20,8 @@ import 'task.pb.dart' as $0;
 
 export 'task.pb.dart';
 
-@$pb.GrpcServiceName('hi.media.MediaTask')
-class MediaTaskClient extends $grpc.Client {
+@$pb.GrpcServiceName('hi.media.Task')
+class TaskClient extends $grpc.Client {
   /// The hostname for this service.
   static const $core.String defaultHost = '';
 
@@ -30,45 +30,45 @@ class MediaTaskClient extends $grpc.Client {
     '',
   ];
 
-  MediaTaskClient(super.channel, {super.options, super.interceptors});
+  TaskClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$0.CreateMediaTaskResp> createTextToImage(
-    $0.CreateTextToImageTaskReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$createTextToImage, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.CreateMediaTaskResp> createImageToVideo(
+  $grpc.ResponseFuture<$0.CreateTaskResp> createImageToVideo(
     $0.CreateImageToVideoTaskReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$createImageToVideo, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.GetMediaTaskResp> get(
-    $0.GetMediaTaskReq request, {
+  $grpc.ResponseFuture<$0.CreateTaskResp> createTextToVideo(
+    $0.CreateTextToVideoTaskReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$createTextToVideo, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.GetTaskResp> get(
+    $0.GetTaskReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$get, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.ListMediaTasksResp> list(
-    $0.ListMediaTasksReq request, {
+  $grpc.ResponseFuture<$0.ListTasksResp> list(
+    $0.ListTasksReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$list, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.CancelMediaTaskResp> cancel(
-    $0.CancelMediaTaskReq request, {
+  $grpc.ResponseFuture<$0.CancelTaskResp> cancel(
+    $0.CancelTaskReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$cancel, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.RecoverSaveMediaTaskResp> recoverSave(
-    $0.RecoverSaveMediaTaskReq request, {
+  $grpc.ResponseFuture<$0.RecoverSaveTaskResp> recoverSave(
+    $0.RecoverSaveTaskReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$recoverSave, request, options: options);
@@ -76,143 +76,138 @@ class MediaTaskClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$createTextToImage =
-      $grpc.ClientMethod<$0.CreateTextToImageTaskReq, $0.CreateMediaTaskResp>(
-          '/hi.media.MediaTask/CreateTextToImage',
-          ($0.CreateTextToImageTaskReq value) => value.writeToBuffer(),
-          $0.CreateMediaTaskResp.fromBuffer);
   static final _$createImageToVideo =
-      $grpc.ClientMethod<$0.CreateImageToVideoTaskReq, $0.CreateMediaTaskResp>(
-          '/hi.media.MediaTask/CreateImageToVideo',
+      $grpc.ClientMethod<$0.CreateImageToVideoTaskReq, $0.CreateTaskResp>(
+          '/hi.media.Task/CreateImageToVideo',
           ($0.CreateImageToVideoTaskReq value) => value.writeToBuffer(),
-          $0.CreateMediaTaskResp.fromBuffer);
-  static final _$get =
-      $grpc.ClientMethod<$0.GetMediaTaskReq, $0.GetMediaTaskResp>(
-          '/hi.media.MediaTask/Get',
-          ($0.GetMediaTaskReq value) => value.writeToBuffer(),
-          $0.GetMediaTaskResp.fromBuffer);
-  static final _$list =
-      $grpc.ClientMethod<$0.ListMediaTasksReq, $0.ListMediaTasksResp>(
-          '/hi.media.MediaTask/List',
-          ($0.ListMediaTasksReq value) => value.writeToBuffer(),
-          $0.ListMediaTasksResp.fromBuffer);
+          $0.CreateTaskResp.fromBuffer);
+  static final _$createTextToVideo =
+      $grpc.ClientMethod<$0.CreateTextToVideoTaskReq, $0.CreateTaskResp>(
+          '/hi.media.Task/CreateTextToVideo',
+          ($0.CreateTextToVideoTaskReq value) => value.writeToBuffer(),
+          $0.CreateTaskResp.fromBuffer);
+  static final _$get = $grpc.ClientMethod<$0.GetTaskReq, $0.GetTaskResp>(
+      '/hi.media.Task/Get',
+      ($0.GetTaskReq value) => value.writeToBuffer(),
+      $0.GetTaskResp.fromBuffer);
+  static final _$list = $grpc.ClientMethod<$0.ListTasksReq, $0.ListTasksResp>(
+      '/hi.media.Task/List',
+      ($0.ListTasksReq value) => value.writeToBuffer(),
+      $0.ListTasksResp.fromBuffer);
   static final _$cancel =
-      $grpc.ClientMethod<$0.CancelMediaTaskReq, $0.CancelMediaTaskResp>(
-          '/hi.media.MediaTask/Cancel',
-          ($0.CancelMediaTaskReq value) => value.writeToBuffer(),
-          $0.CancelMediaTaskResp.fromBuffer);
-  static final _$recoverSave = $grpc.ClientMethod<$0.RecoverSaveMediaTaskReq,
-          $0.RecoverSaveMediaTaskResp>(
-      '/hi.media.MediaTask/RecoverSave',
-      ($0.RecoverSaveMediaTaskReq value) => value.writeToBuffer(),
-      $0.RecoverSaveMediaTaskResp.fromBuffer);
+      $grpc.ClientMethod<$0.CancelTaskReq, $0.CancelTaskResp>(
+          '/hi.media.Task/Cancel',
+          ($0.CancelTaskReq value) => value.writeToBuffer(),
+          $0.CancelTaskResp.fromBuffer);
+  static final _$recoverSave =
+      $grpc.ClientMethod<$0.RecoverSaveTaskReq, $0.RecoverSaveTaskResp>(
+          '/hi.media.Task/RecoverSave',
+          ($0.RecoverSaveTaskReq value) => value.writeToBuffer(),
+          $0.RecoverSaveTaskResp.fromBuffer);
 }
 
-@$pb.GrpcServiceName('hi.media.MediaTask')
-abstract class MediaTaskServiceBase extends $grpc.Service {
-  $core.String get $name => 'hi.media.MediaTask';
+@$pb.GrpcServiceName('hi.media.Task')
+abstract class TaskServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.media.Task';
 
-  MediaTaskServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.CreateTextToImageTaskReq,
-            $0.CreateMediaTaskResp>(
-        'CreateTextToImage',
-        createTextToImage_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $0.CreateTextToImageTaskReq.fromBuffer(value),
-        ($0.CreateMediaTaskResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.CreateImageToVideoTaskReq,
-            $0.CreateMediaTaskResp>(
-        'CreateImageToVideo',
-        createImageToVideo_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $0.CreateImageToVideoTaskReq.fromBuffer(value),
-        ($0.CreateMediaTaskResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.GetMediaTaskReq, $0.GetMediaTaskResp>(
+  TaskServiceBase() {
+    $addMethod(
+        $grpc.ServiceMethod<$0.CreateImageToVideoTaskReq, $0.CreateTaskResp>(
+            'CreateImageToVideo',
+            createImageToVideo_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $0.CreateImageToVideoTaskReq.fromBuffer(value),
+            ($0.CreateTaskResp value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$0.CreateTextToVideoTaskReq, $0.CreateTaskResp>(
+            'CreateTextToVideo',
+            createTextToVideo_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $0.CreateTextToVideoTaskReq.fromBuffer(value),
+            ($0.CreateTaskResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.GetTaskReq, $0.GetTaskResp>(
         'Get',
         get_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.GetMediaTaskReq.fromBuffer(value),
-        ($0.GetMediaTaskResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ListMediaTasksReq, $0.ListMediaTasksResp>(
+        ($core.List<$core.int> value) => $0.GetTaskReq.fromBuffer(value),
+        ($0.GetTaskResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ListTasksReq, $0.ListTasksResp>(
         'List',
         list_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.ListMediaTasksReq.fromBuffer(value),
-        ($0.ListMediaTasksResp value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) => $0.ListTasksReq.fromBuffer(value),
+        ($0.ListTasksResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.CancelTaskReq, $0.CancelTaskResp>(
+        'Cancel',
+        cancel_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.CancelTaskReq.fromBuffer(value),
+        ($0.CancelTaskResp value) => value.writeToBuffer()));
     $addMethod(
-        $grpc.ServiceMethod<$0.CancelMediaTaskReq, $0.CancelMediaTaskResp>(
-            'Cancel',
-            cancel_Pre,
+        $grpc.ServiceMethod<$0.RecoverSaveTaskReq, $0.RecoverSaveTaskResp>(
+            'RecoverSave',
+            recoverSave_Pre,
             false,
             false,
             ($core.List<$core.int> value) =>
-                $0.CancelMediaTaskReq.fromBuffer(value),
-            ($0.CancelMediaTaskResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.RecoverSaveMediaTaskReq,
-            $0.RecoverSaveMediaTaskResp>(
-        'RecoverSave',
-        recoverSave_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $0.RecoverSaveMediaTaskReq.fromBuffer(value),
-        ($0.RecoverSaveMediaTaskResp value) => value.writeToBuffer()));
+                $0.RecoverSaveTaskReq.fromBuffer(value),
+            ($0.RecoverSaveTaskResp value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.CreateMediaTaskResp> createTextToImage_Pre(
-      $grpc.ServiceCall $call,
-      $async.Future<$0.CreateTextToImageTaskReq> $request) async {
-    return createTextToImage($call, await $request);
-  }
-
-  $async.Future<$0.CreateMediaTaskResp> createTextToImage(
-      $grpc.ServiceCall call, $0.CreateTextToImageTaskReq request);
-
-  $async.Future<$0.CreateMediaTaskResp> createImageToVideo_Pre(
+  $async.Future<$0.CreateTaskResp> createImageToVideo_Pre(
       $grpc.ServiceCall $call,
       $async.Future<$0.CreateImageToVideoTaskReq> $request) async {
     return createImageToVideo($call, await $request);
   }
 
-  $async.Future<$0.CreateMediaTaskResp> createImageToVideo(
+  $async.Future<$0.CreateTaskResp> createImageToVideo(
       $grpc.ServiceCall call, $0.CreateImageToVideoTaskReq request);
 
-  $async.Future<$0.GetMediaTaskResp> get_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.GetMediaTaskReq> $request) async {
+  $async.Future<$0.CreateTaskResp> createTextToVideo_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.CreateTextToVideoTaskReq> $request) async {
+    return createTextToVideo($call, await $request);
+  }
+
+  $async.Future<$0.CreateTaskResp> createTextToVideo(
+      $grpc.ServiceCall call, $0.CreateTextToVideoTaskReq request);
+
+  $async.Future<$0.GetTaskResp> get_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.GetTaskReq> $request) async {
     return get($call, await $request);
   }
 
-  $async.Future<$0.GetMediaTaskResp> get(
-      $grpc.ServiceCall call, $0.GetMediaTaskReq request);
+  $async.Future<$0.GetTaskResp> get(
+      $grpc.ServiceCall call, $0.GetTaskReq request);
 
-  $async.Future<$0.ListMediaTasksResp> list_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.ListMediaTasksReq> $request) async {
+  $async.Future<$0.ListTasksResp> list_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.ListTasksReq> $request) async {
     return list($call, await $request);
   }
 
-  $async.Future<$0.ListMediaTasksResp> list(
-      $grpc.ServiceCall call, $0.ListMediaTasksReq request);
+  $async.Future<$0.ListTasksResp> list(
+      $grpc.ServiceCall call, $0.ListTasksReq request);
 
-  $async.Future<$0.CancelMediaTaskResp> cancel_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.CancelMediaTaskReq> $request) async {
+  $async.Future<$0.CancelTaskResp> cancel_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.CancelTaskReq> $request) async {
     return cancel($call, await $request);
   }
 
-  $async.Future<$0.CancelMediaTaskResp> cancel(
-      $grpc.ServiceCall call, $0.CancelMediaTaskReq request);
+  $async.Future<$0.CancelTaskResp> cancel(
+      $grpc.ServiceCall call, $0.CancelTaskReq request);
 
-  $async.Future<$0.RecoverSaveMediaTaskResp> recoverSave_Pre(
-      $grpc.ServiceCall $call,
-      $async.Future<$0.RecoverSaveMediaTaskReq> $request) async {
+  $async.Future<$0.RecoverSaveTaskResp> recoverSave_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.RecoverSaveTaskReq> $request) async {
     return recoverSave($call, await $request);
   }
 
-  $async.Future<$0.RecoverSaveMediaTaskResp> recoverSave(
-      $grpc.ServiceCall call, $0.RecoverSaveMediaTaskReq request);
+  $async.Future<$0.RecoverSaveTaskResp> recoverSave(
+      $grpc.ServiceCall call, $0.RecoverSaveTaskReq request);
 }

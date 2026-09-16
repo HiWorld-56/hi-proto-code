@@ -5,7 +5,7 @@ import grpc
 from hi.media import workflow_manage_pb2 as hi_dot_media_dot_workflow__manage__pb2
 
 
-class MediaWorkflowManageStub(object):
+class WorkflowManageStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -15,53 +15,48 @@ class MediaWorkflowManageStub(object):
             channel: A grpc.Channel.
         """
         self.ImportWorkflow = channel.unary_unary(
-                '/hi.media.MediaWorkflowManage/ImportWorkflow',
-                request_serializer=hi_dot_media_dot_workflow__manage__pb2.ImportMediaWorkflowReq.SerializeToString,
-                response_deserializer=hi_dot_media_dot_workflow__manage__pb2.ImportMediaWorkflowResp.FromString,
+                '/hi.media.WorkflowManage/ImportWorkflow',
+                request_serializer=hi_dot_media_dot_workflow__manage__pb2.ImportWorkflowReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_workflow__manage__pb2.ImportWorkflowResp.FromString,
                 _registered_method=True)
-        self.Update = channel.unary_unary(
-                '/hi.media.MediaWorkflowManage/Update',
-                request_serializer=hi_dot_media_dot_workflow__manage__pb2.UpdateMediaWorkflowReq.SerializeToString,
-                response_deserializer=hi_dot_media_dot_workflow__manage__pb2.UpdateMediaWorkflowResp.FromString,
+        self.UpdateWorkflow = channel.unary_unary(
+                '/hi.media.WorkflowManage/UpdateWorkflow',
+                request_serializer=hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowResp.FromString,
                 _registered_method=True)
-        self.List = channel.unary_unary(
-                '/hi.media.MediaWorkflowManage/List',
-                request_serializer=hi_dot_media_dot_workflow__manage__pb2.ListMediaWorkflowsReq.SerializeToString,
-                response_deserializer=hi_dot_media_dot_workflow__manage__pb2.ListMediaWorkflowsResp.FromString,
-                _registered_method=True)
-        self.Get = channel.unary_unary(
-                '/hi.media.MediaWorkflowManage/Get',
-                request_serializer=hi_dot_media_dot_workflow__manage__pb2.GetMediaWorkflowReq.SerializeToString,
-                response_deserializer=hi_dot_media_dot_workflow__manage__pb2.GetMediaWorkflowResp.FromString,
+        self.UpdateDescription = channel.unary_unary(
+                '/hi.media.WorkflowManage/UpdateDescription',
+                request_serializer=hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowDescriptionReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowDescriptionResp.FromString,
                 _registered_method=True)
         self.Validate = channel.unary_unary(
-                '/hi.media.MediaWorkflowManage/Validate',
-                request_serializer=hi_dot_media_dot_workflow__manage__pb2.ValidateMediaWorkflowReq.SerializeToString,
-                response_deserializer=hi_dot_media_dot_workflow__manage__pb2.ValidateMediaWorkflowResp.FromString,
+                '/hi.media.WorkflowManage/Validate',
+                request_serializer=hi_dot_media_dot_workflow__manage__pb2.ValidateWorkflowReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_workflow__manage__pb2.ValidateWorkflowResp.FromString,
                 _registered_method=True)
         self.Test = channel.unary_unary(
-                '/hi.media.MediaWorkflowManage/Test',
-                request_serializer=hi_dot_media_dot_workflow__manage__pb2.TestMediaWorkflowReq.SerializeToString,
-                response_deserializer=hi_dot_media_dot_workflow__manage__pb2.TestMediaWorkflowResp.FromString,
+                '/hi.media.WorkflowManage/Test',
+                request_serializer=hi_dot_media_dot_workflow__manage__pb2.TestWorkflowReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_workflow__manage__pb2.TestWorkflowResp.FromString,
                 _registered_method=True)
         self.ListTests = channel.unary_unary(
-                '/hi.media.MediaWorkflowManage/ListTests',
-                request_serializer=hi_dot_media_dot_workflow__manage__pb2.ListMediaWorkflowTestsReq.SerializeToString,
-                response_deserializer=hi_dot_media_dot_workflow__manage__pb2.ListMediaWorkflowTestsResp.FromString,
+                '/hi.media.WorkflowManage/ListTests',
+                request_serializer=hi_dot_media_dot_workflow__manage__pb2.ListWorkflowTestsReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_workflow__manage__pb2.ListWorkflowTestsResp.FromString,
                 _registered_method=True)
-        self.SetReady = channel.unary_unary(
-                '/hi.media.MediaWorkflowManage/SetReady',
-                request_serializer=hi_dot_media_dot_workflow__manage__pb2.SetMediaWorkflowReadyReq.SerializeToString,
-                response_deserializer=hi_dot_media_dot_workflow__manage__pb2.SetMediaWorkflowReadyResp.FromString,
+        self.List = channel.unary_unary(
+                '/hi.media.WorkflowManage/List',
+                request_serializer=hi_dot_media_dot_workflow__manage__pb2.ListWorkflowsReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_workflow__manage__pb2.ListWorkflowsResp.FromString,
                 _registered_method=True)
-        self.SetActive = channel.unary_unary(
-                '/hi.media.MediaWorkflowManage/SetActive',
-                request_serializer=hi_dot_media_dot_workflow__manage__pb2.SetActiveMediaWorkflowReq.SerializeToString,
-                response_deserializer=hi_dot_media_dot_workflow__manage__pb2.SetActiveMediaWorkflowResp.FromString,
+        self.Get = channel.unary_unary(
+                '/hi.media.WorkflowManage/Get',
+                request_serializer=hi_dot_media_dot_workflow__manage__pb2.GetWorkflowReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_workflow__manage__pb2.GetWorkflowResp.FromString,
                 _registered_method=True)
 
 
-class MediaWorkflowManageServicer(object):
+class WorkflowManageServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def ImportWorkflow(self, request, context):
@@ -70,19 +65,13 @@ class MediaWorkflowManageServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def Update(self, request, context):
+    def UpdateWorkflow(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def List(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def Get(self, request, context):
+    def UpdateDescription(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -106,75 +95,70 @@ class MediaWorkflowManageServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def SetReady(self, request, context):
+    def List(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def SetActive(self, request, context):
+    def Get(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
 
-def add_MediaWorkflowManageServicer_to_server(servicer, server):
+def add_WorkflowManageServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'ImportWorkflow': grpc.unary_unary_rpc_method_handler(
                     servicer.ImportWorkflow,
-                    request_deserializer=hi_dot_media_dot_workflow__manage__pb2.ImportMediaWorkflowReq.FromString,
-                    response_serializer=hi_dot_media_dot_workflow__manage__pb2.ImportMediaWorkflowResp.SerializeToString,
+                    request_deserializer=hi_dot_media_dot_workflow__manage__pb2.ImportWorkflowReq.FromString,
+                    response_serializer=hi_dot_media_dot_workflow__manage__pb2.ImportWorkflowResp.SerializeToString,
             ),
-            'Update': grpc.unary_unary_rpc_method_handler(
-                    servicer.Update,
-                    request_deserializer=hi_dot_media_dot_workflow__manage__pb2.UpdateMediaWorkflowReq.FromString,
-                    response_serializer=hi_dot_media_dot_workflow__manage__pb2.UpdateMediaWorkflowResp.SerializeToString,
+            'UpdateWorkflow': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdateWorkflow,
+                    request_deserializer=hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowReq.FromString,
+                    response_serializer=hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowResp.SerializeToString,
             ),
-            'List': grpc.unary_unary_rpc_method_handler(
-                    servicer.List,
-                    request_deserializer=hi_dot_media_dot_workflow__manage__pb2.ListMediaWorkflowsReq.FromString,
-                    response_serializer=hi_dot_media_dot_workflow__manage__pb2.ListMediaWorkflowsResp.SerializeToString,
-            ),
-            'Get': grpc.unary_unary_rpc_method_handler(
-                    servicer.Get,
-                    request_deserializer=hi_dot_media_dot_workflow__manage__pb2.GetMediaWorkflowReq.FromString,
-                    response_serializer=hi_dot_media_dot_workflow__manage__pb2.GetMediaWorkflowResp.SerializeToString,
+            'UpdateDescription': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdateDescription,
+                    request_deserializer=hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowDescriptionReq.FromString,
+                    response_serializer=hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowDescriptionResp.SerializeToString,
             ),
             'Validate': grpc.unary_unary_rpc_method_handler(
                     servicer.Validate,
-                    request_deserializer=hi_dot_media_dot_workflow__manage__pb2.ValidateMediaWorkflowReq.FromString,
-                    response_serializer=hi_dot_media_dot_workflow__manage__pb2.ValidateMediaWorkflowResp.SerializeToString,
+                    request_deserializer=hi_dot_media_dot_workflow__manage__pb2.ValidateWorkflowReq.FromString,
+                    response_serializer=hi_dot_media_dot_workflow__manage__pb2.ValidateWorkflowResp.SerializeToString,
             ),
             'Test': grpc.unary_unary_rpc_method_handler(
                     servicer.Test,
-                    request_deserializer=hi_dot_media_dot_workflow__manage__pb2.TestMediaWorkflowReq.FromString,
-                    response_serializer=hi_dot_media_dot_workflow__manage__pb2.TestMediaWorkflowResp.SerializeToString,
+                    request_deserializer=hi_dot_media_dot_workflow__manage__pb2.TestWorkflowReq.FromString,
+                    response_serializer=hi_dot_media_dot_workflow__manage__pb2.TestWorkflowResp.SerializeToString,
             ),
             'ListTests': grpc.unary_unary_rpc_method_handler(
                     servicer.ListTests,
-                    request_deserializer=hi_dot_media_dot_workflow__manage__pb2.ListMediaWorkflowTestsReq.FromString,
-                    response_serializer=hi_dot_media_dot_workflow__manage__pb2.ListMediaWorkflowTestsResp.SerializeToString,
+                    request_deserializer=hi_dot_media_dot_workflow__manage__pb2.ListWorkflowTestsReq.FromString,
+                    response_serializer=hi_dot_media_dot_workflow__manage__pb2.ListWorkflowTestsResp.SerializeToString,
             ),
-            'SetReady': grpc.unary_unary_rpc_method_handler(
-                    servicer.SetReady,
-                    request_deserializer=hi_dot_media_dot_workflow__manage__pb2.SetMediaWorkflowReadyReq.FromString,
-                    response_serializer=hi_dot_media_dot_workflow__manage__pb2.SetMediaWorkflowReadyResp.SerializeToString,
+            'List': grpc.unary_unary_rpc_method_handler(
+                    servicer.List,
+                    request_deserializer=hi_dot_media_dot_workflow__manage__pb2.ListWorkflowsReq.FromString,
+                    response_serializer=hi_dot_media_dot_workflow__manage__pb2.ListWorkflowsResp.SerializeToString,
             ),
-            'SetActive': grpc.unary_unary_rpc_method_handler(
-                    servicer.SetActive,
-                    request_deserializer=hi_dot_media_dot_workflow__manage__pb2.SetActiveMediaWorkflowReq.FromString,
-                    response_serializer=hi_dot_media_dot_workflow__manage__pb2.SetActiveMediaWorkflowResp.SerializeToString,
+            'Get': grpc.unary_unary_rpc_method_handler(
+                    servicer.Get,
+                    request_deserializer=hi_dot_media_dot_workflow__manage__pb2.GetWorkflowReq.FromString,
+                    response_serializer=hi_dot_media_dot_workflow__manage__pb2.GetWorkflowResp.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'hi.media.MediaWorkflowManage', rpc_method_handlers)
+            'hi.media.WorkflowManage', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('hi.media.MediaWorkflowManage', rpc_method_handlers)
+    server.add_registered_method_handlers('hi.media.WorkflowManage', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class MediaWorkflowManage(object):
+class WorkflowManage(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -191,9 +175,9 @@ class MediaWorkflowManage(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.MediaWorkflowManage/ImportWorkflow',
-            hi_dot_media_dot_workflow__manage__pb2.ImportMediaWorkflowReq.SerializeToString,
-            hi_dot_media_dot_workflow__manage__pb2.ImportMediaWorkflowResp.FromString,
+            '/hi.media.WorkflowManage/ImportWorkflow',
+            hi_dot_media_dot_workflow__manage__pb2.ImportWorkflowReq.SerializeToString,
+            hi_dot_media_dot_workflow__manage__pb2.ImportWorkflowResp.FromString,
             options,
             channel_credentials,
             insecure,
@@ -205,7 +189,7 @@ class MediaWorkflowManage(object):
             _registered_method=True)
 
     @staticmethod
-    def Update(request,
+    def UpdateWorkflow(request,
             target,
             options=(),
             channel_credentials=None,
@@ -218,9 +202,9 @@ class MediaWorkflowManage(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.MediaWorkflowManage/Update',
-            hi_dot_media_dot_workflow__manage__pb2.UpdateMediaWorkflowReq.SerializeToString,
-            hi_dot_media_dot_workflow__manage__pb2.UpdateMediaWorkflowResp.FromString,
+            '/hi.media.WorkflowManage/UpdateWorkflow',
+            hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowReq.SerializeToString,
+            hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowResp.FromString,
             options,
             channel_credentials,
             insecure,
@@ -232,7 +216,7 @@ class MediaWorkflowManage(object):
             _registered_method=True)
 
     @staticmethod
-    def List(request,
+    def UpdateDescription(request,
             target,
             options=(),
             channel_credentials=None,
@@ -245,36 +229,9 @@ class MediaWorkflowManage(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.MediaWorkflowManage/List',
-            hi_dot_media_dot_workflow__manage__pb2.ListMediaWorkflowsReq.SerializeToString,
-            hi_dot_media_dot_workflow__manage__pb2.ListMediaWorkflowsResp.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def Get(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/hi.media.MediaWorkflowManage/Get',
-            hi_dot_media_dot_workflow__manage__pb2.GetMediaWorkflowReq.SerializeToString,
-            hi_dot_media_dot_workflow__manage__pb2.GetMediaWorkflowResp.FromString,
+            '/hi.media.WorkflowManage/UpdateDescription',
+            hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowDescriptionReq.SerializeToString,
+            hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowDescriptionResp.FromString,
             options,
             channel_credentials,
             insecure,
@@ -299,9 +256,9 @@ class MediaWorkflowManage(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.MediaWorkflowManage/Validate',
-            hi_dot_media_dot_workflow__manage__pb2.ValidateMediaWorkflowReq.SerializeToString,
-            hi_dot_media_dot_workflow__manage__pb2.ValidateMediaWorkflowResp.FromString,
+            '/hi.media.WorkflowManage/Validate',
+            hi_dot_media_dot_workflow__manage__pb2.ValidateWorkflowReq.SerializeToString,
+            hi_dot_media_dot_workflow__manage__pb2.ValidateWorkflowResp.FromString,
             options,
             channel_credentials,
             insecure,
@@ -326,9 +283,9 @@ class MediaWorkflowManage(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.MediaWorkflowManage/Test',
-            hi_dot_media_dot_workflow__manage__pb2.TestMediaWorkflowReq.SerializeToString,
-            hi_dot_media_dot_workflow__manage__pb2.TestMediaWorkflowResp.FromString,
+            '/hi.media.WorkflowManage/Test',
+            hi_dot_media_dot_workflow__manage__pb2.TestWorkflowReq.SerializeToString,
+            hi_dot_media_dot_workflow__manage__pb2.TestWorkflowResp.FromString,
             options,
             channel_credentials,
             insecure,
@@ -353,9 +310,9 @@ class MediaWorkflowManage(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.MediaWorkflowManage/ListTests',
-            hi_dot_media_dot_workflow__manage__pb2.ListMediaWorkflowTestsReq.SerializeToString,
-            hi_dot_media_dot_workflow__manage__pb2.ListMediaWorkflowTestsResp.FromString,
+            '/hi.media.WorkflowManage/ListTests',
+            hi_dot_media_dot_workflow__manage__pb2.ListWorkflowTestsReq.SerializeToString,
+            hi_dot_media_dot_workflow__manage__pb2.ListWorkflowTestsResp.FromString,
             options,
             channel_credentials,
             insecure,
@@ -367,7 +324,7 @@ class MediaWorkflowManage(object):
             _registered_method=True)
 
     @staticmethod
-    def SetReady(request,
+    def List(request,
             target,
             options=(),
             channel_credentials=None,
@@ -380,9 +337,9 @@ class MediaWorkflowManage(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.MediaWorkflowManage/SetReady',
-            hi_dot_media_dot_workflow__manage__pb2.SetMediaWorkflowReadyReq.SerializeToString,
-            hi_dot_media_dot_workflow__manage__pb2.SetMediaWorkflowReadyResp.FromString,
+            '/hi.media.WorkflowManage/List',
+            hi_dot_media_dot_workflow__manage__pb2.ListWorkflowsReq.SerializeToString,
+            hi_dot_media_dot_workflow__manage__pb2.ListWorkflowsResp.FromString,
             options,
             channel_credentials,
             insecure,
@@ -394,7 +351,7 @@ class MediaWorkflowManage(object):
             _registered_method=True)
 
     @staticmethod
-    def SetActive(request,
+    def Get(request,
             target,
             options=(),
             channel_credentials=None,
@@ -407,9 +364,9 @@ class MediaWorkflowManage(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.MediaWorkflowManage/SetActive',
-            hi_dot_media_dot_workflow__manage__pb2.SetActiveMediaWorkflowReq.SerializeToString,
-            hi_dot_media_dot_workflow__manage__pb2.SetActiveMediaWorkflowResp.FromString,
+            '/hi.media.WorkflowManage/Get',
+            hi_dot_media_dot_workflow__manage__pb2.GetWorkflowReq.SerializeToString,
+            hi_dot_media_dot_workflow__manage__pb2.GetWorkflowResp.FromString,
             options,
             channel_credentials,
             insecure,

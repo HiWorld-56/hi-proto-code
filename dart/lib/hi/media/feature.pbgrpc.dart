@@ -20,8 +20,8 @@ import 'feature.pb.dart' as $0;
 
 export 'feature.pb.dart';
 
-@$pb.GrpcServiceName('hi.media.MediaFeature')
-class MediaFeatureClient extends $grpc.Client {
+@$pb.GrpcServiceName('hi.media.Feature')
+class FeatureClient extends $grpc.Client {
   /// The hostname for this service.
   static const $core.String defaultHost = '';
 
@@ -30,10 +30,10 @@ class MediaFeatureClient extends $grpc.Client {
     '',
   ];
 
-  MediaFeatureClient(super.channel, {super.options, super.interceptors});
+  FeatureClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$0.GetMediaFeatureResp> get(
-    $0.GetMediaFeatureReq request, {
+  $grpc.ResponseFuture<$0.GetFeatureResp> get(
+    $0.GetFeatureReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$get, request, options: options);
@@ -41,34 +41,31 @@ class MediaFeatureClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$get =
-      $grpc.ClientMethod<$0.GetMediaFeatureReq, $0.GetMediaFeatureResp>(
-          '/hi.media.MediaFeature/Get',
-          ($0.GetMediaFeatureReq value) => value.writeToBuffer(),
-          $0.GetMediaFeatureResp.fromBuffer);
+  static final _$get = $grpc.ClientMethod<$0.GetFeatureReq, $0.GetFeatureResp>(
+      '/hi.media.Feature/Get',
+      ($0.GetFeatureReq value) => value.writeToBuffer(),
+      $0.GetFeatureResp.fromBuffer);
 }
 
-@$pb.GrpcServiceName('hi.media.MediaFeature')
-abstract class MediaFeatureServiceBase extends $grpc.Service {
-  $core.String get $name => 'hi.media.MediaFeature';
+@$pb.GrpcServiceName('hi.media.Feature')
+abstract class FeatureServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.media.Feature';
 
-  MediaFeatureServiceBase() {
-    $addMethod(
-        $grpc.ServiceMethod<$0.GetMediaFeatureReq, $0.GetMediaFeatureResp>(
-            'Get',
-            get_Pre,
-            false,
-            false,
-            ($core.List<$core.int> value) =>
-                $0.GetMediaFeatureReq.fromBuffer(value),
-            ($0.GetMediaFeatureResp value) => value.writeToBuffer()));
+  FeatureServiceBase() {
+    $addMethod($grpc.ServiceMethod<$0.GetFeatureReq, $0.GetFeatureResp>(
+        'Get',
+        get_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.GetFeatureReq.fromBuffer(value),
+        ($0.GetFeatureResp value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.GetMediaFeatureResp> get_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.GetMediaFeatureReq> $request) async {
+  $async.Future<$0.GetFeatureResp> get_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.GetFeatureReq> $request) async {
     return get($call, await $request);
   }
 
-  $async.Future<$0.GetMediaFeatureResp> get(
-      $grpc.ServiceCall call, $0.GetMediaFeatureReq request);
+  $async.Future<$0.GetFeatureResp> get(
+      $grpc.ServiceCall call, $0.GetFeatureReq request);
 }

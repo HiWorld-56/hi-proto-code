@@ -35,11 +35,11 @@ var (
 	_ = metadata.Join
 )
 
-var filter_MediaFeature_Get_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+var filter_Feature_Get_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
 
-func request_MediaFeature_Get_0(ctx context.Context, marshaler runtime.Marshaler, client MediaFeatureClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_Feature_Get_0(ctx context.Context, marshaler runtime.Marshaler, client FeatureClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq GetMediaFeatureReq
+		protoReq GetFeatureReq
 		metadata runtime.ServerMetadata
 	)
 	if req.Body != nil {
@@ -48,61 +48,61 @@ func request_MediaFeature_Get_0(ctx context.Context, marshaler runtime.Marshaler
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_MediaFeature_Get_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Feature_Get_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 	msg, err := client.Get(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_MediaFeature_Get_0(ctx context.Context, marshaler runtime.Marshaler, server MediaFeatureServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_Feature_Get_0(ctx context.Context, marshaler runtime.Marshaler, server FeatureServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq GetMediaFeatureReq
+		protoReq GetFeatureReq
 		metadata runtime.ServerMetadata
 	)
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_MediaFeature_Get_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Feature_Get_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 	msg, err := server.Get(ctx, &protoReq)
 	return msg, metadata, err
 }
 
-// RegisterMediaFeatureHandlerServer registers the http handlers for service MediaFeature to "mux".
-// UnaryRPC     :call MediaFeatureServer directly.
+// RegisterFeatureHandlerServer registers the http handlers for service Feature to "mux".
+// UnaryRPC     :call FeatureServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterMediaFeatureHandlerFromEndpoint instead.
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterFeatureHandlerFromEndpoint instead.
 // GRPC interceptors will not work for this type of registration. To use interceptors, you must use the "runtime.WithMiddlewares" option in the "runtime.NewServeMux" call.
-func RegisterMediaFeatureHandlerServer(ctx context.Context, mux *runtime.ServeMux, server MediaFeatureServer) error {
-	mux.Handle(http.MethodGet, pattern_MediaFeature_Get_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+func RegisterFeatureHandlerServer(ctx context.Context, mux *runtime.ServeMux, server FeatureServer) error {
+	mux.Handle(http.MethodGet, pattern_Feature_Get_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.MediaFeature/Get", runtime.WithHTTPPathPattern("/api/v1/media_feature/get"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.Feature/Get", runtime.WithHTTPPathPattern("/api/v1/feature/get"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_MediaFeature_Get_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Feature_Get_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaFeature_Get_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Feature_Get_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil
 }
 
-// RegisterMediaFeatureHandlerFromEndpoint is same as RegisterMediaFeatureHandler but
+// RegisterFeatureHandlerFromEndpoint is same as RegisterFeatureHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterMediaFeatureHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterFeatureHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.NewClient(endpoint, opts...)
 	if err != nil {
 		return err
@@ -121,45 +121,45 @@ func RegisterMediaFeatureHandlerFromEndpoint(ctx context.Context, mux *runtime.S
 			}
 		}()
 	}()
-	return RegisterMediaFeatureHandler(ctx, mux, conn)
+	return RegisterFeatureHandler(ctx, mux, conn)
 }
 
-// RegisterMediaFeatureHandler registers the http handlers for service MediaFeature to "mux".
+// RegisterFeatureHandler registers the http handlers for service Feature to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterMediaFeatureHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterMediaFeatureHandlerClient(ctx, mux, NewMediaFeatureClient(conn))
+func RegisterFeatureHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterFeatureHandlerClient(ctx, mux, NewFeatureClient(conn))
 }
 
-// RegisterMediaFeatureHandlerClient registers the http handlers for service MediaFeature
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "MediaFeatureClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "MediaFeatureClient"
+// RegisterFeatureHandlerClient registers the http handlers for service Feature
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "FeatureClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "FeatureClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "MediaFeatureClient" to call the correct interceptors. This client ignores the HTTP middlewares.
-func RegisterMediaFeatureHandlerClient(ctx context.Context, mux *runtime.ServeMux, client MediaFeatureClient) error {
-	mux.Handle(http.MethodGet, pattern_MediaFeature_Get_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+// "FeatureClient" to call the correct interceptors. This client ignores the HTTP middlewares.
+func RegisterFeatureHandlerClient(ctx context.Context, mux *runtime.ServeMux, client FeatureClient) error {
+	mux.Handle(http.MethodGet, pattern_Feature_Get_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.MediaFeature/Get", runtime.WithHTTPPathPattern("/api/v1/media_feature/get"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.Feature/Get", runtime.WithHTTPPathPattern("/api/v1/feature/get"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_MediaFeature_Get_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Feature_Get_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaFeature_Get_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Feature_Get_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	return nil
 }
 
 var (
-	pattern_MediaFeature_Get_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "media_feature", "get"}, ""))
+	pattern_Feature_Get_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "feature", "get"}, ""))
 )
 
 var (
-	forward_MediaFeature_Get_0 = runtime.ForwardResponseMessage
+	forward_Feature_Get_0 = runtime.ForwardResponseMessage
 )

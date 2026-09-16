@@ -14,110 +14,107 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-class MediaWorkflowDependencyKind extends $pb.ProtobufEnum {
-  static const MediaWorkflowDependencyKind
-      MEDIA_WORKFLOW_DEPENDENCY_KIND_UNSPECIFIED =
-      MediaWorkflowDependencyKind._(0,
-          _omitEnumNames ? '' : 'MEDIA_WORKFLOW_DEPENDENCY_KIND_UNSPECIFIED');
-  static const MediaWorkflowDependencyKind
-      MEDIA_WORKFLOW_DEPENDENCY_KIND_NODE_CLASS = MediaWorkflowDependencyKind._(
-          1, _omitEnumNames ? '' : 'MEDIA_WORKFLOW_DEPENDENCY_KIND_NODE_CLASS');
-  static const MediaWorkflowDependencyKind
-      MEDIA_WORKFLOW_DEPENDENCY_KIND_LOADER_FILE =
-      MediaWorkflowDependencyKind._(2,
-          _omitEnumNames ? '' : 'MEDIA_WORKFLOW_DEPENDENCY_KIND_LOADER_FILE');
+class WorkflowStatus extends $pb.ProtobufEnum {
+  static const WorkflowStatus WORKFLOW_STATUS_UNSPECIFIED =
+      WorkflowStatus._(0, _omitEnumNames ? '' : 'WORKFLOW_STATUS_UNSPECIFIED');
+  static const WorkflowStatus WORKFLOW_STATUS_DRAFT =
+      WorkflowStatus._(1, _omitEnumNames ? '' : 'WORKFLOW_STATUS_DRAFT');
 
-  static const $core.List<MediaWorkflowDependencyKind> values =
-      <MediaWorkflowDependencyKind>[
-    MEDIA_WORKFLOW_DEPENDENCY_KIND_UNSPECIFIED,
-    MEDIA_WORKFLOW_DEPENDENCY_KIND_NODE_CLASS,
-    MEDIA_WORKFLOW_DEPENDENCY_KIND_LOADER_FILE,
+  /// 最近校验通过的草稿在管理试跑完整成功后自动进入 ENABLED；是否对用户可用仍由映射决定。
+  static const WorkflowStatus WORKFLOW_STATUS_ENABLED =
+      WorkflowStatus._(2, _omitEnumNames ? '' : 'WORKFLOW_STATUS_ENABLED');
+
+  static const $core.List<WorkflowStatus> values = <WorkflowStatus>[
+    WORKFLOW_STATUS_UNSPECIFIED,
+    WORKFLOW_STATUS_DRAFT,
+    WORKFLOW_STATUS_ENABLED,
   ];
 
-  static final $core.List<MediaWorkflowDependencyKind?> _byValue =
+  static final $core.List<WorkflowStatus?> _byValue =
       $pb.ProtobufEnum.$_initByValueList(values, 2);
-  static MediaWorkflowDependencyKind? valueOf($core.int value) =>
+  static WorkflowStatus? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
-  const MediaWorkflowDependencyKind._(super.value, super.name);
+  const WorkflowStatus._(super.value, super.name);
 }
 
-class MediaWorkflowIssueSeverity extends $pb.ProtobufEnum {
-  static const MediaWorkflowIssueSeverity
-      MEDIA_WORKFLOW_ISSUE_SEVERITY_UNSPECIFIED = MediaWorkflowIssueSeverity._(
-          0, _omitEnumNames ? '' : 'MEDIA_WORKFLOW_ISSUE_SEVERITY_UNSPECIFIED');
-  static const MediaWorkflowIssueSeverity MEDIA_WORKFLOW_ISSUE_SEVERITY_ERROR =
-      MediaWorkflowIssueSeverity._(
-          1, _omitEnumNames ? '' : 'MEDIA_WORKFLOW_ISSUE_SEVERITY_ERROR');
-  static const MediaWorkflowIssueSeverity
-      MEDIA_WORKFLOW_ISSUE_SEVERITY_WARNING = MediaWorkflowIssueSeverity._(
-          2, _omitEnumNames ? '' : 'MEDIA_WORKFLOW_ISSUE_SEVERITY_WARNING');
+class WorkflowValidationStatus extends $pb.ProtobufEnum {
+  /// 尚未校验。
+  static const WorkflowValidationStatus WORKFLOW_VALIDATION_STATUS_UNSPECIFIED =
+      WorkflowValidationStatus._(
+          0, _omitEnumNames ? '' : 'WORKFLOW_VALIDATION_STATUS_UNSPECIFIED');
+  static const WorkflowValidationStatus WORKFLOW_VALIDATION_STATUS_PASSED =
+      WorkflowValidationStatus._(
+          1, _omitEnumNames ? '' : 'WORKFLOW_VALIDATION_STATUS_PASSED');
+  static const WorkflowValidationStatus WORKFLOW_VALIDATION_STATUS_FAILED =
+      WorkflowValidationStatus._(
+          2, _omitEnumNames ? '' : 'WORKFLOW_VALIDATION_STATUS_FAILED');
 
-  static const $core.List<MediaWorkflowIssueSeverity> values =
-      <MediaWorkflowIssueSeverity>[
-    MEDIA_WORKFLOW_ISSUE_SEVERITY_UNSPECIFIED,
-    MEDIA_WORKFLOW_ISSUE_SEVERITY_ERROR,
-    MEDIA_WORKFLOW_ISSUE_SEVERITY_WARNING,
+  static const $core.List<WorkflowValidationStatus> values =
+      <WorkflowValidationStatus>[
+    WORKFLOW_VALIDATION_STATUS_UNSPECIFIED,
+    WORKFLOW_VALIDATION_STATUS_PASSED,
+    WORKFLOW_VALIDATION_STATUS_FAILED,
   ];
 
-  static final $core.List<MediaWorkflowIssueSeverity?> _byValue =
+  static final $core.List<WorkflowValidationStatus?> _byValue =
       $pb.ProtobufEnum.$_initByValueList(values, 2);
-  static MediaWorkflowIssueSeverity? valueOf($core.int value) =>
+  static WorkflowValidationStatus? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
-  const MediaWorkflowIssueSeverity._(super.value, super.name);
+  const WorkflowValidationStatus._(super.value, super.name);
 }
 
-class MediaWorkflowStatus extends $pb.ProtobufEnum {
-  static const MediaWorkflowStatus MEDIA_WORKFLOW_STATUS_UNSPECIFIED =
-      MediaWorkflowStatus._(
-          0, _omitEnumNames ? '' : 'MEDIA_WORKFLOW_STATUS_UNSPECIFIED');
-  static const MediaWorkflowStatus MEDIA_WORKFLOW_STATUS_DRAFT =
-      MediaWorkflowStatus._(
-          1, _omitEnumNames ? '' : 'MEDIA_WORKFLOW_STATUS_DRAFT');
-  static const MediaWorkflowStatus MEDIA_WORKFLOW_STATUS_READY =
-      MediaWorkflowStatus._(
-          2, _omitEnumNames ? '' : 'MEDIA_WORKFLOW_STATUS_READY');
+class WorkflowIssueSeverity extends $pb.ProtobufEnum {
+  static const WorkflowIssueSeverity WORKFLOW_ISSUE_SEVERITY_UNSPECIFIED =
+      WorkflowIssueSeverity._(
+          0, _omitEnumNames ? '' : 'WORKFLOW_ISSUE_SEVERITY_UNSPECIFIED');
+  static const WorkflowIssueSeverity WORKFLOW_ISSUE_SEVERITY_WARNING =
+      WorkflowIssueSeverity._(
+          1, _omitEnumNames ? '' : 'WORKFLOW_ISSUE_SEVERITY_WARNING');
+  static const WorkflowIssueSeverity WORKFLOW_ISSUE_SEVERITY_ERROR =
+      WorkflowIssueSeverity._(
+          2, _omitEnumNames ? '' : 'WORKFLOW_ISSUE_SEVERITY_ERROR');
 
-  static const $core.List<MediaWorkflowStatus> values = <MediaWorkflowStatus>[
-    MEDIA_WORKFLOW_STATUS_UNSPECIFIED,
-    MEDIA_WORKFLOW_STATUS_DRAFT,
-    MEDIA_WORKFLOW_STATUS_READY,
+  static const $core.List<WorkflowIssueSeverity> values =
+      <WorkflowIssueSeverity>[
+    WORKFLOW_ISSUE_SEVERITY_UNSPECIFIED,
+    WORKFLOW_ISSUE_SEVERITY_WARNING,
+    WORKFLOW_ISSUE_SEVERITY_ERROR,
   ];
 
-  static final $core.List<MediaWorkflowStatus?> _byValue =
+  static final $core.List<WorkflowIssueSeverity?> _byValue =
       $pb.ProtobufEnum.$_initByValueList(values, 2);
-  static MediaWorkflowStatus? valueOf($core.int value) =>
+  static WorkflowIssueSeverity? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
-  const MediaWorkflowStatus._(super.value, super.name);
+  const WorkflowIssueSeverity._(super.value, super.name);
 }
 
-class MediaWorkflowValidationStatus extends $pb.ProtobufEnum {
-  static const MediaWorkflowValidationStatus
-      MEDIA_WORKFLOW_VALIDATION_STATUS_UNSPECIFIED =
-      MediaWorkflowValidationStatus._(0,
-          _omitEnumNames ? '' : 'MEDIA_WORKFLOW_VALIDATION_STATUS_UNSPECIFIED');
-  static const MediaWorkflowValidationStatus
-      MEDIA_WORKFLOW_VALIDATION_STATUS_PASSED = MediaWorkflowValidationStatus._(
-          1, _omitEnumNames ? '' : 'MEDIA_WORKFLOW_VALIDATION_STATUS_PASSED');
-  static const MediaWorkflowValidationStatus
-      MEDIA_WORKFLOW_VALIDATION_STATUS_FAILED = MediaWorkflowValidationStatus._(
-          2, _omitEnumNames ? '' : 'MEDIA_WORKFLOW_VALIDATION_STATUS_FAILED');
+class WorkflowDependencyKind extends $pb.ProtobufEnum {
+  static const WorkflowDependencyKind WORKFLOW_DEPENDENCY_KIND_UNSPECIFIED =
+      WorkflowDependencyKind._(
+          0, _omitEnumNames ? '' : 'WORKFLOW_DEPENDENCY_KIND_UNSPECIFIED');
+  static const WorkflowDependencyKind WORKFLOW_DEPENDENCY_KIND_NODE_CLASS =
+      WorkflowDependencyKind._(
+          1, _omitEnumNames ? '' : 'WORKFLOW_DEPENDENCY_KIND_NODE_CLASS');
+  static const WorkflowDependencyKind WORKFLOW_DEPENDENCY_KIND_LOADER_FILE =
+      WorkflowDependencyKind._(
+          2, _omitEnumNames ? '' : 'WORKFLOW_DEPENDENCY_KIND_LOADER_FILE');
 
-  static const $core.List<MediaWorkflowValidationStatus> values =
-      <MediaWorkflowValidationStatus>[
-    MEDIA_WORKFLOW_VALIDATION_STATUS_UNSPECIFIED,
-    MEDIA_WORKFLOW_VALIDATION_STATUS_PASSED,
-    MEDIA_WORKFLOW_VALIDATION_STATUS_FAILED,
+  static const $core.List<WorkflowDependencyKind> values =
+      <WorkflowDependencyKind>[
+    WORKFLOW_DEPENDENCY_KIND_UNSPECIFIED,
+    WORKFLOW_DEPENDENCY_KIND_NODE_CLASS,
+    WORKFLOW_DEPENDENCY_KIND_LOADER_FILE,
   ];
 
-  static final $core.List<MediaWorkflowValidationStatus?> _byValue =
+  static final $core.List<WorkflowDependencyKind?> _byValue =
       $pb.ProtobufEnum.$_initByValueList(values, 2);
-  static MediaWorkflowValidationStatus? valueOf($core.int value) =>
+  static WorkflowDependencyKind? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
-  const MediaWorkflowValidationStatus._(super.value, super.name);
+  const WorkflowDependencyKind._(super.value, super.name);
 }
 
 const $core.bool _omitEnumNames =

@@ -17,8 +17,8 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
-class GetMediaQuotaResp extends $pb.GeneratedMessage {
-  factory GetMediaQuotaResp({
+class GetQuotaResp extends $pb.GeneratedMessage {
+  factory GetQuotaResp({
     $fixnum.Int64? totalBytes,
     $fixnum.Int64? usedBytes,
     $fixnum.Int64? availableBytes,
@@ -30,17 +30,17 @@ class GetMediaQuotaResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  GetMediaQuotaResp._();
+  GetQuotaResp._();
 
-  factory GetMediaQuotaResp.fromBuffer($core.List<$core.int> data,
+  factory GetQuotaResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory GetMediaQuotaResp.fromJson($core.String json,
+  factory GetQuotaResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetMediaQuotaResp',
+      _omitMessageNames ? '' : 'GetQuotaResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..a<$fixnum.Int64>(
@@ -55,23 +55,23 @@ class GetMediaQuotaResp extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetMediaQuotaResp clone() => deepCopy();
+  GetQuotaResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetMediaQuotaResp copyWith(void Function(GetMediaQuotaResp) updates) =>
-      super.copyWith((message) => updates(message as GetMediaQuotaResp))
-          as GetMediaQuotaResp;
+  GetQuotaResp copyWith(void Function(GetQuotaResp) updates) =>
+      super.copyWith((message) => updates(message as GetQuotaResp))
+          as GetQuotaResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static GetMediaQuotaResp create() => GetMediaQuotaResp._();
+  static GetQuotaResp create() => GetQuotaResp._();
   @$core.override
-  GetMediaQuotaResp createEmptyInstance() => create();
+  GetQuotaResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static GetMediaQuotaResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetMediaQuotaResp>(create);
-  static GetMediaQuotaResp? _defaultInstance;
+  static GetQuotaResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetQuotaResp>(create);
+  static GetQuotaResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $fixnum.Int64 get totalBytes => $_getI64(0);

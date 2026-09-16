@@ -23,11 +23,10 @@ _sym_db = _symbol_database.Default()
 
 
 from buf.validate import validate_pb2 as buf_dot_validate_dot_validate__pb2
-from hi.media import task_pb2 as hi_dot_media_dot_task__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x16hi/media/feature.proto\x12\x08hi.media\x1a\x1b\x62uf/validate/validate.proto\x1a\x13hi/media/task.proto\x1a\x10hi/options.proto\"V\n\x12GetMediaFeatureReq\x12\x30\n\x0b\x66\x65\x61ture_key\x18\x01 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x00R\nfeatureKey\x88\x01\x01\x42\x0e\n\x0c_feature_key\"\xf6\x02\n\x18TextToImageFeatureConfig\x12\x35\n\x11prompt_max_length\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x01H\x00R\x0fpromptMaxLength\x88\x01\x01\x12\x46\n\x1anegative_prompt_max_length\x18\x02 \x01(\x05\x42\x04\x90\xb5\x18\x01H\x01R\x17negativePromptMaxLength\x88\x01\x01\x12P\n\x13\x61llowed_resolutions\x18\x03 \x03(\x0b\x32\x19.hi.media.MediaResolutionB\x04\x90\xb5\x18\x01R\x12\x61llowedResolutions\x12N\n\x12\x64\x65\x66\x61ult_resolution\x18\x04 \x01(\x0b\x32\x19.hi.media.MediaResolutionB\x04\x90\xb5\x18\x01R\x11\x64\x65\x66\x61ultResolution:\x04\x98\xb5\x18\x01\x42\x14\n\x12_prompt_max_lengthB\x1d\n\x1b_negative_prompt_max_length\"\xfc\x04\n\x19ImageToVideoFeatureConfig\x12\x35\n\x11prompt_max_length\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x01H\x00R\x0fpromptMaxLength\x88\x01\x01\x12\x46\n\x1anegative_prompt_max_length\x18\x02 \x01(\x05\x42\x04\x90\xb5\x18\x01H\x01R\x17negativePromptMaxLength\x88\x01\x01\x12P\n\x13\x61llowed_resolutions\x18\x03 \x03(\x0b\x32\x19.hi.media.MediaResolutionB\x04\x90\xb5\x18\x01R\x12\x61llowedResolutions\x12N\n\x12\x64\x65\x66\x61ult_resolution\x18\x04 \x01(\x0b\x32\x19.hi.media.MediaResolutionB\x04\x90\xb5\x18\x01R\x11\x64\x65\x66\x61ultResolution\x12>\n\x18\x61llowed_duration_seconds\x18\x05 \x03(\x05\x42\x04\x90\xb5\x18\x01R\x16\x61llowedDurationSeconds\x12\x43\n\x18\x64\x65\x66\x61ult_duration_seconds\x18\x06 \x01(\x05\x42\x04\x90\xb5\x18\x01H\x02R\x16\x64\x65\x66\x61ultDurationSeconds\x88\x01\x01\x12%\n\x0b\x61llowed_fps\x18\x07 \x03(\x05\x42\x04\x90\xb5\x18\x01R\nallowedFps\x12*\n\x0b\x64\x65\x66\x61ult_fps\x18\x08 \x01(\x05\x42\x04\x90\xb5\x18\x01H\x03R\ndefaultFps\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\x14\n\x12_prompt_max_lengthB\x1d\n\x1b_negative_prompt_max_lengthB\x1b\n\x19_default_duration_secondsB\x0e\n\x0c_default_fps\"\xdf\x02\n\x13GetMediaFeatureResp\x12*\n\x0b\x66\x65\x61ture_key\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\nfeatureKey\x88\x01\x01\x12\x39\n\x13workflow_version_id\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x02R\x11workflowVersionId\x88\x01\x01\x12N\n\rtext_to_image\x18\x03 \x01(\x0b\x32\".hi.media.TextToImageFeatureConfigB\x04\x90\xb5\x18\x01H\x00R\x0btextToImage\x12Q\n\x0eimage_to_video\x18\x04 \x01(\x0b\x32#.hi.media.ImageToVideoFeatureConfigB\x04\x90\xb5\x18\x01H\x00R\x0cimageToVideo:\x04\x98\xb5\x18\x01\x42\x10\n\x0e\x66\x65\x61ture_configB\x0e\n\x0c_feature_keyB\x16\n\x14_workflow_version_id2Y\n\x0cMediaFeature\x12I\n\x03Get\x12\x1c.hi.media.GetMediaFeatureReq\x1a\x1d.hi.media.GetMediaFeatureResp\"\x05\x8a\xb5\x18\x01\x02\x42,Z*github.com/HiWorld-56/hi-proto/go/hi/mediab\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x16hi/media/feature.proto\x12\x08hi.media\x1a\x1b\x62uf/validate/validate.proto\x1a\x10hi/options.proto\"T\n\tTextLimit\x12\x32\n\nmax_length\x18\x01 \x01(\rB\x0e\xbaH\x07*\x02 \x00\xc8\x01\x01\x90\xb5\x18\x01H\x00R\tmaxLength\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\r\n\x0b_max_length\"\xb7\x02\n\x13\x44\x65\x63imalOptionConfig\x12;\n\x0e\x61llowed_values\x18\x01 \x03(\tB\x14\xbaH\r\x92\x01\n\x08\x01\x18\x01\"\x04r\x02\x10\x01\x90\xb5\x18\x01R\rallowedValues\x12\x38\n\rdefault_value\x18\x02 \x01(\tB\x0e\xbaH\x07r\x02\x10\x01\xc8\x01\x01\x90\xb5\x18\x01H\x00R\x0c\x64\x65\x66\x61ultValue\x88\x01\x01:\x96\x01\xbaH\x8e\x01\x1a\x8b\x01\n\x1c\x64\x65\x63imal_option.default_value\x12+default_value must be one of allowed_values\x1a>this.allowed_values.exists(value, value == this.default_value)\x98\xb5\x18\x01\x42\x10\n\x0e_default_value\"\xb5\x02\n\x12StringOptionConfig\x12;\n\x0e\x61llowed_values\x18\x01 \x03(\tB\x14\xbaH\r\x92\x01\n\x08\x01\x18\x01\"\x04r\x02\x10\x01\x90\xb5\x18\x01R\rallowedValues\x12\x38\n\rdefault_value\x18\x02 \x01(\tB\x0e\xbaH\x07r\x02\x10\x01\xc8\x01\x01\x90\xb5\x18\x01H\x00R\x0c\x64\x65\x66\x61ultValue\x88\x01\x01:\x95\x01\xbaH\x8d\x01\x1a\x8a\x01\n\x1bstring_option.default_value\x12+default_value must be one of allowed_values\x1a>this.allowed_values.exists(value, value == this.default_value)\x98\xb5\x18\x01\x42\x10\n\x0e_default_value\"\xbe\x03\n\x0eIntRangeConfig\x12\x30\n\tmin_value\x18\x01 \x01(\x05\x42\x0e\xbaH\x07\x1a\x02 \x00\xc8\x01\x01\x90\xb5\x18\x01H\x00R\x08minValue\x88\x01\x01\x12\x30\n\tmax_value\x18\x02 \x01(\x05\x42\x0e\xbaH\x07\x1a\x02 \x00\xc8\x01\x01\x90\xb5\x18\x01H\x01R\x08maxValue\x88\x01\x01\x12\x38\n\rdefault_value\x18\x03 \x01(\x05\x42\x0e\xbaH\x07\x1a\x02 \x00\xc8\x01\x01\x90\xb5\x18\x01H\x02R\x0c\x64\x65\x66\x61ultValue\x88\x01\x01:\xdf\x01\xbaH\xd7\x01\x1a\xd4\x01\n\x10int_range.bounds\x12Nmin_value must not exceed max_value and default_value must be within the range\x1apthis.min_value <= this.max_value && this.default_value >= this.min_value && this.default_value <= this.max_value\x98\xb5\x18\x01\x42\x0c\n\n_min_valueB\x0c\n\n_max_valueB\x10\n\x0e_default_value\"\x98\x01\n\x0f\x46rameRateConfig\x12@\n\nselectable\x18\x01 \x01(\x0b\x32\x18.hi.media.IntRangeConfigB\x04\x90\xb5\x18\x01H\x00R\nselectable\x12.\n\x0b\x66ixed_value\x18\x02 \x01(\x05\x42\x0b\xbaH\x04\x1a\x02 \x00\x90\xb5\x18\x01H\x00R\nfixedValue:\x04\x98\xb5\x18\x01\x42\r\n\x04mode\x12\x05\xbaH\x02\x08\x01\"\xe6\x02\n\x14VideoParameterConfig\x12\x31\n\x06prompt\x18\x01 \x01(\x0b\x32\x13.hi.media.TextLimitB\x04\x90\xb5\x18\x01R\x06prompt\x12\x45\n\x0c\x61spect_ratio\x18\x02 \x01(\x0b\x32\x1c.hi.media.StringOptionConfigB\x04\x90\xb5\x18\x01R\x0b\x61spectRatio\x12\x43\n\nmegapixels\x18\x03 \x01(\x0b\x32\x1d.hi.media.DecimalOptionConfigB\x04\x90\xb5\x18\x01R\nmegapixels\x12I\n\x10\x64uration_seconds\x18\x04 \x01(\x0b\x32\x18.hi.media.IntRangeConfigB\x04\x90\xb5\x18\x01R\x0f\x64urationSeconds\x12>\n\nframe_rate\x18\x05 \x01(\x0b\x32\x19.hi.media.FrameRateConfigB\x04\x90\xb5\x18\x01R\tframeRate:\x04\x98\xb5\x18\x01\"\xcc\x02\n\x0bModelOption\x12\x33\n\x10model_mapping_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x0emodelMappingId\x88\x01\x01\x12\x1d\n\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x04name\x88\x01\x01\x12(\n\nis_default\x18\x03 \x01(\x08\x42\x04\x90\xb5\x18\x01H\x02R\tisDefault\x88\x01\x01\x12+\n\x0b\x64\x65scription\x18\x04 \x01(\tB\x04\x90\xb5\x18\x01H\x03R\x0b\x64\x65scription\x88\x01\x01\x12O\n\x10parameter_config\x18\x05 \x01(\x0b\x32\x1e.hi.media.VideoParameterConfigB\x04\x90\xb5\x18\x01R\x0fparameterConfig:\x04\x98\xb5\x18\x01\x42\x13\n\x11_model_mapping_idB\x07\n\x05_nameB\r\n\x0b_is_defaultB\x0e\n\x0c_description\"j\n\rGetFeatureReq\x12I\n\x0b\x66\x65\x61ture_key\x18\x01 \x01(\x0e\x32\x14.hi.media.FeatureKeyB\r\xbaH\n\x82\x01\x04\x10\x01 \x00\xc8\x01\x01H\x00R\nfeatureKey\x88\x01\x01\x42\x0e\n\x0c_feature_key\"\xaa\x01\n\x0eGetFeatureResp\x12@\n\x0b\x66\x65\x61ture_key\x18\x01 \x01(\x0e\x32\x14.hi.media.FeatureKeyB\x04\x90\xb5\x18\x01H\x00R\nfeatureKey\x88\x01\x01\x12@\n\rmodel_options\x18\x02 \x03(\x0b\x32\x15.hi.media.ModelOptionB\x04\x90\xb5\x18\x01R\x0cmodelOptions:\x04\x98\xb5\x18\x01\x42\x0e\n\x0c_feature_key*\x87\x01\n\nFeatureKey\x12\x1b\n\x17\x46\x45\x41TURE_KEY_UNSPECIFIED\x10\x00\x12\x1d\n\x19\x46\x45\x41TURE_KEY_TEXT_TO_IMAGE\x10\x01\x12\x1e\n\x1a\x46\x45\x41TURE_KEY_IMAGE_TO_VIDEO\x10\x02\x12\x1d\n\x19\x46\x45\x41TURE_KEY_TEXT_TO_VIDEO\x10\x03\x32J\n\x07\x46\x65\x61ture\x12?\n\x03Get\x12\x17.hi.media.GetFeatureReq\x1a\x18.hi.media.GetFeatureResp\"\x05\x8a\xb5\x18\x01\x02\x42,Z*github.com/HiWorld-56/hi-proto/go/hi/mediab\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -35,56 +34,92 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'hi.media.feature_pb2', _glo
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'Z*github.com/HiWorld-56/hi-proto/go/hi/media'
-  _globals['_GETMEDIAFEATUREREQ'].fields_by_name['feature_key']._loaded_options = None
-  _globals['_GETMEDIAFEATUREREQ'].fields_by_name['feature_key']._serialized_options = b'\272H\007r\002\020\001\310\001\001'
-  _globals['_TEXTTOIMAGEFEATURECONFIG'].fields_by_name['prompt_max_length']._loaded_options = None
-  _globals['_TEXTTOIMAGEFEATURECONFIG'].fields_by_name['prompt_max_length']._serialized_options = b'\220\265\030\001'
-  _globals['_TEXTTOIMAGEFEATURECONFIG'].fields_by_name['negative_prompt_max_length']._loaded_options = None
-  _globals['_TEXTTOIMAGEFEATURECONFIG'].fields_by_name['negative_prompt_max_length']._serialized_options = b'\220\265\030\001'
-  _globals['_TEXTTOIMAGEFEATURECONFIG'].fields_by_name['allowed_resolutions']._loaded_options = None
-  _globals['_TEXTTOIMAGEFEATURECONFIG'].fields_by_name['allowed_resolutions']._serialized_options = b'\220\265\030\001'
-  _globals['_TEXTTOIMAGEFEATURECONFIG'].fields_by_name['default_resolution']._loaded_options = None
-  _globals['_TEXTTOIMAGEFEATURECONFIG'].fields_by_name['default_resolution']._serialized_options = b'\220\265\030\001'
-  _globals['_TEXTTOIMAGEFEATURECONFIG']._loaded_options = None
-  _globals['_TEXTTOIMAGEFEATURECONFIG']._serialized_options = b'\230\265\030\001'
-  _globals['_IMAGETOVIDEOFEATURECONFIG'].fields_by_name['prompt_max_length']._loaded_options = None
-  _globals['_IMAGETOVIDEOFEATURECONFIG'].fields_by_name['prompt_max_length']._serialized_options = b'\220\265\030\001'
-  _globals['_IMAGETOVIDEOFEATURECONFIG'].fields_by_name['negative_prompt_max_length']._loaded_options = None
-  _globals['_IMAGETOVIDEOFEATURECONFIG'].fields_by_name['negative_prompt_max_length']._serialized_options = b'\220\265\030\001'
-  _globals['_IMAGETOVIDEOFEATURECONFIG'].fields_by_name['allowed_resolutions']._loaded_options = None
-  _globals['_IMAGETOVIDEOFEATURECONFIG'].fields_by_name['allowed_resolutions']._serialized_options = b'\220\265\030\001'
-  _globals['_IMAGETOVIDEOFEATURECONFIG'].fields_by_name['default_resolution']._loaded_options = None
-  _globals['_IMAGETOVIDEOFEATURECONFIG'].fields_by_name['default_resolution']._serialized_options = b'\220\265\030\001'
-  _globals['_IMAGETOVIDEOFEATURECONFIG'].fields_by_name['allowed_duration_seconds']._loaded_options = None
-  _globals['_IMAGETOVIDEOFEATURECONFIG'].fields_by_name['allowed_duration_seconds']._serialized_options = b'\220\265\030\001'
-  _globals['_IMAGETOVIDEOFEATURECONFIG'].fields_by_name['default_duration_seconds']._loaded_options = None
-  _globals['_IMAGETOVIDEOFEATURECONFIG'].fields_by_name['default_duration_seconds']._serialized_options = b'\220\265\030\001'
-  _globals['_IMAGETOVIDEOFEATURECONFIG'].fields_by_name['allowed_fps']._loaded_options = None
-  _globals['_IMAGETOVIDEOFEATURECONFIG'].fields_by_name['allowed_fps']._serialized_options = b'\220\265\030\001'
-  _globals['_IMAGETOVIDEOFEATURECONFIG'].fields_by_name['default_fps']._loaded_options = None
-  _globals['_IMAGETOVIDEOFEATURECONFIG'].fields_by_name['default_fps']._serialized_options = b'\220\265\030\001'
-  _globals['_IMAGETOVIDEOFEATURECONFIG']._loaded_options = None
-  _globals['_IMAGETOVIDEOFEATURECONFIG']._serialized_options = b'\230\265\030\001'
-  _globals['_GETMEDIAFEATURERESP'].fields_by_name['feature_key']._loaded_options = None
-  _globals['_GETMEDIAFEATURERESP'].fields_by_name['feature_key']._serialized_options = b'\220\265\030\001'
-  _globals['_GETMEDIAFEATURERESP'].fields_by_name['workflow_version_id']._loaded_options = None
-  _globals['_GETMEDIAFEATURERESP'].fields_by_name['workflow_version_id']._serialized_options = b'\220\265\030\001'
-  _globals['_GETMEDIAFEATURERESP'].fields_by_name['text_to_image']._loaded_options = None
-  _globals['_GETMEDIAFEATURERESP'].fields_by_name['text_to_image']._serialized_options = b'\220\265\030\001'
-  _globals['_GETMEDIAFEATURERESP'].fields_by_name['image_to_video']._loaded_options = None
-  _globals['_GETMEDIAFEATURERESP'].fields_by_name['image_to_video']._serialized_options = b'\220\265\030\001'
-  _globals['_GETMEDIAFEATURERESP']._loaded_options = None
-  _globals['_GETMEDIAFEATURERESP']._serialized_options = b'\230\265\030\001'
-  _globals['_MEDIAFEATURE'].methods_by_name['Get']._loaded_options = None
-  _globals['_MEDIAFEATURE'].methods_by_name['Get']._serialized_options = b'\212\265\030\001\002'
-  _globals['_GETMEDIAFEATUREREQ']._serialized_start=104
-  _globals['_GETMEDIAFEATUREREQ']._serialized_end=190
-  _globals['_TEXTTOIMAGEFEATURECONFIG']._serialized_start=193
-  _globals['_TEXTTOIMAGEFEATURECONFIG']._serialized_end=567
-  _globals['_IMAGETOVIDEOFEATURECONFIG']._serialized_start=570
-  _globals['_IMAGETOVIDEOFEATURECONFIG']._serialized_end=1206
-  _globals['_GETMEDIAFEATURERESP']._serialized_start=1209
-  _globals['_GETMEDIAFEATURERESP']._serialized_end=1560
-  _globals['_MEDIAFEATURE']._serialized_start=1562
-  _globals['_MEDIAFEATURE']._serialized_end=1651
+  _globals['_TEXTLIMIT'].fields_by_name['max_length']._loaded_options = None
+  _globals['_TEXTLIMIT'].fields_by_name['max_length']._serialized_options = b'\272H\007*\002 \000\310\001\001\220\265\030\001'
+  _globals['_TEXTLIMIT']._loaded_options = None
+  _globals['_TEXTLIMIT']._serialized_options = b'\230\265\030\001'
+  _globals['_DECIMALOPTIONCONFIG'].fields_by_name['allowed_values']._loaded_options = None
+  _globals['_DECIMALOPTIONCONFIG'].fields_by_name['allowed_values']._serialized_options = b'\272H\r\222\001\n\010\001\030\001\"\004r\002\020\001\220\265\030\001'
+  _globals['_DECIMALOPTIONCONFIG'].fields_by_name['default_value']._loaded_options = None
+  _globals['_DECIMALOPTIONCONFIG'].fields_by_name['default_value']._serialized_options = b'\272H\007r\002\020\001\310\001\001\220\265\030\001'
+  _globals['_DECIMALOPTIONCONFIG']._loaded_options = None
+  _globals['_DECIMALOPTIONCONFIG']._serialized_options = b'\272H\216\001\032\213\001\n\034decimal_option.default_value\022+default_value must be one of allowed_values\032>this.allowed_values.exists(value, value == this.default_value)\230\265\030\001'
+  _globals['_STRINGOPTIONCONFIG'].fields_by_name['allowed_values']._loaded_options = None
+  _globals['_STRINGOPTIONCONFIG'].fields_by_name['allowed_values']._serialized_options = b'\272H\r\222\001\n\010\001\030\001\"\004r\002\020\001\220\265\030\001'
+  _globals['_STRINGOPTIONCONFIG'].fields_by_name['default_value']._loaded_options = None
+  _globals['_STRINGOPTIONCONFIG'].fields_by_name['default_value']._serialized_options = b'\272H\007r\002\020\001\310\001\001\220\265\030\001'
+  _globals['_STRINGOPTIONCONFIG']._loaded_options = None
+  _globals['_STRINGOPTIONCONFIG']._serialized_options = b'\272H\215\001\032\212\001\n\033string_option.default_value\022+default_value must be one of allowed_values\032>this.allowed_values.exists(value, value == this.default_value)\230\265\030\001'
+  _globals['_INTRANGECONFIG'].fields_by_name['min_value']._loaded_options = None
+  _globals['_INTRANGECONFIG'].fields_by_name['min_value']._serialized_options = b'\272H\007\032\002 \000\310\001\001\220\265\030\001'
+  _globals['_INTRANGECONFIG'].fields_by_name['max_value']._loaded_options = None
+  _globals['_INTRANGECONFIG'].fields_by_name['max_value']._serialized_options = b'\272H\007\032\002 \000\310\001\001\220\265\030\001'
+  _globals['_INTRANGECONFIG'].fields_by_name['default_value']._loaded_options = None
+  _globals['_INTRANGECONFIG'].fields_by_name['default_value']._serialized_options = b'\272H\007\032\002 \000\310\001\001\220\265\030\001'
+  _globals['_INTRANGECONFIG']._loaded_options = None
+  _globals['_INTRANGECONFIG']._serialized_options = b'\272H\327\001\032\324\001\n\020int_range.bounds\022Nmin_value must not exceed max_value and default_value must be within the range\032pthis.min_value <= this.max_value && this.default_value >= this.min_value && this.default_value <= this.max_value\230\265\030\001'
+  _globals['_FRAMERATECONFIG'].oneofs_by_name['mode']._loaded_options = None
+  _globals['_FRAMERATECONFIG'].oneofs_by_name['mode']._serialized_options = b'\272H\002\010\001'
+  _globals['_FRAMERATECONFIG'].fields_by_name['selectable']._loaded_options = None
+  _globals['_FRAMERATECONFIG'].fields_by_name['selectable']._serialized_options = b'\220\265\030\001'
+  _globals['_FRAMERATECONFIG'].fields_by_name['fixed_value']._loaded_options = None
+  _globals['_FRAMERATECONFIG'].fields_by_name['fixed_value']._serialized_options = b'\272H\004\032\002 \000\220\265\030\001'
+  _globals['_FRAMERATECONFIG']._loaded_options = None
+  _globals['_FRAMERATECONFIG']._serialized_options = b'\230\265\030\001'
+  _globals['_VIDEOPARAMETERCONFIG'].fields_by_name['prompt']._loaded_options = None
+  _globals['_VIDEOPARAMETERCONFIG'].fields_by_name['prompt']._serialized_options = b'\220\265\030\001'
+  _globals['_VIDEOPARAMETERCONFIG'].fields_by_name['aspect_ratio']._loaded_options = None
+  _globals['_VIDEOPARAMETERCONFIG'].fields_by_name['aspect_ratio']._serialized_options = b'\220\265\030\001'
+  _globals['_VIDEOPARAMETERCONFIG'].fields_by_name['megapixels']._loaded_options = None
+  _globals['_VIDEOPARAMETERCONFIG'].fields_by_name['megapixels']._serialized_options = b'\220\265\030\001'
+  _globals['_VIDEOPARAMETERCONFIG'].fields_by_name['duration_seconds']._loaded_options = None
+  _globals['_VIDEOPARAMETERCONFIG'].fields_by_name['duration_seconds']._serialized_options = b'\220\265\030\001'
+  _globals['_VIDEOPARAMETERCONFIG'].fields_by_name['frame_rate']._loaded_options = None
+  _globals['_VIDEOPARAMETERCONFIG'].fields_by_name['frame_rate']._serialized_options = b'\220\265\030\001'
+  _globals['_VIDEOPARAMETERCONFIG']._loaded_options = None
+  _globals['_VIDEOPARAMETERCONFIG']._serialized_options = b'\230\265\030\001'
+  _globals['_MODELOPTION'].fields_by_name['model_mapping_id']._loaded_options = None
+  _globals['_MODELOPTION'].fields_by_name['model_mapping_id']._serialized_options = b'\220\265\030\001'
+  _globals['_MODELOPTION'].fields_by_name['name']._loaded_options = None
+  _globals['_MODELOPTION'].fields_by_name['name']._serialized_options = b'\220\265\030\001'
+  _globals['_MODELOPTION'].fields_by_name['is_default']._loaded_options = None
+  _globals['_MODELOPTION'].fields_by_name['is_default']._serialized_options = b'\220\265\030\001'
+  _globals['_MODELOPTION'].fields_by_name['description']._loaded_options = None
+  _globals['_MODELOPTION'].fields_by_name['description']._serialized_options = b'\220\265\030\001'
+  _globals['_MODELOPTION'].fields_by_name['parameter_config']._loaded_options = None
+  _globals['_MODELOPTION'].fields_by_name['parameter_config']._serialized_options = b'\220\265\030\001'
+  _globals['_MODELOPTION']._loaded_options = None
+  _globals['_MODELOPTION']._serialized_options = b'\230\265\030\001'
+  _globals['_GETFEATUREREQ'].fields_by_name['feature_key']._loaded_options = None
+  _globals['_GETFEATUREREQ'].fields_by_name['feature_key']._serialized_options = b'\272H\n\202\001\004\020\001 \000\310\001\001'
+  _globals['_GETFEATURERESP'].fields_by_name['feature_key']._loaded_options = None
+  _globals['_GETFEATURERESP'].fields_by_name['feature_key']._serialized_options = b'\220\265\030\001'
+  _globals['_GETFEATURERESP'].fields_by_name['model_options']._loaded_options = None
+  _globals['_GETFEATURERESP'].fields_by_name['model_options']._serialized_options = b'\220\265\030\001'
+  _globals['_GETFEATURERESP']._loaded_options = None
+  _globals['_GETFEATURERESP']._serialized_options = b'\230\265\030\001'
+  _globals['_FEATURE'].methods_by_name['Get']._loaded_options = None
+  _globals['_FEATURE'].methods_by_name['Get']._serialized_options = b'\212\265\030\001\002'
+  _globals['_FEATUREKEY']._serialized_start=2377
+  _globals['_FEATUREKEY']._serialized_end=2512
+  _globals['_TEXTLIMIT']._serialized_start=83
+  _globals['_TEXTLIMIT']._serialized_end=167
+  _globals['_DECIMALOPTIONCONFIG']._serialized_start=170
+  _globals['_DECIMALOPTIONCONFIG']._serialized_end=481
+  _globals['_STRINGOPTIONCONFIG']._serialized_start=484
+  _globals['_STRINGOPTIONCONFIG']._serialized_end=793
+  _globals['_INTRANGECONFIG']._serialized_start=796
+  _globals['_INTRANGECONFIG']._serialized_end=1242
+  _globals['_FRAMERATECONFIG']._serialized_start=1245
+  _globals['_FRAMERATECONFIG']._serialized_end=1397
+  _globals['_VIDEOPARAMETERCONFIG']._serialized_start=1400
+  _globals['_VIDEOPARAMETERCONFIG']._serialized_end=1758
+  _globals['_MODELOPTION']._serialized_start=1761
+  _globals['_MODELOPTION']._serialized_end=2093
+  _globals['_GETFEATUREREQ']._serialized_start=2095
+  _globals['_GETFEATUREREQ']._serialized_end=2201
+  _globals['_GETFEATURERESP']._serialized_start=2204
+  _globals['_GETFEATURERESP']._serialized_end=2374
+  _globals['_FEATURE']._serialized_start=2514
+  _globals['_FEATURE']._serialized_end=2588
 # @@protoc_insertion_point(module_scope)

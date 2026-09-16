@@ -23,14 +23,14 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 export 'file.pbenum.dart';
 
-class MediaFileSummary extends $pb.GeneratedMessage {
-  factory MediaFileSummary({
+class FileSummary extends $pb.GeneratedMessage {
+  factory FileSummary({
     $core.String? assetId,
     $core.String? filename,
     $2.MediaType? mediaType,
     $core.String? mimeType,
     $fixnum.Int64? sizeBytes,
-    MediaFileSource? source,
+    FileSource? source,
     $fixnum.Int64? createdAt,
   }) {
     final result = create();
@@ -44,17 +44,17 @@ class MediaFileSummary extends $pb.GeneratedMessage {
     return result;
   }
 
-  MediaFileSummary._();
+  FileSummary._();
 
-  factory MediaFileSummary.fromBuffer($core.List<$core.int> data,
+  factory FileSummary.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory MediaFileSummary.fromJson($core.String json,
+  factory FileSummary.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'MediaFileSummary',
+      _omitMessageNames ? '' : 'FileSummary',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'assetId')
@@ -65,29 +65,29 @@ class MediaFileSummary extends $pb.GeneratedMessage {
     ..a<$fixnum.Int64>(
         5, _omitFieldNames ? '' : 'sizeBytes', $pb.PbFieldType.OU6,
         defaultOrMaker: $fixnum.Int64.ZERO)
-    ..aE<MediaFileSource>(6, _omitFieldNames ? '' : 'source',
-        enumValues: MediaFileSource.values)
+    ..aE<FileSource>(6, _omitFieldNames ? '' : 'source',
+        enumValues: FileSource.values)
     ..aInt64(7, _omitFieldNames ? '' : 'createdAt')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MediaFileSummary clone() => deepCopy();
+  FileSummary clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MediaFileSummary copyWith(void Function(MediaFileSummary) updates) =>
-      super.copyWith((message) => updates(message as MediaFileSummary))
-          as MediaFileSummary;
+  FileSummary copyWith(void Function(FileSummary) updates) =>
+      super.copyWith((message) => updates(message as FileSummary))
+          as FileSummary;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static MediaFileSummary create() => MediaFileSummary._();
+  static FileSummary create() => FileSummary._();
   @$core.override
-  MediaFileSummary createEmptyInstance() => create();
+  FileSummary createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static MediaFileSummary getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<MediaFileSummary>(create);
-  static MediaFileSummary? _defaultInstance;
+  static FileSummary getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<FileSummary>(create);
+  static FileSummary? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get assetId => $_getSZ(0);
@@ -135,9 +135,9 @@ class MediaFileSummary extends $pb.GeneratedMessage {
   void clearSizeBytes() => $_clearField(5);
 
   @$pb.TagNumber(6)
-  MediaFileSource get source => $_getN(5);
+  FileSource get source => $_getN(5);
   @$pb.TagNumber(6)
-  set source(MediaFileSource value) => $_setField(6, value);
+  set source(FileSource value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasSource() => $_has(5);
   @$pb.TagNumber(6)
@@ -153,11 +153,11 @@ class MediaFileSummary extends $pb.GeneratedMessage {
   void clearCreatedAt() => $_clearField(7);
 }
 
-class ListMediaFilesReq extends $pb.GeneratedMessage {
-  factory ListMediaFilesReq({
+class ListFilesReq extends $pb.GeneratedMessage {
+  factory ListFilesReq({
     $1.Pagination? pagination,
     $2.MediaType? mediaType,
-    MediaFileSource? source,
+    FileSource? source,
   }) {
     final result = create();
     if (pagination != null) result.pagination = pagination;
@@ -166,45 +166,45 @@ class ListMediaFilesReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  ListMediaFilesReq._();
+  ListFilesReq._();
 
-  factory ListMediaFilesReq.fromBuffer($core.List<$core.int> data,
+  factory ListFilesReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListMediaFilesReq.fromJson($core.String json,
+  factory ListFilesReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListMediaFilesReq',
+      _omitMessageNames ? '' : 'ListFilesReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOM<$1.Pagination>(1, _omitFieldNames ? '' : 'pagination',
         subBuilder: $1.Pagination.create)
     ..aE<$2.MediaType>(2, _omitFieldNames ? '' : 'mediaType',
         enumValues: $2.MediaType.values)
-    ..aE<MediaFileSource>(3, _omitFieldNames ? '' : 'source',
-        enumValues: MediaFileSource.values)
+    ..aE<FileSource>(3, _omitFieldNames ? '' : 'source',
+        enumValues: FileSource.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListMediaFilesReq clone() => deepCopy();
+  ListFilesReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListMediaFilesReq copyWith(void Function(ListMediaFilesReq) updates) =>
-      super.copyWith((message) => updates(message as ListMediaFilesReq))
-          as ListMediaFilesReq;
+  ListFilesReq copyWith(void Function(ListFilesReq) updates) =>
+      super.copyWith((message) => updates(message as ListFilesReq))
+          as ListFilesReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListMediaFilesReq create() => ListMediaFilesReq._();
+  static ListFilesReq create() => ListFilesReq._();
   @$core.override
-  ListMediaFilesReq createEmptyInstance() => create();
+  ListFilesReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListMediaFilesReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListMediaFilesReq>(create);
-  static ListMediaFilesReq? _defaultInstance;
+  static ListFilesReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListFilesReq>(create);
+  static ListFilesReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $1.Pagination get pagination => $_getN(0);
@@ -227,19 +227,19 @@ class ListMediaFilesReq extends $pb.GeneratedMessage {
   void clearMediaType() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  MediaFileSource get source => $_getN(2);
+  FileSource get source => $_getN(2);
   @$pb.TagNumber(3)
-  set source(MediaFileSource value) => $_setField(3, value);
+  set source(FileSource value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasSource() => $_has(2);
   @$pb.TagNumber(3)
   void clearSource() => $_clearField(3);
 }
 
-class ListMediaFilesResp extends $pb.GeneratedMessage {
-  factory ListMediaFilesResp({
+class ListFilesResp extends $pb.GeneratedMessage {
+  factory ListFilesResp({
     $core.int? total,
-    $core.Iterable<MediaFileSummary>? files,
+    $core.Iterable<FileSummary>? files,
   }) {
     final result = create();
     if (total != null) result.total = total;
@@ -247,42 +247,42 @@ class ListMediaFilesResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  ListMediaFilesResp._();
+  ListFilesResp._();
 
-  factory ListMediaFilesResp.fromBuffer($core.List<$core.int> data,
+  factory ListFilesResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListMediaFilesResp.fromJson($core.String json,
+  factory ListFilesResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListMediaFilesResp',
+      _omitMessageNames ? '' : 'ListFilesResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aI(1, _omitFieldNames ? '' : 'total')
-    ..pPM<MediaFileSummary>(2, _omitFieldNames ? '' : 'files',
-        subBuilder: MediaFileSummary.create)
+    ..pPM<FileSummary>(2, _omitFieldNames ? '' : 'files',
+        subBuilder: FileSummary.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListMediaFilesResp clone() => deepCopy();
+  ListFilesResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListMediaFilesResp copyWith(void Function(ListMediaFilesResp) updates) =>
-      super.copyWith((message) => updates(message as ListMediaFilesResp))
-          as ListMediaFilesResp;
+  ListFilesResp copyWith(void Function(ListFilesResp) updates) =>
+      super.copyWith((message) => updates(message as ListFilesResp))
+          as ListFilesResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListMediaFilesResp create() => ListMediaFilesResp._();
+  static ListFilesResp create() => ListFilesResp._();
   @$core.override
-  ListMediaFilesResp createEmptyInstance() => create();
+  ListFilesResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListMediaFilesResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListMediaFilesResp>(create);
-  static ListMediaFilesResp? _defaultInstance;
+  static ListFilesResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListFilesResp>(create);
+  static ListFilesResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.int get total => $_getIZ(0);
@@ -294,11 +294,11 @@ class ListMediaFilesResp extends $pb.GeneratedMessage {
   void clearTotal() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $pb.PbList<MediaFileSummary> get files => $_getList(1);
+  $pb.PbList<FileSummary> get files => $_getList(1);
 }
 
-class DeleteMediaFileReq extends $pb.GeneratedMessage {
-  factory DeleteMediaFileReq({
+class DeleteFileReq extends $pb.GeneratedMessage {
+  factory DeleteFileReq({
     $core.String? assetId,
   }) {
     final result = create();
@@ -306,40 +306,40 @@ class DeleteMediaFileReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  DeleteMediaFileReq._();
+  DeleteFileReq._();
 
-  factory DeleteMediaFileReq.fromBuffer($core.List<$core.int> data,
+  factory DeleteFileReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory DeleteMediaFileReq.fromJson($core.String json,
+  factory DeleteFileReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'DeleteMediaFileReq',
+      _omitMessageNames ? '' : 'DeleteFileReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'assetId')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeleteMediaFileReq clone() => deepCopy();
+  DeleteFileReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeleteMediaFileReq copyWith(void Function(DeleteMediaFileReq) updates) =>
-      super.copyWith((message) => updates(message as DeleteMediaFileReq))
-          as DeleteMediaFileReq;
+  DeleteFileReq copyWith(void Function(DeleteFileReq) updates) =>
+      super.copyWith((message) => updates(message as DeleteFileReq))
+          as DeleteFileReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static DeleteMediaFileReq create() => DeleteMediaFileReq._();
+  static DeleteFileReq create() => DeleteFileReq._();
   @$core.override
-  DeleteMediaFileReq createEmptyInstance() => create();
+  DeleteFileReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static DeleteMediaFileReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<DeleteMediaFileReq>(create);
-  static DeleteMediaFileReq? _defaultInstance;
+  static DeleteFileReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DeleteFileReq>(create);
+  static DeleteFileReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get assetId => $_getSZ(0);
@@ -351,8 +351,8 @@ class DeleteMediaFileReq extends $pb.GeneratedMessage {
   void clearAssetId() => $_clearField(1);
 }
 
-class DeleteMediaFileResp extends $pb.GeneratedMessage {
-  factory DeleteMediaFileResp({
+class DeleteFileResp extends $pb.GeneratedMessage {
+  factory DeleteFileResp({
     $core.String? assetId,
   }) {
     final result = create();
@@ -360,40 +360,40 @@ class DeleteMediaFileResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  DeleteMediaFileResp._();
+  DeleteFileResp._();
 
-  factory DeleteMediaFileResp.fromBuffer($core.List<$core.int> data,
+  factory DeleteFileResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory DeleteMediaFileResp.fromJson($core.String json,
+  factory DeleteFileResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'DeleteMediaFileResp',
+      _omitMessageNames ? '' : 'DeleteFileResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'assetId')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeleteMediaFileResp clone() => deepCopy();
+  DeleteFileResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeleteMediaFileResp copyWith(void Function(DeleteMediaFileResp) updates) =>
-      super.copyWith((message) => updates(message as DeleteMediaFileResp))
-          as DeleteMediaFileResp;
+  DeleteFileResp copyWith(void Function(DeleteFileResp) updates) =>
+      super.copyWith((message) => updates(message as DeleteFileResp))
+          as DeleteFileResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static DeleteMediaFileResp create() => DeleteMediaFileResp._();
+  static DeleteFileResp create() => DeleteFileResp._();
   @$core.override
-  DeleteMediaFileResp createEmptyInstance() => create();
+  DeleteFileResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static DeleteMediaFileResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<DeleteMediaFileResp>(create);
-  static DeleteMediaFileResp? _defaultInstance;
+  static DeleteFileResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DeleteFileResp>(create);
+  static DeleteFileResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get assetId => $_getSZ(0);
@@ -405,10 +405,10 @@ class DeleteMediaFileResp extends $pb.GeneratedMessage {
   void clearAssetId() => $_clearField(1);
 }
 
-class GetMediaFileAccessUrlsReq extends $pb.GeneratedMessage {
-  factory GetMediaFileAccessUrlsReq({
+class GetFileAccessUrlsReq extends $pb.GeneratedMessage {
+  factory GetFileAccessUrlsReq({
     $core.Iterable<$core.String>? assetIds,
-    MediaFileAccessPurpose? purpose,
+    FileAccessPurpose? purpose,
   }) {
     final result = create();
     if (assetIds != null) result.assetIds.addAll(assetIds);
@@ -416,59 +416,58 @@ class GetMediaFileAccessUrlsReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  GetMediaFileAccessUrlsReq._();
+  GetFileAccessUrlsReq._();
 
-  factory GetMediaFileAccessUrlsReq.fromBuffer($core.List<$core.int> data,
+  factory GetFileAccessUrlsReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory GetMediaFileAccessUrlsReq.fromJson($core.String json,
+  factory GetFileAccessUrlsReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetMediaFileAccessUrlsReq',
+      _omitMessageNames ? '' : 'GetFileAccessUrlsReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..pPS(1, _omitFieldNames ? '' : 'assetIds')
-    ..aE<MediaFileAccessPurpose>(2, _omitFieldNames ? '' : 'purpose',
-        enumValues: MediaFileAccessPurpose.values)
+    ..aE<FileAccessPurpose>(2, _omitFieldNames ? '' : 'purpose',
+        enumValues: FileAccessPurpose.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetMediaFileAccessUrlsReq clone() => deepCopy();
+  GetFileAccessUrlsReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetMediaFileAccessUrlsReq copyWith(
-          void Function(GetMediaFileAccessUrlsReq) updates) =>
-      super.copyWith((message) => updates(message as GetMediaFileAccessUrlsReq))
-          as GetMediaFileAccessUrlsReq;
+  GetFileAccessUrlsReq copyWith(void Function(GetFileAccessUrlsReq) updates) =>
+      super.copyWith((message) => updates(message as GetFileAccessUrlsReq))
+          as GetFileAccessUrlsReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static GetMediaFileAccessUrlsReq create() => GetMediaFileAccessUrlsReq._();
+  static GetFileAccessUrlsReq create() => GetFileAccessUrlsReq._();
   @$core.override
-  GetMediaFileAccessUrlsReq createEmptyInstance() => create();
+  GetFileAccessUrlsReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static GetMediaFileAccessUrlsReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetMediaFileAccessUrlsReq>(create);
-  static GetMediaFileAccessUrlsReq? _defaultInstance;
+  static GetFileAccessUrlsReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetFileAccessUrlsReq>(create);
+  static GetFileAccessUrlsReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $pb.PbList<$core.String> get assetIds => $_getList(0);
 
   @$pb.TagNumber(2)
-  MediaFileAccessPurpose get purpose => $_getN(1);
+  FileAccessPurpose get purpose => $_getN(1);
   @$pb.TagNumber(2)
-  set purpose(MediaFileAccessPurpose value) => $_setField(2, value);
+  set purpose(FileAccessPurpose value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasPurpose() => $_has(1);
   @$pb.TagNumber(2)
   void clearPurpose() => $_clearField(2);
 }
 
-class MediaFileAccessUrl extends $pb.GeneratedMessage {
-  factory MediaFileAccessUrl({
+class FileAccessUrl extends $pb.GeneratedMessage {
+  factory FileAccessUrl({
     $core.String? assetId,
     $core.String? url,
     $fixnum.Int64? expireAt,
@@ -480,17 +479,17 @@ class MediaFileAccessUrl extends $pb.GeneratedMessage {
     return result;
   }
 
-  MediaFileAccessUrl._();
+  FileAccessUrl._();
 
-  factory MediaFileAccessUrl.fromBuffer($core.List<$core.int> data,
+  factory FileAccessUrl.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory MediaFileAccessUrl.fromJson($core.String json,
+  factory FileAccessUrl.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'MediaFileAccessUrl',
+      _omitMessageNames ? '' : 'FileAccessUrl',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'assetId')
@@ -499,23 +498,23 @@ class MediaFileAccessUrl extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MediaFileAccessUrl clone() => deepCopy();
+  FileAccessUrl clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MediaFileAccessUrl copyWith(void Function(MediaFileAccessUrl) updates) =>
-      super.copyWith((message) => updates(message as MediaFileAccessUrl))
-          as MediaFileAccessUrl;
+  FileAccessUrl copyWith(void Function(FileAccessUrl) updates) =>
+      super.copyWith((message) => updates(message as FileAccessUrl))
+          as FileAccessUrl;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static MediaFileAccessUrl create() => MediaFileAccessUrl._();
+  static FileAccessUrl create() => FileAccessUrl._();
   @$core.override
-  MediaFileAccessUrl createEmptyInstance() => create();
+  FileAccessUrl createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static MediaFileAccessUrl getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<MediaFileAccessUrl>(create);
-  static MediaFileAccessUrl? _defaultInstance;
+  static FileAccessUrl getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<FileAccessUrl>(create);
+  static FileAccessUrl? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get assetId => $_getSZ(0);
@@ -545,59 +544,58 @@ class MediaFileAccessUrl extends $pb.GeneratedMessage {
   void clearExpireAt() => $_clearField(3);
 }
 
-class GetMediaFileAccessUrlsResp extends $pb.GeneratedMessage {
-  factory GetMediaFileAccessUrlsResp({
-    $core.Iterable<MediaFileAccessUrl>? files,
+class GetFileAccessUrlsResp extends $pb.GeneratedMessage {
+  factory GetFileAccessUrlsResp({
+    $core.Iterable<FileAccessUrl>? files,
   }) {
     final result = create();
     if (files != null) result.files.addAll(files);
     return result;
   }
 
-  GetMediaFileAccessUrlsResp._();
+  GetFileAccessUrlsResp._();
 
-  factory GetMediaFileAccessUrlsResp.fromBuffer($core.List<$core.int> data,
+  factory GetFileAccessUrlsResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory GetMediaFileAccessUrlsResp.fromJson($core.String json,
+  factory GetFileAccessUrlsResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetMediaFileAccessUrlsResp',
+      _omitMessageNames ? '' : 'GetFileAccessUrlsResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
-    ..pPM<MediaFileAccessUrl>(1, _omitFieldNames ? '' : 'files',
-        subBuilder: MediaFileAccessUrl.create)
+    ..pPM<FileAccessUrl>(1, _omitFieldNames ? '' : 'files',
+        subBuilder: FileAccessUrl.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetMediaFileAccessUrlsResp clone() => deepCopy();
+  GetFileAccessUrlsResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetMediaFileAccessUrlsResp copyWith(
-          void Function(GetMediaFileAccessUrlsResp) updates) =>
-      super.copyWith(
-              (message) => updates(message as GetMediaFileAccessUrlsResp))
-          as GetMediaFileAccessUrlsResp;
+  GetFileAccessUrlsResp copyWith(
+          void Function(GetFileAccessUrlsResp) updates) =>
+      super.copyWith((message) => updates(message as GetFileAccessUrlsResp))
+          as GetFileAccessUrlsResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static GetMediaFileAccessUrlsResp create() => GetMediaFileAccessUrlsResp._();
+  static GetFileAccessUrlsResp create() => GetFileAccessUrlsResp._();
   @$core.override
-  GetMediaFileAccessUrlsResp createEmptyInstance() => create();
+  GetFileAccessUrlsResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static GetMediaFileAccessUrlsResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetMediaFileAccessUrlsResp>(create);
-  static GetMediaFileAccessUrlsResp? _defaultInstance;
+  static GetFileAccessUrlsResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetFileAccessUrlsResp>(create);
+  static GetFileAccessUrlsResp? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $pb.PbList<MediaFileAccessUrl> get files => $_getList(0);
+  $pb.PbList<FileAccessUrl> get files => $_getList(0);
 }
 
-class MediaUploadFileMetadata extends $pb.GeneratedMessage {
-  factory MediaUploadFileMetadata({
+class UploadFileMetadata extends $pb.GeneratedMessage {
+  factory UploadFileMetadata({
     $core.String? clientFileId,
     $core.String? filename,
     $fixnum.Int64? sizeBytes,
@@ -609,17 +607,17 @@ class MediaUploadFileMetadata extends $pb.GeneratedMessage {
     return result;
   }
 
-  MediaUploadFileMetadata._();
+  UploadFileMetadata._();
 
-  factory MediaUploadFileMetadata.fromBuffer($core.List<$core.int> data,
+  factory UploadFileMetadata.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory MediaUploadFileMetadata.fromJson($core.String json,
+  factory UploadFileMetadata.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'MediaUploadFileMetadata',
+      _omitMessageNames ? '' : 'UploadFileMetadata',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'clientFileId')
@@ -630,24 +628,23 @@ class MediaUploadFileMetadata extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MediaUploadFileMetadata clone() => deepCopy();
+  UploadFileMetadata clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MediaUploadFileMetadata copyWith(
-          void Function(MediaUploadFileMetadata) updates) =>
-      super.copyWith((message) => updates(message as MediaUploadFileMetadata))
-          as MediaUploadFileMetadata;
+  UploadFileMetadata copyWith(void Function(UploadFileMetadata) updates) =>
+      super.copyWith((message) => updates(message as UploadFileMetadata))
+          as UploadFileMetadata;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static MediaUploadFileMetadata create() => MediaUploadFileMetadata._();
+  static UploadFileMetadata create() => UploadFileMetadata._();
   @$core.override
-  MediaUploadFileMetadata createEmptyInstance() => create();
+  UploadFileMetadata createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static MediaUploadFileMetadata getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<MediaUploadFileMetadata>(create);
-  static MediaUploadFileMetadata? _defaultInstance;
+  static UploadFileMetadata getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UploadFileMetadata>(create);
+  static UploadFileMetadata? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get clientFileId => $_getSZ(0);
@@ -677,10 +674,10 @@ class MediaUploadFileMetadata extends $pb.GeneratedMessage {
   void clearSizeBytes() => $_clearField(3);
 }
 
-class MediaUploadMetadata extends $pb.GeneratedMessage {
-  factory MediaUploadMetadata({
+class UploadMetadata extends $pb.GeneratedMessage {
+  factory UploadMetadata({
     $core.String? requestId,
-    $core.Iterable<MediaUploadFileMetadata>? files,
+    $core.Iterable<UploadFileMetadata>? files,
   }) {
     final result = create();
     if (requestId != null) result.requestId = requestId;
@@ -688,42 +685,42 @@ class MediaUploadMetadata extends $pb.GeneratedMessage {
     return result;
   }
 
-  MediaUploadMetadata._();
+  UploadMetadata._();
 
-  factory MediaUploadMetadata.fromBuffer($core.List<$core.int> data,
+  factory UploadMetadata.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory MediaUploadMetadata.fromJson($core.String json,
+  factory UploadMetadata.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'MediaUploadMetadata',
+      _omitMessageNames ? '' : 'UploadMetadata',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'requestId')
-    ..pPM<MediaUploadFileMetadata>(2, _omitFieldNames ? '' : 'files',
-        subBuilder: MediaUploadFileMetadata.create)
+    ..pPM<UploadFileMetadata>(2, _omitFieldNames ? '' : 'files',
+        subBuilder: UploadFileMetadata.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MediaUploadMetadata clone() => deepCopy();
+  UploadMetadata clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MediaUploadMetadata copyWith(void Function(MediaUploadMetadata) updates) =>
-      super.copyWith((message) => updates(message as MediaUploadMetadata))
-          as MediaUploadMetadata;
+  UploadMetadata copyWith(void Function(UploadMetadata) updates) =>
+      super.copyWith((message) => updates(message as UploadMetadata))
+          as UploadMetadata;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static MediaUploadMetadata create() => MediaUploadMetadata._();
+  static UploadMetadata create() => UploadMetadata._();
   @$core.override
-  MediaUploadMetadata createEmptyInstance() => create();
+  UploadMetadata createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static MediaUploadMetadata getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<MediaUploadMetadata>(create);
-  static MediaUploadMetadata? _defaultInstance;
+  static UploadMetadata getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UploadMetadata>(create);
+  static UploadMetadata? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get requestId => $_getSZ(0);
@@ -735,14 +732,14 @@ class MediaUploadMetadata extends $pb.GeneratedMessage {
   void clearRequestId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $pb.PbList<MediaUploadFileMetadata> get files => $_getList(1);
+  $pb.PbList<UploadFileMetadata> get files => $_getList(1);
 }
 
-class MediaUploadFileResult extends $pb.GeneratedMessage {
-  factory MediaUploadFileResult({
+class UploadFileResult extends $pb.GeneratedMessage {
+  factory UploadFileResult({
     $core.String? clientFileId,
     $core.String? filename,
-    MediaUploadFileStatus? status,
+    UploadFileStatus? status,
     $core.String? assetId,
     $core.String? mimeType,
     $fixnum.Int64? sizeBytes,
@@ -761,23 +758,23 @@ class MediaUploadFileResult extends $pb.GeneratedMessage {
     return result;
   }
 
-  MediaUploadFileResult._();
+  UploadFileResult._();
 
-  factory MediaUploadFileResult.fromBuffer($core.List<$core.int> data,
+  factory UploadFileResult.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory MediaUploadFileResult.fromJson($core.String json,
+  factory UploadFileResult.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'MediaUploadFileResult',
+      _omitMessageNames ? '' : 'UploadFileResult',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'clientFileId')
     ..aOS(2, _omitFieldNames ? '' : 'filename')
-    ..aE<MediaUploadFileStatus>(3, _omitFieldNames ? '' : 'status',
-        enumValues: MediaUploadFileStatus.values)
+    ..aE<UploadFileStatus>(3, _omitFieldNames ? '' : 'status',
+        enumValues: UploadFileStatus.values)
     ..aOS(4, _omitFieldNames ? '' : 'assetId')
     ..aOS(5, _omitFieldNames ? '' : 'mimeType')
     ..a<$fixnum.Int64>(
@@ -788,24 +785,23 @@ class MediaUploadFileResult extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MediaUploadFileResult clone() => deepCopy();
+  UploadFileResult clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MediaUploadFileResult copyWith(
-          void Function(MediaUploadFileResult) updates) =>
-      super.copyWith((message) => updates(message as MediaUploadFileResult))
-          as MediaUploadFileResult;
+  UploadFileResult copyWith(void Function(UploadFileResult) updates) =>
+      super.copyWith((message) => updates(message as UploadFileResult))
+          as UploadFileResult;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static MediaUploadFileResult create() => MediaUploadFileResult._();
+  static UploadFileResult create() => UploadFileResult._();
   @$core.override
-  MediaUploadFileResult createEmptyInstance() => create();
+  UploadFileResult createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static MediaUploadFileResult getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<MediaUploadFileResult>(create);
-  static MediaUploadFileResult? _defaultInstance;
+  static UploadFileResult getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UploadFileResult>(create);
+  static UploadFileResult? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get clientFileId => $_getSZ(0);
@@ -826,9 +822,9 @@ class MediaUploadFileResult extends $pb.GeneratedMessage {
   void clearFilename() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  MediaUploadFileStatus get status => $_getN(2);
+  UploadFileStatus get status => $_getN(2);
   @$pb.TagNumber(3)
-  set status(MediaUploadFileStatus value) => $_setField(3, value);
+  set status(UploadFileStatus value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasStatus() => $_has(2);
   @$pb.TagNumber(3)
@@ -880,11 +876,11 @@ class MediaUploadFileResult extends $pb.GeneratedMessage {
   void clearErrorMessage() => $_clearField(8);
 }
 
-class MediaUploadBatchResult extends $pb.GeneratedMessage {
-  factory MediaUploadBatchResult({
+class UploadBatchResult extends $pb.GeneratedMessage {
+  factory UploadBatchResult({
     $core.String? requestId,
-    MediaUploadStatus? status,
-    $core.Iterable<MediaUploadFileResult>? files,
+    UploadStatus? status,
+    $core.Iterable<UploadFileResult>? files,
   }) {
     final result = create();
     if (requestId != null) result.requestId = requestId;
@@ -893,45 +889,44 @@ class MediaUploadBatchResult extends $pb.GeneratedMessage {
     return result;
   }
 
-  MediaUploadBatchResult._();
+  UploadBatchResult._();
 
-  factory MediaUploadBatchResult.fromBuffer($core.List<$core.int> data,
+  factory UploadBatchResult.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory MediaUploadBatchResult.fromJson($core.String json,
+  factory UploadBatchResult.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'MediaUploadBatchResult',
+      _omitMessageNames ? '' : 'UploadBatchResult',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'requestId')
-    ..aE<MediaUploadStatus>(2, _omitFieldNames ? '' : 'status',
-        enumValues: MediaUploadStatus.values)
-    ..pPM<MediaUploadFileResult>(3, _omitFieldNames ? '' : 'files',
-        subBuilder: MediaUploadFileResult.create)
+    ..aE<UploadStatus>(2, _omitFieldNames ? '' : 'status',
+        enumValues: UploadStatus.values)
+    ..pPM<UploadFileResult>(3, _omitFieldNames ? '' : 'files',
+        subBuilder: UploadFileResult.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MediaUploadBatchResult clone() => deepCopy();
+  UploadBatchResult clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MediaUploadBatchResult copyWith(
-          void Function(MediaUploadBatchResult) updates) =>
-      super.copyWith((message) => updates(message as MediaUploadBatchResult))
-          as MediaUploadBatchResult;
+  UploadBatchResult copyWith(void Function(UploadBatchResult) updates) =>
+      super.copyWith((message) => updates(message as UploadBatchResult))
+          as UploadBatchResult;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static MediaUploadBatchResult create() => MediaUploadBatchResult._();
+  static UploadBatchResult create() => UploadBatchResult._();
   @$core.override
-  MediaUploadBatchResult createEmptyInstance() => create();
+  UploadBatchResult createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static MediaUploadBatchResult getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<MediaUploadBatchResult>(create);
-  static MediaUploadBatchResult? _defaultInstance;
+  static UploadBatchResult getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UploadBatchResult>(create);
+  static UploadBatchResult? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get requestId => $_getSZ(0);
@@ -943,20 +938,20 @@ class MediaUploadBatchResult extends $pb.GeneratedMessage {
   void clearRequestId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  MediaUploadStatus get status => $_getN(1);
+  UploadStatus get status => $_getN(1);
   @$pb.TagNumber(2)
-  set status(MediaUploadStatus value) => $_setField(2, value);
+  set status(UploadStatus value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasStatus() => $_has(1);
   @$pb.TagNumber(2)
   void clearStatus() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $pb.PbList<MediaUploadFileResult> get files => $_getList(2);
+  $pb.PbList<UploadFileResult> get files => $_getList(2);
 }
 
-class GetMediaUploadReq extends $pb.GeneratedMessage {
-  factory GetMediaUploadReq({
+class GetUploadReq extends $pb.GeneratedMessage {
+  factory GetUploadReq({
     $core.String? requestId,
   }) {
     final result = create();
@@ -964,40 +959,40 @@ class GetMediaUploadReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  GetMediaUploadReq._();
+  GetUploadReq._();
 
-  factory GetMediaUploadReq.fromBuffer($core.List<$core.int> data,
+  factory GetUploadReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory GetMediaUploadReq.fromJson($core.String json,
+  factory GetUploadReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetMediaUploadReq',
+      _omitMessageNames ? '' : 'GetUploadReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'requestId')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetMediaUploadReq clone() => deepCopy();
+  GetUploadReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetMediaUploadReq copyWith(void Function(GetMediaUploadReq) updates) =>
-      super.copyWith((message) => updates(message as GetMediaUploadReq))
-          as GetMediaUploadReq;
+  GetUploadReq copyWith(void Function(GetUploadReq) updates) =>
+      super.copyWith((message) => updates(message as GetUploadReq))
+          as GetUploadReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static GetMediaUploadReq create() => GetMediaUploadReq._();
+  static GetUploadReq create() => GetUploadReq._();
   @$core.override
-  GetMediaUploadReq createEmptyInstance() => create();
+  GetUploadReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static GetMediaUploadReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetMediaUploadReq>(create);
-  static GetMediaUploadReq? _defaultInstance;
+  static GetUploadReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetUploadReq>(create);
+  static GetUploadReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get requestId => $_getSZ(0);
@@ -1009,61 +1004,61 @@ class GetMediaUploadReq extends $pb.GeneratedMessage {
   void clearRequestId() => $_clearField(1);
 }
 
-class GetMediaUploadResp extends $pb.GeneratedMessage {
-  factory GetMediaUploadResp({
-    MediaUploadBatchResult? upload,
+class GetUploadResp extends $pb.GeneratedMessage {
+  factory GetUploadResp({
+    UploadBatchResult? upload,
   }) {
     final result = create();
     if (upload != null) result.upload = upload;
     return result;
   }
 
-  GetMediaUploadResp._();
+  GetUploadResp._();
 
-  factory GetMediaUploadResp.fromBuffer($core.List<$core.int> data,
+  factory GetUploadResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory GetMediaUploadResp.fromJson($core.String json,
+  factory GetUploadResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetMediaUploadResp',
+      _omitMessageNames ? '' : 'GetUploadResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
-    ..aOM<MediaUploadBatchResult>(1, _omitFieldNames ? '' : 'upload',
-        subBuilder: MediaUploadBatchResult.create)
+    ..aOM<UploadBatchResult>(1, _omitFieldNames ? '' : 'upload',
+        subBuilder: UploadBatchResult.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetMediaUploadResp clone() => deepCopy();
+  GetUploadResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetMediaUploadResp copyWith(void Function(GetMediaUploadResp) updates) =>
-      super.copyWith((message) => updates(message as GetMediaUploadResp))
-          as GetMediaUploadResp;
+  GetUploadResp copyWith(void Function(GetUploadResp) updates) =>
+      super.copyWith((message) => updates(message as GetUploadResp))
+          as GetUploadResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static GetMediaUploadResp create() => GetMediaUploadResp._();
+  static GetUploadResp create() => GetUploadResp._();
   @$core.override
-  GetMediaUploadResp createEmptyInstance() => create();
+  GetUploadResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static GetMediaUploadResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetMediaUploadResp>(create);
-  static GetMediaUploadResp? _defaultInstance;
+  static GetUploadResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetUploadResp>(create);
+  static GetUploadResp? _defaultInstance;
 
   @$pb.TagNumber(1)
-  MediaUploadBatchResult get upload => $_getN(0);
+  UploadBatchResult get upload => $_getN(0);
   @$pb.TagNumber(1)
-  set upload(MediaUploadBatchResult value) => $_setField(1, value);
+  set upload(UploadBatchResult value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasUpload() => $_has(0);
   @$pb.TagNumber(1)
   void clearUpload() => $_clearField(1);
   @$pb.TagNumber(1)
-  MediaUploadBatchResult ensureUpload() => $_ensure(0);
+  UploadBatchResult ensureUpload() => $_ensure(0);
 }
 
 const $core.bool _omitFieldNames =

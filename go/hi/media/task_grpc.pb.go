@@ -19,289 +19,289 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	MediaTask_CreateTextToImage_FullMethodName  = "/hi.media.MediaTask/CreateTextToImage"
-	MediaTask_CreateImageToVideo_FullMethodName = "/hi.media.MediaTask/CreateImageToVideo"
-	MediaTask_Get_FullMethodName                = "/hi.media.MediaTask/Get"
-	MediaTask_List_FullMethodName               = "/hi.media.MediaTask/List"
-	MediaTask_Cancel_FullMethodName             = "/hi.media.MediaTask/Cancel"
-	MediaTask_RecoverSave_FullMethodName        = "/hi.media.MediaTask/RecoverSave"
+	Task_CreateImageToVideo_FullMethodName = "/hi.media.Task/CreateImageToVideo"
+	Task_CreateTextToVideo_FullMethodName  = "/hi.media.Task/CreateTextToVideo"
+	Task_Get_FullMethodName                = "/hi.media.Task/Get"
+	Task_List_FullMethodName               = "/hi.media.Task/List"
+	Task_Cancel_FullMethodName             = "/hi.media.Task/Cancel"
+	Task_RecoverSave_FullMethodName        = "/hi.media.Task/RecoverSave"
 )
 
-// MediaTaskClient is the client API for MediaTask service.
+// TaskClient is the client API for Task service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type MediaTaskClient interface {
-	CreateTextToImage(ctx context.Context, in *CreateTextToImageTaskReq, opts ...grpc.CallOption) (*CreateMediaTaskResp, error)
-	CreateImageToVideo(ctx context.Context, in *CreateImageToVideoTaskReq, opts ...grpc.CallOption) (*CreateMediaTaskResp, error)
-	Get(ctx context.Context, in *GetMediaTaskReq, opts ...grpc.CallOption) (*GetMediaTaskResp, error)
-	List(ctx context.Context, in *ListMediaTasksReq, opts ...grpc.CallOption) (*ListMediaTasksResp, error)
-	Cancel(ctx context.Context, in *CancelMediaTaskReq, opts ...grpc.CallOption) (*CancelMediaTaskResp, error)
-	RecoverSave(ctx context.Context, in *RecoverSaveMediaTaskReq, opts ...grpc.CallOption) (*RecoverSaveMediaTaskResp, error)
+type TaskClient interface {
+	CreateImageToVideo(ctx context.Context, in *CreateImageToVideoTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error)
+	CreateTextToVideo(ctx context.Context, in *CreateTextToVideoTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error)
+	Get(ctx context.Context, in *GetTaskReq, opts ...grpc.CallOption) (*GetTaskResp, error)
+	List(ctx context.Context, in *ListTasksReq, opts ...grpc.CallOption) (*ListTasksResp, error)
+	Cancel(ctx context.Context, in *CancelTaskReq, opts ...grpc.CallOption) (*CancelTaskResp, error)
+	RecoverSave(ctx context.Context, in *RecoverSaveTaskReq, opts ...grpc.CallOption) (*RecoverSaveTaskResp, error)
 }
 
-type mediaTaskClient struct {
+type taskClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewMediaTaskClient(cc grpc.ClientConnInterface) MediaTaskClient {
-	return &mediaTaskClient{cc}
+func NewTaskClient(cc grpc.ClientConnInterface) TaskClient {
+	return &taskClient{cc}
 }
 
-func (c *mediaTaskClient) CreateTextToImage(ctx context.Context, in *CreateTextToImageTaskReq, opts ...grpc.CallOption) (*CreateMediaTaskResp, error) {
+func (c *taskClient) CreateImageToVideo(ctx context.Context, in *CreateImageToVideoTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateMediaTaskResp)
-	err := c.cc.Invoke(ctx, MediaTask_CreateTextToImage_FullMethodName, in, out, cOpts...)
+	out := new(CreateTaskResp)
+	err := c.cc.Invoke(ctx, Task_CreateImageToVideo_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *mediaTaskClient) CreateImageToVideo(ctx context.Context, in *CreateImageToVideoTaskReq, opts ...grpc.CallOption) (*CreateMediaTaskResp, error) {
+func (c *taskClient) CreateTextToVideo(ctx context.Context, in *CreateTextToVideoTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateMediaTaskResp)
-	err := c.cc.Invoke(ctx, MediaTask_CreateImageToVideo_FullMethodName, in, out, cOpts...)
+	out := new(CreateTaskResp)
+	err := c.cc.Invoke(ctx, Task_CreateTextToVideo_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *mediaTaskClient) Get(ctx context.Context, in *GetMediaTaskReq, opts ...grpc.CallOption) (*GetMediaTaskResp, error) {
+func (c *taskClient) Get(ctx context.Context, in *GetTaskReq, opts ...grpc.CallOption) (*GetTaskResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetMediaTaskResp)
-	err := c.cc.Invoke(ctx, MediaTask_Get_FullMethodName, in, out, cOpts...)
+	out := new(GetTaskResp)
+	err := c.cc.Invoke(ctx, Task_Get_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *mediaTaskClient) List(ctx context.Context, in *ListMediaTasksReq, opts ...grpc.CallOption) (*ListMediaTasksResp, error) {
+func (c *taskClient) List(ctx context.Context, in *ListTasksReq, opts ...grpc.CallOption) (*ListTasksResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListMediaTasksResp)
-	err := c.cc.Invoke(ctx, MediaTask_List_FullMethodName, in, out, cOpts...)
+	out := new(ListTasksResp)
+	err := c.cc.Invoke(ctx, Task_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *mediaTaskClient) Cancel(ctx context.Context, in *CancelMediaTaskReq, opts ...grpc.CallOption) (*CancelMediaTaskResp, error) {
+func (c *taskClient) Cancel(ctx context.Context, in *CancelTaskReq, opts ...grpc.CallOption) (*CancelTaskResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CancelMediaTaskResp)
-	err := c.cc.Invoke(ctx, MediaTask_Cancel_FullMethodName, in, out, cOpts...)
+	out := new(CancelTaskResp)
+	err := c.cc.Invoke(ctx, Task_Cancel_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *mediaTaskClient) RecoverSave(ctx context.Context, in *RecoverSaveMediaTaskReq, opts ...grpc.CallOption) (*RecoverSaveMediaTaskResp, error) {
+func (c *taskClient) RecoverSave(ctx context.Context, in *RecoverSaveTaskReq, opts ...grpc.CallOption) (*RecoverSaveTaskResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RecoverSaveMediaTaskResp)
-	err := c.cc.Invoke(ctx, MediaTask_RecoverSave_FullMethodName, in, out, cOpts...)
+	out := new(RecoverSaveTaskResp)
+	err := c.cc.Invoke(ctx, Task_RecoverSave_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// MediaTaskServer is the server API for MediaTask service.
-// All implementations should embed UnimplementedMediaTaskServer
+// TaskServer is the server API for Task service.
+// All implementations should embed UnimplementedTaskServer
 // for forward compatibility.
-type MediaTaskServer interface {
-	CreateTextToImage(context.Context, *CreateTextToImageTaskReq) (*CreateMediaTaskResp, error)
-	CreateImageToVideo(context.Context, *CreateImageToVideoTaskReq) (*CreateMediaTaskResp, error)
-	Get(context.Context, *GetMediaTaskReq) (*GetMediaTaskResp, error)
-	List(context.Context, *ListMediaTasksReq) (*ListMediaTasksResp, error)
-	Cancel(context.Context, *CancelMediaTaskReq) (*CancelMediaTaskResp, error)
-	RecoverSave(context.Context, *RecoverSaveMediaTaskReq) (*RecoverSaveMediaTaskResp, error)
+type TaskServer interface {
+	CreateImageToVideo(context.Context, *CreateImageToVideoTaskReq) (*CreateTaskResp, error)
+	CreateTextToVideo(context.Context, *CreateTextToVideoTaskReq) (*CreateTaskResp, error)
+	Get(context.Context, *GetTaskReq) (*GetTaskResp, error)
+	List(context.Context, *ListTasksReq) (*ListTasksResp, error)
+	Cancel(context.Context, *CancelTaskReq) (*CancelTaskResp, error)
+	RecoverSave(context.Context, *RecoverSaveTaskReq) (*RecoverSaveTaskResp, error)
 }
 
-// UnimplementedMediaTaskServer should be embedded to have
+// UnimplementedTaskServer should be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedMediaTaskServer struct{}
+type UnimplementedTaskServer struct{}
 
-func (UnimplementedMediaTaskServer) CreateTextToImage(context.Context, *CreateTextToImageTaskReq) (*CreateMediaTaskResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method CreateTextToImage not implemented")
-}
-func (UnimplementedMediaTaskServer) CreateImageToVideo(context.Context, *CreateImageToVideoTaskReq) (*CreateMediaTaskResp, error) {
+func (UnimplementedTaskServer) CreateImageToVideo(context.Context, *CreateImageToVideoTaskReq) (*CreateTaskResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateImageToVideo not implemented")
 }
-func (UnimplementedMediaTaskServer) Get(context.Context, *GetMediaTaskReq) (*GetMediaTaskResp, error) {
+func (UnimplementedTaskServer) CreateTextToVideo(context.Context, *CreateTextToVideoTaskReq) (*CreateTaskResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateTextToVideo not implemented")
+}
+func (UnimplementedTaskServer) Get(context.Context, *GetTaskReq) (*GetTaskResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
-func (UnimplementedMediaTaskServer) List(context.Context, *ListMediaTasksReq) (*ListMediaTasksResp, error) {
+func (UnimplementedTaskServer) List(context.Context, *ListTasksReq) (*ListTasksResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
-func (UnimplementedMediaTaskServer) Cancel(context.Context, *CancelMediaTaskReq) (*CancelMediaTaskResp, error) {
+func (UnimplementedTaskServer) Cancel(context.Context, *CancelTaskReq) (*CancelTaskResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Cancel not implemented")
 }
-func (UnimplementedMediaTaskServer) RecoverSave(context.Context, *RecoverSaveMediaTaskReq) (*RecoverSaveMediaTaskResp, error) {
+func (UnimplementedTaskServer) RecoverSave(context.Context, *RecoverSaveTaskReq) (*RecoverSaveTaskResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method RecoverSave not implemented")
 }
-func (UnimplementedMediaTaskServer) testEmbeddedByValue() {}
+func (UnimplementedTaskServer) testEmbeddedByValue() {}
 
-// UnsafeMediaTaskServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to MediaTaskServer will
+// UnsafeTaskServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to TaskServer will
 // result in compilation errors.
-type UnsafeMediaTaskServer interface {
-	mustEmbedUnimplementedMediaTaskServer()
+type UnsafeTaskServer interface {
+	mustEmbedUnimplementedTaskServer()
 }
 
-func RegisterMediaTaskServer(s grpc.ServiceRegistrar, srv MediaTaskServer) {
-	// If the following call panics, it indicates UnimplementedMediaTaskServer was
+func RegisterTaskServer(s grpc.ServiceRegistrar, srv TaskServer) {
+	// If the following call panics, it indicates UnimplementedTaskServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&MediaTask_ServiceDesc, srv)
+	s.RegisterService(&Task_ServiceDesc, srv)
 }
 
-func _MediaTask_CreateTextToImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateTextToImageTaskReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MediaTaskServer).CreateTextToImage(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: MediaTask_CreateTextToImage_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MediaTaskServer).CreateTextToImage(ctx, req.(*CreateTextToImageTaskReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _MediaTask_CreateImageToVideo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Task_CreateImageToVideo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateImageToVideoTaskReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MediaTaskServer).CreateImageToVideo(ctx, in)
+		return srv.(TaskServer).CreateImageToVideo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MediaTask_CreateImageToVideo_FullMethodName,
+		FullMethod: Task_CreateImageToVideo_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MediaTaskServer).CreateImageToVideo(ctx, req.(*CreateImageToVideoTaskReq))
+		return srv.(TaskServer).CreateImageToVideo(ctx, req.(*CreateImageToVideoTaskReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MediaTask_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetMediaTaskReq)
+func _Task_CreateTextToVideo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateTextToVideoTaskReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MediaTaskServer).Get(ctx, in)
+		return srv.(TaskServer).CreateTextToVideo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MediaTask_Get_FullMethodName,
+		FullMethod: Task_CreateTextToVideo_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MediaTaskServer).Get(ctx, req.(*GetMediaTaskReq))
+		return srv.(TaskServer).CreateTextToVideo(ctx, req.(*CreateTextToVideoTaskReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MediaTask_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListMediaTasksReq)
+func _Task_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTaskReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MediaTaskServer).List(ctx, in)
+		return srv.(TaskServer).Get(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MediaTask_List_FullMethodName,
+		FullMethod: Task_Get_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MediaTaskServer).List(ctx, req.(*ListMediaTasksReq))
+		return srv.(TaskServer).Get(ctx, req.(*GetTaskReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MediaTask_Cancel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CancelMediaTaskReq)
+func _Task_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListTasksReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MediaTaskServer).Cancel(ctx, in)
+		return srv.(TaskServer).List(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MediaTask_Cancel_FullMethodName,
+		FullMethod: Task_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MediaTaskServer).Cancel(ctx, req.(*CancelMediaTaskReq))
+		return srv.(TaskServer).List(ctx, req.(*ListTasksReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MediaTask_RecoverSave_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RecoverSaveMediaTaskReq)
+func _Task_Cancel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CancelTaskReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MediaTaskServer).RecoverSave(ctx, in)
+		return srv.(TaskServer).Cancel(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MediaTask_RecoverSave_FullMethodName,
+		FullMethod: Task_Cancel_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MediaTaskServer).RecoverSave(ctx, req.(*RecoverSaveMediaTaskReq))
+		return srv.(TaskServer).Cancel(ctx, req.(*CancelTaskReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// MediaTask_ServiceDesc is the grpc.ServiceDesc for MediaTask service.
+func _Task_RecoverSave_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RecoverSaveTaskReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TaskServer).RecoverSave(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Task_RecoverSave_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TaskServer).RecoverSave(ctx, req.(*RecoverSaveTaskReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// Task_ServiceDesc is the grpc.ServiceDesc for Task service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var MediaTask_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "hi.media.MediaTask",
-	HandlerType: (*MediaTaskServer)(nil),
+var Task_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.media.Task",
+	HandlerType: (*TaskServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CreateTextToImage",
-			Handler:    _MediaTask_CreateTextToImage_Handler,
+			MethodName: "CreateImageToVideo",
+			Handler:    _Task_CreateImageToVideo_Handler,
 		},
 		{
-			MethodName: "CreateImageToVideo",
-			Handler:    _MediaTask_CreateImageToVideo_Handler,
+			MethodName: "CreateTextToVideo",
+			Handler:    _Task_CreateTextToVideo_Handler,
 		},
 		{
 			MethodName: "Get",
-			Handler:    _MediaTask_Get_Handler,
+			Handler:    _Task_Get_Handler,
 		},
 		{
 			MethodName: "List",
-			Handler:    _MediaTask_List_Handler,
+			Handler:    _Task_List_Handler,
 		},
 		{
 			MethodName: "Cancel",
-			Handler:    _MediaTask_Cancel_Handler,
+			Handler:    _Task_Cancel_Handler,
 		},
 		{
 			MethodName: "RecoverSave",
-			Handler:    _MediaTask_RecoverSave_Handler,
+			Handler:    _Task_RecoverSave_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

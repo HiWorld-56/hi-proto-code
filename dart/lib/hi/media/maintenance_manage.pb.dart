@@ -1,6 +1,6 @@
 // This is a generated file - do not edit.
 //
-// Generated from hi/media/work_manage.proto.
+// Generated from hi/media/maintenance_manage.proto.
 
 // @dart = 3.3
 
@@ -17,59 +17,61 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
-class MediaMaintenanceState extends $pb.GeneratedMessage {
-  factory MediaMaintenanceState({
+class MaintenanceState extends $pb.GeneratedMessage {
+  factory MaintenanceState({
     $core.bool? enabled,
     $core.String? reason,
     $fixnum.Int64? startedAt,
+    $core.String? updatedBy,
     $fixnum.Int64? updatedAt,
   }) {
     final result = create();
     if (enabled != null) result.enabled = enabled;
     if (reason != null) result.reason = reason;
     if (startedAt != null) result.startedAt = startedAt;
+    if (updatedBy != null) result.updatedBy = updatedBy;
     if (updatedAt != null) result.updatedAt = updatedAt;
     return result;
   }
 
-  MediaMaintenanceState._();
+  MaintenanceState._();
 
-  factory MediaMaintenanceState.fromBuffer($core.List<$core.int> data,
+  factory MaintenanceState.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory MediaMaintenanceState.fromJson($core.String json,
+  factory MaintenanceState.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'MediaMaintenanceState',
+      _omitMessageNames ? '' : 'MaintenanceState',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOB(1, _omitFieldNames ? '' : 'enabled')
     ..aOS(2, _omitFieldNames ? '' : 'reason')
     ..aInt64(3, _omitFieldNames ? '' : 'startedAt')
-    ..aInt64(4, _omitFieldNames ? '' : 'updatedAt')
+    ..aOS(4, _omitFieldNames ? '' : 'updatedBy')
+    ..aInt64(5, _omitFieldNames ? '' : 'updatedAt')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MediaMaintenanceState clone() => deepCopy();
+  MaintenanceState clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MediaMaintenanceState copyWith(
-          void Function(MediaMaintenanceState) updates) =>
-      super.copyWith((message) => updates(message as MediaMaintenanceState))
-          as MediaMaintenanceState;
+  MaintenanceState copyWith(void Function(MaintenanceState) updates) =>
+      super.copyWith((message) => updates(message as MaintenanceState))
+          as MaintenanceState;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static MediaMaintenanceState create() => MediaMaintenanceState._();
+  static MaintenanceState create() => MaintenanceState._();
   @$core.override
-  MediaMaintenanceState createEmptyInstance() => create();
+  MaintenanceState createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static MediaMaintenanceState getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<MediaMaintenanceState>(create);
-  static MediaMaintenanceState? _defaultInstance;
+  static MaintenanceState getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MaintenanceState>(create);
+  static MaintenanceState? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.bool get enabled => $_getBF(0);
@@ -99,75 +101,83 @@ class MediaMaintenanceState extends $pb.GeneratedMessage {
   void clearStartedAt() => $_clearField(3);
 
   @$pb.TagNumber(4)
-  $fixnum.Int64 get updatedAt => $_getI64(3);
+  $core.String get updatedBy => $_getSZ(3);
   @$pb.TagNumber(4)
-  set updatedAt($fixnum.Int64 value) => $_setInt64(3, value);
+  set updatedBy($core.String value) => $_setString(3, value);
   @$pb.TagNumber(4)
-  $core.bool hasUpdatedAt() => $_has(3);
+  $core.bool hasUpdatedBy() => $_has(3);
   @$pb.TagNumber(4)
-  void clearUpdatedAt() => $_clearField(4);
+  void clearUpdatedBy() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $fixnum.Int64 get updatedAt => $_getI64(4);
+  @$pb.TagNumber(5)
+  set updatedAt($fixnum.Int64 value) => $_setInt64(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasUpdatedAt() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearUpdatedAt() => $_clearField(5);
 }
 
-class GetMediaMaintenanceResp extends $pb.GeneratedMessage {
-  factory GetMediaMaintenanceResp({
-    MediaMaintenanceState? state,
+class GetMaintenanceResp extends $pb.GeneratedMessage {
+  factory GetMaintenanceResp({
+    MaintenanceState? state,
   }) {
     final result = create();
     if (state != null) result.state = state;
     return result;
   }
 
-  GetMediaMaintenanceResp._();
+  GetMaintenanceResp._();
 
-  factory GetMediaMaintenanceResp.fromBuffer($core.List<$core.int> data,
+  factory GetMaintenanceResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory GetMediaMaintenanceResp.fromJson($core.String json,
+  factory GetMaintenanceResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetMediaMaintenanceResp',
+      _omitMessageNames ? '' : 'GetMaintenanceResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
-    ..aOM<MediaMaintenanceState>(1, _omitFieldNames ? '' : 'state',
-        subBuilder: MediaMaintenanceState.create)
+    ..aOM<MaintenanceState>(1, _omitFieldNames ? '' : 'state',
+        subBuilder: MaintenanceState.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetMediaMaintenanceResp clone() => deepCopy();
+  GetMaintenanceResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetMediaMaintenanceResp copyWith(
-          void Function(GetMediaMaintenanceResp) updates) =>
-      super.copyWith((message) => updates(message as GetMediaMaintenanceResp))
-          as GetMediaMaintenanceResp;
+  GetMaintenanceResp copyWith(void Function(GetMaintenanceResp) updates) =>
+      super.copyWith((message) => updates(message as GetMaintenanceResp))
+          as GetMaintenanceResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static GetMediaMaintenanceResp create() => GetMediaMaintenanceResp._();
+  static GetMaintenanceResp create() => GetMaintenanceResp._();
   @$core.override
-  GetMediaMaintenanceResp createEmptyInstance() => create();
+  GetMaintenanceResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static GetMediaMaintenanceResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetMediaMaintenanceResp>(create);
-  static GetMediaMaintenanceResp? _defaultInstance;
+  static GetMaintenanceResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetMaintenanceResp>(create);
+  static GetMaintenanceResp? _defaultInstance;
 
   @$pb.TagNumber(1)
-  MediaMaintenanceState get state => $_getN(0);
+  MaintenanceState get state => $_getN(0);
   @$pb.TagNumber(1)
-  set state(MediaMaintenanceState value) => $_setField(1, value);
+  set state(MaintenanceState value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasState() => $_has(0);
   @$pb.TagNumber(1)
   void clearState() => $_clearField(1);
   @$pb.TagNumber(1)
-  MediaMaintenanceState ensureState() => $_ensure(0);
+  MaintenanceState ensureState() => $_ensure(0);
 }
 
-class SetMediaMaintenanceReq extends $pb.GeneratedMessage {
-  factory SetMediaMaintenanceReq({
+class SetMaintenanceReq extends $pb.GeneratedMessage {
+  factory SetMaintenanceReq({
     $core.bool? enabled,
     $core.String? reason,
   }) {
@@ -177,17 +187,17 @@ class SetMediaMaintenanceReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  SetMediaMaintenanceReq._();
+  SetMaintenanceReq._();
 
-  factory SetMediaMaintenanceReq.fromBuffer($core.List<$core.int> data,
+  factory SetMaintenanceReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory SetMediaMaintenanceReq.fromJson($core.String json,
+  factory SetMaintenanceReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'SetMediaMaintenanceReq',
+      _omitMessageNames ? '' : 'SetMaintenanceReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOB(1, _omitFieldNames ? '' : 'enabled')
@@ -195,25 +205,25 @@ class SetMediaMaintenanceReq extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SetMediaMaintenanceReq clone() => deepCopy();
+  SetMaintenanceReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SetMediaMaintenanceReq copyWith(
-          void Function(SetMediaMaintenanceReq) updates) =>
-      super.copyWith((message) => updates(message as SetMediaMaintenanceReq))
-          as SetMediaMaintenanceReq;
+  SetMaintenanceReq copyWith(void Function(SetMaintenanceReq) updates) =>
+      super.copyWith((message) => updates(message as SetMaintenanceReq))
+          as SetMaintenanceReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static SetMediaMaintenanceReq create() => SetMediaMaintenanceReq._();
+  static SetMaintenanceReq create() => SetMaintenanceReq._();
   @$core.override
-  SetMediaMaintenanceReq createEmptyInstance() => create();
+  SetMaintenanceReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static SetMediaMaintenanceReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<SetMediaMaintenanceReq>(create);
-  static SetMediaMaintenanceReq? _defaultInstance;
+  static SetMaintenanceReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetMaintenanceReq>(create);
+  static SetMaintenanceReq? _defaultInstance;
 
+  /// 必须显式提交。维护模式只暂停向 ComfyUI 派发新任务，不禁用查询和管理接口。
   @$pb.TagNumber(1)
   $core.bool get enabled => $_getBF(0);
   @$pb.TagNumber(1)
@@ -233,62 +243,61 @@ class SetMediaMaintenanceReq extends $pb.GeneratedMessage {
   void clearReason() => $_clearField(2);
 }
 
-class SetMediaMaintenanceResp extends $pb.GeneratedMessage {
-  factory SetMediaMaintenanceResp({
-    MediaMaintenanceState? state,
+class SetMaintenanceResp extends $pb.GeneratedMessage {
+  factory SetMaintenanceResp({
+    MaintenanceState? state,
   }) {
     final result = create();
     if (state != null) result.state = state;
     return result;
   }
 
-  SetMediaMaintenanceResp._();
+  SetMaintenanceResp._();
 
-  factory SetMediaMaintenanceResp.fromBuffer($core.List<$core.int> data,
+  factory SetMaintenanceResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory SetMediaMaintenanceResp.fromJson($core.String json,
+  factory SetMaintenanceResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'SetMediaMaintenanceResp',
+      _omitMessageNames ? '' : 'SetMaintenanceResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
-    ..aOM<MediaMaintenanceState>(1, _omitFieldNames ? '' : 'state',
-        subBuilder: MediaMaintenanceState.create)
+    ..aOM<MaintenanceState>(1, _omitFieldNames ? '' : 'state',
+        subBuilder: MaintenanceState.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SetMediaMaintenanceResp clone() => deepCopy();
+  SetMaintenanceResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SetMediaMaintenanceResp copyWith(
-          void Function(SetMediaMaintenanceResp) updates) =>
-      super.copyWith((message) => updates(message as SetMediaMaintenanceResp))
-          as SetMediaMaintenanceResp;
+  SetMaintenanceResp copyWith(void Function(SetMaintenanceResp) updates) =>
+      super.copyWith((message) => updates(message as SetMaintenanceResp))
+          as SetMaintenanceResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static SetMediaMaintenanceResp create() => SetMediaMaintenanceResp._();
+  static SetMaintenanceResp create() => SetMaintenanceResp._();
   @$core.override
-  SetMediaMaintenanceResp createEmptyInstance() => create();
+  SetMaintenanceResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static SetMediaMaintenanceResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<SetMediaMaintenanceResp>(create);
-  static SetMediaMaintenanceResp? _defaultInstance;
+  static SetMaintenanceResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetMaintenanceResp>(create);
+  static SetMaintenanceResp? _defaultInstance;
 
   @$pb.TagNumber(1)
-  MediaMaintenanceState get state => $_getN(0);
+  MaintenanceState get state => $_getN(0);
   @$pb.TagNumber(1)
-  set state(MediaMaintenanceState value) => $_setField(1, value);
+  set state(MaintenanceState value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasState() => $_has(0);
   @$pb.TagNumber(1)
   void clearState() => $_clearField(1);
   @$pb.TagNumber(1)
-  MediaMaintenanceState ensureState() => $_ensure(0);
+  MaintenanceState ensureState() => $_ensure(0);
 }
 
 const $core.bool _omitFieldNames =

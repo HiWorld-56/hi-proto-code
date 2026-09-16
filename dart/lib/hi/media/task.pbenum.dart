@@ -14,66 +14,69 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-class MediaTaskPurpose extends $pb.ProtobufEnum {
-  static const MediaTaskPurpose MEDIA_TASK_PURPOSE_UNSPECIFIED =
-      MediaTaskPurpose._(
-          0, _omitEnumNames ? '' : 'MEDIA_TASK_PURPOSE_UNSPECIFIED');
-  static const MediaTaskPurpose MEDIA_TASK_PURPOSE_NORMAL =
-      MediaTaskPurpose._(1, _omitEnumNames ? '' : 'MEDIA_TASK_PURPOSE_NORMAL');
-  static const MediaTaskPurpose MEDIA_TASK_PURPOSE_WORKFLOW_TEST =
-      MediaTaskPurpose._(
-          2, _omitEnumNames ? '' : 'MEDIA_TASK_PURPOSE_WORKFLOW_TEST');
+class TaskPurpose extends $pb.ProtobufEnum {
+  static const TaskPurpose TASK_PURPOSE_UNSPECIFIED =
+      TaskPurpose._(0, _omitEnumNames ? '' : 'TASK_PURPOSE_UNSPECIFIED');
+  static const TaskPurpose TASK_PURPOSE_NORMAL =
+      TaskPurpose._(1, _omitEnumNames ? '' : 'TASK_PURPOSE_NORMAL');
+  static const TaskPurpose TASK_PURPOSE_WORKFLOW_TEST =
+      TaskPurpose._(2, _omitEnumNames ? '' : 'TASK_PURPOSE_WORKFLOW_TEST');
 
-  static const $core.List<MediaTaskPurpose> values = <MediaTaskPurpose>[
-    MEDIA_TASK_PURPOSE_UNSPECIFIED,
-    MEDIA_TASK_PURPOSE_NORMAL,
-    MEDIA_TASK_PURPOSE_WORKFLOW_TEST,
+  static const $core.List<TaskPurpose> values = <TaskPurpose>[
+    TASK_PURPOSE_UNSPECIFIED,
+    TASK_PURPOSE_NORMAL,
+    TASK_PURPOSE_WORKFLOW_TEST,
   ];
 
-  static final $core.List<MediaTaskPurpose?> _byValue =
+  static final $core.List<TaskPurpose?> _byValue =
       $pb.ProtobufEnum.$_initByValueList(values, 2);
-  static MediaTaskPurpose? valueOf($core.int value) =>
+  static TaskPurpose? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
-  const MediaTaskPurpose._(super.value, super.name);
+  const TaskPurpose._(super.value, super.name);
 }
 
-class MediaTaskStatus extends $pb.ProtobufEnum {
-  static const MediaTaskStatus MEDIA_TASK_STATUS_UNSPECIFIED =
-      MediaTaskStatus._(
-          0, _omitEnumNames ? '' : 'MEDIA_TASK_STATUS_UNSPECIFIED');
-  static const MediaTaskStatus MEDIA_TASK_STATUS_PENDING =
-      MediaTaskStatus._(1, _omitEnumNames ? '' : 'MEDIA_TASK_STATUS_PENDING');
-  static const MediaTaskStatus MEDIA_TASK_STATUS_RUNNING =
-      MediaTaskStatus._(2, _omitEnumNames ? '' : 'MEDIA_TASK_STATUS_RUNNING');
-  static const MediaTaskStatus MEDIA_TASK_STATUS_SAVING =
-      MediaTaskStatus._(3, _omitEnumNames ? '' : 'MEDIA_TASK_STATUS_SAVING');
-  static const MediaTaskStatus MEDIA_TASK_STATUS_CANCELLING = MediaTaskStatus._(
-      4, _omitEnumNames ? '' : 'MEDIA_TASK_STATUS_CANCELLING');
-  static const MediaTaskStatus MEDIA_TASK_STATUS_SUCCESS =
-      MediaTaskStatus._(5, _omitEnumNames ? '' : 'MEDIA_TASK_STATUS_SUCCESS');
-  static const MediaTaskStatus MEDIA_TASK_STATUS_FAILED =
-      MediaTaskStatus._(6, _omitEnumNames ? '' : 'MEDIA_TASK_STATUS_FAILED');
-  static const MediaTaskStatus MEDIA_TASK_STATUS_CANCELLED =
-      MediaTaskStatus._(7, _omitEnumNames ? '' : 'MEDIA_TASK_STATUS_CANCELLED');
+class TaskStatus extends $pb.ProtobufEnum {
+  static const TaskStatus TASK_STATUS_UNSPECIFIED =
+      TaskStatus._(0, _omitEnumNames ? '' : 'TASK_STATUS_UNSPECIFIED');
 
-  static const $core.List<MediaTaskStatus> values = <MediaTaskStatus>[
-    MEDIA_TASK_STATUS_UNSPECIFIED,
-    MEDIA_TASK_STATUS_PENDING,
-    MEDIA_TASK_STATUS_RUNNING,
-    MEDIA_TASK_STATUS_SAVING,
-    MEDIA_TASK_STATUS_CANCELLING,
-    MEDIA_TASK_STATUS_SUCCESS,
-    MEDIA_TASK_STATUS_FAILED,
-    MEDIA_TASK_STATUS_CANCELLED,
+  /// 等待派发；维护模式下也保持此状态。
+  static const TaskStatus TASK_STATUS_PENDING =
+      TaskStatus._(1, _omitEnumNames ? '' : 'TASK_STATUS_PENDING');
+
+  /// 覆盖提交、排队、状态核对和 ComfyUI 执行过程，具体文案见 status_message。
+  static const TaskStatus TASK_STATUS_RUNNING =
+      TaskStatus._(2, _omitEnumNames ? '' : 'TASK_STATUS_RUNNING');
+  static const TaskStatus TASK_STATUS_SAVING =
+      TaskStatus._(3, _omitEnumNames ? '' : 'TASK_STATUS_SAVING');
+  static const TaskStatus TASK_STATUS_CANCELLING =
+      TaskStatus._(4, _omitEnumNames ? '' : 'TASK_STATUS_CANCELLING');
+  static const TaskStatus TASK_STATUS_SUCCESS =
+      TaskStatus._(5, _omitEnumNames ? '' : 'TASK_STATUS_SUCCESS');
+
+  /// 上游失败、执行超时、输出无效或保存失败都归入 FAILED，由 error_code 区分。
+  static const TaskStatus TASK_STATUS_FAILED =
+      TaskStatus._(6, _omitEnumNames ? '' : 'TASK_STATUS_FAILED');
+  static const TaskStatus TASK_STATUS_CANCELLED =
+      TaskStatus._(7, _omitEnumNames ? '' : 'TASK_STATUS_CANCELLED');
+
+  static const $core.List<TaskStatus> values = <TaskStatus>[
+    TASK_STATUS_UNSPECIFIED,
+    TASK_STATUS_PENDING,
+    TASK_STATUS_RUNNING,
+    TASK_STATUS_SAVING,
+    TASK_STATUS_CANCELLING,
+    TASK_STATUS_SUCCESS,
+    TASK_STATUS_FAILED,
+    TASK_STATUS_CANCELLED,
   ];
 
-  static final $core.List<MediaTaskStatus?> _byValue =
+  static final $core.List<TaskStatus?> _byValue =
       $pb.ProtobufEnum.$_initByValueList(values, 7);
-  static MediaTaskStatus? valueOf($core.int value) =>
+  static TaskStatus? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
-  const MediaTaskStatus._(super.value, super.name);
+  const TaskStatus._(super.value, super.name);
 }
 
 class MediaType extends $pb.ProtobufEnum {

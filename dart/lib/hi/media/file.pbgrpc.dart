@@ -20,8 +20,8 @@ import 'file.pb.dart' as $0;
 
 export 'file.pb.dart';
 
-@$pb.GrpcServiceName('hi.media.MediaFile')
-class MediaFileClient extends $grpc.Client {
+@$pb.GrpcServiceName('hi.media.File')
+class FileClient extends $grpc.Client {
   /// The hostname for this service.
   static const $core.String defaultHost = '';
 
@@ -30,31 +30,31 @@ class MediaFileClient extends $grpc.Client {
     '',
   ];
 
-  MediaFileClient(super.channel, {super.options, super.interceptors});
+  FileClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$0.GetMediaUploadResp> getUpload(
-    $0.GetMediaUploadReq request, {
+  $grpc.ResponseFuture<$0.GetUploadResp> getUpload(
+    $0.GetUploadReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$getUpload, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.ListMediaFilesResp> list(
-    $0.ListMediaFilesReq request, {
+  $grpc.ResponseFuture<$0.ListFilesResp> list(
+    $0.ListFilesReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$list, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.DeleteMediaFileResp> delete(
-    $0.DeleteMediaFileReq request, {
+  $grpc.ResponseFuture<$0.DeleteFileResp> delete(
+    $0.DeleteFileReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$delete, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.GetMediaFileAccessUrlsResp> getAccessUrls(
-    $0.GetMediaFileAccessUrlsReq request, {
+  $grpc.ResponseFuture<$0.GetFileAccessUrlsResp> getAccessUrls(
+    $0.GetFileAccessUrlsReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$getAccessUrls, request, options: options);
@@ -63,96 +63,93 @@ class MediaFileClient extends $grpc.Client {
   // method descriptors
 
   static final _$getUpload =
-      $grpc.ClientMethod<$0.GetMediaUploadReq, $0.GetMediaUploadResp>(
-          '/hi.media.MediaFile/GetUpload',
-          ($0.GetMediaUploadReq value) => value.writeToBuffer(),
-          $0.GetMediaUploadResp.fromBuffer);
-  static final _$list =
-      $grpc.ClientMethod<$0.ListMediaFilesReq, $0.ListMediaFilesResp>(
-          '/hi.media.MediaFile/List',
-          ($0.ListMediaFilesReq value) => value.writeToBuffer(),
-          $0.ListMediaFilesResp.fromBuffer);
+      $grpc.ClientMethod<$0.GetUploadReq, $0.GetUploadResp>(
+          '/hi.media.File/GetUpload',
+          ($0.GetUploadReq value) => value.writeToBuffer(),
+          $0.GetUploadResp.fromBuffer);
+  static final _$list = $grpc.ClientMethod<$0.ListFilesReq, $0.ListFilesResp>(
+      '/hi.media.File/List',
+      ($0.ListFilesReq value) => value.writeToBuffer(),
+      $0.ListFilesResp.fromBuffer);
   static final _$delete =
-      $grpc.ClientMethod<$0.DeleteMediaFileReq, $0.DeleteMediaFileResp>(
-          '/hi.media.MediaFile/Delete',
-          ($0.DeleteMediaFileReq value) => value.writeToBuffer(),
-          $0.DeleteMediaFileResp.fromBuffer);
-  static final _$getAccessUrls = $grpc.ClientMethod<
-          $0.GetMediaFileAccessUrlsReq, $0.GetMediaFileAccessUrlsResp>(
-      '/hi.media.MediaFile/GetAccessUrls',
-      ($0.GetMediaFileAccessUrlsReq value) => value.writeToBuffer(),
-      $0.GetMediaFileAccessUrlsResp.fromBuffer);
+      $grpc.ClientMethod<$0.DeleteFileReq, $0.DeleteFileResp>(
+          '/hi.media.File/Delete',
+          ($0.DeleteFileReq value) => value.writeToBuffer(),
+          $0.DeleteFileResp.fromBuffer);
+  static final _$getAccessUrls =
+      $grpc.ClientMethod<$0.GetFileAccessUrlsReq, $0.GetFileAccessUrlsResp>(
+          '/hi.media.File/GetAccessUrls',
+          ($0.GetFileAccessUrlsReq value) => value.writeToBuffer(),
+          $0.GetFileAccessUrlsResp.fromBuffer);
 }
 
-@$pb.GrpcServiceName('hi.media.MediaFile')
-abstract class MediaFileServiceBase extends $grpc.Service {
-  $core.String get $name => 'hi.media.MediaFile';
+@$pb.GrpcServiceName('hi.media.File')
+abstract class FileServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.media.File';
 
-  MediaFileServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.GetMediaUploadReq, $0.GetMediaUploadResp>(
+  FileServiceBase() {
+    $addMethod($grpc.ServiceMethod<$0.GetUploadReq, $0.GetUploadResp>(
         'GetUpload',
         getUpload_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.GetMediaUploadReq.fromBuffer(value),
-        ($0.GetMediaUploadResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ListMediaFilesReq, $0.ListMediaFilesResp>(
+        ($core.List<$core.int> value) => $0.GetUploadReq.fromBuffer(value),
+        ($0.GetUploadResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ListFilesReq, $0.ListFilesResp>(
         'List',
         list_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.ListMediaFilesReq.fromBuffer(value),
-        ($0.ListMediaFilesResp value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) => $0.ListFilesReq.fromBuffer(value),
+        ($0.ListFilesResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.DeleteFileReq, $0.DeleteFileResp>(
+        'Delete',
+        delete_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.DeleteFileReq.fromBuffer(value),
+        ($0.DeleteFileResp value) => value.writeToBuffer()));
     $addMethod(
-        $grpc.ServiceMethod<$0.DeleteMediaFileReq, $0.DeleteMediaFileResp>(
-            'Delete',
-            delete_Pre,
+        $grpc.ServiceMethod<$0.GetFileAccessUrlsReq, $0.GetFileAccessUrlsResp>(
+            'GetAccessUrls',
+            getAccessUrls_Pre,
             false,
             false,
             ($core.List<$core.int> value) =>
-                $0.DeleteMediaFileReq.fromBuffer(value),
-            ($0.DeleteMediaFileResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.GetMediaFileAccessUrlsReq,
-            $0.GetMediaFileAccessUrlsResp>(
-        'GetAccessUrls',
-        getAccessUrls_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $0.GetMediaFileAccessUrlsReq.fromBuffer(value),
-        ($0.GetMediaFileAccessUrlsResp value) => value.writeToBuffer()));
+                $0.GetFileAccessUrlsReq.fromBuffer(value),
+            ($0.GetFileAccessUrlsResp value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.GetMediaUploadResp> getUpload_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.GetMediaUploadReq> $request) async {
+  $async.Future<$0.GetUploadResp> getUpload_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.GetUploadReq> $request) async {
     return getUpload($call, await $request);
   }
 
-  $async.Future<$0.GetMediaUploadResp> getUpload(
-      $grpc.ServiceCall call, $0.GetMediaUploadReq request);
+  $async.Future<$0.GetUploadResp> getUpload(
+      $grpc.ServiceCall call, $0.GetUploadReq request);
 
-  $async.Future<$0.ListMediaFilesResp> list_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.ListMediaFilesReq> $request) async {
+  $async.Future<$0.ListFilesResp> list_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.ListFilesReq> $request) async {
     return list($call, await $request);
   }
 
-  $async.Future<$0.ListMediaFilesResp> list(
-      $grpc.ServiceCall call, $0.ListMediaFilesReq request);
+  $async.Future<$0.ListFilesResp> list(
+      $grpc.ServiceCall call, $0.ListFilesReq request);
 
-  $async.Future<$0.DeleteMediaFileResp> delete_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.DeleteMediaFileReq> $request) async {
+  $async.Future<$0.DeleteFileResp> delete_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.DeleteFileReq> $request) async {
     return delete($call, await $request);
   }
 
-  $async.Future<$0.DeleteMediaFileResp> delete(
-      $grpc.ServiceCall call, $0.DeleteMediaFileReq request);
+  $async.Future<$0.DeleteFileResp> delete(
+      $grpc.ServiceCall call, $0.DeleteFileReq request);
 
-  $async.Future<$0.GetMediaFileAccessUrlsResp> getAccessUrls_Pre(
+  $async.Future<$0.GetFileAccessUrlsResp> getAccessUrls_Pre(
       $grpc.ServiceCall $call,
-      $async.Future<$0.GetMediaFileAccessUrlsReq> $request) async {
+      $async.Future<$0.GetFileAccessUrlsReq> $request) async {
     return getAccessUrls($call, await $request);
   }
 
-  $async.Future<$0.GetMediaFileAccessUrlsResp> getAccessUrls(
-      $grpc.ServiceCall call, $0.GetMediaFileAccessUrlsReq request);
+  $async.Future<$0.GetFileAccessUrlsResp> getAccessUrls(
+      $grpc.ServiceCall call, $0.GetFileAccessUrlsReq request);
 }

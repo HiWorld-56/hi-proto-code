@@ -23,235 +23,235 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type MediaFileSource int32
+type FileSource int32
 
 const (
-	MediaFileSource_MEDIA_FILE_SOURCE_UNSPECIFIED MediaFileSource = 0
-	MediaFileSource_MEDIA_FILE_SOURCE_UPLOAD      MediaFileSource = 1
-	MediaFileSource_MEDIA_FILE_SOURCE_GENERATED   MediaFileSource = 2
+	FileSource_FILE_SOURCE_UNSPECIFIED FileSource = 0
+	FileSource_FILE_SOURCE_UPLOAD      FileSource = 1
+	FileSource_FILE_SOURCE_GENERATED   FileSource = 2
 )
 
-// Enum value maps for MediaFileSource.
+// Enum value maps for FileSource.
 var (
-	MediaFileSource_name = map[int32]string{
-		0: "MEDIA_FILE_SOURCE_UNSPECIFIED",
-		1: "MEDIA_FILE_SOURCE_UPLOAD",
-		2: "MEDIA_FILE_SOURCE_GENERATED",
+	FileSource_name = map[int32]string{
+		0: "FILE_SOURCE_UNSPECIFIED",
+		1: "FILE_SOURCE_UPLOAD",
+		2: "FILE_SOURCE_GENERATED",
 	}
-	MediaFileSource_value = map[string]int32{
-		"MEDIA_FILE_SOURCE_UNSPECIFIED": 0,
-		"MEDIA_FILE_SOURCE_UPLOAD":      1,
-		"MEDIA_FILE_SOURCE_GENERATED":   2,
+	FileSource_value = map[string]int32{
+		"FILE_SOURCE_UNSPECIFIED": 0,
+		"FILE_SOURCE_UPLOAD":      1,
+		"FILE_SOURCE_GENERATED":   2,
 	}
 )
 
-func (x MediaFileSource) Enum() *MediaFileSource {
-	p := new(MediaFileSource)
+func (x FileSource) Enum() *FileSource {
+	p := new(FileSource)
 	*p = x
 	return p
 }
 
-func (x MediaFileSource) String() string {
+func (x FileSource) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (MediaFileSource) Descriptor() protoreflect.EnumDescriptor {
+func (FileSource) Descriptor() protoreflect.EnumDescriptor {
 	return file_hi_media_file_proto_enumTypes[0].Descriptor()
 }
 
-func (MediaFileSource) Type() protoreflect.EnumType {
+func (FileSource) Type() protoreflect.EnumType {
 	return &file_hi_media_file_proto_enumTypes[0]
 }
 
-func (x MediaFileSource) Number() protoreflect.EnumNumber {
+func (x FileSource) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use MediaFileSource.Descriptor instead.
-func (MediaFileSource) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use FileSource.Descriptor instead.
+func (FileSource) EnumDescriptor() ([]byte, []int) {
 	return file_hi_media_file_proto_rawDescGZIP(), []int{0}
 }
 
-type MediaFileAccessPurpose int32
+type FileAccessPurpose int32
 
 const (
-	MediaFileAccessPurpose_MEDIA_FILE_ACCESS_PURPOSE_UNSPECIFIED MediaFileAccessPurpose = 0
-	MediaFileAccessPurpose_MEDIA_FILE_ACCESS_PURPOSE_PREVIEW     MediaFileAccessPurpose = 1
-	MediaFileAccessPurpose_MEDIA_FILE_ACCESS_PURPOSE_DOWNLOAD    MediaFileAccessPurpose = 2
+	FileAccessPurpose_FILE_ACCESS_PURPOSE_UNSPECIFIED FileAccessPurpose = 0
+	FileAccessPurpose_FILE_ACCESS_PURPOSE_PREVIEW     FileAccessPurpose = 1
+	FileAccessPurpose_FILE_ACCESS_PURPOSE_DOWNLOAD    FileAccessPurpose = 2
 )
 
-// Enum value maps for MediaFileAccessPurpose.
+// Enum value maps for FileAccessPurpose.
 var (
-	MediaFileAccessPurpose_name = map[int32]string{
-		0: "MEDIA_FILE_ACCESS_PURPOSE_UNSPECIFIED",
-		1: "MEDIA_FILE_ACCESS_PURPOSE_PREVIEW",
-		2: "MEDIA_FILE_ACCESS_PURPOSE_DOWNLOAD",
+	FileAccessPurpose_name = map[int32]string{
+		0: "FILE_ACCESS_PURPOSE_UNSPECIFIED",
+		1: "FILE_ACCESS_PURPOSE_PREVIEW",
+		2: "FILE_ACCESS_PURPOSE_DOWNLOAD",
 	}
-	MediaFileAccessPurpose_value = map[string]int32{
-		"MEDIA_FILE_ACCESS_PURPOSE_UNSPECIFIED": 0,
-		"MEDIA_FILE_ACCESS_PURPOSE_PREVIEW":     1,
-		"MEDIA_FILE_ACCESS_PURPOSE_DOWNLOAD":    2,
+	FileAccessPurpose_value = map[string]int32{
+		"FILE_ACCESS_PURPOSE_UNSPECIFIED": 0,
+		"FILE_ACCESS_PURPOSE_PREVIEW":     1,
+		"FILE_ACCESS_PURPOSE_DOWNLOAD":    2,
 	}
 )
 
-func (x MediaFileAccessPurpose) Enum() *MediaFileAccessPurpose {
-	p := new(MediaFileAccessPurpose)
+func (x FileAccessPurpose) Enum() *FileAccessPurpose {
+	p := new(FileAccessPurpose)
 	*p = x
 	return p
 }
 
-func (x MediaFileAccessPurpose) String() string {
+func (x FileAccessPurpose) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (MediaFileAccessPurpose) Descriptor() protoreflect.EnumDescriptor {
+func (FileAccessPurpose) Descriptor() protoreflect.EnumDescriptor {
 	return file_hi_media_file_proto_enumTypes[1].Descriptor()
 }
 
-func (MediaFileAccessPurpose) Type() protoreflect.EnumType {
+func (FileAccessPurpose) Type() protoreflect.EnumType {
 	return &file_hi_media_file_proto_enumTypes[1]
 }
 
-func (x MediaFileAccessPurpose) Number() protoreflect.EnumNumber {
+func (x FileAccessPurpose) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use MediaFileAccessPurpose.Descriptor instead.
-func (MediaFileAccessPurpose) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use FileAccessPurpose.Descriptor instead.
+func (FileAccessPurpose) EnumDescriptor() ([]byte, []int) {
 	return file_hi_media_file_proto_rawDescGZIP(), []int{1}
 }
 
-type MediaUploadStatus int32
+type UploadStatus int32
 
 const (
-	MediaUploadStatus_MEDIA_UPLOAD_STATUS_UNSPECIFIED MediaUploadStatus = 0
-	MediaUploadStatus_MEDIA_UPLOAD_STATUS_PROCESSING  MediaUploadStatus = 1
-	MediaUploadStatus_MEDIA_UPLOAD_STATUS_COMPLETED   MediaUploadStatus = 2
+	UploadStatus_UPLOAD_STATUS_UNSPECIFIED UploadStatus = 0
+	UploadStatus_UPLOAD_STATUS_PROCESSING  UploadStatus = 1
+	UploadStatus_UPLOAD_STATUS_COMPLETED   UploadStatus = 2
 )
 
-// Enum value maps for MediaUploadStatus.
+// Enum value maps for UploadStatus.
 var (
-	MediaUploadStatus_name = map[int32]string{
-		0: "MEDIA_UPLOAD_STATUS_UNSPECIFIED",
-		1: "MEDIA_UPLOAD_STATUS_PROCESSING",
-		2: "MEDIA_UPLOAD_STATUS_COMPLETED",
+	UploadStatus_name = map[int32]string{
+		0: "UPLOAD_STATUS_UNSPECIFIED",
+		1: "UPLOAD_STATUS_PROCESSING",
+		2: "UPLOAD_STATUS_COMPLETED",
 	}
-	MediaUploadStatus_value = map[string]int32{
-		"MEDIA_UPLOAD_STATUS_UNSPECIFIED": 0,
-		"MEDIA_UPLOAD_STATUS_PROCESSING":  1,
-		"MEDIA_UPLOAD_STATUS_COMPLETED":   2,
+	UploadStatus_value = map[string]int32{
+		"UPLOAD_STATUS_UNSPECIFIED": 0,
+		"UPLOAD_STATUS_PROCESSING":  1,
+		"UPLOAD_STATUS_COMPLETED":   2,
 	}
 )
 
-func (x MediaUploadStatus) Enum() *MediaUploadStatus {
-	p := new(MediaUploadStatus)
+func (x UploadStatus) Enum() *UploadStatus {
+	p := new(UploadStatus)
 	*p = x
 	return p
 }
 
-func (x MediaUploadStatus) String() string {
+func (x UploadStatus) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (MediaUploadStatus) Descriptor() protoreflect.EnumDescriptor {
+func (UploadStatus) Descriptor() protoreflect.EnumDescriptor {
 	return file_hi_media_file_proto_enumTypes[2].Descriptor()
 }
 
-func (MediaUploadStatus) Type() protoreflect.EnumType {
+func (UploadStatus) Type() protoreflect.EnumType {
 	return &file_hi_media_file_proto_enumTypes[2]
 }
 
-func (x MediaUploadStatus) Number() protoreflect.EnumNumber {
+func (x UploadStatus) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use MediaUploadStatus.Descriptor instead.
-func (MediaUploadStatus) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use UploadStatus.Descriptor instead.
+func (UploadStatus) EnumDescriptor() ([]byte, []int) {
 	return file_hi_media_file_proto_rawDescGZIP(), []int{2}
 }
 
-type MediaUploadFileStatus int32
+type UploadFileStatus int32
 
 const (
-	MediaUploadFileStatus_MEDIA_UPLOAD_FILE_STATUS_UNSPECIFIED MediaUploadFileStatus = 0
-	MediaUploadFileStatus_MEDIA_UPLOAD_FILE_STATUS_PENDING     MediaUploadFileStatus = 1
-	MediaUploadFileStatus_MEDIA_UPLOAD_FILE_STATUS_PROCESSING  MediaUploadFileStatus = 2
-	MediaUploadFileStatus_MEDIA_UPLOAD_FILE_STATUS_SUCCESS     MediaUploadFileStatus = 3
-	MediaUploadFileStatus_MEDIA_UPLOAD_FILE_STATUS_FAILED      MediaUploadFileStatus = 4
+	UploadFileStatus_UPLOAD_FILE_STATUS_UNSPECIFIED UploadFileStatus = 0
+	UploadFileStatus_UPLOAD_FILE_STATUS_PENDING     UploadFileStatus = 1
+	UploadFileStatus_UPLOAD_FILE_STATUS_PROCESSING  UploadFileStatus = 2
+	UploadFileStatus_UPLOAD_FILE_STATUS_SUCCESS     UploadFileStatus = 3
+	UploadFileStatus_UPLOAD_FILE_STATUS_FAILED      UploadFileStatus = 4
 )
 
-// Enum value maps for MediaUploadFileStatus.
+// Enum value maps for UploadFileStatus.
 var (
-	MediaUploadFileStatus_name = map[int32]string{
-		0: "MEDIA_UPLOAD_FILE_STATUS_UNSPECIFIED",
-		1: "MEDIA_UPLOAD_FILE_STATUS_PENDING",
-		2: "MEDIA_UPLOAD_FILE_STATUS_PROCESSING",
-		3: "MEDIA_UPLOAD_FILE_STATUS_SUCCESS",
-		4: "MEDIA_UPLOAD_FILE_STATUS_FAILED",
+	UploadFileStatus_name = map[int32]string{
+		0: "UPLOAD_FILE_STATUS_UNSPECIFIED",
+		1: "UPLOAD_FILE_STATUS_PENDING",
+		2: "UPLOAD_FILE_STATUS_PROCESSING",
+		3: "UPLOAD_FILE_STATUS_SUCCESS",
+		4: "UPLOAD_FILE_STATUS_FAILED",
 	}
-	MediaUploadFileStatus_value = map[string]int32{
-		"MEDIA_UPLOAD_FILE_STATUS_UNSPECIFIED": 0,
-		"MEDIA_UPLOAD_FILE_STATUS_PENDING":     1,
-		"MEDIA_UPLOAD_FILE_STATUS_PROCESSING":  2,
-		"MEDIA_UPLOAD_FILE_STATUS_SUCCESS":     3,
-		"MEDIA_UPLOAD_FILE_STATUS_FAILED":      4,
+	UploadFileStatus_value = map[string]int32{
+		"UPLOAD_FILE_STATUS_UNSPECIFIED": 0,
+		"UPLOAD_FILE_STATUS_PENDING":     1,
+		"UPLOAD_FILE_STATUS_PROCESSING":  2,
+		"UPLOAD_FILE_STATUS_SUCCESS":     3,
+		"UPLOAD_FILE_STATUS_FAILED":      4,
 	}
 )
 
-func (x MediaUploadFileStatus) Enum() *MediaUploadFileStatus {
-	p := new(MediaUploadFileStatus)
+func (x UploadFileStatus) Enum() *UploadFileStatus {
+	p := new(UploadFileStatus)
 	*p = x
 	return p
 }
 
-func (x MediaUploadFileStatus) String() string {
+func (x UploadFileStatus) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (MediaUploadFileStatus) Descriptor() protoreflect.EnumDescriptor {
+func (UploadFileStatus) Descriptor() protoreflect.EnumDescriptor {
 	return file_hi_media_file_proto_enumTypes[3].Descriptor()
 }
 
-func (MediaUploadFileStatus) Type() protoreflect.EnumType {
+func (UploadFileStatus) Type() protoreflect.EnumType {
 	return &file_hi_media_file_proto_enumTypes[3]
 }
 
-func (x MediaUploadFileStatus) Number() protoreflect.EnumNumber {
+func (x UploadFileStatus) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use MediaUploadFileStatus.Descriptor instead.
-func (MediaUploadFileStatus) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use UploadFileStatus.Descriptor instead.
+func (UploadFileStatus) EnumDescriptor() ([]byte, []int) {
 	return file_hi_media_file_proto_rawDescGZIP(), []int{3}
 }
 
-type MediaFileSummary struct {
+type FileSummary struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	AssetId       *string                `protobuf:"bytes,1,opt,name=asset_id,json=assetId,proto3,oneof" json:"asset_id,omitempty"`
 	Filename      *string                `protobuf:"bytes,2,opt,name=filename,proto3,oneof" json:"filename,omitempty"`
 	MediaType     *MediaType             `protobuf:"varint,3,opt,name=media_type,json=mediaType,proto3,enum=hi.media.MediaType,oneof" json:"media_type,omitempty"`
 	MimeType      *string                `protobuf:"bytes,4,opt,name=mime_type,json=mimeType,proto3,oneof" json:"mime_type,omitempty"`
 	SizeBytes     *uint64                `protobuf:"varint,5,opt,name=size_bytes,json=sizeBytes,proto3,oneof" json:"size_bytes,omitempty"`
-	Source        *MediaFileSource       `protobuf:"varint,6,opt,name=source,proto3,enum=hi.media.MediaFileSource,oneof" json:"source,omitempty"`
+	Source        *FileSource            `protobuf:"varint,6,opt,name=source,proto3,enum=hi.media.FileSource,oneof" json:"source,omitempty"`
 	CreatedAt     *int64                 `protobuf:"varint,7,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *MediaFileSummary) Reset() {
-	*x = MediaFileSummary{}
+func (x *FileSummary) Reset() {
+	*x = FileSummary{}
 	mi := &file_hi_media_file_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *MediaFileSummary) String() string {
+func (x *FileSummary) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*MediaFileSummary) ProtoMessage() {}
+func (*FileSummary) ProtoMessage() {}
 
-func (x *MediaFileSummary) ProtoReflect() protoreflect.Message {
+func (x *FileSummary) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_media_file_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -263,83 +263,83 @@ func (x *MediaFileSummary) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use MediaFileSummary.ProtoReflect.Descriptor instead.
-func (*MediaFileSummary) Descriptor() ([]byte, []int) {
+// Deprecated: Use FileSummary.ProtoReflect.Descriptor instead.
+func (*FileSummary) Descriptor() ([]byte, []int) {
 	return file_hi_media_file_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *MediaFileSummary) GetAssetId() string {
+func (x *FileSummary) GetAssetId() string {
 	if x != nil && x.AssetId != nil {
 		return *x.AssetId
 	}
 	return ""
 }
 
-func (x *MediaFileSummary) GetFilename() string {
+func (x *FileSummary) GetFilename() string {
 	if x != nil && x.Filename != nil {
 		return *x.Filename
 	}
 	return ""
 }
 
-func (x *MediaFileSummary) GetMediaType() MediaType {
+func (x *FileSummary) GetMediaType() MediaType {
 	if x != nil && x.MediaType != nil {
 		return *x.MediaType
 	}
 	return MediaType_MEDIA_TYPE_UNSPECIFIED
 }
 
-func (x *MediaFileSummary) GetMimeType() string {
+func (x *FileSummary) GetMimeType() string {
 	if x != nil && x.MimeType != nil {
 		return *x.MimeType
 	}
 	return ""
 }
 
-func (x *MediaFileSummary) GetSizeBytes() uint64 {
+func (x *FileSummary) GetSizeBytes() uint64 {
 	if x != nil && x.SizeBytes != nil {
 		return *x.SizeBytes
 	}
 	return 0
 }
 
-func (x *MediaFileSummary) GetSource() MediaFileSource {
+func (x *FileSummary) GetSource() FileSource {
 	if x != nil && x.Source != nil {
 		return *x.Source
 	}
-	return MediaFileSource_MEDIA_FILE_SOURCE_UNSPECIFIED
+	return FileSource_FILE_SOURCE_UNSPECIFIED
 }
 
-func (x *MediaFileSummary) GetCreatedAt() int64 {
+func (x *FileSummary) GetCreatedAt() int64 {
 	if x != nil && x.CreatedAt != nil {
 		return *x.CreatedAt
 	}
 	return 0
 }
 
-type ListMediaFilesReq struct {
+type ListFilesReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Pagination    *hi.Pagination         `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	MediaType     *MediaType             `protobuf:"varint,2,opt,name=media_type,json=mediaType,proto3,enum=hi.media.MediaType,oneof" json:"media_type,omitempty"`
-	Source        *MediaFileSource       `protobuf:"varint,3,opt,name=source,proto3,enum=hi.media.MediaFileSource,oneof" json:"source,omitempty"`
+	Source        *FileSource            `protobuf:"varint,3,opt,name=source,proto3,enum=hi.media.FileSource,oneof" json:"source,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListMediaFilesReq) Reset() {
-	*x = ListMediaFilesReq{}
+func (x *ListFilesReq) Reset() {
+	*x = ListFilesReq{}
 	mi := &file_hi_media_file_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListMediaFilesReq) String() string {
+func (x *ListFilesReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListMediaFilesReq) ProtoMessage() {}
+func (*ListFilesReq) ProtoMessage() {}
 
-func (x *ListMediaFilesReq) ProtoReflect() protoreflect.Message {
+func (x *ListFilesReq) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_media_file_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -351,54 +351,54 @@ func (x *ListMediaFilesReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListMediaFilesReq.ProtoReflect.Descriptor instead.
-func (*ListMediaFilesReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListFilesReq.ProtoReflect.Descriptor instead.
+func (*ListFilesReq) Descriptor() ([]byte, []int) {
 	return file_hi_media_file_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *ListMediaFilesReq) GetPagination() *hi.Pagination {
+func (x *ListFilesReq) GetPagination() *hi.Pagination {
 	if x != nil {
 		return x.Pagination
 	}
 	return nil
 }
 
-func (x *ListMediaFilesReq) GetMediaType() MediaType {
+func (x *ListFilesReq) GetMediaType() MediaType {
 	if x != nil && x.MediaType != nil {
 		return *x.MediaType
 	}
 	return MediaType_MEDIA_TYPE_UNSPECIFIED
 }
 
-func (x *ListMediaFilesReq) GetSource() MediaFileSource {
+func (x *ListFilesReq) GetSource() FileSource {
 	if x != nil && x.Source != nil {
 		return *x.Source
 	}
-	return MediaFileSource_MEDIA_FILE_SOURCE_UNSPECIFIED
+	return FileSource_FILE_SOURCE_UNSPECIFIED
 }
 
-type ListMediaFilesResp struct {
+type ListFilesResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Total         *int32                 `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
-	Files         []*MediaFileSummary    `protobuf:"bytes,2,rep,name=files,proto3" json:"files,omitempty"`
+	Files         []*FileSummary         `protobuf:"bytes,2,rep,name=files,proto3" json:"files,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListMediaFilesResp) Reset() {
-	*x = ListMediaFilesResp{}
+func (x *ListFilesResp) Reset() {
+	*x = ListFilesResp{}
 	mi := &file_hi_media_file_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListMediaFilesResp) String() string {
+func (x *ListFilesResp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListMediaFilesResp) ProtoMessage() {}
+func (*ListFilesResp) ProtoMessage() {}
 
-func (x *ListMediaFilesResp) ProtoReflect() protoreflect.Message {
+func (x *ListFilesResp) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_media_file_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -410,46 +410,46 @@ func (x *ListMediaFilesResp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListMediaFilesResp.ProtoReflect.Descriptor instead.
-func (*ListMediaFilesResp) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListFilesResp.ProtoReflect.Descriptor instead.
+func (*ListFilesResp) Descriptor() ([]byte, []int) {
 	return file_hi_media_file_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *ListMediaFilesResp) GetTotal() int32 {
+func (x *ListFilesResp) GetTotal() int32 {
 	if x != nil && x.Total != nil {
 		return *x.Total
 	}
 	return 0
 }
 
-func (x *ListMediaFilesResp) GetFiles() []*MediaFileSummary {
+func (x *ListFilesResp) GetFiles() []*FileSummary {
 	if x != nil {
 		return x.Files
 	}
 	return nil
 }
 
-type DeleteMediaFileReq struct {
+type DeleteFileReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	AssetId       *string                `protobuf:"bytes,1,opt,name=asset_id,json=assetId,proto3,oneof" json:"asset_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *DeleteMediaFileReq) Reset() {
-	*x = DeleteMediaFileReq{}
+func (x *DeleteFileReq) Reset() {
+	*x = DeleteFileReq{}
 	mi := &file_hi_media_file_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *DeleteMediaFileReq) String() string {
+func (x *DeleteFileReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DeleteMediaFileReq) ProtoMessage() {}
+func (*DeleteFileReq) ProtoMessage() {}
 
-func (x *DeleteMediaFileReq) ProtoReflect() protoreflect.Message {
+func (x *DeleteFileReq) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_media_file_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -461,39 +461,39 @@ func (x *DeleteMediaFileReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DeleteMediaFileReq.ProtoReflect.Descriptor instead.
-func (*DeleteMediaFileReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use DeleteFileReq.ProtoReflect.Descriptor instead.
+func (*DeleteFileReq) Descriptor() ([]byte, []int) {
 	return file_hi_media_file_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *DeleteMediaFileReq) GetAssetId() string {
+func (x *DeleteFileReq) GetAssetId() string {
 	if x != nil && x.AssetId != nil {
 		return *x.AssetId
 	}
 	return ""
 }
 
-type DeleteMediaFileResp struct {
+type DeleteFileResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	AssetId       *string                `protobuf:"bytes,1,opt,name=asset_id,json=assetId,proto3,oneof" json:"asset_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *DeleteMediaFileResp) Reset() {
-	*x = DeleteMediaFileResp{}
+func (x *DeleteFileResp) Reset() {
+	*x = DeleteFileResp{}
 	mi := &file_hi_media_file_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *DeleteMediaFileResp) String() string {
+func (x *DeleteFileResp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DeleteMediaFileResp) ProtoMessage() {}
+func (*DeleteFileResp) ProtoMessage() {}
 
-func (x *DeleteMediaFileResp) ProtoReflect() protoreflect.Message {
+func (x *DeleteFileResp) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_media_file_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -505,40 +505,40 @@ func (x *DeleteMediaFileResp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DeleteMediaFileResp.ProtoReflect.Descriptor instead.
-func (*DeleteMediaFileResp) Descriptor() ([]byte, []int) {
+// Deprecated: Use DeleteFileResp.ProtoReflect.Descriptor instead.
+func (*DeleteFileResp) Descriptor() ([]byte, []int) {
 	return file_hi_media_file_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *DeleteMediaFileResp) GetAssetId() string {
+func (x *DeleteFileResp) GetAssetId() string {
 	if x != nil && x.AssetId != nil {
 		return *x.AssetId
 	}
 	return ""
 }
 
-type GetMediaFileAccessUrlsReq struct {
-	state         protoimpl.MessageState  `protogen:"open.v1"`
-	AssetIds      []string                `protobuf:"bytes,1,rep,name=asset_ids,json=assetIds,proto3" json:"asset_ids,omitempty"`
-	Purpose       *MediaFileAccessPurpose `protobuf:"varint,2,opt,name=purpose,proto3,enum=hi.media.MediaFileAccessPurpose,oneof" json:"purpose,omitempty"`
+type GetFileAccessUrlsReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AssetIds      []string               `protobuf:"bytes,1,rep,name=asset_ids,json=assetIds,proto3" json:"asset_ids,omitempty"`
+	Purpose       *FileAccessPurpose     `protobuf:"varint,2,opt,name=purpose,proto3,enum=hi.media.FileAccessPurpose,oneof" json:"purpose,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetMediaFileAccessUrlsReq) Reset() {
-	*x = GetMediaFileAccessUrlsReq{}
+func (x *GetFileAccessUrlsReq) Reset() {
+	*x = GetFileAccessUrlsReq{}
 	mi := &file_hi_media_file_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetMediaFileAccessUrlsReq) String() string {
+func (x *GetFileAccessUrlsReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetMediaFileAccessUrlsReq) ProtoMessage() {}
+func (*GetFileAccessUrlsReq) ProtoMessage() {}
 
-func (x *GetMediaFileAccessUrlsReq) ProtoReflect() protoreflect.Message {
+func (x *GetFileAccessUrlsReq) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_media_file_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -550,26 +550,26 @@ func (x *GetMediaFileAccessUrlsReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetMediaFileAccessUrlsReq.ProtoReflect.Descriptor instead.
-func (*GetMediaFileAccessUrlsReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetFileAccessUrlsReq.ProtoReflect.Descriptor instead.
+func (*GetFileAccessUrlsReq) Descriptor() ([]byte, []int) {
 	return file_hi_media_file_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *GetMediaFileAccessUrlsReq) GetAssetIds() []string {
+func (x *GetFileAccessUrlsReq) GetAssetIds() []string {
 	if x != nil {
 		return x.AssetIds
 	}
 	return nil
 }
 
-func (x *GetMediaFileAccessUrlsReq) GetPurpose() MediaFileAccessPurpose {
+func (x *GetFileAccessUrlsReq) GetPurpose() FileAccessPurpose {
 	if x != nil && x.Purpose != nil {
 		return *x.Purpose
 	}
-	return MediaFileAccessPurpose_MEDIA_FILE_ACCESS_PURPOSE_UNSPECIFIED
+	return FileAccessPurpose_FILE_ACCESS_PURPOSE_UNSPECIFIED
 }
 
-type MediaFileAccessUrl struct {
+type FileAccessUrl struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	AssetId       *string                `protobuf:"bytes,1,opt,name=asset_id,json=assetId,proto3,oneof" json:"asset_id,omitempty"`
 	Url           *string                `protobuf:"bytes,2,opt,name=url,proto3,oneof" json:"url,omitempty"`
@@ -578,20 +578,20 @@ type MediaFileAccessUrl struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *MediaFileAccessUrl) Reset() {
-	*x = MediaFileAccessUrl{}
+func (x *FileAccessUrl) Reset() {
+	*x = FileAccessUrl{}
 	mi := &file_hi_media_file_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *MediaFileAccessUrl) String() string {
+func (x *FileAccessUrl) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*MediaFileAccessUrl) ProtoMessage() {}
+func (*FileAccessUrl) ProtoMessage() {}
 
-func (x *MediaFileAccessUrl) ProtoReflect() protoreflect.Message {
+func (x *FileAccessUrl) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_media_file_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -603,53 +603,53 @@ func (x *MediaFileAccessUrl) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use MediaFileAccessUrl.ProtoReflect.Descriptor instead.
-func (*MediaFileAccessUrl) Descriptor() ([]byte, []int) {
+// Deprecated: Use FileAccessUrl.ProtoReflect.Descriptor instead.
+func (*FileAccessUrl) Descriptor() ([]byte, []int) {
 	return file_hi_media_file_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *MediaFileAccessUrl) GetAssetId() string {
+func (x *FileAccessUrl) GetAssetId() string {
 	if x != nil && x.AssetId != nil {
 		return *x.AssetId
 	}
 	return ""
 }
 
-func (x *MediaFileAccessUrl) GetUrl() string {
+func (x *FileAccessUrl) GetUrl() string {
 	if x != nil && x.Url != nil {
 		return *x.Url
 	}
 	return ""
 }
 
-func (x *MediaFileAccessUrl) GetExpireAt() int64 {
+func (x *FileAccessUrl) GetExpireAt() int64 {
 	if x != nil && x.ExpireAt != nil {
 		return *x.ExpireAt
 	}
 	return 0
 }
 
-type GetMediaFileAccessUrlsResp struct {
+type GetFileAccessUrlsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Files         []*MediaFileAccessUrl  `protobuf:"bytes,1,rep,name=files,proto3" json:"files,omitempty"`
+	Files         []*FileAccessUrl       `protobuf:"bytes,1,rep,name=files,proto3" json:"files,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetMediaFileAccessUrlsResp) Reset() {
-	*x = GetMediaFileAccessUrlsResp{}
+func (x *GetFileAccessUrlsResp) Reset() {
+	*x = GetFileAccessUrlsResp{}
 	mi := &file_hi_media_file_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetMediaFileAccessUrlsResp) String() string {
+func (x *GetFileAccessUrlsResp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetMediaFileAccessUrlsResp) ProtoMessage() {}
+func (*GetFileAccessUrlsResp) ProtoMessage() {}
 
-func (x *GetMediaFileAccessUrlsResp) ProtoReflect() protoreflect.Message {
+func (x *GetFileAccessUrlsResp) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_media_file_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -661,19 +661,19 @@ func (x *GetMediaFileAccessUrlsResp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetMediaFileAccessUrlsResp.ProtoReflect.Descriptor instead.
-func (*GetMediaFileAccessUrlsResp) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetFileAccessUrlsResp.ProtoReflect.Descriptor instead.
+func (*GetFileAccessUrlsResp) Descriptor() ([]byte, []int) {
 	return file_hi_media_file_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *GetMediaFileAccessUrlsResp) GetFiles() []*MediaFileAccessUrl {
+func (x *GetFileAccessUrlsResp) GetFiles() []*FileAccessUrl {
 	if x != nil {
 		return x.Files
 	}
 	return nil
 }
 
-type MediaUploadFileMetadata struct {
+type UploadFileMetadata struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ClientFileId  *string                `protobuf:"bytes,1,opt,name=client_file_id,json=clientFileId,proto3,oneof" json:"client_file_id,omitempty"`
 	Filename      *string                `protobuf:"bytes,2,opt,name=filename,proto3,oneof" json:"filename,omitempty"`
@@ -682,20 +682,20 @@ type MediaUploadFileMetadata struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *MediaUploadFileMetadata) Reset() {
-	*x = MediaUploadFileMetadata{}
+func (x *UploadFileMetadata) Reset() {
+	*x = UploadFileMetadata{}
 	mi := &file_hi_media_file_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *MediaUploadFileMetadata) String() string {
+func (x *UploadFileMetadata) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*MediaUploadFileMetadata) ProtoMessage() {}
+func (*UploadFileMetadata) ProtoMessage() {}
 
-func (x *MediaUploadFileMetadata) ProtoReflect() protoreflect.Message {
+func (x *UploadFileMetadata) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_media_file_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -707,54 +707,54 @@ func (x *MediaUploadFileMetadata) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use MediaUploadFileMetadata.ProtoReflect.Descriptor instead.
-func (*MediaUploadFileMetadata) Descriptor() ([]byte, []int) {
+// Deprecated: Use UploadFileMetadata.ProtoReflect.Descriptor instead.
+func (*UploadFileMetadata) Descriptor() ([]byte, []int) {
 	return file_hi_media_file_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *MediaUploadFileMetadata) GetClientFileId() string {
+func (x *UploadFileMetadata) GetClientFileId() string {
 	if x != nil && x.ClientFileId != nil {
 		return *x.ClientFileId
 	}
 	return ""
 }
 
-func (x *MediaUploadFileMetadata) GetFilename() string {
+func (x *UploadFileMetadata) GetFilename() string {
 	if x != nil && x.Filename != nil {
 		return *x.Filename
 	}
 	return ""
 }
 
-func (x *MediaUploadFileMetadata) GetSizeBytes() uint64 {
+func (x *UploadFileMetadata) GetSizeBytes() uint64 {
 	if x != nil && x.SizeBytes != nil {
 		return *x.SizeBytes
 	}
 	return 0
 }
 
-type MediaUploadMetadata struct {
-	state         protoimpl.MessageState     `protogen:"open.v1"`
-	RequestId     *string                    `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
-	Files         []*MediaUploadFileMetadata `protobuf:"bytes,2,rep,name=files,proto3" json:"files,omitempty"`
+type UploadMetadata struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RequestId     *string                `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
+	Files         []*UploadFileMetadata  `protobuf:"bytes,2,rep,name=files,proto3" json:"files,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *MediaUploadMetadata) Reset() {
-	*x = MediaUploadMetadata{}
+func (x *UploadMetadata) Reset() {
+	*x = UploadMetadata{}
 	mi := &file_hi_media_file_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *MediaUploadMetadata) String() string {
+func (x *UploadMetadata) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*MediaUploadMetadata) ProtoMessage() {}
+func (*UploadMetadata) ProtoMessage() {}
 
-func (x *MediaUploadMetadata) ProtoReflect() protoreflect.Message {
+func (x *UploadMetadata) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_media_file_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -766,30 +766,30 @@ func (x *MediaUploadMetadata) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use MediaUploadMetadata.ProtoReflect.Descriptor instead.
-func (*MediaUploadMetadata) Descriptor() ([]byte, []int) {
+// Deprecated: Use UploadMetadata.ProtoReflect.Descriptor instead.
+func (*UploadMetadata) Descriptor() ([]byte, []int) {
 	return file_hi_media_file_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *MediaUploadMetadata) GetRequestId() string {
+func (x *UploadMetadata) GetRequestId() string {
 	if x != nil && x.RequestId != nil {
 		return *x.RequestId
 	}
 	return ""
 }
 
-func (x *MediaUploadMetadata) GetFiles() []*MediaUploadFileMetadata {
+func (x *UploadMetadata) GetFiles() []*UploadFileMetadata {
 	if x != nil {
 		return x.Files
 	}
 	return nil
 }
 
-type MediaUploadFileResult struct {
+type UploadFileResult struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ClientFileId  *string                `protobuf:"bytes,1,opt,name=client_file_id,json=clientFileId,proto3,oneof" json:"client_file_id,omitempty"`
 	Filename      *string                `protobuf:"bytes,2,opt,name=filename,proto3,oneof" json:"filename,omitempty"`
-	Status        *MediaUploadFileStatus `protobuf:"varint,3,opt,name=status,proto3,enum=hi.media.MediaUploadFileStatus,oneof" json:"status,omitempty"`
+	Status        *UploadFileStatus      `protobuf:"varint,3,opt,name=status,proto3,enum=hi.media.UploadFileStatus,oneof" json:"status,omitempty"`
 	AssetId       *string                `protobuf:"bytes,4,opt,name=asset_id,json=assetId,proto3,oneof" json:"asset_id,omitempty"`
 	MimeType      *string                `protobuf:"bytes,5,opt,name=mime_type,json=mimeType,proto3,oneof" json:"mime_type,omitempty"`
 	SizeBytes     *uint64                `protobuf:"varint,6,opt,name=size_bytes,json=sizeBytes,proto3,oneof" json:"size_bytes,omitempty"`
@@ -799,20 +799,20 @@ type MediaUploadFileResult struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *MediaUploadFileResult) Reset() {
-	*x = MediaUploadFileResult{}
+func (x *UploadFileResult) Reset() {
+	*x = UploadFileResult{}
 	mi := &file_hi_media_file_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *MediaUploadFileResult) String() string {
+func (x *UploadFileResult) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*MediaUploadFileResult) ProtoMessage() {}
+func (*UploadFileResult) ProtoMessage() {}
 
-func (x *MediaUploadFileResult) ProtoReflect() protoreflect.Message {
+func (x *UploadFileResult) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_media_file_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -824,90 +824,90 @@ func (x *MediaUploadFileResult) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use MediaUploadFileResult.ProtoReflect.Descriptor instead.
-func (*MediaUploadFileResult) Descriptor() ([]byte, []int) {
+// Deprecated: Use UploadFileResult.ProtoReflect.Descriptor instead.
+func (*UploadFileResult) Descriptor() ([]byte, []int) {
 	return file_hi_media_file_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *MediaUploadFileResult) GetClientFileId() string {
+func (x *UploadFileResult) GetClientFileId() string {
 	if x != nil && x.ClientFileId != nil {
 		return *x.ClientFileId
 	}
 	return ""
 }
 
-func (x *MediaUploadFileResult) GetFilename() string {
+func (x *UploadFileResult) GetFilename() string {
 	if x != nil && x.Filename != nil {
 		return *x.Filename
 	}
 	return ""
 }
 
-func (x *MediaUploadFileResult) GetStatus() MediaUploadFileStatus {
+func (x *UploadFileResult) GetStatus() UploadFileStatus {
 	if x != nil && x.Status != nil {
 		return *x.Status
 	}
-	return MediaUploadFileStatus_MEDIA_UPLOAD_FILE_STATUS_UNSPECIFIED
+	return UploadFileStatus_UPLOAD_FILE_STATUS_UNSPECIFIED
 }
 
-func (x *MediaUploadFileResult) GetAssetId() string {
+func (x *UploadFileResult) GetAssetId() string {
 	if x != nil && x.AssetId != nil {
 		return *x.AssetId
 	}
 	return ""
 }
 
-func (x *MediaUploadFileResult) GetMimeType() string {
+func (x *UploadFileResult) GetMimeType() string {
 	if x != nil && x.MimeType != nil {
 		return *x.MimeType
 	}
 	return ""
 }
 
-func (x *MediaUploadFileResult) GetSizeBytes() uint64 {
+func (x *UploadFileResult) GetSizeBytes() uint64 {
 	if x != nil && x.SizeBytes != nil {
 		return *x.SizeBytes
 	}
 	return 0
 }
 
-func (x *MediaUploadFileResult) GetErrorCode() string {
+func (x *UploadFileResult) GetErrorCode() string {
 	if x != nil && x.ErrorCode != nil {
 		return *x.ErrorCode
 	}
 	return ""
 }
 
-func (x *MediaUploadFileResult) GetErrorMessage() string {
+func (x *UploadFileResult) GetErrorMessage() string {
 	if x != nil && x.ErrorMessage != nil {
 		return *x.ErrorMessage
 	}
 	return ""
 }
 
-type MediaUploadBatchResult struct {
-	state         protoimpl.MessageState   `protogen:"open.v1"`
-	RequestId     *string                  `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
-	Status        *MediaUploadStatus       `protobuf:"varint,2,opt,name=status,proto3,enum=hi.media.MediaUploadStatus,oneof" json:"status,omitempty"`
-	Files         []*MediaUploadFileResult `protobuf:"bytes,3,rep,name=files,proto3" json:"files,omitempty"`
+type UploadBatchResult struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RequestId     *string                `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
+	Status        *UploadStatus          `protobuf:"varint,2,opt,name=status,proto3,enum=hi.media.UploadStatus,oneof" json:"status,omitempty"`
+	Files         []*UploadFileResult    `protobuf:"bytes,3,rep,name=files,proto3" json:"files,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *MediaUploadBatchResult) Reset() {
-	*x = MediaUploadBatchResult{}
+func (x *UploadBatchResult) Reset() {
+	*x = UploadBatchResult{}
 	mi := &file_hi_media_file_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *MediaUploadBatchResult) String() string {
+func (x *UploadBatchResult) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*MediaUploadBatchResult) ProtoMessage() {}
+func (*UploadBatchResult) ProtoMessage() {}
 
-func (x *MediaUploadBatchResult) ProtoReflect() protoreflect.Message {
+func (x *UploadBatchResult) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_media_file_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -919,53 +919,53 @@ func (x *MediaUploadBatchResult) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use MediaUploadBatchResult.ProtoReflect.Descriptor instead.
-func (*MediaUploadBatchResult) Descriptor() ([]byte, []int) {
+// Deprecated: Use UploadBatchResult.ProtoReflect.Descriptor instead.
+func (*UploadBatchResult) Descriptor() ([]byte, []int) {
 	return file_hi_media_file_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *MediaUploadBatchResult) GetRequestId() string {
+func (x *UploadBatchResult) GetRequestId() string {
 	if x != nil && x.RequestId != nil {
 		return *x.RequestId
 	}
 	return ""
 }
 
-func (x *MediaUploadBatchResult) GetStatus() MediaUploadStatus {
+func (x *UploadBatchResult) GetStatus() UploadStatus {
 	if x != nil && x.Status != nil {
 		return *x.Status
 	}
-	return MediaUploadStatus_MEDIA_UPLOAD_STATUS_UNSPECIFIED
+	return UploadStatus_UPLOAD_STATUS_UNSPECIFIED
 }
 
-func (x *MediaUploadBatchResult) GetFiles() []*MediaUploadFileResult {
+func (x *UploadBatchResult) GetFiles() []*UploadFileResult {
 	if x != nil {
 		return x.Files
 	}
 	return nil
 }
 
-type GetMediaUploadReq struct {
+type GetUploadReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	RequestId     *string                `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetMediaUploadReq) Reset() {
-	*x = GetMediaUploadReq{}
+func (x *GetUploadReq) Reset() {
+	*x = GetUploadReq{}
 	mi := &file_hi_media_file_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetMediaUploadReq) String() string {
+func (x *GetUploadReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetMediaUploadReq) ProtoMessage() {}
+func (*GetUploadReq) ProtoMessage() {}
 
-func (x *GetMediaUploadReq) ProtoReflect() protoreflect.Message {
+func (x *GetUploadReq) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_media_file_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -977,39 +977,39 @@ func (x *GetMediaUploadReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetMediaUploadReq.ProtoReflect.Descriptor instead.
-func (*GetMediaUploadReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetUploadReq.ProtoReflect.Descriptor instead.
+func (*GetUploadReq) Descriptor() ([]byte, []int) {
 	return file_hi_media_file_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *GetMediaUploadReq) GetRequestId() string {
+func (x *GetUploadReq) GetRequestId() string {
 	if x != nil && x.RequestId != nil {
 		return *x.RequestId
 	}
 	return ""
 }
 
-type GetMediaUploadResp struct {
-	state         protoimpl.MessageState  `protogen:"open.v1"`
-	Upload        *MediaUploadBatchResult `protobuf:"bytes,1,opt,name=upload,proto3" json:"upload,omitempty"`
+type GetUploadResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Upload        *UploadBatchResult     `protobuf:"bytes,1,opt,name=upload,proto3" json:"upload,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetMediaUploadResp) Reset() {
-	*x = GetMediaUploadResp{}
+func (x *GetUploadResp) Reset() {
+	*x = GetUploadResp{}
 	mi := &file_hi_media_file_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetMediaUploadResp) String() string {
+func (x *GetUploadResp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetMediaUploadResp) ProtoMessage() {}
+func (*GetUploadResp) ProtoMessage() {}
 
-func (x *GetMediaUploadResp) ProtoReflect() protoreflect.Message {
+func (x *GetUploadResp) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_media_file_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1021,12 +1021,12 @@ func (x *GetMediaUploadResp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetMediaUploadResp.ProtoReflect.Descriptor instead.
-func (*GetMediaUploadResp) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetUploadResp.ProtoReflect.Descriptor instead.
+func (*GetUploadResp) Descriptor() ([]byte, []int) {
 	return file_hi_media_file_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *GetMediaUploadResp) GetUpload() *MediaUploadBatchResult {
+func (x *GetUploadResp) GetUpload() *UploadBatchResult {
 	if x != nil {
 		return x.Upload
 	}
@@ -1037,16 +1037,16 @@ var File_hi_media_file_proto protoreflect.FileDescriptor
 
 const file_hi_media_file_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/media/file.proto\x12\bhi.media\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x13hi/media/task.proto\x1a\x10hi/options.proto\"\xbe\x03\n" +
-	"\x10MediaFileSummary\x12$\n" +
+	"\x13hi/media/file.proto\x12\bhi.media\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x13hi/media/task.proto\x1a\x10hi/options.proto\"\xb4\x03\n" +
+	"\vFileSummary\x12$\n" +
 	"\basset_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\aassetId\x88\x01\x01\x12%\n" +
 	"\bfilename\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\bfilename\x88\x01\x01\x12=\n" +
 	"\n" +
 	"media_type\x18\x03 \x01(\x0e2\x13.hi.media.MediaTypeB\x04\x90\xb5\x18\x03H\x02R\tmediaType\x88\x01\x01\x12&\n" +
 	"\tmime_type\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\bmimeType\x88\x01\x01\x12(\n" +
 	"\n" +
-	"size_bytes\x18\x05 \x01(\x04B\x04\x90\xb5\x18\x03H\x04R\tsizeBytes\x88\x01\x01\x12<\n" +
-	"\x06source\x18\x06 \x01(\x0e2\x19.hi.media.MediaFileSourceB\x04\x90\xb5\x18\x03H\x05R\x06source\x88\x01\x01\x12(\n" +
+	"size_bytes\x18\x05 \x01(\x04B\x04\x90\xb5\x18\x03H\x04R\tsizeBytes\x88\x01\x01\x127\n" +
+	"\x06source\x18\x06 \x01(\x0e2\x14.hi.media.FileSourceB\x04\x90\xb5\x18\x03H\x05R\x06source\x88\x01\x01\x12(\n" +
 	"\n" +
 	"created_at\x18\a \x01(\x03B\x04\x90\xb5\x18\x03H\x06R\tcreatedAt\x88\x01\x01:\x04\x98\xb5\x18\x03B\v\n" +
 	"\t_asset_idB\v\n" +
@@ -1056,45 +1056,45 @@ const file_hi_media_file_proto_rawDesc = "" +
 	"_mime_typeB\r\n" +
 	"\v_size_bytesB\t\n" +
 	"\a_sourceB\r\n" +
-	"\v_created_at\"\xce\x01\n" +
-	"\x11ListMediaFilesReq\x12.\n" +
+	"\v_created_at\"\xc4\x01\n" +
+	"\fListFilesReq\x12.\n" +
 	"\n" +
 	"pagination\x18\x01 \x01(\v2\x0e.hi.PaginationR\n" +
 	"pagination\x127\n" +
 	"\n" +
-	"media_type\x18\x02 \x01(\x0e2\x13.hi.media.MediaTypeH\x00R\tmediaType\x88\x01\x01\x126\n" +
-	"\x06source\x18\x03 \x01(\x0e2\x19.hi.media.MediaFileSourceH\x01R\x06source\x88\x01\x01B\r\n" +
+	"media_type\x18\x02 \x01(\x0e2\x13.hi.media.MediaTypeH\x00R\tmediaType\x88\x01\x01\x121\n" +
+	"\x06source\x18\x03 \x01(\x0e2\x14.hi.media.FileSourceH\x01R\x06source\x88\x01\x01B\r\n" +
 	"\v_media_typeB\t\n" +
-	"\a_source\"}\n" +
-	"\x12ListMediaFilesResp\x12\x1f\n" +
-	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x126\n" +
-	"\x05files\x18\x02 \x03(\v2\x1a.hi.media.MediaFileSummaryB\x04\x90\xb5\x18\x03R\x05files:\x04\x98\xb5\x18\x03B\b\n" +
-	"\x06_total\"M\n" +
-	"\x12DeleteMediaFileReq\x12*\n" +
+	"\a_source\"s\n" +
+	"\rListFilesResp\x12\x1f\n" +
+	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x121\n" +
+	"\x05files\x18\x02 \x03(\v2\x15.hi.media.FileSummaryB\x04\x90\xb5\x18\x03R\x05files:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_total\"H\n" +
+	"\rDeleteFileReq\x12*\n" +
 	"\basset_id\x18\x01 \x01(\tB\n" +
 	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\aassetId\x88\x01\x01B\v\n" +
-	"\t_asset_id\"N\n" +
-	"\x13DeleteMediaFileResp\x12$\n" +
+	"\t_asset_id\"I\n" +
+	"\x0eDeleteFileResp\x12$\n" +
 	"\basset_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\aassetId\x88\x01\x01:\x04\x98\xb5\x18\x03B\v\n" +
-	"\t_asset_id\"\xa0\x01\n" +
-	"\x19GetMediaFileAccessUrlsReq\x12'\n" +
+	"\t_asset_id\"\x96\x01\n" +
+	"\x14GetFileAccessUrlsReq\x12'\n" +
 	"\tasset_ids\x18\x01 \x03(\tB\n" +
-	"\xbaH\a\x92\x01\x04\b\x01\x18\x01R\bassetIds\x12N\n" +
-	"\apurpose\x18\x02 \x01(\x0e2 .hi.media.MediaFileAccessPurposeB\r\xbaH\n" +
+	"\xbaH\a\x92\x01\x04\b\x01\x18\x01R\bassetIds\x12I\n" +
+	"\apurpose\x18\x02 \x01(\x0e2\x1b.hi.media.FileAccessPurposeB\r\xbaH\n" +
 	"\xc8\x01\x01\x82\x01\x04\x10\x01 \x00H\x00R\apurpose\x88\x01\x01B\n" +
 	"\n" +
-	"\b_purpose\"\xa8\x01\n" +
-	"\x12MediaFileAccessUrl\x12$\n" +
+	"\b_purpose\"\xa3\x01\n" +
+	"\rFileAccessUrl\x12$\n" +
 	"\basset_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\aassetId\x88\x01\x01\x12\x1b\n" +
 	"\x03url\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x03url\x88\x01\x01\x12&\n" +
 	"\texpire_at\x18\x03 \x01(\x03B\x04\x90\xb5\x18\x03H\x02R\bexpireAt\x88\x01\x01:\x04\x98\xb5\x18\x03B\v\n" +
 	"\t_asset_idB\x06\n" +
 	"\x04_urlB\f\n" +
 	"\n" +
-	"_expire_at\"\\\n" +
-	"\x1aGetMediaFileAccessUrlsResp\x128\n" +
-	"\x05files\x18\x01 \x03(\v2\x1c.hi.media.MediaFileAccessUrlB\x04\x90\xb5\x18\x03R\x05files:\x04\x98\xb5\x18\x03\"\xdc\x01\n" +
-	"\x17MediaUploadFileMetadata\x125\n" +
+	"_expire_at\"R\n" +
+	"\x15GetFileAccessUrlsResp\x123\n" +
+	"\x05files\x18\x01 \x03(\v2\x17.hi.media.FileAccessUrlB\x04\x90\xb5\x18\x03R\x05files:\x04\x98\xb5\x18\x03\"\xd7\x01\n" +
+	"\x12UploadFileMetadata\x125\n" +
 	"\x0eclient_file_id\x18\x01 \x01(\tB\n" +
 	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\fclientFileId\x88\x01\x01\x12+\n" +
 	"\bfilename\x18\x02 \x01(\tB\n" +
@@ -1104,17 +1104,17 @@ const file_hi_media_file_proto_rawDesc = "" +
 	"\xbaH\a\xc8\x01\x012\x02 \x00H\x02R\tsizeBytes\x88\x01\x01B\x11\n" +
 	"\x0f_client_file_idB\v\n" +
 	"\t_filenameB\r\n" +
-	"\v_size_bytes\"\x97\x01\n" +
-	"\x13MediaUploadMetadata\x12.\n" +
+	"\v_size_bytes\"\x8d\x01\n" +
+	"\x0eUploadMetadata\x12.\n" +
 	"\n" +
 	"request_id\x18\x01 \x01(\tB\n" +
-	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\trequestId\x88\x01\x01\x12A\n" +
-	"\x05files\x18\x02 \x03(\v2!.hi.media.MediaUploadFileMetadataB\b\xbaH\x05\x92\x01\x02\b\x01R\x05filesB\r\n" +
-	"\v_request_id\"\x81\x04\n" +
-	"\x15MediaUploadFileResult\x12/\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\trequestId\x88\x01\x01\x12<\n" +
+	"\x05files\x18\x02 \x03(\v2\x1c.hi.media.UploadFileMetadataB\b\xbaH\x05\x92\x01\x02\b\x01R\x05filesB\r\n" +
+	"\v_request_id\"\xf7\x03\n" +
+	"\x10UploadFileResult\x12/\n" +
 	"\x0eclient_file_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\fclientFileId\x88\x01\x01\x12%\n" +
-	"\bfilename\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\bfilename\x88\x01\x01\x12B\n" +
-	"\x06status\x18\x03 \x01(\x0e2\x1f.hi.media.MediaUploadFileStatusB\x04\x90\xb5\x18\x03H\x02R\x06status\x88\x01\x01\x12$\n" +
+	"\bfilename\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\bfilename\x88\x01\x01\x12=\n" +
+	"\x06status\x18\x03 \x01(\x0e2\x1a.hi.media.UploadFileStatusB\x04\x90\xb5\x18\x03H\x02R\x06status\x88\x01\x01\x12$\n" +
 	"\basset_id\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\aassetId\x88\x01\x01\x12&\n" +
 	"\tmime_type\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x04R\bmimeType\x88\x01\x01\x12(\n" +
 	"\n" +
@@ -1130,44 +1130,45 @@ const file_hi_media_file_proto_rawDesc = "" +
 	"_mime_typeB\r\n" +
 	"\v_size_bytesB\r\n" +
 	"\v_error_codeB\x10\n" +
-	"\x0e_error_message\"\xdf\x01\n" +
-	"\x16MediaUploadBatchResult\x12(\n" +
+	"\x0e_error_message\"\xd0\x01\n" +
+	"\x11UploadBatchResult\x12(\n" +
 	"\n" +
-	"request_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\trequestId\x88\x01\x01\x12>\n" +
-	"\x06status\x18\x02 \x01(\x0e2\x1b.hi.media.MediaUploadStatusB\x04\x90\xb5\x18\x03H\x01R\x06status\x88\x01\x01\x12;\n" +
-	"\x05files\x18\x03 \x03(\v2\x1f.hi.media.MediaUploadFileResultB\x04\x90\xb5\x18\x03R\x05files:\x04\x98\xb5\x18\x03B\r\n" +
+	"request_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\trequestId\x88\x01\x01\x129\n" +
+	"\x06status\x18\x02 \x01(\x0e2\x16.hi.media.UploadStatusB\x04\x90\xb5\x18\x03H\x01R\x06status\x88\x01\x01\x126\n" +
+	"\x05files\x18\x03 \x03(\v2\x1a.hi.media.UploadFileResultB\x04\x90\xb5\x18\x03R\x05files:\x04\x98\xb5\x18\x03B\r\n" +
 	"\v_request_idB\t\n" +
-	"\a_status\"R\n" +
-	"\x11GetMediaUploadReq\x12.\n" +
+	"\a_status\"M\n" +
+	"\fGetUploadReq\x12.\n" +
 	"\n" +
 	"request_id\x18\x01 \x01(\tB\n" +
 	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\trequestId\x88\x01\x01B\r\n" +
-	"\v_request_id\"Z\n" +
-	"\x12GetMediaUploadResp\x12>\n" +
-	"\x06upload\x18\x01 \x01(\v2 .hi.media.MediaUploadBatchResultB\x04\x90\xb5\x18\x03R\x06upload:\x04\x98\xb5\x18\x03*s\n" +
-	"\x0fMediaFileSource\x12!\n" +
-	"\x1dMEDIA_FILE_SOURCE_UNSPECIFIED\x10\x00\x12\x1c\n" +
-	"\x18MEDIA_FILE_SOURCE_UPLOAD\x10\x01\x12\x1f\n" +
-	"\x1bMEDIA_FILE_SOURCE_GENERATED\x10\x02*\x92\x01\n" +
-	"\x16MediaFileAccessPurpose\x12)\n" +
-	"%MEDIA_FILE_ACCESS_PURPOSE_UNSPECIFIED\x10\x00\x12%\n" +
-	"!MEDIA_FILE_ACCESS_PURPOSE_PREVIEW\x10\x01\x12&\n" +
-	"\"MEDIA_FILE_ACCESS_PURPOSE_DOWNLOAD\x10\x02*\x7f\n" +
-	"\x11MediaUploadStatus\x12#\n" +
-	"\x1fMEDIA_UPLOAD_STATUS_UNSPECIFIED\x10\x00\x12\"\n" +
-	"\x1eMEDIA_UPLOAD_STATUS_PROCESSING\x10\x01\x12!\n" +
-	"\x1dMEDIA_UPLOAD_STATUS_COMPLETED\x10\x02*\xdb\x01\n" +
-	"\x15MediaUploadFileStatus\x12(\n" +
-	"$MEDIA_UPLOAD_FILE_STATUS_UNSPECIFIED\x10\x00\x12$\n" +
-	" MEDIA_UPLOAD_FILE_STATUS_PENDING\x10\x01\x12'\n" +
-	"#MEDIA_UPLOAD_FILE_STATUS_PROCESSING\x10\x02\x12$\n" +
-	" MEDIA_UPLOAD_FILE_STATUS_SUCCESS\x10\x03\x12#\n" +
-	"\x1fMEDIA_UPLOAD_FILE_STATUS_FAILED\x10\x042\xd5\x02\n" +
-	"\tMediaFile\x12M\n" +
-	"\tGetUpload\x12\x1b.hi.media.GetMediaUploadReq\x1a\x1c.hi.media.GetMediaUploadResp\"\x05\x8a\xb5\x18\x01\x02\x12H\n" +
-	"\x04List\x12\x1b.hi.media.ListMediaFilesReq\x1a\x1c.hi.media.ListMediaFilesResp\"\x05\x8a\xb5\x18\x01\x02\x12L\n" +
-	"\x06Delete\x12\x1c.hi.media.DeleteMediaFileReq\x1a\x1d.hi.media.DeleteMediaFileResp\"\x05\x8a\xb5\x18\x01\x02\x12a\n" +
-	"\rGetAccessUrls\x12#.hi.media.GetMediaFileAccessUrlsReq\x1a$.hi.media.GetMediaFileAccessUrlsResp\"\x05\x8a\xb5\x18\x01\x02B\x86\x01\n" +
+	"\v_request_id\"P\n" +
+	"\rGetUploadResp\x129\n" +
+	"\x06upload\x18\x01 \x01(\v2\x1b.hi.media.UploadBatchResultB\x04\x90\xb5\x18\x03R\x06upload:\x04\x98\xb5\x18\x03*\\\n" +
+	"\n" +
+	"FileSource\x12\x1b\n" +
+	"\x17FILE_SOURCE_UNSPECIFIED\x10\x00\x12\x16\n" +
+	"\x12FILE_SOURCE_UPLOAD\x10\x01\x12\x19\n" +
+	"\x15FILE_SOURCE_GENERATED\x10\x02*{\n" +
+	"\x11FileAccessPurpose\x12#\n" +
+	"\x1fFILE_ACCESS_PURPOSE_UNSPECIFIED\x10\x00\x12\x1f\n" +
+	"\x1bFILE_ACCESS_PURPOSE_PREVIEW\x10\x01\x12 \n" +
+	"\x1cFILE_ACCESS_PURPOSE_DOWNLOAD\x10\x02*h\n" +
+	"\fUploadStatus\x12\x1d\n" +
+	"\x19UPLOAD_STATUS_UNSPECIFIED\x10\x00\x12\x1c\n" +
+	"\x18UPLOAD_STATUS_PROCESSING\x10\x01\x12\x1b\n" +
+	"\x17UPLOAD_STATUS_COMPLETED\x10\x02*\xb8\x01\n" +
+	"\x10UploadFileStatus\x12\"\n" +
+	"\x1eUPLOAD_FILE_STATUS_UNSPECIFIED\x10\x00\x12\x1e\n" +
+	"\x1aUPLOAD_FILE_STATUS_PENDING\x10\x01\x12!\n" +
+	"\x1dUPLOAD_FILE_STATUS_PROCESSING\x10\x02\x12\x1e\n" +
+	"\x1aUPLOAD_FILE_STATUS_SUCCESS\x10\x03\x12\x1d\n" +
+	"\x19UPLOAD_FILE_STATUS_FAILED\x10\x042\xa8\x02\n" +
+	"\x04File\x12C\n" +
+	"\tGetUpload\x12\x16.hi.media.GetUploadReq\x1a\x17.hi.media.GetUploadResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n" +
+	"\x04List\x12\x16.hi.media.ListFilesReq\x1a\x17.hi.media.ListFilesResp\"\x05\x8a\xb5\x18\x01\x02\x12B\n" +
+	"\x06Delete\x12\x17.hi.media.DeleteFileReq\x1a\x18.hi.media.DeleteFileResp\"\x05\x8a\xb5\x18\x01\x02\x12W\n" +
+	"\rGetAccessUrls\x12\x1e.hi.media.GetFileAccessUrlsReq\x1a\x1f.hi.media.GetFileAccessUrlsResp\"\x05\x8a\xb5\x18\x01\x02B\x86\x01\n" +
 	"\fcom.hi.mediaB\tFileProtoP\x01Z*github.com/HiWorld-56/hi-proto/go/hi/media\xa2\x02\x03HMX\xaa\x02\bHi.Media\xca\x02\bHi\\Media\xe2\x02\x14Hi\\Media\\GPBMetadata\xea\x02\tHi::Mediab\x06proto3"
 
 var (
@@ -1185,49 +1186,49 @@ func file_hi_media_file_proto_rawDescGZIP() []byte {
 var file_hi_media_file_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
 var file_hi_media_file_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_hi_media_file_proto_goTypes = []any{
-	(MediaFileSource)(0),               // 0: hi.media.MediaFileSource
-	(MediaFileAccessPurpose)(0),        // 1: hi.media.MediaFileAccessPurpose
-	(MediaUploadStatus)(0),             // 2: hi.media.MediaUploadStatus
-	(MediaUploadFileStatus)(0),         // 3: hi.media.MediaUploadFileStatus
-	(*MediaFileSummary)(nil),           // 4: hi.media.MediaFileSummary
-	(*ListMediaFilesReq)(nil),          // 5: hi.media.ListMediaFilesReq
-	(*ListMediaFilesResp)(nil),         // 6: hi.media.ListMediaFilesResp
-	(*DeleteMediaFileReq)(nil),         // 7: hi.media.DeleteMediaFileReq
-	(*DeleteMediaFileResp)(nil),        // 8: hi.media.DeleteMediaFileResp
-	(*GetMediaFileAccessUrlsReq)(nil),  // 9: hi.media.GetMediaFileAccessUrlsReq
-	(*MediaFileAccessUrl)(nil),         // 10: hi.media.MediaFileAccessUrl
-	(*GetMediaFileAccessUrlsResp)(nil), // 11: hi.media.GetMediaFileAccessUrlsResp
-	(*MediaUploadFileMetadata)(nil),    // 12: hi.media.MediaUploadFileMetadata
-	(*MediaUploadMetadata)(nil),        // 13: hi.media.MediaUploadMetadata
-	(*MediaUploadFileResult)(nil),      // 14: hi.media.MediaUploadFileResult
-	(*MediaUploadBatchResult)(nil),     // 15: hi.media.MediaUploadBatchResult
-	(*GetMediaUploadReq)(nil),          // 16: hi.media.GetMediaUploadReq
-	(*GetMediaUploadResp)(nil),         // 17: hi.media.GetMediaUploadResp
-	(MediaType)(0),                     // 18: hi.media.MediaType
-	(*hi.Pagination)(nil),              // 19: hi.Pagination
+	(FileSource)(0),               // 0: hi.media.FileSource
+	(FileAccessPurpose)(0),        // 1: hi.media.FileAccessPurpose
+	(UploadStatus)(0),             // 2: hi.media.UploadStatus
+	(UploadFileStatus)(0),         // 3: hi.media.UploadFileStatus
+	(*FileSummary)(nil),           // 4: hi.media.FileSummary
+	(*ListFilesReq)(nil),          // 5: hi.media.ListFilesReq
+	(*ListFilesResp)(nil),         // 6: hi.media.ListFilesResp
+	(*DeleteFileReq)(nil),         // 7: hi.media.DeleteFileReq
+	(*DeleteFileResp)(nil),        // 8: hi.media.DeleteFileResp
+	(*GetFileAccessUrlsReq)(nil),  // 9: hi.media.GetFileAccessUrlsReq
+	(*FileAccessUrl)(nil),         // 10: hi.media.FileAccessUrl
+	(*GetFileAccessUrlsResp)(nil), // 11: hi.media.GetFileAccessUrlsResp
+	(*UploadFileMetadata)(nil),    // 12: hi.media.UploadFileMetadata
+	(*UploadMetadata)(nil),        // 13: hi.media.UploadMetadata
+	(*UploadFileResult)(nil),      // 14: hi.media.UploadFileResult
+	(*UploadBatchResult)(nil),     // 15: hi.media.UploadBatchResult
+	(*GetUploadReq)(nil),          // 16: hi.media.GetUploadReq
+	(*GetUploadResp)(nil),         // 17: hi.media.GetUploadResp
+	(MediaType)(0),                // 18: hi.media.MediaType
+	(*hi.Pagination)(nil),         // 19: hi.Pagination
 }
 var file_hi_media_file_proto_depIdxs = []int32{
-	18, // 0: hi.media.MediaFileSummary.media_type:type_name -> hi.media.MediaType
-	0,  // 1: hi.media.MediaFileSummary.source:type_name -> hi.media.MediaFileSource
-	19, // 2: hi.media.ListMediaFilesReq.pagination:type_name -> hi.Pagination
-	18, // 3: hi.media.ListMediaFilesReq.media_type:type_name -> hi.media.MediaType
-	0,  // 4: hi.media.ListMediaFilesReq.source:type_name -> hi.media.MediaFileSource
-	4,  // 5: hi.media.ListMediaFilesResp.files:type_name -> hi.media.MediaFileSummary
-	1,  // 6: hi.media.GetMediaFileAccessUrlsReq.purpose:type_name -> hi.media.MediaFileAccessPurpose
-	10, // 7: hi.media.GetMediaFileAccessUrlsResp.files:type_name -> hi.media.MediaFileAccessUrl
-	12, // 8: hi.media.MediaUploadMetadata.files:type_name -> hi.media.MediaUploadFileMetadata
-	3,  // 9: hi.media.MediaUploadFileResult.status:type_name -> hi.media.MediaUploadFileStatus
-	2,  // 10: hi.media.MediaUploadBatchResult.status:type_name -> hi.media.MediaUploadStatus
-	14, // 11: hi.media.MediaUploadBatchResult.files:type_name -> hi.media.MediaUploadFileResult
-	15, // 12: hi.media.GetMediaUploadResp.upload:type_name -> hi.media.MediaUploadBatchResult
-	16, // 13: hi.media.MediaFile.GetUpload:input_type -> hi.media.GetMediaUploadReq
-	5,  // 14: hi.media.MediaFile.List:input_type -> hi.media.ListMediaFilesReq
-	7,  // 15: hi.media.MediaFile.Delete:input_type -> hi.media.DeleteMediaFileReq
-	9,  // 16: hi.media.MediaFile.GetAccessUrls:input_type -> hi.media.GetMediaFileAccessUrlsReq
-	17, // 17: hi.media.MediaFile.GetUpload:output_type -> hi.media.GetMediaUploadResp
-	6,  // 18: hi.media.MediaFile.List:output_type -> hi.media.ListMediaFilesResp
-	8,  // 19: hi.media.MediaFile.Delete:output_type -> hi.media.DeleteMediaFileResp
-	11, // 20: hi.media.MediaFile.GetAccessUrls:output_type -> hi.media.GetMediaFileAccessUrlsResp
+	18, // 0: hi.media.FileSummary.media_type:type_name -> hi.media.MediaType
+	0,  // 1: hi.media.FileSummary.source:type_name -> hi.media.FileSource
+	19, // 2: hi.media.ListFilesReq.pagination:type_name -> hi.Pagination
+	18, // 3: hi.media.ListFilesReq.media_type:type_name -> hi.media.MediaType
+	0,  // 4: hi.media.ListFilesReq.source:type_name -> hi.media.FileSource
+	4,  // 5: hi.media.ListFilesResp.files:type_name -> hi.media.FileSummary
+	1,  // 6: hi.media.GetFileAccessUrlsReq.purpose:type_name -> hi.media.FileAccessPurpose
+	10, // 7: hi.media.GetFileAccessUrlsResp.files:type_name -> hi.media.FileAccessUrl
+	12, // 8: hi.media.UploadMetadata.files:type_name -> hi.media.UploadFileMetadata
+	3,  // 9: hi.media.UploadFileResult.status:type_name -> hi.media.UploadFileStatus
+	2,  // 10: hi.media.UploadBatchResult.status:type_name -> hi.media.UploadStatus
+	14, // 11: hi.media.UploadBatchResult.files:type_name -> hi.media.UploadFileResult
+	15, // 12: hi.media.GetUploadResp.upload:type_name -> hi.media.UploadBatchResult
+	16, // 13: hi.media.File.GetUpload:input_type -> hi.media.GetUploadReq
+	5,  // 14: hi.media.File.List:input_type -> hi.media.ListFilesReq
+	7,  // 15: hi.media.File.Delete:input_type -> hi.media.DeleteFileReq
+	9,  // 16: hi.media.File.GetAccessUrls:input_type -> hi.media.GetFileAccessUrlsReq
+	17, // 17: hi.media.File.GetUpload:output_type -> hi.media.GetUploadResp
+	6,  // 18: hi.media.File.List:output_type -> hi.media.ListFilesResp
+	8,  // 19: hi.media.File.Delete:output_type -> hi.media.DeleteFileResp
+	11, // 20: hi.media.File.GetAccessUrls:output_type -> hi.media.GetFileAccessUrlsResp
 	17, // [17:21] is the sub-list for method output_type
 	13, // [13:17] is the sub-list for method input_type
 	13, // [13:13] is the sub-list for extension type_name

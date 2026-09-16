@@ -23,7 +23,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type GetMediaQuotaResp struct {
+type GetQuotaResp struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	TotalBytes     *uint64                `protobuf:"varint,1,opt,name=total_bytes,json=totalBytes,proto3,oneof" json:"total_bytes,omitempty"`
 	UsedBytes      *uint64                `protobuf:"varint,2,opt,name=used_bytes,json=usedBytes,proto3,oneof" json:"used_bytes,omitempty"`
@@ -32,20 +32,20 @@ type GetMediaQuotaResp struct {
 	sizeCache      protoimpl.SizeCache
 }
 
-func (x *GetMediaQuotaResp) Reset() {
-	*x = GetMediaQuotaResp{}
+func (x *GetQuotaResp) Reset() {
+	*x = GetQuotaResp{}
 	mi := &file_hi_media_quota_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetMediaQuotaResp) String() string {
+func (x *GetQuotaResp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetMediaQuotaResp) ProtoMessage() {}
+func (*GetQuotaResp) ProtoMessage() {}
 
-func (x *GetMediaQuotaResp) ProtoReflect() protoreflect.Message {
+func (x *GetQuotaResp) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_media_quota_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -57,26 +57,26 @@ func (x *GetMediaQuotaResp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetMediaQuotaResp.ProtoReflect.Descriptor instead.
-func (*GetMediaQuotaResp) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetQuotaResp.ProtoReflect.Descriptor instead.
+func (*GetQuotaResp) Descriptor() ([]byte, []int) {
 	return file_hi_media_quota_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *GetMediaQuotaResp) GetTotalBytes() uint64 {
+func (x *GetQuotaResp) GetTotalBytes() uint64 {
 	if x != nil && x.TotalBytes != nil {
 		return *x.TotalBytes
 	}
 	return 0
 }
 
-func (x *GetMediaQuotaResp) GetUsedBytes() uint64 {
+func (x *GetQuotaResp) GetUsedBytes() uint64 {
 	if x != nil && x.UsedBytes != nil {
 		return *x.UsedBytes
 	}
 	return 0
 }
 
-func (x *GetMediaQuotaResp) GetAvailableBytes() uint64 {
+func (x *GetQuotaResp) GetAvailableBytes() uint64 {
 	if x != nil && x.AvailableBytes != nil {
 		return *x.AvailableBytes
 	}
@@ -87,8 +87,8 @@ var File_hi_media_quota_proto protoreflect.FileDescriptor
 
 const file_hi_media_quota_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/media/quota.proto\x12\bhi.media\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/options.proto\"\xd6\x01\n" +
-	"\x11GetMediaQuotaResp\x12*\n" +
+	"\x14hi/media/quota.proto\x12\bhi.media\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/options.proto\"\xd1\x01\n" +
+	"\fGetQuotaResp\x12*\n" +
 	"\vtotal_bytes\x18\x01 \x01(\x04B\x04\x90\xb5\x18\x03H\x00R\n" +
 	"totalBytes\x88\x01\x01\x12(\n" +
 	"\n" +
@@ -96,10 +96,9 @@ const file_hi_media_quota_proto_rawDesc = "" +
 	"\x0favailable_bytes\x18\x03 \x01(\x04B\x04\x90\xb5\x18\x03H\x02R\x0eavailableBytes\x88\x01\x01:\x04\x98\xb5\x18\x03B\x0e\n" +
 	"\f_total_bytesB\r\n" +
 	"\v_used_bytesB\x12\n" +
-	"\x10_available_bytes2O\n" +
-	"\n" +
-	"MediaQuota\x12A\n" +
-	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x1b.hi.media.GetMediaQuotaResp\"\x05\x8a\xb5\x18\x01\x02B\x87\x01\n" +
+	"\x10_available_bytes2E\n" +
+	"\x05Quota\x12<\n" +
+	"\x03Get\x12\x16.google.protobuf.Empty\x1a\x16.hi.media.GetQuotaResp\"\x05\x8a\xb5\x18\x01\x02B\x87\x01\n" +
 	"\fcom.hi.mediaB\n" +
 	"QuotaProtoP\x01Z*github.com/HiWorld-56/hi-proto/go/hi/media\xa2\x02\x03HMX\xaa\x02\bHi.Media\xca\x02\bHi\\Media\xe2\x02\x14Hi\\Media\\GPBMetadata\xea\x02\tHi::Mediab\x06proto3"
 
@@ -117,12 +116,12 @@ func file_hi_media_quota_proto_rawDescGZIP() []byte {
 
 var file_hi_media_quota_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_hi_media_quota_proto_goTypes = []any{
-	(*GetMediaQuotaResp)(nil), // 0: hi.media.GetMediaQuotaResp
-	(*emptypb.Empty)(nil),     // 1: google.protobuf.Empty
+	(*GetQuotaResp)(nil),  // 0: hi.media.GetQuotaResp
+	(*emptypb.Empty)(nil), // 1: google.protobuf.Empty
 }
 var file_hi_media_quota_proto_depIdxs = []int32{
-	1, // 0: hi.media.MediaQuota.Get:input_type -> google.protobuf.Empty
-	0, // 1: hi.media.MediaQuota.Get:output_type -> hi.media.GetMediaQuotaResp
+	1, // 0: hi.media.Quota.Get:input_type -> google.protobuf.Empty
+	0, // 1: hi.media.Quota.Get:output_type -> hi.media.GetQuotaResp
 	1, // [1:2] is the sub-list for method output_type
 	0, // [0:1] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name

@@ -16,218 +16,99 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../common.pb.dart' as $1;
+import 'feature.pbenum.dart' as $2;
 import 'task.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 export 'task.pbenum.dart';
 
-class MediaResolution extends $pb.GeneratedMessage {
-  factory MediaResolution({
-    $core.int? width,
-    $core.int? height,
+class VideoResolution extends $pb.GeneratedMessage {
+  factory VideoResolution({
+    $core.String? aspectRatio,
+    $core.String? megapixels,
   }) {
     final result = create();
-    if (width != null) result.width = width;
-    if (height != null) result.height = height;
+    if (aspectRatio != null) result.aspectRatio = aspectRatio;
+    if (megapixels != null) result.megapixels = megapixels;
     return result;
   }
 
-  MediaResolution._();
+  VideoResolution._();
 
-  factory MediaResolution.fromBuffer($core.List<$core.int> data,
+  factory VideoResolution.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory MediaResolution.fromJson($core.String json,
+  factory VideoResolution.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'MediaResolution',
+      _omitMessageNames ? '' : 'VideoResolution',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'width')
-    ..aI(2, _omitFieldNames ? '' : 'height')
+    ..aOS(1, _omitFieldNames ? '' : 'aspectRatio')
+    ..aOS(2, _omitFieldNames ? '' : 'megapixels')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MediaResolution clone() => deepCopy();
+  VideoResolution clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MediaResolution copyWith(void Function(MediaResolution) updates) =>
-      super.copyWith((message) => updates(message as MediaResolution))
-          as MediaResolution;
+  VideoResolution copyWith(void Function(VideoResolution) updates) =>
+      super.copyWith((message) => updates(message as VideoResolution))
+          as VideoResolution;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static MediaResolution create() => MediaResolution._();
+  static VideoResolution create() => VideoResolution._();
   @$core.override
-  MediaResolution createEmptyInstance() => create();
+  VideoResolution createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static MediaResolution getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<MediaResolution>(create);
-  static MediaResolution? _defaultInstance;
+  static VideoResolution getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<VideoResolution>(create);
+  static VideoResolution? _defaultInstance;
 
+  /// ResolutionSelector 的完整选项字符串，例如 "16:9 (Widescreen)"，不能只传 "16:9"。
   @$pb.TagNumber(1)
-  $core.int get width => $_getIZ(0);
+  $core.String get aspectRatio => $_getSZ(0);
   @$pb.TagNumber(1)
-  set width($core.int value) => $_setSignedInt32(0, value);
+  set aspectRatio($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasWidth() => $_has(0);
+  $core.bool hasAspectRatio() => $_has(0);
   @$pb.TagNumber(1)
-  void clearWidth() => $_clearField(1);
+  void clearAspectRatio() => $_clearField(1);
 
+  /// 十进制字符串，例如 "0.9" 或 "0.98"；客户端不得转为浮点后重新格式化。
   @$pb.TagNumber(2)
-  $core.int get height => $_getIZ(1);
+  $core.String get megapixels => $_getSZ(1);
   @$pb.TagNumber(2)
-  set height($core.int value) => $_setSignedInt32(1, value);
+  set megapixels($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasHeight() => $_has(1);
+  $core.bool hasMegapixels() => $_has(1);
   @$pb.TagNumber(2)
-  void clearHeight() => $_clearField(2);
-}
-
-class CreateTextToImageTaskReq extends $pb.GeneratedMessage {
-  factory CreateTextToImageTaskReq({
-    $core.String? requestId,
-    $core.String? workflowVersionId,
-    $core.String? sourceTaskId,
-    $core.String? prompt,
-    $core.String? negativePrompt,
-    MediaResolution? resolution,
-  }) {
-    final result = create();
-    if (requestId != null) result.requestId = requestId;
-    if (workflowVersionId != null) result.workflowVersionId = workflowVersionId;
-    if (sourceTaskId != null) result.sourceTaskId = sourceTaskId;
-    if (prompt != null) result.prompt = prompt;
-    if (negativePrompt != null) result.negativePrompt = negativePrompt;
-    if (resolution != null) result.resolution = resolution;
-    return result;
-  }
-
-  CreateTextToImageTaskReq._();
-
-  factory CreateTextToImageTaskReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory CreateTextToImageTaskReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'CreateTextToImageTaskReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'requestId')
-    ..aOS(2, _omitFieldNames ? '' : 'workflowVersionId')
-    ..aOS(3, _omitFieldNames ? '' : 'sourceTaskId')
-    ..aOS(4, _omitFieldNames ? '' : 'prompt')
-    ..aOS(5, _omitFieldNames ? '' : 'negativePrompt')
-    ..aOM<MediaResolution>(6, _omitFieldNames ? '' : 'resolution',
-        subBuilder: MediaResolution.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CreateTextToImageTaskReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CreateTextToImageTaskReq copyWith(
-          void Function(CreateTextToImageTaskReq) updates) =>
-      super.copyWith((message) => updates(message as CreateTextToImageTaskReq))
-          as CreateTextToImageTaskReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static CreateTextToImageTaskReq create() => CreateTextToImageTaskReq._();
-  @$core.override
-  CreateTextToImageTaskReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static CreateTextToImageTaskReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CreateTextToImageTaskReq>(create);
-  static CreateTextToImageTaskReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get requestId => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set requestId($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasRequestId() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearRequestId() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get workflowVersionId => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set workflowVersionId($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasWorkflowVersionId() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearWorkflowVersionId() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.String get sourceTaskId => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set sourceTaskId($core.String value) => $_setString(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasSourceTaskId() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearSourceTaskId() => $_clearField(3);
-
-  @$pb.TagNumber(4)
-  $core.String get prompt => $_getSZ(3);
-  @$pb.TagNumber(4)
-  set prompt($core.String value) => $_setString(3, value);
-  @$pb.TagNumber(4)
-  $core.bool hasPrompt() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearPrompt() => $_clearField(4);
-
-  @$pb.TagNumber(5)
-  $core.String get negativePrompt => $_getSZ(4);
-  @$pb.TagNumber(5)
-  set negativePrompt($core.String value) => $_setString(4, value);
-  @$pb.TagNumber(5)
-  $core.bool hasNegativePrompt() => $_has(4);
-  @$pb.TagNumber(5)
-  void clearNegativePrompt() => $_clearField(5);
-
-  @$pb.TagNumber(6)
-  MediaResolution get resolution => $_getN(5);
-  @$pb.TagNumber(6)
-  set resolution(MediaResolution value) => $_setField(6, value);
-  @$pb.TagNumber(6)
-  $core.bool hasResolution() => $_has(5);
-  @$pb.TagNumber(6)
-  void clearResolution() => $_clearField(6);
-  @$pb.TagNumber(6)
-  MediaResolution ensureResolution() => $_ensure(5);
+  void clearMegapixels() => $_clearField(2);
 }
 
 class CreateImageToVideoTaskReq extends $pb.GeneratedMessage {
   factory CreateImageToVideoTaskReq({
     $core.String? requestId,
-    $core.String? workflowVersionId,
-    $core.String? sourceTaskId,
+    $core.String? modelMappingId,
     $core.String? inputAssetId,
     $core.String? prompt,
-    $core.String? negativePrompt,
-    MediaResolution? resolution,
+    VideoResolution? resolution,
     $core.int? durationSeconds,
-    $core.int? fps,
+    $core.int? frameRate,
   }) {
     final result = create();
     if (requestId != null) result.requestId = requestId;
-    if (workflowVersionId != null) result.workflowVersionId = workflowVersionId;
-    if (sourceTaskId != null) result.sourceTaskId = sourceTaskId;
+    if (modelMappingId != null) result.modelMappingId = modelMappingId;
     if (inputAssetId != null) result.inputAssetId = inputAssetId;
     if (prompt != null) result.prompt = prompt;
-    if (negativePrompt != null) result.negativePrompt = negativePrompt;
     if (resolution != null) result.resolution = resolution;
     if (durationSeconds != null) result.durationSeconds = durationSeconds;
-    if (fps != null) result.fps = fps;
+    if (frameRate != null) result.frameRate = frameRate;
     return result;
   }
 
@@ -245,15 +126,13 @@ class CreateImageToVideoTaskReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'requestId')
-    ..aOS(2, _omitFieldNames ? '' : 'workflowVersionId')
-    ..aOS(3, _omitFieldNames ? '' : 'sourceTaskId')
-    ..aOS(4, _omitFieldNames ? '' : 'inputAssetId')
-    ..aOS(5, _omitFieldNames ? '' : 'prompt')
-    ..aOS(6, _omitFieldNames ? '' : 'negativePrompt')
-    ..aOM<MediaResolution>(7, _omitFieldNames ? '' : 'resolution',
-        subBuilder: MediaResolution.create)
-    ..aI(8, _omitFieldNames ? '' : 'durationSeconds')
-    ..aI(9, _omitFieldNames ? '' : 'fps')
+    ..aOS(2, _omitFieldNames ? '' : 'modelMappingId')
+    ..aOS(3, _omitFieldNames ? '' : 'inputAssetId')
+    ..aOS(4, _omitFieldNames ? '' : 'prompt')
+    ..aOM<VideoResolution>(5, _omitFieldNames ? '' : 'resolution',
+        subBuilder: VideoResolution.create)
+    ..aI(6, _omitFieldNames ? '' : 'durationSeconds')
+    ..aI(7, _omitFieldNames ? '' : 'frameRate')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -286,82 +165,182 @@ class CreateImageToVideoTaskReq extends $pb.GeneratedMessage {
   void clearRequestId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get workflowVersionId => $_getSZ(1);
+  $core.String get modelMappingId => $_getSZ(1);
   @$pb.TagNumber(2)
-  set workflowVersionId($core.String value) => $_setString(1, value);
+  set modelMappingId($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasWorkflowVersionId() => $_has(1);
+  $core.bool hasModelMappingId() => $_has(1);
   @$pb.TagNumber(2)
-  void clearWorkflowVersionId() => $_clearField(2);
+  void clearModelMappingId() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $core.String get sourceTaskId => $_getSZ(2);
+  $core.String get inputAssetId => $_getSZ(2);
   @$pb.TagNumber(3)
-  set sourceTaskId($core.String value) => $_setString(2, value);
+  set inputAssetId($core.String value) => $_setString(2, value);
   @$pb.TagNumber(3)
-  $core.bool hasSourceTaskId() => $_has(2);
+  $core.bool hasInputAssetId() => $_has(2);
   @$pb.TagNumber(3)
-  void clearSourceTaskId() => $_clearField(3);
+  void clearInputAssetId() => $_clearField(3);
 
   @$pb.TagNumber(4)
-  $core.String get inputAssetId => $_getSZ(3);
+  $core.String get prompt => $_getSZ(3);
   @$pb.TagNumber(4)
-  set inputAssetId($core.String value) => $_setString(3, value);
+  set prompt($core.String value) => $_setString(3, value);
   @$pb.TagNumber(4)
-  $core.bool hasInputAssetId() => $_has(3);
+  $core.bool hasPrompt() => $_has(3);
   @$pb.TagNumber(4)
-  void clearInputAssetId() => $_clearField(4);
+  void clearPrompt() => $_clearField(4);
 
   @$pb.TagNumber(5)
-  $core.String get prompt => $_getSZ(4);
+  VideoResolution get resolution => $_getN(4);
   @$pb.TagNumber(5)
-  set prompt($core.String value) => $_setString(4, value);
+  set resolution(VideoResolution value) => $_setField(5, value);
   @$pb.TagNumber(5)
-  $core.bool hasPrompt() => $_has(4);
+  $core.bool hasResolution() => $_has(4);
   @$pb.TagNumber(5)
-  void clearPrompt() => $_clearField(5);
+  void clearResolution() => $_clearField(5);
+  @$pb.TagNumber(5)
+  VideoResolution ensureResolution() => $_ensure(4);
 
   @$pb.TagNumber(6)
-  $core.String get negativePrompt => $_getSZ(5);
+  $core.int get durationSeconds => $_getIZ(5);
   @$pb.TagNumber(6)
-  set negativePrompt($core.String value) => $_setString(5, value);
+  set durationSeconds($core.int value) => $_setSignedInt32(5, value);
   @$pb.TagNumber(6)
-  $core.bool hasNegativePrompt() => $_has(5);
+  $core.bool hasDurationSeconds() => $_has(5);
   @$pb.TagNumber(6)
-  void clearNegativePrompt() => $_clearField(6);
+  void clearDurationSeconds() => $_clearField(6);
 
   @$pb.TagNumber(7)
-  MediaResolution get resolution => $_getN(6);
+  $core.int get frameRate => $_getIZ(6);
   @$pb.TagNumber(7)
-  set resolution(MediaResolution value) => $_setField(7, value);
+  set frameRate($core.int value) => $_setSignedInt32(6, value);
   @$pb.TagNumber(7)
-  $core.bool hasResolution() => $_has(6);
+  $core.bool hasFrameRate() => $_has(6);
   @$pb.TagNumber(7)
-  void clearResolution() => $_clearField(7);
-  @$pb.TagNumber(7)
-  MediaResolution ensureResolution() => $_ensure(6);
-
-  @$pb.TagNumber(8)
-  $core.int get durationSeconds => $_getIZ(7);
-  @$pb.TagNumber(8)
-  set durationSeconds($core.int value) => $_setSignedInt32(7, value);
-  @$pb.TagNumber(8)
-  $core.bool hasDurationSeconds() => $_has(7);
-  @$pb.TagNumber(8)
-  void clearDurationSeconds() => $_clearField(8);
-
-  @$pb.TagNumber(9)
-  $core.int get fps => $_getIZ(8);
-  @$pb.TagNumber(9)
-  set fps($core.int value) => $_setSignedInt32(8, value);
-  @$pb.TagNumber(9)
-  $core.bool hasFps() => $_has(8);
-  @$pb.TagNumber(9)
-  void clearFps() => $_clearField(9);
+  void clearFrameRate() => $_clearField(7);
 }
 
-class CreateMediaTaskResp extends $pb.GeneratedMessage {
-  factory CreateMediaTaskResp({
+class CreateTextToVideoTaskReq extends $pb.GeneratedMessage {
+  factory CreateTextToVideoTaskReq({
+    $core.String? requestId,
+    $core.String? modelMappingId,
+    $core.String? prompt,
+    VideoResolution? resolution,
+    $core.int? durationSeconds,
+    $core.int? frameRate,
+  }) {
+    final result = create();
+    if (requestId != null) result.requestId = requestId;
+    if (modelMappingId != null) result.modelMappingId = modelMappingId;
+    if (prompt != null) result.prompt = prompt;
+    if (resolution != null) result.resolution = resolution;
+    if (durationSeconds != null) result.durationSeconds = durationSeconds;
+    if (frameRate != null) result.frameRate = frameRate;
+    return result;
+  }
+
+  CreateTextToVideoTaskReq._();
+
+  factory CreateTextToVideoTaskReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CreateTextToVideoTaskReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CreateTextToVideoTaskReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'requestId')
+    ..aOS(2, _omitFieldNames ? '' : 'modelMappingId')
+    ..aOS(3, _omitFieldNames ? '' : 'prompt')
+    ..aOM<VideoResolution>(4, _omitFieldNames ? '' : 'resolution',
+        subBuilder: VideoResolution.create)
+    ..aI(5, _omitFieldNames ? '' : 'durationSeconds')
+    ..aI(6, _omitFieldNames ? '' : 'frameRate')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreateTextToVideoTaskReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreateTextToVideoTaskReq copyWith(
+          void Function(CreateTextToVideoTaskReq) updates) =>
+      super.copyWith((message) => updates(message as CreateTextToVideoTaskReq))
+          as CreateTextToVideoTaskReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CreateTextToVideoTaskReq create() => CreateTextToVideoTaskReq._();
+  @$core.override
+  CreateTextToVideoTaskReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static CreateTextToVideoTaskReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CreateTextToVideoTaskReq>(create);
+  static CreateTextToVideoTaskReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get requestId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set requestId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRequestId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRequestId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get modelMappingId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set modelMappingId($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasModelMappingId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearModelMappingId() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get prompt => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set prompt($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasPrompt() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearPrompt() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  VideoResolution get resolution => $_getN(3);
+  @$pb.TagNumber(4)
+  set resolution(VideoResolution value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasResolution() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearResolution() => $_clearField(4);
+  @$pb.TagNumber(4)
+  VideoResolution ensureResolution() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  $core.int get durationSeconds => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set durationSeconds($core.int value) => $_setSignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasDurationSeconds() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearDurationSeconds() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.int get frameRate => $_getIZ(5);
+  @$pb.TagNumber(6)
+  set frameRate($core.int value) => $_setSignedInt32(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasFrameRate() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearFrameRate() => $_clearField(6);
+}
+
+class CreateTaskResp extends $pb.GeneratedMessage {
+  factory CreateTaskResp({
     $core.String? taskId,
   }) {
     final result = create();
@@ -369,41 +348,42 @@ class CreateMediaTaskResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  CreateMediaTaskResp._();
+  CreateTaskResp._();
 
-  factory CreateMediaTaskResp.fromBuffer($core.List<$core.int> data,
+  factory CreateTaskResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory CreateMediaTaskResp.fromJson($core.String json,
+  factory CreateTaskResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'CreateMediaTaskResp',
+      _omitMessageNames ? '' : 'CreateTaskResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'taskId')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CreateMediaTaskResp clone() => deepCopy();
+  CreateTaskResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CreateMediaTaskResp copyWith(void Function(CreateMediaTaskResp) updates) =>
-      super.copyWith((message) => updates(message as CreateMediaTaskResp))
-          as CreateMediaTaskResp;
+  CreateTaskResp copyWith(void Function(CreateTaskResp) updates) =>
+      super.copyWith((message) => updates(message as CreateTaskResp))
+          as CreateTaskResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static CreateMediaTaskResp create() => CreateMediaTaskResp._();
+  static CreateTaskResp create() => CreateTaskResp._();
   @$core.override
-  CreateMediaTaskResp createEmptyInstance() => create();
+  CreateTaskResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static CreateMediaTaskResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CreateMediaTaskResp>(create);
-  static CreateMediaTaskResp? _defaultInstance;
+  static CreateTaskResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CreateTaskResp>(create);
+  static CreateTaskResp? _defaultInstance;
 
+  /// 成功响应必有；响应字段不使用 buf.validate 约束。
   @$pb.TagNumber(1)
   $core.String get taskId => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -414,104 +394,22 @@ class CreateMediaTaskResp extends $pb.GeneratedMessage {
   void clearTaskId() => $_clearField(1);
 }
 
-class TextToImageTaskParams extends $pb.GeneratedMessage {
-  factory TextToImageTaskParams({
-    $core.String? prompt,
-    $core.String? negativePrompt,
-    MediaResolution? resolution,
-  }) {
-    final result = create();
-    if (prompt != null) result.prompt = prompt;
-    if (negativePrompt != null) result.negativePrompt = negativePrompt;
-    if (resolution != null) result.resolution = resolution;
-    return result;
-  }
-
-  TextToImageTaskParams._();
-
-  factory TextToImageTaskParams.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory TextToImageTaskParams.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'TextToImageTaskParams',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'prompt')
-    ..aOS(2, _omitFieldNames ? '' : 'negativePrompt')
-    ..aOM<MediaResolution>(3, _omitFieldNames ? '' : 'resolution',
-        subBuilder: MediaResolution.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  TextToImageTaskParams clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  TextToImageTaskParams copyWith(
-          void Function(TextToImageTaskParams) updates) =>
-      super.copyWith((message) => updates(message as TextToImageTaskParams))
-          as TextToImageTaskParams;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static TextToImageTaskParams create() => TextToImageTaskParams._();
-  @$core.override
-  TextToImageTaskParams createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static TextToImageTaskParams getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<TextToImageTaskParams>(create);
-  static TextToImageTaskParams? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get prompt => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set prompt($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasPrompt() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearPrompt() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get negativePrompt => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set negativePrompt($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasNegativePrompt() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearNegativePrompt() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  MediaResolution get resolution => $_getN(2);
-  @$pb.TagNumber(3)
-  set resolution(MediaResolution value) => $_setField(3, value);
-  @$pb.TagNumber(3)
-  $core.bool hasResolution() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearResolution() => $_clearField(3);
-  @$pb.TagNumber(3)
-  MediaResolution ensureResolution() => $_ensure(2);
-}
-
 class ImageToVideoTaskParams extends $pb.GeneratedMessage {
   factory ImageToVideoTaskParams({
     $core.String? inputAssetId,
     $core.String? prompt,
-    $core.String? negativePrompt,
-    MediaResolution? resolution,
+    $core.String? aspectRatio,
+    $core.String? megapixels,
     $core.int? durationSeconds,
-    $core.int? fps,
+    $core.int? frameRate,
   }) {
     final result = create();
     if (inputAssetId != null) result.inputAssetId = inputAssetId;
     if (prompt != null) result.prompt = prompt;
-    if (negativePrompt != null) result.negativePrompt = negativePrompt;
-    if (resolution != null) result.resolution = resolution;
+    if (aspectRatio != null) result.aspectRatio = aspectRatio;
+    if (megapixels != null) result.megapixels = megapixels;
     if (durationSeconds != null) result.durationSeconds = durationSeconds;
-    if (fps != null) result.fps = fps;
+    if (frameRate != null) result.frameRate = frameRate;
     return result;
   }
 
@@ -530,11 +428,10 @@ class ImageToVideoTaskParams extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'inputAssetId')
     ..aOS(2, _omitFieldNames ? '' : 'prompt')
-    ..aOS(3, _omitFieldNames ? '' : 'negativePrompt')
-    ..aOM<MediaResolution>(4, _omitFieldNames ? '' : 'resolution',
-        subBuilder: MediaResolution.create)
+    ..aOS(3, _omitFieldNames ? '' : 'aspectRatio')
+    ..aOS(4, _omitFieldNames ? '' : 'megapixels')
     ..aI(5, _omitFieldNames ? '' : 'durationSeconds')
-    ..aI(6, _omitFieldNames ? '' : 'fps')
+    ..aI(6, _omitFieldNames ? '' : 'frameRate')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -576,24 +473,22 @@ class ImageToVideoTaskParams extends $pb.GeneratedMessage {
   void clearPrompt() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $core.String get negativePrompt => $_getSZ(2);
+  $core.String get aspectRatio => $_getSZ(2);
   @$pb.TagNumber(3)
-  set negativePrompt($core.String value) => $_setString(2, value);
+  set aspectRatio($core.String value) => $_setString(2, value);
   @$pb.TagNumber(3)
-  $core.bool hasNegativePrompt() => $_has(2);
+  $core.bool hasAspectRatio() => $_has(2);
   @$pb.TagNumber(3)
-  void clearNegativePrompt() => $_clearField(3);
+  void clearAspectRatio() => $_clearField(3);
 
   @$pb.TagNumber(4)
-  MediaResolution get resolution => $_getN(3);
+  $core.String get megapixels => $_getSZ(3);
   @$pb.TagNumber(4)
-  set resolution(MediaResolution value) => $_setField(4, value);
+  set megapixels($core.String value) => $_setString(3, value);
   @$pb.TagNumber(4)
-  $core.bool hasResolution() => $_has(3);
+  $core.bool hasMegapixels() => $_has(3);
   @$pb.TagNumber(4)
-  void clearResolution() => $_clearField(4);
-  @$pb.TagNumber(4)
-  MediaResolution ensureResolution() => $_ensure(3);
+  void clearMegapixels() => $_clearField(4);
 
   @$pb.TagNumber(5)
   $core.int get durationSeconds => $_getIZ(4);
@@ -605,22 +500,126 @@ class ImageToVideoTaskParams extends $pb.GeneratedMessage {
   void clearDurationSeconds() => $_clearField(5);
 
   @$pb.TagNumber(6)
-  $core.int get fps => $_getIZ(5);
+  $core.int get frameRate => $_getIZ(5);
   @$pb.TagNumber(6)
-  set fps($core.int value) => $_setSignedInt32(5, value);
+  set frameRate($core.int value) => $_setSignedInt32(5, value);
   @$pb.TagNumber(6)
-  $core.bool hasFps() => $_has(5);
+  $core.bool hasFrameRate() => $_has(5);
   @$pb.TagNumber(6)
-  void clearFps() => $_clearField(6);
+  void clearFrameRate() => $_clearField(6);
 }
 
-class MediaTaskOutput extends $pb.GeneratedMessage {
-  factory MediaTaskOutput({
+class TextToVideoTaskParams extends $pb.GeneratedMessage {
+  factory TextToVideoTaskParams({
+    $core.String? prompt,
+    $core.String? aspectRatio,
+    $core.String? megapixels,
+    $core.int? durationSeconds,
+    $core.int? frameRate,
+  }) {
+    final result = create();
+    if (prompt != null) result.prompt = prompt;
+    if (aspectRatio != null) result.aspectRatio = aspectRatio;
+    if (megapixels != null) result.megapixels = megapixels;
+    if (durationSeconds != null) result.durationSeconds = durationSeconds;
+    if (frameRate != null) result.frameRate = frameRate;
+    return result;
+  }
+
+  TextToVideoTaskParams._();
+
+  factory TextToVideoTaskParams.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory TextToVideoTaskParams.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'TextToVideoTaskParams',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'prompt')
+    ..aOS(2, _omitFieldNames ? '' : 'aspectRatio')
+    ..aOS(3, _omitFieldNames ? '' : 'megapixels')
+    ..aI(4, _omitFieldNames ? '' : 'durationSeconds')
+    ..aI(5, _omitFieldNames ? '' : 'frameRate')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  TextToVideoTaskParams clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  TextToVideoTaskParams copyWith(
+          void Function(TextToVideoTaskParams) updates) =>
+      super.copyWith((message) => updates(message as TextToVideoTaskParams))
+          as TextToVideoTaskParams;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static TextToVideoTaskParams create() => TextToVideoTaskParams._();
+  @$core.override
+  TextToVideoTaskParams createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static TextToVideoTaskParams getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<TextToVideoTaskParams>(create);
+  static TextToVideoTaskParams? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get prompt => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set prompt($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPrompt() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPrompt() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get aspectRatio => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set aspectRatio($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAspectRatio() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAspectRatio() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get megapixels => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set megapixels($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasMegapixels() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearMegapixels() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.int get durationSeconds => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set durationSeconds($core.int value) => $_setSignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasDurationSeconds() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearDurationSeconds() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.int get frameRate => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set frameRate($core.int value) => $_setSignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasFrameRate() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearFrameRate() => $_clearField(5);
+}
+
+class TaskOutput extends $pb.GeneratedMessage {
+  factory TaskOutput({
     $core.String? assetId,
     $core.String? filename,
     MediaType? mediaType,
     $core.String? mimeType,
     $fixnum.Int64? sizeBytes,
+    $fixnum.Int64? durationMs,
     $core.bool? available,
   }) {
     final result = create();
@@ -629,21 +628,22 @@ class MediaTaskOutput extends $pb.GeneratedMessage {
     if (mediaType != null) result.mediaType = mediaType;
     if (mimeType != null) result.mimeType = mimeType;
     if (sizeBytes != null) result.sizeBytes = sizeBytes;
+    if (durationMs != null) result.durationMs = durationMs;
     if (available != null) result.available = available;
     return result;
   }
 
-  MediaTaskOutput._();
+  TaskOutput._();
 
-  factory MediaTaskOutput.fromBuffer($core.List<$core.int> data,
+  factory TaskOutput.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory MediaTaskOutput.fromJson($core.String json,
+  factory TaskOutput.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'MediaTaskOutput',
+      _omitMessageNames ? '' : 'TaskOutput',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'assetId')
@@ -654,27 +654,27 @@ class MediaTaskOutput extends $pb.GeneratedMessage {
     ..a<$fixnum.Int64>(
         5, _omitFieldNames ? '' : 'sizeBytes', $pb.PbFieldType.OU6,
         defaultOrMaker: $fixnum.Int64.ZERO)
-    ..aOB(6, _omitFieldNames ? '' : 'available')
+    ..aInt64(6, _omitFieldNames ? '' : 'durationMs')
+    ..aOB(7, _omitFieldNames ? '' : 'available')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MediaTaskOutput clone() => deepCopy();
+  TaskOutput clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MediaTaskOutput copyWith(void Function(MediaTaskOutput) updates) =>
-      super.copyWith((message) => updates(message as MediaTaskOutput))
-          as MediaTaskOutput;
+  TaskOutput copyWith(void Function(TaskOutput) updates) =>
+      super.copyWith((message) => updates(message as TaskOutput)) as TaskOutput;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static MediaTaskOutput create() => MediaTaskOutput._();
+  static TaskOutput create() => TaskOutput._();
   @$core.override
-  MediaTaskOutput createEmptyInstance() => create();
+  TaskOutput createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static MediaTaskOutput getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<MediaTaskOutput>(create);
-  static MediaTaskOutput? _defaultInstance;
+  static TaskOutput getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<TaskOutput>(create);
+  static TaskOutput? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get assetId => $_getSZ(0);
@@ -722,41 +722,53 @@ class MediaTaskOutput extends $pb.GeneratedMessage {
   void clearSizeBytes() => $_clearField(5);
 
   @$pb.TagNumber(6)
-  $core.bool get available => $_getBF(5);
+  $fixnum.Int64 get durationMs => $_getI64(5);
   @$pb.TagNumber(6)
-  set available($core.bool value) => $_setBool(5, value);
+  set durationMs($fixnum.Int64 value) => $_setInt64(5, value);
   @$pb.TagNumber(6)
-  $core.bool hasAvailable() => $_has(5);
+  $core.bool hasDurationMs() => $_has(5);
   @$pb.TagNumber(6)
-  void clearAvailable() => $_clearField(6);
+  void clearDurationMs() => $_clearField(6);
+
+  /// 资产删除后任务仍可保持成功，但该值为 false 且不能播放。
+  @$pb.TagNumber(7)
+  $core.bool get available => $_getBF(6);
+  @$pb.TagNumber(7)
+  set available($core.bool value) => $_setBool(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasAvailable() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearAvailable() => $_clearField(7);
 }
 
-class MediaTaskSummary extends $pb.GeneratedMessage {
-  factory MediaTaskSummary({
+class TaskSummary extends $pb.GeneratedMessage {
+  factory TaskSummary({
     $core.String? taskId,
-    MediaTaskPurpose? purpose,
-    $core.String? featureKey,
-    $core.String? workflowVersionId,
-    $core.String? workflowName,
-    MediaTaskStatus? status,
+    TaskPurpose? purpose,
+    $2.FeatureKey? featureKey,
+    $core.String? modelMappingId,
+    $core.String? modelName,
+    TaskStatus? status,
     $core.String? statusMessage,
-    MediaTaskOutput? output,
+    $core.String? errorCode,
+    TaskOutput? output,
     $core.bool? canCancel,
     $core.bool? canRecoverSave,
     $fixnum.Int64? saveRecoveryExpiresAt,
     $fixnum.Int64? createdAt,
     $fixnum.Int64? startedAt,
     $fixnum.Int64? completedAt,
-    $core.int? elapsedSeconds,
+    $fixnum.Int64? elapsedSeconds,
   }) {
     final result = create();
     if (taskId != null) result.taskId = taskId;
     if (purpose != null) result.purpose = purpose;
     if (featureKey != null) result.featureKey = featureKey;
-    if (workflowVersionId != null) result.workflowVersionId = workflowVersionId;
-    if (workflowName != null) result.workflowName = workflowName;
+    if (modelMappingId != null) result.modelMappingId = modelMappingId;
+    if (modelName != null) result.modelName = modelName;
     if (status != null) result.status = status;
     if (statusMessage != null) result.statusMessage = statusMessage;
+    if (errorCode != null) result.errorCode = errorCode;
     if (output != null) result.output = output;
     if (canCancel != null) result.canCancel = canCancel;
     if (canRecoverSave != null) result.canRecoverSave = canRecoverSave;
@@ -769,57 +781,59 @@ class MediaTaskSummary extends $pb.GeneratedMessage {
     return result;
   }
 
-  MediaTaskSummary._();
+  TaskSummary._();
 
-  factory MediaTaskSummary.fromBuffer($core.List<$core.int> data,
+  factory TaskSummary.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory MediaTaskSummary.fromJson($core.String json,
+  factory TaskSummary.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'MediaTaskSummary',
+      _omitMessageNames ? '' : 'TaskSummary',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'taskId')
-    ..aE<MediaTaskPurpose>(2, _omitFieldNames ? '' : 'purpose',
-        enumValues: MediaTaskPurpose.values)
-    ..aOS(3, _omitFieldNames ? '' : 'featureKey')
-    ..aOS(4, _omitFieldNames ? '' : 'workflowVersionId')
-    ..aOS(5, _omitFieldNames ? '' : 'workflowName')
-    ..aE<MediaTaskStatus>(6, _omitFieldNames ? '' : 'status',
-        enumValues: MediaTaskStatus.values)
+    ..aE<TaskPurpose>(2, _omitFieldNames ? '' : 'purpose',
+        enumValues: TaskPurpose.values)
+    ..aE<$2.FeatureKey>(3, _omitFieldNames ? '' : 'featureKey',
+        enumValues: $2.FeatureKey.values)
+    ..aOS(4, _omitFieldNames ? '' : 'modelMappingId')
+    ..aOS(5, _omitFieldNames ? '' : 'modelName')
+    ..aE<TaskStatus>(6, _omitFieldNames ? '' : 'status',
+        enumValues: TaskStatus.values)
     ..aOS(7, _omitFieldNames ? '' : 'statusMessage')
-    ..aOM<MediaTaskOutput>(8, _omitFieldNames ? '' : 'output',
-        subBuilder: MediaTaskOutput.create)
-    ..aOB(9, _omitFieldNames ? '' : 'canCancel')
-    ..aOB(10, _omitFieldNames ? '' : 'canRecoverSave')
-    ..aInt64(11, _omitFieldNames ? '' : 'saveRecoveryExpiresAt')
-    ..aInt64(12, _omitFieldNames ? '' : 'createdAt')
-    ..aInt64(13, _omitFieldNames ? '' : 'startedAt')
-    ..aInt64(14, _omitFieldNames ? '' : 'completedAt')
-    ..aI(15, _omitFieldNames ? '' : 'elapsedSeconds')
+    ..aOS(8, _omitFieldNames ? '' : 'errorCode')
+    ..aOM<TaskOutput>(9, _omitFieldNames ? '' : 'output',
+        subBuilder: TaskOutput.create)
+    ..aOB(10, _omitFieldNames ? '' : 'canCancel')
+    ..aOB(11, _omitFieldNames ? '' : 'canRecoverSave')
+    ..aInt64(12, _omitFieldNames ? '' : 'saveRecoveryExpiresAt')
+    ..aInt64(13, _omitFieldNames ? '' : 'createdAt')
+    ..aInt64(14, _omitFieldNames ? '' : 'startedAt')
+    ..aInt64(15, _omitFieldNames ? '' : 'completedAt')
+    ..aInt64(16, _omitFieldNames ? '' : 'elapsedSeconds')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MediaTaskSummary clone() => deepCopy();
+  TaskSummary clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MediaTaskSummary copyWith(void Function(MediaTaskSummary) updates) =>
-      super.copyWith((message) => updates(message as MediaTaskSummary))
-          as MediaTaskSummary;
+  TaskSummary copyWith(void Function(TaskSummary) updates) =>
+      super.copyWith((message) => updates(message as TaskSummary))
+          as TaskSummary;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static MediaTaskSummary create() => MediaTaskSummary._();
+  static TaskSummary create() => TaskSummary._();
   @$core.override
-  MediaTaskSummary createEmptyInstance() => create();
+  TaskSummary createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static MediaTaskSummary getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<MediaTaskSummary>(create);
-  static MediaTaskSummary? _defaultInstance;
+  static TaskSummary getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<TaskSummary>(create);
+  static TaskSummary? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get taskId => $_getSZ(0);
@@ -831,50 +845,51 @@ class MediaTaskSummary extends $pb.GeneratedMessage {
   void clearTaskId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  MediaTaskPurpose get purpose => $_getN(1);
+  TaskPurpose get purpose => $_getN(1);
   @$pb.TagNumber(2)
-  set purpose(MediaTaskPurpose value) => $_setField(2, value);
+  set purpose(TaskPurpose value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasPurpose() => $_has(1);
   @$pb.TagNumber(2)
   void clearPurpose() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $core.String get featureKey => $_getSZ(2);
+  $2.FeatureKey get featureKey => $_getN(2);
   @$pb.TagNumber(3)
-  set featureKey($core.String value) => $_setString(2, value);
+  set featureKey($2.FeatureKey value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasFeatureKey() => $_has(2);
   @$pb.TagNumber(3)
   void clearFeatureKey() => $_clearField(3);
 
   @$pb.TagNumber(4)
-  $core.String get workflowVersionId => $_getSZ(3);
+  $core.String get modelMappingId => $_getSZ(3);
   @$pb.TagNumber(4)
-  set workflowVersionId($core.String value) => $_setString(3, value);
+  set modelMappingId($core.String value) => $_setString(3, value);
   @$pb.TagNumber(4)
-  $core.bool hasWorkflowVersionId() => $_has(3);
+  $core.bool hasModelMappingId() => $_has(3);
   @$pb.TagNumber(4)
-  void clearWorkflowVersionId() => $_clearField(4);
+  void clearModelMappingId() => $_clearField(4);
 
   @$pb.TagNumber(5)
-  $core.String get workflowName => $_getSZ(4);
+  $core.String get modelName => $_getSZ(4);
   @$pb.TagNumber(5)
-  set workflowName($core.String value) => $_setString(4, value);
+  set modelName($core.String value) => $_setString(4, value);
   @$pb.TagNumber(5)
-  $core.bool hasWorkflowName() => $_has(4);
+  $core.bool hasModelName() => $_has(4);
   @$pb.TagNumber(5)
-  void clearWorkflowName() => $_clearField(5);
+  void clearModelName() => $_clearField(5);
 
   @$pb.TagNumber(6)
-  MediaTaskStatus get status => $_getN(5);
+  TaskStatus get status => $_getN(5);
   @$pb.TagNumber(6)
-  set status(MediaTaskStatus value) => $_setField(6, value);
+  set status(TaskStatus value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasStatus() => $_has(5);
   @$pb.TagNumber(6)
   void clearStatus() => $_clearField(6);
 
+  /// 面向用户的脱敏状态说明；前端应优先展示该字段。
   @$pb.TagNumber(7)
   $core.String get statusMessage => $_getSZ(6);
   @$pb.TagNumber(7)
@@ -884,275 +899,203 @@ class MediaTaskSummary extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   void clearStatusMessage() => $_clearField(7);
 
+  /// 稳定异步错误码：QUEUE_TIMEOUT、INPUT_UPLOAD_FAILED、UPSTREAM_SUBMISSION_FAILED、
+  /// UPSTREAM_SUBMISSION_UNKNOWN、UPSTREAM_EXECUTION_FAILED、EXECUTION_TIMEOUT、
+  /// OUTPUT_INVALID、OUTPUT_SAVE_FAILED、OUTPUT_SAVE_UNCERTAIN、SAVE_RECOVERY_FAILED。
   @$pb.TagNumber(8)
-  MediaTaskOutput get output => $_getN(7);
+  $core.String get errorCode => $_getSZ(7);
   @$pb.TagNumber(8)
-  set output(MediaTaskOutput value) => $_setField(8, value);
+  set errorCode($core.String value) => $_setString(7, value);
   @$pb.TagNumber(8)
-  $core.bool hasOutput() => $_has(7);
+  $core.bool hasErrorCode() => $_has(7);
   @$pb.TagNumber(8)
-  void clearOutput() => $_clearField(8);
-  @$pb.TagNumber(8)
-  MediaTaskOutput ensureOutput() => $_ensure(7);
+  void clearErrorCode() => $_clearField(8);
 
+  /// 仅在任务已经产生主资产时存在。
   @$pb.TagNumber(9)
-  $core.bool get canCancel => $_getBF(8);
+  TaskOutput get output => $_getN(8);
   @$pb.TagNumber(9)
-  set canCancel($core.bool value) => $_setBool(8, value);
+  set output(TaskOutput value) => $_setField(9, value);
   @$pb.TagNumber(9)
-  $core.bool hasCanCancel() => $_has(8);
+  $core.bool hasOutput() => $_has(8);
   @$pb.TagNumber(9)
-  void clearCanCancel() => $_clearField(9);
+  void clearOutput() => $_clearField(9);
+  @$pb.TagNumber(9)
+  TaskOutput ensureOutput() => $_ensure(8);
 
   @$pb.TagNumber(10)
-  $core.bool get canRecoverSave => $_getBF(9);
+  $core.bool get canCancel => $_getBF(9);
   @$pb.TagNumber(10)
-  set canRecoverSave($core.bool value) => $_setBool(9, value);
+  set canCancel($core.bool value) => $_setBool(9, value);
   @$pb.TagNumber(10)
-  $core.bool hasCanRecoverSave() => $_has(9);
+  $core.bool hasCanCancel() => $_has(9);
   @$pb.TagNumber(10)
-  void clearCanRecoverSave() => $_clearField(10);
+  void clearCanCancel() => $_clearField(10);
 
+  /// 前端只能依据该字段决定是否显示唯一一次“恢复保存”入口。
   @$pb.TagNumber(11)
-  $fixnum.Int64 get saveRecoveryExpiresAt => $_getI64(10);
+  $core.bool get canRecoverSave => $_getBF(10);
   @$pb.TagNumber(11)
-  set saveRecoveryExpiresAt($fixnum.Int64 value) => $_setInt64(10, value);
+  set canRecoverSave($core.bool value) => $_setBool(10, value);
   @$pb.TagNumber(11)
-  $core.bool hasSaveRecoveryExpiresAt() => $_has(10);
+  $core.bool hasCanRecoverSave() => $_has(10);
   @$pb.TagNumber(11)
-  void clearSaveRecoveryExpiresAt() => $_clearField(11);
+  void clearCanRecoverSave() => $_clearField(11);
 
   @$pb.TagNumber(12)
-  $fixnum.Int64 get createdAt => $_getI64(11);
+  $fixnum.Int64 get saveRecoveryExpiresAt => $_getI64(11);
   @$pb.TagNumber(12)
-  set createdAt($fixnum.Int64 value) => $_setInt64(11, value);
+  set saveRecoveryExpiresAt($fixnum.Int64 value) => $_setInt64(11, value);
   @$pb.TagNumber(12)
-  $core.bool hasCreatedAt() => $_has(11);
+  $core.bool hasSaveRecoveryExpiresAt() => $_has(11);
   @$pb.TagNumber(12)
-  void clearCreatedAt() => $_clearField(12);
+  void clearSaveRecoveryExpiresAt() => $_clearField(12);
 
+  /// Unix 秒；恢复保存不会改写 created_at 或 started_at。
   @$pb.TagNumber(13)
-  $fixnum.Int64 get startedAt => $_getI64(12);
+  $fixnum.Int64 get createdAt => $_getI64(12);
   @$pb.TagNumber(13)
-  set startedAt($fixnum.Int64 value) => $_setInt64(12, value);
+  set createdAt($fixnum.Int64 value) => $_setInt64(12, value);
   @$pb.TagNumber(13)
-  $core.bool hasStartedAt() => $_has(12);
+  $core.bool hasCreatedAt() => $_has(12);
   @$pb.TagNumber(13)
-  void clearStartedAt() => $_clearField(13);
+  void clearCreatedAt() => $_clearField(13);
 
   @$pb.TagNumber(14)
-  $fixnum.Int64 get completedAt => $_getI64(13);
+  $fixnum.Int64 get startedAt => $_getI64(13);
   @$pb.TagNumber(14)
-  set completedAt($fixnum.Int64 value) => $_setInt64(13, value);
+  set startedAt($fixnum.Int64 value) => $_setInt64(13, value);
   @$pb.TagNumber(14)
-  $core.bool hasCompletedAt() => $_has(13);
+  $core.bool hasStartedAt() => $_has(13);
   @$pb.TagNumber(14)
-  void clearCompletedAt() => $_clearField(14);
+  void clearStartedAt() => $_clearField(14);
 
+  /// Unix 秒；恢复受理时清空，恢复得到最终结果时重新写入。
   @$pb.TagNumber(15)
-  $core.int get elapsedSeconds => $_getIZ(14);
+  $fixnum.Int64 get completedAt => $_getI64(14);
   @$pb.TagNumber(15)
-  set elapsedSeconds($core.int value) => $_setSignedInt32(14, value);
+  set completedAt($fixnum.Int64 value) => $_setInt64(14, value);
   @$pb.TagNumber(15)
-  $core.bool hasElapsedSeconds() => $_has(14);
+  $core.bool hasCompletedAt() => $_has(14);
   @$pb.TagNumber(15)
-  void clearElapsedSeconds() => $_clearField(15);
+  void clearCompletedAt() => $_clearField(15);
+
+  /// 从 created_at 到当前时间或 completed_at 的墙钟秒数。
+  @$pb.TagNumber(16)
+  $fixnum.Int64 get elapsedSeconds => $_getI64(15);
+  @$pb.TagNumber(16)
+  set elapsedSeconds($fixnum.Int64 value) => $_setInt64(15, value);
+  @$pb.TagNumber(16)
+  $core.bool hasElapsedSeconds() => $_has(15);
+  @$pb.TagNumber(16)
+  void clearElapsedSeconds() => $_clearField(16);
 }
 
-class MediaTaskProcessingRecord extends $pb.GeneratedMessage {
-  factory MediaTaskProcessingRecord({
-    $fixnum.Int64? occurredAt,
-    $core.String? message,
-  }) {
-    final result = create();
-    if (occurredAt != null) result.occurredAt = occurredAt;
-    if (message != null) result.message = message;
-    return result;
-  }
+enum TaskDetail_EffectiveParams { imageToVideo, textToVideo, notSet }
 
-  MediaTaskProcessingRecord._();
-
-  factory MediaTaskProcessingRecord.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory MediaTaskProcessingRecord.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'MediaTaskProcessingRecord',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
-      createEmptyInstance: create)
-    ..aInt64(1, _omitFieldNames ? '' : 'occurredAt')
-    ..aOS(2, _omitFieldNames ? '' : 'message')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MediaTaskProcessingRecord clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MediaTaskProcessingRecord copyWith(
-          void Function(MediaTaskProcessingRecord) updates) =>
-      super.copyWith((message) => updates(message as MediaTaskProcessingRecord))
-          as MediaTaskProcessingRecord;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static MediaTaskProcessingRecord create() => MediaTaskProcessingRecord._();
-  @$core.override
-  MediaTaskProcessingRecord createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static MediaTaskProcessingRecord getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<MediaTaskProcessingRecord>(create);
-  static MediaTaskProcessingRecord? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $fixnum.Int64 get occurredAt => $_getI64(0);
-  @$pb.TagNumber(1)
-  set occurredAt($fixnum.Int64 value) => $_setInt64(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasOccurredAt() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearOccurredAt() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get message => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set message($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasMessage() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearMessage() => $_clearField(2);
-}
-
-enum MediaTaskDetail_EffectiveParams { textToImage, imageToVideo, notSet }
-
-class MediaTaskDetail extends $pb.GeneratedMessage {
-  factory MediaTaskDetail({
-    MediaTaskSummary? summary,
-    $core.String? sourceTaskId,
-    TextToImageTaskParams? textToImage,
+class TaskDetail extends $pb.GeneratedMessage {
+  factory TaskDetail({
+    TaskSummary? summary,
     ImageToVideoTaskParams? imageToVideo,
-    $core.Iterable<MediaTaskProcessingRecord>? processingRecords,
+    TextToVideoTaskParams? textToVideo,
   }) {
     final result = create();
     if (summary != null) result.summary = summary;
-    if (sourceTaskId != null) result.sourceTaskId = sourceTaskId;
-    if (textToImage != null) result.textToImage = textToImage;
     if (imageToVideo != null) result.imageToVideo = imageToVideo;
-    if (processingRecords != null)
-      result.processingRecords.addAll(processingRecords);
+    if (textToVideo != null) result.textToVideo = textToVideo;
     return result;
   }
 
-  MediaTaskDetail._();
+  TaskDetail._();
 
-  factory MediaTaskDetail.fromBuffer($core.List<$core.int> data,
+  factory TaskDetail.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory MediaTaskDetail.fromJson($core.String json,
+  factory TaskDetail.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
-  static const $core.Map<$core.int, MediaTaskDetail_EffectiveParams>
-      _MediaTaskDetail_EffectiveParamsByTag = {
-    3: MediaTaskDetail_EffectiveParams.textToImage,
-    4: MediaTaskDetail_EffectiveParams.imageToVideo,
-    0: MediaTaskDetail_EffectiveParams.notSet
+  static const $core.Map<$core.int, TaskDetail_EffectiveParams>
+      _TaskDetail_EffectiveParamsByTag = {
+    2: TaskDetail_EffectiveParams.imageToVideo,
+    3: TaskDetail_EffectiveParams.textToVideo,
+    0: TaskDetail_EffectiveParams.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'MediaTaskDetail',
+      _omitMessageNames ? '' : 'TaskDetail',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
-    ..oo(0, [3, 4])
-    ..aOM<MediaTaskSummary>(1, _omitFieldNames ? '' : 'summary',
-        subBuilder: MediaTaskSummary.create)
-    ..aOS(2, _omitFieldNames ? '' : 'sourceTaskId')
-    ..aOM<TextToImageTaskParams>(3, _omitFieldNames ? '' : 'textToImage',
-        subBuilder: TextToImageTaskParams.create)
-    ..aOM<ImageToVideoTaskParams>(4, _omitFieldNames ? '' : 'imageToVideo',
+    ..oo(0, [2, 3])
+    ..aOM<TaskSummary>(1, _omitFieldNames ? '' : 'summary',
+        subBuilder: TaskSummary.create)
+    ..aOM<ImageToVideoTaskParams>(2, _omitFieldNames ? '' : 'imageToVideo',
         subBuilder: ImageToVideoTaskParams.create)
-    ..pPM<MediaTaskProcessingRecord>(
-        5, _omitFieldNames ? '' : 'processingRecords',
-        subBuilder: MediaTaskProcessingRecord.create)
+    ..aOM<TextToVideoTaskParams>(3, _omitFieldNames ? '' : 'textToVideo',
+        subBuilder: TextToVideoTaskParams.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MediaTaskDetail clone() => deepCopy();
+  TaskDetail clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MediaTaskDetail copyWith(void Function(MediaTaskDetail) updates) =>
-      super.copyWith((message) => updates(message as MediaTaskDetail))
-          as MediaTaskDetail;
+  TaskDetail copyWith(void Function(TaskDetail) updates) =>
+      super.copyWith((message) => updates(message as TaskDetail)) as TaskDetail;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static MediaTaskDetail create() => MediaTaskDetail._();
+  static TaskDetail create() => TaskDetail._();
   @$core.override
-  MediaTaskDetail createEmptyInstance() => create();
+  TaskDetail createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static MediaTaskDetail getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<MediaTaskDetail>(create);
-  static MediaTaskDetail? _defaultInstance;
+  static TaskDetail getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<TaskDetail>(create);
+  static TaskDetail? _defaultInstance;
 
+  @$pb.TagNumber(2)
   @$pb.TagNumber(3)
-  @$pb.TagNumber(4)
-  MediaTaskDetail_EffectiveParams whichEffectiveParams() =>
-      _MediaTaskDetail_EffectiveParamsByTag[$_whichOneof(0)]!;
+  TaskDetail_EffectiveParams whichEffectiveParams() =>
+      _TaskDetail_EffectiveParamsByTag[$_whichOneof(0)]!;
+  @$pb.TagNumber(2)
   @$pb.TagNumber(3)
-  @$pb.TagNumber(4)
   void clearEffectiveParams() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
-  MediaTaskSummary get summary => $_getN(0);
+  TaskSummary get summary => $_getN(0);
   @$pb.TagNumber(1)
-  set summary(MediaTaskSummary value) => $_setField(1, value);
+  set summary(TaskSummary value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasSummary() => $_has(0);
   @$pb.TagNumber(1)
   void clearSummary() => $_clearField(1);
   @$pb.TagNumber(1)
-  MediaTaskSummary ensureSummary() => $_ensure(0);
+  TaskSummary ensureSummary() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $core.String get sourceTaskId => $_getSZ(1);
+  ImageToVideoTaskParams get imageToVideo => $_getN(1);
   @$pb.TagNumber(2)
-  set sourceTaskId($core.String value) => $_setString(1, value);
+  set imageToVideo(ImageToVideoTaskParams value) => $_setField(2, value);
   @$pb.TagNumber(2)
-  $core.bool hasSourceTaskId() => $_has(1);
+  $core.bool hasImageToVideo() => $_has(1);
   @$pb.TagNumber(2)
-  void clearSourceTaskId() => $_clearField(2);
+  void clearImageToVideo() => $_clearField(2);
+  @$pb.TagNumber(2)
+  ImageToVideoTaskParams ensureImageToVideo() => $_ensure(1);
 
   @$pb.TagNumber(3)
-  TextToImageTaskParams get textToImage => $_getN(2);
+  TextToVideoTaskParams get textToVideo => $_getN(2);
   @$pb.TagNumber(3)
-  set textToImage(TextToImageTaskParams value) => $_setField(3, value);
+  set textToVideo(TextToVideoTaskParams value) => $_setField(3, value);
   @$pb.TagNumber(3)
-  $core.bool hasTextToImage() => $_has(2);
+  $core.bool hasTextToVideo() => $_has(2);
   @$pb.TagNumber(3)
-  void clearTextToImage() => $_clearField(3);
+  void clearTextToVideo() => $_clearField(3);
   @$pb.TagNumber(3)
-  TextToImageTaskParams ensureTextToImage() => $_ensure(2);
-
-  @$pb.TagNumber(4)
-  ImageToVideoTaskParams get imageToVideo => $_getN(3);
-  @$pb.TagNumber(4)
-  set imageToVideo(ImageToVideoTaskParams value) => $_setField(4, value);
-  @$pb.TagNumber(4)
-  $core.bool hasImageToVideo() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearImageToVideo() => $_clearField(4);
-  @$pb.TagNumber(4)
-  ImageToVideoTaskParams ensureImageToVideo() => $_ensure(3);
-
-  @$pb.TagNumber(5)
-  $pb.PbList<MediaTaskProcessingRecord> get processingRecords => $_getList(4);
+  TextToVideoTaskParams ensureTextToVideo() => $_ensure(2);
 }
 
-class GetMediaTaskReq extends $pb.GeneratedMessage {
-  factory GetMediaTaskReq({
+class GetTaskReq extends $pb.GeneratedMessage {
+  factory GetTaskReq({
     $core.String? taskId,
   }) {
     final result = create();
@@ -1160,40 +1103,39 @@ class GetMediaTaskReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  GetMediaTaskReq._();
+  GetTaskReq._();
 
-  factory GetMediaTaskReq.fromBuffer($core.List<$core.int> data,
+  factory GetTaskReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory GetMediaTaskReq.fromJson($core.String json,
+  factory GetTaskReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetMediaTaskReq',
+      _omitMessageNames ? '' : 'GetTaskReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'taskId')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetMediaTaskReq clone() => deepCopy();
+  GetTaskReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetMediaTaskReq copyWith(void Function(GetMediaTaskReq) updates) =>
-      super.copyWith((message) => updates(message as GetMediaTaskReq))
-          as GetMediaTaskReq;
+  GetTaskReq copyWith(void Function(GetTaskReq) updates) =>
+      super.copyWith((message) => updates(message as GetTaskReq)) as GetTaskReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static GetMediaTaskReq create() => GetMediaTaskReq._();
+  static GetTaskReq create() => GetTaskReq._();
   @$core.override
-  GetMediaTaskReq createEmptyInstance() => create();
+  GetTaskReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static GetMediaTaskReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetMediaTaskReq>(create);
-  static GetMediaTaskReq? _defaultInstance;
+  static GetTaskReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetTaskReq>(create);
+  static GetTaskReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get taskId => $_getSZ(0);
@@ -1205,68 +1147,68 @@ class GetMediaTaskReq extends $pb.GeneratedMessage {
   void clearTaskId() => $_clearField(1);
 }
 
-class GetMediaTaskResp extends $pb.GeneratedMessage {
-  factory GetMediaTaskResp({
-    MediaTaskDetail? task,
+class GetTaskResp extends $pb.GeneratedMessage {
+  factory GetTaskResp({
+    TaskDetail? task,
   }) {
     final result = create();
     if (task != null) result.task = task;
     return result;
   }
 
-  GetMediaTaskResp._();
+  GetTaskResp._();
 
-  factory GetMediaTaskResp.fromBuffer($core.List<$core.int> data,
+  factory GetTaskResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory GetMediaTaskResp.fromJson($core.String json,
+  factory GetTaskResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetMediaTaskResp',
+      _omitMessageNames ? '' : 'GetTaskResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
-    ..aOM<MediaTaskDetail>(1, _omitFieldNames ? '' : 'task',
-        subBuilder: MediaTaskDetail.create)
+    ..aOM<TaskDetail>(1, _omitFieldNames ? '' : 'task',
+        subBuilder: TaskDetail.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetMediaTaskResp clone() => deepCopy();
+  GetTaskResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetMediaTaskResp copyWith(void Function(GetMediaTaskResp) updates) =>
-      super.copyWith((message) => updates(message as GetMediaTaskResp))
-          as GetMediaTaskResp;
+  GetTaskResp copyWith(void Function(GetTaskResp) updates) =>
+      super.copyWith((message) => updates(message as GetTaskResp))
+          as GetTaskResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static GetMediaTaskResp create() => GetMediaTaskResp._();
+  static GetTaskResp create() => GetTaskResp._();
   @$core.override
-  GetMediaTaskResp createEmptyInstance() => create();
+  GetTaskResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static GetMediaTaskResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetMediaTaskResp>(create);
-  static GetMediaTaskResp? _defaultInstance;
+  static GetTaskResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetTaskResp>(create);
+  static GetTaskResp? _defaultInstance;
 
   @$pb.TagNumber(1)
-  MediaTaskDetail get task => $_getN(0);
+  TaskDetail get task => $_getN(0);
   @$pb.TagNumber(1)
-  set task(MediaTaskDetail value) => $_setField(1, value);
+  set task(TaskDetail value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasTask() => $_has(0);
   @$pb.TagNumber(1)
   void clearTask() => $_clearField(1);
   @$pb.TagNumber(1)
-  MediaTaskDetail ensureTask() => $_ensure(0);
+  TaskDetail ensureTask() => $_ensure(0);
 }
 
-class ListMediaTasksReq extends $pb.GeneratedMessage {
-  factory ListMediaTasksReq({
+class ListTasksReq extends $pb.GeneratedMessage {
+  factory ListTasksReq({
     $1.Pagination? pagination,
-    $core.String? featureKey,
-    $core.Iterable<MediaTaskStatus>? statuses,
+    $2.FeatureKey? featureKey,
+    $core.Iterable<TaskStatus>? statuses,
   }) {
     final result = create();
     if (pagination != null) result.pagination = pagination;
@@ -1275,47 +1217,47 @@ class ListMediaTasksReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  ListMediaTasksReq._();
+  ListTasksReq._();
 
-  factory ListMediaTasksReq.fromBuffer($core.List<$core.int> data,
+  factory ListTasksReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListMediaTasksReq.fromJson($core.String json,
+  factory ListTasksReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListMediaTasksReq',
+      _omitMessageNames ? '' : 'ListTasksReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOM<$1.Pagination>(1, _omitFieldNames ? '' : 'pagination',
         subBuilder: $1.Pagination.create)
-    ..aOS(2, _omitFieldNames ? '' : 'featureKey')
-    ..pc<MediaTaskStatus>(
-        3, _omitFieldNames ? '' : 'statuses', $pb.PbFieldType.KE,
-        valueOf: MediaTaskStatus.valueOf,
-        enumValues: MediaTaskStatus.values,
-        defaultEnumValue: MediaTaskStatus.MEDIA_TASK_STATUS_UNSPECIFIED)
+    ..aE<$2.FeatureKey>(2, _omitFieldNames ? '' : 'featureKey',
+        enumValues: $2.FeatureKey.values)
+    ..pc<TaskStatus>(3, _omitFieldNames ? '' : 'statuses', $pb.PbFieldType.KE,
+        valueOf: TaskStatus.valueOf,
+        enumValues: TaskStatus.values,
+        defaultEnumValue: TaskStatus.TASK_STATUS_UNSPECIFIED)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListMediaTasksReq clone() => deepCopy();
+  ListTasksReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListMediaTasksReq copyWith(void Function(ListMediaTasksReq) updates) =>
-      super.copyWith((message) => updates(message as ListMediaTasksReq))
-          as ListMediaTasksReq;
+  ListTasksReq copyWith(void Function(ListTasksReq) updates) =>
+      super.copyWith((message) => updates(message as ListTasksReq))
+          as ListTasksReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListMediaTasksReq create() => ListMediaTasksReq._();
+  static ListTasksReq create() => ListTasksReq._();
   @$core.override
-  ListMediaTasksReq createEmptyInstance() => create();
+  ListTasksReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListMediaTasksReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListMediaTasksReq>(create);
-  static ListMediaTasksReq? _defaultInstance;
+  static ListTasksReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListTasksReq>(create);
+  static ListTasksReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $1.Pagination get pagination => $_getN(0);
@@ -1328,23 +1270,24 @@ class ListMediaTasksReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $1.Pagination ensurePagination() => $_ensure(0);
 
+  /// 不传表示不过滤；显式传值时不能为 UNSPECIFIED。
   @$pb.TagNumber(2)
-  $core.String get featureKey => $_getSZ(1);
+  $2.FeatureKey get featureKey => $_getN(1);
   @$pb.TagNumber(2)
-  set featureKey($core.String value) => $_setString(1, value);
+  set featureKey($2.FeatureKey value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasFeatureKey() => $_has(1);
   @$pb.TagNumber(2)
   void clearFeatureKey() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $pb.PbList<MediaTaskStatus> get statuses => $_getList(2);
+  $pb.PbList<TaskStatus> get statuses => $_getList(2);
 }
 
-class ListMediaTasksResp extends $pb.GeneratedMessage {
-  factory ListMediaTasksResp({
+class ListTasksResp extends $pb.GeneratedMessage {
+  factory ListTasksResp({
     $core.int? total,
-    $core.Iterable<MediaTaskSummary>? tasks,
+    $core.Iterable<TaskSummary>? tasks,
   }) {
     final result = create();
     if (total != null) result.total = total;
@@ -1352,42 +1295,42 @@ class ListMediaTasksResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  ListMediaTasksResp._();
+  ListTasksResp._();
 
-  factory ListMediaTasksResp.fromBuffer($core.List<$core.int> data,
+  factory ListTasksResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListMediaTasksResp.fromJson($core.String json,
+  factory ListTasksResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListMediaTasksResp',
+      _omitMessageNames ? '' : 'ListTasksResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aI(1, _omitFieldNames ? '' : 'total')
-    ..pPM<MediaTaskSummary>(2, _omitFieldNames ? '' : 'tasks',
-        subBuilder: MediaTaskSummary.create)
+    ..pPM<TaskSummary>(2, _omitFieldNames ? '' : 'tasks',
+        subBuilder: TaskSummary.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListMediaTasksResp clone() => deepCopy();
+  ListTasksResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListMediaTasksResp copyWith(void Function(ListMediaTasksResp) updates) =>
-      super.copyWith((message) => updates(message as ListMediaTasksResp))
-          as ListMediaTasksResp;
+  ListTasksResp copyWith(void Function(ListTasksResp) updates) =>
+      super.copyWith((message) => updates(message as ListTasksResp))
+          as ListTasksResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListMediaTasksResp create() => ListMediaTasksResp._();
+  static ListTasksResp create() => ListTasksResp._();
   @$core.override
-  ListMediaTasksResp createEmptyInstance() => create();
+  ListTasksResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListMediaTasksResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListMediaTasksResp>(create);
-  static ListMediaTasksResp? _defaultInstance;
+  static ListTasksResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListTasksResp>(create);
+  static ListTasksResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.int get total => $_getIZ(0);
@@ -1399,11 +1342,11 @@ class ListMediaTasksResp extends $pb.GeneratedMessage {
   void clearTotal() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $pb.PbList<MediaTaskSummary> get tasks => $_getList(1);
+  $pb.PbList<TaskSummary> get tasks => $_getList(1);
 }
 
-class CancelMediaTaskReq extends $pb.GeneratedMessage {
-  factory CancelMediaTaskReq({
+class CancelTaskReq extends $pb.GeneratedMessage {
+  factory CancelTaskReq({
     $core.String? taskId,
   }) {
     final result = create();
@@ -1411,40 +1354,40 @@ class CancelMediaTaskReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  CancelMediaTaskReq._();
+  CancelTaskReq._();
 
-  factory CancelMediaTaskReq.fromBuffer($core.List<$core.int> data,
+  factory CancelTaskReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory CancelMediaTaskReq.fromJson($core.String json,
+  factory CancelTaskReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'CancelMediaTaskReq',
+      _omitMessageNames ? '' : 'CancelTaskReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'taskId')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CancelMediaTaskReq clone() => deepCopy();
+  CancelTaskReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CancelMediaTaskReq copyWith(void Function(CancelMediaTaskReq) updates) =>
-      super.copyWith((message) => updates(message as CancelMediaTaskReq))
-          as CancelMediaTaskReq;
+  CancelTaskReq copyWith(void Function(CancelTaskReq) updates) =>
+      super.copyWith((message) => updates(message as CancelTaskReq))
+          as CancelTaskReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static CancelMediaTaskReq create() => CancelMediaTaskReq._();
+  static CancelTaskReq create() => CancelTaskReq._();
   @$core.override
-  CancelMediaTaskReq createEmptyInstance() => create();
+  CancelTaskReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static CancelMediaTaskReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CancelMediaTaskReq>(create);
-  static CancelMediaTaskReq? _defaultInstance;
+  static CancelTaskReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CancelTaskReq>(create);
+  static CancelTaskReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get taskId => $_getSZ(0);
@@ -1456,10 +1399,10 @@ class CancelMediaTaskReq extends $pb.GeneratedMessage {
   void clearTaskId() => $_clearField(1);
 }
 
-class CancelMediaTaskResp extends $pb.GeneratedMessage {
-  factory CancelMediaTaskResp({
+class CancelTaskResp extends $pb.GeneratedMessage {
+  factory CancelTaskResp({
     $core.String? taskId,
-    MediaTaskStatus? status,
+    TaskStatus? status,
     $core.String? statusMessage,
   }) {
     final result = create();
@@ -1469,43 +1412,43 @@ class CancelMediaTaskResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  CancelMediaTaskResp._();
+  CancelTaskResp._();
 
-  factory CancelMediaTaskResp.fromBuffer($core.List<$core.int> data,
+  factory CancelTaskResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory CancelMediaTaskResp.fromJson($core.String json,
+  factory CancelTaskResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'CancelMediaTaskResp',
+      _omitMessageNames ? '' : 'CancelTaskResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'taskId')
-    ..aE<MediaTaskStatus>(2, _omitFieldNames ? '' : 'status',
-        enumValues: MediaTaskStatus.values)
+    ..aE<TaskStatus>(2, _omitFieldNames ? '' : 'status',
+        enumValues: TaskStatus.values)
     ..aOS(3, _omitFieldNames ? '' : 'statusMessage')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CancelMediaTaskResp clone() => deepCopy();
+  CancelTaskResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CancelMediaTaskResp copyWith(void Function(CancelMediaTaskResp) updates) =>
-      super.copyWith((message) => updates(message as CancelMediaTaskResp))
-          as CancelMediaTaskResp;
+  CancelTaskResp copyWith(void Function(CancelTaskResp) updates) =>
+      super.copyWith((message) => updates(message as CancelTaskResp))
+          as CancelTaskResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static CancelMediaTaskResp create() => CancelMediaTaskResp._();
+  static CancelTaskResp create() => CancelTaskResp._();
   @$core.override
-  CancelMediaTaskResp createEmptyInstance() => create();
+  CancelTaskResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static CancelMediaTaskResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CancelMediaTaskResp>(create);
-  static CancelMediaTaskResp? _defaultInstance;
+  static CancelTaskResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CancelTaskResp>(create);
+  static CancelTaskResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get taskId => $_getSZ(0);
@@ -1517,9 +1460,9 @@ class CancelMediaTaskResp extends $pb.GeneratedMessage {
   void clearTaskId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  MediaTaskStatus get status => $_getN(1);
+  TaskStatus get status => $_getN(1);
   @$pb.TagNumber(2)
-  set status(MediaTaskStatus value) => $_setField(2, value);
+  set status(TaskStatus value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasStatus() => $_has(1);
   @$pb.TagNumber(2)
@@ -1535,8 +1478,8 @@ class CancelMediaTaskResp extends $pb.GeneratedMessage {
   void clearStatusMessage() => $_clearField(3);
 }
 
-class RecoverSaveMediaTaskReq extends $pb.GeneratedMessage {
-  factory RecoverSaveMediaTaskReq({
+class RecoverSaveTaskReq extends $pb.GeneratedMessage {
+  factory RecoverSaveTaskReq({
     $core.String? requestId,
     $core.String? taskId,
   }) {
@@ -1546,17 +1489,17 @@ class RecoverSaveMediaTaskReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  RecoverSaveMediaTaskReq._();
+  RecoverSaveTaskReq._();
 
-  factory RecoverSaveMediaTaskReq.fromBuffer($core.List<$core.int> data,
+  factory RecoverSaveTaskReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory RecoverSaveMediaTaskReq.fromJson($core.String json,
+  factory RecoverSaveTaskReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'RecoverSaveMediaTaskReq',
+      _omitMessageNames ? '' : 'RecoverSaveTaskReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'requestId')
@@ -1564,24 +1507,23 @@ class RecoverSaveMediaTaskReq extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RecoverSaveMediaTaskReq clone() => deepCopy();
+  RecoverSaveTaskReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RecoverSaveMediaTaskReq copyWith(
-          void Function(RecoverSaveMediaTaskReq) updates) =>
-      super.copyWith((message) => updates(message as RecoverSaveMediaTaskReq))
-          as RecoverSaveMediaTaskReq;
+  RecoverSaveTaskReq copyWith(void Function(RecoverSaveTaskReq) updates) =>
+      super.copyWith((message) => updates(message as RecoverSaveTaskReq))
+          as RecoverSaveTaskReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static RecoverSaveMediaTaskReq create() => RecoverSaveMediaTaskReq._();
+  static RecoverSaveTaskReq create() => RecoverSaveTaskReq._();
   @$core.override
-  RecoverSaveMediaTaskReq createEmptyInstance() => create();
+  RecoverSaveTaskReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static RecoverSaveMediaTaskReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<RecoverSaveMediaTaskReq>(create);
-  static RecoverSaveMediaTaskReq? _defaultInstance;
+  static RecoverSaveTaskReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RecoverSaveTaskReq>(create);
+  static RecoverSaveTaskReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get requestId => $_getSZ(0);
@@ -1602,10 +1544,10 @@ class RecoverSaveMediaTaskReq extends $pb.GeneratedMessage {
   void clearTaskId() => $_clearField(2);
 }
 
-class RecoverSaveMediaTaskResp extends $pb.GeneratedMessage {
-  factory RecoverSaveMediaTaskResp({
+class RecoverSaveTaskResp extends $pb.GeneratedMessage {
+  factory RecoverSaveTaskResp({
     $core.String? taskId,
-    MediaTaskStatus? status,
+    TaskStatus? status,
     $core.String? statusMessage,
   }) {
     final result = create();
@@ -1615,44 +1557,43 @@ class RecoverSaveMediaTaskResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  RecoverSaveMediaTaskResp._();
+  RecoverSaveTaskResp._();
 
-  factory RecoverSaveMediaTaskResp.fromBuffer($core.List<$core.int> data,
+  factory RecoverSaveTaskResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory RecoverSaveMediaTaskResp.fromJson($core.String json,
+  factory RecoverSaveTaskResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'RecoverSaveMediaTaskResp',
+      _omitMessageNames ? '' : 'RecoverSaveTaskResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'taskId')
-    ..aE<MediaTaskStatus>(2, _omitFieldNames ? '' : 'status',
-        enumValues: MediaTaskStatus.values)
+    ..aE<TaskStatus>(2, _omitFieldNames ? '' : 'status',
+        enumValues: TaskStatus.values)
     ..aOS(3, _omitFieldNames ? '' : 'statusMessage')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RecoverSaveMediaTaskResp clone() => deepCopy();
+  RecoverSaveTaskResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RecoverSaveMediaTaskResp copyWith(
-          void Function(RecoverSaveMediaTaskResp) updates) =>
-      super.copyWith((message) => updates(message as RecoverSaveMediaTaskResp))
-          as RecoverSaveMediaTaskResp;
+  RecoverSaveTaskResp copyWith(void Function(RecoverSaveTaskResp) updates) =>
+      super.copyWith((message) => updates(message as RecoverSaveTaskResp))
+          as RecoverSaveTaskResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static RecoverSaveMediaTaskResp create() => RecoverSaveMediaTaskResp._();
+  static RecoverSaveTaskResp create() => RecoverSaveTaskResp._();
   @$core.override
-  RecoverSaveMediaTaskResp createEmptyInstance() => create();
+  RecoverSaveTaskResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static RecoverSaveMediaTaskResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<RecoverSaveMediaTaskResp>(create);
-  static RecoverSaveMediaTaskResp? _defaultInstance;
+  static RecoverSaveTaskResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RecoverSaveTaskResp>(create);
+  static RecoverSaveTaskResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get taskId => $_getSZ(0);
@@ -1664,9 +1605,9 @@ class RecoverSaveMediaTaskResp extends $pb.GeneratedMessage {
   void clearTaskId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  MediaTaskStatus get status => $_getN(1);
+  TaskStatus get status => $_getN(1);
   @$pb.TagNumber(2)
-  set status(MediaTaskStatus value) => $_setField(2, value);
+  set status(TaskStatus value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasStatus() => $_has(1);
   @$pb.TagNumber(2)

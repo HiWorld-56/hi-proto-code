@@ -35,11 +35,11 @@ var (
 	_ = metadata.Join
 )
 
-var filter_MediaFile_GetUpload_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+var filter_File_GetUpload_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
 
-func request_MediaFile_GetUpload_0(ctx context.Context, marshaler runtime.Marshaler, client MediaFileClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_File_GetUpload_0(ctx context.Context, marshaler runtime.Marshaler, client FileClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq GetMediaUploadReq
+		protoReq GetUploadReq
 		metadata runtime.ServerMetadata
 	)
 	if req.Body != nil {
@@ -48,31 +48,31 @@ func request_MediaFile_GetUpload_0(ctx context.Context, marshaler runtime.Marsha
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_MediaFile_GetUpload_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_File_GetUpload_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 	msg, err := client.GetUpload(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_MediaFile_GetUpload_0(ctx context.Context, marshaler runtime.Marshaler, server MediaFileServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_File_GetUpload_0(ctx context.Context, marshaler runtime.Marshaler, server FileServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq GetMediaUploadReq
+		protoReq GetUploadReq
 		metadata runtime.ServerMetadata
 	)
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_MediaFile_GetUpload_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_File_GetUpload_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 	msg, err := server.GetUpload(ctx, &protoReq)
 	return msg, metadata, err
 }
 
-func request_MediaFile_List_0(ctx context.Context, marshaler runtime.Marshaler, client MediaFileClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_File_List_0(ctx context.Context, marshaler runtime.Marshaler, client FileClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ListMediaFilesReq
+		protoReq ListFilesReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -85,9 +85,9 @@ func request_MediaFile_List_0(ctx context.Context, marshaler runtime.Marshaler, 
 	return msg, metadata, err
 }
 
-func local_request_MediaFile_List_0(ctx context.Context, marshaler runtime.Marshaler, server MediaFileServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_File_List_0(ctx context.Context, marshaler runtime.Marshaler, server FileServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ListMediaFilesReq
+		protoReq ListFilesReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -97,9 +97,9 @@ func local_request_MediaFile_List_0(ctx context.Context, marshaler runtime.Marsh
 	return msg, metadata, err
 }
 
-func request_MediaFile_Delete_0(ctx context.Context, marshaler runtime.Marshaler, client MediaFileClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_File_Delete_0(ctx context.Context, marshaler runtime.Marshaler, client FileClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq DeleteMediaFileReq
+		protoReq DeleteFileReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -112,9 +112,9 @@ func request_MediaFile_Delete_0(ctx context.Context, marshaler runtime.Marshaler
 	return msg, metadata, err
 }
 
-func local_request_MediaFile_Delete_0(ctx context.Context, marshaler runtime.Marshaler, server MediaFileServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_File_Delete_0(ctx context.Context, marshaler runtime.Marshaler, server FileServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq DeleteMediaFileReq
+		protoReq DeleteFileReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -124,9 +124,9 @@ func local_request_MediaFile_Delete_0(ctx context.Context, marshaler runtime.Mar
 	return msg, metadata, err
 }
 
-func request_MediaFile_GetAccessUrls_0(ctx context.Context, marshaler runtime.Marshaler, client MediaFileClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_File_GetAccessUrls_0(ctx context.Context, marshaler runtime.Marshaler, client FileClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq GetMediaFileAccessUrlsReq
+		protoReq GetFileAccessUrlsReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -139,9 +139,9 @@ func request_MediaFile_GetAccessUrls_0(ctx context.Context, marshaler runtime.Ma
 	return msg, metadata, err
 }
 
-func local_request_MediaFile_GetAccessUrls_0(ctx context.Context, marshaler runtime.Marshaler, server MediaFileServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_File_GetAccessUrls_0(ctx context.Context, marshaler runtime.Marshaler, server FileServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq GetMediaFileAccessUrlsReq
+		protoReq GetFileAccessUrlsReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -151,99 +151,99 @@ func local_request_MediaFile_GetAccessUrls_0(ctx context.Context, marshaler runt
 	return msg, metadata, err
 }
 
-// RegisterMediaFileHandlerServer registers the http handlers for service MediaFile to "mux".
-// UnaryRPC     :call MediaFileServer directly.
+// RegisterFileHandlerServer registers the http handlers for service File to "mux".
+// UnaryRPC     :call FileServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterMediaFileHandlerFromEndpoint instead.
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterFileHandlerFromEndpoint instead.
 // GRPC interceptors will not work for this type of registration. To use interceptors, you must use the "runtime.WithMiddlewares" option in the "runtime.NewServeMux" call.
-func RegisterMediaFileHandlerServer(ctx context.Context, mux *runtime.ServeMux, server MediaFileServer) error {
-	mux.Handle(http.MethodGet, pattern_MediaFile_GetUpload_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+func RegisterFileHandlerServer(ctx context.Context, mux *runtime.ServeMux, server FileServer) error {
+	mux.Handle(http.MethodGet, pattern_File_GetUpload_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.MediaFile/GetUpload", runtime.WithHTTPPathPattern("/api/v1/media_file/get_upload"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.File/GetUpload", runtime.WithHTTPPathPattern("/api/v1/file/get_upload"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_MediaFile_GetUpload_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_File_GetUpload_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaFile_GetUpload_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_File_GetUpload_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaFile_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_File_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.MediaFile/List", runtime.WithHTTPPathPattern("/api/v1/media_file/list"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.File/List", runtime.WithHTTPPathPattern("/api/v1/file/list"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_MediaFile_List_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_File_List_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaFile_List_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_File_List_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaFile_Delete_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_File_Delete_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.MediaFile/Delete", runtime.WithHTTPPathPattern("/api/v1/media_file/delete"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.File/Delete", runtime.WithHTTPPathPattern("/api/v1/file/delete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_MediaFile_Delete_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_File_Delete_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaFile_Delete_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_File_Delete_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaFile_GetAccessUrls_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_File_GetAccessUrls_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.MediaFile/GetAccessUrls", runtime.WithHTTPPathPattern("/api/v1/media_file/get_access_urls"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.File/GetAccessUrls", runtime.WithHTTPPathPattern("/api/v1/file/get_access_urls"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_MediaFile_GetAccessUrls_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_File_GetAccessUrls_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaFile_GetAccessUrls_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_File_GetAccessUrls_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil
 }
 
-// RegisterMediaFileHandlerFromEndpoint is same as RegisterMediaFileHandler but
+// RegisterFileHandlerFromEndpoint is same as RegisterFileHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterMediaFileHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterFileHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.NewClient(endpoint, opts...)
 	if err != nil {
 		return err
@@ -262,102 +262,102 @@ func RegisterMediaFileHandlerFromEndpoint(ctx context.Context, mux *runtime.Serv
 			}
 		}()
 	}()
-	return RegisterMediaFileHandler(ctx, mux, conn)
+	return RegisterFileHandler(ctx, mux, conn)
 }
 
-// RegisterMediaFileHandler registers the http handlers for service MediaFile to "mux".
+// RegisterFileHandler registers the http handlers for service File to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterMediaFileHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterMediaFileHandlerClient(ctx, mux, NewMediaFileClient(conn))
+func RegisterFileHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterFileHandlerClient(ctx, mux, NewFileClient(conn))
 }
 
-// RegisterMediaFileHandlerClient registers the http handlers for service MediaFile
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "MediaFileClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "MediaFileClient"
+// RegisterFileHandlerClient registers the http handlers for service File
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "FileClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "FileClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "MediaFileClient" to call the correct interceptors. This client ignores the HTTP middlewares.
-func RegisterMediaFileHandlerClient(ctx context.Context, mux *runtime.ServeMux, client MediaFileClient) error {
-	mux.Handle(http.MethodGet, pattern_MediaFile_GetUpload_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+// "FileClient" to call the correct interceptors. This client ignores the HTTP middlewares.
+func RegisterFileHandlerClient(ctx context.Context, mux *runtime.ServeMux, client FileClient) error {
+	mux.Handle(http.MethodGet, pattern_File_GetUpload_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.MediaFile/GetUpload", runtime.WithHTTPPathPattern("/api/v1/media_file/get_upload"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.File/GetUpload", runtime.WithHTTPPathPattern("/api/v1/file/get_upload"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_MediaFile_GetUpload_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_File_GetUpload_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaFile_GetUpload_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_File_GetUpload_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaFile_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_File_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.MediaFile/List", runtime.WithHTTPPathPattern("/api/v1/media_file/list"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.File/List", runtime.WithHTTPPathPattern("/api/v1/file/list"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_MediaFile_List_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_File_List_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaFile_List_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_File_List_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaFile_Delete_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_File_Delete_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.MediaFile/Delete", runtime.WithHTTPPathPattern("/api/v1/media_file/delete"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.File/Delete", runtime.WithHTTPPathPattern("/api/v1/file/delete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_MediaFile_Delete_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_File_Delete_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaFile_Delete_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_File_Delete_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaFile_GetAccessUrls_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_File_GetAccessUrls_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.MediaFile/GetAccessUrls", runtime.WithHTTPPathPattern("/api/v1/media_file/get_access_urls"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.File/GetAccessUrls", runtime.WithHTTPPathPattern("/api/v1/file/get_access_urls"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_MediaFile_GetAccessUrls_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_File_GetAccessUrls_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaFile_GetAccessUrls_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_File_GetAccessUrls_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	return nil
 }
 
 var (
-	pattern_MediaFile_GetUpload_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "media_file", "get_upload"}, ""))
-	pattern_MediaFile_List_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "media_file", "list"}, ""))
-	pattern_MediaFile_Delete_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "media_file", "delete"}, ""))
-	pattern_MediaFile_GetAccessUrls_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "media_file", "get_access_urls"}, ""))
+	pattern_File_GetUpload_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "file", "get_upload"}, ""))
+	pattern_File_List_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "file", "list"}, ""))
+	pattern_File_Delete_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "file", "delete"}, ""))
+	pattern_File_GetAccessUrls_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "file", "get_access_urls"}, ""))
 )
 
 var (
-	forward_MediaFile_GetUpload_0     = runtime.ForwardResponseMessage
-	forward_MediaFile_List_0          = runtime.ForwardResponseMessage
-	forward_MediaFile_Delete_0        = runtime.ForwardResponseMessage
-	forward_MediaFile_GetAccessUrls_0 = runtime.ForwardResponseMessage
+	forward_File_GetUpload_0     = runtime.ForwardResponseMessage
+	forward_File_List_0          = runtime.ForwardResponseMessage
+	forward_File_Delete_0        = runtime.ForwardResponseMessage
+	forward_File_GetAccessUrls_0 = runtime.ForwardResponseMessage
 )

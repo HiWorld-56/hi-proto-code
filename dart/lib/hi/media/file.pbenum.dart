@@ -14,112 +14,103 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-class MediaFileSource extends $pb.ProtobufEnum {
-  static const MediaFileSource MEDIA_FILE_SOURCE_UNSPECIFIED =
-      MediaFileSource._(
-          0, _omitEnumNames ? '' : 'MEDIA_FILE_SOURCE_UNSPECIFIED');
-  static const MediaFileSource MEDIA_FILE_SOURCE_UPLOAD =
-      MediaFileSource._(1, _omitEnumNames ? '' : 'MEDIA_FILE_SOURCE_UPLOAD');
-  static const MediaFileSource MEDIA_FILE_SOURCE_GENERATED =
-      MediaFileSource._(2, _omitEnumNames ? '' : 'MEDIA_FILE_SOURCE_GENERATED');
+class FileSource extends $pb.ProtobufEnum {
+  static const FileSource FILE_SOURCE_UNSPECIFIED =
+      FileSource._(0, _omitEnumNames ? '' : 'FILE_SOURCE_UNSPECIFIED');
+  static const FileSource FILE_SOURCE_UPLOAD =
+      FileSource._(1, _omitEnumNames ? '' : 'FILE_SOURCE_UPLOAD');
+  static const FileSource FILE_SOURCE_GENERATED =
+      FileSource._(2, _omitEnumNames ? '' : 'FILE_SOURCE_GENERATED');
 
-  static const $core.List<MediaFileSource> values = <MediaFileSource>[
-    MEDIA_FILE_SOURCE_UNSPECIFIED,
-    MEDIA_FILE_SOURCE_UPLOAD,
-    MEDIA_FILE_SOURCE_GENERATED,
+  static const $core.List<FileSource> values = <FileSource>[
+    FILE_SOURCE_UNSPECIFIED,
+    FILE_SOURCE_UPLOAD,
+    FILE_SOURCE_GENERATED,
   ];
 
-  static final $core.List<MediaFileSource?> _byValue =
+  static final $core.List<FileSource?> _byValue =
       $pb.ProtobufEnum.$_initByValueList(values, 2);
-  static MediaFileSource? valueOf($core.int value) =>
+  static FileSource? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
-  const MediaFileSource._(super.value, super.name);
+  const FileSource._(super.value, super.name);
 }
 
-class MediaFileAccessPurpose extends $pb.ProtobufEnum {
-  static const MediaFileAccessPurpose MEDIA_FILE_ACCESS_PURPOSE_UNSPECIFIED =
-      MediaFileAccessPurpose._(
-          0, _omitEnumNames ? '' : 'MEDIA_FILE_ACCESS_PURPOSE_UNSPECIFIED');
-  static const MediaFileAccessPurpose MEDIA_FILE_ACCESS_PURPOSE_PREVIEW =
-      MediaFileAccessPurpose._(
-          1, _omitEnumNames ? '' : 'MEDIA_FILE_ACCESS_PURPOSE_PREVIEW');
-  static const MediaFileAccessPurpose MEDIA_FILE_ACCESS_PURPOSE_DOWNLOAD =
-      MediaFileAccessPurpose._(
-          2, _omitEnumNames ? '' : 'MEDIA_FILE_ACCESS_PURPOSE_DOWNLOAD');
+class FileAccessPurpose extends $pb.ProtobufEnum {
+  static const FileAccessPurpose FILE_ACCESS_PURPOSE_UNSPECIFIED =
+      FileAccessPurpose._(
+          0, _omitEnumNames ? '' : 'FILE_ACCESS_PURPOSE_UNSPECIFIED');
+  static const FileAccessPurpose FILE_ACCESS_PURPOSE_PREVIEW =
+      FileAccessPurpose._(
+          1, _omitEnumNames ? '' : 'FILE_ACCESS_PURPOSE_PREVIEW');
+  static const FileAccessPurpose FILE_ACCESS_PURPOSE_DOWNLOAD =
+      FileAccessPurpose._(
+          2, _omitEnumNames ? '' : 'FILE_ACCESS_PURPOSE_DOWNLOAD');
 
-  static const $core.List<MediaFileAccessPurpose> values =
-      <MediaFileAccessPurpose>[
-    MEDIA_FILE_ACCESS_PURPOSE_UNSPECIFIED,
-    MEDIA_FILE_ACCESS_PURPOSE_PREVIEW,
-    MEDIA_FILE_ACCESS_PURPOSE_DOWNLOAD,
+  static const $core.List<FileAccessPurpose> values = <FileAccessPurpose>[
+    FILE_ACCESS_PURPOSE_UNSPECIFIED,
+    FILE_ACCESS_PURPOSE_PREVIEW,
+    FILE_ACCESS_PURPOSE_DOWNLOAD,
   ];
 
-  static final $core.List<MediaFileAccessPurpose?> _byValue =
+  static final $core.List<FileAccessPurpose?> _byValue =
       $pb.ProtobufEnum.$_initByValueList(values, 2);
-  static MediaFileAccessPurpose? valueOf($core.int value) =>
+  static FileAccessPurpose? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
-  const MediaFileAccessPurpose._(super.value, super.name);
+  const FileAccessPurpose._(super.value, super.name);
 }
 
-class MediaUploadStatus extends $pb.ProtobufEnum {
-  static const MediaUploadStatus MEDIA_UPLOAD_STATUS_UNSPECIFIED =
-      MediaUploadStatus._(
-          0, _omitEnumNames ? '' : 'MEDIA_UPLOAD_STATUS_UNSPECIFIED');
-  static const MediaUploadStatus MEDIA_UPLOAD_STATUS_PROCESSING =
-      MediaUploadStatus._(
-          1, _omitEnumNames ? '' : 'MEDIA_UPLOAD_STATUS_PROCESSING');
-  static const MediaUploadStatus MEDIA_UPLOAD_STATUS_COMPLETED =
-      MediaUploadStatus._(
-          2, _omitEnumNames ? '' : 'MEDIA_UPLOAD_STATUS_COMPLETED');
+class UploadStatus extends $pb.ProtobufEnum {
+  static const UploadStatus UPLOAD_STATUS_UNSPECIFIED =
+      UploadStatus._(0, _omitEnumNames ? '' : 'UPLOAD_STATUS_UNSPECIFIED');
+  static const UploadStatus UPLOAD_STATUS_PROCESSING =
+      UploadStatus._(1, _omitEnumNames ? '' : 'UPLOAD_STATUS_PROCESSING');
+  static const UploadStatus UPLOAD_STATUS_COMPLETED =
+      UploadStatus._(2, _omitEnumNames ? '' : 'UPLOAD_STATUS_COMPLETED');
 
-  static const $core.List<MediaUploadStatus> values = <MediaUploadStatus>[
-    MEDIA_UPLOAD_STATUS_UNSPECIFIED,
-    MEDIA_UPLOAD_STATUS_PROCESSING,
-    MEDIA_UPLOAD_STATUS_COMPLETED,
+  static const $core.List<UploadStatus> values = <UploadStatus>[
+    UPLOAD_STATUS_UNSPECIFIED,
+    UPLOAD_STATUS_PROCESSING,
+    UPLOAD_STATUS_COMPLETED,
   ];
 
-  static final $core.List<MediaUploadStatus?> _byValue =
+  static final $core.List<UploadStatus?> _byValue =
       $pb.ProtobufEnum.$_initByValueList(values, 2);
-  static MediaUploadStatus? valueOf($core.int value) =>
+  static UploadStatus? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
-  const MediaUploadStatus._(super.value, super.name);
+  const UploadStatus._(super.value, super.name);
 }
 
-class MediaUploadFileStatus extends $pb.ProtobufEnum {
-  static const MediaUploadFileStatus MEDIA_UPLOAD_FILE_STATUS_UNSPECIFIED =
-      MediaUploadFileStatus._(
-          0, _omitEnumNames ? '' : 'MEDIA_UPLOAD_FILE_STATUS_UNSPECIFIED');
-  static const MediaUploadFileStatus MEDIA_UPLOAD_FILE_STATUS_PENDING =
-      MediaUploadFileStatus._(
-          1, _omitEnumNames ? '' : 'MEDIA_UPLOAD_FILE_STATUS_PENDING');
-  static const MediaUploadFileStatus MEDIA_UPLOAD_FILE_STATUS_PROCESSING =
-      MediaUploadFileStatus._(
-          2, _omitEnumNames ? '' : 'MEDIA_UPLOAD_FILE_STATUS_PROCESSING');
-  static const MediaUploadFileStatus MEDIA_UPLOAD_FILE_STATUS_SUCCESS =
-      MediaUploadFileStatus._(
-          3, _omitEnumNames ? '' : 'MEDIA_UPLOAD_FILE_STATUS_SUCCESS');
-  static const MediaUploadFileStatus MEDIA_UPLOAD_FILE_STATUS_FAILED =
-      MediaUploadFileStatus._(
-          4, _omitEnumNames ? '' : 'MEDIA_UPLOAD_FILE_STATUS_FAILED');
+class UploadFileStatus extends $pb.ProtobufEnum {
+  static const UploadFileStatus UPLOAD_FILE_STATUS_UNSPECIFIED =
+      UploadFileStatus._(
+          0, _omitEnumNames ? '' : 'UPLOAD_FILE_STATUS_UNSPECIFIED');
+  static const UploadFileStatus UPLOAD_FILE_STATUS_PENDING =
+      UploadFileStatus._(1, _omitEnumNames ? '' : 'UPLOAD_FILE_STATUS_PENDING');
+  static const UploadFileStatus UPLOAD_FILE_STATUS_PROCESSING =
+      UploadFileStatus._(
+          2, _omitEnumNames ? '' : 'UPLOAD_FILE_STATUS_PROCESSING');
+  static const UploadFileStatus UPLOAD_FILE_STATUS_SUCCESS =
+      UploadFileStatus._(3, _omitEnumNames ? '' : 'UPLOAD_FILE_STATUS_SUCCESS');
+  static const UploadFileStatus UPLOAD_FILE_STATUS_FAILED =
+      UploadFileStatus._(4, _omitEnumNames ? '' : 'UPLOAD_FILE_STATUS_FAILED');
 
-  static const $core.List<MediaUploadFileStatus> values =
-      <MediaUploadFileStatus>[
-    MEDIA_UPLOAD_FILE_STATUS_UNSPECIFIED,
-    MEDIA_UPLOAD_FILE_STATUS_PENDING,
-    MEDIA_UPLOAD_FILE_STATUS_PROCESSING,
-    MEDIA_UPLOAD_FILE_STATUS_SUCCESS,
-    MEDIA_UPLOAD_FILE_STATUS_FAILED,
+  static const $core.List<UploadFileStatus> values = <UploadFileStatus>[
+    UPLOAD_FILE_STATUS_UNSPECIFIED,
+    UPLOAD_FILE_STATUS_PENDING,
+    UPLOAD_FILE_STATUS_PROCESSING,
+    UPLOAD_FILE_STATUS_SUCCESS,
+    UPLOAD_FILE_STATUS_FAILED,
   ];
 
-  static final $core.List<MediaUploadFileStatus?> _byValue =
+  static final $core.List<UploadFileStatus?> _byValue =
       $pb.ProtobufEnum.$_initByValueList(values, 4);
-  static MediaUploadFileStatus? valueOf($core.int value) =>
+  static UploadFileStatus? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
-  const MediaUploadFileStatus._(super.value, super.name);
+  const UploadFileStatus._(super.value, super.name);
 }
 
 const $core.bool _omitEnumNames =

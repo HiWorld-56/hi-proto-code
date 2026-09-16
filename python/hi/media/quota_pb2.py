@@ -26,7 +26,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14hi/media/quota.proto\x12\x08hi.media\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/options.proto\"\xd6\x01\n\x11GetMediaQuotaResp\x12*\n\x0btotal_bytes\x18\x01 \x01(\x04\x42\x04\x90\xb5\x18\x03H\x00R\ntotalBytes\x88\x01\x01\x12(\n\nused_bytes\x18\x02 \x01(\x04\x42\x04\x90\xb5\x18\x03H\x01R\tusedBytes\x88\x01\x01\x12\x32\n\x0f\x61vailable_bytes\x18\x03 \x01(\x04\x42\x04\x90\xb5\x18\x03H\x02R\x0e\x61vailableBytes\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x0e\n\x0c_total_bytesB\r\n\x0b_used_bytesB\x12\n\x10_available_bytes2O\n\nMediaQuota\x12\x41\n\x03Get\x12\x16.google.protobuf.Empty\x1a\x1b.hi.media.GetMediaQuotaResp\"\x05\x8a\xb5\x18\x01\x02\x42,Z*github.com/HiWorld-56/hi-proto/go/hi/mediab\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14hi/media/quota.proto\x12\x08hi.media\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/options.proto\"\xd1\x01\n\x0cGetQuotaResp\x12*\n\x0btotal_bytes\x18\x01 \x01(\x04\x42\x04\x90\xb5\x18\x03H\x00R\ntotalBytes\x88\x01\x01\x12(\n\nused_bytes\x18\x02 \x01(\x04\x42\x04\x90\xb5\x18\x03H\x01R\tusedBytes\x88\x01\x01\x12\x32\n\x0f\x61vailable_bytes\x18\x03 \x01(\x04\x42\x04\x90\xb5\x18\x03H\x02R\x0e\x61vailableBytes\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x0e\n\x0c_total_bytesB\r\n\x0b_used_bytesB\x12\n\x10_available_bytes2E\n\x05Quota\x12<\n\x03Get\x12\x16.google.protobuf.Empty\x1a\x16.hi.media.GetQuotaResp\"\x05\x8a\xb5\x18\x01\x02\x42,Z*github.com/HiWorld-56/hi-proto/go/hi/mediab\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -34,18 +34,18 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'hi.media.quota_pb2', _globa
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'Z*github.com/HiWorld-56/hi-proto/go/hi/media'
-  _globals['_GETMEDIAQUOTARESP'].fields_by_name['total_bytes']._loaded_options = None
-  _globals['_GETMEDIAQUOTARESP'].fields_by_name['total_bytes']._serialized_options = b'\220\265\030\003'
-  _globals['_GETMEDIAQUOTARESP'].fields_by_name['used_bytes']._loaded_options = None
-  _globals['_GETMEDIAQUOTARESP'].fields_by_name['used_bytes']._serialized_options = b'\220\265\030\003'
-  _globals['_GETMEDIAQUOTARESP'].fields_by_name['available_bytes']._loaded_options = None
-  _globals['_GETMEDIAQUOTARESP'].fields_by_name['available_bytes']._serialized_options = b'\220\265\030\003'
-  _globals['_GETMEDIAQUOTARESP']._loaded_options = None
-  _globals['_GETMEDIAQUOTARESP']._serialized_options = b'\230\265\030\003'
-  _globals['_MEDIAQUOTA'].methods_by_name['Get']._loaded_options = None
-  _globals['_MEDIAQUOTA'].methods_by_name['Get']._serialized_options = b'\212\265\030\001\002'
-  _globals['_GETMEDIAQUOTARESP']._serialized_start=82
-  _globals['_GETMEDIAQUOTARESP']._serialized_end=296
-  _globals['_MEDIAQUOTA']._serialized_start=298
-  _globals['_MEDIAQUOTA']._serialized_end=377
+  _globals['_GETQUOTARESP'].fields_by_name['total_bytes']._loaded_options = None
+  _globals['_GETQUOTARESP'].fields_by_name['total_bytes']._serialized_options = b'\220\265\030\003'
+  _globals['_GETQUOTARESP'].fields_by_name['used_bytes']._loaded_options = None
+  _globals['_GETQUOTARESP'].fields_by_name['used_bytes']._serialized_options = b'\220\265\030\003'
+  _globals['_GETQUOTARESP'].fields_by_name['available_bytes']._loaded_options = None
+  _globals['_GETQUOTARESP'].fields_by_name['available_bytes']._serialized_options = b'\220\265\030\003'
+  _globals['_GETQUOTARESP']._loaded_options = None
+  _globals['_GETQUOTARESP']._serialized_options = b'\230\265\030\003'
+  _globals['_QUOTA'].methods_by_name['Get']._loaded_options = None
+  _globals['_QUOTA'].methods_by_name['Get']._serialized_options = b'\212\265\030\001\002'
+  _globals['_GETQUOTARESP']._serialized_start=82
+  _globals['_GETQUOTARESP']._serialized_end=291
+  _globals['_QUOTA']._serialized_start=293
+  _globals['_QUOTA']._serialized_end=362
 # @@protoc_insertion_point(module_scope)

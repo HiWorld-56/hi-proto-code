@@ -15,9 +15,9 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
-@$core.Deprecated('Use getMediaQuotaRespDescriptor instead')
-const GetMediaQuotaResp$json = {
-  '1': 'GetMediaQuotaResp',
+@$core.Deprecated('Use getQuotaRespDescriptor instead')
+const GetQuotaResp$json = {
+  '1': 'GetQuotaResp',
   '2': [
     {
       '1': 'total_bytes',
@@ -58,9 +58,9 @@ const GetMediaQuotaResp$json = {
   ],
 };
 
-/// Descriptor for `GetMediaQuotaResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getMediaQuotaRespDescriptor = $convert.base64Decode(
-    'ChFHZXRNZWRpYVF1b3RhUmVzcBIqCgt0b3RhbF9ieXRlcxgBIAEoBEIEkLUYA0gAUgp0b3RhbE'
-    'J5dGVziAEBEigKCnVzZWRfYnl0ZXMYAiABKARCBJC1GANIAVIJdXNlZEJ5dGVziAEBEjIKD2F2'
-    'YWlsYWJsZV9ieXRlcxgDIAEoBEIEkLUYA0gCUg5hdmFpbGFibGVCeXRlc4gBAToEmLUYA0IOCg'
-    'xfdG90YWxfYnl0ZXNCDQoLX3VzZWRfYnl0ZXNCEgoQX2F2YWlsYWJsZV9ieXRlcw==');
+/// Descriptor for `GetQuotaResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getQuotaRespDescriptor = $convert.base64Decode(
+    'CgxHZXRRdW90YVJlc3ASKgoLdG90YWxfYnl0ZXMYASABKARCBJC1GANIAFIKdG90YWxCeXRlc4'
+    'gBARIoCgp1c2VkX2J5dGVzGAIgASgEQgSQtRgDSAFSCXVzZWRCeXRlc4gBARIyCg9hdmFpbGFi'
+    'bGVfYnl0ZXMYAyABKARCBJC1GANIAlIOYXZhaWxhYmxlQnl0ZXOIAQE6BJi1GANCDgoMX3RvdG'
+    'FsX2J5dGVzQg0KC191c2VkX2J5dGVzQhIKEF9hdmFpbGFibGVfYnl0ZXM=');

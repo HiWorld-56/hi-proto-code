@@ -6,7 +6,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi.media import quota_pb2 as hi_dot_media_dot_quota__pb2
 
 
-class MediaQuotaStub(object):
+class QuotaStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -16,13 +16,13 @@ class MediaQuotaStub(object):
             channel: A grpc.Channel.
         """
         self.Get = channel.unary_unary(
-                '/hi.media.MediaQuota/Get',
+                '/hi.media.Quota/Get',
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-                response_deserializer=hi_dot_media_dot_quota__pb2.GetMediaQuotaResp.FromString,
+                response_deserializer=hi_dot_media_dot_quota__pb2.GetQuotaResp.FromString,
                 _registered_method=True)
 
 
-class MediaQuotaServicer(object):
+class QuotaServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def Get(self, request, context):
@@ -32,22 +32,22 @@ class MediaQuotaServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
-def add_MediaQuotaServicer_to_server(servicer, server):
+def add_QuotaServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'Get': grpc.unary_unary_rpc_method_handler(
                     servicer.Get,
                     request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                    response_serializer=hi_dot_media_dot_quota__pb2.GetMediaQuotaResp.SerializeToString,
+                    response_serializer=hi_dot_media_dot_quota__pb2.GetQuotaResp.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'hi.media.MediaQuota', rpc_method_handlers)
+            'hi.media.Quota', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('hi.media.MediaQuota', rpc_method_handlers)
+    server.add_registered_method_handlers('hi.media.Quota', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class MediaQuota(object):
+class Quota(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -64,9 +64,9 @@ class MediaQuota(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.MediaQuota/Get',
+            '/hi.media.Quota/Get',
             google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-            hi_dot_media_dot_quota__pb2.GetMediaQuotaResp.FromString,
+            hi_dot_media_dot_quota__pb2.GetQuotaResp.FromString,
             options,
             channel_credentials,
             insecure,

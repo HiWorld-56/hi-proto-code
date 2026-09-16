@@ -35,9 +35,9 @@ var (
 	_ = metadata.Join
 )
 
-func request_MediaWorkflowManage_ImportWorkflow_0(ctx context.Context, marshaler runtime.Marshaler, client MediaWorkflowManageClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_WorkflowManage_ImportWorkflow_0(ctx context.Context, marshaler runtime.Marshaler, client WorkflowManageClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ImportMediaWorkflowReq
+		protoReq ImportWorkflowReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -50,9 +50,9 @@ func request_MediaWorkflowManage_ImportWorkflow_0(ctx context.Context, marshaler
 	return msg, metadata, err
 }
 
-func local_request_MediaWorkflowManage_ImportWorkflow_0(ctx context.Context, marshaler runtime.Marshaler, server MediaWorkflowManageServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_WorkflowManage_ImportWorkflow_0(ctx context.Context, marshaler runtime.Marshaler, server WorkflowManageServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ImportMediaWorkflowReq
+		protoReq ImportWorkflowReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -62,9 +62,9 @@ func local_request_MediaWorkflowManage_ImportWorkflow_0(ctx context.Context, mar
 	return msg, metadata, err
 }
 
-func request_MediaWorkflowManage_Update_0(ctx context.Context, marshaler runtime.Marshaler, client MediaWorkflowManageClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_WorkflowManage_UpdateWorkflow_0(ctx context.Context, marshaler runtime.Marshaler, client WorkflowManageClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq UpdateMediaWorkflowReq
+		protoReq UpdateWorkflowReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -73,52 +73,25 @@ func request_MediaWorkflowManage_Update_0(ctx context.Context, marshaler runtime
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.Update(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.UpdateWorkflow(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_MediaWorkflowManage_Update_0(ctx context.Context, marshaler runtime.Marshaler, server MediaWorkflowManageServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_WorkflowManage_UpdateWorkflow_0(ctx context.Context, marshaler runtime.Marshaler, server WorkflowManageServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq UpdateMediaWorkflowReq
+		protoReq UpdateWorkflowReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	msg, err := server.Update(ctx, &protoReq)
+	msg, err := server.UpdateWorkflow(ctx, &protoReq)
 	return msg, metadata, err
 }
 
-func request_MediaWorkflowManage_List_0(ctx context.Context, marshaler runtime.Marshaler, client MediaWorkflowManageClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_WorkflowManage_UpdateDescription_0(ctx context.Context, marshaler runtime.Marshaler, client WorkflowManageClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ListMediaWorkflowsReq
-		metadata runtime.ServerMetadata
-	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	if req.Body != nil {
-		_, _ = io.Copy(io.Discard, req.Body)
-	}
-	msg, err := client.List(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
-	return msg, metadata, err
-}
-
-func local_request_MediaWorkflowManage_List_0(ctx context.Context, marshaler runtime.Marshaler, server MediaWorkflowManageServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq ListMediaWorkflowsReq
-		metadata runtime.ServerMetadata
-	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	msg, err := server.List(ctx, &protoReq)
-	return msg, metadata, err
-}
-
-func request_MediaWorkflowManage_Get_0(ctx context.Context, marshaler runtime.Marshaler, client MediaWorkflowManageClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq GetMediaWorkflowReq
+		protoReq UpdateWorkflowDescriptionReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -127,25 +100,25 @@ func request_MediaWorkflowManage_Get_0(ctx context.Context, marshaler runtime.Ma
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.Get(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.UpdateDescription(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_MediaWorkflowManage_Get_0(ctx context.Context, marshaler runtime.Marshaler, server MediaWorkflowManageServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_WorkflowManage_UpdateDescription_0(ctx context.Context, marshaler runtime.Marshaler, server WorkflowManageServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq GetMediaWorkflowReq
+		protoReq UpdateWorkflowDescriptionReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	msg, err := server.Get(ctx, &protoReq)
+	msg, err := server.UpdateDescription(ctx, &protoReq)
 	return msg, metadata, err
 }
 
-func request_MediaWorkflowManage_Validate_0(ctx context.Context, marshaler runtime.Marshaler, client MediaWorkflowManageClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_WorkflowManage_Validate_0(ctx context.Context, marshaler runtime.Marshaler, client WorkflowManageClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ValidateMediaWorkflowReq
+		protoReq ValidateWorkflowReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -158,9 +131,9 @@ func request_MediaWorkflowManage_Validate_0(ctx context.Context, marshaler runti
 	return msg, metadata, err
 }
 
-func local_request_MediaWorkflowManage_Validate_0(ctx context.Context, marshaler runtime.Marshaler, server MediaWorkflowManageServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_WorkflowManage_Validate_0(ctx context.Context, marshaler runtime.Marshaler, server WorkflowManageServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ValidateMediaWorkflowReq
+		protoReq ValidateWorkflowReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -170,9 +143,9 @@ func local_request_MediaWorkflowManage_Validate_0(ctx context.Context, marshaler
 	return msg, metadata, err
 }
 
-func request_MediaWorkflowManage_Test_0(ctx context.Context, marshaler runtime.Marshaler, client MediaWorkflowManageClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_WorkflowManage_Test_0(ctx context.Context, marshaler runtime.Marshaler, client WorkflowManageClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq TestMediaWorkflowReq
+		protoReq TestWorkflowReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -185,9 +158,9 @@ func request_MediaWorkflowManage_Test_0(ctx context.Context, marshaler runtime.M
 	return msg, metadata, err
 }
 
-func local_request_MediaWorkflowManage_Test_0(ctx context.Context, marshaler runtime.Marshaler, server MediaWorkflowManageServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_WorkflowManage_Test_0(ctx context.Context, marshaler runtime.Marshaler, server WorkflowManageServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq TestMediaWorkflowReq
+		protoReq TestWorkflowReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -197,9 +170,9 @@ func local_request_MediaWorkflowManage_Test_0(ctx context.Context, marshaler run
 	return msg, metadata, err
 }
 
-func request_MediaWorkflowManage_ListTests_0(ctx context.Context, marshaler runtime.Marshaler, client MediaWorkflowManageClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_WorkflowManage_ListTests_0(ctx context.Context, marshaler runtime.Marshaler, client WorkflowManageClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ListMediaWorkflowTestsReq
+		protoReq ListWorkflowTestsReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -212,9 +185,9 @@ func request_MediaWorkflowManage_ListTests_0(ctx context.Context, marshaler runt
 	return msg, metadata, err
 }
 
-func local_request_MediaWorkflowManage_ListTests_0(ctx context.Context, marshaler runtime.Marshaler, server MediaWorkflowManageServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_WorkflowManage_ListTests_0(ctx context.Context, marshaler runtime.Marshaler, server WorkflowManageServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ListMediaWorkflowTestsReq
+		protoReq ListWorkflowTestsReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -224,9 +197,9 @@ func local_request_MediaWorkflowManage_ListTests_0(ctx context.Context, marshale
 	return msg, metadata, err
 }
 
-func request_MediaWorkflowManage_SetReady_0(ctx context.Context, marshaler runtime.Marshaler, client MediaWorkflowManageClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_WorkflowManage_List_0(ctx context.Context, marshaler runtime.Marshaler, client WorkflowManageClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq SetMediaWorkflowReadyReq
+		protoReq ListWorkflowsReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -235,242 +208,230 @@ func request_MediaWorkflowManage_SetReady_0(ctx context.Context, marshaler runti
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.SetReady(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.List(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_MediaWorkflowManage_SetReady_0(ctx context.Context, marshaler runtime.Marshaler, server MediaWorkflowManageServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_WorkflowManage_List_0(ctx context.Context, marshaler runtime.Marshaler, server WorkflowManageServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq SetMediaWorkflowReadyReq
+		protoReq ListWorkflowsReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	msg, err := server.SetReady(ctx, &protoReq)
+	msg, err := server.List(ctx, &protoReq)
 	return msg, metadata, err
 }
 
-func request_MediaWorkflowManage_SetActive_0(ctx context.Context, marshaler runtime.Marshaler, client MediaWorkflowManageClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+var filter_WorkflowManage_Get_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+
+func request_WorkflowManage_Get_0(ctx context.Context, marshaler runtime.Marshaler, client WorkflowManageClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq SetActiveMediaWorkflowReq
+		protoReq GetWorkflowReq
 		metadata runtime.ServerMetadata
 	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.SetActive(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
-	return msg, metadata, err
-}
-
-func local_request_MediaWorkflowManage_SetActive_0(ctx context.Context, marshaler runtime.Marshaler, server MediaWorkflowManageServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq SetActiveMediaWorkflowReq
-		metadata runtime.ServerMetadata
-	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	msg, err := server.SetActive(ctx, &protoReq)
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_WorkflowManage_Get_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := client.Get(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-// RegisterMediaWorkflowManageHandlerServer registers the http handlers for service MediaWorkflowManage to "mux".
-// UnaryRPC     :call MediaWorkflowManageServer directly.
+func local_request_WorkflowManage_Get_0(ctx context.Context, marshaler runtime.Marshaler, server WorkflowManageServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq GetWorkflowReq
+		metadata runtime.ServerMetadata
+	)
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_WorkflowManage_Get_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.Get(ctx, &protoReq)
+	return msg, metadata, err
+}
+
+// RegisterWorkflowManageHandlerServer registers the http handlers for service WorkflowManage to "mux".
+// UnaryRPC     :call WorkflowManageServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterMediaWorkflowManageHandlerFromEndpoint instead.
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterWorkflowManageHandlerFromEndpoint instead.
 // GRPC interceptors will not work for this type of registration. To use interceptors, you must use the "runtime.WithMiddlewares" option in the "runtime.NewServeMux" call.
-func RegisterMediaWorkflowManageHandlerServer(ctx context.Context, mux *runtime.ServeMux, server MediaWorkflowManageServer) error {
-	mux.Handle(http.MethodPost, pattern_MediaWorkflowManage_ImportWorkflow_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+func RegisterWorkflowManageHandlerServer(ctx context.Context, mux *runtime.ServeMux, server WorkflowManageServer) error {
+	mux.Handle(http.MethodPost, pattern_WorkflowManage_ImportWorkflow_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.MediaWorkflowManage/ImportWorkflow", runtime.WithHTTPPathPattern("/api/v1/media_workflow_manage/import_workflow"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.WorkflowManage/ImportWorkflow", runtime.WithHTTPPathPattern("/api/v1/workflow_manage/import_workflow"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_MediaWorkflowManage_ImportWorkflow_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_WorkflowManage_ImportWorkflow_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaWorkflowManage_ImportWorkflow_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_WorkflowManage_ImportWorkflow_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaWorkflowManage_Update_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_WorkflowManage_UpdateWorkflow_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.MediaWorkflowManage/Update", runtime.WithHTTPPathPattern("/api/v1/media_workflow_manage/update"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.WorkflowManage/UpdateWorkflow", runtime.WithHTTPPathPattern("/api/v1/workflow_manage/update_workflow"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_MediaWorkflowManage_Update_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_WorkflowManage_UpdateWorkflow_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaWorkflowManage_Update_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_WorkflowManage_UpdateWorkflow_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaWorkflowManage_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_WorkflowManage_UpdateDescription_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.MediaWorkflowManage/List", runtime.WithHTTPPathPattern("/api/v1/media_workflow_manage/list"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.WorkflowManage/UpdateDescription", runtime.WithHTTPPathPattern("/api/v1/workflow_manage/update_description"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_MediaWorkflowManage_List_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_WorkflowManage_UpdateDescription_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaWorkflowManage_List_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_WorkflowManage_UpdateDescription_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaWorkflowManage_Get_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_WorkflowManage_Validate_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.MediaWorkflowManage/Get", runtime.WithHTTPPathPattern("/api/v1/media_workflow_manage/get"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.WorkflowManage/Validate", runtime.WithHTTPPathPattern("/api/v1/workflow_manage/validate"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_MediaWorkflowManage_Get_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_WorkflowManage_Validate_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaWorkflowManage_Get_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_WorkflowManage_Validate_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaWorkflowManage_Validate_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_WorkflowManage_Test_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.MediaWorkflowManage/Validate", runtime.WithHTTPPathPattern("/api/v1/media_workflow_manage/validate"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.WorkflowManage/Test", runtime.WithHTTPPathPattern("/api/v1/workflow_manage/test"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_MediaWorkflowManage_Validate_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_WorkflowManage_Test_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaWorkflowManage_Validate_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_WorkflowManage_Test_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaWorkflowManage_Test_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_WorkflowManage_ListTests_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.MediaWorkflowManage/Test", runtime.WithHTTPPathPattern("/api/v1/media_workflow_manage/test"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.WorkflowManage/ListTests", runtime.WithHTTPPathPattern("/api/v1/workflow_manage/list_tests"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_MediaWorkflowManage_Test_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_WorkflowManage_ListTests_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaWorkflowManage_Test_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_WorkflowManage_ListTests_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaWorkflowManage_ListTests_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_WorkflowManage_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.MediaWorkflowManage/ListTests", runtime.WithHTTPPathPattern("/api/v1/media_workflow_manage/list_tests"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.WorkflowManage/List", runtime.WithHTTPPathPattern("/api/v1/workflow_manage/list"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_MediaWorkflowManage_ListTests_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_WorkflowManage_List_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaWorkflowManage_ListTests_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_WorkflowManage_List_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaWorkflowManage_SetReady_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodGet, pattern_WorkflowManage_Get_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.MediaWorkflowManage/SetReady", runtime.WithHTTPPathPattern("/api/v1/media_workflow_manage/set_ready"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.WorkflowManage/Get", runtime.WithHTTPPathPattern("/api/v1/workflow_manage/get"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_MediaWorkflowManage_SetReady_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_WorkflowManage_Get_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaWorkflowManage_SetReady_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-	})
-	mux.Handle(http.MethodPost, pattern_MediaWorkflowManage_SetActive_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		var stream runtime.ServerTransportStream
-		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.MediaWorkflowManage/SetActive", runtime.WithHTTPPathPattern("/api/v1/media_workflow_manage/set_active"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := local_request_MediaWorkflowManage_SetActive_0(annotatedContext, inboundMarshaler, server, req, pathParams)
-		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		forward_MediaWorkflowManage_SetActive_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_WorkflowManage_Get_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil
 }
 
-// RegisterMediaWorkflowManageHandlerFromEndpoint is same as RegisterMediaWorkflowManageHandler but
+// RegisterWorkflowManageHandlerFromEndpoint is same as RegisterWorkflowManageHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterMediaWorkflowManageHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterWorkflowManageHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.NewClient(endpoint, opts...)
 	if err != nil {
 		return err
@@ -489,197 +450,178 @@ func RegisterMediaWorkflowManageHandlerFromEndpoint(ctx context.Context, mux *ru
 			}
 		}()
 	}()
-	return RegisterMediaWorkflowManageHandler(ctx, mux, conn)
+	return RegisterWorkflowManageHandler(ctx, mux, conn)
 }
 
-// RegisterMediaWorkflowManageHandler registers the http handlers for service MediaWorkflowManage to "mux".
+// RegisterWorkflowManageHandler registers the http handlers for service WorkflowManage to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterMediaWorkflowManageHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterMediaWorkflowManageHandlerClient(ctx, mux, NewMediaWorkflowManageClient(conn))
+func RegisterWorkflowManageHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterWorkflowManageHandlerClient(ctx, mux, NewWorkflowManageClient(conn))
 }
 
-// RegisterMediaWorkflowManageHandlerClient registers the http handlers for service MediaWorkflowManage
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "MediaWorkflowManageClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "MediaWorkflowManageClient"
+// RegisterWorkflowManageHandlerClient registers the http handlers for service WorkflowManage
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "WorkflowManageClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "WorkflowManageClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "MediaWorkflowManageClient" to call the correct interceptors. This client ignores the HTTP middlewares.
-func RegisterMediaWorkflowManageHandlerClient(ctx context.Context, mux *runtime.ServeMux, client MediaWorkflowManageClient) error {
-	mux.Handle(http.MethodPost, pattern_MediaWorkflowManage_ImportWorkflow_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+// "WorkflowManageClient" to call the correct interceptors. This client ignores the HTTP middlewares.
+func RegisterWorkflowManageHandlerClient(ctx context.Context, mux *runtime.ServeMux, client WorkflowManageClient) error {
+	mux.Handle(http.MethodPost, pattern_WorkflowManage_ImportWorkflow_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.MediaWorkflowManage/ImportWorkflow", runtime.WithHTTPPathPattern("/api/v1/media_workflow_manage/import_workflow"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.WorkflowManage/ImportWorkflow", runtime.WithHTTPPathPattern("/api/v1/workflow_manage/import_workflow"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_MediaWorkflowManage_ImportWorkflow_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_WorkflowManage_ImportWorkflow_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaWorkflowManage_ImportWorkflow_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_WorkflowManage_ImportWorkflow_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaWorkflowManage_Update_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_WorkflowManage_UpdateWorkflow_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.MediaWorkflowManage/Update", runtime.WithHTTPPathPattern("/api/v1/media_workflow_manage/update"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.WorkflowManage/UpdateWorkflow", runtime.WithHTTPPathPattern("/api/v1/workflow_manage/update_workflow"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_MediaWorkflowManage_Update_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_WorkflowManage_UpdateWorkflow_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaWorkflowManage_Update_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_WorkflowManage_UpdateWorkflow_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaWorkflowManage_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_WorkflowManage_UpdateDescription_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.MediaWorkflowManage/List", runtime.WithHTTPPathPattern("/api/v1/media_workflow_manage/list"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.WorkflowManage/UpdateDescription", runtime.WithHTTPPathPattern("/api/v1/workflow_manage/update_description"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_MediaWorkflowManage_List_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_WorkflowManage_UpdateDescription_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaWorkflowManage_List_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_WorkflowManage_UpdateDescription_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaWorkflowManage_Get_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_WorkflowManage_Validate_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.MediaWorkflowManage/Get", runtime.WithHTTPPathPattern("/api/v1/media_workflow_manage/get"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.WorkflowManage/Validate", runtime.WithHTTPPathPattern("/api/v1/workflow_manage/validate"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_MediaWorkflowManage_Get_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_WorkflowManage_Validate_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaWorkflowManage_Get_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_WorkflowManage_Validate_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaWorkflowManage_Validate_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_WorkflowManage_Test_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.MediaWorkflowManage/Validate", runtime.WithHTTPPathPattern("/api/v1/media_workflow_manage/validate"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.WorkflowManage/Test", runtime.WithHTTPPathPattern("/api/v1/workflow_manage/test"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_MediaWorkflowManage_Validate_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_WorkflowManage_Test_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaWorkflowManage_Validate_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_WorkflowManage_Test_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaWorkflowManage_Test_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_WorkflowManage_ListTests_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.MediaWorkflowManage/Test", runtime.WithHTTPPathPattern("/api/v1/media_workflow_manage/test"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.WorkflowManage/ListTests", runtime.WithHTTPPathPattern("/api/v1/workflow_manage/list_tests"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_MediaWorkflowManage_Test_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_WorkflowManage_ListTests_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaWorkflowManage_Test_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_WorkflowManage_ListTests_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaWorkflowManage_ListTests_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_WorkflowManage_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.MediaWorkflowManage/ListTests", runtime.WithHTTPPathPattern("/api/v1/media_workflow_manage/list_tests"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.WorkflowManage/List", runtime.WithHTTPPathPattern("/api/v1/workflow_manage/list"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_MediaWorkflowManage_ListTests_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_WorkflowManage_List_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaWorkflowManage_ListTests_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_WorkflowManage_List_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaWorkflowManage_SetReady_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodGet, pattern_WorkflowManage_Get_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.MediaWorkflowManage/SetReady", runtime.WithHTTPPathPattern("/api/v1/media_workflow_manage/set_ready"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.WorkflowManage/Get", runtime.WithHTTPPathPattern("/api/v1/workflow_manage/get"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_MediaWorkflowManage_SetReady_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_WorkflowManage_Get_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaWorkflowManage_SetReady_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-	})
-	mux.Handle(http.MethodPost, pattern_MediaWorkflowManage_SetActive_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.MediaWorkflowManage/SetActive", runtime.WithHTTPPathPattern("/api/v1/media_workflow_manage/set_active"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := request_MediaWorkflowManage_SetActive_0(annotatedContext, inboundMarshaler, client, req, pathParams)
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		forward_MediaWorkflowManage_SetActive_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_WorkflowManage_Get_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	return nil
 }
 
 var (
-	pattern_MediaWorkflowManage_ImportWorkflow_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "media_workflow_manage", "import_workflow"}, ""))
-	pattern_MediaWorkflowManage_Update_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "media_workflow_manage", "update"}, ""))
-	pattern_MediaWorkflowManage_List_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "media_workflow_manage", "list"}, ""))
-	pattern_MediaWorkflowManage_Get_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "media_workflow_manage", "get"}, ""))
-	pattern_MediaWorkflowManage_Validate_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "media_workflow_manage", "validate"}, ""))
-	pattern_MediaWorkflowManage_Test_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "media_workflow_manage", "test"}, ""))
-	pattern_MediaWorkflowManage_ListTests_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "media_workflow_manage", "list_tests"}, ""))
-	pattern_MediaWorkflowManage_SetReady_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "media_workflow_manage", "set_ready"}, ""))
-	pattern_MediaWorkflowManage_SetActive_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "media_workflow_manage", "set_active"}, ""))
+	pattern_WorkflowManage_ImportWorkflow_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "workflow_manage", "import_workflow"}, ""))
+	pattern_WorkflowManage_UpdateWorkflow_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "workflow_manage", "update_workflow"}, ""))
+	pattern_WorkflowManage_UpdateDescription_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "workflow_manage", "update_description"}, ""))
+	pattern_WorkflowManage_Validate_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "workflow_manage", "validate"}, ""))
+	pattern_WorkflowManage_Test_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "workflow_manage", "test"}, ""))
+	pattern_WorkflowManage_ListTests_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "workflow_manage", "list_tests"}, ""))
+	pattern_WorkflowManage_List_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "workflow_manage", "list"}, ""))
+	pattern_WorkflowManage_Get_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "workflow_manage", "get"}, ""))
 )
 
 var (
-	forward_MediaWorkflowManage_ImportWorkflow_0 = runtime.ForwardResponseMessage
-	forward_MediaWorkflowManage_Update_0         = runtime.ForwardResponseMessage
-	forward_MediaWorkflowManage_List_0           = runtime.ForwardResponseMessage
-	forward_MediaWorkflowManage_Get_0            = runtime.ForwardResponseMessage
-	forward_MediaWorkflowManage_Validate_0       = runtime.ForwardResponseMessage
-	forward_MediaWorkflowManage_Test_0           = runtime.ForwardResponseMessage
-	forward_MediaWorkflowManage_ListTests_0      = runtime.ForwardResponseMessage
-	forward_MediaWorkflowManage_SetReady_0       = runtime.ForwardResponseMessage
-	forward_MediaWorkflowManage_SetActive_0      = runtime.ForwardResponseMessage
+	forward_WorkflowManage_ImportWorkflow_0    = runtime.ForwardResponseMessage
+	forward_WorkflowManage_UpdateWorkflow_0    = runtime.ForwardResponseMessage
+	forward_WorkflowManage_UpdateDescription_0 = runtime.ForwardResponseMessage
+	forward_WorkflowManage_Validate_0          = runtime.ForwardResponseMessage
+	forward_WorkflowManage_Test_0              = runtime.ForwardResponseMessage
+	forward_WorkflowManage_ListTests_0         = runtime.ForwardResponseMessage
+	forward_WorkflowManage_List_0              = runtime.ForwardResponseMessage
+	forward_WorkflowManage_Get_0               = runtime.ForwardResponseMessage
 )

@@ -183,62 +183,801 @@ pub mod auth_client {
         }
     }
 }
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MediaResolution {
-    #[prost(int32, optional, tag = "1")]
-    pub width: ::core::option::Option<i32>,
-    #[prost(int32, optional, tag = "2")]
-    pub height: ::core::option::Option<i32>,
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MaintenanceState {
+    #[prost(bool, optional, tag = "1")]
+    pub enabled: ::core::option::Option<bool>,
+    #[prost(string, optional, tag = "2")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "3")]
+    pub started_at: ::core::option::Option<i64>,
+    #[prost(string, optional, tag = "4")]
+    pub updated_by: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "5")]
+    pub updated_at: ::core::option::Option<i64>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct CreateTextToImageTaskReq {
-    #[prost(string, optional, tag = "1")]
-    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+pub struct GetMaintenanceResp {
+    #[prost(message, optional, tag = "1")]
+    pub state: ::core::option::Option<MaintenanceState>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SetMaintenanceReq {
+    /// 必须显式提交。维护模式只暂停向 ComfyUI 派发新任务，不禁用查询和管理接口。
+    #[prost(bool, optional, tag = "1")]
+    pub enabled: ::core::option::Option<bool>,
     #[prost(string, optional, tag = "2")]
-    pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "3")]
-    pub source_task_id: ::core::option::Option<::prost::alloc::string::String>,
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SetMaintenanceResp {
+    #[prost(message, optional, tag = "1")]
+    pub state: ::core::option::Option<MaintenanceState>,
+}
+/// Generated client implementations.
+pub mod maintenance_manage_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    #[derive(Debug, Clone)]
+    pub struct MaintenanceManageClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl MaintenanceManageClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> MaintenanceManageClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> MaintenanceManageClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            MaintenanceManageClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn get(
+            &mut self,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetMaintenanceResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.MaintenanceManage/Get",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.MaintenanceManage", "Get"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn set(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SetMaintenanceReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::SetMaintenanceResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.MaintenanceManage/Set",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.MaintenanceManage", "Set"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TextLimit {
+    /// 按 Unicode 码点计算的正向提示词最大长度。
+    #[prost(uint32, optional, tag = "1")]
+    pub max_length: ::core::option::Option<u32>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DecimalOptionConfig {
+    /// 为避免浮点格式变化，允许值和默认值都使用十进制字符串传输。
+    #[prost(string, repeated, tag = "1")]
+    pub allowed_values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub default_value: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct StringOptionConfig {
+    #[prost(string, repeated, tag = "1")]
+    pub allowed_values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub default_value: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct IntRangeConfig {
+    #[prost(int32, optional, tag = "1")]
+    pub min_value: ::core::option::Option<i32>,
+    #[prost(int32, optional, tag = "2")]
+    pub max_value: ::core::option::Option<i32>,
+    #[prost(int32, optional, tag = "3")]
+    pub default_value: ::core::option::Option<i32>,
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct FrameRateConfig {
+    #[prost(oneof = "frame_rate_config::Mode", tags = "1, 2")]
+    pub mode: ::core::option::Option<frame_rate_config::Mode>,
+}
+/// Nested message and enum types in `FrameRateConfig`.
+pub mod frame_rate_config {
+    #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Mode {
+        /// 用户可以在工作流配置的整数范围内选择帧率。
+        #[prost(message, tag = "1")]
+        Selectable(super::IntRangeConfig),
+        /// 工作流没有帧率绑定；前端只读展示该值，创建时可以省略帧率。
+        #[prost(int32, tag = "2")]
+        FixedValue(i32),
+    }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VideoParameterConfig {
+    #[prost(message, optional, tag = "1")]
+    pub prompt: ::core::option::Option<TextLimit>,
+    #[prost(message, optional, tag = "2")]
+    pub aspect_ratio: ::core::option::Option<StringOptionConfig>,
+    #[prost(message, optional, tag = "3")]
+    pub megapixels: ::core::option::Option<DecimalOptionConfig>,
+    #[prost(message, optional, tag = "4")]
+    pub duration_seconds: ::core::option::Option<IntRangeConfig>,
+    #[prost(message, optional, tag = "5")]
+    pub frame_rate: ::core::option::Option<FrameRateConfig>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ModelOption {
+    /// 创建任务时提交的唯一选择；客户端不能自行组合模型 ID 与工作流 ID。
+    #[prost(string, optional, tag = "1")]
+    pub model_mapping_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 管理员维护的用户可见模型名称，不是 ComfyUI 原始文件名。
+    #[prost(string, optional, tag = "2")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(bool, optional, tag = "3")]
+    pub is_default: ::core::option::Option<bool>,
+    /// 映射工作流的 Markdown 说明；客户端应使用安全 Markdown 渲染。
     #[prost(string, optional, tag = "4")]
-    pub prompt: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "5")]
-    pub negative_prompt: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(message, optional, tag = "6")]
-    pub resolution: ::core::option::Option<MediaResolution>,
+    pub description: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "5")]
+    pub parameter_config: ::core::option::Option<VideoParameterConfig>,
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetFeatureReq {
+    #[prost(enumeration = "FeatureKey", optional, tag = "1")]
+    pub feature_key: ::core::option::Option<i32>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetFeatureResp {
+    #[prost(enumeration = "FeatureKey", optional, tag = "1")]
+    pub feature_key: ::core::option::Option<i32>,
+    /// 空列表表示该功能当前没有可用映射，客户端不得创建任务。
+    #[prost(message, repeated, tag = "2")]
+    pub model_options: ::prost::alloc::vec::Vec<ModelOption>,
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum FeatureKey {
+    Unspecified = 0,
+    /// 文生图；内部键 image.txt2img；当前没有创建接口。
+    TextToImage = 1,
+    /// 图生视频；内部键 video.img2vid；创建时需要输入图片。
+    ImageToVideo = 2,
+    /// 文生视频；内部键 video.txt2vid；不接受输入图片。
+    TextToVideo = 3,
+}
+impl FeatureKey {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "FEATURE_KEY_UNSPECIFIED",
+            Self::TextToImage => "FEATURE_KEY_TEXT_TO_IMAGE",
+            Self::ImageToVideo => "FEATURE_KEY_IMAGE_TO_VIDEO",
+            Self::TextToVideo => "FEATURE_KEY_TEXT_TO_VIDEO",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "FEATURE_KEY_UNSPECIFIED" => Some(Self::Unspecified),
+            "FEATURE_KEY_TEXT_TO_IMAGE" => Some(Self::TextToImage),
+            "FEATURE_KEY_IMAGE_TO_VIDEO" => Some(Self::ImageToVideo),
+            "FEATURE_KEY_TEXT_TO_VIDEO" => Some(Self::TextToVideo),
+            _ => None,
+        }
+    }
+}
+/// Generated client implementations.
+pub mod feature_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    #[derive(Debug, Clone)]
+    pub struct FeatureClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl FeatureClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> FeatureClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> FeatureClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            FeatureClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn get(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetFeatureReq>,
+        ) -> std::result::Result<tonic::Response<super::GetFeatureResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.media.Feature/Get");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.media.Feature", "Get"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ModelMapping {
+    #[prost(string, optional, tag = "1")]
+    pub model_mapping_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "FeatureKey", optional, tag = "2")]
+    pub feature_key: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "3")]
+    pub model_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(bool, optional, tag = "5")]
+    pub enabled: ::core::option::Option<bool>,
+    #[prost(bool, optional, tag = "6")]
+    pub is_default: ::core::option::Option<bool>,
+    #[prost(int32, optional, tag = "7")]
+    pub sort_order: ::core::option::Option<i32>,
+    #[prost(int64, optional, tag = "8")]
+    pub created_at: ::core::option::Option<i64>,
+    #[prost(int64, optional, tag = "9")]
+    pub updated_at: ::core::option::Option<i64>,
+    #[prost(int64, optional, tag = "10")]
+    pub disabled_at: ::core::option::Option<i64>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CreateModelMappingReq {
+    #[prost(enumeration = "FeatureKey", optional, tag = "1")]
+    pub feature_key: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "2")]
+    pub model_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(bool, optional, tag = "4")]
+    pub is_default: ::core::option::Option<bool>,
+    #[prost(int32, optional, tag = "5")]
+    pub sort_order: ::core::option::Option<i32>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CreateModelMappingResp {
+    #[prost(message, optional, tag = "1")]
+    pub mapping: ::core::option::Option<ModelMapping>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DisableModelMappingReq {
+    #[prost(string, optional, tag = "1")]
+    pub model_mapping_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 停用默认映射且仍有其他启用映射时必填，并且必须属于同一功能。
+    #[prost(string, optional, tag = "2")]
+    pub replacement_default_mapping_id: ::core::option::Option<
+        ::prost::alloc::string::String,
+    >,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DisableModelMappingResp {
+    #[prost(message, optional, tag = "1")]
+    pub mapping: ::core::option::Option<ModelMapping>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SetDefaultModelMappingReq {
+    #[prost(string, optional, tag = "1")]
+    pub model_mapping_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SetDefaultModelMappingResp {
+    #[prost(message, optional, tag = "1")]
+    pub mapping: ::core::option::Option<ModelMapping>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UpdateModelMappingSortOrderReq {
+    /// 同一功能下全部启用映射的完整顺序，不能只提交发生移动的部分。
+    #[prost(string, repeated, tag = "1")]
+    pub model_mapping_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateModelMappingSortOrderResp {
+    #[prost(message, repeated, tag = "1")]
+    pub mappings: ::prost::alloc::vec::Vec<ModelMapping>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetModelMappingReq {
+    #[prost(string, optional, tag = "1")]
+    pub model_mapping_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetModelMappingResp {
+    #[prost(message, optional, tag = "1")]
+    pub mapping: ::core::option::Option<ModelMapping>,
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListModelMappingsReq {
+    #[prost(message, optional, tag = "1")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+    #[prost(enumeration = "FeatureKey", optional, tag = "2")]
+    pub feature_key: ::core::option::Option<i32>,
+    #[prost(bool, optional, tag = "3")]
+    pub enabled: ::core::option::Option<bool>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListModelMappingsResp {
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
+    #[prost(message, repeated, tag = "2")]
+    pub mappings: ::prost::alloc::vec::Vec<ModelMapping>,
+}
+/// Generated client implementations.
+pub mod model_mapping_manage_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    #[derive(Debug, Clone)]
+    pub struct ModelMappingManageClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl ModelMappingManageClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> ModelMappingManageClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ModelMappingManageClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            ModelMappingManageClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn create(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateModelMappingReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::CreateModelMappingResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.ModelMappingManage/Create",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.ModelMappingManage", "Create"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn disable(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DisableModelMappingReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::DisableModelMappingResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.ModelMappingManage/Disable",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.ModelMappingManage", "Disable"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn set_default(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SetDefaultModelMappingReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::SetDefaultModelMappingResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.ModelMappingManage/SetDefault",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.ModelMappingManage", "SetDefault"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn update_sort_order(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateModelMappingSortOrderReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::UpdateModelMappingSortOrderResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.ModelMappingManage/UpdateSortOrder",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("hi.media.ModelMappingManage", "UpdateSortOrder"),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListModelMappingsReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListModelMappingsResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.ModelMappingManage/List",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.ModelMappingManage", "List"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetModelMappingReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetModelMappingResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.ModelMappingManage/Get",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.ModelMappingManage", "Get"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VideoResolution {
+    /// ResolutionSelector 的完整选项字符串，例如 "16:9 (Widescreen)"，不能只传 "16:9"。
+    #[prost(string, optional, tag = "1")]
+    pub aspect_ratio: ::core::option::Option<::prost::alloc::string::String>,
+    /// 十进制字符串，例如 "0.9" 或 "0.98"；客户端不得转为浮点后重新格式化。
+    #[prost(string, optional, tag = "2")]
+    pub megapixels: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateImageToVideoTaskReq {
     #[prost(string, optional, tag = "1")]
     pub request_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
-    pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
+    pub model_mapping_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "3")]
-    pub source_task_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "4")]
     pub input_asset_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "5")]
+    #[prost(string, optional, tag = "4")]
     pub prompt: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "6")]
-    pub negative_prompt: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(message, optional, tag = "7")]
-    pub resolution: ::core::option::Option<MediaResolution>,
-    #[prost(int32, optional, tag = "8")]
+    #[prost(message, optional, tag = "5")]
+    pub resolution: ::core::option::Option<VideoResolution>,
+    #[prost(int32, optional, tag = "6")]
     pub duration_seconds: ::core::option::Option<i32>,
-    #[prost(int32, optional, tag = "9")]
-    pub fps: ::core::option::Option<i32>,
+    #[prost(int32, optional, tag = "7")]
+    pub frame_rate: ::core::option::Option<i32>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct CreateMediaTaskResp {
+pub struct CreateTextToVideoTaskReq {
+    #[prost(string, optional, tag = "1")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub model_mapping_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub prompt: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "4")]
+    pub resolution: ::core::option::Option<VideoResolution>,
+    #[prost(int32, optional, tag = "5")]
+    pub duration_seconds: ::core::option::Option<i32>,
+    #[prost(int32, optional, tag = "6")]
+    pub frame_rate: ::core::option::Option<i32>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CreateTaskResp {
+    /// 成功响应必有；响应字段不使用 buf.validate 约束。
     #[prost(string, optional, tag = "1")]
     pub task_id: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct TextToImageTaskParams {
-    #[prost(string, optional, tag = "1")]
-    pub prompt: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub negative_prompt: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(message, optional, tag = "3")]
-    pub resolution: ::core::option::Option<MediaResolution>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ImageToVideoTaskParams {
@@ -247,16 +986,29 @@ pub struct ImageToVideoTaskParams {
     #[prost(string, optional, tag = "2")]
     pub prompt: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "3")]
-    pub negative_prompt: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(message, optional, tag = "4")]
-    pub resolution: ::core::option::Option<MediaResolution>,
+    pub aspect_ratio: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub megapixels: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(int32, optional, tag = "5")]
     pub duration_seconds: ::core::option::Option<i32>,
     #[prost(int32, optional, tag = "6")]
-    pub fps: ::core::option::Option<i32>,
+    pub frame_rate: ::core::option::Option<i32>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MediaTaskOutput {
+pub struct TextToVideoTaskParams {
+    #[prost(string, optional, tag = "1")]
+    pub prompt: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub aspect_ratio: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub megapixels: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int32, optional, tag = "4")]
+    pub duration_seconds: ::core::option::Option<i32>,
+    #[prost(int32, optional, tag = "5")]
+    pub frame_rate: ::core::option::Option<i32>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TaskOutput {
     #[prost(string, optional, tag = "1")]
     pub asset_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
@@ -267,195 +1019,202 @@ pub struct MediaTaskOutput {
     pub mime_type: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(uint64, optional, tag = "5")]
     pub size_bytes: ::core::option::Option<u64>,
-    #[prost(bool, optional, tag = "6")]
+    #[prost(int64, optional, tag = "6")]
+    pub duration_ms: ::core::option::Option<i64>,
+    /// 资产删除后任务仍可保持成功，但该值为 false 且不能播放。
+    #[prost(bool, optional, tag = "7")]
     pub available: ::core::option::Option<bool>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MediaTaskSummary {
+pub struct TaskSummary {
     #[prost(string, optional, tag = "1")]
     pub task_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(enumeration = "MediaTaskPurpose", optional, tag = "2")]
+    #[prost(enumeration = "TaskPurpose", optional, tag = "2")]
     pub purpose: ::core::option::Option<i32>,
-    #[prost(string, optional, tag = "3")]
-    pub feature_key: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "FeatureKey", optional, tag = "3")]
+    pub feature_key: ::core::option::Option<i32>,
     #[prost(string, optional, tag = "4")]
-    pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
+    pub model_mapping_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "5")]
-    pub workflow_name: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(enumeration = "MediaTaskStatus", optional, tag = "6")]
+    pub model_name: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "TaskStatus", optional, tag = "6")]
     pub status: ::core::option::Option<i32>,
+    /// 面向用户的脱敏状态说明；前端应优先展示该字段。
     #[prost(string, optional, tag = "7")]
     pub status_message: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(message, optional, tag = "8")]
-    pub output: ::core::option::Option<MediaTaskOutput>,
-    #[prost(bool, optional, tag = "9")]
-    pub can_cancel: ::core::option::Option<bool>,
+    /// 稳定异步错误码：QUEUE_TIMEOUT、INPUT_UPLOAD_FAILED、UPSTREAM_SUBMISSION_FAILED、
+    /// UPSTREAM_SUBMISSION_UNKNOWN、UPSTREAM_EXECUTION_FAILED、EXECUTION_TIMEOUT、
+    /// OUTPUT_INVALID、OUTPUT_SAVE_FAILED、OUTPUT_SAVE_UNCERTAIN、SAVE_RECOVERY_FAILED。
+    #[prost(string, optional, tag = "8")]
+    pub error_code: ::core::option::Option<::prost::alloc::string::String>,
+    /// 仅在任务已经产生主资产时存在。
+    #[prost(message, optional, tag = "9")]
+    pub output: ::core::option::Option<TaskOutput>,
     #[prost(bool, optional, tag = "10")]
+    pub can_cancel: ::core::option::Option<bool>,
+    /// 前端只能依据该字段决定是否显示唯一一次“恢复保存”入口。
+    #[prost(bool, optional, tag = "11")]
     pub can_recover_save: ::core::option::Option<bool>,
-    #[prost(int64, optional, tag = "11")]
-    pub save_recovery_expires_at: ::core::option::Option<i64>,
     #[prost(int64, optional, tag = "12")]
-    pub created_at: ::core::option::Option<i64>,
+    pub save_recovery_expires_at: ::core::option::Option<i64>,
+    /// Unix 秒；恢复保存不会改写 created_at 或 started_at。
     #[prost(int64, optional, tag = "13")]
-    pub started_at: ::core::option::Option<i64>,
+    pub created_at: ::core::option::Option<i64>,
     #[prost(int64, optional, tag = "14")]
+    pub started_at: ::core::option::Option<i64>,
+    /// Unix 秒；恢复受理时清空，恢复得到最终结果时重新写入。
+    #[prost(int64, optional, tag = "15")]
     pub completed_at: ::core::option::Option<i64>,
-    #[prost(int32, optional, tag = "15")]
-    pub elapsed_seconds: ::core::option::Option<i32>,
+    /// 从 created_at 到当前时间或 completed_at 的墙钟秒数。
+    #[prost(int64, optional, tag = "16")]
+    pub elapsed_seconds: ::core::option::Option<i64>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MediaTaskProcessingRecord {
-    #[prost(int64, optional, tag = "1")]
-    pub occurred_at: ::core::option::Option<i64>,
-    #[prost(string, optional, tag = "2")]
-    pub message: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MediaTaskDetail {
+pub struct TaskDetail {
     #[prost(message, optional, tag = "1")]
-    pub summary: ::core::option::Option<MediaTaskSummary>,
-    #[prost(string, optional, tag = "2")]
-    pub source_task_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(message, repeated, tag = "5")]
-    pub processing_records: ::prost::alloc::vec::Vec<MediaTaskProcessingRecord>,
-    #[prost(oneof = "media_task_detail::EffectiveParams", tags = "3, 4")]
-    pub effective_params: ::core::option::Option<media_task_detail::EffectiveParams>,
+    pub summary: ::core::option::Option<TaskSummary>,
+    #[prost(oneof = "task_detail::EffectiveParams", tags = "2, 3")]
+    pub effective_params: ::core::option::Option<task_detail::EffectiveParams>,
 }
-/// Nested message and enum types in `MediaTaskDetail`.
-pub mod media_task_detail {
+/// Nested message and enum types in `TaskDetail`.
+pub mod task_detail {
     #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
     pub enum EffectiveParams {
-        #[prost(message, tag = "3")]
-        TextToImage(super::TextToImageTaskParams),
-        #[prost(message, tag = "4")]
+        #[prost(message, tag = "2")]
         ImageToVideo(super::ImageToVideoTaskParams),
+        #[prost(message, tag = "3")]
+        TextToVideo(super::TextToVideoTaskParams),
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetMediaTaskReq {
+pub struct GetTaskReq {
     #[prost(string, optional, tag = "1")]
     pub task_id: ::core::option::Option<::prost::alloc::string::String>,
 }
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetMediaTaskResp {
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetTaskResp {
     #[prost(message, optional, tag = "1")]
-    pub task: ::core::option::Option<MediaTaskDetail>,
+    pub task: ::core::option::Option<TaskDetail>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListMediaTasksReq {
+pub struct ListTasksReq {
     #[prost(message, optional, tag = "1")]
     pub pagination: ::core::option::Option<super::Pagination>,
-    #[prost(string, optional, tag = "2")]
-    pub feature_key: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(enumeration = "MediaTaskStatus", repeated, tag = "3")]
+    /// 不传表示不过滤；显式传值时不能为 UNSPECIFIED。
+    #[prost(enumeration = "FeatureKey", optional, tag = "2")]
+    pub feature_key: ::core::option::Option<i32>,
+    #[prost(enumeration = "TaskStatus", repeated, packed = "false", tag = "3")]
     pub statuses: ::prost::alloc::vec::Vec<i32>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListMediaTasksResp {
+pub struct ListTasksResp {
     #[prost(int32, optional, tag = "1")]
     pub total: ::core::option::Option<i32>,
     #[prost(message, repeated, tag = "2")]
-    pub tasks: ::prost::alloc::vec::Vec<MediaTaskSummary>,
+    pub tasks: ::prost::alloc::vec::Vec<TaskSummary>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct CancelMediaTaskReq {
+pub struct CancelTaskReq {
     #[prost(string, optional, tag = "1")]
     pub task_id: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct CancelMediaTaskResp {
+pub struct CancelTaskResp {
     #[prost(string, optional, tag = "1")]
     pub task_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(enumeration = "MediaTaskStatus", optional, tag = "2")]
+    #[prost(enumeration = "TaskStatus", optional, tag = "2")]
     pub status: ::core::option::Option<i32>,
     #[prost(string, optional, tag = "3")]
     pub status_message: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct RecoverSaveMediaTaskReq {
+pub struct RecoverSaveTaskReq {
     #[prost(string, optional, tag = "1")]
     pub request_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
     pub task_id: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct RecoverSaveMediaTaskResp {
+pub struct RecoverSaveTaskResp {
     #[prost(string, optional, tag = "1")]
     pub task_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(enumeration = "MediaTaskStatus", optional, tag = "2")]
+    #[prost(enumeration = "TaskStatus", optional, tag = "2")]
     pub status: ::core::option::Option<i32>,
     #[prost(string, optional, tag = "3")]
     pub status_message: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
-pub enum MediaTaskPurpose {
+pub enum TaskPurpose {
     Unspecified = 0,
     Normal = 1,
     WorkflowTest = 2,
 }
-impl MediaTaskPurpose {
+impl TaskPurpose {
     /// String value of the enum field names used in the ProtoBuf definition.
     ///
     /// The values are not transformed in any way and thus are considered stable
     /// (if the ProtoBuf definition does not change) and safe for programmatic use.
     pub fn as_str_name(&self) -> &'static str {
         match self {
-            Self::Unspecified => "MEDIA_TASK_PURPOSE_UNSPECIFIED",
-            Self::Normal => "MEDIA_TASK_PURPOSE_NORMAL",
-            Self::WorkflowTest => "MEDIA_TASK_PURPOSE_WORKFLOW_TEST",
+            Self::Unspecified => "TASK_PURPOSE_UNSPECIFIED",
+            Self::Normal => "TASK_PURPOSE_NORMAL",
+            Self::WorkflowTest => "TASK_PURPOSE_WORKFLOW_TEST",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
     pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
         match value {
-            "MEDIA_TASK_PURPOSE_UNSPECIFIED" => Some(Self::Unspecified),
-            "MEDIA_TASK_PURPOSE_NORMAL" => Some(Self::Normal),
-            "MEDIA_TASK_PURPOSE_WORKFLOW_TEST" => Some(Self::WorkflowTest),
+            "TASK_PURPOSE_UNSPECIFIED" => Some(Self::Unspecified),
+            "TASK_PURPOSE_NORMAL" => Some(Self::Normal),
+            "TASK_PURPOSE_WORKFLOW_TEST" => Some(Self::WorkflowTest),
             _ => None,
         }
     }
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
-pub enum MediaTaskStatus {
+pub enum TaskStatus {
     Unspecified = 0,
+    /// 等待派发；维护模式下也保持此状态。
     Pending = 1,
+    /// 覆盖提交、排队、状态核对和 ComfyUI 执行过程，具体文案见 status_message。
     Running = 2,
     Saving = 3,
     Cancelling = 4,
     Success = 5,
+    /// 上游失败、执行超时、输出无效或保存失败都归入 FAILED，由 error_code 区分。
     Failed = 6,
     Cancelled = 7,
 }
-impl MediaTaskStatus {
+impl TaskStatus {
     /// String value of the enum field names used in the ProtoBuf definition.
     ///
     /// The values are not transformed in any way and thus are considered stable
     /// (if the ProtoBuf definition does not change) and safe for programmatic use.
     pub fn as_str_name(&self) -> &'static str {
         match self {
-            Self::Unspecified => "MEDIA_TASK_STATUS_UNSPECIFIED",
-            Self::Pending => "MEDIA_TASK_STATUS_PENDING",
-            Self::Running => "MEDIA_TASK_STATUS_RUNNING",
-            Self::Saving => "MEDIA_TASK_STATUS_SAVING",
-            Self::Cancelling => "MEDIA_TASK_STATUS_CANCELLING",
-            Self::Success => "MEDIA_TASK_STATUS_SUCCESS",
-            Self::Failed => "MEDIA_TASK_STATUS_FAILED",
-            Self::Cancelled => "MEDIA_TASK_STATUS_CANCELLED",
+            Self::Unspecified => "TASK_STATUS_UNSPECIFIED",
+            Self::Pending => "TASK_STATUS_PENDING",
+            Self::Running => "TASK_STATUS_RUNNING",
+            Self::Saving => "TASK_STATUS_SAVING",
+            Self::Cancelling => "TASK_STATUS_CANCELLING",
+            Self::Success => "TASK_STATUS_SUCCESS",
+            Self::Failed => "TASK_STATUS_FAILED",
+            Self::Cancelled => "TASK_STATUS_CANCELLED",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
     pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
         match value {
-            "MEDIA_TASK_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
-            "MEDIA_TASK_STATUS_PENDING" => Some(Self::Pending),
-            "MEDIA_TASK_STATUS_RUNNING" => Some(Self::Running),
-            "MEDIA_TASK_STATUS_SAVING" => Some(Self::Saving),
-            "MEDIA_TASK_STATUS_CANCELLING" => Some(Self::Cancelling),
-            "MEDIA_TASK_STATUS_SUCCESS" => Some(Self::Success),
-            "MEDIA_TASK_STATUS_FAILED" => Some(Self::Failed),
-            "MEDIA_TASK_STATUS_CANCELLED" => Some(Self::Cancelled),
+            "TASK_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
+            "TASK_STATUS_PENDING" => Some(Self::Pending),
+            "TASK_STATUS_RUNNING" => Some(Self::Running),
+            "TASK_STATUS_SAVING" => Some(Self::Saving),
+            "TASK_STATUS_CANCELLING" => Some(Self::Cancelling),
+            "TASK_STATUS_SUCCESS" => Some(Self::Success),
+            "TASK_STATUS_FAILED" => Some(Self::Failed),
+            "TASK_STATUS_CANCELLED" => Some(Self::Cancelled),
             _ => None,
         }
     }
@@ -490,7 +1249,7 @@ impl MediaType {
     }
 }
 /// Generated client implementations.
-pub mod media_task_client {
+pub mod task_client {
     #![allow(
         unused_variables,
         dead_code,
@@ -501,10 +1260,10 @@ pub mod media_task_client {
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
     #[derive(Debug, Clone)]
-    pub struct MediaTaskClient<T> {
+    pub struct TaskClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl MediaTaskClient<tonic::transport::Channel> {
+    impl TaskClient<tonic::transport::Channel> {
         /// Attempt to create a new client by connecting to a given endpoint.
         pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
         where
@@ -515,7 +1274,7 @@ pub mod media_task_client {
             Ok(Self::new(conn))
         }
     }
-    impl<T> MediaTaskClient<T>
+    impl<T> TaskClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::Body>,
         T::Error: Into<StdError>,
@@ -533,7 +1292,7 @@ pub mod media_task_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> MediaTaskClient<InterceptedService<T, F>>
+        ) -> TaskClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -547,7 +1306,7 @@ pub mod media_task_client {
                 http::Request<tonic::body::Body>,
             >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
         {
-            MediaTaskClient::new(InterceptedService::new(inner, interceptor))
+            TaskClient::new(InterceptedService::new(inner, interceptor))
         }
         /// Compress requests with the given encoding.
         ///
@@ -579,38 +1338,11 @@ pub mod media_task_client {
         pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
-        }
-        pub async fn create_text_to_image(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateTextToImageTaskReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::CreateMediaTaskResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.MediaTask/CreateTextToImage",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.MediaTask", "CreateTextToImage"));
-            self.inner.unary(req, path, codec).await
         }
         pub async fn create_image_to_video(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateImageToVideoTaskReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::CreateMediaTaskResp>,
-            tonic::Status,
-        > {
+        ) -> std::result::Result<tonic::Response<super::CreateTaskResp>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -621,20 +1353,17 @@ pub mod media_task_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.MediaTask/CreateImageToVideo",
+                "/hi.media.Task/CreateImageToVideo",
             );
             let mut req = request.into_request();
             req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.MediaTask", "CreateImageToVideo"));
+                .insert(GrpcMethod::new("hi.media.Task", "CreateImageToVideo"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn get(
+        pub async fn create_text_to_video(
             &mut self,
-            request: impl tonic::IntoRequest<super::GetMediaTaskReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetMediaTaskResp>,
-            tonic::Status,
-        > {
+            request: impl tonic::IntoRequest<super::CreateTextToVideoTaskReq>,
+        ) -> std::result::Result<tonic::Response<super::CreateTaskResp>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -644,18 +1373,36 @@ pub mod media_task_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.media.MediaTask/Get");
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.Task/CreateTextToVideo",
+            );
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.media.MediaTask", "Get"));
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.Task", "CreateTextToVideo"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetTaskReq>,
+        ) -> std::result::Result<tonic::Response<super::GetTaskResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.media.Task/Get");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.media.Task", "Get"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn list(
             &mut self,
-            request: impl tonic::IntoRequest<super::ListMediaTasksReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::ListMediaTasksResp>,
-            tonic::Status,
-        > {
+            request: impl tonic::IntoRequest<super::ListTasksReq>,
+        ) -> std::result::Result<tonic::Response<super::ListTasksResp>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -665,18 +1412,15 @@ pub mod media_task_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.media.MediaTask/List");
+            let path = http::uri::PathAndQuery::from_static("/hi.media.Task/List");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.media.MediaTask", "List"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.media.Task", "List"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn cancel(
             &mut self,
-            request: impl tonic::IntoRequest<super::CancelMediaTaskReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::CancelMediaTaskResp>,
-            tonic::Status,
-        > {
+            request: impl tonic::IntoRequest<super::CancelTaskReq>,
+        ) -> std::result::Result<tonic::Response<super::CancelTaskResp>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -686,18 +1430,16 @@ pub mod media_task_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.MediaTask/Cancel",
-            );
+            let path = http::uri::PathAndQuery::from_static("/hi.media.Task/Cancel");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.media.MediaTask", "Cancel"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.media.Task", "Cancel"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn recover_save(
             &mut self,
-            request: impl tonic::IntoRequest<super::RecoverSaveMediaTaskReq>,
+            request: impl tonic::IntoRequest<super::RecoverSaveTaskReq>,
         ) -> std::result::Result<
-            tonic::Response<super::RecoverSaveMediaTaskResp>,
+            tonic::Response<super::RecoverSaveTaskResp>,
             tonic::Status,
         > {
             self.inner
@@ -710,350 +1452,10 @@ pub mod media_task_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.MediaTask/RecoverSave",
+                "/hi.media.Task/RecoverSave",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.MediaTask", "RecoverSave"));
-            self.inner.unary(req, path, codec).await
-        }
-    }
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetMediaFeatureReq {
-    #[prost(string, optional, tag = "1")]
-    pub feature_key: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TextToImageFeatureConfig {
-    #[prost(int32, optional, tag = "1")]
-    pub prompt_max_length: ::core::option::Option<i32>,
-    #[prost(int32, optional, tag = "2")]
-    pub negative_prompt_max_length: ::core::option::Option<i32>,
-    #[prost(message, repeated, tag = "3")]
-    pub allowed_resolutions: ::prost::alloc::vec::Vec<MediaResolution>,
-    #[prost(message, optional, tag = "4")]
-    pub default_resolution: ::core::option::Option<MediaResolution>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ImageToVideoFeatureConfig {
-    #[prost(int32, optional, tag = "1")]
-    pub prompt_max_length: ::core::option::Option<i32>,
-    #[prost(int32, optional, tag = "2")]
-    pub negative_prompt_max_length: ::core::option::Option<i32>,
-    #[prost(message, repeated, tag = "3")]
-    pub allowed_resolutions: ::prost::alloc::vec::Vec<MediaResolution>,
-    #[prost(message, optional, tag = "4")]
-    pub default_resolution: ::core::option::Option<MediaResolution>,
-    #[prost(int32, repeated, packed = "false", tag = "5")]
-    pub allowed_duration_seconds: ::prost::alloc::vec::Vec<i32>,
-    #[prost(int32, optional, tag = "6")]
-    pub default_duration_seconds: ::core::option::Option<i32>,
-    #[prost(int32, repeated, packed = "false", tag = "7")]
-    pub allowed_fps: ::prost::alloc::vec::Vec<i32>,
-    #[prost(int32, optional, tag = "8")]
-    pub default_fps: ::core::option::Option<i32>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetMediaFeatureResp {
-    #[prost(string, optional, tag = "1")]
-    pub feature_key: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(oneof = "get_media_feature_resp::FeatureConfig", tags = "3, 4")]
-    pub feature_config: ::core::option::Option<get_media_feature_resp::FeatureConfig>,
-}
-/// Nested message and enum types in `GetMediaFeatureResp`.
-pub mod get_media_feature_resp {
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum FeatureConfig {
-        #[prost(message, tag = "3")]
-        TextToImage(super::TextToImageFeatureConfig),
-        #[prost(message, tag = "4")]
-        ImageToVideo(super::ImageToVideoFeatureConfig),
-    }
-}
-/// Generated client implementations.
-pub mod media_feature_client {
-    #![allow(
-        unused_variables,
-        dead_code,
-        missing_docs,
-        clippy::wildcard_imports,
-        clippy::let_unit_value,
-    )]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    #[derive(Debug, Clone)]
-    pub struct MediaFeatureClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl MediaFeatureClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> MediaFeatureClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::Body>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> MediaFeatureClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
-        {
-            MediaFeatureClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        pub async fn get(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetMediaFeatureReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetMediaFeatureResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.MediaFeature/Get",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.media.MediaFeature", "Get"));
-            self.inner.unary(req, path, codec).await
-        }
-    }
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MediaMaintenanceState {
-    #[prost(bool, optional, tag = "1")]
-    pub enabled: ::core::option::Option<bool>,
-    #[prost(string, optional, tag = "2")]
-    pub reason: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(int64, optional, tag = "3")]
-    pub started_at: ::core::option::Option<i64>,
-    #[prost(int64, optional, tag = "4")]
-    pub updated_at: ::core::option::Option<i64>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetMediaMaintenanceResp {
-    #[prost(message, optional, tag = "1")]
-    pub state: ::core::option::Option<MediaMaintenanceState>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct SetMediaMaintenanceReq {
-    #[prost(bool, optional, tag = "1")]
-    pub enabled: ::core::option::Option<bool>,
-    #[prost(string, optional, tag = "2")]
-    pub reason: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct SetMediaMaintenanceResp {
-    #[prost(message, optional, tag = "1")]
-    pub state: ::core::option::Option<MediaMaintenanceState>,
-}
-/// Generated client implementations.
-pub mod media_manage_client {
-    #![allow(
-        unused_variables,
-        dead_code,
-        missing_docs,
-        clippy::wildcard_imports,
-        clippy::let_unit_value,
-    )]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    #[derive(Debug, Clone)]
-    pub struct MediaManageClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl MediaManageClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> MediaManageClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::Body>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> MediaManageClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
-        {
-            MediaManageClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        pub async fn get_maintenance(
-            &mut self,
-            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetMediaMaintenanceResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.MediaManage/GetMaintenance",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.MediaManage", "GetMaintenance"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn set_maintenance(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SetMediaMaintenanceReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::SetMediaMaintenanceResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.MediaManage/SetMaintenance",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.MediaManage", "SetMaintenance"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.media.Task", "RecoverSave"));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -1200,124 +1602,142 @@ pub mod user_manage_client {
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ImportMediaWorkflowReq {
-    #[prost(string, optional, tag = "1")]
-    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub feature_key: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "3")]
-    pub name: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "4")]
-    pub change_notes: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "5")]
-    pub api_json: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ImportMediaWorkflowResp {
-    #[prost(string, optional, tag = "1")]
-    pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MediaWorkflowInputBinding {
+pub struct WorkflowInputBinding {
     #[prost(string, optional, tag = "1")]
     pub node_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
     pub input_name: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MediaWorkflowOutputConfig {
+pub struct WorkflowOutputConfig {
+    /// 主输出只绑定节点；后端按节点 class_type 使用固定 history 解析器。
     #[prost(string, optional, tag = "1")]
     pub node_id: ::core::option::Option<::prost::alloc::string::String>,
 }
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MediaWorkflowResolutionConfig {
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkflowStringOptionInput {
     #[prost(message, optional, tag = "1")]
-    pub width: ::core::option::Option<MediaWorkflowInputBinding>,
+    pub binding: ::core::option::Option<WorkflowInputBinding>,
     #[prost(message, optional, tag = "2")]
-    pub height: ::core::option::Option<MediaWorkflowInputBinding>,
-    #[prost(message, repeated, tag = "3")]
-    pub allowed_values: ::prost::alloc::vec::Vec<MediaResolution>,
-    #[prost(message, optional, tag = "4")]
-    pub default_value: ::core::option::Option<MediaResolution>,
+    pub values: ::core::option::Option<StringOptionConfig>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MediaWorkflowIntOptionConfig {
+pub struct WorkflowDecimalOptionInput {
     #[prost(message, optional, tag = "1")]
-    pub binding: ::core::option::Option<MediaWorkflowInputBinding>,
-    #[prost(int32, repeated, packed = "false", tag = "2")]
-    pub allowed_values: ::prost::alloc::vec::Vec<i32>,
-    #[prost(int32, optional, tag = "3")]
-    pub default_value: ::core::option::Option<i32>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TextToImageWorkflowConfig {
-    #[prost(message, optional, tag = "1")]
-    pub prompt: ::core::option::Option<MediaWorkflowInputBinding>,
-    #[prost(int32, optional, tag = "2")]
-    pub prompt_max_length: ::core::option::Option<i32>,
-    #[prost(message, optional, tag = "3")]
-    pub negative_prompt: ::core::option::Option<MediaWorkflowInputBinding>,
-    #[prost(int32, optional, tag = "4")]
-    pub negative_prompt_max_length: ::core::option::Option<i32>,
-    #[prost(message, optional, tag = "5")]
-    pub resolution: ::core::option::Option<MediaWorkflowResolutionConfig>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ImageToVideoWorkflowConfig {
-    #[prost(message, optional, tag = "1")]
-    pub input_image: ::core::option::Option<MediaWorkflowInputBinding>,
+    pub binding: ::core::option::Option<WorkflowInputBinding>,
     #[prost(message, optional, tag = "2")]
-    pub prompt: ::core::option::Option<MediaWorkflowInputBinding>,
-    #[prost(int32, optional, tag = "3")]
-    pub prompt_max_length: ::core::option::Option<i32>,
-    #[prost(message, optional, tag = "4")]
-    pub negative_prompt: ::core::option::Option<MediaWorkflowInputBinding>,
-    #[prost(int32, optional, tag = "5")]
-    pub negative_prompt_max_length: ::core::option::Option<i32>,
-    #[prost(message, optional, tag = "6")]
-    pub resolution: ::core::option::Option<MediaWorkflowResolutionConfig>,
-    #[prost(message, optional, tag = "7")]
-    pub duration_seconds: ::core::option::Option<MediaWorkflowIntOptionConfig>,
-    #[prost(message, optional, tag = "8")]
-    pub fps: ::core::option::Option<MediaWorkflowIntOptionConfig>,
+    pub values: ::core::option::Option<DecimalOptionConfig>,
 }
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MediaWorkflowConfig {
-    #[prost(message, optional, tag = "3")]
-    pub output: ::core::option::Option<MediaWorkflowOutputConfig>,
-    #[prost(int32, optional, tag = "4")]
-    pub execution_timeout_seconds: ::core::option::Option<i32>,
-    #[prost(uint64, optional, tag = "5")]
-    pub output_reservation_bytes: ::core::option::Option<u64>,
-    #[prost(oneof = "media_workflow_config::FeatureConfig", tags = "1, 2")]
-    pub feature_config: ::core::option::Option<media_workflow_config::FeatureConfig>,
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkflowIntRangeInput {
+    #[prost(message, optional, tag = "1")]
+    pub binding: ::core::option::Option<WorkflowInputBinding>,
+    #[prost(message, optional, tag = "2")]
+    pub values: ::core::option::Option<IntRangeConfig>,
 }
-/// Nested message and enum types in `MediaWorkflowConfig`.
-pub mod media_workflow_config {
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum FeatureConfig {
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkflowFixedTextInput {
+    #[prost(message, optional, tag = "1")]
+    pub binding: ::core::option::Option<WorkflowInputBinding>,
+    #[prost(string, optional, tag = "2")]
+    pub value: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkflowSelectableFrameRate {
+    #[prost(message, optional, tag = "1")]
+    pub binding: ::core::option::Option<WorkflowInputBinding>,
+    #[prost(message, optional, tag = "2")]
+    pub values: ::core::option::Option<IntRangeConfig>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkflowFrameRateInput {
+    #[prost(oneof = "workflow_frame_rate_input::Mode", tags = "1, 2")]
+    pub mode: ::core::option::Option<workflow_frame_rate_input::Mode>,
+}
+/// Nested message and enum types in `WorkflowFrameRateInput`.
+pub mod workflow_frame_rate_input {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Mode {
         #[prost(message, tag = "1")]
-        TextToImage(super::TextToImageWorkflowConfig),
-        #[prost(message, tag = "2")]
-        ImageToVideo(super::ImageToVideoWorkflowConfig),
+        Selectable(super::WorkflowSelectableFrameRate),
+        #[prost(int32, tag = "2")]
+        FixedValue(i32),
     }
 }
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateMediaWorkflowReq {
-    #[prost(string, optional, tag = "1")]
-    pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub expected_content_hash: ::core::option::Option<::prost::alloc::string::String>,
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ImageToVideoWorkflowConfig {
+    #[prost(message, optional, tag = "1")]
+    pub input_image: ::core::option::Option<WorkflowInputBinding>,
+    #[prost(message, optional, tag = "2")]
+    pub prompt: ::core::option::Option<WorkflowInputBinding>,
+    #[prost(uint32, optional, tag = "3")]
+    pub prompt_max_length: ::core::option::Option<u32>,
+    /// 可选的管理员固定负向提示词；普通用户接口不接收也不返回该值。
+    #[prost(message, optional, tag = "4")]
+    pub negative_prompt: ::core::option::Option<WorkflowFixedTextInput>,
+    #[prost(message, optional, tag = "5")]
+    pub aspect_ratio: ::core::option::Option<WorkflowStringOptionInput>,
+    #[prost(message, optional, tag = "6")]
+    pub megapixels: ::core::option::Option<WorkflowDecimalOptionInput>,
+    #[prost(message, optional, tag = "7")]
+    pub duration_seconds: ::core::option::Option<WorkflowIntRangeInput>,
+    #[prost(message, optional, tag = "8")]
+    pub frame_rate: ::core::option::Option<WorkflowFrameRateInput>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TextToVideoWorkflowConfig {
+    #[prost(message, optional, tag = "1")]
+    pub prompt: ::core::option::Option<WorkflowInputBinding>,
+    #[prost(uint32, optional, tag = "2")]
+    pub prompt_max_length: ::core::option::Option<u32>,
+    /// 可选的管理员固定负向提示词；普通用户接口不接收也不返回该值。
     #[prost(message, optional, tag = "3")]
-    pub config: ::core::option::Option<MediaWorkflowConfig>,
+    pub negative_prompt: ::core::option::Option<WorkflowFixedTextInput>,
+    #[prost(message, optional, tag = "4")]
+    pub aspect_ratio: ::core::option::Option<WorkflowStringOptionInput>,
+    #[prost(message, optional, tag = "5")]
+    pub megapixels: ::core::option::Option<WorkflowDecimalOptionInput>,
+    #[prost(message, optional, tag = "6")]
+    pub duration_seconds: ::core::option::Option<WorkflowIntRangeInput>,
+    #[prost(message, optional, tag = "7")]
+    pub frame_rate: ::core::option::Option<WorkflowFrameRateInput>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct UpdateMediaWorkflowResp {
+pub struct WorkflowExecutionConfig {
+    #[prost(message, optional, tag = "3")]
+    pub output: ::core::option::Option<WorkflowOutputConfig>,
+    #[prost(uint32, optional, tag = "4")]
+    pub execution_timeout_seconds: ::core::option::Option<u32>,
+    #[prost(uint64, optional, tag = "5")]
+    pub output_reservation_bytes: ::core::option::Option<u64>,
+    #[prost(oneof = "workflow_execution_config::FeatureConfig", tags = "1, 2")]
+    pub feature_config: ::core::option::Option<workflow_execution_config::FeatureConfig>,
+}
+/// Nested message and enum types in `WorkflowExecutionConfig`.
+pub mod workflow_execution_config {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum FeatureConfig {
+        #[prost(message, tag = "1")]
+        ImageToVideo(super::ImageToVideoWorkflowConfig),
+        #[prost(message, tag = "2")]
+        TextToVideo(super::TextToVideoWorkflowConfig),
+    }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkflowIssue {
     #[prost(string, optional, tag = "1")]
-    pub content_hash: ::core::option::Option<::prost::alloc::string::String>,
+    pub code: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "WorkflowIssueSeverity", optional, tag = "2")]
+    pub severity: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "3")]
+    pub message: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub node_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "5")]
+    pub input_name: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MediaWorkflowInputCandidate {
+pub struct WorkflowNodeInput {
     #[prost(string, optional, tag = "1")]
     pub input_name: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
@@ -1332,7 +1752,7 @@ pub struct MediaWorkflowInputCandidate {
     pub declared_type: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MediaWorkflowNode {
+pub struct WorkflowNode {
     #[prost(string, optional, tag = "1")]
     pub node_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
@@ -1340,368 +1760,305 @@ pub struct MediaWorkflowNode {
     #[prost(string, optional, tag = "3")]
     pub title: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, repeated, tag = "4")]
-    pub inputs: ::prost::alloc::vec::Vec<MediaWorkflowInputCandidate>,
+    pub inputs: ::prost::alloc::vec::Vec<WorkflowNodeInput>,
     #[prost(bool, optional, tag = "5")]
     pub supported_main_output: ::core::option::Option<bool>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MediaWorkflowDependencyUsage {
+pub struct WorkflowDependencyUsage {
     #[prost(string, optional, tag = "1")]
     pub node_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
     pub input_name: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MediaWorkflowDependency {
-    #[prost(enumeration = "MediaWorkflowDependencyKind", optional, tag = "1")]
+pub struct WorkflowDependency {
+    #[prost(enumeration = "WorkflowDependencyKind", optional, tag = "1")]
     pub kind: ::core::option::Option<i32>,
     #[prost(string, optional, tag = "2")]
     pub identifier: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, repeated, tag = "3")]
-    pub usages: ::prost::alloc::vec::Vec<MediaWorkflowDependencyUsage>,
+    pub usages: ::prost::alloc::vec::Vec<WorkflowDependencyUsage>,
+    /// false 表示仅存在于当前固定关闭的惰性分支；缺失时校验只产生警告。
+    #[prost(bool, optional, tag = "4")]
+    pub required: ::core::option::Option<bool>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MediaWorkflowIssue {
-    #[prost(string, optional, tag = "1")]
-    pub code: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(enumeration = "MediaWorkflowIssueSeverity", optional, tag = "2")]
-    pub severity: ::core::option::Option<i32>,
-    #[prost(string, optional, tag = "3")]
-    pub message: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "4")]
-    pub node_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "5")]
-    pub input_name: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MediaWorkflowValidationSummary {
-    #[prost(enumeration = "MediaWorkflowValidationStatus", optional, tag = "1")]
-    pub status: ::core::option::Option<i32>,
-    #[prost(int32, optional, tag = "2")]
-    pub error_count: ::core::option::Option<i32>,
-    #[prost(int32, optional, tag = "3")]
-    pub warning_count: ::core::option::Option<i32>,
-    #[prost(string, optional, tag = "4")]
-    pub content_hash: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(int64, optional, tag = "5")]
-    pub validated_at: ::core::option::Option<i64>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MediaWorkflowValidationResult {
-    #[prost(message, optional, tag = "1")]
-    pub summary: ::core::option::Option<MediaWorkflowValidationSummary>,
-    #[prost(message, repeated, tag = "2")]
-    pub issues: ::prost::alloc::vec::Vec<MediaWorkflowIssue>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MediaWorkflowSummary {
+pub struct WorkflowSummary {
     #[prost(string, optional, tag = "1")]
     pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub feature_key: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "FeatureKey", optional, tag = "2")]
+    pub feature_key: ::core::option::Option<i32>,
     #[prost(string, optional, tag = "3")]
     pub name: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(enumeration = "MediaWorkflowStatus", optional, tag = "4")]
+    #[prost(enumeration = "WorkflowStatus", optional, tag = "4")]
     pub status: ::core::option::Option<i32>,
-    #[prost(bool, optional, tag = "5")]
-    pub is_active: ::core::option::Option<bool>,
-    #[prost(message, optional, tag = "6")]
-    pub latest_validation: ::core::option::Option<MediaWorkflowValidationSummary>,
+    #[prost(enumeration = "WorkflowValidationStatus", optional, tag = "5")]
+    pub validation_status: ::core::option::Option<i32>,
+    #[prost(int64, optional, tag = "6")]
+    pub enabled_at: ::core::option::Option<i64>,
     #[prost(string, optional, tag = "7")]
     pub created_by: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(int64, optional, tag = "8")]
     pub created_at: ::core::option::Option<i64>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListMediaWorkflowsReq {
-    #[prost(message, optional, tag = "1")]
-    pub pagination: ::core::option::Option<super::Pagination>,
-    #[prost(string, optional, tag = "2")]
-    pub feature_key: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(enumeration = "MediaWorkflowStatus", optional, tag = "3")]
-    pub status: ::core::option::Option<i32>,
-    #[prost(bool, optional, tag = "4")]
-    pub is_active: ::core::option::Option<bool>,
+    #[prost(int64, optional, tag = "9")]
+    pub updated_at: ::core::option::Option<i64>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListMediaWorkflowsResp {
+pub struct WorkflowDetail {
+    #[prost(message, optional, tag = "1")]
+    pub summary: ::core::option::Option<WorkflowSummary>,
+    #[prost(string, optional, tag = "2")]
+    pub description: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub api_json: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "4")]
+    pub config: ::core::option::Option<WorkflowExecutionConfig>,
+    #[prost(message, repeated, tag = "5")]
+    pub nodes: ::prost::alloc::vec::Vec<WorkflowNode>,
+    #[prost(message, repeated, tag = "6")]
+    pub dependencies: ::prost::alloc::vec::Vec<WorkflowDependency>,
+    #[prost(message, repeated, tag = "7")]
+    pub validation_issues: ::prost::alloc::vec::Vec<WorkflowIssue>,
+    #[prost(int64, optional, tag = "8")]
+    pub validated_at: ::core::option::Option<i64>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ImportWorkflowReq {
+    #[prost(enumeration = "FeatureKey", optional, tag = "1")]
+    pub feature_key: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "2")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub api_json: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub description: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ImportWorkflowResp {
+    #[prost(string, optional, tag = "1")]
+    pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UpdateWorkflowReq {
+    #[prost(string, optional, tag = "1")]
+    pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// api_json 与 config 至少提交一项；只允许修改草稿。
+    #[prost(string, optional, tag = "2")]
+    pub api_json: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "3")]
+    pub config: ::core::option::Option<WorkflowExecutionConfig>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateWorkflowResp {
+    #[prost(message, optional, tag = "1")]
+    pub workflow: ::core::option::Option<WorkflowDetail>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UpdateWorkflowDescriptionReq {
+    #[prost(string, optional, tag = "1")]
+    pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 必须显式提交；空字符串表示清空说明。
+    #[prost(string, optional, tag = "2")]
+    pub description: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateWorkflowDescriptionResp {
+    #[prost(message, optional, tag = "1")]
+    pub workflow: ::core::option::Option<WorkflowDetail>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetWorkflowReq {
+    #[prost(string, optional, tag = "1")]
+    pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetWorkflowResp {
+    #[prost(message, optional, tag = "1")]
+    pub workflow: ::core::option::Option<WorkflowDetail>,
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListWorkflowsReq {
+    #[prost(message, optional, tag = "1")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+    #[prost(enumeration = "FeatureKey", optional, tag = "2")]
+    pub feature_key: ::core::option::Option<i32>,
+    #[prost(enumeration = "WorkflowStatus", optional, tag = "3")]
+    pub status: ::core::option::Option<i32>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListWorkflowsResp {
     #[prost(int32, optional, tag = "1")]
     pub total: ::core::option::Option<i32>,
     #[prost(message, repeated, tag = "2")]
-    pub workflows: ::prost::alloc::vec::Vec<MediaWorkflowSummary>,
+    pub workflows: ::prost::alloc::vec::Vec<WorkflowSummary>,
 }
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MediaWorkflowDetail {
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ValidateWorkflowReq {
     #[prost(string, optional, tag = "1")]
     pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub feature_key: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "3")]
-    pub name: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "4")]
-    pub change_notes: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(enumeration = "MediaWorkflowStatus", optional, tag = "5")]
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ValidateWorkflowResp {
+    #[prost(enumeration = "WorkflowValidationStatus", optional, tag = "1")]
     pub status: ::core::option::Option<i32>,
-    #[prost(bool, optional, tag = "6")]
-    pub is_active: ::core::option::Option<bool>,
-    #[prost(string, optional, tag = "7")]
-    pub api_json: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "8")]
-    pub content_hash: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(message, optional, tag = "9")]
-    pub config: ::core::option::Option<MediaWorkflowConfig>,
-    #[prost(message, repeated, tag = "10")]
-    pub nodes: ::prost::alloc::vec::Vec<MediaWorkflowNode>,
-    #[prost(message, repeated, tag = "11")]
-    pub dependencies: ::prost::alloc::vec::Vec<MediaWorkflowDependency>,
-    #[prost(message, optional, tag = "12")]
-    pub latest_validation: ::core::option::Option<MediaWorkflowValidationResult>,
-    #[prost(string, optional, tag = "13")]
-    pub ready_test_task_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "14")]
-    pub ready_by: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(int64, optional, tag = "15")]
-    pub ready_at: ::core::option::Option<i64>,
-    #[prost(string, optional, tag = "16")]
-    pub created_by: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(int64, optional, tag = "17")]
-    pub created_at: ::core::option::Option<i64>,
+    #[prost(message, repeated, tag = "2")]
+    pub issues: ::prost::alloc::vec::Vec<WorkflowIssue>,
+    #[prost(int64, optional, tag = "3")]
+    pub validated_at: ::core::option::Option<i64>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetMediaWorkflowReq {
-    #[prost(string, optional, tag = "1")]
-    pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetMediaWorkflowResp {
-    #[prost(message, optional, tag = "1")]
-    pub workflow: ::core::option::Option<MediaWorkflowDetail>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ValidateMediaWorkflowReq {
-    #[prost(string, optional, tag = "1")]
-    pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ValidateMediaWorkflowResp {
-    #[prost(message, optional, tag = "1")]
-    pub validation: ::core::option::Option<MediaWorkflowValidationResult>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct TextToImageWorkflowTestInput {
-    #[prost(string, optional, tag = "1")]
-    pub prompt: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ImageToVideoWorkflowTestInput {
-    #[prost(string, optional, tag = "1")]
-    pub input_asset_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub prompt: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct TestMediaWorkflowReq {
+pub struct TestWorkflowReq {
     #[prost(string, optional, tag = "1")]
     pub request_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
     pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "3")]
-    pub expected_content_hash: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(oneof = "test_media_workflow_req::Input", tags = "4, 5")]
-    pub input: ::core::option::Option<test_media_workflow_req::Input>,
-}
-/// Nested message and enum types in `TestMediaWorkflowReq`.
-pub mod test_media_workflow_req {
-    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
-    pub enum Input {
-        #[prost(message, tag = "4")]
-        TextToImage(super::TextToImageWorkflowTestInput),
-        #[prost(message, tag = "5")]
-        ImageToVideo(super::ImageToVideoWorkflowTestInput),
-    }
+    pub prompt: ::core::option::Option<::prost::alloc::string::String>,
+    /// 图生视频必须提交管理员本人的图片资产；文生视频必须省略。
+    /// 分辨率、时长和帧率统一使用工作流默认值或固定值。
+    #[prost(string, optional, tag = "4")]
+    pub input_asset_id: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct TestMediaWorkflowResp {
+pub struct TestWorkflowResp {
     #[prost(string, optional, tag = "1")]
     pub task_id: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MediaWorkflowTestRecord {
-    #[prost(message, optional, tag = "1")]
-    pub task: ::core::option::Option<MediaTaskSummary>,
-    #[prost(string, optional, tag = "2")]
-    pub content_hash: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListMediaWorkflowTestsReq {
+pub struct ListWorkflowTestsReq {
     #[prost(message, optional, tag = "1")]
     pub pagination: ::core::option::Option<super::Pagination>,
     #[prost(string, optional, tag = "2")]
     pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListMediaWorkflowTestsResp {
+pub struct ListWorkflowTestsResp {
     #[prost(int32, optional, tag = "1")]
     pub total: ::core::option::Option<i32>,
     #[prost(message, repeated, tag = "2")]
-    pub tests: ::prost::alloc::vec::Vec<MediaWorkflowTestRecord>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct SetMediaWorkflowReadyReq {
-    #[prost(string, optional, tag = "1")]
-    pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub expected_content_hash: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "3")]
-    pub test_task_id: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct SetMediaWorkflowReadyResp {
-    #[prost(string, optional, tag = "1")]
-    pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(enumeration = "MediaWorkflowStatus", optional, tag = "2")]
-    pub status: ::core::option::Option<i32>,
-    #[prost(string, optional, tag = "3")]
-    pub content_hash: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "4")]
-    pub ready_test_task_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(int64, optional, tag = "5")]
-    pub ready_at: ::core::option::Option<i64>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct SetActiveMediaWorkflowReq {
-    #[prost(string, optional, tag = "1")]
-    pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct SetActiveMediaWorkflowResp {
-    #[prost(string, optional, tag = "1")]
-    pub feature_key: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub active_workflow_version_id: ::core::option::Option<
-        ::prost::alloc::string::String,
-    >,
-    #[prost(int64, optional, tag = "3")]
-    pub activated_at: ::core::option::Option<i64>,
+    pub tasks: ::prost::alloc::vec::Vec<TaskSummary>,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
-pub enum MediaWorkflowDependencyKind {
-    Unspecified = 0,
-    NodeClass = 1,
-    LoaderFile = 2,
-}
-impl MediaWorkflowDependencyKind {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Self::Unspecified => "MEDIA_WORKFLOW_DEPENDENCY_KIND_UNSPECIFIED",
-            Self::NodeClass => "MEDIA_WORKFLOW_DEPENDENCY_KIND_NODE_CLASS",
-            Self::LoaderFile => "MEDIA_WORKFLOW_DEPENDENCY_KIND_LOADER_FILE",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "MEDIA_WORKFLOW_DEPENDENCY_KIND_UNSPECIFIED" => Some(Self::Unspecified),
-            "MEDIA_WORKFLOW_DEPENDENCY_KIND_NODE_CLASS" => Some(Self::NodeClass),
-            "MEDIA_WORKFLOW_DEPENDENCY_KIND_LOADER_FILE" => Some(Self::LoaderFile),
-            _ => None,
-        }
-    }
-}
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum MediaWorkflowIssueSeverity {
-    Unspecified = 0,
-    Error = 1,
-    Warning = 2,
-}
-impl MediaWorkflowIssueSeverity {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Self::Unspecified => "MEDIA_WORKFLOW_ISSUE_SEVERITY_UNSPECIFIED",
-            Self::Error => "MEDIA_WORKFLOW_ISSUE_SEVERITY_ERROR",
-            Self::Warning => "MEDIA_WORKFLOW_ISSUE_SEVERITY_WARNING",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "MEDIA_WORKFLOW_ISSUE_SEVERITY_UNSPECIFIED" => Some(Self::Unspecified),
-            "MEDIA_WORKFLOW_ISSUE_SEVERITY_ERROR" => Some(Self::Error),
-            "MEDIA_WORKFLOW_ISSUE_SEVERITY_WARNING" => Some(Self::Warning),
-            _ => None,
-        }
-    }
-}
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum MediaWorkflowStatus {
+pub enum WorkflowStatus {
     Unspecified = 0,
     Draft = 1,
-    Ready = 2,
+    /// 最近校验通过的草稿在管理试跑完整成功后自动进入 ENABLED；是否对用户可用仍由映射决定。
+    Enabled = 2,
 }
-impl MediaWorkflowStatus {
+impl WorkflowStatus {
     /// String value of the enum field names used in the ProtoBuf definition.
     ///
     /// The values are not transformed in any way and thus are considered stable
     /// (if the ProtoBuf definition does not change) and safe for programmatic use.
     pub fn as_str_name(&self) -> &'static str {
         match self {
-            Self::Unspecified => "MEDIA_WORKFLOW_STATUS_UNSPECIFIED",
-            Self::Draft => "MEDIA_WORKFLOW_STATUS_DRAFT",
-            Self::Ready => "MEDIA_WORKFLOW_STATUS_READY",
+            Self::Unspecified => "WORKFLOW_STATUS_UNSPECIFIED",
+            Self::Draft => "WORKFLOW_STATUS_DRAFT",
+            Self::Enabled => "WORKFLOW_STATUS_ENABLED",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
     pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
         match value {
-            "MEDIA_WORKFLOW_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
-            "MEDIA_WORKFLOW_STATUS_DRAFT" => Some(Self::Draft),
-            "MEDIA_WORKFLOW_STATUS_READY" => Some(Self::Ready),
+            "WORKFLOW_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
+            "WORKFLOW_STATUS_DRAFT" => Some(Self::Draft),
+            "WORKFLOW_STATUS_ENABLED" => Some(Self::Enabled),
             _ => None,
         }
     }
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
-pub enum MediaWorkflowValidationStatus {
+pub enum WorkflowValidationStatus {
+    /// 尚未校验。
     Unspecified = 0,
     Passed = 1,
     Failed = 2,
 }
-impl MediaWorkflowValidationStatus {
+impl WorkflowValidationStatus {
     /// String value of the enum field names used in the ProtoBuf definition.
     ///
     /// The values are not transformed in any way and thus are considered stable
     /// (if the ProtoBuf definition does not change) and safe for programmatic use.
     pub fn as_str_name(&self) -> &'static str {
         match self {
-            Self::Unspecified => "MEDIA_WORKFLOW_VALIDATION_STATUS_UNSPECIFIED",
-            Self::Passed => "MEDIA_WORKFLOW_VALIDATION_STATUS_PASSED",
-            Self::Failed => "MEDIA_WORKFLOW_VALIDATION_STATUS_FAILED",
+            Self::Unspecified => "WORKFLOW_VALIDATION_STATUS_UNSPECIFIED",
+            Self::Passed => "WORKFLOW_VALIDATION_STATUS_PASSED",
+            Self::Failed => "WORKFLOW_VALIDATION_STATUS_FAILED",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
     pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
         match value {
-            "MEDIA_WORKFLOW_VALIDATION_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
-            "MEDIA_WORKFLOW_VALIDATION_STATUS_PASSED" => Some(Self::Passed),
-            "MEDIA_WORKFLOW_VALIDATION_STATUS_FAILED" => Some(Self::Failed),
+            "WORKFLOW_VALIDATION_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
+            "WORKFLOW_VALIDATION_STATUS_PASSED" => Some(Self::Passed),
+            "WORKFLOW_VALIDATION_STATUS_FAILED" => Some(Self::Failed),
+            _ => None,
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum WorkflowIssueSeverity {
+    Unspecified = 0,
+    Warning = 1,
+    Error = 2,
+}
+impl WorkflowIssueSeverity {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "WORKFLOW_ISSUE_SEVERITY_UNSPECIFIED",
+            Self::Warning => "WORKFLOW_ISSUE_SEVERITY_WARNING",
+            Self::Error => "WORKFLOW_ISSUE_SEVERITY_ERROR",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "WORKFLOW_ISSUE_SEVERITY_UNSPECIFIED" => Some(Self::Unspecified),
+            "WORKFLOW_ISSUE_SEVERITY_WARNING" => Some(Self::Warning),
+            "WORKFLOW_ISSUE_SEVERITY_ERROR" => Some(Self::Error),
+            _ => None,
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum WorkflowDependencyKind {
+    Unspecified = 0,
+    NodeClass = 1,
+    LoaderFile = 2,
+}
+impl WorkflowDependencyKind {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "WORKFLOW_DEPENDENCY_KIND_UNSPECIFIED",
+            Self::NodeClass => "WORKFLOW_DEPENDENCY_KIND_NODE_CLASS",
+            Self::LoaderFile => "WORKFLOW_DEPENDENCY_KIND_LOADER_FILE",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "WORKFLOW_DEPENDENCY_KIND_UNSPECIFIED" => Some(Self::Unspecified),
+            "WORKFLOW_DEPENDENCY_KIND_NODE_CLASS" => Some(Self::NodeClass),
+            "WORKFLOW_DEPENDENCY_KIND_LOADER_FILE" => Some(Self::LoaderFile),
             _ => None,
         }
     }
 }
 /// Generated client implementations.
-pub mod media_workflow_manage_client {
+pub mod workflow_manage_client {
     #![allow(
         unused_variables,
         dead_code,
@@ -1712,10 +2069,10 @@ pub mod media_workflow_manage_client {
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
     #[derive(Debug, Clone)]
-    pub struct MediaWorkflowManageClient<T> {
+    pub struct WorkflowManageClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl MediaWorkflowManageClient<tonic::transport::Channel> {
+    impl WorkflowManageClient<tonic::transport::Channel> {
         /// Attempt to create a new client by connecting to a given endpoint.
         pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
         where
@@ -1726,7 +2083,7 @@ pub mod media_workflow_manage_client {
             Ok(Self::new(conn))
         }
     }
-    impl<T> MediaWorkflowManageClient<T>
+    impl<T> WorkflowManageClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::Body>,
         T::Error: Into<StdError>,
@@ -1744,7 +2101,7 @@ pub mod media_workflow_manage_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> MediaWorkflowManageClient<InterceptedService<T, F>>
+        ) -> WorkflowManageClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -1758,7 +2115,7 @@ pub mod media_workflow_manage_client {
                 http::Request<tonic::body::Body>,
             >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
         {
-            MediaWorkflowManageClient::new(InterceptedService::new(inner, interceptor))
+            WorkflowManageClient::new(InterceptedService::new(inner, interceptor))
         }
         /// Compress requests with the given encoding.
         ///
@@ -1793,9 +2150,9 @@ pub mod media_workflow_manage_client {
         }
         pub async fn import_workflow(
             &mut self,
-            request: impl tonic::IntoRequest<super::ImportMediaWorkflowReq>,
+            request: impl tonic::IntoRequest<super::ImportWorkflowReq>,
         ) -> std::result::Result<
-            tonic::Response<super::ImportMediaWorkflowResp>,
+            tonic::Response<super::ImportWorkflowResp>,
             tonic::Status,
         > {
             self.inner
@@ -1808,20 +2165,18 @@ pub mod media_workflow_manage_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.MediaWorkflowManage/ImportWorkflow",
+                "/hi.media.WorkflowManage/ImportWorkflow",
             );
             let mut req = request.into_request();
             req.extensions_mut()
-                .insert(
-                    GrpcMethod::new("hi.media.MediaWorkflowManage", "ImportWorkflow"),
-                );
+                .insert(GrpcMethod::new("hi.media.WorkflowManage", "ImportWorkflow"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn update(
+        pub async fn update_workflow(
             &mut self,
-            request: impl tonic::IntoRequest<super::UpdateMediaWorkflowReq>,
+            request: impl tonic::IntoRequest<super::UpdateWorkflowReq>,
         ) -> std::result::Result<
-            tonic::Response<super::UpdateMediaWorkflowResp>,
+            tonic::Response<super::UpdateWorkflowResp>,
             tonic::Status,
         > {
             self.inner
@@ -1834,18 +2189,18 @@ pub mod media_workflow_manage_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.MediaWorkflowManage/Update",
+                "/hi.media.WorkflowManage/UpdateWorkflow",
             );
             let mut req = request.into_request();
             req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.MediaWorkflowManage", "Update"));
+                .insert(GrpcMethod::new("hi.media.WorkflowManage", "UpdateWorkflow"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn list(
+        pub async fn update_description(
             &mut self,
-            request: impl tonic::IntoRequest<super::ListMediaWorkflowsReq>,
+            request: impl tonic::IntoRequest<super::UpdateWorkflowDescriptionReq>,
         ) -> std::result::Result<
-            tonic::Response<super::ListMediaWorkflowsResp>,
+            tonic::Response<super::UpdateWorkflowDescriptionResp>,
             tonic::Status,
         > {
             self.inner
@@ -1858,42 +2213,18 @@ pub mod media_workflow_manage_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.MediaWorkflowManage/List",
+                "/hi.media.WorkflowManage/UpdateDescription",
             );
             let mut req = request.into_request();
             req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.MediaWorkflowManage", "List"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn get(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetMediaWorkflowReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetMediaWorkflowResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.MediaWorkflowManage/Get",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.MediaWorkflowManage", "Get"));
+                .insert(GrpcMethod::new("hi.media.WorkflowManage", "UpdateDescription"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn validate(
             &mut self,
-            request: impl tonic::IntoRequest<super::ValidateMediaWorkflowReq>,
+            request: impl tonic::IntoRequest<super::ValidateWorkflowReq>,
         ) -> std::result::Result<
-            tonic::Response<super::ValidateMediaWorkflowResp>,
+            tonic::Response<super::ValidateWorkflowResp>,
             tonic::Status,
         > {
             self.inner
@@ -1906,18 +2237,18 @@ pub mod media_workflow_manage_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.MediaWorkflowManage/Validate",
+                "/hi.media.WorkflowManage/Validate",
             );
             let mut req = request.into_request();
             req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.MediaWorkflowManage", "Validate"));
+                .insert(GrpcMethod::new("hi.media.WorkflowManage", "Validate"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn test(
             &mut self,
-            request: impl tonic::IntoRequest<super::TestMediaWorkflowReq>,
+            request: impl tonic::IntoRequest<super::TestWorkflowReq>,
         ) -> std::result::Result<
-            tonic::Response<super::TestMediaWorkflowResp>,
+            tonic::Response<super::TestWorkflowResp>,
             tonic::Status,
         > {
             self.inner
@@ -1930,18 +2261,18 @@ pub mod media_workflow_manage_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.MediaWorkflowManage/Test",
+                "/hi.media.WorkflowManage/Test",
             );
             let mut req = request.into_request();
             req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.MediaWorkflowManage", "Test"));
+                .insert(GrpcMethod::new("hi.media.WorkflowManage", "Test"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn list_tests(
             &mut self,
-            request: impl tonic::IntoRequest<super::ListMediaWorkflowTestsReq>,
+            request: impl tonic::IntoRequest<super::ListWorkflowTestsReq>,
         ) -> std::result::Result<
-            tonic::Response<super::ListMediaWorkflowTestsResp>,
+            tonic::Response<super::ListWorkflowTestsResp>,
             tonic::Status,
         > {
             self.inner
@@ -1954,18 +2285,18 @@ pub mod media_workflow_manage_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.MediaWorkflowManage/ListTests",
+                "/hi.media.WorkflowManage/ListTests",
             );
             let mut req = request.into_request();
             req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.MediaWorkflowManage", "ListTests"));
+                .insert(GrpcMethod::new("hi.media.WorkflowManage", "ListTests"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn set_ready(
+        pub async fn list(
             &mut self,
-            request: impl tonic::IntoRequest<super::SetMediaWorkflowReadyReq>,
+            request: impl tonic::IntoRequest<super::ListWorkflowsReq>,
         ) -> std::result::Result<
-            tonic::Response<super::SetMediaWorkflowReadyResp>,
+            tonic::Response<super::ListWorkflowsResp>,
             tonic::Status,
         > {
             self.inner
@@ -1978,18 +2309,18 @@ pub mod media_workflow_manage_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.MediaWorkflowManage/SetReady",
+                "/hi.media.WorkflowManage/List",
             );
             let mut req = request.into_request();
             req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.MediaWorkflowManage", "SetReady"));
+                .insert(GrpcMethod::new("hi.media.WorkflowManage", "List"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn set_active(
+        pub async fn get(
             &mut self,
-            request: impl tonic::IntoRequest<super::SetActiveMediaWorkflowReq>,
+            request: impl tonic::IntoRequest<super::GetWorkflowReq>,
         ) -> std::result::Result<
-            tonic::Response<super::SetActiveMediaWorkflowResp>,
+            tonic::Response<super::GetWorkflowResp>,
             tonic::Status,
         > {
             self.inner
@@ -2002,17 +2333,17 @@ pub mod media_workflow_manage_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.MediaWorkflowManage/SetActive",
+                "/hi.media.WorkflowManage/Get",
             );
             let mut req = request.into_request();
             req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.MediaWorkflowManage", "SetActive"));
+                .insert(GrpcMethod::new("hi.media.WorkflowManage", "Get"));
             self.inner.unary(req, path, codec).await
         }
     }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetMediaQuotaResp {
+pub struct GetQuotaResp {
     #[prost(uint64, optional, tag = "1")]
     pub total_bytes: ::core::option::Option<u64>,
     #[prost(uint64, optional, tag = "2")]
@@ -2021,7 +2352,7 @@ pub struct GetMediaQuotaResp {
     pub available_bytes: ::core::option::Option<u64>,
 }
 /// Generated client implementations.
-pub mod media_quota_client {
+pub mod quota_client {
     #![allow(
         unused_variables,
         dead_code,
@@ -2032,10 +2363,10 @@ pub mod media_quota_client {
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
     #[derive(Debug, Clone)]
-    pub struct MediaQuotaClient<T> {
+    pub struct QuotaClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl MediaQuotaClient<tonic::transport::Channel> {
+    impl QuotaClient<tonic::transport::Channel> {
         /// Attempt to create a new client by connecting to a given endpoint.
         pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
         where
@@ -2046,7 +2377,7 @@ pub mod media_quota_client {
             Ok(Self::new(conn))
         }
     }
-    impl<T> MediaQuotaClient<T>
+    impl<T> QuotaClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::Body>,
         T::Error: Into<StdError>,
@@ -2064,7 +2395,7 @@ pub mod media_quota_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> MediaQuotaClient<InterceptedService<T, F>>
+        ) -> QuotaClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -2078,7 +2409,7 @@ pub mod media_quota_client {
                 http::Request<tonic::body::Body>,
             >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
         {
-            MediaQuotaClient::new(InterceptedService::new(inner, interceptor))
+            QuotaClient::new(InterceptedService::new(inner, interceptor))
         }
         /// Compress requests with the given encoding.
         ///
@@ -2114,8 +2445,175 @@ pub mod media_quota_client {
         pub async fn get(
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,
+        ) -> std::result::Result<tonic::Response<super::GetQuotaResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.media.Quota/Get");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.media.Quota", "Get"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct Model {
+    #[prost(string, optional, tag = "1")]
+    pub model_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 用户可见的产品模型名称，不是 ComfyUI 工作流中的原始模型文件名。
+    #[prost(string, optional, tag = "2")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "3")]
+    pub created_at: ::core::option::Option<i64>,
+    #[prost(int64, optional, tag = "4")]
+    pub updated_at: ::core::option::Option<i64>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CreateModelReq {
+    #[prost(string, optional, tag = "1")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CreateModelResp {
+    #[prost(message, optional, tag = "1")]
+    pub model: ::core::option::Option<Model>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UpdateModelReq {
+    #[prost(string, optional, tag = "1")]
+    pub model_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UpdateModelResp {
+    #[prost(message, optional, tag = "1")]
+    pub model: ::core::option::Option<Model>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetModelReq {
+    #[prost(string, optional, tag = "1")]
+    pub model_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetModelResp {
+    #[prost(message, optional, tag = "1")]
+    pub model: ::core::option::Option<Model>,
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListModelsReq {
+    #[prost(message, optional, tag = "1")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListModelsResp {
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
+    #[prost(message, repeated, tag = "2")]
+    pub models: ::prost::alloc::vec::Vec<Model>,
+}
+/// Generated client implementations.
+pub mod model_manage_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    #[derive(Debug, Clone)]
+    pub struct ModelManageClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl ModelManageClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> ModelManageClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ModelManageClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            ModelManageClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn create(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateModelReq>,
         ) -> std::result::Result<
-            tonic::Response<super::GetMediaQuotaResp>,
+            tonic::Response<super::CreateModelResp>,
             tonic::Status,
         > {
             self.inner
@@ -2127,9 +2625,74 @@ pub mod media_quota_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.media.MediaQuota/Get");
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.ModelManage/Create",
+            );
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.media.MediaQuota", "Get"));
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.ModelManage", "Create"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn update(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateModelReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::UpdateModelResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.ModelManage/Update",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.ModelManage", "Update"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListModelsReq>,
+        ) -> std::result::Result<tonic::Response<super::ListModelsResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.ModelManage/List",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.media.ModelManage", "List"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetModelReq>,
+        ) -> std::result::Result<tonic::Response<super::GetModelResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.media.ModelManage/Get");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.media.ModelManage", "Get"));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -2749,7 +3312,7 @@ pub mod register_client {
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MediaFileSummary {
+pub struct FileSummary {
     #[prost(string, optional, tag = "1")]
     pub asset_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
@@ -2760,46 +3323,46 @@ pub struct MediaFileSummary {
     pub mime_type: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(uint64, optional, tag = "5")]
     pub size_bytes: ::core::option::Option<u64>,
-    #[prost(enumeration = "MediaFileSource", optional, tag = "6")]
+    #[prost(enumeration = "FileSource", optional, tag = "6")]
     pub source: ::core::option::Option<i32>,
     #[prost(int64, optional, tag = "7")]
     pub created_at: ::core::option::Option<i64>,
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListMediaFilesReq {
+pub struct ListFilesReq {
     #[prost(message, optional, tag = "1")]
     pub pagination: ::core::option::Option<super::Pagination>,
     #[prost(enumeration = "MediaType", optional, tag = "2")]
     pub media_type: ::core::option::Option<i32>,
-    #[prost(enumeration = "MediaFileSource", optional, tag = "3")]
+    #[prost(enumeration = "FileSource", optional, tag = "3")]
     pub source: ::core::option::Option<i32>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListMediaFilesResp {
+pub struct ListFilesResp {
     #[prost(int32, optional, tag = "1")]
     pub total: ::core::option::Option<i32>,
     #[prost(message, repeated, tag = "2")]
-    pub files: ::prost::alloc::vec::Vec<MediaFileSummary>,
+    pub files: ::prost::alloc::vec::Vec<FileSummary>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct DeleteMediaFileReq {
+pub struct DeleteFileReq {
     #[prost(string, optional, tag = "1")]
     pub asset_id: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct DeleteMediaFileResp {
+pub struct DeleteFileResp {
     #[prost(string, optional, tag = "1")]
     pub asset_id: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetMediaFileAccessUrlsReq {
+pub struct GetFileAccessUrlsReq {
     #[prost(string, repeated, tag = "1")]
     pub asset_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    #[prost(enumeration = "MediaFileAccessPurpose", optional, tag = "2")]
+    #[prost(enumeration = "FileAccessPurpose", optional, tag = "2")]
     pub purpose: ::core::option::Option<i32>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MediaFileAccessUrl {
+pub struct FileAccessUrl {
     #[prost(string, optional, tag = "1")]
     pub asset_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
@@ -2808,12 +3371,12 @@ pub struct MediaFileAccessUrl {
     pub expire_at: ::core::option::Option<i64>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetMediaFileAccessUrlsResp {
+pub struct GetFileAccessUrlsResp {
     #[prost(message, repeated, tag = "1")]
-    pub files: ::prost::alloc::vec::Vec<MediaFileAccessUrl>,
+    pub files: ::prost::alloc::vec::Vec<FileAccessUrl>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MediaUploadFileMetadata {
+pub struct UploadFileMetadata {
     #[prost(string, optional, tag = "1")]
     pub client_file_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
@@ -2822,19 +3385,19 @@ pub struct MediaUploadFileMetadata {
     pub size_bytes: ::core::option::Option<u64>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MediaUploadMetadata {
+pub struct UploadMetadata {
     #[prost(string, optional, tag = "1")]
     pub request_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, repeated, tag = "2")]
-    pub files: ::prost::alloc::vec::Vec<MediaUploadFileMetadata>,
+    pub files: ::prost::alloc::vec::Vec<UploadFileMetadata>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MediaUploadFileResult {
+pub struct UploadFileResult {
     #[prost(string, optional, tag = "1")]
     pub client_file_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
     pub filename: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(enumeration = "MediaUploadFileStatus", optional, tag = "3")]
+    #[prost(enumeration = "UploadFileStatus", optional, tag = "3")]
     pub status: ::core::option::Option<i32>,
     #[prost(string, optional, tag = "4")]
     pub asset_id: ::core::option::Option<::prost::alloc::string::String>,
@@ -2848,148 +3411,148 @@ pub struct MediaUploadFileResult {
     pub error_message: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MediaUploadBatchResult {
+pub struct UploadBatchResult {
     #[prost(string, optional, tag = "1")]
     pub request_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(enumeration = "MediaUploadStatus", optional, tag = "2")]
+    #[prost(enumeration = "UploadStatus", optional, tag = "2")]
     pub status: ::core::option::Option<i32>,
     #[prost(message, repeated, tag = "3")]
-    pub files: ::prost::alloc::vec::Vec<MediaUploadFileResult>,
+    pub files: ::prost::alloc::vec::Vec<UploadFileResult>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetMediaUploadReq {
+pub struct GetUploadReq {
     #[prost(string, optional, tag = "1")]
     pub request_id: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetMediaUploadResp {
+pub struct GetUploadResp {
     #[prost(message, optional, tag = "1")]
-    pub upload: ::core::option::Option<MediaUploadBatchResult>,
+    pub upload: ::core::option::Option<UploadBatchResult>,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
-pub enum MediaFileSource {
+pub enum FileSource {
     Unspecified = 0,
     Upload = 1,
     Generated = 2,
 }
-impl MediaFileSource {
+impl FileSource {
     /// String value of the enum field names used in the ProtoBuf definition.
     ///
     /// The values are not transformed in any way and thus are considered stable
     /// (if the ProtoBuf definition does not change) and safe for programmatic use.
     pub fn as_str_name(&self) -> &'static str {
         match self {
-            Self::Unspecified => "MEDIA_FILE_SOURCE_UNSPECIFIED",
-            Self::Upload => "MEDIA_FILE_SOURCE_UPLOAD",
-            Self::Generated => "MEDIA_FILE_SOURCE_GENERATED",
+            Self::Unspecified => "FILE_SOURCE_UNSPECIFIED",
+            Self::Upload => "FILE_SOURCE_UPLOAD",
+            Self::Generated => "FILE_SOURCE_GENERATED",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
     pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
         match value {
-            "MEDIA_FILE_SOURCE_UNSPECIFIED" => Some(Self::Unspecified),
-            "MEDIA_FILE_SOURCE_UPLOAD" => Some(Self::Upload),
-            "MEDIA_FILE_SOURCE_GENERATED" => Some(Self::Generated),
+            "FILE_SOURCE_UNSPECIFIED" => Some(Self::Unspecified),
+            "FILE_SOURCE_UPLOAD" => Some(Self::Upload),
+            "FILE_SOURCE_GENERATED" => Some(Self::Generated),
             _ => None,
         }
     }
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
-pub enum MediaFileAccessPurpose {
+pub enum FileAccessPurpose {
     Unspecified = 0,
     Preview = 1,
     Download = 2,
 }
-impl MediaFileAccessPurpose {
+impl FileAccessPurpose {
     /// String value of the enum field names used in the ProtoBuf definition.
     ///
     /// The values are not transformed in any way and thus are considered stable
     /// (if the ProtoBuf definition does not change) and safe for programmatic use.
     pub fn as_str_name(&self) -> &'static str {
         match self {
-            Self::Unspecified => "MEDIA_FILE_ACCESS_PURPOSE_UNSPECIFIED",
-            Self::Preview => "MEDIA_FILE_ACCESS_PURPOSE_PREVIEW",
-            Self::Download => "MEDIA_FILE_ACCESS_PURPOSE_DOWNLOAD",
+            Self::Unspecified => "FILE_ACCESS_PURPOSE_UNSPECIFIED",
+            Self::Preview => "FILE_ACCESS_PURPOSE_PREVIEW",
+            Self::Download => "FILE_ACCESS_PURPOSE_DOWNLOAD",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
     pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
         match value {
-            "MEDIA_FILE_ACCESS_PURPOSE_UNSPECIFIED" => Some(Self::Unspecified),
-            "MEDIA_FILE_ACCESS_PURPOSE_PREVIEW" => Some(Self::Preview),
-            "MEDIA_FILE_ACCESS_PURPOSE_DOWNLOAD" => Some(Self::Download),
+            "FILE_ACCESS_PURPOSE_UNSPECIFIED" => Some(Self::Unspecified),
+            "FILE_ACCESS_PURPOSE_PREVIEW" => Some(Self::Preview),
+            "FILE_ACCESS_PURPOSE_DOWNLOAD" => Some(Self::Download),
             _ => None,
         }
     }
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
-pub enum MediaUploadStatus {
+pub enum UploadStatus {
     Unspecified = 0,
     Processing = 1,
     Completed = 2,
 }
-impl MediaUploadStatus {
+impl UploadStatus {
     /// String value of the enum field names used in the ProtoBuf definition.
     ///
     /// The values are not transformed in any way and thus are considered stable
     /// (if the ProtoBuf definition does not change) and safe for programmatic use.
     pub fn as_str_name(&self) -> &'static str {
         match self {
-            Self::Unspecified => "MEDIA_UPLOAD_STATUS_UNSPECIFIED",
-            Self::Processing => "MEDIA_UPLOAD_STATUS_PROCESSING",
-            Self::Completed => "MEDIA_UPLOAD_STATUS_COMPLETED",
+            Self::Unspecified => "UPLOAD_STATUS_UNSPECIFIED",
+            Self::Processing => "UPLOAD_STATUS_PROCESSING",
+            Self::Completed => "UPLOAD_STATUS_COMPLETED",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
     pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
         match value {
-            "MEDIA_UPLOAD_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
-            "MEDIA_UPLOAD_STATUS_PROCESSING" => Some(Self::Processing),
-            "MEDIA_UPLOAD_STATUS_COMPLETED" => Some(Self::Completed),
+            "UPLOAD_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
+            "UPLOAD_STATUS_PROCESSING" => Some(Self::Processing),
+            "UPLOAD_STATUS_COMPLETED" => Some(Self::Completed),
             _ => None,
         }
     }
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
-pub enum MediaUploadFileStatus {
+pub enum UploadFileStatus {
     Unspecified = 0,
     Pending = 1,
     Processing = 2,
     Success = 3,
     Failed = 4,
 }
-impl MediaUploadFileStatus {
+impl UploadFileStatus {
     /// String value of the enum field names used in the ProtoBuf definition.
     ///
     /// The values are not transformed in any way and thus are considered stable
     /// (if the ProtoBuf definition does not change) and safe for programmatic use.
     pub fn as_str_name(&self) -> &'static str {
         match self {
-            Self::Unspecified => "MEDIA_UPLOAD_FILE_STATUS_UNSPECIFIED",
-            Self::Pending => "MEDIA_UPLOAD_FILE_STATUS_PENDING",
-            Self::Processing => "MEDIA_UPLOAD_FILE_STATUS_PROCESSING",
-            Self::Success => "MEDIA_UPLOAD_FILE_STATUS_SUCCESS",
-            Self::Failed => "MEDIA_UPLOAD_FILE_STATUS_FAILED",
+            Self::Unspecified => "UPLOAD_FILE_STATUS_UNSPECIFIED",
+            Self::Pending => "UPLOAD_FILE_STATUS_PENDING",
+            Self::Processing => "UPLOAD_FILE_STATUS_PROCESSING",
+            Self::Success => "UPLOAD_FILE_STATUS_SUCCESS",
+            Self::Failed => "UPLOAD_FILE_STATUS_FAILED",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
     pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
         match value {
-            "MEDIA_UPLOAD_FILE_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
-            "MEDIA_UPLOAD_FILE_STATUS_PENDING" => Some(Self::Pending),
-            "MEDIA_UPLOAD_FILE_STATUS_PROCESSING" => Some(Self::Processing),
-            "MEDIA_UPLOAD_FILE_STATUS_SUCCESS" => Some(Self::Success),
-            "MEDIA_UPLOAD_FILE_STATUS_FAILED" => Some(Self::Failed),
+            "UPLOAD_FILE_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
+            "UPLOAD_FILE_STATUS_PENDING" => Some(Self::Pending),
+            "UPLOAD_FILE_STATUS_PROCESSING" => Some(Self::Processing),
+            "UPLOAD_FILE_STATUS_SUCCESS" => Some(Self::Success),
+            "UPLOAD_FILE_STATUS_FAILED" => Some(Self::Failed),
             _ => None,
         }
     }
 }
 /// Generated client implementations.
-pub mod media_file_client {
+pub mod file_client {
     #![allow(
         unused_variables,
         dead_code,
@@ -3000,10 +3563,10 @@ pub mod media_file_client {
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
     #[derive(Debug, Clone)]
-    pub struct MediaFileClient<T> {
+    pub struct FileClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl MediaFileClient<tonic::transport::Channel> {
+    impl FileClient<tonic::transport::Channel> {
         /// Attempt to create a new client by connecting to a given endpoint.
         pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
         where
@@ -3014,7 +3577,7 @@ pub mod media_file_client {
             Ok(Self::new(conn))
         }
     }
-    impl<T> MediaFileClient<T>
+    impl<T> FileClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::Body>,
         T::Error: Into<StdError>,
@@ -3032,7 +3595,7 @@ pub mod media_file_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> MediaFileClient<InterceptedService<T, F>>
+        ) -> FileClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -3046,7 +3609,7 @@ pub mod media_file_client {
                 http::Request<tonic::body::Body>,
             >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
         {
-            MediaFileClient::new(InterceptedService::new(inner, interceptor))
+            FileClient::new(InterceptedService::new(inner, interceptor))
         }
         /// Compress requests with the given encoding.
         ///
@@ -3081,11 +3644,8 @@ pub mod media_file_client {
         }
         pub async fn get_upload(
             &mut self,
-            request: impl tonic::IntoRequest<super::GetMediaUploadReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetMediaUploadResp>,
-            tonic::Status,
-        > {
+            request: impl tonic::IntoRequest<super::GetUploadReq>,
+        ) -> std::result::Result<tonic::Response<super::GetUploadResp>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3095,21 +3655,15 @@ pub mod media_file_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.MediaFile/GetUpload",
-            );
+            let path = http::uri::PathAndQuery::from_static("/hi.media.File/GetUpload");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.MediaFile", "GetUpload"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.media.File", "GetUpload"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn list(
             &mut self,
-            request: impl tonic::IntoRequest<super::ListMediaFilesReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::ListMediaFilesResp>,
-            tonic::Status,
-        > {
+            request: impl tonic::IntoRequest<super::ListFilesReq>,
+        ) -> std::result::Result<tonic::Response<super::ListFilesResp>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3119,18 +3673,15 @@ pub mod media_file_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.media.MediaFile/List");
+            let path = http::uri::PathAndQuery::from_static("/hi.media.File/List");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.media.MediaFile", "List"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.media.File", "List"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn delete(
             &mut self,
-            request: impl tonic::IntoRequest<super::DeleteMediaFileReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::DeleteMediaFileResp>,
-            tonic::Status,
-        > {
+            request: impl tonic::IntoRequest<super::DeleteFileReq>,
+        ) -> std::result::Result<tonic::Response<super::DeleteFileResp>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3140,18 +3691,16 @@ pub mod media_file_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.MediaFile/Delete",
-            );
+            let path = http::uri::PathAndQuery::from_static("/hi.media.File/Delete");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.media.MediaFile", "Delete"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.media.File", "Delete"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn get_access_urls(
             &mut self,
-            request: impl tonic::IntoRequest<super::GetMediaFileAccessUrlsReq>,
+            request: impl tonic::IntoRequest<super::GetFileAccessUrlsReq>,
         ) -> std::result::Result<
-            tonic::Response<super::GetMediaFileAccessUrlsResp>,
+            tonic::Response<super::GetFileAccessUrlsResp>,
             tonic::Status,
         > {
             self.inner
@@ -3164,11 +3713,11 @@ pub mod media_file_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.MediaFile/GetAccessUrls",
+                "/hi.media.File/GetAccessUrls",
             );
             let mut req = request.into_request();
             req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.MediaFile", "GetAccessUrls"));
+                .insert(GrpcMethod::new("hi.media.File", "GetAccessUrls"));
             self.inner.unary(req, path, codec).await
         }
     }

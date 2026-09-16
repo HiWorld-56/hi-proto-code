@@ -1,4 +1,4 @@
-impl serde::Serialize for CancelMediaTaskReq {
+impl serde::Serialize for CancelTaskReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -9,14 +9,14 @@ impl serde::Serialize for CancelMediaTaskReq {
         if self.task_id.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.CancelMediaTaskReq", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.CancelTaskReq", len)?;
         if let Some(v) = self.task_id.as_ref() {
             struct_ser.serialize_field("taskId", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for CancelMediaTaskReq {
+impl<'de> serde::Deserialize<'de> for CancelTaskReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -61,13 +61,13 @@ impl<'de> serde::Deserialize<'de> for CancelMediaTaskReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = CancelMediaTaskReq;
+            type Value = CancelTaskReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.CancelMediaTaskReq")
+                formatter.write_str("struct hi.media.CancelTaskReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CancelMediaTaskReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CancelTaskReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -82,15 +82,15 @@ impl<'de> serde::Deserialize<'de> for CancelMediaTaskReq {
                         }
                     }
                 }
-                Ok(CancelMediaTaskReq {
+                Ok(CancelTaskReq {
                     task_id: task_id__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.CancelMediaTaskReq", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.CancelTaskReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for CancelMediaTaskResp {
+impl serde::Serialize for CancelTaskResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -107,12 +107,12 @@ impl serde::Serialize for CancelMediaTaskResp {
         if self.status_message.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.CancelMediaTaskResp", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.CancelTaskResp", len)?;
         if let Some(v) = self.task_id.as_ref() {
             struct_ser.serialize_field("taskId", v)?;
         }
         if let Some(v) = self.status.as_ref() {
-            let v = MediaTaskStatus::try_from(*v)
+            let v = TaskStatus::try_from(*v)
                 .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
             struct_ser.serialize_field("status", &v)?;
         }
@@ -122,7 +122,7 @@ impl serde::Serialize for CancelMediaTaskResp {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for CancelMediaTaskResp {
+impl<'de> serde::Deserialize<'de> for CancelTaskResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -174,13 +174,13 @@ impl<'de> serde::Deserialize<'de> for CancelMediaTaskResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = CancelMediaTaskResp;
+            type Value = CancelTaskResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.CancelMediaTaskResp")
+                formatter.write_str("struct hi.media.CancelTaskResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CancelMediaTaskResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CancelTaskResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -199,7 +199,7 @@ impl<'de> serde::Deserialize<'de> for CancelMediaTaskResp {
                             if status__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("status"));
                             }
-                            status__ = map_.next_value::<::std::option::Option<MediaTaskStatus>>()?.map(|x| x as i32);
+                            status__ = map_.next_value::<::std::option::Option<TaskStatus>>()?.map(|x| x as i32);
                         }
                         GeneratedField::StatusMessage => {
                             if status_message__.is_some() {
@@ -209,14 +209,14 @@ impl<'de> serde::Deserialize<'de> for CancelMediaTaskResp {
                         }
                     }
                 }
-                Ok(CancelMediaTaskResp {
+                Ok(CancelTaskResp {
                     task_id: task_id__,
                     status: status__,
                     status_message: status_message__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.CancelMediaTaskResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.CancelTaskResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for CreateImageToVideoTaskReq {
@@ -230,10 +230,7 @@ impl serde::Serialize for CreateImageToVideoTaskReq {
         if self.request_id.is_some() {
             len += 1;
         }
-        if self.workflow_version_id.is_some() {
-            len += 1;
-        }
-        if self.source_task_id.is_some() {
+        if self.model_mapping_id.is_some() {
             len += 1;
         }
         if self.input_asset_id.is_some() {
@@ -242,27 +239,21 @@ impl serde::Serialize for CreateImageToVideoTaskReq {
         if self.prompt.is_some() {
             len += 1;
         }
-        if self.negative_prompt.is_some() {
-            len += 1;
-        }
         if self.resolution.is_some() {
             len += 1;
         }
         if self.duration_seconds.is_some() {
             len += 1;
         }
-        if self.fps.is_some() {
+        if self.frame_rate.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.media.CreateImageToVideoTaskReq", len)?;
         if let Some(v) = self.request_id.as_ref() {
             struct_ser.serialize_field("requestId", v)?;
         }
-        if let Some(v) = self.workflow_version_id.as_ref() {
-            struct_ser.serialize_field("workflowVersionId", v)?;
-        }
-        if let Some(v) = self.source_task_id.as_ref() {
-            struct_ser.serialize_field("sourceTaskId", v)?;
+        if let Some(v) = self.model_mapping_id.as_ref() {
+            struct_ser.serialize_field("modelMappingId", v)?;
         }
         if let Some(v) = self.input_asset_id.as_ref() {
             struct_ser.serialize_field("inputAssetId", v)?;
@@ -270,17 +261,14 @@ impl serde::Serialize for CreateImageToVideoTaskReq {
         if let Some(v) = self.prompt.as_ref() {
             struct_ser.serialize_field("prompt", v)?;
         }
-        if let Some(v) = self.negative_prompt.as_ref() {
-            struct_ser.serialize_field("negativePrompt", v)?;
-        }
         if let Some(v) = self.resolution.as_ref() {
             struct_ser.serialize_field("resolution", v)?;
         }
         if let Some(v) = self.duration_seconds.as_ref() {
             struct_ser.serialize_field("durationSeconds", v)?;
         }
-        if let Some(v) = self.fps.as_ref() {
-            struct_ser.serialize_field("fps", v)?;
+        if let Some(v) = self.frame_rate.as_ref() {
+            struct_ser.serialize_field("frameRate", v)?;
         }
         struct_ser.end()
     }
@@ -294,32 +282,27 @@ impl<'de> serde::Deserialize<'de> for CreateImageToVideoTaskReq {
         const FIELDS: &[&str] = &[
             "request_id",
             "requestId",
-            "workflow_version_id",
-            "workflowVersionId",
-            "source_task_id",
-            "sourceTaskId",
+            "model_mapping_id",
+            "modelMappingId",
             "input_asset_id",
             "inputAssetId",
             "prompt",
-            "negative_prompt",
-            "negativePrompt",
             "resolution",
             "duration_seconds",
             "durationSeconds",
-            "fps",
+            "frame_rate",
+            "frameRate",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             RequestId,
-            WorkflowVersionId,
-            SourceTaskId,
+            ModelMappingId,
             InputAssetId,
             Prompt,
-            NegativePrompt,
             Resolution,
             DurationSeconds,
-            Fps,
+            FrameRate,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -342,14 +325,12 @@ impl<'de> serde::Deserialize<'de> for CreateImageToVideoTaskReq {
                     {
                         match value {
                             "requestId" | "request_id" => Ok(GeneratedField::RequestId),
-                            "workflowVersionId" | "workflow_version_id" => Ok(GeneratedField::WorkflowVersionId),
-                            "sourceTaskId" | "source_task_id" => Ok(GeneratedField::SourceTaskId),
+                            "modelMappingId" | "model_mapping_id" => Ok(GeneratedField::ModelMappingId),
                             "inputAssetId" | "input_asset_id" => Ok(GeneratedField::InputAssetId),
                             "prompt" => Ok(GeneratedField::Prompt),
-                            "negativePrompt" | "negative_prompt" => Ok(GeneratedField::NegativePrompt),
                             "resolution" => Ok(GeneratedField::Resolution),
                             "durationSeconds" | "duration_seconds" => Ok(GeneratedField::DurationSeconds),
-                            "fps" => Ok(GeneratedField::Fps),
+                            "frameRate" | "frame_rate" => Ok(GeneratedField::FrameRate),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -370,14 +351,12 @@ impl<'de> serde::Deserialize<'de> for CreateImageToVideoTaskReq {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut request_id__ = None;
-                let mut workflow_version_id__ = None;
-                let mut source_task_id__ = None;
+                let mut model_mapping_id__ = None;
                 let mut input_asset_id__ = None;
                 let mut prompt__ = None;
-                let mut negative_prompt__ = None;
                 let mut resolution__ = None;
                 let mut duration_seconds__ = None;
-                let mut fps__ = None;
+                let mut frame_rate__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::RequestId => {
@@ -386,17 +365,11 @@ impl<'de> serde::Deserialize<'de> for CreateImageToVideoTaskReq {
                             }
                             request_id__ = map_.next_value()?;
                         }
-                        GeneratedField::WorkflowVersionId => {
-                            if workflow_version_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("workflowVersionId"));
+                        GeneratedField::ModelMappingId => {
+                            if model_mapping_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("modelMappingId"));
                             }
-                            workflow_version_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::SourceTaskId => {
-                            if source_task_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("sourceTaskId"));
-                            }
-                            source_task_id__ = map_.next_value()?;
+                            model_mapping_id__ = map_.next_value()?;
                         }
                         GeneratedField::InputAssetId => {
                             if input_asset_id__.is_some() {
@@ -409,12 +382,6 @@ impl<'de> serde::Deserialize<'de> for CreateImageToVideoTaskReq {
                                 return Err(serde::de::Error::duplicate_field("prompt"));
                             }
                             prompt__ = map_.next_value()?;
-                        }
-                        GeneratedField::NegativePrompt => {
-                            if negative_prompt__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("negativePrompt"));
-                            }
-                            negative_prompt__ = map_.next_value()?;
                         }
                         GeneratedField::Resolution => {
                             if resolution__.is_some() {
@@ -430,11 +397,11 @@ impl<'de> serde::Deserialize<'de> for CreateImageToVideoTaskReq {
                                 map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
-                        GeneratedField::Fps => {
-                            if fps__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("fps"));
+                        GeneratedField::FrameRate => {
+                            if frame_rate__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("frameRate"));
                             }
-                            fps__ = 
+                            frame_rate__ = 
                                 map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
@@ -442,21 +409,460 @@ impl<'de> serde::Deserialize<'de> for CreateImageToVideoTaskReq {
                 }
                 Ok(CreateImageToVideoTaskReq {
                     request_id: request_id__,
-                    workflow_version_id: workflow_version_id__,
-                    source_task_id: source_task_id__,
+                    model_mapping_id: model_mapping_id__,
                     input_asset_id: input_asset_id__,
                     prompt: prompt__,
-                    negative_prompt: negative_prompt__,
                     resolution: resolution__,
                     duration_seconds: duration_seconds__,
-                    fps: fps__,
+                    frame_rate: frame_rate__,
                 })
             }
         }
         deserializer.deserialize_struct("hi.media.CreateImageToVideoTaskReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for CreateMediaTaskResp {
+impl serde::Serialize for CreateModelMappingReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.feature_key.is_some() {
+            len += 1;
+        }
+        if self.model_id.is_some() {
+            len += 1;
+        }
+        if self.workflow_version_id.is_some() {
+            len += 1;
+        }
+        if self.is_default.is_some() {
+            len += 1;
+        }
+        if self.sort_order.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.CreateModelMappingReq", len)?;
+        if let Some(v) = self.feature_key.as_ref() {
+            let v = FeatureKey::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("featureKey", &v)?;
+        }
+        if let Some(v) = self.model_id.as_ref() {
+            struct_ser.serialize_field("modelId", v)?;
+        }
+        if let Some(v) = self.workflow_version_id.as_ref() {
+            struct_ser.serialize_field("workflowVersionId", v)?;
+        }
+        if let Some(v) = self.is_default.as_ref() {
+            struct_ser.serialize_field("isDefault", v)?;
+        }
+        if let Some(v) = self.sort_order.as_ref() {
+            struct_ser.serialize_field("sortOrder", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for CreateModelMappingReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "feature_key",
+            "featureKey",
+            "model_id",
+            "modelId",
+            "workflow_version_id",
+            "workflowVersionId",
+            "is_default",
+            "isDefault",
+            "sort_order",
+            "sortOrder",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            FeatureKey,
+            ModelId,
+            WorkflowVersionId,
+            IsDefault,
+            SortOrder,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "featureKey" | "feature_key" => Ok(GeneratedField::FeatureKey),
+                            "modelId" | "model_id" => Ok(GeneratedField::ModelId),
+                            "workflowVersionId" | "workflow_version_id" => Ok(GeneratedField::WorkflowVersionId),
+                            "isDefault" | "is_default" => Ok(GeneratedField::IsDefault),
+                            "sortOrder" | "sort_order" => Ok(GeneratedField::SortOrder),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = CreateModelMappingReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.CreateModelMappingReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateModelMappingReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut feature_key__ = None;
+                let mut model_id__ = None;
+                let mut workflow_version_id__ = None;
+                let mut is_default__ = None;
+                let mut sort_order__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::FeatureKey => {
+                            if feature_key__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("featureKey"));
+                            }
+                            feature_key__ = map_.next_value::<::std::option::Option<FeatureKey>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::ModelId => {
+                            if model_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("modelId"));
+                            }
+                            model_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::WorkflowVersionId => {
+                            if workflow_version_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowVersionId"));
+                            }
+                            workflow_version_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::IsDefault => {
+                            if is_default__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("isDefault"));
+                            }
+                            is_default__ = map_.next_value()?;
+                        }
+                        GeneratedField::SortOrder => {
+                            if sort_order__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sortOrder"));
+                            }
+                            sort_order__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(CreateModelMappingReq {
+                    feature_key: feature_key__,
+                    model_id: model_id__,
+                    workflow_version_id: workflow_version_id__,
+                    is_default: is_default__,
+                    sort_order: sort_order__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.CreateModelMappingReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for CreateModelMappingResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.mapping.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.CreateModelMappingResp", len)?;
+        if let Some(v) = self.mapping.as_ref() {
+            struct_ser.serialize_field("mapping", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for CreateModelMappingResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "mapping",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Mapping,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "mapping" => Ok(GeneratedField::Mapping),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = CreateModelMappingResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.CreateModelMappingResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateModelMappingResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut mapping__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Mapping => {
+                            if mapping__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("mapping"));
+                            }
+                            mapping__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(CreateModelMappingResp {
+                    mapping: mapping__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.CreateModelMappingResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for CreateModelReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.name.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.CreateModelReq", len)?;
+        if let Some(v) = self.name.as_ref() {
+            struct_ser.serialize_field("name", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for CreateModelReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "name",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Name,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "name" => Ok(GeneratedField::Name),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = CreateModelReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.CreateModelReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateModelReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut name__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Name => {
+                            if name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("name"));
+                            }
+                            name__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(CreateModelReq {
+                    name: name__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.CreateModelReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for CreateModelResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.model.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.CreateModelResp", len)?;
+        if let Some(v) = self.model.as_ref() {
+            struct_ser.serialize_field("model", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for CreateModelResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "model",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Model,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "model" => Ok(GeneratedField::Model),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = CreateModelResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.CreateModelResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateModelResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut model__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Model => {
+                            if model__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("model"));
+                            }
+                            model__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(CreateModelResp {
+                    model: model__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.CreateModelResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for CreateTaskResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -467,14 +873,14 @@ impl serde::Serialize for CreateMediaTaskResp {
         if self.task_id.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.CreateMediaTaskResp", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.CreateTaskResp", len)?;
         if let Some(v) = self.task_id.as_ref() {
             struct_ser.serialize_field("taskId", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for CreateMediaTaskResp {
+impl<'de> serde::Deserialize<'de> for CreateTaskResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -519,13 +925,13 @@ impl<'de> serde::Deserialize<'de> for CreateMediaTaskResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = CreateMediaTaskResp;
+            type Value = CreateTaskResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.CreateMediaTaskResp")
+                formatter.write_str("struct hi.media.CreateTaskResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateMediaTaskResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateTaskResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -540,15 +946,15 @@ impl<'de> serde::Deserialize<'de> for CreateMediaTaskResp {
                         }
                     }
                 }
-                Ok(CreateMediaTaskResp {
+                Ok(CreateTaskResp {
                     task_id: task_id__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.CreateMediaTaskResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.CreateTaskResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for CreateTextToImageTaskReq {
+impl serde::Serialize for CreateTextToVideoTaskReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -559,44 +965,44 @@ impl serde::Serialize for CreateTextToImageTaskReq {
         if self.request_id.is_some() {
             len += 1;
         }
-        if self.workflow_version_id.is_some() {
-            len += 1;
-        }
-        if self.source_task_id.is_some() {
+        if self.model_mapping_id.is_some() {
             len += 1;
         }
         if self.prompt.is_some() {
             len += 1;
         }
-        if self.negative_prompt.is_some() {
-            len += 1;
-        }
         if self.resolution.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.CreateTextToImageTaskReq", len)?;
+        if self.duration_seconds.is_some() {
+            len += 1;
+        }
+        if self.frame_rate.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.CreateTextToVideoTaskReq", len)?;
         if let Some(v) = self.request_id.as_ref() {
             struct_ser.serialize_field("requestId", v)?;
         }
-        if let Some(v) = self.workflow_version_id.as_ref() {
-            struct_ser.serialize_field("workflowVersionId", v)?;
-        }
-        if let Some(v) = self.source_task_id.as_ref() {
-            struct_ser.serialize_field("sourceTaskId", v)?;
+        if let Some(v) = self.model_mapping_id.as_ref() {
+            struct_ser.serialize_field("modelMappingId", v)?;
         }
         if let Some(v) = self.prompt.as_ref() {
             struct_ser.serialize_field("prompt", v)?;
         }
-        if let Some(v) = self.negative_prompt.as_ref() {
-            struct_ser.serialize_field("negativePrompt", v)?;
-        }
         if let Some(v) = self.resolution.as_ref() {
             struct_ser.serialize_field("resolution", v)?;
+        }
+        if let Some(v) = self.duration_seconds.as_ref() {
+            struct_ser.serialize_field("durationSeconds", v)?;
+        }
+        if let Some(v) = self.frame_rate.as_ref() {
+            struct_ser.serialize_field("frameRate", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for CreateTextToImageTaskReq {
+impl<'de> serde::Deserialize<'de> for CreateTextToVideoTaskReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -605,24 +1011,24 @@ impl<'de> serde::Deserialize<'de> for CreateTextToImageTaskReq {
         const FIELDS: &[&str] = &[
             "request_id",
             "requestId",
-            "workflow_version_id",
-            "workflowVersionId",
-            "source_task_id",
-            "sourceTaskId",
+            "model_mapping_id",
+            "modelMappingId",
             "prompt",
-            "negative_prompt",
-            "negativePrompt",
             "resolution",
+            "duration_seconds",
+            "durationSeconds",
+            "frame_rate",
+            "frameRate",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             RequestId,
-            WorkflowVersionId,
-            SourceTaskId,
+            ModelMappingId,
             Prompt,
-            NegativePrompt,
             Resolution,
+            DurationSeconds,
+            FrameRate,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -645,11 +1051,11 @@ impl<'de> serde::Deserialize<'de> for CreateTextToImageTaskReq {
                     {
                         match value {
                             "requestId" | "request_id" => Ok(GeneratedField::RequestId),
-                            "workflowVersionId" | "workflow_version_id" => Ok(GeneratedField::WorkflowVersionId),
-                            "sourceTaskId" | "source_task_id" => Ok(GeneratedField::SourceTaskId),
+                            "modelMappingId" | "model_mapping_id" => Ok(GeneratedField::ModelMappingId),
                             "prompt" => Ok(GeneratedField::Prompt),
-                            "negativePrompt" | "negative_prompt" => Ok(GeneratedField::NegativePrompt),
                             "resolution" => Ok(GeneratedField::Resolution),
+                            "durationSeconds" | "duration_seconds" => Ok(GeneratedField::DurationSeconds),
+                            "frameRate" | "frame_rate" => Ok(GeneratedField::FrameRate),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -659,22 +1065,22 @@ impl<'de> serde::Deserialize<'de> for CreateTextToImageTaskReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = CreateTextToImageTaskReq;
+            type Value = CreateTextToVideoTaskReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.CreateTextToImageTaskReq")
+                formatter.write_str("struct hi.media.CreateTextToVideoTaskReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateTextToImageTaskReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateTextToVideoTaskReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
                 let mut request_id__ = None;
-                let mut workflow_version_id__ = None;
-                let mut source_task_id__ = None;
+                let mut model_mapping_id__ = None;
                 let mut prompt__ = None;
-                let mut negative_prompt__ = None;
                 let mut resolution__ = None;
+                let mut duration_seconds__ = None;
+                let mut frame_rate__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::RequestId => {
@@ -683,17 +1089,11 @@ impl<'de> serde::Deserialize<'de> for CreateTextToImageTaskReq {
                             }
                             request_id__ = map_.next_value()?;
                         }
-                        GeneratedField::WorkflowVersionId => {
-                            if workflow_version_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("workflowVersionId"));
+                        GeneratedField::ModelMappingId => {
+                            if model_mapping_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("modelMappingId"));
                             }
-                            workflow_version_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::SourceTaskId => {
-                            if source_task_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("sourceTaskId"));
-                            }
-                            source_task_id__ = map_.next_value()?;
+                            model_mapping_id__ = map_.next_value()?;
                         }
                         GeneratedField::Prompt => {
                             if prompt__.is_some() {
@@ -701,34 +1101,154 @@ impl<'de> serde::Deserialize<'de> for CreateTextToImageTaskReq {
                             }
                             prompt__ = map_.next_value()?;
                         }
-                        GeneratedField::NegativePrompt => {
-                            if negative_prompt__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("negativePrompt"));
-                            }
-                            negative_prompt__ = map_.next_value()?;
-                        }
                         GeneratedField::Resolution => {
                             if resolution__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("resolution"));
                             }
                             resolution__ = map_.next_value()?;
                         }
+                        GeneratedField::DurationSeconds => {
+                            if duration_seconds__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("durationSeconds"));
+                            }
+                            duration_seconds__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::FrameRate => {
+                            if frame_rate__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("frameRate"));
+                            }
+                            frame_rate__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
                     }
                 }
-                Ok(CreateTextToImageTaskReq {
+                Ok(CreateTextToVideoTaskReq {
                     request_id: request_id__,
-                    workflow_version_id: workflow_version_id__,
-                    source_task_id: source_task_id__,
+                    model_mapping_id: model_mapping_id__,
                     prompt: prompt__,
-                    negative_prompt: negative_prompt__,
                     resolution: resolution__,
+                    duration_seconds: duration_seconds__,
+                    frame_rate: frame_rate__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.CreateTextToImageTaskReq", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.CreateTextToVideoTaskReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for DeleteMediaFileReq {
+impl serde::Serialize for DecimalOptionConfig {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.allowed_values.is_empty() {
+            len += 1;
+        }
+        if self.default_value.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.DecimalOptionConfig", len)?;
+        if !self.allowed_values.is_empty() {
+            struct_ser.serialize_field("allowedValues", &self.allowed_values)?;
+        }
+        if let Some(v) = self.default_value.as_ref() {
+            struct_ser.serialize_field("defaultValue", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for DecimalOptionConfig {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "allowed_values",
+            "allowedValues",
+            "default_value",
+            "defaultValue",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            AllowedValues,
+            DefaultValue,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "allowedValues" | "allowed_values" => Ok(GeneratedField::AllowedValues),
+                            "defaultValue" | "default_value" => Ok(GeneratedField::DefaultValue),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = DecimalOptionConfig;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.DecimalOptionConfig")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<DecimalOptionConfig, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut allowed_values__ = None;
+                let mut default_value__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::AllowedValues => {
+                            if allowed_values__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("allowedValues"));
+                            }
+                            allowed_values__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::DefaultValue => {
+                            if default_value__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("defaultValue"));
+                            }
+                            default_value__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(DecimalOptionConfig {
+                    allowed_values: allowed_values__.unwrap_or_default(),
+                    default_value: default_value__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.DecimalOptionConfig", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for DeleteFileReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -739,14 +1259,14 @@ impl serde::Serialize for DeleteMediaFileReq {
         if self.asset_id.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.DeleteMediaFileReq", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.DeleteFileReq", len)?;
         if let Some(v) = self.asset_id.as_ref() {
             struct_ser.serialize_field("assetId", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for DeleteMediaFileReq {
+impl<'de> serde::Deserialize<'de> for DeleteFileReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -791,13 +1311,13 @@ impl<'de> serde::Deserialize<'de> for DeleteMediaFileReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = DeleteMediaFileReq;
+            type Value = DeleteFileReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.DeleteMediaFileReq")
+                formatter.write_str("struct hi.media.DeleteFileReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<DeleteMediaFileReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<DeleteFileReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -812,15 +1332,15 @@ impl<'de> serde::Deserialize<'de> for DeleteMediaFileReq {
                         }
                     }
                 }
-                Ok(DeleteMediaFileReq {
+                Ok(DeleteFileReq {
                     asset_id: asset_id__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.DeleteMediaFileReq", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.DeleteFileReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for DeleteMediaFileResp {
+impl serde::Serialize for DeleteFileResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -831,14 +1351,14 @@ impl serde::Serialize for DeleteMediaFileResp {
         if self.asset_id.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.DeleteMediaFileResp", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.DeleteFileResp", len)?;
         if let Some(v) = self.asset_id.as_ref() {
             struct_ser.serialize_field("assetId", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for DeleteMediaFileResp {
+impl<'de> serde::Deserialize<'de> for DeleteFileResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -883,13 +1403,13 @@ impl<'de> serde::Deserialize<'de> for DeleteMediaFileResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = DeleteMediaFileResp;
+            type Value = DeleteFileResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.DeleteMediaFileResp")
+                formatter.write_str("struct hi.media.DeleteFileResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<DeleteMediaFileResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<DeleteFileResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -904,15 +1424,15 @@ impl<'de> serde::Deserialize<'de> for DeleteMediaFileResp {
                         }
                     }
                 }
-                Ok(DeleteMediaFileResp {
+                Ok(DeleteFileResp {
                     asset_id: asset_id__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.DeleteMediaFileResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.DeleteFileResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for GetMediaFeatureReq {
+impl serde::Serialize for DisableModelMappingReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -920,30 +1440,39 @@ impl serde::Serialize for GetMediaFeatureReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.feature_key.is_some() {
+        if self.model_mapping_id.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.GetMediaFeatureReq", len)?;
-        if let Some(v) = self.feature_key.as_ref() {
-            struct_ser.serialize_field("featureKey", v)?;
+        if self.replacement_default_mapping_id.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.DisableModelMappingReq", len)?;
+        if let Some(v) = self.model_mapping_id.as_ref() {
+            struct_ser.serialize_field("modelMappingId", v)?;
+        }
+        if let Some(v) = self.replacement_default_mapping_id.as_ref() {
+            struct_ser.serialize_field("replacementDefaultMappingId", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for GetMediaFeatureReq {
+impl<'de> serde::Deserialize<'de> for DisableModelMappingReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "feature_key",
-            "featureKey",
+            "model_mapping_id",
+            "modelMappingId",
+            "replacement_default_mapping_id",
+            "replacementDefaultMappingId",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            FeatureKey,
+            ModelMappingId,
+            ReplacementDefaultMappingId,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -965,7 +1494,8 @@ impl<'de> serde::Deserialize<'de> for GetMediaFeatureReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "featureKey" | "feature_key" => Ok(GeneratedField::FeatureKey),
+                            "modelMappingId" | "model_mapping_id" => Ok(GeneratedField::ModelMappingId),
+                            "replacementDefaultMappingId" | "replacement_default_mapping_id" => Ok(GeneratedField::ReplacementDefaultMappingId),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -975,36 +1505,44 @@ impl<'de> serde::Deserialize<'de> for GetMediaFeatureReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GetMediaFeatureReq;
+            type Value = DisableModelMappingReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.GetMediaFeatureReq")
+                formatter.write_str("struct hi.media.DisableModelMappingReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetMediaFeatureReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<DisableModelMappingReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut feature_key__ = None;
+                let mut model_mapping_id__ = None;
+                let mut replacement_default_mapping_id__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::FeatureKey => {
-                            if feature_key__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("featureKey"));
+                        GeneratedField::ModelMappingId => {
+                            if model_mapping_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("modelMappingId"));
                             }
-                            feature_key__ = map_.next_value()?;
+                            model_mapping_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::ReplacementDefaultMappingId => {
+                            if replacement_default_mapping_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("replacementDefaultMappingId"));
+                            }
+                            replacement_default_mapping_id__ = map_.next_value()?;
                         }
                     }
                 }
-                Ok(GetMediaFeatureReq {
-                    feature_key: feature_key__,
+                Ok(DisableModelMappingReq {
+                    model_mapping_id: model_mapping_id__,
+                    replacement_default_mapping_id: replacement_default_mapping_id__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.GetMediaFeatureReq", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.DisableModelMappingReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for GetMediaFeatureResp {
+impl serde::Serialize for DisableModelMappingResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -1012,36 +1550,785 @@ impl serde::Serialize for GetMediaFeatureResp {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.feature_key.is_some() {
+        if self.mapping.is_some() {
             len += 1;
         }
-        if self.workflow_version_id.is_some() {
+        let mut struct_ser = serializer.serialize_struct("hi.media.DisableModelMappingResp", len)?;
+        if let Some(v) = self.mapping.as_ref() {
+            struct_ser.serialize_field("mapping", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for DisableModelMappingResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "mapping",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Mapping,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "mapping" => Ok(GeneratedField::Mapping),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = DisableModelMappingResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.DisableModelMappingResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<DisableModelMappingResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut mapping__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Mapping => {
+                            if mapping__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("mapping"));
+                            }
+                            mapping__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(DisableModelMappingResp {
+                    mapping: mapping__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.DisableModelMappingResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for FeatureKey {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unspecified => "FEATURE_KEY_UNSPECIFIED",
+            Self::TextToImage => "FEATURE_KEY_TEXT_TO_IMAGE",
+            Self::ImageToVideo => "FEATURE_KEY_IMAGE_TO_VIDEO",
+            Self::TextToVideo => "FEATURE_KEY_TEXT_TO_VIDEO",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for FeatureKey {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "FEATURE_KEY_UNSPECIFIED",
+            "FEATURE_KEY_TEXT_TO_IMAGE",
+            "FEATURE_KEY_IMAGE_TO_VIDEO",
+            "FEATURE_KEY_TEXT_TO_VIDEO",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = FeatureKey;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "FEATURE_KEY_UNSPECIFIED" => Ok(FeatureKey::Unspecified),
+                    "FEATURE_KEY_TEXT_TO_IMAGE" => Ok(FeatureKey::TextToImage),
+                    "FEATURE_KEY_IMAGE_TO_VIDEO" => Ok(FeatureKey::ImageToVideo),
+                    "FEATURE_KEY_TEXT_TO_VIDEO" => Ok(FeatureKey::TextToVideo),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for FileAccessPurpose {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unspecified => "FILE_ACCESS_PURPOSE_UNSPECIFIED",
+            Self::Preview => "FILE_ACCESS_PURPOSE_PREVIEW",
+            Self::Download => "FILE_ACCESS_PURPOSE_DOWNLOAD",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for FileAccessPurpose {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "FILE_ACCESS_PURPOSE_UNSPECIFIED",
+            "FILE_ACCESS_PURPOSE_PREVIEW",
+            "FILE_ACCESS_PURPOSE_DOWNLOAD",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = FileAccessPurpose;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "FILE_ACCESS_PURPOSE_UNSPECIFIED" => Ok(FileAccessPurpose::Unspecified),
+                    "FILE_ACCESS_PURPOSE_PREVIEW" => Ok(FileAccessPurpose::Preview),
+                    "FILE_ACCESS_PURPOSE_DOWNLOAD" => Ok(FileAccessPurpose::Download),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for FileAccessUrl {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.asset_id.is_some() {
             len += 1;
         }
-        if self.feature_config.is_some() {
+        if self.url.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.GetMediaFeatureResp", len)?;
-        if let Some(v) = self.feature_key.as_ref() {
-            struct_ser.serialize_field("featureKey", v)?;
+        if self.expire_at.is_some() {
+            len += 1;
         }
-        if let Some(v) = self.workflow_version_id.as_ref() {
-            struct_ser.serialize_field("workflowVersionId", v)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.FileAccessUrl", len)?;
+        if let Some(v) = self.asset_id.as_ref() {
+            struct_ser.serialize_field("assetId", v)?;
         }
-        if let Some(v) = self.feature_config.as_ref() {
+        if let Some(v) = self.url.as_ref() {
+            struct_ser.serialize_field("url", v)?;
+        }
+        if let Some(v) = self.expire_at.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("expireAt", ToString::to_string(&v).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for FileAccessUrl {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "asset_id",
+            "assetId",
+            "url",
+            "expire_at",
+            "expireAt",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            AssetId,
+            Url,
+            ExpireAt,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "assetId" | "asset_id" => Ok(GeneratedField::AssetId),
+                            "url" => Ok(GeneratedField::Url),
+                            "expireAt" | "expire_at" => Ok(GeneratedField::ExpireAt),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = FileAccessUrl;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.FileAccessUrl")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<FileAccessUrl, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut asset_id__ = None;
+                let mut url__ = None;
+                let mut expire_at__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::AssetId => {
+                            if asset_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("assetId"));
+                            }
+                            asset_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Url => {
+                            if url__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("url"));
+                            }
+                            url__ = map_.next_value()?;
+                        }
+                        GeneratedField::ExpireAt => {
+                            if expire_at__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("expireAt"));
+                            }
+                            expire_at__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(FileAccessUrl {
+                    asset_id: asset_id__,
+                    url: url__,
+                    expire_at: expire_at__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.FileAccessUrl", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for FileSource {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unspecified => "FILE_SOURCE_UNSPECIFIED",
+            Self::Upload => "FILE_SOURCE_UPLOAD",
+            Self::Generated => "FILE_SOURCE_GENERATED",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for FileSource {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "FILE_SOURCE_UNSPECIFIED",
+            "FILE_SOURCE_UPLOAD",
+            "FILE_SOURCE_GENERATED",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = FileSource;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "FILE_SOURCE_UNSPECIFIED" => Ok(FileSource::Unspecified),
+                    "FILE_SOURCE_UPLOAD" => Ok(FileSource::Upload),
+                    "FILE_SOURCE_GENERATED" => Ok(FileSource::Generated),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for FileSummary {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.asset_id.is_some() {
+            len += 1;
+        }
+        if self.filename.is_some() {
+            len += 1;
+        }
+        if self.media_type.is_some() {
+            len += 1;
+        }
+        if self.mime_type.is_some() {
+            len += 1;
+        }
+        if self.size_bytes.is_some() {
+            len += 1;
+        }
+        if self.source.is_some() {
+            len += 1;
+        }
+        if self.created_at.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.FileSummary", len)?;
+        if let Some(v) = self.asset_id.as_ref() {
+            struct_ser.serialize_field("assetId", v)?;
+        }
+        if let Some(v) = self.filename.as_ref() {
+            struct_ser.serialize_field("filename", v)?;
+        }
+        if let Some(v) = self.media_type.as_ref() {
+            let v = MediaType::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("mediaType", &v)?;
+        }
+        if let Some(v) = self.mime_type.as_ref() {
+            struct_ser.serialize_field("mimeType", v)?;
+        }
+        if let Some(v) = self.size_bytes.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("sizeBytes", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.source.as_ref() {
+            let v = FileSource::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("source", &v)?;
+        }
+        if let Some(v) = self.created_at.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("createdAt", ToString::to_string(&v).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for FileSummary {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "asset_id",
+            "assetId",
+            "filename",
+            "media_type",
+            "mediaType",
+            "mime_type",
+            "mimeType",
+            "size_bytes",
+            "sizeBytes",
+            "source",
+            "created_at",
+            "createdAt",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            AssetId,
+            Filename,
+            MediaType,
+            MimeType,
+            SizeBytes,
+            Source,
+            CreatedAt,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "assetId" | "asset_id" => Ok(GeneratedField::AssetId),
+                            "filename" => Ok(GeneratedField::Filename),
+                            "mediaType" | "media_type" => Ok(GeneratedField::MediaType),
+                            "mimeType" | "mime_type" => Ok(GeneratedField::MimeType),
+                            "sizeBytes" | "size_bytes" => Ok(GeneratedField::SizeBytes),
+                            "source" => Ok(GeneratedField::Source),
+                            "createdAt" | "created_at" => Ok(GeneratedField::CreatedAt),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = FileSummary;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.FileSummary")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<FileSummary, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut asset_id__ = None;
+                let mut filename__ = None;
+                let mut media_type__ = None;
+                let mut mime_type__ = None;
+                let mut size_bytes__ = None;
+                let mut source__ = None;
+                let mut created_at__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::AssetId => {
+                            if asset_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("assetId"));
+                            }
+                            asset_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Filename => {
+                            if filename__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("filename"));
+                            }
+                            filename__ = map_.next_value()?;
+                        }
+                        GeneratedField::MediaType => {
+                            if media_type__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("mediaType"));
+                            }
+                            media_type__ = map_.next_value::<::std::option::Option<MediaType>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::MimeType => {
+                            if mime_type__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("mimeType"));
+                            }
+                            mime_type__ = map_.next_value()?;
+                        }
+                        GeneratedField::SizeBytes => {
+                            if size_bytes__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sizeBytes"));
+                            }
+                            size_bytes__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Source => {
+                            if source__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("source"));
+                            }
+                            source__ = map_.next_value::<::std::option::Option<FileSource>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::CreatedAt => {
+                            if created_at__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("createdAt"));
+                            }
+                            created_at__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(FileSummary {
+                    asset_id: asset_id__,
+                    filename: filename__,
+                    media_type: media_type__,
+                    mime_type: mime_type__,
+                    size_bytes: size_bytes__,
+                    source: source__,
+                    created_at: created_at__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.FileSummary", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for FrameRateConfig {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.mode.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.FrameRateConfig", len)?;
+        if let Some(v) = self.mode.as_ref() {
             match v {
-                get_media_feature_resp::FeatureConfig::TextToImage(v) => {
-                    struct_ser.serialize_field("textToImage", v)?;
+                frame_rate_config::Mode::Selectable(v) => {
+                    struct_ser.serialize_field("selectable", v)?;
                 }
-                get_media_feature_resp::FeatureConfig::ImageToVideo(v) => {
-                    struct_ser.serialize_field("imageToVideo", v)?;
+                frame_rate_config::Mode::FixedValue(v) => {
+                    struct_ser.serialize_field("fixedValue", v)?;
                 }
             }
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for GetMediaFeatureResp {
+impl<'de> serde::Deserialize<'de> for FrameRateConfig {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "selectable",
+            "fixed_value",
+            "fixedValue",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Selectable,
+            FixedValue,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "selectable" => Ok(GeneratedField::Selectable),
+                            "fixedValue" | "fixed_value" => Ok(GeneratedField::FixedValue),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = FrameRateConfig;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.FrameRateConfig")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<FrameRateConfig, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut mode__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Selectable => {
+                            if mode__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("selectable"));
+                            }
+                            mode__ = map_.next_value::<::std::option::Option<_>>()?.map(frame_rate_config::Mode::Selectable)
+;
+                        }
+                        GeneratedField::FixedValue => {
+                            if mode__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("fixedValue"));
+                            }
+                            mode__ = map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| frame_rate_config::Mode::FixedValue(x.0));
+                        }
+                    }
+                }
+                Ok(FrameRateConfig {
+                    mode: mode__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.FrameRateConfig", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for GetFeatureReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.feature_key.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.GetFeatureReq", len)?;
+        if let Some(v) = self.feature_key.as_ref() {
+            let v = FeatureKey::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("featureKey", &v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for GetFeatureReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -1050,20 +2337,11 @@ impl<'de> serde::Deserialize<'de> for GetMediaFeatureResp {
         const FIELDS: &[&str] = &[
             "feature_key",
             "featureKey",
-            "workflow_version_id",
-            "workflowVersionId",
-            "text_to_image",
-            "textToImage",
-            "image_to_video",
-            "imageToVideo",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             FeatureKey,
-            WorkflowVersionId,
-            TextToImage,
-            ImageToVideo,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1086,9 +2364,6 @@ impl<'de> serde::Deserialize<'de> for GetMediaFeatureResp {
                     {
                         match value {
                             "featureKey" | "feature_key" => Ok(GeneratedField::FeatureKey),
-                            "workflowVersionId" | "workflow_version_id" => Ok(GeneratedField::WorkflowVersionId),
-                            "textToImage" | "text_to_image" => Ok(GeneratedField::TextToImage),
-                            "imageToVideo" | "image_to_video" => Ok(GeneratedField::ImageToVideo),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -1098,60 +2373,148 @@ impl<'de> serde::Deserialize<'de> for GetMediaFeatureResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GetMediaFeatureResp;
+            type Value = GetFeatureReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.GetMediaFeatureResp")
+                formatter.write_str("struct hi.media.GetFeatureReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetMediaFeatureResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetFeatureReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
                 let mut feature_key__ = None;
-                let mut workflow_version_id__ = None;
-                let mut feature_config__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::FeatureKey => {
                             if feature_key__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("featureKey"));
                             }
-                            feature_key__ = map_.next_value()?;
-                        }
-                        GeneratedField::WorkflowVersionId => {
-                            if workflow_version_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("workflowVersionId"));
-                            }
-                            workflow_version_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::TextToImage => {
-                            if feature_config__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("textToImage"));
-                            }
-                            feature_config__ = map_.next_value::<::std::option::Option<_>>()?.map(get_media_feature_resp::FeatureConfig::TextToImage)
-;
-                        }
-                        GeneratedField::ImageToVideo => {
-                            if feature_config__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("imageToVideo"));
-                            }
-                            feature_config__ = map_.next_value::<::std::option::Option<_>>()?.map(get_media_feature_resp::FeatureConfig::ImageToVideo)
-;
+                            feature_key__ = map_.next_value::<::std::option::Option<FeatureKey>>()?.map(|x| x as i32);
                         }
                     }
                 }
-                Ok(GetMediaFeatureResp {
+                Ok(GetFeatureReq {
                     feature_key: feature_key__,
-                    workflow_version_id: workflow_version_id__,
-                    feature_config: feature_config__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.GetMediaFeatureResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.GetFeatureReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for GetMediaFileAccessUrlsReq {
+impl serde::Serialize for GetFeatureResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.feature_key.is_some() {
+            len += 1;
+        }
+        if !self.model_options.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.GetFeatureResp", len)?;
+        if let Some(v) = self.feature_key.as_ref() {
+            let v = FeatureKey::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("featureKey", &v)?;
+        }
+        if !self.model_options.is_empty() {
+            struct_ser.serialize_field("modelOptions", &self.model_options)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for GetFeatureResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "feature_key",
+            "featureKey",
+            "model_options",
+            "modelOptions",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            FeatureKey,
+            ModelOptions,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "featureKey" | "feature_key" => Ok(GeneratedField::FeatureKey),
+                            "modelOptions" | "model_options" => Ok(GeneratedField::ModelOptions),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = GetFeatureResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.GetFeatureResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetFeatureResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut feature_key__ = None;
+                let mut model_options__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::FeatureKey => {
+                            if feature_key__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("featureKey"));
+                            }
+                            feature_key__ = map_.next_value::<::std::option::Option<FeatureKey>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::ModelOptions => {
+                            if model_options__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("modelOptions"));
+                            }
+                            model_options__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(GetFeatureResp {
+                    feature_key: feature_key__,
+                    model_options: model_options__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.GetFeatureResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for GetFileAccessUrlsReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -1165,19 +2528,19 @@ impl serde::Serialize for GetMediaFileAccessUrlsReq {
         if self.purpose.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.GetMediaFileAccessUrlsReq", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.GetFileAccessUrlsReq", len)?;
         if !self.asset_ids.is_empty() {
             struct_ser.serialize_field("assetIds", &self.asset_ids)?;
         }
         if let Some(v) = self.purpose.as_ref() {
-            let v = MediaFileAccessPurpose::try_from(*v)
+            let v = FileAccessPurpose::try_from(*v)
                 .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
             struct_ser.serialize_field("purpose", &v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for GetMediaFileAccessUrlsReq {
+impl<'de> serde::Deserialize<'de> for GetFileAccessUrlsReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -1225,13 +2588,13 @@ impl<'de> serde::Deserialize<'de> for GetMediaFileAccessUrlsReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GetMediaFileAccessUrlsReq;
+            type Value = GetFileAccessUrlsReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.GetMediaFileAccessUrlsReq")
+                formatter.write_str("struct hi.media.GetFileAccessUrlsReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetMediaFileAccessUrlsReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetFileAccessUrlsReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -1249,20 +2612,20 @@ impl<'de> serde::Deserialize<'de> for GetMediaFileAccessUrlsReq {
                             if purpose__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("purpose"));
                             }
-                            purpose__ = map_.next_value::<::std::option::Option<MediaFileAccessPurpose>>()?.map(|x| x as i32);
+                            purpose__ = map_.next_value::<::std::option::Option<FileAccessPurpose>>()?.map(|x| x as i32);
                         }
                     }
                 }
-                Ok(GetMediaFileAccessUrlsReq {
+                Ok(GetFileAccessUrlsReq {
                     asset_ids: asset_ids__.unwrap_or_default(),
                     purpose: purpose__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.GetMediaFileAccessUrlsReq", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.GetFileAccessUrlsReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for GetMediaFileAccessUrlsResp {
+impl serde::Serialize for GetFileAccessUrlsResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -1273,14 +2636,14 @@ impl serde::Serialize for GetMediaFileAccessUrlsResp {
         if !self.files.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.GetMediaFileAccessUrlsResp", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.GetFileAccessUrlsResp", len)?;
         if !self.files.is_empty() {
             struct_ser.serialize_field("files", &self.files)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for GetMediaFileAccessUrlsResp {
+impl<'de> serde::Deserialize<'de> for GetFileAccessUrlsResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -1324,13 +2687,13 @@ impl<'de> serde::Deserialize<'de> for GetMediaFileAccessUrlsResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GetMediaFileAccessUrlsResp;
+            type Value = GetFileAccessUrlsResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.GetMediaFileAccessUrlsResp")
+                formatter.write_str("struct hi.media.GetFileAccessUrlsResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetMediaFileAccessUrlsResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetFileAccessUrlsResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -1345,15 +2708,15 @@ impl<'de> serde::Deserialize<'de> for GetMediaFileAccessUrlsResp {
                         }
                     }
                 }
-                Ok(GetMediaFileAccessUrlsResp {
+                Ok(GetFileAccessUrlsResp {
                     files: files__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.GetMediaFileAccessUrlsResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.GetFileAccessUrlsResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for GetMediaMaintenanceResp {
+impl serde::Serialize for GetMaintenanceResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -1364,14 +2727,14 @@ impl serde::Serialize for GetMediaMaintenanceResp {
         if self.state.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.GetMediaMaintenanceResp", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.GetMaintenanceResp", len)?;
         if let Some(v) = self.state.as_ref() {
             struct_ser.serialize_field("state", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for GetMediaMaintenanceResp {
+impl<'de> serde::Deserialize<'de> for GetMaintenanceResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -1415,13 +2778,13 @@ impl<'de> serde::Deserialize<'de> for GetMediaMaintenanceResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GetMediaMaintenanceResp;
+            type Value = GetMaintenanceResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.GetMediaMaintenanceResp")
+                formatter.write_str("struct hi.media.GetMaintenanceResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetMediaMaintenanceResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetMaintenanceResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -1436,15 +2799,381 @@ impl<'de> serde::Deserialize<'de> for GetMediaMaintenanceResp {
                         }
                     }
                 }
-                Ok(GetMediaMaintenanceResp {
+                Ok(GetMaintenanceResp {
                     state: state__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.GetMediaMaintenanceResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.GetMaintenanceResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for GetMediaQuotaResp {
+impl serde::Serialize for GetModelMappingReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.model_mapping_id.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.GetModelMappingReq", len)?;
+        if let Some(v) = self.model_mapping_id.as_ref() {
+            struct_ser.serialize_field("modelMappingId", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for GetModelMappingReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "model_mapping_id",
+            "modelMappingId",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            ModelMappingId,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "modelMappingId" | "model_mapping_id" => Ok(GeneratedField::ModelMappingId),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = GetModelMappingReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.GetModelMappingReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetModelMappingReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut model_mapping_id__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::ModelMappingId => {
+                            if model_mapping_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("modelMappingId"));
+                            }
+                            model_mapping_id__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(GetModelMappingReq {
+                    model_mapping_id: model_mapping_id__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.GetModelMappingReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for GetModelMappingResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.mapping.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.GetModelMappingResp", len)?;
+        if let Some(v) = self.mapping.as_ref() {
+            struct_ser.serialize_field("mapping", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for GetModelMappingResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "mapping",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Mapping,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "mapping" => Ok(GeneratedField::Mapping),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = GetModelMappingResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.GetModelMappingResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetModelMappingResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut mapping__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Mapping => {
+                            if mapping__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("mapping"));
+                            }
+                            mapping__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(GetModelMappingResp {
+                    mapping: mapping__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.GetModelMappingResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for GetModelReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.model_id.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.GetModelReq", len)?;
+        if let Some(v) = self.model_id.as_ref() {
+            struct_ser.serialize_field("modelId", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for GetModelReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "model_id",
+            "modelId",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            ModelId,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "modelId" | "model_id" => Ok(GeneratedField::ModelId),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = GetModelReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.GetModelReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetModelReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut model_id__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::ModelId => {
+                            if model_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("modelId"));
+                            }
+                            model_id__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(GetModelReq {
+                    model_id: model_id__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.GetModelReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for GetModelResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.model.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.GetModelResp", len)?;
+        if let Some(v) = self.model.as_ref() {
+            struct_ser.serialize_field("model", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for GetModelResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "model",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Model,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "model" => Ok(GeneratedField::Model),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = GetModelResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.GetModelResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetModelResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut model__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Model => {
+                            if model__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("model"));
+                            }
+                            model__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(GetModelResp {
+                    model: model__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.GetModelResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for GetQuotaResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -1461,7 +3190,7 @@ impl serde::Serialize for GetMediaQuotaResp {
         if self.available_bytes.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.GetMediaQuotaResp", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.GetQuotaResp", len)?;
         if let Some(v) = self.total_bytes.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
@@ -1480,7 +3209,7 @@ impl serde::Serialize for GetMediaQuotaResp {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for GetMediaQuotaResp {
+impl<'de> serde::Deserialize<'de> for GetQuotaResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -1533,13 +3262,13 @@ impl<'de> serde::Deserialize<'de> for GetMediaQuotaResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GetMediaQuotaResp;
+            type Value = GetQuotaResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.GetMediaQuotaResp")
+                formatter.write_str("struct hi.media.GetQuotaResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetMediaQuotaResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetQuotaResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -1574,17 +3303,17 @@ impl<'de> serde::Deserialize<'de> for GetMediaQuotaResp {
                         }
                     }
                 }
-                Ok(GetMediaQuotaResp {
+                Ok(GetQuotaResp {
                     total_bytes: total_bytes__,
                     used_bytes: used_bytes__,
                     available_bytes: available_bytes__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.GetMediaQuotaResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.GetQuotaResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for GetMediaTaskReq {
+impl serde::Serialize for GetTaskReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -1595,14 +3324,14 @@ impl serde::Serialize for GetMediaTaskReq {
         if self.task_id.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.GetMediaTaskReq", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.GetTaskReq", len)?;
         if let Some(v) = self.task_id.as_ref() {
             struct_ser.serialize_field("taskId", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for GetMediaTaskReq {
+impl<'de> serde::Deserialize<'de> for GetTaskReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -1647,13 +3376,13 @@ impl<'de> serde::Deserialize<'de> for GetMediaTaskReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GetMediaTaskReq;
+            type Value = GetTaskReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.GetMediaTaskReq")
+                formatter.write_str("struct hi.media.GetTaskReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetMediaTaskReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetTaskReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -1668,15 +3397,15 @@ impl<'de> serde::Deserialize<'de> for GetMediaTaskReq {
                         }
                     }
                 }
-                Ok(GetMediaTaskReq {
+                Ok(GetTaskReq {
                     task_id: task_id__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.GetMediaTaskReq", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.GetTaskReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for GetMediaTaskResp {
+impl serde::Serialize for GetTaskResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -1687,14 +3416,14 @@ impl serde::Serialize for GetMediaTaskResp {
         if self.task.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.GetMediaTaskResp", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.GetTaskResp", len)?;
         if let Some(v) = self.task.as_ref() {
             struct_ser.serialize_field("task", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for GetMediaTaskResp {
+impl<'de> serde::Deserialize<'de> for GetTaskResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -1738,13 +3467,13 @@ impl<'de> serde::Deserialize<'de> for GetMediaTaskResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GetMediaTaskResp;
+            type Value = GetTaskResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.GetMediaTaskResp")
+                formatter.write_str("struct hi.media.GetTaskResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetMediaTaskResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetTaskResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -1759,15 +3488,15 @@ impl<'de> serde::Deserialize<'de> for GetMediaTaskResp {
                         }
                     }
                 }
-                Ok(GetMediaTaskResp {
+                Ok(GetTaskResp {
                     task: task__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.GetMediaTaskResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.GetTaskResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for GetMediaUploadReq {
+impl serde::Serialize for GetUploadReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -1778,14 +3507,14 @@ impl serde::Serialize for GetMediaUploadReq {
         if self.request_id.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.GetMediaUploadReq", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.GetUploadReq", len)?;
         if let Some(v) = self.request_id.as_ref() {
             struct_ser.serialize_field("requestId", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for GetMediaUploadReq {
+impl<'de> serde::Deserialize<'de> for GetUploadReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -1830,13 +3559,13 @@ impl<'de> serde::Deserialize<'de> for GetMediaUploadReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GetMediaUploadReq;
+            type Value = GetUploadReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.GetMediaUploadReq")
+                formatter.write_str("struct hi.media.GetUploadReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetMediaUploadReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetUploadReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -1851,15 +3580,15 @@ impl<'de> serde::Deserialize<'de> for GetMediaUploadReq {
                         }
                     }
                 }
-                Ok(GetMediaUploadReq {
+                Ok(GetUploadReq {
                     request_id: request_id__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.GetMediaUploadReq", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.GetUploadReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for GetMediaUploadResp {
+impl serde::Serialize for GetUploadResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -1870,14 +3599,14 @@ impl serde::Serialize for GetMediaUploadResp {
         if self.upload.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.GetMediaUploadResp", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.GetUploadResp", len)?;
         if let Some(v) = self.upload.as_ref() {
             struct_ser.serialize_field("upload", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for GetMediaUploadResp {
+impl<'de> serde::Deserialize<'de> for GetUploadResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -1921,13 +3650,13 @@ impl<'de> serde::Deserialize<'de> for GetMediaUploadResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GetMediaUploadResp;
+            type Value = GetUploadResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.GetMediaUploadResp")
+                formatter.write_str("struct hi.media.GetUploadResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetMediaUploadResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetUploadResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -1942,15 +3671,15 @@ impl<'de> serde::Deserialize<'de> for GetMediaUploadResp {
                         }
                     }
                 }
-                Ok(GetMediaUploadResp {
+                Ok(GetUploadResp {
                     upload: upload__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.GetMediaUploadResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.GetUploadResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for GetMediaWorkflowReq {
+impl serde::Serialize for GetWorkflowReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -1961,14 +3690,14 @@ impl serde::Serialize for GetMediaWorkflowReq {
         if self.workflow_version_id.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.GetMediaWorkflowReq", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.GetWorkflowReq", len)?;
         if let Some(v) = self.workflow_version_id.as_ref() {
             struct_ser.serialize_field("workflowVersionId", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for GetMediaWorkflowReq {
+impl<'de> serde::Deserialize<'de> for GetWorkflowReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -2013,13 +3742,13 @@ impl<'de> serde::Deserialize<'de> for GetMediaWorkflowReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GetMediaWorkflowReq;
+            type Value = GetWorkflowReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.GetMediaWorkflowReq")
+                formatter.write_str("struct hi.media.GetWorkflowReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetMediaWorkflowReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetWorkflowReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -2034,15 +3763,15 @@ impl<'de> serde::Deserialize<'de> for GetMediaWorkflowReq {
                         }
                     }
                 }
-                Ok(GetMediaWorkflowReq {
+                Ok(GetWorkflowReq {
                     workflow_version_id: workflow_version_id__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.GetMediaWorkflowReq", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.GetWorkflowReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for GetMediaWorkflowResp {
+impl serde::Serialize for GetWorkflowResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -2053,14 +3782,14 @@ impl serde::Serialize for GetMediaWorkflowResp {
         if self.workflow.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.GetMediaWorkflowResp", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.GetWorkflowResp", len)?;
         if let Some(v) = self.workflow.as_ref() {
             struct_ser.serialize_field("workflow", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for GetMediaWorkflowResp {
+impl<'de> serde::Deserialize<'de> for GetWorkflowResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -2104,13 +3833,13 @@ impl<'de> serde::Deserialize<'de> for GetMediaWorkflowResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GetMediaWorkflowResp;
+            type Value = GetWorkflowResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.GetMediaWorkflowResp")
+                formatter.write_str("struct hi.media.GetWorkflowResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetMediaWorkflowResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetWorkflowResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -2125,244 +3854,12 @@ impl<'de> serde::Deserialize<'de> for GetMediaWorkflowResp {
                         }
                     }
                 }
-                Ok(GetMediaWorkflowResp {
+                Ok(GetWorkflowResp {
                     workflow: workflow__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.GetMediaWorkflowResp", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for ImageToVideoFeatureConfig {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.prompt_max_length.is_some() {
-            len += 1;
-        }
-        if self.negative_prompt_max_length.is_some() {
-            len += 1;
-        }
-        if !self.allowed_resolutions.is_empty() {
-            len += 1;
-        }
-        if self.default_resolution.is_some() {
-            len += 1;
-        }
-        if !self.allowed_duration_seconds.is_empty() {
-            len += 1;
-        }
-        if self.default_duration_seconds.is_some() {
-            len += 1;
-        }
-        if !self.allowed_fps.is_empty() {
-            len += 1;
-        }
-        if self.default_fps.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.ImageToVideoFeatureConfig", len)?;
-        if let Some(v) = self.prompt_max_length.as_ref() {
-            struct_ser.serialize_field("promptMaxLength", v)?;
-        }
-        if let Some(v) = self.negative_prompt_max_length.as_ref() {
-            struct_ser.serialize_field("negativePromptMaxLength", v)?;
-        }
-        if !self.allowed_resolutions.is_empty() {
-            struct_ser.serialize_field("allowedResolutions", &self.allowed_resolutions)?;
-        }
-        if let Some(v) = self.default_resolution.as_ref() {
-            struct_ser.serialize_field("defaultResolution", v)?;
-        }
-        if !self.allowed_duration_seconds.is_empty() {
-            struct_ser.serialize_field("allowedDurationSeconds", &self.allowed_duration_seconds)?;
-        }
-        if let Some(v) = self.default_duration_seconds.as_ref() {
-            struct_ser.serialize_field("defaultDurationSeconds", v)?;
-        }
-        if !self.allowed_fps.is_empty() {
-            struct_ser.serialize_field("allowedFps", &self.allowed_fps)?;
-        }
-        if let Some(v) = self.default_fps.as_ref() {
-            struct_ser.serialize_field("defaultFps", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for ImageToVideoFeatureConfig {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "prompt_max_length",
-            "promptMaxLength",
-            "negative_prompt_max_length",
-            "negativePromptMaxLength",
-            "allowed_resolutions",
-            "allowedResolutions",
-            "default_resolution",
-            "defaultResolution",
-            "allowed_duration_seconds",
-            "allowedDurationSeconds",
-            "default_duration_seconds",
-            "defaultDurationSeconds",
-            "allowed_fps",
-            "allowedFps",
-            "default_fps",
-            "defaultFps",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            PromptMaxLength,
-            NegativePromptMaxLength,
-            AllowedResolutions,
-            DefaultResolution,
-            AllowedDurationSeconds,
-            DefaultDurationSeconds,
-            AllowedFps,
-            DefaultFps,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "promptMaxLength" | "prompt_max_length" => Ok(GeneratedField::PromptMaxLength),
-                            "negativePromptMaxLength" | "negative_prompt_max_length" => Ok(GeneratedField::NegativePromptMaxLength),
-                            "allowedResolutions" | "allowed_resolutions" => Ok(GeneratedField::AllowedResolutions),
-                            "defaultResolution" | "default_resolution" => Ok(GeneratedField::DefaultResolution),
-                            "allowedDurationSeconds" | "allowed_duration_seconds" => Ok(GeneratedField::AllowedDurationSeconds),
-                            "defaultDurationSeconds" | "default_duration_seconds" => Ok(GeneratedField::DefaultDurationSeconds),
-                            "allowedFps" | "allowed_fps" => Ok(GeneratedField::AllowedFps),
-                            "defaultFps" | "default_fps" => Ok(GeneratedField::DefaultFps),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ImageToVideoFeatureConfig;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.ImageToVideoFeatureConfig")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ImageToVideoFeatureConfig, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut prompt_max_length__ = None;
-                let mut negative_prompt_max_length__ = None;
-                let mut allowed_resolutions__ = None;
-                let mut default_resolution__ = None;
-                let mut allowed_duration_seconds__ = None;
-                let mut default_duration_seconds__ = None;
-                let mut allowed_fps__ = None;
-                let mut default_fps__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::PromptMaxLength => {
-                            if prompt_max_length__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("promptMaxLength"));
-                            }
-                            prompt_max_length__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                        GeneratedField::NegativePromptMaxLength => {
-                            if negative_prompt_max_length__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("negativePromptMaxLength"));
-                            }
-                            negative_prompt_max_length__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                        GeneratedField::AllowedResolutions => {
-                            if allowed_resolutions__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("allowedResolutions"));
-                            }
-                            allowed_resolutions__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::DefaultResolution => {
-                            if default_resolution__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("defaultResolution"));
-                            }
-                            default_resolution__ = map_.next_value()?;
-                        }
-                        GeneratedField::AllowedDurationSeconds => {
-                            if allowed_duration_seconds__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("allowedDurationSeconds"));
-                            }
-                            allowed_duration_seconds__ = 
-                                Some(map_.next_value::<Vec<::pbjson::private::NumberDeserialize<_>>>()?
-                                    .into_iter().map(|x| x.0).collect())
-                            ;
-                        }
-                        GeneratedField::DefaultDurationSeconds => {
-                            if default_duration_seconds__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("defaultDurationSeconds"));
-                            }
-                            default_duration_seconds__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                        GeneratedField::AllowedFps => {
-                            if allowed_fps__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("allowedFps"));
-                            }
-                            allowed_fps__ = 
-                                Some(map_.next_value::<Vec<::pbjson::private::NumberDeserialize<_>>>()?
-                                    .into_iter().map(|x| x.0).collect())
-                            ;
-                        }
-                        GeneratedField::DefaultFps => {
-                            if default_fps__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("defaultFps"));
-                            }
-                            default_fps__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                    }
-                }
-                Ok(ImageToVideoFeatureConfig {
-                    prompt_max_length: prompt_max_length__,
-                    negative_prompt_max_length: negative_prompt_max_length__,
-                    allowed_resolutions: allowed_resolutions__.unwrap_or_default(),
-                    default_resolution: default_resolution__,
-                    allowed_duration_seconds: allowed_duration_seconds__.unwrap_or_default(),
-                    default_duration_seconds: default_duration_seconds__,
-                    allowed_fps: allowed_fps__.unwrap_or_default(),
-                    default_fps: default_fps__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.ImageToVideoFeatureConfig", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.GetWorkflowResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for ImageToVideoTaskParams {
@@ -2379,16 +3876,16 @@ impl serde::Serialize for ImageToVideoTaskParams {
         if self.prompt.is_some() {
             len += 1;
         }
-        if self.negative_prompt.is_some() {
+        if self.aspect_ratio.is_some() {
             len += 1;
         }
-        if self.resolution.is_some() {
+        if self.megapixels.is_some() {
             len += 1;
         }
         if self.duration_seconds.is_some() {
             len += 1;
         }
-        if self.fps.is_some() {
+        if self.frame_rate.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.media.ImageToVideoTaskParams", len)?;
@@ -2398,17 +3895,17 @@ impl serde::Serialize for ImageToVideoTaskParams {
         if let Some(v) = self.prompt.as_ref() {
             struct_ser.serialize_field("prompt", v)?;
         }
-        if let Some(v) = self.negative_prompt.as_ref() {
-            struct_ser.serialize_field("negativePrompt", v)?;
+        if let Some(v) = self.aspect_ratio.as_ref() {
+            struct_ser.serialize_field("aspectRatio", v)?;
         }
-        if let Some(v) = self.resolution.as_ref() {
-            struct_ser.serialize_field("resolution", v)?;
+        if let Some(v) = self.megapixels.as_ref() {
+            struct_ser.serialize_field("megapixels", v)?;
         }
         if let Some(v) = self.duration_seconds.as_ref() {
             struct_ser.serialize_field("durationSeconds", v)?;
         }
-        if let Some(v) = self.fps.as_ref() {
-            struct_ser.serialize_field("fps", v)?;
+        if let Some(v) = self.frame_rate.as_ref() {
+            struct_ser.serialize_field("frameRate", v)?;
         }
         struct_ser.end()
     }
@@ -2423,22 +3920,23 @@ impl<'de> serde::Deserialize<'de> for ImageToVideoTaskParams {
             "input_asset_id",
             "inputAssetId",
             "prompt",
-            "negative_prompt",
-            "negativePrompt",
-            "resolution",
+            "aspect_ratio",
+            "aspectRatio",
+            "megapixels",
             "duration_seconds",
             "durationSeconds",
-            "fps",
+            "frame_rate",
+            "frameRate",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             InputAssetId,
             Prompt,
-            NegativePrompt,
-            Resolution,
+            AspectRatio,
+            Megapixels,
             DurationSeconds,
-            Fps,
+            FrameRate,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -2462,10 +3960,10 @@ impl<'de> serde::Deserialize<'de> for ImageToVideoTaskParams {
                         match value {
                             "inputAssetId" | "input_asset_id" => Ok(GeneratedField::InputAssetId),
                             "prompt" => Ok(GeneratedField::Prompt),
-                            "negativePrompt" | "negative_prompt" => Ok(GeneratedField::NegativePrompt),
-                            "resolution" => Ok(GeneratedField::Resolution),
+                            "aspectRatio" | "aspect_ratio" => Ok(GeneratedField::AspectRatio),
+                            "megapixels" => Ok(GeneratedField::Megapixels),
                             "durationSeconds" | "duration_seconds" => Ok(GeneratedField::DurationSeconds),
-                            "fps" => Ok(GeneratedField::Fps),
+                            "frameRate" | "frame_rate" => Ok(GeneratedField::FrameRate),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -2487,10 +3985,10 @@ impl<'de> serde::Deserialize<'de> for ImageToVideoTaskParams {
             {
                 let mut input_asset_id__ = None;
                 let mut prompt__ = None;
-                let mut negative_prompt__ = None;
-                let mut resolution__ = None;
+                let mut aspect_ratio__ = None;
+                let mut megapixels__ = None;
                 let mut duration_seconds__ = None;
-                let mut fps__ = None;
+                let mut frame_rate__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::InputAssetId => {
@@ -2505,17 +4003,17 @@ impl<'de> serde::Deserialize<'de> for ImageToVideoTaskParams {
                             }
                             prompt__ = map_.next_value()?;
                         }
-                        GeneratedField::NegativePrompt => {
-                            if negative_prompt__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("negativePrompt"));
+                        GeneratedField::AspectRatio => {
+                            if aspect_ratio__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("aspectRatio"));
                             }
-                            negative_prompt__ = map_.next_value()?;
+                            aspect_ratio__ = map_.next_value()?;
                         }
-                        GeneratedField::Resolution => {
-                            if resolution__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("resolution"));
+                        GeneratedField::Megapixels => {
+                            if megapixels__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("megapixels"));
                             }
-                            resolution__ = map_.next_value()?;
+                            megapixels__ = map_.next_value()?;
                         }
                         GeneratedField::DurationSeconds => {
                             if duration_seconds__.is_some() {
@@ -2525,11 +4023,11 @@ impl<'de> serde::Deserialize<'de> for ImageToVideoTaskParams {
                                 map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
-                        GeneratedField::Fps => {
-                            if fps__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("fps"));
+                        GeneratedField::FrameRate => {
+                            if frame_rate__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("frameRate"));
                             }
-                            fps__ = 
+                            frame_rate__ = 
                                 map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
@@ -2538,10 +4036,10 @@ impl<'de> serde::Deserialize<'de> for ImageToVideoTaskParams {
                 Ok(ImageToVideoTaskParams {
                     input_asset_id: input_asset_id__,
                     prompt: prompt__,
-                    negative_prompt: negative_prompt__,
-                    resolution: resolution__,
+                    aspect_ratio: aspect_ratio__,
+                    megapixels: megapixels__,
                     duration_seconds: duration_seconds__,
-                    fps: fps__,
+                    frame_rate: frame_rate__,
                 })
             }
         }
@@ -2568,16 +4066,16 @@ impl serde::Serialize for ImageToVideoWorkflowConfig {
         if self.negative_prompt.is_some() {
             len += 1;
         }
-        if self.negative_prompt_max_length.is_some() {
+        if self.aspect_ratio.is_some() {
             len += 1;
         }
-        if self.resolution.is_some() {
+        if self.megapixels.is_some() {
             len += 1;
         }
         if self.duration_seconds.is_some() {
             len += 1;
         }
-        if self.fps.is_some() {
+        if self.frame_rate.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.media.ImageToVideoWorkflowConfig", len)?;
@@ -2593,17 +4091,17 @@ impl serde::Serialize for ImageToVideoWorkflowConfig {
         if let Some(v) = self.negative_prompt.as_ref() {
             struct_ser.serialize_field("negativePrompt", v)?;
         }
-        if let Some(v) = self.negative_prompt_max_length.as_ref() {
-            struct_ser.serialize_field("negativePromptMaxLength", v)?;
+        if let Some(v) = self.aspect_ratio.as_ref() {
+            struct_ser.serialize_field("aspectRatio", v)?;
         }
-        if let Some(v) = self.resolution.as_ref() {
-            struct_ser.serialize_field("resolution", v)?;
+        if let Some(v) = self.megapixels.as_ref() {
+            struct_ser.serialize_field("megapixels", v)?;
         }
         if let Some(v) = self.duration_seconds.as_ref() {
             struct_ser.serialize_field("durationSeconds", v)?;
         }
-        if let Some(v) = self.fps.as_ref() {
-            struct_ser.serialize_field("fps", v)?;
+        if let Some(v) = self.frame_rate.as_ref() {
+            struct_ser.serialize_field("frameRate", v)?;
         }
         struct_ser.end()
     }
@@ -2622,12 +4120,13 @@ impl<'de> serde::Deserialize<'de> for ImageToVideoWorkflowConfig {
             "promptMaxLength",
             "negative_prompt",
             "negativePrompt",
-            "negative_prompt_max_length",
-            "negativePromptMaxLength",
-            "resolution",
+            "aspect_ratio",
+            "aspectRatio",
+            "megapixels",
             "duration_seconds",
             "durationSeconds",
-            "fps",
+            "frame_rate",
+            "frameRate",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -2636,10 +4135,10 @@ impl<'de> serde::Deserialize<'de> for ImageToVideoWorkflowConfig {
             Prompt,
             PromptMaxLength,
             NegativePrompt,
-            NegativePromptMaxLength,
-            Resolution,
+            AspectRatio,
+            Megapixels,
             DurationSeconds,
-            Fps,
+            FrameRate,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -2665,10 +4164,10 @@ impl<'de> serde::Deserialize<'de> for ImageToVideoWorkflowConfig {
                             "prompt" => Ok(GeneratedField::Prompt),
                             "promptMaxLength" | "prompt_max_length" => Ok(GeneratedField::PromptMaxLength),
                             "negativePrompt" | "negative_prompt" => Ok(GeneratedField::NegativePrompt),
-                            "negativePromptMaxLength" | "negative_prompt_max_length" => Ok(GeneratedField::NegativePromptMaxLength),
-                            "resolution" => Ok(GeneratedField::Resolution),
+                            "aspectRatio" | "aspect_ratio" => Ok(GeneratedField::AspectRatio),
+                            "megapixels" => Ok(GeneratedField::Megapixels),
                             "durationSeconds" | "duration_seconds" => Ok(GeneratedField::DurationSeconds),
-                            "fps" => Ok(GeneratedField::Fps),
+                            "frameRate" | "frame_rate" => Ok(GeneratedField::FrameRate),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -2692,10 +4191,10 @@ impl<'de> serde::Deserialize<'de> for ImageToVideoWorkflowConfig {
                 let mut prompt__ = None;
                 let mut prompt_max_length__ = None;
                 let mut negative_prompt__ = None;
-                let mut negative_prompt_max_length__ = None;
-                let mut resolution__ = None;
+                let mut aspect_ratio__ = None;
+                let mut megapixels__ = None;
                 let mut duration_seconds__ = None;
-                let mut fps__ = None;
+                let mut frame_rate__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::InputImage => {
@@ -2724,19 +4223,17 @@ impl<'de> serde::Deserialize<'de> for ImageToVideoWorkflowConfig {
                             }
                             negative_prompt__ = map_.next_value()?;
                         }
-                        GeneratedField::NegativePromptMaxLength => {
-                            if negative_prompt_max_length__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("negativePromptMaxLength"));
+                        GeneratedField::AspectRatio => {
+                            if aspect_ratio__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("aspectRatio"));
                             }
-                            negative_prompt_max_length__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
+                            aspect_ratio__ = map_.next_value()?;
                         }
-                        GeneratedField::Resolution => {
-                            if resolution__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("resolution"));
+                        GeneratedField::Megapixels => {
+                            if megapixels__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("megapixels"));
                             }
-                            resolution__ = map_.next_value()?;
+                            megapixels__ = map_.next_value()?;
                         }
                         GeneratedField::DurationSeconds => {
                             if duration_seconds__.is_some() {
@@ -2744,11 +4241,11 @@ impl<'de> serde::Deserialize<'de> for ImageToVideoWorkflowConfig {
                             }
                             duration_seconds__ = map_.next_value()?;
                         }
-                        GeneratedField::Fps => {
-                            if fps__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("fps"));
+                        GeneratedField::FrameRate => {
+                            if frame_rate__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("frameRate"));
                             }
-                            fps__ = map_.next_value()?;
+                            frame_rate__ = map_.next_value()?;
                         }
                     }
                 }
@@ -2757,17 +4254,17 @@ impl<'de> serde::Deserialize<'de> for ImageToVideoWorkflowConfig {
                     prompt: prompt__,
                     prompt_max_length: prompt_max_length__,
                     negative_prompt: negative_prompt__,
-                    negative_prompt_max_length: negative_prompt_max_length__,
-                    resolution: resolution__,
+                    aspect_ratio: aspect_ratio__,
+                    megapixels: megapixels__,
                     duration_seconds: duration_seconds__,
-                    fps: fps__,
+                    frame_rate: frame_rate__,
                 })
             }
         }
         deserializer.deserialize_struct("hi.media.ImageToVideoWorkflowConfig", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ImageToVideoWorkflowTestInput {
+impl serde::Serialize for ImportWorkflowReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -2775,174 +4272,57 @@ impl serde::Serialize for ImageToVideoWorkflowTestInput {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.input_asset_id.is_some() {
-            len += 1;
-        }
-        if self.prompt.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.ImageToVideoWorkflowTestInput", len)?;
-        if let Some(v) = self.input_asset_id.as_ref() {
-            struct_ser.serialize_field("inputAssetId", v)?;
-        }
-        if let Some(v) = self.prompt.as_ref() {
-            struct_ser.serialize_field("prompt", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for ImageToVideoWorkflowTestInput {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "input_asset_id",
-            "inputAssetId",
-            "prompt",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            InputAssetId,
-            Prompt,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "inputAssetId" | "input_asset_id" => Ok(GeneratedField::InputAssetId),
-                            "prompt" => Ok(GeneratedField::Prompt),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ImageToVideoWorkflowTestInput;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.ImageToVideoWorkflowTestInput")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ImageToVideoWorkflowTestInput, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut input_asset_id__ = None;
-                let mut prompt__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::InputAssetId => {
-                            if input_asset_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("inputAssetId"));
-                            }
-                            input_asset_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::Prompt => {
-                            if prompt__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("prompt"));
-                            }
-                            prompt__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(ImageToVideoWorkflowTestInput {
-                    input_asset_id: input_asset_id__,
-                    prompt: prompt__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.ImageToVideoWorkflowTestInput", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for ImportMediaWorkflowReq {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.request_id.is_some() {
-            len += 1;
-        }
         if self.feature_key.is_some() {
             len += 1;
         }
         if self.name.is_some() {
             len += 1;
         }
-        if self.change_notes.is_some() {
-            len += 1;
-        }
         if self.api_json.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.ImportMediaWorkflowReq", len)?;
-        if let Some(v) = self.request_id.as_ref() {
-            struct_ser.serialize_field("requestId", v)?;
+        if self.description.is_some() {
+            len += 1;
         }
+        let mut struct_ser = serializer.serialize_struct("hi.media.ImportWorkflowReq", len)?;
         if let Some(v) = self.feature_key.as_ref() {
-            struct_ser.serialize_field("featureKey", v)?;
+            let v = FeatureKey::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("featureKey", &v)?;
         }
         if let Some(v) = self.name.as_ref() {
             struct_ser.serialize_field("name", v)?;
         }
-        if let Some(v) = self.change_notes.as_ref() {
-            struct_ser.serialize_field("changeNotes", v)?;
-        }
         if let Some(v) = self.api_json.as_ref() {
             struct_ser.serialize_field("apiJson", v)?;
+        }
+        if let Some(v) = self.description.as_ref() {
+            struct_ser.serialize_field("description", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ImportMediaWorkflowReq {
+impl<'de> serde::Deserialize<'de> for ImportWorkflowReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "request_id",
-            "requestId",
             "feature_key",
             "featureKey",
             "name",
-            "change_notes",
-            "changeNotes",
             "api_json",
             "apiJson",
+            "description",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            RequestId,
             FeatureKey,
             Name,
-            ChangeNotes,
             ApiJson,
+            Description,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -2964,11 +4344,10 @@ impl<'de> serde::Deserialize<'de> for ImportMediaWorkflowReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
                             "featureKey" | "feature_key" => Ok(GeneratedField::FeatureKey),
                             "name" => Ok(GeneratedField::Name),
-                            "changeNotes" | "change_notes" => Ok(GeneratedField::ChangeNotes),
                             "apiJson" | "api_json" => Ok(GeneratedField::ApiJson),
+                            "description" => Ok(GeneratedField::Description),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -2978,34 +4357,27 @@ impl<'de> serde::Deserialize<'de> for ImportMediaWorkflowReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ImportMediaWorkflowReq;
+            type Value = ImportWorkflowReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.ImportMediaWorkflowReq")
+                formatter.write_str("struct hi.media.ImportWorkflowReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ImportMediaWorkflowReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ImportWorkflowReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut request_id__ = None;
                 let mut feature_key__ = None;
                 let mut name__ = None;
-                let mut change_notes__ = None;
                 let mut api_json__ = None;
+                let mut description__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::RequestId => {
-                            if request_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("requestId"));
-                            }
-                            request_id__ = map_.next_value()?;
-                        }
                         GeneratedField::FeatureKey => {
                             if feature_key__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("featureKey"));
                             }
-                            feature_key__ = map_.next_value()?;
+                            feature_key__ = map_.next_value::<::std::option::Option<FeatureKey>>()?.map(|x| x as i32);
                         }
                         GeneratedField::Name => {
                             if name__.is_some() {
@@ -3013,33 +4385,32 @@ impl<'de> serde::Deserialize<'de> for ImportMediaWorkflowReq {
                             }
                             name__ = map_.next_value()?;
                         }
-                        GeneratedField::ChangeNotes => {
-                            if change_notes__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("changeNotes"));
-                            }
-                            change_notes__ = map_.next_value()?;
-                        }
                         GeneratedField::ApiJson => {
                             if api_json__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("apiJson"));
                             }
                             api_json__ = map_.next_value()?;
                         }
+                        GeneratedField::Description => {
+                            if description__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("description"));
+                            }
+                            description__ = map_.next_value()?;
+                        }
                     }
                 }
-                Ok(ImportMediaWorkflowReq {
-                    request_id: request_id__,
+                Ok(ImportWorkflowReq {
                     feature_key: feature_key__,
                     name: name__,
-                    change_notes: change_notes__,
                     api_json: api_json__,
+                    description: description__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.ImportMediaWorkflowReq", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.ImportWorkflowReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ImportMediaWorkflowResp {
+impl serde::Serialize for ImportWorkflowResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -3050,14 +4421,14 @@ impl serde::Serialize for ImportMediaWorkflowResp {
         if self.workflow_version_id.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.ImportMediaWorkflowResp", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.ImportWorkflowResp", len)?;
         if let Some(v) = self.workflow_version_id.as_ref() {
             struct_ser.serialize_field("workflowVersionId", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ImportMediaWorkflowResp {
+impl<'de> serde::Deserialize<'de> for ImportWorkflowResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -3102,13 +4473,13 @@ impl<'de> serde::Deserialize<'de> for ImportMediaWorkflowResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ImportMediaWorkflowResp;
+            type Value = ImportWorkflowResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.ImportMediaWorkflowResp")
+                formatter.write_str("struct hi.media.ImportWorkflowResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ImportMediaWorkflowResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ImportWorkflowResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -3123,12 +4494,146 @@ impl<'de> serde::Deserialize<'de> for ImportMediaWorkflowResp {
                         }
                     }
                 }
-                Ok(ImportMediaWorkflowResp {
+                Ok(ImportWorkflowResp {
                     workflow_version_id: workflow_version_id__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.ImportMediaWorkflowResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.ImportWorkflowResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for IntRangeConfig {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.min_value.is_some() {
+            len += 1;
+        }
+        if self.max_value.is_some() {
+            len += 1;
+        }
+        if self.default_value.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.IntRangeConfig", len)?;
+        if let Some(v) = self.min_value.as_ref() {
+            struct_ser.serialize_field("minValue", v)?;
+        }
+        if let Some(v) = self.max_value.as_ref() {
+            struct_ser.serialize_field("maxValue", v)?;
+        }
+        if let Some(v) = self.default_value.as_ref() {
+            struct_ser.serialize_field("defaultValue", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for IntRangeConfig {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "min_value",
+            "minValue",
+            "max_value",
+            "maxValue",
+            "default_value",
+            "defaultValue",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            MinValue,
+            MaxValue,
+            DefaultValue,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "minValue" | "min_value" => Ok(GeneratedField::MinValue),
+                            "maxValue" | "max_value" => Ok(GeneratedField::MaxValue),
+                            "defaultValue" | "default_value" => Ok(GeneratedField::DefaultValue),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = IntRangeConfig;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.IntRangeConfig")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<IntRangeConfig, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut min_value__ = None;
+                let mut max_value__ = None;
+                let mut default_value__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::MinValue => {
+                            if min_value__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("minValue"));
+                            }
+                            min_value__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::MaxValue => {
+                            if max_value__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("maxValue"));
+                            }
+                            max_value__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::DefaultValue => {
+                            if default_value__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("defaultValue"));
+                            }
+                            default_value__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(IntRangeConfig {
+                    min_value: min_value__,
+                    max_value: max_value__,
+                    default_value: default_value__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.IntRangeConfig", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for InviteCodeCreateResp {
@@ -3948,7 +5453,7 @@ impl<'de> serde::Deserialize<'de> for InviteCodeVerifyReq {
         deserializer.deserialize_struct("hi.media.InviteCodeVerifyReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListMediaFilesReq {
+impl serde::Serialize for ListFilesReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -3965,7 +5470,7 @@ impl serde::Serialize for ListMediaFilesReq {
         if self.source.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.ListMediaFilesReq", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.ListFilesReq", len)?;
         if let Some(v) = self.pagination.as_ref() {
             struct_ser.serialize_field("pagination", v)?;
         }
@@ -3975,14 +5480,14 @@ impl serde::Serialize for ListMediaFilesReq {
             struct_ser.serialize_field("mediaType", &v)?;
         }
         if let Some(v) = self.source.as_ref() {
-            let v = MediaFileSource::try_from(*v)
+            let v = FileSource::try_from(*v)
                 .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
             struct_ser.serialize_field("source", &v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListMediaFilesReq {
+impl<'de> serde::Deserialize<'de> for ListFilesReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -4033,13 +5538,13 @@ impl<'de> serde::Deserialize<'de> for ListMediaFilesReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListMediaFilesReq;
+            type Value = ListFilesReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.ListMediaFilesReq")
+                formatter.write_str("struct hi.media.ListFilesReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListMediaFilesReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListFilesReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -4064,21 +5569,21 @@ impl<'de> serde::Deserialize<'de> for ListMediaFilesReq {
                             if source__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("source"));
                             }
-                            source__ = map_.next_value::<::std::option::Option<MediaFileSource>>()?.map(|x| x as i32);
+                            source__ = map_.next_value::<::std::option::Option<FileSource>>()?.map(|x| x as i32);
                         }
                     }
                 }
-                Ok(ListMediaFilesReq {
+                Ok(ListFilesReq {
                     pagination: pagination__,
                     media_type: media_type__,
                     source: source__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.ListMediaFilesReq", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.ListFilesReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListMediaFilesResp {
+impl serde::Serialize for ListFilesResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -4092,7 +5597,7 @@ impl serde::Serialize for ListMediaFilesResp {
         if !self.files.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.ListMediaFilesResp", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.ListFilesResp", len)?;
         if let Some(v) = self.total.as_ref() {
             struct_ser.serialize_field("total", v)?;
         }
@@ -4102,7 +5607,7 @@ impl serde::Serialize for ListMediaFilesResp {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListMediaFilesResp {
+impl<'de> serde::Deserialize<'de> for ListFilesResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -4149,13 +5654,13 @@ impl<'de> serde::Deserialize<'de> for ListMediaFilesResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListMediaFilesResp;
+            type Value = ListFilesResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.ListMediaFilesResp")
+                formatter.write_str("struct hi.media.ListFilesResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListMediaFilesResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListFilesResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -4179,16 +5684,455 @@ impl<'de> serde::Deserialize<'de> for ListMediaFilesResp {
                         }
                     }
                 }
-                Ok(ListMediaFilesResp {
+                Ok(ListFilesResp {
                     total: total__,
                     files: files__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.ListMediaFilesResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.ListFilesResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListMediaTasksReq {
+impl serde::Serialize for ListModelMappingsReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.pagination.is_some() {
+            len += 1;
+        }
+        if self.feature_key.is_some() {
+            len += 1;
+        }
+        if self.enabled.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.ListModelMappingsReq", len)?;
+        if let Some(v) = self.pagination.as_ref() {
+            struct_ser.serialize_field("pagination", v)?;
+        }
+        if let Some(v) = self.feature_key.as_ref() {
+            let v = FeatureKey::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("featureKey", &v)?;
+        }
+        if let Some(v) = self.enabled.as_ref() {
+            struct_ser.serialize_field("enabled", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ListModelMappingsReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "pagination",
+            "feature_key",
+            "featureKey",
+            "enabled",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Pagination,
+            FeatureKey,
+            Enabled,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "pagination" => Ok(GeneratedField::Pagination),
+                            "featureKey" | "feature_key" => Ok(GeneratedField::FeatureKey),
+                            "enabled" => Ok(GeneratedField::Enabled),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ListModelMappingsReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.ListModelMappingsReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListModelMappingsReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut pagination__ = None;
+                let mut feature_key__ = None;
+                let mut enabled__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Pagination => {
+                            if pagination__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("pagination"));
+                            }
+                            pagination__ = map_.next_value()?;
+                        }
+                        GeneratedField::FeatureKey => {
+                            if feature_key__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("featureKey"));
+                            }
+                            feature_key__ = map_.next_value::<::std::option::Option<FeatureKey>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::Enabled => {
+                            if enabled__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("enabled"));
+                            }
+                            enabled__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ListModelMappingsReq {
+                    pagination: pagination__,
+                    feature_key: feature_key__,
+                    enabled: enabled__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.ListModelMappingsReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ListModelMappingsResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.total.is_some() {
+            len += 1;
+        }
+        if !self.mappings.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.ListModelMappingsResp", len)?;
+        if let Some(v) = self.total.as_ref() {
+            struct_ser.serialize_field("total", v)?;
+        }
+        if !self.mappings.is_empty() {
+            struct_ser.serialize_field("mappings", &self.mappings)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ListModelMappingsResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "total",
+            "mappings",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Total,
+            Mappings,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "total" => Ok(GeneratedField::Total),
+                            "mappings" => Ok(GeneratedField::Mappings),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ListModelMappingsResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.ListModelMappingsResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListModelMappingsResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut total__ = None;
+                let mut mappings__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Total => {
+                            if total__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("total"));
+                            }
+                            total__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Mappings => {
+                            if mappings__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("mappings"));
+                            }
+                            mappings__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(ListModelMappingsResp {
+                    total: total__,
+                    mappings: mappings__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.ListModelMappingsResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ListModelsReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.pagination.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.ListModelsReq", len)?;
+        if let Some(v) = self.pagination.as_ref() {
+            struct_ser.serialize_field("pagination", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ListModelsReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "pagination",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Pagination,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "pagination" => Ok(GeneratedField::Pagination),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ListModelsReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.ListModelsReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListModelsReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut pagination__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Pagination => {
+                            if pagination__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("pagination"));
+                            }
+                            pagination__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ListModelsReq {
+                    pagination: pagination__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.ListModelsReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ListModelsResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.total.is_some() {
+            len += 1;
+        }
+        if !self.models.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.ListModelsResp", len)?;
+        if let Some(v) = self.total.as_ref() {
+            struct_ser.serialize_field("total", v)?;
+        }
+        if !self.models.is_empty() {
+            struct_ser.serialize_field("models", &self.models)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ListModelsResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "total",
+            "models",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Total,
+            Models,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "total" => Ok(GeneratedField::Total),
+                            "models" => Ok(GeneratedField::Models),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ListModelsResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.ListModelsResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListModelsResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut total__ = None;
+                let mut models__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Total => {
+                            if total__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("total"));
+                            }
+                            total__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Models => {
+                            if models__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("models"));
+                            }
+                            models__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(ListModelsResp {
+                    total: total__,
+                    models: models__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.ListModelsResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ListTasksReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -4205,16 +6149,18 @@ impl serde::Serialize for ListMediaTasksReq {
         if !self.statuses.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.ListMediaTasksReq", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.ListTasksReq", len)?;
         if let Some(v) = self.pagination.as_ref() {
             struct_ser.serialize_field("pagination", v)?;
         }
         if let Some(v) = self.feature_key.as_ref() {
-            struct_ser.serialize_field("featureKey", v)?;
+            let v = FeatureKey::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("featureKey", &v)?;
         }
         if !self.statuses.is_empty() {
             let v = self.statuses.iter().cloned().map(|v| {
-                MediaTaskStatus::try_from(v)
+                TaskStatus::try_from(v)
                     .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", v)))
                 }).collect::<std::result::Result<Vec<_>, _>>()?;
             struct_ser.serialize_field("statuses", &v)?;
@@ -4222,7 +6168,7 @@ impl serde::Serialize for ListMediaTasksReq {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListMediaTasksReq {
+impl<'de> serde::Deserialize<'de> for ListTasksReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -4273,13 +6219,13 @@ impl<'de> serde::Deserialize<'de> for ListMediaTasksReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListMediaTasksReq;
+            type Value = ListTasksReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.ListMediaTasksReq")
+                formatter.write_str("struct hi.media.ListTasksReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListMediaTasksReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListTasksReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -4298,27 +6244,27 @@ impl<'de> serde::Deserialize<'de> for ListMediaTasksReq {
                             if feature_key__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("featureKey"));
                             }
-                            feature_key__ = map_.next_value()?;
+                            feature_key__ = map_.next_value::<::std::option::Option<FeatureKey>>()?.map(|x| x as i32);
                         }
                         GeneratedField::Statuses => {
                             if statuses__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("statuses"));
                             }
-                            statuses__ = Some(map_.next_value::<Vec<MediaTaskStatus>>()?.into_iter().map(|x| x as i32).collect());
+                            statuses__ = Some(map_.next_value::<Vec<TaskStatus>>()?.into_iter().map(|x| x as i32).collect());
                         }
                     }
                 }
-                Ok(ListMediaTasksReq {
+                Ok(ListTasksReq {
                     pagination: pagination__,
                     feature_key: feature_key__,
                     statuses: statuses__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.ListMediaTasksReq", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.ListTasksReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListMediaTasksResp {
+impl serde::Serialize for ListTasksResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -4332,7 +6278,7 @@ impl serde::Serialize for ListMediaTasksResp {
         if !self.tasks.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.ListMediaTasksResp", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.ListTasksResp", len)?;
         if let Some(v) = self.total.as_ref() {
             struct_ser.serialize_field("total", v)?;
         }
@@ -4342,7 +6288,7 @@ impl serde::Serialize for ListMediaTasksResp {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListMediaTasksResp {
+impl<'de> serde::Deserialize<'de> for ListTasksResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -4389,13 +6335,13 @@ impl<'de> serde::Deserialize<'de> for ListMediaTasksResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListMediaTasksResp;
+            type Value = ListTasksResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.ListMediaTasksResp")
+                formatter.write_str("struct hi.media.ListTasksResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListMediaTasksResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListTasksResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -4419,16 +6365,16 @@ impl<'de> serde::Deserialize<'de> for ListMediaTasksResp {
                         }
                     }
                 }
-                Ok(ListMediaTasksResp {
+                Ok(ListTasksResp {
                     total: total__,
                     tasks: tasks__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.ListMediaTasksResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.ListTasksResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListMediaWorkflowTestsReq {
+impl serde::Serialize for ListWorkflowTestsReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -4442,7 +6388,7 @@ impl serde::Serialize for ListMediaWorkflowTestsReq {
         if self.workflow_version_id.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.ListMediaWorkflowTestsReq", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.ListWorkflowTestsReq", len)?;
         if let Some(v) = self.pagination.as_ref() {
             struct_ser.serialize_field("pagination", v)?;
         }
@@ -4452,7 +6398,7 @@ impl serde::Serialize for ListMediaWorkflowTestsReq {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListMediaWorkflowTestsReq {
+impl<'de> serde::Deserialize<'de> for ListWorkflowTestsReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -4500,13 +6446,13 @@ impl<'de> serde::Deserialize<'de> for ListMediaWorkflowTestsReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListMediaWorkflowTestsReq;
+            type Value = ListWorkflowTestsReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.ListMediaWorkflowTestsReq")
+                formatter.write_str("struct hi.media.ListWorkflowTestsReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListMediaWorkflowTestsReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListWorkflowTestsReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -4528,16 +6474,16 @@ impl<'de> serde::Deserialize<'de> for ListMediaWorkflowTestsReq {
                         }
                     }
                 }
-                Ok(ListMediaWorkflowTestsReq {
+                Ok(ListWorkflowTestsReq {
                     pagination: pagination__,
                     workflow_version_id: workflow_version_id__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.ListMediaWorkflowTestsReq", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.ListWorkflowTestsReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListMediaWorkflowTestsResp {
+impl serde::Serialize for ListWorkflowTestsResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -4548,20 +6494,20 @@ impl serde::Serialize for ListMediaWorkflowTestsResp {
         if self.total.is_some() {
             len += 1;
         }
-        if !self.tests.is_empty() {
+        if !self.tasks.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.ListMediaWorkflowTestsResp", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.ListWorkflowTestsResp", len)?;
         if let Some(v) = self.total.as_ref() {
             struct_ser.serialize_field("total", v)?;
         }
-        if !self.tests.is_empty() {
-            struct_ser.serialize_field("tests", &self.tests)?;
+        if !self.tasks.is_empty() {
+            struct_ser.serialize_field("tasks", &self.tasks)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListMediaWorkflowTestsResp {
+impl<'de> serde::Deserialize<'de> for ListWorkflowTestsResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -4569,13 +6515,13 @@ impl<'de> serde::Deserialize<'de> for ListMediaWorkflowTestsResp {
     {
         const FIELDS: &[&str] = &[
             "total",
-            "tests",
+            "tasks",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Total,
-            Tests,
+            Tasks,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -4598,7 +6544,7 @@ impl<'de> serde::Deserialize<'de> for ListMediaWorkflowTestsResp {
                     {
                         match value {
                             "total" => Ok(GeneratedField::Total),
-                            "tests" => Ok(GeneratedField::Tests),
+                            "tasks" => Ok(GeneratedField::Tasks),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -4608,18 +6554,18 @@ impl<'de> serde::Deserialize<'de> for ListMediaWorkflowTestsResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListMediaWorkflowTestsResp;
+            type Value = ListWorkflowTestsResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.ListMediaWorkflowTestsResp")
+                formatter.write_str("struct hi.media.ListWorkflowTestsResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListMediaWorkflowTestsResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListWorkflowTestsResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
                 let mut total__ = None;
-                let mut tests__ = None;
+                let mut tasks__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Total => {
@@ -4630,24 +6576,24 @@ impl<'de> serde::Deserialize<'de> for ListMediaWorkflowTestsResp {
                                 map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
-                        GeneratedField::Tests => {
-                            if tests__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("tests"));
+                        GeneratedField::Tasks => {
+                            if tasks__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("tasks"));
                             }
-                            tests__ = Some(map_.next_value()?);
+                            tasks__ = Some(map_.next_value()?);
                         }
                     }
                 }
-                Ok(ListMediaWorkflowTestsResp {
+                Ok(ListWorkflowTestsResp {
                     total: total__,
-                    tests: tests__.unwrap_or_default(),
+                    tasks: tasks__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.ListMediaWorkflowTestsResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.ListWorkflowTestsResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListMediaWorkflowsReq {
+impl serde::Serialize for ListWorkflowsReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -4664,28 +6610,24 @@ impl serde::Serialize for ListMediaWorkflowsReq {
         if self.status.is_some() {
             len += 1;
         }
-        if self.is_active.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.ListMediaWorkflowsReq", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.ListWorkflowsReq", len)?;
         if let Some(v) = self.pagination.as_ref() {
             struct_ser.serialize_field("pagination", v)?;
         }
         if let Some(v) = self.feature_key.as_ref() {
-            struct_ser.serialize_field("featureKey", v)?;
+            let v = FeatureKey::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("featureKey", &v)?;
         }
         if let Some(v) = self.status.as_ref() {
-            let v = MediaWorkflowStatus::try_from(*v)
+            let v = WorkflowStatus::try_from(*v)
                 .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
             struct_ser.serialize_field("status", &v)?;
-        }
-        if let Some(v) = self.is_active.as_ref() {
-            struct_ser.serialize_field("isActive", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListMediaWorkflowsReq {
+impl<'de> serde::Deserialize<'de> for ListWorkflowsReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -4696,8 +6638,6 @@ impl<'de> serde::Deserialize<'de> for ListMediaWorkflowsReq {
             "feature_key",
             "featureKey",
             "status",
-            "is_active",
-            "isActive",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -4705,7 +6645,6 @@ impl<'de> serde::Deserialize<'de> for ListMediaWorkflowsReq {
             Pagination,
             FeatureKey,
             Status,
-            IsActive,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -4730,7 +6669,6 @@ impl<'de> serde::Deserialize<'de> for ListMediaWorkflowsReq {
                             "pagination" => Ok(GeneratedField::Pagination),
                             "featureKey" | "feature_key" => Ok(GeneratedField::FeatureKey),
                             "status" => Ok(GeneratedField::Status),
-                            "isActive" | "is_active" => Ok(GeneratedField::IsActive),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -4740,20 +6678,19 @@ impl<'de> serde::Deserialize<'de> for ListMediaWorkflowsReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListMediaWorkflowsReq;
+            type Value = ListWorkflowsReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.ListMediaWorkflowsReq")
+                formatter.write_str("struct hi.media.ListWorkflowsReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListMediaWorkflowsReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListWorkflowsReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
                 let mut pagination__ = None;
                 let mut feature_key__ = None;
                 let mut status__ = None;
-                let mut is_active__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Pagination => {
@@ -4766,34 +6703,27 @@ impl<'de> serde::Deserialize<'de> for ListMediaWorkflowsReq {
                             if feature_key__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("featureKey"));
                             }
-                            feature_key__ = map_.next_value()?;
+                            feature_key__ = map_.next_value::<::std::option::Option<FeatureKey>>()?.map(|x| x as i32);
                         }
                         GeneratedField::Status => {
                             if status__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("status"));
                             }
-                            status__ = map_.next_value::<::std::option::Option<MediaWorkflowStatus>>()?.map(|x| x as i32);
-                        }
-                        GeneratedField::IsActive => {
-                            if is_active__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("isActive"));
-                            }
-                            is_active__ = map_.next_value()?;
+                            status__ = map_.next_value::<::std::option::Option<WorkflowStatus>>()?.map(|x| x as i32);
                         }
                     }
                 }
-                Ok(ListMediaWorkflowsReq {
+                Ok(ListWorkflowsReq {
                     pagination: pagination__,
                     feature_key: feature_key__,
                     status: status__,
-                    is_active: is_active__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.ListMediaWorkflowsReq", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.ListWorkflowsReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListMediaWorkflowsResp {
+impl serde::Serialize for ListWorkflowsResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -4807,7 +6737,7 @@ impl serde::Serialize for ListMediaWorkflowsResp {
         if !self.workflows.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.ListMediaWorkflowsResp", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.ListWorkflowsResp", len)?;
         if let Some(v) = self.total.as_ref() {
             struct_ser.serialize_field("total", v)?;
         }
@@ -4817,7 +6747,7 @@ impl serde::Serialize for ListMediaWorkflowsResp {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListMediaWorkflowsResp {
+impl<'de> serde::Deserialize<'de> for ListWorkflowsResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -4864,13 +6794,13 @@ impl<'de> serde::Deserialize<'de> for ListMediaWorkflowsResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListMediaWorkflowsResp;
+            type Value = ListWorkflowsResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.ListMediaWorkflowsResp")
+                formatter.write_str("struct hi.media.ListWorkflowsResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListMediaWorkflowsResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListWorkflowsResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -4894,505 +6824,16 @@ impl<'de> serde::Deserialize<'de> for ListMediaWorkflowsResp {
                         }
                     }
                 }
-                Ok(ListMediaWorkflowsResp {
+                Ok(ListWorkflowsResp {
                     total: total__,
                     workflows: workflows__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.ListMediaWorkflowsResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.ListWorkflowsResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for MediaFileAccessPurpose {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        let variant = match self {
-            Self::Unspecified => "MEDIA_FILE_ACCESS_PURPOSE_UNSPECIFIED",
-            Self::Preview => "MEDIA_FILE_ACCESS_PURPOSE_PREVIEW",
-            Self::Download => "MEDIA_FILE_ACCESS_PURPOSE_DOWNLOAD",
-        };
-        serializer.serialize_str(variant)
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaFileAccessPurpose {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "MEDIA_FILE_ACCESS_PURPOSE_UNSPECIFIED",
-            "MEDIA_FILE_ACCESS_PURPOSE_PREVIEW",
-            "MEDIA_FILE_ACCESS_PURPOSE_DOWNLOAD",
-        ];
-
-        struct GeneratedVisitor;
-
-        impl serde::de::Visitor<'_> for GeneratedVisitor {
-            type Value = MediaFileAccessPurpose;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                write!(formatter, "expected one of: {:?}", &FIELDS)
-            }
-
-            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                i32::try_from(v)
-                    .ok()
-                    .and_then(|x| x.try_into().ok())
-                    .ok_or_else(|| {
-                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
-                    })
-            }
-
-            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                i32::try_from(v)
-                    .ok()
-                    .and_then(|x| x.try_into().ok())
-                    .ok_or_else(|| {
-                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
-                    })
-            }
-
-            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                match value {
-                    "MEDIA_FILE_ACCESS_PURPOSE_UNSPECIFIED" => Ok(MediaFileAccessPurpose::Unspecified),
-                    "MEDIA_FILE_ACCESS_PURPOSE_PREVIEW" => Ok(MediaFileAccessPurpose::Preview),
-                    "MEDIA_FILE_ACCESS_PURPOSE_DOWNLOAD" => Ok(MediaFileAccessPurpose::Download),
-                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
-                }
-            }
-        }
-        deserializer.deserialize_any(GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaFileAccessUrl {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.asset_id.is_some() {
-            len += 1;
-        }
-        if self.url.is_some() {
-            len += 1;
-        }
-        if self.expire_at.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.MediaFileAccessUrl", len)?;
-        if let Some(v) = self.asset_id.as_ref() {
-            struct_ser.serialize_field("assetId", v)?;
-        }
-        if let Some(v) = self.url.as_ref() {
-            struct_ser.serialize_field("url", v)?;
-        }
-        if let Some(v) = self.expire_at.as_ref() {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("expireAt", ToString::to_string(&v).as_str())?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaFileAccessUrl {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "asset_id",
-            "assetId",
-            "url",
-            "expire_at",
-            "expireAt",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            AssetId,
-            Url,
-            ExpireAt,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "assetId" | "asset_id" => Ok(GeneratedField::AssetId),
-                            "url" => Ok(GeneratedField::Url),
-                            "expireAt" | "expire_at" => Ok(GeneratedField::ExpireAt),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MediaFileAccessUrl;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.MediaFileAccessUrl")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaFileAccessUrl, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut asset_id__ = None;
-                let mut url__ = None;
-                let mut expire_at__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::AssetId => {
-                            if asset_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("assetId"));
-                            }
-                            asset_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::Url => {
-                            if url__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("url"));
-                            }
-                            url__ = map_.next_value()?;
-                        }
-                        GeneratedField::ExpireAt => {
-                            if expire_at__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("expireAt"));
-                            }
-                            expire_at__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                    }
-                }
-                Ok(MediaFileAccessUrl {
-                    asset_id: asset_id__,
-                    url: url__,
-                    expire_at: expire_at__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.MediaFileAccessUrl", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaFileSource {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        let variant = match self {
-            Self::Unspecified => "MEDIA_FILE_SOURCE_UNSPECIFIED",
-            Self::Upload => "MEDIA_FILE_SOURCE_UPLOAD",
-            Self::Generated => "MEDIA_FILE_SOURCE_GENERATED",
-        };
-        serializer.serialize_str(variant)
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaFileSource {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "MEDIA_FILE_SOURCE_UNSPECIFIED",
-            "MEDIA_FILE_SOURCE_UPLOAD",
-            "MEDIA_FILE_SOURCE_GENERATED",
-        ];
-
-        struct GeneratedVisitor;
-
-        impl serde::de::Visitor<'_> for GeneratedVisitor {
-            type Value = MediaFileSource;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                write!(formatter, "expected one of: {:?}", &FIELDS)
-            }
-
-            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                i32::try_from(v)
-                    .ok()
-                    .and_then(|x| x.try_into().ok())
-                    .ok_or_else(|| {
-                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
-                    })
-            }
-
-            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                i32::try_from(v)
-                    .ok()
-                    .and_then(|x| x.try_into().ok())
-                    .ok_or_else(|| {
-                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
-                    })
-            }
-
-            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                match value {
-                    "MEDIA_FILE_SOURCE_UNSPECIFIED" => Ok(MediaFileSource::Unspecified),
-                    "MEDIA_FILE_SOURCE_UPLOAD" => Ok(MediaFileSource::Upload),
-                    "MEDIA_FILE_SOURCE_GENERATED" => Ok(MediaFileSource::Generated),
-                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
-                }
-            }
-        }
-        deserializer.deserialize_any(GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaFileSummary {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.asset_id.is_some() {
-            len += 1;
-        }
-        if self.filename.is_some() {
-            len += 1;
-        }
-        if self.media_type.is_some() {
-            len += 1;
-        }
-        if self.mime_type.is_some() {
-            len += 1;
-        }
-        if self.size_bytes.is_some() {
-            len += 1;
-        }
-        if self.source.is_some() {
-            len += 1;
-        }
-        if self.created_at.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.MediaFileSummary", len)?;
-        if let Some(v) = self.asset_id.as_ref() {
-            struct_ser.serialize_field("assetId", v)?;
-        }
-        if let Some(v) = self.filename.as_ref() {
-            struct_ser.serialize_field("filename", v)?;
-        }
-        if let Some(v) = self.media_type.as_ref() {
-            let v = MediaType::try_from(*v)
-                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
-            struct_ser.serialize_field("mediaType", &v)?;
-        }
-        if let Some(v) = self.mime_type.as_ref() {
-            struct_ser.serialize_field("mimeType", v)?;
-        }
-        if let Some(v) = self.size_bytes.as_ref() {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("sizeBytes", ToString::to_string(&v).as_str())?;
-        }
-        if let Some(v) = self.source.as_ref() {
-            let v = MediaFileSource::try_from(*v)
-                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
-            struct_ser.serialize_field("source", &v)?;
-        }
-        if let Some(v) = self.created_at.as_ref() {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("createdAt", ToString::to_string(&v).as_str())?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaFileSummary {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "asset_id",
-            "assetId",
-            "filename",
-            "media_type",
-            "mediaType",
-            "mime_type",
-            "mimeType",
-            "size_bytes",
-            "sizeBytes",
-            "source",
-            "created_at",
-            "createdAt",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            AssetId,
-            Filename,
-            MediaType,
-            MimeType,
-            SizeBytes,
-            Source,
-            CreatedAt,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "assetId" | "asset_id" => Ok(GeneratedField::AssetId),
-                            "filename" => Ok(GeneratedField::Filename),
-                            "mediaType" | "media_type" => Ok(GeneratedField::MediaType),
-                            "mimeType" | "mime_type" => Ok(GeneratedField::MimeType),
-                            "sizeBytes" | "size_bytes" => Ok(GeneratedField::SizeBytes),
-                            "source" => Ok(GeneratedField::Source),
-                            "createdAt" | "created_at" => Ok(GeneratedField::CreatedAt),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MediaFileSummary;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.MediaFileSummary")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaFileSummary, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut asset_id__ = None;
-                let mut filename__ = None;
-                let mut media_type__ = None;
-                let mut mime_type__ = None;
-                let mut size_bytes__ = None;
-                let mut source__ = None;
-                let mut created_at__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::AssetId => {
-                            if asset_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("assetId"));
-                            }
-                            asset_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::Filename => {
-                            if filename__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("filename"));
-                            }
-                            filename__ = map_.next_value()?;
-                        }
-                        GeneratedField::MediaType => {
-                            if media_type__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("mediaType"));
-                            }
-                            media_type__ = map_.next_value::<::std::option::Option<MediaType>>()?.map(|x| x as i32);
-                        }
-                        GeneratedField::MimeType => {
-                            if mime_type__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("mimeType"));
-                            }
-                            mime_type__ = map_.next_value()?;
-                        }
-                        GeneratedField::SizeBytes => {
-                            if size_bytes__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("sizeBytes"));
-                            }
-                            size_bytes__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                        GeneratedField::Source => {
-                            if source__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("source"));
-                            }
-                            source__ = map_.next_value::<::std::option::Option<MediaFileSource>>()?.map(|x| x as i32);
-                        }
-                        GeneratedField::CreatedAt => {
-                            if created_at__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("createdAt"));
-                            }
-                            created_at__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                    }
-                }
-                Ok(MediaFileSummary {
-                    asset_id: asset_id__,
-                    filename: filename__,
-                    media_type: media_type__,
-                    mime_type: mime_type__,
-                    size_bytes: size_bytes__,
-                    source: source__,
-                    created_at: created_at__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.MediaFileSummary", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaMaintenanceState {
+impl serde::Serialize for MaintenanceState {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -5409,10 +6850,13 @@ impl serde::Serialize for MediaMaintenanceState {
         if self.started_at.is_some() {
             len += 1;
         }
+        if self.updated_by.is_some() {
+            len += 1;
+        }
         if self.updated_at.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.MediaMaintenanceState", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.MaintenanceState", len)?;
         if let Some(v) = self.enabled.as_ref() {
             struct_ser.serialize_field("enabled", v)?;
         }
@@ -5424,6 +6868,9 @@ impl serde::Serialize for MediaMaintenanceState {
             #[allow(clippy::needless_borrows_for_generic_args)]
             struct_ser.serialize_field("startedAt", ToString::to_string(&v).as_str())?;
         }
+        if let Some(v) = self.updated_by.as_ref() {
+            struct_ser.serialize_field("updatedBy", v)?;
+        }
         if let Some(v) = self.updated_at.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
@@ -5432,7 +6879,7 @@ impl serde::Serialize for MediaMaintenanceState {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for MediaMaintenanceState {
+impl<'de> serde::Deserialize<'de> for MaintenanceState {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -5443,6 +6890,8 @@ impl<'de> serde::Deserialize<'de> for MediaMaintenanceState {
             "reason",
             "started_at",
             "startedAt",
+            "updated_by",
+            "updatedBy",
             "updated_at",
             "updatedAt",
         ];
@@ -5452,6 +6901,7 @@ impl<'de> serde::Deserialize<'de> for MediaMaintenanceState {
             Enabled,
             Reason,
             StartedAt,
+            UpdatedBy,
             UpdatedAt,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -5477,6 +6927,7 @@ impl<'de> serde::Deserialize<'de> for MediaMaintenanceState {
                             "enabled" => Ok(GeneratedField::Enabled),
                             "reason" => Ok(GeneratedField::Reason),
                             "startedAt" | "started_at" => Ok(GeneratedField::StartedAt),
+                            "updatedBy" | "updated_by" => Ok(GeneratedField::UpdatedBy),
                             "updatedAt" | "updated_at" => Ok(GeneratedField::UpdatedAt),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -5487,19 +6938,20 @@ impl<'de> serde::Deserialize<'de> for MediaMaintenanceState {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MediaMaintenanceState;
+            type Value = MaintenanceState;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.MediaMaintenanceState")
+                formatter.write_str("struct hi.media.MaintenanceState")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaMaintenanceState, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MaintenanceState, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
                 let mut enabled__ = None;
                 let mut reason__ = None;
                 let mut started_at__ = None;
+                let mut updated_by__ = None;
                 let mut updated_at__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
@@ -5523,6 +6975,12 @@ impl<'de> serde::Deserialize<'de> for MediaMaintenanceState {
                                 map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
+                        GeneratedField::UpdatedBy => {
+                            if updated_by__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("updatedBy"));
+                            }
+                            updated_by__ = map_.next_value()?;
+                        }
                         GeneratedField::UpdatedAt => {
                             if updated_at__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("updatedAt"));
@@ -5533,1116 +6991,16 @@ impl<'de> serde::Deserialize<'de> for MediaMaintenanceState {
                         }
                     }
                 }
-                Ok(MediaMaintenanceState {
+                Ok(MaintenanceState {
                     enabled: enabled__,
                     reason: reason__,
                     started_at: started_at__,
+                    updated_by: updated_by__,
                     updated_at: updated_at__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.MediaMaintenanceState", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaResolution {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.width.is_some() {
-            len += 1;
-        }
-        if self.height.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.MediaResolution", len)?;
-        if let Some(v) = self.width.as_ref() {
-            struct_ser.serialize_field("width", v)?;
-        }
-        if let Some(v) = self.height.as_ref() {
-            struct_ser.serialize_field("height", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaResolution {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "width",
-            "height",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Width,
-            Height,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "width" => Ok(GeneratedField::Width),
-                            "height" => Ok(GeneratedField::Height),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MediaResolution;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.MediaResolution")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaResolution, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut width__ = None;
-                let mut height__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Width => {
-                            if width__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("width"));
-                            }
-                            width__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                        GeneratedField::Height => {
-                            if height__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("height"));
-                            }
-                            height__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                    }
-                }
-                Ok(MediaResolution {
-                    width: width__,
-                    height: height__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.MediaResolution", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaTaskDetail {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.summary.is_some() {
-            len += 1;
-        }
-        if self.source_task_id.is_some() {
-            len += 1;
-        }
-        if !self.processing_records.is_empty() {
-            len += 1;
-        }
-        if self.effective_params.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.MediaTaskDetail", len)?;
-        if let Some(v) = self.summary.as_ref() {
-            struct_ser.serialize_field("summary", v)?;
-        }
-        if let Some(v) = self.source_task_id.as_ref() {
-            struct_ser.serialize_field("sourceTaskId", v)?;
-        }
-        if !self.processing_records.is_empty() {
-            struct_ser.serialize_field("processingRecords", &self.processing_records)?;
-        }
-        if let Some(v) = self.effective_params.as_ref() {
-            match v {
-                media_task_detail::EffectiveParams::TextToImage(v) => {
-                    struct_ser.serialize_field("textToImage", v)?;
-                }
-                media_task_detail::EffectiveParams::ImageToVideo(v) => {
-                    struct_ser.serialize_field("imageToVideo", v)?;
-                }
-            }
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaTaskDetail {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "summary",
-            "source_task_id",
-            "sourceTaskId",
-            "processing_records",
-            "processingRecords",
-            "text_to_image",
-            "textToImage",
-            "image_to_video",
-            "imageToVideo",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Summary,
-            SourceTaskId,
-            ProcessingRecords,
-            TextToImage,
-            ImageToVideo,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "summary" => Ok(GeneratedField::Summary),
-                            "sourceTaskId" | "source_task_id" => Ok(GeneratedField::SourceTaskId),
-                            "processingRecords" | "processing_records" => Ok(GeneratedField::ProcessingRecords),
-                            "textToImage" | "text_to_image" => Ok(GeneratedField::TextToImage),
-                            "imageToVideo" | "image_to_video" => Ok(GeneratedField::ImageToVideo),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MediaTaskDetail;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.MediaTaskDetail")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaTaskDetail, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut summary__ = None;
-                let mut source_task_id__ = None;
-                let mut processing_records__ = None;
-                let mut effective_params__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Summary => {
-                            if summary__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("summary"));
-                            }
-                            summary__ = map_.next_value()?;
-                        }
-                        GeneratedField::SourceTaskId => {
-                            if source_task_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("sourceTaskId"));
-                            }
-                            source_task_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::ProcessingRecords => {
-                            if processing_records__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("processingRecords"));
-                            }
-                            processing_records__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::TextToImage => {
-                            if effective_params__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("textToImage"));
-                            }
-                            effective_params__ = map_.next_value::<::std::option::Option<_>>()?.map(media_task_detail::EffectiveParams::TextToImage)
-;
-                        }
-                        GeneratedField::ImageToVideo => {
-                            if effective_params__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("imageToVideo"));
-                            }
-                            effective_params__ = map_.next_value::<::std::option::Option<_>>()?.map(media_task_detail::EffectiveParams::ImageToVideo)
-;
-                        }
-                    }
-                }
-                Ok(MediaTaskDetail {
-                    summary: summary__,
-                    source_task_id: source_task_id__,
-                    processing_records: processing_records__.unwrap_or_default(),
-                    effective_params: effective_params__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.MediaTaskDetail", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaTaskOutput {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.asset_id.is_some() {
-            len += 1;
-        }
-        if self.filename.is_some() {
-            len += 1;
-        }
-        if self.media_type.is_some() {
-            len += 1;
-        }
-        if self.mime_type.is_some() {
-            len += 1;
-        }
-        if self.size_bytes.is_some() {
-            len += 1;
-        }
-        if self.available.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.MediaTaskOutput", len)?;
-        if let Some(v) = self.asset_id.as_ref() {
-            struct_ser.serialize_field("assetId", v)?;
-        }
-        if let Some(v) = self.filename.as_ref() {
-            struct_ser.serialize_field("filename", v)?;
-        }
-        if let Some(v) = self.media_type.as_ref() {
-            let v = MediaType::try_from(*v)
-                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
-            struct_ser.serialize_field("mediaType", &v)?;
-        }
-        if let Some(v) = self.mime_type.as_ref() {
-            struct_ser.serialize_field("mimeType", v)?;
-        }
-        if let Some(v) = self.size_bytes.as_ref() {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("sizeBytes", ToString::to_string(&v).as_str())?;
-        }
-        if let Some(v) = self.available.as_ref() {
-            struct_ser.serialize_field("available", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaTaskOutput {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "asset_id",
-            "assetId",
-            "filename",
-            "media_type",
-            "mediaType",
-            "mime_type",
-            "mimeType",
-            "size_bytes",
-            "sizeBytes",
-            "available",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            AssetId,
-            Filename,
-            MediaType,
-            MimeType,
-            SizeBytes,
-            Available,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "assetId" | "asset_id" => Ok(GeneratedField::AssetId),
-                            "filename" => Ok(GeneratedField::Filename),
-                            "mediaType" | "media_type" => Ok(GeneratedField::MediaType),
-                            "mimeType" | "mime_type" => Ok(GeneratedField::MimeType),
-                            "sizeBytes" | "size_bytes" => Ok(GeneratedField::SizeBytes),
-                            "available" => Ok(GeneratedField::Available),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MediaTaskOutput;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.MediaTaskOutput")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaTaskOutput, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut asset_id__ = None;
-                let mut filename__ = None;
-                let mut media_type__ = None;
-                let mut mime_type__ = None;
-                let mut size_bytes__ = None;
-                let mut available__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::AssetId => {
-                            if asset_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("assetId"));
-                            }
-                            asset_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::Filename => {
-                            if filename__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("filename"));
-                            }
-                            filename__ = map_.next_value()?;
-                        }
-                        GeneratedField::MediaType => {
-                            if media_type__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("mediaType"));
-                            }
-                            media_type__ = map_.next_value::<::std::option::Option<MediaType>>()?.map(|x| x as i32);
-                        }
-                        GeneratedField::MimeType => {
-                            if mime_type__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("mimeType"));
-                            }
-                            mime_type__ = map_.next_value()?;
-                        }
-                        GeneratedField::SizeBytes => {
-                            if size_bytes__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("sizeBytes"));
-                            }
-                            size_bytes__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                        GeneratedField::Available => {
-                            if available__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("available"));
-                            }
-                            available__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(MediaTaskOutput {
-                    asset_id: asset_id__,
-                    filename: filename__,
-                    media_type: media_type__,
-                    mime_type: mime_type__,
-                    size_bytes: size_bytes__,
-                    available: available__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.MediaTaskOutput", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaTaskProcessingRecord {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.occurred_at.is_some() {
-            len += 1;
-        }
-        if self.message.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.MediaTaskProcessingRecord", len)?;
-        if let Some(v) = self.occurred_at.as_ref() {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("occurredAt", ToString::to_string(&v).as_str())?;
-        }
-        if let Some(v) = self.message.as_ref() {
-            struct_ser.serialize_field("message", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaTaskProcessingRecord {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "occurred_at",
-            "occurredAt",
-            "message",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            OccurredAt,
-            Message,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "occurredAt" | "occurred_at" => Ok(GeneratedField::OccurredAt),
-                            "message" => Ok(GeneratedField::Message),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MediaTaskProcessingRecord;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.MediaTaskProcessingRecord")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaTaskProcessingRecord, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut occurred_at__ = None;
-                let mut message__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::OccurredAt => {
-                            if occurred_at__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("occurredAt"));
-                            }
-                            occurred_at__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                        GeneratedField::Message => {
-                            if message__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("message"));
-                            }
-                            message__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(MediaTaskProcessingRecord {
-                    occurred_at: occurred_at__,
-                    message: message__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.MediaTaskProcessingRecord", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaTaskPurpose {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        let variant = match self {
-            Self::Unspecified => "MEDIA_TASK_PURPOSE_UNSPECIFIED",
-            Self::Normal => "MEDIA_TASK_PURPOSE_NORMAL",
-            Self::WorkflowTest => "MEDIA_TASK_PURPOSE_WORKFLOW_TEST",
-        };
-        serializer.serialize_str(variant)
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaTaskPurpose {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "MEDIA_TASK_PURPOSE_UNSPECIFIED",
-            "MEDIA_TASK_PURPOSE_NORMAL",
-            "MEDIA_TASK_PURPOSE_WORKFLOW_TEST",
-        ];
-
-        struct GeneratedVisitor;
-
-        impl serde::de::Visitor<'_> for GeneratedVisitor {
-            type Value = MediaTaskPurpose;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                write!(formatter, "expected one of: {:?}", &FIELDS)
-            }
-
-            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                i32::try_from(v)
-                    .ok()
-                    .and_then(|x| x.try_into().ok())
-                    .ok_or_else(|| {
-                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
-                    })
-            }
-
-            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                i32::try_from(v)
-                    .ok()
-                    .and_then(|x| x.try_into().ok())
-                    .ok_or_else(|| {
-                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
-                    })
-            }
-
-            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                match value {
-                    "MEDIA_TASK_PURPOSE_UNSPECIFIED" => Ok(MediaTaskPurpose::Unspecified),
-                    "MEDIA_TASK_PURPOSE_NORMAL" => Ok(MediaTaskPurpose::Normal),
-                    "MEDIA_TASK_PURPOSE_WORKFLOW_TEST" => Ok(MediaTaskPurpose::WorkflowTest),
-                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
-                }
-            }
-        }
-        deserializer.deserialize_any(GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaTaskStatus {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        let variant = match self {
-            Self::Unspecified => "MEDIA_TASK_STATUS_UNSPECIFIED",
-            Self::Pending => "MEDIA_TASK_STATUS_PENDING",
-            Self::Running => "MEDIA_TASK_STATUS_RUNNING",
-            Self::Saving => "MEDIA_TASK_STATUS_SAVING",
-            Self::Cancelling => "MEDIA_TASK_STATUS_CANCELLING",
-            Self::Success => "MEDIA_TASK_STATUS_SUCCESS",
-            Self::Failed => "MEDIA_TASK_STATUS_FAILED",
-            Self::Cancelled => "MEDIA_TASK_STATUS_CANCELLED",
-        };
-        serializer.serialize_str(variant)
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaTaskStatus {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "MEDIA_TASK_STATUS_UNSPECIFIED",
-            "MEDIA_TASK_STATUS_PENDING",
-            "MEDIA_TASK_STATUS_RUNNING",
-            "MEDIA_TASK_STATUS_SAVING",
-            "MEDIA_TASK_STATUS_CANCELLING",
-            "MEDIA_TASK_STATUS_SUCCESS",
-            "MEDIA_TASK_STATUS_FAILED",
-            "MEDIA_TASK_STATUS_CANCELLED",
-        ];
-
-        struct GeneratedVisitor;
-
-        impl serde::de::Visitor<'_> for GeneratedVisitor {
-            type Value = MediaTaskStatus;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                write!(formatter, "expected one of: {:?}", &FIELDS)
-            }
-
-            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                i32::try_from(v)
-                    .ok()
-                    .and_then(|x| x.try_into().ok())
-                    .ok_or_else(|| {
-                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
-                    })
-            }
-
-            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                i32::try_from(v)
-                    .ok()
-                    .and_then(|x| x.try_into().ok())
-                    .ok_or_else(|| {
-                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
-                    })
-            }
-
-            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                match value {
-                    "MEDIA_TASK_STATUS_UNSPECIFIED" => Ok(MediaTaskStatus::Unspecified),
-                    "MEDIA_TASK_STATUS_PENDING" => Ok(MediaTaskStatus::Pending),
-                    "MEDIA_TASK_STATUS_RUNNING" => Ok(MediaTaskStatus::Running),
-                    "MEDIA_TASK_STATUS_SAVING" => Ok(MediaTaskStatus::Saving),
-                    "MEDIA_TASK_STATUS_CANCELLING" => Ok(MediaTaskStatus::Cancelling),
-                    "MEDIA_TASK_STATUS_SUCCESS" => Ok(MediaTaskStatus::Success),
-                    "MEDIA_TASK_STATUS_FAILED" => Ok(MediaTaskStatus::Failed),
-                    "MEDIA_TASK_STATUS_CANCELLED" => Ok(MediaTaskStatus::Cancelled),
-                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
-                }
-            }
-        }
-        deserializer.deserialize_any(GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaTaskSummary {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.task_id.is_some() {
-            len += 1;
-        }
-        if self.purpose.is_some() {
-            len += 1;
-        }
-        if self.feature_key.is_some() {
-            len += 1;
-        }
-        if self.workflow_version_id.is_some() {
-            len += 1;
-        }
-        if self.workflow_name.is_some() {
-            len += 1;
-        }
-        if self.status.is_some() {
-            len += 1;
-        }
-        if self.status_message.is_some() {
-            len += 1;
-        }
-        if self.output.is_some() {
-            len += 1;
-        }
-        if self.can_cancel.is_some() {
-            len += 1;
-        }
-        if self.can_recover_save.is_some() {
-            len += 1;
-        }
-        if self.save_recovery_expires_at.is_some() {
-            len += 1;
-        }
-        if self.created_at.is_some() {
-            len += 1;
-        }
-        if self.started_at.is_some() {
-            len += 1;
-        }
-        if self.completed_at.is_some() {
-            len += 1;
-        }
-        if self.elapsed_seconds.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.MediaTaskSummary", len)?;
-        if let Some(v) = self.task_id.as_ref() {
-            struct_ser.serialize_field("taskId", v)?;
-        }
-        if let Some(v) = self.purpose.as_ref() {
-            let v = MediaTaskPurpose::try_from(*v)
-                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
-            struct_ser.serialize_field("purpose", &v)?;
-        }
-        if let Some(v) = self.feature_key.as_ref() {
-            struct_ser.serialize_field("featureKey", v)?;
-        }
-        if let Some(v) = self.workflow_version_id.as_ref() {
-            struct_ser.serialize_field("workflowVersionId", v)?;
-        }
-        if let Some(v) = self.workflow_name.as_ref() {
-            struct_ser.serialize_field("workflowName", v)?;
-        }
-        if let Some(v) = self.status.as_ref() {
-            let v = MediaTaskStatus::try_from(*v)
-                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
-            struct_ser.serialize_field("status", &v)?;
-        }
-        if let Some(v) = self.status_message.as_ref() {
-            struct_ser.serialize_field("statusMessage", v)?;
-        }
-        if let Some(v) = self.output.as_ref() {
-            struct_ser.serialize_field("output", v)?;
-        }
-        if let Some(v) = self.can_cancel.as_ref() {
-            struct_ser.serialize_field("canCancel", v)?;
-        }
-        if let Some(v) = self.can_recover_save.as_ref() {
-            struct_ser.serialize_field("canRecoverSave", v)?;
-        }
-        if let Some(v) = self.save_recovery_expires_at.as_ref() {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("saveRecoveryExpiresAt", ToString::to_string(&v).as_str())?;
-        }
-        if let Some(v) = self.created_at.as_ref() {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("createdAt", ToString::to_string(&v).as_str())?;
-        }
-        if let Some(v) = self.started_at.as_ref() {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("startedAt", ToString::to_string(&v).as_str())?;
-        }
-        if let Some(v) = self.completed_at.as_ref() {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("completedAt", ToString::to_string(&v).as_str())?;
-        }
-        if let Some(v) = self.elapsed_seconds.as_ref() {
-            struct_ser.serialize_field("elapsedSeconds", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaTaskSummary {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "task_id",
-            "taskId",
-            "purpose",
-            "feature_key",
-            "featureKey",
-            "workflow_version_id",
-            "workflowVersionId",
-            "workflow_name",
-            "workflowName",
-            "status",
-            "status_message",
-            "statusMessage",
-            "output",
-            "can_cancel",
-            "canCancel",
-            "can_recover_save",
-            "canRecoverSave",
-            "save_recovery_expires_at",
-            "saveRecoveryExpiresAt",
-            "created_at",
-            "createdAt",
-            "started_at",
-            "startedAt",
-            "completed_at",
-            "completedAt",
-            "elapsed_seconds",
-            "elapsedSeconds",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            TaskId,
-            Purpose,
-            FeatureKey,
-            WorkflowVersionId,
-            WorkflowName,
-            Status,
-            StatusMessage,
-            Output,
-            CanCancel,
-            CanRecoverSave,
-            SaveRecoveryExpiresAt,
-            CreatedAt,
-            StartedAt,
-            CompletedAt,
-            ElapsedSeconds,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "taskId" | "task_id" => Ok(GeneratedField::TaskId),
-                            "purpose" => Ok(GeneratedField::Purpose),
-                            "featureKey" | "feature_key" => Ok(GeneratedField::FeatureKey),
-                            "workflowVersionId" | "workflow_version_id" => Ok(GeneratedField::WorkflowVersionId),
-                            "workflowName" | "workflow_name" => Ok(GeneratedField::WorkflowName),
-                            "status" => Ok(GeneratedField::Status),
-                            "statusMessage" | "status_message" => Ok(GeneratedField::StatusMessage),
-                            "output" => Ok(GeneratedField::Output),
-                            "canCancel" | "can_cancel" => Ok(GeneratedField::CanCancel),
-                            "canRecoverSave" | "can_recover_save" => Ok(GeneratedField::CanRecoverSave),
-                            "saveRecoveryExpiresAt" | "save_recovery_expires_at" => Ok(GeneratedField::SaveRecoveryExpiresAt),
-                            "createdAt" | "created_at" => Ok(GeneratedField::CreatedAt),
-                            "startedAt" | "started_at" => Ok(GeneratedField::StartedAt),
-                            "completedAt" | "completed_at" => Ok(GeneratedField::CompletedAt),
-                            "elapsedSeconds" | "elapsed_seconds" => Ok(GeneratedField::ElapsedSeconds),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MediaTaskSummary;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.MediaTaskSummary")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaTaskSummary, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut task_id__ = None;
-                let mut purpose__ = None;
-                let mut feature_key__ = None;
-                let mut workflow_version_id__ = None;
-                let mut workflow_name__ = None;
-                let mut status__ = None;
-                let mut status_message__ = None;
-                let mut output__ = None;
-                let mut can_cancel__ = None;
-                let mut can_recover_save__ = None;
-                let mut save_recovery_expires_at__ = None;
-                let mut created_at__ = None;
-                let mut started_at__ = None;
-                let mut completed_at__ = None;
-                let mut elapsed_seconds__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::TaskId => {
-                            if task_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("taskId"));
-                            }
-                            task_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::Purpose => {
-                            if purpose__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("purpose"));
-                            }
-                            purpose__ = map_.next_value::<::std::option::Option<MediaTaskPurpose>>()?.map(|x| x as i32);
-                        }
-                        GeneratedField::FeatureKey => {
-                            if feature_key__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("featureKey"));
-                            }
-                            feature_key__ = map_.next_value()?;
-                        }
-                        GeneratedField::WorkflowVersionId => {
-                            if workflow_version_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("workflowVersionId"));
-                            }
-                            workflow_version_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::WorkflowName => {
-                            if workflow_name__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("workflowName"));
-                            }
-                            workflow_name__ = map_.next_value()?;
-                        }
-                        GeneratedField::Status => {
-                            if status__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("status"));
-                            }
-                            status__ = map_.next_value::<::std::option::Option<MediaTaskStatus>>()?.map(|x| x as i32);
-                        }
-                        GeneratedField::StatusMessage => {
-                            if status_message__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("statusMessage"));
-                            }
-                            status_message__ = map_.next_value()?;
-                        }
-                        GeneratedField::Output => {
-                            if output__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("output"));
-                            }
-                            output__ = map_.next_value()?;
-                        }
-                        GeneratedField::CanCancel => {
-                            if can_cancel__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("canCancel"));
-                            }
-                            can_cancel__ = map_.next_value()?;
-                        }
-                        GeneratedField::CanRecoverSave => {
-                            if can_recover_save__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("canRecoverSave"));
-                            }
-                            can_recover_save__ = map_.next_value()?;
-                        }
-                        GeneratedField::SaveRecoveryExpiresAt => {
-                            if save_recovery_expires_at__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("saveRecoveryExpiresAt"));
-                            }
-                            save_recovery_expires_at__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                        GeneratedField::CreatedAt => {
-                            if created_at__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("createdAt"));
-                            }
-                            created_at__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                        GeneratedField::StartedAt => {
-                            if started_at__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("startedAt"));
-                            }
-                            started_at__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                        GeneratedField::CompletedAt => {
-                            if completed_at__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("completedAt"));
-                            }
-                            completed_at__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                        GeneratedField::ElapsedSeconds => {
-                            if elapsed_seconds__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("elapsedSeconds"));
-                            }
-                            elapsed_seconds__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                    }
-                }
-                Ok(MediaTaskSummary {
-                    task_id: task_id__,
-                    purpose: purpose__,
-                    feature_key: feature_key__,
-                    workflow_version_id: workflow_version_id__,
-                    workflow_name: workflow_name__,
-                    status: status__,
-                    status_message: status_message__,
-                    output: output__,
-                    can_cancel: can_cancel__,
-                    can_recover_save: can_recover_save__,
-                    save_recovery_expires_at: save_recovery_expires_at__,
-                    created_at: created_at__,
-                    started_at: started_at__,
-                    completed_at: completed_at__,
-                    elapsed_seconds: elapsed_seconds__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.MediaTaskSummary", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.MaintenanceState", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for MediaType {
@@ -6719,7 +7077,3704 @@ impl<'de> serde::Deserialize<'de> for MediaType {
         deserializer.deserialize_any(GeneratedVisitor)
     }
 }
-impl serde::Serialize for MediaUploadBatchResult {
+impl serde::Serialize for Model {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.model_id.is_some() {
+            len += 1;
+        }
+        if self.name.is_some() {
+            len += 1;
+        }
+        if self.created_at.is_some() {
+            len += 1;
+        }
+        if self.updated_at.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.Model", len)?;
+        if let Some(v) = self.model_id.as_ref() {
+            struct_ser.serialize_field("modelId", v)?;
+        }
+        if let Some(v) = self.name.as_ref() {
+            struct_ser.serialize_field("name", v)?;
+        }
+        if let Some(v) = self.created_at.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("createdAt", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.updated_at.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("updatedAt", ToString::to_string(&v).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for Model {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "model_id",
+            "modelId",
+            "name",
+            "created_at",
+            "createdAt",
+            "updated_at",
+            "updatedAt",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            ModelId,
+            Name,
+            CreatedAt,
+            UpdatedAt,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "modelId" | "model_id" => Ok(GeneratedField::ModelId),
+                            "name" => Ok(GeneratedField::Name),
+                            "createdAt" | "created_at" => Ok(GeneratedField::CreatedAt),
+                            "updatedAt" | "updated_at" => Ok(GeneratedField::UpdatedAt),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = Model;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.Model")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<Model, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut model_id__ = None;
+                let mut name__ = None;
+                let mut created_at__ = None;
+                let mut updated_at__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::ModelId => {
+                            if model_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("modelId"));
+                            }
+                            model_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Name => {
+                            if name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("name"));
+                            }
+                            name__ = map_.next_value()?;
+                        }
+                        GeneratedField::CreatedAt => {
+                            if created_at__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("createdAt"));
+                            }
+                            created_at__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::UpdatedAt => {
+                            if updated_at__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("updatedAt"));
+                            }
+                            updated_at__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(Model {
+                    model_id: model_id__,
+                    name: name__,
+                    created_at: created_at__,
+                    updated_at: updated_at__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.Model", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ModelMapping {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.model_mapping_id.is_some() {
+            len += 1;
+        }
+        if self.feature_key.is_some() {
+            len += 1;
+        }
+        if self.model_id.is_some() {
+            len += 1;
+        }
+        if self.workflow_version_id.is_some() {
+            len += 1;
+        }
+        if self.enabled.is_some() {
+            len += 1;
+        }
+        if self.is_default.is_some() {
+            len += 1;
+        }
+        if self.sort_order.is_some() {
+            len += 1;
+        }
+        if self.created_at.is_some() {
+            len += 1;
+        }
+        if self.updated_at.is_some() {
+            len += 1;
+        }
+        if self.disabled_at.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.ModelMapping", len)?;
+        if let Some(v) = self.model_mapping_id.as_ref() {
+            struct_ser.serialize_field("modelMappingId", v)?;
+        }
+        if let Some(v) = self.feature_key.as_ref() {
+            let v = FeatureKey::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("featureKey", &v)?;
+        }
+        if let Some(v) = self.model_id.as_ref() {
+            struct_ser.serialize_field("modelId", v)?;
+        }
+        if let Some(v) = self.workflow_version_id.as_ref() {
+            struct_ser.serialize_field("workflowVersionId", v)?;
+        }
+        if let Some(v) = self.enabled.as_ref() {
+            struct_ser.serialize_field("enabled", v)?;
+        }
+        if let Some(v) = self.is_default.as_ref() {
+            struct_ser.serialize_field("isDefault", v)?;
+        }
+        if let Some(v) = self.sort_order.as_ref() {
+            struct_ser.serialize_field("sortOrder", v)?;
+        }
+        if let Some(v) = self.created_at.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("createdAt", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.updated_at.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("updatedAt", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.disabled_at.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("disabledAt", ToString::to_string(&v).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ModelMapping {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "model_mapping_id",
+            "modelMappingId",
+            "feature_key",
+            "featureKey",
+            "model_id",
+            "modelId",
+            "workflow_version_id",
+            "workflowVersionId",
+            "enabled",
+            "is_default",
+            "isDefault",
+            "sort_order",
+            "sortOrder",
+            "created_at",
+            "createdAt",
+            "updated_at",
+            "updatedAt",
+            "disabled_at",
+            "disabledAt",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            ModelMappingId,
+            FeatureKey,
+            ModelId,
+            WorkflowVersionId,
+            Enabled,
+            IsDefault,
+            SortOrder,
+            CreatedAt,
+            UpdatedAt,
+            DisabledAt,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "modelMappingId" | "model_mapping_id" => Ok(GeneratedField::ModelMappingId),
+                            "featureKey" | "feature_key" => Ok(GeneratedField::FeatureKey),
+                            "modelId" | "model_id" => Ok(GeneratedField::ModelId),
+                            "workflowVersionId" | "workflow_version_id" => Ok(GeneratedField::WorkflowVersionId),
+                            "enabled" => Ok(GeneratedField::Enabled),
+                            "isDefault" | "is_default" => Ok(GeneratedField::IsDefault),
+                            "sortOrder" | "sort_order" => Ok(GeneratedField::SortOrder),
+                            "createdAt" | "created_at" => Ok(GeneratedField::CreatedAt),
+                            "updatedAt" | "updated_at" => Ok(GeneratedField::UpdatedAt),
+                            "disabledAt" | "disabled_at" => Ok(GeneratedField::DisabledAt),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ModelMapping;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.ModelMapping")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ModelMapping, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut model_mapping_id__ = None;
+                let mut feature_key__ = None;
+                let mut model_id__ = None;
+                let mut workflow_version_id__ = None;
+                let mut enabled__ = None;
+                let mut is_default__ = None;
+                let mut sort_order__ = None;
+                let mut created_at__ = None;
+                let mut updated_at__ = None;
+                let mut disabled_at__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::ModelMappingId => {
+                            if model_mapping_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("modelMappingId"));
+                            }
+                            model_mapping_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::FeatureKey => {
+                            if feature_key__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("featureKey"));
+                            }
+                            feature_key__ = map_.next_value::<::std::option::Option<FeatureKey>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::ModelId => {
+                            if model_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("modelId"));
+                            }
+                            model_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::WorkflowVersionId => {
+                            if workflow_version_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowVersionId"));
+                            }
+                            workflow_version_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Enabled => {
+                            if enabled__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("enabled"));
+                            }
+                            enabled__ = map_.next_value()?;
+                        }
+                        GeneratedField::IsDefault => {
+                            if is_default__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("isDefault"));
+                            }
+                            is_default__ = map_.next_value()?;
+                        }
+                        GeneratedField::SortOrder => {
+                            if sort_order__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sortOrder"));
+                            }
+                            sort_order__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::CreatedAt => {
+                            if created_at__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("createdAt"));
+                            }
+                            created_at__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::UpdatedAt => {
+                            if updated_at__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("updatedAt"));
+                            }
+                            updated_at__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::DisabledAt => {
+                            if disabled_at__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("disabledAt"));
+                            }
+                            disabled_at__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(ModelMapping {
+                    model_mapping_id: model_mapping_id__,
+                    feature_key: feature_key__,
+                    model_id: model_id__,
+                    workflow_version_id: workflow_version_id__,
+                    enabled: enabled__,
+                    is_default: is_default__,
+                    sort_order: sort_order__,
+                    created_at: created_at__,
+                    updated_at: updated_at__,
+                    disabled_at: disabled_at__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.ModelMapping", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ModelOption {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.model_mapping_id.is_some() {
+            len += 1;
+        }
+        if self.name.is_some() {
+            len += 1;
+        }
+        if self.is_default.is_some() {
+            len += 1;
+        }
+        if self.description.is_some() {
+            len += 1;
+        }
+        if self.parameter_config.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.ModelOption", len)?;
+        if let Some(v) = self.model_mapping_id.as_ref() {
+            struct_ser.serialize_field("modelMappingId", v)?;
+        }
+        if let Some(v) = self.name.as_ref() {
+            struct_ser.serialize_field("name", v)?;
+        }
+        if let Some(v) = self.is_default.as_ref() {
+            struct_ser.serialize_field("isDefault", v)?;
+        }
+        if let Some(v) = self.description.as_ref() {
+            struct_ser.serialize_field("description", v)?;
+        }
+        if let Some(v) = self.parameter_config.as_ref() {
+            struct_ser.serialize_field("parameterConfig", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ModelOption {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "model_mapping_id",
+            "modelMappingId",
+            "name",
+            "is_default",
+            "isDefault",
+            "description",
+            "parameter_config",
+            "parameterConfig",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            ModelMappingId,
+            Name,
+            IsDefault,
+            Description,
+            ParameterConfig,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "modelMappingId" | "model_mapping_id" => Ok(GeneratedField::ModelMappingId),
+                            "name" => Ok(GeneratedField::Name),
+                            "isDefault" | "is_default" => Ok(GeneratedField::IsDefault),
+                            "description" => Ok(GeneratedField::Description),
+                            "parameterConfig" | "parameter_config" => Ok(GeneratedField::ParameterConfig),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ModelOption;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.ModelOption")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ModelOption, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut model_mapping_id__ = None;
+                let mut name__ = None;
+                let mut is_default__ = None;
+                let mut description__ = None;
+                let mut parameter_config__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::ModelMappingId => {
+                            if model_mapping_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("modelMappingId"));
+                            }
+                            model_mapping_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Name => {
+                            if name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("name"));
+                            }
+                            name__ = map_.next_value()?;
+                        }
+                        GeneratedField::IsDefault => {
+                            if is_default__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("isDefault"));
+                            }
+                            is_default__ = map_.next_value()?;
+                        }
+                        GeneratedField::Description => {
+                            if description__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("description"));
+                            }
+                            description__ = map_.next_value()?;
+                        }
+                        GeneratedField::ParameterConfig => {
+                            if parameter_config__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("parameterConfig"));
+                            }
+                            parameter_config__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ModelOption {
+                    model_mapping_id: model_mapping_id__,
+                    name: name__,
+                    is_default: is_default__,
+                    description: description__,
+                    parameter_config: parameter_config__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.ModelOption", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for RecoverSaveTaskReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.request_id.is_some() {
+            len += 1;
+        }
+        if self.task_id.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.RecoverSaveTaskReq", len)?;
+        if let Some(v) = self.request_id.as_ref() {
+            struct_ser.serialize_field("requestId", v)?;
+        }
+        if let Some(v) = self.task_id.as_ref() {
+            struct_ser.serialize_field("taskId", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for RecoverSaveTaskReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "request_id",
+            "requestId",
+            "task_id",
+            "taskId",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            RequestId,
+            TaskId,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
+                            "taskId" | "task_id" => Ok(GeneratedField::TaskId),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = RecoverSaveTaskReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.RecoverSaveTaskReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<RecoverSaveTaskReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut request_id__ = None;
+                let mut task_id__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
+                            }
+                            request_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::TaskId => {
+                            if task_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("taskId"));
+                            }
+                            task_id__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(RecoverSaveTaskReq {
+                    request_id: request_id__,
+                    task_id: task_id__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.RecoverSaveTaskReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for RecoverSaveTaskResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.task_id.is_some() {
+            len += 1;
+        }
+        if self.status.is_some() {
+            len += 1;
+        }
+        if self.status_message.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.RecoverSaveTaskResp", len)?;
+        if let Some(v) = self.task_id.as_ref() {
+            struct_ser.serialize_field("taskId", v)?;
+        }
+        if let Some(v) = self.status.as_ref() {
+            let v = TaskStatus::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("status", &v)?;
+        }
+        if let Some(v) = self.status_message.as_ref() {
+            struct_ser.serialize_field("statusMessage", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for RecoverSaveTaskResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "task_id",
+            "taskId",
+            "status",
+            "status_message",
+            "statusMessage",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            TaskId,
+            Status,
+            StatusMessage,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "taskId" | "task_id" => Ok(GeneratedField::TaskId),
+                            "status" => Ok(GeneratedField::Status),
+                            "statusMessage" | "status_message" => Ok(GeneratedField::StatusMessage),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = RecoverSaveTaskResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.RecoverSaveTaskResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<RecoverSaveTaskResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut task_id__ = None;
+                let mut status__ = None;
+                let mut status_message__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::TaskId => {
+                            if task_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("taskId"));
+                            }
+                            task_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Status => {
+                            if status__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("status"));
+                            }
+                            status__ = map_.next_value::<::std::option::Option<TaskStatus>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::StatusMessage => {
+                            if status_message__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("statusMessage"));
+                            }
+                            status_message__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(RecoverSaveTaskResp {
+                    task_id: task_id__,
+                    status: status__,
+                    status_message: status_message__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.RecoverSaveTaskResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for SetDefaultModelMappingReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.model_mapping_id.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.SetDefaultModelMappingReq", len)?;
+        if let Some(v) = self.model_mapping_id.as_ref() {
+            struct_ser.serialize_field("modelMappingId", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for SetDefaultModelMappingReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "model_mapping_id",
+            "modelMappingId",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            ModelMappingId,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "modelMappingId" | "model_mapping_id" => Ok(GeneratedField::ModelMappingId),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = SetDefaultModelMappingReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.SetDefaultModelMappingReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SetDefaultModelMappingReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut model_mapping_id__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::ModelMappingId => {
+                            if model_mapping_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("modelMappingId"));
+                            }
+                            model_mapping_id__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(SetDefaultModelMappingReq {
+                    model_mapping_id: model_mapping_id__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.SetDefaultModelMappingReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for SetDefaultModelMappingResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.mapping.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.SetDefaultModelMappingResp", len)?;
+        if let Some(v) = self.mapping.as_ref() {
+            struct_ser.serialize_field("mapping", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for SetDefaultModelMappingResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "mapping",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Mapping,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "mapping" => Ok(GeneratedField::Mapping),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = SetDefaultModelMappingResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.SetDefaultModelMappingResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SetDefaultModelMappingResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut mapping__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Mapping => {
+                            if mapping__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("mapping"));
+                            }
+                            mapping__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(SetDefaultModelMappingResp {
+                    mapping: mapping__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.SetDefaultModelMappingResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for SetMaintenanceReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.enabled.is_some() {
+            len += 1;
+        }
+        if self.reason.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.SetMaintenanceReq", len)?;
+        if let Some(v) = self.enabled.as_ref() {
+            struct_ser.serialize_field("enabled", v)?;
+        }
+        if let Some(v) = self.reason.as_ref() {
+            struct_ser.serialize_field("reason", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for SetMaintenanceReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "enabled",
+            "reason",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Enabled,
+            Reason,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "enabled" => Ok(GeneratedField::Enabled),
+                            "reason" => Ok(GeneratedField::Reason),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = SetMaintenanceReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.SetMaintenanceReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SetMaintenanceReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut enabled__ = None;
+                let mut reason__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Enabled => {
+                            if enabled__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("enabled"));
+                            }
+                            enabled__ = map_.next_value()?;
+                        }
+                        GeneratedField::Reason => {
+                            if reason__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("reason"));
+                            }
+                            reason__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(SetMaintenanceReq {
+                    enabled: enabled__,
+                    reason: reason__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.SetMaintenanceReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for SetMaintenanceResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.state.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.SetMaintenanceResp", len)?;
+        if let Some(v) = self.state.as_ref() {
+            struct_ser.serialize_field("state", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for SetMaintenanceResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "state",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            State,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "state" => Ok(GeneratedField::State),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = SetMaintenanceResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.SetMaintenanceResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SetMaintenanceResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut state__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::State => {
+                            if state__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("state"));
+                            }
+                            state__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(SetMaintenanceResp {
+                    state: state__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.SetMaintenanceResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for StringOptionConfig {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.allowed_values.is_empty() {
+            len += 1;
+        }
+        if self.default_value.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.StringOptionConfig", len)?;
+        if !self.allowed_values.is_empty() {
+            struct_ser.serialize_field("allowedValues", &self.allowed_values)?;
+        }
+        if let Some(v) = self.default_value.as_ref() {
+            struct_ser.serialize_field("defaultValue", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for StringOptionConfig {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "allowed_values",
+            "allowedValues",
+            "default_value",
+            "defaultValue",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            AllowedValues,
+            DefaultValue,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "allowedValues" | "allowed_values" => Ok(GeneratedField::AllowedValues),
+                            "defaultValue" | "default_value" => Ok(GeneratedField::DefaultValue),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = StringOptionConfig;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.StringOptionConfig")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<StringOptionConfig, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut allowed_values__ = None;
+                let mut default_value__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::AllowedValues => {
+                            if allowed_values__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("allowedValues"));
+                            }
+                            allowed_values__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::DefaultValue => {
+                            if default_value__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("defaultValue"));
+                            }
+                            default_value__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(StringOptionConfig {
+                    allowed_values: allowed_values__.unwrap_or_default(),
+                    default_value: default_value__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.StringOptionConfig", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for TaskDetail {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.summary.is_some() {
+            len += 1;
+        }
+        if self.effective_params.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.TaskDetail", len)?;
+        if let Some(v) = self.summary.as_ref() {
+            struct_ser.serialize_field("summary", v)?;
+        }
+        if let Some(v) = self.effective_params.as_ref() {
+            match v {
+                task_detail::EffectiveParams::ImageToVideo(v) => {
+                    struct_ser.serialize_field("imageToVideo", v)?;
+                }
+                task_detail::EffectiveParams::TextToVideo(v) => {
+                    struct_ser.serialize_field("textToVideo", v)?;
+                }
+            }
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for TaskDetail {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "summary",
+            "image_to_video",
+            "imageToVideo",
+            "text_to_video",
+            "textToVideo",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Summary,
+            ImageToVideo,
+            TextToVideo,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "summary" => Ok(GeneratedField::Summary),
+                            "imageToVideo" | "image_to_video" => Ok(GeneratedField::ImageToVideo),
+                            "textToVideo" | "text_to_video" => Ok(GeneratedField::TextToVideo),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = TaskDetail;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.TaskDetail")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<TaskDetail, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut summary__ = None;
+                let mut effective_params__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Summary => {
+                            if summary__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("summary"));
+                            }
+                            summary__ = map_.next_value()?;
+                        }
+                        GeneratedField::ImageToVideo => {
+                            if effective_params__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("imageToVideo"));
+                            }
+                            effective_params__ = map_.next_value::<::std::option::Option<_>>()?.map(task_detail::EffectiveParams::ImageToVideo)
+;
+                        }
+                        GeneratedField::TextToVideo => {
+                            if effective_params__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("textToVideo"));
+                            }
+                            effective_params__ = map_.next_value::<::std::option::Option<_>>()?.map(task_detail::EffectiveParams::TextToVideo)
+;
+                        }
+                    }
+                }
+                Ok(TaskDetail {
+                    summary: summary__,
+                    effective_params: effective_params__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.TaskDetail", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for TaskOutput {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.asset_id.is_some() {
+            len += 1;
+        }
+        if self.filename.is_some() {
+            len += 1;
+        }
+        if self.media_type.is_some() {
+            len += 1;
+        }
+        if self.mime_type.is_some() {
+            len += 1;
+        }
+        if self.size_bytes.is_some() {
+            len += 1;
+        }
+        if self.duration_ms.is_some() {
+            len += 1;
+        }
+        if self.available.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.TaskOutput", len)?;
+        if let Some(v) = self.asset_id.as_ref() {
+            struct_ser.serialize_field("assetId", v)?;
+        }
+        if let Some(v) = self.filename.as_ref() {
+            struct_ser.serialize_field("filename", v)?;
+        }
+        if let Some(v) = self.media_type.as_ref() {
+            let v = MediaType::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("mediaType", &v)?;
+        }
+        if let Some(v) = self.mime_type.as_ref() {
+            struct_ser.serialize_field("mimeType", v)?;
+        }
+        if let Some(v) = self.size_bytes.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("sizeBytes", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.duration_ms.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("durationMs", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.available.as_ref() {
+            struct_ser.serialize_field("available", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for TaskOutput {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "asset_id",
+            "assetId",
+            "filename",
+            "media_type",
+            "mediaType",
+            "mime_type",
+            "mimeType",
+            "size_bytes",
+            "sizeBytes",
+            "duration_ms",
+            "durationMs",
+            "available",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            AssetId,
+            Filename,
+            MediaType,
+            MimeType,
+            SizeBytes,
+            DurationMs,
+            Available,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "assetId" | "asset_id" => Ok(GeneratedField::AssetId),
+                            "filename" => Ok(GeneratedField::Filename),
+                            "mediaType" | "media_type" => Ok(GeneratedField::MediaType),
+                            "mimeType" | "mime_type" => Ok(GeneratedField::MimeType),
+                            "sizeBytes" | "size_bytes" => Ok(GeneratedField::SizeBytes),
+                            "durationMs" | "duration_ms" => Ok(GeneratedField::DurationMs),
+                            "available" => Ok(GeneratedField::Available),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = TaskOutput;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.TaskOutput")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<TaskOutput, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut asset_id__ = None;
+                let mut filename__ = None;
+                let mut media_type__ = None;
+                let mut mime_type__ = None;
+                let mut size_bytes__ = None;
+                let mut duration_ms__ = None;
+                let mut available__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::AssetId => {
+                            if asset_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("assetId"));
+                            }
+                            asset_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Filename => {
+                            if filename__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("filename"));
+                            }
+                            filename__ = map_.next_value()?;
+                        }
+                        GeneratedField::MediaType => {
+                            if media_type__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("mediaType"));
+                            }
+                            media_type__ = map_.next_value::<::std::option::Option<MediaType>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::MimeType => {
+                            if mime_type__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("mimeType"));
+                            }
+                            mime_type__ = map_.next_value()?;
+                        }
+                        GeneratedField::SizeBytes => {
+                            if size_bytes__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sizeBytes"));
+                            }
+                            size_bytes__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::DurationMs => {
+                            if duration_ms__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("durationMs"));
+                            }
+                            duration_ms__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Available => {
+                            if available__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("available"));
+                            }
+                            available__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(TaskOutput {
+                    asset_id: asset_id__,
+                    filename: filename__,
+                    media_type: media_type__,
+                    mime_type: mime_type__,
+                    size_bytes: size_bytes__,
+                    duration_ms: duration_ms__,
+                    available: available__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.TaskOutput", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for TaskPurpose {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unspecified => "TASK_PURPOSE_UNSPECIFIED",
+            Self::Normal => "TASK_PURPOSE_NORMAL",
+            Self::WorkflowTest => "TASK_PURPOSE_WORKFLOW_TEST",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for TaskPurpose {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "TASK_PURPOSE_UNSPECIFIED",
+            "TASK_PURPOSE_NORMAL",
+            "TASK_PURPOSE_WORKFLOW_TEST",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = TaskPurpose;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "TASK_PURPOSE_UNSPECIFIED" => Ok(TaskPurpose::Unspecified),
+                    "TASK_PURPOSE_NORMAL" => Ok(TaskPurpose::Normal),
+                    "TASK_PURPOSE_WORKFLOW_TEST" => Ok(TaskPurpose::WorkflowTest),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for TaskStatus {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unspecified => "TASK_STATUS_UNSPECIFIED",
+            Self::Pending => "TASK_STATUS_PENDING",
+            Self::Running => "TASK_STATUS_RUNNING",
+            Self::Saving => "TASK_STATUS_SAVING",
+            Self::Cancelling => "TASK_STATUS_CANCELLING",
+            Self::Success => "TASK_STATUS_SUCCESS",
+            Self::Failed => "TASK_STATUS_FAILED",
+            Self::Cancelled => "TASK_STATUS_CANCELLED",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for TaskStatus {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "TASK_STATUS_UNSPECIFIED",
+            "TASK_STATUS_PENDING",
+            "TASK_STATUS_RUNNING",
+            "TASK_STATUS_SAVING",
+            "TASK_STATUS_CANCELLING",
+            "TASK_STATUS_SUCCESS",
+            "TASK_STATUS_FAILED",
+            "TASK_STATUS_CANCELLED",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = TaskStatus;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "TASK_STATUS_UNSPECIFIED" => Ok(TaskStatus::Unspecified),
+                    "TASK_STATUS_PENDING" => Ok(TaskStatus::Pending),
+                    "TASK_STATUS_RUNNING" => Ok(TaskStatus::Running),
+                    "TASK_STATUS_SAVING" => Ok(TaskStatus::Saving),
+                    "TASK_STATUS_CANCELLING" => Ok(TaskStatus::Cancelling),
+                    "TASK_STATUS_SUCCESS" => Ok(TaskStatus::Success),
+                    "TASK_STATUS_FAILED" => Ok(TaskStatus::Failed),
+                    "TASK_STATUS_CANCELLED" => Ok(TaskStatus::Cancelled),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for TaskSummary {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.task_id.is_some() {
+            len += 1;
+        }
+        if self.purpose.is_some() {
+            len += 1;
+        }
+        if self.feature_key.is_some() {
+            len += 1;
+        }
+        if self.model_mapping_id.is_some() {
+            len += 1;
+        }
+        if self.model_name.is_some() {
+            len += 1;
+        }
+        if self.status.is_some() {
+            len += 1;
+        }
+        if self.status_message.is_some() {
+            len += 1;
+        }
+        if self.error_code.is_some() {
+            len += 1;
+        }
+        if self.output.is_some() {
+            len += 1;
+        }
+        if self.can_cancel.is_some() {
+            len += 1;
+        }
+        if self.can_recover_save.is_some() {
+            len += 1;
+        }
+        if self.save_recovery_expires_at.is_some() {
+            len += 1;
+        }
+        if self.created_at.is_some() {
+            len += 1;
+        }
+        if self.started_at.is_some() {
+            len += 1;
+        }
+        if self.completed_at.is_some() {
+            len += 1;
+        }
+        if self.elapsed_seconds.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.TaskSummary", len)?;
+        if let Some(v) = self.task_id.as_ref() {
+            struct_ser.serialize_field("taskId", v)?;
+        }
+        if let Some(v) = self.purpose.as_ref() {
+            let v = TaskPurpose::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("purpose", &v)?;
+        }
+        if let Some(v) = self.feature_key.as_ref() {
+            let v = FeatureKey::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("featureKey", &v)?;
+        }
+        if let Some(v) = self.model_mapping_id.as_ref() {
+            struct_ser.serialize_field("modelMappingId", v)?;
+        }
+        if let Some(v) = self.model_name.as_ref() {
+            struct_ser.serialize_field("modelName", v)?;
+        }
+        if let Some(v) = self.status.as_ref() {
+            let v = TaskStatus::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("status", &v)?;
+        }
+        if let Some(v) = self.status_message.as_ref() {
+            struct_ser.serialize_field("statusMessage", v)?;
+        }
+        if let Some(v) = self.error_code.as_ref() {
+            struct_ser.serialize_field("errorCode", v)?;
+        }
+        if let Some(v) = self.output.as_ref() {
+            struct_ser.serialize_field("output", v)?;
+        }
+        if let Some(v) = self.can_cancel.as_ref() {
+            struct_ser.serialize_field("canCancel", v)?;
+        }
+        if let Some(v) = self.can_recover_save.as_ref() {
+            struct_ser.serialize_field("canRecoverSave", v)?;
+        }
+        if let Some(v) = self.save_recovery_expires_at.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("saveRecoveryExpiresAt", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.created_at.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("createdAt", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.started_at.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("startedAt", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.completed_at.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("completedAt", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.elapsed_seconds.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("elapsedSeconds", ToString::to_string(&v).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for TaskSummary {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "task_id",
+            "taskId",
+            "purpose",
+            "feature_key",
+            "featureKey",
+            "model_mapping_id",
+            "modelMappingId",
+            "model_name",
+            "modelName",
+            "status",
+            "status_message",
+            "statusMessage",
+            "error_code",
+            "errorCode",
+            "output",
+            "can_cancel",
+            "canCancel",
+            "can_recover_save",
+            "canRecoverSave",
+            "save_recovery_expires_at",
+            "saveRecoveryExpiresAt",
+            "created_at",
+            "createdAt",
+            "started_at",
+            "startedAt",
+            "completed_at",
+            "completedAt",
+            "elapsed_seconds",
+            "elapsedSeconds",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            TaskId,
+            Purpose,
+            FeatureKey,
+            ModelMappingId,
+            ModelName,
+            Status,
+            StatusMessage,
+            ErrorCode,
+            Output,
+            CanCancel,
+            CanRecoverSave,
+            SaveRecoveryExpiresAt,
+            CreatedAt,
+            StartedAt,
+            CompletedAt,
+            ElapsedSeconds,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "taskId" | "task_id" => Ok(GeneratedField::TaskId),
+                            "purpose" => Ok(GeneratedField::Purpose),
+                            "featureKey" | "feature_key" => Ok(GeneratedField::FeatureKey),
+                            "modelMappingId" | "model_mapping_id" => Ok(GeneratedField::ModelMappingId),
+                            "modelName" | "model_name" => Ok(GeneratedField::ModelName),
+                            "status" => Ok(GeneratedField::Status),
+                            "statusMessage" | "status_message" => Ok(GeneratedField::StatusMessage),
+                            "errorCode" | "error_code" => Ok(GeneratedField::ErrorCode),
+                            "output" => Ok(GeneratedField::Output),
+                            "canCancel" | "can_cancel" => Ok(GeneratedField::CanCancel),
+                            "canRecoverSave" | "can_recover_save" => Ok(GeneratedField::CanRecoverSave),
+                            "saveRecoveryExpiresAt" | "save_recovery_expires_at" => Ok(GeneratedField::SaveRecoveryExpiresAt),
+                            "createdAt" | "created_at" => Ok(GeneratedField::CreatedAt),
+                            "startedAt" | "started_at" => Ok(GeneratedField::StartedAt),
+                            "completedAt" | "completed_at" => Ok(GeneratedField::CompletedAt),
+                            "elapsedSeconds" | "elapsed_seconds" => Ok(GeneratedField::ElapsedSeconds),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = TaskSummary;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.TaskSummary")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<TaskSummary, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut task_id__ = None;
+                let mut purpose__ = None;
+                let mut feature_key__ = None;
+                let mut model_mapping_id__ = None;
+                let mut model_name__ = None;
+                let mut status__ = None;
+                let mut status_message__ = None;
+                let mut error_code__ = None;
+                let mut output__ = None;
+                let mut can_cancel__ = None;
+                let mut can_recover_save__ = None;
+                let mut save_recovery_expires_at__ = None;
+                let mut created_at__ = None;
+                let mut started_at__ = None;
+                let mut completed_at__ = None;
+                let mut elapsed_seconds__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::TaskId => {
+                            if task_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("taskId"));
+                            }
+                            task_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Purpose => {
+                            if purpose__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("purpose"));
+                            }
+                            purpose__ = map_.next_value::<::std::option::Option<TaskPurpose>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::FeatureKey => {
+                            if feature_key__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("featureKey"));
+                            }
+                            feature_key__ = map_.next_value::<::std::option::Option<FeatureKey>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::ModelMappingId => {
+                            if model_mapping_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("modelMappingId"));
+                            }
+                            model_mapping_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::ModelName => {
+                            if model_name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("modelName"));
+                            }
+                            model_name__ = map_.next_value()?;
+                        }
+                        GeneratedField::Status => {
+                            if status__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("status"));
+                            }
+                            status__ = map_.next_value::<::std::option::Option<TaskStatus>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::StatusMessage => {
+                            if status_message__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("statusMessage"));
+                            }
+                            status_message__ = map_.next_value()?;
+                        }
+                        GeneratedField::ErrorCode => {
+                            if error_code__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("errorCode"));
+                            }
+                            error_code__ = map_.next_value()?;
+                        }
+                        GeneratedField::Output => {
+                            if output__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("output"));
+                            }
+                            output__ = map_.next_value()?;
+                        }
+                        GeneratedField::CanCancel => {
+                            if can_cancel__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("canCancel"));
+                            }
+                            can_cancel__ = map_.next_value()?;
+                        }
+                        GeneratedField::CanRecoverSave => {
+                            if can_recover_save__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("canRecoverSave"));
+                            }
+                            can_recover_save__ = map_.next_value()?;
+                        }
+                        GeneratedField::SaveRecoveryExpiresAt => {
+                            if save_recovery_expires_at__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("saveRecoveryExpiresAt"));
+                            }
+                            save_recovery_expires_at__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::CreatedAt => {
+                            if created_at__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("createdAt"));
+                            }
+                            created_at__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::StartedAt => {
+                            if started_at__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("startedAt"));
+                            }
+                            started_at__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::CompletedAt => {
+                            if completed_at__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("completedAt"));
+                            }
+                            completed_at__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::ElapsedSeconds => {
+                            if elapsed_seconds__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("elapsedSeconds"));
+                            }
+                            elapsed_seconds__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(TaskSummary {
+                    task_id: task_id__,
+                    purpose: purpose__,
+                    feature_key: feature_key__,
+                    model_mapping_id: model_mapping_id__,
+                    model_name: model_name__,
+                    status: status__,
+                    status_message: status_message__,
+                    error_code: error_code__,
+                    output: output__,
+                    can_cancel: can_cancel__,
+                    can_recover_save: can_recover_save__,
+                    save_recovery_expires_at: save_recovery_expires_at__,
+                    created_at: created_at__,
+                    started_at: started_at__,
+                    completed_at: completed_at__,
+                    elapsed_seconds: elapsed_seconds__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.TaskSummary", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for TestWorkflowReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.request_id.is_some() {
+            len += 1;
+        }
+        if self.workflow_version_id.is_some() {
+            len += 1;
+        }
+        if self.prompt.is_some() {
+            len += 1;
+        }
+        if self.input_asset_id.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.TestWorkflowReq", len)?;
+        if let Some(v) = self.request_id.as_ref() {
+            struct_ser.serialize_field("requestId", v)?;
+        }
+        if let Some(v) = self.workflow_version_id.as_ref() {
+            struct_ser.serialize_field("workflowVersionId", v)?;
+        }
+        if let Some(v) = self.prompt.as_ref() {
+            struct_ser.serialize_field("prompt", v)?;
+        }
+        if let Some(v) = self.input_asset_id.as_ref() {
+            struct_ser.serialize_field("inputAssetId", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for TestWorkflowReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "request_id",
+            "requestId",
+            "workflow_version_id",
+            "workflowVersionId",
+            "prompt",
+            "input_asset_id",
+            "inputAssetId",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            RequestId,
+            WorkflowVersionId,
+            Prompt,
+            InputAssetId,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
+                            "workflowVersionId" | "workflow_version_id" => Ok(GeneratedField::WorkflowVersionId),
+                            "prompt" => Ok(GeneratedField::Prompt),
+                            "inputAssetId" | "input_asset_id" => Ok(GeneratedField::InputAssetId),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = TestWorkflowReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.TestWorkflowReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<TestWorkflowReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut request_id__ = None;
+                let mut workflow_version_id__ = None;
+                let mut prompt__ = None;
+                let mut input_asset_id__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
+                            }
+                            request_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::WorkflowVersionId => {
+                            if workflow_version_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowVersionId"));
+                            }
+                            workflow_version_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Prompt => {
+                            if prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prompt"));
+                            }
+                            prompt__ = map_.next_value()?;
+                        }
+                        GeneratedField::InputAssetId => {
+                            if input_asset_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputAssetId"));
+                            }
+                            input_asset_id__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(TestWorkflowReq {
+                    request_id: request_id__,
+                    workflow_version_id: workflow_version_id__,
+                    prompt: prompt__,
+                    input_asset_id: input_asset_id__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.TestWorkflowReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for TestWorkflowResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.task_id.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.TestWorkflowResp", len)?;
+        if let Some(v) = self.task_id.as_ref() {
+            struct_ser.serialize_field("taskId", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for TestWorkflowResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "task_id",
+            "taskId",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            TaskId,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "taskId" | "task_id" => Ok(GeneratedField::TaskId),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = TestWorkflowResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.TestWorkflowResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<TestWorkflowResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut task_id__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::TaskId => {
+                            if task_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("taskId"));
+                            }
+                            task_id__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(TestWorkflowResp {
+                    task_id: task_id__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.TestWorkflowResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for TextLimit {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.max_length.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.TextLimit", len)?;
+        if let Some(v) = self.max_length.as_ref() {
+            struct_ser.serialize_field("maxLength", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for TextLimit {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "max_length",
+            "maxLength",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            MaxLength,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "maxLength" | "max_length" => Ok(GeneratedField::MaxLength),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = TextLimit;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.TextLimit")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<TextLimit, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut max_length__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::MaxLength => {
+                            if max_length__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("maxLength"));
+                            }
+                            max_length__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(TextLimit {
+                    max_length: max_length__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.TextLimit", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for TextToVideoTaskParams {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.prompt.is_some() {
+            len += 1;
+        }
+        if self.aspect_ratio.is_some() {
+            len += 1;
+        }
+        if self.megapixels.is_some() {
+            len += 1;
+        }
+        if self.duration_seconds.is_some() {
+            len += 1;
+        }
+        if self.frame_rate.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.TextToVideoTaskParams", len)?;
+        if let Some(v) = self.prompt.as_ref() {
+            struct_ser.serialize_field("prompt", v)?;
+        }
+        if let Some(v) = self.aspect_ratio.as_ref() {
+            struct_ser.serialize_field("aspectRatio", v)?;
+        }
+        if let Some(v) = self.megapixels.as_ref() {
+            struct_ser.serialize_field("megapixels", v)?;
+        }
+        if let Some(v) = self.duration_seconds.as_ref() {
+            struct_ser.serialize_field("durationSeconds", v)?;
+        }
+        if let Some(v) = self.frame_rate.as_ref() {
+            struct_ser.serialize_field("frameRate", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for TextToVideoTaskParams {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "prompt",
+            "aspect_ratio",
+            "aspectRatio",
+            "megapixels",
+            "duration_seconds",
+            "durationSeconds",
+            "frame_rate",
+            "frameRate",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Prompt,
+            AspectRatio,
+            Megapixels,
+            DurationSeconds,
+            FrameRate,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "prompt" => Ok(GeneratedField::Prompt),
+                            "aspectRatio" | "aspect_ratio" => Ok(GeneratedField::AspectRatio),
+                            "megapixels" => Ok(GeneratedField::Megapixels),
+                            "durationSeconds" | "duration_seconds" => Ok(GeneratedField::DurationSeconds),
+                            "frameRate" | "frame_rate" => Ok(GeneratedField::FrameRate),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = TextToVideoTaskParams;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.TextToVideoTaskParams")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<TextToVideoTaskParams, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut prompt__ = None;
+                let mut aspect_ratio__ = None;
+                let mut megapixels__ = None;
+                let mut duration_seconds__ = None;
+                let mut frame_rate__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Prompt => {
+                            if prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prompt"));
+                            }
+                            prompt__ = map_.next_value()?;
+                        }
+                        GeneratedField::AspectRatio => {
+                            if aspect_ratio__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("aspectRatio"));
+                            }
+                            aspect_ratio__ = map_.next_value()?;
+                        }
+                        GeneratedField::Megapixels => {
+                            if megapixels__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("megapixels"));
+                            }
+                            megapixels__ = map_.next_value()?;
+                        }
+                        GeneratedField::DurationSeconds => {
+                            if duration_seconds__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("durationSeconds"));
+                            }
+                            duration_seconds__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::FrameRate => {
+                            if frame_rate__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("frameRate"));
+                            }
+                            frame_rate__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(TextToVideoTaskParams {
+                    prompt: prompt__,
+                    aspect_ratio: aspect_ratio__,
+                    megapixels: megapixels__,
+                    duration_seconds: duration_seconds__,
+                    frame_rate: frame_rate__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.TextToVideoTaskParams", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for TextToVideoWorkflowConfig {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.prompt.is_some() {
+            len += 1;
+        }
+        if self.prompt_max_length.is_some() {
+            len += 1;
+        }
+        if self.negative_prompt.is_some() {
+            len += 1;
+        }
+        if self.aspect_ratio.is_some() {
+            len += 1;
+        }
+        if self.megapixels.is_some() {
+            len += 1;
+        }
+        if self.duration_seconds.is_some() {
+            len += 1;
+        }
+        if self.frame_rate.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.TextToVideoWorkflowConfig", len)?;
+        if let Some(v) = self.prompt.as_ref() {
+            struct_ser.serialize_field("prompt", v)?;
+        }
+        if let Some(v) = self.prompt_max_length.as_ref() {
+            struct_ser.serialize_field("promptMaxLength", v)?;
+        }
+        if let Some(v) = self.negative_prompt.as_ref() {
+            struct_ser.serialize_field("negativePrompt", v)?;
+        }
+        if let Some(v) = self.aspect_ratio.as_ref() {
+            struct_ser.serialize_field("aspectRatio", v)?;
+        }
+        if let Some(v) = self.megapixels.as_ref() {
+            struct_ser.serialize_field("megapixels", v)?;
+        }
+        if let Some(v) = self.duration_seconds.as_ref() {
+            struct_ser.serialize_field("durationSeconds", v)?;
+        }
+        if let Some(v) = self.frame_rate.as_ref() {
+            struct_ser.serialize_field("frameRate", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for TextToVideoWorkflowConfig {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "prompt",
+            "prompt_max_length",
+            "promptMaxLength",
+            "negative_prompt",
+            "negativePrompt",
+            "aspect_ratio",
+            "aspectRatio",
+            "megapixels",
+            "duration_seconds",
+            "durationSeconds",
+            "frame_rate",
+            "frameRate",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Prompt,
+            PromptMaxLength,
+            NegativePrompt,
+            AspectRatio,
+            Megapixels,
+            DurationSeconds,
+            FrameRate,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "prompt" => Ok(GeneratedField::Prompt),
+                            "promptMaxLength" | "prompt_max_length" => Ok(GeneratedField::PromptMaxLength),
+                            "negativePrompt" | "negative_prompt" => Ok(GeneratedField::NegativePrompt),
+                            "aspectRatio" | "aspect_ratio" => Ok(GeneratedField::AspectRatio),
+                            "megapixels" => Ok(GeneratedField::Megapixels),
+                            "durationSeconds" | "duration_seconds" => Ok(GeneratedField::DurationSeconds),
+                            "frameRate" | "frame_rate" => Ok(GeneratedField::FrameRate),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = TextToVideoWorkflowConfig;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.TextToVideoWorkflowConfig")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<TextToVideoWorkflowConfig, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut prompt__ = None;
+                let mut prompt_max_length__ = None;
+                let mut negative_prompt__ = None;
+                let mut aspect_ratio__ = None;
+                let mut megapixels__ = None;
+                let mut duration_seconds__ = None;
+                let mut frame_rate__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Prompt => {
+                            if prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prompt"));
+                            }
+                            prompt__ = map_.next_value()?;
+                        }
+                        GeneratedField::PromptMaxLength => {
+                            if prompt_max_length__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("promptMaxLength"));
+                            }
+                            prompt_max_length__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::NegativePrompt => {
+                            if negative_prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("negativePrompt"));
+                            }
+                            negative_prompt__ = map_.next_value()?;
+                        }
+                        GeneratedField::AspectRatio => {
+                            if aspect_ratio__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("aspectRatio"));
+                            }
+                            aspect_ratio__ = map_.next_value()?;
+                        }
+                        GeneratedField::Megapixels => {
+                            if megapixels__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("megapixels"));
+                            }
+                            megapixels__ = map_.next_value()?;
+                        }
+                        GeneratedField::DurationSeconds => {
+                            if duration_seconds__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("durationSeconds"));
+                            }
+                            duration_seconds__ = map_.next_value()?;
+                        }
+                        GeneratedField::FrameRate => {
+                            if frame_rate__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("frameRate"));
+                            }
+                            frame_rate__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(TextToVideoWorkflowConfig {
+                    prompt: prompt__,
+                    prompt_max_length: prompt_max_length__,
+                    negative_prompt: negative_prompt__,
+                    aspect_ratio: aspect_ratio__,
+                    megapixels: megapixels__,
+                    duration_seconds: duration_seconds__,
+                    frame_rate: frame_rate__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.TextToVideoWorkflowConfig", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for UpdateModelMappingSortOrderReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.model_mapping_ids.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.UpdateModelMappingSortOrderReq", len)?;
+        if !self.model_mapping_ids.is_empty() {
+            struct_ser.serialize_field("modelMappingIds", &self.model_mapping_ids)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for UpdateModelMappingSortOrderReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "model_mapping_ids",
+            "modelMappingIds",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            ModelMappingIds,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "modelMappingIds" | "model_mapping_ids" => Ok(GeneratedField::ModelMappingIds),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = UpdateModelMappingSortOrderReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.UpdateModelMappingSortOrderReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdateModelMappingSortOrderReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut model_mapping_ids__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::ModelMappingIds => {
+                            if model_mapping_ids__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("modelMappingIds"));
+                            }
+                            model_mapping_ids__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(UpdateModelMappingSortOrderReq {
+                    model_mapping_ids: model_mapping_ids__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.UpdateModelMappingSortOrderReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for UpdateModelMappingSortOrderResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.mappings.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.UpdateModelMappingSortOrderResp", len)?;
+        if !self.mappings.is_empty() {
+            struct_ser.serialize_field("mappings", &self.mappings)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for UpdateModelMappingSortOrderResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "mappings",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Mappings,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "mappings" => Ok(GeneratedField::Mappings),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = UpdateModelMappingSortOrderResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.UpdateModelMappingSortOrderResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdateModelMappingSortOrderResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut mappings__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Mappings => {
+                            if mappings__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("mappings"));
+                            }
+                            mappings__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(UpdateModelMappingSortOrderResp {
+                    mappings: mappings__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.UpdateModelMappingSortOrderResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for UpdateModelReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.model_id.is_some() {
+            len += 1;
+        }
+        if self.name.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.UpdateModelReq", len)?;
+        if let Some(v) = self.model_id.as_ref() {
+            struct_ser.serialize_field("modelId", v)?;
+        }
+        if let Some(v) = self.name.as_ref() {
+            struct_ser.serialize_field("name", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for UpdateModelReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "model_id",
+            "modelId",
+            "name",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            ModelId,
+            Name,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "modelId" | "model_id" => Ok(GeneratedField::ModelId),
+                            "name" => Ok(GeneratedField::Name),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = UpdateModelReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.UpdateModelReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdateModelReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut model_id__ = None;
+                let mut name__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::ModelId => {
+                            if model_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("modelId"));
+                            }
+                            model_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Name => {
+                            if name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("name"));
+                            }
+                            name__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(UpdateModelReq {
+                    model_id: model_id__,
+                    name: name__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.UpdateModelReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for UpdateModelResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.model.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.UpdateModelResp", len)?;
+        if let Some(v) = self.model.as_ref() {
+            struct_ser.serialize_field("model", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for UpdateModelResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "model",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Model,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "model" => Ok(GeneratedField::Model),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = UpdateModelResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.UpdateModelResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdateModelResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut model__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Model => {
+                            if model__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("model"));
+                            }
+                            model__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(UpdateModelResp {
+                    model: model__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.UpdateModelResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for UpdateWorkflowDescriptionReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.workflow_version_id.is_some() {
+            len += 1;
+        }
+        if self.description.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.UpdateWorkflowDescriptionReq", len)?;
+        if let Some(v) = self.workflow_version_id.as_ref() {
+            struct_ser.serialize_field("workflowVersionId", v)?;
+        }
+        if let Some(v) = self.description.as_ref() {
+            struct_ser.serialize_field("description", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for UpdateWorkflowDescriptionReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "workflow_version_id",
+            "workflowVersionId",
+            "description",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            WorkflowVersionId,
+            Description,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "workflowVersionId" | "workflow_version_id" => Ok(GeneratedField::WorkflowVersionId),
+                            "description" => Ok(GeneratedField::Description),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = UpdateWorkflowDescriptionReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.UpdateWorkflowDescriptionReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdateWorkflowDescriptionReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut workflow_version_id__ = None;
+                let mut description__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::WorkflowVersionId => {
+                            if workflow_version_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowVersionId"));
+                            }
+                            workflow_version_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Description => {
+                            if description__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("description"));
+                            }
+                            description__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(UpdateWorkflowDescriptionReq {
+                    workflow_version_id: workflow_version_id__,
+                    description: description__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.UpdateWorkflowDescriptionReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for UpdateWorkflowDescriptionResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.workflow.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.UpdateWorkflowDescriptionResp", len)?;
+        if let Some(v) = self.workflow.as_ref() {
+            struct_ser.serialize_field("workflow", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for UpdateWorkflowDescriptionResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "workflow",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Workflow,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "workflow" => Ok(GeneratedField::Workflow),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = UpdateWorkflowDescriptionResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.UpdateWorkflowDescriptionResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdateWorkflowDescriptionResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut workflow__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Workflow => {
+                            if workflow__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflow"));
+                            }
+                            workflow__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(UpdateWorkflowDescriptionResp {
+                    workflow: workflow__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.UpdateWorkflowDescriptionResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for UpdateWorkflowReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.workflow_version_id.is_some() {
+            len += 1;
+        }
+        if self.api_json.is_some() {
+            len += 1;
+        }
+        if self.config.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.UpdateWorkflowReq", len)?;
+        if let Some(v) = self.workflow_version_id.as_ref() {
+            struct_ser.serialize_field("workflowVersionId", v)?;
+        }
+        if let Some(v) = self.api_json.as_ref() {
+            struct_ser.serialize_field("apiJson", v)?;
+        }
+        if let Some(v) = self.config.as_ref() {
+            struct_ser.serialize_field("config", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for UpdateWorkflowReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "workflow_version_id",
+            "workflowVersionId",
+            "api_json",
+            "apiJson",
+            "config",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            WorkflowVersionId,
+            ApiJson,
+            Config,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "workflowVersionId" | "workflow_version_id" => Ok(GeneratedField::WorkflowVersionId),
+                            "apiJson" | "api_json" => Ok(GeneratedField::ApiJson),
+                            "config" => Ok(GeneratedField::Config),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = UpdateWorkflowReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.UpdateWorkflowReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdateWorkflowReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut workflow_version_id__ = None;
+                let mut api_json__ = None;
+                let mut config__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::WorkflowVersionId => {
+                            if workflow_version_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowVersionId"));
+                            }
+                            workflow_version_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::ApiJson => {
+                            if api_json__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("apiJson"));
+                            }
+                            api_json__ = map_.next_value()?;
+                        }
+                        GeneratedField::Config => {
+                            if config__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("config"));
+                            }
+                            config__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(UpdateWorkflowReq {
+                    workflow_version_id: workflow_version_id__,
+                    api_json: api_json__,
+                    config: config__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.UpdateWorkflowReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for UpdateWorkflowResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.workflow.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.UpdateWorkflowResp", len)?;
+        if let Some(v) = self.workflow.as_ref() {
+            struct_ser.serialize_field("workflow", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for UpdateWorkflowResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "workflow",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Workflow,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "workflow" => Ok(GeneratedField::Workflow),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = UpdateWorkflowResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.UpdateWorkflowResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdateWorkflowResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut workflow__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Workflow => {
+                            if workflow__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflow"));
+                            }
+                            workflow__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(UpdateWorkflowResp {
+                    workflow: workflow__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.UpdateWorkflowResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for UploadBatchResult {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -6736,12 +10791,12 @@ impl serde::Serialize for MediaUploadBatchResult {
         if !self.files.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.MediaUploadBatchResult", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.UploadBatchResult", len)?;
         if let Some(v) = self.request_id.as_ref() {
             struct_ser.serialize_field("requestId", v)?;
         }
         if let Some(v) = self.status.as_ref() {
-            let v = MediaUploadStatus::try_from(*v)
+            let v = UploadStatus::try_from(*v)
                 .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
             struct_ser.serialize_field("status", &v)?;
         }
@@ -6751,7 +10806,7 @@ impl serde::Serialize for MediaUploadBatchResult {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for MediaUploadBatchResult {
+impl<'de> serde::Deserialize<'de> for UploadBatchResult {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -6802,13 +10857,13 @@ impl<'de> serde::Deserialize<'de> for MediaUploadBatchResult {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MediaUploadBatchResult;
+            type Value = UploadBatchResult;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.MediaUploadBatchResult")
+                formatter.write_str("struct hi.media.UploadBatchResult")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaUploadBatchResult, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UploadBatchResult, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -6827,7 +10882,7 @@ impl<'de> serde::Deserialize<'de> for MediaUploadBatchResult {
                             if status__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("status"));
                             }
-                            status__ = map_.next_value::<::std::option::Option<MediaUploadStatus>>()?.map(|x| x as i32);
+                            status__ = map_.next_value::<::std::option::Option<UploadStatus>>()?.map(|x| x as i32);
                         }
                         GeneratedField::Files => {
                             if files__.is_some() {
@@ -6837,17 +10892,17 @@ impl<'de> serde::Deserialize<'de> for MediaUploadBatchResult {
                         }
                     }
                 }
-                Ok(MediaUploadBatchResult {
+                Ok(UploadBatchResult {
                     request_id: request_id__,
                     status: status__,
                     files: files__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.MediaUploadBatchResult", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.UploadBatchResult", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for MediaUploadFileMetadata {
+impl serde::Serialize for UploadFileMetadata {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -6864,7 +10919,7 @@ impl serde::Serialize for MediaUploadFileMetadata {
         if self.size_bytes.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.MediaUploadFileMetadata", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.UploadFileMetadata", len)?;
         if let Some(v) = self.client_file_id.as_ref() {
             struct_ser.serialize_field("clientFileId", v)?;
         }
@@ -6879,7 +10934,7 @@ impl serde::Serialize for MediaUploadFileMetadata {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for MediaUploadFileMetadata {
+impl<'de> serde::Deserialize<'de> for UploadFileMetadata {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -6931,13 +10986,13 @@ impl<'de> serde::Deserialize<'de> for MediaUploadFileMetadata {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MediaUploadFileMetadata;
+            type Value = UploadFileMetadata;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.MediaUploadFileMetadata")
+                formatter.write_str("struct hi.media.UploadFileMetadata")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaUploadFileMetadata, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UploadFileMetadata, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -6968,17 +11023,17 @@ impl<'de> serde::Deserialize<'de> for MediaUploadFileMetadata {
                         }
                     }
                 }
-                Ok(MediaUploadFileMetadata {
+                Ok(UploadFileMetadata {
                     client_file_id: client_file_id__,
                     filename: filename__,
                     size_bytes: size_bytes__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.MediaUploadFileMetadata", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.UploadFileMetadata", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for MediaUploadFileResult {
+impl serde::Serialize for UploadFileResult {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -7010,7 +11065,7 @@ impl serde::Serialize for MediaUploadFileResult {
         if self.error_message.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.MediaUploadFileResult", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.UploadFileResult", len)?;
         if let Some(v) = self.client_file_id.as_ref() {
             struct_ser.serialize_field("clientFileId", v)?;
         }
@@ -7018,7 +11073,7 @@ impl serde::Serialize for MediaUploadFileResult {
             struct_ser.serialize_field("filename", v)?;
         }
         if let Some(v) = self.status.as_ref() {
-            let v = MediaUploadFileStatus::try_from(*v)
+            let v = UploadFileStatus::try_from(*v)
                 .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
             struct_ser.serialize_field("status", &v)?;
         }
@@ -7042,7 +11097,7 @@ impl serde::Serialize for MediaUploadFileResult {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for MediaUploadFileResult {
+impl<'de> serde::Deserialize<'de> for UploadFileResult {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -7113,13 +11168,13 @@ impl<'de> serde::Deserialize<'de> for MediaUploadFileResult {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MediaUploadFileResult;
+            type Value = UploadFileResult;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.MediaUploadFileResult")
+                formatter.write_str("struct hi.media.UploadFileResult")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaUploadFileResult, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UploadFileResult, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -7149,7 +11204,7 @@ impl<'de> serde::Deserialize<'de> for MediaUploadFileResult {
                             if status__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("status"));
                             }
-                            status__ = map_.next_value::<::std::option::Option<MediaUploadFileStatus>>()?.map(|x| x as i32);
+                            status__ = map_.next_value::<::std::option::Option<UploadFileStatus>>()?.map(|x| x as i32);
                         }
                         GeneratedField::AssetId => {
                             if asset_id__.is_some() {
@@ -7185,7 +11240,7 @@ impl<'de> serde::Deserialize<'de> for MediaUploadFileResult {
                         }
                     }
                 }
-                Ok(MediaUploadFileResult {
+                Ok(UploadFileResult {
                     client_file_id: client_file_id__,
                     filename: filename__,
                     status: status__,
@@ -7197,43 +11252,43 @@ impl<'de> serde::Deserialize<'de> for MediaUploadFileResult {
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.MediaUploadFileResult", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.UploadFileResult", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for MediaUploadFileStatus {
+impl serde::Serialize for UploadFileStatus {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
         S: serde::Serializer,
     {
         let variant = match self {
-            Self::Unspecified => "MEDIA_UPLOAD_FILE_STATUS_UNSPECIFIED",
-            Self::Pending => "MEDIA_UPLOAD_FILE_STATUS_PENDING",
-            Self::Processing => "MEDIA_UPLOAD_FILE_STATUS_PROCESSING",
-            Self::Success => "MEDIA_UPLOAD_FILE_STATUS_SUCCESS",
-            Self::Failed => "MEDIA_UPLOAD_FILE_STATUS_FAILED",
+            Self::Unspecified => "UPLOAD_FILE_STATUS_UNSPECIFIED",
+            Self::Pending => "UPLOAD_FILE_STATUS_PENDING",
+            Self::Processing => "UPLOAD_FILE_STATUS_PROCESSING",
+            Self::Success => "UPLOAD_FILE_STATUS_SUCCESS",
+            Self::Failed => "UPLOAD_FILE_STATUS_FAILED",
         };
         serializer.serialize_str(variant)
     }
 }
-impl<'de> serde::Deserialize<'de> for MediaUploadFileStatus {
+impl<'de> serde::Deserialize<'de> for UploadFileStatus {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "MEDIA_UPLOAD_FILE_STATUS_UNSPECIFIED",
-            "MEDIA_UPLOAD_FILE_STATUS_PENDING",
-            "MEDIA_UPLOAD_FILE_STATUS_PROCESSING",
-            "MEDIA_UPLOAD_FILE_STATUS_SUCCESS",
-            "MEDIA_UPLOAD_FILE_STATUS_FAILED",
+            "UPLOAD_FILE_STATUS_UNSPECIFIED",
+            "UPLOAD_FILE_STATUS_PENDING",
+            "UPLOAD_FILE_STATUS_PROCESSING",
+            "UPLOAD_FILE_STATUS_SUCCESS",
+            "UPLOAD_FILE_STATUS_FAILED",
         ];
 
         struct GeneratedVisitor;
 
         impl serde::de::Visitor<'_> for GeneratedVisitor {
-            type Value = MediaUploadFileStatus;
+            type Value = UploadFileStatus;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                 write!(formatter, "expected one of: {:?}", &FIELDS)
@@ -7268,11 +11323,11 @@ impl<'de> serde::Deserialize<'de> for MediaUploadFileStatus {
                 E: serde::de::Error,
             {
                 match value {
-                    "MEDIA_UPLOAD_FILE_STATUS_UNSPECIFIED" => Ok(MediaUploadFileStatus::Unspecified),
-                    "MEDIA_UPLOAD_FILE_STATUS_PENDING" => Ok(MediaUploadFileStatus::Pending),
-                    "MEDIA_UPLOAD_FILE_STATUS_PROCESSING" => Ok(MediaUploadFileStatus::Processing),
-                    "MEDIA_UPLOAD_FILE_STATUS_SUCCESS" => Ok(MediaUploadFileStatus::Success),
-                    "MEDIA_UPLOAD_FILE_STATUS_FAILED" => Ok(MediaUploadFileStatus::Failed),
+                    "UPLOAD_FILE_STATUS_UNSPECIFIED" => Ok(UploadFileStatus::Unspecified),
+                    "UPLOAD_FILE_STATUS_PENDING" => Ok(UploadFileStatus::Pending),
+                    "UPLOAD_FILE_STATUS_PROCESSING" => Ok(UploadFileStatus::Processing),
+                    "UPLOAD_FILE_STATUS_SUCCESS" => Ok(UploadFileStatus::Success),
+                    "UPLOAD_FILE_STATUS_FAILED" => Ok(UploadFileStatus::Failed),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }
@@ -7280,7 +11335,7 @@ impl<'de> serde::Deserialize<'de> for MediaUploadFileStatus {
         deserializer.deserialize_any(GeneratedVisitor)
     }
 }
-impl serde::Serialize for MediaUploadMetadata {
+impl serde::Serialize for UploadMetadata {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -7294,7 +11349,7 @@ impl serde::Serialize for MediaUploadMetadata {
         if !self.files.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.MediaUploadMetadata", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.UploadMetadata", len)?;
         if let Some(v) = self.request_id.as_ref() {
             struct_ser.serialize_field("requestId", v)?;
         }
@@ -7304,7 +11359,7 @@ impl serde::Serialize for MediaUploadMetadata {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for MediaUploadMetadata {
+impl<'de> serde::Deserialize<'de> for UploadMetadata {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -7352,13 +11407,13 @@ impl<'de> serde::Deserialize<'de> for MediaUploadMetadata {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MediaUploadMetadata;
+            type Value = UploadMetadata;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.MediaUploadMetadata")
+                formatter.write_str("struct hi.media.UploadMetadata")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaUploadMetadata, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UploadMetadata, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -7380,45 +11435,45 @@ impl<'de> serde::Deserialize<'de> for MediaUploadMetadata {
                         }
                     }
                 }
-                Ok(MediaUploadMetadata {
+                Ok(UploadMetadata {
                     request_id: request_id__,
                     files: files__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.MediaUploadMetadata", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.UploadMetadata", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for MediaUploadStatus {
+impl serde::Serialize for UploadStatus {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
         S: serde::Serializer,
     {
         let variant = match self {
-            Self::Unspecified => "MEDIA_UPLOAD_STATUS_UNSPECIFIED",
-            Self::Processing => "MEDIA_UPLOAD_STATUS_PROCESSING",
-            Self::Completed => "MEDIA_UPLOAD_STATUS_COMPLETED",
+            Self::Unspecified => "UPLOAD_STATUS_UNSPECIFIED",
+            Self::Processing => "UPLOAD_STATUS_PROCESSING",
+            Self::Completed => "UPLOAD_STATUS_COMPLETED",
         };
         serializer.serialize_str(variant)
     }
 }
-impl<'de> serde::Deserialize<'de> for MediaUploadStatus {
+impl<'de> serde::Deserialize<'de> for UploadStatus {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "MEDIA_UPLOAD_STATUS_UNSPECIFIED",
-            "MEDIA_UPLOAD_STATUS_PROCESSING",
-            "MEDIA_UPLOAD_STATUS_COMPLETED",
+            "UPLOAD_STATUS_UNSPECIFIED",
+            "UPLOAD_STATUS_PROCESSING",
+            "UPLOAD_STATUS_COMPLETED",
         ];
 
         struct GeneratedVisitor;
 
         impl serde::de::Visitor<'_> for GeneratedVisitor {
-            type Value = MediaUploadStatus;
+            type Value = UploadStatus;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                 write!(formatter, "expected one of: {:?}", &FIELDS)
@@ -7453,4669 +11508,14 @@ impl<'de> serde::Deserialize<'de> for MediaUploadStatus {
                 E: serde::de::Error,
             {
                 match value {
-                    "MEDIA_UPLOAD_STATUS_UNSPECIFIED" => Ok(MediaUploadStatus::Unspecified),
-                    "MEDIA_UPLOAD_STATUS_PROCESSING" => Ok(MediaUploadStatus::Processing),
-                    "MEDIA_UPLOAD_STATUS_COMPLETED" => Ok(MediaUploadStatus::Completed),
+                    "UPLOAD_STATUS_UNSPECIFIED" => Ok(UploadStatus::Unspecified),
+                    "UPLOAD_STATUS_PROCESSING" => Ok(UploadStatus::Processing),
+                    "UPLOAD_STATUS_COMPLETED" => Ok(UploadStatus::Completed),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }
         }
         deserializer.deserialize_any(GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaWorkflowConfig {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.output.is_some() {
-            len += 1;
-        }
-        if self.execution_timeout_seconds.is_some() {
-            len += 1;
-        }
-        if self.output_reservation_bytes.is_some() {
-            len += 1;
-        }
-        if self.feature_config.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.MediaWorkflowConfig", len)?;
-        if let Some(v) = self.output.as_ref() {
-            struct_ser.serialize_field("output", v)?;
-        }
-        if let Some(v) = self.execution_timeout_seconds.as_ref() {
-            struct_ser.serialize_field("executionTimeoutSeconds", v)?;
-        }
-        if let Some(v) = self.output_reservation_bytes.as_ref() {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("outputReservationBytes", ToString::to_string(&v).as_str())?;
-        }
-        if let Some(v) = self.feature_config.as_ref() {
-            match v {
-                media_workflow_config::FeatureConfig::TextToImage(v) => {
-                    struct_ser.serialize_field("textToImage", v)?;
-                }
-                media_workflow_config::FeatureConfig::ImageToVideo(v) => {
-                    struct_ser.serialize_field("imageToVideo", v)?;
-                }
-            }
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaWorkflowConfig {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "output",
-            "execution_timeout_seconds",
-            "executionTimeoutSeconds",
-            "output_reservation_bytes",
-            "outputReservationBytes",
-            "text_to_image",
-            "textToImage",
-            "image_to_video",
-            "imageToVideo",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Output,
-            ExecutionTimeoutSeconds,
-            OutputReservationBytes,
-            TextToImage,
-            ImageToVideo,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "output" => Ok(GeneratedField::Output),
-                            "executionTimeoutSeconds" | "execution_timeout_seconds" => Ok(GeneratedField::ExecutionTimeoutSeconds),
-                            "outputReservationBytes" | "output_reservation_bytes" => Ok(GeneratedField::OutputReservationBytes),
-                            "textToImage" | "text_to_image" => Ok(GeneratedField::TextToImage),
-                            "imageToVideo" | "image_to_video" => Ok(GeneratedField::ImageToVideo),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MediaWorkflowConfig;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.MediaWorkflowConfig")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaWorkflowConfig, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut output__ = None;
-                let mut execution_timeout_seconds__ = None;
-                let mut output_reservation_bytes__ = None;
-                let mut feature_config__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Output => {
-                            if output__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("output"));
-                            }
-                            output__ = map_.next_value()?;
-                        }
-                        GeneratedField::ExecutionTimeoutSeconds => {
-                            if execution_timeout_seconds__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("executionTimeoutSeconds"));
-                            }
-                            execution_timeout_seconds__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                        GeneratedField::OutputReservationBytes => {
-                            if output_reservation_bytes__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("outputReservationBytes"));
-                            }
-                            output_reservation_bytes__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                        GeneratedField::TextToImage => {
-                            if feature_config__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("textToImage"));
-                            }
-                            feature_config__ = map_.next_value::<::std::option::Option<_>>()?.map(media_workflow_config::FeatureConfig::TextToImage)
-;
-                        }
-                        GeneratedField::ImageToVideo => {
-                            if feature_config__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("imageToVideo"));
-                            }
-                            feature_config__ = map_.next_value::<::std::option::Option<_>>()?.map(media_workflow_config::FeatureConfig::ImageToVideo)
-;
-                        }
-                    }
-                }
-                Ok(MediaWorkflowConfig {
-                    output: output__,
-                    execution_timeout_seconds: execution_timeout_seconds__,
-                    output_reservation_bytes: output_reservation_bytes__,
-                    feature_config: feature_config__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.MediaWorkflowConfig", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaWorkflowDependency {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.kind.is_some() {
-            len += 1;
-        }
-        if self.identifier.is_some() {
-            len += 1;
-        }
-        if !self.usages.is_empty() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.MediaWorkflowDependency", len)?;
-        if let Some(v) = self.kind.as_ref() {
-            let v = MediaWorkflowDependencyKind::try_from(*v)
-                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
-            struct_ser.serialize_field("kind", &v)?;
-        }
-        if let Some(v) = self.identifier.as_ref() {
-            struct_ser.serialize_field("identifier", v)?;
-        }
-        if !self.usages.is_empty() {
-            struct_ser.serialize_field("usages", &self.usages)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaWorkflowDependency {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "kind",
-            "identifier",
-            "usages",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Kind,
-            Identifier,
-            Usages,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "kind" => Ok(GeneratedField::Kind),
-                            "identifier" => Ok(GeneratedField::Identifier),
-                            "usages" => Ok(GeneratedField::Usages),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MediaWorkflowDependency;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.MediaWorkflowDependency")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaWorkflowDependency, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut kind__ = None;
-                let mut identifier__ = None;
-                let mut usages__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Kind => {
-                            if kind__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("kind"));
-                            }
-                            kind__ = map_.next_value::<::std::option::Option<MediaWorkflowDependencyKind>>()?.map(|x| x as i32);
-                        }
-                        GeneratedField::Identifier => {
-                            if identifier__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("identifier"));
-                            }
-                            identifier__ = map_.next_value()?;
-                        }
-                        GeneratedField::Usages => {
-                            if usages__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("usages"));
-                            }
-                            usages__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(MediaWorkflowDependency {
-                    kind: kind__,
-                    identifier: identifier__,
-                    usages: usages__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.MediaWorkflowDependency", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaWorkflowDependencyKind {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        let variant = match self {
-            Self::Unspecified => "MEDIA_WORKFLOW_DEPENDENCY_KIND_UNSPECIFIED",
-            Self::NodeClass => "MEDIA_WORKFLOW_DEPENDENCY_KIND_NODE_CLASS",
-            Self::LoaderFile => "MEDIA_WORKFLOW_DEPENDENCY_KIND_LOADER_FILE",
-        };
-        serializer.serialize_str(variant)
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaWorkflowDependencyKind {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "MEDIA_WORKFLOW_DEPENDENCY_KIND_UNSPECIFIED",
-            "MEDIA_WORKFLOW_DEPENDENCY_KIND_NODE_CLASS",
-            "MEDIA_WORKFLOW_DEPENDENCY_KIND_LOADER_FILE",
-        ];
-
-        struct GeneratedVisitor;
-
-        impl serde::de::Visitor<'_> for GeneratedVisitor {
-            type Value = MediaWorkflowDependencyKind;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                write!(formatter, "expected one of: {:?}", &FIELDS)
-            }
-
-            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                i32::try_from(v)
-                    .ok()
-                    .and_then(|x| x.try_into().ok())
-                    .ok_or_else(|| {
-                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
-                    })
-            }
-
-            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                i32::try_from(v)
-                    .ok()
-                    .and_then(|x| x.try_into().ok())
-                    .ok_or_else(|| {
-                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
-                    })
-            }
-
-            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                match value {
-                    "MEDIA_WORKFLOW_DEPENDENCY_KIND_UNSPECIFIED" => Ok(MediaWorkflowDependencyKind::Unspecified),
-                    "MEDIA_WORKFLOW_DEPENDENCY_KIND_NODE_CLASS" => Ok(MediaWorkflowDependencyKind::NodeClass),
-                    "MEDIA_WORKFLOW_DEPENDENCY_KIND_LOADER_FILE" => Ok(MediaWorkflowDependencyKind::LoaderFile),
-                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
-                }
-            }
-        }
-        deserializer.deserialize_any(GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaWorkflowDependencyUsage {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.node_id.is_some() {
-            len += 1;
-        }
-        if self.input_name.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.MediaWorkflowDependencyUsage", len)?;
-        if let Some(v) = self.node_id.as_ref() {
-            struct_ser.serialize_field("nodeId", v)?;
-        }
-        if let Some(v) = self.input_name.as_ref() {
-            struct_ser.serialize_field("inputName", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaWorkflowDependencyUsage {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "node_id",
-            "nodeId",
-            "input_name",
-            "inputName",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            NodeId,
-            InputName,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "nodeId" | "node_id" => Ok(GeneratedField::NodeId),
-                            "inputName" | "input_name" => Ok(GeneratedField::InputName),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MediaWorkflowDependencyUsage;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.MediaWorkflowDependencyUsage")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaWorkflowDependencyUsage, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut node_id__ = None;
-                let mut input_name__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::NodeId => {
-                            if node_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("nodeId"));
-                            }
-                            node_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::InputName => {
-                            if input_name__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("inputName"));
-                            }
-                            input_name__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(MediaWorkflowDependencyUsage {
-                    node_id: node_id__,
-                    input_name: input_name__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.MediaWorkflowDependencyUsage", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaWorkflowDetail {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.workflow_version_id.is_some() {
-            len += 1;
-        }
-        if self.feature_key.is_some() {
-            len += 1;
-        }
-        if self.name.is_some() {
-            len += 1;
-        }
-        if self.change_notes.is_some() {
-            len += 1;
-        }
-        if self.status.is_some() {
-            len += 1;
-        }
-        if self.is_active.is_some() {
-            len += 1;
-        }
-        if self.api_json.is_some() {
-            len += 1;
-        }
-        if self.content_hash.is_some() {
-            len += 1;
-        }
-        if self.config.is_some() {
-            len += 1;
-        }
-        if !self.nodes.is_empty() {
-            len += 1;
-        }
-        if !self.dependencies.is_empty() {
-            len += 1;
-        }
-        if self.latest_validation.is_some() {
-            len += 1;
-        }
-        if self.ready_test_task_id.is_some() {
-            len += 1;
-        }
-        if self.ready_by.is_some() {
-            len += 1;
-        }
-        if self.ready_at.is_some() {
-            len += 1;
-        }
-        if self.created_by.is_some() {
-            len += 1;
-        }
-        if self.created_at.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.MediaWorkflowDetail", len)?;
-        if let Some(v) = self.workflow_version_id.as_ref() {
-            struct_ser.serialize_field("workflowVersionId", v)?;
-        }
-        if let Some(v) = self.feature_key.as_ref() {
-            struct_ser.serialize_field("featureKey", v)?;
-        }
-        if let Some(v) = self.name.as_ref() {
-            struct_ser.serialize_field("name", v)?;
-        }
-        if let Some(v) = self.change_notes.as_ref() {
-            struct_ser.serialize_field("changeNotes", v)?;
-        }
-        if let Some(v) = self.status.as_ref() {
-            let v = MediaWorkflowStatus::try_from(*v)
-                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
-            struct_ser.serialize_field("status", &v)?;
-        }
-        if let Some(v) = self.is_active.as_ref() {
-            struct_ser.serialize_field("isActive", v)?;
-        }
-        if let Some(v) = self.api_json.as_ref() {
-            struct_ser.serialize_field("apiJson", v)?;
-        }
-        if let Some(v) = self.content_hash.as_ref() {
-            struct_ser.serialize_field("contentHash", v)?;
-        }
-        if let Some(v) = self.config.as_ref() {
-            struct_ser.serialize_field("config", v)?;
-        }
-        if !self.nodes.is_empty() {
-            struct_ser.serialize_field("nodes", &self.nodes)?;
-        }
-        if !self.dependencies.is_empty() {
-            struct_ser.serialize_field("dependencies", &self.dependencies)?;
-        }
-        if let Some(v) = self.latest_validation.as_ref() {
-            struct_ser.serialize_field("latestValidation", v)?;
-        }
-        if let Some(v) = self.ready_test_task_id.as_ref() {
-            struct_ser.serialize_field("readyTestTaskId", v)?;
-        }
-        if let Some(v) = self.ready_by.as_ref() {
-            struct_ser.serialize_field("readyBy", v)?;
-        }
-        if let Some(v) = self.ready_at.as_ref() {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("readyAt", ToString::to_string(&v).as_str())?;
-        }
-        if let Some(v) = self.created_by.as_ref() {
-            struct_ser.serialize_field("createdBy", v)?;
-        }
-        if let Some(v) = self.created_at.as_ref() {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("createdAt", ToString::to_string(&v).as_str())?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaWorkflowDetail {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "workflow_version_id",
-            "workflowVersionId",
-            "feature_key",
-            "featureKey",
-            "name",
-            "change_notes",
-            "changeNotes",
-            "status",
-            "is_active",
-            "isActive",
-            "api_json",
-            "apiJson",
-            "content_hash",
-            "contentHash",
-            "config",
-            "nodes",
-            "dependencies",
-            "latest_validation",
-            "latestValidation",
-            "ready_test_task_id",
-            "readyTestTaskId",
-            "ready_by",
-            "readyBy",
-            "ready_at",
-            "readyAt",
-            "created_by",
-            "createdBy",
-            "created_at",
-            "createdAt",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            WorkflowVersionId,
-            FeatureKey,
-            Name,
-            ChangeNotes,
-            Status,
-            IsActive,
-            ApiJson,
-            ContentHash,
-            Config,
-            Nodes,
-            Dependencies,
-            LatestValidation,
-            ReadyTestTaskId,
-            ReadyBy,
-            ReadyAt,
-            CreatedBy,
-            CreatedAt,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "workflowVersionId" | "workflow_version_id" => Ok(GeneratedField::WorkflowVersionId),
-                            "featureKey" | "feature_key" => Ok(GeneratedField::FeatureKey),
-                            "name" => Ok(GeneratedField::Name),
-                            "changeNotes" | "change_notes" => Ok(GeneratedField::ChangeNotes),
-                            "status" => Ok(GeneratedField::Status),
-                            "isActive" | "is_active" => Ok(GeneratedField::IsActive),
-                            "apiJson" | "api_json" => Ok(GeneratedField::ApiJson),
-                            "contentHash" | "content_hash" => Ok(GeneratedField::ContentHash),
-                            "config" => Ok(GeneratedField::Config),
-                            "nodes" => Ok(GeneratedField::Nodes),
-                            "dependencies" => Ok(GeneratedField::Dependencies),
-                            "latestValidation" | "latest_validation" => Ok(GeneratedField::LatestValidation),
-                            "readyTestTaskId" | "ready_test_task_id" => Ok(GeneratedField::ReadyTestTaskId),
-                            "readyBy" | "ready_by" => Ok(GeneratedField::ReadyBy),
-                            "readyAt" | "ready_at" => Ok(GeneratedField::ReadyAt),
-                            "createdBy" | "created_by" => Ok(GeneratedField::CreatedBy),
-                            "createdAt" | "created_at" => Ok(GeneratedField::CreatedAt),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MediaWorkflowDetail;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.MediaWorkflowDetail")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaWorkflowDetail, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut workflow_version_id__ = None;
-                let mut feature_key__ = None;
-                let mut name__ = None;
-                let mut change_notes__ = None;
-                let mut status__ = None;
-                let mut is_active__ = None;
-                let mut api_json__ = None;
-                let mut content_hash__ = None;
-                let mut config__ = None;
-                let mut nodes__ = None;
-                let mut dependencies__ = None;
-                let mut latest_validation__ = None;
-                let mut ready_test_task_id__ = None;
-                let mut ready_by__ = None;
-                let mut ready_at__ = None;
-                let mut created_by__ = None;
-                let mut created_at__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::WorkflowVersionId => {
-                            if workflow_version_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("workflowVersionId"));
-                            }
-                            workflow_version_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::FeatureKey => {
-                            if feature_key__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("featureKey"));
-                            }
-                            feature_key__ = map_.next_value()?;
-                        }
-                        GeneratedField::Name => {
-                            if name__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("name"));
-                            }
-                            name__ = map_.next_value()?;
-                        }
-                        GeneratedField::ChangeNotes => {
-                            if change_notes__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("changeNotes"));
-                            }
-                            change_notes__ = map_.next_value()?;
-                        }
-                        GeneratedField::Status => {
-                            if status__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("status"));
-                            }
-                            status__ = map_.next_value::<::std::option::Option<MediaWorkflowStatus>>()?.map(|x| x as i32);
-                        }
-                        GeneratedField::IsActive => {
-                            if is_active__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("isActive"));
-                            }
-                            is_active__ = map_.next_value()?;
-                        }
-                        GeneratedField::ApiJson => {
-                            if api_json__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("apiJson"));
-                            }
-                            api_json__ = map_.next_value()?;
-                        }
-                        GeneratedField::ContentHash => {
-                            if content_hash__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("contentHash"));
-                            }
-                            content_hash__ = map_.next_value()?;
-                        }
-                        GeneratedField::Config => {
-                            if config__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("config"));
-                            }
-                            config__ = map_.next_value()?;
-                        }
-                        GeneratedField::Nodes => {
-                            if nodes__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("nodes"));
-                            }
-                            nodes__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Dependencies => {
-                            if dependencies__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("dependencies"));
-                            }
-                            dependencies__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::LatestValidation => {
-                            if latest_validation__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("latestValidation"));
-                            }
-                            latest_validation__ = map_.next_value()?;
-                        }
-                        GeneratedField::ReadyTestTaskId => {
-                            if ready_test_task_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("readyTestTaskId"));
-                            }
-                            ready_test_task_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::ReadyBy => {
-                            if ready_by__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("readyBy"));
-                            }
-                            ready_by__ = map_.next_value()?;
-                        }
-                        GeneratedField::ReadyAt => {
-                            if ready_at__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("readyAt"));
-                            }
-                            ready_at__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                        GeneratedField::CreatedBy => {
-                            if created_by__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("createdBy"));
-                            }
-                            created_by__ = map_.next_value()?;
-                        }
-                        GeneratedField::CreatedAt => {
-                            if created_at__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("createdAt"));
-                            }
-                            created_at__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                    }
-                }
-                Ok(MediaWorkflowDetail {
-                    workflow_version_id: workflow_version_id__,
-                    feature_key: feature_key__,
-                    name: name__,
-                    change_notes: change_notes__,
-                    status: status__,
-                    is_active: is_active__,
-                    api_json: api_json__,
-                    content_hash: content_hash__,
-                    config: config__,
-                    nodes: nodes__.unwrap_or_default(),
-                    dependencies: dependencies__.unwrap_or_default(),
-                    latest_validation: latest_validation__,
-                    ready_test_task_id: ready_test_task_id__,
-                    ready_by: ready_by__,
-                    ready_at: ready_at__,
-                    created_by: created_by__,
-                    created_at: created_at__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.MediaWorkflowDetail", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaWorkflowInputBinding {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.node_id.is_some() {
-            len += 1;
-        }
-        if self.input_name.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.MediaWorkflowInputBinding", len)?;
-        if let Some(v) = self.node_id.as_ref() {
-            struct_ser.serialize_field("nodeId", v)?;
-        }
-        if let Some(v) = self.input_name.as_ref() {
-            struct_ser.serialize_field("inputName", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaWorkflowInputBinding {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "node_id",
-            "nodeId",
-            "input_name",
-            "inputName",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            NodeId,
-            InputName,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "nodeId" | "node_id" => Ok(GeneratedField::NodeId),
-                            "inputName" | "input_name" => Ok(GeneratedField::InputName),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MediaWorkflowInputBinding;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.MediaWorkflowInputBinding")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaWorkflowInputBinding, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut node_id__ = None;
-                let mut input_name__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::NodeId => {
-                            if node_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("nodeId"));
-                            }
-                            node_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::InputName => {
-                            if input_name__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("inputName"));
-                            }
-                            input_name__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(MediaWorkflowInputBinding {
-                    node_id: node_id__,
-                    input_name: input_name__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.MediaWorkflowInputBinding", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaWorkflowInputCandidate {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.input_name.is_some() {
-            len += 1;
-        }
-        if self.value_json.is_some() {
-            len += 1;
-        }
-        if self.is_link.is_some() {
-            len += 1;
-        }
-        if self.source_node_id.is_some() {
-            len += 1;
-        }
-        if self.source_output_index.is_some() {
-            len += 1;
-        }
-        if self.declared_type.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.MediaWorkflowInputCandidate", len)?;
-        if let Some(v) = self.input_name.as_ref() {
-            struct_ser.serialize_field("inputName", v)?;
-        }
-        if let Some(v) = self.value_json.as_ref() {
-            struct_ser.serialize_field("valueJson", v)?;
-        }
-        if let Some(v) = self.is_link.as_ref() {
-            struct_ser.serialize_field("isLink", v)?;
-        }
-        if let Some(v) = self.source_node_id.as_ref() {
-            struct_ser.serialize_field("sourceNodeId", v)?;
-        }
-        if let Some(v) = self.source_output_index.as_ref() {
-            struct_ser.serialize_field("sourceOutputIndex", v)?;
-        }
-        if let Some(v) = self.declared_type.as_ref() {
-            struct_ser.serialize_field("declaredType", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaWorkflowInputCandidate {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "input_name",
-            "inputName",
-            "value_json",
-            "valueJson",
-            "is_link",
-            "isLink",
-            "source_node_id",
-            "sourceNodeId",
-            "source_output_index",
-            "sourceOutputIndex",
-            "declared_type",
-            "declaredType",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            InputName,
-            ValueJson,
-            IsLink,
-            SourceNodeId,
-            SourceOutputIndex,
-            DeclaredType,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "inputName" | "input_name" => Ok(GeneratedField::InputName),
-                            "valueJson" | "value_json" => Ok(GeneratedField::ValueJson),
-                            "isLink" | "is_link" => Ok(GeneratedField::IsLink),
-                            "sourceNodeId" | "source_node_id" => Ok(GeneratedField::SourceNodeId),
-                            "sourceOutputIndex" | "source_output_index" => Ok(GeneratedField::SourceOutputIndex),
-                            "declaredType" | "declared_type" => Ok(GeneratedField::DeclaredType),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MediaWorkflowInputCandidate;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.MediaWorkflowInputCandidate")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaWorkflowInputCandidate, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut input_name__ = None;
-                let mut value_json__ = None;
-                let mut is_link__ = None;
-                let mut source_node_id__ = None;
-                let mut source_output_index__ = None;
-                let mut declared_type__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::InputName => {
-                            if input_name__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("inputName"));
-                            }
-                            input_name__ = map_.next_value()?;
-                        }
-                        GeneratedField::ValueJson => {
-                            if value_json__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("valueJson"));
-                            }
-                            value_json__ = map_.next_value()?;
-                        }
-                        GeneratedField::IsLink => {
-                            if is_link__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("isLink"));
-                            }
-                            is_link__ = map_.next_value()?;
-                        }
-                        GeneratedField::SourceNodeId => {
-                            if source_node_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("sourceNodeId"));
-                            }
-                            source_node_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::SourceOutputIndex => {
-                            if source_output_index__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("sourceOutputIndex"));
-                            }
-                            source_output_index__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                        GeneratedField::DeclaredType => {
-                            if declared_type__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("declaredType"));
-                            }
-                            declared_type__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(MediaWorkflowInputCandidate {
-                    input_name: input_name__,
-                    value_json: value_json__,
-                    is_link: is_link__,
-                    source_node_id: source_node_id__,
-                    source_output_index: source_output_index__,
-                    declared_type: declared_type__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.MediaWorkflowInputCandidate", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaWorkflowIntOptionConfig {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.binding.is_some() {
-            len += 1;
-        }
-        if !self.allowed_values.is_empty() {
-            len += 1;
-        }
-        if self.default_value.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.MediaWorkflowIntOptionConfig", len)?;
-        if let Some(v) = self.binding.as_ref() {
-            struct_ser.serialize_field("binding", v)?;
-        }
-        if !self.allowed_values.is_empty() {
-            struct_ser.serialize_field("allowedValues", &self.allowed_values)?;
-        }
-        if let Some(v) = self.default_value.as_ref() {
-            struct_ser.serialize_field("defaultValue", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaWorkflowIntOptionConfig {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "binding",
-            "allowed_values",
-            "allowedValues",
-            "default_value",
-            "defaultValue",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Binding,
-            AllowedValues,
-            DefaultValue,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "binding" => Ok(GeneratedField::Binding),
-                            "allowedValues" | "allowed_values" => Ok(GeneratedField::AllowedValues),
-                            "defaultValue" | "default_value" => Ok(GeneratedField::DefaultValue),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MediaWorkflowIntOptionConfig;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.MediaWorkflowIntOptionConfig")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaWorkflowIntOptionConfig, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut binding__ = None;
-                let mut allowed_values__ = None;
-                let mut default_value__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Binding => {
-                            if binding__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("binding"));
-                            }
-                            binding__ = map_.next_value()?;
-                        }
-                        GeneratedField::AllowedValues => {
-                            if allowed_values__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("allowedValues"));
-                            }
-                            allowed_values__ = 
-                                Some(map_.next_value::<Vec<::pbjson::private::NumberDeserialize<_>>>()?
-                                    .into_iter().map(|x| x.0).collect())
-                            ;
-                        }
-                        GeneratedField::DefaultValue => {
-                            if default_value__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("defaultValue"));
-                            }
-                            default_value__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                    }
-                }
-                Ok(MediaWorkflowIntOptionConfig {
-                    binding: binding__,
-                    allowed_values: allowed_values__.unwrap_or_default(),
-                    default_value: default_value__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.MediaWorkflowIntOptionConfig", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaWorkflowIssue {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.code.is_some() {
-            len += 1;
-        }
-        if self.severity.is_some() {
-            len += 1;
-        }
-        if self.message.is_some() {
-            len += 1;
-        }
-        if self.node_id.is_some() {
-            len += 1;
-        }
-        if self.input_name.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.MediaWorkflowIssue", len)?;
-        if let Some(v) = self.code.as_ref() {
-            struct_ser.serialize_field("code", v)?;
-        }
-        if let Some(v) = self.severity.as_ref() {
-            let v = MediaWorkflowIssueSeverity::try_from(*v)
-                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
-            struct_ser.serialize_field("severity", &v)?;
-        }
-        if let Some(v) = self.message.as_ref() {
-            struct_ser.serialize_field("message", v)?;
-        }
-        if let Some(v) = self.node_id.as_ref() {
-            struct_ser.serialize_field("nodeId", v)?;
-        }
-        if let Some(v) = self.input_name.as_ref() {
-            struct_ser.serialize_field("inputName", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaWorkflowIssue {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "code",
-            "severity",
-            "message",
-            "node_id",
-            "nodeId",
-            "input_name",
-            "inputName",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Code,
-            Severity,
-            Message,
-            NodeId,
-            InputName,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "code" => Ok(GeneratedField::Code),
-                            "severity" => Ok(GeneratedField::Severity),
-                            "message" => Ok(GeneratedField::Message),
-                            "nodeId" | "node_id" => Ok(GeneratedField::NodeId),
-                            "inputName" | "input_name" => Ok(GeneratedField::InputName),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MediaWorkflowIssue;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.MediaWorkflowIssue")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaWorkflowIssue, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut code__ = None;
-                let mut severity__ = None;
-                let mut message__ = None;
-                let mut node_id__ = None;
-                let mut input_name__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Code => {
-                            if code__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("code"));
-                            }
-                            code__ = map_.next_value()?;
-                        }
-                        GeneratedField::Severity => {
-                            if severity__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("severity"));
-                            }
-                            severity__ = map_.next_value::<::std::option::Option<MediaWorkflowIssueSeverity>>()?.map(|x| x as i32);
-                        }
-                        GeneratedField::Message => {
-                            if message__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("message"));
-                            }
-                            message__ = map_.next_value()?;
-                        }
-                        GeneratedField::NodeId => {
-                            if node_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("nodeId"));
-                            }
-                            node_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::InputName => {
-                            if input_name__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("inputName"));
-                            }
-                            input_name__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(MediaWorkflowIssue {
-                    code: code__,
-                    severity: severity__,
-                    message: message__,
-                    node_id: node_id__,
-                    input_name: input_name__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.MediaWorkflowIssue", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaWorkflowIssueSeverity {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        let variant = match self {
-            Self::Unspecified => "MEDIA_WORKFLOW_ISSUE_SEVERITY_UNSPECIFIED",
-            Self::Error => "MEDIA_WORKFLOW_ISSUE_SEVERITY_ERROR",
-            Self::Warning => "MEDIA_WORKFLOW_ISSUE_SEVERITY_WARNING",
-        };
-        serializer.serialize_str(variant)
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaWorkflowIssueSeverity {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "MEDIA_WORKFLOW_ISSUE_SEVERITY_UNSPECIFIED",
-            "MEDIA_WORKFLOW_ISSUE_SEVERITY_ERROR",
-            "MEDIA_WORKFLOW_ISSUE_SEVERITY_WARNING",
-        ];
-
-        struct GeneratedVisitor;
-
-        impl serde::de::Visitor<'_> for GeneratedVisitor {
-            type Value = MediaWorkflowIssueSeverity;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                write!(formatter, "expected one of: {:?}", &FIELDS)
-            }
-
-            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                i32::try_from(v)
-                    .ok()
-                    .and_then(|x| x.try_into().ok())
-                    .ok_or_else(|| {
-                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
-                    })
-            }
-
-            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                i32::try_from(v)
-                    .ok()
-                    .and_then(|x| x.try_into().ok())
-                    .ok_or_else(|| {
-                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
-                    })
-            }
-
-            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                match value {
-                    "MEDIA_WORKFLOW_ISSUE_SEVERITY_UNSPECIFIED" => Ok(MediaWorkflowIssueSeverity::Unspecified),
-                    "MEDIA_WORKFLOW_ISSUE_SEVERITY_ERROR" => Ok(MediaWorkflowIssueSeverity::Error),
-                    "MEDIA_WORKFLOW_ISSUE_SEVERITY_WARNING" => Ok(MediaWorkflowIssueSeverity::Warning),
-                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
-                }
-            }
-        }
-        deserializer.deserialize_any(GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaWorkflowNode {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.node_id.is_some() {
-            len += 1;
-        }
-        if self.class_type.is_some() {
-            len += 1;
-        }
-        if self.title.is_some() {
-            len += 1;
-        }
-        if !self.inputs.is_empty() {
-            len += 1;
-        }
-        if self.supported_main_output.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.MediaWorkflowNode", len)?;
-        if let Some(v) = self.node_id.as_ref() {
-            struct_ser.serialize_field("nodeId", v)?;
-        }
-        if let Some(v) = self.class_type.as_ref() {
-            struct_ser.serialize_field("classType", v)?;
-        }
-        if let Some(v) = self.title.as_ref() {
-            struct_ser.serialize_field("title", v)?;
-        }
-        if !self.inputs.is_empty() {
-            struct_ser.serialize_field("inputs", &self.inputs)?;
-        }
-        if let Some(v) = self.supported_main_output.as_ref() {
-            struct_ser.serialize_field("supportedMainOutput", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaWorkflowNode {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "node_id",
-            "nodeId",
-            "class_type",
-            "classType",
-            "title",
-            "inputs",
-            "supported_main_output",
-            "supportedMainOutput",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            NodeId,
-            ClassType,
-            Title,
-            Inputs,
-            SupportedMainOutput,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "nodeId" | "node_id" => Ok(GeneratedField::NodeId),
-                            "classType" | "class_type" => Ok(GeneratedField::ClassType),
-                            "title" => Ok(GeneratedField::Title),
-                            "inputs" => Ok(GeneratedField::Inputs),
-                            "supportedMainOutput" | "supported_main_output" => Ok(GeneratedField::SupportedMainOutput),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MediaWorkflowNode;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.MediaWorkflowNode")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaWorkflowNode, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut node_id__ = None;
-                let mut class_type__ = None;
-                let mut title__ = None;
-                let mut inputs__ = None;
-                let mut supported_main_output__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::NodeId => {
-                            if node_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("nodeId"));
-                            }
-                            node_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::ClassType => {
-                            if class_type__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("classType"));
-                            }
-                            class_type__ = map_.next_value()?;
-                        }
-                        GeneratedField::Title => {
-                            if title__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("title"));
-                            }
-                            title__ = map_.next_value()?;
-                        }
-                        GeneratedField::Inputs => {
-                            if inputs__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("inputs"));
-                            }
-                            inputs__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::SupportedMainOutput => {
-                            if supported_main_output__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("supportedMainOutput"));
-                            }
-                            supported_main_output__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(MediaWorkflowNode {
-                    node_id: node_id__,
-                    class_type: class_type__,
-                    title: title__,
-                    inputs: inputs__.unwrap_or_default(),
-                    supported_main_output: supported_main_output__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.MediaWorkflowNode", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaWorkflowOutputConfig {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.node_id.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.MediaWorkflowOutputConfig", len)?;
-        if let Some(v) = self.node_id.as_ref() {
-            struct_ser.serialize_field("nodeId", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaWorkflowOutputConfig {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "node_id",
-            "nodeId",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            NodeId,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "nodeId" | "node_id" => Ok(GeneratedField::NodeId),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MediaWorkflowOutputConfig;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.MediaWorkflowOutputConfig")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaWorkflowOutputConfig, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut node_id__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::NodeId => {
-                            if node_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("nodeId"));
-                            }
-                            node_id__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(MediaWorkflowOutputConfig {
-                    node_id: node_id__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.MediaWorkflowOutputConfig", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaWorkflowResolutionConfig {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.width.is_some() {
-            len += 1;
-        }
-        if self.height.is_some() {
-            len += 1;
-        }
-        if !self.allowed_values.is_empty() {
-            len += 1;
-        }
-        if self.default_value.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.MediaWorkflowResolutionConfig", len)?;
-        if let Some(v) = self.width.as_ref() {
-            struct_ser.serialize_field("width", v)?;
-        }
-        if let Some(v) = self.height.as_ref() {
-            struct_ser.serialize_field("height", v)?;
-        }
-        if !self.allowed_values.is_empty() {
-            struct_ser.serialize_field("allowedValues", &self.allowed_values)?;
-        }
-        if let Some(v) = self.default_value.as_ref() {
-            struct_ser.serialize_field("defaultValue", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaWorkflowResolutionConfig {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "width",
-            "height",
-            "allowed_values",
-            "allowedValues",
-            "default_value",
-            "defaultValue",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Width,
-            Height,
-            AllowedValues,
-            DefaultValue,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "width" => Ok(GeneratedField::Width),
-                            "height" => Ok(GeneratedField::Height),
-                            "allowedValues" | "allowed_values" => Ok(GeneratedField::AllowedValues),
-                            "defaultValue" | "default_value" => Ok(GeneratedField::DefaultValue),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MediaWorkflowResolutionConfig;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.MediaWorkflowResolutionConfig")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaWorkflowResolutionConfig, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut width__ = None;
-                let mut height__ = None;
-                let mut allowed_values__ = None;
-                let mut default_value__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Width => {
-                            if width__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("width"));
-                            }
-                            width__ = map_.next_value()?;
-                        }
-                        GeneratedField::Height => {
-                            if height__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("height"));
-                            }
-                            height__ = map_.next_value()?;
-                        }
-                        GeneratedField::AllowedValues => {
-                            if allowed_values__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("allowedValues"));
-                            }
-                            allowed_values__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::DefaultValue => {
-                            if default_value__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("defaultValue"));
-                            }
-                            default_value__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(MediaWorkflowResolutionConfig {
-                    width: width__,
-                    height: height__,
-                    allowed_values: allowed_values__.unwrap_or_default(),
-                    default_value: default_value__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.MediaWorkflowResolutionConfig", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaWorkflowStatus {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        let variant = match self {
-            Self::Unspecified => "MEDIA_WORKFLOW_STATUS_UNSPECIFIED",
-            Self::Draft => "MEDIA_WORKFLOW_STATUS_DRAFT",
-            Self::Ready => "MEDIA_WORKFLOW_STATUS_READY",
-        };
-        serializer.serialize_str(variant)
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaWorkflowStatus {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "MEDIA_WORKFLOW_STATUS_UNSPECIFIED",
-            "MEDIA_WORKFLOW_STATUS_DRAFT",
-            "MEDIA_WORKFLOW_STATUS_READY",
-        ];
-
-        struct GeneratedVisitor;
-
-        impl serde::de::Visitor<'_> for GeneratedVisitor {
-            type Value = MediaWorkflowStatus;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                write!(formatter, "expected one of: {:?}", &FIELDS)
-            }
-
-            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                i32::try_from(v)
-                    .ok()
-                    .and_then(|x| x.try_into().ok())
-                    .ok_or_else(|| {
-                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
-                    })
-            }
-
-            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                i32::try_from(v)
-                    .ok()
-                    .and_then(|x| x.try_into().ok())
-                    .ok_or_else(|| {
-                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
-                    })
-            }
-
-            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                match value {
-                    "MEDIA_WORKFLOW_STATUS_UNSPECIFIED" => Ok(MediaWorkflowStatus::Unspecified),
-                    "MEDIA_WORKFLOW_STATUS_DRAFT" => Ok(MediaWorkflowStatus::Draft),
-                    "MEDIA_WORKFLOW_STATUS_READY" => Ok(MediaWorkflowStatus::Ready),
-                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
-                }
-            }
-        }
-        deserializer.deserialize_any(GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaWorkflowSummary {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.workflow_version_id.is_some() {
-            len += 1;
-        }
-        if self.feature_key.is_some() {
-            len += 1;
-        }
-        if self.name.is_some() {
-            len += 1;
-        }
-        if self.status.is_some() {
-            len += 1;
-        }
-        if self.is_active.is_some() {
-            len += 1;
-        }
-        if self.latest_validation.is_some() {
-            len += 1;
-        }
-        if self.created_by.is_some() {
-            len += 1;
-        }
-        if self.created_at.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.MediaWorkflowSummary", len)?;
-        if let Some(v) = self.workflow_version_id.as_ref() {
-            struct_ser.serialize_field("workflowVersionId", v)?;
-        }
-        if let Some(v) = self.feature_key.as_ref() {
-            struct_ser.serialize_field("featureKey", v)?;
-        }
-        if let Some(v) = self.name.as_ref() {
-            struct_ser.serialize_field("name", v)?;
-        }
-        if let Some(v) = self.status.as_ref() {
-            let v = MediaWorkflowStatus::try_from(*v)
-                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
-            struct_ser.serialize_field("status", &v)?;
-        }
-        if let Some(v) = self.is_active.as_ref() {
-            struct_ser.serialize_field("isActive", v)?;
-        }
-        if let Some(v) = self.latest_validation.as_ref() {
-            struct_ser.serialize_field("latestValidation", v)?;
-        }
-        if let Some(v) = self.created_by.as_ref() {
-            struct_ser.serialize_field("createdBy", v)?;
-        }
-        if let Some(v) = self.created_at.as_ref() {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("createdAt", ToString::to_string(&v).as_str())?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaWorkflowSummary {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "workflow_version_id",
-            "workflowVersionId",
-            "feature_key",
-            "featureKey",
-            "name",
-            "status",
-            "is_active",
-            "isActive",
-            "latest_validation",
-            "latestValidation",
-            "created_by",
-            "createdBy",
-            "created_at",
-            "createdAt",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            WorkflowVersionId,
-            FeatureKey,
-            Name,
-            Status,
-            IsActive,
-            LatestValidation,
-            CreatedBy,
-            CreatedAt,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "workflowVersionId" | "workflow_version_id" => Ok(GeneratedField::WorkflowVersionId),
-                            "featureKey" | "feature_key" => Ok(GeneratedField::FeatureKey),
-                            "name" => Ok(GeneratedField::Name),
-                            "status" => Ok(GeneratedField::Status),
-                            "isActive" | "is_active" => Ok(GeneratedField::IsActive),
-                            "latestValidation" | "latest_validation" => Ok(GeneratedField::LatestValidation),
-                            "createdBy" | "created_by" => Ok(GeneratedField::CreatedBy),
-                            "createdAt" | "created_at" => Ok(GeneratedField::CreatedAt),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MediaWorkflowSummary;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.MediaWorkflowSummary")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaWorkflowSummary, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut workflow_version_id__ = None;
-                let mut feature_key__ = None;
-                let mut name__ = None;
-                let mut status__ = None;
-                let mut is_active__ = None;
-                let mut latest_validation__ = None;
-                let mut created_by__ = None;
-                let mut created_at__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::WorkflowVersionId => {
-                            if workflow_version_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("workflowVersionId"));
-                            }
-                            workflow_version_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::FeatureKey => {
-                            if feature_key__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("featureKey"));
-                            }
-                            feature_key__ = map_.next_value()?;
-                        }
-                        GeneratedField::Name => {
-                            if name__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("name"));
-                            }
-                            name__ = map_.next_value()?;
-                        }
-                        GeneratedField::Status => {
-                            if status__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("status"));
-                            }
-                            status__ = map_.next_value::<::std::option::Option<MediaWorkflowStatus>>()?.map(|x| x as i32);
-                        }
-                        GeneratedField::IsActive => {
-                            if is_active__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("isActive"));
-                            }
-                            is_active__ = map_.next_value()?;
-                        }
-                        GeneratedField::LatestValidation => {
-                            if latest_validation__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("latestValidation"));
-                            }
-                            latest_validation__ = map_.next_value()?;
-                        }
-                        GeneratedField::CreatedBy => {
-                            if created_by__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("createdBy"));
-                            }
-                            created_by__ = map_.next_value()?;
-                        }
-                        GeneratedField::CreatedAt => {
-                            if created_at__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("createdAt"));
-                            }
-                            created_at__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                    }
-                }
-                Ok(MediaWorkflowSummary {
-                    workflow_version_id: workflow_version_id__,
-                    feature_key: feature_key__,
-                    name: name__,
-                    status: status__,
-                    is_active: is_active__,
-                    latest_validation: latest_validation__,
-                    created_by: created_by__,
-                    created_at: created_at__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.MediaWorkflowSummary", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaWorkflowTestRecord {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.task.is_some() {
-            len += 1;
-        }
-        if self.content_hash.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.MediaWorkflowTestRecord", len)?;
-        if let Some(v) = self.task.as_ref() {
-            struct_ser.serialize_field("task", v)?;
-        }
-        if let Some(v) = self.content_hash.as_ref() {
-            struct_ser.serialize_field("contentHash", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaWorkflowTestRecord {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "task",
-            "content_hash",
-            "contentHash",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Task,
-            ContentHash,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "task" => Ok(GeneratedField::Task),
-                            "contentHash" | "content_hash" => Ok(GeneratedField::ContentHash),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MediaWorkflowTestRecord;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.MediaWorkflowTestRecord")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaWorkflowTestRecord, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut task__ = None;
-                let mut content_hash__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Task => {
-                            if task__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("task"));
-                            }
-                            task__ = map_.next_value()?;
-                        }
-                        GeneratedField::ContentHash => {
-                            if content_hash__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("contentHash"));
-                            }
-                            content_hash__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(MediaWorkflowTestRecord {
-                    task: task__,
-                    content_hash: content_hash__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.MediaWorkflowTestRecord", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaWorkflowValidationResult {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.summary.is_some() {
-            len += 1;
-        }
-        if !self.issues.is_empty() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.MediaWorkflowValidationResult", len)?;
-        if let Some(v) = self.summary.as_ref() {
-            struct_ser.serialize_field("summary", v)?;
-        }
-        if !self.issues.is_empty() {
-            struct_ser.serialize_field("issues", &self.issues)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaWorkflowValidationResult {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "summary",
-            "issues",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Summary,
-            Issues,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "summary" => Ok(GeneratedField::Summary),
-                            "issues" => Ok(GeneratedField::Issues),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MediaWorkflowValidationResult;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.MediaWorkflowValidationResult")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaWorkflowValidationResult, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut summary__ = None;
-                let mut issues__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Summary => {
-                            if summary__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("summary"));
-                            }
-                            summary__ = map_.next_value()?;
-                        }
-                        GeneratedField::Issues => {
-                            if issues__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("issues"));
-                            }
-                            issues__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(MediaWorkflowValidationResult {
-                    summary: summary__,
-                    issues: issues__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.MediaWorkflowValidationResult", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaWorkflowValidationStatus {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        let variant = match self {
-            Self::Unspecified => "MEDIA_WORKFLOW_VALIDATION_STATUS_UNSPECIFIED",
-            Self::Passed => "MEDIA_WORKFLOW_VALIDATION_STATUS_PASSED",
-            Self::Failed => "MEDIA_WORKFLOW_VALIDATION_STATUS_FAILED",
-        };
-        serializer.serialize_str(variant)
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaWorkflowValidationStatus {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "MEDIA_WORKFLOW_VALIDATION_STATUS_UNSPECIFIED",
-            "MEDIA_WORKFLOW_VALIDATION_STATUS_PASSED",
-            "MEDIA_WORKFLOW_VALIDATION_STATUS_FAILED",
-        ];
-
-        struct GeneratedVisitor;
-
-        impl serde::de::Visitor<'_> for GeneratedVisitor {
-            type Value = MediaWorkflowValidationStatus;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                write!(formatter, "expected one of: {:?}", &FIELDS)
-            }
-
-            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                i32::try_from(v)
-                    .ok()
-                    .and_then(|x| x.try_into().ok())
-                    .ok_or_else(|| {
-                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
-                    })
-            }
-
-            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                i32::try_from(v)
-                    .ok()
-                    .and_then(|x| x.try_into().ok())
-                    .ok_or_else(|| {
-                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
-                    })
-            }
-
-            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                match value {
-                    "MEDIA_WORKFLOW_VALIDATION_STATUS_UNSPECIFIED" => Ok(MediaWorkflowValidationStatus::Unspecified),
-                    "MEDIA_WORKFLOW_VALIDATION_STATUS_PASSED" => Ok(MediaWorkflowValidationStatus::Passed),
-                    "MEDIA_WORKFLOW_VALIDATION_STATUS_FAILED" => Ok(MediaWorkflowValidationStatus::Failed),
-                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
-                }
-            }
-        }
-        deserializer.deserialize_any(GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MediaWorkflowValidationSummary {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.status.is_some() {
-            len += 1;
-        }
-        if self.error_count.is_some() {
-            len += 1;
-        }
-        if self.warning_count.is_some() {
-            len += 1;
-        }
-        if self.content_hash.is_some() {
-            len += 1;
-        }
-        if self.validated_at.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.MediaWorkflowValidationSummary", len)?;
-        if let Some(v) = self.status.as_ref() {
-            let v = MediaWorkflowValidationStatus::try_from(*v)
-                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
-            struct_ser.serialize_field("status", &v)?;
-        }
-        if let Some(v) = self.error_count.as_ref() {
-            struct_ser.serialize_field("errorCount", v)?;
-        }
-        if let Some(v) = self.warning_count.as_ref() {
-            struct_ser.serialize_field("warningCount", v)?;
-        }
-        if let Some(v) = self.content_hash.as_ref() {
-            struct_ser.serialize_field("contentHash", v)?;
-        }
-        if let Some(v) = self.validated_at.as_ref() {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("validatedAt", ToString::to_string(&v).as_str())?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for MediaWorkflowValidationSummary {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "status",
-            "error_count",
-            "errorCount",
-            "warning_count",
-            "warningCount",
-            "content_hash",
-            "contentHash",
-            "validated_at",
-            "validatedAt",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Status,
-            ErrorCount,
-            WarningCount,
-            ContentHash,
-            ValidatedAt,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "status" => Ok(GeneratedField::Status),
-                            "errorCount" | "error_count" => Ok(GeneratedField::ErrorCount),
-                            "warningCount" | "warning_count" => Ok(GeneratedField::WarningCount),
-                            "contentHash" | "content_hash" => Ok(GeneratedField::ContentHash),
-                            "validatedAt" | "validated_at" => Ok(GeneratedField::ValidatedAt),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MediaWorkflowValidationSummary;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.MediaWorkflowValidationSummary")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaWorkflowValidationSummary, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut status__ = None;
-                let mut error_count__ = None;
-                let mut warning_count__ = None;
-                let mut content_hash__ = None;
-                let mut validated_at__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Status => {
-                            if status__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("status"));
-                            }
-                            status__ = map_.next_value::<::std::option::Option<MediaWorkflowValidationStatus>>()?.map(|x| x as i32);
-                        }
-                        GeneratedField::ErrorCount => {
-                            if error_count__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("errorCount"));
-                            }
-                            error_count__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                        GeneratedField::WarningCount => {
-                            if warning_count__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("warningCount"));
-                            }
-                            warning_count__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                        GeneratedField::ContentHash => {
-                            if content_hash__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("contentHash"));
-                            }
-                            content_hash__ = map_.next_value()?;
-                        }
-                        GeneratedField::ValidatedAt => {
-                            if validated_at__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("validatedAt"));
-                            }
-                            validated_at__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                    }
-                }
-                Ok(MediaWorkflowValidationSummary {
-                    status: status__,
-                    error_count: error_count__,
-                    warning_count: warning_count__,
-                    content_hash: content_hash__,
-                    validated_at: validated_at__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.MediaWorkflowValidationSummary", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for RecoverSaveMediaTaskReq {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.request_id.is_some() {
-            len += 1;
-        }
-        if self.task_id.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.RecoverSaveMediaTaskReq", len)?;
-        if let Some(v) = self.request_id.as_ref() {
-            struct_ser.serialize_field("requestId", v)?;
-        }
-        if let Some(v) = self.task_id.as_ref() {
-            struct_ser.serialize_field("taskId", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for RecoverSaveMediaTaskReq {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "request_id",
-            "requestId",
-            "task_id",
-            "taskId",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            RequestId,
-            TaskId,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
-                            "taskId" | "task_id" => Ok(GeneratedField::TaskId),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = RecoverSaveMediaTaskReq;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.RecoverSaveMediaTaskReq")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<RecoverSaveMediaTaskReq, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut request_id__ = None;
-                let mut task_id__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::RequestId => {
-                            if request_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("requestId"));
-                            }
-                            request_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::TaskId => {
-                            if task_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("taskId"));
-                            }
-                            task_id__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(RecoverSaveMediaTaskReq {
-                    request_id: request_id__,
-                    task_id: task_id__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.RecoverSaveMediaTaskReq", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for RecoverSaveMediaTaskResp {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.task_id.is_some() {
-            len += 1;
-        }
-        if self.status.is_some() {
-            len += 1;
-        }
-        if self.status_message.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.RecoverSaveMediaTaskResp", len)?;
-        if let Some(v) = self.task_id.as_ref() {
-            struct_ser.serialize_field("taskId", v)?;
-        }
-        if let Some(v) = self.status.as_ref() {
-            let v = MediaTaskStatus::try_from(*v)
-                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
-            struct_ser.serialize_field("status", &v)?;
-        }
-        if let Some(v) = self.status_message.as_ref() {
-            struct_ser.serialize_field("statusMessage", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for RecoverSaveMediaTaskResp {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "task_id",
-            "taskId",
-            "status",
-            "status_message",
-            "statusMessage",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            TaskId,
-            Status,
-            StatusMessage,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "taskId" | "task_id" => Ok(GeneratedField::TaskId),
-                            "status" => Ok(GeneratedField::Status),
-                            "statusMessage" | "status_message" => Ok(GeneratedField::StatusMessage),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = RecoverSaveMediaTaskResp;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.RecoverSaveMediaTaskResp")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<RecoverSaveMediaTaskResp, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut task_id__ = None;
-                let mut status__ = None;
-                let mut status_message__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::TaskId => {
-                            if task_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("taskId"));
-                            }
-                            task_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::Status => {
-                            if status__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("status"));
-                            }
-                            status__ = map_.next_value::<::std::option::Option<MediaTaskStatus>>()?.map(|x| x as i32);
-                        }
-                        GeneratedField::StatusMessage => {
-                            if status_message__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("statusMessage"));
-                            }
-                            status_message__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(RecoverSaveMediaTaskResp {
-                    task_id: task_id__,
-                    status: status__,
-                    status_message: status_message__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.RecoverSaveMediaTaskResp", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for SetActiveMediaWorkflowReq {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.workflow_version_id.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.SetActiveMediaWorkflowReq", len)?;
-        if let Some(v) = self.workflow_version_id.as_ref() {
-            struct_ser.serialize_field("workflowVersionId", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for SetActiveMediaWorkflowReq {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "workflow_version_id",
-            "workflowVersionId",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            WorkflowVersionId,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "workflowVersionId" | "workflow_version_id" => Ok(GeneratedField::WorkflowVersionId),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = SetActiveMediaWorkflowReq;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.SetActiveMediaWorkflowReq")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SetActiveMediaWorkflowReq, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut workflow_version_id__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::WorkflowVersionId => {
-                            if workflow_version_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("workflowVersionId"));
-                            }
-                            workflow_version_id__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(SetActiveMediaWorkflowReq {
-                    workflow_version_id: workflow_version_id__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.SetActiveMediaWorkflowReq", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for SetActiveMediaWorkflowResp {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.feature_key.is_some() {
-            len += 1;
-        }
-        if self.active_workflow_version_id.is_some() {
-            len += 1;
-        }
-        if self.activated_at.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.SetActiveMediaWorkflowResp", len)?;
-        if let Some(v) = self.feature_key.as_ref() {
-            struct_ser.serialize_field("featureKey", v)?;
-        }
-        if let Some(v) = self.active_workflow_version_id.as_ref() {
-            struct_ser.serialize_field("activeWorkflowVersionId", v)?;
-        }
-        if let Some(v) = self.activated_at.as_ref() {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("activatedAt", ToString::to_string(&v).as_str())?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for SetActiveMediaWorkflowResp {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "feature_key",
-            "featureKey",
-            "active_workflow_version_id",
-            "activeWorkflowVersionId",
-            "activated_at",
-            "activatedAt",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            FeatureKey,
-            ActiveWorkflowVersionId,
-            ActivatedAt,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "featureKey" | "feature_key" => Ok(GeneratedField::FeatureKey),
-                            "activeWorkflowVersionId" | "active_workflow_version_id" => Ok(GeneratedField::ActiveWorkflowVersionId),
-                            "activatedAt" | "activated_at" => Ok(GeneratedField::ActivatedAt),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = SetActiveMediaWorkflowResp;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.SetActiveMediaWorkflowResp")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SetActiveMediaWorkflowResp, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut feature_key__ = None;
-                let mut active_workflow_version_id__ = None;
-                let mut activated_at__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::FeatureKey => {
-                            if feature_key__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("featureKey"));
-                            }
-                            feature_key__ = map_.next_value()?;
-                        }
-                        GeneratedField::ActiveWorkflowVersionId => {
-                            if active_workflow_version_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("activeWorkflowVersionId"));
-                            }
-                            active_workflow_version_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::ActivatedAt => {
-                            if activated_at__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("activatedAt"));
-                            }
-                            activated_at__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                    }
-                }
-                Ok(SetActiveMediaWorkflowResp {
-                    feature_key: feature_key__,
-                    active_workflow_version_id: active_workflow_version_id__,
-                    activated_at: activated_at__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.SetActiveMediaWorkflowResp", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for SetMediaMaintenanceReq {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.enabled.is_some() {
-            len += 1;
-        }
-        if self.reason.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.SetMediaMaintenanceReq", len)?;
-        if let Some(v) = self.enabled.as_ref() {
-            struct_ser.serialize_field("enabled", v)?;
-        }
-        if let Some(v) = self.reason.as_ref() {
-            struct_ser.serialize_field("reason", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for SetMediaMaintenanceReq {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "enabled",
-            "reason",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Enabled,
-            Reason,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "enabled" => Ok(GeneratedField::Enabled),
-                            "reason" => Ok(GeneratedField::Reason),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = SetMediaMaintenanceReq;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.SetMediaMaintenanceReq")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SetMediaMaintenanceReq, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut enabled__ = None;
-                let mut reason__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Enabled => {
-                            if enabled__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("enabled"));
-                            }
-                            enabled__ = map_.next_value()?;
-                        }
-                        GeneratedField::Reason => {
-                            if reason__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("reason"));
-                            }
-                            reason__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(SetMediaMaintenanceReq {
-                    enabled: enabled__,
-                    reason: reason__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.SetMediaMaintenanceReq", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for SetMediaMaintenanceResp {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.state.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.SetMediaMaintenanceResp", len)?;
-        if let Some(v) = self.state.as_ref() {
-            struct_ser.serialize_field("state", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for SetMediaMaintenanceResp {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "state",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            State,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "state" => Ok(GeneratedField::State),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = SetMediaMaintenanceResp;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.SetMediaMaintenanceResp")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SetMediaMaintenanceResp, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut state__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::State => {
-                            if state__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("state"));
-                            }
-                            state__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(SetMediaMaintenanceResp {
-                    state: state__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.SetMediaMaintenanceResp", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for SetMediaWorkflowReadyReq {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.workflow_version_id.is_some() {
-            len += 1;
-        }
-        if self.expected_content_hash.is_some() {
-            len += 1;
-        }
-        if self.test_task_id.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.SetMediaWorkflowReadyReq", len)?;
-        if let Some(v) = self.workflow_version_id.as_ref() {
-            struct_ser.serialize_field("workflowVersionId", v)?;
-        }
-        if let Some(v) = self.expected_content_hash.as_ref() {
-            struct_ser.serialize_field("expectedContentHash", v)?;
-        }
-        if let Some(v) = self.test_task_id.as_ref() {
-            struct_ser.serialize_field("testTaskId", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for SetMediaWorkflowReadyReq {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "workflow_version_id",
-            "workflowVersionId",
-            "expected_content_hash",
-            "expectedContentHash",
-            "test_task_id",
-            "testTaskId",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            WorkflowVersionId,
-            ExpectedContentHash,
-            TestTaskId,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "workflowVersionId" | "workflow_version_id" => Ok(GeneratedField::WorkflowVersionId),
-                            "expectedContentHash" | "expected_content_hash" => Ok(GeneratedField::ExpectedContentHash),
-                            "testTaskId" | "test_task_id" => Ok(GeneratedField::TestTaskId),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = SetMediaWorkflowReadyReq;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.SetMediaWorkflowReadyReq")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SetMediaWorkflowReadyReq, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut workflow_version_id__ = None;
-                let mut expected_content_hash__ = None;
-                let mut test_task_id__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::WorkflowVersionId => {
-                            if workflow_version_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("workflowVersionId"));
-                            }
-                            workflow_version_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::ExpectedContentHash => {
-                            if expected_content_hash__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("expectedContentHash"));
-                            }
-                            expected_content_hash__ = map_.next_value()?;
-                        }
-                        GeneratedField::TestTaskId => {
-                            if test_task_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("testTaskId"));
-                            }
-                            test_task_id__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(SetMediaWorkflowReadyReq {
-                    workflow_version_id: workflow_version_id__,
-                    expected_content_hash: expected_content_hash__,
-                    test_task_id: test_task_id__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.SetMediaWorkflowReadyReq", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for SetMediaWorkflowReadyResp {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.workflow_version_id.is_some() {
-            len += 1;
-        }
-        if self.status.is_some() {
-            len += 1;
-        }
-        if self.content_hash.is_some() {
-            len += 1;
-        }
-        if self.ready_test_task_id.is_some() {
-            len += 1;
-        }
-        if self.ready_at.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.SetMediaWorkflowReadyResp", len)?;
-        if let Some(v) = self.workflow_version_id.as_ref() {
-            struct_ser.serialize_field("workflowVersionId", v)?;
-        }
-        if let Some(v) = self.status.as_ref() {
-            let v = MediaWorkflowStatus::try_from(*v)
-                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
-            struct_ser.serialize_field("status", &v)?;
-        }
-        if let Some(v) = self.content_hash.as_ref() {
-            struct_ser.serialize_field("contentHash", v)?;
-        }
-        if let Some(v) = self.ready_test_task_id.as_ref() {
-            struct_ser.serialize_field("readyTestTaskId", v)?;
-        }
-        if let Some(v) = self.ready_at.as_ref() {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("readyAt", ToString::to_string(&v).as_str())?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for SetMediaWorkflowReadyResp {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "workflow_version_id",
-            "workflowVersionId",
-            "status",
-            "content_hash",
-            "contentHash",
-            "ready_test_task_id",
-            "readyTestTaskId",
-            "ready_at",
-            "readyAt",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            WorkflowVersionId,
-            Status,
-            ContentHash,
-            ReadyTestTaskId,
-            ReadyAt,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "workflowVersionId" | "workflow_version_id" => Ok(GeneratedField::WorkflowVersionId),
-                            "status" => Ok(GeneratedField::Status),
-                            "contentHash" | "content_hash" => Ok(GeneratedField::ContentHash),
-                            "readyTestTaskId" | "ready_test_task_id" => Ok(GeneratedField::ReadyTestTaskId),
-                            "readyAt" | "ready_at" => Ok(GeneratedField::ReadyAt),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = SetMediaWorkflowReadyResp;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.SetMediaWorkflowReadyResp")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SetMediaWorkflowReadyResp, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut workflow_version_id__ = None;
-                let mut status__ = None;
-                let mut content_hash__ = None;
-                let mut ready_test_task_id__ = None;
-                let mut ready_at__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::WorkflowVersionId => {
-                            if workflow_version_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("workflowVersionId"));
-                            }
-                            workflow_version_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::Status => {
-                            if status__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("status"));
-                            }
-                            status__ = map_.next_value::<::std::option::Option<MediaWorkflowStatus>>()?.map(|x| x as i32);
-                        }
-                        GeneratedField::ContentHash => {
-                            if content_hash__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("contentHash"));
-                            }
-                            content_hash__ = map_.next_value()?;
-                        }
-                        GeneratedField::ReadyTestTaskId => {
-                            if ready_test_task_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("readyTestTaskId"));
-                            }
-                            ready_test_task_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::ReadyAt => {
-                            if ready_at__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("readyAt"));
-                            }
-                            ready_at__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                    }
-                }
-                Ok(SetMediaWorkflowReadyResp {
-                    workflow_version_id: workflow_version_id__,
-                    status: status__,
-                    content_hash: content_hash__,
-                    ready_test_task_id: ready_test_task_id__,
-                    ready_at: ready_at__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.SetMediaWorkflowReadyResp", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for TestMediaWorkflowReq {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.request_id.is_some() {
-            len += 1;
-        }
-        if self.workflow_version_id.is_some() {
-            len += 1;
-        }
-        if self.expected_content_hash.is_some() {
-            len += 1;
-        }
-        if self.input.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.TestMediaWorkflowReq", len)?;
-        if let Some(v) = self.request_id.as_ref() {
-            struct_ser.serialize_field("requestId", v)?;
-        }
-        if let Some(v) = self.workflow_version_id.as_ref() {
-            struct_ser.serialize_field("workflowVersionId", v)?;
-        }
-        if let Some(v) = self.expected_content_hash.as_ref() {
-            struct_ser.serialize_field("expectedContentHash", v)?;
-        }
-        if let Some(v) = self.input.as_ref() {
-            match v {
-                test_media_workflow_req::Input::TextToImage(v) => {
-                    struct_ser.serialize_field("textToImage", v)?;
-                }
-                test_media_workflow_req::Input::ImageToVideo(v) => {
-                    struct_ser.serialize_field("imageToVideo", v)?;
-                }
-            }
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for TestMediaWorkflowReq {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "request_id",
-            "requestId",
-            "workflow_version_id",
-            "workflowVersionId",
-            "expected_content_hash",
-            "expectedContentHash",
-            "text_to_image",
-            "textToImage",
-            "image_to_video",
-            "imageToVideo",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            RequestId,
-            WorkflowVersionId,
-            ExpectedContentHash,
-            TextToImage,
-            ImageToVideo,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
-                            "workflowVersionId" | "workflow_version_id" => Ok(GeneratedField::WorkflowVersionId),
-                            "expectedContentHash" | "expected_content_hash" => Ok(GeneratedField::ExpectedContentHash),
-                            "textToImage" | "text_to_image" => Ok(GeneratedField::TextToImage),
-                            "imageToVideo" | "image_to_video" => Ok(GeneratedField::ImageToVideo),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = TestMediaWorkflowReq;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.TestMediaWorkflowReq")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<TestMediaWorkflowReq, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut request_id__ = None;
-                let mut workflow_version_id__ = None;
-                let mut expected_content_hash__ = None;
-                let mut input__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::RequestId => {
-                            if request_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("requestId"));
-                            }
-                            request_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::WorkflowVersionId => {
-                            if workflow_version_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("workflowVersionId"));
-                            }
-                            workflow_version_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::ExpectedContentHash => {
-                            if expected_content_hash__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("expectedContentHash"));
-                            }
-                            expected_content_hash__ = map_.next_value()?;
-                        }
-                        GeneratedField::TextToImage => {
-                            if input__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("textToImage"));
-                            }
-                            input__ = map_.next_value::<::std::option::Option<_>>()?.map(test_media_workflow_req::Input::TextToImage)
-;
-                        }
-                        GeneratedField::ImageToVideo => {
-                            if input__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("imageToVideo"));
-                            }
-                            input__ = map_.next_value::<::std::option::Option<_>>()?.map(test_media_workflow_req::Input::ImageToVideo)
-;
-                        }
-                    }
-                }
-                Ok(TestMediaWorkflowReq {
-                    request_id: request_id__,
-                    workflow_version_id: workflow_version_id__,
-                    expected_content_hash: expected_content_hash__,
-                    input: input__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.TestMediaWorkflowReq", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for TestMediaWorkflowResp {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.task_id.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.TestMediaWorkflowResp", len)?;
-        if let Some(v) = self.task_id.as_ref() {
-            struct_ser.serialize_field("taskId", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for TestMediaWorkflowResp {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "task_id",
-            "taskId",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            TaskId,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "taskId" | "task_id" => Ok(GeneratedField::TaskId),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = TestMediaWorkflowResp;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.TestMediaWorkflowResp")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<TestMediaWorkflowResp, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut task_id__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::TaskId => {
-                            if task_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("taskId"));
-                            }
-                            task_id__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(TestMediaWorkflowResp {
-                    task_id: task_id__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.TestMediaWorkflowResp", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for TextToImageFeatureConfig {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.prompt_max_length.is_some() {
-            len += 1;
-        }
-        if self.negative_prompt_max_length.is_some() {
-            len += 1;
-        }
-        if !self.allowed_resolutions.is_empty() {
-            len += 1;
-        }
-        if self.default_resolution.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.TextToImageFeatureConfig", len)?;
-        if let Some(v) = self.prompt_max_length.as_ref() {
-            struct_ser.serialize_field("promptMaxLength", v)?;
-        }
-        if let Some(v) = self.negative_prompt_max_length.as_ref() {
-            struct_ser.serialize_field("negativePromptMaxLength", v)?;
-        }
-        if !self.allowed_resolutions.is_empty() {
-            struct_ser.serialize_field("allowedResolutions", &self.allowed_resolutions)?;
-        }
-        if let Some(v) = self.default_resolution.as_ref() {
-            struct_ser.serialize_field("defaultResolution", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for TextToImageFeatureConfig {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "prompt_max_length",
-            "promptMaxLength",
-            "negative_prompt_max_length",
-            "negativePromptMaxLength",
-            "allowed_resolutions",
-            "allowedResolutions",
-            "default_resolution",
-            "defaultResolution",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            PromptMaxLength,
-            NegativePromptMaxLength,
-            AllowedResolutions,
-            DefaultResolution,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "promptMaxLength" | "prompt_max_length" => Ok(GeneratedField::PromptMaxLength),
-                            "negativePromptMaxLength" | "negative_prompt_max_length" => Ok(GeneratedField::NegativePromptMaxLength),
-                            "allowedResolutions" | "allowed_resolutions" => Ok(GeneratedField::AllowedResolutions),
-                            "defaultResolution" | "default_resolution" => Ok(GeneratedField::DefaultResolution),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = TextToImageFeatureConfig;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.TextToImageFeatureConfig")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<TextToImageFeatureConfig, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut prompt_max_length__ = None;
-                let mut negative_prompt_max_length__ = None;
-                let mut allowed_resolutions__ = None;
-                let mut default_resolution__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::PromptMaxLength => {
-                            if prompt_max_length__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("promptMaxLength"));
-                            }
-                            prompt_max_length__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                        GeneratedField::NegativePromptMaxLength => {
-                            if negative_prompt_max_length__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("negativePromptMaxLength"));
-                            }
-                            negative_prompt_max_length__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                        GeneratedField::AllowedResolutions => {
-                            if allowed_resolutions__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("allowedResolutions"));
-                            }
-                            allowed_resolutions__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::DefaultResolution => {
-                            if default_resolution__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("defaultResolution"));
-                            }
-                            default_resolution__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(TextToImageFeatureConfig {
-                    prompt_max_length: prompt_max_length__,
-                    negative_prompt_max_length: negative_prompt_max_length__,
-                    allowed_resolutions: allowed_resolutions__.unwrap_or_default(),
-                    default_resolution: default_resolution__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.TextToImageFeatureConfig", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for TextToImageTaskParams {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.prompt.is_some() {
-            len += 1;
-        }
-        if self.negative_prompt.is_some() {
-            len += 1;
-        }
-        if self.resolution.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.TextToImageTaskParams", len)?;
-        if let Some(v) = self.prompt.as_ref() {
-            struct_ser.serialize_field("prompt", v)?;
-        }
-        if let Some(v) = self.negative_prompt.as_ref() {
-            struct_ser.serialize_field("negativePrompt", v)?;
-        }
-        if let Some(v) = self.resolution.as_ref() {
-            struct_ser.serialize_field("resolution", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for TextToImageTaskParams {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "prompt",
-            "negative_prompt",
-            "negativePrompt",
-            "resolution",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Prompt,
-            NegativePrompt,
-            Resolution,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "prompt" => Ok(GeneratedField::Prompt),
-                            "negativePrompt" | "negative_prompt" => Ok(GeneratedField::NegativePrompt),
-                            "resolution" => Ok(GeneratedField::Resolution),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = TextToImageTaskParams;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.TextToImageTaskParams")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<TextToImageTaskParams, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut prompt__ = None;
-                let mut negative_prompt__ = None;
-                let mut resolution__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Prompt => {
-                            if prompt__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("prompt"));
-                            }
-                            prompt__ = map_.next_value()?;
-                        }
-                        GeneratedField::NegativePrompt => {
-                            if negative_prompt__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("negativePrompt"));
-                            }
-                            negative_prompt__ = map_.next_value()?;
-                        }
-                        GeneratedField::Resolution => {
-                            if resolution__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("resolution"));
-                            }
-                            resolution__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(TextToImageTaskParams {
-                    prompt: prompt__,
-                    negative_prompt: negative_prompt__,
-                    resolution: resolution__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.TextToImageTaskParams", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for TextToImageWorkflowConfig {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.prompt.is_some() {
-            len += 1;
-        }
-        if self.prompt_max_length.is_some() {
-            len += 1;
-        }
-        if self.negative_prompt.is_some() {
-            len += 1;
-        }
-        if self.negative_prompt_max_length.is_some() {
-            len += 1;
-        }
-        if self.resolution.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.TextToImageWorkflowConfig", len)?;
-        if let Some(v) = self.prompt.as_ref() {
-            struct_ser.serialize_field("prompt", v)?;
-        }
-        if let Some(v) = self.prompt_max_length.as_ref() {
-            struct_ser.serialize_field("promptMaxLength", v)?;
-        }
-        if let Some(v) = self.negative_prompt.as_ref() {
-            struct_ser.serialize_field("negativePrompt", v)?;
-        }
-        if let Some(v) = self.negative_prompt_max_length.as_ref() {
-            struct_ser.serialize_field("negativePromptMaxLength", v)?;
-        }
-        if let Some(v) = self.resolution.as_ref() {
-            struct_ser.serialize_field("resolution", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for TextToImageWorkflowConfig {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "prompt",
-            "prompt_max_length",
-            "promptMaxLength",
-            "negative_prompt",
-            "negativePrompt",
-            "negative_prompt_max_length",
-            "negativePromptMaxLength",
-            "resolution",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Prompt,
-            PromptMaxLength,
-            NegativePrompt,
-            NegativePromptMaxLength,
-            Resolution,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "prompt" => Ok(GeneratedField::Prompt),
-                            "promptMaxLength" | "prompt_max_length" => Ok(GeneratedField::PromptMaxLength),
-                            "negativePrompt" | "negative_prompt" => Ok(GeneratedField::NegativePrompt),
-                            "negativePromptMaxLength" | "negative_prompt_max_length" => Ok(GeneratedField::NegativePromptMaxLength),
-                            "resolution" => Ok(GeneratedField::Resolution),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = TextToImageWorkflowConfig;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.TextToImageWorkflowConfig")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<TextToImageWorkflowConfig, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut prompt__ = None;
-                let mut prompt_max_length__ = None;
-                let mut negative_prompt__ = None;
-                let mut negative_prompt_max_length__ = None;
-                let mut resolution__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Prompt => {
-                            if prompt__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("prompt"));
-                            }
-                            prompt__ = map_.next_value()?;
-                        }
-                        GeneratedField::PromptMaxLength => {
-                            if prompt_max_length__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("promptMaxLength"));
-                            }
-                            prompt_max_length__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                        GeneratedField::NegativePrompt => {
-                            if negative_prompt__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("negativePrompt"));
-                            }
-                            negative_prompt__ = map_.next_value()?;
-                        }
-                        GeneratedField::NegativePromptMaxLength => {
-                            if negative_prompt_max_length__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("negativePromptMaxLength"));
-                            }
-                            negative_prompt_max_length__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                        GeneratedField::Resolution => {
-                            if resolution__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("resolution"));
-                            }
-                            resolution__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(TextToImageWorkflowConfig {
-                    prompt: prompt__,
-                    prompt_max_length: prompt_max_length__,
-                    negative_prompt: negative_prompt__,
-                    negative_prompt_max_length: negative_prompt_max_length__,
-                    resolution: resolution__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.TextToImageWorkflowConfig", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for TextToImageWorkflowTestInput {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.prompt.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.TextToImageWorkflowTestInput", len)?;
-        if let Some(v) = self.prompt.as_ref() {
-            struct_ser.serialize_field("prompt", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for TextToImageWorkflowTestInput {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "prompt",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Prompt,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "prompt" => Ok(GeneratedField::Prompt),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = TextToImageWorkflowTestInput;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.TextToImageWorkflowTestInput")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<TextToImageWorkflowTestInput, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut prompt__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Prompt => {
-                            if prompt__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("prompt"));
-                            }
-                            prompt__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(TextToImageWorkflowTestInput {
-                    prompt: prompt__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.TextToImageWorkflowTestInput", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for UpdateMediaWorkflowReq {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.workflow_version_id.is_some() {
-            len += 1;
-        }
-        if self.expected_content_hash.is_some() {
-            len += 1;
-        }
-        if self.config.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.UpdateMediaWorkflowReq", len)?;
-        if let Some(v) = self.workflow_version_id.as_ref() {
-            struct_ser.serialize_field("workflowVersionId", v)?;
-        }
-        if let Some(v) = self.expected_content_hash.as_ref() {
-            struct_ser.serialize_field("expectedContentHash", v)?;
-        }
-        if let Some(v) = self.config.as_ref() {
-            struct_ser.serialize_field("config", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for UpdateMediaWorkflowReq {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "workflow_version_id",
-            "workflowVersionId",
-            "expected_content_hash",
-            "expectedContentHash",
-            "config",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            WorkflowVersionId,
-            ExpectedContentHash,
-            Config,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "workflowVersionId" | "workflow_version_id" => Ok(GeneratedField::WorkflowVersionId),
-                            "expectedContentHash" | "expected_content_hash" => Ok(GeneratedField::ExpectedContentHash),
-                            "config" => Ok(GeneratedField::Config),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = UpdateMediaWorkflowReq;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.UpdateMediaWorkflowReq")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdateMediaWorkflowReq, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut workflow_version_id__ = None;
-                let mut expected_content_hash__ = None;
-                let mut config__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::WorkflowVersionId => {
-                            if workflow_version_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("workflowVersionId"));
-                            }
-                            workflow_version_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::ExpectedContentHash => {
-                            if expected_content_hash__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("expectedContentHash"));
-                            }
-                            expected_content_hash__ = map_.next_value()?;
-                        }
-                        GeneratedField::Config => {
-                            if config__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("config"));
-                            }
-                            config__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(UpdateMediaWorkflowReq {
-                    workflow_version_id: workflow_version_id__,
-                    expected_content_hash: expected_content_hash__,
-                    config: config__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.UpdateMediaWorkflowReq", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for UpdateMediaWorkflowResp {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.content_hash.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.UpdateMediaWorkflowResp", len)?;
-        if let Some(v) = self.content_hash.as_ref() {
-            struct_ser.serialize_field("contentHash", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for UpdateMediaWorkflowResp {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "content_hash",
-            "contentHash",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            ContentHash,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "contentHash" | "content_hash" => Ok(GeneratedField::ContentHash),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = UpdateMediaWorkflowResp;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.UpdateMediaWorkflowResp")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdateMediaWorkflowResp, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut content_hash__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::ContentHash => {
-                            if content_hash__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("contentHash"));
-                            }
-                            content_hash__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(UpdateMediaWorkflowResp {
-                    content_hash: content_hash__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.UpdateMediaWorkflowResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for UserManageListReq {
@@ -12449,7 +11849,7 @@ impl<'de> serde::Deserialize<'de> for user_manage_list_resp::Unit {
         deserializer.deserialize_struct("hi.media.UserManageListResp.Unit", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ValidateMediaWorkflowReq {
+impl serde::Serialize for ValidateWorkflowReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -12460,14 +11860,14 @@ impl serde::Serialize for ValidateMediaWorkflowReq {
         if self.workflow_version_id.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.ValidateMediaWorkflowReq", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.ValidateWorkflowReq", len)?;
         if let Some(v) = self.workflow_version_id.as_ref() {
             struct_ser.serialize_field("workflowVersionId", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ValidateMediaWorkflowReq {
+impl<'de> serde::Deserialize<'de> for ValidateWorkflowReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -12512,13 +11912,13 @@ impl<'de> serde::Deserialize<'de> for ValidateMediaWorkflowReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ValidateMediaWorkflowReq;
+            type Value = ValidateWorkflowReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.ValidateMediaWorkflowReq")
+                formatter.write_str("struct hi.media.ValidateWorkflowReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ValidateMediaWorkflowReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ValidateWorkflowReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -12533,15 +11933,15 @@ impl<'de> serde::Deserialize<'de> for ValidateMediaWorkflowReq {
                         }
                     }
                 }
-                Ok(ValidateMediaWorkflowReq {
+                Ok(ValidateWorkflowReq {
                     workflow_version_id: workflow_version_id__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.ValidateMediaWorkflowReq", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.ValidateWorkflowReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ValidateMediaWorkflowResp {
+impl serde::Serialize for ValidateWorkflowResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -12549,29 +11949,50 @@ impl serde::Serialize for ValidateMediaWorkflowResp {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.validation.is_some() {
+        if self.status.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.ValidateMediaWorkflowResp", len)?;
-        if let Some(v) = self.validation.as_ref() {
-            struct_ser.serialize_field("validation", v)?;
+        if !self.issues.is_empty() {
+            len += 1;
+        }
+        if self.validated_at.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.ValidateWorkflowResp", len)?;
+        if let Some(v) = self.status.as_ref() {
+            let v = WorkflowValidationStatus::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("status", &v)?;
+        }
+        if !self.issues.is_empty() {
+            struct_ser.serialize_field("issues", &self.issues)?;
+        }
+        if let Some(v) = self.validated_at.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("validatedAt", ToString::to_string(&v).as_str())?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ValidateMediaWorkflowResp {
+impl<'de> serde::Deserialize<'de> for ValidateWorkflowResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "validation",
+            "status",
+            "issues",
+            "validated_at",
+            "validatedAt",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Validation,
+            Status,
+            Issues,
+            ValidatedAt,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -12593,7 +12014,9 @@ impl<'de> serde::Deserialize<'de> for ValidateMediaWorkflowResp {
                         E: serde::de::Error,
                     {
                         match value {
-                            "validation" => Ok(GeneratedField::Validation),
+                            "status" => Ok(GeneratedField::Status),
+                            "issues" => Ok(GeneratedField::Issues),
+                            "validatedAt" | "validated_at" => Ok(GeneratedField::ValidatedAt),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -12603,32 +12026,2870 @@ impl<'de> serde::Deserialize<'de> for ValidateMediaWorkflowResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ValidateMediaWorkflowResp;
+            type Value = ValidateWorkflowResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.ValidateMediaWorkflowResp")
+                formatter.write_str("struct hi.media.ValidateWorkflowResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ValidateMediaWorkflowResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ValidateWorkflowResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut validation__ = None;
+                let mut status__ = None;
+                let mut issues__ = None;
+                let mut validated_at__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Validation => {
-                            if validation__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("validation"));
+                        GeneratedField::Status => {
+                            if status__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("status"));
                             }
-                            validation__ = map_.next_value()?;
+                            status__ = map_.next_value::<::std::option::Option<WorkflowValidationStatus>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::Issues => {
+                            if issues__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("issues"));
+                            }
+                            issues__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::ValidatedAt => {
+                            if validated_at__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("validatedAt"));
+                            }
+                            validated_at__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
                         }
                     }
                 }
-                Ok(ValidateMediaWorkflowResp {
-                    validation: validation__,
+                Ok(ValidateWorkflowResp {
+                    status: status__,
+                    issues: issues__.unwrap_or_default(),
+                    validated_at: validated_at__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.ValidateMediaWorkflowResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.ValidateWorkflowResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for VideoParameterConfig {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.prompt.is_some() {
+            len += 1;
+        }
+        if self.aspect_ratio.is_some() {
+            len += 1;
+        }
+        if self.megapixels.is_some() {
+            len += 1;
+        }
+        if self.duration_seconds.is_some() {
+            len += 1;
+        }
+        if self.frame_rate.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.VideoParameterConfig", len)?;
+        if let Some(v) = self.prompt.as_ref() {
+            struct_ser.serialize_field("prompt", v)?;
+        }
+        if let Some(v) = self.aspect_ratio.as_ref() {
+            struct_ser.serialize_field("aspectRatio", v)?;
+        }
+        if let Some(v) = self.megapixels.as_ref() {
+            struct_ser.serialize_field("megapixels", v)?;
+        }
+        if let Some(v) = self.duration_seconds.as_ref() {
+            struct_ser.serialize_field("durationSeconds", v)?;
+        }
+        if let Some(v) = self.frame_rate.as_ref() {
+            struct_ser.serialize_field("frameRate", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for VideoParameterConfig {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "prompt",
+            "aspect_ratio",
+            "aspectRatio",
+            "megapixels",
+            "duration_seconds",
+            "durationSeconds",
+            "frame_rate",
+            "frameRate",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Prompt,
+            AspectRatio,
+            Megapixels,
+            DurationSeconds,
+            FrameRate,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "prompt" => Ok(GeneratedField::Prompt),
+                            "aspectRatio" | "aspect_ratio" => Ok(GeneratedField::AspectRatio),
+                            "megapixels" => Ok(GeneratedField::Megapixels),
+                            "durationSeconds" | "duration_seconds" => Ok(GeneratedField::DurationSeconds),
+                            "frameRate" | "frame_rate" => Ok(GeneratedField::FrameRate),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = VideoParameterConfig;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.VideoParameterConfig")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<VideoParameterConfig, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut prompt__ = None;
+                let mut aspect_ratio__ = None;
+                let mut megapixels__ = None;
+                let mut duration_seconds__ = None;
+                let mut frame_rate__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Prompt => {
+                            if prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prompt"));
+                            }
+                            prompt__ = map_.next_value()?;
+                        }
+                        GeneratedField::AspectRatio => {
+                            if aspect_ratio__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("aspectRatio"));
+                            }
+                            aspect_ratio__ = map_.next_value()?;
+                        }
+                        GeneratedField::Megapixels => {
+                            if megapixels__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("megapixels"));
+                            }
+                            megapixels__ = map_.next_value()?;
+                        }
+                        GeneratedField::DurationSeconds => {
+                            if duration_seconds__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("durationSeconds"));
+                            }
+                            duration_seconds__ = map_.next_value()?;
+                        }
+                        GeneratedField::FrameRate => {
+                            if frame_rate__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("frameRate"));
+                            }
+                            frame_rate__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(VideoParameterConfig {
+                    prompt: prompt__,
+                    aspect_ratio: aspect_ratio__,
+                    megapixels: megapixels__,
+                    duration_seconds: duration_seconds__,
+                    frame_rate: frame_rate__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.VideoParameterConfig", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for VideoResolution {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.aspect_ratio.is_some() {
+            len += 1;
+        }
+        if self.megapixels.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.VideoResolution", len)?;
+        if let Some(v) = self.aspect_ratio.as_ref() {
+            struct_ser.serialize_field("aspectRatio", v)?;
+        }
+        if let Some(v) = self.megapixels.as_ref() {
+            struct_ser.serialize_field("megapixels", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for VideoResolution {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "aspect_ratio",
+            "aspectRatio",
+            "megapixels",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            AspectRatio,
+            Megapixels,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "aspectRatio" | "aspect_ratio" => Ok(GeneratedField::AspectRatio),
+                            "megapixels" => Ok(GeneratedField::Megapixels),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = VideoResolution;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.VideoResolution")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<VideoResolution, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut aspect_ratio__ = None;
+                let mut megapixels__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::AspectRatio => {
+                            if aspect_ratio__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("aspectRatio"));
+                            }
+                            aspect_ratio__ = map_.next_value()?;
+                        }
+                        GeneratedField::Megapixels => {
+                            if megapixels__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("megapixels"));
+                            }
+                            megapixels__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(VideoResolution {
+                    aspect_ratio: aspect_ratio__,
+                    megapixels: megapixels__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.VideoResolution", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WorkflowDecimalOptionInput {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.binding.is_some() {
+            len += 1;
+        }
+        if self.values.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowDecimalOptionInput", len)?;
+        if let Some(v) = self.binding.as_ref() {
+            struct_ser.serialize_field("binding", v)?;
+        }
+        if let Some(v) = self.values.as_ref() {
+            struct_ser.serialize_field("values", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowDecimalOptionInput {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "binding",
+            "values",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Binding,
+            Values,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "binding" => Ok(GeneratedField::Binding),
+                            "values" => Ok(GeneratedField::Values),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WorkflowDecimalOptionInput;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.WorkflowDecimalOptionInput")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<WorkflowDecimalOptionInput, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut binding__ = None;
+                let mut values__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Binding => {
+                            if binding__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("binding"));
+                            }
+                            binding__ = map_.next_value()?;
+                        }
+                        GeneratedField::Values => {
+                            if values__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("values"));
+                            }
+                            values__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(WorkflowDecimalOptionInput {
+                    binding: binding__,
+                    values: values__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.WorkflowDecimalOptionInput", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WorkflowDependency {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.kind.is_some() {
+            len += 1;
+        }
+        if self.identifier.is_some() {
+            len += 1;
+        }
+        if !self.usages.is_empty() {
+            len += 1;
+        }
+        if self.required.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowDependency", len)?;
+        if let Some(v) = self.kind.as_ref() {
+            let v = WorkflowDependencyKind::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("kind", &v)?;
+        }
+        if let Some(v) = self.identifier.as_ref() {
+            struct_ser.serialize_field("identifier", v)?;
+        }
+        if !self.usages.is_empty() {
+            struct_ser.serialize_field("usages", &self.usages)?;
+        }
+        if let Some(v) = self.required.as_ref() {
+            struct_ser.serialize_field("required", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowDependency {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "kind",
+            "identifier",
+            "usages",
+            "required",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Kind,
+            Identifier,
+            Usages,
+            Required,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "kind" => Ok(GeneratedField::Kind),
+                            "identifier" => Ok(GeneratedField::Identifier),
+                            "usages" => Ok(GeneratedField::Usages),
+                            "required" => Ok(GeneratedField::Required),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WorkflowDependency;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.WorkflowDependency")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<WorkflowDependency, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut kind__ = None;
+                let mut identifier__ = None;
+                let mut usages__ = None;
+                let mut required__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Kind => {
+                            if kind__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("kind"));
+                            }
+                            kind__ = map_.next_value::<::std::option::Option<WorkflowDependencyKind>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::Identifier => {
+                            if identifier__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("identifier"));
+                            }
+                            identifier__ = map_.next_value()?;
+                        }
+                        GeneratedField::Usages => {
+                            if usages__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("usages"));
+                            }
+                            usages__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Required => {
+                            if required__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("required"));
+                            }
+                            required__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(WorkflowDependency {
+                    kind: kind__,
+                    identifier: identifier__,
+                    usages: usages__.unwrap_or_default(),
+                    required: required__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.WorkflowDependency", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WorkflowDependencyKind {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unspecified => "WORKFLOW_DEPENDENCY_KIND_UNSPECIFIED",
+            Self::NodeClass => "WORKFLOW_DEPENDENCY_KIND_NODE_CLASS",
+            Self::LoaderFile => "WORKFLOW_DEPENDENCY_KIND_LOADER_FILE",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowDependencyKind {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "WORKFLOW_DEPENDENCY_KIND_UNSPECIFIED",
+            "WORKFLOW_DEPENDENCY_KIND_NODE_CLASS",
+            "WORKFLOW_DEPENDENCY_KIND_LOADER_FILE",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = WorkflowDependencyKind;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "WORKFLOW_DEPENDENCY_KIND_UNSPECIFIED" => Ok(WorkflowDependencyKind::Unspecified),
+                    "WORKFLOW_DEPENDENCY_KIND_NODE_CLASS" => Ok(WorkflowDependencyKind::NodeClass),
+                    "WORKFLOW_DEPENDENCY_KIND_LOADER_FILE" => Ok(WorkflowDependencyKind::LoaderFile),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WorkflowDependencyUsage {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.node_id.is_some() {
+            len += 1;
+        }
+        if self.input_name.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowDependencyUsage", len)?;
+        if let Some(v) = self.node_id.as_ref() {
+            struct_ser.serialize_field("nodeId", v)?;
+        }
+        if let Some(v) = self.input_name.as_ref() {
+            struct_ser.serialize_field("inputName", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowDependencyUsage {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "node_id",
+            "nodeId",
+            "input_name",
+            "inputName",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            NodeId,
+            InputName,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "nodeId" | "node_id" => Ok(GeneratedField::NodeId),
+                            "inputName" | "input_name" => Ok(GeneratedField::InputName),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WorkflowDependencyUsage;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.WorkflowDependencyUsage")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<WorkflowDependencyUsage, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut node_id__ = None;
+                let mut input_name__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::NodeId => {
+                            if node_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("nodeId"));
+                            }
+                            node_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::InputName => {
+                            if input_name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputName"));
+                            }
+                            input_name__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(WorkflowDependencyUsage {
+                    node_id: node_id__,
+                    input_name: input_name__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.WorkflowDependencyUsage", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WorkflowDetail {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.summary.is_some() {
+            len += 1;
+        }
+        if self.description.is_some() {
+            len += 1;
+        }
+        if self.api_json.is_some() {
+            len += 1;
+        }
+        if self.config.is_some() {
+            len += 1;
+        }
+        if !self.nodes.is_empty() {
+            len += 1;
+        }
+        if !self.dependencies.is_empty() {
+            len += 1;
+        }
+        if !self.validation_issues.is_empty() {
+            len += 1;
+        }
+        if self.validated_at.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowDetail", len)?;
+        if let Some(v) = self.summary.as_ref() {
+            struct_ser.serialize_field("summary", v)?;
+        }
+        if let Some(v) = self.description.as_ref() {
+            struct_ser.serialize_field("description", v)?;
+        }
+        if let Some(v) = self.api_json.as_ref() {
+            struct_ser.serialize_field("apiJson", v)?;
+        }
+        if let Some(v) = self.config.as_ref() {
+            struct_ser.serialize_field("config", v)?;
+        }
+        if !self.nodes.is_empty() {
+            struct_ser.serialize_field("nodes", &self.nodes)?;
+        }
+        if !self.dependencies.is_empty() {
+            struct_ser.serialize_field("dependencies", &self.dependencies)?;
+        }
+        if !self.validation_issues.is_empty() {
+            struct_ser.serialize_field("validationIssues", &self.validation_issues)?;
+        }
+        if let Some(v) = self.validated_at.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("validatedAt", ToString::to_string(&v).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowDetail {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "summary",
+            "description",
+            "api_json",
+            "apiJson",
+            "config",
+            "nodes",
+            "dependencies",
+            "validation_issues",
+            "validationIssues",
+            "validated_at",
+            "validatedAt",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Summary,
+            Description,
+            ApiJson,
+            Config,
+            Nodes,
+            Dependencies,
+            ValidationIssues,
+            ValidatedAt,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "summary" => Ok(GeneratedField::Summary),
+                            "description" => Ok(GeneratedField::Description),
+                            "apiJson" | "api_json" => Ok(GeneratedField::ApiJson),
+                            "config" => Ok(GeneratedField::Config),
+                            "nodes" => Ok(GeneratedField::Nodes),
+                            "dependencies" => Ok(GeneratedField::Dependencies),
+                            "validationIssues" | "validation_issues" => Ok(GeneratedField::ValidationIssues),
+                            "validatedAt" | "validated_at" => Ok(GeneratedField::ValidatedAt),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WorkflowDetail;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.WorkflowDetail")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<WorkflowDetail, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut summary__ = None;
+                let mut description__ = None;
+                let mut api_json__ = None;
+                let mut config__ = None;
+                let mut nodes__ = None;
+                let mut dependencies__ = None;
+                let mut validation_issues__ = None;
+                let mut validated_at__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Summary => {
+                            if summary__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("summary"));
+                            }
+                            summary__ = map_.next_value()?;
+                        }
+                        GeneratedField::Description => {
+                            if description__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("description"));
+                            }
+                            description__ = map_.next_value()?;
+                        }
+                        GeneratedField::ApiJson => {
+                            if api_json__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("apiJson"));
+                            }
+                            api_json__ = map_.next_value()?;
+                        }
+                        GeneratedField::Config => {
+                            if config__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("config"));
+                            }
+                            config__ = map_.next_value()?;
+                        }
+                        GeneratedField::Nodes => {
+                            if nodes__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("nodes"));
+                            }
+                            nodes__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Dependencies => {
+                            if dependencies__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("dependencies"));
+                            }
+                            dependencies__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::ValidationIssues => {
+                            if validation_issues__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("validationIssues"));
+                            }
+                            validation_issues__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::ValidatedAt => {
+                            if validated_at__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("validatedAt"));
+                            }
+                            validated_at__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(WorkflowDetail {
+                    summary: summary__,
+                    description: description__,
+                    api_json: api_json__,
+                    config: config__,
+                    nodes: nodes__.unwrap_or_default(),
+                    dependencies: dependencies__.unwrap_or_default(),
+                    validation_issues: validation_issues__.unwrap_or_default(),
+                    validated_at: validated_at__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.WorkflowDetail", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WorkflowExecutionConfig {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.output.is_some() {
+            len += 1;
+        }
+        if self.execution_timeout_seconds.is_some() {
+            len += 1;
+        }
+        if self.output_reservation_bytes.is_some() {
+            len += 1;
+        }
+        if self.feature_config.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowExecutionConfig", len)?;
+        if let Some(v) = self.output.as_ref() {
+            struct_ser.serialize_field("output", v)?;
+        }
+        if let Some(v) = self.execution_timeout_seconds.as_ref() {
+            struct_ser.serialize_field("executionTimeoutSeconds", v)?;
+        }
+        if let Some(v) = self.output_reservation_bytes.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("outputReservationBytes", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.feature_config.as_ref() {
+            match v {
+                workflow_execution_config::FeatureConfig::ImageToVideo(v) => {
+                    struct_ser.serialize_field("imageToVideo", v)?;
+                }
+                workflow_execution_config::FeatureConfig::TextToVideo(v) => {
+                    struct_ser.serialize_field("textToVideo", v)?;
+                }
+            }
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowExecutionConfig {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "output",
+            "execution_timeout_seconds",
+            "executionTimeoutSeconds",
+            "output_reservation_bytes",
+            "outputReservationBytes",
+            "image_to_video",
+            "imageToVideo",
+            "text_to_video",
+            "textToVideo",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Output,
+            ExecutionTimeoutSeconds,
+            OutputReservationBytes,
+            ImageToVideo,
+            TextToVideo,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "output" => Ok(GeneratedField::Output),
+                            "executionTimeoutSeconds" | "execution_timeout_seconds" => Ok(GeneratedField::ExecutionTimeoutSeconds),
+                            "outputReservationBytes" | "output_reservation_bytes" => Ok(GeneratedField::OutputReservationBytes),
+                            "imageToVideo" | "image_to_video" => Ok(GeneratedField::ImageToVideo),
+                            "textToVideo" | "text_to_video" => Ok(GeneratedField::TextToVideo),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WorkflowExecutionConfig;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.WorkflowExecutionConfig")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<WorkflowExecutionConfig, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut output__ = None;
+                let mut execution_timeout_seconds__ = None;
+                let mut output_reservation_bytes__ = None;
+                let mut feature_config__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Output => {
+                            if output__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("output"));
+                            }
+                            output__ = map_.next_value()?;
+                        }
+                        GeneratedField::ExecutionTimeoutSeconds => {
+                            if execution_timeout_seconds__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("executionTimeoutSeconds"));
+                            }
+                            execution_timeout_seconds__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::OutputReservationBytes => {
+                            if output_reservation_bytes__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("outputReservationBytes"));
+                            }
+                            output_reservation_bytes__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::ImageToVideo => {
+                            if feature_config__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("imageToVideo"));
+                            }
+                            feature_config__ = map_.next_value::<::std::option::Option<_>>()?.map(workflow_execution_config::FeatureConfig::ImageToVideo)
+;
+                        }
+                        GeneratedField::TextToVideo => {
+                            if feature_config__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("textToVideo"));
+                            }
+                            feature_config__ = map_.next_value::<::std::option::Option<_>>()?.map(workflow_execution_config::FeatureConfig::TextToVideo)
+;
+                        }
+                    }
+                }
+                Ok(WorkflowExecutionConfig {
+                    output: output__,
+                    execution_timeout_seconds: execution_timeout_seconds__,
+                    output_reservation_bytes: output_reservation_bytes__,
+                    feature_config: feature_config__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.WorkflowExecutionConfig", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WorkflowFixedTextInput {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.binding.is_some() {
+            len += 1;
+        }
+        if self.value.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowFixedTextInput", len)?;
+        if let Some(v) = self.binding.as_ref() {
+            struct_ser.serialize_field("binding", v)?;
+        }
+        if let Some(v) = self.value.as_ref() {
+            struct_ser.serialize_field("value", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowFixedTextInput {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "binding",
+            "value",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Binding,
+            Value,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "binding" => Ok(GeneratedField::Binding),
+                            "value" => Ok(GeneratedField::Value),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WorkflowFixedTextInput;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.WorkflowFixedTextInput")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<WorkflowFixedTextInput, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut binding__ = None;
+                let mut value__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Binding => {
+                            if binding__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("binding"));
+                            }
+                            binding__ = map_.next_value()?;
+                        }
+                        GeneratedField::Value => {
+                            if value__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("value"));
+                            }
+                            value__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(WorkflowFixedTextInput {
+                    binding: binding__,
+                    value: value__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.WorkflowFixedTextInput", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WorkflowFrameRateInput {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.mode.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowFrameRateInput", len)?;
+        if let Some(v) = self.mode.as_ref() {
+            match v {
+                workflow_frame_rate_input::Mode::Selectable(v) => {
+                    struct_ser.serialize_field("selectable", v)?;
+                }
+                workflow_frame_rate_input::Mode::FixedValue(v) => {
+                    struct_ser.serialize_field("fixedValue", v)?;
+                }
+            }
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowFrameRateInput {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "selectable",
+            "fixed_value",
+            "fixedValue",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Selectable,
+            FixedValue,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "selectable" => Ok(GeneratedField::Selectable),
+                            "fixedValue" | "fixed_value" => Ok(GeneratedField::FixedValue),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WorkflowFrameRateInput;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.WorkflowFrameRateInput")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<WorkflowFrameRateInput, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut mode__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Selectable => {
+                            if mode__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("selectable"));
+                            }
+                            mode__ = map_.next_value::<::std::option::Option<_>>()?.map(workflow_frame_rate_input::Mode::Selectable)
+;
+                        }
+                        GeneratedField::FixedValue => {
+                            if mode__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("fixedValue"));
+                            }
+                            mode__ = map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| workflow_frame_rate_input::Mode::FixedValue(x.0));
+                        }
+                    }
+                }
+                Ok(WorkflowFrameRateInput {
+                    mode: mode__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.WorkflowFrameRateInput", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WorkflowInputBinding {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.node_id.is_some() {
+            len += 1;
+        }
+        if self.input_name.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowInputBinding", len)?;
+        if let Some(v) = self.node_id.as_ref() {
+            struct_ser.serialize_field("nodeId", v)?;
+        }
+        if let Some(v) = self.input_name.as_ref() {
+            struct_ser.serialize_field("inputName", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowInputBinding {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "node_id",
+            "nodeId",
+            "input_name",
+            "inputName",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            NodeId,
+            InputName,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "nodeId" | "node_id" => Ok(GeneratedField::NodeId),
+                            "inputName" | "input_name" => Ok(GeneratedField::InputName),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WorkflowInputBinding;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.WorkflowInputBinding")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<WorkflowInputBinding, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut node_id__ = None;
+                let mut input_name__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::NodeId => {
+                            if node_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("nodeId"));
+                            }
+                            node_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::InputName => {
+                            if input_name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputName"));
+                            }
+                            input_name__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(WorkflowInputBinding {
+                    node_id: node_id__,
+                    input_name: input_name__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.WorkflowInputBinding", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WorkflowIntRangeInput {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.binding.is_some() {
+            len += 1;
+        }
+        if self.values.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowIntRangeInput", len)?;
+        if let Some(v) = self.binding.as_ref() {
+            struct_ser.serialize_field("binding", v)?;
+        }
+        if let Some(v) = self.values.as_ref() {
+            struct_ser.serialize_field("values", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowIntRangeInput {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "binding",
+            "values",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Binding,
+            Values,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "binding" => Ok(GeneratedField::Binding),
+                            "values" => Ok(GeneratedField::Values),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WorkflowIntRangeInput;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.WorkflowIntRangeInput")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<WorkflowIntRangeInput, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut binding__ = None;
+                let mut values__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Binding => {
+                            if binding__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("binding"));
+                            }
+                            binding__ = map_.next_value()?;
+                        }
+                        GeneratedField::Values => {
+                            if values__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("values"));
+                            }
+                            values__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(WorkflowIntRangeInput {
+                    binding: binding__,
+                    values: values__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.WorkflowIntRangeInput", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WorkflowIssue {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.code.is_some() {
+            len += 1;
+        }
+        if self.severity.is_some() {
+            len += 1;
+        }
+        if self.message.is_some() {
+            len += 1;
+        }
+        if self.node_id.is_some() {
+            len += 1;
+        }
+        if self.input_name.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowIssue", len)?;
+        if let Some(v) = self.code.as_ref() {
+            struct_ser.serialize_field("code", v)?;
+        }
+        if let Some(v) = self.severity.as_ref() {
+            let v = WorkflowIssueSeverity::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("severity", &v)?;
+        }
+        if let Some(v) = self.message.as_ref() {
+            struct_ser.serialize_field("message", v)?;
+        }
+        if let Some(v) = self.node_id.as_ref() {
+            struct_ser.serialize_field("nodeId", v)?;
+        }
+        if let Some(v) = self.input_name.as_ref() {
+            struct_ser.serialize_field("inputName", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowIssue {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "code",
+            "severity",
+            "message",
+            "node_id",
+            "nodeId",
+            "input_name",
+            "inputName",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Code,
+            Severity,
+            Message,
+            NodeId,
+            InputName,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "code" => Ok(GeneratedField::Code),
+                            "severity" => Ok(GeneratedField::Severity),
+                            "message" => Ok(GeneratedField::Message),
+                            "nodeId" | "node_id" => Ok(GeneratedField::NodeId),
+                            "inputName" | "input_name" => Ok(GeneratedField::InputName),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WorkflowIssue;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.WorkflowIssue")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<WorkflowIssue, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut code__ = None;
+                let mut severity__ = None;
+                let mut message__ = None;
+                let mut node_id__ = None;
+                let mut input_name__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Code => {
+                            if code__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("code"));
+                            }
+                            code__ = map_.next_value()?;
+                        }
+                        GeneratedField::Severity => {
+                            if severity__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("severity"));
+                            }
+                            severity__ = map_.next_value::<::std::option::Option<WorkflowIssueSeverity>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::Message => {
+                            if message__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("message"));
+                            }
+                            message__ = map_.next_value()?;
+                        }
+                        GeneratedField::NodeId => {
+                            if node_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("nodeId"));
+                            }
+                            node_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::InputName => {
+                            if input_name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputName"));
+                            }
+                            input_name__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(WorkflowIssue {
+                    code: code__,
+                    severity: severity__,
+                    message: message__,
+                    node_id: node_id__,
+                    input_name: input_name__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.WorkflowIssue", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WorkflowIssueSeverity {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unspecified => "WORKFLOW_ISSUE_SEVERITY_UNSPECIFIED",
+            Self::Warning => "WORKFLOW_ISSUE_SEVERITY_WARNING",
+            Self::Error => "WORKFLOW_ISSUE_SEVERITY_ERROR",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowIssueSeverity {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "WORKFLOW_ISSUE_SEVERITY_UNSPECIFIED",
+            "WORKFLOW_ISSUE_SEVERITY_WARNING",
+            "WORKFLOW_ISSUE_SEVERITY_ERROR",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = WorkflowIssueSeverity;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "WORKFLOW_ISSUE_SEVERITY_UNSPECIFIED" => Ok(WorkflowIssueSeverity::Unspecified),
+                    "WORKFLOW_ISSUE_SEVERITY_WARNING" => Ok(WorkflowIssueSeverity::Warning),
+                    "WORKFLOW_ISSUE_SEVERITY_ERROR" => Ok(WorkflowIssueSeverity::Error),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WorkflowNode {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.node_id.is_some() {
+            len += 1;
+        }
+        if self.class_type.is_some() {
+            len += 1;
+        }
+        if self.title.is_some() {
+            len += 1;
+        }
+        if !self.inputs.is_empty() {
+            len += 1;
+        }
+        if self.supported_main_output.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowNode", len)?;
+        if let Some(v) = self.node_id.as_ref() {
+            struct_ser.serialize_field("nodeId", v)?;
+        }
+        if let Some(v) = self.class_type.as_ref() {
+            struct_ser.serialize_field("classType", v)?;
+        }
+        if let Some(v) = self.title.as_ref() {
+            struct_ser.serialize_field("title", v)?;
+        }
+        if !self.inputs.is_empty() {
+            struct_ser.serialize_field("inputs", &self.inputs)?;
+        }
+        if let Some(v) = self.supported_main_output.as_ref() {
+            struct_ser.serialize_field("supportedMainOutput", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowNode {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "node_id",
+            "nodeId",
+            "class_type",
+            "classType",
+            "title",
+            "inputs",
+            "supported_main_output",
+            "supportedMainOutput",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            NodeId,
+            ClassType,
+            Title,
+            Inputs,
+            SupportedMainOutput,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "nodeId" | "node_id" => Ok(GeneratedField::NodeId),
+                            "classType" | "class_type" => Ok(GeneratedField::ClassType),
+                            "title" => Ok(GeneratedField::Title),
+                            "inputs" => Ok(GeneratedField::Inputs),
+                            "supportedMainOutput" | "supported_main_output" => Ok(GeneratedField::SupportedMainOutput),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WorkflowNode;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.WorkflowNode")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<WorkflowNode, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut node_id__ = None;
+                let mut class_type__ = None;
+                let mut title__ = None;
+                let mut inputs__ = None;
+                let mut supported_main_output__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::NodeId => {
+                            if node_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("nodeId"));
+                            }
+                            node_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::ClassType => {
+                            if class_type__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("classType"));
+                            }
+                            class_type__ = map_.next_value()?;
+                        }
+                        GeneratedField::Title => {
+                            if title__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("title"));
+                            }
+                            title__ = map_.next_value()?;
+                        }
+                        GeneratedField::Inputs => {
+                            if inputs__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputs"));
+                            }
+                            inputs__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::SupportedMainOutput => {
+                            if supported_main_output__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("supportedMainOutput"));
+                            }
+                            supported_main_output__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(WorkflowNode {
+                    node_id: node_id__,
+                    class_type: class_type__,
+                    title: title__,
+                    inputs: inputs__.unwrap_or_default(),
+                    supported_main_output: supported_main_output__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.WorkflowNode", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WorkflowNodeInput {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.input_name.is_some() {
+            len += 1;
+        }
+        if self.value_json.is_some() {
+            len += 1;
+        }
+        if self.is_link.is_some() {
+            len += 1;
+        }
+        if self.source_node_id.is_some() {
+            len += 1;
+        }
+        if self.source_output_index.is_some() {
+            len += 1;
+        }
+        if self.declared_type.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowNodeInput", len)?;
+        if let Some(v) = self.input_name.as_ref() {
+            struct_ser.serialize_field("inputName", v)?;
+        }
+        if let Some(v) = self.value_json.as_ref() {
+            struct_ser.serialize_field("valueJson", v)?;
+        }
+        if let Some(v) = self.is_link.as_ref() {
+            struct_ser.serialize_field("isLink", v)?;
+        }
+        if let Some(v) = self.source_node_id.as_ref() {
+            struct_ser.serialize_field("sourceNodeId", v)?;
+        }
+        if let Some(v) = self.source_output_index.as_ref() {
+            struct_ser.serialize_field("sourceOutputIndex", v)?;
+        }
+        if let Some(v) = self.declared_type.as_ref() {
+            struct_ser.serialize_field("declaredType", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowNodeInput {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "input_name",
+            "inputName",
+            "value_json",
+            "valueJson",
+            "is_link",
+            "isLink",
+            "source_node_id",
+            "sourceNodeId",
+            "source_output_index",
+            "sourceOutputIndex",
+            "declared_type",
+            "declaredType",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            InputName,
+            ValueJson,
+            IsLink,
+            SourceNodeId,
+            SourceOutputIndex,
+            DeclaredType,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "inputName" | "input_name" => Ok(GeneratedField::InputName),
+                            "valueJson" | "value_json" => Ok(GeneratedField::ValueJson),
+                            "isLink" | "is_link" => Ok(GeneratedField::IsLink),
+                            "sourceNodeId" | "source_node_id" => Ok(GeneratedField::SourceNodeId),
+                            "sourceOutputIndex" | "source_output_index" => Ok(GeneratedField::SourceOutputIndex),
+                            "declaredType" | "declared_type" => Ok(GeneratedField::DeclaredType),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WorkflowNodeInput;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.WorkflowNodeInput")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<WorkflowNodeInput, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut input_name__ = None;
+                let mut value_json__ = None;
+                let mut is_link__ = None;
+                let mut source_node_id__ = None;
+                let mut source_output_index__ = None;
+                let mut declared_type__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::InputName => {
+                            if input_name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputName"));
+                            }
+                            input_name__ = map_.next_value()?;
+                        }
+                        GeneratedField::ValueJson => {
+                            if value_json__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("valueJson"));
+                            }
+                            value_json__ = map_.next_value()?;
+                        }
+                        GeneratedField::IsLink => {
+                            if is_link__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("isLink"));
+                            }
+                            is_link__ = map_.next_value()?;
+                        }
+                        GeneratedField::SourceNodeId => {
+                            if source_node_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sourceNodeId"));
+                            }
+                            source_node_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::SourceOutputIndex => {
+                            if source_output_index__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sourceOutputIndex"));
+                            }
+                            source_output_index__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::DeclaredType => {
+                            if declared_type__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("declaredType"));
+                            }
+                            declared_type__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(WorkflowNodeInput {
+                    input_name: input_name__,
+                    value_json: value_json__,
+                    is_link: is_link__,
+                    source_node_id: source_node_id__,
+                    source_output_index: source_output_index__,
+                    declared_type: declared_type__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.WorkflowNodeInput", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WorkflowOutputConfig {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.node_id.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowOutputConfig", len)?;
+        if let Some(v) = self.node_id.as_ref() {
+            struct_ser.serialize_field("nodeId", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowOutputConfig {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "node_id",
+            "nodeId",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            NodeId,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "nodeId" | "node_id" => Ok(GeneratedField::NodeId),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WorkflowOutputConfig;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.WorkflowOutputConfig")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<WorkflowOutputConfig, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut node_id__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::NodeId => {
+                            if node_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("nodeId"));
+                            }
+                            node_id__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(WorkflowOutputConfig {
+                    node_id: node_id__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.WorkflowOutputConfig", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WorkflowSelectableFrameRate {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.binding.is_some() {
+            len += 1;
+        }
+        if self.values.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowSelectableFrameRate", len)?;
+        if let Some(v) = self.binding.as_ref() {
+            struct_ser.serialize_field("binding", v)?;
+        }
+        if let Some(v) = self.values.as_ref() {
+            struct_ser.serialize_field("values", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowSelectableFrameRate {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "binding",
+            "values",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Binding,
+            Values,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "binding" => Ok(GeneratedField::Binding),
+                            "values" => Ok(GeneratedField::Values),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WorkflowSelectableFrameRate;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.WorkflowSelectableFrameRate")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<WorkflowSelectableFrameRate, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut binding__ = None;
+                let mut values__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Binding => {
+                            if binding__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("binding"));
+                            }
+                            binding__ = map_.next_value()?;
+                        }
+                        GeneratedField::Values => {
+                            if values__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("values"));
+                            }
+                            values__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(WorkflowSelectableFrameRate {
+                    binding: binding__,
+                    values: values__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.WorkflowSelectableFrameRate", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WorkflowStatus {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unspecified => "WORKFLOW_STATUS_UNSPECIFIED",
+            Self::Draft => "WORKFLOW_STATUS_DRAFT",
+            Self::Enabled => "WORKFLOW_STATUS_ENABLED",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowStatus {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "WORKFLOW_STATUS_UNSPECIFIED",
+            "WORKFLOW_STATUS_DRAFT",
+            "WORKFLOW_STATUS_ENABLED",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = WorkflowStatus;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "WORKFLOW_STATUS_UNSPECIFIED" => Ok(WorkflowStatus::Unspecified),
+                    "WORKFLOW_STATUS_DRAFT" => Ok(WorkflowStatus::Draft),
+                    "WORKFLOW_STATUS_ENABLED" => Ok(WorkflowStatus::Enabled),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WorkflowStringOptionInput {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.binding.is_some() {
+            len += 1;
+        }
+        if self.values.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowStringOptionInput", len)?;
+        if let Some(v) = self.binding.as_ref() {
+            struct_ser.serialize_field("binding", v)?;
+        }
+        if let Some(v) = self.values.as_ref() {
+            struct_ser.serialize_field("values", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowStringOptionInput {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "binding",
+            "values",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Binding,
+            Values,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "binding" => Ok(GeneratedField::Binding),
+                            "values" => Ok(GeneratedField::Values),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WorkflowStringOptionInput;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.WorkflowStringOptionInput")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<WorkflowStringOptionInput, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut binding__ = None;
+                let mut values__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Binding => {
+                            if binding__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("binding"));
+                            }
+                            binding__ = map_.next_value()?;
+                        }
+                        GeneratedField::Values => {
+                            if values__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("values"));
+                            }
+                            values__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(WorkflowStringOptionInput {
+                    binding: binding__,
+                    values: values__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.WorkflowStringOptionInput", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WorkflowSummary {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.workflow_version_id.is_some() {
+            len += 1;
+        }
+        if self.feature_key.is_some() {
+            len += 1;
+        }
+        if self.name.is_some() {
+            len += 1;
+        }
+        if self.status.is_some() {
+            len += 1;
+        }
+        if self.validation_status.is_some() {
+            len += 1;
+        }
+        if self.enabled_at.is_some() {
+            len += 1;
+        }
+        if self.created_by.is_some() {
+            len += 1;
+        }
+        if self.created_at.is_some() {
+            len += 1;
+        }
+        if self.updated_at.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowSummary", len)?;
+        if let Some(v) = self.workflow_version_id.as_ref() {
+            struct_ser.serialize_field("workflowVersionId", v)?;
+        }
+        if let Some(v) = self.feature_key.as_ref() {
+            let v = FeatureKey::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("featureKey", &v)?;
+        }
+        if let Some(v) = self.name.as_ref() {
+            struct_ser.serialize_field("name", v)?;
+        }
+        if let Some(v) = self.status.as_ref() {
+            let v = WorkflowStatus::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("status", &v)?;
+        }
+        if let Some(v) = self.validation_status.as_ref() {
+            let v = WorkflowValidationStatus::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("validationStatus", &v)?;
+        }
+        if let Some(v) = self.enabled_at.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("enabledAt", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.created_by.as_ref() {
+            struct_ser.serialize_field("createdBy", v)?;
+        }
+        if let Some(v) = self.created_at.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("createdAt", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.updated_at.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("updatedAt", ToString::to_string(&v).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowSummary {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "workflow_version_id",
+            "workflowVersionId",
+            "feature_key",
+            "featureKey",
+            "name",
+            "status",
+            "validation_status",
+            "validationStatus",
+            "enabled_at",
+            "enabledAt",
+            "created_by",
+            "createdBy",
+            "created_at",
+            "createdAt",
+            "updated_at",
+            "updatedAt",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            WorkflowVersionId,
+            FeatureKey,
+            Name,
+            Status,
+            ValidationStatus,
+            EnabledAt,
+            CreatedBy,
+            CreatedAt,
+            UpdatedAt,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "workflowVersionId" | "workflow_version_id" => Ok(GeneratedField::WorkflowVersionId),
+                            "featureKey" | "feature_key" => Ok(GeneratedField::FeatureKey),
+                            "name" => Ok(GeneratedField::Name),
+                            "status" => Ok(GeneratedField::Status),
+                            "validationStatus" | "validation_status" => Ok(GeneratedField::ValidationStatus),
+                            "enabledAt" | "enabled_at" => Ok(GeneratedField::EnabledAt),
+                            "createdBy" | "created_by" => Ok(GeneratedField::CreatedBy),
+                            "createdAt" | "created_at" => Ok(GeneratedField::CreatedAt),
+                            "updatedAt" | "updated_at" => Ok(GeneratedField::UpdatedAt),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WorkflowSummary;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.WorkflowSummary")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<WorkflowSummary, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut workflow_version_id__ = None;
+                let mut feature_key__ = None;
+                let mut name__ = None;
+                let mut status__ = None;
+                let mut validation_status__ = None;
+                let mut enabled_at__ = None;
+                let mut created_by__ = None;
+                let mut created_at__ = None;
+                let mut updated_at__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::WorkflowVersionId => {
+                            if workflow_version_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowVersionId"));
+                            }
+                            workflow_version_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::FeatureKey => {
+                            if feature_key__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("featureKey"));
+                            }
+                            feature_key__ = map_.next_value::<::std::option::Option<FeatureKey>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::Name => {
+                            if name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("name"));
+                            }
+                            name__ = map_.next_value()?;
+                        }
+                        GeneratedField::Status => {
+                            if status__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("status"));
+                            }
+                            status__ = map_.next_value::<::std::option::Option<WorkflowStatus>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::ValidationStatus => {
+                            if validation_status__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("validationStatus"));
+                            }
+                            validation_status__ = map_.next_value::<::std::option::Option<WorkflowValidationStatus>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::EnabledAt => {
+                            if enabled_at__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("enabledAt"));
+                            }
+                            enabled_at__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::CreatedBy => {
+                            if created_by__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("createdBy"));
+                            }
+                            created_by__ = map_.next_value()?;
+                        }
+                        GeneratedField::CreatedAt => {
+                            if created_at__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("createdAt"));
+                            }
+                            created_at__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::UpdatedAt => {
+                            if updated_at__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("updatedAt"));
+                            }
+                            updated_at__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(WorkflowSummary {
+                    workflow_version_id: workflow_version_id__,
+                    feature_key: feature_key__,
+                    name: name__,
+                    status: status__,
+                    validation_status: validation_status__,
+                    enabled_at: enabled_at__,
+                    created_by: created_by__,
+                    created_at: created_at__,
+                    updated_at: updated_at__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.WorkflowSummary", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WorkflowValidationStatus {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unspecified => "WORKFLOW_VALIDATION_STATUS_UNSPECIFIED",
+            Self::Passed => "WORKFLOW_VALIDATION_STATUS_PASSED",
+            Self::Failed => "WORKFLOW_VALIDATION_STATUS_FAILED",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowValidationStatus {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "WORKFLOW_VALIDATION_STATUS_UNSPECIFIED",
+            "WORKFLOW_VALIDATION_STATUS_PASSED",
+            "WORKFLOW_VALIDATION_STATUS_FAILED",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = WorkflowValidationStatus;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "WORKFLOW_VALIDATION_STATUS_UNSPECIFIED" => Ok(WorkflowValidationStatus::Unspecified),
+                    "WORKFLOW_VALIDATION_STATUS_PASSED" => Ok(WorkflowValidationStatus::Passed),
+                    "WORKFLOW_VALIDATION_STATUS_FAILED" => Ok(WorkflowValidationStatus::Failed),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
     }
 }

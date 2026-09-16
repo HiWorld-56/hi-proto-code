@@ -5,7 +5,7 @@ import grpc
 from hi.media import task_pb2 as hi_dot_media_dot_task__pb2
 
 
-class MediaTaskStub(object):
+class TaskStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -14,48 +14,48 @@ class MediaTaskStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.CreateTextToImage = channel.unary_unary(
-                '/hi.media.MediaTask/CreateTextToImage',
-                request_serializer=hi_dot_media_dot_task__pb2.CreateTextToImageTaskReq.SerializeToString,
-                response_deserializer=hi_dot_media_dot_task__pb2.CreateMediaTaskResp.FromString,
-                _registered_method=True)
         self.CreateImageToVideo = channel.unary_unary(
-                '/hi.media.MediaTask/CreateImageToVideo',
+                '/hi.media.Task/CreateImageToVideo',
                 request_serializer=hi_dot_media_dot_task__pb2.CreateImageToVideoTaskReq.SerializeToString,
-                response_deserializer=hi_dot_media_dot_task__pb2.CreateMediaTaskResp.FromString,
+                response_deserializer=hi_dot_media_dot_task__pb2.CreateTaskResp.FromString,
+                _registered_method=True)
+        self.CreateTextToVideo = channel.unary_unary(
+                '/hi.media.Task/CreateTextToVideo',
+                request_serializer=hi_dot_media_dot_task__pb2.CreateTextToVideoTaskReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_task__pb2.CreateTaskResp.FromString,
                 _registered_method=True)
         self.Get = channel.unary_unary(
-                '/hi.media.MediaTask/Get',
-                request_serializer=hi_dot_media_dot_task__pb2.GetMediaTaskReq.SerializeToString,
-                response_deserializer=hi_dot_media_dot_task__pb2.GetMediaTaskResp.FromString,
+                '/hi.media.Task/Get',
+                request_serializer=hi_dot_media_dot_task__pb2.GetTaskReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_task__pb2.GetTaskResp.FromString,
                 _registered_method=True)
         self.List = channel.unary_unary(
-                '/hi.media.MediaTask/List',
-                request_serializer=hi_dot_media_dot_task__pb2.ListMediaTasksReq.SerializeToString,
-                response_deserializer=hi_dot_media_dot_task__pb2.ListMediaTasksResp.FromString,
+                '/hi.media.Task/List',
+                request_serializer=hi_dot_media_dot_task__pb2.ListTasksReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_task__pb2.ListTasksResp.FromString,
                 _registered_method=True)
         self.Cancel = channel.unary_unary(
-                '/hi.media.MediaTask/Cancel',
-                request_serializer=hi_dot_media_dot_task__pb2.CancelMediaTaskReq.SerializeToString,
-                response_deserializer=hi_dot_media_dot_task__pb2.CancelMediaTaskResp.FromString,
+                '/hi.media.Task/Cancel',
+                request_serializer=hi_dot_media_dot_task__pb2.CancelTaskReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_task__pb2.CancelTaskResp.FromString,
                 _registered_method=True)
         self.RecoverSave = channel.unary_unary(
-                '/hi.media.MediaTask/RecoverSave',
-                request_serializer=hi_dot_media_dot_task__pb2.RecoverSaveMediaTaskReq.SerializeToString,
-                response_deserializer=hi_dot_media_dot_task__pb2.RecoverSaveMediaTaskResp.FromString,
+                '/hi.media.Task/RecoverSave',
+                request_serializer=hi_dot_media_dot_task__pb2.RecoverSaveTaskReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_task__pb2.RecoverSaveTaskResp.FromString,
                 _registered_method=True)
 
 
-class MediaTaskServicer(object):
+class TaskServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def CreateTextToImage(self, request, context):
+    def CreateImageToVideo(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def CreateImageToVideo(self, request, context):
+    def CreateTextToVideo(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -86,75 +86,48 @@ class MediaTaskServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
-def add_MediaTaskServicer_to_server(servicer, server):
+def add_TaskServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'CreateTextToImage': grpc.unary_unary_rpc_method_handler(
-                    servicer.CreateTextToImage,
-                    request_deserializer=hi_dot_media_dot_task__pb2.CreateTextToImageTaskReq.FromString,
-                    response_serializer=hi_dot_media_dot_task__pb2.CreateMediaTaskResp.SerializeToString,
-            ),
             'CreateImageToVideo': grpc.unary_unary_rpc_method_handler(
                     servicer.CreateImageToVideo,
                     request_deserializer=hi_dot_media_dot_task__pb2.CreateImageToVideoTaskReq.FromString,
-                    response_serializer=hi_dot_media_dot_task__pb2.CreateMediaTaskResp.SerializeToString,
+                    response_serializer=hi_dot_media_dot_task__pb2.CreateTaskResp.SerializeToString,
+            ),
+            'CreateTextToVideo': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateTextToVideo,
+                    request_deserializer=hi_dot_media_dot_task__pb2.CreateTextToVideoTaskReq.FromString,
+                    response_serializer=hi_dot_media_dot_task__pb2.CreateTaskResp.SerializeToString,
             ),
             'Get': grpc.unary_unary_rpc_method_handler(
                     servicer.Get,
-                    request_deserializer=hi_dot_media_dot_task__pb2.GetMediaTaskReq.FromString,
-                    response_serializer=hi_dot_media_dot_task__pb2.GetMediaTaskResp.SerializeToString,
+                    request_deserializer=hi_dot_media_dot_task__pb2.GetTaskReq.FromString,
+                    response_serializer=hi_dot_media_dot_task__pb2.GetTaskResp.SerializeToString,
             ),
             'List': grpc.unary_unary_rpc_method_handler(
                     servicer.List,
-                    request_deserializer=hi_dot_media_dot_task__pb2.ListMediaTasksReq.FromString,
-                    response_serializer=hi_dot_media_dot_task__pb2.ListMediaTasksResp.SerializeToString,
+                    request_deserializer=hi_dot_media_dot_task__pb2.ListTasksReq.FromString,
+                    response_serializer=hi_dot_media_dot_task__pb2.ListTasksResp.SerializeToString,
             ),
             'Cancel': grpc.unary_unary_rpc_method_handler(
                     servicer.Cancel,
-                    request_deserializer=hi_dot_media_dot_task__pb2.CancelMediaTaskReq.FromString,
-                    response_serializer=hi_dot_media_dot_task__pb2.CancelMediaTaskResp.SerializeToString,
+                    request_deserializer=hi_dot_media_dot_task__pb2.CancelTaskReq.FromString,
+                    response_serializer=hi_dot_media_dot_task__pb2.CancelTaskResp.SerializeToString,
             ),
             'RecoverSave': grpc.unary_unary_rpc_method_handler(
                     servicer.RecoverSave,
-                    request_deserializer=hi_dot_media_dot_task__pb2.RecoverSaveMediaTaskReq.FromString,
-                    response_serializer=hi_dot_media_dot_task__pb2.RecoverSaveMediaTaskResp.SerializeToString,
+                    request_deserializer=hi_dot_media_dot_task__pb2.RecoverSaveTaskReq.FromString,
+                    response_serializer=hi_dot_media_dot_task__pb2.RecoverSaveTaskResp.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'hi.media.MediaTask', rpc_method_handlers)
+            'hi.media.Task', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('hi.media.MediaTask', rpc_method_handlers)
+    server.add_registered_method_handlers('hi.media.Task', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class MediaTask(object):
+class Task(object):
     """Missing associated documentation comment in .proto file."""
-
-    @staticmethod
-    def CreateTextToImage(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/hi.media.MediaTask/CreateTextToImage',
-            hi_dot_media_dot_task__pb2.CreateTextToImageTaskReq.SerializeToString,
-            hi_dot_media_dot_task__pb2.CreateMediaTaskResp.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
 
     @staticmethod
     def CreateImageToVideo(request,
@@ -170,9 +143,36 @@ class MediaTask(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.MediaTask/CreateImageToVideo',
+            '/hi.media.Task/CreateImageToVideo',
             hi_dot_media_dot_task__pb2.CreateImageToVideoTaskReq.SerializeToString,
-            hi_dot_media_dot_task__pb2.CreateMediaTaskResp.FromString,
+            hi_dot_media_dot_task__pb2.CreateTaskResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CreateTextToVideo(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.media.Task/CreateTextToVideo',
+            hi_dot_media_dot_task__pb2.CreateTextToVideoTaskReq.SerializeToString,
+            hi_dot_media_dot_task__pb2.CreateTaskResp.FromString,
             options,
             channel_credentials,
             insecure,
@@ -197,9 +197,9 @@ class MediaTask(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.MediaTask/Get',
-            hi_dot_media_dot_task__pb2.GetMediaTaskReq.SerializeToString,
-            hi_dot_media_dot_task__pb2.GetMediaTaskResp.FromString,
+            '/hi.media.Task/Get',
+            hi_dot_media_dot_task__pb2.GetTaskReq.SerializeToString,
+            hi_dot_media_dot_task__pb2.GetTaskResp.FromString,
             options,
             channel_credentials,
             insecure,
@@ -224,9 +224,9 @@ class MediaTask(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.MediaTask/List',
-            hi_dot_media_dot_task__pb2.ListMediaTasksReq.SerializeToString,
-            hi_dot_media_dot_task__pb2.ListMediaTasksResp.FromString,
+            '/hi.media.Task/List',
+            hi_dot_media_dot_task__pb2.ListTasksReq.SerializeToString,
+            hi_dot_media_dot_task__pb2.ListTasksResp.FromString,
             options,
             channel_credentials,
             insecure,
@@ -251,9 +251,9 @@ class MediaTask(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.MediaTask/Cancel',
-            hi_dot_media_dot_task__pb2.CancelMediaTaskReq.SerializeToString,
-            hi_dot_media_dot_task__pb2.CancelMediaTaskResp.FromString,
+            '/hi.media.Task/Cancel',
+            hi_dot_media_dot_task__pb2.CancelTaskReq.SerializeToString,
+            hi_dot_media_dot_task__pb2.CancelTaskResp.FromString,
             options,
             channel_credentials,
             insecure,
@@ -278,9 +278,9 @@ class MediaTask(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.MediaTask/RecoverSave',
-            hi_dot_media_dot_task__pb2.RecoverSaveMediaTaskReq.SerializeToString,
-            hi_dot_media_dot_task__pb2.RecoverSaveMediaTaskResp.FromString,
+            '/hi.media.Task/RecoverSave',
+            hi_dot_media_dot_task__pb2.RecoverSaveTaskReq.SerializeToString,
+            hi_dot_media_dot_task__pb2.RecoverSaveTaskResp.FromString,
             options,
             channel_credentials,
             insecure,

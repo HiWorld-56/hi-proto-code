@@ -5,7 +5,7 @@ import grpc
 from hi.media import file_pb2 as hi_dot_media_dot_file__pb2
 
 
-class MediaFileStub(object):
+class FileStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -15,28 +15,28 @@ class MediaFileStub(object):
             channel: A grpc.Channel.
         """
         self.GetUpload = channel.unary_unary(
-                '/hi.media.MediaFile/GetUpload',
-                request_serializer=hi_dot_media_dot_file__pb2.GetMediaUploadReq.SerializeToString,
-                response_deserializer=hi_dot_media_dot_file__pb2.GetMediaUploadResp.FromString,
+                '/hi.media.File/GetUpload',
+                request_serializer=hi_dot_media_dot_file__pb2.GetUploadReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_file__pb2.GetUploadResp.FromString,
                 _registered_method=True)
         self.List = channel.unary_unary(
-                '/hi.media.MediaFile/List',
-                request_serializer=hi_dot_media_dot_file__pb2.ListMediaFilesReq.SerializeToString,
-                response_deserializer=hi_dot_media_dot_file__pb2.ListMediaFilesResp.FromString,
+                '/hi.media.File/List',
+                request_serializer=hi_dot_media_dot_file__pb2.ListFilesReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_file__pb2.ListFilesResp.FromString,
                 _registered_method=True)
         self.Delete = channel.unary_unary(
-                '/hi.media.MediaFile/Delete',
-                request_serializer=hi_dot_media_dot_file__pb2.DeleteMediaFileReq.SerializeToString,
-                response_deserializer=hi_dot_media_dot_file__pb2.DeleteMediaFileResp.FromString,
+                '/hi.media.File/Delete',
+                request_serializer=hi_dot_media_dot_file__pb2.DeleteFileReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_file__pb2.DeleteFileResp.FromString,
                 _registered_method=True)
         self.GetAccessUrls = channel.unary_unary(
-                '/hi.media.MediaFile/GetAccessUrls',
-                request_serializer=hi_dot_media_dot_file__pb2.GetMediaFileAccessUrlsReq.SerializeToString,
-                response_deserializer=hi_dot_media_dot_file__pb2.GetMediaFileAccessUrlsResp.FromString,
+                '/hi.media.File/GetAccessUrls',
+                request_serializer=hi_dot_media_dot_file__pb2.GetFileAccessUrlsReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_file__pb2.GetFileAccessUrlsResp.FromString,
                 _registered_method=True)
 
 
-class MediaFileServicer(object):
+class FileServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def GetUpload(self, request, context):
@@ -64,37 +64,37 @@ class MediaFileServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
-def add_MediaFileServicer_to_server(servicer, server):
+def add_FileServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetUpload': grpc.unary_unary_rpc_method_handler(
                     servicer.GetUpload,
-                    request_deserializer=hi_dot_media_dot_file__pb2.GetMediaUploadReq.FromString,
-                    response_serializer=hi_dot_media_dot_file__pb2.GetMediaUploadResp.SerializeToString,
+                    request_deserializer=hi_dot_media_dot_file__pb2.GetUploadReq.FromString,
+                    response_serializer=hi_dot_media_dot_file__pb2.GetUploadResp.SerializeToString,
             ),
             'List': grpc.unary_unary_rpc_method_handler(
                     servicer.List,
-                    request_deserializer=hi_dot_media_dot_file__pb2.ListMediaFilesReq.FromString,
-                    response_serializer=hi_dot_media_dot_file__pb2.ListMediaFilesResp.SerializeToString,
+                    request_deserializer=hi_dot_media_dot_file__pb2.ListFilesReq.FromString,
+                    response_serializer=hi_dot_media_dot_file__pb2.ListFilesResp.SerializeToString,
             ),
             'Delete': grpc.unary_unary_rpc_method_handler(
                     servicer.Delete,
-                    request_deserializer=hi_dot_media_dot_file__pb2.DeleteMediaFileReq.FromString,
-                    response_serializer=hi_dot_media_dot_file__pb2.DeleteMediaFileResp.SerializeToString,
+                    request_deserializer=hi_dot_media_dot_file__pb2.DeleteFileReq.FromString,
+                    response_serializer=hi_dot_media_dot_file__pb2.DeleteFileResp.SerializeToString,
             ),
             'GetAccessUrls': grpc.unary_unary_rpc_method_handler(
                     servicer.GetAccessUrls,
-                    request_deserializer=hi_dot_media_dot_file__pb2.GetMediaFileAccessUrlsReq.FromString,
-                    response_serializer=hi_dot_media_dot_file__pb2.GetMediaFileAccessUrlsResp.SerializeToString,
+                    request_deserializer=hi_dot_media_dot_file__pb2.GetFileAccessUrlsReq.FromString,
+                    response_serializer=hi_dot_media_dot_file__pb2.GetFileAccessUrlsResp.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'hi.media.MediaFile', rpc_method_handlers)
+            'hi.media.File', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('hi.media.MediaFile', rpc_method_handlers)
+    server.add_registered_method_handlers('hi.media.File', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class MediaFile(object):
+class File(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -111,9 +111,9 @@ class MediaFile(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.MediaFile/GetUpload',
-            hi_dot_media_dot_file__pb2.GetMediaUploadReq.SerializeToString,
-            hi_dot_media_dot_file__pb2.GetMediaUploadResp.FromString,
+            '/hi.media.File/GetUpload',
+            hi_dot_media_dot_file__pb2.GetUploadReq.SerializeToString,
+            hi_dot_media_dot_file__pb2.GetUploadResp.FromString,
             options,
             channel_credentials,
             insecure,
@@ -138,9 +138,9 @@ class MediaFile(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.MediaFile/List',
-            hi_dot_media_dot_file__pb2.ListMediaFilesReq.SerializeToString,
-            hi_dot_media_dot_file__pb2.ListMediaFilesResp.FromString,
+            '/hi.media.File/List',
+            hi_dot_media_dot_file__pb2.ListFilesReq.SerializeToString,
+            hi_dot_media_dot_file__pb2.ListFilesResp.FromString,
             options,
             channel_credentials,
             insecure,
@@ -165,9 +165,9 @@ class MediaFile(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.MediaFile/Delete',
-            hi_dot_media_dot_file__pb2.DeleteMediaFileReq.SerializeToString,
-            hi_dot_media_dot_file__pb2.DeleteMediaFileResp.FromString,
+            '/hi.media.File/Delete',
+            hi_dot_media_dot_file__pb2.DeleteFileReq.SerializeToString,
+            hi_dot_media_dot_file__pb2.DeleteFileResp.FromString,
             options,
             channel_credentials,
             insecure,
@@ -192,9 +192,9 @@ class MediaFile(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.MediaFile/GetAccessUrls',
-            hi_dot_media_dot_file__pb2.GetMediaFileAccessUrlsReq.SerializeToString,
-            hi_dot_media_dot_file__pb2.GetMediaFileAccessUrlsResp.FromString,
+            '/hi.media.File/GetAccessUrls',
+            hi_dot_media_dot_file__pb2.GetFileAccessUrlsReq.SerializeToString,
+            hi_dot_media_dot_file__pb2.GetFileAccessUrlsResp.FromString,
             options,
             channel_credentials,
             insecure,

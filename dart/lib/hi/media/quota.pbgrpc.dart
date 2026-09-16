@@ -21,8 +21,8 @@ import 'quota.pb.dart' as $1;
 
 export 'quota.pb.dart';
 
-@$pb.GrpcServiceName('hi.media.MediaQuota')
-class MediaQuotaClient extends $grpc.Client {
+@$pb.GrpcServiceName('hi.media.Quota')
+class QuotaClient extends $grpc.Client {
   /// The hostname for this service.
   static const $core.String defaultHost = '';
 
@@ -31,9 +31,9 @@ class MediaQuotaClient extends $grpc.Client {
     '',
   ];
 
-  MediaQuotaClient(super.channel, {super.options, super.interceptors});
+  QuotaClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$1.GetMediaQuotaResp> get(
+  $grpc.ResponseFuture<$1.GetQuotaResp> get(
     $0.Empty request, {
     $grpc.CallOptions? options,
   }) {
@@ -42,31 +42,30 @@ class MediaQuotaClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$get = $grpc.ClientMethod<$0.Empty, $1.GetMediaQuotaResp>(
-      '/hi.media.MediaQuota/Get',
+  static final _$get = $grpc.ClientMethod<$0.Empty, $1.GetQuotaResp>(
+      '/hi.media.Quota/Get',
       ($0.Empty value) => value.writeToBuffer(),
-      $1.GetMediaQuotaResp.fromBuffer);
+      $1.GetQuotaResp.fromBuffer);
 }
 
-@$pb.GrpcServiceName('hi.media.MediaQuota')
-abstract class MediaQuotaServiceBase extends $grpc.Service {
-  $core.String get $name => 'hi.media.MediaQuota';
+@$pb.GrpcServiceName('hi.media.Quota')
+abstract class QuotaServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.media.Quota';
 
-  MediaQuotaServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.Empty, $1.GetMediaQuotaResp>(
+  QuotaServiceBase() {
+    $addMethod($grpc.ServiceMethod<$0.Empty, $1.GetQuotaResp>(
         'Get',
         get_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($1.GetMediaQuotaResp value) => value.writeToBuffer()));
+        ($1.GetQuotaResp value) => value.writeToBuffer()));
   }
 
-  $async.Future<$1.GetMediaQuotaResp> get_Pre(
+  $async.Future<$1.GetQuotaResp> get_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
     return get($call, await $request);
   }
 
-  $async.Future<$1.GetMediaQuotaResp> get(
-      $grpc.ServiceCall call, $0.Empty request);
+  $async.Future<$1.GetQuotaResp> get($grpc.ServiceCall call, $0.Empty request);
 }

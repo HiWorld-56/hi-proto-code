@@ -35,34 +35,7 @@ var (
 	_ = metadata.Join
 )
 
-func request_MediaTask_CreateTextToImage_0(ctx context.Context, marshaler runtime.Marshaler, client MediaTaskClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq CreateTextToImageTaskReq
-		metadata runtime.ServerMetadata
-	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	if req.Body != nil {
-		_, _ = io.Copy(io.Discard, req.Body)
-	}
-	msg, err := client.CreateTextToImage(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
-	return msg, metadata, err
-}
-
-func local_request_MediaTask_CreateTextToImage_0(ctx context.Context, marshaler runtime.Marshaler, server MediaTaskServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq CreateTextToImageTaskReq
-		metadata runtime.ServerMetadata
-	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	msg, err := server.CreateTextToImage(ctx, &protoReq)
-	return msg, metadata, err
-}
-
-func request_MediaTask_CreateImageToVideo_0(ctx context.Context, marshaler runtime.Marshaler, client MediaTaskClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_Task_CreateImageToVideo_0(ctx context.Context, marshaler runtime.Marshaler, client TaskClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq CreateImageToVideoTaskReq
 		metadata runtime.ServerMetadata
@@ -77,7 +50,7 @@ func request_MediaTask_CreateImageToVideo_0(ctx context.Context, marshaler runti
 	return msg, metadata, err
 }
 
-func local_request_MediaTask_CreateImageToVideo_0(ctx context.Context, marshaler runtime.Marshaler, server MediaTaskServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_Task_CreateImageToVideo_0(ctx context.Context, marshaler runtime.Marshaler, server TaskServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq CreateImageToVideoTaskReq
 		metadata runtime.ServerMetadata
@@ -89,11 +62,38 @@ func local_request_MediaTask_CreateImageToVideo_0(ctx context.Context, marshaler
 	return msg, metadata, err
 }
 
-var filter_MediaTask_Get_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
-
-func request_MediaTask_Get_0(ctx context.Context, marshaler runtime.Marshaler, client MediaTaskClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_Task_CreateTextToVideo_0(ctx context.Context, marshaler runtime.Marshaler, client TaskClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq GetMediaTaskReq
+		protoReq CreateTextToVideoTaskReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	msg, err := client.CreateTextToVideo(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_Task_CreateTextToVideo_0(ctx context.Context, marshaler runtime.Marshaler, server TaskServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq CreateTextToVideoTaskReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.CreateTextToVideo(ctx, &protoReq)
+	return msg, metadata, err
+}
+
+var filter_Task_Get_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+
+func request_Task_Get_0(ctx context.Context, marshaler runtime.Marshaler, client TaskClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq GetTaskReq
 		metadata runtime.ServerMetadata
 	)
 	if req.Body != nil {
@@ -102,31 +102,31 @@ func request_MediaTask_Get_0(ctx context.Context, marshaler runtime.Marshaler, c
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_MediaTask_Get_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Task_Get_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 	msg, err := client.Get(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_MediaTask_Get_0(ctx context.Context, marshaler runtime.Marshaler, server MediaTaskServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_Task_Get_0(ctx context.Context, marshaler runtime.Marshaler, server TaskServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq GetMediaTaskReq
+		protoReq GetTaskReq
 		metadata runtime.ServerMetadata
 	)
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_MediaTask_Get_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Task_Get_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 	msg, err := server.Get(ctx, &protoReq)
 	return msg, metadata, err
 }
 
-func request_MediaTask_List_0(ctx context.Context, marshaler runtime.Marshaler, client MediaTaskClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_Task_List_0(ctx context.Context, marshaler runtime.Marshaler, client TaskClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ListMediaTasksReq
+		protoReq ListTasksReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -139,9 +139,9 @@ func request_MediaTask_List_0(ctx context.Context, marshaler runtime.Marshaler, 
 	return msg, metadata, err
 }
 
-func local_request_MediaTask_List_0(ctx context.Context, marshaler runtime.Marshaler, server MediaTaskServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_Task_List_0(ctx context.Context, marshaler runtime.Marshaler, server TaskServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ListMediaTasksReq
+		protoReq ListTasksReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -151,9 +151,9 @@ func local_request_MediaTask_List_0(ctx context.Context, marshaler runtime.Marsh
 	return msg, metadata, err
 }
 
-func request_MediaTask_Cancel_0(ctx context.Context, marshaler runtime.Marshaler, client MediaTaskClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_Task_Cancel_0(ctx context.Context, marshaler runtime.Marshaler, client TaskClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq CancelMediaTaskReq
+		protoReq CancelTaskReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -166,9 +166,9 @@ func request_MediaTask_Cancel_0(ctx context.Context, marshaler runtime.Marshaler
 	return msg, metadata, err
 }
 
-func local_request_MediaTask_Cancel_0(ctx context.Context, marshaler runtime.Marshaler, server MediaTaskServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_Task_Cancel_0(ctx context.Context, marshaler runtime.Marshaler, server TaskServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq CancelMediaTaskReq
+		protoReq CancelTaskReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -178,9 +178,9 @@ func local_request_MediaTask_Cancel_0(ctx context.Context, marshaler runtime.Mar
 	return msg, metadata, err
 }
 
-func request_MediaTask_RecoverSave_0(ctx context.Context, marshaler runtime.Marshaler, client MediaTaskClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_Task_RecoverSave_0(ctx context.Context, marshaler runtime.Marshaler, client TaskClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq RecoverSaveMediaTaskReq
+		protoReq RecoverSaveTaskReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -193,9 +193,9 @@ func request_MediaTask_RecoverSave_0(ctx context.Context, marshaler runtime.Mars
 	return msg, metadata, err
 }
 
-func local_request_MediaTask_RecoverSave_0(ctx context.Context, marshaler runtime.Marshaler, server MediaTaskServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_Task_RecoverSave_0(ctx context.Context, marshaler runtime.Marshaler, server TaskServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq RecoverSaveMediaTaskReq
+		protoReq RecoverSaveTaskReq
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -205,139 +205,139 @@ func local_request_MediaTask_RecoverSave_0(ctx context.Context, marshaler runtim
 	return msg, metadata, err
 }
 
-// RegisterMediaTaskHandlerServer registers the http handlers for service MediaTask to "mux".
-// UnaryRPC     :call MediaTaskServer directly.
+// RegisterTaskHandlerServer registers the http handlers for service Task to "mux".
+// UnaryRPC     :call TaskServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterMediaTaskHandlerFromEndpoint instead.
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterTaskHandlerFromEndpoint instead.
 // GRPC interceptors will not work for this type of registration. To use interceptors, you must use the "runtime.WithMiddlewares" option in the "runtime.NewServeMux" call.
-func RegisterMediaTaskHandlerServer(ctx context.Context, mux *runtime.ServeMux, server MediaTaskServer) error {
-	mux.Handle(http.MethodPost, pattern_MediaTask_CreateTextToImage_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+func RegisterTaskHandlerServer(ctx context.Context, mux *runtime.ServeMux, server TaskServer) error {
+	mux.Handle(http.MethodPost, pattern_Task_CreateImageToVideo_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.MediaTask/CreateTextToImage", runtime.WithHTTPPathPattern("/api/v1/media_task/create_text_to_image"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.Task/CreateImageToVideo", runtime.WithHTTPPathPattern("/api/v1/task/create_image_to_video"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_MediaTask_CreateTextToImage_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Task_CreateImageToVideo_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaTask_CreateTextToImage_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Task_CreateImageToVideo_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaTask_CreateImageToVideo_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_Task_CreateTextToVideo_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.MediaTask/CreateImageToVideo", runtime.WithHTTPPathPattern("/api/v1/media_task/create_image_to_video"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.Task/CreateTextToVideo", runtime.WithHTTPPathPattern("/api/v1/task/create_text_to_video"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_MediaTask_CreateImageToVideo_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Task_CreateTextToVideo_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaTask_CreateImageToVideo_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Task_CreateTextToVideo_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodGet, pattern_MediaTask_Get_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodGet, pattern_Task_Get_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.MediaTask/Get", runtime.WithHTTPPathPattern("/api/v1/media_task/get"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.Task/Get", runtime.WithHTTPPathPattern("/api/v1/task/get"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_MediaTask_Get_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Task_Get_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaTask_Get_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Task_Get_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaTask_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_Task_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.MediaTask/List", runtime.WithHTTPPathPattern("/api/v1/media_task/list"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.Task/List", runtime.WithHTTPPathPattern("/api/v1/task/list"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_MediaTask_List_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Task_List_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaTask_List_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Task_List_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaTask_Cancel_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_Task_Cancel_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.MediaTask/Cancel", runtime.WithHTTPPathPattern("/api/v1/media_task/cancel"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.Task/Cancel", runtime.WithHTTPPathPattern("/api/v1/task/cancel"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_MediaTask_Cancel_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Task_Cancel_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaTask_Cancel_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Task_Cancel_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaTask_RecoverSave_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_Task_RecoverSave_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.MediaTask/RecoverSave", runtime.WithHTTPPathPattern("/api/v1/media_task/recover_save"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.media.Task/RecoverSave", runtime.WithHTTPPathPattern("/api/v1/task/recover_save"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_MediaTask_RecoverSave_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Task_RecoverSave_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaTask_RecoverSave_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Task_RecoverSave_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil
 }
 
-// RegisterMediaTaskHandlerFromEndpoint is same as RegisterMediaTaskHandler but
+// RegisterTaskHandlerFromEndpoint is same as RegisterTaskHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterMediaTaskHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterTaskHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.NewClient(endpoint, opts...)
 	if err != nil {
 		return err
@@ -356,140 +356,140 @@ func RegisterMediaTaskHandlerFromEndpoint(ctx context.Context, mux *runtime.Serv
 			}
 		}()
 	}()
-	return RegisterMediaTaskHandler(ctx, mux, conn)
+	return RegisterTaskHandler(ctx, mux, conn)
 }
 
-// RegisterMediaTaskHandler registers the http handlers for service MediaTask to "mux".
+// RegisterTaskHandler registers the http handlers for service Task to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterMediaTaskHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterMediaTaskHandlerClient(ctx, mux, NewMediaTaskClient(conn))
+func RegisterTaskHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterTaskHandlerClient(ctx, mux, NewTaskClient(conn))
 }
 
-// RegisterMediaTaskHandlerClient registers the http handlers for service MediaTask
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "MediaTaskClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "MediaTaskClient"
+// RegisterTaskHandlerClient registers the http handlers for service Task
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "TaskClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "TaskClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "MediaTaskClient" to call the correct interceptors. This client ignores the HTTP middlewares.
-func RegisterMediaTaskHandlerClient(ctx context.Context, mux *runtime.ServeMux, client MediaTaskClient) error {
-	mux.Handle(http.MethodPost, pattern_MediaTask_CreateTextToImage_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+// "TaskClient" to call the correct interceptors. This client ignores the HTTP middlewares.
+func RegisterTaskHandlerClient(ctx context.Context, mux *runtime.ServeMux, client TaskClient) error {
+	mux.Handle(http.MethodPost, pattern_Task_CreateImageToVideo_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.MediaTask/CreateTextToImage", runtime.WithHTTPPathPattern("/api/v1/media_task/create_text_to_image"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.Task/CreateImageToVideo", runtime.WithHTTPPathPattern("/api/v1/task/create_image_to_video"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_MediaTask_CreateTextToImage_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Task_CreateImageToVideo_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaTask_CreateTextToImage_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Task_CreateImageToVideo_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaTask_CreateImageToVideo_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_Task_CreateTextToVideo_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.MediaTask/CreateImageToVideo", runtime.WithHTTPPathPattern("/api/v1/media_task/create_image_to_video"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.Task/CreateTextToVideo", runtime.WithHTTPPathPattern("/api/v1/task/create_text_to_video"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_MediaTask_CreateImageToVideo_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Task_CreateTextToVideo_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaTask_CreateImageToVideo_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Task_CreateTextToVideo_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodGet, pattern_MediaTask_Get_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodGet, pattern_Task_Get_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.MediaTask/Get", runtime.WithHTTPPathPattern("/api/v1/media_task/get"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.Task/Get", runtime.WithHTTPPathPattern("/api/v1/task/get"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_MediaTask_Get_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Task_Get_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaTask_Get_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Task_Get_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaTask_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_Task_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.MediaTask/List", runtime.WithHTTPPathPattern("/api/v1/media_task/list"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.Task/List", runtime.WithHTTPPathPattern("/api/v1/task/list"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_MediaTask_List_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Task_List_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaTask_List_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Task_List_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaTask_Cancel_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_Task_Cancel_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.MediaTask/Cancel", runtime.WithHTTPPathPattern("/api/v1/media_task/cancel"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.Task/Cancel", runtime.WithHTTPPathPattern("/api/v1/task/cancel"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_MediaTask_Cancel_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Task_Cancel_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaTask_Cancel_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Task_Cancel_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_MediaTask_RecoverSave_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_Task_RecoverSave_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.MediaTask/RecoverSave", runtime.WithHTTPPathPattern("/api/v1/media_task/recover_save"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.media.Task/RecoverSave", runtime.WithHTTPPathPattern("/api/v1/task/recover_save"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_MediaTask_RecoverSave_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Task_RecoverSave_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_MediaTask_RecoverSave_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Task_RecoverSave_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	return nil
 }
 
 var (
-	pattern_MediaTask_CreateTextToImage_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "media_task", "create_text_to_image"}, ""))
-	pattern_MediaTask_CreateImageToVideo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "media_task", "create_image_to_video"}, ""))
-	pattern_MediaTask_Get_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "media_task", "get"}, ""))
-	pattern_MediaTask_List_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "media_task", "list"}, ""))
-	pattern_MediaTask_Cancel_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "media_task", "cancel"}, ""))
-	pattern_MediaTask_RecoverSave_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "media_task", "recover_save"}, ""))
+	pattern_Task_CreateImageToVideo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "task", "create_image_to_video"}, ""))
+	pattern_Task_CreateTextToVideo_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "task", "create_text_to_video"}, ""))
+	pattern_Task_Get_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "task", "get"}, ""))
+	pattern_Task_List_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "task", "list"}, ""))
+	pattern_Task_Cancel_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "task", "cancel"}, ""))
+	pattern_Task_RecoverSave_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "task", "recover_save"}, ""))
 )
 
 var (
-	forward_MediaTask_CreateTextToImage_0  = runtime.ForwardResponseMessage
-	forward_MediaTask_CreateImageToVideo_0 = runtime.ForwardResponseMessage
-	forward_MediaTask_Get_0                = runtime.ForwardResponseMessage
-	forward_MediaTask_List_0               = runtime.ForwardResponseMessage
-	forward_MediaTask_Cancel_0             = runtime.ForwardResponseMessage
-	forward_MediaTask_RecoverSave_0        = runtime.ForwardResponseMessage
+	forward_Task_CreateImageToVideo_0 = runtime.ForwardResponseMessage
+	forward_Task_CreateTextToVideo_0  = runtime.ForwardResponseMessage
+	forward_Task_Get_0                = runtime.ForwardResponseMessage
+	forward_Task_List_0               = runtime.ForwardResponseMessage
+	forward_Task_Cancel_0             = runtime.ForwardResponseMessage
+	forward_Task_RecoverSave_0        = runtime.ForwardResponseMessage
 )

@@ -15,76 +15,74 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
-@$core.Deprecated('Use mediaFileSourceDescriptor instead')
-const MediaFileSource$json = {
-  '1': 'MediaFileSource',
+@$core.Deprecated('Use fileSourceDescriptor instead')
+const FileSource$json = {
+  '1': 'FileSource',
   '2': [
-    {'1': 'MEDIA_FILE_SOURCE_UNSPECIFIED', '2': 0},
-    {'1': 'MEDIA_FILE_SOURCE_UPLOAD', '2': 1},
-    {'1': 'MEDIA_FILE_SOURCE_GENERATED', '2': 2},
+    {'1': 'FILE_SOURCE_UNSPECIFIED', '2': 0},
+    {'1': 'FILE_SOURCE_UPLOAD', '2': 1},
+    {'1': 'FILE_SOURCE_GENERATED', '2': 2},
   ],
 };
 
-/// Descriptor for `MediaFileSource`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List mediaFileSourceDescriptor = $convert.base64Decode(
-    'Cg9NZWRpYUZpbGVTb3VyY2USIQodTUVESUFfRklMRV9TT1VSQ0VfVU5TUEVDSUZJRUQQABIcCh'
-    'hNRURJQV9GSUxFX1NPVVJDRV9VUExPQUQQARIfChtNRURJQV9GSUxFX1NPVVJDRV9HRU5FUkFU'
-    'RUQQAg==');
+/// Descriptor for `FileSource`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List fileSourceDescriptor = $convert.base64Decode(
+    'CgpGaWxlU291cmNlEhsKF0ZJTEVfU09VUkNFX1VOU1BFQ0lGSUVEEAASFgoSRklMRV9TT1VSQ0'
+    'VfVVBMT0FEEAESGQoVRklMRV9TT1VSQ0VfR0VORVJBVEVEEAI=');
 
-@$core.Deprecated('Use mediaFileAccessPurposeDescriptor instead')
-const MediaFileAccessPurpose$json = {
-  '1': 'MediaFileAccessPurpose',
+@$core.Deprecated('Use fileAccessPurposeDescriptor instead')
+const FileAccessPurpose$json = {
+  '1': 'FileAccessPurpose',
   '2': [
-    {'1': 'MEDIA_FILE_ACCESS_PURPOSE_UNSPECIFIED', '2': 0},
-    {'1': 'MEDIA_FILE_ACCESS_PURPOSE_PREVIEW', '2': 1},
-    {'1': 'MEDIA_FILE_ACCESS_PURPOSE_DOWNLOAD', '2': 2},
+    {'1': 'FILE_ACCESS_PURPOSE_UNSPECIFIED', '2': 0},
+    {'1': 'FILE_ACCESS_PURPOSE_PREVIEW', '2': 1},
+    {'1': 'FILE_ACCESS_PURPOSE_DOWNLOAD', '2': 2},
   ],
 };
 
-/// Descriptor for `MediaFileAccessPurpose`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List mediaFileAccessPurposeDescriptor = $convert.base64Decode(
-    'ChZNZWRpYUZpbGVBY2Nlc3NQdXJwb3NlEikKJU1FRElBX0ZJTEVfQUNDRVNTX1BVUlBPU0VfVU'
-    '5TUEVDSUZJRUQQABIlCiFNRURJQV9GSUxFX0FDQ0VTU19QVVJQT1NFX1BSRVZJRVcQARImCiJN'
-    'RURJQV9GSUxFX0FDQ0VTU19QVVJQT1NFX0RPV05MT0FEEAI=');
+/// Descriptor for `FileAccessPurpose`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List fileAccessPurposeDescriptor = $convert.base64Decode(
+    'ChFGaWxlQWNjZXNzUHVycG9zZRIjCh9GSUxFX0FDQ0VTU19QVVJQT1NFX1VOU1BFQ0lGSUVEEA'
+    'ASHwobRklMRV9BQ0NFU1NfUFVSUE9TRV9QUkVWSUVXEAESIAocRklMRV9BQ0NFU1NfUFVSUE9T'
+    'RV9ET1dOTE9BRBAC');
 
-@$core.Deprecated('Use mediaUploadStatusDescriptor instead')
-const MediaUploadStatus$json = {
-  '1': 'MediaUploadStatus',
+@$core.Deprecated('Use uploadStatusDescriptor instead')
+const UploadStatus$json = {
+  '1': 'UploadStatus',
   '2': [
-    {'1': 'MEDIA_UPLOAD_STATUS_UNSPECIFIED', '2': 0},
-    {'1': 'MEDIA_UPLOAD_STATUS_PROCESSING', '2': 1},
-    {'1': 'MEDIA_UPLOAD_STATUS_COMPLETED', '2': 2},
+    {'1': 'UPLOAD_STATUS_UNSPECIFIED', '2': 0},
+    {'1': 'UPLOAD_STATUS_PROCESSING', '2': 1},
+    {'1': 'UPLOAD_STATUS_COMPLETED', '2': 2},
   ],
 };
 
-/// Descriptor for `MediaUploadStatus`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List mediaUploadStatusDescriptor = $convert.base64Decode(
-    'ChFNZWRpYVVwbG9hZFN0YXR1cxIjCh9NRURJQV9VUExPQURfU1RBVFVTX1VOU1BFQ0lGSUVEEA'
-    'ASIgoeTUVESUFfVVBMT0FEX1NUQVRVU19QUk9DRVNTSU5HEAESIQodTUVESUFfVVBMT0FEX1NU'
-    'QVRVU19DT01QTEVURUQQAg==');
+/// Descriptor for `UploadStatus`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List uploadStatusDescriptor = $convert.base64Decode(
+    'CgxVcGxvYWRTdGF0dXMSHQoZVVBMT0FEX1NUQVRVU19VTlNQRUNJRklFRBAAEhwKGFVQTE9BRF'
+    '9TVEFUVVNfUFJPQ0VTU0lORxABEhsKF1VQTE9BRF9TVEFUVVNfQ09NUExFVEVEEAI=');
 
-@$core.Deprecated('Use mediaUploadFileStatusDescriptor instead')
-const MediaUploadFileStatus$json = {
-  '1': 'MediaUploadFileStatus',
+@$core.Deprecated('Use uploadFileStatusDescriptor instead')
+const UploadFileStatus$json = {
+  '1': 'UploadFileStatus',
   '2': [
-    {'1': 'MEDIA_UPLOAD_FILE_STATUS_UNSPECIFIED', '2': 0},
-    {'1': 'MEDIA_UPLOAD_FILE_STATUS_PENDING', '2': 1},
-    {'1': 'MEDIA_UPLOAD_FILE_STATUS_PROCESSING', '2': 2},
-    {'1': 'MEDIA_UPLOAD_FILE_STATUS_SUCCESS', '2': 3},
-    {'1': 'MEDIA_UPLOAD_FILE_STATUS_FAILED', '2': 4},
+    {'1': 'UPLOAD_FILE_STATUS_UNSPECIFIED', '2': 0},
+    {'1': 'UPLOAD_FILE_STATUS_PENDING', '2': 1},
+    {'1': 'UPLOAD_FILE_STATUS_PROCESSING', '2': 2},
+    {'1': 'UPLOAD_FILE_STATUS_SUCCESS', '2': 3},
+    {'1': 'UPLOAD_FILE_STATUS_FAILED', '2': 4},
   ],
 };
 
-/// Descriptor for `MediaUploadFileStatus`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List mediaUploadFileStatusDescriptor = $convert.base64Decode(
-    'ChVNZWRpYVVwbG9hZEZpbGVTdGF0dXMSKAokTUVESUFfVVBMT0FEX0ZJTEVfU1RBVFVTX1VOU1'
-    'BFQ0lGSUVEEAASJAogTUVESUFfVVBMT0FEX0ZJTEVfU1RBVFVTX1BFTkRJTkcQARInCiNNRURJ'
-    'QV9VUExPQURfRklMRV9TVEFUVVNfUFJPQ0VTU0lORxACEiQKIE1FRElBX1VQTE9BRF9GSUxFX1'
-    'NUQVRVU19TVUNDRVNTEAMSIwofTUVESUFfVVBMT0FEX0ZJTEVfU1RBVFVTX0ZBSUxFRBAE');
+/// Descriptor for `UploadFileStatus`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List uploadFileStatusDescriptor = $convert.base64Decode(
+    'ChBVcGxvYWRGaWxlU3RhdHVzEiIKHlVQTE9BRF9GSUxFX1NUQVRVU19VTlNQRUNJRklFRBAAEh'
+    '4KGlVQTE9BRF9GSUxFX1NUQVRVU19QRU5ESU5HEAESIQodVVBMT0FEX0ZJTEVfU1RBVFVTX1BS'
+    'T0NFU1NJTkcQAhIeChpVUExPQURfRklMRV9TVEFUVVNfU1VDQ0VTUxADEh0KGVVQTE9BRF9GSU'
+    'xFX1NUQVRVU19GQUlMRUQQBA==');
 
-@$core.Deprecated('Use mediaFileSummaryDescriptor instead')
-const MediaFileSummary$json = {
-  '1': 'MediaFileSummary',
+@$core.Deprecated('Use fileSummaryDescriptor instead')
+const FileSummary$json = {
+  '1': 'FileSummary',
   '2': [
     {
       '1': 'asset_id',
@@ -142,7 +140,7 @@ const MediaFileSummary$json = {
       '3': 6,
       '4': 1,
       '5': 14,
-      '6': '.hi.media.MediaFileSource',
+      '6': '.hi.media.FileSource',
       '8': {},
       '9': 5,
       '10': 'source',
@@ -171,21 +169,20 @@ const MediaFileSummary$json = {
   ],
 };
 
-/// Descriptor for `MediaFileSummary`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List mediaFileSummaryDescriptor = $convert.base64Decode(
-    'ChBNZWRpYUZpbGVTdW1tYXJ5EiQKCGFzc2V0X2lkGAEgASgJQgSQtRgDSABSB2Fzc2V0SWSIAQ'
-    'ESJQoIZmlsZW5hbWUYAiABKAlCBJC1GANIAVIIZmlsZW5hbWWIAQESPQoKbWVkaWFfdHlwZRgD'
-    'IAEoDjITLmhpLm1lZGlhLk1lZGlhVHlwZUIEkLUYA0gCUgltZWRpYVR5cGWIAQESJgoJbWltZV'
-    '90eXBlGAQgASgJQgSQtRgDSANSCG1pbWVUeXBliAEBEigKCnNpemVfYnl0ZXMYBSABKARCBJC1'
-    'GANIBFIJc2l6ZUJ5dGVziAEBEjwKBnNvdXJjZRgGIAEoDjIZLmhpLm1lZGlhLk1lZGlhRmlsZV'
-    'NvdXJjZUIEkLUYA0gFUgZzb3VyY2WIAQESKAoKY3JlYXRlZF9hdBgHIAEoA0IEkLUYA0gGUglj'
-    'cmVhdGVkQXSIAQE6BJi1GANCCwoJX2Fzc2V0X2lkQgsKCV9maWxlbmFtZUINCgtfbWVkaWFfdH'
-    'lwZUIMCgpfbWltZV90eXBlQg0KC19zaXplX2J5dGVzQgkKB19zb3VyY2VCDQoLX2NyZWF0ZWRf'
-    'YXQ=');
+/// Descriptor for `FileSummary`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List fileSummaryDescriptor = $convert.base64Decode(
+    'CgtGaWxlU3VtbWFyeRIkCghhc3NldF9pZBgBIAEoCUIEkLUYA0gAUgdhc3NldElkiAEBEiUKCG'
+    'ZpbGVuYW1lGAIgASgJQgSQtRgDSAFSCGZpbGVuYW1liAEBEj0KCm1lZGlhX3R5cGUYAyABKA4y'
+    'Ey5oaS5tZWRpYS5NZWRpYVR5cGVCBJC1GANIAlIJbWVkaWFUeXBliAEBEiYKCW1pbWVfdHlwZR'
+    'gEIAEoCUIEkLUYA0gDUghtaW1lVHlwZYgBARIoCgpzaXplX2J5dGVzGAUgASgEQgSQtRgDSARS'
+    'CXNpemVCeXRlc4gBARI3CgZzb3VyY2UYBiABKA4yFC5oaS5tZWRpYS5GaWxlU291cmNlQgSQtR'
+    'gDSAVSBnNvdXJjZYgBARIoCgpjcmVhdGVkX2F0GAcgASgDQgSQtRgDSAZSCWNyZWF0ZWRBdIgB'
+    'AToEmLUYA0ILCglfYXNzZXRfaWRCCwoJX2ZpbGVuYW1lQg0KC19tZWRpYV90eXBlQgwKCl9taW'
+    '1lX3R5cGVCDQoLX3NpemVfYnl0ZXNCCQoHX3NvdXJjZUINCgtfY3JlYXRlZF9hdA==');
 
-@$core.Deprecated('Use listMediaFilesReqDescriptor instead')
-const ListMediaFilesReq$json = {
-  '1': 'ListMediaFilesReq',
+@$core.Deprecated('Use listFilesReqDescriptor instead')
+const ListFilesReq$json = {
+  '1': 'ListFilesReq',
   '2': [
     {
       '1': 'pagination',
@@ -210,7 +207,7 @@ const ListMediaFilesReq$json = {
       '3': 3,
       '4': 1,
       '5': 14,
-      '6': '.hi.media.MediaFileSource',
+      '6': '.hi.media.FileSource',
       '9': 1,
       '10': 'source',
       '17': true
@@ -222,16 +219,16 @@ const ListMediaFilesReq$json = {
   ],
 };
 
-/// Descriptor for `ListMediaFilesReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listMediaFilesReqDescriptor = $convert.base64Decode(
-    'ChFMaXN0TWVkaWFGaWxlc1JlcRIuCgpwYWdpbmF0aW9uGAEgASgLMg4uaGkuUGFnaW5hdGlvbl'
-    'IKcGFnaW5hdGlvbhI3CgptZWRpYV90eXBlGAIgASgOMhMuaGkubWVkaWEuTWVkaWFUeXBlSABS'
-    'CW1lZGlhVHlwZYgBARI2CgZzb3VyY2UYAyABKA4yGS5oaS5tZWRpYS5NZWRpYUZpbGVTb3VyY2'
-    'VIAVIGc291cmNliAEBQg0KC19tZWRpYV90eXBlQgkKB19zb3VyY2U=');
+/// Descriptor for `ListFilesReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listFilesReqDescriptor = $convert.base64Decode(
+    'CgxMaXN0RmlsZXNSZXESLgoKcGFnaW5hdGlvbhgBIAEoCzIOLmhpLlBhZ2luYXRpb25SCnBhZ2'
+    'luYXRpb24SNwoKbWVkaWFfdHlwZRgCIAEoDjITLmhpLm1lZGlhLk1lZGlhVHlwZUgAUgltZWRp'
+    'YVR5cGWIAQESMQoGc291cmNlGAMgASgOMhQuaGkubWVkaWEuRmlsZVNvdXJjZUgBUgZzb3VyY2'
+    'WIAQFCDQoLX21lZGlhX3R5cGVCCQoHX3NvdXJjZQ==');
 
-@$core.Deprecated('Use listMediaFilesRespDescriptor instead')
-const ListMediaFilesResp$json = {
-  '1': 'ListMediaFilesResp',
+@$core.Deprecated('Use listFilesRespDescriptor instead')
+const ListFilesResp$json = {
+  '1': 'ListFilesResp',
   '2': [
     {
       '1': 'total',
@@ -248,7 +245,7 @@ const ListMediaFilesResp$json = {
       '3': 2,
       '4': 3,
       '5': 11,
-      '6': '.hi.media.MediaFileSummary',
+      '6': '.hi.media.FileSummary',
       '8': {},
       '10': 'files'
     },
@@ -259,15 +256,15 @@ const ListMediaFilesResp$json = {
   ],
 };
 
-/// Descriptor for `ListMediaFilesResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listMediaFilesRespDescriptor = $convert.base64Decode(
-    'ChJMaXN0TWVkaWFGaWxlc1Jlc3ASHwoFdG90YWwYASABKAVCBJC1GANIAFIFdG90YWyIAQESNg'
-    'oFZmlsZXMYAiADKAsyGi5oaS5tZWRpYS5NZWRpYUZpbGVTdW1tYXJ5QgSQtRgDUgVmaWxlczoE'
-    'mLUYA0IICgZfdG90YWw=');
+/// Descriptor for `ListFilesResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listFilesRespDescriptor = $convert.base64Decode(
+    'Cg1MaXN0RmlsZXNSZXNwEh8KBXRvdGFsGAEgASgFQgSQtRgDSABSBXRvdGFsiAEBEjEKBWZpbG'
+    'VzGAIgAygLMhUuaGkubWVkaWEuRmlsZVN1bW1hcnlCBJC1GANSBWZpbGVzOgSYtRgDQggKBl90'
+    'b3RhbA==');
 
-@$core.Deprecated('Use deleteMediaFileReqDescriptor instead')
-const DeleteMediaFileReq$json = {
-  '1': 'DeleteMediaFileReq',
+@$core.Deprecated('Use deleteFileReqDescriptor instead')
+const DeleteFileReq$json = {
+  '1': 'DeleteFileReq',
   '2': [
     {
       '1': 'asset_id',
@@ -285,14 +282,14 @@ const DeleteMediaFileReq$json = {
   ],
 };
 
-/// Descriptor for `DeleteMediaFileReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List deleteMediaFileReqDescriptor = $convert.base64Decode(
-    'ChJEZWxldGVNZWRpYUZpbGVSZXESKgoIYXNzZXRfaWQYASABKAlCCrpIB8gBAXICEAFIAFIHYX'
-    'NzZXRJZIgBAUILCglfYXNzZXRfaWQ=');
+/// Descriptor for `DeleteFileReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List deleteFileReqDescriptor = $convert.base64Decode(
+    'Cg1EZWxldGVGaWxlUmVxEioKCGFzc2V0X2lkGAEgASgJQgq6SAfIAQFyAhABSABSB2Fzc2V0SW'
+    'SIAQFCCwoJX2Fzc2V0X2lk');
 
-@$core.Deprecated('Use deleteMediaFileRespDescriptor instead')
-const DeleteMediaFileResp$json = {
-  '1': 'DeleteMediaFileResp',
+@$core.Deprecated('Use deleteFileRespDescriptor instead')
+const DeleteFileResp$json = {
+  '1': 'DeleteFileResp',
   '2': [
     {
       '1': 'asset_id',
@@ -311,14 +308,14 @@ const DeleteMediaFileResp$json = {
   ],
 };
 
-/// Descriptor for `DeleteMediaFileResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List deleteMediaFileRespDescriptor = $convert.base64Decode(
-    'ChNEZWxldGVNZWRpYUZpbGVSZXNwEiQKCGFzc2V0X2lkGAEgASgJQgSQtRgDSABSB2Fzc2V0SW'
-    'SIAQE6BJi1GANCCwoJX2Fzc2V0X2lk');
+/// Descriptor for `DeleteFileResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List deleteFileRespDescriptor = $convert.base64Decode(
+    'Cg5EZWxldGVGaWxlUmVzcBIkCghhc3NldF9pZBgBIAEoCUIEkLUYA0gAUgdhc3NldElkiAEBOg'
+    'SYtRgDQgsKCV9hc3NldF9pZA==');
 
-@$core.Deprecated('Use getMediaFileAccessUrlsReqDescriptor instead')
-const GetMediaFileAccessUrlsReq$json = {
-  '1': 'GetMediaFileAccessUrlsReq',
+@$core.Deprecated('Use getFileAccessUrlsReqDescriptor instead')
+const GetFileAccessUrlsReq$json = {
+  '1': 'GetFileAccessUrlsReq',
   '2': [
     {'1': 'asset_ids', '3': 1, '4': 3, '5': 9, '8': {}, '10': 'assetIds'},
     {
@@ -326,7 +323,7 @@ const GetMediaFileAccessUrlsReq$json = {
       '3': 2,
       '4': 1,
       '5': 14,
-      '6': '.hi.media.MediaFileAccessPurpose',
+      '6': '.hi.media.FileAccessPurpose',
       '8': {},
       '9': 0,
       '10': 'purpose',
@@ -338,15 +335,15 @@ const GetMediaFileAccessUrlsReq$json = {
   ],
 };
 
-/// Descriptor for `GetMediaFileAccessUrlsReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getMediaFileAccessUrlsReqDescriptor = $convert.base64Decode(
-    'ChlHZXRNZWRpYUZpbGVBY2Nlc3NVcmxzUmVxEicKCWFzc2V0X2lkcxgBIAMoCUIKukgHkgEECA'
-    'EYAVIIYXNzZXRJZHMSTgoHcHVycG9zZRgCIAEoDjIgLmhpLm1lZGlhLk1lZGlhRmlsZUFjY2Vz'
-    'c1B1cnBvc2VCDbpICsgBAYIBBBABIABIAFIHcHVycG9zZYgBAUIKCghfcHVycG9zZQ==');
+/// Descriptor for `GetFileAccessUrlsReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getFileAccessUrlsReqDescriptor = $convert.base64Decode(
+    'ChRHZXRGaWxlQWNjZXNzVXJsc1JlcRInCglhc3NldF9pZHMYASADKAlCCrpIB5IBBAgBGAFSCG'
+    'Fzc2V0SWRzEkkKB3B1cnBvc2UYAiABKA4yGy5oaS5tZWRpYS5GaWxlQWNjZXNzUHVycG9zZUIN'
+    'ukgKyAEBggEEEAEgAEgAUgdwdXJwb3NliAEBQgoKCF9wdXJwb3Nl');
 
-@$core.Deprecated('Use mediaFileAccessUrlDescriptor instead')
-const MediaFileAccessUrl$json = {
-  '1': 'MediaFileAccessUrl',
+@$core.Deprecated('Use fileAccessUrlDescriptor instead')
+const FileAccessUrl$json = {
+  '1': 'FileAccessUrl',
   '2': [
     {
       '1': 'asset_id',
@@ -387,23 +384,22 @@ const MediaFileAccessUrl$json = {
   ],
 };
 
-/// Descriptor for `MediaFileAccessUrl`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List mediaFileAccessUrlDescriptor = $convert.base64Decode(
-    'ChJNZWRpYUZpbGVBY2Nlc3NVcmwSJAoIYXNzZXRfaWQYASABKAlCBJC1GANIAFIHYXNzZXRJZI'
-    'gBARIbCgN1cmwYAiABKAlCBJC1GANIAVIDdXJsiAEBEiYKCWV4cGlyZV9hdBgDIAEoA0IEkLUY'
-    'A0gCUghleHBpcmVBdIgBAToEmLUYA0ILCglfYXNzZXRfaWRCBgoEX3VybEIMCgpfZXhwaXJlX2'
-    'F0');
+/// Descriptor for `FileAccessUrl`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List fileAccessUrlDescriptor = $convert.base64Decode(
+    'Cg1GaWxlQWNjZXNzVXJsEiQKCGFzc2V0X2lkGAEgASgJQgSQtRgDSABSB2Fzc2V0SWSIAQESGw'
+    'oDdXJsGAIgASgJQgSQtRgDSAFSA3VybIgBARImCglleHBpcmVfYXQYAyABKANCBJC1GANIAlII'
+    'ZXhwaXJlQXSIAQE6BJi1GANCCwoJX2Fzc2V0X2lkQgYKBF91cmxCDAoKX2V4cGlyZV9hdA==');
 
-@$core.Deprecated('Use getMediaFileAccessUrlsRespDescriptor instead')
-const GetMediaFileAccessUrlsResp$json = {
-  '1': 'GetMediaFileAccessUrlsResp',
+@$core.Deprecated('Use getFileAccessUrlsRespDescriptor instead')
+const GetFileAccessUrlsResp$json = {
+  '1': 'GetFileAccessUrlsResp',
   '2': [
     {
       '1': 'files',
       '3': 1,
       '4': 3,
       '5': 11,
-      '6': '.hi.media.MediaFileAccessUrl',
+      '6': '.hi.media.FileAccessUrl',
       '8': {},
       '10': 'files'
     },
@@ -411,15 +407,14 @@ const GetMediaFileAccessUrlsResp$json = {
   '7': {},
 };
 
-/// Descriptor for `GetMediaFileAccessUrlsResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getMediaFileAccessUrlsRespDescriptor =
-    $convert.base64Decode(
-        'ChpHZXRNZWRpYUZpbGVBY2Nlc3NVcmxzUmVzcBI4CgVmaWxlcxgBIAMoCzIcLmhpLm1lZGlhLk'
-        '1lZGlhRmlsZUFjY2Vzc1VybEIEkLUYA1IFZmlsZXM6BJi1GAM=');
+/// Descriptor for `GetFileAccessUrlsResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getFileAccessUrlsRespDescriptor = $convert.base64Decode(
+    'ChVHZXRGaWxlQWNjZXNzVXJsc1Jlc3ASMwoFZmlsZXMYASADKAsyFy5oaS5tZWRpYS5GaWxlQW'
+    'NjZXNzVXJsQgSQtRgDUgVmaWxlczoEmLUYAw==');
 
-@$core.Deprecated('Use mediaUploadFileMetadataDescriptor instead')
-const MediaUploadFileMetadata$json = {
-  '1': 'MediaUploadFileMetadata',
+@$core.Deprecated('Use uploadFileMetadataDescriptor instead')
+const UploadFileMetadata$json = {
+  '1': 'UploadFileMetadata',
   '2': [
     {
       '1': 'client_file_id',
@@ -459,16 +454,16 @@ const MediaUploadFileMetadata$json = {
   ],
 };
 
-/// Descriptor for `MediaUploadFileMetadata`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List mediaUploadFileMetadataDescriptor = $convert.base64Decode(
-    'ChdNZWRpYVVwbG9hZEZpbGVNZXRhZGF0YRI1Cg5jbGllbnRfZmlsZV9pZBgBIAEoCUIKukgHyA'
-    'EBcgIQAUgAUgxjbGllbnRGaWxlSWSIAQESKwoIZmlsZW5hbWUYAiABKAlCCrpIB8gBAXICEAFI'
-    'AVIIZmlsZW5hbWWIAQESLgoKc2l6ZV9ieXRlcxgDIAEoBEIKukgHyAEBMgIgAEgCUglzaXplQn'
-    'l0ZXOIAQFCEQoPX2NsaWVudF9maWxlX2lkQgsKCV9maWxlbmFtZUINCgtfc2l6ZV9ieXRlcw==');
+/// Descriptor for `UploadFileMetadata`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List uploadFileMetadataDescriptor = $convert.base64Decode(
+    'ChJVcGxvYWRGaWxlTWV0YWRhdGESNQoOY2xpZW50X2ZpbGVfaWQYASABKAlCCrpIB8gBAXICEA'
+    'FIAFIMY2xpZW50RmlsZUlkiAEBEisKCGZpbGVuYW1lGAIgASgJQgq6SAfIAQFyAhABSAFSCGZp'
+    'bGVuYW1liAEBEi4KCnNpemVfYnl0ZXMYAyABKARCCrpIB8gBATICIABIAlIJc2l6ZUJ5dGVziA'
+    'EBQhEKD19jbGllbnRfZmlsZV9pZEILCglfZmlsZW5hbWVCDQoLX3NpemVfYnl0ZXM=');
 
-@$core.Deprecated('Use mediaUploadMetadataDescriptor instead')
-const MediaUploadMetadata$json = {
-  '1': 'MediaUploadMetadata',
+@$core.Deprecated('Use uploadMetadataDescriptor instead')
+const UploadMetadata$json = {
+  '1': 'UploadMetadata',
   '2': [
     {
       '1': 'request_id',
@@ -485,7 +480,7 @@ const MediaUploadMetadata$json = {
       '3': 2,
       '4': 3,
       '5': 11,
-      '6': '.hi.media.MediaUploadFileMetadata',
+      '6': '.hi.media.UploadFileMetadata',
       '8': {},
       '10': 'files'
     },
@@ -495,15 +490,15 @@ const MediaUploadMetadata$json = {
   ],
 };
 
-/// Descriptor for `MediaUploadMetadata`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List mediaUploadMetadataDescriptor = $convert.base64Decode(
-    'ChNNZWRpYVVwbG9hZE1ldGFkYXRhEi4KCnJlcXVlc3RfaWQYASABKAlCCrpIB8gBAXICEAFIAF'
-    'IJcmVxdWVzdElkiAEBEkEKBWZpbGVzGAIgAygLMiEuaGkubWVkaWEuTWVkaWFVcGxvYWRGaWxl'
-    'TWV0YWRhdGFCCLpIBZIBAggBUgVmaWxlc0INCgtfcmVxdWVzdF9pZA==');
+/// Descriptor for `UploadMetadata`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List uploadMetadataDescriptor = $convert.base64Decode(
+    'Cg5VcGxvYWRNZXRhZGF0YRIuCgpyZXF1ZXN0X2lkGAEgASgJQgq6SAfIAQFyAhABSABSCXJlcX'
+    'Vlc3RJZIgBARI8CgVmaWxlcxgCIAMoCzIcLmhpLm1lZGlhLlVwbG9hZEZpbGVNZXRhZGF0YUII'
+    'ukgFkgECCAFSBWZpbGVzQg0KC19yZXF1ZXN0X2lk');
 
-@$core.Deprecated('Use mediaUploadFileResultDescriptor instead')
-const MediaUploadFileResult$json = {
-  '1': 'MediaUploadFileResult',
+@$core.Deprecated('Use uploadFileResultDescriptor instead')
+const UploadFileResult$json = {
+  '1': 'UploadFileResult',
   '2': [
     {
       '1': 'client_file_id',
@@ -530,7 +525,7 @@ const MediaUploadFileResult$json = {
       '3': 3,
       '4': 1,
       '5': 14,
-      '6': '.hi.media.MediaUploadFileStatus',
+      '6': '.hi.media.UploadFileStatus',
       '8': {},
       '9': 2,
       '10': 'status',
@@ -600,22 +595,22 @@ const MediaUploadFileResult$json = {
   ],
 };
 
-/// Descriptor for `MediaUploadFileResult`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List mediaUploadFileResultDescriptor = $convert.base64Decode(
-    'ChVNZWRpYVVwbG9hZEZpbGVSZXN1bHQSLwoOY2xpZW50X2ZpbGVfaWQYASABKAlCBJC1GANIAF'
-    'IMY2xpZW50RmlsZUlkiAEBEiUKCGZpbGVuYW1lGAIgASgJQgSQtRgDSAFSCGZpbGVuYW1liAEB'
-    'EkIKBnN0YXR1cxgDIAEoDjIfLmhpLm1lZGlhLk1lZGlhVXBsb2FkRmlsZVN0YXR1c0IEkLUYA0'
-    'gCUgZzdGF0dXOIAQESJAoIYXNzZXRfaWQYBCABKAlCBJC1GANIA1IHYXNzZXRJZIgBARImCglt'
-    'aW1lX3R5cGUYBSABKAlCBJC1GANIBFIIbWltZVR5cGWIAQESKAoKc2l6ZV9ieXRlcxgGIAEoBE'
-    'IEkLUYA0gFUglzaXplQnl0ZXOIAQESKAoKZXJyb3JfY29kZRgHIAEoCUIEkLUYA0gGUgllcnJv'
-    'ckNvZGWIAQESLgoNZXJyb3JfbWVzc2FnZRgIIAEoCUIEkLUYA0gHUgxlcnJvck1lc3NhZ2WIAQ'
-    'E6BJi1GANCEQoPX2NsaWVudF9maWxlX2lkQgsKCV9maWxlbmFtZUIJCgdfc3RhdHVzQgsKCV9h'
-    'c3NldF9pZEIMCgpfbWltZV90eXBlQg0KC19zaXplX2J5dGVzQg0KC19lcnJvcl9jb2RlQhAKDl'
-    '9lcnJvcl9tZXNzYWdl');
+/// Descriptor for `UploadFileResult`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List uploadFileResultDescriptor = $convert.base64Decode(
+    'ChBVcGxvYWRGaWxlUmVzdWx0Ei8KDmNsaWVudF9maWxlX2lkGAEgASgJQgSQtRgDSABSDGNsaW'
+    'VudEZpbGVJZIgBARIlCghmaWxlbmFtZRgCIAEoCUIEkLUYA0gBUghmaWxlbmFtZYgBARI9CgZz'
+    'dGF0dXMYAyABKA4yGi5oaS5tZWRpYS5VcGxvYWRGaWxlU3RhdHVzQgSQtRgDSAJSBnN0YXR1c4'
+    'gBARIkCghhc3NldF9pZBgEIAEoCUIEkLUYA0gDUgdhc3NldElkiAEBEiYKCW1pbWVfdHlwZRgF'
+    'IAEoCUIEkLUYA0gEUghtaW1lVHlwZYgBARIoCgpzaXplX2J5dGVzGAYgASgEQgSQtRgDSAVSCX'
+    'NpemVCeXRlc4gBARIoCgplcnJvcl9jb2RlGAcgASgJQgSQtRgDSAZSCWVycm9yQ29kZYgBARIu'
+    'Cg1lcnJvcl9tZXNzYWdlGAggASgJQgSQtRgDSAdSDGVycm9yTWVzc2FnZYgBAToEmLUYA0IRCg'
+    '9fY2xpZW50X2ZpbGVfaWRCCwoJX2ZpbGVuYW1lQgkKB19zdGF0dXNCCwoJX2Fzc2V0X2lkQgwK'
+    'Cl9taW1lX3R5cGVCDQoLX3NpemVfYnl0ZXNCDQoLX2Vycm9yX2NvZGVCEAoOX2Vycm9yX21lc3'
+    'NhZ2U=');
 
-@$core.Deprecated('Use mediaUploadBatchResultDescriptor instead')
-const MediaUploadBatchResult$json = {
-  '1': 'MediaUploadBatchResult',
+@$core.Deprecated('Use uploadBatchResultDescriptor instead')
+const UploadBatchResult$json = {
+  '1': 'UploadBatchResult',
   '2': [
     {
       '1': 'request_id',
@@ -632,7 +627,7 @@ const MediaUploadBatchResult$json = {
       '3': 2,
       '4': 1,
       '5': 14,
-      '6': '.hi.media.MediaUploadStatus',
+      '6': '.hi.media.UploadStatus',
       '8': {},
       '9': 1,
       '10': 'status',
@@ -643,7 +638,7 @@ const MediaUploadBatchResult$json = {
       '3': 3,
       '4': 3,
       '5': 11,
-      '6': '.hi.media.MediaUploadFileResult',
+      '6': '.hi.media.UploadFileResult',
       '8': {},
       '10': 'files'
     },
@@ -655,17 +650,16 @@ const MediaUploadBatchResult$json = {
   ],
 };
 
-/// Descriptor for `MediaUploadBatchResult`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List mediaUploadBatchResultDescriptor = $convert.base64Decode(
-    'ChZNZWRpYVVwbG9hZEJhdGNoUmVzdWx0EigKCnJlcXVlc3RfaWQYASABKAlCBJC1GANIAFIJcm'
-    'VxdWVzdElkiAEBEj4KBnN0YXR1cxgCIAEoDjIbLmhpLm1lZGlhLk1lZGlhVXBsb2FkU3RhdHVz'
-    'QgSQtRgDSAFSBnN0YXR1c4gBARI7CgVmaWxlcxgDIAMoCzIfLmhpLm1lZGlhLk1lZGlhVXBsb2'
-    'FkRmlsZVJlc3VsdEIEkLUYA1IFZmlsZXM6BJi1GANCDQoLX3JlcXVlc3RfaWRCCQoHX3N0YXR1'
-    'cw==');
+/// Descriptor for `UploadBatchResult`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List uploadBatchResultDescriptor = $convert.base64Decode(
+    'ChFVcGxvYWRCYXRjaFJlc3VsdBIoCgpyZXF1ZXN0X2lkGAEgASgJQgSQtRgDSABSCXJlcXVlc3'
+    'RJZIgBARI5CgZzdGF0dXMYAiABKA4yFi5oaS5tZWRpYS5VcGxvYWRTdGF0dXNCBJC1GANIAVIG'
+    'c3RhdHVziAEBEjYKBWZpbGVzGAMgAygLMhouaGkubWVkaWEuVXBsb2FkRmlsZVJlc3VsdEIEkL'
+    'UYA1IFZmlsZXM6BJi1GANCDQoLX3JlcXVlc3RfaWRCCQoHX3N0YXR1cw==');
 
-@$core.Deprecated('Use getMediaUploadReqDescriptor instead')
-const GetMediaUploadReq$json = {
-  '1': 'GetMediaUploadReq',
+@$core.Deprecated('Use getUploadReqDescriptor instead')
+const GetUploadReq$json = {
+  '1': 'GetUploadReq',
   '2': [
     {
       '1': 'request_id',
@@ -683,21 +677,21 @@ const GetMediaUploadReq$json = {
   ],
 };
 
-/// Descriptor for `GetMediaUploadReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getMediaUploadReqDescriptor = $convert.base64Decode(
-    'ChFHZXRNZWRpYVVwbG9hZFJlcRIuCgpyZXF1ZXN0X2lkGAEgASgJQgq6SAfIAQFyAhABSABSCX'
-    'JlcXVlc3RJZIgBAUINCgtfcmVxdWVzdF9pZA==');
+/// Descriptor for `GetUploadReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getUploadReqDescriptor = $convert.base64Decode(
+    'CgxHZXRVcGxvYWRSZXESLgoKcmVxdWVzdF9pZBgBIAEoCUIKukgHyAEBcgIQAUgAUglyZXF1ZX'
+    'N0SWSIAQFCDQoLX3JlcXVlc3RfaWQ=');
 
-@$core.Deprecated('Use getMediaUploadRespDescriptor instead')
-const GetMediaUploadResp$json = {
-  '1': 'GetMediaUploadResp',
+@$core.Deprecated('Use getUploadRespDescriptor instead')
+const GetUploadResp$json = {
+  '1': 'GetUploadResp',
   '2': [
     {
       '1': 'upload',
       '3': 1,
       '4': 1,
       '5': 11,
-      '6': '.hi.media.MediaUploadBatchResult',
+      '6': '.hi.media.UploadBatchResult',
       '8': {},
       '10': 'upload'
     },
@@ -705,7 +699,7 @@ const GetMediaUploadResp$json = {
   '7': {},
 };
 
-/// Descriptor for `GetMediaUploadResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getMediaUploadRespDescriptor = $convert.base64Decode(
-    'ChJHZXRNZWRpYVVwbG9hZFJlc3ASPgoGdXBsb2FkGAEgASgLMiAuaGkubWVkaWEuTWVkaWFVcG'
-    'xvYWRCYXRjaFJlc3VsdEIEkLUYA1IGdXBsb2FkOgSYtRgD');
+/// Descriptor for `GetUploadResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getUploadRespDescriptor = $convert.base64Decode(
+    'Cg1HZXRVcGxvYWRSZXNwEjkKBnVwbG9hZBgBIAEoCzIbLmhpLm1lZGlhLlVwbG9hZEJhdGNoUm'
+    'VzdWx0QgSQtRgDUgZ1cGxvYWQ6BJi1GAM=');

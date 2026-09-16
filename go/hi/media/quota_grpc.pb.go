@@ -20,99 +20,99 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	MediaQuota_Get_FullMethodName = "/hi.media.MediaQuota/Get"
+	Quota_Get_FullMethodName = "/hi.media.Quota/Get"
 )
 
-// MediaQuotaClient is the client API for MediaQuota service.
+// QuotaClient is the client API for Quota service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type MediaQuotaClient interface {
-	Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetMediaQuotaResp, error)
+type QuotaClient interface {
+	Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetQuotaResp, error)
 }
 
-type mediaQuotaClient struct {
+type quotaClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewMediaQuotaClient(cc grpc.ClientConnInterface) MediaQuotaClient {
-	return &mediaQuotaClient{cc}
+func NewQuotaClient(cc grpc.ClientConnInterface) QuotaClient {
+	return &quotaClient{cc}
 }
 
-func (c *mediaQuotaClient) Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetMediaQuotaResp, error) {
+func (c *quotaClient) Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetQuotaResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetMediaQuotaResp)
-	err := c.cc.Invoke(ctx, MediaQuota_Get_FullMethodName, in, out, cOpts...)
+	out := new(GetQuotaResp)
+	err := c.cc.Invoke(ctx, Quota_Get_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// MediaQuotaServer is the server API for MediaQuota service.
-// All implementations should embed UnimplementedMediaQuotaServer
+// QuotaServer is the server API for Quota service.
+// All implementations should embed UnimplementedQuotaServer
 // for forward compatibility.
-type MediaQuotaServer interface {
-	Get(context.Context, *emptypb.Empty) (*GetMediaQuotaResp, error)
+type QuotaServer interface {
+	Get(context.Context, *emptypb.Empty) (*GetQuotaResp, error)
 }
 
-// UnimplementedMediaQuotaServer should be embedded to have
+// UnimplementedQuotaServer should be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedMediaQuotaServer struct{}
+type UnimplementedQuotaServer struct{}
 
-func (UnimplementedMediaQuotaServer) Get(context.Context, *emptypb.Empty) (*GetMediaQuotaResp, error) {
+func (UnimplementedQuotaServer) Get(context.Context, *emptypb.Empty) (*GetQuotaResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
-func (UnimplementedMediaQuotaServer) testEmbeddedByValue() {}
+func (UnimplementedQuotaServer) testEmbeddedByValue() {}
 
-// UnsafeMediaQuotaServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to MediaQuotaServer will
+// UnsafeQuotaServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to QuotaServer will
 // result in compilation errors.
-type UnsafeMediaQuotaServer interface {
-	mustEmbedUnimplementedMediaQuotaServer()
+type UnsafeQuotaServer interface {
+	mustEmbedUnimplementedQuotaServer()
 }
 
-func RegisterMediaQuotaServer(s grpc.ServiceRegistrar, srv MediaQuotaServer) {
-	// If the following call panics, it indicates UnimplementedMediaQuotaServer was
+func RegisterQuotaServer(s grpc.ServiceRegistrar, srv QuotaServer) {
+	// If the following call panics, it indicates UnimplementedQuotaServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&MediaQuota_ServiceDesc, srv)
+	s.RegisterService(&Quota_ServiceDesc, srv)
 }
 
-func _MediaQuota_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Quota_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MediaQuotaServer).Get(ctx, in)
+		return srv.(QuotaServer).Get(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MediaQuota_Get_FullMethodName,
+		FullMethod: Quota_Get_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MediaQuotaServer).Get(ctx, req.(*emptypb.Empty))
+		return srv.(QuotaServer).Get(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// MediaQuota_ServiceDesc is the grpc.ServiceDesc for MediaQuota service.
+// Quota_ServiceDesc is the grpc.ServiceDesc for Quota service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var MediaQuota_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "hi.media.MediaQuota",
-	HandlerType: (*MediaQuotaServer)(nil),
+var Quota_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.media.Quota",
+	HandlerType: (*QuotaServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Get",
-			Handler:    _MediaQuota_Get_Handler,
+			Handler:    _Quota_Get_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -19,403 +19,365 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	MediaWorkflowManage_ImportWorkflow_FullMethodName = "/hi.media.MediaWorkflowManage/ImportWorkflow"
-	MediaWorkflowManage_Update_FullMethodName         = "/hi.media.MediaWorkflowManage/Update"
-	MediaWorkflowManage_List_FullMethodName           = "/hi.media.MediaWorkflowManage/List"
-	MediaWorkflowManage_Get_FullMethodName            = "/hi.media.MediaWorkflowManage/Get"
-	MediaWorkflowManage_Validate_FullMethodName       = "/hi.media.MediaWorkflowManage/Validate"
-	MediaWorkflowManage_Test_FullMethodName           = "/hi.media.MediaWorkflowManage/Test"
-	MediaWorkflowManage_ListTests_FullMethodName      = "/hi.media.MediaWorkflowManage/ListTests"
-	MediaWorkflowManage_SetReady_FullMethodName       = "/hi.media.MediaWorkflowManage/SetReady"
-	MediaWorkflowManage_SetActive_FullMethodName      = "/hi.media.MediaWorkflowManage/SetActive"
+	WorkflowManage_ImportWorkflow_FullMethodName    = "/hi.media.WorkflowManage/ImportWorkflow"
+	WorkflowManage_UpdateWorkflow_FullMethodName    = "/hi.media.WorkflowManage/UpdateWorkflow"
+	WorkflowManage_UpdateDescription_FullMethodName = "/hi.media.WorkflowManage/UpdateDescription"
+	WorkflowManage_Validate_FullMethodName          = "/hi.media.WorkflowManage/Validate"
+	WorkflowManage_Test_FullMethodName              = "/hi.media.WorkflowManage/Test"
+	WorkflowManage_ListTests_FullMethodName         = "/hi.media.WorkflowManage/ListTests"
+	WorkflowManage_List_FullMethodName              = "/hi.media.WorkflowManage/List"
+	WorkflowManage_Get_FullMethodName               = "/hi.media.WorkflowManage/Get"
 )
 
-// MediaWorkflowManageClient is the client API for MediaWorkflowManage service.
+// WorkflowManageClient is the client API for WorkflowManage service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type MediaWorkflowManageClient interface {
-	ImportWorkflow(ctx context.Context, in *ImportMediaWorkflowReq, opts ...grpc.CallOption) (*ImportMediaWorkflowResp, error)
-	Update(ctx context.Context, in *UpdateMediaWorkflowReq, opts ...grpc.CallOption) (*UpdateMediaWorkflowResp, error)
-	List(ctx context.Context, in *ListMediaWorkflowsReq, opts ...grpc.CallOption) (*ListMediaWorkflowsResp, error)
-	Get(ctx context.Context, in *GetMediaWorkflowReq, opts ...grpc.CallOption) (*GetMediaWorkflowResp, error)
-	Validate(ctx context.Context, in *ValidateMediaWorkflowReq, opts ...grpc.CallOption) (*ValidateMediaWorkflowResp, error)
-	Test(ctx context.Context, in *TestMediaWorkflowReq, opts ...grpc.CallOption) (*TestMediaWorkflowResp, error)
-	ListTests(ctx context.Context, in *ListMediaWorkflowTestsReq, opts ...grpc.CallOption) (*ListMediaWorkflowTestsResp, error)
-	SetReady(ctx context.Context, in *SetMediaWorkflowReadyReq, opts ...grpc.CallOption) (*SetMediaWorkflowReadyResp, error)
-	SetActive(ctx context.Context, in *SetActiveMediaWorkflowReq, opts ...grpc.CallOption) (*SetActiveMediaWorkflowResp, error)
+type WorkflowManageClient interface {
+	ImportWorkflow(ctx context.Context, in *ImportWorkflowReq, opts ...grpc.CallOption) (*ImportWorkflowResp, error)
+	UpdateWorkflow(ctx context.Context, in *UpdateWorkflowReq, opts ...grpc.CallOption) (*UpdateWorkflowResp, error)
+	UpdateDescription(ctx context.Context, in *UpdateWorkflowDescriptionReq, opts ...grpc.CallOption) (*UpdateWorkflowDescriptionResp, error)
+	Validate(ctx context.Context, in *ValidateWorkflowReq, opts ...grpc.CallOption) (*ValidateWorkflowResp, error)
+	Test(ctx context.Context, in *TestWorkflowReq, opts ...grpc.CallOption) (*TestWorkflowResp, error)
+	ListTests(ctx context.Context, in *ListWorkflowTestsReq, opts ...grpc.CallOption) (*ListWorkflowTestsResp, error)
+	List(ctx context.Context, in *ListWorkflowsReq, opts ...grpc.CallOption) (*ListWorkflowsResp, error)
+	Get(ctx context.Context, in *GetWorkflowReq, opts ...grpc.CallOption) (*GetWorkflowResp, error)
 }
 
-type mediaWorkflowManageClient struct {
+type workflowManageClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewMediaWorkflowManageClient(cc grpc.ClientConnInterface) MediaWorkflowManageClient {
-	return &mediaWorkflowManageClient{cc}
+func NewWorkflowManageClient(cc grpc.ClientConnInterface) WorkflowManageClient {
+	return &workflowManageClient{cc}
 }
 
-func (c *mediaWorkflowManageClient) ImportWorkflow(ctx context.Context, in *ImportMediaWorkflowReq, opts ...grpc.CallOption) (*ImportMediaWorkflowResp, error) {
+func (c *workflowManageClient) ImportWorkflow(ctx context.Context, in *ImportWorkflowReq, opts ...grpc.CallOption) (*ImportWorkflowResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ImportMediaWorkflowResp)
-	err := c.cc.Invoke(ctx, MediaWorkflowManage_ImportWorkflow_FullMethodName, in, out, cOpts...)
+	out := new(ImportWorkflowResp)
+	err := c.cc.Invoke(ctx, WorkflowManage_ImportWorkflow_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *mediaWorkflowManageClient) Update(ctx context.Context, in *UpdateMediaWorkflowReq, opts ...grpc.CallOption) (*UpdateMediaWorkflowResp, error) {
+func (c *workflowManageClient) UpdateWorkflow(ctx context.Context, in *UpdateWorkflowReq, opts ...grpc.CallOption) (*UpdateWorkflowResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdateMediaWorkflowResp)
-	err := c.cc.Invoke(ctx, MediaWorkflowManage_Update_FullMethodName, in, out, cOpts...)
+	out := new(UpdateWorkflowResp)
+	err := c.cc.Invoke(ctx, WorkflowManage_UpdateWorkflow_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *mediaWorkflowManageClient) List(ctx context.Context, in *ListMediaWorkflowsReq, opts ...grpc.CallOption) (*ListMediaWorkflowsResp, error) {
+func (c *workflowManageClient) UpdateDescription(ctx context.Context, in *UpdateWorkflowDescriptionReq, opts ...grpc.CallOption) (*UpdateWorkflowDescriptionResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListMediaWorkflowsResp)
-	err := c.cc.Invoke(ctx, MediaWorkflowManage_List_FullMethodName, in, out, cOpts...)
+	out := new(UpdateWorkflowDescriptionResp)
+	err := c.cc.Invoke(ctx, WorkflowManage_UpdateDescription_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *mediaWorkflowManageClient) Get(ctx context.Context, in *GetMediaWorkflowReq, opts ...grpc.CallOption) (*GetMediaWorkflowResp, error) {
+func (c *workflowManageClient) Validate(ctx context.Context, in *ValidateWorkflowReq, opts ...grpc.CallOption) (*ValidateWorkflowResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetMediaWorkflowResp)
-	err := c.cc.Invoke(ctx, MediaWorkflowManage_Get_FullMethodName, in, out, cOpts...)
+	out := new(ValidateWorkflowResp)
+	err := c.cc.Invoke(ctx, WorkflowManage_Validate_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *mediaWorkflowManageClient) Validate(ctx context.Context, in *ValidateMediaWorkflowReq, opts ...grpc.CallOption) (*ValidateMediaWorkflowResp, error) {
+func (c *workflowManageClient) Test(ctx context.Context, in *TestWorkflowReq, opts ...grpc.CallOption) (*TestWorkflowResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ValidateMediaWorkflowResp)
-	err := c.cc.Invoke(ctx, MediaWorkflowManage_Validate_FullMethodName, in, out, cOpts...)
+	out := new(TestWorkflowResp)
+	err := c.cc.Invoke(ctx, WorkflowManage_Test_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *mediaWorkflowManageClient) Test(ctx context.Context, in *TestMediaWorkflowReq, opts ...grpc.CallOption) (*TestMediaWorkflowResp, error) {
+func (c *workflowManageClient) ListTests(ctx context.Context, in *ListWorkflowTestsReq, opts ...grpc.CallOption) (*ListWorkflowTestsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(TestMediaWorkflowResp)
-	err := c.cc.Invoke(ctx, MediaWorkflowManage_Test_FullMethodName, in, out, cOpts...)
+	out := new(ListWorkflowTestsResp)
+	err := c.cc.Invoke(ctx, WorkflowManage_ListTests_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *mediaWorkflowManageClient) ListTests(ctx context.Context, in *ListMediaWorkflowTestsReq, opts ...grpc.CallOption) (*ListMediaWorkflowTestsResp, error) {
+func (c *workflowManageClient) List(ctx context.Context, in *ListWorkflowsReq, opts ...grpc.CallOption) (*ListWorkflowsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListMediaWorkflowTestsResp)
-	err := c.cc.Invoke(ctx, MediaWorkflowManage_ListTests_FullMethodName, in, out, cOpts...)
+	out := new(ListWorkflowsResp)
+	err := c.cc.Invoke(ctx, WorkflowManage_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *mediaWorkflowManageClient) SetReady(ctx context.Context, in *SetMediaWorkflowReadyReq, opts ...grpc.CallOption) (*SetMediaWorkflowReadyResp, error) {
+func (c *workflowManageClient) Get(ctx context.Context, in *GetWorkflowReq, opts ...grpc.CallOption) (*GetWorkflowResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SetMediaWorkflowReadyResp)
-	err := c.cc.Invoke(ctx, MediaWorkflowManage_SetReady_FullMethodName, in, out, cOpts...)
+	out := new(GetWorkflowResp)
+	err := c.cc.Invoke(ctx, WorkflowManage_Get_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *mediaWorkflowManageClient) SetActive(ctx context.Context, in *SetActiveMediaWorkflowReq, opts ...grpc.CallOption) (*SetActiveMediaWorkflowResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SetActiveMediaWorkflowResp)
-	err := c.cc.Invoke(ctx, MediaWorkflowManage_SetActive_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// MediaWorkflowManageServer is the server API for MediaWorkflowManage service.
-// All implementations should embed UnimplementedMediaWorkflowManageServer
+// WorkflowManageServer is the server API for WorkflowManage service.
+// All implementations should embed UnimplementedWorkflowManageServer
 // for forward compatibility.
-type MediaWorkflowManageServer interface {
-	ImportWorkflow(context.Context, *ImportMediaWorkflowReq) (*ImportMediaWorkflowResp, error)
-	Update(context.Context, *UpdateMediaWorkflowReq) (*UpdateMediaWorkflowResp, error)
-	List(context.Context, *ListMediaWorkflowsReq) (*ListMediaWorkflowsResp, error)
-	Get(context.Context, *GetMediaWorkflowReq) (*GetMediaWorkflowResp, error)
-	Validate(context.Context, *ValidateMediaWorkflowReq) (*ValidateMediaWorkflowResp, error)
-	Test(context.Context, *TestMediaWorkflowReq) (*TestMediaWorkflowResp, error)
-	ListTests(context.Context, *ListMediaWorkflowTestsReq) (*ListMediaWorkflowTestsResp, error)
-	SetReady(context.Context, *SetMediaWorkflowReadyReq) (*SetMediaWorkflowReadyResp, error)
-	SetActive(context.Context, *SetActiveMediaWorkflowReq) (*SetActiveMediaWorkflowResp, error)
+type WorkflowManageServer interface {
+	ImportWorkflow(context.Context, *ImportWorkflowReq) (*ImportWorkflowResp, error)
+	UpdateWorkflow(context.Context, *UpdateWorkflowReq) (*UpdateWorkflowResp, error)
+	UpdateDescription(context.Context, *UpdateWorkflowDescriptionReq) (*UpdateWorkflowDescriptionResp, error)
+	Validate(context.Context, *ValidateWorkflowReq) (*ValidateWorkflowResp, error)
+	Test(context.Context, *TestWorkflowReq) (*TestWorkflowResp, error)
+	ListTests(context.Context, *ListWorkflowTestsReq) (*ListWorkflowTestsResp, error)
+	List(context.Context, *ListWorkflowsReq) (*ListWorkflowsResp, error)
+	Get(context.Context, *GetWorkflowReq) (*GetWorkflowResp, error)
 }
 
-// UnimplementedMediaWorkflowManageServer should be embedded to have
+// UnimplementedWorkflowManageServer should be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedMediaWorkflowManageServer struct{}
+type UnimplementedWorkflowManageServer struct{}
 
-func (UnimplementedMediaWorkflowManageServer) ImportWorkflow(context.Context, *ImportMediaWorkflowReq) (*ImportMediaWorkflowResp, error) {
+func (UnimplementedWorkflowManageServer) ImportWorkflow(context.Context, *ImportWorkflowReq) (*ImportWorkflowResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ImportWorkflow not implemented")
 }
-func (UnimplementedMediaWorkflowManageServer) Update(context.Context, *UpdateMediaWorkflowReq) (*UpdateMediaWorkflowResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
+func (UnimplementedWorkflowManageServer) UpdateWorkflow(context.Context, *UpdateWorkflowReq) (*UpdateWorkflowResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateWorkflow not implemented")
 }
-func (UnimplementedMediaWorkflowManageServer) List(context.Context, *ListMediaWorkflowsReq) (*ListMediaWorkflowsResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method List not implemented")
+func (UnimplementedWorkflowManageServer) UpdateDescription(context.Context, *UpdateWorkflowDescriptionReq) (*UpdateWorkflowDescriptionResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateDescription not implemented")
 }
-func (UnimplementedMediaWorkflowManageServer) Get(context.Context, *GetMediaWorkflowReq) (*GetMediaWorkflowResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
-}
-func (UnimplementedMediaWorkflowManageServer) Validate(context.Context, *ValidateMediaWorkflowReq) (*ValidateMediaWorkflowResp, error) {
+func (UnimplementedWorkflowManageServer) Validate(context.Context, *ValidateWorkflowReq) (*ValidateWorkflowResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Validate not implemented")
 }
-func (UnimplementedMediaWorkflowManageServer) Test(context.Context, *TestMediaWorkflowReq) (*TestMediaWorkflowResp, error) {
+func (UnimplementedWorkflowManageServer) Test(context.Context, *TestWorkflowReq) (*TestWorkflowResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Test not implemented")
 }
-func (UnimplementedMediaWorkflowManageServer) ListTests(context.Context, *ListMediaWorkflowTestsReq) (*ListMediaWorkflowTestsResp, error) {
+func (UnimplementedWorkflowManageServer) ListTests(context.Context, *ListWorkflowTestsReq) (*ListWorkflowTestsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListTests not implemented")
 }
-func (UnimplementedMediaWorkflowManageServer) SetReady(context.Context, *SetMediaWorkflowReadyReq) (*SetMediaWorkflowReadyResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method SetReady not implemented")
+func (UnimplementedWorkflowManageServer) List(context.Context, *ListWorkflowsReq) (*ListWorkflowsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
-func (UnimplementedMediaWorkflowManageServer) SetActive(context.Context, *SetActiveMediaWorkflowReq) (*SetActiveMediaWorkflowResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method SetActive not implemented")
+func (UnimplementedWorkflowManageServer) Get(context.Context, *GetWorkflowReq) (*GetWorkflowResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
-func (UnimplementedMediaWorkflowManageServer) testEmbeddedByValue() {}
+func (UnimplementedWorkflowManageServer) testEmbeddedByValue() {}
 
-// UnsafeMediaWorkflowManageServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to MediaWorkflowManageServer will
+// UnsafeWorkflowManageServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to WorkflowManageServer will
 // result in compilation errors.
-type UnsafeMediaWorkflowManageServer interface {
-	mustEmbedUnimplementedMediaWorkflowManageServer()
+type UnsafeWorkflowManageServer interface {
+	mustEmbedUnimplementedWorkflowManageServer()
 }
 
-func RegisterMediaWorkflowManageServer(s grpc.ServiceRegistrar, srv MediaWorkflowManageServer) {
-	// If the following call panics, it indicates UnimplementedMediaWorkflowManageServer was
+func RegisterWorkflowManageServer(s grpc.ServiceRegistrar, srv WorkflowManageServer) {
+	// If the following call panics, it indicates UnimplementedWorkflowManageServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&MediaWorkflowManage_ServiceDesc, srv)
+	s.RegisterService(&WorkflowManage_ServiceDesc, srv)
 }
 
-func _MediaWorkflowManage_ImportWorkflow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ImportMediaWorkflowReq)
+func _WorkflowManage_ImportWorkflow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ImportWorkflowReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MediaWorkflowManageServer).ImportWorkflow(ctx, in)
+		return srv.(WorkflowManageServer).ImportWorkflow(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MediaWorkflowManage_ImportWorkflow_FullMethodName,
+		FullMethod: WorkflowManage_ImportWorkflow_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MediaWorkflowManageServer).ImportWorkflow(ctx, req.(*ImportMediaWorkflowReq))
+		return srv.(WorkflowManageServer).ImportWorkflow(ctx, req.(*ImportWorkflowReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MediaWorkflowManage_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateMediaWorkflowReq)
+func _WorkflowManage_UpdateWorkflow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateWorkflowReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MediaWorkflowManageServer).Update(ctx, in)
+		return srv.(WorkflowManageServer).UpdateWorkflow(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MediaWorkflowManage_Update_FullMethodName,
+		FullMethod: WorkflowManage_UpdateWorkflow_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MediaWorkflowManageServer).Update(ctx, req.(*UpdateMediaWorkflowReq))
+		return srv.(WorkflowManageServer).UpdateWorkflow(ctx, req.(*UpdateWorkflowReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MediaWorkflowManage_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListMediaWorkflowsReq)
+func _WorkflowManage_UpdateDescription_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateWorkflowDescriptionReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MediaWorkflowManageServer).List(ctx, in)
+		return srv.(WorkflowManageServer).UpdateDescription(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MediaWorkflowManage_List_FullMethodName,
+		FullMethod: WorkflowManage_UpdateDescription_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MediaWorkflowManageServer).List(ctx, req.(*ListMediaWorkflowsReq))
+		return srv.(WorkflowManageServer).UpdateDescription(ctx, req.(*UpdateWorkflowDescriptionReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MediaWorkflowManage_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetMediaWorkflowReq)
+func _WorkflowManage_Validate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ValidateWorkflowReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MediaWorkflowManageServer).Get(ctx, in)
+		return srv.(WorkflowManageServer).Validate(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MediaWorkflowManage_Get_FullMethodName,
+		FullMethod: WorkflowManage_Validate_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MediaWorkflowManageServer).Get(ctx, req.(*GetMediaWorkflowReq))
+		return srv.(WorkflowManageServer).Validate(ctx, req.(*ValidateWorkflowReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MediaWorkflowManage_Validate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ValidateMediaWorkflowReq)
+func _WorkflowManage_Test_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TestWorkflowReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MediaWorkflowManageServer).Validate(ctx, in)
+		return srv.(WorkflowManageServer).Test(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MediaWorkflowManage_Validate_FullMethodName,
+		FullMethod: WorkflowManage_Test_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MediaWorkflowManageServer).Validate(ctx, req.(*ValidateMediaWorkflowReq))
+		return srv.(WorkflowManageServer).Test(ctx, req.(*TestWorkflowReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MediaWorkflowManage_Test_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(TestMediaWorkflowReq)
+func _WorkflowManage_ListTests_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListWorkflowTestsReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MediaWorkflowManageServer).Test(ctx, in)
+		return srv.(WorkflowManageServer).ListTests(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MediaWorkflowManage_Test_FullMethodName,
+		FullMethod: WorkflowManage_ListTests_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MediaWorkflowManageServer).Test(ctx, req.(*TestMediaWorkflowReq))
+		return srv.(WorkflowManageServer).ListTests(ctx, req.(*ListWorkflowTestsReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MediaWorkflowManage_ListTests_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListMediaWorkflowTestsReq)
+func _WorkflowManage_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListWorkflowsReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MediaWorkflowManageServer).ListTests(ctx, in)
+		return srv.(WorkflowManageServer).List(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MediaWorkflowManage_ListTests_FullMethodName,
+		FullMethod: WorkflowManage_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MediaWorkflowManageServer).ListTests(ctx, req.(*ListMediaWorkflowTestsReq))
+		return srv.(WorkflowManageServer).List(ctx, req.(*ListWorkflowsReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MediaWorkflowManage_SetReady_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SetMediaWorkflowReadyReq)
+func _WorkflowManage_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetWorkflowReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MediaWorkflowManageServer).SetReady(ctx, in)
+		return srv.(WorkflowManageServer).Get(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MediaWorkflowManage_SetReady_FullMethodName,
+		FullMethod: WorkflowManage_Get_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MediaWorkflowManageServer).SetReady(ctx, req.(*SetMediaWorkflowReadyReq))
+		return srv.(WorkflowManageServer).Get(ctx, req.(*GetWorkflowReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MediaWorkflowManage_SetActive_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SetActiveMediaWorkflowReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MediaWorkflowManageServer).SetActive(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: MediaWorkflowManage_SetActive_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MediaWorkflowManageServer).SetActive(ctx, req.(*SetActiveMediaWorkflowReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-// MediaWorkflowManage_ServiceDesc is the grpc.ServiceDesc for MediaWorkflowManage service.
+// WorkflowManage_ServiceDesc is the grpc.ServiceDesc for WorkflowManage service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var MediaWorkflowManage_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "hi.media.MediaWorkflowManage",
-	HandlerType: (*MediaWorkflowManageServer)(nil),
+var WorkflowManage_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.media.WorkflowManage",
+	HandlerType: (*WorkflowManageServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "ImportWorkflow",
-			Handler:    _MediaWorkflowManage_ImportWorkflow_Handler,
+			Handler:    _WorkflowManage_ImportWorkflow_Handler,
 		},
 		{
-			MethodName: "Update",
-			Handler:    _MediaWorkflowManage_Update_Handler,
+			MethodName: "UpdateWorkflow",
+			Handler:    _WorkflowManage_UpdateWorkflow_Handler,
 		},
 		{
-			MethodName: "List",
-			Handler:    _MediaWorkflowManage_List_Handler,
-		},
-		{
-			MethodName: "Get",
-			Handler:    _MediaWorkflowManage_Get_Handler,
+			MethodName: "UpdateDescription",
+			Handler:    _WorkflowManage_UpdateDescription_Handler,
 		},
 		{
 			MethodName: "Validate",
-			Handler:    _MediaWorkflowManage_Validate_Handler,
+			Handler:    _WorkflowManage_Validate_Handler,
 		},
 		{
 			MethodName: "Test",
-			Handler:    _MediaWorkflowManage_Test_Handler,
+			Handler:    _WorkflowManage_Test_Handler,
 		},
 		{
 			MethodName: "ListTests",
-			Handler:    _MediaWorkflowManage_ListTests_Handler,
+			Handler:    _WorkflowManage_ListTests_Handler,
 		},
 		{
-			MethodName: "SetReady",
-			Handler:    _MediaWorkflowManage_SetReady_Handler,
+			MethodName: "List",
+			Handler:    _WorkflowManage_List_Handler,
 		},
 		{
-			MethodName: "SetActive",
-			Handler:    _MediaWorkflowManage_SetActive_Handler,
+			MethodName: "Get",
+			Handler:    _WorkflowManage_Get_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
