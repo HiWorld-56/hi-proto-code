@@ -3375,6 +3375,9 @@ pub struct GetFileAccessUrlsResp {
     #[prost(message, repeated, tag = "1")]
     pub files: ::prost::alloc::vec::Vec<FileAccessUrl>,
 }
+/// POST /api/v1/file/upload 的单文件清单项。该上传口为 HiMedia 手写的
+/// multipart/form-data HTTP 接口，不是 gRPC RPC；文件项的 form name
+/// 必须与 client_file_id 一致。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UploadFileMetadata {
     #[prost(string, optional, tag = "1")]
@@ -3384,6 +3387,10 @@ pub struct UploadFileMetadata {
     #[prost(uint64, optional, tag = "3")]
     pub size_bytes: ::core::option::Option<u64>,
 }
+/// POST /api/v1/file/upload 的 metadata 项。metadata 必须是 multipart 第一项，
+/// Content-Type 必须是 application/json，且 Content-Disposition 不能携带 filename。
+/// JSON 使用 request_id/client_file_id/filename/size_bytes 这些 snake_case 字段，
+/// 其中 size_bytes 按 uint64 十进制字符串传递。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UploadMetadata {
     #[prost(string, optional, tag = "1")]
@@ -3410,6 +3417,8 @@ pub struct UploadFileResult {
     #[prost(string, optional, tag = "8")]
     pub error_message: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// POST /api/v1/file/upload 的 data 响应，同时也是 GetUploadResult 的批次结果。
+/// HTTP 上使用 protojson lowerCamelCase 字段；成功文件的 assetId 用于图生视频任务。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UploadBatchResult {
     #[prost(string, optional, tag = "1")]
@@ -3566,6 +3575,13 @@ pub mod file_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    /// 用户文件查询与管理。
+    ///
+    /// 上传例外：HTTP 客户端通过 AUTH_USER 的 `POST /api/v1/file/upload` 上传静态
+    /// JPEG/PNG。该路由 HiMedia 手写 HTTP Handler 接收 multipart/form-data，因此没有
+    /// File.Upload RPC，也不由 grpc-gateway 生成。请求使用 UploadMetadata，成功响应
+    /// 包装的 data 是 UploadBatchResult。超时或响应丢失时，使用同一 request_id 调用
+    /// GetUploadResult 查询，不要换新 ID 重复上传。
     #[derive(Debug, Clone)]
     pub struct FileClient<T> {
         inner: tonic::client::Grpc<T>,

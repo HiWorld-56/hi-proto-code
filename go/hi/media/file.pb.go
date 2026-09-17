@@ -673,6 +673,9 @@ func (x *GetFileAccessUrlsResp) GetFiles() []*FileAccessUrl {
 	return nil
 }
 
+// POST /api/v1/file/upload 的单文件清单项。该上传口为 HiMedia 手写的
+// multipart/form-data HTTP 接口，不是 gRPC RPC；文件项的 form name
+// 必须与 client_file_id 一致。
 type UploadFileMetadata struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ClientFileId  *string                `protobuf:"bytes,1,opt,name=client_file_id,json=clientFileId,proto3,oneof" json:"client_file_id,omitempty"`
@@ -733,6 +736,10 @@ func (x *UploadFileMetadata) GetSizeBytes() uint64 {
 	return 0
 }
 
+// POST /api/v1/file/upload 的 metadata 项。metadata 必须是 multipart 第一项，
+// Content-Type 必须是 application/json，且 Content-Disposition 不能携带 filename。
+// JSON 使用 request_id/client_file_id/filename/size_bytes 这些 snake_case 字段，
+// 其中 size_bytes 按 uint64 十进制字符串传递。
 type UploadMetadata struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	RequestId     *string                `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
@@ -885,6 +892,8 @@ func (x *UploadFileResult) GetErrorMessage() string {
 	return ""
 }
 
+// POST /api/v1/file/upload 的 data 响应，同时也是 GetUploadResult 的批次结果。
+// HTTP 上使用 protojson lowerCamelCase 字段；成功文件的 assetId 用于图生视频任务。
 type UploadBatchResult struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	RequestId     *string                `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`

@@ -6,7 +6,14 @@ from hi.media import file_pb2 as hi_dot_media_dot_file__pb2
 
 
 class FileStub(object):
-    """Missing associated documentation comment in .proto file."""
+    """用户文件查询与管理。
+
+    上传例外：HTTP 客户端通过 AUTH_USER 的 `POST /api/v1/file/upload` 上传静态
+    JPEG/PNG。该路由 HiMedia 手写 HTTP Handler 接收 multipart/form-data，因此没有
+    File.Upload RPC，也不由 grpc-gateway 生成。请求使用 UploadMetadata，成功响应
+    包装的 data 是 UploadBatchResult。超时或响应丢失时，使用同一 request_id 调用
+    GetUploadResult 查询，不要换新 ID 重复上传。
+    """
 
     def __init__(self, channel):
         """Constructor.
@@ -37,7 +44,14 @@ class FileStub(object):
 
 
 class FileServicer(object):
-    """Missing associated documentation comment in .proto file."""
+    """用户文件查询与管理。
+
+    上传例外：HTTP 客户端通过 AUTH_USER 的 `POST /api/v1/file/upload` 上传静态
+    JPEG/PNG。该路由 HiMedia 手写 HTTP Handler 接收 multipart/form-data，因此没有
+    File.Upload RPC，也不由 grpc-gateway 生成。请求使用 UploadMetadata，成功响应
+    包装的 data 是 UploadBatchResult。超时或响应丢失时，使用同一 request_id 调用
+    GetUploadResult 查询，不要换新 ID 重复上传。
+    """
 
     def GetUploadResult(self, request, context):
         """按 request_id 查询已持久化的上传结果，供正常返回后复查或在超时、响应丢失后确认结果。
@@ -97,7 +111,14 @@ def add_FileServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class File(object):
-    """Missing associated documentation comment in .proto file."""
+    """用户文件查询与管理。
+
+    上传例外：HTTP 客户端通过 AUTH_USER 的 `POST /api/v1/file/upload` 上传静态
+    JPEG/PNG。该路由 HiMedia 手写 HTTP Handler 接收 multipart/form-data，因此没有
+    File.Upload RPC，也不由 grpc-gateway 生成。请求使用 UploadMetadata，成功响应
+    包装的 data 是 UploadBatchResult。超时或响应丢失时，使用同一 request_id 调用
+    GetUploadResult 查询，不要换新 ID 重复上传。
+    """
 
     @staticmethod
     def GetUploadResult(request,

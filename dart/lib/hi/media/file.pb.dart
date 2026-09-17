@@ -594,6 +594,9 @@ class GetFileAccessUrlsResp extends $pb.GeneratedMessage {
   $pb.PbList<FileAccessUrl> get files => $_getList(0);
 }
 
+/// POST /api/v1/file/upload 的单文件清单项。该上传口为 HiMedia 手写的
+/// multipart/form-data HTTP 接口，不是 gRPC RPC；文件项的 form name
+/// 必须与 client_file_id 一致。
 class UploadFileMetadata extends $pb.GeneratedMessage {
   factory UploadFileMetadata({
     $core.String? clientFileId,
@@ -674,6 +677,10 @@ class UploadFileMetadata extends $pb.GeneratedMessage {
   void clearSizeBytes() => $_clearField(3);
 }
 
+/// POST /api/v1/file/upload 的 metadata 项。metadata 必须是 multipart 第一项，
+/// Content-Type 必须是 application/json，且 Content-Disposition 不能携带 filename。
+/// JSON 使用 request_id/client_file_id/filename/size_bytes 这些 snake_case 字段，
+/// 其中 size_bytes 按 uint64 十进制字符串传递。
 class UploadMetadata extends $pb.GeneratedMessage {
   factory UploadMetadata({
     $core.String? requestId,
@@ -876,6 +883,8 @@ class UploadFileResult extends $pb.GeneratedMessage {
   void clearErrorMessage() => $_clearField(8);
 }
 
+/// POST /api/v1/file/upload 的 data 响应，同时也是 GetUploadResult 的批次结果。
+/// HTTP 上使用 protojson lowerCamelCase 字段；成功文件的 assetId 用于图生视频任务。
 class UploadBatchResult extends $pb.GeneratedMessage {
   factory UploadBatchResult({
     $core.String? requestId,

@@ -28,6 +28,14 @@ const (
 // FileClient is the client API for File service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 用户文件查询与管理。
+//
+// 上传例外：HTTP 客户端通过 AUTH_USER 的 `POST /api/v1/file/upload` 上传静态
+// JPEG/PNG。该路由 HiMedia 手写 HTTP Handler 接收 multipart/form-data，因此没有
+// File.Upload RPC，也不由 grpc-gateway 生成。请求使用 UploadMetadata，成功响应
+// 包装的 data 是 UploadBatchResult。超时或响应丢失时，使用同一 request_id 调用
+// GetUploadResult 查询，不要换新 ID 重复上传。
 type FileClient interface {
 	// 按 request_id 查询已持久化的上传结果，供正常返回后复查或在超时、响应丢失后确认结果。
 	// 此接口不上传文件，也不返回上传地址。
@@ -88,6 +96,14 @@ func (c *fileClient) GetAccessUrls(ctx context.Context, in *GetFileAccessUrlsReq
 // FileServer is the server API for File service.
 // All implementations should embed UnimplementedFileServer
 // for forward compatibility.
+//
+// 用户文件查询与管理。
+//
+// 上传例外：HTTP 客户端通过 AUTH_USER 的 `POST /api/v1/file/upload` 上传静态
+// JPEG/PNG。该路由 HiMedia 手写 HTTP Handler 接收 multipart/form-data，因此没有
+// File.Upload RPC，也不由 grpc-gateway 生成。请求使用 UploadMetadata，成功响应
+// 包装的 data 是 UploadBatchResult。超时或响应丢失时，使用同一 request_id 调用
+// GetUploadResult 查询，不要换新 ID 重复上传。
 type FileServer interface {
 	// 按 request_id 查询已持久化的上传结果，供正常返回后复查或在超时、响应丢失后确认结果。
 	// 此接口不上传文件，也不返回上传地址。
