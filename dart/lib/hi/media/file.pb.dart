@@ -950,8 +950,9 @@ class UploadBatchResult extends $pb.GeneratedMessage {
   $pb.PbList<UploadFileResult> get files => $_getList(2);
 }
 
-class GetUploadReq extends $pb.GeneratedMessage {
-  factory GetUploadReq({
+/// 使用前端生成的 request_id 标识一次上传批次；只能查询当前登录用户自己的批次。
+class GetUploadResultReq extends $pb.GeneratedMessage {
+  factory GetUploadResultReq({
     $core.String? requestId,
   }) {
     final result = create();
@@ -959,41 +960,42 @@ class GetUploadReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  GetUploadReq._();
+  GetUploadResultReq._();
 
-  factory GetUploadReq.fromBuffer($core.List<$core.int> data,
+  factory GetUploadResultReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory GetUploadReq.fromJson($core.String json,
+  factory GetUploadResultReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetUploadReq',
+      _omitMessageNames ? '' : 'GetUploadResultReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'requestId')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetUploadReq clone() => deepCopy();
+  GetUploadResultReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetUploadReq copyWith(void Function(GetUploadReq) updates) =>
-      super.copyWith((message) => updates(message as GetUploadReq))
-          as GetUploadReq;
+  GetUploadResultReq copyWith(void Function(GetUploadResultReq) updates) =>
+      super.copyWith((message) => updates(message as GetUploadResultReq))
+          as GetUploadResultReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static GetUploadReq create() => GetUploadReq._();
+  static GetUploadResultReq create() => GetUploadResultReq._();
   @$core.override
-  GetUploadReq createEmptyInstance() => create();
+  GetUploadResultReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static GetUploadReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetUploadReq>(create);
-  static GetUploadReq? _defaultInstance;
+  static GetUploadResultReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetUploadResultReq>(create);
+  static GetUploadResultReq? _defaultInstance;
 
+  /// 调用上传接口时提交的同一个 request_id。
   @$pb.TagNumber(1)
   $core.String get requestId => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -1004,61 +1006,63 @@ class GetUploadReq extends $pb.GeneratedMessage {
   void clearRequestId() => $_clearField(1);
 }
 
-class GetUploadResp extends $pb.GeneratedMessage {
-  factory GetUploadResp({
-    UploadBatchResult? upload,
+/// 返回上传批次及全部文件的当前结果；已完成批次中可以同时存在成功和失败文件。
+class GetUploadResultResp extends $pb.GeneratedMessage {
+  factory GetUploadResultResp({
+    UploadBatchResult? result,
   }) {
-    final result = create();
-    if (upload != null) result.upload = upload;
-    return result;
+    final result$ = create();
+    if (result != null) result$.result = result;
+    return result$;
   }
 
-  GetUploadResp._();
+  GetUploadResultResp._();
 
-  factory GetUploadResp.fromBuffer($core.List<$core.int> data,
+  factory GetUploadResultResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory GetUploadResp.fromJson($core.String json,
+  factory GetUploadResultResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetUploadResp',
+      _omitMessageNames ? '' : 'GetUploadResultResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
-    ..aOM<UploadBatchResult>(1, _omitFieldNames ? '' : 'upload',
+    ..aOM<UploadBatchResult>(1, _omitFieldNames ? '' : 'result',
         subBuilder: UploadBatchResult.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetUploadResp clone() => deepCopy();
+  GetUploadResultResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetUploadResp copyWith(void Function(GetUploadResp) updates) =>
-      super.copyWith((message) => updates(message as GetUploadResp))
-          as GetUploadResp;
+  GetUploadResultResp copyWith(void Function(GetUploadResultResp) updates) =>
+      super.copyWith((message) => updates(message as GetUploadResultResp))
+          as GetUploadResultResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static GetUploadResp create() => GetUploadResp._();
+  static GetUploadResultResp create() => GetUploadResultResp._();
   @$core.override
-  GetUploadResp createEmptyInstance() => create();
+  GetUploadResultResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static GetUploadResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetUploadResp>(create);
-  static GetUploadResp? _defaultInstance;
+  static GetUploadResultResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetUploadResultResp>(create);
+  static GetUploadResultResp? _defaultInstance;
 
+  /// 当前批次状态及每个文件的处理结果。
   @$pb.TagNumber(1)
-  UploadBatchResult get upload => $_getN(0);
+  UploadBatchResult get result => $_getN(0);
   @$pb.TagNumber(1)
-  set upload(UploadBatchResult value) => $_setField(1, value);
+  set result(UploadBatchResult value) => $_setField(1, value);
   @$pb.TagNumber(1)
-  $core.bool hasUpload() => $_has(0);
+  $core.bool hasResult() => $_has(0);
   @$pb.TagNumber(1)
-  void clearUpload() => $_clearField(1);
+  void clearResult() => $_clearField(1);
   @$pb.TagNumber(1)
-  UploadBatchResult ensureUpload() => $_ensure(0);
+  UploadBatchResult ensureResult() => $_ensure(0);
 }
 
 const $core.bool _omitFieldNames =

@@ -3419,15 +3419,19 @@ pub struct UploadBatchResult {
     #[prost(message, repeated, tag = "3")]
     pub files: ::prost::alloc::vec::Vec<UploadFileResult>,
 }
+/// 使用前端生成的 request_id 标识一次上传批次；只能查询当前登录用户自己的批次。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetUploadReq {
+pub struct GetUploadResultReq {
+    /// 调用上传接口时提交的同一个 request_id。
     #[prost(string, optional, tag = "1")]
     pub request_id: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 返回上传批次及全部文件的当前结果；已完成批次中可以同时存在成功和失败文件。
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetUploadResp {
+pub struct GetUploadResultResp {
+    /// 当前批次状态及每个文件的处理结果。
     #[prost(message, optional, tag = "1")]
-    pub upload: ::core::option::Option<UploadBatchResult>,
+    pub result: ::core::option::Option<UploadBatchResult>,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -3642,10 +3646,15 @@ pub mod file_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        pub async fn get_upload(
+        /// 按 request_id 查询已持久化的上传结果，供正常返回后复查或在超时、响应丢失后确认结果。
+        /// 此接口不上传文件，也不返回上传地址。
+        pub async fn get_upload_result(
             &mut self,
-            request: impl tonic::IntoRequest<super::GetUploadReq>,
-        ) -> std::result::Result<tonic::Response<super::GetUploadResp>, tonic::Status> {
+            request: impl tonic::IntoRequest<super::GetUploadResultReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetUploadResultResp>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3655,9 +3664,12 @@ pub mod file_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.media.File/GetUpload");
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.File/GetUploadResult",
+            );
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.media.File", "GetUpload"));
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.File", "GetUploadResult"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn list(

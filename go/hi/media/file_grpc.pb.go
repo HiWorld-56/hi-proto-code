@@ -19,17 +19,19 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	File_GetUpload_FullMethodName     = "/hi.media.File/GetUpload"
-	File_List_FullMethodName          = "/hi.media.File/List"
-	File_Delete_FullMethodName        = "/hi.media.File/Delete"
-	File_GetAccessUrls_FullMethodName = "/hi.media.File/GetAccessUrls"
+	File_GetUploadResult_FullMethodName = "/hi.media.File/GetUploadResult"
+	File_List_FullMethodName            = "/hi.media.File/List"
+	File_Delete_FullMethodName          = "/hi.media.File/Delete"
+	File_GetAccessUrls_FullMethodName   = "/hi.media.File/GetAccessUrls"
 )
 
 // FileClient is the client API for File service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FileClient interface {
-	GetUpload(ctx context.Context, in *GetUploadReq, opts ...grpc.CallOption) (*GetUploadResp, error)
+	// 按 request_id 查询已持久化的上传结果，供正常返回后复查或在超时、响应丢失后确认结果。
+	// 此接口不上传文件，也不返回上传地址。
+	GetUploadResult(ctx context.Context, in *GetUploadResultReq, opts ...grpc.CallOption) (*GetUploadResultResp, error)
 	List(ctx context.Context, in *ListFilesReq, opts ...grpc.CallOption) (*ListFilesResp, error)
 	Delete(ctx context.Context, in *DeleteFileReq, opts ...grpc.CallOption) (*DeleteFileResp, error)
 	GetAccessUrls(ctx context.Context, in *GetFileAccessUrlsReq, opts ...grpc.CallOption) (*GetFileAccessUrlsResp, error)
@@ -43,10 +45,10 @@ func NewFileClient(cc grpc.ClientConnInterface) FileClient {
 	return &fileClient{cc}
 }
 
-func (c *fileClient) GetUpload(ctx context.Context, in *GetUploadReq, opts ...grpc.CallOption) (*GetUploadResp, error) {
+func (c *fileClient) GetUploadResult(ctx context.Context, in *GetUploadResultReq, opts ...grpc.CallOption) (*GetUploadResultResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetUploadResp)
-	err := c.cc.Invoke(ctx, File_GetUpload_FullMethodName, in, out, cOpts...)
+	out := new(GetUploadResultResp)
+	err := c.cc.Invoke(ctx, File_GetUploadResult_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -87,7 +89,9 @@ func (c *fileClient) GetAccessUrls(ctx context.Context, in *GetFileAccessUrlsReq
 // All implementations should embed UnimplementedFileServer
 // for forward compatibility.
 type FileServer interface {
-	GetUpload(context.Context, *GetUploadReq) (*GetUploadResp, error)
+	// 按 request_id 查询已持久化的上传结果，供正常返回后复查或在超时、响应丢失后确认结果。
+	// 此接口不上传文件，也不返回上传地址。
+	GetUploadResult(context.Context, *GetUploadResultReq) (*GetUploadResultResp, error)
 	List(context.Context, *ListFilesReq) (*ListFilesResp, error)
 	Delete(context.Context, *DeleteFileReq) (*DeleteFileResp, error)
 	GetAccessUrls(context.Context, *GetFileAccessUrlsReq) (*GetFileAccessUrlsResp, error)
@@ -100,8 +104,8 @@ type FileServer interface {
 // pointer dereference when methods are called.
 type UnimplementedFileServer struct{}
 
-func (UnimplementedFileServer) GetUpload(context.Context, *GetUploadReq) (*GetUploadResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetUpload not implemented")
+func (UnimplementedFileServer) GetUploadResult(context.Context, *GetUploadResultReq) (*GetUploadResultResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetUploadResult not implemented")
 }
 func (UnimplementedFileServer) List(context.Context, *ListFilesReq) (*ListFilesResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
@@ -132,20 +136,20 @@ func RegisterFileServer(s grpc.ServiceRegistrar, srv FileServer) {
 	s.RegisterService(&File_ServiceDesc, srv)
 }
 
-func _File_GetUpload_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUploadReq)
+func _File_GetUploadResult_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUploadResultReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FileServer).GetUpload(ctx, in)
+		return srv.(FileServer).GetUploadResult(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: File_GetUpload_FullMethodName,
+		FullMethod: File_GetUploadResult_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FileServer).GetUpload(ctx, req.(*GetUploadReq))
+		return srv.(FileServer).GetUploadResult(ctx, req.(*GetUploadResultReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -212,8 +216,8 @@ var File_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*FileServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetUpload",
-			Handler:    _File_GetUpload_Handler,
+			MethodName: "GetUploadResult",
+			Handler:    _File_GetUploadResult_Handler,
 		},
 		{
 			MethodName: "List",

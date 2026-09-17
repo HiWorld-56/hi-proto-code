@@ -14,10 +14,10 @@ class FileStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.GetUpload = channel.unary_unary(
-                '/hi.media.File/GetUpload',
-                request_serializer=hi_dot_media_dot_file__pb2.GetUploadReq.SerializeToString,
-                response_deserializer=hi_dot_media_dot_file__pb2.GetUploadResp.FromString,
+        self.GetUploadResult = channel.unary_unary(
+                '/hi.media.File/GetUploadResult',
+                request_serializer=hi_dot_media_dot_file__pb2.GetUploadResultReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_file__pb2.GetUploadResultResp.FromString,
                 _registered_method=True)
         self.List = channel.unary_unary(
                 '/hi.media.File/List',
@@ -39,8 +39,10 @@ class FileStub(object):
 class FileServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def GetUpload(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+    def GetUploadResult(self, request, context):
+        """按 request_id 查询已持久化的上传结果，供正常返回后复查或在超时、响应丢失后确认结果。
+        此接口不上传文件，也不返回上传地址。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -66,10 +68,10 @@ class FileServicer(object):
 
 def add_FileServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'GetUpload': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetUpload,
-                    request_deserializer=hi_dot_media_dot_file__pb2.GetUploadReq.FromString,
-                    response_serializer=hi_dot_media_dot_file__pb2.GetUploadResp.SerializeToString,
+            'GetUploadResult': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetUploadResult,
+                    request_deserializer=hi_dot_media_dot_file__pb2.GetUploadResultReq.FromString,
+                    response_serializer=hi_dot_media_dot_file__pb2.GetUploadResultResp.SerializeToString,
             ),
             'List': grpc.unary_unary_rpc_method_handler(
                     servicer.List,
@@ -98,7 +100,7 @@ class File(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def GetUpload(request,
+    def GetUploadResult(request,
             target,
             options=(),
             channel_credentials=None,
@@ -111,9 +113,9 @@ class File(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.File/GetUpload',
-            hi_dot_media_dot_file__pb2.GetUploadReq.SerializeToString,
-            hi_dot_media_dot_file__pb2.GetUploadResp.FromString,
+            '/hi.media.File/GetUploadResult',
+            hi_dot_media_dot_file__pb2.GetUploadResultReq.SerializeToString,
+            hi_dot_media_dot_file__pb2.GetUploadResultResp.FromString,
             options,
             channel_credentials,
             insecure,

@@ -32,11 +32,13 @@ class FileClient extends $grpc.Client {
 
   FileClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$0.GetUploadResp> getUpload(
-    $0.GetUploadReq request, {
+  /// 按 request_id 查询已持久化的上传结果，供正常返回后复查或在超时、响应丢失后确认结果。
+  /// 此接口不上传文件，也不返回上传地址。
+  $grpc.ResponseFuture<$0.GetUploadResultResp> getUploadResult(
+    $0.GetUploadResultReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$getUpload, request, options: options);
+    return $createUnaryCall(_$getUploadResult, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.ListFilesResp> list(
@@ -62,11 +64,11 @@ class FileClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$getUpload =
-      $grpc.ClientMethod<$0.GetUploadReq, $0.GetUploadResp>(
-          '/hi.media.File/GetUpload',
-          ($0.GetUploadReq value) => value.writeToBuffer(),
-          $0.GetUploadResp.fromBuffer);
+  static final _$getUploadResult =
+      $grpc.ClientMethod<$0.GetUploadResultReq, $0.GetUploadResultResp>(
+          '/hi.media.File/GetUploadResult',
+          ($0.GetUploadResultReq value) => value.writeToBuffer(),
+          $0.GetUploadResultResp.fromBuffer);
   static final _$list = $grpc.ClientMethod<$0.ListFilesReq, $0.ListFilesResp>(
       '/hi.media.File/List',
       ($0.ListFilesReq value) => value.writeToBuffer(),
@@ -88,13 +90,15 @@ abstract class FileServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.media.File';
 
   FileServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.GetUploadReq, $0.GetUploadResp>(
-        'GetUpload',
-        getUpload_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.GetUploadReq.fromBuffer(value),
-        ($0.GetUploadResp value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$0.GetUploadResultReq, $0.GetUploadResultResp>(
+            'GetUploadResult',
+            getUploadResult_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $0.GetUploadResultReq.fromBuffer(value),
+            ($0.GetUploadResultResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.ListFilesReq, $0.ListFilesResp>(
         'List',
         list_Pre,
@@ -120,13 +124,14 @@ abstract class FileServiceBase extends $grpc.Service {
             ($0.GetFileAccessUrlsResp value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.GetUploadResp> getUpload_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.GetUploadReq> $request) async {
-    return getUpload($call, await $request);
+  $async.Future<$0.GetUploadResultResp> getUploadResult_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.GetUploadResultReq> $request) async {
+    return getUploadResult($call, await $request);
   }
 
-  $async.Future<$0.GetUploadResp> getUpload(
-      $grpc.ServiceCall call, $0.GetUploadReq request);
+  $async.Future<$0.GetUploadResultResp> getUploadResult(
+      $grpc.ServiceCall call, $0.GetUploadResultReq request);
 
   $async.Future<$0.ListFilesResp> list_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.ListFilesReq> $request) async {

@@ -3496,7 +3496,7 @@ impl<'de> serde::Deserialize<'de> for GetTaskResp {
         deserializer.deserialize_struct("hi.media.GetTaskResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for GetUploadReq {
+impl serde::Serialize for GetUploadResultReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -3507,14 +3507,14 @@ impl serde::Serialize for GetUploadReq {
         if self.request_id.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.GetUploadReq", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.GetUploadResultReq", len)?;
         if let Some(v) = self.request_id.as_ref() {
             struct_ser.serialize_field("requestId", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for GetUploadReq {
+impl<'de> serde::Deserialize<'de> for GetUploadResultReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -3559,13 +3559,13 @@ impl<'de> serde::Deserialize<'de> for GetUploadReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GetUploadReq;
+            type Value = GetUploadResultReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.GetUploadReq")
+                formatter.write_str("struct hi.media.GetUploadResultReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetUploadReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetUploadResultReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -3580,15 +3580,15 @@ impl<'de> serde::Deserialize<'de> for GetUploadReq {
                         }
                     }
                 }
-                Ok(GetUploadReq {
+                Ok(GetUploadResultReq {
                     request_id: request_id__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.GetUploadReq", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.GetUploadResultReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for GetUploadResp {
+impl serde::Serialize for GetUploadResultResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -3596,29 +3596,29 @@ impl serde::Serialize for GetUploadResp {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.upload.is_some() {
+        if self.result.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.GetUploadResp", len)?;
-        if let Some(v) = self.upload.as_ref() {
-            struct_ser.serialize_field("upload", v)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.GetUploadResultResp", len)?;
+        if let Some(v) = self.result.as_ref() {
+            struct_ser.serialize_field("result", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for GetUploadResp {
+impl<'de> serde::Deserialize<'de> for GetUploadResultResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "upload",
+            "result",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Upload,
+            Result,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -3640,7 +3640,7 @@ impl<'de> serde::Deserialize<'de> for GetUploadResp {
                         E: serde::de::Error,
                     {
                         match value {
-                            "upload" => Ok(GeneratedField::Upload),
+                            "result" => Ok(GeneratedField::Result),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -3650,33 +3650,33 @@ impl<'de> serde::Deserialize<'de> for GetUploadResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GetUploadResp;
+            type Value = GetUploadResultResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.GetUploadResp")
+                formatter.write_str("struct hi.media.GetUploadResultResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetUploadResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetUploadResultResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut upload__ = None;
+                let mut result__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Upload => {
-                            if upload__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("upload"));
+                        GeneratedField::Result => {
+                            if result__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("result"));
                             }
-                            upload__ = map_.next_value()?;
+                            result__ = map_.next_value()?;
                         }
                     }
                 }
-                Ok(GetUploadResp {
-                    upload: upload__,
+                Ok(GetUploadResultResp {
+                    result: result__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.GetUploadResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.GetUploadResultResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for GetWorkflowReq {

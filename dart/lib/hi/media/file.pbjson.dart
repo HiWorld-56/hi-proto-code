@@ -657,9 +657,9 @@ final $typed_data.Uint8List uploadBatchResultDescriptor = $convert.base64Decode(
     'c3RhdHVziAEBEjYKBWZpbGVzGAMgAygLMhouaGkubWVkaWEuVXBsb2FkRmlsZVJlc3VsdEIEkL'
     'UYA1IFZmlsZXM6BJi1GANCDQoLX3JlcXVlc3RfaWRCCQoHX3N0YXR1cw==');
 
-@$core.Deprecated('Use getUploadReqDescriptor instead')
-const GetUploadReq$json = {
-  '1': 'GetUploadReq',
+@$core.Deprecated('Use getUploadResultReqDescriptor instead')
+const GetUploadResultReq$json = {
+  '1': 'GetUploadResultReq',
   '2': [
     {
       '1': 'request_id',
@@ -677,29 +677,29 @@ const GetUploadReq$json = {
   ],
 };
 
-/// Descriptor for `GetUploadReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getUploadReqDescriptor = $convert.base64Decode(
-    'CgxHZXRVcGxvYWRSZXESLgoKcmVxdWVzdF9pZBgBIAEoCUIKukgHyAEBcgIQAUgAUglyZXF1ZX'
-    'N0SWSIAQFCDQoLX3JlcXVlc3RfaWQ=');
+/// Descriptor for `GetUploadResultReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getUploadResultReqDescriptor = $convert.base64Decode(
+    'ChJHZXRVcGxvYWRSZXN1bHRSZXESLgoKcmVxdWVzdF9pZBgBIAEoCUIKukgHyAEBcgIQAUgAUg'
+    'lyZXF1ZXN0SWSIAQFCDQoLX3JlcXVlc3RfaWQ=');
 
-@$core.Deprecated('Use getUploadRespDescriptor instead')
-const GetUploadResp$json = {
-  '1': 'GetUploadResp',
+@$core.Deprecated('Use getUploadResultRespDescriptor instead')
+const GetUploadResultResp$json = {
+  '1': 'GetUploadResultResp',
   '2': [
     {
-      '1': 'upload',
+      '1': 'result',
       '3': 1,
       '4': 1,
       '5': 11,
       '6': '.hi.media.UploadBatchResult',
       '8': {},
-      '10': 'upload'
+      '10': 'result'
     },
   ],
   '7': {},
 };
 
-/// Descriptor for `GetUploadResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getUploadRespDescriptor = $convert.base64Decode(
-    'Cg1HZXRVcGxvYWRSZXNwEjkKBnVwbG9hZBgBIAEoCzIbLmhpLm1lZGlhLlVwbG9hZEJhdGNoUm'
-    'VzdWx0QgSQtRgDUgZ1cGxvYWQ6BJi1GAM=');
+/// Descriptor for `GetUploadResultResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getUploadResultRespDescriptor = $convert.base64Decode(
+    'ChNHZXRVcGxvYWRSZXN1bHRSZXNwEjkKBnJlc3VsdBgBIAEoCzIbLmhpLm1lZGlhLlVwbG9hZE'
+    'JhdGNoUmVzdWx0QgSQtRgDUgZyZXN1bHQ6BJi1GAM=');

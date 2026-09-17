@@ -945,27 +945,29 @@ func (x *UploadBatchResult) GetFiles() []*UploadFileResult {
 	return nil
 }
 
-type GetUploadReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	RequestId     *string                `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
+// 使用前端生成的 request_id 标识一次上传批次；只能查询当前登录用户自己的批次。
+type GetUploadResultReq struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 调用上传接口时提交的同一个 request_id。
+	RequestId     *string `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetUploadReq) Reset() {
-	*x = GetUploadReq{}
+func (x *GetUploadResultReq) Reset() {
+	*x = GetUploadResultReq{}
 	mi := &file_hi_media_file_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetUploadReq) String() string {
+func (x *GetUploadResultReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetUploadReq) ProtoMessage() {}
+func (*GetUploadResultReq) ProtoMessage() {}
 
-func (x *GetUploadReq) ProtoReflect() protoreflect.Message {
+func (x *GetUploadResultReq) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_media_file_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -977,39 +979,41 @@ func (x *GetUploadReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetUploadReq.ProtoReflect.Descriptor instead.
-func (*GetUploadReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetUploadResultReq.ProtoReflect.Descriptor instead.
+func (*GetUploadResultReq) Descriptor() ([]byte, []int) {
 	return file_hi_media_file_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *GetUploadReq) GetRequestId() string {
+func (x *GetUploadResultReq) GetRequestId() string {
 	if x != nil && x.RequestId != nil {
 		return *x.RequestId
 	}
 	return ""
 }
 
-type GetUploadResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Upload        *UploadBatchResult     `protobuf:"bytes,1,opt,name=upload,proto3" json:"upload,omitempty"`
+// 返回上传批次及全部文件的当前结果；已完成批次中可以同时存在成功和失败文件。
+type GetUploadResultResp struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 当前批次状态及每个文件的处理结果。
+	Result        *UploadBatchResult `protobuf:"bytes,1,opt,name=result,proto3" json:"result,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetUploadResp) Reset() {
-	*x = GetUploadResp{}
+func (x *GetUploadResultResp) Reset() {
+	*x = GetUploadResultResp{}
 	mi := &file_hi_media_file_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetUploadResp) String() string {
+func (x *GetUploadResultResp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetUploadResp) ProtoMessage() {}
+func (*GetUploadResultResp) ProtoMessage() {}
 
-func (x *GetUploadResp) ProtoReflect() protoreflect.Message {
+func (x *GetUploadResultResp) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_media_file_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1021,14 +1025,14 @@ func (x *GetUploadResp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetUploadResp.ProtoReflect.Descriptor instead.
-func (*GetUploadResp) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetUploadResultResp.ProtoReflect.Descriptor instead.
+func (*GetUploadResultResp) Descriptor() ([]byte, []int) {
 	return file_hi_media_file_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *GetUploadResp) GetUpload() *UploadBatchResult {
+func (x *GetUploadResultResp) GetResult() *UploadBatchResult {
 	if x != nil {
-		return x.Upload
+		return x.Result
 	}
 	return nil
 }
@@ -1137,14 +1141,14 @@ const file_hi_media_file_proto_rawDesc = "" +
 	"\x06status\x18\x02 \x01(\x0e2\x16.hi.media.UploadStatusB\x04\x90\xb5\x18\x03H\x01R\x06status\x88\x01\x01\x126\n" +
 	"\x05files\x18\x03 \x03(\v2\x1a.hi.media.UploadFileResultB\x04\x90\xb5\x18\x03R\x05files:\x04\x98\xb5\x18\x03B\r\n" +
 	"\v_request_idB\t\n" +
-	"\a_status\"M\n" +
-	"\fGetUploadReq\x12.\n" +
+	"\a_status\"S\n" +
+	"\x12GetUploadResultReq\x12.\n" +
 	"\n" +
 	"request_id\x18\x01 \x01(\tB\n" +
 	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\trequestId\x88\x01\x01B\r\n" +
-	"\v_request_id\"P\n" +
-	"\rGetUploadResp\x129\n" +
-	"\x06upload\x18\x01 \x01(\v2\x1b.hi.media.UploadBatchResultB\x04\x90\xb5\x18\x03R\x06upload:\x04\x98\xb5\x18\x03*\\\n" +
+	"\v_request_id\"V\n" +
+	"\x13GetUploadResultResp\x129\n" +
+	"\x06result\x18\x01 \x01(\v2\x1b.hi.media.UploadBatchResultB\x04\x90\xb5\x18\x03R\x06result:\x04\x98\xb5\x18\x03*\\\n" +
 	"\n" +
 	"FileSource\x12\x1b\n" +
 	"\x17FILE_SOURCE_UNSPECIFIED\x10\x00\x12\x16\n" +
@@ -1163,9 +1167,9 @@ const file_hi_media_file_proto_rawDesc = "" +
 	"\x1aUPLOAD_FILE_STATUS_PENDING\x10\x01\x12!\n" +
 	"\x1dUPLOAD_FILE_STATUS_PROCESSING\x10\x02\x12\x1e\n" +
 	"\x1aUPLOAD_FILE_STATUS_SUCCESS\x10\x03\x12\x1d\n" +
-	"\x19UPLOAD_FILE_STATUS_FAILED\x10\x042\xa8\x02\n" +
-	"\x04File\x12C\n" +
-	"\tGetUpload\x12\x16.hi.media.GetUploadReq\x1a\x17.hi.media.GetUploadResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n" +
+	"\x19UPLOAD_FILE_STATUS_FAILED\x10\x042\xba\x02\n" +
+	"\x04File\x12U\n" +
+	"\x0fGetUploadResult\x12\x1c.hi.media.GetUploadResultReq\x1a\x1d.hi.media.GetUploadResultResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n" +
 	"\x04List\x12\x16.hi.media.ListFilesReq\x1a\x17.hi.media.ListFilesResp\"\x05\x8a\xb5\x18\x01\x02\x12B\n" +
 	"\x06Delete\x12\x17.hi.media.DeleteFileReq\x1a\x18.hi.media.DeleteFileResp\"\x05\x8a\xb5\x18\x01\x02\x12W\n" +
 	"\rGetAccessUrls\x12\x1e.hi.media.GetFileAccessUrlsReq\x1a\x1f.hi.media.GetFileAccessUrlsResp\"\x05\x8a\xb5\x18\x01\x02B\x86\x01\n" +
@@ -1202,8 +1206,8 @@ var file_hi_media_file_proto_goTypes = []any{
 	(*UploadMetadata)(nil),        // 13: hi.media.UploadMetadata
 	(*UploadFileResult)(nil),      // 14: hi.media.UploadFileResult
 	(*UploadBatchResult)(nil),     // 15: hi.media.UploadBatchResult
-	(*GetUploadReq)(nil),          // 16: hi.media.GetUploadReq
-	(*GetUploadResp)(nil),         // 17: hi.media.GetUploadResp
+	(*GetUploadResultReq)(nil),    // 16: hi.media.GetUploadResultReq
+	(*GetUploadResultResp)(nil),   // 17: hi.media.GetUploadResultResp
 	(MediaType)(0),                // 18: hi.media.MediaType
 	(*hi.Pagination)(nil),         // 19: hi.Pagination
 }
@@ -1220,12 +1224,12 @@ var file_hi_media_file_proto_depIdxs = []int32{
 	3,  // 9: hi.media.UploadFileResult.status:type_name -> hi.media.UploadFileStatus
 	2,  // 10: hi.media.UploadBatchResult.status:type_name -> hi.media.UploadStatus
 	14, // 11: hi.media.UploadBatchResult.files:type_name -> hi.media.UploadFileResult
-	15, // 12: hi.media.GetUploadResp.upload:type_name -> hi.media.UploadBatchResult
-	16, // 13: hi.media.File.GetUpload:input_type -> hi.media.GetUploadReq
+	15, // 12: hi.media.GetUploadResultResp.result:type_name -> hi.media.UploadBatchResult
+	16, // 13: hi.media.File.GetUploadResult:input_type -> hi.media.GetUploadResultReq
 	5,  // 14: hi.media.File.List:input_type -> hi.media.ListFilesReq
 	7,  // 15: hi.media.File.Delete:input_type -> hi.media.DeleteFileReq
 	9,  // 16: hi.media.File.GetAccessUrls:input_type -> hi.media.GetFileAccessUrlsReq
-	17, // 17: hi.media.File.GetUpload:output_type -> hi.media.GetUploadResp
+	17, // 17: hi.media.File.GetUploadResult:output_type -> hi.media.GetUploadResultResp
 	6,  // 18: hi.media.File.List:output_type -> hi.media.ListFilesResp
 	8,  // 19: hi.media.File.Delete:output_type -> hi.media.DeleteFileResp
 	11, // 20: hi.media.File.GetAccessUrls:output_type -> hi.media.GetFileAccessUrlsResp
