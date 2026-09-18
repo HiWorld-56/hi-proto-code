@@ -31,6 +31,7 @@ const (
 	ModuleId_MODULE_UNKNOWN ModuleId = 0
 	ModuleId_MODULE_UI      ModuleId = 1 // hinj_ui（face）
 	ModuleId_MODULE_LUA     ModuleId = 2 // lua 执行器
+	ModuleId_MODULE_UPDATER ModuleId = 3 // hinj_updater（OTA 更新，systemd 直接拉起的独立进程）
 )
 
 // Enum value maps for ModuleId.
@@ -39,11 +40,13 @@ var (
 		0: "MODULE_UNKNOWN",
 		1: "MODULE_UI",
 		2: "MODULE_LUA",
+		3: "MODULE_UPDATER",
 	}
 	ModuleId_value = map[string]int32{
 		"MODULE_UNKNOWN": 0,
 		"MODULE_UI":      1,
 		"MODULE_LUA":     2,
+		"MODULE_UPDATER": 3,
 	}
 )
 
@@ -78,12 +81,13 @@ var File_hi_ninja_common_proto protoreflect.FileDescriptor
 
 const file_hi_ninja_common_proto_rawDesc = "" +
 	"\n" +
-	"\x15hi/ninja/common.proto\x12\bhi.ninja*=\n" +
+	"\x15hi/ninja/common.proto\x12\bhi.ninja*Q\n" +
 	"\bModuleId\x12\x12\n" +
 	"\x0eMODULE_UNKNOWN\x10\x00\x12\r\n" +
 	"\tMODULE_UI\x10\x01\x12\x0e\n" +
 	"\n" +
-	"MODULE_LUA\x10\x02B\x88\x01\n" +
+	"MODULE_LUA\x10\x02\x12\x12\n" +
+	"\x0eMODULE_UPDATER\x10\x03B\x88\x01\n" +
 	"\fcom.hi.ninjaB\vCommonProtoP\x01Z*github.com/HiWorld-56/hi-proto/go/hi/ninja\xa2\x02\x03HNX\xaa\x02\bHi.Ninja\xca\x02\bHi\\Ninja\xe2\x02\x14Hi\\Ninja\\GPBMetadata\xea\x02\tHi::Ninjab\x06proto3"
 
 var (

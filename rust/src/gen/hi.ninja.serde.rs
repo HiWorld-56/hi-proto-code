@@ -866,6 +866,240 @@ impl<'de> serde::Deserialize<'de> for BrainToLua {
         deserializer.deserialize_struct("hi.ninja.BrainToLua", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for BrainToUpdater {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.request_id.is_some() {
+            len += 1;
+        }
+        if self.cmd.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.BrainToUpdater", len)?;
+        if let Some(v) = self.request_id.as_ref() {
+            struct_ser.serialize_field("requestId", v)?;
+        }
+        if let Some(v) = self.cmd.as_ref() {
+            match v {
+                brain_to_updater::Cmd::GetStatus(v) => {
+                    struct_ser.serialize_field("getStatus", v)?;
+                }
+                brain_to_updater::Cmd::Check(v) => {
+                    struct_ser.serialize_field("check", v)?;
+                }
+                brain_to_updater::Cmd::Apply(v) => {
+                    struct_ser.serialize_field("apply", v)?;
+                }
+            }
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for BrainToUpdater {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "request_id",
+            "requestId",
+            "get_status",
+            "getStatus",
+            "check",
+            "apply",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            RequestId,
+            GetStatus,
+            Check,
+            Apply,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
+                            "getStatus" | "get_status" => Ok(GeneratedField::GetStatus),
+                            "check" => Ok(GeneratedField::Check),
+                            "apply" => Ok(GeneratedField::Apply),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = BrainToUpdater;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.BrainToUpdater")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<BrainToUpdater, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut request_id__ = None;
+                let mut cmd__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
+                            }
+                            request_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::GetStatus => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("getStatus"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_updater::Cmd::GetStatus)
+;
+                        }
+                        GeneratedField::Check => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("check"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_updater::Cmd::Check)
+;
+                        }
+                        GeneratedField::Apply => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("apply"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_updater::Cmd::Apply)
+;
+                        }
+                    }
+                }
+                Ok(BrainToUpdater {
+                    request_id: request_id__,
+                    cmd: cmd__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.BrainToUpdater", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for Check {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.trigger.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.Check", len)?;
+        if let Some(v) = self.trigger.as_ref() {
+            let v = update_status::Trigger::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("trigger", &v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for Check {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "trigger",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Trigger,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "trigger" => Ok(GeneratedField::Trigger),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = Check;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.Check")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<Check, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut trigger__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Trigger => {
+                            if trigger__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("trigger"));
+                            }
+                            trigger__ = map_.next_value::<::std::option::Option<update_status::Trigger>>()?.map(|x| x as i32);
+                        }
+                    }
+                }
+                Ok(Check {
+                    trigger: trigger__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.Check", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for CloseReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -972,6 +1206,149 @@ impl<'de> serde::Deserialize<'de> for CloseReq {
             }
         }
         deserializer.deserialize_struct("hi.ninja.CloseReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for CmdResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.request_id.is_some() {
+            len += 1;
+        }
+        if self.ok.is_some() {
+            len += 1;
+        }
+        if self.error.is_some() {
+            len += 1;
+        }
+        if self.status.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.CmdResp", len)?;
+        if let Some(v) = self.request_id.as_ref() {
+            struct_ser.serialize_field("requestId", v)?;
+        }
+        if let Some(v) = self.ok.as_ref() {
+            struct_ser.serialize_field("ok", v)?;
+        }
+        if let Some(v) = self.error.as_ref() {
+            struct_ser.serialize_field("error", v)?;
+        }
+        if let Some(v) = self.status.as_ref() {
+            struct_ser.serialize_field("status", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for CmdResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "request_id",
+            "requestId",
+            "ok",
+            "error",
+            "status",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            RequestId,
+            Ok,
+            Error,
+            Status,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
+                            "ok" => Ok(GeneratedField::Ok),
+                            "error" => Ok(GeneratedField::Error),
+                            "status" => Ok(GeneratedField::Status),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = CmdResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.CmdResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CmdResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut request_id__ = None;
+                let mut ok__ = None;
+                let mut error__ = None;
+                let mut status__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
+                            }
+                            request_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Ok => {
+                            if ok__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("ok"));
+                            }
+                            ok__ = map_.next_value()?;
+                        }
+                        GeneratedField::Error => {
+                            if error__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("error"));
+                            }
+                            error__ = map_.next_value()?;
+                        }
+                        GeneratedField::Status => {
+                            if status__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("status"));
+                            }
+                            status__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(CmdResp {
+                    request_id: request_id__,
+                    ok: ok__,
+                    error: error__,
+                    status: status__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.CmdResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for Emotion {
@@ -2470,6 +2847,7 @@ impl serde::Serialize for ModuleId {
             Self::ModuleUnknown => "MODULE_UNKNOWN",
             Self::ModuleUi => "MODULE_UI",
             Self::ModuleLua => "MODULE_LUA",
+            Self::ModuleUpdater => "MODULE_UPDATER",
         };
         serializer.serialize_str(variant)
     }
@@ -2484,6 +2862,7 @@ impl<'de> serde::Deserialize<'de> for ModuleId {
             "MODULE_UNKNOWN",
             "MODULE_UI",
             "MODULE_LUA",
+            "MODULE_UPDATER",
         ];
 
         struct GeneratedVisitor;
@@ -2527,6 +2906,7 @@ impl<'de> serde::Deserialize<'de> for ModuleId {
                     "MODULE_UNKNOWN" => Ok(ModuleId::ModuleUnknown),
                     "MODULE_UI" => Ok(ModuleId::ModuleUi),
                     "MODULE_LUA" => Ok(ModuleId::ModuleLua),
+                    "MODULE_UPDATER" => Ok(ModuleId::ModuleUpdater),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }
@@ -3696,7 +4076,7 @@ impl<'de> serde::Deserialize<'de> for update_action::Action {
         deserializer.deserialize_any(GeneratedVisitor)
     }
 }
-impl serde::Serialize for UpdateInfo {
+impl serde::Serialize for UpdateStatus {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -3731,15 +4111,20 @@ impl serde::Serialize for UpdateInfo {
         if self.updated_at.is_some() {
             len += 1;
         }
+        if self.last_check_at.is_some() {
+            len += 1;
+        }
         if self.downloaded_bytes.is_some() {
             len += 1;
         }
         if self.total_bytes.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.ninja.UpdateInfo", len)?;
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.UpdateStatus", len)?;
         if let Some(v) = self.state.as_ref() {
-            struct_ser.serialize_field("state", v)?;
+            let v = update_status::State::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("state", &v)?;
         }
         if let Some(v) = self.current_version.as_ref() {
             struct_ser.serialize_field("currentVersion", v)?;
@@ -3760,12 +4145,19 @@ impl serde::Serialize for UpdateInfo {
             struct_ser.serialize_field("changes", &self.changes)?;
         }
         if let Some(v) = self.trigger.as_ref() {
-            struct_ser.serialize_field("trigger", v)?;
+            let v = update_status::Trigger::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("trigger", &v)?;
         }
         if let Some(v) = self.updated_at.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
             struct_ser.serialize_field("updatedAt", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.last_check_at.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("lastCheckAt", ToString::to_string(&v).as_str())?;
         }
         if let Some(v) = self.downloaded_bytes.as_ref() {
             #[allow(clippy::needless_borrow)]
@@ -3780,7 +4172,7 @@ impl serde::Serialize for UpdateInfo {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for UpdateInfo {
+impl<'de> serde::Deserialize<'de> for UpdateStatus {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -3799,6 +4191,8 @@ impl<'de> serde::Deserialize<'de> for UpdateInfo {
             "trigger",
             "updated_at",
             "updatedAt",
+            "last_check_at",
+            "lastCheckAt",
             "downloaded_bytes",
             "downloadedBytes",
             "total_bytes",
@@ -3816,6 +4210,7 @@ impl<'de> serde::Deserialize<'de> for UpdateInfo {
             Changes,
             Trigger,
             UpdatedAt,
+            LastCheckAt,
             DownloadedBytes,
             TotalBytes,
         }
@@ -3848,6 +4243,7 @@ impl<'de> serde::Deserialize<'de> for UpdateInfo {
                             "changes" => Ok(GeneratedField::Changes),
                             "trigger" => Ok(GeneratedField::Trigger),
                             "updatedAt" | "updated_at" => Ok(GeneratedField::UpdatedAt),
+                            "lastCheckAt" | "last_check_at" => Ok(GeneratedField::LastCheckAt),
                             "downloadedBytes" | "downloaded_bytes" => Ok(GeneratedField::DownloadedBytes),
                             "totalBytes" | "total_bytes" => Ok(GeneratedField::TotalBytes),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
@@ -3859,13 +4255,13 @@ impl<'de> serde::Deserialize<'de> for UpdateInfo {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = UpdateInfo;
+            type Value = UpdateStatus;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ninja.UpdateInfo")
+                formatter.write_str("struct hi.ninja.UpdateStatus")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdateInfo, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdateStatus, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -3878,6 +4274,7 @@ impl<'de> serde::Deserialize<'de> for UpdateInfo {
                 let mut changes__ = None;
                 let mut trigger__ = None;
                 let mut updated_at__ = None;
+                let mut last_check_at__ = None;
                 let mut downloaded_bytes__ = None;
                 let mut total_bytes__ = None;
                 while let Some(k) = map_.next_key()? {
@@ -3886,7 +4283,7 @@ impl<'de> serde::Deserialize<'de> for UpdateInfo {
                             if state__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("state"));
                             }
-                            state__ = map_.next_value()?;
+                            state__ = map_.next_value::<::std::option::Option<update_status::State>>()?.map(|x| x as i32);
                         }
                         GeneratedField::CurrentVersion => {
                             if current_version__.is_some() {
@@ -3930,13 +4327,21 @@ impl<'de> serde::Deserialize<'de> for UpdateInfo {
                             if trigger__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("trigger"));
                             }
-                            trigger__ = map_.next_value()?;
+                            trigger__ = map_.next_value::<::std::option::Option<update_status::Trigger>>()?.map(|x| x as i32);
                         }
                         GeneratedField::UpdatedAt => {
                             if updated_at__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("updatedAt"));
                             }
                             updated_at__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::LastCheckAt => {
+                            if last_check_at__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("lastCheckAt"));
+                            }
+                            last_check_at__ = 
                                 map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
@@ -3958,7 +4363,7 @@ impl<'de> serde::Deserialize<'de> for UpdateInfo {
                         }
                     }
                 }
-                Ok(UpdateInfo {
+                Ok(UpdateStatus {
                     state: state__,
                     current_version: current_version__,
                     target_version: target_version__,
@@ -3968,11 +4373,330 @@ impl<'de> serde::Deserialize<'de> for UpdateInfo {
                     changes: changes__.unwrap_or_default(),
                     trigger: trigger__,
                     updated_at: updated_at__,
+                    last_check_at: last_check_at__,
                     downloaded_bytes: downloaded_bytes__,
                     total_bytes: total_bytes__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.ninja.UpdateInfo", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.ninja.UpdateStatus", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for update_status::State {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unknown => "STATE_UNKNOWN",
+            Self::Idle => "STATE_IDLE",
+            Self::Checking => "STATE_CHECKING",
+            Self::UpdateAvailable => "STATE_UPDATE_AVAILABLE",
+            Self::Downloading => "STATE_DOWNLOADING",
+            Self::Verifying => "STATE_VERIFYING",
+            Self::Unpacking => "STATE_UNPACKING",
+            Self::Stopping => "STATE_STOPPING",
+            Self::Preserving => "STATE_PRESERVING",
+            Self::Switching => "STATE_SWITCHING",
+            Self::Starting => "STATE_STARTING",
+            Self::Healthy => "STATE_HEALTHY",
+            Self::SelfUpdating => "STATE_SELF_UPDATING",
+            Self::Retrying => "STATE_RETRYING",
+            Self::Rollbacking => "STATE_ROLLBACKING",
+            Self::Done => "STATE_DONE",
+            Self::Failed => "STATE_FAILED",
+            Self::RollbackDone => "STATE_ROLLBACK_DONE",
+            Self::RollbackFailed => "STATE_ROLLBACK_FAILED",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for update_status::State {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "STATE_UNKNOWN",
+            "STATE_IDLE",
+            "STATE_CHECKING",
+            "STATE_UPDATE_AVAILABLE",
+            "STATE_DOWNLOADING",
+            "STATE_VERIFYING",
+            "STATE_UNPACKING",
+            "STATE_STOPPING",
+            "STATE_PRESERVING",
+            "STATE_SWITCHING",
+            "STATE_STARTING",
+            "STATE_HEALTHY",
+            "STATE_SELF_UPDATING",
+            "STATE_RETRYING",
+            "STATE_ROLLBACKING",
+            "STATE_DONE",
+            "STATE_FAILED",
+            "STATE_ROLLBACK_DONE",
+            "STATE_ROLLBACK_FAILED",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = update_status::State;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "STATE_UNKNOWN" => Ok(update_status::State::Unknown),
+                    "STATE_IDLE" => Ok(update_status::State::Idle),
+                    "STATE_CHECKING" => Ok(update_status::State::Checking),
+                    "STATE_UPDATE_AVAILABLE" => Ok(update_status::State::UpdateAvailable),
+                    "STATE_DOWNLOADING" => Ok(update_status::State::Downloading),
+                    "STATE_VERIFYING" => Ok(update_status::State::Verifying),
+                    "STATE_UNPACKING" => Ok(update_status::State::Unpacking),
+                    "STATE_STOPPING" => Ok(update_status::State::Stopping),
+                    "STATE_PRESERVING" => Ok(update_status::State::Preserving),
+                    "STATE_SWITCHING" => Ok(update_status::State::Switching),
+                    "STATE_STARTING" => Ok(update_status::State::Starting),
+                    "STATE_HEALTHY" => Ok(update_status::State::Healthy),
+                    "STATE_SELF_UPDATING" => Ok(update_status::State::SelfUpdating),
+                    "STATE_RETRYING" => Ok(update_status::State::Retrying),
+                    "STATE_ROLLBACKING" => Ok(update_status::State::Rollbacking),
+                    "STATE_DONE" => Ok(update_status::State::Done),
+                    "STATE_FAILED" => Ok(update_status::State::Failed),
+                    "STATE_ROLLBACK_DONE" => Ok(update_status::State::RollbackDone),
+                    "STATE_ROLLBACK_FAILED" => Ok(update_status::State::RollbackFailed),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for update_status::Trigger {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unknown => "TRIGGER_UNKNOWN",
+            Self::Manual => "TRIGGER_MANUAL",
+            Self::UpdaterStartup => "TRIGGER_UPDATER_STARTUP",
+            Self::BrainStartup => "TRIGGER_BRAIN_STARTUP",
+            Self::Push => "TRIGGER_PUSH",
+            Self::Poll => "TRIGGER_POLL",
+            Self::Apply => "TRIGGER_APPLY",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for update_status::Trigger {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "TRIGGER_UNKNOWN",
+            "TRIGGER_MANUAL",
+            "TRIGGER_UPDATER_STARTUP",
+            "TRIGGER_BRAIN_STARTUP",
+            "TRIGGER_PUSH",
+            "TRIGGER_POLL",
+            "TRIGGER_APPLY",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = update_status::Trigger;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "TRIGGER_UNKNOWN" => Ok(update_status::Trigger::Unknown),
+                    "TRIGGER_MANUAL" => Ok(update_status::Trigger::Manual),
+                    "TRIGGER_UPDATER_STARTUP" => Ok(update_status::Trigger::UpdaterStartup),
+                    "TRIGGER_BRAIN_STARTUP" => Ok(update_status::Trigger::BrainStartup),
+                    "TRIGGER_PUSH" => Ok(update_status::Trigger::Push),
+                    "TRIGGER_POLL" => Ok(update_status::Trigger::Poll),
+                    "TRIGGER_APPLY" => Ok(update_status::Trigger::Apply),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for UpdaterToBrain {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.cmd.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.UpdaterToBrain", len)?;
+        if let Some(v) = self.cmd.as_ref() {
+            match v {
+                updater_to_brain::Cmd::Resp(v) => {
+                    struct_ser.serialize_field("resp", v)?;
+                }
+                updater_to_brain::Cmd::EventStatus(v) => {
+                    struct_ser.serialize_field("eventStatus", v)?;
+                }
+            }
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for UpdaterToBrain {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "resp",
+            "event_status",
+            "eventStatus",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Resp,
+            EventStatus,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "resp" => Ok(GeneratedField::Resp),
+                            "eventStatus" | "event_status" => Ok(GeneratedField::EventStatus),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = UpdaterToBrain;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.UpdaterToBrain")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdaterToBrain, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut cmd__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Resp => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("resp"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(updater_to_brain::Cmd::Resp)
+;
+                        }
+                        GeneratedField::EventStatus => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("eventStatus"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(updater_to_brain::Cmd::EventStatus)
+;
+                        }
+                    }
+                }
+                Ok(UpdaterToBrain {
+                    cmd: cmd__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.UpdaterToBrain", FIELDS, GeneratedVisitor)
     }
 }

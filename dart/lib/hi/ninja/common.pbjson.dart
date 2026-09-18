@@ -22,10 +22,11 @@ const ModuleId$json = {
     {'1': 'MODULE_UNKNOWN', '2': 0},
     {'1': 'MODULE_UI', '2': 1},
     {'1': 'MODULE_LUA', '2': 2},
+    {'1': 'MODULE_UPDATER', '2': 3},
   ],
 };
 
 /// Descriptor for `ModuleId`. Decode as a `google.protobuf.EnumDescriptorProto`.
 final $typed_data.Uint8List moduleIdDescriptor = $convert.base64Decode(
     'CghNb2R1bGVJZBISCg5NT0RVTEVfVU5LTk9XThAAEg0KCU1PRFVMRV9VSRABEg4KCk1PRFVMRV'
-    '9MVUEQAg==');
+    '9MVUEQAhISCg5NT0RVTEVfVVBEQVRFUhAD');

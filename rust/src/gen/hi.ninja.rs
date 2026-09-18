@@ -196,6 +196,297 @@ pub mod lua_to_brain {
         HostCall(super::HostCallReq),
     }
 }
+/// 更新状态快照。**updater 是唯一的写方**，brain 与 face 都只读。
+///
+/// 它同时是三个地方的同一份东西：updater 落盘的 `status.json`、
+/// updater 主动推给 brain 的事件、以及每条控制命令的回包 ——
+/// 所以 brain 不需要"合并状态"，收到哪份用哪份。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UpdateStatus {
+    #[prost(enumeration = "update_status::State", optional, tag = "1")]
+    pub state: ::core::option::Option<i32>,
+    /// 当前在跑的版本；不传=updater 也不知道
+    #[prost(string, optional, tag = "2")]
+    pub current_version: ::core::option::Option<::prost::alloc::string::String>,
+    /// 要更新到的版本；不传=没有更新目标
+    #[prost(string, optional, tag = "3")]
+    pub target_version: ::core::option::Option<::prost::alloc::string::String>,
+    /// 0-100。**总长未知时恒为 0**，别编一个会往回跳的数
+    #[prost(uint32, optional, tag = "4")]
+    pub progress: ::core::option::Option<u32>,
+    /// 给人看的一句话说明
+    #[prost(string, optional, tag = "5")]
+    pub message: ::core::option::Option<::prost::alloc::string::String>,
+    /// 失败原因；不传=没失败
+    #[prost(string, optional, tag = "6")]
+    pub error: ::core::option::Option<::prost::alloc::string::String>,
+    /// changelog
+    #[prost(string, repeated, tag = "7")]
+    pub changes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    #[prost(enumeration = "update_status::Trigger", optional, tag = "8")]
+    pub trigger: ::core::option::Option<i32>,
+    /// 这份状态写出来的时刻，**Unix 秒**
+    #[prost(uint64, optional, tag = "9")]
+    pub updated_at: ::core::option::Option<u64>,
+    /// 最近一次真的问过服务端的时刻，**Unix 秒**；不传=从没查过
+    #[prost(uint64, optional, tag = "10")]
+    pub last_check_at: ::core::option::Option<u64>,
+    #[prost(uint64, optional, tag = "11")]
+    pub downloaded_bytes: ::core::option::Option<u64>,
+    /// **不传 = 未知**（服务端没给 Content-Length）；0 是真实取值：空文件。
+    /// 与 `hi/ninja/ui.proto` 的 `PluginProgress.total_bytes` 同口径。
+    #[prost(uint64, optional, tag = "12")]
+    pub total_bytes: ::core::option::Option<u64>,
+}
+/// Nested message and enum types in `UpdateStatus`.
+pub mod update_status {
+    /// 当前阶段。**这些值 updater 全都会真的写出来**，一个不多一个不少
+    /// （2026-09-18 在 hinj-updater 仓里逐个数过）。
+    ///
+    /// ⚠️ 原来这里是自由字符串，注释里举的 `installing` / `success` **实现里一次都没出现过**，
+    /// 而真正会出现的 13 个一个都没写。face 要照它渲染界面，猜不得。
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        Unknown = 0,
+        /// —— 没有在装的时候 ——
+        ///
+        /// 闲着；**也包括"查过了，已经是最新"**
+        Idle = 1,
+        /// 正在问服务端有没有新版
+        Checking = 2,
+        /// 有新版，等人点"装"（target_version 是它）
+        UpdateAvailable = 3,
+        /// —— 正在装（这一段里 updater 拒绝任何新的检查/安装命令）——
+        ///
+        /// 下载 bundle（看 downloaded_bytes / total_bytes）
+        Downloading = 4,
+        /// 校验摘要/签名
+        Verifying = 5,
+        /// 解包到 releases/\<版本>
+        Unpacking = 6,
+        /// 停 face、停 brain
+        Stopping = 7,
+        /// 保留要跨版本带走的数据
+        Preserving = 8,
+        /// 原子切换 /opt/hinj/current
+        Switching = 9,
+        /// 拉起 brain、拉起 face
+        Starting = 10,
+        /// 等服务真的 active
+        Healthy = 11,
+        /// **updater 换它自己**（换完要走一次启动确认）
+        SelfUpdating = 12,
+        /// 这一轮失败了，等着重来
+        Retrying = 13,
+        /// 正在回到上一个版本
+        Rollbacking = 14,
+        /// —— 收尾 ——
+        ///
+        /// 装成了
+        Done = 15,
+        /// 装/查失败（原因在 error）
+        Failed = 16,
+        /// 回滚成功，跑的是旧版本
+        RollbackDone = 17,
+        /// 回滚也失败了 —— **人要到现场**
+        RollbackFailed = 18,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Self::Unknown => "STATE_UNKNOWN",
+                Self::Idle => "STATE_IDLE",
+                Self::Checking => "STATE_CHECKING",
+                Self::UpdateAvailable => "STATE_UPDATE_AVAILABLE",
+                Self::Downloading => "STATE_DOWNLOADING",
+                Self::Verifying => "STATE_VERIFYING",
+                Self::Unpacking => "STATE_UNPACKING",
+                Self::Stopping => "STATE_STOPPING",
+                Self::Preserving => "STATE_PRESERVING",
+                Self::Switching => "STATE_SWITCHING",
+                Self::Starting => "STATE_STARTING",
+                Self::Healthy => "STATE_HEALTHY",
+                Self::SelfUpdating => "STATE_SELF_UPDATING",
+                Self::Retrying => "STATE_RETRYING",
+                Self::Rollbacking => "STATE_ROLLBACKING",
+                Self::Done => "STATE_DONE",
+                Self::Failed => "STATE_FAILED",
+                Self::RollbackDone => "STATE_ROLLBACK_DONE",
+                Self::RollbackFailed => "STATE_ROLLBACK_FAILED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNKNOWN" => Some(Self::Unknown),
+                "STATE_IDLE" => Some(Self::Idle),
+                "STATE_CHECKING" => Some(Self::Checking),
+                "STATE_UPDATE_AVAILABLE" => Some(Self::UpdateAvailable),
+                "STATE_DOWNLOADING" => Some(Self::Downloading),
+                "STATE_VERIFYING" => Some(Self::Verifying),
+                "STATE_UNPACKING" => Some(Self::Unpacking),
+                "STATE_STOPPING" => Some(Self::Stopping),
+                "STATE_PRESERVING" => Some(Self::Preserving),
+                "STATE_SWITCHING" => Some(Self::Switching),
+                "STATE_STARTING" => Some(Self::Starting),
+                "STATE_HEALTHY" => Some(Self::Healthy),
+                "STATE_SELF_UPDATING" => Some(Self::SelfUpdating),
+                "STATE_RETRYING" => Some(Self::Retrying),
+                "STATE_ROLLBACKING" => Some(Self::Rollbacking),
+                "STATE_DONE" => Some(Self::Done),
+                "STATE_FAILED" => Some(Self::Failed),
+                "STATE_ROLLBACK_DONE" => Some(Self::RollbackDone),
+                "STATE_ROLLBACK_FAILED" => Some(Self::RollbackFailed),
+                _ => None,
+            }
+        }
+    }
+    /// 这一次状态变化是**谁引起的**。
+    ///
+    /// ⚠️ 它不只是给人看的：brain 判断"我要的那次检查到底做了没有"**只能靠它** ——
+    /// updater 在忙的时候会回一个 `ok=true` 但什么都没查的响应，
+    /// 状态里的 trigger 还是上一次那个。判据是"trigger 是我这次发的那个"，
+    /// 不是"ok 为真"（见 `UpdaterToBrain.CmdResp`）。
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Trigger {
+        Unknown = 0,
+        /// 人在 face 上点的
+        Manual = 1,
+        /// updater 自己开机时查的（brain 可能还没起来）
+        UpdaterStartup = 2,
+        /// brain 开机、且网络/时间/登录都就绪之后让它查的
+        BrainStartup = 3,
+        /// 收到 `app-update` 全网广播（见 hi/did/admin.proto）
+        Push = 4,
+        /// updater 自己的轮询
+        Poll = 5,
+        /// 安装过程中写出来的状态
+        Apply = 6,
+    }
+    impl Trigger {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Self::Unknown => "TRIGGER_UNKNOWN",
+                Self::Manual => "TRIGGER_MANUAL",
+                Self::UpdaterStartup => "TRIGGER_UPDATER_STARTUP",
+                Self::BrainStartup => "TRIGGER_BRAIN_STARTUP",
+                Self::Push => "TRIGGER_PUSH",
+                Self::Poll => "TRIGGER_POLL",
+                Self::Apply => "TRIGGER_APPLY",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "TRIGGER_UNKNOWN" => Some(Self::Unknown),
+                "TRIGGER_MANUAL" => Some(Self::Manual),
+                "TRIGGER_UPDATER_STARTUP" => Some(Self::UpdaterStartup),
+                "TRIGGER_BRAIN_STARTUP" => Some(Self::BrainStartup),
+                "TRIGGER_PUSH" => Some(Self::Push),
+                "TRIGGER_POLL" => Some(Self::Poll),
+                "TRIGGER_APPLY" => Some(Self::Apply),
+                _ => None,
+            }
+        }
+    }
+}
+/// brain -> updater
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BrainToUpdater {
+    /// 回包按它配对。**每条请求都要带**，updater 原样放回 `CmdResp.request_id`；
+    /// 对不上的回包 brain 直接丢（超时之后迟到的那种）。
+    #[prost(string, optional, tag = "1")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(oneof = "brain_to_updater::Cmd", tags = "2, 3, 4")]
+    pub cmd: ::core::option::Option<brain_to_updater::Cmd>,
+}
+/// Nested message and enum types in `BrainToUpdater`.
+pub mod brain_to_updater {
+    #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Cmd {
+        /// 取一次当前状态，不触发任何动作。（本文件里空请求一律用 Empty，同 ui.proto）
+        #[prost(message, tag = "2")]
+        GetStatus(::pbjson_types::Empty),
+        #[prost(message, tag = "3")]
+        Check(super::Check),
+        /// 把 `target_version` 那一版装上。**这是不可逆的**：会停 face/brain、换 current。
+        #[prost(message, tag = "4")]
+        Apply(::pbjson_types::Empty),
+    }
+}
+/// 现在去问服务端有没有新版。
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct Check {
+    /// 谁让查的。**不传=TRIGGER_MANUAL**。
+    /// updater 按它分别做防抖（各档的间隔在 `hinj-updater.toml`），
+    /// 并把它写进 `UpdateStatus.trigger` —— 那是 brain 认领自己那次检查的唯一凭据。
+    #[prost(enumeration = "update_status::Trigger", optional, tag = "1")]
+    pub trigger: ::core::option::Option<i32>,
+}
+/// updater -> brain
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UpdaterToBrain {
+    #[prost(oneof = "updater_to_brain::Cmd", tags = "1, 2")]
+    pub cmd: ::core::option::Option<updater_to_brain::Cmd>,
+}
+/// Nested message and enum types in `UpdaterToBrain`.
+pub mod updater_to_brain {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Cmd {
+        #[prost(message, tag = "1")]
+        Resp(super::CmdResp),
+        /// updater 主动推的状态变化（不对应任何请求）。装的过程全靠它，一路推到 face。
+        #[prost(message, tag = "2")]
+        EventStatus(super::UpdateStatus),
+    }
+}
+/// 一条控制命令的回包。**状态永远带着**，不管成没成 —— 失败时那份状态正是原因所在。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CmdResp {
+    #[prost(string, optional, tag = "1")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// ⚠️ **`ok=true` 只说明这条命令被接受了，不说明它做了事。**
+    /// updater 在装的时候、或者防抖窗口里，会回一个"好的，但我什么都没查"的成功响应。
+    /// 要知道"我要的那次检查做了没有"，判据是 `status.trigger` 等于你发的那个
+    /// 且 `status.state` 是 IDLE / UPDATE_AVAILABLE 之一。
+    #[prost(bool, optional, tag = "2")]
+    pub ok: ::core::option::Option<bool>,
+    /// 不传=没出错
+    #[prost(string, optional, tag = "3")]
+    pub error: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "4")]
+    pub status: ::core::option::Option<UpdateStatus>,
+}
 /// 机器人初始化：自身身份 + 当前所有者
 /// master 缺省表示尚未绑定所有者
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -352,9 +643,10 @@ pub mod brain_to_face {
         /// 系统状态：NTP 时间同步 + 网络连通性（face 上线推送 + 状态变化时推送）
         #[prost(message, tag = "18")]
         EventStatus(super::StatusEvent),
-        /// 资源更新信息同步
+        /// 固件 OTA 更新的状态。**brain 原样转发 updater 的那份**，不自己攒、不自己改；
+        /// 定义在 `hi/ninja/updater.proto`（那条线的契约在那儿）。
         #[prost(message, tag = "19")]
-        EventUpdate(super::UpdateInfo),
+        EventUpdate(super::UpdateStatus),
         /// 币安设置同步（凭证 + 初始本金；仅限本地 face IPC）
         #[prost(message, tag = "21")]
         EventBinanceSettings(super::BinanceSettings),
@@ -372,43 +664,6 @@ pub struct StatusEvent {
     #[prost(bool, optional, tag = "3")]
     pub usb: ::core::option::Option<bool>,
 }
-/// 资源更新进度信息
-/// `state`：当前更新状态，例如 `idle`、`checking`、`downloading`、`installing`、`success`、`failed` 等。
-/// `current_version`：当前已安装/正在运行的版本号。
-/// `target_version`：目标版本号，也就是准备更新到的版本。
-/// `progress`： 更新进度，通常是 `0-100` 的百分比。
-/// `message` ： 给用户或前端展示的状态说明，例如“正在下载更新包”。
-/// `error` ：错误信息。更新失败时记录失败原因；正常情况下不传。
-/// `changes` ：版本变更列表，通常是 changelog，例如修复了哪些问题、增加了哪些功能。
-/// `trigger`：更新触发来源，例如 `manual` 手动触发、`auto` 自动检查、`startup` 启动时触发等。
-/// `updated_at` ：状态最后更新时间，通常是 Unix 时间戳。具体是秒还是毫秒要看实现约定。
-/// `downloaded_bytes`：已下载的字节数。
-/// `total_bytes`：需要下载的总字节数。可用于计算下载百分比。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct UpdateInfo {
-    #[prost(string, optional, tag = "1")]
-    pub state: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub current_version: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "3")]
-    pub target_version: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(uint32, optional, tag = "4")]
-    pub progress: ::core::option::Option<u32>,
-    #[prost(string, optional, tag = "5")]
-    pub message: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "6")]
-    pub error: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, repeated, tag = "7")]
-    pub changes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "8")]
-    pub trigger: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(uint64, optional, tag = "9")]
-    pub updated_at: ::core::option::Option<u64>,
-    #[prost(uint64, optional, tag = "10")]
-    pub downloaded_bytes: ::core::option::Option<u64>,
-    #[prost(uint64, optional, tag = "11")]
-    pub total_bytes: ::core::option::Option<u64>,
-}
 /// face -> brain
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct FaceToBrain {
@@ -422,7 +677,7 @@ pub mod face_to_brain {
         /// 音频播放开始/结束，brain 据此控制麦克风静音
         #[prost(enumeration = "super::StateToggle", tag = "1")]
         VoiceState(i32),
-        /// 更新动作
+        /// 固件更新：人在 face 上点的那一下（查/装/不看了）。
         #[prost(message, tag = "2")]
         UpdateAction(super::UpdateAction),
         /// face 重启后内存缓存是空的，用它主动要一次（本文件里空请求一律用 Empty，见 show_qr_code）
@@ -447,7 +702,7 @@ pub mod face_to_brain {
 /// 机器人的网可能很差。没有进度的话,用户在市场点了"购买"之后,face 上什么都不会变,
 /// 直到某一刻插件突然出现;中间那段沉默里,用户只会以为没买成、然后再点一次。
 ///
-/// 字段有意与固件更新(UpdaterStatus)同形:state / progress / 已下/共多少字节。
+/// 字段有意与固件更新(`updater.proto` 的 `UpdateStatus`)同形:state / progress / 已下/共多少字节。
 /// **face 那边不该为"插件"和"固件"学两套进度模型。**
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PluginProgress {
@@ -523,7 +778,10 @@ pub mod plugin_progress {
         }
     }
 }
-/// 更新动作
+/// 固件更新：人在 face 上点的那一下。
+///
+/// brain 收到之后转成 `hi/ninja/updater.proto` 的 `BrainToUpdater` 发给 updater；
+/// **做不做得成由 updater 说了算**，结果照常从 `event_update` 回到 face。
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UpdateAction {
     #[prost(enumeration = "update_action::Action", optional, tag = "1")]
@@ -545,8 +803,14 @@ pub mod update_action {
     #[repr(i32)]
     pub enum Action {
         Unknown = 0,
+        /// 现在去查有没有新版。→ `Check{trigger: TRIGGER_MANUAL}`
         Check = 1,
+        /// 装。**不可逆**：updater 会停 face 和 brain，face 上的进度到此为止
+        /// （装完两边都是新起的进程，face 重新 request_init 时会拿到新的状态）。
         Apply = 2,
+        /// 不看了。**这一条不发给 updater** —— 它是 brain 自己的事：
+        /// 把缓着的那份状态丢掉，免得 face 每次 `request_init` 又被推一遍同一个提示。
+        /// 下次 updater 再推状态（轮询/广播/开机查到新版）照常显示。
         Dismiss = 3,
     }
     impl Action {
@@ -649,6 +913,8 @@ pub enum ModuleId {
     ModuleUi = 1,
     /// lua 执行器
     ModuleLua = 2,
+    /// hinj_updater（OTA 更新，systemd 直接拉起的独立进程）
+    ModuleUpdater = 3,
 }
 impl ModuleId {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -660,6 +926,7 @@ impl ModuleId {
             Self::ModuleUnknown => "MODULE_UNKNOWN",
             Self::ModuleUi => "MODULE_UI",
             Self::ModuleLua => "MODULE_LUA",
+            Self::ModuleUpdater => "MODULE_UPDATER",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -668,6 +935,7 @@ impl ModuleId {
             "MODULE_UNKNOWN" => Some(Self::ModuleUnknown),
             "MODULE_UI" => Some(Self::ModuleUi),
             "MODULE_LUA" => Some(Self::ModuleLua),
+            "MODULE_UPDATER" => Some(Self::ModuleUpdater),
             _ => None,
         }
     }

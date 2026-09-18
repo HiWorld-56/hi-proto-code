@@ -22,6 +22,7 @@ import '../club/messaging.pb.dart' as $2;
 import '../common.pb.dart' as $0;
 import '../did/transfer.pb.dart' as $5;
 import 'ui.pbenum.dart';
+import 'updater.pb.dart' as $6;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -598,7 +599,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     $0.Entity? eventFriendAdd,
     GroupInfoList? membersInit,
     StatusEvent? eventStatus,
-    UpdateInfo? eventUpdate,
+    $6.UpdateStatus? eventUpdate,
     PluginProgress? eventPluginProgress,
     BinanceSettings? eventBinanceSettings,
   }) {
@@ -725,8 +726,8 @@ class BrainToFace extends $pb.GeneratedMessage {
         subBuilder: GroupInfoList.create)
     ..aOM<StatusEvent>(18, _omitFieldNames ? '' : 'eventStatus',
         subBuilder: StatusEvent.create)
-    ..aOM<UpdateInfo>(19, _omitFieldNames ? '' : 'eventUpdate',
-        subBuilder: UpdateInfo.create)
+    ..aOM<$6.UpdateStatus>(19, _omitFieldNames ? '' : 'eventUpdate',
+        subBuilder: $6.UpdateStatus.create)
     ..aOM<PluginProgress>(20, _omitFieldNames ? '' : 'eventPluginProgress',
         subBuilder: PluginProgress.create)
     ..aOM<BinanceSettings>(21, _omitFieldNames ? '' : 'eventBinanceSettings',
@@ -999,17 +1000,18 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(18)
   StatusEvent ensureEventStatus() => $_ensure(17);
 
-  /// 资源更新信息同步
+  /// 固件 OTA 更新的状态。**brain 原样转发 updater 的那份**，不自己攒、不自己改；
+  /// 定义在 `hi/ninja/updater.proto`（那条线的契约在那儿）。
   @$pb.TagNumber(19)
-  UpdateInfo get eventUpdate => $_getN(18);
+  $6.UpdateStatus get eventUpdate => $_getN(18);
   @$pb.TagNumber(19)
-  set eventUpdate(UpdateInfo value) => $_setField(19, value);
+  set eventUpdate($6.UpdateStatus value) => $_setField(19, value);
   @$pb.TagNumber(19)
   $core.bool hasEventUpdate() => $_has(18);
   @$pb.TagNumber(19)
   void clearEventUpdate() => $_clearField(19);
   @$pb.TagNumber(19)
-  UpdateInfo ensureEventUpdate() => $_ensure(18);
+  $6.UpdateStatus ensureEventUpdate() => $_ensure(18);
 
   @$pb.TagNumber(20)
   PluginProgress get eventPluginProgress => $_getN(19);
@@ -1116,191 +1118,6 @@ class StatusEvent extends $pb.GeneratedMessage {
   void clearUsb() => $_clearField(3);
 }
 
-/// 资源更新进度信息
-///  `state`：当前更新状态，例如 `idle`、`checking`、`downloading`、`installing`、`success`、`failed` 等。
-///  `current_version`：当前已安装/正在运行的版本号。
-///  `target_version`：目标版本号，也就是准备更新到的版本。
-///  `progress`： 更新进度，通常是 `0-100` 的百分比。
-///  `message` ： 给用户或前端展示的状态说明，例如“正在下载更新包”。
-///  `error` ：错误信息。更新失败时记录失败原因；正常情况下不传。
-///  `changes` ：版本变更列表，通常是 changelog，例如修复了哪些问题、增加了哪些功能。
-///  `trigger`：更新触发来源，例如 `manual` 手动触发、`auto` 自动检查、`startup` 启动时触发等。
-///  `updated_at` ：状态最后更新时间，通常是 Unix 时间戳。具体是秒还是毫秒要看实现约定。
-///  `downloaded_bytes`：已下载的字节数。
-///  `total_bytes`：需要下载的总字节数。可用于计算下载百分比。
-class UpdateInfo extends $pb.GeneratedMessage {
-  factory UpdateInfo({
-    $core.String? state,
-    $core.String? currentVersion,
-    $core.String? targetVersion,
-    $core.int? progress,
-    $core.String? message,
-    $core.String? error,
-    $core.Iterable<$core.String>? changes,
-    $core.String? trigger,
-    $fixnum.Int64? updatedAt,
-    $fixnum.Int64? downloadedBytes,
-    $fixnum.Int64? totalBytes,
-  }) {
-    final result = create();
-    if (state != null) result.state = state;
-    if (currentVersion != null) result.currentVersion = currentVersion;
-    if (targetVersion != null) result.targetVersion = targetVersion;
-    if (progress != null) result.progress = progress;
-    if (message != null) result.message = message;
-    if (error != null) result.error = error;
-    if (changes != null) result.changes.addAll(changes);
-    if (trigger != null) result.trigger = trigger;
-    if (updatedAt != null) result.updatedAt = updatedAt;
-    if (downloadedBytes != null) result.downloadedBytes = downloadedBytes;
-    if (totalBytes != null) result.totalBytes = totalBytes;
-    return result;
-  }
-
-  UpdateInfo._();
-
-  factory UpdateInfo.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory UpdateInfo.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'UpdateInfo',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'state')
-    ..aOS(2, _omitFieldNames ? '' : 'currentVersion')
-    ..aOS(3, _omitFieldNames ? '' : 'targetVersion')
-    ..aI(4, _omitFieldNames ? '' : 'progress', fieldType: $pb.PbFieldType.OU3)
-    ..aOS(5, _omitFieldNames ? '' : 'message')
-    ..aOS(6, _omitFieldNames ? '' : 'error')
-    ..pPS(7, _omitFieldNames ? '' : 'changes')
-    ..aOS(8, _omitFieldNames ? '' : 'trigger')
-    ..a<$fixnum.Int64>(
-        9, _omitFieldNames ? '' : 'updatedAt', $pb.PbFieldType.OU6,
-        defaultOrMaker: $fixnum.Int64.ZERO)
-    ..a<$fixnum.Int64>(
-        10, _omitFieldNames ? '' : 'downloadedBytes', $pb.PbFieldType.OU6,
-        defaultOrMaker: $fixnum.Int64.ZERO)
-    ..a<$fixnum.Int64>(
-        11, _omitFieldNames ? '' : 'totalBytes', $pb.PbFieldType.OU6,
-        defaultOrMaker: $fixnum.Int64.ZERO)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UpdateInfo clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UpdateInfo copyWith(void Function(UpdateInfo) updates) =>
-      super.copyWith((message) => updates(message as UpdateInfo)) as UpdateInfo;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static UpdateInfo create() => UpdateInfo._();
-  @$core.override
-  UpdateInfo createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static UpdateInfo getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<UpdateInfo>(create);
-  static UpdateInfo? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get state => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set state($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasState() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearState() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get currentVersion => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set currentVersion($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasCurrentVersion() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearCurrentVersion() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.String get targetVersion => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set targetVersion($core.String value) => $_setString(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasTargetVersion() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearTargetVersion() => $_clearField(3);
-
-  @$pb.TagNumber(4)
-  $core.int get progress => $_getIZ(3);
-  @$pb.TagNumber(4)
-  set progress($core.int value) => $_setUnsignedInt32(3, value);
-  @$pb.TagNumber(4)
-  $core.bool hasProgress() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearProgress() => $_clearField(4);
-
-  @$pb.TagNumber(5)
-  $core.String get message => $_getSZ(4);
-  @$pb.TagNumber(5)
-  set message($core.String value) => $_setString(4, value);
-  @$pb.TagNumber(5)
-  $core.bool hasMessage() => $_has(4);
-  @$pb.TagNumber(5)
-  void clearMessage() => $_clearField(5);
-
-  @$pb.TagNumber(6)
-  $core.String get error => $_getSZ(5);
-  @$pb.TagNumber(6)
-  set error($core.String value) => $_setString(5, value);
-  @$pb.TagNumber(6)
-  $core.bool hasError() => $_has(5);
-  @$pb.TagNumber(6)
-  void clearError() => $_clearField(6);
-
-  @$pb.TagNumber(7)
-  $pb.PbList<$core.String> get changes => $_getList(6);
-
-  @$pb.TagNumber(8)
-  $core.String get trigger => $_getSZ(7);
-  @$pb.TagNumber(8)
-  set trigger($core.String value) => $_setString(7, value);
-  @$pb.TagNumber(8)
-  $core.bool hasTrigger() => $_has(7);
-  @$pb.TagNumber(8)
-  void clearTrigger() => $_clearField(8);
-
-  @$pb.TagNumber(9)
-  $fixnum.Int64 get updatedAt => $_getI64(8);
-  @$pb.TagNumber(9)
-  set updatedAt($fixnum.Int64 value) => $_setInt64(8, value);
-  @$pb.TagNumber(9)
-  $core.bool hasUpdatedAt() => $_has(8);
-  @$pb.TagNumber(9)
-  void clearUpdatedAt() => $_clearField(9);
-
-  @$pb.TagNumber(10)
-  $fixnum.Int64 get downloadedBytes => $_getI64(9);
-  @$pb.TagNumber(10)
-  set downloadedBytes($fixnum.Int64 value) => $_setInt64(9, value);
-  @$pb.TagNumber(10)
-  $core.bool hasDownloadedBytes() => $_has(9);
-  @$pb.TagNumber(10)
-  void clearDownloadedBytes() => $_clearField(10);
-
-  @$pb.TagNumber(11)
-  $fixnum.Int64 get totalBytes => $_getI64(10);
-  @$pb.TagNumber(11)
-  set totalBytes($fixnum.Int64 value) => $_setInt64(10, value);
-  @$pb.TagNumber(11)
-  $core.bool hasTotalBytes() => $_has(10);
-  @$pb.TagNumber(11)
-  void clearTotalBytes() => $_clearField(11);
-}
-
 enum FaceToBrain_Cmd {
   voiceState,
   updateAction,
@@ -1396,6 +1213,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearVoiceState() => $_clearField(1);
 
+  /// 固件更新：人在 face 上点的那一下（查/装/不看了）。
   @$pb.TagNumber(2)
   UpdateAction get updateAction => $_getN(1);
   @$pb.TagNumber(2)
@@ -1446,7 +1264,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
 /// 机器人的网可能很差。没有进度的话,用户在市场点了"购买"之后,face 上什么都不会变,
 /// 直到某一刻插件突然出现;中间那段沉默里,用户只会以为没买成、然后再点一次。
 ///
-/// 字段有意与固件更新(UpdaterStatus)同形:state / progress / 已下/共多少字节。
+/// 字段有意与固件更新(`updater.proto` 的 `UpdateStatus`)同形:state / progress / 已下/共多少字节。
 /// **face 那边不该为"插件"和"固件"学两套进度模型。**
 class PluginProgress extends $pb.GeneratedMessage {
   factory PluginProgress({
@@ -1581,7 +1399,10 @@ class PluginProgress extends $pb.GeneratedMessage {
   void clearMessage() => $_clearField(7);
 }
 
-/// 更新动作
+/// 固件更新：人在 face 上点的那一下。
+///
+/// brain 收到之后转成 `hi/ninja/updater.proto` 的 `BrainToUpdater` 发给 updater；
+/// **做不做得成由 updater 说了算**，结果照常从 `event_update` 回到 face。
 class UpdateAction extends $pb.GeneratedMessage {
   factory UpdateAction({
     UpdateAction_Action? action,

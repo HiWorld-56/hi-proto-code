@@ -94,10 +94,19 @@ class PluginProgress_State extends $pb.ProtobufEnum {
 class UpdateAction_Action extends $pb.ProtobufEnum {
   static const UpdateAction_Action ACTION_UNKNOWN =
       UpdateAction_Action._(0, _omitEnumNames ? '' : 'ACTION_UNKNOWN');
+
+  /// 现在去查有没有新版。→ `Check{trigger: TRIGGER_MANUAL}`
   static const UpdateAction_Action ACTION_CHECK =
       UpdateAction_Action._(1, _omitEnumNames ? '' : 'ACTION_CHECK');
+
+  /// 装。**不可逆**：updater 会停 face 和 brain，face 上的进度到此为止
+  /// （装完两边都是新起的进程，face 重新 request_init 时会拿到新的状态）。
   static const UpdateAction_Action ACTION_APPLY =
       UpdateAction_Action._(2, _omitEnumNames ? '' : 'ACTION_APPLY');
+
+  /// 不看了。**这一条不发给 updater** —— 它是 brain 自己的事：
+  /// 把缓着的那份状态丢掉，免得 face 每次 `request_init` 又被推一遍同一个提示。
+  /// 下次 updater 再推状态（轮询/广播/开机查到新版）照常显示。
   static const UpdateAction_Action ACTION_DISMISS =
       UpdateAction_Action._(3, _omitEnumNames ? '' : 'ACTION_DISMISS');
 

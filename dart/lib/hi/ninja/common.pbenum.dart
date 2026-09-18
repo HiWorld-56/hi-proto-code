@@ -25,15 +25,18 @@ class ModuleId extends $pb.ProtobufEnum {
       ModuleId._(1, _omitEnumNames ? '' : 'MODULE_UI');
   static const ModuleId MODULE_LUA =
       ModuleId._(2, _omitEnumNames ? '' : 'MODULE_LUA');
+  static const ModuleId MODULE_UPDATER =
+      ModuleId._(3, _omitEnumNames ? '' : 'MODULE_UPDATER');
 
   static const $core.List<ModuleId> values = <ModuleId>[
     MODULE_UNKNOWN,
     MODULE_UI,
     MODULE_LUA,
+    MODULE_UPDATER,
   ];
 
   static final $core.List<ModuleId?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 2);
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
   static ModuleId? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

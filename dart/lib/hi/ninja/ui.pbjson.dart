@@ -401,7 +401,7 @@ const BrainToFace$json = {
       '3': 19,
       '4': 1,
       '5': 11,
-      '6': '.hi.ninja.UpdateInfo',
+      '6': '.hi.ninja.UpdateStatus',
       '9': 0,
       '10': 'eventUpdate'
     },
@@ -442,10 +442,10 @@ final $typed_data.Uint8List brainToFaceDescriptor = $convert.base64Decode(
     'kuRW50aXR5SABSEWV2ZW50RnJpZW5kRGVsZXRlEjYKEGV2ZW50X2ZyaWVuZF9hZGQYECABKAsy'
     'Ci5oaS5FbnRpdHlIAFIOZXZlbnRGcmllbmRBZGQSPAoMbWVtYmVyc19pbml0GBEgASgLMhcuaG'
     'kubmluamEuR3JvdXBJbmZvTGlzdEgAUgttZW1iZXJzSW5pdBI6CgxldmVudF9zdGF0dXMYEiAB'
-    'KAsyFS5oaS5uaW5qYS5TdGF0dXNFdmVudEgAUgtldmVudFN0YXR1cxI5CgxldmVudF91cGRhdG'
-    'UYEyABKAsyFC5oaS5uaW5qYS5VcGRhdGVJbmZvSABSC2V2ZW50VXBkYXRlElEKFmV2ZW50X2Jp'
-    'bmFuY2Vfc2V0dGluZ3MYFSABKAsyGS5oaS5uaW5qYS5CaW5hbmNlU2V0dGluZ3NIAFIUZXZlbn'
-    'RCaW5hbmNlU2V0dGluZ3NCBQoDY21k');
+    'KAsyFS5oaS5uaW5qYS5TdGF0dXNFdmVudEgAUgtldmVudFN0YXR1cxI7CgxldmVudF91cGRhdG'
+    'UYEyABKAsyFi5oaS5uaW5qYS5VcGRhdGVTdGF0dXNIAFILZXZlbnRVcGRhdGUSUQoWZXZlbnRf'
+    'YmluYW5jZV9zZXR0aW5ncxgVIAEoCzIZLmhpLm5pbmphLkJpbmFuY2VTZXR0aW5nc0gAUhRldm'
+    'VudEJpbmFuY2VTZXR0aW5nc0IFCgNjbWQ=');
 
 @$core.Deprecated('Use statusEventDescriptor instead')
 const StatusEvent$json = {
@@ -466,113 +466,6 @@ const StatusEvent$json = {
 final $typed_data.Uint8List statusEventDescriptor = $convert.base64Decode(
     'CgtTdGF0dXNFdmVudBIVCgNudHAYASABKAhIAFIDbnRwiAEBEhcKBHdpZmkYAiABKAhIAVIEd2'
     'lmaYgBARIVCgN1c2IYAyABKAhIAlIDdXNiiAEBQgYKBF9udHBCBwoFX3dpZmlCBgoEX3VzYg==');
-
-@$core.Deprecated('Use updateInfoDescriptor instead')
-const UpdateInfo$json = {
-  '1': 'UpdateInfo',
-  '2': [
-    {'1': 'state', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'state', '17': true},
-    {
-      '1': 'current_version',
-      '3': 2,
-      '4': 1,
-      '5': 9,
-      '9': 1,
-      '10': 'currentVersion',
-      '17': true
-    },
-    {
-      '1': 'target_version',
-      '3': 3,
-      '4': 1,
-      '5': 9,
-      '9': 2,
-      '10': 'targetVersion',
-      '17': true
-    },
-    {
-      '1': 'progress',
-      '3': 4,
-      '4': 1,
-      '5': 13,
-      '9': 3,
-      '10': 'progress',
-      '17': true
-    },
-    {
-      '1': 'message',
-      '3': 5,
-      '4': 1,
-      '5': 9,
-      '9': 4,
-      '10': 'message',
-      '17': true
-    },
-    {'1': 'error', '3': 6, '4': 1, '5': 9, '9': 5, '10': 'error', '17': true},
-    {'1': 'changes', '3': 7, '4': 3, '5': 9, '10': 'changes'},
-    {
-      '1': 'trigger',
-      '3': 8,
-      '4': 1,
-      '5': 9,
-      '9': 6,
-      '10': 'trigger',
-      '17': true
-    },
-    {
-      '1': 'updated_at',
-      '3': 9,
-      '4': 1,
-      '5': 4,
-      '9': 7,
-      '10': 'updatedAt',
-      '17': true
-    },
-    {
-      '1': 'downloaded_bytes',
-      '3': 10,
-      '4': 1,
-      '5': 4,
-      '9': 8,
-      '10': 'downloadedBytes',
-      '17': true
-    },
-    {
-      '1': 'total_bytes',
-      '3': 11,
-      '4': 1,
-      '5': 4,
-      '9': 9,
-      '10': 'totalBytes',
-      '17': true
-    },
-  ],
-  '8': [
-    {'1': '_state'},
-    {'1': '_current_version'},
-    {'1': '_target_version'},
-    {'1': '_progress'},
-    {'1': '_message'},
-    {'1': '_error'},
-    {'1': '_trigger'},
-    {'1': '_updated_at'},
-    {'1': '_downloaded_bytes'},
-    {'1': '_total_bytes'},
-  ],
-};
-
-/// Descriptor for `UpdateInfo`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List updateInfoDescriptor = $convert.base64Decode(
-    'CgpVcGRhdGVJbmZvEhkKBXN0YXRlGAEgASgJSABSBXN0YXRliAEBEiwKD2N1cnJlbnRfdmVyc2'
-    'lvbhgCIAEoCUgBUg5jdXJyZW50VmVyc2lvbogBARIqCg50YXJnZXRfdmVyc2lvbhgDIAEoCUgC'
-    'Ug10YXJnZXRWZXJzaW9uiAEBEh8KCHByb2dyZXNzGAQgASgNSANSCHByb2dyZXNziAEBEh0KB2'
-    '1lc3NhZ2UYBSABKAlIBFIHbWVzc2FnZYgBARIZCgVlcnJvchgGIAEoCUgFUgVlcnJvcogBARIY'
-    'CgdjaGFuZ2VzGAcgAygJUgdjaGFuZ2VzEh0KB3RyaWdnZXIYCCABKAlIBlIHdHJpZ2dlcogBAR'
-    'IiCgp1cGRhdGVkX2F0GAkgASgESAdSCXVwZGF0ZWRBdIgBARIuChBkb3dubG9hZGVkX2J5dGVz'
-    'GAogASgESAhSD2Rvd25sb2FkZWRCeXRlc4gBARIkCgt0b3RhbF9ieXRlcxgLIAEoBEgJUgp0b3'
-    'RhbEJ5dGVziAEBQggKBl9zdGF0ZUISChBfY3VycmVudF92ZXJzaW9uQhEKD190YXJnZXRfdmVy'
-    'c2lvbkILCglfcHJvZ3Jlc3NCCgoIX21lc3NhZ2VCCAoGX2Vycm9yQgoKCF90cmlnZ2VyQg0KC1'
-    '91cGRhdGVkX2F0QhMKEV9kb3dubG9hZGVkX2J5dGVzQg4KDF90b3RhbF9ieXRlcw==');
 
 @$core.Deprecated('Use faceToBrainDescriptor instead')
 const FaceToBrain$json = {
