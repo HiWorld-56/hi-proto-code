@@ -16,13 +16,13 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../common.pb.dart' as $1;
-import 'feature.pbenum.dart' as $2;
 import 'task.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 export 'task.pbenum.dart';
 
+/// 视频分辨率选择，不传某项时使用工作流该项默认值。
 class VideoResolution extends $pb.GeneratedMessage {
   factory VideoResolution({
     $core.String? aspectRatio,
@@ -91,10 +91,11 @@ class VideoResolution extends $pb.GeneratedMessage {
   void clearMegapixels() => $_clearField(2);
 }
 
+/// 创建图生视频任务；工作流必须属于 video.img2vid，图片为本人可用的 JPEG/PNG 资产。
 class CreateImageToVideoTaskReq extends $pb.GeneratedMessage {
   factory CreateImageToVideoTaskReq({
     $core.String? requestId,
-    $core.String? modelMappingId,
+    $core.String? workflowId,
     $core.String? inputAssetId,
     $core.String? prompt,
     VideoResolution? resolution,
@@ -103,7 +104,7 @@ class CreateImageToVideoTaskReq extends $pb.GeneratedMessage {
   }) {
     final result = create();
     if (requestId != null) result.requestId = requestId;
-    if (modelMappingId != null) result.modelMappingId = modelMappingId;
+    if (workflowId != null) result.workflowId = workflowId;
     if (inputAssetId != null) result.inputAssetId = inputAssetId;
     if (prompt != null) result.prompt = prompt;
     if (resolution != null) result.resolution = resolution;
@@ -126,7 +127,7 @@ class CreateImageToVideoTaskReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'requestId')
-    ..aOS(2, _omitFieldNames ? '' : 'modelMappingId')
+    ..aOS(2, _omitFieldNames ? '' : 'workflowId')
     ..aOS(3, _omitFieldNames ? '' : 'inputAssetId')
     ..aOS(4, _omitFieldNames ? '' : 'prompt')
     ..aOM<VideoResolution>(5, _omitFieldNames ? '' : 'resolution',
@@ -155,6 +156,7 @@ class CreateImageToVideoTaskReq extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<CreateImageToVideoTaskReq>(create);
   static CreateImageToVideoTaskReq? _defaultInstance;
 
+  /// 本人范围内的幂等键；同一次操作重发复用，新操作使用新值。
   @$pb.TagNumber(1)
   $core.String get requestId => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -164,14 +166,15 @@ class CreateImageToVideoTaskReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearRequestId() => $_clearField(1);
 
+  /// 来自对应功能的 Function.Get；服务端验证工作流已启用且属于本 RPC 的功能。
   @$pb.TagNumber(2)
-  $core.String get modelMappingId => $_getSZ(1);
+  $core.String get workflowId => $_getSZ(1);
   @$pb.TagNumber(2)
-  set modelMappingId($core.String value) => $_setString(1, value);
+  set workflowId($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasModelMappingId() => $_has(1);
+  $core.bool hasWorkflowId() => $_has(1);
   @$pb.TagNumber(2)
-  void clearModelMappingId() => $_clearField(2);
+  void clearWorkflowId() => $_clearField(2);
 
   @$pb.TagNumber(3)
   $core.String get inputAssetId => $_getSZ(2);
@@ -191,6 +194,7 @@ class CreateImageToVideoTaskReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearPrompt() => $_clearField(4);
 
+  /// 宽高比和像素量各自独立补齐；不传时使用工作流默认值。
   @$pb.TagNumber(5)
   VideoResolution get resolution => $_getN(4);
   @$pb.TagNumber(5)
@@ -202,6 +206,7 @@ class CreateImageToVideoTaskReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   VideoResolution ensureResolution() => $_ensure(4);
 
+  /// 整数秒；不传时使用工作流默认时长。
   @$pb.TagNumber(6)
   $core.int get durationSeconds => $_getIZ(5);
   @$pb.TagNumber(6)
@@ -211,6 +216,7 @@ class CreateImageToVideoTaskReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   void clearDurationSeconds() => $_clearField(6);
 
+  /// 帧/秒；不传时使用默认或固定值；固定模式显式提交时必须与固定值相同。
   @$pb.TagNumber(7)
   $core.int get frameRate => $_getIZ(6);
   @$pb.TagNumber(7)
@@ -221,10 +227,11 @@ class CreateImageToVideoTaskReq extends $pb.GeneratedMessage {
   void clearFrameRate() => $_clearField(7);
 }
 
+/// 创建文生视频任务；工作流必须属于 video.txt2vid，不接受输入图片。
 class CreateTextToVideoTaskReq extends $pb.GeneratedMessage {
   factory CreateTextToVideoTaskReq({
     $core.String? requestId,
-    $core.String? modelMappingId,
+    $core.String? workflowId,
     $core.String? prompt,
     VideoResolution? resolution,
     $core.int? durationSeconds,
@@ -232,7 +239,7 @@ class CreateTextToVideoTaskReq extends $pb.GeneratedMessage {
   }) {
     final result = create();
     if (requestId != null) result.requestId = requestId;
-    if (modelMappingId != null) result.modelMappingId = modelMappingId;
+    if (workflowId != null) result.workflowId = workflowId;
     if (prompt != null) result.prompt = prompt;
     if (resolution != null) result.resolution = resolution;
     if (durationSeconds != null) result.durationSeconds = durationSeconds;
@@ -254,7 +261,7 @@ class CreateTextToVideoTaskReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'requestId')
-    ..aOS(2, _omitFieldNames ? '' : 'modelMappingId')
+    ..aOS(2, _omitFieldNames ? '' : 'workflowId')
     ..aOS(3, _omitFieldNames ? '' : 'prompt')
     ..aOM<VideoResolution>(4, _omitFieldNames ? '' : 'resolution',
         subBuilder: VideoResolution.create)
@@ -282,6 +289,7 @@ class CreateTextToVideoTaskReq extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<CreateTextToVideoTaskReq>(create);
   static CreateTextToVideoTaskReq? _defaultInstance;
 
+  /// 本人范围内的幂等键；同一次操作重发复用，新操作使用新值。
   @$pb.TagNumber(1)
   $core.String get requestId => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -291,14 +299,15 @@ class CreateTextToVideoTaskReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearRequestId() => $_clearField(1);
 
+  /// 来自对应功能的 Function.Get；服务端验证工作流已启用且属于本 RPC 的功能。
   @$pb.TagNumber(2)
-  $core.String get modelMappingId => $_getSZ(1);
+  $core.String get workflowId => $_getSZ(1);
   @$pb.TagNumber(2)
-  set modelMappingId($core.String value) => $_setString(1, value);
+  set workflowId($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasModelMappingId() => $_has(1);
+  $core.bool hasWorkflowId() => $_has(1);
   @$pb.TagNumber(2)
-  void clearModelMappingId() => $_clearField(2);
+  void clearWorkflowId() => $_clearField(2);
 
   @$pb.TagNumber(3)
   $core.String get prompt => $_getSZ(2);
@@ -309,6 +318,7 @@ class CreateTextToVideoTaskReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearPrompt() => $_clearField(3);
 
+  /// 宽高比和像素量各自独立补齐；不传时使用工作流默认值。
   @$pb.TagNumber(4)
   VideoResolution get resolution => $_getN(3);
   @$pb.TagNumber(4)
@@ -320,6 +330,7 @@ class CreateTextToVideoTaskReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   VideoResolution ensureResolution() => $_ensure(3);
 
+  /// 整数秒；不传时使用工作流默认时长。
   @$pb.TagNumber(5)
   $core.int get durationSeconds => $_getIZ(4);
   @$pb.TagNumber(5)
@@ -329,6 +340,7 @@ class CreateTextToVideoTaskReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   void clearDurationSeconds() => $_clearField(5);
 
+  /// 帧/秒；不传时使用默认或固定值；固定模式显式提交时必须与固定值相同。
   @$pb.TagNumber(6)
   $core.int get frameRate => $_getIZ(5);
   @$pb.TagNumber(6)
@@ -339,6 +351,7 @@ class CreateTextToVideoTaskReq extends $pb.GeneratedMessage {
   void clearFrameRate() => $_clearField(6);
 }
 
+/// 返回已受理任务的 ID；同一 request_id 重发返回原任务，不比较重发参数。
 class CreateTaskResp extends $pb.GeneratedMessage {
   factory CreateTaskResp({
     $core.String? taskId,
@@ -394,6 +407,7 @@ class CreateTaskResp extends $pb.GeneratedMessage {
   void clearTaskId() => $_clearField(1);
 }
 
+/// 图生视频实际参数，包含创建时补齐的默认值或固定值。
 class ImageToVideoTaskParams extends $pb.GeneratedMessage {
   factory ImageToVideoTaskParams({
     $core.String? inputAssetId,
@@ -490,6 +504,7 @@ class ImageToVideoTaskParams extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearMegapixels() => $_clearField(4);
 
+  /// 创建时确定的实际时长，单位为整数秒。
   @$pb.TagNumber(5)
   $core.int get durationSeconds => $_getIZ(4);
   @$pb.TagNumber(5)
@@ -499,6 +514,7 @@ class ImageToVideoTaskParams extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   void clearDurationSeconds() => $_clearField(5);
 
+  /// 创建时确定的实际帧率，单位为帧/秒。
   @$pb.TagNumber(6)
   $core.int get frameRate => $_getIZ(5);
   @$pb.TagNumber(6)
@@ -509,6 +525,7 @@ class ImageToVideoTaskParams extends $pb.GeneratedMessage {
   void clearFrameRate() => $_clearField(6);
 }
 
+/// 文生视频实际参数，包含创建时补齐的默认值或固定值。
 class TextToVideoTaskParams extends $pb.GeneratedMessage {
   factory TextToVideoTaskParams({
     $core.String? prompt,
@@ -593,6 +610,7 @@ class TextToVideoTaskParams extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearMegapixels() => $_clearField(3);
 
+  /// 创建时确定的实际时长，单位为整数秒。
   @$pb.TagNumber(4)
   $core.int get durationSeconds => $_getIZ(3);
   @$pb.TagNumber(4)
@@ -602,6 +620,7 @@ class TextToVideoTaskParams extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearDurationSeconds() => $_clearField(4);
 
+  /// 创建时确定的实际帧率，单位为帧/秒。
   @$pb.TagNumber(5)
   $core.int get frameRate => $_getIZ(4);
   @$pb.TagNumber(5)
@@ -612,6 +631,7 @@ class TextToVideoTaskParams extends $pb.GeneratedMessage {
   void clearFrameRate() => $_clearField(5);
 }
 
+/// 唯一主产物；size_bytes 为字节，duration_ms 为毫秒，访问地址通过 File.GetAccessUrls 获取。
 class TaskOutput extends $pb.GeneratedMessage {
   factory TaskOutput({
     $core.String? assetId,
@@ -741,13 +761,16 @@ class TaskOutput extends $pb.GeneratedMessage {
   void clearAvailable() => $_clearField(7);
 }
 
+/// 任务摘要，不暴露模型真实名、工作流对象键或上游 prompt_id。
 class TaskSummary extends $pb.GeneratedMessage {
   factory TaskSummary({
     $core.String? taskId,
     TaskPurpose? purpose,
-    $2.FeatureKey? featureKey,
-    $core.String? modelMappingId,
-    $core.String? modelName,
+    $core.String? functionId,
+    $core.String? functionDisplayName,
+    $core.String? modelId,
+    $core.String? modelDisplayName,
+    $core.String? workflowId,
     TaskStatus? status,
     $core.String? statusMessage,
     $core.String? errorCode,
@@ -763,9 +786,12 @@ class TaskSummary extends $pb.GeneratedMessage {
     final result = create();
     if (taskId != null) result.taskId = taskId;
     if (purpose != null) result.purpose = purpose;
-    if (featureKey != null) result.featureKey = featureKey;
-    if (modelMappingId != null) result.modelMappingId = modelMappingId;
-    if (modelName != null) result.modelName = modelName;
+    if (functionId != null) result.functionId = functionId;
+    if (functionDisplayName != null)
+      result.functionDisplayName = functionDisplayName;
+    if (modelId != null) result.modelId = modelId;
+    if (modelDisplayName != null) result.modelDisplayName = modelDisplayName;
+    if (workflowId != null) result.workflowId = workflowId;
     if (status != null) result.status = status;
     if (statusMessage != null) result.statusMessage = statusMessage;
     if (errorCode != null) result.errorCode = errorCode;
@@ -797,23 +823,24 @@ class TaskSummary extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'taskId')
     ..aE<TaskPurpose>(2, _omitFieldNames ? '' : 'purpose',
         enumValues: TaskPurpose.values)
-    ..aE<$2.FeatureKey>(3, _omitFieldNames ? '' : 'featureKey',
-        enumValues: $2.FeatureKey.values)
-    ..aOS(4, _omitFieldNames ? '' : 'modelMappingId')
-    ..aOS(5, _omitFieldNames ? '' : 'modelName')
-    ..aE<TaskStatus>(6, _omitFieldNames ? '' : 'status',
+    ..aOS(3, _omitFieldNames ? '' : 'functionId')
+    ..aOS(4, _omitFieldNames ? '' : 'functionDisplayName')
+    ..aOS(5, _omitFieldNames ? '' : 'modelId')
+    ..aOS(6, _omitFieldNames ? '' : 'modelDisplayName')
+    ..aOS(7, _omitFieldNames ? '' : 'workflowId')
+    ..aE<TaskStatus>(8, _omitFieldNames ? '' : 'status',
         enumValues: TaskStatus.values)
-    ..aOS(7, _omitFieldNames ? '' : 'statusMessage')
-    ..aOS(8, _omitFieldNames ? '' : 'errorCode')
-    ..aOM<TaskOutput>(9, _omitFieldNames ? '' : 'output',
+    ..aOS(9, _omitFieldNames ? '' : 'statusMessage')
+    ..aOS(10, _omitFieldNames ? '' : 'errorCode')
+    ..aOM<TaskOutput>(11, _omitFieldNames ? '' : 'output',
         subBuilder: TaskOutput.create)
-    ..aOB(10, _omitFieldNames ? '' : 'canCancel')
-    ..aOB(11, _omitFieldNames ? '' : 'canRecoverSave')
-    ..aInt64(12, _omitFieldNames ? '' : 'saveRecoveryExpiresAt')
-    ..aInt64(13, _omitFieldNames ? '' : 'createdAt')
-    ..aInt64(14, _omitFieldNames ? '' : 'startedAt')
-    ..aInt64(15, _omitFieldNames ? '' : 'completedAt')
-    ..aInt64(16, _omitFieldNames ? '' : 'elapsedSeconds')
+    ..aOB(12, _omitFieldNames ? '' : 'canCancel')
+    ..aOB(13, _omitFieldNames ? '' : 'canRecoverSave')
+    ..aInt64(14, _omitFieldNames ? '' : 'saveRecoveryExpiresAt')
+    ..aInt64(15, _omitFieldNames ? '' : 'createdAt')
+    ..aInt64(16, _omitFieldNames ? '' : 'startedAt')
+    ..aInt64(17, _omitFieldNames ? '' : 'completedAt')
+    ..aInt64(18, _omitFieldNames ? '' : 'elapsedSeconds')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -853,146 +880,172 @@ class TaskSummary extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearPurpose() => $_clearField(2);
 
+  /// 任务受理时确定的功能 ID：video.img2vid 或 video.txt2vid。
   @$pb.TagNumber(3)
-  $2.FeatureKey get featureKey => $_getN(2);
+  $core.String get functionId => $_getSZ(2);
   @$pb.TagNumber(3)
-  set featureKey($2.FeatureKey value) => $_setField(3, value);
+  set functionId($core.String value) => $_setString(2, value);
   @$pb.TagNumber(3)
-  $core.bool hasFeatureKey() => $_has(2);
+  $core.bool hasFunctionId() => $_has(2);
   @$pb.TagNumber(3)
-  void clearFeatureKey() => $_clearField(3);
+  void clearFunctionId() => $_clearField(3);
 
+  /// 从当前功能记录读取的用户可见名称。
   @$pb.TagNumber(4)
-  $core.String get modelMappingId => $_getSZ(3);
+  $core.String get functionDisplayName => $_getSZ(3);
   @$pb.TagNumber(4)
-  set modelMappingId($core.String value) => $_setString(3, value);
+  set functionDisplayName($core.String value) => $_setString(3, value);
   @$pb.TagNumber(4)
-  $core.bool hasModelMappingId() => $_has(3);
+  $core.bool hasFunctionDisplayName() => $_has(3);
   @$pb.TagNumber(4)
-  void clearModelMappingId() => $_clearField(4);
+  void clearFunctionDisplayName() => $_clearField(4);
 
   @$pb.TagNumber(5)
-  $core.String get modelName => $_getSZ(4);
+  $core.String get modelId => $_getSZ(4);
   @$pb.TagNumber(5)
-  set modelName($core.String value) => $_setString(4, value);
+  set modelId($core.String value) => $_setString(4, value);
   @$pb.TagNumber(5)
-  $core.bool hasModelName() => $_has(4);
+  $core.bool hasModelId() => $_has(4);
   @$pb.TagNumber(5)
-  void clearModelName() => $_clearField(5);
+  void clearModelId() => $_clearField(5);
 
+  /// 从当前模型记录读取，不是 ComfyUI 真实文件名。
   @$pb.TagNumber(6)
-  TaskStatus get status => $_getN(5);
+  $core.String get modelDisplayName => $_getSZ(5);
   @$pb.TagNumber(6)
-  set status(TaskStatus value) => $_setField(6, value);
+  set modelDisplayName($core.String value) => $_setString(5, value);
   @$pb.TagNumber(6)
-  $core.bool hasStatus() => $_has(5);
+  $core.bool hasModelDisplayName() => $_has(5);
   @$pb.TagNumber(6)
-  void clearStatus() => $_clearField(6);
+  void clearModelDisplayName() => $_clearField(6);
+
+  /// 任务受理时选择的工作流；不返回对象键或完整工作流图。
+  @$pb.TagNumber(7)
+  $core.String get workflowId => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set workflowId($core.String value) => $_setString(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasWorkflowId() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearWorkflowId() => $_clearField(7);
+
+  @$pb.TagNumber(8)
+  TaskStatus get status => $_getN(7);
+  @$pb.TagNumber(8)
+  set status(TaskStatus value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasStatus() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearStatus() => $_clearField(8);
 
   /// 面向用户的脱敏状态说明；前端应优先展示该字段。
-  @$pb.TagNumber(7)
-  $core.String get statusMessage => $_getSZ(6);
-  @$pb.TagNumber(7)
-  set statusMessage($core.String value) => $_setString(6, value);
-  @$pb.TagNumber(7)
-  $core.bool hasStatusMessage() => $_has(6);
-  @$pb.TagNumber(7)
-  void clearStatusMessage() => $_clearField(7);
+  @$pb.TagNumber(9)
+  $core.String get statusMessage => $_getSZ(8);
+  @$pb.TagNumber(9)
+  set statusMessage($core.String value) => $_setString(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasStatusMessage() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearStatusMessage() => $_clearField(9);
 
-  /// 稳定异步错误码：QUEUE_TIMEOUT、INPUT_UPLOAD_FAILED、UPSTREAM_SUBMISSION_FAILED、
+  /// 稳定异步错误码：QUEUE_TIMEOUT、WORKFLOW_FILE_NOT_FOUND、WORKFLOW_FILE_UNAVAILABLE、
+  /// WORKFLOW_FILE_INVALID、INPUT_UPLOAD_FAILED、UPSTREAM_SUBMISSION_FAILED、
   /// UPSTREAM_SUBMISSION_UNKNOWN、UPSTREAM_EXECUTION_FAILED、EXECUTION_TIMEOUT、
   /// OUTPUT_INVALID、OUTPUT_SAVE_FAILED、OUTPUT_SAVE_UNCERTAIN、SAVE_RECOVERY_FAILED。
-  @$pb.TagNumber(8)
-  $core.String get errorCode => $_getSZ(7);
-  @$pb.TagNumber(8)
-  set errorCode($core.String value) => $_setString(7, value);
-  @$pb.TagNumber(8)
-  $core.bool hasErrorCode() => $_has(7);
-  @$pb.TagNumber(8)
-  void clearErrorCode() => $_clearField(8);
+  @$pb.TagNumber(10)
+  $core.String get errorCode => $_getSZ(9);
+  @$pb.TagNumber(10)
+  set errorCode($core.String value) => $_setString(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasErrorCode() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearErrorCode() => $_clearField(10);
 
   /// 仅在任务已经产生主资产时存在。
-  @$pb.TagNumber(9)
-  TaskOutput get output => $_getN(8);
-  @$pb.TagNumber(9)
-  set output(TaskOutput value) => $_setField(9, value);
-  @$pb.TagNumber(9)
-  $core.bool hasOutput() => $_has(8);
-  @$pb.TagNumber(9)
-  void clearOutput() => $_clearField(9);
-  @$pb.TagNumber(9)
-  TaskOutput ensureOutput() => $_ensure(8);
+  @$pb.TagNumber(11)
+  TaskOutput get output => $_getN(10);
+  @$pb.TagNumber(11)
+  set output(TaskOutput value) => $_setField(11, value);
+  @$pb.TagNumber(11)
+  $core.bool hasOutput() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearOutput() => $_clearField(11);
+  @$pb.TagNumber(11)
+  TaskOutput ensureOutput() => $_ensure(10);
 
-  @$pb.TagNumber(10)
-  $core.bool get canCancel => $_getBF(9);
-  @$pb.TagNumber(10)
-  set canCancel($core.bool value) => $_setBool(9, value);
-  @$pb.TagNumber(10)
-  $core.bool hasCanCancel() => $_has(9);
-  @$pb.TagNumber(10)
-  void clearCanCancel() => $_clearField(10);
+  @$pb.TagNumber(12)
+  $core.bool get canCancel => $_getBF(11);
+  @$pb.TagNumber(12)
+  set canCancel($core.bool value) => $_setBool(11, value);
+  @$pb.TagNumber(12)
+  $core.bool hasCanCancel() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearCanCancel() => $_clearField(12);
 
   /// 前端只能依据该字段决定是否显示唯一一次“恢复保存”入口。
-  @$pb.TagNumber(11)
-  $core.bool get canRecoverSave => $_getBF(10);
-  @$pb.TagNumber(11)
-  set canRecoverSave($core.bool value) => $_setBool(10, value);
-  @$pb.TagNumber(11)
-  $core.bool hasCanRecoverSave() => $_has(10);
-  @$pb.TagNumber(11)
-  void clearCanRecoverSave() => $_clearField(11);
+  @$pb.TagNumber(13)
+  $core.bool get canRecoverSave => $_getBF(12);
+  @$pb.TagNumber(13)
+  set canRecoverSave($core.bool value) => $_setBool(12, value);
+  @$pb.TagNumber(13)
+  $core.bool hasCanRecoverSave() => $_has(12);
+  @$pb.TagNumber(13)
+  void clearCanRecoverSave() => $_clearField(13);
 
-  @$pb.TagNumber(12)
-  $fixnum.Int64 get saveRecoveryExpiresAt => $_getI64(11);
-  @$pb.TagNumber(12)
-  set saveRecoveryExpiresAt($fixnum.Int64 value) => $_setInt64(11, value);
-  @$pb.TagNumber(12)
-  $core.bool hasSaveRecoveryExpiresAt() => $_has(11);
-  @$pb.TagNumber(12)
-  void clearSaveRecoveryExpiresAt() => $_clearField(12);
+  /// Unix 秒；首次可恢复保存失败时确定的截止时间，达到该时刻后不可恢复。
+  @$pb.TagNumber(14)
+  $fixnum.Int64 get saveRecoveryExpiresAt => $_getI64(13);
+  @$pb.TagNumber(14)
+  set saveRecoveryExpiresAt($fixnum.Int64 value) => $_setInt64(13, value);
+  @$pb.TagNumber(14)
+  $core.bool hasSaveRecoveryExpiresAt() => $_has(13);
+  @$pb.TagNumber(14)
+  void clearSaveRecoveryExpiresAt() => $_clearField(14);
 
   /// Unix 秒；恢复保存不会改写 created_at 或 started_at。
-  @$pb.TagNumber(13)
-  $fixnum.Int64 get createdAt => $_getI64(12);
-  @$pb.TagNumber(13)
-  set createdAt($fixnum.Int64 value) => $_setInt64(12, value);
-  @$pb.TagNumber(13)
-  $core.bool hasCreatedAt() => $_has(12);
-  @$pb.TagNumber(13)
-  void clearCreatedAt() => $_clearField(13);
+  @$pb.TagNumber(15)
+  $fixnum.Int64 get createdAt => $_getI64(14);
+  @$pb.TagNumber(15)
+  set createdAt($fixnum.Int64 value) => $_setInt64(14, value);
+  @$pb.TagNumber(15)
+  $core.bool hasCreatedAt() => $_has(14);
+  @$pb.TagNumber(15)
+  void clearCreatedAt() => $_clearField(15);
 
-  @$pb.TagNumber(14)
-  $fixnum.Int64 get startedAt => $_getI64(13);
-  @$pb.TagNumber(14)
-  set startedAt($fixnum.Int64 value) => $_setInt64(13, value);
-  @$pb.TagNumber(14)
-  $core.bool hasStartedAt() => $_has(13);
-  @$pb.TagNumber(14)
-  void clearStartedAt() => $_clearField(14);
+  /// Unix 秒；首次确认 ComfyUI 真正开始执行时写入，提交和排队期间不写入。
+  @$pb.TagNumber(16)
+  $fixnum.Int64 get startedAt => $_getI64(15);
+  @$pb.TagNumber(16)
+  set startedAt($fixnum.Int64 value) => $_setInt64(15, value);
+  @$pb.TagNumber(16)
+  $core.bool hasStartedAt() => $_has(15);
+  @$pb.TagNumber(16)
+  void clearStartedAt() => $_clearField(16);
 
   /// Unix 秒；恢复受理时清空，恢复得到最终结果时重新写入。
-  @$pb.TagNumber(15)
-  $fixnum.Int64 get completedAt => $_getI64(14);
-  @$pb.TagNumber(15)
-  set completedAt($fixnum.Int64 value) => $_setInt64(14, value);
-  @$pb.TagNumber(15)
-  $core.bool hasCompletedAt() => $_has(14);
-  @$pb.TagNumber(15)
-  void clearCompletedAt() => $_clearField(15);
+  @$pb.TagNumber(17)
+  $fixnum.Int64 get completedAt => $_getI64(16);
+  @$pb.TagNumber(17)
+  set completedAt($fixnum.Int64 value) => $_setInt64(16, value);
+  @$pb.TagNumber(17)
+  $core.bool hasCompletedAt() => $_has(16);
+  @$pb.TagNumber(17)
+  void clearCompletedAt() => $_clearField(17);
 
   /// 从 created_at 到当前时间或 completed_at 的墙钟秒数。
-  @$pb.TagNumber(16)
-  $fixnum.Int64 get elapsedSeconds => $_getI64(15);
-  @$pb.TagNumber(16)
-  set elapsedSeconds($fixnum.Int64 value) => $_setInt64(15, value);
-  @$pb.TagNumber(16)
-  $core.bool hasElapsedSeconds() => $_has(15);
-  @$pb.TagNumber(16)
-  void clearElapsedSeconds() => $_clearField(16);
+  @$pb.TagNumber(18)
+  $fixnum.Int64 get elapsedSeconds => $_getI64(17);
+  @$pb.TagNumber(18)
+  set elapsedSeconds($fixnum.Int64 value) => $_setInt64(17, value);
+  @$pb.TagNumber(18)
+  $core.bool hasElapsedSeconds() => $_has(17);
+  @$pb.TagNumber(18)
+  void clearElapsedSeconds() => $_clearField(18);
 }
 
 enum TaskDetail_EffectiveParams { imageToVideo, textToVideo, notSet }
 
+/// 任务详情及其实际业务参数；重新生成需重新查询 Function.Get 并使用新 request_id。
 class TaskDetail extends $pb.GeneratedMessage {
   factory TaskDetail({
     TaskSummary? summary,
@@ -1094,6 +1147,7 @@ class TaskDetail extends $pb.GeneratedMessage {
   TextToVideoTaskParams ensureTextToVideo() => $_ensure(2);
 }
 
+/// 查询本人任务。
 class GetTaskReq extends $pb.GeneratedMessage {
   factory GetTaskReq({
     $core.String? taskId,
@@ -1147,6 +1201,7 @@ class GetTaskReq extends $pb.GeneratedMessage {
   void clearTaskId() => $_clearField(1);
 }
 
+/// 返回本人任务详情。
 class GetTaskResp extends $pb.GeneratedMessage {
   factory GetTaskResp({
     TaskDetail? task,
@@ -1204,15 +1259,16 @@ class GetTaskResp extends $pb.GeneratedMessage {
   TaskDetail ensureTask() => $_ensure(0);
 }
 
+/// 分页查询本人任务，可按功能与状态过滤。
 class ListTasksReq extends $pb.GeneratedMessage {
   factory ListTasksReq({
     $1.Pagination? pagination,
-    $2.FeatureKey? featureKey,
+    $core.String? functionId,
     $core.Iterable<TaskStatus>? statuses,
   }) {
     final result = create();
     if (pagination != null) result.pagination = pagination;
-    if (featureKey != null) result.featureKey = featureKey;
+    if (functionId != null) result.functionId = functionId;
     if (statuses != null) result.statuses.addAll(statuses);
     return result;
   }
@@ -1232,8 +1288,7 @@ class ListTasksReq extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<$1.Pagination>(1, _omitFieldNames ? '' : 'pagination',
         subBuilder: $1.Pagination.create)
-    ..aE<$2.FeatureKey>(2, _omitFieldNames ? '' : 'featureKey',
-        enumValues: $2.FeatureKey.values)
+    ..aOS(2, _omitFieldNames ? '' : 'functionId')
     ..pc<TaskStatus>(3, _omitFieldNames ? '' : 'statuses', $pb.PbFieldType.KE,
         valueOf: TaskStatus.valueOf,
         enumValues: TaskStatus.values,
@@ -1270,20 +1325,21 @@ class ListTasksReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $1.Pagination ensurePagination() => $_ensure(0);
 
-  /// 不传表示不过滤；显式传值时不能为 UNSPECIFIED。
+  /// 不传表示不过滤；传入 Function.List 返回的功能 ID。
   @$pb.TagNumber(2)
-  $2.FeatureKey get featureKey => $_getN(1);
+  $core.String get functionId => $_getSZ(1);
   @$pb.TagNumber(2)
-  set featureKey($2.FeatureKey value) => $_setField(2, value);
+  set functionId($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasFeatureKey() => $_has(1);
+  $core.bool hasFunctionId() => $_has(1);
   @$pb.TagNumber(2)
-  void clearFeatureKey() => $_clearField(2);
+  void clearFunctionId() => $_clearField(2);
 
   @$pb.TagNumber(3)
   $pb.PbList<TaskStatus> get statuses => $_getList(2);
 }
 
+/// 返回符合条件的任务总数和当前分页。
 class ListTasksResp extends $pb.GeneratedMessage {
   factory ListTasksResp({
     $core.int? total,
@@ -1345,6 +1401,7 @@ class ListTasksResp extends $pb.GeneratedMessage {
   $pb.PbList<TaskSummary> get tasks => $_getList(1);
 }
 
+/// 取消本人可取消的任务。
 class CancelTaskReq extends $pb.GeneratedMessage {
   factory CancelTaskReq({
     $core.String? taskId,
@@ -1399,6 +1456,7 @@ class CancelTaskReq extends $pb.GeneratedMessage {
   void clearTaskId() => $_clearField(1);
 }
 
+/// 返回取消受理后的当前任务状态，不保证同步终止上游执行。
 class CancelTaskResp extends $pb.GeneratedMessage {
   factory CancelTaskResp({
     $core.String? taskId,
@@ -1478,6 +1536,7 @@ class CancelTaskResp extends $pb.GeneratedMessage {
   void clearStatusMessage() => $_clearField(3);
 }
 
+/// 恢复本人 can_recover_save=true 的普通任务；每个任务最多受理一次，不重新执行 GPU。
 class RecoverSaveTaskReq extends $pb.GeneratedMessage {
   factory RecoverSaveTaskReq({
     $core.String? requestId,
@@ -1525,6 +1584,7 @@ class RecoverSaveTaskReq extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<RecoverSaveTaskReq>(create);
   static RecoverSaveTaskReq? _defaultInstance;
 
+  /// 本人范围内的幂等键；同一次操作重发复用，新操作使用新值。
   @$pb.TagNumber(1)
   $core.String get requestId => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -1544,6 +1604,7 @@ class RecoverSaveTaskReq extends $pb.GeneratedMessage {
   void clearTaskId() => $_clearField(2);
 }
 
+/// 返回原任务 ID 和当前状态；相同恢复 request_id 重发幂等。
 class RecoverSaveTaskResp extends $pb.GeneratedMessage {
   factory RecoverSaveTaskResp({
     $core.String? taskId,

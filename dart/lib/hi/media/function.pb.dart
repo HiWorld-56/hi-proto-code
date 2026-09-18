@@ -1,6 +1,6 @@
 // This is a generated file - do not edit.
 //
-// Generated from hi/media/feature.proto.
+// Generated from hi/media/function.proto.
 
 // @dart = 3.3
 
@@ -14,12 +14,9 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'feature.pbenum.dart';
-
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
-export 'feature.pbenum.dart';
-
+/// 文本长度约束；服务端按 Unicode 码点计数。
 class TextLimit extends $pb.GeneratedMessage {
   factory TextLimit({
     $core.int? maxLength,
@@ -74,6 +71,7 @@ class TextLimit extends $pb.GeneratedMessage {
   void clearMaxLength() => $_clearField(1);
 }
 
+/// 像素量选项，使用规范十进制字符串，默认值必须在允许集合内。
 class DecimalOptionConfig extends $pb.GeneratedMessage {
   factory DecimalOptionConfig({
     $core.Iterable<$core.String>? allowedValues,
@@ -121,7 +119,7 @@ class DecimalOptionConfig extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<DecimalOptionConfig>(create);
   static DecimalOptionConfig? _defaultInstance;
 
-  /// 为避免浮点格式变化，允许值和默认值都使用十进制字符串传输。
+  /// 规范十进制字符串，例如 "0.9"；客户端必须原样提交，不转为浮点重新格式化。
   @$pb.TagNumber(1)
   $pb.PbList<$core.String> get allowedValues => $_getList(0);
 
@@ -135,6 +133,7 @@ class DecimalOptionConfig extends $pb.GeneratedMessage {
   void clearDefaultValue() => $_clearField(2);
 }
 
+/// 字符串选项，保存并传递工作流节点接受的完整值。
 class StringOptionConfig extends $pb.GeneratedMessage {
   factory StringOptionConfig({
     $core.Iterable<$core.String>? allowedValues,
@@ -195,6 +194,7 @@ class StringOptionConfig extends $pb.GeneratedMessage {
   void clearDefaultValue() => $_clearField(2);
 }
 
+/// 正整数范围，最小值和最大值均包含在允许范围内。
 class IntRangeConfig extends $pb.GeneratedMessage {
   factory IntRangeConfig({
     $core.int? minValue,
@@ -245,6 +245,7 @@ class IntRangeConfig extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<IntRangeConfig>(create);
   static IntRangeConfig? _defaultInstance;
 
+  /// 含边界最小值。
   @$pb.TagNumber(1)
   $core.int get minValue => $_getIZ(0);
   @$pb.TagNumber(1)
@@ -254,6 +255,7 @@ class IntRangeConfig extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearMinValue() => $_clearField(1);
 
+  /// 含边界最大值。
   @$pb.TagNumber(2)
   $core.int get maxValue => $_getIZ(1);
   @$pb.TagNumber(2)
@@ -263,6 +265,7 @@ class IntRangeConfig extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearMaxValue() => $_clearField(2);
 
+  /// 用户省略参数时采用的值。
   @$pb.TagNumber(3)
   $core.int get defaultValue => $_getIZ(2);
   @$pb.TagNumber(3)
@@ -275,6 +278,7 @@ class IntRangeConfig extends $pb.GeneratedMessage {
 
 enum FrameRateConfig_Mode { selectable, fixedValue, notSet }
 
+/// 帧率（帧/秒）的可选范围或固定值，两种模式必须选择其一。
 class FrameRateConfig extends $pb.GeneratedMessage {
   factory FrameRateConfig({
     IntRangeConfig? selectable,
@@ -361,6 +365,7 @@ class FrameRateConfig extends $pb.GeneratedMessage {
   void clearFixedValue() => $_clearField(2);
 }
 
+/// 工作流向普通用户开放的视频参数，不包含管理员固定输入。
 class VideoParameterConfig extends $pb.GeneratedMessage {
   factory VideoParameterConfig({
     TextLimit? prompt,
@@ -478,38 +483,282 @@ class VideoParameterConfig extends $pb.GeneratedMessage {
   FrameRateConfig ensureFrameRate() => $_ensure(4);
 }
 
-class ModelOption extends $pb.GeneratedMessage {
-  factory ModelOption({
-    $core.String? modelMappingId,
-    $core.String? name,
+/// 系统初始化的功能；客户端从 Function.List 获取 ID，不自行按名称推导。
+class FunctionSummary extends $pb.GeneratedMessage {
+  factory FunctionSummary({
+    $core.String? functionId,
+    $core.String? displayName,
+  }) {
+    final result = create();
+    if (functionId != null) result.functionId = functionId;
+    if (displayName != null) result.displayName = displayName;
+    return result;
+  }
+
+  FunctionSummary._();
+
+  factory FunctionSummary.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory FunctionSummary.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'FunctionSummary',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'functionId')
+    ..aOS(2, _omitFieldNames ? '' : 'displayName')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  FunctionSummary clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  FunctionSummary copyWith(void Function(FunctionSummary) updates) =>
+      super.copyWith((message) => updates(message as FunctionSummary))
+          as FunctionSummary;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static FunctionSummary create() => FunctionSummary._();
+  @$core.override
+  FunctionSummary createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static FunctionSummary getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<FunctionSummary>(create);
+  static FunctionSummary? _defaultInstance;
+
+  /// 固定值：video.img2vid（图生视频）、video.txt2vid（文生视频）。
+  @$pb.TagNumber(1)
+  $core.String get functionId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set functionId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasFunctionId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearFunctionId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get displayName => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set displayName($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasDisplayName() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearDisplayName() => $_clearField(2);
+}
+
+/// 返回全部固定功能；功能是否可创建任务由 Get 的 workflows 判断。
+class ListFunctionsResp extends $pb.GeneratedMessage {
+  factory ListFunctionsResp({
+    $core.Iterable<FunctionSummary>? functions,
+  }) {
+    final result = create();
+    if (functions != null) result.functions.addAll(functions);
+    return result;
+  }
+
+  ListFunctionsResp._();
+
+  factory ListFunctionsResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListFunctionsResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListFunctionsResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..pPM<FunctionSummary>(1, _omitFieldNames ? '' : 'functions',
+        subBuilder: FunctionSummary.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListFunctionsResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListFunctionsResp copyWith(void Function(ListFunctionsResp) updates) =>
+      super.copyWith((message) => updates(message as ListFunctionsResp))
+          as ListFunctionsResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListFunctionsResp create() => ListFunctionsResp._();
+  @$core.override
+  ListFunctionsResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListFunctionsResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListFunctionsResp>(create);
+  static ListFunctionsResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<FunctionSummary> get functions => $_getList(0);
+}
+
+/// 查询选中功能及其当前启用的工作流。
+class GetFunctionReq extends $pb.GeneratedMessage {
+  factory GetFunctionReq({
+    $core.String? functionId,
+  }) {
+    final result = create();
+    if (functionId != null) result.functionId = functionId;
+    return result;
+  }
+
+  GetFunctionReq._();
+
+  factory GetFunctionReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetFunctionReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetFunctionReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'functionId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetFunctionReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetFunctionReq copyWith(void Function(GetFunctionReq) updates) =>
+      super.copyWith((message) => updates(message as GetFunctionReq))
+          as GetFunctionReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetFunctionReq create() => GetFunctionReq._();
+  @$core.override
+  GetFunctionReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GetFunctionReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetFunctionReq>(create);
+  static GetFunctionReq? _defaultInstance;
+
+  /// 必须来自 Function.List：video.img2vid 或 video.txt2vid。
+  @$pb.TagNumber(1)
+  $core.String get functionId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set functionId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasFunctionId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearFunctionId() => $_clearField(1);
+}
+
+/// 普通用户可见的模型信息，不含 ComfyUI 真实文件名。
+class WorkflowModelOption extends $pb.GeneratedMessage {
+  factory WorkflowModelOption({
+    $core.String? modelId,
+    $core.String? displayName,
+  }) {
+    final result = create();
+    if (modelId != null) result.modelId = modelId;
+    if (displayName != null) result.displayName = displayName;
+    return result;
+  }
+
+  WorkflowModelOption._();
+
+  factory WorkflowModelOption.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory WorkflowModelOption.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'WorkflowModelOption',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'modelId')
+    ..aOS(2, _omitFieldNames ? '' : 'displayName')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  WorkflowModelOption clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  WorkflowModelOption copyWith(void Function(WorkflowModelOption) updates) =>
+      super.copyWith((message) => updates(message as WorkflowModelOption))
+          as WorkflowModelOption;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static WorkflowModelOption create() => WorkflowModelOption._();
+  @$core.override
+  WorkflowModelOption createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static WorkflowModelOption getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<WorkflowModelOption>(create);
+  static WorkflowModelOption? _defaultInstance;
+
+  /// 关联模型 ID；创建任务时无需回传。
+  @$pb.TagNumber(1)
+  $core.String get modelId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set modelId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasModelId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearModelId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get displayName => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set displayName($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasDisplayName() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearDisplayName() => $_clearField(2);
+}
+
+/// 功能页的一项可用工作流；用户选择后按该项参数配置填写表单。
+class WorkflowOption extends $pb.GeneratedMessage {
+  factory WorkflowOption({
+    $core.String? workflowId,
+    WorkflowModelOption? model,
     $core.bool? isDefault,
     $core.String? description,
     VideoParameterConfig? parameterConfig,
   }) {
     final result = create();
-    if (modelMappingId != null) result.modelMappingId = modelMappingId;
-    if (name != null) result.name = name;
+    if (workflowId != null) result.workflowId = workflowId;
+    if (model != null) result.model = model;
     if (isDefault != null) result.isDefault = isDefault;
     if (description != null) result.description = description;
     if (parameterConfig != null) result.parameterConfig = parameterConfig;
     return result;
   }
 
-  ModelOption._();
+  WorkflowOption._();
 
-  factory ModelOption.fromBuffer($core.List<$core.int> data,
+  factory WorkflowOption.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ModelOption.fromJson($core.String json,
+  factory WorkflowOption.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ModelOption',
+      _omitMessageNames ? '' : 'WorkflowOption',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'modelMappingId')
-    ..aOS(2, _omitFieldNames ? '' : 'name')
+    ..aOS(1, _omitFieldNames ? '' : 'workflowId')
+    ..aOM<WorkflowModelOption>(2, _omitFieldNames ? '' : 'model',
+        subBuilder: WorkflowModelOption.create)
     ..aOB(3, _omitFieldNames ? '' : 'isDefault')
     ..aOS(4, _omitFieldNames ? '' : 'description')
     ..aOM<VideoParameterConfig>(5, _omitFieldNames ? '' : 'parameterConfig',
@@ -517,44 +766,46 @@ class ModelOption extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ModelOption clone() => deepCopy();
+  WorkflowOption clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ModelOption copyWith(void Function(ModelOption) updates) =>
-      super.copyWith((message) => updates(message as ModelOption))
-          as ModelOption;
+  WorkflowOption copyWith(void Function(WorkflowOption) updates) =>
+      super.copyWith((message) => updates(message as WorkflowOption))
+          as WorkflowOption;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ModelOption create() => ModelOption._();
+  static WorkflowOption create() => WorkflowOption._();
   @$core.override
-  ModelOption createEmptyInstance() => create();
+  WorkflowOption createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ModelOption getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ModelOption>(create);
-  static ModelOption? _defaultInstance;
+  static WorkflowOption getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<WorkflowOption>(create);
+  static WorkflowOption? _defaultInstance;
 
-  /// 创建任务时提交的唯一选择；客户端不能自行组合模型 ID 与工作流 ID。
+  /// 创建任务时提交的唯一工作流 ID，由服务端生成；客户端不计算 hash。
   @$pb.TagNumber(1)
-  $core.String get modelMappingId => $_getSZ(0);
+  $core.String get workflowId => $_getSZ(0);
   @$pb.TagNumber(1)
-  set modelMappingId($core.String value) => $_setString(0, value);
+  set workflowId($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasModelMappingId() => $_has(0);
+  $core.bool hasWorkflowId() => $_has(0);
   @$pb.TagNumber(1)
-  void clearModelMappingId() => $_clearField(1);
+  void clearWorkflowId() => $_clearField(1);
 
-  /// 管理员维护的用户可见模型名称，不是 ComfyUI 原始文件名。
   @$pb.TagNumber(2)
-  $core.String get name => $_getSZ(1);
+  WorkflowModelOption get model => $_getN(1);
   @$pb.TagNumber(2)
-  set name($core.String value) => $_setString(1, value);
+  set model(WorkflowModelOption value) => $_setField(2, value);
   @$pb.TagNumber(2)
-  $core.bool hasName() => $_has(1);
+  $core.bool hasModel() => $_has(1);
   @$pb.TagNumber(2)
-  void clearName() => $_clearField(2);
+  void clearModel() => $_clearField(2);
+  @$pb.TagNumber(2)
+  WorkflowModelOption ensureModel() => $_ensure(1);
 
+  /// 管理员显式指定；同一功能最多一项为 true，也可以没有默认项。
   @$pb.TagNumber(3)
   $core.bool get isDefault => $_getBF(2);
   @$pb.TagNumber(3)
@@ -564,7 +815,7 @@ class ModelOption extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearIsDefault() => $_clearField(3);
 
-  /// 映射工作流的 Markdown 说明；客户端应使用安全 Markdown 渲染。
+  /// 管理员编写的 Markdown 说明；客户端应使用安全 Markdown 渲染。
   @$pb.TagNumber(4)
   $core.String get description => $_getSZ(3);
   @$pb.TagNumber(4)
@@ -574,6 +825,7 @@ class ModelOption extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearDescription() => $_clearField(4);
 
+  /// 该工作流的范围、完整允许值与默认值，不能按模型名称硬编码。
   @$pb.TagNumber(5)
   VideoParameterConfig get parameterConfig => $_getN(4);
   @$pb.TagNumber(5)
@@ -586,122 +838,70 @@ class ModelOption extends $pb.GeneratedMessage {
   VideoParameterConfig ensureParameterConfig() => $_ensure(4);
 }
 
-class GetFeatureReq extends $pb.GeneratedMessage {
-  factory GetFeatureReq({
-    FeatureKey? featureKey,
+/// 一次返回功能页所需的全部可用工作流配置，不暴露节点、依赖或文件对象键。
+class GetFunctionResp extends $pb.GeneratedMessage {
+  factory GetFunctionResp({
+    FunctionSummary? function,
+    $core.Iterable<WorkflowOption>? workflows,
   }) {
     final result = create();
-    if (featureKey != null) result.featureKey = featureKey;
+    if (function != null) result.function = function;
+    if (workflows != null) result.workflows.addAll(workflows);
     return result;
   }
 
-  GetFeatureReq._();
+  GetFunctionResp._();
 
-  factory GetFeatureReq.fromBuffer($core.List<$core.int> data,
+  factory GetFunctionResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory GetFeatureReq.fromJson($core.String json,
+  factory GetFunctionResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetFeatureReq',
+      _omitMessageNames ? '' : 'GetFunctionResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
-    ..aE<FeatureKey>(1, _omitFieldNames ? '' : 'featureKey',
-        enumValues: FeatureKey.values)
+    ..aOM<FunctionSummary>(1, _omitFieldNames ? '' : 'function',
+        subBuilder: FunctionSummary.create)
+    ..pPM<WorkflowOption>(2, _omitFieldNames ? '' : 'workflows',
+        subBuilder: WorkflowOption.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetFeatureReq clone() => deepCopy();
+  GetFunctionResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetFeatureReq copyWith(void Function(GetFeatureReq) updates) =>
-      super.copyWith((message) => updates(message as GetFeatureReq))
-          as GetFeatureReq;
+  GetFunctionResp copyWith(void Function(GetFunctionResp) updates) =>
+      super.copyWith((message) => updates(message as GetFunctionResp))
+          as GetFunctionResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static GetFeatureReq create() => GetFeatureReq._();
+  static GetFunctionResp create() => GetFunctionResp._();
   @$core.override
-  GetFeatureReq createEmptyInstance() => create();
+  GetFunctionResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static GetFeatureReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetFeatureReq>(create);
-  static GetFeatureReq? _defaultInstance;
+  static GetFunctionResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetFunctionResp>(create);
+  static GetFunctionResp? _defaultInstance;
 
   @$pb.TagNumber(1)
-  FeatureKey get featureKey => $_getN(0);
+  FunctionSummary get function => $_getN(0);
   @$pb.TagNumber(1)
-  set featureKey(FeatureKey value) => $_setField(1, value);
+  set function(FunctionSummary value) => $_setField(1, value);
   @$pb.TagNumber(1)
-  $core.bool hasFeatureKey() => $_has(0);
+  $core.bool hasFunction() => $_has(0);
   @$pb.TagNumber(1)
-  void clearFeatureKey() => $_clearField(1);
-}
-
-class GetFeatureResp extends $pb.GeneratedMessage {
-  factory GetFeatureResp({
-    FeatureKey? featureKey,
-    $core.Iterable<ModelOption>? modelOptions,
-  }) {
-    final result = create();
-    if (featureKey != null) result.featureKey = featureKey;
-    if (modelOptions != null) result.modelOptions.addAll(modelOptions);
-    return result;
-  }
-
-  GetFeatureResp._();
-
-  factory GetFeatureResp.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory GetFeatureResp.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetFeatureResp',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
-      createEmptyInstance: create)
-    ..aE<FeatureKey>(1, _omitFieldNames ? '' : 'featureKey',
-        enumValues: FeatureKey.values)
-    ..pPM<ModelOption>(2, _omitFieldNames ? '' : 'modelOptions',
-        subBuilder: ModelOption.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetFeatureResp clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetFeatureResp copyWith(void Function(GetFeatureResp) updates) =>
-      super.copyWith((message) => updates(message as GetFeatureResp))
-          as GetFeatureResp;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static GetFeatureResp create() => GetFeatureResp._();
-  @$core.override
-  GetFeatureResp createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static GetFeatureResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetFeatureResp>(create);
-  static GetFeatureResp? _defaultInstance;
-
+  void clearFunction() => $_clearField(1);
   @$pb.TagNumber(1)
-  FeatureKey get featureKey => $_getN(0);
-  @$pb.TagNumber(1)
-  set featureKey(FeatureKey value) => $_setField(1, value);
-  @$pb.TagNumber(1)
-  $core.bool hasFeatureKey() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearFeatureKey() => $_clearField(1);
+  FunctionSummary ensureFunction() => $_ensure(0);
 
-  /// 空列表表示该功能当前没有可用映射，客户端不得创建任务。
+  /// 只包含 ENABLED 工作流，按管理员顺序及稳定次序排列；空列表表示当前不可创建。
   @$pb.TagNumber(2)
-  $pb.PbList<ModelOption> get modelOptions => $_getList(1);
+  $pb.PbList<WorkflowOption> get workflows => $_getList(1);
 }
 
 const $core.bool _omitFieldNames =

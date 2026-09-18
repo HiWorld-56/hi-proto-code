@@ -30,12 +30,20 @@ const (
 // TaskClient is the client API for Task service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 普通用户视频任务创建、查询、取消和一次性恢复保存。
 type TaskClient interface {
+	// 创建图生视频任务；只提交 workflow_id 与业务参数，不组合功能或模型 ID。
 	CreateImageToVideo(ctx context.Context, in *CreateImageToVideoTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error)
+	// 创建文生视频任务；只提交 workflow_id 与业务参数。
 	CreateTextToVideo(ctx context.Context, in *CreateTextToVideoTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error)
+	// 查询本人任务详情及产物资产 ID。
 	Get(ctx context.Context, in *GetTaskReq, opts ...grpc.CallOption) (*GetTaskResp, error)
+	// 分页查询本人任务。
 	List(ctx context.Context, in *ListTasksReq, opts ...grpc.CallOption) (*ListTasksResp, error)
+	// 按 can_cancel 取消任务；相同任务重复请求返回当前状态。
 	Cancel(ctx context.Context, in *CancelTaskReq, opts ...grpc.CallOption) (*CancelTaskResp, error)
+	// 恢复保存复用原任务，不检查存储额度或未完成任务上限，只受保存并发限制。
 	RecoverSave(ctx context.Context, in *RecoverSaveTaskReq, opts ...grpc.CallOption) (*RecoverSaveTaskResp, error)
 }
 
@@ -110,12 +118,20 @@ func (c *taskClient) RecoverSave(ctx context.Context, in *RecoverSaveTaskReq, op
 // TaskServer is the server API for Task service.
 // All implementations should embed UnimplementedTaskServer
 // for forward compatibility.
+//
+// 普通用户视频任务创建、查询、取消和一次性恢复保存。
 type TaskServer interface {
+	// 创建图生视频任务；只提交 workflow_id 与业务参数，不组合功能或模型 ID。
 	CreateImageToVideo(context.Context, *CreateImageToVideoTaskReq) (*CreateTaskResp, error)
+	// 创建文生视频任务；只提交 workflow_id 与业务参数。
 	CreateTextToVideo(context.Context, *CreateTextToVideoTaskReq) (*CreateTaskResp, error)
+	// 查询本人任务详情及产物资产 ID。
 	Get(context.Context, *GetTaskReq) (*GetTaskResp, error)
+	// 分页查询本人任务。
 	List(context.Context, *ListTasksReq) (*ListTasksResp, error)
+	// 按 can_cancel 取消任务；相同任务重复请求返回当前状态。
 	Cancel(context.Context, *CancelTaskReq) (*CancelTaskResp, error)
+	// 恢复保存复用原任务，不检查存储额度或未完成任务上限，只受保存并发限制。
 	RecoverSave(context.Context, *RecoverSaveTaskReq) (*RecoverSaveTaskResp, error)
 }
 

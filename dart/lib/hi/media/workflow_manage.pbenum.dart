@@ -14,13 +14,14 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+/// 工作流生命周期状态，修改执行内容后回到草稿。
 class WorkflowStatus extends $pb.ProtobufEnum {
   static const WorkflowStatus WORKFLOW_STATUS_UNSPECIFIED =
       WorkflowStatus._(0, _omitEnumNames ? '' : 'WORKFLOW_STATUS_UNSPECIFIED');
   static const WorkflowStatus WORKFLOW_STATUS_DRAFT =
       WorkflowStatus._(1, _omitEnumNames ? '' : 'WORKFLOW_STATUS_DRAFT');
 
-  /// 最近校验通过的草稿在管理试跑完整成功后自动进入 ENABLED；是否对用户可用仍由映射决定。
+  /// 最近校验通过的草稿在试跑完整成功后自动启用，出现在 Function.Get 的可用工作流中。
   static const WorkflowStatus WORKFLOW_STATUS_ENABLED =
       WorkflowStatus._(2, _omitEnumNames ? '' : 'WORKFLOW_STATUS_ENABLED');
 
@@ -38,6 +39,7 @@ class WorkflowStatus extends $pb.ProtobufEnum {
   const WorkflowStatus._(super.value, super.name);
 }
 
+/// 当前内容的最近静态校验状态；修改执行内容后重置。
 class WorkflowValidationStatus extends $pb.ProtobufEnum {
   /// 尚未校验。
   static const WorkflowValidationStatus WORKFLOW_VALIDATION_STATUS_UNSPECIFIED =
@@ -65,6 +67,7 @@ class WorkflowValidationStatus extends $pb.ProtobufEnum {
   const WorkflowValidationStatus._(super.value, super.name);
 }
 
+/// 校验问题严重程度；任意 ERROR 阻止试跑。
 class WorkflowIssueSeverity extends $pb.ProtobufEnum {
   static const WorkflowIssueSeverity WORKFLOW_ISSUE_SEVERITY_UNSPECIFIED =
       WorkflowIssueSeverity._(
@@ -91,6 +94,7 @@ class WorkflowIssueSeverity extends $pb.ProtobufEnum {
   const WorkflowIssueSeverity._(super.value, super.name);
 }
 
+/// 依赖类型，区分节点实现与 Loader 文件。
 class WorkflowDependencyKind extends $pb.ProtobufEnum {
   static const WorkflowDependencyKind WORKFLOW_DEPENDENCY_KIND_UNSPECIFIED =
       WorkflowDependencyKind._(

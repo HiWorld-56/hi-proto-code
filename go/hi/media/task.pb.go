@@ -23,6 +23,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// 任务用途；普通任务和管理试跑共用执行链路。
 type TaskPurpose int32
 
 const (
@@ -72,11 +73,12 @@ func (TaskPurpose) EnumDescriptor() ([]byte, []int) {
 	return file_hi_media_task_proto_rawDescGZIP(), []int{0}
 }
 
+// 用户可见任务状态；内部提交与核对细节使用 status_message 说明。
 type TaskStatus int32
 
 const (
 	TaskStatus_TASK_STATUS_UNSPECIFIED TaskStatus = 0
-	// 等待派发；维护模式下也保持此状态。
+	// 等待 FIFO 派发。
 	TaskStatus_TASK_STATUS_PENDING TaskStatus = 1
 	// 覆盖提交、排队、状态核对和 ComfyUI 执行过程，具体文案见 status_message。
 	TaskStatus_TASK_STATUS_RUNNING    TaskStatus = 2
@@ -139,6 +141,7 @@ func (TaskStatus) EnumDescriptor() ([]byte, []int) {
 	return file_hi_media_task_proto_rawDescGZIP(), []int{1}
 }
 
+// 资产媒体类型。
 type MediaType int32
 
 const (
@@ -188,6 +191,7 @@ func (MediaType) EnumDescriptor() ([]byte, []int) {
 	return file_hi_media_task_proto_rawDescGZIP(), []int{2}
 }
 
+// 视频分辨率选择，不传某项时使用工作流该项默认值。
 type VideoResolution struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// ResolutionSelector 的完整选项字符串，例如 "16:9 (Widescreen)"，不能只传 "16:9"。
@@ -242,17 +246,23 @@ func (x *VideoResolution) GetMegapixels() string {
 	return ""
 }
 
+// 创建图生视频任务；工作流必须属于 video.img2vid，图片为本人可用的 JPEG/PNG 资产。
 type CreateImageToVideoTaskReq struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	RequestId       *string                `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
-	ModelMappingId  *string                `protobuf:"bytes,2,opt,name=model_mapping_id,json=modelMappingId,proto3,oneof" json:"model_mapping_id,omitempty"`
-	InputAssetId    *string                `protobuf:"bytes,3,opt,name=input_asset_id,json=inputAssetId,proto3,oneof" json:"input_asset_id,omitempty"`
-	Prompt          *string                `protobuf:"bytes,4,opt,name=prompt,proto3,oneof" json:"prompt,omitempty"`
-	Resolution      *VideoResolution       `protobuf:"bytes,5,opt,name=resolution,proto3" json:"resolution,omitempty"`
-	DurationSeconds *int32                 `protobuf:"varint,6,opt,name=duration_seconds,json=durationSeconds,proto3,oneof" json:"duration_seconds,omitempty"`
-	FrameRate       *int32                 `protobuf:"varint,7,opt,name=frame_rate,json=frameRate,proto3,oneof" json:"frame_rate,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 本人范围内的幂等键；同一次操作重发复用，新操作使用新值。
+	RequestId *string `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
+	// 来自对应功能的 Function.Get；服务端验证工作流已启用且属于本 RPC 的功能。
+	WorkflowId   *string `protobuf:"bytes,2,opt,name=workflow_id,json=workflowId,proto3,oneof" json:"workflow_id,omitempty"`
+	InputAssetId *string `protobuf:"bytes,3,opt,name=input_asset_id,json=inputAssetId,proto3,oneof" json:"input_asset_id,omitempty"`
+	Prompt       *string `protobuf:"bytes,4,opt,name=prompt,proto3,oneof" json:"prompt,omitempty"`
+	// 宽高比和像素量各自独立补齐；不传时使用工作流默认值。
+	Resolution *VideoResolution `protobuf:"bytes,5,opt,name=resolution,proto3" json:"resolution,omitempty"`
+	// 整数秒；不传时使用工作流默认时长。
+	DurationSeconds *int32 `protobuf:"varint,6,opt,name=duration_seconds,json=durationSeconds,proto3,oneof" json:"duration_seconds,omitempty"`
+	// 帧/秒；不传时使用默认或固定值；固定模式显式提交时必须与固定值相同。
+	FrameRate     *int32 `protobuf:"varint,7,opt,name=frame_rate,json=frameRate,proto3,oneof" json:"frame_rate,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CreateImageToVideoTaskReq) Reset() {
@@ -292,9 +302,9 @@ func (x *CreateImageToVideoTaskReq) GetRequestId() string {
 	return ""
 }
 
-func (x *CreateImageToVideoTaskReq) GetModelMappingId() string {
-	if x != nil && x.ModelMappingId != nil {
-		return *x.ModelMappingId
+func (x *CreateImageToVideoTaskReq) GetWorkflowId() string {
+	if x != nil && x.WorkflowId != nil {
+		return *x.WorkflowId
 	}
 	return ""
 }
@@ -334,16 +344,22 @@ func (x *CreateImageToVideoTaskReq) GetFrameRate() int32 {
 	return 0
 }
 
+// 创建文生视频任务；工作流必须属于 video.txt2vid，不接受输入图片。
 type CreateTextToVideoTaskReq struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	RequestId       *string                `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
-	ModelMappingId  *string                `protobuf:"bytes,2,opt,name=model_mapping_id,json=modelMappingId,proto3,oneof" json:"model_mapping_id,omitempty"`
-	Prompt          *string                `protobuf:"bytes,3,opt,name=prompt,proto3,oneof" json:"prompt,omitempty"`
-	Resolution      *VideoResolution       `protobuf:"bytes,4,opt,name=resolution,proto3" json:"resolution,omitempty"`
-	DurationSeconds *int32                 `protobuf:"varint,5,opt,name=duration_seconds,json=durationSeconds,proto3,oneof" json:"duration_seconds,omitempty"`
-	FrameRate       *int32                 `protobuf:"varint,6,opt,name=frame_rate,json=frameRate,proto3,oneof" json:"frame_rate,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 本人范围内的幂等键；同一次操作重发复用，新操作使用新值。
+	RequestId *string `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
+	// 来自对应功能的 Function.Get；服务端验证工作流已启用且属于本 RPC 的功能。
+	WorkflowId *string `protobuf:"bytes,2,opt,name=workflow_id,json=workflowId,proto3,oneof" json:"workflow_id,omitempty"`
+	Prompt     *string `protobuf:"bytes,3,opt,name=prompt,proto3,oneof" json:"prompt,omitempty"`
+	// 宽高比和像素量各自独立补齐；不传时使用工作流默认值。
+	Resolution *VideoResolution `protobuf:"bytes,4,opt,name=resolution,proto3" json:"resolution,omitempty"`
+	// 整数秒；不传时使用工作流默认时长。
+	DurationSeconds *int32 `protobuf:"varint,5,opt,name=duration_seconds,json=durationSeconds,proto3,oneof" json:"duration_seconds,omitempty"`
+	// 帧/秒；不传时使用默认或固定值；固定模式显式提交时必须与固定值相同。
+	FrameRate     *int32 `protobuf:"varint,6,opt,name=frame_rate,json=frameRate,proto3,oneof" json:"frame_rate,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CreateTextToVideoTaskReq) Reset() {
@@ -383,9 +399,9 @@ func (x *CreateTextToVideoTaskReq) GetRequestId() string {
 	return ""
 }
 
-func (x *CreateTextToVideoTaskReq) GetModelMappingId() string {
-	if x != nil && x.ModelMappingId != nil {
-		return *x.ModelMappingId
+func (x *CreateTextToVideoTaskReq) GetWorkflowId() string {
+	if x != nil && x.WorkflowId != nil {
+		return *x.WorkflowId
 	}
 	return ""
 }
@@ -418,6 +434,7 @@ func (x *CreateTextToVideoTaskReq) GetFrameRate() int32 {
 	return 0
 }
 
+// 返回已受理任务的 ID；同一 request_id 重发返回原任务，不比较重发参数。
 type CreateTaskResp struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 成功响应必有；响应字段不使用 buf.validate 约束。
@@ -463,16 +480,19 @@ func (x *CreateTaskResp) GetTaskId() string {
 	return ""
 }
 
+// 图生视频实际参数，包含创建时补齐的默认值或固定值。
 type ImageToVideoTaskParams struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	InputAssetId    *string                `protobuf:"bytes,1,opt,name=input_asset_id,json=inputAssetId,proto3,oneof" json:"input_asset_id,omitempty"`
-	Prompt          *string                `protobuf:"bytes,2,opt,name=prompt,proto3,oneof" json:"prompt,omitempty"`
-	AspectRatio     *string                `protobuf:"bytes,3,opt,name=aspect_ratio,json=aspectRatio,proto3,oneof" json:"aspect_ratio,omitempty"`
-	Megapixels      *string                `protobuf:"bytes,4,opt,name=megapixels,proto3,oneof" json:"megapixels,omitempty"`
-	DurationSeconds *int32                 `protobuf:"varint,5,opt,name=duration_seconds,json=durationSeconds,proto3,oneof" json:"duration_seconds,omitempty"`
-	FrameRate       *int32                 `protobuf:"varint,6,opt,name=frame_rate,json=frameRate,proto3,oneof" json:"frame_rate,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	state        protoimpl.MessageState `protogen:"open.v1"`
+	InputAssetId *string                `protobuf:"bytes,1,opt,name=input_asset_id,json=inputAssetId,proto3,oneof" json:"input_asset_id,omitempty"`
+	Prompt       *string                `protobuf:"bytes,2,opt,name=prompt,proto3,oneof" json:"prompt,omitempty"`
+	AspectRatio  *string                `protobuf:"bytes,3,opt,name=aspect_ratio,json=aspectRatio,proto3,oneof" json:"aspect_ratio,omitempty"`
+	Megapixels   *string                `protobuf:"bytes,4,opt,name=megapixels,proto3,oneof" json:"megapixels,omitempty"`
+	// 创建时确定的实际时长，单位为整数秒。
+	DurationSeconds *int32 `protobuf:"varint,5,opt,name=duration_seconds,json=durationSeconds,proto3,oneof" json:"duration_seconds,omitempty"`
+	// 创建时确定的实际帧率，单位为帧/秒。
+	FrameRate     *int32 `protobuf:"varint,6,opt,name=frame_rate,json=frameRate,proto3,oneof" json:"frame_rate,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ImageToVideoTaskParams) Reset() {
@@ -547,15 +567,18 @@ func (x *ImageToVideoTaskParams) GetFrameRate() int32 {
 	return 0
 }
 
+// 文生视频实际参数，包含创建时补齐的默认值或固定值。
 type TextToVideoTaskParams struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	Prompt          *string                `protobuf:"bytes,1,opt,name=prompt,proto3,oneof" json:"prompt,omitempty"`
-	AspectRatio     *string                `protobuf:"bytes,2,opt,name=aspect_ratio,json=aspectRatio,proto3,oneof" json:"aspect_ratio,omitempty"`
-	Megapixels      *string                `protobuf:"bytes,3,opt,name=megapixels,proto3,oneof" json:"megapixels,omitempty"`
-	DurationSeconds *int32                 `protobuf:"varint,4,opt,name=duration_seconds,json=durationSeconds,proto3,oneof" json:"duration_seconds,omitempty"`
-	FrameRate       *int32                 `protobuf:"varint,5,opt,name=frame_rate,json=frameRate,proto3,oneof" json:"frame_rate,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	Prompt      *string                `protobuf:"bytes,1,opt,name=prompt,proto3,oneof" json:"prompt,omitempty"`
+	AspectRatio *string                `protobuf:"bytes,2,opt,name=aspect_ratio,json=aspectRatio,proto3,oneof" json:"aspect_ratio,omitempty"`
+	Megapixels  *string                `protobuf:"bytes,3,opt,name=megapixels,proto3,oneof" json:"megapixels,omitempty"`
+	// 创建时确定的实际时长，单位为整数秒。
+	DurationSeconds *int32 `protobuf:"varint,4,opt,name=duration_seconds,json=durationSeconds,proto3,oneof" json:"duration_seconds,omitempty"`
+	// 创建时确定的实际帧率，单位为帧/秒。
+	FrameRate     *int32 `protobuf:"varint,5,opt,name=frame_rate,json=frameRate,proto3,oneof" json:"frame_rate,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *TextToVideoTaskParams) Reset() {
@@ -623,6 +646,7 @@ func (x *TextToVideoTaskParams) GetFrameRate() int32 {
 	return 0
 }
 
+// 唯一主产物；size_bytes 为字节，duration_ms 为毫秒，访问地址通过 File.GetAccessUrls 获取。
 type TaskOutput struct {
 	state      protoimpl.MessageState `protogen:"open.v1"`
 	AssetId    *string                `protobuf:"bytes,1,opt,name=asset_id,json=assetId,proto3,oneof" json:"asset_id,omitempty"`
@@ -716,33 +740,43 @@ func (x *TaskOutput) GetAvailable() bool {
 	return false
 }
 
+// 任务摘要，不暴露模型真实名、工作流对象键或上游 prompt_id。
 type TaskSummary struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	TaskId         *string                `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3,oneof" json:"task_id,omitempty"`
-	Purpose        *TaskPurpose           `protobuf:"varint,2,opt,name=purpose,proto3,enum=hi.media.TaskPurpose,oneof" json:"purpose,omitempty"`
-	FeatureKey     *FeatureKey            `protobuf:"varint,3,opt,name=feature_key,json=featureKey,proto3,enum=hi.media.FeatureKey,oneof" json:"feature_key,omitempty"`
-	ModelMappingId *string                `protobuf:"bytes,4,opt,name=model_mapping_id,json=modelMappingId,proto3,oneof" json:"model_mapping_id,omitempty"`
-	ModelName      *string                `protobuf:"bytes,5,opt,name=model_name,json=modelName,proto3,oneof" json:"model_name,omitempty"`
-	Status         *TaskStatus            `protobuf:"varint,6,opt,name=status,proto3,enum=hi.media.TaskStatus,oneof" json:"status,omitempty"`
+	state   protoimpl.MessageState `protogen:"open.v1"`
+	TaskId  *string                `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3,oneof" json:"task_id,omitempty"`
+	Purpose *TaskPurpose           `protobuf:"varint,2,opt,name=purpose,proto3,enum=hi.media.TaskPurpose,oneof" json:"purpose,omitempty"`
+	// 任务受理时确定的功能 ID：video.img2vid 或 video.txt2vid。
+	FunctionId *string `protobuf:"bytes,3,opt,name=function_id,json=functionId,proto3,oneof" json:"function_id,omitempty"`
+	// 从当前功能记录读取的用户可见名称。
+	FunctionDisplayName *string `protobuf:"bytes,4,opt,name=function_display_name,json=functionDisplayName,proto3,oneof" json:"function_display_name,omitempty"`
+	ModelId             *string `protobuf:"bytes,5,opt,name=model_id,json=modelId,proto3,oneof" json:"model_id,omitempty"`
+	// 从当前模型记录读取，不是 ComfyUI 真实文件名。
+	ModelDisplayName *string `protobuf:"bytes,6,opt,name=model_display_name,json=modelDisplayName,proto3,oneof" json:"model_display_name,omitempty"`
+	// 任务受理时选择的工作流；不返回对象键或完整工作流图。
+	WorkflowId *string     `protobuf:"bytes,7,opt,name=workflow_id,json=workflowId,proto3,oneof" json:"workflow_id,omitempty"`
+	Status     *TaskStatus `protobuf:"varint,8,opt,name=status,proto3,enum=hi.media.TaskStatus,oneof" json:"status,omitempty"`
 	// 面向用户的脱敏状态说明；前端应优先展示该字段。
-	StatusMessage *string `protobuf:"bytes,7,opt,name=status_message,json=statusMessage,proto3,oneof" json:"status_message,omitempty"`
-	// 稳定异步错误码：QUEUE_TIMEOUT、INPUT_UPLOAD_FAILED、UPSTREAM_SUBMISSION_FAILED、
+	StatusMessage *string `protobuf:"bytes,9,opt,name=status_message,json=statusMessage,proto3,oneof" json:"status_message,omitempty"`
+	// 稳定异步错误码：QUEUE_TIMEOUT、WORKFLOW_FILE_NOT_FOUND、WORKFLOW_FILE_UNAVAILABLE、
+	// WORKFLOW_FILE_INVALID、INPUT_UPLOAD_FAILED、UPSTREAM_SUBMISSION_FAILED、
 	// UPSTREAM_SUBMISSION_UNKNOWN、UPSTREAM_EXECUTION_FAILED、EXECUTION_TIMEOUT、
 	// OUTPUT_INVALID、OUTPUT_SAVE_FAILED、OUTPUT_SAVE_UNCERTAIN、SAVE_RECOVERY_FAILED。
-	ErrorCode *string `protobuf:"bytes,8,opt,name=error_code,json=errorCode,proto3,oneof" json:"error_code,omitempty"`
+	ErrorCode *string `protobuf:"bytes,10,opt,name=error_code,json=errorCode,proto3,oneof" json:"error_code,omitempty"`
 	// 仅在任务已经产生主资产时存在。
-	Output    *TaskOutput `protobuf:"bytes,9,opt,name=output,proto3" json:"output,omitempty"`
-	CanCancel *bool       `protobuf:"varint,10,opt,name=can_cancel,json=canCancel,proto3,oneof" json:"can_cancel,omitempty"`
+	Output    *TaskOutput `protobuf:"bytes,11,opt,name=output,proto3" json:"output,omitempty"`
+	CanCancel *bool       `protobuf:"varint,12,opt,name=can_cancel,json=canCancel,proto3,oneof" json:"can_cancel,omitempty"`
 	// 前端只能依据该字段决定是否显示唯一一次“恢复保存”入口。
-	CanRecoverSave        *bool  `protobuf:"varint,11,opt,name=can_recover_save,json=canRecoverSave,proto3,oneof" json:"can_recover_save,omitempty"`
-	SaveRecoveryExpiresAt *int64 `protobuf:"varint,12,opt,name=save_recovery_expires_at,json=saveRecoveryExpiresAt,proto3,oneof" json:"save_recovery_expires_at,omitempty"`
+	CanRecoverSave *bool `protobuf:"varint,13,opt,name=can_recover_save,json=canRecoverSave,proto3,oneof" json:"can_recover_save,omitempty"`
+	// Unix 秒；首次可恢复保存失败时确定的截止时间，达到该时刻后不可恢复。
+	SaveRecoveryExpiresAt *int64 `protobuf:"varint,14,opt,name=save_recovery_expires_at,json=saveRecoveryExpiresAt,proto3,oneof" json:"save_recovery_expires_at,omitempty"`
 	// Unix 秒；恢复保存不会改写 created_at 或 started_at。
-	CreatedAt *int64 `protobuf:"varint,13,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
-	StartedAt *int64 `protobuf:"varint,14,opt,name=started_at,json=startedAt,proto3,oneof" json:"started_at,omitempty"`
+	CreatedAt *int64 `protobuf:"varint,15,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
+	// Unix 秒；首次确认 ComfyUI 真正开始执行时写入，提交和排队期间不写入。
+	StartedAt *int64 `protobuf:"varint,16,opt,name=started_at,json=startedAt,proto3,oneof" json:"started_at,omitempty"`
 	// Unix 秒；恢复受理时清空，恢复得到最终结果时重新写入。
-	CompletedAt *int64 `protobuf:"varint,15,opt,name=completed_at,json=completedAt,proto3,oneof" json:"completed_at,omitempty"`
+	CompletedAt *int64 `protobuf:"varint,17,opt,name=completed_at,json=completedAt,proto3,oneof" json:"completed_at,omitempty"`
 	// 从 created_at 到当前时间或 completed_at 的墙钟秒数。
-	ElapsedSeconds *int64 `protobuf:"varint,16,opt,name=elapsed_seconds,json=elapsedSeconds,proto3,oneof" json:"elapsed_seconds,omitempty"`
+	ElapsedSeconds *int64 `protobuf:"varint,18,opt,name=elapsed_seconds,json=elapsedSeconds,proto3,oneof" json:"elapsed_seconds,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -791,23 +825,37 @@ func (x *TaskSummary) GetPurpose() TaskPurpose {
 	return TaskPurpose_TASK_PURPOSE_UNSPECIFIED
 }
 
-func (x *TaskSummary) GetFeatureKey() FeatureKey {
-	if x != nil && x.FeatureKey != nil {
-		return *x.FeatureKey
-	}
-	return FeatureKey_FEATURE_KEY_UNSPECIFIED
-}
-
-func (x *TaskSummary) GetModelMappingId() string {
-	if x != nil && x.ModelMappingId != nil {
-		return *x.ModelMappingId
+func (x *TaskSummary) GetFunctionId() string {
+	if x != nil && x.FunctionId != nil {
+		return *x.FunctionId
 	}
 	return ""
 }
 
-func (x *TaskSummary) GetModelName() string {
-	if x != nil && x.ModelName != nil {
-		return *x.ModelName
+func (x *TaskSummary) GetFunctionDisplayName() string {
+	if x != nil && x.FunctionDisplayName != nil {
+		return *x.FunctionDisplayName
+	}
+	return ""
+}
+
+func (x *TaskSummary) GetModelId() string {
+	if x != nil && x.ModelId != nil {
+		return *x.ModelId
+	}
+	return ""
+}
+
+func (x *TaskSummary) GetModelDisplayName() string {
+	if x != nil && x.ModelDisplayName != nil {
+		return *x.ModelDisplayName
+	}
+	return ""
+}
+
+func (x *TaskSummary) GetWorkflowId() string {
+	if x != nil && x.WorkflowId != nil {
+		return *x.WorkflowId
 	}
 	return ""
 }
@@ -889,6 +937,7 @@ func (x *TaskSummary) GetElapsedSeconds() int64 {
 	return 0
 }
 
+// 任务详情及其实际业务参数；重新生成需重新查询 Function.Get 并使用新 request_id。
 type TaskDetail struct {
 	state   protoimpl.MessageState `protogen:"open.v1"`
 	Summary *TaskSummary           `protobuf:"bytes,1,opt,name=summary,proto3" json:"summary,omitempty"`
@@ -979,6 +1028,7 @@ func (*TaskDetail_ImageToVideo) isTaskDetail_EffectiveParams() {}
 
 func (*TaskDetail_TextToVideo) isTaskDetail_EffectiveParams() {}
 
+// 查询本人任务。
 type GetTaskReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	TaskId        *string                `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3,oneof" json:"task_id,omitempty"`
@@ -1023,6 +1073,7 @@ func (x *GetTaskReq) GetTaskId() string {
 	return ""
 }
 
+// 返回本人任务详情。
 type GetTaskResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Task          *TaskDetail            `protobuf:"bytes,1,opt,name=task,proto3" json:"task,omitempty"`
@@ -1067,11 +1118,12 @@ func (x *GetTaskResp) GetTask() *TaskDetail {
 	return nil
 }
 
+// 分页查询本人任务，可按功能与状态过滤。
 type ListTasksReq struct {
 	state      protoimpl.MessageState `protogen:"open.v1"`
 	Pagination *hi.Pagination         `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
-	// 不传表示不过滤；显式传值时不能为 UNSPECIFIED。
-	FeatureKey    *FeatureKey  `protobuf:"varint,2,opt,name=feature_key,json=featureKey,proto3,enum=hi.media.FeatureKey,oneof" json:"feature_key,omitempty"`
+	// 不传表示不过滤；传入 Function.List 返回的功能 ID。
+	FunctionId    *string      `protobuf:"bytes,2,opt,name=function_id,json=functionId,proto3,oneof" json:"function_id,omitempty"`
 	Statuses      []TaskStatus `protobuf:"varint,3,rep,packed,name=statuses,proto3,enum=hi.media.TaskStatus" json:"statuses,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1114,11 +1166,11 @@ func (x *ListTasksReq) GetPagination() *hi.Pagination {
 	return nil
 }
 
-func (x *ListTasksReq) GetFeatureKey() FeatureKey {
-	if x != nil && x.FeatureKey != nil {
-		return *x.FeatureKey
+func (x *ListTasksReq) GetFunctionId() string {
+	if x != nil && x.FunctionId != nil {
+		return *x.FunctionId
 	}
-	return FeatureKey_FEATURE_KEY_UNSPECIFIED
+	return ""
 }
 
 func (x *ListTasksReq) GetStatuses() []TaskStatus {
@@ -1128,6 +1180,7 @@ func (x *ListTasksReq) GetStatuses() []TaskStatus {
 	return nil
 }
 
+// 返回符合条件的任务总数和当前分页。
 type ListTasksResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Total         *int32                 `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
@@ -1180,6 +1233,7 @@ func (x *ListTasksResp) GetTasks() []*TaskSummary {
 	return nil
 }
 
+// 取消本人可取消的任务。
 type CancelTaskReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	TaskId        *string                `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3,oneof" json:"task_id,omitempty"`
@@ -1224,6 +1278,7 @@ func (x *CancelTaskReq) GetTaskId() string {
 	return ""
 }
 
+// 返回取消受理后的当前任务状态，不保证同步终止上游执行。
 type CancelTaskResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	TaskId        *string                `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3,oneof" json:"task_id,omitempty"`
@@ -1284,10 +1339,12 @@ func (x *CancelTaskResp) GetStatusMessage() string {
 	return ""
 }
 
+// 恢复本人 can_recover_save=true 的普通任务；每个任务最多受理一次，不重新执行 GPU。
 type RecoverSaveTaskReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	RequestId     *string                `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
-	TaskId        *string                `protobuf:"bytes,2,opt,name=task_id,json=taskId,proto3,oneof" json:"task_id,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 本人范围内的幂等键；同一次操作重发复用，新操作使用新值。
+	RequestId     *string `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
+	TaskId        *string `protobuf:"bytes,2,opt,name=task_id,json=taskId,proto3,oneof" json:"task_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1336,6 +1393,7 @@ func (x *RecoverSaveTaskReq) GetTaskId() string {
 	return ""
 }
 
+// 返回原任务 ID 和当前状态；相同恢复 request_id 重发幂等。
 type RecoverSaveTaskResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	TaskId        *string                `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3,oneof" json:"task_id,omitempty"`
@@ -1400,20 +1458,21 @@ var File_hi_media_task_proto protoreflect.FileDescriptor
 
 const file_hi_media_task_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/media/task.proto\x12\bhi.media\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x16hi/media/feature.proto\x1a\x10hi/options.proto\"\x90\x01\n" +
+	"\x13hi/media/task.proto\x12\bhi.media\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\x90\x01\n" +
 	"\x0fVideoResolution\x12/\n" +
 	"\faspect_ratio\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x00R\vaspectRatio\x88\x01\x01\x12,\n" +
 	"\n" +
 	"megapixels\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x01R\n" +
 	"megapixels\x88\x01\x01B\x0f\n" +
 	"\r_aspect_ratioB\r\n" +
-	"\v_megapixels\"\xed\x03\n" +
+	"\v_megapixels\"\xdf\x03\n" +
 	"\x19CreateImageToVideoTaskReq\x12.\n" +
 	"\n" +
 	"request_id\x18\x01 \x01(\tB\n" +
-	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\trequestId\x88\x01\x01\x129\n" +
-	"\x10model_mapping_id\x18\x02 \x01(\tB\n" +
-	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x01R\x0emodelMappingId\x88\x01\x01\x125\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\trequestId\x88\x01\x01\x120\n" +
+	"\vworkflow_id\x18\x02 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x01R\n" +
+	"workflowId\x88\x01\x01\x125\n" +
 	"\x0einput_asset_id\x18\x03 \x01(\tB\n" +
 	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x02R\finputAssetId\x88\x01\x01\x12'\n" +
 	"\x06prompt\x18\x04 \x01(\tB\n" +
@@ -1424,18 +1483,19 @@ const file_hi_media_task_proto_rawDesc = "" +
 	"\x10duration_seconds\x18\x06 \x01(\x05B\a\xbaH\x04\x1a\x02 \x00H\x04R\x0fdurationSeconds\x88\x01\x01\x12+\n" +
 	"\n" +
 	"frame_rate\x18\a \x01(\x05B\a\xbaH\x04\x1a\x02 \x00H\x05R\tframeRate\x88\x01\x01B\r\n" +
-	"\v_request_idB\x13\n" +
-	"\x11_model_mapping_idB\x11\n" +
+	"\v_request_idB\x0e\n" +
+	"\f_workflow_idB\x11\n" +
 	"\x0f_input_asset_idB\t\n" +
 	"\a_promptB\x13\n" +
 	"\x11_duration_secondsB\r\n" +
-	"\v_frame_rate\"\xa2\x03\n" +
+	"\v_frame_rate\"\x94\x03\n" +
 	"\x18CreateTextToVideoTaskReq\x12.\n" +
 	"\n" +
 	"request_id\x18\x01 \x01(\tB\n" +
-	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\trequestId\x88\x01\x01\x129\n" +
-	"\x10model_mapping_id\x18\x02 \x01(\tB\n" +
-	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x01R\x0emodelMappingId\x88\x01\x01\x12'\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\trequestId\x88\x01\x01\x120\n" +
+	"\vworkflow_id\x18\x02 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x01R\n" +
+	"workflowId\x88\x01\x01\x12'\n" +
 	"\x06prompt\x18\x03 \x01(\tB\n" +
 	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x02R\x06prompt\x88\x01\x01\x129\n" +
 	"\n" +
@@ -1444,8 +1504,8 @@ const file_hi_media_task_proto_rawDesc = "" +
 	"\x10duration_seconds\x18\x05 \x01(\x05B\a\xbaH\x04\x1a\x02 \x00H\x03R\x0fdurationSeconds\x88\x01\x01\x12+\n" +
 	"\n" +
 	"frame_rate\x18\x06 \x01(\x05B\a\xbaH\x04\x1a\x02 \x00H\x04R\tframeRate\x88\x01\x01B\r\n" +
-	"\v_request_idB\x13\n" +
-	"\x11_model_mapping_idB\t\n" +
+	"\v_request_idB\x0e\n" +
+	"\f_workflow_idB\t\n" +
 	"\a_promptB\x13\n" +
 	"\x11_duration_secondsB\r\n" +
 	"\v_frame_rate\"F\n" +
@@ -1503,39 +1563,43 @@ const file_hi_media_task_proto_rawDesc = "" +
 	"\v_size_bytesB\x0e\n" +
 	"\f_duration_msB\f\n" +
 	"\n" +
-	"_available\"\xb3\b\n" +
+	"_available\"\xb2\t\n" +
 	"\vTaskSummary\x12\"\n" +
 	"\atask_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x06taskId\x88\x01\x01\x12:\n" +
-	"\apurpose\x18\x02 \x01(\x0e2\x15.hi.media.TaskPurposeB\x04\x90\xb5\x18\x03H\x01R\apurpose\x88\x01\x01\x12@\n" +
-	"\vfeature_key\x18\x03 \x01(\x0e2\x14.hi.media.FeatureKeyB\x04\x90\xb5\x18\x03H\x02R\n" +
-	"featureKey\x88\x01\x01\x123\n" +
-	"\x10model_mapping_id\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x0emodelMappingId\x88\x01\x01\x12(\n" +
+	"\apurpose\x18\x02 \x01(\x0e2\x15.hi.media.TaskPurposeB\x04\x90\xb5\x18\x03H\x01R\apurpose\x88\x01\x01\x12*\n" +
+	"\vfunction_id\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\n" +
+	"functionId\x88\x01\x01\x12=\n" +
+	"\x15function_display_name\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x13functionDisplayName\x88\x01\x01\x12$\n" +
+	"\bmodel_id\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x04R\amodelId\x88\x01\x01\x127\n" +
+	"\x12model_display_name\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03H\x05R\x10modelDisplayName\x88\x01\x01\x12*\n" +
+	"\vworkflow_id\x18\a \x01(\tB\x04\x90\xb5\x18\x03H\x06R\n" +
+	"workflowId\x88\x01\x01\x127\n" +
+	"\x06status\x18\b \x01(\x0e2\x14.hi.media.TaskStatusB\x04\x90\xb5\x18\x03H\aR\x06status\x88\x01\x01\x120\n" +
+	"\x0estatus_message\x18\t \x01(\tB\x04\x90\xb5\x18\x03H\bR\rstatusMessage\x88\x01\x01\x12(\n" +
 	"\n" +
-	"model_name\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x04R\tmodelName\x88\x01\x01\x127\n" +
-	"\x06status\x18\x06 \x01(\x0e2\x14.hi.media.TaskStatusB\x04\x90\xb5\x18\x03H\x05R\x06status\x88\x01\x01\x120\n" +
-	"\x0estatus_message\x18\a \x01(\tB\x04\x90\xb5\x18\x03H\x06R\rstatusMessage\x88\x01\x01\x12(\n" +
+	"error_code\x18\n" +
+	" \x01(\tB\x04\x90\xb5\x18\x03H\tR\terrorCode\x88\x01\x01\x122\n" +
+	"\x06output\x18\v \x01(\v2\x14.hi.media.TaskOutputB\x04\x90\xb5\x18\x03R\x06output\x12(\n" +
 	"\n" +
-	"error_code\x18\b \x01(\tB\x04\x90\xb5\x18\x03H\aR\terrorCode\x88\x01\x01\x122\n" +
-	"\x06output\x18\t \x01(\v2\x14.hi.media.TaskOutputB\x04\x90\xb5\x18\x03R\x06output\x12(\n" +
+	"can_cancel\x18\f \x01(\bB\x04\x90\xb5\x18\x03H\n" +
+	"R\tcanCancel\x88\x01\x01\x123\n" +
+	"\x10can_recover_save\x18\r \x01(\bB\x04\x90\xb5\x18\x03H\vR\x0ecanRecoverSave\x88\x01\x01\x12B\n" +
+	"\x18save_recovery_expires_at\x18\x0e \x01(\x03B\x04\x90\xb5\x18\x03H\fR\x15saveRecoveryExpiresAt\x88\x01\x01\x12(\n" +
 	"\n" +
-	"can_cancel\x18\n" +
-	" \x01(\bB\x04\x90\xb5\x18\x03H\bR\tcanCancel\x88\x01\x01\x123\n" +
-	"\x10can_recover_save\x18\v \x01(\bB\x04\x90\xb5\x18\x03H\tR\x0ecanRecoverSave\x88\x01\x01\x12B\n" +
-	"\x18save_recovery_expires_at\x18\f \x01(\x03B\x04\x90\xb5\x18\x03H\n" +
-	"R\x15saveRecoveryExpiresAt\x88\x01\x01\x12(\n" +
+	"created_at\x18\x0f \x01(\x03B\x04\x90\xb5\x18\x03H\rR\tcreatedAt\x88\x01\x01\x12(\n" +
 	"\n" +
-	"created_at\x18\r \x01(\x03B\x04\x90\xb5\x18\x03H\vR\tcreatedAt\x88\x01\x01\x12(\n" +
-	"\n" +
-	"started_at\x18\x0e \x01(\x03B\x04\x90\xb5\x18\x03H\fR\tstartedAt\x88\x01\x01\x12,\n" +
-	"\fcompleted_at\x18\x0f \x01(\x03B\x04\x90\xb5\x18\x03H\rR\vcompletedAt\x88\x01\x01\x122\n" +
-	"\x0felapsed_seconds\x18\x10 \x01(\x03B\x04\x90\xb5\x18\x03H\x0eR\x0eelapsedSeconds\x88\x01\x01:\x04\x98\xb5\x18\x03B\n" +
+	"started_at\x18\x10 \x01(\x03B\x04\x90\xb5\x18\x03H\x0eR\tstartedAt\x88\x01\x01\x12,\n" +
+	"\fcompleted_at\x18\x11 \x01(\x03B\x04\x90\xb5\x18\x03H\x0fR\vcompletedAt\x88\x01\x01\x122\n" +
+	"\x0felapsed_seconds\x18\x12 \x01(\x03B\x04\x90\xb5\x18\x03H\x10R\x0eelapsedSeconds\x88\x01\x01:\x04\x98\xb5\x18\x03B\n" +
 	"\n" +
 	"\b_task_idB\n" +
 	"\n" +
 	"\b_purposeB\x0e\n" +
-	"\f_feature_keyB\x13\n" +
-	"\x11_model_mapping_idB\r\n" +
-	"\v_model_nameB\t\n" +
+	"\f_function_idB\x18\n" +
+	"\x16_function_display_nameB\v\n" +
+	"\t_model_idB\x15\n" +
+	"\x13_model_display_nameB\x0e\n" +
+	"\f_workflow_idB\t\n" +
 	"\a_statusB\x11\n" +
 	"\x0f_status_messageB\r\n" +
 	"\v_error_codeB\r\n" +
@@ -1559,16 +1623,15 @@ const file_hi_media_task_proto_rawDesc = "" +
 	"\n" +
 	"\b_task_id\"C\n" +
 	"\vGetTaskResp\x12.\n" +
-	"\x04task\x18\x01 \x01(\v2\x14.hi.media.TaskDetailB\x04\x90\xb5\x18\x03R\x04task:\x04\x98\xb5\x18\x03\"\xdb\x01\n" +
+	"\x04task\x18\x01 \x01(\v2\x14.hi.media.TaskDetailB\x04\x90\xb5\x18\x03R\x04task:\x04\x98\xb5\x18\x03\"\xc2\x01\n" +
 	"\fListTasksReq\x12.\n" +
 	"\n" +
 	"pagination\x18\x01 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\x12F\n" +
-	"\vfeature_key\x18\x02 \x01(\x0e2\x14.hi.media.FeatureKeyB\n" +
-	"\xbaH\a\x82\x01\x04\x10\x01 \x00H\x00R\n" +
-	"featureKey\x88\x01\x01\x12C\n" +
+	"pagination\x12-\n" +
+	"\vfunction_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x00R\n" +
+	"functionId\x88\x01\x01\x12C\n" +
 	"\bstatuses\x18\x03 \x03(\x0e2\x14.hi.media.TaskStatusB\x11\xbaH\x0e\x92\x01\v\x18\x01\"\a\x82\x01\x04\x10\x01 \x00R\bstatusesB\x0e\n" +
-	"\f_feature_key\"s\n" +
+	"\f_function_id\"s\n" +
 	"\rListTasksResp\x12\x1f\n" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x121\n" +
 	"\x05tasks\x18\x02 \x03(\v2\x15.hi.media.TaskSummaryB\x04\x90\xb5\x18\x03R\x05tasks:\x04\x98\xb5\x18\x03B\b\n" +
@@ -1665,44 +1728,41 @@ var file_hi_media_task_proto_goTypes = []any{
 	(*CancelTaskResp)(nil),            // 17: hi.media.CancelTaskResp
 	(*RecoverSaveTaskReq)(nil),        // 18: hi.media.RecoverSaveTaskReq
 	(*RecoverSaveTaskResp)(nil),       // 19: hi.media.RecoverSaveTaskResp
-	(FeatureKey)(0),                   // 20: hi.media.FeatureKey
-	(*hi.Pagination)(nil),             // 21: hi.Pagination
+	(*hi.Pagination)(nil),             // 20: hi.Pagination
 }
 var file_hi_media_task_proto_depIdxs = []int32{
 	3,  // 0: hi.media.CreateImageToVideoTaskReq.resolution:type_name -> hi.media.VideoResolution
 	3,  // 1: hi.media.CreateTextToVideoTaskReq.resolution:type_name -> hi.media.VideoResolution
 	2,  // 2: hi.media.TaskOutput.media_type:type_name -> hi.media.MediaType
 	0,  // 3: hi.media.TaskSummary.purpose:type_name -> hi.media.TaskPurpose
-	20, // 4: hi.media.TaskSummary.feature_key:type_name -> hi.media.FeatureKey
-	1,  // 5: hi.media.TaskSummary.status:type_name -> hi.media.TaskStatus
-	9,  // 6: hi.media.TaskSummary.output:type_name -> hi.media.TaskOutput
-	10, // 7: hi.media.TaskDetail.summary:type_name -> hi.media.TaskSummary
-	7,  // 8: hi.media.TaskDetail.image_to_video:type_name -> hi.media.ImageToVideoTaskParams
-	8,  // 9: hi.media.TaskDetail.text_to_video:type_name -> hi.media.TextToVideoTaskParams
-	11, // 10: hi.media.GetTaskResp.task:type_name -> hi.media.TaskDetail
-	21, // 11: hi.media.ListTasksReq.pagination:type_name -> hi.Pagination
-	20, // 12: hi.media.ListTasksReq.feature_key:type_name -> hi.media.FeatureKey
-	1,  // 13: hi.media.ListTasksReq.statuses:type_name -> hi.media.TaskStatus
-	10, // 14: hi.media.ListTasksResp.tasks:type_name -> hi.media.TaskSummary
-	1,  // 15: hi.media.CancelTaskResp.status:type_name -> hi.media.TaskStatus
-	1,  // 16: hi.media.RecoverSaveTaskResp.status:type_name -> hi.media.TaskStatus
-	4,  // 17: hi.media.Task.CreateImageToVideo:input_type -> hi.media.CreateImageToVideoTaskReq
-	5,  // 18: hi.media.Task.CreateTextToVideo:input_type -> hi.media.CreateTextToVideoTaskReq
-	12, // 19: hi.media.Task.Get:input_type -> hi.media.GetTaskReq
-	14, // 20: hi.media.Task.List:input_type -> hi.media.ListTasksReq
-	16, // 21: hi.media.Task.Cancel:input_type -> hi.media.CancelTaskReq
-	18, // 22: hi.media.Task.RecoverSave:input_type -> hi.media.RecoverSaveTaskReq
-	6,  // 23: hi.media.Task.CreateImageToVideo:output_type -> hi.media.CreateTaskResp
-	6,  // 24: hi.media.Task.CreateTextToVideo:output_type -> hi.media.CreateTaskResp
-	13, // 25: hi.media.Task.Get:output_type -> hi.media.GetTaskResp
-	15, // 26: hi.media.Task.List:output_type -> hi.media.ListTasksResp
-	17, // 27: hi.media.Task.Cancel:output_type -> hi.media.CancelTaskResp
-	19, // 28: hi.media.Task.RecoverSave:output_type -> hi.media.RecoverSaveTaskResp
-	23, // [23:29] is the sub-list for method output_type
-	17, // [17:23] is the sub-list for method input_type
-	17, // [17:17] is the sub-list for extension type_name
-	17, // [17:17] is the sub-list for extension extendee
-	0,  // [0:17] is the sub-list for field type_name
+	1,  // 4: hi.media.TaskSummary.status:type_name -> hi.media.TaskStatus
+	9,  // 5: hi.media.TaskSummary.output:type_name -> hi.media.TaskOutput
+	10, // 6: hi.media.TaskDetail.summary:type_name -> hi.media.TaskSummary
+	7,  // 7: hi.media.TaskDetail.image_to_video:type_name -> hi.media.ImageToVideoTaskParams
+	8,  // 8: hi.media.TaskDetail.text_to_video:type_name -> hi.media.TextToVideoTaskParams
+	11, // 9: hi.media.GetTaskResp.task:type_name -> hi.media.TaskDetail
+	20, // 10: hi.media.ListTasksReq.pagination:type_name -> hi.Pagination
+	1,  // 11: hi.media.ListTasksReq.statuses:type_name -> hi.media.TaskStatus
+	10, // 12: hi.media.ListTasksResp.tasks:type_name -> hi.media.TaskSummary
+	1,  // 13: hi.media.CancelTaskResp.status:type_name -> hi.media.TaskStatus
+	1,  // 14: hi.media.RecoverSaveTaskResp.status:type_name -> hi.media.TaskStatus
+	4,  // 15: hi.media.Task.CreateImageToVideo:input_type -> hi.media.CreateImageToVideoTaskReq
+	5,  // 16: hi.media.Task.CreateTextToVideo:input_type -> hi.media.CreateTextToVideoTaskReq
+	12, // 17: hi.media.Task.Get:input_type -> hi.media.GetTaskReq
+	14, // 18: hi.media.Task.List:input_type -> hi.media.ListTasksReq
+	16, // 19: hi.media.Task.Cancel:input_type -> hi.media.CancelTaskReq
+	18, // 20: hi.media.Task.RecoverSave:input_type -> hi.media.RecoverSaveTaskReq
+	6,  // 21: hi.media.Task.CreateImageToVideo:output_type -> hi.media.CreateTaskResp
+	6,  // 22: hi.media.Task.CreateTextToVideo:output_type -> hi.media.CreateTaskResp
+	13, // 23: hi.media.Task.Get:output_type -> hi.media.GetTaskResp
+	15, // 24: hi.media.Task.List:output_type -> hi.media.ListTasksResp
+	17, // 25: hi.media.Task.Cancel:output_type -> hi.media.CancelTaskResp
+	19, // 26: hi.media.Task.RecoverSave:output_type -> hi.media.RecoverSaveTaskResp
+	21, // [21:27] is the sub-list for method output_type
+	15, // [15:21] is the sub-list for method input_type
+	15, // [15:15] is the sub-list for extension type_name
+	15, // [15:15] is the sub-list for extension extendee
+	0,  // [0:15] is the sub-list for field type_name
 }
 
 func init() { file_hi_media_task_proto_init() }
@@ -1710,7 +1770,6 @@ func file_hi_media_task_proto_init() {
 	if File_hi_media_task_proto != nil {
 		return
 	}
-	file_hi_media_feature_proto_init()
 	file_hi_media_task_proto_msgTypes[0].OneofWrappers = []any{}
 	file_hi_media_task_proto_msgTypes[1].OneofWrappers = []any{}
 	file_hi_media_task_proto_msgTypes[2].OneofWrappers = []any{}

@@ -23,6 +23,7 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 export 'file.pbenum.dart';
 
+/// 本人可用资产摘要；size_bytes 为字节，created_at 为 Unix 秒。
 class FileSummary extends $pb.GeneratedMessage {
   factory FileSummary({
     $core.String? assetId,
@@ -153,6 +154,7 @@ class FileSummary extends $pb.GeneratedMessage {
   void clearCreatedAt() => $_clearField(7);
 }
 
+/// 分页查询本人 available 资产，不传筛选字段表示不过滤。
 class ListFilesReq extends $pb.GeneratedMessage {
   factory ListFilesReq({
     $1.Pagination? pagination,
@@ -236,6 +238,7 @@ class ListFilesReq extends $pb.GeneratedMessage {
   void clearSource() => $_clearField(3);
 }
 
+/// 返回符合筛选条件的资产总数与当前分页。
 class ListFilesResp extends $pb.GeneratedMessage {
   factory ListFilesResp({
     $core.int? total,
@@ -297,6 +300,7 @@ class ListFilesResp extends $pb.GeneratedMessage {
   $pb.PbList<FileSummary> get files => $_getList(1);
 }
 
+/// 删除本人资产；有有效任务引用时拒绝删除。
 class DeleteFileReq extends $pb.GeneratedMessage {
   factory DeleteFileReq({
     $core.String? assetId,
@@ -351,6 +355,7 @@ class DeleteFileReq extends $pb.GeneratedMessage {
   void clearAssetId() => $_clearField(1);
 }
 
+/// 返回已完成物理删除和实际占用扣减的资产 ID。
 class DeleteFileResp extends $pb.GeneratedMessage {
   factory DeleteFileResp({
     $core.String? assetId,
@@ -405,6 +410,7 @@ class DeleteFileResp extends $pb.GeneratedMessage {
   void clearAssetId() => $_clearField(1);
 }
 
+/// 为本人可用资产申请临时访问地址，资产 ID 不得重复。
 class GetFileAccessUrlsReq extends $pb.GeneratedMessage {
   factory GetFileAccessUrlsReq({
     $core.Iterable<$core.String>? assetIds,
@@ -466,6 +472,7 @@ class GetFileAccessUrlsReq extends $pb.GeneratedMessage {
   void clearPurpose() => $_clearField(2);
 }
 
+/// 临时访问地址，expire_at 为 Unix 秒；不暴露内部存储定位信息。
 class FileAccessUrl extends $pb.GeneratedMessage {
   factory FileAccessUrl({
     $core.String? assetId,
@@ -544,6 +551,7 @@ class FileAccessUrl extends $pb.GeneratedMessage {
   void clearExpireAt() => $_clearField(3);
 }
 
+/// 按资产返回临时访问地址及其过期时间。
 class GetFileAccessUrlsResp extends $pb.GeneratedMessage {
   factory GetFileAccessUrlsResp({
     $core.Iterable<FileAccessUrl>? files,
@@ -596,7 +604,7 @@ class GetFileAccessUrlsResp extends $pb.GeneratedMessage {
 
 /// POST /api/v1/file/upload 的单文件清单项。该上传口为 HiMedia 手写的
 /// multipart/form-data HTTP 接口，不是 gRPC RPC；文件项的 form name
-/// 必须与 client_file_id 一致。
+/// 必须与 metadata 中的 clientFileId 一致，filename 也必须与清单一致。
 class UploadFileMetadata extends $pb.GeneratedMessage {
   factory UploadFileMetadata({
     $core.String? clientFileId,
@@ -649,6 +657,7 @@ class UploadFileMetadata extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<UploadFileMetadata>(create);
   static UploadFileMetadata? _defaultInstance;
 
+  /// 本批内唯一的客户端文件标识，也是对应文件项的 form name。
   @$pb.TagNumber(1)
   $core.String get clientFileId => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -667,6 +676,7 @@ class UploadFileMetadata extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearFilename() => $_clearField(2);
 
+  /// 文件实际字节数；JSON 字段 sizeBytes 必须使用 uint64 十进制字符串。
   @$pb.TagNumber(3)
   $fixnum.Int64 get sizeBytes => $_getI64(2);
   @$pb.TagNumber(3)
@@ -679,8 +689,10 @@ class UploadFileMetadata extends $pb.GeneratedMessage {
 
 /// POST /api/v1/file/upload 的 metadata 项。metadata 必须是 multipart 第一项，
 /// Content-Type 必须是 application/json，且 Content-Disposition 不能携带 filename。
-/// JSON 使用 request_id/client_file_id/filename/size_bytes 这些 snake_case 字段，
-/// 其中 size_bytes 按 uint64 十进制字符串传递。
+/// JSON 仅接受 lowerCamelCase：requestId/files/clientFileId/filename/sizeBytes，
+/// 不兼容 snake_case；其中 sizeBytes 按 uint64 十进制字符串传递。
+/// 例：{"requestId":"upload-001","files":[{"clientFileId":"input","filename":"input.png","sizeBytes":"167483"}]}。
+/// 同一 requestId 重发相同清单返回原批次，内容不一致返回 Aborted。
 class UploadMetadata extends $pb.GeneratedMessage {
   factory UploadMetadata({
     $core.String? requestId,
@@ -729,6 +741,7 @@ class UploadMetadata extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<UploadMetadata>(create);
   static UploadMetadata? _defaultInstance;
 
+  /// 本人范围内的上传幂等键；超时或响应丢失后查询或重发时复用。
   @$pb.TagNumber(1)
   $core.String get requestId => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -742,6 +755,7 @@ class UploadMetadata extends $pb.GeneratedMessage {
   $pb.PbList<UploadFileMetadata> get files => $_getList(1);
 }
 
+/// 单文件上传结果；成功时提供资产、类型和字节数，失败时提供稳定错误码及说明。
 class UploadFileResult extends $pb.GeneratedMessage {
   factory UploadFileResult({
     $core.String? clientFileId,

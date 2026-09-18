@@ -20,6 +20,7 @@ import 'task.pb.dart' as $0;
 
 export 'task.pb.dart';
 
+/// 普通用户视频任务创建、查询、取消和一次性恢复保存。
 @$pb.GrpcServiceName('hi.media.Task')
 class TaskClient extends $grpc.Client {
   /// The hostname for this service.
@@ -32,6 +33,7 @@ class TaskClient extends $grpc.Client {
 
   TaskClient(super.channel, {super.options, super.interceptors});
 
+  /// 创建图生视频任务；只提交 workflow_id 与业务参数，不组合功能或模型 ID。
   $grpc.ResponseFuture<$0.CreateTaskResp> createImageToVideo(
     $0.CreateImageToVideoTaskReq request, {
     $grpc.CallOptions? options,
@@ -39,6 +41,7 @@ class TaskClient extends $grpc.Client {
     return $createUnaryCall(_$createImageToVideo, request, options: options);
   }
 
+  /// 创建文生视频任务；只提交 workflow_id 与业务参数。
   $grpc.ResponseFuture<$0.CreateTaskResp> createTextToVideo(
     $0.CreateTextToVideoTaskReq request, {
     $grpc.CallOptions? options,
@@ -46,6 +49,7 @@ class TaskClient extends $grpc.Client {
     return $createUnaryCall(_$createTextToVideo, request, options: options);
   }
 
+  /// 查询本人任务详情及产物资产 ID。
   $grpc.ResponseFuture<$0.GetTaskResp> get(
     $0.GetTaskReq request, {
     $grpc.CallOptions? options,
@@ -53,6 +57,7 @@ class TaskClient extends $grpc.Client {
     return $createUnaryCall(_$get, request, options: options);
   }
 
+  /// 分页查询本人任务。
   $grpc.ResponseFuture<$0.ListTasksResp> list(
     $0.ListTasksReq request, {
     $grpc.CallOptions? options,
@@ -60,6 +65,7 @@ class TaskClient extends $grpc.Client {
     return $createUnaryCall(_$list, request, options: options);
   }
 
+  /// 按 can_cancel 取消任务；相同任务重复请求返回当前状态。
   $grpc.ResponseFuture<$0.CancelTaskResp> cancel(
     $0.CancelTaskReq request, {
     $grpc.CallOptions? options,
@@ -67,6 +73,7 @@ class TaskClient extends $grpc.Client {
     return $createUnaryCall(_$cancel, request, options: options);
   }
 
+  /// 恢复保存复用原任务，不检查存储额度或未完成任务上限，只受保存并发限制。
   $grpc.ResponseFuture<$0.RecoverSaveTaskResp> recoverSave(
     $0.RecoverSaveTaskReq request, {
     $grpc.CallOptions? options,

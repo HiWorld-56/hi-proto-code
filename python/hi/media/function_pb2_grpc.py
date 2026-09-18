@@ -3,11 +3,12 @@
 import grpc
 
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
-from hi.media import maintenance_manage_pb2 as hi_dot_media_dot_maintenance__manage__pb2
+from hi.media import function_pb2 as hi_dot_media_dot_function__pb2
 
 
-class MaintenanceManageStub(object):
-    """Missing associated documentation comment in .proto file."""
+class FunctionStub(object):
+    """普通用户的功能选择入口。
+    """
 
     def __init__(self, channel):
         """Constructor.
@@ -15,56 +16,87 @@ class MaintenanceManageStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.Get = channel.unary_unary(
-                '/hi.media.MaintenanceManage/Get',
+        self.List = channel.unary_unary(
+                '/hi.media.Function/List',
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-                response_deserializer=hi_dot_media_dot_maintenance__manage__pb2.GetMaintenanceResp.FromString,
+                response_deserializer=hi_dot_media_dot_function__pb2.ListFunctionsResp.FromString,
                 _registered_method=True)
-        self.Set = channel.unary_unary(
-                '/hi.media.MaintenanceManage/Set',
-                request_serializer=hi_dot_media_dot_maintenance__manage__pb2.SetMaintenanceReq.SerializeToString,
-                response_deserializer=hi_dot_media_dot_maintenance__manage__pb2.SetMaintenanceResp.FromString,
+        self.Get = channel.unary_unary(
+                '/hi.media.Function/Get',
+                request_serializer=hi_dot_media_dot_function__pb2.GetFunctionReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_function__pb2.GetFunctionResp.FromString,
                 _registered_method=True)
 
 
-class MaintenanceManageServicer(object):
-    """Missing associated documentation comment in .proto file."""
+class FunctionServicer(object):
+    """普通用户的功能选择入口。
+    """
+
+    def List(self, request, context):
+        """返回系统固定功能 ID 及显示名。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def Get(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def Set(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """返回指定功能及全部已启用工作流，各自携带模型信息与用户参数配置。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
 
-def add_MaintenanceManageServicer_to_server(servicer, server):
+def add_FunctionServicer_to_server(servicer, server):
     rpc_method_handlers = {
+            'List': grpc.unary_unary_rpc_method_handler(
+                    servicer.List,
+                    request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                    response_serializer=hi_dot_media_dot_function__pb2.ListFunctionsResp.SerializeToString,
+            ),
             'Get': grpc.unary_unary_rpc_method_handler(
                     servicer.Get,
-                    request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                    response_serializer=hi_dot_media_dot_maintenance__manage__pb2.GetMaintenanceResp.SerializeToString,
-            ),
-            'Set': grpc.unary_unary_rpc_method_handler(
-                    servicer.Set,
-                    request_deserializer=hi_dot_media_dot_maintenance__manage__pb2.SetMaintenanceReq.FromString,
-                    response_serializer=hi_dot_media_dot_maintenance__manage__pb2.SetMaintenanceResp.SerializeToString,
+                    request_deserializer=hi_dot_media_dot_function__pb2.GetFunctionReq.FromString,
+                    response_serializer=hi_dot_media_dot_function__pb2.GetFunctionResp.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'hi.media.MaintenanceManage', rpc_method_handlers)
+            'hi.media.Function', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('hi.media.MaintenanceManage', rpc_method_handlers)
+    server.add_registered_method_handlers('hi.media.Function', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class MaintenanceManage(object):
-    """Missing associated documentation comment in .proto file."""
+class Function(object):
+    """普通用户的功能选择入口。
+    """
+
+    @staticmethod
+    def List(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.media.Function/List',
+            google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            hi_dot_media_dot_function__pb2.ListFunctionsResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
 
     @staticmethod
     def Get(request,
@@ -80,36 +112,9 @@ class MaintenanceManage(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.MaintenanceManage/Get',
-            google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-            hi_dot_media_dot_maintenance__manage__pb2.GetMaintenanceResp.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def Set(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/hi.media.MaintenanceManage/Set',
-            hi_dot_media_dot_maintenance__manage__pb2.SetMaintenanceReq.SerializeToString,
-            hi_dot_media_dot_maintenance__manage__pb2.SetMaintenanceResp.FromString,
+            '/hi.media.Function/Get',
+            hi_dot_media_dot_function__pb2.GetFunctionReq.SerializeToString,
+            hi_dot_media_dot_function__pb2.GetFunctionResp.FromString,
             options,
             channel_credentials,
             insecure,

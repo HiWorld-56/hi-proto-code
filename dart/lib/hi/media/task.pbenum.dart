@@ -14,6 +14,7 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+/// 任务用途；普通任务和管理试跑共用执行链路。
 class TaskPurpose extends $pb.ProtobufEnum {
   static const TaskPurpose TASK_PURPOSE_UNSPECIFIED =
       TaskPurpose._(0, _omitEnumNames ? '' : 'TASK_PURPOSE_UNSPECIFIED');
@@ -36,11 +37,12 @@ class TaskPurpose extends $pb.ProtobufEnum {
   const TaskPurpose._(super.value, super.name);
 }
 
+/// 用户可见任务状态；内部提交与核对细节使用 status_message 说明。
 class TaskStatus extends $pb.ProtobufEnum {
   static const TaskStatus TASK_STATUS_UNSPECIFIED =
       TaskStatus._(0, _omitEnumNames ? '' : 'TASK_STATUS_UNSPECIFIED');
 
-  /// 等待派发；维护模式下也保持此状态。
+  /// 等待 FIFO 派发。
   static const TaskStatus TASK_STATUS_PENDING =
       TaskStatus._(1, _omitEnumNames ? '' : 'TASK_STATUS_PENDING');
 
@@ -79,6 +81,7 @@ class TaskStatus extends $pb.ProtobufEnum {
   const TaskStatus._(super.value, super.name);
 }
 
+/// 资产媒体类型。
 class MediaType extends $pb.ProtobufEnum {
   static const MediaType MEDIA_TYPE_UNSPECIFIED =
       MediaType._(0, _omitEnumNames ? '' : 'MEDIA_TYPE_UNSPECIFIED');

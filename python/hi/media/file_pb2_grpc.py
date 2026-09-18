@@ -62,19 +62,22 @@ class FileServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def List(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """分页查询本人 available 资产。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def Delete(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """同步删除本人资产并扣减实际占用；仍被任务引用时拒绝，重复删除幂等。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def GetAccessUrls(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """为本人 available 资产签发预览或下载地址，不返回内部存储地址或对象键。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')

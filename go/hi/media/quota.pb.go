@@ -23,11 +23,15 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// 本人存储额度；不包含预占，所有数值单位为字节，JSON 使用十进制字符串。
 type GetQuotaResp struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	TotalBytes     *uint64                `protobuf:"varint,1,opt,name=total_bytes,json=totalBytes,proto3,oneof" json:"total_bytes,omitempty"`
-	UsedBytes      *uint64                `protobuf:"varint,2,opt,name=used_bytes,json=usedBytes,proto3,oneof" json:"used_bytes,omitempty"`
-	AvailableBytes *uint64                `protobuf:"varint,3,opt,name=available_bytes,json=availableBytes,proto3,oneof" json:"available_bytes,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 用户存储总上限。
+	TotalBytes *uint64 `protobuf:"varint,1,opt,name=total_bytes,json=totalBytes,proto3,oneof" json:"total_bytes,omitempty"`
+	// 已确认的实际占用，已受理任务保存后允许超过 total_bytes。
+	UsedBytes *uint64 `protobuf:"varint,2,opt,name=used_bytes,json=usedBytes,proto3,oneof" json:"used_bytes,omitempty"`
+	// max(total_bytes - used_bytes, 0)，不会因超额变为负数。
+	AvailableBytes *uint64 `protobuf:"varint,3,opt,name=available_bytes,json=availableBytes,proto3,oneof" json:"available_bytes,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }

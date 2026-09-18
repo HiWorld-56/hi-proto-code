@@ -6,7 +6,8 @@ from hi.media import task_pb2 as hi_dot_media_dot_task__pb2
 
 
 class TaskStub(object):
-    """Missing associated documentation comment in .proto file."""
+    """普通用户视频任务创建、查询、取消和一次性恢复保存。
+    """
 
     def __init__(self, channel):
         """Constructor.
@@ -47,40 +48,47 @@ class TaskStub(object):
 
 
 class TaskServicer(object):
-    """Missing associated documentation comment in .proto file."""
+    """普通用户视频任务创建、查询、取消和一次性恢复保存。
+    """
 
     def CreateImageToVideo(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """创建图生视频任务；只提交 workflow_id 与业务参数，不组合功能或模型 ID。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def CreateTextToVideo(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """创建文生视频任务；只提交 workflow_id 与业务参数。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def Get(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """查询本人任务详情及产物资产 ID。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def List(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """分页查询本人任务。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def Cancel(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """按 can_cancel 取消任务；相同任务重复请求返回当前状态。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def RecoverSave(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """恢复保存复用原任务，不检查存储额度或未完成任务上限，只受保存并发限制。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -127,7 +135,8 @@ def add_TaskServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class Task(object):
-    """Missing associated documentation comment in .proto file."""
+    """普通用户视频任务创建、查询、取消和一次性恢复保存。
+    """
 
     @staticmethod
     def CreateImageToVideo(request,

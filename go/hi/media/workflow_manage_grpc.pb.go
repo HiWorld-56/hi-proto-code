@@ -19,27 +19,39 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	WorkflowManage_ImportWorkflow_FullMethodName    = "/hi.media.WorkflowManage/ImportWorkflow"
-	WorkflowManage_UpdateWorkflow_FullMethodName    = "/hi.media.WorkflowManage/UpdateWorkflow"
-	WorkflowManage_UpdateDescription_FullMethodName = "/hi.media.WorkflowManage/UpdateDescription"
-	WorkflowManage_Validate_FullMethodName          = "/hi.media.WorkflowManage/Validate"
-	WorkflowManage_Test_FullMethodName              = "/hi.media.WorkflowManage/Test"
-	WorkflowManage_ListTests_FullMethodName         = "/hi.media.WorkflowManage/ListTests"
-	WorkflowManage_List_FullMethodName              = "/hi.media.WorkflowManage/List"
-	WorkflowManage_Get_FullMethodName               = "/hi.media.WorkflowManage/Get"
+	WorkflowManage_Update_FullMethodName          = "/hi.media.WorkflowManage/Update"
+	WorkflowManage_Validate_FullMethodName        = "/hi.media.WorkflowManage/Validate"
+	WorkflowManage_Test_FullMethodName            = "/hi.media.WorkflowManage/Test"
+	WorkflowManage_ListTests_FullMethodName       = "/hi.media.WorkflowManage/ListTests"
+	WorkflowManage_SetDefault_FullMethodName      = "/hi.media.WorkflowManage/SetDefault"
+	WorkflowManage_UpdateSortOrder_FullMethodName = "/hi.media.WorkflowManage/UpdateSortOrder"
+	WorkflowManage_List_FullMethodName            = "/hi.media.WorkflowManage/List"
+	WorkflowManage_Get_FullMethodName             = "/hi.media.WorkflowManage/Get"
 )
 
 // WorkflowManageClient is the client API for WorkflowManage service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 管理员工作流配置、校验、试跑与展示设置。
+// 文件导入/替换使用上述 AUTH_SUPERADMIN multipart HTTP 接口，
+// 不声明 Import/ReplaceFile RPC，不由 grpc-gateway 生成上传路由。
 type WorkflowManageClient interface {
-	ImportWorkflow(ctx context.Context, in *ImportWorkflowReq, opts ...grpc.CallOption) (*ImportWorkflowResp, error)
-	UpdateWorkflow(ctx context.Context, in *UpdateWorkflowReq, opts ...grpc.CallOption) (*UpdateWorkflowResp, error)
-	UpdateDescription(ctx context.Context, in *UpdateWorkflowDescriptionReq, opts ...grpc.CallOption) (*UpdateWorkflowDescriptionResp, error)
+	// 说明和执行配置按 presence 更新；普通任务、试跑与配置修改共用工作流行锁。
+	Update(ctx context.Context, in *UpdateWorkflowReq, opts ...grpc.CallOption) (*UpdateWorkflowResp, error)
+	// 校验当前内容；上游暂时不可用时返回 Unavailable，不覆盖之前的校验结果。
 	Validate(ctx context.Context, in *ValidateWorkflowReq, opts ...grpc.CallOption) (*ValidateWorkflowResp, error)
+	// 使用统一 FIFO 和发起者额度执行真实试跑；成功保存并结算后自动启用草稿。
 	Test(ctx context.Context, in *TestWorkflowReq, opts ...grpc.CallOption) (*TestWorkflowResp, error)
+	// 按工作流分页查询管理试跑记录。
 	ListTests(ctx context.Context, in *ListWorkflowTestsReq, opts ...grpc.CallOption) (*ListWorkflowTestsResp, error)
+	// 管理员手动指定或清除默认项，同一功能最多一个，也允许没有默认项。
+	SetDefault(ctx context.Context, in *SetDefaultWorkflowReq, opts ...grpc.CallOption) (*SetDefaultWorkflowResp, error)
+	// 设置同一功能全部工作流的顺序。
+	UpdateSortOrder(ctx context.Context, in *UpdateWorkflowSortOrderReq, opts ...grpc.CallOption) (*UpdateWorkflowSortOrderResp, error)
+	// 只读取数据库摘要，不下载工作流文件。
 	List(ctx context.Context, in *ListWorkflowsReq, opts ...grpc.CallOption) (*ListWorkflowsResp, error)
+	// 读取当前文件并解析绑定候选节点；object_info 不可用时仍返回可解析的基础节点。
 	Get(ctx context.Context, in *GetWorkflowReq, opts ...grpc.CallOption) (*GetWorkflowResp, error)
 }
 
@@ -51,30 +63,10 @@ func NewWorkflowManageClient(cc grpc.ClientConnInterface) WorkflowManageClient {
 	return &workflowManageClient{cc}
 }
 
-func (c *workflowManageClient) ImportWorkflow(ctx context.Context, in *ImportWorkflowReq, opts ...grpc.CallOption) (*ImportWorkflowResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ImportWorkflowResp)
-	err := c.cc.Invoke(ctx, WorkflowManage_ImportWorkflow_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *workflowManageClient) UpdateWorkflow(ctx context.Context, in *UpdateWorkflowReq, opts ...grpc.CallOption) (*UpdateWorkflowResp, error) {
+func (c *workflowManageClient) Update(ctx context.Context, in *UpdateWorkflowReq, opts ...grpc.CallOption) (*UpdateWorkflowResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UpdateWorkflowResp)
-	err := c.cc.Invoke(ctx, WorkflowManage_UpdateWorkflow_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *workflowManageClient) UpdateDescription(ctx context.Context, in *UpdateWorkflowDescriptionReq, opts ...grpc.CallOption) (*UpdateWorkflowDescriptionResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdateWorkflowDescriptionResp)
-	err := c.cc.Invoke(ctx, WorkflowManage_UpdateDescription_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, WorkflowManage_Update_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -111,6 +103,26 @@ func (c *workflowManageClient) ListTests(ctx context.Context, in *ListWorkflowTe
 	return out, nil
 }
 
+func (c *workflowManageClient) SetDefault(ctx context.Context, in *SetDefaultWorkflowReq, opts ...grpc.CallOption) (*SetDefaultWorkflowResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SetDefaultWorkflowResp)
+	err := c.cc.Invoke(ctx, WorkflowManage_SetDefault_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *workflowManageClient) UpdateSortOrder(ctx context.Context, in *UpdateWorkflowSortOrderReq, opts ...grpc.CallOption) (*UpdateWorkflowSortOrderResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateWorkflowSortOrderResp)
+	err := c.cc.Invoke(ctx, WorkflowManage_UpdateSortOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *workflowManageClient) List(ctx context.Context, in *ListWorkflowsReq, opts ...grpc.CallOption) (*ListWorkflowsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListWorkflowsResp)
@@ -134,14 +146,26 @@ func (c *workflowManageClient) Get(ctx context.Context, in *GetWorkflowReq, opts
 // WorkflowManageServer is the server API for WorkflowManage service.
 // All implementations should embed UnimplementedWorkflowManageServer
 // for forward compatibility.
+//
+// 管理员工作流配置、校验、试跑与展示设置。
+// 文件导入/替换使用上述 AUTH_SUPERADMIN multipart HTTP 接口，
+// 不声明 Import/ReplaceFile RPC，不由 grpc-gateway 生成上传路由。
 type WorkflowManageServer interface {
-	ImportWorkflow(context.Context, *ImportWorkflowReq) (*ImportWorkflowResp, error)
-	UpdateWorkflow(context.Context, *UpdateWorkflowReq) (*UpdateWorkflowResp, error)
-	UpdateDescription(context.Context, *UpdateWorkflowDescriptionReq) (*UpdateWorkflowDescriptionResp, error)
+	// 说明和执行配置按 presence 更新；普通任务、试跑与配置修改共用工作流行锁。
+	Update(context.Context, *UpdateWorkflowReq) (*UpdateWorkflowResp, error)
+	// 校验当前内容；上游暂时不可用时返回 Unavailable，不覆盖之前的校验结果。
 	Validate(context.Context, *ValidateWorkflowReq) (*ValidateWorkflowResp, error)
+	// 使用统一 FIFO 和发起者额度执行真实试跑；成功保存并结算后自动启用草稿。
 	Test(context.Context, *TestWorkflowReq) (*TestWorkflowResp, error)
+	// 按工作流分页查询管理试跑记录。
 	ListTests(context.Context, *ListWorkflowTestsReq) (*ListWorkflowTestsResp, error)
+	// 管理员手动指定或清除默认项，同一功能最多一个，也允许没有默认项。
+	SetDefault(context.Context, *SetDefaultWorkflowReq) (*SetDefaultWorkflowResp, error)
+	// 设置同一功能全部工作流的顺序。
+	UpdateSortOrder(context.Context, *UpdateWorkflowSortOrderReq) (*UpdateWorkflowSortOrderResp, error)
+	// 只读取数据库摘要，不下载工作流文件。
 	List(context.Context, *ListWorkflowsReq) (*ListWorkflowsResp, error)
+	// 读取当前文件并解析绑定候选节点；object_info 不可用时仍返回可解析的基础节点。
 	Get(context.Context, *GetWorkflowReq) (*GetWorkflowResp, error)
 }
 
@@ -152,14 +176,8 @@ type WorkflowManageServer interface {
 // pointer dereference when methods are called.
 type UnimplementedWorkflowManageServer struct{}
 
-func (UnimplementedWorkflowManageServer) ImportWorkflow(context.Context, *ImportWorkflowReq) (*ImportWorkflowResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ImportWorkflow not implemented")
-}
-func (UnimplementedWorkflowManageServer) UpdateWorkflow(context.Context, *UpdateWorkflowReq) (*UpdateWorkflowResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method UpdateWorkflow not implemented")
-}
-func (UnimplementedWorkflowManageServer) UpdateDescription(context.Context, *UpdateWorkflowDescriptionReq) (*UpdateWorkflowDescriptionResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method UpdateDescription not implemented")
+func (UnimplementedWorkflowManageServer) Update(context.Context, *UpdateWorkflowReq) (*UpdateWorkflowResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
 }
 func (UnimplementedWorkflowManageServer) Validate(context.Context, *ValidateWorkflowReq) (*ValidateWorkflowResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Validate not implemented")
@@ -169,6 +187,12 @@ func (UnimplementedWorkflowManageServer) Test(context.Context, *TestWorkflowReq)
 }
 func (UnimplementedWorkflowManageServer) ListTests(context.Context, *ListWorkflowTestsReq) (*ListWorkflowTestsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListTests not implemented")
+}
+func (UnimplementedWorkflowManageServer) SetDefault(context.Context, *SetDefaultWorkflowReq) (*SetDefaultWorkflowResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetDefault not implemented")
+}
+func (UnimplementedWorkflowManageServer) UpdateSortOrder(context.Context, *UpdateWorkflowSortOrderReq) (*UpdateWorkflowSortOrderResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateSortOrder not implemented")
 }
 func (UnimplementedWorkflowManageServer) List(context.Context, *ListWorkflowsReq) (*ListWorkflowsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
@@ -196,56 +220,20 @@ func RegisterWorkflowManageServer(s grpc.ServiceRegistrar, srv WorkflowManageSer
 	s.RegisterService(&WorkflowManage_ServiceDesc, srv)
 }
 
-func _WorkflowManage_ImportWorkflow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ImportWorkflowReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(WorkflowManageServer).ImportWorkflow(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: WorkflowManage_ImportWorkflow_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WorkflowManageServer).ImportWorkflow(ctx, req.(*ImportWorkflowReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _WorkflowManage_UpdateWorkflow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _WorkflowManage_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateWorkflowReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(WorkflowManageServer).UpdateWorkflow(ctx, in)
+		return srv.(WorkflowManageServer).Update(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: WorkflowManage_UpdateWorkflow_FullMethodName,
+		FullMethod: WorkflowManage_Update_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WorkflowManageServer).UpdateWorkflow(ctx, req.(*UpdateWorkflowReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _WorkflowManage_UpdateDescription_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateWorkflowDescriptionReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(WorkflowManageServer).UpdateDescription(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: WorkflowManage_UpdateDescription_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WorkflowManageServer).UpdateDescription(ctx, req.(*UpdateWorkflowDescriptionReq))
+		return srv.(WorkflowManageServer).Update(ctx, req.(*UpdateWorkflowReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -304,6 +292,42 @@ func _WorkflowManage_ListTests_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _WorkflowManage_SetDefault_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetDefaultWorkflowReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WorkflowManageServer).SetDefault(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WorkflowManage_SetDefault_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WorkflowManageServer).SetDefault(ctx, req.(*SetDefaultWorkflowReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WorkflowManage_UpdateSortOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateWorkflowSortOrderReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WorkflowManageServer).UpdateSortOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WorkflowManage_UpdateSortOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WorkflowManageServer).UpdateSortOrder(ctx, req.(*UpdateWorkflowSortOrderReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _WorkflowManage_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListWorkflowsReq)
 	if err := dec(in); err != nil {
@@ -348,16 +372,8 @@ var WorkflowManage_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*WorkflowManageServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ImportWorkflow",
-			Handler:    _WorkflowManage_ImportWorkflow_Handler,
-		},
-		{
-			MethodName: "UpdateWorkflow",
-			Handler:    _WorkflowManage_UpdateWorkflow_Handler,
-		},
-		{
-			MethodName: "UpdateDescription",
-			Handler:    _WorkflowManage_UpdateDescription_Handler,
+			MethodName: "Update",
+			Handler:    _WorkflowManage_Update_Handler,
 		},
 		{
 			MethodName: "Validate",
@@ -370,6 +386,14 @@ var WorkflowManage_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListTests",
 			Handler:    _WorkflowManage_ListTests_Handler,
+		},
+		{
+			MethodName: "SetDefault",
+			Handler:    _WorkflowManage_SetDefault_Handler,
+		},
+		{
+			MethodName: "UpdateSortOrder",
+			Handler:    _WorkflowManage_UpdateSortOrder_Handler,
 		},
 		{
 			MethodName: "List",

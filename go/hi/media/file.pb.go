@@ -23,6 +23,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// 资产来源，区分用户上传和任务生成。
 type FileSource int32
 
 const (
@@ -72,6 +73,7 @@ func (FileSource) EnumDescriptor() ([]byte, []int) {
 	return file_hi_media_file_proto_rawDescGZIP(), []int{0}
 }
 
+// 临时访问地址的用途，决定预览或下载响应行为。
 type FileAccessPurpose int32
 
 const (
@@ -121,6 +123,7 @@ func (FileAccessPurpose) EnumDescriptor() ([]byte, []int) {
 	return file_hi_media_file_proto_rawDescGZIP(), []int{1}
 }
 
+// 上传批次状态；COMPLETED 表示所有文件已有结果，不代表全部成功。
 type UploadStatus int32
 
 const (
@@ -170,6 +173,7 @@ func (UploadStatus) EnumDescriptor() ([]byte, []int) {
 	return file_hi_media_file_proto_rawDescGZIP(), []int{2}
 }
 
+// 批次内单文件的处理状态。
 type UploadFileStatus int32
 
 const (
@@ -225,6 +229,7 @@ func (UploadFileStatus) EnumDescriptor() ([]byte, []int) {
 	return file_hi_media_file_proto_rawDescGZIP(), []int{3}
 }
 
+// 本人可用资产摘要；size_bytes 为字节，created_at 为 Unix 秒。
 type FileSummary struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	AssetId       *string                `protobuf:"bytes,1,opt,name=asset_id,json=assetId,proto3,oneof" json:"asset_id,omitempty"`
@@ -317,6 +322,7 @@ func (x *FileSummary) GetCreatedAt() int64 {
 	return 0
 }
 
+// 分页查询本人 available 资产，不传筛选字段表示不过滤。
 type ListFilesReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Pagination    *hi.Pagination         `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
@@ -377,6 +383,7 @@ func (x *ListFilesReq) GetSource() FileSource {
 	return FileSource_FILE_SOURCE_UNSPECIFIED
 }
 
+// 返回符合筛选条件的资产总数与当前分页。
 type ListFilesResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Total         *int32                 `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
@@ -429,6 +436,7 @@ func (x *ListFilesResp) GetFiles() []*FileSummary {
 	return nil
 }
 
+// 删除本人资产；有有效任务引用时拒绝删除。
 type DeleteFileReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	AssetId       *string                `protobuf:"bytes,1,opt,name=asset_id,json=assetId,proto3,oneof" json:"asset_id,omitempty"`
@@ -473,6 +481,7 @@ func (x *DeleteFileReq) GetAssetId() string {
 	return ""
 }
 
+// 返回已完成物理删除和实际占用扣减的资产 ID。
 type DeleteFileResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	AssetId       *string                `protobuf:"bytes,1,opt,name=asset_id,json=assetId,proto3,oneof" json:"asset_id,omitempty"`
@@ -517,6 +526,7 @@ func (x *DeleteFileResp) GetAssetId() string {
 	return ""
 }
 
+// 为本人可用资产申请临时访问地址，资产 ID 不得重复。
 type GetFileAccessUrlsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	AssetIds      []string               `protobuf:"bytes,1,rep,name=asset_ids,json=assetIds,proto3" json:"asset_ids,omitempty"`
@@ -569,6 +579,7 @@ func (x *GetFileAccessUrlsReq) GetPurpose() FileAccessPurpose {
 	return FileAccessPurpose_FILE_ACCESS_PURPOSE_UNSPECIFIED
 }
 
+// 临时访问地址，expire_at 为 Unix 秒；不暴露内部存储定位信息。
 type FileAccessUrl struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	AssetId       *string                `protobuf:"bytes,1,opt,name=asset_id,json=assetId,proto3,oneof" json:"asset_id,omitempty"`
@@ -629,6 +640,7 @@ func (x *FileAccessUrl) GetExpireAt() int64 {
 	return 0
 }
 
+// 按资产返回临时访问地址及其过期时间。
 type GetFileAccessUrlsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Files         []*FileAccessUrl       `protobuf:"bytes,1,rep,name=files,proto3" json:"files,omitempty"`
@@ -675,12 +687,14 @@ func (x *GetFileAccessUrlsResp) GetFiles() []*FileAccessUrl {
 
 // POST /api/v1/file/upload 的单文件清单项。该上传口为 HiMedia 手写的
 // multipart/form-data HTTP 接口，不是 gRPC RPC；文件项的 form name
-// 必须与 client_file_id 一致。
+// 必须与 metadata 中的 clientFileId 一致，filename 也必须与清单一致。
 type UploadFileMetadata struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	ClientFileId  *string                `protobuf:"bytes,1,opt,name=client_file_id,json=clientFileId,proto3,oneof" json:"client_file_id,omitempty"`
-	Filename      *string                `protobuf:"bytes,2,opt,name=filename,proto3,oneof" json:"filename,omitempty"`
-	SizeBytes     *uint64                `protobuf:"varint,3,opt,name=size_bytes,json=sizeBytes,proto3,oneof" json:"size_bytes,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 本批内唯一的客户端文件标识，也是对应文件项的 form name。
+	ClientFileId *string `protobuf:"bytes,1,opt,name=client_file_id,json=clientFileId,proto3,oneof" json:"client_file_id,omitempty"`
+	Filename     *string `protobuf:"bytes,2,opt,name=filename,proto3,oneof" json:"filename,omitempty"`
+	// 文件实际字节数；JSON 字段 sizeBytes 必须使用 uint64 十进制字符串。
+	SizeBytes     *uint64 `protobuf:"varint,3,opt,name=size_bytes,json=sizeBytes,proto3,oneof" json:"size_bytes,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -738,12 +752,15 @@ func (x *UploadFileMetadata) GetSizeBytes() uint64 {
 
 // POST /api/v1/file/upload 的 metadata 项。metadata 必须是 multipart 第一项，
 // Content-Type 必须是 application/json，且 Content-Disposition 不能携带 filename。
-// JSON 使用 request_id/client_file_id/filename/size_bytes 这些 snake_case 字段，
-// 其中 size_bytes 按 uint64 十进制字符串传递。
+// JSON 仅接受 lowerCamelCase：requestId/files/clientFileId/filename/sizeBytes，
+// 不兼容 snake_case；其中 sizeBytes 按 uint64 十进制字符串传递。
+// 例：{"requestId":"upload-001","files":[{"clientFileId":"input","filename":"input.png","sizeBytes":"167483"}]}。
+// 同一 requestId 重发相同清单返回原批次，内容不一致返回 Aborted。
 type UploadMetadata struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	RequestId     *string                `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
-	Files         []*UploadFileMetadata  `protobuf:"bytes,2,rep,name=files,proto3" json:"files,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 本人范围内的上传幂等键；超时或响应丢失后查询或重发时复用。
+	RequestId     *string               `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
+	Files         []*UploadFileMetadata `protobuf:"bytes,2,rep,name=files,proto3" json:"files,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -792,6 +809,7 @@ func (x *UploadMetadata) GetFiles() []*UploadFileMetadata {
 	return nil
 }
 
+// 单文件上传结果；成功时提供资产、类型和字节数，失败时提供稳定错误码及说明。
 type UploadFileResult struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ClientFileId  *string                `protobuf:"bytes,1,opt,name=client_file_id,json=clientFileId,proto3,oneof" json:"client_file_id,omitempty"`

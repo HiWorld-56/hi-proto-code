@@ -26,7 +26,10 @@ const (
 // QuotaClient is the client API for Quota service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 用户存储总额度查询；新任务在实际占用达到上限时拒绝受理。
 type QuotaClient interface {
+	// 返回当前用户的总上限、实际占用和可用量。
 	Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetQuotaResp, error)
 }
 
@@ -51,7 +54,10 @@ func (c *quotaClient) Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.C
 // QuotaServer is the server API for Quota service.
 // All implementations should embed UnimplementedQuotaServer
 // for forward compatibility.
+//
+// 用户存储总额度查询；新任务在实际占用达到上限时拒绝受理。
 type QuotaServer interface {
+	// 返回当前用户的总上限、实际占用和可用量。
 	Get(context.Context, *emptypb.Empty) (*GetQuotaResp, error)
 }
 

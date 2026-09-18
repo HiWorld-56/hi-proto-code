@@ -1,6 +1,6 @@
 // This is a generated file - do not edit.
 //
-// Generated from hi/media/feature.proto.
+// Generated from hi/media/function.proto.
 
 // @dart = 3.3
 
@@ -14,23 +14,6 @@
 import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
-
-@$core.Deprecated('Use featureKeyDescriptor instead')
-const FeatureKey$json = {
-  '1': 'FeatureKey',
-  '2': [
-    {'1': 'FEATURE_KEY_UNSPECIFIED', '2': 0},
-    {'1': 'FEATURE_KEY_TEXT_TO_IMAGE', '2': 1},
-    {'1': 'FEATURE_KEY_IMAGE_TO_VIDEO', '2': 2},
-    {'1': 'FEATURE_KEY_TEXT_TO_VIDEO', '2': 3},
-  ],
-};
-
-/// Descriptor for `FeatureKey`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List featureKeyDescriptor = $convert.base64Decode(
-    'CgpGZWF0dXJlS2V5EhsKF0ZFQVRVUkVfS0VZX1VOU1BFQ0lGSUVEEAASHQoZRkVBVFVSRV9LRV'
-    'lfVEVYVF9UT19JTUFHRRABEh4KGkZFQVRVUkVfS0VZX0lNQUdFX1RPX1ZJREVPEAISHQoZRkVB'
-    'VFVSRV9LRVlfVEVYVF9UT19WSURFTxAD');
 
 @$core.Deprecated('Use textLimitDescriptor instead')
 const TextLimit$json = {
@@ -288,29 +271,151 @@ final $typed_data.Uint8List videoParameterConfigDescriptor = $convert.base64Deco
     'Rpb25TZWNvbmRzEj4KCmZyYW1lX3JhdGUYBSABKAsyGS5oaS5tZWRpYS5GcmFtZVJhdGVDb25m'
     'aWdCBJC1GAFSCWZyYW1lUmF0ZToEmLUYAQ==');
 
-@$core.Deprecated('Use modelOptionDescriptor instead')
-const ModelOption$json = {
-  '1': 'ModelOption',
+@$core.Deprecated('Use functionSummaryDescriptor instead')
+const FunctionSummary$json = {
+  '1': 'FunctionSummary',
   '2': [
     {
-      '1': 'model_mapping_id',
+      '1': 'function_id',
       '3': 1,
       '4': 1,
       '5': 9,
       '8': {},
       '9': 0,
-      '10': 'modelMappingId',
+      '10': 'functionId',
       '17': true
     },
     {
-      '1': 'name',
+      '1': 'display_name',
       '3': 2,
       '4': 1,
       '5': 9,
       '8': {},
       '9': 1,
-      '10': 'name',
+      '10': 'displayName',
       '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_function_id'},
+    {'1': '_display_name'},
+  ],
+};
+
+/// Descriptor for `FunctionSummary`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List functionSummaryDescriptor = $convert.base64Decode(
+    'Cg9GdW5jdGlvblN1bW1hcnkSKgoLZnVuY3Rpb25faWQYASABKAlCBJC1GAFIAFIKZnVuY3Rpb2'
+    '5JZIgBARIsCgxkaXNwbGF5X25hbWUYAiABKAlCBJC1GAFIAVILZGlzcGxheU5hbWWIAQE6BJi1'
+    'GAFCDgoMX2Z1bmN0aW9uX2lkQg8KDV9kaXNwbGF5X25hbWU=');
+
+@$core.Deprecated('Use listFunctionsRespDescriptor instead')
+const ListFunctionsResp$json = {
+  '1': 'ListFunctionsResp',
+  '2': [
+    {
+      '1': 'functions',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.media.FunctionSummary',
+      '8': {},
+      '10': 'functions'
+    },
+  ],
+  '7': {},
+};
+
+/// Descriptor for `ListFunctionsResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listFunctionsRespDescriptor = $convert.base64Decode(
+    'ChFMaXN0RnVuY3Rpb25zUmVzcBI9CglmdW5jdGlvbnMYASADKAsyGS5oaS5tZWRpYS5GdW5jdG'
+    'lvblN1bW1hcnlCBJC1GAFSCWZ1bmN0aW9uczoEmLUYAQ==');
+
+@$core.Deprecated('Use getFunctionReqDescriptor instead')
+const GetFunctionReq$json = {
+  '1': 'GetFunctionReq',
+  '2': [
+    {
+      '1': 'function_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'functionId',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_function_id'},
+  ],
+};
+
+/// Descriptor for `GetFunctionReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getFunctionReqDescriptor = $convert.base64Decode(
+    'Cg5HZXRGdW5jdGlvblJlcRIwCgtmdW5jdGlvbl9pZBgBIAEoCUIKukgHyAEBcgIQAUgAUgpmdW'
+    '5jdGlvbklkiAEBQg4KDF9mdW5jdGlvbl9pZA==');
+
+@$core.Deprecated('Use workflowModelOptionDescriptor instead')
+const WorkflowModelOption$json = {
+  '1': 'WorkflowModelOption',
+  '2': [
+    {
+      '1': 'model_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'modelId',
+      '17': true
+    },
+    {
+      '1': 'display_name',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'displayName',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_model_id'},
+    {'1': '_display_name'},
+  ],
+};
+
+/// Descriptor for `WorkflowModelOption`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List workflowModelOptionDescriptor = $convert.base64Decode(
+    'ChNXb3JrZmxvd01vZGVsT3B0aW9uEiQKCG1vZGVsX2lkGAEgASgJQgSQtRgBSABSB21vZGVsSW'
+    'SIAQESLAoMZGlzcGxheV9uYW1lGAIgASgJQgSQtRgBSAFSC2Rpc3BsYXlOYW1liAEBOgSYtRgB'
+    'QgsKCV9tb2RlbF9pZEIPCg1fZGlzcGxheV9uYW1l');
+
+@$core.Deprecated('Use workflowOptionDescriptor instead')
+const WorkflowOption$json = {
+  '1': 'WorkflowOption',
+  '2': [
+    {
+      '1': 'workflow_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'workflowId',
+      '17': true
+    },
+    {
+      '1': 'model',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.WorkflowModelOption',
+      '8': {},
+      '10': 'model'
     },
     {
       '1': 'is_default',
@@ -318,7 +423,7 @@ const ModelOption$json = {
       '4': 1,
       '5': 8,
       '8': {},
-      '9': 2,
+      '9': 1,
       '10': 'isDefault',
       '17': true
     },
@@ -328,7 +433,7 @@ const ModelOption$json = {
       '4': 1,
       '5': 9,
       '8': {},
-      '9': 3,
+      '9': 2,
       '10': 'description',
       '17': true
     },
@@ -344,82 +449,50 @@ const ModelOption$json = {
   ],
   '7': {},
   '8': [
-    {'1': '_model_mapping_id'},
-    {'1': '_name'},
+    {'1': '_workflow_id'},
     {'1': '_is_default'},
     {'1': '_description'},
   ],
 };
 
-/// Descriptor for `ModelOption`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List modelOptionDescriptor = $convert.base64Decode(
-    'CgtNb2RlbE9wdGlvbhIzChBtb2RlbF9tYXBwaW5nX2lkGAEgASgJQgSQtRgBSABSDm1vZGVsTW'
-    'FwcGluZ0lkiAEBEh0KBG5hbWUYAiABKAlCBJC1GAFIAVIEbmFtZYgBARIoCgppc19kZWZhdWx0'
-    'GAMgASgIQgSQtRgBSAJSCWlzRGVmYXVsdIgBARIrCgtkZXNjcmlwdGlvbhgEIAEoCUIEkLUYAU'
-    'gDUgtkZXNjcmlwdGlvbogBARJPChBwYXJhbWV0ZXJfY29uZmlnGAUgASgLMh4uaGkubWVkaWEu'
-    'VmlkZW9QYXJhbWV0ZXJDb25maWdCBJC1GAFSD3BhcmFtZXRlckNvbmZpZzoEmLUYAUITChFfbW'
-    '9kZWxfbWFwcGluZ19pZEIHCgVfbmFtZUINCgtfaXNfZGVmYXVsdEIOCgxfZGVzY3JpcHRpb24=');
+/// Descriptor for `WorkflowOption`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List workflowOptionDescriptor = $convert.base64Decode(
+    'Cg5Xb3JrZmxvd09wdGlvbhIqCgt3b3JrZmxvd19pZBgBIAEoCUIEkLUYAUgAUgp3b3JrZmxvd0'
+    'lkiAEBEjkKBW1vZGVsGAIgASgLMh0uaGkubWVkaWEuV29ya2Zsb3dNb2RlbE9wdGlvbkIEkLUY'
+    'AVIFbW9kZWwSKAoKaXNfZGVmYXVsdBgDIAEoCEIEkLUYAUgBUglpc0RlZmF1bHSIAQESKwoLZG'
+    'VzY3JpcHRpb24YBCABKAlCBJC1GAFIAlILZGVzY3JpcHRpb26IAQESTwoQcGFyYW1ldGVyX2Nv'
+    'bmZpZxgFIAEoCzIeLmhpLm1lZGlhLlZpZGVvUGFyYW1ldGVyQ29uZmlnQgSQtRgBUg9wYXJhbW'
+    'V0ZXJDb25maWc6BJi1GAFCDgoMX3dvcmtmbG93X2lkQg0KC19pc19kZWZhdWx0Qg4KDF9kZXNj'
+    'cmlwdGlvbg==');
 
-@$core.Deprecated('Use getFeatureReqDescriptor instead')
-const GetFeatureReq$json = {
-  '1': 'GetFeatureReq',
+@$core.Deprecated('Use getFunctionRespDescriptor instead')
+const GetFunctionResp$json = {
+  '1': 'GetFunctionResp',
   '2': [
     {
-      '1': 'feature_key',
+      '1': 'function',
       '3': 1,
       '4': 1,
-      '5': 14,
-      '6': '.hi.media.FeatureKey',
+      '5': 11,
+      '6': '.hi.media.FunctionSummary',
       '8': {},
-      '9': 0,
-      '10': 'featureKey',
-      '17': true
-    },
-  ],
-  '8': [
-    {'1': '_feature_key'},
-  ],
-};
-
-/// Descriptor for `GetFeatureReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getFeatureReqDescriptor = $convert.base64Decode(
-    'Cg1HZXRGZWF0dXJlUmVxEkkKC2ZlYXR1cmVfa2V5GAEgASgOMhQuaGkubWVkaWEuRmVhdHVyZU'
-    'tleUINukgKyAEBggEEEAEgAEgAUgpmZWF0dXJlS2V5iAEBQg4KDF9mZWF0dXJlX2tleQ==');
-
-@$core.Deprecated('Use getFeatureRespDescriptor instead')
-const GetFeatureResp$json = {
-  '1': 'GetFeatureResp',
-  '2': [
-    {
-      '1': 'feature_key',
-      '3': 1,
-      '4': 1,
-      '5': 14,
-      '6': '.hi.media.FeatureKey',
-      '8': {},
-      '9': 0,
-      '10': 'featureKey',
-      '17': true
+      '10': 'function'
     },
     {
-      '1': 'model_options',
+      '1': 'workflows',
       '3': 2,
       '4': 3,
       '5': 11,
-      '6': '.hi.media.ModelOption',
+      '6': '.hi.media.WorkflowOption',
       '8': {},
-      '10': 'modelOptions'
+      '10': 'workflows'
     },
   ],
   '7': {},
-  '8': [
-    {'1': '_feature_key'},
-  ],
 };
 
-/// Descriptor for `GetFeatureResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getFeatureRespDescriptor = $convert.base64Decode(
-    'Cg5HZXRGZWF0dXJlUmVzcBJACgtmZWF0dXJlX2tleRgBIAEoDjIULmhpLm1lZGlhLkZlYXR1cm'
-    'VLZXlCBJC1GAFIAFIKZmVhdHVyZUtleYgBARJACg1tb2RlbF9vcHRpb25zGAIgAygLMhUuaGku'
-    'bWVkaWEuTW9kZWxPcHRpb25CBJC1GAFSDG1vZGVsT3B0aW9uczoEmLUYAUIOCgxfZmVhdHVyZV'
-    '9rZXk=');
+/// Descriptor for `GetFunctionResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getFunctionRespDescriptor = $convert.base64Decode(
+    'Cg9HZXRGdW5jdGlvblJlc3ASOwoIZnVuY3Rpb24YASABKAsyGS5oaS5tZWRpYS5GdW5jdGlvbl'
+    'N1bW1hcnlCBJC1GAFSCGZ1bmN0aW9uEjwKCXdvcmtmbG93cxgCIAMoCzIYLmhpLm1lZGlhLldv'
+    'cmtmbG93T3B0aW9uQgSQtRgBUgl3b3JrZmxvd3M6BJi1GAE=');

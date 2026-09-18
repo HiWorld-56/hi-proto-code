@@ -23,12 +23,13 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// 工作流生命周期状态，修改执行内容后回到草稿。
 type WorkflowStatus int32
 
 const (
 	WorkflowStatus_WORKFLOW_STATUS_UNSPECIFIED WorkflowStatus = 0
 	WorkflowStatus_WORKFLOW_STATUS_DRAFT       WorkflowStatus = 1
-	// 最近校验通过的草稿在管理试跑完整成功后自动进入 ENABLED；是否对用户可用仍由映射决定。
+	// 最近校验通过的草稿在试跑完整成功后自动启用，出现在 Function.Get 的可用工作流中。
 	WorkflowStatus_WORKFLOW_STATUS_ENABLED WorkflowStatus = 2
 )
 
@@ -73,6 +74,7 @@ func (WorkflowStatus) EnumDescriptor() ([]byte, []int) {
 	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{0}
 }
 
+// 当前内容的最近静态校验状态；修改执行内容后重置。
 type WorkflowValidationStatus int32
 
 const (
@@ -123,6 +125,7 @@ func (WorkflowValidationStatus) EnumDescriptor() ([]byte, []int) {
 	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{1}
 }
 
+// 校验问题严重程度；任意 ERROR 阻止试跑。
 type WorkflowIssueSeverity int32
 
 const (
@@ -172,6 +175,7 @@ func (WorkflowIssueSeverity) EnumDescriptor() ([]byte, []int) {
 	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{2}
 }
 
+// 依赖类型，区分节点实现与 Loader 文件。
 type WorkflowDependencyKind int32
 
 const (
@@ -221,10 +225,13 @@ func (WorkflowDependencyKind) EnumDescriptor() ([]byte, []int) {
 	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{3}
 }
 
+// 将一个业务参数绑定到一个具体节点输入，不支持多目标绑定。
 type WorkflowInputBinding struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	NodeId        *string                `protobuf:"bytes,1,opt,name=node_id,json=nodeId,proto3,oneof" json:"node_id,omitempty"`
-	InputName     *string                `protobuf:"bytes,2,opt,name=input_name,json=inputName,proto3,oneof" json:"input_name,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// API JSON 中的字符串节点 ID，可包含冒号。
+	NodeId *string `protobuf:"bytes,1,opt,name=node_id,json=nodeId,proto3,oneof" json:"node_id,omitempty"`
+	// inputs 中的精确键名，包括动态节点中的点号。
+	InputName     *string `protobuf:"bytes,2,opt,name=input_name,json=inputName,proto3,oneof" json:"input_name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -273,6 +280,7 @@ func (x *WorkflowInputBinding) GetInputName() string {
 	return ""
 }
 
+// 唯一主输出 SaveVideo 节点，用于解析 history，不绑定 output_name。
 type WorkflowOutputConfig struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 主输出只绑定节点；后端按节点 class_type 使用固定 history 解析器。
@@ -318,6 +326,7 @@ func (x *WorkflowOutputConfig) GetNodeId() string {
 	return ""
 }
 
+// 完整字符串选项及其写入节点，适用于宽高比。
 type WorkflowStringOptionInput struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Binding       *WorkflowInputBinding  `protobuf:"bytes,1,opt,name=binding,proto3" json:"binding,omitempty"`
@@ -370,6 +379,7 @@ func (x *WorkflowStringOptionInput) GetValues() *StringOptionConfig {
 	return nil
 }
 
+// 规范十进制选项及其写入节点，适用于像素量。
 type WorkflowDecimalOptionInput struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Binding       *WorkflowInputBinding  `protobuf:"bytes,1,opt,name=binding,proto3" json:"binding,omitempty"`
@@ -422,6 +432,7 @@ func (x *WorkflowDecimalOptionInput) GetValues() *DecimalOptionConfig {
 	return nil
 }
 
+// 正整数范围及其写入节点，适用于视频时长。
 type WorkflowIntRangeInput struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Binding       *WorkflowInputBinding  `protobuf:"bytes,1,opt,name=binding,proto3" json:"binding,omitempty"`
@@ -474,10 +485,12 @@ func (x *WorkflowIntRangeInput) GetValues() *IntRangeConfig {
 	return nil
 }
 
+// 管理员固定文本输入，不向普通用户开放。
 type WorkflowFixedTextInput struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Binding       *WorkflowInputBinding  `protobuf:"bytes,1,opt,name=binding,proto3" json:"binding,omitempty"`
-	Value         *string                `protobuf:"bytes,2,opt,name=value,proto3,oneof" json:"value,omitempty"`
+	state   protoimpl.MessageState `protogen:"open.v1"`
+	Binding *WorkflowInputBinding  `protobuf:"bytes,1,opt,name=binding,proto3" json:"binding,omitempty"`
+	// 管理员固定文本，提供本消息时必须填写，不作为普通用户参数。
+	Value         *string `protobuf:"bytes,2,opt,name=value,proto3,oneof" json:"value,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -526,6 +539,7 @@ func (x *WorkflowFixedTextInput) GetValue() string {
 	return ""
 }
 
+// 用户可选帧率的范围和绑定节点。
 type WorkflowSelectableFrameRate struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Binding       *WorkflowInputBinding  `protobuf:"bytes,1,opt,name=binding,proto3" json:"binding,omitempty"`
@@ -578,6 +592,7 @@ func (x *WorkflowSelectableFrameRate) GetValues() *IntRangeConfig {
 	return nil
 }
 
+// 帧率配置，选择用户可调或工作流固定值。
 type WorkflowFrameRateInput struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Types that are valid to be assigned to Mode:
@@ -649,10 +664,12 @@ type isWorkflowFrameRateInput_Mode interface {
 }
 
 type WorkflowFrameRateInput_Selectable struct {
+	// 用户可选范围，执行时写入绑定节点。
 	Selectable *WorkflowSelectableFrameRate `protobuf:"bytes,1,opt,name=selectable,proto3,oneof"`
 }
 
 type WorkflowFrameRateInput_FixedValue struct {
+	// 帧/秒；工作流内部固定，不执行节点改写。
 	FixedValue int32 `protobuf:"varint,2,opt,name=fixed_value,json=fixedValue,proto3,oneof"`
 }
 
@@ -660,11 +677,13 @@ func (*WorkflowFrameRateInput_Selectable) isWorkflowFrameRateInput_Mode() {}
 
 func (*WorkflowFrameRateInput_FixedValue) isWorkflowFrameRateInput_Mode() {}
 
+// 图生视频执行配置，对应功能 video.img2vid。
 type ImageToVideoWorkflowConfig struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	InputImage      *WorkflowInputBinding  `protobuf:"bytes,1,opt,name=input_image,json=inputImage,proto3" json:"input_image,omitempty"`
-	Prompt          *WorkflowInputBinding  `protobuf:"bytes,2,opt,name=prompt,proto3" json:"prompt,omitempty"`
-	PromptMaxLength *uint32                `protobuf:"varint,3,opt,name=prompt_max_length,json=promptMaxLength,proto3,oneof" json:"prompt_max_length,omitempty"`
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	InputImage *WorkflowInputBinding  `protobuf:"bytes,1,opt,name=input_image,json=inputImage,proto3" json:"input_image,omitempty"`
+	Prompt     *WorkflowInputBinding  `protobuf:"bytes,2,opt,name=prompt,proto3" json:"prompt,omitempty"`
+	// 正向提示词的 Unicode 码点上限，不是 UTF-8 字节数。
+	PromptMaxLength *uint32 `protobuf:"varint,3,opt,name=prompt_max_length,json=promptMaxLength,proto3,oneof" json:"prompt_max_length,omitempty"`
 	// 可选的管理员固定负向提示词；普通用户接口不接收也不返回该值。
 	NegativePrompt  *WorkflowFixedTextInput     `protobuf:"bytes,4,opt,name=negative_prompt,json=negativePrompt,proto3" json:"negative_prompt,omitempty"`
 	AspectRatio     *WorkflowStringOptionInput  `protobuf:"bytes,5,opt,name=aspect_ratio,json=aspectRatio,proto3" json:"aspect_ratio,omitempty"`
@@ -761,10 +780,12 @@ func (x *ImageToVideoWorkflowConfig) GetFrameRate() *WorkflowFrameRateInput {
 	return nil
 }
 
+// 文生视频执行配置，对应功能 video.txt2vid。
 type TextToVideoWorkflowConfig struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	Prompt          *WorkflowInputBinding  `protobuf:"bytes,1,opt,name=prompt,proto3" json:"prompt,omitempty"`
-	PromptMaxLength *uint32                `protobuf:"varint,2,opt,name=prompt_max_length,json=promptMaxLength,proto3,oneof" json:"prompt_max_length,omitempty"`
+	state  protoimpl.MessageState `protogen:"open.v1"`
+	Prompt *WorkflowInputBinding  `protobuf:"bytes,1,opt,name=prompt,proto3" json:"prompt,omitempty"`
+	// 正向提示词的 Unicode 码点上限，不是 UTF-8 字节数。
+	PromptMaxLength *uint32 `protobuf:"varint,2,opt,name=prompt_max_length,json=promptMaxLength,proto3,oneof" json:"prompt_max_length,omitempty"`
 	// 可选的管理员固定负向提示词；普通用户接口不接收也不返回该值。
 	NegativePrompt  *WorkflowFixedTextInput     `protobuf:"bytes,3,opt,name=negative_prompt,json=negativePrompt,proto3" json:"negative_prompt,omitempty"`
 	AspectRatio     *WorkflowStringOptionInput  `protobuf:"bytes,4,opt,name=aspect_ratio,json=aspectRatio,proto3" json:"aspect_ratio,omitempty"`
@@ -854,16 +875,17 @@ func (x *TextToVideoWorkflowConfig) GetFrameRate() *WorkflowFrameRateInput {
 	return nil
 }
 
+// 完整执行配置；功能配置必须与工作流归属一致，保存时不建立产物预占。
 type WorkflowExecutionConfig struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Types that are valid to be assigned to FeatureConfig:
+	// Types that are valid to be assigned to FunctionConfig:
 	//
 	//	*WorkflowExecutionConfig_ImageToVideo
 	//	*WorkflowExecutionConfig_TextToVideo
-	FeatureConfig           isWorkflowExecutionConfig_FeatureConfig `protobuf_oneof:"feature_config"`
-	Output                  *WorkflowOutputConfig                   `protobuf:"bytes,3,opt,name=output,proto3" json:"output,omitempty"`
-	ExecutionTimeoutSeconds *uint32                                 `protobuf:"varint,4,opt,name=execution_timeout_seconds,json=executionTimeoutSeconds,proto3,oneof" json:"execution_timeout_seconds,omitempty"`
-	OutputReservationBytes  *uint64                                 `protobuf:"varint,5,opt,name=output_reservation_bytes,json=outputReservationBytes,proto3,oneof" json:"output_reservation_bytes,omitempty"`
+	FunctionConfig isWorkflowExecutionConfig_FunctionConfig `protobuf_oneof:"function_config"`
+	Output         *WorkflowOutputConfig                    `protobuf:"bytes,3,opt,name=output,proto3" json:"output,omitempty"`
+	// 从 ComfyUI 真正开始执行起计时，单位秒；必填正整数，不按模型名称硬编码。
+	ExecutionTimeoutSeconds *uint32 `protobuf:"varint,4,opt,name=execution_timeout_seconds,json=executionTimeoutSeconds,proto3,oneof" json:"execution_timeout_seconds,omitempty"`
 	unknownFields           protoimpl.UnknownFields
 	sizeCache               protoimpl.SizeCache
 }
@@ -898,16 +920,16 @@ func (*WorkflowExecutionConfig) Descriptor() ([]byte, []int) {
 	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *WorkflowExecutionConfig) GetFeatureConfig() isWorkflowExecutionConfig_FeatureConfig {
+func (x *WorkflowExecutionConfig) GetFunctionConfig() isWorkflowExecutionConfig_FunctionConfig {
 	if x != nil {
-		return x.FeatureConfig
+		return x.FunctionConfig
 	}
 	return nil
 }
 
 func (x *WorkflowExecutionConfig) GetImageToVideo() *ImageToVideoWorkflowConfig {
 	if x != nil {
-		if x, ok := x.FeatureConfig.(*WorkflowExecutionConfig_ImageToVideo); ok {
+		if x, ok := x.FunctionConfig.(*WorkflowExecutionConfig_ImageToVideo); ok {
 			return x.ImageToVideo
 		}
 	}
@@ -916,7 +938,7 @@ func (x *WorkflowExecutionConfig) GetImageToVideo() *ImageToVideoWorkflowConfig 
 
 func (x *WorkflowExecutionConfig) GetTextToVideo() *TextToVideoWorkflowConfig {
 	if x != nil {
-		if x, ok := x.FeatureConfig.(*WorkflowExecutionConfig_TextToVideo); ok {
+		if x, ok := x.FunctionConfig.(*WorkflowExecutionConfig_TextToVideo); ok {
 			return x.TextToVideo
 		}
 	}
@@ -937,15 +959,8 @@ func (x *WorkflowExecutionConfig) GetExecutionTimeoutSeconds() uint32 {
 	return 0
 }
 
-func (x *WorkflowExecutionConfig) GetOutputReservationBytes() uint64 {
-	if x != nil && x.OutputReservationBytes != nil {
-		return *x.OutputReservationBytes
-	}
-	return 0
-}
-
-type isWorkflowExecutionConfig_FeatureConfig interface {
-	isWorkflowExecutionConfig_FeatureConfig()
+type isWorkflowExecutionConfig_FunctionConfig interface {
+	isWorkflowExecutionConfig_FunctionConfig()
 }
 
 type WorkflowExecutionConfig_ImageToVideo struct {
@@ -956,10 +971,11 @@ type WorkflowExecutionConfig_TextToVideo struct {
 	TextToVideo *TextToVideoWorkflowConfig `protobuf:"bytes,2,opt,name=text_to_video,json=textToVideo,proto3,oneof"`
 }
 
-func (*WorkflowExecutionConfig_ImageToVideo) isWorkflowExecutionConfig_FeatureConfig() {}
+func (*WorkflowExecutionConfig_ImageToVideo) isWorkflowExecutionConfig_FunctionConfig() {}
 
-func (*WorkflowExecutionConfig_TextToVideo) isWorkflowExecutionConfig_FeatureConfig() {}
+func (*WorkflowExecutionConfig_TextToVideo) isWorkflowExecutionConfig_FunctionConfig() {}
 
+// 静态校验发现的问题，节点和输入定位信息按需提供。
 type WorkflowIssue struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Code          *string                `protobuf:"bytes,1,opt,name=code,proto3,oneof" json:"code,omitempty"`
@@ -1036,16 +1052,21 @@ func (x *WorkflowIssue) GetInputName() string {
 	return ""
 }
 
+// 供管理员配置绑定的节点输入描述。
 type WorkflowNodeInput struct {
-	state             protoimpl.MessageState `protogen:"open.v1"`
-	InputName         *string                `protobuf:"bytes,1,opt,name=input_name,json=inputName,proto3,oneof" json:"input_name,omitempty"`
-	ValueJson         *string                `protobuf:"bytes,2,opt,name=value_json,json=valueJson,proto3,oneof" json:"value_json,omitempty"`
-	IsLink            *bool                  `protobuf:"varint,3,opt,name=is_link,json=isLink,proto3,oneof" json:"is_link,omitempty"`
-	SourceNodeId      *string                `protobuf:"bytes,4,opt,name=source_node_id,json=sourceNodeId,proto3,oneof" json:"source_node_id,omitempty"`
-	SourceOutputIndex *int32                 `protobuf:"varint,5,opt,name=source_output_index,json=sourceOutputIndex,proto3,oneof" json:"source_output_index,omitempty"`
-	DeclaredType      *string                `protobuf:"bytes,6,opt,name=declared_type,json=declaredType,proto3,oneof" json:"declared_type,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	state     protoimpl.MessageState `protogen:"open.v1"`
+	InputName *string                `protobuf:"bytes,1,opt,name=input_name,json=inputName,proto3,oneof" json:"input_name,omitempty"`
+	// 固定值的原始 JSON；连线输入不提供。
+	ValueJson *string `protobuf:"bytes,2,opt,name=value_json,json=valueJson,proto3,oneof" json:"value_json,omitempty"`
+	// true 表示 [source_node_id, output_index] 连线。
+	IsLink       *bool   `protobuf:"varint,3,opt,name=is_link,json=isLink,proto3,oneof" json:"is_link,omitempty"`
+	SourceNodeId *string `protobuf:"bytes,4,opt,name=source_node_id,json=sourceNodeId,proto3,oneof" json:"source_node_id,omitempty"`
+	// 源节点输出的零基下标，仅连线输入提供。
+	SourceOutputIndex *int32 `protobuf:"varint,5,opt,name=source_output_index,json=sourceOutputIndex,proto3,oneof" json:"source_output_index,omitempty"`
+	// object_info 可用时补充的上游输入类型。
+	DeclaredType  *string `protobuf:"bytes,6,opt,name=declared_type,json=declaredType,proto3,oneof" json:"declared_type,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *WorkflowNodeInput) Reset() {
@@ -1120,6 +1141,7 @@ func (x *WorkflowNodeInput) GetDeclaredType() string {
 	return ""
 }
 
+// 从当前 API JSON 解析的节点，节点 ID 不按整数解释。
 type WorkflowNode struct {
 	state               protoimpl.MessageState `protogen:"open.v1"`
 	NodeId              *string                `protobuf:"bytes,1,opt,name=node_id,json=nodeId,proto3,oneof" json:"node_id,omitempty"`
@@ -1196,6 +1218,7 @@ func (x *WorkflowNode) GetSupportedMainOutput() bool {
 	return false
 }
 
+// 依赖在工作流中使用的位置。
 type WorkflowDependencyUsage struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	NodeId        *string                `protobuf:"bytes,1,opt,name=node_id,json=nodeId,proto3,oneof" json:"node_id,omitempty"`
@@ -1248,9 +1271,11 @@ func (x *WorkflowDependencyUsage) GetInputName() string {
 	return ""
 }
 
+// 动态解析的依赖，管理员只查看，不维护依赖清单。
 type WorkflowDependency struct {
-	state      protoimpl.MessageState     `protogen:"open.v1"`
-	Kind       *WorkflowDependencyKind    `protobuf:"varint,1,opt,name=kind,proto3,enum=hi.media.WorkflowDependencyKind,oneof" json:"kind,omitempty"`
+	state protoimpl.MessageState  `protogen:"open.v1"`
+	Kind  *WorkflowDependencyKind `protobuf:"varint,1,opt,name=kind,proto3,enum=hi.media.WorkflowDependencyKind,oneof" json:"kind,omitempty"`
+	// 节点 class_type 或 Loader 依赖文件名。
 	Identifier *string                    `protobuf:"bytes,2,opt,name=identifier,proto3,oneof" json:"identifier,omitempty"`
 	Usages     []*WorkflowDependencyUsage `protobuf:"bytes,3,rep,name=usages,proto3" json:"usages,omitempty"`
 	// false 表示仅存在于当前固定关闭的惰性分支；缺失时校验只产生警告。
@@ -1317,19 +1342,33 @@ func (x *WorkflowDependency) GetRequired() bool {
 	return false
 }
 
+// 管理摘要；不下载工作流文件，不暴露对象键、存储地址或完整 API JSON。
 type WorkflowSummary struct {
-	state             protoimpl.MessageState    `protogen:"open.v1"`
-	WorkflowVersionId *string                   `protobuf:"bytes,1,opt,name=workflow_version_id,json=workflowVersionId,proto3,oneof" json:"workflow_version_id,omitempty"`
-	FeatureKey        *FeatureKey               `protobuf:"varint,2,opt,name=feature_key,json=featureKey,proto3,enum=hi.media.FeatureKey,oneof" json:"feature_key,omitempty"`
-	Name              *string                   `protobuf:"bytes,3,opt,name=name,proto3,oneof" json:"name,omitempty"`
-	Status            *WorkflowStatus           `protobuf:"varint,4,opt,name=status,proto3,enum=hi.media.WorkflowStatus,oneof" json:"status,omitempty"`
-	ValidationStatus  *WorkflowValidationStatus `protobuf:"varint,5,opt,name=validation_status,json=validationStatus,proto3,enum=hi.media.WorkflowValidationStatus,oneof" json:"validation_status,omitempty"`
-	EnabledAt         *int64                    `protobuf:"varint,6,opt,name=enabled_at,json=enabledAt,proto3,oneof" json:"enabled_at,omitempty"`
-	CreatedBy         *string                   `protobuf:"bytes,7,opt,name=created_by,json=createdBy,proto3,oneof" json:"created_by,omitempty"`
-	CreatedAt         *int64                    `protobuf:"varint,8,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
-	UpdatedAt         *int64                    `protobuf:"varint,9,opt,name=updated_at,json=updatedAt,proto3,oneof" json:"updated_at,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 服务端将 function_id、单个零字节、model_id 依次拼接后计算 SHA-256，取小写十六进制。
+	WorkflowId *string          `protobuf:"bytes,1,opt,name=workflow_id,json=workflowId,proto3,oneof" json:"workflow_id,omitempty"`
+	Function   *FunctionSummary `protobuf:"bytes,2,opt,name=function,proto3" json:"function,omitempty"`
+	Model      *Model           `protobuf:"bytes,3,opt,name=model,proto3" json:"model,omitempty"`
+	// 当前上传文件的原文件名，仅用于管理展示。
+	OriginalFilename *string `protobuf:"bytes,4,opt,name=original_filename,json=originalFilename,proto3,oneof" json:"original_filename,omitempty"`
+	// 当前 API JSON 原始字节数；JSON 使用十进制字符串。
+	FileSizeBytes    *uint64                   `protobuf:"varint,5,opt,name=file_size_bytes,json=fileSizeBytes,proto3,oneof" json:"file_size_bytes,omitempty"`
+	Status           *WorkflowStatus           `protobuf:"varint,6,opt,name=status,proto3,enum=hi.media.WorkflowStatus,oneof" json:"status,omitempty"`
+	ValidationStatus *WorkflowValidationStatus `protobuf:"varint,7,opt,name=validation_status,json=validationStatus,proto3,enum=hi.media.WorkflowValidationStatus,oneof" json:"validation_status,omitempty"`
+	// 创建时为 false；仅管理员显式指定，同一功能最多一个默认项。
+	IsDefault *bool `protobuf:"varint,8,opt,name=is_default,json=isDefault,proto3,oneof" json:"is_default,omitempty"`
+	// 同一功能内的展示顺序，较小值优先。
+	SortOrder *int32 `protobuf:"varint,9,opt,name=sort_order,json=sortOrder,proto3,oneof" json:"sort_order,omitempty"`
+	// Unix 秒；首次试跑成功启用时间，从未启用时不提供，后续修改或试跑不覆盖。
+	EnabledAt *int64 `protobuf:"varint,10,opt,name=enabled_at,json=enabledAt,proto3,oneof" json:"enabled_at,omitempty"`
+	// 首次导入管理员 DID。
+	CreatedBy *string `protobuf:"bytes,11,opt,name=created_by,json=createdBy,proto3,oneof" json:"created_by,omitempty"`
+	// Unix 秒。
+	CreatedAt *int64 `protobuf:"varint,12,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
+	// Unix 秒。
+	UpdatedAt     *int64 `protobuf:"varint,13,opt,name=updated_at,json=updatedAt,proto3,oneof" json:"updated_at,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *WorkflowSummary) Reset() {
@@ -1362,25 +1401,39 @@ func (*WorkflowSummary) Descriptor() ([]byte, []int) {
 	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{16}
 }
 
-func (x *WorkflowSummary) GetWorkflowVersionId() string {
-	if x != nil && x.WorkflowVersionId != nil {
-		return *x.WorkflowVersionId
+func (x *WorkflowSummary) GetWorkflowId() string {
+	if x != nil && x.WorkflowId != nil {
+		return *x.WorkflowId
 	}
 	return ""
 }
 
-func (x *WorkflowSummary) GetFeatureKey() FeatureKey {
-	if x != nil && x.FeatureKey != nil {
-		return *x.FeatureKey
+func (x *WorkflowSummary) GetFunction() *FunctionSummary {
+	if x != nil {
+		return x.Function
 	}
-	return FeatureKey_FEATURE_KEY_UNSPECIFIED
+	return nil
 }
 
-func (x *WorkflowSummary) GetName() string {
-	if x != nil && x.Name != nil {
-		return *x.Name
+func (x *WorkflowSummary) GetModel() *Model {
+	if x != nil {
+		return x.Model
+	}
+	return nil
+}
+
+func (x *WorkflowSummary) GetOriginalFilename() string {
+	if x != nil && x.OriginalFilename != nil {
+		return *x.OriginalFilename
 	}
 	return ""
+}
+
+func (x *WorkflowSummary) GetFileSizeBytes() uint64 {
+	if x != nil && x.FileSizeBytes != nil {
+		return *x.FileSizeBytes
+	}
+	return 0
 }
 
 func (x *WorkflowSummary) GetStatus() WorkflowStatus {
@@ -1395,6 +1448,20 @@ func (x *WorkflowSummary) GetValidationStatus() WorkflowValidationStatus {
 		return *x.ValidationStatus
 	}
 	return WorkflowValidationStatus_WORKFLOW_VALIDATION_STATUS_UNSPECIFIED
+}
+
+func (x *WorkflowSummary) GetIsDefault() bool {
+	if x != nil && x.IsDefault != nil {
+		return *x.IsDefault
+	}
+	return false
+}
+
+func (x *WorkflowSummary) GetSortOrder() int32 {
+	if x != nil && x.SortOrder != nil {
+		return *x.SortOrder
+	}
+	return 0
 }
 
 func (x *WorkflowSummary) GetEnabledAt() int64 {
@@ -1425,18 +1492,21 @@ func (x *WorkflowSummary) GetUpdatedAt() int64 {
 	return 0
 }
 
+// 管理详情；节点和依赖从当前文件动态解析，不返回完整文件或历史对象列表。
 type WorkflowDetail struct {
-	state            protoimpl.MessageState   `protogen:"open.v1"`
-	Summary          *WorkflowSummary         `protobuf:"bytes,1,opt,name=summary,proto3" json:"summary,omitempty"`
-	Description      *string                  `protobuf:"bytes,2,opt,name=description,proto3,oneof" json:"description,omitempty"`
-	ApiJson          *string                  `protobuf:"bytes,3,opt,name=api_json,json=apiJson,proto3,oneof" json:"api_json,omitempty"`
-	Config           *WorkflowExecutionConfig `protobuf:"bytes,4,opt,name=config,proto3" json:"config,omitempty"`
-	Nodes            []*WorkflowNode          `protobuf:"bytes,5,rep,name=nodes,proto3" json:"nodes,omitempty"`
-	Dependencies     []*WorkflowDependency    `protobuf:"bytes,6,rep,name=dependencies,proto3" json:"dependencies,omitempty"`
-	ValidationIssues []*WorkflowIssue         `protobuf:"bytes,7,rep,name=validation_issues,json=validationIssues,proto3" json:"validation_issues,omitempty"`
-	ValidatedAt      *int64                   `protobuf:"varint,8,opt,name=validated_at,json=validatedAt,proto3,oneof" json:"validated_at,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state   protoimpl.MessageState `protogen:"open.v1"`
+	Summary *WorkflowSummary       `protobuf:"bytes,1,opt,name=summary,proto3" json:"summary,omitempty"`
+	// 管理员自由编辑的用户说明，按安全 Markdown 渲染。
+	Description *string `protobuf:"bytes,2,opt,name=description,proto3,oneof" json:"description,omitempty"`
+	// 尚未配置时不提供。
+	Config           *WorkflowExecutionConfig `protobuf:"bytes,3,opt,name=config,proto3" json:"config,omitempty"`
+	Nodes            []*WorkflowNode          `protobuf:"bytes,4,rep,name=nodes,proto3" json:"nodes,omitempty"`
+	Dependencies     []*WorkflowDependency    `protobuf:"bytes,5,rep,name=dependencies,proto3" json:"dependencies,omitempty"`
+	ValidationIssues []*WorkflowIssue         `protobuf:"bytes,6,rep,name=validation_issues,json=validationIssues,proto3" json:"validation_issues,omitempty"`
+	// Unix 秒；尚未校验时不提供。
+	ValidatedAt   *int64 `protobuf:"varint,7,opt,name=validated_at,json=validatedAt,proto3,oneof" json:"validated_at,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *WorkflowDetail) Reset() {
@@ -1483,13 +1553,6 @@ func (x *WorkflowDetail) GetDescription() string {
 	return ""
 }
 
-func (x *WorkflowDetail) GetApiJson() string {
-	if x != nil && x.ApiJson != nil {
-		return *x.ApiJson
-	}
-	return ""
-}
-
 func (x *WorkflowDetail) GetConfig() *WorkflowExecutionConfig {
 	if x != nil {
 		return x.Config
@@ -1525,30 +1588,37 @@ func (x *WorkflowDetail) GetValidatedAt() int64 {
 	return 0
 }
 
-type ImportWorkflowReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	FeatureKey    *FeatureKey            `protobuf:"varint,1,opt,name=feature_key,json=featureKey,proto3,enum=hi.media.FeatureKey,oneof" json:"feature_key,omitempty"`
-	Name          *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
-	ApiJson       *string                `protobuf:"bytes,3,opt,name=api_json,json=apiJson,proto3,oneof" json:"api_json,omitempty"`
-	Description   *string                `protobuf:"bytes,4,opt,name=description,proto3,oneof" json:"description,omitempty"`
+// AUTH_SUPERADMIN 的 POST /api/v1/workflow_manage/import 使用的 metadata。
+// 自定义 multipart HTTP 接口，不是 RPC。第一项 metadata 为 application/json、
+// 不携带 filename，仅接受 lowerCamelCase（functionId/modelId/description）；
+// 第二项 workflow 为完整 UTF-8 API JSON .json 文件，非空，默认上限 10 MiB。
+// 不接受编辑器 Workflow JSON；组合已存在时返回 Aborted，不覆盖原工作流。
+type WorkflowImportMetadata struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 来自 Function.List 的 video.img2vid 或 video.txt2vid。
+	FunctionId *string `protobuf:"bytes,1,opt,name=function_id,json=functionId,proto3,oneof" json:"function_id,omitempty"`
+	// 已创建且尚未关联同一功能工作流的模型 ID。
+	ModelId *string `protobuf:"bytes,2,opt,name=model_id,json=modelId,proto3,oneof" json:"model_id,omitempty"`
+	// 不传表示没有说明；不从工作流 Note 自动提取。
+	Description   *string `protobuf:"bytes,3,opt,name=description,proto3,oneof" json:"description,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ImportWorkflowReq) Reset() {
-	*x = ImportWorkflowReq{}
+func (x *WorkflowImportMetadata) Reset() {
+	*x = WorkflowImportMetadata{}
 	mi := &file_hi_media_workflow_manage_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ImportWorkflowReq) String() string {
+func (x *WorkflowImportMetadata) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ImportWorkflowReq) ProtoMessage() {}
+func (*WorkflowImportMetadata) ProtoMessage() {}
 
-func (x *ImportWorkflowReq) ProtoReflect() protoreflect.Message {
+func (x *WorkflowImportMetadata) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_media_workflow_manage_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1560,60 +1630,58 @@ func (x *ImportWorkflowReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ImportWorkflowReq.ProtoReflect.Descriptor instead.
-func (*ImportWorkflowReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use WorkflowImportMetadata.ProtoReflect.Descriptor instead.
+func (*WorkflowImportMetadata) Descriptor() ([]byte, []int) {
 	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{18}
 }
 
-func (x *ImportWorkflowReq) GetFeatureKey() FeatureKey {
-	if x != nil && x.FeatureKey != nil {
-		return *x.FeatureKey
-	}
-	return FeatureKey_FEATURE_KEY_UNSPECIFIED
-}
-
-func (x *ImportWorkflowReq) GetName() string {
-	if x != nil && x.Name != nil {
-		return *x.Name
+func (x *WorkflowImportMetadata) GetFunctionId() string {
+	if x != nil && x.FunctionId != nil {
+		return *x.FunctionId
 	}
 	return ""
 }
 
-func (x *ImportWorkflowReq) GetApiJson() string {
-	if x != nil && x.ApiJson != nil {
-		return *x.ApiJson
+func (x *WorkflowImportMetadata) GetModelId() string {
+	if x != nil && x.ModelId != nil {
+		return *x.ModelId
 	}
 	return ""
 }
 
-func (x *ImportWorkflowReq) GetDescription() string {
+func (x *WorkflowImportMetadata) GetDescription() string {
 	if x != nil && x.Description != nil {
 		return *x.Description
 	}
 	return ""
 }
 
-type ImportWorkflowResp struct {
-	state             protoimpl.MessageState `protogen:"open.v1"`
-	WorkflowVersionId *string                `protobuf:"bytes,1,opt,name=workflow_version_id,json=workflowVersionId,proto3,oneof" json:"workflow_version_id,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+// AUTH_SUPERADMIN 的 POST /api/v1/workflow_manage/replace_file 使用的 metadata。
+// 第一项 metadata 为 application/json、无 filename，仅接受 lowerCamelCase workflowId；
+// 第二项 workflow 的文件要求与 Import 相同。替换后保留说明和配置，回到草稿并重置校验。
+// 旧文件保留；存在未结束任务时拒绝替换，返回 Aborted。
+type WorkflowReplaceFileMetadata struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 已导入的工作流 ID，不修改其功能与模型归属。
+	WorkflowId    *string `protobuf:"bytes,1,opt,name=workflow_id,json=workflowId,proto3,oneof" json:"workflow_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ImportWorkflowResp) Reset() {
-	*x = ImportWorkflowResp{}
+func (x *WorkflowReplaceFileMetadata) Reset() {
+	*x = WorkflowReplaceFileMetadata{}
 	mi := &file_hi_media_workflow_manage_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ImportWorkflowResp) String() string {
+func (x *WorkflowReplaceFileMetadata) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ImportWorkflowResp) ProtoMessage() {}
+func (*WorkflowReplaceFileMetadata) ProtoMessage() {}
 
-func (x *ImportWorkflowResp) ProtoReflect() protoreflect.Message {
+func (x *WorkflowReplaceFileMetadata) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_media_workflow_manage_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1625,23 +1693,70 @@ func (x *ImportWorkflowResp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ImportWorkflowResp.ProtoReflect.Descriptor instead.
-func (*ImportWorkflowResp) Descriptor() ([]byte, []int) {
+// Deprecated: Use WorkflowReplaceFileMetadata.ProtoReflect.Descriptor instead.
+func (*WorkflowReplaceFileMetadata) Descriptor() ([]byte, []int) {
 	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{19}
 }
 
-func (x *ImportWorkflowResp) GetWorkflowVersionId() string {
-	if x != nil && x.WorkflowVersionId != nil {
-		return *x.WorkflowVersionId
+func (x *WorkflowReplaceFileMetadata) GetWorkflowId() string {
+	if x != nil && x.WorkflowId != nil {
+		return *x.WorkflowId
 	}
 	return ""
 }
 
+// 两个工作流 multipart 接口成功响应包装中的 data；只返回稳定工作流 ID。
+type WorkflowFileMutationResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	WorkflowId    *string                `protobuf:"bytes,1,opt,name=workflow_id,json=workflowId,proto3,oneof" json:"workflow_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *WorkflowFileMutationResp) Reset() {
+	*x = WorkflowFileMutationResp{}
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WorkflowFileMutationResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WorkflowFileMutationResp) ProtoMessage() {}
+
+func (x *WorkflowFileMutationResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use WorkflowFileMutationResp.ProtoReflect.Descriptor instead.
+func (*WorkflowFileMutationResp) Descriptor() ([]byte, []int) {
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *WorkflowFileMutationResp) GetWorkflowId() string {
+	if x != nil && x.WorkflowId != nil {
+		return *x.WorkflowId
+	}
+	return ""
+}
+
+// 更新说明或完整执行配置，至少提供一项；不接受工作流 JSON 字符串。
 type UpdateWorkflowReq struct {
-	state             protoimpl.MessageState `protogen:"open.v1"`
-	WorkflowVersionId *string                `protobuf:"bytes,1,opt,name=workflow_version_id,json=workflowVersionId,proto3,oneof" json:"workflow_version_id,omitempty"`
-	// api_json 与 config 至少提交一项；只允许修改草稿。
-	ApiJson       *string                  `protobuf:"bytes,2,opt,name=api_json,json=apiJson,proto3,oneof" json:"api_json,omitempty"`
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	WorkflowId *string                `protobuf:"bytes,1,opt,name=workflow_id,json=workflowId,proto3,oneof" json:"workflow_id,omitempty"`
+	// 不传表示不修改；显式空字符串表示清空，仅修改说明不改变状态或校验结果。
+	Description *string `protobuf:"bytes,2,opt,name=description,proto3,oneof" json:"description,omitempty"`
+	// 提交即替换完整配置并回到 DRAFT / unvalidated；有未结束任务时返回 Aborted。
 	Config        *WorkflowExecutionConfig `protobuf:"bytes,3,opt,name=config,proto3" json:"config,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1649,7 +1764,7 @@ type UpdateWorkflowReq struct {
 
 func (x *UpdateWorkflowReq) Reset() {
 	*x = UpdateWorkflowReq{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[20]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1661,7 +1776,7 @@ func (x *UpdateWorkflowReq) String() string {
 func (*UpdateWorkflowReq) ProtoMessage() {}
 
 func (x *UpdateWorkflowReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[20]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1674,19 +1789,19 @@ func (x *UpdateWorkflowReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateWorkflowReq.ProtoReflect.Descriptor instead.
 func (*UpdateWorkflowReq) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{20}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{21}
 }
 
-func (x *UpdateWorkflowReq) GetWorkflowVersionId() string {
-	if x != nil && x.WorkflowVersionId != nil {
-		return *x.WorkflowVersionId
+func (x *UpdateWorkflowReq) GetWorkflowId() string {
+	if x != nil && x.WorkflowId != nil {
+		return *x.WorkflowId
 	}
 	return ""
 }
 
-func (x *UpdateWorkflowReq) GetApiJson() string {
-	if x != nil && x.ApiJson != nil {
-		return *x.ApiJson
+func (x *UpdateWorkflowReq) GetDescription() string {
+	if x != nil && x.Description != nil {
+		return *x.Description
 	}
 	return ""
 }
@@ -1698,6 +1813,7 @@ func (x *UpdateWorkflowReq) GetConfig() *WorkflowExecutionConfig {
 	return nil
 }
 
+// 返回更新后的管理详情。
 type UpdateWorkflowResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Workflow      *WorkflowDetail        `protobuf:"bytes,1,opt,name=workflow,proto3" json:"workflow,omitempty"`
@@ -1707,7 +1823,7 @@ type UpdateWorkflowResp struct {
 
 func (x *UpdateWorkflowResp) Reset() {
 	*x = UpdateWorkflowResp{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[21]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1719,7 +1835,7 @@ func (x *UpdateWorkflowResp) String() string {
 func (*UpdateWorkflowResp) ProtoMessage() {}
 
 func (x *UpdateWorkflowResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[21]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1732,7 +1848,7 @@ func (x *UpdateWorkflowResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateWorkflowResp.ProtoReflect.Descriptor instead.
 func (*UpdateWorkflowResp) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{21}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *UpdateWorkflowResp) GetWorkflow() *WorkflowDetail {
@@ -1742,113 +1858,17 @@ func (x *UpdateWorkflowResp) GetWorkflow() *WorkflowDetail {
 	return nil
 }
 
-type UpdateWorkflowDescriptionReq struct {
-	state             protoimpl.MessageState `protogen:"open.v1"`
-	WorkflowVersionId *string                `protobuf:"bytes,1,opt,name=workflow_version_id,json=workflowVersionId,proto3,oneof" json:"workflow_version_id,omitempty"`
-	// 必须显式提交；空字符串表示清空说明。
-	Description   *string `protobuf:"bytes,2,opt,name=description,proto3,oneof" json:"description,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UpdateWorkflowDescriptionReq) Reset() {
-	*x = UpdateWorkflowDescriptionReq{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[22]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UpdateWorkflowDescriptionReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UpdateWorkflowDescriptionReq) ProtoMessage() {}
-
-func (x *UpdateWorkflowDescriptionReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[22]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UpdateWorkflowDescriptionReq.ProtoReflect.Descriptor instead.
-func (*UpdateWorkflowDescriptionReq) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{22}
-}
-
-func (x *UpdateWorkflowDescriptionReq) GetWorkflowVersionId() string {
-	if x != nil && x.WorkflowVersionId != nil {
-		return *x.WorkflowVersionId
-	}
-	return ""
-}
-
-func (x *UpdateWorkflowDescriptionReq) GetDescription() string {
-	if x != nil && x.Description != nil {
-		return *x.Description
-	}
-	return ""
-}
-
-type UpdateWorkflowDescriptionResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Workflow      *WorkflowDetail        `protobuf:"bytes,1,opt,name=workflow,proto3" json:"workflow,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UpdateWorkflowDescriptionResp) Reset() {
-	*x = UpdateWorkflowDescriptionResp{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[23]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UpdateWorkflowDescriptionResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UpdateWorkflowDescriptionResp) ProtoMessage() {}
-
-func (x *UpdateWorkflowDescriptionResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[23]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UpdateWorkflowDescriptionResp.ProtoReflect.Descriptor instead.
-func (*UpdateWorkflowDescriptionResp) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{23}
-}
-
-func (x *UpdateWorkflowDescriptionResp) GetWorkflow() *WorkflowDetail {
-	if x != nil {
-		return x.Workflow
-	}
-	return nil
-}
-
+// 根据工作流 ID 查询管理员详情。
 type GetWorkflowReq struct {
-	state             protoimpl.MessageState `protogen:"open.v1"`
-	WorkflowVersionId *string                `protobuf:"bytes,1,opt,name=workflow_version_id,json=workflowVersionId,proto3,oneof" json:"workflow_version_id,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	WorkflowId    *string                `protobuf:"bytes,1,opt,name=workflow_id,json=workflowId,proto3,oneof" json:"workflow_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetWorkflowReq) Reset() {
 	*x = GetWorkflowReq{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[24]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1860,7 +1880,7 @@ func (x *GetWorkflowReq) String() string {
 func (*GetWorkflowReq) ProtoMessage() {}
 
 func (x *GetWorkflowReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[24]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1873,16 +1893,17 @@ func (x *GetWorkflowReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWorkflowReq.ProtoReflect.Descriptor instead.
 func (*GetWorkflowReq) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{24}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{23}
 }
 
-func (x *GetWorkflowReq) GetWorkflowVersionId() string {
-	if x != nil && x.WorkflowVersionId != nil {
-		return *x.WorkflowVersionId
+func (x *GetWorkflowReq) GetWorkflowId() string {
+	if x != nil && x.WorkflowId != nil {
+		return *x.WorkflowId
 	}
 	return ""
 }
 
+// 当前文件不可用时返回 Unavailable；对象不存在或 JSON 损坏时返回 FailedPrecondition。
 type GetWorkflowResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Workflow      *WorkflowDetail        `protobuf:"bytes,1,opt,name=workflow,proto3" json:"workflow,omitempty"`
@@ -1892,7 +1913,7 @@ type GetWorkflowResp struct {
 
 func (x *GetWorkflowResp) Reset() {
 	*x = GetWorkflowResp{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[25]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1904,7 +1925,7 @@ func (x *GetWorkflowResp) String() string {
 func (*GetWorkflowResp) ProtoMessage() {}
 
 func (x *GetWorkflowResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[25]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1917,7 +1938,7 @@ func (x *GetWorkflowResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWorkflowResp.ProtoReflect.Descriptor instead.
 func (*GetWorkflowResp) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{25}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *GetWorkflowResp) GetWorkflow() *WorkflowDetail {
@@ -1927,18 +1948,20 @@ func (x *GetWorkflowResp) GetWorkflow() *WorkflowDetail {
 	return nil
 }
 
+// 分页查询工作流摘要；不传过滤字段表示不过滤。
 type ListWorkflowsReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Pagination    *hi.Pagination         `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
-	FeatureKey    *FeatureKey            `protobuf:"varint,2,opt,name=feature_key,json=featureKey,proto3,enum=hi.media.FeatureKey,oneof" json:"feature_key,omitempty"`
-	Status        *WorkflowStatus        `protobuf:"varint,3,opt,name=status,proto3,enum=hi.media.WorkflowStatus,oneof" json:"status,omitempty"`
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	Pagination *hi.Pagination         `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	// 来自 Function.List 的固定功能 ID。
+	FunctionId    *string         `protobuf:"bytes,2,opt,name=function_id,json=functionId,proto3,oneof" json:"function_id,omitempty"`
+	Status        *WorkflowStatus `protobuf:"varint,3,opt,name=status,proto3,enum=hi.media.WorkflowStatus,oneof" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ListWorkflowsReq) Reset() {
 	*x = ListWorkflowsReq{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[26]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1950,7 +1973,7 @@ func (x *ListWorkflowsReq) String() string {
 func (*ListWorkflowsReq) ProtoMessage() {}
 
 func (x *ListWorkflowsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[26]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1963,7 +1986,7 @@ func (x *ListWorkflowsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListWorkflowsReq.ProtoReflect.Descriptor instead.
 func (*ListWorkflowsReq) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{26}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *ListWorkflowsReq) GetPagination() *hi.Pagination {
@@ -1973,11 +1996,11 @@ func (x *ListWorkflowsReq) GetPagination() *hi.Pagination {
 	return nil
 }
 
-func (x *ListWorkflowsReq) GetFeatureKey() FeatureKey {
-	if x != nil && x.FeatureKey != nil {
-		return *x.FeatureKey
+func (x *ListWorkflowsReq) GetFunctionId() string {
+	if x != nil && x.FunctionId != nil {
+		return *x.FunctionId
 	}
-	return FeatureKey_FEATURE_KEY_UNSPECIFIED
+	return ""
 }
 
 func (x *ListWorkflowsReq) GetStatus() WorkflowStatus {
@@ -1987,6 +2010,7 @@ func (x *ListWorkflowsReq) GetStatus() WorkflowStatus {
 	return WorkflowStatus_WORKFLOW_STATUS_UNSPECIFIED
 }
 
+// 返回数据库摘要，不触发文件下载。
 type ListWorkflowsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Total         *int32                 `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
@@ -1997,7 +2021,7 @@ type ListWorkflowsResp struct {
 
 func (x *ListWorkflowsResp) Reset() {
 	*x = ListWorkflowsResp{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[27]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2009,7 +2033,7 @@ func (x *ListWorkflowsResp) String() string {
 func (*ListWorkflowsResp) ProtoMessage() {}
 
 func (x *ListWorkflowsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[27]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2022,7 +2046,7 @@ func (x *ListWorkflowsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListWorkflowsResp.ProtoReflect.Descriptor instead.
 func (*ListWorkflowsResp) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{27}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *ListWorkflowsResp) GetTotal() int32 {
@@ -2039,16 +2063,17 @@ func (x *ListWorkflowsResp) GetWorkflows() []*WorkflowSummary {
 	return nil
 }
 
+// 静态校验当前文件、绑定、参数和环境依赖，不执行 GPU。
 type ValidateWorkflowReq struct {
-	state             protoimpl.MessageState `protogen:"open.v1"`
-	WorkflowVersionId *string                `protobuf:"bytes,1,opt,name=workflow_version_id,json=workflowVersionId,proto3,oneof" json:"workflow_version_id,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	WorkflowId    *string                `protobuf:"bytes,1,opt,name=workflow_id,json=workflowId,proto3,oneof" json:"workflow_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ValidateWorkflowReq) Reset() {
 	*x = ValidateWorkflowReq{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[28]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2060,7 +2085,7 @@ func (x *ValidateWorkflowReq) String() string {
 func (*ValidateWorkflowReq) ProtoMessage() {}
 
 func (x *ValidateWorkflowReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[28]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2073,28 +2098,30 @@ func (x *ValidateWorkflowReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ValidateWorkflowReq.ProtoReflect.Descriptor instead.
 func (*ValidateWorkflowReq) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{28}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{27}
 }
 
-func (x *ValidateWorkflowReq) GetWorkflowVersionId() string {
-	if x != nil && x.WorkflowVersionId != nil {
-		return *x.WorkflowVersionId
+func (x *ValidateWorkflowReq) GetWorkflowId() string {
+	if x != nil && x.WorkflowId != nil {
+		return *x.WorkflowId
 	}
 	return ""
 }
 
+// 最近一次静态校验结果；只有 WARNING 时仍为 PASSED。
 type ValidateWorkflowResp struct {
-	state         protoimpl.MessageState    `protogen:"open.v1"`
-	Status        *WorkflowValidationStatus `protobuf:"varint,1,opt,name=status,proto3,enum=hi.media.WorkflowValidationStatus,oneof" json:"status,omitempty"`
-	Issues        []*WorkflowIssue          `protobuf:"bytes,2,rep,name=issues,proto3" json:"issues,omitempty"`
-	ValidatedAt   *int64                    `protobuf:"varint,3,opt,name=validated_at,json=validatedAt,proto3,oneof" json:"validated_at,omitempty"`
+	state  protoimpl.MessageState    `protogen:"open.v1"`
+	Status *WorkflowValidationStatus `protobuf:"varint,1,opt,name=status,proto3,enum=hi.media.WorkflowValidationStatus,oneof" json:"status,omitempty"`
+	Issues []*WorkflowIssue          `protobuf:"bytes,2,rep,name=issues,proto3" json:"issues,omitempty"`
+	// Unix 秒。
+	ValidatedAt   *int64 `protobuf:"varint,3,opt,name=validated_at,json=validatedAt,proto3,oneof" json:"validated_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ValidateWorkflowResp) Reset() {
 	*x = ValidateWorkflowResp{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[29]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2106,7 +2133,7 @@ func (x *ValidateWorkflowResp) String() string {
 func (*ValidateWorkflowResp) ProtoMessage() {}
 
 func (x *ValidateWorkflowResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[29]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2119,7 +2146,7 @@ func (x *ValidateWorkflowResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ValidateWorkflowResp.ProtoReflect.Descriptor instead.
 func (*ValidateWorkflowResp) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{29}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *ValidateWorkflowResp) GetStatus() WorkflowValidationStatus {
@@ -2143,12 +2170,16 @@ func (x *ValidateWorkflowResp) GetValidatedAt() int64 {
 	return 0
 }
 
+// 受理管理试跑；允许最近校验通过的 DRAFT 或 ENABLED，同一工作流不能并行试跑。
 type TestWorkflowReq struct {
-	state             protoimpl.MessageState `protogen:"open.v1"`
-	RequestId         *string                `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
-	WorkflowVersionId *string                `protobuf:"bytes,2,opt,name=workflow_version_id,json=workflowVersionId,proto3,oneof" json:"workflow_version_id,omitempty"`
-	Prompt            *string                `protobuf:"bytes,3,opt,name=prompt,proto3,oneof" json:"prompt,omitempty"`
-	// 图生视频必须提交管理员本人的图片资产；文生视频必须省略。
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 管理员范围内的幂等键；同一次试跑重发复用，新试跑使用新值。
+	RequestId *string `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
+	// 最近一次静态校验必须通过，无需预先启用。
+	WorkflowId *string `protobuf:"bytes,2,opt,name=workflow_id,json=workflowId,proto3,oneof" json:"workflow_id,omitempty"`
+	// 本次真实试跑的正向提示词，按工作流 Unicode 码点上限校验。
+	Prompt *string `protobuf:"bytes,3,opt,name=prompt,proto3,oneof" json:"prompt,omitempty"`
+	// 图生视频必须提交管理员本人的可用 JPEG/PNG 资产；文生视频必须省略。
 	// 分辨率、时长和帧率统一使用工作流默认值或固定值。
 	InputAssetId  *string `protobuf:"bytes,4,opt,name=input_asset_id,json=inputAssetId,proto3,oneof" json:"input_asset_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -2157,7 +2188,7 @@ type TestWorkflowReq struct {
 
 func (x *TestWorkflowReq) Reset() {
 	*x = TestWorkflowReq{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[30]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2169,7 +2200,7 @@ func (x *TestWorkflowReq) String() string {
 func (*TestWorkflowReq) ProtoMessage() {}
 
 func (x *TestWorkflowReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[30]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2182,7 +2213,7 @@ func (x *TestWorkflowReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TestWorkflowReq.ProtoReflect.Descriptor instead.
 func (*TestWorkflowReq) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{30}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *TestWorkflowReq) GetRequestId() string {
@@ -2192,9 +2223,9 @@ func (x *TestWorkflowReq) GetRequestId() string {
 	return ""
 }
 
-func (x *TestWorkflowReq) GetWorkflowVersionId() string {
-	if x != nil && x.WorkflowVersionId != nil {
-		return *x.WorkflowVersionId
+func (x *TestWorkflowReq) GetWorkflowId() string {
+	if x != nil && x.WorkflowId != nil {
+		return *x.WorkflowId
 	}
 	return ""
 }
@@ -2213,6 +2244,7 @@ func (x *TestWorkflowReq) GetInputAssetId() string {
 	return ""
 }
 
+// 返回受理的试跑任务 ID；试跑成功保存并结算后才自动启用草稿，不支持恢复保存。
 type TestWorkflowResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	TaskId        *string                `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3,oneof" json:"task_id,omitempty"`
@@ -2222,7 +2254,7 @@ type TestWorkflowResp struct {
 
 func (x *TestWorkflowResp) Reset() {
 	*x = TestWorkflowResp{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[31]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2234,7 +2266,7 @@ func (x *TestWorkflowResp) String() string {
 func (*TestWorkflowResp) ProtoMessage() {}
 
 func (x *TestWorkflowResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[31]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2247,7 +2279,7 @@ func (x *TestWorkflowResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TestWorkflowResp.ProtoReflect.Descriptor instead.
 func (*TestWorkflowResp) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{31}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *TestWorkflowResp) GetTaskId() string {
@@ -2257,17 +2289,18 @@ func (x *TestWorkflowResp) GetTaskId() string {
 	return ""
 }
 
+// 查询指定工作流的管理试跑，不包含普通任务。
 type ListWorkflowTestsReq struct {
-	state             protoimpl.MessageState `protogen:"open.v1"`
-	Pagination        *hi.Pagination         `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
-	WorkflowVersionId *string                `protobuf:"bytes,2,opt,name=workflow_version_id,json=workflowVersionId,proto3,oneof" json:"workflow_version_id,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Pagination    *hi.Pagination         `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	WorkflowId    *string                `protobuf:"bytes,2,opt,name=workflow_id,json=workflowId,proto3,oneof" json:"workflow_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ListWorkflowTestsReq) Reset() {
 	*x = ListWorkflowTestsReq{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[32]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2279,7 +2312,7 @@ func (x *ListWorkflowTestsReq) String() string {
 func (*ListWorkflowTestsReq) ProtoMessage() {}
 
 func (x *ListWorkflowTestsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[32]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2292,7 +2325,7 @@ func (x *ListWorkflowTestsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListWorkflowTestsReq.ProtoReflect.Descriptor instead.
 func (*ListWorkflowTestsReq) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{32}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *ListWorkflowTestsReq) GetPagination() *hi.Pagination {
@@ -2302,13 +2335,14 @@ func (x *ListWorkflowTestsReq) GetPagination() *hi.Pagination {
 	return nil
 }
 
-func (x *ListWorkflowTestsReq) GetWorkflowVersionId() string {
-	if x != nil && x.WorkflowVersionId != nil {
-		return *x.WorkflowVersionId
+func (x *ListWorkflowTestsReq) GetWorkflowId() string {
+	if x != nil && x.WorkflowId != nil {
+		return *x.WorkflowId
 	}
 	return ""
 }
 
+// 返回该工作流的管理试跑总数及分页，不区分管理员归属。
 type ListWorkflowTestsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Total         *int32                 `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
@@ -2319,7 +2353,7 @@ type ListWorkflowTestsResp struct {
 
 func (x *ListWorkflowTestsResp) Reset() {
 	*x = ListWorkflowTestsResp{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[33]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2331,7 +2365,7 @@ func (x *ListWorkflowTestsResp) String() string {
 func (*ListWorkflowTestsResp) ProtoMessage() {}
 
 func (x *ListWorkflowTestsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[33]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2344,7 +2378,7 @@ func (x *ListWorkflowTestsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListWorkflowTestsResp.ProtoReflect.Descriptor instead.
 func (*ListWorkflowTestsResp) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{33}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *ListWorkflowTestsResp) GetTotal() int32 {
@@ -2361,11 +2395,210 @@ func (x *ListWorkflowTestsResp) GetTasks() []*TaskSummary {
 	return nil
 }
 
+// 设置或清除默认项，不改变启用状态。
+type SetDefaultWorkflowReq struct {
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	WorkflowId *string                `protobuf:"bytes,1,opt,name=workflow_id,json=workflowId,proto3,oneof" json:"workflow_id,omitempty"`
+	// true 清除同功能其他默认项；false 只清除目标；必须显式提交。
+	IsDefault     *bool `protobuf:"varint,2,opt,name=is_default,json=isDefault,proto3,oneof" json:"is_default,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SetDefaultWorkflowReq) Reset() {
+	*x = SetDefaultWorkflowReq{}
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[33]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetDefaultWorkflowReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetDefaultWorkflowReq) ProtoMessage() {}
+
+func (x *SetDefaultWorkflowReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[33]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetDefaultWorkflowReq.ProtoReflect.Descriptor instead.
+func (*SetDefaultWorkflowReq) Descriptor() ([]byte, []int) {
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{33}
+}
+
+func (x *SetDefaultWorkflowReq) GetWorkflowId() string {
+	if x != nil && x.WorkflowId != nil {
+		return *x.WorkflowId
+	}
+	return ""
+}
+
+func (x *SetDefaultWorkflowReq) GetIsDefault() bool {
+	if x != nil && x.IsDefault != nil {
+		return *x.IsDefault
+	}
+	return false
+}
+
+// 返回默认项更新后的工作流摘要。
+type SetDefaultWorkflowResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Workflow      *WorkflowSummary       `protobuf:"bytes,1,opt,name=workflow,proto3" json:"workflow,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SetDefaultWorkflowResp) Reset() {
+	*x = SetDefaultWorkflowResp{}
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[34]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetDefaultWorkflowResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetDefaultWorkflowResp) ProtoMessage() {}
+
+func (x *SetDefaultWorkflowResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[34]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetDefaultWorkflowResp.ProtoReflect.Descriptor instead.
+func (*SetDefaultWorkflowResp) Descriptor() ([]byte, []int) {
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{34}
+}
+
+func (x *SetDefaultWorkflowResp) GetWorkflow() *WorkflowSummary {
+	if x != nil {
+		return x.Workflow
+	}
+	return nil
+}
+
+// 更新同一功能的完整工作流展示顺序。
+type UpdateWorkflowSortOrderReq struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 来自 Function.List 的固定功能 ID。
+	FunctionId *string `protobuf:"bytes,1,opt,name=function_id,json=functionId,proto3,oneof" json:"function_id,omitempty"`
+	// 该功能全部工作流（含草稿），按期望顺序提交，每个 ID 恰好一次。
+	WorkflowIds   []string `protobuf:"bytes,2,rep,name=workflow_ids,json=workflowIds,proto3" json:"workflow_ids,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateWorkflowSortOrderReq) Reset() {
+	*x = UpdateWorkflowSortOrderReq{}
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[35]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateWorkflowSortOrderReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateWorkflowSortOrderReq) ProtoMessage() {}
+
+func (x *UpdateWorkflowSortOrderReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[35]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateWorkflowSortOrderReq.ProtoReflect.Descriptor instead.
+func (*UpdateWorkflowSortOrderReq) Descriptor() ([]byte, []int) {
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{35}
+}
+
+func (x *UpdateWorkflowSortOrderReq) GetFunctionId() string {
+	if x != nil && x.FunctionId != nil {
+		return *x.FunctionId
+	}
+	return ""
+}
+
+func (x *UpdateWorkflowSortOrderReq) GetWorkflowIds() []string {
+	if x != nil {
+		return x.WorkflowIds
+	}
+	return nil
+}
+
+// 返回调整后的完整工作流摘要列表。
+type UpdateWorkflowSortOrderResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Workflows     []*WorkflowSummary     `protobuf:"bytes,1,rep,name=workflows,proto3" json:"workflows,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateWorkflowSortOrderResp) Reset() {
+	*x = UpdateWorkflowSortOrderResp{}
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[36]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateWorkflowSortOrderResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateWorkflowSortOrderResp) ProtoMessage() {}
+
+func (x *UpdateWorkflowSortOrderResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[36]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateWorkflowSortOrderResp.ProtoReflect.Descriptor instead.
+func (*UpdateWorkflowSortOrderResp) Descriptor() ([]byte, []int) {
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{36}
+}
+
+func (x *UpdateWorkflowSortOrderResp) GetWorkflows() []*WorkflowSummary {
+	if x != nil {
+		return x.Workflows
+	}
+	return nil
+}
+
 var File_hi_media_workflow_manage_proto protoreflect.FileDescriptor
 
 const file_hi_media_workflow_manage_proto_rawDesc = "" +
 	"\n" +
-	"\x1ehi/media/workflow_manage.proto\x12\bhi.media\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x16hi/media/feature.proto\x1a\x13hi/media/task.proto\x1a\x10hi/options.proto\"\x99\x01\n" +
+	"\x1ehi/media/workflow_manage.proto\x12\bhi.media\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x17hi/media/function.proto\x1a\x1bhi/media/model_manage.proto\x1a\x13hi/media/task.proto\x1a\x10hi/options.proto\"\x99\x01\n" +
 	"\x14WorkflowInputBinding\x12,\n" +
 	"\anode_id\x18\x01 \x01(\tB\x0e\xbaH\a\xc8\x01\x01r\x02\x10\x01\x90\xb5\x18\x03H\x00R\x06nodeId\x88\x01\x01\x122\n" +
 	"\n" +
@@ -2445,17 +2678,15 @@ const file_hi_media_workflow_manage_proto_rawDesc = "" +
 	"\n" +
 	"frame_rate\x18\a \x01(\v2 .hi.media.WorkflowFrameRateInputB\n" +
 	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\tframeRate:\x04\x98\xb5\x18\x03B\x14\n" +
-	"\x12_prompt_max_length\"\xfc\x03\n" +
+	"\x12_prompt_max_length\"\x91\x03\n" +
 	"\x17WorkflowExecutionConfig\x12R\n" +
 	"\x0eimage_to_video\x18\x01 \x01(\v2$.hi.media.ImageToVideoWorkflowConfigB\x04\x90\xb5\x18\x03H\x00R\fimageToVideo\x12O\n" +
 	"\rtext_to_video\x18\x02 \x01(\v2#.hi.media.TextToVideoWorkflowConfigB\x04\x90\xb5\x18\x03H\x00R\vtextToVideo\x12B\n" +
 	"\x06output\x18\x03 \x01(\v2\x1e.hi.media.WorkflowOutputConfigB\n" +
 	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\x06output\x12O\n" +
-	"\x19execution_timeout_seconds\x18\x04 \x01(\rB\x0e\xbaH\a\xc8\x01\x01*\x02 \x00\x90\xb5\x18\x03H\x01R\x17executionTimeoutSeconds\x88\x01\x01\x12M\n" +
-	"\x18output_reservation_bytes\x18\x05 \x01(\x04B\x0e\xbaH\a\xc8\x01\x012\x02 \x00\x90\xb5\x18\x03H\x02R\x16outputReservationBytes\x88\x01\x01:\x04\x98\xb5\x18\x03B\x17\n" +
-	"\x0efeature_config\x12\x05\xbaH\x02\b\x01B\x1c\n" +
-	"\x1a_execution_timeout_secondsB\x1b\n" +
-	"\x19_output_reservation_bytes\"\xac\x02\n" +
+	"\x19execution_timeout_seconds\x18\x04 \x01(\rB\x0e\xbaH\a\xc8\x01\x01*\x02 \x00\x90\xb5\x18\x03H\x01R\x17executionTimeoutSeconds\x88\x01\x01:\x04\x98\xb5\x18\x03B\x18\n" +
+	"\x0ffunction_config\x12\x05\xbaH\x02\b\x01B\x1c\n" +
+	"\x1a_execution_timeout_seconds\"\xac\x02\n" +
 	"\rWorkflowIssue\x12\x1d\n" +
 	"\x04code\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04code\x88\x01\x01\x12F\n" +
 	"\bseverity\x18\x02 \x01(\x0e2\x1f.hi.media.WorkflowIssueSeverityB\x04\x90\xb5\x18\x03H\x01R\bseverity\x88\x01\x01\x12#\n" +
@@ -2514,136 +2745,161 @@ const file_hi_media_workflow_manage_proto_rawDesc = "" +
 	"\brequired\x18\x04 \x01(\bB\x04\x90\xb5\x18\x03H\x02R\brequired\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
 	"\x05_kindB\r\n" +
 	"\v_identifierB\v\n" +
-	"\t_required\"\x82\x05\n" +
-	"\x0fWorkflowSummary\x129\n" +
-	"\x13workflow_version_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x11workflowVersionId\x88\x01\x01\x12@\n" +
-	"\vfeature_key\x18\x02 \x01(\x0e2\x14.hi.media.FeatureKeyB\x04\x90\xb5\x18\x03H\x01R\n" +
-	"featureKey\x88\x01\x01\x12\x1d\n" +
-	"\x04name\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x04name\x88\x01\x01\x12;\n" +
-	"\x06status\x18\x04 \x01(\x0e2\x18.hi.media.WorkflowStatusB\x04\x90\xb5\x18\x03H\x03R\x06status\x88\x01\x01\x12Z\n" +
-	"\x11validation_status\x18\x05 \x01(\x0e2\".hi.media.WorkflowValidationStatusB\x04\x90\xb5\x18\x03H\x04R\x10validationStatus\x88\x01\x01\x12(\n" +
+	"\t_required\"\xe2\x06\n" +
+	"\x0fWorkflowSummary\x12*\n" +
+	"\vworkflow_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\n" +
+	"workflowId\x88\x01\x01\x12;\n" +
+	"\bfunction\x18\x02 \x01(\v2\x19.hi.media.FunctionSummaryB\x04\x90\xb5\x18\x03R\bfunction\x12+\n" +
+	"\x05model\x18\x03 \x01(\v2\x0f.hi.media.ModelB\x04\x90\xb5\x18\x03R\x05model\x126\n" +
+	"\x11original_filename\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x10originalFilename\x88\x01\x01\x121\n" +
+	"\x0ffile_size_bytes\x18\x05 \x01(\x04B\x04\x90\xb5\x18\x03H\x02R\rfileSizeBytes\x88\x01\x01\x12;\n" +
+	"\x06status\x18\x06 \x01(\x0e2\x18.hi.media.WorkflowStatusB\x04\x90\xb5\x18\x03H\x03R\x06status\x88\x01\x01\x12Z\n" +
+	"\x11validation_status\x18\a \x01(\x0e2\".hi.media.WorkflowValidationStatusB\x04\x90\xb5\x18\x03H\x04R\x10validationStatus\x88\x01\x01\x12(\n" +
 	"\n" +
-	"enabled_at\x18\x06 \x01(\x03B\x04\x90\xb5\x18\x03H\x05R\tenabledAt\x88\x01\x01\x12(\n" +
+	"is_default\x18\b \x01(\bB\x04\x90\xb5\x18\x03H\x05R\tisDefault\x88\x01\x01\x12(\n" +
 	"\n" +
-	"created_by\x18\a \x01(\tB\x04\x90\xb5\x18\x03H\x06R\tcreatedBy\x88\x01\x01\x12(\n" +
+	"sort_order\x18\t \x01(\x05B\x04\x90\xb5\x18\x03H\x06R\tsortOrder\x88\x01\x01\x12(\n" +
 	"\n" +
-	"created_at\x18\b \x01(\x03B\x04\x90\xb5\x18\x03H\aR\tcreatedAt\x88\x01\x01\x12(\n" +
+	"enabled_at\x18\n" +
+	" \x01(\x03B\x04\x90\xb5\x18\x03H\aR\tenabledAt\x88\x01\x01\x12(\n" +
 	"\n" +
-	"updated_at\x18\t \x01(\x03B\x04\x90\xb5\x18\x03H\bR\tupdatedAt\x88\x01\x01:\x04\x98\xb5\x18\x03B\x16\n" +
-	"\x14_workflow_version_idB\x0e\n" +
-	"\f_feature_keyB\a\n" +
-	"\x05_nameB\t\n" +
+	"created_by\x18\v \x01(\tB\x04\x90\xb5\x18\x03H\bR\tcreatedBy\x88\x01\x01\x12(\n" +
+	"\n" +
+	"created_at\x18\f \x01(\x03B\x04\x90\xb5\x18\x03H\tR\tcreatedAt\x88\x01\x01\x12(\n" +
+	"\n" +
+	"updated_at\x18\r \x01(\x03B\x04\x90\xb5\x18\x03H\n" +
+	"R\tupdatedAt\x88\x01\x01:\x04\x98\xb5\x18\x03B\x0e\n" +
+	"\f_workflow_idB\x14\n" +
+	"\x12_original_filenameB\x12\n" +
+	"\x10_file_size_bytesB\t\n" +
 	"\a_statusB\x14\n" +
 	"\x12_validation_statusB\r\n" +
+	"\v_is_defaultB\r\n" +
+	"\v_sort_orderB\r\n" +
 	"\v_enabled_atB\r\n" +
 	"\v_created_byB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_updated_at\"\x89\x04\n" +
+	"\v_updated_at\"\xd6\x03\n" +
 	"\x0eWorkflowDetail\x129\n" +
 	"\asummary\x18\x01 \x01(\v2\x19.hi.media.WorkflowSummaryB\x04\x90\xb5\x18\x03R\asummary\x12+\n" +
-	"\vdescription\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\vdescription\x88\x01\x01\x12$\n" +
-	"\bapi_json\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\aapiJson\x88\x01\x01\x12?\n" +
-	"\x06config\x18\x04 \x01(\v2!.hi.media.WorkflowExecutionConfigB\x04\x90\xb5\x18\x03R\x06config\x122\n" +
-	"\x05nodes\x18\x05 \x03(\v2\x16.hi.media.WorkflowNodeB\x04\x90\xb5\x18\x03R\x05nodes\x12F\n" +
-	"\fdependencies\x18\x06 \x03(\v2\x1c.hi.media.WorkflowDependencyB\x04\x90\xb5\x18\x03R\fdependencies\x12J\n" +
-	"\x11validation_issues\x18\a \x03(\v2\x17.hi.media.WorkflowIssueB\x04\x90\xb5\x18\x03R\x10validationIssues\x12,\n" +
-	"\fvalidated_at\x18\b \x01(\x03B\x04\x90\xb5\x18\x03H\x02R\vvalidatedAt\x88\x01\x01:\x04\x98\xb5\x18\x03B\x0e\n" +
-	"\f_descriptionB\v\n" +
-	"\t_api_jsonB\x0f\n" +
-	"\r_validated_at\"\x8c\x02\n" +
-	"\x11ImportWorkflowReq\x12I\n" +
-	"\vfeature_key\x18\x01 \x01(\x0e2\x14.hi.media.FeatureKeyB\r\xbaH\n" +
-	"\xc8\x01\x01\x82\x01\x04\x10\x01 \x00H\x00R\n" +
-	"featureKey\x88\x01\x01\x12#\n" +
-	"\x04name\x18\x02 \x01(\tB\n" +
-	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x01R\x04name\x88\x01\x01\x12*\n" +
-	"\bapi_json\x18\x03 \x01(\tB\n" +
-	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x02R\aapiJson\x88\x01\x01\x12%\n" +
-	"\vdescription\x18\x04 \x01(\tH\x03R\vdescription\x88\x01\x01B\x0e\n" +
-	"\f_feature_keyB\a\n" +
-	"\x05_nameB\v\n" +
-	"\t_api_jsonB\x0e\n" +
-	"\f_description\"m\n" +
-	"\x12ImportWorkflowResp\x129\n" +
-	"\x13workflow_version_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x11workflowVersionId\x88\x01\x01:\x04\x98\xb5\x18\x03B\x16\n" +
-	"\x14_workflow_version_id\"\xca\x02\n" +
-	"\x11UpdateWorkflowReq\x12?\n" +
-	"\x13workflow_version_id\x18\x01 \x01(\tB\n" +
-	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\x11workflowVersionId\x88\x01\x01\x12'\n" +
-	"\bapi_json\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x01R\aapiJson\x88\x01\x01\x129\n" +
-	"\x06config\x18\x03 \x01(\v2!.hi.media.WorkflowExecutionConfigR\x06config:k\xbaHh\x1af\n" +
-	"\x17update_workflow.content\x12#api_json or config must be provided\x1a&has(this.api_json) || has(this.config)B\x16\n" +
-	"\x14_workflow_version_idB\v\n" +
-	"\t_api_json\"V\n" +
+	"\vdescription\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\vdescription\x88\x01\x01\x12?\n" +
+	"\x06config\x18\x03 \x01(\v2!.hi.media.WorkflowExecutionConfigB\x04\x90\xb5\x18\x03R\x06config\x122\n" +
+	"\x05nodes\x18\x04 \x03(\v2\x16.hi.media.WorkflowNodeB\x04\x90\xb5\x18\x03R\x05nodes\x12F\n" +
+	"\fdependencies\x18\x05 \x03(\v2\x1c.hi.media.WorkflowDependencyB\x04\x90\xb5\x18\x03R\fdependencies\x12J\n" +
+	"\x11validation_issues\x18\x06 \x03(\v2\x17.hi.media.WorkflowIssueB\x04\x90\xb5\x18\x03R\x10validationIssues\x12,\n" +
+	"\fvalidated_at\x18\a \x01(\x03B\x04\x90\xb5\x18\x03H\x01R\vvalidatedAt\x88\x01\x01:\x04\x98\xb5\x18\x03B\x0e\n" +
+	"\f_descriptionB\x0f\n" +
+	"\r_validated_at\"\xca\x01\n" +
+	"\x16WorkflowImportMetadata\x120\n" +
+	"\vfunction_id\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\n" +
+	"functionId\x88\x01\x01\x12*\n" +
+	"\bmodel_id\x18\x02 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x01R\amodelId\x88\x01\x01\x12%\n" +
+	"\vdescription\x18\x03 \x01(\tH\x02R\vdescription\x88\x01\x01B\x0e\n" +
+	"\f_function_idB\v\n" +
+	"\t_model_idB\x0e\n" +
+	"\f_description\"_\n" +
+	"\x1bWorkflowReplaceFileMetadata\x120\n" +
+	"\vworkflow_id\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\n" +
+	"workflowId\x88\x01\x01B\x0e\n" +
+	"\f_workflow_id\"\\\n" +
+	"\x18WorkflowFileMutationResp\x12*\n" +
+	"\vworkflow_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\n" +
+	"workflowId\x88\x01\x01:\x04\x98\xb5\x18\x03B\x0e\n" +
+	"\f_workflow_id\"\xba\x02\n" +
+	"\x11UpdateWorkflowReq\x120\n" +
+	"\vworkflow_id\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\n" +
+	"workflowId\x88\x01\x01\x12%\n" +
+	"\vdescription\x18\x02 \x01(\tH\x01R\vdescription\x88\x01\x01\x129\n" +
+	"\x06config\x18\x03 \x01(\v2!.hi.media.WorkflowExecutionConfigR\x06config:q\xbaHn\x1al\n" +
+	"\x17update_workflow.content\x12&description or config must be provided\x1a)has(this.description) || has(this.config)B\x0e\n" +
+	"\f_workflow_idB\x0e\n" +
+	"\f_description\"V\n" +
 	"\x12UpdateWorkflowResp\x12:\n" +
-	"\bworkflow\x18\x01 \x01(\v2\x18.hi.media.WorkflowDetailB\x04\x90\xb5\x18\x03R\bworkflow:\x04\x98\xb5\x18\x03\"\xb6\x01\n" +
-	"\x1cUpdateWorkflowDescriptionReq\x12?\n" +
-	"\x13workflow_version_id\x18\x01 \x01(\tB\n" +
-	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\x11workflowVersionId\x88\x01\x01\x12-\n" +
-	"\vdescription\x18\x02 \x01(\tB\x06\xbaH\x03\xc8\x01\x01H\x01R\vdescription\x88\x01\x01B\x16\n" +
-	"\x14_workflow_version_idB\x0e\n" +
-	"\f_description\"a\n" +
-	"\x1dUpdateWorkflowDescriptionResp\x12:\n" +
-	"\bworkflow\x18\x01 \x01(\v2\x18.hi.media.WorkflowDetailB\x04\x90\xb5\x18\x03R\bworkflow:\x04\x98\xb5\x18\x03\"i\n" +
-	"\x0eGetWorkflowReq\x12?\n" +
-	"\x13workflow_version_id\x18\x01 \x01(\tB\n" +
-	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\x11workflowVersionId\x88\x01\x01B\x16\n" +
-	"\x14_workflow_version_id\"S\n" +
+	"\bworkflow\x18\x01 \x01(\v2\x18.hi.media.WorkflowDetailB\x04\x90\xb5\x18\x03R\bworkflow:\x04\x98\xb5\x18\x03\"R\n" +
+	"\x0eGetWorkflowReq\x120\n" +
+	"\vworkflow_id\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\n" +
+	"workflowId\x88\x01\x01B\x0e\n" +
+	"\f_workflow_id\"S\n" +
 	"\x0fGetWorkflowResp\x12:\n" +
-	"\bworkflow\x18\x01 \x01(\v2\x18.hi.media.WorkflowDetailB\x04\x90\xb5\x18\x03R\bworkflow:\x04\x98\xb5\x18\x03\"\xe8\x01\n" +
+	"\bworkflow\x18\x01 \x01(\v2\x18.hi.media.WorkflowDetailB\x04\x90\xb5\x18\x03R\bworkflow:\x04\x98\xb5\x18\x03\"\xcf\x01\n" +
 	"\x10ListWorkflowsReq\x12.\n" +
 	"\n" +
 	"pagination\x18\x01 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\x12F\n" +
-	"\vfeature_key\x18\x02 \x01(\x0e2\x14.hi.media.FeatureKeyB\n" +
-	"\xbaH\a\x82\x01\x04\x10\x01 \x00H\x00R\n" +
-	"featureKey\x88\x01\x01\x12A\n" +
+	"pagination\x12-\n" +
+	"\vfunction_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x00R\n" +
+	"functionId\x88\x01\x01\x12A\n" +
 	"\x06status\x18\x03 \x01(\x0e2\x18.hi.media.WorkflowStatusB\n" +
 	"\xbaH\a\x82\x01\x04\x10\x01 \x00H\x01R\x06status\x88\x01\x01B\x0e\n" +
-	"\f_feature_keyB\t\n" +
+	"\f_function_idB\t\n" +
 	"\a_status\"\x83\x01\n" +
 	"\x11ListWorkflowsResp\x12\x1f\n" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12=\n" +
 	"\tworkflows\x18\x02 \x03(\v2\x19.hi.media.WorkflowSummaryB\x04\x90\xb5\x18\x03R\tworkflows:\x04\x98\xb5\x18\x03B\b\n" +
-	"\x06_total\"n\n" +
-	"\x13ValidateWorkflowReq\x12?\n" +
-	"\x13workflow_version_id\x18\x01 \x01(\tB\n" +
-	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\x11workflowVersionId\x88\x01\x01B\x16\n" +
-	"\x14_workflow_version_id\"\xe4\x01\n" +
+	"\x06_total\"W\n" +
+	"\x13ValidateWorkflowReq\x120\n" +
+	"\vworkflow_id\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\n" +
+	"workflowId\x88\x01\x01B\x0e\n" +
+	"\f_workflow_id\"\xe4\x01\n" +
 	"\x14ValidateWorkflowResp\x12E\n" +
 	"\x06status\x18\x01 \x01(\x0e2\".hi.media.WorkflowValidationStatusB\x04\x90\xb5\x18\x03H\x00R\x06status\x88\x01\x01\x125\n" +
 	"\x06issues\x18\x02 \x03(\v2\x17.hi.media.WorkflowIssueB\x04\x90\xb5\x18\x03R\x06issues\x12,\n" +
 	"\fvalidated_at\x18\x03 \x01(\x03B\x04\x90\xb5\x18\x03H\x01R\vvalidatedAt\x88\x01\x01:\x04\x98\xb5\x18\x03B\t\n" +
 	"\a_statusB\x0f\n" +
-	"\r_validated_at\"\xa4\x02\n" +
+	"\r_validated_at\"\x8d\x02\n" +
 	"\x0fTestWorkflowReq\x12.\n" +
 	"\n" +
 	"request_id\x18\x01 \x01(\tB\n" +
-	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\trequestId\x88\x01\x01\x12?\n" +
-	"\x13workflow_version_id\x18\x02 \x01(\tB\n" +
-	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x01R\x11workflowVersionId\x88\x01\x01\x12'\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\trequestId\x88\x01\x01\x120\n" +
+	"\vworkflow_id\x18\x02 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x01R\n" +
+	"workflowId\x88\x01\x01\x12'\n" +
 	"\x06prompt\x18\x03 \x01(\tB\n" +
 	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x02R\x06prompt\x88\x01\x01\x122\n" +
 	"\x0einput_asset_id\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x03R\finputAssetId\x88\x01\x01B\r\n" +
-	"\v_request_idB\x16\n" +
-	"\x14_workflow_version_idB\t\n" +
+	"\v_request_idB\x0e\n" +
+	"\f_workflow_idB\t\n" +
 	"\a_promptB\x11\n" +
 	"\x0f_input_asset_id\"H\n" +
 	"\x10TestWorkflowResp\x12\"\n" +
 	"\atask_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x06taskId\x88\x01\x01:\x04\x98\xb5\x18\x03B\n" +
 	"\n" +
-	"\b_task_id\"\x9f\x01\n" +
+	"\b_task_id\"\x88\x01\n" +
 	"\x14ListWorkflowTestsReq\x12.\n" +
 	"\n" +
 	"pagination\x18\x01 \x01(\v2\x0e.hi.PaginationR\n" +
-	"pagination\x12?\n" +
-	"\x13workflow_version_id\x18\x02 \x01(\tB\n" +
-	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\x11workflowVersionId\x88\x01\x01B\x16\n" +
-	"\x14_workflow_version_id\"{\n" +
+	"pagination\x120\n" +
+	"\vworkflow_id\x18\x02 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\n" +
+	"workflowId\x88\x01\x01B\x0e\n" +
+	"\f_workflow_id\"{\n" +
 	"\x15ListWorkflowTestsResp\x12\x1f\n" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x121\n" +
 	"\x05tasks\x18\x02 \x03(\v2\x15.hi.media.TaskSummaryB\x04\x90\xb5\x18\x03R\x05tasks:\x04\x98\xb5\x18\x03B\b\n" +
-	"\x06_total*i\n" +
+	"\x06_total\"\x94\x01\n" +
+	"\x15SetDefaultWorkflowReq\x120\n" +
+	"\vworkflow_id\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\n" +
+	"workflowId\x88\x01\x01\x12*\n" +
+	"\n" +
+	"is_default\x18\x02 \x01(\bB\x06\xbaH\x03\xc8\x01\x01H\x01R\tisDefault\x88\x01\x01B\x0e\n" +
+	"\f_workflow_idB\r\n" +
+	"\v_is_default\"[\n" +
+	"\x16SetDefaultWorkflowResp\x12;\n" +
+	"\bworkflow\x18\x01 \x01(\v2\x19.hi.media.WorkflowSummaryB\x04\x90\xb5\x18\x03R\bworkflow:\x04\x98\xb5\x18\x03\"\x91\x01\n" +
+	"\x1aUpdateWorkflowSortOrderReq\x120\n" +
+	"\vfunction_id\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\n" +
+	"functionId\x88\x01\x01\x121\n" +
+	"\fworkflow_ids\x18\x02 \x03(\tB\x0e\xbaH\v\x92\x01\b\x18\x01\"\x04r\x02\x10\x01R\vworkflowIdsB\x0e\n" +
+	"\f_function_id\"b\n" +
+	"\x1bUpdateWorkflowSortOrderResp\x12=\n" +
+	"\tworkflows\x18\x01 \x03(\v2\x19.hi.media.WorkflowSummaryB\x04\x90\xb5\x18\x03R\tworkflows:\x04\x98\xb5\x18\x03*i\n" +
 	"\x0eWorkflowStatus\x12\x1f\n" +
 	"\x1bWORKFLOW_STATUS_UNSPECIFIED\x10\x00\x12\x19\n" +
 	"\x15WORKFLOW_STATUS_DRAFT\x10\x01\x12\x1b\n" +
@@ -2659,14 +2915,15 @@ const file_hi_media_workflow_manage_proto_rawDesc = "" +
 	"\x16WorkflowDependencyKind\x12(\n" +
 	"$WORKFLOW_DEPENDENCY_KIND_UNSPECIFIED\x10\x00\x12'\n" +
 	"#WORKFLOW_DEPENDENCY_KIND_NODE_CLASS\x10\x01\x12(\n" +
-	"$WORKFLOW_DEPENDENCY_KIND_LOADER_FILE\x10\x022\x9d\x05\n" +
-	"\x0eWorkflowManage\x12R\n" +
-	"\x0eImportWorkflow\x12\x1b.hi.media.ImportWorkflowReq\x1a\x1c.hi.media.ImportWorkflowResp\"\x05\x8a\xb5\x18\x01\x04\x12R\n" +
-	"\x0eUpdateWorkflow\x12\x1b.hi.media.UpdateWorkflowReq\x1a\x1c.hi.media.UpdateWorkflowResp\"\x05\x8a\xb5\x18\x01\x04\x12k\n" +
-	"\x11UpdateDescription\x12&.hi.media.UpdateWorkflowDescriptionReq\x1a'.hi.media.UpdateWorkflowDescriptionResp\"\x05\x8a\xb5\x18\x01\x04\x12P\n" +
+	"$WORKFLOW_DEPENDENCY_KIND_LOADER_FILE\x10\x022\x93\x05\n" +
+	"\x0eWorkflowManage\x12J\n" +
+	"\x06Update\x12\x1b.hi.media.UpdateWorkflowReq\x1a\x1c.hi.media.UpdateWorkflowResp\"\x05\x8a\xb5\x18\x01\x04\x12P\n" +
 	"\bValidate\x12\x1d.hi.media.ValidateWorkflowReq\x1a\x1e.hi.media.ValidateWorkflowResp\"\x05\x8a\xb5\x18\x01\x04\x12D\n" +
 	"\x04Test\x12\x19.hi.media.TestWorkflowReq\x1a\x1a.hi.media.TestWorkflowResp\"\x05\x8a\xb5\x18\x01\x04\x12S\n" +
-	"\tListTests\x12\x1e.hi.media.ListWorkflowTestsReq\x1a\x1f.hi.media.ListWorkflowTestsResp\"\x05\x8a\xb5\x18\x01\x04\x12F\n" +
+	"\tListTests\x12\x1e.hi.media.ListWorkflowTestsReq\x1a\x1f.hi.media.ListWorkflowTestsResp\"\x05\x8a\xb5\x18\x01\x04\x12V\n" +
+	"\n" +
+	"SetDefault\x12\x1f.hi.media.SetDefaultWorkflowReq\x1a .hi.media.SetDefaultWorkflowResp\"\x05\x8a\xb5\x18\x01\x04\x12e\n" +
+	"\x0fUpdateSortOrder\x12$.hi.media.UpdateWorkflowSortOrderReq\x1a%.hi.media.UpdateWorkflowSortOrderResp\"\x05\x8a\xb5\x18\x01\x04\x12F\n" +
 	"\x04List\x12\x1a.hi.media.ListWorkflowsReq\x1a\x1b.hi.media.ListWorkflowsResp\"\x05\x8a\xb5\x18\x01\x04\x12A\n" +
 	"\x03Get\x12\x18.hi.media.GetWorkflowReq\x1a\x19.hi.media.GetWorkflowResp\"\x05\x8a\xb5\x18\x01\x04B\x90\x01\n" +
 	"\fcom.hi.mediaB\x13WorkflowManageProtoP\x01Z*github.com/HiWorld-56/hi-proto/go/hi/media\xa2\x02\x03HMX\xaa\x02\bHi.Media\xca\x02\bHi\\Media\xe2\x02\x14Hi\\Media\\GPBMetadata\xea\x02\tHi::Mediab\x06proto3"
@@ -2684,63 +2941,67 @@ func file_hi_media_workflow_manage_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_media_workflow_manage_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
-var file_hi_media_workflow_manage_proto_msgTypes = make([]protoimpl.MessageInfo, 34)
+var file_hi_media_workflow_manage_proto_msgTypes = make([]protoimpl.MessageInfo, 37)
 var file_hi_media_workflow_manage_proto_goTypes = []any{
-	(WorkflowStatus)(0),                   // 0: hi.media.WorkflowStatus
-	(WorkflowValidationStatus)(0),         // 1: hi.media.WorkflowValidationStatus
-	(WorkflowIssueSeverity)(0),            // 2: hi.media.WorkflowIssueSeverity
-	(WorkflowDependencyKind)(0),           // 3: hi.media.WorkflowDependencyKind
-	(*WorkflowInputBinding)(nil),          // 4: hi.media.WorkflowInputBinding
-	(*WorkflowOutputConfig)(nil),          // 5: hi.media.WorkflowOutputConfig
-	(*WorkflowStringOptionInput)(nil),     // 6: hi.media.WorkflowStringOptionInput
-	(*WorkflowDecimalOptionInput)(nil),    // 7: hi.media.WorkflowDecimalOptionInput
-	(*WorkflowIntRangeInput)(nil),         // 8: hi.media.WorkflowIntRangeInput
-	(*WorkflowFixedTextInput)(nil),        // 9: hi.media.WorkflowFixedTextInput
-	(*WorkflowSelectableFrameRate)(nil),   // 10: hi.media.WorkflowSelectableFrameRate
-	(*WorkflowFrameRateInput)(nil),        // 11: hi.media.WorkflowFrameRateInput
-	(*ImageToVideoWorkflowConfig)(nil),    // 12: hi.media.ImageToVideoWorkflowConfig
-	(*TextToVideoWorkflowConfig)(nil),     // 13: hi.media.TextToVideoWorkflowConfig
-	(*WorkflowExecutionConfig)(nil),       // 14: hi.media.WorkflowExecutionConfig
-	(*WorkflowIssue)(nil),                 // 15: hi.media.WorkflowIssue
-	(*WorkflowNodeInput)(nil),             // 16: hi.media.WorkflowNodeInput
-	(*WorkflowNode)(nil),                  // 17: hi.media.WorkflowNode
-	(*WorkflowDependencyUsage)(nil),       // 18: hi.media.WorkflowDependencyUsage
-	(*WorkflowDependency)(nil),            // 19: hi.media.WorkflowDependency
-	(*WorkflowSummary)(nil),               // 20: hi.media.WorkflowSummary
-	(*WorkflowDetail)(nil),                // 21: hi.media.WorkflowDetail
-	(*ImportWorkflowReq)(nil),             // 22: hi.media.ImportWorkflowReq
-	(*ImportWorkflowResp)(nil),            // 23: hi.media.ImportWorkflowResp
-	(*UpdateWorkflowReq)(nil),             // 24: hi.media.UpdateWorkflowReq
-	(*UpdateWorkflowResp)(nil),            // 25: hi.media.UpdateWorkflowResp
-	(*UpdateWorkflowDescriptionReq)(nil),  // 26: hi.media.UpdateWorkflowDescriptionReq
-	(*UpdateWorkflowDescriptionResp)(nil), // 27: hi.media.UpdateWorkflowDescriptionResp
-	(*GetWorkflowReq)(nil),                // 28: hi.media.GetWorkflowReq
-	(*GetWorkflowResp)(nil),               // 29: hi.media.GetWorkflowResp
-	(*ListWorkflowsReq)(nil),              // 30: hi.media.ListWorkflowsReq
-	(*ListWorkflowsResp)(nil),             // 31: hi.media.ListWorkflowsResp
-	(*ValidateWorkflowReq)(nil),           // 32: hi.media.ValidateWorkflowReq
-	(*ValidateWorkflowResp)(nil),          // 33: hi.media.ValidateWorkflowResp
-	(*TestWorkflowReq)(nil),               // 34: hi.media.TestWorkflowReq
-	(*TestWorkflowResp)(nil),              // 35: hi.media.TestWorkflowResp
-	(*ListWorkflowTestsReq)(nil),          // 36: hi.media.ListWorkflowTestsReq
-	(*ListWorkflowTestsResp)(nil),         // 37: hi.media.ListWorkflowTestsResp
-	(*StringOptionConfig)(nil),            // 38: hi.media.StringOptionConfig
-	(*DecimalOptionConfig)(nil),           // 39: hi.media.DecimalOptionConfig
-	(*IntRangeConfig)(nil),                // 40: hi.media.IntRangeConfig
-	(FeatureKey)(0),                       // 41: hi.media.FeatureKey
-	(*hi.Pagination)(nil),                 // 42: hi.Pagination
-	(*TaskSummary)(nil),                   // 43: hi.media.TaskSummary
+	(WorkflowStatus)(0),                 // 0: hi.media.WorkflowStatus
+	(WorkflowValidationStatus)(0),       // 1: hi.media.WorkflowValidationStatus
+	(WorkflowIssueSeverity)(0),          // 2: hi.media.WorkflowIssueSeverity
+	(WorkflowDependencyKind)(0),         // 3: hi.media.WorkflowDependencyKind
+	(*WorkflowInputBinding)(nil),        // 4: hi.media.WorkflowInputBinding
+	(*WorkflowOutputConfig)(nil),        // 5: hi.media.WorkflowOutputConfig
+	(*WorkflowStringOptionInput)(nil),   // 6: hi.media.WorkflowStringOptionInput
+	(*WorkflowDecimalOptionInput)(nil),  // 7: hi.media.WorkflowDecimalOptionInput
+	(*WorkflowIntRangeInput)(nil),       // 8: hi.media.WorkflowIntRangeInput
+	(*WorkflowFixedTextInput)(nil),      // 9: hi.media.WorkflowFixedTextInput
+	(*WorkflowSelectableFrameRate)(nil), // 10: hi.media.WorkflowSelectableFrameRate
+	(*WorkflowFrameRateInput)(nil),      // 11: hi.media.WorkflowFrameRateInput
+	(*ImageToVideoWorkflowConfig)(nil),  // 12: hi.media.ImageToVideoWorkflowConfig
+	(*TextToVideoWorkflowConfig)(nil),   // 13: hi.media.TextToVideoWorkflowConfig
+	(*WorkflowExecutionConfig)(nil),     // 14: hi.media.WorkflowExecutionConfig
+	(*WorkflowIssue)(nil),               // 15: hi.media.WorkflowIssue
+	(*WorkflowNodeInput)(nil),           // 16: hi.media.WorkflowNodeInput
+	(*WorkflowNode)(nil),                // 17: hi.media.WorkflowNode
+	(*WorkflowDependencyUsage)(nil),     // 18: hi.media.WorkflowDependencyUsage
+	(*WorkflowDependency)(nil),          // 19: hi.media.WorkflowDependency
+	(*WorkflowSummary)(nil),             // 20: hi.media.WorkflowSummary
+	(*WorkflowDetail)(nil),              // 21: hi.media.WorkflowDetail
+	(*WorkflowImportMetadata)(nil),      // 22: hi.media.WorkflowImportMetadata
+	(*WorkflowReplaceFileMetadata)(nil), // 23: hi.media.WorkflowReplaceFileMetadata
+	(*WorkflowFileMutationResp)(nil),    // 24: hi.media.WorkflowFileMutationResp
+	(*UpdateWorkflowReq)(nil),           // 25: hi.media.UpdateWorkflowReq
+	(*UpdateWorkflowResp)(nil),          // 26: hi.media.UpdateWorkflowResp
+	(*GetWorkflowReq)(nil),              // 27: hi.media.GetWorkflowReq
+	(*GetWorkflowResp)(nil),             // 28: hi.media.GetWorkflowResp
+	(*ListWorkflowsReq)(nil),            // 29: hi.media.ListWorkflowsReq
+	(*ListWorkflowsResp)(nil),           // 30: hi.media.ListWorkflowsResp
+	(*ValidateWorkflowReq)(nil),         // 31: hi.media.ValidateWorkflowReq
+	(*ValidateWorkflowResp)(nil),        // 32: hi.media.ValidateWorkflowResp
+	(*TestWorkflowReq)(nil),             // 33: hi.media.TestWorkflowReq
+	(*TestWorkflowResp)(nil),            // 34: hi.media.TestWorkflowResp
+	(*ListWorkflowTestsReq)(nil),        // 35: hi.media.ListWorkflowTestsReq
+	(*ListWorkflowTestsResp)(nil),       // 36: hi.media.ListWorkflowTestsResp
+	(*SetDefaultWorkflowReq)(nil),       // 37: hi.media.SetDefaultWorkflowReq
+	(*SetDefaultWorkflowResp)(nil),      // 38: hi.media.SetDefaultWorkflowResp
+	(*UpdateWorkflowSortOrderReq)(nil),  // 39: hi.media.UpdateWorkflowSortOrderReq
+	(*UpdateWorkflowSortOrderResp)(nil), // 40: hi.media.UpdateWorkflowSortOrderResp
+	(*StringOptionConfig)(nil),          // 41: hi.media.StringOptionConfig
+	(*DecimalOptionConfig)(nil),         // 42: hi.media.DecimalOptionConfig
+	(*IntRangeConfig)(nil),              // 43: hi.media.IntRangeConfig
+	(*FunctionSummary)(nil),             // 44: hi.media.FunctionSummary
+	(*Model)(nil),                       // 45: hi.media.Model
+	(*hi.Pagination)(nil),               // 46: hi.Pagination
+	(*TaskSummary)(nil),                 // 47: hi.media.TaskSummary
 }
 var file_hi_media_workflow_manage_proto_depIdxs = []int32{
 	4,  // 0: hi.media.WorkflowStringOptionInput.binding:type_name -> hi.media.WorkflowInputBinding
-	38, // 1: hi.media.WorkflowStringOptionInput.values:type_name -> hi.media.StringOptionConfig
+	41, // 1: hi.media.WorkflowStringOptionInput.values:type_name -> hi.media.StringOptionConfig
 	4,  // 2: hi.media.WorkflowDecimalOptionInput.binding:type_name -> hi.media.WorkflowInputBinding
-	39, // 3: hi.media.WorkflowDecimalOptionInput.values:type_name -> hi.media.DecimalOptionConfig
+	42, // 3: hi.media.WorkflowDecimalOptionInput.values:type_name -> hi.media.DecimalOptionConfig
 	4,  // 4: hi.media.WorkflowIntRangeInput.binding:type_name -> hi.media.WorkflowInputBinding
-	40, // 5: hi.media.WorkflowIntRangeInput.values:type_name -> hi.media.IntRangeConfig
+	43, // 5: hi.media.WorkflowIntRangeInput.values:type_name -> hi.media.IntRangeConfig
 	4,  // 6: hi.media.WorkflowFixedTextInput.binding:type_name -> hi.media.WorkflowInputBinding
 	4,  // 7: hi.media.WorkflowSelectableFrameRate.binding:type_name -> hi.media.WorkflowInputBinding
-	40, // 8: hi.media.WorkflowSelectableFrameRate.values:type_name -> hi.media.IntRangeConfig
+	43, // 8: hi.media.WorkflowSelectableFrameRate.values:type_name -> hi.media.IntRangeConfig
 	10, // 9: hi.media.WorkflowFrameRateInput.selectable:type_name -> hi.media.WorkflowSelectableFrameRate
 	4,  // 10: hi.media.ImageToVideoWorkflowConfig.input_image:type_name -> hi.media.WorkflowInputBinding
 	4,  // 11: hi.media.ImageToVideoWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
@@ -2762,43 +3023,43 @@ var file_hi_media_workflow_manage_proto_depIdxs = []int32{
 	16, // 27: hi.media.WorkflowNode.inputs:type_name -> hi.media.WorkflowNodeInput
 	3,  // 28: hi.media.WorkflowDependency.kind:type_name -> hi.media.WorkflowDependencyKind
 	18, // 29: hi.media.WorkflowDependency.usages:type_name -> hi.media.WorkflowDependencyUsage
-	41, // 30: hi.media.WorkflowSummary.feature_key:type_name -> hi.media.FeatureKey
-	0,  // 31: hi.media.WorkflowSummary.status:type_name -> hi.media.WorkflowStatus
-	1,  // 32: hi.media.WorkflowSummary.validation_status:type_name -> hi.media.WorkflowValidationStatus
-	20, // 33: hi.media.WorkflowDetail.summary:type_name -> hi.media.WorkflowSummary
-	14, // 34: hi.media.WorkflowDetail.config:type_name -> hi.media.WorkflowExecutionConfig
-	17, // 35: hi.media.WorkflowDetail.nodes:type_name -> hi.media.WorkflowNode
-	19, // 36: hi.media.WorkflowDetail.dependencies:type_name -> hi.media.WorkflowDependency
-	15, // 37: hi.media.WorkflowDetail.validation_issues:type_name -> hi.media.WorkflowIssue
-	41, // 38: hi.media.ImportWorkflowReq.feature_key:type_name -> hi.media.FeatureKey
+	44, // 30: hi.media.WorkflowSummary.function:type_name -> hi.media.FunctionSummary
+	45, // 31: hi.media.WorkflowSummary.model:type_name -> hi.media.Model
+	0,  // 32: hi.media.WorkflowSummary.status:type_name -> hi.media.WorkflowStatus
+	1,  // 33: hi.media.WorkflowSummary.validation_status:type_name -> hi.media.WorkflowValidationStatus
+	20, // 34: hi.media.WorkflowDetail.summary:type_name -> hi.media.WorkflowSummary
+	14, // 35: hi.media.WorkflowDetail.config:type_name -> hi.media.WorkflowExecutionConfig
+	17, // 36: hi.media.WorkflowDetail.nodes:type_name -> hi.media.WorkflowNode
+	19, // 37: hi.media.WorkflowDetail.dependencies:type_name -> hi.media.WorkflowDependency
+	15, // 38: hi.media.WorkflowDetail.validation_issues:type_name -> hi.media.WorkflowIssue
 	14, // 39: hi.media.UpdateWorkflowReq.config:type_name -> hi.media.WorkflowExecutionConfig
 	21, // 40: hi.media.UpdateWorkflowResp.workflow:type_name -> hi.media.WorkflowDetail
-	21, // 41: hi.media.UpdateWorkflowDescriptionResp.workflow:type_name -> hi.media.WorkflowDetail
-	21, // 42: hi.media.GetWorkflowResp.workflow:type_name -> hi.media.WorkflowDetail
-	42, // 43: hi.media.ListWorkflowsReq.pagination:type_name -> hi.Pagination
-	41, // 44: hi.media.ListWorkflowsReq.feature_key:type_name -> hi.media.FeatureKey
-	0,  // 45: hi.media.ListWorkflowsReq.status:type_name -> hi.media.WorkflowStatus
-	20, // 46: hi.media.ListWorkflowsResp.workflows:type_name -> hi.media.WorkflowSummary
-	1,  // 47: hi.media.ValidateWorkflowResp.status:type_name -> hi.media.WorkflowValidationStatus
-	15, // 48: hi.media.ValidateWorkflowResp.issues:type_name -> hi.media.WorkflowIssue
-	42, // 49: hi.media.ListWorkflowTestsReq.pagination:type_name -> hi.Pagination
-	43, // 50: hi.media.ListWorkflowTestsResp.tasks:type_name -> hi.media.TaskSummary
-	22, // 51: hi.media.WorkflowManage.ImportWorkflow:input_type -> hi.media.ImportWorkflowReq
-	24, // 52: hi.media.WorkflowManage.UpdateWorkflow:input_type -> hi.media.UpdateWorkflowReq
-	26, // 53: hi.media.WorkflowManage.UpdateDescription:input_type -> hi.media.UpdateWorkflowDescriptionReq
-	32, // 54: hi.media.WorkflowManage.Validate:input_type -> hi.media.ValidateWorkflowReq
-	34, // 55: hi.media.WorkflowManage.Test:input_type -> hi.media.TestWorkflowReq
-	36, // 56: hi.media.WorkflowManage.ListTests:input_type -> hi.media.ListWorkflowTestsReq
-	30, // 57: hi.media.WorkflowManage.List:input_type -> hi.media.ListWorkflowsReq
-	28, // 58: hi.media.WorkflowManage.Get:input_type -> hi.media.GetWorkflowReq
-	23, // 59: hi.media.WorkflowManage.ImportWorkflow:output_type -> hi.media.ImportWorkflowResp
-	25, // 60: hi.media.WorkflowManage.UpdateWorkflow:output_type -> hi.media.UpdateWorkflowResp
-	27, // 61: hi.media.WorkflowManage.UpdateDescription:output_type -> hi.media.UpdateWorkflowDescriptionResp
-	33, // 62: hi.media.WorkflowManage.Validate:output_type -> hi.media.ValidateWorkflowResp
-	35, // 63: hi.media.WorkflowManage.Test:output_type -> hi.media.TestWorkflowResp
-	37, // 64: hi.media.WorkflowManage.ListTests:output_type -> hi.media.ListWorkflowTestsResp
-	31, // 65: hi.media.WorkflowManage.List:output_type -> hi.media.ListWorkflowsResp
-	29, // 66: hi.media.WorkflowManage.Get:output_type -> hi.media.GetWorkflowResp
+	21, // 41: hi.media.GetWorkflowResp.workflow:type_name -> hi.media.WorkflowDetail
+	46, // 42: hi.media.ListWorkflowsReq.pagination:type_name -> hi.Pagination
+	0,  // 43: hi.media.ListWorkflowsReq.status:type_name -> hi.media.WorkflowStatus
+	20, // 44: hi.media.ListWorkflowsResp.workflows:type_name -> hi.media.WorkflowSummary
+	1,  // 45: hi.media.ValidateWorkflowResp.status:type_name -> hi.media.WorkflowValidationStatus
+	15, // 46: hi.media.ValidateWorkflowResp.issues:type_name -> hi.media.WorkflowIssue
+	46, // 47: hi.media.ListWorkflowTestsReq.pagination:type_name -> hi.Pagination
+	47, // 48: hi.media.ListWorkflowTestsResp.tasks:type_name -> hi.media.TaskSummary
+	20, // 49: hi.media.SetDefaultWorkflowResp.workflow:type_name -> hi.media.WorkflowSummary
+	20, // 50: hi.media.UpdateWorkflowSortOrderResp.workflows:type_name -> hi.media.WorkflowSummary
+	25, // 51: hi.media.WorkflowManage.Update:input_type -> hi.media.UpdateWorkflowReq
+	31, // 52: hi.media.WorkflowManage.Validate:input_type -> hi.media.ValidateWorkflowReq
+	33, // 53: hi.media.WorkflowManage.Test:input_type -> hi.media.TestWorkflowReq
+	35, // 54: hi.media.WorkflowManage.ListTests:input_type -> hi.media.ListWorkflowTestsReq
+	37, // 55: hi.media.WorkflowManage.SetDefault:input_type -> hi.media.SetDefaultWorkflowReq
+	39, // 56: hi.media.WorkflowManage.UpdateSortOrder:input_type -> hi.media.UpdateWorkflowSortOrderReq
+	29, // 57: hi.media.WorkflowManage.List:input_type -> hi.media.ListWorkflowsReq
+	27, // 58: hi.media.WorkflowManage.Get:input_type -> hi.media.GetWorkflowReq
+	26, // 59: hi.media.WorkflowManage.Update:output_type -> hi.media.UpdateWorkflowResp
+	32, // 60: hi.media.WorkflowManage.Validate:output_type -> hi.media.ValidateWorkflowResp
+	34, // 61: hi.media.WorkflowManage.Test:output_type -> hi.media.TestWorkflowResp
+	36, // 62: hi.media.WorkflowManage.ListTests:output_type -> hi.media.ListWorkflowTestsResp
+	38, // 63: hi.media.WorkflowManage.SetDefault:output_type -> hi.media.SetDefaultWorkflowResp
+	40, // 64: hi.media.WorkflowManage.UpdateSortOrder:output_type -> hi.media.UpdateWorkflowSortOrderResp
+	30, // 65: hi.media.WorkflowManage.List:output_type -> hi.media.ListWorkflowsResp
+	28, // 66: hi.media.WorkflowManage.Get:output_type -> hi.media.GetWorkflowResp
 	59, // [59:67] is the sub-list for method output_type
 	51, // [51:59] is the sub-list for method input_type
 	51, // [51:51] is the sub-list for extension type_name
@@ -2811,7 +3072,8 @@ func file_hi_media_workflow_manage_proto_init() {
 	if File_hi_media_workflow_manage_proto != nil {
 		return
 	}
-	file_hi_media_feature_proto_init()
+	file_hi_media_function_proto_init()
+	file_hi_media_model_manage_proto_init()
 	file_hi_media_task_proto_init()
 	file_hi_media_workflow_manage_proto_msgTypes[0].OneofWrappers = []any{}
 	file_hi_media_workflow_manage_proto_msgTypes[1].OneofWrappers = []any{}
@@ -2836,8 +3098,9 @@ func file_hi_media_workflow_manage_proto_init() {
 	file_hi_media_workflow_manage_proto_msgTypes[18].OneofWrappers = []any{}
 	file_hi_media_workflow_manage_proto_msgTypes[19].OneofWrappers = []any{}
 	file_hi_media_workflow_manage_proto_msgTypes[20].OneofWrappers = []any{}
-	file_hi_media_workflow_manage_proto_msgTypes[22].OneofWrappers = []any{}
-	file_hi_media_workflow_manage_proto_msgTypes[24].OneofWrappers = []any{}
+	file_hi_media_workflow_manage_proto_msgTypes[21].OneofWrappers = []any{}
+	file_hi_media_workflow_manage_proto_msgTypes[23].OneofWrappers = []any{}
+	file_hi_media_workflow_manage_proto_msgTypes[25].OneofWrappers = []any{}
 	file_hi_media_workflow_manage_proto_msgTypes[26].OneofWrappers = []any{}
 	file_hi_media_workflow_manage_proto_msgTypes[27].OneofWrappers = []any{}
 	file_hi_media_workflow_manage_proto_msgTypes[28].OneofWrappers = []any{}
@@ -2846,13 +3109,14 @@ func file_hi_media_workflow_manage_proto_init() {
 	file_hi_media_workflow_manage_proto_msgTypes[31].OneofWrappers = []any{}
 	file_hi_media_workflow_manage_proto_msgTypes[32].OneofWrappers = []any{}
 	file_hi_media_workflow_manage_proto_msgTypes[33].OneofWrappers = []any{}
+	file_hi_media_workflow_manage_proto_msgTypes[35].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_media_workflow_manage_proto_rawDesc), len(file_hi_media_workflow_manage_proto_rawDesc)),
 			NumEnums:      4,
-			NumMessages:   34,
+			NumMessages:   37,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

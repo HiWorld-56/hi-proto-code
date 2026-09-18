@@ -6,7 +6,10 @@ from hi.media import workflow_manage_pb2 as hi_dot_media_dot_workflow__manage__p
 
 
 class WorkflowManageStub(object):
-    """Missing associated documentation comment in .proto file."""
+    """管理员工作流配置、校验、试跑与展示设置。
+    文件导入/替换使用上述 AUTH_SUPERADMIN multipart HTTP 接口，
+    不声明 Import/ReplaceFile RPC，不由 grpc-gateway 生成上传路由。
+    """
 
     def __init__(self, channel):
         """Constructor.
@@ -14,20 +17,10 @@ class WorkflowManageStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.ImportWorkflow = channel.unary_unary(
-                '/hi.media.WorkflowManage/ImportWorkflow',
-                request_serializer=hi_dot_media_dot_workflow__manage__pb2.ImportWorkflowReq.SerializeToString,
-                response_deserializer=hi_dot_media_dot_workflow__manage__pb2.ImportWorkflowResp.FromString,
-                _registered_method=True)
-        self.UpdateWorkflow = channel.unary_unary(
-                '/hi.media.WorkflowManage/UpdateWorkflow',
+        self.Update = channel.unary_unary(
+                '/hi.media.WorkflowManage/Update',
                 request_serializer=hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowReq.SerializeToString,
                 response_deserializer=hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowResp.FromString,
-                _registered_method=True)
-        self.UpdateDescription = channel.unary_unary(
-                '/hi.media.WorkflowManage/UpdateDescription',
-                request_serializer=hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowDescriptionReq.SerializeToString,
-                response_deserializer=hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowDescriptionResp.FromString,
                 _registered_method=True)
         self.Validate = channel.unary_unary(
                 '/hi.media.WorkflowManage/Validate',
@@ -44,6 +37,16 @@ class WorkflowManageStub(object):
                 request_serializer=hi_dot_media_dot_workflow__manage__pb2.ListWorkflowTestsReq.SerializeToString,
                 response_deserializer=hi_dot_media_dot_workflow__manage__pb2.ListWorkflowTestsResp.FromString,
                 _registered_method=True)
+        self.SetDefault = channel.unary_unary(
+                '/hi.media.WorkflowManage/SetDefault',
+                request_serializer=hi_dot_media_dot_workflow__manage__pb2.SetDefaultWorkflowReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_workflow__manage__pb2.SetDefaultWorkflowResp.FromString,
+                _registered_method=True)
+        self.UpdateSortOrder = channel.unary_unary(
+                '/hi.media.WorkflowManage/UpdateSortOrder',
+                request_serializer=hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowSortOrderReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowSortOrderResp.FromString,
+                _registered_method=True)
         self.List = channel.unary_unary(
                 '/hi.media.WorkflowManage/List',
                 request_serializer=hi_dot_media_dot_workflow__manage__pb2.ListWorkflowsReq.SerializeToString,
@@ -57,52 +60,63 @@ class WorkflowManageStub(object):
 
 
 class WorkflowManageServicer(object):
-    """Missing associated documentation comment in .proto file."""
+    """管理员工作流配置、校验、试跑与展示设置。
+    文件导入/替换使用上述 AUTH_SUPERADMIN multipart HTTP 接口，
+    不声明 Import/ReplaceFile RPC，不由 grpc-gateway 生成上传路由。
+    """
 
-    def ImportWorkflow(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def UpdateWorkflow(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def UpdateDescription(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+    def Update(self, request, context):
+        """说明和执行配置按 presence 更新；普通任务、试跑与配置修改共用工作流行锁。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def Validate(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """校验当前内容；上游暂时不可用时返回 Unavailable，不覆盖之前的校验结果。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def Test(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """使用统一 FIFO 和发起者额度执行真实试跑；成功保存并结算后自动启用草稿。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def ListTests(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """按工作流分页查询管理试跑记录。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def SetDefault(self, request, context):
+        """管理员手动指定或清除默认项，同一功能最多一个，也允许没有默认项。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def UpdateSortOrder(self, request, context):
+        """设置同一功能全部工作流的顺序。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def List(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """只读取数据库摘要，不下载工作流文件。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def Get(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """读取当前文件并解析绑定候选节点；object_info 不可用时仍返回可解析的基础节点。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -110,20 +124,10 @@ class WorkflowManageServicer(object):
 
 def add_WorkflowManageServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'ImportWorkflow': grpc.unary_unary_rpc_method_handler(
-                    servicer.ImportWorkflow,
-                    request_deserializer=hi_dot_media_dot_workflow__manage__pb2.ImportWorkflowReq.FromString,
-                    response_serializer=hi_dot_media_dot_workflow__manage__pb2.ImportWorkflowResp.SerializeToString,
-            ),
-            'UpdateWorkflow': grpc.unary_unary_rpc_method_handler(
-                    servicer.UpdateWorkflow,
+            'Update': grpc.unary_unary_rpc_method_handler(
+                    servicer.Update,
                     request_deserializer=hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowReq.FromString,
                     response_serializer=hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowResp.SerializeToString,
-            ),
-            'UpdateDescription': grpc.unary_unary_rpc_method_handler(
-                    servicer.UpdateDescription,
-                    request_deserializer=hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowDescriptionReq.FromString,
-                    response_serializer=hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowDescriptionResp.SerializeToString,
             ),
             'Validate': grpc.unary_unary_rpc_method_handler(
                     servicer.Validate,
@@ -139,6 +143,16 @@ def add_WorkflowManageServicer_to_server(servicer, server):
                     servicer.ListTests,
                     request_deserializer=hi_dot_media_dot_workflow__manage__pb2.ListWorkflowTestsReq.FromString,
                     response_serializer=hi_dot_media_dot_workflow__manage__pb2.ListWorkflowTestsResp.SerializeToString,
+            ),
+            'SetDefault': grpc.unary_unary_rpc_method_handler(
+                    servicer.SetDefault,
+                    request_deserializer=hi_dot_media_dot_workflow__manage__pb2.SetDefaultWorkflowReq.FromString,
+                    response_serializer=hi_dot_media_dot_workflow__manage__pb2.SetDefaultWorkflowResp.SerializeToString,
+            ),
+            'UpdateSortOrder': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdateSortOrder,
+                    request_deserializer=hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowSortOrderReq.FromString,
+                    response_serializer=hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowSortOrderResp.SerializeToString,
             ),
             'List': grpc.unary_unary_rpc_method_handler(
                     servicer.List,
@@ -159,10 +173,13 @@ def add_WorkflowManageServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class WorkflowManage(object):
-    """Missing associated documentation comment in .proto file."""
+    """管理员工作流配置、校验、试跑与展示设置。
+    文件导入/替换使用上述 AUTH_SUPERADMIN multipart HTTP 接口，
+    不声明 Import/ReplaceFile RPC，不由 grpc-gateway 生成上传路由。
+    """
 
     @staticmethod
-    def ImportWorkflow(request,
+    def Update(request,
             target,
             options=(),
             channel_credentials=None,
@@ -175,63 +192,9 @@ class WorkflowManage(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.media.WorkflowManage/ImportWorkflow',
-            hi_dot_media_dot_workflow__manage__pb2.ImportWorkflowReq.SerializeToString,
-            hi_dot_media_dot_workflow__manage__pb2.ImportWorkflowResp.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def UpdateWorkflow(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/hi.media.WorkflowManage/UpdateWorkflow',
+            '/hi.media.WorkflowManage/Update',
             hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowReq.SerializeToString,
             hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowResp.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def UpdateDescription(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/hi.media.WorkflowManage/UpdateDescription',
-            hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowDescriptionReq.SerializeToString,
-            hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowDescriptionResp.FromString,
             options,
             channel_credentials,
             insecure,
@@ -313,6 +276,60 @@ class WorkflowManage(object):
             '/hi.media.WorkflowManage/ListTests',
             hi_dot_media_dot_workflow__manage__pb2.ListWorkflowTestsReq.SerializeToString,
             hi_dot_media_dot_workflow__manage__pb2.ListWorkflowTestsResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def SetDefault(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.media.WorkflowManage/SetDefault',
+            hi_dot_media_dot_workflow__manage__pb2.SetDefaultWorkflowReq.SerializeToString,
+            hi_dot_media_dot_workflow__manage__pb2.SetDefaultWorkflowResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def UpdateSortOrder(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.media.WorkflowManage/UpdateSortOrder',
+            hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowSortOrderReq.SerializeToString,
+            hi_dot_media_dot_workflow__manage__pb2.UpdateWorkflowSortOrderResp.FromString,
             options,
             channel_credentials,
             insecure,

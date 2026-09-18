@@ -119,13 +119,13 @@ const CreateImageToVideoTaskReq$json = {
       '17': true
     },
     {
-      '1': 'model_mapping_id',
+      '1': 'workflow_id',
       '3': 2,
       '4': 1,
       '5': 9,
       '8': {},
       '9': 1,
-      '10': 'modelMappingId',
+      '10': 'workflowId',
       '17': true
     },
     {
@@ -179,7 +179,7 @@ const CreateImageToVideoTaskReq$json = {
   ],
   '8': [
     {'1': '_request_id'},
-    {'1': '_model_mapping_id'},
+    {'1': '_workflow_id'},
     {'1': '_input_asset_id'},
     {'1': '_prompt'},
     {'1': '_duration_seconds'},
@@ -190,14 +190,14 @@ const CreateImageToVideoTaskReq$json = {
 /// Descriptor for `CreateImageToVideoTaskReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List createImageToVideoTaskReqDescriptor = $convert.base64Decode(
     'ChlDcmVhdGVJbWFnZVRvVmlkZW9UYXNrUmVxEi4KCnJlcXVlc3RfaWQYASABKAlCCrpIB8gBAX'
-    'ICEAFIAFIJcmVxdWVzdElkiAEBEjkKEG1vZGVsX21hcHBpbmdfaWQYAiABKAlCCrpIB8gBAXIC'
-    'EAFIAVIObW9kZWxNYXBwaW5nSWSIAQESNQoOaW5wdXRfYXNzZXRfaWQYAyABKAlCCrpIB8gBAX'
-    'ICEAFIAlIMaW5wdXRBc3NldElkiAEBEicKBnByb21wdBgEIAEoCUIKukgHyAEBcgIQAUgDUgZw'
-    'cm9tcHSIAQESOQoKcmVzb2x1dGlvbhgFIAEoCzIZLmhpLm1lZGlhLlZpZGVvUmVzb2x1dGlvbl'
-    'IKcmVzb2x1dGlvbhI3ChBkdXJhdGlvbl9zZWNvbmRzGAYgASgFQge6SAQaAiAASARSD2R1cmF0'
-    'aW9uU2Vjb25kc4gBARIrCgpmcmFtZV9yYXRlGAcgASgFQge6SAQaAiAASAVSCWZyYW1lUmF0ZY'
-    'gBAUINCgtfcmVxdWVzdF9pZEITChFfbW9kZWxfbWFwcGluZ19pZEIRCg9faW5wdXRfYXNzZXRf'
-    'aWRCCQoHX3Byb21wdEITChFfZHVyYXRpb25fc2Vjb25kc0INCgtfZnJhbWVfcmF0ZQ==');
+    'ICEAFIAFIJcmVxdWVzdElkiAEBEjAKC3dvcmtmbG93X2lkGAIgASgJQgq6SAfIAQFyAhABSAFS'
+    'CndvcmtmbG93SWSIAQESNQoOaW5wdXRfYXNzZXRfaWQYAyABKAlCCrpIB8gBAXICEAFIAlIMaW'
+    '5wdXRBc3NldElkiAEBEicKBnByb21wdBgEIAEoCUIKukgHyAEBcgIQAUgDUgZwcm9tcHSIAQES'
+    'OQoKcmVzb2x1dGlvbhgFIAEoCzIZLmhpLm1lZGlhLlZpZGVvUmVzb2x1dGlvblIKcmVzb2x1dG'
+    'lvbhI3ChBkdXJhdGlvbl9zZWNvbmRzGAYgASgFQge6SAQaAiAASARSD2R1cmF0aW9uU2Vjb25k'
+    'c4gBARIrCgpmcmFtZV9yYXRlGAcgASgFQge6SAQaAiAASAVSCWZyYW1lUmF0ZYgBAUINCgtfcm'
+    'VxdWVzdF9pZEIOCgxfd29ya2Zsb3dfaWRCEQoPX2lucHV0X2Fzc2V0X2lkQgkKB19wcm9tcHRC'
+    'EwoRX2R1cmF0aW9uX3NlY29uZHNCDQoLX2ZyYW1lX3JhdGU=');
 
 @$core.Deprecated('Use createTextToVideoTaskReqDescriptor instead')
 const CreateTextToVideoTaskReq$json = {
@@ -214,13 +214,13 @@ const CreateTextToVideoTaskReq$json = {
       '17': true
     },
     {
-      '1': 'model_mapping_id',
+      '1': 'workflow_id',
       '3': 2,
       '4': 1,
       '5': 9,
       '8': {},
       '9': 1,
-      '10': 'modelMappingId',
+      '10': 'workflowId',
       '17': true
     },
     {
@@ -264,7 +264,7 @@ const CreateTextToVideoTaskReq$json = {
   ],
   '8': [
     {'1': '_request_id'},
-    {'1': '_model_mapping_id'},
+    {'1': '_workflow_id'},
     {'1': '_prompt'},
     {'1': '_duration_seconds'},
     {'1': '_frame_rate'},
@@ -274,13 +274,13 @@ const CreateTextToVideoTaskReq$json = {
 /// Descriptor for `CreateTextToVideoTaskReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List createTextToVideoTaskReqDescriptor = $convert.base64Decode(
     'ChhDcmVhdGVUZXh0VG9WaWRlb1Rhc2tSZXESLgoKcmVxdWVzdF9pZBgBIAEoCUIKukgHyAEBcg'
-    'IQAUgAUglyZXF1ZXN0SWSIAQESOQoQbW9kZWxfbWFwcGluZ19pZBgCIAEoCUIKukgHyAEBcgIQ'
-    'AUgBUg5tb2RlbE1hcHBpbmdJZIgBARInCgZwcm9tcHQYAyABKAlCCrpIB8gBAXICEAFIAlIGcH'
-    'JvbXB0iAEBEjkKCnJlc29sdXRpb24YBCABKAsyGS5oaS5tZWRpYS5WaWRlb1Jlc29sdXRpb25S'
-    'CnJlc29sdXRpb24SNwoQZHVyYXRpb25fc2Vjb25kcxgFIAEoBUIHukgEGgIgAEgDUg9kdXJhdG'
-    'lvblNlY29uZHOIAQESKwoKZnJhbWVfcmF0ZRgGIAEoBUIHukgEGgIgAEgEUglmcmFtZVJhdGWI'
-    'AQFCDQoLX3JlcXVlc3RfaWRCEwoRX21vZGVsX21hcHBpbmdfaWRCCQoHX3Byb21wdEITChFfZH'
-    'VyYXRpb25fc2Vjb25kc0INCgtfZnJhbWVfcmF0ZQ==');
+    'IQAUgAUglyZXF1ZXN0SWSIAQESMAoLd29ya2Zsb3dfaWQYAiABKAlCCrpIB8gBAXICEAFIAVIK'
+    'd29ya2Zsb3dJZIgBARInCgZwcm9tcHQYAyABKAlCCrpIB8gBAXICEAFIAlIGcHJvbXB0iAEBEj'
+    'kKCnJlc29sdXRpb24YBCABKAsyGS5oaS5tZWRpYS5WaWRlb1Jlc29sdXRpb25SCnJlc29sdXRp'
+    'b24SNwoQZHVyYXRpb25fc2Vjb25kcxgFIAEoBUIHukgEGgIgAEgDUg9kdXJhdGlvblNlY29uZH'
+    'OIAQESKwoKZnJhbWVfcmF0ZRgGIAEoBUIHukgEGgIgAEgEUglmcmFtZVJhdGWIAQFCDQoLX3Jl'
+    'cXVlc3RfaWRCDgoMX3dvcmtmbG93X2lkQgkKB19wcm9tcHRCEwoRX2R1cmF0aW9uX3NlY29uZH'
+    'NCDQoLX2ZyYW1lX3JhdGU=');
 
 @$core.Deprecated('Use createTaskRespDescriptor instead')
 const CreateTaskResp$json = {
@@ -594,70 +594,89 @@ const TaskSummary$json = {
       '17': true
     },
     {
-      '1': 'feature_key',
+      '1': 'function_id',
       '3': 3,
       '4': 1,
-      '5': 14,
-      '6': '.hi.media.FeatureKey',
+      '5': 9,
       '8': {},
       '9': 2,
-      '10': 'featureKey',
+      '10': 'functionId',
       '17': true
     },
     {
-      '1': 'model_mapping_id',
+      '1': 'function_display_name',
       '3': 4,
       '4': 1,
       '5': 9,
       '8': {},
       '9': 3,
-      '10': 'modelMappingId',
+      '10': 'functionDisplayName',
       '17': true
     },
     {
-      '1': 'model_name',
+      '1': 'model_id',
       '3': 5,
       '4': 1,
       '5': 9,
       '8': {},
       '9': 4,
-      '10': 'modelName',
+      '10': 'modelId',
       '17': true
     },
     {
-      '1': 'status',
+      '1': 'model_display_name',
       '3': 6,
       '4': 1,
-      '5': 14,
-      '6': '.hi.media.TaskStatus',
+      '5': 9,
       '8': {},
       '9': 5,
-      '10': 'status',
+      '10': 'modelDisplayName',
       '17': true
     },
     {
-      '1': 'status_message',
+      '1': 'workflow_id',
       '3': 7,
       '4': 1,
       '5': 9,
       '8': {},
       '9': 6,
+      '10': 'workflowId',
+      '17': true
+    },
+    {
+      '1': 'status',
+      '3': 8,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.media.TaskStatus',
+      '8': {},
+      '9': 7,
+      '10': 'status',
+      '17': true
+    },
+    {
+      '1': 'status_message',
+      '3': 9,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 8,
       '10': 'statusMessage',
       '17': true
     },
     {
       '1': 'error_code',
-      '3': 8,
+      '3': 10,
       '4': 1,
       '5': 9,
       '8': {},
-      '9': 7,
+      '9': 9,
       '10': 'errorCode',
       '17': true
     },
     {
       '1': 'output',
-      '3': 9,
+      '3': 11,
       '4': 1,
       '5': 11,
       '6': '.hi.media.TaskOutput',
@@ -666,71 +685,71 @@ const TaskSummary$json = {
     },
     {
       '1': 'can_cancel',
-      '3': 10,
+      '3': 12,
       '4': 1,
       '5': 8,
       '8': {},
-      '9': 8,
+      '9': 10,
       '10': 'canCancel',
       '17': true
     },
     {
       '1': 'can_recover_save',
-      '3': 11,
+      '3': 13,
       '4': 1,
       '5': 8,
       '8': {},
-      '9': 9,
+      '9': 11,
       '10': 'canRecoverSave',
       '17': true
     },
     {
       '1': 'save_recovery_expires_at',
-      '3': 12,
-      '4': 1,
-      '5': 3,
-      '8': {},
-      '9': 10,
-      '10': 'saveRecoveryExpiresAt',
-      '17': true
-    },
-    {
-      '1': 'created_at',
-      '3': 13,
-      '4': 1,
-      '5': 3,
-      '8': {},
-      '9': 11,
-      '10': 'createdAt',
-      '17': true
-    },
-    {
-      '1': 'started_at',
       '3': 14,
       '4': 1,
       '5': 3,
       '8': {},
       '9': 12,
-      '10': 'startedAt',
+      '10': 'saveRecoveryExpiresAt',
       '17': true
     },
     {
-      '1': 'completed_at',
+      '1': 'created_at',
       '3': 15,
       '4': 1,
       '5': 3,
       '8': {},
       '9': 13,
-      '10': 'completedAt',
+      '10': 'createdAt',
       '17': true
     },
     {
-      '1': 'elapsed_seconds',
+      '1': 'started_at',
       '3': 16,
       '4': 1,
       '5': 3,
       '8': {},
       '9': 14,
+      '10': 'startedAt',
+      '17': true
+    },
+    {
+      '1': 'completed_at',
+      '3': 17,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 15,
+      '10': 'completedAt',
+      '17': true
+    },
+    {
+      '1': 'elapsed_seconds',
+      '3': 18,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 16,
       '10': 'elapsedSeconds',
       '17': true
     },
@@ -739,9 +758,11 @@ const TaskSummary$json = {
   '8': [
     {'1': '_task_id'},
     {'1': '_purpose'},
-    {'1': '_feature_key'},
-    {'1': '_model_mapping_id'},
-    {'1': '_model_name'},
+    {'1': '_function_id'},
+    {'1': '_function_display_name'},
+    {'1': '_model_id'},
+    {'1': '_model_display_name'},
+    {'1': '_workflow_id'},
     {'1': '_status'},
     {'1': '_status_message'},
     {'1': '_error_code'},
@@ -758,25 +779,27 @@ const TaskSummary$json = {
 /// Descriptor for `TaskSummary`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List taskSummaryDescriptor = $convert.base64Decode(
     'CgtUYXNrU3VtbWFyeRIiCgd0YXNrX2lkGAEgASgJQgSQtRgDSABSBnRhc2tJZIgBARI6CgdwdX'
-    'Jwb3NlGAIgASgOMhUuaGkubWVkaWEuVGFza1B1cnBvc2VCBJC1GANIAVIHcHVycG9zZYgBARJA'
-    'CgtmZWF0dXJlX2tleRgDIAEoDjIULmhpLm1lZGlhLkZlYXR1cmVLZXlCBJC1GANIAlIKZmVhdH'
-    'VyZUtleYgBARIzChBtb2RlbF9tYXBwaW5nX2lkGAQgASgJQgSQtRgDSANSDm1vZGVsTWFwcGlu'
-    'Z0lkiAEBEigKCm1vZGVsX25hbWUYBSABKAlCBJC1GANIBFIJbW9kZWxOYW1liAEBEjcKBnN0YX'
-    'R1cxgGIAEoDjIULmhpLm1lZGlhLlRhc2tTdGF0dXNCBJC1GANIBVIGc3RhdHVziAEBEjAKDnN0'
-    'YXR1c19tZXNzYWdlGAcgASgJQgSQtRgDSAZSDXN0YXR1c01lc3NhZ2WIAQESKAoKZXJyb3JfY2'
-    '9kZRgIIAEoCUIEkLUYA0gHUgllcnJvckNvZGWIAQESMgoGb3V0cHV0GAkgASgLMhQuaGkubWVk'
-    'aWEuVGFza091dHB1dEIEkLUYA1IGb3V0cHV0EigKCmNhbl9jYW5jZWwYCiABKAhCBJC1GANICF'
-    'IJY2FuQ2FuY2VsiAEBEjMKEGNhbl9yZWNvdmVyX3NhdmUYCyABKAhCBJC1GANICVIOY2FuUmVj'
-    'b3ZlclNhdmWIAQESQgoYc2F2ZV9yZWNvdmVyeV9leHBpcmVzX2F0GAwgASgDQgSQtRgDSApSFX'
-    'NhdmVSZWNvdmVyeUV4cGlyZXNBdIgBARIoCgpjcmVhdGVkX2F0GA0gASgDQgSQtRgDSAtSCWNy'
-    'ZWF0ZWRBdIgBARIoCgpzdGFydGVkX2F0GA4gASgDQgSQtRgDSAxSCXN0YXJ0ZWRBdIgBARIsCg'
-    'xjb21wbGV0ZWRfYXQYDyABKANCBJC1GANIDVILY29tcGxldGVkQXSIAQESMgoPZWxhcHNlZF9z'
-    'ZWNvbmRzGBAgASgDQgSQtRgDSA5SDmVsYXBzZWRTZWNvbmRziAEBOgSYtRgDQgoKCF90YXNrX2'
-    'lkQgoKCF9wdXJwb3NlQg4KDF9mZWF0dXJlX2tleUITChFfbW9kZWxfbWFwcGluZ19pZEINCgtf'
-    'bW9kZWxfbmFtZUIJCgdfc3RhdHVzQhEKD19zdGF0dXNfbWVzc2FnZUINCgtfZXJyb3JfY29kZU'
-    'INCgtfY2FuX2NhbmNlbEITChFfY2FuX3JlY292ZXJfc2F2ZUIbChlfc2F2ZV9yZWNvdmVyeV9l'
-    'eHBpcmVzX2F0Qg0KC19jcmVhdGVkX2F0Qg0KC19zdGFydGVkX2F0Qg8KDV9jb21wbGV0ZWRfYX'
-    'RCEgoQX2VsYXBzZWRfc2Vjb25kcw==');
+    'Jwb3NlGAIgASgOMhUuaGkubWVkaWEuVGFza1B1cnBvc2VCBJC1GANIAVIHcHVycG9zZYgBARIq'
+    'CgtmdW5jdGlvbl9pZBgDIAEoCUIEkLUYA0gCUgpmdW5jdGlvbklkiAEBEj0KFWZ1bmN0aW9uX2'
+    'Rpc3BsYXlfbmFtZRgEIAEoCUIEkLUYA0gDUhNmdW5jdGlvbkRpc3BsYXlOYW1liAEBEiQKCG1v'
+    'ZGVsX2lkGAUgASgJQgSQtRgDSARSB21vZGVsSWSIAQESNwoSbW9kZWxfZGlzcGxheV9uYW1lGA'
+    'YgASgJQgSQtRgDSAVSEG1vZGVsRGlzcGxheU5hbWWIAQESKgoLd29ya2Zsb3dfaWQYByABKAlC'
+    'BJC1GANIBlIKd29ya2Zsb3dJZIgBARI3CgZzdGF0dXMYCCABKA4yFC5oaS5tZWRpYS5UYXNrU3'
+    'RhdHVzQgSQtRgDSAdSBnN0YXR1c4gBARIwCg5zdGF0dXNfbWVzc2FnZRgJIAEoCUIEkLUYA0gI'
+    'Ug1zdGF0dXNNZXNzYWdliAEBEigKCmVycm9yX2NvZGUYCiABKAlCBJC1GANICVIJZXJyb3JDb2'
+    'RliAEBEjIKBm91dHB1dBgLIAEoCzIULmhpLm1lZGlhLlRhc2tPdXRwdXRCBJC1GANSBm91dHB1'
+    'dBIoCgpjYW5fY2FuY2VsGAwgASgIQgSQtRgDSApSCWNhbkNhbmNlbIgBARIzChBjYW5fcmVjb3'
+    'Zlcl9zYXZlGA0gASgIQgSQtRgDSAtSDmNhblJlY292ZXJTYXZliAEBEkIKGHNhdmVfcmVjb3Zl'
+    'cnlfZXhwaXJlc19hdBgOIAEoA0IEkLUYA0gMUhVzYXZlUmVjb3ZlcnlFeHBpcmVzQXSIAQESKA'
+    'oKY3JlYXRlZF9hdBgPIAEoA0IEkLUYA0gNUgljcmVhdGVkQXSIAQESKAoKc3RhcnRlZF9hdBgQ'
+    'IAEoA0IEkLUYA0gOUglzdGFydGVkQXSIAQESLAoMY29tcGxldGVkX2F0GBEgASgDQgSQtRgDSA'
+    '9SC2NvbXBsZXRlZEF0iAEBEjIKD2VsYXBzZWRfc2Vjb25kcxgSIAEoA0IEkLUYA0gQUg5lbGFw'
+    'c2VkU2Vjb25kc4gBAToEmLUYA0IKCghfdGFza19pZEIKCghfcHVycG9zZUIOCgxfZnVuY3Rpb2'
+    '5faWRCGAoWX2Z1bmN0aW9uX2Rpc3BsYXlfbmFtZUILCglfbW9kZWxfaWRCFQoTX21vZGVsX2Rp'
+    'c3BsYXlfbmFtZUIOCgxfd29ya2Zsb3dfaWRCCQoHX3N0YXR1c0IRCg9fc3RhdHVzX21lc3NhZ2'
+    'VCDQoLX2Vycm9yX2NvZGVCDQoLX2Nhbl9jYW5jZWxCEwoRX2Nhbl9yZWNvdmVyX3NhdmVCGwoZ'
+    'X3NhdmVfcmVjb3ZlcnlfZXhwaXJlc19hdEINCgtfY3JlYXRlZF9hdEINCgtfc3RhcnRlZF9hdE'
+    'IPCg1fY29tcGxldGVkX2F0QhIKEF9lbGFwc2VkX3NlY29uZHM=');
 
 @$core.Deprecated('Use taskDetailDescriptor instead')
 const TaskDetail$json = {
@@ -886,14 +909,13 @@ const ListTasksReq$json = {
       '10': 'pagination'
     },
     {
-      '1': 'feature_key',
+      '1': 'function_id',
       '3': 2,
       '4': 1,
-      '5': 14,
-      '6': '.hi.media.FeatureKey',
+      '5': 9,
       '8': {},
       '9': 0,
-      '10': 'featureKey',
+      '10': 'functionId',
       '17': true
     },
     {
@@ -907,16 +929,16 @@ const ListTasksReq$json = {
     },
   ],
   '8': [
-    {'1': '_feature_key'},
+    {'1': '_function_id'},
   ],
 };
 
 /// Descriptor for `ListTasksReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listTasksReqDescriptor = $convert.base64Decode(
     'CgxMaXN0VGFza3NSZXESLgoKcGFnaW5hdGlvbhgBIAEoCzIOLmhpLlBhZ2luYXRpb25SCnBhZ2'
-    'luYXRpb24SRgoLZmVhdHVyZV9rZXkYAiABKA4yFC5oaS5tZWRpYS5GZWF0dXJlS2V5Qgq6SAeC'
-    'AQQQASAASABSCmZlYXR1cmVLZXmIAQESQwoIc3RhdHVzZXMYAyADKA4yFC5oaS5tZWRpYS5UYX'
-    'NrU3RhdHVzQhG6SA6SAQsYASIHggEEEAEgAFIIc3RhdHVzZXNCDgoMX2ZlYXR1cmVfa2V5');
+    'luYXRpb24SLQoLZnVuY3Rpb25faWQYAiABKAlCB7pIBHICEAFIAFIKZnVuY3Rpb25JZIgBARJD'
+    'CghzdGF0dXNlcxgDIAMoDjIULmhpLm1lZGlhLlRhc2tTdGF0dXNCEbpIDpIBCxgBIgeCAQQQAS'
+    'AAUghzdGF0dXNlc0IOCgxfZnVuY3Rpb25faWQ=');
 
 @$core.Deprecated('Use listTasksRespDescriptor instead')
 const ListTasksResp$json = {

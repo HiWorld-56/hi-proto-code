@@ -7,7 +7,8 @@ from hi.media import quota_pb2 as hi_dot_media_dot_quota__pb2
 
 
 class QuotaStub(object):
-    """Missing associated documentation comment in .proto file."""
+    """用户存储总额度查询；新任务在实际占用达到上限时拒绝受理。
+    """
 
     def __init__(self, channel):
         """Constructor.
@@ -23,10 +24,12 @@ class QuotaStub(object):
 
 
 class QuotaServicer(object):
-    """Missing associated documentation comment in .proto file."""
+    """用户存储总额度查询；新任务在实际占用达到上限时拒绝受理。
+    """
 
     def Get(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """返回当前用户的总上限、实际占用和可用量。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -48,7 +51,8 @@ def add_QuotaServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class Quota(object):
-    """Missing associated documentation comment in .proto file."""
+    """用户存储总额度查询；新任务在实际占用达到上限时拒绝受理。
+    """
 
     @staticmethod
     def Get(request,

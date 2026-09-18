@@ -183,755 +183,7 @@ pub mod auth_client {
         }
     }
 }
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MaintenanceState {
-    #[prost(bool, optional, tag = "1")]
-    pub enabled: ::core::option::Option<bool>,
-    #[prost(string, optional, tag = "2")]
-    pub reason: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(int64, optional, tag = "3")]
-    pub started_at: ::core::option::Option<i64>,
-    #[prost(string, optional, tag = "4")]
-    pub updated_by: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(int64, optional, tag = "5")]
-    pub updated_at: ::core::option::Option<i64>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetMaintenanceResp {
-    #[prost(message, optional, tag = "1")]
-    pub state: ::core::option::Option<MaintenanceState>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct SetMaintenanceReq {
-    /// 必须显式提交。维护模式只暂停向 ComfyUI 派发新任务，不禁用查询和管理接口。
-    #[prost(bool, optional, tag = "1")]
-    pub enabled: ::core::option::Option<bool>,
-    #[prost(string, optional, tag = "2")]
-    pub reason: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct SetMaintenanceResp {
-    #[prost(message, optional, tag = "1")]
-    pub state: ::core::option::Option<MaintenanceState>,
-}
-/// Generated client implementations.
-pub mod maintenance_manage_client {
-    #![allow(
-        unused_variables,
-        dead_code,
-        missing_docs,
-        clippy::wildcard_imports,
-        clippy::let_unit_value,
-    )]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    #[derive(Debug, Clone)]
-    pub struct MaintenanceManageClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl MaintenanceManageClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> MaintenanceManageClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::Body>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> MaintenanceManageClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
-        {
-            MaintenanceManageClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        pub async fn get(
-            &mut self,
-            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetMaintenanceResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.MaintenanceManage/Get",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.MaintenanceManage", "Get"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn set(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SetMaintenanceReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::SetMaintenanceResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.MaintenanceManage/Set",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.MaintenanceManage", "Set"));
-            self.inner.unary(req, path, codec).await
-        }
-    }
-}
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct TextLimit {
-    /// 按 Unicode 码点计算的正向提示词最大长度。
-    #[prost(uint32, optional, tag = "1")]
-    pub max_length: ::core::option::Option<u32>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct DecimalOptionConfig {
-    /// 为避免浮点格式变化，允许值和默认值都使用十进制字符串传输。
-    #[prost(string, repeated, tag = "1")]
-    pub allowed_values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub default_value: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct StringOptionConfig {
-    #[prost(string, repeated, tag = "1")]
-    pub allowed_values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub default_value: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct IntRangeConfig {
-    #[prost(int32, optional, tag = "1")]
-    pub min_value: ::core::option::Option<i32>,
-    #[prost(int32, optional, tag = "2")]
-    pub max_value: ::core::option::Option<i32>,
-    #[prost(int32, optional, tag = "3")]
-    pub default_value: ::core::option::Option<i32>,
-}
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct FrameRateConfig {
-    #[prost(oneof = "frame_rate_config::Mode", tags = "1, 2")]
-    pub mode: ::core::option::Option<frame_rate_config::Mode>,
-}
-/// Nested message and enum types in `FrameRateConfig`.
-pub mod frame_rate_config {
-    #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Oneof)]
-    pub enum Mode {
-        /// 用户可以在工作流配置的整数范围内选择帧率。
-        #[prost(message, tag = "1")]
-        Selectable(super::IntRangeConfig),
-        /// 工作流没有帧率绑定；前端只读展示该值，创建时可以省略帧率。
-        #[prost(int32, tag = "2")]
-        FixedValue(i32),
-    }
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct VideoParameterConfig {
-    #[prost(message, optional, tag = "1")]
-    pub prompt: ::core::option::Option<TextLimit>,
-    #[prost(message, optional, tag = "2")]
-    pub aspect_ratio: ::core::option::Option<StringOptionConfig>,
-    #[prost(message, optional, tag = "3")]
-    pub megapixels: ::core::option::Option<DecimalOptionConfig>,
-    #[prost(message, optional, tag = "4")]
-    pub duration_seconds: ::core::option::Option<IntRangeConfig>,
-    #[prost(message, optional, tag = "5")]
-    pub frame_rate: ::core::option::Option<FrameRateConfig>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ModelOption {
-    /// 创建任务时提交的唯一选择；客户端不能自行组合模型 ID 与工作流 ID。
-    #[prost(string, optional, tag = "1")]
-    pub model_mapping_id: ::core::option::Option<::prost::alloc::string::String>,
-    /// 管理员维护的用户可见模型名称，不是 ComfyUI 原始文件名。
-    #[prost(string, optional, tag = "2")]
-    pub name: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(bool, optional, tag = "3")]
-    pub is_default: ::core::option::Option<bool>,
-    /// 映射工作流的 Markdown 说明；客户端应使用安全 Markdown 渲染。
-    #[prost(string, optional, tag = "4")]
-    pub description: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(message, optional, tag = "5")]
-    pub parameter_config: ::core::option::Option<VideoParameterConfig>,
-}
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetFeatureReq {
-    #[prost(enumeration = "FeatureKey", optional, tag = "1")]
-    pub feature_key: ::core::option::Option<i32>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetFeatureResp {
-    #[prost(enumeration = "FeatureKey", optional, tag = "1")]
-    pub feature_key: ::core::option::Option<i32>,
-    /// 空列表表示该功能当前没有可用映射，客户端不得创建任务。
-    #[prost(message, repeated, tag = "2")]
-    pub model_options: ::prost::alloc::vec::Vec<ModelOption>,
-}
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum FeatureKey {
-    Unspecified = 0,
-    /// 文生图；内部键 image.txt2img；当前没有创建接口。
-    TextToImage = 1,
-    /// 图生视频；内部键 video.img2vid；创建时需要输入图片。
-    ImageToVideo = 2,
-    /// 文生视频；内部键 video.txt2vid；不接受输入图片。
-    TextToVideo = 3,
-}
-impl FeatureKey {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Self::Unspecified => "FEATURE_KEY_UNSPECIFIED",
-            Self::TextToImage => "FEATURE_KEY_TEXT_TO_IMAGE",
-            Self::ImageToVideo => "FEATURE_KEY_IMAGE_TO_VIDEO",
-            Self::TextToVideo => "FEATURE_KEY_TEXT_TO_VIDEO",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "FEATURE_KEY_UNSPECIFIED" => Some(Self::Unspecified),
-            "FEATURE_KEY_TEXT_TO_IMAGE" => Some(Self::TextToImage),
-            "FEATURE_KEY_IMAGE_TO_VIDEO" => Some(Self::ImageToVideo),
-            "FEATURE_KEY_TEXT_TO_VIDEO" => Some(Self::TextToVideo),
-            _ => None,
-        }
-    }
-}
-/// Generated client implementations.
-pub mod feature_client {
-    #![allow(
-        unused_variables,
-        dead_code,
-        missing_docs,
-        clippy::wildcard_imports,
-        clippy::let_unit_value,
-    )]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    #[derive(Debug, Clone)]
-    pub struct FeatureClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl FeatureClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> FeatureClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::Body>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> FeatureClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
-        {
-            FeatureClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        pub async fn get(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetFeatureReq>,
-        ) -> std::result::Result<tonic::Response<super::GetFeatureResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.media.Feature/Get");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.media.Feature", "Get"));
-            self.inner.unary(req, path, codec).await
-        }
-    }
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ModelMapping {
-    #[prost(string, optional, tag = "1")]
-    pub model_mapping_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(enumeration = "FeatureKey", optional, tag = "2")]
-    pub feature_key: ::core::option::Option<i32>,
-    #[prost(string, optional, tag = "3")]
-    pub model_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "4")]
-    pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(bool, optional, tag = "5")]
-    pub enabled: ::core::option::Option<bool>,
-    #[prost(bool, optional, tag = "6")]
-    pub is_default: ::core::option::Option<bool>,
-    #[prost(int32, optional, tag = "7")]
-    pub sort_order: ::core::option::Option<i32>,
-    #[prost(int64, optional, tag = "8")]
-    pub created_at: ::core::option::Option<i64>,
-    #[prost(int64, optional, tag = "9")]
-    pub updated_at: ::core::option::Option<i64>,
-    #[prost(int64, optional, tag = "10")]
-    pub disabled_at: ::core::option::Option<i64>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct CreateModelMappingReq {
-    #[prost(enumeration = "FeatureKey", optional, tag = "1")]
-    pub feature_key: ::core::option::Option<i32>,
-    #[prost(string, optional, tag = "2")]
-    pub model_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "3")]
-    pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(bool, optional, tag = "4")]
-    pub is_default: ::core::option::Option<bool>,
-    #[prost(int32, optional, tag = "5")]
-    pub sort_order: ::core::option::Option<i32>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct CreateModelMappingResp {
-    #[prost(message, optional, tag = "1")]
-    pub mapping: ::core::option::Option<ModelMapping>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct DisableModelMappingReq {
-    #[prost(string, optional, tag = "1")]
-    pub model_mapping_id: ::core::option::Option<::prost::alloc::string::String>,
-    /// 停用默认映射且仍有其他启用映射时必填，并且必须属于同一功能。
-    #[prost(string, optional, tag = "2")]
-    pub replacement_default_mapping_id: ::core::option::Option<
-        ::prost::alloc::string::String,
-    >,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct DisableModelMappingResp {
-    #[prost(message, optional, tag = "1")]
-    pub mapping: ::core::option::Option<ModelMapping>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct SetDefaultModelMappingReq {
-    #[prost(string, optional, tag = "1")]
-    pub model_mapping_id: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct SetDefaultModelMappingResp {
-    #[prost(message, optional, tag = "1")]
-    pub mapping: ::core::option::Option<ModelMapping>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct UpdateModelMappingSortOrderReq {
-    /// 同一功能下全部启用映射的完整顺序，不能只提交发生移动的部分。
-    #[prost(string, repeated, tag = "1")]
-    pub model_mapping_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateModelMappingSortOrderResp {
-    #[prost(message, repeated, tag = "1")]
-    pub mappings: ::prost::alloc::vec::Vec<ModelMapping>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetModelMappingReq {
-    #[prost(string, optional, tag = "1")]
-    pub model_mapping_id: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetModelMappingResp {
-    #[prost(message, optional, tag = "1")]
-    pub mapping: ::core::option::Option<ModelMapping>,
-}
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListModelMappingsReq {
-    #[prost(message, optional, tag = "1")]
-    pub pagination: ::core::option::Option<super::Pagination>,
-    #[prost(enumeration = "FeatureKey", optional, tag = "2")]
-    pub feature_key: ::core::option::Option<i32>,
-    #[prost(bool, optional, tag = "3")]
-    pub enabled: ::core::option::Option<bool>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListModelMappingsResp {
-    #[prost(int32, optional, tag = "1")]
-    pub total: ::core::option::Option<i32>,
-    #[prost(message, repeated, tag = "2")]
-    pub mappings: ::prost::alloc::vec::Vec<ModelMapping>,
-}
-/// Generated client implementations.
-pub mod model_mapping_manage_client {
-    #![allow(
-        unused_variables,
-        dead_code,
-        missing_docs,
-        clippy::wildcard_imports,
-        clippy::let_unit_value,
-    )]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    #[derive(Debug, Clone)]
-    pub struct ModelMappingManageClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl ModelMappingManageClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> ModelMappingManageClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::Body>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> ModelMappingManageClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
-        {
-            ModelMappingManageClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        pub async fn create(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateModelMappingReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::CreateModelMappingResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.ModelMappingManage/Create",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.ModelMappingManage", "Create"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn disable(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DisableModelMappingReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::DisableModelMappingResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.ModelMappingManage/Disable",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.ModelMappingManage", "Disable"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn set_default(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SetDefaultModelMappingReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::SetDefaultModelMappingResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.ModelMappingManage/SetDefault",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.ModelMappingManage", "SetDefault"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn update_sort_order(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdateModelMappingSortOrderReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::UpdateModelMappingSortOrderResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.ModelMappingManage/UpdateSortOrder",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new("hi.media.ModelMappingManage", "UpdateSortOrder"),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn list(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListModelMappingsReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::ListModelMappingsResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.ModelMappingManage/List",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.ModelMappingManage", "List"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn get(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetModelMappingReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetModelMappingResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.ModelMappingManage/Get",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.ModelMappingManage", "Get"));
-            self.inner.unary(req, path, codec).await
-        }
-    }
-}
+/// 视频分辨率选择，不传某项时使用工作流该项默认值。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct VideoResolution {
     /// ResolutionSelector 的完整选项字符串，例如 "16:9 (Widescreen)"，不能只传 "16:9"。
@@ -941,44 +193,58 @@ pub struct VideoResolution {
     #[prost(string, optional, tag = "2")]
     pub megapixels: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 创建图生视频任务；工作流必须属于 video.img2vid，图片为本人可用的 JPEG/PNG 资产。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateImageToVideoTaskReq {
+    /// 本人范围内的幂等键；同一次操作重发复用，新操作使用新值。
     #[prost(string, optional, tag = "1")]
     pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 来自对应功能的 Function.Get；服务端验证工作流已启用且属于本 RPC 的功能。
     #[prost(string, optional, tag = "2")]
-    pub model_mapping_id: ::core::option::Option<::prost::alloc::string::String>,
+    pub workflow_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "3")]
     pub input_asset_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "4")]
     pub prompt: ::core::option::Option<::prost::alloc::string::String>,
+    /// 宽高比和像素量各自独立补齐；不传时使用工作流默认值。
     #[prost(message, optional, tag = "5")]
     pub resolution: ::core::option::Option<VideoResolution>,
+    /// 整数秒；不传时使用工作流默认时长。
     #[prost(int32, optional, tag = "6")]
     pub duration_seconds: ::core::option::Option<i32>,
+    /// 帧/秒；不传时使用默认或固定值；固定模式显式提交时必须与固定值相同。
     #[prost(int32, optional, tag = "7")]
     pub frame_rate: ::core::option::Option<i32>,
 }
+/// 创建文生视频任务；工作流必须属于 video.txt2vid，不接受输入图片。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateTextToVideoTaskReq {
+    /// 本人范围内的幂等键；同一次操作重发复用，新操作使用新值。
     #[prost(string, optional, tag = "1")]
     pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 来自对应功能的 Function.Get；服务端验证工作流已启用且属于本 RPC 的功能。
     #[prost(string, optional, tag = "2")]
-    pub model_mapping_id: ::core::option::Option<::prost::alloc::string::String>,
+    pub workflow_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "3")]
     pub prompt: ::core::option::Option<::prost::alloc::string::String>,
+    /// 宽高比和像素量各自独立补齐；不传时使用工作流默认值。
     #[prost(message, optional, tag = "4")]
     pub resolution: ::core::option::Option<VideoResolution>,
+    /// 整数秒；不传时使用工作流默认时长。
     #[prost(int32, optional, tag = "5")]
     pub duration_seconds: ::core::option::Option<i32>,
+    /// 帧/秒；不传时使用默认或固定值；固定模式显式提交时必须与固定值相同。
     #[prost(int32, optional, tag = "6")]
     pub frame_rate: ::core::option::Option<i32>,
 }
+/// 返回已受理任务的 ID；同一 request_id 重发返回原任务，不比较重发参数。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateTaskResp {
     /// 成功响应必有；响应字段不使用 buf.validate 约束。
     #[prost(string, optional, tag = "1")]
     pub task_id: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 图生视频实际参数，包含创建时补齐的默认值或固定值。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ImageToVideoTaskParams {
     #[prost(string, optional, tag = "1")]
@@ -989,11 +255,14 @@ pub struct ImageToVideoTaskParams {
     pub aspect_ratio: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "4")]
     pub megapixels: ::core::option::Option<::prost::alloc::string::String>,
+    /// 创建时确定的实际时长，单位为整数秒。
     #[prost(int32, optional, tag = "5")]
     pub duration_seconds: ::core::option::Option<i32>,
+    /// 创建时确定的实际帧率，单位为帧/秒。
     #[prost(int32, optional, tag = "6")]
     pub frame_rate: ::core::option::Option<i32>,
 }
+/// 文生视频实际参数，包含创建时补齐的默认值或固定值。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TextToVideoTaskParams {
     #[prost(string, optional, tag = "1")]
@@ -1002,11 +271,14 @@ pub struct TextToVideoTaskParams {
     pub aspect_ratio: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "3")]
     pub megapixels: ::core::option::Option<::prost::alloc::string::String>,
+    /// 创建时确定的实际时长，单位为整数秒。
     #[prost(int32, optional, tag = "4")]
     pub duration_seconds: ::core::option::Option<i32>,
+    /// 创建时确定的实际帧率，单位为帧/秒。
     #[prost(int32, optional, tag = "5")]
     pub frame_rate: ::core::option::Option<i32>,
 }
+/// 唯一主产物；size_bytes 为字节，duration_ms 为毫秒，访问地址通过 File.GetAccessUrls 获取。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TaskOutput {
     #[prost(string, optional, tag = "1")]
@@ -1025,50 +297,63 @@ pub struct TaskOutput {
     #[prost(bool, optional, tag = "7")]
     pub available: ::core::option::Option<bool>,
 }
+/// 任务摘要，不暴露模型真实名、工作流对象键或上游 prompt_id。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TaskSummary {
     #[prost(string, optional, tag = "1")]
     pub task_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(enumeration = "TaskPurpose", optional, tag = "2")]
     pub purpose: ::core::option::Option<i32>,
-    #[prost(enumeration = "FeatureKey", optional, tag = "3")]
-    pub feature_key: ::core::option::Option<i32>,
+    /// 任务受理时确定的功能 ID：video.img2vid 或 video.txt2vid。
+    #[prost(string, optional, tag = "3")]
+    pub function_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 从当前功能记录读取的用户可见名称。
     #[prost(string, optional, tag = "4")]
-    pub model_mapping_id: ::core::option::Option<::prost::alloc::string::String>,
+    pub function_display_name: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "5")]
-    pub model_name: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(enumeration = "TaskStatus", optional, tag = "6")]
+    pub model_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 从当前模型记录读取，不是 ComfyUI 真实文件名。
+    #[prost(string, optional, tag = "6")]
+    pub model_display_name: ::core::option::Option<::prost::alloc::string::String>,
+    /// 任务受理时选择的工作流；不返回对象键或完整工作流图。
+    #[prost(string, optional, tag = "7")]
+    pub workflow_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "TaskStatus", optional, tag = "8")]
     pub status: ::core::option::Option<i32>,
     /// 面向用户的脱敏状态说明；前端应优先展示该字段。
-    #[prost(string, optional, tag = "7")]
+    #[prost(string, optional, tag = "9")]
     pub status_message: ::core::option::Option<::prost::alloc::string::String>,
-    /// 稳定异步错误码：QUEUE_TIMEOUT、INPUT_UPLOAD_FAILED、UPSTREAM_SUBMISSION_FAILED、
+    /// 稳定异步错误码：QUEUE_TIMEOUT、WORKFLOW_FILE_NOT_FOUND、WORKFLOW_FILE_UNAVAILABLE、
+    /// WORKFLOW_FILE_INVALID、INPUT_UPLOAD_FAILED、UPSTREAM_SUBMISSION_FAILED、
     /// UPSTREAM_SUBMISSION_UNKNOWN、UPSTREAM_EXECUTION_FAILED、EXECUTION_TIMEOUT、
     /// OUTPUT_INVALID、OUTPUT_SAVE_FAILED、OUTPUT_SAVE_UNCERTAIN、SAVE_RECOVERY_FAILED。
-    #[prost(string, optional, tag = "8")]
+    #[prost(string, optional, tag = "10")]
     pub error_code: ::core::option::Option<::prost::alloc::string::String>,
     /// 仅在任务已经产生主资产时存在。
-    #[prost(message, optional, tag = "9")]
+    #[prost(message, optional, tag = "11")]
     pub output: ::core::option::Option<TaskOutput>,
-    #[prost(bool, optional, tag = "10")]
+    #[prost(bool, optional, tag = "12")]
     pub can_cancel: ::core::option::Option<bool>,
     /// 前端只能依据该字段决定是否显示唯一一次“恢复保存”入口。
-    #[prost(bool, optional, tag = "11")]
+    #[prost(bool, optional, tag = "13")]
     pub can_recover_save: ::core::option::Option<bool>,
-    #[prost(int64, optional, tag = "12")]
+    /// Unix 秒；首次可恢复保存失败时确定的截止时间，达到该时刻后不可恢复。
+    #[prost(int64, optional, tag = "14")]
     pub save_recovery_expires_at: ::core::option::Option<i64>,
     /// Unix 秒；恢复保存不会改写 created_at 或 started_at。
-    #[prost(int64, optional, tag = "13")]
+    #[prost(int64, optional, tag = "15")]
     pub created_at: ::core::option::Option<i64>,
-    #[prost(int64, optional, tag = "14")]
+    /// Unix 秒；首次确认 ComfyUI 真正开始执行时写入，提交和排队期间不写入。
+    #[prost(int64, optional, tag = "16")]
     pub started_at: ::core::option::Option<i64>,
     /// Unix 秒；恢复受理时清空，恢复得到最终结果时重新写入。
-    #[prost(int64, optional, tag = "15")]
+    #[prost(int64, optional, tag = "17")]
     pub completed_at: ::core::option::Option<i64>,
     /// 从 created_at 到当前时间或 completed_at 的墙钟秒数。
-    #[prost(int64, optional, tag = "16")]
+    #[prost(int64, optional, tag = "18")]
     pub elapsed_seconds: ::core::option::Option<i64>,
 }
+/// 任务详情及其实际业务参数；重新生成需重新查询 Function.Get 并使用新 request_id。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TaskDetail {
     #[prost(message, optional, tag = "1")]
@@ -1086,26 +371,30 @@ pub mod task_detail {
         TextToVideo(super::TextToVideoTaskParams),
     }
 }
+/// 查询本人任务。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetTaskReq {
     #[prost(string, optional, tag = "1")]
     pub task_id: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 返回本人任务详情。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetTaskResp {
     #[prost(message, optional, tag = "1")]
     pub task: ::core::option::Option<TaskDetail>,
 }
+/// 分页查询本人任务，可按功能与状态过滤。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListTasksReq {
     #[prost(message, optional, tag = "1")]
     pub pagination: ::core::option::Option<super::Pagination>,
-    /// 不传表示不过滤；显式传值时不能为 UNSPECIFIED。
-    #[prost(enumeration = "FeatureKey", optional, tag = "2")]
-    pub feature_key: ::core::option::Option<i32>,
+    /// 不传表示不过滤；传入 Function.List 返回的功能 ID。
+    #[prost(string, optional, tag = "2")]
+    pub function_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(enumeration = "TaskStatus", repeated, packed = "false", tag = "3")]
     pub statuses: ::prost::alloc::vec::Vec<i32>,
 }
+/// 返回符合条件的任务总数和当前分页。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListTasksResp {
     #[prost(int32, optional, tag = "1")]
@@ -1113,11 +402,13 @@ pub struct ListTasksResp {
     #[prost(message, repeated, tag = "2")]
     pub tasks: ::prost::alloc::vec::Vec<TaskSummary>,
 }
+/// 取消本人可取消的任务。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CancelTaskReq {
     #[prost(string, optional, tag = "1")]
     pub task_id: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 返回取消受理后的当前任务状态，不保证同步终止上游执行。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CancelTaskResp {
     #[prost(string, optional, tag = "1")]
@@ -1127,13 +418,16 @@ pub struct CancelTaskResp {
     #[prost(string, optional, tag = "3")]
     pub status_message: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 恢复本人 can_recover_save=true 的普通任务；每个任务最多受理一次，不重新执行 GPU。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct RecoverSaveTaskReq {
+    /// 本人范围内的幂等键；同一次操作重发复用，新操作使用新值。
     #[prost(string, optional, tag = "1")]
     pub request_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
     pub task_id: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 返回原任务 ID 和当前状态；相同恢复 request_id 重发幂等。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct RecoverSaveTaskResp {
     #[prost(string, optional, tag = "1")]
@@ -1143,6 +437,7 @@ pub struct RecoverSaveTaskResp {
     #[prost(string, optional, tag = "3")]
     pub status_message: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 任务用途；普通任务和管理试跑共用执行链路。
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum TaskPurpose {
@@ -1172,11 +467,12 @@ impl TaskPurpose {
         }
     }
 }
+/// 用户可见任务状态；内部提交与核对细节使用 status_message 说明。
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum TaskStatus {
     Unspecified = 0,
-    /// 等待派发；维护模式下也保持此状态。
+    /// 等待 FIFO 派发。
     Pending = 1,
     /// 覆盖提交、排队、状态核对和 ComfyUI 执行过程，具体文案见 status_message。
     Running = 2,
@@ -1219,6 +515,7 @@ impl TaskStatus {
         }
     }
 }
+/// 资产媒体类型。
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum MediaType {
@@ -1259,6 +556,7 @@ pub mod task_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    /// 普通用户视频任务创建、查询、取消和一次性恢复保存。
     #[derive(Debug, Clone)]
     pub struct TaskClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -1339,6 +637,7 @@ pub mod task_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
+        /// 创建图生视频任务；只提交 workflow_id 与业务参数，不组合功能或模型 ID。
         pub async fn create_image_to_video(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateImageToVideoTaskReq>,
@@ -1360,6 +659,7 @@ pub mod task_client {
                 .insert(GrpcMethod::new("hi.media.Task", "CreateImageToVideo"));
             self.inner.unary(req, path, codec).await
         }
+        /// 创建文生视频任务；只提交 workflow_id 与业务参数。
         pub async fn create_text_to_video(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateTextToVideoTaskReq>,
@@ -1381,6 +681,7 @@ pub mod task_client {
                 .insert(GrpcMethod::new("hi.media.Task", "CreateTextToVideo"));
             self.inner.unary(req, path, codec).await
         }
+        /// 查询本人任务详情及产物资产 ID。
         pub async fn get(
             &mut self,
             request: impl tonic::IntoRequest<super::GetTaskReq>,
@@ -1399,6 +700,7 @@ pub mod task_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.media.Task", "Get"));
             self.inner.unary(req, path, codec).await
         }
+        /// 分页查询本人任务。
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<super::ListTasksReq>,
@@ -1417,6 +719,7 @@ pub mod task_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.media.Task", "List"));
             self.inner.unary(req, path, codec).await
         }
+        /// 按 can_cancel 取消任务；相同任务重复请求返回当前状态。
         pub async fn cancel(
             &mut self,
             request: impl tonic::IntoRequest<super::CancelTaskReq>,
@@ -1435,6 +738,7 @@ pub mod task_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.media.Task", "Cancel"));
             self.inner.unary(req, path, codec).await
         }
+        /// 恢复保存复用原任务，不检查存储额度或未完成任务上限，只受保存并发限制。
         pub async fn recover_save(
             &mut self,
             request: impl tonic::IntoRequest<super::RecoverSaveTaskReq>,
@@ -1601,922 +905,350 @@ pub mod user_manage_client {
         }
     }
 }
+/// 文本长度约束；服务端按 Unicode 码点计数。
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TextLimit {
+    /// 按 Unicode 码点计算的正向提示词最大长度。
+    #[prost(uint32, optional, tag = "1")]
+    pub max_length: ::core::option::Option<u32>,
+}
+/// 像素量选项，使用规范十进制字符串，默认值必须在允许集合内。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct WorkflowInputBinding {
-    #[prost(string, optional, tag = "1")]
-    pub node_id: ::core::option::Option<::prost::alloc::string::String>,
+pub struct DecimalOptionConfig {
+    /// 规范十进制字符串，例如 "0.9"；客户端必须原样提交，不转为浮点重新格式化。
+    #[prost(string, repeated, tag = "1")]
+    pub allowed_values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
-    pub input_name: ::core::option::Option<::prost::alloc::string::String>,
+    pub default_value: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 字符串选项，保存并传递工作流节点接受的完整值。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct WorkflowOutputConfig {
-    /// 主输出只绑定节点；后端按节点 class_type 使用固定 history 解析器。
-    #[prost(string, optional, tag = "1")]
-    pub node_id: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct WorkflowStringOptionInput {
-    #[prost(message, optional, tag = "1")]
-    pub binding: ::core::option::Option<WorkflowInputBinding>,
-    #[prost(message, optional, tag = "2")]
-    pub values: ::core::option::Option<StringOptionConfig>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct WorkflowDecimalOptionInput {
-    #[prost(message, optional, tag = "1")]
-    pub binding: ::core::option::Option<WorkflowInputBinding>,
-    #[prost(message, optional, tag = "2")]
-    pub values: ::core::option::Option<DecimalOptionConfig>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct WorkflowIntRangeInput {
-    #[prost(message, optional, tag = "1")]
-    pub binding: ::core::option::Option<WorkflowInputBinding>,
-    #[prost(message, optional, tag = "2")]
-    pub values: ::core::option::Option<IntRangeConfig>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct WorkflowFixedTextInput {
-    #[prost(message, optional, tag = "1")]
-    pub binding: ::core::option::Option<WorkflowInputBinding>,
+pub struct StringOptionConfig {
+    #[prost(string, repeated, tag = "1")]
+    pub allowed_values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
-    pub value: ::core::option::Option<::prost::alloc::string::String>,
+    pub default_value: ::core::option::Option<::prost::alloc::string::String>,
 }
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct WorkflowSelectableFrameRate {
-    #[prost(message, optional, tag = "1")]
-    pub binding: ::core::option::Option<WorkflowInputBinding>,
-    #[prost(message, optional, tag = "2")]
-    pub values: ::core::option::Option<IntRangeConfig>,
+/// 正整数范围，最小值和最大值均包含在允许范围内。
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct IntRangeConfig {
+    /// 含边界最小值。
+    #[prost(int32, optional, tag = "1")]
+    pub min_value: ::core::option::Option<i32>,
+    /// 含边界最大值。
+    #[prost(int32, optional, tag = "2")]
+    pub max_value: ::core::option::Option<i32>,
+    /// 用户省略参数时采用的值。
+    #[prost(int32, optional, tag = "3")]
+    pub default_value: ::core::option::Option<i32>,
 }
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct WorkflowFrameRateInput {
-    #[prost(oneof = "workflow_frame_rate_input::Mode", tags = "1, 2")]
-    pub mode: ::core::option::Option<workflow_frame_rate_input::Mode>,
+/// 帧率（帧/秒）的可选范围或固定值，两种模式必须选择其一。
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct FrameRateConfig {
+    #[prost(oneof = "frame_rate_config::Mode", tags = "1, 2")]
+    pub mode: ::core::option::Option<frame_rate_config::Mode>,
 }
-/// Nested message and enum types in `WorkflowFrameRateInput`.
-pub mod workflow_frame_rate_input {
-    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+/// Nested message and enum types in `FrameRateConfig`.
+pub mod frame_rate_config {
+    #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Oneof)]
     pub enum Mode {
+        /// 用户可以在工作流配置的整数范围内选择帧率。
         #[prost(message, tag = "1")]
-        Selectable(super::WorkflowSelectableFrameRate),
+        Selectable(super::IntRangeConfig),
+        /// 工作流没有帧率绑定；前端只读展示该值，创建时可以省略帧率。
         #[prost(int32, tag = "2")]
         FixedValue(i32),
     }
 }
+/// 工作流向普通用户开放的视频参数，不包含管理员固定输入。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ImageToVideoWorkflowConfig {
+pub struct VideoParameterConfig {
     #[prost(message, optional, tag = "1")]
-    pub input_image: ::core::option::Option<WorkflowInputBinding>,
+    pub prompt: ::core::option::Option<TextLimit>,
     #[prost(message, optional, tag = "2")]
-    pub prompt: ::core::option::Option<WorkflowInputBinding>,
-    #[prost(uint32, optional, tag = "3")]
-    pub prompt_max_length: ::core::option::Option<u32>,
-    /// 可选的管理员固定负向提示词；普通用户接口不接收也不返回该值。
+    pub aspect_ratio: ::core::option::Option<StringOptionConfig>,
+    #[prost(message, optional, tag = "3")]
+    pub megapixels: ::core::option::Option<DecimalOptionConfig>,
     #[prost(message, optional, tag = "4")]
-    pub negative_prompt: ::core::option::Option<WorkflowFixedTextInput>,
+    pub duration_seconds: ::core::option::Option<IntRangeConfig>,
     #[prost(message, optional, tag = "5")]
-    pub aspect_ratio: ::core::option::Option<WorkflowStringOptionInput>,
-    #[prost(message, optional, tag = "6")]
-    pub megapixels: ::core::option::Option<WorkflowDecimalOptionInput>,
-    #[prost(message, optional, tag = "7")]
-    pub duration_seconds: ::core::option::Option<WorkflowIntRangeInput>,
-    #[prost(message, optional, tag = "8")]
-    pub frame_rate: ::core::option::Option<WorkflowFrameRateInput>,
+    pub frame_rate: ::core::option::Option<FrameRateConfig>,
 }
+/// 系统初始化的功能；客户端从 Function.List 获取 ID，不自行按名称推导。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct TextToVideoWorkflowConfig {
-    #[prost(message, optional, tag = "1")]
-    pub prompt: ::core::option::Option<WorkflowInputBinding>,
-    #[prost(uint32, optional, tag = "2")]
-    pub prompt_max_length: ::core::option::Option<u32>,
-    /// 可选的管理员固定负向提示词；普通用户接口不接收也不返回该值。
-    #[prost(message, optional, tag = "3")]
-    pub negative_prompt: ::core::option::Option<WorkflowFixedTextInput>,
-    #[prost(message, optional, tag = "4")]
-    pub aspect_ratio: ::core::option::Option<WorkflowStringOptionInput>,
-    #[prost(message, optional, tag = "5")]
-    pub megapixels: ::core::option::Option<WorkflowDecimalOptionInput>,
-    #[prost(message, optional, tag = "6")]
-    pub duration_seconds: ::core::option::Option<WorkflowIntRangeInput>,
-    #[prost(message, optional, tag = "7")]
-    pub frame_rate: ::core::option::Option<WorkflowFrameRateInput>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct WorkflowExecutionConfig {
-    #[prost(message, optional, tag = "3")]
-    pub output: ::core::option::Option<WorkflowOutputConfig>,
-    #[prost(uint32, optional, tag = "4")]
-    pub execution_timeout_seconds: ::core::option::Option<u32>,
-    #[prost(uint64, optional, tag = "5")]
-    pub output_reservation_bytes: ::core::option::Option<u64>,
-    #[prost(oneof = "workflow_execution_config::FeatureConfig", tags = "1, 2")]
-    pub feature_config: ::core::option::Option<workflow_execution_config::FeatureConfig>,
-}
-/// Nested message and enum types in `WorkflowExecutionConfig`.
-pub mod workflow_execution_config {
-    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
-    pub enum FeatureConfig {
-        #[prost(message, tag = "1")]
-        ImageToVideo(super::ImageToVideoWorkflowConfig),
-        #[prost(message, tag = "2")]
-        TextToVideo(super::TextToVideoWorkflowConfig),
-    }
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct WorkflowIssue {
+pub struct FunctionSummary {
+    /// 固定值：video.img2vid（图生视频）、video.txt2vid（文生视频）。
     #[prost(string, optional, tag = "1")]
-    pub code: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(enumeration = "WorkflowIssueSeverity", optional, tag = "2")]
-    pub severity: ::core::option::Option<i32>,
-    #[prost(string, optional, tag = "3")]
-    pub message: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "4")]
-    pub node_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "5")]
-    pub input_name: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct WorkflowNodeInput {
-    #[prost(string, optional, tag = "1")]
-    pub input_name: ::core::option::Option<::prost::alloc::string::String>,
+    pub function_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
-    pub value_json: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(bool, optional, tag = "3")]
-    pub is_link: ::core::option::Option<bool>,
-    #[prost(string, optional, tag = "4")]
-    pub source_node_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(int32, optional, tag = "5")]
-    pub source_output_index: ::core::option::Option<i32>,
-    #[prost(string, optional, tag = "6")]
-    pub declared_type: ::core::option::Option<::prost::alloc::string::String>,
+    pub display_name: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 返回全部固定功能；功能是否可创建任务由 Get 的 workflows 判断。
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct WorkflowNode {
+pub struct ListFunctionsResp {
+    #[prost(message, repeated, tag = "1")]
+    pub functions: ::prost::alloc::vec::Vec<FunctionSummary>,
+}
+/// 查询选中功能及其当前启用的工作流。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetFunctionReq {
+    /// 必须来自 Function.List：video.img2vid 或 video.txt2vid。
     #[prost(string, optional, tag = "1")]
-    pub node_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub class_type: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "3")]
-    pub title: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(message, repeated, tag = "4")]
-    pub inputs: ::prost::alloc::vec::Vec<WorkflowNodeInput>,
-    #[prost(bool, optional, tag = "5")]
-    pub supported_main_output: ::core::option::Option<bool>,
+    pub function_id: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 普通用户可见的模型信息，不含 ComfyUI 真实文件名。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct WorkflowDependencyUsage {
-    #[prost(string, optional, tag = "1")]
-    pub node_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub input_name: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct WorkflowDependency {
-    #[prost(enumeration = "WorkflowDependencyKind", optional, tag = "1")]
-    pub kind: ::core::option::Option<i32>,
-    #[prost(string, optional, tag = "2")]
-    pub identifier: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(message, repeated, tag = "3")]
-    pub usages: ::prost::alloc::vec::Vec<WorkflowDependencyUsage>,
-    /// false 表示仅存在于当前固定关闭的惰性分支；缺失时校验只产生警告。
-    #[prost(bool, optional, tag = "4")]
-    pub required: ::core::option::Option<bool>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct WorkflowSummary {
-    #[prost(string, optional, tag = "1")]
-    pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(enumeration = "FeatureKey", optional, tag = "2")]
-    pub feature_key: ::core::option::Option<i32>,
-    #[prost(string, optional, tag = "3")]
-    pub name: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(enumeration = "WorkflowStatus", optional, tag = "4")]
-    pub status: ::core::option::Option<i32>,
-    #[prost(enumeration = "WorkflowValidationStatus", optional, tag = "5")]
-    pub validation_status: ::core::option::Option<i32>,
-    #[prost(int64, optional, tag = "6")]
-    pub enabled_at: ::core::option::Option<i64>,
-    #[prost(string, optional, tag = "7")]
-    pub created_by: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(int64, optional, tag = "8")]
-    pub created_at: ::core::option::Option<i64>,
-    #[prost(int64, optional, tag = "9")]
-    pub updated_at: ::core::option::Option<i64>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct WorkflowDetail {
-    #[prost(message, optional, tag = "1")]
-    pub summary: ::core::option::Option<WorkflowSummary>,
-    #[prost(string, optional, tag = "2")]
-    pub description: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "3")]
-    pub api_json: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(message, optional, tag = "4")]
-    pub config: ::core::option::Option<WorkflowExecutionConfig>,
-    #[prost(message, repeated, tag = "5")]
-    pub nodes: ::prost::alloc::vec::Vec<WorkflowNode>,
-    #[prost(message, repeated, tag = "6")]
-    pub dependencies: ::prost::alloc::vec::Vec<WorkflowDependency>,
-    #[prost(message, repeated, tag = "7")]
-    pub validation_issues: ::prost::alloc::vec::Vec<WorkflowIssue>,
-    #[prost(int64, optional, tag = "8")]
-    pub validated_at: ::core::option::Option<i64>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ImportWorkflowReq {
-    #[prost(enumeration = "FeatureKey", optional, tag = "1")]
-    pub feature_key: ::core::option::Option<i32>,
-    #[prost(string, optional, tag = "2")]
-    pub name: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "3")]
-    pub api_json: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "4")]
-    pub description: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ImportWorkflowResp {
-    #[prost(string, optional, tag = "1")]
-    pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct UpdateWorkflowReq {
-    #[prost(string, optional, tag = "1")]
-    pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
-    /// api_json 与 config 至少提交一项；只允许修改草稿。
-    #[prost(string, optional, tag = "2")]
-    pub api_json: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(message, optional, tag = "3")]
-    pub config: ::core::option::Option<WorkflowExecutionConfig>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateWorkflowResp {
-    #[prost(message, optional, tag = "1")]
-    pub workflow: ::core::option::Option<WorkflowDetail>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct UpdateWorkflowDescriptionReq {
-    #[prost(string, optional, tag = "1")]
-    pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
-    /// 必须显式提交；空字符串表示清空说明。
-    #[prost(string, optional, tag = "2")]
-    pub description: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateWorkflowDescriptionResp {
-    #[prost(message, optional, tag = "1")]
-    pub workflow: ::core::option::Option<WorkflowDetail>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetWorkflowReq {
-    #[prost(string, optional, tag = "1")]
-    pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetWorkflowResp {
-    #[prost(message, optional, tag = "1")]
-    pub workflow: ::core::option::Option<WorkflowDetail>,
-}
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListWorkflowsReq {
-    #[prost(message, optional, tag = "1")]
-    pub pagination: ::core::option::Option<super::Pagination>,
-    #[prost(enumeration = "FeatureKey", optional, tag = "2")]
-    pub feature_key: ::core::option::Option<i32>,
-    #[prost(enumeration = "WorkflowStatus", optional, tag = "3")]
-    pub status: ::core::option::Option<i32>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListWorkflowsResp {
-    #[prost(int32, optional, tag = "1")]
-    pub total: ::core::option::Option<i32>,
-    #[prost(message, repeated, tag = "2")]
-    pub workflows: ::prost::alloc::vec::Vec<WorkflowSummary>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ValidateWorkflowReq {
-    #[prost(string, optional, tag = "1")]
-    pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ValidateWorkflowResp {
-    #[prost(enumeration = "WorkflowValidationStatus", optional, tag = "1")]
-    pub status: ::core::option::Option<i32>,
-    #[prost(message, repeated, tag = "2")]
-    pub issues: ::prost::alloc::vec::Vec<WorkflowIssue>,
-    #[prost(int64, optional, tag = "3")]
-    pub validated_at: ::core::option::Option<i64>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct TestWorkflowReq {
-    #[prost(string, optional, tag = "1")]
-    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "3")]
-    pub prompt: ::core::option::Option<::prost::alloc::string::String>,
-    /// 图生视频必须提交管理员本人的图片资产；文生视频必须省略。
-    /// 分辨率、时长和帧率统一使用工作流默认值或固定值。
-    #[prost(string, optional, tag = "4")]
-    pub input_asset_id: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct TestWorkflowResp {
-    #[prost(string, optional, tag = "1")]
-    pub task_id: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListWorkflowTestsReq {
-    #[prost(message, optional, tag = "1")]
-    pub pagination: ::core::option::Option<super::Pagination>,
-    #[prost(string, optional, tag = "2")]
-    pub workflow_version_id: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListWorkflowTestsResp {
-    #[prost(int32, optional, tag = "1")]
-    pub total: ::core::option::Option<i32>,
-    #[prost(message, repeated, tag = "2")]
-    pub tasks: ::prost::alloc::vec::Vec<TaskSummary>,
-}
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum WorkflowStatus {
-    Unspecified = 0,
-    Draft = 1,
-    /// 最近校验通过的草稿在管理试跑完整成功后自动进入 ENABLED；是否对用户可用仍由映射决定。
-    Enabled = 2,
-}
-impl WorkflowStatus {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Self::Unspecified => "WORKFLOW_STATUS_UNSPECIFIED",
-            Self::Draft => "WORKFLOW_STATUS_DRAFT",
-            Self::Enabled => "WORKFLOW_STATUS_ENABLED",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "WORKFLOW_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
-            "WORKFLOW_STATUS_DRAFT" => Some(Self::Draft),
-            "WORKFLOW_STATUS_ENABLED" => Some(Self::Enabled),
-            _ => None,
-        }
-    }
-}
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum WorkflowValidationStatus {
-    /// 尚未校验。
-    Unspecified = 0,
-    Passed = 1,
-    Failed = 2,
-}
-impl WorkflowValidationStatus {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Self::Unspecified => "WORKFLOW_VALIDATION_STATUS_UNSPECIFIED",
-            Self::Passed => "WORKFLOW_VALIDATION_STATUS_PASSED",
-            Self::Failed => "WORKFLOW_VALIDATION_STATUS_FAILED",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "WORKFLOW_VALIDATION_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
-            "WORKFLOW_VALIDATION_STATUS_PASSED" => Some(Self::Passed),
-            "WORKFLOW_VALIDATION_STATUS_FAILED" => Some(Self::Failed),
-            _ => None,
-        }
-    }
-}
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum WorkflowIssueSeverity {
-    Unspecified = 0,
-    Warning = 1,
-    Error = 2,
-}
-impl WorkflowIssueSeverity {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Self::Unspecified => "WORKFLOW_ISSUE_SEVERITY_UNSPECIFIED",
-            Self::Warning => "WORKFLOW_ISSUE_SEVERITY_WARNING",
-            Self::Error => "WORKFLOW_ISSUE_SEVERITY_ERROR",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "WORKFLOW_ISSUE_SEVERITY_UNSPECIFIED" => Some(Self::Unspecified),
-            "WORKFLOW_ISSUE_SEVERITY_WARNING" => Some(Self::Warning),
-            "WORKFLOW_ISSUE_SEVERITY_ERROR" => Some(Self::Error),
-            _ => None,
-        }
-    }
-}
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum WorkflowDependencyKind {
-    Unspecified = 0,
-    NodeClass = 1,
-    LoaderFile = 2,
-}
-impl WorkflowDependencyKind {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Self::Unspecified => "WORKFLOW_DEPENDENCY_KIND_UNSPECIFIED",
-            Self::NodeClass => "WORKFLOW_DEPENDENCY_KIND_NODE_CLASS",
-            Self::LoaderFile => "WORKFLOW_DEPENDENCY_KIND_LOADER_FILE",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "WORKFLOW_DEPENDENCY_KIND_UNSPECIFIED" => Some(Self::Unspecified),
-            "WORKFLOW_DEPENDENCY_KIND_NODE_CLASS" => Some(Self::NodeClass),
-            "WORKFLOW_DEPENDENCY_KIND_LOADER_FILE" => Some(Self::LoaderFile),
-            _ => None,
-        }
-    }
-}
-/// Generated client implementations.
-pub mod workflow_manage_client {
-    #![allow(
-        unused_variables,
-        dead_code,
-        missing_docs,
-        clippy::wildcard_imports,
-        clippy::let_unit_value,
-    )]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    #[derive(Debug, Clone)]
-    pub struct WorkflowManageClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl WorkflowManageClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> WorkflowManageClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::Body>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> WorkflowManageClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
-        {
-            WorkflowManageClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        pub async fn import_workflow(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ImportWorkflowReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::ImportWorkflowResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.WorkflowManage/ImportWorkflow",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.WorkflowManage", "ImportWorkflow"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn update_workflow(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdateWorkflowReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::UpdateWorkflowResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.WorkflowManage/UpdateWorkflow",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.WorkflowManage", "UpdateWorkflow"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn update_description(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdateWorkflowDescriptionReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::UpdateWorkflowDescriptionResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.WorkflowManage/UpdateDescription",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.WorkflowManage", "UpdateDescription"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn validate(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ValidateWorkflowReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::ValidateWorkflowResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.WorkflowManage/Validate",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.WorkflowManage", "Validate"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn test(
-            &mut self,
-            request: impl tonic::IntoRequest<super::TestWorkflowReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::TestWorkflowResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.WorkflowManage/Test",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.WorkflowManage", "Test"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn list_tests(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListWorkflowTestsReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::ListWorkflowTestsResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.WorkflowManage/ListTests",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.WorkflowManage", "ListTests"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn list(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListWorkflowsReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::ListWorkflowsResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.WorkflowManage/List",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.WorkflowManage", "List"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn get(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetWorkflowReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetWorkflowResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.media.WorkflowManage/Get",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.media.WorkflowManage", "Get"));
-            self.inner.unary(req, path, codec).await
-        }
-    }
-}
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetQuotaResp {
-    #[prost(uint64, optional, tag = "1")]
-    pub total_bytes: ::core::option::Option<u64>,
-    #[prost(uint64, optional, tag = "2")]
-    pub used_bytes: ::core::option::Option<u64>,
-    #[prost(uint64, optional, tag = "3")]
-    pub available_bytes: ::core::option::Option<u64>,
-}
-/// Generated client implementations.
-pub mod quota_client {
-    #![allow(
-        unused_variables,
-        dead_code,
-        missing_docs,
-        clippy::wildcard_imports,
-        clippy::let_unit_value,
-    )]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    #[derive(Debug, Clone)]
-    pub struct QuotaClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl QuotaClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> QuotaClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::Body>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> QuotaClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
-        {
-            QuotaClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        pub async fn get(
-            &mut self,
-            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
-        ) -> std::result::Result<tonic::Response<super::GetQuotaResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.media.Quota/Get");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.media.Quota", "Get"));
-            self.inner.unary(req, path, codec).await
-        }
-    }
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct Model {
+pub struct WorkflowModelOption {
+    /// 关联模型 ID；创建任务时无需回传。
     #[prost(string, optional, tag = "1")]
     pub model_id: ::core::option::Option<::prost::alloc::string::String>,
-    /// 用户可见的产品模型名称，不是 ComfyUI 工作流中的原始模型文件名。
     #[prost(string, optional, tag = "2")]
-    pub name: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(int64, optional, tag = "3")]
-    pub created_at: ::core::option::Option<i64>,
+    pub display_name: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 功能页的一项可用工作流；用户选择后按该项参数配置填写表单。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkflowOption {
+    /// 创建任务时提交的唯一工作流 ID，由服务端生成；客户端不计算 hash。
+    #[prost(string, optional, tag = "1")]
+    pub workflow_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub model: ::core::option::Option<WorkflowModelOption>,
+    /// 管理员显式指定；同一功能最多一项为 true，也可以没有默认项。
+    #[prost(bool, optional, tag = "3")]
+    pub is_default: ::core::option::Option<bool>,
+    /// 管理员编写的 Markdown 说明；客户端应使用安全 Markdown 渲染。
+    #[prost(string, optional, tag = "4")]
+    pub description: ::core::option::Option<::prost::alloc::string::String>,
+    /// 该工作流的范围、完整允许值与默认值，不能按模型名称硬编码。
+    #[prost(message, optional, tag = "5")]
+    pub parameter_config: ::core::option::Option<VideoParameterConfig>,
+}
+/// 一次返回功能页所需的全部可用工作流配置，不暴露节点、依赖或文件对象键。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetFunctionResp {
+    #[prost(message, optional, tag = "1")]
+    pub function: ::core::option::Option<FunctionSummary>,
+    /// 只包含 ENABLED 工作流，按管理员顺序及稳定次序排列；空列表表示当前不可创建。
+    #[prost(message, repeated, tag = "2")]
+    pub workflows: ::prost::alloc::vec::Vec<WorkflowOption>,
+}
+/// Generated client implementations.
+pub mod function_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 普通用户的功能选择入口。
+    #[derive(Debug, Clone)]
+    pub struct FunctionClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl FunctionClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> FunctionClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> FunctionClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            FunctionClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// 返回系统固定功能 ID 及显示名。
+        pub async fn list(
+            &mut self,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListFunctionsResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.media.Function/List");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.media.Function", "List"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 返回指定功能及全部已启用工作流，各自携带模型信息与用户参数配置。
+        pub async fn get(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetFunctionReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetFunctionResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.media.Function/Get");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.media.Function", "Get"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// 管理员模型资源；普通用户使用 WorkflowModelOption，不能获得 real_name。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct Model {
+    /// 服务端生成的不透明 ID，创建后不可修改。
+    #[prost(string, optional, tag = "1")]
+    pub model_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 全局唯一的用户可见名称，管理员可修改。
+    #[prost(string, optional, tag = "2")]
+    pub display_name: ::core::option::Option<::prost::alloc::string::String>,
+    /// 管理员手动填写的 ComfyUI 主模型文件名，全局唯一且创建后不可修改；仅管理可见。
+    #[prost(string, optional, tag = "3")]
+    pub real_name: ::core::option::Option<::prost::alloc::string::String>,
+    /// Unix 秒。
     #[prost(int64, optional, tag = "4")]
+    pub created_at: ::core::option::Option<i64>,
+    /// Unix 秒。
+    #[prost(int64, optional, tag = "5")]
     pub updated_at: ::core::option::Option<i64>,
 }
+/// 创建模型，显示名和真实名分别全局唯一。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateModelReq {
     #[prost(string, optional, tag = "1")]
-    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    pub display_name: ::core::option::Option<::prost::alloc::string::String>,
+    /// ComfyUI 主模型真实文件名；由管理员确认，不从候选列表接口获取。
+    #[prost(string, optional, tag = "2")]
+    pub real_name: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 返回新建模型及服务端分配的 ID。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateModelResp {
     #[prost(message, optional, tag = "1")]
     pub model: ::core::option::Option<Model>,
 }
+/// 仅修改显示名；模型 ID 和真实名不可修改。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UpdateModelReq {
     #[prost(string, optional, tag = "1")]
     pub model_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
-    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    pub display_name: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 返回更新后的模型。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UpdateModelResp {
     #[prost(message, optional, tag = "1")]
     pub model: ::core::option::Option<Model>,
 }
+/// 按模型 ID 查询管理详情。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetModelReq {
     #[prost(string, optional, tag = "1")]
     pub model_id: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 返回模型管理详情。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetModelResp {
     #[prost(message, optional, tag = "1")]
     pub model: ::core::option::Option<Model>,
 }
+/// 分页查询全部模型，不按关联工作流启用状态过滤。
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListModelsReq {
     #[prost(message, optional, tag = "1")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
+/// 返回模型总数和当前分页。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListModelsResp {
     #[prost(int32, optional, tag = "1")]
     pub total: ::core::option::Option<i32>,
     #[prost(message, repeated, tag = "2")]
     pub models: ::prost::alloc::vec::Vec<Model>,
+}
+/// 删除没有被任何工作流引用的模型。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DeleteModelReq {
+    #[prost(string, optional, tag = "1")]
+    pub model_id: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Generated client implementations.
 pub mod model_manage_client {
@@ -2529,6 +1261,7 @@ pub mod model_manage_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    /// 管理员维护用户显示名与真实模型名；不动态改写工作流 Loader。
     #[derive(Debug, Clone)]
     pub struct ModelManageClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -2609,6 +1342,7 @@ pub mod model_manage_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
+        /// 创建显示名与真实名的对应关系。
         pub async fn create(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateModelReq>,
@@ -2633,6 +1367,7 @@ pub mod model_manage_client {
                 .insert(GrpcMethod::new("hi.media.ModelManage", "Create"));
             self.inner.unary(req, path, codec).await
         }
+        /// 仅更新用户可见显示名。
         pub async fn update(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateModelReq>,
@@ -2657,6 +1392,29 @@ pub mod model_manage_client {
                 .insert(GrpcMethod::new("hi.media.ModelManage", "Update"));
             self.inner.unary(req, path, codec).await
         }
+        /// 被任何工作流引用时返回 FailedPrecondition；成功返回空响应。
+        pub async fn delete(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteModelReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.ModelManage/Delete",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.ModelManage", "Delete"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 分页查询模型。
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<super::ListModelsReq>,
@@ -2677,6 +1435,7 @@ pub mod model_manage_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.media.ModelManage", "List"));
             self.inner.unary(req, path, codec).await
         }
+        /// 查询模型详情，包含仅管理员可见的真实名。
         pub async fn get(
             &mut self,
             request: impl tonic::IntoRequest<super::GetModelReq>,
@@ -2693,6 +1452,990 @@ pub mod model_manage_client {
             let path = http::uri::PathAndQuery::from_static("/hi.media.ModelManage/Get");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.media.ModelManage", "Get"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// 将一个业务参数绑定到一个具体节点输入，不支持多目标绑定。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkflowInputBinding {
+    /// API JSON 中的字符串节点 ID，可包含冒号。
+    #[prost(string, optional, tag = "1")]
+    pub node_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// inputs 中的精确键名，包括动态节点中的点号。
+    #[prost(string, optional, tag = "2")]
+    pub input_name: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 唯一主输出 SaveVideo 节点，用于解析 history，不绑定 output_name。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkflowOutputConfig {
+    /// 主输出只绑定节点；后端按节点 class_type 使用固定 history 解析器。
+    #[prost(string, optional, tag = "1")]
+    pub node_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 完整字符串选项及其写入节点，适用于宽高比。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkflowStringOptionInput {
+    #[prost(message, optional, tag = "1")]
+    pub binding: ::core::option::Option<WorkflowInputBinding>,
+    #[prost(message, optional, tag = "2")]
+    pub values: ::core::option::Option<StringOptionConfig>,
+}
+/// 规范十进制选项及其写入节点，适用于像素量。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkflowDecimalOptionInput {
+    #[prost(message, optional, tag = "1")]
+    pub binding: ::core::option::Option<WorkflowInputBinding>,
+    #[prost(message, optional, tag = "2")]
+    pub values: ::core::option::Option<DecimalOptionConfig>,
+}
+/// 正整数范围及其写入节点，适用于视频时长。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkflowIntRangeInput {
+    #[prost(message, optional, tag = "1")]
+    pub binding: ::core::option::Option<WorkflowInputBinding>,
+    #[prost(message, optional, tag = "2")]
+    pub values: ::core::option::Option<IntRangeConfig>,
+}
+/// 管理员固定文本输入，不向普通用户开放。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkflowFixedTextInput {
+    #[prost(message, optional, tag = "1")]
+    pub binding: ::core::option::Option<WorkflowInputBinding>,
+    /// 管理员固定文本，提供本消息时必须填写，不作为普通用户参数。
+    #[prost(string, optional, tag = "2")]
+    pub value: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 用户可选帧率的范围和绑定节点。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkflowSelectableFrameRate {
+    #[prost(message, optional, tag = "1")]
+    pub binding: ::core::option::Option<WorkflowInputBinding>,
+    #[prost(message, optional, tag = "2")]
+    pub values: ::core::option::Option<IntRangeConfig>,
+}
+/// 帧率配置，选择用户可调或工作流固定值。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkflowFrameRateInput {
+    #[prost(oneof = "workflow_frame_rate_input::Mode", tags = "1, 2")]
+    pub mode: ::core::option::Option<workflow_frame_rate_input::Mode>,
+}
+/// Nested message and enum types in `WorkflowFrameRateInput`.
+pub mod workflow_frame_rate_input {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Mode {
+        /// 用户可选范围，执行时写入绑定节点。
+        #[prost(message, tag = "1")]
+        Selectable(super::WorkflowSelectableFrameRate),
+        /// 帧/秒；工作流内部固定，不执行节点改写。
+        #[prost(int32, tag = "2")]
+        FixedValue(i32),
+    }
+}
+/// 图生视频执行配置，对应功能 video.img2vid。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ImageToVideoWorkflowConfig {
+    #[prost(message, optional, tag = "1")]
+    pub input_image: ::core::option::Option<WorkflowInputBinding>,
+    #[prost(message, optional, tag = "2")]
+    pub prompt: ::core::option::Option<WorkflowInputBinding>,
+    /// 正向提示词的 Unicode 码点上限，不是 UTF-8 字节数。
+    #[prost(uint32, optional, tag = "3")]
+    pub prompt_max_length: ::core::option::Option<u32>,
+    /// 可选的管理员固定负向提示词；普通用户接口不接收也不返回该值。
+    #[prost(message, optional, tag = "4")]
+    pub negative_prompt: ::core::option::Option<WorkflowFixedTextInput>,
+    #[prost(message, optional, tag = "5")]
+    pub aspect_ratio: ::core::option::Option<WorkflowStringOptionInput>,
+    #[prost(message, optional, tag = "6")]
+    pub megapixels: ::core::option::Option<WorkflowDecimalOptionInput>,
+    #[prost(message, optional, tag = "7")]
+    pub duration_seconds: ::core::option::Option<WorkflowIntRangeInput>,
+    #[prost(message, optional, tag = "8")]
+    pub frame_rate: ::core::option::Option<WorkflowFrameRateInput>,
+}
+/// 文生视频执行配置，对应功能 video.txt2vid。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TextToVideoWorkflowConfig {
+    #[prost(message, optional, tag = "1")]
+    pub prompt: ::core::option::Option<WorkflowInputBinding>,
+    /// 正向提示词的 Unicode 码点上限，不是 UTF-8 字节数。
+    #[prost(uint32, optional, tag = "2")]
+    pub prompt_max_length: ::core::option::Option<u32>,
+    /// 可选的管理员固定负向提示词；普通用户接口不接收也不返回该值。
+    #[prost(message, optional, tag = "3")]
+    pub negative_prompt: ::core::option::Option<WorkflowFixedTextInput>,
+    #[prost(message, optional, tag = "4")]
+    pub aspect_ratio: ::core::option::Option<WorkflowStringOptionInput>,
+    #[prost(message, optional, tag = "5")]
+    pub megapixels: ::core::option::Option<WorkflowDecimalOptionInput>,
+    #[prost(message, optional, tag = "6")]
+    pub duration_seconds: ::core::option::Option<WorkflowIntRangeInput>,
+    #[prost(message, optional, tag = "7")]
+    pub frame_rate: ::core::option::Option<WorkflowFrameRateInput>,
+}
+/// 完整执行配置；功能配置必须与工作流归属一致，保存时不建立产物预占。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkflowExecutionConfig {
+    #[prost(message, optional, tag = "3")]
+    pub output: ::core::option::Option<WorkflowOutputConfig>,
+    /// 从 ComfyUI 真正开始执行起计时，单位秒；必填正整数，不按模型名称硬编码。
+    #[prost(uint32, optional, tag = "4")]
+    pub execution_timeout_seconds: ::core::option::Option<u32>,
+    #[prost(oneof = "workflow_execution_config::FunctionConfig", tags = "1, 2")]
+    pub function_config: ::core::option::Option<
+        workflow_execution_config::FunctionConfig,
+    >,
+}
+/// Nested message and enum types in `WorkflowExecutionConfig`.
+pub mod workflow_execution_config {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum FunctionConfig {
+        #[prost(message, tag = "1")]
+        ImageToVideo(super::ImageToVideoWorkflowConfig),
+        #[prost(message, tag = "2")]
+        TextToVideo(super::TextToVideoWorkflowConfig),
+    }
+}
+/// 静态校验发现的问题，节点和输入定位信息按需提供。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkflowIssue {
+    #[prost(string, optional, tag = "1")]
+    pub code: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "WorkflowIssueSeverity", optional, tag = "2")]
+    pub severity: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "3")]
+    pub message: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub node_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "5")]
+    pub input_name: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 供管理员配置绑定的节点输入描述。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkflowNodeInput {
+    #[prost(string, optional, tag = "1")]
+    pub input_name: ::core::option::Option<::prost::alloc::string::String>,
+    /// 固定值的原始 JSON；连线输入不提供。
+    #[prost(string, optional, tag = "2")]
+    pub value_json: ::core::option::Option<::prost::alloc::string::String>,
+    /// true 表示 \[source_node_id, output_index\] 连线。
+    #[prost(bool, optional, tag = "3")]
+    pub is_link: ::core::option::Option<bool>,
+    #[prost(string, optional, tag = "4")]
+    pub source_node_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 源节点输出的零基下标，仅连线输入提供。
+    #[prost(int32, optional, tag = "5")]
+    pub source_output_index: ::core::option::Option<i32>,
+    /// object_info 可用时补充的上游输入类型。
+    #[prost(string, optional, tag = "6")]
+    pub declared_type: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 从当前 API JSON 解析的节点，节点 ID 不按整数解释。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct WorkflowNode {
+    #[prost(string, optional, tag = "1")]
+    pub node_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub class_type: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub title: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, repeated, tag = "4")]
+    pub inputs: ::prost::alloc::vec::Vec<WorkflowNodeInput>,
+    #[prost(bool, optional, tag = "5")]
+    pub supported_main_output: ::core::option::Option<bool>,
+}
+/// 依赖在工作流中使用的位置。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkflowDependencyUsage {
+    #[prost(string, optional, tag = "1")]
+    pub node_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub input_name: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 动态解析的依赖，管理员只查看，不维护依赖清单。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct WorkflowDependency {
+    #[prost(enumeration = "WorkflowDependencyKind", optional, tag = "1")]
+    pub kind: ::core::option::Option<i32>,
+    /// 节点 class_type 或 Loader 依赖文件名。
+    #[prost(string, optional, tag = "2")]
+    pub identifier: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, repeated, tag = "3")]
+    pub usages: ::prost::alloc::vec::Vec<WorkflowDependencyUsage>,
+    /// false 表示仅存在于当前固定关闭的惰性分支；缺失时校验只产生警告。
+    #[prost(bool, optional, tag = "4")]
+    pub required: ::core::option::Option<bool>,
+}
+/// 管理摘要；不下载工作流文件，不暴露对象键、存储地址或完整 API JSON。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkflowSummary {
+    /// 服务端将 function_id、单个零字节、model_id 依次拼接后计算 SHA-256，取小写十六进制。
+    #[prost(string, optional, tag = "1")]
+    pub workflow_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub function: ::core::option::Option<FunctionSummary>,
+    #[prost(message, optional, tag = "3")]
+    pub model: ::core::option::Option<Model>,
+    /// 当前上传文件的原文件名，仅用于管理展示。
+    #[prost(string, optional, tag = "4")]
+    pub original_filename: ::core::option::Option<::prost::alloc::string::String>,
+    /// 当前 API JSON 原始字节数；JSON 使用十进制字符串。
+    #[prost(uint64, optional, tag = "5")]
+    pub file_size_bytes: ::core::option::Option<u64>,
+    #[prost(enumeration = "WorkflowStatus", optional, tag = "6")]
+    pub status: ::core::option::Option<i32>,
+    #[prost(enumeration = "WorkflowValidationStatus", optional, tag = "7")]
+    pub validation_status: ::core::option::Option<i32>,
+    /// 创建时为 false；仅管理员显式指定，同一功能最多一个默认项。
+    #[prost(bool, optional, tag = "8")]
+    pub is_default: ::core::option::Option<bool>,
+    /// 同一功能内的展示顺序，较小值优先。
+    #[prost(int32, optional, tag = "9")]
+    pub sort_order: ::core::option::Option<i32>,
+    /// Unix 秒；首次试跑成功启用时间，从未启用时不提供，后续修改或试跑不覆盖。
+    #[prost(int64, optional, tag = "10")]
+    pub enabled_at: ::core::option::Option<i64>,
+    /// 首次导入管理员 DID。
+    #[prost(string, optional, tag = "11")]
+    pub created_by: ::core::option::Option<::prost::alloc::string::String>,
+    /// Unix 秒。
+    #[prost(int64, optional, tag = "12")]
+    pub created_at: ::core::option::Option<i64>,
+    /// Unix 秒。
+    #[prost(int64, optional, tag = "13")]
+    pub updated_at: ::core::option::Option<i64>,
+}
+/// 管理详情；节点和依赖从当前文件动态解析，不返回完整文件或历史对象列表。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct WorkflowDetail {
+    #[prost(message, optional, tag = "1")]
+    pub summary: ::core::option::Option<WorkflowSummary>,
+    /// 管理员自由编辑的用户说明，按安全 Markdown 渲染。
+    #[prost(string, optional, tag = "2")]
+    pub description: ::core::option::Option<::prost::alloc::string::String>,
+    /// 尚未配置时不提供。
+    #[prost(message, optional, tag = "3")]
+    pub config: ::core::option::Option<WorkflowExecutionConfig>,
+    #[prost(message, repeated, tag = "4")]
+    pub nodes: ::prost::alloc::vec::Vec<WorkflowNode>,
+    #[prost(message, repeated, tag = "5")]
+    pub dependencies: ::prost::alloc::vec::Vec<WorkflowDependency>,
+    #[prost(message, repeated, tag = "6")]
+    pub validation_issues: ::prost::alloc::vec::Vec<WorkflowIssue>,
+    /// Unix 秒；尚未校验时不提供。
+    #[prost(int64, optional, tag = "7")]
+    pub validated_at: ::core::option::Option<i64>,
+}
+/// AUTH_SUPERADMIN 的 POST /api/v1/workflow_manage/import 使用的 metadata。
+/// 自定义 multipart HTTP 接口，不是 RPC。第一项 metadata 为 application/json、
+/// 不携带 filename，仅接受 lowerCamelCase（functionId/modelId/description）；
+/// 第二项 workflow 为完整 UTF-8 API JSON .json 文件，非空，默认上限 10 MiB。
+/// 不接受编辑器 Workflow JSON；组合已存在时返回 Aborted，不覆盖原工作流。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkflowImportMetadata {
+    /// 来自 Function.List 的 video.img2vid 或 video.txt2vid。
+    #[prost(string, optional, tag = "1")]
+    pub function_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 已创建且尚未关联同一功能工作流的模型 ID。
+    #[prost(string, optional, tag = "2")]
+    pub model_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 不传表示没有说明；不从工作流 Note 自动提取。
+    #[prost(string, optional, tag = "3")]
+    pub description: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// AUTH_SUPERADMIN 的 POST /api/v1/workflow_manage/replace_file 使用的 metadata。
+/// 第一项 metadata 为 application/json、无 filename，仅接受 lowerCamelCase workflowId；
+/// 第二项 workflow 的文件要求与 Import 相同。替换后保留说明和配置，回到草稿并重置校验。
+/// 旧文件保留；存在未结束任务时拒绝替换，返回 Aborted。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkflowReplaceFileMetadata {
+    /// 已导入的工作流 ID，不修改其功能与模型归属。
+    #[prost(string, optional, tag = "1")]
+    pub workflow_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 两个工作流 multipart 接口成功响应包装中的 data；只返回稳定工作流 ID。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkflowFileMutationResp {
+    #[prost(string, optional, tag = "1")]
+    pub workflow_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 更新说明或完整执行配置，至少提供一项；不接受工作流 JSON 字符串。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UpdateWorkflowReq {
+    #[prost(string, optional, tag = "1")]
+    pub workflow_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 不传表示不修改；显式空字符串表示清空，仅修改说明不改变状态或校验结果。
+    #[prost(string, optional, tag = "2")]
+    pub description: ::core::option::Option<::prost::alloc::string::String>,
+    /// 提交即替换完整配置并回到 DRAFT / unvalidated；有未结束任务时返回 Aborted。
+    #[prost(message, optional, tag = "3")]
+    pub config: ::core::option::Option<WorkflowExecutionConfig>,
+}
+/// 返回更新后的管理详情。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateWorkflowResp {
+    #[prost(message, optional, tag = "1")]
+    pub workflow: ::core::option::Option<WorkflowDetail>,
+}
+/// 根据工作流 ID 查询管理员详情。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetWorkflowReq {
+    #[prost(string, optional, tag = "1")]
+    pub workflow_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 当前文件不可用时返回 Unavailable；对象不存在或 JSON 损坏时返回 FailedPrecondition。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetWorkflowResp {
+    #[prost(message, optional, tag = "1")]
+    pub workflow: ::core::option::Option<WorkflowDetail>,
+}
+/// 分页查询工作流摘要；不传过滤字段表示不过滤。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListWorkflowsReq {
+    #[prost(message, optional, tag = "1")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+    /// 来自 Function.List 的固定功能 ID。
+    #[prost(string, optional, tag = "2")]
+    pub function_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "WorkflowStatus", optional, tag = "3")]
+    pub status: ::core::option::Option<i32>,
+}
+/// 返回数据库摘要，不触发文件下载。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListWorkflowsResp {
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
+    #[prost(message, repeated, tag = "2")]
+    pub workflows: ::prost::alloc::vec::Vec<WorkflowSummary>,
+}
+/// 静态校验当前文件、绑定、参数和环境依赖，不执行 GPU。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ValidateWorkflowReq {
+    #[prost(string, optional, tag = "1")]
+    pub workflow_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 最近一次静态校验结果；只有 WARNING 时仍为 PASSED。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ValidateWorkflowResp {
+    #[prost(enumeration = "WorkflowValidationStatus", optional, tag = "1")]
+    pub status: ::core::option::Option<i32>,
+    #[prost(message, repeated, tag = "2")]
+    pub issues: ::prost::alloc::vec::Vec<WorkflowIssue>,
+    /// Unix 秒。
+    #[prost(int64, optional, tag = "3")]
+    pub validated_at: ::core::option::Option<i64>,
+}
+/// 受理管理试跑；允许最近校验通过的 DRAFT 或 ENABLED，同一工作流不能并行试跑。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TestWorkflowReq {
+    /// 管理员范围内的幂等键；同一次试跑重发复用，新试跑使用新值。
+    #[prost(string, optional, tag = "1")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 最近一次静态校验必须通过，无需预先启用。
+    #[prost(string, optional, tag = "2")]
+    pub workflow_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 本次真实试跑的正向提示词，按工作流 Unicode 码点上限校验。
+    #[prost(string, optional, tag = "3")]
+    pub prompt: ::core::option::Option<::prost::alloc::string::String>,
+    /// 图生视频必须提交管理员本人的可用 JPEG/PNG 资产；文生视频必须省略。
+    /// 分辨率、时长和帧率统一使用工作流默认值或固定值。
+    #[prost(string, optional, tag = "4")]
+    pub input_asset_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 返回受理的试跑任务 ID；试跑成功保存并结算后才自动启用草稿，不支持恢复保存。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TestWorkflowResp {
+    #[prost(string, optional, tag = "1")]
+    pub task_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 查询指定工作流的管理试跑，不包含普通任务。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListWorkflowTestsReq {
+    #[prost(message, optional, tag = "1")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+    #[prost(string, optional, tag = "2")]
+    pub workflow_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 返回该工作流的管理试跑总数及分页，不区分管理员归属。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListWorkflowTestsResp {
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
+    #[prost(message, repeated, tag = "2")]
+    pub tasks: ::prost::alloc::vec::Vec<TaskSummary>,
+}
+/// 设置或清除默认项，不改变启用状态。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SetDefaultWorkflowReq {
+    #[prost(string, optional, tag = "1")]
+    pub workflow_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// true 清除同功能其他默认项；false 只清除目标；必须显式提交。
+    #[prost(bool, optional, tag = "2")]
+    pub is_default: ::core::option::Option<bool>,
+}
+/// 返回默认项更新后的工作流摘要。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SetDefaultWorkflowResp {
+    #[prost(message, optional, tag = "1")]
+    pub workflow: ::core::option::Option<WorkflowSummary>,
+}
+/// 更新同一功能的完整工作流展示顺序。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UpdateWorkflowSortOrderReq {
+    /// 来自 Function.List 的固定功能 ID。
+    #[prost(string, optional, tag = "1")]
+    pub function_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 该功能全部工作流（含草稿），按期望顺序提交，每个 ID 恰好一次。
+    #[prost(string, repeated, tag = "2")]
+    pub workflow_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// 返回调整后的完整工作流摘要列表。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateWorkflowSortOrderResp {
+    #[prost(message, repeated, tag = "1")]
+    pub workflows: ::prost::alloc::vec::Vec<WorkflowSummary>,
+}
+/// 工作流生命周期状态，修改执行内容后回到草稿。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum WorkflowStatus {
+    Unspecified = 0,
+    Draft = 1,
+    /// 最近校验通过的草稿在试跑完整成功后自动启用，出现在 Function.Get 的可用工作流中。
+    Enabled = 2,
+}
+impl WorkflowStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "WORKFLOW_STATUS_UNSPECIFIED",
+            Self::Draft => "WORKFLOW_STATUS_DRAFT",
+            Self::Enabled => "WORKFLOW_STATUS_ENABLED",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "WORKFLOW_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
+            "WORKFLOW_STATUS_DRAFT" => Some(Self::Draft),
+            "WORKFLOW_STATUS_ENABLED" => Some(Self::Enabled),
+            _ => None,
+        }
+    }
+}
+/// 当前内容的最近静态校验状态；修改执行内容后重置。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum WorkflowValidationStatus {
+    /// 尚未校验。
+    Unspecified = 0,
+    Passed = 1,
+    Failed = 2,
+}
+impl WorkflowValidationStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "WORKFLOW_VALIDATION_STATUS_UNSPECIFIED",
+            Self::Passed => "WORKFLOW_VALIDATION_STATUS_PASSED",
+            Self::Failed => "WORKFLOW_VALIDATION_STATUS_FAILED",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "WORKFLOW_VALIDATION_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
+            "WORKFLOW_VALIDATION_STATUS_PASSED" => Some(Self::Passed),
+            "WORKFLOW_VALIDATION_STATUS_FAILED" => Some(Self::Failed),
+            _ => None,
+        }
+    }
+}
+/// 校验问题严重程度；任意 ERROR 阻止试跑。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum WorkflowIssueSeverity {
+    Unspecified = 0,
+    Warning = 1,
+    Error = 2,
+}
+impl WorkflowIssueSeverity {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "WORKFLOW_ISSUE_SEVERITY_UNSPECIFIED",
+            Self::Warning => "WORKFLOW_ISSUE_SEVERITY_WARNING",
+            Self::Error => "WORKFLOW_ISSUE_SEVERITY_ERROR",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "WORKFLOW_ISSUE_SEVERITY_UNSPECIFIED" => Some(Self::Unspecified),
+            "WORKFLOW_ISSUE_SEVERITY_WARNING" => Some(Self::Warning),
+            "WORKFLOW_ISSUE_SEVERITY_ERROR" => Some(Self::Error),
+            _ => None,
+        }
+    }
+}
+/// 依赖类型，区分节点实现与 Loader 文件。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum WorkflowDependencyKind {
+    Unspecified = 0,
+    NodeClass = 1,
+    LoaderFile = 2,
+}
+impl WorkflowDependencyKind {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "WORKFLOW_DEPENDENCY_KIND_UNSPECIFIED",
+            Self::NodeClass => "WORKFLOW_DEPENDENCY_KIND_NODE_CLASS",
+            Self::LoaderFile => "WORKFLOW_DEPENDENCY_KIND_LOADER_FILE",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "WORKFLOW_DEPENDENCY_KIND_UNSPECIFIED" => Some(Self::Unspecified),
+            "WORKFLOW_DEPENDENCY_KIND_NODE_CLASS" => Some(Self::NodeClass),
+            "WORKFLOW_DEPENDENCY_KIND_LOADER_FILE" => Some(Self::LoaderFile),
+            _ => None,
+        }
+    }
+}
+/// Generated client implementations.
+pub mod workflow_manage_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 管理员工作流配置、校验、试跑与展示设置。
+    /// 文件导入/替换使用上述 AUTH_SUPERADMIN multipart HTTP 接口，
+    /// 不声明 Import/ReplaceFile RPC，不由 grpc-gateway 生成上传路由。
+    #[derive(Debug, Clone)]
+    pub struct WorkflowManageClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl WorkflowManageClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> WorkflowManageClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> WorkflowManageClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            WorkflowManageClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// 说明和执行配置按 presence 更新；普通任务、试跑与配置修改共用工作流行锁。
+        pub async fn update(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateWorkflowReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::UpdateWorkflowResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.WorkflowManage/Update",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.WorkflowManage", "Update"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 校验当前内容；上游暂时不可用时返回 Unavailable，不覆盖之前的校验结果。
+        pub async fn validate(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ValidateWorkflowReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ValidateWorkflowResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.WorkflowManage/Validate",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.WorkflowManage", "Validate"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 使用统一 FIFO 和发起者额度执行真实试跑；成功保存并结算后自动启用草稿。
+        pub async fn test(
+            &mut self,
+            request: impl tonic::IntoRequest<super::TestWorkflowReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::TestWorkflowResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.WorkflowManage/Test",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.WorkflowManage", "Test"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 按工作流分页查询管理试跑记录。
+        pub async fn list_tests(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListWorkflowTestsReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListWorkflowTestsResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.WorkflowManage/ListTests",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.WorkflowManage", "ListTests"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 管理员手动指定或清除默认项，同一功能最多一个，也允许没有默认项。
+        pub async fn set_default(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SetDefaultWorkflowReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::SetDefaultWorkflowResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.WorkflowManage/SetDefault",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.WorkflowManage", "SetDefault"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 设置同一功能全部工作流的顺序。
+        pub async fn update_sort_order(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateWorkflowSortOrderReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::UpdateWorkflowSortOrderResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.WorkflowManage/UpdateSortOrder",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.WorkflowManage", "UpdateSortOrder"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 只读取数据库摘要，不下载工作流文件。
+        pub async fn list(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListWorkflowsReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListWorkflowsResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.WorkflowManage/List",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.WorkflowManage", "List"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 读取当前文件并解析绑定候选节点；object_info 不可用时仍返回可解析的基础节点。
+        pub async fn get(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetWorkflowReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetWorkflowResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.WorkflowManage/Get",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.WorkflowManage", "Get"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// 本人存储额度；不包含预占，所有数值单位为字节，JSON 使用十进制字符串。
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetQuotaResp {
+    /// 用户存储总上限。
+    #[prost(uint64, optional, tag = "1")]
+    pub total_bytes: ::core::option::Option<u64>,
+    /// 已确认的实际占用，已受理任务保存后允许超过 total_bytes。
+    #[prost(uint64, optional, tag = "2")]
+    pub used_bytes: ::core::option::Option<u64>,
+    /// max(total_bytes - used_bytes, 0)，不会因超额变为负数。
+    #[prost(uint64, optional, tag = "3")]
+    pub available_bytes: ::core::option::Option<u64>,
+}
+/// Generated client implementations.
+pub mod quota_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 用户存储总额度查询；新任务在实际占用达到上限时拒绝受理。
+    #[derive(Debug, Clone)]
+    pub struct QuotaClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl QuotaClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> QuotaClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> QuotaClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            QuotaClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// 返回当前用户的总上限、实际占用和可用量。
+        pub async fn get(
+            &mut self,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
+        ) -> std::result::Result<tonic::Response<super::GetQuotaResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.media.Quota/Get");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.media.Quota", "Get"));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -3311,6 +3054,7 @@ pub mod register_client {
         }
     }
 }
+/// 本人可用资产摘要；size_bytes 为字节，created_at 为 Unix 秒。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct FileSummary {
     #[prost(string, optional, tag = "1")]
@@ -3328,6 +3072,7 @@ pub struct FileSummary {
     #[prost(int64, optional, tag = "7")]
     pub created_at: ::core::option::Option<i64>,
 }
+/// 分页查询本人 available 资产，不传筛选字段表示不过滤。
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListFilesReq {
     #[prost(message, optional, tag = "1")]
@@ -3337,6 +3082,7 @@ pub struct ListFilesReq {
     #[prost(enumeration = "FileSource", optional, tag = "3")]
     pub source: ::core::option::Option<i32>,
 }
+/// 返回符合筛选条件的资产总数与当前分页。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListFilesResp {
     #[prost(int32, optional, tag = "1")]
@@ -3344,16 +3090,19 @@ pub struct ListFilesResp {
     #[prost(message, repeated, tag = "2")]
     pub files: ::prost::alloc::vec::Vec<FileSummary>,
 }
+/// 删除本人资产；有有效任务引用时拒绝删除。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeleteFileReq {
     #[prost(string, optional, tag = "1")]
     pub asset_id: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 返回已完成物理删除和实际占用扣减的资产 ID。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeleteFileResp {
     #[prost(string, optional, tag = "1")]
     pub asset_id: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 为本人可用资产申请临时访问地址，资产 ID 不得重复。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetFileAccessUrlsReq {
     #[prost(string, repeated, tag = "1")]
@@ -3361,6 +3110,7 @@ pub struct GetFileAccessUrlsReq {
     #[prost(enumeration = "FileAccessPurpose", optional, tag = "2")]
     pub purpose: ::core::option::Option<i32>,
 }
+/// 临时访问地址，expire_at 为 Unix 秒；不暴露内部存储定位信息。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct FileAccessUrl {
     #[prost(string, optional, tag = "1")]
@@ -3370,6 +3120,7 @@ pub struct FileAccessUrl {
     #[prost(int64, optional, tag = "3")]
     pub expire_at: ::core::option::Option<i64>,
 }
+/// 按资产返回临时访问地址及其过期时间。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetFileAccessUrlsResp {
     #[prost(message, repeated, tag = "1")]
@@ -3377,27 +3128,33 @@ pub struct GetFileAccessUrlsResp {
 }
 /// POST /api/v1/file/upload 的单文件清单项。该上传口为 HiMedia 手写的
 /// multipart/form-data HTTP 接口，不是 gRPC RPC；文件项的 form name
-/// 必须与 client_file_id 一致。
+/// 必须与 metadata 中的 clientFileId 一致，filename 也必须与清单一致。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UploadFileMetadata {
+    /// 本批内唯一的客户端文件标识，也是对应文件项的 form name。
     #[prost(string, optional, tag = "1")]
     pub client_file_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
     pub filename: ::core::option::Option<::prost::alloc::string::String>,
+    /// 文件实际字节数；JSON 字段 sizeBytes 必须使用 uint64 十进制字符串。
     #[prost(uint64, optional, tag = "3")]
     pub size_bytes: ::core::option::Option<u64>,
 }
 /// POST /api/v1/file/upload 的 metadata 项。metadata 必须是 multipart 第一项，
 /// Content-Type 必须是 application/json，且 Content-Disposition 不能携带 filename。
-/// JSON 使用 request_id/client_file_id/filename/size_bytes 这些 snake_case 字段，
-/// 其中 size_bytes 按 uint64 十进制字符串传递。
+/// JSON 仅接受 lowerCamelCase：requestId/files/clientFileId/filename/sizeBytes，
+/// 不兼容 snake_case；其中 sizeBytes 按 uint64 十进制字符串传递。
+/// 例：{"requestId":"upload-001","files":\[{"clientFileId":"input","filename":"input.png","sizeBytes":"167483"}\]}。
+/// 同一 requestId 重发相同清单返回原批次，内容不一致返回 Aborted。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UploadMetadata {
+    /// 本人范围内的上传幂等键；超时或响应丢失后查询或重发时复用。
     #[prost(string, optional, tag = "1")]
     pub request_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, repeated, tag = "2")]
     pub files: ::prost::alloc::vec::Vec<UploadFileMetadata>,
 }
+/// 单文件上传结果；成功时提供资产、类型和字节数，失败时提供稳定错误码及说明。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UploadFileResult {
     #[prost(string, optional, tag = "1")]
@@ -3442,6 +3199,7 @@ pub struct GetUploadResultResp {
     #[prost(message, optional, tag = "1")]
     pub result: ::core::option::Option<UploadBatchResult>,
 }
+/// 资产来源，区分用户上传和任务生成。
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum FileSource {
@@ -3471,6 +3229,7 @@ impl FileSource {
         }
     }
 }
+/// 临时访问地址的用途，决定预览或下载响应行为。
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum FileAccessPurpose {
@@ -3500,6 +3259,7 @@ impl FileAccessPurpose {
         }
     }
 }
+/// 上传批次状态；COMPLETED 表示所有文件已有结果，不代表全部成功。
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum UploadStatus {
@@ -3529,6 +3289,7 @@ impl UploadStatus {
         }
     }
 }
+/// 批次内单文件的处理状态。
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum UploadFileStatus {
@@ -3688,6 +3449,7 @@ pub mod file_client {
                 .insert(GrpcMethod::new("hi.media.File", "GetUploadResult"));
             self.inner.unary(req, path, codec).await
         }
+        /// 分页查询本人 available 资产。
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<super::ListFilesReq>,
@@ -3706,6 +3468,7 @@ pub mod file_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.media.File", "List"));
             self.inner.unary(req, path, codec).await
         }
+        /// 同步删除本人资产并扣减实际占用；仍被任务引用时拒绝，重复删除幂等。
         pub async fn delete(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteFileReq>,
@@ -3724,6 +3487,7 @@ pub mod file_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.media.File", "Delete"));
             self.inner.unary(req, path, codec).await
         }
+        /// 为本人 available 资产签发预览或下载地址，不返回内部存储地址或对象键。
         pub async fn get_access_urls(
             &mut self,
             request: impl tonic::IntoRequest<super::GetFileAccessUrlsReq>,

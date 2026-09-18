@@ -15,20 +15,23 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../common.pb.dart' as $1;
+import '../common.pb.dart' as $2;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
+/// 管理员模型资源；普通用户使用 WorkflowModelOption，不能获得 real_name。
 class Model extends $pb.GeneratedMessage {
   factory Model({
     $core.String? modelId,
-    $core.String? name,
+    $core.String? displayName,
+    $core.String? realName,
     $fixnum.Int64? createdAt,
     $fixnum.Int64? updatedAt,
   }) {
     final result = create();
     if (modelId != null) result.modelId = modelId;
-    if (name != null) result.name = name;
+    if (displayName != null) result.displayName = displayName;
+    if (realName != null) result.realName = realName;
     if (createdAt != null) result.createdAt = createdAt;
     if (updatedAt != null) result.updatedAt = updatedAt;
     return result;
@@ -48,9 +51,10 @@ class Model extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'modelId')
-    ..aOS(2, _omitFieldNames ? '' : 'name')
-    ..aInt64(3, _omitFieldNames ? '' : 'createdAt')
-    ..aInt64(4, _omitFieldNames ? '' : 'updatedAt')
+    ..aOS(2, _omitFieldNames ? '' : 'displayName')
+    ..aOS(3, _omitFieldNames ? '' : 'realName')
+    ..aInt64(4, _omitFieldNames ? '' : 'createdAt')
+    ..aInt64(5, _omitFieldNames ? '' : 'updatedAt')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -71,6 +75,7 @@ class Model extends $pb.GeneratedMessage {
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Model>(create);
   static Model? _defaultInstance;
 
+  /// 服务端生成的不透明 ID，创建后不可修改。
   @$pb.TagNumber(1)
   $core.String get modelId => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -80,41 +85,56 @@ class Model extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearModelId() => $_clearField(1);
 
-  /// 用户可见的产品模型名称，不是 ComfyUI 工作流中的原始模型文件名。
+  /// 全局唯一的用户可见名称，管理员可修改。
   @$pb.TagNumber(2)
-  $core.String get name => $_getSZ(1);
+  $core.String get displayName => $_getSZ(1);
   @$pb.TagNumber(2)
-  set name($core.String value) => $_setString(1, value);
+  set displayName($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasName() => $_has(1);
+  $core.bool hasDisplayName() => $_has(1);
   @$pb.TagNumber(2)
-  void clearName() => $_clearField(2);
+  void clearDisplayName() => $_clearField(2);
 
+  /// 管理员手动填写的 ComfyUI 主模型文件名，全局唯一且创建后不可修改；仅管理可见。
   @$pb.TagNumber(3)
-  $fixnum.Int64 get createdAt => $_getI64(2);
+  $core.String get realName => $_getSZ(2);
   @$pb.TagNumber(3)
-  set createdAt($fixnum.Int64 value) => $_setInt64(2, value);
+  set realName($core.String value) => $_setString(2, value);
   @$pb.TagNumber(3)
-  $core.bool hasCreatedAt() => $_has(2);
+  $core.bool hasRealName() => $_has(2);
   @$pb.TagNumber(3)
-  void clearCreatedAt() => $_clearField(3);
+  void clearRealName() => $_clearField(3);
 
+  /// Unix 秒。
   @$pb.TagNumber(4)
-  $fixnum.Int64 get updatedAt => $_getI64(3);
+  $fixnum.Int64 get createdAt => $_getI64(3);
   @$pb.TagNumber(4)
-  set updatedAt($fixnum.Int64 value) => $_setInt64(3, value);
+  set createdAt($fixnum.Int64 value) => $_setInt64(3, value);
   @$pb.TagNumber(4)
-  $core.bool hasUpdatedAt() => $_has(3);
+  $core.bool hasCreatedAt() => $_has(3);
   @$pb.TagNumber(4)
-  void clearUpdatedAt() => $_clearField(4);
+  void clearCreatedAt() => $_clearField(4);
+
+  /// Unix 秒。
+  @$pb.TagNumber(5)
+  $fixnum.Int64 get updatedAt => $_getI64(4);
+  @$pb.TagNumber(5)
+  set updatedAt($fixnum.Int64 value) => $_setInt64(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasUpdatedAt() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearUpdatedAt() => $_clearField(5);
 }
 
+/// 创建模型，显示名和真实名分别全局唯一。
 class CreateModelReq extends $pb.GeneratedMessage {
   factory CreateModelReq({
-    $core.String? name,
+    $core.String? displayName,
+    $core.String? realName,
   }) {
     final result = create();
-    if (name != null) result.name = name;
+    if (displayName != null) result.displayName = displayName;
+    if (realName != null) result.realName = realName;
     return result;
   }
 
@@ -131,7 +151,8 @@ class CreateModelReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'CreateModelReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'name')
+    ..aOS(1, _omitFieldNames ? '' : 'displayName')
+    ..aOS(2, _omitFieldNames ? '' : 'realName')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -154,15 +175,26 @@ class CreateModelReq extends $pb.GeneratedMessage {
   static CreateModelReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get name => $_getSZ(0);
+  $core.String get displayName => $_getSZ(0);
   @$pb.TagNumber(1)
-  set name($core.String value) => $_setString(0, value);
+  set displayName($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasName() => $_has(0);
+  $core.bool hasDisplayName() => $_has(0);
   @$pb.TagNumber(1)
-  void clearName() => $_clearField(1);
+  void clearDisplayName() => $_clearField(1);
+
+  /// ComfyUI 主模型真实文件名；由管理员确认，不从候选列表接口获取。
+  @$pb.TagNumber(2)
+  $core.String get realName => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set realName($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasRealName() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearRealName() => $_clearField(2);
 }
 
+/// 返回新建模型及服务端分配的 ID。
 class CreateModelResp extends $pb.GeneratedMessage {
   factory CreateModelResp({
     Model? model,
@@ -219,14 +251,15 @@ class CreateModelResp extends $pb.GeneratedMessage {
   Model ensureModel() => $_ensure(0);
 }
 
+/// 仅修改显示名；模型 ID 和真实名不可修改。
 class UpdateModelReq extends $pb.GeneratedMessage {
   factory UpdateModelReq({
     $core.String? modelId,
-    $core.String? name,
+    $core.String? displayName,
   }) {
     final result = create();
     if (modelId != null) result.modelId = modelId;
-    if (name != null) result.name = name;
+    if (displayName != null) result.displayName = displayName;
     return result;
   }
 
@@ -244,7 +277,7 @@ class UpdateModelReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'modelId')
-    ..aOS(2, _omitFieldNames ? '' : 'name')
+    ..aOS(2, _omitFieldNames ? '' : 'displayName')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -276,15 +309,16 @@ class UpdateModelReq extends $pb.GeneratedMessage {
   void clearModelId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get name => $_getSZ(1);
+  $core.String get displayName => $_getSZ(1);
   @$pb.TagNumber(2)
-  set name($core.String value) => $_setString(1, value);
+  set displayName($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasName() => $_has(1);
+  $core.bool hasDisplayName() => $_has(1);
   @$pb.TagNumber(2)
-  void clearName() => $_clearField(2);
+  void clearDisplayName() => $_clearField(2);
 }
 
+/// 返回更新后的模型。
 class UpdateModelResp extends $pb.GeneratedMessage {
   factory UpdateModelResp({
     Model? model,
@@ -341,6 +375,7 @@ class UpdateModelResp extends $pb.GeneratedMessage {
   Model ensureModel() => $_ensure(0);
 }
 
+/// 按模型 ID 查询管理详情。
 class GetModelReq extends $pb.GeneratedMessage {
   factory GetModelReq({
     $core.String? modelId,
@@ -395,6 +430,7 @@ class GetModelReq extends $pb.GeneratedMessage {
   void clearModelId() => $_clearField(1);
 }
 
+/// 返回模型管理详情。
 class GetModelResp extends $pb.GeneratedMessage {
   factory GetModelResp({
     Model? model,
@@ -451,9 +487,10 @@ class GetModelResp extends $pb.GeneratedMessage {
   Model ensureModel() => $_ensure(0);
 }
 
+/// 分页查询全部模型，不按关联工作流启用状态过滤。
 class ListModelsReq extends $pb.GeneratedMessage {
   factory ListModelsReq({
-    $1.Pagination? pagination,
+    $2.Pagination? pagination,
   }) {
     final result = create();
     if (pagination != null) result.pagination = pagination;
@@ -473,8 +510,8 @@ class ListModelsReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'ListModelsReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
-    ..aOM<$1.Pagination>(1, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $1.Pagination.create)
+    ..aOM<$2.Pagination>(1, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $2.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -497,17 +534,18 @@ class ListModelsReq extends $pb.GeneratedMessage {
   static ListModelsReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $1.Pagination get pagination => $_getN(0);
+  $2.Pagination get pagination => $_getN(0);
   @$pb.TagNumber(1)
-  set pagination($1.Pagination value) => $_setField(1, value);
+  set pagination($2.Pagination value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasPagination() => $_has(0);
   @$pb.TagNumber(1)
   void clearPagination() => $_clearField(1);
   @$pb.TagNumber(1)
-  $1.Pagination ensurePagination() => $_ensure(0);
+  $2.Pagination ensurePagination() => $_ensure(0);
 }
 
+/// 返回模型总数和当前分页。
 class ListModelsResp extends $pb.GeneratedMessage {
   factory ListModelsResp({
     $core.int? total,
@@ -566,6 +604,61 @@ class ListModelsResp extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(2)
   $pb.PbList<Model> get models => $_getList(1);
+}
+
+/// 删除没有被任何工作流引用的模型。
+class DeleteModelReq extends $pb.GeneratedMessage {
+  factory DeleteModelReq({
+    $core.String? modelId,
+  }) {
+    final result = create();
+    if (modelId != null) result.modelId = modelId;
+    return result;
+  }
+
+  DeleteModelReq._();
+
+  factory DeleteModelReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory DeleteModelReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DeleteModelReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'modelId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeleteModelReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeleteModelReq copyWith(void Function(DeleteModelReq) updates) =>
+      super.copyWith((message) => updates(message as DeleteModelReq))
+          as DeleteModelReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static DeleteModelReq create() => DeleteModelReq._();
+  @$core.override
+  DeleteModelReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static DeleteModelReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DeleteModelReq>(create);
+  static DeleteModelReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get modelId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set modelId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasModelId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearModelId() => $_clearField(1);
 }
 
 const $core.bool _omitFieldNames =

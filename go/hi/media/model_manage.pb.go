@@ -11,6 +11,7 @@ import (
 	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -23,13 +24,19 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// 管理员模型资源；普通用户使用 WorkflowModelOption，不能获得 real_name。
 type Model struct {
-	state   protoimpl.MessageState `protogen:"open.v1"`
-	ModelId *string                `protobuf:"bytes,1,opt,name=model_id,json=modelId,proto3,oneof" json:"model_id,omitempty"`
-	// 用户可见的产品模型名称，不是 ComfyUI 工作流中的原始模型文件名。
-	Name          *string `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
-	CreatedAt     *int64  `protobuf:"varint,3,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
-	UpdatedAt     *int64  `protobuf:"varint,4,opt,name=updated_at,json=updatedAt,proto3,oneof" json:"updated_at,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 服务端生成的不透明 ID，创建后不可修改。
+	ModelId *string `protobuf:"bytes,1,opt,name=model_id,json=modelId,proto3,oneof" json:"model_id,omitempty"`
+	// 全局唯一的用户可见名称，管理员可修改。
+	DisplayName *string `protobuf:"bytes,2,opt,name=display_name,json=displayName,proto3,oneof" json:"display_name,omitempty"`
+	// 管理员手动填写的 ComfyUI 主模型文件名，全局唯一且创建后不可修改；仅管理可见。
+	RealName *string `protobuf:"bytes,3,opt,name=real_name,json=realName,proto3,oneof" json:"real_name,omitempty"`
+	// Unix 秒。
+	CreatedAt *int64 `protobuf:"varint,4,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
+	// Unix 秒。
+	UpdatedAt     *int64 `protobuf:"varint,5,opt,name=updated_at,json=updatedAt,proto3,oneof" json:"updated_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -71,9 +78,16 @@ func (x *Model) GetModelId() string {
 	return ""
 }
 
-func (x *Model) GetName() string {
-	if x != nil && x.Name != nil {
-		return *x.Name
+func (x *Model) GetDisplayName() string {
+	if x != nil && x.DisplayName != nil {
+		return *x.DisplayName
+	}
+	return ""
+}
+
+func (x *Model) GetRealName() string {
+	if x != nil && x.RealName != nil {
+		return *x.RealName
 	}
 	return ""
 }
@@ -92,9 +106,12 @@ func (x *Model) GetUpdatedAt() int64 {
 	return 0
 }
 
+// 创建模型，显示名和真实名分别全局唯一。
 type CreateModelReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          *string                `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	DisplayName *string                `protobuf:"bytes,1,opt,name=display_name,json=displayName,proto3,oneof" json:"display_name,omitempty"`
+	// ComfyUI 主模型真实文件名；由管理员确认，不从候选列表接口获取。
+	RealName      *string `protobuf:"bytes,2,opt,name=real_name,json=realName,proto3,oneof" json:"real_name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -129,13 +146,21 @@ func (*CreateModelReq) Descriptor() ([]byte, []int) {
 	return file_hi_media_model_manage_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *CreateModelReq) GetName() string {
-	if x != nil && x.Name != nil {
-		return *x.Name
+func (x *CreateModelReq) GetDisplayName() string {
+	if x != nil && x.DisplayName != nil {
+		return *x.DisplayName
 	}
 	return ""
 }
 
+func (x *CreateModelReq) GetRealName() string {
+	if x != nil && x.RealName != nil {
+		return *x.RealName
+	}
+	return ""
+}
+
+// 返回新建模型及服务端分配的 ID。
 type CreateModelResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Model         *Model                 `protobuf:"bytes,1,opt,name=model,proto3" json:"model,omitempty"`
@@ -180,10 +205,11 @@ func (x *CreateModelResp) GetModel() *Model {
 	return nil
 }
 
+// 仅修改显示名；模型 ID 和真实名不可修改。
 type UpdateModelReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ModelId       *string                `protobuf:"bytes,1,opt,name=model_id,json=modelId,proto3,oneof" json:"model_id,omitempty"`
-	Name          *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	DisplayName   *string                `protobuf:"bytes,2,opt,name=display_name,json=displayName,proto3,oneof" json:"display_name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -225,13 +251,14 @@ func (x *UpdateModelReq) GetModelId() string {
 	return ""
 }
 
-func (x *UpdateModelReq) GetName() string {
-	if x != nil && x.Name != nil {
-		return *x.Name
+func (x *UpdateModelReq) GetDisplayName() string {
+	if x != nil && x.DisplayName != nil {
+		return *x.DisplayName
 	}
 	return ""
 }
 
+// 返回更新后的模型。
 type UpdateModelResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Model         *Model                 `protobuf:"bytes,1,opt,name=model,proto3" json:"model,omitempty"`
@@ -276,6 +303,7 @@ func (x *UpdateModelResp) GetModel() *Model {
 	return nil
 }
 
+// 按模型 ID 查询管理详情。
 type GetModelReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ModelId       *string                `protobuf:"bytes,1,opt,name=model_id,json=modelId,proto3,oneof" json:"model_id,omitempty"`
@@ -320,6 +348,7 @@ func (x *GetModelReq) GetModelId() string {
 	return ""
 }
 
+// 返回模型管理详情。
 type GetModelResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Model         *Model                 `protobuf:"bytes,1,opt,name=model,proto3" json:"model,omitempty"`
@@ -364,6 +393,7 @@ func (x *GetModelResp) GetModel() *Model {
 	return nil
 }
 
+// 分页查询全部模型，不按关联工作流启用状态过滤。
 type ListModelsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Pagination    *hi.Pagination         `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
@@ -408,6 +438,7 @@ func (x *ListModelsReq) GetPagination() *hi.Pagination {
 	return nil
 }
 
+// 返回模型总数和当前分页。
 type ListModelsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Total         *int32                 `protobuf:"varint,1,opt,name=total,proto3,oneof" json:"total,omitempty"`
@@ -460,35 +491,87 @@ func (x *ListModelsResp) GetModels() []*Model {
 	return nil
 }
 
+// 删除没有被任何工作流引用的模型。
+type DeleteModelReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ModelId       *string                `protobuf:"bytes,1,opt,name=model_id,json=modelId,proto3,oneof" json:"model_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteModelReq) Reset() {
+	*x = DeleteModelReq{}
+	mi := &file_hi_media_model_manage_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteModelReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteModelReq) ProtoMessage() {}
+
+func (x *DeleteModelReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_media_model_manage_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteModelReq.ProtoReflect.Descriptor instead.
+func (*DeleteModelReq) Descriptor() ([]byte, []int) {
+	return file_hi_media_model_manage_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *DeleteModelReq) GetModelId() string {
+	if x != nil && x.ModelId != nil {
+		return *x.ModelId
+	}
+	return ""
+}
+
 var File_hi_media_model_manage_proto protoreflect.FileDescriptor
 
 const file_hi_media_model_manage_proto_rawDesc = "" +
 	"\n" +
-	"\x1bhi/media/model_manage.proto\x12\bhi.media\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xda\x01\n" +
+	"\x1bhi/media/model_manage.proto\x12\bhi.media\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xa7\x02\n" +
 	"\x05Model\x12$\n" +
-	"\bmodel_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\amodelId\x88\x01\x01\x12\x1d\n" +
-	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x04name\x88\x01\x01\x12(\n" +
+	"\bmodel_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\amodelId\x88\x01\x01\x12,\n" +
+	"\fdisplay_name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\vdisplayName\x88\x01\x01\x12&\n" +
+	"\treal_name\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\brealName\x88\x01\x01\x12(\n" +
 	"\n" +
-	"created_at\x18\x03 \x01(\x03B\x04\x90\xb5\x18\x03H\x02R\tcreatedAt\x88\x01\x01\x12(\n" +
+	"created_at\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x03H\x03R\tcreatedAt\x88\x01\x01\x12(\n" +
 	"\n" +
-	"updated_at\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x03H\x03R\tupdatedAt\x88\x01\x01:\x04\x98\xb5\x18\x03B\v\n" +
-	"\t_model_idB\a\n" +
-	"\x05_nameB\r\n" +
+	"updated_at\x18\x05 \x01(\x03B\x04\x90\xb5\x18\x03H\x04R\tupdatedAt\x88\x01\x01:\x04\x98\xb5\x18\x03B\v\n" +
+	"\t_model_idB\x0f\n" +
+	"\r_display_nameB\f\n" +
+	"\n" +
+	"_real_nameB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_updated_at\">\n" +
-	"\x0eCreateModelReq\x12#\n" +
-	"\x04name\x18\x01 \x01(\tB\n" +
-	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\x04name\x88\x01\x01B\a\n" +
-	"\x05_name\"D\n" +
+	"\v_updated_at\"\x91\x01\n" +
+	"\x0eCreateModelReq\x122\n" +
+	"\fdisplay_name\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\vdisplayName\x88\x01\x01\x12,\n" +
+	"\treal_name\x18\x02 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x01R\brealName\x88\x01\x01B\x0f\n" +
+	"\r_display_nameB\f\n" +
+	"\n" +
+	"_real_name\"D\n" +
 	"\x0fCreateModelResp\x12+\n" +
-	"\x05model\x18\x01 \x01(\v2\x0f.hi.media.ModelB\x04\x90\xb5\x18\x03R\x05model:\x04\x98\xb5\x18\x03\"w\n" +
+	"\x05model\x18\x01 \x01(\v2\x0f.hi.media.ModelB\x04\x90\xb5\x18\x03R\x05model:\x04\x98\xb5\x18\x03\"\x8e\x01\n" +
 	"\x0eUpdateModelReq\x12*\n" +
 	"\bmodel_id\x18\x01 \x01(\tB\n" +
-	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\amodelId\x88\x01\x01\x12#\n" +
-	"\x04name\x18\x02 \x01(\tB\n" +
-	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x01R\x04name\x88\x01\x01B\v\n" +
-	"\t_model_idB\a\n" +
-	"\x05_name\"D\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\amodelId\x88\x01\x01\x122\n" +
+	"\fdisplay_name\x18\x02 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x01R\vdisplayName\x88\x01\x01B\v\n" +
+	"\t_model_idB\x0f\n" +
+	"\r_display_name\"D\n" +
 	"\x0fUpdateModelResp\x12+\n" +
 	"\x05model\x18\x01 \x01(\v2\x0f.hi.media.ModelB\x04\x90\xb5\x18\x03R\x05model:\x04\x98\xb5\x18\x03\"F\n" +
 	"\vGetModelReq\x12*\n" +
@@ -504,10 +587,15 @@ const file_hi_media_model_manage_proto_rawDesc = "" +
 	"\x0eListModelsResp\x12\x1f\n" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12-\n" +
 	"\x06models\x18\x02 \x03(\v2\x0f.hi.media.ModelB\x04\x90\xb5\x18\x03R\x06models:\x04\x98\xb5\x18\x03B\b\n" +
-	"\x06_total2\x98\x02\n" +
+	"\x06_total\"I\n" +
+	"\x0eDeleteModelReq\x12*\n" +
+	"\bmodel_id\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\amodelId\x88\x01\x01B\v\n" +
+	"\t_model_id2\xdb\x02\n" +
 	"\vModelManage\x12D\n" +
 	"\x06Create\x12\x18.hi.media.CreateModelReq\x1a\x19.hi.media.CreateModelResp\"\x05\x8a\xb5\x18\x01\x04\x12D\n" +
-	"\x06Update\x12\x18.hi.media.UpdateModelReq\x1a\x19.hi.media.UpdateModelResp\"\x05\x8a\xb5\x18\x01\x04\x12@\n" +
+	"\x06Update\x12\x18.hi.media.UpdateModelReq\x1a\x19.hi.media.UpdateModelResp\"\x05\x8a\xb5\x18\x01\x04\x12A\n" +
+	"\x06Delete\x12\x18.hi.media.DeleteModelReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12@\n" +
 	"\x04List\x12\x17.hi.media.ListModelsReq\x1a\x18.hi.media.ListModelsResp\"\x05\x8a\xb5\x18\x01\x04\x12;\n" +
 	"\x03Get\x12\x15.hi.media.GetModelReq\x1a\x16.hi.media.GetModelResp\"\x05\x8a\xb5\x18\x01\x04B\x8d\x01\n" +
 	"\fcom.hi.mediaB\x10ModelManageProtoP\x01Z*github.com/HiWorld-56/hi-proto/go/hi/media\xa2\x02\x03HMX\xaa\x02\bHi.Media\xca\x02\bHi\\Media\xe2\x02\x14Hi\\Media\\GPBMetadata\xea\x02\tHi::Mediab\x06proto3"
@@ -524,7 +612,7 @@ func file_hi_media_model_manage_proto_rawDescGZIP() []byte {
 	return file_hi_media_model_manage_proto_rawDescData
 }
 
-var file_hi_media_model_manage_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_hi_media_model_manage_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_hi_media_model_manage_proto_goTypes = []any{
 	(*Model)(nil),           // 0: hi.media.Model
 	(*CreateModelReq)(nil),  // 1: hi.media.CreateModelReq
@@ -535,27 +623,31 @@ var file_hi_media_model_manage_proto_goTypes = []any{
 	(*GetModelResp)(nil),    // 6: hi.media.GetModelResp
 	(*ListModelsReq)(nil),   // 7: hi.media.ListModelsReq
 	(*ListModelsResp)(nil),  // 8: hi.media.ListModelsResp
-	(*hi.Pagination)(nil),   // 9: hi.Pagination
+	(*DeleteModelReq)(nil),  // 9: hi.media.DeleteModelReq
+	(*hi.Pagination)(nil),   // 10: hi.Pagination
+	(*emptypb.Empty)(nil),   // 11: google.protobuf.Empty
 }
 var file_hi_media_model_manage_proto_depIdxs = []int32{
-	0, // 0: hi.media.CreateModelResp.model:type_name -> hi.media.Model
-	0, // 1: hi.media.UpdateModelResp.model:type_name -> hi.media.Model
-	0, // 2: hi.media.GetModelResp.model:type_name -> hi.media.Model
-	9, // 3: hi.media.ListModelsReq.pagination:type_name -> hi.Pagination
-	0, // 4: hi.media.ListModelsResp.models:type_name -> hi.media.Model
-	1, // 5: hi.media.ModelManage.Create:input_type -> hi.media.CreateModelReq
-	3, // 6: hi.media.ModelManage.Update:input_type -> hi.media.UpdateModelReq
-	7, // 7: hi.media.ModelManage.List:input_type -> hi.media.ListModelsReq
-	5, // 8: hi.media.ModelManage.Get:input_type -> hi.media.GetModelReq
-	2, // 9: hi.media.ModelManage.Create:output_type -> hi.media.CreateModelResp
-	4, // 10: hi.media.ModelManage.Update:output_type -> hi.media.UpdateModelResp
-	8, // 11: hi.media.ModelManage.List:output_type -> hi.media.ListModelsResp
-	6, // 12: hi.media.ModelManage.Get:output_type -> hi.media.GetModelResp
-	9, // [9:13] is the sub-list for method output_type
-	5, // [5:9] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	0,  // 0: hi.media.CreateModelResp.model:type_name -> hi.media.Model
+	0,  // 1: hi.media.UpdateModelResp.model:type_name -> hi.media.Model
+	0,  // 2: hi.media.GetModelResp.model:type_name -> hi.media.Model
+	10, // 3: hi.media.ListModelsReq.pagination:type_name -> hi.Pagination
+	0,  // 4: hi.media.ListModelsResp.models:type_name -> hi.media.Model
+	1,  // 5: hi.media.ModelManage.Create:input_type -> hi.media.CreateModelReq
+	3,  // 6: hi.media.ModelManage.Update:input_type -> hi.media.UpdateModelReq
+	9,  // 7: hi.media.ModelManage.Delete:input_type -> hi.media.DeleteModelReq
+	7,  // 8: hi.media.ModelManage.List:input_type -> hi.media.ListModelsReq
+	5,  // 9: hi.media.ModelManage.Get:input_type -> hi.media.GetModelReq
+	2,  // 10: hi.media.ModelManage.Create:output_type -> hi.media.CreateModelResp
+	4,  // 11: hi.media.ModelManage.Update:output_type -> hi.media.UpdateModelResp
+	11, // 12: hi.media.ModelManage.Delete:output_type -> google.protobuf.Empty
+	8,  // 13: hi.media.ModelManage.List:output_type -> hi.media.ListModelsResp
+	6,  // 14: hi.media.ModelManage.Get:output_type -> hi.media.GetModelResp
+	10, // [10:15] is the sub-list for method output_type
+	5,  // [5:10] is the sub-list for method input_type
+	5,  // [5:5] is the sub-list for extension type_name
+	5,  // [5:5] is the sub-list for extension extendee
+	0,  // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_hi_media_model_manage_proto_init() }
@@ -568,13 +660,14 @@ func file_hi_media_model_manage_proto_init() {
 	file_hi_media_model_manage_proto_msgTypes[3].OneofWrappers = []any{}
 	file_hi_media_model_manage_proto_msgTypes[5].OneofWrappers = []any{}
 	file_hi_media_model_manage_proto_msgTypes[8].OneofWrappers = []any{}
+	file_hi_media_model_manage_proto_msgTypes[9].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_media_model_manage_proto_rawDesc), len(file_hi_media_model_manage_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   9,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -578,22 +578,11 @@ const WorkflowExecutionConfig$json = {
       '10': 'executionTimeoutSeconds',
       '17': true
     },
-    {
-      '1': 'output_reservation_bytes',
-      '3': 5,
-      '4': 1,
-      '5': 4,
-      '8': {},
-      '9': 2,
-      '10': 'outputReservationBytes',
-      '17': true
-    },
   ],
   '7': {},
   '8': [
-    {'1': 'feature_config', '2': {}},
+    {'1': 'function_config', '2': {}},
     {'1': '_execution_timeout_seconds'},
-    {'1': '_output_reservation_bytes'},
   ],
 };
 
@@ -605,10 +594,8 @@ final $typed_data.Uint8List workflowExecutionConfigDescriptor = $convert.base64D
     'ZpZ0IEkLUYA0gAUgt0ZXh0VG9WaWRlbxJCCgZvdXRwdXQYAyABKAsyHi5oaS5tZWRpYS5Xb3Jr'
     'Zmxvd091dHB1dENvbmZpZ0IKukgDyAEBkLUYA1IGb3V0cHV0Ek8KGWV4ZWN1dGlvbl90aW1lb3'
     'V0X3NlY29uZHMYBCABKA1CDrpIB8gBASoCIACQtRgDSAFSF2V4ZWN1dGlvblRpbWVvdXRTZWNv'
-    'bmRziAEBEk0KGG91dHB1dF9yZXNlcnZhdGlvbl9ieXRlcxgFIAEoBEIOukgHyAEBMgIgAJC1GA'
-    'NIAlIWb3V0cHV0UmVzZXJ2YXRpb25CeXRlc4gBAToEmLUYA0IXCg5mZWF0dXJlX2NvbmZpZxIF'
-    'ukgCCAFCHAoaX2V4ZWN1dGlvbl90aW1lb3V0X3NlY29uZHNCGwoZX291dHB1dF9yZXNlcnZhdG'
-    'lvbl9ieXRlcw==');
+    'bmRziAEBOgSYtRgDQhgKD2Z1bmN0aW9uX2NvbmZpZxIFukgCCAFCHAoaX2V4ZWN1dGlvbl90aW'
+    '1lb3V0X3NlY29uZHM=');
 
 @$core.Deprecated('Use workflowIssueDescriptor instead')
 const WorkflowIssue$json = {
@@ -948,39 +935,56 @@ const WorkflowSummary$json = {
   '1': 'WorkflowSummary',
   '2': [
     {
-      '1': 'workflow_version_id',
+      '1': 'workflow_id',
       '3': 1,
       '4': 1,
       '5': 9,
       '8': {},
       '9': 0,
-      '10': 'workflowVersionId',
+      '10': 'workflowId',
       '17': true
     },
     {
-      '1': 'feature_key',
+      '1': 'function',
       '3': 2,
       '4': 1,
-      '5': 14,
-      '6': '.hi.media.FeatureKey',
+      '5': 11,
+      '6': '.hi.media.FunctionSummary',
       '8': {},
-      '9': 1,
-      '10': 'featureKey',
-      '17': true
+      '10': 'function'
     },
     {
-      '1': 'name',
+      '1': 'model',
       '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.Model',
+      '8': {},
+      '10': 'model'
+    },
+    {
+      '1': 'original_filename',
+      '3': 4,
       '4': 1,
       '5': 9,
       '8': {},
+      '9': 1,
+      '10': 'originalFilename',
+      '17': true
+    },
+    {
+      '1': 'file_size_bytes',
+      '3': 5,
+      '4': 1,
+      '5': 4,
+      '8': {},
       '9': 2,
-      '10': 'name',
+      '10': 'fileSizeBytes',
       '17': true
     },
     {
       '1': 'status',
-      '3': 4,
+      '3': 6,
       '4': 1,
       '5': 14,
       '6': '.hi.media.WorkflowStatus',
@@ -991,7 +995,7 @@ const WorkflowSummary$json = {
     },
     {
       '1': 'validation_status',
-      '3': 5,
+      '3': 7,
       '4': 1,
       '5': 14,
       '6': '.hi.media.WorkflowValidationStatus',
@@ -1001,53 +1005,75 @@ const WorkflowSummary$json = {
       '17': true
     },
     {
+      '1': 'is_default',
+      '3': 8,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 5,
+      '10': 'isDefault',
+      '17': true
+    },
+    {
+      '1': 'sort_order',
+      '3': 9,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '9': 6,
+      '10': 'sortOrder',
+      '17': true
+    },
+    {
       '1': 'enabled_at',
-      '3': 6,
+      '3': 10,
       '4': 1,
       '5': 3,
       '8': {},
-      '9': 5,
+      '9': 7,
       '10': 'enabledAt',
       '17': true
     },
     {
       '1': 'created_by',
-      '3': 7,
+      '3': 11,
       '4': 1,
       '5': 9,
       '8': {},
-      '9': 6,
+      '9': 8,
       '10': 'createdBy',
       '17': true
     },
     {
       '1': 'created_at',
-      '3': 8,
+      '3': 12,
       '4': 1,
       '5': 3,
       '8': {},
-      '9': 7,
+      '9': 9,
       '10': 'createdAt',
       '17': true
     },
     {
       '1': 'updated_at',
-      '3': 9,
+      '3': 13,
       '4': 1,
       '5': 3,
       '8': {},
-      '9': 8,
+      '9': 10,
       '10': 'updatedAt',
       '17': true
     },
   ],
   '7': {},
   '8': [
-    {'1': '_workflow_version_id'},
-    {'1': '_feature_key'},
-    {'1': '_name'},
+    {'1': '_workflow_id'},
+    {'1': '_original_filename'},
+    {'1': '_file_size_bytes'},
     {'1': '_status'},
     {'1': '_validation_status'},
+    {'1': '_is_default'},
+    {'1': '_sort_order'},
     {'1': '_enabled_at'},
     {'1': '_created_by'},
     {'1': '_created_at'},
@@ -1057,18 +1083,22 @@ const WorkflowSummary$json = {
 
 /// Descriptor for `WorkflowSummary`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List workflowSummaryDescriptor = $convert.base64Decode(
-    'Cg9Xb3JrZmxvd1N1bW1hcnkSOQoTd29ya2Zsb3dfdmVyc2lvbl9pZBgBIAEoCUIEkLUYA0gAUh'
-    'F3b3JrZmxvd1ZlcnNpb25JZIgBARJACgtmZWF0dXJlX2tleRgCIAEoDjIULmhpLm1lZGlhLkZl'
-    'YXR1cmVLZXlCBJC1GANIAVIKZmVhdHVyZUtleYgBARIdCgRuYW1lGAMgASgJQgSQtRgDSAJSBG'
-    '5hbWWIAQESOwoGc3RhdHVzGAQgASgOMhguaGkubWVkaWEuV29ya2Zsb3dTdGF0dXNCBJC1GANI'
-    'A1IGc3RhdHVziAEBEloKEXZhbGlkYXRpb25fc3RhdHVzGAUgASgOMiIuaGkubWVkaWEuV29ya2'
-    'Zsb3dWYWxpZGF0aW9uU3RhdHVzQgSQtRgDSARSEHZhbGlkYXRpb25TdGF0dXOIAQESKAoKZW5h'
-    'YmxlZF9hdBgGIAEoA0IEkLUYA0gFUgllbmFibGVkQXSIAQESKAoKY3JlYXRlZF9ieRgHIAEoCU'
-    'IEkLUYA0gGUgljcmVhdGVkQnmIAQESKAoKY3JlYXRlZF9hdBgIIAEoA0IEkLUYA0gHUgljcmVh'
-    'dGVkQXSIAQESKAoKdXBkYXRlZF9hdBgJIAEoA0IEkLUYA0gIUgl1cGRhdGVkQXSIAQE6BJi1GA'
-    'NCFgoUX3dvcmtmbG93X3ZlcnNpb25faWRCDgoMX2ZlYXR1cmVfa2V5QgcKBV9uYW1lQgkKB19z'
-    'dGF0dXNCFAoSX3ZhbGlkYXRpb25fc3RhdHVzQg0KC19lbmFibGVkX2F0Qg0KC19jcmVhdGVkX2'
-    'J5Qg0KC19jcmVhdGVkX2F0Qg0KC191cGRhdGVkX2F0');
+    'Cg9Xb3JrZmxvd1N1bW1hcnkSKgoLd29ya2Zsb3dfaWQYASABKAlCBJC1GANIAFIKd29ya2Zsb3'
+    'dJZIgBARI7CghmdW5jdGlvbhgCIAEoCzIZLmhpLm1lZGlhLkZ1bmN0aW9uU3VtbWFyeUIEkLUY'
+    'A1IIZnVuY3Rpb24SKwoFbW9kZWwYAyABKAsyDy5oaS5tZWRpYS5Nb2RlbEIEkLUYA1IFbW9kZW'
+    'wSNgoRb3JpZ2luYWxfZmlsZW5hbWUYBCABKAlCBJC1GANIAVIQb3JpZ2luYWxGaWxlbmFtZYgB'
+    'ARIxCg9maWxlX3NpemVfYnl0ZXMYBSABKARCBJC1GANIAlINZmlsZVNpemVCeXRlc4gBARI7Cg'
+    'ZzdGF0dXMYBiABKA4yGC5oaS5tZWRpYS5Xb3JrZmxvd1N0YXR1c0IEkLUYA0gDUgZzdGF0dXOI'
+    'AQESWgoRdmFsaWRhdGlvbl9zdGF0dXMYByABKA4yIi5oaS5tZWRpYS5Xb3JrZmxvd1ZhbGlkYX'
+    'Rpb25TdGF0dXNCBJC1GANIBFIQdmFsaWRhdGlvblN0YXR1c4gBARIoCgppc19kZWZhdWx0GAgg'
+    'ASgIQgSQtRgDSAVSCWlzRGVmYXVsdIgBARIoCgpzb3J0X29yZGVyGAkgASgFQgSQtRgDSAZSCX'
+    'NvcnRPcmRlcogBARIoCgplbmFibGVkX2F0GAogASgDQgSQtRgDSAdSCWVuYWJsZWRBdIgBARIo'
+    'CgpjcmVhdGVkX2J5GAsgASgJQgSQtRgDSAhSCWNyZWF0ZWRCeYgBARIoCgpjcmVhdGVkX2F0GA'
+    'wgASgDQgSQtRgDSAlSCWNyZWF0ZWRBdIgBARIoCgp1cGRhdGVkX2F0GA0gASgDQgSQtRgDSApS'
+    'CXVwZGF0ZWRBdIgBAToEmLUYA0IOCgxfd29ya2Zsb3dfaWRCFAoSX29yaWdpbmFsX2ZpbGVuYW'
+    '1lQhIKEF9maWxlX3NpemVfYnl0ZXNCCQoHX3N0YXR1c0IUChJfdmFsaWRhdGlvbl9zdGF0dXNC'
+    'DQoLX2lzX2RlZmF1bHRCDQoLX3NvcnRfb3JkZXJCDQoLX2VuYWJsZWRfYXRCDQoLX2NyZWF0ZW'
+    'RfYnlCDQoLX2NyZWF0ZWRfYXRCDQoLX3VwZGF0ZWRfYXQ=');
 
 @$core.Deprecated('Use workflowDetailDescriptor instead')
 const WorkflowDetail$json = {
@@ -1094,18 +1124,8 @@ const WorkflowDetail$json = {
       '17': true
     },
     {
-      '1': 'api_json',
-      '3': 3,
-      '4': 1,
-      '5': 9,
-      '8': {},
-      '9': 1,
-      '10': 'apiJson',
-      '17': true
-    },
-    {
       '1': 'config',
-      '3': 4,
+      '3': 3,
       '4': 1,
       '5': 11,
       '6': '.hi.media.WorkflowExecutionConfig',
@@ -1114,7 +1134,7 @@ const WorkflowDetail$json = {
     },
     {
       '1': 'nodes',
-      '3': 5,
+      '3': 4,
       '4': 3,
       '5': 11,
       '6': '.hi.media.WorkflowNode',
@@ -1123,7 +1143,7 @@ const WorkflowDetail$json = {
     },
     {
       '1': 'dependencies',
-      '3': 6,
+      '3': 5,
       '4': 3,
       '5': 11,
       '6': '.hi.media.WorkflowDependency',
@@ -1132,7 +1152,7 @@ const WorkflowDetail$json = {
     },
     {
       '1': 'validation_issues',
-      '3': 7,
+      '3': 6,
       '4': 3,
       '5': 11,
       '6': '.hi.media.WorkflowIssue',
@@ -1141,11 +1161,11 @@ const WorkflowDetail$json = {
     },
     {
       '1': 'validated_at',
-      '3': 8,
+      '3': 7,
       '4': 1,
       '5': 3,
       '8': {},
-      '9': 2,
+      '9': 1,
       '10': 'validatedAt',
       '17': true
     },
@@ -1153,7 +1173,6 @@ const WorkflowDetail$json = {
   '7': {},
   '8': [
     {'1': '_description'},
-    {'1': '_api_json'},
     {'1': '_validated_at'},
   ],
 };
@@ -1162,124 +1181,136 @@ const WorkflowDetail$json = {
 final $typed_data.Uint8List workflowDetailDescriptor = $convert.base64Decode(
     'Cg5Xb3JrZmxvd0RldGFpbBI5CgdzdW1tYXJ5GAEgASgLMhkuaGkubWVkaWEuV29ya2Zsb3dTdW'
     '1tYXJ5QgSQtRgDUgdzdW1tYXJ5EisKC2Rlc2NyaXB0aW9uGAIgASgJQgSQtRgDSABSC2Rlc2Ny'
-    'aXB0aW9uiAEBEiQKCGFwaV9qc29uGAMgASgJQgSQtRgDSAFSB2FwaUpzb26IAQESPwoGY29uZm'
-    'lnGAQgASgLMiEuaGkubWVkaWEuV29ya2Zsb3dFeGVjdXRpb25Db25maWdCBJC1GANSBmNvbmZp'
-    'ZxIyCgVub2RlcxgFIAMoCzIWLmhpLm1lZGlhLldvcmtmbG93Tm9kZUIEkLUYA1IFbm9kZXMSRg'
-    'oMZGVwZW5kZW5jaWVzGAYgAygLMhwuaGkubWVkaWEuV29ya2Zsb3dEZXBlbmRlbmN5QgSQtRgD'
-    'UgxkZXBlbmRlbmNpZXMSSgoRdmFsaWRhdGlvbl9pc3N1ZXMYByADKAsyFy5oaS5tZWRpYS5Xb3'
-    'JrZmxvd0lzc3VlQgSQtRgDUhB2YWxpZGF0aW9uSXNzdWVzEiwKDHZhbGlkYXRlZF9hdBgIIAEo'
-    'A0IEkLUYA0gCUgt2YWxpZGF0ZWRBdIgBAToEmLUYA0IOCgxfZGVzY3JpcHRpb25CCwoJX2FwaV'
-    '9qc29uQg8KDV92YWxpZGF0ZWRfYXQ=');
+    'aXB0aW9uiAEBEj8KBmNvbmZpZxgDIAEoCzIhLmhpLm1lZGlhLldvcmtmbG93RXhlY3V0aW9uQ2'
+    '9uZmlnQgSQtRgDUgZjb25maWcSMgoFbm9kZXMYBCADKAsyFi5oaS5tZWRpYS5Xb3JrZmxvd05v'
+    'ZGVCBJC1GANSBW5vZGVzEkYKDGRlcGVuZGVuY2llcxgFIAMoCzIcLmhpLm1lZGlhLldvcmtmbG'
+    '93RGVwZW5kZW5jeUIEkLUYA1IMZGVwZW5kZW5jaWVzEkoKEXZhbGlkYXRpb25faXNzdWVzGAYg'
+    'AygLMhcuaGkubWVkaWEuV29ya2Zsb3dJc3N1ZUIEkLUYA1IQdmFsaWRhdGlvbklzc3VlcxIsCg'
+    'x2YWxpZGF0ZWRfYXQYByABKANCBJC1GANIAVILdmFsaWRhdGVkQXSIAQE6BJi1GANCDgoMX2Rl'
+    'c2NyaXB0aW9uQg8KDV92YWxpZGF0ZWRfYXQ=');
 
-@$core.Deprecated('Use importWorkflowReqDescriptor instead')
-const ImportWorkflowReq$json = {
-  '1': 'ImportWorkflowReq',
+@$core.Deprecated('Use workflowImportMetadataDescriptor instead')
+const WorkflowImportMetadata$json = {
+  '1': 'WorkflowImportMetadata',
   '2': [
     {
-      '1': 'feature_key',
+      '1': 'function_id',
       '3': 1,
       '4': 1,
-      '5': 14,
-      '6': '.hi.media.FeatureKey',
+      '5': 9,
       '8': {},
       '9': 0,
-      '10': 'featureKey',
+      '10': 'functionId',
       '17': true
     },
     {
-      '1': 'name',
+      '1': 'model_id',
       '3': 2,
       '4': 1,
       '5': 9,
       '8': {},
       '9': 1,
-      '10': 'name',
-      '17': true
-    },
-    {
-      '1': 'api_json',
-      '3': 3,
-      '4': 1,
-      '5': 9,
-      '8': {},
-      '9': 2,
-      '10': 'apiJson',
+      '10': 'modelId',
       '17': true
     },
     {
       '1': 'description',
-      '3': 4,
+      '3': 3,
       '4': 1,
       '5': 9,
-      '9': 3,
+      '9': 2,
       '10': 'description',
       '17': true
     },
   ],
   '8': [
-    {'1': '_feature_key'},
-    {'1': '_name'},
-    {'1': '_api_json'},
+    {'1': '_function_id'},
+    {'1': '_model_id'},
     {'1': '_description'},
   ],
 };
 
-/// Descriptor for `ImportWorkflowReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List importWorkflowReqDescriptor = $convert.base64Decode(
-    'ChFJbXBvcnRXb3JrZmxvd1JlcRJJCgtmZWF0dXJlX2tleRgBIAEoDjIULmhpLm1lZGlhLkZlYX'
-    'R1cmVLZXlCDbpICsgBAYIBBBABIABIAFIKZmVhdHVyZUtleYgBARIjCgRuYW1lGAIgASgJQgq6'
-    'SAfIAQFyAhABSAFSBG5hbWWIAQESKgoIYXBpX2pzb24YAyABKAlCCrpIB8gBAXICEAFIAlIHYX'
-    'BpSnNvbogBARIlCgtkZXNjcmlwdGlvbhgEIAEoCUgDUgtkZXNjcmlwdGlvbogBAUIOCgxfZmVh'
-    'dHVyZV9rZXlCBwoFX25hbWVCCwoJX2FwaV9qc29uQg4KDF9kZXNjcmlwdGlvbg==');
+/// Descriptor for `WorkflowImportMetadata`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List workflowImportMetadataDescriptor = $convert.base64Decode(
+    'ChZXb3JrZmxvd0ltcG9ydE1ldGFkYXRhEjAKC2Z1bmN0aW9uX2lkGAEgASgJQgq6SAfIAQFyAh'
+    'ABSABSCmZ1bmN0aW9uSWSIAQESKgoIbW9kZWxfaWQYAiABKAlCCrpIB8gBAXICEAFIAVIHbW9k'
+    'ZWxJZIgBARIlCgtkZXNjcmlwdGlvbhgDIAEoCUgCUgtkZXNjcmlwdGlvbogBAUIOCgxfZnVuY3'
+    'Rpb25faWRCCwoJX21vZGVsX2lkQg4KDF9kZXNjcmlwdGlvbg==');
 
-@$core.Deprecated('Use importWorkflowRespDescriptor instead')
-const ImportWorkflowResp$json = {
-  '1': 'ImportWorkflowResp',
+@$core.Deprecated('Use workflowReplaceFileMetadataDescriptor instead')
+const WorkflowReplaceFileMetadata$json = {
+  '1': 'WorkflowReplaceFileMetadata',
   '2': [
     {
-      '1': 'workflow_version_id',
+      '1': 'workflow_id',
       '3': 1,
       '4': 1,
       '5': 9,
       '8': {},
       '9': 0,
-      '10': 'workflowVersionId',
+      '10': 'workflowId',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_workflow_id'},
+  ],
+};
+
+/// Descriptor for `WorkflowReplaceFileMetadata`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List workflowReplaceFileMetadataDescriptor =
+    $convert.base64Decode(
+        'ChtXb3JrZmxvd1JlcGxhY2VGaWxlTWV0YWRhdGESMAoLd29ya2Zsb3dfaWQYASABKAlCCrpIB8'
+        'gBAXICEAFIAFIKd29ya2Zsb3dJZIgBAUIOCgxfd29ya2Zsb3dfaWQ=');
+
+@$core.Deprecated('Use workflowFileMutationRespDescriptor instead')
+const WorkflowFileMutationResp$json = {
+  '1': 'WorkflowFileMutationResp',
+  '2': [
+    {
+      '1': 'workflow_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'workflowId',
       '17': true
     },
   ],
   '7': {},
   '8': [
-    {'1': '_workflow_version_id'},
+    {'1': '_workflow_id'},
   ],
 };
 
-/// Descriptor for `ImportWorkflowResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List importWorkflowRespDescriptor = $convert.base64Decode(
-    'ChJJbXBvcnRXb3JrZmxvd1Jlc3ASOQoTd29ya2Zsb3dfdmVyc2lvbl9pZBgBIAEoCUIEkLUYA0'
-    'gAUhF3b3JrZmxvd1ZlcnNpb25JZIgBAToEmLUYA0IWChRfd29ya2Zsb3dfdmVyc2lvbl9pZA==');
+/// Descriptor for `WorkflowFileMutationResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List workflowFileMutationRespDescriptor =
+    $convert.base64Decode(
+        'ChhXb3JrZmxvd0ZpbGVNdXRhdGlvblJlc3ASKgoLd29ya2Zsb3dfaWQYASABKAlCBJC1GANIAF'
+        'IKd29ya2Zsb3dJZIgBAToEmLUYA0IOCgxfd29ya2Zsb3dfaWQ=');
 
 @$core.Deprecated('Use updateWorkflowReqDescriptor instead')
 const UpdateWorkflowReq$json = {
   '1': 'UpdateWorkflowReq',
   '2': [
     {
-      '1': 'workflow_version_id',
+      '1': 'workflow_id',
       '3': 1,
       '4': 1,
       '5': 9,
       '8': {},
       '9': 0,
-      '10': 'workflowVersionId',
+      '10': 'workflowId',
       '17': true
     },
     {
-      '1': 'api_json',
+      '1': 'description',
       '3': 2,
       '4': 1,
       '5': 9,
-      '8': {},
       '9': 1,
-      '10': 'apiJson',
+      '10': 'description',
       '17': true
     },
     {
@@ -1293,19 +1324,19 @@ const UpdateWorkflowReq$json = {
   ],
   '7': {},
   '8': [
-    {'1': '_workflow_version_id'},
-    {'1': '_api_json'},
+    {'1': '_workflow_id'},
+    {'1': '_description'},
   ],
 };
 
 /// Descriptor for `UpdateWorkflowReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List updateWorkflowReqDescriptor = $convert.base64Decode(
-    'ChFVcGRhdGVXb3JrZmxvd1JlcRI/ChN3b3JrZmxvd192ZXJzaW9uX2lkGAEgASgJQgq6SAfIAQ'
-    'FyAhABSABSEXdvcmtmbG93VmVyc2lvbklkiAEBEicKCGFwaV9qc29uGAIgASgJQge6SARyAhAB'
-    'SAFSB2FwaUpzb26IAQESOQoGY29uZmlnGAMgASgLMiEuaGkubWVkaWEuV29ya2Zsb3dFeGVjdX'
-    'Rpb25Db25maWdSBmNvbmZpZzprukhoGmYKF3VwZGF0ZV93b3JrZmxvdy5jb250ZW50EiNhcGlf'
-    'anNvbiBvciBjb25maWcgbXVzdCBiZSBwcm92aWRlZBomaGFzKHRoaXMuYXBpX2pzb24pIHx8IG'
-    'hhcyh0aGlzLmNvbmZpZylCFgoUX3dvcmtmbG93X3ZlcnNpb25faWRCCwoJX2FwaV9qc29u');
+    'ChFVcGRhdGVXb3JrZmxvd1JlcRIwCgt3b3JrZmxvd19pZBgBIAEoCUIKukgHyAEBcgIQAUgAUg'
+    'p3b3JrZmxvd0lkiAEBEiUKC2Rlc2NyaXB0aW9uGAIgASgJSAFSC2Rlc2NyaXB0aW9uiAEBEjkK'
+    'BmNvbmZpZxgDIAEoCzIhLmhpLm1lZGlhLldvcmtmbG93RXhlY3V0aW9uQ29uZmlnUgZjb25maW'
+    'c6cbpIbhpsChd1cGRhdGVfd29ya2Zsb3cuY29udGVudBImZGVzY3JpcHRpb24gb3IgY29uZmln'
+    'IG11c3QgYmUgcHJvdmlkZWQaKWhhcyh0aGlzLmRlc2NyaXB0aW9uKSB8fCBoYXModGhpcy5jb2'
+    '5maWcpQg4KDF93b3JrZmxvd19pZEIOCgxfZGVzY3JpcHRpb24=');
 
 @$core.Deprecated('Use updateWorkflowRespDescriptor instead')
 const UpdateWorkflowResp$json = {
@@ -1329,91 +1360,30 @@ final $typed_data.Uint8List updateWorkflowRespDescriptor = $convert.base64Decode
     'ChJVcGRhdGVXb3JrZmxvd1Jlc3ASOgoId29ya2Zsb3cYASABKAsyGC5oaS5tZWRpYS5Xb3JrZm'
     'xvd0RldGFpbEIEkLUYA1IId29ya2Zsb3c6BJi1GAM=');
 
-@$core.Deprecated('Use updateWorkflowDescriptionReqDescriptor instead')
-const UpdateWorkflowDescriptionReq$json = {
-  '1': 'UpdateWorkflowDescriptionReq',
-  '2': [
-    {
-      '1': 'workflow_version_id',
-      '3': 1,
-      '4': 1,
-      '5': 9,
-      '8': {},
-      '9': 0,
-      '10': 'workflowVersionId',
-      '17': true
-    },
-    {
-      '1': 'description',
-      '3': 2,
-      '4': 1,
-      '5': 9,
-      '8': {},
-      '9': 1,
-      '10': 'description',
-      '17': true
-    },
-  ],
-  '8': [
-    {'1': '_workflow_version_id'},
-    {'1': '_description'},
-  ],
-};
-
-/// Descriptor for `UpdateWorkflowDescriptionReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List updateWorkflowDescriptionReqDescriptor = $convert.base64Decode(
-    'ChxVcGRhdGVXb3JrZmxvd0Rlc2NyaXB0aW9uUmVxEj8KE3dvcmtmbG93X3ZlcnNpb25faWQYAS'
-    'ABKAlCCrpIB8gBAXICEAFIAFIRd29ya2Zsb3dWZXJzaW9uSWSIAQESLQoLZGVzY3JpcHRpb24Y'
-    'AiABKAlCBrpIA8gBAUgBUgtkZXNjcmlwdGlvbogBAUIWChRfd29ya2Zsb3dfdmVyc2lvbl9pZE'
-    'IOCgxfZGVzY3JpcHRpb24=');
-
-@$core.Deprecated('Use updateWorkflowDescriptionRespDescriptor instead')
-const UpdateWorkflowDescriptionResp$json = {
-  '1': 'UpdateWorkflowDescriptionResp',
-  '2': [
-    {
-      '1': 'workflow',
-      '3': 1,
-      '4': 1,
-      '5': 11,
-      '6': '.hi.media.WorkflowDetail',
-      '8': {},
-      '10': 'workflow'
-    },
-  ],
-  '7': {},
-};
-
-/// Descriptor for `UpdateWorkflowDescriptionResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List updateWorkflowDescriptionRespDescriptor =
-    $convert.base64Decode(
-        'Ch1VcGRhdGVXb3JrZmxvd0Rlc2NyaXB0aW9uUmVzcBI6Cgh3b3JrZmxvdxgBIAEoCzIYLmhpLm'
-        '1lZGlhLldvcmtmbG93RGV0YWlsQgSQtRgDUgh3b3JrZmxvdzoEmLUYAw==');
-
 @$core.Deprecated('Use getWorkflowReqDescriptor instead')
 const GetWorkflowReq$json = {
   '1': 'GetWorkflowReq',
   '2': [
     {
-      '1': 'workflow_version_id',
+      '1': 'workflow_id',
       '3': 1,
       '4': 1,
       '5': 9,
       '8': {},
       '9': 0,
-      '10': 'workflowVersionId',
+      '10': 'workflowId',
       '17': true
     },
   ],
   '8': [
-    {'1': '_workflow_version_id'},
+    {'1': '_workflow_id'},
   ],
 };
 
 /// Descriptor for `GetWorkflowReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List getWorkflowReqDescriptor = $convert.base64Decode(
-    'Cg5HZXRXb3JrZmxvd1JlcRI/ChN3b3JrZmxvd192ZXJzaW9uX2lkGAEgASgJQgq6SAfIAQFyAh'
-    'ABSABSEXdvcmtmbG93VmVyc2lvbklkiAEBQhYKFF93b3JrZmxvd192ZXJzaW9uX2lk');
+    'Cg5HZXRXb3JrZmxvd1JlcRIwCgt3b3JrZmxvd19pZBgBIAEoCUIKukgHyAEBcgIQAUgAUgp3b3'
+    'JrZmxvd0lkiAEBQg4KDF93b3JrZmxvd19pZA==');
 
 @$core.Deprecated('Use getWorkflowRespDescriptor instead')
 const GetWorkflowResp$json = {
@@ -1450,14 +1420,13 @@ const ListWorkflowsReq$json = {
       '10': 'pagination'
     },
     {
-      '1': 'feature_key',
+      '1': 'function_id',
       '3': 2,
       '4': 1,
-      '5': 14,
-      '6': '.hi.media.FeatureKey',
+      '5': 9,
       '8': {},
       '9': 0,
-      '10': 'featureKey',
+      '10': 'functionId',
       '17': true
     },
     {
@@ -1473,7 +1442,7 @@ const ListWorkflowsReq$json = {
     },
   ],
   '8': [
-    {'1': '_feature_key'},
+    {'1': '_function_id'},
     {'1': '_status'},
   ],
 };
@@ -1481,10 +1450,9 @@ const ListWorkflowsReq$json = {
 /// Descriptor for `ListWorkflowsReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listWorkflowsReqDescriptor = $convert.base64Decode(
     'ChBMaXN0V29ya2Zsb3dzUmVxEi4KCnBhZ2luYXRpb24YASABKAsyDi5oaS5QYWdpbmF0aW9uUg'
-    'pwYWdpbmF0aW9uEkYKC2ZlYXR1cmVfa2V5GAIgASgOMhQuaGkubWVkaWEuRmVhdHVyZUtleUIK'
-    'ukgHggEEEAEgAEgAUgpmZWF0dXJlS2V5iAEBEkEKBnN0YXR1cxgDIAEoDjIYLmhpLm1lZGlhLl'
-    'dvcmtmbG93U3RhdHVzQgq6SAeCAQQQASAASAFSBnN0YXR1c4gBAUIOCgxfZmVhdHVyZV9rZXlC'
-    'CQoHX3N0YXR1cw==');
+    'pwYWdpbmF0aW9uEi0KC2Z1bmN0aW9uX2lkGAIgASgJQge6SARyAhABSABSCmZ1bmN0aW9uSWSI'
+    'AQESQQoGc3RhdHVzGAMgASgOMhguaGkubWVkaWEuV29ya2Zsb3dTdGF0dXNCCrpIB4IBBBABIA'
+    'BIAVIGc3RhdHVziAEBQg4KDF9mdW5jdGlvbl9pZEIJCgdfc3RhdHVz');
 
 @$core.Deprecated('Use listWorkflowsRespDescriptor instead')
 const ListWorkflowsResp$json = {
@@ -1527,25 +1495,25 @@ const ValidateWorkflowReq$json = {
   '1': 'ValidateWorkflowReq',
   '2': [
     {
-      '1': 'workflow_version_id',
+      '1': 'workflow_id',
       '3': 1,
       '4': 1,
       '5': 9,
       '8': {},
       '9': 0,
-      '10': 'workflowVersionId',
+      '10': 'workflowId',
       '17': true
     },
   ],
   '8': [
-    {'1': '_workflow_version_id'},
+    {'1': '_workflow_id'},
   ],
 };
 
 /// Descriptor for `ValidateWorkflowReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List validateWorkflowReqDescriptor = $convert.base64Decode(
-    'ChNWYWxpZGF0ZVdvcmtmbG93UmVxEj8KE3dvcmtmbG93X3ZlcnNpb25faWQYASABKAlCCrpIB8'
-    'gBAXICEAFIAFIRd29ya2Zsb3dWZXJzaW9uSWSIAQFCFgoUX3dvcmtmbG93X3ZlcnNpb25faWQ=');
+    'ChNWYWxpZGF0ZVdvcmtmbG93UmVxEjAKC3dvcmtmbG93X2lkGAEgASgJQgq6SAfIAQFyAhABSA'
+    'BSCndvcmtmbG93SWSIAQFCDgoMX3dvcmtmbG93X2lk');
 
 @$core.Deprecated('Use validateWorkflowRespDescriptor instead')
 const ValidateWorkflowResp$json = {
@@ -1612,13 +1580,13 @@ const TestWorkflowReq$json = {
       '17': true
     },
     {
-      '1': 'workflow_version_id',
+      '1': 'workflow_id',
       '3': 2,
       '4': 1,
       '5': 9,
       '8': {},
       '9': 1,
-      '10': 'workflowVersionId',
+      '10': 'workflowId',
       '17': true
     },
     {
@@ -1644,7 +1612,7 @@ const TestWorkflowReq$json = {
   ],
   '8': [
     {'1': '_request_id'},
-    {'1': '_workflow_version_id'},
+    {'1': '_workflow_id'},
     {'1': '_prompt'},
     {'1': '_input_asset_id'},
   ],
@@ -1653,11 +1621,10 @@ const TestWorkflowReq$json = {
 /// Descriptor for `TestWorkflowReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List testWorkflowReqDescriptor = $convert.base64Decode(
     'Cg9UZXN0V29ya2Zsb3dSZXESLgoKcmVxdWVzdF9pZBgBIAEoCUIKukgHyAEBcgIQAUgAUglyZX'
-    'F1ZXN0SWSIAQESPwoTd29ya2Zsb3dfdmVyc2lvbl9pZBgCIAEoCUIKukgHyAEBcgIQAUgBUhF3'
-    'b3JrZmxvd1ZlcnNpb25JZIgBARInCgZwcm9tcHQYAyABKAlCCrpIB8gBAXICEAFIAlIGcHJvbX'
-    'B0iAEBEjIKDmlucHV0X2Fzc2V0X2lkGAQgASgJQge6SARyAhABSANSDGlucHV0QXNzZXRJZIgB'
-    'AUINCgtfcmVxdWVzdF9pZEIWChRfd29ya2Zsb3dfdmVyc2lvbl9pZEIJCgdfcHJvbXB0QhEKD1'
-    '9pbnB1dF9hc3NldF9pZA==');
+    'F1ZXN0SWSIAQESMAoLd29ya2Zsb3dfaWQYAiABKAlCCrpIB8gBAXICEAFIAVIKd29ya2Zsb3dJ'
+    'ZIgBARInCgZwcm9tcHQYAyABKAlCCrpIB8gBAXICEAFIAlIGcHJvbXB0iAEBEjIKDmlucHV0X2'
+    'Fzc2V0X2lkGAQgASgJQge6SARyAhABSANSDGlucHV0QXNzZXRJZIgBAUINCgtfcmVxdWVzdF9p'
+    'ZEIOCgxfd29ya2Zsb3dfaWRCCQoHX3Byb21wdEIRCg9faW5wdXRfYXNzZXRfaWQ=');
 
 @$core.Deprecated('Use testWorkflowRespDescriptor instead')
 const TestWorkflowResp$json = {
@@ -1698,26 +1665,26 @@ const ListWorkflowTestsReq$json = {
       '10': 'pagination'
     },
     {
-      '1': 'workflow_version_id',
+      '1': 'workflow_id',
       '3': 2,
       '4': 1,
       '5': 9,
       '8': {},
       '9': 0,
-      '10': 'workflowVersionId',
+      '10': 'workflowId',
       '17': true
     },
   ],
   '8': [
-    {'1': '_workflow_version_id'},
+    {'1': '_workflow_id'},
   ],
 };
 
 /// Descriptor for `ListWorkflowTestsReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listWorkflowTestsReqDescriptor = $convert.base64Decode(
     'ChRMaXN0V29ya2Zsb3dUZXN0c1JlcRIuCgpwYWdpbmF0aW9uGAEgASgLMg4uaGkuUGFnaW5hdG'
-    'lvblIKcGFnaW5hdGlvbhI/ChN3b3JrZmxvd192ZXJzaW9uX2lkGAIgASgJQgq6SAfIAQFyAhAB'
-    'SABSEXdvcmtmbG93VmVyc2lvbklkiAEBQhYKFF93b3JrZmxvd192ZXJzaW9uX2lk');
+    'lvblIKcGFnaW5hdGlvbhIwCgt3b3JrZmxvd19pZBgCIAEoCUIKukgHyAEBcgIQAUgAUgp3b3Jr'
+    'Zmxvd0lkiAEBQg4KDF93b3JrZmxvd19pZA==');
 
 @$core.Deprecated('Use listWorkflowTestsRespDescriptor instead')
 const ListWorkflowTestsResp$json = {
@@ -1754,3 +1721,114 @@ final $typed_data.Uint8List listWorkflowTestsRespDescriptor = $convert.base64Dec
     'ChVMaXN0V29ya2Zsb3dUZXN0c1Jlc3ASHwoFdG90YWwYASABKAVCBJC1GANIAFIFdG90YWyIAQ'
     'ESMQoFdGFza3MYAiADKAsyFS5oaS5tZWRpYS5UYXNrU3VtbWFyeUIEkLUYA1IFdGFza3M6BJi1'
     'GANCCAoGX3RvdGFs');
+
+@$core.Deprecated('Use setDefaultWorkflowReqDescriptor instead')
+const SetDefaultWorkflowReq$json = {
+  '1': 'SetDefaultWorkflowReq',
+  '2': [
+    {
+      '1': 'workflow_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'workflowId',
+      '17': true
+    },
+    {
+      '1': 'is_default',
+      '3': 2,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 1,
+      '10': 'isDefault',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_workflow_id'},
+    {'1': '_is_default'},
+  ],
+};
+
+/// Descriptor for `SetDefaultWorkflowReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setDefaultWorkflowReqDescriptor = $convert.base64Decode(
+    'ChVTZXREZWZhdWx0V29ya2Zsb3dSZXESMAoLd29ya2Zsb3dfaWQYASABKAlCCrpIB8gBAXICEA'
+    'FIAFIKd29ya2Zsb3dJZIgBARIqCgppc19kZWZhdWx0GAIgASgIQga6SAPIAQFIAVIJaXNEZWZh'
+    'dWx0iAEBQg4KDF93b3JrZmxvd19pZEINCgtfaXNfZGVmYXVsdA==');
+
+@$core.Deprecated('Use setDefaultWorkflowRespDescriptor instead')
+const SetDefaultWorkflowResp$json = {
+  '1': 'SetDefaultWorkflowResp',
+  '2': [
+    {
+      '1': 'workflow',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.WorkflowSummary',
+      '8': {},
+      '10': 'workflow'
+    },
+  ],
+  '7': {},
+};
+
+/// Descriptor for `SetDefaultWorkflowResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setDefaultWorkflowRespDescriptor =
+    $convert.base64Decode(
+        'ChZTZXREZWZhdWx0V29ya2Zsb3dSZXNwEjsKCHdvcmtmbG93GAEgASgLMhkuaGkubWVkaWEuV2'
+        '9ya2Zsb3dTdW1tYXJ5QgSQtRgDUgh3b3JrZmxvdzoEmLUYAw==');
+
+@$core.Deprecated('Use updateWorkflowSortOrderReqDescriptor instead')
+const UpdateWorkflowSortOrderReq$json = {
+  '1': 'UpdateWorkflowSortOrderReq',
+  '2': [
+    {
+      '1': 'function_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'functionId',
+      '17': true
+    },
+    {'1': 'workflow_ids', '3': 2, '4': 3, '5': 9, '8': {}, '10': 'workflowIds'},
+  ],
+  '8': [
+    {'1': '_function_id'},
+  ],
+};
+
+/// Descriptor for `UpdateWorkflowSortOrderReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List updateWorkflowSortOrderReqDescriptor =
+    $convert.base64Decode(
+        'ChpVcGRhdGVXb3JrZmxvd1NvcnRPcmRlclJlcRIwCgtmdW5jdGlvbl9pZBgBIAEoCUIKukgHyA'
+        'EBcgIQAUgAUgpmdW5jdGlvbklkiAEBEjEKDHdvcmtmbG93X2lkcxgCIAMoCUIOukgLkgEIGAEi'
+        'BHICEAFSC3dvcmtmbG93SWRzQg4KDF9mdW5jdGlvbl9pZA==');
+
+@$core.Deprecated('Use updateWorkflowSortOrderRespDescriptor instead')
+const UpdateWorkflowSortOrderResp$json = {
+  '1': 'UpdateWorkflowSortOrderResp',
+  '2': [
+    {
+      '1': 'workflows',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.media.WorkflowSummary',
+      '8': {},
+      '10': 'workflows'
+    },
+  ],
+  '7': {},
+};
+
+/// Descriptor for `UpdateWorkflowSortOrderResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List updateWorkflowSortOrderRespDescriptor =
+    $convert.base64Decode(
+        'ChtVcGRhdGVXb3JrZmxvd1NvcnRPcmRlclJlc3ASPQoJd29ya2Zsb3dzGAEgAygLMhkuaGkubW'
+        'VkaWEuV29ya2Zsb3dTdW1tYXJ5QgSQtRgDUgl3b3JrZmxvd3M6BJi1GAM=');

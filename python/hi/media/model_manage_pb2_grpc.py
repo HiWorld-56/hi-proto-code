@@ -2,11 +2,13 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
+from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi.media import model_manage_pb2 as hi_dot_media_dot_model__manage__pb2
 
 
 class ModelManageStub(object):
-    """Missing associated documentation comment in .proto file."""
+    """管理员维护用户显示名与真实模型名；不动态改写工作流 Loader。
+    """
 
     def __init__(self, channel):
         """Constructor.
@@ -24,6 +26,11 @@ class ModelManageStub(object):
                 request_serializer=hi_dot_media_dot_model__manage__pb2.UpdateModelReq.SerializeToString,
                 response_deserializer=hi_dot_media_dot_model__manage__pb2.UpdateModelResp.FromString,
                 _registered_method=True)
+        self.Delete = channel.unary_unary(
+                '/hi.media.ModelManage/Delete',
+                request_serializer=hi_dot_media_dot_model__manage__pb2.DeleteModelReq.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                _registered_method=True)
         self.List = channel.unary_unary(
                 '/hi.media.ModelManage/List',
                 request_serializer=hi_dot_media_dot_model__manage__pb2.ListModelsReq.SerializeToString,
@@ -37,28 +44,40 @@ class ModelManageStub(object):
 
 
 class ModelManageServicer(object):
-    """Missing associated documentation comment in .proto file."""
+    """管理员维护用户显示名与真实模型名；不动态改写工作流 Loader。
+    """
 
     def Create(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """创建显示名与真实名的对应关系。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def Update(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """仅更新用户可见显示名。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def Delete(self, request, context):
+        """被任何工作流引用时返回 FailedPrecondition；成功返回空响应。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def List(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """分页查询模型。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def Get(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """查询模型详情，包含仅管理员可见的真实名。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -75,6 +94,11 @@ def add_ModelManageServicer_to_server(servicer, server):
                     servicer.Update,
                     request_deserializer=hi_dot_media_dot_model__manage__pb2.UpdateModelReq.FromString,
                     response_serializer=hi_dot_media_dot_model__manage__pb2.UpdateModelResp.SerializeToString,
+            ),
+            'Delete': grpc.unary_unary_rpc_method_handler(
+                    servicer.Delete,
+                    request_deserializer=hi_dot_media_dot_model__manage__pb2.DeleteModelReq.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'List': grpc.unary_unary_rpc_method_handler(
                     servicer.List,
@@ -95,7 +119,8 @@ def add_ModelManageServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class ModelManage(object):
-    """Missing associated documentation comment in .proto file."""
+    """管理员维护用户显示名与真实模型名；不动态改写工作流 Loader。
+    """
 
     @staticmethod
     def Create(request,
@@ -141,6 +166,33 @@ class ModelManage(object):
             '/hi.media.ModelManage/Update',
             hi_dot_media_dot_model__manage__pb2.UpdateModelReq.SerializeToString,
             hi_dot_media_dot_model__manage__pb2.UpdateModelResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def Delete(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.media.ModelManage/Delete',
+            hi_dot_media_dot_model__manage__pb2.DeleteModelReq.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,
             insecure,

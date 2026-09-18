@@ -15,15 +15,17 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../common.pb.dart' as $2;
-import 'feature.pb.dart' as $1;
-import 'task.pb.dart' as $3;
+import '../common.pb.dart' as $3;
+import 'function.pb.dart' as $1;
+import 'model_manage.pb.dart' as $2;
+import 'task.pb.dart' as $4;
 import 'workflow_manage.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 export 'workflow_manage.pbenum.dart';
 
+/// 将一个业务参数绑定到一个具体节点输入，不支持多目标绑定。
 class WorkflowInputBinding extends $pb.GeneratedMessage {
   factory WorkflowInputBinding({
     $core.String? nodeId,
@@ -71,6 +73,7 @@ class WorkflowInputBinding extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<WorkflowInputBinding>(create);
   static WorkflowInputBinding? _defaultInstance;
 
+  /// API JSON 中的字符串节点 ID，可包含冒号。
   @$pb.TagNumber(1)
   $core.String get nodeId => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -80,6 +83,7 @@ class WorkflowInputBinding extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearNodeId() => $_clearField(1);
 
+  /// inputs 中的精确键名，包括动态节点中的点号。
   @$pb.TagNumber(2)
   $core.String get inputName => $_getSZ(1);
   @$pb.TagNumber(2)
@@ -90,6 +94,7 @@ class WorkflowInputBinding extends $pb.GeneratedMessage {
   void clearInputName() => $_clearField(2);
 }
 
+/// 唯一主输出 SaveVideo 节点，用于解析 history，不绑定 output_name。
 class WorkflowOutputConfig extends $pb.GeneratedMessage {
   factory WorkflowOutputConfig({
     $core.String? nodeId,
@@ -145,6 +150,7 @@ class WorkflowOutputConfig extends $pb.GeneratedMessage {
   void clearNodeId() => $_clearField(1);
 }
 
+/// 完整字符串选项及其写入节点，适用于宽高比。
 class WorkflowStringOptionInput extends $pb.GeneratedMessage {
   factory WorkflowStringOptionInput({
     WorkflowInputBinding? binding,
@@ -218,6 +224,7 @@ class WorkflowStringOptionInput extends $pb.GeneratedMessage {
   $1.StringOptionConfig ensureValues() => $_ensure(1);
 }
 
+/// 规范十进制选项及其写入节点，适用于像素量。
 class WorkflowDecimalOptionInput extends $pb.GeneratedMessage {
   factory WorkflowDecimalOptionInput({
     WorkflowInputBinding? binding,
@@ -292,6 +299,7 @@ class WorkflowDecimalOptionInput extends $pb.GeneratedMessage {
   $1.DecimalOptionConfig ensureValues() => $_ensure(1);
 }
 
+/// 正整数范围及其写入节点，适用于视频时长。
 class WorkflowIntRangeInput extends $pb.GeneratedMessage {
   factory WorkflowIntRangeInput({
     WorkflowInputBinding? binding,
@@ -365,6 +373,7 @@ class WorkflowIntRangeInput extends $pb.GeneratedMessage {
   $1.IntRangeConfig ensureValues() => $_ensure(1);
 }
 
+/// 管理员固定文本输入，不向普通用户开放。
 class WorkflowFixedTextInput extends $pb.GeneratedMessage {
   factory WorkflowFixedTextInput({
     WorkflowInputBinding? binding,
@@ -425,6 +434,7 @@ class WorkflowFixedTextInput extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   WorkflowInputBinding ensureBinding() => $_ensure(0);
 
+  /// 管理员固定文本，提供本消息时必须填写，不作为普通用户参数。
   @$pb.TagNumber(2)
   $core.String get value => $_getSZ(1);
   @$pb.TagNumber(2)
@@ -435,6 +445,7 @@ class WorkflowFixedTextInput extends $pb.GeneratedMessage {
   void clearValue() => $_clearField(2);
 }
 
+/// 用户可选帧率的范围和绑定节点。
 class WorkflowSelectableFrameRate extends $pb.GeneratedMessage {
   factory WorkflowSelectableFrameRate({
     WorkflowInputBinding? binding,
@@ -512,6 +523,7 @@ class WorkflowSelectableFrameRate extends $pb.GeneratedMessage {
 
 enum WorkflowFrameRateInput_Mode { selectable, fixedValue, notSet }
 
+/// 帧率配置，选择用户可调或工作流固定值。
 class WorkflowFrameRateInput extends $pb.GeneratedMessage {
   factory WorkflowFrameRateInput({
     WorkflowSelectableFrameRate? selectable,
@@ -576,6 +588,7 @@ class WorkflowFrameRateInput extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearMode() => $_clearField($_whichOneof(0));
 
+  /// 用户可选范围，执行时写入绑定节点。
   @$pb.TagNumber(1)
   WorkflowSelectableFrameRate get selectable => $_getN(0);
   @$pb.TagNumber(1)
@@ -587,6 +600,7 @@ class WorkflowFrameRateInput extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   WorkflowSelectableFrameRate ensureSelectable() => $_ensure(0);
 
+  /// 帧/秒；工作流内部固定，不执行节点改写。
   @$pb.TagNumber(2)
   $core.int get fixedValue => $_getIZ(1);
   @$pb.TagNumber(2)
@@ -597,6 +611,7 @@ class WorkflowFrameRateInput extends $pb.GeneratedMessage {
   void clearFixedValue() => $_clearField(2);
 }
 
+/// 图生视频执行配置，对应功能 video.img2vid。
 class ImageToVideoWorkflowConfig extends $pb.GeneratedMessage {
   factory ImageToVideoWorkflowConfig({
     WorkflowInputBinding? inputImage,
@@ -694,6 +709,7 @@ class ImageToVideoWorkflowConfig extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   WorkflowInputBinding ensurePrompt() => $_ensure(1);
 
+  /// 正向提示词的 Unicode 码点上限，不是 UTF-8 字节数。
   @$pb.TagNumber(3)
   $core.int get promptMaxLength => $_getIZ(2);
   @$pb.TagNumber(3)
@@ -760,6 +776,7 @@ class ImageToVideoWorkflowConfig extends $pb.GeneratedMessage {
   WorkflowFrameRateInput ensureFrameRate() => $_ensure(7);
 }
 
+/// 文生视频执行配置，对应功能 video.txt2vid。
 class TextToVideoWorkflowConfig extends $pb.GeneratedMessage {
   factory TextToVideoWorkflowConfig({
     WorkflowInputBinding? prompt,
@@ -841,6 +858,7 @@ class TextToVideoWorkflowConfig extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   WorkflowInputBinding ensurePrompt() => $_ensure(0);
 
+  /// 正向提示词的 Unicode 码点上限，不是 UTF-8 字节数。
   @$pb.TagNumber(2)
   $core.int get promptMaxLength => $_getIZ(1);
   @$pb.TagNumber(2)
@@ -907,15 +925,19 @@ class TextToVideoWorkflowConfig extends $pb.GeneratedMessage {
   WorkflowFrameRateInput ensureFrameRate() => $_ensure(6);
 }
 
-enum WorkflowExecutionConfig_FeatureConfig { imageToVideo, textToVideo, notSet }
+enum WorkflowExecutionConfig_FunctionConfig {
+  imageToVideo,
+  textToVideo,
+  notSet
+}
 
+/// 完整执行配置；功能配置必须与工作流归属一致，保存时不建立产物预占。
 class WorkflowExecutionConfig extends $pb.GeneratedMessage {
   factory WorkflowExecutionConfig({
     ImageToVideoWorkflowConfig? imageToVideo,
     TextToVideoWorkflowConfig? textToVideo,
     WorkflowOutputConfig? output,
     $core.int? executionTimeoutSeconds,
-    $fixnum.Int64? outputReservationBytes,
   }) {
     final result = create();
     if (imageToVideo != null) result.imageToVideo = imageToVideo;
@@ -923,8 +945,6 @@ class WorkflowExecutionConfig extends $pb.GeneratedMessage {
     if (output != null) result.output = output;
     if (executionTimeoutSeconds != null)
       result.executionTimeoutSeconds = executionTimeoutSeconds;
-    if (outputReservationBytes != null)
-      result.outputReservationBytes = outputReservationBytes;
     return result;
   }
 
@@ -937,11 +957,11 @@ class WorkflowExecutionConfig extends $pb.GeneratedMessage {
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
-  static const $core.Map<$core.int, WorkflowExecutionConfig_FeatureConfig>
-      _WorkflowExecutionConfig_FeatureConfigByTag = {
-    1: WorkflowExecutionConfig_FeatureConfig.imageToVideo,
-    2: WorkflowExecutionConfig_FeatureConfig.textToVideo,
-    0: WorkflowExecutionConfig_FeatureConfig.notSet
+  static const $core.Map<$core.int, WorkflowExecutionConfig_FunctionConfig>
+      _WorkflowExecutionConfig_FunctionConfigByTag = {
+    1: WorkflowExecutionConfig_FunctionConfig.imageToVideo,
+    2: WorkflowExecutionConfig_FunctionConfig.textToVideo,
+    0: WorkflowExecutionConfig_FunctionConfig.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'WorkflowExecutionConfig',
@@ -956,9 +976,6 @@ class WorkflowExecutionConfig extends $pb.GeneratedMessage {
         subBuilder: WorkflowOutputConfig.create)
     ..aI(4, _omitFieldNames ? '' : 'executionTimeoutSeconds',
         fieldType: $pb.PbFieldType.OU3)
-    ..a<$fixnum.Int64>(
-        5, _omitFieldNames ? '' : 'outputReservationBytes', $pb.PbFieldType.OU6,
-        defaultOrMaker: $fixnum.Int64.ZERO)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -983,11 +1000,11 @@ class WorkflowExecutionConfig extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
-  WorkflowExecutionConfig_FeatureConfig whichFeatureConfig() =>
-      _WorkflowExecutionConfig_FeatureConfigByTag[$_whichOneof(0)]!;
+  WorkflowExecutionConfig_FunctionConfig whichFunctionConfig() =>
+      _WorkflowExecutionConfig_FunctionConfigByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
-  void clearFeatureConfig() => $_clearField($_whichOneof(0));
+  void clearFunctionConfig() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
   ImageToVideoWorkflowConfig get imageToVideo => $_getN(0);
@@ -1022,6 +1039,7 @@ class WorkflowExecutionConfig extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   WorkflowOutputConfig ensureOutput() => $_ensure(2);
 
+  /// 从 ComfyUI 真正开始执行起计时，单位秒；必填正整数，不按模型名称硬编码。
   @$pb.TagNumber(4)
   $core.int get executionTimeoutSeconds => $_getIZ(3);
   @$pb.TagNumber(4)
@@ -1030,17 +1048,9 @@ class WorkflowExecutionConfig extends $pb.GeneratedMessage {
   $core.bool hasExecutionTimeoutSeconds() => $_has(3);
   @$pb.TagNumber(4)
   void clearExecutionTimeoutSeconds() => $_clearField(4);
-
-  @$pb.TagNumber(5)
-  $fixnum.Int64 get outputReservationBytes => $_getI64(4);
-  @$pb.TagNumber(5)
-  set outputReservationBytes($fixnum.Int64 value) => $_setInt64(4, value);
-  @$pb.TagNumber(5)
-  $core.bool hasOutputReservationBytes() => $_has(4);
-  @$pb.TagNumber(5)
-  void clearOutputReservationBytes() => $_clearField(5);
 }
 
+/// 静态校验发现的问题，节点和输入定位信息按需提供。
 class WorkflowIssue extends $pb.GeneratedMessage {
   factory WorkflowIssue({
     $core.String? code,
@@ -1144,6 +1154,7 @@ class WorkflowIssue extends $pb.GeneratedMessage {
   void clearInputName() => $_clearField(5);
 }
 
+/// 供管理员配置绑定的节点输入描述。
 class WorkflowNodeInput extends $pb.GeneratedMessage {
   factory WorkflowNodeInput({
     $core.String? inputName,
@@ -1212,6 +1223,7 @@ class WorkflowNodeInput extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearInputName() => $_clearField(1);
 
+  /// 固定值的原始 JSON；连线输入不提供。
   @$pb.TagNumber(2)
   $core.String get valueJson => $_getSZ(1);
   @$pb.TagNumber(2)
@@ -1221,6 +1233,7 @@ class WorkflowNodeInput extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearValueJson() => $_clearField(2);
 
+  /// true 表示 [source_node_id, output_index] 连线。
   @$pb.TagNumber(3)
   $core.bool get isLink => $_getBF(2);
   @$pb.TagNumber(3)
@@ -1239,6 +1252,7 @@ class WorkflowNodeInput extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearSourceNodeId() => $_clearField(4);
 
+  /// 源节点输出的零基下标，仅连线输入提供。
   @$pb.TagNumber(5)
   $core.int get sourceOutputIndex => $_getIZ(4);
   @$pb.TagNumber(5)
@@ -1248,6 +1262,7 @@ class WorkflowNodeInput extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   void clearSourceOutputIndex() => $_clearField(5);
 
+  /// object_info 可用时补充的上游输入类型。
   @$pb.TagNumber(6)
   $core.String get declaredType => $_getSZ(5);
   @$pb.TagNumber(6)
@@ -1258,6 +1273,7 @@ class WorkflowNodeInput extends $pb.GeneratedMessage {
   void clearDeclaredType() => $_clearField(6);
 }
 
+/// 从当前 API JSON 解析的节点，节点 ID 不按整数解释。
 class WorkflowNode extends $pb.GeneratedMessage {
   factory WorkflowNode({
     $core.String? nodeId,
@@ -1356,6 +1372,7 @@ class WorkflowNode extends $pb.GeneratedMessage {
   void clearSupportedMainOutput() => $_clearField(5);
 }
 
+/// 依赖在工作流中使用的位置。
 class WorkflowDependencyUsage extends $pb.GeneratedMessage {
   factory WorkflowDependencyUsage({
     $core.String? nodeId,
@@ -1423,6 +1440,7 @@ class WorkflowDependencyUsage extends $pb.GeneratedMessage {
   void clearInputName() => $_clearField(2);
 }
 
+/// 动态解析的依赖，管理员只查看，不维护依赖清单。
 class WorkflowDependency extends $pb.GeneratedMessage {
   factory WorkflowDependency({
     WorkflowDependencyKind? kind,
@@ -1487,6 +1505,7 @@ class WorkflowDependency extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearKind() => $_clearField(1);
 
+  /// 节点 class_type 或 Loader 依赖文件名。
   @$pb.TagNumber(2)
   $core.String get identifier => $_getSZ(1);
   @$pb.TagNumber(2)
@@ -1510,24 +1529,33 @@ class WorkflowDependency extends $pb.GeneratedMessage {
   void clearRequired() => $_clearField(4);
 }
 
+/// 管理摘要；不下载工作流文件，不暴露对象键、存储地址或完整 API JSON。
 class WorkflowSummary extends $pb.GeneratedMessage {
   factory WorkflowSummary({
-    $core.String? workflowVersionId,
-    $1.FeatureKey? featureKey,
-    $core.String? name,
+    $core.String? workflowId,
+    $1.FunctionSummary? function,
+    $2.Model? model,
+    $core.String? originalFilename,
+    $fixnum.Int64? fileSizeBytes,
     WorkflowStatus? status,
     WorkflowValidationStatus? validationStatus,
+    $core.bool? isDefault,
+    $core.int? sortOrder,
     $fixnum.Int64? enabledAt,
     $core.String? createdBy,
     $fixnum.Int64? createdAt,
     $fixnum.Int64? updatedAt,
   }) {
     final result = create();
-    if (workflowVersionId != null) result.workflowVersionId = workflowVersionId;
-    if (featureKey != null) result.featureKey = featureKey;
-    if (name != null) result.name = name;
+    if (workflowId != null) result.workflowId = workflowId;
+    if (function != null) result.function = function;
+    if (model != null) result.model = model;
+    if (originalFilename != null) result.originalFilename = originalFilename;
+    if (fileSizeBytes != null) result.fileSizeBytes = fileSizeBytes;
     if (status != null) result.status = status;
     if (validationStatus != null) result.validationStatus = validationStatus;
+    if (isDefault != null) result.isDefault = isDefault;
+    if (sortOrder != null) result.sortOrder = sortOrder;
     if (enabledAt != null) result.enabledAt = enabledAt;
     if (createdBy != null) result.createdBy = createdBy;
     if (createdAt != null) result.createdAt = createdAt;
@@ -1548,18 +1576,25 @@ class WorkflowSummary extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'WorkflowSummary',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'workflowVersionId')
-    ..aE<$1.FeatureKey>(2, _omitFieldNames ? '' : 'featureKey',
-        enumValues: $1.FeatureKey.values)
-    ..aOS(3, _omitFieldNames ? '' : 'name')
-    ..aE<WorkflowStatus>(4, _omitFieldNames ? '' : 'status',
+    ..aOS(1, _omitFieldNames ? '' : 'workflowId')
+    ..aOM<$1.FunctionSummary>(2, _omitFieldNames ? '' : 'function',
+        subBuilder: $1.FunctionSummary.create)
+    ..aOM<$2.Model>(3, _omitFieldNames ? '' : 'model',
+        subBuilder: $2.Model.create)
+    ..aOS(4, _omitFieldNames ? '' : 'originalFilename')
+    ..a<$fixnum.Int64>(
+        5, _omitFieldNames ? '' : 'fileSizeBytes', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..aE<WorkflowStatus>(6, _omitFieldNames ? '' : 'status',
         enumValues: WorkflowStatus.values)
-    ..aE<WorkflowValidationStatus>(5, _omitFieldNames ? '' : 'validationStatus',
+    ..aE<WorkflowValidationStatus>(7, _omitFieldNames ? '' : 'validationStatus',
         enumValues: WorkflowValidationStatus.values)
-    ..aInt64(6, _omitFieldNames ? '' : 'enabledAt')
-    ..aOS(7, _omitFieldNames ? '' : 'createdBy')
-    ..aInt64(8, _omitFieldNames ? '' : 'createdAt')
-    ..aInt64(9, _omitFieldNames ? '' : 'updatedAt')
+    ..aOB(8, _omitFieldNames ? '' : 'isDefault')
+    ..aI(9, _omitFieldNames ? '' : 'sortOrder')
+    ..aInt64(10, _omitFieldNames ? '' : 'enabledAt')
+    ..aOS(11, _omitFieldNames ? '' : 'createdBy')
+    ..aInt64(12, _omitFieldNames ? '' : 'createdAt')
+    ..aInt64(13, _omitFieldNames ? '' : 'updatedAt')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1581,93 +1616,142 @@ class WorkflowSummary extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<WorkflowSummary>(create);
   static WorkflowSummary? _defaultInstance;
 
+  /// 服务端将 function_id、单个零字节、model_id 依次拼接后计算 SHA-256，取小写十六进制。
   @$pb.TagNumber(1)
-  $core.String get workflowVersionId => $_getSZ(0);
+  $core.String get workflowId => $_getSZ(0);
   @$pb.TagNumber(1)
-  set workflowVersionId($core.String value) => $_setString(0, value);
+  set workflowId($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasWorkflowVersionId() => $_has(0);
+  $core.bool hasWorkflowId() => $_has(0);
   @$pb.TagNumber(1)
-  void clearWorkflowVersionId() => $_clearField(1);
+  void clearWorkflowId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $1.FeatureKey get featureKey => $_getN(1);
+  $1.FunctionSummary get function => $_getN(1);
   @$pb.TagNumber(2)
-  set featureKey($1.FeatureKey value) => $_setField(2, value);
+  set function($1.FunctionSummary value) => $_setField(2, value);
   @$pb.TagNumber(2)
-  $core.bool hasFeatureKey() => $_has(1);
+  $core.bool hasFunction() => $_has(1);
   @$pb.TagNumber(2)
-  void clearFeatureKey() => $_clearField(2);
+  void clearFunction() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $1.FunctionSummary ensureFunction() => $_ensure(1);
 
   @$pb.TagNumber(3)
-  $core.String get name => $_getSZ(2);
+  $2.Model get model => $_getN(2);
   @$pb.TagNumber(3)
-  set name($core.String value) => $_setString(2, value);
+  set model($2.Model value) => $_setField(3, value);
   @$pb.TagNumber(3)
-  $core.bool hasName() => $_has(2);
+  $core.bool hasModel() => $_has(2);
   @$pb.TagNumber(3)
-  void clearName() => $_clearField(3);
+  void clearModel() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $2.Model ensureModel() => $_ensure(2);
 
+  /// 当前上传文件的原文件名，仅用于管理展示。
   @$pb.TagNumber(4)
-  WorkflowStatus get status => $_getN(3);
+  $core.String get originalFilename => $_getSZ(3);
   @$pb.TagNumber(4)
-  set status(WorkflowStatus value) => $_setField(4, value);
+  set originalFilename($core.String value) => $_setString(3, value);
   @$pb.TagNumber(4)
-  $core.bool hasStatus() => $_has(3);
+  $core.bool hasOriginalFilename() => $_has(3);
   @$pb.TagNumber(4)
-  void clearStatus() => $_clearField(4);
+  void clearOriginalFilename() => $_clearField(4);
 
+  /// 当前 API JSON 原始字节数；JSON 使用十进制字符串。
   @$pb.TagNumber(5)
-  WorkflowValidationStatus get validationStatus => $_getN(4);
+  $fixnum.Int64 get fileSizeBytes => $_getI64(4);
   @$pb.TagNumber(5)
-  set validationStatus(WorkflowValidationStatus value) => $_setField(5, value);
+  set fileSizeBytes($fixnum.Int64 value) => $_setInt64(4, value);
   @$pb.TagNumber(5)
-  $core.bool hasValidationStatus() => $_has(4);
+  $core.bool hasFileSizeBytes() => $_has(4);
   @$pb.TagNumber(5)
-  void clearValidationStatus() => $_clearField(5);
+  void clearFileSizeBytes() => $_clearField(5);
 
   @$pb.TagNumber(6)
-  $fixnum.Int64 get enabledAt => $_getI64(5);
+  WorkflowStatus get status => $_getN(5);
   @$pb.TagNumber(6)
-  set enabledAt($fixnum.Int64 value) => $_setInt64(5, value);
+  set status(WorkflowStatus value) => $_setField(6, value);
   @$pb.TagNumber(6)
-  $core.bool hasEnabledAt() => $_has(5);
+  $core.bool hasStatus() => $_has(5);
   @$pb.TagNumber(6)
-  void clearEnabledAt() => $_clearField(6);
+  void clearStatus() => $_clearField(6);
 
   @$pb.TagNumber(7)
-  $core.String get createdBy => $_getSZ(6);
+  WorkflowValidationStatus get validationStatus => $_getN(6);
   @$pb.TagNumber(7)
-  set createdBy($core.String value) => $_setString(6, value);
+  set validationStatus(WorkflowValidationStatus value) => $_setField(7, value);
   @$pb.TagNumber(7)
-  $core.bool hasCreatedBy() => $_has(6);
+  $core.bool hasValidationStatus() => $_has(6);
   @$pb.TagNumber(7)
-  void clearCreatedBy() => $_clearField(7);
+  void clearValidationStatus() => $_clearField(7);
 
+  /// 创建时为 false；仅管理员显式指定，同一功能最多一个默认项。
   @$pb.TagNumber(8)
-  $fixnum.Int64 get createdAt => $_getI64(7);
+  $core.bool get isDefault => $_getBF(7);
   @$pb.TagNumber(8)
-  set createdAt($fixnum.Int64 value) => $_setInt64(7, value);
+  set isDefault($core.bool value) => $_setBool(7, value);
   @$pb.TagNumber(8)
-  $core.bool hasCreatedAt() => $_has(7);
+  $core.bool hasIsDefault() => $_has(7);
   @$pb.TagNumber(8)
-  void clearCreatedAt() => $_clearField(8);
+  void clearIsDefault() => $_clearField(8);
 
+  /// 同一功能内的展示顺序，较小值优先。
   @$pb.TagNumber(9)
-  $fixnum.Int64 get updatedAt => $_getI64(8);
+  $core.int get sortOrder => $_getIZ(8);
   @$pb.TagNumber(9)
-  set updatedAt($fixnum.Int64 value) => $_setInt64(8, value);
+  set sortOrder($core.int value) => $_setSignedInt32(8, value);
   @$pb.TagNumber(9)
-  $core.bool hasUpdatedAt() => $_has(8);
+  $core.bool hasSortOrder() => $_has(8);
   @$pb.TagNumber(9)
-  void clearUpdatedAt() => $_clearField(9);
+  void clearSortOrder() => $_clearField(9);
+
+  /// Unix 秒；首次试跑成功启用时间，从未启用时不提供，后续修改或试跑不覆盖。
+  @$pb.TagNumber(10)
+  $fixnum.Int64 get enabledAt => $_getI64(9);
+  @$pb.TagNumber(10)
+  set enabledAt($fixnum.Int64 value) => $_setInt64(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasEnabledAt() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearEnabledAt() => $_clearField(10);
+
+  /// 首次导入管理员 DID。
+  @$pb.TagNumber(11)
+  $core.String get createdBy => $_getSZ(10);
+  @$pb.TagNumber(11)
+  set createdBy($core.String value) => $_setString(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasCreatedBy() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearCreatedBy() => $_clearField(11);
+
+  /// Unix 秒。
+  @$pb.TagNumber(12)
+  $fixnum.Int64 get createdAt => $_getI64(11);
+  @$pb.TagNumber(12)
+  set createdAt($fixnum.Int64 value) => $_setInt64(11, value);
+  @$pb.TagNumber(12)
+  $core.bool hasCreatedAt() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearCreatedAt() => $_clearField(12);
+
+  /// Unix 秒。
+  @$pb.TagNumber(13)
+  $fixnum.Int64 get updatedAt => $_getI64(12);
+  @$pb.TagNumber(13)
+  set updatedAt($fixnum.Int64 value) => $_setInt64(12, value);
+  @$pb.TagNumber(13)
+  $core.bool hasUpdatedAt() => $_has(12);
+  @$pb.TagNumber(13)
+  void clearUpdatedAt() => $_clearField(13);
 }
 
+/// 管理详情；节点和依赖从当前文件动态解析，不返回完整文件或历史对象列表。
 class WorkflowDetail extends $pb.GeneratedMessage {
   factory WorkflowDetail({
     WorkflowSummary? summary,
     $core.String? description,
-    $core.String? apiJson,
     WorkflowExecutionConfig? config,
     $core.Iterable<WorkflowNode>? nodes,
     $core.Iterable<WorkflowDependency>? dependencies,
@@ -1677,7 +1761,6 @@ class WorkflowDetail extends $pb.GeneratedMessage {
     final result = create();
     if (summary != null) result.summary = summary;
     if (description != null) result.description = description;
-    if (apiJson != null) result.apiJson = apiJson;
     if (config != null) result.config = config;
     if (nodes != null) result.nodes.addAll(nodes);
     if (dependencies != null) result.dependencies.addAll(dependencies);
@@ -1703,16 +1786,15 @@ class WorkflowDetail extends $pb.GeneratedMessage {
     ..aOM<WorkflowSummary>(1, _omitFieldNames ? '' : 'summary',
         subBuilder: WorkflowSummary.create)
     ..aOS(2, _omitFieldNames ? '' : 'description')
-    ..aOS(3, _omitFieldNames ? '' : 'apiJson')
-    ..aOM<WorkflowExecutionConfig>(4, _omitFieldNames ? '' : 'config',
+    ..aOM<WorkflowExecutionConfig>(3, _omitFieldNames ? '' : 'config',
         subBuilder: WorkflowExecutionConfig.create)
-    ..pPM<WorkflowNode>(5, _omitFieldNames ? '' : 'nodes',
+    ..pPM<WorkflowNode>(4, _omitFieldNames ? '' : 'nodes',
         subBuilder: WorkflowNode.create)
-    ..pPM<WorkflowDependency>(6, _omitFieldNames ? '' : 'dependencies',
+    ..pPM<WorkflowDependency>(5, _omitFieldNames ? '' : 'dependencies',
         subBuilder: WorkflowDependency.create)
-    ..pPM<WorkflowIssue>(7, _omitFieldNames ? '' : 'validationIssues',
+    ..pPM<WorkflowIssue>(6, _omitFieldNames ? '' : 'validationIssues',
         subBuilder: WorkflowIssue.create)
-    ..aInt64(8, _omitFieldNames ? '' : 'validatedAt')
+    ..aInt64(7, _omitFieldNames ? '' : 'validatedAt')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1745,6 +1827,7 @@ class WorkflowDetail extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   WorkflowSummary ensureSummary() => $_ensure(0);
 
+  /// 管理员自由编辑的用户说明，按安全 Markdown 渲染。
   @$pb.TagNumber(2)
   $core.String get description => $_getSZ(1);
   @$pb.TagNumber(2)
@@ -1754,199 +1837,253 @@ class WorkflowDetail extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearDescription() => $_clearField(2);
 
+  /// 尚未配置时不提供。
   @$pb.TagNumber(3)
-  $core.String get apiJson => $_getSZ(2);
+  WorkflowExecutionConfig get config => $_getN(2);
   @$pb.TagNumber(3)
-  set apiJson($core.String value) => $_setString(2, value);
+  set config(WorkflowExecutionConfig value) => $_setField(3, value);
   @$pb.TagNumber(3)
-  $core.bool hasApiJson() => $_has(2);
+  $core.bool hasConfig() => $_has(2);
   @$pb.TagNumber(3)
-  void clearApiJson() => $_clearField(3);
+  void clearConfig() => $_clearField(3);
+  @$pb.TagNumber(3)
+  WorkflowExecutionConfig ensureConfig() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  WorkflowExecutionConfig get config => $_getN(3);
-  @$pb.TagNumber(4)
-  set config(WorkflowExecutionConfig value) => $_setField(4, value);
-  @$pb.TagNumber(4)
-  $core.bool hasConfig() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearConfig() => $_clearField(4);
-  @$pb.TagNumber(4)
-  WorkflowExecutionConfig ensureConfig() => $_ensure(3);
+  $pb.PbList<WorkflowNode> get nodes => $_getList(3);
 
   @$pb.TagNumber(5)
-  $pb.PbList<WorkflowNode> get nodes => $_getList(4);
+  $pb.PbList<WorkflowDependency> get dependencies => $_getList(4);
 
   @$pb.TagNumber(6)
-  $pb.PbList<WorkflowDependency> get dependencies => $_getList(5);
+  $pb.PbList<WorkflowIssue> get validationIssues => $_getList(5);
 
+  /// Unix 秒；尚未校验时不提供。
   @$pb.TagNumber(7)
-  $pb.PbList<WorkflowIssue> get validationIssues => $_getList(6);
-
-  @$pb.TagNumber(8)
-  $fixnum.Int64 get validatedAt => $_getI64(7);
-  @$pb.TagNumber(8)
-  set validatedAt($fixnum.Int64 value) => $_setInt64(7, value);
-  @$pb.TagNumber(8)
-  $core.bool hasValidatedAt() => $_has(7);
-  @$pb.TagNumber(8)
-  void clearValidatedAt() => $_clearField(8);
+  $fixnum.Int64 get validatedAt => $_getI64(6);
+  @$pb.TagNumber(7)
+  set validatedAt($fixnum.Int64 value) => $_setInt64(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasValidatedAt() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearValidatedAt() => $_clearField(7);
 }
 
-class ImportWorkflowReq extends $pb.GeneratedMessage {
-  factory ImportWorkflowReq({
-    $1.FeatureKey? featureKey,
-    $core.String? name,
-    $core.String? apiJson,
+/// AUTH_SUPERADMIN 的 POST /api/v1/workflow_manage/import 使用的 metadata。
+/// 自定义 multipart HTTP 接口，不是 RPC。第一项 metadata 为 application/json、
+/// 不携带 filename，仅接受 lowerCamelCase（functionId/modelId/description）；
+/// 第二项 workflow 为完整 UTF-8 API JSON .json 文件，非空，默认上限 10 MiB。
+/// 不接受编辑器 Workflow JSON；组合已存在时返回 Aborted，不覆盖原工作流。
+class WorkflowImportMetadata extends $pb.GeneratedMessage {
+  factory WorkflowImportMetadata({
+    $core.String? functionId,
+    $core.String? modelId,
     $core.String? description,
   }) {
     final result = create();
-    if (featureKey != null) result.featureKey = featureKey;
-    if (name != null) result.name = name;
-    if (apiJson != null) result.apiJson = apiJson;
+    if (functionId != null) result.functionId = functionId;
+    if (modelId != null) result.modelId = modelId;
     if (description != null) result.description = description;
     return result;
   }
 
-  ImportWorkflowReq._();
+  WorkflowImportMetadata._();
 
-  factory ImportWorkflowReq.fromBuffer($core.List<$core.int> data,
+  factory WorkflowImportMetadata.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ImportWorkflowReq.fromJson($core.String json,
+  factory WorkflowImportMetadata.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ImportWorkflowReq',
+      _omitMessageNames ? '' : 'WorkflowImportMetadata',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
-    ..aE<$1.FeatureKey>(1, _omitFieldNames ? '' : 'featureKey',
-        enumValues: $1.FeatureKey.values)
-    ..aOS(2, _omitFieldNames ? '' : 'name')
-    ..aOS(3, _omitFieldNames ? '' : 'apiJson')
-    ..aOS(4, _omitFieldNames ? '' : 'description')
+    ..aOS(1, _omitFieldNames ? '' : 'functionId')
+    ..aOS(2, _omitFieldNames ? '' : 'modelId')
+    ..aOS(3, _omitFieldNames ? '' : 'description')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ImportWorkflowReq clone() => deepCopy();
+  WorkflowImportMetadata clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ImportWorkflowReq copyWith(void Function(ImportWorkflowReq) updates) =>
-      super.copyWith((message) => updates(message as ImportWorkflowReq))
-          as ImportWorkflowReq;
+  WorkflowImportMetadata copyWith(
+          void Function(WorkflowImportMetadata) updates) =>
+      super.copyWith((message) => updates(message as WorkflowImportMetadata))
+          as WorkflowImportMetadata;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ImportWorkflowReq create() => ImportWorkflowReq._();
+  static WorkflowImportMetadata create() => WorkflowImportMetadata._();
   @$core.override
-  ImportWorkflowReq createEmptyInstance() => create();
+  WorkflowImportMetadata createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ImportWorkflowReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ImportWorkflowReq>(create);
-  static ImportWorkflowReq? _defaultInstance;
+  static WorkflowImportMetadata getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<WorkflowImportMetadata>(create);
+  static WorkflowImportMetadata? _defaultInstance;
 
+  /// 来自 Function.List 的 video.img2vid 或 video.txt2vid。
   @$pb.TagNumber(1)
-  $1.FeatureKey get featureKey => $_getN(0);
+  $core.String get functionId => $_getSZ(0);
   @$pb.TagNumber(1)
-  set featureKey($1.FeatureKey value) => $_setField(1, value);
+  set functionId($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasFeatureKey() => $_has(0);
+  $core.bool hasFunctionId() => $_has(0);
   @$pb.TagNumber(1)
-  void clearFeatureKey() => $_clearField(1);
+  void clearFunctionId() => $_clearField(1);
 
+  /// 已创建且尚未关联同一功能工作流的模型 ID。
   @$pb.TagNumber(2)
-  $core.String get name => $_getSZ(1);
+  $core.String get modelId => $_getSZ(1);
   @$pb.TagNumber(2)
-  set name($core.String value) => $_setString(1, value);
+  set modelId($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasName() => $_has(1);
+  $core.bool hasModelId() => $_has(1);
   @$pb.TagNumber(2)
-  void clearName() => $_clearField(2);
+  void clearModelId() => $_clearField(2);
 
+  /// 不传表示没有说明；不从工作流 Note 自动提取。
   @$pb.TagNumber(3)
-  $core.String get apiJson => $_getSZ(2);
+  $core.String get description => $_getSZ(2);
   @$pb.TagNumber(3)
-  set apiJson($core.String value) => $_setString(2, value);
+  set description($core.String value) => $_setString(2, value);
   @$pb.TagNumber(3)
-  $core.bool hasApiJson() => $_has(2);
+  $core.bool hasDescription() => $_has(2);
   @$pb.TagNumber(3)
-  void clearApiJson() => $_clearField(3);
-
-  @$pb.TagNumber(4)
-  $core.String get description => $_getSZ(3);
-  @$pb.TagNumber(4)
-  set description($core.String value) => $_setString(3, value);
-  @$pb.TagNumber(4)
-  $core.bool hasDescription() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearDescription() => $_clearField(4);
+  void clearDescription() => $_clearField(3);
 }
 
-class ImportWorkflowResp extends $pb.GeneratedMessage {
-  factory ImportWorkflowResp({
-    $core.String? workflowVersionId,
+/// AUTH_SUPERADMIN 的 POST /api/v1/workflow_manage/replace_file 使用的 metadata。
+/// 第一项 metadata 为 application/json、无 filename，仅接受 lowerCamelCase workflowId；
+/// 第二项 workflow 的文件要求与 Import 相同。替换后保留说明和配置，回到草稿并重置校验。
+/// 旧文件保留；存在未结束任务时拒绝替换，返回 Aborted。
+class WorkflowReplaceFileMetadata extends $pb.GeneratedMessage {
+  factory WorkflowReplaceFileMetadata({
+    $core.String? workflowId,
   }) {
     final result = create();
-    if (workflowVersionId != null) result.workflowVersionId = workflowVersionId;
+    if (workflowId != null) result.workflowId = workflowId;
     return result;
   }
 
-  ImportWorkflowResp._();
+  WorkflowReplaceFileMetadata._();
 
-  factory ImportWorkflowResp.fromBuffer($core.List<$core.int> data,
+  factory WorkflowReplaceFileMetadata.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ImportWorkflowResp.fromJson($core.String json,
+  factory WorkflowReplaceFileMetadata.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ImportWorkflowResp',
+      _omitMessageNames ? '' : 'WorkflowReplaceFileMetadata',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'workflowVersionId')
+    ..aOS(1, _omitFieldNames ? '' : 'workflowId')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ImportWorkflowResp clone() => deepCopy();
+  WorkflowReplaceFileMetadata clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ImportWorkflowResp copyWith(void Function(ImportWorkflowResp) updates) =>
-      super.copyWith((message) => updates(message as ImportWorkflowResp))
-          as ImportWorkflowResp;
+  WorkflowReplaceFileMetadata copyWith(
+          void Function(WorkflowReplaceFileMetadata) updates) =>
+      super.copyWith(
+              (message) => updates(message as WorkflowReplaceFileMetadata))
+          as WorkflowReplaceFileMetadata;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ImportWorkflowResp create() => ImportWorkflowResp._();
+  static WorkflowReplaceFileMetadata create() =>
+      WorkflowReplaceFileMetadata._();
   @$core.override
-  ImportWorkflowResp createEmptyInstance() => create();
+  WorkflowReplaceFileMetadata createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ImportWorkflowResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ImportWorkflowResp>(create);
-  static ImportWorkflowResp? _defaultInstance;
+  static WorkflowReplaceFileMetadata getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<WorkflowReplaceFileMetadata>(create);
+  static WorkflowReplaceFileMetadata? _defaultInstance;
 
+  /// 已导入的工作流 ID，不修改其功能与模型归属。
   @$pb.TagNumber(1)
-  $core.String get workflowVersionId => $_getSZ(0);
+  $core.String get workflowId => $_getSZ(0);
   @$pb.TagNumber(1)
-  set workflowVersionId($core.String value) => $_setString(0, value);
+  set workflowId($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasWorkflowVersionId() => $_has(0);
+  $core.bool hasWorkflowId() => $_has(0);
   @$pb.TagNumber(1)
-  void clearWorkflowVersionId() => $_clearField(1);
+  void clearWorkflowId() => $_clearField(1);
 }
 
+/// 两个工作流 multipart 接口成功响应包装中的 data；只返回稳定工作流 ID。
+class WorkflowFileMutationResp extends $pb.GeneratedMessage {
+  factory WorkflowFileMutationResp({
+    $core.String? workflowId,
+  }) {
+    final result = create();
+    if (workflowId != null) result.workflowId = workflowId;
+    return result;
+  }
+
+  WorkflowFileMutationResp._();
+
+  factory WorkflowFileMutationResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory WorkflowFileMutationResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'WorkflowFileMutationResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'workflowId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  WorkflowFileMutationResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  WorkflowFileMutationResp copyWith(
+          void Function(WorkflowFileMutationResp) updates) =>
+      super.copyWith((message) => updates(message as WorkflowFileMutationResp))
+          as WorkflowFileMutationResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static WorkflowFileMutationResp create() => WorkflowFileMutationResp._();
+  @$core.override
+  WorkflowFileMutationResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static WorkflowFileMutationResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<WorkflowFileMutationResp>(create);
+  static WorkflowFileMutationResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get workflowId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set workflowId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasWorkflowId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearWorkflowId() => $_clearField(1);
+}
+
+/// 更新说明或完整执行配置，至少提供一项；不接受工作流 JSON 字符串。
 class UpdateWorkflowReq extends $pb.GeneratedMessage {
   factory UpdateWorkflowReq({
-    $core.String? workflowVersionId,
-    $core.String? apiJson,
+    $core.String? workflowId,
+    $core.String? description,
     WorkflowExecutionConfig? config,
   }) {
     final result = create();
-    if (workflowVersionId != null) result.workflowVersionId = workflowVersionId;
-    if (apiJson != null) result.apiJson = apiJson;
+    if (workflowId != null) result.workflowId = workflowId;
+    if (description != null) result.description = description;
     if (config != null) result.config = config;
     return result;
   }
@@ -1964,8 +2101,8 @@ class UpdateWorkflowReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'UpdateWorkflowReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'workflowVersionId')
-    ..aOS(2, _omitFieldNames ? '' : 'apiJson')
+    ..aOS(1, _omitFieldNames ? '' : 'workflowId')
+    ..aOS(2, _omitFieldNames ? '' : 'description')
     ..aOM<WorkflowExecutionConfig>(3, _omitFieldNames ? '' : 'config',
         subBuilder: WorkflowExecutionConfig.create)
     ..hasRequiredFields = false;
@@ -1990,24 +2127,25 @@ class UpdateWorkflowReq extends $pb.GeneratedMessage {
   static UpdateWorkflowReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get workflowVersionId => $_getSZ(0);
+  $core.String get workflowId => $_getSZ(0);
   @$pb.TagNumber(1)
-  set workflowVersionId($core.String value) => $_setString(0, value);
+  set workflowId($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasWorkflowVersionId() => $_has(0);
+  $core.bool hasWorkflowId() => $_has(0);
   @$pb.TagNumber(1)
-  void clearWorkflowVersionId() => $_clearField(1);
+  void clearWorkflowId() => $_clearField(1);
 
-  /// api_json 与 config 至少提交一项；只允许修改草稿。
+  /// 不传表示不修改；显式空字符串表示清空，仅修改说明不改变状态或校验结果。
   @$pb.TagNumber(2)
-  $core.String get apiJson => $_getSZ(1);
+  $core.String get description => $_getSZ(1);
   @$pb.TagNumber(2)
-  set apiJson($core.String value) => $_setString(1, value);
+  set description($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasApiJson() => $_has(1);
+  $core.bool hasDescription() => $_has(1);
   @$pb.TagNumber(2)
-  void clearApiJson() => $_clearField(2);
+  void clearDescription() => $_clearField(2);
 
+  /// 提交即替换完整配置并回到 DRAFT / unvalidated；有未结束任务时返回 Aborted。
   @$pb.TagNumber(3)
   WorkflowExecutionConfig get config => $_getN(2);
   @$pb.TagNumber(3)
@@ -2020,6 +2158,7 @@ class UpdateWorkflowReq extends $pb.GeneratedMessage {
   WorkflowExecutionConfig ensureConfig() => $_ensure(2);
 }
 
+/// 返回更新后的管理详情。
 class UpdateWorkflowResp extends $pb.GeneratedMessage {
   factory UpdateWorkflowResp({
     WorkflowDetail? workflow,
@@ -2077,142 +2216,13 @@ class UpdateWorkflowResp extends $pb.GeneratedMessage {
   WorkflowDetail ensureWorkflow() => $_ensure(0);
 }
 
-class UpdateWorkflowDescriptionReq extends $pb.GeneratedMessage {
-  factory UpdateWorkflowDescriptionReq({
-    $core.String? workflowVersionId,
-    $core.String? description,
-  }) {
-    final result = create();
-    if (workflowVersionId != null) result.workflowVersionId = workflowVersionId;
-    if (description != null) result.description = description;
-    return result;
-  }
-
-  UpdateWorkflowDescriptionReq._();
-
-  factory UpdateWorkflowDescriptionReq.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory UpdateWorkflowDescriptionReq.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'UpdateWorkflowDescriptionReq',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'workflowVersionId')
-    ..aOS(2, _omitFieldNames ? '' : 'description')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UpdateWorkflowDescriptionReq clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UpdateWorkflowDescriptionReq copyWith(
-          void Function(UpdateWorkflowDescriptionReq) updates) =>
-      super.copyWith(
-              (message) => updates(message as UpdateWorkflowDescriptionReq))
-          as UpdateWorkflowDescriptionReq;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static UpdateWorkflowDescriptionReq create() =>
-      UpdateWorkflowDescriptionReq._();
-  @$core.override
-  UpdateWorkflowDescriptionReq createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static UpdateWorkflowDescriptionReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<UpdateWorkflowDescriptionReq>(create);
-  static UpdateWorkflowDescriptionReq? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get workflowVersionId => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set workflowVersionId($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasWorkflowVersionId() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearWorkflowVersionId() => $_clearField(1);
-
-  /// 必须显式提交；空字符串表示清空说明。
-  @$pb.TagNumber(2)
-  $core.String get description => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set description($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasDescription() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearDescription() => $_clearField(2);
-}
-
-class UpdateWorkflowDescriptionResp extends $pb.GeneratedMessage {
-  factory UpdateWorkflowDescriptionResp({
-    WorkflowDetail? workflow,
-  }) {
-    final result = create();
-    if (workflow != null) result.workflow = workflow;
-    return result;
-  }
-
-  UpdateWorkflowDescriptionResp._();
-
-  factory UpdateWorkflowDescriptionResp.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory UpdateWorkflowDescriptionResp.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'UpdateWorkflowDescriptionResp',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
-      createEmptyInstance: create)
-    ..aOM<WorkflowDetail>(1, _omitFieldNames ? '' : 'workflow',
-        subBuilder: WorkflowDetail.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UpdateWorkflowDescriptionResp clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UpdateWorkflowDescriptionResp copyWith(
-          void Function(UpdateWorkflowDescriptionResp) updates) =>
-      super.copyWith(
-              (message) => updates(message as UpdateWorkflowDescriptionResp))
-          as UpdateWorkflowDescriptionResp;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static UpdateWorkflowDescriptionResp create() =>
-      UpdateWorkflowDescriptionResp._();
-  @$core.override
-  UpdateWorkflowDescriptionResp createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static UpdateWorkflowDescriptionResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<UpdateWorkflowDescriptionResp>(create);
-  static UpdateWorkflowDescriptionResp? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  WorkflowDetail get workflow => $_getN(0);
-  @$pb.TagNumber(1)
-  set workflow(WorkflowDetail value) => $_setField(1, value);
-  @$pb.TagNumber(1)
-  $core.bool hasWorkflow() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearWorkflow() => $_clearField(1);
-  @$pb.TagNumber(1)
-  WorkflowDetail ensureWorkflow() => $_ensure(0);
-}
-
+/// 根据工作流 ID 查询管理员详情。
 class GetWorkflowReq extends $pb.GeneratedMessage {
   factory GetWorkflowReq({
-    $core.String? workflowVersionId,
+    $core.String? workflowId,
   }) {
     final result = create();
-    if (workflowVersionId != null) result.workflowVersionId = workflowVersionId;
+    if (workflowId != null) result.workflowId = workflowId;
     return result;
   }
 
@@ -2229,7 +2239,7 @@ class GetWorkflowReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'GetWorkflowReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'workflowVersionId')
+    ..aOS(1, _omitFieldNames ? '' : 'workflowId')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2252,15 +2262,16 @@ class GetWorkflowReq extends $pb.GeneratedMessage {
   static GetWorkflowReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get workflowVersionId => $_getSZ(0);
+  $core.String get workflowId => $_getSZ(0);
   @$pb.TagNumber(1)
-  set workflowVersionId($core.String value) => $_setString(0, value);
+  set workflowId($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasWorkflowVersionId() => $_has(0);
+  $core.bool hasWorkflowId() => $_has(0);
   @$pb.TagNumber(1)
-  void clearWorkflowVersionId() => $_clearField(1);
+  void clearWorkflowId() => $_clearField(1);
 }
 
+/// 当前文件不可用时返回 Unavailable；对象不存在或 JSON 损坏时返回 FailedPrecondition。
 class GetWorkflowResp extends $pb.GeneratedMessage {
   factory GetWorkflowResp({
     WorkflowDetail? workflow,
@@ -2318,15 +2329,16 @@ class GetWorkflowResp extends $pb.GeneratedMessage {
   WorkflowDetail ensureWorkflow() => $_ensure(0);
 }
 
+/// 分页查询工作流摘要；不传过滤字段表示不过滤。
 class ListWorkflowsReq extends $pb.GeneratedMessage {
   factory ListWorkflowsReq({
-    $2.Pagination? pagination,
-    $1.FeatureKey? featureKey,
+    $3.Pagination? pagination,
+    $core.String? functionId,
     WorkflowStatus? status,
   }) {
     final result = create();
     if (pagination != null) result.pagination = pagination;
-    if (featureKey != null) result.featureKey = featureKey;
+    if (functionId != null) result.functionId = functionId;
     if (status != null) result.status = status;
     return result;
   }
@@ -2344,10 +2356,9 @@ class ListWorkflowsReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'ListWorkflowsReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
-    ..aOM<$2.Pagination>(1, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $2.Pagination.create)
-    ..aE<$1.FeatureKey>(2, _omitFieldNames ? '' : 'featureKey',
-        enumValues: $1.FeatureKey.values)
+    ..aOM<$3.Pagination>(1, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $3.Pagination.create)
+    ..aOS(2, _omitFieldNames ? '' : 'functionId')
     ..aE<WorkflowStatus>(3, _omitFieldNames ? '' : 'status',
         enumValues: WorkflowStatus.values)
     ..hasRequiredFields = false;
@@ -2372,24 +2383,25 @@ class ListWorkflowsReq extends $pb.GeneratedMessage {
   static ListWorkflowsReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.Pagination get pagination => $_getN(0);
+  $3.Pagination get pagination => $_getN(0);
   @$pb.TagNumber(1)
-  set pagination($2.Pagination value) => $_setField(1, value);
+  set pagination($3.Pagination value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasPagination() => $_has(0);
   @$pb.TagNumber(1)
   void clearPagination() => $_clearField(1);
   @$pb.TagNumber(1)
-  $2.Pagination ensurePagination() => $_ensure(0);
+  $3.Pagination ensurePagination() => $_ensure(0);
 
+  /// 来自 Function.List 的固定功能 ID。
   @$pb.TagNumber(2)
-  $1.FeatureKey get featureKey => $_getN(1);
+  $core.String get functionId => $_getSZ(1);
   @$pb.TagNumber(2)
-  set featureKey($1.FeatureKey value) => $_setField(2, value);
+  set functionId($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasFeatureKey() => $_has(1);
+  $core.bool hasFunctionId() => $_has(1);
   @$pb.TagNumber(2)
-  void clearFeatureKey() => $_clearField(2);
+  void clearFunctionId() => $_clearField(2);
 
   @$pb.TagNumber(3)
   WorkflowStatus get status => $_getN(2);
@@ -2401,6 +2413,7 @@ class ListWorkflowsReq extends $pb.GeneratedMessage {
   void clearStatus() => $_clearField(3);
 }
 
+/// 返回数据库摘要，不触发文件下载。
 class ListWorkflowsResp extends $pb.GeneratedMessage {
   factory ListWorkflowsResp({
     $core.int? total,
@@ -2462,12 +2475,13 @@ class ListWorkflowsResp extends $pb.GeneratedMessage {
   $pb.PbList<WorkflowSummary> get workflows => $_getList(1);
 }
 
+/// 静态校验当前文件、绑定、参数和环境依赖，不执行 GPU。
 class ValidateWorkflowReq extends $pb.GeneratedMessage {
   factory ValidateWorkflowReq({
-    $core.String? workflowVersionId,
+    $core.String? workflowId,
   }) {
     final result = create();
-    if (workflowVersionId != null) result.workflowVersionId = workflowVersionId;
+    if (workflowId != null) result.workflowId = workflowId;
     return result;
   }
 
@@ -2484,7 +2498,7 @@ class ValidateWorkflowReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'ValidateWorkflowReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'workflowVersionId')
+    ..aOS(1, _omitFieldNames ? '' : 'workflowId')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2507,15 +2521,16 @@ class ValidateWorkflowReq extends $pb.GeneratedMessage {
   static ValidateWorkflowReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get workflowVersionId => $_getSZ(0);
+  $core.String get workflowId => $_getSZ(0);
   @$pb.TagNumber(1)
-  set workflowVersionId($core.String value) => $_setString(0, value);
+  set workflowId($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasWorkflowVersionId() => $_has(0);
+  $core.bool hasWorkflowId() => $_has(0);
   @$pb.TagNumber(1)
-  void clearWorkflowVersionId() => $_clearField(1);
+  void clearWorkflowId() => $_clearField(1);
 }
 
+/// 最近一次静态校验结果；只有 WARNING 时仍为 PASSED。
 class ValidateWorkflowResp extends $pb.GeneratedMessage {
   factory ValidateWorkflowResp({
     WorkflowValidationStatus? status,
@@ -2580,6 +2595,7 @@ class ValidateWorkflowResp extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $pb.PbList<WorkflowIssue> get issues => $_getList(1);
 
+  /// Unix 秒。
   @$pb.TagNumber(3)
   $fixnum.Int64 get validatedAt => $_getI64(2);
   @$pb.TagNumber(3)
@@ -2590,16 +2606,17 @@ class ValidateWorkflowResp extends $pb.GeneratedMessage {
   void clearValidatedAt() => $_clearField(3);
 }
 
+/// 受理管理试跑；允许最近校验通过的 DRAFT 或 ENABLED，同一工作流不能并行试跑。
 class TestWorkflowReq extends $pb.GeneratedMessage {
   factory TestWorkflowReq({
     $core.String? requestId,
-    $core.String? workflowVersionId,
+    $core.String? workflowId,
     $core.String? prompt,
     $core.String? inputAssetId,
   }) {
     final result = create();
     if (requestId != null) result.requestId = requestId;
-    if (workflowVersionId != null) result.workflowVersionId = workflowVersionId;
+    if (workflowId != null) result.workflowId = workflowId;
     if (prompt != null) result.prompt = prompt;
     if (inputAssetId != null) result.inputAssetId = inputAssetId;
     return result;
@@ -2619,7 +2636,7 @@ class TestWorkflowReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'requestId')
-    ..aOS(2, _omitFieldNames ? '' : 'workflowVersionId')
+    ..aOS(2, _omitFieldNames ? '' : 'workflowId')
     ..aOS(3, _omitFieldNames ? '' : 'prompt')
     ..aOS(4, _omitFieldNames ? '' : 'inputAssetId')
     ..hasRequiredFields = false;
@@ -2643,6 +2660,7 @@ class TestWorkflowReq extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<TestWorkflowReq>(create);
   static TestWorkflowReq? _defaultInstance;
 
+  /// 管理员范围内的幂等键；同一次试跑重发复用，新试跑使用新值。
   @$pb.TagNumber(1)
   $core.String get requestId => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -2652,15 +2670,17 @@ class TestWorkflowReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearRequestId() => $_clearField(1);
 
+  /// 最近一次静态校验必须通过，无需预先启用。
   @$pb.TagNumber(2)
-  $core.String get workflowVersionId => $_getSZ(1);
+  $core.String get workflowId => $_getSZ(1);
   @$pb.TagNumber(2)
-  set workflowVersionId($core.String value) => $_setString(1, value);
+  set workflowId($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasWorkflowVersionId() => $_has(1);
+  $core.bool hasWorkflowId() => $_has(1);
   @$pb.TagNumber(2)
-  void clearWorkflowVersionId() => $_clearField(2);
+  void clearWorkflowId() => $_clearField(2);
 
+  /// 本次真实试跑的正向提示词，按工作流 Unicode 码点上限校验。
   @$pb.TagNumber(3)
   $core.String get prompt => $_getSZ(2);
   @$pb.TagNumber(3)
@@ -2670,7 +2690,7 @@ class TestWorkflowReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearPrompt() => $_clearField(3);
 
-  /// 图生视频必须提交管理员本人的图片资产；文生视频必须省略。
+  /// 图生视频必须提交管理员本人的可用 JPEG/PNG 资产；文生视频必须省略。
   /// 分辨率、时长和帧率统一使用工作流默认值或固定值。
   @$pb.TagNumber(4)
   $core.String get inputAssetId => $_getSZ(3);
@@ -2682,6 +2702,7 @@ class TestWorkflowReq extends $pb.GeneratedMessage {
   void clearInputAssetId() => $_clearField(4);
 }
 
+/// 返回受理的试跑任务 ID；试跑成功保存并结算后才自动启用草稿，不支持恢复保存。
 class TestWorkflowResp extends $pb.GeneratedMessage {
   factory TestWorkflowResp({
     $core.String? taskId,
@@ -2736,14 +2757,15 @@ class TestWorkflowResp extends $pb.GeneratedMessage {
   void clearTaskId() => $_clearField(1);
 }
 
+/// 查询指定工作流的管理试跑，不包含普通任务。
 class ListWorkflowTestsReq extends $pb.GeneratedMessage {
   factory ListWorkflowTestsReq({
-    $2.Pagination? pagination,
-    $core.String? workflowVersionId,
+    $3.Pagination? pagination,
+    $core.String? workflowId,
   }) {
     final result = create();
     if (pagination != null) result.pagination = pagination;
-    if (workflowVersionId != null) result.workflowVersionId = workflowVersionId;
+    if (workflowId != null) result.workflowId = workflowId;
     return result;
   }
 
@@ -2760,9 +2782,9 @@ class ListWorkflowTestsReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'ListWorkflowTestsReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
-    ..aOM<$2.Pagination>(1, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $2.Pagination.create)
-    ..aOS(2, _omitFieldNames ? '' : 'workflowVersionId')
+    ..aOM<$3.Pagination>(1, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $3.Pagination.create)
+    ..aOS(2, _omitFieldNames ? '' : 'workflowId')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2785,30 +2807,31 @@ class ListWorkflowTestsReq extends $pb.GeneratedMessage {
   static ListWorkflowTestsReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.Pagination get pagination => $_getN(0);
+  $3.Pagination get pagination => $_getN(0);
   @$pb.TagNumber(1)
-  set pagination($2.Pagination value) => $_setField(1, value);
+  set pagination($3.Pagination value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasPagination() => $_has(0);
   @$pb.TagNumber(1)
   void clearPagination() => $_clearField(1);
   @$pb.TagNumber(1)
-  $2.Pagination ensurePagination() => $_ensure(0);
+  $3.Pagination ensurePagination() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $core.String get workflowVersionId => $_getSZ(1);
+  $core.String get workflowId => $_getSZ(1);
   @$pb.TagNumber(2)
-  set workflowVersionId($core.String value) => $_setString(1, value);
+  set workflowId($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasWorkflowVersionId() => $_has(1);
+  $core.bool hasWorkflowId() => $_has(1);
   @$pb.TagNumber(2)
-  void clearWorkflowVersionId() => $_clearField(2);
+  void clearWorkflowId() => $_clearField(2);
 }
 
+/// 返回该工作流的管理试跑总数及分页，不区分管理员归属。
 class ListWorkflowTestsResp extends $pb.GeneratedMessage {
   factory ListWorkflowTestsResp({
     $core.int? total,
-    $core.Iterable<$3.TaskSummary>? tasks,
+    $core.Iterable<$4.TaskSummary>? tasks,
   }) {
     final result = create();
     if (total != null) result.total = total;
@@ -2830,8 +2853,8 @@ class ListWorkflowTestsResp extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
     ..aI(1, _omitFieldNames ? '' : 'total')
-    ..pPM<$3.TaskSummary>(2, _omitFieldNames ? '' : 'tasks',
-        subBuilder: $3.TaskSummary.create)
+    ..pPM<$4.TaskSummary>(2, _omitFieldNames ? '' : 'tasks',
+        subBuilder: $4.TaskSummary.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2864,7 +2887,253 @@ class ListWorkflowTestsResp extends $pb.GeneratedMessage {
   void clearTotal() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $pb.PbList<$3.TaskSummary> get tasks => $_getList(1);
+  $pb.PbList<$4.TaskSummary> get tasks => $_getList(1);
+}
+
+/// 设置或清除默认项，不改变启用状态。
+class SetDefaultWorkflowReq extends $pb.GeneratedMessage {
+  factory SetDefaultWorkflowReq({
+    $core.String? workflowId,
+    $core.bool? isDefault,
+  }) {
+    final result = create();
+    if (workflowId != null) result.workflowId = workflowId;
+    if (isDefault != null) result.isDefault = isDefault;
+    return result;
+  }
+
+  SetDefaultWorkflowReq._();
+
+  factory SetDefaultWorkflowReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SetDefaultWorkflowReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SetDefaultWorkflowReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'workflowId')
+    ..aOB(2, _omitFieldNames ? '' : 'isDefault')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetDefaultWorkflowReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetDefaultWorkflowReq copyWith(
+          void Function(SetDefaultWorkflowReq) updates) =>
+      super.copyWith((message) => updates(message as SetDefaultWorkflowReq))
+          as SetDefaultWorkflowReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SetDefaultWorkflowReq create() => SetDefaultWorkflowReq._();
+  @$core.override
+  SetDefaultWorkflowReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static SetDefaultWorkflowReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetDefaultWorkflowReq>(create);
+  static SetDefaultWorkflowReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get workflowId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set workflowId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasWorkflowId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearWorkflowId() => $_clearField(1);
+
+  /// true 清除同功能其他默认项；false 只清除目标；必须显式提交。
+  @$pb.TagNumber(2)
+  $core.bool get isDefault => $_getBF(1);
+  @$pb.TagNumber(2)
+  set isDefault($core.bool value) => $_setBool(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasIsDefault() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearIsDefault() => $_clearField(2);
+}
+
+/// 返回默认项更新后的工作流摘要。
+class SetDefaultWorkflowResp extends $pb.GeneratedMessage {
+  factory SetDefaultWorkflowResp({
+    WorkflowSummary? workflow,
+  }) {
+    final result = create();
+    if (workflow != null) result.workflow = workflow;
+    return result;
+  }
+
+  SetDefaultWorkflowResp._();
+
+  factory SetDefaultWorkflowResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SetDefaultWorkflowResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SetDefaultWorkflowResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOM<WorkflowSummary>(1, _omitFieldNames ? '' : 'workflow',
+        subBuilder: WorkflowSummary.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetDefaultWorkflowResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetDefaultWorkflowResp copyWith(
+          void Function(SetDefaultWorkflowResp) updates) =>
+      super.copyWith((message) => updates(message as SetDefaultWorkflowResp))
+          as SetDefaultWorkflowResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SetDefaultWorkflowResp create() => SetDefaultWorkflowResp._();
+  @$core.override
+  SetDefaultWorkflowResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static SetDefaultWorkflowResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetDefaultWorkflowResp>(create);
+  static SetDefaultWorkflowResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  WorkflowSummary get workflow => $_getN(0);
+  @$pb.TagNumber(1)
+  set workflow(WorkflowSummary value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasWorkflow() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearWorkflow() => $_clearField(1);
+  @$pb.TagNumber(1)
+  WorkflowSummary ensureWorkflow() => $_ensure(0);
+}
+
+/// 更新同一功能的完整工作流展示顺序。
+class UpdateWorkflowSortOrderReq extends $pb.GeneratedMessage {
+  factory UpdateWorkflowSortOrderReq({
+    $core.String? functionId,
+    $core.Iterable<$core.String>? workflowIds,
+  }) {
+    final result = create();
+    if (functionId != null) result.functionId = functionId;
+    if (workflowIds != null) result.workflowIds.addAll(workflowIds);
+    return result;
+  }
+
+  UpdateWorkflowSortOrderReq._();
+
+  factory UpdateWorkflowSortOrderReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory UpdateWorkflowSortOrderReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UpdateWorkflowSortOrderReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'functionId')
+    ..pPS(2, _omitFieldNames ? '' : 'workflowIds')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UpdateWorkflowSortOrderReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UpdateWorkflowSortOrderReq copyWith(
+          void Function(UpdateWorkflowSortOrderReq) updates) =>
+      super.copyWith(
+              (message) => updates(message as UpdateWorkflowSortOrderReq))
+          as UpdateWorkflowSortOrderReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static UpdateWorkflowSortOrderReq create() => UpdateWorkflowSortOrderReq._();
+  @$core.override
+  UpdateWorkflowSortOrderReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static UpdateWorkflowSortOrderReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UpdateWorkflowSortOrderReq>(create);
+  static UpdateWorkflowSortOrderReq? _defaultInstance;
+
+  /// 来自 Function.List 的固定功能 ID。
+  @$pb.TagNumber(1)
+  $core.String get functionId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set functionId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasFunctionId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearFunctionId() => $_clearField(1);
+
+  /// 该功能全部工作流（含草稿），按期望顺序提交，每个 ID 恰好一次。
+  @$pb.TagNumber(2)
+  $pb.PbList<$core.String> get workflowIds => $_getList(1);
+}
+
+/// 返回调整后的完整工作流摘要列表。
+class UpdateWorkflowSortOrderResp extends $pb.GeneratedMessage {
+  factory UpdateWorkflowSortOrderResp({
+    $core.Iterable<WorkflowSummary>? workflows,
+  }) {
+    final result = create();
+    if (workflows != null) result.workflows.addAll(workflows);
+    return result;
+  }
+
+  UpdateWorkflowSortOrderResp._();
+
+  factory UpdateWorkflowSortOrderResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory UpdateWorkflowSortOrderResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UpdateWorkflowSortOrderResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..pPM<WorkflowSummary>(1, _omitFieldNames ? '' : 'workflows',
+        subBuilder: WorkflowSummary.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UpdateWorkflowSortOrderResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UpdateWorkflowSortOrderResp copyWith(
+          void Function(UpdateWorkflowSortOrderResp) updates) =>
+      super.copyWith(
+              (message) => updates(message as UpdateWorkflowSortOrderResp))
+          as UpdateWorkflowSortOrderResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static UpdateWorkflowSortOrderResp create() =>
+      UpdateWorkflowSortOrderResp._();
+  @$core.override
+  UpdateWorkflowSortOrderResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static UpdateWorkflowSortOrderResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UpdateWorkflowSortOrderResp>(create);
+  static UpdateWorkflowSortOrderResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<WorkflowSummary> get workflows => $_getList(0);
 }
 
 const $core.bool _omitFieldNames =

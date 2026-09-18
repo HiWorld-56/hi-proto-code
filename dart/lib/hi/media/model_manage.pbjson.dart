@@ -30,32 +30,42 @@ const Model$json = {
       '17': true
     },
     {
-      '1': 'name',
+      '1': 'display_name',
       '3': 2,
       '4': 1,
       '5': 9,
       '8': {},
       '9': 1,
-      '10': 'name',
+      '10': 'displayName',
+      '17': true
+    },
+    {
+      '1': 'real_name',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'realName',
       '17': true
     },
     {
       '1': 'created_at',
-      '3': 3,
-      '4': 1,
-      '5': 3,
-      '8': {},
-      '9': 2,
-      '10': 'createdAt',
-      '17': true
-    },
-    {
-      '1': 'updated_at',
       '3': 4,
       '4': 1,
       '5': 3,
       '8': {},
       '9': 3,
+      '10': 'createdAt',
+      '17': true
+    },
+    {
+      '1': 'updated_at',
+      '3': 5,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 4,
       '10': 'updatedAt',
       '17': true
     },
@@ -63,7 +73,8 @@ const Model$json = {
   '7': {},
   '8': [
     {'1': '_model_id'},
-    {'1': '_name'},
+    {'1': '_display_name'},
+    {'1': '_real_name'},
     {'1': '_created_at'},
     {'1': '_updated_at'},
   ],
@@ -71,35 +82,49 @@ const Model$json = {
 
 /// Descriptor for `Model`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List modelDescriptor = $convert.base64Decode(
-    'CgVNb2RlbBIkCghtb2RlbF9pZBgBIAEoCUIEkLUYA0gAUgdtb2RlbElkiAEBEh0KBG5hbWUYAi'
-    'ABKAlCBJC1GANIAVIEbmFtZYgBARIoCgpjcmVhdGVkX2F0GAMgASgDQgSQtRgDSAJSCWNyZWF0'
-    'ZWRBdIgBARIoCgp1cGRhdGVkX2F0GAQgASgDQgSQtRgDSANSCXVwZGF0ZWRBdIgBAToEmLUYA0'
-    'ILCglfbW9kZWxfaWRCBwoFX25hbWVCDQoLX2NyZWF0ZWRfYXRCDQoLX3VwZGF0ZWRfYXQ=');
+    'CgVNb2RlbBIkCghtb2RlbF9pZBgBIAEoCUIEkLUYA0gAUgdtb2RlbElkiAEBEiwKDGRpc3BsYX'
+    'lfbmFtZRgCIAEoCUIEkLUYA0gBUgtkaXNwbGF5TmFtZYgBARImCglyZWFsX25hbWUYAyABKAlC'
+    'BJC1GANIAlIIcmVhbE5hbWWIAQESKAoKY3JlYXRlZF9hdBgEIAEoA0IEkLUYA0gDUgljcmVhdG'
+    'VkQXSIAQESKAoKdXBkYXRlZF9hdBgFIAEoA0IEkLUYA0gEUgl1cGRhdGVkQXSIAQE6BJi1GANC'
+    'CwoJX21vZGVsX2lkQg8KDV9kaXNwbGF5X25hbWVCDAoKX3JlYWxfbmFtZUINCgtfY3JlYXRlZF'
+    '9hdEINCgtfdXBkYXRlZF9hdA==');
 
 @$core.Deprecated('Use createModelReqDescriptor instead')
 const CreateModelReq$json = {
   '1': 'CreateModelReq',
   '2': [
     {
-      '1': 'name',
+      '1': 'display_name',
       '3': 1,
       '4': 1,
       '5': 9,
       '8': {},
       '9': 0,
-      '10': 'name',
+      '10': 'displayName',
+      '17': true
+    },
+    {
+      '1': 'real_name',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'realName',
       '17': true
     },
   ],
   '8': [
-    {'1': '_name'},
+    {'1': '_display_name'},
+    {'1': '_real_name'},
   ],
 };
 
 /// Descriptor for `CreateModelReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List createModelReqDescriptor = $convert.base64Decode(
-    'Cg5DcmVhdGVNb2RlbFJlcRIjCgRuYW1lGAEgASgJQgq6SAfIAQFyAhABSABSBG5hbWWIAQFCBw'
-    'oFX25hbWU=');
+    'Cg5DcmVhdGVNb2RlbFJlcRIyCgxkaXNwbGF5X25hbWUYASABKAlCCrpIB8gBAXICEAFIAFILZG'
+    'lzcGxheU5hbWWIAQESLAoJcmVhbF9uYW1lGAIgASgJQgq6SAfIAQFyAhABSAFSCHJlYWxOYW1l'
+    'iAEBQg8KDV9kaXNwbGF5X25hbWVCDAoKX3JlYWxfbmFtZQ==');
 
 @$core.Deprecated('Use createModelRespDescriptor instead')
 const CreateModelResp$json = {
@@ -138,27 +163,27 @@ const UpdateModelReq$json = {
       '17': true
     },
     {
-      '1': 'name',
+      '1': 'display_name',
       '3': 2,
       '4': 1,
       '5': 9,
       '8': {},
       '9': 1,
-      '10': 'name',
+      '10': 'displayName',
       '17': true
     },
   ],
   '8': [
     {'1': '_model_id'},
-    {'1': '_name'},
+    {'1': '_display_name'},
   ],
 };
 
 /// Descriptor for `UpdateModelReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List updateModelReqDescriptor = $convert.base64Decode(
     'Cg5VcGRhdGVNb2RlbFJlcRIqCghtb2RlbF9pZBgBIAEoCUIKukgHyAEBcgIQAUgAUgdtb2RlbE'
-    'lkiAEBEiMKBG5hbWUYAiABKAlCCrpIB8gBAXICEAFIAVIEbmFtZYgBAUILCglfbW9kZWxfaWRC'
-    'BwoFX25hbWU=');
+    'lkiAEBEjIKDGRpc3BsYXlfbmFtZRgCIAEoCUIKukgHyAEBcgIQAUgBUgtkaXNwbGF5TmFtZYgB'
+    'AUILCglfbW9kZWxfaWRCDwoNX2Rpc3BsYXlfbmFtZQ==');
 
 @$core.Deprecated('Use updateModelRespDescriptor instead')
 const UpdateModelResp$json = {
@@ -284,3 +309,28 @@ final $typed_data.Uint8List listModelsRespDescriptor = $convert.base64Decode(
     'Cg5MaXN0TW9kZWxzUmVzcBIfCgV0b3RhbBgBIAEoBUIEkLUYA0gAUgV0b3RhbIgBARItCgZtb2'
     'RlbHMYAiADKAsyDy5oaS5tZWRpYS5Nb2RlbEIEkLUYA1IGbW9kZWxzOgSYtRgDQggKBl90b3Rh'
     'bA==');
+
+@$core.Deprecated('Use deleteModelReqDescriptor instead')
+const DeleteModelReq$json = {
+  '1': 'DeleteModelReq',
+  '2': [
+    {
+      '1': 'model_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'modelId',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_model_id'},
+  ],
+};
+
+/// Descriptor for `DeleteModelReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List deleteModelReqDescriptor = $convert.base64Decode(
+    'Cg5EZWxldGVNb2RlbFJlcRIqCghtb2RlbF9pZBgBIAEoCUIKukgHyAEBcgIQAUgAUgdtb2RlbE'
+    'lkiAEBQgsKCV9tb2RlbF9pZA==');

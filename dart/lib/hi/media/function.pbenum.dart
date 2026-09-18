@@ -1,6 +1,6 @@
 // This is a generated file - do not edit.
 //
-// Generated from hi/media/maintenance_manage.proto.
+// Generated from hi/media/function.proto.
 
 // @dart = 3.3
 

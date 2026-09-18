@@ -20,6 +20,9 @@ import 'workflow_manage.pb.dart' as $0;
 
 export 'workflow_manage.pb.dart';
 
+/// 管理员工作流配置、校验、试跑与展示设置。
+/// 文件导入/替换使用上述 AUTH_SUPERADMIN multipart HTTP 接口，
+/// 不声明 Import/ReplaceFile RPC，不由 grpc-gateway 生成上传路由。
 @$pb.GrpcServiceName('hi.media.WorkflowManage')
 class WorkflowManageClient extends $grpc.Client {
   /// The hostname for this service.
@@ -32,27 +35,15 @@ class WorkflowManageClient extends $grpc.Client {
 
   WorkflowManageClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$0.ImportWorkflowResp> importWorkflow(
-    $0.ImportWorkflowReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$importWorkflow, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.UpdateWorkflowResp> updateWorkflow(
+  /// 说明和执行配置按 presence 更新；普通任务、试跑与配置修改共用工作流行锁。
+  $grpc.ResponseFuture<$0.UpdateWorkflowResp> update(
     $0.UpdateWorkflowReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$updateWorkflow, request, options: options);
+    return $createUnaryCall(_$update, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.UpdateWorkflowDescriptionResp> updateDescription(
-    $0.UpdateWorkflowDescriptionReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$updateDescription, request, options: options);
-  }
-
+  /// 校验当前内容；上游暂时不可用时返回 Unavailable，不覆盖之前的校验结果。
   $grpc.ResponseFuture<$0.ValidateWorkflowResp> validate(
     $0.ValidateWorkflowReq request, {
     $grpc.CallOptions? options,
@@ -60,6 +51,7 @@ class WorkflowManageClient extends $grpc.Client {
     return $createUnaryCall(_$validate, request, options: options);
   }
 
+  /// 使用统一 FIFO 和发起者额度执行真实试跑；成功保存并结算后自动启用草稿。
   $grpc.ResponseFuture<$0.TestWorkflowResp> test(
     $0.TestWorkflowReq request, {
     $grpc.CallOptions? options,
@@ -67,6 +59,7 @@ class WorkflowManageClient extends $grpc.Client {
     return $createUnaryCall(_$test, request, options: options);
   }
 
+  /// 按工作流分页查询管理试跑记录。
   $grpc.ResponseFuture<$0.ListWorkflowTestsResp> listTests(
     $0.ListWorkflowTestsReq request, {
     $grpc.CallOptions? options,
@@ -74,6 +67,23 @@ class WorkflowManageClient extends $grpc.Client {
     return $createUnaryCall(_$listTests, request, options: options);
   }
 
+  /// 管理员手动指定或清除默认项，同一功能最多一个，也允许没有默认项。
+  $grpc.ResponseFuture<$0.SetDefaultWorkflowResp> setDefault(
+    $0.SetDefaultWorkflowReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$setDefault, request, options: options);
+  }
+
+  /// 设置同一功能全部工作流的顺序。
+  $grpc.ResponseFuture<$0.UpdateWorkflowSortOrderResp> updateSortOrder(
+    $0.UpdateWorkflowSortOrderReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$updateSortOrder, request, options: options);
+  }
+
+  /// 只读取数据库摘要，不下载工作流文件。
   $grpc.ResponseFuture<$0.ListWorkflowsResp> list(
     $0.ListWorkflowsReq request, {
     $grpc.CallOptions? options,
@@ -81,6 +91,7 @@ class WorkflowManageClient extends $grpc.Client {
     return $createUnaryCall(_$list, request, options: options);
   }
 
+  /// 读取当前文件并解析绑定候选节点；object_info 不可用时仍返回可解析的基础节点。
   $grpc.ResponseFuture<$0.GetWorkflowResp> get(
     $0.GetWorkflowReq request, {
     $grpc.CallOptions? options,
@@ -90,21 +101,11 @@ class WorkflowManageClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$importWorkflow =
-      $grpc.ClientMethod<$0.ImportWorkflowReq, $0.ImportWorkflowResp>(
-          '/hi.media.WorkflowManage/ImportWorkflow',
-          ($0.ImportWorkflowReq value) => value.writeToBuffer(),
-          $0.ImportWorkflowResp.fromBuffer);
-  static final _$updateWorkflow =
+  static final _$update =
       $grpc.ClientMethod<$0.UpdateWorkflowReq, $0.UpdateWorkflowResp>(
-          '/hi.media.WorkflowManage/UpdateWorkflow',
+          '/hi.media.WorkflowManage/Update',
           ($0.UpdateWorkflowReq value) => value.writeToBuffer(),
           $0.UpdateWorkflowResp.fromBuffer);
-  static final _$updateDescription = $grpc.ClientMethod<
-          $0.UpdateWorkflowDescriptionReq, $0.UpdateWorkflowDescriptionResp>(
-      '/hi.media.WorkflowManage/UpdateDescription',
-      ($0.UpdateWorkflowDescriptionReq value) => value.writeToBuffer(),
-      $0.UpdateWorkflowDescriptionResp.fromBuffer);
   static final _$validate =
       $grpc.ClientMethod<$0.ValidateWorkflowReq, $0.ValidateWorkflowResp>(
           '/hi.media.WorkflowManage/Validate',
@@ -120,6 +121,16 @@ class WorkflowManageClient extends $grpc.Client {
           '/hi.media.WorkflowManage/ListTests',
           ($0.ListWorkflowTestsReq value) => value.writeToBuffer(),
           $0.ListWorkflowTestsResp.fromBuffer);
+  static final _$setDefault =
+      $grpc.ClientMethod<$0.SetDefaultWorkflowReq, $0.SetDefaultWorkflowResp>(
+          '/hi.media.WorkflowManage/SetDefault',
+          ($0.SetDefaultWorkflowReq value) => value.writeToBuffer(),
+          $0.SetDefaultWorkflowResp.fromBuffer);
+  static final _$updateSortOrder = $grpc.ClientMethod<
+          $0.UpdateWorkflowSortOrderReq, $0.UpdateWorkflowSortOrderResp>(
+      '/hi.media.WorkflowManage/UpdateSortOrder',
+      ($0.UpdateWorkflowSortOrderReq value) => value.writeToBuffer(),
+      $0.UpdateWorkflowSortOrderResp.fromBuffer);
   static final _$list =
       $grpc.ClientMethod<$0.ListWorkflowsReq, $0.ListWorkflowsResp>(
           '/hi.media.WorkflowManage/List',
@@ -137,29 +148,13 @@ abstract class WorkflowManageServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.media.WorkflowManage';
 
   WorkflowManageServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.ImportWorkflowReq, $0.ImportWorkflowResp>(
-        'ImportWorkflow',
-        importWorkflow_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.ImportWorkflowReq.fromBuffer(value),
-        ($0.ImportWorkflowResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.UpdateWorkflowReq, $0.UpdateWorkflowResp>(
-        'UpdateWorkflow',
-        updateWorkflow_Pre,
+        'Update',
+        update_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.UpdateWorkflowReq.fromBuffer(value),
         ($0.UpdateWorkflowResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.UpdateWorkflowDescriptionReq,
-            $0.UpdateWorkflowDescriptionResp>(
-        'UpdateDescription',
-        updateDescription_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $0.UpdateWorkflowDescriptionReq.fromBuffer(value),
-        ($0.UpdateWorkflowDescriptionResp value) => value.writeToBuffer()));
     $addMethod(
         $grpc.ServiceMethod<$0.ValidateWorkflowReq, $0.ValidateWorkflowResp>(
             'Validate',
@@ -185,6 +180,24 @@ abstract class WorkflowManageServiceBase extends $grpc.Service {
             ($core.List<$core.int> value) =>
                 $0.ListWorkflowTestsReq.fromBuffer(value),
             ($0.ListWorkflowTestsResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.SetDefaultWorkflowReq,
+            $0.SetDefaultWorkflowResp>(
+        'SetDefault',
+        setDefault_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.SetDefaultWorkflowReq.fromBuffer(value),
+        ($0.SetDefaultWorkflowResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.UpdateWorkflowSortOrderReq,
+            $0.UpdateWorkflowSortOrderResp>(
+        'UpdateSortOrder',
+        updateSortOrder_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.UpdateWorkflowSortOrderReq.fromBuffer(value),
+        ($0.UpdateWorkflowSortOrderResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.ListWorkflowsReq, $0.ListWorkflowsResp>(
         'List',
         list_Pre,
@@ -201,32 +214,13 @@ abstract class WorkflowManageServiceBase extends $grpc.Service {
         ($0.GetWorkflowResp value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.ImportWorkflowResp> importWorkflow_Pre(
-      $grpc.ServiceCall $call,
-      $async.Future<$0.ImportWorkflowReq> $request) async {
-    return importWorkflow($call, await $request);
-  }
-
-  $async.Future<$0.ImportWorkflowResp> importWorkflow(
-      $grpc.ServiceCall call, $0.ImportWorkflowReq request);
-
-  $async.Future<$0.UpdateWorkflowResp> updateWorkflow_Pre(
-      $grpc.ServiceCall $call,
+  $async.Future<$0.UpdateWorkflowResp> update_Pre($grpc.ServiceCall $call,
       $async.Future<$0.UpdateWorkflowReq> $request) async {
-    return updateWorkflow($call, await $request);
+    return update($call, await $request);
   }
 
-  $async.Future<$0.UpdateWorkflowResp> updateWorkflow(
+  $async.Future<$0.UpdateWorkflowResp> update(
       $grpc.ServiceCall call, $0.UpdateWorkflowReq request);
-
-  $async.Future<$0.UpdateWorkflowDescriptionResp> updateDescription_Pre(
-      $grpc.ServiceCall $call,
-      $async.Future<$0.UpdateWorkflowDescriptionReq> $request) async {
-    return updateDescription($call, await $request);
-  }
-
-  $async.Future<$0.UpdateWorkflowDescriptionResp> updateDescription(
-      $grpc.ServiceCall call, $0.UpdateWorkflowDescriptionReq request);
 
   $async.Future<$0.ValidateWorkflowResp> validate_Pre($grpc.ServiceCall $call,
       $async.Future<$0.ValidateWorkflowReq> $request) async {
@@ -251,6 +245,24 @@ abstract class WorkflowManageServiceBase extends $grpc.Service {
 
   $async.Future<$0.ListWorkflowTestsResp> listTests(
       $grpc.ServiceCall call, $0.ListWorkflowTestsReq request);
+
+  $async.Future<$0.SetDefaultWorkflowResp> setDefault_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.SetDefaultWorkflowReq> $request) async {
+    return setDefault($call, await $request);
+  }
+
+  $async.Future<$0.SetDefaultWorkflowResp> setDefault(
+      $grpc.ServiceCall call, $0.SetDefaultWorkflowReq request);
+
+  $async.Future<$0.UpdateWorkflowSortOrderResp> updateSortOrder_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.UpdateWorkflowSortOrderReq> $request) async {
+    return updateSortOrder($call, await $request);
+  }
+
+  $async.Future<$0.UpdateWorkflowSortOrderResp> updateSortOrder(
+      $grpc.ServiceCall call, $0.UpdateWorkflowSortOrderReq request);
 
   $async.Future<$0.ListWorkflowsResp> list_Pre($grpc.ServiceCall $call,
       $async.Future<$0.ListWorkflowsReq> $request) async {

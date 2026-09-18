@@ -14,6 +14,7 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+/// 资产来源，区分用户上传和任务生成。
 class FileSource extends $pb.ProtobufEnum {
   static const FileSource FILE_SOURCE_UNSPECIFIED =
       FileSource._(0, _omitEnumNames ? '' : 'FILE_SOURCE_UNSPECIFIED');
@@ -36,6 +37,7 @@ class FileSource extends $pb.ProtobufEnum {
   const FileSource._(super.value, super.name);
 }
 
+/// 临时访问地址的用途，决定预览或下载响应行为。
 class FileAccessPurpose extends $pb.ProtobufEnum {
   static const FileAccessPurpose FILE_ACCESS_PURPOSE_UNSPECIFIED =
       FileAccessPurpose._(
@@ -61,6 +63,7 @@ class FileAccessPurpose extends $pb.ProtobufEnum {
   const FileAccessPurpose._(super.value, super.name);
 }
 
+/// 上传批次状态；COMPLETED 表示所有文件已有结果，不代表全部成功。
 class UploadStatus extends $pb.ProtobufEnum {
   static const UploadStatus UPLOAD_STATUS_UNSPECIFIED =
       UploadStatus._(0, _omitEnumNames ? '' : 'UPLOAD_STATUS_UNSPECIFIED');
@@ -83,6 +86,7 @@ class UploadStatus extends $pb.ProtobufEnum {
   const UploadStatus._(super.value, super.name);
 }
 
+/// 批次内单文件的处理状态。
 class UploadFileStatus extends $pb.ProtobufEnum {
   static const UploadFileStatus UPLOAD_FILE_STATUS_UNSPECIFIED =
       UploadFileStatus._(

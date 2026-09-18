@@ -23,11 +23,12 @@ _sym_db = _symbol_database.Default()
 
 
 from buf.validate import validate_pb2 as buf_dot_validate_dot_validate__pb2
+from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi import common_pb2 as hi_dot_common__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1bhi/media/model_manage.proto\x12\x08hi.media\x1a\x1b\x62uf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xda\x01\n\x05Model\x12$\n\x08model_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x07modelId\x88\x01\x01\x12\x1d\n\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x04name\x88\x01\x01\x12(\n\ncreated_at\x18\x03 \x01(\x03\x42\x04\x90\xb5\x18\x03H\x02R\tcreatedAt\x88\x01\x01\x12(\n\nupdated_at\x18\x04 \x01(\x03\x42\x04\x90\xb5\x18\x03H\x03R\tupdatedAt\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x0b\n\t_model_idB\x07\n\x05_nameB\r\n\x0b_created_atB\r\n\x0b_updated_at\">\n\x0e\x43reateModelReq\x12#\n\x04name\x18\x01 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x00R\x04name\x88\x01\x01\x42\x07\n\x05_name\"D\n\x0f\x43reateModelResp\x12+\n\x05model\x18\x01 \x01(\x0b\x32\x0f.hi.media.ModelB\x04\x90\xb5\x18\x03R\x05model:\x04\x98\xb5\x18\x03\"w\n\x0eUpdateModelReq\x12*\n\x08model_id\x18\x01 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x00R\x07modelId\x88\x01\x01\x12#\n\x04name\x18\x02 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x01R\x04name\x88\x01\x01\x42\x0b\n\t_model_idB\x07\n\x05_name\"D\n\x0fUpdateModelResp\x12+\n\x05model\x18\x01 \x01(\x0b\x32\x0f.hi.media.ModelB\x04\x90\xb5\x18\x03R\x05model:\x04\x98\xb5\x18\x03\"F\n\x0bGetModelReq\x12*\n\x08model_id\x18\x01 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x00R\x07modelId\x88\x01\x01\x42\x0b\n\t_model_id\"A\n\x0cGetModelResp\x12+\n\x05model\x18\x01 \x01(\x0b\x32\x0f.hi.media.ModelB\x04\x90\xb5\x18\x03R\x05model:\x04\x98\xb5\x18\x03\"?\n\rListModelsReq\x12.\n\npagination\x18\x01 \x01(\x0b\x32\x0e.hi.PaginationR\npagination\"p\n\x0eListModelsResp\x12\x1f\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12-\n\x06models\x18\x02 \x03(\x0b\x32\x0f.hi.media.ModelB\x04\x90\xb5\x18\x03R\x06models:\x04\x98\xb5\x18\x03\x42\x08\n\x06_total2\x98\x02\n\x0bModelManage\x12\x44\n\x06\x43reate\x12\x18.hi.media.CreateModelReq\x1a\x19.hi.media.CreateModelResp\"\x05\x8a\xb5\x18\x01\x04\x12\x44\n\x06Update\x12\x18.hi.media.UpdateModelReq\x1a\x19.hi.media.UpdateModelResp\"\x05\x8a\xb5\x18\x01\x04\x12@\n\x04List\x12\x17.hi.media.ListModelsReq\x1a\x18.hi.media.ListModelsResp\"\x05\x8a\xb5\x18\x01\x04\x12;\n\x03Get\x12\x15.hi.media.GetModelReq\x1a\x16.hi.media.GetModelResp\"\x05\x8a\xb5\x18\x01\x04\x42,Z*github.com/HiWorld-56/hi-proto/go/hi/mediab\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1bhi/media/model_manage.proto\x12\x08hi.media\x1a\x1b\x62uf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xa7\x02\n\x05Model\x12$\n\x08model_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x07modelId\x88\x01\x01\x12,\n\x0c\x64isplay_name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x0b\x64isplayName\x88\x01\x01\x12&\n\treal_name\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x08realName\x88\x01\x01\x12(\n\ncreated_at\x18\x04 \x01(\x03\x42\x04\x90\xb5\x18\x03H\x03R\tcreatedAt\x88\x01\x01\x12(\n\nupdated_at\x18\x05 \x01(\x03\x42\x04\x90\xb5\x18\x03H\x04R\tupdatedAt\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x0b\n\t_model_idB\x0f\n\r_display_nameB\x0c\n\n_real_nameB\r\n\x0b_created_atB\r\n\x0b_updated_at\"\x91\x01\n\x0e\x43reateModelReq\x12\x32\n\x0c\x64isplay_name\x18\x01 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x00R\x0b\x64isplayName\x88\x01\x01\x12,\n\treal_name\x18\x02 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x01R\x08realName\x88\x01\x01\x42\x0f\n\r_display_nameB\x0c\n\n_real_name\"D\n\x0f\x43reateModelResp\x12+\n\x05model\x18\x01 \x01(\x0b\x32\x0f.hi.media.ModelB\x04\x90\xb5\x18\x03R\x05model:\x04\x98\xb5\x18\x03\"\x8e\x01\n\x0eUpdateModelReq\x12*\n\x08model_id\x18\x01 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x00R\x07modelId\x88\x01\x01\x12\x32\n\x0c\x64isplay_name\x18\x02 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x01R\x0b\x64isplayName\x88\x01\x01\x42\x0b\n\t_model_idB\x0f\n\r_display_name\"D\n\x0fUpdateModelResp\x12+\n\x05model\x18\x01 \x01(\x0b\x32\x0f.hi.media.ModelB\x04\x90\xb5\x18\x03R\x05model:\x04\x98\xb5\x18\x03\"F\n\x0bGetModelReq\x12*\n\x08model_id\x18\x01 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x00R\x07modelId\x88\x01\x01\x42\x0b\n\t_model_id\"A\n\x0cGetModelResp\x12+\n\x05model\x18\x01 \x01(\x0b\x32\x0f.hi.media.ModelB\x04\x90\xb5\x18\x03R\x05model:\x04\x98\xb5\x18\x03\"?\n\rListModelsReq\x12.\n\npagination\x18\x01 \x01(\x0b\x32\x0e.hi.PaginationR\npagination\"p\n\x0eListModelsResp\x12\x1f\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12-\n\x06models\x18\x02 \x03(\x0b\x32\x0f.hi.media.ModelB\x04\x90\xb5\x18\x03R\x06models:\x04\x98\xb5\x18\x03\x42\x08\n\x06_total\"I\n\x0e\x44\x65leteModelReq\x12*\n\x08model_id\x18\x01 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x00R\x07modelId\x88\x01\x01\x42\x0b\n\t_model_id2\xdb\x02\n\x0bModelManage\x12\x44\n\x06\x43reate\x12\x18.hi.media.CreateModelReq\x1a\x19.hi.media.CreateModelResp\"\x05\x8a\xb5\x18\x01\x04\x12\x44\n\x06Update\x12\x18.hi.media.UpdateModelReq\x1a\x19.hi.media.UpdateModelResp\"\x05\x8a\xb5\x18\x01\x04\x12\x41\n\x06\x44\x65lete\x12\x18.hi.media.DeleteModelReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12@\n\x04List\x12\x17.hi.media.ListModelsReq\x1a\x18.hi.media.ListModelsResp\"\x05\x8a\xb5\x18\x01\x04\x12;\n\x03Get\x12\x15.hi.media.GetModelReq\x1a\x16.hi.media.GetModelResp\"\x05\x8a\xb5\x18\x01\x04\x42,Z*github.com/HiWorld-56/hi-proto/go/hi/mediab\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -37,24 +38,28 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._serialized_options = b'Z*github.com/HiWorld-56/hi-proto/go/hi/media'
   _globals['_MODEL'].fields_by_name['model_id']._loaded_options = None
   _globals['_MODEL'].fields_by_name['model_id']._serialized_options = b'\220\265\030\003'
-  _globals['_MODEL'].fields_by_name['name']._loaded_options = None
-  _globals['_MODEL'].fields_by_name['name']._serialized_options = b'\220\265\030\003'
+  _globals['_MODEL'].fields_by_name['display_name']._loaded_options = None
+  _globals['_MODEL'].fields_by_name['display_name']._serialized_options = b'\220\265\030\003'
+  _globals['_MODEL'].fields_by_name['real_name']._loaded_options = None
+  _globals['_MODEL'].fields_by_name['real_name']._serialized_options = b'\220\265\030\003'
   _globals['_MODEL'].fields_by_name['created_at']._loaded_options = None
   _globals['_MODEL'].fields_by_name['created_at']._serialized_options = b'\220\265\030\003'
   _globals['_MODEL'].fields_by_name['updated_at']._loaded_options = None
   _globals['_MODEL'].fields_by_name['updated_at']._serialized_options = b'\220\265\030\003'
   _globals['_MODEL']._loaded_options = None
   _globals['_MODEL']._serialized_options = b'\230\265\030\003'
-  _globals['_CREATEMODELREQ'].fields_by_name['name']._loaded_options = None
-  _globals['_CREATEMODELREQ'].fields_by_name['name']._serialized_options = b'\272H\007r\002\020\001\310\001\001'
+  _globals['_CREATEMODELREQ'].fields_by_name['display_name']._loaded_options = None
+  _globals['_CREATEMODELREQ'].fields_by_name['display_name']._serialized_options = b'\272H\007r\002\020\001\310\001\001'
+  _globals['_CREATEMODELREQ'].fields_by_name['real_name']._loaded_options = None
+  _globals['_CREATEMODELREQ'].fields_by_name['real_name']._serialized_options = b'\272H\007r\002\020\001\310\001\001'
   _globals['_CREATEMODELRESP'].fields_by_name['model']._loaded_options = None
   _globals['_CREATEMODELRESP'].fields_by_name['model']._serialized_options = b'\220\265\030\003'
   _globals['_CREATEMODELRESP']._loaded_options = None
   _globals['_CREATEMODELRESP']._serialized_options = b'\230\265\030\003'
   _globals['_UPDATEMODELREQ'].fields_by_name['model_id']._loaded_options = None
   _globals['_UPDATEMODELREQ'].fields_by_name['model_id']._serialized_options = b'\272H\007r\002\020\001\310\001\001'
-  _globals['_UPDATEMODELREQ'].fields_by_name['name']._loaded_options = None
-  _globals['_UPDATEMODELREQ'].fields_by_name['name']._serialized_options = b'\272H\007r\002\020\001\310\001\001'
+  _globals['_UPDATEMODELREQ'].fields_by_name['display_name']._loaded_options = None
+  _globals['_UPDATEMODELREQ'].fields_by_name['display_name']._serialized_options = b'\272H\007r\002\020\001\310\001\001'
   _globals['_UPDATEMODELRESP'].fields_by_name['model']._loaded_options = None
   _globals['_UPDATEMODELRESP'].fields_by_name['model']._serialized_options = b'\220\265\030\003'
   _globals['_UPDATEMODELRESP']._loaded_options = None
@@ -71,32 +76,38 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_LISTMODELSRESP'].fields_by_name['models']._serialized_options = b'\220\265\030\003'
   _globals['_LISTMODELSRESP']._loaded_options = None
   _globals['_LISTMODELSRESP']._serialized_options = b'\230\265\030\003'
+  _globals['_DELETEMODELREQ'].fields_by_name['model_id']._loaded_options = None
+  _globals['_DELETEMODELREQ'].fields_by_name['model_id']._serialized_options = b'\272H\007r\002\020\001\310\001\001'
   _globals['_MODELMANAGE'].methods_by_name['Create']._loaded_options = None
   _globals['_MODELMANAGE'].methods_by_name['Create']._serialized_options = b'\212\265\030\001\004'
   _globals['_MODELMANAGE'].methods_by_name['Update']._loaded_options = None
   _globals['_MODELMANAGE'].methods_by_name['Update']._serialized_options = b'\212\265\030\001\004'
+  _globals['_MODELMANAGE'].methods_by_name['Delete']._loaded_options = None
+  _globals['_MODELMANAGE'].methods_by_name['Delete']._serialized_options = b'\212\265\030\001\004'
   _globals['_MODELMANAGE'].methods_by_name['List']._loaded_options = None
   _globals['_MODELMANAGE'].methods_by_name['List']._serialized_options = b'\212\265\030\001\004'
   _globals['_MODELMANAGE'].methods_by_name['Get']._loaded_options = None
   _globals['_MODELMANAGE'].methods_by_name['Get']._serialized_options = b'\212\265\030\001\004'
-  _globals['_MODEL']._serialized_start=106
-  _globals['_MODEL']._serialized_end=324
-  _globals['_CREATEMODELREQ']._serialized_start=326
-  _globals['_CREATEMODELREQ']._serialized_end=388
-  _globals['_CREATEMODELRESP']._serialized_start=390
-  _globals['_CREATEMODELRESP']._serialized_end=458
-  _globals['_UPDATEMODELREQ']._serialized_start=460
-  _globals['_UPDATEMODELREQ']._serialized_end=579
-  _globals['_UPDATEMODELRESP']._serialized_start=581
-  _globals['_UPDATEMODELRESP']._serialized_end=649
-  _globals['_GETMODELREQ']._serialized_start=651
-  _globals['_GETMODELREQ']._serialized_end=721
-  _globals['_GETMODELRESP']._serialized_start=723
-  _globals['_GETMODELRESP']._serialized_end=788
-  _globals['_LISTMODELSREQ']._serialized_start=790
-  _globals['_LISTMODELSREQ']._serialized_end=853
-  _globals['_LISTMODELSRESP']._serialized_start=855
-  _globals['_LISTMODELSRESP']._serialized_end=967
-  _globals['_MODELMANAGE']._serialized_start=970
-  _globals['_MODELMANAGE']._serialized_end=1250
+  _globals['_MODEL']._serialized_start=135
+  _globals['_MODEL']._serialized_end=430
+  _globals['_CREATEMODELREQ']._serialized_start=433
+  _globals['_CREATEMODELREQ']._serialized_end=578
+  _globals['_CREATEMODELRESP']._serialized_start=580
+  _globals['_CREATEMODELRESP']._serialized_end=648
+  _globals['_UPDATEMODELREQ']._serialized_start=651
+  _globals['_UPDATEMODELREQ']._serialized_end=793
+  _globals['_UPDATEMODELRESP']._serialized_start=795
+  _globals['_UPDATEMODELRESP']._serialized_end=863
+  _globals['_GETMODELREQ']._serialized_start=865
+  _globals['_GETMODELREQ']._serialized_end=935
+  _globals['_GETMODELRESP']._serialized_start=937
+  _globals['_GETMODELRESP']._serialized_end=1002
+  _globals['_LISTMODELSREQ']._serialized_start=1004
+  _globals['_LISTMODELSREQ']._serialized_end=1067
+  _globals['_LISTMODELSRESP']._serialized_start=1069
+  _globals['_LISTMODELSRESP']._serialized_end=1181
+  _globals['_DELETEMODELREQ']._serialized_start=1183
+  _globals['_DELETEMODELREQ']._serialized_end=1256
+  _globals['_MODELMANAGE']._serialized_start=1259
+  _globals['_MODELMANAGE']._serialized_end=1606
 # @@protoc_insertion_point(module_scope)

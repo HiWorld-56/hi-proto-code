@@ -17,6 +17,7 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
+/// 本人存储额度；不包含预占，所有数值单位为字节，JSON 使用十进制字符串。
 class GetQuotaResp extends $pb.GeneratedMessage {
   factory GetQuotaResp({
     $fixnum.Int64? totalBytes,
@@ -73,6 +74,7 @@ class GetQuotaResp extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<GetQuotaResp>(create);
   static GetQuotaResp? _defaultInstance;
 
+  /// 用户存储总上限。
   @$pb.TagNumber(1)
   $fixnum.Int64 get totalBytes => $_getI64(0);
   @$pb.TagNumber(1)
@@ -82,6 +84,7 @@ class GetQuotaResp extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearTotalBytes() => $_clearField(1);
 
+  /// 已确认的实际占用，已受理任务保存后允许超过 total_bytes。
   @$pb.TagNumber(2)
   $fixnum.Int64 get usedBytes => $_getI64(1);
   @$pb.TagNumber(2)
@@ -91,6 +94,7 @@ class GetQuotaResp extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearUsedBytes() => $_clearField(2);
 
+  /// max(total_bytes - used_bytes, 0)，不会因超额变为负数。
   @$pb.TagNumber(3)
   $fixnum.Int64 get availableBytes => $_getI64(2);
   @$pb.TagNumber(3)

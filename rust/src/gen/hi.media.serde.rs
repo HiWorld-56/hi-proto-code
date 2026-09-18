@@ -230,7 +230,7 @@ impl serde::Serialize for CreateImageToVideoTaskReq {
         if self.request_id.is_some() {
             len += 1;
         }
-        if self.model_mapping_id.is_some() {
+        if self.workflow_id.is_some() {
             len += 1;
         }
         if self.input_asset_id.is_some() {
@@ -252,8 +252,8 @@ impl serde::Serialize for CreateImageToVideoTaskReq {
         if let Some(v) = self.request_id.as_ref() {
             struct_ser.serialize_field("requestId", v)?;
         }
-        if let Some(v) = self.model_mapping_id.as_ref() {
-            struct_ser.serialize_field("modelMappingId", v)?;
+        if let Some(v) = self.workflow_id.as_ref() {
+            struct_ser.serialize_field("workflowId", v)?;
         }
         if let Some(v) = self.input_asset_id.as_ref() {
             struct_ser.serialize_field("inputAssetId", v)?;
@@ -282,8 +282,8 @@ impl<'de> serde::Deserialize<'de> for CreateImageToVideoTaskReq {
         const FIELDS: &[&str] = &[
             "request_id",
             "requestId",
-            "model_mapping_id",
-            "modelMappingId",
+            "workflow_id",
+            "workflowId",
             "input_asset_id",
             "inputAssetId",
             "prompt",
@@ -297,7 +297,7 @@ impl<'de> serde::Deserialize<'de> for CreateImageToVideoTaskReq {
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             RequestId,
-            ModelMappingId,
+            WorkflowId,
             InputAssetId,
             Prompt,
             Resolution,
@@ -325,7 +325,7 @@ impl<'de> serde::Deserialize<'de> for CreateImageToVideoTaskReq {
                     {
                         match value {
                             "requestId" | "request_id" => Ok(GeneratedField::RequestId),
-                            "modelMappingId" | "model_mapping_id" => Ok(GeneratedField::ModelMappingId),
+                            "workflowId" | "workflow_id" => Ok(GeneratedField::WorkflowId),
                             "inputAssetId" | "input_asset_id" => Ok(GeneratedField::InputAssetId),
                             "prompt" => Ok(GeneratedField::Prompt),
                             "resolution" => Ok(GeneratedField::Resolution),
@@ -351,7 +351,7 @@ impl<'de> serde::Deserialize<'de> for CreateImageToVideoTaskReq {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut request_id__ = None;
-                let mut model_mapping_id__ = None;
+                let mut workflow_id__ = None;
                 let mut input_asset_id__ = None;
                 let mut prompt__ = None;
                 let mut resolution__ = None;
@@ -365,11 +365,11 @@ impl<'de> serde::Deserialize<'de> for CreateImageToVideoTaskReq {
                             }
                             request_id__ = map_.next_value()?;
                         }
-                        GeneratedField::ModelMappingId => {
-                            if model_mapping_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("modelMappingId"));
+                        GeneratedField::WorkflowId => {
+                            if workflow_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowId"));
                             }
-                            model_mapping_id__ = map_.next_value()?;
+                            workflow_id__ = map_.next_value()?;
                         }
                         GeneratedField::InputAssetId => {
                             if input_asset_id__.is_some() {
@@ -409,7 +409,7 @@ impl<'de> serde::Deserialize<'de> for CreateImageToVideoTaskReq {
                 }
                 Ok(CreateImageToVideoTaskReq {
                     request_id: request_id__,
-                    model_mapping_id: model_mapping_id__,
+                    workflow_id: workflow_id__,
                     input_asset_id: input_asset_id__,
                     prompt: prompt__,
                     resolution: resolution__,
@@ -421,265 +421,6 @@ impl<'de> serde::Deserialize<'de> for CreateImageToVideoTaskReq {
         deserializer.deserialize_struct("hi.media.CreateImageToVideoTaskReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for CreateModelMappingReq {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.feature_key.is_some() {
-            len += 1;
-        }
-        if self.model_id.is_some() {
-            len += 1;
-        }
-        if self.workflow_version_id.is_some() {
-            len += 1;
-        }
-        if self.is_default.is_some() {
-            len += 1;
-        }
-        if self.sort_order.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.CreateModelMappingReq", len)?;
-        if let Some(v) = self.feature_key.as_ref() {
-            let v = FeatureKey::try_from(*v)
-                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
-            struct_ser.serialize_field("featureKey", &v)?;
-        }
-        if let Some(v) = self.model_id.as_ref() {
-            struct_ser.serialize_field("modelId", v)?;
-        }
-        if let Some(v) = self.workflow_version_id.as_ref() {
-            struct_ser.serialize_field("workflowVersionId", v)?;
-        }
-        if let Some(v) = self.is_default.as_ref() {
-            struct_ser.serialize_field("isDefault", v)?;
-        }
-        if let Some(v) = self.sort_order.as_ref() {
-            struct_ser.serialize_field("sortOrder", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for CreateModelMappingReq {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "feature_key",
-            "featureKey",
-            "model_id",
-            "modelId",
-            "workflow_version_id",
-            "workflowVersionId",
-            "is_default",
-            "isDefault",
-            "sort_order",
-            "sortOrder",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            FeatureKey,
-            ModelId,
-            WorkflowVersionId,
-            IsDefault,
-            SortOrder,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "featureKey" | "feature_key" => Ok(GeneratedField::FeatureKey),
-                            "modelId" | "model_id" => Ok(GeneratedField::ModelId),
-                            "workflowVersionId" | "workflow_version_id" => Ok(GeneratedField::WorkflowVersionId),
-                            "isDefault" | "is_default" => Ok(GeneratedField::IsDefault),
-                            "sortOrder" | "sort_order" => Ok(GeneratedField::SortOrder),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = CreateModelMappingReq;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.CreateModelMappingReq")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateModelMappingReq, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut feature_key__ = None;
-                let mut model_id__ = None;
-                let mut workflow_version_id__ = None;
-                let mut is_default__ = None;
-                let mut sort_order__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::FeatureKey => {
-                            if feature_key__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("featureKey"));
-                            }
-                            feature_key__ = map_.next_value::<::std::option::Option<FeatureKey>>()?.map(|x| x as i32);
-                        }
-                        GeneratedField::ModelId => {
-                            if model_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("modelId"));
-                            }
-                            model_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::WorkflowVersionId => {
-                            if workflow_version_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("workflowVersionId"));
-                            }
-                            workflow_version_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::IsDefault => {
-                            if is_default__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("isDefault"));
-                            }
-                            is_default__ = map_.next_value()?;
-                        }
-                        GeneratedField::SortOrder => {
-                            if sort_order__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("sortOrder"));
-                            }
-                            sort_order__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                    }
-                }
-                Ok(CreateModelMappingReq {
-                    feature_key: feature_key__,
-                    model_id: model_id__,
-                    workflow_version_id: workflow_version_id__,
-                    is_default: is_default__,
-                    sort_order: sort_order__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.CreateModelMappingReq", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for CreateModelMappingResp {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.mapping.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.CreateModelMappingResp", len)?;
-        if let Some(v) = self.mapping.as_ref() {
-            struct_ser.serialize_field("mapping", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for CreateModelMappingResp {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "mapping",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Mapping,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "mapping" => Ok(GeneratedField::Mapping),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = CreateModelMappingResp;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.CreateModelMappingResp")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateModelMappingResp, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut mapping__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Mapping => {
-                            if mapping__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("mapping"));
-                            }
-                            mapping__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(CreateModelMappingResp {
-                    mapping: mapping__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.CreateModelMappingResp", FIELDS, GeneratedVisitor)
-    }
-}
 impl serde::Serialize for CreateModelReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -688,12 +429,18 @@ impl serde::Serialize for CreateModelReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.name.is_some() {
+        if self.display_name.is_some() {
+            len += 1;
+        }
+        if self.real_name.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.media.CreateModelReq", len)?;
-        if let Some(v) = self.name.as_ref() {
-            struct_ser.serialize_field("name", v)?;
+        if let Some(v) = self.display_name.as_ref() {
+            struct_ser.serialize_field("displayName", v)?;
+        }
+        if let Some(v) = self.real_name.as_ref() {
+            struct_ser.serialize_field("realName", v)?;
         }
         struct_ser.end()
     }
@@ -705,12 +452,16 @@ impl<'de> serde::Deserialize<'de> for CreateModelReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "name",
+            "display_name",
+            "displayName",
+            "real_name",
+            "realName",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Name,
+            DisplayName,
+            RealName,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -732,7 +483,8 @@ impl<'de> serde::Deserialize<'de> for CreateModelReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "name" => Ok(GeneratedField::Name),
+                            "displayName" | "display_name" => Ok(GeneratedField::DisplayName),
+                            "realName" | "real_name" => Ok(GeneratedField::RealName),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -752,19 +504,27 @@ impl<'de> serde::Deserialize<'de> for CreateModelReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut name__ = None;
+                let mut display_name__ = None;
+                let mut real_name__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Name => {
-                            if name__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("name"));
+                        GeneratedField::DisplayName => {
+                            if display_name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("displayName"));
                             }
-                            name__ = map_.next_value()?;
+                            display_name__ = map_.next_value()?;
+                        }
+                        GeneratedField::RealName => {
+                            if real_name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("realName"));
+                            }
+                            real_name__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(CreateModelReq {
-                    name: name__,
+                    display_name: display_name__,
+                    real_name: real_name__,
                 })
             }
         }
@@ -965,7 +725,7 @@ impl serde::Serialize for CreateTextToVideoTaskReq {
         if self.request_id.is_some() {
             len += 1;
         }
-        if self.model_mapping_id.is_some() {
+        if self.workflow_id.is_some() {
             len += 1;
         }
         if self.prompt.is_some() {
@@ -984,8 +744,8 @@ impl serde::Serialize for CreateTextToVideoTaskReq {
         if let Some(v) = self.request_id.as_ref() {
             struct_ser.serialize_field("requestId", v)?;
         }
-        if let Some(v) = self.model_mapping_id.as_ref() {
-            struct_ser.serialize_field("modelMappingId", v)?;
+        if let Some(v) = self.workflow_id.as_ref() {
+            struct_ser.serialize_field("workflowId", v)?;
         }
         if let Some(v) = self.prompt.as_ref() {
             struct_ser.serialize_field("prompt", v)?;
@@ -1011,8 +771,8 @@ impl<'de> serde::Deserialize<'de> for CreateTextToVideoTaskReq {
         const FIELDS: &[&str] = &[
             "request_id",
             "requestId",
-            "model_mapping_id",
-            "modelMappingId",
+            "workflow_id",
+            "workflowId",
             "prompt",
             "resolution",
             "duration_seconds",
@@ -1024,7 +784,7 @@ impl<'de> serde::Deserialize<'de> for CreateTextToVideoTaskReq {
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             RequestId,
-            ModelMappingId,
+            WorkflowId,
             Prompt,
             Resolution,
             DurationSeconds,
@@ -1051,7 +811,7 @@ impl<'de> serde::Deserialize<'de> for CreateTextToVideoTaskReq {
                     {
                         match value {
                             "requestId" | "request_id" => Ok(GeneratedField::RequestId),
-                            "modelMappingId" | "model_mapping_id" => Ok(GeneratedField::ModelMappingId),
+                            "workflowId" | "workflow_id" => Ok(GeneratedField::WorkflowId),
                             "prompt" => Ok(GeneratedField::Prompt),
                             "resolution" => Ok(GeneratedField::Resolution),
                             "durationSeconds" | "duration_seconds" => Ok(GeneratedField::DurationSeconds),
@@ -1076,7 +836,7 @@ impl<'de> serde::Deserialize<'de> for CreateTextToVideoTaskReq {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut request_id__ = None;
-                let mut model_mapping_id__ = None;
+                let mut workflow_id__ = None;
                 let mut prompt__ = None;
                 let mut resolution__ = None;
                 let mut duration_seconds__ = None;
@@ -1089,11 +849,11 @@ impl<'de> serde::Deserialize<'de> for CreateTextToVideoTaskReq {
                             }
                             request_id__ = map_.next_value()?;
                         }
-                        GeneratedField::ModelMappingId => {
-                            if model_mapping_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("modelMappingId"));
+                        GeneratedField::WorkflowId => {
+                            if workflow_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowId"));
                             }
-                            model_mapping_id__ = map_.next_value()?;
+                            workflow_id__ = map_.next_value()?;
                         }
                         GeneratedField::Prompt => {
                             if prompt__.is_some() {
@@ -1127,7 +887,7 @@ impl<'de> serde::Deserialize<'de> for CreateTextToVideoTaskReq {
                 }
                 Ok(CreateTextToVideoTaskReq {
                     request_id: request_id__,
-                    model_mapping_id: model_mapping_id__,
+                    workflow_id: workflow_id__,
                     prompt: prompt__,
                     resolution: resolution__,
                     duration_seconds: duration_seconds__,
@@ -1432,7 +1192,7 @@ impl<'de> serde::Deserialize<'de> for DeleteFileResp {
         deserializer.deserialize_struct("hi.media.DeleteFileResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for DisableModelMappingReq {
+impl serde::Serialize for DeleteModelReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -1440,39 +1200,30 @@ impl serde::Serialize for DisableModelMappingReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.model_mapping_id.is_some() {
+        if self.model_id.is_some() {
             len += 1;
         }
-        if self.replacement_default_mapping_id.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.DisableModelMappingReq", len)?;
-        if let Some(v) = self.model_mapping_id.as_ref() {
-            struct_ser.serialize_field("modelMappingId", v)?;
-        }
-        if let Some(v) = self.replacement_default_mapping_id.as_ref() {
-            struct_ser.serialize_field("replacementDefaultMappingId", v)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.DeleteModelReq", len)?;
+        if let Some(v) = self.model_id.as_ref() {
+            struct_ser.serialize_field("modelId", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for DisableModelMappingReq {
+impl<'de> serde::Deserialize<'de> for DeleteModelReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "model_mapping_id",
-            "modelMappingId",
-            "replacement_default_mapping_id",
-            "replacementDefaultMappingId",
+            "model_id",
+            "modelId",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            ModelMappingId,
-            ReplacementDefaultMappingId,
+            ModelId,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1494,8 +1245,7 @@ impl<'de> serde::Deserialize<'de> for DisableModelMappingReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "modelMappingId" | "model_mapping_id" => Ok(GeneratedField::ModelMappingId),
-                            "replacementDefaultMappingId" | "replacement_default_mapping_id" => Ok(GeneratedField::ReplacementDefaultMappingId),
+                            "modelId" | "model_id" => Ok(GeneratedField::ModelId),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -1505,209 +1255,33 @@ impl<'de> serde::Deserialize<'de> for DisableModelMappingReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = DisableModelMappingReq;
+            type Value = DeleteModelReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.DisableModelMappingReq")
+                formatter.write_str("struct hi.media.DeleteModelReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<DisableModelMappingReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<DeleteModelReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut model_mapping_id__ = None;
-                let mut replacement_default_mapping_id__ = None;
+                let mut model_id__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::ModelMappingId => {
-                            if model_mapping_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("modelMappingId"));
+                        GeneratedField::ModelId => {
+                            if model_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("modelId"));
                             }
-                            model_mapping_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::ReplacementDefaultMappingId => {
-                            if replacement_default_mapping_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("replacementDefaultMappingId"));
-                            }
-                            replacement_default_mapping_id__ = map_.next_value()?;
+                            model_id__ = map_.next_value()?;
                         }
                     }
                 }
-                Ok(DisableModelMappingReq {
-                    model_mapping_id: model_mapping_id__,
-                    replacement_default_mapping_id: replacement_default_mapping_id__,
+                Ok(DeleteModelReq {
+                    model_id: model_id__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.DisableModelMappingReq", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for DisableModelMappingResp {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.mapping.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.DisableModelMappingResp", len)?;
-        if let Some(v) = self.mapping.as_ref() {
-            struct_ser.serialize_field("mapping", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for DisableModelMappingResp {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "mapping",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Mapping,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "mapping" => Ok(GeneratedField::Mapping),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = DisableModelMappingResp;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.DisableModelMappingResp")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<DisableModelMappingResp, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut mapping__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Mapping => {
-                            if mapping__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("mapping"));
-                            }
-                            mapping__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(DisableModelMappingResp {
-                    mapping: mapping__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.DisableModelMappingResp", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for FeatureKey {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        let variant = match self {
-            Self::Unspecified => "FEATURE_KEY_UNSPECIFIED",
-            Self::TextToImage => "FEATURE_KEY_TEXT_TO_IMAGE",
-            Self::ImageToVideo => "FEATURE_KEY_IMAGE_TO_VIDEO",
-            Self::TextToVideo => "FEATURE_KEY_TEXT_TO_VIDEO",
-        };
-        serializer.serialize_str(variant)
-    }
-}
-impl<'de> serde::Deserialize<'de> for FeatureKey {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "FEATURE_KEY_UNSPECIFIED",
-            "FEATURE_KEY_TEXT_TO_IMAGE",
-            "FEATURE_KEY_IMAGE_TO_VIDEO",
-            "FEATURE_KEY_TEXT_TO_VIDEO",
-        ];
-
-        struct GeneratedVisitor;
-
-        impl serde::de::Visitor<'_> for GeneratedVisitor {
-            type Value = FeatureKey;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                write!(formatter, "expected one of: {:?}", &FIELDS)
-            }
-
-            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                i32::try_from(v)
-                    .ok()
-                    .and_then(|x| x.try_into().ok())
-                    .ok_or_else(|| {
-                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
-                    })
-            }
-
-            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                i32::try_from(v)
-                    .ok()
-                    .and_then(|x| x.try_into().ok())
-                    .ok_or_else(|| {
-                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
-                    })
-            }
-
-            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                match value {
-                    "FEATURE_KEY_UNSPECIFIED" => Ok(FeatureKey::Unspecified),
-                    "FEATURE_KEY_TEXT_TO_IMAGE" => Ok(FeatureKey::TextToImage),
-                    "FEATURE_KEY_IMAGE_TO_VIDEO" => Ok(FeatureKey::ImageToVideo),
-                    "FEATURE_KEY_TEXT_TO_VIDEO" => Ok(FeatureKey::TextToVideo),
-                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
-                }
-            }
-        }
-        deserializer.deserialize_any(GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.DeleteModelReq", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for FileAccessPurpose {
@@ -2308,7 +1882,7 @@ impl<'de> serde::Deserialize<'de> for FrameRateConfig {
         deserializer.deserialize_struct("hi.media.FrameRateConfig", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for GetFeatureReq {
+impl serde::Serialize for FunctionSummary {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -2316,32 +1890,39 @@ impl serde::Serialize for GetFeatureReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.feature_key.is_some() {
+        if self.function_id.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.GetFeatureReq", len)?;
-        if let Some(v) = self.feature_key.as_ref() {
-            let v = FeatureKey::try_from(*v)
-                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
-            struct_ser.serialize_field("featureKey", &v)?;
+        if self.display_name.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.FunctionSummary", len)?;
+        if let Some(v) = self.function_id.as_ref() {
+            struct_ser.serialize_field("functionId", v)?;
+        }
+        if let Some(v) = self.display_name.as_ref() {
+            struct_ser.serialize_field("displayName", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for GetFeatureReq {
+impl<'de> serde::Deserialize<'de> for FunctionSummary {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "feature_key",
-            "featureKey",
+            "function_id",
+            "functionId",
+            "display_name",
+            "displayName",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            FeatureKey,
+            FunctionId,
+            DisplayName,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -2363,7 +1944,8 @@ impl<'de> serde::Deserialize<'de> for GetFeatureReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "featureKey" | "feature_key" => Ok(GeneratedField::FeatureKey),
+                            "functionId" | "function_id" => Ok(GeneratedField::FunctionId),
+                            "displayName" | "display_name" => Ok(GeneratedField::DisplayName),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -2373,145 +1955,41 @@ impl<'de> serde::Deserialize<'de> for GetFeatureReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GetFeatureReq;
+            type Value = FunctionSummary;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.GetFeatureReq")
+                formatter.write_str("struct hi.media.FunctionSummary")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetFeatureReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<FunctionSummary, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut feature_key__ = None;
+                let mut function_id__ = None;
+                let mut display_name__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::FeatureKey => {
-                            if feature_key__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("featureKey"));
+                        GeneratedField::FunctionId => {
+                            if function_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("functionId"));
                             }
-                            feature_key__ = map_.next_value::<::std::option::Option<FeatureKey>>()?.map(|x| x as i32);
+                            function_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::DisplayName => {
+                            if display_name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("displayName"));
+                            }
+                            display_name__ = map_.next_value()?;
                         }
                     }
                 }
-                Ok(GetFeatureReq {
-                    feature_key: feature_key__,
+                Ok(FunctionSummary {
+                    function_id: function_id__,
+                    display_name: display_name__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.GetFeatureReq", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for GetFeatureResp {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.feature_key.is_some() {
-            len += 1;
-        }
-        if !self.model_options.is_empty() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.GetFeatureResp", len)?;
-        if let Some(v) = self.feature_key.as_ref() {
-            let v = FeatureKey::try_from(*v)
-                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
-            struct_ser.serialize_field("featureKey", &v)?;
-        }
-        if !self.model_options.is_empty() {
-            struct_ser.serialize_field("modelOptions", &self.model_options)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for GetFeatureResp {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "feature_key",
-            "featureKey",
-            "model_options",
-            "modelOptions",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            FeatureKey,
-            ModelOptions,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "featureKey" | "feature_key" => Ok(GeneratedField::FeatureKey),
-                            "modelOptions" | "model_options" => Ok(GeneratedField::ModelOptions),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GetFeatureResp;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.GetFeatureResp")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetFeatureResp, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut feature_key__ = None;
-                let mut model_options__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::FeatureKey => {
-                            if feature_key__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("featureKey"));
-                            }
-                            feature_key__ = map_.next_value::<::std::option::Option<FeatureKey>>()?.map(|x| x as i32);
-                        }
-                        GeneratedField::ModelOptions => {
-                            if model_options__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("modelOptions"));
-                            }
-                            model_options__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(GetFeatureResp {
-                    feature_key: feature_key__,
-                    model_options: model_options__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.GetFeatureResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.FunctionSummary", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for GetFileAccessUrlsReq {
@@ -2716,7 +2194,7 @@ impl<'de> serde::Deserialize<'de> for GetFileAccessUrlsResp {
         deserializer.deserialize_struct("hi.media.GetFileAccessUrlsResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for GetMaintenanceResp {
+impl serde::Serialize for GetFunctionReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -2724,29 +2202,30 @@ impl serde::Serialize for GetMaintenanceResp {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.state.is_some() {
+        if self.function_id.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.GetMaintenanceResp", len)?;
-        if let Some(v) = self.state.as_ref() {
-            struct_ser.serialize_field("state", v)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.GetFunctionReq", len)?;
+        if let Some(v) = self.function_id.as_ref() {
+            struct_ser.serialize_field("functionId", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for GetMaintenanceResp {
+impl<'de> serde::Deserialize<'de> for GetFunctionReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "state",
+            "function_id",
+            "functionId",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            State,
+            FunctionId,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -2768,7 +2247,7 @@ impl<'de> serde::Deserialize<'de> for GetMaintenanceResp {
                         E: serde::de::Error,
                     {
                         match value {
-                            "state" => Ok(GeneratedField::State),
+                            "functionId" | "function_id" => Ok(GeneratedField::FunctionId),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -2778,36 +2257,36 @@ impl<'de> serde::Deserialize<'de> for GetMaintenanceResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GetMaintenanceResp;
+            type Value = GetFunctionReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.GetMaintenanceResp")
+                formatter.write_str("struct hi.media.GetFunctionReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetMaintenanceResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetFunctionReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut state__ = None;
+                let mut function_id__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::State => {
-                            if state__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("state"));
+                        GeneratedField::FunctionId => {
+                            if function_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("functionId"));
                             }
-                            state__ = map_.next_value()?;
+                            function_id__ = map_.next_value()?;
                         }
                     }
                 }
-                Ok(GetMaintenanceResp {
-                    state: state__,
+                Ok(GetFunctionReq {
+                    function_id: function_id__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.GetMaintenanceResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.GetFunctionReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for GetModelMappingReq {
+impl serde::Serialize for GetFunctionResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -2815,30 +2294,37 @@ impl serde::Serialize for GetModelMappingReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.model_mapping_id.is_some() {
+        if self.function.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.GetModelMappingReq", len)?;
-        if let Some(v) = self.model_mapping_id.as_ref() {
-            struct_ser.serialize_field("modelMappingId", v)?;
+        if !self.workflows.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.GetFunctionResp", len)?;
+        if let Some(v) = self.function.as_ref() {
+            struct_ser.serialize_field("function", v)?;
+        }
+        if !self.workflows.is_empty() {
+            struct_ser.serialize_field("workflows", &self.workflows)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for GetModelMappingReq {
+impl<'de> serde::Deserialize<'de> for GetFunctionResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "model_mapping_id",
-            "modelMappingId",
+            "function",
+            "workflows",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            ModelMappingId,
+            Function,
+            Workflows,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -2860,7 +2346,8 @@ impl<'de> serde::Deserialize<'de> for GetModelMappingReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "modelMappingId" | "model_mapping_id" => Ok(GeneratedField::ModelMappingId),
+                            "function" => Ok(GeneratedField::Function),
+                            "workflows" => Ok(GeneratedField::Workflows),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -2870,124 +2357,41 @@ impl<'de> serde::Deserialize<'de> for GetModelMappingReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GetModelMappingReq;
+            type Value = GetFunctionResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.GetModelMappingReq")
+                formatter.write_str("struct hi.media.GetFunctionResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetModelMappingReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetFunctionResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut model_mapping_id__ = None;
+                let mut function__ = None;
+                let mut workflows__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::ModelMappingId => {
-                            if model_mapping_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("modelMappingId"));
+                        GeneratedField::Function => {
+                            if function__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("function"));
                             }
-                            model_mapping_id__ = map_.next_value()?;
+                            function__ = map_.next_value()?;
+                        }
+                        GeneratedField::Workflows => {
+                            if workflows__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflows"));
+                            }
+                            workflows__ = Some(map_.next_value()?);
                         }
                     }
                 }
-                Ok(GetModelMappingReq {
-                    model_mapping_id: model_mapping_id__,
+                Ok(GetFunctionResp {
+                    function: function__,
+                    workflows: workflows__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.GetModelMappingReq", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for GetModelMappingResp {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.mapping.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.GetModelMappingResp", len)?;
-        if let Some(v) = self.mapping.as_ref() {
-            struct_ser.serialize_field("mapping", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for GetModelMappingResp {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "mapping",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Mapping,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "mapping" => Ok(GeneratedField::Mapping),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GetModelMappingResp;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.GetModelMappingResp")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetModelMappingResp, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut mapping__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Mapping => {
-                            if mapping__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("mapping"));
-                            }
-                            mapping__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(GetModelMappingResp {
-                    mapping: mapping__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.GetModelMappingResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.GetFunctionResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for GetModelReq {
@@ -3687,12 +3091,12 @@ impl serde::Serialize for GetWorkflowReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.workflow_version_id.is_some() {
+        if self.workflow_id.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.media.GetWorkflowReq", len)?;
-        if let Some(v) = self.workflow_version_id.as_ref() {
-            struct_ser.serialize_field("workflowVersionId", v)?;
+        if let Some(v) = self.workflow_id.as_ref() {
+            struct_ser.serialize_field("workflowId", v)?;
         }
         struct_ser.end()
     }
@@ -3704,13 +3108,13 @@ impl<'de> serde::Deserialize<'de> for GetWorkflowReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "workflow_version_id",
-            "workflowVersionId",
+            "workflow_id",
+            "workflowId",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            WorkflowVersionId,
+            WorkflowId,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -3732,7 +3136,7 @@ impl<'de> serde::Deserialize<'de> for GetWorkflowReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "workflowVersionId" | "workflow_version_id" => Ok(GeneratedField::WorkflowVersionId),
+                            "workflowId" | "workflow_id" => Ok(GeneratedField::WorkflowId),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -3752,19 +3156,19 @@ impl<'de> serde::Deserialize<'de> for GetWorkflowReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut workflow_version_id__ = None;
+                let mut workflow_id__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::WorkflowVersionId => {
-                            if workflow_version_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("workflowVersionId"));
+                        GeneratedField::WorkflowId => {
+                            if workflow_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowId"));
                             }
-                            workflow_version_id__ = map_.next_value()?;
+                            workflow_id__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(GetWorkflowReq {
-                    workflow_version_id: workflow_version_id__,
+                    workflow_id: workflow_id__,
                 })
             }
         }
@@ -4262,244 +3666,6 @@ impl<'de> serde::Deserialize<'de> for ImageToVideoWorkflowConfig {
             }
         }
         deserializer.deserialize_struct("hi.media.ImageToVideoWorkflowConfig", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for ImportWorkflowReq {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.feature_key.is_some() {
-            len += 1;
-        }
-        if self.name.is_some() {
-            len += 1;
-        }
-        if self.api_json.is_some() {
-            len += 1;
-        }
-        if self.description.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.ImportWorkflowReq", len)?;
-        if let Some(v) = self.feature_key.as_ref() {
-            let v = FeatureKey::try_from(*v)
-                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
-            struct_ser.serialize_field("featureKey", &v)?;
-        }
-        if let Some(v) = self.name.as_ref() {
-            struct_ser.serialize_field("name", v)?;
-        }
-        if let Some(v) = self.api_json.as_ref() {
-            struct_ser.serialize_field("apiJson", v)?;
-        }
-        if let Some(v) = self.description.as_ref() {
-            struct_ser.serialize_field("description", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for ImportWorkflowReq {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "feature_key",
-            "featureKey",
-            "name",
-            "api_json",
-            "apiJson",
-            "description",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            FeatureKey,
-            Name,
-            ApiJson,
-            Description,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "featureKey" | "feature_key" => Ok(GeneratedField::FeatureKey),
-                            "name" => Ok(GeneratedField::Name),
-                            "apiJson" | "api_json" => Ok(GeneratedField::ApiJson),
-                            "description" => Ok(GeneratedField::Description),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ImportWorkflowReq;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.ImportWorkflowReq")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ImportWorkflowReq, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut feature_key__ = None;
-                let mut name__ = None;
-                let mut api_json__ = None;
-                let mut description__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::FeatureKey => {
-                            if feature_key__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("featureKey"));
-                            }
-                            feature_key__ = map_.next_value::<::std::option::Option<FeatureKey>>()?.map(|x| x as i32);
-                        }
-                        GeneratedField::Name => {
-                            if name__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("name"));
-                            }
-                            name__ = map_.next_value()?;
-                        }
-                        GeneratedField::ApiJson => {
-                            if api_json__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("apiJson"));
-                            }
-                            api_json__ = map_.next_value()?;
-                        }
-                        GeneratedField::Description => {
-                            if description__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("description"));
-                            }
-                            description__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(ImportWorkflowReq {
-                    feature_key: feature_key__,
-                    name: name__,
-                    api_json: api_json__,
-                    description: description__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.ImportWorkflowReq", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for ImportWorkflowResp {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.workflow_version_id.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.ImportWorkflowResp", len)?;
-        if let Some(v) = self.workflow_version_id.as_ref() {
-            struct_ser.serialize_field("workflowVersionId", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for ImportWorkflowResp {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "workflow_version_id",
-            "workflowVersionId",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            WorkflowVersionId,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "workflowVersionId" | "workflow_version_id" => Ok(GeneratedField::WorkflowVersionId),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ImportWorkflowResp;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.ImportWorkflowResp")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ImportWorkflowResp, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut workflow_version_id__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::WorkflowVersionId => {
-                            if workflow_version_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("workflowVersionId"));
-                            }
-                            workflow_version_id__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(ImportWorkflowResp {
-                    workflow_version_id: workflow_version_id__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.ImportWorkflowResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for IntRangeConfig {
@@ -5693,7 +4859,7 @@ impl<'de> serde::Deserialize<'de> for ListFilesResp {
         deserializer.deserialize_struct("hi.media.ListFilesResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListModelMappingsReq {
+impl serde::Serialize for ListFunctionsResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -5701,48 +4867,29 @@ impl serde::Serialize for ListModelMappingsReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.pagination.is_some() {
+        if !self.functions.is_empty() {
             len += 1;
         }
-        if self.feature_key.is_some() {
-            len += 1;
-        }
-        if self.enabled.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.ListModelMappingsReq", len)?;
-        if let Some(v) = self.pagination.as_ref() {
-            struct_ser.serialize_field("pagination", v)?;
-        }
-        if let Some(v) = self.feature_key.as_ref() {
-            let v = FeatureKey::try_from(*v)
-                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
-            struct_ser.serialize_field("featureKey", &v)?;
-        }
-        if let Some(v) = self.enabled.as_ref() {
-            struct_ser.serialize_field("enabled", v)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.ListFunctionsResp", len)?;
+        if !self.functions.is_empty() {
+            struct_ser.serialize_field("functions", &self.functions)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListModelMappingsReq {
+impl<'de> serde::Deserialize<'de> for ListFunctionsResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "pagination",
-            "feature_key",
-            "featureKey",
-            "enabled",
+            "functions",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Pagination,
-            FeatureKey,
-            Enabled,
+            Functions,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -5764,9 +4911,7 @@ impl<'de> serde::Deserialize<'de> for ListModelMappingsReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "pagination" => Ok(GeneratedField::Pagination),
-                            "featureKey" | "feature_key" => Ok(GeneratedField::FeatureKey),
-                            "enabled" => Ok(GeneratedField::Enabled),
+                            "functions" => Ok(GeneratedField::Functions),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -5776,159 +4921,33 @@ impl<'de> serde::Deserialize<'de> for ListModelMappingsReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListModelMappingsReq;
+            type Value = ListFunctionsResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.ListModelMappingsReq")
+                formatter.write_str("struct hi.media.ListFunctionsResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListModelMappingsReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListFunctionsResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut pagination__ = None;
-                let mut feature_key__ = None;
-                let mut enabled__ = None;
+                let mut functions__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Pagination => {
-                            if pagination__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("pagination"));
+                        GeneratedField::Functions => {
+                            if functions__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("functions"));
                             }
-                            pagination__ = map_.next_value()?;
-                        }
-                        GeneratedField::FeatureKey => {
-                            if feature_key__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("featureKey"));
-                            }
-                            feature_key__ = map_.next_value::<::std::option::Option<FeatureKey>>()?.map(|x| x as i32);
-                        }
-                        GeneratedField::Enabled => {
-                            if enabled__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("enabled"));
-                            }
-                            enabled__ = map_.next_value()?;
+                            functions__ = Some(map_.next_value()?);
                         }
                     }
                 }
-                Ok(ListModelMappingsReq {
-                    pagination: pagination__,
-                    feature_key: feature_key__,
-                    enabled: enabled__,
+                Ok(ListFunctionsResp {
+                    functions: functions__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.ListModelMappingsReq", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for ListModelMappingsResp {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.total.is_some() {
-            len += 1;
-        }
-        if !self.mappings.is_empty() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.ListModelMappingsResp", len)?;
-        if let Some(v) = self.total.as_ref() {
-            struct_ser.serialize_field("total", v)?;
-        }
-        if !self.mappings.is_empty() {
-            struct_ser.serialize_field("mappings", &self.mappings)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for ListModelMappingsResp {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "total",
-            "mappings",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Total,
-            Mappings,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "total" => Ok(GeneratedField::Total),
-                            "mappings" => Ok(GeneratedField::Mappings),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListModelMappingsResp;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.ListModelMappingsResp")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListModelMappingsResp, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut total__ = None;
-                let mut mappings__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Total => {
-                            if total__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("total"));
-                            }
-                            total__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                        GeneratedField::Mappings => {
-                            if mappings__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("mappings"));
-                            }
-                            mappings__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(ListModelMappingsResp {
-                    total: total__,
-                    mappings: mappings__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.ListModelMappingsResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.ListFunctionsResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for ListModelsReq {
@@ -6143,7 +5162,7 @@ impl serde::Serialize for ListTasksReq {
         if self.pagination.is_some() {
             len += 1;
         }
-        if self.feature_key.is_some() {
+        if self.function_id.is_some() {
             len += 1;
         }
         if !self.statuses.is_empty() {
@@ -6153,10 +5172,8 @@ impl serde::Serialize for ListTasksReq {
         if let Some(v) = self.pagination.as_ref() {
             struct_ser.serialize_field("pagination", v)?;
         }
-        if let Some(v) = self.feature_key.as_ref() {
-            let v = FeatureKey::try_from(*v)
-                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
-            struct_ser.serialize_field("featureKey", &v)?;
+        if let Some(v) = self.function_id.as_ref() {
+            struct_ser.serialize_field("functionId", v)?;
         }
         if !self.statuses.is_empty() {
             let v = self.statuses.iter().cloned().map(|v| {
@@ -6176,15 +5193,15 @@ impl<'de> serde::Deserialize<'de> for ListTasksReq {
     {
         const FIELDS: &[&str] = &[
             "pagination",
-            "feature_key",
-            "featureKey",
+            "function_id",
+            "functionId",
             "statuses",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Pagination,
-            FeatureKey,
+            FunctionId,
             Statuses,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -6208,7 +5225,7 @@ impl<'de> serde::Deserialize<'de> for ListTasksReq {
                     {
                         match value {
                             "pagination" => Ok(GeneratedField::Pagination),
-                            "featureKey" | "feature_key" => Ok(GeneratedField::FeatureKey),
+                            "functionId" | "function_id" => Ok(GeneratedField::FunctionId),
                             "statuses" => Ok(GeneratedField::Statuses),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -6230,7 +5247,7 @@ impl<'de> serde::Deserialize<'de> for ListTasksReq {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut pagination__ = None;
-                let mut feature_key__ = None;
+                let mut function_id__ = None;
                 let mut statuses__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
@@ -6240,11 +5257,11 @@ impl<'de> serde::Deserialize<'de> for ListTasksReq {
                             }
                             pagination__ = map_.next_value()?;
                         }
-                        GeneratedField::FeatureKey => {
-                            if feature_key__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("featureKey"));
+                        GeneratedField::FunctionId => {
+                            if function_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("functionId"));
                             }
-                            feature_key__ = map_.next_value::<::std::option::Option<FeatureKey>>()?.map(|x| x as i32);
+                            function_id__ = map_.next_value()?;
                         }
                         GeneratedField::Statuses => {
                             if statuses__.is_some() {
@@ -6256,7 +5273,7 @@ impl<'de> serde::Deserialize<'de> for ListTasksReq {
                 }
                 Ok(ListTasksReq {
                     pagination: pagination__,
-                    feature_key: feature_key__,
+                    function_id: function_id__,
                     statuses: statuses__.unwrap_or_default(),
                 })
             }
@@ -6385,15 +5402,15 @@ impl serde::Serialize for ListWorkflowTestsReq {
         if self.pagination.is_some() {
             len += 1;
         }
-        if self.workflow_version_id.is_some() {
+        if self.workflow_id.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.media.ListWorkflowTestsReq", len)?;
         if let Some(v) = self.pagination.as_ref() {
             struct_ser.serialize_field("pagination", v)?;
         }
-        if let Some(v) = self.workflow_version_id.as_ref() {
-            struct_ser.serialize_field("workflowVersionId", v)?;
+        if let Some(v) = self.workflow_id.as_ref() {
+            struct_ser.serialize_field("workflowId", v)?;
         }
         struct_ser.end()
     }
@@ -6406,14 +5423,14 @@ impl<'de> serde::Deserialize<'de> for ListWorkflowTestsReq {
     {
         const FIELDS: &[&str] = &[
             "pagination",
-            "workflow_version_id",
-            "workflowVersionId",
+            "workflow_id",
+            "workflowId",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Pagination,
-            WorkflowVersionId,
+            WorkflowId,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -6436,7 +5453,7 @@ impl<'de> serde::Deserialize<'de> for ListWorkflowTestsReq {
                     {
                         match value {
                             "pagination" => Ok(GeneratedField::Pagination),
-                            "workflowVersionId" | "workflow_version_id" => Ok(GeneratedField::WorkflowVersionId),
+                            "workflowId" | "workflow_id" => Ok(GeneratedField::WorkflowId),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -6457,7 +5474,7 @@ impl<'de> serde::Deserialize<'de> for ListWorkflowTestsReq {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut pagination__ = None;
-                let mut workflow_version_id__ = None;
+                let mut workflow_id__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Pagination => {
@@ -6466,17 +5483,17 @@ impl<'de> serde::Deserialize<'de> for ListWorkflowTestsReq {
                             }
                             pagination__ = map_.next_value()?;
                         }
-                        GeneratedField::WorkflowVersionId => {
-                            if workflow_version_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("workflowVersionId"));
+                        GeneratedField::WorkflowId => {
+                            if workflow_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowId"));
                             }
-                            workflow_version_id__ = map_.next_value()?;
+                            workflow_id__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(ListWorkflowTestsReq {
                     pagination: pagination__,
-                    workflow_version_id: workflow_version_id__,
+                    workflow_id: workflow_id__,
                 })
             }
         }
@@ -6604,7 +5621,7 @@ impl serde::Serialize for ListWorkflowsReq {
         if self.pagination.is_some() {
             len += 1;
         }
-        if self.feature_key.is_some() {
+        if self.function_id.is_some() {
             len += 1;
         }
         if self.status.is_some() {
@@ -6614,10 +5631,8 @@ impl serde::Serialize for ListWorkflowsReq {
         if let Some(v) = self.pagination.as_ref() {
             struct_ser.serialize_field("pagination", v)?;
         }
-        if let Some(v) = self.feature_key.as_ref() {
-            let v = FeatureKey::try_from(*v)
-                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
-            struct_ser.serialize_field("featureKey", &v)?;
+        if let Some(v) = self.function_id.as_ref() {
+            struct_ser.serialize_field("functionId", v)?;
         }
         if let Some(v) = self.status.as_ref() {
             let v = WorkflowStatus::try_from(*v)
@@ -6635,15 +5650,15 @@ impl<'de> serde::Deserialize<'de> for ListWorkflowsReq {
     {
         const FIELDS: &[&str] = &[
             "pagination",
-            "feature_key",
-            "featureKey",
+            "function_id",
+            "functionId",
             "status",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Pagination,
-            FeatureKey,
+            FunctionId,
             Status,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -6667,7 +5682,7 @@ impl<'de> serde::Deserialize<'de> for ListWorkflowsReq {
                     {
                         match value {
                             "pagination" => Ok(GeneratedField::Pagination),
-                            "featureKey" | "feature_key" => Ok(GeneratedField::FeatureKey),
+                            "functionId" | "function_id" => Ok(GeneratedField::FunctionId),
                             "status" => Ok(GeneratedField::Status),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -6689,7 +5704,7 @@ impl<'de> serde::Deserialize<'de> for ListWorkflowsReq {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut pagination__ = None;
-                let mut feature_key__ = None;
+                let mut function_id__ = None;
                 let mut status__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
@@ -6699,11 +5714,11 @@ impl<'de> serde::Deserialize<'de> for ListWorkflowsReq {
                             }
                             pagination__ = map_.next_value()?;
                         }
-                        GeneratedField::FeatureKey => {
-                            if feature_key__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("featureKey"));
+                        GeneratedField::FunctionId => {
+                            if function_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("functionId"));
                             }
-                            feature_key__ = map_.next_value::<::std::option::Option<FeatureKey>>()?.map(|x| x as i32);
+                            function_id__ = map_.next_value()?;
                         }
                         GeneratedField::Status => {
                             if status__.is_some() {
@@ -6715,7 +5730,7 @@ impl<'de> serde::Deserialize<'de> for ListWorkflowsReq {
                 }
                 Ok(ListWorkflowsReq {
                     pagination: pagination__,
-                    feature_key: feature_key__,
+                    function_id: function_id__,
                     status: status__,
                 })
             }
@@ -6833,176 +5848,6 @@ impl<'de> serde::Deserialize<'de> for ListWorkflowsResp {
         deserializer.deserialize_struct("hi.media.ListWorkflowsResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for MaintenanceState {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.enabled.is_some() {
-            len += 1;
-        }
-        if self.reason.is_some() {
-            len += 1;
-        }
-        if self.started_at.is_some() {
-            len += 1;
-        }
-        if self.updated_by.is_some() {
-            len += 1;
-        }
-        if self.updated_at.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.MaintenanceState", len)?;
-        if let Some(v) = self.enabled.as_ref() {
-            struct_ser.serialize_field("enabled", v)?;
-        }
-        if let Some(v) = self.reason.as_ref() {
-            struct_ser.serialize_field("reason", v)?;
-        }
-        if let Some(v) = self.started_at.as_ref() {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("startedAt", ToString::to_string(&v).as_str())?;
-        }
-        if let Some(v) = self.updated_by.as_ref() {
-            struct_ser.serialize_field("updatedBy", v)?;
-        }
-        if let Some(v) = self.updated_at.as_ref() {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("updatedAt", ToString::to_string(&v).as_str())?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for MaintenanceState {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "enabled",
-            "reason",
-            "started_at",
-            "startedAt",
-            "updated_by",
-            "updatedBy",
-            "updated_at",
-            "updatedAt",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Enabled,
-            Reason,
-            StartedAt,
-            UpdatedBy,
-            UpdatedAt,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "enabled" => Ok(GeneratedField::Enabled),
-                            "reason" => Ok(GeneratedField::Reason),
-                            "startedAt" | "started_at" => Ok(GeneratedField::StartedAt),
-                            "updatedBy" | "updated_by" => Ok(GeneratedField::UpdatedBy),
-                            "updatedAt" | "updated_at" => Ok(GeneratedField::UpdatedAt),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MaintenanceState;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.MaintenanceState")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MaintenanceState, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut enabled__ = None;
-                let mut reason__ = None;
-                let mut started_at__ = None;
-                let mut updated_by__ = None;
-                let mut updated_at__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Enabled => {
-                            if enabled__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("enabled"));
-                            }
-                            enabled__ = map_.next_value()?;
-                        }
-                        GeneratedField::Reason => {
-                            if reason__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("reason"));
-                            }
-                            reason__ = map_.next_value()?;
-                        }
-                        GeneratedField::StartedAt => {
-                            if started_at__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("startedAt"));
-                            }
-                            started_at__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                        GeneratedField::UpdatedBy => {
-                            if updated_by__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("updatedBy"));
-                            }
-                            updated_by__ = map_.next_value()?;
-                        }
-                        GeneratedField::UpdatedAt => {
-                            if updated_at__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("updatedAt"));
-                            }
-                            updated_at__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                    }
-                }
-                Ok(MaintenanceState {
-                    enabled: enabled__,
-                    reason: reason__,
-                    started_at: started_at__,
-                    updated_by: updated_by__,
-                    updated_at: updated_at__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.MaintenanceState", FIELDS, GeneratedVisitor)
-    }
-}
 impl serde::Serialize for MediaType {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -7088,7 +5933,10 @@ impl serde::Serialize for Model {
         if self.model_id.is_some() {
             len += 1;
         }
-        if self.name.is_some() {
+        if self.display_name.is_some() {
+            len += 1;
+        }
+        if self.real_name.is_some() {
             len += 1;
         }
         if self.created_at.is_some() {
@@ -7101,8 +5949,11 @@ impl serde::Serialize for Model {
         if let Some(v) = self.model_id.as_ref() {
             struct_ser.serialize_field("modelId", v)?;
         }
-        if let Some(v) = self.name.as_ref() {
-            struct_ser.serialize_field("name", v)?;
+        if let Some(v) = self.display_name.as_ref() {
+            struct_ser.serialize_field("displayName", v)?;
+        }
+        if let Some(v) = self.real_name.as_ref() {
+            struct_ser.serialize_field("realName", v)?;
         }
         if let Some(v) = self.created_at.as_ref() {
             #[allow(clippy::needless_borrow)]
@@ -7126,7 +5977,10 @@ impl<'de> serde::Deserialize<'de> for Model {
         const FIELDS: &[&str] = &[
             "model_id",
             "modelId",
-            "name",
+            "display_name",
+            "displayName",
+            "real_name",
+            "realName",
             "created_at",
             "createdAt",
             "updated_at",
@@ -7136,7 +5990,8 @@ impl<'de> serde::Deserialize<'de> for Model {
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             ModelId,
-            Name,
+            DisplayName,
+            RealName,
             CreatedAt,
             UpdatedAt,
         }
@@ -7161,7 +6016,8 @@ impl<'de> serde::Deserialize<'de> for Model {
                     {
                         match value {
                             "modelId" | "model_id" => Ok(GeneratedField::ModelId),
-                            "name" => Ok(GeneratedField::Name),
+                            "displayName" | "display_name" => Ok(GeneratedField::DisplayName),
+                            "realName" | "real_name" => Ok(GeneratedField::RealName),
                             "createdAt" | "created_at" => Ok(GeneratedField::CreatedAt),
                             "updatedAt" | "updated_at" => Ok(GeneratedField::UpdatedAt),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
@@ -7184,7 +6040,8 @@ impl<'de> serde::Deserialize<'de> for Model {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut model_id__ = None;
-                let mut name__ = None;
+                let mut display_name__ = None;
+                let mut real_name__ = None;
                 let mut created_at__ = None;
                 let mut updated_at__ = None;
                 while let Some(k) = map_.next_key()? {
@@ -7195,11 +6052,17 @@ impl<'de> serde::Deserialize<'de> for Model {
                             }
                             model_id__ = map_.next_value()?;
                         }
-                        GeneratedField::Name => {
-                            if name__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("name"));
+                        GeneratedField::DisplayName => {
+                            if display_name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("displayName"));
                             }
-                            name__ = map_.next_value()?;
+                            display_name__ = map_.next_value()?;
+                        }
+                        GeneratedField::RealName => {
+                            if real_name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("realName"));
+                            }
+                            real_name__ = map_.next_value()?;
                         }
                         GeneratedField::CreatedAt => {
                             if created_at__.is_some() {
@@ -7221,444 +6084,14 @@ impl<'de> serde::Deserialize<'de> for Model {
                 }
                 Ok(Model {
                     model_id: model_id__,
-                    name: name__,
+                    display_name: display_name__,
+                    real_name: real_name__,
                     created_at: created_at__,
                     updated_at: updated_at__,
                 })
             }
         }
         deserializer.deserialize_struct("hi.media.Model", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for ModelMapping {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.model_mapping_id.is_some() {
-            len += 1;
-        }
-        if self.feature_key.is_some() {
-            len += 1;
-        }
-        if self.model_id.is_some() {
-            len += 1;
-        }
-        if self.workflow_version_id.is_some() {
-            len += 1;
-        }
-        if self.enabled.is_some() {
-            len += 1;
-        }
-        if self.is_default.is_some() {
-            len += 1;
-        }
-        if self.sort_order.is_some() {
-            len += 1;
-        }
-        if self.created_at.is_some() {
-            len += 1;
-        }
-        if self.updated_at.is_some() {
-            len += 1;
-        }
-        if self.disabled_at.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.ModelMapping", len)?;
-        if let Some(v) = self.model_mapping_id.as_ref() {
-            struct_ser.serialize_field("modelMappingId", v)?;
-        }
-        if let Some(v) = self.feature_key.as_ref() {
-            let v = FeatureKey::try_from(*v)
-                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
-            struct_ser.serialize_field("featureKey", &v)?;
-        }
-        if let Some(v) = self.model_id.as_ref() {
-            struct_ser.serialize_field("modelId", v)?;
-        }
-        if let Some(v) = self.workflow_version_id.as_ref() {
-            struct_ser.serialize_field("workflowVersionId", v)?;
-        }
-        if let Some(v) = self.enabled.as_ref() {
-            struct_ser.serialize_field("enabled", v)?;
-        }
-        if let Some(v) = self.is_default.as_ref() {
-            struct_ser.serialize_field("isDefault", v)?;
-        }
-        if let Some(v) = self.sort_order.as_ref() {
-            struct_ser.serialize_field("sortOrder", v)?;
-        }
-        if let Some(v) = self.created_at.as_ref() {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("createdAt", ToString::to_string(&v).as_str())?;
-        }
-        if let Some(v) = self.updated_at.as_ref() {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("updatedAt", ToString::to_string(&v).as_str())?;
-        }
-        if let Some(v) = self.disabled_at.as_ref() {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("disabledAt", ToString::to_string(&v).as_str())?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for ModelMapping {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "model_mapping_id",
-            "modelMappingId",
-            "feature_key",
-            "featureKey",
-            "model_id",
-            "modelId",
-            "workflow_version_id",
-            "workflowVersionId",
-            "enabled",
-            "is_default",
-            "isDefault",
-            "sort_order",
-            "sortOrder",
-            "created_at",
-            "createdAt",
-            "updated_at",
-            "updatedAt",
-            "disabled_at",
-            "disabledAt",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            ModelMappingId,
-            FeatureKey,
-            ModelId,
-            WorkflowVersionId,
-            Enabled,
-            IsDefault,
-            SortOrder,
-            CreatedAt,
-            UpdatedAt,
-            DisabledAt,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "modelMappingId" | "model_mapping_id" => Ok(GeneratedField::ModelMappingId),
-                            "featureKey" | "feature_key" => Ok(GeneratedField::FeatureKey),
-                            "modelId" | "model_id" => Ok(GeneratedField::ModelId),
-                            "workflowVersionId" | "workflow_version_id" => Ok(GeneratedField::WorkflowVersionId),
-                            "enabled" => Ok(GeneratedField::Enabled),
-                            "isDefault" | "is_default" => Ok(GeneratedField::IsDefault),
-                            "sortOrder" | "sort_order" => Ok(GeneratedField::SortOrder),
-                            "createdAt" | "created_at" => Ok(GeneratedField::CreatedAt),
-                            "updatedAt" | "updated_at" => Ok(GeneratedField::UpdatedAt),
-                            "disabledAt" | "disabled_at" => Ok(GeneratedField::DisabledAt),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ModelMapping;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.ModelMapping")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ModelMapping, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut model_mapping_id__ = None;
-                let mut feature_key__ = None;
-                let mut model_id__ = None;
-                let mut workflow_version_id__ = None;
-                let mut enabled__ = None;
-                let mut is_default__ = None;
-                let mut sort_order__ = None;
-                let mut created_at__ = None;
-                let mut updated_at__ = None;
-                let mut disabled_at__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::ModelMappingId => {
-                            if model_mapping_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("modelMappingId"));
-                            }
-                            model_mapping_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::FeatureKey => {
-                            if feature_key__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("featureKey"));
-                            }
-                            feature_key__ = map_.next_value::<::std::option::Option<FeatureKey>>()?.map(|x| x as i32);
-                        }
-                        GeneratedField::ModelId => {
-                            if model_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("modelId"));
-                            }
-                            model_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::WorkflowVersionId => {
-                            if workflow_version_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("workflowVersionId"));
-                            }
-                            workflow_version_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::Enabled => {
-                            if enabled__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("enabled"));
-                            }
-                            enabled__ = map_.next_value()?;
-                        }
-                        GeneratedField::IsDefault => {
-                            if is_default__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("isDefault"));
-                            }
-                            is_default__ = map_.next_value()?;
-                        }
-                        GeneratedField::SortOrder => {
-                            if sort_order__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("sortOrder"));
-                            }
-                            sort_order__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                        GeneratedField::CreatedAt => {
-                            if created_at__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("createdAt"));
-                            }
-                            created_at__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                        GeneratedField::UpdatedAt => {
-                            if updated_at__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("updatedAt"));
-                            }
-                            updated_at__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                        GeneratedField::DisabledAt => {
-                            if disabled_at__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("disabledAt"));
-                            }
-                            disabled_at__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                    }
-                }
-                Ok(ModelMapping {
-                    model_mapping_id: model_mapping_id__,
-                    feature_key: feature_key__,
-                    model_id: model_id__,
-                    workflow_version_id: workflow_version_id__,
-                    enabled: enabled__,
-                    is_default: is_default__,
-                    sort_order: sort_order__,
-                    created_at: created_at__,
-                    updated_at: updated_at__,
-                    disabled_at: disabled_at__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.ModelMapping", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for ModelOption {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.model_mapping_id.is_some() {
-            len += 1;
-        }
-        if self.name.is_some() {
-            len += 1;
-        }
-        if self.is_default.is_some() {
-            len += 1;
-        }
-        if self.description.is_some() {
-            len += 1;
-        }
-        if self.parameter_config.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.ModelOption", len)?;
-        if let Some(v) = self.model_mapping_id.as_ref() {
-            struct_ser.serialize_field("modelMappingId", v)?;
-        }
-        if let Some(v) = self.name.as_ref() {
-            struct_ser.serialize_field("name", v)?;
-        }
-        if let Some(v) = self.is_default.as_ref() {
-            struct_ser.serialize_field("isDefault", v)?;
-        }
-        if let Some(v) = self.description.as_ref() {
-            struct_ser.serialize_field("description", v)?;
-        }
-        if let Some(v) = self.parameter_config.as_ref() {
-            struct_ser.serialize_field("parameterConfig", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for ModelOption {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "model_mapping_id",
-            "modelMappingId",
-            "name",
-            "is_default",
-            "isDefault",
-            "description",
-            "parameter_config",
-            "parameterConfig",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            ModelMappingId,
-            Name,
-            IsDefault,
-            Description,
-            ParameterConfig,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "modelMappingId" | "model_mapping_id" => Ok(GeneratedField::ModelMappingId),
-                            "name" => Ok(GeneratedField::Name),
-                            "isDefault" | "is_default" => Ok(GeneratedField::IsDefault),
-                            "description" => Ok(GeneratedField::Description),
-                            "parameterConfig" | "parameter_config" => Ok(GeneratedField::ParameterConfig),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ModelOption;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.ModelOption")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ModelOption, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut model_mapping_id__ = None;
-                let mut name__ = None;
-                let mut is_default__ = None;
-                let mut description__ = None;
-                let mut parameter_config__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::ModelMappingId => {
-                            if model_mapping_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("modelMappingId"));
-                            }
-                            model_mapping_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::Name => {
-                            if name__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("name"));
-                            }
-                            name__ = map_.next_value()?;
-                        }
-                        GeneratedField::IsDefault => {
-                            if is_default__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("isDefault"));
-                            }
-                            is_default__ = map_.next_value()?;
-                        }
-                        GeneratedField::Description => {
-                            if description__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("description"));
-                            }
-                            description__ = map_.next_value()?;
-                        }
-                        GeneratedField::ParameterConfig => {
-                            if parameter_config__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("parameterConfig"));
-                            }
-                            parameter_config__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(ModelOption {
-                    model_mapping_id: model_mapping_id__,
-                    name: name__,
-                    is_default: is_default__,
-                    description: description__,
-                    parameter_config: parameter_config__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.ModelOption", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for RecoverSaveTaskReq {
@@ -7900,7 +6333,7 @@ impl<'de> serde::Deserialize<'de> for RecoverSaveTaskResp {
         deserializer.deserialize_struct("hi.media.RecoverSaveTaskResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for SetDefaultModelMappingReq {
+impl serde::Serialize for SetDefaultWorkflowReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -7908,30 +6341,39 @@ impl serde::Serialize for SetDefaultModelMappingReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.model_mapping_id.is_some() {
+        if self.workflow_id.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.SetDefaultModelMappingReq", len)?;
-        if let Some(v) = self.model_mapping_id.as_ref() {
-            struct_ser.serialize_field("modelMappingId", v)?;
+        if self.is_default.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.SetDefaultWorkflowReq", len)?;
+        if let Some(v) = self.workflow_id.as_ref() {
+            struct_ser.serialize_field("workflowId", v)?;
+        }
+        if let Some(v) = self.is_default.as_ref() {
+            struct_ser.serialize_field("isDefault", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for SetDefaultModelMappingReq {
+impl<'de> serde::Deserialize<'de> for SetDefaultWorkflowReq {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "model_mapping_id",
-            "modelMappingId",
+            "workflow_id",
+            "workflowId",
+            "is_default",
+            "isDefault",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            ModelMappingId,
+            WorkflowId,
+            IsDefault,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -7953,7 +6395,8 @@ impl<'de> serde::Deserialize<'de> for SetDefaultModelMappingReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "modelMappingId" | "model_mapping_id" => Ok(GeneratedField::ModelMappingId),
+                            "workflowId" | "workflow_id" => Ok(GeneratedField::WorkflowId),
+                            "isDefault" | "is_default" => Ok(GeneratedField::IsDefault),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -7963,36 +6406,44 @@ impl<'de> serde::Deserialize<'de> for SetDefaultModelMappingReq {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = SetDefaultModelMappingReq;
+            type Value = SetDefaultWorkflowReq;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.SetDefaultModelMappingReq")
+                formatter.write_str("struct hi.media.SetDefaultWorkflowReq")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SetDefaultModelMappingReq, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SetDefaultWorkflowReq, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut model_mapping_id__ = None;
+                let mut workflow_id__ = None;
+                let mut is_default__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::ModelMappingId => {
-                            if model_mapping_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("modelMappingId"));
+                        GeneratedField::WorkflowId => {
+                            if workflow_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowId"));
                             }
-                            model_mapping_id__ = map_.next_value()?;
+                            workflow_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::IsDefault => {
+                            if is_default__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("isDefault"));
+                            }
+                            is_default__ = map_.next_value()?;
                         }
                     }
                 }
-                Ok(SetDefaultModelMappingReq {
-                    model_mapping_id: model_mapping_id__,
+                Ok(SetDefaultWorkflowReq {
+                    workflow_id: workflow_id__,
+                    is_default: is_default__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.SetDefaultModelMappingReq", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.SetDefaultWorkflowReq", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for SetDefaultModelMappingResp {
+impl serde::Serialize for SetDefaultWorkflowResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -8000,29 +6451,29 @@ impl serde::Serialize for SetDefaultModelMappingResp {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.mapping.is_some() {
+        if self.workflow.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("hi.media.SetDefaultModelMappingResp", len)?;
-        if let Some(v) = self.mapping.as_ref() {
-            struct_ser.serialize_field("mapping", v)?;
+        let mut struct_ser = serializer.serialize_struct("hi.media.SetDefaultWorkflowResp", len)?;
+        if let Some(v) = self.workflow.as_ref() {
+            struct_ser.serialize_field("workflow", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for SetDefaultModelMappingResp {
+impl<'de> serde::Deserialize<'de> for SetDefaultWorkflowResp {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "mapping",
+            "workflow",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Mapping,
+            Workflow,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -8044,7 +6495,7 @@ impl<'de> serde::Deserialize<'de> for SetDefaultModelMappingResp {
                         E: serde::de::Error,
                     {
                         match value {
-                            "mapping" => Ok(GeneratedField::Mapping),
+                            "workflow" => Ok(GeneratedField::Workflow),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -8054,232 +6505,33 @@ impl<'de> serde::Deserialize<'de> for SetDefaultModelMappingResp {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = SetDefaultModelMappingResp;
+            type Value = SetDefaultWorkflowResp;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.SetDefaultModelMappingResp")
+                formatter.write_str("struct hi.media.SetDefaultWorkflowResp")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SetDefaultModelMappingResp, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SetDefaultWorkflowResp, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut mapping__ = None;
+                let mut workflow__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Mapping => {
-                            if mapping__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("mapping"));
+                        GeneratedField::Workflow => {
+                            if workflow__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflow"));
                             }
-                            mapping__ = map_.next_value()?;
+                            workflow__ = map_.next_value()?;
                         }
                     }
                 }
-                Ok(SetDefaultModelMappingResp {
-                    mapping: mapping__,
+                Ok(SetDefaultWorkflowResp {
+                    workflow: workflow__,
                 })
             }
         }
-        deserializer.deserialize_struct("hi.media.SetDefaultModelMappingResp", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for SetMaintenanceReq {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.enabled.is_some() {
-            len += 1;
-        }
-        if self.reason.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.SetMaintenanceReq", len)?;
-        if let Some(v) = self.enabled.as_ref() {
-            struct_ser.serialize_field("enabled", v)?;
-        }
-        if let Some(v) = self.reason.as_ref() {
-            struct_ser.serialize_field("reason", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for SetMaintenanceReq {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "enabled",
-            "reason",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Enabled,
-            Reason,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "enabled" => Ok(GeneratedField::Enabled),
-                            "reason" => Ok(GeneratedField::Reason),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = SetMaintenanceReq;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.SetMaintenanceReq")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SetMaintenanceReq, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut enabled__ = None;
-                let mut reason__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Enabled => {
-                            if enabled__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("enabled"));
-                            }
-                            enabled__ = map_.next_value()?;
-                        }
-                        GeneratedField::Reason => {
-                            if reason__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("reason"));
-                            }
-                            reason__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(SetMaintenanceReq {
-                    enabled: enabled__,
-                    reason: reason__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.SetMaintenanceReq", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for SetMaintenanceResp {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.state.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.SetMaintenanceResp", len)?;
-        if let Some(v) = self.state.as_ref() {
-            struct_ser.serialize_field("state", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for SetMaintenanceResp {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "state",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            State,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "state" => Ok(GeneratedField::State),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = SetMaintenanceResp;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.SetMaintenanceResp")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SetMaintenanceResp, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut state__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::State => {
-                            if state__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("state"));
-                            }
-                            state__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(SetMaintenanceResp {
-                    state: state__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.SetMaintenanceResp", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.media.SetDefaultWorkflowResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for StringOptionConfig {
@@ -8905,13 +7157,19 @@ impl serde::Serialize for TaskSummary {
         if self.purpose.is_some() {
             len += 1;
         }
-        if self.feature_key.is_some() {
+        if self.function_id.is_some() {
             len += 1;
         }
-        if self.model_mapping_id.is_some() {
+        if self.function_display_name.is_some() {
             len += 1;
         }
-        if self.model_name.is_some() {
+        if self.model_id.is_some() {
+            len += 1;
+        }
+        if self.model_display_name.is_some() {
+            len += 1;
+        }
+        if self.workflow_id.is_some() {
             len += 1;
         }
         if self.status.is_some() {
@@ -8956,16 +7214,20 @@ impl serde::Serialize for TaskSummary {
                 .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
             struct_ser.serialize_field("purpose", &v)?;
         }
-        if let Some(v) = self.feature_key.as_ref() {
-            let v = FeatureKey::try_from(*v)
-                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
-            struct_ser.serialize_field("featureKey", &v)?;
+        if let Some(v) = self.function_id.as_ref() {
+            struct_ser.serialize_field("functionId", v)?;
         }
-        if let Some(v) = self.model_mapping_id.as_ref() {
-            struct_ser.serialize_field("modelMappingId", v)?;
+        if let Some(v) = self.function_display_name.as_ref() {
+            struct_ser.serialize_field("functionDisplayName", v)?;
         }
-        if let Some(v) = self.model_name.as_ref() {
-            struct_ser.serialize_field("modelName", v)?;
+        if let Some(v) = self.model_id.as_ref() {
+            struct_ser.serialize_field("modelId", v)?;
+        }
+        if let Some(v) = self.model_display_name.as_ref() {
+            struct_ser.serialize_field("modelDisplayName", v)?;
+        }
+        if let Some(v) = self.workflow_id.as_ref() {
+            struct_ser.serialize_field("workflowId", v)?;
         }
         if let Some(v) = self.status.as_ref() {
             let v = TaskStatus::try_from(*v)
@@ -9025,12 +7287,16 @@ impl<'de> serde::Deserialize<'de> for TaskSummary {
             "task_id",
             "taskId",
             "purpose",
-            "feature_key",
-            "featureKey",
-            "model_mapping_id",
-            "modelMappingId",
-            "model_name",
-            "modelName",
+            "function_id",
+            "functionId",
+            "function_display_name",
+            "functionDisplayName",
+            "model_id",
+            "modelId",
+            "model_display_name",
+            "modelDisplayName",
+            "workflow_id",
+            "workflowId",
             "status",
             "status_message",
             "statusMessage",
@@ -9057,9 +7323,11 @@ impl<'de> serde::Deserialize<'de> for TaskSummary {
         enum GeneratedField {
             TaskId,
             Purpose,
-            FeatureKey,
-            ModelMappingId,
-            ModelName,
+            FunctionId,
+            FunctionDisplayName,
+            ModelId,
+            ModelDisplayName,
+            WorkflowId,
             Status,
             StatusMessage,
             ErrorCode,
@@ -9094,9 +7362,11 @@ impl<'de> serde::Deserialize<'de> for TaskSummary {
                         match value {
                             "taskId" | "task_id" => Ok(GeneratedField::TaskId),
                             "purpose" => Ok(GeneratedField::Purpose),
-                            "featureKey" | "feature_key" => Ok(GeneratedField::FeatureKey),
-                            "modelMappingId" | "model_mapping_id" => Ok(GeneratedField::ModelMappingId),
-                            "modelName" | "model_name" => Ok(GeneratedField::ModelName),
+                            "functionId" | "function_id" => Ok(GeneratedField::FunctionId),
+                            "functionDisplayName" | "function_display_name" => Ok(GeneratedField::FunctionDisplayName),
+                            "modelId" | "model_id" => Ok(GeneratedField::ModelId),
+                            "modelDisplayName" | "model_display_name" => Ok(GeneratedField::ModelDisplayName),
+                            "workflowId" | "workflow_id" => Ok(GeneratedField::WorkflowId),
                             "status" => Ok(GeneratedField::Status),
                             "statusMessage" | "status_message" => Ok(GeneratedField::StatusMessage),
                             "errorCode" | "error_code" => Ok(GeneratedField::ErrorCode),
@@ -9129,9 +7399,11 @@ impl<'de> serde::Deserialize<'de> for TaskSummary {
             {
                 let mut task_id__ = None;
                 let mut purpose__ = None;
-                let mut feature_key__ = None;
-                let mut model_mapping_id__ = None;
-                let mut model_name__ = None;
+                let mut function_id__ = None;
+                let mut function_display_name__ = None;
+                let mut model_id__ = None;
+                let mut model_display_name__ = None;
+                let mut workflow_id__ = None;
                 let mut status__ = None;
                 let mut status_message__ = None;
                 let mut error_code__ = None;
@@ -9157,23 +7429,35 @@ impl<'de> serde::Deserialize<'de> for TaskSummary {
                             }
                             purpose__ = map_.next_value::<::std::option::Option<TaskPurpose>>()?.map(|x| x as i32);
                         }
-                        GeneratedField::FeatureKey => {
-                            if feature_key__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("featureKey"));
+                        GeneratedField::FunctionId => {
+                            if function_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("functionId"));
                             }
-                            feature_key__ = map_.next_value::<::std::option::Option<FeatureKey>>()?.map(|x| x as i32);
+                            function_id__ = map_.next_value()?;
                         }
-                        GeneratedField::ModelMappingId => {
-                            if model_mapping_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("modelMappingId"));
+                        GeneratedField::FunctionDisplayName => {
+                            if function_display_name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("functionDisplayName"));
                             }
-                            model_mapping_id__ = map_.next_value()?;
+                            function_display_name__ = map_.next_value()?;
                         }
-                        GeneratedField::ModelName => {
-                            if model_name__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("modelName"));
+                        GeneratedField::ModelId => {
+                            if model_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("modelId"));
                             }
-                            model_name__ = map_.next_value()?;
+                            model_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::ModelDisplayName => {
+                            if model_display_name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("modelDisplayName"));
+                            }
+                            model_display_name__ = map_.next_value()?;
+                        }
+                        GeneratedField::WorkflowId => {
+                            if workflow_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowId"));
+                            }
+                            workflow_id__ = map_.next_value()?;
                         }
                         GeneratedField::Status => {
                             if status__.is_some() {
@@ -9256,9 +7540,11 @@ impl<'de> serde::Deserialize<'de> for TaskSummary {
                 Ok(TaskSummary {
                     task_id: task_id__,
                     purpose: purpose__,
-                    feature_key: feature_key__,
-                    model_mapping_id: model_mapping_id__,
-                    model_name: model_name__,
+                    function_id: function_id__,
+                    function_display_name: function_display_name__,
+                    model_id: model_id__,
+                    model_display_name: model_display_name__,
+                    workflow_id: workflow_id__,
                     status: status__,
                     status_message: status_message__,
                     error_code: error_code__,
@@ -9287,7 +7573,7 @@ impl serde::Serialize for TestWorkflowReq {
         if self.request_id.is_some() {
             len += 1;
         }
-        if self.workflow_version_id.is_some() {
+        if self.workflow_id.is_some() {
             len += 1;
         }
         if self.prompt.is_some() {
@@ -9300,8 +7586,8 @@ impl serde::Serialize for TestWorkflowReq {
         if let Some(v) = self.request_id.as_ref() {
             struct_ser.serialize_field("requestId", v)?;
         }
-        if let Some(v) = self.workflow_version_id.as_ref() {
-            struct_ser.serialize_field("workflowVersionId", v)?;
+        if let Some(v) = self.workflow_id.as_ref() {
+            struct_ser.serialize_field("workflowId", v)?;
         }
         if let Some(v) = self.prompt.as_ref() {
             struct_ser.serialize_field("prompt", v)?;
@@ -9321,8 +7607,8 @@ impl<'de> serde::Deserialize<'de> for TestWorkflowReq {
         const FIELDS: &[&str] = &[
             "request_id",
             "requestId",
-            "workflow_version_id",
-            "workflowVersionId",
+            "workflow_id",
+            "workflowId",
             "prompt",
             "input_asset_id",
             "inputAssetId",
@@ -9331,7 +7617,7 @@ impl<'de> serde::Deserialize<'de> for TestWorkflowReq {
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             RequestId,
-            WorkflowVersionId,
+            WorkflowId,
             Prompt,
             InputAssetId,
         }
@@ -9356,7 +7642,7 @@ impl<'de> serde::Deserialize<'de> for TestWorkflowReq {
                     {
                         match value {
                             "requestId" | "request_id" => Ok(GeneratedField::RequestId),
-                            "workflowVersionId" | "workflow_version_id" => Ok(GeneratedField::WorkflowVersionId),
+                            "workflowId" | "workflow_id" => Ok(GeneratedField::WorkflowId),
                             "prompt" => Ok(GeneratedField::Prompt),
                             "inputAssetId" | "input_asset_id" => Ok(GeneratedField::InputAssetId),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
@@ -9379,7 +7665,7 @@ impl<'de> serde::Deserialize<'de> for TestWorkflowReq {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut request_id__ = None;
-                let mut workflow_version_id__ = None;
+                let mut workflow_id__ = None;
                 let mut prompt__ = None;
                 let mut input_asset_id__ = None;
                 while let Some(k) = map_.next_key()? {
@@ -9390,11 +7676,11 @@ impl<'de> serde::Deserialize<'de> for TestWorkflowReq {
                             }
                             request_id__ = map_.next_value()?;
                         }
-                        GeneratedField::WorkflowVersionId => {
-                            if workflow_version_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("workflowVersionId"));
+                        GeneratedField::WorkflowId => {
+                            if workflow_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowId"));
                             }
-                            workflow_version_id__ = map_.next_value()?;
+                            workflow_id__ = map_.next_value()?;
                         }
                         GeneratedField::Prompt => {
                             if prompt__.is_some() {
@@ -9412,7 +7698,7 @@ impl<'de> serde::Deserialize<'de> for TestWorkflowReq {
                 }
                 Ok(TestWorkflowReq {
                     request_id: request_id__,
-                    workflow_version_id: workflow_version_id__,
+                    workflow_id: workflow_id__,
                     prompt: prompt__,
                     input_asset_id: input_asset_id__,
                 })
@@ -9973,189 +8259,6 @@ impl<'de> serde::Deserialize<'de> for TextToVideoWorkflowConfig {
         deserializer.deserialize_struct("hi.media.TextToVideoWorkflowConfig", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for UpdateModelMappingSortOrderReq {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if !self.model_mapping_ids.is_empty() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.UpdateModelMappingSortOrderReq", len)?;
-        if !self.model_mapping_ids.is_empty() {
-            struct_ser.serialize_field("modelMappingIds", &self.model_mapping_ids)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for UpdateModelMappingSortOrderReq {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "model_mapping_ids",
-            "modelMappingIds",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            ModelMappingIds,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "modelMappingIds" | "model_mapping_ids" => Ok(GeneratedField::ModelMappingIds),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = UpdateModelMappingSortOrderReq;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.UpdateModelMappingSortOrderReq")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdateModelMappingSortOrderReq, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut model_mapping_ids__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::ModelMappingIds => {
-                            if model_mapping_ids__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("modelMappingIds"));
-                            }
-                            model_mapping_ids__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(UpdateModelMappingSortOrderReq {
-                    model_mapping_ids: model_mapping_ids__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.UpdateModelMappingSortOrderReq", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for UpdateModelMappingSortOrderResp {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if !self.mappings.is_empty() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.UpdateModelMappingSortOrderResp", len)?;
-        if !self.mappings.is_empty() {
-            struct_ser.serialize_field("mappings", &self.mappings)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for UpdateModelMappingSortOrderResp {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "mappings",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Mappings,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "mappings" => Ok(GeneratedField::Mappings),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = UpdateModelMappingSortOrderResp;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.UpdateModelMappingSortOrderResp")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdateModelMappingSortOrderResp, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut mappings__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Mappings => {
-                            if mappings__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("mappings"));
-                            }
-                            mappings__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(UpdateModelMappingSortOrderResp {
-                    mappings: mappings__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.UpdateModelMappingSortOrderResp", FIELDS, GeneratedVisitor)
-    }
-}
 impl serde::Serialize for UpdateModelReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -10167,15 +8270,15 @@ impl serde::Serialize for UpdateModelReq {
         if self.model_id.is_some() {
             len += 1;
         }
-        if self.name.is_some() {
+        if self.display_name.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.media.UpdateModelReq", len)?;
         if let Some(v) = self.model_id.as_ref() {
             struct_ser.serialize_field("modelId", v)?;
         }
-        if let Some(v) = self.name.as_ref() {
-            struct_ser.serialize_field("name", v)?;
+        if let Some(v) = self.display_name.as_ref() {
+            struct_ser.serialize_field("displayName", v)?;
         }
         struct_ser.end()
     }
@@ -10189,13 +8292,14 @@ impl<'de> serde::Deserialize<'de> for UpdateModelReq {
         const FIELDS: &[&str] = &[
             "model_id",
             "modelId",
-            "name",
+            "display_name",
+            "displayName",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             ModelId,
-            Name,
+            DisplayName,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -10218,7 +8322,7 @@ impl<'de> serde::Deserialize<'de> for UpdateModelReq {
                     {
                         match value {
                             "modelId" | "model_id" => Ok(GeneratedField::ModelId),
-                            "name" => Ok(GeneratedField::Name),
+                            "displayName" | "display_name" => Ok(GeneratedField::DisplayName),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -10239,7 +8343,7 @@ impl<'de> serde::Deserialize<'de> for UpdateModelReq {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut model_id__ = None;
-                let mut name__ = None;
+                let mut display_name__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::ModelId => {
@@ -10248,17 +8352,17 @@ impl<'de> serde::Deserialize<'de> for UpdateModelReq {
                             }
                             model_id__ = map_.next_value()?;
                         }
-                        GeneratedField::Name => {
-                            if name__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("name"));
+                        GeneratedField::DisplayName => {
+                            if display_name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("displayName"));
                             }
-                            name__ = map_.next_value()?;
+                            display_name__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(UpdateModelReq {
                     model_id: model_id__,
-                    name: name__,
+                    display_name: display_name__,
                 })
             }
         }
@@ -10356,206 +8460,6 @@ impl<'de> serde::Deserialize<'de> for UpdateModelResp {
         deserializer.deserialize_struct("hi.media.UpdateModelResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for UpdateWorkflowDescriptionReq {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.workflow_version_id.is_some() {
-            len += 1;
-        }
-        if self.description.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.UpdateWorkflowDescriptionReq", len)?;
-        if let Some(v) = self.workflow_version_id.as_ref() {
-            struct_ser.serialize_field("workflowVersionId", v)?;
-        }
-        if let Some(v) = self.description.as_ref() {
-            struct_ser.serialize_field("description", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for UpdateWorkflowDescriptionReq {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "workflow_version_id",
-            "workflowVersionId",
-            "description",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            WorkflowVersionId,
-            Description,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "workflowVersionId" | "workflow_version_id" => Ok(GeneratedField::WorkflowVersionId),
-                            "description" => Ok(GeneratedField::Description),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = UpdateWorkflowDescriptionReq;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.UpdateWorkflowDescriptionReq")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdateWorkflowDescriptionReq, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut workflow_version_id__ = None;
-                let mut description__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::WorkflowVersionId => {
-                            if workflow_version_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("workflowVersionId"));
-                            }
-                            workflow_version_id__ = map_.next_value()?;
-                        }
-                        GeneratedField::Description => {
-                            if description__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("description"));
-                            }
-                            description__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(UpdateWorkflowDescriptionReq {
-                    workflow_version_id: workflow_version_id__,
-                    description: description__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.UpdateWorkflowDescriptionReq", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for UpdateWorkflowDescriptionResp {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.workflow.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.media.UpdateWorkflowDescriptionResp", len)?;
-        if let Some(v) = self.workflow.as_ref() {
-            struct_ser.serialize_field("workflow", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for UpdateWorkflowDescriptionResp {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "workflow",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Workflow,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "workflow" => Ok(GeneratedField::Workflow),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = UpdateWorkflowDescriptionResp;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.media.UpdateWorkflowDescriptionResp")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdateWorkflowDescriptionResp, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut workflow__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Workflow => {
-                            if workflow__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("workflow"));
-                            }
-                            workflow__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(UpdateWorkflowDescriptionResp {
-                    workflow: workflow__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.media.UpdateWorkflowDescriptionResp", FIELDS, GeneratedVisitor)
-    }
-}
 impl serde::Serialize for UpdateWorkflowReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -10564,21 +8468,21 @@ impl serde::Serialize for UpdateWorkflowReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.workflow_version_id.is_some() {
+        if self.workflow_id.is_some() {
             len += 1;
         }
-        if self.api_json.is_some() {
+        if self.description.is_some() {
             len += 1;
         }
         if self.config.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.media.UpdateWorkflowReq", len)?;
-        if let Some(v) = self.workflow_version_id.as_ref() {
-            struct_ser.serialize_field("workflowVersionId", v)?;
+        if let Some(v) = self.workflow_id.as_ref() {
+            struct_ser.serialize_field("workflowId", v)?;
         }
-        if let Some(v) = self.api_json.as_ref() {
-            struct_ser.serialize_field("apiJson", v)?;
+        if let Some(v) = self.description.as_ref() {
+            struct_ser.serialize_field("description", v)?;
         }
         if let Some(v) = self.config.as_ref() {
             struct_ser.serialize_field("config", v)?;
@@ -10593,17 +8497,16 @@ impl<'de> serde::Deserialize<'de> for UpdateWorkflowReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "workflow_version_id",
-            "workflowVersionId",
-            "api_json",
-            "apiJson",
+            "workflow_id",
+            "workflowId",
+            "description",
             "config",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            WorkflowVersionId,
-            ApiJson,
+            WorkflowId,
+            Description,
             Config,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -10626,8 +8529,8 @@ impl<'de> serde::Deserialize<'de> for UpdateWorkflowReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "workflowVersionId" | "workflow_version_id" => Ok(GeneratedField::WorkflowVersionId),
-                            "apiJson" | "api_json" => Ok(GeneratedField::ApiJson),
+                            "workflowId" | "workflow_id" => Ok(GeneratedField::WorkflowId),
+                            "description" => Ok(GeneratedField::Description),
                             "config" => Ok(GeneratedField::Config),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -10648,22 +8551,22 @@ impl<'de> serde::Deserialize<'de> for UpdateWorkflowReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut workflow_version_id__ = None;
-                let mut api_json__ = None;
+                let mut workflow_id__ = None;
+                let mut description__ = None;
                 let mut config__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::WorkflowVersionId => {
-                            if workflow_version_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("workflowVersionId"));
+                        GeneratedField::WorkflowId => {
+                            if workflow_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowId"));
                             }
-                            workflow_version_id__ = map_.next_value()?;
+                            workflow_id__ = map_.next_value()?;
                         }
-                        GeneratedField::ApiJson => {
-                            if api_json__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("apiJson"));
+                        GeneratedField::Description => {
+                            if description__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("description"));
                             }
-                            api_json__ = map_.next_value()?;
+                            description__ = map_.next_value()?;
                         }
                         GeneratedField::Config => {
                             if config__.is_some() {
@@ -10674,8 +8577,8 @@ impl<'de> serde::Deserialize<'de> for UpdateWorkflowReq {
                     }
                 }
                 Ok(UpdateWorkflowReq {
-                    workflow_version_id: workflow_version_id__,
-                    api_json: api_json__,
+                    workflow_id: workflow_id__,
+                    description: description__,
                     config: config__,
                 })
             }
@@ -10772,6 +8675,207 @@ impl<'de> serde::Deserialize<'de> for UpdateWorkflowResp {
             }
         }
         deserializer.deserialize_struct("hi.media.UpdateWorkflowResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for UpdateWorkflowSortOrderReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.function_id.is_some() {
+            len += 1;
+        }
+        if !self.workflow_ids.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.UpdateWorkflowSortOrderReq", len)?;
+        if let Some(v) = self.function_id.as_ref() {
+            struct_ser.serialize_field("functionId", v)?;
+        }
+        if !self.workflow_ids.is_empty() {
+            struct_ser.serialize_field("workflowIds", &self.workflow_ids)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for UpdateWorkflowSortOrderReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "function_id",
+            "functionId",
+            "workflow_ids",
+            "workflowIds",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            FunctionId,
+            WorkflowIds,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "functionId" | "function_id" => Ok(GeneratedField::FunctionId),
+                            "workflowIds" | "workflow_ids" => Ok(GeneratedField::WorkflowIds),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = UpdateWorkflowSortOrderReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.UpdateWorkflowSortOrderReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdateWorkflowSortOrderReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut function_id__ = None;
+                let mut workflow_ids__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::FunctionId => {
+                            if function_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("functionId"));
+                            }
+                            function_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::WorkflowIds => {
+                            if workflow_ids__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowIds"));
+                            }
+                            workflow_ids__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(UpdateWorkflowSortOrderReq {
+                    function_id: function_id__,
+                    workflow_ids: workflow_ids__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.UpdateWorkflowSortOrderReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for UpdateWorkflowSortOrderResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.workflows.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.UpdateWorkflowSortOrderResp", len)?;
+        if !self.workflows.is_empty() {
+            struct_ser.serialize_field("workflows", &self.workflows)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for UpdateWorkflowSortOrderResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "workflows",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Workflows,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "workflows" => Ok(GeneratedField::Workflows),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = UpdateWorkflowSortOrderResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.UpdateWorkflowSortOrderResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdateWorkflowSortOrderResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut workflows__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Workflows => {
+                            if workflows__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflows"));
+                            }
+                            workflows__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(UpdateWorkflowSortOrderResp {
+                    workflows: workflows__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.UpdateWorkflowSortOrderResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for UploadBatchResult {
@@ -11857,12 +9961,12 @@ impl serde::Serialize for ValidateWorkflowReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.workflow_version_id.is_some() {
+        if self.workflow_id.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.media.ValidateWorkflowReq", len)?;
-        if let Some(v) = self.workflow_version_id.as_ref() {
-            struct_ser.serialize_field("workflowVersionId", v)?;
+        if let Some(v) = self.workflow_id.as_ref() {
+            struct_ser.serialize_field("workflowId", v)?;
         }
         struct_ser.end()
     }
@@ -11874,13 +9978,13 @@ impl<'de> serde::Deserialize<'de> for ValidateWorkflowReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "workflow_version_id",
-            "workflowVersionId",
+            "workflow_id",
+            "workflowId",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            WorkflowVersionId,
+            WorkflowId,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -11902,7 +10006,7 @@ impl<'de> serde::Deserialize<'de> for ValidateWorkflowReq {
                         E: serde::de::Error,
                     {
                         match value {
-                            "workflowVersionId" | "workflow_version_id" => Ok(GeneratedField::WorkflowVersionId),
+                            "workflowId" | "workflow_id" => Ok(GeneratedField::WorkflowId),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -11922,19 +10026,19 @@ impl<'de> serde::Deserialize<'de> for ValidateWorkflowReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut workflow_version_id__ = None;
+                let mut workflow_id__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::WorkflowVersionId => {
-                            if workflow_version_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("workflowVersionId"));
+                        GeneratedField::WorkflowId => {
+                            if workflow_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowId"));
                             }
-                            workflow_version_id__ = map_.next_value()?;
+                            workflow_id__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(ValidateWorkflowReq {
-                    workflow_version_id: workflow_version_id__,
+                    workflow_id: workflow_id__,
                 })
             }
         }
@@ -12794,9 +10898,6 @@ impl serde::Serialize for WorkflowDetail {
         if self.description.is_some() {
             len += 1;
         }
-        if self.api_json.is_some() {
-            len += 1;
-        }
         if self.config.is_some() {
             len += 1;
         }
@@ -12818,9 +10919,6 @@ impl serde::Serialize for WorkflowDetail {
         }
         if let Some(v) = self.description.as_ref() {
             struct_ser.serialize_field("description", v)?;
-        }
-        if let Some(v) = self.api_json.as_ref() {
-            struct_ser.serialize_field("apiJson", v)?;
         }
         if let Some(v) = self.config.as_ref() {
             struct_ser.serialize_field("config", v)?;
@@ -12851,8 +10949,6 @@ impl<'de> serde::Deserialize<'de> for WorkflowDetail {
         const FIELDS: &[&str] = &[
             "summary",
             "description",
-            "api_json",
-            "apiJson",
             "config",
             "nodes",
             "dependencies",
@@ -12866,7 +10962,6 @@ impl<'de> serde::Deserialize<'de> for WorkflowDetail {
         enum GeneratedField {
             Summary,
             Description,
-            ApiJson,
             Config,
             Nodes,
             Dependencies,
@@ -12895,7 +10990,6 @@ impl<'de> serde::Deserialize<'de> for WorkflowDetail {
                         match value {
                             "summary" => Ok(GeneratedField::Summary),
                             "description" => Ok(GeneratedField::Description),
-                            "apiJson" | "api_json" => Ok(GeneratedField::ApiJson),
                             "config" => Ok(GeneratedField::Config),
                             "nodes" => Ok(GeneratedField::Nodes),
                             "dependencies" => Ok(GeneratedField::Dependencies),
@@ -12922,7 +11016,6 @@ impl<'de> serde::Deserialize<'de> for WorkflowDetail {
             {
                 let mut summary__ = None;
                 let mut description__ = None;
-                let mut api_json__ = None;
                 let mut config__ = None;
                 let mut nodes__ = None;
                 let mut dependencies__ = None;
@@ -12941,12 +11034,6 @@ impl<'de> serde::Deserialize<'de> for WorkflowDetail {
                                 return Err(serde::de::Error::duplicate_field("description"));
                             }
                             description__ = map_.next_value()?;
-                        }
-                        GeneratedField::ApiJson => {
-                            if api_json__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("apiJson"));
-                            }
-                            api_json__ = map_.next_value()?;
                         }
                         GeneratedField::Config => {
                             if config__.is_some() {
@@ -12985,7 +11072,6 @@ impl<'de> serde::Deserialize<'de> for WorkflowDetail {
                 Ok(WorkflowDetail {
                     summary: summary__,
                     description: description__,
-                    api_json: api_json__,
                     config: config__,
                     nodes: nodes__.unwrap_or_default(),
                     dependencies: dependencies__.unwrap_or_default(),
@@ -13011,10 +11097,7 @@ impl serde::Serialize for WorkflowExecutionConfig {
         if self.execution_timeout_seconds.is_some() {
             len += 1;
         }
-        if self.output_reservation_bytes.is_some() {
-            len += 1;
-        }
-        if self.feature_config.is_some() {
+        if self.function_config.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowExecutionConfig", len)?;
@@ -13024,17 +11107,12 @@ impl serde::Serialize for WorkflowExecutionConfig {
         if let Some(v) = self.execution_timeout_seconds.as_ref() {
             struct_ser.serialize_field("executionTimeoutSeconds", v)?;
         }
-        if let Some(v) = self.output_reservation_bytes.as_ref() {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("outputReservationBytes", ToString::to_string(&v).as_str())?;
-        }
-        if let Some(v) = self.feature_config.as_ref() {
+        if let Some(v) = self.function_config.as_ref() {
             match v {
-                workflow_execution_config::FeatureConfig::ImageToVideo(v) => {
+                workflow_execution_config::FunctionConfig::ImageToVideo(v) => {
                     struct_ser.serialize_field("imageToVideo", v)?;
                 }
-                workflow_execution_config::FeatureConfig::TextToVideo(v) => {
+                workflow_execution_config::FunctionConfig::TextToVideo(v) => {
                     struct_ser.serialize_field("textToVideo", v)?;
                 }
             }
@@ -13052,8 +11130,6 @@ impl<'de> serde::Deserialize<'de> for WorkflowExecutionConfig {
             "output",
             "execution_timeout_seconds",
             "executionTimeoutSeconds",
-            "output_reservation_bytes",
-            "outputReservationBytes",
             "image_to_video",
             "imageToVideo",
             "text_to_video",
@@ -13064,7 +11140,6 @@ impl<'de> serde::Deserialize<'de> for WorkflowExecutionConfig {
         enum GeneratedField {
             Output,
             ExecutionTimeoutSeconds,
-            OutputReservationBytes,
             ImageToVideo,
             TextToVideo,
         }
@@ -13090,7 +11165,6 @@ impl<'de> serde::Deserialize<'de> for WorkflowExecutionConfig {
                         match value {
                             "output" => Ok(GeneratedField::Output),
                             "executionTimeoutSeconds" | "execution_timeout_seconds" => Ok(GeneratedField::ExecutionTimeoutSeconds),
-                            "outputReservationBytes" | "output_reservation_bytes" => Ok(GeneratedField::OutputReservationBytes),
                             "imageToVideo" | "image_to_video" => Ok(GeneratedField::ImageToVideo),
                             "textToVideo" | "text_to_video" => Ok(GeneratedField::TextToVideo),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
@@ -13114,8 +11188,7 @@ impl<'de> serde::Deserialize<'de> for WorkflowExecutionConfig {
             {
                 let mut output__ = None;
                 let mut execution_timeout_seconds__ = None;
-                let mut output_reservation_bytes__ = None;
-                let mut feature_config__ = None;
+                let mut function_config__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Output => {
@@ -13132,26 +11205,18 @@ impl<'de> serde::Deserialize<'de> for WorkflowExecutionConfig {
                                 map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
-                        GeneratedField::OutputReservationBytes => {
-                            if output_reservation_bytes__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("outputReservationBytes"));
-                            }
-                            output_reservation_bytes__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
                         GeneratedField::ImageToVideo => {
-                            if feature_config__.is_some() {
+                            if function_config__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("imageToVideo"));
                             }
-                            feature_config__ = map_.next_value::<::std::option::Option<_>>()?.map(workflow_execution_config::FeatureConfig::ImageToVideo)
+                            function_config__ = map_.next_value::<::std::option::Option<_>>()?.map(workflow_execution_config::FunctionConfig::ImageToVideo)
 ;
                         }
                         GeneratedField::TextToVideo => {
-                            if feature_config__.is_some() {
+                            if function_config__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("textToVideo"));
                             }
-                            feature_config__ = map_.next_value::<::std::option::Option<_>>()?.map(workflow_execution_config::FeatureConfig::TextToVideo)
+                            function_config__ = map_.next_value::<::std::option::Option<_>>()?.map(workflow_execution_config::FunctionConfig::TextToVideo)
 ;
                         }
                     }
@@ -13159,12 +11224,103 @@ impl<'de> serde::Deserialize<'de> for WorkflowExecutionConfig {
                 Ok(WorkflowExecutionConfig {
                     output: output__,
                     execution_timeout_seconds: execution_timeout_seconds__,
-                    output_reservation_bytes: output_reservation_bytes__,
-                    feature_config: feature_config__,
+                    function_config: function_config__,
                 })
             }
         }
         deserializer.deserialize_struct("hi.media.WorkflowExecutionConfig", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WorkflowFileMutationResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.workflow_id.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowFileMutationResp", len)?;
+        if let Some(v) = self.workflow_id.as_ref() {
+            struct_ser.serialize_field("workflowId", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowFileMutationResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "workflow_id",
+            "workflowId",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            WorkflowId,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "workflowId" | "workflow_id" => Ok(GeneratedField::WorkflowId),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WorkflowFileMutationResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.WorkflowFileMutationResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<WorkflowFileMutationResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut workflow_id__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::WorkflowId => {
+                            if workflow_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowId"));
+                            }
+                            workflow_id__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(WorkflowFileMutationResp {
+                    workflow_id: workflow_id__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.WorkflowFileMutationResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for WorkflowFixedTextInput {
@@ -13382,6 +11538,133 @@ impl<'de> serde::Deserialize<'de> for WorkflowFrameRateInput {
             }
         }
         deserializer.deserialize_struct("hi.media.WorkflowFrameRateInput", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WorkflowImportMetadata {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.function_id.is_some() {
+            len += 1;
+        }
+        if self.model_id.is_some() {
+            len += 1;
+        }
+        if self.description.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowImportMetadata", len)?;
+        if let Some(v) = self.function_id.as_ref() {
+            struct_ser.serialize_field("functionId", v)?;
+        }
+        if let Some(v) = self.model_id.as_ref() {
+            struct_ser.serialize_field("modelId", v)?;
+        }
+        if let Some(v) = self.description.as_ref() {
+            struct_ser.serialize_field("description", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowImportMetadata {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "function_id",
+            "functionId",
+            "model_id",
+            "modelId",
+            "description",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            FunctionId,
+            ModelId,
+            Description,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "functionId" | "function_id" => Ok(GeneratedField::FunctionId),
+                            "modelId" | "model_id" => Ok(GeneratedField::ModelId),
+                            "description" => Ok(GeneratedField::Description),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WorkflowImportMetadata;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.WorkflowImportMetadata")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<WorkflowImportMetadata, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut function_id__ = None;
+                let mut model_id__ = None;
+                let mut description__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::FunctionId => {
+                            if function_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("functionId"));
+                            }
+                            function_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::ModelId => {
+                            if model_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("modelId"));
+                            }
+                            model_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Description => {
+                            if description__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("description"));
+                            }
+                            description__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(WorkflowImportMetadata {
+                    function_id: function_id__,
+                    model_id: model_id__,
+                    description: description__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.WorkflowImportMetadata", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for WorkflowInputBinding {
@@ -13839,6 +12122,116 @@ impl<'de> serde::Deserialize<'de> for WorkflowIssueSeverity {
         deserializer.deserialize_any(GeneratedVisitor)
     }
 }
+impl serde::Serialize for WorkflowModelOption {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.model_id.is_some() {
+            len += 1;
+        }
+        if self.display_name.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowModelOption", len)?;
+        if let Some(v) = self.model_id.as_ref() {
+            struct_ser.serialize_field("modelId", v)?;
+        }
+        if let Some(v) = self.display_name.as_ref() {
+            struct_ser.serialize_field("displayName", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowModelOption {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "model_id",
+            "modelId",
+            "display_name",
+            "displayName",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            ModelId,
+            DisplayName,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "modelId" | "model_id" => Ok(GeneratedField::ModelId),
+                            "displayName" | "display_name" => Ok(GeneratedField::DisplayName),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WorkflowModelOption;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.WorkflowModelOption")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<WorkflowModelOption, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut model_id__ = None;
+                let mut display_name__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::ModelId => {
+                            if model_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("modelId"));
+                            }
+                            model_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::DisplayName => {
+                            if display_name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("displayName"));
+                            }
+                            display_name__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(WorkflowModelOption {
+                    model_id: model_id__,
+                    display_name: display_name__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.WorkflowModelOption", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for WorkflowNode {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -14185,6 +12578,168 @@ impl<'de> serde::Deserialize<'de> for WorkflowNodeInput {
         deserializer.deserialize_struct("hi.media.WorkflowNodeInput", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for WorkflowOption {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.workflow_id.is_some() {
+            len += 1;
+        }
+        if self.model.is_some() {
+            len += 1;
+        }
+        if self.is_default.is_some() {
+            len += 1;
+        }
+        if self.description.is_some() {
+            len += 1;
+        }
+        if self.parameter_config.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowOption", len)?;
+        if let Some(v) = self.workflow_id.as_ref() {
+            struct_ser.serialize_field("workflowId", v)?;
+        }
+        if let Some(v) = self.model.as_ref() {
+            struct_ser.serialize_field("model", v)?;
+        }
+        if let Some(v) = self.is_default.as_ref() {
+            struct_ser.serialize_field("isDefault", v)?;
+        }
+        if let Some(v) = self.description.as_ref() {
+            struct_ser.serialize_field("description", v)?;
+        }
+        if let Some(v) = self.parameter_config.as_ref() {
+            struct_ser.serialize_field("parameterConfig", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowOption {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "workflow_id",
+            "workflowId",
+            "model",
+            "is_default",
+            "isDefault",
+            "description",
+            "parameter_config",
+            "parameterConfig",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            WorkflowId,
+            Model,
+            IsDefault,
+            Description,
+            ParameterConfig,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "workflowId" | "workflow_id" => Ok(GeneratedField::WorkflowId),
+                            "model" => Ok(GeneratedField::Model),
+                            "isDefault" | "is_default" => Ok(GeneratedField::IsDefault),
+                            "description" => Ok(GeneratedField::Description),
+                            "parameterConfig" | "parameter_config" => Ok(GeneratedField::ParameterConfig),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WorkflowOption;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.WorkflowOption")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<WorkflowOption, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut workflow_id__ = None;
+                let mut model__ = None;
+                let mut is_default__ = None;
+                let mut description__ = None;
+                let mut parameter_config__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::WorkflowId => {
+                            if workflow_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowId"));
+                            }
+                            workflow_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Model => {
+                            if model__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("model"));
+                            }
+                            model__ = map_.next_value()?;
+                        }
+                        GeneratedField::IsDefault => {
+                            if is_default__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("isDefault"));
+                            }
+                            is_default__ = map_.next_value()?;
+                        }
+                        GeneratedField::Description => {
+                            if description__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("description"));
+                            }
+                            description__ = map_.next_value()?;
+                        }
+                        GeneratedField::ParameterConfig => {
+                            if parameter_config__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("parameterConfig"));
+                            }
+                            parameter_config__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(WorkflowOption {
+                    workflow_id: workflow_id__,
+                    model: model__,
+                    is_default: is_default__,
+                    description: description__,
+                    parameter_config: parameter_config__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.WorkflowOption", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for WorkflowOutputConfig {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -14275,6 +12830,98 @@ impl<'de> serde::Deserialize<'de> for WorkflowOutputConfig {
             }
         }
         deserializer.deserialize_struct("hi.media.WorkflowOutputConfig", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WorkflowReplaceFileMetadata {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.workflow_id.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowReplaceFileMetadata", len)?;
+        if let Some(v) = self.workflow_id.as_ref() {
+            struct_ser.serialize_field("workflowId", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowReplaceFileMetadata {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "workflow_id",
+            "workflowId",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            WorkflowId,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "workflowId" | "workflow_id" => Ok(GeneratedField::WorkflowId),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WorkflowReplaceFileMetadata;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.WorkflowReplaceFileMetadata")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<WorkflowReplaceFileMetadata, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut workflow_id__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::WorkflowId => {
+                            if workflow_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowId"));
+                            }
+                            workflow_id__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(WorkflowReplaceFileMetadata {
+                    workflow_id: workflow_id__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.WorkflowReplaceFileMetadata", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for WorkflowSelectableFrameRate {
@@ -14575,19 +13222,31 @@ impl serde::Serialize for WorkflowSummary {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.workflow_version_id.is_some() {
+        if self.workflow_id.is_some() {
             len += 1;
         }
-        if self.feature_key.is_some() {
+        if self.function.is_some() {
             len += 1;
         }
-        if self.name.is_some() {
+        if self.model.is_some() {
+            len += 1;
+        }
+        if self.original_filename.is_some() {
+            len += 1;
+        }
+        if self.file_size_bytes.is_some() {
             len += 1;
         }
         if self.status.is_some() {
             len += 1;
         }
         if self.validation_status.is_some() {
+            len += 1;
+        }
+        if self.is_default.is_some() {
+            len += 1;
+        }
+        if self.sort_order.is_some() {
             len += 1;
         }
         if self.enabled_at.is_some() {
@@ -14603,16 +13262,22 @@ impl serde::Serialize for WorkflowSummary {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowSummary", len)?;
-        if let Some(v) = self.workflow_version_id.as_ref() {
-            struct_ser.serialize_field("workflowVersionId", v)?;
+        if let Some(v) = self.workflow_id.as_ref() {
+            struct_ser.serialize_field("workflowId", v)?;
         }
-        if let Some(v) = self.feature_key.as_ref() {
-            let v = FeatureKey::try_from(*v)
-                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
-            struct_ser.serialize_field("featureKey", &v)?;
+        if let Some(v) = self.function.as_ref() {
+            struct_ser.serialize_field("function", v)?;
         }
-        if let Some(v) = self.name.as_ref() {
-            struct_ser.serialize_field("name", v)?;
+        if let Some(v) = self.model.as_ref() {
+            struct_ser.serialize_field("model", v)?;
+        }
+        if let Some(v) = self.original_filename.as_ref() {
+            struct_ser.serialize_field("originalFilename", v)?;
+        }
+        if let Some(v) = self.file_size_bytes.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("fileSizeBytes", ToString::to_string(&v).as_str())?;
         }
         if let Some(v) = self.status.as_ref() {
             let v = WorkflowStatus::try_from(*v)
@@ -14623,6 +13288,12 @@ impl serde::Serialize for WorkflowSummary {
             let v = WorkflowValidationStatus::try_from(*v)
                 .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
             struct_ser.serialize_field("validationStatus", &v)?;
+        }
+        if let Some(v) = self.is_default.as_ref() {
+            struct_ser.serialize_field("isDefault", v)?;
+        }
+        if let Some(v) = self.sort_order.as_ref() {
+            struct_ser.serialize_field("sortOrder", v)?;
         }
         if let Some(v) = self.enabled_at.as_ref() {
             #[allow(clippy::needless_borrow)]
@@ -14652,14 +13323,21 @@ impl<'de> serde::Deserialize<'de> for WorkflowSummary {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "workflow_version_id",
-            "workflowVersionId",
-            "feature_key",
-            "featureKey",
-            "name",
+            "workflow_id",
+            "workflowId",
+            "function",
+            "model",
+            "original_filename",
+            "originalFilename",
+            "file_size_bytes",
+            "fileSizeBytes",
             "status",
             "validation_status",
             "validationStatus",
+            "is_default",
+            "isDefault",
+            "sort_order",
+            "sortOrder",
             "enabled_at",
             "enabledAt",
             "created_by",
@@ -14672,11 +13350,15 @@ impl<'de> serde::Deserialize<'de> for WorkflowSummary {
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            WorkflowVersionId,
-            FeatureKey,
-            Name,
+            WorkflowId,
+            Function,
+            Model,
+            OriginalFilename,
+            FileSizeBytes,
             Status,
             ValidationStatus,
+            IsDefault,
+            SortOrder,
             EnabledAt,
             CreatedBy,
             CreatedAt,
@@ -14702,11 +13384,15 @@ impl<'de> serde::Deserialize<'de> for WorkflowSummary {
                         E: serde::de::Error,
                     {
                         match value {
-                            "workflowVersionId" | "workflow_version_id" => Ok(GeneratedField::WorkflowVersionId),
-                            "featureKey" | "feature_key" => Ok(GeneratedField::FeatureKey),
-                            "name" => Ok(GeneratedField::Name),
+                            "workflowId" | "workflow_id" => Ok(GeneratedField::WorkflowId),
+                            "function" => Ok(GeneratedField::Function),
+                            "model" => Ok(GeneratedField::Model),
+                            "originalFilename" | "original_filename" => Ok(GeneratedField::OriginalFilename),
+                            "fileSizeBytes" | "file_size_bytes" => Ok(GeneratedField::FileSizeBytes),
                             "status" => Ok(GeneratedField::Status),
                             "validationStatus" | "validation_status" => Ok(GeneratedField::ValidationStatus),
+                            "isDefault" | "is_default" => Ok(GeneratedField::IsDefault),
+                            "sortOrder" | "sort_order" => Ok(GeneratedField::SortOrder),
                             "enabledAt" | "enabled_at" => Ok(GeneratedField::EnabledAt),
                             "createdBy" | "created_by" => Ok(GeneratedField::CreatedBy),
                             "createdAt" | "created_at" => Ok(GeneratedField::CreatedAt),
@@ -14730,34 +13416,52 @@ impl<'de> serde::Deserialize<'de> for WorkflowSummary {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut workflow_version_id__ = None;
-                let mut feature_key__ = None;
-                let mut name__ = None;
+                let mut workflow_id__ = None;
+                let mut function__ = None;
+                let mut model__ = None;
+                let mut original_filename__ = None;
+                let mut file_size_bytes__ = None;
                 let mut status__ = None;
                 let mut validation_status__ = None;
+                let mut is_default__ = None;
+                let mut sort_order__ = None;
                 let mut enabled_at__ = None;
                 let mut created_by__ = None;
                 let mut created_at__ = None;
                 let mut updated_at__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::WorkflowVersionId => {
-                            if workflow_version_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("workflowVersionId"));
+                        GeneratedField::WorkflowId => {
+                            if workflow_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowId"));
                             }
-                            workflow_version_id__ = map_.next_value()?;
+                            workflow_id__ = map_.next_value()?;
                         }
-                        GeneratedField::FeatureKey => {
-                            if feature_key__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("featureKey"));
+                        GeneratedField::Function => {
+                            if function__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("function"));
                             }
-                            feature_key__ = map_.next_value::<::std::option::Option<FeatureKey>>()?.map(|x| x as i32);
+                            function__ = map_.next_value()?;
                         }
-                        GeneratedField::Name => {
-                            if name__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("name"));
+                        GeneratedField::Model => {
+                            if model__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("model"));
                             }
-                            name__ = map_.next_value()?;
+                            model__ = map_.next_value()?;
+                        }
+                        GeneratedField::OriginalFilename => {
+                            if original_filename__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("originalFilename"));
+                            }
+                            original_filename__ = map_.next_value()?;
+                        }
+                        GeneratedField::FileSizeBytes => {
+                            if file_size_bytes__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("fileSizeBytes"));
+                            }
+                            file_size_bytes__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
                         }
                         GeneratedField::Status => {
                             if status__.is_some() {
@@ -14770,6 +13474,20 @@ impl<'de> serde::Deserialize<'de> for WorkflowSummary {
                                 return Err(serde::de::Error::duplicate_field("validationStatus"));
                             }
                             validation_status__ = map_.next_value::<::std::option::Option<WorkflowValidationStatus>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::IsDefault => {
+                            if is_default__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("isDefault"));
+                            }
+                            is_default__ = map_.next_value()?;
+                        }
+                        GeneratedField::SortOrder => {
+                            if sort_order__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sortOrder"));
+                            }
+                            sort_order__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
                         }
                         GeneratedField::EnabledAt => {
                             if enabled_at__.is_some() {
@@ -14804,11 +13522,15 @@ impl<'de> serde::Deserialize<'de> for WorkflowSummary {
                     }
                 }
                 Ok(WorkflowSummary {
-                    workflow_version_id: workflow_version_id__,
-                    feature_key: feature_key__,
-                    name: name__,
+                    workflow_id: workflow_id__,
+                    function: function__,
+                    model: model__,
+                    original_filename: original_filename__,
+                    file_size_bytes: file_size_bytes__,
                     status: status__,
                     validation_status: validation_status__,
+                    is_default: is_default__,
+                    sort_order: sort_order__,
                     enabled_at: enabled_at__,
                     created_by: created_by__,
                     created_at: created_at__,

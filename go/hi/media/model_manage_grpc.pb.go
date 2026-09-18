@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -21,6 +22,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	ModelManage_Create_FullMethodName = "/hi.media.ModelManage/Create"
 	ModelManage_Update_FullMethodName = "/hi.media.ModelManage/Update"
+	ModelManage_Delete_FullMethodName = "/hi.media.ModelManage/Delete"
 	ModelManage_List_FullMethodName   = "/hi.media.ModelManage/List"
 	ModelManage_Get_FullMethodName    = "/hi.media.ModelManage/Get"
 )
@@ -28,10 +30,18 @@ const (
 // ModelManageClient is the client API for ModelManage service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 管理员维护用户显示名与真实模型名；不动态改写工作流 Loader。
 type ModelManageClient interface {
+	// 创建显示名与真实名的对应关系。
 	Create(ctx context.Context, in *CreateModelReq, opts ...grpc.CallOption) (*CreateModelResp, error)
+	// 仅更新用户可见显示名。
 	Update(ctx context.Context, in *UpdateModelReq, opts ...grpc.CallOption) (*UpdateModelResp, error)
+	// 被任何工作流引用时返回 FailedPrecondition；成功返回空响应。
+	Delete(ctx context.Context, in *DeleteModelReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 分页查询模型。
 	List(ctx context.Context, in *ListModelsReq, opts ...grpc.CallOption) (*ListModelsResp, error)
+	// 查询模型详情，包含仅管理员可见的真实名。
 	Get(ctx context.Context, in *GetModelReq, opts ...grpc.CallOption) (*GetModelResp, error)
 }
 
@@ -63,6 +73,16 @@ func (c *modelManageClient) Update(ctx context.Context, in *UpdateModelReq, opts
 	return out, nil
 }
 
+func (c *modelManageClient) Delete(ctx context.Context, in *DeleteModelReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, ModelManage_Delete_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *modelManageClient) List(ctx context.Context, in *ListModelsReq, opts ...grpc.CallOption) (*ListModelsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListModelsResp)
@@ -86,10 +106,18 @@ func (c *modelManageClient) Get(ctx context.Context, in *GetModelReq, opts ...gr
 // ModelManageServer is the server API for ModelManage service.
 // All implementations should embed UnimplementedModelManageServer
 // for forward compatibility.
+//
+// 管理员维护用户显示名与真实模型名；不动态改写工作流 Loader。
 type ModelManageServer interface {
+	// 创建显示名与真实名的对应关系。
 	Create(context.Context, *CreateModelReq) (*CreateModelResp, error)
+	// 仅更新用户可见显示名。
 	Update(context.Context, *UpdateModelReq) (*UpdateModelResp, error)
+	// 被任何工作流引用时返回 FailedPrecondition；成功返回空响应。
+	Delete(context.Context, *DeleteModelReq) (*emptypb.Empty, error)
+	// 分页查询模型。
 	List(context.Context, *ListModelsReq) (*ListModelsResp, error)
+	// 查询模型详情，包含仅管理员可见的真实名。
 	Get(context.Context, *GetModelReq) (*GetModelResp, error)
 }
 
@@ -105,6 +133,9 @@ func (UnimplementedModelManageServer) Create(context.Context, *CreateModelReq) (
 }
 func (UnimplementedModelManageServer) Update(context.Context, *UpdateModelReq) (*UpdateModelResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
+}
+func (UnimplementedModelManageServer) Delete(context.Context, *DeleteModelReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
 }
 func (UnimplementedModelManageServer) List(context.Context, *ListModelsReq) (*ListModelsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
@@ -168,6 +199,24 @@ func _ModelManage_Update_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ModelManage_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteModelReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ModelManageServer).Delete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ModelManage_Delete_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ModelManageServer).Delete(ctx, req.(*DeleteModelReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ModelManage_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListModelsReq)
 	if err := dec(in); err != nil {
@@ -218,6 +267,10 @@ var ModelManage_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Update",
 			Handler:    _ModelManage_Update_Handler,
+		},
+		{
+			MethodName: "Delete",
+			Handler:    _ModelManage_Delete_Handler,
 		},
 		{
 			MethodName: "List",

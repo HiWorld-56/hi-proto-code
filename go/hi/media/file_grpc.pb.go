@@ -40,8 +40,11 @@ type FileClient interface {
 	// 按 request_id 查询已持久化的上传结果，供正常返回后复查或在超时、响应丢失后确认结果。
 	// 此接口不上传文件，也不返回上传地址。
 	GetUploadResult(ctx context.Context, in *GetUploadResultReq, opts ...grpc.CallOption) (*GetUploadResultResp, error)
+	// 分页查询本人 available 资产。
 	List(ctx context.Context, in *ListFilesReq, opts ...grpc.CallOption) (*ListFilesResp, error)
+	// 同步删除本人资产并扣减实际占用；仍被任务引用时拒绝，重复删除幂等。
 	Delete(ctx context.Context, in *DeleteFileReq, opts ...grpc.CallOption) (*DeleteFileResp, error)
+	// 为本人 available 资产签发预览或下载地址，不返回内部存储地址或对象键。
 	GetAccessUrls(ctx context.Context, in *GetFileAccessUrlsReq, opts ...grpc.CallOption) (*GetFileAccessUrlsResp, error)
 }
 
@@ -108,8 +111,11 @@ type FileServer interface {
 	// 按 request_id 查询已持久化的上传结果，供正常返回后复查或在超时、响应丢失后确认结果。
 	// 此接口不上传文件，也不返回上传地址。
 	GetUploadResult(context.Context, *GetUploadResultReq) (*GetUploadResultResp, error)
+	// 分页查询本人 available 资产。
 	List(context.Context, *ListFilesReq) (*ListFilesResp, error)
+	// 同步删除本人资产并扣减实际占用；仍被任务引用时拒绝，重复删除幂等。
 	Delete(context.Context, *DeleteFileReq) (*DeleteFileResp, error)
+	// 为本人 available 资产签发预览或下载地址，不返回内部存储地址或对象键。
 	GetAccessUrls(context.Context, *GetFileAccessUrlsReq) (*GetFileAccessUrlsResp, error)
 }
 

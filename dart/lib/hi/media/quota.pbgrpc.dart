@@ -21,6 +21,7 @@ import 'quota.pb.dart' as $1;
 
 export 'quota.pb.dart';
 
+/// 用户存储总额度查询；新任务在实际占用达到上限时拒绝受理。
 @$pb.GrpcServiceName('hi.media.Quota')
 class QuotaClient extends $grpc.Client {
   /// The hostname for this service.
@@ -33,6 +34,7 @@ class QuotaClient extends $grpc.Client {
 
   QuotaClient(super.channel, {super.options, super.interceptors});
 
+  /// 返回当前用户的总上限、实际占用和可用量。
   $grpc.ResponseFuture<$1.GetQuotaResp> get(
     $0.Empty request, {
     $grpc.CallOptions? options,
