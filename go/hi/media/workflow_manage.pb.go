@@ -1492,7 +1492,8 @@ func (x *WorkflowSummary) GetUpdatedAt() int64 {
 	return 0
 }
 
-// 管理详情；节点和依赖从当前文件动态解析，不返回完整文件或历史对象列表。
+// 管理详情；Get 的节点和依赖从当前文件动态解析，Update 不返回这两项。
+// 不返回完整文件或历史对象列表。
 type WorkflowDetail struct {
 	state   protoimpl.MessageState `protogen:"open.v1"`
 	Summary *WorkflowSummary       `protobuf:"bytes,1,opt,name=summary,proto3" json:"summary,omitempty"`
@@ -1813,7 +1814,8 @@ func (x *UpdateWorkflowReq) GetConfig() *WorkflowExecutionConfig {
 	return nil
 }
 
-// 返回更新后的管理详情。
+// 返回数据库中的更新结果（摘要、说明、配置及校验结果），不读取工作流文件。
+// 不返回动态 nodes/dependencies；如需刷新节点和依赖，请调用 Get。
 type UpdateWorkflowResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Workflow      *WorkflowDetail        `protobuf:"bytes,1,opt,name=workflow,proto3" json:"workflow,omitempty"`

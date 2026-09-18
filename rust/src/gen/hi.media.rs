@@ -1719,7 +1719,8 @@ pub struct WorkflowSummary {
     #[prost(int64, optional, tag = "13")]
     pub updated_at: ::core::option::Option<i64>,
 }
-/// 管理详情；节点和依赖从当前文件动态解析，不返回完整文件或历史对象列表。
+/// 管理详情；Get 的节点和依赖从当前文件动态解析，Update 不返回这两项。
+/// 不返回完整文件或历史对象列表。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct WorkflowDetail {
     #[prost(message, optional, tag = "1")]
@@ -1785,7 +1786,8 @@ pub struct UpdateWorkflowReq {
     #[prost(message, optional, tag = "3")]
     pub config: ::core::option::Option<WorkflowExecutionConfig>,
 }
-/// 返回更新后的管理详情。
+/// 返回数据库中的更新结果（摘要、说明、配置及校验结果），不读取工作流文件。
+/// 不返回动态 nodes/dependencies；如需刷新节点和依赖，请调用 Get。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateWorkflowResp {
     #[prost(message, optional, tag = "1")]

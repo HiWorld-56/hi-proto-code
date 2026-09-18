@@ -1747,7 +1747,8 @@ class WorkflowSummary extends $pb.GeneratedMessage {
   void clearUpdatedAt() => $_clearField(13);
 }
 
-/// 管理详情；节点和依赖从当前文件动态解析，不返回完整文件或历史对象列表。
+/// 管理详情；Get 的节点和依赖从当前文件动态解析，Update 不返回这两项。
+/// 不返回完整文件或历史对象列表。
 class WorkflowDetail extends $pb.GeneratedMessage {
   factory WorkflowDetail({
     WorkflowSummary? summary,
@@ -2158,7 +2159,8 @@ class UpdateWorkflowReq extends $pb.GeneratedMessage {
   WorkflowExecutionConfig ensureConfig() => $_ensure(2);
 }
 
-/// 返回更新后的管理详情。
+/// 返回数据库中的更新结果（摘要、说明、配置及校验结果），不读取工作流文件。
+/// 不返回动态 nodes/dependencies；如需刷新节点和依赖，请调用 Get。
 class UpdateWorkflowResp extends $pb.GeneratedMessage {
   factory UpdateWorkflowResp({
     WorkflowDetail? workflow,
