@@ -810,6 +810,7 @@ class TaskSummary extends $pb.GeneratedMessage {
     $fixnum.Int64? startedAt,
     $fixnum.Int64? completedAt,
     $fixnum.Int64? elapsedSeconds,
+    $core.String? inputAssetId,
   }) {
     final result = create();
     if (taskId != null) result.taskId = taskId;
@@ -832,6 +833,7 @@ class TaskSummary extends $pb.GeneratedMessage {
     if (startedAt != null) result.startedAt = startedAt;
     if (completedAt != null) result.completedAt = completedAt;
     if (elapsedSeconds != null) result.elapsedSeconds = elapsedSeconds;
+    if (inputAssetId != null) result.inputAssetId = inputAssetId;
     return result;
   }
 
@@ -869,6 +871,7 @@ class TaskSummary extends $pb.GeneratedMessage {
     ..aInt64(16, _omitFieldNames ? '' : 'startedAt')
     ..aInt64(17, _omitFieldNames ? '' : 'completedAt')
     ..aInt64(18, _omitFieldNames ? '' : 'elapsedSeconds')
+    ..aOS(19, _omitFieldNames ? '' : 'inputAssetId')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1069,6 +1072,18 @@ class TaskSummary extends $pb.GeneratedMessage {
   $core.bool hasElapsedSeconds() => $_has(17);
   @$pb.TagNumber(18)
   void clearElapsedSeconds() => $_clearField(18);
+
+  /// 图生视频的原始输入图片资产 ID，列表和详情摘要均返回；文生视频不返回。
+  /// 前端通过 File.GetAccessUrls 申请 PREVIEW 地址作为视频封面，不是视频 output.asset_id。
+  /// 原图删除后仍保留该历史 ID；无法获取预览时显示占位图，不延长原图保留期。
+  @$pb.TagNumber(19)
+  $core.String get inputAssetId => $_getSZ(18);
+  @$pb.TagNumber(19)
+  set inputAssetId($core.String value) => $_setString(18, value);
+  @$pb.TagNumber(19)
+  $core.bool hasInputAssetId() => $_has(18);
+  @$pb.TagNumber(19)
+  void clearInputAssetId() => $_clearField(19);
 }
 
 enum TaskDetail_EffectiveParams { imageToVideo, textToVideo, notSet }

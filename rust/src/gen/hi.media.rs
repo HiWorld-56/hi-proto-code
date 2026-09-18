@@ -360,6 +360,11 @@ pub struct TaskSummary {
     /// 从 created_at 到当前时间或 completed_at 的墙钟秒数。
     #[prost(int64, optional, tag = "18")]
     pub elapsed_seconds: ::core::option::Option<i64>,
+    /// 图生视频的原始输入图片资产 ID，列表和详情摘要均返回；文生视频不返回。
+    /// 前端通过 File.GetAccessUrls 申请 PREVIEW 地址作为视频封面，不是视频 output.asset_id。
+    /// 原图删除后仍保留该历史 ID；无法获取预览时显示占位图，不延长原图保留期。
+    #[prost(string, optional, tag = "19")]
+    pub input_asset_id: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 任务详情及其实际业务参数；重新生成需重新查询 Function.Get 并使用新 request_id。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]

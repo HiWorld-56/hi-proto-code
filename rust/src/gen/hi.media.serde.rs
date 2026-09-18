@@ -7243,6 +7243,9 @@ impl serde::Serialize for TaskSummary {
         if self.elapsed_seconds.is_some() {
             len += 1;
         }
+        if self.input_asset_id.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.media.TaskSummary", len)?;
         if let Some(v) = self.task_id.as_ref() {
             struct_ser.serialize_field("taskId", v)?;
@@ -7312,6 +7315,9 @@ impl serde::Serialize for TaskSummary {
             #[allow(clippy::needless_borrows_for_generic_args)]
             struct_ser.serialize_field("elapsedSeconds", ToString::to_string(&v).as_str())?;
         }
+        if let Some(v) = self.input_asset_id.as_ref() {
+            struct_ser.serialize_field("inputAssetId", v)?;
+        }
         struct_ser.end()
     }
 }
@@ -7355,6 +7361,8 @@ impl<'de> serde::Deserialize<'de> for TaskSummary {
             "completedAt",
             "elapsed_seconds",
             "elapsedSeconds",
+            "input_asset_id",
+            "inputAssetId",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -7377,6 +7385,7 @@ impl<'de> serde::Deserialize<'de> for TaskSummary {
             StartedAt,
             CompletedAt,
             ElapsedSeconds,
+            InputAssetId,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -7416,6 +7425,7 @@ impl<'de> serde::Deserialize<'de> for TaskSummary {
                             "startedAt" | "started_at" => Ok(GeneratedField::StartedAt),
                             "completedAt" | "completed_at" => Ok(GeneratedField::CompletedAt),
                             "elapsedSeconds" | "elapsed_seconds" => Ok(GeneratedField::ElapsedSeconds),
+                            "inputAssetId" | "input_asset_id" => Ok(GeneratedField::InputAssetId),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -7453,6 +7463,7 @@ impl<'de> serde::Deserialize<'de> for TaskSummary {
                 let mut started_at__ = None;
                 let mut completed_at__ = None;
                 let mut elapsed_seconds__ = None;
+                let mut input_asset_id__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::TaskId => {
@@ -7573,6 +7584,12 @@ impl<'de> serde::Deserialize<'de> for TaskSummary {
                                 map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
+                        GeneratedField::InputAssetId => {
+                            if input_asset_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputAssetId"));
+                            }
+                            input_asset_id__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(TaskSummary {
@@ -7594,6 +7611,7 @@ impl<'de> serde::Deserialize<'de> for TaskSummary {
                     started_at: started_at__,
                     completed_at: completed_at__,
                     elapsed_seconds: elapsed_seconds__,
+                    input_asset_id: input_asset_id__,
                 })
             }
         }
