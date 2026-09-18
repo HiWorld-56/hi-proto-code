@@ -6801,6 +6801,12 @@ impl serde::Serialize for TaskOutput {
         if self.available.is_some() {
             len += 1;
         }
+        if self.width.is_some() {
+            len += 1;
+        }
+        if self.height.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.media.TaskOutput", len)?;
         if let Some(v) = self.asset_id.as_ref() {
             struct_ser.serialize_field("assetId", v)?;
@@ -6829,6 +6835,12 @@ impl serde::Serialize for TaskOutput {
         if let Some(v) = self.available.as_ref() {
             struct_ser.serialize_field("available", v)?;
         }
+        if let Some(v) = self.width.as_ref() {
+            struct_ser.serialize_field("width", v)?;
+        }
+        if let Some(v) = self.height.as_ref() {
+            struct_ser.serialize_field("height", v)?;
+        }
         struct_ser.end()
     }
 }
@@ -6851,6 +6863,8 @@ impl<'de> serde::Deserialize<'de> for TaskOutput {
             "duration_ms",
             "durationMs",
             "available",
+            "width",
+            "height",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -6862,6 +6876,8 @@ impl<'de> serde::Deserialize<'de> for TaskOutput {
             SizeBytes,
             DurationMs,
             Available,
+            Width,
+            Height,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -6890,6 +6906,8 @@ impl<'de> serde::Deserialize<'de> for TaskOutput {
                             "sizeBytes" | "size_bytes" => Ok(GeneratedField::SizeBytes),
                             "durationMs" | "duration_ms" => Ok(GeneratedField::DurationMs),
                             "available" => Ok(GeneratedField::Available),
+                            "width" => Ok(GeneratedField::Width),
+                            "height" => Ok(GeneratedField::Height),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -6916,6 +6934,8 @@ impl<'de> serde::Deserialize<'de> for TaskOutput {
                 let mut size_bytes__ = None;
                 let mut duration_ms__ = None;
                 let mut available__ = None;
+                let mut width__ = None;
+                let mut height__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::AssetId => {
@@ -6964,6 +6984,22 @@ impl<'de> serde::Deserialize<'de> for TaskOutput {
                             }
                             available__ = map_.next_value()?;
                         }
+                        GeneratedField::Width => {
+                            if width__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("width"));
+                            }
+                            width__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Height => {
+                            if height__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("height"));
+                            }
+                            height__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
                     }
                 }
                 Ok(TaskOutput {
@@ -6974,6 +7010,8 @@ impl<'de> serde::Deserialize<'de> for TaskOutput {
                     size_bytes: size_bytes__,
                     duration_ms: duration_ms__,
                     available: available__,
+                    width: width__,
+                    height: height__,
                 })
             }
         }

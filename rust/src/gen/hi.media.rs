@@ -279,6 +279,8 @@ pub struct TextToVideoTaskParams {
     pub frame_rate: ::core::option::Option<i32>,
 }
 /// 唯一主产物；size_bytes 为字节，duration_ms 为毫秒，访问地址通过 File.GetAccessUrls 获取。
+/// Task.List 的 tasks\[\].output 与 Task.Get 的 task.summary.output 共用此结构。
+/// 实际宽高直接供前端布局使用，无需逐条查询详情或加载视频；尚无产物时不提供宽高。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TaskOutput {
     #[prost(string, optional, tag = "1")]
@@ -296,6 +298,12 @@ pub struct TaskOutput {
     /// 资产删除后任务仍可保持成功，但该值为 false 且不能播放。
     #[prost(bool, optional, tag = "7")]
     pub available: ::core::option::Option<bool>,
+    /// 实际产物宽度，单位像素；读取已保存的视频探测结果，不根据生成参数推算。
+    #[prost(uint32, optional, tag = "8")]
+    pub width: ::core::option::Option<u32>,
+    /// 实际产物高度，单位像素；与 width 一同返回，查询时不重新探测视频。
+    #[prost(uint32, optional, tag = "9")]
+    pub height: ::core::option::Option<u32>,
 }
 /// 任务摘要，不暴露模型真实名、工作流对象键或上游 prompt_id。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]

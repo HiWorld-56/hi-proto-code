@@ -632,6 +632,8 @@ class TextToVideoTaskParams extends $pb.GeneratedMessage {
 }
 
 /// 唯一主产物；size_bytes 为字节，duration_ms 为毫秒，访问地址通过 File.GetAccessUrls 获取。
+/// Task.List 的 tasks[].output 与 Task.Get 的 task.summary.output 共用此结构。
+/// 实际宽高直接供前端布局使用，无需逐条查询详情或加载视频；尚无产物时不提供宽高。
 class TaskOutput extends $pb.GeneratedMessage {
   factory TaskOutput({
     $core.String? assetId,
@@ -641,6 +643,8 @@ class TaskOutput extends $pb.GeneratedMessage {
     $fixnum.Int64? sizeBytes,
     $fixnum.Int64? durationMs,
     $core.bool? available,
+    $core.int? width,
+    $core.int? height,
   }) {
     final result = create();
     if (assetId != null) result.assetId = assetId;
@@ -650,6 +654,8 @@ class TaskOutput extends $pb.GeneratedMessage {
     if (sizeBytes != null) result.sizeBytes = sizeBytes;
     if (durationMs != null) result.durationMs = durationMs;
     if (available != null) result.available = available;
+    if (width != null) result.width = width;
+    if (height != null) result.height = height;
     return result;
   }
 
@@ -676,6 +682,8 @@ class TaskOutput extends $pb.GeneratedMessage {
         defaultOrMaker: $fixnum.Int64.ZERO)
     ..aInt64(6, _omitFieldNames ? '' : 'durationMs')
     ..aOB(7, _omitFieldNames ? '' : 'available')
+    ..aI(8, _omitFieldNames ? '' : 'width', fieldType: $pb.PbFieldType.OU3)
+    ..aI(9, _omitFieldNames ? '' : 'height', fieldType: $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -759,6 +767,26 @@ class TaskOutput extends $pb.GeneratedMessage {
   $core.bool hasAvailable() => $_has(6);
   @$pb.TagNumber(7)
   void clearAvailable() => $_clearField(7);
+
+  /// 实际产物宽度，单位像素；读取已保存的视频探测结果，不根据生成参数推算。
+  @$pb.TagNumber(8)
+  $core.int get width => $_getIZ(7);
+  @$pb.TagNumber(8)
+  set width($core.int value) => $_setUnsignedInt32(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasWidth() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearWidth() => $_clearField(8);
+
+  /// 实际产物高度，单位像素；与 width 一同返回，查询时不重新探测视频。
+  @$pb.TagNumber(9)
+  $core.int get height => $_getIZ(8);
+  @$pb.TagNumber(9)
+  set height($core.int value) => $_setUnsignedInt32(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasHeight() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearHeight() => $_clearField(9);
 }
 
 /// 任务摘要，不暴露模型真实名、工作流对象键或上游 prompt_id。

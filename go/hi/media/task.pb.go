@@ -647,6 +647,8 @@ func (x *TextToVideoTaskParams) GetFrameRate() int32 {
 }
 
 // 唯一主产物；size_bytes 为字节，duration_ms 为毫秒，访问地址通过 File.GetAccessUrls 获取。
+// Task.List 的 tasks[].output 与 Task.Get 的 task.summary.output 共用此结构。
+// 实际宽高直接供前端布局使用，无需逐条查询详情或加载视频；尚无产物时不提供宽高。
 type TaskOutput struct {
 	state      protoimpl.MessageState `protogen:"open.v1"`
 	AssetId    *string                `protobuf:"bytes,1,opt,name=asset_id,json=assetId,proto3,oneof" json:"asset_id,omitempty"`
@@ -656,7 +658,11 @@ type TaskOutput struct {
 	SizeBytes  *uint64                `protobuf:"varint,5,opt,name=size_bytes,json=sizeBytes,proto3,oneof" json:"size_bytes,omitempty"`
 	DurationMs *int64                 `protobuf:"varint,6,opt,name=duration_ms,json=durationMs,proto3,oneof" json:"duration_ms,omitempty"`
 	// 资产删除后任务仍可保持成功，但该值为 false 且不能播放。
-	Available     *bool `protobuf:"varint,7,opt,name=available,proto3,oneof" json:"available,omitempty"`
+	Available *bool `protobuf:"varint,7,opt,name=available,proto3,oneof" json:"available,omitempty"`
+	// 实际产物宽度，单位像素；读取已保存的视频探测结果，不根据生成参数推算。
+	Width *uint32 `protobuf:"varint,8,opt,name=width,proto3,oneof" json:"width,omitempty"`
+	// 实际产物高度，单位像素；与 width 一同返回，查询时不重新探测视频。
+	Height        *uint32 `protobuf:"varint,9,opt,name=height,proto3,oneof" json:"height,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -738,6 +744,20 @@ func (x *TaskOutput) GetAvailable() bool {
 		return *x.Available
 	}
 	return false
+}
+
+func (x *TaskOutput) GetWidth() uint32 {
+	if x != nil && x.Width != nil {
+		return *x.Width
+	}
+	return 0
+}
+
+func (x *TaskOutput) GetHeight() uint32 {
+	if x != nil && x.Height != nil {
+		return *x.Height
+	}
+	return 0
 }
 
 // 任务摘要，不暴露模型真实名、工作流对象键或上游 prompt_id。
@@ -1542,7 +1562,7 @@ const file_hi_media_task_proto_rawDesc = "" +
 	"\r_aspect_ratioB\r\n" +
 	"\v_megapixelsB\x13\n" +
 	"\x11_duration_secondsB\r\n" +
-	"\v_frame_rate\"\xa9\x03\n" +
+	"\v_frame_rate\"\x82\x04\n" +
 	"\n" +
 	"TaskOutput\x12$\n" +
 	"\basset_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\aassetId\x88\x01\x01\x12%\n" +
@@ -1554,7 +1574,9 @@ const file_hi_media_task_proto_rawDesc = "" +
 	"size_bytes\x18\x05 \x01(\x04B\x04\x90\xb5\x18\x03H\x04R\tsizeBytes\x88\x01\x01\x12*\n" +
 	"\vduration_ms\x18\x06 \x01(\x03B\x04\x90\xb5\x18\x03H\x05R\n" +
 	"durationMs\x88\x01\x01\x12'\n" +
-	"\tavailable\x18\a \x01(\bB\x04\x90\xb5\x18\x03H\x06R\tavailable\x88\x01\x01:\x04\x98\xb5\x18\x03B\v\n" +
+	"\tavailable\x18\a \x01(\bB\x04\x90\xb5\x18\x03H\x06R\tavailable\x88\x01\x01\x12\x1f\n" +
+	"\x05width\x18\b \x01(\rB\x04\x90\xb5\x18\x03H\aR\x05width\x88\x01\x01\x12!\n" +
+	"\x06height\x18\t \x01(\rB\x04\x90\xb5\x18\x03H\bR\x06height\x88\x01\x01:\x04\x98\xb5\x18\x03B\v\n" +
 	"\t_asset_idB\v\n" +
 	"\t_filenameB\r\n" +
 	"\v_media_typeB\f\n" +
@@ -1563,7 +1585,9 @@ const file_hi_media_task_proto_rawDesc = "" +
 	"\v_size_bytesB\x0e\n" +
 	"\f_duration_msB\f\n" +
 	"\n" +
-	"_available\"\xb2\t\n" +
+	"_availableB\b\n" +
+	"\x06_widthB\t\n" +
+	"\a_height\"\xb2\t\n" +
 	"\vTaskSummary\x12\"\n" +
 	"\atask_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x06taskId\x88\x01\x01\x12:\n" +
 	"\apurpose\x18\x02 \x01(\x0e2\x15.hi.media.TaskPurposeB\x04\x90\xb5\x18\x03H\x01R\apurpose\x88\x01\x01\x12*\n" +

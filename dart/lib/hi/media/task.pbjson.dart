@@ -544,6 +544,26 @@ const TaskOutput$json = {
       '10': 'available',
       '17': true
     },
+    {
+      '1': 'width',
+      '3': 8,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 7,
+      '10': 'width',
+      '17': true
+    },
+    {
+      '1': 'height',
+      '3': 9,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 8,
+      '10': 'height',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -554,6 +574,8 @@ const TaskOutput$json = {
     {'1': '_size_bytes'},
     {'1': '_duration_ms'},
     {'1': '_available'},
+    {'1': '_width'},
+    {'1': '_height'},
   ],
 };
 
@@ -564,9 +586,11 @@ final $typed_data.Uint8List taskOutputDescriptor = $convert.base64Decode(
     'LmhpLm1lZGlhLk1lZGlhVHlwZUIEkLUYA0gCUgltZWRpYVR5cGWIAQESJgoJbWltZV90eXBlGA'
     'QgASgJQgSQtRgDSANSCG1pbWVUeXBliAEBEigKCnNpemVfYnl0ZXMYBSABKARCBJC1GANIBFIJ'
     'c2l6ZUJ5dGVziAEBEioKC2R1cmF0aW9uX21zGAYgASgDQgSQtRgDSAVSCmR1cmF0aW9uTXOIAQ'
-    'ESJwoJYXZhaWxhYmxlGAcgASgIQgSQtRgDSAZSCWF2YWlsYWJsZYgBAToEmLUYA0ILCglfYXNz'
-    'ZXRfaWRCCwoJX2ZpbGVuYW1lQg0KC19tZWRpYV90eXBlQgwKCl9taW1lX3R5cGVCDQoLX3Npem'
-    'VfYnl0ZXNCDgoMX2R1cmF0aW9uX21zQgwKCl9hdmFpbGFibGU=');
+    'ESJwoJYXZhaWxhYmxlGAcgASgIQgSQtRgDSAZSCWF2YWlsYWJsZYgBARIfCgV3aWR0aBgIIAEo'
+    'DUIEkLUYA0gHUgV3aWR0aIgBARIhCgZoZWlnaHQYCSABKA1CBJC1GANICFIGaGVpZ2h0iAEBOg'
+    'SYtRgDQgsKCV9hc3NldF9pZEILCglfZmlsZW5hbWVCDQoLX21lZGlhX3R5cGVCDAoKX21pbWVf'
+    'dHlwZUINCgtfc2l6ZV9ieXRlc0IOCgxfZHVyYXRpb25fbXNCDAoKX2F2YWlsYWJsZUIICgZfd2'
+    'lkdGhCCQoHX2hlaWdodA==');
 
 @$core.Deprecated('Use taskSummaryDescriptor instead')
 const TaskSummary$json = {
