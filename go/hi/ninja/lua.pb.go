@@ -27,10 +27,14 @@ const (
 // 🔴 没主人 / 匿名时**不要给值**（proto3 optional 的 presence），不是空串 ——
 // 空串会让 `if ctx.master then` 判成真，而那正是"提款只认主人"的判据。
 type LuaCtx struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Me            *string                `protobuf:"bytes,1,opt,name=me,proto3,oneof" json:"me,omitempty"`         // 机器人自己的 did
-	Master        *string                `protobuf:"bytes,2,opt,name=master,proto3,oneof" json:"master,omitempty"` // 主人；没有就不给
-	Asker         *string                `protobuf:"bytes,3,opt,name=asker,proto3,oneof" json:"asker,omitempty"`   // 这一次是谁在问；匿名就不给
+	state  protoimpl.MessageState `protogen:"open.v1"`
+	Me     *string                `protobuf:"bytes,1,opt,name=me,proto3,oneof" json:"me,omitempty"`         // 机器人自己的 did
+	Master *string                `protobuf:"bytes,2,opt,name=master,proto3,oneof" json:"master,omitempty"` // 主人；没有就不给
+	Asker  *string                `protobuf:"bytes,3,opt,name=asker,proto3,oneof" json:"asker,omitempty"`   // 这一次是谁在问；匿名就不给
+	// 引起这次调用的那条消息的暗语等级(hi.club.Message.dark;不带 = 0 = 普通)。
+	// **只给宿主用,不给 lua 脚本看**:执行器随 HostCallReq.ctx 原样带回,宿主发消息
+	// (host.send_message)就沿用这个等级 —— 问题是哪一级,发出去的就是哪一级。插件不能自己选。
+	Dark          *uint32 `protobuf:"varint,4,opt,name=dark,proto3,oneof" json:"dark,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -84,6 +88,13 @@ func (x *LuaCtx) GetAsker() string {
 		return *x.Asker
 	}
 	return ""
+}
+
+func (x *LuaCtx) GetDark() uint32 {
+	if x != nil && x.Dark != nil {
+		return *x.Dark
+	}
+	return 0
 }
 
 // OpenReq 装一个插件：跑一遍顶层，读出 contract 与 manifest。
@@ -886,14 +897,16 @@ var File_hi_ninja_lua_proto protoreflect.FileDescriptor
 
 const file_hi_ninja_lua_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/ninja/lua.proto\x12\bhi.ninja\"q\n" +
+	"\x12hi/ninja/lua.proto\x12\bhi.ninja\"\x93\x01\n" +
 	"\x06LuaCtx\x12\x13\n" +
 	"\x02me\x18\x01 \x01(\tH\x00R\x02me\x88\x01\x01\x12\x1b\n" +
 	"\x06master\x18\x02 \x01(\tH\x01R\x06master\x88\x01\x01\x12\x19\n" +
-	"\x05asker\x18\x03 \x01(\tH\x02R\x05asker\x88\x01\x01B\x05\n" +
+	"\x05asker\x18\x03 \x01(\tH\x02R\x05asker\x88\x01\x01\x12\x17\n" +
+	"\x04dark\x18\x04 \x01(\rH\x03R\x04dark\x88\x01\x01B\x05\n" +
 	"\x03_meB\t\n" +
 	"\a_masterB\b\n" +
-	"\x06_asker\"\xa5\x01\n" +
+	"\x06_askerB\a\n" +
+	"\x05_dark\"\xa5\x01\n" +
 	"\aOpenReq\x12\x17\n" +
 	"\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x1d\n" +
 	"\aversion\x18\x02 \x01(\tH\x01R\aversion\x88\x01\x01\x12\x1b\n" +

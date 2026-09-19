@@ -22,19 +22,21 @@ const LuaCtx$json = {
     {'1': 'me', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'me', '17': true},
     {'1': 'master', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'master', '17': true},
     {'1': 'asker', '3': 3, '4': 1, '5': 9, '9': 2, '10': 'asker', '17': true},
+    {'1': 'dark', '3': 4, '4': 1, '5': 13, '9': 3, '10': 'dark', '17': true},
   ],
   '8': [
     {'1': '_me'},
     {'1': '_master'},
     {'1': '_asker'},
+    {'1': '_dark'},
   ],
 };
 
 /// Descriptor for `LuaCtx`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List luaCtxDescriptor = $convert.base64Decode(
     'CgZMdWFDdHgSEwoCbWUYASABKAlIAFICbWWIAQESGwoGbWFzdGVyGAIgASgJSAFSBm1hc3Rlco'
-    'gBARIZCgVhc2tlchgDIAEoCUgCUgVhc2tlcogBAUIFCgNfbWVCCQoHX21hc3RlckIICgZfYXNr'
-    'ZXI=');
+    'gBARIZCgVhc2tlchgDIAEoCUgCUgVhc2tlcogBARIXCgRkYXJrGAQgASgNSANSBGRhcmuIAQFC'
+    'BQoDX21lQgkKB19tYXN0ZXJCCAoGX2Fza2VyQgcKBV9kYXJr');
 
 @$core.Deprecated('Use openReqDescriptor instead')
 const OpenReq$json = {

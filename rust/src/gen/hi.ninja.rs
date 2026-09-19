@@ -15,6 +15,11 @@ pub struct LuaCtx {
     /// 这一次是谁在问；匿名就不给
     #[prost(string, optional, tag = "3")]
     pub asker: ::core::option::Option<::prost::alloc::string::String>,
+    /// 引起这次调用的那条消息的暗语等级(hi.club.Message.dark;不带 = 0 = 普通)。
+    /// **只给宿主用,不给 lua 脚本看**:执行器随 HostCallReq.ctx 原样带回,宿主发消息
+    /// (host.send_message)就沿用这个等级 —— 问题是哪一级,发出去的就是哪一级。插件不能自己选。
+    #[prost(uint32, optional, tag = "4")]
+    pub dark: ::core::option::Option<u32>,
 }
 /// OpenReq 装一个插件：跑一遍顶层，读出 contract 与 manifest。
 ///

@@ -27,11 +27,13 @@ class LuaCtx extends $pb.GeneratedMessage {
     $core.String? me,
     $core.String? master,
     $core.String? asker,
+    $core.int? dark,
   }) {
     final result = create();
     if (me != null) result.me = me;
     if (master != null) result.master = master;
     if (asker != null) result.asker = asker;
+    if (dark != null) result.dark = dark;
     return result;
   }
 
@@ -51,6 +53,7 @@ class LuaCtx extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'me')
     ..aOS(2, _omitFieldNames ? '' : 'master')
     ..aOS(3, _omitFieldNames ? '' : 'asker')
+    ..aI(4, _omitFieldNames ? '' : 'dark', fieldType: $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -97,6 +100,18 @@ class LuaCtx extends $pb.GeneratedMessage {
   $core.bool hasAsker() => $_has(2);
   @$pb.TagNumber(3)
   void clearAsker() => $_clearField(3);
+
+  /// 引起这次调用的那条消息的暗语等级(hi.club.Message.dark;不带 = 0 = 普通)。
+  /// **只给宿主用,不给 lua 脚本看**:执行器随 HostCallReq.ctx 原样带回,宿主发消息
+  /// (host.send_message)就沿用这个等级 —— 问题是哪一级,发出去的就是哪一级。插件不能自己选。
+  @$pb.TagNumber(4)
+  $core.int get dark => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set dark($core.int value) => $_setUnsignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasDark() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearDark() => $_clearField(4);
 }
 
 /// OpenReq 装一个插件：跑一遍顶层，读出 contract 与 manifest。

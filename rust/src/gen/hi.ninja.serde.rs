@@ -2368,6 +2368,9 @@ impl serde::Serialize for LuaCtx {
         if self.asker.is_some() {
             len += 1;
         }
+        if self.dark.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.LuaCtx", len)?;
         if let Some(v) = self.me.as_ref() {
             struct_ser.serialize_field("me", v)?;
@@ -2377,6 +2380,9 @@ impl serde::Serialize for LuaCtx {
         }
         if let Some(v) = self.asker.as_ref() {
             struct_ser.serialize_field("asker", v)?;
+        }
+        if let Some(v) = self.dark.as_ref() {
+            struct_ser.serialize_field("dark", v)?;
         }
         struct_ser.end()
     }
@@ -2391,6 +2397,7 @@ impl<'de> serde::Deserialize<'de> for LuaCtx {
             "me",
             "master",
             "asker",
+            "dark",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -2398,6 +2405,7 @@ impl<'de> serde::Deserialize<'de> for LuaCtx {
             Me,
             Master,
             Asker,
+            Dark,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -2422,6 +2430,7 @@ impl<'de> serde::Deserialize<'de> for LuaCtx {
                             "me" => Ok(GeneratedField::Me),
                             "master" => Ok(GeneratedField::Master),
                             "asker" => Ok(GeneratedField::Asker),
+                            "dark" => Ok(GeneratedField::Dark),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -2444,6 +2453,7 @@ impl<'de> serde::Deserialize<'de> for LuaCtx {
                 let mut me__ = None;
                 let mut master__ = None;
                 let mut asker__ = None;
+                let mut dark__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Me => {
@@ -2464,12 +2474,21 @@ impl<'de> serde::Deserialize<'de> for LuaCtx {
                             }
                             asker__ = map_.next_value()?;
                         }
+                        GeneratedField::Dark => {
+                            if dark__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("dark"));
+                            }
+                            dark__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
                     }
                 }
                 Ok(LuaCtx {
                     me: me__,
                     master: master__,
                     asker: asker__,
+                    dark: dark__,
                 })
             }
         }
