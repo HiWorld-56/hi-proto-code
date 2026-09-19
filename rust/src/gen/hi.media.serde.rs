@@ -9692,12 +9692,18 @@ impl serde::Serialize for UserManageListReq {
         if self.pagination.is_some() {
             len += 1;
         }
+        if self.name.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.media.UserManageListReq", len)?;
         if let Some(v) = self.did.as_ref() {
             struct_ser.serialize_field("did", v)?;
         }
         if let Some(v) = self.pagination.as_ref() {
             struct_ser.serialize_field("pagination", v)?;
+        }
+        if let Some(v) = self.name.as_ref() {
+            struct_ser.serialize_field("name", v)?;
         }
         struct_ser.end()
     }
@@ -9711,12 +9717,14 @@ impl<'de> serde::Deserialize<'de> for UserManageListReq {
         const FIELDS: &[&str] = &[
             "did",
             "pagination",
+            "name",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Did,
             Pagination,
+            Name,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -9740,6 +9748,7 @@ impl<'de> serde::Deserialize<'de> for UserManageListReq {
                         match value {
                             "did" => Ok(GeneratedField::Did),
                             "pagination" => Ok(GeneratedField::Pagination),
+                            "name" => Ok(GeneratedField::Name),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -9761,6 +9770,7 @@ impl<'de> serde::Deserialize<'de> for UserManageListReq {
             {
                 let mut did__ = None;
                 let mut pagination__ = None;
+                let mut name__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Did => {
@@ -9775,11 +9785,18 @@ impl<'de> serde::Deserialize<'de> for UserManageListReq {
                             }
                             pagination__ = map_.next_value()?;
                         }
+                        GeneratedField::Name => {
+                            if name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("name"));
+                            }
+                            name__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(UserManageListReq {
                     did: did__,
                     pagination: pagination__,
+                    name: name__,
                 })
             }
         }

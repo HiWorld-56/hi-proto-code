@@ -779,11 +779,14 @@ pub mod task_client {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UserManageListReq {
-    /// 可选：按用户 DID 模糊查询；不传表示不筛选。
+    /// 可选：按用户 DID 子串模糊查询；不传表示不筛选。
     #[prost(string, optional, tag = "1")]
     pub did: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
+    /// 可选：按 HiDID 当前用户名子串模糊查询；不传表示不筛选。
+    #[prost(string, optional, tag = "3")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UserManageListResp {

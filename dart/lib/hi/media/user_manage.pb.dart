@@ -23,10 +23,12 @@ class UserManageListReq extends $pb.GeneratedMessage {
   factory UserManageListReq({
     $core.String? did,
     $1.Pagination? pagination,
+    $core.String? name,
   }) {
     final result = create();
     if (did != null) result.did = did;
     if (pagination != null) result.pagination = pagination;
+    if (name != null) result.name = name;
     return result;
   }
 
@@ -46,6 +48,7 @@ class UserManageListReq extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'did')
     ..aOM<$1.Pagination>(2, _omitFieldNames ? '' : 'pagination',
         subBuilder: $1.Pagination.create)
+    ..aOS(3, _omitFieldNames ? '' : 'name')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -67,7 +70,7 @@ class UserManageListReq extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<UserManageListReq>(create);
   static UserManageListReq? _defaultInstance;
 
-  /// 可选：按用户 DID 模糊查询；不传表示不筛选。
+  /// 可选：按用户 DID 子串模糊查询；不传表示不筛选。
   @$pb.TagNumber(1)
   $core.String get did => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -87,6 +90,16 @@ class UserManageListReq extends $pb.GeneratedMessage {
   void clearPagination() => $_clearField(2);
   @$pb.TagNumber(2)
   $1.Pagination ensurePagination() => $_ensure(1);
+
+  /// 可选：按 HiDID 当前用户名子串模糊查询；不传表示不筛选。
+  @$pb.TagNumber(3)
+  $core.String get name => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set name($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasName() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearName() => $_clearField(3);
 }
 
 class UserManageListResp_Unit extends $pb.GeneratedMessage {

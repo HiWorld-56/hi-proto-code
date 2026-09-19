@@ -25,9 +25,11 @@ const (
 
 type UserManageListReq struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 可选：按用户 DID 模糊查询；不传表示不筛选。
-	Did           *string        `protobuf:"bytes,1,opt,name=did,proto3,oneof" json:"did,omitempty"`
-	Pagination    *hi.Pagination `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	// 可选：按用户 DID 子串模糊查询；不传表示不筛选。
+	Did        *string        `protobuf:"bytes,1,opt,name=did,proto3,oneof" json:"did,omitempty"`
+	Pagination *hi.Pagination `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	// 可选：按 HiDID 当前用户名子串模糊查询；不传表示不筛选。
+	Name          *string `protobuf:"bytes,3,opt,name=name,proto3,oneof" json:"name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -74,6 +76,13 @@ func (x *UserManageListReq) GetPagination() *hi.Pagination {
 		return x.Pagination
 	}
 	return nil
+}
+
+func (x *UserManageListReq) GetName() string {
+	if x != nil && x.Name != nil {
+		return *x.Name
+	}
+	return ""
 }
 
 type UserManageListResp struct {
@@ -192,14 +201,17 @@ var File_hi_media_user_manage_proto protoreflect.FileDescriptor
 
 const file_hi_media_user_manage_proto_rawDesc = "" +
 	"\n" +
-	"\x1ahi/media/user_manage.proto\x12\bhi.media\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"s\n" +
+	"\x1ahi/media/user_manage.proto\x12\bhi.media\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xa1\x01\n" +
 	"\x11UserManageListReq\x12&\n" +
 	"\x03did\x18\x01 \x01(\tB\x0f\xbaH\fr\n" +
 	"\x18\xff\x012\x05^\\S+$H\x00R\x03did\x88\x01\x01\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"paginationB\x06\n" +
-	"\x04_did\"\xa2\x02\n" +
+	"pagination\x12#\n" +
+	"\x04name\x18\x03 \x01(\tB\n" +
+	"\xbaH\ar\x05\x10\x01\x18\xff\x01H\x01R\x04name\x88\x01\x01B\x06\n" +
+	"\x04_didB\a\n" +
+	"\x05_name\"\xa2\x02\n" +
 	"\x12UserManageListResp\x12\x1f\n" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12=\n" +
 	"\x05users\x18\x02 \x03(\v2!.hi.media.UserManageListResp.UnitB\x04\x90\xb5\x18\x03R\x05users\x1a\x9b\x01\n" +

@@ -37,17 +37,28 @@ const UserManageListReq$json = {
       '6': '.hi.Pagination',
       '10': 'pagination'
     },
+    {
+      '1': 'name',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'name',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_did'},
+    {'1': '_name'},
   ],
 };
 
 /// Descriptor for `UserManageListReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List userManageListReqDescriptor = $convert.base64Decode(
     'ChFVc2VyTWFuYWdlTGlzdFJlcRImCgNkaWQYASABKAlCD7pIDHIKGP8BMgVeXFMrJEgAUgNkaW'
-    'SIAQESLgoKcGFnaW5hdGlvbhgCIAEoCzIOLmhpLlBhZ2luYXRpb25SCnBhZ2luYXRpb25CBgoE'
-    'X2RpZA==');
+    'SIAQESLgoKcGFnaW5hdGlvbhgCIAEoCzIOLmhpLlBhZ2luYXRpb25SCnBhZ2luYXRpb24SIwoE'
+    'bmFtZRgDIAEoCUIKukgHcgUQARj/AUgBUgRuYW1liAEBQgYKBF9kaWRCBwoFX25hbWU=');
 
 @$core.Deprecated('Use userManageListRespDescriptor instead')
 const UserManageListResp$json = {
