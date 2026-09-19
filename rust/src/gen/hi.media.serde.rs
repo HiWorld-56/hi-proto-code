@@ -9910,6 +9910,9 @@ impl serde::Serialize for user_manage_list_resp::Unit {
         if self.registered_at.is_some() {
             len += 1;
         }
+        if self.name.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.media.UserManageListResp.Unit", len)?;
         if let Some(v) = self.did.as_ref() {
             struct_ser.serialize_field("did", v)?;
@@ -9918,6 +9921,9 @@ impl serde::Serialize for user_manage_list_resp::Unit {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
             struct_ser.serialize_field("registeredAt", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.name.as_ref() {
+            struct_ser.serialize_field("name", v)?;
         }
         struct_ser.end()
     }
@@ -9932,12 +9938,14 @@ impl<'de> serde::Deserialize<'de> for user_manage_list_resp::Unit {
             "did",
             "registered_at",
             "registeredAt",
+            "name",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Did,
             RegisteredAt,
+            Name,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -9961,6 +9969,7 @@ impl<'de> serde::Deserialize<'de> for user_manage_list_resp::Unit {
                         match value {
                             "did" => Ok(GeneratedField::Did),
                             "registeredAt" | "registered_at" => Ok(GeneratedField::RegisteredAt),
+                            "name" => Ok(GeneratedField::Name),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -9982,6 +9991,7 @@ impl<'de> serde::Deserialize<'de> for user_manage_list_resp::Unit {
             {
                 let mut did__ = None;
                 let mut registered_at__ = None;
+                let mut name__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Did => {
@@ -9998,11 +10008,18 @@ impl<'de> serde::Deserialize<'de> for user_manage_list_resp::Unit {
                                 map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
+                        GeneratedField::Name => {
+                            if name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("name"));
+                            }
+                            name__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(user_manage_list_resp::Unit {
                     did: did__,
                     registered_at: registered_at__,
+                    name: name__,
                 })
             }
         }

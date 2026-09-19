@@ -104,11 +104,22 @@ const UserManageListResp_Unit$json = {
       '10': 'registeredAt',
       '17': true
     },
+    {
+      '1': 'name',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'name',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
     {'1': '_did'},
     {'1': '_registered_at'},
+    {'1': '_name'},
   ],
 };
 
@@ -116,6 +127,7 @@ const UserManageListResp_Unit$json = {
 final $typed_data.Uint8List userManageListRespDescriptor = $convert.base64Decode(
     'ChJVc2VyTWFuYWdlTGlzdFJlc3ASHwoFdG90YWwYASABKAVCBJC1GANIAFIFdG90YWyIAQESPQ'
     'oFdXNlcnMYAiADKAsyIS5oaS5tZWRpYS5Vc2VyTWFuYWdlTGlzdFJlc3AuVW5pdEIEkLUYA1IF'
-    'dXNlcnMacwoEVW5pdBIbCgNkaWQYASABKAlCBJC1GANIAFIDZGlkiAEBEi4KDXJlZ2lzdGVyZW'
-    'RfYXQYAiABKANCBJC1GANIAVIMcmVnaXN0ZXJlZEF0iAEBOgSYtRgDQgYKBF9kaWRCEAoOX3Jl'
-    'Z2lzdGVyZWRfYXQ6BJi1GANCCAoGX3RvdGFs');
+    'dXNlcnMamwEKBFVuaXQSGwoDZGlkGAEgASgJQgSQtRgDSABSA2RpZIgBARIuCg1yZWdpc3Rlcm'
+    'VkX2F0GAIgASgDQgSQtRgDSAFSDHJlZ2lzdGVyZWRBdIgBARIdCgRuYW1lGAMgASgJQgSQtRgD'
+    'SAJSBG5hbWWIAQE6BJi1GANCBgoEX2RpZEIQCg5fcmVnaXN0ZXJlZF9hdEIHCgVfbmFtZToEmL'
+    'UYA0IICgZfdG90YWw=');

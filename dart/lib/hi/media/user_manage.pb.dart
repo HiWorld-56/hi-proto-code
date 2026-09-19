@@ -93,10 +93,12 @@ class UserManageListResp_Unit extends $pb.GeneratedMessage {
   factory UserManageListResp_Unit({
     $core.String? did,
     $fixnum.Int64? registeredAt,
+    $core.String? name,
   }) {
     final result = create();
     if (did != null) result.did = did;
     if (registeredAt != null) result.registeredAt = registeredAt;
+    if (name != null) result.name = name;
     return result;
   }
 
@@ -115,6 +117,7 @@ class UserManageListResp_Unit extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'did')
     ..aInt64(2, _omitFieldNames ? '' : 'registeredAt')
+    ..aOS(3, _omitFieldNames ? '' : 'name')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -154,6 +157,15 @@ class UserManageListResp_Unit extends $pb.GeneratedMessage {
   $core.bool hasRegisteredAt() => $_has(1);
   @$pb.TagNumber(2)
   void clearRegisteredAt() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get name => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set name($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasName() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearName() => $_clearField(3);
 }
 
 class UserManageListResp extends $pb.GeneratedMessage {

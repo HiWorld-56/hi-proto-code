@@ -27,7 +27,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1ahi/media/user_manage.proto\x12\x08hi.media\x1a\x1b\x62uf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"s\n\x11UserManageListReq\x12&\n\x03\x64id\x18\x01 \x01(\tB\x0f\xbaH\x0cr\n\x18\xff\x01\x32\x05^\\S+$H\x00R\x03\x64id\x88\x01\x01\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npaginationB\x06\n\x04_did\"\xf9\x01\n\x12UserManageListResp\x12\x1f\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12=\n\x05users\x18\x02 \x03(\x0b\x32!.hi.media.UserManageListResp.UnitB\x04\x90\xb5\x18\x03R\x05users\x1as\n\x04Unit\x12\x1b\n\x03\x64id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x03\x64id\x88\x01\x01\x12.\n\rregistered_at\x18\x02 \x01(\x03\x42\x04\x90\xb5\x18\x03H\x01R\x0cregisteredAt\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x06\n\x04_didB\x10\n\x0e_registered_at:\x04\x98\xb5\x18\x03\x42\x08\n\x06_total2V\n\nUserManage\x12H\n\x04List\x12\x1b.hi.media.UserManageListReq\x1a\x1c.hi.media.UserManageListResp\"\x05\x8a\xb5\x18\x01\x04\x42,Z*github.com/HiWorld-56/hi-proto/go/hi/mediab\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1ahi/media/user_manage.proto\x12\x08hi.media\x1a\x1b\x62uf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"s\n\x11UserManageListReq\x12&\n\x03\x64id\x18\x01 \x01(\tB\x0f\xbaH\x0cr\n\x18\xff\x01\x32\x05^\\S+$H\x00R\x03\x64id\x88\x01\x01\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npaginationB\x06\n\x04_did\"\xa2\x02\n\x12UserManageListResp\x12\x1f\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12=\n\x05users\x18\x02 \x03(\x0b\x32!.hi.media.UserManageListResp.UnitB\x04\x90\xb5\x18\x03R\x05users\x1a\x9b\x01\n\x04Unit\x12\x1b\n\x03\x64id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x03\x64id\x88\x01\x01\x12.\n\rregistered_at\x18\x02 \x01(\x03\x42\x04\x90\xb5\x18\x03H\x01R\x0cregisteredAt\x88\x01\x01\x12\x1d\n\x04name\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x04name\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x06\n\x04_didB\x10\n\x0e_registered_atB\x07\n\x05_name:\x04\x98\xb5\x18\x03\x42\x08\n\x06_total2V\n\nUserManage\x12H\n\x04List\x12\x1b.hi.media.UserManageListReq\x1a\x1c.hi.media.UserManageListResp\"\x05\x8a\xb5\x18\x01\x04\x42,Z*github.com/HiWorld-56/hi-proto/go/hi/mediab\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -41,6 +41,8 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_USERMANAGELISTRESP_UNIT'].fields_by_name['did']._serialized_options = b'\220\265\030\003'
   _globals['_USERMANAGELISTRESP_UNIT'].fields_by_name['registered_at']._loaded_options = None
   _globals['_USERMANAGELISTRESP_UNIT'].fields_by_name['registered_at']._serialized_options = b'\220\265\030\003'
+  _globals['_USERMANAGELISTRESP_UNIT'].fields_by_name['name']._loaded_options = None
+  _globals['_USERMANAGELISTRESP_UNIT'].fields_by_name['name']._serialized_options = b'\220\265\030\003'
   _globals['_USERMANAGELISTRESP_UNIT']._loaded_options = None
   _globals['_USERMANAGELISTRESP_UNIT']._serialized_options = b'\230\265\030\003'
   _globals['_USERMANAGELISTRESP'].fields_by_name['total']._loaded_options = None
@@ -54,9 +56,9 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_USERMANAGELISTREQ']._serialized_start=104
   _globals['_USERMANAGELISTREQ']._serialized_end=219
   _globals['_USERMANAGELISTRESP']._serialized_start=222
-  _globals['_USERMANAGELISTRESP']._serialized_end=471
-  _globals['_USERMANAGELISTRESP_UNIT']._serialized_start=340
-  _globals['_USERMANAGELISTRESP_UNIT']._serialized_end=455
-  _globals['_USERMANAGE']._serialized_start=473
-  _globals['_USERMANAGE']._serialized_end=559
+  _globals['_USERMANAGELISTRESP']._serialized_end=512
+  _globals['_USERMANAGELISTRESP_UNIT']._serialized_start=341
+  _globals['_USERMANAGELISTRESP_UNIT']._serialized_end=496
+  _globals['_USERMANAGE']._serialized_start=514
+  _globals['_USERMANAGE']._serialized_end=600
 # @@protoc_insertion_point(module_scope)

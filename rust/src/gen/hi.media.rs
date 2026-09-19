@@ -801,6 +801,9 @@ pub mod user_manage_list_resp {
         /// Unix 秒
         #[prost(int64, optional, tag = "2")]
         pub registered_at: ::core::option::Option<i64>,
+        /// HiDID 当前用户名
+        #[prost(string, optional, tag = "3")]
+        pub name: ::core::option::Option<::prost::alloc::string::String>,
     }
 }
 /// Generated client implementations.

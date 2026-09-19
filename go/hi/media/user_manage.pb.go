@@ -132,6 +132,7 @@ type UserManageListResp_Unit struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           *string                `protobuf:"bytes,1,opt,name=did,proto3,oneof" json:"did,omitempty"`
 	RegisteredAt  *int64                 `protobuf:"varint,2,opt,name=registered_at,json=registeredAt,proto3,oneof" json:"registered_at,omitempty"` // Unix 秒
+	Name          *string                `protobuf:"bytes,3,opt,name=name,proto3,oneof" json:"name,omitempty"`                                      // HiDID 当前用户名
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -180,6 +181,13 @@ func (x *UserManageListResp_Unit) GetRegisteredAt() int64 {
 	return 0
 }
 
+func (x *UserManageListResp_Unit) GetName() string {
+	if x != nil && x.Name != nil {
+		return *x.Name
+	}
+	return ""
+}
+
 var File_hi_media_user_manage_proto protoreflect.FileDescriptor
 
 const file_hi_media_user_manage_proto_rawDesc = "" +
@@ -191,15 +199,17 @@ const file_hi_media_user_manage_proto_rawDesc = "" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
 	"paginationB\x06\n" +
-	"\x04_did\"\xf9\x01\n" +
+	"\x04_did\"\xa2\x02\n" +
 	"\x12UserManageListResp\x12\x1f\n" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12=\n" +
-	"\x05users\x18\x02 \x03(\v2!.hi.media.UserManageListResp.UnitB\x04\x90\xb5\x18\x03R\x05users\x1as\n" +
+	"\x05users\x18\x02 \x03(\v2!.hi.media.UserManageListResp.UnitB\x04\x90\xb5\x18\x03R\x05users\x1a\x9b\x01\n" +
 	"\x04Unit\x12\x1b\n" +
 	"\x03did\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x03did\x88\x01\x01\x12.\n" +
-	"\rregistered_at\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x03H\x01R\fregisteredAt\x88\x01\x01:\x04\x98\xb5\x18\x03B\x06\n" +
+	"\rregistered_at\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x03H\x01R\fregisteredAt\x88\x01\x01\x12\x1d\n" +
+	"\x04name\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x04name\x88\x01\x01:\x04\x98\xb5\x18\x03B\x06\n" +
 	"\x04_didB\x10\n" +
-	"\x0e_registered_at:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x0e_registered_atB\a\n" +
+	"\x05_name:\x04\x98\xb5\x18\x03B\b\n" +
 	"\x06_total2V\n" +
 	"\n" +
 	"UserManage\x12H\n" +
