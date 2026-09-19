@@ -142,6 +142,7 @@ class Notice extends $pb.GeneratedMessage {
     $core.String? status,
     $1.Any? extra,
     $core.String? exType,
+    $core.int? dark,
   }) {
     final result = create();
     if (uuid != null) result.uuid = uuid;
@@ -152,6 +153,7 @@ class Notice extends $pb.GeneratedMessage {
     if (status != null) result.status = status;
     if (extra != null) result.extra = extra;
     if (exType != null) result.exType = exType;
+    if (dark != null) result.dark = dark;
     return result;
   }
 
@@ -177,6 +179,7 @@ class Notice extends $pb.GeneratedMessage {
     ..aOS(6, _omitFieldNames ? '' : 'status')
     ..aOM<$1.Any>(7, _omitFieldNames ? '' : 'extra', subBuilder: $1.Any.create)
     ..aOS(8, _omitFieldNames ? '' : 'exType')
+    ..aI(9, _omitFieldNames ? '' : 'dark', fieldType: $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -280,6 +283,15 @@ class Notice extends $pb.GeneratedMessage {
   $core.bool hasExType() => $_has(7);
   @$pb.TagNumber(8)
   void clearExType() => $_clearField(8);
+
+  @$pb.TagNumber(9)
+  $core.int get dark => $_getIZ(8);
+  @$pb.TagNumber(9)
+  set dark($core.int value) => $_setUnsignedInt32(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasDark() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearDark() => $_clearField(9);
 }
 
 class Prompt extends $pb.GeneratedMessage {
@@ -348,53 +360,22 @@ class Prompt extends $pb.GeneratedMessage {
 }
 
 ///
-/// Message.type —— 这条消息是什么。取值就是下面这几个,**别自己发明**。
+/// ## dark:暗语等级 —— **UI 忽略它,别的流程照走**
 ///
-/// chat     常规消息。**唯一会在聊天里显示的类型**
-/// draft    草稿:后端照常落档,但**不推送、不触发 assistant**
-/// (backend `isQ3GroupDraft`,目前只用在 Q3 群)
-/// invalid  历史遗留,**没有任何一端实现,新代码别用**。
-/// 原意是"未通过安全验证的消息",但伪造包现在一律在 broker 就被拒掉、
-/// 根本不进网,不存在"投出来一条 invalid 让端自己判"这回事。
+/// `dark` 是一个等级:**不带 = 0 = 普通(明)**,1 = 1 级暗语,依此类推。Message 与 Notice 各有一个。
 ///
-/// ----------------------------------------------------------------------------------------------------
-/// ## `from` 是**真实发送者**,恒等于发这条 MQTT 包的那个身份
+/// · **暗 ≠ 保密。** 内容照常明文过 MQTT、照常进历史记录和各端本地库,会话里的人换个
+/// 不过滤的客户端就能读到。它只表示「界面上别显示」—— 典型用途:两个 agent 在群里协商,
+/// 不需要让群里的人看到。
+/// · **只有显示这一步跳过**:进历史记录、补拉同步、机器人触发 AI 回复、回调……一律照走。
+/// · **过滤在 core**:core 只把 `dark <= 阈值` 的交给 UI(阈值默认 0,可随时切换),
+/// 所以不认识暗语的 app 不用改就看不到。事件照发(带着 dark),机器人靠事件做事。
+/// · 后端离线推送:`dark > 0` 不推(手机通知栏也是显示)。
+/// · 回复一条暗语:**收到几级,回复就用几级**(后端 AI 助手、机器人都照此)。
+/// · 分级是留给以后按层级分支处理的,现在只用到 0 / 1。
 ///
-/// ⚠️ 这是一条**被 broker 强制**的不变量,不是君子协定:
-/// `hi-mqtt-fromguard` 插件在 `MOSQ_EVT_ACL_CHECK` 里解出 `from.did`,
-/// 跟这条连接的 mqtt username(= 发送者 did)比对,对不上**直接拒,包根本不进网**。
-///
-/// 所以任何时候都可以拿 `from` 当真实发送者用,收信方不需要再验一遍。
-/// 由此推出两条:
-///
-/// · **不许**把 `from` 填成别人。填了这条消息就发不出去 —— 而且在 MQTT 3.1.1 下
-/// *发送端连报错都看不到**(QoS2 握手照常走完,只是没有任何人收得到)。
-/// · **没有"后端代发"这条路**(原来的 `Publisher.Publish` 已删,见文件末尾)——
-/// 发包的只可能是持有那条连接的进程,于是这条不变量没有第二个入口要堵。
-///
-/// ## `ghost` 是**显示覆盖**,纯前端的事
-///
-/// 挂了 `ghost` 时,聊天界面把这条消息**显示成 ghost 发的**;`from` 仍然是真实发送者,
-/// 只是不显示。用途是"代笔":B 替 A 写,界面上显示 A。
-///
-/// example:
-/// 常规   from = 发送者   ghost = null    → 显示为发送者
-/// 代笔   from = B(真的是 B 发的)  ghost = A  → 显示为 A
-///
-/// ⚠️ **ghost 只影响显示,不参与任何判据。** 归档、@解析、离线推送、触发 assistant、
-/// 权限,一律看 `from`。"谁有资格给谁代笔"是**业务/前端**要不要管的事,协议层不管 ——
-/// 协议层只负责保证 `from` 是真的。
-///
-/// ⚠️ **这套语义是 2026-08-26 反过来的。** 原来是「`from` 写要显示的那个人、
-/// `ghost` 写真实发送者」。反转的理由:旧语义下 broker 的判据必须写成
-/// 「发送者 ∈ {from.did, ghost.did}」,而那等于承认"填了 ghost 就能署名任何人",
-/// 等于没堵。反转之后判据退化成一行 `from.did == username`,不碰业务层。
-/// 我们维护的端里当时没有任何一处设置 `ghost`(core-mqtt 全是 `ghost: None`,
-/// backend 只是原样转发),所以反转不影响存量。
-/// ----------------------------------------------------------------------------------------------------
-/// 任意聊天中:
-/// type != chat 时: 一律不显示
-/// type == chat 时: 发送者显示为 ghost,ghost 为空则显示 from
+/// ⚠️ **不带就是 0,这是有意的缺省语义**,不是「拿零值冒充没有」:老的发送方从来不填这个字段,
+/// 它们发的就是 0 级(普通)消息。读的时候 `GetDark()` / `unwrap_or(0)` 是对的。
 class Message extends $pb.GeneratedMessage {
   factory Message({
     $core.String? uuid,
@@ -406,6 +387,7 @@ class Message extends $pb.GeneratedMessage {
     $core.String? exType,
     $0.Entity? ghost,
     Prompt? prompt,
+    $core.int? dark,
   }) {
     final result = create();
     if (uuid != null) result.uuid = uuid;
@@ -417,6 +399,7 @@ class Message extends $pb.GeneratedMessage {
     if (exType != null) result.exType = exType;
     if (ghost != null) result.ghost = ghost;
     if (prompt != null) result.prompt = prompt;
+    if (dark != null) result.dark = dark;
     return result;
   }
 
@@ -445,6 +428,7 @@ class Message extends $pb.GeneratedMessage {
     ..aOM<$0.Entity>(8, _omitFieldNames ? '' : 'ghost',
         subBuilder: $0.Entity.create)
     ..aOM<Prompt>(9, _omitFieldNames ? '' : 'prompt', subBuilder: Prompt.create)
+    ..aI(10, _omitFieldNames ? '' : 'dark', fieldType: $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -547,6 +531,15 @@ class Message extends $pb.GeneratedMessage {
   void clearPrompt() => $_clearField(9);
   @$pb.TagNumber(9)
   Prompt ensurePrompt() => $_ensure(8);
+
+  @$pb.TagNumber(10)
+  $core.int get dark => $_getIZ(9);
+  @$pb.TagNumber(10)
+  set dark($core.int value) => $_setUnsignedInt32(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasDark() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearDark() => $_clearField(10);
 }
 
 /// ⚠️ 被后端 Go 引用(群消息 @ 解析),proto 里无 rpc 引用,勿当死 message 删。

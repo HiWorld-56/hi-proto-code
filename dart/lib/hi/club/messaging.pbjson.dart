@@ -134,6 +134,16 @@ const Notice$json = {
       '10': 'exType',
       '17': true
     },
+    {
+      '1': 'dark',
+      '3': 9,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 6,
+      '10': 'dark',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -143,6 +153,7 @@ const Notice$json = {
     {'1': '_expiration'},
     {'1': '_status'},
     {'1': '_ex_type'},
+    {'1': '_dark'},
   ],
 };
 
@@ -153,9 +164,9 @@ final $typed_data.Uint8List noticeDescriptor = $convert.base64Decode(
     'CXRpbWVzdGFtcBgEIAEoA0IEkLUYAkgCUgl0aW1lc3RhbXCIAQESKQoKZXhwaXJhdGlvbhgFIA'
     'EoA0IEkLUYAkgDUgpleHBpcmF0aW9uiAEBEiEKBnN0YXR1cxgGIAEoCUIEkLUYAkgEUgZzdGF0'
     'dXOIAQESMAoFZXh0cmEYByABKAsyFC5nb29nbGUucHJvdG9idWYuQW55QgSQtRgCUgVleHRyYR'
-    'IiCgdleF90eXBlGAggASgJQgSQtRgCSAVSBmV4VHlwZYgBAToEmLUYAkIHCgVfdXVpZEIHCgVf'
-    'dHlwZUIMCgpfdGltZXN0YW1wQg0KC19leHBpcmF0aW9uQgkKB19zdGF0dXNCCgoIX2V4X3R5cG'
-    'U=');
+    'IiCgdleF90eXBlGAggASgJQgSQtRgCSAVSBmV4VHlwZYgBARIdCgRkYXJrGAkgASgNQgSQtRgC'
+    'SAZSBGRhcmuIAQE6BJi1GAJCBwoFX3V1aWRCBwoFX3R5cGVCDAoKX3RpbWVzdGFtcEINCgtfZX'
+    'hwaXJhdGlvbkIJCgdfc3RhdHVzQgoKCF9leF90eXBlQgcKBV9kYXJr');
 
 @$core.Deprecated('Use promptDescriptor instead')
 const Prompt$json = {
@@ -283,6 +294,16 @@ const Message$json = {
       '8': {},
       '10': 'prompt'
     },
+    {
+      '1': 'dark',
+      '3': 10,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 4,
+      '10': 'dark',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -290,6 +311,7 @@ const Message$json = {
     {'1': '_type'},
     {'1': '_timestamp'},
     {'1': '_ex_type'},
+    {'1': '_dark'},
   ],
 };
 
@@ -301,8 +323,9 @@ final $typed_data.Uint8List messageDescriptor = $convert.base64Decode(
     '1wGAUgASgDQgSQtRgCSAJSCXRpbWVzdGFtcIgBARIwCgVleHRyYRgGIAEoCzIULmdvb2dsZS5w'
     'cm90b2J1Zi5BbnlCBJC1GAJSBWV4dHJhEiIKB2V4X3R5cGUYByABKAlCBJC1GAJIA1IGZXhUeX'
     'BliAEBEiYKBWdob3N0GAggASgLMgouaGkuRW50aXR5QgSQtRgBUgVnaG9zdBItCgZwcm9tcHQY'
-    'CSABKAsyDy5oaS5jbHViLlByb21wdEIEkLUYAlIGcHJvbXB0OgSYtRgCQgcKBV91dWlkQgcKBV'
-    '90eXBlQgwKCl90aW1lc3RhbXBCCgoIX2V4X3R5cGU=');
+    'CSABKAsyDy5oaS5jbHViLlByb21wdEIEkLUYAlIGcHJvbXB0Eh0KBGRhcmsYCiABKA1CBJC1GA'
+    'JIBFIEZGFya4gBAToEmLUYAkIHCgVfdXVpZEIHCgVfdHlwZUIMCgpfdGltZXN0YW1wQgoKCF9l'
+    'eF90eXBlQgcKBV9kYXJr');
 
 @$core.Deprecated('Use mentionDescriptor instead')
 const Mention$json = {

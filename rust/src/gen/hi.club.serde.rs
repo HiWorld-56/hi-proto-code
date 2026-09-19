@@ -15452,6 +15452,9 @@ impl serde::Serialize for Message {
         if self.prompt.is_some() {
             len += 1;
         }
+        if self.dark.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.club.Message", len)?;
         if let Some(v) = self.uuid.as_ref() {
             struct_ser.serialize_field("uuid", v)?;
@@ -15482,6 +15485,9 @@ impl serde::Serialize for Message {
         if let Some(v) = self.prompt.as_ref() {
             struct_ser.serialize_field("prompt", v)?;
         }
+        if let Some(v) = self.dark.as_ref() {
+            struct_ser.serialize_field("dark", v)?;
+        }
         struct_ser.end()
     }
 }
@@ -15502,6 +15508,7 @@ impl<'de> serde::Deserialize<'de> for Message {
             "exType",
             "ghost",
             "prompt",
+            "dark",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -15515,6 +15522,7 @@ impl<'de> serde::Deserialize<'de> for Message {
             ExType,
             Ghost,
             Prompt,
+            Dark,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -15545,6 +15553,7 @@ impl<'de> serde::Deserialize<'de> for Message {
                             "exType" | "ex_type" => Ok(GeneratedField::ExType),
                             "ghost" => Ok(GeneratedField::Ghost),
                             "prompt" => Ok(GeneratedField::Prompt),
+                            "dark" => Ok(GeneratedField::Dark),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -15573,6 +15582,7 @@ impl<'de> serde::Deserialize<'de> for Message {
                 let mut ex_type__ = None;
                 let mut ghost__ = None;
                 let mut prompt__ = None;
+                let mut dark__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Uuid => {
@@ -15631,6 +15641,14 @@ impl<'de> serde::Deserialize<'de> for Message {
                             }
                             prompt__ = map_.next_value()?;
                         }
+                        GeneratedField::Dark => {
+                            if dark__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("dark"));
+                            }
+                            dark__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
                     }
                 }
                 Ok(Message {
@@ -15643,6 +15661,7 @@ impl<'de> serde::Deserialize<'de> for Message {
                     ex_type: ex_type__,
                     ghost: ghost__,
                     prompt: prompt__,
+                    dark: dark__,
                 })
             }
         }
@@ -15806,6 +15825,9 @@ impl serde::Serialize for Notice {
         if self.ex_type.is_some() {
             len += 1;
         }
+        if self.dark.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.club.Notice", len)?;
         if let Some(v) = self.uuid.as_ref() {
             struct_ser.serialize_field("uuid", v)?;
@@ -15835,6 +15857,9 @@ impl serde::Serialize for Notice {
         if let Some(v) = self.ex_type.as_ref() {
             struct_ser.serialize_field("exType", v)?;
         }
+        if let Some(v) = self.dark.as_ref() {
+            struct_ser.serialize_field("dark", v)?;
+        }
         struct_ser.end()
     }
 }
@@ -15854,6 +15879,7 @@ impl<'de> serde::Deserialize<'de> for Notice {
             "extra",
             "ex_type",
             "exType",
+            "dark",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -15866,6 +15892,7 @@ impl<'de> serde::Deserialize<'de> for Notice {
             Status,
             Extra,
             ExType,
+            Dark,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -15895,6 +15922,7 @@ impl<'de> serde::Deserialize<'de> for Notice {
                             "status" => Ok(GeneratedField::Status),
                             "extra" => Ok(GeneratedField::Extra),
                             "exType" | "ex_type" => Ok(GeneratedField::ExType),
+                            "dark" => Ok(GeneratedField::Dark),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -15922,6 +15950,7 @@ impl<'de> serde::Deserialize<'de> for Notice {
                 let mut status__ = None;
                 let mut extra__ = None;
                 let mut ex_type__ = None;
+                let mut dark__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Uuid => {
@@ -15976,6 +16005,14 @@ impl<'de> serde::Deserialize<'de> for Notice {
                             }
                             ex_type__ = map_.next_value()?;
                         }
+                        GeneratedField::Dark => {
+                            if dark__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("dark"));
+                            }
+                            dark__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
                     }
                 }
                 Ok(Notice {
@@ -15987,6 +16024,7 @@ impl<'de> serde::Deserialize<'de> for Notice {
                     status: status__,
                     extra: extra__,
                     ex_type: ex_type__,
+                    dark: dark__,
                 })
             }
         }
