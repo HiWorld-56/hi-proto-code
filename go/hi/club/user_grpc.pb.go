@@ -21,20 +21,18 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	User_GetCurrent_FullMethodName             = "/hi.club.User/GetCurrent"
-	User_Update_FullMethodName                 = "/hi.club.User/Update"
-	User_ListSystemMessages_FullMethodName     = "/hi.club.User/ListSystemMessages"
-	User_DeleteSystemMessage_FullMethodName    = "/hi.club.User/DeleteSystemMessage"
-	User_DeleteAllSystemMessage_FullMethodName = "/hi.club.User/DeleteAllSystemMessage"
-	User_HandleSystemMessage_FullMethodName    = "/hi.club.User/HandleSystemMessage"
-	User_MarkNoticeProcessed_FullMethodName    = "/hi.club.User/MarkNoticeProcessed"
-	User_ListRelations_FullMethodName          = "/hi.club.User/ListRelations"
-	User_AddFriend_FullMethodName              = "/hi.club.User/AddFriend"
-	User_DeleteFriend_FullMethodName           = "/hi.club.User/DeleteFriend"
-	User_ListGroups_FullMethodName             = "/hi.club.User/ListGroups"
-	User_GetOther_FullMethodName               = "/hi.club.User/GetOther"
-	User_UnprocessedSysMsgCount_FullMethodName = "/hi.club.User/UnprocessedSysMsgCount"
-	User_SetRemark_FullMethodName              = "/hi.club.User/SetRemark"
+	User_GetCurrent_FullMethodName          = "/hi.club.User/GetCurrent"
+	User_Update_FullMethodName              = "/hi.club.User/Update"
+	User_ListNotices_FullMethodName         = "/hi.club.User/ListNotices"
+	User_ListNoticeStatuses_FullMethodName  = "/hi.club.User/ListNoticeStatuses"
+	User_HandleNotice_FullMethodName        = "/hi.club.User/HandleNotice"
+	User_MarkNoticeProcessed_FullMethodName = "/hi.club.User/MarkNoticeProcessed"
+	User_ListRelations_FullMethodName       = "/hi.club.User/ListRelations"
+	User_AddFriend_FullMethodName           = "/hi.club.User/AddFriend"
+	User_DeleteFriend_FullMethodName        = "/hi.club.User/DeleteFriend"
+	User_ListGroups_FullMethodName          = "/hi.club.User/ListGroups"
+	User_GetOther_FullMethodName            = "/hi.club.User/GetOther"
+	User_SetRemark_FullMethodName           = "/hi.club.User/SetRemark"
 )
 
 // UserClient is the client API for User service.
@@ -51,17 +49,17 @@ type UserClient interface {
 	// (实测差 0.6s:客户端微秒 vs 服务端整秒)。写完顺手回权威值,调用方不必再多一次
 	// GetCurrent,也避免中间被自己的另一个端插一手、拿回不一致的资料。
 	Update(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*UserInfo, error)
-	ListSystemMessages(ctx context.Context, in *ListSystemMessagesReq, opts ...grpc.CallOption) (*SystemMessages, error)
-	DeleteSystemMessage(ctx context.Context, in *DeleteSystemMessageReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	DeleteAllSystemMessage(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	HandleSystemMessage(ctx context.Context, in *HandleSystemMessageReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 通知是历史记录:后端只记录、不删,也不替端上算未读 —— 所以没有删除接口、没有未读计数接口,
+	// 清理本地通知是端上(core)自己的事。
+	ListNotices(ctx context.Context, in *ListNoticesReq, opts ...grpc.CallOption) (*ListNoticesResp, error)
+	ListNoticeStatuses(ctx context.Context, in *ListNoticeStatusesReq, opts ...grpc.CallOption) (*ListNoticeStatusesResp, error)
+	HandleNotice(ctx context.Context, in *HandleNoticeReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	MarkNoticeProcessed(ctx context.Context, in *MarkNoticeProcessedReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListRelations(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListRelationsResp, error)
 	AddFriend(ctx context.Context, in *AddFriendReq, opts ...grpc.CallOption) (*AddFriendResp, error)
 	DeleteFriend(ctx context.Context, in *DeleteFriendReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListGroups(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListGroupsResp, error)
 	GetOther(ctx context.Context, in *GetUserReq, opts ...grpc.CallOption) (*hi.Entity, error)
-	UnprocessedSysMsgCount(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UnprocessedSysMsgCountResp, error)
 	SetRemark(ctx context.Context, in *SetRemarkReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
@@ -93,40 +91,30 @@ func (c *userClient) Update(ctx context.Context, in *UpdateUserReq, opts ...grpc
 	return out, nil
 }
 
-func (c *userClient) ListSystemMessages(ctx context.Context, in *ListSystemMessagesReq, opts ...grpc.CallOption) (*SystemMessages, error) {
+func (c *userClient) ListNotices(ctx context.Context, in *ListNoticesReq, opts ...grpc.CallOption) (*ListNoticesResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SystemMessages)
-	err := c.cc.Invoke(ctx, User_ListSystemMessages_FullMethodName, in, out, cOpts...)
+	out := new(ListNoticesResp)
+	err := c.cc.Invoke(ctx, User_ListNotices_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userClient) DeleteSystemMessage(ctx context.Context, in *DeleteSystemMessageReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *userClient) ListNoticeStatuses(ctx context.Context, in *ListNoticeStatusesReq, opts ...grpc.CallOption) (*ListNoticeStatusesResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, User_DeleteSystemMessage_FullMethodName, in, out, cOpts...)
+	out := new(ListNoticeStatusesResp)
+	err := c.cc.Invoke(ctx, User_ListNoticeStatuses_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userClient) DeleteAllSystemMessage(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *userClient) HandleNotice(ctx context.Context, in *HandleNoticeReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, User_DeleteAllSystemMessage_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userClient) HandleSystemMessage(ctx context.Context, in *HandleSystemMessageReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, User_HandleSystemMessage_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, User_HandleNotice_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -193,16 +181,6 @@ func (c *userClient) GetOther(ctx context.Context, in *GetUserReq, opts ...grpc.
 	return out, nil
 }
 
-func (c *userClient) UnprocessedSysMsgCount(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UnprocessedSysMsgCountResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UnprocessedSysMsgCountResp)
-	err := c.cc.Invoke(ctx, User_UnprocessedSysMsgCount_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *userClient) SetRemark(ctx context.Context, in *SetRemarkReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -227,17 +205,17 @@ type UserServer interface {
 	// (实测差 0.6s:客户端微秒 vs 服务端整秒)。写完顺手回权威值,调用方不必再多一次
 	// GetCurrent,也避免中间被自己的另一个端插一手、拿回不一致的资料。
 	Update(context.Context, *UpdateUserReq) (*UserInfo, error)
-	ListSystemMessages(context.Context, *ListSystemMessagesReq) (*SystemMessages, error)
-	DeleteSystemMessage(context.Context, *DeleteSystemMessageReq) (*emptypb.Empty, error)
-	DeleteAllSystemMessage(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
-	HandleSystemMessage(context.Context, *HandleSystemMessageReq) (*emptypb.Empty, error)
+	// 通知是历史记录:后端只记录、不删,也不替端上算未读 —— 所以没有删除接口、没有未读计数接口,
+	// 清理本地通知是端上(core)自己的事。
+	ListNotices(context.Context, *ListNoticesReq) (*ListNoticesResp, error)
+	ListNoticeStatuses(context.Context, *ListNoticeStatusesReq) (*ListNoticeStatusesResp, error)
+	HandleNotice(context.Context, *HandleNoticeReq) (*emptypb.Empty, error)
 	MarkNoticeProcessed(context.Context, *MarkNoticeProcessedReq) (*emptypb.Empty, error)
 	ListRelations(context.Context, *emptypb.Empty) (*ListRelationsResp, error)
 	AddFriend(context.Context, *AddFriendReq) (*AddFriendResp, error)
 	DeleteFriend(context.Context, *DeleteFriendReq) (*emptypb.Empty, error)
 	ListGroups(context.Context, *emptypb.Empty) (*ListGroupsResp, error)
 	GetOther(context.Context, *GetUserReq) (*hi.Entity, error)
-	UnprocessedSysMsgCount(context.Context, *emptypb.Empty) (*UnprocessedSysMsgCountResp, error)
 	SetRemark(context.Context, *SetRemarkReq) (*emptypb.Empty, error)
 }
 
@@ -254,17 +232,14 @@ func (UnimplementedUserServer) GetCurrent(context.Context, *emptypb.Empty) (*Use
 func (UnimplementedUserServer) Update(context.Context, *UpdateUserReq) (*UserInfo, error) {
 	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
 }
-func (UnimplementedUserServer) ListSystemMessages(context.Context, *ListSystemMessagesReq) (*SystemMessages, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListSystemMessages not implemented")
+func (UnimplementedUserServer) ListNotices(context.Context, *ListNoticesReq) (*ListNoticesResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListNotices not implemented")
 }
-func (UnimplementedUserServer) DeleteSystemMessage(context.Context, *DeleteSystemMessageReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method DeleteSystemMessage not implemented")
+func (UnimplementedUserServer) ListNoticeStatuses(context.Context, *ListNoticeStatusesReq) (*ListNoticeStatusesResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListNoticeStatuses not implemented")
 }
-func (UnimplementedUserServer) DeleteAllSystemMessage(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method DeleteAllSystemMessage not implemented")
-}
-func (UnimplementedUserServer) HandleSystemMessage(context.Context, *HandleSystemMessageReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method HandleSystemMessage not implemented")
+func (UnimplementedUserServer) HandleNotice(context.Context, *HandleNoticeReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method HandleNotice not implemented")
 }
 func (UnimplementedUserServer) MarkNoticeProcessed(context.Context, *MarkNoticeProcessedReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method MarkNoticeProcessed not implemented")
@@ -283,9 +258,6 @@ func (UnimplementedUserServer) ListGroups(context.Context, *emptypb.Empty) (*Lis
 }
 func (UnimplementedUserServer) GetOther(context.Context, *GetUserReq) (*hi.Entity, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetOther not implemented")
-}
-func (UnimplementedUserServer) UnprocessedSysMsgCount(context.Context, *emptypb.Empty) (*UnprocessedSysMsgCountResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method UnprocessedSysMsgCount not implemented")
 }
 func (UnimplementedUserServer) SetRemark(context.Context, *SetRemarkReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetRemark not implemented")
@@ -346,74 +318,56 @@ func _User_Update_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_ListSystemMessages_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListSystemMessagesReq)
+func _User_ListNotices_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListNoticesReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServer).ListSystemMessages(ctx, in)
+		return srv.(UserServer).ListNotices(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: User_ListSystemMessages_FullMethodName,
+		FullMethod: User_ListNotices_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).ListSystemMessages(ctx, req.(*ListSystemMessagesReq))
+		return srv.(UserServer).ListNotices(ctx, req.(*ListNoticesReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_DeleteSystemMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteSystemMessageReq)
+func _User_ListNoticeStatuses_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListNoticeStatusesReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServer).DeleteSystemMessage(ctx, in)
+		return srv.(UserServer).ListNoticeStatuses(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: User_DeleteSystemMessage_FullMethodName,
+		FullMethod: User_ListNoticeStatuses_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).DeleteSystemMessage(ctx, req.(*DeleteSystemMessageReq))
+		return srv.(UserServer).ListNoticeStatuses(ctx, req.(*ListNoticeStatusesReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_DeleteAllSystemMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+func _User_HandleNotice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HandleNoticeReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServer).DeleteAllSystemMessage(ctx, in)
+		return srv.(UserServer).HandleNotice(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: User_DeleteAllSystemMessage_FullMethodName,
+		FullMethod: User_HandleNotice_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).DeleteAllSystemMessage(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _User_HandleSystemMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HandleSystemMessageReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServer).HandleSystemMessage(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: User_HandleSystemMessage_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).HandleSystemMessage(ctx, req.(*HandleSystemMessageReq))
+		return srv.(UserServer).HandleNotice(ctx, req.(*HandleNoticeReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -526,24 +480,6 @@ func _User_GetOther_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_UnprocessedSysMsgCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServer).UnprocessedSysMsgCount(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: User_UnprocessedSysMsgCount_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).UnprocessedSysMsgCount(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _User_SetRemark_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SetRemarkReq)
 	if err := dec(in); err != nil {
@@ -578,20 +514,16 @@ var User_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _User_Update_Handler,
 		},
 		{
-			MethodName: "ListSystemMessages",
-			Handler:    _User_ListSystemMessages_Handler,
+			MethodName: "ListNotices",
+			Handler:    _User_ListNotices_Handler,
 		},
 		{
-			MethodName: "DeleteSystemMessage",
-			Handler:    _User_DeleteSystemMessage_Handler,
+			MethodName: "ListNoticeStatuses",
+			Handler:    _User_ListNoticeStatuses_Handler,
 		},
 		{
-			MethodName: "DeleteAllSystemMessage",
-			Handler:    _User_DeleteAllSystemMessage_Handler,
-		},
-		{
-			MethodName: "HandleSystemMessage",
-			Handler:    _User_HandleSystemMessage_Handler,
+			MethodName: "HandleNotice",
+			Handler:    _User_HandleNotice_Handler,
 		},
 		{
 			MethodName: "MarkNoticeProcessed",
@@ -616,10 +548,6 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetOther",
 			Handler:    _User_GetOther_Handler,
-		},
-		{
-			MethodName: "UnprocessedSysMsgCount",
-			Handler:    _User_UnprocessedSysMsgCount_Handler,
 		},
 		{
 			MethodName: "SetRemark",

@@ -4184,21 +4184,30 @@ pub mod packet {
         Message(super::Message),
     }
 }
-/// ## status:这条通知我处理过没有
+/// ## status:这条通知的状态 —— **每条通知都有,发送方在发出时写好**
 ///
-/// `not_processed` / `processed`(邀请类另有 `accept` / `reject`)。**发出时一律写 `not_processed`**,
-/// 收方处理完调 `User.MarkNoticeProcessed`(按 uuid)置为 `processed`。
+/// |值|含义|谁写|
+/// |-|--|--|
+/// |`not_processed`|需要收方处理,还没处理|发送方(需要处理的通知)|
+/// |`processed`|不需要处理 / 已处理|发送方(纯告知的通知);或收方调 `User.MarkNoticeProcessed`|
+/// |`accept` / `reject`|邀请已被同意 / 拒绝|后端(`User.HandleNotice`)|
+/// |`invalid`|邀请的对象已不存在(如群已解散)|后端|
+/// |`expired`|过了 `expiration` 还是 `not_processed`|**不存储,后端在读取时现算**|
 ///
-/// 为什么要落到通知上而不是让端上自己记:端**不在线时发生的事**,上线补拉 `ListSystemMessages`
-/// 拿到的是同一条通知,状态跟着它走,端就知道这条到底处理过没有 —— 端上自己那份记录,
-/// 换台设备、重装、清缓存就没了。
+/// 纯告知的通知(群通知、`robot-update`、`plugin-load`、授权结果……)**发出时就是 `processed`**,
+/// 于是所有通知都按同一套状态处理,没有"这类通知有没有状态"的分支。
 ///
-/// ⚠️ 补拉走的是**库里的 status**(`ListSystemMessage` 用 `sysMsg.Status` 覆盖 payload 里那份),
-/// 实时那条则是发出时的快照(恒为 `not_processed`)。所以判据以补拉/回执为准。
+/// ## 后端只如实记录,新不新、要不要处理由端上判断
+///
+/// 单聊通知由后端在 **MQTT 收到时**记进历史(不管是谁发的),保存 30 天。端上用
+/// `User.ListNotices` 按游标增量拉**全部**通知,自己判断哪些是新的;
+/// 状态会变的(没处理完的那些),端上定期 + 下拉刷新时用 `User.ListNoticeStatuses` 按 uuid 查最新状态。
+///
+/// ⚠️ 实时收到的那条是**发出时的快照**,之后的状态以 `ListNotices` / `ListNoticeStatuses` 为准。
 ///
 /// 典型:`friend-add` —— 我把 A 删了、A 又加回来、我又是"自动同意",
-/// 那么这条通知就是我唯一能知道"好友回来了"的信号,处理完(清掉会话的 severed)回执一下,
-/// 免得每次上线都重复处理。
+/// 那么这条通知就是我唯一能知道"好友回来了"的信号。离线期间发生的,上线增量同步拿到它
+/// (状态 `not_processed`),处理完(清掉会话的 severed)回执一下。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Notice {
     #[prost(string, optional, tag = "1")]
@@ -4994,36 +5003,55 @@ pub struct UserInfo {
     #[prost(string, optional, tag = "4")]
     pub moment: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 我的单聊通知历史,按时间线增量拉(用法照 `Group.ListMessages`)。
+///
+/// ⚠️ **后端不判断"新不新"、不按状态或类型筛** —— 30 天内的全部通知按时间顺序原样返回,
+/// 新不新、要不要处理由端上自己判断(见 hi/club/messaging.proto 里 status 那段)。
+/// 这里原来是 `ListSystemMessages`:后端写死只返回好友/入群邀请两种、还替端上算 `has_new`
+/// (读一次就改掉,多台设备谁先拉谁把"新"吃掉),于是离线期间的 friend-add 永远补不回来。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListSystemMessagesReq {
+pub struct ListNoticesReq {
+    /// 上一页最后一条的 uuid;不传 = 从最早一条开始
     #[prost(string, optional, tag = "1")]
-    pub status: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(message, optional, tag = "2")]
-    pub pagination: ::core::option::Option<super::Pagination>,
+    pub last_uuid: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SystemMessages {
-    #[prost(bool, optional, tag = "1")]
-    pub has_new: ::core::option::Option<bool>,
-    #[prost(int32, optional, tag = "2")]
-    pub total: ::core::option::Option<i32>,
-    /// Notice(messaging)为通知型,关系/群级
-    #[prost(message, repeated, tag = "3")]
+pub struct ListNoticesResp {
+    /// 按时间正序;空 = 已经拉到头
+    #[prost(message, repeated, tag = "1")]
     pub list: ::prost::alloc::vec::Vec<Notice>,
 }
+/// 按 uuid 查这几条通知**现在**的状态。端上把本地没处理完的那些发上来(定期 + 下拉刷新),
+/// 别的设备处理过、或者已经过期的,在这里拿到新状态。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct DeleteSystemMessageReq {
-    #[prost(string, optional, tag = "1")]
-    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+pub struct ListNoticeStatusesReq {
+    #[prost(string, repeated, tag = "1")]
+    pub uuids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct HandleSystemMessageReq {
+pub struct NoticeStatus {
     #[prost(string, optional, tag = "1")]
     pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    /// 取值见 hi/club/messaging.proto 里 status 那段
     #[prost(string, optional, tag = "2")]
     pub status: ::core::option::Option<::prost::alloc::string::String>,
 }
-/// 通知回执:**我处理完这条通知了**。与 HandleSystemMessage 不是一回事 ——
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListNoticeStatusesResp {
+    /// 查不到的 uuid(不是我的 / 超过 30 天)不返回
+    #[prost(message, repeated, tag = "1")]
+    pub list: ::prost::alloc::vec::Vec<NoticeStatus>,
+}
+/// 对邀请(好友 / 入群)做决定。uuid 就是那条邀请通知的 uuid。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct HandleNoticeReq {
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    /// true = 同意,false = 拒绝
+    #[prost(bool, optional, tag = "2")]
+    pub accept: ::core::option::Option<bool>,
+}
+/// 通知回执:**我处理完这条通知了**。与 HandleNotice 不是一回事 ——
 /// 后者是"我对邀请做决定"(accept/reject,带真加好友/真入群的副作用),
 /// 这里只是"这条我消费过了",没有任何业务副作用,对**任何**需要端上处理的通知都适用。
 /// 以通知 uuid 为唯一标识,所以不用按类型各写一个接口。
@@ -5093,11 +5121,6 @@ pub struct ListGroupsResp {
 pub struct GetUserReq {
     #[prost(string, tag = "1")]
     pub did: ::prost::alloc::string::String,
-}
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct UnprocessedSysMsgCountResp {
-    #[prost(int32, optional, tag = "1")]
-    pub count: ::core::option::Option<i32>,
 }
 /// 改自己的资料。**不收 hi.Entity 整体** —— Entity 带 did/type/update,
 /// 而"改谁"永远取自 token,type/update 是服务端产物。入参只放调用方真正该给的。
@@ -5328,10 +5351,36 @@ pub mod user_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.User", "Update"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn list_system_messages(
+        /// 通知是历史记录:后端只记录、不删,也不替端上算未读 —— 所以没有删除接口、没有未读计数接口,
+        /// 清理本地通知是端上(core)自己的事。
+        pub async fn list_notices(
             &mut self,
-            request: impl tonic::IntoRequest<super::ListSystemMessagesReq>,
-        ) -> std::result::Result<tonic::Response<super::SystemMessages>, tonic::Status> {
+            request: impl tonic::IntoRequest<super::ListNoticesReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListNoticesResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.User/ListNotices");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.User", "ListNotices"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_notice_statuses(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListNoticeStatusesReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListNoticeStatusesResp>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -5342,16 +5391,16 @@ pub mod user_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.User/ListSystemMessages",
+                "/hi.club.User/ListNoticeStatuses",
             );
             let mut req = request.into_request();
             req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.User", "ListSystemMessages"));
+                .insert(GrpcMethod::new("hi.club.User", "ListNoticeStatuses"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn delete_system_message(
+        pub async fn handle_notice(
             &mut self,
-            request: impl tonic::IntoRequest<super::DeleteSystemMessageReq>,
+            request: impl tonic::IntoRequest<super::HandleNoticeReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -5363,53 +5412,10 @@ pub mod user_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.User/DeleteSystemMessage",
+                "/hi.club.User/HandleNotice",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.User", "DeleteSystemMessage"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn delete_all_system_message(
-            &mut self,
-            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.User/DeleteAllSystemMessage",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.User", "DeleteAllSystemMessage"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn handle_system_message(
-            &mut self,
-            request: impl tonic::IntoRequest<super::HandleSystemMessageReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.User/HandleSystemMessage",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.User", "HandleSystemMessage"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.User", "HandleNotice"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn mark_notice_processed(
@@ -5529,30 +5535,6 @@ pub mod user_client {
             let path = http::uri::PathAndQuery::from_static("/hi.club.User/GetOther");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.club.User", "GetOther"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn unprocessed_sys_msg_count(
-            &mut self,
-            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
-        ) -> std::result::Result<
-            tonic::Response<super::UnprocessedSysMsgCountResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.User/UnprocessedSysMsgCount",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.User", "UnprocessedSysMsgCount"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn set_remark(

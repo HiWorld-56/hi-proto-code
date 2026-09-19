@@ -109,206 +109,168 @@ class UserInfo extends $pb.GeneratedMessage {
   void clearMoment() => $_clearField(4);
 }
 
-class ListSystemMessagesReq extends $pb.GeneratedMessage {
-  factory ListSystemMessagesReq({
-    $core.String? status,
-    $2.Pagination? pagination,
+/// 我的单聊通知历史,按时间线增量拉(用法照 `Group.ListMessages`)。
+///
+/// ⚠️ **后端不判断"新不新"、不按状态或类型筛** —— 30 天内的全部通知按时间顺序原样返回,
+/// 新不新、要不要处理由端上自己判断(见 hi/club/messaging.proto 里 status 那段)。
+/// 这里原来是 `ListSystemMessages`:后端写死只返回好友/入群邀请两种、还替端上算 `has_new`
+/// (读一次就改掉,多台设备谁先拉谁把"新"吃掉),于是离线期间的 friend-add 永远补不回来。
+class ListNoticesReq extends $pb.GeneratedMessage {
+  factory ListNoticesReq({
+    $core.String? lastUuid,
   }) {
     final result = create();
-    if (status != null) result.status = status;
-    if (pagination != null) result.pagination = pagination;
+    if (lastUuid != null) result.lastUuid = lastUuid;
     return result;
   }
 
-  ListSystemMessagesReq._();
+  ListNoticesReq._();
 
-  factory ListSystemMessagesReq.fromBuffer($core.List<$core.int> data,
+  factory ListNoticesReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ListSystemMessagesReq.fromJson($core.String json,
+  factory ListNoticesReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ListSystemMessagesReq',
+      _omitMessageNames ? '' : 'ListNoticesReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'status')
-    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $2.Pagination.create)
+    ..aOS(1, _omitFieldNames ? '' : 'lastUuid')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListSystemMessagesReq clone() => deepCopy();
+  ListNoticesReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ListSystemMessagesReq copyWith(
-          void Function(ListSystemMessagesReq) updates) =>
-      super.copyWith((message) => updates(message as ListSystemMessagesReq))
-          as ListSystemMessagesReq;
+  ListNoticesReq copyWith(void Function(ListNoticesReq) updates) =>
+      super.copyWith((message) => updates(message as ListNoticesReq))
+          as ListNoticesReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ListSystemMessagesReq create() => ListSystemMessagesReq._();
+  static ListNoticesReq create() => ListNoticesReq._();
   @$core.override
-  ListSystemMessagesReq createEmptyInstance() => create();
+  ListNoticesReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ListSystemMessagesReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListSystemMessagesReq>(create);
-  static ListSystemMessagesReq? _defaultInstance;
+  static ListNoticesReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListNoticesReq>(create);
+  static ListNoticesReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get status => $_getSZ(0);
+  $core.String get lastUuid => $_getSZ(0);
   @$pb.TagNumber(1)
-  set status($core.String value) => $_setString(0, value);
+  set lastUuid($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasStatus() => $_has(0);
+  $core.bool hasLastUuid() => $_has(0);
   @$pb.TagNumber(1)
-  void clearStatus() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $2.Pagination get pagination => $_getN(1);
-  @$pb.TagNumber(2)
-  set pagination($2.Pagination value) => $_setField(2, value);
-  @$pb.TagNumber(2)
-  $core.bool hasPagination() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearPagination() => $_clearField(2);
-  @$pb.TagNumber(2)
-  $2.Pagination ensurePagination() => $_ensure(1);
+  void clearLastUuid() => $_clearField(1);
 }
 
-class SystemMessages extends $pb.GeneratedMessage {
-  factory SystemMessages({
-    $core.bool? hasNew,
-    $core.int? total,
+class ListNoticesResp extends $pb.GeneratedMessage {
+  factory ListNoticesResp({
     $core.Iterable<$3.Notice>? list,
   }) {
     final result = create();
-    if (hasNew != null) result.hasNew = hasNew;
-    if (total != null) result.total = total;
     if (list != null) result.list.addAll(list);
     return result;
   }
 
-  SystemMessages._();
+  ListNoticesResp._();
 
-  factory SystemMessages.fromBuffer($core.List<$core.int> data,
+  factory ListNoticesResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory SystemMessages.fromJson($core.String json,
+  factory ListNoticesResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'SystemMessages',
+      _omitMessageNames ? '' : 'ListNoticesResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOB(1, _omitFieldNames ? '' : 'hasNew')
-    ..aI(2, _omitFieldNames ? '' : 'total')
-    ..pPM<$3.Notice>(3, _omitFieldNames ? '' : 'list',
+    ..pPM<$3.Notice>(1, _omitFieldNames ? '' : 'list',
         subBuilder: $3.Notice.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SystemMessages clone() => deepCopy();
+  ListNoticesResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SystemMessages copyWith(void Function(SystemMessages) updates) =>
-      super.copyWith((message) => updates(message as SystemMessages))
-          as SystemMessages;
+  ListNoticesResp copyWith(void Function(ListNoticesResp) updates) =>
+      super.copyWith((message) => updates(message as ListNoticesResp))
+          as ListNoticesResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static SystemMessages create() => SystemMessages._();
+  static ListNoticesResp create() => ListNoticesResp._();
   @$core.override
-  SystemMessages createEmptyInstance() => create();
+  ListNoticesResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static SystemMessages getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<SystemMessages>(create);
-  static SystemMessages? _defaultInstance;
+  static ListNoticesResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListNoticesResp>(create);
+  static ListNoticesResp? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.bool get hasNew => $_getBF(0);
-  @$pb.TagNumber(1)
-  set hasNew($core.bool value) => $_setBool(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasHasNew() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearHasNew() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.int get total => $_getIZ(1);
-  @$pb.TagNumber(2)
-  set total($core.int value) => $_setSignedInt32(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasTotal() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearTotal() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $pb.PbList<$3.Notice> get list => $_getList(2);
+  $pb.PbList<$3.Notice> get list => $_getList(0);
 }
 
-class DeleteSystemMessageReq extends $pb.GeneratedMessage {
-  factory DeleteSystemMessageReq({
-    $core.String? uuid,
+/// 按 uuid 查这几条通知**现在**的状态。端上把本地没处理完的那些发上来(定期 + 下拉刷新),
+/// 别的设备处理过、或者已经过期的,在这里拿到新状态。
+class ListNoticeStatusesReq extends $pb.GeneratedMessage {
+  factory ListNoticeStatusesReq({
+    $core.Iterable<$core.String>? uuids,
   }) {
     final result = create();
-    if (uuid != null) result.uuid = uuid;
+    if (uuids != null) result.uuids.addAll(uuids);
     return result;
   }
 
-  DeleteSystemMessageReq._();
+  ListNoticeStatusesReq._();
 
-  factory DeleteSystemMessageReq.fromBuffer($core.List<$core.int> data,
+  factory ListNoticeStatusesReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory DeleteSystemMessageReq.fromJson($core.String json,
+  factory ListNoticeStatusesReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'DeleteSystemMessageReq',
+      _omitMessageNames ? '' : 'ListNoticeStatusesReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'uuid')
+    ..pPS(1, _omitFieldNames ? '' : 'uuids')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeleteSystemMessageReq clone() => deepCopy();
+  ListNoticeStatusesReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeleteSystemMessageReq copyWith(
-          void Function(DeleteSystemMessageReq) updates) =>
-      super.copyWith((message) => updates(message as DeleteSystemMessageReq))
-          as DeleteSystemMessageReq;
+  ListNoticeStatusesReq copyWith(
+          void Function(ListNoticeStatusesReq) updates) =>
+      super.copyWith((message) => updates(message as ListNoticeStatusesReq))
+          as ListNoticeStatusesReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static DeleteSystemMessageReq create() => DeleteSystemMessageReq._();
+  static ListNoticeStatusesReq create() => ListNoticeStatusesReq._();
   @$core.override
-  DeleteSystemMessageReq createEmptyInstance() => create();
+  ListNoticeStatusesReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static DeleteSystemMessageReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<DeleteSystemMessageReq>(create);
-  static DeleteSystemMessageReq? _defaultInstance;
+  static ListNoticeStatusesReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListNoticeStatusesReq>(create);
+  static ListNoticeStatusesReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get uuid => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set uuid($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasUuid() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearUuid() => $_clearField(1);
+  $pb.PbList<$core.String> get uuids => $_getList(0);
 }
 
-class HandleSystemMessageReq extends $pb.GeneratedMessage {
-  factory HandleSystemMessageReq({
+class NoticeStatus extends $pb.GeneratedMessage {
+  factory NoticeStatus({
     $core.String? uuid,
     $core.String? status,
   }) {
@@ -318,17 +280,17 @@ class HandleSystemMessageReq extends $pb.GeneratedMessage {
     return result;
   }
 
-  HandleSystemMessageReq._();
+  NoticeStatus._();
 
-  factory HandleSystemMessageReq.fromBuffer($core.List<$core.int> data,
+  factory NoticeStatus.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory HandleSystemMessageReq.fromJson($core.String json,
+  factory NoticeStatus.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'HandleSystemMessageReq',
+      _omitMessageNames ? '' : 'NoticeStatus',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'uuid')
@@ -336,24 +298,23 @@ class HandleSystemMessageReq extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  HandleSystemMessageReq clone() => deepCopy();
+  NoticeStatus clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  HandleSystemMessageReq copyWith(
-          void Function(HandleSystemMessageReq) updates) =>
-      super.copyWith((message) => updates(message as HandleSystemMessageReq))
-          as HandleSystemMessageReq;
+  NoticeStatus copyWith(void Function(NoticeStatus) updates) =>
+      super.copyWith((message) => updates(message as NoticeStatus))
+          as NoticeStatus;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static HandleSystemMessageReq create() => HandleSystemMessageReq._();
+  static NoticeStatus create() => NoticeStatus._();
   @$core.override
-  HandleSystemMessageReq createEmptyInstance() => create();
+  NoticeStatus createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static HandleSystemMessageReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<HandleSystemMessageReq>(create);
-  static HandleSystemMessageReq? _defaultInstance;
+  static NoticeStatus getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<NoticeStatus>(create);
+  static NoticeStatus? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get uuid => $_getSZ(0);
@@ -374,7 +335,124 @@ class HandleSystemMessageReq extends $pb.GeneratedMessage {
   void clearStatus() => $_clearField(2);
 }
 
-/// 通知回执:**我处理完这条通知了**。与 HandleSystemMessage 不是一回事 ——
+class ListNoticeStatusesResp extends $pb.GeneratedMessage {
+  factory ListNoticeStatusesResp({
+    $core.Iterable<NoticeStatus>? list,
+  }) {
+    final result = create();
+    if (list != null) result.list.addAll(list);
+    return result;
+  }
+
+  ListNoticeStatusesResp._();
+
+  factory ListNoticeStatusesResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListNoticeStatusesResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListNoticeStatusesResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..pPM<NoticeStatus>(1, _omitFieldNames ? '' : 'list',
+        subBuilder: NoticeStatus.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListNoticeStatusesResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListNoticeStatusesResp copyWith(
+          void Function(ListNoticeStatusesResp) updates) =>
+      super.copyWith((message) => updates(message as ListNoticeStatusesResp))
+          as ListNoticeStatusesResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListNoticeStatusesResp create() => ListNoticeStatusesResp._();
+  @$core.override
+  ListNoticeStatusesResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListNoticeStatusesResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListNoticeStatusesResp>(create);
+  static ListNoticeStatusesResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<NoticeStatus> get list => $_getList(0);
+}
+
+/// 对邀请(好友 / 入群)做决定。uuid 就是那条邀请通知的 uuid。
+class HandleNoticeReq extends $pb.GeneratedMessage {
+  factory HandleNoticeReq({
+    $core.String? uuid,
+    $core.bool? accept,
+  }) {
+    final result = create();
+    if (uuid != null) result.uuid = uuid;
+    if (accept != null) result.accept = accept;
+    return result;
+  }
+
+  HandleNoticeReq._();
+
+  factory HandleNoticeReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory HandleNoticeReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'HandleNoticeReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'uuid')
+    ..aOB(2, _omitFieldNames ? '' : 'accept')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HandleNoticeReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HandleNoticeReq copyWith(void Function(HandleNoticeReq) updates) =>
+      super.copyWith((message) => updates(message as HandleNoticeReq))
+          as HandleNoticeReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static HandleNoticeReq create() => HandleNoticeReq._();
+  @$core.override
+  HandleNoticeReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static HandleNoticeReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<HandleNoticeReq>(create);
+  static HandleNoticeReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get uuid => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set uuid($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasUuid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUuid() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.bool get accept => $_getBF(1);
+  @$pb.TagNumber(2)
+  set accept($core.bool value) => $_setBool(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAccept() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAccept() => $_clearField(2);
+}
+
+/// 通知回执:**我处理完这条通知了**。与 HandleNotice 不是一回事 ——
 /// 后者是"我对邀请做决定"(accept/reject,带真加好友/真入群的副作用),
 /// 这里只是"这条我消费过了",没有任何业务副作用,对**任何**需要端上处理的通知都适用。
 /// 以通知 uuid 为唯一标识,所以不用按类型各写一个接口。
@@ -869,62 +947,6 @@ class GetUserReq extends $pb.GeneratedMessage {
   $core.bool hasDid() => $_has(0);
   @$pb.TagNumber(1)
   void clearDid() => $_clearField(1);
-}
-
-class UnprocessedSysMsgCountResp extends $pb.GeneratedMessage {
-  factory UnprocessedSysMsgCountResp({
-    $core.int? count,
-  }) {
-    final result = create();
-    if (count != null) result.count = count;
-    return result;
-  }
-
-  UnprocessedSysMsgCountResp._();
-
-  factory UnprocessedSysMsgCountResp.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory UnprocessedSysMsgCountResp.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'UnprocessedSysMsgCountResp',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
-      createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'count')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UnprocessedSysMsgCountResp clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UnprocessedSysMsgCountResp copyWith(
-          void Function(UnprocessedSysMsgCountResp) updates) =>
-      super.copyWith(
-              (message) => updates(message as UnprocessedSysMsgCountResp))
-          as UnprocessedSysMsgCountResp;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static UnprocessedSysMsgCountResp create() => UnprocessedSysMsgCountResp._();
-  @$core.override
-  UnprocessedSysMsgCountResp createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static UnprocessedSysMsgCountResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<UnprocessedSysMsgCountResp>(create);
-  static UnprocessedSysMsgCountResp? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.int get count => $_getIZ(0);
-  @$pb.TagNumber(1)
-  set count($core.int value) => $_setSignedInt32(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasCount() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearCount() => $_clearField(1);
 }
 
 /// 改自己的资料。**不收 hi.Entity 整体** —— Entity 带 did/type/update,

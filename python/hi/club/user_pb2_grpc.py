@@ -26,24 +26,19 @@ class UserStub(object):
                 request_serializer=hi_dot_club_dot_user__pb2.UpdateUserReq.SerializeToString,
                 response_deserializer=hi_dot_club_dot_user__pb2.UserInfo.FromString,
                 _registered_method=True)
-        self.ListSystemMessages = channel.unary_unary(
-                '/hi.club.User/ListSystemMessages',
-                request_serializer=hi_dot_club_dot_user__pb2.ListSystemMessagesReq.SerializeToString,
-                response_deserializer=hi_dot_club_dot_user__pb2.SystemMessages.FromString,
+        self.ListNotices = channel.unary_unary(
+                '/hi.club.User/ListNotices',
+                request_serializer=hi_dot_club_dot_user__pb2.ListNoticesReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_user__pb2.ListNoticesResp.FromString,
                 _registered_method=True)
-        self.DeleteSystemMessage = channel.unary_unary(
-                '/hi.club.User/DeleteSystemMessage',
-                request_serializer=hi_dot_club_dot_user__pb2.DeleteSystemMessageReq.SerializeToString,
-                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+        self.ListNoticeStatuses = channel.unary_unary(
+                '/hi.club.User/ListNoticeStatuses',
+                request_serializer=hi_dot_club_dot_user__pb2.ListNoticeStatusesReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_user__pb2.ListNoticeStatusesResp.FromString,
                 _registered_method=True)
-        self.DeleteAllSystemMessage = channel.unary_unary(
-                '/hi.club.User/DeleteAllSystemMessage',
-                request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                _registered_method=True)
-        self.HandleSystemMessage = channel.unary_unary(
-                '/hi.club.User/HandleSystemMessage',
-                request_serializer=hi_dot_club_dot_user__pb2.HandleSystemMessageReq.SerializeToString,
+        self.HandleNotice = channel.unary_unary(
+                '/hi.club.User/HandleNotice',
+                request_serializer=hi_dot_club_dot_user__pb2.HandleNoticeReq.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
         self.MarkNoticeProcessed = channel.unary_unary(
@@ -76,11 +71,6 @@ class UserStub(object):
                 request_serializer=hi_dot_club_dot_user__pb2.GetUserReq.SerializeToString,
                 response_deserializer=hi_dot_common__pb2.Entity.FromString,
                 _registered_method=True)
-        self.UnprocessedSysMsgCount = channel.unary_unary(
-                '/hi.club.User/UnprocessedSysMsgCount',
-                request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-                response_deserializer=hi_dot_club_dot_user__pb2.UnprocessedSysMsgCountResp.FromString,
-                _registered_method=True)
         self.SetRemark = channel.unary_unary(
                 '/hi.club.User/SetRemark',
                 request_serializer=hi_dot_club_dot_user__pb2.SetRemarkReq.SerializeToString,
@@ -111,25 +101,21 @@ class UserServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def ListSystemMessages(self, request, context):
+    def ListNotices(self, request, context):
+        """通知是历史记录:后端只记录、不删,也不替端上算未读 —— 所以没有删除接口、没有未读计数接口,
+        清理本地通知是端上(core)自己的事。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListNoticeStatuses(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def DeleteSystemMessage(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def DeleteAllSystemMessage(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def HandleSystemMessage(self, request, context):
+    def HandleNotice(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -171,12 +157,6 @@ class UserServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def UnprocessedSysMsgCount(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
     def SetRemark(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -196,24 +176,19 @@ def add_UserServicer_to_server(servicer, server):
                     request_deserializer=hi_dot_club_dot_user__pb2.UpdateUserReq.FromString,
                     response_serializer=hi_dot_club_dot_user__pb2.UserInfo.SerializeToString,
             ),
-            'ListSystemMessages': grpc.unary_unary_rpc_method_handler(
-                    servicer.ListSystemMessages,
-                    request_deserializer=hi_dot_club_dot_user__pb2.ListSystemMessagesReq.FromString,
-                    response_serializer=hi_dot_club_dot_user__pb2.SystemMessages.SerializeToString,
+            'ListNotices': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListNotices,
+                    request_deserializer=hi_dot_club_dot_user__pb2.ListNoticesReq.FromString,
+                    response_serializer=hi_dot_club_dot_user__pb2.ListNoticesResp.SerializeToString,
             ),
-            'DeleteSystemMessage': grpc.unary_unary_rpc_method_handler(
-                    servicer.DeleteSystemMessage,
-                    request_deserializer=hi_dot_club_dot_user__pb2.DeleteSystemMessageReq.FromString,
-                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            'ListNoticeStatuses': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListNoticeStatuses,
+                    request_deserializer=hi_dot_club_dot_user__pb2.ListNoticeStatusesReq.FromString,
+                    response_serializer=hi_dot_club_dot_user__pb2.ListNoticeStatusesResp.SerializeToString,
             ),
-            'DeleteAllSystemMessage': grpc.unary_unary_rpc_method_handler(
-                    servicer.DeleteAllSystemMessage,
-                    request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-            ),
-            'HandleSystemMessage': grpc.unary_unary_rpc_method_handler(
-                    servicer.HandleSystemMessage,
-                    request_deserializer=hi_dot_club_dot_user__pb2.HandleSystemMessageReq.FromString,
+            'HandleNotice': grpc.unary_unary_rpc_method_handler(
+                    servicer.HandleNotice,
+                    request_deserializer=hi_dot_club_dot_user__pb2.HandleNoticeReq.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'MarkNoticeProcessed': grpc.unary_unary_rpc_method_handler(
@@ -245,11 +220,6 @@ def add_UserServicer_to_server(servicer, server):
                     servicer.GetOther,
                     request_deserializer=hi_dot_club_dot_user__pb2.GetUserReq.FromString,
                     response_serializer=hi_dot_common__pb2.Entity.SerializeToString,
-            ),
-            'UnprocessedSysMsgCount': grpc.unary_unary_rpc_method_handler(
-                    servicer.UnprocessedSysMsgCount,
-                    request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                    response_serializer=hi_dot_club_dot_user__pb2.UnprocessedSysMsgCountResp.SerializeToString,
             ),
             'SetRemark': grpc.unary_unary_rpc_method_handler(
                     servicer.SetRemark,
@@ -322,7 +292,7 @@ class User(object):
             _registered_method=True)
 
     @staticmethod
-    def ListSystemMessages(request,
+    def ListNotices(request,
             target,
             options=(),
             channel_credentials=None,
@@ -335,9 +305,9 @@ class User(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.club.User/ListSystemMessages',
-            hi_dot_club_dot_user__pb2.ListSystemMessagesReq.SerializeToString,
-            hi_dot_club_dot_user__pb2.SystemMessages.FromString,
+            '/hi.club.User/ListNotices',
+            hi_dot_club_dot_user__pb2.ListNoticesReq.SerializeToString,
+            hi_dot_club_dot_user__pb2.ListNoticesResp.FromString,
             options,
             channel_credentials,
             insecure,
@@ -349,7 +319,7 @@ class User(object):
             _registered_method=True)
 
     @staticmethod
-    def DeleteSystemMessage(request,
+    def ListNoticeStatuses(request,
             target,
             options=(),
             channel_credentials=None,
@@ -362,9 +332,9 @@ class User(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.club.User/DeleteSystemMessage',
-            hi_dot_club_dot_user__pb2.DeleteSystemMessageReq.SerializeToString,
-            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            '/hi.club.User/ListNoticeStatuses',
+            hi_dot_club_dot_user__pb2.ListNoticeStatusesReq.SerializeToString,
+            hi_dot_club_dot_user__pb2.ListNoticeStatusesResp.FromString,
             options,
             channel_credentials,
             insecure,
@@ -376,7 +346,7 @@ class User(object):
             _registered_method=True)
 
     @staticmethod
-    def DeleteAllSystemMessage(request,
+    def HandleNotice(request,
             target,
             options=(),
             channel_credentials=None,
@@ -389,35 +359,8 @@ class User(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.club.User/DeleteAllSystemMessage',
-            google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def HandleSystemMessage(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/hi.club.User/HandleSystemMessage',
-            hi_dot_club_dot_user__pb2.HandleSystemMessageReq.SerializeToString,
+            '/hi.club.User/HandleNotice',
+            hi_dot_club_dot_user__pb2.HandleNoticeReq.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,
@@ -581,33 +524,6 @@ class User(object):
             '/hi.club.User/GetOther',
             hi_dot_club_dot_user__pb2.GetUserReq.SerializeToString,
             hi_dot_common__pb2.Entity.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def UnprocessedSysMsgCount(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/hi.club.User/UnprocessedSysMsgCount',
-            google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-            hi_dot_club_dot_user__pb2.UnprocessedSysMsgCountResp.FromString,
             options,
             channel_credentials,
             insecure,

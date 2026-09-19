@@ -56,33 +56,27 @@ class UserClient extends $grpc.Client {
     return $createUnaryCall(_$update, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.SystemMessages> listSystemMessages(
-    $1.ListSystemMessagesReq request, {
+  /// 通知是历史记录:后端只记录、不删,也不替端上算未读 —— 所以没有删除接口、没有未读计数接口,
+  /// 清理本地通知是端上(core)自己的事。
+  $grpc.ResponseFuture<$1.ListNoticesResp> listNotices(
+    $1.ListNoticesReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$listSystemMessages, request, options: options);
+    return $createUnaryCall(_$listNotices, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.Empty> deleteSystemMessage(
-    $1.DeleteSystemMessageReq request, {
+  $grpc.ResponseFuture<$1.ListNoticeStatusesResp> listNoticeStatuses(
+    $1.ListNoticeStatusesReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$deleteSystemMessage, request, options: options);
+    return $createUnaryCall(_$listNoticeStatuses, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.Empty> deleteAllSystemMessage(
-    $0.Empty request, {
+  $grpc.ResponseFuture<$0.Empty> handleNotice(
+    $1.HandleNoticeReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$deleteAllSystemMessage, request,
-        options: options);
-  }
-
-  $grpc.ResponseFuture<$0.Empty> handleSystemMessage(
-    $1.HandleSystemMessageReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$handleSystemMessage, request, options: options);
+    return $createUnaryCall(_$handleNotice, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.Empty> markNoticeProcessed(
@@ -127,14 +121,6 @@ class UserClient extends $grpc.Client {
     return $createUnaryCall(_$getOther, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.UnprocessedSysMsgCountResp> unprocessedSysMsgCount(
-    $0.Empty request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$unprocessedSysMsgCount, request,
-        options: options);
-  }
-
   $grpc.ResponseFuture<$0.Empty> setRemark(
     $1.SetRemarkReq request, {
     $grpc.CallOptions? options,
@@ -152,25 +138,20 @@ class UserClient extends $grpc.Client {
       '/hi.club.User/Update',
       ($1.UpdateUserReq value) => value.writeToBuffer(),
       $1.UserInfo.fromBuffer);
-  static final _$listSystemMessages =
-      $grpc.ClientMethod<$1.ListSystemMessagesReq, $1.SystemMessages>(
-          '/hi.club.User/ListSystemMessages',
-          ($1.ListSystemMessagesReq value) => value.writeToBuffer(),
-          $1.SystemMessages.fromBuffer);
-  static final _$deleteSystemMessage =
-      $grpc.ClientMethod<$1.DeleteSystemMessageReq, $0.Empty>(
-          '/hi.club.User/DeleteSystemMessage',
-          ($1.DeleteSystemMessageReq value) => value.writeToBuffer(),
-          $0.Empty.fromBuffer);
-  static final _$deleteAllSystemMessage =
-      $grpc.ClientMethod<$0.Empty, $0.Empty>(
-          '/hi.club.User/DeleteAllSystemMessage',
-          ($0.Empty value) => value.writeToBuffer(),
-          $0.Empty.fromBuffer);
-  static final _$handleSystemMessage =
-      $grpc.ClientMethod<$1.HandleSystemMessageReq, $0.Empty>(
-          '/hi.club.User/HandleSystemMessage',
-          ($1.HandleSystemMessageReq value) => value.writeToBuffer(),
+  static final _$listNotices =
+      $grpc.ClientMethod<$1.ListNoticesReq, $1.ListNoticesResp>(
+          '/hi.club.User/ListNotices',
+          ($1.ListNoticesReq value) => value.writeToBuffer(),
+          $1.ListNoticesResp.fromBuffer);
+  static final _$listNoticeStatuses =
+      $grpc.ClientMethod<$1.ListNoticeStatusesReq, $1.ListNoticeStatusesResp>(
+          '/hi.club.User/ListNoticeStatuses',
+          ($1.ListNoticeStatusesReq value) => value.writeToBuffer(),
+          $1.ListNoticeStatusesResp.fromBuffer);
+  static final _$handleNotice =
+      $grpc.ClientMethod<$1.HandleNoticeReq, $0.Empty>(
+          '/hi.club.User/HandleNotice',
+          ($1.HandleNoticeReq value) => value.writeToBuffer(),
           $0.Empty.fromBuffer);
   static final _$markNoticeProcessed =
       $grpc.ClientMethod<$1.MarkNoticeProcessedReq, $0.Empty>(
@@ -200,11 +181,6 @@ class UserClient extends $grpc.Client {
       '/hi.club.User/GetOther',
       ($1.GetUserReq value) => value.writeToBuffer(),
       $2.Entity.fromBuffer);
-  static final _$unprocessedSysMsgCount =
-      $grpc.ClientMethod<$0.Empty, $1.UnprocessedSysMsgCountResp>(
-          '/hi.club.User/UnprocessedSysMsgCount',
-          ($0.Empty value) => value.writeToBuffer(),
-          $1.UnprocessedSysMsgCountResp.fromBuffer);
   static final _$setRemark = $grpc.ClientMethod<$1.SetRemarkReq, $0.Empty>(
       '/hi.club.User/SetRemark',
       ($1.SetRemarkReq value) => value.writeToBuffer(),
@@ -230,36 +206,28 @@ abstract class UserServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.UpdateUserReq.fromBuffer(value),
         ($1.UserInfo value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.ListSystemMessagesReq, $1.SystemMessages>(
-        'ListSystemMessages',
-        listSystemMessages_Pre,
+    $addMethod($grpc.ServiceMethod<$1.ListNoticesReq, $1.ListNoticesResp>(
+        'ListNotices',
+        listNotices_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.ListNoticesReq.fromBuffer(value),
+        ($1.ListNoticesResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.ListNoticeStatusesReq,
+            $1.ListNoticeStatusesResp>(
+        'ListNoticeStatuses',
+        listNoticeStatuses_Pre,
         false,
         false,
         ($core.List<$core.int> value) =>
-            $1.ListSystemMessagesReq.fromBuffer(value),
-        ($1.SystemMessages value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.DeleteSystemMessageReq, $0.Empty>(
-        'DeleteSystemMessage',
-        deleteSystemMessage_Pre,
+            $1.ListNoticeStatusesReq.fromBuffer(value),
+        ($1.ListNoticeStatusesResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.HandleNoticeReq, $0.Empty>(
+        'HandleNotice',
+        handleNotice_Pre,
         false,
         false,
-        ($core.List<$core.int> value) =>
-            $1.DeleteSystemMessageReq.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.Empty, $0.Empty>(
-        'DeleteAllSystemMessage',
-        deleteAllSystemMessage_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.HandleSystemMessageReq, $0.Empty>(
-        'HandleSystemMessage',
-        handleSystemMessage_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $1.HandleSystemMessageReq.fromBuffer(value),
+        ($core.List<$core.int> value) => $1.HandleNoticeReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.MarkNoticeProcessedReq, $0.Empty>(
         'MarkNoticeProcessed',
@@ -304,13 +272,6 @@ abstract class UserServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.GetUserReq.fromBuffer(value),
         ($2.Entity value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.Empty, $1.UnprocessedSysMsgCountResp>(
-        'UnprocessedSysMsgCount',
-        unprocessedSysMsgCount_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($1.UnprocessedSysMsgCountResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.SetRemarkReq, $0.Empty>(
         'SetRemark',
         setRemark_Pre,
@@ -336,38 +297,30 @@ abstract class UserServiceBase extends $grpc.Service {
   $async.Future<$1.UserInfo> update(
       $grpc.ServiceCall call, $1.UpdateUserReq request);
 
-  $async.Future<$1.SystemMessages> listSystemMessages_Pre(
+  $async.Future<$1.ListNoticesResp> listNotices_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.ListNoticesReq> $request) async {
+    return listNotices($call, await $request);
+  }
+
+  $async.Future<$1.ListNoticesResp> listNotices(
+      $grpc.ServiceCall call, $1.ListNoticesReq request);
+
+  $async.Future<$1.ListNoticeStatusesResp> listNoticeStatuses_Pre(
       $grpc.ServiceCall $call,
-      $async.Future<$1.ListSystemMessagesReq> $request) async {
-    return listSystemMessages($call, await $request);
+      $async.Future<$1.ListNoticeStatusesReq> $request) async {
+    return listNoticeStatuses($call, await $request);
   }
 
-  $async.Future<$1.SystemMessages> listSystemMessages(
-      $grpc.ServiceCall call, $1.ListSystemMessagesReq request);
+  $async.Future<$1.ListNoticeStatusesResp> listNoticeStatuses(
+      $grpc.ServiceCall call, $1.ListNoticeStatusesReq request);
 
-  $async.Future<$0.Empty> deleteSystemMessage_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.DeleteSystemMessageReq> $request) async {
-    return deleteSystemMessage($call, await $request);
+  $async.Future<$0.Empty> handleNotice_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.HandleNoticeReq> $request) async {
+    return handleNotice($call, await $request);
   }
 
-  $async.Future<$0.Empty> deleteSystemMessage(
-      $grpc.ServiceCall call, $1.DeleteSystemMessageReq request);
-
-  $async.Future<$0.Empty> deleteAllSystemMessage_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
-    return deleteAllSystemMessage($call, await $request);
-  }
-
-  $async.Future<$0.Empty> deleteAllSystemMessage(
-      $grpc.ServiceCall call, $0.Empty request);
-
-  $async.Future<$0.Empty> handleSystemMessage_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.HandleSystemMessageReq> $request) async {
-    return handleSystemMessage($call, await $request);
-  }
-
-  $async.Future<$0.Empty> handleSystemMessage(
-      $grpc.ServiceCall call, $1.HandleSystemMessageReq request);
+  $async.Future<$0.Empty> handleNotice(
+      $grpc.ServiceCall call, $1.HandleNoticeReq request);
 
   $async.Future<$0.Empty> markNoticeProcessed_Pre($grpc.ServiceCall $call,
       $async.Future<$1.MarkNoticeProcessedReq> $request) async {
@@ -416,14 +369,6 @@ abstract class UserServiceBase extends $grpc.Service {
 
   $async.Future<$2.Entity> getOther(
       $grpc.ServiceCall call, $1.GetUserReq request);
-
-  $async.Future<$1.UnprocessedSysMsgCountResp> unprocessedSysMsgCount_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
-    return unprocessedSysMsgCount($call, await $request);
-  }
-
-  $async.Future<$1.UnprocessedSysMsgCountResp> unprocessedSysMsgCount(
-      $grpc.ServiceCall call, $0.Empty request);
 
   $async.Future<$0.Empty> setRemark_Pre(
       $grpc.ServiceCall $call, $async.Future<$1.SetRemarkReq> $request) async {

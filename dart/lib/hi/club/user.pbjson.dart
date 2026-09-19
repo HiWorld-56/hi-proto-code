@@ -85,57 +85,37 @@ final $typed_data.Uint8List userInfoDescriptor = $convert.base64Decode(
     'QgSQtRgDSABSDHZlcmlmeVBvbGljeYgBARIhCgZtb21lbnQYBCABKAlCBJC1GAJIAVIGbW9tZW'
     '50iAEBOgSYtRgDQhAKDl92ZXJpZnlfcG9saWN5QgkKB19tb21lbnQ=');
 
-@$core.Deprecated('Use listSystemMessagesReqDescriptor instead')
-const ListSystemMessagesReq$json = {
-  '1': 'ListSystemMessagesReq',
+@$core.Deprecated('Use listNoticesReqDescriptor instead')
+const ListNoticesReq$json = {
+  '1': 'ListNoticesReq',
   '2': [
-    {'1': 'status', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'status', '17': true},
     {
-      '1': 'pagination',
-      '3': 2,
+      '1': 'last_uuid',
+      '3': 1,
       '4': 1,
-      '5': 11,
-      '6': '.hi.Pagination',
-      '10': 'pagination'
+      '5': 9,
+      '9': 0,
+      '10': 'lastUuid',
+      '17': true
     },
   ],
   '8': [
-    {'1': '_status'},
+    {'1': '_last_uuid'},
   ],
 };
 
-/// Descriptor for `ListSystemMessagesReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listSystemMessagesReqDescriptor = $convert.base64Decode(
-    'ChVMaXN0U3lzdGVtTWVzc2FnZXNSZXESGwoGc3RhdHVzGAEgASgJSABSBnN0YXR1c4gBARIuCg'
-    'pwYWdpbmF0aW9uGAIgASgLMg4uaGkuUGFnaW5hdGlvblIKcGFnaW5hdGlvbkIJCgdfc3RhdHVz');
+/// Descriptor for `ListNoticesReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listNoticesReqDescriptor = $convert.base64Decode(
+    'Cg5MaXN0Tm90aWNlc1JlcRIgCglsYXN0X3V1aWQYASABKAlIAFIIbGFzdFV1aWSIAQFCDAoKX2'
+    'xhc3RfdXVpZA==');
 
-@$core.Deprecated('Use systemMessagesDescriptor instead')
-const SystemMessages$json = {
-  '1': 'SystemMessages',
+@$core.Deprecated('Use listNoticesRespDescriptor instead')
+const ListNoticesResp$json = {
+  '1': 'ListNoticesResp',
   '2': [
     {
-      '1': 'has_new',
-      '3': 1,
-      '4': 1,
-      '5': 8,
-      '8': {},
-      '9': 0,
-      '10': 'hasNew',
-      '17': true
-    },
-    {
-      '1': 'total',
-      '3': 2,
-      '4': 1,
-      '5': 5,
-      '8': {},
-      '9': 1,
-      '10': 'total',
-      '17': true
-    },
-    {
       '1': 'list',
-      '3': 3,
+      '3': 1,
       '4': 3,
       '5': 11,
       '6': '.hi.club.Notice',
@@ -144,53 +124,121 @@ const SystemMessages$json = {
     },
   ],
   '7': {},
-  '8': [
-    {'1': '_has_new'},
-    {'1': '_total'},
-  ],
 };
 
-/// Descriptor for `SystemMessages`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List systemMessagesDescriptor = $convert.base64Decode(
-    'Cg5TeXN0ZW1NZXNzYWdlcxIiCgdoYXNfbmV3GAEgASgIQgSQtRgDSABSBmhhc05ld4gBARIfCg'
-    'V0b3RhbBgCIAEoBUIEkLUYA0gBUgV0b3RhbIgBARIpCgRsaXN0GAMgAygLMg8uaGkuY2x1Yi5O'
-    'b3RpY2VCBJC1GAJSBGxpc3Q6BJi1GANCCgoIX2hhc19uZXdCCAoGX3RvdGFs');
+/// Descriptor for `ListNoticesResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listNoticesRespDescriptor = $convert.base64Decode(
+    'Cg9MaXN0Tm90aWNlc1Jlc3ASKQoEbGlzdBgBIAMoCzIPLmhpLmNsdWIuTm90aWNlQgSQtRgCUg'
+    'RsaXN0OgSYtRgD');
 
-@$core.Deprecated('Use deleteSystemMessageReqDescriptor instead')
-const DeleteSystemMessageReq$json = {
-  '1': 'DeleteSystemMessageReq',
+@$core.Deprecated('Use listNoticeStatusesReqDescriptor instead')
+const ListNoticeStatusesReq$json = {
+  '1': 'ListNoticeStatusesReq',
   '2': [
-    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'uuid', '17': true},
-  ],
-  '8': [
-    {'1': '_uuid'},
+    {'1': 'uuids', '3': 1, '4': 3, '5': 9, '10': 'uuids'},
   ],
 };
 
-/// Descriptor for `DeleteSystemMessageReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List deleteSystemMessageReqDescriptor =
+/// Descriptor for `ListNoticeStatusesReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listNoticeStatusesReqDescriptor =
     $convert.base64Decode(
-        'ChZEZWxldGVTeXN0ZW1NZXNzYWdlUmVxEhcKBHV1aWQYASABKAlIAFIEdXVpZIgBAUIHCgVfdX'
-        'VpZA==');
+        'ChVMaXN0Tm90aWNlU3RhdHVzZXNSZXESFAoFdXVpZHMYASADKAlSBXV1aWRz');
 
-@$core.Deprecated('Use handleSystemMessageReqDescriptor instead')
-const HandleSystemMessageReq$json = {
-  '1': 'HandleSystemMessageReq',
+@$core.Deprecated('Use noticeStatusDescriptor instead')
+const NoticeStatus$json = {
+  '1': 'NoticeStatus',
   '2': [
-    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'uuid', '17': true},
-    {'1': 'status', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'status', '17': true},
+    {
+      '1': 'uuid',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'uuid',
+      '17': true
+    },
+    {
+      '1': 'status',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'status',
+      '17': true
+    },
   ],
+  '7': {},
   '8': [
     {'1': '_uuid'},
     {'1': '_status'},
   ],
 };
 
-/// Descriptor for `HandleSystemMessageReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List handleSystemMessageReqDescriptor =
+/// Descriptor for `NoticeStatus`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List noticeStatusDescriptor = $convert.base64Decode(
+    'CgxOb3RpY2VTdGF0dXMSHQoEdXVpZBgBIAEoCUIEkLUYA0gAUgR1dWlkiAEBEiEKBnN0YXR1cx'
+    'gCIAEoCUIEkLUYA0gBUgZzdGF0dXOIAQE6BJi1GANCBwoFX3V1aWRCCQoHX3N0YXR1cw==');
+
+@$core.Deprecated('Use listNoticeStatusesRespDescriptor instead')
+const ListNoticeStatusesResp$json = {
+  '1': 'ListNoticeStatusesResp',
+  '2': [
+    {
+      '1': 'list',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.club.NoticeStatus',
+      '8': {},
+      '10': 'list'
+    },
+  ],
+  '7': {},
+};
+
+/// Descriptor for `ListNoticeStatusesResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listNoticeStatusesRespDescriptor =
     $convert.base64Decode(
-        'ChZIYW5kbGVTeXN0ZW1NZXNzYWdlUmVxEhcKBHV1aWQYASABKAlIAFIEdXVpZIgBARIbCgZzdG'
-        'F0dXMYAiABKAlIAVIGc3RhdHVziAEBQgcKBV91dWlkQgkKB19zdGF0dXM=');
+        'ChZMaXN0Tm90aWNlU3RhdHVzZXNSZXNwEi8KBGxpc3QYASADKAsyFS5oaS5jbHViLk5vdGljZV'
+        'N0YXR1c0IEkLUYA1IEbGlzdDoEmLUYAw==');
+
+@$core.Deprecated('Use handleNoticeReqDescriptor instead')
+const HandleNoticeReq$json = {
+  '1': 'HandleNoticeReq',
+  '2': [
+    {
+      '1': 'uuid',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'uuid',
+      '17': true
+    },
+    {
+      '1': 'accept',
+      '3': 2,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 1,
+      '10': 'accept',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_uuid'},
+    {'1': '_accept'},
+  ],
+};
+
+/// Descriptor for `HandleNoticeReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List handleNoticeReqDescriptor = $convert.base64Decode(
+    'Cg9IYW5kbGVOb3RpY2VSZXESHwoEdXVpZBgBIAEoCUIGukgDyAEBSABSBHV1aWSIAQESIwoGYW'
+    'NjZXB0GAIgASgIQga6SAPIAQFIAVIGYWNjZXB0iAEBQgcKBV91dWlkQgkKB19hY2NlcHQ=');
 
 @$core.Deprecated('Use markNoticeProcessedReqDescriptor instead')
 const MarkNoticeProcessedReq$json = {
@@ -392,33 +440,6 @@ const GetUserReq$json = {
 /// Descriptor for `GetUserReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List getUserReqDescriptor =
     $convert.base64Decode('CgpHZXRVc2VyUmVxEhAKA2RpZBgBIAEoCVIDZGlk');
-
-@$core.Deprecated('Use unprocessedSysMsgCountRespDescriptor instead')
-const UnprocessedSysMsgCountResp$json = {
-  '1': 'UnprocessedSysMsgCountResp',
-  '2': [
-    {
-      '1': 'count',
-      '3': 1,
-      '4': 1,
-      '5': 5,
-      '8': {},
-      '9': 0,
-      '10': 'count',
-      '17': true
-    },
-  ],
-  '7': {},
-  '8': [
-    {'1': '_count'},
-  ],
-};
-
-/// Descriptor for `UnprocessedSysMsgCountResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List unprocessedSysMsgCountRespDescriptor =
-    $convert.base64Decode(
-        'ChpVbnByb2Nlc3NlZFN5c01zZ0NvdW50UmVzcBIfCgVjb3VudBgBIAEoBUIEkLUYA0gAUgVjb3'
-        'VudIgBAToEmLUYA0IICgZfY291bnQ=');
 
 @$core.Deprecated('Use updateUserReqDescriptor instead')
 const UpdateUserReq$json = {
