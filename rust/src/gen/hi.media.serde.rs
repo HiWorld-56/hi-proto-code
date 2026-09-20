@@ -1386,6 +1386,7 @@ impl serde::Serialize for FileAccessPurpose {
             Self::Unspecified => "FILE_ACCESS_PURPOSE_UNSPECIFIED",
             Self::Preview => "FILE_ACCESS_PURPOSE_PREVIEW",
             Self::Download => "FILE_ACCESS_PURPOSE_DOWNLOAD",
+            Self::Cover => "FILE_ACCESS_PURPOSE_COVER",
         };
         serializer.serialize_str(variant)
     }
@@ -1400,6 +1401,7 @@ impl<'de> serde::Deserialize<'de> for FileAccessPurpose {
             "FILE_ACCESS_PURPOSE_UNSPECIFIED",
             "FILE_ACCESS_PURPOSE_PREVIEW",
             "FILE_ACCESS_PURPOSE_DOWNLOAD",
+            "FILE_ACCESS_PURPOSE_COVER",
         ];
 
         struct GeneratedVisitor;
@@ -1443,6 +1445,7 @@ impl<'de> serde::Deserialize<'de> for FileAccessPurpose {
                     "FILE_ACCESS_PURPOSE_UNSPECIFIED" => Ok(FileAccessPurpose::Unspecified),
                     "FILE_ACCESS_PURPOSE_PREVIEW" => Ok(FileAccessPurpose::Preview),
                     "FILE_ACCESS_PURPOSE_DOWNLOAD" => Ok(FileAccessPurpose::Download),
+                    "FILE_ACCESS_PURPOSE_COVER" => Ok(FileAccessPurpose::Cover),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }
@@ -1684,6 +1687,9 @@ impl serde::Serialize for FileSummary {
         if self.created_at.is_some() {
             len += 1;
         }
+        if self.has_cover.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.media.FileSummary", len)?;
         if let Some(v) = self.asset_id.as_ref() {
             struct_ser.serialize_field("assetId", v)?;
@@ -1714,6 +1720,9 @@ impl serde::Serialize for FileSummary {
             #[allow(clippy::needless_borrows_for_generic_args)]
             struct_ser.serialize_field("createdAt", ToString::to_string(&v).as_str())?;
         }
+        if let Some(v) = self.has_cover.as_ref() {
+            struct_ser.serialize_field("hasCover", v)?;
+        }
         struct_ser.end()
     }
 }
@@ -1736,6 +1745,8 @@ impl<'de> serde::Deserialize<'de> for FileSummary {
             "source",
             "created_at",
             "createdAt",
+            "has_cover",
+            "hasCover",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -1747,6 +1758,7 @@ impl<'de> serde::Deserialize<'de> for FileSummary {
             SizeBytes,
             Source,
             CreatedAt,
+            HasCover,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1775,6 +1787,7 @@ impl<'de> serde::Deserialize<'de> for FileSummary {
                             "sizeBytes" | "size_bytes" => Ok(GeneratedField::SizeBytes),
                             "source" => Ok(GeneratedField::Source),
                             "createdAt" | "created_at" => Ok(GeneratedField::CreatedAt),
+                            "hasCover" | "has_cover" => Ok(GeneratedField::HasCover),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -1801,6 +1814,7 @@ impl<'de> serde::Deserialize<'de> for FileSummary {
                 let mut size_bytes__ = None;
                 let mut source__ = None;
                 let mut created_at__ = None;
+                let mut has_cover__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::AssetId => {
@@ -1849,6 +1863,12 @@ impl<'de> serde::Deserialize<'de> for FileSummary {
                                 map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
+                        GeneratedField::HasCover => {
+                            if has_cover__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("hasCover"));
+                            }
+                            has_cover__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(FileSummary {
@@ -1859,6 +1879,7 @@ impl<'de> serde::Deserialize<'de> for FileSummary {
                     size_bytes: size_bytes__,
                     source: source__,
                     created_at: created_at__,
+                    has_cover: has_cover__,
                 })
             }
         }
@@ -6899,6 +6920,9 @@ impl serde::Serialize for TaskOutput {
         if self.height.is_some() {
             len += 1;
         }
+        if self.has_cover.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.media.TaskOutput", len)?;
         if let Some(v) = self.asset_id.as_ref() {
             struct_ser.serialize_field("assetId", v)?;
@@ -6933,6 +6957,9 @@ impl serde::Serialize for TaskOutput {
         if let Some(v) = self.height.as_ref() {
             struct_ser.serialize_field("height", v)?;
         }
+        if let Some(v) = self.has_cover.as_ref() {
+            struct_ser.serialize_field("hasCover", v)?;
+        }
         struct_ser.end()
     }
 }
@@ -6957,6 +6984,8 @@ impl<'de> serde::Deserialize<'de> for TaskOutput {
             "available",
             "width",
             "height",
+            "has_cover",
+            "hasCover",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -6970,6 +6999,7 @@ impl<'de> serde::Deserialize<'de> for TaskOutput {
             Available,
             Width,
             Height,
+            HasCover,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -7000,6 +7030,7 @@ impl<'de> serde::Deserialize<'de> for TaskOutput {
                             "available" => Ok(GeneratedField::Available),
                             "width" => Ok(GeneratedField::Width),
                             "height" => Ok(GeneratedField::Height),
+                            "hasCover" | "has_cover" => Ok(GeneratedField::HasCover),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -7028,6 +7059,7 @@ impl<'de> serde::Deserialize<'de> for TaskOutput {
                 let mut available__ = None;
                 let mut width__ = None;
                 let mut height__ = None;
+                let mut has_cover__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::AssetId => {
@@ -7092,6 +7124,12 @@ impl<'de> serde::Deserialize<'de> for TaskOutput {
                                 map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
+                        GeneratedField::HasCover => {
+                            if has_cover__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("hasCover"));
+                            }
+                            has_cover__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(TaskOutput {
@@ -7104,6 +7142,7 @@ impl<'de> serde::Deserialize<'de> for TaskOutput {
                     available: available__,
                     width: width__,
                     height: height__,
+                    has_cover: has_cover__,
                 })
             }
         }

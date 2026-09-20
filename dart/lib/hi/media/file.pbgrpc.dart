@@ -56,7 +56,7 @@ class FileClient extends $grpc.Client {
     return $createUnaryCall(_$list, request, options: options);
   }
 
-  /// 同步删除本人资产并扣减实际占用；仍被任务引用时拒绝，重复删除幂等。
+  /// 同步删除本人资产及附属封面，全部删除后扣减合计占用；仍被任务引用时拒绝，重复删除幂等。
   $grpc.ResponseFuture<$0.DeleteFileResp> delete(
     $0.DeleteFileReq request, {
     $grpc.CallOptions? options,
@@ -64,7 +64,8 @@ class FileClient extends $grpc.Client {
     return $createUnaryCall(_$delete, request, options: options);
   }
 
-  /// 为本人 available 资产签发预览或下载地址，不返回内部存储地址或对象键。
+  /// 为本人 available 资产签发预览、下载或封面地址，不返回内部存储地址或对象键。
+  /// COVER 仍传视频资产 ID；封面不存在返回 NotFound，PREVIEW/DOWNLOAD 保持访问原文件。
   $grpc.ResponseFuture<$0.GetFileAccessUrlsResp> getAccessUrls(
     $0.GetFileAccessUrlsReq request, {
     $grpc.CallOptions? options,

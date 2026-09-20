@@ -37,7 +37,7 @@ class FileSource extends $pb.ProtobufEnum {
   const FileSource._(super.value, super.name);
 }
 
-/// 临时访问地址的用途，决定预览或下载响应行为。
+/// 临时访问地址的用途；封面与原文件使用同一视频资产 ID。
 class FileAccessPurpose extends $pb.ProtobufEnum {
   static const FileAccessPurpose FILE_ACCESS_PURPOSE_UNSPECIFIED =
       FileAccessPurpose._(
@@ -49,14 +49,19 @@ class FileAccessPurpose extends $pb.ProtobufEnum {
       FileAccessPurpose._(
           2, _omitEnumNames ? '' : 'FILE_ACCESS_PURPOSE_DOWNLOAD');
 
+  /// 访问生成视频的第一帧 JPEG 封面；不存在时返回 NotFound，不回退到原文件。
+  static const FileAccessPurpose FILE_ACCESS_PURPOSE_COVER =
+      FileAccessPurpose._(3, _omitEnumNames ? '' : 'FILE_ACCESS_PURPOSE_COVER');
+
   static const $core.List<FileAccessPurpose> values = <FileAccessPurpose>[
     FILE_ACCESS_PURPOSE_UNSPECIFIED,
     FILE_ACCESS_PURPOSE_PREVIEW,
     FILE_ACCESS_PURPOSE_DOWNLOAD,
+    FILE_ACCESS_PURPOSE_COVER,
   ];
 
   static final $core.List<FileAccessPurpose?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 2);
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
   static FileAccessPurpose? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

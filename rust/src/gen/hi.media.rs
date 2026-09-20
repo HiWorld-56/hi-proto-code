@@ -304,6 +304,10 @@ pub struct TaskOutput {
     /// 实际产物高度，单位像素；与 width 一同返回，查询时不重新探测视频。
     #[prost(uint32, optional, tag = "9")]
     pub height: ::core::option::Option<u32>,
+    /// 资产可用且有已保存的视频封面；用 asset_id 申请 FILE_ACCESS_PURPOSE_COVER 地址。
+    /// 无封面或资产不可用时为 false，不影响视频任务的成功状态；size_bytes 不含封面。
+    #[prost(bool, optional, tag = "10")]
+    pub has_cover: ::core::option::Option<bool>,
 }
 /// 任务摘要，不暴露模型真实名、工作流对象键或上游 prompt_id。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -3107,7 +3111,7 @@ pub mod register_client {
         }
     }
 }
-/// 本人可用资产摘要；size_bytes 为字节，created_at 为 Unix 秒。
+/// 本人可用资产摘要；size_bytes 为原文件字节数（不含封面），created_at 为 Unix 秒。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct FileSummary {
     #[prost(string, optional, tag = "1")]
@@ -3124,6 +3128,10 @@ pub struct FileSummary {
     pub source: ::core::option::Option<i32>,
     #[prost(int64, optional, tag = "7")]
     pub created_at: ::core::option::Option<i64>,
+    /// 是否有已保存且可访问的视频封面；为 true 时用本资产 ID 申请 COVER 地址。
+    /// 用户上传图片、历史未补图视频及封面生成失败的视频为 false。
+    #[prost(bool, optional, tag = "8")]
+    pub has_cover: ::core::option::Option<bool>,
 }
 /// 分页查询本人 available 资产，不传筛选字段表示不过滤。
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
@@ -3282,13 +3290,15 @@ impl FileSource {
         }
     }
 }
-/// 临时访问地址的用途，决定预览或下载响应行为。
+/// 临时访问地址的用途；封面与原文件使用同一视频资产 ID。
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum FileAccessPurpose {
     Unspecified = 0,
     Preview = 1,
     Download = 2,
+    /// 访问生成视频的第一帧 JPEG 封面；不存在时返回 NotFound，不回退到原文件。
+    Cover = 3,
 }
 impl FileAccessPurpose {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -3300,6 +3310,7 @@ impl FileAccessPurpose {
             Self::Unspecified => "FILE_ACCESS_PURPOSE_UNSPECIFIED",
             Self::Preview => "FILE_ACCESS_PURPOSE_PREVIEW",
             Self::Download => "FILE_ACCESS_PURPOSE_DOWNLOAD",
+            Self::Cover => "FILE_ACCESS_PURPOSE_COVER",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -3308,6 +3319,7 @@ impl FileAccessPurpose {
             "FILE_ACCESS_PURPOSE_UNSPECIFIED" => Some(Self::Unspecified),
             "FILE_ACCESS_PURPOSE_PREVIEW" => Some(Self::Preview),
             "FILE_ACCESS_PURPOSE_DOWNLOAD" => Some(Self::Download),
+            "FILE_ACCESS_PURPOSE_COVER" => Some(Self::Cover),
             _ => None,
         }
     }
@@ -3521,7 +3533,7 @@ pub mod file_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.media.File", "List"));
             self.inner.unary(req, path, codec).await
         }
-        /// 同步删除本人资产并扣减实际占用；仍被任务引用时拒绝，重复删除幂等。
+        /// 同步删除本人资产及附属封面，全部删除后扣减合计占用；仍被任务引用时拒绝，重复删除幂等。
         pub async fn delete(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteFileReq>,
@@ -3540,7 +3552,8 @@ pub mod file_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.media.File", "Delete"));
             self.inner.unary(req, path, codec).await
         }
-        /// 为本人 available 资产签发预览或下载地址，不返回内部存储地址或对象键。
+        /// 为本人 available 资产签发预览、下载或封面地址，不返回内部存储地址或对象键。
+        /// COVER 仍传视频资产 ID；封面不存在返回 NotFound，PREVIEW/DOWNLOAD 保持访问原文件。
         pub async fn get_access_urls(
             &mut self,
             request: impl tonic::IntoRequest<super::GetFileAccessUrlsReq>,

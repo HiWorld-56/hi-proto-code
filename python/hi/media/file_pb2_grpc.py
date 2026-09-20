@@ -69,14 +69,15 @@ class FileServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def Delete(self, request, context):
-        """同步删除本人资产并扣减实际占用；仍被任务引用时拒绝，重复删除幂等。
+        """同步删除本人资产及附属封面，全部删除后扣减合计占用；仍被任务引用时拒绝，重复删除幂等。
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def GetAccessUrls(self, request, context):
-        """为本人 available 资产签发预览或下载地址，不返回内部存储地址或对象键。
+        """为本人 available 资产签发预览、下载或封面地址，不返回内部存储地址或对象键。
+        COVER 仍传视频资产 ID；封面不存在返回 NotFound，PREVIEW/DOWNLOAD 保持访问原文件。
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')

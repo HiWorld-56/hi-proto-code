@@ -73,13 +73,15 @@ func (FileSource) EnumDescriptor() ([]byte, []int) {
 	return file_hi_media_file_proto_rawDescGZIP(), []int{0}
 }
 
-// 临时访问地址的用途，决定预览或下载响应行为。
+// 临时访问地址的用途；封面与原文件使用同一视频资产 ID。
 type FileAccessPurpose int32
 
 const (
 	FileAccessPurpose_FILE_ACCESS_PURPOSE_UNSPECIFIED FileAccessPurpose = 0
 	FileAccessPurpose_FILE_ACCESS_PURPOSE_PREVIEW     FileAccessPurpose = 1
 	FileAccessPurpose_FILE_ACCESS_PURPOSE_DOWNLOAD    FileAccessPurpose = 2
+	// 访问生成视频的第一帧 JPEG 封面；不存在时返回 NotFound，不回退到原文件。
+	FileAccessPurpose_FILE_ACCESS_PURPOSE_COVER FileAccessPurpose = 3
 )
 
 // Enum value maps for FileAccessPurpose.
@@ -88,11 +90,13 @@ var (
 		0: "FILE_ACCESS_PURPOSE_UNSPECIFIED",
 		1: "FILE_ACCESS_PURPOSE_PREVIEW",
 		2: "FILE_ACCESS_PURPOSE_DOWNLOAD",
+		3: "FILE_ACCESS_PURPOSE_COVER",
 	}
 	FileAccessPurpose_value = map[string]int32{
 		"FILE_ACCESS_PURPOSE_UNSPECIFIED": 0,
 		"FILE_ACCESS_PURPOSE_PREVIEW":     1,
 		"FILE_ACCESS_PURPOSE_DOWNLOAD":    2,
+		"FILE_ACCESS_PURPOSE_COVER":       3,
 	}
 )
 
@@ -229,16 +233,19 @@ func (UploadFileStatus) EnumDescriptor() ([]byte, []int) {
 	return file_hi_media_file_proto_rawDescGZIP(), []int{3}
 }
 
-// 本人可用资产摘要；size_bytes 为字节，created_at 为 Unix 秒。
+// 本人可用资产摘要；size_bytes 为原文件字节数（不含封面），created_at 为 Unix 秒。
 type FileSummary struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	AssetId       *string                `protobuf:"bytes,1,opt,name=asset_id,json=assetId,proto3,oneof" json:"asset_id,omitempty"`
-	Filename      *string                `protobuf:"bytes,2,opt,name=filename,proto3,oneof" json:"filename,omitempty"`
-	MediaType     *MediaType             `protobuf:"varint,3,opt,name=media_type,json=mediaType,proto3,enum=hi.media.MediaType,oneof" json:"media_type,omitempty"`
-	MimeType      *string                `protobuf:"bytes,4,opt,name=mime_type,json=mimeType,proto3,oneof" json:"mime_type,omitempty"`
-	SizeBytes     *uint64                `protobuf:"varint,5,opt,name=size_bytes,json=sizeBytes,proto3,oneof" json:"size_bytes,omitempty"`
-	Source        *FileSource            `protobuf:"varint,6,opt,name=source,proto3,enum=hi.media.FileSource,oneof" json:"source,omitempty"`
-	CreatedAt     *int64                 `protobuf:"varint,7,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
+	state     protoimpl.MessageState `protogen:"open.v1"`
+	AssetId   *string                `protobuf:"bytes,1,opt,name=asset_id,json=assetId,proto3,oneof" json:"asset_id,omitempty"`
+	Filename  *string                `protobuf:"bytes,2,opt,name=filename,proto3,oneof" json:"filename,omitempty"`
+	MediaType *MediaType             `protobuf:"varint,3,opt,name=media_type,json=mediaType,proto3,enum=hi.media.MediaType,oneof" json:"media_type,omitempty"`
+	MimeType  *string                `protobuf:"bytes,4,opt,name=mime_type,json=mimeType,proto3,oneof" json:"mime_type,omitempty"`
+	SizeBytes *uint64                `protobuf:"varint,5,opt,name=size_bytes,json=sizeBytes,proto3,oneof" json:"size_bytes,omitempty"`
+	Source    *FileSource            `protobuf:"varint,6,opt,name=source,proto3,enum=hi.media.FileSource,oneof" json:"source,omitempty"`
+	CreatedAt *int64                 `protobuf:"varint,7,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
+	// 是否有已保存且可访问的视频封面；为 true 时用本资产 ID 申请 COVER 地址。
+	// 用户上传图片、历史未补图视频及封面生成失败的视频为 false。
+	HasCover      *bool `protobuf:"varint,8,opt,name=has_cover,json=hasCover,proto3,oneof" json:"has_cover,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -320,6 +327,13 @@ func (x *FileSummary) GetCreatedAt() int64 {
 		return *x.CreatedAt
 	}
 	return 0
+}
+
+func (x *FileSummary) GetHasCover() bool {
+	if x != nil && x.HasCover != nil {
+		return *x.HasCover
+	}
+	return false
 }
 
 // 分页查询本人 available 资产，不传筛选字段表示不过滤。
@@ -1068,7 +1082,7 @@ var File_hi_media_file_proto protoreflect.FileDescriptor
 
 const file_hi_media_file_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/media/file.proto\x12\bhi.media\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x13hi/media/task.proto\x1a\x10hi/options.proto\"\xb4\x03\n" +
+	"\x13hi/media/file.proto\x12\bhi.media\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x13hi/media/task.proto\x1a\x10hi/options.proto\"\xea\x03\n" +
 	"\vFileSummary\x12$\n" +
 	"\basset_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\aassetId\x88\x01\x01\x12%\n" +
 	"\bfilename\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\bfilename\x88\x01\x01\x12=\n" +
@@ -1079,7 +1093,8 @@ const file_hi_media_file_proto_rawDesc = "" +
 	"size_bytes\x18\x05 \x01(\x04B\x04\x90\xb5\x18\x03H\x04R\tsizeBytes\x88\x01\x01\x127\n" +
 	"\x06source\x18\x06 \x01(\x0e2\x14.hi.media.FileSourceB\x04\x90\xb5\x18\x03H\x05R\x06source\x88\x01\x01\x12(\n" +
 	"\n" +
-	"created_at\x18\a \x01(\x03B\x04\x90\xb5\x18\x03H\x06R\tcreatedAt\x88\x01\x01:\x04\x98\xb5\x18\x03B\v\n" +
+	"created_at\x18\a \x01(\x03B\x04\x90\xb5\x18\x03H\x06R\tcreatedAt\x88\x01\x01\x12&\n" +
+	"\thas_cover\x18\b \x01(\bB\x04\x90\xb5\x18\x03H\aR\bhasCover\x88\x01\x01:\x04\x98\xb5\x18\x03B\v\n" +
 	"\t_asset_idB\v\n" +
 	"\t_filenameB\r\n" +
 	"\v_media_typeB\f\n" +
@@ -1087,7 +1102,9 @@ const file_hi_media_file_proto_rawDesc = "" +
 	"_mime_typeB\r\n" +
 	"\v_size_bytesB\t\n" +
 	"\a_sourceB\r\n" +
-	"\v_created_at\"\xc4\x01\n" +
+	"\v_created_atB\f\n" +
+	"\n" +
+	"_has_cover\"\xc4\x01\n" +
 	"\fListFilesReq\x12.\n" +
 	"\n" +
 	"pagination\x18\x01 \x01(\v2\x0e.hi.PaginationR\n" +
@@ -1180,11 +1197,12 @@ const file_hi_media_file_proto_rawDesc = "" +
 	"FileSource\x12\x1b\n" +
 	"\x17FILE_SOURCE_UNSPECIFIED\x10\x00\x12\x16\n" +
 	"\x12FILE_SOURCE_UPLOAD\x10\x01\x12\x19\n" +
-	"\x15FILE_SOURCE_GENERATED\x10\x02*{\n" +
+	"\x15FILE_SOURCE_GENERATED\x10\x02*\x9a\x01\n" +
 	"\x11FileAccessPurpose\x12#\n" +
 	"\x1fFILE_ACCESS_PURPOSE_UNSPECIFIED\x10\x00\x12\x1f\n" +
 	"\x1bFILE_ACCESS_PURPOSE_PREVIEW\x10\x01\x12 \n" +
-	"\x1cFILE_ACCESS_PURPOSE_DOWNLOAD\x10\x02*h\n" +
+	"\x1cFILE_ACCESS_PURPOSE_DOWNLOAD\x10\x02\x12\x1d\n" +
+	"\x19FILE_ACCESS_PURPOSE_COVER\x10\x03*h\n" +
 	"\fUploadStatus\x12\x1d\n" +
 	"\x19UPLOAD_STATUS_UNSPECIFIED\x10\x00\x12\x1c\n" +
 	"\x18UPLOAD_STATUS_PROCESSING\x10\x01\x12\x1b\n" +

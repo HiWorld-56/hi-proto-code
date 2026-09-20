@@ -37,6 +37,7 @@ const FileAccessPurpose$json = {
     {'1': 'FILE_ACCESS_PURPOSE_UNSPECIFIED', '2': 0},
     {'1': 'FILE_ACCESS_PURPOSE_PREVIEW', '2': 1},
     {'1': 'FILE_ACCESS_PURPOSE_DOWNLOAD', '2': 2},
+    {'1': 'FILE_ACCESS_PURPOSE_COVER', '2': 3},
   ],
 };
 
@@ -44,7 +45,7 @@ const FileAccessPurpose$json = {
 final $typed_data.Uint8List fileAccessPurposeDescriptor = $convert.base64Decode(
     'ChFGaWxlQWNjZXNzUHVycG9zZRIjCh9GSUxFX0FDQ0VTU19QVVJQT1NFX1VOU1BFQ0lGSUVEEA'
     'ASHwobRklMRV9BQ0NFU1NfUFVSUE9TRV9QUkVWSUVXEAESIAocRklMRV9BQ0NFU1NfUFVSUE9T'
-    'RV9ET1dOTE9BRBAC');
+    'RV9ET1dOTE9BRBACEh0KGUZJTEVfQUNDRVNTX1BVUlBPU0VfQ09WRVIQAw==');
 
 @$core.Deprecated('Use uploadStatusDescriptor instead')
 const UploadStatus$json = {
@@ -156,6 +157,16 @@ const FileSummary$json = {
       '10': 'createdAt',
       '17': true
     },
+    {
+      '1': 'has_cover',
+      '3': 8,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 7,
+      '10': 'hasCover',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -166,6 +177,7 @@ const FileSummary$json = {
     {'1': '_size_bytes'},
     {'1': '_source'},
     {'1': '_created_at'},
+    {'1': '_has_cover'},
   ],
 };
 
@@ -177,8 +189,9 @@ final $typed_data.Uint8List fileSummaryDescriptor = $convert.base64Decode(
     'gEIAEoCUIEkLUYA0gDUghtaW1lVHlwZYgBARIoCgpzaXplX2J5dGVzGAUgASgEQgSQtRgDSARS'
     'CXNpemVCeXRlc4gBARI3CgZzb3VyY2UYBiABKA4yFC5oaS5tZWRpYS5GaWxlU291cmNlQgSQtR'
     'gDSAVSBnNvdXJjZYgBARIoCgpjcmVhdGVkX2F0GAcgASgDQgSQtRgDSAZSCWNyZWF0ZWRBdIgB'
-    'AToEmLUYA0ILCglfYXNzZXRfaWRCCwoJX2ZpbGVuYW1lQg0KC19tZWRpYV90eXBlQgwKCl9taW'
-    '1lX3R5cGVCDQoLX3NpemVfYnl0ZXNCCQoHX3NvdXJjZUINCgtfY3JlYXRlZF9hdA==');
+    'ARImCgloYXNfY292ZXIYCCABKAhCBJC1GANIB1IIaGFzQ292ZXKIAQE6BJi1GANCCwoJX2Fzc2'
+    'V0X2lkQgsKCV9maWxlbmFtZUINCgtfbWVkaWFfdHlwZUIMCgpfbWltZV90eXBlQg0KC19zaXpl'
+    'X2J5dGVzQgkKB19zb3VyY2VCDQoLX2NyZWF0ZWRfYXRCDAoKX2hhc19jb3Zlcg==');
 
 @$core.Deprecated('Use listFilesReqDescriptor instead')
 const ListFilesReq$json = {

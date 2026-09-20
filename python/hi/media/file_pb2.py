@@ -28,7 +28,7 @@ from hi.media import task_pb2 as hi_dot_media_dot_task__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13hi/media/file.proto\x12\x08hi.media\x1a\x1b\x62uf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x13hi/media/task.proto\x1a\x10hi/options.proto\"\xb4\x03\n\x0b\x46ileSummary\x12$\n\x08\x61sset_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x07\x61ssetId\x88\x01\x01\x12%\n\x08\x66ilename\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x08\x66ilename\x88\x01\x01\x12=\n\nmedia_type\x18\x03 \x01(\x0e\x32\x13.hi.media.MediaTypeB\x04\x90\xb5\x18\x03H\x02R\tmediaType\x88\x01\x01\x12&\n\tmime_type\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x08mimeType\x88\x01\x01\x12(\n\nsize_bytes\x18\x05 \x01(\x04\x42\x04\x90\xb5\x18\x03H\x04R\tsizeBytes\x88\x01\x01\x12\x37\n\x06source\x18\x06 \x01(\x0e\x32\x14.hi.media.FileSourceB\x04\x90\xb5\x18\x03H\x05R\x06source\x88\x01\x01\x12(\n\ncreated_at\x18\x07 \x01(\x03\x42\x04\x90\xb5\x18\x03H\x06R\tcreatedAt\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x0b\n\t_asset_idB\x0b\n\t_filenameB\r\n\x0b_media_typeB\x0c\n\n_mime_typeB\r\n\x0b_size_bytesB\t\n\x07_sourceB\r\n\x0b_created_at\"\xc4\x01\n\x0cListFilesReq\x12.\n\npagination\x18\x01 \x01(\x0b\x32\x0e.hi.PaginationR\npagination\x12\x37\n\nmedia_type\x18\x02 \x01(\x0e\x32\x13.hi.media.MediaTypeH\x00R\tmediaType\x88\x01\x01\x12\x31\n\x06source\x18\x03 \x01(\x0e\x32\x14.hi.media.FileSourceH\x01R\x06source\x88\x01\x01\x42\r\n\x0b_media_typeB\t\n\x07_source\"s\n\rListFilesResp\x12\x1f\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12\x31\n\x05\x66iles\x18\x02 \x03(\x0b\x32\x15.hi.media.FileSummaryB\x04\x90\xb5\x18\x03R\x05\x66iles:\x04\x98\xb5\x18\x03\x42\x08\n\x06_total\"H\n\rDeleteFileReq\x12*\n\x08\x61sset_id\x18\x01 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x00R\x07\x61ssetId\x88\x01\x01\x42\x0b\n\t_asset_id\"I\n\x0e\x44\x65leteFileResp\x12$\n\x08\x61sset_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x07\x61ssetId\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x0b\n\t_asset_id\"\x96\x01\n\x14GetFileAccessUrlsReq\x12\'\n\tasset_ids\x18\x01 \x03(\tB\n\xbaH\x07\x92\x01\x04\x08\x01\x18\x01R\x08\x61ssetIds\x12I\n\x07purpose\x18\x02 \x01(\x0e\x32\x1b.hi.media.FileAccessPurposeB\r\xbaH\n\x82\x01\x04\x10\x01 \x00\xc8\x01\x01H\x00R\x07purpose\x88\x01\x01\x42\n\n\x08_purpose\"\xa3\x01\n\rFileAccessUrl\x12$\n\x08\x61sset_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x07\x61ssetId\x88\x01\x01\x12\x1b\n\x03url\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x03url\x88\x01\x01\x12&\n\texpire_at\x18\x03 \x01(\x03\x42\x04\x90\xb5\x18\x03H\x02R\x08\x65xpireAt\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x0b\n\t_asset_idB\x06\n\x04_urlB\x0c\n\n_expire_at\"R\n\x15GetFileAccessUrlsResp\x12\x33\n\x05\x66iles\x18\x01 \x03(\x0b\x32\x17.hi.media.FileAccessUrlB\x04\x90\xb5\x18\x03R\x05\x66iles:\x04\x98\xb5\x18\x03\"\xd7\x01\n\x12UploadFileMetadata\x12\x35\n\x0e\x63lient_file_id\x18\x01 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x00R\x0c\x63lientFileId\x88\x01\x01\x12+\n\x08\x66ilename\x18\x02 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x01R\x08\x66ilename\x88\x01\x01\x12.\n\nsize_bytes\x18\x03 \x01(\x04\x42\n\xbaH\x07\x32\x02 \x00\xc8\x01\x01H\x02R\tsizeBytes\x88\x01\x01\x42\x11\n\x0f_client_file_idB\x0b\n\t_filenameB\r\n\x0b_size_bytes\"\x8d\x01\n\x0eUploadMetadata\x12.\n\nrequest_id\x18\x01 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x00R\trequestId\x88\x01\x01\x12<\n\x05\x66iles\x18\x02 \x03(\x0b\x32\x1c.hi.media.UploadFileMetadataB\x08\xbaH\x05\x92\x01\x02\x08\x01R\x05\x66ilesB\r\n\x0b_request_id\"\xf7\x03\n\x10UploadFileResult\x12/\n\x0e\x63lient_file_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x0c\x63lientFileId\x88\x01\x01\x12%\n\x08\x66ilename\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x08\x66ilename\x88\x01\x01\x12=\n\x06status\x18\x03 \x01(\x0e\x32\x1a.hi.media.UploadFileStatusB\x04\x90\xb5\x18\x03H\x02R\x06status\x88\x01\x01\x12$\n\x08\x61sset_id\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x07\x61ssetId\x88\x01\x01\x12&\n\tmime_type\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x04R\x08mimeType\x88\x01\x01\x12(\n\nsize_bytes\x18\x06 \x01(\x04\x42\x04\x90\xb5\x18\x03H\x05R\tsizeBytes\x88\x01\x01\x12(\n\nerror_code\x18\x07 \x01(\tB\x04\x90\xb5\x18\x03H\x06R\terrorCode\x88\x01\x01\x12.\n\rerror_message\x18\x08 \x01(\tB\x04\x90\xb5\x18\x03H\x07R\x0c\x65rrorMessage\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x11\n\x0f_client_file_idB\x0b\n\t_filenameB\t\n\x07_statusB\x0b\n\t_asset_idB\x0c\n\n_mime_typeB\r\n\x0b_size_bytesB\r\n\x0b_error_codeB\x10\n\x0e_error_message\"\xd0\x01\n\x11UploadBatchResult\x12(\n\nrequest_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\trequestId\x88\x01\x01\x12\x39\n\x06status\x18\x02 \x01(\x0e\x32\x16.hi.media.UploadStatusB\x04\x90\xb5\x18\x03H\x01R\x06status\x88\x01\x01\x12\x36\n\x05\x66iles\x18\x03 \x03(\x0b\x32\x1a.hi.media.UploadFileResultB\x04\x90\xb5\x18\x03R\x05\x66iles:\x04\x98\xb5\x18\x03\x42\r\n\x0b_request_idB\t\n\x07_status\"S\n\x12GetUploadResultReq\x12.\n\nrequest_id\x18\x01 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x00R\trequestId\x88\x01\x01\x42\r\n\x0b_request_id\"V\n\x13GetUploadResultResp\x12\x39\n\x06result\x18\x01 \x01(\x0b\x32\x1b.hi.media.UploadBatchResultB\x04\x90\xb5\x18\x03R\x06result:\x04\x98\xb5\x18\x03*\\\n\nFileSource\x12\x1b\n\x17\x46ILE_SOURCE_UNSPECIFIED\x10\x00\x12\x16\n\x12\x46ILE_SOURCE_UPLOAD\x10\x01\x12\x19\n\x15\x46ILE_SOURCE_GENERATED\x10\x02*{\n\x11\x46ileAccessPurpose\x12#\n\x1f\x46ILE_ACCESS_PURPOSE_UNSPECIFIED\x10\x00\x12\x1f\n\x1b\x46ILE_ACCESS_PURPOSE_PREVIEW\x10\x01\x12 \n\x1c\x46ILE_ACCESS_PURPOSE_DOWNLOAD\x10\x02*h\n\x0cUploadStatus\x12\x1d\n\x19UPLOAD_STATUS_UNSPECIFIED\x10\x00\x12\x1c\n\x18UPLOAD_STATUS_PROCESSING\x10\x01\x12\x1b\n\x17UPLOAD_STATUS_COMPLETED\x10\x02*\xb8\x01\n\x10UploadFileStatus\x12\"\n\x1eUPLOAD_FILE_STATUS_UNSPECIFIED\x10\x00\x12\x1e\n\x1aUPLOAD_FILE_STATUS_PENDING\x10\x01\x12!\n\x1dUPLOAD_FILE_STATUS_PROCESSING\x10\x02\x12\x1e\n\x1aUPLOAD_FILE_STATUS_SUCCESS\x10\x03\x12\x1d\n\x19UPLOAD_FILE_STATUS_FAILED\x10\x04\x32\xba\x02\n\x04\x46ile\x12U\n\x0fGetUploadResult\x12\x1c.hi.media.GetUploadResultReq\x1a\x1d.hi.media.GetUploadResultResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n\x04List\x12\x16.hi.media.ListFilesReq\x1a\x17.hi.media.ListFilesResp\"\x05\x8a\xb5\x18\x01\x02\x12\x42\n\x06\x44\x65lete\x12\x17.hi.media.DeleteFileReq\x1a\x18.hi.media.DeleteFileResp\"\x05\x8a\xb5\x18\x01\x02\x12W\n\rGetAccessUrls\x12\x1e.hi.media.GetFileAccessUrlsReq\x1a\x1f.hi.media.GetFileAccessUrlsResp\"\x05\x8a\xb5\x18\x01\x02\x42,Z*github.com/HiWorld-56/hi-proto/go/hi/mediab\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13hi/media/file.proto\x12\x08hi.media\x1a\x1b\x62uf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x13hi/media/task.proto\x1a\x10hi/options.proto\"\xea\x03\n\x0b\x46ileSummary\x12$\n\x08\x61sset_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x07\x61ssetId\x88\x01\x01\x12%\n\x08\x66ilename\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x08\x66ilename\x88\x01\x01\x12=\n\nmedia_type\x18\x03 \x01(\x0e\x32\x13.hi.media.MediaTypeB\x04\x90\xb5\x18\x03H\x02R\tmediaType\x88\x01\x01\x12&\n\tmime_type\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x08mimeType\x88\x01\x01\x12(\n\nsize_bytes\x18\x05 \x01(\x04\x42\x04\x90\xb5\x18\x03H\x04R\tsizeBytes\x88\x01\x01\x12\x37\n\x06source\x18\x06 \x01(\x0e\x32\x14.hi.media.FileSourceB\x04\x90\xb5\x18\x03H\x05R\x06source\x88\x01\x01\x12(\n\ncreated_at\x18\x07 \x01(\x03\x42\x04\x90\xb5\x18\x03H\x06R\tcreatedAt\x88\x01\x01\x12&\n\thas_cover\x18\x08 \x01(\x08\x42\x04\x90\xb5\x18\x03H\x07R\x08hasCover\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x0b\n\t_asset_idB\x0b\n\t_filenameB\r\n\x0b_media_typeB\x0c\n\n_mime_typeB\r\n\x0b_size_bytesB\t\n\x07_sourceB\r\n\x0b_created_atB\x0c\n\n_has_cover\"\xc4\x01\n\x0cListFilesReq\x12.\n\npagination\x18\x01 \x01(\x0b\x32\x0e.hi.PaginationR\npagination\x12\x37\n\nmedia_type\x18\x02 \x01(\x0e\x32\x13.hi.media.MediaTypeH\x00R\tmediaType\x88\x01\x01\x12\x31\n\x06source\x18\x03 \x01(\x0e\x32\x14.hi.media.FileSourceH\x01R\x06source\x88\x01\x01\x42\r\n\x0b_media_typeB\t\n\x07_source\"s\n\rListFilesResp\x12\x1f\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12\x31\n\x05\x66iles\x18\x02 \x03(\x0b\x32\x15.hi.media.FileSummaryB\x04\x90\xb5\x18\x03R\x05\x66iles:\x04\x98\xb5\x18\x03\x42\x08\n\x06_total\"H\n\rDeleteFileReq\x12*\n\x08\x61sset_id\x18\x01 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x00R\x07\x61ssetId\x88\x01\x01\x42\x0b\n\t_asset_id\"I\n\x0e\x44\x65leteFileResp\x12$\n\x08\x61sset_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x07\x61ssetId\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x0b\n\t_asset_id\"\x96\x01\n\x14GetFileAccessUrlsReq\x12\'\n\tasset_ids\x18\x01 \x03(\tB\n\xbaH\x07\x92\x01\x04\x08\x01\x18\x01R\x08\x61ssetIds\x12I\n\x07purpose\x18\x02 \x01(\x0e\x32\x1b.hi.media.FileAccessPurposeB\r\xbaH\n\x82\x01\x04\x10\x01 \x00\xc8\x01\x01H\x00R\x07purpose\x88\x01\x01\x42\n\n\x08_purpose\"\xa3\x01\n\rFileAccessUrl\x12$\n\x08\x61sset_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x07\x61ssetId\x88\x01\x01\x12\x1b\n\x03url\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x03url\x88\x01\x01\x12&\n\texpire_at\x18\x03 \x01(\x03\x42\x04\x90\xb5\x18\x03H\x02R\x08\x65xpireAt\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x0b\n\t_asset_idB\x06\n\x04_urlB\x0c\n\n_expire_at\"R\n\x15GetFileAccessUrlsResp\x12\x33\n\x05\x66iles\x18\x01 \x03(\x0b\x32\x17.hi.media.FileAccessUrlB\x04\x90\xb5\x18\x03R\x05\x66iles:\x04\x98\xb5\x18\x03\"\xd7\x01\n\x12UploadFileMetadata\x12\x35\n\x0e\x63lient_file_id\x18\x01 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x00R\x0c\x63lientFileId\x88\x01\x01\x12+\n\x08\x66ilename\x18\x02 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x01R\x08\x66ilename\x88\x01\x01\x12.\n\nsize_bytes\x18\x03 \x01(\x04\x42\n\xbaH\x07\x32\x02 \x00\xc8\x01\x01H\x02R\tsizeBytes\x88\x01\x01\x42\x11\n\x0f_client_file_idB\x0b\n\t_filenameB\r\n\x0b_size_bytes\"\x8d\x01\n\x0eUploadMetadata\x12.\n\nrequest_id\x18\x01 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x00R\trequestId\x88\x01\x01\x12<\n\x05\x66iles\x18\x02 \x03(\x0b\x32\x1c.hi.media.UploadFileMetadataB\x08\xbaH\x05\x92\x01\x02\x08\x01R\x05\x66ilesB\r\n\x0b_request_id\"\xf7\x03\n\x10UploadFileResult\x12/\n\x0e\x63lient_file_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x0c\x63lientFileId\x88\x01\x01\x12%\n\x08\x66ilename\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x08\x66ilename\x88\x01\x01\x12=\n\x06status\x18\x03 \x01(\x0e\x32\x1a.hi.media.UploadFileStatusB\x04\x90\xb5\x18\x03H\x02R\x06status\x88\x01\x01\x12$\n\x08\x61sset_id\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x07\x61ssetId\x88\x01\x01\x12&\n\tmime_type\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x04R\x08mimeType\x88\x01\x01\x12(\n\nsize_bytes\x18\x06 \x01(\x04\x42\x04\x90\xb5\x18\x03H\x05R\tsizeBytes\x88\x01\x01\x12(\n\nerror_code\x18\x07 \x01(\tB\x04\x90\xb5\x18\x03H\x06R\terrorCode\x88\x01\x01\x12.\n\rerror_message\x18\x08 \x01(\tB\x04\x90\xb5\x18\x03H\x07R\x0c\x65rrorMessage\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x11\n\x0f_client_file_idB\x0b\n\t_filenameB\t\n\x07_statusB\x0b\n\t_asset_idB\x0c\n\n_mime_typeB\r\n\x0b_size_bytesB\r\n\x0b_error_codeB\x10\n\x0e_error_message\"\xd0\x01\n\x11UploadBatchResult\x12(\n\nrequest_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\trequestId\x88\x01\x01\x12\x39\n\x06status\x18\x02 \x01(\x0e\x32\x16.hi.media.UploadStatusB\x04\x90\xb5\x18\x03H\x01R\x06status\x88\x01\x01\x12\x36\n\x05\x66iles\x18\x03 \x03(\x0b\x32\x1a.hi.media.UploadFileResultB\x04\x90\xb5\x18\x03R\x05\x66iles:\x04\x98\xb5\x18\x03\x42\r\n\x0b_request_idB\t\n\x07_status\"S\n\x12GetUploadResultReq\x12.\n\nrequest_id\x18\x01 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x00R\trequestId\x88\x01\x01\x42\r\n\x0b_request_id\"V\n\x13GetUploadResultResp\x12\x39\n\x06result\x18\x01 \x01(\x0b\x32\x1b.hi.media.UploadBatchResultB\x04\x90\xb5\x18\x03R\x06result:\x04\x98\xb5\x18\x03*\\\n\nFileSource\x12\x1b\n\x17\x46ILE_SOURCE_UNSPECIFIED\x10\x00\x12\x16\n\x12\x46ILE_SOURCE_UPLOAD\x10\x01\x12\x19\n\x15\x46ILE_SOURCE_GENERATED\x10\x02*\x9a\x01\n\x11\x46ileAccessPurpose\x12#\n\x1f\x46ILE_ACCESS_PURPOSE_UNSPECIFIED\x10\x00\x12\x1f\n\x1b\x46ILE_ACCESS_PURPOSE_PREVIEW\x10\x01\x12 \n\x1c\x46ILE_ACCESS_PURPOSE_DOWNLOAD\x10\x02\x12\x1d\n\x19\x46ILE_ACCESS_PURPOSE_COVER\x10\x03*h\n\x0cUploadStatus\x12\x1d\n\x19UPLOAD_STATUS_UNSPECIFIED\x10\x00\x12\x1c\n\x18UPLOAD_STATUS_PROCESSING\x10\x01\x12\x1b\n\x17UPLOAD_STATUS_COMPLETED\x10\x02*\xb8\x01\n\x10UploadFileStatus\x12\"\n\x1eUPLOAD_FILE_STATUS_UNSPECIFIED\x10\x00\x12\x1e\n\x1aUPLOAD_FILE_STATUS_PENDING\x10\x01\x12!\n\x1dUPLOAD_FILE_STATUS_PROCESSING\x10\x02\x12\x1e\n\x1aUPLOAD_FILE_STATUS_SUCCESS\x10\x03\x12\x1d\n\x19UPLOAD_FILE_STATUS_FAILED\x10\x04\x32\xba\x02\n\x04\x46ile\x12U\n\x0fGetUploadResult\x12\x1c.hi.media.GetUploadResultReq\x1a\x1d.hi.media.GetUploadResultResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n\x04List\x12\x16.hi.media.ListFilesReq\x1a\x17.hi.media.ListFilesResp\"\x05\x8a\xb5\x18\x01\x02\x12\x42\n\x06\x44\x65lete\x12\x17.hi.media.DeleteFileReq\x1a\x18.hi.media.DeleteFileResp\"\x05\x8a\xb5\x18\x01\x02\x12W\n\rGetAccessUrls\x12\x1e.hi.media.GetFileAccessUrlsReq\x1a\x1f.hi.media.GetFileAccessUrlsResp\"\x05\x8a\xb5\x18\x01\x02\x42,Z*github.com/HiWorld-56/hi-proto/go/hi/mediab\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -50,6 +50,8 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_FILESUMMARY'].fields_by_name['source']._serialized_options = b'\220\265\030\003'
   _globals['_FILESUMMARY'].fields_by_name['created_at']._loaded_options = None
   _globals['_FILESUMMARY'].fields_by_name['created_at']._serialized_options = b'\220\265\030\003'
+  _globals['_FILESUMMARY'].fields_by_name['has_cover']._loaded_options = None
+  _globals['_FILESUMMARY'].fields_by_name['has_cover']._serialized_options = b'\220\265\030\003'
   _globals['_FILESUMMARY']._loaded_options = None
   _globals['_FILESUMMARY']._serialized_options = b'\230\265\030\003'
   _globals['_LISTFILESRESP'].fields_by_name['total']._loaded_options = None
@@ -130,42 +132,42 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_FILE'].methods_by_name['Delete']._serialized_options = b'\212\265\030\001\002'
   _globals['_FILE'].methods_by_name['GetAccessUrls']._loaded_options = None
   _globals['_FILE'].methods_by_name['GetAccessUrls']._serialized_options = b'\212\265\030\001\002'
-  _globals['_FILESOURCE']._serialized_start=2677
-  _globals['_FILESOURCE']._serialized_end=2769
-  _globals['_FILEACCESSPURPOSE']._serialized_start=2771
-  _globals['_FILEACCESSPURPOSE']._serialized_end=2894
-  _globals['_UPLOADSTATUS']._serialized_start=2896
-  _globals['_UPLOADSTATUS']._serialized_end=3000
-  _globals['_UPLOADFILESTATUS']._serialized_start=3003
-  _globals['_UPLOADFILESTATUS']._serialized_end=3187
+  _globals['_FILESOURCE']._serialized_start=2731
+  _globals['_FILESOURCE']._serialized_end=2823
+  _globals['_FILEACCESSPURPOSE']._serialized_start=2826
+  _globals['_FILEACCESSPURPOSE']._serialized_end=2980
+  _globals['_UPLOADSTATUS']._serialized_start=2982
+  _globals['_UPLOADSTATUS']._serialized_end=3086
+  _globals['_UPLOADFILESTATUS']._serialized_start=3089
+  _globals['_UPLOADFILESTATUS']._serialized_end=3273
   _globals['_FILESUMMARY']._serialized_start=119
-  _globals['_FILESUMMARY']._serialized_end=555
-  _globals['_LISTFILESREQ']._serialized_start=558
-  _globals['_LISTFILESREQ']._serialized_end=754
-  _globals['_LISTFILESRESP']._serialized_start=756
-  _globals['_LISTFILESRESP']._serialized_end=871
-  _globals['_DELETEFILEREQ']._serialized_start=873
-  _globals['_DELETEFILEREQ']._serialized_end=945
-  _globals['_DELETEFILERESP']._serialized_start=947
-  _globals['_DELETEFILERESP']._serialized_end=1020
-  _globals['_GETFILEACCESSURLSREQ']._serialized_start=1023
-  _globals['_GETFILEACCESSURLSREQ']._serialized_end=1173
-  _globals['_FILEACCESSURL']._serialized_start=1176
-  _globals['_FILEACCESSURL']._serialized_end=1339
-  _globals['_GETFILEACCESSURLSRESP']._serialized_start=1341
-  _globals['_GETFILEACCESSURLSRESP']._serialized_end=1423
-  _globals['_UPLOADFILEMETADATA']._serialized_start=1426
-  _globals['_UPLOADFILEMETADATA']._serialized_end=1641
-  _globals['_UPLOADMETADATA']._serialized_start=1644
-  _globals['_UPLOADMETADATA']._serialized_end=1785
-  _globals['_UPLOADFILERESULT']._serialized_start=1788
-  _globals['_UPLOADFILERESULT']._serialized_end=2291
-  _globals['_UPLOADBATCHRESULT']._serialized_start=2294
-  _globals['_UPLOADBATCHRESULT']._serialized_end=2502
-  _globals['_GETUPLOADRESULTREQ']._serialized_start=2504
-  _globals['_GETUPLOADRESULTREQ']._serialized_end=2587
-  _globals['_GETUPLOADRESULTRESP']._serialized_start=2589
-  _globals['_GETUPLOADRESULTRESP']._serialized_end=2675
-  _globals['_FILE']._serialized_start=3190
-  _globals['_FILE']._serialized_end=3504
+  _globals['_FILESUMMARY']._serialized_end=609
+  _globals['_LISTFILESREQ']._serialized_start=612
+  _globals['_LISTFILESREQ']._serialized_end=808
+  _globals['_LISTFILESRESP']._serialized_start=810
+  _globals['_LISTFILESRESP']._serialized_end=925
+  _globals['_DELETEFILEREQ']._serialized_start=927
+  _globals['_DELETEFILEREQ']._serialized_end=999
+  _globals['_DELETEFILERESP']._serialized_start=1001
+  _globals['_DELETEFILERESP']._serialized_end=1074
+  _globals['_GETFILEACCESSURLSREQ']._serialized_start=1077
+  _globals['_GETFILEACCESSURLSREQ']._serialized_end=1227
+  _globals['_FILEACCESSURL']._serialized_start=1230
+  _globals['_FILEACCESSURL']._serialized_end=1393
+  _globals['_GETFILEACCESSURLSRESP']._serialized_start=1395
+  _globals['_GETFILEACCESSURLSRESP']._serialized_end=1477
+  _globals['_UPLOADFILEMETADATA']._serialized_start=1480
+  _globals['_UPLOADFILEMETADATA']._serialized_end=1695
+  _globals['_UPLOADMETADATA']._serialized_start=1698
+  _globals['_UPLOADMETADATA']._serialized_end=1839
+  _globals['_UPLOADFILERESULT']._serialized_start=1842
+  _globals['_UPLOADFILERESULT']._serialized_end=2345
+  _globals['_UPLOADBATCHRESULT']._serialized_start=2348
+  _globals['_UPLOADBATCHRESULT']._serialized_end=2556
+  _globals['_GETUPLOADRESULTREQ']._serialized_start=2558
+  _globals['_GETUPLOADRESULTREQ']._serialized_end=2641
+  _globals['_GETUPLOADRESULTRESP']._serialized_start=2643
+  _globals['_GETUPLOADRESULTRESP']._serialized_end=2729
+  _globals['_FILE']._serialized_start=3276
+  _globals['_FILE']._serialized_end=3590
 # @@protoc_insertion_point(module_scope)

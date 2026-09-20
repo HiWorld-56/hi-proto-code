@@ -23,7 +23,7 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 export 'file.pbenum.dart';
 
-/// 本人可用资产摘要；size_bytes 为字节，created_at 为 Unix 秒。
+/// 本人可用资产摘要；size_bytes 为原文件字节数（不含封面），created_at 为 Unix 秒。
 class FileSummary extends $pb.GeneratedMessage {
   factory FileSummary({
     $core.String? assetId,
@@ -33,6 +33,7 @@ class FileSummary extends $pb.GeneratedMessage {
     $fixnum.Int64? sizeBytes,
     FileSource? source,
     $fixnum.Int64? createdAt,
+    $core.bool? hasCover,
   }) {
     final result = create();
     if (assetId != null) result.assetId = assetId;
@@ -42,6 +43,7 @@ class FileSummary extends $pb.GeneratedMessage {
     if (sizeBytes != null) result.sizeBytes = sizeBytes;
     if (source != null) result.source = source;
     if (createdAt != null) result.createdAt = createdAt;
+    if (hasCover != null) result.hasCover = hasCover;
     return result;
   }
 
@@ -69,6 +71,7 @@ class FileSummary extends $pb.GeneratedMessage {
     ..aE<FileSource>(6, _omitFieldNames ? '' : 'source',
         enumValues: FileSource.values)
     ..aInt64(7, _omitFieldNames ? '' : 'createdAt')
+    ..aOB(8, _omitFieldNames ? '' : 'hasCover')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -152,6 +155,17 @@ class FileSummary extends $pb.GeneratedMessage {
   $core.bool hasCreatedAt() => $_has(6);
   @$pb.TagNumber(7)
   void clearCreatedAt() => $_clearField(7);
+
+  /// 是否有已保存且可访问的视频封面；为 true 时用本资产 ID 申请 COVER 地址。
+  /// 用户上传图片、历史未补图视频及封面生成失败的视频为 false。
+  @$pb.TagNumber(8)
+  $core.bool get hasCover => $_getBF(7);
+  @$pb.TagNumber(8)
+  set hasCover($core.bool value) => $_setBool(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasHasCover() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearHasCover() => $_clearField(8);
 }
 
 /// 分页查询本人 available 资产，不传筛选字段表示不过滤。

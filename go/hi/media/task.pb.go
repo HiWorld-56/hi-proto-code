@@ -663,7 +663,10 @@ type TaskOutput struct {
 	// 实际产物宽度，单位像素；读取已保存的视频探测结果，不根据生成参数推算。
 	Width *uint32 `protobuf:"varint,8,opt,name=width,proto3,oneof" json:"width,omitempty"`
 	// 实际产物高度，单位像素；与 width 一同返回，查询时不重新探测视频。
-	Height        *uint32 `protobuf:"varint,9,opt,name=height,proto3,oneof" json:"height,omitempty"`
+	Height *uint32 `protobuf:"varint,9,opt,name=height,proto3,oneof" json:"height,omitempty"`
+	// 资产可用且有已保存的视频封面；用 asset_id 申请 FILE_ACCESS_PURPOSE_COVER 地址。
+	// 无封面或资产不可用时为 false，不影响视频任务的成功状态；size_bytes 不含封面。
+	HasCover      *bool `protobuf:"varint,10,opt,name=has_cover,json=hasCover,proto3,oneof" json:"has_cover,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -759,6 +762,13 @@ func (x *TaskOutput) GetHeight() uint32 {
 		return *x.Height
 	}
 	return 0
+}
+
+func (x *TaskOutput) GetHasCover() bool {
+	if x != nil && x.HasCover != nil {
+		return *x.HasCover
+	}
+	return false
 }
 
 // 任务摘要，不暴露模型真实名、工作流对象键或上游 prompt_id。
@@ -1632,7 +1642,7 @@ const file_hi_media_task_proto_rawDesc = "" +
 	"\r_aspect_ratioB\r\n" +
 	"\v_megapixelsB\x13\n" +
 	"\x11_duration_secondsB\r\n" +
-	"\v_frame_rate\"\x82\x04\n" +
+	"\v_frame_rate\"\xb8\x04\n" +
 	"\n" +
 	"TaskOutput\x12$\n" +
 	"\basset_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\aassetId\x88\x01\x01\x12%\n" +
@@ -1646,7 +1656,9 @@ const file_hi_media_task_proto_rawDesc = "" +
 	"durationMs\x88\x01\x01\x12'\n" +
 	"\tavailable\x18\a \x01(\bB\x04\x90\xb5\x18\x03H\x06R\tavailable\x88\x01\x01\x12\x1f\n" +
 	"\x05width\x18\b \x01(\rB\x04\x90\xb5\x18\x03H\aR\x05width\x88\x01\x01\x12!\n" +
-	"\x06height\x18\t \x01(\rB\x04\x90\xb5\x18\x03H\bR\x06height\x88\x01\x01:\x04\x98\xb5\x18\x03B\v\n" +
+	"\x06height\x18\t \x01(\rB\x04\x90\xb5\x18\x03H\bR\x06height\x88\x01\x01\x12&\n" +
+	"\thas_cover\x18\n" +
+	" \x01(\bB\x04\x90\xb5\x18\x03H\tR\bhasCover\x88\x01\x01:\x04\x98\xb5\x18\x03B\v\n" +
 	"\t_asset_idB\v\n" +
 	"\t_filenameB\r\n" +
 	"\v_media_typeB\f\n" +
@@ -1657,7 +1669,9 @@ const file_hi_media_task_proto_rawDesc = "" +
 	"\n" +
 	"_availableB\b\n" +
 	"\x06_widthB\t\n" +
-	"\a_height\"\xcf\n" +
+	"\a_heightB\f\n" +
+	"\n" +
+	"_has_cover\"\xcf\n" +
 	"\n" +
 	"\vTaskSummary\x12\"\n" +
 	"\atask_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x06taskId\x88\x01\x01\x12:\n" +

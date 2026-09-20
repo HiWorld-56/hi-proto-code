@@ -645,6 +645,7 @@ class TaskOutput extends $pb.GeneratedMessage {
     $core.bool? available,
     $core.int? width,
     $core.int? height,
+    $core.bool? hasCover,
   }) {
     final result = create();
     if (assetId != null) result.assetId = assetId;
@@ -656,6 +657,7 @@ class TaskOutput extends $pb.GeneratedMessage {
     if (available != null) result.available = available;
     if (width != null) result.width = width;
     if (height != null) result.height = height;
+    if (hasCover != null) result.hasCover = hasCover;
     return result;
   }
 
@@ -684,6 +686,7 @@ class TaskOutput extends $pb.GeneratedMessage {
     ..aOB(7, _omitFieldNames ? '' : 'available')
     ..aI(8, _omitFieldNames ? '' : 'width', fieldType: $pb.PbFieldType.OU3)
     ..aI(9, _omitFieldNames ? '' : 'height', fieldType: $pb.PbFieldType.OU3)
+    ..aOB(10, _omitFieldNames ? '' : 'hasCover')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -787,6 +790,17 @@ class TaskOutput extends $pb.GeneratedMessage {
   $core.bool hasHeight() => $_has(8);
   @$pb.TagNumber(9)
   void clearHeight() => $_clearField(9);
+
+  /// 资产可用且有已保存的视频封面；用 asset_id 申请 FILE_ACCESS_PURPOSE_COVER 地址。
+  /// 无封面或资产不可用时为 false，不影响视频任务的成功状态；size_bytes 不含封面。
+  @$pb.TagNumber(10)
+  $core.bool get hasCover => $_getBF(9);
+  @$pb.TagNumber(10)
+  set hasCover($core.bool value) => $_setBool(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasHasCover() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearHasCover() => $_clearField(10);
 }
 
 /// 任务摘要，不暴露模型真实名、工作流对象键或上游 prompt_id。
