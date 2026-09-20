@@ -11,6 +11,7 @@ import (
 	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -1383,6 +1384,51 @@ func (x *CancelTaskResp) GetStatusMessage() string {
 	return ""
 }
 
+// 从本人任务历史中删除一个已经失败的普通生成任务。
+type DeleteTaskReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TaskId        *string                `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3,oneof" json:"task_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteTaskReq) Reset() {
+	*x = DeleteTaskReq{}
+	mi := &file_hi_media_task_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteTaskReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteTaskReq) ProtoMessage() {}
+
+func (x *DeleteTaskReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_media_task_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteTaskReq.ProtoReflect.Descriptor instead.
+func (*DeleteTaskReq) Descriptor() ([]byte, []int) {
+	return file_hi_media_task_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *DeleteTaskReq) GetTaskId() string {
+	if x != nil && x.TaskId != nil {
+		return *x.TaskId
+	}
+	return ""
+}
+
 // 恢复本人 can_recover_save=true 的普通任务；每个任务最多受理一次，不重新执行 GPU。
 type RecoverSaveTaskReq struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -1395,7 +1441,7 @@ type RecoverSaveTaskReq struct {
 
 func (x *RecoverSaveTaskReq) Reset() {
 	*x = RecoverSaveTaskReq{}
-	mi := &file_hi_media_task_proto_msgTypes[15]
+	mi := &file_hi_media_task_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1407,7 +1453,7 @@ func (x *RecoverSaveTaskReq) String() string {
 func (*RecoverSaveTaskReq) ProtoMessage() {}
 
 func (x *RecoverSaveTaskReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_task_proto_msgTypes[15]
+	mi := &file_hi_media_task_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1420,7 +1466,7 @@ func (x *RecoverSaveTaskReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RecoverSaveTaskReq.ProtoReflect.Descriptor instead.
 func (*RecoverSaveTaskReq) Descriptor() ([]byte, []int) {
-	return file_hi_media_task_proto_rawDescGZIP(), []int{15}
+	return file_hi_media_task_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *RecoverSaveTaskReq) GetRequestId() string {
@@ -1449,7 +1495,7 @@ type RecoverSaveTaskResp struct {
 
 func (x *RecoverSaveTaskResp) Reset() {
 	*x = RecoverSaveTaskResp{}
-	mi := &file_hi_media_task_proto_msgTypes[16]
+	mi := &file_hi_media_task_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1461,7 +1507,7 @@ func (x *RecoverSaveTaskResp) String() string {
 func (*RecoverSaveTaskResp) ProtoMessage() {}
 
 func (x *RecoverSaveTaskResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_task_proto_msgTypes[16]
+	mi := &file_hi_media_task_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1474,7 +1520,7 @@ func (x *RecoverSaveTaskResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RecoverSaveTaskResp.ProtoReflect.Descriptor instead.
 func (*RecoverSaveTaskResp) Descriptor() ([]byte, []int) {
-	return file_hi_media_task_proto_rawDescGZIP(), []int{16}
+	return file_hi_media_task_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *RecoverSaveTaskResp) GetTaskId() string {
@@ -1502,7 +1548,7 @@ var File_hi_media_task_proto protoreflect.FileDescriptor
 
 const file_hi_media_task_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/media/task.proto\x12\bhi.media\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\x90\x01\n" +
+	"\x13hi/media/task.proto\x12\bhi.media\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\x90\x01\n" +
 	"\x0fVideoResolution\x12/\n" +
 	"\faspect_ratio\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x00R\vaspectRatio\x88\x01\x01\x12,\n" +
 	"\n" +
@@ -1701,7 +1747,12 @@ const file_hi_media_task_proto_rawDesc = "" +
 	"\n" +
 	"\b_task_idB\t\n" +
 	"\a_statusB\x11\n" +
-	"\x0f_status_message\"\x89\x01\n" +
+	"\x0f_status_message\"E\n" +
+	"\rDeleteTaskReq\x12(\n" +
+	"\atask_id\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\x06taskId\x88\x01\x01B\n" +
+	"\n" +
+	"\b_task_id\"\x89\x01\n" +
 	"\x12RecoverSaveTaskReq\x12.\n" +
 	"\n" +
 	"request_id\x18\x01 \x01(\tB\n" +
@@ -1736,13 +1787,14 @@ const file_hi_media_task_proto_rawDesc = "" +
 	"\tMediaType\x12\x1a\n" +
 	"\x16MEDIA_TYPE_UNSPECIFIED\x10\x00\x12\x14\n" +
 	"\x10MEDIA_TYPE_IMAGE\x10\x01\x12\x14\n" +
-	"\x10MEDIA_TYPE_VIDEO\x10\x022\xce\x03\n" +
+	"\x10MEDIA_TYPE_VIDEO\x10\x022\x90\x04\n" +
 	"\x04Task\x12Z\n" +
 	"\x12CreateImageToVideo\x12#.hi.media.CreateImageToVideoTaskReq\x1a\x18.hi.media.CreateTaskResp\"\x05\x8a\xb5\x18\x01\x02\x12X\n" +
 	"\x11CreateTextToVideo\x12\".hi.media.CreateTextToVideoTaskReq\x1a\x18.hi.media.CreateTaskResp\"\x05\x8a\xb5\x18\x01\x02\x129\n" +
 	"\x03Get\x12\x14.hi.media.GetTaskReq\x1a\x15.hi.media.GetTaskResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n" +
 	"\x04List\x12\x16.hi.media.ListTasksReq\x1a\x17.hi.media.ListTasksResp\"\x05\x8a\xb5\x18\x01\x02\x12B\n" +
-	"\x06Cancel\x12\x17.hi.media.CancelTaskReq\x1a\x18.hi.media.CancelTaskResp\"\x05\x8a\xb5\x18\x01\x02\x12Q\n" +
+	"\x06Cancel\x12\x17.hi.media.CancelTaskReq\x1a\x18.hi.media.CancelTaskResp\"\x05\x8a\xb5\x18\x01\x02\x12@\n" +
+	"\x06Delete\x12\x17.hi.media.DeleteTaskReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12Q\n" +
 	"\vRecoverSave\x12\x1c.hi.media.RecoverSaveTaskReq\x1a\x1d.hi.media.RecoverSaveTaskResp\"\x05\x8a\xb5\x18\x01\x02B\x86\x01\n" +
 	"\fcom.hi.mediaB\tTaskProtoP\x01Z*github.com/HiWorld-56/hi-proto/go/hi/media\xa2\x02\x03HMX\xaa\x02\bHi.Media\xca\x02\bHi\\Media\xe2\x02\x14Hi\\Media\\GPBMetadata\xea\x02\tHi::Mediab\x06proto3"
 
@@ -1759,7 +1811,7 @@ func file_hi_media_task_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_media_task_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_hi_media_task_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
+var file_hi_media_task_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_hi_media_task_proto_goTypes = []any{
 	(TaskPurpose)(0),                  // 0: hi.media.TaskPurpose
 	(TaskStatus)(0),                   // 1: hi.media.TaskStatus
@@ -1779,9 +1831,11 @@ var file_hi_media_task_proto_goTypes = []any{
 	(*ListTasksResp)(nil),             // 15: hi.media.ListTasksResp
 	(*CancelTaskReq)(nil),             // 16: hi.media.CancelTaskReq
 	(*CancelTaskResp)(nil),            // 17: hi.media.CancelTaskResp
-	(*RecoverSaveTaskReq)(nil),        // 18: hi.media.RecoverSaveTaskReq
-	(*RecoverSaveTaskResp)(nil),       // 19: hi.media.RecoverSaveTaskResp
-	(*hi.Pagination)(nil),             // 20: hi.Pagination
+	(*DeleteTaskReq)(nil),             // 18: hi.media.DeleteTaskReq
+	(*RecoverSaveTaskReq)(nil),        // 19: hi.media.RecoverSaveTaskReq
+	(*RecoverSaveTaskResp)(nil),       // 20: hi.media.RecoverSaveTaskResp
+	(*hi.Pagination)(nil),             // 21: hi.Pagination
+	(*emptypb.Empty)(nil),             // 22: google.protobuf.Empty
 }
 var file_hi_media_task_proto_depIdxs = []int32{
 	3,  // 0: hi.media.CreateImageToVideoTaskReq.resolution:type_name -> hi.media.VideoResolution
@@ -1794,7 +1848,7 @@ var file_hi_media_task_proto_depIdxs = []int32{
 	7,  // 7: hi.media.TaskDetail.image_to_video:type_name -> hi.media.ImageToVideoTaskParams
 	8,  // 8: hi.media.TaskDetail.text_to_video:type_name -> hi.media.TextToVideoTaskParams
 	11, // 9: hi.media.GetTaskResp.task:type_name -> hi.media.TaskDetail
-	20, // 10: hi.media.ListTasksReq.pagination:type_name -> hi.Pagination
+	21, // 10: hi.media.ListTasksReq.pagination:type_name -> hi.Pagination
 	1,  // 11: hi.media.ListTasksReq.statuses:type_name -> hi.media.TaskStatus
 	10, // 12: hi.media.ListTasksResp.tasks:type_name -> hi.media.TaskSummary
 	1,  // 13: hi.media.CancelTaskResp.status:type_name -> hi.media.TaskStatus
@@ -1804,15 +1858,17 @@ var file_hi_media_task_proto_depIdxs = []int32{
 	12, // 17: hi.media.Task.Get:input_type -> hi.media.GetTaskReq
 	14, // 18: hi.media.Task.List:input_type -> hi.media.ListTasksReq
 	16, // 19: hi.media.Task.Cancel:input_type -> hi.media.CancelTaskReq
-	18, // 20: hi.media.Task.RecoverSave:input_type -> hi.media.RecoverSaveTaskReq
-	6,  // 21: hi.media.Task.CreateImageToVideo:output_type -> hi.media.CreateTaskResp
-	6,  // 22: hi.media.Task.CreateTextToVideo:output_type -> hi.media.CreateTaskResp
-	13, // 23: hi.media.Task.Get:output_type -> hi.media.GetTaskResp
-	15, // 24: hi.media.Task.List:output_type -> hi.media.ListTasksResp
-	17, // 25: hi.media.Task.Cancel:output_type -> hi.media.CancelTaskResp
-	19, // 26: hi.media.Task.RecoverSave:output_type -> hi.media.RecoverSaveTaskResp
-	21, // [21:27] is the sub-list for method output_type
-	15, // [15:21] is the sub-list for method input_type
+	18, // 20: hi.media.Task.Delete:input_type -> hi.media.DeleteTaskReq
+	19, // 21: hi.media.Task.RecoverSave:input_type -> hi.media.RecoverSaveTaskReq
+	6,  // 22: hi.media.Task.CreateImageToVideo:output_type -> hi.media.CreateTaskResp
+	6,  // 23: hi.media.Task.CreateTextToVideo:output_type -> hi.media.CreateTaskResp
+	13, // 24: hi.media.Task.Get:output_type -> hi.media.GetTaskResp
+	15, // 25: hi.media.Task.List:output_type -> hi.media.ListTasksResp
+	17, // 26: hi.media.Task.Cancel:output_type -> hi.media.CancelTaskResp
+	22, // 27: hi.media.Task.Delete:output_type -> google.protobuf.Empty
+	20, // 28: hi.media.Task.RecoverSave:output_type -> hi.media.RecoverSaveTaskResp
+	22, // [22:29] is the sub-list for method output_type
+	15, // [15:22] is the sub-list for method input_type
 	15, // [15:15] is the sub-list for extension type_name
 	15, // [15:15] is the sub-list for extension extendee
 	0,  // [0:15] is the sub-list for field type_name
@@ -1842,13 +1898,14 @@ func file_hi_media_task_proto_init() {
 	file_hi_media_task_proto_msgTypes[14].OneofWrappers = []any{}
 	file_hi_media_task_proto_msgTypes[15].OneofWrappers = []any{}
 	file_hi_media_task_proto_msgTypes[16].OneofWrappers = []any{}
+	file_hi_media_task_proto_msgTypes[17].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_media_task_proto_rawDesc), len(file_hi_media_task_proto_rawDesc)),
 			NumEnums:      3,
-			NumMessages:   17,
+			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

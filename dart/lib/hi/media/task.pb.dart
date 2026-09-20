@@ -15,7 +15,7 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../common.pb.dart' as $1;
+import '../common.pb.dart' as $2;
 import 'task.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -1323,7 +1323,7 @@ class GetTaskResp extends $pb.GeneratedMessage {
 /// 分页查询本人任务，可按功能与状态过滤。
 class ListTasksReq extends $pb.GeneratedMessage {
   factory ListTasksReq({
-    $1.Pagination? pagination,
+    $2.Pagination? pagination,
     $core.String? functionId,
     $core.Iterable<TaskStatus>? statuses,
   }) {
@@ -1347,8 +1347,8 @@ class ListTasksReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'ListTasksReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
-    ..aOM<$1.Pagination>(1, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $1.Pagination.create)
+    ..aOM<$2.Pagination>(1, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $2.Pagination.create)
     ..aOS(2, _omitFieldNames ? '' : 'functionId')
     ..pc<TaskStatus>(3, _omitFieldNames ? '' : 'statuses', $pb.PbFieldType.KE,
         valueOf: TaskStatus.valueOf,
@@ -1376,15 +1376,15 @@ class ListTasksReq extends $pb.GeneratedMessage {
   static ListTasksReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $1.Pagination get pagination => $_getN(0);
+  $2.Pagination get pagination => $_getN(0);
   @$pb.TagNumber(1)
-  set pagination($1.Pagination value) => $_setField(1, value);
+  set pagination($2.Pagination value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasPagination() => $_has(0);
   @$pb.TagNumber(1)
   void clearPagination() => $_clearField(1);
   @$pb.TagNumber(1)
-  $1.Pagination ensurePagination() => $_ensure(0);
+  $2.Pagination ensurePagination() => $_ensure(0);
 
   /// 不传表示不过滤；传入 Function.List 返回的功能 ID。
   @$pb.TagNumber(2)
@@ -1595,6 +1595,61 @@ class CancelTaskResp extends $pb.GeneratedMessage {
   $core.bool hasStatusMessage() => $_has(2);
   @$pb.TagNumber(3)
   void clearStatusMessage() => $_clearField(3);
+}
+
+/// 从本人任务历史中删除一个已经失败的普通生成任务。
+class DeleteTaskReq extends $pb.GeneratedMessage {
+  factory DeleteTaskReq({
+    $core.String? taskId,
+  }) {
+    final result = create();
+    if (taskId != null) result.taskId = taskId;
+    return result;
+  }
+
+  DeleteTaskReq._();
+
+  factory DeleteTaskReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory DeleteTaskReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DeleteTaskReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'taskId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeleteTaskReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeleteTaskReq copyWith(void Function(DeleteTaskReq) updates) =>
+      super.copyWith((message) => updates(message as DeleteTaskReq))
+          as DeleteTaskReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static DeleteTaskReq create() => DeleteTaskReq._();
+  @$core.override
+  DeleteTaskReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static DeleteTaskReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DeleteTaskReq>(create);
+  static DeleteTaskReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get taskId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set taskId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasTaskId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTaskId() => $_clearField(1);
 }
 
 /// 恢复本人 can_recover_save=true 的普通任务；每个任务最多受理一次，不重新执行 GPU。

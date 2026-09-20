@@ -1101,6 +1101,31 @@ final $typed_data.Uint8List cancelTaskRespDescriptor = $convert.base64Decode(
     'Cg5zdGF0dXNfbWVzc2FnZRgDIAEoCUIEkLUYA0gCUg1zdGF0dXNNZXNzYWdliAEBOgSYtRgDQg'
     'oKCF90YXNrX2lkQgkKB19zdGF0dXNCEQoPX3N0YXR1c19tZXNzYWdl');
 
+@$core.Deprecated('Use deleteTaskReqDescriptor instead')
+const DeleteTaskReq$json = {
+  '1': 'DeleteTaskReq',
+  '2': [
+    {
+      '1': 'task_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'taskId',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_task_id'},
+  ],
+};
+
+/// Descriptor for `DeleteTaskReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List deleteTaskReqDescriptor = $convert.base64Decode(
+    'Cg1EZWxldGVUYXNrUmVxEigKB3Rhc2tfaWQYASABKAlCCrpIB8gBAXICEAFIAFIGdGFza0lkiA'
+    'EBQgoKCF90YXNrX2lk');
+
 @$core.Deprecated('Use recoverSaveTaskReqDescriptor instead')
 const RecoverSaveTaskReq$json = {
   '1': 'RecoverSaveTaskReq',

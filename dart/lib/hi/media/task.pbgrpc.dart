@@ -15,6 +15,7 @@ import 'dart:core' as $core;
 
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
+import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $1;
 
 import 'task.pb.dart' as $0;
 
@@ -73,6 +74,14 @@ class TaskClient extends $grpc.Client {
     return $createUnaryCall(_$cancel, request, options: options);
   }
 
+  /// 仅允许删除本人已经失败的普通生成任务；重复删除幂等成功。
+  $grpc.ResponseFuture<$1.Empty> delete(
+    $0.DeleteTaskReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$delete, request, options: options);
+  }
+
   /// 恢复保存复用原任务，不检查存储额度或未完成任务上限，只受保存并发限制。
   $grpc.ResponseFuture<$0.RecoverSaveTaskResp> recoverSave(
     $0.RecoverSaveTaskReq request, {
@@ -106,6 +115,10 @@ class TaskClient extends $grpc.Client {
           '/hi.media.Task/Cancel',
           ($0.CancelTaskReq value) => value.writeToBuffer(),
           $0.CancelTaskResp.fromBuffer);
+  static final _$delete = $grpc.ClientMethod<$0.DeleteTaskReq, $1.Empty>(
+      '/hi.media.Task/Delete',
+      ($0.DeleteTaskReq value) => value.writeToBuffer(),
+      $1.Empty.fromBuffer);
   static final _$recoverSave =
       $grpc.ClientMethod<$0.RecoverSaveTaskReq, $0.RecoverSaveTaskResp>(
           '/hi.media.Task/RecoverSave',
@@ -157,6 +170,13 @@ abstract class TaskServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.CancelTaskReq.fromBuffer(value),
         ($0.CancelTaskResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.DeleteTaskReq, $1.Empty>(
+        'Delete',
+        delete_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.DeleteTaskReq.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
     $addMethod(
         $grpc.ServiceMethod<$0.RecoverSaveTaskReq, $0.RecoverSaveTaskResp>(
             'RecoverSave',
@@ -209,6 +229,14 @@ abstract class TaskServiceBase extends $grpc.Service {
 
   $async.Future<$0.CancelTaskResp> cancel(
       $grpc.ServiceCall call, $0.CancelTaskReq request);
+
+  $async.Future<$1.Empty> delete_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.DeleteTaskReq> $request) async {
+    return delete($call, await $request);
+  }
+
+  $async.Future<$1.Empty> delete(
+      $grpc.ServiceCall call, $0.DeleteTaskReq request);
 
   $async.Future<$0.RecoverSaveTaskResp> recoverSave_Pre($grpc.ServiceCall $call,
       $async.Future<$0.RecoverSaveTaskReq> $request) async {

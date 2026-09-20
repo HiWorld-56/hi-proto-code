@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -24,6 +25,7 @@ const (
 	Task_Get_FullMethodName                = "/hi.media.Task/Get"
 	Task_List_FullMethodName               = "/hi.media.Task/List"
 	Task_Cancel_FullMethodName             = "/hi.media.Task/Cancel"
+	Task_Delete_FullMethodName             = "/hi.media.Task/Delete"
 	Task_RecoverSave_FullMethodName        = "/hi.media.Task/RecoverSave"
 )
 
@@ -43,6 +45,8 @@ type TaskClient interface {
 	List(ctx context.Context, in *ListTasksReq, opts ...grpc.CallOption) (*ListTasksResp, error)
 	// 按 can_cancel 取消任务；相同任务重复请求返回当前状态。
 	Cancel(ctx context.Context, in *CancelTaskReq, opts ...grpc.CallOption) (*CancelTaskResp, error)
+	// 仅允许删除本人已经失败的普通生成任务；重复删除幂等成功。
+	Delete(ctx context.Context, in *DeleteTaskReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 恢复保存复用原任务，不检查存储额度或未完成任务上限，只受保存并发限制。
 	RecoverSave(ctx context.Context, in *RecoverSaveTaskReq, opts ...grpc.CallOption) (*RecoverSaveTaskResp, error)
 }
@@ -105,6 +109,16 @@ func (c *taskClient) Cancel(ctx context.Context, in *CancelTaskReq, opts ...grpc
 	return out, nil
 }
 
+func (c *taskClient) Delete(ctx context.Context, in *DeleteTaskReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Task_Delete_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *taskClient) RecoverSave(ctx context.Context, in *RecoverSaveTaskReq, opts ...grpc.CallOption) (*RecoverSaveTaskResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(RecoverSaveTaskResp)
@@ -131,6 +145,8 @@ type TaskServer interface {
 	List(context.Context, *ListTasksReq) (*ListTasksResp, error)
 	// 按 can_cancel 取消任务；相同任务重复请求返回当前状态。
 	Cancel(context.Context, *CancelTaskReq) (*CancelTaskResp, error)
+	// 仅允许删除本人已经失败的普通生成任务；重复删除幂等成功。
+	Delete(context.Context, *DeleteTaskReq) (*emptypb.Empty, error)
 	// 恢复保存复用原任务，不检查存储额度或未完成任务上限，只受保存并发限制。
 	RecoverSave(context.Context, *RecoverSaveTaskReq) (*RecoverSaveTaskResp, error)
 }
@@ -156,6 +172,9 @@ func (UnimplementedTaskServer) List(context.Context, *ListTasksReq) (*ListTasksR
 }
 func (UnimplementedTaskServer) Cancel(context.Context, *CancelTaskReq) (*CancelTaskResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Cancel not implemented")
+}
+func (UnimplementedTaskServer) Delete(context.Context, *DeleteTaskReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
 }
 func (UnimplementedTaskServer) RecoverSave(context.Context, *RecoverSaveTaskReq) (*RecoverSaveTaskResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method RecoverSave not implemented")
@@ -270,6 +289,24 @@ func _Task_Cancel_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Task_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteTaskReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TaskServer).Delete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Task_Delete_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TaskServer).Delete(ctx, req.(*DeleteTaskReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Task_RecoverSave_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RecoverSaveTaskReq)
 	if err := dec(in); err != nil {
@@ -314,6 +351,10 @@ var Task_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Cancel",
 			Handler:    _Task_Cancel_Handler,
+		},
+		{
+			MethodName: "Delete",
+			Handler:    _Task_Delete_Handler,
 		},
 		{
 			MethodName: "RecoverSave",

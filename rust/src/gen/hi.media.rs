@@ -438,6 +438,12 @@ pub struct CancelTaskResp {
     #[prost(string, optional, tag = "3")]
     pub status_message: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 从本人任务历史中删除一个已经失败的普通生成任务。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DeleteTaskReq {
+    #[prost(string, optional, tag = "1")]
+    pub task_id: ::core::option::Option<::prost::alloc::string::String>,
+}
 /// 恢复本人 can_recover_save=true 的普通任务；每个任务最多受理一次，不重新执行 GPU。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct RecoverSaveTaskReq {
@@ -756,6 +762,25 @@ pub mod task_client {
             let path = http::uri::PathAndQuery::from_static("/hi.media.Task/Cancel");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.media.Task", "Cancel"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 仅允许删除本人已经失败的普通生成任务；重复删除幂等成功。
+        pub async fn delete(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteTaskReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.media.Task/Delete");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.media.Task", "Delete"));
             self.inner.unary(req, path, codec).await
         }
         /// 恢复保存复用原任务，不检查存储额度或未完成任务上限，只受保存并发限制。

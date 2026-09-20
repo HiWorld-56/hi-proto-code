@@ -2,6 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
+from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi.media import task_pb2 as hi_dot_media_dot_task__pb2
 
 
@@ -39,6 +40,11 @@ class TaskStub(object):
                 '/hi.media.Task/Cancel',
                 request_serializer=hi_dot_media_dot_task__pb2.CancelTaskReq.SerializeToString,
                 response_deserializer=hi_dot_media_dot_task__pb2.CancelTaskResp.FromString,
+                _registered_method=True)
+        self.Delete = channel.unary_unary(
+                '/hi.media.Task/Delete',
+                request_serializer=hi_dot_media_dot_task__pb2.DeleteTaskReq.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
         self.RecoverSave = channel.unary_unary(
                 '/hi.media.Task/RecoverSave',
@@ -86,6 +92,13 @@ class TaskServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def Delete(self, request, context):
+        """仅允许删除本人已经失败的普通生成任务；重复删除幂等成功。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def RecoverSave(self, request, context):
         """恢复保存复用原任务，不检查存储额度或未完成任务上限，只受保存并发限制。
         """
@@ -120,6 +133,11 @@ def add_TaskServicer_to_server(servicer, server):
                     servicer.Cancel,
                     request_deserializer=hi_dot_media_dot_task__pb2.CancelTaskReq.FromString,
                     response_serializer=hi_dot_media_dot_task__pb2.CancelTaskResp.SerializeToString,
+            ),
+            'Delete': grpc.unary_unary_rpc_method_handler(
+                    servicer.Delete,
+                    request_deserializer=hi_dot_media_dot_task__pb2.DeleteTaskReq.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'RecoverSave': grpc.unary_unary_rpc_method_handler(
                     servicer.RecoverSave,
@@ -263,6 +281,33 @@ class Task(object):
             '/hi.media.Task/Cancel',
             hi_dot_media_dot_task__pb2.CancelTaskReq.SerializeToString,
             hi_dot_media_dot_task__pb2.CancelTaskResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def Delete(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.media.Task/Delete',
+            hi_dot_media_dot_task__pb2.DeleteTaskReq.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,
             insecure,
