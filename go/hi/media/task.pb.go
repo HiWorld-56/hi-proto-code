@@ -664,7 +664,7 @@ type TaskOutput struct {
 	Width *uint32 `protobuf:"varint,8,opt,name=width,proto3,oneof" json:"width,omitempty"`
 	// 实际产物高度，单位像素；与 width 一同返回，查询时不重新探测视频。
 	Height *uint32 `protobuf:"varint,9,opt,name=height,proto3,oneof" json:"height,omitempty"`
-	// 资产可用且有已保存的视频封面；用 asset_id 申请 FILE_ACCESS_PURPOSE_COVER 地址。
+	// 资产可用且有已保存的视频封面；用 asset_id 申请 COVER 地址时为 true 返回封面，否则返回原文件。
 	// 无封面或资产不可用时为 false，不影响视频任务的成功状态；size_bytes 不含封面。
 	HasCover      *bool `protobuf:"varint,10,opt,name=has_cover,json=hasCover,proto3,oneof" json:"has_cover,omitempty"`
 	unknownFields protoimpl.UnknownFields

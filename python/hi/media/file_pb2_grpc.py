@@ -76,8 +76,9 @@ class FileServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def GetAccessUrls(self, request, context):
-        """为本人 available 资产签发预览、下载或封面地址，不返回内部存储地址或对象键。
-        COVER 仍传视频资产 ID；封面不存在返回 NotFound，PREVIEW/DOWNLOAD 保持访问原文件。
+        """为本人 available 资产签发访问地址，不返回内部存储地址或对象键。
+        COVER 优先封面、无封面回退原文件，可混合批量请求；仍使用原资产 ID。
+        PREVIEW 始终直接访问原文件，DOWNLOAD 下载原文件。
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')

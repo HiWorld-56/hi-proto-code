@@ -791,7 +791,7 @@ class TaskOutput extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   void clearHeight() => $_clearField(9);
 
-  /// 资产可用且有已保存的视频封面；用 asset_id 申请 FILE_ACCESS_PURPOSE_COVER 地址。
+  /// 资产可用且有已保存的视频封面；用 asset_id 申请 COVER 地址时为 true 返回封面，否则返回原文件。
   /// 无封面或资产不可用时为 false，不影响视频任务的成功状态；size_bytes 不含封面。
   @$pb.TagNumber(10)
   $core.bool get hasCover => $_getBF(9);

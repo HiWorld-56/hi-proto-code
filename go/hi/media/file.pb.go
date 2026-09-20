@@ -78,9 +78,12 @@ type FileAccessPurpose int32
 
 const (
 	FileAccessPurpose_FILE_ACCESS_PURPOSE_UNSPECIFIED FileAccessPurpose = 0
-	FileAccessPurpose_FILE_ACCESS_PURPOSE_PREVIEW     FileAccessPurpose = 1
-	FileAccessPurpose_FILE_ACCESS_PURPOSE_DOWNLOAD    FileAccessPurpose = 2
-	// 访问生成视频的第一帧 JPEG 封面；不存在时返回 NotFound，不回退到原文件。
+	// 始终直接访问原文件，用于播放视频或查看原图。
+	FileAccessPurpose_FILE_ACCESS_PURPOSE_PREVIEW FileAccessPurpose = 1
+	// 下载原文件，响应使用下载文件名。
+	FileAccessPurpose_FILE_ACCESS_PURPOSE_DOWNLOAD FileAccessPurpose = 2
+	// 列表预览：有视频封面时返回第一帧 JPEG，否则返回原文件；图片返回原图。
+	// 缺少封面不报错；资产不存在、不可用或不属于本人时仍拒绝访问。
 	FileAccessPurpose_FILE_ACCESS_PURPOSE_COVER FileAccessPurpose = 3
 )
 
@@ -243,7 +246,7 @@ type FileSummary struct {
 	SizeBytes *uint64                `protobuf:"varint,5,opt,name=size_bytes,json=sizeBytes,proto3,oneof" json:"size_bytes,omitempty"`
 	Source    *FileSource            `protobuf:"varint,6,opt,name=source,proto3,enum=hi.media.FileSource,oneof" json:"source,omitempty"`
 	CreatedAt *int64                 `protobuf:"varint,7,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
-	// 是否有已保存且可访问的视频封面；为 true 时用本资产 ID 申请 COVER 地址。
+	// 是否有已保存且可访问的视频封面；本字段为 true 时 COVER 返回封面，否则返回原文件。
 	// 用户上传图片、历史未补图视频及封面生成失败的视频为 false。
 	HasCover      *bool `protobuf:"varint,8,opt,name=has_cover,json=hasCover,proto3,oneof" json:"has_cover,omitempty"`
 	unknownFields protoimpl.UnknownFields

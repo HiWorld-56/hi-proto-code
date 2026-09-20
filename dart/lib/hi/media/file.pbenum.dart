@@ -42,14 +42,19 @@ class FileAccessPurpose extends $pb.ProtobufEnum {
   static const FileAccessPurpose FILE_ACCESS_PURPOSE_UNSPECIFIED =
       FileAccessPurpose._(
           0, _omitEnumNames ? '' : 'FILE_ACCESS_PURPOSE_UNSPECIFIED');
+
+  /// 始终直接访问原文件，用于播放视频或查看原图。
   static const FileAccessPurpose FILE_ACCESS_PURPOSE_PREVIEW =
       FileAccessPurpose._(
           1, _omitEnumNames ? '' : 'FILE_ACCESS_PURPOSE_PREVIEW');
+
+  /// 下载原文件，响应使用下载文件名。
   static const FileAccessPurpose FILE_ACCESS_PURPOSE_DOWNLOAD =
       FileAccessPurpose._(
           2, _omitEnumNames ? '' : 'FILE_ACCESS_PURPOSE_DOWNLOAD');
 
-  /// 访问生成视频的第一帧 JPEG 封面；不存在时返回 NotFound，不回退到原文件。
+  /// 列表预览：有视频封面时返回第一帧 JPEG，否则返回原文件；图片返回原图。
+  /// 缺少封面不报错；资产不存在、不可用或不属于本人时仍拒绝访问。
   static const FileAccessPurpose FILE_ACCESS_PURPOSE_COVER =
       FileAccessPurpose._(3, _omitEnumNames ? '' : 'FILE_ACCESS_PURPOSE_COVER');
 

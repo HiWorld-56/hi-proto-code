@@ -44,8 +44,9 @@ type FileClient interface {
 	List(ctx context.Context, in *ListFilesReq, opts ...grpc.CallOption) (*ListFilesResp, error)
 	// 同步删除本人资产及附属封面，全部删除后扣减合计占用；仍被任务引用时拒绝，重复删除幂等。
 	Delete(ctx context.Context, in *DeleteFileReq, opts ...grpc.CallOption) (*DeleteFileResp, error)
-	// 为本人 available 资产签发预览、下载或封面地址，不返回内部存储地址或对象键。
-	// COVER 仍传视频资产 ID；封面不存在返回 NotFound，PREVIEW/DOWNLOAD 保持访问原文件。
+	// 为本人 available 资产签发访问地址，不返回内部存储地址或对象键。
+	// COVER 优先封面、无封面回退原文件，可混合批量请求；仍使用原资产 ID。
+	// PREVIEW 始终直接访问原文件，DOWNLOAD 下载原文件。
 	GetAccessUrls(ctx context.Context, in *GetFileAccessUrlsReq, opts ...grpc.CallOption) (*GetFileAccessUrlsResp, error)
 }
 
@@ -116,8 +117,9 @@ type FileServer interface {
 	List(context.Context, *ListFilesReq) (*ListFilesResp, error)
 	// 同步删除本人资产及附属封面，全部删除后扣减合计占用；仍被任务引用时拒绝，重复删除幂等。
 	Delete(context.Context, *DeleteFileReq) (*DeleteFileResp, error)
-	// 为本人 available 资产签发预览、下载或封面地址，不返回内部存储地址或对象键。
-	// COVER 仍传视频资产 ID；封面不存在返回 NotFound，PREVIEW/DOWNLOAD 保持访问原文件。
+	// 为本人 available 资产签发访问地址，不返回内部存储地址或对象键。
+	// COVER 优先封面、无封面回退原文件，可混合批量请求；仍使用原资产 ID。
+	// PREVIEW 始终直接访问原文件，DOWNLOAD 下载原文件。
 	GetAccessUrls(context.Context, *GetFileAccessUrlsReq) (*GetFileAccessUrlsResp, error)
 }
 

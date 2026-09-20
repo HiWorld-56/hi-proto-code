@@ -156,7 +156,7 @@ class FileSummary extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   void clearCreatedAt() => $_clearField(7);
 
-  /// 是否有已保存且可访问的视频封面；为 true 时用本资产 ID 申请 COVER 地址。
+  /// 是否有已保存且可访问的视频封面；本字段为 true 时 COVER 返回封面，否则返回原文件。
   /// 用户上传图片、历史未补图视频及封面生成失败的视频为 false。
   @$pb.TagNumber(8)
   $core.bool get hasCover => $_getBF(7);

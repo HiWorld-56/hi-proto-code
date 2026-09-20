@@ -304,7 +304,7 @@ pub struct TaskOutput {
     /// 实际产物高度，单位像素；与 width 一同返回，查询时不重新探测视频。
     #[prost(uint32, optional, tag = "9")]
     pub height: ::core::option::Option<u32>,
-    /// 资产可用且有已保存的视频封面；用 asset_id 申请 FILE_ACCESS_PURPOSE_COVER 地址。
+    /// 资产可用且有已保存的视频封面；用 asset_id 申请 COVER 地址时为 true 返回封面，否则返回原文件。
     /// 无封面或资产不可用时为 false，不影响视频任务的成功状态；size_bytes 不含封面。
     #[prost(bool, optional, tag = "10")]
     pub has_cover: ::core::option::Option<bool>,
@@ -3128,7 +3128,7 @@ pub struct FileSummary {
     pub source: ::core::option::Option<i32>,
     #[prost(int64, optional, tag = "7")]
     pub created_at: ::core::option::Option<i64>,
-    /// 是否有已保存且可访问的视频封面；为 true 时用本资产 ID 申请 COVER 地址。
+    /// 是否有已保存且可访问的视频封面；本字段为 true 时 COVER 返回封面，否则返回原文件。
     /// 用户上传图片、历史未补图视频及封面生成失败的视频为 false。
     #[prost(bool, optional, tag = "8")]
     pub has_cover: ::core::option::Option<bool>,
@@ -3295,9 +3295,12 @@ impl FileSource {
 #[repr(i32)]
 pub enum FileAccessPurpose {
     Unspecified = 0,
+    /// 始终直接访问原文件，用于播放视频或查看原图。
     Preview = 1,
+    /// 下载原文件，响应使用下载文件名。
     Download = 2,
-    /// 访问生成视频的第一帧 JPEG 封面；不存在时返回 NotFound，不回退到原文件。
+    /// 列表预览：有视频封面时返回第一帧 JPEG，否则返回原文件；图片返回原图。
+    /// 缺少封面不报错；资产不存在、不可用或不属于本人时仍拒绝访问。
     Cover = 3,
 }
 impl FileAccessPurpose {
@@ -3552,8 +3555,9 @@ pub mod file_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.media.File", "Delete"));
             self.inner.unary(req, path, codec).await
         }
-        /// 为本人 available 资产签发预览、下载或封面地址，不返回内部存储地址或对象键。
-        /// COVER 仍传视频资产 ID；封面不存在返回 NotFound，PREVIEW/DOWNLOAD 保持访问原文件。
+        /// 为本人 available 资产签发访问地址，不返回内部存储地址或对象键。
+        /// COVER 优先封面、无封面回退原文件，可混合批量请求；仍使用原资产 ID。
+        /// PREVIEW 始终直接访问原文件，DOWNLOAD 下载原文件。
         pub async fn get_access_urls(
             &mut self,
             request: impl tonic::IntoRequest<super::GetFileAccessUrlsReq>,
