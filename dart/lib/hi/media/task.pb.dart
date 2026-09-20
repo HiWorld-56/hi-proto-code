@@ -811,6 +811,7 @@ class TaskSummary extends $pb.GeneratedMessage {
     $fixnum.Int64? completedAt,
     $fixnum.Int64? elapsedSeconds,
     $core.String? inputAssetId,
+    $core.String? effectiveParamsJson,
   }) {
     final result = create();
     if (taskId != null) result.taskId = taskId;
@@ -834,6 +835,8 @@ class TaskSummary extends $pb.GeneratedMessage {
     if (completedAt != null) result.completedAt = completedAt;
     if (elapsedSeconds != null) result.elapsedSeconds = elapsedSeconds;
     if (inputAssetId != null) result.inputAssetId = inputAssetId;
+    if (effectiveParamsJson != null)
+      result.effectiveParamsJson = effectiveParamsJson;
     return result;
   }
 
@@ -872,6 +875,7 @@ class TaskSummary extends $pb.GeneratedMessage {
     ..aInt64(17, _omitFieldNames ? '' : 'completedAt')
     ..aInt64(18, _omitFieldNames ? '' : 'elapsedSeconds')
     ..aOS(19, _omitFieldNames ? '' : 'inputAssetId')
+    ..aOS(20, _omitFieldNames ? '' : 'effectiveParamsJson')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1084,6 +1088,20 @@ class TaskSummary extends $pb.GeneratedMessage {
   $core.bool hasInputAssetId() => $_has(18);
   @$pb.TagNumber(19)
   void clearInputAssetId() => $_clearField(19);
+
+  /// 创建任务时保存的实际业务参数 JSON 字符串，包含已补齐的默认值或固定值。
+  /// 列表、详情摘要和管理试跑列表均返回，不随工作流配置修改而变化。
+  /// HTTP 字段为 effectiveParamsJson；解析字符串后，内部键使用 snake_case：
+  /// prompt、aspect_ratio、megapixels（字符串）、duration_seconds、frame_rate（整数），
+  /// 图生视频另含 input_asset_id；不包含工作流图、节点绑定或管理员负向提示词。
+  @$pb.TagNumber(20)
+  $core.String get effectiveParamsJson => $_getSZ(19);
+  @$pb.TagNumber(20)
+  set effectiveParamsJson($core.String value) => $_setString(19, value);
+  @$pb.TagNumber(20)
+  $core.bool hasEffectiveParamsJson() => $_has(19);
+  @$pb.TagNumber(20)
+  void clearEffectiveParamsJson() => $_clearField(20);
 }
 
 enum TaskDetail_EffectiveParams { imageToVideo, textToVideo, notSet }

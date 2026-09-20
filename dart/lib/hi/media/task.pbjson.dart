@@ -787,6 +787,16 @@ const TaskSummary$json = {
       '10': 'inputAssetId',
       '17': true
     },
+    {
+      '1': 'effective_params_json',
+      '3': 20,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 18,
+      '10': 'effectiveParamsJson',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -808,6 +818,7 @@ const TaskSummary$json = {
     {'1': '_completed_at'},
     {'1': '_elapsed_seconds'},
     {'1': '_input_asset_id'},
+    {'1': '_effective_params_json'},
   ],
 };
 
@@ -830,12 +841,14 @@ final $typed_data.Uint8List taskSummaryDescriptor = $convert.base64Decode(
     'IAEoA0IEkLUYA0gOUglzdGFydGVkQXSIAQESLAoMY29tcGxldGVkX2F0GBEgASgDQgSQtRgDSA'
     '9SC2NvbXBsZXRlZEF0iAEBEjIKD2VsYXBzZWRfc2Vjb25kcxgSIAEoA0IEkLUYA0gQUg5lbGFw'
     'c2VkU2Vjb25kc4gBARIvCg5pbnB1dF9hc3NldF9pZBgTIAEoCUIEkLUYA0gRUgxpbnB1dEFzc2'
-    'V0SWSIAQE6BJi1GANCCgoIX3Rhc2tfaWRCCgoIX3B1cnBvc2VCDgoMX2Z1bmN0aW9uX2lkQhgK'
-    'Fl9mdW5jdGlvbl9kaXNwbGF5X25hbWVCCwoJX21vZGVsX2lkQhUKE19tb2RlbF9kaXNwbGF5X2'
-    '5hbWVCDgoMX3dvcmtmbG93X2lkQgkKB19zdGF0dXNCEQoPX3N0YXR1c19tZXNzYWdlQg0KC19l'
-    'cnJvcl9jb2RlQg0KC19jYW5fY2FuY2VsQhMKEV9jYW5fcmVjb3Zlcl9zYXZlQhsKGV9zYXZlX3'
-    'JlY292ZXJ5X2V4cGlyZXNfYXRCDQoLX2NyZWF0ZWRfYXRCDQoLX3N0YXJ0ZWRfYXRCDwoNX2Nv'
-    'bXBsZXRlZF9hdEISChBfZWxhcHNlZF9zZWNvbmRzQhEKD19pbnB1dF9hc3NldF9pZA==');
+    'V0SWSIAQESPQoVZWZmZWN0aXZlX3BhcmFtc19qc29uGBQgASgJQgSQtRgDSBJSE2VmZmVjdGl2'
+    'ZVBhcmFtc0pzb26IAQE6BJi1GANCCgoIX3Rhc2tfaWRCCgoIX3B1cnBvc2VCDgoMX2Z1bmN0aW'
+    '9uX2lkQhgKFl9mdW5jdGlvbl9kaXNwbGF5X25hbWVCCwoJX21vZGVsX2lkQhUKE19tb2RlbF9k'
+    'aXNwbGF5X25hbWVCDgoMX3dvcmtmbG93X2lkQgkKB19zdGF0dXNCEQoPX3N0YXR1c19tZXNzYW'
+    'dlQg0KC19lcnJvcl9jb2RlQg0KC19jYW5fY2FuY2VsQhMKEV9jYW5fcmVjb3Zlcl9zYXZlQhsK'
+    'GV9zYXZlX3JlY292ZXJ5X2V4cGlyZXNfYXRCDQoLX2NyZWF0ZWRfYXRCDQoLX3N0YXJ0ZWRfYX'
+    'RCDwoNX2NvbXBsZXRlZF9hdEISChBfZWxhcHNlZF9zZWNvbmRzQhEKD19pbnB1dF9hc3NldF9p'
+    'ZEIYChZfZWZmZWN0aXZlX3BhcmFtc19qc29u');
 
 @$core.Deprecated('Use taskDetailDescriptor instead')
 const TaskDetail$json = {

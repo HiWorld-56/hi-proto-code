@@ -800,9 +800,15 @@ type TaskSummary struct {
 	// 图生视频的原始输入图片资产 ID，列表和详情摘要均返回；文生视频不返回。
 	// 前端通过 File.GetAccessUrls 申请 PREVIEW 地址作为视频封面，不是视频 output.asset_id。
 	// 原图删除后仍保留该历史 ID；无法获取预览时显示占位图，不延长原图保留期。
-	InputAssetId  *string `protobuf:"bytes,19,opt,name=input_asset_id,json=inputAssetId,proto3,oneof" json:"input_asset_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	InputAssetId *string `protobuf:"bytes,19,opt,name=input_asset_id,json=inputAssetId,proto3,oneof" json:"input_asset_id,omitempty"`
+	// 创建任务时保存的实际业务参数 JSON 字符串，包含已补齐的默认值或固定值。
+	// 列表、详情摘要和管理试跑列表均返回，不随工作流配置修改而变化。
+	// HTTP 字段为 effectiveParamsJson；解析字符串后，内部键使用 snake_case：
+	// prompt、aspect_ratio、megapixels（字符串）、duration_seconds、frame_rate（整数），
+	// 图生视频另含 input_asset_id；不包含工作流图、节点绑定或管理员负向提示词。
+	EffectiveParamsJson *string `protobuf:"bytes,20,opt,name=effective_params_json,json=effectiveParamsJson,proto3,oneof" json:"effective_params_json,omitempty"`
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
 }
 
 func (x *TaskSummary) Reset() {
@@ -964,6 +970,13 @@ func (x *TaskSummary) GetElapsedSeconds() int64 {
 func (x *TaskSummary) GetInputAssetId() string {
 	if x != nil && x.InputAssetId != nil {
 		return *x.InputAssetId
+	}
+	return ""
+}
+
+func (x *TaskSummary) GetEffectiveParamsJson() string {
+	if x != nil && x.EffectiveParamsJson != nil {
+		return *x.EffectiveParamsJson
 	}
 	return ""
 }
@@ -1598,7 +1611,8 @@ const file_hi_media_task_proto_rawDesc = "" +
 	"\n" +
 	"_availableB\b\n" +
 	"\x06_widthB\t\n" +
-	"\a_height\"\xf6\t\n" +
+	"\a_height\"\xcf\n" +
+	"\n" +
 	"\vTaskSummary\x12\"\n" +
 	"\atask_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x06taskId\x88\x01\x01\x12:\n" +
 	"\apurpose\x18\x02 \x01(\x0e2\x15.hi.media.TaskPurposeB\x04\x90\xb5\x18\x03H\x01R\apurpose\x88\x01\x01\x12*\n" +
@@ -1626,7 +1640,8 @@ const file_hi_media_task_proto_rawDesc = "" +
 	"started_at\x18\x10 \x01(\x03B\x04\x90\xb5\x18\x03H\x0eR\tstartedAt\x88\x01\x01\x12,\n" +
 	"\fcompleted_at\x18\x11 \x01(\x03B\x04\x90\xb5\x18\x03H\x0fR\vcompletedAt\x88\x01\x01\x122\n" +
 	"\x0felapsed_seconds\x18\x12 \x01(\x03B\x04\x90\xb5\x18\x03H\x10R\x0eelapsedSeconds\x88\x01\x01\x12/\n" +
-	"\x0einput_asset_id\x18\x13 \x01(\tB\x04\x90\xb5\x18\x03H\x11R\finputAssetId\x88\x01\x01:\x04\x98\xb5\x18\x03B\n" +
+	"\x0einput_asset_id\x18\x13 \x01(\tB\x04\x90\xb5\x18\x03H\x11R\finputAssetId\x88\x01\x01\x12=\n" +
+	"\x15effective_params_json\x18\x14 \x01(\tB\x04\x90\xb5\x18\x03H\x12R\x13effectiveParamsJson\x88\x01\x01:\x04\x98\xb5\x18\x03B\n" +
 	"\n" +
 	"\b_task_idB\n" +
 	"\n" +
@@ -1646,7 +1661,8 @@ const file_hi_media_task_proto_rawDesc = "" +
 	"\v_started_atB\x0f\n" +
 	"\r_completed_atB\x12\n" +
 	"\x10_elapsed_secondsB\x11\n" +
-	"\x0f_input_asset_id\"\xfa\x01\n" +
+	"\x0f_input_asset_idB\x18\n" +
+	"\x16_effective_params_json\"\xfa\x01\n" +
 	"\n" +
 	"TaskDetail\x125\n" +
 	"\asummary\x18\x01 \x01(\v2\x15.hi.media.TaskSummaryB\x04\x90\xb5\x18\x03R\asummary\x12N\n" +

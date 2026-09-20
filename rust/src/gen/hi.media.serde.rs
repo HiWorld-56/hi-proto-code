@@ -7246,6 +7246,9 @@ impl serde::Serialize for TaskSummary {
         if self.input_asset_id.is_some() {
             len += 1;
         }
+        if self.effective_params_json.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.media.TaskSummary", len)?;
         if let Some(v) = self.task_id.as_ref() {
             struct_ser.serialize_field("taskId", v)?;
@@ -7318,6 +7321,9 @@ impl serde::Serialize for TaskSummary {
         if let Some(v) = self.input_asset_id.as_ref() {
             struct_ser.serialize_field("inputAssetId", v)?;
         }
+        if let Some(v) = self.effective_params_json.as_ref() {
+            struct_ser.serialize_field("effectiveParamsJson", v)?;
+        }
         struct_ser.end()
     }
 }
@@ -7363,6 +7369,8 @@ impl<'de> serde::Deserialize<'de> for TaskSummary {
             "elapsedSeconds",
             "input_asset_id",
             "inputAssetId",
+            "effective_params_json",
+            "effectiveParamsJson",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -7386,6 +7394,7 @@ impl<'de> serde::Deserialize<'de> for TaskSummary {
             CompletedAt,
             ElapsedSeconds,
             InputAssetId,
+            EffectiveParamsJson,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -7426,6 +7435,7 @@ impl<'de> serde::Deserialize<'de> for TaskSummary {
                             "completedAt" | "completed_at" => Ok(GeneratedField::CompletedAt),
                             "elapsedSeconds" | "elapsed_seconds" => Ok(GeneratedField::ElapsedSeconds),
                             "inputAssetId" | "input_asset_id" => Ok(GeneratedField::InputAssetId),
+                            "effectiveParamsJson" | "effective_params_json" => Ok(GeneratedField::EffectiveParamsJson),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -7464,6 +7474,7 @@ impl<'de> serde::Deserialize<'de> for TaskSummary {
                 let mut completed_at__ = None;
                 let mut elapsed_seconds__ = None;
                 let mut input_asset_id__ = None;
+                let mut effective_params_json__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::TaskId => {
@@ -7590,6 +7601,12 @@ impl<'de> serde::Deserialize<'de> for TaskSummary {
                             }
                             input_asset_id__ = map_.next_value()?;
                         }
+                        GeneratedField::EffectiveParamsJson => {
+                            if effective_params_json__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("effectiveParamsJson"));
+                            }
+                            effective_params_json__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(TaskSummary {
@@ -7612,6 +7629,7 @@ impl<'de> serde::Deserialize<'de> for TaskSummary {
                     completed_at: completed_at__,
                     elapsed_seconds: elapsed_seconds__,
                     input_asset_id: input_asset_id__,
+                    effective_params_json: effective_params_json__,
                 })
             }
         }

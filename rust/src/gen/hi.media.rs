@@ -365,6 +365,13 @@ pub struct TaskSummary {
     /// 原图删除后仍保留该历史 ID；无法获取预览时显示占位图，不延长原图保留期。
     #[prost(string, optional, tag = "19")]
     pub input_asset_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 创建任务时保存的实际业务参数 JSON 字符串，包含已补齐的默认值或固定值。
+    /// 列表、详情摘要和管理试跑列表均返回，不随工作流配置修改而变化。
+    /// HTTP 字段为 effectiveParamsJson；解析字符串后，内部键使用 snake_case：
+    /// prompt、aspect_ratio、megapixels（字符串）、duration_seconds、frame_rate（整数），
+    /// 图生视频另含 input_asset_id；不包含工作流图、节点绑定或管理员负向提示词。
+    #[prost(string, optional, tag = "20")]
+    pub effective_params_json: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 任务详情及其实际业务参数；重新生成需重新查询 Function.Get 并使用新 request_id。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
