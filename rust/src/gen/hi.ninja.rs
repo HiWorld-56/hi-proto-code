@@ -547,31 +547,44 @@ pub struct AudioPlay {
     #[prost(bytes = "vec", optional, tag = "2")]
     pub audio: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
 }
-/// 币安接入设置。**凭证与业务参数分开放** —— 初始本金不是凭证，
-/// 它是算累计收益用的基数；混在一条里，改一次本金就得把 api_secret 整条重发一遍。
+/// 币安接入设置。**密钥不在这里** —— 2026-09-20 起密钥一个字都不出 brain：
+/// face 不再自己连币安，要数据就发 `BinanceRequest`（见下），brain 替它去。
+///
+/// 于是这条只剩一件事：告诉 face「这台机器人配过币安没有」以及算收益用的基数。
+/// **收得到这条 = 配过**（没配过 brain 根本不推），face 据此决定显不显示资产面板。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BinanceSettings {
-    #[prost(message, optional, tag = "1")]
-    pub credentials: ::core::option::Option<BinanceCredentials>,
     /// 初始本金。**十进制字符串**，与本仓所有金额字段同口径（免浮点误差）。
     #[prost(string, optional, tag = "2")]
     pub initial_capital: ::core::option::Option<::prost::alloc::string::String>,
 }
-/// 币安 API 凭证。
-/// ⚠️ `api_secret` 是敏感字段，**只允许走 brain ↔ face 这条本地 ZMQ**，不出机器。
+/// face -> brain：替我去币安做一次。
+///
+/// ⭐ **机器人到币安只有一条路**，就是 brain 的币安模块（`src/binance/`）。
+/// face 从前自己签名直连桥，于是同一件事有两条路径：密钥要多存一份、
+/// 缓存各缓各的、而币安的权重是**按出口 IP** 算的（全网机器人共用桥那一个出口），
+/// 两条路各查各的等于把配额打两遍。2026-09-20 把 face 那条删了。
+///
+/// 参数为什么是 JSON 字符串：brain 的操作表本来就按 JSON 收参数并**在那里校验**
+/// （不合法当场拒，还会在报错里给出正确写法）。再定义一遍 proto 参数就是第二套判据。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct BinanceCredentials {
+pub struct BinanceRequest {
+    /// face 给的流水号，brain 原样带回 `BinanceResult.request`
     #[prost(string, optional, tag = "1")]
-    pub api_key: ::core::option::Option<::prost::alloc::string::String>,
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 操作名，如 `usds_futures.account_information_v3`
     #[prost(string, optional, tag = "2")]
-    pub api_secret: ::core::option::Option<::prost::alloc::string::String>,
+    pub op: ::core::option::Option<::prost::alloc::string::String>,
+    /// 参数，一个 JSON 对象；不传 = 没有参数
+    #[prost(string, optional, tag = "3")]
+    pub params_json: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// brain -> face：所有指令通过 oneof 路由
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BrainToFace {
     #[prost(
         oneof = "brain_to_face::Cmd",
-        tags = "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21"
+        tags = "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21, 22"
     )]
     pub cmd: ::core::option::Option<brain_to_face::Cmd>,
 }
@@ -652,9 +665,13 @@ pub mod brain_to_face {
         /// 定义在 `hi/ninja/updater.proto`（那条线的契约在那儿）。
         #[prost(message, tag = "19")]
         EventUpdate(super::UpdateStatus),
-        /// 币安设置同步（凭证 + 初始本金；仅限本地 face IPC）
+        /// 币安设置同步（**只有初始本金，没有密钥**；仅限本地 face IPC）
         #[prost(message, tag = "21")]
         EventBinanceSettings(super::BinanceSettings),
+        /// 币安结果。**与通知那条路回给代理的是同一个消息** —— 同一张操作表、
+        /// 同一份账户快照，face 不该为"看板"再学一套形状。`request` 是 face 给的流水号。
+        #[prost(message, tag = "22")]
+        BinanceResult(super::super::binance::BinanceResult),
     }
 }
 /// 系统状态快照
@@ -670,14 +687,14 @@ pub struct StatusEvent {
     pub usb: ::core::option::Option<bool>,
 }
 /// face -> brain
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct FaceToBrain {
-    #[prost(oneof = "face_to_brain::Cmd", tags = "1, 2, 3, 4")]
+    #[prost(oneof = "face_to_brain::Cmd", tags = "1, 2, 3, 4, 5")]
     pub cmd: ::core::option::Option<face_to_brain::Cmd>,
 }
 /// Nested message and enum types in `FaceToBrain`.
 pub mod face_to_brain {
-    #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Oneof)]
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
     pub enum Cmd {
         /// 音频播放开始/结束，brain 据此控制麦克风静音
         #[prost(enumeration = "super::StateToggle", tag = "1")]
@@ -699,6 +716,9 @@ pub mod face_to_brain {
         /// 都由模块在准备好之后再要一次，不必让 brain 去猜「这次是新上来的还是一直都在」。
         #[prost(message, tag = "4")]
         RequestInit(::pbjson_types::Empty),
+        /// 替我去币安做一次（face 自己不连币安，见 BinanceRequest 的说明）
+        #[prost(message, tag = "5")]
+        BinanceRequest(super::BinanceRequest),
     }
 }
 /// 插件下载/安装进度。

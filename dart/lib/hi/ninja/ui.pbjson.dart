@@ -158,14 +158,6 @@ const BinanceSettings$json = {
   '1': 'BinanceSettings',
   '2': [
     {
-      '1': 'credentials',
-      '3': 1,
-      '4': 1,
-      '5': 11,
-      '6': '.hi.ninja.BinanceCredentials',
-      '10': 'credentials'
-    },
-    {
       '1': 'initial_capital',
       '3': 2,
       '4': 1,
@@ -182,44 +174,37 @@ const BinanceSettings$json = {
 
 /// Descriptor for `BinanceSettings`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List binanceSettingsDescriptor = $convert.base64Decode(
-    'Cg9CaW5hbmNlU2V0dGluZ3MSPgoLY3JlZGVudGlhbHMYASABKAsyHC5oaS5uaW5qYS5CaW5hbm'
-    'NlQ3JlZGVudGlhbHNSC2NyZWRlbnRpYWxzEiwKD2luaXRpYWxfY2FwaXRhbBgCIAEoCUgAUg5p'
-    'bml0aWFsQ2FwaXRhbIgBAUISChBfaW5pdGlhbF9jYXBpdGFs');
+    'Cg9CaW5hbmNlU2V0dGluZ3MSLAoPaW5pdGlhbF9jYXBpdGFsGAIgASgJSABSDmluaXRpYWxDYX'
+    'BpdGFsiAEBQhIKEF9pbml0aWFsX2NhcGl0YWw=');
 
-@$core.Deprecated('Use binanceCredentialsDescriptor instead')
-const BinanceCredentials$json = {
-  '1': 'BinanceCredentials',
+@$core.Deprecated('Use binanceRequestDescriptor instead')
+const BinanceRequest$json = {
+  '1': 'BinanceRequest',
   '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'id', '17': true},
+    {'1': 'op', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'op', '17': true},
     {
-      '1': 'api_key',
-      '3': 1,
+      '1': 'params_json',
+      '3': 3,
       '4': 1,
       '5': 9,
-      '9': 0,
-      '10': 'apiKey',
-      '17': true
-    },
-    {
-      '1': 'api_secret',
-      '3': 2,
-      '4': 1,
-      '5': 9,
-      '9': 1,
-      '10': 'apiSecret',
+      '9': 2,
+      '10': 'paramsJson',
       '17': true
     },
   ],
   '8': [
-    {'1': '_api_key'},
-    {'1': '_api_secret'},
+    {'1': '_id'},
+    {'1': '_op'},
+    {'1': '_params_json'},
   ],
 };
 
-/// Descriptor for `BinanceCredentials`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List binanceCredentialsDescriptor = $convert.base64Decode(
-    'ChJCaW5hbmNlQ3JlZGVudGlhbHMSHAoHYXBpX2tleRgBIAEoCUgAUgZhcGlLZXmIAQESIgoKYX'
-    'BpX3NlY3JldBgCIAEoCUgBUglhcGlTZWNyZXSIAQFCCgoIX2FwaV9rZXlCDQoLX2FwaV9zZWNy'
-    'ZXQ=');
+/// Descriptor for `BinanceRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List binanceRequestDescriptor = $convert.base64Decode(
+    'Cg5CaW5hbmNlUmVxdWVzdBITCgJpZBgBIAEoCUgAUgJpZIgBARITCgJvcBgCIAEoCUgBUgJvcI'
+    'gBARIkCgtwYXJhbXNfanNvbhgDIAEoCUgCUgpwYXJhbXNKc29uiAEBQgUKA19pZEIFCgNfb3BC'
+    'DgoMX3BhcmFtc19qc29u');
 
 @$core.Deprecated('Use brainToFaceDescriptor instead')
 const BrainToFace$json = {
@@ -414,6 +399,15 @@ const BrainToFace$json = {
       '9': 0,
       '10': 'eventBinanceSettings'
     },
+    {
+      '1': 'binance_result',
+      '3': 22,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceResult',
+      '9': 0,
+      '10': 'binanceResult'
+    },
   ],
   '8': [
     {'1': 'cmd'},
@@ -445,7 +439,8 @@ final $typed_data.Uint8List brainToFaceDescriptor = $convert.base64Decode(
     'KAsyFS5oaS5uaW5qYS5TdGF0dXNFdmVudEgAUgtldmVudFN0YXR1cxI7CgxldmVudF91cGRhdG'
     'UYEyABKAsyFi5oaS5uaW5qYS5VcGRhdGVTdGF0dXNIAFILZXZlbnRVcGRhdGUSUQoWZXZlbnRf'
     'YmluYW5jZV9zZXR0aW5ncxgVIAEoCzIZLmhpLm5pbmphLkJpbmFuY2VTZXR0aW5nc0gAUhRldm'
-    'VudEJpbmFuY2VTZXR0aW5nc0IFCgNjbWQ=');
+    'VudEJpbmFuY2VTZXR0aW5ncxJCCg5iaW5hbmNlX3Jlc3VsdBgWIAEoCzIZLmhpLmJpbmFuY2Uu'
+    'QmluYW5jZVJlc3VsdEgAUg1iaW5hbmNlUmVzdWx0QgUKA2NtZA==');
 
 @$core.Deprecated('Use statusEventDescriptor instead')
 const StatusEvent$json = {
@@ -507,6 +502,15 @@ const FaceToBrain$json = {
       '9': 0,
       '10': 'requestInit'
     },
+    {
+      '1': 'binance_request',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.BinanceRequest',
+      '9': 0,
+      '10': 'binanceRequest'
+    },
   ],
   '8': [
     {'1': 'cmd'},
@@ -519,8 +523,9 @@ final $typed_data.Uint8List faceToBrainDescriptor = $convert.base64Decode(
     'xlSABSCnZvaWNlU3RhdGUSPQoNdXBkYXRlX2FjdGlvbhgCIAEoCzIWLmhpLm5pbmphLlVwZGF0'
     'ZUFjdGlvbkgAUgx1cGRhdGVBY3Rpb24SSgoUZ2V0X2JpbmFuY2Vfc2V0dGluZ3MYAyABKAsyFi'
     '5nb29nbGUucHJvdG9idWYuRW1wdHlIAFISZ2V0QmluYW5jZVNldHRpbmdzEjsKDHJlcXVlc3Rf'
-    'aW5pdBgEIAEoCzIWLmdvb2dsZS5wcm90b2J1Zi5FbXB0eUgAUgtyZXF1ZXN0SW5pdEIFCgNjbW'
-    'Q=');
+    'aW5pdBgEIAEoCzIWLmdvb2dsZS5wcm90b2J1Zi5FbXB0eUgAUgtyZXF1ZXN0SW5pdBJDCg9iaW'
+    '5hbmNlX3JlcXVlc3QYBSABKAsyGC5oaS5uaW5qYS5CaW5hbmNlUmVxdWVzdEgAUg5iaW5hbmNl'
+    'UmVxdWVzdEIFCgNjbWQ=');
 
 @$core.Deprecated('Use pluginProgressDescriptor instead')
 const PluginProgress$json = {

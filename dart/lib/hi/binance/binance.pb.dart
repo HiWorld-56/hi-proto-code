@@ -403,6 +403,184 @@ class BinanceSpotAccount extends $pb.GeneratedMessage {
   void clearOmitZeroBalances() => $_clearField(1);
 }
 
+/// 查一张现货订单。`GET /api/v3/order`
+/// `order_id` 与 `orig_client_order_id` 给一个即可(都不给由币安报错)。
+class BinanceSpotGetOrder extends $pb.GeneratedMessage {
+  factory BinanceSpotGetOrder({
+    $core.String? symbol,
+    $fixnum.Int64? orderId,
+    $core.String? origClientOrderId,
+  }) {
+    final result = create();
+    if (symbol != null) result.symbol = symbol;
+    if (orderId != null) result.orderId = orderId;
+    if (origClientOrderId != null) result.origClientOrderId = origClientOrderId;
+    return result;
+  }
+
+  BinanceSpotGetOrder._();
+
+  factory BinanceSpotGetOrder.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceSpotGetOrder.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceSpotGetOrder',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'symbol')
+    ..aInt64(2, _omitFieldNames ? '' : 'orderId')
+    ..aOS(3, _omitFieldNames ? '' : 'origClientOrderId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceSpotGetOrder clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceSpotGetOrder copyWith(void Function(BinanceSpotGetOrder) updates) =>
+      super.copyWith((message) => updates(message as BinanceSpotGetOrder))
+          as BinanceSpotGetOrder;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceSpotGetOrder create() => BinanceSpotGetOrder._();
+  @$core.override
+  BinanceSpotGetOrder createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceSpotGetOrder getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceSpotGetOrder>(create);
+  static BinanceSpotGetOrder? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get symbol => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set symbol($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSymbol() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSymbol() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get orderId => $_getI64(1);
+  @$pb.TagNumber(2)
+  set orderId($fixnum.Int64 value) => $_setInt64(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasOrderId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearOrderId() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get origClientOrderId => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set origClientOrderId($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasOrigClientOrderId() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearOrigClientOrderId() => $_clearField(3);
+}
+
+/// 现货的 OCO 挂单组。`GET /api/v3/openOrderList`
+/// **没有参数**:它回的是整个账户的挂单组。
+class BinanceSpotOpenOrderLists extends $pb.GeneratedMessage {
+  factory BinanceSpotOpenOrderLists() => create();
+
+  BinanceSpotOpenOrderLists._();
+
+  factory BinanceSpotOpenOrderLists.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceSpotOpenOrderLists.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceSpotOpenOrderLists',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceSpotOpenOrderLists clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceSpotOpenOrderLists copyWith(
+          void Function(BinanceSpotOpenOrderLists) updates) =>
+      super.copyWith((message) => updates(message as BinanceSpotOpenOrderLists))
+          as BinanceSpotOpenOrderLists;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceSpotOpenOrderLists create() => BinanceSpotOpenOrderLists._();
+  @$core.override
+  BinanceSpotOpenOrderLists createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceSpotOpenOrderLists getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceSpotOpenOrderLists>(create);
+  static BinanceSpotOpenOrderLists? _defaultInstance;
+}
+
+/// 现货 24 小时行情。`GET /api/v3/ticker/24hr`
+/// ⚠️ **这是公开接口,不签名** —— 但照样走桥(机器人连不上币安)。
+/// 不传 symbol 会把全市场一次回来,权重很高,面板上只该按需要的交易对问。
+class BinanceSpotTicker24h extends $pb.GeneratedMessage {
+  factory BinanceSpotTicker24h({
+    $core.String? symbol,
+  }) {
+    final result = create();
+    if (symbol != null) result.symbol = symbol;
+    return result;
+  }
+
+  BinanceSpotTicker24h._();
+
+  factory BinanceSpotTicker24h.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceSpotTicker24h.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceSpotTicker24h',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'symbol')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceSpotTicker24h clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceSpotTicker24h copyWith(void Function(BinanceSpotTicker24h) updates) =>
+      super.copyWith((message) => updates(message as BinanceSpotTicker24h))
+          as BinanceSpotTicker24h;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceSpotTicker24h create() => BinanceSpotTicker24h._();
+  @$core.override
+  BinanceSpotTicker24h createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceSpotTicker24h getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceSpotTicker24h>(create);
+  static BinanceSpotTicker24h? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get symbol => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set symbol($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSymbol() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSymbol() => $_clearField(1);
+}
+
 /// 合约下单。`POST /fapi/v1/order`
 ///
 /// ⚠️ **平仓不是一个单独的接口** —— 它就是一张 `reduce_only = true` 的反向市价单。
@@ -909,6 +1087,153 @@ class BinanceFuturesOpenOrders extends $pb.GeneratedMessage {
   $core.bool hasSymbol() => $_has(0);
   @$pb.TagNumber(1)
   void clearSymbol() => $_clearField(1);
+}
+
+/// 合约的策略委托(止盈止损这类)。`GET /fapi/v1/openAlgoOrders`
+/// **与普通挂单是两张表** —— 只查 `openOrders` 的话,面板上会缺掉全部止盈止损单。
+class BinanceFuturesOpenAlgoOrders extends $pb.GeneratedMessage {
+  factory BinanceFuturesOpenAlgoOrders() => create();
+
+  BinanceFuturesOpenAlgoOrders._();
+
+  factory BinanceFuturesOpenAlgoOrders.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceFuturesOpenAlgoOrders.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceFuturesOpenAlgoOrders',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceFuturesOpenAlgoOrders clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceFuturesOpenAlgoOrders copyWith(
+          void Function(BinanceFuturesOpenAlgoOrders) updates) =>
+      super.copyWith(
+              (message) => updates(message as BinanceFuturesOpenAlgoOrders))
+          as BinanceFuturesOpenAlgoOrders;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceFuturesOpenAlgoOrders create() =>
+      BinanceFuturesOpenAlgoOrders._();
+  @$core.override
+  BinanceFuturesOpenAlgoOrders createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceFuturesOpenAlgoOrders getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceFuturesOpenAlgoOrders>(create);
+  static BinanceFuturesOpenAlgoOrders? _defaultInstance;
+}
+
+/// 合约资金流水(已实现盈亏、资金费、手续费…)。`GET /fapi/v1/income`
+/// 累计收益算的就是它 —— **账户接口只有"现在"**,赚过又提走的钱不在里面。
+class BinanceFuturesIncome extends $pb.GeneratedMessage {
+  factory BinanceFuturesIncome({
+    $core.String? symbol,
+    $core.String? incomeType,
+    $fixnum.Int64? startTime,
+    $fixnum.Int64? endTime,
+    $fixnum.Int64? limit,
+  }) {
+    final result = create();
+    if (symbol != null) result.symbol = symbol;
+    if (incomeType != null) result.incomeType = incomeType;
+    if (startTime != null) result.startTime = startTime;
+    if (endTime != null) result.endTime = endTime;
+    if (limit != null) result.limit = limit;
+    return result;
+  }
+
+  BinanceFuturesIncome._();
+
+  factory BinanceFuturesIncome.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceFuturesIncome.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceFuturesIncome',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'symbol')
+    ..aOS(2, _omitFieldNames ? '' : 'incomeType')
+    ..aInt64(3, _omitFieldNames ? '' : 'startTime')
+    ..aInt64(4, _omitFieldNames ? '' : 'endTime')
+    ..aInt64(5, _omitFieldNames ? '' : 'limit')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceFuturesIncome clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceFuturesIncome copyWith(void Function(BinanceFuturesIncome) updates) =>
+      super.copyWith((message) => updates(message as BinanceFuturesIncome))
+          as BinanceFuturesIncome;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceFuturesIncome create() => BinanceFuturesIncome._();
+  @$core.override
+  BinanceFuturesIncome createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceFuturesIncome getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceFuturesIncome>(create);
+  static BinanceFuturesIncome? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get symbol => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set symbol($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSymbol() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSymbol() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get incomeType => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set incomeType($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasIncomeType() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearIncomeType() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $fixnum.Int64 get startTime => $_getI64(2);
+  @$pb.TagNumber(3)
+  set startTime($fixnum.Int64 value) => $_setInt64(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasStartTime() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearStartTime() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $fixnum.Int64 get endTime => $_getI64(3);
+  @$pb.TagNumber(4)
+  set endTime($fixnum.Int64 value) => $_setInt64(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasEndTime() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearEndTime() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $fixnum.Int64 get limit => $_getI64(4);
+  @$pb.TagNumber(5)
+  set limit($fixnum.Int64 value) => $_setInt64(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasLimit() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearLimit() => $_clearField(5);
 }
 
 /// 一次币安操作的结果。装在**消息**里回给下指令的人:

@@ -57,6 +57,29 @@ pub struct BinanceSpotAccount {
     #[prost(bool, optional, tag = "1")]
     pub omit_zero_balances: ::core::option::Option<bool>,
 }
+/// 查一张现货订单。`GET /api/v3/order`
+/// `order_id` 与 `orig_client_order_id` 给一个即可(都不给由币安报错)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceSpotGetOrder {
+    #[prost(string, optional, tag = "1")]
+    pub symbol: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "2")]
+    pub order_id: ::core::option::Option<i64>,
+    #[prost(string, optional, tag = "3")]
+    pub orig_client_order_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 现货的 OCO 挂单组。`GET /api/v3/openOrderList`
+/// **没有参数**:它回的是整个账户的挂单组。
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceSpotOpenOrderLists {}
+/// 现货 24 小时行情。`GET /api/v3/ticker/24hr`
+/// ⚠️ **这是公开接口,不签名** —— 但照样走桥(机器人连不上币安)。
+/// 不传 symbol 会把全市场一次回来,权重很高,面板上只该按需要的交易对问。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceSpotTicker24h {
+    #[prost(string, optional, tag = "1")]
+    pub symbol: ::core::option::Option<::prost::alloc::string::String>,
+}
 /// 合约下单。`POST /fapi/v1/order`
 ///
 /// ⚠️ **平仓不是一个单独的接口** —— 它就是一张 `reduce_only = true` 的反向市价单。
@@ -127,6 +150,30 @@ pub struct BinanceFuturesOpenOrders {
     /// 不传 = 全部(权重高)
     #[prost(string, optional, tag = "1")]
     pub symbol: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 合约的策略委托(止盈止损这类)。`GET /fapi/v1/openAlgoOrders`
+/// **与普通挂单是两张表** —— 只查 `openOrders` 的话,面板上会缺掉全部止盈止损单。
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceFuturesOpenAlgoOrders {}
+/// 合约资金流水(已实现盈亏、资金费、手续费…)。`GET /fapi/v1/income`
+/// 累计收益算的就是它 —— **账户接口只有"现在"**,赚过又提走的钱不在里面。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceFuturesIncome {
+    /// 不传 = 全部
+    #[prost(string, optional, tag = "1")]
+    pub symbol: ::core::option::Option<::prost::alloc::string::String>,
+    /// 如 REALIZED_PNL / FUNDING_FEE;不传 = 全部
+    #[prost(string, optional, tag = "2")]
+    pub income_type: ::core::option::Option<::prost::alloc::string::String>,
+    /// 毫秒
+    #[prost(int64, optional, tag = "3")]
+    pub start_time: ::core::option::Option<i64>,
+    /// 毫秒
+    #[prost(int64, optional, tag = "4")]
+    pub end_time: ::core::option::Option<i64>,
+    /// 默认 100,最大 1000
+    #[prost(int64, optional, tag = "5")]
+    pub limit: ::core::option::Option<i64>,
 }
 /// 一次币安操作的结果。装在**消息**里回给下指令的人:
 /// `Content.type = "binance"`、`Content.kind = binance`。
