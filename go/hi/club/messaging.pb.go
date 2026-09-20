@@ -8,6 +8,7 @@ package club
 
 import (
 	hi "github.com/HiWorld-56/hi-proto/go/hi"
+	binance "github.com/HiWorld-56/hi-proto/go/hi/binance"
 	did "github.com/HiWorld-56/hi-proto/go/hi/did"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -606,6 +607,7 @@ func (x *MemberExit) GetType() string {
 // transfer    转账卡            kind=trans(hi.did.Transaction)
 // trade       交易卡            kind=trade(TradeBase)
 // broadcast   广播
+// binance     币安操作结果卡      kind=binance(hi.binance.BinanceResult)
 //
 // ⚠️ **注意是 `image_url` 不是 `image`、`audio_url` 不是 `audio`。**
 //
@@ -632,6 +634,7 @@ type Content struct {
 	//	*Content_Chat_
 	//	*Content_Trans
 	//	*Content_Trade
+	//	*Content_Binance
 	Kind          isContent_Kind `protobuf_oneof:"kind"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -708,6 +711,15 @@ func (x *Content) GetTrade() *TradeBase {
 	return nil
 }
 
+func (x *Content) GetBinance() *binance.BinanceResult {
+	if x != nil {
+		if x, ok := x.Kind.(*Content_Binance); ok {
+			return x.Binance
+		}
+	}
+	return nil
+}
+
 type isContent_Kind interface {
 	isContent_Kind()
 }
@@ -724,11 +736,18 @@ type Content_Trade struct {
 	Trade *TradeBase `protobuf:"bytes,4,opt,name=trade,proto3,oneof"` // 交易卡可入群,基础卡=PARTICIPANT
 }
 
+type Content_Binance struct {
+	// 币安操作的结果,机器人回给下指令的那个会话。与转账卡同型:载荷定义在别的包里,这里只引用。
+	Binance *binance.BinanceResult `protobuf:"bytes,5,opt,name=binance,proto3,oneof"`
+}
+
 func (*Content_Chat_) isContent_Kind() {}
 
 func (*Content_Trans) isContent_Kind() {}
 
 func (*Content_Trade) isContent_Kind() {}
+
+func (*Content_Binance) isContent_Kind() {}
 
 type Content_Chat struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -802,7 +821,7 @@ var File_hi_club_messaging_proto protoreflect.FileDescriptor
 
 const file_hi_club_messaging_proto_rawDesc = "" +
 	"\n" +
-	"\x17hi/club/messaging.proto\x12\ahi.club\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x13hi/club/trade.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/transfer.proto\x1a\x10hi/options.proto\"{\n" +
+	"\x17hi/club/messaging.proto\x12\ahi.club\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x13hi/club/trade.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/transfer.proto\x1a\x18hi/binance/binance.proto\x1a\x10hi/options.proto\"{\n" +
 	"\x06Packet\x12/\n" +
 	"\x06notice\x18\x01 \x01(\v2\x0f.hi.club.NoticeB\x04\x90\xb5\x18\x02H\x00R\x06notice\x122\n" +
 	"\amessage\x18\x02 \x01(\v2\x10.hi.club.MessageB\x04\x90\xb5\x18\x02H\x00R\amessage:\x04\x98\xb5\x18\x02B\x06\n" +
@@ -871,12 +890,13 @@ const file_hi_club_messaging_proto_rawDesc = "" +
 	"MemberExit\x12'\n" +
 	"\x06member\x18\x01 \x01(\v2\x0f.hi.club.MemberR\x06member\x12\x17\n" +
 	"\x04type\x18\x02 \x01(\tH\x00R\x04type\x88\x01\x01B\a\n" +
-	"\x05_type\"\x9b\x03\n" +
+	"\x05_type\"\xd8\x03\n" +
 	"\aContent\x12\x1d\n" +
 	"\x04type\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x04type\x88\x01\x01\x121\n" +
 	"\x04chat\x18\x02 \x01(\v2\x15.hi.club.Content.ChatB\x04\x90\xb5\x18\x02H\x00R\x04chat\x121\n" +
 	"\x05trans\x18\x03 \x01(\v2\x13.hi.did.TransactionB\x04\x90\xb5\x18\x01H\x00R\x05trans\x120\n" +
-	"\x05trade\x18\x04 \x01(\v2\x12.hi.club.TradeBaseB\x04\x90\xb5\x18\x02H\x00R\x05trade\x1a\xc1\x01\n" +
+	"\x05trade\x18\x04 \x01(\v2\x12.hi.club.TradeBaseB\x04\x90\xb5\x18\x02H\x00R\x05trade\x12;\n" +
+	"\abinance\x18\x05 \x01(\v2\x19.hi.binance.BinanceResultB\x04\x90\xb5\x18\x02H\x00R\abinance\x1a\xc1\x01\n" +
 	"\x04Chat\x12#\n" +
 	"\acontent\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\acontent\x88\x01\x01\x12\x1d\n" +
 	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x04name\x88\x01\x01\x12\x1d\n" +
@@ -905,19 +925,20 @@ func file_hi_club_messaging_proto_rawDescGZIP() []byte {
 
 var file_hi_club_messaging_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_hi_club_messaging_proto_goTypes = []any{
-	(*Packet)(nil),          // 0: hi.club.Packet
-	(*Notice)(nil),          // 1: hi.club.Notice
-	(*Prompt)(nil),          // 2: hi.club.Prompt
-	(*Message)(nil),         // 3: hi.club.Message
-	(*Mention)(nil),         // 4: hi.club.Mention
-	(*Member)(nil),          // 5: hi.club.Member
-	(*MemberExit)(nil),      // 6: hi.club.MemberExit
-	(*Content)(nil),         // 7: hi.club.Content
-	(*Content_Chat)(nil),    // 8: hi.club.Content.Chat
-	(*hi.Entity)(nil),       // 9: hi.Entity
-	(*anypb.Any)(nil),       // 10: google.protobuf.Any
-	(*did.Transaction)(nil), // 11: hi.did.Transaction
-	(*TradeBase)(nil),       // 12: hi.club.TradeBase
+	(*Packet)(nil),                // 0: hi.club.Packet
+	(*Notice)(nil),                // 1: hi.club.Notice
+	(*Prompt)(nil),                // 2: hi.club.Prompt
+	(*Message)(nil),               // 3: hi.club.Message
+	(*Mention)(nil),               // 4: hi.club.Mention
+	(*Member)(nil),                // 5: hi.club.Member
+	(*MemberExit)(nil),            // 6: hi.club.MemberExit
+	(*Content)(nil),               // 7: hi.club.Content
+	(*Content_Chat)(nil),          // 8: hi.club.Content.Chat
+	(*hi.Entity)(nil),             // 9: hi.Entity
+	(*anypb.Any)(nil),             // 10: google.protobuf.Any
+	(*did.Transaction)(nil),       // 11: hi.did.Transaction
+	(*TradeBase)(nil),             // 12: hi.club.TradeBase
+	(*binance.BinanceResult)(nil), // 13: hi.binance.BinanceResult
 }
 var file_hi_club_messaging_proto_depIdxs = []int32{
 	1,  // 0: hi.club.Packet.notice:type_name -> hi.club.Notice
@@ -937,11 +958,12 @@ var file_hi_club_messaging_proto_depIdxs = []int32{
 	8,  // 14: hi.club.Content.chat:type_name -> hi.club.Content.Chat
 	11, // 15: hi.club.Content.trans:type_name -> hi.did.Transaction
 	12, // 16: hi.club.Content.trade:type_name -> hi.club.TradeBase
-	17, // [17:17] is the sub-list for method output_type
-	17, // [17:17] is the sub-list for method input_type
-	17, // [17:17] is the sub-list for extension type_name
-	17, // [17:17] is the sub-list for extension extendee
-	0,  // [0:17] is the sub-list for field type_name
+	13, // 17: hi.club.Content.binance:type_name -> hi.binance.BinanceResult
+	18, // [18:18] is the sub-list for method output_type
+	18, // [18:18] is the sub-list for method input_type
+	18, // [18:18] is the sub-list for extension type_name
+	18, // [18:18] is the sub-list for extension extendee
+	0,  // [0:18] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_messaging_proto_init() }
@@ -963,6 +985,7 @@ func file_hi_club_messaging_proto_init() {
 		(*Content_Chat_)(nil),
 		(*Content_Trans)(nil),
 		(*Content_Trade)(nil),
+		(*Content_Binance)(nil),
 	}
 	file_hi_club_messaging_proto_msgTypes[8].OneofWrappers = []any{}
 	type x struct{}

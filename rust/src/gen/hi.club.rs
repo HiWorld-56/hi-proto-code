@@ -4320,6 +4320,7 @@ pub struct MemberExit {
 /// transfer    转账卡            kind=trans(hi.did.Transaction)
 /// trade       交易卡            kind=trade(TradeBase)
 /// broadcast   广播
+/// binance     币安操作结果卡      kind=binance(hi.binance.BinanceResult)
 ///
 /// ⚠️ **注意是 `image_url` 不是 `image`、`audio_url` 不是 `audio`。**
 ///
@@ -4342,7 +4343,7 @@ pub struct MemberExit {
 pub struct Content {
     #[prost(string, optional, tag = "1")]
     pub r#type: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(oneof = "content::Kind", tags = "2, 3, 4")]
+    #[prost(oneof = "content::Kind", tags = "2, 3, 4, 5")]
     pub kind: ::core::option::Option<content::Kind>,
 }
 /// Nested message and enum types in `Content`.
@@ -4368,6 +4369,9 @@ pub mod content {
         /// 交易卡可入群,基础卡=PARTICIPANT
         #[prost(message, tag = "4")]
         Trade(super::TradeBase),
+        /// 币安操作的结果,机器人回给下指令的那个会话。与转账卡同型:载荷定义在别的包里,这里只引用。
+        #[prost(message, tag = "5")]
+        Binance(super::super::binance::BinanceResult),
     }
 }
 /// 群公共信息(所有成员一致)。群类型(单聊/群)在 base.type;public/private 见 private 字段。

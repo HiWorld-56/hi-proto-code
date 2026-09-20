@@ -16,6 +16,7 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/any.pb.dart' as $1;
 
+import '../binance/binance.pb.dart' as $4;
 import '../common.pb.dart' as $0;
 import '../did/transfer.pb.dart' as $2;
 import 'trade.pb.dart' as $3;
@@ -846,7 +847,7 @@ class Content_Chat extends $pb.GeneratedMessage {
   void clearDuration() => $_clearField(4);
 }
 
-enum Content_Kind { chat, trans, trade, notSet }
+enum Content_Kind { chat, trans, trade, binance, notSet }
 
 ///
 /// Content.type —— **一条消息里这一段是什么**。字符串,取值就是下面这张表,**别自己发明**。
@@ -858,6 +859,7 @@ enum Content_Kind { chat, trans, trade, notSet }
 /// transfer    转账卡            kind=trans(hi.did.Transaction)
 /// trade       交易卡            kind=trade(TradeBase)
 /// broadcast   广播
+/// binance     币安操作结果卡      kind=binance(hi.binance.BinanceResult)
 ///
 /// ⚠️ **注意是 `image_url` 不是 `image`、`audio_url` 不是 `audio`。**
 ///
@@ -882,12 +884,14 @@ class Content extends $pb.GeneratedMessage {
     Content_Chat? chat,
     $2.Transaction? trans,
     $3.TradeBase? trade,
+    $4.BinanceResult? binance,
   }) {
     final result = create();
     if (type != null) result.type = type;
     if (chat != null) result.chat = chat;
     if (trans != null) result.trans = trans;
     if (trade != null) result.trade = trade;
+    if (binance != null) result.binance = binance;
     return result;
   }
 
@@ -904,13 +908,14 @@ class Content extends $pb.GeneratedMessage {
     2: Content_Kind.chat,
     3: Content_Kind.trans,
     4: Content_Kind.trade,
+    5: Content_Kind.binance,
     0: Content_Kind.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Content',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3, 4])
+    ..oo(0, [2, 3, 4, 5])
     ..aOS(1, _omitFieldNames ? '' : 'type')
     ..aOM<Content_Chat>(2, _omitFieldNames ? '' : 'chat',
         subBuilder: Content_Chat.create)
@@ -918,6 +923,8 @@ class Content extends $pb.GeneratedMessage {
         subBuilder: $2.Transaction.create)
     ..aOM<$3.TradeBase>(4, _omitFieldNames ? '' : 'trade',
         subBuilder: $3.TradeBase.create)
+    ..aOM<$4.BinanceResult>(5, _omitFieldNames ? '' : 'binance',
+        subBuilder: $4.BinanceResult.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -941,10 +948,12 @@ class Content extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
   @$pb.TagNumber(4)
+  @$pb.TagNumber(5)
   Content_Kind whichKind() => _Content_KindByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
   @$pb.TagNumber(4)
+  @$pb.TagNumber(5)
   void clearKind() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -988,6 +997,18 @@ class Content extends $pb.GeneratedMessage {
   void clearTrade() => $_clearField(4);
   @$pb.TagNumber(4)
   $3.TradeBase ensureTrade() => $_ensure(3);
+
+  /// 币安操作的结果,机器人回给下指令的那个会话。与转账卡同型:载荷定义在别的包里,这里只引用。
+  @$pb.TagNumber(5)
+  $4.BinanceResult get binance => $_getN(4);
+  @$pb.TagNumber(5)
+  set binance($4.BinanceResult value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasBinance() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearBinance() => $_clearField(5);
+  @$pb.TagNumber(5)
+  $4.BinanceResult ensureBinance() => $_ensure(4);
 }
 
 const $core.bool _omitFieldNames =

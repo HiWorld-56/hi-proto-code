@@ -427,6 +427,16 @@ const Content$json = {
       '9': 0,
       '10': 'trade'
     },
+    {
+      '1': 'binance',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceResult',
+      '8': {},
+      '9': 0,
+      '10': 'binance'
+    },
   ],
   '3': [Content_Chat$json],
   '7': {},
@@ -495,8 +505,9 @@ final $typed_data.Uint8List contentDescriptor = $convert.base64Decode(
     'CgdDb250ZW50Eh0KBHR5cGUYASABKAlCBJC1GAJIAVIEdHlwZYgBARIxCgRjaGF0GAIgASgLMh'
     'UuaGkuY2x1Yi5Db250ZW50LkNoYXRCBJC1GAJIAFIEY2hhdBIxCgV0cmFucxgDIAEoCzITLmhp'
     'LmRpZC5UcmFuc2FjdGlvbkIEkLUYAUgAUgV0cmFucxIwCgV0cmFkZRgEIAEoCzISLmhpLmNsdW'
-    'IuVHJhZGVCYXNlQgSQtRgCSABSBXRyYWRlGsEBCgRDaGF0EiMKB2NvbnRlbnQYASABKAlCBJC1'
-    'GAJIAFIHY29udGVudIgBARIdCgRuYW1lGAIgASgJQgSQtRgCSAFSBG5hbWWIAQESHQoEc2l6ZR'
-    'gDIAEoDUIEkLUYAkgCUgRzaXpliAEBEiUKCGR1cmF0aW9uGAQgASgNQgSQtRgCSANSCGR1cmF0'
-    'aW9uiAEBOgSYtRgCQgoKCF9jb250ZW50QgcKBV9uYW1lQgcKBV9zaXplQgsKCV9kdXJhdGlvbj'
-    'oEmLUYAkIGCgRraW5kQgcKBV90eXBl');
+    'IuVHJhZGVCYXNlQgSQtRgCSABSBXRyYWRlEjsKB2JpbmFuY2UYBSABKAsyGS5oaS5iaW5hbmNl'
+    'LkJpbmFuY2VSZXN1bHRCBJC1GAJIAFIHYmluYW5jZRrBAQoEQ2hhdBIjCgdjb250ZW50GAEgAS'
+    'gJQgSQtRgCSABSB2NvbnRlbnSIAQESHQoEbmFtZRgCIAEoCUIEkLUYAkgBUgRuYW1liAEBEh0K'
+    'BHNpemUYAyABKA1CBJC1GAJIAlIEc2l6ZYgBARIlCghkdXJhdGlvbhgEIAEoDUIEkLUYAkgDUg'
+    'hkdXJhdGlvbogBAToEmLUYAkIKCghfY29udGVudEIHCgVfbmFtZUIHCgVfc2l6ZUILCglfZHVy'
+    'YXRpb246BJi1GAJCBgoEa2luZEIHCgVfdHlwZQ==');

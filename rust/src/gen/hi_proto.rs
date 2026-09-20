@@ -16,6 +16,10 @@ pub mod hi {
             include!("hi.ai.plugin.serde.rs");
         }
     }
+    pub mod binance {
+        include!("hi.binance.rs");
+        include!("hi.binance.serde.rs");
+    }
     pub mod club {
         include!("hi.club.rs");
         include!("hi.club.serde.rs");
