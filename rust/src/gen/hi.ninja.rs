@@ -584,7 +584,7 @@ pub struct BinanceRequest {
 pub struct BrainToFace {
     #[prost(
         oneof = "brain_to_face::Cmd",
-        tags = "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21, 22"
+        tags = "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21, 22, 23"
     )]
     pub cmd: ::core::option::Option<brain_to_face::Cmd>,
 }
@@ -672,7 +672,38 @@ pub mod brain_to_face {
         /// 同一份账户快照，face 不该为"看板"再学一套形状。`request` 是 face 给的流水号。
         #[prost(message, tag = "22")]
         BinanceResult(super::super::binance::BinanceResult),
+        /// **插件没初始化好**(它的 install 跑失败了)。face 照现有警告的样子弹一张卡,
+        /// 上面带「重试」—— 点了回 `plugin_init_retry`。
+        ///
+        /// 为什么要人来点:失败的原因往往在机器人**够不着**的地方(代理的群还没开、
+        /// 还没绑主人),自动重试多少次都一样;而人知道"什么时候可以再试了"。
+        #[prost(message, tag = "23")]
+        EventPluginInitFailed(super::PluginInitFailed),
     }
+}
+/// 插件的初始化(install)没成。
+///
+/// ⚠️ **这不是"插件坏了"** —— 插件装好了、方法照常可用,只是它的准备工作没做完
+/// (典型:交易类插件要加进代理的管理群,而群满了、代理还没开新群)。
+/// 所以 brain 不会因此卸载它,也不上报后台;要做的只有一件:**让人看见并能重试**。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PluginInitFailed {
+    /// 插件挂牌 uuid。重试时原样带回来
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    /// 插件名(给人看的)
+    #[prost(string, optional, tag = "2")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    /// 失败原因,**插件自己给的那句人话**(别在 face 上另编一句)
+    #[prost(string, optional, tag = "3")]
+    pub message: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 人点了「重试」。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PluginInitRetry {
+    /// 要重来的那个插件(来自 PluginInitFailed.uuid)
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 系统状态快照
 /// ntp:  系统时间已同步（时间戳 > 1_750_000_000，即 2025-06 之后）
@@ -689,7 +720,7 @@ pub struct StatusEvent {
 /// face -> brain
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct FaceToBrain {
-    #[prost(oneof = "face_to_brain::Cmd", tags = "1, 2, 3, 4, 5")]
+    #[prost(oneof = "face_to_brain::Cmd", tags = "1, 2, 3, 4, 5, 6")]
     pub cmd: ::core::option::Option<face_to_brain::Cmd>,
 }
 /// Nested message and enum types in `FaceToBrain`.
@@ -719,6 +750,9 @@ pub mod face_to_brain {
         /// 替我去币安做一次（face 自己不连币安，见 BinanceRequest 的说明）
         #[prost(message, tag = "5")]
         BinanceRequest(super::BinanceRequest),
+        /// 人在那张「插件没初始化好」的卡上点了重试
+        #[prost(message, tag = "6")]
+        PluginInitRetry(super::PluginInitRetry),
     }
 }
 /// 插件下载/安装进度。

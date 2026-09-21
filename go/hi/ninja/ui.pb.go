@@ -182,7 +182,7 @@ func (x PluginProgress_State) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use PluginProgress_State.Descriptor instead.
 func (PluginProgress_State) EnumDescriptor() ([]byte, []int) {
-	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{11, 0}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{13, 0}
 }
 
 type UpdateAction_Action int32
@@ -240,7 +240,7 @@ func (x UpdateAction_Action) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use UpdateAction_Action.Descriptor instead.
 func (UpdateAction_Action) EnumDescriptor() ([]byte, []int) {
-	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{12, 0}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{14, 0}
 }
 
 // 机器人初始化：自身身份 + 当前所有者
@@ -704,6 +704,7 @@ type BrainToFace struct {
 	//	*BrainToFace_EventUpdate
 	//	*BrainToFace_EventBinanceSettings
 	//	*BrainToFace_BinanceResult
+	//	*BrainToFace_EventPluginInitFailed
 	Cmd           isBrainToFace_Cmd `protobuf_oneof:"cmd"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -944,6 +945,15 @@ func (x *BrainToFace) GetBinanceResult() *binance.BinanceResult {
 	return nil
 }
 
+func (x *BrainToFace) GetEventPluginInitFailed() *PluginInitFailed {
+	if x != nil {
+		if x, ok := x.Cmd.(*BrainToFace_EventPluginInitFailed); ok {
+			return x.EventPluginInitFailed
+		}
+	}
+	return nil
+}
+
 type isBrainToFace_Cmd interface {
 	isBrainToFace_Cmd()
 }
@@ -1049,6 +1059,15 @@ type BrainToFace_BinanceResult struct {
 	BinanceResult *binance.BinanceResult `protobuf:"bytes,22,opt,name=binance_result,json=binanceResult,proto3,oneof"`
 }
 
+type BrainToFace_EventPluginInitFailed struct {
+	// **插件没初始化好**(它的 install 跑失败了)。face 照现有警告的样子弹一张卡,
+	// 上面带「重试」—— 点了回 `plugin_init_retry`。
+	//
+	// 为什么要人来点:失败的原因往往在机器人**够不着**的地方(代理的群还没开、
+	// 还没绑主人),自动重试多少次都一样;而人知道"什么时候可以再试了"。
+	EventPluginInitFailed *PluginInitFailed `protobuf:"bytes,23,opt,name=event_plugin_init_failed,json=eventPluginInitFailed,proto3,oneof"`
+}
+
 func (*BrainToFace_InitRobot) isBrainToFace_Cmd() {}
 
 func (*BrainToFace_ShowListen) isBrainToFace_Cmd() {}
@@ -1093,6 +1112,118 @@ func (*BrainToFace_EventBinanceSettings) isBrainToFace_Cmd() {}
 
 func (*BrainToFace_BinanceResult) isBrainToFace_Cmd() {}
 
+func (*BrainToFace_EventPluginInitFailed) isBrainToFace_Cmd() {}
+
+// 插件的初始化(install)没成。
+//
+// ⚠️ **这不是"插件坏了"** —— 插件装好了、方法照常可用,只是它的准备工作没做完
+// (典型:交易类插件要加进代理的管理群,而群满了、代理还没开新群)。
+// 所以 brain 不会因此卸载它,也不上报后台;要做的只有一件:**让人看见并能重试**。
+type PluginInitFailed struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Uuid          *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`       // 插件挂牌 uuid。重试时原样带回来
+	Name          *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`       // 插件名(给人看的)
+	Message       *string                `protobuf:"bytes,3,opt,name=message,proto3,oneof" json:"message,omitempty"` // 失败原因,**插件自己给的那句人话**(别在 face 上另编一句)
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PluginInitFailed) Reset() {
+	*x = PluginInitFailed{}
+	mi := &file_hi_ninja_ui_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PluginInitFailed) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PluginInitFailed) ProtoMessage() {}
+
+func (x *PluginInitFailed) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ninja_ui_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PluginInitFailed.ProtoReflect.Descriptor instead.
+func (*PluginInitFailed) Descriptor() ([]byte, []int) {
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *PluginInitFailed) GetUuid() string {
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
+	}
+	return ""
+}
+
+func (x *PluginInitFailed) GetName() string {
+	if x != nil && x.Name != nil {
+		return *x.Name
+	}
+	return ""
+}
+
+func (x *PluginInitFailed) GetMessage() string {
+	if x != nil && x.Message != nil {
+		return *x.Message
+	}
+	return ""
+}
+
+// 人点了「重试」。
+type PluginInitRetry struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Uuid          *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"` // 要重来的那个插件(来自 PluginInitFailed.uuid)
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PluginInitRetry) Reset() {
+	*x = PluginInitRetry{}
+	mi := &file_hi_ninja_ui_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PluginInitRetry) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PluginInitRetry) ProtoMessage() {}
+
+func (x *PluginInitRetry) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ninja_ui_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PluginInitRetry.ProtoReflect.Descriptor instead.
+func (*PluginInitRetry) Descriptor() ([]byte, []int) {
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *PluginInitRetry) GetUuid() string {
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
+	}
+	return ""
+}
+
 // 系统状态快照
 // ntp:  系统时间已同步（时间戳 > 1_750_000_000，即 2025-06 之后）
 // wifi: 服务器 TCP 443 可达
@@ -1107,7 +1238,7 @@ type StatusEvent struct {
 
 func (x *StatusEvent) Reset() {
 	*x = StatusEvent{}
-	mi := &file_hi_ninja_ui_proto_msgTypes[9]
+	mi := &file_hi_ninja_ui_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1119,7 +1250,7 @@ func (x *StatusEvent) String() string {
 func (*StatusEvent) ProtoMessage() {}
 
 func (x *StatusEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ui_proto_msgTypes[9]
+	mi := &file_hi_ninja_ui_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1132,7 +1263,7 @@ func (x *StatusEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StatusEvent.ProtoReflect.Descriptor instead.
 func (*StatusEvent) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{9}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *StatusEvent) GetNtp() bool {
@@ -1166,6 +1297,7 @@ type FaceToBrain struct {
 	//	*FaceToBrain_GetBinanceSettings
 	//	*FaceToBrain_RequestInit
 	//	*FaceToBrain_BinanceRequest
+	//	*FaceToBrain_PluginInitRetry
 	Cmd           isFaceToBrain_Cmd `protobuf_oneof:"cmd"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1173,7 +1305,7 @@ type FaceToBrain struct {
 
 func (x *FaceToBrain) Reset() {
 	*x = FaceToBrain{}
-	mi := &file_hi_ninja_ui_proto_msgTypes[10]
+	mi := &file_hi_ninja_ui_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1185,7 +1317,7 @@ func (x *FaceToBrain) String() string {
 func (*FaceToBrain) ProtoMessage() {}
 
 func (x *FaceToBrain) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ui_proto_msgTypes[10]
+	mi := &file_hi_ninja_ui_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1198,7 +1330,7 @@ func (x *FaceToBrain) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FaceToBrain.ProtoReflect.Descriptor instead.
 func (*FaceToBrain) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{10}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *FaceToBrain) GetCmd() isFaceToBrain_Cmd {
@@ -1253,6 +1385,15 @@ func (x *FaceToBrain) GetBinanceRequest() *BinanceRequest {
 	return nil
 }
 
+func (x *FaceToBrain) GetPluginInitRetry() *PluginInitRetry {
+	if x != nil {
+		if x, ok := x.Cmd.(*FaceToBrain_PluginInitRetry); ok {
+			return x.PluginInitRetry
+		}
+	}
+	return nil
+}
+
 type isFaceToBrain_Cmd interface {
 	isFaceToBrain_Cmd()
 }
@@ -1289,6 +1430,11 @@ type FaceToBrain_BinanceRequest struct {
 	BinanceRequest *BinanceRequest `protobuf:"bytes,5,opt,name=binance_request,json=binanceRequest,proto3,oneof"`
 }
 
+type FaceToBrain_PluginInitRetry struct {
+	// 人在那张「插件没初始化好」的卡上点了重试
+	PluginInitRetry *PluginInitRetry `protobuf:"bytes,6,opt,name=plugin_init_retry,json=pluginInitRetry,proto3,oneof"`
+}
+
 func (*FaceToBrain_VoiceState) isFaceToBrain_Cmd() {}
 
 func (*FaceToBrain_UpdateAction) isFaceToBrain_Cmd() {}
@@ -1298,6 +1444,8 @@ func (*FaceToBrain_GetBinanceSettings) isFaceToBrain_Cmd() {}
 func (*FaceToBrain_RequestInit) isFaceToBrain_Cmd() {}
 
 func (*FaceToBrain_BinanceRequest) isFaceToBrain_Cmd() {}
+
+func (*FaceToBrain_PluginInitRetry) isFaceToBrain_Cmd() {}
 
 // 插件下载/安装进度。
 //
@@ -1324,7 +1472,7 @@ type PluginProgress struct {
 
 func (x *PluginProgress) Reset() {
 	*x = PluginProgress{}
-	mi := &file_hi_ninja_ui_proto_msgTypes[11]
+	mi := &file_hi_ninja_ui_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1336,7 +1484,7 @@ func (x *PluginProgress) String() string {
 func (*PluginProgress) ProtoMessage() {}
 
 func (x *PluginProgress) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ui_proto_msgTypes[11]
+	mi := &file_hi_ninja_ui_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1349,7 +1497,7 @@ func (x *PluginProgress) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PluginProgress.ProtoReflect.Descriptor instead.
 func (*PluginProgress) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{11}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *PluginProgress) GetUuid() string {
@@ -1414,7 +1562,7 @@ type UpdateAction struct {
 
 func (x *UpdateAction) Reset() {
 	*x = UpdateAction{}
-	mi := &file_hi_ninja_ui_proto_msgTypes[12]
+	mi := &file_hi_ninja_ui_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1426,7 +1574,7 @@ func (x *UpdateAction) String() string {
 func (*UpdateAction) ProtoMessage() {}
 
 func (x *UpdateAction) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ui_proto_msgTypes[12]
+	mi := &file_hi_ninja_ui_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1439,7 +1587,7 @@ func (x *UpdateAction) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateAction.ProtoReflect.Descriptor instead.
 func (*UpdateAction) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{12}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *UpdateAction) GetAction() UpdateAction_Action {
@@ -1491,8 +1639,7 @@ const file_hi_ninja_ui_proto_rawDesc = "" +
 	"paramsJson\x88\x01\x01B\x05\n" +
 	"\x03_idB\x05\n" +
 	"\x03_opB\x0e\n" +
-	"\f_params_json\"\xd9\n" +
-	"\n" +
+	"\f_params_json\"\xb0\v\n" +
 	"\vBrainToFace\x124\n" +
 	"\n" +
 	"init_robot\x18\x01 \x01(\v2\x13.hi.ninja.RobotInitH\x00R\tinitRobot\x128\n" +
@@ -1524,22 +1671,35 @@ const file_hi_ninja_ui_proto_rawDesc = "" +
 	"\fevent_status\x18\x12 \x01(\v2\x15.hi.ninja.StatusEventH\x00R\veventStatus\x12;\n" +
 	"\fevent_update\x18\x13 \x01(\v2\x16.hi.ninja.UpdateStatusH\x00R\veventUpdate\x12Q\n" +
 	"\x16event_binance_settings\x18\x15 \x01(\v2\x19.hi.ninja.BinanceSettingsH\x00R\x14eventBinanceSettings\x12B\n" +
-	"\x0ebinance_result\x18\x16 \x01(\v2\x19.hi.binance.BinanceResultH\x00R\rbinanceResultB\x05\n" +
-	"\x03cmd\"m\n" +
+	"\x0ebinance_result\x18\x16 \x01(\v2\x19.hi.binance.BinanceResultH\x00R\rbinanceResult\x12U\n" +
+	"\x18event_plugin_init_failed\x18\x17 \x01(\v2\x1a.hi.ninja.PluginInitFailedH\x00R\x15eventPluginInitFailedB\x05\n" +
+	"\x03cmd\"\x81\x01\n" +
+	"\x10PluginInitFailed\x12\x17\n" +
+	"\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x17\n" +
+	"\x04name\x18\x02 \x01(\tH\x01R\x04name\x88\x01\x01\x12\x1d\n" +
+	"\amessage\x18\x03 \x01(\tH\x02R\amessage\x88\x01\x01B\a\n" +
+	"\x05_uuidB\a\n" +
+	"\x05_nameB\n" +
+	"\n" +
+	"\b_message\"3\n" +
+	"\x0fPluginInitRetry\x12\x17\n" +
+	"\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01B\a\n" +
+	"\x05_uuid\"m\n" +
 	"\vStatusEvent\x12\x15\n" +
 	"\x03ntp\x18\x01 \x01(\bH\x00R\x03ntp\x88\x01\x01\x12\x17\n" +
 	"\x04wifi\x18\x02 \x01(\bH\x01R\x04wifi\x88\x01\x01\x12\x15\n" +
 	"\x03usb\x18\x03 \x01(\bH\x02R\x03usb\x88\x01\x01B\x06\n" +
 	"\x04_ntpB\a\n" +
 	"\x05_wifiB\x06\n" +
-	"\x04_usb\"\xdb\x02\n" +
+	"\x04_usb\"\xa4\x03\n" +
 	"\vFaceToBrain\x128\n" +
 	"\vvoice_state\x18\x01 \x01(\x0e2\x15.hi.ninja.StateToggleH\x00R\n" +
 	"voiceState\x12=\n" +
 	"\rupdate_action\x18\x02 \x01(\v2\x16.hi.ninja.UpdateActionH\x00R\fupdateAction\x12J\n" +
 	"\x14get_binance_settings\x18\x03 \x01(\v2\x16.google.protobuf.EmptyH\x00R\x12getBinanceSettings\x12;\n" +
 	"\frequest_init\x18\x04 \x01(\v2\x16.google.protobuf.EmptyH\x00R\vrequestInit\x12C\n" +
-	"\x0fbinance_request\x18\x05 \x01(\v2\x18.hi.ninja.BinanceRequestH\x00R\x0ebinanceRequestB\x05\n" +
+	"\x0fbinance_request\x18\x05 \x01(\v2\x18.hi.ninja.BinanceRequestH\x00R\x0ebinanceRequest\x12G\n" +
+	"\x11plugin_init_retry\x18\x06 \x01(\v2\x19.hi.ninja.PluginInitRetryH\x00R\x0fpluginInitRetryB\x05\n" +
 	"\x03cmd\"\xdb\x03\n" +
 	"\x0ePluginProgress\x12\x17\n" +
 	"\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x19\n" +
@@ -1597,7 +1757,7 @@ func file_hi_ninja_ui_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_ninja_ui_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
-var file_hi_ninja_ui_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
+var file_hi_ninja_ui_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
 var file_hi_ninja_ui_proto_goTypes = []any{
 	(StateToggle)(0),              // 0: hi.ninja.StateToggle
 	(Emotion)(0),                  // 1: hi.ninja.Emotion
@@ -1612,59 +1772,63 @@ var file_hi_ninja_ui_proto_goTypes = []any{
 	(*BinanceSettings)(nil),       // 10: hi.ninja.BinanceSettings
 	(*BinanceRequest)(nil),        // 11: hi.ninja.BinanceRequest
 	(*BrainToFace)(nil),           // 12: hi.ninja.BrainToFace
-	(*StatusEvent)(nil),           // 13: hi.ninja.StatusEvent
-	(*FaceToBrain)(nil),           // 14: hi.ninja.FaceToBrain
-	(*PluginProgress)(nil),        // 15: hi.ninja.PluginProgress
-	(*UpdateAction)(nil),          // 16: hi.ninja.UpdateAction
-	(*hi.Entity)(nil),             // 17: hi.Entity
-	(*club.GroupInfo)(nil),        // 18: hi.club.GroupInfo
-	(*club.Message)(nil),          // 19: hi.club.Message
-	(*emptypb.Empty)(nil),         // 20: google.protobuf.Empty
-	(*ai.PluginView)(nil),         // 21: hi.ai.PluginView
-	(*did.Transaction)(nil),       // 22: hi.did.Transaction
-	(*UpdateStatus)(nil),          // 23: hi.ninja.UpdateStatus
-	(*binance.BinanceResult)(nil), // 24: hi.binance.BinanceResult
+	(*PluginInitFailed)(nil),      // 13: hi.ninja.PluginInitFailed
+	(*PluginInitRetry)(nil),       // 14: hi.ninja.PluginInitRetry
+	(*StatusEvent)(nil),           // 15: hi.ninja.StatusEvent
+	(*FaceToBrain)(nil),           // 16: hi.ninja.FaceToBrain
+	(*PluginProgress)(nil),        // 17: hi.ninja.PluginProgress
+	(*UpdateAction)(nil),          // 18: hi.ninja.UpdateAction
+	(*hi.Entity)(nil),             // 19: hi.Entity
+	(*club.GroupInfo)(nil),        // 20: hi.club.GroupInfo
+	(*club.Message)(nil),          // 21: hi.club.Message
+	(*emptypb.Empty)(nil),         // 22: google.protobuf.Empty
+	(*ai.PluginView)(nil),         // 23: hi.ai.PluginView
+	(*did.Transaction)(nil),       // 24: hi.did.Transaction
+	(*UpdateStatus)(nil),          // 25: hi.ninja.UpdateStatus
+	(*binance.BinanceResult)(nil), // 26: hi.binance.BinanceResult
 }
 var file_hi_ninja_ui_proto_depIdxs = []int32{
-	17, // 0: hi.ninja.RobotInit.robot:type_name -> hi.Entity
-	17, // 1: hi.ninja.RobotInit.master:type_name -> hi.Entity
-	17, // 2: hi.ninja.FriendList.list:type_name -> hi.Entity
-	18, // 3: hi.ninja.GroupInfoList.list:type_name -> hi.club.GroupInfo
-	17, // 4: hi.ninja.MasterEvent.master:type_name -> hi.Entity
+	19, // 0: hi.ninja.RobotInit.robot:type_name -> hi.Entity
+	19, // 1: hi.ninja.RobotInit.master:type_name -> hi.Entity
+	19, // 2: hi.ninja.FriendList.list:type_name -> hi.Entity
+	20, // 3: hi.ninja.GroupInfoList.list:type_name -> hi.club.GroupInfo
+	19, // 4: hi.ninja.MasterEvent.master:type_name -> hi.Entity
 	4,  // 5: hi.ninja.BrainToFace.init_robot:type_name -> hi.ninja.RobotInit
 	0,  // 6: hi.ninja.BrainToFace.show_listen:type_name -> hi.ninja.StateToggle
 	1,  // 7: hi.ninja.BrainToFace.show_emotion:type_name -> hi.ninja.Emotion
-	19, // 8: hi.ninja.BrainToFace.show_im_request:type_name -> hi.club.Message
+	21, // 8: hi.ninja.BrainToFace.show_im_request:type_name -> hi.club.Message
 	8,  // 9: hi.ninja.BrainToFace.show_im_reply:type_name -> hi.ninja.TextReply
 	8,  // 10: hi.ninja.BrainToFace.show_voice_reply:type_name -> hi.ninja.TextReply
-	20, // 11: hi.ninja.BrainToFace.show_qr_code:type_name -> google.protobuf.Empty
-	17, // 12: hi.ninja.BrainToFace.event_robot:type_name -> hi.Entity
+	22, // 11: hi.ninja.BrainToFace.show_qr_code:type_name -> google.protobuf.Empty
+	19, // 12: hi.ninja.BrainToFace.event_robot:type_name -> hi.Entity
 	7,  // 13: hi.ninja.BrainToFace.event_master:type_name -> hi.ninja.MasterEvent
-	18, // 14: hi.ninja.BrainToFace.event_members:type_name -> hi.club.GroupInfo
-	21, // 15: hi.ninja.BrainToFace.event_plugin:type_name -> hi.ai.PluginView
-	15, // 16: hi.ninja.BrainToFace.event_plugin_progress:type_name -> hi.ninja.PluginProgress
-	22, // 17: hi.ninja.BrainToFace.event_transaction:type_name -> hi.did.Transaction
+	20, // 14: hi.ninja.BrainToFace.event_members:type_name -> hi.club.GroupInfo
+	23, // 15: hi.ninja.BrainToFace.event_plugin:type_name -> hi.ai.PluginView
+	17, // 16: hi.ninja.BrainToFace.event_plugin_progress:type_name -> hi.ninja.PluginProgress
+	24, // 17: hi.ninja.BrainToFace.event_transaction:type_name -> hi.did.Transaction
 	9,  // 18: hi.ninja.BrainToFace.play_audio:type_name -> hi.ninja.AudioPlay
 	5,  // 19: hi.ninja.BrainToFace.event_friends:type_name -> hi.ninja.FriendList
-	17, // 20: hi.ninja.BrainToFace.event_friend_delete:type_name -> hi.Entity
-	17, // 21: hi.ninja.BrainToFace.event_friend_add:type_name -> hi.Entity
+	19, // 20: hi.ninja.BrainToFace.event_friend_delete:type_name -> hi.Entity
+	19, // 21: hi.ninja.BrainToFace.event_friend_add:type_name -> hi.Entity
 	6,  // 22: hi.ninja.BrainToFace.members_init:type_name -> hi.ninja.GroupInfoList
-	13, // 23: hi.ninja.BrainToFace.event_status:type_name -> hi.ninja.StatusEvent
-	23, // 24: hi.ninja.BrainToFace.event_update:type_name -> hi.ninja.UpdateStatus
+	15, // 23: hi.ninja.BrainToFace.event_status:type_name -> hi.ninja.StatusEvent
+	25, // 24: hi.ninja.BrainToFace.event_update:type_name -> hi.ninja.UpdateStatus
 	10, // 25: hi.ninja.BrainToFace.event_binance_settings:type_name -> hi.ninja.BinanceSettings
-	24, // 26: hi.ninja.BrainToFace.binance_result:type_name -> hi.binance.BinanceResult
-	0,  // 27: hi.ninja.FaceToBrain.voice_state:type_name -> hi.ninja.StateToggle
-	16, // 28: hi.ninja.FaceToBrain.update_action:type_name -> hi.ninja.UpdateAction
-	20, // 29: hi.ninja.FaceToBrain.get_binance_settings:type_name -> google.protobuf.Empty
-	20, // 30: hi.ninja.FaceToBrain.request_init:type_name -> google.protobuf.Empty
-	11, // 31: hi.ninja.FaceToBrain.binance_request:type_name -> hi.ninja.BinanceRequest
-	2,  // 32: hi.ninja.PluginProgress.state:type_name -> hi.ninja.PluginProgress.State
-	3,  // 33: hi.ninja.UpdateAction.action:type_name -> hi.ninja.UpdateAction.Action
-	34, // [34:34] is the sub-list for method output_type
-	34, // [34:34] is the sub-list for method input_type
-	34, // [34:34] is the sub-list for extension type_name
-	34, // [34:34] is the sub-list for extension extendee
-	0,  // [0:34] is the sub-list for field type_name
+	26, // 26: hi.ninja.BrainToFace.binance_result:type_name -> hi.binance.BinanceResult
+	13, // 27: hi.ninja.BrainToFace.event_plugin_init_failed:type_name -> hi.ninja.PluginInitFailed
+	0,  // 28: hi.ninja.FaceToBrain.voice_state:type_name -> hi.ninja.StateToggle
+	18, // 29: hi.ninja.FaceToBrain.update_action:type_name -> hi.ninja.UpdateAction
+	22, // 30: hi.ninja.FaceToBrain.get_binance_settings:type_name -> google.protobuf.Empty
+	22, // 31: hi.ninja.FaceToBrain.request_init:type_name -> google.protobuf.Empty
+	11, // 32: hi.ninja.FaceToBrain.binance_request:type_name -> hi.ninja.BinanceRequest
+	14, // 33: hi.ninja.FaceToBrain.plugin_init_retry:type_name -> hi.ninja.PluginInitRetry
+	2,  // 34: hi.ninja.PluginProgress.state:type_name -> hi.ninja.PluginProgress.State
+	3,  // 35: hi.ninja.UpdateAction.action:type_name -> hi.ninja.UpdateAction.Action
+	36, // [36:36] is the sub-list for method output_type
+	36, // [36:36] is the sub-list for method input_type
+	36, // [36:36] is the sub-list for extension type_name
+	36, // [36:36] is the sub-list for extension extendee
+	0,  // [0:36] is the sub-list for field type_name
 }
 
 func init() { file_hi_ninja_ui_proto_init() }
@@ -1701,24 +1865,28 @@ func file_hi_ninja_ui_proto_init() {
 		(*BrainToFace_EventUpdate)(nil),
 		(*BrainToFace_EventBinanceSettings)(nil),
 		(*BrainToFace_BinanceResult)(nil),
+		(*BrainToFace_EventPluginInitFailed)(nil),
 	}
 	file_hi_ninja_ui_proto_msgTypes[9].OneofWrappers = []any{}
-	file_hi_ninja_ui_proto_msgTypes[10].OneofWrappers = []any{
+	file_hi_ninja_ui_proto_msgTypes[10].OneofWrappers = []any{}
+	file_hi_ninja_ui_proto_msgTypes[11].OneofWrappers = []any{}
+	file_hi_ninja_ui_proto_msgTypes[12].OneofWrappers = []any{
 		(*FaceToBrain_VoiceState)(nil),
 		(*FaceToBrain_UpdateAction)(nil),
 		(*FaceToBrain_GetBinanceSettings)(nil),
 		(*FaceToBrain_RequestInit)(nil),
 		(*FaceToBrain_BinanceRequest)(nil),
+		(*FaceToBrain_PluginInitRetry)(nil),
 	}
-	file_hi_ninja_ui_proto_msgTypes[11].OneofWrappers = []any{}
-	file_hi_ninja_ui_proto_msgTypes[12].OneofWrappers = []any{}
+	file_hi_ninja_ui_proto_msgTypes[13].OneofWrappers = []any{}
+	file_hi_ninja_ui_proto_msgTypes[14].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ninja_ui_proto_rawDesc), len(file_hi_ninja_ui_proto_rawDesc)),
 			NumEnums:      4,
-			NumMessages:   13,
+			NumMessages:   15,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
