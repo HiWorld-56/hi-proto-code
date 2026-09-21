@@ -28,6 +28,7 @@ const (
 	Group_GetMemberTotal_FullMethodName = "/hi.club.Group/GetMemberTotal"
 	Group_Invite_FullMethodName         = "/hi.club.Group/Invite"
 	Group_Join_FullMethodName           = "/hi.club.Group/Join"
+	Group_ListByCreator_FullMethodName  = "/hi.club.Group/ListByCreator"
 	Group_Quit_FullMethodName           = "/hi.club.Group/Quit"
 	Group_Remove_FullMethodName         = "/hi.club.Group/Remove"
 	Group_ListMessages_FullMethodName   = "/hi.club.Group/ListMessages"
@@ -55,6 +56,7 @@ type GroupClient interface {
 	GetMemberTotal(ctx context.Context, in *GetGroupMemberTotalReq, opts ...grpc.CallOption) (*GetGroupMemberTotalResp, error)
 	Invite(ctx context.Context, in *InviteGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Join(ctx context.Context, in *JoinGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ListByCreator(ctx context.Context, in *ListGroupsByCreatorReq, opts ...grpc.CallOption) (*ListGroupsByCreatorResp, error)
 	Quit(ctx context.Context, in *QuitGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Remove(ctx context.Context, in *RemoveGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListMessages(ctx context.Context, in *ListGroupMessagesReq, opts ...grpc.CallOption) (*ListGroupMessagesResp, error)
@@ -152,6 +154,16 @@ func (c *groupClient) Join(ctx context.Context, in *JoinGroupReq, opts ...grpc.C
 	return out, nil
 }
 
+func (c *groupClient) ListByCreator(ctx context.Context, in *ListGroupsByCreatorReq, opts ...grpc.CallOption) (*ListGroupsByCreatorResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListGroupsByCreatorResp)
+	err := c.cc.Invoke(ctx, Group_ListByCreator_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *groupClient) Quit(ctx context.Context, in *QuitGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -240,6 +252,7 @@ type GroupServer interface {
 	GetMemberTotal(context.Context, *GetGroupMemberTotalReq) (*GetGroupMemberTotalResp, error)
 	Invite(context.Context, *InviteGroupReq) (*emptypb.Empty, error)
 	Join(context.Context, *JoinGroupReq) (*emptypb.Empty, error)
+	ListByCreator(context.Context, *ListGroupsByCreatorReq) (*ListGroupsByCreatorResp, error)
 	Quit(context.Context, *QuitGroupReq) (*emptypb.Empty, error)
 	Remove(context.Context, *RemoveGroupReq) (*emptypb.Empty, error)
 	ListMessages(context.Context, *ListGroupMessagesReq) (*ListGroupMessagesResp, error)
@@ -279,6 +292,9 @@ func (UnimplementedGroupServer) Invite(context.Context, *InviteGroupReq) (*empty
 }
 func (UnimplementedGroupServer) Join(context.Context, *JoinGroupReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Join not implemented")
+}
+func (UnimplementedGroupServer) ListByCreator(context.Context, *ListGroupsByCreatorReq) (*ListGroupsByCreatorResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListByCreator not implemented")
 }
 func (UnimplementedGroupServer) Quit(context.Context, *QuitGroupReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Quit not implemented")
@@ -465,6 +481,24 @@ func _Group_Join_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Group_ListByCreator_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListGroupsByCreatorReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GroupServer).ListByCreator(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Group_ListByCreator_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GroupServer).ListByCreator(ctx, req.(*ListGroupsByCreatorReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Group_Quit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(QuitGroupReq)
 	if err := dec(in); err != nil {
@@ -629,6 +663,10 @@ var Group_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Join",
 			Handler:    _Group_Join_Handler,
+		},
+		{
+			MethodName: "ListByCreator",
+			Handler:    _Group_ListByCreator_Handler,
 		},
 		{
 			MethodName: "Quit",

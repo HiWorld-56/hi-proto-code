@@ -55,6 +55,11 @@ class GroupStub(object):
                 request_serializer=hi_dot_club_dot_group__pb2.JoinGroupReq.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
+        self.ListByCreator = channel.unary_unary(
+                '/hi.club.Group/ListByCreator',
+                request_serializer=hi_dot_club_dot_group__pb2.ListGroupsByCreatorReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_group__pb2.ListGroupsByCreatorResp.FromString,
+                _registered_method=True)
         self.Quit = channel.unary_unary(
                 '/hi.club.Group/Quit',
                 request_serializer=hi_dot_club_dot_group__pb2.QuitGroupReq.SerializeToString,
@@ -149,6 +154,12 @@ class GroupServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ListByCreator(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def Quit(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -233,6 +244,11 @@ def add_GroupServicer_to_server(servicer, server):
                     servicer.Join,
                     request_deserializer=hi_dot_club_dot_group__pb2.JoinGroupReq.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'ListByCreator': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListByCreator,
+                    request_deserializer=hi_dot_club_dot_group__pb2.ListGroupsByCreatorReq.FromString,
+                    response_serializer=hi_dot_club_dot_group__pb2.ListGroupsByCreatorResp.SerializeToString,
             ),
             'Quit': grpc.unary_unary_rpc_method_handler(
                     servicer.Quit,
@@ -486,6 +502,33 @@ class Group(object):
             '/hi.club.Group/Join',
             hi_dot_club_dot_group__pb2.JoinGroupReq.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ListByCreator(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.Group/ListByCreator',
+            hi_dot_club_dot_group__pb2.ListGroupsByCreatorReq.SerializeToString,
+            hi_dot_club_dot_group__pb2.ListGroupsByCreatorResp.FromString,
             options,
             channel_credentials,
             insecure,

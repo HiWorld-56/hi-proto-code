@@ -12,6 +12,7 @@
 
 import 'dart:core' as $core;
 
+import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../common.pb.dart' as $2;
@@ -26,11 +27,13 @@ class GroupBase extends $pb.GeneratedMessage {
     $2.Entity? base,
     $core.String? background,
     $core.bool? private,
+    $core.bool? findable,
   }) {
     final result = create();
     if (base != null) result.base = base;
     if (background != null) result.background = background;
     if (private != null) result.private = private;
+    if (findable != null) result.findable = findable;
     return result;
   }
 
@@ -51,6 +54,7 @@ class GroupBase extends $pb.GeneratedMessage {
         subBuilder: $2.Entity.create)
     ..aOS(2, _omitFieldNames ? '' : 'background')
     ..aOB(3, _omitFieldNames ? '' : 'private')
+    ..aOB(4, _omitFieldNames ? '' : 'findable')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -99,6 +103,22 @@ class GroupBase extends $pb.GeneratedMessage {
   $core.bool hasPrivate() => $_has(2);
   @$pb.TagNumber(3)
   void clearPrivate() => $_clearField(3);
+
+  /// **能不能被"按创建者"找到**(`Group.ListByCreator`)。默认 false ——
+  /// 新建的群一律找不到,加这个接口不会把谁的群暴露出去。
+  ///
+  /// 用途:代理建一批群来管机器人,群有 300 人上限,满了就再建一个。
+  /// 把它们设成**公开 + 可被找到**,机器人(插件的 install)就能凭代理的 did
+  /// 现查出当前可用的那几个,挨个试着加 —— 代理不需要自己跑一个服务,
+  /// 也不需要每加一个群就发一版新插件。
+  @$pb.TagNumber(4)
+  $core.bool get findable => $_getBF(3);
+  @$pb.TagNumber(4)
+  set findable($core.bool value) => $_setBool(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasFindable() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearFindable() => $_clearField(4);
 }
 
 /// 成员相关属性(**对外可见**:成员列表里人人可见谁是什么角色、谁被禁言)。
@@ -1420,6 +1440,7 @@ class UpdateGroupReq extends $pb.GeneratedMessage {
     $core.String? avatar,
     $core.String? background,
     $core.bool? private,
+    $core.bool? findable,
   }) {
     final result = create();
     if (group != null) result.group = group;
@@ -1427,6 +1448,7 @@ class UpdateGroupReq extends $pb.GeneratedMessage {
     if (avatar != null) result.avatar = avatar;
     if (background != null) result.background = background;
     if (private != null) result.private = private;
+    if (findable != null) result.findable = findable;
     return result;
   }
 
@@ -1448,6 +1470,7 @@ class UpdateGroupReq extends $pb.GeneratedMessage {
     ..aOS(3, _omitFieldNames ? '' : 'avatar')
     ..aOS(4, _omitFieldNames ? '' : 'background')
     ..aOB(5, _omitFieldNames ? '' : 'private')
+    ..aOB(6, _omitFieldNames ? '' : 'findable')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1513,6 +1536,206 @@ class UpdateGroupReq extends $pb.GeneratedMessage {
   $core.bool hasPrivate() => $_has(4);
   @$pb.TagNumber(5)
   void clearPrivate() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.bool get findable => $_getBF(5);
+  @$pb.TagNumber(6)
+  set findable($core.bool value) => $_setBool(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasFindable() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearFindable() => $_clearField(6);
+}
+
+/// 按创建者找群。
+///
+/// ⚠️ **只回「公开 且 可被找到」的群**,而这两样默认都不是 —— 所以这个接口
+/// 不会把谁的群翻出来:群主得自己在界面上把它设成"可被找到"。
+class ListGroupsByCreatorReq extends $pb.GeneratedMessage {
+  factory ListGroupsByCreatorReq({
+    $core.String? creator,
+  }) {
+    final result = create();
+    if (creator != null) result.creator = creator;
+    return result;
+  }
+
+  ListGroupsByCreatorReq._();
+
+  factory ListGroupsByCreatorReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListGroupsByCreatorReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListGroupsByCreatorReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'creator')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListGroupsByCreatorReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListGroupsByCreatorReq copyWith(
+          void Function(ListGroupsByCreatorReq) updates) =>
+      super.copyWith((message) => updates(message as ListGroupsByCreatorReq))
+          as ListGroupsByCreatorReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListGroupsByCreatorReq create() => ListGroupsByCreatorReq._();
+  @$core.override
+  ListGroupsByCreatorReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListGroupsByCreatorReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListGroupsByCreatorReq>(create);
+  static ListGroupsByCreatorReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get creator => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set creator($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasCreator() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCreator() => $_clearField(1);
+}
+
+/// 一个能被找到的群。**不是 GroupBase** —— 这里要的是"还能不能加得进去",
+/// 所以带当前人数;群名/头像那些等加进去之后自己会拿到。
+class FindableGroup extends $pb.GeneratedMessage {
+  factory FindableGroup({
+    $core.String? code,
+    $core.String? name,
+    $fixnum.Int64? memberTotal,
+  }) {
+    final result = create();
+    if (code != null) result.code = code;
+    if (name != null) result.name = name;
+    if (memberTotal != null) result.memberTotal = memberTotal;
+    return result;
+  }
+
+  FindableGroup._();
+
+  factory FindableGroup.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory FindableGroup.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'FindableGroup',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'code')
+    ..aOS(2, _omitFieldNames ? '' : 'name')
+    ..aInt64(3, _omitFieldNames ? '' : 'memberTotal')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  FindableGroup clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  FindableGroup copyWith(void Function(FindableGroup) updates) =>
+      super.copyWith((message) => updates(message as FindableGroup))
+          as FindableGroup;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static FindableGroup create() => FindableGroup._();
+  @$core.override
+  FindableGroup createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static FindableGroup getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<FindableGroup>(create);
+  static FindableGroup? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get code => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set code($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasCode() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCode() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get name => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set name($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasName() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearName() => $_clearField(2);
+
+  /// 当前人数。**只是个提示,不是判据** —— 从查到到加入之间人数会变,
+  /// "满没满"最终由 `Join` 回的 `ResourceExhausted(8)` 说了算。
+  @$pb.TagNumber(3)
+  $fixnum.Int64 get memberTotal => $_getI64(2);
+  @$pb.TagNumber(3)
+  set memberTotal($fixnum.Int64 value) => $_setInt64(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasMemberTotal() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearMemberTotal() => $_clearField(3);
+}
+
+class ListGroupsByCreatorResp extends $pb.GeneratedMessage {
+  factory ListGroupsByCreatorResp({
+    $core.Iterable<FindableGroup>? groups,
+  }) {
+    final result = create();
+    if (groups != null) result.groups.addAll(groups);
+    return result;
+  }
+
+  ListGroupsByCreatorResp._();
+
+  factory ListGroupsByCreatorResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListGroupsByCreatorResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListGroupsByCreatorResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..pPM<FindableGroup>(1, _omitFieldNames ? '' : 'groups',
+        subBuilder: FindableGroup.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListGroupsByCreatorResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListGroupsByCreatorResp copyWith(
+          void Function(ListGroupsByCreatorResp) updates) =>
+      super.copyWith((message) => updates(message as ListGroupsByCreatorResp))
+          as ListGroupsByCreatorResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListGroupsByCreatorResp create() => ListGroupsByCreatorResp._();
+  @$core.override
+  ListGroupsByCreatorResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListGroupsByCreatorResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListGroupsByCreatorResp>(create);
+  static ListGroupsByCreatorResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<FindableGroup> get groups => $_getList(0);
 }
 
 const $core.bool _omitFieldNames =

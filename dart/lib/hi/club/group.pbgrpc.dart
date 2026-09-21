@@ -95,6 +95,13 @@ class GroupClient extends $grpc.Client {
     return $createUnaryCall(_$join, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.ListGroupsByCreatorResp> listByCreator(
+    $0.ListGroupsByCreatorReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listByCreator, request, options: options);
+  }
+
   $grpc.ResponseFuture<$1.Empty> quit(
     $0.QuitGroupReq request, {
     $grpc.CallOptions? options,
@@ -181,6 +188,11 @@ class GroupClient extends $grpc.Client {
       '/hi.club.Group/Join',
       ($0.JoinGroupReq value) => value.writeToBuffer(),
       $1.Empty.fromBuffer);
+  static final _$listByCreator =
+      $grpc.ClientMethod<$0.ListGroupsByCreatorReq, $0.ListGroupsByCreatorResp>(
+          '/hi.club.Group/ListByCreator',
+          ($0.ListGroupsByCreatorReq value) => value.writeToBuffer(),
+          $0.ListGroupsByCreatorResp.fromBuffer);
   static final _$quit = $grpc.ClientMethod<$0.QuitGroupReq, $1.Empty>(
       '/hi.club.Group/Quit',
       ($0.QuitGroupReq value) => value.writeToBuffer(),
@@ -276,6 +288,15 @@ abstract class GroupServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.JoinGroupReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ListGroupsByCreatorReq,
+            $0.ListGroupsByCreatorResp>(
+        'ListByCreator',
+        listByCreator_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.ListGroupsByCreatorReq.fromBuffer(value),
+        ($0.ListGroupsByCreatorResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.QuitGroupReq, $1.Empty>(
         'Quit',
         quit_Pre,
@@ -392,6 +413,15 @@ abstract class GroupServiceBase extends $grpc.Service {
   }
 
   $async.Future<$1.Empty> join($grpc.ServiceCall call, $0.JoinGroupReq request);
+
+  $async.Future<$0.ListGroupsByCreatorResp> listByCreator_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.ListGroupsByCreatorReq> $request) async {
+    return listByCreator($call, await $request);
+  }
+
+  $async.Future<$0.ListGroupsByCreatorResp> listByCreator(
+      $grpc.ServiceCall call, $0.ListGroupsByCreatorReq request);
 
   $async.Future<$1.Empty> quit_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.QuitGroupReq> $request) async {

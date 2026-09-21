@@ -27,10 +27,18 @@ const (
 // 群公共信息(所有成员一致)。群类型(单聊/群)在 base.type;public/private 见 private 字段。
 // base.update 供前端判断缓存新鲜度。
 type GroupBase struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Base          *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
-	Background    *string                `protobuf:"bytes,2,opt,name=background,proto3,oneof" json:"background,omitempty"`
-	Private       *bool                  `protobuf:"varint,3,opt,name=private,proto3,oneof" json:"private,omitempty"` // true=私密群(只能被邀请加入);false=公开群
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	Base       *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
+	Background *string                `protobuf:"bytes,2,opt,name=background,proto3,oneof" json:"background,omitempty"`
+	Private    *bool                  `protobuf:"varint,3,opt,name=private,proto3,oneof" json:"private,omitempty"` // true=私密群(只能被邀请加入);false=公开群
+	// **能不能被"按创建者"找到**(`Group.ListByCreator`)。默认 false ——
+	// 新建的群一律找不到,加这个接口不会把谁的群暴露出去。
+	//
+	// 用途:代理建一批群来管机器人,群有 300 人上限,满了就再建一个。
+	// 把它们设成**公开 + 可被找到**,机器人(插件的 install)就能凭代理的 did
+	// 现查出当前可用的那几个,挨个试着加 —— 代理不需要自己跑一个服务,
+	// 也不需要每加一个群就发一版新插件。
+	Findable      *bool `protobuf:"varint,4,opt,name=findable,proto3,oneof" json:"findable,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -82,6 +90,13 @@ func (x *GroupBase) GetBackground() string {
 func (x *GroupBase) GetPrivate() bool {
 	if x != nil && x.Private != nil {
 		return *x.Private
+	}
+	return false
+}
+
+func (x *GroupBase) GetFindable() bool {
+	if x != nil && x.Findable != nil {
+		return *x.Findable
 	}
 	return false
 }
@@ -1161,6 +1176,7 @@ type UpdateGroupReq struct {
 	Avatar        *string                `protobuf:"bytes,3,opt,name=avatar,proto3,oneof" json:"avatar,omitempty"`         // 群头像 url;不传=不动,传了=设成这个(传空串=清空)
 	Background    *string                `protobuf:"bytes,4,opt,name=background,proto3,oneof" json:"background,omitempty"` // 群背景 url;**有 presence**:不传=不动,传空串=清空
 	Private       *bool                  `protobuf:"varint,5,opt,name=private,proto3,oneof" json:"private,omitempty"`      // true=私密群(只能被邀请);false=公开群。不传=不动
+	Findable      *bool                  `protobuf:"varint,6,opt,name=findable,proto3,oneof" json:"findable,omitempty"`    // true=可按创建者找到(见 GroupBase.findable)。不传=不动
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1230,21 +1246,186 @@ func (x *UpdateGroupReq) GetPrivate() bool {
 	return false
 }
 
+func (x *UpdateGroupReq) GetFindable() bool {
+	if x != nil && x.Findable != nil {
+		return *x.Findable
+	}
+	return false
+}
+
+// 按创建者找群。
+//
+// ⚠️ **只回「公开 且 可被找到」的群**,而这两样默认都不是 —— 所以这个接口
+// 不会把谁的群翻出来:群主得自己在界面上把它设成"可被找到"。
+type ListGroupsByCreatorReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Creator       *string                `protobuf:"bytes,1,opt,name=creator,proto3,oneof" json:"creator,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListGroupsByCreatorReq) Reset() {
+	*x = ListGroupsByCreatorReq{}
+	mi := &file_hi_club_group_proto_msgTypes[23]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListGroupsByCreatorReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListGroupsByCreatorReq) ProtoMessage() {}
+
+func (x *ListGroupsByCreatorReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_group_proto_msgTypes[23]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListGroupsByCreatorReq.ProtoReflect.Descriptor instead.
+func (*ListGroupsByCreatorReq) Descriptor() ([]byte, []int) {
+	return file_hi_club_group_proto_rawDescGZIP(), []int{23}
+}
+
+func (x *ListGroupsByCreatorReq) GetCreator() string {
+	if x != nil && x.Creator != nil {
+		return *x.Creator
+	}
+	return ""
+}
+
+// 一个能被找到的群。**不是 GroupBase** —— 这里要的是"还能不能加得进去",
+// 所以带当前人数;群名/头像那些等加进去之后自己会拿到。
+type FindableGroup struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Code  *string                `protobuf:"bytes,1,opt,name=code,proto3,oneof" json:"code,omitempty"`
+	Name  *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	// 当前人数。**只是个提示,不是判据** —— 从查到到加入之间人数会变,
+	// "满没满"最终由 `Join` 回的 `ResourceExhausted(8)` 说了算。
+	MemberTotal   *int64 `protobuf:"varint,3,opt,name=member_total,json=memberTotal,proto3,oneof" json:"member_total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FindableGroup) Reset() {
+	*x = FindableGroup{}
+	mi := &file_hi_club_group_proto_msgTypes[24]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FindableGroup) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FindableGroup) ProtoMessage() {}
+
+func (x *FindableGroup) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_group_proto_msgTypes[24]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FindableGroup.ProtoReflect.Descriptor instead.
+func (*FindableGroup) Descriptor() ([]byte, []int) {
+	return file_hi_club_group_proto_rawDescGZIP(), []int{24}
+}
+
+func (x *FindableGroup) GetCode() string {
+	if x != nil && x.Code != nil {
+		return *x.Code
+	}
+	return ""
+}
+
+func (x *FindableGroup) GetName() string {
+	if x != nil && x.Name != nil {
+		return *x.Name
+	}
+	return ""
+}
+
+func (x *FindableGroup) GetMemberTotal() int64 {
+	if x != nil && x.MemberTotal != nil {
+		return *x.MemberTotal
+	}
+	return 0
+}
+
+type ListGroupsByCreatorResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Groups        []*FindableGroup       `protobuf:"bytes,1,rep,name=groups,proto3" json:"groups,omitempty"` // **人少的排前面**,省得挨个撞上限
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListGroupsByCreatorResp) Reset() {
+	*x = ListGroupsByCreatorResp{}
+	mi := &file_hi_club_group_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListGroupsByCreatorResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListGroupsByCreatorResp) ProtoMessage() {}
+
+func (x *ListGroupsByCreatorResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_group_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListGroupsByCreatorResp.ProtoReflect.Descriptor instead.
+func (*ListGroupsByCreatorResp) Descriptor() ([]byte, []int) {
+	return file_hi_club_group_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *ListGroupsByCreatorResp) GetGroups() []*FindableGroup {
+	if x != nil {
+		return x.Groups
+	}
+	return nil
+}
+
 var File_hi_club_group_proto protoreflect.FileDescriptor
 
 const file_hi_club_group_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/club/group.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\x1a\x1bbuf/validate/validate.proto\"\xa2\x01\n" +
+	"\x13hi/club/group.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\x1a\x1bbuf/validate/validate.proto\"\xd6\x01\n" +
 	"\tGroupBase\x12$\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x12)\n" +
 	"\n" +
 	"background\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\n" +
 	"background\x88\x01\x01\x12#\n" +
-	"\aprivate\x18\x03 \x01(\bB\x04\x90\xb5\x18\x01H\x01R\aprivate\x88\x01\x01:\x04\x98\xb5\x18\x01B\r\n" +
+	"\aprivate\x18\x03 \x01(\bB\x04\x90\xb5\x18\x01H\x01R\aprivate\x88\x01\x01\x12%\n" +
+	"\bfindable\x18\x04 \x01(\bB\x04\x90\xb5\x18\x01H\x02R\bfindable\x88\x01\x01:\x04\x98\xb5\x18\x01B\r\n" +
 	"\v_backgroundB\n" +
 	"\n" +
-	"\b_private\"j\n" +
+	"\b_privateB\v\n" +
+	"\t_findable\"j\n" +
 	"\x0fGroupMemberAttr\x12\x1d\n" +
 	"\x04role\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x04role\x88\x01\x01\x12\x1f\n" +
 	"\x05muted\x18\x02 \x01(\bB\x04\x90\xb5\x18\x02H\x01R\x05muted\x88\x01\x01:\x04\x98\xb5\x18\x02B\a\n" +
@@ -1328,7 +1509,7 @@ const file_hi_club_group_proto_rawDesc = "" +
 	"\amembers\x18\x02 \x03(\tR\amembers\x12\x19\n" +
 	"\x05muted\x18\x03 \x01(\bH\x01R\x05muted\x88\x01\x01B\a\n" +
 	"\x05_codeB\b\n" +
-	"\x06_muted\"\xef\x01\n" +
+	"\x06_muted\"\x9d\x02\n" +
 	"\x0eUpdateGroupReq\x12*\n" +
 	"\x05group\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x05group\x88\x01\x01\x12\x17\n" +
 	"\x04name\x18\x02 \x01(\tH\x01R\x04name\x88\x01\x01\x12\x1b\n" +
@@ -1336,13 +1517,28 @@ const file_hi_club_group_proto_rawDesc = "" +
 	"\n" +
 	"background\x18\x04 \x01(\tH\x03R\n" +
 	"background\x88\x01\x01\x12\x1d\n" +
-	"\aprivate\x18\x05 \x01(\bH\x04R\aprivate\x88\x01\x01B\b\n" +
+	"\aprivate\x18\x05 \x01(\bH\x04R\aprivate\x88\x01\x01\x12\x1f\n" +
+	"\bfindable\x18\x06 \x01(\bH\x05R\bfindable\x88\x01\x01B\b\n" +
 	"\x06_groupB\a\n" +
 	"\x05_nameB\t\n" +
 	"\a_avatarB\r\n" +
 	"\v_backgroundB\n" +
 	"\n" +
-	"\b_private2\x80\b\n" +
+	"\b_privateB\v\n" +
+	"\t_findable\"T\n" +
+	"\x16ListGroupsByCreatorReq\x12.\n" +
+	"\acreator\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\acreator\x88\x01\x01B\n" +
+	"\n" +
+	"\b_creator\"\xa4\x01\n" +
+	"\rFindableGroup\x12\x1d\n" +
+	"\x04code\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x04code\x88\x01\x01\x12\x1d\n" +
+	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x04name\x88\x01\x01\x12,\n" +
+	"\fmember_total\x18\x03 \x01(\x03B\x04\x90\xb5\x18\x01H\x02R\vmemberTotal\x88\x01\x01:\x04\x98\xb5\x18\x01B\a\n" +
+	"\x05_codeB\a\n" +
+	"\x05_nameB\x0f\n" +
+	"\r_member_total\"U\n" +
+	"\x17ListGroupsByCreatorResp\x124\n" +
+	"\x06groups\x18\x01 \x03(\v2\x16.hi.club.FindableGroupB\x04\x90\xb5\x18\x01R\x06groups:\x04\x98\xb5\x18\x012\xdb\b\n" +
 	"\x05Group\x12<\n" +
 	"\x03Get\x12\x14.hi.club.GetGroupReq\x1a\x18.hi.club.GroupMemberView\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
 	"\x06Create\x12\x17.hi.club.CreateGroupReq\x1a\x12.hi.club.GroupBase\"\x05\x8a\xb5\x18\x01\x02\x12C\n" +
@@ -1351,7 +1547,8 @@ const file_hi_club_group_proto_rawDesc = "" +
 	"\vListMembers\x12\x1c.hi.club.ListGroupMembersReq\x1a\x12.hi.club.GroupInfo\"\x05\x8a\xb5\x18\x01\x02\x12Z\n" +
 	"\x0eGetMemberTotal\x12\x1f.hi.club.GetGroupMemberTotalReq\x1a .hi.club.GetGroupMemberTotalResp\"\x05\x8a\xb5\x18\x01\x02\x12@\n" +
 	"\x06Invite\x12\x17.hi.club.InviteGroupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
-	"\x04Join\x12\x15.hi.club.JoinGroupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
+	"\x04Join\x12\x15.hi.club.JoinGroupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12Y\n" +
+	"\rListByCreator\x12\x1f.hi.club.ListGroupsByCreatorReq\x1a .hi.club.ListGroupsByCreatorResp\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
 	"\x04Quit\x12\x15.hi.club.QuitGroupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12@\n" +
 	"\x06Remove\x12\x17.hi.club.RemoveGroupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12T\n" +
 	"\fListMessages\x12\x1d.hi.club.ListGroupMessagesReq\x1a\x1e.hi.club.ListGroupMessagesResp\"\x05\x8a\xb5\x18\x01\x02\x12=\n" +
@@ -1374,7 +1571,7 @@ func file_hi_club_group_proto_rawDescGZIP() []byte {
 	return file_hi_club_group_proto_rawDescData
 }
 
-var file_hi_club_group_proto_msgTypes = make([]protoimpl.MessageInfo, 23)
+var file_hi_club_group_proto_msgTypes = make([]protoimpl.MessageInfo, 26)
 var file_hi_club_group_proto_goTypes = []any{
 	(*GroupBase)(nil),               // 0: hi.club.GroupBase
 	(*GroupMemberAttr)(nil),         // 1: hi.club.GroupMemberAttr
@@ -1399,56 +1596,62 @@ var file_hi_club_group_proto_goTypes = []any{
 	(*SetDndReq)(nil),               // 20: hi.club.SetDndReq
 	(*MuteMembersReq)(nil),          // 21: hi.club.MuteMembersReq
 	(*UpdateGroupReq)(nil),          // 22: hi.club.UpdateGroupReq
-	(*hi.Entity)(nil),               // 23: hi.Entity
-	(*Packet)(nil),                  // 24: hi.club.Packet
-	(*hi.Pagination)(nil),           // 25: hi.Pagination
-	(*emptypb.Empty)(nil),           // 26: google.protobuf.Empty
+	(*ListGroupsByCreatorReq)(nil),  // 23: hi.club.ListGroupsByCreatorReq
+	(*FindableGroup)(nil),           // 24: hi.club.FindableGroup
+	(*ListGroupsByCreatorResp)(nil), // 25: hi.club.ListGroupsByCreatorResp
+	(*hi.Entity)(nil),               // 26: hi.Entity
+	(*Packet)(nil),                  // 27: hi.club.Packet
+	(*hi.Pagination)(nil),           // 28: hi.Pagination
+	(*emptypb.Empty)(nil),           // 29: google.protobuf.Empty
 }
 var file_hi_club_group_proto_depIdxs = []int32{
-	23, // 0: hi.club.GroupBase.base:type_name -> hi.Entity
-	23, // 1: hi.club.GroupMember.base:type_name -> hi.Entity
+	26, // 0: hi.club.GroupBase.base:type_name -> hi.Entity
+	26, // 1: hi.club.GroupMember.base:type_name -> hi.Entity
 	1,  // 2: hi.club.GroupMember.attr:type_name -> hi.club.GroupMemberAttr
 	0,  // 3: hi.club.GroupInfo.base:type_name -> hi.club.GroupBase
 	2,  // 4: hi.club.GroupInfo.list:type_name -> hi.club.GroupMember
 	0,  // 5: hi.club.GroupMemberView.base:type_name -> hi.club.GroupBase
 	1,  // 6: hi.club.GroupMemberView.attr:type_name -> hi.club.GroupMemberAttr
-	24, // 7: hi.club.ListGroupMessagesResp.list:type_name -> hi.club.Packet
-	25, // 8: hi.club.ListGroupMembersReq.pagination:type_name -> hi.Pagination
-	5,  // 9: hi.club.Group.Get:input_type -> hi.club.GetGroupReq
-	6,  // 10: hi.club.Group.Create:input_type -> hi.club.CreateGroupReq
-	7,  // 11: hi.club.Group.CreateSingle:input_type -> hi.club.CreateSingleReq
-	22, // 12: hi.club.Group.Update:input_type -> hi.club.UpdateGroupReq
-	10, // 13: hi.club.Group.ListMembers:input_type -> hi.club.ListGroupMembersReq
-	11, // 14: hi.club.Group.GetMemberTotal:input_type -> hi.club.GetGroupMemberTotalReq
-	13, // 15: hi.club.Group.Invite:input_type -> hi.club.InviteGroupReq
-	14, // 16: hi.club.Group.Join:input_type -> hi.club.JoinGroupReq
-	15, // 17: hi.club.Group.Quit:input_type -> hi.club.QuitGroupReq
-	16, // 18: hi.club.Group.Remove:input_type -> hi.club.RemoveGroupReq
-	8,  // 19: hi.club.Group.ListMessages:input_type -> hi.club.ListGroupMessagesReq
-	17, // 20: hi.club.Group.SetRole:input_type -> hi.club.SetRoleReq
-	18, // 21: hi.club.Group.GetRole:input_type -> hi.club.GetRoleReq
-	20, // 22: hi.club.Group.SetDnd:input_type -> hi.club.SetDndReq
-	21, // 23: hi.club.Group.MuteMembers:input_type -> hi.club.MuteMembersReq
-	4,  // 24: hi.club.Group.Get:output_type -> hi.club.GroupMemberView
-	0,  // 25: hi.club.Group.Create:output_type -> hi.club.GroupBase
-	0,  // 26: hi.club.Group.CreateSingle:output_type -> hi.club.GroupBase
-	0,  // 27: hi.club.Group.Update:output_type -> hi.club.GroupBase
-	3,  // 28: hi.club.Group.ListMembers:output_type -> hi.club.GroupInfo
-	12, // 29: hi.club.Group.GetMemberTotal:output_type -> hi.club.GetGroupMemberTotalResp
-	26, // 30: hi.club.Group.Invite:output_type -> google.protobuf.Empty
-	26, // 31: hi.club.Group.Join:output_type -> google.protobuf.Empty
-	26, // 32: hi.club.Group.Quit:output_type -> google.protobuf.Empty
-	26, // 33: hi.club.Group.Remove:output_type -> google.protobuf.Empty
-	9,  // 34: hi.club.Group.ListMessages:output_type -> hi.club.ListGroupMessagesResp
-	26, // 35: hi.club.Group.SetRole:output_type -> google.protobuf.Empty
-	19, // 36: hi.club.Group.GetRole:output_type -> hi.club.GetRoleResp
-	26, // 37: hi.club.Group.SetDnd:output_type -> google.protobuf.Empty
-	26, // 38: hi.club.Group.MuteMembers:output_type -> google.protobuf.Empty
-	24, // [24:39] is the sub-list for method output_type
-	9,  // [9:24] is the sub-list for method input_type
-	9,  // [9:9] is the sub-list for extension type_name
-	9,  // [9:9] is the sub-list for extension extendee
-	0,  // [0:9] is the sub-list for field type_name
+	27, // 7: hi.club.ListGroupMessagesResp.list:type_name -> hi.club.Packet
+	28, // 8: hi.club.ListGroupMembersReq.pagination:type_name -> hi.Pagination
+	24, // 9: hi.club.ListGroupsByCreatorResp.groups:type_name -> hi.club.FindableGroup
+	5,  // 10: hi.club.Group.Get:input_type -> hi.club.GetGroupReq
+	6,  // 11: hi.club.Group.Create:input_type -> hi.club.CreateGroupReq
+	7,  // 12: hi.club.Group.CreateSingle:input_type -> hi.club.CreateSingleReq
+	22, // 13: hi.club.Group.Update:input_type -> hi.club.UpdateGroupReq
+	10, // 14: hi.club.Group.ListMembers:input_type -> hi.club.ListGroupMembersReq
+	11, // 15: hi.club.Group.GetMemberTotal:input_type -> hi.club.GetGroupMemberTotalReq
+	13, // 16: hi.club.Group.Invite:input_type -> hi.club.InviteGroupReq
+	14, // 17: hi.club.Group.Join:input_type -> hi.club.JoinGroupReq
+	23, // 18: hi.club.Group.ListByCreator:input_type -> hi.club.ListGroupsByCreatorReq
+	15, // 19: hi.club.Group.Quit:input_type -> hi.club.QuitGroupReq
+	16, // 20: hi.club.Group.Remove:input_type -> hi.club.RemoveGroupReq
+	8,  // 21: hi.club.Group.ListMessages:input_type -> hi.club.ListGroupMessagesReq
+	17, // 22: hi.club.Group.SetRole:input_type -> hi.club.SetRoleReq
+	18, // 23: hi.club.Group.GetRole:input_type -> hi.club.GetRoleReq
+	20, // 24: hi.club.Group.SetDnd:input_type -> hi.club.SetDndReq
+	21, // 25: hi.club.Group.MuteMembers:input_type -> hi.club.MuteMembersReq
+	4,  // 26: hi.club.Group.Get:output_type -> hi.club.GroupMemberView
+	0,  // 27: hi.club.Group.Create:output_type -> hi.club.GroupBase
+	0,  // 28: hi.club.Group.CreateSingle:output_type -> hi.club.GroupBase
+	0,  // 29: hi.club.Group.Update:output_type -> hi.club.GroupBase
+	3,  // 30: hi.club.Group.ListMembers:output_type -> hi.club.GroupInfo
+	12, // 31: hi.club.Group.GetMemberTotal:output_type -> hi.club.GetGroupMemberTotalResp
+	29, // 32: hi.club.Group.Invite:output_type -> google.protobuf.Empty
+	29, // 33: hi.club.Group.Join:output_type -> google.protobuf.Empty
+	25, // 34: hi.club.Group.ListByCreator:output_type -> hi.club.ListGroupsByCreatorResp
+	29, // 35: hi.club.Group.Quit:output_type -> google.protobuf.Empty
+	29, // 36: hi.club.Group.Remove:output_type -> google.protobuf.Empty
+	9,  // 37: hi.club.Group.ListMessages:output_type -> hi.club.ListGroupMessagesResp
+	29, // 38: hi.club.Group.SetRole:output_type -> google.protobuf.Empty
+	19, // 39: hi.club.Group.GetRole:output_type -> hi.club.GetRoleResp
+	29, // 40: hi.club.Group.SetDnd:output_type -> google.protobuf.Empty
+	29, // 41: hi.club.Group.MuteMembers:output_type -> google.protobuf.Empty
+	26, // [26:42] is the sub-list for method output_type
+	10, // [10:26] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_group_proto_init() }
@@ -1476,13 +1679,15 @@ func file_hi_club_group_proto_init() {
 	file_hi_club_group_proto_msgTypes[20].OneofWrappers = []any{}
 	file_hi_club_group_proto_msgTypes[21].OneofWrappers = []any{}
 	file_hi_club_group_proto_msgTypes[22].OneofWrappers = []any{}
+	file_hi_club_group_proto_msgTypes[23].OneofWrappers = []any{}
+	file_hi_club_group_proto_msgTypes[24].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_group_proto_rawDesc), len(file_hi_club_group_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   23,
+			NumMessages:   26,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

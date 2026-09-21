@@ -4385,6 +4385,15 @@ pub struct GroupBase {
     /// true=私密群(只能被邀请加入);false=公开群
     #[prost(bool, optional, tag = "3")]
     pub private: ::core::option::Option<bool>,
+    /// **能不能被"按创建者"找到**(`Group.ListByCreator`)。默认 false ——
+    /// 新建的群一律找不到,加这个接口不会把谁的群暴露出去。
+    ///
+    /// 用途:代理建一批群来管机器人,群有 300 人上限,满了就再建一个。
+    /// 把它们设成**公开 + 可被找到**,机器人(插件的 install)就能凭代理的 did
+    /// 现查出当前可用的那几个,挨个试着加 —— 代理不需要自己跑一个服务,
+    /// 也不需要每加一个群就发一版新插件。
+    #[prost(bool, optional, tag = "4")]
+    pub findable: ::core::option::Option<bool>,
 }
 /// 成员相关属性(**对外可见**:成员列表里人人可见谁是什么角色、谁被禁言)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -4574,6 +4583,37 @@ pub struct UpdateGroupReq {
     /// true=私密群(只能被邀请);false=公开群。不传=不动
     #[prost(bool, optional, tag = "5")]
     pub private: ::core::option::Option<bool>,
+    /// true=可按创建者找到(见 GroupBase.findable)。不传=不动
+    #[prost(bool, optional, tag = "6")]
+    pub findable: ::core::option::Option<bool>,
+}
+/// 按创建者找群。
+///
+/// ⚠️ **只回「公开 且 可被找到」的群**,而这两样默认都不是 —— 所以这个接口
+/// 不会把谁的群翻出来:群主得自己在界面上把它设成"可被找到"。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListGroupsByCreatorReq {
+    #[prost(string, optional, tag = "1")]
+    pub creator: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 一个能被找到的群。**不是 GroupBase** —— 这里要的是"还能不能加得进去",
+/// 所以带当前人数;群名/头像那些等加进去之后自己会拿到。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct FindableGroup {
+    #[prost(string, optional, tag = "1")]
+    pub code: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    /// 当前人数。**只是个提示,不是判据** —— 从查到到加入之间人数会变,
+    /// "满没满"最终由 `Join` 回的 `ResourceExhausted(8)` 说了算。
+    #[prost(int64, optional, tag = "3")]
+    pub member_total: ::core::option::Option<i64>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListGroupsByCreatorResp {
+    /// **人少的排前面**,省得挨个撞上限
+    #[prost(message, repeated, tag = "1")]
+    pub groups: ::prost::alloc::vec::Vec<FindableGroup>,
 }
 /// Generated client implementations.
 pub mod group_client {
@@ -4828,6 +4868,30 @@ pub mod group_client {
             let path = http::uri::PathAndQuery::from_static("/hi.club.Group/Join");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Group", "Join"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_by_creator(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListGroupsByCreatorReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListGroupsByCreatorResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Group/ListByCreator",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Group", "ListByCreator"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn quit(
