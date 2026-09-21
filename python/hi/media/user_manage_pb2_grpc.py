@@ -2,6 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
+from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi.media import user_manage_pb2 as hi_dot_media_dot_user__manage__pb2
 
 
@@ -20,6 +21,16 @@ class UserManageStub(object):
                 request_serializer=hi_dot_media_dot_user__manage__pb2.UserManageListReq.SerializeToString,
                 response_deserializer=hi_dot_media_dot_user__manage__pb2.UserManageListResp.FromString,
                 _registered_method=True)
+        self.Edit = channel.unary_unary(
+                '/hi.media.UserManage/Edit',
+                request_serializer=hi_dot_media_dot_user__manage__pb2.UserManageEditReq.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                _registered_method=True)
+        self.Delete = channel.unary_unary(
+                '/hi.media.UserManage/Delete',
+                request_serializer=hi_dot_media_dot_user__manage__pb2.UserManageDeleteReq.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                _registered_method=True)
 
 
 class UserManageServicer(object):
@@ -32,6 +43,20 @@ class UserManageServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def Edit(self, request, context):
+        """修改 HiMedia 本地用户备注，不修改 HiDID 用户名。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def Delete(self, request, context):
+        """标记删除 HiMedia 用户，清除任务历史与全部私有资产文件；保留本地用户行及 HiDID 账号。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_UserManageServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -39,6 +64,16 @@ def add_UserManageServicer_to_server(servicer, server):
                     servicer.List,
                     request_deserializer=hi_dot_media_dot_user__manage__pb2.UserManageListReq.FromString,
                     response_serializer=hi_dot_media_dot_user__manage__pb2.UserManageListResp.SerializeToString,
+            ),
+            'Edit': grpc.unary_unary_rpc_method_handler(
+                    servicer.Edit,
+                    request_deserializer=hi_dot_media_dot_user__manage__pb2.UserManageEditReq.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'Delete': grpc.unary_unary_rpc_method_handler(
+                    servicer.Delete,
+                    request_deserializer=hi_dot_media_dot_user__manage__pb2.UserManageDeleteReq.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -69,6 +104,60 @@ class UserManage(object):
             '/hi.media.UserManage/List',
             hi_dot_media_dot_user__manage__pb2.UserManageListReq.SerializeToString,
             hi_dot_media_dot_user__manage__pb2.UserManageListResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def Edit(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.media.UserManage/Edit',
+            hi_dot_media_dot_user__manage__pb2.UserManageEditReq.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def Delete(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.media.UserManage/Delete',
+            hi_dot_media_dot_user__manage__pb2.UserManageDeleteReq.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,
             insecure,

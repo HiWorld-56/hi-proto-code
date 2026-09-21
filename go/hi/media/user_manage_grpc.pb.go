@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -19,7 +20,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	UserManage_List_FullMethodName = "/hi.media.UserManage/List"
+	UserManage_List_FullMethodName   = "/hi.media.UserManage/List"
+	UserManage_Edit_FullMethodName   = "/hi.media.UserManage/Edit"
+	UserManage_Delete_FullMethodName = "/hi.media.UserManage/Delete"
 )
 
 // UserManageClient is the client API for UserManage service.
@@ -29,6 +32,10 @@ const (
 // HiMedia 本地准入用户目录。只表达用户是否已进入 HiMedia，不代替 HiDID 用户资料。
 type UserManageClient interface {
 	List(ctx context.Context, in *UserManageListReq, opts ...grpc.CallOption) (*UserManageListResp, error)
+	// 修改 HiMedia 本地用户备注，不修改 HiDID 用户名。
+	Edit(ctx context.Context, in *UserManageEditReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 标记删除 HiMedia 用户，清除任务历史与全部私有资产文件；保留本地用户行及 HiDID 账号。
+	Delete(ctx context.Context, in *UserManageDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type userManageClient struct {
@@ -49,6 +56,26 @@ func (c *userManageClient) List(ctx context.Context, in *UserManageListReq, opts
 	return out, nil
 }
 
+func (c *userManageClient) Edit(ctx context.Context, in *UserManageEditReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, UserManage_Edit_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userManageClient) Delete(ctx context.Context, in *UserManageDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, UserManage_Delete_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserManageServer is the server API for UserManage service.
 // All implementations should embed UnimplementedUserManageServer
 // for forward compatibility.
@@ -56,6 +83,10 @@ func (c *userManageClient) List(ctx context.Context, in *UserManageListReq, opts
 // HiMedia 本地准入用户目录。只表达用户是否已进入 HiMedia，不代替 HiDID 用户资料。
 type UserManageServer interface {
 	List(context.Context, *UserManageListReq) (*UserManageListResp, error)
+	// 修改 HiMedia 本地用户备注，不修改 HiDID 用户名。
+	Edit(context.Context, *UserManageEditReq) (*emptypb.Empty, error)
+	// 标记删除 HiMedia 用户，清除任务历史与全部私有资产文件；保留本地用户行及 HiDID 账号。
+	Delete(context.Context, *UserManageDeleteReq) (*emptypb.Empty, error)
 }
 
 // UnimplementedUserManageServer should be embedded to have
@@ -67,6 +98,12 @@ type UnimplementedUserManageServer struct{}
 
 func (UnimplementedUserManageServer) List(context.Context, *UserManageListReq) (*UserManageListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
+}
+func (UnimplementedUserManageServer) Edit(context.Context, *UserManageEditReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
+}
+func (UnimplementedUserManageServer) Delete(context.Context, *UserManageDeleteReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
 }
 func (UnimplementedUserManageServer) testEmbeddedByValue() {}
 
@@ -106,6 +143,42 @@ func _UserManage_List_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserManage_Edit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserManageEditReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserManageServer).Edit(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserManage_Edit_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserManageServer).Edit(ctx, req.(*UserManageEditReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserManage_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserManageDeleteReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserManageServer).Delete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserManage_Delete_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserManageServer).Delete(ctx, req.(*UserManageDeleteReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserManage_ServiceDesc is the grpc.ServiceDesc for UserManage service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -116,6 +189,14 @@ var UserManage_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "List",
 			Handler:    _UserManage_List_Handler,
+		},
+		{
+			MethodName: "Edit",
+			Handler:    _UserManage_Edit_Handler,
+		},
+		{
+			MethodName: "Delete",
+			Handler:    _UserManage_Delete_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

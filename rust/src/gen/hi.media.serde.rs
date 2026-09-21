@@ -9827,6 +9827,205 @@ impl<'de> serde::Deserialize<'de> for UploadStatus {
         deserializer.deserialize_any(GeneratedVisitor)
     }
 }
+impl serde::Serialize for UserManageDeleteReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.did.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.UserManageDeleteReq", len)?;
+        if let Some(v) = self.did.as_ref() {
+            struct_ser.serialize_field("did", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for UserManageDeleteReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "did",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Did,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "did" => Ok(GeneratedField::Did),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = UserManageDeleteReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.UserManageDeleteReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UserManageDeleteReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut did__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Did => {
+                            if did__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("did"));
+                            }
+                            did__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(UserManageDeleteReq {
+                    did: did__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.UserManageDeleteReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for UserManageEditReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.did.is_some() {
+            len += 1;
+        }
+        if self.note.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.UserManageEditReq", len)?;
+        if let Some(v) = self.did.as_ref() {
+            struct_ser.serialize_field("did", v)?;
+        }
+        if let Some(v) = self.note.as_ref() {
+            struct_ser.serialize_field("note", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for UserManageEditReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "did",
+            "note",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Did,
+            Note,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "did" => Ok(GeneratedField::Did),
+                            "note" => Ok(GeneratedField::Note),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = UserManageEditReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.UserManageEditReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UserManageEditReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut did__ = None;
+                let mut note__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Did => {
+                            if did__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("did"));
+                            }
+                            did__ = map_.next_value()?;
+                        }
+                        GeneratedField::Note => {
+                            if note__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("note"));
+                            }
+                            note__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(UserManageEditReq {
+                    did: did__,
+                    note: note__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.UserManageEditReq", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for UserManageListReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -10079,6 +10278,15 @@ impl serde::Serialize for user_manage_list_resp::Unit {
         if self.name.is_some() {
             len += 1;
         }
+        if self.note.is_some() {
+            len += 1;
+        }
+        if self.deleting.is_some() {
+            len += 1;
+        }
+        if self.deleted_at.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.media.UserManageListResp.Unit", len)?;
         if let Some(v) = self.did.as_ref() {
             struct_ser.serialize_field("did", v)?;
@@ -10090,6 +10298,17 @@ impl serde::Serialize for user_manage_list_resp::Unit {
         }
         if let Some(v) = self.name.as_ref() {
             struct_ser.serialize_field("name", v)?;
+        }
+        if let Some(v) = self.note.as_ref() {
+            struct_ser.serialize_field("note", v)?;
+        }
+        if let Some(v) = self.deleting.as_ref() {
+            struct_ser.serialize_field("deleting", v)?;
+        }
+        if let Some(v) = self.deleted_at.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("deletedAt", ToString::to_string(&v).as_str())?;
         }
         struct_ser.end()
     }
@@ -10105,6 +10324,10 @@ impl<'de> serde::Deserialize<'de> for user_manage_list_resp::Unit {
             "registered_at",
             "registeredAt",
             "name",
+            "note",
+            "deleting",
+            "deleted_at",
+            "deletedAt",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -10112,6 +10335,9 @@ impl<'de> serde::Deserialize<'de> for user_manage_list_resp::Unit {
             Did,
             RegisteredAt,
             Name,
+            Note,
+            Deleting,
+            DeletedAt,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -10136,6 +10362,9 @@ impl<'de> serde::Deserialize<'de> for user_manage_list_resp::Unit {
                             "did" => Ok(GeneratedField::Did),
                             "registeredAt" | "registered_at" => Ok(GeneratedField::RegisteredAt),
                             "name" => Ok(GeneratedField::Name),
+                            "note" => Ok(GeneratedField::Note),
+                            "deleting" => Ok(GeneratedField::Deleting),
+                            "deletedAt" | "deleted_at" => Ok(GeneratedField::DeletedAt),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -10158,6 +10387,9 @@ impl<'de> serde::Deserialize<'de> for user_manage_list_resp::Unit {
                 let mut did__ = None;
                 let mut registered_at__ = None;
                 let mut name__ = None;
+                let mut note__ = None;
+                let mut deleting__ = None;
+                let mut deleted_at__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Did => {
@@ -10180,12 +10412,35 @@ impl<'de> serde::Deserialize<'de> for user_manage_list_resp::Unit {
                             }
                             name__ = map_.next_value()?;
                         }
+                        GeneratedField::Note => {
+                            if note__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("note"));
+                            }
+                            note__ = map_.next_value()?;
+                        }
+                        GeneratedField::Deleting => {
+                            if deleting__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("deleting"));
+                            }
+                            deleting__ = map_.next_value()?;
+                        }
+                        GeneratedField::DeletedAt => {
+                            if deleted_at__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("deletedAt"));
+                            }
+                            deleted_at__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
                     }
                 }
                 Ok(user_manage_list_resp::Unit {
                     did: did__,
                     registered_at: registered_at__,
                     name: name__,
+                    note: note__,
+                    deleting: deleting__,
+                    deleted_at: deleted_at__,
                 })
             }
         }

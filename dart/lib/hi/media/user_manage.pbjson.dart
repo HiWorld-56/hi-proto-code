@@ -125,12 +125,45 @@ const UserManageListResp_Unit$json = {
       '10': 'name',
       '17': true
     },
+    {
+      '1': 'note',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 3,
+      '10': 'note',
+      '17': true
+    },
+    {
+      '1': 'deleting',
+      '3': 5,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 4,
+      '10': 'deleting',
+      '17': true
+    },
+    {
+      '1': 'deleted_at',
+      '3': 6,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 5,
+      '10': 'deletedAt',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
     {'1': '_did'},
     {'1': '_registered_at'},
     {'1': '_name'},
+    {'1': '_note'},
+    {'1': '_deleting'},
+    {'1': '_deleted_at'},
   ],
 };
 
@@ -138,7 +171,71 @@ const UserManageListResp_Unit$json = {
 final $typed_data.Uint8List userManageListRespDescriptor = $convert.base64Decode(
     'ChJVc2VyTWFuYWdlTGlzdFJlc3ASHwoFdG90YWwYASABKAVCBJC1GANIAFIFdG90YWyIAQESPQ'
     'oFdXNlcnMYAiADKAsyIS5oaS5tZWRpYS5Vc2VyTWFuYWdlTGlzdFJlc3AuVW5pdEIEkLUYA1IF'
-    'dXNlcnMamwEKBFVuaXQSGwoDZGlkGAEgASgJQgSQtRgDSABSA2RpZIgBARIuCg1yZWdpc3Rlcm'
+    'dXNlcnMasAIKBFVuaXQSGwoDZGlkGAEgASgJQgSQtRgDSABSA2RpZIgBARIuCg1yZWdpc3Rlcm'
     'VkX2F0GAIgASgDQgSQtRgDSAFSDHJlZ2lzdGVyZWRBdIgBARIdCgRuYW1lGAMgASgJQgSQtRgD'
-    'SAJSBG5hbWWIAQE6BJi1GANCBgoEX2RpZEIQCg5fcmVnaXN0ZXJlZF9hdEIHCgVfbmFtZToEmL'
-    'UYA0IICgZfdG90YWw=');
+    'SAJSBG5hbWWIAQESHQoEbm90ZRgEIAEoCUIEkLUYA0gDUgRub3RliAEBEiUKCGRlbGV0aW5nGA'
+    'UgASgIQgSQtRgDSARSCGRlbGV0aW5niAEBEigKCmRlbGV0ZWRfYXQYBiABKANCBJC1GANIBVIJ'
+    'ZGVsZXRlZEF0iAEBOgSYtRgDQgYKBF9kaWRCEAoOX3JlZ2lzdGVyZWRfYXRCBwoFX25hbWVCBw'
+    'oFX25vdGVCCwoJX2RlbGV0aW5nQg0KC19kZWxldGVkX2F0OgSYtRgDQggKBl90b3RhbA==');
+
+@$core.Deprecated('Use userManageEditReqDescriptor instead')
+const UserManageEditReq$json = {
+  '1': 'UserManageEditReq',
+  '2': [
+    {
+      '1': 'did',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'did',
+      '17': true
+    },
+    {
+      '1': 'note',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'note',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_did'},
+    {'1': '_note'},
+  ],
+};
+
+/// Descriptor for `UserManageEditReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List userManageEditReqDescriptor = $convert.base64Decode(
+    'ChFVc2VyTWFuYWdlRWRpdFJlcRIkCgNkaWQYASABKAlCDbpICsgBAXIFEAEY/wFIAFIDZGlkiA'
+    'EBEiQKBG5vdGUYAiABKAlCC7pICMgBAXIDGP8BSAFSBG5vdGWIAQFCBgoEX2RpZEIHCgVfbm90'
+    'ZQ==');
+
+@$core.Deprecated('Use userManageDeleteReqDescriptor instead')
+const UserManageDeleteReq$json = {
+  '1': 'UserManageDeleteReq',
+  '2': [
+    {
+      '1': 'did',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'did',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_did'},
+  ],
+};
+
+/// Descriptor for `UserManageDeleteReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List userManageDeleteReqDescriptor = $convert.base64Decode(
+    'ChNVc2VyTWFuYWdlRGVsZXRlUmVxEiQKA2RpZBgBIAEoCUINukgKyAEBcgUQARj/AUgAUgNkaW'
+    'SIAQFCBgoEX2RpZA==');

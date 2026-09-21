@@ -843,7 +843,29 @@ pub mod user_manage_list_resp {
         /// HiDID 当前用户名
         #[prost(string, optional, tag = "3")]
         pub name: ::core::option::Option<::prost::alloc::string::String>,
+        /// HiMedia 管理员填写的用户备注
+        #[prost(string, optional, tag = "4")]
+        pub note: ::core::option::Option<::prost::alloc::string::String>,
+        /// 正在清理资产，可用 DID 重试删除
+        #[prost(bool, optional, tag = "5")]
+        pub deleting: ::core::option::Option<bool>,
+        /// 删除完成时间，Unix 秒；未删除时不返回
+        #[prost(int64, optional, tag = "6")]
+        pub deleted_at: ::core::option::Option<i64>,
     }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UserManageEditReq {
+    #[prost(string, optional, tag = "1")]
+    pub did: ::core::option::Option<::prost::alloc::string::String>,
+    /// 必填；空字符串表示清空备注，不修改 HiDID 用户资料。
+    #[prost(string, optional, tag = "2")]
+    pub note: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UserManageDeleteReq {
+    #[prost(string, optional, tag = "1")]
+    pub did: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Generated client implementations.
 pub mod user_manage_client {
@@ -956,6 +978,47 @@ pub mod user_manage_client {
             let path = http::uri::PathAndQuery::from_static("/hi.media.UserManage/List");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.media.UserManage", "List"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 修改 HiMedia 本地用户备注，不修改 HiDID 用户名。
+        pub async fn edit(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UserManageEditReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.media.UserManage/Edit");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.media.UserManage", "Edit"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 标记删除 HiMedia 用户，清除任务历史与全部私有资产文件；保留本地用户行及 HiDID 账号。
+        pub async fn delete(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UserManageDeleteReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.UserManage/Delete",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.UserManage", "Delete"));
             self.inner.unary(req, path, codec).await
         }
     }

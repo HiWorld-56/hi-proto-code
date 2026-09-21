@@ -11,6 +11,7 @@ import (
 	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -137,18 +138,118 @@ func (x *UserManageListResp) GetUsers() []*UserManageListResp_Unit {
 	return nil
 }
 
+type UserManageEditReq struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Did   *string                `protobuf:"bytes,1,opt,name=did,proto3,oneof" json:"did,omitempty"`
+	// 必填；空字符串表示清空备注，不修改 HiDID 用户资料。
+	Note          *string `protobuf:"bytes,2,opt,name=note,proto3,oneof" json:"note,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UserManageEditReq) Reset() {
+	*x = UserManageEditReq{}
+	mi := &file_hi_media_user_manage_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UserManageEditReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserManageEditReq) ProtoMessage() {}
+
+func (x *UserManageEditReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_media_user_manage_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserManageEditReq.ProtoReflect.Descriptor instead.
+func (*UserManageEditReq) Descriptor() ([]byte, []int) {
+	return file_hi_media_user_manage_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *UserManageEditReq) GetDid() string {
+	if x != nil && x.Did != nil {
+		return *x.Did
+	}
+	return ""
+}
+
+func (x *UserManageEditReq) GetNote() string {
+	if x != nil && x.Note != nil {
+		return *x.Note
+	}
+	return ""
+}
+
+type UserManageDeleteReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Did           *string                `protobuf:"bytes,1,opt,name=did,proto3,oneof" json:"did,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UserManageDeleteReq) Reset() {
+	*x = UserManageDeleteReq{}
+	mi := &file_hi_media_user_manage_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UserManageDeleteReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserManageDeleteReq) ProtoMessage() {}
+
+func (x *UserManageDeleteReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_media_user_manage_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserManageDeleteReq.ProtoReflect.Descriptor instead.
+func (*UserManageDeleteReq) Descriptor() ([]byte, []int) {
+	return file_hi_media_user_manage_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *UserManageDeleteReq) GetDid() string {
+	if x != nil && x.Did != nil {
+		return *x.Did
+	}
+	return ""
+}
+
 type UserManageListResp_Unit struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           *string                `protobuf:"bytes,1,opt,name=did,proto3,oneof" json:"did,omitempty"`
 	RegisteredAt  *int64                 `protobuf:"varint,2,opt,name=registered_at,json=registeredAt,proto3,oneof" json:"registered_at,omitempty"` // Unix 秒
 	Name          *string                `protobuf:"bytes,3,opt,name=name,proto3,oneof" json:"name,omitempty"`                                      // HiDID 当前用户名
+	Note          *string                `protobuf:"bytes,4,opt,name=note,proto3,oneof" json:"note,omitempty"`                                      // HiMedia 管理员填写的用户备注
+	Deleting      *bool                  `protobuf:"varint,5,opt,name=deleting,proto3,oneof" json:"deleting,omitempty"`                             // 正在清理资产，可用 DID 重试删除
+	DeletedAt     *int64                 `protobuf:"varint,6,opt,name=deleted_at,json=deletedAt,proto3,oneof" json:"deleted_at,omitempty"`          // 删除完成时间，Unix 秒；未删除时不返回
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *UserManageListResp_Unit) Reset() {
 	*x = UserManageListResp_Unit{}
-	mi := &file_hi_media_user_manage_proto_msgTypes[2]
+	mi := &file_hi_media_user_manage_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -160,7 +261,7 @@ func (x *UserManageListResp_Unit) String() string {
 func (*UserManageListResp_Unit) ProtoMessage() {}
 
 func (x *UserManageListResp_Unit) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_user_manage_proto_msgTypes[2]
+	mi := &file_hi_media_user_manage_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -197,11 +298,32 @@ func (x *UserManageListResp_Unit) GetName() string {
 	return ""
 }
 
+func (x *UserManageListResp_Unit) GetNote() string {
+	if x != nil && x.Note != nil {
+		return *x.Note
+	}
+	return ""
+}
+
+func (x *UserManageListResp_Unit) GetDeleting() bool {
+	if x != nil && x.Deleting != nil {
+		return *x.Deleting
+	}
+	return false
+}
+
+func (x *UserManageListResp_Unit) GetDeletedAt() int64 {
+	if x != nil && x.DeletedAt != nil {
+		return *x.DeletedAt
+	}
+	return 0
+}
+
 var File_hi_media_user_manage_proto protoreflect.FileDescriptor
 
 const file_hi_media_user_manage_proto_rawDesc = "" +
 	"\n" +
-	"\x1ahi/media/user_manage.proto\x12\bhi.media\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xa1\x01\n" +
+	"\x1ahi/media/user_manage.proto\x12\bhi.media\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xa1\x01\n" +
 	"\x11UserManageListReq\x12&\n" +
 	"\x03did\x18\x01 \x01(\tB\x0f\xbaH\fr\n" +
 	"\x18\xff\x012\x05^\\S+$H\x00R\x03did\x88\x01\x01\x12.\n" +
@@ -211,21 +333,40 @@ const file_hi_media_user_manage_proto_rawDesc = "" +
 	"\x04name\x18\x03 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\xff\x01H\x01R\x04name\x88\x01\x01B\x06\n" +
 	"\x04_didB\a\n" +
-	"\x05_name\"\xa2\x02\n" +
+	"\x05_name\"\xb7\x03\n" +
 	"\x12UserManageListResp\x12\x1f\n" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12=\n" +
-	"\x05users\x18\x02 \x03(\v2!.hi.media.UserManageListResp.UnitB\x04\x90\xb5\x18\x03R\x05users\x1a\x9b\x01\n" +
+	"\x05users\x18\x02 \x03(\v2!.hi.media.UserManageListResp.UnitB\x04\x90\xb5\x18\x03R\x05users\x1a\xb0\x02\n" +
 	"\x04Unit\x12\x1b\n" +
 	"\x03did\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x03did\x88\x01\x01\x12.\n" +
 	"\rregistered_at\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x03H\x01R\fregisteredAt\x88\x01\x01\x12\x1d\n" +
-	"\x04name\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x04name\x88\x01\x01:\x04\x98\xb5\x18\x03B\x06\n" +
+	"\x04name\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x04name\x88\x01\x01\x12\x1d\n" +
+	"\x04note\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x04note\x88\x01\x01\x12%\n" +
+	"\bdeleting\x18\x05 \x01(\bB\x04\x90\xb5\x18\x03H\x04R\bdeleting\x88\x01\x01\x12(\n" +
+	"\n" +
+	"deleted_at\x18\x06 \x01(\x03B\x04\x90\xb5\x18\x03H\x05R\tdeletedAt\x88\x01\x01:\x04\x98\xb5\x18\x03B\x06\n" +
 	"\x04_didB\x10\n" +
 	"\x0e_registered_atB\a\n" +
-	"\x05_name:\x04\x98\xb5\x18\x03B\b\n" +
-	"\x06_total2V\n" +
+	"\x05_nameB\a\n" +
+	"\x05_noteB\v\n" +
+	"\t_deletingB\r\n" +
+	"\v_deleted_at:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_total\"p\n" +
+	"\x11UserManageEditReq\x12$\n" +
+	"\x03did\x18\x01 \x01(\tB\r\xbaH\n" +
+	"\xc8\x01\x01r\x05\x10\x01\x18\xff\x01H\x00R\x03did\x88\x01\x01\x12$\n" +
+	"\x04note\x18\x02 \x01(\tB\v\xbaH\b\xc8\x01\x01r\x03\x18\xff\x01H\x01R\x04note\x88\x01\x01B\x06\n" +
+	"\x04_didB\a\n" +
+	"\x05_note\"C\n" +
+	"\x13UserManageDeleteReq\x12$\n" +
+	"\x03did\x18\x01 \x01(\tB\r\xbaH\n" +
+	"\xc8\x01\x01r\x05\x10\x01\x18\xff\x01H\x00R\x03did\x88\x01\x01B\x06\n" +
+	"\x04_did2\xe2\x01\n" +
 	"\n" +
 	"UserManage\x12H\n" +
-	"\x04List\x12\x1b.hi.media.UserManageListReq\x1a\x1c.hi.media.UserManageListResp\"\x05\x8a\xb5\x18\x01\x04B\x8c\x01\n" +
+	"\x04List\x12\x1b.hi.media.UserManageListReq\x1a\x1c.hi.media.UserManageListResp\"\x05\x8a\xb5\x18\x01\x04\x12B\n" +
+	"\x04Edit\x12\x1b.hi.media.UserManageEditReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12F\n" +
+	"\x06Delete\x12\x1d.hi.media.UserManageDeleteReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04B\x8c\x01\n" +
 	"\fcom.hi.mediaB\x0fUserManageProtoP\x01Z*github.com/HiWorld-56/hi-proto/go/hi/media\xa2\x02\x03HMX\xaa\x02\bHi.Media\xca\x02\bHi\\Media\xe2\x02\x14Hi\\Media\\GPBMetadata\xea\x02\tHi::Mediab\x06proto3"
 
 var (
@@ -240,20 +381,27 @@ func file_hi_media_user_manage_proto_rawDescGZIP() []byte {
 	return file_hi_media_user_manage_proto_rawDescData
 }
 
-var file_hi_media_user_manage_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_hi_media_user_manage_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_hi_media_user_manage_proto_goTypes = []any{
 	(*UserManageListReq)(nil),       // 0: hi.media.UserManageListReq
 	(*UserManageListResp)(nil),      // 1: hi.media.UserManageListResp
-	(*UserManageListResp_Unit)(nil), // 2: hi.media.UserManageListResp.Unit
-	(*hi.Pagination)(nil),           // 3: hi.Pagination
+	(*UserManageEditReq)(nil),       // 2: hi.media.UserManageEditReq
+	(*UserManageDeleteReq)(nil),     // 3: hi.media.UserManageDeleteReq
+	(*UserManageListResp_Unit)(nil), // 4: hi.media.UserManageListResp.Unit
+	(*hi.Pagination)(nil),           // 5: hi.Pagination
+	(*emptypb.Empty)(nil),           // 6: google.protobuf.Empty
 }
 var file_hi_media_user_manage_proto_depIdxs = []int32{
-	3, // 0: hi.media.UserManageListReq.pagination:type_name -> hi.Pagination
-	2, // 1: hi.media.UserManageListResp.users:type_name -> hi.media.UserManageListResp.Unit
+	5, // 0: hi.media.UserManageListReq.pagination:type_name -> hi.Pagination
+	4, // 1: hi.media.UserManageListResp.users:type_name -> hi.media.UserManageListResp.Unit
 	0, // 2: hi.media.UserManage.List:input_type -> hi.media.UserManageListReq
-	1, // 3: hi.media.UserManage.List:output_type -> hi.media.UserManageListResp
-	3, // [3:4] is the sub-list for method output_type
-	2, // [2:3] is the sub-list for method input_type
+	2, // 3: hi.media.UserManage.Edit:input_type -> hi.media.UserManageEditReq
+	3, // 4: hi.media.UserManage.Delete:input_type -> hi.media.UserManageDeleteReq
+	1, // 5: hi.media.UserManage.List:output_type -> hi.media.UserManageListResp
+	6, // 6: hi.media.UserManage.Edit:output_type -> google.protobuf.Empty
+	6, // 7: hi.media.UserManage.Delete:output_type -> google.protobuf.Empty
+	5, // [5:8] is the sub-list for method output_type
+	2, // [2:5] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
 	2, // [2:2] is the sub-list for extension extendee
 	0, // [0:2] is the sub-list for field type_name
@@ -267,13 +415,15 @@ func file_hi_media_user_manage_proto_init() {
 	file_hi_media_user_manage_proto_msgTypes[0].OneofWrappers = []any{}
 	file_hi_media_user_manage_proto_msgTypes[1].OneofWrappers = []any{}
 	file_hi_media_user_manage_proto_msgTypes[2].OneofWrappers = []any{}
+	file_hi_media_user_manage_proto_msgTypes[3].OneofWrappers = []any{}
+	file_hi_media_user_manage_proto_msgTypes[4].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_media_user_manage_proto_rawDesc), len(file_hi_media_user_manage_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
