@@ -409,13 +409,13 @@ const BrainToFace$json = {
       '10': 'binanceResult'
     },
     {
-      '1': 'event_plugin_init_failed',
-      '3': 23,
+      '1': 'show_tip',
+      '3': 24,
       '4': 1,
       '5': 11,
-      '6': '.hi.ninja.PluginInitFailed',
+      '6': '.hi.ninja.Tip',
       '9': 0,
-      '10': 'eventPluginInitFailed'
+      '10': 'showTip'
     },
   ],
   '8': [
@@ -449,53 +449,23 @@ final $typed_data.Uint8List brainToFaceDescriptor = $convert.base64Decode(
     'UYEyABKAsyFi5oaS5uaW5qYS5VcGRhdGVTdGF0dXNIAFILZXZlbnRVcGRhdGUSUQoWZXZlbnRf'
     'YmluYW5jZV9zZXR0aW5ncxgVIAEoCzIZLmhpLm5pbmphLkJpbmFuY2VTZXR0aW5nc0gAUhRldm'
     'VudEJpbmFuY2VTZXR0aW5ncxJCCg5iaW5hbmNlX3Jlc3VsdBgWIAEoCzIZLmhpLmJpbmFuY2Uu'
-    'QmluYW5jZVJlc3VsdEgAUg1iaW5hbmNlUmVzdWx0ElUKGGV2ZW50X3BsdWdpbl9pbml0X2ZhaW'
-    'xlZBgXIAEoCzIaLmhpLm5pbmphLlBsdWdpbkluaXRGYWlsZWRIAFIVZXZlbnRQbHVnaW5Jbml0'
-    'RmFpbGVkQgUKA2NtZA==');
+    'QmluYW5jZVJlc3VsdEgAUg1iaW5hbmNlUmVzdWx0EioKCHNob3dfdGlwGBggASgLMg0uaGkubm'
+    'luamEuVGlwSABSB3Nob3dUaXBCBQoDY21k');
 
-@$core.Deprecated('Use pluginInitFailedDescriptor instead')
-const PluginInitFailed$json = {
-  '1': 'PluginInitFailed',
+@$core.Deprecated('Use tipDescriptor instead')
+const Tip$json = {
+  '1': 'Tip',
   '2': [
-    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'uuid', '17': true},
-    {'1': 'name', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'name', '17': true},
-    {
-      '1': 'message',
-      '3': 3,
-      '4': 1,
-      '5': 9,
-      '9': 2,
-      '10': 'message',
-      '17': true
-    },
+    {'1': 'text', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'text', '17': true},
   ],
   '8': [
-    {'1': '_uuid'},
-    {'1': '_name'},
-    {'1': '_message'},
+    {'1': '_text'},
   ],
 };
 
-/// Descriptor for `PluginInitFailed`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List pluginInitFailedDescriptor = $convert.base64Decode(
-    'ChBQbHVnaW5Jbml0RmFpbGVkEhcKBHV1aWQYASABKAlIAFIEdXVpZIgBARIXCgRuYW1lGAIgAS'
-    'gJSAFSBG5hbWWIAQESHQoHbWVzc2FnZRgDIAEoCUgCUgdtZXNzYWdliAEBQgcKBV91dWlkQgcK'
-    'BV9uYW1lQgoKCF9tZXNzYWdl');
-
-@$core.Deprecated('Use pluginInitRetryDescriptor instead')
-const PluginInitRetry$json = {
-  '1': 'PluginInitRetry',
-  '2': [
-    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'uuid', '17': true},
-  ],
-  '8': [
-    {'1': '_uuid'},
-  ],
-};
-
-/// Descriptor for `PluginInitRetry`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List pluginInitRetryDescriptor = $convert.base64Decode(
-    'Cg9QbHVnaW5Jbml0UmV0cnkSFwoEdXVpZBgBIAEoCUgAUgR1dWlkiAEBQgcKBV91dWlk');
+/// Descriptor for `Tip`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List tipDescriptor = $convert
+    .base64Decode('CgNUaXASFwoEdGV4dBgBIAEoCUgAUgR0ZXh0iAEBQgcKBV90ZXh0');
 
 @$core.Deprecated('Use statusEventDescriptor instead')
 const StatusEvent$json = {
@@ -566,15 +536,6 @@ const FaceToBrain$json = {
       '9': 0,
       '10': 'binanceRequest'
     },
-    {
-      '1': 'plugin_init_retry',
-      '3': 6,
-      '4': 1,
-      '5': 11,
-      '6': '.hi.ninja.PluginInitRetry',
-      '9': 0,
-      '10': 'pluginInitRetry'
-    },
   ],
   '8': [
     {'1': 'cmd'},
@@ -589,8 +550,7 @@ final $typed_data.Uint8List faceToBrainDescriptor = $convert.base64Decode(
     '5nb29nbGUucHJvdG9idWYuRW1wdHlIAFISZ2V0QmluYW5jZVNldHRpbmdzEjsKDHJlcXVlc3Rf'
     'aW5pdBgEIAEoCzIWLmdvb2dsZS5wcm90b2J1Zi5FbXB0eUgAUgtyZXF1ZXN0SW5pdBJDCg9iaW'
     '5hbmNlX3JlcXVlc3QYBSABKAsyGC5oaS5uaW5qYS5CaW5hbmNlUmVxdWVzdEgAUg5iaW5hbmNl'
-    'UmVxdWVzdBJHChFwbHVnaW5faW5pdF9yZXRyeRgGIAEoCzIZLmhpLm5pbmphLlBsdWdpbkluaX'
-    'RSZXRyeUgAUg9wbHVnaW5Jbml0UmV0cnlCBQoDY21k');
+    'UmVxdWVzdEIFCgNjbWQ=');
 
 @$core.Deprecated('Use pluginProgressDescriptor instead')
 const PluginProgress$json = {

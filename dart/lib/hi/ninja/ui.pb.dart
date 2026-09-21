@@ -584,7 +584,7 @@ enum BrainToFace_Cmd {
   eventPluginProgress,
   eventBinanceSettings,
   binanceResult,
-  eventPluginInitFailed,
+  showTip,
   notSet
 }
 
@@ -613,7 +613,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     PluginProgress? eventPluginProgress,
     BinanceSettings? eventBinanceSettings,
     $7.BinanceResult? binanceResult,
-    PluginInitFailed? eventPluginInitFailed,
+    Tip? showTip,
   }) {
     final result = create();
     if (initRobot != null) result.initRobot = initRobot;
@@ -640,8 +640,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     if (eventBinanceSettings != null)
       result.eventBinanceSettings = eventBinanceSettings;
     if (binanceResult != null) result.binanceResult = binanceResult;
-    if (eventPluginInitFailed != null)
-      result.eventPluginInitFailed = eventPluginInitFailed;
+    if (showTip != null) result.showTip = showTip;
     return result;
   }
 
@@ -677,7 +676,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     20: BrainToFace_Cmd.eventPluginProgress,
     21: BrainToFace_Cmd.eventBinanceSettings,
     22: BrainToFace_Cmd.binanceResult,
-    23: BrainToFace_Cmd.eventPluginInitFailed,
+    24: BrainToFace_Cmd.showTip,
     0: BrainToFace_Cmd.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -707,7 +706,7 @@ class BrainToFace extends $pb.GeneratedMessage {
       20,
       21,
       22,
-      23
+      24
     ])
     ..aOM<RobotInit>(1, _omitFieldNames ? '' : 'initRobot',
         subBuilder: RobotInit.create)
@@ -753,8 +752,7 @@ class BrainToFace extends $pb.GeneratedMessage {
         subBuilder: BinanceSettings.create)
     ..aOM<$7.BinanceResult>(22, _omitFieldNames ? '' : 'binanceResult',
         subBuilder: $7.BinanceResult.create)
-    ..aOM<PluginInitFailed>(23, _omitFieldNames ? '' : 'eventPluginInitFailed',
-        subBuilder: PluginInitFailed.create)
+    ..aOM<Tip>(24, _omitFieldNames ? '' : 'showTip', subBuilder: Tip.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -798,7 +796,7 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(20)
   @$pb.TagNumber(21)
   @$pb.TagNumber(22)
-  @$pb.TagNumber(23)
+  @$pb.TagNumber(24)
   BrainToFace_Cmd whichCmd() => _BrainToFace_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
@@ -822,7 +820,7 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(20)
   @$pb.TagNumber(21)
   @$pb.TagNumber(22)
-  @$pb.TagNumber(23)
+  @$pb.TagNumber(24)
   void clearCmd() => $_clearField($_whichOneof(0));
 
   /// 初始化
@@ -1076,159 +1074,75 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(22)
   $7.BinanceResult ensureBinanceResult() => $_ensure(21);
 
-  /// **插件没初始化好**(它的 install 跑失败了)。face 照现有警告的样子弹一张卡,
-  /// 上面带「重试」—— 点了回 `plugin_init_retry`。
+  /// **通用提示**:一句话,不带按钮,到时自动关。
   ///
-  /// 为什么要人来点:失败的原因往往在机器人**够不着**的地方(代理的群还没开、
-  /// 还没绑主人),自动重试多少次都一样;而人知道"什么时候可以再试了"。
-  @$pb.TagNumber(23)
-  PluginInitFailed get eventPluginInitFailed => $_getN(22);
-  @$pb.TagNumber(23)
-  set eventPluginInitFailed(PluginInitFailed value) => $_setField(23, value);
-  @$pb.TagNumber(23)
-  $core.bool hasEventPluginInitFailed() => $_has(22);
-  @$pb.TagNumber(23)
-  void clearEventPluginInitFailed() => $_clearField(23);
-  @$pb.TagNumber(23)
-  PluginInitFailed ensureEventPluginInitFailed() => $_ensure(22);
+  /// 现在的用处:有插件没初始化好(install 失败)时提示一句「部分插件未安装成功,详情请在 App 内查询」。
+  /// face 上**不做重试** —— 哪个插件、为什么,屏幕上说不清也点不准;
+  /// 主人在 App 里问机器人(内置插件的 plugin_status / plugin_retry_install)就能查、能重试。
+  @$pb.TagNumber(24)
+  Tip get showTip => $_getN(22);
+  @$pb.TagNumber(24)
+  set showTip(Tip value) => $_setField(24, value);
+  @$pb.TagNumber(24)
+  $core.bool hasShowTip() => $_has(22);
+  @$pb.TagNumber(24)
+  void clearShowTip() => $_clearField(24);
+  @$pb.TagNumber(24)
+  Tip ensureShowTip() => $_ensure(22);
 }
 
-/// 插件的初始化(install)没成。
-///
-/// ⚠️ **这不是"插件坏了"** —— 插件装好了、方法照常可用,只是它的准备工作没做完
-/// (典型:交易类插件要加进代理的管理群,而群满了、代理还没开新群)。
-/// 所以 brain 不会因此卸载它,也不上报后台;要做的只有一件:**让人看见并能重试**。
-class PluginInitFailed extends $pb.GeneratedMessage {
-  factory PluginInitFailed({
-    $core.String? uuid,
-    $core.String? name,
-    $core.String? message,
+/// 通用提示:给人看的一句话。**文案由 brain 定**,face 不另编。
+class Tip extends $pb.GeneratedMessage {
+  factory Tip({
+    $core.String? text,
   }) {
     final result = create();
-    if (uuid != null) result.uuid = uuid;
-    if (name != null) result.name = name;
-    if (message != null) result.message = message;
+    if (text != null) result.text = text;
     return result;
   }
 
-  PluginInitFailed._();
+  Tip._();
 
-  factory PluginInitFailed.fromBuffer($core.List<$core.int> data,
+  factory Tip.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory PluginInitFailed.fromJson($core.String json,
+  factory Tip.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'PluginInitFailed',
+      _omitMessageNames ? '' : 'Tip',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'uuid')
-    ..aOS(2, _omitFieldNames ? '' : 'name')
-    ..aOS(3, _omitFieldNames ? '' : 'message')
+    ..aOS(1, _omitFieldNames ? '' : 'text')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PluginInitFailed clone() => deepCopy();
+  Tip clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PluginInitFailed copyWith(void Function(PluginInitFailed) updates) =>
-      super.copyWith((message) => updates(message as PluginInitFailed))
-          as PluginInitFailed;
+  Tip copyWith(void Function(Tip) updates) =>
+      super.copyWith((message) => updates(message as Tip)) as Tip;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static PluginInitFailed create() => PluginInitFailed._();
+  static Tip create() => Tip._();
   @$core.override
-  PluginInitFailed createEmptyInstance() => create();
+  Tip createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static PluginInitFailed getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<PluginInitFailed>(create);
-  static PluginInitFailed? _defaultInstance;
+  static Tip getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Tip>(create);
+  static Tip? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get uuid => $_getSZ(0);
+  $core.String get text => $_getSZ(0);
   @$pb.TagNumber(1)
-  set uuid($core.String value) => $_setString(0, value);
+  set text($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasUuid() => $_has(0);
+  $core.bool hasText() => $_has(0);
   @$pb.TagNumber(1)
-  void clearUuid() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get name => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set name($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasName() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearName() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.String get message => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set message($core.String value) => $_setString(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasMessage() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearMessage() => $_clearField(3);
-}
-
-/// 人点了「重试」。
-class PluginInitRetry extends $pb.GeneratedMessage {
-  factory PluginInitRetry({
-    $core.String? uuid,
-  }) {
-    final result = create();
-    if (uuid != null) result.uuid = uuid;
-    return result;
-  }
-
-  PluginInitRetry._();
-
-  factory PluginInitRetry.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory PluginInitRetry.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'PluginInitRetry',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'uuid')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PluginInitRetry clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PluginInitRetry copyWith(void Function(PluginInitRetry) updates) =>
-      super.copyWith((message) => updates(message as PluginInitRetry))
-          as PluginInitRetry;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static PluginInitRetry create() => PluginInitRetry._();
-  @$core.override
-  PluginInitRetry createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static PluginInitRetry getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<PluginInitRetry>(create);
-  static PluginInitRetry? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get uuid => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set uuid($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasUuid() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearUuid() => $_clearField(1);
+  void clearText() => $_clearField(1);
 }
 
 /// 系统状态快照
@@ -1318,7 +1232,6 @@ enum FaceToBrain_Cmd {
   getBinanceSettings,
   requestInit,
   binanceRequest,
-  pluginInitRetry,
   notSet
 }
 
@@ -1330,7 +1243,6 @@ class FaceToBrain extends $pb.GeneratedMessage {
     $3.Empty? getBinanceSettings,
     $3.Empty? requestInit,
     BinanceRequest? binanceRequest,
-    PluginInitRetry? pluginInitRetry,
   }) {
     final result = create();
     if (voiceState != null) result.voiceState = voiceState;
@@ -1339,7 +1251,6 @@ class FaceToBrain extends $pb.GeneratedMessage {
       result.getBinanceSettings = getBinanceSettings;
     if (requestInit != null) result.requestInit = requestInit;
     if (binanceRequest != null) result.binanceRequest = binanceRequest;
-    if (pluginInitRetry != null) result.pluginInitRetry = pluginInitRetry;
     return result;
   }
 
@@ -1358,14 +1269,13 @@ class FaceToBrain extends $pb.GeneratedMessage {
     3: FaceToBrain_Cmd.getBinanceSettings,
     4: FaceToBrain_Cmd.requestInit,
     5: FaceToBrain_Cmd.binanceRequest,
-    6: FaceToBrain_Cmd.pluginInitRetry,
     0: FaceToBrain_Cmd.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'FaceToBrain',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..oo(0, [1, 2, 3, 4, 5, 6])
+    ..oo(0, [1, 2, 3, 4, 5])
     ..aE<StateToggle>(1, _omitFieldNames ? '' : 'voiceState',
         enumValues: StateToggle.values)
     ..aOM<UpdateAction>(2, _omitFieldNames ? '' : 'updateAction',
@@ -1376,8 +1286,6 @@ class FaceToBrain extends $pb.GeneratedMessage {
         subBuilder: $3.Empty.create)
     ..aOM<BinanceRequest>(5, _omitFieldNames ? '' : 'binanceRequest',
         subBuilder: BinanceRequest.create)
-    ..aOM<PluginInitRetry>(6, _omitFieldNames ? '' : 'pluginInitRetry',
-        subBuilder: PluginInitRetry.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1404,14 +1312,12 @@ class FaceToBrain extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   @$pb.TagNumber(4)
   @$pb.TagNumber(5)
-  @$pb.TagNumber(6)
   FaceToBrain_Cmd whichCmd() => _FaceToBrain_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
   @$pb.TagNumber(4)
   @$pb.TagNumber(5)
-  @$pb.TagNumber(6)
   void clearCmd() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -1478,18 +1384,6 @@ class FaceToBrain extends $pb.GeneratedMessage {
   void clearBinanceRequest() => $_clearField(5);
   @$pb.TagNumber(5)
   BinanceRequest ensureBinanceRequest() => $_ensure(4);
-
-  /// 人在那张「插件没初始化好」的卡上点了重试
-  @$pb.TagNumber(6)
-  PluginInitRetry get pluginInitRetry => $_getN(5);
-  @$pb.TagNumber(6)
-  set pluginInitRetry(PluginInitRetry value) => $_setField(6, value);
-  @$pb.TagNumber(6)
-  $core.bool hasPluginInitRetry() => $_has(5);
-  @$pb.TagNumber(6)
-  void clearPluginInitRetry() => $_clearField(6);
-  @$pb.TagNumber(6)
-  PluginInitRetry ensurePluginInitRetry() => $_ensure(5);
 }
 
 /// 插件下载/安装进度。
