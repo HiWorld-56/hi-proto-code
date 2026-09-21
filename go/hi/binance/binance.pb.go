@@ -242,6 +242,15 @@ type BinanceSpotNewOrder struct {
 	// 两个都给或都不给由币安报错 —— 我们不替它判,也不替它猜。
 	QuoteOrderQty *string `protobuf:"bytes,6,opt,name=quote_order_qty,json=quoteOrderQty,proto3,oneof" json:"quote_order_qty,omitempty"`
 	Price         *string `protobuf:"bytes,7,opt,name=price,proto3,oneof" json:"price,omitempty"` // 限价单必给
+	// **按百分比**下单(十进制字符串,0 < p ≤ 100,如 "25")。与 quantity / quote_order_qty 三选一。
+	//
+	// 由**机器人**换算成数量 —— 下指令的一方不知道每台的余额,一条群指令里各台余额也不同:
+	//
+	//	· 买(BUY):可用的**计价币**(如 USDT)× p%
+	//	· 卖(SELL):可用的**标的币**(如 BNB)× p% —— 基数是持币,不是账户金额
+	//
+	// 换算后按交易对的步长**向下取整**;不够最小下单量就不下,回一句为什么。
+	Percent       *string `protobuf:"bytes,8,opt,name=percent,proto3,oneof" json:"percent,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -321,6 +330,13 @@ func (x *BinanceSpotNewOrder) GetQuoteOrderQty() string {
 func (x *BinanceSpotNewOrder) GetPrice() string {
 	if x != nil && x.Price != nil {
 		return *x.Price
+	}
+	return ""
+}
+
+func (x *BinanceSpotNewOrder) GetPercent() string {
+	if x != nil && x.Percent != nil {
+		return *x.Percent
 	}
 	return ""
 }
@@ -686,7 +702,17 @@ type BinanceFuturesNewOrder struct {
 	Price        *string                `protobuf:"bytes,7,opt,name=price,proto3,oneof" json:"price,omitempty"` // 限价单必给
 	// 只减仓:这张单只能让持仓变小,不会反向开出新仓。**平仓就靠它**。
 	// ⚠️ 双向持仓模式(position_side = LONG / SHORT)下币安不收这个参数,给了会报错。
-	ReduceOnly    *bool `protobuf:"varint,8,opt,name=reduce_only,json=reduceOnly,proto3,oneof" json:"reduce_only,omitempty"`
+	ReduceOnly *bool `protobuf:"varint,8,opt,name=reduce_only,json=reduceOnly,proto3,oneof" json:"reduce_only,omitempty"`
+	// **按百分比**下单(十进制字符串,0 < p ≤ 100,如 "25")。与 quantity 二选一。
+	//
+	// 由**机器人**换算成数量(下指令的一方不知道每台的余额):
+	//
+	//	· 开仓:可用保证金 × p% **当保证金**,仓位 = 它 × 当前杠杆,再按价格折成数量
+	//	  (限价单用给的 price,市价单用标记价格)
+	//	· 平仓(reduce_only,或双向持仓里 LONG+SELL / SHORT+BUY):**当前持仓数量** × p%
+	//
+	// 换算后按交易对的步长**向下取整**;不够最小下单量就不下,回一句为什么。
+	Percent       *string `protobuf:"bytes,9,opt,name=percent,proto3,oneof" json:"percent,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -775,6 +801,13 @@ func (x *BinanceFuturesNewOrder) GetReduceOnly() bool {
 		return *x.ReduceOnly
 	}
 	return false
+}
+
+func (x *BinanceFuturesNewOrder) GetPercent() string {
+	if x != nil && x.Percent != nil {
+		return *x.Percent
+	}
+	return ""
 }
 
 // 合约撤单。`DELETE /fapi/v1/order`
@@ -1275,7 +1308,7 @@ var File_hi_binance_binance_proto protoreflect.FileDescriptor
 const file_hi_binance_binance_proto_rawDesc = "" +
 	"\n" +
 	"\x18hi/binance/binance.proto\x12\n" +
-	"hi.binance\x1a\x1bbuf/validate/validate.proto\x1a\x10hi/options.proto\"\xfd\x03\n" +
+	"hi.binance\x1a\x1bbuf/validate/validate.proto\x1a\x10hi/options.proto\"\xae\x04\n" +
 	"\x13BinanceSpotNewOrder\x126\n" +
 	"\x06symbol\x18\x01 \x01(\tB\x19\xbaH\x12\xc8\x01\x01r\r2\v^[A-Z0-9]+$\x90\xb5\x18\x02H\x00R\x06symbol\x88\x01\x01\x12A\n" +
 	"\x04side\x18\x02 \x01(\x0e2\x1c.hi.binance.BinanceOrderSideB\n" +
@@ -1285,14 +1318,17 @@ const file_hi_binance_binance_proto_rawDesc = "" +
 	"\rtime_in_force\x18\x04 \x01(\x0e2\x1e.hi.binance.BinanceTimeInForceB\x04\x90\xb5\x18\x02H\x03R\vtimeInForce\x88\x01\x01\x12%\n" +
 	"\bquantity\x18\x05 \x01(\tB\x04\x90\xb5\x18\x02H\x04R\bquantity\x88\x01\x01\x121\n" +
 	"\x0fquote_order_qty\x18\x06 \x01(\tB\x04\x90\xb5\x18\x02H\x05R\rquoteOrderQty\x88\x01\x01\x12\x1f\n" +
-	"\x05price\x18\a \x01(\tB\x04\x90\xb5\x18\x02H\x06R\x05price\x88\x01\x01:\x04\x98\xb5\x18\x02B\t\n" +
+	"\x05price\x18\a \x01(\tB\x04\x90\xb5\x18\x02H\x06R\x05price\x88\x01\x01\x12#\n" +
+	"\apercent\x18\b \x01(\tB\x04\x90\xb5\x18\x02H\aR\apercent\x88\x01\x01:\x04\x98\xb5\x18\x02B\t\n" +
 	"\a_symbolB\a\n" +
 	"\x05_sideB\a\n" +
 	"\x05_typeB\x10\n" +
 	"\x0e_time_in_forceB\v\n" +
 	"\t_quantityB\x12\n" +
 	"\x10_quote_order_qtyB\b\n" +
-	"\x06_price\"\xe9\x01\n" +
+	"\x06_priceB\n" +
+	"\n" +
+	"\b_percent\"\xe9\x01\n" +
 	"\x16BinanceSpotCancelOrder\x126\n" +
 	"\x06symbol\x18\x01 \x01(\tB\x19\xbaH\x12\xc8\x01\x01r\r2\v^[A-Z0-9]+$\x90\xb5\x18\x02H\x00R\x06symbol\x88\x01\x01\x12$\n" +
 	"\border_id\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x02H\x01R\aorderId\x88\x01\x01\x12:\n" +
@@ -1319,7 +1355,7 @@ const file_hi_binance_binance_proto_rawDesc = "" +
 	"\x19BinanceSpotOpenOrderLists:\x04\x98\xb5\x18\x02\"J\n" +
 	"\x14BinanceSpotTicker24h\x12!\n" +
 	"\x06symbol\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x06symbol\x88\x01\x01:\x04\x98\xb5\x18\x02B\t\n" +
-	"\a_symbol\"\xd8\x04\n" +
+	"\a_symbol\"\x89\x05\n" +
 	"\x16BinanceFuturesNewOrder\x126\n" +
 	"\x06symbol\x18\x01 \x01(\tB\x19\xbaH\x12\xc8\x01\x01r\r2\v^[A-Z0-9]+$\x90\xb5\x18\x02H\x00R\x06symbol\x88\x01\x01\x12A\n" +
 	"\x04side\x18\x02 \x01(\x0e2\x1c.hi.binance.BinanceOrderSideB\n" +
@@ -1331,7 +1367,8 @@ const file_hi_binance_binance_proto_rawDesc = "" +
 	"\bquantity\x18\x06 \x01(\tB\x04\x90\xb5\x18\x02H\x05R\bquantity\x88\x01\x01\x12\x1f\n" +
 	"\x05price\x18\a \x01(\tB\x04\x90\xb5\x18\x02H\x06R\x05price\x88\x01\x01\x12*\n" +
 	"\vreduce_only\x18\b \x01(\bB\x04\x90\xb5\x18\x02H\aR\n" +
-	"reduceOnly\x88\x01\x01:\x04\x98\xb5\x18\x02B\t\n" +
+	"reduceOnly\x88\x01\x01\x12#\n" +
+	"\apercent\x18\t \x01(\tB\x04\x90\xb5\x18\x02H\bR\apercent\x88\x01\x01:\x04\x98\xb5\x18\x02B\t\n" +
 	"\a_symbolB\a\n" +
 	"\x05_sideB\a\n" +
 	"\x05_typeB\x10\n" +
@@ -1339,7 +1376,9 @@ const file_hi_binance_binance_proto_rawDesc = "" +
 	"\x0e_time_in_forceB\v\n" +
 	"\t_quantityB\b\n" +
 	"\x06_priceB\x0e\n" +
-	"\f_reduce_only\"\xec\x01\n" +
+	"\f_reduce_onlyB\n" +
+	"\n" +
+	"\b_percent\"\xec\x01\n" +
 	"\x19BinanceFuturesCancelOrder\x126\n" +
 	"\x06symbol\x18\x01 \x01(\tB\x19\xbaH\x12\xc8\x01\x01r\r2\v^[A-Z0-9]+$\x90\xb5\x18\x02H\x00R\x06symbol\x88\x01\x01\x12$\n" +
 	"\border_id\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x02H\x01R\aorderId\x88\x01\x01\x12:\n" +

@@ -607,6 +607,9 @@ impl serde::Serialize for BinanceFuturesNewOrder {
         if self.reduce_only.is_some() {
             len += 1;
         }
+        if self.percent.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.binance.BinanceFuturesNewOrder", len)?;
         if let Some(v) = self.symbol.as_ref() {
             struct_ser.serialize_field("symbol", v)?;
@@ -640,6 +643,9 @@ impl serde::Serialize for BinanceFuturesNewOrder {
         if let Some(v) = self.reduce_only.as_ref() {
             struct_ser.serialize_field("reduceOnly", v)?;
         }
+        if let Some(v) = self.percent.as_ref() {
+            struct_ser.serialize_field("percent", v)?;
+        }
         struct_ser.end()
     }
 }
@@ -661,6 +667,7 @@ impl<'de> serde::Deserialize<'de> for BinanceFuturesNewOrder {
             "price",
             "reduce_only",
             "reduceOnly",
+            "percent",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -673,6 +680,7 @@ impl<'de> serde::Deserialize<'de> for BinanceFuturesNewOrder {
             Quantity,
             Price,
             ReduceOnly,
+            Percent,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -702,6 +710,7 @@ impl<'de> serde::Deserialize<'de> for BinanceFuturesNewOrder {
                             "quantity" => Ok(GeneratedField::Quantity),
                             "price" => Ok(GeneratedField::Price),
                             "reduceOnly" | "reduce_only" => Ok(GeneratedField::ReduceOnly),
+                            "percent" => Ok(GeneratedField::Percent),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -729,6 +738,7 @@ impl<'de> serde::Deserialize<'de> for BinanceFuturesNewOrder {
                 let mut quantity__ = None;
                 let mut price__ = None;
                 let mut reduce_only__ = None;
+                let mut percent__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Symbol => {
@@ -779,6 +789,12 @@ impl<'de> serde::Deserialize<'de> for BinanceFuturesNewOrder {
                             }
                             reduce_only__ = map_.next_value()?;
                         }
+                        GeneratedField::Percent => {
+                            if percent__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("percent"));
+                            }
+                            percent__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(BinanceFuturesNewOrder {
@@ -790,6 +806,7 @@ impl<'de> serde::Deserialize<'de> for BinanceFuturesNewOrder {
                     quantity: quantity__,
                     price: price__,
                     reduce_only: reduce_only__,
+                    percent: percent__,
                 })
             }
         }
@@ -1910,6 +1927,9 @@ impl serde::Serialize for BinanceSpotNewOrder {
         if self.price.is_some() {
             len += 1;
         }
+        if self.percent.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.binance.BinanceSpotNewOrder", len)?;
         if let Some(v) = self.symbol.as_ref() {
             struct_ser.serialize_field("symbol", v)?;
@@ -1938,6 +1958,9 @@ impl serde::Serialize for BinanceSpotNewOrder {
         if let Some(v) = self.price.as_ref() {
             struct_ser.serialize_field("price", v)?;
         }
+        if let Some(v) = self.percent.as_ref() {
+            struct_ser.serialize_field("percent", v)?;
+        }
         struct_ser.end()
     }
 }
@@ -1957,6 +1980,7 @@ impl<'de> serde::Deserialize<'de> for BinanceSpotNewOrder {
             "quote_order_qty",
             "quoteOrderQty",
             "price",
+            "percent",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -1968,6 +1992,7 @@ impl<'de> serde::Deserialize<'de> for BinanceSpotNewOrder {
             Quantity,
             QuoteOrderQty,
             Price,
+            Percent,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1996,6 +2021,7 @@ impl<'de> serde::Deserialize<'de> for BinanceSpotNewOrder {
                             "quantity" => Ok(GeneratedField::Quantity),
                             "quoteOrderQty" | "quote_order_qty" => Ok(GeneratedField::QuoteOrderQty),
                             "price" => Ok(GeneratedField::Price),
+                            "percent" => Ok(GeneratedField::Percent),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -2022,6 +2048,7 @@ impl<'de> serde::Deserialize<'de> for BinanceSpotNewOrder {
                 let mut quantity__ = None;
                 let mut quote_order_qty__ = None;
                 let mut price__ = None;
+                let mut percent__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Symbol => {
@@ -2066,6 +2093,12 @@ impl<'de> serde::Deserialize<'de> for BinanceSpotNewOrder {
                             }
                             price__ = map_.next_value()?;
                         }
+                        GeneratedField::Percent => {
+                            if percent__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("percent"));
+                            }
+                            percent__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(BinanceSpotNewOrder {
@@ -2076,6 +2109,7 @@ impl<'de> serde::Deserialize<'de> for BinanceSpotNewOrder {
                     quantity: quantity__,
                     quote_order_qty: quote_order_qty__,
                     price: price__,
+                    percent: percent__,
                 })
             }
         }

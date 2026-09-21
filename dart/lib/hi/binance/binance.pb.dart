@@ -31,6 +31,7 @@ class BinanceSpotNewOrder extends $pb.GeneratedMessage {
     $core.String? quantity,
     $core.String? quoteOrderQty,
     $core.String? price,
+    $core.String? percent,
   }) {
     final result = create();
     if (symbol != null) result.symbol = symbol;
@@ -40,6 +41,7 @@ class BinanceSpotNewOrder extends $pb.GeneratedMessage {
     if (quantity != null) result.quantity = quantity;
     if (quoteOrderQty != null) result.quoteOrderQty = quoteOrderQty;
     if (price != null) result.price = price;
+    if (percent != null) result.percent = percent;
     return result;
   }
 
@@ -66,6 +68,7 @@ class BinanceSpotNewOrder extends $pb.GeneratedMessage {
     ..aOS(5, _omitFieldNames ? '' : 'quantity')
     ..aOS(6, _omitFieldNames ? '' : 'quoteOrderQty')
     ..aOS(7, _omitFieldNames ? '' : 'price')
+    ..aOS(8, _omitFieldNames ? '' : 'percent')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -151,6 +154,21 @@ class BinanceSpotNewOrder extends $pb.GeneratedMessage {
   $core.bool hasPrice() => $_has(6);
   @$pb.TagNumber(7)
   void clearPrice() => $_clearField(7);
+
+  /// **按百分比**下单(十进制字符串,0 < p ≤ 100,如 "25")。与 quantity / quote_order_qty 三选一。
+  ///
+  /// 由**机器人**换算成数量 —— 下指令的一方不知道每台的余额,一条群指令里各台余额也不同:
+  ///   · 买(BUY):可用的**计价币**(如 USDT)× p%
+  ///   · 卖(SELL):可用的**标的币**(如 BNB)× p% —— 基数是持币,不是账户金额
+  /// 换算后按交易对的步长**向下取整**;不够最小下单量就不下,回一句为什么。
+  @$pb.TagNumber(8)
+  $core.String get percent => $_getSZ(7);
+  @$pb.TagNumber(8)
+  set percent($core.String value) => $_setString(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasPercent() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearPercent() => $_clearField(8);
 }
 
 /// 现货撤单。`DELETE /api/v3/order`
@@ -595,6 +613,7 @@ class BinanceFuturesNewOrder extends $pb.GeneratedMessage {
     $core.String? quantity,
     $core.String? price,
     $core.bool? reduceOnly,
+    $core.String? percent,
   }) {
     final result = create();
     if (symbol != null) result.symbol = symbol;
@@ -605,6 +624,7 @@ class BinanceFuturesNewOrder extends $pb.GeneratedMessage {
     if (quantity != null) result.quantity = quantity;
     if (price != null) result.price = price;
     if (reduceOnly != null) result.reduceOnly = reduceOnly;
+    if (percent != null) result.percent = percent;
     return result;
   }
 
@@ -633,6 +653,7 @@ class BinanceFuturesNewOrder extends $pb.GeneratedMessage {
     ..aOS(6, _omitFieldNames ? '' : 'quantity')
     ..aOS(7, _omitFieldNames ? '' : 'price')
     ..aOB(8, _omitFieldNames ? '' : 'reduceOnly')
+    ..aOS(9, _omitFieldNames ? '' : 'percent')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -728,6 +749,22 @@ class BinanceFuturesNewOrder extends $pb.GeneratedMessage {
   $core.bool hasReduceOnly() => $_has(7);
   @$pb.TagNumber(8)
   void clearReduceOnly() => $_clearField(8);
+
+  /// **按百分比**下单(十进制字符串,0 < p ≤ 100,如 "25")。与 quantity 二选一。
+  ///
+  /// 由**机器人**换算成数量(下指令的一方不知道每台的余额):
+  ///   · 开仓:可用保证金 × p% **当保证金**,仓位 = 它 × 当前杠杆,再按价格折成数量
+  ///     (限价单用给的 price,市价单用标记价格)
+  ///   · 平仓(reduce_only,或双向持仓里 LONG+SELL / SHORT+BUY):**当前持仓数量** × p%
+  /// 换算后按交易对的步长**向下取整**;不够最小下单量就不下,回一句为什么。
+  @$pb.TagNumber(9)
+  $core.String get percent => $_getSZ(8);
+  @$pb.TagNumber(9)
+  set percent($core.String value) => $_setString(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasPercent() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearPercent() => $_clearField(9);
 }
 
 /// 合约撤单。`DELETE /fapi/v1/order`

@@ -157,6 +157,16 @@ const BinanceSpotNewOrder$json = {
       '10': 'price',
       '17': true
     },
+    {
+      '1': 'percent',
+      '3': 8,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 7,
+      '10': 'percent',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -167,6 +177,7 @@ const BinanceSpotNewOrder$json = {
     {'1': '_quantity'},
     {'1': '_quote_order_qty'},
     {'1': '_price'},
+    {'1': '_percent'},
   ],
 };
 
@@ -179,9 +190,10 @@ final $typed_data.Uint8List binanceSpotNewOrderDescriptor = $convert.base64Decod
     'X2ZvcmNlGAQgASgOMh4uaGkuYmluYW5jZS5CaW5hbmNlVGltZUluRm9yY2VCBJC1GAJIA1ILdG'
     'ltZUluRm9yY2WIAQESJQoIcXVhbnRpdHkYBSABKAlCBJC1GAJIBFIIcXVhbnRpdHmIAQESMQoP'
     'cXVvdGVfb3JkZXJfcXR5GAYgASgJQgSQtRgCSAVSDXF1b3RlT3JkZXJRdHmIAQESHwoFcHJpY2'
-    'UYByABKAlCBJC1GAJIBlIFcHJpY2WIAQE6BJi1GAJCCQoHX3N5bWJvbEIHCgVfc2lkZUIHCgVf'
-    'dHlwZUIQCg5fdGltZV9pbl9mb3JjZUILCglfcXVhbnRpdHlCEgoQX3F1b3RlX29yZGVyX3F0eU'
-    'IICgZfcHJpY2U=');
+    'UYByABKAlCBJC1GAJIBlIFcHJpY2WIAQESIwoHcGVyY2VudBgIIAEoCUIEkLUYAkgHUgdwZXJj'
+    'ZW50iAEBOgSYtRgCQgkKB19zeW1ib2xCBwoFX3NpZGVCBwoFX3R5cGVCEAoOX3RpbWVfaW5fZm'
+    '9yY2VCCwoJX3F1YW50aXR5QhIKEF9xdW90ZV9vcmRlcl9xdHlCCAoGX3ByaWNlQgoKCF9wZXJj'
+    'ZW50');
 
 @$core.Deprecated('Use binanceSpotCancelOrderDescriptor instead')
 const BinanceSpotCancelOrder$json = {
@@ -488,6 +500,16 @@ const BinanceFuturesNewOrder$json = {
       '10': 'reduceOnly',
       '17': true
     },
+    {
+      '1': 'percent',
+      '3': 9,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 8,
+      '10': 'percent',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -499,6 +521,7 @@ const BinanceFuturesNewOrder$json = {
     {'1': '_quantity'},
     {'1': '_price'},
     {'1': '_reduce_only'},
+    {'1': '_percent'},
   ],
 };
 
@@ -512,9 +535,10 @@ final $typed_data.Uint8List binanceFuturesNewOrderDescriptor = $convert.base64De
     'NSDHBvc2l0aW9uU2lkZYgBARJNCg10aW1lX2luX2ZvcmNlGAUgASgOMh4uaGkuYmluYW5jZS5C'
     'aW5hbmNlVGltZUluRm9yY2VCBJC1GAJIBFILdGltZUluRm9yY2WIAQESJQoIcXVhbnRpdHkYBi'
     'ABKAlCBJC1GAJIBVIIcXVhbnRpdHmIAQESHwoFcHJpY2UYByABKAlCBJC1GAJIBlIFcHJpY2WI'
-    'AQESKgoLcmVkdWNlX29ubHkYCCABKAhCBJC1GAJIB1IKcmVkdWNlT25seYgBAToEmLUYAkIJCg'
-    'dfc3ltYm9sQgcKBV9zaWRlQgcKBV90eXBlQhAKDl9wb3NpdGlvbl9zaWRlQhAKDl90aW1lX2lu'
-    'X2ZvcmNlQgsKCV9xdWFudGl0eUIICgZfcHJpY2VCDgoMX3JlZHVjZV9vbmx5');
+    'AQESKgoLcmVkdWNlX29ubHkYCCABKAhCBJC1GAJIB1IKcmVkdWNlT25seYgBARIjCgdwZXJjZW'
+    '50GAkgASgJQgSQtRgCSAhSB3BlcmNlbnSIAQE6BJi1GAJCCQoHX3N5bWJvbEIHCgVfc2lkZUIH'
+    'CgVfdHlwZUIQCg5fcG9zaXRpb25fc2lkZUIQCg5fdGltZV9pbl9mb3JjZUILCglfcXVhbnRpdH'
+    'lCCAoGX3ByaWNlQg4KDF9yZWR1Y2Vfb25seUIKCghfcGVyY2VudA==');
 
 @$core.Deprecated('Use binanceFuturesCancelOrderDescriptor instead')
 const BinanceFuturesCancelOrder$json = {

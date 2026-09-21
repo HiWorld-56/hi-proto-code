@@ -22,6 +22,14 @@ pub struct BinanceSpotNewOrder {
     /// 限价单必给
     #[prost(string, optional, tag = "7")]
     pub price: ::core::option::Option<::prost::alloc::string::String>,
+    /// **按百分比**下单(十进制字符串,0 \< p ≤ 100,如 "25")。与 quantity / quote_order_qty 三选一。
+    ///
+    /// 由**机器人**换算成数量 —— 下指令的一方不知道每台的余额,一条群指令里各台余额也不同:
+    /// · 买(BUY):可用的**计价币**(如 USDT)× p%
+    /// · 卖(SELL):可用的**标的币**(如 BNB)× p% —— 基数是持币,不是账户金额
+    /// 换算后按交易对的步长**向下取整**;不够最小下单量就不下,回一句为什么。
+    #[prost(string, optional, tag = "8")]
+    pub percent: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 现货撤单。`DELETE /api/v3/order`
 /// `order_id` 与 `orig_client_order_id` 给一个即可(都不给由币安报错)。
@@ -107,6 +115,15 @@ pub struct BinanceFuturesNewOrder {
     /// ⚠️ 双向持仓模式(position_side = LONG / SHORT)下币安不收这个参数,给了会报错。
     #[prost(bool, optional, tag = "8")]
     pub reduce_only: ::core::option::Option<bool>,
+    /// **按百分比**下单(十进制字符串,0 \< p ≤ 100,如 "25")。与 quantity 二选一。
+    ///
+    /// 由**机器人**换算成数量(下指令的一方不知道每台的余额):
+    /// · 开仓:可用保证金 × p% **当保证金**,仓位 = 它 × 当前杠杆,再按价格折成数量
+    /// (限价单用给的 price,市价单用标记价格)
+    /// · 平仓(reduce_only,或双向持仓里 LONG+SELL / SHORT+BUY):**当前持仓数量** × p%
+    /// 换算后按交易对的步长**向下取整**;不够最小下单量就不下,回一句为什么。
+    #[prost(string, optional, tag = "9")]
+    pub percent: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 合约撤单。`DELETE /fapi/v1/order`
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
