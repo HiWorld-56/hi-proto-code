@@ -4374,26 +4374,17 @@ pub mod content {
         Binance(super::super::binance::BinanceResult),
     }
 }
-/// 群公共信息(所有成员一致)。群类型(单聊/群)在 base.type;public/private 见 private 字段。
-/// base.update 供前端判断缓存新鲜度。
+/// 群公共信息(所有成员一致)。**群的种类只看 base.type**:single / group-private / group-public / group-open
+/// (取值与各自的规则见 hi/common.proto 的 Entity 注释)。base.update 供前端判断缓存新鲜度。
+///
+/// ⚠️ 原来这里还有 `private`、`findable` 两个布尔,与 base.type 一起描述"这是个什么样的群" ——
+/// 三处各管一截,于是私有群只能"先建成公开群、再改成私密",单聊群也一直是公开的。已删,只留 type。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GroupBase {
     #[prost(message, optional, tag = "1")]
     pub base: ::core::option::Option<super::Entity>,
     #[prost(string, optional, tag = "2")]
     pub background: ::core::option::Option<::prost::alloc::string::String>,
-    /// true=私密群(只能被邀请加入);false=公开群
-    #[prost(bool, optional, tag = "3")]
-    pub private: ::core::option::Option<bool>,
-    /// **能不能被"按创建者"找到**(`Group.ListByCreator`)。默认 false ——
-    /// 新建的群一律找不到,加这个接口不会把谁的群暴露出去。
-    ///
-    /// 用途:代理建一批群来管机器人,群有 300 人上限,满了就再建一个。
-    /// 把它们设成**公开 + 可被找到**,机器人(插件的 install)就能凭代理的 did
-    /// 现查出当前可用的那几个,挨个试着加 —— 代理不需要自己跑一个服务,
-    /// 也不需要每加一个群就发一版新插件。
-    #[prost(bool, optional, tag = "4")]
-    pub findable: ::core::option::Option<bool>,
 }
 /// 成员相关属性(**对外可见**:成员列表里人人可见谁是什么角色、谁被禁言)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -4437,11 +4428,15 @@ pub struct GetGroupReq {
     #[prost(string, optional, tag = "1")]
     pub code: ::core::option::Option<::prost::alloc::string::String>,
 }
-/// 创建群聊
+/// 创建群聊。**建的时候就定类型**,不用先建成公开群再改。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateGroupReq {
     #[prost(string, optional, tag = "1")]
     pub name: ::core::option::Option<::prost::alloc::string::String>,
+    /// group-private / group-public / group-open。不传 = group-public,但**调用方应当总是传**(界面上让用户选)。
+    /// single 不能在这里建(单聊群随关系建,见 CreateSingle)。
+    #[prost(string, optional, tag = "2")]
+    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 创建单聊
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -4580,26 +4575,26 @@ pub struct UpdateGroupReq {
     /// 群背景 url;**有 presence**:不传=不动,传空串=清空
     #[prost(string, optional, tag = "4")]
     pub background: ::core::option::Option<::prost::alloc::string::String>,
-    /// true=私密群(只能被邀请);false=公开群。不传=不动
-    #[prost(bool, optional, tag = "5")]
-    pub private: ::core::option::Option<bool>,
-    /// true=可按创建者找到(见 GroupBase.findable)。不传=不动
-    #[prost(bool, optional, tag = "6")]
-    pub findable: ::core::option::Option<bool>,
+    /// 改群类型:group-private / group-public / group-open 之间互换。不传=不动。仅群主。单聊群不能改。
+    ///
+    /// 新号:5/6 原是 private/findable(bool),复用会让老客户端的请求解不开
+    #[prost(string, optional, tag = "7")]
+    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
 }
-/// 按创建者找群。
+/// 按创建者找群。**只回透明群(group-open)** —— 私有群、公开群都不会被这样翻出来。
 ///
-/// ⚠️ **只回「公开 且 可被找到」的群**,而这两样默认都不是 —— 所以这个接口
-/// 不会把谁的群翻出来:群主得自己在界面上把它设成"可被找到"。
+/// 用途:代理建一批群来管机器人,群有 300 人上限,满了就再建一个。把它们建成透明群,
+/// 机器人(插件的 install)就能凭代理的 did 现查出当前可用的那几个,挨个试着加 ——
+/// 代理不需要自己跑一个服务,也不需要每加一个群就发一版新插件。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListGroupsByCreatorReq {
     #[prost(string, optional, tag = "1")]
     pub creator: ::core::option::Option<::prost::alloc::string::String>,
 }
-/// 一个能被找到的群。**不是 GroupBase** —— 这里要的是"还能不能加得进去",
+/// 一个透明群(按创建者找到的)。**不是 GroupBase** —— 这里要的是"还能不能加得进去",
 /// 所以带当前人数;群名/头像那些等加进去之后自己会拿到。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct FindableGroup {
+pub struct OpenGroup {
     #[prost(string, optional, tag = "1")]
     pub code: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
@@ -4613,7 +4608,7 @@ pub struct FindableGroup {
 pub struct ListGroupsByCreatorResp {
     /// **人少的排前面**,省得挨个撞上限
     #[prost(message, repeated, tag = "1")]
-    pub groups: ::prost::alloc::vec::Vec<FindableGroup>,
+    pub groups: ::prost::alloc::vec::Vec<OpenGroup>,
 }
 /// Generated client implementations.
 pub mod group_client {

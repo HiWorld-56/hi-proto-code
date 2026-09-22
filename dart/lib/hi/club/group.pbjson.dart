@@ -38,41 +38,18 @@ const GroupBase$json = {
       '10': 'background',
       '17': true
     },
-    {
-      '1': 'private',
-      '3': 3,
-      '4': 1,
-      '5': 8,
-      '8': {},
-      '9': 1,
-      '10': 'private',
-      '17': true
-    },
-    {
-      '1': 'findable',
-      '3': 4,
-      '4': 1,
-      '5': 8,
-      '8': {},
-      '9': 2,
-      '10': 'findable',
-      '17': true
-    },
   ],
   '7': {},
   '8': [
     {'1': '_background'},
-    {'1': '_private'},
-    {'1': '_findable'},
   ],
 };
 
 /// Descriptor for `GroupBase`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List groupBaseDescriptor = $convert.base64Decode(
     'CglHcm91cEJhc2USJAoEYmFzZRgBIAEoCzIKLmhpLkVudGl0eUIEkLUYAVIEYmFzZRIpCgpiYW'
-    'NrZ3JvdW5kGAIgASgJQgSQtRgBSABSCmJhY2tncm91bmSIAQESIwoHcHJpdmF0ZRgDIAEoCEIE'
-    'kLUYAUgBUgdwcml2YXRliAEBEiUKCGZpbmRhYmxlGAQgASgIQgSQtRgBSAJSCGZpbmRhYmxliA'
-    'EBOgSYtRgBQg0KC19iYWNrZ3JvdW5kQgoKCF9wcml2YXRlQgsKCV9maW5kYWJsZQ==');
+    'NrZ3JvdW5kGAIgASgJQgSQtRgBSABSCmJhY2tncm91bmSIAQE6BJi1GAFCDQoLX2JhY2tncm91'
+    'bmQ=');
 
 @$core.Deprecated('Use groupMemberAttrDescriptor instead')
 const GroupMemberAttr$json = {
@@ -238,15 +215,28 @@ const CreateGroupReq$json = {
   '1': 'CreateGroupReq',
   '2': [
     {'1': 'name', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'name', '17': true},
+    {
+      '1': 'type',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'type',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_name'},
+    {'1': '_type'},
   ],
 };
 
 /// Descriptor for `CreateGroupReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List createGroupReqDescriptor = $convert.base64Decode(
-    'Cg5DcmVhdGVHcm91cFJlcRIXCgRuYW1lGAEgASgJSABSBG5hbWWIAQFCBwoFX25hbWU=');
+    'Cg5DcmVhdGVHcm91cFJlcRIXCgRuYW1lGAEgASgJSABSBG5hbWWIAQESRwoEdHlwZRgCIAEoCU'
+    'IuukgrcilSDWdyb3VwLXByaXZhdGVSDGdyb3VwLXB1YmxpY1IKZ3JvdXAtb3BlbkgBUgR0eXBl'
+    'iAEBQgcKBV9uYW1lQgcKBV90eXBl');
 
 @$core.Deprecated('Use createSingleReqDescriptor instead')
 const CreateSingleReq$json = {
@@ -564,21 +554,13 @@ const UpdateGroupReq$json = {
       '17': true
     },
     {
-      '1': 'private',
-      '3': 5,
+      '1': 'type',
+      '3': 7,
       '4': 1,
-      '5': 8,
+      '5': 9,
+      '8': {},
       '9': 4,
-      '10': 'private',
-      '17': true
-    },
-    {
-      '1': 'findable',
-      '3': 6,
-      '4': 1,
-      '5': 8,
-      '9': 5,
-      '10': 'findable',
+      '10': 'type',
       '17': true
     },
   ],
@@ -587,8 +569,7 @@ const UpdateGroupReq$json = {
     {'1': '_name'},
     {'1': '_avatar'},
     {'1': '_background'},
-    {'1': '_private'},
-    {'1': '_findable'},
+    {'1': '_type'},
   ],
 };
 
@@ -596,10 +577,10 @@ const UpdateGroupReq$json = {
 final $typed_data.Uint8List updateGroupReqDescriptor = $convert.base64Decode(
     'Cg5VcGRhdGVHcm91cFJlcRIqCgVncm91cBgBIAEoCUIPukgMyAEBcgcyBV5cUyskSABSBWdyb3'
     'VwiAEBEhcKBG5hbWUYAiABKAlIAVIEbmFtZYgBARIbCgZhdmF0YXIYAyABKAlIAlIGYXZhdGFy'
-    'iAEBEiMKCmJhY2tncm91bmQYBCABKAlIA1IKYmFja2dyb3VuZIgBARIdCgdwcml2YXRlGAUgAS'
-    'gISARSB3ByaXZhdGWIAQESHwoIZmluZGFibGUYBiABKAhIBVIIZmluZGFibGWIAQFCCAoGX2dy'
-    'b3VwQgcKBV9uYW1lQgkKB19hdmF0YXJCDQoLX2JhY2tncm91bmRCCgoIX3ByaXZhdGVCCwoJX2'
-    'ZpbmRhYmxl');
+    'iAEBEiMKCmJhY2tncm91bmQYBCABKAlIA1IKYmFja2dyb3VuZIgBARJHCgR0eXBlGAcgASgJQi'
+    '66SCtyKVINZ3JvdXAtcHJpdmF0ZVIMZ3JvdXAtcHVibGljUgpncm91cC1vcGVuSARSBHR5cGWI'
+    'AQFCCAoGX2dyb3VwQgcKBV9uYW1lQgkKB19hdmF0YXJCDQoLX2JhY2tncm91bmRCBwoFX3R5cG'
+    'U=');
 
 @$core.Deprecated('Use listGroupsByCreatorReqDescriptor instead')
 const ListGroupsByCreatorReq$json = {
@@ -627,9 +608,9 @@ final $typed_data.Uint8List listGroupsByCreatorReqDescriptor =
         'ChZMaXN0R3JvdXBzQnlDcmVhdG9yUmVxEi4KB2NyZWF0b3IYASABKAlCD7pIDMgBAXIHMgVeXF'
         'MrJEgAUgdjcmVhdG9yiAEBQgoKCF9jcmVhdG9y');
 
-@$core.Deprecated('Use findableGroupDescriptor instead')
-const FindableGroup$json = {
-  '1': 'FindableGroup',
+@$core.Deprecated('Use openGroupDescriptor instead')
+const OpenGroup$json = {
+  '1': 'OpenGroup',
   '2': [
     {
       '1': 'code',
@@ -670,11 +651,11 @@ const FindableGroup$json = {
   ],
 };
 
-/// Descriptor for `FindableGroup`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List findableGroupDescriptor = $convert.base64Decode(
-    'Cg1GaW5kYWJsZUdyb3VwEh0KBGNvZGUYASABKAlCBJC1GAFIAFIEY29kZYgBARIdCgRuYW1lGA'
-    'IgASgJQgSQtRgBSAFSBG5hbWWIAQESLAoMbWVtYmVyX3RvdGFsGAMgASgDQgSQtRgBSAJSC21l'
-    'bWJlclRvdGFsiAEBOgSYtRgBQgcKBV9jb2RlQgcKBV9uYW1lQg8KDV9tZW1iZXJfdG90YWw=');
+/// Descriptor for `OpenGroup`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List openGroupDescriptor = $convert.base64Decode(
+    'CglPcGVuR3JvdXASHQoEY29kZRgBIAEoCUIEkLUYAUgAUgRjb2RliAEBEh0KBG5hbWUYAiABKA'
+    'lCBJC1GAFIAVIEbmFtZYgBARIsCgxtZW1iZXJfdG90YWwYAyABKANCBJC1GAFIAlILbWVtYmVy'
+    'VG90YWyIAQE6BJi1GAFCBwoFX2NvZGVCBwoFX25hbWVCDwoNX21lbWJlcl90b3RhbA==');
 
 @$core.Deprecated('Use listGroupsByCreatorRespDescriptor instead')
 const ListGroupsByCreatorResp$json = {
@@ -685,7 +666,7 @@ const ListGroupsByCreatorResp$json = {
       '3': 1,
       '4': 3,
       '5': 11,
-      '6': '.hi.club.FindableGroup',
+      '6': '.hi.club.OpenGroup',
       '8': {},
       '10': 'groups'
     },
@@ -696,5 +677,5 @@ const ListGroupsByCreatorResp$json = {
 /// Descriptor for `ListGroupsByCreatorResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listGroupsByCreatorRespDescriptor =
     $convert.base64Decode(
-        'ChdMaXN0R3JvdXBzQnlDcmVhdG9yUmVzcBI0CgZncm91cHMYASADKAsyFi5oaS5jbHViLkZpbm'
-        'RhYmxlR3JvdXBCBJC1GAFSBmdyb3VwczoEmLUYAQ==');
+        'ChdMaXN0R3JvdXBzQnlDcmVhdG9yUmVzcBIwCgZncm91cHMYASADKAsyEi5oaS5jbHViLk9wZW'
+        '5Hcm91cEIEkLUYAVIGZ3JvdXBzOgSYtRgB');

@@ -20,20 +20,19 @@ import 'messaging.pb.dart' as $3;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
-/// 群公共信息(所有成员一致)。群类型(单聊/群)在 base.type;public/private 见 private 字段。
-/// base.update 供前端判断缓存新鲜度。
+/// 群公共信息(所有成员一致)。**群的种类只看 base.type**:single / group-private / group-public / group-open
+/// (取值与各自的规则见 hi/common.proto 的 Entity 注释)。base.update 供前端判断缓存新鲜度。
+///
+/// ⚠️ 原来这里还有 `private`、`findable` 两个布尔,与 base.type 一起描述"这是个什么样的群" ——
+///    三处各管一截,于是私有群只能"先建成公开群、再改成私密",单聊群也一直是公开的。已删,只留 type。
 class GroupBase extends $pb.GeneratedMessage {
   factory GroupBase({
     $2.Entity? base,
     $core.String? background,
-    $core.bool? private,
-    $core.bool? findable,
   }) {
     final result = create();
     if (base != null) result.base = base;
     if (background != null) result.background = background;
-    if (private != null) result.private = private;
-    if (findable != null) result.findable = findable;
     return result;
   }
 
@@ -53,8 +52,6 @@ class GroupBase extends $pb.GeneratedMessage {
     ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'base',
         subBuilder: $2.Entity.create)
     ..aOS(2, _omitFieldNames ? '' : 'background')
-    ..aOB(3, _omitFieldNames ? '' : 'private')
-    ..aOB(4, _omitFieldNames ? '' : 'findable')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -94,31 +91,6 @@ class GroupBase extends $pb.GeneratedMessage {
   $core.bool hasBackground() => $_has(1);
   @$pb.TagNumber(2)
   void clearBackground() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.bool get private => $_getBF(2);
-  @$pb.TagNumber(3)
-  set private($core.bool value) => $_setBool(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasPrivate() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearPrivate() => $_clearField(3);
-
-  /// **能不能被"按创建者"找到**(`Group.ListByCreator`)。默认 false ——
-  /// 新建的群一律找不到,加这个接口不会把谁的群暴露出去。
-  ///
-  /// 用途:代理建一批群来管机器人,群有 300 人上限,满了就再建一个。
-  /// 把它们设成**公开 + 可被找到**,机器人(插件的 install)就能凭代理的 did
-  /// 现查出当前可用的那几个,挨个试着加 —— 代理不需要自己跑一个服务,
-  /// 也不需要每加一个群就发一版新插件。
-  @$pb.TagNumber(4)
-  $core.bool get findable => $_getBF(3);
-  @$pb.TagNumber(4)
-  set findable($core.bool value) => $_setBool(3, value);
-  @$pb.TagNumber(4)
-  $core.bool hasFindable() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearFindable() => $_clearField(4);
 }
 
 /// 成员相关属性(**对外可见**:成员列表里人人可见谁是什么角色、谁被禁言)。
@@ -463,13 +435,15 @@ class GetGroupReq extends $pb.GeneratedMessage {
   void clearCode() => $_clearField(1);
 }
 
-/// 创建群聊
+/// 创建群聊。**建的时候就定类型**,不用先建成公开群再改。
 class CreateGroupReq extends $pb.GeneratedMessage {
   factory CreateGroupReq({
     $core.String? name,
+    $core.String? type,
   }) {
     final result = create();
     if (name != null) result.name = name;
+    if (type != null) result.type = type;
     return result;
   }
 
@@ -487,6 +461,7 @@ class CreateGroupReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'name')
+    ..aOS(2, _omitFieldNames ? '' : 'type')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -516,6 +491,17 @@ class CreateGroupReq extends $pb.GeneratedMessage {
   $core.bool hasName() => $_has(0);
   @$pb.TagNumber(1)
   void clearName() => $_clearField(1);
+
+  /// group-private / group-public / group-open。不传 = group-public,但**调用方应当总是传**(界面上让用户选)。
+  /// single 不能在这里建(单聊群随关系建,见 CreateSingle)。
+  @$pb.TagNumber(2)
+  $core.String get type => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set type($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasType() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearType() => $_clearField(2);
 }
 
 /// 创建单聊
@@ -1439,16 +1425,14 @@ class UpdateGroupReq extends $pb.GeneratedMessage {
     $core.String? name,
     $core.String? avatar,
     $core.String? background,
-    $core.bool? private,
-    $core.bool? findable,
+    $core.String? type,
   }) {
     final result = create();
     if (group != null) result.group = group;
     if (name != null) result.name = name;
     if (avatar != null) result.avatar = avatar;
     if (background != null) result.background = background;
-    if (private != null) result.private = private;
-    if (findable != null) result.findable = findable;
+    if (type != null) result.type = type;
     return result;
   }
 
@@ -1469,8 +1453,7 @@ class UpdateGroupReq extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'name')
     ..aOS(3, _omitFieldNames ? '' : 'avatar')
     ..aOS(4, _omitFieldNames ? '' : 'background')
-    ..aOB(5, _omitFieldNames ? '' : 'private')
-    ..aOB(6, _omitFieldNames ? '' : 'findable')
+    ..aOS(7, _omitFieldNames ? '' : 'type')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1528,29 +1511,22 @@ class UpdateGroupReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearBackground() => $_clearField(4);
 
-  @$pb.TagNumber(5)
-  $core.bool get private => $_getBF(4);
-  @$pb.TagNumber(5)
-  set private($core.bool value) => $_setBool(4, value);
-  @$pb.TagNumber(5)
-  $core.bool hasPrivate() => $_has(4);
-  @$pb.TagNumber(5)
-  void clearPrivate() => $_clearField(5);
-
-  @$pb.TagNumber(6)
-  $core.bool get findable => $_getBF(5);
-  @$pb.TagNumber(6)
-  set findable($core.bool value) => $_setBool(5, value);
-  @$pb.TagNumber(6)
-  $core.bool hasFindable() => $_has(5);
-  @$pb.TagNumber(6)
-  void clearFindable() => $_clearField(6);
+  /// 改群类型:group-private / group-public / group-open 之间互换。不传=不动。仅群主。单聊群不能改。
+  @$pb.TagNumber(7)
+  $core.String get type => $_getSZ(4);
+  @$pb.TagNumber(7)
+  set type($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(7)
+  $core.bool hasType() => $_has(4);
+  @$pb.TagNumber(7)
+  void clearType() => $_clearField(7);
 }
 
-/// 按创建者找群。
+/// 按创建者找群。**只回透明群(group-open)** —— 私有群、公开群都不会被这样翻出来。
 ///
-/// ⚠️ **只回「公开 且 可被找到」的群**,而这两样默认都不是 —— 所以这个接口
-/// 不会把谁的群翻出来:群主得自己在界面上把它设成"可被找到"。
+/// 用途:代理建一批群来管机器人,群有 300 人上限,满了就再建一个。把它们建成透明群,
+/// 机器人(插件的 install)就能凭代理的 did 现查出当前可用的那几个,挨个试着加 ——
+/// 代理不需要自己跑一个服务,也不需要每加一个群就发一版新插件。
 class ListGroupsByCreatorReq extends $pb.GeneratedMessage {
   factory ListGroupsByCreatorReq({
     $core.String? creator,
@@ -1606,10 +1582,10 @@ class ListGroupsByCreatorReq extends $pb.GeneratedMessage {
   void clearCreator() => $_clearField(1);
 }
 
-/// 一个能被找到的群。**不是 GroupBase** —— 这里要的是"还能不能加得进去",
+/// 一个透明群(按创建者找到的)。**不是 GroupBase** —— 这里要的是"还能不能加得进去",
 /// 所以带当前人数;群名/头像那些等加进去之后自己会拿到。
-class FindableGroup extends $pb.GeneratedMessage {
-  factory FindableGroup({
+class OpenGroup extends $pb.GeneratedMessage {
+  factory OpenGroup({
     $core.String? code,
     $core.String? name,
     $fixnum.Int64? memberTotal,
@@ -1621,17 +1597,17 @@ class FindableGroup extends $pb.GeneratedMessage {
     return result;
   }
 
-  FindableGroup._();
+  OpenGroup._();
 
-  factory FindableGroup.fromBuffer($core.List<$core.int> data,
+  factory OpenGroup.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory FindableGroup.fromJson($core.String json,
+  factory OpenGroup.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'FindableGroup',
+      _omitMessageNames ? '' : 'OpenGroup',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'code')
@@ -1640,23 +1616,22 @@ class FindableGroup extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  FindableGroup clone() => deepCopy();
+  OpenGroup clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  FindableGroup copyWith(void Function(FindableGroup) updates) =>
-      super.copyWith((message) => updates(message as FindableGroup))
-          as FindableGroup;
+  OpenGroup copyWith(void Function(OpenGroup) updates) =>
+      super.copyWith((message) => updates(message as OpenGroup)) as OpenGroup;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static FindableGroup create() => FindableGroup._();
+  static OpenGroup create() => OpenGroup._();
   @$core.override
-  FindableGroup createEmptyInstance() => create();
+  OpenGroup createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static FindableGroup getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<FindableGroup>(create);
-  static FindableGroup? _defaultInstance;
+  static OpenGroup getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<OpenGroup>(create);
+  static OpenGroup? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get code => $_getSZ(0);
@@ -1690,7 +1665,7 @@ class FindableGroup extends $pb.GeneratedMessage {
 
 class ListGroupsByCreatorResp extends $pb.GeneratedMessage {
   factory ListGroupsByCreatorResp({
-    $core.Iterable<FindableGroup>? groups,
+    $core.Iterable<OpenGroup>? groups,
   }) {
     final result = create();
     if (groups != null) result.groups.addAll(groups);
@@ -1710,8 +1685,8 @@ class ListGroupsByCreatorResp extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'ListGroupsByCreatorResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..pPM<FindableGroup>(1, _omitFieldNames ? '' : 'groups',
-        subBuilder: FindableGroup.create)
+    ..pPM<OpenGroup>(1, _omitFieldNames ? '' : 'groups',
+        subBuilder: OpenGroup.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1735,7 +1710,7 @@ class ListGroupsByCreatorResp extends $pb.GeneratedMessage {
   static ListGroupsByCreatorResp? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $pb.PbList<FindableGroup> get groups => $_getList(0);
+  $pb.PbList<OpenGroup> get groups => $_getList(0);
 }
 
 const $core.bool _omitFieldNames =

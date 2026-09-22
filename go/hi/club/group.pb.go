@@ -24,21 +24,16 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// 群公共信息(所有成员一致)。群类型(单聊/群)在 base.type;public/private 见 private 字段。
-// base.update 供前端判断缓存新鲜度。
+// 群公共信息(所有成员一致)。**群的种类只看 base.type**:single / group-private / group-public / group-open
+// (取值与各自的规则见 hi/common.proto 的 Entity 注释)。base.update 供前端判断缓存新鲜度。
+//
+// ⚠️ 原来这里还有 `private`、`findable` 两个布尔,与 base.type 一起描述"这是个什么样的群" ——
+//
+//	三处各管一截,于是私有群只能"先建成公开群、再改成私密",单聊群也一直是公开的。已删,只留 type。
 type GroupBase struct {
-	state      protoimpl.MessageState `protogen:"open.v1"`
-	Base       *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
-	Background *string                `protobuf:"bytes,2,opt,name=background,proto3,oneof" json:"background,omitempty"`
-	Private    *bool                  `protobuf:"varint,3,opt,name=private,proto3,oneof" json:"private,omitempty"` // true=私密群(只能被邀请加入);false=公开群
-	// **能不能被"按创建者"找到**(`Group.ListByCreator`)。默认 false ——
-	// 新建的群一律找不到,加这个接口不会把谁的群暴露出去。
-	//
-	// 用途:代理建一批群来管机器人,群有 300 人上限,满了就再建一个。
-	// 把它们设成**公开 + 可被找到**,机器人(插件的 install)就能凭代理的 did
-	// 现查出当前可用的那几个,挨个试着加 —— 代理不需要自己跑一个服务,
-	// 也不需要每加一个群就发一版新插件。
-	Findable      *bool `protobuf:"varint,4,opt,name=findable,proto3,oneof" json:"findable,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Base          *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
+	Background    *string                `protobuf:"bytes,2,opt,name=background,proto3,oneof" json:"background,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -85,20 +80,6 @@ func (x *GroupBase) GetBackground() string {
 		return *x.Background
 	}
 	return ""
-}
-
-func (x *GroupBase) GetPrivate() bool {
-	if x != nil && x.Private != nil {
-		return *x.Private
-	}
-	return false
-}
-
-func (x *GroupBase) GetFindable() bool {
-	if x != nil && x.Findable != nil {
-		return *x.Findable
-	}
-	return false
 }
 
 // 成员相关属性(**对外可见**:成员列表里人人可见谁是什么角色、谁被禁言)。
@@ -364,10 +345,13 @@ func (x *GetGroupReq) GetCode() string {
 	return ""
 }
 
-// 创建群聊
+// 创建群聊。**建的时候就定类型**,不用先建成公开群再改。
 type CreateGroupReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          *string                `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Name  *string                `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	// group-private / group-public / group-open。不传 = group-public,但**调用方应当总是传**(界面上让用户选)。
+	// single 不能在这里建(单聊群随关系建,见 CreateSingle)。
+	Type          *string `protobuf:"bytes,2,opt,name=type,proto3,oneof" json:"type,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -405,6 +389,13 @@ func (*CreateGroupReq) Descriptor() ([]byte, []int) {
 func (x *CreateGroupReq) GetName() string {
 	if x != nil && x.Name != nil {
 		return *x.Name
+	}
+	return ""
+}
+
+func (x *CreateGroupReq) GetType() string {
+	if x != nil && x.Type != nil {
+		return *x.Type
 	}
 	return ""
 }
@@ -1170,13 +1161,13 @@ func (x *MuteMembersReq) GetMuted() bool {
 // 要不要更新是**下游按 update 时间戳**判断的(身份池 upsert、brain 的 is_outdated 都是),
 // 上游只负责"我这次确实设置了"这个事实。
 type UpdateGroupReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Group         *string                `protobuf:"bytes,1,opt,name=group,proto3,oneof" json:"group,omitempty"`           // 群号(定位;权限由后端校验 owner/admin)
-	Name          *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`             // 群名;不传=不动,传了=设成这个(传空串=清空)
-	Avatar        *string                `protobuf:"bytes,3,opt,name=avatar,proto3,oneof" json:"avatar,omitempty"`         // 群头像 url;不传=不动,传了=设成这个(传空串=清空)
-	Background    *string                `protobuf:"bytes,4,opt,name=background,proto3,oneof" json:"background,omitempty"` // 群背景 url;**有 presence**:不传=不动,传空串=清空
-	Private       *bool                  `protobuf:"varint,5,opt,name=private,proto3,oneof" json:"private,omitempty"`      // true=私密群(只能被邀请);false=公开群。不传=不动
-	Findable      *bool                  `protobuf:"varint,6,opt,name=findable,proto3,oneof" json:"findable,omitempty"`    // true=可按创建者找到(见 GroupBase.findable)。不传=不动
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	Group      *string                `protobuf:"bytes,1,opt,name=group,proto3,oneof" json:"group,omitempty"`           // 群号(定位;权限由后端校验 owner/admin)
+	Name       *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`             // 群名;不传=不动,传了=设成这个(传空串=清空)
+	Avatar     *string                `protobuf:"bytes,3,opt,name=avatar,proto3,oneof" json:"avatar,omitempty"`         // 群头像 url;不传=不动,传了=设成这个(传空串=清空)
+	Background *string                `protobuf:"bytes,4,opt,name=background,proto3,oneof" json:"background,omitempty"` // 群背景 url;**有 presence**:不传=不动,传空串=清空
+	// 改群类型:group-private / group-public / group-open 之间互换。不传=不动。仅群主。单聊群不能改。
+	Type          *string `protobuf:"bytes,7,opt,name=type,proto3,oneof" json:"type,omitempty"` // 新号:5/6 原是 private/findable(bool),复用会让老客户端的请求解不开
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1239,24 +1230,18 @@ func (x *UpdateGroupReq) GetBackground() string {
 	return ""
 }
 
-func (x *UpdateGroupReq) GetPrivate() bool {
-	if x != nil && x.Private != nil {
-		return *x.Private
+func (x *UpdateGroupReq) GetType() string {
+	if x != nil && x.Type != nil {
+		return *x.Type
 	}
-	return false
+	return ""
 }
 
-func (x *UpdateGroupReq) GetFindable() bool {
-	if x != nil && x.Findable != nil {
-		return *x.Findable
-	}
-	return false
-}
-
-// 按创建者找群。
+// 按创建者找群。**只回透明群(group-open)** —— 私有群、公开群都不会被这样翻出来。
 //
-// ⚠️ **只回「公开 且 可被找到」的群**,而这两样默认都不是 —— 所以这个接口
-// 不会把谁的群翻出来:群主得自己在界面上把它设成"可被找到"。
+// 用途:代理建一批群来管机器人,群有 300 人上限,满了就再建一个。把它们建成透明群,
+// 机器人(插件的 install)就能凭代理的 did 现查出当前可用的那几个,挨个试着加 ——
+// 代理不需要自己跑一个服务,也不需要每加一个群就发一版新插件。
 type ListGroupsByCreatorReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Creator       *string                `protobuf:"bytes,1,opt,name=creator,proto3,oneof" json:"creator,omitempty"`
@@ -1301,9 +1286,9 @@ func (x *ListGroupsByCreatorReq) GetCreator() string {
 	return ""
 }
 
-// 一个能被找到的群。**不是 GroupBase** —— 这里要的是"还能不能加得进去",
+// 一个透明群(按创建者找到的)。**不是 GroupBase** —— 这里要的是"还能不能加得进去",
 // 所以带当前人数;群名/头像那些等加进去之后自己会拿到。
-type FindableGroup struct {
+type OpenGroup struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Code  *string                `protobuf:"bytes,1,opt,name=code,proto3,oneof" json:"code,omitempty"`
 	Name  *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
@@ -1314,20 +1299,20 @@ type FindableGroup struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *FindableGroup) Reset() {
-	*x = FindableGroup{}
+func (x *OpenGroup) Reset() {
+	*x = OpenGroup{}
 	mi := &file_hi_club_group_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *FindableGroup) String() string {
+func (x *OpenGroup) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*FindableGroup) ProtoMessage() {}
+func (*OpenGroup) ProtoMessage() {}
 
-func (x *FindableGroup) ProtoReflect() protoreflect.Message {
+func (x *OpenGroup) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_club_group_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1339,26 +1324,26 @@ func (x *FindableGroup) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use FindableGroup.ProtoReflect.Descriptor instead.
-func (*FindableGroup) Descriptor() ([]byte, []int) {
+// Deprecated: Use OpenGroup.ProtoReflect.Descriptor instead.
+func (*OpenGroup) Descriptor() ([]byte, []int) {
 	return file_hi_club_group_proto_rawDescGZIP(), []int{24}
 }
 
-func (x *FindableGroup) GetCode() string {
+func (x *OpenGroup) GetCode() string {
 	if x != nil && x.Code != nil {
 		return *x.Code
 	}
 	return ""
 }
 
-func (x *FindableGroup) GetName() string {
+func (x *OpenGroup) GetName() string {
 	if x != nil && x.Name != nil {
 		return *x.Name
 	}
 	return ""
 }
 
-func (x *FindableGroup) GetMemberTotal() int64 {
+func (x *OpenGroup) GetMemberTotal() int64 {
 	if x != nil && x.MemberTotal != nil {
 		return *x.MemberTotal
 	}
@@ -1367,7 +1352,7 @@ func (x *FindableGroup) GetMemberTotal() int64 {
 
 type ListGroupsByCreatorResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Groups        []*FindableGroup       `protobuf:"bytes,1,rep,name=groups,proto3" json:"groups,omitempty"` // **人少的排前面**,省得挨个撞上限
+	Groups        []*OpenGroup           `protobuf:"bytes,1,rep,name=groups,proto3" json:"groups,omitempty"` // **人少的排前面**,省得挨个撞上限
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1402,7 +1387,7 @@ func (*ListGroupsByCreatorResp) Descriptor() ([]byte, []int) {
 	return file_hi_club_group_proto_rawDescGZIP(), []int{25}
 }
 
-func (x *ListGroupsByCreatorResp) GetGroups() []*FindableGroup {
+func (x *ListGroupsByCreatorResp) GetGroups() []*OpenGroup {
 	if x != nil {
 		return x.Groups
 	}
@@ -1413,19 +1398,14 @@ var File_hi_club_group_proto protoreflect.FileDescriptor
 
 const file_hi_club_group_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/club/group.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\x1a\x1bbuf/validate/validate.proto\"\xd6\x01\n" +
+	"\x13hi/club/group.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\x1a\x1bbuf/validate/validate.proto\"q\n" +
 	"\tGroupBase\x12$\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x12)\n" +
 	"\n" +
 	"background\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\n" +
-	"background\x88\x01\x01\x12#\n" +
-	"\aprivate\x18\x03 \x01(\bB\x04\x90\xb5\x18\x01H\x01R\aprivate\x88\x01\x01\x12%\n" +
-	"\bfindable\x18\x04 \x01(\bB\x04\x90\xb5\x18\x01H\x02R\bfindable\x88\x01\x01:\x04\x98\xb5\x18\x01B\r\n" +
-	"\v_backgroundB\n" +
-	"\n" +
-	"\b_privateB\v\n" +
-	"\t_findable\"j\n" +
+	"background\x88\x01\x01:\x04\x98\xb5\x18\x01B\r\n" +
+	"\v_background\"j\n" +
 	"\x0fGroupMemberAttr\x12\x1d\n" +
 	"\x04role\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x04role\x88\x01\x01\x12\x1f\n" +
 	"\x05muted\x18\x02 \x01(\bB\x04\x90\xb5\x18\x02H\x01R\x05muted\x88\x01\x01:\x04\x98\xb5\x18\x02B\a\n" +
@@ -1445,10 +1425,13 @@ const file_hi_club_group_proto_rawDesc = "" +
 	"\x04_dnd\"/\n" +
 	"\vGetGroupReq\x12\x17\n" +
 	"\x04code\x18\x01 \x01(\tH\x00R\x04code\x88\x01\x01B\a\n" +
-	"\x05_code\"2\n" +
+	"\x05_code\"\x84\x01\n" +
 	"\x0eCreateGroupReq\x12\x17\n" +
-	"\x04name\x18\x01 \x01(\tH\x00R\x04name\x88\x01\x01B\a\n" +
-	"\x05_name\"#\n" +
+	"\x04name\x18\x01 \x01(\tH\x00R\x04name\x88\x01\x01\x12G\n" +
+	"\x04type\x18\x02 \x01(\tB.\xbaH+r)R\rgroup-privateR\fgroup-publicR\n" +
+	"group-openH\x01R\x04type\x88\x01\x01B\a\n" +
+	"\x05_nameB\a\n" +
+	"\x05_type\"#\n" +
 	"\x0fCreateSingleReq\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\"h\n" +
 	"\x14ListGroupMessagesReq\x12 \n" +
@@ -1509,36 +1492,34 @@ const file_hi_club_group_proto_rawDesc = "" +
 	"\amembers\x18\x02 \x03(\tR\amembers\x12\x19\n" +
 	"\x05muted\x18\x03 \x01(\bH\x01R\x05muted\x88\x01\x01B\a\n" +
 	"\x05_codeB\b\n" +
-	"\x06_muted\"\x9d\x02\n" +
+	"\x06_muted\"\x96\x02\n" +
 	"\x0eUpdateGroupReq\x12*\n" +
 	"\x05group\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x05group\x88\x01\x01\x12\x17\n" +
 	"\x04name\x18\x02 \x01(\tH\x01R\x04name\x88\x01\x01\x12\x1b\n" +
 	"\x06avatar\x18\x03 \x01(\tH\x02R\x06avatar\x88\x01\x01\x12#\n" +
 	"\n" +
 	"background\x18\x04 \x01(\tH\x03R\n" +
-	"background\x88\x01\x01\x12\x1d\n" +
-	"\aprivate\x18\x05 \x01(\bH\x04R\aprivate\x88\x01\x01\x12\x1f\n" +
-	"\bfindable\x18\x06 \x01(\bH\x05R\bfindable\x88\x01\x01B\b\n" +
+	"background\x88\x01\x01\x12G\n" +
+	"\x04type\x18\a \x01(\tB.\xbaH+r)R\rgroup-privateR\fgroup-publicR\n" +
+	"group-openH\x04R\x04type\x88\x01\x01B\b\n" +
 	"\x06_groupB\a\n" +
 	"\x05_nameB\t\n" +
 	"\a_avatarB\r\n" +
-	"\v_backgroundB\n" +
-	"\n" +
-	"\b_privateB\v\n" +
-	"\t_findable\"T\n" +
+	"\v_backgroundB\a\n" +
+	"\x05_type\"T\n" +
 	"\x16ListGroupsByCreatorReq\x12.\n" +
 	"\acreator\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\acreator\x88\x01\x01B\n" +
 	"\n" +
-	"\b_creator\"\xa4\x01\n" +
-	"\rFindableGroup\x12\x1d\n" +
+	"\b_creator\"\xa0\x01\n" +
+	"\tOpenGroup\x12\x1d\n" +
 	"\x04code\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x04code\x88\x01\x01\x12\x1d\n" +
 	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x04name\x88\x01\x01\x12,\n" +
 	"\fmember_total\x18\x03 \x01(\x03B\x04\x90\xb5\x18\x01H\x02R\vmemberTotal\x88\x01\x01:\x04\x98\xb5\x18\x01B\a\n" +
 	"\x05_codeB\a\n" +
 	"\x05_nameB\x0f\n" +
-	"\r_member_total\"U\n" +
-	"\x17ListGroupsByCreatorResp\x124\n" +
-	"\x06groups\x18\x01 \x03(\v2\x16.hi.club.FindableGroupB\x04\x90\xb5\x18\x01R\x06groups:\x04\x98\xb5\x18\x012\xdb\b\n" +
+	"\r_member_total\"Q\n" +
+	"\x17ListGroupsByCreatorResp\x120\n" +
+	"\x06groups\x18\x01 \x03(\v2\x12.hi.club.OpenGroupB\x04\x90\xb5\x18\x01R\x06groups:\x04\x98\xb5\x18\x012\xdb\b\n" +
 	"\x05Group\x12<\n" +
 	"\x03Get\x12\x14.hi.club.GetGroupReq\x1a\x18.hi.club.GroupMemberView\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
 	"\x06Create\x12\x17.hi.club.CreateGroupReq\x1a\x12.hi.club.GroupBase\"\x05\x8a\xb5\x18\x01\x02\x12C\n" +
@@ -1597,7 +1578,7 @@ var file_hi_club_group_proto_goTypes = []any{
 	(*MuteMembersReq)(nil),          // 21: hi.club.MuteMembersReq
 	(*UpdateGroupReq)(nil),          // 22: hi.club.UpdateGroupReq
 	(*ListGroupsByCreatorReq)(nil),  // 23: hi.club.ListGroupsByCreatorReq
-	(*FindableGroup)(nil),           // 24: hi.club.FindableGroup
+	(*OpenGroup)(nil),               // 24: hi.club.OpenGroup
 	(*ListGroupsByCreatorResp)(nil), // 25: hi.club.ListGroupsByCreatorResp
 	(*hi.Entity)(nil),               // 26: hi.Entity
 	(*Packet)(nil),                  // 27: hi.club.Packet
@@ -1614,7 +1595,7 @@ var file_hi_club_group_proto_depIdxs = []int32{
 	1,  // 6: hi.club.GroupMemberView.attr:type_name -> hi.club.GroupMemberAttr
 	27, // 7: hi.club.ListGroupMessagesResp.list:type_name -> hi.club.Packet
 	28, // 8: hi.club.ListGroupMembersReq.pagination:type_name -> hi.Pagination
-	24, // 9: hi.club.ListGroupsByCreatorResp.groups:type_name -> hi.club.FindableGroup
+	24, // 9: hi.club.ListGroupsByCreatorResp.groups:type_name -> hi.club.OpenGroup
 	5,  // 10: hi.club.Group.Get:input_type -> hi.club.GetGroupReq
 	6,  // 11: hi.club.Group.Create:input_type -> hi.club.CreateGroupReq
 	7,  // 12: hi.club.Group.CreateSingle:input_type -> hi.club.CreateSingleReq
