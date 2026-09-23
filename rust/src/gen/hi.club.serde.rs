@@ -16779,21 +16779,15 @@ impl serde::Serialize for OpenGroup {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.code.is_some() {
-            len += 1;
-        }
-        if self.name.is_some() {
+        if self.base.is_some() {
             len += 1;
         }
         if self.member_total.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.club.OpenGroup", len)?;
-        if let Some(v) = self.code.as_ref() {
-            struct_ser.serialize_field("code", v)?;
-        }
-        if let Some(v) = self.name.as_ref() {
-            struct_ser.serialize_field("name", v)?;
+        if let Some(v) = self.base.as_ref() {
+            struct_ser.serialize_field("base", v)?;
         }
         if let Some(v) = self.member_total.as_ref() {
             #[allow(clippy::needless_borrow)]
@@ -16810,16 +16804,14 @@ impl<'de> serde::Deserialize<'de> for OpenGroup {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "code",
-            "name",
+            "base",
             "member_total",
             "memberTotal",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Code,
-            Name,
+            Base,
             MemberTotal,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -16842,8 +16834,7 @@ impl<'de> serde::Deserialize<'de> for OpenGroup {
                         E: serde::de::Error,
                     {
                         match value {
-                            "code" => Ok(GeneratedField::Code),
-                            "name" => Ok(GeneratedField::Name),
+                            "base" => Ok(GeneratedField::Base),
                             "memberTotal" | "member_total" => Ok(GeneratedField::MemberTotal),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -16864,22 +16855,15 @@ impl<'de> serde::Deserialize<'de> for OpenGroup {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut code__ = None;
-                let mut name__ = None;
+                let mut base__ = None;
                 let mut member_total__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Code => {
-                            if code__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("code"));
+                        GeneratedField::Base => {
+                            if base__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("base"));
                             }
-                            code__ = map_.next_value()?;
-                        }
-                        GeneratedField::Name => {
-                            if name__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("name"));
-                            }
-                            name__ = map_.next_value()?;
+                            base__ = map_.next_value()?;
                         }
                         GeneratedField::MemberTotal => {
                             if member_total__.is_some() {
@@ -16892,8 +16876,7 @@ impl<'de> serde::Deserialize<'de> for OpenGroup {
                     }
                 }
                 Ok(OpenGroup {
-                    code: code__,
-                    name: name__,
+                    base: base__,
                     member_total: member_total__,
                 })
             }

@@ -613,24 +613,13 @@ const OpenGroup$json = {
   '1': 'OpenGroup',
   '2': [
     {
-      '1': 'code',
-      '3': 1,
+      '1': 'base',
+      '3': 4,
       '4': 1,
-      '5': 9,
+      '5': 11,
+      '6': '.hi.Entity',
       '8': {},
-      '9': 0,
-      '10': 'code',
-      '17': true
-    },
-    {
-      '1': 'name',
-      '3': 2,
-      '4': 1,
-      '5': 9,
-      '8': {},
-      '9': 1,
-      '10': 'name',
-      '17': true
+      '10': 'base'
     },
     {
       '1': 'member_total',
@@ -638,24 +627,22 @@ const OpenGroup$json = {
       '4': 1,
       '5': 3,
       '8': {},
-      '9': 2,
+      '9': 0,
       '10': 'memberTotal',
       '17': true
     },
   ],
   '7': {},
   '8': [
-    {'1': '_code'},
-    {'1': '_name'},
     {'1': '_member_total'},
   ],
 };
 
 /// Descriptor for `OpenGroup`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List openGroupDescriptor = $convert.base64Decode(
-    'CglPcGVuR3JvdXASHQoEY29kZRgBIAEoCUIEkLUYAUgAUgRjb2RliAEBEh0KBG5hbWUYAiABKA'
-    'lCBJC1GAFIAVIEbmFtZYgBARIsCgxtZW1iZXJfdG90YWwYAyABKANCBJC1GAFIAlILbWVtYmVy'
-    'VG90YWyIAQE6BJi1GAFCBwoFX2NvZGVCBwoFX25hbWVCDwoNX21lbWJlcl90b3RhbA==');
+    'CglPcGVuR3JvdXASJAoEYmFzZRgEIAEoCzIKLmhpLkVudGl0eUIEkLUYAVIEYmFzZRIsCgxtZW'
+    '1iZXJfdG90YWwYAyABKANCBJC1GAFIAFILbWVtYmVyVG90YWyIAQE6BJi1GAFCDwoNX21lbWJl'
+    'cl90b3RhbA==');
 
 @$core.Deprecated('Use listGroupsByCreatorRespDescriptor instead')
 const ListGroupsByCreatorResp$json = {

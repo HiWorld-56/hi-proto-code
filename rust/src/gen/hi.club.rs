@@ -4608,14 +4608,20 @@ pub struct ListGroupsByCreatorReq {
     #[prost(string, optional, tag = "1")]
     pub creator: ::core::option::Option<::prost::alloc::string::String>,
 }
-/// 一个透明群(按创建者找到的)。**不是 GroupBase** —— 这里要的是"还能不能加得进去",
-/// 所以带当前人数;群名/头像那些等加进去之后自己会拿到。
+/// 一个透明群(按创建者找到的)= 群的身份门面 + 当前人数。
+///
+/// ⛔ **对象一律用 `hi.Entity`,不许把 did/name/avatar 拉平成散字段**(见 hi/common.proto
+/// 「对象用 Entity」那段)。这里原来是 `code` + `name` 两个字符串:群号与群名跟别处对不上号
+/// (别处叫 `base.did` / `base.name`)、头像没有、**`update` 也没有** —— 而下游正是按
+/// `update` 比时间戳决定要不要刷本地缓存的,拉平之后这个群的资料在本地永远刷不了。
+/// 不是 `GroupBase`:那个带 background(加进去之后才用得上);这里只要身份门面 + 人数。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct OpenGroup {
-    #[prost(string, optional, tag = "1")]
-    pub code: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    /// 群的身份门面:群号 = `base.did`,群名/头像/update 一并给(`type` 恒为 group-open)。
+    /// **新号 4**:1/2 原来是 `code` / `name` 两个字符串,而 string 与 message 在 wire 上
+    /// 同为 length-delimited —— 复用同一个号,老客户端解出来是一段乱码而不是报错。
+    #[prost(message, optional, tag = "4")]
+    pub base: ::core::option::Option<super::Entity>,
     /// 当前人数。**只是个提示,不是判据** —— 从查到到加入之间人数会变,
     /// "满没满"最终由 `Join` 回的 `ResourceExhausted(8)` 说了算。
     #[prost(int64, optional, tag = "3")]

@@ -1582,18 +1582,21 @@ class ListGroupsByCreatorReq extends $pb.GeneratedMessage {
   void clearCreator() => $_clearField(1);
 }
 
-/// 一个透明群(按创建者找到的)。**不是 GroupBase** —— 这里要的是"还能不能加得进去",
-/// 所以带当前人数;群名/头像那些等加进去之后自己会拿到。
+/// 一个透明群(按创建者找到的)= 群的身份门面 + 当前人数。
+///
+/// ⛔ **对象一律用 `hi.Entity`,不许把 did/name/avatar 拉平成散字段**(见 hi/common.proto
+/// 「对象用 Entity」那段)。这里原来是 `code` + `name` 两个字符串:群号与群名跟别处对不上号
+/// (别处叫 `base.did` / `base.name`)、头像没有、**`update` 也没有** —— 而下游正是按
+/// `update` 比时间戳决定要不要刷本地缓存的,拉平之后这个群的资料在本地永远刷不了。
+/// 不是 `GroupBase`:那个带 background(加进去之后才用得上);这里只要身份门面 + 人数。
 class OpenGroup extends $pb.GeneratedMessage {
   factory OpenGroup({
-    $core.String? code,
-    $core.String? name,
     $fixnum.Int64? memberTotal,
+    $2.Entity? base,
   }) {
     final result = create();
-    if (code != null) result.code = code;
-    if (name != null) result.name = name;
     if (memberTotal != null) result.memberTotal = memberTotal;
+    if (base != null) result.base = base;
     return result;
   }
 
@@ -1610,9 +1613,9 @@ class OpenGroup extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'OpenGroup',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'code')
-    ..aOS(2, _omitFieldNames ? '' : 'name')
     ..aInt64(3, _omitFieldNames ? '' : 'memberTotal')
+    ..aOM<$2.Entity>(4, _omitFieldNames ? '' : 'base',
+        subBuilder: $2.Entity.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1633,34 +1636,30 @@ class OpenGroup extends $pb.GeneratedMessage {
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<OpenGroup>(create);
   static OpenGroup? _defaultInstance;
 
-  @$pb.TagNumber(1)
-  $core.String get code => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set code($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasCode() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearCode() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get name => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set name($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasName() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearName() => $_clearField(2);
-
   /// 当前人数。**只是个提示,不是判据** —— 从查到到加入之间人数会变,
   /// "满没满"最终由 `Join` 回的 `ResourceExhausted(8)` 说了算。
   @$pb.TagNumber(3)
-  $fixnum.Int64 get memberTotal => $_getI64(2);
+  $fixnum.Int64 get memberTotal => $_getI64(0);
   @$pb.TagNumber(3)
-  set memberTotal($fixnum.Int64 value) => $_setInt64(2, value);
+  set memberTotal($fixnum.Int64 value) => $_setInt64(0, value);
   @$pb.TagNumber(3)
-  $core.bool hasMemberTotal() => $_has(2);
+  $core.bool hasMemberTotal() => $_has(0);
   @$pb.TagNumber(3)
   void clearMemberTotal() => $_clearField(3);
+
+  /// 群的身份门面:群号 = `base.did`,群名/头像/update 一并给(`type` 恒为 group-open)。
+  /// **新号 4**:1/2 原来是 `code` / `name` 两个字符串,而 string 与 message 在 wire 上
+  /// 同为 length-delimited —— 复用同一个号,老客户端解出来是一段乱码而不是报错。
+  @$pb.TagNumber(4)
+  $2.Entity get base => $_getN(1);
+  @$pb.TagNumber(4)
+  set base($2.Entity value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasBase() => $_has(1);
+  @$pb.TagNumber(4)
+  void clearBase() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $2.Entity ensureBase() => $_ensure(1);
 }
 
 class ListGroupsByCreatorResp extends $pb.GeneratedMessage {
