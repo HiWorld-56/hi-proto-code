@@ -319,23 +319,29 @@ const ListUsersAssetsResp$json = {
 const ListUsersAssetsResp_Unit$json = {
   '1': 'Unit',
   '2': [
-    {'1': 'did', '3': 1, '4': 1, '5': 9, '8': {}, '10': 'did'},
     {
-      '1': 'avatar',
-      '3': 2,
+      '1': 'base',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'base'
+    },
+    {
+      '1': 'total',
+      '3': 3,
       '4': 1,
       '5': 9,
       '8': {},
       '9': 0,
-      '10': 'avatar',
+      '10': 'total',
       '17': true
     },
-    {'1': 'n', '3': 3, '4': 1, '5': 9, '8': {}, '9': 1, '10': 'n', '17': true},
   ],
   '7': {},
   '8': [
-    {'1': '_avatar'},
-    {'1': '_n'},
+    {'1': '_total'},
   ],
 };
 
@@ -343,9 +349,9 @@ const ListUsersAssetsResp_Unit$json = {
 final $typed_data.Uint8List listUsersAssetsRespDescriptor = $convert.base64Decode(
     'ChNMaXN0VXNlcnNBc3NldHNSZXNwEh8KBXRvdGFsGAEgASgFQgSQtRgBSABSBXRvdGFsiAEBEj'
     'oKBGxpc3QYAiADKAsyIC5oaS5kaWQuTGlzdFVzZXJzQXNzZXRzUmVzcC5Vbml0QgSQtRgBUgRs'
-    'aXN0GnEKBFVuaXQSFgoDZGlkGAEgASgJQgSQtRgBUgNkaWQSIQoGYXZhdGFyGAIgASgJQgSQtR'
-    'gBSABSBmF2YXRhcogBARIXCgFuGAMgASgJQgSQtRgBSAFSAW6IAQE6BJi1GAFCCQoHX2F2YXRh'
-    'ckIECgJfbjoEmLUYAUIICgZfdG90YWw=');
+    'aXN0Gl0KBFVuaXQSJAoEYmFzZRgEIAEoCzIKLmhpLkVudGl0eUIEkLUYAVIEYmFzZRIfCgV0b3'
+    'RhbBgDIAEoCUIEkLUYAUgAUgV0b3RhbIgBAToEmLUYAUIICgZfdG90YWw6BJi1GAFCCAoGX3Rv'
+    'dGFs');
 
 @$core.Deprecated('Use getUserAssetsReqDescriptor instead')
 const GetUserAssetsReq$json = {

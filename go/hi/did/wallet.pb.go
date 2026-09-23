@@ -800,11 +800,19 @@ func (x *ListAddressesResp_Unit) GetAddress() string {
 	return ""
 }
 
+// 一个人 + 他的总资产。
+//
+// ⛔ 原来是 `did` + `avatar` + `n` 三个散字段:**把人的门面拉平了,还只拉了一半**
+// (有头像没名字、没有 `update`,于是这张榜永远显示不了名字,想显示就得改契约);
+// 而 `n` 其实是"总资产",名字什么也没说。
+// 对象一律 `hi.Entity`,对象之外的附加信息才单独开字段(见 hi/common.proto 的 Entity 那段)。
 type ListUsersAssetsResp_Unit struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Did           string                 `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
-	Avatar        *string                `protobuf:"bytes,2,opt,name=avatar,proto3,oneof" json:"avatar,omitempty"`
-	N             *string                `protobuf:"bytes,3,opt,name=n,proto3,oneof" json:"n,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 这个人(did / 名字 / 头像 / update)。**新号 4** —— 1 原来是 `string did`,
+	// 而 string 与 message 在 wire 上同为 length-delimited,复用同一个号老客户端解出来是乱码。
+	Base *hi.Entity `protobuf:"bytes,4,opt,name=base,proto3" json:"base,omitempty"`
+	// 按 `currency` 折算的总资产,十进制字符串(免浮点误差)。沿用 3 号:类型与含义没变,只是改了名字。
+	Total         *string `protobuf:"bytes,3,opt,name=total,proto3,oneof" json:"total,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -839,23 +847,16 @@ func (*ListUsersAssetsResp_Unit) Descriptor() ([]byte, []int) {
 	return file_hi_did_wallet_proto_rawDescGZIP(), []int{8, 0}
 }
 
-func (x *ListUsersAssetsResp_Unit) GetDid() string {
+func (x *ListUsersAssetsResp_Unit) GetBase() *hi.Entity {
 	if x != nil {
-		return x.Did
+		return x.Base
 	}
-	return ""
+	return nil
 }
 
-func (x *ListUsersAssetsResp_Unit) GetAvatar() string {
-	if x != nil && x.Avatar != nil {
-		return *x.Avatar
-	}
-	return ""
-}
-
-func (x *ListUsersAssetsResp_Unit) GetN() string {
-	if x != nil && x.N != nil {
-		return *x.N
+func (x *ListUsersAssetsResp_Unit) GetTotal() string {
+	if x != nil && x.Total != nil {
+		return *x.Total
 	}
 	return ""
 }
@@ -1037,16 +1038,15 @@ const file_hi_did_wallet_proto_rawDesc = "" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
 	"paginationB\v\n" +
-	"\t_currency\"\xf5\x01\n" +
+	"\t_currency\"\xe1\x01\n" +
 	"\x13ListUsersAssetsResp\x12\x1f\n" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x01H\x00R\x05total\x88\x01\x01\x12:\n" +
-	"\x04list\x18\x02 \x03(\v2 .hi.did.ListUsersAssetsResp.UnitB\x04\x90\xb5\x18\x01R\x04list\x1aq\n" +
-	"\x04Unit\x12\x16\n" +
-	"\x03did\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01R\x03did\x12!\n" +
-	"\x06avatar\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x06avatar\x88\x01\x01\x12\x17\n" +
-	"\x01n\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x01n\x88\x01\x01:\x04\x98\xb5\x18\x01B\t\n" +
-	"\a_avatarB\x04\n" +
-	"\x02_n:\x04\x98\xb5\x18\x01B\b\n" +
+	"\x04list\x18\x02 \x03(\v2 .hi.did.ListUsersAssetsResp.UnitB\x04\x90\xb5\x18\x01R\x04list\x1a]\n" +
+	"\x04Unit\x12$\n" +
+	"\x04base\x18\x04 \x01(\v2\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x12\x1f\n" +
+	"\x05total\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x01B\b\n" +
+	"\x06_total:\x04\x98\xb5\x18\x01B\b\n" +
 	"\x06_total\"F\n" +
 	"\x10GetUserAssetsReq\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12\x17\n" +
@@ -1117,9 +1117,10 @@ var file_hi_did_wallet_proto_goTypes = []any{
 	(*GetUserAssetsResp_Unit)(nil),   // 16: hi.did.GetUserAssetsResp.Unit
 	(*UpdateAssetsReq_Asset)(nil),    // 17: hi.did.UpdateAssetsReq.Asset
 	(*hi.Pagination)(nil),            // 18: hi.Pagination
-	(*Coin)(nil),                     // 19: hi.did.Coin
-	(*hi.SignedData)(nil),            // 20: hi.SignedData
-	(*emptypb.Empty)(nil),            // 21: google.protobuf.Empty
+	(*hi.Entity)(nil),                // 19: hi.Entity
+	(*Coin)(nil),                     // 20: hi.did.Coin
+	(*hi.SignedData)(nil),            // 21: hi.SignedData
+	(*emptypb.Empty)(nil),            // 22: google.protobuf.Empty
 }
 var file_hi_did_wallet_proto_depIdxs = []int32{
 	12, // 0: hi.did.GetWalletResp.list:type_name -> hi.did.GetWalletResp.Unit
@@ -1129,26 +1130,27 @@ var file_hi_did_wallet_proto_depIdxs = []int32{
 	15, // 4: hi.did.ListUsersAssetsResp.list:type_name -> hi.did.ListUsersAssetsResp.Unit
 	16, // 5: hi.did.GetUserAssetsResp.unit:type_name -> hi.did.GetUserAssetsResp.Unit
 	17, // 6: hi.did.UpdateAssetsReq.assets:type_name -> hi.did.UpdateAssetsReq.Asset
-	19, // 7: hi.did.GetUserAssetsResp.Unit.coin:type_name -> hi.did.Coin
-	11, // 8: hi.did.Wallet.UpdateAssets:input_type -> hi.did.UpdateAssetsReq
-	1,  // 9: hi.did.Wallet.Get:input_type -> hi.did.GetWalletReq
-	5,  // 10: hi.did.Assets.Total:input_type -> hi.did.TotalAssetsReq
-	7,  // 11: hi.did.Assets.List:input_type -> hi.did.ListUsersAssetsReq
-	9,  // 12: hi.did.Assets.Get:input_type -> hi.did.GetUserAssetsReq
-	20, // 13: hi.did.Assets.UpdateAddresses:input_type -> hi.SignedData
-	3,  // 14: hi.did.Assets.ListAddresses:input_type -> hi.did.ListAddressesReq
-	21, // 15: hi.did.Wallet.UpdateAssets:output_type -> google.protobuf.Empty
-	2,  // 16: hi.did.Wallet.Get:output_type -> hi.did.GetWalletResp
-	6,  // 17: hi.did.Assets.Total:output_type -> hi.did.TotalAssetsResp
-	8,  // 18: hi.did.Assets.List:output_type -> hi.did.ListUsersAssetsResp
-	10, // 19: hi.did.Assets.Get:output_type -> hi.did.GetUserAssetsResp
-	21, // 20: hi.did.Assets.UpdateAddresses:output_type -> google.protobuf.Empty
-	4,  // 21: hi.did.Assets.ListAddresses:output_type -> hi.did.ListAddressesResp
-	15, // [15:22] is the sub-list for method output_type
-	8,  // [8:15] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	19, // 7: hi.did.ListUsersAssetsResp.Unit.base:type_name -> hi.Entity
+	20, // 8: hi.did.GetUserAssetsResp.Unit.coin:type_name -> hi.did.Coin
+	11, // 9: hi.did.Wallet.UpdateAssets:input_type -> hi.did.UpdateAssetsReq
+	1,  // 10: hi.did.Wallet.Get:input_type -> hi.did.GetWalletReq
+	5,  // 11: hi.did.Assets.Total:input_type -> hi.did.TotalAssetsReq
+	7,  // 12: hi.did.Assets.List:input_type -> hi.did.ListUsersAssetsReq
+	9,  // 13: hi.did.Assets.Get:input_type -> hi.did.GetUserAssetsReq
+	21, // 14: hi.did.Assets.UpdateAddresses:input_type -> hi.SignedData
+	3,  // 15: hi.did.Assets.ListAddresses:input_type -> hi.did.ListAddressesReq
+	22, // 16: hi.did.Wallet.UpdateAssets:output_type -> google.protobuf.Empty
+	2,  // 17: hi.did.Wallet.Get:output_type -> hi.did.GetWalletResp
+	6,  // 18: hi.did.Assets.Total:output_type -> hi.did.TotalAssetsResp
+	8,  // 19: hi.did.Assets.List:output_type -> hi.did.ListUsersAssetsResp
+	10, // 20: hi.did.Assets.Get:output_type -> hi.did.GetUserAssetsResp
+	22, // 21: hi.did.Assets.UpdateAddresses:output_type -> google.protobuf.Empty
+	4,  // 22: hi.did.Assets.ListAddresses:output_type -> hi.did.ListAddressesResp
+	16, // [16:23] is the sub-list for method output_type
+	9,  // [9:16] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_hi_did_wallet_proto_init() }

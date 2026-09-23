@@ -5613,24 +5613,18 @@ impl serde::Serialize for list_users_assets_resp::Unit {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.did.is_empty() {
+        if self.base.is_some() {
             len += 1;
         }
-        if self.avatar.is_some() {
-            len += 1;
-        }
-        if self.n.is_some() {
+        if self.total.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.did.ListUsersAssetsResp.Unit", len)?;
-        if !self.did.is_empty() {
-            struct_ser.serialize_field("did", &self.did)?;
+        if let Some(v) = self.base.as_ref() {
+            struct_ser.serialize_field("base", v)?;
         }
-        if let Some(v) = self.avatar.as_ref() {
-            struct_ser.serialize_field("avatar", v)?;
-        }
-        if let Some(v) = self.n.as_ref() {
-            struct_ser.serialize_field("n", v)?;
+        if let Some(v) = self.total.as_ref() {
+            struct_ser.serialize_field("total", v)?;
         }
         struct_ser.end()
     }
@@ -5642,16 +5636,14 @@ impl<'de> serde::Deserialize<'de> for list_users_assets_resp::Unit {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "did",
-            "avatar",
-            "n",
+            "base",
+            "total",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Did,
-            Avatar,
-            N,
+            Base,
+            Total,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -5673,9 +5665,8 @@ impl<'de> serde::Deserialize<'de> for list_users_assets_resp::Unit {
                         E: serde::de::Error,
                     {
                         match value {
-                            "did" => Ok(GeneratedField::Did),
-                            "avatar" => Ok(GeneratedField::Avatar),
-                            "n" => Ok(GeneratedField::N),
+                            "base" => Ok(GeneratedField::Base),
+                            "total" => Ok(GeneratedField::Total),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -5695,35 +5686,27 @@ impl<'de> serde::Deserialize<'de> for list_users_assets_resp::Unit {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut did__ = None;
-                let mut avatar__ = None;
-                let mut n__ = None;
+                let mut base__ = None;
+                let mut total__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Did => {
-                            if did__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("did"));
+                        GeneratedField::Base => {
+                            if base__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("base"));
                             }
-                            did__ = Some(map_.next_value()?);
+                            base__ = map_.next_value()?;
                         }
-                        GeneratedField::Avatar => {
-                            if avatar__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("avatar"));
+                        GeneratedField::Total => {
+                            if total__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("total"));
                             }
-                            avatar__ = map_.next_value()?;
-                        }
-                        GeneratedField::N => {
-                            if n__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("n"));
-                            }
-                            n__ = map_.next_value()?;
+                            total__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(list_users_assets_resp::Unit {
-                    did: did__.unwrap_or_default(),
-                    avatar: avatar__,
-                    n: n__,
+                    base: base__,
+                    total: total__,
                 })
             }
         }

@@ -2852,14 +2852,21 @@ pub struct ListUsersAssetsResp {
 }
 /// Nested message and enum types in `ListUsersAssetsResp`.
 pub mod list_users_assets_resp {
+    /// 一个人 + 他的总资产。
+    ///
+    /// ⛔ 原来是 `did` + `avatar` + `n` 三个散字段:**把人的门面拉平了,还只拉了一半**
+    /// (有头像没名字、没有 `update`,于是这张榜永远显示不了名字,想显示就得改契约);
+    /// 而 `n` 其实是"总资产",名字什么也没说。
+    /// 对象一律 `hi.Entity`,对象之外的附加信息才单独开字段(见 hi/common.proto 的 Entity 那段)。
     #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
     pub struct Unit {
-        #[prost(string, tag = "1")]
-        pub did: ::prost::alloc::string::String,
-        #[prost(string, optional, tag = "2")]
-        pub avatar: ::core::option::Option<::prost::alloc::string::String>,
+        /// 这个人(did / 名字 / 头像 / update)。**新号 4** —— 1 原来是 `string did`,
+        /// 而 string 与 message 在 wire 上同为 length-delimited,复用同一个号老客户端解出来是乱码。
+        #[prost(message, optional, tag = "4")]
+        pub base: ::core::option::Option<super::super::Entity>,
+        /// 按 `currency` 折算的总资产,十进制字符串(免浮点误差)。沿用 3 号:类型与含义没变,只是改了名字。
         #[prost(string, optional, tag = "3")]
-        pub n: ::core::option::Option<::prost::alloc::string::String>,
+        pub total: ::core::option::Option<::prost::alloc::string::String>,
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]

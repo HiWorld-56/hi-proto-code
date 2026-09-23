@@ -730,16 +730,20 @@ class ListUsersAssetsReq extends $pb.GeneratedMessage {
   $2.Pagination ensurePagination() => $_ensure(1);
 }
 
+/// 一个人 + 他的总资产。
+///
+/// ⛔ 原来是 `did` + `avatar` + `n` 三个散字段:**把人的门面拉平了,还只拉了一半**
+/// (有头像没名字、没有 `update`,于是这张榜永远显示不了名字,想显示就得改契约);
+/// 而 `n` 其实是"总资产",名字什么也没说。
+/// 对象一律 `hi.Entity`,对象之外的附加信息才单独开字段(见 hi/common.proto 的 Entity 那段)。
 class ListUsersAssetsResp_Unit extends $pb.GeneratedMessage {
   factory ListUsersAssetsResp_Unit({
-    $core.String? did,
-    $core.String? avatar,
-    $core.String? n,
+    $core.String? total,
+    $2.Entity? base,
   }) {
     final result = create();
-    if (did != null) result.did = did;
-    if (avatar != null) result.avatar = avatar;
-    if (n != null) result.n = n;
+    if (total != null) result.total = total;
+    if (base != null) result.base = base;
     return result;
   }
 
@@ -756,9 +760,9 @@ class ListUsersAssetsResp_Unit extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'ListUsersAssetsResp.Unit',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'did')
-    ..aOS(2, _omitFieldNames ? '' : 'avatar')
-    ..aOS(3, _omitFieldNames ? '' : 'n')
+    ..aOS(3, _omitFieldNames ? '' : 'total')
+    ..aOM<$2.Entity>(4, _omitFieldNames ? '' : 'base',
+        subBuilder: $2.Entity.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -781,32 +785,28 @@ class ListUsersAssetsResp_Unit extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<ListUsersAssetsResp_Unit>(create);
   static ListUsersAssetsResp_Unit? _defaultInstance;
 
-  @$pb.TagNumber(1)
-  $core.String get did => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set did($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasDid() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearDid() => $_clearField(1);
+  /// 按 `currency` 折算的总资产,十进制字符串(免浮点误差)。沿用 3 号:类型与含义没变,只是改了名字。
+  @$pb.TagNumber(3)
+  $core.String get total => $_getSZ(0);
+  @$pb.TagNumber(3)
+  set total($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(3)
+  $core.bool hasTotal() => $_has(0);
+  @$pb.TagNumber(3)
+  void clearTotal() => $_clearField(3);
 
-  @$pb.TagNumber(2)
-  $core.String get avatar => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set avatar($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasAvatar() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearAvatar() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.String get n => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set n($core.String value) => $_setString(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasN() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearN() => $_clearField(3);
+  /// 这个人(did / 名字 / 头像 / update)。**新号 4** —— 1 原来是 `string did`,
+  /// 而 string 与 message 在 wire 上同为 length-delimited,复用同一个号老客户端解出来是乱码。
+  @$pb.TagNumber(4)
+  $2.Entity get base => $_getN(1);
+  @$pb.TagNumber(4)
+  set base($2.Entity value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasBase() => $_has(1);
+  @$pb.TagNumber(4)
+  void clearBase() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $2.Entity ensureBase() => $_ensure(1);
 }
 
 class ListUsersAssetsResp extends $pb.GeneratedMessage {
