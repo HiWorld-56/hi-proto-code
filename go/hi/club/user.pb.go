@@ -166,8 +166,17 @@ func (x *UserInfo) GetMoment() string {
 // 这里原来是 `ListSystemMessages`:后端写死只返回好友/入群邀请两种、还替端上算 `has_new`
 // (读一次就改掉,多台设备谁先拉谁把"新"吃掉),于是离线期间的 friend-add 永远补不回来。
 type ListNoticesReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	LastUuid      *string                `protobuf:"bytes,1,opt,name=last_uuid,json=lastUuid,proto3,oneof" json:"last_uuid,omitempty"` // 上一页最后一条的 uuid;不传 = 从最早一条开始
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 上一页最后一条的 uuid。
+	//
+	// ⚠️ **不传 ≠ 从最早一条开始**,而是「我什么都不知道,你替我定起点」——
+	// 服务端按自己记的同步位置(每拉一页只许前进)返回它之后的那些。
+	// 这是**重装 / 重新登录 / 换设备**的恢复路径,与 `Group.ListMessages` 同一套:
+	// 端上拿到第一页后立刻改用自己的本地游标,从此不再传空。
+	//
+	// 传了但服务端找不到(那条已过保存期被清掉)也回落到同步位置 —— **不回到最早一条**:
+	// 回到最早一条等于把端上早就删掉的通知整批重新塞回去(2026-09-23 就是这么发生的)。
+	LastUuid      *string `protobuf:"bytes,1,opt,name=last_uuid,json=lastUuid,proto3,oneof" json:"last_uuid,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -253,6 +262,58 @@ func (x *ListNoticesResp) GetList() []*Notice {
 	return nil
 }
 
+// 我名下**还欠着的**通知:合并状态后仍是 `not_processed`、而且没过期的全部(30 天内)。
+//
+// **与游标无关,这是它存在的全部理由。** 游标管的是"新的",而"还欠着的"必须与端上删没删、
+// 重装没重装无关 —— 它对应的是后端(或对方)还挂着等一个答复的事:
+// 好友申请、入群邀请、授权申请。端上没有它,那件事就永远卡在那里,而且零报错。
+//
+// 端上每轮同步调一次(条数天然很少)。有了它,端上才可以放心地只按游标增量拉、
+// 并且把已达终态的通知从本机删掉。
+type ListPendingNoticesResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	List          []*Notice              `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"` // 按时间正序
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListPendingNoticesResp) Reset() {
+	*x = ListPendingNoticesResp{}
+	mi := &file_hi_club_user_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListPendingNoticesResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListPendingNoticesResp) ProtoMessage() {}
+
+func (x *ListPendingNoticesResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_user_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListPendingNoticesResp.ProtoReflect.Descriptor instead.
+func (*ListPendingNoticesResp) Descriptor() ([]byte, []int) {
+	return file_hi_club_user_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *ListPendingNoticesResp) GetList() []*Notice {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
 // 按 uuid 查这几条通知**现在**的状态。端上把本地没处理完的那些发上来(定期 + 下拉刷新),
 // 别的设备处理过、或者已经过期的,在这里拿到新状态。
 type ListNoticeStatusesReq struct {
@@ -264,7 +325,7 @@ type ListNoticeStatusesReq struct {
 
 func (x *ListNoticeStatusesReq) Reset() {
 	*x = ListNoticeStatusesReq{}
-	mi := &file_hi_club_user_proto_msgTypes[3]
+	mi := &file_hi_club_user_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -276,7 +337,7 @@ func (x *ListNoticeStatusesReq) String() string {
 func (*ListNoticeStatusesReq) ProtoMessage() {}
 
 func (x *ListNoticeStatusesReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_user_proto_msgTypes[3]
+	mi := &file_hi_club_user_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -289,7 +350,7 @@ func (x *ListNoticeStatusesReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListNoticeStatusesReq.ProtoReflect.Descriptor instead.
 func (*ListNoticeStatusesReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_user_proto_rawDescGZIP(), []int{3}
+	return file_hi_club_user_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *ListNoticeStatusesReq) GetUuids() []string {
@@ -309,7 +370,7 @@ type NoticeStatus struct {
 
 func (x *NoticeStatus) Reset() {
 	*x = NoticeStatus{}
-	mi := &file_hi_club_user_proto_msgTypes[4]
+	mi := &file_hi_club_user_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -321,7 +382,7 @@ func (x *NoticeStatus) String() string {
 func (*NoticeStatus) ProtoMessage() {}
 
 func (x *NoticeStatus) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_user_proto_msgTypes[4]
+	mi := &file_hi_club_user_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -334,7 +395,7 @@ func (x *NoticeStatus) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NoticeStatus.ProtoReflect.Descriptor instead.
 func (*NoticeStatus) Descriptor() ([]byte, []int) {
-	return file_hi_club_user_proto_rawDescGZIP(), []int{4}
+	return file_hi_club_user_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *NoticeStatus) GetUuid() string {
@@ -360,7 +421,7 @@ type ListNoticeStatusesResp struct {
 
 func (x *ListNoticeStatusesResp) Reset() {
 	*x = ListNoticeStatusesResp{}
-	mi := &file_hi_club_user_proto_msgTypes[5]
+	mi := &file_hi_club_user_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -372,7 +433,7 @@ func (x *ListNoticeStatusesResp) String() string {
 func (*ListNoticeStatusesResp) ProtoMessage() {}
 
 func (x *ListNoticeStatusesResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_user_proto_msgTypes[5]
+	mi := &file_hi_club_user_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -385,7 +446,7 @@ func (x *ListNoticeStatusesResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListNoticeStatusesResp.ProtoReflect.Descriptor instead.
 func (*ListNoticeStatusesResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_user_proto_rawDescGZIP(), []int{5}
+	return file_hi_club_user_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ListNoticeStatusesResp) GetList() []*NoticeStatus {
@@ -406,7 +467,7 @@ type HandleNoticeReq struct {
 
 func (x *HandleNoticeReq) Reset() {
 	*x = HandleNoticeReq{}
-	mi := &file_hi_club_user_proto_msgTypes[6]
+	mi := &file_hi_club_user_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -418,7 +479,7 @@ func (x *HandleNoticeReq) String() string {
 func (*HandleNoticeReq) ProtoMessage() {}
 
 func (x *HandleNoticeReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_user_proto_msgTypes[6]
+	mi := &file_hi_club_user_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -431,7 +492,7 @@ func (x *HandleNoticeReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HandleNoticeReq.ProtoReflect.Descriptor instead.
 func (*HandleNoticeReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_user_proto_rawDescGZIP(), []int{6}
+	return file_hi_club_user_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *HandleNoticeReq) GetUuid() string {
@@ -461,7 +522,7 @@ type MarkNoticeProcessedReq struct {
 
 func (x *MarkNoticeProcessedReq) Reset() {
 	*x = MarkNoticeProcessedReq{}
-	mi := &file_hi_club_user_proto_msgTypes[7]
+	mi := &file_hi_club_user_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -473,7 +534,7 @@ func (x *MarkNoticeProcessedReq) String() string {
 func (*MarkNoticeProcessedReq) ProtoMessage() {}
 
 func (x *MarkNoticeProcessedReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_user_proto_msgTypes[7]
+	mi := &file_hi_club_user_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -486,7 +547,7 @@ func (x *MarkNoticeProcessedReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MarkNoticeProcessedReq.ProtoReflect.Descriptor instead.
 func (*MarkNoticeProcessedReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_user_proto_rawDescGZIP(), []int{7}
+	return file_hi_club_user_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *MarkNoticeProcessedReq) GetUuid() string {
@@ -507,7 +568,7 @@ type RelationInfo struct {
 
 func (x *RelationInfo) Reset() {
 	*x = RelationInfo{}
-	mi := &file_hi_club_user_proto_msgTypes[8]
+	mi := &file_hi_club_user_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -519,7 +580,7 @@ func (x *RelationInfo) String() string {
 func (*RelationInfo) ProtoMessage() {}
 
 func (x *RelationInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_user_proto_msgTypes[8]
+	mi := &file_hi_club_user_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -532,7 +593,7 @@ func (x *RelationInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RelationInfo.ProtoReflect.Descriptor instead.
 func (*RelationInfo) Descriptor() ([]byte, []int) {
-	return file_hi_club_user_proto_rawDescGZIP(), []int{8}
+	return file_hi_club_user_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *RelationInfo) GetBase() *hi.Entity {
@@ -577,7 +638,7 @@ type ListRelationsResp struct {
 
 func (x *ListRelationsResp) Reset() {
 	*x = ListRelationsResp{}
-	mi := &file_hi_club_user_proto_msgTypes[9]
+	mi := &file_hi_club_user_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -589,7 +650,7 @@ func (x *ListRelationsResp) String() string {
 func (*ListRelationsResp) ProtoMessage() {}
 
 func (x *ListRelationsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_user_proto_msgTypes[9]
+	mi := &file_hi_club_user_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -602,7 +663,7 @@ func (x *ListRelationsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListRelationsResp.ProtoReflect.Descriptor instead.
 func (*ListRelationsResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_user_proto_rawDescGZIP(), []int{9}
+	return file_hi_club_user_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *ListRelationsResp) GetFriend() []*RelationInfo {
@@ -636,7 +697,7 @@ type AddFriendReq struct {
 
 func (x *AddFriendReq) Reset() {
 	*x = AddFriendReq{}
-	mi := &file_hi_club_user_proto_msgTypes[10]
+	mi := &file_hi_club_user_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -648,7 +709,7 @@ func (x *AddFriendReq) String() string {
 func (*AddFriendReq) ProtoMessage() {}
 
 func (x *AddFriendReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_user_proto_msgTypes[10]
+	mi := &file_hi_club_user_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -661,7 +722,7 @@ func (x *AddFriendReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddFriendReq.ProtoReflect.Descriptor instead.
 func (*AddFriendReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_user_proto_rawDescGZIP(), []int{10}
+	return file_hi_club_user_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *AddFriendReq) GetDid() string {
@@ -687,7 +748,7 @@ type AddFriendResp struct {
 
 func (x *AddFriendResp) Reset() {
 	*x = AddFriendResp{}
-	mi := &file_hi_club_user_proto_msgTypes[11]
+	mi := &file_hi_club_user_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -699,7 +760,7 @@ func (x *AddFriendResp) String() string {
 func (*AddFriendResp) ProtoMessage() {}
 
 func (x *AddFriendResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_user_proto_msgTypes[11]
+	mi := &file_hi_club_user_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -712,7 +773,7 @@ func (x *AddFriendResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddFriendResp.ProtoReflect.Descriptor instead.
 func (*AddFriendResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_user_proto_rawDescGZIP(), []int{11}
+	return file_hi_club_user_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *AddFriendResp) GetStatus() FriendRequestStatus {
@@ -731,7 +792,7 @@ type DeleteFriendReq struct {
 
 func (x *DeleteFriendReq) Reset() {
 	*x = DeleteFriendReq{}
-	mi := &file_hi_club_user_proto_msgTypes[12]
+	mi := &file_hi_club_user_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -743,7 +804,7 @@ func (x *DeleteFriendReq) String() string {
 func (*DeleteFriendReq) ProtoMessage() {}
 
 func (x *DeleteFriendReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_user_proto_msgTypes[12]
+	mi := &file_hi_club_user_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -756,7 +817,7 @@ func (x *DeleteFriendReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteFriendReq.ProtoReflect.Descriptor instead.
 func (*DeleteFriendReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_user_proto_rawDescGZIP(), []int{12}
+	return file_hi_club_user_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *DeleteFriendReq) GetDid() string {
@@ -775,7 +836,7 @@ type ListGroupsResp struct {
 
 func (x *ListGroupsResp) Reset() {
 	*x = ListGroupsResp{}
-	mi := &file_hi_club_user_proto_msgTypes[13]
+	mi := &file_hi_club_user_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -787,7 +848,7 @@ func (x *ListGroupsResp) String() string {
 func (*ListGroupsResp) ProtoMessage() {}
 
 func (x *ListGroupsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_user_proto_msgTypes[13]
+	mi := &file_hi_club_user_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -800,7 +861,7 @@ func (x *ListGroupsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListGroupsResp.ProtoReflect.Descriptor instead.
 func (*ListGroupsResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_user_proto_rawDescGZIP(), []int{13}
+	return file_hi_club_user_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *ListGroupsResp) GetList() []*GroupBase {
@@ -819,7 +880,7 @@ type GetUserReq struct {
 
 func (x *GetUserReq) Reset() {
 	*x = GetUserReq{}
-	mi := &file_hi_club_user_proto_msgTypes[14]
+	mi := &file_hi_club_user_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -831,7 +892,7 @@ func (x *GetUserReq) String() string {
 func (*GetUserReq) ProtoMessage() {}
 
 func (x *GetUserReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_user_proto_msgTypes[14]
+	mi := &file_hi_club_user_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -844,7 +905,7 @@ func (x *GetUserReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserReq.ProtoReflect.Descriptor instead.
 func (*GetUserReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_user_proto_rawDescGZIP(), []int{14}
+	return file_hi_club_user_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *GetUserReq) GetDid() string {
@@ -871,7 +932,7 @@ type UpdateUserReq struct {
 
 func (x *UpdateUserReq) Reset() {
 	*x = UpdateUserReq{}
-	mi := &file_hi_club_user_proto_msgTypes[15]
+	mi := &file_hi_club_user_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -883,7 +944,7 @@ func (x *UpdateUserReq) String() string {
 func (*UpdateUserReq) ProtoMessage() {}
 
 func (x *UpdateUserReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_user_proto_msgTypes[15]
+	mi := &file_hi_club_user_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -896,7 +957,7 @@ func (x *UpdateUserReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateUserReq.ProtoReflect.Descriptor instead.
 func (*UpdateUserReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_user_proto_rawDescGZIP(), []int{15}
+	return file_hi_club_user_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *UpdateUserReq) GetName() string {
@@ -937,7 +998,7 @@ type SetRemarkReq struct {
 
 func (x *SetRemarkReq) Reset() {
 	*x = SetRemarkReq{}
-	mi := &file_hi_club_user_proto_msgTypes[16]
+	mi := &file_hi_club_user_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -949,7 +1010,7 @@ func (x *SetRemarkReq) String() string {
 func (*SetRemarkReq) ProtoMessage() {}
 
 func (x *SetRemarkReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_user_proto_msgTypes[16]
+	mi := &file_hi_club_user_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -962,7 +1023,7 @@ func (x *SetRemarkReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetRemarkReq.ProtoReflect.Descriptor instead.
 func (*SetRemarkReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_user_proto_rawDescGZIP(), []int{16}
+	return file_hi_club_user_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *SetRemarkReq) GetUser() string {
@@ -988,7 +1049,7 @@ type ListOnlineUsersReq struct {
 
 func (x *ListOnlineUsersReq) Reset() {
 	*x = ListOnlineUsersReq{}
-	mi := &file_hi_club_user_proto_msgTypes[17]
+	mi := &file_hi_club_user_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1000,7 +1061,7 @@ func (x *ListOnlineUsersReq) String() string {
 func (*ListOnlineUsersReq) ProtoMessage() {}
 
 func (x *ListOnlineUsersReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_user_proto_msgTypes[17]
+	mi := &file_hi_club_user_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1013,7 +1074,7 @@ func (x *ListOnlineUsersReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListOnlineUsersReq.ProtoReflect.Descriptor instead.
 func (*ListOnlineUsersReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_user_proto_rawDescGZIP(), []int{17}
+	return file_hi_club_user_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *ListOnlineUsersReq) GetUsers() []string {
@@ -1032,7 +1093,7 @@ type ListOnlineUsersResp struct {
 
 func (x *ListOnlineUsersResp) Reset() {
 	*x = ListOnlineUsersResp{}
-	mi := &file_hi_club_user_proto_msgTypes[18]
+	mi := &file_hi_club_user_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1044,7 +1105,7 @@ func (x *ListOnlineUsersResp) String() string {
 func (*ListOnlineUsersResp) ProtoMessage() {}
 
 func (x *ListOnlineUsersResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_user_proto_msgTypes[18]
+	mi := &file_hi_club_user_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1057,7 +1118,7 @@ func (x *ListOnlineUsersResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListOnlineUsersResp.ProtoReflect.Descriptor instead.
 func (*ListOnlineUsersResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_user_proto_rawDescGZIP(), []int{18}
+	return file_hi_club_user_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *ListOnlineUsersResp) GetList() []*hi.Entity {
@@ -1085,6 +1146,8 @@ const file_hi_club_user_proto_rawDesc = "" +
 	"\n" +
 	"_last_uuid\"B\n" +
 	"\x0fListNoticesResp\x12)\n" +
+	"\x04list\x18\x01 \x03(\v2\x0f.hi.club.NoticeB\x04\x90\xb5\x18\x02R\x04list:\x04\x98\xb5\x18\x03\"I\n" +
+	"\x16ListPendingNoticesResp\x12)\n" +
 	"\x04list\x18\x01 \x03(\v2\x0f.hi.club.NoticeB\x04\x90\xb5\x18\x02R\x04list:\x04\x98\xb5\x18\x03\"-\n" +
 	"\x15ListNoticeStatusesReq\x12\x14\n" +
 	"\x05uuids\x18\x01 \x03(\tR\x05uuids\"j\n" +
@@ -1154,12 +1217,13 @@ const file_hi_club_user_proto_rawDesc = "" +
 	"\x1aFRIEND_REQUEST_STATUS_SENT\x10\x02\x12\x1f\n" +
 	"\x1bFRIEND_REQUEST_STATUS_ADDED\x10\x03\x12(\n" +
 	"$FRIEND_REQUEST_STATUS_ALREADY_FRIEND\x10\x04\x12(\n" +
-	"$FRIEND_REQUEST_STATUS_PENDING_EXISTS\x10\x052\xde\x06\n" +
+	"$FRIEND_REQUEST_STATUS_PENDING_EXISTS\x10\x052\xb4\a\n" +
 	"\x04User\x12>\n" +
 	"\n" +
 	"GetCurrent\x12\x16.google.protobuf.Empty\x1a\x11.hi.club.UserInfo\"\x05\x8a\xb5\x18\x01\x02\x12:\n" +
 	"\x06Update\x12\x16.hi.club.UpdateUserReq\x1a\x11.hi.club.UserInfo\"\x05\x8a\xb5\x18\x01\x02\x12G\n" +
-	"\vListNotices\x12\x17.hi.club.ListNoticesReq\x1a\x18.hi.club.ListNoticesResp\"\x05\x8a\xb5\x18\x01\x02\x12\\\n" +
+	"\vListNotices\x12\x17.hi.club.ListNoticesReq\x1a\x18.hi.club.ListNoticesResp\"\x05\x8a\xb5\x18\x01\x02\x12T\n" +
+	"\x12ListPendingNotices\x12\x16.google.protobuf.Empty\x1a\x1f.hi.club.ListPendingNoticesResp\"\x05\x8a\xb5\x18\x01\x02\x12\\\n" +
 	"\x12ListNoticeStatuses\x12\x1e.hi.club.ListNoticeStatusesReq\x1a\x1f.hi.club.ListNoticeStatusesResp\"\x05\x8a\xb5\x18\x01\x02\x12G\n" +
 	"\fHandleNotice\x12\x18.hi.club.HandleNoticeReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12U\n" +
 	"\x13MarkNoticeProcessed\x12\x1f.hi.club.MarkNoticeProcessedReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12J\n" +
@@ -1189,75 +1253,79 @@ func file_hi_club_user_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_club_user_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_hi_club_user_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
+var file_hi_club_user_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
 var file_hi_club_user_proto_goTypes = []any{
 	(FriendRequestStatus)(0),       // 0: hi.club.FriendRequestStatus
 	(*UserInfo)(nil),               // 1: hi.club.UserInfo
 	(*ListNoticesReq)(nil),         // 2: hi.club.ListNoticesReq
 	(*ListNoticesResp)(nil),        // 3: hi.club.ListNoticesResp
-	(*ListNoticeStatusesReq)(nil),  // 4: hi.club.ListNoticeStatusesReq
-	(*NoticeStatus)(nil),           // 5: hi.club.NoticeStatus
-	(*ListNoticeStatusesResp)(nil), // 6: hi.club.ListNoticeStatusesResp
-	(*HandleNoticeReq)(nil),        // 7: hi.club.HandleNoticeReq
-	(*MarkNoticeProcessedReq)(nil), // 8: hi.club.MarkNoticeProcessedReq
-	(*RelationInfo)(nil),           // 9: hi.club.RelationInfo
-	(*ListRelationsResp)(nil),      // 10: hi.club.ListRelationsResp
-	(*AddFriendReq)(nil),           // 11: hi.club.AddFriendReq
-	(*AddFriendResp)(nil),          // 12: hi.club.AddFriendResp
-	(*DeleteFriendReq)(nil),        // 13: hi.club.DeleteFriendReq
-	(*ListGroupsResp)(nil),         // 14: hi.club.ListGroupsResp
-	(*GetUserReq)(nil),             // 15: hi.club.GetUserReq
-	(*UpdateUserReq)(nil),          // 16: hi.club.UpdateUserReq
-	(*SetRemarkReq)(nil),           // 17: hi.club.SetRemarkReq
-	(*ListOnlineUsersReq)(nil),     // 18: hi.club.ListOnlineUsersReq
-	(*ListOnlineUsersResp)(nil),    // 19: hi.club.ListOnlineUsersResp
-	(*hi.Entity)(nil),              // 20: hi.Entity
-	(*Notice)(nil),                 // 21: hi.club.Notice
-	(*GroupBase)(nil),              // 22: hi.club.GroupBase
-	(*emptypb.Empty)(nil),          // 23: google.protobuf.Empty
+	(*ListPendingNoticesResp)(nil), // 4: hi.club.ListPendingNoticesResp
+	(*ListNoticeStatusesReq)(nil),  // 5: hi.club.ListNoticeStatusesReq
+	(*NoticeStatus)(nil),           // 6: hi.club.NoticeStatus
+	(*ListNoticeStatusesResp)(nil), // 7: hi.club.ListNoticeStatusesResp
+	(*HandleNoticeReq)(nil),        // 8: hi.club.HandleNoticeReq
+	(*MarkNoticeProcessedReq)(nil), // 9: hi.club.MarkNoticeProcessedReq
+	(*RelationInfo)(nil),           // 10: hi.club.RelationInfo
+	(*ListRelationsResp)(nil),      // 11: hi.club.ListRelationsResp
+	(*AddFriendReq)(nil),           // 12: hi.club.AddFriendReq
+	(*AddFriendResp)(nil),          // 13: hi.club.AddFriendResp
+	(*DeleteFriendReq)(nil),        // 14: hi.club.DeleteFriendReq
+	(*ListGroupsResp)(nil),         // 15: hi.club.ListGroupsResp
+	(*GetUserReq)(nil),             // 16: hi.club.GetUserReq
+	(*UpdateUserReq)(nil),          // 17: hi.club.UpdateUserReq
+	(*SetRemarkReq)(nil),           // 18: hi.club.SetRemarkReq
+	(*ListOnlineUsersReq)(nil),     // 19: hi.club.ListOnlineUsersReq
+	(*ListOnlineUsersResp)(nil),    // 20: hi.club.ListOnlineUsersResp
+	(*hi.Entity)(nil),              // 21: hi.Entity
+	(*Notice)(nil),                 // 22: hi.club.Notice
+	(*GroupBase)(nil),              // 23: hi.club.GroupBase
+	(*emptypb.Empty)(nil),          // 24: google.protobuf.Empty
 }
 var file_hi_club_user_proto_depIdxs = []int32{
-	20, // 0: hi.club.UserInfo.base:type_name -> hi.Entity
-	21, // 1: hi.club.ListNoticesResp.list:type_name -> hi.club.Notice
-	5,  // 2: hi.club.ListNoticeStatusesResp.list:type_name -> hi.club.NoticeStatus
-	20, // 3: hi.club.RelationInfo.base:type_name -> hi.Entity
-	9,  // 4: hi.club.ListRelationsResp.friend:type_name -> hi.club.RelationInfo
-	9,  // 5: hi.club.ListRelationsResp.servitor:type_name -> hi.club.RelationInfo
-	9,  // 6: hi.club.ListRelationsResp.master:type_name -> hi.club.RelationInfo
-	0,  // 7: hi.club.AddFriendResp.status:type_name -> hi.club.FriendRequestStatus
-	22, // 8: hi.club.ListGroupsResp.list:type_name -> hi.club.GroupBase
-	20, // 9: hi.club.ListOnlineUsersResp.list:type_name -> hi.Entity
-	23, // 10: hi.club.User.GetCurrent:input_type -> google.protobuf.Empty
-	16, // 11: hi.club.User.Update:input_type -> hi.club.UpdateUserReq
-	2,  // 12: hi.club.User.ListNotices:input_type -> hi.club.ListNoticesReq
-	4,  // 13: hi.club.User.ListNoticeStatuses:input_type -> hi.club.ListNoticeStatusesReq
-	7,  // 14: hi.club.User.HandleNotice:input_type -> hi.club.HandleNoticeReq
-	8,  // 15: hi.club.User.MarkNoticeProcessed:input_type -> hi.club.MarkNoticeProcessedReq
-	23, // 16: hi.club.User.ListRelations:input_type -> google.protobuf.Empty
-	11, // 17: hi.club.User.AddFriend:input_type -> hi.club.AddFriendReq
-	13, // 18: hi.club.User.DeleteFriend:input_type -> hi.club.DeleteFriendReq
-	23, // 19: hi.club.User.ListGroups:input_type -> google.protobuf.Empty
-	15, // 20: hi.club.User.GetOther:input_type -> hi.club.GetUserReq
-	17, // 21: hi.club.User.SetRemark:input_type -> hi.club.SetRemarkReq
-	18, // 22: hi.club.UserDirectory.ListOnline:input_type -> hi.club.ListOnlineUsersReq
-	1,  // 23: hi.club.User.GetCurrent:output_type -> hi.club.UserInfo
-	1,  // 24: hi.club.User.Update:output_type -> hi.club.UserInfo
-	3,  // 25: hi.club.User.ListNotices:output_type -> hi.club.ListNoticesResp
-	6,  // 26: hi.club.User.ListNoticeStatuses:output_type -> hi.club.ListNoticeStatusesResp
-	23, // 27: hi.club.User.HandleNotice:output_type -> google.protobuf.Empty
-	23, // 28: hi.club.User.MarkNoticeProcessed:output_type -> google.protobuf.Empty
-	10, // 29: hi.club.User.ListRelations:output_type -> hi.club.ListRelationsResp
-	12, // 30: hi.club.User.AddFriend:output_type -> hi.club.AddFriendResp
-	23, // 31: hi.club.User.DeleteFriend:output_type -> google.protobuf.Empty
-	14, // 32: hi.club.User.ListGroups:output_type -> hi.club.ListGroupsResp
-	20, // 33: hi.club.User.GetOther:output_type -> hi.Entity
-	23, // 34: hi.club.User.SetRemark:output_type -> google.protobuf.Empty
-	19, // 35: hi.club.UserDirectory.ListOnline:output_type -> hi.club.ListOnlineUsersResp
-	23, // [23:36] is the sub-list for method output_type
-	10, // [10:23] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	21, // 0: hi.club.UserInfo.base:type_name -> hi.Entity
+	22, // 1: hi.club.ListNoticesResp.list:type_name -> hi.club.Notice
+	22, // 2: hi.club.ListPendingNoticesResp.list:type_name -> hi.club.Notice
+	6,  // 3: hi.club.ListNoticeStatusesResp.list:type_name -> hi.club.NoticeStatus
+	21, // 4: hi.club.RelationInfo.base:type_name -> hi.Entity
+	10, // 5: hi.club.ListRelationsResp.friend:type_name -> hi.club.RelationInfo
+	10, // 6: hi.club.ListRelationsResp.servitor:type_name -> hi.club.RelationInfo
+	10, // 7: hi.club.ListRelationsResp.master:type_name -> hi.club.RelationInfo
+	0,  // 8: hi.club.AddFriendResp.status:type_name -> hi.club.FriendRequestStatus
+	23, // 9: hi.club.ListGroupsResp.list:type_name -> hi.club.GroupBase
+	21, // 10: hi.club.ListOnlineUsersResp.list:type_name -> hi.Entity
+	24, // 11: hi.club.User.GetCurrent:input_type -> google.protobuf.Empty
+	17, // 12: hi.club.User.Update:input_type -> hi.club.UpdateUserReq
+	2,  // 13: hi.club.User.ListNotices:input_type -> hi.club.ListNoticesReq
+	24, // 14: hi.club.User.ListPendingNotices:input_type -> google.protobuf.Empty
+	5,  // 15: hi.club.User.ListNoticeStatuses:input_type -> hi.club.ListNoticeStatusesReq
+	8,  // 16: hi.club.User.HandleNotice:input_type -> hi.club.HandleNoticeReq
+	9,  // 17: hi.club.User.MarkNoticeProcessed:input_type -> hi.club.MarkNoticeProcessedReq
+	24, // 18: hi.club.User.ListRelations:input_type -> google.protobuf.Empty
+	12, // 19: hi.club.User.AddFriend:input_type -> hi.club.AddFriendReq
+	14, // 20: hi.club.User.DeleteFriend:input_type -> hi.club.DeleteFriendReq
+	24, // 21: hi.club.User.ListGroups:input_type -> google.protobuf.Empty
+	16, // 22: hi.club.User.GetOther:input_type -> hi.club.GetUserReq
+	18, // 23: hi.club.User.SetRemark:input_type -> hi.club.SetRemarkReq
+	19, // 24: hi.club.UserDirectory.ListOnline:input_type -> hi.club.ListOnlineUsersReq
+	1,  // 25: hi.club.User.GetCurrent:output_type -> hi.club.UserInfo
+	1,  // 26: hi.club.User.Update:output_type -> hi.club.UserInfo
+	3,  // 27: hi.club.User.ListNotices:output_type -> hi.club.ListNoticesResp
+	4,  // 28: hi.club.User.ListPendingNotices:output_type -> hi.club.ListPendingNoticesResp
+	7,  // 29: hi.club.User.ListNoticeStatuses:output_type -> hi.club.ListNoticeStatusesResp
+	24, // 30: hi.club.User.HandleNotice:output_type -> google.protobuf.Empty
+	24, // 31: hi.club.User.MarkNoticeProcessed:output_type -> google.protobuf.Empty
+	11, // 32: hi.club.User.ListRelations:output_type -> hi.club.ListRelationsResp
+	13, // 33: hi.club.User.AddFriend:output_type -> hi.club.AddFriendResp
+	24, // 34: hi.club.User.DeleteFriend:output_type -> google.protobuf.Empty
+	15, // 35: hi.club.User.ListGroups:output_type -> hi.club.ListGroupsResp
+	21, // 36: hi.club.User.GetOther:output_type -> hi.Entity
+	24, // 37: hi.club.User.SetRemark:output_type -> google.protobuf.Empty
+	20, // 38: hi.club.UserDirectory.ListOnline:output_type -> hi.club.ListOnlineUsersResp
+	25, // [25:39] is the sub-list for method output_type
+	11, // [11:25] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_user_proto_init() }
@@ -1269,22 +1337,22 @@ func file_hi_club_user_proto_init() {
 	file_hi_club_group_proto_init()
 	file_hi_club_user_proto_msgTypes[0].OneofWrappers = []any{}
 	file_hi_club_user_proto_msgTypes[1].OneofWrappers = []any{}
-	file_hi_club_user_proto_msgTypes[4].OneofWrappers = []any{}
-	file_hi_club_user_proto_msgTypes[6].OneofWrappers = []any{}
+	file_hi_club_user_proto_msgTypes[5].OneofWrappers = []any{}
 	file_hi_club_user_proto_msgTypes[7].OneofWrappers = []any{}
 	file_hi_club_user_proto_msgTypes[8].OneofWrappers = []any{}
 	file_hi_club_user_proto_msgTypes[9].OneofWrappers = []any{}
 	file_hi_club_user_proto_msgTypes[10].OneofWrappers = []any{}
 	file_hi_club_user_proto_msgTypes[11].OneofWrappers = []any{}
-	file_hi_club_user_proto_msgTypes[15].OneofWrappers = []any{}
+	file_hi_club_user_proto_msgTypes[12].OneofWrappers = []any{}
 	file_hi_club_user_proto_msgTypes[16].OneofWrappers = []any{}
+	file_hi_club_user_proto_msgTypes[17].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_user_proto_rawDesc), len(file_hi_club_user_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   19,
+			NumMessages:   20,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

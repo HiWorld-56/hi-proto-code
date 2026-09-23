@@ -24,6 +24,7 @@ const (
 	User_GetCurrent_FullMethodName          = "/hi.club.User/GetCurrent"
 	User_Update_FullMethodName              = "/hi.club.User/Update"
 	User_ListNotices_FullMethodName         = "/hi.club.User/ListNotices"
+	User_ListPendingNotices_FullMethodName  = "/hi.club.User/ListPendingNotices"
 	User_ListNoticeStatuses_FullMethodName  = "/hi.club.User/ListNoticeStatuses"
 	User_HandleNotice_FullMethodName        = "/hi.club.User/HandleNotice"
 	User_MarkNoticeProcessed_FullMethodName = "/hi.club.User/MarkNoticeProcessed"
@@ -51,7 +52,12 @@ type UserClient interface {
 	Update(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*UserInfo, error)
 	// 通知是历史记录:后端只记录、不删,也不替端上算未读 —— 所以没有删除接口、没有未读计数接口,
 	// 清理本地通知是端上(core)自己的事。
+	//
+	// ⛔ **端上只许删已达终态的**(processed/accept/reject/invalid/expired)。还没处理完的那条
+	// 在后端(或对方)那边挂着等答复,本地删掉 = 那件事永远没人回,且没有任何报错。
+	// 端上按什么判、怎么拒,见 hi/club/messaging.proto 里 status 那段。
 	ListNotices(ctx context.Context, in *ListNoticesReq, opts ...grpc.CallOption) (*ListNoticesResp, error)
+	ListPendingNotices(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListPendingNoticesResp, error)
 	ListNoticeStatuses(ctx context.Context, in *ListNoticeStatusesReq, opts ...grpc.CallOption) (*ListNoticeStatusesResp, error)
 	HandleNotice(ctx context.Context, in *HandleNoticeReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	MarkNoticeProcessed(ctx context.Context, in *MarkNoticeProcessedReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -95,6 +101,16 @@ func (c *userClient) ListNotices(ctx context.Context, in *ListNoticesReq, opts .
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListNoticesResp)
 	err := c.cc.Invoke(ctx, User_ListNotices_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) ListPendingNotices(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListPendingNoticesResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListPendingNoticesResp)
+	err := c.cc.Invoke(ctx, User_ListPendingNotices_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -207,7 +223,12 @@ type UserServer interface {
 	Update(context.Context, *UpdateUserReq) (*UserInfo, error)
 	// 通知是历史记录:后端只记录、不删,也不替端上算未读 —— 所以没有删除接口、没有未读计数接口,
 	// 清理本地通知是端上(core)自己的事。
+	//
+	// ⛔ **端上只许删已达终态的**(processed/accept/reject/invalid/expired)。还没处理完的那条
+	// 在后端(或对方)那边挂着等答复,本地删掉 = 那件事永远没人回,且没有任何报错。
+	// 端上按什么判、怎么拒,见 hi/club/messaging.proto 里 status 那段。
 	ListNotices(context.Context, *ListNoticesReq) (*ListNoticesResp, error)
+	ListPendingNotices(context.Context, *emptypb.Empty) (*ListPendingNoticesResp, error)
 	ListNoticeStatuses(context.Context, *ListNoticeStatusesReq) (*ListNoticeStatusesResp, error)
 	HandleNotice(context.Context, *HandleNoticeReq) (*emptypb.Empty, error)
 	MarkNoticeProcessed(context.Context, *MarkNoticeProcessedReq) (*emptypb.Empty, error)
@@ -234,6 +255,9 @@ func (UnimplementedUserServer) Update(context.Context, *UpdateUserReq) (*UserInf
 }
 func (UnimplementedUserServer) ListNotices(context.Context, *ListNoticesReq) (*ListNoticesResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListNotices not implemented")
+}
+func (UnimplementedUserServer) ListPendingNotices(context.Context, *emptypb.Empty) (*ListPendingNoticesResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListPendingNotices not implemented")
 }
 func (UnimplementedUserServer) ListNoticeStatuses(context.Context, *ListNoticeStatusesReq) (*ListNoticeStatusesResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListNoticeStatuses not implemented")
@@ -332,6 +356,24 @@ func _User_ListNotices_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServer).ListNotices(ctx, req.(*ListNoticesReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_ListPendingNotices_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).ListPendingNotices(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_ListPendingNotices_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).ListPendingNotices(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -516,6 +558,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListNotices",
 			Handler:    _User_ListNotices_Handler,
+		},
+		{
+			MethodName: "ListPendingNotices",
+			Handler:    _User_ListPendingNotices_Handler,
 		},
 		{
 			MethodName: "ListNoticeStatuses",

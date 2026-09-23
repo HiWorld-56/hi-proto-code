@@ -4194,6 +4194,19 @@ pub mod packet {
 /// |`invalid`|邀请的对象已不存在(如群已解散)|后端|
 /// |`expired`|过了 `expiration` 还是 `not_processed`|**不存储,后端在读取时现算**|
 ///
+/// `expiration` 是**绝对时刻(微秒)**,与 `timestamp` 同一把尺;不带 = 不过期。
+///
+/// ## 终态:除了 `not_processed`,其余都是终态
+///
+/// *未达终态 = `not_processed` 且没过期*\*,别的都是终态(`processed` / `accept` / `reject` /
+/// `invalid` / `expired`)。这条判据有两个用处,端上两处都必须按它来:
+///
+/// 1. **端上删本地通知,只许删终态的。** 还欠着的那条在后端(或对方)那里挂着等一个答复,
+///    本地删掉 = 那件事永远没人回,而且零报错(`core` 的 `delete_notice` 会拒,
+///    `clear_notices` 只清终态的)。
+/// 1. **还欠着的通知与游标无关**:端上每轮同步用 `User.ListPendingNotices` 拿全量,
+///    所以它不会因为换设备、重装、重新登录而丢。
+///
 /// 纯告知的通知(群通知、`robot-update`、`plugin-load`、授权结果……)**发出时就是 `processed`**,
 /// 于是所有通知都按同一套状态处理,没有"这类通知有没有状态"的分支。
 ///
@@ -4202,6 +4215,10 @@ pub mod packet {
 /// 单聊通知由后端在 **MQTT 收到时**记进历史(不管是谁发的),保存 30 天。端上用
 /// `User.ListNotices` 按游标增量拉**全部**通知,自己判断哪些是新的;
 /// 状态会变的(没处理完的那些),端上定期 + 下拉刷新时用 `User.ListNoticeStatuses` 按 uuid 查最新状态。
+///
+/// *游标不传 = 由服务端定起点*\*(重装 / 重新登录 / 换设备),与 `Group.ListMessages` 同一套;
+/// 服务端那个位置每拉一页只许前进。**端上删掉的通知不会被同步再拉回来**,靠的就是它 ——
+/// 本地游标在重新登录时随本地数据一起清空,那时若回到"最早一条",删掉的会整批回来。
 ///
 /// ⚠️ 实时收到的那条是**发出时的快照**,之后的状态以 `ListNotices` / `ListNoticeStatuses` 为准。
 ///
@@ -5048,13 +5065,35 @@ pub struct UserInfo {
 /// (读一次就改掉,多台设备谁先拉谁把"新"吃掉),于是离线期间的 friend-add 永远补不回来。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListNoticesReq {
-    /// 上一页最后一条的 uuid;不传 = 从最早一条开始
+    /// 上一页最后一条的 uuid。
+    ///
+    /// ⚠️ **不传 ≠ 从最早一条开始**,而是「我什么都不知道,你替我定起点」——
+    /// 服务端按自己记的同步位置(每拉一页只许前进)返回它之后的那些。
+    /// 这是**重装 / 重新登录 / 换设备**的恢复路径,与 `Group.ListMessages` 同一套:
+    /// 端上拿到第一页后立刻改用自己的本地游标,从此不再传空。
+    ///
+    /// 传了但服务端找不到(那条已过保存期被清掉)也回落到同步位置 —— **不回到最早一条**:
+    /// 回到最早一条等于把端上早就删掉的通知整批重新塞回去(2026-09-23 就是这么发生的)。
     #[prost(string, optional, tag = "1")]
     pub last_uuid: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListNoticesResp {
     /// 按时间正序;空 = 已经拉到头
+    #[prost(message, repeated, tag = "1")]
+    pub list: ::prost::alloc::vec::Vec<Notice>,
+}
+/// 我名下**还欠着的**通知:合并状态后仍是 `not_processed`、而且没过期的全部(30 天内)。
+///
+/// **与游标无关,这是它存在的全部理由。** 游标管的是"新的",而"还欠着的"必须与端上删没删、
+/// 重装没重装无关 —— 它对应的是后端(或对方)还挂着等一个答复的事:
+/// 好友申请、入群邀请、授权申请。端上没有它,那件事就永远卡在那里,而且零报错。
+///
+/// 端上每轮同步调一次(条数天然很少)。有了它,端上才可以放心地只按游标增量拉、
+/// 并且把已达终态的通知从本机删掉。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListPendingNoticesResp {
+    /// 按时间正序
     #[prost(message, repeated, tag = "1")]
     pub list: ::prost::alloc::vec::Vec<Notice>,
 }
@@ -5390,6 +5429,10 @@ pub mod user_client {
         }
         /// 通知是历史记录:后端只记录、不删,也不替端上算未读 —— 所以没有删除接口、没有未读计数接口,
         /// 清理本地通知是端上(core)自己的事。
+        ///
+        /// ⛔ **端上只许删已达终态的**(processed/accept/reject/invalid/expired)。还没处理完的那条
+        /// 在后端(或对方)那边挂着等答复,本地删掉 = 那件事永远没人回,且没有任何报错。
+        /// 端上按什么判、怎么拒,见 hi/club/messaging.proto 里 status 那段。
         pub async fn list_notices(
             &mut self,
             request: impl tonic::IntoRequest<super::ListNoticesReq>,
@@ -5409,6 +5452,30 @@ pub mod user_client {
             let path = http::uri::PathAndQuery::from_static("/hi.club.User/ListNotices");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.club.User", "ListNotices"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_pending_notices(
+            &mut self,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListPendingNoticesResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.User/ListPendingNotices",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.User", "ListPendingNotices"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn list_notice_statuses(

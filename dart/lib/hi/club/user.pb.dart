@@ -159,6 +159,15 @@ class ListNoticesReq extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<ListNoticesReq>(create);
   static ListNoticesReq? _defaultInstance;
 
+  /// 上一页最后一条的 uuid。
+  ///
+  /// ⚠️ **不传 ≠ 从最早一条开始**,而是「我什么都不知道,你替我定起点」——
+  /// 服务端按自己记的同步位置(每拉一页只许前进)返回它之后的那些。
+  /// 这是**重装 / 重新登录 / 换设备**的恢复路径,与 `Group.ListMessages` 同一套:
+  /// 端上拿到第一页后立刻改用自己的本地游标,从此不再传空。
+  ///
+  /// 传了但服务端找不到(那条已过保存期被清掉)也回落到同步位置 —— **不回到最早一条**:
+  /// 回到最早一条等于把端上早就删掉的通知整批重新塞回去(2026-09-23 就是这么发生的)。
   @$pb.TagNumber(1)
   $core.String get lastUuid => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -213,6 +222,64 @@ class ListNoticesResp extends $pb.GeneratedMessage {
   static ListNoticesResp getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<ListNoticesResp>(create);
   static ListNoticesResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<$3.Notice> get list => $_getList(0);
+}
+
+/// 我名下**还欠着的**通知:合并状态后仍是 `not_processed`、而且没过期的全部(30 天内)。
+///
+/// **与游标无关,这是它存在的全部理由。** 游标管的是"新的",而"还欠着的"必须与端上删没删、
+/// 重装没重装无关 —— 它对应的是后端(或对方)还挂着等一个答复的事:
+/// 好友申请、入群邀请、授权申请。端上没有它,那件事就永远卡在那里,而且零报错。
+///
+/// 端上每轮同步调一次(条数天然很少)。有了它,端上才可以放心地只按游标增量拉、
+/// 并且把已达终态的通知从本机删掉。
+class ListPendingNoticesResp extends $pb.GeneratedMessage {
+  factory ListPendingNoticesResp({
+    $core.Iterable<$3.Notice>? list,
+  }) {
+    final result = create();
+    if (list != null) result.list.addAll(list);
+    return result;
+  }
+
+  ListPendingNoticesResp._();
+
+  factory ListPendingNoticesResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListPendingNoticesResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListPendingNoticesResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..pPM<$3.Notice>(1, _omitFieldNames ? '' : 'list',
+        subBuilder: $3.Notice.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListPendingNoticesResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListPendingNoticesResp copyWith(
+          void Function(ListPendingNoticesResp) updates) =>
+      super.copyWith((message) => updates(message as ListPendingNoticesResp))
+          as ListPendingNoticesResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListPendingNoticesResp create() => ListPendingNoticesResp._();
+  @$core.override
+  ListPendingNoticesResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListPendingNoticesResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListPendingNoticesResp>(create);
+  static ListPendingNoticesResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $pb.PbList<$3.Notice> get list => $_getList(0);

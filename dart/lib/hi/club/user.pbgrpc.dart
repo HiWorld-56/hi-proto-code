@@ -58,11 +58,22 @@ class UserClient extends $grpc.Client {
 
   /// 通知是历史记录:后端只记录、不删,也不替端上算未读 —— 所以没有删除接口、没有未读计数接口,
   /// 清理本地通知是端上(core)自己的事。
+  ///
+  /// ⛔ **端上只许删已达终态的**(processed/accept/reject/invalid/expired)。还没处理完的那条
+  /// 在后端(或对方)那边挂着等答复,本地删掉 = 那件事永远没人回,且没有任何报错。
+  /// 端上按什么判、怎么拒,见 hi/club/messaging.proto 里 status 那段。
   $grpc.ResponseFuture<$1.ListNoticesResp> listNotices(
     $1.ListNoticesReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$listNotices, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$1.ListPendingNoticesResp> listPendingNotices(
+    $0.Empty request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listPendingNotices, request, options: options);
   }
 
   $grpc.ResponseFuture<$1.ListNoticeStatusesResp> listNoticeStatuses(
@@ -143,6 +154,11 @@ class UserClient extends $grpc.Client {
           '/hi.club.User/ListNotices',
           ($1.ListNoticesReq value) => value.writeToBuffer(),
           $1.ListNoticesResp.fromBuffer);
+  static final _$listPendingNotices =
+      $grpc.ClientMethod<$0.Empty, $1.ListPendingNoticesResp>(
+          '/hi.club.User/ListPendingNotices',
+          ($0.Empty value) => value.writeToBuffer(),
+          $1.ListPendingNoticesResp.fromBuffer);
   static final _$listNoticeStatuses =
       $grpc.ClientMethod<$1.ListNoticeStatusesReq, $1.ListNoticeStatusesResp>(
           '/hi.club.User/ListNoticeStatuses',
@@ -213,6 +229,13 @@ abstract class UserServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.ListNoticesReq.fromBuffer(value),
         ($1.ListNoticesResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Empty, $1.ListPendingNoticesResp>(
+        'ListPendingNotices',
+        listPendingNotices_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
+        ($1.ListPendingNoticesResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.ListNoticeStatusesReq,
             $1.ListNoticeStatusesResp>(
         'ListNoticeStatuses',
@@ -304,6 +327,14 @@ abstract class UserServiceBase extends $grpc.Service {
 
   $async.Future<$1.ListNoticesResp> listNotices(
       $grpc.ServiceCall call, $1.ListNoticesReq request);
+
+  $async.Future<$1.ListPendingNoticesResp> listPendingNotices_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
+    return listPendingNotices($call, await $request);
+  }
+
+  $async.Future<$1.ListPendingNoticesResp> listPendingNotices(
+      $grpc.ServiceCall call, $0.Empty request);
 
   $async.Future<$1.ListNoticeStatusesResp> listNoticeStatuses_Pre(
       $grpc.ServiceCall $call,

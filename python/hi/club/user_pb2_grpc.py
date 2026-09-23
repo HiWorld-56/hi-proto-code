@@ -31,6 +31,11 @@ class UserStub(object):
                 request_serializer=hi_dot_club_dot_user__pb2.ListNoticesReq.SerializeToString,
                 response_deserializer=hi_dot_club_dot_user__pb2.ListNoticesResp.FromString,
                 _registered_method=True)
+        self.ListPendingNotices = channel.unary_unary(
+                '/hi.club.User/ListPendingNotices',
+                request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+                response_deserializer=hi_dot_club_dot_user__pb2.ListPendingNoticesResp.FromString,
+                _registered_method=True)
         self.ListNoticeStatuses = channel.unary_unary(
                 '/hi.club.User/ListNoticeStatuses',
                 request_serializer=hi_dot_club_dot_user__pb2.ListNoticeStatusesReq.SerializeToString,
@@ -104,7 +109,17 @@ class UserServicer(object):
     def ListNotices(self, request, context):
         """通知是历史记录:后端只记录、不删,也不替端上算未读 —— 所以没有删除接口、没有未读计数接口,
         清理本地通知是端上(core)自己的事。
+
+        ⛔ **端上只许删已达终态的**(processed/accept/reject/invalid/expired)。还没处理完的那条
+        在后端(或对方)那边挂着等答复,本地删掉 = 那件事永远没人回,且没有任何报错。
+        端上按什么判、怎么拒,见 hi/club/messaging.proto 里 status 那段。
         """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListPendingNotices(self, request, context):
+        """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -180,6 +195,11 @@ def add_UserServicer_to_server(servicer, server):
                     servicer.ListNotices,
                     request_deserializer=hi_dot_club_dot_user__pb2.ListNoticesReq.FromString,
                     response_serializer=hi_dot_club_dot_user__pb2.ListNoticesResp.SerializeToString,
+            ),
+            'ListPendingNotices': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListPendingNotices,
+                    request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                    response_serializer=hi_dot_club_dot_user__pb2.ListPendingNoticesResp.SerializeToString,
             ),
             'ListNoticeStatuses': grpc.unary_unary_rpc_method_handler(
                     servicer.ListNoticeStatuses,
@@ -308,6 +328,33 @@ class User(object):
             '/hi.club.User/ListNotices',
             hi_dot_club_dot_user__pb2.ListNoticesReq.SerializeToString,
             hi_dot_club_dot_user__pb2.ListNoticesResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ListPendingNotices(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.User/ListPendingNotices',
+            google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            hi_dot_club_dot_user__pb2.ListPendingNoticesResp.FromString,
             options,
             channel_credentials,
             insecure,

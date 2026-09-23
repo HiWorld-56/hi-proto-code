@@ -131,6 +131,29 @@ final $typed_data.Uint8List listNoticesRespDescriptor = $convert.base64Decode(
     'Cg9MaXN0Tm90aWNlc1Jlc3ASKQoEbGlzdBgBIAMoCzIPLmhpLmNsdWIuTm90aWNlQgSQtRgCUg'
     'RsaXN0OgSYtRgD');
 
+@$core.Deprecated('Use listPendingNoticesRespDescriptor instead')
+const ListPendingNoticesResp$json = {
+  '1': 'ListPendingNoticesResp',
+  '2': [
+    {
+      '1': 'list',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.club.Notice',
+      '8': {},
+      '10': 'list'
+    },
+  ],
+  '7': {},
+};
+
+/// Descriptor for `ListPendingNoticesResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listPendingNoticesRespDescriptor =
+    $convert.base64Decode(
+        'ChZMaXN0UGVuZGluZ05vdGljZXNSZXNwEikKBGxpc3QYASADKAsyDy5oaS5jbHViLk5vdGljZU'
+        'IEkLUYAlIEbGlzdDoEmLUYAw==');
+
 @$core.Deprecated('Use listNoticeStatusesReqDescriptor instead')
 const ListNoticeStatusesReq$json = {
   '1': 'ListNoticeStatusesReq',
