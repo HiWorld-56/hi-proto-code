@@ -1141,7 +1141,9 @@ func (x *MuteMembersReq) GetMuted() bool {
 //
 //	故「仅群主/管理员」这类校验**由 handler 按请求里的 code 查群成员表强制**(不进 hi.auth 档)。
 //
-// 成员权限矩阵(后端强制,只允许高级别对低级别操作:owner>admin>member):
+// 成员权限矩阵(后端强制,只允许高级别对低级别操作:owner>admin>member)。
+// ⚠️ **这张表是唯一口径**,别在各个 rpc 的行尾另写一份:2026-09-23 就是行尾那句
+// 「改群类型仅 owner」与本表冲突,后端照行尾实现,前端照本表放出了入口,管理员一点就是 7。
 //
 //	owner   : 全允许(含解散群、加管理员)
 //	admin   : 拉/踢人、拉/踢机器人、禁言、改群信息、设群类型;不可解散群、不可加管理员;不可操作 owner/admin
@@ -1166,7 +1168,8 @@ type UpdateGroupReq struct {
 	Name       *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`             // 群名;不传=不动,传了=设成这个(传空串=清空)
 	Avatar     *string                `protobuf:"bytes,3,opt,name=avatar,proto3,oneof" json:"avatar,omitempty"`         // 群头像 url;不传=不动,传了=设成这个(传空串=清空)
 	Background *string                `protobuf:"bytes,4,opt,name=background,proto3,oneof" json:"background,omitempty"` // 群背景 url;**有 presence**:不传=不动,传空串=清空
-	// 改群类型:group-private / group-public / group-open 之间互换。不传=不动。仅群主。单聊群不能改。
+	// 改群类型:group-private / group-public / group-open 之间互换。不传=不动。
+	// **群主与管理员都可以**(与改名字/头像/背景同一档权限,见上面的权限矩阵)。单聊群不能改。
 	Type          *string `protobuf:"bytes,7,opt,name=type,proto3,oneof" json:"type,omitempty"` // 新号:5/6 原是 private/findable(bool),复用会让老客户端的请求解不开
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
