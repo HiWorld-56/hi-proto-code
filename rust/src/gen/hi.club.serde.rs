@@ -835,6 +835,476 @@ impl<'de> serde::Deserialize<'de> for ApplyResp {
         deserializer.deserialize_struct("hi.club.ApplyResp", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for BinanceSendReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.code.is_some() {
+            len += 1;
+        }
+        if self.dark.is_some() {
+            len += 1;
+        }
+        if self.ttl_ms.is_some() {
+            len += 1;
+        }
+        if self.op.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.BinanceSendReq", len)?;
+        if let Some(v) = self.code.as_ref() {
+            struct_ser.serialize_field("code", v)?;
+        }
+        if let Some(v) = self.dark.as_ref() {
+            struct_ser.serialize_field("dark", v)?;
+        }
+        if let Some(v) = self.ttl_ms.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("ttlMs", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.op.as_ref() {
+            match v {
+                binance_send_req::Op::SpotNewOrder(v) => {
+                    struct_ser.serialize_field("spotNewOrder", v)?;
+                }
+                binance_send_req::Op::SpotCancelOrder(v) => {
+                    struct_ser.serialize_field("spotCancelOrder", v)?;
+                }
+                binance_send_req::Op::SpotCancelAllOpenOrders(v) => {
+                    struct_ser.serialize_field("spotCancelAllOpenOrders", v)?;
+                }
+                binance_send_req::Op::SpotGetOpenOrders(v) => {
+                    struct_ser.serialize_field("spotGetOpenOrders", v)?;
+                }
+                binance_send_req::Op::SpotAccountInformation(v) => {
+                    struct_ser.serialize_field("spotAccountInformation", v)?;
+                }
+                binance_send_req::Op::SpotGetOrder(v) => {
+                    struct_ser.serialize_field("spotGetOrder", v)?;
+                }
+                binance_send_req::Op::SpotGetOpenOrderLists(v) => {
+                    struct_ser.serialize_field("spotGetOpenOrderLists", v)?;
+                }
+                binance_send_req::Op::SpotTicker24h(v) => {
+                    struct_ser.serialize_field("spotTicker24h", v)?;
+                }
+                binance_send_req::Op::UsdsFuturesNewOrder(v) => {
+                    struct_ser.serialize_field("usdsFuturesNewOrder", v)?;
+                }
+                binance_send_req::Op::UsdsFuturesCancelOrder(v) => {
+                    struct_ser.serialize_field("usdsFuturesCancelOrder", v)?;
+                }
+                binance_send_req::Op::UsdsFuturesCancelAllOpenOrders(v) => {
+                    struct_ser.serialize_field("usdsFuturesCancelAllOpenOrders", v)?;
+                }
+                binance_send_req::Op::UsdsFuturesChangeInitialLeverage(v) => {
+                    struct_ser.serialize_field("usdsFuturesChangeInitialLeverage", v)?;
+                }
+                binance_send_req::Op::UsdsFuturesPositionInformationV3(v) => {
+                    struct_ser.serialize_field("usdsFuturesPositionInformationV3", v)?;
+                }
+                binance_send_req::Op::UsdsFuturesAccountInformationV3(v) => {
+                    struct_ser.serialize_field("usdsFuturesAccountInformationV3", v)?;
+                }
+                binance_send_req::Op::UsdsFuturesCurrentAllOpenOrders(v) => {
+                    struct_ser.serialize_field("usdsFuturesCurrentAllOpenOrders", v)?;
+                }
+                binance_send_req::Op::UsdsFuturesOpenAlgoOrders(v) => {
+                    struct_ser.serialize_field("usdsFuturesOpenAlgoOrders", v)?;
+                }
+                binance_send_req::Op::UsdsFuturesIncome(v) => {
+                    struct_ser.serialize_field("usdsFuturesIncome", v)?;
+                }
+            }
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for BinanceSendReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "code",
+            "dark",
+            "ttl_ms",
+            "ttlMs",
+            "spot_new_order",
+            "spotNewOrder",
+            "spot_cancel_order",
+            "spotCancelOrder",
+            "spot_cancel_all_open_orders",
+            "spotCancelAllOpenOrders",
+            "spot_get_open_orders",
+            "spotGetOpenOrders",
+            "spot_account_information",
+            "spotAccountInformation",
+            "spot_get_order",
+            "spotGetOrder",
+            "spot_get_open_order_lists",
+            "spotGetOpenOrderLists",
+            "spot_ticker_24h",
+            "spotTicker24h",
+            "usds_futures_new_order",
+            "usdsFuturesNewOrder",
+            "usds_futures_cancel_order",
+            "usdsFuturesCancelOrder",
+            "usds_futures_cancel_all_open_orders",
+            "usdsFuturesCancelAllOpenOrders",
+            "usds_futures_change_initial_leverage",
+            "usdsFuturesChangeInitialLeverage",
+            "usds_futures_position_information_v3",
+            "usdsFuturesPositionInformationV3",
+            "usds_futures_account_information_v3",
+            "usdsFuturesAccountInformationV3",
+            "usds_futures_current_all_open_orders",
+            "usdsFuturesCurrentAllOpenOrders",
+            "usds_futures_open_algo_orders",
+            "usdsFuturesOpenAlgoOrders",
+            "usds_futures_income",
+            "usdsFuturesIncome",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Code,
+            Dark,
+            TtlMs,
+            SpotNewOrder,
+            SpotCancelOrder,
+            SpotCancelAllOpenOrders,
+            SpotGetOpenOrders,
+            SpotAccountInformation,
+            SpotGetOrder,
+            SpotGetOpenOrderLists,
+            SpotTicker24h,
+            UsdsFuturesNewOrder,
+            UsdsFuturesCancelOrder,
+            UsdsFuturesCancelAllOpenOrders,
+            UsdsFuturesChangeInitialLeverage,
+            UsdsFuturesPositionInformationV3,
+            UsdsFuturesAccountInformationV3,
+            UsdsFuturesCurrentAllOpenOrders,
+            UsdsFuturesOpenAlgoOrders,
+            UsdsFuturesIncome,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "code" => Ok(GeneratedField::Code),
+                            "dark" => Ok(GeneratedField::Dark),
+                            "ttlMs" | "ttl_ms" => Ok(GeneratedField::TtlMs),
+                            "spotNewOrder" | "spot_new_order" => Ok(GeneratedField::SpotNewOrder),
+                            "spotCancelOrder" | "spot_cancel_order" => Ok(GeneratedField::SpotCancelOrder),
+                            "spotCancelAllOpenOrders" | "spot_cancel_all_open_orders" => Ok(GeneratedField::SpotCancelAllOpenOrders),
+                            "spotGetOpenOrders" | "spot_get_open_orders" => Ok(GeneratedField::SpotGetOpenOrders),
+                            "spotAccountInformation" | "spot_account_information" => Ok(GeneratedField::SpotAccountInformation),
+                            "spotGetOrder" | "spot_get_order" => Ok(GeneratedField::SpotGetOrder),
+                            "spotGetOpenOrderLists" | "spot_get_open_order_lists" => Ok(GeneratedField::SpotGetOpenOrderLists),
+                            "spotTicker24h" | "spot_ticker_24h" => Ok(GeneratedField::SpotTicker24h),
+                            "usdsFuturesNewOrder" | "usds_futures_new_order" => Ok(GeneratedField::UsdsFuturesNewOrder),
+                            "usdsFuturesCancelOrder" | "usds_futures_cancel_order" => Ok(GeneratedField::UsdsFuturesCancelOrder),
+                            "usdsFuturesCancelAllOpenOrders" | "usds_futures_cancel_all_open_orders" => Ok(GeneratedField::UsdsFuturesCancelAllOpenOrders),
+                            "usdsFuturesChangeInitialLeverage" | "usds_futures_change_initial_leverage" => Ok(GeneratedField::UsdsFuturesChangeInitialLeverage),
+                            "usdsFuturesPositionInformationV3" | "usds_futures_position_information_v3" => Ok(GeneratedField::UsdsFuturesPositionInformationV3),
+                            "usdsFuturesAccountInformationV3" | "usds_futures_account_information_v3" => Ok(GeneratedField::UsdsFuturesAccountInformationV3),
+                            "usdsFuturesCurrentAllOpenOrders" | "usds_futures_current_all_open_orders" => Ok(GeneratedField::UsdsFuturesCurrentAllOpenOrders),
+                            "usdsFuturesOpenAlgoOrders" | "usds_futures_open_algo_orders" => Ok(GeneratedField::UsdsFuturesOpenAlgoOrders),
+                            "usdsFuturesIncome" | "usds_futures_income" => Ok(GeneratedField::UsdsFuturesIncome),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = BinanceSendReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.BinanceSendReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<BinanceSendReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut code__ = None;
+                let mut dark__ = None;
+                let mut ttl_ms__ = None;
+                let mut op__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Code => {
+                            if code__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("code"));
+                            }
+                            code__ = map_.next_value()?;
+                        }
+                        GeneratedField::Dark => {
+                            if dark__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("dark"));
+                            }
+                            dark__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::TtlMs => {
+                            if ttl_ms__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("ttlMs"));
+                            }
+                            ttl_ms__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::SpotNewOrder => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("spotNewOrder"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_send_req::Op::SpotNewOrder)
+;
+                        }
+                        GeneratedField::SpotCancelOrder => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("spotCancelOrder"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_send_req::Op::SpotCancelOrder)
+;
+                        }
+                        GeneratedField::SpotCancelAllOpenOrders => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("spotCancelAllOpenOrders"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_send_req::Op::SpotCancelAllOpenOrders)
+;
+                        }
+                        GeneratedField::SpotGetOpenOrders => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("spotGetOpenOrders"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_send_req::Op::SpotGetOpenOrders)
+;
+                        }
+                        GeneratedField::SpotAccountInformation => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("spotAccountInformation"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_send_req::Op::SpotAccountInformation)
+;
+                        }
+                        GeneratedField::SpotGetOrder => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("spotGetOrder"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_send_req::Op::SpotGetOrder)
+;
+                        }
+                        GeneratedField::SpotGetOpenOrderLists => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("spotGetOpenOrderLists"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_send_req::Op::SpotGetOpenOrderLists)
+;
+                        }
+                        GeneratedField::SpotTicker24h => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("spotTicker24h"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_send_req::Op::SpotTicker24h)
+;
+                        }
+                        GeneratedField::UsdsFuturesNewOrder => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("usdsFuturesNewOrder"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_send_req::Op::UsdsFuturesNewOrder)
+;
+                        }
+                        GeneratedField::UsdsFuturesCancelOrder => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("usdsFuturesCancelOrder"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_send_req::Op::UsdsFuturesCancelOrder)
+;
+                        }
+                        GeneratedField::UsdsFuturesCancelAllOpenOrders => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("usdsFuturesCancelAllOpenOrders"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_send_req::Op::UsdsFuturesCancelAllOpenOrders)
+;
+                        }
+                        GeneratedField::UsdsFuturesChangeInitialLeverage => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("usdsFuturesChangeInitialLeverage"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_send_req::Op::UsdsFuturesChangeInitialLeverage)
+;
+                        }
+                        GeneratedField::UsdsFuturesPositionInformationV3 => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("usdsFuturesPositionInformationV3"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_send_req::Op::UsdsFuturesPositionInformationV3)
+;
+                        }
+                        GeneratedField::UsdsFuturesAccountInformationV3 => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("usdsFuturesAccountInformationV3"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_send_req::Op::UsdsFuturesAccountInformationV3)
+;
+                        }
+                        GeneratedField::UsdsFuturesCurrentAllOpenOrders => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("usdsFuturesCurrentAllOpenOrders"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_send_req::Op::UsdsFuturesCurrentAllOpenOrders)
+;
+                        }
+                        GeneratedField::UsdsFuturesOpenAlgoOrders => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("usdsFuturesOpenAlgoOrders"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_send_req::Op::UsdsFuturesOpenAlgoOrders)
+;
+                        }
+                        GeneratedField::UsdsFuturesIncome => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("usdsFuturesIncome"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_send_req::Op::UsdsFuturesIncome)
+;
+                        }
+                    }
+                }
+                Ok(BinanceSendReq {
+                    code: code__,
+                    dark: dark__,
+                    ttl_ms: ttl_ms__,
+                    op: op__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.BinanceSendReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for BinanceSendResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.uuid.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.BinanceSendResp", len)?;
+        if let Some(v) = self.uuid.as_ref() {
+            struct_ser.serialize_field("uuid", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for BinanceSendResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "uuid",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Uuid,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "uuid" => Ok(GeneratedField::Uuid),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = BinanceSendResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.BinanceSendResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<BinanceSendResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut uuid__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Uuid => {
+                            if uuid__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("uuid"));
+                            }
+                            uuid__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(BinanceSendResp {
+                    uuid: uuid__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.BinanceSendResp", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for BindStatusReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>

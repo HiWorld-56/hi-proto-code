@@ -1898,6 +1898,229 @@ pub mod source_client {
         }
     }
 }
+/// 给机器人下一条**币安指令**。
+///
+/// ## 通知一律由后端发
+///
+/// 端上**不再直接往 MQTT 发通知**:broker 的 fromguard 拦掉设备账号发出的**全部**通知
+/// (2026-09-24 定)。理由:通知类型表里除了币安指令,**全部**是"某件事发生了"的系统通知
+/// (`robot-bind` / `group-kick` / `group-dissolve` / `plugin-grant-expiring` …),收方按类型
+/// 直接动状态 —— 换主人、标群只读、付续费。broker 只核得了 `from` 是不是本人,核不了
+/// "这类通知该不该由你发",于是任何一个好友 / 群成员都能冒充后端。
+/// 判据归后端:端上把**要做什么**交给这里,由后端核权限、核参数,再以后端身份发出通知。
+///
+/// 发出去的通知与原来一字不差(收方 brain 不用改):
+/// type = "binance"、ex_type = 操作名、extra = Any{对应的 hi.binance.\*}、
+/// from = 调用者、status = "processed"、expiration = 现在 + ttl。
+/// 形状与各字段的口径见 hi/binance/binance.proto。
+///
+/// ## 发到哪
+///
+/// `code` 是会话号:**群号**或**单聊群号**(单聊群号由两个 did 算出,见各端 `single_group_code`)。
+/// 发进群 = 群里所有认这个代理的机器人一起做;发单聊 = 只有对方那一台做。
+/// 调用者必须是这个会话的成员 —— 不是就 NotFound(不替人确认这个会话在不在)。
+///
+/// ## 操作名不单独传
+///
+/// 操作由 `op` 选中的是哪一个决定,后端据此填 `ex_type`。**不再让调用方同时给
+/// 操作名和载荷** —— 那是同一件事存两份,原来就得靠端上自己保证两者对得上。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceSendReq {
+    /// 会话号:群号 / 单聊群号
+    #[prost(string, optional, tag = "1")]
+    pub code: ::core::option::Option<::prost::alloc::string::String>,
+    /// 暗语等级;不传 = 0 = 明。机器人回结果时沿用它
+    #[prost(uint32, optional, tag = "2")]
+    pub dark: ::core::option::Option<u32>,
+    /// 这条指令的有效期(毫秒),过期机器人不执行。不传 = 60 秒;上限 10 分钟。
+    #[prost(int64, optional, tag = "3")]
+    pub ttl_ms: ::core::option::Option<i64>,
+    #[prost(
+        oneof = "binance_send_req::Op",
+        tags = "10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 28"
+    )]
+    pub op: ::core::option::Option<binance_send_req::Op>,
+}
+/// Nested message and enum types in `BinanceSendReq`.
+pub mod binance_send_req {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Op {
+        /// spot.new_order
+        #[prost(message, tag = "10")]
+        SpotNewOrder(super::super::binance::BinanceSpotNewOrder),
+        /// spot.cancel_order
+        #[prost(message, tag = "11")]
+        SpotCancelOrder(super::super::binance::BinanceSpotCancelOrder),
+        /// spot.cancel_all_open_orders
+        #[prost(message, tag = "12")]
+        SpotCancelAllOpenOrders(super::super::binance::BinanceSpotCancelAllOrders),
+        /// spot.get_open_orders
+        #[prost(message, tag = "13")]
+        SpotGetOpenOrders(super::super::binance::BinanceSpotOpenOrders),
+        /// spot.account_information
+        #[prost(message, tag = "14")]
+        SpotAccountInformation(super::super::binance::BinanceSpotAccount),
+        /// spot.get_order
+        #[prost(message, tag = "15")]
+        SpotGetOrder(super::super::binance::BinanceSpotGetOrder),
+        /// spot.get_open_order_lists
+        #[prost(message, tag = "16")]
+        SpotGetOpenOrderLists(super::super::binance::BinanceSpotOpenOrderLists),
+        /// spot.ticker_24h
+        #[prost(message, tag = "17")]
+        SpotTicker24h(super::super::binance::BinanceSpotTicker24h),
+        /// usds_futures.new_order
+        #[prost(message, tag = "20")]
+        UsdsFuturesNewOrder(super::super::binance::BinanceFuturesNewOrder),
+        /// usds_futures.cancel_order
+        #[prost(message, tag = "21")]
+        UsdsFuturesCancelOrder(super::super::binance::BinanceFuturesCancelOrder),
+        /// usds_futures.cancel_all_open_orders
+        #[prost(message, tag = "22")]
+        UsdsFuturesCancelAllOpenOrders(
+            super::super::binance::BinanceFuturesCancelAllOrders,
+        ),
+        /// usds_futures.change_initial_leverage
+        #[prost(message, tag = "23")]
+        UsdsFuturesChangeInitialLeverage(super::super::binance::BinanceFuturesLeverage),
+        /// usds_futures.position_information_v3
+        #[prost(message, tag = "24")]
+        UsdsFuturesPositionInformationV3(super::super::binance::BinanceFuturesPositions),
+        /// usds_futures.account_information_v3
+        #[prost(message, tag = "25")]
+        UsdsFuturesAccountInformationV3(super::super::binance::BinanceFuturesAccount),
+        /// usds_futures.current_all_open_orders
+        #[prost(message, tag = "26")]
+        UsdsFuturesCurrentAllOpenOrders(super::super::binance::BinanceFuturesOpenOrders),
+        /// usds_futures.open_algo_orders
+        #[prost(message, tag = "27")]
+        UsdsFuturesOpenAlgoOrders(super::super::binance::BinanceFuturesOpenAlgoOrders),
+        /// usds_futures.income
+        #[prost(message, tag = "28")]
+        UsdsFuturesIncome(super::super::binance::BinanceFuturesIncome),
+    }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceSendResp {
+    /// 这条指令(通知)的 uuid。机器人回的结果里 `BinanceResult.request` 就是它 —— 按它配对。
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// Generated client implementations.
+pub mod binance_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    #[derive(Debug, Clone)]
+    pub struct BinanceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl BinanceClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> BinanceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> BinanceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            BinanceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// 下一条币安指令:核权限与参数后,**由后端**以调用者的身份发出 `binance` 通知。
+        pub async fn send(
+            &mut self,
+            request: impl tonic::IntoRequest<super::BinanceSendReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::BinanceSendResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Binance/Send");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Binance", "Send"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
 /// Generated client implementations.
 pub mod speech_client {
     #![allow(
