@@ -40,7 +40,7 @@ const (
 //	type = "binance"、ex_type = 操作名、extra = Any{对应的 hi.binance.*}、
 //	from = 调用者、status = "processed"、expiration = 现在 + ttl。
 //
-// 形状与各字段的口径见 hi/binance/binance.proto。
+// 形状与各字段的口径见 hi/binance/binance.proto(美股见 hi/binance/stocks.proto)。
 //
 // ## 发到哪
 //
@@ -77,6 +77,16 @@ type BinanceSendReq struct {
 	//	*BinanceSendReq_UsdsFuturesCurrentAllOpenOrders
 	//	*BinanceSendReq_UsdsFuturesOpenAlgoOrders
 	//	*BinanceSendReq_UsdsFuturesIncome
+	//	*BinanceSendReq_StocksPlaceEquityOrder
+	//	*BinanceSendReq_StocksCancelEquityOrder
+	//	*BinanceSendReq_StocksCancelAllEquityOrders
+	//	*BinanceSendReq_StocksCurrentOpenOrders
+	//	*BinanceSendReq_StocksEquityOrderDetail
+	//	*BinanceSendReq_StocksEquityOrderHistory
+	//	*BinanceSendReq_StocksEquityTradeHistory
+	//	*BinanceSendReq_StocksExchangeInfo
+	//	*BinanceSendReq_StocksLatestQuote
+	//	*BinanceSendReq_WalletQueryUserWalletBalance
 	Op            isBinanceSendReq_Op `protobuf_oneof:"op"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -293,6 +303,96 @@ func (x *BinanceSendReq) GetUsdsFuturesIncome() *binance.BinanceFuturesIncome {
 	return nil
 }
 
+func (x *BinanceSendReq) GetStocksPlaceEquityOrder() *binance.BinanceStockNewOrder {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceSendReq_StocksPlaceEquityOrder); ok {
+			return x.StocksPlaceEquityOrder
+		}
+	}
+	return nil
+}
+
+func (x *BinanceSendReq) GetStocksCancelEquityOrder() *binance.BinanceStockCancelOrder {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceSendReq_StocksCancelEquityOrder); ok {
+			return x.StocksCancelEquityOrder
+		}
+	}
+	return nil
+}
+
+func (x *BinanceSendReq) GetStocksCancelAllEquityOrders() *binance.BinanceStockCancelAllOrders {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceSendReq_StocksCancelAllEquityOrders); ok {
+			return x.StocksCancelAllEquityOrders
+		}
+	}
+	return nil
+}
+
+func (x *BinanceSendReq) GetStocksCurrentOpenOrders() *binance.BinanceStockOpenOrders {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceSendReq_StocksCurrentOpenOrders); ok {
+			return x.StocksCurrentOpenOrders
+		}
+	}
+	return nil
+}
+
+func (x *BinanceSendReq) GetStocksEquityOrderDetail() *binance.BinanceStockGetOrder {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceSendReq_StocksEquityOrderDetail); ok {
+			return x.StocksEquityOrderDetail
+		}
+	}
+	return nil
+}
+
+func (x *BinanceSendReq) GetStocksEquityOrderHistory() *binance.BinanceStockOrderHistory {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceSendReq_StocksEquityOrderHistory); ok {
+			return x.StocksEquityOrderHistory
+		}
+	}
+	return nil
+}
+
+func (x *BinanceSendReq) GetStocksEquityTradeHistory() *binance.BinanceStockTradeHistory {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceSendReq_StocksEquityTradeHistory); ok {
+			return x.StocksEquityTradeHistory
+		}
+	}
+	return nil
+}
+
+func (x *BinanceSendReq) GetStocksExchangeInfo() *binance.BinanceStockExchangeInfo {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceSendReq_StocksExchangeInfo); ok {
+			return x.StocksExchangeInfo
+		}
+	}
+	return nil
+}
+
+func (x *BinanceSendReq) GetStocksLatestQuote() *binance.BinanceStockQuote {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceSendReq_StocksLatestQuote); ok {
+			return x.StocksLatestQuote
+		}
+	}
+	return nil
+}
+
+func (x *BinanceSendReq) GetWalletQueryUserWalletBalance() *binance.BinanceWalletBalance {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceSendReq_WalletQueryUserWalletBalance); ok {
+			return x.WalletQueryUserWalletBalance
+		}
+	}
+	return nil
+}
+
 type isBinanceSendReq_Op interface {
 	isBinanceSendReq_Op()
 }
@@ -365,6 +465,46 @@ type BinanceSendReq_UsdsFuturesIncome struct {
 	UsdsFuturesIncome *binance.BinanceFuturesIncome `protobuf:"bytes,28,opt,name=usds_futures_income,json=usdsFuturesIncome,proto3,oneof"` // usds_futures.income
 }
 
+type BinanceSendReq_StocksPlaceEquityOrder struct {
+	StocksPlaceEquityOrder *binance.BinanceStockNewOrder `protobuf:"bytes,30,opt,name=stocks_place_equity_order,json=stocksPlaceEquityOrder,proto3,oneof"` // stocks.place_equity_order
+}
+
+type BinanceSendReq_StocksCancelEquityOrder struct {
+	StocksCancelEquityOrder *binance.BinanceStockCancelOrder `protobuf:"bytes,31,opt,name=stocks_cancel_equity_order,json=stocksCancelEquityOrder,proto3,oneof"` // stocks.cancel_equity_order
+}
+
+type BinanceSendReq_StocksCancelAllEquityOrders struct {
+	StocksCancelAllEquityOrders *binance.BinanceStockCancelAllOrders `protobuf:"bytes,32,opt,name=stocks_cancel_all_equity_orders,json=stocksCancelAllEquityOrders,proto3,oneof"` // stocks.cancel_all_equity_orders
+}
+
+type BinanceSendReq_StocksCurrentOpenOrders struct {
+	StocksCurrentOpenOrders *binance.BinanceStockOpenOrders `protobuf:"bytes,33,opt,name=stocks_current_open_orders,json=stocksCurrentOpenOrders,proto3,oneof"` // stocks.current_open_orders
+}
+
+type BinanceSendReq_StocksEquityOrderDetail struct {
+	StocksEquityOrderDetail *binance.BinanceStockGetOrder `protobuf:"bytes,34,opt,name=stocks_equity_order_detail,json=stocksEquityOrderDetail,proto3,oneof"` // stocks.equity_order_detail
+}
+
+type BinanceSendReq_StocksEquityOrderHistory struct {
+	StocksEquityOrderHistory *binance.BinanceStockOrderHistory `protobuf:"bytes,35,opt,name=stocks_equity_order_history,json=stocksEquityOrderHistory,proto3,oneof"` // stocks.equity_order_history
+}
+
+type BinanceSendReq_StocksEquityTradeHistory struct {
+	StocksEquityTradeHistory *binance.BinanceStockTradeHistory `protobuf:"bytes,36,opt,name=stocks_equity_trade_history,json=stocksEquityTradeHistory,proto3,oneof"` // stocks.equity_trade_history
+}
+
+type BinanceSendReq_StocksExchangeInfo struct {
+	StocksExchangeInfo *binance.BinanceStockExchangeInfo `protobuf:"bytes,37,opt,name=stocks_exchange_info,json=stocksExchangeInfo,proto3,oneof"` // stocks.exchange_info
+}
+
+type BinanceSendReq_StocksLatestQuote struct {
+	StocksLatestQuote *binance.BinanceStockQuote `protobuf:"bytes,38,opt,name=stocks_latest_quote,json=stocksLatestQuote,proto3,oneof"` // stocks.latest_quote
+}
+
+type BinanceSendReq_WalletQueryUserWalletBalance struct {
+	WalletQueryUserWalletBalance *binance.BinanceWalletBalance `protobuf:"bytes,40,opt,name=wallet_query_user_wallet_balance,json=walletQueryUserWalletBalance,proto3,oneof"` // wallet.query_user_wallet_balance
+}
+
 func (*BinanceSendReq_SpotNewOrder) isBinanceSendReq_Op() {}
 
 func (*BinanceSendReq_SpotCancelOrder) isBinanceSendReq_Op() {}
@@ -398,6 +538,26 @@ func (*BinanceSendReq_UsdsFuturesCurrentAllOpenOrders) isBinanceSendReq_Op() {}
 func (*BinanceSendReq_UsdsFuturesOpenAlgoOrders) isBinanceSendReq_Op() {}
 
 func (*BinanceSendReq_UsdsFuturesIncome) isBinanceSendReq_Op() {}
+
+func (*BinanceSendReq_StocksPlaceEquityOrder) isBinanceSendReq_Op() {}
+
+func (*BinanceSendReq_StocksCancelEquityOrder) isBinanceSendReq_Op() {}
+
+func (*BinanceSendReq_StocksCancelAllEquityOrders) isBinanceSendReq_Op() {}
+
+func (*BinanceSendReq_StocksCurrentOpenOrders) isBinanceSendReq_Op() {}
+
+func (*BinanceSendReq_StocksEquityOrderDetail) isBinanceSendReq_Op() {}
+
+func (*BinanceSendReq_StocksEquityOrderHistory) isBinanceSendReq_Op() {}
+
+func (*BinanceSendReq_StocksEquityTradeHistory) isBinanceSendReq_Op() {}
+
+func (*BinanceSendReq_StocksExchangeInfo) isBinanceSendReq_Op() {}
+
+func (*BinanceSendReq_StocksLatestQuote) isBinanceSendReq_Op() {}
+
+func (*BinanceSendReq_WalletQueryUserWalletBalance) isBinanceSendReq_Op() {}
 
 type BinanceSendResp struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -448,7 +608,7 @@ var File_hi_club_binance_proto protoreflect.FileDescriptor
 
 const file_hi_club_binance_proto_rawDesc = "" +
 	"\n" +
-	"\x15hi/club/binance.proto\x12\ahi.club\x1a\x1bbuf/validate/validate.proto\x1a\x18hi/binance/binance.proto\x1a\x10hi/options.proto\"\x9c\x0e\n" +
+	"\x15hi/club/binance.proto\x12\ahi.club\x1a\x1bbuf/validate/validate.proto\x1a\x18hi/binance/binance.proto\x1a\x17hi/binance/stocks.proto\x1a\x10hi/options.proto\"\xf9\x15\n" +
 	"\x0eBinanceSendReq\x12\x1f\n" +
 	"\x04code\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01H\x01R\x04code\x88\x01\x01\x12\x17\n" +
 	"\x04dark\x18\x02 \x01(\rH\x02R\x04dark\x88\x01\x01\x12'\n" +
@@ -470,7 +630,17 @@ const file_hi_club_binance_proto_rawDesc = "" +
 	"#usds_futures_account_information_v3\x18\x19 \x01(\v2!.hi.binance.BinanceFuturesAccountH\x00R\x1fusdsFuturesAccountInformationV3\x12u\n" +
 	"$usds_futures_current_all_open_orders\x18\x1a \x01(\v2$.hi.binance.BinanceFuturesOpenOrdersH\x00R\x1fusdsFuturesCurrentAllOpenOrders\x12l\n" +
 	"\x1dusds_futures_open_algo_orders\x18\x1b \x01(\v2(.hi.binance.BinanceFuturesOpenAlgoOrdersH\x00R\x19usdsFuturesOpenAlgoOrders\x12R\n" +
-	"\x13usds_futures_income\x18\x1c \x01(\v2 .hi.binance.BinanceFuturesIncomeH\x00R\x11usdsFuturesIncomeB\v\n" +
+	"\x13usds_futures_income\x18\x1c \x01(\v2 .hi.binance.BinanceFuturesIncomeH\x00R\x11usdsFuturesIncome\x12]\n" +
+	"\x19stocks_place_equity_order\x18\x1e \x01(\v2 .hi.binance.BinanceStockNewOrderH\x00R\x16stocksPlaceEquityOrder\x12b\n" +
+	"\x1astocks_cancel_equity_order\x18\x1f \x01(\v2#.hi.binance.BinanceStockCancelOrderH\x00R\x17stocksCancelEquityOrder\x12o\n" +
+	"\x1fstocks_cancel_all_equity_orders\x18  \x01(\v2'.hi.binance.BinanceStockCancelAllOrdersH\x00R\x1bstocksCancelAllEquityOrders\x12a\n" +
+	"\x1astocks_current_open_orders\x18! \x01(\v2\".hi.binance.BinanceStockOpenOrdersH\x00R\x17stocksCurrentOpenOrders\x12_\n" +
+	"\x1astocks_equity_order_detail\x18\" \x01(\v2 .hi.binance.BinanceStockGetOrderH\x00R\x17stocksEquityOrderDetail\x12e\n" +
+	"\x1bstocks_equity_order_history\x18# \x01(\v2$.hi.binance.BinanceStockOrderHistoryH\x00R\x18stocksEquityOrderHistory\x12e\n" +
+	"\x1bstocks_equity_trade_history\x18$ \x01(\v2$.hi.binance.BinanceStockTradeHistoryH\x00R\x18stocksEquityTradeHistory\x12X\n" +
+	"\x14stocks_exchange_info\x18% \x01(\v2$.hi.binance.BinanceStockExchangeInfoH\x00R\x12stocksExchangeInfo\x12O\n" +
+	"\x13stocks_latest_quote\x18& \x01(\v2\x1d.hi.binance.BinanceStockQuoteH\x00R\x11stocksLatestQuote\x12j\n" +
+	" wallet_query_user_wallet_balance\x18( \x01(\v2 .hi.binance.BinanceWalletBalanceH\x00R\x1cwalletQueryUserWalletBalanceB\v\n" +
 	"\x02op\x12\x05\xbaH\x02\b\x01B\a\n" +
 	"\x05_codeB\a\n" +
 	"\x05_darkB\t\n" +
@@ -515,6 +685,16 @@ var file_hi_club_binance_proto_goTypes = []any{
 	(*binance.BinanceFuturesOpenOrders)(nil),      // 16: hi.binance.BinanceFuturesOpenOrders
 	(*binance.BinanceFuturesOpenAlgoOrders)(nil),  // 17: hi.binance.BinanceFuturesOpenAlgoOrders
 	(*binance.BinanceFuturesIncome)(nil),          // 18: hi.binance.BinanceFuturesIncome
+	(*binance.BinanceStockNewOrder)(nil),          // 19: hi.binance.BinanceStockNewOrder
+	(*binance.BinanceStockCancelOrder)(nil),       // 20: hi.binance.BinanceStockCancelOrder
+	(*binance.BinanceStockCancelAllOrders)(nil),   // 21: hi.binance.BinanceStockCancelAllOrders
+	(*binance.BinanceStockOpenOrders)(nil),        // 22: hi.binance.BinanceStockOpenOrders
+	(*binance.BinanceStockGetOrder)(nil),          // 23: hi.binance.BinanceStockGetOrder
+	(*binance.BinanceStockOrderHistory)(nil),      // 24: hi.binance.BinanceStockOrderHistory
+	(*binance.BinanceStockTradeHistory)(nil),      // 25: hi.binance.BinanceStockTradeHistory
+	(*binance.BinanceStockExchangeInfo)(nil),      // 26: hi.binance.BinanceStockExchangeInfo
+	(*binance.BinanceStockQuote)(nil),             // 27: hi.binance.BinanceStockQuote
+	(*binance.BinanceWalletBalance)(nil),          // 28: hi.binance.BinanceWalletBalance
 }
 var file_hi_club_binance_proto_depIdxs = []int32{
 	2,  // 0: hi.club.BinanceSendReq.spot_new_order:type_name -> hi.binance.BinanceSpotNewOrder
@@ -534,13 +714,23 @@ var file_hi_club_binance_proto_depIdxs = []int32{
 	16, // 14: hi.club.BinanceSendReq.usds_futures_current_all_open_orders:type_name -> hi.binance.BinanceFuturesOpenOrders
 	17, // 15: hi.club.BinanceSendReq.usds_futures_open_algo_orders:type_name -> hi.binance.BinanceFuturesOpenAlgoOrders
 	18, // 16: hi.club.BinanceSendReq.usds_futures_income:type_name -> hi.binance.BinanceFuturesIncome
-	0,  // 17: hi.club.Binance.Send:input_type -> hi.club.BinanceSendReq
-	1,  // 18: hi.club.Binance.Send:output_type -> hi.club.BinanceSendResp
-	18, // [18:19] is the sub-list for method output_type
-	17, // [17:18] is the sub-list for method input_type
-	17, // [17:17] is the sub-list for extension type_name
-	17, // [17:17] is the sub-list for extension extendee
-	0,  // [0:17] is the sub-list for field type_name
+	19, // 17: hi.club.BinanceSendReq.stocks_place_equity_order:type_name -> hi.binance.BinanceStockNewOrder
+	20, // 18: hi.club.BinanceSendReq.stocks_cancel_equity_order:type_name -> hi.binance.BinanceStockCancelOrder
+	21, // 19: hi.club.BinanceSendReq.stocks_cancel_all_equity_orders:type_name -> hi.binance.BinanceStockCancelAllOrders
+	22, // 20: hi.club.BinanceSendReq.stocks_current_open_orders:type_name -> hi.binance.BinanceStockOpenOrders
+	23, // 21: hi.club.BinanceSendReq.stocks_equity_order_detail:type_name -> hi.binance.BinanceStockGetOrder
+	24, // 22: hi.club.BinanceSendReq.stocks_equity_order_history:type_name -> hi.binance.BinanceStockOrderHistory
+	25, // 23: hi.club.BinanceSendReq.stocks_equity_trade_history:type_name -> hi.binance.BinanceStockTradeHistory
+	26, // 24: hi.club.BinanceSendReq.stocks_exchange_info:type_name -> hi.binance.BinanceStockExchangeInfo
+	27, // 25: hi.club.BinanceSendReq.stocks_latest_quote:type_name -> hi.binance.BinanceStockQuote
+	28, // 26: hi.club.BinanceSendReq.wallet_query_user_wallet_balance:type_name -> hi.binance.BinanceWalletBalance
+	0,  // 27: hi.club.Binance.Send:input_type -> hi.club.BinanceSendReq
+	1,  // 28: hi.club.Binance.Send:output_type -> hi.club.BinanceSendResp
+	28, // [28:29] is the sub-list for method output_type
+	27, // [27:28] is the sub-list for method input_type
+	27, // [27:27] is the sub-list for extension type_name
+	27, // [27:27] is the sub-list for extension extendee
+	0,  // [0:27] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_binance_proto_init() }
@@ -566,6 +756,16 @@ func file_hi_club_binance_proto_init() {
 		(*BinanceSendReq_UsdsFuturesCurrentAllOpenOrders)(nil),
 		(*BinanceSendReq_UsdsFuturesOpenAlgoOrders)(nil),
 		(*BinanceSendReq_UsdsFuturesIncome)(nil),
+		(*BinanceSendReq_StocksPlaceEquityOrder)(nil),
+		(*BinanceSendReq_StocksCancelEquityOrder)(nil),
+		(*BinanceSendReq_StocksCancelAllEquityOrders)(nil),
+		(*BinanceSendReq_StocksCurrentOpenOrders)(nil),
+		(*BinanceSendReq_StocksEquityOrderDetail)(nil),
+		(*BinanceSendReq_StocksEquityOrderHistory)(nil),
+		(*BinanceSendReq_StocksEquityTradeHistory)(nil),
+		(*BinanceSendReq_StocksExchangeInfo)(nil),
+		(*BinanceSendReq_StocksLatestQuote)(nil),
+		(*BinanceSendReq_WalletQueryUserWalletBalance)(nil),
 	}
 	file_hi_club_binance_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}

@@ -1273,6 +1273,49 @@ class BinanceFuturesIncome extends $pb.GeneratedMessage {
   void clearLimit() => $_clearField(5);
 }
 
+/// 各钱包的余额(现货、资金、合约、理财…,每个钱包带逐币明细)。`GET /sapi/v1/asset/wallet/balance`
+///
+/// **没有参数**:明细(`needBalanceDetail=true`)由机器人一律带上 —— 不带就只有每个钱包折成 BTC 的总额,
+/// 看不出里面有什么币,而这个接口要回答的正是"钱在哪个钱包、有多少"。
+/// 美股的买入扣款与卖出回款(USDC)都在这里看,美股模块本身没有查余额的接口。
+class BinanceWalletBalance extends $pb.GeneratedMessage {
+  factory BinanceWalletBalance() => create();
+
+  BinanceWalletBalance._();
+
+  factory BinanceWalletBalance.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceWalletBalance.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceWalletBalance',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceWalletBalance clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceWalletBalance copyWith(void Function(BinanceWalletBalance) updates) =>
+      super.copyWith((message) => updates(message as BinanceWalletBalance))
+          as BinanceWalletBalance;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceWalletBalance create() => BinanceWalletBalance._();
+  @$core.override
+  BinanceWalletBalance createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceWalletBalance getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceWalletBalance>(create);
+  static BinanceWalletBalance? _defaultInstance;
+}
+
 /// 一次币安操作的结果。装在**消息**里回给下指令的人:
 /// `Content.type = "binance"`、`Content.kind = binance`。
 ///

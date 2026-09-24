@@ -1912,7 +1912,7 @@ pub mod source_client {
 /// 发出去的通知与原来一字不差(收方 brain 不用改):
 /// type = "binance"、ex_type = 操作名、extra = Any{对应的 hi.binance.\*}、
 /// from = 调用者、status = "processed"、expiration = 现在 + ttl。
-/// 形状与各字段的口径见 hi/binance/binance.proto。
+/// 形状与各字段的口径见 hi/binance/binance.proto(美股见 hi/binance/stocks.proto)。
 ///
 /// ## 发到哪
 ///
@@ -1937,7 +1937,7 @@ pub struct BinanceSendReq {
     pub ttl_ms: ::core::option::Option<i64>,
     #[prost(
         oneof = "binance_send_req::Op",
-        tags = "10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 28"
+        tags = "10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 31, 32, 33, 34, 35, 36, 37, 38, 40"
     )]
     pub op: ::core::option::Option<binance_send_req::Op>,
 }
@@ -1998,6 +1998,36 @@ pub mod binance_send_req {
         /// usds_futures.income
         #[prost(message, tag = "28")]
         UsdsFuturesIncome(super::super::binance::BinanceFuturesIncome),
+        /// stocks.place_equity_order
+        #[prost(message, tag = "30")]
+        StocksPlaceEquityOrder(super::super::binance::BinanceStockNewOrder),
+        /// stocks.cancel_equity_order
+        #[prost(message, tag = "31")]
+        StocksCancelEquityOrder(super::super::binance::BinanceStockCancelOrder),
+        /// stocks.cancel_all_equity_orders
+        #[prost(message, tag = "32")]
+        StocksCancelAllEquityOrders(super::super::binance::BinanceStockCancelAllOrders),
+        /// stocks.current_open_orders
+        #[prost(message, tag = "33")]
+        StocksCurrentOpenOrders(super::super::binance::BinanceStockOpenOrders),
+        /// stocks.equity_order_detail
+        #[prost(message, tag = "34")]
+        StocksEquityOrderDetail(super::super::binance::BinanceStockGetOrder),
+        /// stocks.equity_order_history
+        #[prost(message, tag = "35")]
+        StocksEquityOrderHistory(super::super::binance::BinanceStockOrderHistory),
+        /// stocks.equity_trade_history
+        #[prost(message, tag = "36")]
+        StocksEquityTradeHistory(super::super::binance::BinanceStockTradeHistory),
+        /// stocks.exchange_info
+        #[prost(message, tag = "37")]
+        StocksExchangeInfo(super::super::binance::BinanceStockExchangeInfo),
+        /// stocks.latest_quote
+        #[prost(message, tag = "38")]
+        StocksLatestQuote(super::super::binance::BinanceStockQuote),
+        /// wallet.query_user_wallet_balance
+        #[prost(message, tag = "40")]
+        WalletQueryUserWalletBalance(super::super::binance::BinanceWalletBalance),
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]

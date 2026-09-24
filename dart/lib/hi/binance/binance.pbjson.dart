@@ -804,6 +804,16 @@ final $typed_data.Uint8List binanceFuturesIncomeDescriptor = $convert.base64Deco
     'Cgdfc3ltYm9sQg4KDF9pbmNvbWVfdHlwZUINCgtfc3RhcnRfdGltZUILCglfZW5kX3RpbWVCCA'
     'oGX2xpbWl0');
 
+@$core.Deprecated('Use binanceWalletBalanceDescriptor instead')
+const BinanceWalletBalance$json = {
+  '1': 'BinanceWalletBalance',
+  '7': {},
+};
+
+/// Descriptor for `BinanceWalletBalance`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List binanceWalletBalanceDescriptor =
+    $convert.base64Decode('ChRCaW5hbmNlV2FsbGV0QmFsYW5jZToEmLUYAg==');
+
 @$core.Deprecated('Use binanceResultDescriptor instead')
 const BinanceResult$json = {
   '1': 'BinanceResult',

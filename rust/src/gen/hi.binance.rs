@@ -192,6 +192,13 @@ pub struct BinanceFuturesIncome {
     #[prost(int64, optional, tag = "5")]
     pub limit: ::core::option::Option<i64>,
 }
+/// 各钱包的余额(现货、资金、合约、理财…,每个钱包带逐币明细)。`GET /sapi/v1/asset/wallet/balance`
+///
+/// **没有参数**:明细(`needBalanceDetail=true`)由机器人一律带上 —— 不带就只有每个钱包折成 BTC 的总额,
+/// 看不出里面有什么币,而这个接口要回答的正是"钱在哪个钱包、有多少"。
+/// 美股的买入扣款与卖出回款(USDC)都在这里看,美股模块本身没有查余额的接口。
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceWalletBalance {}
 /// 一次币安操作的结果。装在**消息**里回给下指令的人:
 /// `Content.type = "binance"`、`Content.kind = binance`。
 ///
@@ -352,6 +359,271 @@ impl BinancePositionSide {
             "BINANCE_POSITION_SIDE_BOTH" => Some(Self::Both),
             "BINANCE_POSITION_SIDE_LONG" => Some(Self::Long),
             "BINANCE_POSITION_SIDE_SHORT" => Some(Self::Short),
+            _ => None,
+        }
+    }
+}
+/// 美股下单。
+///
+/// 三种填法(币安的规则,我们不替它判,也不替它猜):
+/// · 市价买:给 `notional`(花多少 USDC),不给 quantity / price / trading_session
+/// · 市价卖:给 `quantity`(卖多少股)
+/// · 限价(买卖都一样):给 `quantity` + `price` + `trading_session`
+///
+/// ⚠️ 最小名义是 5 USDC,但 `notional = 5` 实测被拒(`486419 below the minimum`)——
+/// 订单 ≤ 350 美元另收 0.35 美元平台费,看来是按扣费后的金额判的。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceStockNewOrder {
+    /// 股票代码,如 AAPL、BRK.B
+    #[prost(string, optional, tag = "1")]
+    pub symbol: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "BinanceOrderSide", optional, tag = "2")]
+    pub side: ::core::option::Option<i32>,
+    #[prost(enumeration = "BinanceOrderType", optional, tag = "3")]
+    pub r#type: ::core::option::Option<i32>,
+    /// 股数,可以是小数(碎股)
+    #[prost(string, optional, tag = "4")]
+    pub quantity: ::core::option::Option<::prost::alloc::string::String>,
+    /// 金额(USDC),**只用于市价买**
+    #[prost(string, optional, tag = "5")]
+    pub notional: ::core::option::Option<::prost::alloc::string::String>,
+    /// 限价,最多 2 位小数
+    #[prost(string, optional, tag = "6")]
+    pub price: ::core::option::Option<::prost::alloc::string::String>,
+    /// 不传 = DAY
+    #[prost(enumeration = "BinanceStockTimeInForce", optional, tag = "7")]
+    pub time_in_force: ::core::option::Option<i32>,
+    /// 限价必给
+    #[prost(enumeration = "BinanceStockTradingSession", optional, tag = "8")]
+    pub trading_session: ::core::option::Option<i32>,
+    /// 买入扣款的钱包;不传 = CARD
+    #[prost(enumeration = "BinanceStockWallet", optional, tag = "9")]
+    pub wallet: ::core::option::Option<i32>,
+}
+/// 美股撤单。**只收订单号** —— 币安这个接口不收 clientOrderId。
+/// 订单号来自下单的回包(`BinanceResult.body` 里的 `orderId`)或查挂单。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceStockCancelOrder {
+    #[prost(string, optional, tag = "1")]
+    pub order_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 美股撤掉**全部**挂单。**没有参数** —— 与现货/合约不同,币安这个接口不按股票撤。
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceStockCancelAllOrders {}
+/// 美股当前挂单。**没有参数**:回的是整个账户的挂单。
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceStockOpenOrders {}
+/// 查一张美股订单。`order_id` 与 `client_order_id` 给一个即可(都不给由币安报错)。
+/// `client_order_id` 就是下单那条通知的 uuid(机器人下单时填进去的)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceStockGetOrder {
+    #[prost(string, optional, tag = "1")]
+    pub order_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub client_order_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 美股历史订单。**起止时间必填**(币安的要求,不给回 `-1102`)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceStockOrderHistory {
+    /// 毫秒
+    #[prost(int64, optional, tag = "1")]
+    pub start_time: ::core::option::Option<i64>,
+    /// 毫秒
+    #[prost(int64, optional, tag = "2")]
+    pub end_time: ::core::option::Option<i64>,
+    /// 不传 = 全部
+    #[prost(string, optional, tag = "3")]
+    pub symbol: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "BinanceOrderType", optional, tag = "4")]
+    pub r#type: ::core::option::Option<i32>,
+    #[prost(enumeration = "BinanceOrderSide", optional, tag = "5")]
+    pub side: ::core::option::Option<i32>,
+    /// 空 = 不按状态筛
+    #[prost(
+        enumeration = "BinanceStockOrderStatus",
+        repeated,
+        packed = "false",
+        tag = "6"
+    )]
+    pub statuses: ::prost::alloc::vec::Vec<i32>,
+    /// 页码,从 1 起(币安叫 `current`)。不传 = 1。
+    #[prost(uint32, optional, tag = "7")]
+    pub page: ::core::option::Option<u32>,
+    /// 每页条数,不传 = 20
+    #[prost(uint32, optional, tag = "8")]
+    pub size: ::core::option::Option<u32>,
+}
+/// 美股成交记录。**起止时间必填**。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceStockTradeHistory {
+    #[prost(int64, optional, tag = "1")]
+    pub start_time: ::core::option::Option<i64>,
+    #[prost(int64, optional, tag = "2")]
+    pub end_time: ::core::option::Option<i64>,
+    #[prost(string, optional, tag = "3")]
+    pub symbol: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "BinanceOrderSide", optional, tag = "4")]
+    pub side: ::core::option::Option<i32>,
+    /// 只看这一张单的成交
+    #[prost(string, optional, tag = "5")]
+    pub order_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(uint32, optional, tag = "6")]
+    pub page: ::core::option::Option<u32>,
+    #[prost(uint32, optional, tag = "7")]
+    pub size: ::core::option::Option<u32>,
+}
+/// 一只股票的交易规则(能不能买卖、碎股、夜盘、步长、最小/最大名义)。
+///
+/// ⚠️ **`symbol` 必填。** 币安不给 symbol 时回全部 7900 多只,整份 3 MB ——
+/// 结果要装进一条消息回来,这个量不该出现在消息里。页面按股票代码逐只问。
+/// 查不到的代码币安回 200 + 空的 `symbols`,不是错误。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceStockExchangeInfo {
+    #[prost(string, optional, tag = "1")]
+    pub symbol: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 一只股票的最新买卖报价。一次只能问一只。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceStockQuote {
+    #[prost(string, optional, tag = "1")]
+    pub symbol: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 订单有效方式。**与现货/合约的 `BinanceTimeInForce` 不是一回事**(那边是 GTC/IOC/FOK),
+/// 并进那个枚举会让合约也收 DAY、到了币安才被拒。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum BinanceStockTimeInForce {
+    Unspecified = 0,
+    /// 当日有效(币安的默认)
+    Day = 1,
+    /// 撤销前有效(最长 90 天),**只限限价单**
+    Gtc = 2,
+}
+impl BinanceStockTimeInForce {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "BINANCE_STOCK_TIME_IN_FORCE_UNSPECIFIED",
+            Self::Day => "BINANCE_STOCK_TIME_IN_FORCE_DAY",
+            Self::Gtc => "BINANCE_STOCK_TIME_IN_FORCE_GTC",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "BINANCE_STOCK_TIME_IN_FORCE_UNSPECIFIED" => Some(Self::Unspecified),
+            "BINANCE_STOCK_TIME_IN_FORCE_DAY" => Some(Self::Day),
+            "BINANCE_STOCK_TIME_IN_FORCE_GTC" => Some(Self::Gtc),
+            _ => None,
+        }
+    }
+}
+/// 交易时段。**限价单必填,市价单不许填**(由币安判)。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum BinanceStockTradingSession {
+    Unspecified = 0,
+    /// 常规时段 09:30–16:00 ET
+    Rth = 1,
+    /// 含盘前盘后 04:00–20:00 ET
+    Extended = 2,
+    /// 24 小时(含夜盘)。币安写作 `24H` —— 标识符不能以数字开头
+    AllDay = 3,
+}
+impl BinanceStockTradingSession {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "BINANCE_STOCK_TRADING_SESSION_UNSPECIFIED",
+            Self::Rth => "BINANCE_STOCK_TRADING_SESSION_RTH",
+            Self::Extended => "BINANCE_STOCK_TRADING_SESSION_EXTENDED",
+            Self::AllDay => "BINANCE_STOCK_TRADING_SESSION_ALL_DAY",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "BINANCE_STOCK_TRADING_SESSION_UNSPECIFIED" => Some(Self::Unspecified),
+            "BINANCE_STOCK_TRADING_SESSION_RTH" => Some(Self::Rth),
+            "BINANCE_STOCK_TRADING_SESSION_EXTENDED" => Some(Self::Extended),
+            "BINANCE_STOCK_TRADING_SESSION_ALL_DAY" => Some(Self::AllDay),
+            _ => None,
+        }
+    }
+}
+/// 买入时从哪个钱包扣钱。**卖出一律回到 CARD**(币安的规则,不由这里选)。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum BinanceStockWallet {
+    Unspecified = 0,
+    /// 资金账户(币安的默认)
+    Card = 1,
+    /// 现货账户
+    Main = 2,
+}
+impl BinanceStockWallet {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "BINANCE_STOCK_WALLET_UNSPECIFIED",
+            Self::Card => "BINANCE_STOCK_WALLET_CARD",
+            Self::Main => "BINANCE_STOCK_WALLET_MAIN",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "BINANCE_STOCK_WALLET_UNSPECIFIED" => Some(Self::Unspecified),
+            "BINANCE_STOCK_WALLET_CARD" => Some(Self::Card),
+            "BINANCE_STOCK_WALLET_MAIN" => Some(Self::Main),
+            _ => None,
+        }
+    }
+}
+/// 订单状态(查历史时按它筛)。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum BinanceStockOrderStatus {
+    Unspecified = 0,
+    Filled = 1,
+    PartiallyFilled = 2,
+    Canceled = 3,
+    Expired = 4,
+    Rejected = 5,
+}
+impl BinanceStockOrderStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "BINANCE_STOCK_ORDER_STATUS_UNSPECIFIED",
+            Self::Filled => "BINANCE_STOCK_ORDER_STATUS_FILLED",
+            Self::PartiallyFilled => "BINANCE_STOCK_ORDER_STATUS_PARTIALLY_FILLED",
+            Self::Canceled => "BINANCE_STOCK_ORDER_STATUS_CANCELED",
+            Self::Expired => "BINANCE_STOCK_ORDER_STATUS_EXPIRED",
+            Self::Rejected => "BINANCE_STOCK_ORDER_STATUS_REJECTED",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "BINANCE_STOCK_ORDER_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
+            "BINANCE_STOCK_ORDER_STATUS_FILLED" => Some(Self::Filled),
+            "BINANCE_STOCK_ORDER_STATUS_PARTIALLY_FILLED" => Some(Self::PartiallyFilled),
+            "BINANCE_STOCK_ORDER_STATUS_CANCELED" => Some(Self::Canceled),
+            "BINANCE_STOCK_ORDER_STATUS_EXPIRED" => Some(Self::Expired),
+            "BINANCE_STOCK_ORDER_STATUS_REJECTED" => Some(Self::Rejected),
             _ => None,
         }
     }

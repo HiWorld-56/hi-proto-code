@@ -193,6 +193,96 @@ const BinanceSendReq$json = {
       '9': 0,
       '10': 'usdsFuturesIncome'
     },
+    {
+      '1': 'stocks_place_equity_order',
+      '3': 30,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceStockNewOrder',
+      '9': 0,
+      '10': 'stocksPlaceEquityOrder'
+    },
+    {
+      '1': 'stocks_cancel_equity_order',
+      '3': 31,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceStockCancelOrder',
+      '9': 0,
+      '10': 'stocksCancelEquityOrder'
+    },
+    {
+      '1': 'stocks_cancel_all_equity_orders',
+      '3': 32,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceStockCancelAllOrders',
+      '9': 0,
+      '10': 'stocksCancelAllEquityOrders'
+    },
+    {
+      '1': 'stocks_current_open_orders',
+      '3': 33,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceStockOpenOrders',
+      '9': 0,
+      '10': 'stocksCurrentOpenOrders'
+    },
+    {
+      '1': 'stocks_equity_order_detail',
+      '3': 34,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceStockGetOrder',
+      '9': 0,
+      '10': 'stocksEquityOrderDetail'
+    },
+    {
+      '1': 'stocks_equity_order_history',
+      '3': 35,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceStockOrderHistory',
+      '9': 0,
+      '10': 'stocksEquityOrderHistory'
+    },
+    {
+      '1': 'stocks_equity_trade_history',
+      '3': 36,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceStockTradeHistory',
+      '9': 0,
+      '10': 'stocksEquityTradeHistory'
+    },
+    {
+      '1': 'stocks_exchange_info',
+      '3': 37,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceStockExchangeInfo',
+      '9': 0,
+      '10': 'stocksExchangeInfo'
+    },
+    {
+      '1': 'stocks_latest_quote',
+      '3': 38,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceStockQuote',
+      '9': 0,
+      '10': 'stocksLatestQuote'
+    },
+    {
+      '1': 'wallet_query_user_wallet_balance',
+      '3': 40,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceWalletBalance',
+      '9': 0,
+      '10': 'walletQueryUserWalletBalance'
+    },
   ],
   '8': [
     {'1': 'op', '2': {}},
@@ -236,7 +326,25 @@ final $typed_data.Uint8List binanceSendReqDescriptor = $convert.base64Decode(
     '9fb3JkZXJzGBsgASgLMiguaGkuYmluYW5jZS5CaW5hbmNlRnV0dXJlc09wZW5BbGdvT3JkZXJz'
     'SABSGXVzZHNGdXR1cmVzT3BlbkFsZ29PcmRlcnMSUgoTdXNkc19mdXR1cmVzX2luY29tZRgcIA'
     'EoCzIgLmhpLmJpbmFuY2UuQmluYW5jZUZ1dHVyZXNJbmNvbWVIAFIRdXNkc0Z1dHVyZXNJbmNv'
-    'bWVCCwoCb3ASBbpIAggBQgcKBV9jb2RlQgcKBV9kYXJrQgkKB190dGxfbXM=');
+    'bWUSXQoZc3RvY2tzX3BsYWNlX2VxdWl0eV9vcmRlchgeIAEoCzIgLmhpLmJpbmFuY2UuQmluYW'
+    '5jZVN0b2NrTmV3T3JkZXJIAFIWc3RvY2tzUGxhY2VFcXVpdHlPcmRlchJiChpzdG9ja3NfY2Fu'
+    'Y2VsX2VxdWl0eV9vcmRlchgfIAEoCzIjLmhpLmJpbmFuY2UuQmluYW5jZVN0b2NrQ2FuY2VsT3'
+    'JkZXJIAFIXc3RvY2tzQ2FuY2VsRXF1aXR5T3JkZXISbwofc3RvY2tzX2NhbmNlbF9hbGxfZXF1'
+    'aXR5X29yZGVycxggIAEoCzInLmhpLmJpbmFuY2UuQmluYW5jZVN0b2NrQ2FuY2VsQWxsT3JkZX'
+    'JzSABSG3N0b2Nrc0NhbmNlbEFsbEVxdWl0eU9yZGVycxJhChpzdG9ja3NfY3VycmVudF9vcGVu'
+    'X29yZGVycxghIAEoCzIiLmhpLmJpbmFuY2UuQmluYW5jZVN0b2NrT3Blbk9yZGVyc0gAUhdzdG'
+    '9ja3NDdXJyZW50T3Blbk9yZGVycxJfChpzdG9ja3NfZXF1aXR5X29yZGVyX2RldGFpbBgiIAEo'
+    'CzIgLmhpLmJpbmFuY2UuQmluYW5jZVN0b2NrR2V0T3JkZXJIAFIXc3RvY2tzRXF1aXR5T3JkZX'
+    'JEZXRhaWwSZQobc3RvY2tzX2VxdWl0eV9vcmRlcl9oaXN0b3J5GCMgASgLMiQuaGkuYmluYW5j'
+    'ZS5CaW5hbmNlU3RvY2tPcmRlckhpc3RvcnlIAFIYc3RvY2tzRXF1aXR5T3JkZXJIaXN0b3J5Em'
+    'UKG3N0b2Nrc19lcXVpdHlfdHJhZGVfaGlzdG9yeRgkIAEoCzIkLmhpLmJpbmFuY2UuQmluYW5j'
+    'ZVN0b2NrVHJhZGVIaXN0b3J5SABSGHN0b2Nrc0VxdWl0eVRyYWRlSGlzdG9yeRJYChRzdG9ja3'
+    'NfZXhjaGFuZ2VfaW5mbxglIAEoCzIkLmhpLmJpbmFuY2UuQmluYW5jZVN0b2NrRXhjaGFuZ2VJ'
+    'bmZvSABSEnN0b2Nrc0V4Y2hhbmdlSW5mbxJPChNzdG9ja3NfbGF0ZXN0X3F1b3RlGCYgASgLMh'
+    '0uaGkuYmluYW5jZS5CaW5hbmNlU3RvY2tRdW90ZUgAUhFzdG9ja3NMYXRlc3RRdW90ZRJqCiB3'
+    'YWxsZXRfcXVlcnlfdXNlcl93YWxsZXRfYmFsYW5jZRgoIAEoCzIgLmhpLmJpbmFuY2UuQmluYW'
+    '5jZVdhbGxldEJhbGFuY2VIAFIcd2FsbGV0UXVlcnlVc2VyV2FsbGV0QmFsYW5jZUILCgJvcBIF'
+    'ukgCCAFCBwoFX2NvZGVCBwoFX2RhcmtCCQoHX3R0bF9tcw==');
 
 @$core.Deprecated('Use binanceSendRespDescriptor instead')
 const BinanceSendResp$json = {

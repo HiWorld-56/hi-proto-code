@@ -16,6 +16,7 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../binance/binance.pb.dart' as $1;
+import '../binance/stocks.pb.dart' as $2;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -37,6 +38,16 @@ enum BinanceSendReq_Op {
   usdsFuturesCurrentAllOpenOrders,
   usdsFuturesOpenAlgoOrders,
   usdsFuturesIncome,
+  stocksPlaceEquityOrder,
+  stocksCancelEquityOrder,
+  stocksCancelAllEquityOrders,
+  stocksCurrentOpenOrders,
+  stocksEquityOrderDetail,
+  stocksEquityOrderHistory,
+  stocksEquityTradeHistory,
+  stocksExchangeInfo,
+  stocksLatestQuote,
+  walletQueryUserWalletBalance,
   notSet
 }
 
@@ -54,7 +65,7 @@ enum BinanceSendReq_Op {
 /// 发出去的通知与原来一字不差(收方 brain 不用改):
 ///   type = "binance"、ex_type = 操作名、extra = Any{对应的 hi.binance.*}、
 ///   from = 调用者、status = "processed"、expiration = 现在 + ttl。
-/// 形状与各字段的口径见 hi/binance/binance.proto。
+/// 形状与各字段的口径见 hi/binance/binance.proto(美股见 hi/binance/stocks.proto)。
 ///
 /// ## 发到哪
 ///
@@ -88,6 +99,16 @@ class BinanceSendReq extends $pb.GeneratedMessage {
     $1.BinanceFuturesOpenOrders? usdsFuturesCurrentAllOpenOrders,
     $1.BinanceFuturesOpenAlgoOrders? usdsFuturesOpenAlgoOrders,
     $1.BinanceFuturesIncome? usdsFuturesIncome,
+    $2.BinanceStockNewOrder? stocksPlaceEquityOrder,
+    $2.BinanceStockCancelOrder? stocksCancelEquityOrder,
+    $2.BinanceStockCancelAllOrders? stocksCancelAllEquityOrders,
+    $2.BinanceStockOpenOrders? stocksCurrentOpenOrders,
+    $2.BinanceStockGetOrder? stocksEquityOrderDetail,
+    $2.BinanceStockOrderHistory? stocksEquityOrderHistory,
+    $2.BinanceStockTradeHistory? stocksEquityTradeHistory,
+    $2.BinanceStockExchangeInfo? stocksExchangeInfo,
+    $2.BinanceStockQuote? stocksLatestQuote,
+    $1.BinanceWalletBalance? walletQueryUserWalletBalance,
   }) {
     final result = create();
     if (code != null) result.code = code;
@@ -123,6 +144,25 @@ class BinanceSendReq extends $pb.GeneratedMessage {
     if (usdsFuturesOpenAlgoOrders != null)
       result.usdsFuturesOpenAlgoOrders = usdsFuturesOpenAlgoOrders;
     if (usdsFuturesIncome != null) result.usdsFuturesIncome = usdsFuturesIncome;
+    if (stocksPlaceEquityOrder != null)
+      result.stocksPlaceEquityOrder = stocksPlaceEquityOrder;
+    if (stocksCancelEquityOrder != null)
+      result.stocksCancelEquityOrder = stocksCancelEquityOrder;
+    if (stocksCancelAllEquityOrders != null)
+      result.stocksCancelAllEquityOrders = stocksCancelAllEquityOrders;
+    if (stocksCurrentOpenOrders != null)
+      result.stocksCurrentOpenOrders = stocksCurrentOpenOrders;
+    if (stocksEquityOrderDetail != null)
+      result.stocksEquityOrderDetail = stocksEquityOrderDetail;
+    if (stocksEquityOrderHistory != null)
+      result.stocksEquityOrderHistory = stocksEquityOrderHistory;
+    if (stocksEquityTradeHistory != null)
+      result.stocksEquityTradeHistory = stocksEquityTradeHistory;
+    if (stocksExchangeInfo != null)
+      result.stocksExchangeInfo = stocksExchangeInfo;
+    if (stocksLatestQuote != null) result.stocksLatestQuote = stocksLatestQuote;
+    if (walletQueryUserWalletBalance != null)
+      result.walletQueryUserWalletBalance = walletQueryUserWalletBalance;
     return result;
   }
 
@@ -154,14 +194,51 @@ class BinanceSendReq extends $pb.GeneratedMessage {
     26: BinanceSendReq_Op.usdsFuturesCurrentAllOpenOrders,
     27: BinanceSendReq_Op.usdsFuturesOpenAlgoOrders,
     28: BinanceSendReq_Op.usdsFuturesIncome,
+    30: BinanceSendReq_Op.stocksPlaceEquityOrder,
+    31: BinanceSendReq_Op.stocksCancelEquityOrder,
+    32: BinanceSendReq_Op.stocksCancelAllEquityOrders,
+    33: BinanceSendReq_Op.stocksCurrentOpenOrders,
+    34: BinanceSendReq_Op.stocksEquityOrderDetail,
+    35: BinanceSendReq_Op.stocksEquityOrderHistory,
+    36: BinanceSendReq_Op.stocksEquityTradeHistory,
+    37: BinanceSendReq_Op.stocksExchangeInfo,
+    38: BinanceSendReq_Op.stocksLatestQuote,
+    40: BinanceSendReq_Op.walletQueryUserWalletBalance,
     0: BinanceSendReq_Op.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'BinanceSendReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..oo(
-        0, [10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 28])
+    ..oo(0, [
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      40
+    ])
     ..aOS(1, _omitFieldNames ? '' : 'code')
     ..aI(2, _omitFieldNames ? '' : 'dark', fieldType: $pb.PbFieldType.OU3)
     ..aInt64(3, _omitFieldNames ? '' : 'ttlMs')
@@ -214,6 +291,35 @@ class BinanceSendReq extends $pb.GeneratedMessage {
     ..aOM<$1.BinanceFuturesIncome>(
         28, _omitFieldNames ? '' : 'usdsFuturesIncome',
         subBuilder: $1.BinanceFuturesIncome.create)
+    ..aOM<$2.BinanceStockNewOrder>(
+        30, _omitFieldNames ? '' : 'stocksPlaceEquityOrder',
+        subBuilder: $2.BinanceStockNewOrder.create)
+    ..aOM<$2.BinanceStockCancelOrder>(
+        31, _omitFieldNames ? '' : 'stocksCancelEquityOrder',
+        subBuilder: $2.BinanceStockCancelOrder.create)
+    ..aOM<$2.BinanceStockCancelAllOrders>(
+        32, _omitFieldNames ? '' : 'stocksCancelAllEquityOrders',
+        subBuilder: $2.BinanceStockCancelAllOrders.create)
+    ..aOM<$2.BinanceStockOpenOrders>(
+        33, _omitFieldNames ? '' : 'stocksCurrentOpenOrders',
+        subBuilder: $2.BinanceStockOpenOrders.create)
+    ..aOM<$2.BinanceStockGetOrder>(
+        34, _omitFieldNames ? '' : 'stocksEquityOrderDetail',
+        subBuilder: $2.BinanceStockGetOrder.create)
+    ..aOM<$2.BinanceStockOrderHistory>(
+        35, _omitFieldNames ? '' : 'stocksEquityOrderHistory',
+        subBuilder: $2.BinanceStockOrderHistory.create)
+    ..aOM<$2.BinanceStockTradeHistory>(
+        36, _omitFieldNames ? '' : 'stocksEquityTradeHistory',
+        subBuilder: $2.BinanceStockTradeHistory.create)
+    ..aOM<$2.BinanceStockExchangeInfo>(
+        37, _omitFieldNames ? '' : 'stocksExchangeInfo',
+        subBuilder: $2.BinanceStockExchangeInfo.create)
+    ..aOM<$2.BinanceStockQuote>(38, _omitFieldNames ? '' : 'stocksLatestQuote',
+        subBuilder: $2.BinanceStockQuote.create)
+    ..aOM<$1.BinanceWalletBalance>(
+        40, _omitFieldNames ? '' : 'walletQueryUserWalletBalance',
+        subBuilder: $1.BinanceWalletBalance.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -252,6 +358,16 @@ class BinanceSendReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(26)
   @$pb.TagNumber(27)
   @$pb.TagNumber(28)
+  @$pb.TagNumber(30)
+  @$pb.TagNumber(31)
+  @$pb.TagNumber(32)
+  @$pb.TagNumber(33)
+  @$pb.TagNumber(34)
+  @$pb.TagNumber(35)
+  @$pb.TagNumber(36)
+  @$pb.TagNumber(37)
+  @$pb.TagNumber(38)
+  @$pb.TagNumber(40)
   BinanceSendReq_Op whichOp() => _BinanceSendReq_OpByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(10)
   @$pb.TagNumber(11)
@@ -270,6 +386,16 @@ class BinanceSendReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(26)
   @$pb.TagNumber(27)
   @$pb.TagNumber(28)
+  @$pb.TagNumber(30)
+  @$pb.TagNumber(31)
+  @$pb.TagNumber(32)
+  @$pb.TagNumber(33)
+  @$pb.TagNumber(34)
+  @$pb.TagNumber(35)
+  @$pb.TagNumber(36)
+  @$pb.TagNumber(37)
+  @$pb.TagNumber(38)
+  @$pb.TagNumber(40)
   void clearOp() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -505,6 +631,126 @@ class BinanceSendReq extends $pb.GeneratedMessage {
   void clearUsdsFuturesIncome() => $_clearField(28);
   @$pb.TagNumber(28)
   $1.BinanceFuturesIncome ensureUsdsFuturesIncome() => $_ensure(19);
+
+  @$pb.TagNumber(30)
+  $2.BinanceStockNewOrder get stocksPlaceEquityOrder => $_getN(20);
+  @$pb.TagNumber(30)
+  set stocksPlaceEquityOrder($2.BinanceStockNewOrder value) =>
+      $_setField(30, value);
+  @$pb.TagNumber(30)
+  $core.bool hasStocksPlaceEquityOrder() => $_has(20);
+  @$pb.TagNumber(30)
+  void clearStocksPlaceEquityOrder() => $_clearField(30);
+  @$pb.TagNumber(30)
+  $2.BinanceStockNewOrder ensureStocksPlaceEquityOrder() => $_ensure(20);
+
+  @$pb.TagNumber(31)
+  $2.BinanceStockCancelOrder get stocksCancelEquityOrder => $_getN(21);
+  @$pb.TagNumber(31)
+  set stocksCancelEquityOrder($2.BinanceStockCancelOrder value) =>
+      $_setField(31, value);
+  @$pb.TagNumber(31)
+  $core.bool hasStocksCancelEquityOrder() => $_has(21);
+  @$pb.TagNumber(31)
+  void clearStocksCancelEquityOrder() => $_clearField(31);
+  @$pb.TagNumber(31)
+  $2.BinanceStockCancelOrder ensureStocksCancelEquityOrder() => $_ensure(21);
+
+  @$pb.TagNumber(32)
+  $2.BinanceStockCancelAllOrders get stocksCancelAllEquityOrders => $_getN(22);
+  @$pb.TagNumber(32)
+  set stocksCancelAllEquityOrders($2.BinanceStockCancelAllOrders value) =>
+      $_setField(32, value);
+  @$pb.TagNumber(32)
+  $core.bool hasStocksCancelAllEquityOrders() => $_has(22);
+  @$pb.TagNumber(32)
+  void clearStocksCancelAllEquityOrders() => $_clearField(32);
+  @$pb.TagNumber(32)
+  $2.BinanceStockCancelAllOrders ensureStocksCancelAllEquityOrders() =>
+      $_ensure(22);
+
+  @$pb.TagNumber(33)
+  $2.BinanceStockOpenOrders get stocksCurrentOpenOrders => $_getN(23);
+  @$pb.TagNumber(33)
+  set stocksCurrentOpenOrders($2.BinanceStockOpenOrders value) =>
+      $_setField(33, value);
+  @$pb.TagNumber(33)
+  $core.bool hasStocksCurrentOpenOrders() => $_has(23);
+  @$pb.TagNumber(33)
+  void clearStocksCurrentOpenOrders() => $_clearField(33);
+  @$pb.TagNumber(33)
+  $2.BinanceStockOpenOrders ensureStocksCurrentOpenOrders() => $_ensure(23);
+
+  @$pb.TagNumber(34)
+  $2.BinanceStockGetOrder get stocksEquityOrderDetail => $_getN(24);
+  @$pb.TagNumber(34)
+  set stocksEquityOrderDetail($2.BinanceStockGetOrder value) =>
+      $_setField(34, value);
+  @$pb.TagNumber(34)
+  $core.bool hasStocksEquityOrderDetail() => $_has(24);
+  @$pb.TagNumber(34)
+  void clearStocksEquityOrderDetail() => $_clearField(34);
+  @$pb.TagNumber(34)
+  $2.BinanceStockGetOrder ensureStocksEquityOrderDetail() => $_ensure(24);
+
+  @$pb.TagNumber(35)
+  $2.BinanceStockOrderHistory get stocksEquityOrderHistory => $_getN(25);
+  @$pb.TagNumber(35)
+  set stocksEquityOrderHistory($2.BinanceStockOrderHistory value) =>
+      $_setField(35, value);
+  @$pb.TagNumber(35)
+  $core.bool hasStocksEquityOrderHistory() => $_has(25);
+  @$pb.TagNumber(35)
+  void clearStocksEquityOrderHistory() => $_clearField(35);
+  @$pb.TagNumber(35)
+  $2.BinanceStockOrderHistory ensureStocksEquityOrderHistory() => $_ensure(25);
+
+  @$pb.TagNumber(36)
+  $2.BinanceStockTradeHistory get stocksEquityTradeHistory => $_getN(26);
+  @$pb.TagNumber(36)
+  set stocksEquityTradeHistory($2.BinanceStockTradeHistory value) =>
+      $_setField(36, value);
+  @$pb.TagNumber(36)
+  $core.bool hasStocksEquityTradeHistory() => $_has(26);
+  @$pb.TagNumber(36)
+  void clearStocksEquityTradeHistory() => $_clearField(36);
+  @$pb.TagNumber(36)
+  $2.BinanceStockTradeHistory ensureStocksEquityTradeHistory() => $_ensure(26);
+
+  @$pb.TagNumber(37)
+  $2.BinanceStockExchangeInfo get stocksExchangeInfo => $_getN(27);
+  @$pb.TagNumber(37)
+  set stocksExchangeInfo($2.BinanceStockExchangeInfo value) =>
+      $_setField(37, value);
+  @$pb.TagNumber(37)
+  $core.bool hasStocksExchangeInfo() => $_has(27);
+  @$pb.TagNumber(37)
+  void clearStocksExchangeInfo() => $_clearField(37);
+  @$pb.TagNumber(37)
+  $2.BinanceStockExchangeInfo ensureStocksExchangeInfo() => $_ensure(27);
+
+  @$pb.TagNumber(38)
+  $2.BinanceStockQuote get stocksLatestQuote => $_getN(28);
+  @$pb.TagNumber(38)
+  set stocksLatestQuote($2.BinanceStockQuote value) => $_setField(38, value);
+  @$pb.TagNumber(38)
+  $core.bool hasStocksLatestQuote() => $_has(28);
+  @$pb.TagNumber(38)
+  void clearStocksLatestQuote() => $_clearField(38);
+  @$pb.TagNumber(38)
+  $2.BinanceStockQuote ensureStocksLatestQuote() => $_ensure(28);
+
+  @$pb.TagNumber(40)
+  $1.BinanceWalletBalance get walletQueryUserWalletBalance => $_getN(29);
+  @$pb.TagNumber(40)
+  set walletQueryUserWalletBalance($1.BinanceWalletBalance value) =>
+      $_setField(40, value);
+  @$pb.TagNumber(40)
+  $core.bool hasWalletQueryUserWalletBalance() => $_has(29);
+  @$pb.TagNumber(40)
+  void clearWalletQueryUserWalletBalance() => $_clearField(40);
+  @$pb.TagNumber(40)
+  $1.BinanceWalletBalance ensureWalletQueryUserWalletBalance() => $_ensure(29);
 }
 
 class BinanceSendResp extends $pb.GeneratedMessage {
