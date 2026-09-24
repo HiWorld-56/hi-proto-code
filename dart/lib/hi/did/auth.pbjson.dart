@@ -130,39 +130,27 @@ const LoginQr$json = {
       '17': true
     },
     {
-      '1': 'app',
+      '1': 'qr',
       '3': 2,
       '4': 1,
       '5': 9,
       '8': {},
       '9': 1,
-      '10': 'app',
-      '17': true
-    },
-    {
-      '1': 'dev',
-      '3': 3,
-      '4': 1,
-      '5': 9,
-      '8': {},
-      '9': 2,
-      '10': 'dev',
+      '10': 'qr',
       '17': true
     },
   ],
   '7': {},
   '8': [
     {'1': '_req_id'},
-    {'1': '_app'},
-    {'1': '_dev'},
+    {'1': '_qr'},
   ],
 };
 
 /// Descriptor for `LoginQr`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List loginQrDescriptor = $convert.base64Decode(
-    'CgdMb2dpblFyEiAKBnJlcV9pZBgBIAEoCUIEkLUYAUgAUgVyZXFJZIgBARIbCgNhcHAYAiABKA'
-    'lCBJC1GAFIAVIDYXBwiAEBEhsKA2RldhgDIAEoCUIEkLUYAUgCUgNkZXaIAQE6BJi1GAFCCQoH'
-    'X3JlcV9pZEIGCgRfYXBwQgYKBF9kZXY=');
+    'CgdMb2dpblFyEiAKBnJlcV9pZBgBIAEoCUIEkLUYAUgAUgVyZXFJZIgBARIZCgJxchgCIAEoCU'
+    'IEkLUYAUgBUgJxcogBAToEmLUYAUIJCgdfcmVxX2lkQgUKA19xcg==');
 
 @$core.Deprecated('Use reqStatusRespDescriptor instead')
 const ReqStatusResp$json = {

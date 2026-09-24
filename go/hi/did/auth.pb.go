@@ -88,7 +88,7 @@ func (x *RefreshTokenReq) GetRefreshToken() string {
 // `node` 是**被登录的那一端**(拿 token 的那一端),不是签名的那台设备:
 //
 //	· 自己登录自己(app/pc 自签):就是本机;
-//	· 扫码 / 被唤起替别人授权:是**发起登录的那一端** —— 扫码时照二维码里的 `LoginQr.app/dev` 原样填,
+//	· 扫码 / 被唤起替别人授权:是**发起登录的那一端** —— 扫码时照二维码(`LoginQr.qr`)里的 app/dev 原样填,
 //	  唤起时照发起方在链接里带的 app/dev 填。后端核对它与申请 reqId 时报的那组一致,不一致就拒。
 type LoginReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -262,19 +262,20 @@ func (x *GenerateReqIdReq) GetNode() *hi.ClientInfo {
 	return nil
 }
 
-// 扫码登录的**二维码内容**(`GenerateReqId` 的返回)。
+// 扫码登录的**二维码**(`GenerateReqId` 的返回)。
 //
-// 发起登录的那一端(网页)申请 reqId 时报了自己是谁;后端把 reqId 连同这组 app/dev 原样交回。
-// **前端把这条消息的 JSON 原样编进二维码**(即 HTTP 网关回的 data:`{"reqId":"L…","app":"HiClub","dev":"web"}`),
-// 扫码方原样解出来填进 `LoginReq`:`reqId` → `req_id`,`app`/`dev` → `node.app`/`node.dev`。
+// 链路:业务侧申请 reqId 时在 `GenerateReqIdReq.node` 里报发起端的 app/dev → hidid 生成 reqId,
+// 把 app/dev 存进登录会话 → **二维码文本由 hidid 生成**(`qr`),网页原样显示,**不自己拼**。
+// 扫码方解出 `qr` 照填 `LoginReq`(`reqId` → `req_id`,`app`/`dev` → `node.app`/`node.dev`),
+// hidid 验签时核对它与会话里那组一致 —— 码被改过就对不上,当场拒。
 //
+// `qr` 的内容(JSON,键名固定):`{"reqId":"L…","app":"HiClub","dev":"web"}`。
 // 原来二维码里只有裸 reqId,扫码方不知道自己在授权哪一端,只能猜(扫网页码就报 web)。
 // 非扫码的(app 唤起 app)由发起方自己把 app/dev 带进链接,不经这里。
 type LoginQr struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ReqId         *string                `protobuf:"bytes,1,opt,name=req_id,json=reqId,proto3,oneof" json:"req_id,omitempty"`
-	App           *string                `protobuf:"bytes,2,opt,name=app,proto3,oneof" json:"app,omitempty"` // 发起登录的那一端的 app(同 hi.ClientInfo.app)
-	Dev           *string                `protobuf:"bytes,3,opt,name=dev,proto3,oneof" json:"dev,omitempty"` // 发起登录的那一端的 dev(同 hi.ClientInfo.dev)
+	ReqId         *string                `protobuf:"bytes,1,opt,name=req_id,json=reqId,proto3,oneof" json:"req_id,omitempty"` // 网页拿它轮询 GetReqStatus
+	Qr            *string                `protobuf:"bytes,2,opt,name=qr,proto3,oneof" json:"qr,omitempty"`                    // 二维码文本,hidid 生成,网页原样显示
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -316,16 +317,9 @@ func (x *LoginQr) GetReqId() string {
 	return ""
 }
 
-func (x *LoginQr) GetApp() string {
-	if x != nil && x.App != nil {
-		return *x.App
-	}
-	return ""
-}
-
-func (x *LoginQr) GetDev() string {
-	if x != nil && x.Dev != nil {
-		return *x.Dev
+func (x *LoginQr) GetQr() string {
+	if x != nil && x.Qr != nil {
+		return *x.Qr
 	}
 	return ""
 }
@@ -420,14 +414,12 @@ const file_hi_did_auth_proto_rawDesc = "" +
 	"\x04mqtt\x18\x03 \x01(\v2\x13.hi.MqttCredentialsB\x04\x90\xb5\x18\x03R\x04mqtt:\x04\x98\xb5\x18\x03\"H\n" +
 	"\x10GenerateReqIdReq\x12\x10\n" +
 	"\x03did\x18\x01 \x01(\tR\x03did\x12\"\n" +
-	"\x04node\x18\x02 \x01(\v2\x0e.hi.ClientInfoR\x04node\"\x86\x01\n" +
+	"\x04node\x18\x02 \x01(\v2\x0e.hi.ClientInfoR\x04node\"^\n" +
 	"\aLoginQr\x12 \n" +
-	"\x06req_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x05reqId\x88\x01\x01\x12\x1b\n" +
-	"\x03app\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x03app\x88\x01\x01\x12\x1b\n" +
-	"\x03dev\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01H\x02R\x03dev\x88\x01\x01:\x04\x98\xb5\x18\x01B\t\n" +
-	"\a_req_idB\x06\n" +
-	"\x04_appB\x06\n" +
-	"\x04_dev\"\xc3\x01\n" +
+	"\x06req_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x05reqId\x88\x01\x01\x12\x19\n" +
+	"\x02qr\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x02qr\x88\x01\x01:\x04\x98\xb5\x18\x01B\t\n" +
+	"\a_req_idB\x05\n" +
+	"\x03_qr\"\xc3\x01\n" +
 	"\rReqStatusResp\x12$\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x12!\n" +
