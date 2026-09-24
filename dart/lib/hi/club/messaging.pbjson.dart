@@ -359,30 +359,6 @@ final $typed_data.Uint8List memberDescriptor = $convert.base64Decode(
     'CgZNZW1iZXISIAoFZ3JvdXAYASABKAsyCi5oaS5FbnRpdHlSBWdyb3VwEh4KBHVzZXIYAiABKA'
     'syCi5oaS5FbnRpdHlSBHVzZXI=');
 
-@$core.Deprecated('Use memberExitDescriptor instead')
-const MemberExit$json = {
-  '1': 'MemberExit',
-  '2': [
-    {
-      '1': 'member',
-      '3': 1,
-      '4': 1,
-      '5': 11,
-      '6': '.hi.club.Member',
-      '10': 'member'
-    },
-    {'1': 'type', '3': 2, '4': 1, '5': 9, '9': 0, '10': 'type', '17': true},
-  ],
-  '8': [
-    {'1': '_type'},
-  ],
-};
-
-/// Descriptor for `MemberExit`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List memberExitDescriptor = $convert.base64Decode(
-    'CgpNZW1iZXJFeGl0EicKBm1lbWJlchgBIAEoCzIPLmhpLmNsdWIuTWVtYmVyUgZtZW1iZXISFw'
-    'oEdHlwZRgCIAEoCUgAUgR0eXBliAEBQgcKBV90eXBl');
-
 @$core.Deprecated('Use contentDescriptor instead')
 const Content$json = {
   '1': 'Content',

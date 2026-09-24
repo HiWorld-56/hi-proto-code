@@ -563,58 +563,6 @@ func (x *Member) GetUser() *hi.Entity {
 	return nil
 }
 
-type MemberExit struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Member        *Member                `protobuf:"bytes,1,opt,name=member,proto3" json:"member,omitempty"`
-	Type          *string                `protobuf:"bytes,2,opt,name=type,proto3,oneof" json:"type,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *MemberExit) Reset() {
-	*x = MemberExit{}
-	mi := &file_hi_club_messaging_proto_msgTypes[6]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *MemberExit) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*MemberExit) ProtoMessage() {}
-
-func (x *MemberExit) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_messaging_proto_msgTypes[6]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use MemberExit.ProtoReflect.Descriptor instead.
-func (*MemberExit) Descriptor() ([]byte, []int) {
-	return file_hi_club_messaging_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *MemberExit) GetMember() *Member {
-	if x != nil {
-		return x.Member
-	}
-	return nil
-}
-
-func (x *MemberExit) GetType() string {
-	if x != nil && x.Type != nil {
-		return *x.Type
-	}
-	return ""
-}
-
 // Content.type —— **一条消息里这一段是什么**。字符串,取值就是下面这张表,**别自己发明**。
 //
 // text        纯文本            chat.content = 正文
@@ -661,7 +609,7 @@ type Content struct {
 
 func (x *Content) Reset() {
 	*x = Content{}
-	mi := &file_hi_club_messaging_proto_msgTypes[7]
+	mi := &file_hi_club_messaging_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -673,7 +621,7 @@ func (x *Content) String() string {
 func (*Content) ProtoMessage() {}
 
 func (x *Content) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_messaging_proto_msgTypes[7]
+	mi := &file_hi_club_messaging_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -686,7 +634,7 @@ func (x *Content) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Content.ProtoReflect.Descriptor instead.
 func (*Content) Descriptor() ([]byte, []int) {
-	return file_hi_club_messaging_proto_rawDescGZIP(), []int{7}
+	return file_hi_club_messaging_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *Content) GetType() string {
@@ -796,7 +744,7 @@ type Content_Chat struct {
 
 func (x *Content_Chat) Reset() {
 	*x = Content_Chat{}
-	mi := &file_hi_club_messaging_proto_msgTypes[8]
+	mi := &file_hi_club_messaging_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -808,7 +756,7 @@ func (x *Content_Chat) String() string {
 func (*Content_Chat) ProtoMessage() {}
 
 func (x *Content_Chat) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_messaging_proto_msgTypes[8]
+	mi := &file_hi_club_messaging_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -821,7 +769,7 @@ func (x *Content_Chat) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Content_Chat.ProtoReflect.Descriptor instead.
 func (*Content_Chat) Descriptor() ([]byte, []int) {
-	return file_hi_club_messaging_proto_rawDescGZIP(), []int{7, 0}
+	return file_hi_club_messaging_proto_rawDescGZIP(), []int{6, 0}
 }
 
 func (x *Content_Chat) GetContent() string {
@@ -920,12 +868,7 @@ const file_hi_club_messaging_proto_rawDesc = "" +
 	"\x05group\x18\x01 \x01(\v2\n" +
 	".hi.EntityR\x05group\x12\x1e\n" +
 	"\x04user\x18\x02 \x01(\v2\n" +
-	".hi.EntityR\x04user\"W\n" +
-	"\n" +
-	"MemberExit\x12'\n" +
-	"\x06member\x18\x01 \x01(\v2\x0f.hi.club.MemberR\x06member\x12\x17\n" +
-	"\x04type\x18\x02 \x01(\tH\x00R\x04type\x88\x01\x01B\a\n" +
-	"\x05_type\"\x9d\x04\n" +
+	".hi.EntityR\x04user\"\x9d\x04\n" +
 	"\aContent\x12\x1d\n" +
 	"\x04type\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x04type\x88\x01\x01\x121\n" +
 	"\x04chat\x18\x02 \x01(\v2\x15.hi.club.Content.ChatB\x04\x90\xb5\x18\x02H\x00R\x04chat\x121\n" +
@@ -960,7 +903,7 @@ func file_hi_club_messaging_proto_rawDescGZIP() []byte {
 	return file_hi_club_messaging_proto_rawDescData
 }
 
-var file_hi_club_messaging_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_hi_club_messaging_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_hi_club_messaging_proto_goTypes = []any{
 	(*Packet)(nil),                 // 0: hi.club.Packet
 	(*Notice)(nil),                 // 1: hi.club.Notice
@@ -968,41 +911,39 @@ var file_hi_club_messaging_proto_goTypes = []any{
 	(*Message)(nil),                // 3: hi.club.Message
 	(*Mention)(nil),                // 4: hi.club.Mention
 	(*Member)(nil),                 // 5: hi.club.Member
-	(*MemberExit)(nil),             // 6: hi.club.MemberExit
-	(*Content)(nil),                // 7: hi.club.Content
-	(*Content_Chat)(nil),           // 8: hi.club.Content.Chat
-	(*hi.Entity)(nil),              // 9: hi.Entity
-	(*anypb.Any)(nil),              // 10: google.protobuf.Any
-	(*did.Transaction)(nil),        // 11: hi.did.Transaction
-	(*TradeBase)(nil),              // 12: hi.club.TradeBase
-	(*binance.BinanceResult)(nil),  // 13: hi.binance.BinanceResult
-	(*binance.BinanceCommand)(nil), // 14: hi.binance.BinanceCommand
+	(*Content)(nil),                // 6: hi.club.Content
+	(*Content_Chat)(nil),           // 7: hi.club.Content.Chat
+	(*hi.Entity)(nil),              // 8: hi.Entity
+	(*anypb.Any)(nil),              // 9: google.protobuf.Any
+	(*did.Transaction)(nil),        // 10: hi.did.Transaction
+	(*TradeBase)(nil),              // 11: hi.club.TradeBase
+	(*binance.BinanceResult)(nil),  // 12: hi.binance.BinanceResult
+	(*binance.BinanceCommand)(nil), // 13: hi.binance.BinanceCommand
 }
 var file_hi_club_messaging_proto_depIdxs = []int32{
 	1,  // 0: hi.club.Packet.notice:type_name -> hi.club.Notice
 	3,  // 1: hi.club.Packet.message:type_name -> hi.club.Message
-	9,  // 2: hi.club.Notice.from:type_name -> hi.Entity
-	10, // 3: hi.club.Notice.extra:type_name -> google.protobuf.Any
-	9,  // 4: hi.club.Message.from:type_name -> hi.Entity
-	7,  // 5: hi.club.Message.conts:type_name -> hi.club.Content
-	10, // 6: hi.club.Message.extra:type_name -> google.protobuf.Any
-	9,  // 7: hi.club.Message.ghost:type_name -> hi.Entity
+	8,  // 2: hi.club.Notice.from:type_name -> hi.Entity
+	9,  // 3: hi.club.Notice.extra:type_name -> google.protobuf.Any
+	8,  // 4: hi.club.Message.from:type_name -> hi.Entity
+	6,  // 5: hi.club.Message.conts:type_name -> hi.club.Content
+	9,  // 6: hi.club.Message.extra:type_name -> google.protobuf.Any
+	8,  // 7: hi.club.Message.ghost:type_name -> hi.Entity
 	2,  // 8: hi.club.Message.prompt:type_name -> hi.club.Prompt
-	9,  // 9: hi.club.Mention.group:type_name -> hi.Entity
-	9,  // 10: hi.club.Mention.list:type_name -> hi.Entity
-	9,  // 11: hi.club.Member.group:type_name -> hi.Entity
-	9,  // 12: hi.club.Member.user:type_name -> hi.Entity
-	5,  // 13: hi.club.MemberExit.member:type_name -> hi.club.Member
-	8,  // 14: hi.club.Content.chat:type_name -> hi.club.Content.Chat
-	11, // 15: hi.club.Content.trans:type_name -> hi.did.Transaction
-	12, // 16: hi.club.Content.trade:type_name -> hi.club.TradeBase
-	13, // 17: hi.club.Content.binance:type_name -> hi.binance.BinanceResult
-	14, // 18: hi.club.Content.binance_cmd:type_name -> hi.binance.BinanceCommand
-	19, // [19:19] is the sub-list for method output_type
-	19, // [19:19] is the sub-list for method input_type
-	19, // [19:19] is the sub-list for extension type_name
-	19, // [19:19] is the sub-list for extension extendee
-	0,  // [0:19] is the sub-list for field type_name
+	8,  // 9: hi.club.Mention.group:type_name -> hi.Entity
+	8,  // 10: hi.club.Mention.list:type_name -> hi.Entity
+	8,  // 11: hi.club.Member.group:type_name -> hi.Entity
+	8,  // 12: hi.club.Member.user:type_name -> hi.Entity
+	7,  // 13: hi.club.Content.chat:type_name -> hi.club.Content.Chat
+	10, // 14: hi.club.Content.trans:type_name -> hi.did.Transaction
+	11, // 15: hi.club.Content.trade:type_name -> hi.club.TradeBase
+	12, // 16: hi.club.Content.binance:type_name -> hi.binance.BinanceResult
+	13, // 17: hi.club.Content.binance_cmd:type_name -> hi.binance.BinanceCommand
+	18, // [18:18] is the sub-list for method output_type
+	18, // [18:18] is the sub-list for method input_type
+	18, // [18:18] is the sub-list for extension type_name
+	18, // [18:18] is the sub-list for extension extendee
+	0,  // [0:18] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_messaging_proto_init() }
@@ -1019,22 +960,21 @@ func file_hi_club_messaging_proto_init() {
 	file_hi_club_messaging_proto_msgTypes[2].OneofWrappers = []any{}
 	file_hi_club_messaging_proto_msgTypes[3].OneofWrappers = []any{}
 	file_hi_club_messaging_proto_msgTypes[4].OneofWrappers = []any{}
-	file_hi_club_messaging_proto_msgTypes[6].OneofWrappers = []any{}
-	file_hi_club_messaging_proto_msgTypes[7].OneofWrappers = []any{
+	file_hi_club_messaging_proto_msgTypes[6].OneofWrappers = []any{
 		(*Content_Chat_)(nil),
 		(*Content_Trans)(nil),
 		(*Content_Trade)(nil),
 		(*Content_Binance)(nil),
 		(*Content_BinanceCmd)(nil),
 	}
-	file_hi_club_messaging_proto_msgTypes[8].OneofWrappers = []any{}
+	file_hi_club_messaging_proto_msgTypes[7].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_messaging_proto_rawDesc), len(file_hi_club_messaging_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   9,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

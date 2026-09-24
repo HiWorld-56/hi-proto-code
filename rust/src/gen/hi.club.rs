@@ -4321,13 +4321,6 @@ pub struct Member {
     #[prost(message, optional, tag = "2")]
     pub user: ::core::option::Option<super::Entity>,
 }
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MemberExit {
-    #[prost(message, optional, tag = "1")]
-    pub member: ::core::option::Option<Member>,
-    #[prost(string, optional, tag = "2")]
-    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
-}
 /// Content.type —— **一条消息里这一段是什么**。字符串,取值就是下面这张表,**别自己发明**。
 ///
 /// text        纯文本            chat.content = 正文
