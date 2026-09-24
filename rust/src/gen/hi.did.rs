@@ -700,6 +700,11 @@ pub struct RefreshTokenReq {
     pub refresh_token: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// hidid web/app/pc登录
+///
+/// `node` 是**被登录的那一端**(拿 token 的那一端),不是签名的那台设备:
+/// · 自己登录自己(app/pc 自签):就是本机;
+/// · 扫码 / 被唤起替别人授权:是**发起登录的那一端** —— 扫码时照二维码里的 `LoginQr.app/dev` 原样填,
+/// 唤起时照发起方在链接里带的 app/dev 填。后端核对它与申请 reqId 时报的那组一致,不一致就拒。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct LoginReq {
     #[prost(string, optional, tag = "1")]
@@ -724,6 +729,25 @@ pub struct GenerateReqIdReq {
     pub did: ::prost::alloc::string::String,
     #[prost(message, optional, tag = "2")]
     pub node: ::core::option::Option<super::ClientInfo>,
+}
+/// 扫码登录的**二维码内容**(`GenerateReqId` 的返回)。
+///
+/// 发起登录的那一端(网页)申请 reqId 时报了自己是谁;后端把 reqId 连同这组 app/dev 原样交回。
+/// **前端把这条消息的 JSON 原样编进二维码**(即 HTTP 网关回的 data:`{"reqId":"L…","app":"HiClub","dev":"web"}`),
+/// 扫码方原样解出来填进 `LoginReq`:`reqId` → `req_id`,`app`/`dev` → `node.app`/`node.dev`。
+///
+/// 原来二维码里只有裸 reqId,扫码方不知道自己在授权哪一端,只能猜(扫网页码就报 web)。
+/// 非扫码的(app 唤起 app)由发起方自己把 app/dev 带进链接,不经这里。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct LoginQr {
+    #[prost(string, optional, tag = "1")]
+    pub req_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 发起登录的那一端的 app(同 hi.ClientInfo.app)
+    #[prost(string, optional, tag = "2")]
+    pub app: ::core::option::Option<::prost::alloc::string::String>,
+    /// 发起登录的那一端的 dev(同 hi.ClientInfo.dev)
+    #[prost(string, optional, tag = "3")]
+    pub dev: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ReqStatusResp {
@@ -918,10 +942,7 @@ pub mod auth_client {
         pub async fn generate_req_id(
             &mut self,
             request: impl tonic::IntoRequest<super::GenerateReqIdReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::super::RequestId>,
-            tonic::Status,
-        > {
+        ) -> std::result::Result<tonic::Response<super::LoginQr>, tonic::Status> {
             self.inner
                 .ready()
                 .await

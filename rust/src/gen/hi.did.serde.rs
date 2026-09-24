@@ -5931,6 +5931,132 @@ impl<'de> serde::Deserialize<'de> for ListUsersResp {
         deserializer.deserialize_struct("hi.did.ListUsersResp", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for LoginQr {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.req_id.is_some() {
+            len += 1;
+        }
+        if self.app.is_some() {
+            len += 1;
+        }
+        if self.dev.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.did.LoginQr", len)?;
+        if let Some(v) = self.req_id.as_ref() {
+            struct_ser.serialize_field("reqId", v)?;
+        }
+        if let Some(v) = self.app.as_ref() {
+            struct_ser.serialize_field("app", v)?;
+        }
+        if let Some(v) = self.dev.as_ref() {
+            struct_ser.serialize_field("dev", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for LoginQr {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "req_id",
+            "reqId",
+            "app",
+            "dev",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            ReqId,
+            App,
+            Dev,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "reqId" | "req_id" => Ok(GeneratedField::ReqId),
+                            "app" => Ok(GeneratedField::App),
+                            "dev" => Ok(GeneratedField::Dev),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = LoginQr;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.did.LoginQr")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<LoginQr, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut req_id__ = None;
+                let mut app__ = None;
+                let mut dev__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::ReqId => {
+                            if req_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("reqId"));
+                            }
+                            req_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::App => {
+                            if app__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("app"));
+                            }
+                            app__ = map_.next_value()?;
+                        }
+                        GeneratedField::Dev => {
+                            if dev__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("dev"));
+                            }
+                            dev__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(LoginQr {
+                    req_id: req_id__,
+                    app: app__,
+                    dev: dev__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.did.LoginQr", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for LoginReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>

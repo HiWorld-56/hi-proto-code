@@ -582,7 +582,7 @@ pub mod auth_client {
             &mut self,
             request: impl tonic::IntoRequest<super::super::did::GenerateReqIdReq>,
         ) -> std::result::Result<
-            tonic::Response<super::super::RequestId>,
+            tonic::Response<super::super::did::LoginQr>,
             tonic::Status,
         > {
             self.inner

@@ -35,7 +35,7 @@ const (
 type AuthClient interface {
 	RefreshToken(ctx context.Context, in *did.RefreshTokenReq, opts ...grpc.CallOption) (*hi.AuthToken, error)
 	Logout(ctx context.Context, in *did.RefreshTokenReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	GenerateReqId(ctx context.Context, in *did.GenerateReqIdReq, opts ...grpc.CallOption) (*hi.RequestId, error)
+	GenerateReqId(ctx context.Context, in *did.GenerateReqIdReq, opts ...grpc.CallOption) (*did.LoginQr, error)
 	GetReqStatus(ctx context.Context, in *hi.RequestId, opts ...grpc.CallOption) (*did.ReqStatusResp, error)
 	Verify(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*LoginResp, error)
 }
@@ -68,9 +68,9 @@ func (c *authClient) Logout(ctx context.Context, in *did.RefreshTokenReq, opts .
 	return out, nil
 }
 
-func (c *authClient) GenerateReqId(ctx context.Context, in *did.GenerateReqIdReq, opts ...grpc.CallOption) (*hi.RequestId, error) {
+func (c *authClient) GenerateReqId(ctx context.Context, in *did.GenerateReqIdReq, opts ...grpc.CallOption) (*did.LoginQr, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(hi.RequestId)
+	out := new(did.LoginQr)
 	err := c.cc.Invoke(ctx, Auth_GenerateReqId_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -104,7 +104,7 @@ func (c *authClient) Verify(ctx context.Context, in *hi.SignedData, opts ...grpc
 type AuthServer interface {
 	RefreshToken(context.Context, *did.RefreshTokenReq) (*hi.AuthToken, error)
 	Logout(context.Context, *did.RefreshTokenReq) (*emptypb.Empty, error)
-	GenerateReqId(context.Context, *did.GenerateReqIdReq) (*hi.RequestId, error)
+	GenerateReqId(context.Context, *did.GenerateReqIdReq) (*did.LoginQr, error)
 	GetReqStatus(context.Context, *hi.RequestId) (*did.ReqStatusResp, error)
 	Verify(context.Context, *hi.SignedData) (*LoginResp, error)
 }
@@ -122,7 +122,7 @@ func (UnimplementedAuthServer) RefreshToken(context.Context, *did.RefreshTokenRe
 func (UnimplementedAuthServer) Logout(context.Context, *did.RefreshTokenReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Logout not implemented")
 }
-func (UnimplementedAuthServer) GenerateReqId(context.Context, *did.GenerateReqIdReq) (*hi.RequestId, error) {
+func (UnimplementedAuthServer) GenerateReqId(context.Context, *did.GenerateReqIdReq) (*did.LoginQr, error) {
 	return nil, status.Error(codes.Unimplemented, "method GenerateReqId not implemented")
 }
 func (UnimplementedAuthServer) GetReqStatus(context.Context, *hi.RequestId) (*did.ReqStatusResp, error) {

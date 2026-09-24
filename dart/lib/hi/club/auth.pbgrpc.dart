@@ -49,7 +49,7 @@ class AuthClient extends $grpc.Client {
     return $createUnaryCall(_$logout, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.RequestId> generateReqId(
+  $grpc.ResponseFuture<$0.LoginQr> generateReqId(
     $0.GenerateReqIdReq request, {
     $grpc.CallOptions? options,
   }) {
@@ -82,10 +82,10 @@ class AuthClient extends $grpc.Client {
       ($0.RefreshTokenReq value) => value.writeToBuffer(),
       $2.Empty.fromBuffer);
   static final _$generateReqId =
-      $grpc.ClientMethod<$0.GenerateReqIdReq, $1.RequestId>(
+      $grpc.ClientMethod<$0.GenerateReqIdReq, $0.LoginQr>(
           '/hi.club.Auth/GenerateReqId',
           ($0.GenerateReqIdReq value) => value.writeToBuffer(),
-          $1.RequestId.fromBuffer);
+          $0.LoginQr.fromBuffer);
   static final _$getReqStatus =
       $grpc.ClientMethod<$1.RequestId, $0.ReqStatusResp>(
           '/hi.club.Auth/GetReqStatus',
@@ -116,13 +116,13 @@ abstract class AuthServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.RefreshTokenReq.fromBuffer(value),
         ($2.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.GenerateReqIdReq, $1.RequestId>(
+    $addMethod($grpc.ServiceMethod<$0.GenerateReqIdReq, $0.LoginQr>(
         'GenerateReqId',
         generateReqId_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.GenerateReqIdReq.fromBuffer(value),
-        ($1.RequestId value) => value.writeToBuffer()));
+        ($0.LoginQr value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.RequestId, $0.ReqStatusResp>(
         'GetReqStatus',
         getReqStatus_Pre,
@@ -155,12 +155,12 @@ abstract class AuthServiceBase extends $grpc.Service {
   $async.Future<$2.Empty> logout(
       $grpc.ServiceCall call, $0.RefreshTokenReq request);
 
-  $async.Future<$1.RequestId> generateReqId_Pre($grpc.ServiceCall $call,
+  $async.Future<$0.LoginQr> generateReqId_Pre($grpc.ServiceCall $call,
       $async.Future<$0.GenerateReqIdReq> $request) async {
     return generateReqId($call, await $request);
   }
 
-  $async.Future<$1.RequestId> generateReqId(
+  $async.Future<$0.LoginQr> generateReqId(
       $grpc.ServiceCall call, $0.GenerateReqIdReq request);
 
   $async.Future<$0.ReqStatusResp> getReqStatus_Pre(

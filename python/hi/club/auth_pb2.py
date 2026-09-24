@@ -28,7 +28,7 @@ from hi.did import auth_pb2 as hi_dot_did_dot_auth__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12hi/club/auth.proto\x12\x07hi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x11hi/did/auth.proto\x1a\x10hi/options.proto\"\xbb\x01\n\tLoginResp\x12$\n\x04\x62\x61se\x18\x01 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x04\x62\x61se\x12)\n\x05token\x18\x02 \x01(\x0b\x32\r.hi.AuthTokenB\x04\x90\xb5\x18\x03R\x05token\x12-\n\x04mqtt\x18\x03 \x01(\x0b\x32\x13.hi.MqttCredentialsB\x04\x90\xb5\x18\x03R\x04mqtt\x12(\n\x06master\x18\x04 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x06master:\x04\x98\xb5\x18\x03\x32\xba\x02\n\x04\x41uth\x12=\n\x0cRefreshToken\x12\x17.hi.did.RefreshTokenReq\x1a\r.hi.AuthToken\"\x05\x8a\xb5\x18\x01\x01\x12@\n\x06Logout\x12\x17.hi.did.RefreshTokenReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x01\x12?\n\rGenerateReqId\x12\x18.hi.did.GenerateReqIdReq\x1a\r.hi.RequestId\"\x05\x8a\xb5\x18\x01\x01\x12;\n\x0cGetReqStatus\x12\r.hi.RequestId\x1a\x15.hi.did.ReqStatusResp\"\x05\x8a\xb5\x18\x01\x01\x12\x33\n\x06Verify\x12\x0e.hi.SignedData\x1a\x12.hi.club.LoginResp\"\x05\x8a\xb5\x18\x01\x05\x42+Z)github.com/HiWorld-56/hi-proto/go/hi/clubb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12hi/club/auth.proto\x12\x07hi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x11hi/did/auth.proto\x1a\x10hi/options.proto\"\xbb\x01\n\tLoginResp\x12$\n\x04\x62\x61se\x18\x01 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x04\x62\x61se\x12)\n\x05token\x18\x02 \x01(\x0b\x32\r.hi.AuthTokenB\x04\x90\xb5\x18\x03R\x05token\x12-\n\x04mqtt\x18\x03 \x01(\x0b\x32\x13.hi.MqttCredentialsB\x04\x90\xb5\x18\x03R\x04mqtt\x12(\n\x06master\x18\x04 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x06master:\x04\x98\xb5\x18\x03\x32\xbc\x02\n\x04\x41uth\x12=\n\x0cRefreshToken\x12\x17.hi.did.RefreshTokenReq\x1a\r.hi.AuthToken\"\x05\x8a\xb5\x18\x01\x01\x12@\n\x06Logout\x12\x17.hi.did.RefreshTokenReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x01\x12\x41\n\rGenerateReqId\x12\x18.hi.did.GenerateReqIdReq\x1a\x0f.hi.did.LoginQr\"\x05\x8a\xb5\x18\x01\x01\x12;\n\x0cGetReqStatus\x12\r.hi.RequestId\x1a\x15.hi.did.ReqStatusResp\"\x05\x8a\xb5\x18\x01\x01\x12\x33\n\x06Verify\x12\x0e.hi.SignedData\x1a\x12.hi.club.LoginResp\"\x05\x8a\xb5\x18\x01\x05\x42+Z)github.com/HiWorld-56/hi-proto/go/hi/clubb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -59,5 +59,5 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_LOGINRESP']._serialized_start=115
   _globals['_LOGINRESP']._serialized_end=302
   _globals['_AUTH']._serialized_start=305
-  _globals['_AUTH']._serialized_end=619
+  _globals['_AUTH']._serialized_end=621
 # @@protoc_insertion_point(module_scope)

@@ -100,6 +100,11 @@ class RefreshTokenReq extends $pb.GeneratedMessage {
 }
 
 /// hidid web/app/pc登录
+///
+/// `node` 是**被登录的那一端**(拿 token 的那一端),不是签名的那台设备:
+///   · 自己登录自己(app/pc 自签):就是本机;
+///   · 扫码 / 被唤起替别人授权:是**发起登录的那一端** —— 扫码时照二维码里的 `LoginQr.app/dev` 原样填,
+///     唤起时照发起方在链接里带的 app/dev 填。后端核对它与申请 reqId 时报的那组一致,不一致就拒。
 class LoginReq extends $pb.GeneratedMessage {
   factory LoginReq({
     $core.String? reqId,
@@ -333,6 +338,91 @@ class GenerateReqIdReq extends $pb.GeneratedMessage {
   void clearNode() => $_clearField(2);
   @$pb.TagNumber(2)
   $1.ClientInfo ensureNode() => $_ensure(1);
+}
+
+/// 扫码登录的**二维码内容**(`GenerateReqId` 的返回)。
+///
+/// 发起登录的那一端(网页)申请 reqId 时报了自己是谁;后端把 reqId 连同这组 app/dev 原样交回。
+/// **前端把这条消息的 JSON 原样编进二维码**(即 HTTP 网关回的 data:`{"reqId":"L…","app":"HiClub","dev":"web"}`),
+/// 扫码方原样解出来填进 `LoginReq`:`reqId` → `req_id`,`app`/`dev` → `node.app`/`node.dev`。
+///
+/// 原来二维码里只有裸 reqId,扫码方不知道自己在授权哪一端,只能猜(扫网页码就报 web)。
+/// 非扫码的(app 唤起 app)由发起方自己把 app/dev 带进链接,不经这里。
+class LoginQr extends $pb.GeneratedMessage {
+  factory LoginQr({
+    $core.String? reqId,
+    $core.String? app,
+    $core.String? dev,
+  }) {
+    final result = create();
+    if (reqId != null) result.reqId = reqId;
+    if (app != null) result.app = app;
+    if (dev != null) result.dev = dev;
+    return result;
+  }
+
+  LoginQr._();
+
+  factory LoginQr.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory LoginQr.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'LoginQr',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'reqId')
+    ..aOS(2, _omitFieldNames ? '' : 'app')
+    ..aOS(3, _omitFieldNames ? '' : 'dev')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  LoginQr clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  LoginQr copyWith(void Function(LoginQr) updates) =>
+      super.copyWith((message) => updates(message as LoginQr)) as LoginQr;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static LoginQr create() => LoginQr._();
+  @$core.override
+  LoginQr createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static LoginQr getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<LoginQr>(create);
+  static LoginQr? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get reqId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set reqId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasReqId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearReqId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get app => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set app($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasApp() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearApp() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get dev => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set dev($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasDev() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearDev() => $_clearField(3);
 }
 
 class ReqStatusResp extends $pb.GeneratedMessage {

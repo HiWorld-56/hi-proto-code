@@ -63,7 +63,7 @@ class AuthStub(object):
         self.GenerateReqId = channel.unary_unary(
                 '/hi.did.Auth/GenerateReqId',
                 request_serializer=hi_dot_did_dot_auth__pb2.GenerateReqIdReq.SerializeToString,
-                response_deserializer=hi_dot_common__pb2.RequestId.FromString,
+                response_deserializer=hi_dot_did_dot_auth__pb2.LoginQr.FromString,
                 _registered_method=True)
         self.GetReqStatus = channel.unary_unary(
                 '/hi.did.Auth/GetReqStatus',
@@ -172,7 +172,7 @@ def add_AuthServicer_to_server(servicer, server):
             'GenerateReqId': grpc.unary_unary_rpc_method_handler(
                     servicer.GenerateReqId,
                     request_deserializer=hi_dot_did_dot_auth__pb2.GenerateReqIdReq.FromString,
-                    response_serializer=hi_dot_common__pb2.RequestId.SerializeToString,
+                    response_serializer=hi_dot_did_dot_auth__pb2.LoginQr.SerializeToString,
             ),
             'GetReqStatus': grpc.unary_unary_rpc_method_handler(
                     servicer.GetReqStatus,
@@ -321,7 +321,7 @@ class Auth(object):
             target,
             '/hi.did.Auth/GenerateReqId',
             hi_dot_did_dot_auth__pb2.GenerateReqIdReq.SerializeToString,
-            hi_dot_common__pb2.RequestId.FromString,
+            hi_dot_did_dot_auth__pb2.LoginQr.FromString,
             options,
             channel_credentials,
             insecure,

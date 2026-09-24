@@ -68,7 +68,7 @@ type AuthClient interface {
 	RefreshToken(ctx context.Context, in *RefreshTokenReq, opts ...grpc.CallOption) (*hi.AuthToken, error)
 	Verify(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*LoginResp, error)
 	VerifyOffline(ctx context.Context, in *hi.SignedData, opts ...grpc.CallOption) (*LoginResp, error)
-	GenerateReqId(ctx context.Context, in *GenerateReqIdReq, opts ...grpc.CallOption) (*hi.RequestId, error)
+	GenerateReqId(ctx context.Context, in *GenerateReqIdReq, opts ...grpc.CallOption) (*LoginQr, error)
 	GetReqStatus(ctx context.Context, in *hi.RequestId, opts ...grpc.CallOption) (*ReqStatusResp, error)
 	// 登出:删该会话的 refresh/access 行,并释放 PC 独占槽位。**凭 refresh_token 证明归属**,故不鉴权。
 	//
@@ -117,9 +117,9 @@ func (c *authClient) VerifyOffline(ctx context.Context, in *hi.SignedData, opts 
 	return out, nil
 }
 
-func (c *authClient) GenerateReqId(ctx context.Context, in *GenerateReqIdReq, opts ...grpc.CallOption) (*hi.RequestId, error) {
+func (c *authClient) GenerateReqId(ctx context.Context, in *GenerateReqIdReq, opts ...grpc.CallOption) (*LoginQr, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(hi.RequestId)
+	out := new(LoginQr)
 	err := c.cc.Invoke(ctx, Auth_GenerateReqId_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -186,7 +186,7 @@ type AuthServer interface {
 	RefreshToken(context.Context, *RefreshTokenReq) (*hi.AuthToken, error)
 	Verify(context.Context, *hi.SignedData) (*LoginResp, error)
 	VerifyOffline(context.Context, *hi.SignedData) (*LoginResp, error)
-	GenerateReqId(context.Context, *GenerateReqIdReq) (*hi.RequestId, error)
+	GenerateReqId(context.Context, *GenerateReqIdReq) (*LoginQr, error)
 	GetReqStatus(context.Context, *hi.RequestId) (*ReqStatusResp, error)
 	// 登出:删该会话的 refresh/access 行,并释放 PC 独占槽位。**凭 refresh_token 证明归属**,故不鉴权。
 	//
@@ -213,7 +213,7 @@ func (UnimplementedAuthServer) Verify(context.Context, *hi.SignedData) (*LoginRe
 func (UnimplementedAuthServer) VerifyOffline(context.Context, *hi.SignedData) (*LoginResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method VerifyOffline not implemented")
 }
-func (UnimplementedAuthServer) GenerateReqId(context.Context, *GenerateReqIdReq) (*hi.RequestId, error) {
+func (UnimplementedAuthServer) GenerateReqId(context.Context, *GenerateReqIdReq) (*LoginQr, error) {
 	return nil, status.Error(codes.Unimplemented, "method GenerateReqId not implemented")
 }
 func (UnimplementedAuthServer) GetReqStatus(context.Context, *hi.RequestId) (*ReqStatusResp, error) {

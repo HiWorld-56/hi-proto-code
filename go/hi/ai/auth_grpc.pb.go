@@ -33,7 +33,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthClient interface {
 	RefreshToken(ctx context.Context, in *did.RefreshTokenReq, opts ...grpc.CallOption) (*hi.AuthToken, error)
-	GenerateReqId(ctx context.Context, in *did.GenerateReqIdReq, opts ...grpc.CallOption) (*hi.RequestId, error)
+	GenerateReqId(ctx context.Context, in *did.GenerateReqIdReq, opts ...grpc.CallOption) (*did.LoginQr, error)
 	GetReqStatus(ctx context.Context, in *hi.RequestId, opts ...grpc.CallOption) (*did.ReqStatusResp, error)
 	// 登出:删该会话的 refresh/access 行。**凭 refresh_token 证明归属**,故不鉴权。
 	//
@@ -60,9 +60,9 @@ func (c *authClient) RefreshToken(ctx context.Context, in *did.RefreshTokenReq, 
 	return out, nil
 }
 
-func (c *authClient) GenerateReqId(ctx context.Context, in *did.GenerateReqIdReq, opts ...grpc.CallOption) (*hi.RequestId, error) {
+func (c *authClient) GenerateReqId(ctx context.Context, in *did.GenerateReqIdReq, opts ...grpc.CallOption) (*did.LoginQr, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(hi.RequestId)
+	out := new(did.LoginQr)
 	err := c.cc.Invoke(ctx, Auth_GenerateReqId_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -95,7 +95,7 @@ func (c *authClient) Logout(ctx context.Context, in *did.RefreshTokenReq, opts .
 // for forward compatibility.
 type AuthServer interface {
 	RefreshToken(context.Context, *did.RefreshTokenReq) (*hi.AuthToken, error)
-	GenerateReqId(context.Context, *did.GenerateReqIdReq) (*hi.RequestId, error)
+	GenerateReqId(context.Context, *did.GenerateReqIdReq) (*did.LoginQr, error)
 	GetReqStatus(context.Context, *hi.RequestId) (*did.ReqStatusResp, error)
 	// 登出:删该会话的 refresh/access 行。**凭 refresh_token 证明归属**,故不鉴权。
 	//
@@ -114,7 +114,7 @@ type UnimplementedAuthServer struct{}
 func (UnimplementedAuthServer) RefreshToken(context.Context, *did.RefreshTokenReq) (*hi.AuthToken, error) {
 	return nil, status.Error(codes.Unimplemented, "method RefreshToken not implemented")
 }
-func (UnimplementedAuthServer) GenerateReqId(context.Context, *did.GenerateReqIdReq) (*hi.RequestId, error) {
+func (UnimplementedAuthServer) GenerateReqId(context.Context, *did.GenerateReqIdReq) (*did.LoginQr, error) {
 	return nil, status.Error(codes.Unimplemented, "method GenerateReqId not implemented")
 }
 func (UnimplementedAuthServer) GetReqStatus(context.Context, *hi.RequestId) (*did.ReqStatusResp, error) {
