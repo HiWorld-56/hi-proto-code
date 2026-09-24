@@ -27,9 +27,9 @@ var File_hi_media_auth_proto protoreflect.FileDescriptor
 
 const file_hi_media_auth_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/media/auth.proto\x12\bhi.media\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x11hi/did/auth.proto\x1a\x10hi/options.proto2\x85\x02\n" +
-	"\x04Auth\x12?\n" +
-	"\rGenerateReqId\x12\x18.hi.did.GenerateReqIdReq\x1a\r.hi.RequestId\"\x05\x8a\xb5\x18\x01\x01\x12;\n" +
+	"\x13hi/media/auth.proto\x12\bhi.media\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x11hi/did/auth.proto\x1a\x10hi/options.proto2\x87\x02\n" +
+	"\x04Auth\x12A\n" +
+	"\rGenerateReqId\x12\x18.hi.did.GenerateReqIdReq\x1a\x0f.hi.did.LoginQr\"\x05\x8a\xb5\x18\x01\x01\x12;\n" +
 	"\fGetReqStatus\x12\r.hi.RequestId\x1a\x15.hi.did.ReqStatusResp\"\x05\x8a\xb5\x18\x01\x01\x12=\n" +
 	"\fRefreshToken\x12\x17.hi.did.RefreshTokenReq\x1a\r.hi.AuthToken\"\x05\x8a\xb5\x18\x01\x01\x12@\n" +
 	"\x06Logout\x12\x17.hi.did.RefreshTokenReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x01B\x86\x01\n" +
@@ -39,19 +39,20 @@ var file_hi_media_auth_proto_goTypes = []any{
 	(*did.GenerateReqIdReq)(nil), // 0: hi.did.GenerateReqIdReq
 	(*hi.RequestId)(nil),         // 1: hi.RequestId
 	(*did.RefreshTokenReq)(nil),  // 2: hi.did.RefreshTokenReq
-	(*did.ReqStatusResp)(nil),    // 3: hi.did.ReqStatusResp
-	(*hi.AuthToken)(nil),         // 4: hi.AuthToken
-	(*emptypb.Empty)(nil),        // 5: google.protobuf.Empty
+	(*did.LoginQr)(nil),          // 3: hi.did.LoginQr
+	(*did.ReqStatusResp)(nil),    // 4: hi.did.ReqStatusResp
+	(*hi.AuthToken)(nil),         // 5: hi.AuthToken
+	(*emptypb.Empty)(nil),        // 6: google.protobuf.Empty
 }
 var file_hi_media_auth_proto_depIdxs = []int32{
 	0, // 0: hi.media.Auth.GenerateReqId:input_type -> hi.did.GenerateReqIdReq
 	1, // 1: hi.media.Auth.GetReqStatus:input_type -> hi.RequestId
 	2, // 2: hi.media.Auth.RefreshToken:input_type -> hi.did.RefreshTokenReq
 	2, // 3: hi.media.Auth.Logout:input_type -> hi.did.RefreshTokenReq
-	1, // 4: hi.media.Auth.GenerateReqId:output_type -> hi.RequestId
-	3, // 5: hi.media.Auth.GetReqStatus:output_type -> hi.did.ReqStatusResp
-	4, // 6: hi.media.Auth.RefreshToken:output_type -> hi.AuthToken
-	5, // 7: hi.media.Auth.Logout:output_type -> google.protobuf.Empty
+	3, // 4: hi.media.Auth.GenerateReqId:output_type -> hi.did.LoginQr
+	4, // 5: hi.media.Auth.GetReqStatus:output_type -> hi.did.ReqStatusResp
+	5, // 6: hi.media.Auth.RefreshToken:output_type -> hi.AuthToken
+	6, // 7: hi.media.Auth.Logout:output_type -> google.protobuf.Empty
 	4, // [4:8] is the sub-list for method output_type
 	0, // [0:4] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name

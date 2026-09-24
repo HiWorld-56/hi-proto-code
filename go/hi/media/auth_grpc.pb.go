@@ -34,7 +34,7 @@ const (
 //
 // Auth 提供 HiMedia Web 扫码登录及会话管理接口。
 type AuthClient interface {
-	GenerateReqId(ctx context.Context, in *did.GenerateReqIdReq, opts ...grpc.CallOption) (*hi.RequestId, error)
+	GenerateReqId(ctx context.Context, in *did.GenerateReqIdReq, opts ...grpc.CallOption) (*did.LoginQr, error)
 	GetReqStatus(ctx context.Context, in *hi.RequestId, opts ...grpc.CallOption) (*did.ReqStatusResp, error)
 	RefreshToken(ctx context.Context, in *did.RefreshTokenReq, opts ...grpc.CallOption) (*hi.AuthToken, error)
 	Logout(ctx context.Context, in *did.RefreshTokenReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -48,9 +48,9 @@ func NewAuthClient(cc grpc.ClientConnInterface) AuthClient {
 	return &authClient{cc}
 }
 
-func (c *authClient) GenerateReqId(ctx context.Context, in *did.GenerateReqIdReq, opts ...grpc.CallOption) (*hi.RequestId, error) {
+func (c *authClient) GenerateReqId(ctx context.Context, in *did.GenerateReqIdReq, opts ...grpc.CallOption) (*did.LoginQr, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(hi.RequestId)
+	out := new(did.LoginQr)
 	err := c.cc.Invoke(ctx, Auth_GenerateReqId_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -94,7 +94,7 @@ func (c *authClient) Logout(ctx context.Context, in *did.RefreshTokenReq, opts .
 //
 // Auth 提供 HiMedia Web 扫码登录及会话管理接口。
 type AuthServer interface {
-	GenerateReqId(context.Context, *did.GenerateReqIdReq) (*hi.RequestId, error)
+	GenerateReqId(context.Context, *did.GenerateReqIdReq) (*did.LoginQr, error)
 	GetReqStatus(context.Context, *hi.RequestId) (*did.ReqStatusResp, error)
 	RefreshToken(context.Context, *did.RefreshTokenReq) (*hi.AuthToken, error)
 	Logout(context.Context, *did.RefreshTokenReq) (*emptypb.Empty, error)
@@ -107,7 +107,7 @@ type AuthServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAuthServer struct{}
 
-func (UnimplementedAuthServer) GenerateReqId(context.Context, *did.GenerateReqIdReq) (*hi.RequestId, error) {
+func (UnimplementedAuthServer) GenerateReqId(context.Context, *did.GenerateReqIdReq) (*did.LoginQr, error) {
 	return nil, status.Error(codes.Unimplemented, "method GenerateReqId not implemented")
 }
 func (UnimplementedAuthServer) GetReqStatus(context.Context, *hi.RequestId) (*did.ReqStatusResp, error) {
