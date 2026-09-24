@@ -920,6 +920,9 @@ impl serde::Serialize for BinanceSendReq {
                 binance_send_req::Op::UsdsFuturesIncome(v) => {
                     struct_ser.serialize_field("usdsFuturesIncome", v)?;
                 }
+                binance_send_req::Op::UsdsFuturesSignTradfiContract(v) => {
+                    struct_ser.serialize_field("usdsFuturesSignTradfiContract", v)?;
+                }
                 binance_send_req::Op::StocksPlaceEquityOrder(v) => {
                     struct_ser.serialize_field("stocksPlaceEquityOrder", v)?;
                 }
@@ -946,6 +949,12 @@ impl serde::Serialize for BinanceSendReq {
                 }
                 binance_send_req::Op::StocksLatestQuote(v) => {
                     struct_ser.serialize_field("stocksLatestQuote", v)?;
+                }
+                binance_send_req::Op::StocksTokenizedAssets(v) => {
+                    struct_ser.serialize_field("stocksTokenizedAssets", v)?;
+                }
+                binance_send_req::Op::StocksSignUsEquityDisclaimer(v) => {
+                    struct_ser.serialize_field("stocksSignUsEquityDisclaimer", v)?;
                 }
                 binance_send_req::Op::WalletQueryUserWalletBalance(v) => {
                     struct_ser.serialize_field("walletQueryUserWalletBalance", v)?;
@@ -1000,6 +1009,8 @@ impl<'de> serde::Deserialize<'de> for BinanceSendReq {
             "usdsFuturesOpenAlgoOrders",
             "usds_futures_income",
             "usdsFuturesIncome",
+            "usds_futures_sign_tradfi_contract",
+            "usdsFuturesSignTradfiContract",
             "stocks_place_equity_order",
             "stocksPlaceEquityOrder",
             "stocks_cancel_equity_order",
@@ -1018,6 +1029,10 @@ impl<'de> serde::Deserialize<'de> for BinanceSendReq {
             "stocksExchangeInfo",
             "stocks_latest_quote",
             "stocksLatestQuote",
+            "stocks_tokenized_assets",
+            "stocksTokenizedAssets",
+            "stocks_sign_us_equity_disclaimer",
+            "stocksSignUsEquityDisclaimer",
             "wallet_query_user_wallet_balance",
             "walletQueryUserWalletBalance",
         ];
@@ -1044,6 +1059,7 @@ impl<'de> serde::Deserialize<'de> for BinanceSendReq {
             UsdsFuturesCurrentAllOpenOrders,
             UsdsFuturesOpenAlgoOrders,
             UsdsFuturesIncome,
+            UsdsFuturesSignTradfiContract,
             StocksPlaceEquityOrder,
             StocksCancelEquityOrder,
             StocksCancelAllEquityOrders,
@@ -1053,6 +1069,8 @@ impl<'de> serde::Deserialize<'de> for BinanceSendReq {
             StocksEquityTradeHistory,
             StocksExchangeInfo,
             StocksLatestQuote,
+            StocksTokenizedAssets,
+            StocksSignUsEquityDisclaimer,
             WalletQueryUserWalletBalance,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -1095,6 +1113,7 @@ impl<'de> serde::Deserialize<'de> for BinanceSendReq {
                             "usdsFuturesCurrentAllOpenOrders" | "usds_futures_current_all_open_orders" => Ok(GeneratedField::UsdsFuturesCurrentAllOpenOrders),
                             "usdsFuturesOpenAlgoOrders" | "usds_futures_open_algo_orders" => Ok(GeneratedField::UsdsFuturesOpenAlgoOrders),
                             "usdsFuturesIncome" | "usds_futures_income" => Ok(GeneratedField::UsdsFuturesIncome),
+                            "usdsFuturesSignTradfiContract" | "usds_futures_sign_tradfi_contract" => Ok(GeneratedField::UsdsFuturesSignTradfiContract),
                             "stocksPlaceEquityOrder" | "stocks_place_equity_order" => Ok(GeneratedField::StocksPlaceEquityOrder),
                             "stocksCancelEquityOrder" | "stocks_cancel_equity_order" => Ok(GeneratedField::StocksCancelEquityOrder),
                             "stocksCancelAllEquityOrders" | "stocks_cancel_all_equity_orders" => Ok(GeneratedField::StocksCancelAllEquityOrders),
@@ -1104,6 +1123,8 @@ impl<'de> serde::Deserialize<'de> for BinanceSendReq {
                             "stocksEquityTradeHistory" | "stocks_equity_trade_history" => Ok(GeneratedField::StocksEquityTradeHistory),
                             "stocksExchangeInfo" | "stocks_exchange_info" => Ok(GeneratedField::StocksExchangeInfo),
                             "stocksLatestQuote" | "stocks_latest_quote" => Ok(GeneratedField::StocksLatestQuote),
+                            "stocksTokenizedAssets" | "stocks_tokenized_assets" => Ok(GeneratedField::StocksTokenizedAssets),
+                            "stocksSignUsEquityDisclaimer" | "stocks_sign_us_equity_disclaimer" => Ok(GeneratedField::StocksSignUsEquityDisclaimer),
                             "walletQueryUserWalletBalance" | "wallet_query_user_wallet_balance" => Ok(GeneratedField::WalletQueryUserWalletBalance),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -1271,6 +1292,13 @@ impl<'de> serde::Deserialize<'de> for BinanceSendReq {
                             op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_send_req::Op::UsdsFuturesIncome)
 ;
                         }
+                        GeneratedField::UsdsFuturesSignTradfiContract => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("usdsFuturesSignTradfiContract"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_send_req::Op::UsdsFuturesSignTradfiContract)
+;
+                        }
                         GeneratedField::StocksPlaceEquityOrder => {
                             if op__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("stocksPlaceEquityOrder"));
@@ -1332,6 +1360,20 @@ impl<'de> serde::Deserialize<'de> for BinanceSendReq {
                                 return Err(serde::de::Error::duplicate_field("stocksLatestQuote"));
                             }
                             op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_send_req::Op::StocksLatestQuote)
+;
+                        }
+                        GeneratedField::StocksTokenizedAssets => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("stocksTokenizedAssets"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_send_req::Op::StocksTokenizedAssets)
+;
+                        }
+                        GeneratedField::StocksSignUsEquityDisclaimer => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("stocksSignUsEquityDisclaimer"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_send_req::Op::StocksSignUsEquityDisclaimer)
 ;
                         }
                         GeneratedField::WalletQueryUserWalletBalance => {

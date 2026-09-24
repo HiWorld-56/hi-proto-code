@@ -1273,6 +1273,56 @@ class BinanceFuturesIncome extends $pb.GeneratedMessage {
   void clearLimit() => $_clearField(5);
 }
 
+/// 签 **TradFi 永续合约协议**。`POST /fapi/v1/stock/contract`
+///
+/// 股票、商品、外汇这类永续(`contractType == TRADIFI_PERPETUAL`)**要先签才能交易**;查询不用签。
+/// 每个币安账户签一次,重复签币安照样回成功。**没有参数**。
+///
+/// 现在由币安插件在 install 时**静默**签(有密钥才签得了,见插件);以后给用户一个「同意」页面,
+/// 发的也是这个对象。它是**法律动作**,不该由 AI 自己决定去做 —— 插件没把它开放成插件方法。
+class BinanceFuturesSignTradfiContract extends $pb.GeneratedMessage {
+  factory BinanceFuturesSignTradfiContract() => create();
+
+  BinanceFuturesSignTradfiContract._();
+
+  factory BinanceFuturesSignTradfiContract.fromBuffer(
+          $core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceFuturesSignTradfiContract.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceFuturesSignTradfiContract',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceFuturesSignTradfiContract clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceFuturesSignTradfiContract copyWith(
+          void Function(BinanceFuturesSignTradfiContract) updates) =>
+      super.copyWith(
+              (message) => updates(message as BinanceFuturesSignTradfiContract))
+          as BinanceFuturesSignTradfiContract;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceFuturesSignTradfiContract create() =>
+      BinanceFuturesSignTradfiContract._();
+  @$core.override
+  BinanceFuturesSignTradfiContract createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceFuturesSignTradfiContract getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceFuturesSignTradfiContract>(
+          create);
+  static BinanceFuturesSignTradfiContract? _defaultInstance;
+}
+
 /// 各钱包的余额(现货、资金、合约、理财…,每个钱包带逐币明细)。`GET /sapi/v1/asset/wallet/balance`
 ///
 /// **没有参数**:明细(`needBalanceDetail=true`)由机器人一律带上 —— 不带就只有每个钱包折成 BTC 的总额,

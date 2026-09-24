@@ -1937,7 +1937,7 @@ pub struct BinanceSendReq {
     pub ttl_ms: ::core::option::Option<i64>,
     #[prost(
         oneof = "binance_send_req::Op",
-        tags = "10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 31, 32, 33, 34, 35, 36, 37, 38, 40"
+        tags = "10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 40"
     )]
     pub op: ::core::option::Option<binance_send_req::Op>,
 }
@@ -1998,6 +1998,11 @@ pub mod binance_send_req {
         /// usds_futures.income
         #[prost(message, tag = "28")]
         UsdsFuturesIncome(super::super::binance::BinanceFuturesIncome),
+        /// usds_futures.sign_tradfi_contract
+        #[prost(message, tag = "29")]
+        UsdsFuturesSignTradfiContract(
+            super::super::binance::BinanceFuturesSignTradfiContract,
+        ),
         /// stocks.place_equity_order
         #[prost(message, tag = "30")]
         StocksPlaceEquityOrder(super::super::binance::BinanceStockNewOrder),
@@ -2025,6 +2030,12 @@ pub mod binance_send_req {
         /// stocks.latest_quote
         #[prost(message, tag = "38")]
         StocksLatestQuote(super::super::binance::BinanceStockQuote),
+        /// stocks.tokenized_assets
+        #[prost(message, tag = "39")]
+        StocksTokenizedAssets(super::super::binance::BinanceStockTokenizedAssets),
+        /// stocks.sign_us_equity_disclaimer
+        #[prost(message, tag = "41")]
+        StocksSignUsEquityDisclaimer(super::super::binance::BinanceStockSignDisclaimer),
         /// wallet.query_user_wallet_balance
         #[prost(message, tag = "40")]
         WalletQueryUserWalletBalance(super::super::binance::BinanceWalletBalance),

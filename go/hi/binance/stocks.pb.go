@@ -819,6 +819,88 @@ func (x *BinanceStockQuote) GetSymbol() string {
 	return ""
 }
 
+// **bStocks 清单**:哪些股票能换成代币、代币叫什么(`TSLAB` ↔ `TSLA`)。**没有参数**。
+//
+// 这些代币在**现货**上都有对 USDT 的交易对(`TSLABUSDT`),照现货那套对象买卖。
+// ⚠️ 公开的现货清单里**认不出**哪些是 bStocks(字段与普通币一模一样,2026-09-24 比过),
+//
+//	所以只能问这里 —— 它要带 API key(与行情接口一样不签名)。
+type BinanceStockTokenizedAssets struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BinanceStockTokenizedAssets) Reset() {
+	*x = BinanceStockTokenizedAssets{}
+	mi := &file_hi_binance_stocks_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BinanceStockTokenizedAssets) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BinanceStockTokenizedAssets) ProtoMessage() {}
+
+func (x *BinanceStockTokenizedAssets) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_binance_stocks_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BinanceStockTokenizedAssets.ProtoReflect.Descriptor instead.
+func (*BinanceStockTokenizedAssets) Descriptor() ([]byte, []int) {
+	return file_hi_binance_stocks_proto_rawDescGZIP(), []int{9}
+}
+
+// 签 **美股免责声明**。**没有参数**。重复签币安照样回成功。
+//
+// 与 `BinanceFuturesSignTradfiContract` 同一个口径:插件 install 时静默签,以后给用户一个「同意」页面;
+// 它是法律动作,不开放给 AI。
+type BinanceStockSignDisclaimer struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BinanceStockSignDisclaimer) Reset() {
+	*x = BinanceStockSignDisclaimer{}
+	mi := &file_hi_binance_stocks_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BinanceStockSignDisclaimer) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BinanceStockSignDisclaimer) ProtoMessage() {}
+
+func (x *BinanceStockSignDisclaimer) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_binance_stocks_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BinanceStockSignDisclaimer.ProtoReflect.Descriptor instead.
+func (*BinanceStockSignDisclaimer) Descriptor() ([]byte, []int) {
+	return file_hi_binance_stocks_proto_rawDescGZIP(), []int{10}
+}
+
 var File_hi_binance_stocks_proto protoreflect.FileDescriptor
 
 const file_hi_binance_stocks_proto_rawDesc = "" +
@@ -898,7 +980,9 @@ const file_hi_binance_stocks_proto_rawDesc = "" +
 	"\a_symbol\"j\n" +
 	"\x11BinanceStockQuote\x12D\n" +
 	"\x06symbol\x18\x01 \x01(\tB'\xbaH \xc8\x01\x01r\x1b2\x19^[A-Z0-9]+(\\.[A-Z0-9]+)?$\x90\xb5\x18\x02H\x00R\x06symbol\x88\x01\x01:\x04\x98\xb5\x18\x02B\t\n" +
-	"\a_symbol*\x90\x01\n" +
+	"\a_symbol\"#\n" +
+	"\x1bBinanceStockTokenizedAssets:\x04\x98\xb5\x18\x02\"\"\n" +
+	"\x1aBinanceStockSignDisclaimer:\x04\x98\xb5\x18\x02*\x90\x01\n" +
 	"\x17BinanceStockTimeInForce\x12+\n" +
 	"'BINANCE_STOCK_TIME_IN_FORCE_UNSPECIFIED\x10\x00\x12#\n" +
 	"\x1fBINANCE_STOCK_TIME_IN_FORCE_DAY\x10\x01\x12#\n" +
@@ -936,7 +1020,7 @@ func file_hi_binance_stocks_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_binance_stocks_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
-var file_hi_binance_stocks_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_hi_binance_stocks_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_hi_binance_stocks_proto_goTypes = []any{
 	(BinanceStockTimeInForce)(0),        // 0: hi.binance.BinanceStockTimeInForce
 	(BinanceStockTradingSession)(0),     // 1: hi.binance.BinanceStockTradingSession
@@ -951,19 +1035,21 @@ var file_hi_binance_stocks_proto_goTypes = []any{
 	(*BinanceStockTradeHistory)(nil),    // 10: hi.binance.BinanceStockTradeHistory
 	(*BinanceStockExchangeInfo)(nil),    // 11: hi.binance.BinanceStockExchangeInfo
 	(*BinanceStockQuote)(nil),           // 12: hi.binance.BinanceStockQuote
-	(BinanceOrderSide)(0),               // 13: hi.binance.BinanceOrderSide
-	(BinanceOrderType)(0),               // 14: hi.binance.BinanceOrderType
+	(*BinanceStockTokenizedAssets)(nil), // 13: hi.binance.BinanceStockTokenizedAssets
+	(*BinanceStockSignDisclaimer)(nil),  // 14: hi.binance.BinanceStockSignDisclaimer
+	(BinanceOrderSide)(0),               // 15: hi.binance.BinanceOrderSide
+	(BinanceOrderType)(0),               // 16: hi.binance.BinanceOrderType
 }
 var file_hi_binance_stocks_proto_depIdxs = []int32{
-	13, // 0: hi.binance.BinanceStockNewOrder.side:type_name -> hi.binance.BinanceOrderSide
-	14, // 1: hi.binance.BinanceStockNewOrder.type:type_name -> hi.binance.BinanceOrderType
+	15, // 0: hi.binance.BinanceStockNewOrder.side:type_name -> hi.binance.BinanceOrderSide
+	16, // 1: hi.binance.BinanceStockNewOrder.type:type_name -> hi.binance.BinanceOrderType
 	0,  // 2: hi.binance.BinanceStockNewOrder.time_in_force:type_name -> hi.binance.BinanceStockTimeInForce
 	1,  // 3: hi.binance.BinanceStockNewOrder.trading_session:type_name -> hi.binance.BinanceStockTradingSession
 	2,  // 4: hi.binance.BinanceStockNewOrder.wallet:type_name -> hi.binance.BinanceStockWallet
-	14, // 5: hi.binance.BinanceStockOrderHistory.type:type_name -> hi.binance.BinanceOrderType
-	13, // 6: hi.binance.BinanceStockOrderHistory.side:type_name -> hi.binance.BinanceOrderSide
+	16, // 5: hi.binance.BinanceStockOrderHistory.type:type_name -> hi.binance.BinanceOrderType
+	15, // 6: hi.binance.BinanceStockOrderHistory.side:type_name -> hi.binance.BinanceOrderSide
 	3,  // 7: hi.binance.BinanceStockOrderHistory.statuses:type_name -> hi.binance.BinanceStockOrderStatus
-	13, // 8: hi.binance.BinanceStockTradeHistory.side:type_name -> hi.binance.BinanceOrderSide
+	15, // 8: hi.binance.BinanceStockTradeHistory.side:type_name -> hi.binance.BinanceOrderSide
 	9,  // [9:9] is the sub-list for method output_type
 	9,  // [9:9] is the sub-list for method input_type
 	9,  // [9:9] is the sub-list for extension type_name
@@ -990,7 +1076,7 @@ func file_hi_binance_stocks_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_binance_stocks_proto_rawDesc), len(file_hi_binance_stocks_proto_rawDesc)),
 			NumEnums:      4,
-			NumMessages:   9,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

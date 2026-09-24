@@ -779,6 +779,96 @@ class BinanceStockQuote extends $pb.GeneratedMessage {
   void clearSymbol() => $_clearField(1);
 }
 
+/// **bStocks 清单**:哪些股票能换成代币、代币叫什么(`TSLAB` ↔ `TSLA`)。**没有参数**。
+///
+/// 这些代币在**现货**上都有对 USDT 的交易对(`TSLABUSDT`),照现货那套对象买卖。
+/// ⚠️ 公开的现货清单里**认不出**哪些是 bStocks(字段与普通币一模一样,2026-09-24 比过),
+///    所以只能问这里 —— 它要带 API key(与行情接口一样不签名)。
+class BinanceStockTokenizedAssets extends $pb.GeneratedMessage {
+  factory BinanceStockTokenizedAssets() => create();
+
+  BinanceStockTokenizedAssets._();
+
+  factory BinanceStockTokenizedAssets.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceStockTokenizedAssets.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceStockTokenizedAssets',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceStockTokenizedAssets clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceStockTokenizedAssets copyWith(
+          void Function(BinanceStockTokenizedAssets) updates) =>
+      super.copyWith(
+              (message) => updates(message as BinanceStockTokenizedAssets))
+          as BinanceStockTokenizedAssets;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceStockTokenizedAssets create() =>
+      BinanceStockTokenizedAssets._();
+  @$core.override
+  BinanceStockTokenizedAssets createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceStockTokenizedAssets getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceStockTokenizedAssets>(create);
+  static BinanceStockTokenizedAssets? _defaultInstance;
+}
+
+/// 签 **美股免责声明**。**没有参数**。重复签币安照样回成功。
+///
+/// 与 `BinanceFuturesSignTradfiContract` 同一个口径:插件 install 时静默签,以后给用户一个「同意」页面;
+/// 它是法律动作,不开放给 AI。
+class BinanceStockSignDisclaimer extends $pb.GeneratedMessage {
+  factory BinanceStockSignDisclaimer() => create();
+
+  BinanceStockSignDisclaimer._();
+
+  factory BinanceStockSignDisclaimer.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceStockSignDisclaimer.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceStockSignDisclaimer',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceStockSignDisclaimer clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceStockSignDisclaimer copyWith(
+          void Function(BinanceStockSignDisclaimer) updates) =>
+      super.copyWith(
+              (message) => updates(message as BinanceStockSignDisclaimer))
+          as BinanceStockSignDisclaimer;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceStockSignDisclaimer create() => BinanceStockSignDisclaimer._();
+  @$core.override
+  BinanceStockSignDisclaimer createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceStockSignDisclaimer getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceStockSignDisclaimer>(create);
+  static BinanceStockSignDisclaimer? _defaultInstance;
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

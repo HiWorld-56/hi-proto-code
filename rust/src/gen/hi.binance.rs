@@ -192,6 +192,15 @@ pub struct BinanceFuturesIncome {
     #[prost(int64, optional, tag = "5")]
     pub limit: ::core::option::Option<i64>,
 }
+/// 签 **TradFi 永续合约协议**。`POST /fapi/v1/stock/contract`
+///
+/// 股票、商品、外汇这类永续(`contractType == TRADIFI_PERPETUAL`)**要先签才能交易**;查询不用签。
+/// 每个币安账户签一次,重复签币安照样回成功。**没有参数**。
+///
+/// 现在由币安插件在 install 时**静默**签(有密钥才签得了,见插件);以后给用户一个「同意」页面,
+/// 发的也是这个对象。它是**法律动作**,不该由 AI 自己决定去做 —— 插件没把它开放成插件方法。
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceFuturesSignTradfiContract {}
 /// 各钱包的余额(现货、资金、合约、理财…,每个钱包带逐币明细)。`GET /sapi/v1/asset/wallet/balance`
 ///
 /// **没有参数**:明细(`needBalanceDetail=true`)由机器人一律带上 —— 不带就只有每个钱包折成 BTC 的总额,
@@ -488,6 +497,19 @@ pub struct BinanceStockQuote {
     #[prost(string, optional, tag = "1")]
     pub symbol: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// **bStocks 清单**:哪些股票能换成代币、代币叫什么(`TSLAB` ↔ `TSLA`)。**没有参数**。
+///
+/// 这些代币在**现货**上都有对 USDT 的交易对(`TSLABUSDT`),照现货那套对象买卖。
+/// ⚠️ 公开的现货清单里**认不出**哪些是 bStocks(字段与普通币一模一样,2026-09-24 比过),
+/// 所以只能问这里 —— 它要带 API key(与行情接口一样不签名)。
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceStockTokenizedAssets {}
+/// 签 **美股免责声明**。**没有参数**。重复签币安照样回成功。
+///
+/// 与 `BinanceFuturesSignTradfiContract` 同一个口径:插件 install 时静默签,以后给用户一个「同意」页面;
+/// 它是法律动作,不开放给 AI。
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceStockSignDisclaimer {}
 /// 订单有效方式。**与现货/合约的 `BinanceTimeInForce` 不是一回事**(那边是 GTC/IOC/FOK),
 /// 并进那个枚举会让合约也收 DAY、到了币安才被拒。
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]

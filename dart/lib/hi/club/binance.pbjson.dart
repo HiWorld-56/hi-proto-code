@@ -194,6 +194,15 @@ const BinanceSendReq$json = {
       '10': 'usdsFuturesIncome'
     },
     {
+      '1': 'usds_futures_sign_tradfi_contract',
+      '3': 29,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceFuturesSignTradfiContract',
+      '9': 0,
+      '10': 'usdsFuturesSignTradfiContract'
+    },
+    {
       '1': 'stocks_place_equity_order',
       '3': 30,
       '4': 1,
@@ -275,6 +284,24 @@ const BinanceSendReq$json = {
       '10': 'stocksLatestQuote'
     },
     {
+      '1': 'stocks_tokenized_assets',
+      '3': 39,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceStockTokenizedAssets',
+      '9': 0,
+      '10': 'stocksTokenizedAssets'
+    },
+    {
+      '1': 'stocks_sign_us_equity_disclaimer',
+      '3': 41,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceStockSignDisclaimer',
+      '9': 0,
+      '10': 'stocksSignUsEquityDisclaimer'
+    },
+    {
       '1': 'wallet_query_user_wallet_balance',
       '3': 40,
       '4': 1,
@@ -326,25 +353,31 @@ final $typed_data.Uint8List binanceSendReqDescriptor = $convert.base64Decode(
     '9fb3JkZXJzGBsgASgLMiguaGkuYmluYW5jZS5CaW5hbmNlRnV0dXJlc09wZW5BbGdvT3JkZXJz'
     'SABSGXVzZHNGdXR1cmVzT3BlbkFsZ29PcmRlcnMSUgoTdXNkc19mdXR1cmVzX2luY29tZRgcIA'
     'EoCzIgLmhpLmJpbmFuY2UuQmluYW5jZUZ1dHVyZXNJbmNvbWVIAFIRdXNkc0Z1dHVyZXNJbmNv'
-    'bWUSXQoZc3RvY2tzX3BsYWNlX2VxdWl0eV9vcmRlchgeIAEoCzIgLmhpLmJpbmFuY2UuQmluYW'
-    '5jZVN0b2NrTmV3T3JkZXJIAFIWc3RvY2tzUGxhY2VFcXVpdHlPcmRlchJiChpzdG9ja3NfY2Fu'
-    'Y2VsX2VxdWl0eV9vcmRlchgfIAEoCzIjLmhpLmJpbmFuY2UuQmluYW5jZVN0b2NrQ2FuY2VsT3'
-    'JkZXJIAFIXc3RvY2tzQ2FuY2VsRXF1aXR5T3JkZXISbwofc3RvY2tzX2NhbmNlbF9hbGxfZXF1'
-    'aXR5X29yZGVycxggIAEoCzInLmhpLmJpbmFuY2UuQmluYW5jZVN0b2NrQ2FuY2VsQWxsT3JkZX'
-    'JzSABSG3N0b2Nrc0NhbmNlbEFsbEVxdWl0eU9yZGVycxJhChpzdG9ja3NfY3VycmVudF9vcGVu'
-    'X29yZGVycxghIAEoCzIiLmhpLmJpbmFuY2UuQmluYW5jZVN0b2NrT3Blbk9yZGVyc0gAUhdzdG'
-    '9ja3NDdXJyZW50T3Blbk9yZGVycxJfChpzdG9ja3NfZXF1aXR5X29yZGVyX2RldGFpbBgiIAEo'
-    'CzIgLmhpLmJpbmFuY2UuQmluYW5jZVN0b2NrR2V0T3JkZXJIAFIXc3RvY2tzRXF1aXR5T3JkZX'
-    'JEZXRhaWwSZQobc3RvY2tzX2VxdWl0eV9vcmRlcl9oaXN0b3J5GCMgASgLMiQuaGkuYmluYW5j'
-    'ZS5CaW5hbmNlU3RvY2tPcmRlckhpc3RvcnlIAFIYc3RvY2tzRXF1aXR5T3JkZXJIaXN0b3J5Em'
-    'UKG3N0b2Nrc19lcXVpdHlfdHJhZGVfaGlzdG9yeRgkIAEoCzIkLmhpLmJpbmFuY2UuQmluYW5j'
-    'ZVN0b2NrVHJhZGVIaXN0b3J5SABSGHN0b2Nrc0VxdWl0eVRyYWRlSGlzdG9yeRJYChRzdG9ja3'
-    'NfZXhjaGFuZ2VfaW5mbxglIAEoCzIkLmhpLmJpbmFuY2UuQmluYW5jZVN0b2NrRXhjaGFuZ2VJ'
-    'bmZvSABSEnN0b2Nrc0V4Y2hhbmdlSW5mbxJPChNzdG9ja3NfbGF0ZXN0X3F1b3RlGCYgASgLMh'
-    '0uaGkuYmluYW5jZS5CaW5hbmNlU3RvY2tRdW90ZUgAUhFzdG9ja3NMYXRlc3RRdW90ZRJqCiB3'
-    'YWxsZXRfcXVlcnlfdXNlcl93YWxsZXRfYmFsYW5jZRgoIAEoCzIgLmhpLmJpbmFuY2UuQmluYW'
-    '5jZVdhbGxldEJhbGFuY2VIAFIcd2FsbGV0UXVlcnlVc2VyV2FsbGV0QmFsYW5jZUILCgJvcBIF'
-    'ukgCCAFCBwoFX2NvZGVCBwoFX2RhcmtCCQoHX3R0bF9tcw==');
+    'bWUSeAohdXNkc19mdXR1cmVzX3NpZ25fdHJhZGZpX2NvbnRyYWN0GB0gASgLMiwuaGkuYmluYW'
+    '5jZS5CaW5hbmNlRnV0dXJlc1NpZ25UcmFkZmlDb250cmFjdEgAUh11c2RzRnV0dXJlc1NpZ25U'
+    'cmFkZmlDb250cmFjdBJdChlzdG9ja3NfcGxhY2VfZXF1aXR5X29yZGVyGB4gASgLMiAuaGkuYm'
+    'luYW5jZS5CaW5hbmNlU3RvY2tOZXdPcmRlckgAUhZzdG9ja3NQbGFjZUVxdWl0eU9yZGVyEmIK'
+    'GnN0b2Nrc19jYW5jZWxfZXF1aXR5X29yZGVyGB8gASgLMiMuaGkuYmluYW5jZS5CaW5hbmNlU3'
+    'RvY2tDYW5jZWxPcmRlckgAUhdzdG9ja3NDYW5jZWxFcXVpdHlPcmRlchJvCh9zdG9ja3NfY2Fu'
+    'Y2VsX2FsbF9lcXVpdHlfb3JkZXJzGCAgASgLMicuaGkuYmluYW5jZS5CaW5hbmNlU3RvY2tDYW'
+    '5jZWxBbGxPcmRlcnNIAFIbc3RvY2tzQ2FuY2VsQWxsRXF1aXR5T3JkZXJzEmEKGnN0b2Nrc19j'
+    'dXJyZW50X29wZW5fb3JkZXJzGCEgASgLMiIuaGkuYmluYW5jZS5CaW5hbmNlU3RvY2tPcGVuT3'
+    'JkZXJzSABSF3N0b2Nrc0N1cnJlbnRPcGVuT3JkZXJzEl8KGnN0b2Nrc19lcXVpdHlfb3JkZXJf'
+    'ZGV0YWlsGCIgASgLMiAuaGkuYmluYW5jZS5CaW5hbmNlU3RvY2tHZXRPcmRlckgAUhdzdG9ja3'
+    'NFcXVpdHlPcmRlckRldGFpbBJlChtzdG9ja3NfZXF1aXR5X29yZGVyX2hpc3RvcnkYIyABKAsy'
+    'JC5oaS5iaW5hbmNlLkJpbmFuY2VTdG9ja09yZGVySGlzdG9yeUgAUhhzdG9ja3NFcXVpdHlPcm'
+    'Rlckhpc3RvcnkSZQobc3RvY2tzX2VxdWl0eV90cmFkZV9oaXN0b3J5GCQgASgLMiQuaGkuYmlu'
+    'YW5jZS5CaW5hbmNlU3RvY2tUcmFkZUhpc3RvcnlIAFIYc3RvY2tzRXF1aXR5VHJhZGVIaXN0b3'
+    'J5ElgKFHN0b2Nrc19leGNoYW5nZV9pbmZvGCUgASgLMiQuaGkuYmluYW5jZS5CaW5hbmNlU3Rv'
+    'Y2tFeGNoYW5nZUluZm9IAFISc3RvY2tzRXhjaGFuZ2VJbmZvEk8KE3N0b2Nrc19sYXRlc3RfcX'
+    'VvdGUYJiABKAsyHS5oaS5iaW5hbmNlLkJpbmFuY2VTdG9ja1F1b3RlSABSEXN0b2Nrc0xhdGVz'
+    'dFF1b3RlEmEKF3N0b2Nrc190b2tlbml6ZWRfYXNzZXRzGCcgASgLMicuaGkuYmluYW5jZS5CaW'
+    '5hbmNlU3RvY2tUb2tlbml6ZWRBc3NldHNIAFIVc3RvY2tzVG9rZW5pemVkQXNzZXRzEnAKIHN0'
+    'b2Nrc19zaWduX3VzX2VxdWl0eV9kaXNjbGFpbWVyGCkgASgLMiYuaGkuYmluYW5jZS5CaW5hbm'
+    'NlU3RvY2tTaWduRGlzY2xhaW1lckgAUhxzdG9ja3NTaWduVXNFcXVpdHlEaXNjbGFpbWVyEmoK'
+    'IHdhbGxldF9xdWVyeV91c2VyX3dhbGxldF9iYWxhbmNlGCggASgLMiAuaGkuYmluYW5jZS5CaW'
+    '5hbmNlV2FsbGV0QmFsYW5jZUgAUhx3YWxsZXRRdWVyeVVzZXJXYWxsZXRCYWxhbmNlQgsKAm9w'
+    'EgW6SAIIAUIHCgVfY29kZUIHCgVfZGFya0IJCgdfdHRsX21z');
 
 @$core.Deprecated('Use binanceSendRespDescriptor instead')
 const BinanceSendResp$json = {

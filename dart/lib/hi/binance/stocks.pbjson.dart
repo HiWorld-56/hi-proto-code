@@ -564,3 +564,23 @@ const BinanceStockQuote$json = {
 final $typed_data.Uint8List binanceStockQuoteDescriptor = $convert.base64Decode(
     'ChFCaW5hbmNlU3RvY2tRdW90ZRJECgZzeW1ib2wYASABKAlCJ7pIIMgBAXIbMhleW0EtWjAtOV'
     '0rKFwuW0EtWjAtOV0rKT8kkLUYAkgAUgZzeW1ib2yIAQE6BJi1GAJCCQoHX3N5bWJvbA==');
+
+@$core.Deprecated('Use binanceStockTokenizedAssetsDescriptor instead')
+const BinanceStockTokenizedAssets$json = {
+  '1': 'BinanceStockTokenizedAssets',
+  '7': {},
+};
+
+/// Descriptor for `BinanceStockTokenizedAssets`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List binanceStockTokenizedAssetsDescriptor =
+    $convert.base64Decode('ChtCaW5hbmNlU3RvY2tUb2tlbml6ZWRBc3NldHM6BJi1GAI=');
+
+@$core.Deprecated('Use binanceStockSignDisclaimerDescriptor instead')
+const BinanceStockSignDisclaimer$json = {
+  '1': 'BinanceStockSignDisclaimer',
+  '7': {},
+};
+
+/// Descriptor for `BinanceStockSignDisclaimer`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List binanceStockSignDisclaimerDescriptor =
+    $convert.base64Decode('ChpCaW5hbmNlU3RvY2tTaWduRGlzY2xhaW1lcjoEmLUYAg==');
