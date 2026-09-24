@@ -456,7 +456,9 @@ func (x *ListNoticeStatusesResp) GetList() []*NoticeStatus {
 	return nil
 }
 
-// 对邀请(好友 / 入群)做决定。uuid 就是那条邀请通知的 uuid。
+// 对要我拍板的通知做决定。uuid 就是那条通知的 uuid。
+// 要拍板的只有三种:friend-invite / group-invite / plugin-grant-request(卖家批准或驳回申请、买家接受或谢绝分享,
+// 后端按授权单的发起方自己分派);其余通知回 InvalidArgument。状态读取时从业务表合并,做完不用再 MarkNoticeProcessed。
 type HandleNoticeReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Uuid          *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
@@ -510,7 +512,7 @@ func (x *HandleNoticeReq) GetAccept() bool {
 }
 
 // 通知回执:**我处理完这条通知了**。与 HandleNotice 不是一回事 ——
-// 后者是"我对邀请做决定"(accept/reject,带真加好友/真入群的副作用),
+// 后者是"我对要拍板的通知做决定"(accept/reject,带真加好友/真入群/真授权的副作用),
 // 这里只是"这条我消费过了",没有任何业务副作用,对**任何**需要端上处理的通知都适用。
 // 以通知 uuid 为唯一标识,所以不用按类型各写一个接口。
 type MarkNoticeProcessedReq struct {
