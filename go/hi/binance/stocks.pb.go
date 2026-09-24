@@ -476,7 +476,7 @@ func (*BinanceStockOpenOrders) Descriptor() ([]byte, []int) {
 }
 
 // 查一张美股订单。`order_id` 与 `client_order_id` 给一个即可(都不给由币安报错)。
-// `client_order_id` 就是下单那条通知的 uuid(机器人下单时填进去的)。
+// `client_order_id` 就是下单那条指令消息的 uuid(机器人下单时填进去的)。
 type BinanceStockGetOrder struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	OrderId       *string                `protobuf:"bytes,1,opt,name=order_id,json=orderId,proto3,oneof" json:"order_id,omitempty"`

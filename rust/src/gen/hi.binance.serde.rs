@@ -1,3 +1,527 @@
+impl serde::Serialize for BinanceCommand {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.expiration.is_some() {
+            len += 1;
+        }
+        if self.op.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.binance.BinanceCommand", len)?;
+        if let Some(v) = self.expiration.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("expiration", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.op.as_ref() {
+            match v {
+                binance_command::Op::SpotNewOrder(v) => {
+                    struct_ser.serialize_field("spotNewOrder", v)?;
+                }
+                binance_command::Op::SpotCancelOrder(v) => {
+                    struct_ser.serialize_field("spotCancelOrder", v)?;
+                }
+                binance_command::Op::SpotCancelAllOpenOrders(v) => {
+                    struct_ser.serialize_field("spotCancelAllOpenOrders", v)?;
+                }
+                binance_command::Op::SpotGetOpenOrders(v) => {
+                    struct_ser.serialize_field("spotGetOpenOrders", v)?;
+                }
+                binance_command::Op::SpotAccountInformation(v) => {
+                    struct_ser.serialize_field("spotAccountInformation", v)?;
+                }
+                binance_command::Op::SpotGetOrder(v) => {
+                    struct_ser.serialize_field("spotGetOrder", v)?;
+                }
+                binance_command::Op::SpotGetOpenOrderLists(v) => {
+                    struct_ser.serialize_field("spotGetOpenOrderLists", v)?;
+                }
+                binance_command::Op::SpotTicker24h(v) => {
+                    struct_ser.serialize_field("spotTicker24h", v)?;
+                }
+                binance_command::Op::UsdsFuturesNewOrder(v) => {
+                    struct_ser.serialize_field("usdsFuturesNewOrder", v)?;
+                }
+                binance_command::Op::UsdsFuturesCancelOrder(v) => {
+                    struct_ser.serialize_field("usdsFuturesCancelOrder", v)?;
+                }
+                binance_command::Op::UsdsFuturesCancelAllOpenOrders(v) => {
+                    struct_ser.serialize_field("usdsFuturesCancelAllOpenOrders", v)?;
+                }
+                binance_command::Op::UsdsFuturesChangeInitialLeverage(v) => {
+                    struct_ser.serialize_field("usdsFuturesChangeInitialLeverage", v)?;
+                }
+                binance_command::Op::UsdsFuturesPositionInformationV3(v) => {
+                    struct_ser.serialize_field("usdsFuturesPositionInformationV3", v)?;
+                }
+                binance_command::Op::UsdsFuturesAccountInformationV3(v) => {
+                    struct_ser.serialize_field("usdsFuturesAccountInformationV3", v)?;
+                }
+                binance_command::Op::UsdsFuturesCurrentAllOpenOrders(v) => {
+                    struct_ser.serialize_field("usdsFuturesCurrentAllOpenOrders", v)?;
+                }
+                binance_command::Op::UsdsFuturesOpenAlgoOrders(v) => {
+                    struct_ser.serialize_field("usdsFuturesOpenAlgoOrders", v)?;
+                }
+                binance_command::Op::UsdsFuturesIncome(v) => {
+                    struct_ser.serialize_field("usdsFuturesIncome", v)?;
+                }
+                binance_command::Op::UsdsFuturesSignTradfiContract(v) => {
+                    struct_ser.serialize_field("usdsFuturesSignTradfiContract", v)?;
+                }
+                binance_command::Op::StocksPlaceEquityOrder(v) => {
+                    struct_ser.serialize_field("stocksPlaceEquityOrder", v)?;
+                }
+                binance_command::Op::StocksCancelEquityOrder(v) => {
+                    struct_ser.serialize_field("stocksCancelEquityOrder", v)?;
+                }
+                binance_command::Op::StocksCancelAllEquityOrders(v) => {
+                    struct_ser.serialize_field("stocksCancelAllEquityOrders", v)?;
+                }
+                binance_command::Op::StocksCurrentOpenOrders(v) => {
+                    struct_ser.serialize_field("stocksCurrentOpenOrders", v)?;
+                }
+                binance_command::Op::StocksEquityOrderDetail(v) => {
+                    struct_ser.serialize_field("stocksEquityOrderDetail", v)?;
+                }
+                binance_command::Op::StocksEquityOrderHistory(v) => {
+                    struct_ser.serialize_field("stocksEquityOrderHistory", v)?;
+                }
+                binance_command::Op::StocksEquityTradeHistory(v) => {
+                    struct_ser.serialize_field("stocksEquityTradeHistory", v)?;
+                }
+                binance_command::Op::StocksExchangeInfo(v) => {
+                    struct_ser.serialize_field("stocksExchangeInfo", v)?;
+                }
+                binance_command::Op::StocksLatestQuote(v) => {
+                    struct_ser.serialize_field("stocksLatestQuote", v)?;
+                }
+                binance_command::Op::StocksTokenizedAssets(v) => {
+                    struct_ser.serialize_field("stocksTokenizedAssets", v)?;
+                }
+                binance_command::Op::StocksSignUsEquityDisclaimer(v) => {
+                    struct_ser.serialize_field("stocksSignUsEquityDisclaimer", v)?;
+                }
+                binance_command::Op::WalletQueryUserWalletBalance(v) => {
+                    struct_ser.serialize_field("walletQueryUserWalletBalance", v)?;
+                }
+            }
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for BinanceCommand {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "expiration",
+            "spot_new_order",
+            "spotNewOrder",
+            "spot_cancel_order",
+            "spotCancelOrder",
+            "spot_cancel_all_open_orders",
+            "spotCancelAllOpenOrders",
+            "spot_get_open_orders",
+            "spotGetOpenOrders",
+            "spot_account_information",
+            "spotAccountInformation",
+            "spot_get_order",
+            "spotGetOrder",
+            "spot_get_open_order_lists",
+            "spotGetOpenOrderLists",
+            "spot_ticker_24h",
+            "spotTicker24h",
+            "usds_futures_new_order",
+            "usdsFuturesNewOrder",
+            "usds_futures_cancel_order",
+            "usdsFuturesCancelOrder",
+            "usds_futures_cancel_all_open_orders",
+            "usdsFuturesCancelAllOpenOrders",
+            "usds_futures_change_initial_leverage",
+            "usdsFuturesChangeInitialLeverage",
+            "usds_futures_position_information_v3",
+            "usdsFuturesPositionInformationV3",
+            "usds_futures_account_information_v3",
+            "usdsFuturesAccountInformationV3",
+            "usds_futures_current_all_open_orders",
+            "usdsFuturesCurrentAllOpenOrders",
+            "usds_futures_open_algo_orders",
+            "usdsFuturesOpenAlgoOrders",
+            "usds_futures_income",
+            "usdsFuturesIncome",
+            "usds_futures_sign_tradfi_contract",
+            "usdsFuturesSignTradfiContract",
+            "stocks_place_equity_order",
+            "stocksPlaceEquityOrder",
+            "stocks_cancel_equity_order",
+            "stocksCancelEquityOrder",
+            "stocks_cancel_all_equity_orders",
+            "stocksCancelAllEquityOrders",
+            "stocks_current_open_orders",
+            "stocksCurrentOpenOrders",
+            "stocks_equity_order_detail",
+            "stocksEquityOrderDetail",
+            "stocks_equity_order_history",
+            "stocksEquityOrderHistory",
+            "stocks_equity_trade_history",
+            "stocksEquityTradeHistory",
+            "stocks_exchange_info",
+            "stocksExchangeInfo",
+            "stocks_latest_quote",
+            "stocksLatestQuote",
+            "stocks_tokenized_assets",
+            "stocksTokenizedAssets",
+            "stocks_sign_us_equity_disclaimer",
+            "stocksSignUsEquityDisclaimer",
+            "wallet_query_user_wallet_balance",
+            "walletQueryUserWalletBalance",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Expiration,
+            SpotNewOrder,
+            SpotCancelOrder,
+            SpotCancelAllOpenOrders,
+            SpotGetOpenOrders,
+            SpotAccountInformation,
+            SpotGetOrder,
+            SpotGetOpenOrderLists,
+            SpotTicker24h,
+            UsdsFuturesNewOrder,
+            UsdsFuturesCancelOrder,
+            UsdsFuturesCancelAllOpenOrders,
+            UsdsFuturesChangeInitialLeverage,
+            UsdsFuturesPositionInformationV3,
+            UsdsFuturesAccountInformationV3,
+            UsdsFuturesCurrentAllOpenOrders,
+            UsdsFuturesOpenAlgoOrders,
+            UsdsFuturesIncome,
+            UsdsFuturesSignTradfiContract,
+            StocksPlaceEquityOrder,
+            StocksCancelEquityOrder,
+            StocksCancelAllEquityOrders,
+            StocksCurrentOpenOrders,
+            StocksEquityOrderDetail,
+            StocksEquityOrderHistory,
+            StocksEquityTradeHistory,
+            StocksExchangeInfo,
+            StocksLatestQuote,
+            StocksTokenizedAssets,
+            StocksSignUsEquityDisclaimer,
+            WalletQueryUserWalletBalance,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "expiration" => Ok(GeneratedField::Expiration),
+                            "spotNewOrder" | "spot_new_order" => Ok(GeneratedField::SpotNewOrder),
+                            "spotCancelOrder" | "spot_cancel_order" => Ok(GeneratedField::SpotCancelOrder),
+                            "spotCancelAllOpenOrders" | "spot_cancel_all_open_orders" => Ok(GeneratedField::SpotCancelAllOpenOrders),
+                            "spotGetOpenOrders" | "spot_get_open_orders" => Ok(GeneratedField::SpotGetOpenOrders),
+                            "spotAccountInformation" | "spot_account_information" => Ok(GeneratedField::SpotAccountInformation),
+                            "spotGetOrder" | "spot_get_order" => Ok(GeneratedField::SpotGetOrder),
+                            "spotGetOpenOrderLists" | "spot_get_open_order_lists" => Ok(GeneratedField::SpotGetOpenOrderLists),
+                            "spotTicker24h" | "spot_ticker_24h" => Ok(GeneratedField::SpotTicker24h),
+                            "usdsFuturesNewOrder" | "usds_futures_new_order" => Ok(GeneratedField::UsdsFuturesNewOrder),
+                            "usdsFuturesCancelOrder" | "usds_futures_cancel_order" => Ok(GeneratedField::UsdsFuturesCancelOrder),
+                            "usdsFuturesCancelAllOpenOrders" | "usds_futures_cancel_all_open_orders" => Ok(GeneratedField::UsdsFuturesCancelAllOpenOrders),
+                            "usdsFuturesChangeInitialLeverage" | "usds_futures_change_initial_leverage" => Ok(GeneratedField::UsdsFuturesChangeInitialLeverage),
+                            "usdsFuturesPositionInformationV3" | "usds_futures_position_information_v3" => Ok(GeneratedField::UsdsFuturesPositionInformationV3),
+                            "usdsFuturesAccountInformationV3" | "usds_futures_account_information_v3" => Ok(GeneratedField::UsdsFuturesAccountInformationV3),
+                            "usdsFuturesCurrentAllOpenOrders" | "usds_futures_current_all_open_orders" => Ok(GeneratedField::UsdsFuturesCurrentAllOpenOrders),
+                            "usdsFuturesOpenAlgoOrders" | "usds_futures_open_algo_orders" => Ok(GeneratedField::UsdsFuturesOpenAlgoOrders),
+                            "usdsFuturesIncome" | "usds_futures_income" => Ok(GeneratedField::UsdsFuturesIncome),
+                            "usdsFuturesSignTradfiContract" | "usds_futures_sign_tradfi_contract" => Ok(GeneratedField::UsdsFuturesSignTradfiContract),
+                            "stocksPlaceEquityOrder" | "stocks_place_equity_order" => Ok(GeneratedField::StocksPlaceEquityOrder),
+                            "stocksCancelEquityOrder" | "stocks_cancel_equity_order" => Ok(GeneratedField::StocksCancelEquityOrder),
+                            "stocksCancelAllEquityOrders" | "stocks_cancel_all_equity_orders" => Ok(GeneratedField::StocksCancelAllEquityOrders),
+                            "stocksCurrentOpenOrders" | "stocks_current_open_orders" => Ok(GeneratedField::StocksCurrentOpenOrders),
+                            "stocksEquityOrderDetail" | "stocks_equity_order_detail" => Ok(GeneratedField::StocksEquityOrderDetail),
+                            "stocksEquityOrderHistory" | "stocks_equity_order_history" => Ok(GeneratedField::StocksEquityOrderHistory),
+                            "stocksEquityTradeHistory" | "stocks_equity_trade_history" => Ok(GeneratedField::StocksEquityTradeHistory),
+                            "stocksExchangeInfo" | "stocks_exchange_info" => Ok(GeneratedField::StocksExchangeInfo),
+                            "stocksLatestQuote" | "stocks_latest_quote" => Ok(GeneratedField::StocksLatestQuote),
+                            "stocksTokenizedAssets" | "stocks_tokenized_assets" => Ok(GeneratedField::StocksTokenizedAssets),
+                            "stocksSignUsEquityDisclaimer" | "stocks_sign_us_equity_disclaimer" => Ok(GeneratedField::StocksSignUsEquityDisclaimer),
+                            "walletQueryUserWalletBalance" | "wallet_query_user_wallet_balance" => Ok(GeneratedField::WalletQueryUserWalletBalance),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = BinanceCommand;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.binance.BinanceCommand")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<BinanceCommand, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut expiration__ = None;
+                let mut op__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Expiration => {
+                            if expiration__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("expiration"));
+                            }
+                            expiration__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::SpotNewOrder => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("spotNewOrder"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::SpotNewOrder)
+;
+                        }
+                        GeneratedField::SpotCancelOrder => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("spotCancelOrder"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::SpotCancelOrder)
+;
+                        }
+                        GeneratedField::SpotCancelAllOpenOrders => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("spotCancelAllOpenOrders"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::SpotCancelAllOpenOrders)
+;
+                        }
+                        GeneratedField::SpotGetOpenOrders => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("spotGetOpenOrders"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::SpotGetOpenOrders)
+;
+                        }
+                        GeneratedField::SpotAccountInformation => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("spotAccountInformation"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::SpotAccountInformation)
+;
+                        }
+                        GeneratedField::SpotGetOrder => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("spotGetOrder"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::SpotGetOrder)
+;
+                        }
+                        GeneratedField::SpotGetOpenOrderLists => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("spotGetOpenOrderLists"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::SpotGetOpenOrderLists)
+;
+                        }
+                        GeneratedField::SpotTicker24h => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("spotTicker24h"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::SpotTicker24h)
+;
+                        }
+                        GeneratedField::UsdsFuturesNewOrder => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("usdsFuturesNewOrder"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::UsdsFuturesNewOrder)
+;
+                        }
+                        GeneratedField::UsdsFuturesCancelOrder => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("usdsFuturesCancelOrder"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::UsdsFuturesCancelOrder)
+;
+                        }
+                        GeneratedField::UsdsFuturesCancelAllOpenOrders => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("usdsFuturesCancelAllOpenOrders"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::UsdsFuturesCancelAllOpenOrders)
+;
+                        }
+                        GeneratedField::UsdsFuturesChangeInitialLeverage => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("usdsFuturesChangeInitialLeverage"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::UsdsFuturesChangeInitialLeverage)
+;
+                        }
+                        GeneratedField::UsdsFuturesPositionInformationV3 => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("usdsFuturesPositionInformationV3"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::UsdsFuturesPositionInformationV3)
+;
+                        }
+                        GeneratedField::UsdsFuturesAccountInformationV3 => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("usdsFuturesAccountInformationV3"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::UsdsFuturesAccountInformationV3)
+;
+                        }
+                        GeneratedField::UsdsFuturesCurrentAllOpenOrders => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("usdsFuturesCurrentAllOpenOrders"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::UsdsFuturesCurrentAllOpenOrders)
+;
+                        }
+                        GeneratedField::UsdsFuturesOpenAlgoOrders => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("usdsFuturesOpenAlgoOrders"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::UsdsFuturesOpenAlgoOrders)
+;
+                        }
+                        GeneratedField::UsdsFuturesIncome => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("usdsFuturesIncome"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::UsdsFuturesIncome)
+;
+                        }
+                        GeneratedField::UsdsFuturesSignTradfiContract => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("usdsFuturesSignTradfiContract"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::UsdsFuturesSignTradfiContract)
+;
+                        }
+                        GeneratedField::StocksPlaceEquityOrder => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("stocksPlaceEquityOrder"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::StocksPlaceEquityOrder)
+;
+                        }
+                        GeneratedField::StocksCancelEquityOrder => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("stocksCancelEquityOrder"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::StocksCancelEquityOrder)
+;
+                        }
+                        GeneratedField::StocksCancelAllEquityOrders => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("stocksCancelAllEquityOrders"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::StocksCancelAllEquityOrders)
+;
+                        }
+                        GeneratedField::StocksCurrentOpenOrders => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("stocksCurrentOpenOrders"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::StocksCurrentOpenOrders)
+;
+                        }
+                        GeneratedField::StocksEquityOrderDetail => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("stocksEquityOrderDetail"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::StocksEquityOrderDetail)
+;
+                        }
+                        GeneratedField::StocksEquityOrderHistory => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("stocksEquityOrderHistory"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::StocksEquityOrderHistory)
+;
+                        }
+                        GeneratedField::StocksEquityTradeHistory => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("stocksEquityTradeHistory"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::StocksEquityTradeHistory)
+;
+                        }
+                        GeneratedField::StocksExchangeInfo => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("stocksExchangeInfo"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::StocksExchangeInfo)
+;
+                        }
+                        GeneratedField::StocksLatestQuote => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("stocksLatestQuote"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::StocksLatestQuote)
+;
+                        }
+                        GeneratedField::StocksTokenizedAssets => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("stocksTokenizedAssets"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::StocksTokenizedAssets)
+;
+                        }
+                        GeneratedField::StocksSignUsEquityDisclaimer => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("stocksSignUsEquityDisclaimer"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::StocksSignUsEquityDisclaimer)
+;
+                        }
+                        GeneratedField::WalletQueryUserWalletBalance => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("walletQueryUserWalletBalance"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::WalletQueryUserWalletBalance)
+;
+                        }
+                    }
+                }
+                Ok(BinanceCommand {
+                    expiration: expiration__,
+                    op: op__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.binance.BinanceCommand", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for BinanceFuturesAccount {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>

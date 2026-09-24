@@ -326,7 +326,7 @@ class BinanceStockOpenOrders extends $pb.GeneratedMessage {
 }
 
 /// 查一张美股订单。`order_id` 与 `client_order_id` 给一个即可(都不给由币安报错)。
-/// `client_order_id` 就是下单那条通知的 uuid(机器人下单时填进去的)。
+/// `client_order_id` 就是下单那条指令消息的 uuid(机器人下单时填进去的)。
 class BinanceStockGetOrder extends $pb.GeneratedMessage {
   factory BinanceStockGetOrder({
     $core.String? orderId,

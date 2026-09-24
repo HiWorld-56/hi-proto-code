@@ -1,6 +1,6 @@
 // This is a generated file - do not edit.
 //
-// Generated from hi/club/binance.proto.
+// Generated from hi/binance/command.proto.
 
 // @dart = 3.3
 

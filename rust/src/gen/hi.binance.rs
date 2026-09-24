@@ -40,7 +40,7 @@ pub struct BinanceSpotCancelOrder {
     /// 币安的订单号
     #[prost(int64, optional, tag = "2")]
     pub order_id: ::core::option::Option<i64>,
-    /// 下单时那条通知的 uuid
+    /// 下单时那条指令消息的 uuid
     #[prost(string, optional, tag = "3")]
     pub orig_client_order_id: ::core::option::Option<::prost::alloc::string::String>,
 }
@@ -208,7 +208,7 @@ pub struct BinanceFuturesSignTradfiContract {}
 /// 美股的买入扣款与卖出回款(USDC)都在这里看,美股模块本身没有查余额的接口。
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BinanceWalletBalance {}
-/// 一次币安操作的结果。装在**消息**里回给下指令的人:
+/// 一次币安操作的结果。装在**消息**里回到指令来的那个会话:
 /// `Content.type = "binance"`、`Content.kind = binance`。
 ///
 /// ## 为什么 `body` 是一串原始 JSON,而不是结构化的字段
@@ -221,13 +221,13 @@ pub struct BinanceWalletBalance {}
 /// · 发出去了,币安回了 2xx  → `http_status` = 200,`body` = 它的 JSON
 /// · 发出去了,币安拒了      → `http_status` = 4xx/5xx,`body` = `{"code":-1121,"msg":"Invalid symbol."}`
 /// · **根本没发出去**       → 没有 `http_status`,`error` 写人话
-/// (没配凭据、指令过期、系统时钟不可信、这台机器人没认你当代理……)
+/// (没配凭据、指令过期、系统时钟不可信、不认发令人、没装币安插件……)
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BinanceResult {
-    /// 请求那条通知的 uuid,配对用
+    /// 指令那条消息的 uuid,配对用
     #[prost(string, optional, tag = "1")]
     pub request: ::core::option::Option<::prost::alloc::string::String>,
-    /// 操作名,与请求的 ex_type 相同
+    /// 操作名(「模块.方法」)
     #[prost(string, optional, tag = "2")]
     pub op: ::core::option::Option<::prost::alloc::string::String>,
     /// 币安的 HTTP 状态码;没发出去就不带
@@ -423,7 +423,7 @@ pub struct BinanceStockCancelAllOrders {}
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BinanceStockOpenOrders {}
 /// 查一张美股订单。`order_id` 与 `client_order_id` 给一个即可(都不给由币安报错)。
-/// `client_order_id` 就是下单那条通知的 uuid(机器人下单时填进去的)。
+/// `client_order_id` 就是下单那条指令消息的 uuid(机器人下单时填进去的)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BinanceStockGetOrder {
     #[prost(string, optional, tag = "1")]
@@ -648,5 +648,139 @@ impl BinanceStockOrderStatus {
             "BINANCE_STOCK_ORDER_STATUS_REJECTED" => Some(Self::Rejected),
             _ => None,
         }
+    }
+}
+/// 给机器人的一条**币安指令**。装在**消息**里:`Content.type = "binance_cmd"`、`Content.kind = binance_cmd`。
+///
+/// ## 指令就是一条普通消息(2026-09-25 定)
+///
+/// 消息机制**一处不改**,只是用它传指令:
+/// · 发到哪个会话、@ 谁,与聊天完全一样 —— 群里 @ 要它执行的那台机器人,要所有机器人执行就 @所有人;
+/// 单聊就是那一台。群里没 @ 它的,它不处理(与聊天同一条规则)。
+/// · 发令人是信封上的 `from`(broker 验过),**载荷里没有发令人,也不许加**。
+/// · 机器人只处理实时收到的消息,离线期间攒下的不补 —— 同样是消息本来的规则,不另立。
+/// · 送达状态就是消息的状态(进了历史 = 已送达)。
+///
+/// 谁能让这台机器人交易,由**币安插件**判(主人或插件配置的代理),brain 不判。
+/// 结果由机器人回一条消息到同一个会话:`Content.kind = binance`(`BinanceResult`),
+/// `request` = 这条指令**消息**的 uuid,暗语等级沿用指令那条。**任何结局都回一条** ——
+/// 不认这个人、没装币安插件、过期、币安报错,原因都在 `BinanceResult.error` / `body` 里。
+///
+/// ## 操作名
+///
+/// `op` 选中的是哪一个就是哪个操作,操作名是币安官方 SDK 的「模块.方法」,写在每行末尾的注释里:
+/// 字段名 = 模块 + `_` + 方法(模块是 `spot` / `usds_futures` / `stocks` / `wallet`)。
+/// 结果里的 `BinanceResult.op` 就是这个操作名。
+///
+/// ## 为什么没有 `newClientOrderId`
+///
+/// 下单时由**机器人**填,值就是这条指令消息的 uuid(36 字符,正好是币安的上限)。
+/// 它只为**对账**(日后在币安看到一笔订单,能对回是哪条指令下的),不是去重手段。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceCommand {
+    /// 过期时刻,**绝对时间,微秒**(与 `Notice.expiration` 同一口径)。过了机器人不执行、回一条失败;
+    /// 机器人系统时钟不可信时也不执行。
+    #[prost(int64, optional, tag = "1")]
+    pub expiration: ::core::option::Option<i64>,
+    #[prost(
+        oneof = "binance_command::Op",
+        tags = "10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 40"
+    )]
+    pub op: ::core::option::Option<binance_command::Op>,
+}
+/// Nested message and enum types in `BinanceCommand`.
+pub mod binance_command {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Op {
+        /// spot.new_order
+        #[prost(message, tag = "10")]
+        SpotNewOrder(super::BinanceSpotNewOrder),
+        /// spot.cancel_order
+        #[prost(message, tag = "11")]
+        SpotCancelOrder(super::BinanceSpotCancelOrder),
+        /// spot.cancel_all_open_orders
+        #[prost(message, tag = "12")]
+        SpotCancelAllOpenOrders(super::BinanceSpotCancelAllOrders),
+        /// spot.get_open_orders
+        #[prost(message, tag = "13")]
+        SpotGetOpenOrders(super::BinanceSpotOpenOrders),
+        /// spot.account_information
+        #[prost(message, tag = "14")]
+        SpotAccountInformation(super::BinanceSpotAccount),
+        /// spot.get_order
+        #[prost(message, tag = "15")]
+        SpotGetOrder(super::BinanceSpotGetOrder),
+        /// spot.get_open_order_lists
+        #[prost(message, tag = "16")]
+        SpotGetOpenOrderLists(super::BinanceSpotOpenOrderLists),
+        /// spot.ticker_24h
+        #[prost(message, tag = "17")]
+        SpotTicker24h(super::BinanceSpotTicker24h),
+        /// usds_futures.new_order
+        #[prost(message, tag = "20")]
+        UsdsFuturesNewOrder(super::BinanceFuturesNewOrder),
+        /// usds_futures.cancel_order
+        #[prost(message, tag = "21")]
+        UsdsFuturesCancelOrder(super::BinanceFuturesCancelOrder),
+        /// usds_futures.cancel_all_open_orders
+        #[prost(message, tag = "22")]
+        UsdsFuturesCancelAllOpenOrders(super::BinanceFuturesCancelAllOrders),
+        /// usds_futures.change_initial_leverage
+        #[prost(message, tag = "23")]
+        UsdsFuturesChangeInitialLeverage(super::BinanceFuturesLeverage),
+        /// usds_futures.position_information_v3
+        #[prost(message, tag = "24")]
+        UsdsFuturesPositionInformationV3(super::BinanceFuturesPositions),
+        /// usds_futures.account_information_v3
+        #[prost(message, tag = "25")]
+        UsdsFuturesAccountInformationV3(super::BinanceFuturesAccount),
+        /// usds_futures.current_all_open_orders
+        #[prost(message, tag = "26")]
+        UsdsFuturesCurrentAllOpenOrders(super::BinanceFuturesOpenOrders),
+        /// usds_futures.open_algo_orders
+        #[prost(message, tag = "27")]
+        UsdsFuturesOpenAlgoOrders(super::BinanceFuturesOpenAlgoOrders),
+        /// usds_futures.income
+        #[prost(message, tag = "28")]
+        UsdsFuturesIncome(super::BinanceFuturesIncome),
+        /// usds_futures.sign_tradfi_contract
+        #[prost(message, tag = "29")]
+        UsdsFuturesSignTradfiContract(super::BinanceFuturesSignTradfiContract),
+        /// stocks.place_equity_order
+        #[prost(message, tag = "30")]
+        StocksPlaceEquityOrder(super::BinanceStockNewOrder),
+        /// stocks.cancel_equity_order
+        #[prost(message, tag = "31")]
+        StocksCancelEquityOrder(super::BinanceStockCancelOrder),
+        /// stocks.cancel_all_equity_orders
+        #[prost(message, tag = "32")]
+        StocksCancelAllEquityOrders(super::BinanceStockCancelAllOrders),
+        /// stocks.current_open_orders
+        #[prost(message, tag = "33")]
+        StocksCurrentOpenOrders(super::BinanceStockOpenOrders),
+        /// stocks.equity_order_detail
+        #[prost(message, tag = "34")]
+        StocksEquityOrderDetail(super::BinanceStockGetOrder),
+        /// stocks.equity_order_history
+        #[prost(message, tag = "35")]
+        StocksEquityOrderHistory(super::BinanceStockOrderHistory),
+        /// stocks.equity_trade_history
+        #[prost(message, tag = "36")]
+        StocksEquityTradeHistory(super::BinanceStockTradeHistory),
+        /// stocks.exchange_info
+        #[prost(message, tag = "37")]
+        StocksExchangeInfo(super::BinanceStockExchangeInfo),
+        /// stocks.latest_quote
+        #[prost(message, tag = "38")]
+        StocksLatestQuote(super::BinanceStockQuote),
+        /// stocks.tokenized_assets
+        #[prost(message, tag = "39")]
+        StocksTokenizedAssets(super::BinanceStockTokenizedAssets),
+        /// stocks.sign_us_equity_disclaimer
+        #[prost(message, tag = "41")]
+        StocksSignUsEquityDisclaimer(super::BinanceStockSignDisclaimer),
+        /// wallet.query_user_wallet_balance
+        #[prost(message, tag = "40")]
+        WalletQueryUserWalletBalance(super::BinanceWalletBalance),
     }
 }

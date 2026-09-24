@@ -347,7 +347,7 @@ type BinanceSpotCancelOrder struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
 	Symbol            *string                `protobuf:"bytes,1,opt,name=symbol,proto3,oneof" json:"symbol,omitempty"`
 	OrderId           *int64                 `protobuf:"varint,2,opt,name=order_id,json=orderId,proto3,oneof" json:"order_id,omitempty"`                                  // 币安的订单号
-	OrigClientOrderId *string                `protobuf:"bytes,3,opt,name=orig_client_order_id,json=origClientOrderId,proto3,oneof" json:"orig_client_order_id,omitempty"` // 下单时那条通知的 uuid
+	OrigClientOrderId *string                `protobuf:"bytes,3,opt,name=orig_client_order_id,json=origClientOrderId,proto3,oneof" json:"orig_client_order_id,omitempty"` // 下单时那条指令消息的 uuid
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -1297,7 +1297,7 @@ func (*BinanceWalletBalance) Descriptor() ([]byte, []int) {
 	return file_hi_binance_binance_proto_rawDescGZIP(), []int{18}
 }
 
-// 一次币安操作的结果。装在**消息**里回给下指令的人:
+// 一次币安操作的结果。装在**消息**里回到指令来的那个会话:
 // `Content.type = "binance"`、`Content.kind = binance`。
 //
 // ## 为什么 `body` 是一串原始 JSON,而不是结构化的字段
@@ -1310,11 +1310,11 @@ func (*BinanceWalletBalance) Descriptor() ([]byte, []int) {
 //	· 发出去了,币安回了 2xx  → `http_status` = 200,`body` = 它的 JSON
 //	· 发出去了,币安拒了      → `http_status` = 4xx/5xx,`body` = `{"code":-1121,"msg":"Invalid symbol."}`
 //	· **根本没发出去**       → 没有 `http_status`,`error` 写人话
-//	  (没配凭据、指令过期、系统时钟不可信、这台机器人没认你当代理……)
+//	  (没配凭据、指令过期、系统时钟不可信、不认发令人、没装币安插件……)
 type BinanceResult struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Request       *string                `protobuf:"bytes,1,opt,name=request,proto3,oneof" json:"request,omitempty"`                          // 请求那条通知的 uuid,配对用
-	Op            *string                `protobuf:"bytes,2,opt,name=op,proto3,oneof" json:"op,omitempty"`                                    // 操作名,与请求的 ex_type 相同
+	Request       *string                `protobuf:"bytes,1,opt,name=request,proto3,oneof" json:"request,omitempty"`                          // 指令那条消息的 uuid,配对用
+	Op            *string                `protobuf:"bytes,2,opt,name=op,proto3,oneof" json:"op,omitempty"`                                    // 操作名(「模块.方法」)
 	HttpStatus    *uint32                `protobuf:"varint,3,opt,name=http_status,json=httpStatus,proto3,oneof" json:"http_status,omitempty"` // 币安的 HTTP 状态码;没发出去就不带
 	Body          *string                `protobuf:"bytes,4,opt,name=body,proto3,oneof" json:"body,omitempty"`                                // 币安返回的原始 JSON,一个字不改
 	Error         *string                `protobuf:"bytes,5,opt,name=error,proto3,oneof" json:"error,omitempty"`                              // 没发出去时的原因(人话);发出去了就不带
