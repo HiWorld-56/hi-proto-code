@@ -289,8 +289,26 @@ final $typed_data.Uint8List numberDescriptor =
 const ClientInfo$json = {
   '1': 'ClientInfo',
   '2': [
-    {'1': 'app', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'app', '17': true},
-    {'1': 'dev', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'dev', '17': true},
+    {
+      '1': 'app',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'app',
+      '17': true
+    },
+    {
+      '1': 'dev',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'dev',
+      '17': true
+    },
     {'1': 'mac', '3': 3, '4': 1, '5': 9, '9': 2, '10': 'mac', '17': true},
   ],
   '8': [
@@ -302,8 +320,10 @@ const ClientInfo$json = {
 
 /// Descriptor for `ClientInfo`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List clientInfoDescriptor = $convert.base64Decode(
-    'CgpDbGllbnRJbmZvEhUKA2FwcBgBIAEoCUgAUgNhcHCIAQESFQoDZGV2GAIgASgJSAFSA2Rldo'
-    'gBARIVCgNtYWMYAyABKAlIAlIDbWFjiAEBQgYKBF9hcHBCBgoEX2RldkIGCgRfbWFj');
+    'CgpDbGllbnRJbmZvEkQKA2FwcBgBIAEoCUItukgqyAEBciVSBUhpRElEUgRIaUFJUgZIaUNsdW'
+    'JSB0hpTWVkaWFSBVRoaXJkSABSA2FwcIgBARI3CgNkZXYYAiABKAlCILpIHcgBAXIYUgN3ZWJS'
+    'A2FwcFICcGNSCGVtYmVkZGVkSAFSA2RldogBARIVCgNtYWMYAyABKAlIAlIDbWFjiAEBQgYKBF'
+    '9hcHBCBgoEX2RldkIGCgRfbWFj');
 
 @$core.Deprecated('Use paginationDescriptor instead')
 const Pagination$json = {

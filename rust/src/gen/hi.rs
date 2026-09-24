@@ -251,12 +251,17 @@ pub struct Number {
     #[prost(int64, optional, tag = "1")]
     pub n: ::core::option::Option<i64>,
 }
+/// 客户端是谁:哪个 app、哪一种端、哪台设备。登录槽位按 (did, app, dev) 一行(mac 不参与),
+/// 按端记的东西(消息 / 通知的服务端同步位置)也用 (app, dev)。
+///
+/// ⛔ **取值只有下面列的这几个,大小写照写**,由校验拒掉别的写法。后端**原样使用、不改写** ——
+/// 原来两个后端各自"纠正"前端传的值(club 一律改成 "hiclub",hidid 把 "hidid" 改成 "HiDID"),
+/// 于是同一个 app 在库里有两种写法,前端传错了也没人知道。传错了改前端。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ClientInfo {
-    /// HiDID、HiAI、HiClub、HiMedia、Third
     #[prost(string, optional, tag = "1")]
     pub app: ::core::option::Option<::prost::alloc::string::String>,
-    /// web、app、pc、embeded
+    /// embedded = 硬件机器人
     #[prost(string, optional, tag = "2")]
     pub dev: ::core::option::Option<::prost::alloc::string::String>,
     /// Null / Mac or Static UUID (Preventing being kicked off)

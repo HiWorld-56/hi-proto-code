@@ -517,10 +517,16 @@ func (x *Number) GetN() int64 {
 	return 0
 }
 
+// 客户端是谁:哪个 app、哪一种端、哪台设备。登录槽位按 (did, app, dev) 一行(mac 不参与),
+// 按端记的东西(消息 / 通知的服务端同步位置)也用 (app, dev)。
+//
+// ⛔ **取值只有下面列的这几个,大小写照写**,由校验拒掉别的写法。后端**原样使用、不改写** ——
+// 原来两个后端各自"纠正"前端传的值(club 一律改成 "hiclub",hidid 把 "hidid" 改成 "HiDID"),
+// 于是同一个 app 在库里有两种写法,前端传错了也没人知道。传错了改前端。
 type ClientInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	App           *string                `protobuf:"bytes,1,opt,name=app,proto3,oneof" json:"app,omitempty"` // HiDID、HiAI、HiClub、HiMedia、Third
-	Dev           *string                `protobuf:"bytes,2,opt,name=dev,proto3,oneof" json:"dev,omitempty"` // web、app、pc、embeded
+	App           *string                `protobuf:"bytes,1,opt,name=app,proto3,oneof" json:"app,omitempty"`
+	Dev           *string                `protobuf:"bytes,2,opt,name=dev,proto3,oneof" json:"dev,omitempty"` // embedded = 硬件机器人
 	Mac           *string                `protobuf:"bytes,3,opt,name=mac,proto3,oneof" json:"mac,omitempty"` // Null / Mac or Static UUID (Preventing being kicked off)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1020,11 +1026,11 @@ const file_hi_common_proto_rawDesc = "" +
 	"\x06_state\"!\n" +
 	"\x06Number\x12\x11\n" +
 	"\x01n\x18\x01 \x01(\x03H\x00R\x01n\x88\x01\x01B\x04\n" +
-	"\x02_n\"i\n" +
+	"\x02_n\"\xba\x01\n" +
 	"\n" +
-	"ClientInfo\x12\x15\n" +
-	"\x03app\x18\x01 \x01(\tH\x00R\x03app\x88\x01\x01\x12\x15\n" +
-	"\x03dev\x18\x02 \x01(\tH\x01R\x03dev\x88\x01\x01\x12\x15\n" +
+	"ClientInfo\x12D\n" +
+	"\x03app\x18\x01 \x01(\tB-\xbaH*\xc8\x01\x01r%R\x05HiDIDR\x04HiAIR\x06HiClubR\aHiMediaR\x05ThirdH\x00R\x03app\x88\x01\x01\x127\n" +
+	"\x03dev\x18\x02 \x01(\tB \xbaH\x1d\xc8\x01\x01r\x18R\x03webR\x03appR\x02pcR\bembeddedH\x01R\x03dev\x88\x01\x01\x12\x15\n" +
 	"\x03mac\x18\x03 \x01(\tH\x02R\x03mac\x88\x01\x01B\x06\n" +
 	"\x04_appB\x06\n" +
 	"\x04_devB\x06\n" +
