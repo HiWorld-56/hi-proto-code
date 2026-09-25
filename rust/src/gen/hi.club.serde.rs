@@ -1611,6 +1611,114 @@ impl<'de> serde::Deserialize<'de> for content::Chat {
         deserializer.deserialize_struct("hi.club.Content.Chat", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for Contents {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.list.is_empty() {
+            len += 1;
+        }
+        if self.prompt.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.Contents", len)?;
+        if !self.list.is_empty() {
+            struct_ser.serialize_field("list", &self.list)?;
+        }
+        if let Some(v) = self.prompt.as_ref() {
+            struct_ser.serialize_field("prompt", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for Contents {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "list",
+            "prompt",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            List,
+            Prompt,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "list" => Ok(GeneratedField::List),
+                            "prompt" => Ok(GeneratedField::Prompt),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = Contents;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.Contents")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<Contents, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut list__ = None;
+                let mut prompt__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::List => {
+                            if list__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("list"));
+                            }
+                            list__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Prompt => {
+                            if prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prompt"));
+                            }
+                            prompt__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(Contents {
+                    list: list__.unwrap_or_default(),
+                    prompt: prompt__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.Contents", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for CreateApiKeyReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -15626,9 +15734,6 @@ impl serde::Serialize for Message {
         if self.from.is_some() {
             len += 1;
         }
-        if !self.conts.is_empty() {
-            len += 1;
-        }
         if self.timestamp.is_some() {
             len += 1;
         }
@@ -15641,10 +15746,10 @@ impl serde::Serialize for Message {
         if self.ghost.is_some() {
             len += 1;
         }
-        if self.prompt.is_some() {
+        if self.dark.is_some() {
             len += 1;
         }
-        if self.dark.is_some() {
+        if self.contents.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.club.Message", len)?;
@@ -15656,9 +15761,6 @@ impl serde::Serialize for Message {
         }
         if let Some(v) = self.from.as_ref() {
             struct_ser.serialize_field("from", v)?;
-        }
-        if !self.conts.is_empty() {
-            struct_ser.serialize_field("conts", &self.conts)?;
         }
         if let Some(v) = self.timestamp.as_ref() {
             #[allow(clippy::needless_borrow)]
@@ -15674,11 +15776,13 @@ impl serde::Serialize for Message {
         if let Some(v) = self.ghost.as_ref() {
             struct_ser.serialize_field("ghost", v)?;
         }
-        if let Some(v) = self.prompt.as_ref() {
-            struct_ser.serialize_field("prompt", v)?;
-        }
         if let Some(v) = self.dark.as_ref() {
             struct_ser.serialize_field("dark", v)?;
+        }
+        if let Some(v) = self.contents.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("contents", pbjson::private::base64::encode(&v).as_str())?;
         }
         struct_ser.end()
     }
@@ -15693,14 +15797,13 @@ impl<'de> serde::Deserialize<'de> for Message {
             "uuid",
             "type",
             "from",
-            "conts",
             "timestamp",
             "extra",
             "ex_type",
             "exType",
             "ghost",
-            "prompt",
             "dark",
+            "contents",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -15708,13 +15811,12 @@ impl<'de> serde::Deserialize<'de> for Message {
             Uuid,
             Type,
             From,
-            Conts,
             Timestamp,
             Extra,
             ExType,
             Ghost,
-            Prompt,
             Dark,
+            Contents,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -15739,13 +15841,12 @@ impl<'de> serde::Deserialize<'de> for Message {
                             "uuid" => Ok(GeneratedField::Uuid),
                             "type" => Ok(GeneratedField::Type),
                             "from" => Ok(GeneratedField::From),
-                            "conts" => Ok(GeneratedField::Conts),
                             "timestamp" => Ok(GeneratedField::Timestamp),
                             "extra" => Ok(GeneratedField::Extra),
                             "exType" | "ex_type" => Ok(GeneratedField::ExType),
                             "ghost" => Ok(GeneratedField::Ghost),
-                            "prompt" => Ok(GeneratedField::Prompt),
                             "dark" => Ok(GeneratedField::Dark),
+                            "contents" => Ok(GeneratedField::Contents),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -15768,13 +15869,12 @@ impl<'de> serde::Deserialize<'de> for Message {
                 let mut uuid__ = None;
                 let mut r#type__ = None;
                 let mut from__ = None;
-                let mut conts__ = None;
                 let mut timestamp__ = None;
                 let mut extra__ = None;
                 let mut ex_type__ = None;
                 let mut ghost__ = None;
-                let mut prompt__ = None;
                 let mut dark__ = None;
+                let mut contents__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Uuid => {
@@ -15794,12 +15894,6 @@ impl<'de> serde::Deserialize<'de> for Message {
                                 return Err(serde::de::Error::duplicate_field("from"));
                             }
                             from__ = map_.next_value()?;
-                        }
-                        GeneratedField::Conts => {
-                            if conts__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("conts"));
-                            }
-                            conts__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Timestamp => {
                             if timestamp__.is_some() {
@@ -15827,12 +15921,6 @@ impl<'de> serde::Deserialize<'de> for Message {
                             }
                             ghost__ = map_.next_value()?;
                         }
-                        GeneratedField::Prompt => {
-                            if prompt__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("prompt"));
-                            }
-                            prompt__ = map_.next_value()?;
-                        }
                         GeneratedField::Dark => {
                             if dark__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("dark"));
@@ -15841,19 +15929,26 @@ impl<'de> serde::Deserialize<'de> for Message {
                                 map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
+                        GeneratedField::Contents => {
+                            if contents__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("contents"));
+                            }
+                            contents__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::BytesDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
                     }
                 }
                 Ok(Message {
                     uuid: uuid__,
                     r#type: r#type__,
                     from: from__,
-                    conts: conts__.unwrap_or_default(),
                     timestamp: timestamp__,
                     extra: extra__,
                     ex_type: ex_type__,
                     ghost: ghost__,
-                    prompt: prompt__,
                     dark: dark__,
+                    contents: contents__,
                 })
             }
         }

@@ -379,46 +379,45 @@ class Prompt extends $pb.GeneratedMessage {
 }
 
 ///
-/// ## dark:暗语等级 —— **UI 忽略它,别的流程照走**
+/// ## 信封与可变部分 —— 中间层只解信封(2026-09-25 定)
 ///
-/// `dark` 是一个等级:**不带 = 0 = 普通(明)**,1 = 1 级暗语,依此类推。Message 与 Notice 各有一个。
+/// `Message` 本身是**信封级**的:uuid / type / from / timestamp / ex_type / ghost / dark,
+/// 中间层(hiclub-core-mqtt、club 后端、broker)只读它们做**路由与同步**。
+/// *可变部分**只有两处,中间层**不解析、不改写、原样存、原样转**:
 ///
-/// · **暗 ≠ 保密。** 内容照常明文过 MQTT、照常进历史记录和各端本地库,会话里的人换个
-/// 不过滤的客户端就能读到。它只表示「界面上别显示」—— 典型用途:两个 agent 在群里协商,
-/// 不需要让群里的人看到。
-/// · **只有显示这一步跳过**:进历史记录、补拉同步、机器人触发 AI 回复、回调……一律照走。
-/// · **过滤在 core**:core 只把 `dark <= 阈值` 的交给 UI(阈值默认 0,可随时切换),
-/// 所以不认识暗语的 app 不用改就看不到。事件照发(带着 dark),机器人靠事件做事。
-/// · 后端离线推送:`dark > 0` 不推(手机通知栏也是显示)。
-/// · 回复一条暗语:**收到几级,回复就用几级**(后端 AI 助手、机器人都照此)。
-/// · 分级是留给以后按层级分支处理的,现在只用到 0 / 1。
+/// · `contents` —— 序列化后的 `Contents`(内容段 + 提示),**由发送方编码、接收方(UI / brain)解析**。
+/// 它是 `bytes` 而不是具体结构,是故意的:中间层在类型上就碰不到内容,上层加一种内容,
+/// 中间层一行不改、一个号不打。(原来是 `repeated Content conts` + `Prompt prompt`,
+/// core 解开再用自己的 proto 版本重编码 → 不认识的内容静默丢;后端补拉还逐条改写 —— 都已拆掉。)
+/// · `extra` —— `google.protobuf.Any`,本来就不透明。
 ///
-/// ⚠️ **不带就是 0,这是有意的缺省语义**,不是「拿零值冒充没有」:老的发送方从来不填这个字段,
-/// 它们发的就是 0 级(普通)消息。读的时候 `GetDark()` / `unwrap_or(0)` 是对的。
+/// `timestamp`:**服务器入库时填接收时间**(所有消息统一到服务器时间),这是入库时**唯一**改动的字段。
+/// 发送方填的是本地时间,只作占位;端上显示时间以 core 给的为准(实时 = 本地收到时间,补拉后 = 服务器时间)。
+///
+/// `from` / `ghost` 是 Entity,带着**发送那一刻**的基础信息与 `update` 一起传播;
+/// 各端的对象缓存池按 `update` 比新旧、惰性更新 —— **任何一层都不许把它换成"当前资料"**。
 class Message extends $pb.GeneratedMessage {
   factory Message({
     $core.String? uuid,
     $core.String? type,
     $0.Entity? from,
-    $core.Iterable<Content>? conts,
     $fixnum.Int64? timestamp,
     $1.Any? extra,
     $core.String? exType,
     $0.Entity? ghost,
-    Prompt? prompt,
     $core.int? dark,
+    $core.List<$core.int>? contents,
   }) {
     final result = create();
     if (uuid != null) result.uuid = uuid;
     if (type != null) result.type = type;
     if (from != null) result.from = from;
-    if (conts != null) result.conts.addAll(conts);
     if (timestamp != null) result.timestamp = timestamp;
     if (extra != null) result.extra = extra;
     if (exType != null) result.exType = exType;
     if (ghost != null) result.ghost = ghost;
-    if (prompt != null) result.prompt = prompt;
     if (dark != null) result.dark = dark;
+    if (contents != null) result.contents = contents;
     return result;
   }
 
@@ -439,15 +438,14 @@ class Message extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'type')
     ..aOM<$0.Entity>(3, _omitFieldNames ? '' : 'from',
         subBuilder: $0.Entity.create)
-    ..pPM<Content>(4, _omitFieldNames ? '' : 'conts',
-        subBuilder: Content.create)
     ..aInt64(5, _omitFieldNames ? '' : 'timestamp')
     ..aOM<$1.Any>(6, _omitFieldNames ? '' : 'extra', subBuilder: $1.Any.create)
     ..aOS(7, _omitFieldNames ? '' : 'exType')
     ..aOM<$0.Entity>(8, _omitFieldNames ? '' : 'ghost',
         subBuilder: $0.Entity.create)
-    ..aOM<Prompt>(9, _omitFieldNames ? '' : 'prompt', subBuilder: Prompt.create)
     ..aI(10, _omitFieldNames ? '' : 'dark', fieldType: $pb.PbFieldType.OU3)
+    ..a<$core.List<$core.int>>(
+        11, _omitFieldNames ? '' : 'contents', $pb.PbFieldType.OY)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -497,68 +495,127 @@ class Message extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $0.Entity ensureFrom() => $_ensure(2);
 
-  @$pb.TagNumber(4)
-  $pb.PbList<Content> get conts => $_getList(3);
-
   @$pb.TagNumber(5)
-  $fixnum.Int64 get timestamp => $_getI64(4);
+  $fixnum.Int64 get timestamp => $_getI64(3);
   @$pb.TagNumber(5)
-  set timestamp($fixnum.Int64 value) => $_setInt64(4, value);
+  set timestamp($fixnum.Int64 value) => $_setInt64(3, value);
   @$pb.TagNumber(5)
-  $core.bool hasTimestamp() => $_has(4);
+  $core.bool hasTimestamp() => $_has(3);
   @$pb.TagNumber(5)
   void clearTimestamp() => $_clearField(5);
 
   @$pb.TagNumber(6)
-  $1.Any get extra => $_getN(5);
+  $1.Any get extra => $_getN(4);
   @$pb.TagNumber(6)
   set extra($1.Any value) => $_setField(6, value);
   @$pb.TagNumber(6)
-  $core.bool hasExtra() => $_has(5);
+  $core.bool hasExtra() => $_has(4);
   @$pb.TagNumber(6)
   void clearExtra() => $_clearField(6);
   @$pb.TagNumber(6)
-  $1.Any ensureExtra() => $_ensure(5);
+  $1.Any ensureExtra() => $_ensure(4);
 
   @$pb.TagNumber(7)
-  $core.String get exType => $_getSZ(6);
+  $core.String get exType => $_getSZ(5);
   @$pb.TagNumber(7)
-  set exType($core.String value) => $_setString(6, value);
+  set exType($core.String value) => $_setString(5, value);
   @$pb.TagNumber(7)
-  $core.bool hasExType() => $_has(6);
+  $core.bool hasExType() => $_has(5);
   @$pb.TagNumber(7)
   void clearExType() => $_clearField(7);
 
   @$pb.TagNumber(8)
-  $0.Entity get ghost => $_getN(7);
+  $0.Entity get ghost => $_getN(6);
   @$pb.TagNumber(8)
   set ghost($0.Entity value) => $_setField(8, value);
   @$pb.TagNumber(8)
-  $core.bool hasGhost() => $_has(7);
+  $core.bool hasGhost() => $_has(6);
   @$pb.TagNumber(8)
   void clearGhost() => $_clearField(8);
   @$pb.TagNumber(8)
-  $0.Entity ensureGhost() => $_ensure(7);
-
-  @$pb.TagNumber(9)
-  Prompt get prompt => $_getN(8);
-  @$pb.TagNumber(9)
-  set prompt(Prompt value) => $_setField(9, value);
-  @$pb.TagNumber(9)
-  $core.bool hasPrompt() => $_has(8);
-  @$pb.TagNumber(9)
-  void clearPrompt() => $_clearField(9);
-  @$pb.TagNumber(9)
-  Prompt ensurePrompt() => $_ensure(8);
+  $0.Entity ensureGhost() => $_ensure(6);
 
   @$pb.TagNumber(10)
-  $core.int get dark => $_getIZ(9);
+  $core.int get dark => $_getIZ(7);
   @$pb.TagNumber(10)
-  set dark($core.int value) => $_setUnsignedInt32(9, value);
+  set dark($core.int value) => $_setUnsignedInt32(7, value);
   @$pb.TagNumber(10)
-  $core.bool hasDark() => $_has(9);
+  $core.bool hasDark() => $_has(7);
   @$pb.TagNumber(10)
   void clearDark() => $_clearField(10);
+
+  /// 可变部分:序列化后的 `Contents`。中间层原样存、原样转,只有 UI / brain 解(见上方说明)
+  @$pb.TagNumber(11)
+  $core.List<$core.int> get contents => $_getN(8);
+  @$pb.TagNumber(11)
+  set contents($core.List<$core.int> value) => $_setBytes(8, value);
+  @$pb.TagNumber(11)
+  $core.bool hasContents() => $_has(8);
+  @$pb.TagNumber(11)
+  void clearContents() => $_clearField(11);
+}
+
+/// 消息的可变部分(`Message.contents` 里装的就是它序列化后的字节)。
+/// **只由发送方编码、接收方解析**;中间层不认识它也不需要认识它。
+class Contents extends $pb.GeneratedMessage {
+  factory Contents({
+    $core.Iterable<Content>? list,
+    Prompt? prompt,
+  }) {
+    final result = create();
+    if (list != null) result.list.addAll(list);
+    if (prompt != null) result.prompt = prompt;
+    return result;
+  }
+
+  Contents._();
+
+  factory Contents.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Contents.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Contents',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..pPM<Content>(1, _omitFieldNames ? '' : 'list', subBuilder: Content.create)
+    ..aOM<Prompt>(2, _omitFieldNames ? '' : 'prompt', subBuilder: Prompt.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Contents clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Contents copyWith(void Function(Contents) updates) =>
+      super.copyWith((message) => updates(message as Contents)) as Contents;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Contents create() => Contents._();
+  @$core.override
+  Contents createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Contents getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Contents>(create);
+  static Contents? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<Content> get list => $_getList(0);
+
+  @$pb.TagNumber(2)
+  Prompt get prompt => $_getN(1);
+  @$pb.TagNumber(2)
+  set prompt(Prompt value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPrompt() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPrompt() => $_clearField(2);
+  @$pb.TagNumber(2)
+  Prompt ensurePrompt() => $_ensure(1);
 }
 
 /// ⚠️ 被后端 Go 引用(群消息 @ 解析),proto 里无 rpc 引用,勿当死 message 删。

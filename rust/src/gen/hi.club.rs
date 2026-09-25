@@ -4169,14 +4169,14 @@ pub mod agent_plugin_client {
         }
     }
 }
-#[derive(Clone, PartialEq, ::prost::Message)]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Packet {
     #[prost(oneof = "packet::Kind", tags = "1, 2")]
     pub kind: ::core::option::Option<packet::Kind>,
 }
 /// Nested message and enum types in `Packet`.
 pub mod packet {
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
     pub enum Kind {
         #[prost(message, tag = "1")]
         Notice(super::Notice),
@@ -4262,23 +4262,24 @@ pub struct Prompt {
     #[prost(string, optional, tag = "2")]
     pub state: ::core::option::Option<::prost::alloc::string::String>,
 }
-/// ## dark:暗语等级 —— **UI 忽略它,别的流程照走**
+/// ## 信封与可变部分 —— 中间层只解信封(2026-09-25 定)
 ///
-/// `dark` 是一个等级:**不带 = 0 = 普通(明)**,1 = 1 级暗语,依此类推。Message 与 Notice 各有一个。
+/// `Message` 本身是**信封级**的:uuid / type / from / timestamp / ex_type / ghost / dark,
+/// 中间层(hiclub-core-mqtt、club 后端、broker)只读它们做**路由与同步**。
+/// *可变部分**只有两处,中间层**不解析、不改写、原样存、原样转*\*:
 ///
-/// · **暗 ≠ 保密。** 内容照常明文过 MQTT、照常进历史记录和各端本地库,会话里的人换个
-/// 不过滤的客户端就能读到。它只表示「界面上别显示」—— 典型用途:两个 agent 在群里协商,
-/// 不需要让群里的人看到。
-/// · **只有显示这一步跳过**:进历史记录、补拉同步、机器人触发 AI 回复、回调……一律照走。
-/// · **过滤在 core**:core 只把 `dark <= 阈值` 的交给 UI(阈值默认 0,可随时切换),
-/// 所以不认识暗语的 app 不用改就看不到。事件照发(带着 dark),机器人靠事件做事。
-/// · 后端离线推送:`dark > 0` 不推(手机通知栏也是显示)。
-/// · 回复一条暗语:**收到几级,回复就用几级**(后端 AI 助手、机器人都照此)。
-/// · 分级是留给以后按层级分支处理的,现在只用到 0 / 1。
+/// · `contents` —— 序列化后的 `Contents`(内容段 + 提示),**由发送方编码、接收方(UI / brain)解析**。
+/// 它是 `bytes` 而不是具体结构,是故意的:中间层在类型上就碰不到内容,上层加一种内容,
+/// 中间层一行不改、一个号不打。(原来是 `repeated Content conts` + `Prompt prompt`,
+/// core 解开再用自己的 proto 版本重编码 → 不认识的内容静默丢;后端补拉还逐条改写 —— 都已拆掉。)
+/// · `extra` —— `google.protobuf.Any`,本来就不透明。
 ///
-/// ⚠️ **不带就是 0,这是有意的缺省语义**,不是「拿零值冒充没有」:老的发送方从来不填这个字段,
-/// 它们发的就是 0 级(普通)消息。读的时候 `GetDark()` / `unwrap_or(0)` 是对的。
-#[derive(Clone, PartialEq, ::prost::Message)]
+/// `timestamp`:**服务器入库时填接收时间**(所有消息统一到服务器时间),这是入库时**唯一**改动的字段。
+/// 发送方填的是本地时间,只作占位;端上显示时间以 core 给的为准(实时 = 本地收到时间,补拉后 = 服务器时间)。
+///
+/// `from` / `ghost` 是 Entity,带着**发送那一刻**的基础信息与 `update` 一起传播;
+/// 各端的对象缓存池按 `update` 比新旧、惰性更新 —— **任何一层都不许把它换成"当前资料"**。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Message {
     #[prost(string, optional, tag = "1")]
     pub uuid: ::core::option::Option<::prost::alloc::string::String>,
@@ -4287,8 +4288,7 @@ pub struct Message {
     /// Entity=公开门面
     #[prost(message, optional, tag = "3")]
     pub from: ::core::option::Option<super::Entity>,
-    #[prost(message, repeated, tag = "4")]
-    pub conts: ::prost::alloc::vec::Vec<Content>,
+    /// 服务器入库时填接收时间(微秒)
     #[prost(int64, optional, tag = "5")]
     pub timestamp: ::core::option::Option<i64>,
     #[prost(message, optional, tag = "6")]
@@ -4298,11 +4298,23 @@ pub struct Message {
     /// Entity=公开门面
     #[prost(message, optional, tag = "8")]
     pub ghost: ::core::option::Option<super::Entity>,
-    #[prost(message, optional, tag = "9")]
-    pub prompt: ::core::option::Option<Prompt>,
     /// 暗语等级,不带 = 0 = 普通;见上面「暗语」那段
     #[prost(uint32, optional, tag = "10")]
     pub dark: ::core::option::Option<u32>,
+    /// 可变部分:序列化后的 `Contents`。中间层原样存、原样转,只有 UI / brain 解(见上方说明)
+    #[prost(bytes = "vec", optional, tag = "11")]
+    pub contents: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
+}
+/// 消息的可变部分(`Message.contents` 里装的就是它序列化后的字节)。
+/// **只由发送方编码、接收方解析**;中间层不认识它也不需要认识它。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Contents {
+    /// 内容段,见下面 Content.type 那张表
+    #[prost(message, repeated, tag = "1")]
+    pub list: ::prost::alloc::vec::Vec<Content>,
+    /// AI 用的提示
+    #[prost(message, optional, tag = "2")]
+    pub prompt: ::core::option::Option<Prompt>,
 }
 /// ⚠️ 被后端 Go 引用(群消息 @ 解析),proto 里无 rpc 引用,勿当死 message 删。
 #[derive(Clone, PartialEq, ::prost::Message)]

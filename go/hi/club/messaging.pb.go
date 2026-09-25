@@ -318,34 +318,35 @@ func (x *Prompt) GetState() string {
 	return ""
 }
 
-// ## dark:暗语等级 —— **UI 忽略它,别的流程照走**
+// ## 信封与可变部分 —— 中间层只解信封(2026-09-25 定)
 //
-// `dark` 是一个等级:**不带 = 0 = 普通(明)**,1 = 1 级暗语,依此类推。Message 与 Notice 各有一个。
+// `Message` 本身是**信封级**的:uuid / type / from / timestamp / ex_type / ghost / dark,
+// 中间层(hiclub-core-mqtt、club 后端、broker)只读它们做**路由与同步**。
+// *可变部分**只有两处,中间层**不解析、不改写、原样存、原样转**:
 //
-// · **暗 ≠ 保密。** 内容照常明文过 MQTT、照常进历史记录和各端本地库,会话里的人换个
-// 不过滤的客户端就能读到。它只表示「界面上别显示」—— 典型用途:两个 agent 在群里协商,
-// 不需要让群里的人看到。
-// · **只有显示这一步跳过**:进历史记录、补拉同步、机器人触发 AI 回复、回调……一律照走。
-// · **过滤在 core**:core 只把 `dark <= 阈值` 的交给 UI(阈值默认 0,可随时切换),
-// 所以不认识暗语的 app 不用改就看不到。事件照发(带着 dark),机器人靠事件做事。
-// · 后端离线推送:`dark > 0` 不推(手机通知栏也是显示)。
-// · 回复一条暗语:**收到几级,回复就用几级**(后端 AI 助手、机器人都照此)。
-// · 分级是留给以后按层级分支处理的,现在只用到 0 / 1。
+// · `contents` —— 序列化后的 `Contents`(内容段 + 提示),**由发送方编码、接收方(UI / brain)解析**。
+// 它是 `bytes` 而不是具体结构,是故意的:中间层在类型上就碰不到内容,上层加一种内容,
+// 中间层一行不改、一个号不打。(原来是 `repeated Content conts` + `Prompt prompt`,
+// core 解开再用自己的 proto 版本重编码 → 不认识的内容静默丢;后端补拉还逐条改写 —— 都已拆掉。)
+// · `extra` —— `google.protobuf.Any`,本来就不透明。
 //
-// ⚠️ **不带就是 0,这是有意的缺省语义**,不是「拿零值冒充没有」:老的发送方从来不填这个字段,
-// 它们发的就是 0 级(普通)消息。读的时候 `GetDark()` / `unwrap_or(0)` 是对的。
+// `timestamp`:**服务器入库时填接收时间**(所有消息统一到服务器时间),这是入库时**唯一**改动的字段。
+// 发送方填的是本地时间,只作占位;端上显示时间以 core 给的为准(实时 = 本地收到时间,补拉后 = 服务器时间)。
+//
+// `from` / `ghost` 是 Entity,带着**发送那一刻**的基础信息与 `update` 一起传播;
+// 各端的对象缓存池按 `update` 比新旧、惰性更新 —— **任何一层都不许把它换成"当前资料"**。
 type Message struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
-	Type          *string                `protobuf:"bytes,2,opt,name=type,proto3,oneof" json:"type,omitempty"`
-	From          *hi.Entity             `protobuf:"bytes,3,opt,name=from,proto3" json:"from,omitempty"` // Entity=公开门面
-	Conts         []*Content             `protobuf:"bytes,4,rep,name=conts,proto3" json:"conts,omitempty"`
-	Timestamp     *int64                 `protobuf:"varint,5,opt,name=timestamp,proto3,oneof" json:"timestamp,omitempty"`
-	Extra         *anypb.Any             `protobuf:"bytes,6,opt,name=extra,proto3" json:"extra,omitempty"`
-	ExType        *string                `protobuf:"bytes,7,opt,name=ex_type,json=exType,proto3,oneof" json:"ex_type,omitempty"`
-	Ghost         *hi.Entity             `protobuf:"bytes,8,opt,name=ghost,proto3" json:"ghost,omitempty"` // Entity=公开门面
-	Prompt        *Prompt                `protobuf:"bytes,9,opt,name=prompt,proto3" json:"prompt,omitempty"`
-	Dark          *uint32                `protobuf:"varint,10,opt,name=dark,proto3,oneof" json:"dark,omitempty"` // 暗语等级,不带 = 0 = 普通;见上面「暗语」那段
+	state     protoimpl.MessageState `protogen:"open.v1"`
+	Uuid      *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
+	Type      *string                `protobuf:"bytes,2,opt,name=type,proto3,oneof" json:"type,omitempty"`
+	From      *hi.Entity             `protobuf:"bytes,3,opt,name=from,proto3" json:"from,omitempty"`                  // Entity=公开门面
+	Timestamp *int64                 `protobuf:"varint,5,opt,name=timestamp,proto3,oneof" json:"timestamp,omitempty"` // 服务器入库时填接收时间(微秒)
+	Extra     *anypb.Any             `protobuf:"bytes,6,opt,name=extra,proto3" json:"extra,omitempty"`
+	ExType    *string                `protobuf:"bytes,7,opt,name=ex_type,json=exType,proto3,oneof" json:"ex_type,omitempty"`
+	Ghost     *hi.Entity             `protobuf:"bytes,8,opt,name=ghost,proto3" json:"ghost,omitempty"`       // Entity=公开门面
+	Dark      *uint32                `protobuf:"varint,10,opt,name=dark,proto3,oneof" json:"dark,omitempty"` // 暗语等级,不带 = 0 = 普通;见上面「暗语」那段
+	// 可变部分:序列化后的 `Contents`。中间层原样存、原样转,只有 UI / brain 解(见上方说明)
+	Contents      []byte `protobuf:"bytes,11,opt,name=contents,proto3,oneof" json:"contents,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -401,13 +402,6 @@ func (x *Message) GetFrom() *hi.Entity {
 	return nil
 }
 
-func (x *Message) GetConts() []*Content {
-	if x != nil {
-		return x.Conts
-	}
-	return nil
-}
-
 func (x *Message) GetTimestamp() int64 {
 	if x != nil && x.Timestamp != nil {
 		return *x.Timestamp
@@ -436,18 +430,72 @@ func (x *Message) GetGhost() *hi.Entity {
 	return nil
 }
 
-func (x *Message) GetPrompt() *Prompt {
-	if x != nil {
-		return x.Prompt
-	}
-	return nil
-}
-
 func (x *Message) GetDark() uint32 {
 	if x != nil && x.Dark != nil {
 		return *x.Dark
 	}
 	return 0
+}
+
+func (x *Message) GetContents() []byte {
+	if x != nil {
+		return x.Contents
+	}
+	return nil
+}
+
+// 消息的可变部分(`Message.contents` 里装的就是它序列化后的字节)。
+// **只由发送方编码、接收方解析**;中间层不认识它也不需要认识它。
+type Contents struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	List          []*Content             `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`     // 内容段,见下面 Content.type 那张表
+	Prompt        *Prompt                `protobuf:"bytes,2,opt,name=prompt,proto3" json:"prompt,omitempty"` // AI 用的提示
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Contents) Reset() {
+	*x = Contents{}
+	mi := &file_hi_club_messaging_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Contents) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Contents) ProtoMessage() {}
+
+func (x *Contents) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_messaging_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Contents.ProtoReflect.Descriptor instead.
+func (*Contents) Descriptor() ([]byte, []int) {
+	return file_hi_club_messaging_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *Contents) GetList() []*Content {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
+func (x *Contents) GetPrompt() *Prompt {
+	if x != nil {
+		return x.Prompt
+	}
+	return nil
 }
 
 // ⚠️ 被后端 Go 引用(群消息 @ 解析),proto 里无 rpc 引用,勿当死 message 删。
@@ -462,7 +510,7 @@ type Mention struct {
 
 func (x *Mention) Reset() {
 	*x = Mention{}
-	mi := &file_hi_club_messaging_proto_msgTypes[4]
+	mi := &file_hi_club_messaging_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -474,7 +522,7 @@ func (x *Mention) String() string {
 func (*Mention) ProtoMessage() {}
 
 func (x *Mention) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_messaging_proto_msgTypes[4]
+	mi := &file_hi_club_messaging_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -487,7 +535,7 @@ func (x *Mention) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Mention.ProtoReflect.Descriptor instead.
 func (*Mention) Descriptor() ([]byte, []int) {
-	return file_hi_club_messaging_proto_rawDescGZIP(), []int{4}
+	return file_hi_club_messaging_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *Mention) GetGroup() *hi.Entity {
@@ -521,7 +569,7 @@ type Member struct {
 
 func (x *Member) Reset() {
 	*x = Member{}
-	mi := &file_hi_club_messaging_proto_msgTypes[5]
+	mi := &file_hi_club_messaging_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -533,7 +581,7 @@ func (x *Member) String() string {
 func (*Member) ProtoMessage() {}
 
 func (x *Member) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_messaging_proto_msgTypes[5]
+	mi := &file_hi_club_messaging_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -546,7 +594,7 @@ func (x *Member) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Member.ProtoReflect.Descriptor instead.
 func (*Member) Descriptor() ([]byte, []int) {
-	return file_hi_club_messaging_proto_rawDescGZIP(), []int{5}
+	return file_hi_club_messaging_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *Member) GetGroup() *hi.Entity {
@@ -609,7 +657,7 @@ type Content struct {
 
 func (x *Content) Reset() {
 	*x = Content{}
-	mi := &file_hi_club_messaging_proto_msgTypes[6]
+	mi := &file_hi_club_messaging_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -621,7 +669,7 @@ func (x *Content) String() string {
 func (*Content) ProtoMessage() {}
 
 func (x *Content) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_messaging_proto_msgTypes[6]
+	mi := &file_hi_club_messaging_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -634,7 +682,7 @@ func (x *Content) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Content.ProtoReflect.Descriptor instead.
 func (*Content) Descriptor() ([]byte, []int) {
-	return file_hi_club_messaging_proto_rawDescGZIP(), []int{6}
+	return file_hi_club_messaging_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *Content) GetType() string {
@@ -744,7 +792,7 @@ type Content_Chat struct {
 
 func (x *Content_Chat) Reset() {
 	*x = Content_Chat{}
-	mi := &file_hi_club_messaging_proto_msgTypes[7]
+	mi := &file_hi_club_messaging_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -756,7 +804,7 @@ func (x *Content_Chat) String() string {
 func (*Content_Chat) ProtoMessage() {}
 
 func (x *Content_Chat) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_messaging_proto_msgTypes[7]
+	mi := &file_hi_club_messaging_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -769,7 +817,7 @@ func (x *Content_Chat) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Content_Chat.ProtoReflect.Descriptor instead.
 func (*Content_Chat) Descriptor() ([]byte, []int) {
-	return file_hi_club_messaging_proto_rawDescGZIP(), []int{6, 0}
+	return file_hi_club_messaging_proto_rawDescGZIP(), []int{7, 0}
 }
 
 func (x *Content_Chat) GetContent() string {
@@ -835,28 +883,31 @@ const file_hi_club_messaging_proto_rawDesc = "" +
 	"\x06custom\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x06custom\x88\x01\x01\x12\x1f\n" +
 	"\x05state\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x05state\x88\x01\x01:\x04\x98\xb5\x18\x02B\t\n" +
 	"\a_customB\b\n" +
-	"\x06_state\"\xcb\x03\n" +
+	"\x06_state\"\xa2\x03\n" +
 	"\aMessage\x12\x1d\n" +
 	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x04uuid\x88\x01\x01\x12\x1d\n" +
 	"\x04type\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x04type\x88\x01\x01\x12$\n" +
 	"\x04from\x18\x03 \x01(\v2\n" +
-	".hi.EntityB\x04\x90\xb5\x18\x01R\x04from\x12,\n" +
-	"\x05conts\x18\x04 \x03(\v2\x10.hi.club.ContentB\x04\x90\xb5\x18\x02R\x05conts\x12'\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x04from\x12'\n" +
 	"\ttimestamp\x18\x05 \x01(\x03B\x04\x90\xb5\x18\x02H\x02R\ttimestamp\x88\x01\x01\x120\n" +
 	"\x05extra\x18\x06 \x01(\v2\x14.google.protobuf.AnyB\x04\x90\xb5\x18\x02R\x05extra\x12\"\n" +
 	"\aex_type\x18\a \x01(\tB\x04\x90\xb5\x18\x02H\x03R\x06exType\x88\x01\x01\x12&\n" +
 	"\x05ghost\x18\b \x01(\v2\n" +
-	".hi.EntityB\x04\x90\xb5\x18\x01R\x05ghost\x12-\n" +
-	"\x06prompt\x18\t \x01(\v2\x0f.hi.club.PromptB\x04\x90\xb5\x18\x02R\x06prompt\x12\x1d\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x05ghost\x12\x1d\n" +
 	"\x04dark\x18\n" +
-	" \x01(\rB\x04\x90\xb5\x18\x02H\x04R\x04dark\x88\x01\x01:\x04\x98\xb5\x18\x02B\a\n" +
+	" \x01(\rB\x04\x90\xb5\x18\x02H\x04R\x04dark\x88\x01\x01\x12%\n" +
+	"\bcontents\x18\v \x01(\fB\x04\x90\xb5\x18\x02H\x05R\bcontents\x88\x01\x01:\x04\x98\xb5\x18\x02B\a\n" +
 	"\x05_uuidB\a\n" +
 	"\x05_typeB\f\n" +
 	"\n" +
 	"_timestampB\n" +
 	"\n" +
 	"\b_ex_typeB\a\n" +
-	"\x05_dark\"j\n" +
+	"\x05_darkB\v\n" +
+	"\t_contents\"k\n" +
+	"\bContents\x12*\n" +
+	"\x04list\x18\x01 \x03(\v2\x10.hi.club.ContentB\x04\x90\xb5\x18\x02R\x04list\x12-\n" +
+	"\x06prompt\x18\x02 \x01(\v2\x0f.hi.club.PromptB\x04\x90\xb5\x18\x02R\x06prompt:\x04\x98\xb5\x18\x02\"j\n" +
 	"\aMention\x12 \n" +
 	"\x05group\x18\x01 \x01(\v2\n" +
 	".hi.EntityR\x05group\x12\x15\n" +
@@ -903,42 +954,43 @@ func file_hi_club_messaging_proto_rawDescGZIP() []byte {
 	return file_hi_club_messaging_proto_rawDescData
 }
 
-var file_hi_club_messaging_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_hi_club_messaging_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_hi_club_messaging_proto_goTypes = []any{
 	(*Packet)(nil),                 // 0: hi.club.Packet
 	(*Notice)(nil),                 // 1: hi.club.Notice
 	(*Prompt)(nil),                 // 2: hi.club.Prompt
 	(*Message)(nil),                // 3: hi.club.Message
-	(*Mention)(nil),                // 4: hi.club.Mention
-	(*Member)(nil),                 // 5: hi.club.Member
-	(*Content)(nil),                // 6: hi.club.Content
-	(*Content_Chat)(nil),           // 7: hi.club.Content.Chat
-	(*hi.Entity)(nil),              // 8: hi.Entity
-	(*anypb.Any)(nil),              // 9: google.protobuf.Any
-	(*did.Transaction)(nil),        // 10: hi.did.Transaction
-	(*TradeBase)(nil),              // 11: hi.club.TradeBase
-	(*binance.BinanceResult)(nil),  // 12: hi.binance.BinanceResult
-	(*binance.BinanceCommand)(nil), // 13: hi.binance.BinanceCommand
+	(*Contents)(nil),               // 4: hi.club.Contents
+	(*Mention)(nil),                // 5: hi.club.Mention
+	(*Member)(nil),                 // 6: hi.club.Member
+	(*Content)(nil),                // 7: hi.club.Content
+	(*Content_Chat)(nil),           // 8: hi.club.Content.Chat
+	(*hi.Entity)(nil),              // 9: hi.Entity
+	(*anypb.Any)(nil),              // 10: google.protobuf.Any
+	(*did.Transaction)(nil),        // 11: hi.did.Transaction
+	(*TradeBase)(nil),              // 12: hi.club.TradeBase
+	(*binance.BinanceResult)(nil),  // 13: hi.binance.BinanceResult
+	(*binance.BinanceCommand)(nil), // 14: hi.binance.BinanceCommand
 }
 var file_hi_club_messaging_proto_depIdxs = []int32{
 	1,  // 0: hi.club.Packet.notice:type_name -> hi.club.Notice
 	3,  // 1: hi.club.Packet.message:type_name -> hi.club.Message
-	8,  // 2: hi.club.Notice.from:type_name -> hi.Entity
-	9,  // 3: hi.club.Notice.extra:type_name -> google.protobuf.Any
-	8,  // 4: hi.club.Message.from:type_name -> hi.Entity
-	6,  // 5: hi.club.Message.conts:type_name -> hi.club.Content
-	9,  // 6: hi.club.Message.extra:type_name -> google.protobuf.Any
-	8,  // 7: hi.club.Message.ghost:type_name -> hi.Entity
-	2,  // 8: hi.club.Message.prompt:type_name -> hi.club.Prompt
-	8,  // 9: hi.club.Mention.group:type_name -> hi.Entity
-	8,  // 10: hi.club.Mention.list:type_name -> hi.Entity
-	8,  // 11: hi.club.Member.group:type_name -> hi.Entity
-	8,  // 12: hi.club.Member.user:type_name -> hi.Entity
-	7,  // 13: hi.club.Content.chat:type_name -> hi.club.Content.Chat
-	10, // 14: hi.club.Content.trans:type_name -> hi.did.Transaction
-	11, // 15: hi.club.Content.trade:type_name -> hi.club.TradeBase
-	12, // 16: hi.club.Content.binance:type_name -> hi.binance.BinanceResult
-	13, // 17: hi.club.Content.binance_cmd:type_name -> hi.binance.BinanceCommand
+	9,  // 2: hi.club.Notice.from:type_name -> hi.Entity
+	10, // 3: hi.club.Notice.extra:type_name -> google.protobuf.Any
+	9,  // 4: hi.club.Message.from:type_name -> hi.Entity
+	10, // 5: hi.club.Message.extra:type_name -> google.protobuf.Any
+	9,  // 6: hi.club.Message.ghost:type_name -> hi.Entity
+	7,  // 7: hi.club.Contents.list:type_name -> hi.club.Content
+	2,  // 8: hi.club.Contents.prompt:type_name -> hi.club.Prompt
+	9,  // 9: hi.club.Mention.group:type_name -> hi.Entity
+	9,  // 10: hi.club.Mention.list:type_name -> hi.Entity
+	9,  // 11: hi.club.Member.group:type_name -> hi.Entity
+	9,  // 12: hi.club.Member.user:type_name -> hi.Entity
+	8,  // 13: hi.club.Content.chat:type_name -> hi.club.Content.Chat
+	11, // 14: hi.club.Content.trans:type_name -> hi.did.Transaction
+	12, // 15: hi.club.Content.trade:type_name -> hi.club.TradeBase
+	13, // 16: hi.club.Content.binance:type_name -> hi.binance.BinanceResult
+	14, // 17: hi.club.Content.binance_cmd:type_name -> hi.binance.BinanceCommand
 	18, // [18:18] is the sub-list for method output_type
 	18, // [18:18] is the sub-list for method input_type
 	18, // [18:18] is the sub-list for extension type_name
@@ -959,22 +1011,22 @@ func file_hi_club_messaging_proto_init() {
 	file_hi_club_messaging_proto_msgTypes[1].OneofWrappers = []any{}
 	file_hi_club_messaging_proto_msgTypes[2].OneofWrappers = []any{}
 	file_hi_club_messaging_proto_msgTypes[3].OneofWrappers = []any{}
-	file_hi_club_messaging_proto_msgTypes[4].OneofWrappers = []any{}
-	file_hi_club_messaging_proto_msgTypes[6].OneofWrappers = []any{
+	file_hi_club_messaging_proto_msgTypes[5].OneofWrappers = []any{}
+	file_hi_club_messaging_proto_msgTypes[7].OneofWrappers = []any{
 		(*Content_Chat_)(nil),
 		(*Content_Trans)(nil),
 		(*Content_Trade)(nil),
 		(*Content_Binance)(nil),
 		(*Content_BinanceCmd)(nil),
 	}
-	file_hi_club_messaging_proto_msgTypes[7].OneofWrappers = []any{}
+	file_hi_club_messaging_proto_msgTypes[8].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_messaging_proto_rawDesc), len(file_hi_club_messaging_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

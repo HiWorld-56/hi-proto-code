@@ -239,15 +239,6 @@ const Message$json = {
       '10': 'from'
     },
     {
-      '1': 'conts',
-      '3': 4,
-      '4': 3,
-      '5': 11,
-      '6': '.hi.club.Content',
-      '8': {},
-      '10': 'conts'
-    },
-    {
       '1': 'timestamp',
       '3': 5,
       '4': 1,
@@ -286,15 +277,6 @@ const Message$json = {
       '10': 'ghost'
     },
     {
-      '1': 'prompt',
-      '3': 9,
-      '4': 1,
-      '5': 11,
-      '6': '.hi.club.Prompt',
-      '8': {},
-      '10': 'prompt'
-    },
-    {
       '1': 'dark',
       '3': 10,
       '4': 1,
@@ -302,6 +284,16 @@ const Message$json = {
       '8': {},
       '9': 4,
       '10': 'dark',
+      '17': true
+    },
+    {
+      '1': 'contents',
+      '3': 11,
+      '4': 1,
+      '5': 12,
+      '8': {},
+      '9': 5,
+      '10': 'contents',
       '17': true
     },
   ],
@@ -312,20 +304,51 @@ const Message$json = {
     {'1': '_timestamp'},
     {'1': '_ex_type'},
     {'1': '_dark'},
+    {'1': '_contents'},
   ],
 };
 
 /// Descriptor for `Message`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List messageDescriptor = $convert.base64Decode(
     'CgdNZXNzYWdlEh0KBHV1aWQYASABKAlCBJC1GAJIAFIEdXVpZIgBARIdCgR0eXBlGAIgASgJQg'
-    'SQtRgCSAFSBHR5cGWIAQESJAoEZnJvbRgDIAEoCzIKLmhpLkVudGl0eUIEkLUYAVIEZnJvbRIs'
-    'CgVjb250cxgEIAMoCzIQLmhpLmNsdWIuQ29udGVudEIEkLUYAlIFY29udHMSJwoJdGltZXN0YW'
-    '1wGAUgASgDQgSQtRgCSAJSCXRpbWVzdGFtcIgBARIwCgVleHRyYRgGIAEoCzIULmdvb2dsZS5w'
-    'cm90b2J1Zi5BbnlCBJC1GAJSBWV4dHJhEiIKB2V4X3R5cGUYByABKAlCBJC1GAJIA1IGZXhUeX'
-    'BliAEBEiYKBWdob3N0GAggASgLMgouaGkuRW50aXR5QgSQtRgBUgVnaG9zdBItCgZwcm9tcHQY'
-    'CSABKAsyDy5oaS5jbHViLlByb21wdEIEkLUYAlIGcHJvbXB0Eh0KBGRhcmsYCiABKA1CBJC1GA'
-    'JIBFIEZGFya4gBAToEmLUYAkIHCgVfdXVpZEIHCgVfdHlwZUIMCgpfdGltZXN0YW1wQgoKCF9l'
-    'eF90eXBlQgcKBV9kYXJr');
+    'SQtRgCSAFSBHR5cGWIAQESJAoEZnJvbRgDIAEoCzIKLmhpLkVudGl0eUIEkLUYAVIEZnJvbRIn'
+    'Cgl0aW1lc3RhbXAYBSABKANCBJC1GAJIAlIJdGltZXN0YW1wiAEBEjAKBWV4dHJhGAYgASgLMh'
+    'QuZ29vZ2xlLnByb3RvYnVmLkFueUIEkLUYAlIFZXh0cmESIgoHZXhfdHlwZRgHIAEoCUIEkLUY'
+    'AkgDUgZleFR5cGWIAQESJgoFZ2hvc3QYCCABKAsyCi5oaS5FbnRpdHlCBJC1GAFSBWdob3N0Eh'
+    '0KBGRhcmsYCiABKA1CBJC1GAJIBFIEZGFya4gBARIlCghjb250ZW50cxgLIAEoDEIEkLUYAkgF'
+    'Ughjb250ZW50c4gBAToEmLUYAkIHCgVfdXVpZEIHCgVfdHlwZUIMCgpfdGltZXN0YW1wQgoKCF'
+    '9leF90eXBlQgcKBV9kYXJrQgsKCV9jb250ZW50cw==');
+
+@$core.Deprecated('Use contentsDescriptor instead')
+const Contents$json = {
+  '1': 'Contents',
+  '2': [
+    {
+      '1': 'list',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.club.Content',
+      '8': {},
+      '10': 'list'
+    },
+    {
+      '1': 'prompt',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.Prompt',
+      '8': {},
+      '10': 'prompt'
+    },
+  ],
+  '7': {},
+};
+
+/// Descriptor for `Contents`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List contentsDescriptor = $convert.base64Decode(
+    'CghDb250ZW50cxIqCgRsaXN0GAEgAygLMhAuaGkuY2x1Yi5Db250ZW50QgSQtRgCUgRsaXN0Ei'
+    '0KBnByb21wdBgCIAEoCzIPLmhpLmNsdWIuUHJvbXB0QgSQtRgCUgZwcm9tcHQ6BJi1GAI=');
 
 @$core.Deprecated('Use mentionDescriptor instead')
 const Mention$json = {
