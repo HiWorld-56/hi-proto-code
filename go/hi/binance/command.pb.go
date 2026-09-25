@@ -87,6 +87,19 @@ type BinanceCommand struct {
 	//	*BinanceCommand_StocksTokenizedAssets
 	//	*BinanceCommand_StocksSignUsEquityDisclaimer
 	//	*BinanceCommand_WalletQueryUserWalletBalance
+	//	*BinanceCommand_SpotOrderListOco
+	//	*BinanceCommand_SpotOrderListOto
+	//	*BinanceCommand_SpotOrderListOtoco
+	//	*BinanceCommand_SpotOrderListOpo
+	//	*BinanceCommand_SpotOrderListOpoco
+	//	*BinanceCommand_SpotDeleteOrderList
+	//	*BinanceCommand_SpotGetOrderList
+	//	*BinanceCommand_SpotAllOrderList
+	//	*BinanceCommand_UsdsFuturesNewAlgoOrder
+	//	*BinanceCommand_UsdsFuturesCancelAlgoOrder
+	//	*BinanceCommand_UsdsFuturesCancelAllAlgoOpenOrders
+	//	*BinanceCommand_UsdsFuturesQueryAlgoOrder
+	//	*BinanceCommand_UsdsFuturesQueryAllAlgoOrders
 	Op            isBinanceCommand_Op `protobuf_oneof:"op"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -406,6 +419,123 @@ func (x *BinanceCommand) GetWalletQueryUserWalletBalance() *BinanceWalletBalance
 	return nil
 }
 
+func (x *BinanceCommand) GetSpotOrderListOco() *BinanceSpotOrderListOco {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceCommand_SpotOrderListOco); ok {
+			return x.SpotOrderListOco
+		}
+	}
+	return nil
+}
+
+func (x *BinanceCommand) GetSpotOrderListOto() *BinanceSpotOrderListOto {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceCommand_SpotOrderListOto); ok {
+			return x.SpotOrderListOto
+		}
+	}
+	return nil
+}
+
+func (x *BinanceCommand) GetSpotOrderListOtoco() *BinanceSpotOrderListOtoco {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceCommand_SpotOrderListOtoco); ok {
+			return x.SpotOrderListOtoco
+		}
+	}
+	return nil
+}
+
+func (x *BinanceCommand) GetSpotOrderListOpo() *BinanceSpotOrderListOpo {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceCommand_SpotOrderListOpo); ok {
+			return x.SpotOrderListOpo
+		}
+	}
+	return nil
+}
+
+func (x *BinanceCommand) GetSpotOrderListOpoco() *BinanceSpotOrderListOpoco {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceCommand_SpotOrderListOpoco); ok {
+			return x.SpotOrderListOpoco
+		}
+	}
+	return nil
+}
+
+func (x *BinanceCommand) GetSpotDeleteOrderList() *BinanceSpotCancelOrderList {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceCommand_SpotDeleteOrderList); ok {
+			return x.SpotDeleteOrderList
+		}
+	}
+	return nil
+}
+
+func (x *BinanceCommand) GetSpotGetOrderList() *BinanceSpotGetOrderList {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceCommand_SpotGetOrderList); ok {
+			return x.SpotGetOrderList
+		}
+	}
+	return nil
+}
+
+func (x *BinanceCommand) GetSpotAllOrderList() *BinanceSpotAllOrderLists {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceCommand_SpotAllOrderList); ok {
+			return x.SpotAllOrderList
+		}
+	}
+	return nil
+}
+
+func (x *BinanceCommand) GetUsdsFuturesNewAlgoOrder() *BinanceFuturesNewAlgoOrder {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceCommand_UsdsFuturesNewAlgoOrder); ok {
+			return x.UsdsFuturesNewAlgoOrder
+		}
+	}
+	return nil
+}
+
+func (x *BinanceCommand) GetUsdsFuturesCancelAlgoOrder() *BinanceFuturesCancelAlgoOrder {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceCommand_UsdsFuturesCancelAlgoOrder); ok {
+			return x.UsdsFuturesCancelAlgoOrder
+		}
+	}
+	return nil
+}
+
+func (x *BinanceCommand) GetUsdsFuturesCancelAllAlgoOpenOrders() *BinanceFuturesCancelAllAlgoOrders {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceCommand_UsdsFuturesCancelAllAlgoOpenOrders); ok {
+			return x.UsdsFuturesCancelAllAlgoOpenOrders
+		}
+	}
+	return nil
+}
+
+func (x *BinanceCommand) GetUsdsFuturesQueryAlgoOrder() *BinanceFuturesGetAlgoOrder {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceCommand_UsdsFuturesQueryAlgoOrder); ok {
+			return x.UsdsFuturesQueryAlgoOrder
+		}
+	}
+	return nil
+}
+
+func (x *BinanceCommand) GetUsdsFuturesQueryAllAlgoOrders() *BinanceFuturesAllAlgoOrders {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceCommand_UsdsFuturesQueryAllAlgoOrders); ok {
+			return x.UsdsFuturesQueryAllAlgoOrders
+		}
+	}
+	return nil
+}
+
 type isBinanceCommand_Op interface {
 	isBinanceCommand_Op()
 }
@@ -530,6 +660,60 @@ type BinanceCommand_WalletQueryUserWalletBalance struct {
 	WalletQueryUserWalletBalance *BinanceWalletBalance `protobuf:"bytes,40,opt,name=wallet_query_user_wallet_balance,json=walletQueryUserWalletBalance,proto3,oneof"` // wallet.query_user_wallet_balance
 }
 
+type BinanceCommand_SpotOrderListOco struct {
+	// 现货组合单(止盈止损一起挂、成交后自动挂止损…)
+	SpotOrderListOco *BinanceSpotOrderListOco `protobuf:"bytes,42,opt,name=spot_order_list_oco,json=spotOrderListOco,proto3,oneof"` // spot.order_list_oco
+}
+
+type BinanceCommand_SpotOrderListOto struct {
+	SpotOrderListOto *BinanceSpotOrderListOto `protobuf:"bytes,43,opt,name=spot_order_list_oto,json=spotOrderListOto,proto3,oneof"` // spot.order_list_oto
+}
+
+type BinanceCommand_SpotOrderListOtoco struct {
+	SpotOrderListOtoco *BinanceSpotOrderListOtoco `protobuf:"bytes,44,opt,name=spot_order_list_otoco,json=spotOrderListOtoco,proto3,oneof"` // spot.order_list_otoco
+}
+
+type BinanceCommand_SpotOrderListOpo struct {
+	SpotOrderListOpo *BinanceSpotOrderListOpo `protobuf:"bytes,45,opt,name=spot_order_list_opo,json=spotOrderListOpo,proto3,oneof"` // spot.order_list_opo
+}
+
+type BinanceCommand_SpotOrderListOpoco struct {
+	SpotOrderListOpoco *BinanceSpotOrderListOpoco `protobuf:"bytes,46,opt,name=spot_order_list_opoco,json=spotOrderListOpoco,proto3,oneof"` // spot.order_list_opoco
+}
+
+type BinanceCommand_SpotDeleteOrderList struct {
+	SpotDeleteOrderList *BinanceSpotCancelOrderList `protobuf:"bytes,47,opt,name=spot_delete_order_list,json=spotDeleteOrderList,proto3,oneof"` // spot.delete_order_list
+}
+
+type BinanceCommand_SpotGetOrderList struct {
+	SpotGetOrderList *BinanceSpotGetOrderList `protobuf:"bytes,48,opt,name=spot_get_order_list,json=spotGetOrderList,proto3,oneof"` // spot.get_order_list
+}
+
+type BinanceCommand_SpotAllOrderList struct {
+	SpotAllOrderList *BinanceSpotAllOrderLists `protobuf:"bytes,49,opt,name=spot_all_order_list,json=spotAllOrderList,proto3,oneof"` // spot.all_order_list
+}
+
+type BinanceCommand_UsdsFuturesNewAlgoOrder struct {
+	// 合约策略委托(止盈、止损、跟踪止损)
+	UsdsFuturesNewAlgoOrder *BinanceFuturesNewAlgoOrder `protobuf:"bytes,50,opt,name=usds_futures_new_algo_order,json=usdsFuturesNewAlgoOrder,proto3,oneof"` // usds_futures.new_algo_order
+}
+
+type BinanceCommand_UsdsFuturesCancelAlgoOrder struct {
+	UsdsFuturesCancelAlgoOrder *BinanceFuturesCancelAlgoOrder `protobuf:"bytes,51,opt,name=usds_futures_cancel_algo_order,json=usdsFuturesCancelAlgoOrder,proto3,oneof"` // usds_futures.cancel_algo_order
+}
+
+type BinanceCommand_UsdsFuturesCancelAllAlgoOpenOrders struct {
+	UsdsFuturesCancelAllAlgoOpenOrders *BinanceFuturesCancelAllAlgoOrders `protobuf:"bytes,52,opt,name=usds_futures_cancel_all_algo_open_orders,json=usdsFuturesCancelAllAlgoOpenOrders,proto3,oneof"` // usds_futures.cancel_all_algo_open_orders
+}
+
+type BinanceCommand_UsdsFuturesQueryAlgoOrder struct {
+	UsdsFuturesQueryAlgoOrder *BinanceFuturesGetAlgoOrder `protobuf:"bytes,53,opt,name=usds_futures_query_algo_order,json=usdsFuturesQueryAlgoOrder,proto3,oneof"` // usds_futures.query_algo_order
+}
+
+type BinanceCommand_UsdsFuturesQueryAllAlgoOrders struct {
+	UsdsFuturesQueryAllAlgoOrders *BinanceFuturesAllAlgoOrders `protobuf:"bytes,54,opt,name=usds_futures_query_all_algo_orders,json=usdsFuturesQueryAllAlgoOrders,proto3,oneof"` // usds_futures.query_all_algo_orders
+}
+
 func (*BinanceCommand_SpotNewOrder) isBinanceCommand_Op() {}
 
 func (*BinanceCommand_SpotCancelOrder) isBinanceCommand_Op() {}
@@ -590,12 +774,38 @@ func (*BinanceCommand_StocksSignUsEquityDisclaimer) isBinanceCommand_Op() {}
 
 func (*BinanceCommand_WalletQueryUserWalletBalance) isBinanceCommand_Op() {}
 
+func (*BinanceCommand_SpotOrderListOco) isBinanceCommand_Op() {}
+
+func (*BinanceCommand_SpotOrderListOto) isBinanceCommand_Op() {}
+
+func (*BinanceCommand_SpotOrderListOtoco) isBinanceCommand_Op() {}
+
+func (*BinanceCommand_SpotOrderListOpo) isBinanceCommand_Op() {}
+
+func (*BinanceCommand_SpotOrderListOpoco) isBinanceCommand_Op() {}
+
+func (*BinanceCommand_SpotDeleteOrderList) isBinanceCommand_Op() {}
+
+func (*BinanceCommand_SpotGetOrderList) isBinanceCommand_Op() {}
+
+func (*BinanceCommand_SpotAllOrderList) isBinanceCommand_Op() {}
+
+func (*BinanceCommand_UsdsFuturesNewAlgoOrder) isBinanceCommand_Op() {}
+
+func (*BinanceCommand_UsdsFuturesCancelAlgoOrder) isBinanceCommand_Op() {}
+
+func (*BinanceCommand_UsdsFuturesCancelAllAlgoOpenOrders) isBinanceCommand_Op() {}
+
+func (*BinanceCommand_UsdsFuturesQueryAlgoOrder) isBinanceCommand_Op() {}
+
+func (*BinanceCommand_UsdsFuturesQueryAllAlgoOrders) isBinanceCommand_Op() {}
+
 var File_hi_binance_command_proto protoreflect.FileDescriptor
 
 const file_hi_binance_command_proto_rawDesc = "" +
 	"\n" +
 	"\x18hi/binance/command.proto\x12\n" +
-	"hi.binance\x1a\x1bbuf/validate/validate.proto\x1a\x18hi/binance/binance.proto\x1a\x17hi/binance/stocks.proto\x1a\x10hi/options.proto\"\xc2\x19\n" +
+	"hi.binance\x1a\x1bbuf/validate/validate.proto\x1a\x18hi/binance/binance.proto\x1a\x17hi/binance/stocks.proto\x1a\x10hi/options.proto\"\x99$\n" +
 	"\x0eBinanceCommand\x12/\n" +
 	"\n" +
 	"expiration\x18\x01 \x01(\x03B\n" +
@@ -631,7 +841,20 @@ const file_hi_binance_command_proto_rawDesc = "" +
 	"\x13stocks_latest_quote\x18& \x01(\v2\x1d.hi.binance.BinanceStockQuoteB\x04\x90\xb5\x18\x02H\x00R\x11stocksLatestQuote\x12g\n" +
 	"\x17stocks_tokenized_assets\x18' \x01(\v2'.hi.binance.BinanceStockTokenizedAssetsB\x04\x90\xb5\x18\x02H\x00R\x15stocksTokenizedAssets\x12v\n" +
 	" stocks_sign_us_equity_disclaimer\x18) \x01(\v2&.hi.binance.BinanceStockSignDisclaimerB\x04\x90\xb5\x18\x02H\x00R\x1cstocksSignUsEquityDisclaimer\x12p\n" +
-	" wallet_query_user_wallet_balance\x18( \x01(\v2 .hi.binance.BinanceWalletBalanceB\x04\x90\xb5\x18\x02H\x00R\x1cwalletQueryUserWalletBalance:\x04\x98\xb5\x18\x02B\v\n" +
+	" wallet_query_user_wallet_balance\x18( \x01(\v2 .hi.binance.BinanceWalletBalanceB\x04\x90\xb5\x18\x02H\x00R\x1cwalletQueryUserWalletBalance\x12Z\n" +
+	"\x13spot_order_list_oco\x18* \x01(\v2#.hi.binance.BinanceSpotOrderListOcoB\x04\x90\xb5\x18\x02H\x00R\x10spotOrderListOco\x12Z\n" +
+	"\x13spot_order_list_oto\x18+ \x01(\v2#.hi.binance.BinanceSpotOrderListOtoB\x04\x90\xb5\x18\x02H\x00R\x10spotOrderListOto\x12`\n" +
+	"\x15spot_order_list_otoco\x18, \x01(\v2%.hi.binance.BinanceSpotOrderListOtocoB\x04\x90\xb5\x18\x02H\x00R\x12spotOrderListOtoco\x12Z\n" +
+	"\x13spot_order_list_opo\x18- \x01(\v2#.hi.binance.BinanceSpotOrderListOpoB\x04\x90\xb5\x18\x02H\x00R\x10spotOrderListOpo\x12`\n" +
+	"\x15spot_order_list_opoco\x18. \x01(\v2%.hi.binance.BinanceSpotOrderListOpocoB\x04\x90\xb5\x18\x02H\x00R\x12spotOrderListOpoco\x12c\n" +
+	"\x16spot_delete_order_list\x18/ \x01(\v2&.hi.binance.BinanceSpotCancelOrderListB\x04\x90\xb5\x18\x02H\x00R\x13spotDeleteOrderList\x12Z\n" +
+	"\x13spot_get_order_list\x180 \x01(\v2#.hi.binance.BinanceSpotGetOrderListB\x04\x90\xb5\x18\x02H\x00R\x10spotGetOrderList\x12[\n" +
+	"\x13spot_all_order_list\x181 \x01(\v2$.hi.binance.BinanceSpotAllOrderListsB\x04\x90\xb5\x18\x02H\x00R\x10spotAllOrderList\x12l\n" +
+	"\x1busds_futures_new_algo_order\x182 \x01(\v2&.hi.binance.BinanceFuturesNewAlgoOrderB\x04\x90\xb5\x18\x02H\x00R\x17usdsFuturesNewAlgoOrder\x12u\n" +
+	"\x1eusds_futures_cancel_algo_order\x183 \x01(\v2).hi.binance.BinanceFuturesCancelAlgoOrderB\x04\x90\xb5\x18\x02H\x00R\x1ausdsFuturesCancelAlgoOrder\x12\x8b\x01\n" +
+	"(usds_futures_cancel_all_algo_open_orders\x184 \x01(\v2-.hi.binance.BinanceFuturesCancelAllAlgoOrdersB\x04\x90\xb5\x18\x02H\x00R\"usdsFuturesCancelAllAlgoOpenOrders\x12p\n" +
+	"\x1dusds_futures_query_algo_order\x185 \x01(\v2&.hi.binance.BinanceFuturesGetAlgoOrderB\x04\x90\xb5\x18\x02H\x00R\x19usdsFuturesQueryAlgoOrder\x12z\n" +
+	"\"usds_futures_query_all_algo_orders\x186 \x01(\v2'.hi.binance.BinanceFuturesAllAlgoOrdersB\x04\x90\xb5\x18\x02H\x00R\x1dusdsFuturesQueryAllAlgoOrders:\x04\x98\xb5\x18\x02B\v\n" +
 	"\x02op\x12\x05\xbaH\x02\b\x01B\r\n" +
 	"\v_expirationB\x95\x01\n" +
 	"\x0ecom.hi.binanceB\fCommandProtoP\x01Z,github.com/HiWorld-56/hi-proto/go/hi/binance\xa2\x02\x03HBX\xaa\x02\n" +
@@ -652,37 +875,50 @@ func file_hi_binance_command_proto_rawDescGZIP() []byte {
 
 var file_hi_binance_command_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_hi_binance_command_proto_goTypes = []any{
-	(*BinanceCommand)(nil),                   // 0: hi.binance.BinanceCommand
-	(*BinanceSpotNewOrder)(nil),              // 1: hi.binance.BinanceSpotNewOrder
-	(*BinanceSpotCancelOrder)(nil),           // 2: hi.binance.BinanceSpotCancelOrder
-	(*BinanceSpotCancelAllOrders)(nil),       // 3: hi.binance.BinanceSpotCancelAllOrders
-	(*BinanceSpotOpenOrders)(nil),            // 4: hi.binance.BinanceSpotOpenOrders
-	(*BinanceSpotAccount)(nil),               // 5: hi.binance.BinanceSpotAccount
-	(*BinanceSpotGetOrder)(nil),              // 6: hi.binance.BinanceSpotGetOrder
-	(*BinanceSpotOpenOrderLists)(nil),        // 7: hi.binance.BinanceSpotOpenOrderLists
-	(*BinanceSpotTicker24H)(nil),             // 8: hi.binance.BinanceSpotTicker24h
-	(*BinanceFuturesNewOrder)(nil),           // 9: hi.binance.BinanceFuturesNewOrder
-	(*BinanceFuturesCancelOrder)(nil),        // 10: hi.binance.BinanceFuturesCancelOrder
-	(*BinanceFuturesCancelAllOrders)(nil),    // 11: hi.binance.BinanceFuturesCancelAllOrders
-	(*BinanceFuturesLeverage)(nil),           // 12: hi.binance.BinanceFuturesLeverage
-	(*BinanceFuturesPositions)(nil),          // 13: hi.binance.BinanceFuturesPositions
-	(*BinanceFuturesAccount)(nil),            // 14: hi.binance.BinanceFuturesAccount
-	(*BinanceFuturesOpenOrders)(nil),         // 15: hi.binance.BinanceFuturesOpenOrders
-	(*BinanceFuturesOpenAlgoOrders)(nil),     // 16: hi.binance.BinanceFuturesOpenAlgoOrders
-	(*BinanceFuturesIncome)(nil),             // 17: hi.binance.BinanceFuturesIncome
-	(*BinanceFuturesSignTradfiContract)(nil), // 18: hi.binance.BinanceFuturesSignTradfiContract
-	(*BinanceStockNewOrder)(nil),             // 19: hi.binance.BinanceStockNewOrder
-	(*BinanceStockCancelOrder)(nil),          // 20: hi.binance.BinanceStockCancelOrder
-	(*BinanceStockCancelAllOrders)(nil),      // 21: hi.binance.BinanceStockCancelAllOrders
-	(*BinanceStockOpenOrders)(nil),           // 22: hi.binance.BinanceStockOpenOrders
-	(*BinanceStockGetOrder)(nil),             // 23: hi.binance.BinanceStockGetOrder
-	(*BinanceStockOrderHistory)(nil),         // 24: hi.binance.BinanceStockOrderHistory
-	(*BinanceStockTradeHistory)(nil),         // 25: hi.binance.BinanceStockTradeHistory
-	(*BinanceStockExchangeInfo)(nil),         // 26: hi.binance.BinanceStockExchangeInfo
-	(*BinanceStockQuote)(nil),                // 27: hi.binance.BinanceStockQuote
-	(*BinanceStockTokenizedAssets)(nil),      // 28: hi.binance.BinanceStockTokenizedAssets
-	(*BinanceStockSignDisclaimer)(nil),       // 29: hi.binance.BinanceStockSignDisclaimer
-	(*BinanceWalletBalance)(nil),             // 30: hi.binance.BinanceWalletBalance
+	(*BinanceCommand)(nil),                    // 0: hi.binance.BinanceCommand
+	(*BinanceSpotNewOrder)(nil),               // 1: hi.binance.BinanceSpotNewOrder
+	(*BinanceSpotCancelOrder)(nil),            // 2: hi.binance.BinanceSpotCancelOrder
+	(*BinanceSpotCancelAllOrders)(nil),        // 3: hi.binance.BinanceSpotCancelAllOrders
+	(*BinanceSpotOpenOrders)(nil),             // 4: hi.binance.BinanceSpotOpenOrders
+	(*BinanceSpotAccount)(nil),                // 5: hi.binance.BinanceSpotAccount
+	(*BinanceSpotGetOrder)(nil),               // 6: hi.binance.BinanceSpotGetOrder
+	(*BinanceSpotOpenOrderLists)(nil),         // 7: hi.binance.BinanceSpotOpenOrderLists
+	(*BinanceSpotTicker24H)(nil),              // 8: hi.binance.BinanceSpotTicker24h
+	(*BinanceFuturesNewOrder)(nil),            // 9: hi.binance.BinanceFuturesNewOrder
+	(*BinanceFuturesCancelOrder)(nil),         // 10: hi.binance.BinanceFuturesCancelOrder
+	(*BinanceFuturesCancelAllOrders)(nil),     // 11: hi.binance.BinanceFuturesCancelAllOrders
+	(*BinanceFuturesLeverage)(nil),            // 12: hi.binance.BinanceFuturesLeverage
+	(*BinanceFuturesPositions)(nil),           // 13: hi.binance.BinanceFuturesPositions
+	(*BinanceFuturesAccount)(nil),             // 14: hi.binance.BinanceFuturesAccount
+	(*BinanceFuturesOpenOrders)(nil),          // 15: hi.binance.BinanceFuturesOpenOrders
+	(*BinanceFuturesOpenAlgoOrders)(nil),      // 16: hi.binance.BinanceFuturesOpenAlgoOrders
+	(*BinanceFuturesIncome)(nil),              // 17: hi.binance.BinanceFuturesIncome
+	(*BinanceFuturesSignTradfiContract)(nil),  // 18: hi.binance.BinanceFuturesSignTradfiContract
+	(*BinanceStockNewOrder)(nil),              // 19: hi.binance.BinanceStockNewOrder
+	(*BinanceStockCancelOrder)(nil),           // 20: hi.binance.BinanceStockCancelOrder
+	(*BinanceStockCancelAllOrders)(nil),       // 21: hi.binance.BinanceStockCancelAllOrders
+	(*BinanceStockOpenOrders)(nil),            // 22: hi.binance.BinanceStockOpenOrders
+	(*BinanceStockGetOrder)(nil),              // 23: hi.binance.BinanceStockGetOrder
+	(*BinanceStockOrderHistory)(nil),          // 24: hi.binance.BinanceStockOrderHistory
+	(*BinanceStockTradeHistory)(nil),          // 25: hi.binance.BinanceStockTradeHistory
+	(*BinanceStockExchangeInfo)(nil),          // 26: hi.binance.BinanceStockExchangeInfo
+	(*BinanceStockQuote)(nil),                 // 27: hi.binance.BinanceStockQuote
+	(*BinanceStockTokenizedAssets)(nil),       // 28: hi.binance.BinanceStockTokenizedAssets
+	(*BinanceStockSignDisclaimer)(nil),        // 29: hi.binance.BinanceStockSignDisclaimer
+	(*BinanceWalletBalance)(nil),              // 30: hi.binance.BinanceWalletBalance
+	(*BinanceSpotOrderListOco)(nil),           // 31: hi.binance.BinanceSpotOrderListOco
+	(*BinanceSpotOrderListOto)(nil),           // 32: hi.binance.BinanceSpotOrderListOto
+	(*BinanceSpotOrderListOtoco)(nil),         // 33: hi.binance.BinanceSpotOrderListOtoco
+	(*BinanceSpotOrderListOpo)(nil),           // 34: hi.binance.BinanceSpotOrderListOpo
+	(*BinanceSpotOrderListOpoco)(nil),         // 35: hi.binance.BinanceSpotOrderListOpoco
+	(*BinanceSpotCancelOrderList)(nil),        // 36: hi.binance.BinanceSpotCancelOrderList
+	(*BinanceSpotGetOrderList)(nil),           // 37: hi.binance.BinanceSpotGetOrderList
+	(*BinanceSpotAllOrderLists)(nil),          // 38: hi.binance.BinanceSpotAllOrderLists
+	(*BinanceFuturesNewAlgoOrder)(nil),        // 39: hi.binance.BinanceFuturesNewAlgoOrder
+	(*BinanceFuturesCancelAlgoOrder)(nil),     // 40: hi.binance.BinanceFuturesCancelAlgoOrder
+	(*BinanceFuturesCancelAllAlgoOrders)(nil), // 41: hi.binance.BinanceFuturesCancelAllAlgoOrders
+	(*BinanceFuturesGetAlgoOrder)(nil),        // 42: hi.binance.BinanceFuturesGetAlgoOrder
+	(*BinanceFuturesAllAlgoOrders)(nil),       // 43: hi.binance.BinanceFuturesAllAlgoOrders
 }
 var file_hi_binance_command_proto_depIdxs = []int32{
 	1,  // 0: hi.binance.BinanceCommand.spot_new_order:type_name -> hi.binance.BinanceSpotNewOrder
@@ -715,11 +951,24 @@ var file_hi_binance_command_proto_depIdxs = []int32{
 	28, // 27: hi.binance.BinanceCommand.stocks_tokenized_assets:type_name -> hi.binance.BinanceStockTokenizedAssets
 	29, // 28: hi.binance.BinanceCommand.stocks_sign_us_equity_disclaimer:type_name -> hi.binance.BinanceStockSignDisclaimer
 	30, // 29: hi.binance.BinanceCommand.wallet_query_user_wallet_balance:type_name -> hi.binance.BinanceWalletBalance
-	30, // [30:30] is the sub-list for method output_type
-	30, // [30:30] is the sub-list for method input_type
-	30, // [30:30] is the sub-list for extension type_name
-	30, // [30:30] is the sub-list for extension extendee
-	0,  // [0:30] is the sub-list for field type_name
+	31, // 30: hi.binance.BinanceCommand.spot_order_list_oco:type_name -> hi.binance.BinanceSpotOrderListOco
+	32, // 31: hi.binance.BinanceCommand.spot_order_list_oto:type_name -> hi.binance.BinanceSpotOrderListOto
+	33, // 32: hi.binance.BinanceCommand.spot_order_list_otoco:type_name -> hi.binance.BinanceSpotOrderListOtoco
+	34, // 33: hi.binance.BinanceCommand.spot_order_list_opo:type_name -> hi.binance.BinanceSpotOrderListOpo
+	35, // 34: hi.binance.BinanceCommand.spot_order_list_opoco:type_name -> hi.binance.BinanceSpotOrderListOpoco
+	36, // 35: hi.binance.BinanceCommand.spot_delete_order_list:type_name -> hi.binance.BinanceSpotCancelOrderList
+	37, // 36: hi.binance.BinanceCommand.spot_get_order_list:type_name -> hi.binance.BinanceSpotGetOrderList
+	38, // 37: hi.binance.BinanceCommand.spot_all_order_list:type_name -> hi.binance.BinanceSpotAllOrderLists
+	39, // 38: hi.binance.BinanceCommand.usds_futures_new_algo_order:type_name -> hi.binance.BinanceFuturesNewAlgoOrder
+	40, // 39: hi.binance.BinanceCommand.usds_futures_cancel_algo_order:type_name -> hi.binance.BinanceFuturesCancelAlgoOrder
+	41, // 40: hi.binance.BinanceCommand.usds_futures_cancel_all_algo_open_orders:type_name -> hi.binance.BinanceFuturesCancelAllAlgoOrders
+	42, // 41: hi.binance.BinanceCommand.usds_futures_query_algo_order:type_name -> hi.binance.BinanceFuturesGetAlgoOrder
+	43, // 42: hi.binance.BinanceCommand.usds_futures_query_all_algo_orders:type_name -> hi.binance.BinanceFuturesAllAlgoOrders
+	43, // [43:43] is the sub-list for method output_type
+	43, // [43:43] is the sub-list for method input_type
+	43, // [43:43] is the sub-list for extension type_name
+	43, // [43:43] is the sub-list for extension extendee
+	0,  // [0:43] is the sub-list for field type_name
 }
 
 func init() { file_hi_binance_command_proto_init() }
@@ -760,6 +1009,19 @@ func file_hi_binance_command_proto_init() {
 		(*BinanceCommand_StocksTokenizedAssets)(nil),
 		(*BinanceCommand_StocksSignUsEquityDisclaimer)(nil),
 		(*BinanceCommand_WalletQueryUserWalletBalance)(nil),
+		(*BinanceCommand_SpotOrderListOco)(nil),
+		(*BinanceCommand_SpotOrderListOto)(nil),
+		(*BinanceCommand_SpotOrderListOtoco)(nil),
+		(*BinanceCommand_SpotOrderListOpo)(nil),
+		(*BinanceCommand_SpotOrderListOpoco)(nil),
+		(*BinanceCommand_SpotDeleteOrderList)(nil),
+		(*BinanceCommand_SpotGetOrderList)(nil),
+		(*BinanceCommand_SpotAllOrderList)(nil),
+		(*BinanceCommand_UsdsFuturesNewAlgoOrder)(nil),
+		(*BinanceCommand_UsdsFuturesCancelAlgoOrder)(nil),
+		(*BinanceCommand_UsdsFuturesCancelAllAlgoOpenOrders)(nil),
+		(*BinanceCommand_UsdsFuturesQueryAlgoOrder)(nil),
+		(*BinanceCommand_UsdsFuturesQueryAllAlgoOrders)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

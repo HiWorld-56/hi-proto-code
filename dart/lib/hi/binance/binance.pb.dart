@@ -26,12 +26,14 @@ class BinanceSpotNewOrder extends $pb.GeneratedMessage {
   factory BinanceSpotNewOrder({
     $core.String? symbol,
     BinanceOrderSide? side,
-    BinanceOrderType? type,
+    BinanceSpotOrderType? type,
     BinanceTimeInForce? timeInForce,
     $core.String? quantity,
     $core.String? quoteOrderQty,
     $core.String? price,
     $core.String? percent,
+    $core.String? stopPrice,
+    $core.int? trailingDelta,
   }) {
     final result = create();
     if (symbol != null) result.symbol = symbol;
@@ -42,6 +44,8 @@ class BinanceSpotNewOrder extends $pb.GeneratedMessage {
     if (quoteOrderQty != null) result.quoteOrderQty = quoteOrderQty;
     if (price != null) result.price = price;
     if (percent != null) result.percent = percent;
+    if (stopPrice != null) result.stopPrice = stopPrice;
+    if (trailingDelta != null) result.trailingDelta = trailingDelta;
     return result;
   }
 
@@ -61,14 +65,17 @@ class BinanceSpotNewOrder extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'symbol')
     ..aE<BinanceOrderSide>(2, _omitFieldNames ? '' : 'side',
         enumValues: BinanceOrderSide.values)
-    ..aE<BinanceOrderType>(3, _omitFieldNames ? '' : 'type',
-        enumValues: BinanceOrderType.values)
+    ..aE<BinanceSpotOrderType>(3, _omitFieldNames ? '' : 'type',
+        enumValues: BinanceSpotOrderType.values)
     ..aE<BinanceTimeInForce>(4, _omitFieldNames ? '' : 'timeInForce',
         enumValues: BinanceTimeInForce.values)
     ..aOS(5, _omitFieldNames ? '' : 'quantity')
     ..aOS(6, _omitFieldNames ? '' : 'quoteOrderQty')
     ..aOS(7, _omitFieldNames ? '' : 'price')
     ..aOS(8, _omitFieldNames ? '' : 'percent')
+    ..aOS(9, _omitFieldNames ? '' : 'stopPrice')
+    ..aI(10, _omitFieldNames ? '' : 'trailingDelta',
+        fieldType: $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -109,9 +116,9 @@ class BinanceSpotNewOrder extends $pb.GeneratedMessage {
   void clearSide() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  BinanceOrderType get type => $_getN(2);
+  BinanceSpotOrderType get type => $_getN(2);
   @$pb.TagNumber(3)
-  set type(BinanceOrderType value) => $_setField(3, value);
+  set type(BinanceSpotOrderType value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasType() => $_has(2);
   @$pb.TagNumber(3)
@@ -169,6 +176,26 @@ class BinanceSpotNewOrder extends $pb.GeneratedMessage {
   $core.bool hasPercent() => $_has(7);
   @$pb.TagNumber(8)
   void clearPercent() => $_clearField(8);
+
+  /// 触发价(STOP_LOSS / STOP_LOSS_LIMIT / TAKE_PROFIT / TAKE_PROFIT_LIMIT)。与 trailing_delta 至少给一个。
+  @$pb.TagNumber(9)
+  $core.String get stopPrice => $_getSZ(8);
+  @$pb.TagNumber(9)
+  set stopPrice($core.String value) => $_setString(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasStopPrice() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearStopPrice() => $_clearField(9);
+
+  /// 跟踪止损的回撤幅度,单位 **BIPS**(万分之一,100 = 1%)。给了就是跟踪单;与 stop_price 同给时,到了 stop_price 才开始跟踪。
+  @$pb.TagNumber(10)
+  $core.int get trailingDelta => $_getIZ(9);
+  @$pb.TagNumber(10)
+  set trailingDelta($core.int value) => $_setUnsignedInt32(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasTrailingDelta() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearTrailingDelta() => $_clearField(10);
 }
 
 /// 现货撤单。`DELETE /api/v3/order`
@@ -597,6 +624,1029 @@ class BinanceSpotTicker24h extends $pb.GeneratedMessage {
   $core.bool hasSymbol() => $_has(0);
   @$pb.TagNumber(1)
   void clearSymbol() => $_clearField(1);
+}
+
+/// OCO 里的一张(上方 / 下方),或 OTOCO / OPO / OPOCO 里后挂的那张。方向与数量在组合单那一层给。
+///
+/// 上方(above)能用:STOP_LOSS_LIMIT / STOP_LOSS / LIMIT_MAKER / TAKE_PROFIT / TAKE_PROFIT_LIMIT;
+/// 下方(below)能用:STOP_LOSS / STOP_LOSS_LIMIT / TAKE_PROFIT / TAKE_PROFIT_LIMIT。
+/// OPO 的后一张另外还能用 LIMIT / MARKET。取值不对由币安拒,我们不替它判。
+class BinanceSpotListLeg extends $pb.GeneratedMessage {
+  factory BinanceSpotListLeg({
+    BinanceSpotOrderType? type,
+    $core.String? price,
+    $core.String? stopPrice,
+    $core.int? trailingDelta,
+    BinanceTimeInForce? timeInForce,
+  }) {
+    final result = create();
+    if (type != null) result.type = type;
+    if (price != null) result.price = price;
+    if (stopPrice != null) result.stopPrice = stopPrice;
+    if (trailingDelta != null) result.trailingDelta = trailingDelta;
+    if (timeInForce != null) result.timeInForce = timeInForce;
+    return result;
+  }
+
+  BinanceSpotListLeg._();
+
+  factory BinanceSpotListLeg.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceSpotListLeg.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceSpotListLeg',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..aE<BinanceSpotOrderType>(1, _omitFieldNames ? '' : 'type',
+        enumValues: BinanceSpotOrderType.values)
+    ..aOS(2, _omitFieldNames ? '' : 'price')
+    ..aOS(3, _omitFieldNames ? '' : 'stopPrice')
+    ..aI(4, _omitFieldNames ? '' : 'trailingDelta',
+        fieldType: $pb.PbFieldType.OU3)
+    ..aE<BinanceTimeInForce>(5, _omitFieldNames ? '' : 'timeInForce',
+        enumValues: BinanceTimeInForce.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceSpotListLeg clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceSpotListLeg copyWith(void Function(BinanceSpotListLeg) updates) =>
+      super.copyWith((message) => updates(message as BinanceSpotListLeg))
+          as BinanceSpotListLeg;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceSpotListLeg create() => BinanceSpotListLeg._();
+  @$core.override
+  BinanceSpotListLeg createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceSpotListLeg getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceSpotListLeg>(create);
+  static BinanceSpotListLeg? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  BinanceSpotOrderType get type => $_getN(0);
+  @$pb.TagNumber(1)
+  set type(BinanceSpotOrderType value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasType() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearType() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get price => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set price($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPrice() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPrice() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get stopPrice => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set stopPrice($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasStopPrice() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearStopPrice() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.int get trailingDelta => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set trailingDelta($core.int value) => $_setUnsignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasTrailingDelta() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearTrailingDelta() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  BinanceTimeInForce get timeInForce => $_getN(4);
+  @$pb.TagNumber(5)
+  set timeInForce(BinanceTimeInForce value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasTimeInForce() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearTimeInForce() => $_clearField(5);
+}
+
+/// OTO / OTOCO / OPO / OPOCO 里**先挂的那张**(working)。只能是 LIMIT 或 LIMIT_MAKER,要给 price 与 quantity。
+class BinanceSpotWorkingOrder extends $pb.GeneratedMessage {
+  factory BinanceSpotWorkingOrder({
+    BinanceSpotOrderType? type,
+    BinanceOrderSide? side,
+    $core.String? price,
+    $core.String? quantity,
+    BinanceTimeInForce? timeInForce,
+  }) {
+    final result = create();
+    if (type != null) result.type = type;
+    if (side != null) result.side = side;
+    if (price != null) result.price = price;
+    if (quantity != null) result.quantity = quantity;
+    if (timeInForce != null) result.timeInForce = timeInForce;
+    return result;
+  }
+
+  BinanceSpotWorkingOrder._();
+
+  factory BinanceSpotWorkingOrder.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceSpotWorkingOrder.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceSpotWorkingOrder',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..aE<BinanceSpotOrderType>(1, _omitFieldNames ? '' : 'type',
+        enumValues: BinanceSpotOrderType.values)
+    ..aE<BinanceOrderSide>(2, _omitFieldNames ? '' : 'side',
+        enumValues: BinanceOrderSide.values)
+    ..aOS(3, _omitFieldNames ? '' : 'price')
+    ..aOS(4, _omitFieldNames ? '' : 'quantity')
+    ..aE<BinanceTimeInForce>(5, _omitFieldNames ? '' : 'timeInForce',
+        enumValues: BinanceTimeInForce.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceSpotWorkingOrder clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceSpotWorkingOrder copyWith(
+          void Function(BinanceSpotWorkingOrder) updates) =>
+      super.copyWith((message) => updates(message as BinanceSpotWorkingOrder))
+          as BinanceSpotWorkingOrder;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceSpotWorkingOrder create() => BinanceSpotWorkingOrder._();
+  @$core.override
+  BinanceSpotWorkingOrder createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceSpotWorkingOrder getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceSpotWorkingOrder>(create);
+  static BinanceSpotWorkingOrder? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  BinanceSpotOrderType get type => $_getN(0);
+  @$pb.TagNumber(1)
+  set type(BinanceSpotOrderType value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasType() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearType() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  BinanceOrderSide get side => $_getN(1);
+  @$pb.TagNumber(2)
+  set side(BinanceOrderSide value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSide() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSide() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get price => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set price($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasPrice() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearPrice() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get quantity => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set quantity($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasQuantity() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearQuantity() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  BinanceTimeInForce get timeInForce => $_getN(4);
+  @$pb.TagNumber(5)
+  set timeInForce(BinanceTimeInForce value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasTimeInForce() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearTimeInForce() => $_clearField(5);
+}
+
+/// OCO:止盈止损一起挂。`POST /api/v3/orderList/oco`
+/// 卖出:上方 = 止盈(LIMIT_MAKER / TAKE_PROFIT*)价高于现价,下方 = 止损(STOP_LOSS*)触发价低于现价。
+class BinanceSpotOrderListOco extends $pb.GeneratedMessage {
+  factory BinanceSpotOrderListOco({
+    $core.String? symbol,
+    BinanceOrderSide? side,
+    $core.String? quantity,
+    BinanceSpotListLeg? above,
+    BinanceSpotListLeg? below,
+  }) {
+    final result = create();
+    if (symbol != null) result.symbol = symbol;
+    if (side != null) result.side = side;
+    if (quantity != null) result.quantity = quantity;
+    if (above != null) result.above = above;
+    if (below != null) result.below = below;
+    return result;
+  }
+
+  BinanceSpotOrderListOco._();
+
+  factory BinanceSpotOrderListOco.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceSpotOrderListOco.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceSpotOrderListOco',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'symbol')
+    ..aE<BinanceOrderSide>(2, _omitFieldNames ? '' : 'side',
+        enumValues: BinanceOrderSide.values)
+    ..aOS(3, _omitFieldNames ? '' : 'quantity')
+    ..aOM<BinanceSpotListLeg>(4, _omitFieldNames ? '' : 'above',
+        subBuilder: BinanceSpotListLeg.create)
+    ..aOM<BinanceSpotListLeg>(5, _omitFieldNames ? '' : 'below',
+        subBuilder: BinanceSpotListLeg.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceSpotOrderListOco clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceSpotOrderListOco copyWith(
+          void Function(BinanceSpotOrderListOco) updates) =>
+      super.copyWith((message) => updates(message as BinanceSpotOrderListOco))
+          as BinanceSpotOrderListOco;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceSpotOrderListOco create() => BinanceSpotOrderListOco._();
+  @$core.override
+  BinanceSpotOrderListOco createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceSpotOrderListOco getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceSpotOrderListOco>(create);
+  static BinanceSpotOrderListOco? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get symbol => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set symbol($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSymbol() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSymbol() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  BinanceOrderSide get side => $_getN(1);
+  @$pb.TagNumber(2)
+  set side(BinanceOrderSide value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSide() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSide() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get quantity => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set quantity($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasQuantity() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearQuantity() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  BinanceSpotListLeg get above => $_getN(3);
+  @$pb.TagNumber(4)
+  set above(BinanceSpotListLeg value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasAbove() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearAbove() => $_clearField(4);
+  @$pb.TagNumber(4)
+  BinanceSpotListLeg ensureAbove() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  BinanceSpotListLeg get below => $_getN(4);
+  @$pb.TagNumber(5)
+  set below(BinanceSpotListLeg value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasBelow() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearBelow() => $_clearField(5);
+  @$pb.TagNumber(5)
+  BinanceSpotListLeg ensureBelow() => $_ensure(4);
+}
+
+/// OTO:先挂一张,成交后挂上第二张。`POST /api/v3/orderList/oto`
+class BinanceSpotOrderListOto extends $pb.GeneratedMessage {
+  factory BinanceSpotOrderListOto({
+    $core.String? symbol,
+    BinanceSpotWorkingOrder? working,
+    BinanceOrderSide? pendingSide,
+    $core.String? pendingQuantity,
+    BinanceSpotListLeg? pending,
+  }) {
+    final result = create();
+    if (symbol != null) result.symbol = symbol;
+    if (working != null) result.working = working;
+    if (pendingSide != null) result.pendingSide = pendingSide;
+    if (pendingQuantity != null) result.pendingQuantity = pendingQuantity;
+    if (pending != null) result.pending = pending;
+    return result;
+  }
+
+  BinanceSpotOrderListOto._();
+
+  factory BinanceSpotOrderListOto.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceSpotOrderListOto.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceSpotOrderListOto',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'symbol')
+    ..aOM<BinanceSpotWorkingOrder>(2, _omitFieldNames ? '' : 'working',
+        subBuilder: BinanceSpotWorkingOrder.create)
+    ..aE<BinanceOrderSide>(3, _omitFieldNames ? '' : 'pendingSide',
+        enumValues: BinanceOrderSide.values)
+    ..aOS(4, _omitFieldNames ? '' : 'pendingQuantity')
+    ..aOM<BinanceSpotListLeg>(5, _omitFieldNames ? '' : 'pending',
+        subBuilder: BinanceSpotListLeg.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceSpotOrderListOto clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceSpotOrderListOto copyWith(
+          void Function(BinanceSpotOrderListOto) updates) =>
+      super.copyWith((message) => updates(message as BinanceSpotOrderListOto))
+          as BinanceSpotOrderListOto;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceSpotOrderListOto create() => BinanceSpotOrderListOto._();
+  @$core.override
+  BinanceSpotOrderListOto createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceSpotOrderListOto getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceSpotOrderListOto>(create);
+  static BinanceSpotOrderListOto? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get symbol => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set symbol($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSymbol() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSymbol() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  BinanceSpotWorkingOrder get working => $_getN(1);
+  @$pb.TagNumber(2)
+  set working(BinanceSpotWorkingOrder value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasWorking() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearWorking() => $_clearField(2);
+  @$pb.TagNumber(2)
+  BinanceSpotWorkingOrder ensureWorking() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  BinanceOrderSide get pendingSide => $_getN(2);
+  @$pb.TagNumber(3)
+  set pendingSide(BinanceOrderSide value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasPendingSide() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearPendingSide() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get pendingQuantity => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set pendingQuantity($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasPendingQuantity() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearPendingQuantity() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  BinanceSpotListLeg get pending => $_getN(4);
+  @$pb.TagNumber(5)
+  set pending(BinanceSpotListLeg value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasPending() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearPending() => $_clearField(5);
+  @$pb.TagNumber(5)
+  BinanceSpotListLeg ensurePending() => $_ensure(4);
+}
+
+/// OTOCO:先挂一张,成交后挂上一对 OCO。`POST /api/v3/orderList/otoco`
+class BinanceSpotOrderListOtoco extends $pb.GeneratedMessage {
+  factory BinanceSpotOrderListOtoco({
+    $core.String? symbol,
+    BinanceSpotWorkingOrder? working,
+    BinanceOrderSide? pendingSide,
+    $core.String? pendingQuantity,
+    BinanceSpotListLeg? pendingAbove,
+    BinanceSpotListLeg? pendingBelow,
+  }) {
+    final result = create();
+    if (symbol != null) result.symbol = symbol;
+    if (working != null) result.working = working;
+    if (pendingSide != null) result.pendingSide = pendingSide;
+    if (pendingQuantity != null) result.pendingQuantity = pendingQuantity;
+    if (pendingAbove != null) result.pendingAbove = pendingAbove;
+    if (pendingBelow != null) result.pendingBelow = pendingBelow;
+    return result;
+  }
+
+  BinanceSpotOrderListOtoco._();
+
+  factory BinanceSpotOrderListOtoco.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceSpotOrderListOtoco.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceSpotOrderListOtoco',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'symbol')
+    ..aOM<BinanceSpotWorkingOrder>(2, _omitFieldNames ? '' : 'working',
+        subBuilder: BinanceSpotWorkingOrder.create)
+    ..aE<BinanceOrderSide>(3, _omitFieldNames ? '' : 'pendingSide',
+        enumValues: BinanceOrderSide.values)
+    ..aOS(4, _omitFieldNames ? '' : 'pendingQuantity')
+    ..aOM<BinanceSpotListLeg>(5, _omitFieldNames ? '' : 'pendingAbove',
+        subBuilder: BinanceSpotListLeg.create)
+    ..aOM<BinanceSpotListLeg>(6, _omitFieldNames ? '' : 'pendingBelow',
+        subBuilder: BinanceSpotListLeg.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceSpotOrderListOtoco clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceSpotOrderListOtoco copyWith(
+          void Function(BinanceSpotOrderListOtoco) updates) =>
+      super.copyWith((message) => updates(message as BinanceSpotOrderListOtoco))
+          as BinanceSpotOrderListOtoco;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceSpotOrderListOtoco create() => BinanceSpotOrderListOtoco._();
+  @$core.override
+  BinanceSpotOrderListOtoco createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceSpotOrderListOtoco getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceSpotOrderListOtoco>(create);
+  static BinanceSpotOrderListOtoco? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get symbol => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set symbol($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSymbol() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSymbol() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  BinanceSpotWorkingOrder get working => $_getN(1);
+  @$pb.TagNumber(2)
+  set working(BinanceSpotWorkingOrder value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasWorking() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearWorking() => $_clearField(2);
+  @$pb.TagNumber(2)
+  BinanceSpotWorkingOrder ensureWorking() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  BinanceOrderSide get pendingSide => $_getN(2);
+  @$pb.TagNumber(3)
+  set pendingSide(BinanceOrderSide value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasPendingSide() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearPendingSide() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get pendingQuantity => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set pendingQuantity($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasPendingQuantity() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearPendingQuantity() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  BinanceSpotListLeg get pendingAbove => $_getN(4);
+  @$pb.TagNumber(5)
+  set pendingAbove(BinanceSpotListLeg value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasPendingAbove() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearPendingAbove() => $_clearField(5);
+  @$pb.TagNumber(5)
+  BinanceSpotListLeg ensurePendingAbove() => $_ensure(4);
+
+  @$pb.TagNumber(6)
+  BinanceSpotListLeg get pendingBelow => $_getN(5);
+  @$pb.TagNumber(6)
+  set pendingBelow(BinanceSpotListLeg value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasPendingBelow() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearPendingBelow() => $_clearField(6);
+  @$pb.TagNumber(6)
+  BinanceSpotListLeg ensurePendingBelow() => $_ensure(5);
+}
+
+/// OPO:同 OTO,第二张的数量跟第一张实际成交的量走。`POST /api/v3/orderList/opo`
+class BinanceSpotOrderListOpo extends $pb.GeneratedMessage {
+  factory BinanceSpotOrderListOpo({
+    $core.String? symbol,
+    BinanceSpotWorkingOrder? working,
+    BinanceOrderSide? pendingSide,
+    BinanceSpotListLeg? pending,
+  }) {
+    final result = create();
+    if (symbol != null) result.symbol = symbol;
+    if (working != null) result.working = working;
+    if (pendingSide != null) result.pendingSide = pendingSide;
+    if (pending != null) result.pending = pending;
+    return result;
+  }
+
+  BinanceSpotOrderListOpo._();
+
+  factory BinanceSpotOrderListOpo.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceSpotOrderListOpo.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceSpotOrderListOpo',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'symbol')
+    ..aOM<BinanceSpotWorkingOrder>(2, _omitFieldNames ? '' : 'working',
+        subBuilder: BinanceSpotWorkingOrder.create)
+    ..aE<BinanceOrderSide>(3, _omitFieldNames ? '' : 'pendingSide',
+        enumValues: BinanceOrderSide.values)
+    ..aOM<BinanceSpotListLeg>(4, _omitFieldNames ? '' : 'pending',
+        subBuilder: BinanceSpotListLeg.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceSpotOrderListOpo clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceSpotOrderListOpo copyWith(
+          void Function(BinanceSpotOrderListOpo) updates) =>
+      super.copyWith((message) => updates(message as BinanceSpotOrderListOpo))
+          as BinanceSpotOrderListOpo;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceSpotOrderListOpo create() => BinanceSpotOrderListOpo._();
+  @$core.override
+  BinanceSpotOrderListOpo createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceSpotOrderListOpo getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceSpotOrderListOpo>(create);
+  static BinanceSpotOrderListOpo? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get symbol => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set symbol($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSymbol() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSymbol() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  BinanceSpotWorkingOrder get working => $_getN(1);
+  @$pb.TagNumber(2)
+  set working(BinanceSpotWorkingOrder value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasWorking() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearWorking() => $_clearField(2);
+  @$pb.TagNumber(2)
+  BinanceSpotWorkingOrder ensureWorking() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  BinanceOrderSide get pendingSide => $_getN(2);
+  @$pb.TagNumber(3)
+  set pendingSide(BinanceOrderSide value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasPendingSide() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearPendingSide() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  BinanceSpotListLeg get pending => $_getN(3);
+  @$pb.TagNumber(4)
+  set pending(BinanceSpotListLeg value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasPending() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearPending() => $_clearField(4);
+  @$pb.TagNumber(4)
+  BinanceSpotListLeg ensurePending() => $_ensure(3);
+}
+
+/// OPOCO:同 OTOCO,数量跟第一张实际成交的量走。`POST /api/v3/orderList/opoco`
+class BinanceSpotOrderListOpoco extends $pb.GeneratedMessage {
+  factory BinanceSpotOrderListOpoco({
+    $core.String? symbol,
+    BinanceSpotWorkingOrder? working,
+    BinanceOrderSide? pendingSide,
+    BinanceSpotListLeg? pendingAbove,
+    BinanceSpotListLeg? pendingBelow,
+  }) {
+    final result = create();
+    if (symbol != null) result.symbol = symbol;
+    if (working != null) result.working = working;
+    if (pendingSide != null) result.pendingSide = pendingSide;
+    if (pendingAbove != null) result.pendingAbove = pendingAbove;
+    if (pendingBelow != null) result.pendingBelow = pendingBelow;
+    return result;
+  }
+
+  BinanceSpotOrderListOpoco._();
+
+  factory BinanceSpotOrderListOpoco.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceSpotOrderListOpoco.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceSpotOrderListOpoco',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'symbol')
+    ..aOM<BinanceSpotWorkingOrder>(2, _omitFieldNames ? '' : 'working',
+        subBuilder: BinanceSpotWorkingOrder.create)
+    ..aE<BinanceOrderSide>(3, _omitFieldNames ? '' : 'pendingSide',
+        enumValues: BinanceOrderSide.values)
+    ..aOM<BinanceSpotListLeg>(4, _omitFieldNames ? '' : 'pendingAbove',
+        subBuilder: BinanceSpotListLeg.create)
+    ..aOM<BinanceSpotListLeg>(5, _omitFieldNames ? '' : 'pendingBelow',
+        subBuilder: BinanceSpotListLeg.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceSpotOrderListOpoco clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceSpotOrderListOpoco copyWith(
+          void Function(BinanceSpotOrderListOpoco) updates) =>
+      super.copyWith((message) => updates(message as BinanceSpotOrderListOpoco))
+          as BinanceSpotOrderListOpoco;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceSpotOrderListOpoco create() => BinanceSpotOrderListOpoco._();
+  @$core.override
+  BinanceSpotOrderListOpoco createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceSpotOrderListOpoco getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceSpotOrderListOpoco>(create);
+  static BinanceSpotOrderListOpoco? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get symbol => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set symbol($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSymbol() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSymbol() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  BinanceSpotWorkingOrder get working => $_getN(1);
+  @$pb.TagNumber(2)
+  set working(BinanceSpotWorkingOrder value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasWorking() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearWorking() => $_clearField(2);
+  @$pb.TagNumber(2)
+  BinanceSpotWorkingOrder ensureWorking() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  BinanceOrderSide get pendingSide => $_getN(2);
+  @$pb.TagNumber(3)
+  set pendingSide(BinanceOrderSide value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasPendingSide() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearPendingSide() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  BinanceSpotListLeg get pendingAbove => $_getN(3);
+  @$pb.TagNumber(4)
+  set pendingAbove(BinanceSpotListLeg value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasPendingAbove() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearPendingAbove() => $_clearField(4);
+  @$pb.TagNumber(4)
+  BinanceSpotListLeg ensurePendingAbove() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  BinanceSpotListLeg get pendingBelow => $_getN(4);
+  @$pb.TagNumber(5)
+  set pendingBelow(BinanceSpotListLeg value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasPendingBelow() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearPendingBelow() => $_clearField(5);
+  @$pb.TagNumber(5)
+  BinanceSpotListLeg ensurePendingBelow() => $_ensure(4);
+}
+
+/// 撤整组组合单。`DELETE /api/v3/orderList`
+/// `order_list_id` 与 `list_client_order_id` 给一个即可。
+class BinanceSpotCancelOrderList extends $pb.GeneratedMessage {
+  factory BinanceSpotCancelOrderList({
+    $core.String? symbol,
+    $fixnum.Int64? orderListId,
+    $core.String? listClientOrderId,
+  }) {
+    final result = create();
+    if (symbol != null) result.symbol = symbol;
+    if (orderListId != null) result.orderListId = orderListId;
+    if (listClientOrderId != null) result.listClientOrderId = listClientOrderId;
+    return result;
+  }
+
+  BinanceSpotCancelOrderList._();
+
+  factory BinanceSpotCancelOrderList.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceSpotCancelOrderList.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceSpotCancelOrderList',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'symbol')
+    ..aInt64(2, _omitFieldNames ? '' : 'orderListId')
+    ..aOS(3, _omitFieldNames ? '' : 'listClientOrderId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceSpotCancelOrderList clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceSpotCancelOrderList copyWith(
+          void Function(BinanceSpotCancelOrderList) updates) =>
+      super.copyWith(
+              (message) => updates(message as BinanceSpotCancelOrderList))
+          as BinanceSpotCancelOrderList;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceSpotCancelOrderList create() => BinanceSpotCancelOrderList._();
+  @$core.override
+  BinanceSpotCancelOrderList createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceSpotCancelOrderList getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceSpotCancelOrderList>(create);
+  static BinanceSpotCancelOrderList? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get symbol => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set symbol($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSymbol() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSymbol() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get orderListId => $_getI64(1);
+  @$pb.TagNumber(2)
+  set orderListId($fixnum.Int64 value) => $_setInt64(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasOrderListId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearOrderListId() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get listClientOrderId => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set listClientOrderId($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasListClientOrderId() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearListClientOrderId() => $_clearField(3);
+}
+
+/// 查一组组合单。`GET /api/v3/orderList`
+/// `order_list_id` 与 `orig_client_order_id`(即下单时的 listClientOrderId)给一个即可。
+class BinanceSpotGetOrderList extends $pb.GeneratedMessage {
+  factory BinanceSpotGetOrderList({
+    $fixnum.Int64? orderListId,
+    $core.String? origClientOrderId,
+  }) {
+    final result = create();
+    if (orderListId != null) result.orderListId = orderListId;
+    if (origClientOrderId != null) result.origClientOrderId = origClientOrderId;
+    return result;
+  }
+
+  BinanceSpotGetOrderList._();
+
+  factory BinanceSpotGetOrderList.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceSpotGetOrderList.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceSpotGetOrderList',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..aInt64(1, _omitFieldNames ? '' : 'orderListId')
+    ..aOS(2, _omitFieldNames ? '' : 'origClientOrderId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceSpotGetOrderList clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceSpotGetOrderList copyWith(
+          void Function(BinanceSpotGetOrderList) updates) =>
+      super.copyWith((message) => updates(message as BinanceSpotGetOrderList))
+          as BinanceSpotGetOrderList;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceSpotGetOrderList create() => BinanceSpotGetOrderList._();
+  @$core.override
+  BinanceSpotGetOrderList createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceSpotGetOrderList getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceSpotGetOrderList>(create);
+  static BinanceSpotGetOrderList? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $fixnum.Int64 get orderListId => $_getI64(0);
+  @$pb.TagNumber(1)
+  set orderListId($fixnum.Int64 value) => $_setInt64(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasOrderListId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearOrderListId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get origClientOrderId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set origClientOrderId($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasOrigClientOrderId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearOrigClientOrderId() => $_clearField(2);
+}
+
+/// 组合单历史。`GET /api/v3/allOrderList`
+/// 给了 from_id 就不能再给时间范围。
+class BinanceSpotAllOrderLists extends $pb.GeneratedMessage {
+  factory BinanceSpotAllOrderLists({
+    $fixnum.Int64? fromId,
+    $fixnum.Int64? startTime,
+    $fixnum.Int64? endTime,
+    $core.int? limit,
+  }) {
+    final result = create();
+    if (fromId != null) result.fromId = fromId;
+    if (startTime != null) result.startTime = startTime;
+    if (endTime != null) result.endTime = endTime;
+    if (limit != null) result.limit = limit;
+    return result;
+  }
+
+  BinanceSpotAllOrderLists._();
+
+  factory BinanceSpotAllOrderLists.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceSpotAllOrderLists.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceSpotAllOrderLists',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..aInt64(1, _omitFieldNames ? '' : 'fromId')
+    ..aInt64(2, _omitFieldNames ? '' : 'startTime')
+    ..aInt64(3, _omitFieldNames ? '' : 'endTime')
+    ..aI(4, _omitFieldNames ? '' : 'limit', fieldType: $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceSpotAllOrderLists clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceSpotAllOrderLists copyWith(
+          void Function(BinanceSpotAllOrderLists) updates) =>
+      super.copyWith((message) => updates(message as BinanceSpotAllOrderLists))
+          as BinanceSpotAllOrderLists;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceSpotAllOrderLists create() => BinanceSpotAllOrderLists._();
+  @$core.override
+  BinanceSpotAllOrderLists createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceSpotAllOrderLists getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceSpotAllOrderLists>(create);
+  static BinanceSpotAllOrderLists? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $fixnum.Int64 get fromId => $_getI64(0);
+  @$pb.TagNumber(1)
+  set fromId($fixnum.Int64 value) => $_setInt64(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasFromId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearFromId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get startTime => $_getI64(1);
+  @$pb.TagNumber(2)
+  set startTime($fixnum.Int64 value) => $_setInt64(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasStartTime() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearStartTime() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $fixnum.Int64 get endTime => $_getI64(2);
+  @$pb.TagNumber(3)
+  set endTime($fixnum.Int64 value) => $_setInt64(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasEndTime() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearEndTime() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.int get limit => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set limit($core.int value) => $_setUnsignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasLimit() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearLimit() => $_clearField(4);
 }
 
 /// 合约下单。`POST /fapi/v1/order`
@@ -1129,7 +2179,13 @@ class BinanceFuturesOpenOrders extends $pb.GeneratedMessage {
 /// 合约的策略委托(止盈止损这类)。`GET /fapi/v1/openAlgoOrders`
 /// **与普通挂单是两张表** —— 只查 `openOrders` 的话,面板上会缺掉全部止盈止损单。
 class BinanceFuturesOpenAlgoOrders extends $pb.GeneratedMessage {
-  factory BinanceFuturesOpenAlgoOrders() => create();
+  factory BinanceFuturesOpenAlgoOrders({
+    $core.String? symbol,
+  }) {
+    final result = create();
+    if (symbol != null) result.symbol = symbol;
+    return result;
+  }
 
   BinanceFuturesOpenAlgoOrders._();
 
@@ -1144,6 +2200,7 @@ class BinanceFuturesOpenAlgoOrders extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'BinanceFuturesOpenAlgoOrders',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
       createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'symbol')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1167,6 +2224,558 @@ class BinanceFuturesOpenAlgoOrders extends $pb.GeneratedMessage {
   static BinanceFuturesOpenAlgoOrders getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<BinanceFuturesOpenAlgoOrders>(create);
   static BinanceFuturesOpenAlgoOrders? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get symbol => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set symbol($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSymbol() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSymbol() => $_clearField(1);
+}
+
+/// 合约**策略委托**下单(止盈、止损、跟踪止损)。`POST /fapi/v1/algoOrder`,`algoType` 固定 CONDITIONAL(brain 填)。
+/// 类型与各自要给的字段见 `BinanceFuturesAlgoOrderType`。
+///
+/// ⚠️ 这是**条件单**:下单成功只是挂上了,**触发时**才真正下出去;挂着的在 `open_algo_orders` 里查,不在普通挂单里。
+class BinanceFuturesNewAlgoOrder extends $pb.GeneratedMessage {
+  factory BinanceFuturesNewAlgoOrder({
+    $core.String? symbol,
+    BinanceOrderSide? side,
+    BinanceFuturesAlgoOrderType? type,
+    BinancePositionSide? positionSide,
+    BinanceTimeInForce? timeInForce,
+    $core.String? quantity,
+    $core.String? price,
+    $core.String? triggerPrice,
+    BinanceWorkingType? workingType,
+    $core.bool? closePosition,
+    $core.bool? priceProtect,
+    $core.bool? reduceOnly,
+    $core.String? activatePrice,
+    $core.String? callbackRate,
+    $core.String? percent,
+  }) {
+    final result = create();
+    if (symbol != null) result.symbol = symbol;
+    if (side != null) result.side = side;
+    if (type != null) result.type = type;
+    if (positionSide != null) result.positionSide = positionSide;
+    if (timeInForce != null) result.timeInForce = timeInForce;
+    if (quantity != null) result.quantity = quantity;
+    if (price != null) result.price = price;
+    if (triggerPrice != null) result.triggerPrice = triggerPrice;
+    if (workingType != null) result.workingType = workingType;
+    if (closePosition != null) result.closePosition = closePosition;
+    if (priceProtect != null) result.priceProtect = priceProtect;
+    if (reduceOnly != null) result.reduceOnly = reduceOnly;
+    if (activatePrice != null) result.activatePrice = activatePrice;
+    if (callbackRate != null) result.callbackRate = callbackRate;
+    if (percent != null) result.percent = percent;
+    return result;
+  }
+
+  BinanceFuturesNewAlgoOrder._();
+
+  factory BinanceFuturesNewAlgoOrder.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceFuturesNewAlgoOrder.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceFuturesNewAlgoOrder',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'symbol')
+    ..aE<BinanceOrderSide>(2, _omitFieldNames ? '' : 'side',
+        enumValues: BinanceOrderSide.values)
+    ..aE<BinanceFuturesAlgoOrderType>(3, _omitFieldNames ? '' : 'type',
+        enumValues: BinanceFuturesAlgoOrderType.values)
+    ..aE<BinancePositionSide>(4, _omitFieldNames ? '' : 'positionSide',
+        enumValues: BinancePositionSide.values)
+    ..aE<BinanceTimeInForce>(5, _omitFieldNames ? '' : 'timeInForce',
+        enumValues: BinanceTimeInForce.values)
+    ..aOS(6, _omitFieldNames ? '' : 'quantity')
+    ..aOS(7, _omitFieldNames ? '' : 'price')
+    ..aOS(8, _omitFieldNames ? '' : 'triggerPrice')
+    ..aE<BinanceWorkingType>(9, _omitFieldNames ? '' : 'workingType',
+        enumValues: BinanceWorkingType.values)
+    ..aOB(10, _omitFieldNames ? '' : 'closePosition')
+    ..aOB(11, _omitFieldNames ? '' : 'priceProtect')
+    ..aOB(12, _omitFieldNames ? '' : 'reduceOnly')
+    ..aOS(13, _omitFieldNames ? '' : 'activatePrice')
+    ..aOS(14, _omitFieldNames ? '' : 'callbackRate')
+    ..aOS(15, _omitFieldNames ? '' : 'percent')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceFuturesNewAlgoOrder clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceFuturesNewAlgoOrder copyWith(
+          void Function(BinanceFuturesNewAlgoOrder) updates) =>
+      super.copyWith(
+              (message) => updates(message as BinanceFuturesNewAlgoOrder))
+          as BinanceFuturesNewAlgoOrder;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceFuturesNewAlgoOrder create() => BinanceFuturesNewAlgoOrder._();
+  @$core.override
+  BinanceFuturesNewAlgoOrder createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceFuturesNewAlgoOrder getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceFuturesNewAlgoOrder>(create);
+  static BinanceFuturesNewAlgoOrder? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get symbol => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set symbol($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSymbol() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSymbol() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  BinanceOrderSide get side => $_getN(1);
+  @$pb.TagNumber(2)
+  set side(BinanceOrderSide value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSide() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSide() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  BinanceFuturesAlgoOrderType get type => $_getN(2);
+  @$pb.TagNumber(3)
+  set type(BinanceFuturesAlgoOrderType value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasType() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearType() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  BinancePositionSide get positionSide => $_getN(3);
+  @$pb.TagNumber(4)
+  set positionSide(BinancePositionSide value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasPositionSide() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearPositionSide() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  BinanceTimeInForce get timeInForce => $_getN(4);
+  @$pb.TagNumber(5)
+  set timeInForce(BinanceTimeInForce value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasTimeInForce() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearTimeInForce() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.String get quantity => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set quantity($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasQuantity() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearQuantity() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.String get price => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set price($core.String value) => $_setString(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasPrice() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearPrice() => $_clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.String get triggerPrice => $_getSZ(7);
+  @$pb.TagNumber(8)
+  set triggerPrice($core.String value) => $_setString(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasTriggerPrice() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearTriggerPrice() => $_clearField(8);
+
+  @$pb.TagNumber(9)
+  BinanceWorkingType get workingType => $_getN(8);
+  @$pb.TagNumber(9)
+  set workingType(BinanceWorkingType value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasWorkingType() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearWorkingType() => $_clearField(9);
+
+  /// 触发时**平掉这个方向的全部仓位**(只用于 STOP_MARKET / TAKE_PROFIT_MARKET)。给了就不能给 quantity。
+  @$pb.TagNumber(10)
+  $core.bool get closePosition => $_getBF(9);
+  @$pb.TagNumber(10)
+  set closePosition($core.bool value) => $_setBool(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasClosePosition() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearClosePosition() => $_clearField(10);
+
+  /// 价格保护:触发时标记价与最新价偏离过大就不触发。
+  @$pb.TagNumber(11)
+  $core.bool get priceProtect => $_getBF(10);
+  @$pb.TagNumber(11)
+  set priceProtect($core.bool value) => $_setBool(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasPriceProtect() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearPriceProtect() => $_clearField(11);
+
+  /// 只减仓(双向持仓模式下币安不收)。止盈止损单一般都该带上,免得触发时反向开出新仓。
+  @$pb.TagNumber(12)
+  $core.bool get reduceOnly => $_getBF(11);
+  @$pb.TagNumber(12)
+  set reduceOnly($core.bool value) => $_setBool(11, value);
+  @$pb.TagNumber(12)
+  $core.bool hasReduceOnly() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearReduceOnly() => $_clearField(12);
+
+  @$pb.TagNumber(13)
+  $core.String get activatePrice => $_getSZ(12);
+  @$pb.TagNumber(13)
+  set activatePrice($core.String value) => $_setString(12, value);
+  @$pb.TagNumber(13)
+  $core.bool hasActivatePrice() => $_has(12);
+  @$pb.TagNumber(13)
+  void clearActivatePrice() => $_clearField(13);
+
+  @$pb.TagNumber(14)
+  $core.String get callbackRate => $_getSZ(13);
+  @$pb.TagNumber(14)
+  set callbackRate($core.String value) => $_setString(13, value);
+  @$pb.TagNumber(14)
+  $core.bool hasCallbackRate() => $_has(13);
+  @$pb.TagNumber(14)
+  void clearCallbackRate() => $_clearField(14);
+
+  /// **按百分比**(十进制字符串,0 < p ≤ 100)。与 quantity / close_position 三选一;口径同 `BinanceFuturesNewOrder.percent`,
+  /// 换算用的价格:有 price 用 price,否则用 trigger_price,都没有用标记价格。
+  @$pb.TagNumber(15)
+  $core.String get percent => $_getSZ(14);
+  @$pb.TagNumber(15)
+  set percent($core.String value) => $_setString(14, value);
+  @$pb.TagNumber(15)
+  $core.bool hasPercent() => $_has(14);
+  @$pb.TagNumber(15)
+  void clearPercent() => $_clearField(15);
+}
+
+/// 撤一张策略委托。`DELETE /fapi/v1/algoOrder`。`algo_id` 与 `client_algo_id` 给一个即可。
+class BinanceFuturesCancelAlgoOrder extends $pb.GeneratedMessage {
+  factory BinanceFuturesCancelAlgoOrder({
+    $fixnum.Int64? algoId,
+    $core.String? clientAlgoId,
+  }) {
+    final result = create();
+    if (algoId != null) result.algoId = algoId;
+    if (clientAlgoId != null) result.clientAlgoId = clientAlgoId;
+    return result;
+  }
+
+  BinanceFuturesCancelAlgoOrder._();
+
+  factory BinanceFuturesCancelAlgoOrder.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceFuturesCancelAlgoOrder.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceFuturesCancelAlgoOrder',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..aInt64(1, _omitFieldNames ? '' : 'algoId')
+    ..aOS(2, _omitFieldNames ? '' : 'clientAlgoId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceFuturesCancelAlgoOrder clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceFuturesCancelAlgoOrder copyWith(
+          void Function(BinanceFuturesCancelAlgoOrder) updates) =>
+      super.copyWith(
+              (message) => updates(message as BinanceFuturesCancelAlgoOrder))
+          as BinanceFuturesCancelAlgoOrder;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceFuturesCancelAlgoOrder create() =>
+      BinanceFuturesCancelAlgoOrder._();
+  @$core.override
+  BinanceFuturesCancelAlgoOrder createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceFuturesCancelAlgoOrder getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceFuturesCancelAlgoOrder>(create);
+  static BinanceFuturesCancelAlgoOrder? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $fixnum.Int64 get algoId => $_getI64(0);
+  @$pb.TagNumber(1)
+  set algoId($fixnum.Int64 value) => $_setInt64(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAlgoId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAlgoId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get clientAlgoId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set clientAlgoId($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasClientAlgoId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearClientAlgoId() => $_clearField(2);
+}
+
+/// 撤一个交易对的全部策略委托。`DELETE /fapi/v1/algoOpenOrders`
+class BinanceFuturesCancelAllAlgoOrders extends $pb.GeneratedMessage {
+  factory BinanceFuturesCancelAllAlgoOrders({
+    $core.String? symbol,
+  }) {
+    final result = create();
+    if (symbol != null) result.symbol = symbol;
+    return result;
+  }
+
+  BinanceFuturesCancelAllAlgoOrders._();
+
+  factory BinanceFuturesCancelAllAlgoOrders.fromBuffer(
+          $core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceFuturesCancelAllAlgoOrders.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceFuturesCancelAllAlgoOrders',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'symbol')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceFuturesCancelAllAlgoOrders clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceFuturesCancelAllAlgoOrders copyWith(
+          void Function(BinanceFuturesCancelAllAlgoOrders) updates) =>
+      super.copyWith((message) =>
+              updates(message as BinanceFuturesCancelAllAlgoOrders))
+          as BinanceFuturesCancelAllAlgoOrders;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceFuturesCancelAllAlgoOrders create() =>
+      BinanceFuturesCancelAllAlgoOrders._();
+  @$core.override
+  BinanceFuturesCancelAllAlgoOrders createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceFuturesCancelAllAlgoOrders getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceFuturesCancelAllAlgoOrders>(
+          create);
+  static BinanceFuturesCancelAllAlgoOrders? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get symbol => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set symbol($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSymbol() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSymbol() => $_clearField(1);
+}
+
+/// 查一张策略委托。`GET /fapi/v1/algoOrder`。`algo_id` 与 `client_algo_id` 给一个即可。
+class BinanceFuturesGetAlgoOrder extends $pb.GeneratedMessage {
+  factory BinanceFuturesGetAlgoOrder({
+    $fixnum.Int64? algoId,
+    $core.String? clientAlgoId,
+  }) {
+    final result = create();
+    if (algoId != null) result.algoId = algoId;
+    if (clientAlgoId != null) result.clientAlgoId = clientAlgoId;
+    return result;
+  }
+
+  BinanceFuturesGetAlgoOrder._();
+
+  factory BinanceFuturesGetAlgoOrder.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceFuturesGetAlgoOrder.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceFuturesGetAlgoOrder',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..aInt64(1, _omitFieldNames ? '' : 'algoId')
+    ..aOS(2, _omitFieldNames ? '' : 'clientAlgoId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceFuturesGetAlgoOrder clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceFuturesGetAlgoOrder copyWith(
+          void Function(BinanceFuturesGetAlgoOrder) updates) =>
+      super.copyWith(
+              (message) => updates(message as BinanceFuturesGetAlgoOrder))
+          as BinanceFuturesGetAlgoOrder;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceFuturesGetAlgoOrder create() => BinanceFuturesGetAlgoOrder._();
+  @$core.override
+  BinanceFuturesGetAlgoOrder createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceFuturesGetAlgoOrder getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceFuturesGetAlgoOrder>(create);
+  static BinanceFuturesGetAlgoOrder? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $fixnum.Int64 get algoId => $_getI64(0);
+  @$pb.TagNumber(1)
+  set algoId($fixnum.Int64 value) => $_setInt64(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAlgoId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAlgoId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get clientAlgoId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set clientAlgoId($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasClientAlgoId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearClientAlgoId() => $_clearField(2);
+}
+
+/// 策略委托历史(含已触发、已撤、已过期)。`GET /fapi/v1/allAlgoOrders`
+class BinanceFuturesAllAlgoOrders extends $pb.GeneratedMessage {
+  factory BinanceFuturesAllAlgoOrders({
+    $core.String? symbol,
+    $fixnum.Int64? algoId,
+    $fixnum.Int64? startTime,
+    $fixnum.Int64? endTime,
+    $core.int? limit,
+  }) {
+    final result = create();
+    if (symbol != null) result.symbol = symbol;
+    if (algoId != null) result.algoId = algoId;
+    if (startTime != null) result.startTime = startTime;
+    if (endTime != null) result.endTime = endTime;
+    if (limit != null) result.limit = limit;
+    return result;
+  }
+
+  BinanceFuturesAllAlgoOrders._();
+
+  factory BinanceFuturesAllAlgoOrders.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceFuturesAllAlgoOrders.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceFuturesAllAlgoOrders',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'symbol')
+    ..aInt64(2, _omitFieldNames ? '' : 'algoId')
+    ..aInt64(3, _omitFieldNames ? '' : 'startTime')
+    ..aInt64(4, _omitFieldNames ? '' : 'endTime')
+    ..aI(5, _omitFieldNames ? '' : 'limit', fieldType: $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceFuturesAllAlgoOrders clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceFuturesAllAlgoOrders copyWith(
+          void Function(BinanceFuturesAllAlgoOrders) updates) =>
+      super.copyWith(
+              (message) => updates(message as BinanceFuturesAllAlgoOrders))
+          as BinanceFuturesAllAlgoOrders;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceFuturesAllAlgoOrders create() =>
+      BinanceFuturesAllAlgoOrders._();
+  @$core.override
+  BinanceFuturesAllAlgoOrders createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceFuturesAllAlgoOrders getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceFuturesAllAlgoOrders>(create);
+  static BinanceFuturesAllAlgoOrders? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get symbol => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set symbol($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSymbol() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSymbol() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get algoId => $_getI64(1);
+  @$pb.TagNumber(2)
+  set algoId($fixnum.Int64 value) => $_setInt64(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAlgoId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAlgoId() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $fixnum.Int64 get startTime => $_getI64(2);
+  @$pb.TagNumber(3)
+  set startTime($fixnum.Int64 value) => $_setInt64(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasStartTime() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearStartTime() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $fixnum.Int64 get endTime => $_getI64(3);
+  @$pb.TagNumber(4)
+  set endTime($fixnum.Int64 value) => $_setInt64(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasEndTime() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearEndTime() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.int get limit => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set limit($core.int value) => $_setUnsignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasLimit() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearLimit() => $_clearField(5);
 }
 
 /// 合约资金流水(已实现盈亏、资金费、手续费…)。`GET /fapi/v1/income`

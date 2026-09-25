@@ -7,7 +7,7 @@ pub struct BinanceSpotNewOrder {
     pub symbol: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(enumeration = "BinanceOrderSide", optional, tag = "2")]
     pub side: ::core::option::Option<i32>,
-    #[prost(enumeration = "BinanceOrderType", optional, tag = "3")]
+    #[prost(enumeration = "BinanceSpotOrderType", optional, tag = "3")]
     pub r#type: ::core::option::Option<i32>,
     /// 限价单必给;市价单不传
     #[prost(enumeration = "BinanceTimeInForce", optional, tag = "4")]
@@ -30,6 +30,12 @@ pub struct BinanceSpotNewOrder {
     /// 换算后按交易对的步长**向下取整**;不够最小下单量就不下,回一句为什么。
     #[prost(string, optional, tag = "8")]
     pub percent: ::core::option::Option<::prost::alloc::string::String>,
+    /// 触发价(STOP_LOSS / STOP_LOSS_LIMIT / TAKE_PROFIT / TAKE_PROFIT_LIMIT)。与 trailing_delta 至少给一个。
+    #[prost(string, optional, tag = "9")]
+    pub stop_price: ::core::option::Option<::prost::alloc::string::String>,
+    /// 跟踪止损的回撤幅度,单位 **BIPS**(万分之一,100 = 1%)。给了就是跟踪单;与 stop_price 同给时,到了 stop_price 才开始跟踪。
+    #[prost(uint32, optional, tag = "10")]
+    pub trailing_delta: ::core::option::Option<u32>,
 }
 /// 现货撤单。`DELETE /api/v3/order`
 /// `order_id` 与 `orig_client_order_id` 给一个即可(都不给由币安报错)。
@@ -87,6 +93,151 @@ pub struct BinanceSpotOpenOrderLists {}
 pub struct BinanceSpotTicker24h {
     #[prost(string, optional, tag = "1")]
     pub symbol: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// OCO 里的一张(上方 / 下方),或 OTOCO / OPO / OPOCO 里后挂的那张。方向与数量在组合单那一层给。
+///
+/// 上方(above)能用:STOP_LOSS_LIMIT / STOP_LOSS / LIMIT_MAKER / TAKE_PROFIT / TAKE_PROFIT_LIMIT;
+/// 下方(below)能用:STOP_LOSS / STOP_LOSS_LIMIT / TAKE_PROFIT / TAKE_PROFIT_LIMIT。
+/// OPO 的后一张另外还能用 LIMIT / MARKET。取值不对由币安拒,我们不替它判。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceSpotListLeg {
+    #[prost(enumeration = "BinanceSpotOrderType", optional, tag = "1")]
+    pub r#type: ::core::option::Option<i32>,
+    /// \*\_LIMIT / LIMIT_MAKER 的限价
+    #[prost(string, optional, tag = "2")]
+    pub price: ::core::option::Option<::prost::alloc::string::String>,
+    /// 触发价
+    #[prost(string, optional, tag = "3")]
+    pub stop_price: ::core::option::Option<::prost::alloc::string::String>,
+    /// 跟踪幅度(BIPS)
+    #[prost(uint32, optional, tag = "4")]
+    pub trailing_delta: ::core::option::Option<u32>,
+    /// \*\_LIMIT 必给
+    #[prost(enumeration = "BinanceTimeInForce", optional, tag = "5")]
+    pub time_in_force: ::core::option::Option<i32>,
+}
+/// OTO / OTOCO / OPO / OPOCO 里**先挂的那张**(working)。只能是 LIMIT 或 LIMIT_MAKER,要给 price 与 quantity。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceSpotWorkingOrder {
+    #[prost(enumeration = "BinanceSpotOrderType", optional, tag = "1")]
+    pub r#type: ::core::option::Option<i32>,
+    #[prost(enumeration = "BinanceOrderSide", optional, tag = "2")]
+    pub side: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "3")]
+    pub price: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub quantity: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "BinanceTimeInForce", optional, tag = "5")]
+    pub time_in_force: ::core::option::Option<i32>,
+}
+/// OCO:止盈止损一起挂。`POST /api/v3/orderList/oco`
+/// 卖出:上方 = 止盈(LIMIT_MAKER / TAKE_PROFIT\*)价高于现价,下方 = 止损(STOP_LOSS\*)触发价低于现价。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceSpotOrderListOco {
+    #[prost(string, optional, tag = "1")]
+    pub symbol: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "BinanceOrderSide", optional, tag = "2")]
+    pub side: ::core::option::Option<i32>,
+    /// 两张单共用
+    #[prost(string, optional, tag = "3")]
+    pub quantity: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "4")]
+    pub above: ::core::option::Option<BinanceSpotListLeg>,
+    #[prost(message, optional, tag = "5")]
+    pub below: ::core::option::Option<BinanceSpotListLeg>,
+}
+/// OTO:先挂一张,成交后挂上第二张。`POST /api/v3/orderList/oto`
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceSpotOrderListOto {
+    #[prost(string, optional, tag = "1")]
+    pub symbol: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub working: ::core::option::Option<BinanceSpotWorkingOrder>,
+    #[prost(enumeration = "BinanceOrderSide", optional, tag = "3")]
+    pub pending_side: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "4")]
+    pub pending_quantity: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "5")]
+    pub pending: ::core::option::Option<BinanceSpotListLeg>,
+}
+/// OTOCO:先挂一张,成交后挂上一对 OCO。`POST /api/v3/orderList/otoco`
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceSpotOrderListOtoco {
+    #[prost(string, optional, tag = "1")]
+    pub symbol: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub working: ::core::option::Option<BinanceSpotWorkingOrder>,
+    #[prost(enumeration = "BinanceOrderSide", optional, tag = "3")]
+    pub pending_side: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "4")]
+    pub pending_quantity: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "5")]
+    pub pending_above: ::core::option::Option<BinanceSpotListLeg>,
+    /// 币安这里标的是可选
+    #[prost(message, optional, tag = "6")]
+    pub pending_below: ::core::option::Option<BinanceSpotListLeg>,
+}
+/// OPO:同 OTO,第二张的数量跟第一张实际成交的量走。`POST /api/v3/orderList/opo`
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceSpotOrderListOpo {
+    #[prost(string, optional, tag = "1")]
+    pub symbol: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub working: ::core::option::Option<BinanceSpotWorkingOrder>,
+    #[prost(enumeration = "BinanceOrderSide", optional, tag = "3")]
+    pub pending_side: ::core::option::Option<i32>,
+    #[prost(message, optional, tag = "4")]
+    pub pending: ::core::option::Option<BinanceSpotListLeg>,
+}
+/// OPOCO:同 OTOCO,数量跟第一张实际成交的量走。`POST /api/v3/orderList/opoco`
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceSpotOrderListOpoco {
+    #[prost(string, optional, tag = "1")]
+    pub symbol: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub working: ::core::option::Option<BinanceSpotWorkingOrder>,
+    #[prost(enumeration = "BinanceOrderSide", optional, tag = "3")]
+    pub pending_side: ::core::option::Option<i32>,
+    #[prost(message, optional, tag = "4")]
+    pub pending_above: ::core::option::Option<BinanceSpotListLeg>,
+    #[prost(message, optional, tag = "5")]
+    pub pending_below: ::core::option::Option<BinanceSpotListLeg>,
+}
+/// 撤整组组合单。`DELETE /api/v3/orderList`
+/// `order_list_id` 与 `list_client_order_id` 给一个即可。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceSpotCancelOrderList {
+    #[prost(string, optional, tag = "1")]
+    pub symbol: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "2")]
+    pub order_list_id: ::core::option::Option<i64>,
+    #[prost(string, optional, tag = "3")]
+    pub list_client_order_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 查一组组合单。`GET /api/v3/orderList`
+/// `order_list_id` 与 `orig_client_order_id`(即下单时的 listClientOrderId)给一个即可。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceSpotGetOrderList {
+    #[prost(int64, optional, tag = "1")]
+    pub order_list_id: ::core::option::Option<i64>,
+    #[prost(string, optional, tag = "2")]
+    pub orig_client_order_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 组合单历史。`GET /api/v3/allOrderList`
+/// 给了 from_id 就不能再给时间范围。
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceSpotAllOrderLists {
+    #[prost(int64, optional, tag = "1")]
+    pub from_id: ::core::option::Option<i64>,
+    /// 毫秒
+    #[prost(int64, optional, tag = "2")]
+    pub start_time: ::core::option::Option<i64>,
+    /// 毫秒
+    #[prost(int64, optional, tag = "3")]
+    pub end_time: ::core::option::Option<i64>,
+    /// 默认 500,最多 1000
+    #[prost(uint32, optional, tag = "4")]
+    pub limit: ::core::option::Option<u32>,
 }
 /// 合约下单。`POST /fapi/v1/order`
 ///
@@ -170,8 +321,99 @@ pub struct BinanceFuturesOpenOrders {
 }
 /// 合约的策略委托(止盈止损这类)。`GET /fapi/v1/openAlgoOrders`
 /// **与普通挂单是两张表** —— 只查 `openOrders` 的话,面板上会缺掉全部止盈止损单。
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct BinanceFuturesOpenAlgoOrders {}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceFuturesOpenAlgoOrders {
+    /// 不传 = 全部
+    #[prost(string, optional, tag = "1")]
+    pub symbol: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 合约**策略委托**下单(止盈、止损、跟踪止损)。`POST /fapi/v1/algoOrder`,`algoType` 固定 CONDITIONAL(brain 填)。
+/// 类型与各自要给的字段见 `BinanceFuturesAlgoOrderType`。
+///
+/// ⚠️ 这是**条件单**:下单成功只是挂上了,**触发时**才真正下出去;挂着的在 `open_algo_orders` 里查,不在普通挂单里。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceFuturesNewAlgoOrder {
+    #[prost(string, optional, tag = "1")]
+    pub symbol: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "BinanceOrderSide", optional, tag = "2")]
+    pub side: ::core::option::Option<i32>,
+    #[prost(enumeration = "BinanceFuturesAlgoOrderType", optional, tag = "3")]
+    pub r#type: ::core::option::Option<i32>,
+    /// 不传 = BOTH
+    #[prost(enumeration = "BinancePositionSide", optional, tag = "4")]
+    pub position_side: ::core::option::Option<i32>,
+    /// STOP / TAKE_PROFIT(限价)用
+    #[prost(enumeration = "BinanceTimeInForce", optional, tag = "5")]
+    pub time_in_force: ::core::option::Option<i32>,
+    /// 与 close_position 不能同给
+    #[prost(string, optional, tag = "6")]
+    pub quantity: ::core::option::Option<::prost::alloc::string::String>,
+    /// STOP / TAKE_PROFIT 触发后的限价
+    #[prost(string, optional, tag = "7")]
+    pub price: ::core::option::Option<::prost::alloc::string::String>,
+    /// 触发价
+    #[prost(string, optional, tag = "8")]
+    pub trigger_price: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "BinanceWorkingType", optional, tag = "9")]
+    pub working_type: ::core::option::Option<i32>,
+    /// 触发时**平掉这个方向的全部仓位**(只用于 STOP_MARKET / TAKE_PROFIT_MARKET)。给了就不能给 quantity。
+    #[prost(bool, optional, tag = "10")]
+    pub close_position: ::core::option::Option<bool>,
+    /// 价格保护:触发时标记价与最新价偏离过大就不触发。
+    #[prost(bool, optional, tag = "11")]
+    pub price_protect: ::core::option::Option<bool>,
+    /// 只减仓(双向持仓模式下币安不收)。止盈止损单一般都该带上,免得触发时反向开出新仓。
+    #[prost(bool, optional, tag = "12")]
+    pub reduce_only: ::core::option::Option<bool>,
+    /// 跟踪止损的激活价
+    #[prost(string, optional, tag = "13")]
+    pub activate_price: ::core::option::Option<::prost::alloc::string::String>,
+    /// 跟踪止损的回调比例(%),0.1–10
+    #[prost(string, optional, tag = "14")]
+    pub callback_rate: ::core::option::Option<::prost::alloc::string::String>,
+    /// **按百分比**(十进制字符串,0 \< p ≤ 100)。与 quantity / close_position 三选一;口径同 `BinanceFuturesNewOrder.percent`,
+    /// 换算用的价格:有 price 用 price,否则用 trigger_price,都没有用标记价格。
+    #[prost(string, optional, tag = "15")]
+    pub percent: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 撤一张策略委托。`DELETE /fapi/v1/algoOrder`。`algo_id` 与 `client_algo_id` 给一个即可。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceFuturesCancelAlgoOrder {
+    #[prost(int64, optional, tag = "1")]
+    pub algo_id: ::core::option::Option<i64>,
+    #[prost(string, optional, tag = "2")]
+    pub client_algo_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 撤一个交易对的全部策略委托。`DELETE /fapi/v1/algoOpenOrders`
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceFuturesCancelAllAlgoOrders {
+    #[prost(string, optional, tag = "1")]
+    pub symbol: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 查一张策略委托。`GET /fapi/v1/algoOrder`。`algo_id` 与 `client_algo_id` 给一个即可。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceFuturesGetAlgoOrder {
+    #[prost(int64, optional, tag = "1")]
+    pub algo_id: ::core::option::Option<i64>,
+    #[prost(string, optional, tag = "2")]
+    pub client_algo_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 策略委托历史(含已触发、已撤、已过期)。`GET /fapi/v1/allAlgoOrders`
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceFuturesAllAlgoOrders {
+    #[prost(string, optional, tag = "1")]
+    pub symbol: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "2")]
+    pub algo_id: ::core::option::Option<i64>,
+    /// 毫秒
+    #[prost(int64, optional, tag = "3")]
+    pub start_time: ::core::option::Option<i64>,
+    /// 毫秒
+    #[prost(int64, optional, tag = "4")]
+    pub end_time: ::core::option::Option<i64>,
+    #[prost(uint32, optional, tag = "5")]
+    pub limit: ::core::option::Option<u32>,
+}
 /// 合约资金流水(已实现盈亏、资金费、手续费…)。`GET /fapi/v1/income`
 /// 累计收益算的就是它 —— **账户接口只有"现在"**,赚过又提走的钱不在里面。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -270,8 +512,10 @@ impl BinanceOrderSide {
         }
     }
 }
-/// 订单类型。**第一批只做这两种** —— 要加(止损、跟踪委托……)时在这里加一行,
-/// 并同步到 brain 的操作表。
+/// **合约普通单**的类型。只有这两种 —— 合约的止盈止损、跟踪止损是**策略委托**,
+/// 走另一个接口(`BinanceFuturesNewAlgoOrder`):币安 2025-12-09 起把它们从 `/fapi/v1/order` 迁走,
+/// 再往普通下单接口发会回 `-4120 STOP_ORDER_SWITCH_ALGO`。
+/// 现货的单型更多,是另一个枚举(`BinanceSpotOrderType`)—— 两边能下的单不一样,合用一个枚举就能写出币安必拒的组合。
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum BinanceOrderType {
@@ -299,6 +543,148 @@ impl BinanceOrderType {
             "BINANCE_ORDER_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
             "BINANCE_ORDER_TYPE_LIMIT" => Some(Self::Limit),
             "BINANCE_ORDER_TYPE_MARKET" => Some(Self::Market),
+            _ => None,
+        }
+    }
+}
+/// **现货**的订单类型(`POST /api/v3/order` 的 `type`)。1、2 与 `BinanceOrderType` 同值(拆枚举之前的存量指令照样解得出来)。
+///
+/// |类型|还要给|
+/// |--|---|
+/// |LIMIT|price、time_in_force、quantity|
+/// |MARKET|quantity 或 quote_order_qty|
+/// |STOP_LOSS|quantity,stop_price 或 trailing_delta —— 触发后按**市价**成交(止损)|
+/// |STOP_LOSS_LIMIT|price、time_in_force、quantity,stop_price 或 trailing_delta —— 触发后挂**限价**单|
+/// |TAKE_PROFIT|quantity,stop_price 或 trailing_delta —— 触发后按市价成交(止盈)|
+/// |TAKE_PROFIT_LIMIT|price、time_in_force、quantity,stop_price 或 trailing_delta|
+/// |LIMIT_MAKER|price、quantity —— 只做挂单方,会立即成交就被拒|
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum BinanceSpotOrderType {
+    Unspecified = 0,
+    Limit = 1,
+    Market = 2,
+    StopLoss = 3,
+    StopLossLimit = 4,
+    TakeProfit = 5,
+    TakeProfitLimit = 6,
+    LimitMaker = 7,
+}
+impl BinanceSpotOrderType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "BINANCE_SPOT_ORDER_TYPE_UNSPECIFIED",
+            Self::Limit => "BINANCE_SPOT_ORDER_TYPE_LIMIT",
+            Self::Market => "BINANCE_SPOT_ORDER_TYPE_MARKET",
+            Self::StopLoss => "BINANCE_SPOT_ORDER_TYPE_STOP_LOSS",
+            Self::StopLossLimit => "BINANCE_SPOT_ORDER_TYPE_STOP_LOSS_LIMIT",
+            Self::TakeProfit => "BINANCE_SPOT_ORDER_TYPE_TAKE_PROFIT",
+            Self::TakeProfitLimit => "BINANCE_SPOT_ORDER_TYPE_TAKE_PROFIT_LIMIT",
+            Self::LimitMaker => "BINANCE_SPOT_ORDER_TYPE_LIMIT_MAKER",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "BINANCE_SPOT_ORDER_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "BINANCE_SPOT_ORDER_TYPE_LIMIT" => Some(Self::Limit),
+            "BINANCE_SPOT_ORDER_TYPE_MARKET" => Some(Self::Market),
+            "BINANCE_SPOT_ORDER_TYPE_STOP_LOSS" => Some(Self::StopLoss),
+            "BINANCE_SPOT_ORDER_TYPE_STOP_LOSS_LIMIT" => Some(Self::StopLossLimit),
+            "BINANCE_SPOT_ORDER_TYPE_TAKE_PROFIT" => Some(Self::TakeProfit),
+            "BINANCE_SPOT_ORDER_TYPE_TAKE_PROFIT_LIMIT" => Some(Self::TakeProfitLimit),
+            "BINANCE_SPOT_ORDER_TYPE_LIMIT_MAKER" => Some(Self::LimitMaker),
+            _ => None,
+        }
+    }
+}
+/// **合约策略委托**的类型(`POST /fapi/v1/algoOrder`,`algoType = CONDITIONAL`)。
+///
+/// |类型|还要给|
+/// |--|---|
+/// |STOP|quantity、price、trigger_price —— 触发后挂限价单(止损)|
+/// |TAKE_PROFIT|quantity、price、trigger_price —— 触发后挂限价单(止盈)|
+/// |STOP_MARKET|trigger_price,quantity 或 close_position —— 触发后市价(止损)|
+/// |TAKE_PROFIT_MARKET|trigger_price,quantity 或 close_position —— 触发后市价(止盈)|
+/// |TRAILING_STOP_MARKET|quantity、callback_rate,可选 activate_price —— 跟踪止损|
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum BinanceFuturesAlgoOrderType {
+    Unspecified = 0,
+    Stop = 1,
+    StopMarket = 2,
+    TakeProfit = 3,
+    TakeProfitMarket = 4,
+    TrailingStopMarket = 5,
+}
+impl BinanceFuturesAlgoOrderType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "BINANCE_FUTURES_ALGO_ORDER_TYPE_UNSPECIFIED",
+            Self::Stop => "BINANCE_FUTURES_ALGO_ORDER_TYPE_STOP",
+            Self::StopMarket => "BINANCE_FUTURES_ALGO_ORDER_TYPE_STOP_MARKET",
+            Self::TakeProfit => "BINANCE_FUTURES_ALGO_ORDER_TYPE_TAKE_PROFIT",
+            Self::TakeProfitMarket => {
+                "BINANCE_FUTURES_ALGO_ORDER_TYPE_TAKE_PROFIT_MARKET"
+            }
+            Self::TrailingStopMarket => {
+                "BINANCE_FUTURES_ALGO_ORDER_TYPE_TRAILING_STOP_MARKET"
+            }
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "BINANCE_FUTURES_ALGO_ORDER_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "BINANCE_FUTURES_ALGO_ORDER_TYPE_STOP" => Some(Self::Stop),
+            "BINANCE_FUTURES_ALGO_ORDER_TYPE_STOP_MARKET" => Some(Self::StopMarket),
+            "BINANCE_FUTURES_ALGO_ORDER_TYPE_TAKE_PROFIT" => Some(Self::TakeProfit),
+            "BINANCE_FUTURES_ALGO_ORDER_TYPE_TAKE_PROFIT_MARKET" => {
+                Some(Self::TakeProfitMarket)
+            }
+            "BINANCE_FUTURES_ALGO_ORDER_TYPE_TRAILING_STOP_MARKET" => {
+                Some(Self::TrailingStopMarket)
+            }
+            _ => None,
+        }
+    }
+}
+/// 合约触发价按哪个价格比。不传 = 币安默认 CONTRACT_PRICE(最新成交价)。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum BinanceWorkingType {
+    Unspecified = 0,
+    /// 标记价格 —— 不容易被一笔插针打穿
+    MarkPrice = 1,
+    /// 最新成交价
+    ContractPrice = 2,
+}
+impl BinanceWorkingType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "BINANCE_WORKING_TYPE_UNSPECIFIED",
+            Self::MarkPrice => "BINANCE_WORKING_TYPE_MARK_PRICE",
+            Self::ContractPrice => "BINANCE_WORKING_TYPE_CONTRACT_PRICE",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "BINANCE_WORKING_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "BINANCE_WORKING_TYPE_MARK_PRICE" => Some(Self::MarkPrice),
+            "BINANCE_WORKING_TYPE_CONTRACT_PRICE" => Some(Self::ContractPrice),
             _ => None,
         }
     }
@@ -684,7 +1070,7 @@ pub struct BinanceCommand {
     pub expiration: ::core::option::Option<i64>,
     #[prost(
         oneof = "binance_command::Op",
-        tags = "10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 40"
+        tags = "10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 40, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54"
     )]
     pub op: ::core::option::Option<binance_command::Op>,
 }
@@ -782,5 +1168,48 @@ pub mod binance_command {
         /// wallet.query_user_wallet_balance
         #[prost(message, tag = "40")]
         WalletQueryUserWalletBalance(super::BinanceWalletBalance),
+        /// 现货组合单(止盈止损一起挂、成交后自动挂止损…)
+        ///
+        /// spot.order_list_oco
+        #[prost(message, tag = "42")]
+        SpotOrderListOco(super::BinanceSpotOrderListOco),
+        /// spot.order_list_oto
+        #[prost(message, tag = "43")]
+        SpotOrderListOto(super::BinanceSpotOrderListOto),
+        /// spot.order_list_otoco
+        #[prost(message, tag = "44")]
+        SpotOrderListOtoco(super::BinanceSpotOrderListOtoco),
+        /// spot.order_list_opo
+        #[prost(message, tag = "45")]
+        SpotOrderListOpo(super::BinanceSpotOrderListOpo),
+        /// spot.order_list_opoco
+        #[prost(message, tag = "46")]
+        SpotOrderListOpoco(super::BinanceSpotOrderListOpoco),
+        /// spot.delete_order_list
+        #[prost(message, tag = "47")]
+        SpotDeleteOrderList(super::BinanceSpotCancelOrderList),
+        /// spot.get_order_list
+        #[prost(message, tag = "48")]
+        SpotGetOrderList(super::BinanceSpotGetOrderList),
+        /// spot.all_order_list
+        #[prost(message, tag = "49")]
+        SpotAllOrderList(super::BinanceSpotAllOrderLists),
+        /// 合约策略委托(止盈、止损、跟踪止损)
+        ///
+        /// usds_futures.new_algo_order
+        #[prost(message, tag = "50")]
+        UsdsFuturesNewAlgoOrder(super::BinanceFuturesNewAlgoOrder),
+        /// usds_futures.cancel_algo_order
+        #[prost(message, tag = "51")]
+        UsdsFuturesCancelAlgoOrder(super::BinanceFuturesCancelAlgoOrder),
+        /// usds_futures.cancel_all_algo_open_orders
+        #[prost(message, tag = "52")]
+        UsdsFuturesCancelAllAlgoOpenOrders(super::BinanceFuturesCancelAllAlgoOrders),
+        /// usds_futures.query_algo_order
+        #[prost(message, tag = "53")]
+        UsdsFuturesQueryAlgoOrder(super::BinanceFuturesGetAlgoOrder),
+        /// usds_futures.query_all_algo_orders
+        #[prost(message, tag = "54")]
+        UsdsFuturesQueryAllAlgoOrders(super::BinanceFuturesAllAlgoOrders),
     }
 }

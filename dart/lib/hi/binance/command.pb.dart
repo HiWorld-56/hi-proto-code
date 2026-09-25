@@ -51,6 +51,19 @@ enum BinanceCommand_Op {
   stocksTokenizedAssets,
   walletQueryUserWalletBalance,
   stocksSignUsEquityDisclaimer,
+  spotOrderListOco,
+  spotOrderListOto,
+  spotOrderListOtoco,
+  spotOrderListOpo,
+  spotOrderListOpoco,
+  spotDeleteOrderList,
+  spotGetOrderList,
+  spotAllOrderList,
+  usdsFuturesNewAlgoOrder,
+  usdsFuturesCancelAlgoOrder,
+  usdsFuturesCancelAllAlgoOpenOrders,
+  usdsFuturesQueryAlgoOrder,
+  usdsFuturesQueryAllAlgoOrders,
   notSet
 }
 
@@ -113,6 +126,19 @@ class BinanceCommand extends $pb.GeneratedMessage {
     $1.BinanceStockTokenizedAssets? stocksTokenizedAssets,
     $0.BinanceWalletBalance? walletQueryUserWalletBalance,
     $1.BinanceStockSignDisclaimer? stocksSignUsEquityDisclaimer,
+    $0.BinanceSpotOrderListOco? spotOrderListOco,
+    $0.BinanceSpotOrderListOto? spotOrderListOto,
+    $0.BinanceSpotOrderListOtoco? spotOrderListOtoco,
+    $0.BinanceSpotOrderListOpo? spotOrderListOpo,
+    $0.BinanceSpotOrderListOpoco? spotOrderListOpoco,
+    $0.BinanceSpotCancelOrderList? spotDeleteOrderList,
+    $0.BinanceSpotGetOrderList? spotGetOrderList,
+    $0.BinanceSpotAllOrderLists? spotAllOrderList,
+    $0.BinanceFuturesNewAlgoOrder? usdsFuturesNewAlgoOrder,
+    $0.BinanceFuturesCancelAlgoOrder? usdsFuturesCancelAlgoOrder,
+    $0.BinanceFuturesCancelAllAlgoOrders? usdsFuturesCancelAllAlgoOpenOrders,
+    $0.BinanceFuturesGetAlgoOrder? usdsFuturesQueryAlgoOrder,
+    $0.BinanceFuturesAllAlgoOrders? usdsFuturesQueryAllAlgoOrders,
   }) {
     final result = create();
     if (expiration != null) result.expiration = expiration;
@@ -171,6 +197,28 @@ class BinanceCommand extends $pb.GeneratedMessage {
       result.walletQueryUserWalletBalance = walletQueryUserWalletBalance;
     if (stocksSignUsEquityDisclaimer != null)
       result.stocksSignUsEquityDisclaimer = stocksSignUsEquityDisclaimer;
+    if (spotOrderListOco != null) result.spotOrderListOco = spotOrderListOco;
+    if (spotOrderListOto != null) result.spotOrderListOto = spotOrderListOto;
+    if (spotOrderListOtoco != null)
+      result.spotOrderListOtoco = spotOrderListOtoco;
+    if (spotOrderListOpo != null) result.spotOrderListOpo = spotOrderListOpo;
+    if (spotOrderListOpoco != null)
+      result.spotOrderListOpoco = spotOrderListOpoco;
+    if (spotDeleteOrderList != null)
+      result.spotDeleteOrderList = spotDeleteOrderList;
+    if (spotGetOrderList != null) result.spotGetOrderList = spotGetOrderList;
+    if (spotAllOrderList != null) result.spotAllOrderList = spotAllOrderList;
+    if (usdsFuturesNewAlgoOrder != null)
+      result.usdsFuturesNewAlgoOrder = usdsFuturesNewAlgoOrder;
+    if (usdsFuturesCancelAlgoOrder != null)
+      result.usdsFuturesCancelAlgoOrder = usdsFuturesCancelAlgoOrder;
+    if (usdsFuturesCancelAllAlgoOpenOrders != null)
+      result.usdsFuturesCancelAllAlgoOpenOrders =
+          usdsFuturesCancelAllAlgoOpenOrders;
+    if (usdsFuturesQueryAlgoOrder != null)
+      result.usdsFuturesQueryAlgoOrder = usdsFuturesQueryAlgoOrder;
+    if (usdsFuturesQueryAllAlgoOrders != null)
+      result.usdsFuturesQueryAllAlgoOrders = usdsFuturesQueryAllAlgoOrders;
     return result;
   }
 
@@ -215,6 +263,19 @@ class BinanceCommand extends $pb.GeneratedMessage {
     39: BinanceCommand_Op.stocksTokenizedAssets,
     40: BinanceCommand_Op.walletQueryUserWalletBalance,
     41: BinanceCommand_Op.stocksSignUsEquityDisclaimer,
+    42: BinanceCommand_Op.spotOrderListOco,
+    43: BinanceCommand_Op.spotOrderListOto,
+    44: BinanceCommand_Op.spotOrderListOtoco,
+    45: BinanceCommand_Op.spotOrderListOpo,
+    46: BinanceCommand_Op.spotOrderListOpoco,
+    47: BinanceCommand_Op.spotDeleteOrderList,
+    48: BinanceCommand_Op.spotGetOrderList,
+    49: BinanceCommand_Op.spotAllOrderList,
+    50: BinanceCommand_Op.usdsFuturesNewAlgoOrder,
+    51: BinanceCommand_Op.usdsFuturesCancelAlgoOrder,
+    52: BinanceCommand_Op.usdsFuturesCancelAllAlgoOpenOrders,
+    53: BinanceCommand_Op.usdsFuturesQueryAlgoOrder,
+    54: BinanceCommand_Op.usdsFuturesQueryAllAlgoOrders,
     0: BinanceCommand_Op.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -251,7 +312,20 @@ class BinanceCommand extends $pb.GeneratedMessage {
       38,
       39,
       40,
-      41
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54
     ])
     ..aInt64(1, _omitFieldNames ? '' : 'expiration')
     ..aOM<$0.BinanceSpotNewOrder>(10, _omitFieldNames ? '' : 'spotNewOrder',
@@ -341,6 +415,45 @@ class BinanceCommand extends $pb.GeneratedMessage {
     ..aOM<$1.BinanceStockSignDisclaimer>(
         41, _omitFieldNames ? '' : 'stocksSignUsEquityDisclaimer',
         subBuilder: $1.BinanceStockSignDisclaimer.create)
+    ..aOM<$0.BinanceSpotOrderListOco>(
+        42, _omitFieldNames ? '' : 'spotOrderListOco',
+        subBuilder: $0.BinanceSpotOrderListOco.create)
+    ..aOM<$0.BinanceSpotOrderListOto>(
+        43, _omitFieldNames ? '' : 'spotOrderListOto',
+        subBuilder: $0.BinanceSpotOrderListOto.create)
+    ..aOM<$0.BinanceSpotOrderListOtoco>(
+        44, _omitFieldNames ? '' : 'spotOrderListOtoco',
+        subBuilder: $0.BinanceSpotOrderListOtoco.create)
+    ..aOM<$0.BinanceSpotOrderListOpo>(
+        45, _omitFieldNames ? '' : 'spotOrderListOpo',
+        subBuilder: $0.BinanceSpotOrderListOpo.create)
+    ..aOM<$0.BinanceSpotOrderListOpoco>(
+        46, _omitFieldNames ? '' : 'spotOrderListOpoco',
+        subBuilder: $0.BinanceSpotOrderListOpoco.create)
+    ..aOM<$0.BinanceSpotCancelOrderList>(
+        47, _omitFieldNames ? '' : 'spotDeleteOrderList',
+        subBuilder: $0.BinanceSpotCancelOrderList.create)
+    ..aOM<$0.BinanceSpotGetOrderList>(
+        48, _omitFieldNames ? '' : 'spotGetOrderList',
+        subBuilder: $0.BinanceSpotGetOrderList.create)
+    ..aOM<$0.BinanceSpotAllOrderLists>(
+        49, _omitFieldNames ? '' : 'spotAllOrderList',
+        subBuilder: $0.BinanceSpotAllOrderLists.create)
+    ..aOM<$0.BinanceFuturesNewAlgoOrder>(
+        50, _omitFieldNames ? '' : 'usdsFuturesNewAlgoOrder',
+        subBuilder: $0.BinanceFuturesNewAlgoOrder.create)
+    ..aOM<$0.BinanceFuturesCancelAlgoOrder>(
+        51, _omitFieldNames ? '' : 'usdsFuturesCancelAlgoOrder',
+        subBuilder: $0.BinanceFuturesCancelAlgoOrder.create)
+    ..aOM<$0.BinanceFuturesCancelAllAlgoOrders>(
+        52, _omitFieldNames ? '' : 'usdsFuturesCancelAllAlgoOpenOrders',
+        subBuilder: $0.BinanceFuturesCancelAllAlgoOrders.create)
+    ..aOM<$0.BinanceFuturesGetAlgoOrder>(
+        53, _omitFieldNames ? '' : 'usdsFuturesQueryAlgoOrder',
+        subBuilder: $0.BinanceFuturesGetAlgoOrder.create)
+    ..aOM<$0.BinanceFuturesAllAlgoOrders>(
+        54, _omitFieldNames ? '' : 'usdsFuturesQueryAllAlgoOrders',
+        subBuilder: $0.BinanceFuturesAllAlgoOrders.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -392,6 +505,19 @@ class BinanceCommand extends $pb.GeneratedMessage {
   @$pb.TagNumber(39)
   @$pb.TagNumber(40)
   @$pb.TagNumber(41)
+  @$pb.TagNumber(42)
+  @$pb.TagNumber(43)
+  @$pb.TagNumber(44)
+  @$pb.TagNumber(45)
+  @$pb.TagNumber(46)
+  @$pb.TagNumber(47)
+  @$pb.TagNumber(48)
+  @$pb.TagNumber(49)
+  @$pb.TagNumber(50)
+  @$pb.TagNumber(51)
+  @$pb.TagNumber(52)
+  @$pb.TagNumber(53)
+  @$pb.TagNumber(54)
   BinanceCommand_Op whichOp() => _BinanceCommand_OpByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(10)
   @$pb.TagNumber(11)
@@ -423,6 +549,19 @@ class BinanceCommand extends $pb.GeneratedMessage {
   @$pb.TagNumber(39)
   @$pb.TagNumber(40)
   @$pb.TagNumber(41)
+  @$pb.TagNumber(42)
+  @$pb.TagNumber(43)
+  @$pb.TagNumber(44)
+  @$pb.TagNumber(45)
+  @$pb.TagNumber(46)
+  @$pb.TagNumber(47)
+  @$pb.TagNumber(48)
+  @$pb.TagNumber(49)
+  @$pb.TagNumber(50)
+  @$pb.TagNumber(51)
+  @$pb.TagNumber(52)
+  @$pb.TagNumber(53)
+  @$pb.TagNumber(54)
   void clearOp() => $_clearField($_whichOneof(0));
 
   /// 过期时刻,**绝对时间,微秒**(与 `Notice.expiration` 同一口径)。过了机器人不执行、回一条失败;
@@ -801,6 +940,171 @@ class BinanceCommand extends $pb.GeneratedMessage {
   @$pb.TagNumber(41)
   $1.BinanceStockSignDisclaimer ensureStocksSignUsEquityDisclaimer() =>
       $_ensure(30);
+
+  /// 现货组合单(止盈止损一起挂、成交后自动挂止损…)
+  @$pb.TagNumber(42)
+  $0.BinanceSpotOrderListOco get spotOrderListOco => $_getN(31);
+  @$pb.TagNumber(42)
+  set spotOrderListOco($0.BinanceSpotOrderListOco value) =>
+      $_setField(42, value);
+  @$pb.TagNumber(42)
+  $core.bool hasSpotOrderListOco() => $_has(31);
+  @$pb.TagNumber(42)
+  void clearSpotOrderListOco() => $_clearField(42);
+  @$pb.TagNumber(42)
+  $0.BinanceSpotOrderListOco ensureSpotOrderListOco() => $_ensure(31);
+
+  @$pb.TagNumber(43)
+  $0.BinanceSpotOrderListOto get spotOrderListOto => $_getN(32);
+  @$pb.TagNumber(43)
+  set spotOrderListOto($0.BinanceSpotOrderListOto value) =>
+      $_setField(43, value);
+  @$pb.TagNumber(43)
+  $core.bool hasSpotOrderListOto() => $_has(32);
+  @$pb.TagNumber(43)
+  void clearSpotOrderListOto() => $_clearField(43);
+  @$pb.TagNumber(43)
+  $0.BinanceSpotOrderListOto ensureSpotOrderListOto() => $_ensure(32);
+
+  @$pb.TagNumber(44)
+  $0.BinanceSpotOrderListOtoco get spotOrderListOtoco => $_getN(33);
+  @$pb.TagNumber(44)
+  set spotOrderListOtoco($0.BinanceSpotOrderListOtoco value) =>
+      $_setField(44, value);
+  @$pb.TagNumber(44)
+  $core.bool hasSpotOrderListOtoco() => $_has(33);
+  @$pb.TagNumber(44)
+  void clearSpotOrderListOtoco() => $_clearField(44);
+  @$pb.TagNumber(44)
+  $0.BinanceSpotOrderListOtoco ensureSpotOrderListOtoco() => $_ensure(33);
+
+  @$pb.TagNumber(45)
+  $0.BinanceSpotOrderListOpo get spotOrderListOpo => $_getN(34);
+  @$pb.TagNumber(45)
+  set spotOrderListOpo($0.BinanceSpotOrderListOpo value) =>
+      $_setField(45, value);
+  @$pb.TagNumber(45)
+  $core.bool hasSpotOrderListOpo() => $_has(34);
+  @$pb.TagNumber(45)
+  void clearSpotOrderListOpo() => $_clearField(45);
+  @$pb.TagNumber(45)
+  $0.BinanceSpotOrderListOpo ensureSpotOrderListOpo() => $_ensure(34);
+
+  @$pb.TagNumber(46)
+  $0.BinanceSpotOrderListOpoco get spotOrderListOpoco => $_getN(35);
+  @$pb.TagNumber(46)
+  set spotOrderListOpoco($0.BinanceSpotOrderListOpoco value) =>
+      $_setField(46, value);
+  @$pb.TagNumber(46)
+  $core.bool hasSpotOrderListOpoco() => $_has(35);
+  @$pb.TagNumber(46)
+  void clearSpotOrderListOpoco() => $_clearField(46);
+  @$pb.TagNumber(46)
+  $0.BinanceSpotOrderListOpoco ensureSpotOrderListOpoco() => $_ensure(35);
+
+  @$pb.TagNumber(47)
+  $0.BinanceSpotCancelOrderList get spotDeleteOrderList => $_getN(36);
+  @$pb.TagNumber(47)
+  set spotDeleteOrderList($0.BinanceSpotCancelOrderList value) =>
+      $_setField(47, value);
+  @$pb.TagNumber(47)
+  $core.bool hasSpotDeleteOrderList() => $_has(36);
+  @$pb.TagNumber(47)
+  void clearSpotDeleteOrderList() => $_clearField(47);
+  @$pb.TagNumber(47)
+  $0.BinanceSpotCancelOrderList ensureSpotDeleteOrderList() => $_ensure(36);
+
+  @$pb.TagNumber(48)
+  $0.BinanceSpotGetOrderList get spotGetOrderList => $_getN(37);
+  @$pb.TagNumber(48)
+  set spotGetOrderList($0.BinanceSpotGetOrderList value) =>
+      $_setField(48, value);
+  @$pb.TagNumber(48)
+  $core.bool hasSpotGetOrderList() => $_has(37);
+  @$pb.TagNumber(48)
+  void clearSpotGetOrderList() => $_clearField(48);
+  @$pb.TagNumber(48)
+  $0.BinanceSpotGetOrderList ensureSpotGetOrderList() => $_ensure(37);
+
+  @$pb.TagNumber(49)
+  $0.BinanceSpotAllOrderLists get spotAllOrderList => $_getN(38);
+  @$pb.TagNumber(49)
+  set spotAllOrderList($0.BinanceSpotAllOrderLists value) =>
+      $_setField(49, value);
+  @$pb.TagNumber(49)
+  $core.bool hasSpotAllOrderList() => $_has(38);
+  @$pb.TagNumber(49)
+  void clearSpotAllOrderList() => $_clearField(49);
+  @$pb.TagNumber(49)
+  $0.BinanceSpotAllOrderLists ensureSpotAllOrderList() => $_ensure(38);
+
+  /// 合约策略委托(止盈、止损、跟踪止损)
+  @$pb.TagNumber(50)
+  $0.BinanceFuturesNewAlgoOrder get usdsFuturesNewAlgoOrder => $_getN(39);
+  @$pb.TagNumber(50)
+  set usdsFuturesNewAlgoOrder($0.BinanceFuturesNewAlgoOrder value) =>
+      $_setField(50, value);
+  @$pb.TagNumber(50)
+  $core.bool hasUsdsFuturesNewAlgoOrder() => $_has(39);
+  @$pb.TagNumber(50)
+  void clearUsdsFuturesNewAlgoOrder() => $_clearField(50);
+  @$pb.TagNumber(50)
+  $0.BinanceFuturesNewAlgoOrder ensureUsdsFuturesNewAlgoOrder() => $_ensure(39);
+
+  @$pb.TagNumber(51)
+  $0.BinanceFuturesCancelAlgoOrder get usdsFuturesCancelAlgoOrder => $_getN(40);
+  @$pb.TagNumber(51)
+  set usdsFuturesCancelAlgoOrder($0.BinanceFuturesCancelAlgoOrder value) =>
+      $_setField(51, value);
+  @$pb.TagNumber(51)
+  $core.bool hasUsdsFuturesCancelAlgoOrder() => $_has(40);
+  @$pb.TagNumber(51)
+  void clearUsdsFuturesCancelAlgoOrder() => $_clearField(51);
+  @$pb.TagNumber(51)
+  $0.BinanceFuturesCancelAlgoOrder ensureUsdsFuturesCancelAlgoOrder() =>
+      $_ensure(40);
+
+  @$pb.TagNumber(52)
+  $0.BinanceFuturesCancelAllAlgoOrders get usdsFuturesCancelAllAlgoOpenOrders =>
+      $_getN(41);
+  @$pb.TagNumber(52)
+  set usdsFuturesCancelAllAlgoOpenOrders(
+          $0.BinanceFuturesCancelAllAlgoOrders value) =>
+      $_setField(52, value);
+  @$pb.TagNumber(52)
+  $core.bool hasUsdsFuturesCancelAllAlgoOpenOrders() => $_has(41);
+  @$pb.TagNumber(52)
+  void clearUsdsFuturesCancelAllAlgoOpenOrders() => $_clearField(52);
+  @$pb.TagNumber(52)
+  $0.BinanceFuturesCancelAllAlgoOrders
+      ensureUsdsFuturesCancelAllAlgoOpenOrders() => $_ensure(41);
+
+  @$pb.TagNumber(53)
+  $0.BinanceFuturesGetAlgoOrder get usdsFuturesQueryAlgoOrder => $_getN(42);
+  @$pb.TagNumber(53)
+  set usdsFuturesQueryAlgoOrder($0.BinanceFuturesGetAlgoOrder value) =>
+      $_setField(53, value);
+  @$pb.TagNumber(53)
+  $core.bool hasUsdsFuturesQueryAlgoOrder() => $_has(42);
+  @$pb.TagNumber(53)
+  void clearUsdsFuturesQueryAlgoOrder() => $_clearField(53);
+  @$pb.TagNumber(53)
+  $0.BinanceFuturesGetAlgoOrder ensureUsdsFuturesQueryAlgoOrder() =>
+      $_ensure(42);
+
+  @$pb.TagNumber(54)
+  $0.BinanceFuturesAllAlgoOrders get usdsFuturesQueryAllAlgoOrders =>
+      $_getN(43);
+  @$pb.TagNumber(54)
+  set usdsFuturesQueryAllAlgoOrders($0.BinanceFuturesAllAlgoOrders value) =>
+      $_setField(54, value);
+  @$pb.TagNumber(54)
+  $core.bool hasUsdsFuturesQueryAllAlgoOrders() => $_has(43);
+  @$pb.TagNumber(54)
+  void clearUsdsFuturesQueryAllAlgoOrders() => $_clearField(54);
+  @$pb.TagNumber(54)
+  $0.BinanceFuturesAllAlgoOrders ensureUsdsFuturesQueryAllAlgoOrders() =>
+      $_ensure(43);
 }
 
 const $core.bool _omitFieldNames =

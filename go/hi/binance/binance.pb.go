@@ -73,8 +73,10 @@ func (BinanceOrderSide) EnumDescriptor() ([]byte, []int) {
 	return file_hi_binance_binance_proto_rawDescGZIP(), []int{0}
 }
 
-// 订单类型。**第一批只做这两种** —— 要加(止损、跟踪委托……)时在这里加一行,
-// 并同步到 brain 的操作表。
+// **合约普通单**的类型。只有这两种 —— 合约的止盈止损、跟踪止损是**策略委托**,
+// 走另一个接口(`BinanceFuturesNewAlgoOrder`):币安 2025-12-09 起把它们从 `/fapi/v1/order` 迁走,
+// 再往普通下单接口发会回 `-4120 STOP_ORDER_SWITCH_ALGO`。
+// 现货的单型更多,是另一个枚举(`BinanceSpotOrderType`)—— 两边能下的单不一样,合用一个枚举就能写出币安必拒的组合。
 type BinanceOrderType int32
 
 const (
@@ -124,6 +126,198 @@ func (BinanceOrderType) EnumDescriptor() ([]byte, []int) {
 	return file_hi_binance_binance_proto_rawDescGZIP(), []int{1}
 }
 
+// **现货**的订单类型(`POST /api/v3/order` 的 `type`)。1、2 与 `BinanceOrderType` 同值(拆枚举之前的存量指令照样解得出来)。
+//
+// | 类型 | 还要给 |
+// |---|---|
+// | LIMIT | price、time_in_force、quantity |
+// | MARKET | quantity 或 quote_order_qty |
+// | STOP_LOSS | quantity,stop_price 或 trailing_delta —— 触发后按**市价**成交(止损) |
+// | STOP_LOSS_LIMIT | price、time_in_force、quantity,stop_price 或 trailing_delta —— 触发后挂**限价**单 |
+// | TAKE_PROFIT | quantity,stop_price 或 trailing_delta —— 触发后按市价成交(止盈) |
+// | TAKE_PROFIT_LIMIT | price、time_in_force、quantity,stop_price 或 trailing_delta |
+// | LIMIT_MAKER | price、quantity —— 只做挂单方,会立即成交就被拒 |
+type BinanceSpotOrderType int32
+
+const (
+	BinanceSpotOrderType_BINANCE_SPOT_ORDER_TYPE_UNSPECIFIED       BinanceSpotOrderType = 0
+	BinanceSpotOrderType_BINANCE_SPOT_ORDER_TYPE_LIMIT             BinanceSpotOrderType = 1
+	BinanceSpotOrderType_BINANCE_SPOT_ORDER_TYPE_MARKET            BinanceSpotOrderType = 2
+	BinanceSpotOrderType_BINANCE_SPOT_ORDER_TYPE_STOP_LOSS         BinanceSpotOrderType = 3
+	BinanceSpotOrderType_BINANCE_SPOT_ORDER_TYPE_STOP_LOSS_LIMIT   BinanceSpotOrderType = 4
+	BinanceSpotOrderType_BINANCE_SPOT_ORDER_TYPE_TAKE_PROFIT       BinanceSpotOrderType = 5
+	BinanceSpotOrderType_BINANCE_SPOT_ORDER_TYPE_TAKE_PROFIT_LIMIT BinanceSpotOrderType = 6
+	BinanceSpotOrderType_BINANCE_SPOT_ORDER_TYPE_LIMIT_MAKER       BinanceSpotOrderType = 7
+)
+
+// Enum value maps for BinanceSpotOrderType.
+var (
+	BinanceSpotOrderType_name = map[int32]string{
+		0: "BINANCE_SPOT_ORDER_TYPE_UNSPECIFIED",
+		1: "BINANCE_SPOT_ORDER_TYPE_LIMIT",
+		2: "BINANCE_SPOT_ORDER_TYPE_MARKET",
+		3: "BINANCE_SPOT_ORDER_TYPE_STOP_LOSS",
+		4: "BINANCE_SPOT_ORDER_TYPE_STOP_LOSS_LIMIT",
+		5: "BINANCE_SPOT_ORDER_TYPE_TAKE_PROFIT",
+		6: "BINANCE_SPOT_ORDER_TYPE_TAKE_PROFIT_LIMIT",
+		7: "BINANCE_SPOT_ORDER_TYPE_LIMIT_MAKER",
+	}
+	BinanceSpotOrderType_value = map[string]int32{
+		"BINANCE_SPOT_ORDER_TYPE_UNSPECIFIED":       0,
+		"BINANCE_SPOT_ORDER_TYPE_LIMIT":             1,
+		"BINANCE_SPOT_ORDER_TYPE_MARKET":            2,
+		"BINANCE_SPOT_ORDER_TYPE_STOP_LOSS":         3,
+		"BINANCE_SPOT_ORDER_TYPE_STOP_LOSS_LIMIT":   4,
+		"BINANCE_SPOT_ORDER_TYPE_TAKE_PROFIT":       5,
+		"BINANCE_SPOT_ORDER_TYPE_TAKE_PROFIT_LIMIT": 6,
+		"BINANCE_SPOT_ORDER_TYPE_LIMIT_MAKER":       7,
+	}
+)
+
+func (x BinanceSpotOrderType) Enum() *BinanceSpotOrderType {
+	p := new(BinanceSpotOrderType)
+	*p = x
+	return p
+}
+
+func (x BinanceSpotOrderType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (BinanceSpotOrderType) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_binance_binance_proto_enumTypes[2].Descriptor()
+}
+
+func (BinanceSpotOrderType) Type() protoreflect.EnumType {
+	return &file_hi_binance_binance_proto_enumTypes[2]
+}
+
+func (x BinanceSpotOrderType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use BinanceSpotOrderType.Descriptor instead.
+func (BinanceSpotOrderType) EnumDescriptor() ([]byte, []int) {
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{2}
+}
+
+// **合约策略委托**的类型(`POST /fapi/v1/algoOrder`,`algoType = CONDITIONAL`)。
+//
+// | 类型 | 还要给 |
+// |---|---|
+// | STOP | quantity、price、trigger_price —— 触发后挂限价单(止损) |
+// | TAKE_PROFIT | quantity、price、trigger_price —— 触发后挂限价单(止盈) |
+// | STOP_MARKET | trigger_price,quantity 或 close_position —— 触发后市价(止损) |
+// | TAKE_PROFIT_MARKET | trigger_price,quantity 或 close_position —— 触发后市价(止盈) |
+// | TRAILING_STOP_MARKET | quantity、callback_rate,可选 activate_price —— 跟踪止损 |
+type BinanceFuturesAlgoOrderType int32
+
+const (
+	BinanceFuturesAlgoOrderType_BINANCE_FUTURES_ALGO_ORDER_TYPE_UNSPECIFIED          BinanceFuturesAlgoOrderType = 0
+	BinanceFuturesAlgoOrderType_BINANCE_FUTURES_ALGO_ORDER_TYPE_STOP                 BinanceFuturesAlgoOrderType = 1
+	BinanceFuturesAlgoOrderType_BINANCE_FUTURES_ALGO_ORDER_TYPE_STOP_MARKET          BinanceFuturesAlgoOrderType = 2
+	BinanceFuturesAlgoOrderType_BINANCE_FUTURES_ALGO_ORDER_TYPE_TAKE_PROFIT          BinanceFuturesAlgoOrderType = 3
+	BinanceFuturesAlgoOrderType_BINANCE_FUTURES_ALGO_ORDER_TYPE_TAKE_PROFIT_MARKET   BinanceFuturesAlgoOrderType = 4
+	BinanceFuturesAlgoOrderType_BINANCE_FUTURES_ALGO_ORDER_TYPE_TRAILING_STOP_MARKET BinanceFuturesAlgoOrderType = 5
+)
+
+// Enum value maps for BinanceFuturesAlgoOrderType.
+var (
+	BinanceFuturesAlgoOrderType_name = map[int32]string{
+		0: "BINANCE_FUTURES_ALGO_ORDER_TYPE_UNSPECIFIED",
+		1: "BINANCE_FUTURES_ALGO_ORDER_TYPE_STOP",
+		2: "BINANCE_FUTURES_ALGO_ORDER_TYPE_STOP_MARKET",
+		3: "BINANCE_FUTURES_ALGO_ORDER_TYPE_TAKE_PROFIT",
+		4: "BINANCE_FUTURES_ALGO_ORDER_TYPE_TAKE_PROFIT_MARKET",
+		5: "BINANCE_FUTURES_ALGO_ORDER_TYPE_TRAILING_STOP_MARKET",
+	}
+	BinanceFuturesAlgoOrderType_value = map[string]int32{
+		"BINANCE_FUTURES_ALGO_ORDER_TYPE_UNSPECIFIED":          0,
+		"BINANCE_FUTURES_ALGO_ORDER_TYPE_STOP":                 1,
+		"BINANCE_FUTURES_ALGO_ORDER_TYPE_STOP_MARKET":          2,
+		"BINANCE_FUTURES_ALGO_ORDER_TYPE_TAKE_PROFIT":          3,
+		"BINANCE_FUTURES_ALGO_ORDER_TYPE_TAKE_PROFIT_MARKET":   4,
+		"BINANCE_FUTURES_ALGO_ORDER_TYPE_TRAILING_STOP_MARKET": 5,
+	}
+)
+
+func (x BinanceFuturesAlgoOrderType) Enum() *BinanceFuturesAlgoOrderType {
+	p := new(BinanceFuturesAlgoOrderType)
+	*p = x
+	return p
+}
+
+func (x BinanceFuturesAlgoOrderType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (BinanceFuturesAlgoOrderType) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_binance_binance_proto_enumTypes[3].Descriptor()
+}
+
+func (BinanceFuturesAlgoOrderType) Type() protoreflect.EnumType {
+	return &file_hi_binance_binance_proto_enumTypes[3]
+}
+
+func (x BinanceFuturesAlgoOrderType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use BinanceFuturesAlgoOrderType.Descriptor instead.
+func (BinanceFuturesAlgoOrderType) EnumDescriptor() ([]byte, []int) {
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{3}
+}
+
+// 合约触发价按哪个价格比。不传 = 币安默认 CONTRACT_PRICE(最新成交价)。
+type BinanceWorkingType int32
+
+const (
+	BinanceWorkingType_BINANCE_WORKING_TYPE_UNSPECIFIED    BinanceWorkingType = 0
+	BinanceWorkingType_BINANCE_WORKING_TYPE_MARK_PRICE     BinanceWorkingType = 1 // 标记价格 —— 不容易被一笔插针打穿
+	BinanceWorkingType_BINANCE_WORKING_TYPE_CONTRACT_PRICE BinanceWorkingType = 2 // 最新成交价
+)
+
+// Enum value maps for BinanceWorkingType.
+var (
+	BinanceWorkingType_name = map[int32]string{
+		0: "BINANCE_WORKING_TYPE_UNSPECIFIED",
+		1: "BINANCE_WORKING_TYPE_MARK_PRICE",
+		2: "BINANCE_WORKING_TYPE_CONTRACT_PRICE",
+	}
+	BinanceWorkingType_value = map[string]int32{
+		"BINANCE_WORKING_TYPE_UNSPECIFIED":    0,
+		"BINANCE_WORKING_TYPE_MARK_PRICE":     1,
+		"BINANCE_WORKING_TYPE_CONTRACT_PRICE": 2,
+	}
+)
+
+func (x BinanceWorkingType) Enum() *BinanceWorkingType {
+	p := new(BinanceWorkingType)
+	*p = x
+	return p
+}
+
+func (x BinanceWorkingType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (BinanceWorkingType) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_binance_binance_proto_enumTypes[4].Descriptor()
+}
+
+func (BinanceWorkingType) Type() protoreflect.EnumType {
+	return &file_hi_binance_binance_proto_enumTypes[4]
+}
+
+func (x BinanceWorkingType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use BinanceWorkingType.Descriptor instead.
+func (BinanceWorkingType) EnumDescriptor() ([]byte, []int) {
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{4}
+}
+
 // 订单有效方式(限价单才用得上)。
 type BinanceTimeInForce int32
 
@@ -161,11 +355,11 @@ func (x BinanceTimeInForce) String() string {
 }
 
 func (BinanceTimeInForce) Descriptor() protoreflect.EnumDescriptor {
-	return file_hi_binance_binance_proto_enumTypes[2].Descriptor()
+	return file_hi_binance_binance_proto_enumTypes[5].Descriptor()
 }
 
 func (BinanceTimeInForce) Type() protoreflect.EnumType {
-	return &file_hi_binance_binance_proto_enumTypes[2]
+	return &file_hi_binance_binance_proto_enumTypes[5]
 }
 
 func (x BinanceTimeInForce) Number() protoreflect.EnumNumber {
@@ -174,7 +368,7 @@ func (x BinanceTimeInForce) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use BinanceTimeInForce.Descriptor instead.
 func (BinanceTimeInForce) EnumDescriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{2}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{5}
 }
 
 // 持仓方向(合约)。单向持仓模式下只有 BOTH;双向持仓才用 LONG / SHORT。
@@ -214,11 +408,11 @@ func (x BinancePositionSide) String() string {
 }
 
 func (BinancePositionSide) Descriptor() protoreflect.EnumDescriptor {
-	return file_hi_binance_binance_proto_enumTypes[3].Descriptor()
+	return file_hi_binance_binance_proto_enumTypes[6].Descriptor()
 }
 
 func (BinancePositionSide) Type() protoreflect.EnumType {
-	return &file_hi_binance_binance_proto_enumTypes[3]
+	return &file_hi_binance_binance_proto_enumTypes[6]
 }
 
 func (x BinancePositionSide) Number() protoreflect.EnumNumber {
@@ -227,7 +421,7 @@ func (x BinancePositionSide) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use BinancePositionSide.Descriptor instead.
 func (BinancePositionSide) EnumDescriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{3}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{6}
 }
 
 // 现货下单。`POST /api/v3/order`
@@ -235,7 +429,7 @@ type BinanceSpotNewOrder struct {
 	state       protoimpl.MessageState `protogen:"open.v1"`
 	Symbol      *string                `protobuf:"bytes,1,opt,name=symbol,proto3,oneof" json:"symbol,omitempty"` // 交易对,如 BNBUSDT
 	Side        *BinanceOrderSide      `protobuf:"varint,2,opt,name=side,proto3,enum=hi.binance.BinanceOrderSide,oneof" json:"side,omitempty"`
-	Type        *BinanceOrderType      `protobuf:"varint,3,opt,name=type,proto3,enum=hi.binance.BinanceOrderType,oneof" json:"type,omitempty"`
+	Type        *BinanceSpotOrderType  `protobuf:"varint,3,opt,name=type,proto3,enum=hi.binance.BinanceSpotOrderType,oneof" json:"type,omitempty"`
 	TimeInForce *BinanceTimeInForce    `protobuf:"varint,4,opt,name=time_in_force,json=timeInForce,proto3,enum=hi.binance.BinanceTimeInForce,oneof" json:"time_in_force,omitempty"` // 限价单必给;市价单不传
 	Quantity    *string                `protobuf:"bytes,5,opt,name=quantity,proto3,oneof" json:"quantity,omitempty"`                                                                // 按**标的数量**下单
 	// 按**金额**下单(市价单专用,如"买 100 USDT 的 BNB")。与 quantity 二选一,
@@ -250,7 +444,11 @@ type BinanceSpotNewOrder struct {
 	//	· 卖(SELL):可用的**标的币**(如 BNB)× p% —— 基数是持币,不是账户金额
 	//
 	// 换算后按交易对的步长**向下取整**;不够最小下单量就不下,回一句为什么。
-	Percent       *string `protobuf:"bytes,8,opt,name=percent,proto3,oneof" json:"percent,omitempty"`
+	Percent *string `protobuf:"bytes,8,opt,name=percent,proto3,oneof" json:"percent,omitempty"`
+	// 触发价(STOP_LOSS / STOP_LOSS_LIMIT / TAKE_PROFIT / TAKE_PROFIT_LIMIT)。与 trailing_delta 至少给一个。
+	StopPrice *string `protobuf:"bytes,9,opt,name=stop_price,json=stopPrice,proto3,oneof" json:"stop_price,omitempty"`
+	// 跟踪止损的回撤幅度,单位 **BIPS**(万分之一,100 = 1%)。给了就是跟踪单;与 stop_price 同给时,到了 stop_price 才开始跟踪。
+	TrailingDelta *uint32 `protobuf:"varint,10,opt,name=trailing_delta,json=trailingDelta,proto3,oneof" json:"trailing_delta,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -299,11 +497,11 @@ func (x *BinanceSpotNewOrder) GetSide() BinanceOrderSide {
 	return BinanceOrderSide_BINANCE_ORDER_SIDE_UNSPECIFIED
 }
 
-func (x *BinanceSpotNewOrder) GetType() BinanceOrderType {
+func (x *BinanceSpotNewOrder) GetType() BinanceSpotOrderType {
 	if x != nil && x.Type != nil {
 		return *x.Type
 	}
-	return BinanceOrderType_BINANCE_ORDER_TYPE_UNSPECIFIED
+	return BinanceSpotOrderType_BINANCE_SPOT_ORDER_TYPE_UNSPECIFIED
 }
 
 func (x *BinanceSpotNewOrder) GetTimeInForce() BinanceTimeInForce {
@@ -339,6 +537,20 @@ func (x *BinanceSpotNewOrder) GetPercent() string {
 		return *x.Percent
 	}
 	return ""
+}
+
+func (x *BinanceSpotNewOrder) GetStopPrice() string {
+	if x != nil && x.StopPrice != nil {
+		return *x.StopPrice
+	}
+	return ""
+}
+
+func (x *BinanceSpotNewOrder) GetTrailingDelta() uint32 {
+	if x != nil && x.TrailingDelta != nil {
+		return *x.TrailingDelta
+	}
+	return 0
 }
 
 // 现货撤单。`DELETE /api/v3/order`
@@ -686,6 +898,736 @@ func (x *BinanceSpotTicker24H) GetSymbol() string {
 	return ""
 }
 
+// OCO 里的一张(上方 / 下方),或 OTOCO / OPO / OPOCO 里后挂的那张。方向与数量在组合单那一层给。
+//
+// 上方(above)能用:STOP_LOSS_LIMIT / STOP_LOSS / LIMIT_MAKER / TAKE_PROFIT / TAKE_PROFIT_LIMIT;
+// 下方(below)能用:STOP_LOSS / STOP_LOSS_LIMIT / TAKE_PROFIT / TAKE_PROFIT_LIMIT。
+// OPO 的后一张另外还能用 LIMIT / MARKET。取值不对由币安拒,我们不替它判。
+type BinanceSpotListLeg struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Type          *BinanceSpotOrderType  `protobuf:"varint,1,opt,name=type,proto3,enum=hi.binance.BinanceSpotOrderType,oneof" json:"type,omitempty"`
+	Price         *string                `protobuf:"bytes,2,opt,name=price,proto3,oneof" json:"price,omitempty"`                                                                      // *_LIMIT / LIMIT_MAKER 的限价
+	StopPrice     *string                `protobuf:"bytes,3,opt,name=stop_price,json=stopPrice,proto3,oneof" json:"stop_price,omitempty"`                                             // 触发价
+	TrailingDelta *uint32                `protobuf:"varint,4,opt,name=trailing_delta,json=trailingDelta,proto3,oneof" json:"trailing_delta,omitempty"`                                // 跟踪幅度(BIPS)
+	TimeInForce   *BinanceTimeInForce    `protobuf:"varint,5,opt,name=time_in_force,json=timeInForce,proto3,enum=hi.binance.BinanceTimeInForce,oneof" json:"time_in_force,omitempty"` // *_LIMIT 必给
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BinanceSpotListLeg) Reset() {
+	*x = BinanceSpotListLeg{}
+	mi := &file_hi_binance_binance_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BinanceSpotListLeg) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BinanceSpotListLeg) ProtoMessage() {}
+
+func (x *BinanceSpotListLeg) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_binance_binance_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BinanceSpotListLeg.ProtoReflect.Descriptor instead.
+func (*BinanceSpotListLeg) Descriptor() ([]byte, []int) {
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *BinanceSpotListLeg) GetType() BinanceSpotOrderType {
+	if x != nil && x.Type != nil {
+		return *x.Type
+	}
+	return BinanceSpotOrderType_BINANCE_SPOT_ORDER_TYPE_UNSPECIFIED
+}
+
+func (x *BinanceSpotListLeg) GetPrice() string {
+	if x != nil && x.Price != nil {
+		return *x.Price
+	}
+	return ""
+}
+
+func (x *BinanceSpotListLeg) GetStopPrice() string {
+	if x != nil && x.StopPrice != nil {
+		return *x.StopPrice
+	}
+	return ""
+}
+
+func (x *BinanceSpotListLeg) GetTrailingDelta() uint32 {
+	if x != nil && x.TrailingDelta != nil {
+		return *x.TrailingDelta
+	}
+	return 0
+}
+
+func (x *BinanceSpotListLeg) GetTimeInForce() BinanceTimeInForce {
+	if x != nil && x.TimeInForce != nil {
+		return *x.TimeInForce
+	}
+	return BinanceTimeInForce_BINANCE_TIME_IN_FORCE_UNSPECIFIED
+}
+
+// OTO / OTOCO / OPO / OPOCO 里**先挂的那张**(working)。只能是 LIMIT 或 LIMIT_MAKER,要给 price 与 quantity。
+type BinanceSpotWorkingOrder struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Type          *BinanceSpotOrderType  `protobuf:"varint,1,opt,name=type,proto3,enum=hi.binance.BinanceSpotOrderType,oneof" json:"type,omitempty"`
+	Side          *BinanceOrderSide      `protobuf:"varint,2,opt,name=side,proto3,enum=hi.binance.BinanceOrderSide,oneof" json:"side,omitempty"`
+	Price         *string                `protobuf:"bytes,3,opt,name=price,proto3,oneof" json:"price,omitempty"`
+	Quantity      *string                `protobuf:"bytes,4,opt,name=quantity,proto3,oneof" json:"quantity,omitempty"`
+	TimeInForce   *BinanceTimeInForce    `protobuf:"varint,5,opt,name=time_in_force,json=timeInForce,proto3,enum=hi.binance.BinanceTimeInForce,oneof" json:"time_in_force,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BinanceSpotWorkingOrder) Reset() {
+	*x = BinanceSpotWorkingOrder{}
+	mi := &file_hi_binance_binance_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BinanceSpotWorkingOrder) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BinanceSpotWorkingOrder) ProtoMessage() {}
+
+func (x *BinanceSpotWorkingOrder) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_binance_binance_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BinanceSpotWorkingOrder.ProtoReflect.Descriptor instead.
+func (*BinanceSpotWorkingOrder) Descriptor() ([]byte, []int) {
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *BinanceSpotWorkingOrder) GetType() BinanceSpotOrderType {
+	if x != nil && x.Type != nil {
+		return *x.Type
+	}
+	return BinanceSpotOrderType_BINANCE_SPOT_ORDER_TYPE_UNSPECIFIED
+}
+
+func (x *BinanceSpotWorkingOrder) GetSide() BinanceOrderSide {
+	if x != nil && x.Side != nil {
+		return *x.Side
+	}
+	return BinanceOrderSide_BINANCE_ORDER_SIDE_UNSPECIFIED
+}
+
+func (x *BinanceSpotWorkingOrder) GetPrice() string {
+	if x != nil && x.Price != nil {
+		return *x.Price
+	}
+	return ""
+}
+
+func (x *BinanceSpotWorkingOrder) GetQuantity() string {
+	if x != nil && x.Quantity != nil {
+		return *x.Quantity
+	}
+	return ""
+}
+
+func (x *BinanceSpotWorkingOrder) GetTimeInForce() BinanceTimeInForce {
+	if x != nil && x.TimeInForce != nil {
+		return *x.TimeInForce
+	}
+	return BinanceTimeInForce_BINANCE_TIME_IN_FORCE_UNSPECIFIED
+}
+
+// OCO:止盈止损一起挂。`POST /api/v3/orderList/oco`
+// 卖出:上方 = 止盈(LIMIT_MAKER / TAKE_PROFIT*)价高于现价,下方 = 止损(STOP_LOSS*)触发价低于现价。
+type BinanceSpotOrderListOco struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Symbol        *string                `protobuf:"bytes,1,opt,name=symbol,proto3,oneof" json:"symbol,omitempty"`
+	Side          *BinanceOrderSide      `protobuf:"varint,2,opt,name=side,proto3,enum=hi.binance.BinanceOrderSide,oneof" json:"side,omitempty"`
+	Quantity      *string                `protobuf:"bytes,3,opt,name=quantity,proto3,oneof" json:"quantity,omitempty"` // 两张单共用
+	Above         *BinanceSpotListLeg    `protobuf:"bytes,4,opt,name=above,proto3" json:"above,omitempty"`
+	Below         *BinanceSpotListLeg    `protobuf:"bytes,5,opt,name=below,proto3" json:"below,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BinanceSpotOrderListOco) Reset() {
+	*x = BinanceSpotOrderListOco{}
+	mi := &file_hi_binance_binance_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BinanceSpotOrderListOco) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BinanceSpotOrderListOco) ProtoMessage() {}
+
+func (x *BinanceSpotOrderListOco) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_binance_binance_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BinanceSpotOrderListOco.ProtoReflect.Descriptor instead.
+func (*BinanceSpotOrderListOco) Descriptor() ([]byte, []int) {
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *BinanceSpotOrderListOco) GetSymbol() string {
+	if x != nil && x.Symbol != nil {
+		return *x.Symbol
+	}
+	return ""
+}
+
+func (x *BinanceSpotOrderListOco) GetSide() BinanceOrderSide {
+	if x != nil && x.Side != nil {
+		return *x.Side
+	}
+	return BinanceOrderSide_BINANCE_ORDER_SIDE_UNSPECIFIED
+}
+
+func (x *BinanceSpotOrderListOco) GetQuantity() string {
+	if x != nil && x.Quantity != nil {
+		return *x.Quantity
+	}
+	return ""
+}
+
+func (x *BinanceSpotOrderListOco) GetAbove() *BinanceSpotListLeg {
+	if x != nil {
+		return x.Above
+	}
+	return nil
+}
+
+func (x *BinanceSpotOrderListOco) GetBelow() *BinanceSpotListLeg {
+	if x != nil {
+		return x.Below
+	}
+	return nil
+}
+
+// OTO:先挂一张,成交后挂上第二张。`POST /api/v3/orderList/oto`
+type BinanceSpotOrderListOto struct {
+	state           protoimpl.MessageState   `protogen:"open.v1"`
+	Symbol          *string                  `protobuf:"bytes,1,opt,name=symbol,proto3,oneof" json:"symbol,omitempty"`
+	Working         *BinanceSpotWorkingOrder `protobuf:"bytes,2,opt,name=working,proto3" json:"working,omitempty"`
+	PendingSide     *BinanceOrderSide        `protobuf:"varint,3,opt,name=pending_side,json=pendingSide,proto3,enum=hi.binance.BinanceOrderSide,oneof" json:"pending_side,omitempty"`
+	PendingQuantity *string                  `protobuf:"bytes,4,opt,name=pending_quantity,json=pendingQuantity,proto3,oneof" json:"pending_quantity,omitempty"`
+	Pending         *BinanceSpotListLeg      `protobuf:"bytes,5,opt,name=pending,proto3" json:"pending,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *BinanceSpotOrderListOto) Reset() {
+	*x = BinanceSpotOrderListOto{}
+	mi := &file_hi_binance_binance_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BinanceSpotOrderListOto) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BinanceSpotOrderListOto) ProtoMessage() {}
+
+func (x *BinanceSpotOrderListOto) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_binance_binance_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BinanceSpotOrderListOto.ProtoReflect.Descriptor instead.
+func (*BinanceSpotOrderListOto) Descriptor() ([]byte, []int) {
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *BinanceSpotOrderListOto) GetSymbol() string {
+	if x != nil && x.Symbol != nil {
+		return *x.Symbol
+	}
+	return ""
+}
+
+func (x *BinanceSpotOrderListOto) GetWorking() *BinanceSpotWorkingOrder {
+	if x != nil {
+		return x.Working
+	}
+	return nil
+}
+
+func (x *BinanceSpotOrderListOto) GetPendingSide() BinanceOrderSide {
+	if x != nil && x.PendingSide != nil {
+		return *x.PendingSide
+	}
+	return BinanceOrderSide_BINANCE_ORDER_SIDE_UNSPECIFIED
+}
+
+func (x *BinanceSpotOrderListOto) GetPendingQuantity() string {
+	if x != nil && x.PendingQuantity != nil {
+		return *x.PendingQuantity
+	}
+	return ""
+}
+
+func (x *BinanceSpotOrderListOto) GetPending() *BinanceSpotListLeg {
+	if x != nil {
+		return x.Pending
+	}
+	return nil
+}
+
+// OTOCO:先挂一张,成交后挂上一对 OCO。`POST /api/v3/orderList/otoco`
+type BinanceSpotOrderListOtoco struct {
+	state           protoimpl.MessageState   `protogen:"open.v1"`
+	Symbol          *string                  `protobuf:"bytes,1,opt,name=symbol,proto3,oneof" json:"symbol,omitempty"`
+	Working         *BinanceSpotWorkingOrder `protobuf:"bytes,2,opt,name=working,proto3" json:"working,omitempty"`
+	PendingSide     *BinanceOrderSide        `protobuf:"varint,3,opt,name=pending_side,json=pendingSide,proto3,enum=hi.binance.BinanceOrderSide,oneof" json:"pending_side,omitempty"`
+	PendingQuantity *string                  `protobuf:"bytes,4,opt,name=pending_quantity,json=pendingQuantity,proto3,oneof" json:"pending_quantity,omitempty"`
+	PendingAbove    *BinanceSpotListLeg      `protobuf:"bytes,5,opt,name=pending_above,json=pendingAbove,proto3" json:"pending_above,omitempty"`
+	PendingBelow    *BinanceSpotListLeg      `protobuf:"bytes,6,opt,name=pending_below,json=pendingBelow,proto3" json:"pending_below,omitempty"` // 币安这里标的是可选
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *BinanceSpotOrderListOtoco) Reset() {
+	*x = BinanceSpotOrderListOtoco{}
+	mi := &file_hi_binance_binance_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BinanceSpotOrderListOtoco) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BinanceSpotOrderListOtoco) ProtoMessage() {}
+
+func (x *BinanceSpotOrderListOtoco) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_binance_binance_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BinanceSpotOrderListOtoco.ProtoReflect.Descriptor instead.
+func (*BinanceSpotOrderListOtoco) Descriptor() ([]byte, []int) {
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *BinanceSpotOrderListOtoco) GetSymbol() string {
+	if x != nil && x.Symbol != nil {
+		return *x.Symbol
+	}
+	return ""
+}
+
+func (x *BinanceSpotOrderListOtoco) GetWorking() *BinanceSpotWorkingOrder {
+	if x != nil {
+		return x.Working
+	}
+	return nil
+}
+
+func (x *BinanceSpotOrderListOtoco) GetPendingSide() BinanceOrderSide {
+	if x != nil && x.PendingSide != nil {
+		return *x.PendingSide
+	}
+	return BinanceOrderSide_BINANCE_ORDER_SIDE_UNSPECIFIED
+}
+
+func (x *BinanceSpotOrderListOtoco) GetPendingQuantity() string {
+	if x != nil && x.PendingQuantity != nil {
+		return *x.PendingQuantity
+	}
+	return ""
+}
+
+func (x *BinanceSpotOrderListOtoco) GetPendingAbove() *BinanceSpotListLeg {
+	if x != nil {
+		return x.PendingAbove
+	}
+	return nil
+}
+
+func (x *BinanceSpotOrderListOtoco) GetPendingBelow() *BinanceSpotListLeg {
+	if x != nil {
+		return x.PendingBelow
+	}
+	return nil
+}
+
+// OPO:同 OTO,第二张的数量跟第一张实际成交的量走。`POST /api/v3/orderList/opo`
+type BinanceSpotOrderListOpo struct {
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	Symbol        *string                  `protobuf:"bytes,1,opt,name=symbol,proto3,oneof" json:"symbol,omitempty"`
+	Working       *BinanceSpotWorkingOrder `protobuf:"bytes,2,opt,name=working,proto3" json:"working,omitempty"`
+	PendingSide   *BinanceOrderSide        `protobuf:"varint,3,opt,name=pending_side,json=pendingSide,proto3,enum=hi.binance.BinanceOrderSide,oneof" json:"pending_side,omitempty"`
+	Pending       *BinanceSpotListLeg      `protobuf:"bytes,4,opt,name=pending,proto3" json:"pending,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BinanceSpotOrderListOpo) Reset() {
+	*x = BinanceSpotOrderListOpo{}
+	mi := &file_hi_binance_binance_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BinanceSpotOrderListOpo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BinanceSpotOrderListOpo) ProtoMessage() {}
+
+func (x *BinanceSpotOrderListOpo) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_binance_binance_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BinanceSpotOrderListOpo.ProtoReflect.Descriptor instead.
+func (*BinanceSpotOrderListOpo) Descriptor() ([]byte, []int) {
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *BinanceSpotOrderListOpo) GetSymbol() string {
+	if x != nil && x.Symbol != nil {
+		return *x.Symbol
+	}
+	return ""
+}
+
+func (x *BinanceSpotOrderListOpo) GetWorking() *BinanceSpotWorkingOrder {
+	if x != nil {
+		return x.Working
+	}
+	return nil
+}
+
+func (x *BinanceSpotOrderListOpo) GetPendingSide() BinanceOrderSide {
+	if x != nil && x.PendingSide != nil {
+		return *x.PendingSide
+	}
+	return BinanceOrderSide_BINANCE_ORDER_SIDE_UNSPECIFIED
+}
+
+func (x *BinanceSpotOrderListOpo) GetPending() *BinanceSpotListLeg {
+	if x != nil {
+		return x.Pending
+	}
+	return nil
+}
+
+// OPOCO:同 OTOCO,数量跟第一张实际成交的量走。`POST /api/v3/orderList/opoco`
+type BinanceSpotOrderListOpoco struct {
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	Symbol        *string                  `protobuf:"bytes,1,opt,name=symbol,proto3,oneof" json:"symbol,omitempty"`
+	Working       *BinanceSpotWorkingOrder `protobuf:"bytes,2,opt,name=working,proto3" json:"working,omitempty"`
+	PendingSide   *BinanceOrderSide        `protobuf:"varint,3,opt,name=pending_side,json=pendingSide,proto3,enum=hi.binance.BinanceOrderSide,oneof" json:"pending_side,omitempty"`
+	PendingAbove  *BinanceSpotListLeg      `protobuf:"bytes,4,opt,name=pending_above,json=pendingAbove,proto3" json:"pending_above,omitempty"`
+	PendingBelow  *BinanceSpotListLeg      `protobuf:"bytes,5,opt,name=pending_below,json=pendingBelow,proto3" json:"pending_below,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BinanceSpotOrderListOpoco) Reset() {
+	*x = BinanceSpotOrderListOpoco{}
+	mi := &file_hi_binance_binance_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BinanceSpotOrderListOpoco) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BinanceSpotOrderListOpoco) ProtoMessage() {}
+
+func (x *BinanceSpotOrderListOpoco) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_binance_binance_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BinanceSpotOrderListOpoco.ProtoReflect.Descriptor instead.
+func (*BinanceSpotOrderListOpoco) Descriptor() ([]byte, []int) {
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *BinanceSpotOrderListOpoco) GetSymbol() string {
+	if x != nil && x.Symbol != nil {
+		return *x.Symbol
+	}
+	return ""
+}
+
+func (x *BinanceSpotOrderListOpoco) GetWorking() *BinanceSpotWorkingOrder {
+	if x != nil {
+		return x.Working
+	}
+	return nil
+}
+
+func (x *BinanceSpotOrderListOpoco) GetPendingSide() BinanceOrderSide {
+	if x != nil && x.PendingSide != nil {
+		return *x.PendingSide
+	}
+	return BinanceOrderSide_BINANCE_ORDER_SIDE_UNSPECIFIED
+}
+
+func (x *BinanceSpotOrderListOpoco) GetPendingAbove() *BinanceSpotListLeg {
+	if x != nil {
+		return x.PendingAbove
+	}
+	return nil
+}
+
+func (x *BinanceSpotOrderListOpoco) GetPendingBelow() *BinanceSpotListLeg {
+	if x != nil {
+		return x.PendingBelow
+	}
+	return nil
+}
+
+// 撤整组组合单。`DELETE /api/v3/orderList`
+// `order_list_id` 与 `list_client_order_id` 给一个即可。
+type BinanceSpotCancelOrderList struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	Symbol            *string                `protobuf:"bytes,1,opt,name=symbol,proto3,oneof" json:"symbol,omitempty"`
+	OrderListId       *int64                 `protobuf:"varint,2,opt,name=order_list_id,json=orderListId,proto3,oneof" json:"order_list_id,omitempty"`
+	ListClientOrderId *string                `protobuf:"bytes,3,opt,name=list_client_order_id,json=listClientOrderId,proto3,oneof" json:"list_client_order_id,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *BinanceSpotCancelOrderList) Reset() {
+	*x = BinanceSpotCancelOrderList{}
+	mi := &file_hi_binance_binance_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BinanceSpotCancelOrderList) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BinanceSpotCancelOrderList) ProtoMessage() {}
+
+func (x *BinanceSpotCancelOrderList) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_binance_binance_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BinanceSpotCancelOrderList.ProtoReflect.Descriptor instead.
+func (*BinanceSpotCancelOrderList) Descriptor() ([]byte, []int) {
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *BinanceSpotCancelOrderList) GetSymbol() string {
+	if x != nil && x.Symbol != nil {
+		return *x.Symbol
+	}
+	return ""
+}
+
+func (x *BinanceSpotCancelOrderList) GetOrderListId() int64 {
+	if x != nil && x.OrderListId != nil {
+		return *x.OrderListId
+	}
+	return 0
+}
+
+func (x *BinanceSpotCancelOrderList) GetListClientOrderId() string {
+	if x != nil && x.ListClientOrderId != nil {
+		return *x.ListClientOrderId
+	}
+	return ""
+}
+
+// 查一组组合单。`GET /api/v3/orderList`
+// `order_list_id` 与 `orig_client_order_id`(即下单时的 listClientOrderId)给一个即可。
+type BinanceSpotGetOrderList struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	OrderListId       *int64                 `protobuf:"varint,1,opt,name=order_list_id,json=orderListId,proto3,oneof" json:"order_list_id,omitempty"`
+	OrigClientOrderId *string                `protobuf:"bytes,2,opt,name=orig_client_order_id,json=origClientOrderId,proto3,oneof" json:"orig_client_order_id,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *BinanceSpotGetOrderList) Reset() {
+	*x = BinanceSpotGetOrderList{}
+	mi := &file_hi_binance_binance_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BinanceSpotGetOrderList) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BinanceSpotGetOrderList) ProtoMessage() {}
+
+func (x *BinanceSpotGetOrderList) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_binance_binance_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BinanceSpotGetOrderList.ProtoReflect.Descriptor instead.
+func (*BinanceSpotGetOrderList) Descriptor() ([]byte, []int) {
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *BinanceSpotGetOrderList) GetOrderListId() int64 {
+	if x != nil && x.OrderListId != nil {
+		return *x.OrderListId
+	}
+	return 0
+}
+
+func (x *BinanceSpotGetOrderList) GetOrigClientOrderId() string {
+	if x != nil && x.OrigClientOrderId != nil {
+		return *x.OrigClientOrderId
+	}
+	return ""
+}
+
+// 组合单历史。`GET /api/v3/allOrderList`
+// 给了 from_id 就不能再给时间范围。
+type BinanceSpotAllOrderLists struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	FromId        *int64                 `protobuf:"varint,1,opt,name=from_id,json=fromId,proto3,oneof" json:"from_id,omitempty"`
+	StartTime     *int64                 `protobuf:"varint,2,opt,name=start_time,json=startTime,proto3,oneof" json:"start_time,omitempty"` // 毫秒
+	EndTime       *int64                 `protobuf:"varint,3,opt,name=end_time,json=endTime,proto3,oneof" json:"end_time,omitempty"`       // 毫秒
+	Limit         *uint32                `protobuf:"varint,4,opt,name=limit,proto3,oneof" json:"limit,omitempty"`                          // 默认 500,最多 1000
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BinanceSpotAllOrderLists) Reset() {
+	*x = BinanceSpotAllOrderLists{}
+	mi := &file_hi_binance_binance_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BinanceSpotAllOrderLists) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BinanceSpotAllOrderLists) ProtoMessage() {}
+
+func (x *BinanceSpotAllOrderLists) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_binance_binance_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BinanceSpotAllOrderLists.ProtoReflect.Descriptor instead.
+func (*BinanceSpotAllOrderLists) Descriptor() ([]byte, []int) {
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *BinanceSpotAllOrderLists) GetFromId() int64 {
+	if x != nil && x.FromId != nil {
+		return *x.FromId
+	}
+	return 0
+}
+
+func (x *BinanceSpotAllOrderLists) GetStartTime() int64 {
+	if x != nil && x.StartTime != nil {
+		return *x.StartTime
+	}
+	return 0
+}
+
+func (x *BinanceSpotAllOrderLists) GetEndTime() int64 {
+	if x != nil && x.EndTime != nil {
+		return *x.EndTime
+	}
+	return 0
+}
+
+func (x *BinanceSpotAllOrderLists) GetLimit() uint32 {
+	if x != nil && x.Limit != nil {
+		return *x.Limit
+	}
+	return 0
+}
+
 // 合约下单。`POST /fapi/v1/order`
 //
 // ⚠️ **平仓不是一个单独的接口** —— 它就是一张 `reduce_only = true` 的反向市价单。
@@ -719,7 +1661,7 @@ type BinanceFuturesNewOrder struct {
 
 func (x *BinanceFuturesNewOrder) Reset() {
 	*x = BinanceFuturesNewOrder{}
-	mi := &file_hi_binance_binance_proto_msgTypes[8]
+	mi := &file_hi_binance_binance_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -731,7 +1673,7 @@ func (x *BinanceFuturesNewOrder) String() string {
 func (*BinanceFuturesNewOrder) ProtoMessage() {}
 
 func (x *BinanceFuturesNewOrder) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[8]
+	mi := &file_hi_binance_binance_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -744,7 +1686,7 @@ func (x *BinanceFuturesNewOrder) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceFuturesNewOrder.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesNewOrder) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{8}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *BinanceFuturesNewOrder) GetSymbol() string {
@@ -822,7 +1764,7 @@ type BinanceFuturesCancelOrder struct {
 
 func (x *BinanceFuturesCancelOrder) Reset() {
 	*x = BinanceFuturesCancelOrder{}
-	mi := &file_hi_binance_binance_proto_msgTypes[9]
+	mi := &file_hi_binance_binance_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -834,7 +1776,7 @@ func (x *BinanceFuturesCancelOrder) String() string {
 func (*BinanceFuturesCancelOrder) ProtoMessage() {}
 
 func (x *BinanceFuturesCancelOrder) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[9]
+	mi := &file_hi_binance_binance_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -847,7 +1789,7 @@ func (x *BinanceFuturesCancelOrder) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceFuturesCancelOrder.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesCancelOrder) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{9}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *BinanceFuturesCancelOrder) GetSymbol() string {
@@ -881,7 +1823,7 @@ type BinanceFuturesCancelAllOrders struct {
 
 func (x *BinanceFuturesCancelAllOrders) Reset() {
 	*x = BinanceFuturesCancelAllOrders{}
-	mi := &file_hi_binance_binance_proto_msgTypes[10]
+	mi := &file_hi_binance_binance_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -893,7 +1835,7 @@ func (x *BinanceFuturesCancelAllOrders) String() string {
 func (*BinanceFuturesCancelAllOrders) ProtoMessage() {}
 
 func (x *BinanceFuturesCancelAllOrders) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[10]
+	mi := &file_hi_binance_binance_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -906,7 +1848,7 @@ func (x *BinanceFuturesCancelAllOrders) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceFuturesCancelAllOrders.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesCancelAllOrders) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{10}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *BinanceFuturesCancelAllOrders) GetSymbol() string {
@@ -927,7 +1869,7 @@ type BinanceFuturesLeverage struct {
 
 func (x *BinanceFuturesLeverage) Reset() {
 	*x = BinanceFuturesLeverage{}
-	mi := &file_hi_binance_binance_proto_msgTypes[11]
+	mi := &file_hi_binance_binance_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -939,7 +1881,7 @@ func (x *BinanceFuturesLeverage) String() string {
 func (*BinanceFuturesLeverage) ProtoMessage() {}
 
 func (x *BinanceFuturesLeverage) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[11]
+	mi := &file_hi_binance_binance_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -952,7 +1894,7 @@ func (x *BinanceFuturesLeverage) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceFuturesLeverage.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesLeverage) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{11}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *BinanceFuturesLeverage) GetSymbol() string {
@@ -979,7 +1921,7 @@ type BinanceFuturesPositions struct {
 
 func (x *BinanceFuturesPositions) Reset() {
 	*x = BinanceFuturesPositions{}
-	mi := &file_hi_binance_binance_proto_msgTypes[12]
+	mi := &file_hi_binance_binance_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -991,7 +1933,7 @@ func (x *BinanceFuturesPositions) String() string {
 func (*BinanceFuturesPositions) ProtoMessage() {}
 
 func (x *BinanceFuturesPositions) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[12]
+	mi := &file_hi_binance_binance_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1004,7 +1946,7 @@ func (x *BinanceFuturesPositions) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceFuturesPositions.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesPositions) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{12}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *BinanceFuturesPositions) GetSymbol() string {
@@ -1024,7 +1966,7 @@ type BinanceFuturesAccount struct {
 
 func (x *BinanceFuturesAccount) Reset() {
 	*x = BinanceFuturesAccount{}
-	mi := &file_hi_binance_binance_proto_msgTypes[13]
+	mi := &file_hi_binance_binance_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1036,7 +1978,7 @@ func (x *BinanceFuturesAccount) String() string {
 func (*BinanceFuturesAccount) ProtoMessage() {}
 
 func (x *BinanceFuturesAccount) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[13]
+	mi := &file_hi_binance_binance_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1049,7 +1991,7 @@ func (x *BinanceFuturesAccount) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceFuturesAccount.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesAccount) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{13}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{23}
 }
 
 // 合约当前挂单。`GET /fapi/v1/openOrders`
@@ -1062,7 +2004,7 @@ type BinanceFuturesOpenOrders struct {
 
 func (x *BinanceFuturesOpenOrders) Reset() {
 	*x = BinanceFuturesOpenOrders{}
-	mi := &file_hi_binance_binance_proto_msgTypes[14]
+	mi := &file_hi_binance_binance_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1074,7 +2016,7 @@ func (x *BinanceFuturesOpenOrders) String() string {
 func (*BinanceFuturesOpenOrders) ProtoMessage() {}
 
 func (x *BinanceFuturesOpenOrders) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[14]
+	mi := &file_hi_binance_binance_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1087,7 +2029,7 @@ func (x *BinanceFuturesOpenOrders) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceFuturesOpenOrders.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesOpenOrders) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{14}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *BinanceFuturesOpenOrders) GetSymbol() string {
@@ -1101,13 +2043,14 @@ func (x *BinanceFuturesOpenOrders) GetSymbol() string {
 // **与普通挂单是两张表** —— 只查 `openOrders` 的话,面板上会缺掉全部止盈止损单。
 type BinanceFuturesOpenAlgoOrders struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	Symbol        *string                `protobuf:"bytes,1,opt,name=symbol,proto3,oneof" json:"symbol,omitempty"` // 不传 = 全部
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *BinanceFuturesOpenAlgoOrders) Reset() {
 	*x = BinanceFuturesOpenAlgoOrders{}
-	mi := &file_hi_binance_binance_proto_msgTypes[15]
+	mi := &file_hi_binance_binance_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1119,7 +2062,7 @@ func (x *BinanceFuturesOpenAlgoOrders) String() string {
 func (*BinanceFuturesOpenAlgoOrders) ProtoMessage() {}
 
 func (x *BinanceFuturesOpenAlgoOrders) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[15]
+	mi := &file_hi_binance_binance_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1132,7 +2075,407 @@ func (x *BinanceFuturesOpenAlgoOrders) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceFuturesOpenAlgoOrders.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesOpenAlgoOrders) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{15}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *BinanceFuturesOpenAlgoOrders) GetSymbol() string {
+	if x != nil && x.Symbol != nil {
+		return *x.Symbol
+	}
+	return ""
+}
+
+// 合约**策略委托**下单(止盈、止损、跟踪止损)。`POST /fapi/v1/algoOrder`,`algoType` 固定 CONDITIONAL(brain 填)。
+// 类型与各自要给的字段见 `BinanceFuturesAlgoOrderType`。
+//
+// ⚠️ 这是**条件单**:下单成功只是挂上了,**触发时**才真正下出去;挂着的在 `open_algo_orders` 里查,不在普通挂单里。
+type BinanceFuturesNewAlgoOrder struct {
+	state        protoimpl.MessageState       `protogen:"open.v1"`
+	Symbol       *string                      `protobuf:"bytes,1,opt,name=symbol,proto3,oneof" json:"symbol,omitempty"`
+	Side         *BinanceOrderSide            `protobuf:"varint,2,opt,name=side,proto3,enum=hi.binance.BinanceOrderSide,oneof" json:"side,omitempty"`
+	Type         *BinanceFuturesAlgoOrderType `protobuf:"varint,3,opt,name=type,proto3,enum=hi.binance.BinanceFuturesAlgoOrderType,oneof" json:"type,omitempty"`
+	PositionSide *BinancePositionSide         `protobuf:"varint,4,opt,name=position_side,json=positionSide,proto3,enum=hi.binance.BinancePositionSide,oneof" json:"position_side,omitempty"` // 不传 = BOTH
+	TimeInForce  *BinanceTimeInForce          `protobuf:"varint,5,opt,name=time_in_force,json=timeInForce,proto3,enum=hi.binance.BinanceTimeInForce,oneof" json:"time_in_force,omitempty"`   // STOP / TAKE_PROFIT(限价)用
+	Quantity     *string                      `protobuf:"bytes,6,opt,name=quantity,proto3,oneof" json:"quantity,omitempty"`                                                                  // 与 close_position 不能同给
+	Price        *string                      `protobuf:"bytes,7,opt,name=price,proto3,oneof" json:"price,omitempty"`                                                                        // STOP / TAKE_PROFIT 触发后的限价
+	TriggerPrice *string                      `protobuf:"bytes,8,opt,name=trigger_price,json=triggerPrice,proto3,oneof" json:"trigger_price,omitempty"`                                      // 触发价
+	WorkingType  *BinanceWorkingType          `protobuf:"varint,9,opt,name=working_type,json=workingType,proto3,enum=hi.binance.BinanceWorkingType,oneof" json:"working_type,omitempty"`
+	// 触发时**平掉这个方向的全部仓位**(只用于 STOP_MARKET / TAKE_PROFIT_MARKET)。给了就不能给 quantity。
+	ClosePosition *bool `protobuf:"varint,10,opt,name=close_position,json=closePosition,proto3,oneof" json:"close_position,omitempty"`
+	// 价格保护:触发时标记价与最新价偏离过大就不触发。
+	PriceProtect *bool `protobuf:"varint,11,opt,name=price_protect,json=priceProtect,proto3,oneof" json:"price_protect,omitempty"`
+	// 只减仓(双向持仓模式下币安不收)。止盈止损单一般都该带上,免得触发时反向开出新仓。
+	ReduceOnly    *bool   `protobuf:"varint,12,opt,name=reduce_only,json=reduceOnly,proto3,oneof" json:"reduce_only,omitempty"`
+	ActivatePrice *string `protobuf:"bytes,13,opt,name=activate_price,json=activatePrice,proto3,oneof" json:"activate_price,omitempty"` // 跟踪止损的激活价
+	CallbackRate  *string `protobuf:"bytes,14,opt,name=callback_rate,json=callbackRate,proto3,oneof" json:"callback_rate,omitempty"`    // 跟踪止损的回调比例(%),0.1–10
+	// **按百分比**(十进制字符串,0 < p ≤ 100)。与 quantity / close_position 三选一;口径同 `BinanceFuturesNewOrder.percent`,
+	// 换算用的价格:有 price 用 price,否则用 trigger_price,都没有用标记价格。
+	Percent       *string `protobuf:"bytes,15,opt,name=percent,proto3,oneof" json:"percent,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BinanceFuturesNewAlgoOrder) Reset() {
+	*x = BinanceFuturesNewAlgoOrder{}
+	mi := &file_hi_binance_binance_proto_msgTypes[26]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BinanceFuturesNewAlgoOrder) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BinanceFuturesNewAlgoOrder) ProtoMessage() {}
+
+func (x *BinanceFuturesNewAlgoOrder) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_binance_binance_proto_msgTypes[26]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BinanceFuturesNewAlgoOrder.ProtoReflect.Descriptor instead.
+func (*BinanceFuturesNewAlgoOrder) Descriptor() ([]byte, []int) {
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{26}
+}
+
+func (x *BinanceFuturesNewAlgoOrder) GetSymbol() string {
+	if x != nil && x.Symbol != nil {
+		return *x.Symbol
+	}
+	return ""
+}
+
+func (x *BinanceFuturesNewAlgoOrder) GetSide() BinanceOrderSide {
+	if x != nil && x.Side != nil {
+		return *x.Side
+	}
+	return BinanceOrderSide_BINANCE_ORDER_SIDE_UNSPECIFIED
+}
+
+func (x *BinanceFuturesNewAlgoOrder) GetType() BinanceFuturesAlgoOrderType {
+	if x != nil && x.Type != nil {
+		return *x.Type
+	}
+	return BinanceFuturesAlgoOrderType_BINANCE_FUTURES_ALGO_ORDER_TYPE_UNSPECIFIED
+}
+
+func (x *BinanceFuturesNewAlgoOrder) GetPositionSide() BinancePositionSide {
+	if x != nil && x.PositionSide != nil {
+		return *x.PositionSide
+	}
+	return BinancePositionSide_BINANCE_POSITION_SIDE_UNSPECIFIED
+}
+
+func (x *BinanceFuturesNewAlgoOrder) GetTimeInForce() BinanceTimeInForce {
+	if x != nil && x.TimeInForce != nil {
+		return *x.TimeInForce
+	}
+	return BinanceTimeInForce_BINANCE_TIME_IN_FORCE_UNSPECIFIED
+}
+
+func (x *BinanceFuturesNewAlgoOrder) GetQuantity() string {
+	if x != nil && x.Quantity != nil {
+		return *x.Quantity
+	}
+	return ""
+}
+
+func (x *BinanceFuturesNewAlgoOrder) GetPrice() string {
+	if x != nil && x.Price != nil {
+		return *x.Price
+	}
+	return ""
+}
+
+func (x *BinanceFuturesNewAlgoOrder) GetTriggerPrice() string {
+	if x != nil && x.TriggerPrice != nil {
+		return *x.TriggerPrice
+	}
+	return ""
+}
+
+func (x *BinanceFuturesNewAlgoOrder) GetWorkingType() BinanceWorkingType {
+	if x != nil && x.WorkingType != nil {
+		return *x.WorkingType
+	}
+	return BinanceWorkingType_BINANCE_WORKING_TYPE_UNSPECIFIED
+}
+
+func (x *BinanceFuturesNewAlgoOrder) GetClosePosition() bool {
+	if x != nil && x.ClosePosition != nil {
+		return *x.ClosePosition
+	}
+	return false
+}
+
+func (x *BinanceFuturesNewAlgoOrder) GetPriceProtect() bool {
+	if x != nil && x.PriceProtect != nil {
+		return *x.PriceProtect
+	}
+	return false
+}
+
+func (x *BinanceFuturesNewAlgoOrder) GetReduceOnly() bool {
+	if x != nil && x.ReduceOnly != nil {
+		return *x.ReduceOnly
+	}
+	return false
+}
+
+func (x *BinanceFuturesNewAlgoOrder) GetActivatePrice() string {
+	if x != nil && x.ActivatePrice != nil {
+		return *x.ActivatePrice
+	}
+	return ""
+}
+
+func (x *BinanceFuturesNewAlgoOrder) GetCallbackRate() string {
+	if x != nil && x.CallbackRate != nil {
+		return *x.CallbackRate
+	}
+	return ""
+}
+
+func (x *BinanceFuturesNewAlgoOrder) GetPercent() string {
+	if x != nil && x.Percent != nil {
+		return *x.Percent
+	}
+	return ""
+}
+
+// 撤一张策略委托。`DELETE /fapi/v1/algoOrder`。`algo_id` 与 `client_algo_id` 给一个即可。
+type BinanceFuturesCancelAlgoOrder struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AlgoId        *int64                 `protobuf:"varint,1,opt,name=algo_id,json=algoId,proto3,oneof" json:"algo_id,omitempty"`
+	ClientAlgoId  *string                `protobuf:"bytes,2,opt,name=client_algo_id,json=clientAlgoId,proto3,oneof" json:"client_algo_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BinanceFuturesCancelAlgoOrder) Reset() {
+	*x = BinanceFuturesCancelAlgoOrder{}
+	mi := &file_hi_binance_binance_proto_msgTypes[27]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BinanceFuturesCancelAlgoOrder) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BinanceFuturesCancelAlgoOrder) ProtoMessage() {}
+
+func (x *BinanceFuturesCancelAlgoOrder) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_binance_binance_proto_msgTypes[27]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BinanceFuturesCancelAlgoOrder.ProtoReflect.Descriptor instead.
+func (*BinanceFuturesCancelAlgoOrder) Descriptor() ([]byte, []int) {
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{27}
+}
+
+func (x *BinanceFuturesCancelAlgoOrder) GetAlgoId() int64 {
+	if x != nil && x.AlgoId != nil {
+		return *x.AlgoId
+	}
+	return 0
+}
+
+func (x *BinanceFuturesCancelAlgoOrder) GetClientAlgoId() string {
+	if x != nil && x.ClientAlgoId != nil {
+		return *x.ClientAlgoId
+	}
+	return ""
+}
+
+// 撤一个交易对的全部策略委托。`DELETE /fapi/v1/algoOpenOrders`
+type BinanceFuturesCancelAllAlgoOrders struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Symbol        *string                `protobuf:"bytes,1,opt,name=symbol,proto3,oneof" json:"symbol,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BinanceFuturesCancelAllAlgoOrders) Reset() {
+	*x = BinanceFuturesCancelAllAlgoOrders{}
+	mi := &file_hi_binance_binance_proto_msgTypes[28]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BinanceFuturesCancelAllAlgoOrders) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BinanceFuturesCancelAllAlgoOrders) ProtoMessage() {}
+
+func (x *BinanceFuturesCancelAllAlgoOrders) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_binance_binance_proto_msgTypes[28]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BinanceFuturesCancelAllAlgoOrders.ProtoReflect.Descriptor instead.
+func (*BinanceFuturesCancelAllAlgoOrders) Descriptor() ([]byte, []int) {
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{28}
+}
+
+func (x *BinanceFuturesCancelAllAlgoOrders) GetSymbol() string {
+	if x != nil && x.Symbol != nil {
+		return *x.Symbol
+	}
+	return ""
+}
+
+// 查一张策略委托。`GET /fapi/v1/algoOrder`。`algo_id` 与 `client_algo_id` 给一个即可。
+type BinanceFuturesGetAlgoOrder struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AlgoId        *int64                 `protobuf:"varint,1,opt,name=algo_id,json=algoId,proto3,oneof" json:"algo_id,omitempty"`
+	ClientAlgoId  *string                `protobuf:"bytes,2,opt,name=client_algo_id,json=clientAlgoId,proto3,oneof" json:"client_algo_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BinanceFuturesGetAlgoOrder) Reset() {
+	*x = BinanceFuturesGetAlgoOrder{}
+	mi := &file_hi_binance_binance_proto_msgTypes[29]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BinanceFuturesGetAlgoOrder) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BinanceFuturesGetAlgoOrder) ProtoMessage() {}
+
+func (x *BinanceFuturesGetAlgoOrder) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_binance_binance_proto_msgTypes[29]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BinanceFuturesGetAlgoOrder.ProtoReflect.Descriptor instead.
+func (*BinanceFuturesGetAlgoOrder) Descriptor() ([]byte, []int) {
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{29}
+}
+
+func (x *BinanceFuturesGetAlgoOrder) GetAlgoId() int64 {
+	if x != nil && x.AlgoId != nil {
+		return *x.AlgoId
+	}
+	return 0
+}
+
+func (x *BinanceFuturesGetAlgoOrder) GetClientAlgoId() string {
+	if x != nil && x.ClientAlgoId != nil {
+		return *x.ClientAlgoId
+	}
+	return ""
+}
+
+// 策略委托历史(含已触发、已撤、已过期)。`GET /fapi/v1/allAlgoOrders`
+type BinanceFuturesAllAlgoOrders struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Symbol        *string                `protobuf:"bytes,1,opt,name=symbol,proto3,oneof" json:"symbol,omitempty"`
+	AlgoId        *int64                 `protobuf:"varint,2,opt,name=algo_id,json=algoId,proto3,oneof" json:"algo_id,omitempty"`
+	StartTime     *int64                 `protobuf:"varint,3,opt,name=start_time,json=startTime,proto3,oneof" json:"start_time,omitempty"` // 毫秒
+	EndTime       *int64                 `protobuf:"varint,4,opt,name=end_time,json=endTime,proto3,oneof" json:"end_time,omitempty"`       // 毫秒
+	Limit         *uint32                `protobuf:"varint,5,opt,name=limit,proto3,oneof" json:"limit,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BinanceFuturesAllAlgoOrders) Reset() {
+	*x = BinanceFuturesAllAlgoOrders{}
+	mi := &file_hi_binance_binance_proto_msgTypes[30]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BinanceFuturesAllAlgoOrders) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BinanceFuturesAllAlgoOrders) ProtoMessage() {}
+
+func (x *BinanceFuturesAllAlgoOrders) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_binance_binance_proto_msgTypes[30]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BinanceFuturesAllAlgoOrders.ProtoReflect.Descriptor instead.
+func (*BinanceFuturesAllAlgoOrders) Descriptor() ([]byte, []int) {
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{30}
+}
+
+func (x *BinanceFuturesAllAlgoOrders) GetSymbol() string {
+	if x != nil && x.Symbol != nil {
+		return *x.Symbol
+	}
+	return ""
+}
+
+func (x *BinanceFuturesAllAlgoOrders) GetAlgoId() int64 {
+	if x != nil && x.AlgoId != nil {
+		return *x.AlgoId
+	}
+	return 0
+}
+
+func (x *BinanceFuturesAllAlgoOrders) GetStartTime() int64 {
+	if x != nil && x.StartTime != nil {
+		return *x.StartTime
+	}
+	return 0
+}
+
+func (x *BinanceFuturesAllAlgoOrders) GetEndTime() int64 {
+	if x != nil && x.EndTime != nil {
+		return *x.EndTime
+	}
+	return 0
+}
+
+func (x *BinanceFuturesAllAlgoOrders) GetLimit() uint32 {
+	if x != nil && x.Limit != nil {
+		return *x.Limit
+	}
+	return 0
 }
 
 // 合约资金流水(已实现盈亏、资金费、手续费…)。`GET /fapi/v1/income`
@@ -1150,7 +2493,7 @@ type BinanceFuturesIncome struct {
 
 func (x *BinanceFuturesIncome) Reset() {
 	*x = BinanceFuturesIncome{}
-	mi := &file_hi_binance_binance_proto_msgTypes[16]
+	mi := &file_hi_binance_binance_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1162,7 +2505,7 @@ func (x *BinanceFuturesIncome) String() string {
 func (*BinanceFuturesIncome) ProtoMessage() {}
 
 func (x *BinanceFuturesIncome) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[16]
+	mi := &file_hi_binance_binance_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1175,7 +2518,7 @@ func (x *BinanceFuturesIncome) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceFuturesIncome.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesIncome) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{16}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *BinanceFuturesIncome) GetSymbol() string {
@@ -1228,7 +2571,7 @@ type BinanceFuturesSignTradfiContract struct {
 
 func (x *BinanceFuturesSignTradfiContract) Reset() {
 	*x = BinanceFuturesSignTradfiContract{}
-	mi := &file_hi_binance_binance_proto_msgTypes[17]
+	mi := &file_hi_binance_binance_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1240,7 +2583,7 @@ func (x *BinanceFuturesSignTradfiContract) String() string {
 func (*BinanceFuturesSignTradfiContract) ProtoMessage() {}
 
 func (x *BinanceFuturesSignTradfiContract) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[17]
+	mi := &file_hi_binance_binance_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1253,7 +2596,7 @@ func (x *BinanceFuturesSignTradfiContract) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceFuturesSignTradfiContract.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesSignTradfiContract) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{17}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{32}
 }
 
 // 各钱包的余额(现货、资金、合约、理财…,每个钱包带逐币明细)。`GET /sapi/v1/asset/wallet/balance`
@@ -1269,7 +2612,7 @@ type BinanceWalletBalance struct {
 
 func (x *BinanceWalletBalance) Reset() {
 	*x = BinanceWalletBalance{}
-	mi := &file_hi_binance_binance_proto_msgTypes[18]
+	mi := &file_hi_binance_binance_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1281,7 +2624,7 @@ func (x *BinanceWalletBalance) String() string {
 func (*BinanceWalletBalance) ProtoMessage() {}
 
 func (x *BinanceWalletBalance) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[18]
+	mi := &file_hi_binance_binance_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1294,7 +2637,7 @@ func (x *BinanceWalletBalance) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceWalletBalance.ProtoReflect.Descriptor instead.
 func (*BinanceWalletBalance) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{18}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{33}
 }
 
 // 一次币安操作的结果。装在**消息**里回到指令来的那个会话:
@@ -1324,7 +2667,7 @@ type BinanceResult struct {
 
 func (x *BinanceResult) Reset() {
 	*x = BinanceResult{}
-	mi := &file_hi_binance_binance_proto_msgTypes[19]
+	mi := &file_hi_binance_binance_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1336,7 +2679,7 @@ func (x *BinanceResult) String() string {
 func (*BinanceResult) ProtoMessage() {}
 
 func (x *BinanceResult) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[19]
+	mi := &file_hi_binance_binance_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1349,7 +2692,7 @@ func (x *BinanceResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceResult.ProtoReflect.Descriptor instead.
 func (*BinanceResult) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{19}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *BinanceResult) GetRequest() string {
@@ -1392,18 +2735,22 @@ var File_hi_binance_binance_proto protoreflect.FileDescriptor
 const file_hi_binance_binance_proto_rawDesc = "" +
 	"\n" +
 	"\x18hi/binance/binance.proto\x12\n" +
-	"hi.binance\x1a\x1bbuf/validate/validate.proto\x1a\x10hi/options.proto\"\xae\x04\n" +
+	"hi.binance\x1a\x1bbuf/validate/validate.proto\x1a\x10hi/options.proto\"\xb0\x05\n" +
 	"\x13BinanceSpotNewOrder\x126\n" +
 	"\x06symbol\x18\x01 \x01(\tB\x19\xbaH\x12\xc8\x01\x01r\r2\v^[A-Z0-9]+$\x90\xb5\x18\x02H\x00R\x06symbol\x88\x01\x01\x12A\n" +
 	"\x04side\x18\x02 \x01(\x0e2\x1c.hi.binance.BinanceOrderSideB\n" +
-	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x01R\x04side\x88\x01\x01\x12A\n" +
-	"\x04type\x18\x03 \x01(\x0e2\x1c.hi.binance.BinanceOrderTypeB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x01R\x04side\x88\x01\x01\x12E\n" +
+	"\x04type\x18\x03 \x01(\x0e2 .hi.binance.BinanceSpotOrderTypeB\n" +
 	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x02R\x04type\x88\x01\x01\x12M\n" +
 	"\rtime_in_force\x18\x04 \x01(\x0e2\x1e.hi.binance.BinanceTimeInForceB\x04\x90\xb5\x18\x02H\x03R\vtimeInForce\x88\x01\x01\x12%\n" +
 	"\bquantity\x18\x05 \x01(\tB\x04\x90\xb5\x18\x02H\x04R\bquantity\x88\x01\x01\x121\n" +
 	"\x0fquote_order_qty\x18\x06 \x01(\tB\x04\x90\xb5\x18\x02H\x05R\rquoteOrderQty\x88\x01\x01\x12\x1f\n" +
 	"\x05price\x18\a \x01(\tB\x04\x90\xb5\x18\x02H\x06R\x05price\x88\x01\x01\x12#\n" +
-	"\apercent\x18\b \x01(\tB\x04\x90\xb5\x18\x02H\aR\apercent\x88\x01\x01:\x04\x98\xb5\x18\x02B\t\n" +
+	"\apercent\x18\b \x01(\tB\x04\x90\xb5\x18\x02H\aR\apercent\x88\x01\x01\x12(\n" +
+	"\n" +
+	"stop_price\x18\t \x01(\tB\x04\x90\xb5\x18\x02H\bR\tstopPrice\x88\x01\x01\x120\n" +
+	"\x0etrailing_delta\x18\n" +
+	" \x01(\rB\x04\x90\xb5\x18\x02H\tR\rtrailingDelta\x88\x01\x01:\x04\x98\xb5\x18\x02B\t\n" +
 	"\a_symbolB\a\n" +
 	"\x05_sideB\a\n" +
 	"\x05_typeB\x10\n" +
@@ -1412,7 +2759,9 @@ const file_hi_binance_binance_proto_rawDesc = "" +
 	"\x10_quote_order_qtyB\b\n" +
 	"\x06_priceB\n" +
 	"\n" +
-	"\b_percent\"\xe9\x01\n" +
+	"\b_percentB\r\n" +
+	"\v_stop_priceB\x11\n" +
+	"\x0f_trailing_delta\"\xe9\x01\n" +
 	"\x16BinanceSpotCancelOrder\x126\n" +
 	"\x06symbol\x18\x01 \x01(\tB\x19\xbaH\x12\xc8\x01\x01r\r2\v^[A-Z0-9]+$\x90\xb5\x18\x02H\x00R\x06symbol\x88\x01\x01\x12$\n" +
 	"\border_id\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x02H\x01R\aorderId\x88\x01\x01\x12:\n" +
@@ -1439,7 +2788,119 @@ const file_hi_binance_binance_proto_rawDesc = "" +
 	"\x19BinanceSpotOpenOrderLists:\x04\x98\xb5\x18\x02\"J\n" +
 	"\x14BinanceSpotTicker24h\x12!\n" +
 	"\x06symbol\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x06symbol\x88\x01\x01:\x04\x98\xb5\x18\x02B\t\n" +
-	"\a_symbol\"\x89\x05\n" +
+	"\a_symbol\"\xf4\x02\n" +
+	"\x12BinanceSpotListLeg\x12E\n" +
+	"\x04type\x18\x01 \x01(\x0e2 .hi.binance.BinanceSpotOrderTypeB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x00R\x04type\x88\x01\x01\x12\x1f\n" +
+	"\x05price\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x05price\x88\x01\x01\x12(\n" +
+	"\n" +
+	"stop_price\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02H\x02R\tstopPrice\x88\x01\x01\x120\n" +
+	"\x0etrailing_delta\x18\x04 \x01(\rB\x04\x90\xb5\x18\x02H\x03R\rtrailingDelta\x88\x01\x01\x12M\n" +
+	"\rtime_in_force\x18\x05 \x01(\x0e2\x1e.hi.binance.BinanceTimeInForceB\x04\x90\xb5\x18\x02H\x04R\vtimeInForce\x88\x01\x01:\x04\x98\xb5\x18\x02B\a\n" +
+	"\x05_typeB\b\n" +
+	"\x06_priceB\r\n" +
+	"\v_stop_priceB\x11\n" +
+	"\x0f_trailing_deltaB\x10\n" +
+	"\x0e_time_in_force\"\x87\x03\n" +
+	"\x17BinanceSpotWorkingOrder\x12E\n" +
+	"\x04type\x18\x01 \x01(\x0e2 .hi.binance.BinanceSpotOrderTypeB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x00R\x04type\x88\x01\x01\x12A\n" +
+	"\x04side\x18\x02 \x01(\x0e2\x1c.hi.binance.BinanceOrderSideB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x01R\x04side\x88\x01\x01\x12%\n" +
+	"\x05price\x18\x03 \x01(\tB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x02R\x05price\x88\x01\x01\x12+\n" +
+	"\bquantity\x18\x04 \x01(\tB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x03R\bquantity\x88\x01\x01\x12M\n" +
+	"\rtime_in_force\x18\x05 \x01(\x0e2\x1e.hi.binance.BinanceTimeInForceB\x04\x90\xb5\x18\x02H\x04R\vtimeInForce\x88\x01\x01:\x04\x98\xb5\x18\x02B\a\n" +
+	"\x05_typeB\a\n" +
+	"\x05_sideB\b\n" +
+	"\x06_priceB\v\n" +
+	"\t_quantityB\x10\n" +
+	"\x0e_time_in_force\"\xec\x02\n" +
+	"\x17BinanceSpotOrderListOco\x126\n" +
+	"\x06symbol\x18\x01 \x01(\tB\x19\xbaH\x12\xc8\x01\x01r\r2\v^[A-Z0-9]+$\x90\xb5\x18\x02H\x00R\x06symbol\x88\x01\x01\x12A\n" +
+	"\x04side\x18\x02 \x01(\x0e2\x1c.hi.binance.BinanceOrderSideB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x01R\x04side\x88\x01\x01\x12+\n" +
+	"\bquantity\x18\x03 \x01(\tB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x02R\bquantity\x88\x01\x01\x12@\n" +
+	"\x05above\x18\x04 \x01(\v2\x1e.hi.binance.BinanceSpotListLegB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02R\x05above\x12@\n" +
+	"\x05below\x18\x05 \x01(\v2\x1e.hi.binance.BinanceSpotListLegB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02R\x05below:\x04\x98\xb5\x18\x02B\t\n" +
+	"\a_symbolB\a\n" +
+	"\x05_sideB\v\n" +
+	"\t_quantity\"\xa7\x03\n" +
+	"\x17BinanceSpotOrderListOto\x126\n" +
+	"\x06symbol\x18\x01 \x01(\tB\x19\xbaH\x12\xc8\x01\x01r\r2\v^[A-Z0-9]+$\x90\xb5\x18\x02H\x00R\x06symbol\x88\x01\x01\x12I\n" +
+	"\aworking\x18\x02 \x01(\v2#.hi.binance.BinanceSpotWorkingOrderB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02R\aworking\x12P\n" +
+	"\fpending_side\x18\x03 \x01(\x0e2\x1c.hi.binance.BinanceOrderSideB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x01R\vpendingSide\x88\x01\x01\x12:\n" +
+	"\x10pending_quantity\x18\x04 \x01(\tB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x02R\x0fpendingQuantity\x88\x01\x01\x12D\n" +
+	"\apending\x18\x05 \x01(\v2\x1e.hi.binance.BinanceSpotListLegB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02R\apending:\x04\x98\xb5\x18\x02B\t\n" +
+	"\a_symbolB\x0f\n" +
+	"\r_pending_sideB\x13\n" +
+	"\x11_pending_quantity\"\xff\x03\n" +
+	"\x19BinanceSpotOrderListOtoco\x126\n" +
+	"\x06symbol\x18\x01 \x01(\tB\x19\xbaH\x12\xc8\x01\x01r\r2\v^[A-Z0-9]+$\x90\xb5\x18\x02H\x00R\x06symbol\x88\x01\x01\x12I\n" +
+	"\aworking\x18\x02 \x01(\v2#.hi.binance.BinanceSpotWorkingOrderB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02R\aworking\x12P\n" +
+	"\fpending_side\x18\x03 \x01(\x0e2\x1c.hi.binance.BinanceOrderSideB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x01R\vpendingSide\x88\x01\x01\x12:\n" +
+	"\x10pending_quantity\x18\x04 \x01(\tB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x02R\x0fpendingQuantity\x88\x01\x01\x12O\n" +
+	"\rpending_above\x18\x05 \x01(\v2\x1e.hi.binance.BinanceSpotListLegB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02R\fpendingAbove\x12I\n" +
+	"\rpending_below\x18\x06 \x01(\v2\x1e.hi.binance.BinanceSpotListLegB\x04\x90\xb5\x18\x02R\fpendingBelow:\x04\x98\xb5\x18\x02B\t\n" +
+	"\a_symbolB\x0f\n" +
+	"\r_pending_sideB\x13\n" +
+	"\x11_pending_quantity\"\xd6\x02\n" +
+	"\x17BinanceSpotOrderListOpo\x126\n" +
+	"\x06symbol\x18\x01 \x01(\tB\x19\xbaH\x12\xc8\x01\x01r\r2\v^[A-Z0-9]+$\x90\xb5\x18\x02H\x00R\x06symbol\x88\x01\x01\x12I\n" +
+	"\aworking\x18\x02 \x01(\v2#.hi.binance.BinanceSpotWorkingOrderB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02R\aworking\x12P\n" +
+	"\fpending_side\x18\x03 \x01(\x0e2\x1c.hi.binance.BinanceOrderSideB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x01R\vpendingSide\x88\x01\x01\x12D\n" +
+	"\apending\x18\x04 \x01(\v2\x1e.hi.binance.BinanceSpotListLegB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02R\apending:\x04\x98\xb5\x18\x02B\t\n" +
+	"\a_symbolB\x0f\n" +
+	"\r_pending_side\"\xae\x03\n" +
+	"\x19BinanceSpotOrderListOpoco\x126\n" +
+	"\x06symbol\x18\x01 \x01(\tB\x19\xbaH\x12\xc8\x01\x01r\r2\v^[A-Z0-9]+$\x90\xb5\x18\x02H\x00R\x06symbol\x88\x01\x01\x12I\n" +
+	"\aworking\x18\x02 \x01(\v2#.hi.binance.BinanceSpotWorkingOrderB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02R\aworking\x12P\n" +
+	"\fpending_side\x18\x03 \x01(\x0e2\x1c.hi.binance.BinanceOrderSideB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x01R\vpendingSide\x88\x01\x01\x12O\n" +
+	"\rpending_above\x18\x04 \x01(\v2\x1e.hi.binance.BinanceSpotListLegB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02R\fpendingAbove\x12I\n" +
+	"\rpending_below\x18\x05 \x01(\v2\x1e.hi.binance.BinanceSpotListLegB\x04\x90\xb5\x18\x02R\fpendingBelow:\x04\x98\xb5\x18\x02B\t\n" +
+	"\a_symbolB\x0f\n" +
+	"\r_pending_side\"\xfb\x01\n" +
+	"\x1aBinanceSpotCancelOrderList\x126\n" +
+	"\x06symbol\x18\x01 \x01(\tB\x19\xbaH\x12\xc8\x01\x01r\r2\v^[A-Z0-9]+$\x90\xb5\x18\x02H\x00R\x06symbol\x88\x01\x01\x12-\n" +
+	"\rorder_list_id\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x02H\x01R\vorderListId\x88\x01\x01\x12:\n" +
+	"\x14list_client_order_id\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02H\x02R\x11listClientOrderId\x88\x01\x01:\x04\x98\xb5\x18\x02B\t\n" +
+	"\a_symbolB\x10\n" +
+	"\x0e_order_list_idB\x17\n" +
+	"\x15_list_client_order_id\"\xb5\x01\n" +
+	"\x17BinanceSpotGetOrderList\x12-\n" +
+	"\rorder_list_id\x18\x01 \x01(\x03B\x04\x90\xb5\x18\x02H\x00R\vorderListId\x88\x01\x01\x12:\n" +
+	"\x14orig_client_order_id\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x11origClientOrderId\x88\x01\x01:\x04\x98\xb5\x18\x02B\x10\n" +
+	"\x0e_order_list_idB\x17\n" +
+	"\x15_orig_client_order_id\"\xe7\x01\n" +
+	"\x18BinanceSpotAllOrderLists\x12\"\n" +
+	"\afrom_id\x18\x01 \x01(\x03B\x04\x90\xb5\x18\x02H\x00R\x06fromId\x88\x01\x01\x12(\n" +
+	"\n" +
+	"start_time\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x02H\x01R\tstartTime\x88\x01\x01\x12$\n" +
+	"\bend_time\x18\x03 \x01(\x03B\x04\x90\xb5\x18\x02H\x02R\aendTime\x88\x01\x01\x12\x1f\n" +
+	"\x05limit\x18\x04 \x01(\rB\x04\x90\xb5\x18\x02H\x03R\x05limit\x88\x01\x01:\x04\x98\xb5\x18\x02B\n" +
+	"\n" +
+	"\b_from_idB\r\n" +
+	"\v_start_timeB\v\n" +
+	"\t_end_timeB\b\n" +
+	"\x06_limit\"\x89\x05\n" +
 	"\x16BinanceFuturesNewOrder\x126\n" +
 	"\x06symbol\x18\x01 \x01(\tB\x19\xbaH\x12\xc8\x01\x01r\r2\v^[A-Z0-9]+$\x90\xb5\x18\x02H\x00R\x06symbol\x88\x01\x01\x12A\n" +
 	"\x04side\x18\x02 \x01(\x0e2\x1c.hi.binance.BinanceOrderSideB\n" +
@@ -1484,8 +2945,75 @@ const file_hi_binance_binance_proto_rawDesc = "" +
 	"\x15BinanceFuturesAccount:\x04\x98\xb5\x18\x02\"N\n" +
 	"\x18BinanceFuturesOpenOrders\x12!\n" +
 	"\x06symbol\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x06symbol\x88\x01\x01:\x04\x98\xb5\x18\x02B\t\n" +
-	"\a_symbol\"$\n" +
-	"\x1cBinanceFuturesOpenAlgoOrders:\x04\x98\xb5\x18\x02\"\x9d\x02\n" +
+	"\a_symbol\"R\n" +
+	"\x1cBinanceFuturesOpenAlgoOrders\x12!\n" +
+	"\x06symbol\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x06symbol\x88\x01\x01:\x04\x98\xb5\x18\x02B\t\n" +
+	"\a_symbol\"\xc7\b\n" +
+	"\x1aBinanceFuturesNewAlgoOrder\x126\n" +
+	"\x06symbol\x18\x01 \x01(\tB\x19\xbaH\x12\xc8\x01\x01r\r2\v^[A-Z0-9]+$\x90\xb5\x18\x02H\x00R\x06symbol\x88\x01\x01\x12A\n" +
+	"\x04side\x18\x02 \x01(\x0e2\x1c.hi.binance.BinanceOrderSideB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x01R\x04side\x88\x01\x01\x12L\n" +
+	"\x04type\x18\x03 \x01(\x0e2'.hi.binance.BinanceFuturesAlgoOrderTypeB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x02R\x04type\x88\x01\x01\x12O\n" +
+	"\rposition_side\x18\x04 \x01(\x0e2\x1f.hi.binance.BinancePositionSideB\x04\x90\xb5\x18\x02H\x03R\fpositionSide\x88\x01\x01\x12M\n" +
+	"\rtime_in_force\x18\x05 \x01(\x0e2\x1e.hi.binance.BinanceTimeInForceB\x04\x90\xb5\x18\x02H\x04R\vtimeInForce\x88\x01\x01\x12%\n" +
+	"\bquantity\x18\x06 \x01(\tB\x04\x90\xb5\x18\x02H\x05R\bquantity\x88\x01\x01\x12\x1f\n" +
+	"\x05price\x18\a \x01(\tB\x04\x90\xb5\x18\x02H\x06R\x05price\x88\x01\x01\x12.\n" +
+	"\rtrigger_price\x18\b \x01(\tB\x04\x90\xb5\x18\x02H\aR\ftriggerPrice\x88\x01\x01\x12L\n" +
+	"\fworking_type\x18\t \x01(\x0e2\x1e.hi.binance.BinanceWorkingTypeB\x04\x90\xb5\x18\x02H\bR\vworkingType\x88\x01\x01\x120\n" +
+	"\x0eclose_position\x18\n" +
+	" \x01(\bB\x04\x90\xb5\x18\x02H\tR\rclosePosition\x88\x01\x01\x12.\n" +
+	"\rprice_protect\x18\v \x01(\bB\x04\x90\xb5\x18\x02H\n" +
+	"R\fpriceProtect\x88\x01\x01\x12*\n" +
+	"\vreduce_only\x18\f \x01(\bB\x04\x90\xb5\x18\x02H\vR\n" +
+	"reduceOnly\x88\x01\x01\x120\n" +
+	"\x0eactivate_price\x18\r \x01(\tB\x04\x90\xb5\x18\x02H\fR\ractivatePrice\x88\x01\x01\x12.\n" +
+	"\rcallback_rate\x18\x0e \x01(\tB\x04\x90\xb5\x18\x02H\rR\fcallbackRate\x88\x01\x01\x12#\n" +
+	"\apercent\x18\x0f \x01(\tB\x04\x90\xb5\x18\x02H\x0eR\apercent\x88\x01\x01:\x04\x98\xb5\x18\x02B\t\n" +
+	"\a_symbolB\a\n" +
+	"\x05_sideB\a\n" +
+	"\x05_typeB\x10\n" +
+	"\x0e_position_sideB\x10\n" +
+	"\x0e_time_in_forceB\v\n" +
+	"\t_quantityB\b\n" +
+	"\x06_priceB\x10\n" +
+	"\x0e_trigger_priceB\x0f\n" +
+	"\r_working_typeB\x11\n" +
+	"\x0f_close_positionB\x10\n" +
+	"\x0e_price_protectB\x0e\n" +
+	"\f_reduce_onlyB\x11\n" +
+	"\x0f_activate_priceB\x10\n" +
+	"\x0e_callback_rateB\n" +
+	"\n" +
+	"\b_percent\"\x99\x01\n" +
+	"\x1dBinanceFuturesCancelAlgoOrder\x12\"\n" +
+	"\aalgo_id\x18\x01 \x01(\x03B\x04\x90\xb5\x18\x02H\x00R\x06algoId\x88\x01\x01\x12/\n" +
+	"\x0eclient_algo_id\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\fclientAlgoId\x88\x01\x01:\x04\x98\xb5\x18\x02B\n" +
+	"\n" +
+	"\b_algo_idB\x11\n" +
+	"\x0f_client_algo_id\"l\n" +
+	"!BinanceFuturesCancelAllAlgoOrders\x126\n" +
+	"\x06symbol\x18\x01 \x01(\tB\x19\xbaH\x12\xc8\x01\x01r\r2\v^[A-Z0-9]+$\x90\xb5\x18\x02H\x00R\x06symbol\x88\x01\x01:\x04\x98\xb5\x18\x02B\t\n" +
+	"\a_symbol\"\x96\x01\n" +
+	"\x1aBinanceFuturesGetAlgoOrder\x12\"\n" +
+	"\aalgo_id\x18\x01 \x01(\x03B\x04\x90\xb5\x18\x02H\x00R\x06algoId\x88\x01\x01\x12/\n" +
+	"\x0eclient_algo_id\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\fclientAlgoId\x88\x01\x01:\x04\x98\xb5\x18\x02B\n" +
+	"\n" +
+	"\b_algo_idB\x11\n" +
+	"\x0f_client_algo_id\"\xad\x02\n" +
+	"\x1bBinanceFuturesAllAlgoOrders\x126\n" +
+	"\x06symbol\x18\x01 \x01(\tB\x19\xbaH\x12\xc8\x01\x01r\r2\v^[A-Z0-9]+$\x90\xb5\x18\x02H\x00R\x06symbol\x88\x01\x01\x12\"\n" +
+	"\aalgo_id\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x02H\x01R\x06algoId\x88\x01\x01\x12(\n" +
+	"\n" +
+	"start_time\x18\x03 \x01(\x03B\x04\x90\xb5\x18\x02H\x02R\tstartTime\x88\x01\x01\x12$\n" +
+	"\bend_time\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x02H\x03R\aendTime\x88\x01\x01\x12\x1f\n" +
+	"\x05limit\x18\x05 \x01(\rB\x04\x90\xb5\x18\x02H\x04R\x05limit\x88\x01\x01:\x04\x98\xb5\x18\x02B\t\n" +
+	"\a_symbolB\n" +
+	"\n" +
+	"\b_algo_idB\r\n" +
+	"\v_start_timeB\v\n" +
+	"\t_end_timeB\b\n" +
+	"\x06_limit\"\x9d\x02\n" +
 	"\x14BinanceFuturesIncome\x12!\n" +
 	"\x06symbol\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x06symbol\x88\x01\x01\x12*\n" +
 	"\vincome_type\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\n" +
@@ -1521,7 +3049,27 @@ const file_hi_binance_binance_proto_rawDesc = "" +
 	"\x10BinanceOrderType\x12\"\n" +
 	"\x1eBINANCE_ORDER_TYPE_UNSPECIFIED\x10\x00\x12\x1c\n" +
 	"\x18BINANCE_ORDER_TYPE_LIMIT\x10\x01\x12\x1d\n" +
-	"\x19BINANCE_ORDER_TYPE_MARKET\x10\x02*\x98\x01\n" +
+	"\x19BINANCE_ORDER_TYPE_MARKET\x10\x02*\xdb\x02\n" +
+	"\x14BinanceSpotOrderType\x12'\n" +
+	"#BINANCE_SPOT_ORDER_TYPE_UNSPECIFIED\x10\x00\x12!\n" +
+	"\x1dBINANCE_SPOT_ORDER_TYPE_LIMIT\x10\x01\x12\"\n" +
+	"\x1eBINANCE_SPOT_ORDER_TYPE_MARKET\x10\x02\x12%\n" +
+	"!BINANCE_SPOT_ORDER_TYPE_STOP_LOSS\x10\x03\x12+\n" +
+	"'BINANCE_SPOT_ORDER_TYPE_STOP_LOSS_LIMIT\x10\x04\x12'\n" +
+	"#BINANCE_SPOT_ORDER_TYPE_TAKE_PROFIT\x10\x05\x12-\n" +
+	")BINANCE_SPOT_ORDER_TYPE_TAKE_PROFIT_LIMIT\x10\x06\x12'\n" +
+	"#BINANCE_SPOT_ORDER_TYPE_LIMIT_MAKER\x10\a*\xcc\x02\n" +
+	"\x1bBinanceFuturesAlgoOrderType\x12/\n" +
+	"+BINANCE_FUTURES_ALGO_ORDER_TYPE_UNSPECIFIED\x10\x00\x12(\n" +
+	"$BINANCE_FUTURES_ALGO_ORDER_TYPE_STOP\x10\x01\x12/\n" +
+	"+BINANCE_FUTURES_ALGO_ORDER_TYPE_STOP_MARKET\x10\x02\x12/\n" +
+	"+BINANCE_FUTURES_ALGO_ORDER_TYPE_TAKE_PROFIT\x10\x03\x126\n" +
+	"2BINANCE_FUTURES_ALGO_ORDER_TYPE_TAKE_PROFIT_MARKET\x10\x04\x128\n" +
+	"4BINANCE_FUTURES_ALGO_ORDER_TYPE_TRAILING_STOP_MARKET\x10\x05*\x88\x01\n" +
+	"\x12BinanceWorkingType\x12$\n" +
+	" BINANCE_WORKING_TYPE_UNSPECIFIED\x10\x00\x12#\n" +
+	"\x1fBINANCE_WORKING_TYPE_MARK_PRICE\x10\x01\x12'\n" +
+	"#BINANCE_WORKING_TYPE_CONTRACT_PRICE\x10\x02*\x98\x01\n" +
 	"\x12BinanceTimeInForce\x12%\n" +
 	"!BINANCE_TIME_IN_FORCE_UNSPECIFIED\x10\x00\x12\x1d\n" +
 	"\x19BINANCE_TIME_IN_FORCE_GTC\x10\x01\x12\x1d\n" +
@@ -1548,47 +3096,92 @@ func file_hi_binance_binance_proto_rawDescGZIP() []byte {
 	return file_hi_binance_binance_proto_rawDescData
 }
 
-var file_hi_binance_binance_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
-var file_hi_binance_binance_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
+var file_hi_binance_binance_proto_enumTypes = make([]protoimpl.EnumInfo, 7)
+var file_hi_binance_binance_proto_msgTypes = make([]protoimpl.MessageInfo, 35)
 var file_hi_binance_binance_proto_goTypes = []any{
-	(BinanceOrderSide)(0),                    // 0: hi.binance.BinanceOrderSide
-	(BinanceOrderType)(0),                    // 1: hi.binance.BinanceOrderType
-	(BinanceTimeInForce)(0),                  // 2: hi.binance.BinanceTimeInForce
-	(BinancePositionSide)(0),                 // 3: hi.binance.BinancePositionSide
-	(*BinanceSpotNewOrder)(nil),              // 4: hi.binance.BinanceSpotNewOrder
-	(*BinanceSpotCancelOrder)(nil),           // 5: hi.binance.BinanceSpotCancelOrder
-	(*BinanceSpotCancelAllOrders)(nil),       // 6: hi.binance.BinanceSpotCancelAllOrders
-	(*BinanceSpotOpenOrders)(nil),            // 7: hi.binance.BinanceSpotOpenOrders
-	(*BinanceSpotAccount)(nil),               // 8: hi.binance.BinanceSpotAccount
-	(*BinanceSpotGetOrder)(nil),              // 9: hi.binance.BinanceSpotGetOrder
-	(*BinanceSpotOpenOrderLists)(nil),        // 10: hi.binance.BinanceSpotOpenOrderLists
-	(*BinanceSpotTicker24H)(nil),             // 11: hi.binance.BinanceSpotTicker24h
-	(*BinanceFuturesNewOrder)(nil),           // 12: hi.binance.BinanceFuturesNewOrder
-	(*BinanceFuturesCancelOrder)(nil),        // 13: hi.binance.BinanceFuturesCancelOrder
-	(*BinanceFuturesCancelAllOrders)(nil),    // 14: hi.binance.BinanceFuturesCancelAllOrders
-	(*BinanceFuturesLeverage)(nil),           // 15: hi.binance.BinanceFuturesLeverage
-	(*BinanceFuturesPositions)(nil),          // 16: hi.binance.BinanceFuturesPositions
-	(*BinanceFuturesAccount)(nil),            // 17: hi.binance.BinanceFuturesAccount
-	(*BinanceFuturesOpenOrders)(nil),         // 18: hi.binance.BinanceFuturesOpenOrders
-	(*BinanceFuturesOpenAlgoOrders)(nil),     // 19: hi.binance.BinanceFuturesOpenAlgoOrders
-	(*BinanceFuturesIncome)(nil),             // 20: hi.binance.BinanceFuturesIncome
-	(*BinanceFuturesSignTradfiContract)(nil), // 21: hi.binance.BinanceFuturesSignTradfiContract
-	(*BinanceWalletBalance)(nil),             // 22: hi.binance.BinanceWalletBalance
-	(*BinanceResult)(nil),                    // 23: hi.binance.BinanceResult
+	(BinanceOrderSide)(0),                     // 0: hi.binance.BinanceOrderSide
+	(BinanceOrderType)(0),                     // 1: hi.binance.BinanceOrderType
+	(BinanceSpotOrderType)(0),                 // 2: hi.binance.BinanceSpotOrderType
+	(BinanceFuturesAlgoOrderType)(0),          // 3: hi.binance.BinanceFuturesAlgoOrderType
+	(BinanceWorkingType)(0),                   // 4: hi.binance.BinanceWorkingType
+	(BinanceTimeInForce)(0),                   // 5: hi.binance.BinanceTimeInForce
+	(BinancePositionSide)(0),                  // 6: hi.binance.BinancePositionSide
+	(*BinanceSpotNewOrder)(nil),               // 7: hi.binance.BinanceSpotNewOrder
+	(*BinanceSpotCancelOrder)(nil),            // 8: hi.binance.BinanceSpotCancelOrder
+	(*BinanceSpotCancelAllOrders)(nil),        // 9: hi.binance.BinanceSpotCancelAllOrders
+	(*BinanceSpotOpenOrders)(nil),             // 10: hi.binance.BinanceSpotOpenOrders
+	(*BinanceSpotAccount)(nil),                // 11: hi.binance.BinanceSpotAccount
+	(*BinanceSpotGetOrder)(nil),               // 12: hi.binance.BinanceSpotGetOrder
+	(*BinanceSpotOpenOrderLists)(nil),         // 13: hi.binance.BinanceSpotOpenOrderLists
+	(*BinanceSpotTicker24H)(nil),              // 14: hi.binance.BinanceSpotTicker24h
+	(*BinanceSpotListLeg)(nil),                // 15: hi.binance.BinanceSpotListLeg
+	(*BinanceSpotWorkingOrder)(nil),           // 16: hi.binance.BinanceSpotWorkingOrder
+	(*BinanceSpotOrderListOco)(nil),           // 17: hi.binance.BinanceSpotOrderListOco
+	(*BinanceSpotOrderListOto)(nil),           // 18: hi.binance.BinanceSpotOrderListOto
+	(*BinanceSpotOrderListOtoco)(nil),         // 19: hi.binance.BinanceSpotOrderListOtoco
+	(*BinanceSpotOrderListOpo)(nil),           // 20: hi.binance.BinanceSpotOrderListOpo
+	(*BinanceSpotOrderListOpoco)(nil),         // 21: hi.binance.BinanceSpotOrderListOpoco
+	(*BinanceSpotCancelOrderList)(nil),        // 22: hi.binance.BinanceSpotCancelOrderList
+	(*BinanceSpotGetOrderList)(nil),           // 23: hi.binance.BinanceSpotGetOrderList
+	(*BinanceSpotAllOrderLists)(nil),          // 24: hi.binance.BinanceSpotAllOrderLists
+	(*BinanceFuturesNewOrder)(nil),            // 25: hi.binance.BinanceFuturesNewOrder
+	(*BinanceFuturesCancelOrder)(nil),         // 26: hi.binance.BinanceFuturesCancelOrder
+	(*BinanceFuturesCancelAllOrders)(nil),     // 27: hi.binance.BinanceFuturesCancelAllOrders
+	(*BinanceFuturesLeverage)(nil),            // 28: hi.binance.BinanceFuturesLeverage
+	(*BinanceFuturesPositions)(nil),           // 29: hi.binance.BinanceFuturesPositions
+	(*BinanceFuturesAccount)(nil),             // 30: hi.binance.BinanceFuturesAccount
+	(*BinanceFuturesOpenOrders)(nil),          // 31: hi.binance.BinanceFuturesOpenOrders
+	(*BinanceFuturesOpenAlgoOrders)(nil),      // 32: hi.binance.BinanceFuturesOpenAlgoOrders
+	(*BinanceFuturesNewAlgoOrder)(nil),        // 33: hi.binance.BinanceFuturesNewAlgoOrder
+	(*BinanceFuturesCancelAlgoOrder)(nil),     // 34: hi.binance.BinanceFuturesCancelAlgoOrder
+	(*BinanceFuturesCancelAllAlgoOrders)(nil), // 35: hi.binance.BinanceFuturesCancelAllAlgoOrders
+	(*BinanceFuturesGetAlgoOrder)(nil),        // 36: hi.binance.BinanceFuturesGetAlgoOrder
+	(*BinanceFuturesAllAlgoOrders)(nil),       // 37: hi.binance.BinanceFuturesAllAlgoOrders
+	(*BinanceFuturesIncome)(nil),              // 38: hi.binance.BinanceFuturesIncome
+	(*BinanceFuturesSignTradfiContract)(nil),  // 39: hi.binance.BinanceFuturesSignTradfiContract
+	(*BinanceWalletBalance)(nil),              // 40: hi.binance.BinanceWalletBalance
+	(*BinanceResult)(nil),                     // 41: hi.binance.BinanceResult
 }
 var file_hi_binance_binance_proto_depIdxs = []int32{
-	0, // 0: hi.binance.BinanceSpotNewOrder.side:type_name -> hi.binance.BinanceOrderSide
-	1, // 1: hi.binance.BinanceSpotNewOrder.type:type_name -> hi.binance.BinanceOrderType
-	2, // 2: hi.binance.BinanceSpotNewOrder.time_in_force:type_name -> hi.binance.BinanceTimeInForce
-	0, // 3: hi.binance.BinanceFuturesNewOrder.side:type_name -> hi.binance.BinanceOrderSide
-	1, // 4: hi.binance.BinanceFuturesNewOrder.type:type_name -> hi.binance.BinanceOrderType
-	3, // 5: hi.binance.BinanceFuturesNewOrder.position_side:type_name -> hi.binance.BinancePositionSide
-	2, // 6: hi.binance.BinanceFuturesNewOrder.time_in_force:type_name -> hi.binance.BinanceTimeInForce
-	7, // [7:7] is the sub-list for method output_type
-	7, // [7:7] is the sub-list for method input_type
-	7, // [7:7] is the sub-list for extension type_name
-	7, // [7:7] is the sub-list for extension extendee
-	0, // [0:7] is the sub-list for field type_name
+	0,  // 0: hi.binance.BinanceSpotNewOrder.side:type_name -> hi.binance.BinanceOrderSide
+	2,  // 1: hi.binance.BinanceSpotNewOrder.type:type_name -> hi.binance.BinanceSpotOrderType
+	5,  // 2: hi.binance.BinanceSpotNewOrder.time_in_force:type_name -> hi.binance.BinanceTimeInForce
+	2,  // 3: hi.binance.BinanceSpotListLeg.type:type_name -> hi.binance.BinanceSpotOrderType
+	5,  // 4: hi.binance.BinanceSpotListLeg.time_in_force:type_name -> hi.binance.BinanceTimeInForce
+	2,  // 5: hi.binance.BinanceSpotWorkingOrder.type:type_name -> hi.binance.BinanceSpotOrderType
+	0,  // 6: hi.binance.BinanceSpotWorkingOrder.side:type_name -> hi.binance.BinanceOrderSide
+	5,  // 7: hi.binance.BinanceSpotWorkingOrder.time_in_force:type_name -> hi.binance.BinanceTimeInForce
+	0,  // 8: hi.binance.BinanceSpotOrderListOco.side:type_name -> hi.binance.BinanceOrderSide
+	15, // 9: hi.binance.BinanceSpotOrderListOco.above:type_name -> hi.binance.BinanceSpotListLeg
+	15, // 10: hi.binance.BinanceSpotOrderListOco.below:type_name -> hi.binance.BinanceSpotListLeg
+	16, // 11: hi.binance.BinanceSpotOrderListOto.working:type_name -> hi.binance.BinanceSpotWorkingOrder
+	0,  // 12: hi.binance.BinanceSpotOrderListOto.pending_side:type_name -> hi.binance.BinanceOrderSide
+	15, // 13: hi.binance.BinanceSpotOrderListOto.pending:type_name -> hi.binance.BinanceSpotListLeg
+	16, // 14: hi.binance.BinanceSpotOrderListOtoco.working:type_name -> hi.binance.BinanceSpotWorkingOrder
+	0,  // 15: hi.binance.BinanceSpotOrderListOtoco.pending_side:type_name -> hi.binance.BinanceOrderSide
+	15, // 16: hi.binance.BinanceSpotOrderListOtoco.pending_above:type_name -> hi.binance.BinanceSpotListLeg
+	15, // 17: hi.binance.BinanceSpotOrderListOtoco.pending_below:type_name -> hi.binance.BinanceSpotListLeg
+	16, // 18: hi.binance.BinanceSpotOrderListOpo.working:type_name -> hi.binance.BinanceSpotWorkingOrder
+	0,  // 19: hi.binance.BinanceSpotOrderListOpo.pending_side:type_name -> hi.binance.BinanceOrderSide
+	15, // 20: hi.binance.BinanceSpotOrderListOpo.pending:type_name -> hi.binance.BinanceSpotListLeg
+	16, // 21: hi.binance.BinanceSpotOrderListOpoco.working:type_name -> hi.binance.BinanceSpotWorkingOrder
+	0,  // 22: hi.binance.BinanceSpotOrderListOpoco.pending_side:type_name -> hi.binance.BinanceOrderSide
+	15, // 23: hi.binance.BinanceSpotOrderListOpoco.pending_above:type_name -> hi.binance.BinanceSpotListLeg
+	15, // 24: hi.binance.BinanceSpotOrderListOpoco.pending_below:type_name -> hi.binance.BinanceSpotListLeg
+	0,  // 25: hi.binance.BinanceFuturesNewOrder.side:type_name -> hi.binance.BinanceOrderSide
+	1,  // 26: hi.binance.BinanceFuturesNewOrder.type:type_name -> hi.binance.BinanceOrderType
+	6,  // 27: hi.binance.BinanceFuturesNewOrder.position_side:type_name -> hi.binance.BinancePositionSide
+	5,  // 28: hi.binance.BinanceFuturesNewOrder.time_in_force:type_name -> hi.binance.BinanceTimeInForce
+	0,  // 29: hi.binance.BinanceFuturesNewAlgoOrder.side:type_name -> hi.binance.BinanceOrderSide
+	3,  // 30: hi.binance.BinanceFuturesNewAlgoOrder.type:type_name -> hi.binance.BinanceFuturesAlgoOrderType
+	6,  // 31: hi.binance.BinanceFuturesNewAlgoOrder.position_side:type_name -> hi.binance.BinancePositionSide
+	5,  // 32: hi.binance.BinanceFuturesNewAlgoOrder.time_in_force:type_name -> hi.binance.BinanceTimeInForce
+	4,  // 33: hi.binance.BinanceFuturesNewAlgoOrder.working_type:type_name -> hi.binance.BinanceWorkingType
+	34, // [34:34] is the sub-list for method output_type
+	34, // [34:34] is the sub-list for method input_type
+	34, // [34:34] is the sub-list for extension type_name
+	34, // [34:34] is the sub-list for extension extendee
+	0,  // [0:34] is the sub-list for field type_name
 }
 
 func init() { file_hi_binance_binance_proto_init() }
@@ -1608,16 +3201,32 @@ func file_hi_binance_binance_proto_init() {
 	file_hi_binance_binance_proto_msgTypes[10].OneofWrappers = []any{}
 	file_hi_binance_binance_proto_msgTypes[11].OneofWrappers = []any{}
 	file_hi_binance_binance_proto_msgTypes[12].OneofWrappers = []any{}
+	file_hi_binance_binance_proto_msgTypes[13].OneofWrappers = []any{}
 	file_hi_binance_binance_proto_msgTypes[14].OneofWrappers = []any{}
+	file_hi_binance_binance_proto_msgTypes[15].OneofWrappers = []any{}
 	file_hi_binance_binance_proto_msgTypes[16].OneofWrappers = []any{}
+	file_hi_binance_binance_proto_msgTypes[17].OneofWrappers = []any{}
+	file_hi_binance_binance_proto_msgTypes[18].OneofWrappers = []any{}
 	file_hi_binance_binance_proto_msgTypes[19].OneofWrappers = []any{}
+	file_hi_binance_binance_proto_msgTypes[20].OneofWrappers = []any{}
+	file_hi_binance_binance_proto_msgTypes[21].OneofWrappers = []any{}
+	file_hi_binance_binance_proto_msgTypes[22].OneofWrappers = []any{}
+	file_hi_binance_binance_proto_msgTypes[24].OneofWrappers = []any{}
+	file_hi_binance_binance_proto_msgTypes[25].OneofWrappers = []any{}
+	file_hi_binance_binance_proto_msgTypes[26].OneofWrappers = []any{}
+	file_hi_binance_binance_proto_msgTypes[27].OneofWrappers = []any{}
+	file_hi_binance_binance_proto_msgTypes[28].OneofWrappers = []any{}
+	file_hi_binance_binance_proto_msgTypes[29].OneofWrappers = []any{}
+	file_hi_binance_binance_proto_msgTypes[30].OneofWrappers = []any{}
+	file_hi_binance_binance_proto_msgTypes[31].OneofWrappers = []any{}
+	file_hi_binance_binance_proto_msgTypes[34].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_binance_binance_proto_rawDesc), len(file_hi_binance_binance_proto_rawDesc)),
-			NumEnums:      4,
-			NumMessages:   20,
+			NumEnums:      7,
+			NumMessages:   35,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
