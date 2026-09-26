@@ -700,6 +700,9 @@ pub enum BinanceTimeInForce {
     Ioc = 2,
     /// 全部成交,否则撤销
     Fok = 3,
+    /// 只做挂单(币安 App 的「只做 Maker」):会立刻成交的单直接被拒,不会误吃单。**只有合约普通限价单收**;
+    /// 现货的只做挂单是单型 BINANCE_SPOT_ORDER_TYPE_LIMIT_MAKER,不是有效期。
+    Gtx = 4,
 }
 impl BinanceTimeInForce {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -712,6 +715,7 @@ impl BinanceTimeInForce {
             Self::Gtc => "BINANCE_TIME_IN_FORCE_GTC",
             Self::Ioc => "BINANCE_TIME_IN_FORCE_IOC",
             Self::Fok => "BINANCE_TIME_IN_FORCE_FOK",
+            Self::Gtx => "BINANCE_TIME_IN_FORCE_GTX",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -721,6 +725,7 @@ impl BinanceTimeInForce {
             "BINANCE_TIME_IN_FORCE_GTC" => Some(Self::Gtc),
             "BINANCE_TIME_IN_FORCE_IOC" => Some(Self::Ioc),
             "BINANCE_TIME_IN_FORCE_FOK" => Some(Self::Fok),
+            "BINANCE_TIME_IN_FORCE_GTX" => Some(Self::Gtx),
             _ => None,
         }
     }

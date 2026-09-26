@@ -7440,6 +7440,7 @@ impl serde::Serialize for BinanceTimeInForce {
             Self::Gtc => "BINANCE_TIME_IN_FORCE_GTC",
             Self::Ioc => "BINANCE_TIME_IN_FORCE_IOC",
             Self::Fok => "BINANCE_TIME_IN_FORCE_FOK",
+            Self::Gtx => "BINANCE_TIME_IN_FORCE_GTX",
         };
         serializer.serialize_str(variant)
     }
@@ -7455,6 +7456,7 @@ impl<'de> serde::Deserialize<'de> for BinanceTimeInForce {
             "BINANCE_TIME_IN_FORCE_GTC",
             "BINANCE_TIME_IN_FORCE_IOC",
             "BINANCE_TIME_IN_FORCE_FOK",
+            "BINANCE_TIME_IN_FORCE_GTX",
         ];
 
         struct GeneratedVisitor;
@@ -7499,6 +7501,7 @@ impl<'de> serde::Deserialize<'de> for BinanceTimeInForce {
                     "BINANCE_TIME_IN_FORCE_GTC" => Ok(BinanceTimeInForce::Gtc),
                     "BINANCE_TIME_IN_FORCE_IOC" => Ok(BinanceTimeInForce::Ioc),
                     "BINANCE_TIME_IN_FORCE_FOK" => Ok(BinanceTimeInForce::Fok),
+                    "BINANCE_TIME_IN_FORCE_GTX" => Ok(BinanceTimeInForce::Gtx),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }

@@ -326,6 +326,9 @@ const (
 	BinanceTimeInForce_BINANCE_TIME_IN_FORCE_GTC         BinanceTimeInForce = 1 // 成交为止
 	BinanceTimeInForce_BINANCE_TIME_IN_FORCE_IOC         BinanceTimeInForce = 2 // 立即成交,剩余撤销
 	BinanceTimeInForce_BINANCE_TIME_IN_FORCE_FOK         BinanceTimeInForce = 3 // 全部成交,否则撤销
+	// 只做挂单(币安 App 的「只做 Maker」):会立刻成交的单直接被拒,不会误吃单。**只有合约普通限价单收**;
+	// 现货的只做挂单是单型 BINANCE_SPOT_ORDER_TYPE_LIMIT_MAKER,不是有效期。
+	BinanceTimeInForce_BINANCE_TIME_IN_FORCE_GTX BinanceTimeInForce = 4
 )
 
 // Enum value maps for BinanceTimeInForce.
@@ -335,12 +338,14 @@ var (
 		1: "BINANCE_TIME_IN_FORCE_GTC",
 		2: "BINANCE_TIME_IN_FORCE_IOC",
 		3: "BINANCE_TIME_IN_FORCE_FOK",
+		4: "BINANCE_TIME_IN_FORCE_GTX",
 	}
 	BinanceTimeInForce_value = map[string]int32{
 		"BINANCE_TIME_IN_FORCE_UNSPECIFIED": 0,
 		"BINANCE_TIME_IN_FORCE_GTC":         1,
 		"BINANCE_TIME_IN_FORCE_IOC":         2,
 		"BINANCE_TIME_IN_FORCE_FOK":         3,
+		"BINANCE_TIME_IN_FORCE_GTX":         4,
 	}
 )
 
@@ -3069,12 +3074,13 @@ const file_hi_binance_binance_proto_rawDesc = "" +
 	"\x12BinanceWorkingType\x12$\n" +
 	" BINANCE_WORKING_TYPE_UNSPECIFIED\x10\x00\x12#\n" +
 	"\x1fBINANCE_WORKING_TYPE_MARK_PRICE\x10\x01\x12'\n" +
-	"#BINANCE_WORKING_TYPE_CONTRACT_PRICE\x10\x02*\x98\x01\n" +
+	"#BINANCE_WORKING_TYPE_CONTRACT_PRICE\x10\x02*\xb7\x01\n" +
 	"\x12BinanceTimeInForce\x12%\n" +
 	"!BINANCE_TIME_IN_FORCE_UNSPECIFIED\x10\x00\x12\x1d\n" +
 	"\x19BINANCE_TIME_IN_FORCE_GTC\x10\x01\x12\x1d\n" +
 	"\x19BINANCE_TIME_IN_FORCE_IOC\x10\x02\x12\x1d\n" +
-	"\x19BINANCE_TIME_IN_FORCE_FOK\x10\x03*\x9d\x01\n" +
+	"\x19BINANCE_TIME_IN_FORCE_FOK\x10\x03\x12\x1d\n" +
+	"\x19BINANCE_TIME_IN_FORCE_GTX\x10\x04*\x9d\x01\n" +
 	"\x13BinancePositionSide\x12%\n" +
 	"!BINANCE_POSITION_SIDE_UNSPECIFIED\x10\x00\x12\x1e\n" +
 	"\x1aBINANCE_POSITION_SIDE_BOTH\x10\x01\x12\x1e\n" +

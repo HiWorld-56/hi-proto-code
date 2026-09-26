@@ -117,6 +117,7 @@ const BinanceTimeInForce$json = {
     {'1': 'BINANCE_TIME_IN_FORCE_GTC', '2': 1},
     {'1': 'BINANCE_TIME_IN_FORCE_IOC', '2': 2},
     {'1': 'BINANCE_TIME_IN_FORCE_FOK', '2': 3},
+    {'1': 'BINANCE_TIME_IN_FORCE_GTX', '2': 4},
   ],
 };
 
@@ -124,7 +125,8 @@ const BinanceTimeInForce$json = {
 final $typed_data.Uint8List binanceTimeInForceDescriptor = $convert.base64Decode(
     'ChJCaW5hbmNlVGltZUluRm9yY2USJQohQklOQU5DRV9USU1FX0lOX0ZPUkNFX1VOU1BFQ0lGSU'
     'VEEAASHQoZQklOQU5DRV9USU1FX0lOX0ZPUkNFX0dUQxABEh0KGUJJTkFOQ0VfVElNRV9JTl9G'
-    'T1JDRV9JT0MQAhIdChlCSU5BTkNFX1RJTUVfSU5fRk9SQ0VfRk9LEAM=');
+    'T1JDRV9JT0MQAhIdChlCSU5BTkNFX1RJTUVfSU5fRk9SQ0VfRk9LEAMSHQoZQklOQU5DRV9USU'
+    '1FX0lOX0ZPUkNFX0dUWBAE');
 
 @$core.Deprecated('Use binancePositionSideDescriptor instead')
 const BinancePositionSide$json = {

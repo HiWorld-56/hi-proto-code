@@ -220,15 +220,22 @@ class BinanceTimeInForce extends $pb.ProtobufEnum {
       BinanceTimeInForce._(
           3, _omitEnumNames ? '' : 'BINANCE_TIME_IN_FORCE_FOK');
 
+  /// 只做挂单(币安 App 的「只做 Maker」):会立刻成交的单直接被拒,不会误吃单。**只有合约普通限价单收**;
+  /// 现货的只做挂单是单型 BINANCE_SPOT_ORDER_TYPE_LIMIT_MAKER,不是有效期。
+  static const BinanceTimeInForce BINANCE_TIME_IN_FORCE_GTX =
+      BinanceTimeInForce._(
+          4, _omitEnumNames ? '' : 'BINANCE_TIME_IN_FORCE_GTX');
+
   static const $core.List<BinanceTimeInForce> values = <BinanceTimeInForce>[
     BINANCE_TIME_IN_FORCE_UNSPECIFIED,
     BINANCE_TIME_IN_FORCE_GTC,
     BINANCE_TIME_IN_FORCE_IOC,
     BINANCE_TIME_IN_FORCE_FOK,
+    BINANCE_TIME_IN_FORCE_GTX,
   ];
 
   static final $core.List<BinanceTimeInForce?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 3);
+      $pb.ProtobufEnum.$_initByValueList(values, 4);
   static BinanceTimeInForce? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
