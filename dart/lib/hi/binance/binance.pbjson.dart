@@ -1414,6 +1414,33 @@ final $typed_data.Uint8List binanceFuturesLeverageDescriptor = $convert.base64De
     '1aMC05XSskkLUYAkgAUgZzeW1ib2yIAQESLwoIbGV2ZXJhZ2UYAiABKA1CDrpIB8gBASoCKAGQ'
     'tRgCSAFSCGxldmVyYWdliAEBOgSYtRgCQgkKB19zeW1ib2xCCwoJX2xldmVyYWdl');
 
+@$core.Deprecated('Use binanceFuturesTicker24hDescriptor instead')
+const BinanceFuturesTicker24h$json = {
+  '1': 'BinanceFuturesTicker24h',
+  '2': [
+    {
+      '1': 'symbol',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'symbol',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_symbol'},
+  ],
+};
+
+/// Descriptor for `BinanceFuturesTicker24h`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List binanceFuturesTicker24hDescriptor =
+    $convert.base64Decode(
+        'ChdCaW5hbmNlRnV0dXJlc1RpY2tlcjI0aBIhCgZzeW1ib2wYASABKAlCBJC1GAJIAFIGc3ltYm'
+        '9siAEBOgSYtRgCQgkKB19zeW1ib2w=');
+
 @$core.Deprecated('Use binanceFuturesPositionsDescriptor instead')
 const BinanceFuturesPositions$json = {
   '1': 'BinanceFuturesPositions',

@@ -2023,6 +2023,63 @@ class BinanceFuturesLeverage extends $pb.GeneratedMessage {
   void clearLeverage() => $_clearField(2);
 }
 
+/// 合约 24 小时行情(现价、涨跌)。`GET /fapi/v1/ticker/24hr`,公开接口不签名。
+/// 自然语言下单时模型要知道现价:没有这个,它问不到合约价格就自己编数(2026-09-26 实测)。
+class BinanceFuturesTicker24h extends $pb.GeneratedMessage {
+  factory BinanceFuturesTicker24h({
+    $core.String? symbol,
+  }) {
+    final result = create();
+    if (symbol != null) result.symbol = symbol;
+    return result;
+  }
+
+  BinanceFuturesTicker24h._();
+
+  factory BinanceFuturesTicker24h.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceFuturesTicker24h.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceFuturesTicker24h',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'symbol')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceFuturesTicker24h clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceFuturesTicker24h copyWith(
+          void Function(BinanceFuturesTicker24h) updates) =>
+      super.copyWith((message) => updates(message as BinanceFuturesTicker24h))
+          as BinanceFuturesTicker24h;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceFuturesTicker24h create() => BinanceFuturesTicker24h._();
+  @$core.override
+  BinanceFuturesTicker24h createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceFuturesTicker24h getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceFuturesTicker24h>(create);
+  static BinanceFuturesTicker24h? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get symbol => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set symbol($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSymbol() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSymbol() => $_clearField(1);
+}
+
 /// 合约持仓。`GET /fapi/v3/positionRisk`
 class BinanceFuturesPositions extends $pb.GeneratedMessage {
   factory BinanceFuturesPositions({

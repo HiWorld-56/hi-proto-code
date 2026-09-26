@@ -459,6 +459,16 @@ const BinanceCommand$json = {
       '9': 0,
       '10': 'usdsFuturesQueryAllAlgoOrders'
     },
+    {
+      '1': 'usds_futures_ticker_24h',
+      '3': 55,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceFuturesTicker24h',
+      '8': {},
+      '9': 0,
+      '10': 'usdsFuturesTicker24h'
+    },
   ],
   '7': {},
   '8': [
@@ -551,5 +561,7 @@ final $typed_data.Uint8List binanceCommandDescriptor = $convert.base64Decode(
     'FsZ29fb3JkZXIYNSABKAsyJi5oaS5iaW5hbmNlLkJpbmFuY2VGdXR1cmVzR2V0QWxnb09yZGVy'
     'QgSQtRgCSABSGXVzZHNGdXR1cmVzUXVlcnlBbGdvT3JkZXISegoidXNkc19mdXR1cmVzX3F1ZX'
     'J5X2FsbF9hbGdvX29yZGVycxg2IAEoCzInLmhpLmJpbmFuY2UuQmluYW5jZUZ1dHVyZXNBbGxB'
-    'bGdvT3JkZXJzQgSQtRgCSABSHXVzZHNGdXR1cmVzUXVlcnlBbGxBbGdvT3JkZXJzOgSYtRgCQg'
-    'sKAm9wEgW6SAIIAUINCgtfZXhwaXJhdGlvbg==');
+    'bGdvT3JkZXJzQgSQtRgCSABSHXVzZHNGdXR1cmVzUXVlcnlBbGxBbGdvT3JkZXJzEmIKF3VzZH'
+    'NfZnV0dXJlc190aWNrZXJfMjRoGDcgASgLMiMuaGkuYmluYW5jZS5CaW5hbmNlRnV0dXJlc1Rp'
+    'Y2tlcjI0aEIEkLUYAkgAUhR1c2RzRnV0dXJlc1RpY2tlcjI0aDoEmLUYAkILCgJvcBIFukgCCA'
+    'FCDQoLX2V4cGlyYXRpb24=');

@@ -301,6 +301,13 @@ pub struct BinanceFuturesLeverage {
     #[prost(uint32, optional, tag = "2")]
     pub leverage: ::core::option::Option<u32>,
 }
+/// 合约 24 小时行情(现价、涨跌)。`GET /fapi/v1/ticker/24hr`,公开接口不签名。
+/// 自然语言下单时模型要知道现价:没有这个,它问不到合约价格就自己编数(2026-09-26 实测)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceFuturesTicker24h {
+    #[prost(string, optional, tag = "1")]
+    pub symbol: ::core::option::Option<::prost::alloc::string::String>,
+}
 /// 合约持仓。`GET /fapi/v3/positionRisk`
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BinanceFuturesPositions {
@@ -1075,7 +1082,7 @@ pub struct BinanceCommand {
     pub expiration: ::core::option::Option<i64>,
     #[prost(
         oneof = "binance_command::Op",
-        tags = "10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 40, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54"
+        tags = "10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 40, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55"
     )]
     pub op: ::core::option::Option<binance_command::Op>,
 }
@@ -1216,5 +1223,8 @@ pub mod binance_command {
         /// usds_futures.query_all_algo_orders
         #[prost(message, tag = "54")]
         UsdsFuturesQueryAllAlgoOrders(super::BinanceFuturesAllAlgoOrders),
+        /// usds_futures.ticker_24h
+        #[prost(message, tag = "55")]
+        UsdsFuturesTicker24h(super::BinanceFuturesTicker24h),
     }
 }
