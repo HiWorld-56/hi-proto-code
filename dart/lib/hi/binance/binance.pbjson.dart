@@ -1268,6 +1268,16 @@ const BinanceFuturesNewOrder$json = {
       '10': 'percent',
       '17': true
     },
+    {
+      '1': 'leverage',
+      '3': 10,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 9,
+      '10': 'leverage',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -1280,6 +1290,7 @@ const BinanceFuturesNewOrder$json = {
     {'1': '_price'},
     {'1': '_reduce_only'},
     {'1': '_percent'},
+    {'1': '_leverage'},
   ],
 };
 
@@ -1294,9 +1305,10 @@ final $typed_data.Uint8List binanceFuturesNewOrderDescriptor = $convert.base64De
     'aW5hbmNlVGltZUluRm9yY2VCBJC1GAJIBFILdGltZUluRm9yY2WIAQESJQoIcXVhbnRpdHkYBi'
     'ABKAlCBJC1GAJIBVIIcXVhbnRpdHmIAQESHwoFcHJpY2UYByABKAlCBJC1GAJIBlIFcHJpY2WI'
     'AQESKgoLcmVkdWNlX29ubHkYCCABKAhCBJC1GAJIB1IKcmVkdWNlT25seYgBARIjCgdwZXJjZW'
-    '50GAkgASgJQgSQtRgCSAhSB3BlcmNlbnSIAQE6BJi1GAJCCQoHX3N5bWJvbEIHCgVfc2lkZUIH'
-    'CgVfdHlwZUIQCg5fcG9zaXRpb25fc2lkZUIQCg5fdGltZV9pbl9mb3JjZUILCglfcXVhbnRpdH'
-    'lCCAoGX3ByaWNlQg4KDF9yZWR1Y2Vfb25seUIKCghfcGVyY2VudA==');
+    '50GAkgASgJQgSQtRgCSAhSB3BlcmNlbnSIAQESJQoIbGV2ZXJhZ2UYCiABKA1CBJC1GAJICVII'
+    'bGV2ZXJhZ2WIAQE6BJi1GAJCCQoHX3N5bWJvbEIHCgVfc2lkZUIHCgVfdHlwZUIQCg5fcG9zaX'
+    'Rpb25fc2lkZUIQCg5fdGltZV9pbl9mb3JjZUILCglfcXVhbnRpdHlCCAoGX3ByaWNlQg4KDF9y'
+    'ZWR1Y2Vfb25seUIKCghfcGVyY2VudEILCglfbGV2ZXJhZ2U=');
 
 @$core.Deprecated('Use binanceFuturesCancelOrderDescriptor instead')
 const BinanceFuturesCancelOrder$json = {
@@ -1413,6 +1425,153 @@ final $typed_data.Uint8List binanceFuturesLeverageDescriptor = $convert.base64De
     'ChZCaW5hbmNlRnV0dXJlc0xldmVyYWdlEjYKBnN5bWJvbBgBIAEoCUIZukgSyAEBcg0yC15bQS'
     '1aMC05XSskkLUYAkgAUgZzeW1ib2yIAQESLwoIbGV2ZXJhZ2UYAiABKA1CDrpIB8gBASoCKAGQ'
     'tRgCSAFSCGxldmVyYWdliAEBOgSYtRgCQgkKB19zeW1ib2xCCwoJX2xldmVyYWdl');
+
+@$core.Deprecated('Use binanceSpotKlinesDescriptor instead')
+const BinanceSpotKlines$json = {
+  '1': 'BinanceSpotKlines',
+  '2': [
+    {
+      '1': 'symbol',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'symbol',
+      '17': true
+    },
+    {
+      '1': 'interval',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'interval',
+      '17': true
+    },
+    {
+      '1': 'limit',
+      '3': 3,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 2,
+      '10': 'limit',
+      '17': true
+    },
+    {
+      '1': 'start_time',
+      '3': 4,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 3,
+      '10': 'startTime',
+      '17': true
+    },
+    {
+      '1': 'end_time',
+      '3': 5,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 4,
+      '10': 'endTime',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_symbol'},
+    {'1': '_interval'},
+    {'1': '_limit'},
+    {'1': '_start_time'},
+    {'1': '_end_time'},
+  ],
+};
+
+/// Descriptor for `BinanceSpotKlines`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List binanceSpotKlinesDescriptor = $convert.base64Decode(
+    'ChFCaW5hbmNlU3BvdEtsaW5lcxIhCgZzeW1ib2wYASABKAlCBJC1GAJIAFIGc3ltYm9siAEBEi'
+    'UKCGludGVydmFsGAIgASgJQgSQtRgCSAFSCGludGVydmFsiAEBEh8KBWxpbWl0GAMgASgNQgSQ'
+    'tRgCSAJSBWxpbWl0iAEBEigKCnN0YXJ0X3RpbWUYBCABKANCBJC1GAJIA1IJc3RhcnRUaW1liA'
+    'EBEiQKCGVuZF90aW1lGAUgASgDQgSQtRgCSARSB2VuZFRpbWWIAQE6BJi1GAJCCQoHX3N5bWJv'
+    'bEILCglfaW50ZXJ2YWxCCAoGX2xpbWl0Qg0KC19zdGFydF90aW1lQgsKCV9lbmRfdGltZQ==');
+
+@$core.Deprecated('Use binanceFuturesKlinesDescriptor instead')
+const BinanceFuturesKlines$json = {
+  '1': 'BinanceFuturesKlines',
+  '2': [
+    {
+      '1': 'symbol',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'symbol',
+      '17': true
+    },
+    {
+      '1': 'interval',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'interval',
+      '17': true
+    },
+    {
+      '1': 'limit',
+      '3': 3,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 2,
+      '10': 'limit',
+      '17': true
+    },
+    {
+      '1': 'start_time',
+      '3': 4,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 3,
+      '10': 'startTime',
+      '17': true
+    },
+    {
+      '1': 'end_time',
+      '3': 5,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 4,
+      '10': 'endTime',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_symbol'},
+    {'1': '_interval'},
+    {'1': '_limit'},
+    {'1': '_start_time'},
+    {'1': '_end_time'},
+  ],
+};
+
+/// Descriptor for `BinanceFuturesKlines`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List binanceFuturesKlinesDescriptor = $convert.base64Decode(
+    'ChRCaW5hbmNlRnV0dXJlc0tsaW5lcxIhCgZzeW1ib2wYASABKAlCBJC1GAJIAFIGc3ltYm9siA'
+    'EBEiUKCGludGVydmFsGAIgASgJQgSQtRgCSAFSCGludGVydmFsiAEBEh8KBWxpbWl0GAMgASgN'
+    'QgSQtRgCSAJSBWxpbWl0iAEBEigKCnN0YXJ0X3RpbWUYBCABKANCBJC1GAJIA1IJc3RhcnRUaW'
+    '1liAEBEiQKCGVuZF90aW1lGAUgASgDQgSQtRgCSARSB2VuZFRpbWWIAQE6BJi1GAJCCQoHX3N5'
+    'bWJvbEILCglfaW50ZXJ2YWxCCAoGX2xpbWl0Qg0KC19zdGFydF90aW1lQgsKCV9lbmRfdGltZQ'
+    '==');
 
 @$core.Deprecated('Use binanceFuturesTicker24hDescriptor instead')
 const BinanceFuturesTicker24h$json = {
@@ -1691,6 +1850,16 @@ const BinanceFuturesNewAlgoOrder$json = {
       '10': 'percent',
       '17': true
     },
+    {
+      '1': 'leverage',
+      '3': 16,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 15,
+      '10': 'leverage',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -1709,6 +1878,7 @@ const BinanceFuturesNewAlgoOrder$json = {
     {'1': '_activate_price'},
     {'1': '_callback_rate'},
     {'1': '_percent'},
+    {'1': '_leverage'},
   ],
 };
 
@@ -1729,11 +1899,12 @@ final $typed_data.Uint8List binanceFuturesNewAlgoOrderDescriptor = $convert.base
     'SApSDHByaWNlUHJvdGVjdIgBARIqCgtyZWR1Y2Vfb25seRgMIAEoCEIEkLUYAkgLUgpyZWR1Y2'
     'VPbmx5iAEBEjAKDmFjdGl2YXRlX3ByaWNlGA0gASgJQgSQtRgCSAxSDWFjdGl2YXRlUHJpY2WI'
     'AQESLgoNY2FsbGJhY2tfcmF0ZRgOIAEoCUIEkLUYAkgNUgxjYWxsYmFja1JhdGWIAQESIwoHcG'
-    'VyY2VudBgPIAEoCUIEkLUYAkgOUgdwZXJjZW50iAEBOgSYtRgCQgkKB19zeW1ib2xCBwoFX3Np'
-    'ZGVCBwoFX3R5cGVCEAoOX3Bvc2l0aW9uX3NpZGVCEAoOX3RpbWVfaW5fZm9yY2VCCwoJX3F1YW'
-    '50aXR5QggKBl9wcmljZUIQCg5fdHJpZ2dlcl9wcmljZUIPCg1fd29ya2luZ190eXBlQhEKD19j'
-    'bG9zZV9wb3NpdGlvbkIQCg5fcHJpY2VfcHJvdGVjdEIOCgxfcmVkdWNlX29ubHlCEQoPX2FjdG'
-    'l2YXRlX3ByaWNlQhAKDl9jYWxsYmFja19yYXRlQgoKCF9wZXJjZW50');
+    'VyY2VudBgPIAEoCUIEkLUYAkgOUgdwZXJjZW50iAEBEiUKCGxldmVyYWdlGBAgASgNQgSQtRgC'
+    'SA9SCGxldmVyYWdliAEBOgSYtRgCQgkKB19zeW1ib2xCBwoFX3NpZGVCBwoFX3R5cGVCEAoOX3'
+    'Bvc2l0aW9uX3NpZGVCEAoOX3RpbWVfaW5fZm9yY2VCCwoJX3F1YW50aXR5QggKBl9wcmljZUIQ'
+    'Cg5fdHJpZ2dlcl9wcmljZUIPCg1fd29ya2luZ190eXBlQhEKD19jbG9zZV9wb3NpdGlvbkIQCg'
+    '5fcHJpY2VfcHJvdGVjdEIOCgxfcmVkdWNlX29ubHlCEQoPX2FjdGl2YXRlX3ByaWNlQhAKDl9j'
+    'YWxsYmFja19yYXRlQgoKCF9wZXJjZW50QgsKCV9sZXZlcmFnZQ==');
 
 @$core.Deprecated('Use binanceFuturesCancelAlgoOrderDescriptor instead')
 const BinanceFuturesCancelAlgoOrder$json = {

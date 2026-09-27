@@ -65,6 +65,8 @@ enum BinanceCommand_Op {
   usdsFuturesQueryAlgoOrder,
   usdsFuturesQueryAllAlgoOrders,
   usdsFuturesTicker24h,
+  spotKlines,
+  usdsFuturesKlines,
   notSet
 }
 
@@ -141,6 +143,8 @@ class BinanceCommand extends $pb.GeneratedMessage {
     $0.BinanceFuturesGetAlgoOrder? usdsFuturesQueryAlgoOrder,
     $0.BinanceFuturesAllAlgoOrders? usdsFuturesQueryAllAlgoOrders,
     $0.BinanceFuturesTicker24h? usdsFuturesTicker24h,
+    $0.BinanceSpotKlines? spotKlines,
+    $0.BinanceFuturesKlines? usdsFuturesKlines,
   }) {
     final result = create();
     if (expiration != null) result.expiration = expiration;
@@ -223,6 +227,8 @@ class BinanceCommand extends $pb.GeneratedMessage {
       result.usdsFuturesQueryAllAlgoOrders = usdsFuturesQueryAllAlgoOrders;
     if (usdsFuturesTicker24h != null)
       result.usdsFuturesTicker24h = usdsFuturesTicker24h;
+    if (spotKlines != null) result.spotKlines = spotKlines;
+    if (usdsFuturesKlines != null) result.usdsFuturesKlines = usdsFuturesKlines;
     return result;
   }
 
@@ -281,6 +287,8 @@ class BinanceCommand extends $pb.GeneratedMessage {
     53: BinanceCommand_Op.usdsFuturesQueryAlgoOrder,
     54: BinanceCommand_Op.usdsFuturesQueryAllAlgoOrders,
     55: BinanceCommand_Op.usdsFuturesTicker24h,
+    56: BinanceCommand_Op.spotKlines,
+    57: BinanceCommand_Op.usdsFuturesKlines,
     0: BinanceCommand_Op.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -331,7 +339,9 @@ class BinanceCommand extends $pb.GeneratedMessage {
       52,
       53,
       54,
-      55
+      55,
+      56,
+      57
     ])
     ..aInt64(1, _omitFieldNames ? '' : 'expiration')
     ..aOM<$0.BinanceSpotNewOrder>(10, _omitFieldNames ? '' : 'spotNewOrder',
@@ -464,6 +474,11 @@ class BinanceCommand extends $pb.GeneratedMessage {
         55, _omitFieldNames ? '' : 'usdsFuturesTicker24h',
         protoName: 'usds_futures_ticker_24h',
         subBuilder: $0.BinanceFuturesTicker24h.create)
+    ..aOM<$0.BinanceSpotKlines>(56, _omitFieldNames ? '' : 'spotKlines',
+        subBuilder: $0.BinanceSpotKlines.create)
+    ..aOM<$0.BinanceFuturesKlines>(
+        57, _omitFieldNames ? '' : 'usdsFuturesKlines',
+        subBuilder: $0.BinanceFuturesKlines.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -529,6 +544,8 @@ class BinanceCommand extends $pb.GeneratedMessage {
   @$pb.TagNumber(53)
   @$pb.TagNumber(54)
   @$pb.TagNumber(55)
+  @$pb.TagNumber(56)
+  @$pb.TagNumber(57)
   BinanceCommand_Op whichOp() => _BinanceCommand_OpByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(10)
   @$pb.TagNumber(11)
@@ -574,6 +591,8 @@ class BinanceCommand extends $pb.GeneratedMessage {
   @$pb.TagNumber(53)
   @$pb.TagNumber(54)
   @$pb.TagNumber(55)
+  @$pb.TagNumber(56)
+  @$pb.TagNumber(57)
   void clearOp() => $_clearField($_whichOneof(0));
 
   /// 过期时刻,**绝对时间,微秒**(与 `Notice.expiration` 同一口径)。过了机器人不执行、回一条失败;
@@ -1129,6 +1148,28 @@ class BinanceCommand extends $pb.GeneratedMessage {
   void clearUsdsFuturesTicker24h() => $_clearField(55);
   @$pb.TagNumber(55)
   $0.BinanceFuturesTicker24h ensureUsdsFuturesTicker24h() => $_ensure(44);
+
+  @$pb.TagNumber(56)
+  $0.BinanceSpotKlines get spotKlines => $_getN(45);
+  @$pb.TagNumber(56)
+  set spotKlines($0.BinanceSpotKlines value) => $_setField(56, value);
+  @$pb.TagNumber(56)
+  $core.bool hasSpotKlines() => $_has(45);
+  @$pb.TagNumber(56)
+  void clearSpotKlines() => $_clearField(56);
+  @$pb.TagNumber(56)
+  $0.BinanceSpotKlines ensureSpotKlines() => $_ensure(45);
+
+  @$pb.TagNumber(57)
+  $0.BinanceFuturesKlines get usdsFuturesKlines => $_getN(46);
+  @$pb.TagNumber(57)
+  set usdsFuturesKlines($0.BinanceFuturesKlines value) => $_setField(57, value);
+  @$pb.TagNumber(57)
+  $core.bool hasUsdsFuturesKlines() => $_has(46);
+  @$pb.TagNumber(57)
+  void clearUsdsFuturesKlines() => $_clearField(57);
+  @$pb.TagNumber(57)
+  $0.BinanceFuturesKlines ensureUsdsFuturesKlines() => $_ensure(46);
 }
 
 const $core.bool _omitFieldNames =

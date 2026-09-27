@@ -275,6 +275,10 @@ pub struct BinanceFuturesNewOrder {
     /// 换算后按交易对的步长**向下取整**;不够最小下单量就不下,回一句为什么。
     #[prost(string, optional, tag = "9")]
     pub percent: ::core::option::Option<::prost::alloc::string::String>,
+    /// 杠杆(倍数)。给了:机器人**先把这个交易对的杠杆设成它,再下单**(按比例开仓也按新杠杆换算)。
+    /// 币安的杠杆是按交易对分别设的,原来「设杠杆」和「下单」是两个动作,漏点一个就按旧杠杆开仓(2026-09-27 用户反馈)。
+    #[prost(uint32, optional, tag = "10")]
+    pub leverage: ::core::option::Option<u32>,
 }
 /// 合约撤单。`DELETE /fapi/v1/order`
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -300,6 +304,38 @@ pub struct BinanceFuturesLeverage {
     /// 上限各交易对不同,由币安判
     #[prost(uint32, optional, tag = "2")]
     pub leverage: ::core::option::Option<u32>,
+}
+/// K 线。`GET /api/v3/klines`(现货)/ `GET /fapi/v1/klines`(合约),公开接口不签名。
+/// interval 照币安的写法:1m 3m 5m 15m 30m 1h 2h 4h 6h 8h 12h 1d 3d 1w 1M;limit 不给 = 币安默认(500),最多 1500。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceSpotKlines {
+    #[prost(string, optional, tag = "1")]
+    pub symbol: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub interval: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(uint32, optional, tag = "3")]
+    pub limit: ::core::option::Option<u32>,
+    /// 毫秒
+    #[prost(int64, optional, tag = "4")]
+    pub start_time: ::core::option::Option<i64>,
+    /// 毫秒
+    #[prost(int64, optional, tag = "5")]
+    pub end_time: ::core::option::Option<i64>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceFuturesKlines {
+    #[prost(string, optional, tag = "1")]
+    pub symbol: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub interval: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(uint32, optional, tag = "3")]
+    pub limit: ::core::option::Option<u32>,
+    /// 毫秒
+    #[prost(int64, optional, tag = "4")]
+    pub start_time: ::core::option::Option<i64>,
+    /// 毫秒
+    #[prost(int64, optional, tag = "5")]
+    pub end_time: ::core::option::Option<i64>,
 }
 /// 合约 24 小时行情(现价、涨跌)。`GET /fapi/v1/ticker/24hr`,公开接口不签名。
 /// 自然语言下单时模型要知道现价:没有这个,它问不到合约价格就自己编数(2026-09-26 实测)。
@@ -382,6 +418,9 @@ pub struct BinanceFuturesNewAlgoOrder {
     /// 换算用的价格:有 price 用 price,否则用 trigger_price,都没有用标记价格。
     #[prost(string, optional, tag = "15")]
     pub percent: ::core::option::Option<::prost::alloc::string::String>,
+    /// 杠杆(倍数),含义同 BinanceFuturesNewOrder.leverage:给了就先设好这个交易对的杠杆,再挂这张条件单。
+    #[prost(uint32, optional, tag = "16")]
+    pub leverage: ::core::option::Option<u32>,
 }
 /// 撤一张策略委托。`DELETE /fapi/v1/algoOrder`。`algo_id` 与 `client_algo_id` 给一个即可。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1082,7 +1121,7 @@ pub struct BinanceCommand {
     pub expiration: ::core::option::Option<i64>,
     #[prost(
         oneof = "binance_command::Op",
-        tags = "10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 40, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55"
+        tags = "10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 40, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57"
     )]
     pub op: ::core::option::Option<binance_command::Op>,
 }
@@ -1226,5 +1265,11 @@ pub mod binance_command {
         /// usds_futures.ticker_24h
         #[prost(message, tag = "55")]
         UsdsFuturesTicker24h(super::BinanceFuturesTicker24h),
+        /// spot.klines
+        #[prost(message, tag = "56")]
+        SpotKlines(super::BinanceSpotKlines),
+        /// usds_futures.klines
+        #[prost(message, tag = "57")]
+        UsdsFuturesKlines(super::BinanceFuturesKlines),
     }
 }

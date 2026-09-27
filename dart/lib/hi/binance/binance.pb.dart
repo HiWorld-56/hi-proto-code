@@ -1664,6 +1664,7 @@ class BinanceFuturesNewOrder extends $pb.GeneratedMessage {
     $core.String? price,
     $core.bool? reduceOnly,
     $core.String? percent,
+    $core.int? leverage,
   }) {
     final result = create();
     if (symbol != null) result.symbol = symbol;
@@ -1675,6 +1676,7 @@ class BinanceFuturesNewOrder extends $pb.GeneratedMessage {
     if (price != null) result.price = price;
     if (reduceOnly != null) result.reduceOnly = reduceOnly;
     if (percent != null) result.percent = percent;
+    if (leverage != null) result.leverage = leverage;
     return result;
   }
 
@@ -1704,6 +1706,7 @@ class BinanceFuturesNewOrder extends $pb.GeneratedMessage {
     ..aOS(7, _omitFieldNames ? '' : 'price')
     ..aOB(8, _omitFieldNames ? '' : 'reduceOnly')
     ..aOS(9, _omitFieldNames ? '' : 'percent')
+    ..aI(10, _omitFieldNames ? '' : 'leverage', fieldType: $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1815,6 +1818,17 @@ class BinanceFuturesNewOrder extends $pb.GeneratedMessage {
   $core.bool hasPercent() => $_has(8);
   @$pb.TagNumber(9)
   void clearPercent() => $_clearField(9);
+
+  /// 杠杆(倍数)。给了:机器人**先把这个交易对的杠杆设成它,再下单**(按比例开仓也按新杠杆换算)。
+  /// 币安的杠杆是按交易对分别设的,原来「设杠杆」和「下单」是两个动作,漏点一个就按旧杠杆开仓(2026-09-27 用户反馈)。
+  @$pb.TagNumber(10)
+  $core.int get leverage => $_getIZ(9);
+  @$pb.TagNumber(10)
+  set leverage($core.int value) => $_setUnsignedInt32(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasLeverage() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearLeverage() => $_clearField(10);
 }
 
 /// 合约撤单。`DELETE /fapi/v1/order`
@@ -2021,6 +2035,212 @@ class BinanceFuturesLeverage extends $pb.GeneratedMessage {
   $core.bool hasLeverage() => $_has(1);
   @$pb.TagNumber(2)
   void clearLeverage() => $_clearField(2);
+}
+
+/// K 线。`GET /api/v3/klines`(现货)/ `GET /fapi/v1/klines`(合约),公开接口不签名。
+/// interval 照币安的写法:1m 3m 5m 15m 30m 1h 2h 4h 6h 8h 12h 1d 3d 1w 1M;limit 不给 = 币安默认(500),最多 1500。
+class BinanceSpotKlines extends $pb.GeneratedMessage {
+  factory BinanceSpotKlines({
+    $core.String? symbol,
+    $core.String? interval,
+    $core.int? limit,
+    $fixnum.Int64? startTime,
+    $fixnum.Int64? endTime,
+  }) {
+    final result = create();
+    if (symbol != null) result.symbol = symbol;
+    if (interval != null) result.interval = interval;
+    if (limit != null) result.limit = limit;
+    if (startTime != null) result.startTime = startTime;
+    if (endTime != null) result.endTime = endTime;
+    return result;
+  }
+
+  BinanceSpotKlines._();
+
+  factory BinanceSpotKlines.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceSpotKlines.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceSpotKlines',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'symbol')
+    ..aOS(2, _omitFieldNames ? '' : 'interval')
+    ..aI(3, _omitFieldNames ? '' : 'limit', fieldType: $pb.PbFieldType.OU3)
+    ..aInt64(4, _omitFieldNames ? '' : 'startTime')
+    ..aInt64(5, _omitFieldNames ? '' : 'endTime')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceSpotKlines clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceSpotKlines copyWith(void Function(BinanceSpotKlines) updates) =>
+      super.copyWith((message) => updates(message as BinanceSpotKlines))
+          as BinanceSpotKlines;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceSpotKlines create() => BinanceSpotKlines._();
+  @$core.override
+  BinanceSpotKlines createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceSpotKlines getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceSpotKlines>(create);
+  static BinanceSpotKlines? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get symbol => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set symbol($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSymbol() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSymbol() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get interval => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set interval($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasInterval() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearInterval() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.int get limit => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set limit($core.int value) => $_setUnsignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasLimit() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearLimit() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $fixnum.Int64 get startTime => $_getI64(3);
+  @$pb.TagNumber(4)
+  set startTime($fixnum.Int64 value) => $_setInt64(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasStartTime() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearStartTime() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $fixnum.Int64 get endTime => $_getI64(4);
+  @$pb.TagNumber(5)
+  set endTime($fixnum.Int64 value) => $_setInt64(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasEndTime() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearEndTime() => $_clearField(5);
+}
+
+class BinanceFuturesKlines extends $pb.GeneratedMessage {
+  factory BinanceFuturesKlines({
+    $core.String? symbol,
+    $core.String? interval,
+    $core.int? limit,
+    $fixnum.Int64? startTime,
+    $fixnum.Int64? endTime,
+  }) {
+    final result = create();
+    if (symbol != null) result.symbol = symbol;
+    if (interval != null) result.interval = interval;
+    if (limit != null) result.limit = limit;
+    if (startTime != null) result.startTime = startTime;
+    if (endTime != null) result.endTime = endTime;
+    return result;
+  }
+
+  BinanceFuturesKlines._();
+
+  factory BinanceFuturesKlines.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceFuturesKlines.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceFuturesKlines',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'symbol')
+    ..aOS(2, _omitFieldNames ? '' : 'interval')
+    ..aI(3, _omitFieldNames ? '' : 'limit', fieldType: $pb.PbFieldType.OU3)
+    ..aInt64(4, _omitFieldNames ? '' : 'startTime')
+    ..aInt64(5, _omitFieldNames ? '' : 'endTime')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceFuturesKlines clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceFuturesKlines copyWith(void Function(BinanceFuturesKlines) updates) =>
+      super.copyWith((message) => updates(message as BinanceFuturesKlines))
+          as BinanceFuturesKlines;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceFuturesKlines create() => BinanceFuturesKlines._();
+  @$core.override
+  BinanceFuturesKlines createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceFuturesKlines getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceFuturesKlines>(create);
+  static BinanceFuturesKlines? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get symbol => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set symbol($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSymbol() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSymbol() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get interval => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set interval($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasInterval() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearInterval() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.int get limit => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set limit($core.int value) => $_setUnsignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasLimit() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearLimit() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $fixnum.Int64 get startTime => $_getI64(3);
+  @$pb.TagNumber(4)
+  set startTime($fixnum.Int64 value) => $_setInt64(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasStartTime() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearStartTime() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $fixnum.Int64 get endTime => $_getI64(4);
+  @$pb.TagNumber(5)
+  set endTime($fixnum.Int64 value) => $_setInt64(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasEndTime() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearEndTime() => $_clearField(5);
 }
 
 /// 合约 24 小时行情(现价、涨跌)。`GET /fapi/v1/ticker/24hr`,公开接口不签名。
@@ -2313,6 +2533,7 @@ class BinanceFuturesNewAlgoOrder extends $pb.GeneratedMessage {
     $core.String? activatePrice,
     $core.String? callbackRate,
     $core.String? percent,
+    $core.int? leverage,
   }) {
     final result = create();
     if (symbol != null) result.symbol = symbol;
@@ -2330,6 +2551,7 @@ class BinanceFuturesNewAlgoOrder extends $pb.GeneratedMessage {
     if (activatePrice != null) result.activatePrice = activatePrice;
     if (callbackRate != null) result.callbackRate = callbackRate;
     if (percent != null) result.percent = percent;
+    if (leverage != null) result.leverage = leverage;
     return result;
   }
 
@@ -2366,6 +2588,7 @@ class BinanceFuturesNewAlgoOrder extends $pb.GeneratedMessage {
     ..aOS(13, _omitFieldNames ? '' : 'activatePrice')
     ..aOS(14, _omitFieldNames ? '' : 'callbackRate')
     ..aOS(15, _omitFieldNames ? '' : 'percent')
+    ..aI(16, _omitFieldNames ? '' : 'leverage', fieldType: $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2528,6 +2751,16 @@ class BinanceFuturesNewAlgoOrder extends $pb.GeneratedMessage {
   $core.bool hasPercent() => $_has(14);
   @$pb.TagNumber(15)
   void clearPercent() => $_clearField(15);
+
+  /// 杠杆(倍数),含义同 BinanceFuturesNewOrder.leverage:给了就先设好这个交易对的杠杆,再挂这张条件单。
+  @$pb.TagNumber(16)
+  $core.int get leverage => $_getIZ(15);
+  @$pb.TagNumber(16)
+  set leverage($core.int value) => $_setUnsignedInt32(15, value);
+  @$pb.TagNumber(16)
+  $core.bool hasLeverage() => $_has(15);
+  @$pb.TagNumber(16)
+  void clearLeverage() => $_clearField(16);
 }
 
 /// 撤一张策略委托。`DELETE /fapi/v1/algoOrder`。`algo_id` 与 `client_algo_id` 给一个即可。

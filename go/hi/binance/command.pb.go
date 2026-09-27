@@ -101,6 +101,8 @@ type BinanceCommand struct {
 	//	*BinanceCommand_UsdsFuturesQueryAlgoOrder
 	//	*BinanceCommand_UsdsFuturesQueryAllAlgoOrders
 	//	*BinanceCommand_UsdsFuturesTicker_24H
+	//	*BinanceCommand_SpotKlines
+	//	*BinanceCommand_UsdsFuturesKlines
 	Op            isBinanceCommand_Op `protobuf_oneof:"op"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -546,6 +548,24 @@ func (x *BinanceCommand) GetUsdsFuturesTicker_24H() *BinanceFuturesTicker24H {
 	return nil
 }
 
+func (x *BinanceCommand) GetSpotKlines() *BinanceSpotKlines {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceCommand_SpotKlines); ok {
+			return x.SpotKlines
+		}
+	}
+	return nil
+}
+
+func (x *BinanceCommand) GetUsdsFuturesKlines() *BinanceFuturesKlines {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceCommand_UsdsFuturesKlines); ok {
+			return x.UsdsFuturesKlines
+		}
+	}
+	return nil
+}
+
 type isBinanceCommand_Op interface {
 	isBinanceCommand_Op()
 }
@@ -728,6 +748,14 @@ type BinanceCommand_UsdsFuturesTicker_24H struct {
 	UsdsFuturesTicker_24H *BinanceFuturesTicker24H `protobuf:"bytes,55,opt,name=usds_futures_ticker_24h,json=usdsFuturesTicker24h,proto3,oneof"` // usds_futures.ticker_24h
 }
 
+type BinanceCommand_SpotKlines struct {
+	SpotKlines *BinanceSpotKlines `protobuf:"bytes,56,opt,name=spot_klines,json=spotKlines,proto3,oneof"` // spot.klines
+}
+
+type BinanceCommand_UsdsFuturesKlines struct {
+	UsdsFuturesKlines *BinanceFuturesKlines `protobuf:"bytes,57,opt,name=usds_futures_klines,json=usdsFuturesKlines,proto3,oneof"` // usds_futures.klines
+}
+
 func (*BinanceCommand_SpotNewOrder) isBinanceCommand_Op() {}
 
 func (*BinanceCommand_SpotCancelOrder) isBinanceCommand_Op() {}
@@ -816,12 +844,16 @@ func (*BinanceCommand_UsdsFuturesQueryAllAlgoOrders) isBinanceCommand_Op() {}
 
 func (*BinanceCommand_UsdsFuturesTicker_24H) isBinanceCommand_Op() {}
 
+func (*BinanceCommand_SpotKlines) isBinanceCommand_Op() {}
+
+func (*BinanceCommand_UsdsFuturesKlines) isBinanceCommand_Op() {}
+
 var File_hi_binance_command_proto protoreflect.FileDescriptor
 
 const file_hi_binance_command_proto_rawDesc = "" +
 	"\n" +
 	"\x18hi/binance/command.proto\x12\n" +
-	"hi.binance\x1a\x1bbuf/validate/validate.proto\x1a\x18hi/binance/binance.proto\x1a\x17hi/binance/stocks.proto\x1a\x10hi/options.proto\"\xfd$\n" +
+	"hi.binance\x1a\x1bbuf/validate/validate.proto\x1a\x18hi/binance/binance.proto\x1a\x17hi/binance/stocks.proto\x1a\x10hi/options.proto\"\x9f&\n" +
 	"\x0eBinanceCommand\x12/\n" +
 	"\n" +
 	"expiration\x18\x01 \x01(\x03B\n" +
@@ -871,7 +903,10 @@ const file_hi_binance_command_proto_rawDesc = "" +
 	"(usds_futures_cancel_all_algo_open_orders\x184 \x01(\v2-.hi.binance.BinanceFuturesCancelAllAlgoOrdersB\x04\x90\xb5\x18\x02H\x00R\"usdsFuturesCancelAllAlgoOpenOrders\x12p\n" +
 	"\x1dusds_futures_query_algo_order\x185 \x01(\v2&.hi.binance.BinanceFuturesGetAlgoOrderB\x04\x90\xb5\x18\x02H\x00R\x19usdsFuturesQueryAlgoOrder\x12z\n" +
 	"\"usds_futures_query_all_algo_orders\x186 \x01(\v2'.hi.binance.BinanceFuturesAllAlgoOrdersB\x04\x90\xb5\x18\x02H\x00R\x1dusdsFuturesQueryAllAlgoOrders\x12b\n" +
-	"\x17usds_futures_ticker_24h\x187 \x01(\v2#.hi.binance.BinanceFuturesTicker24hB\x04\x90\xb5\x18\x02H\x00R\x14usdsFuturesTicker24h:\x04\x98\xb5\x18\x02B\v\n" +
+	"\x17usds_futures_ticker_24h\x187 \x01(\v2#.hi.binance.BinanceFuturesTicker24hB\x04\x90\xb5\x18\x02H\x00R\x14usdsFuturesTicker24h\x12F\n" +
+	"\vspot_klines\x188 \x01(\v2\x1d.hi.binance.BinanceSpotKlinesB\x04\x90\xb5\x18\x02H\x00R\n" +
+	"spotKlines\x12X\n" +
+	"\x13usds_futures_klines\x189 \x01(\v2 .hi.binance.BinanceFuturesKlinesB\x04\x90\xb5\x18\x02H\x00R\x11usdsFuturesKlines:\x04\x98\xb5\x18\x02B\v\n" +
 	"\x02op\x12\x05\xbaH\x02\b\x01B\r\n" +
 	"\v_expirationB\x95\x01\n" +
 	"\x0ecom.hi.binanceB\fCommandProtoP\x01Z,github.com/HiWorld-56/hi-proto/go/hi/binance\xa2\x02\x03HBX\xaa\x02\n" +
@@ -937,6 +972,8 @@ var file_hi_binance_command_proto_goTypes = []any{
 	(*BinanceFuturesGetAlgoOrder)(nil),        // 42: hi.binance.BinanceFuturesGetAlgoOrder
 	(*BinanceFuturesAllAlgoOrders)(nil),       // 43: hi.binance.BinanceFuturesAllAlgoOrders
 	(*BinanceFuturesTicker24H)(nil),           // 44: hi.binance.BinanceFuturesTicker24h
+	(*BinanceSpotKlines)(nil),                 // 45: hi.binance.BinanceSpotKlines
+	(*BinanceFuturesKlines)(nil),              // 46: hi.binance.BinanceFuturesKlines
 }
 var file_hi_binance_command_proto_depIdxs = []int32{
 	1,  // 0: hi.binance.BinanceCommand.spot_new_order:type_name -> hi.binance.BinanceSpotNewOrder
@@ -983,11 +1020,13 @@ var file_hi_binance_command_proto_depIdxs = []int32{
 	42, // 41: hi.binance.BinanceCommand.usds_futures_query_algo_order:type_name -> hi.binance.BinanceFuturesGetAlgoOrder
 	43, // 42: hi.binance.BinanceCommand.usds_futures_query_all_algo_orders:type_name -> hi.binance.BinanceFuturesAllAlgoOrders
 	44, // 43: hi.binance.BinanceCommand.usds_futures_ticker_24h:type_name -> hi.binance.BinanceFuturesTicker24h
-	44, // [44:44] is the sub-list for method output_type
-	44, // [44:44] is the sub-list for method input_type
-	44, // [44:44] is the sub-list for extension type_name
-	44, // [44:44] is the sub-list for extension extendee
-	0,  // [0:44] is the sub-list for field type_name
+	45, // 44: hi.binance.BinanceCommand.spot_klines:type_name -> hi.binance.BinanceSpotKlines
+	46, // 45: hi.binance.BinanceCommand.usds_futures_klines:type_name -> hi.binance.BinanceFuturesKlines
+	46, // [46:46] is the sub-list for method output_type
+	46, // [46:46] is the sub-list for method input_type
+	46, // [46:46] is the sub-list for extension type_name
+	46, // [46:46] is the sub-list for extension extendee
+	0,  // [0:46] is the sub-list for field type_name
 }
 
 func init() { file_hi_binance_command_proto_init() }
@@ -1042,6 +1081,8 @@ func file_hi_binance_command_proto_init() {
 		(*BinanceCommand_UsdsFuturesQueryAlgoOrder)(nil),
 		(*BinanceCommand_UsdsFuturesQueryAllAlgoOrders)(nil),
 		(*BinanceCommand_UsdsFuturesTicker_24H)(nil),
+		(*BinanceCommand_SpotKlines)(nil),
+		(*BinanceCommand_UsdsFuturesKlines)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
