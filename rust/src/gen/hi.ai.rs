@@ -831,6 +831,12 @@ pub struct PluginVersion {
     /// 那边早就是公开的了,源头这边却标着 SELF,两边对不上。以这边为准改成 PUBLIC。
     #[prost(string, optional, tag = "6")]
     pub description: ::core::option::Option<::prost::alloc::string::String>,
+    /// 插件提示词(包里的 `prompt.md`):用这个插件要知道的**概念**,对话时由后端拼进系统消息(每个插件一行)。
+    /// 与 description 一样**创建时不用传**,后端在 CreateVersion 时从包里读出、规整后存库
+    /// (换行保留,每行去首尾空白、连续空白压成一个,空行去掉;上限 800 字)。不带 = 这个插件没写。
+    /// web 拿它展示「这个插件给模型加了什么话」(2026-09-27 起)。可见性同 description:它本来就是喂给模型的。
+    #[prost(string, optional, tag = "7")]
+    pub prompt: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 一个版本在某个 target 上的制品。**发版接口不返回它** —— 发版是立即返回的,
 /// RUST 的构建在后台跑,结果经 Get/ListVersions 回显给发版的人看。

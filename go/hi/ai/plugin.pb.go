@@ -378,7 +378,12 @@ type PluginVersion struct {
 	//
 	// PUBLIC:买家在挂牌页看的 `MarketListingDetail.capabilities` 就是这一份 ——
 	// 那边早就是公开的了,源头这边却标着 SELF,两边对不上。以这边为准改成 PUBLIC。
-	Description   *string `protobuf:"bytes,6,opt,name=description,proto3,oneof" json:"description,omitempty"`
+	Description *string `protobuf:"bytes,6,opt,name=description,proto3,oneof" json:"description,omitempty"`
+	// 插件提示词(包里的 `prompt.md`):用这个插件要知道的**概念**,对话时由后端拼进系统消息(每个插件一行)。
+	// 与 description 一样**创建时不用传**,后端在 CreateVersion 时从包里读出、规整后存库
+	// (换行保留,每行去首尾空白、连续空白压成一个,空行去掉;上限 800 字)。不带 = 这个插件没写。
+	// web 拿它展示「这个插件给模型加了什么话」(2026-09-27 起)。可见性同 description:它本来就是喂给模型的。
+	Prompt        *string `protobuf:"bytes,7,opt,name=prompt,proto3,oneof" json:"prompt,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -451,6 +456,13 @@ func (x *PluginVersion) GetUrl() string {
 func (x *PluginVersion) GetDescription() string {
 	if x != nil && x.Description != nil {
 		return *x.Description
+	}
+	return ""
+}
+
+func (x *PluginVersion) GetPrompt() string {
+	if x != nil && x.Prompt != nil {
+		return *x.Prompt
 	}
 	return ""
 }
@@ -3081,14 +3093,15 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\x04lang\x18\x03 \x01(\x0e2\x11.hi.ai.PluginLangB\x04\x90\xb5\x18\x03H\x02R\x04lang\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
 	"\x05_uuidB\a\n" +
 	"\x05_nameB\a\n" +
-	"\x05_lang\"\xa9\x02\n" +
+	"\x05_lang\"\xd7\x02\n" +
 	"\rPluginVersion\x12\x1d\n" +
 	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04uuid\x88\x01\x01\x12#\n" +
 	"\aversion\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\aversion\x88\x01\x01\x12\x1d\n" +
 	"\x04logo\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01H\x02R\x04logo\x88\x01\x01\x12#\n" +
 	"\asummary\x18\x04 \x01(\tB\x04\x90\xb5\x18\x01H\x03R\asummary\x88\x01\x01\x12\x1b\n" +
 	"\x03url\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x04R\x03url\x88\x01\x01\x12+\n" +
-	"\vdescription\x18\x06 \x01(\tB\x04\x90\xb5\x18\x01H\x05R\vdescription\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
+	"\vdescription\x18\x06 \x01(\tB\x04\x90\xb5\x18\x01H\x05R\vdescription\x88\x01\x01\x12!\n" +
+	"\x06prompt\x18\a \x01(\tB\x04\x90\xb5\x18\x01H\x06R\x06prompt\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
 	"\x05_uuidB\n" +
 	"\n" +
 	"\b_versionB\a\n" +
@@ -3096,7 +3109,8 @@ const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\n" +
 	"\b_summaryB\x06\n" +
 	"\x04_urlB\x0e\n" +
-	"\f_description\"\xd6\x04\n" +
+	"\f_descriptionB\t\n" +
+	"\a_prompt\"\xd6\x04\n" +
 	"\x0ePluginArtifact\x12\x1d\n" +
 	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04uuid\x88\x01\x01\x12#\n" +
 	"\aversion\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\aversion\x88\x01\x01\x12!\n" +

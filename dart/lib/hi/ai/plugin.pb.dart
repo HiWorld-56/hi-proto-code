@@ -121,6 +121,7 @@ class PluginVersion extends $pb.GeneratedMessage {
     $core.String? summary,
     $core.String? url,
     $core.String? description,
+    $core.String? prompt,
   }) {
     final result = create();
     if (uuid != null) result.uuid = uuid;
@@ -129,6 +130,7 @@ class PluginVersion extends $pb.GeneratedMessage {
     if (summary != null) result.summary = summary;
     if (url != null) result.url = url;
     if (description != null) result.description = description;
+    if (prompt != null) result.prompt = prompt;
     return result;
   }
 
@@ -151,6 +153,7 @@ class PluginVersion extends $pb.GeneratedMessage {
     ..aOS(4, _omitFieldNames ? '' : 'summary')
     ..aOS(5, _omitFieldNames ? '' : 'url')
     ..aOS(6, _omitFieldNames ? '' : 'description')
+    ..aOS(7, _omitFieldNames ? '' : 'prompt')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -250,6 +253,19 @@ class PluginVersion extends $pb.GeneratedMessage {
   $core.bool hasDescription() => $_has(5);
   @$pb.TagNumber(6)
   void clearDescription() => $_clearField(6);
+
+  /// 插件提示词(包里的 `prompt.md`):用这个插件要知道的**概念**,对话时由后端拼进系统消息(每个插件一行)。
+  /// 与 description 一样**创建时不用传**,后端在 CreateVersion 时从包里读出、规整后存库
+  /// (换行保留,每行去首尾空白、连续空白压成一个,空行去掉;上限 800 字)。不带 = 这个插件没写。
+  /// web 拿它展示「这个插件给模型加了什么话」(2026-09-27 起)。可见性同 description:它本来就是喂给模型的。
+  @$pb.TagNumber(7)
+  $core.String get prompt => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set prompt($core.String value) => $_setString(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasPrompt() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearPrompt() => $_clearField(7);
 }
 
 /// 一个版本在某个 target 上的制品。**发版接口不返回它** —— 发版是立即返回的,

@@ -177,6 +177,16 @@ const PluginVersion$json = {
       '10': 'description',
       '17': true
     },
+    {
+      '1': 'prompt',
+      '3': 7,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 6,
+      '10': 'prompt',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -186,6 +196,7 @@ const PluginVersion$json = {
     {'1': '_summary'},
     {'1': '_url'},
     {'1': '_description'},
+    {'1': '_prompt'},
   ],
 };
 
@@ -195,8 +206,9 @@ final $typed_data.Uint8List pluginVersionDescriptor = $convert.base64Decode(
     '9uGAIgASgJQgSQtRgBSAFSB3ZlcnNpb26IAQESHQoEbG9nbxgDIAEoCUIEkLUYAUgCUgRsb2dv'
     'iAEBEiMKB3N1bW1hcnkYBCABKAlCBJC1GAFIA1IHc3VtbWFyeYgBARIbCgN1cmwYBSABKAlCBJ'
     'C1GANIBFIDdXJsiAEBEisKC2Rlc2NyaXB0aW9uGAYgASgJQgSQtRgBSAVSC2Rlc2NyaXB0aW9u'
-    'iAEBOgSYtRgDQgcKBV91dWlkQgoKCF92ZXJzaW9uQgcKBV9sb2dvQgoKCF9zdW1tYXJ5QgYKBF'
-    '91cmxCDgoMX2Rlc2NyaXB0aW9u');
+    'iAEBEiEKBnByb21wdBgHIAEoCUIEkLUYAUgGUgZwcm9tcHSIAQE6BJi1GANCBwoFX3V1aWRCCg'
+    'oIX3ZlcnNpb25CBwoFX2xvZ29CCgoIX3N1bW1hcnlCBgoEX3VybEIOCgxfZGVzY3JpcHRpb25C'
+    'CQoHX3Byb21wdA==');
 
 @$core.Deprecated('Use pluginArtifactDescriptor instead')
 const PluginArtifact$json = {
