@@ -17,8 +17,9 @@ import 'package:protobuf/protobuf.dart' as $pb;
 /// SettleMode 结算方式。**挂牌后不可改** —— 改价可以,改"钱怎么走"不行。
 ///
 /// club 不实现任何一种业务,它只跑状态机:FREE/APPROVAL 自己闭合;
-/// MERCHANT/AGENT/EXTERNAL 共用同一条回调路径(见 hi/club/callback.proto),
-/// club 完全不关心对方是在收钱还是在审资质。
+/// PAID 由 hidid 回调认款(hi/did/callback.proto 的 `Pay` → club 核验);
+/// EXTERNAL 由三方商户经 `MarketCallback` 的 Pull / Notify 自己拉、自己回 ——
+/// club 完全不关心对方是在审资质还是走别的渠道。
 class SettleMode extends $pb.ProtobufEnum {
   static const SettleMode SETTLE_MODE_UNSPECIFIED =
       SettleMode._(0, _omitEnumNames ? '' : 'SETTLE_MODE_UNSPECIFIED');

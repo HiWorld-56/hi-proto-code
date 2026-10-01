@@ -422,8 +422,8 @@ type ChatReq struct {
 	//	从此再没发出去过,**不报错、类型也对,只是值永远是零值**。搬家时别再漏第二次。
 	EchoToolCalls *bool `protobuf:"varint,9,opt,name=echo_tool_calls,json=echoToolCalls,proto3,oneof" json:"echo_tool_calls,omitempty"` // 发 type="echoToolCalls" 帧:模型调了哪个函数、传了什么参数、工具返回什么
 	EchoMemory    *bool `protobuf:"varint,10,opt,name=echo_memory,json=echoMemory,proto3,oneof" json:"echo_memory,omitempty"`           // 发 type="echoMemory" 帧:本轮命中的记忆片段(旧名 return_training_data)
-	// 发 type="echoContext" 帧:**这次真正喂给模型的那份上下文**(系统提示词 + 按 qa_num 截出的历史
-	// + 本轮输入),即 GetCompleteMessage 的产物。调不准的时候要看的就是它 ——
+	// 发 type="echoContext" 帧:**这次真正喂给模型的那份上下文**(系统提示词,已含【插件】段 +
+	// 按 qa_num 截出的历史;**不含本轮提问**),即 GetCompleteMessage 产物里本轮提问之前的那部分。调不准的时候要看的就是它 ——
 	// 光看历史列表看不出实际截了几轮、系统提示词长什么样、记忆片段拼没拼进去。
 	EchoContext *bool `protobuf:"varint,11,opt,name=echo_context,json=echoContext,proto3,oneof" json:"echo_context,omitempty"`
 	// 这句话是谁说的。**不是"谁在调"** —— 调用方几乎永远是机器人自己(`agent`),
@@ -869,7 +869,7 @@ func (x *ChatResp) GetTools() []*ToolCall {
 //	toolCalls     —— **指令**:轮到客户端执行工具了。见下,不可关
 //	echoToolCalls —— 回显:模型调了哪个函数、传了什么参数、工具返回什么(由 echo_tool_calls 打开)
 //	echoMemory    —— 回显:本轮命中的记忆片段(由 echo_memory 打开)
-//	echoContext   —— 回显:这次真正喂给模型的上下文(由 echo_context 打开)
+//	echoContext   —— 回显:这次真正喂给模型的上下文(系统提示词含【插件】段 + 截出的历史,不含本轮提问;由 echo_context 打开)
 //
 // ⚠️ **`msg` 里是完整答复,不是 token 分片。** 服务端跑完整个循环、Finish 之后
 //

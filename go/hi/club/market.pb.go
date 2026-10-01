@@ -29,8 +29,9 @@ const (
 // SettleMode 结算方式。**挂牌后不可改** —— 改价可以,改"钱怎么走"不行。
 //
 // club 不实现任何一种业务,它只跑状态机:FREE/APPROVAL 自己闭合;
-// MERCHANT/AGENT/EXTERNAL 共用同一条回调路径(见 hi/club/callback.proto),
-// club 完全不关心对方是在收钱还是在审资质。
+// PAID 由 hidid 回调认款(hi/did/callback.proto 的 `Pay` → club 核验);
+// EXTERNAL 由三方商户经 `MarketCallback` 的 Pull / Notify 自己拉、自己回 ——
+// club 完全不关心对方是在审资质还是走别的渠道。
 type SettleMode int32
 
 const (
@@ -186,7 +187,7 @@ type MarketListingKind int32
 const (
 	MarketListingKind_MARKET_LISTING_KIND_UNSPECIFIED MarketListingKind = 0 // = NORMAL,三方商户的货
 	MarketListingKind_MARKET_LISTING_KIND_OFFICIAL    MarketListingKind = 1 // 官方出品(可以收费、走正常申请流程)
-	MarketListingKind_MARKET_LISTING_KIND_BUILTIN     MarketListingKind = 2 // 内置:每台硬件机器人自动引用 + 全网跟版 + 免费永久免审
+	MarketListingKind_MARKET_LISTING_KIND_BUILTIN     MarketListingKind = 2 // 内置:新硬件机器人注册时自动引用 + 免费永久免审;此后与普通插件一样(跟版靠引用行的 follow_latest,2026-09-05 起不再全网强推)
 )
 
 // Enum value maps for MarketListingKind.

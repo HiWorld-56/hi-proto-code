@@ -154,7 +154,7 @@ type ChatReq struct {
 	//	即便 ai 修好了也永远拿不到回显帧。搬家时别再漏第二次。
 	EchoToolCalls *bool `protobuf:"varint,9,opt,name=echo_tool_calls,json=echoToolCalls,proto3,oneof" json:"echo_tool_calls,omitempty"` // 发 type="echoToolCalls" 帧:模型调了哪个函数、传了什么参数、工具返回什么
 	EchoMemory    *bool `protobuf:"varint,10,opt,name=echo_memory,json=echoMemory,proto3,oneof" json:"echo_memory,omitempty"`           // 发 type="echoMemory" 帧:本轮命中的记忆片段(旧名 return_training_data)
-	EchoContext   *bool `protobuf:"varint,11,opt,name=echo_context,json=echoContext,proto3,oneof" json:"echo_context,omitempty"`        // 发 type="echoContext" 帧:这次真正喂给模型的那份上下文(系统提示词 + 截出的历史 + 本轮输入)
+	EchoContext   *bool `protobuf:"varint,11,opt,name=echo_context,json=echoContext,proto3,oneof" json:"echo_context,omitempty"`        // 发 type="echoContext" 帧:这次真正喂给模型的那份上下文(系统提示词含【插件】段 + 截出的历史;**不含本轮提问**)
 	// ── 这句话是谁说的 ─────────────────────────────────────────────────────────
 	//
 	// 🔴 **不是"谁在调这个接口"。** 调用方几乎永远是机器人自己(`agent` 就是它),
