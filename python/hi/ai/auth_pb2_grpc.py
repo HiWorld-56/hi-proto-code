@@ -60,7 +60,9 @@ class AuthServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def Logout(self, request, context):
-        """登出:删该会话的 refresh/access 行。**凭 refresh_token 证明归属**,故不鉴权。
+        """登出:删该会话的 refresh/access 行。**凭 refresh_token 证明归属**(当前或宽限位那份,
+        与 hi.did / hi.club 同一判据),不作数一律 Unauthenticated、不回假成功。
+        AUTH_NONE 只是传输层不验 access(登出时它可能已过期),不是不要凭据。
 
         🔴 hi-ai 此前**根本没有登出** —— 会话只能等自己过期(15 天)或被同一台设备的新登录覆盖,
         用户主动退出这件事做不到。与 club / hi-did 同形补上。
