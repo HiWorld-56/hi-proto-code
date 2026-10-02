@@ -2640,6 +2640,11 @@ pub mod list_users_assets_resp {
         #[prost(message, optional, tag = "4")]
         pub base: ::core::option::Option<super::super::Entity>,
         /// 按 `currency` 折算的总资产,十进制字符串(免浮点误差)。沿用 3 号:类型与含义没变,只是改了名字。
+        ///
+        /// * `"0"`:这个人没有资产(没登记过地址,或没上报过任何币种)。
+        /// * **absent**:这次算不出来 —— 查询失败,或他某个币种的数量没上报过 / 库里不是数字。
+        ///   不是 0,前端要显示成「未知」,不许按 0 显示(那是在说他没有资产)。
+        ///   (backend-hi-did v2.5.34-dev6 起;原来失败与不知道一律写成 "0"。)
         #[prost(string, optional, tag = "3")]
         pub total: ::core::option::Option<::prost::alloc::string::String>,
     }
