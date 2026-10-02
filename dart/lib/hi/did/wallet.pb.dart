@@ -651,6 +651,8 @@ class TotalAssetsResp extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<TotalAssetsResp>(create);
   static TotalAssetsResp? _defaultInstance;
 
+  /// 全网总资产 = **有市场价的币**的市值之和:没有行情的币(如已不支持的 FIL)没有市值,不计入。
+  /// 与 ListUsersAssetsResp 里单人的 total 口径不同 —— 单人有一项算不出就 absent。
   @$pb.TagNumber(1)
   $core.String get n => $_getSZ(0);
   @$pb.TagNumber(1)

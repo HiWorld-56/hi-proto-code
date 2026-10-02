@@ -2608,6 +2608,8 @@ pub struct TotalAssetsReq {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TotalAssetsResp {
+    /// 全网总资产 = **有市场价的币**的市值之和:没有行情的币(如已不支持的 FIL)没有市值,不计入。
+    /// 与 ListUsersAssetsResp 里单人的 total 口径不同 —— 单人有一项算不出就 absent。
     #[prost(string, optional, tag = "1")]
     pub n: ::core::option::Option<::prost::alloc::string::String>,
 }
