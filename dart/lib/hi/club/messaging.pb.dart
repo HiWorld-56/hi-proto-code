@@ -16,11 +16,10 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/any.pb.dart' as $1;
 
-import '../binance/binance.pb.dart' as $4;
-import '../binance/command.pb.dart' as $5;
+import '../binance/binance.pb.dart' as $3;
+import '../binance/command.pb.dart' as $4;
 import '../common.pb.dart' as $0;
 import '../did/transfer.pb.dart' as $2;
-import 'trade.pb.dart' as $3;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -855,7 +854,7 @@ class Content_Chat extends $pb.GeneratedMessage {
   void clearDuration() => $_clearField(4);
 }
 
-enum Content_Kind { chat, trans, trade, binance, binanceCmd, notSet }
+enum Content_Kind { chat, trans, binance, binanceCmd, notSet }
 
 ///
 /// Content.type —— **一条消息里这一段是什么**。字符串,取值就是下面这张表,**别自己发明**。
@@ -865,7 +864,6 @@ enum Content_Kind { chat, trans, trade, binance, binanceCmd, notSet }
 /// audio_url   语音              chat.content = 音频 url(duration=秒)
 /// file        文件              chat.content = 文件 url(name/size)
 /// transfer    转账卡            kind=trans(hi.did.Transaction)
-/// trade       交易卡            kind=trade(TradeBase)
 /// broadcast   广播
 /// binance     币安操作结果卡      kind=binance(hi.binance.BinanceResult)
 /// binance_cmd 币安指令            kind=binance_cmd(hi.binance.BinanceCommand)—— 群里要 @ 执行的机器人,见 hi/binance/command.proto
@@ -874,7 +872,7 @@ enum Content_Kind { chat, trans, trade, binance, binanceCmd, notSet }
 ///
 /// 这套 content 是**从 OpenAI 的 content 标准扩展来的** —— 那边的多模态内容块就是
 /// `{"type":"text"}` / `{"type":"image_url"}`,`image_url` 是照抄它的词,不是我们随手起的。
-/// `audio_url` / `file` / `transfer` / `trade` 是我们在同一范式下的扩展。
+/// `audio_url` / `file` / `transfer` 是我们在同一范式下的扩展。
 /// 所以**别看着别扭就"顺手改成 image"**:改了既背离上游那套约定,也当场打断
 /// Android 端(hiclub-app)与硬件端(hinj-brain)—— 它们现网都按这张表收发。
 /// 同理,以后加多模态类型**先看 OpenAI 那边叫什么**,能对齐就对齐。
@@ -892,15 +890,13 @@ class Content extends $pb.GeneratedMessage {
     $core.String? type,
     Content_Chat? chat,
     $2.Transaction? trans,
-    $3.TradeBase? trade,
-    $4.BinanceResult? binance,
-    $5.BinanceCommand? binanceCmd,
+    $3.BinanceResult? binance,
+    $4.BinanceCommand? binanceCmd,
   }) {
     final result = create();
     if (type != null) result.type = type;
     if (chat != null) result.chat = chat;
     if (trans != null) result.trans = trans;
-    if (trade != null) result.trade = trade;
     if (binance != null) result.binance = binance;
     if (binanceCmd != null) result.binanceCmd = binanceCmd;
     return result;
@@ -918,7 +914,6 @@ class Content extends $pb.GeneratedMessage {
   static const $core.Map<$core.int, Content_Kind> _Content_KindByTag = {
     2: Content_Kind.chat,
     3: Content_Kind.trans,
-    4: Content_Kind.trade,
     5: Content_Kind.binance,
     6: Content_Kind.binanceCmd,
     0: Content_Kind.notSet
@@ -927,18 +922,16 @@ class Content extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'Content',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3, 4, 5, 6])
+    ..oo(0, [2, 3, 5, 6])
     ..aOS(1, _omitFieldNames ? '' : 'type')
     ..aOM<Content_Chat>(2, _omitFieldNames ? '' : 'chat',
         subBuilder: Content_Chat.create)
     ..aOM<$2.Transaction>(3, _omitFieldNames ? '' : 'trans',
         subBuilder: $2.Transaction.create)
-    ..aOM<$3.TradeBase>(4, _omitFieldNames ? '' : 'trade',
-        subBuilder: $3.TradeBase.create)
-    ..aOM<$4.BinanceResult>(5, _omitFieldNames ? '' : 'binance',
-        subBuilder: $4.BinanceResult.create)
-    ..aOM<$5.BinanceCommand>(6, _omitFieldNames ? '' : 'binanceCmd',
-        subBuilder: $5.BinanceCommand.create)
+    ..aOM<$3.BinanceResult>(5, _omitFieldNames ? '' : 'binance',
+        subBuilder: $3.BinanceResult.create)
+    ..aOM<$4.BinanceCommand>(6, _omitFieldNames ? '' : 'binanceCmd',
+        subBuilder: $4.BinanceCommand.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -961,13 +954,11 @@ class Content extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
-  @$pb.TagNumber(4)
   @$pb.TagNumber(5)
   @$pb.TagNumber(6)
   Content_Kind whichKind() => _Content_KindByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
-  @$pb.TagNumber(4)
   @$pb.TagNumber(5)
   @$pb.TagNumber(6)
   void clearKind() => $_clearField($_whichOneof(0));
@@ -1003,40 +994,31 @@ class Content extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $2.Transaction ensureTrans() => $_ensure(2);
 
-  @$pb.TagNumber(4)
-  $3.TradeBase get trade => $_getN(3);
-  @$pb.TagNumber(4)
-  set trade($3.TradeBase value) => $_setField(4, value);
-  @$pb.TagNumber(4)
-  $core.bool hasTrade() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearTrade() => $_clearField(4);
-  @$pb.TagNumber(4)
-  $3.TradeBase ensureTrade() => $_ensure(3);
-
+  /// ⚠️ 没有「交易卡」(原 `TradeBase trade = 4`),不要加回来:中间人交易(club-trade)
+  ///    2026-10-02 整体下线,交易卡只服务那一摊。
   /// 币安操作的结果,机器人回给下指令的那个会话。与转账卡同型:载荷定义在别的包里,这里只引用。
   @$pb.TagNumber(5)
-  $4.BinanceResult get binance => $_getN(4);
+  $3.BinanceResult get binance => $_getN(3);
   @$pb.TagNumber(5)
-  set binance($4.BinanceResult value) => $_setField(5, value);
+  set binance($3.BinanceResult value) => $_setField(5, value);
   @$pb.TagNumber(5)
-  $core.bool hasBinance() => $_has(4);
+  $core.bool hasBinance() => $_has(3);
   @$pb.TagNumber(5)
   void clearBinance() => $_clearField(5);
   @$pb.TagNumber(5)
-  $4.BinanceResult ensureBinance() => $_ensure(4);
+  $3.BinanceResult ensureBinance() => $_ensure(3);
 
   /// 给机器人的币安指令。就是一条普通消息:群里 @ 谁谁执行,发令人是信封的 from。
   @$pb.TagNumber(6)
-  $5.BinanceCommand get binanceCmd => $_getN(5);
+  $4.BinanceCommand get binanceCmd => $_getN(4);
   @$pb.TagNumber(6)
-  set binanceCmd($5.BinanceCommand value) => $_setField(6, value);
+  set binanceCmd($4.BinanceCommand value) => $_setField(6, value);
   @$pb.TagNumber(6)
-  $core.bool hasBinanceCmd() => $_has(5);
+  $core.bool hasBinanceCmd() => $_has(4);
   @$pb.TagNumber(6)
   void clearBinanceCmd() => $_clearField(6);
   @$pb.TagNumber(6)
-  $5.BinanceCommand ensureBinanceCmd() => $_ensure(5);
+  $4.BinanceCommand ensureBinanceCmd() => $_ensure(4);
 }
 
 const $core.bool _omitFieldNames =

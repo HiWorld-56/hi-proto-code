@@ -512,8 +512,7 @@ func (MarketOrderStatus) EnumDescriptor() ([]byte, []int) {
 //	  付过几次、每次为什么没成,一点都查不到;
 //	· 人工退款查账的抓手就是"客人给的那个号"对上一笔入账,号一换就断了。
 //
-// 与中间人交易的子订单是**同一个模式**(见 hi_trade_sub_order):一次尝试一行、
-// 换号靠复制、旧行标出局。两边是独立的子系统,共用的是模式而不是表。
+// 一次尝试一行、换号靠复制、旧行标出局。
 type MarketPaymentStatus int32
 
 const (
@@ -2928,8 +2927,7 @@ type MarketOrder struct {
 	//	                (`MerchantOwner.SetServer`,改它 = 改钱打给谁)。
 	//
 	// 混成一列的后果:那一列会随"谁改了 server"变,而"卖家是谁"不变 ——
-	// 两个变速不同的事实压在一起,迟早对不上。club-trade 早就是分开的
-	// (业务单记交易者、子单记账号),market 这边补齐,口径一致。
+	// 两个变速不同的事实压在一起,迟早对不上。
 	//
 	// ⚠️ **两个都由后端推导,不接受前端指定** —— 让前端传就等于把"钱打给谁"变成可篡改入参。
 	// ⚠️ `payee_account` 在**开单那一刻解析并写死**(与价格/时长同批快照):
@@ -4283,8 +4281,6 @@ func (x *MarketPullResp) GetList() []*MarketPendingGrant {
 
 // Notify 的**签名载荷 schema**(商户处理完把结果交回来)(rpc 收的是 hi.SignedData,后端把 SignedData.Data 反序列化进它)。
 // ⚠️ 只被后端 Go 引用、proto 里无 rpc 引用 —— **勿按「无引用」当死 message 删**
-//
-//	(同 `PullOrdersData` / `ReportResultsData` 的先例)。
 type MarketNotifyData struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	GrantUuid     *string                `protobuf:"bytes,1,opt,name=grant_uuid,json=grantUuid,proto3,oneof" json:"grant_uuid,omitempty"`

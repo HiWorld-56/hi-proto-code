@@ -3155,8 +3155,7 @@ class MarketOrder extends $pb.GeneratedMessage {
   ///                   (`MerchantOwner.SetServer`,改它 = 改钱打给谁)。
   ///
   /// 混成一列的后果:那一列会随"谁改了 server"变,而"卖家是谁"不变 ——
-  /// 两个变速不同的事实压在一起,迟早对不上。club-trade 早就是分开的
-  /// (业务单记交易者、子单记账号),market 这边补齐,口径一致。
+  /// 两个变速不同的事实压在一起,迟早对不上。
   ///
   /// ⚠️ **两个都由后端推导,不接受前端指定** —— 让前端传就等于把"钱打给谁"变成可篡改入参。
   /// ⚠️ `payee_account` 在**开单那一刻解析并写死**(与价格/时长同批快照):
@@ -4780,7 +4779,6 @@ class MarketPullResp extends $pb.GeneratedMessage {
 
 /// Notify 的**签名载荷 schema**(商户处理完把结果交回来)(rpc 收的是 hi.SignedData,后端把 SignedData.Data 反序列化进它)。
 /// ⚠️ 只被后端 Go 引用、proto 里无 rpc 引用 —— **勿按「无引用」当死 message 删**
-///    (同 `PullOrdersData` / `ReportResultsData` 的先例)。
 class MarketNotifyData extends $pb.GeneratedMessage {
   factory MarketNotifyData({
     $core.String? grantUuid,

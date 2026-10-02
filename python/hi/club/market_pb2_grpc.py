@@ -11,7 +11,7 @@ class MarketDirectoryStub(object):
     """── 服务 ─────────────────────────────────────────────────────────────────────
 
     ⚠️ **四个 service 必须拆开,不能合并** —— `check_auth.py` 要求「同一 service 内档位集合一致」。
-    由来见 `Trade`/`TradeManage` 的警告:合并会让 filter 值变成越权入口
+    合并会让 filter 值变成越权入口
     (「did 留空即拿到全部人的数据」)。
 
     市场公开目录(免鉴权):逛市场不需要登录。
@@ -72,7 +72,7 @@ class MarketDirectoryServicer(object):
     """── 服务 ─────────────────────────────────────────────────────────────────────
 
     ⚠️ **四个 service 必须拆开,不能合并** —— `check_auth.py` 要求「同一 service 内档位集合一致」。
-    由来见 `Trade`/`TradeManage` 的警告:合并会让 filter 值变成越权入口
+    合并会让 filter 值变成越权入口
     (「did 留空即拿到全部人的数据」)。
 
     市场公开目录(免鉴权):逛市场不需要登录。
@@ -178,7 +178,7 @@ class MarketDirectory(object):
     """── 服务 ─────────────────────────────────────────────────────────────────────
 
     ⚠️ **四个 service 必须拆开,不能合并** —— `check_auth.py` 要求「同一 service 内档位集合一致」。
-    由来见 `Trade`/`TradeManage` 的警告:合并会让 filter 值变成越权入口
+    合并会让 filter 值变成越权入口
     (「did 留空即拿到全部人的数据」)。
 
     市场公开目录(免鉴权):逛市场不需要登录。
@@ -1251,11 +1251,8 @@ class MarketCallbackStub(object):
     要让 club 主动调,就得给它配一套密钥并自己管理,多一块攻击面。
 
     ② 更重要的是:**中间人不参与业务交互,就没有造假空间。**
-    这与 hidid PC 端那套是同一个设计:hidid 只通知 PC "有新单",
-    订单本身由 PC 端直接去业务后台拉、处理完直接回传 ——
     数据一旦经中间方中转,中间方就有造假空间。私钥在谁手里,谁就是签名方;
     签名方向与"谁持有密钥"天然对齐,不需要额外的信任假设。
-    同一范式在本仓已有先例:`hi.club.Order` 的 Pull / Report。
 
     ③ 顺带简化:不需要发现商户的 endpoint、不需要出方向的重试与超时、
     不需要商户额外起一个 gRPC 服务端。
@@ -1296,11 +1293,8 @@ class MarketCallbackServicer(object):
     要让 club 主动调,就得给它配一套密钥并自己管理,多一块攻击面。
 
     ② 更重要的是:**中间人不参与业务交互,就没有造假空间。**
-    这与 hidid PC 端那套是同一个设计:hidid 只通知 PC "有新单",
-    订单本身由 PC 端直接去业务后台拉、处理完直接回传 ——
     数据一旦经中间方中转,中间方就有造假空间。私钥在谁手里,谁就是签名方;
     签名方向与"谁持有密钥"天然对齐,不需要额外的信任假设。
-    同一范式在本仓已有先例:`hi.club.Order` 的 Pull / Report。
 
     ③ 顺带简化:不需要发现商户的 endpoint、不需要出方向的重试与超时、
     不需要商户额外起一个 gRPC 服务端。
@@ -1356,11 +1350,8 @@ class MarketCallback(object):
     要让 club 主动调,就得给它配一套密钥并自己管理,多一块攻击面。
 
     ② 更重要的是:**中间人不参与业务交互,就没有造假空间。**
-    这与 hidid PC 端那套是同一个设计:hidid 只通知 PC "有新单",
-    订单本身由 PC 端直接去业务后台拉、处理完直接回传 ——
     数据一旦经中间方中转,中间方就有造假空间。私钥在谁手里,谁就是签名方;
     签名方向与"谁持有密钥"天然对齐,不需要额外的信任假设。
-    同一范式在本仓已有先例:`hi.club.Order` 的 Pull / Report。
 
     ③ 顺带简化:不需要发现商户的 endpoint、不需要出方向的重试与超时、
     不需要商户额外起一个 gRPC 服务端。
@@ -1427,7 +1418,7 @@ class MarketCallback(object):
 
 
 class MarketManageStub(object):
-    """市场管理(超管)。与用户面**主体不同,故拆 service** —— 范式见 Trade/TradeManage。
+    """市场管理(超管)。与用户面**主体不同,故拆 service** —— 范式见 Merchant/MerchantManage。
     """
 
     def __init__(self, channel):
@@ -1454,7 +1445,7 @@ class MarketManageStub(object):
 
 
 class MarketManageServicer(object):
-    """市场管理(超管)。与用户面**主体不同,故拆 service** —— 范式见 Trade/TradeManage。
+    """市场管理(超管)。与用户面**主体不同,故拆 service** —— 范式见 Merchant/MerchantManage。
     """
 
     def ListListings(self, request, context):
@@ -1502,7 +1493,7 @@ def add_MarketManageServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class MarketManage(object):
-    """市场管理(超管)。与用户面**主体不同,故拆 service** —— 范式见 Trade/TradeManage。
+    """市场管理(超管)。与用户面**主体不同,故拆 service** —— 范式见 Merchant/MerchantManage。
     """
 
     @staticmethod

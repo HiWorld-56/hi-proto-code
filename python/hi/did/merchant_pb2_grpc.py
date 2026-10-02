@@ -1010,197 +1010,13 @@ class MerchantOwner(object):
             _registered_method=True)
 
 
-class OrderEventStub(object):
-    """── 订单通知/事件(web3 自动付款机制,裁决 #10)──────────────────────
-    架构:PC 端跑 hidid-pc,通过 SSE 长连接(OrderEvent.Sub)与 hidid 后台保持连接(pc 无公网 IP)。
-    流程:①商户业务系统在**自己的服务上**生成订单 → ②商户调 OrderNotify.Send → hidid 后端把通知
-    转发给对应 hidid-pc → ③hidid-pc 按用户设置的地址**去拉订单** → ④付款 →
-    ⑤付款结果通过用户设置的地址回传。
-    关键:hidid 后端**只负责转发通知**,订单真伪由三方业务系统控制;拉单/回传的 url 都是用户填的,
-    hidid-pc 直接对接三方、不经 hidid 后台 —— 排除了 hidid 后台伪造订单的可能。
-    是商户特有的行为,放 merchant.proto。拆两端:主体不同(hidid-pc 订阅 vs 商户发送)、档位不同。
-
-    订单事件订阅端(hidid-pc 订阅,token)。原 SSE.OrderEvents —— SSE 是传输术语不是主体。
-    """
-
-    def __init__(self, channel):
-        """Constructor.
-
-        Args:
-            channel: A grpc.Channel.
-        """
-        self.Sub = channel.unary_stream(
-                '/hi.did.OrderEvent/Sub',
-                request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-                response_deserializer=hi_dot_did_dot_merchant__pb2.OrderEventResp.FromString,
-                _registered_method=True)
-
-
-class OrderEventServicer(object):
-    """── 订单通知/事件(web3 自动付款机制,裁决 #10)──────────────────────
-    架构:PC 端跑 hidid-pc,通过 SSE 长连接(OrderEvent.Sub)与 hidid 后台保持连接(pc 无公网 IP)。
-    流程:①商户业务系统在**自己的服务上**生成订单 → ②商户调 OrderNotify.Send → hidid 后端把通知
-    转发给对应 hidid-pc → ③hidid-pc 按用户设置的地址**去拉订单** → ④付款 →
-    ⑤付款结果通过用户设置的地址回传。
-    关键:hidid 后端**只负责转发通知**,订单真伪由三方业务系统控制;拉单/回传的 url 都是用户填的,
-    hidid-pc 直接对接三方、不经 hidid 后台 —— 排除了 hidid 后台伪造订单的可能。
-    是商户特有的行为,放 merchant.proto。拆两端:主体不同(hidid-pc 订阅 vs 商户发送)、档位不同。
-
-    订单事件订阅端(hidid-pc 订阅,token)。原 SSE.OrderEvents —— SSE 是传输术语不是主体。
-    """
-
-    def Sub(self, request, context):
-        """⚠️ **只能订阅自己的** —— did 取自 token,入参不给 did。
-        原先是 `Sub(hi.DID)` 且 handler 直接用 req.Id:任何登录用户传别人的 did,
-        既能收对方订单事件,又会触发下面的"重复登录"逻辑把对方的 hidid-pc 挤下线。
-
-        重复登录语义(hidid-pc 特有):A 机已登录且未显式登出时,**B 机登录应被挡下**,
-        而不是踢掉 A。原实现踢的是 A,方向反了。
-        """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-
-def add_OrderEventServicer_to_server(servicer, server):
-    rpc_method_handlers = {
-            'Sub': grpc.unary_stream_rpc_method_handler(
-                    servicer.Sub,
-                    request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                    response_serializer=hi_dot_did_dot_merchant__pb2.OrderEventResp.SerializeToString,
-            ),
-    }
-    generic_handler = grpc.method_handlers_generic_handler(
-            'hi.did.OrderEvent', rpc_method_handlers)
-    server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('hi.did.OrderEvent', rpc_method_handlers)
-
-
- # This class is part of an EXPERIMENTAL API.
-class OrderEvent(object):
-    """── 订单通知/事件(web3 自动付款机制,裁决 #10)──────────────────────
-    架构:PC 端跑 hidid-pc,通过 SSE 长连接(OrderEvent.Sub)与 hidid 后台保持连接(pc 无公网 IP)。
-    流程:①商户业务系统在**自己的服务上**生成订单 → ②商户调 OrderNotify.Send → hidid 后端把通知
-    转发给对应 hidid-pc → ③hidid-pc 按用户设置的地址**去拉订单** → ④付款 →
-    ⑤付款结果通过用户设置的地址回传。
-    关键:hidid 后端**只负责转发通知**,订单真伪由三方业务系统控制;拉单/回传的 url 都是用户填的,
-    hidid-pc 直接对接三方、不经 hidid 后台 —— 排除了 hidid 后台伪造订单的可能。
-    是商户特有的行为,放 merchant.proto。拆两端:主体不同(hidid-pc 订阅 vs 商户发送)、档位不同。
-
-    订单事件订阅端(hidid-pc 订阅,token)。原 SSE.OrderEvents —— SSE 是传输术语不是主体。
-    """
-
-    @staticmethod
-    def Sub(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_stream(
-            request,
-            target,
-            '/hi.did.OrderEvent/Sub',
-            google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-            hi_dot_did_dot_merchant__pb2.OrderEventResp.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-
-class OrderNotifyStub(object):
-    """订单通知发送端(商户触发,公开):商户业务系统触发一次付款通知,hidid 转发给对应 hidid-pc。
-    公开=只是转发触发器,订单真伪由三方业务系统 + 用户填的 url 兜底(裁决 #10)。
-    与订阅端主体不同(商户 vs hidid-pc)、档位不同(公开 vs token),故拆开。
-    """
-
-    def __init__(self, channel):
-        """Constructor.
-
-        Args:
-            channel: A grpc.Channel.
-        """
-        self.Send = channel.unary_unary(
-                '/hi.did.OrderNotify/Send',
-                request_serializer=hi_dot_did_dot_merchant__pb2.MerchantNotifyReq.SerializeToString,
-                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                _registered_method=True)
-
-
-class OrderNotifyServicer(object):
-    """订单通知发送端(商户触发,公开):商户业务系统触发一次付款通知,hidid 转发给对应 hidid-pc。
-    公开=只是转发触发器,订单真伪由三方业务系统 + 用户填的 url 兜底(裁决 #10)。
-    与订阅端主体不同(商户 vs hidid-pc)、档位不同(公开 vs token),故拆开。
-    """
-
-    def Send(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-
-def add_OrderNotifyServicer_to_server(servicer, server):
-    rpc_method_handlers = {
-            'Send': grpc.unary_unary_rpc_method_handler(
-                    servicer.Send,
-                    request_deserializer=hi_dot_did_dot_merchant__pb2.MerchantNotifyReq.FromString,
-                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-            ),
-    }
-    generic_handler = grpc.method_handlers_generic_handler(
-            'hi.did.OrderNotify', rpc_method_handlers)
-    server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('hi.did.OrderNotify', rpc_method_handlers)
-
-
- # This class is part of an EXPERIMENTAL API.
-class OrderNotify(object):
-    """订单通知发送端(商户触发,公开):商户业务系统触发一次付款通知,hidid 转发给对应 hidid-pc。
-    公开=只是转发触发器,订单真伪由三方业务系统 + 用户填的 url 兜底(裁决 #10)。
-    与订阅端主体不同(商户 vs hidid-pc)、档位不同(公开 vs token),故拆开。
-    """
-
-    @staticmethod
-    def Send(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/hi.did.OrderNotify/Send',
-            hi_dot_did_dot_merchant__pb2.MerchantNotifyReq.SerializeToString,
-            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-
 class MerchantGrantedStub(object):
-    """跨商户访问用户数据(**整个 service 的每个方法都先过授权校验**)。
+    """⚠️ 没有「订单通知 / 订单事件」(原 `OrderNotify.Send` / `OrderEvent.Sub`),不要加回来:
+    那是给 hidid PC 端(hidid-windows)替中间人交易自动付款用的一条推送通道,唯一的发送方是
+    club-trade;中间人交易 2026-10-02 整体下线,这条通道随之删除。
+    三方要用户付款,走 `hi.did.Pay` 的付款请求 + `PayCallback` 回调(见 payment.proto)。
+
+    跨商户访问用户数据(**整个 service 的每个方法都先过授权校验**)。
 
     与 Merchant 拆开而不是共用一个 `merchant` 字段:那样"空=自己免 grant / 非空=别家走
     grant"是**两条鉴权分支挤在一个方法里**,handler 里分支写岔就是静默跨商户读。
@@ -1251,7 +1067,12 @@ class MerchantGrantedStub(object):
 
 
 class MerchantGrantedServicer(object):
-    """跨商户访问用户数据(**整个 service 的每个方法都先过授权校验**)。
+    """⚠️ 没有「订单通知 / 订单事件」(原 `OrderNotify.Send` / `OrderEvent.Sub`),不要加回来:
+    那是给 hidid PC 端(hidid-windows)替中间人交易自动付款用的一条推送通道,唯一的发送方是
+    club-trade;中间人交易 2026-10-02 整体下线,这条通道随之删除。
+    三方要用户付款,走 `hi.did.Pay` 的付款请求 + `PayCallback` 回调(见 payment.proto)。
+
+    跨商户访问用户数据(**整个 service 的每个方法都先过授权校验**)。
 
     与 Merchant 拆开而不是共用一个 `merchant` 字段:那样"空=自己免 grant / 非空=别家走
     grant"是**两条鉴权分支挤在一个方法里**,handler 里分支写岔就是静默跨商户读。
@@ -1345,7 +1166,12 @@ def add_MerchantGrantedServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class MerchantGranted(object):
-    """跨商户访问用户数据(**整个 service 的每个方法都先过授权校验**)。
+    """⚠️ 没有「订单通知 / 订单事件」(原 `OrderNotify.Send` / `OrderEvent.Sub`),不要加回来:
+    那是给 hidid PC 端(hidid-windows)替中间人交易自动付款用的一条推送通道,唯一的发送方是
+    club-trade;中间人交易 2026-10-02 整体下线,这条通道随之删除。
+    三方要用户付款,走 `hi.did.Pay` 的付款请求 + `PayCallback` 回调(见 payment.proto)。
+
+    跨商户访问用户数据(**整个 service 的每个方法都先过授权校验**)。
 
     与 Merchant 拆开而不是共用一个 `merchant` 字段:那样"空=自己免 grant / 非空=别家走
     grant"是**两条鉴权分支挤在一个方法里**,handler 里分支写岔就是静默跨商户读。

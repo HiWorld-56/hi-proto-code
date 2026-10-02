@@ -311,8 +311,7 @@ class MarketOrderStatus extends $pb.ProtobufEnum {
 ///     付过几次、每次为什么没成,一点都查不到;
 ///   · 人工退款查账的抓手就是"客人给的那个号"对上一笔入账,号一换就断了。
 ///
-/// 与中间人交易的子订单是**同一个模式**(见 hi_trade_sub_order):一次尝试一行、
-/// 换号靠复制、旧行标出局。两边是独立的子系统,共用的是模式而不是表。
+/// 一次尝试一行、换号靠复制、旧行标出局。
 class MarketPaymentStatus extends $pb.ProtobufEnum {
   static const MarketPaymentStatus MARKET_PAYMENT_STATUS_PENDING =
       MarketPaymentStatus._(

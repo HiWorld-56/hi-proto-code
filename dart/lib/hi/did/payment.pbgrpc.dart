@@ -22,7 +22,7 @@ import 'payment.pb.dart' as $2;
 
 export 'payment.pb.dart';
 
-/// Pay —— 典型账单-支付流程(与 OrderNotify/OrderEvent 的自动付款是两条独立流程):
+/// Pay —— 典型账单-支付流程:
 /// 先 GenerateReq 申请支付号,付款完成后 Notify 后台去核对。
 @$pb.GrpcServiceName('hi.did.Pay')
 class PayClient extends $grpc.Client {

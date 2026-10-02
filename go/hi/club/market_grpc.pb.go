@@ -1196,11 +1196,8 @@ const (
 //
 // ② 更重要的是:**中间人不参与业务交互,就没有造假空间。**
 //
-//	这与 hidid PC 端那套是同一个设计:hidid 只通知 PC "有新单",
-//	订单本身由 PC 端直接去业务后台拉、处理完直接回传 ——
 //	数据一旦经中间方中转,中间方就有造假空间。私钥在谁手里,谁就是签名方;
 //	签名方向与"谁持有密钥"天然对齐,不需要额外的信任假设。
-//	同一范式在本仓已有先例:`hi.club.Order` 的 Pull / Report。
 //
 // ③ 顺带简化:不需要发现商户的 endpoint、不需要出方向的重试与超时、
 //
@@ -1260,11 +1257,8 @@ func (c *marketCallbackClient) Notify(ctx context.Context, in *hi.SignedData, op
 //
 // ② 更重要的是:**中间人不参与业务交互,就没有造假空间。**
 //
-//	这与 hidid PC 端那套是同一个设计:hidid 只通知 PC "有新单",
-//	订单本身由 PC 端直接去业务后台拉、处理完直接回传 ——
 //	数据一旦经中间方中转,中间方就有造假空间。私钥在谁手里,谁就是签名方;
 //	签名方向与"谁持有密钥"天然对齐,不需要额外的信任假设。
-//	同一范式在本仓已有先例:`hi.club.Order` 的 Pull / Report。
 //
 // ③ 顺带简化:不需要发现商户的 endpoint、不需要出方向的重试与超时、
 //
@@ -1378,7 +1372,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// 市场管理(超管)。与用户面**主体不同,故拆 service** —— 范式见 Trade/TradeManage。
+// 市场管理(超管)。与用户面**主体不同,故拆 service** —— 范式见 Merchant/MerchantManage。
 type MarketManageClient interface {
 	ListListings(ctx context.Context, in *MarketManageListListingsReq, opts ...grpc.CallOption) (*SearchListingsResp, error)
 	ListGrants(ctx context.Context, in *MarketManageListGrantsReq, opts ...grpc.CallOption) (*ListGrantsResp, error)
@@ -1427,7 +1421,7 @@ func (c *marketManageClient) ForceDelist(ctx context.Context, in *ForceDelistReq
 // All implementations should embed UnimplementedMarketManageServer
 // for forward compatibility.
 //
-// 市场管理(超管)。与用户面**主体不同,故拆 service** —— 范式见 Trade/TradeManage。
+// 市场管理(超管)。与用户面**主体不同,故拆 service** —— 范式见 Merchant/MerchantManage。
 type MarketManageServer interface {
 	ListListings(context.Context, *MarketManageListListingsReq) (*SearchListingsResp, error)
 	ListGrants(context.Context, *MarketManageListGrantsReq) (*ListGrantsResp, error)

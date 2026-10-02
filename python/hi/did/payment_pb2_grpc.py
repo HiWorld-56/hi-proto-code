@@ -8,7 +8,7 @@ from hi.did import payment_pb2 as hi_dot_did_dot_payment__pb2
 
 
 class PayStub(object):
-    """Pay —— 典型账单-支付流程(与 OrderNotify/OrderEvent 的自动付款是两条独立流程):
+    """Pay —— 典型账单-支付流程:
     先 GenerateReq 申请支付号,付款完成后 Notify 后台去核对。
     """
 
@@ -31,7 +31,7 @@ class PayStub(object):
 
 
 class PayServicer(object):
-    """Pay —— 典型账单-支付流程(与 OrderNotify/OrderEvent 的自动付款是两条独立流程):
+    """Pay —— 典型账单-支付流程:
     先 GenerateReq 申请支付号,付款完成后 Notify 后台去核对。
     """
 
@@ -69,7 +69,7 @@ def add_PayServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class Pay(object):
-    """Pay —— 典型账单-支付流程(与 OrderNotify/OrderEvent 的自动付款是两条独立流程):
+    """Pay —— 典型账单-支付流程:
     先 GenerateReq 申请支付号,付款完成后 Notify 后台去核对。
     """
 

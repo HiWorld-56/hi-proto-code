@@ -417,16 +417,6 @@ const Content$json = {
       '10': 'trans'
     },
     {
-      '1': 'trade',
-      '3': 4,
-      '4': 1,
-      '5': 11,
-      '6': '.hi.club.TradeBase',
-      '8': {},
-      '9': 0,
-      '10': 'trade'
-    },
-    {
       '1': 'binance',
       '3': 5,
       '4': 1,
@@ -513,11 +503,10 @@ const Content_Chat$json = {
 final $typed_data.Uint8List contentDescriptor = $convert.base64Decode(
     'CgdDb250ZW50Eh0KBHR5cGUYASABKAlCBJC1GAJIAVIEdHlwZYgBARIxCgRjaGF0GAIgASgLMh'
     'UuaGkuY2x1Yi5Db250ZW50LkNoYXRCBJC1GAJIAFIEY2hhdBIxCgV0cmFucxgDIAEoCzITLmhp'
-    'LmRpZC5UcmFuc2FjdGlvbkIEkLUYAUgAUgV0cmFucxIwCgV0cmFkZRgEIAEoCzISLmhpLmNsdW'
-    'IuVHJhZGVCYXNlQgSQtRgCSABSBXRyYWRlEjsKB2JpbmFuY2UYBSABKAsyGS5oaS5iaW5hbmNl'
-    'LkJpbmFuY2VSZXN1bHRCBJC1GAJIAFIHYmluYW5jZRJDCgtiaW5hbmNlX2NtZBgGIAEoCzIaLm'
-    'hpLmJpbmFuY2UuQmluYW5jZUNvbW1hbmRCBJC1GAJIAFIKYmluYW5jZUNtZBrBAQoEQ2hhdBIj'
-    'Cgdjb250ZW50GAEgASgJQgSQtRgCSABSB2NvbnRlbnSIAQESHQoEbmFtZRgCIAEoCUIEkLUYAk'
-    'gBUgRuYW1liAEBEh0KBHNpemUYAyABKA1CBJC1GAJIAlIEc2l6ZYgBARIlCghkdXJhdGlvbhgE'
-    'IAEoDUIEkLUYAkgDUghkdXJhdGlvbogBAToEmLUYAkIKCghfY29udGVudEIHCgVfbmFtZUIHCg'
-    'Vfc2l6ZUILCglfZHVyYXRpb246BJi1GAJCBgoEa2luZEIHCgVfdHlwZQ==');
+    'LmRpZC5UcmFuc2FjdGlvbkIEkLUYAUgAUgV0cmFucxI7CgdiaW5hbmNlGAUgASgLMhkuaGkuYm'
+    'luYW5jZS5CaW5hbmNlUmVzdWx0QgSQtRgCSABSB2JpbmFuY2USQwoLYmluYW5jZV9jbWQYBiAB'
+    'KAsyGi5oaS5iaW5hbmNlLkJpbmFuY2VDb21tYW5kQgSQtRgCSABSCmJpbmFuY2VDbWQawQEKBE'
+    'NoYXQSIwoHY29udGVudBgBIAEoCUIEkLUYAkgAUgdjb250ZW50iAEBEh0KBG5hbWUYAiABKAlC'
+    'BJC1GAJIAVIEbmFtZYgBARIdCgRzaXplGAMgASgNQgSQtRgCSAJSBHNpemWIAQESJQoIZHVyYX'
+    'Rpb24YBCABKA1CBJC1GAJIA1IIZHVyYXRpb26IAQE6BJi1GAJCCgoIX2NvbnRlbnRCBwoFX25h'
+    'bWVCBwoFX3NpemVCCwoJX2R1cmF0aW9uOgSYtRgCQgYKBGtpbmRCBwoFX3R5cGU=');
