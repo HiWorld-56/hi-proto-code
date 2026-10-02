@@ -527,6 +527,41 @@ pub struct BinanceResult {
     /// 没发出去时的原因(人话);发出去了就不带
     #[prost(string, optional, tag = "5")]
     pub error: ::core::option::Option<::prost::alloc::string::String>,
+    /// 回这条结果时,这台机器人**手里已有的**持有情况(见 `BinanceHoldings`)。
+    /// **不带 = 这条结果没有报告持有情况**(指令被拒 / 过期 / 没装插件,或机器人版本还没有这个字段) ——
+    /// 不是「没持仓」,也不是「不知道」,读方应沿用这台之前报告过的那一份。
+    #[prost(message, optional, tag = "6")]
+    pub held: ::core::option::Option<BinanceHoldings>,
+}
+/// 一台机器人**最近一次知道的**持有情况,按产品线分开。随 `BinanceResult` 顺带回来,好让发令方在下单前
+/// 按「谁持有这个币」挑机器人。
+///
+/// ## 不实时,但不说假话
+///
+/// · 取自机器人本地的账户快照(后台轮询的合约账户、最近一次查到的现货账户),**不为它另打币安**;
+/// 主人在 hi 之外(币安 App、网页)做的改动,要等下一次查询才反映出来。
+/// · 经 hi 下过单 / 撤过单 / 改过杠杆 / 换过密钥,机器人当场把它作废 —— 之后那条线**不带**,直到再取到为止。
+/// 所以**某条线不带 = 不知道**(没查过、或刚动过账户还没再取),**带着空列表 = 确实没有持有**。两者不许混。
+/// · 查持仓失败照常从 `http_status` / `error` 报出来;这里只放成功取到过的那一份。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceHoldings {
+    /// U 本位合约(含 TradFi 永续):仓位不为 0 的交易对,如 BNBUSDT
+    #[prost(message, optional, tag = "1")]
+    pub futures: ::core::option::Option<BinanceHeld>,
+    /// 现货(含 bStocks):余额(可用 + 冻结)不为 0 的币,如 BNB、USDT
+    #[prost(message, optional, tag = "2")]
+    pub spot: ::core::option::Option<BinanceHeld>,
+}
+/// 一条产品线上持有的东西,以及这份数据有多旧。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceHeld {
+    /// 从币安取到这份数据,到机器人回这条结果,过了多少**秒**。
+    /// 用时长不用时刻:机器人的钟不一定准(开机那会儿可能是 1970),时长只靠它自己的单调计时。
+    #[prost(uint32, optional, tag = "1")]
+    pub age: ::core::option::Option<u32>,
+    /// 合约是交易对,现货是币;按字典序
+    #[prost(string, repeated, tag = "2")]
+    pub names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// 买卖方向。
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]

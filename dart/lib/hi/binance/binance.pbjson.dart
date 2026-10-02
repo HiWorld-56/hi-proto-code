@@ -2234,6 +2234,17 @@ const BinanceResult$json = {
       '10': 'error',
       '17': true
     },
+    {
+      '1': 'held',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceHoldings',
+      '8': {},
+      '9': 5,
+      '10': 'held',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -2242,6 +2253,7 @@ const BinanceResult$json = {
     {'1': '_http_status'},
     {'1': '_body'},
     {'1': '_error'},
+    {'1': '_held'},
   ],
 };
 
@@ -2250,5 +2262,73 @@ final $typed_data.Uint8List binanceResultDescriptor = $convert.base64Decode(
     'Cg1CaW5hbmNlUmVzdWx0EiMKB3JlcXVlc3QYASABKAlCBJC1GAJIAFIHcmVxdWVzdIgBARIZCg'
     'JvcBgCIAEoCUIEkLUYAkgBUgJvcIgBARIqCgtodHRwX3N0YXR1cxgDIAEoDUIEkLUYAkgCUgpo'
     'dHRwU3RhdHVziAEBEh0KBGJvZHkYBCABKAlCBJC1GAJIA1IEYm9keYgBARIfCgVlcnJvchgFIA'
-    'EoCUIEkLUYAkgEUgVlcnJvcogBAToEmLUYAkIKCghfcmVxdWVzdEIFCgNfb3BCDgoMX2h0dHBf'
-    'c3RhdHVzQgcKBV9ib2R5QggKBl9lcnJvcg==');
+    'EoCUIEkLUYAkgEUgVlcnJvcogBARI6CgRoZWxkGAYgASgLMhsuaGkuYmluYW5jZS5CaW5hbmNl'
+    'SG9sZGluZ3NCBJC1GAJIBVIEaGVsZIgBAToEmLUYAkIKCghfcmVxdWVzdEIFCgNfb3BCDgoMX2'
+    'h0dHBfc3RhdHVzQgcKBV9ib2R5QggKBl9lcnJvckIHCgVfaGVsZA==');
+
+@$core.Deprecated('Use binanceHoldingsDescriptor instead')
+const BinanceHoldings$json = {
+  '1': 'BinanceHoldings',
+  '2': [
+    {
+      '1': 'futures',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceHeld',
+      '8': {},
+      '9': 0,
+      '10': 'futures',
+      '17': true
+    },
+    {
+      '1': 'spot',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceHeld',
+      '8': {},
+      '9': 1,
+      '10': 'spot',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_futures'},
+    {'1': '_spot'},
+  ],
+};
+
+/// Descriptor for `BinanceHoldings`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List binanceHoldingsDescriptor = $convert.base64Decode(
+    'Cg9CaW5hbmNlSG9sZGluZ3MSPAoHZnV0dXJlcxgBIAEoCzIXLmhpLmJpbmFuY2UuQmluYW5jZU'
+    'hlbGRCBJC1GAJIAFIHZnV0dXJlc4gBARI2CgRzcG90GAIgASgLMhcuaGkuYmluYW5jZS5CaW5h'
+    'bmNlSGVsZEIEkLUYAkgBUgRzcG90iAEBOgSYtRgCQgoKCF9mdXR1cmVzQgcKBV9zcG90');
+
+@$core.Deprecated('Use binanceHeldDescriptor instead')
+const BinanceHeld$json = {
+  '1': 'BinanceHeld',
+  '2': [
+    {
+      '1': 'age',
+      '3': 1,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 0,
+      '10': 'age',
+      '17': true
+    },
+    {'1': 'names', '3': 2, '4': 3, '5': 9, '8': {}, '10': 'names'},
+  ],
+  '7': {},
+  '8': [
+    {'1': '_age'},
+  ],
+};
+
+/// Descriptor for `BinanceHeld`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List binanceHeldDescriptor = $convert.base64Decode(
+    'CgtCaW5hbmNlSGVsZBIbCgNhZ2UYASABKA1CBJC1GAJIAFIDYWdliAEBEhoKBW5hbWVzGAIgAy'
+    'gJQgSQtRgCUgVuYW1lczoEmLUYAkIGCgRfYWdl');

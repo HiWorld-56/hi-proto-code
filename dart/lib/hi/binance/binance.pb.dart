@@ -3286,6 +3286,7 @@ class BinanceResult extends $pb.GeneratedMessage {
     $core.int? httpStatus,
     $core.String? body,
     $core.String? error,
+    BinanceHoldings? held,
   }) {
     final result = create();
     if (request != null) result.request = request;
@@ -3293,6 +3294,7 @@ class BinanceResult extends $pb.GeneratedMessage {
     if (httpStatus != null) result.httpStatus = httpStatus;
     if (body != null) result.body = body;
     if (error != null) result.error = error;
+    if (held != null) result.held = held;
     return result;
   }
 
@@ -3314,6 +3316,8 @@ class BinanceResult extends $pb.GeneratedMessage {
     ..aI(3, _omitFieldNames ? '' : 'httpStatus', fieldType: $pb.PbFieldType.OU3)
     ..aOS(4, _omitFieldNames ? '' : 'body')
     ..aOS(5, _omitFieldNames ? '' : 'error')
+    ..aOM<BinanceHoldings>(6, _omitFieldNames ? '' : 'held',
+        subBuilder: BinanceHoldings.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3379,6 +3383,165 @@ class BinanceResult extends $pb.GeneratedMessage {
   $core.bool hasError() => $_has(4);
   @$pb.TagNumber(5)
   void clearError() => $_clearField(5);
+
+  /// 回这条结果时,这台机器人**手里已有的**持有情况(见 `BinanceHoldings`)。
+  /// **不带 = 这条结果没有报告持有情况**(指令被拒 / 过期 / 没装插件,或机器人版本还没有这个字段) ——
+  /// 不是「没持仓」,也不是「不知道」,读方应沿用这台之前报告过的那一份。
+  @$pb.TagNumber(6)
+  BinanceHoldings get held => $_getN(5);
+  @$pb.TagNumber(6)
+  set held(BinanceHoldings value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasHeld() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearHeld() => $_clearField(6);
+  @$pb.TagNumber(6)
+  BinanceHoldings ensureHeld() => $_ensure(5);
+}
+
+/// 一台机器人**最近一次知道的**持有情况,按产品线分开。随 `BinanceResult` 顺带回来,好让发令方在下单前
+/// 按「谁持有这个币」挑机器人。
+///
+/// ## 不实时,但不说假话
+///
+/// · 取自机器人本地的账户快照(后台轮询的合约账户、最近一次查到的现货账户),**不为它另打币安**;
+///   主人在 hi 之外(币安 App、网页)做的改动,要等下一次查询才反映出来。
+/// · 经 hi 下过单 / 撤过单 / 改过杠杆 / 换过密钥,机器人当场把它作废 —— 之后那条线**不带**,直到再取到为止。
+///   所以**某条线不带 = 不知道**(没查过、或刚动过账户还没再取),**带着空列表 = 确实没有持有**。两者不许混。
+/// · 查持仓失败照常从 `http_status` / `error` 报出来;这里只放成功取到过的那一份。
+class BinanceHoldings extends $pb.GeneratedMessage {
+  factory BinanceHoldings({
+    BinanceHeld? futures,
+    BinanceHeld? spot,
+  }) {
+    final result = create();
+    if (futures != null) result.futures = futures;
+    if (spot != null) result.spot = spot;
+    return result;
+  }
+
+  BinanceHoldings._();
+
+  factory BinanceHoldings.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceHoldings.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceHoldings',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..aOM<BinanceHeld>(1, _omitFieldNames ? '' : 'futures',
+        subBuilder: BinanceHeld.create)
+    ..aOM<BinanceHeld>(2, _omitFieldNames ? '' : 'spot',
+        subBuilder: BinanceHeld.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceHoldings clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceHoldings copyWith(void Function(BinanceHoldings) updates) =>
+      super.copyWith((message) => updates(message as BinanceHoldings))
+          as BinanceHoldings;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceHoldings create() => BinanceHoldings._();
+  @$core.override
+  BinanceHoldings createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceHoldings getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceHoldings>(create);
+  static BinanceHoldings? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  BinanceHeld get futures => $_getN(0);
+  @$pb.TagNumber(1)
+  set futures(BinanceHeld value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasFutures() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearFutures() => $_clearField(1);
+  @$pb.TagNumber(1)
+  BinanceHeld ensureFutures() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  BinanceHeld get spot => $_getN(1);
+  @$pb.TagNumber(2)
+  set spot(BinanceHeld value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSpot() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSpot() => $_clearField(2);
+  @$pb.TagNumber(2)
+  BinanceHeld ensureSpot() => $_ensure(1);
+}
+
+/// 一条产品线上持有的东西,以及这份数据有多旧。
+class BinanceHeld extends $pb.GeneratedMessage {
+  factory BinanceHeld({
+    $core.int? age,
+    $core.Iterable<$core.String>? names,
+  }) {
+    final result = create();
+    if (age != null) result.age = age;
+    if (names != null) result.names.addAll(names);
+    return result;
+  }
+
+  BinanceHeld._();
+
+  factory BinanceHeld.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceHeld.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceHeld',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..aI(1, _omitFieldNames ? '' : 'age', fieldType: $pb.PbFieldType.OU3)
+    ..pPS(2, _omitFieldNames ? '' : 'names')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceHeld clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceHeld copyWith(void Function(BinanceHeld) updates) =>
+      super.copyWith((message) => updates(message as BinanceHeld))
+          as BinanceHeld;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceHeld create() => BinanceHeld._();
+  @$core.override
+  BinanceHeld createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceHeld getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceHeld>(create);
+  static BinanceHeld? _defaultInstance;
+
+  /// 从币安取到这份数据,到机器人回这条结果,过了多少**秒**。
+  /// 用时长不用时刻:机器人的钟不一定准(开机那会儿可能是 1970),时长只靠它自己的单调计时。
+  @$pb.TagNumber(1)
+  $core.int get age => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set age($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAge() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAge() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<$core.String> get names => $_getList(1);
 }
 
 const $core.bool _omitFieldNames =
