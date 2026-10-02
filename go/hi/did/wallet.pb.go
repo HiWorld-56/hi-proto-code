@@ -935,9 +935,17 @@ func (x *GetUserAssetsResp_Unit) GetPrice() string {
 }
 
 type UpdateAssetsReq_Asset struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Coin          *string                `protobuf:"bytes,1,opt,name=coin,proto3,oneof" json:"coin,omitempty"` // 币种标识:btc/eth/usdt_erc20/trx/usdt_trc20/sol/apt/...
-	Amount        *string                `protobuf:"bytes,2,opt,name=amount,proto3,oneof" json:"amount,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 币种规范名 = hi_coin.name = Price.Get 回的 coin.name(大小写照写):
+	//
+	//	BTC / ETH / TRX / SOL / APT / USDT-ERC20 / USDT-TRC20 / USDT-SOL / WHDS-TRC20 / BT-TRC20 /
+	//	BT-SOL / PANDA / WHDS-APT / HWHD-APT / SLKJ-APT / WSM-APT;另有只有行情、不能转账的 W3GTS(不在 hi_coin)。
+	//
+	// ⚠️ 不是显示名:app 的 CoinConfig 里该传 key(「USDT-TRC20」),不是 name(「USDT TRC20」)。
+	//
+	//	已发出去的版本传的显示名由 hi-did 按 hi_coin_alias 归一,新代码别再传。
+	Coin          *string `protobuf:"bytes,1,opt,name=coin,proto3,oneof" json:"coin,omitempty"`
+	Amount        *string `protobuf:"bytes,2,opt,name=amount,proto3,oneof" json:"amount,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }

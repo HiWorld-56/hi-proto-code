@@ -1144,6 +1144,11 @@ class UpdateAssetsReq_Asset extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<UpdateAssetsReq_Asset>(create);
   static UpdateAssetsReq_Asset? _defaultInstance;
 
+  /// 币种规范名 = hi_coin.name = Price.Get 回的 coin.name(大小写照写):
+  ///   BTC / ETH / TRX / SOL / APT / USDT-ERC20 / USDT-TRC20 / USDT-SOL / WHDS-TRC20 / BT-TRC20 /
+  ///   BT-SOL / PANDA / WHDS-APT / HWHD-APT / SLKJ-APT / WSM-APT;另有只有行情、不能转账的 W3GTS(不在 hi_coin)。
+  /// ⚠️ 不是显示名:app 的 CoinConfig 里该传 key(「USDT-TRC20」),不是 name(「USDT TRC20」)。
+  ///    已发出去的版本传的显示名由 hi-did 按 hi_coin_alias 归一,新代码别再传。
   @$pb.TagNumber(1)
   $core.String get coin => $_getSZ(0);
   @$pb.TagNumber(1)
