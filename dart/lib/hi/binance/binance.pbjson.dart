@@ -2159,6 +2159,32 @@ final $typed_data.Uint8List binanceFuturesIncomeDescriptor = $convert.base64Deco
     'Cgdfc3ltYm9sQg4KDF9pbmNvbWVfdHlwZUINCgtfc3RhcnRfdGltZUILCglfZW5kX3RpbWVCCA'
     'oGX2xpbWl0');
 
+@$core.Deprecated('Use binanceFuturesPnlDescriptor instead')
+const BinanceFuturesPnl$json = {
+  '1': 'BinanceFuturesPnl',
+  '2': [
+    {
+      '1': 'window',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'window',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_window'},
+  ],
+};
+
+/// Descriptor for `BinanceFuturesPnl`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List binanceFuturesPnlDescriptor = $convert.base64Decode(
+    'ChFCaW5hbmNlRnV0dXJlc1BubBI1CgZ3aW5kb3cYASABKAlCGLpIEcgBAXIMUgV0b2RheVIDOT'
+    'BkkLUYAkgAUgZ3aW5kb3eIAQE6BJi1GAJCCQoHX3dpbmRvdw==');
+
 @$core.Deprecated('Use binanceFuturesSignTradfiContractDescriptor instead')
 const BinanceFuturesSignTradfiContract$json = {
   '1': 'BinanceFuturesSignTradfiContract',

@@ -550,14 +550,11 @@ pub struct AudioPlay {
 /// 币安接入设置。**密钥不在这里** —— 2026-09-20 起密钥一个字都不出 brain：
 /// face 不再自己连币安，要数据就发 `BinanceRequest`（见下），brain 替它去。
 ///
-/// 于是这条只剩一件事：告诉 face「这台机器人配过币安没有」以及算收益用的基数。
+/// 于是这条只剩一件事：告诉 face「这台机器人配过币安没有」。
 /// **收得到这条 = 配过**（没配过 brain 根本不推），face 据此决定显不显示资产面板。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct BinanceSettings {
-    /// 初始本金。**十进制字符串**，与本仓所有金额字段同口径（免浮点误差）。
-    #[prost(string, optional, tag = "2")]
-    pub initial_capital: ::core::option::Option<::prost::alloc::string::String>,
-}
+/// 盈亏不靠手填的本金算，见 hi/binance/binance.proto 的 `BinanceFuturesPnl`。
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceSettings {}
 /// face -> brain：替我去币安做一次。
 ///
 /// ⭐ **机器人到币安只有一条路**，就是 brain 的币安模块（`src/binance/`）。
@@ -665,7 +662,7 @@ pub mod brain_to_face {
         /// 定义在 `hi/ninja/updater.proto`（那条线的契约在那儿）。
         #[prost(message, tag = "19")]
         EventUpdate(super::UpdateStatus),
-        /// 币安设置同步（**只有初始本金，没有密钥**；仅限本地 face IPC）
+        /// 币安设置同步（**只说配过没有，没有密钥**；仅限本地 face IPC）
         #[prost(message, tag = "21")]
         EventBinanceSettings(super::BinanceSettings),
         /// 币安结果。**与通知那条路回给代理的是同一个消息** —— 同一张操作表、

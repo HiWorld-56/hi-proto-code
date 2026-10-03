@@ -480,6 +480,39 @@ pub struct BinanceFuturesIncome {
     #[prost(int64, optional, tag = "5")]
     pub limit: ::core::option::Option<i64>,
 }
+/// 合约账户在一个时间窗里的**盈亏**。**不是币安的一个接口**,是机器人用流水与账户算出来的
+/// (`usds_futures.income` 翻页取全 + `usds_futures.account_information_v3`),口径照币安「PnL 分析」:
+///
+/// 盈亏 = 窗内**非划转**流水之和(已实现盈亏 + 手续费 + 资金费 + 其它)
+/// = 期末钱包余额 − 期初钱包余额 − 净流入
+/// 期初钱包余额 = 现在的钱包余额(totalWalletBalance)− 窗内全部流水
+/// 比率 = 盈亏 ÷ (期初钱包余额 + 净流入);分母不大于 0 时没有比率
+///
+/// 只算 USDT 流水(用 BNB 抵扣的手续费那类流水是 BNB 的个数,不能当 USDT 加)。
+///
+/// 窗口(`window`):
+/// · `today`:币安时间 UTC 0 点到现在。**不含**未实现盈亏(开仓以来的浮盈不是今天的)。
+/// · `90d`:近 90 天到现在(币安流水只保留三个月),**加上**现在持仓的未实现盈亏(totalUnrealizedProfit)。
+///
+/// 结果在 `BinanceResult.body` 里,是**机器人写的 JSON**(不是币安原文),金额一律十进制字符串:
+///
+/// window           "today" / "90d"
+/// start_ms end_ms  窗口(毫秒,币安时间)
+/// pnl              盈亏
+/// pct              比率(百分数,如 "-31.23";分母不大于 0 时为 null)
+/// base             比率的分母(期初钱包余额 + 净流入)
+/// wallet_start wallet_now  期初 / 现在的钱包余额
+/// net_inflow       窗内划转净额(转入为正)
+/// realized_pnl commission funding_fee other  盈亏的构成(各自的流水之和,带正负)
+/// unrealized       现在的未实现盈亏;unrealized_included 表示 pnl 里加没加它
+/// commission_paid funding_fee_paid  窗内付出去的手续费 / 资金费(只算负流水,取正数)
+/// complete         流水取全没有(一页 1000 条、最多 5 页;没取全时 pnl 偏小)
+/// rows             用到的流水条数
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceFuturesPnl {
+    #[prost(string, optional, tag = "1")]
+    pub window: ::core::option::Option<::prost::alloc::string::String>,
+}
 /// 签 **TradFi 永续合约协议**。`POST /fapi/v1/stock/contract`
 ///
 /// 股票、商品、外汇这类永续(`contractType == TRADIFI_PERPETUAL`)**要先签才能交易**;查询不用签。
@@ -1157,7 +1190,7 @@ pub struct BinanceCommand {
     pub expiration: ::core::option::Option<i64>,
     #[prost(
         oneof = "binance_command::Op",
-        tags = "10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 40, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57"
+        tags = "10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 40, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58"
     )]
     pub op: ::core::option::Option<binance_command::Op>,
 }
@@ -1307,5 +1340,8 @@ pub mod binance_command {
         /// usds_futures.klines
         #[prost(message, tag = "57")]
         UsdsFuturesKlines(super::BinanceFuturesKlines),
+        /// usds_futures.pnl(机器人算的)
+        #[prost(message, tag = "58")]
+        UsdsFuturesPnl(super::BinanceFuturesPnl),
     }
 }

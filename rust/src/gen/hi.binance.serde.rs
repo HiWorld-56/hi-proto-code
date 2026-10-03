@@ -158,6 +158,9 @@ impl serde::Serialize for BinanceCommand {
                 binance_command::Op::UsdsFuturesKlines(v) => {
                     struct_ser.serialize_field("usdsFuturesKlines", v)?;
                 }
+                binance_command::Op::UsdsFuturesPnl(v) => {
+                    struct_ser.serialize_field("usdsFuturesPnl", v)?;
+                }
             }
         }
         struct_ser.end()
@@ -263,6 +266,8 @@ impl<'de> serde::Deserialize<'de> for BinanceCommand {
             "spotKlines",
             "usds_futures_klines",
             "usdsFuturesKlines",
+            "usds_futures_pnl",
+            "usdsFuturesPnl",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -314,6 +319,7 @@ impl<'de> serde::Deserialize<'de> for BinanceCommand {
             UsdsFuturesTicker24h,
             SpotKlines,
             UsdsFuturesKlines,
+            UsdsFuturesPnl,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -382,6 +388,7 @@ impl<'de> serde::Deserialize<'de> for BinanceCommand {
                             "usdsFuturesTicker24h" | "usds_futures_ticker_24h" => Ok(GeneratedField::UsdsFuturesTicker24h),
                             "spotKlines" | "spot_klines" => Ok(GeneratedField::SpotKlines),
                             "usdsFuturesKlines" | "usds_futures_klines" => Ok(GeneratedField::UsdsFuturesKlines),
+                            "usdsFuturesPnl" | "usds_futures_pnl" => Ok(GeneratedField::UsdsFuturesPnl),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -733,6 +740,13 @@ impl<'de> serde::Deserialize<'de> for BinanceCommand {
                                 return Err(serde::de::Error::duplicate_field("usdsFuturesKlines"));
                             }
                             op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::UsdsFuturesKlines)
+;
+                        }
+                        GeneratedField::UsdsFuturesPnl => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("usdsFuturesPnl"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::UsdsFuturesPnl)
 ;
                         }
                     }
@@ -2876,6 +2890,97 @@ impl<'de> serde::Deserialize<'de> for BinanceFuturesOpenOrders {
             }
         }
         deserializer.deserialize_struct("hi.binance.BinanceFuturesOpenOrders", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for BinanceFuturesPnl {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.window.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.binance.BinanceFuturesPnl", len)?;
+        if let Some(v) = self.window.as_ref() {
+            struct_ser.serialize_field("window", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for BinanceFuturesPnl {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "window",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Window,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "window" => Ok(GeneratedField::Window),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = BinanceFuturesPnl;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.binance.BinanceFuturesPnl")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<BinanceFuturesPnl, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut window__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Window => {
+                            if window__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("window"));
+                            }
+                            window__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(BinanceFuturesPnl {
+                    window: window__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.binance.BinanceFuturesPnl", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for BinanceFuturesPositions {

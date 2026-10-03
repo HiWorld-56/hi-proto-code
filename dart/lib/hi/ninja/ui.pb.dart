@@ -417,16 +417,11 @@ class AudioPlay extends $pb.GeneratedMessage {
 /// 币安接入设置。**密钥不在这里** —— 2026-09-20 起密钥一个字都不出 brain：
 /// face 不再自己连币安，要数据就发 `BinanceRequest`（见下），brain 替它去。
 ///
-/// 于是这条只剩一件事：告诉 face「这台机器人配过币安没有」以及算收益用的基数。
+/// 于是这条只剩一件事：告诉 face「这台机器人配过币安没有」。
 /// **收得到这条 = 配过**（没配过 brain 根本不推），face 据此决定显不显示资产面板。
+/// 盈亏不靠手填的本金算，见 hi/binance/binance.proto 的 `BinanceFuturesPnl`。
 class BinanceSettings extends $pb.GeneratedMessage {
-  factory BinanceSettings({
-    $core.String? initialCapital,
-  }) {
-    final result = create();
-    if (initialCapital != null) result.initialCapital = initialCapital;
-    return result;
-  }
+  factory BinanceSettings() => create();
 
   BinanceSettings._();
 
@@ -441,7 +436,6 @@ class BinanceSettings extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'BinanceSettings',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..aOS(2, _omitFieldNames ? '' : 'initialCapital')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -462,16 +456,6 @@ class BinanceSettings extends $pb.GeneratedMessage {
   static BinanceSettings getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<BinanceSettings>(create);
   static BinanceSettings? _defaultInstance;
-
-  /// 初始本金。**十进制字符串**，与本仓所有金额字段同口径（免浮点误差）。
-  @$pb.TagNumber(2)
-  $core.String get initialCapital => $_getSZ(0);
-  @$pb.TagNumber(2)
-  set initialCapital($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(2)
-  $core.bool hasInitialCapital() => $_has(0);
-  @$pb.TagNumber(2)
-  void clearInitialCapital() => $_clearField(2);
 }
 
 /// face -> brain：替我去币安做一次。
@@ -1049,7 +1033,7 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(20)
   PluginProgress ensureEventPluginProgress() => $_ensure(19);
 
-  /// 币安设置同步（**只有初始本金，没有密钥**；仅限本地 face IPC）
+  /// 币安设置同步（**只说配过没有，没有密钥**；仅限本地 face IPC）
   @$pb.TagNumber(21)
   BinanceSettings get eventBinanceSettings => $_getN(20);
   @$pb.TagNumber(21)

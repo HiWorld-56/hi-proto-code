@@ -243,14 +243,8 @@ impl serde::Serialize for BinanceSettings {
         S: serde::Serializer,
     {
         use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.initial_capital.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.ninja.BinanceSettings", len)?;
-        if let Some(v) = self.initial_capital.as_ref() {
-            struct_ser.serialize_field("initialCapital", v)?;
-        }
+        let len = 0;
+        let struct_ser = serializer.serialize_struct("hi.ninja.BinanceSettings", len)?;
         struct_ser.end()
     }
 }
@@ -261,13 +255,10 @@ impl<'de> serde::Deserialize<'de> for BinanceSettings {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "initial_capital",
-            "initialCapital",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            InitialCapital,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -288,10 +279,7 @@ impl<'de> serde::Deserialize<'de> for BinanceSettings {
                     where
                         E: serde::de::Error,
                     {
-                        match value {
-                            "initialCapital" | "initial_capital" => Ok(GeneratedField::InitialCapital),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
+                            Err(serde::de::Error::unknown_field(value, FIELDS))
                     }
                 }
                 deserializer.deserialize_identifier(GeneratedVisitor)
@@ -309,19 +297,10 @@ impl<'de> serde::Deserialize<'de> for BinanceSettings {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut initial_capital__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::InitialCapital => {
-                            if initial_capital__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("initialCapital"));
-                            }
-                            initial_capital__ = map_.next_value()?;
-                        }
-                    }
+                while map_.next_key::<GeneratedField>()?.is_some() {
+                    let _ = map_.next_value::<serde::de::IgnoredAny>()?;
                 }
                 Ok(BinanceSettings {
-                    initial_capital: initial_capital__,
                 })
             }
         }

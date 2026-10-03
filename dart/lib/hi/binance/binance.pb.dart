@@ -3172,6 +3172,88 @@ class BinanceFuturesIncome extends $pb.GeneratedMessage {
   void clearLimit() => $_clearField(5);
 }
 
+/// 合约账户在一个时间窗里的**盈亏**。**不是币安的一个接口**,是机器人用流水与账户算出来的
+/// (`usds_futures.income` 翻页取全 + `usds_futures.account_information_v3`),口径照币安「PnL 分析」:
+///
+///   盈亏 = 窗内**非划转**流水之和(已实现盈亏 + 手续费 + 资金费 + 其它)
+///          = 期末钱包余额 − 期初钱包余额 − 净流入
+///   期初钱包余额 = 现在的钱包余额(totalWalletBalance)− 窗内全部流水
+///   比率 = 盈亏 ÷ (期初钱包余额 + 净流入);分母不大于 0 时没有比率
+///
+/// 只算 USDT 流水(用 BNB 抵扣的手续费那类流水是 BNB 的个数,不能当 USDT 加)。
+///
+/// 窗口(`window`):
+///   · `today`:币安时间 UTC 0 点到现在。**不含**未实现盈亏(开仓以来的浮盈不是今天的)。
+///   · `90d`:近 90 天到现在(币安流水只保留三个月),**加上**现在持仓的未实现盈亏(totalUnrealizedProfit)。
+///
+/// 结果在 `BinanceResult.body` 里,是**机器人写的 JSON**(不是币安原文),金额一律十进制字符串:
+///
+///   window           "today" / "90d"
+///   start_ms end_ms  窗口(毫秒,币安时间)
+///   pnl              盈亏
+///   pct              比率(百分数,如 "-31.23";分母不大于 0 时为 null)
+///   base             比率的分母(期初钱包余额 + 净流入)
+///   wallet_start wallet_now  期初 / 现在的钱包余额
+///   net_inflow       窗内划转净额(转入为正)
+///   realized_pnl commission funding_fee other  盈亏的构成(各自的流水之和,带正负)
+///   unrealized       现在的未实现盈亏;unrealized_included 表示 pnl 里加没加它
+///   commission_paid funding_fee_paid  窗内付出去的手续费 / 资金费(只算负流水,取正数)
+///   complete         流水取全没有(一页 1000 条、最多 5 页;没取全时 pnl 偏小)
+///   rows             用到的流水条数
+class BinanceFuturesPnl extends $pb.GeneratedMessage {
+  factory BinanceFuturesPnl({
+    $core.String? window,
+  }) {
+    final result = create();
+    if (window != null) result.window = window;
+    return result;
+  }
+
+  BinanceFuturesPnl._();
+
+  factory BinanceFuturesPnl.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceFuturesPnl.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceFuturesPnl',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'window')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceFuturesPnl clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceFuturesPnl copyWith(void Function(BinanceFuturesPnl) updates) =>
+      super.copyWith((message) => updates(message as BinanceFuturesPnl))
+          as BinanceFuturesPnl;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceFuturesPnl create() => BinanceFuturesPnl._();
+  @$core.override
+  BinanceFuturesPnl createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceFuturesPnl getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceFuturesPnl>(create);
+  static BinanceFuturesPnl? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get window => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set window($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasWindow() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearWindow() => $_clearField(1);
+}
+
 /// 签 **TradFi 永续合约协议**。`POST /fapi/v1/stock/contract`
 ///
 /// 股票、商品、外汇这类永续(`contractType == TRADIFI_PERPETUAL`)**要先签才能交易**;查询不用签。

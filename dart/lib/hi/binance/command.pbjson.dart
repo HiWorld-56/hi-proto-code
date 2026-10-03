@@ -489,6 +489,16 @@ const BinanceCommand$json = {
       '9': 0,
       '10': 'usdsFuturesKlines'
     },
+    {
+      '1': 'usds_futures_pnl',
+      '3': 58,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceFuturesPnl',
+      '8': {},
+      '9': 0,
+      '10': 'usdsFuturesPnl'
+    },
   ],
   '7': {},
   '8': [
@@ -586,5 +596,6 @@ final $typed_data.Uint8List binanceCommandDescriptor = $convert.base64Decode(
     'Y2tlcjI0aEIEkLUYAkgAUhR1c2RzRnV0dXJlc1RpY2tlcjI0aBJGCgtzcG90X2tsaW5lcxg4IA'
     'EoCzIdLmhpLmJpbmFuY2UuQmluYW5jZVNwb3RLbGluZXNCBJC1GAJIAFIKc3BvdEtsaW5lcxJY'
     'ChN1c2RzX2Z1dHVyZXNfa2xpbmVzGDkgASgLMiAuaGkuYmluYW5jZS5CaW5hbmNlRnV0dXJlc0'
-    'tsaW5lc0IEkLUYAkgAUhF1c2RzRnV0dXJlc0tsaW5lczoEmLUYAkILCgJvcBIFukgCCAFCDQoL'
-    'X2V4cGlyYXRpb24=');
+    'tsaW5lc0IEkLUYAkgAUhF1c2RzRnV0dXJlc0tsaW5lcxJPChB1c2RzX2Z1dHVyZXNfcG5sGDog'
+    'ASgLMh0uaGkuYmluYW5jZS5CaW5hbmNlRnV0dXJlc1BubEIEkLUYAkgAUg51c2RzRnV0dXJlc1'
+    'BubDoEmLUYAkILCgJvcBIFukgCCAFCDQoLX2V4cGlyYXRpb24=');

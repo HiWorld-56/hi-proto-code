@@ -561,14 +561,13 @@ func (x *AudioPlay) GetAudio() []byte {
 // 币安接入设置。**密钥不在这里** —— 2026-09-20 起密钥一个字都不出 brain：
 // face 不再自己连币安，要数据就发 `BinanceRequest`（见下），brain 替它去。
 //
-// 于是这条只剩一件事：告诉 face「这台机器人配过币安没有」以及算收益用的基数。
+// 于是这条只剩一件事：告诉 face「这台机器人配过币安没有」。
 // **收得到这条 = 配过**（没配过 brain 根本不推），face 据此决定显不显示资产面板。
+// 盈亏不靠手填的本金算，见 hi/binance/binance.proto 的 `BinanceFuturesPnl`。
 type BinanceSettings struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// 初始本金。**十进制字符串**，与本仓所有金额字段同口径（免浮点误差）。
-	InitialCapital *string `protobuf:"bytes,2,opt,name=initial_capital,json=initialCapital,proto3,oneof" json:"initial_capital,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *BinanceSettings) Reset() {
@@ -599,13 +598,6 @@ func (x *BinanceSettings) ProtoReflect() protoreflect.Message {
 // Deprecated: Use BinanceSettings.ProtoReflect.Descriptor instead.
 func (*BinanceSettings) Descriptor() ([]byte, []int) {
 	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *BinanceSettings) GetInitialCapital() string {
-	if x != nil && x.InitialCapital != nil {
-		return *x.InitialCapital
-	}
-	return ""
 }
 
 // face -> brain：替我去币安做一次。
@@ -1049,7 +1041,7 @@ type BrainToFace_EventUpdate struct {
 }
 
 type BrainToFace_EventBinanceSettings struct {
-	// 币安设置同步（**只有初始本金，没有密钥**；仅限本地 face IPC）
+	// 币安设置同步（**只说配过没有，没有密钥**；仅限本地 face IPC）
 	EventBinanceSettings *BinanceSettings `protobuf:"bytes,21,opt,name=event_binance_settings,json=eventBinanceSettings,proto3,oneof"`
 }
 
@@ -1546,10 +1538,8 @@ const file_hi_ninja_ui_proto_rawDesc = "" +
 	"\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x19\n" +
 	"\x05audio\x18\x02 \x01(\fH\x01R\x05audio\x88\x01\x01B\a\n" +
 	"\x05_uuidB\b\n" +
-	"\x06_audio\"S\n" +
-	"\x0fBinanceSettings\x12,\n" +
-	"\x0finitial_capital\x18\x02 \x01(\tH\x00R\x0einitialCapital\x88\x01\x01B\x12\n" +
-	"\x10_initial_capital\"~\n" +
+	"\x06_audio\"\x11\n" +
+	"\x0fBinanceSettings\"~\n" +
 	"\x0eBinanceRequest\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x13\n" +
 	"\x02op\x18\x02 \x01(\tH\x01R\x02op\x88\x01\x01\x12$\n" +
@@ -1747,7 +1737,6 @@ func file_hi_ninja_ui_proto_init() {
 	file_hi_ninja_ui_proto_msgTypes[3].OneofWrappers = []any{}
 	file_hi_ninja_ui_proto_msgTypes[4].OneofWrappers = []any{}
 	file_hi_ninja_ui_proto_msgTypes[5].OneofWrappers = []any{}
-	file_hi_ninja_ui_proto_msgTypes[6].OneofWrappers = []any{}
 	file_hi_ninja_ui_proto_msgTypes[7].OneofWrappers = []any{}
 	file_hi_ninja_ui_proto_msgTypes[8].OneofWrappers = []any{
 		(*BrainToFace_InitRobot)(nil),

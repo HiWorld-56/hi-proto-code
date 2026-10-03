@@ -103,6 +103,7 @@ type BinanceCommand struct {
 	//	*BinanceCommand_UsdsFuturesTicker_24H
 	//	*BinanceCommand_SpotKlines
 	//	*BinanceCommand_UsdsFuturesKlines
+	//	*BinanceCommand_UsdsFuturesPnl
 	Op            isBinanceCommand_Op `protobuf_oneof:"op"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -566,6 +567,15 @@ func (x *BinanceCommand) GetUsdsFuturesKlines() *BinanceFuturesKlines {
 	return nil
 }
 
+func (x *BinanceCommand) GetUsdsFuturesPnl() *BinanceFuturesPnl {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceCommand_UsdsFuturesPnl); ok {
+			return x.UsdsFuturesPnl
+		}
+	}
+	return nil
+}
+
 type isBinanceCommand_Op interface {
 	isBinanceCommand_Op()
 }
@@ -756,6 +766,10 @@ type BinanceCommand_UsdsFuturesKlines struct {
 	UsdsFuturesKlines *BinanceFuturesKlines `protobuf:"bytes,57,opt,name=usds_futures_klines,json=usdsFuturesKlines,proto3,oneof"` // usds_futures.klines
 }
 
+type BinanceCommand_UsdsFuturesPnl struct {
+	UsdsFuturesPnl *BinanceFuturesPnl `protobuf:"bytes,58,opt,name=usds_futures_pnl,json=usdsFuturesPnl,proto3,oneof"` // usds_futures.pnl(机器人算的)
+}
+
 func (*BinanceCommand_SpotNewOrder) isBinanceCommand_Op() {}
 
 func (*BinanceCommand_SpotCancelOrder) isBinanceCommand_Op() {}
@@ -848,12 +862,14 @@ func (*BinanceCommand_SpotKlines) isBinanceCommand_Op() {}
 
 func (*BinanceCommand_UsdsFuturesKlines) isBinanceCommand_Op() {}
 
+func (*BinanceCommand_UsdsFuturesPnl) isBinanceCommand_Op() {}
+
 var File_hi_binance_command_proto protoreflect.FileDescriptor
 
 const file_hi_binance_command_proto_rawDesc = "" +
 	"\n" +
 	"\x18hi/binance/command.proto\x12\n" +
-	"hi.binance\x1a\x1bbuf/validate/validate.proto\x1a\x18hi/binance/binance.proto\x1a\x17hi/binance/stocks.proto\x1a\x10hi/options.proto\"\x9f&\n" +
+	"hi.binance\x1a\x1bbuf/validate/validate.proto\x1a\x18hi/binance/binance.proto\x1a\x17hi/binance/stocks.proto\x1a\x10hi/options.proto\"\xf0&\n" +
 	"\x0eBinanceCommand\x12/\n" +
 	"\n" +
 	"expiration\x18\x01 \x01(\x03B\n" +
@@ -906,7 +922,8 @@ const file_hi_binance_command_proto_rawDesc = "" +
 	"\x17usds_futures_ticker_24h\x187 \x01(\v2#.hi.binance.BinanceFuturesTicker24hB\x04\x90\xb5\x18\x02H\x00R\x14usdsFuturesTicker24h\x12F\n" +
 	"\vspot_klines\x188 \x01(\v2\x1d.hi.binance.BinanceSpotKlinesB\x04\x90\xb5\x18\x02H\x00R\n" +
 	"spotKlines\x12X\n" +
-	"\x13usds_futures_klines\x189 \x01(\v2 .hi.binance.BinanceFuturesKlinesB\x04\x90\xb5\x18\x02H\x00R\x11usdsFuturesKlines:\x04\x98\xb5\x18\x02B\v\n" +
+	"\x13usds_futures_klines\x189 \x01(\v2 .hi.binance.BinanceFuturesKlinesB\x04\x90\xb5\x18\x02H\x00R\x11usdsFuturesKlines\x12O\n" +
+	"\x10usds_futures_pnl\x18: \x01(\v2\x1d.hi.binance.BinanceFuturesPnlB\x04\x90\xb5\x18\x02H\x00R\x0eusdsFuturesPnl:\x04\x98\xb5\x18\x02B\v\n" +
 	"\x02op\x12\x05\xbaH\x02\b\x01B\r\n" +
 	"\v_expirationB\x95\x01\n" +
 	"\x0ecom.hi.binanceB\fCommandProtoP\x01Z,github.com/HiWorld-56/hi-proto/go/hi/binance\xa2\x02\x03HBX\xaa\x02\n" +
@@ -974,6 +991,7 @@ var file_hi_binance_command_proto_goTypes = []any{
 	(*BinanceFuturesTicker24H)(nil),           // 44: hi.binance.BinanceFuturesTicker24h
 	(*BinanceSpotKlines)(nil),                 // 45: hi.binance.BinanceSpotKlines
 	(*BinanceFuturesKlines)(nil),              // 46: hi.binance.BinanceFuturesKlines
+	(*BinanceFuturesPnl)(nil),                 // 47: hi.binance.BinanceFuturesPnl
 }
 var file_hi_binance_command_proto_depIdxs = []int32{
 	1,  // 0: hi.binance.BinanceCommand.spot_new_order:type_name -> hi.binance.BinanceSpotNewOrder
@@ -1022,11 +1040,12 @@ var file_hi_binance_command_proto_depIdxs = []int32{
 	44, // 43: hi.binance.BinanceCommand.usds_futures_ticker_24h:type_name -> hi.binance.BinanceFuturesTicker24h
 	45, // 44: hi.binance.BinanceCommand.spot_klines:type_name -> hi.binance.BinanceSpotKlines
 	46, // 45: hi.binance.BinanceCommand.usds_futures_klines:type_name -> hi.binance.BinanceFuturesKlines
-	46, // [46:46] is the sub-list for method output_type
-	46, // [46:46] is the sub-list for method input_type
-	46, // [46:46] is the sub-list for extension type_name
-	46, // [46:46] is the sub-list for extension extendee
-	0,  // [0:46] is the sub-list for field type_name
+	47, // 46: hi.binance.BinanceCommand.usds_futures_pnl:type_name -> hi.binance.BinanceFuturesPnl
+	47, // [47:47] is the sub-list for method output_type
+	47, // [47:47] is the sub-list for method input_type
+	47, // [47:47] is the sub-list for extension type_name
+	47, // [47:47] is the sub-list for extension extendee
+	0,  // [0:47] is the sub-list for field type_name
 }
 
 func init() { file_hi_binance_command_proto_init() }
@@ -1083,6 +1102,7 @@ func file_hi_binance_command_proto_init() {
 		(*BinanceCommand_UsdsFuturesTicker_24H)(nil),
 		(*BinanceCommand_SpotKlines)(nil),
 		(*BinanceCommand_UsdsFuturesKlines)(nil),
+		(*BinanceCommand_UsdsFuturesPnl)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

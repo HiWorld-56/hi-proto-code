@@ -156,26 +156,11 @@ final $typed_data.Uint8List audioPlayDescriptor = $convert.base64Decode(
 @$core.Deprecated('Use binanceSettingsDescriptor instead')
 const BinanceSettings$json = {
   '1': 'BinanceSettings',
-  '2': [
-    {
-      '1': 'initial_capital',
-      '3': 2,
-      '4': 1,
-      '5': 9,
-      '9': 0,
-      '10': 'initialCapital',
-      '17': true
-    },
-  ],
-  '8': [
-    {'1': '_initial_capital'},
-  ],
 };
 
 /// Descriptor for `BinanceSettings`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List binanceSettingsDescriptor = $convert.base64Decode(
-    'Cg9CaW5hbmNlU2V0dGluZ3MSLAoPaW5pdGlhbF9jYXBpdGFsGAIgASgJSABSDmluaXRpYWxDYX'
-    'BpdGFsiAEBQhIKEF9pbml0aWFsX2NhcGl0YWw=');
+final $typed_data.Uint8List binanceSettingsDescriptor =
+    $convert.base64Decode('Cg9CaW5hbmNlU2V0dGluZ3M=');
 
 @$core.Deprecated('Use binanceRequestDescriptor instead')
 const BinanceRequest$json = {
