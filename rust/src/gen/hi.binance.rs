@@ -480,39 +480,28 @@ pub struct BinanceFuturesIncome {
     #[prost(int64, optional, tag = "5")]
     pub limit: ::core::option::Option<i64>,
 }
-/// 合约账户在一个时间窗里的**盈亏**。**不是币安的一个接口**,是机器人用流水与账户算出来的
-/// (`usds_futures.income` 翻页取全 + `usds_futures.account_information_v3`),口径照币安「PnL 分析」:
+/// 合约账户的**收益率**(按用户设定的初始资金算)。**不是币安的一个接口**,是机器人算的;
+/// 全生态只有这一个公式、只在机器人算一份(face 看板、币安插件「盈亏」、桌面版「盈亏」页与
+/// 每条结果顺带的 `BinanceResult.roi` 都用它):
 ///
-/// 盈亏 = 窗内**非划转**流水之和(已实现盈亏 + 手续费 + 资金费 + 其它)
-/// = 期末钱包余额 − 期初钱包余额 − 净流入
-/// 期初钱包余额 = 现在的钱包余额(totalWalletBalance)− 窗内全部流水
-/// 比率 = 盈亏 ÷ (期初钱包余额 + 净流入);分母不大于 0 时没有比率
+/// 当前余额 = 合约账户的 totalMarginBalance(钱包余额 + 未实现盈亏;币安 App 叫「保证金余额」,hiclub 叫「账户权益」)
+/// 收益     = 当前余额 − 初始资金
+/// 收益率   = 收益 ÷ 初始资金 × 100(%)
 ///
-/// 只算 USDT 流水(用 BNB 抵扣的手续费那类流水是 BNB 的个数,不能当 USDT 加)。
+/// 初始资金是主人自己设的数(USDT,存在机器人本地;入口:hiclub app 的 USB 密钥页、对机器人说)。
+/// **没设或设的是 0:不算**,结果里没有收益与收益率 —— 界面写「未设初始资金」,不写 0% 也不留空。
+/// 期间的划转会算进收益(初始资金是一个固定数,机器人不追流水)。
 ///
-/// 窗口(`window`):
-/// · `today`:币安时间 UTC 0 点到现在。**不含**未实现盈亏(开仓以来的浮盈不是今天的)。
-/// · `90d`:近 90 天到现在(币安流水只保留三个月),**加上**现在持仓的未实现盈亏(totalUnrealizedProfit)。
+/// 当前余额取自机器人的账户快照(后台每 60 秒取一次;快照过期就当场取),全程十进制计算。
 ///
-/// 结果在 `BinanceResult.body` 里,是**机器人写的 JSON**(不是币安原文),金额一律十进制字符串:
-///
-/// window           "today" / "90d"
-/// start_ms end_ms  窗口(毫秒,币安时间)
-/// pnl              盈亏
-/// pct              比率(百分数,如 "-31.23";分母不大于 0 时为 null)
-/// base             比率的分母(期初钱包余额 + 净流入)
-/// wallet_start wallet_now  期初 / 现在的钱包余额
-/// net_inflow       窗内划转净额(转入为正)
-/// realized_pnl commission funding_fee other  盈亏的构成(各自的流水之和,带正负)
-/// unrealized       现在的未实现盈亏;unrealized_included 表示 pnl 里加没加它
-/// commission_paid funding_fee_paid  窗内付出去的手续费 / 资金费(只算负流水,取正数)
-/// complete         流水取全没有(一页 1000 条、最多 5 页;没取全时 pnl 偏小)
-/// rows             用到的流水条数
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct BinanceFuturesPnl {
-    #[prost(string, optional, tag = "1")]
-    pub window: ::core::option::Option<::prost::alloc::string::String>,
-}
+/// 结果在 `BinanceResult.body` 里,是**机器人写的 JSON**(不是币安原文),键与 `BinanceRoi` 的字段同名:
+/// balance          当前余额(十进制字符串)
+/// initial_capital  初始资金;未设为 null
+/// pnl              收益;未设为 null
+/// pct              收益率(百分数,两位小数,如 "12.34" / "-3.10");未设为 null
+/// age              当前余额是多少秒前从币安取到的
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceFuturesPnl {}
 /// 签 **TradFi 永续合约协议**。`POST /fapi/v1/stock/contract`
 ///
 /// 股票、商品、外汇这类永续(`contractType == TRADIFI_PERPETUAL`)**要先签才能交易**;查询不用签。
@@ -565,6 +554,35 @@ pub struct BinanceResult {
     /// 不是「没持仓」,也不是「不知道」,读方应沿用这台之前报告过的那一份。
     #[prost(message, optional, tag = "6")]
     pub held: ::core::option::Option<BinanceHoldings>,
+    /// 回这条结果时,这台机器人的**收益率**快照(公式见 `BinanceFuturesPnl`,只在机器人算一份)。
+    /// 与 `held` 同样只在插件认了发令人(主人 / 代理)之后才带。
+    /// **不带 = 不知道**(这条没报告、机器人还没取到过余额,或机器人版本还没有这个字段)—— 读方显示「未知」。
+    #[prost(message, optional, tag = "7")]
+    pub roi: ::core::option::Option<BinanceRoi>,
+}
+/// 一台机器人的收益率快照。公式与口径只写在 `BinanceFuturesPnl` 那条注释里。
+///
+/// 三种状态:
+/// · `BinanceResult.roi` 不带                 = 不知道(界面「未知」)
+/// · 带了但没有 `initial_capital`              = 主人没设初始资金(或设的是 0)(界面「未设初始资金」)
+/// · 带了且有 `initial_capital`                = `balance` / `pnl` / `pct` 都有
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceRoi {
+    /// 当前余额从币安取到之后,到机器人回这条结果,过了多少**秒**(机器人自己的单调计时)。未设初始资金时可能不带。
+    #[prost(uint32, optional, tag = "1")]
+    pub age: ::core::option::Option<u32>,
+    /// 当前余额(totalMarginBalance),十进制字符串
+    #[prost(string, optional, tag = "2")]
+    pub balance: ::core::option::Option<::prost::alloc::string::String>,
+    /// 初始资金;不带 = 未设
+    #[prost(string, optional, tag = "3")]
+    pub initial_capital: ::core::option::Option<::prost::alloc::string::String>,
+    /// 收益 = balance − initial_capital
+    #[prost(string, optional, tag = "4")]
+    pub pnl: ::core::option::Option<::prost::alloc::string::String>,
+    /// 收益率,百分数,两位小数(如 "12.34")
+    #[prost(string, optional, tag = "5")]
+    pub pct: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 一台机器人**最近一次知道的**持有情况,按产品线分开。随 `BinanceResult` 顺带回来,好让发令方在下单前
 /// 按「谁持有这个币」挑机器人。
@@ -1340,7 +1358,7 @@ pub mod binance_command {
         /// usds_futures.klines
         #[prost(message, tag = "57")]
         UsdsFuturesKlines(super::BinanceFuturesKlines),
-        /// usds_futures.pnl(机器人算的)
+        /// usds_futures.pnl(机器人算的收益率)
         #[prost(message, tag = "58")]
         UsdsFuturesPnl(super::BinanceFuturesPnl),
     }

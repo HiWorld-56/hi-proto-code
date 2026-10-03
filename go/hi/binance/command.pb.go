@@ -767,7 +767,7 @@ type BinanceCommand_UsdsFuturesKlines struct {
 }
 
 type BinanceCommand_UsdsFuturesPnl struct {
-	UsdsFuturesPnl *BinanceFuturesPnl `protobuf:"bytes,58,opt,name=usds_futures_pnl,json=usdsFuturesPnl,proto3,oneof"` // usds_futures.pnl(机器人算的)
+	UsdsFuturesPnl *BinanceFuturesPnl `protobuf:"bytes,58,opt,name=usds_futures_pnl,json=usdsFuturesPnl,proto3,oneof"` // usds_futures.pnl(机器人算的收益率)
 }
 
 func (*BinanceCommand_SpotNewOrder) isBinanceCommand_Op() {}

@@ -2162,28 +2162,12 @@ final $typed_data.Uint8List binanceFuturesIncomeDescriptor = $convert.base64Deco
 @$core.Deprecated('Use binanceFuturesPnlDescriptor instead')
 const BinanceFuturesPnl$json = {
   '1': 'BinanceFuturesPnl',
-  '2': [
-    {
-      '1': 'window',
-      '3': 1,
-      '4': 1,
-      '5': 9,
-      '8': {},
-      '9': 0,
-      '10': 'window',
-      '17': true
-    },
-  ],
   '7': {},
-  '8': [
-    {'1': '_window'},
-  ],
 };
 
 /// Descriptor for `BinanceFuturesPnl`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List binanceFuturesPnlDescriptor = $convert.base64Decode(
-    'ChFCaW5hbmNlRnV0dXJlc1BubBI1CgZ3aW5kb3cYASABKAlCGLpIEcgBAXIMUgV0b2RheVIDOT'
-    'BkkLUYAkgAUgZ3aW5kb3eIAQE6BJi1GAJCCQoHX3dpbmRvdw==');
+final $typed_data.Uint8List binanceFuturesPnlDescriptor =
+    $convert.base64Decode('ChFCaW5hbmNlRnV0dXJlc1BubDoEmLUYAg==');
 
 @$core.Deprecated('Use binanceFuturesSignTradfiContractDescriptor instead')
 const BinanceFuturesSignTradfiContract$json = {
@@ -2271,6 +2255,17 @@ const BinanceResult$json = {
       '10': 'held',
       '17': true
     },
+    {
+      '1': 'roi',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceRoi',
+      '8': {},
+      '9': 6,
+      '10': 'roi',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -2280,6 +2275,7 @@ const BinanceResult$json = {
     {'1': '_body'},
     {'1': '_error'},
     {'1': '_held'},
+    {'1': '_roi'},
   ],
 };
 
@@ -2289,8 +2285,82 @@ final $typed_data.Uint8List binanceResultDescriptor = $convert.base64Decode(
     'JvcBgCIAEoCUIEkLUYAkgBUgJvcIgBARIqCgtodHRwX3N0YXR1cxgDIAEoDUIEkLUYAkgCUgpo'
     'dHRwU3RhdHVziAEBEh0KBGJvZHkYBCABKAlCBJC1GAJIA1IEYm9keYgBARIfCgVlcnJvchgFIA'
     'EoCUIEkLUYAkgEUgVlcnJvcogBARI6CgRoZWxkGAYgASgLMhsuaGkuYmluYW5jZS5CaW5hbmNl'
-    'SG9sZGluZ3NCBJC1GAJIBVIEaGVsZIgBAToEmLUYAkIKCghfcmVxdWVzdEIFCgNfb3BCDgoMX2'
-    'h0dHBfc3RhdHVzQgcKBV9ib2R5QggKBl9lcnJvckIHCgVfaGVsZA==');
+    'SG9sZGluZ3NCBJC1GAJIBVIEaGVsZIgBARIzCgNyb2kYByABKAsyFi5oaS5iaW5hbmNlLkJpbm'
+    'FuY2VSb2lCBJC1GAJIBlIDcm9piAEBOgSYtRgCQgoKCF9yZXF1ZXN0QgUKA19vcEIOCgxfaHR0'
+    'cF9zdGF0dXNCBwoFX2JvZHlCCAoGX2Vycm9yQgcKBV9oZWxkQgYKBF9yb2k=');
+
+@$core.Deprecated('Use binanceRoiDescriptor instead')
+const BinanceRoi$json = {
+  '1': 'BinanceRoi',
+  '2': [
+    {
+      '1': 'age',
+      '3': 1,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 0,
+      '10': 'age',
+      '17': true
+    },
+    {
+      '1': 'balance',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'balance',
+      '17': true
+    },
+    {
+      '1': 'initial_capital',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'initialCapital',
+      '17': true
+    },
+    {
+      '1': 'pnl',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 3,
+      '10': 'pnl',
+      '17': true
+    },
+    {
+      '1': 'pct',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 4,
+      '10': 'pct',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_age'},
+    {'1': '_balance'},
+    {'1': '_initial_capital'},
+    {'1': '_pnl'},
+    {'1': '_pct'},
+  ],
+};
+
+/// Descriptor for `BinanceRoi`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List binanceRoiDescriptor = $convert.base64Decode(
+    'CgpCaW5hbmNlUm9pEhsKA2FnZRgBIAEoDUIEkLUYAkgAUgNhZ2WIAQESIwoHYmFsYW5jZRgCIA'
+    'EoCUIEkLUYAkgBUgdiYWxhbmNliAEBEjIKD2luaXRpYWxfY2FwaXRhbBgDIAEoCUIEkLUYAkgC'
+    'Ug5pbml0aWFsQ2FwaXRhbIgBARIbCgNwbmwYBCABKAlCBJC1GAJIA1IDcG5siAEBEhsKA3BjdB'
+    'gFIAEoCUIEkLUYAkgEUgNwY3SIAQE6BJi1GAJCBgoEX2FnZUIKCghfYmFsYW5jZUISChBfaW5p'
+    'dGlhbF9jYXBpdGFsQgYKBF9wbmxCBgoEX3BjdA==');
 
 @$core.Deprecated('Use binanceHoldingsDescriptor instead')
 const BinanceHoldings$json = {
