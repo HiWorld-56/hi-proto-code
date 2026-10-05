@@ -493,11 +493,12 @@ pub struct ChatResp {
     pub result: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, repeated, tag = "3")]
     pub tools: ::prost::alloc::vec::Vec<ToolCall>,
-    /// 本轮用户那句**实际被模型读到的样子**:语音(audio_url)已转写成 text,其余原样。
-    /// 只在**开一轮**的 Converse 回包里有(final 与否都带),Resume 不带(那一句在开轮时已经给过)。
+    /// 这一轮的**问题**:请求里的 `conts` 原样、同序,只把每段语音(audio_url)换成 hi-ai 识别出的那段 text。
+    /// 语音转文字只在 hi-ai 做一次(推理前必转,见 service/chat.go 的 Prepare),调用方别另做一遍 ——
+    /// 两处识别结果可能不一致。Converse 与 Resume 的回包都带(final 与否都带,续跑带的是开轮那一句)。
     /// 用途:club 把机器人的语音对话记进聊天记录时,用户那句存成文字而不是一段录音 url。
     #[prost(message, repeated, tag = "4")]
-    pub asked: ::prost::alloc::vec::Vec<Content>,
+    pub question: ::prost::alloc::vec::Vec<Content>,
 }
 /// 流式帧(ConverseStream / ResumeStream)。
 ///
@@ -545,10 +546,9 @@ pub struct ConverseStreamResp {
     /// 待客户端执行的工具
     #[prost(message, repeated, tag = "5")]
     pub tools: ::prost::alloc::vec::Vec<ToolCall>,
-    /// 同 ChatResp.asked:本轮用户那句转写后的样子。只在 ConverseStream 的收尾帧(`msg` 或 `toolCalls`)上带,
-    /// ResumeStream 不带。
+    /// 同 ChatResp.question。挂在每条流的收尾帧(`msg` 或 `toolCalls`)上,ConverseStream 与 ResumeStream 都带。
     #[prost(message, repeated, tag = "6")]
-    pub asked: ::prost::alloc::vec::Vec<Content>,
+    pub question: ::prost::alloc::vec::Vec<Content>,
 }
 /// Generated client implementations.
 pub mod chat_client {

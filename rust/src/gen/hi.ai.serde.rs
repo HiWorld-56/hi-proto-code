@@ -1574,7 +1574,7 @@ impl serde::Serialize for ChatResp {
         if !self.tools.is_empty() {
             len += 1;
         }
-        if !self.asked.is_empty() {
+        if !self.question.is_empty() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.ChatResp", len)?;
@@ -1587,8 +1587,8 @@ impl serde::Serialize for ChatResp {
         if !self.tools.is_empty() {
             struct_ser.serialize_field("tools", &self.tools)?;
         }
-        if !self.asked.is_empty() {
-            struct_ser.serialize_field("asked", &self.asked)?;
+        if !self.question.is_empty() {
+            struct_ser.serialize_field("question", &self.question)?;
         }
         struct_ser.end()
     }
@@ -1603,7 +1603,7 @@ impl<'de> serde::Deserialize<'de> for ChatResp {
             "final",
             "result",
             "tools",
-            "asked",
+            "question",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -1611,7 +1611,7 @@ impl<'de> serde::Deserialize<'de> for ChatResp {
             Final,
             Result,
             Tools,
-            Asked,
+            Question,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1636,7 +1636,7 @@ impl<'de> serde::Deserialize<'de> for ChatResp {
                             "final" => Ok(GeneratedField::Final),
                             "result" => Ok(GeneratedField::Result),
                             "tools" => Ok(GeneratedField::Tools),
-                            "asked" => Ok(GeneratedField::Asked),
+                            "question" => Ok(GeneratedField::Question),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -1659,7 +1659,7 @@ impl<'de> serde::Deserialize<'de> for ChatResp {
                 let mut r#final__ = None;
                 let mut result__ = None;
                 let mut tools__ = None;
-                let mut asked__ = None;
+                let mut question__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Final => {
@@ -1680,11 +1680,11 @@ impl<'de> serde::Deserialize<'de> for ChatResp {
                             }
                             tools__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::Asked => {
-                            if asked__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("asked"));
+                        GeneratedField::Question => {
+                            if question__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("question"));
                             }
-                            asked__ = Some(map_.next_value()?);
+                            question__ = Some(map_.next_value()?);
                         }
                     }
                 }
@@ -1692,7 +1692,7 @@ impl<'de> serde::Deserialize<'de> for ChatResp {
                     r#final: r#final__,
                     result: result__,
                     tools: tools__.unwrap_or_default(),
-                    asked: asked__.unwrap_or_default(),
+                    question: question__.unwrap_or_default(),
                 })
             }
         }
@@ -2046,7 +2046,7 @@ impl serde::Serialize for ConverseStreamResp {
         if !self.tools.is_empty() {
             len += 1;
         }
-        if !self.asked.is_empty() {
+        if !self.question.is_empty() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ai.ConverseStreamResp", len)?;
@@ -2065,8 +2065,8 @@ impl serde::Serialize for ConverseStreamResp {
         if !self.tools.is_empty() {
             struct_ser.serialize_field("tools", &self.tools)?;
         }
-        if !self.asked.is_empty() {
-            struct_ser.serialize_field("asked", &self.asked)?;
+        if !self.question.is_empty() {
+            struct_ser.serialize_field("question", &self.question)?;
         }
         struct_ser.end()
     }
@@ -2083,7 +2083,7 @@ impl<'de> serde::Deserialize<'de> for ConverseStreamResp {
             "message",
             "id",
             "tools",
-            "asked",
+            "question",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -2093,7 +2093,7 @@ impl<'de> serde::Deserialize<'de> for ConverseStreamResp {
             Message,
             Id,
             Tools,
-            Asked,
+            Question,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -2120,7 +2120,7 @@ impl<'de> serde::Deserialize<'de> for ConverseStreamResp {
                             "message" => Ok(GeneratedField::Message),
                             "id" => Ok(GeneratedField::Id),
                             "tools" => Ok(GeneratedField::Tools),
-                            "asked" => Ok(GeneratedField::Asked),
+                            "question" => Ok(GeneratedField::Question),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -2145,7 +2145,7 @@ impl<'de> serde::Deserialize<'de> for ConverseStreamResp {
                 let mut message__ = None;
                 let mut id__ = None;
                 let mut tools__ = None;
-                let mut asked__ = None;
+                let mut question__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Code => {
@@ -2180,11 +2180,11 @@ impl<'de> serde::Deserialize<'de> for ConverseStreamResp {
                             }
                             tools__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::Asked => {
-                            if asked__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("asked"));
+                        GeneratedField::Question => {
+                            if question__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("question"));
                             }
-                            asked__ = Some(map_.next_value()?);
+                            question__ = Some(map_.next_value()?);
                         }
                     }
                 }
@@ -2194,7 +2194,7 @@ impl<'de> serde::Deserialize<'de> for ConverseStreamResp {
                     message: message__,
                     id: id__,
                     tools: tools__.unwrap_or_default(),
-                    asked: asked__.unwrap_or_default(),
+                    question: question__.unwrap_or_default(),
                 })
             }
         }

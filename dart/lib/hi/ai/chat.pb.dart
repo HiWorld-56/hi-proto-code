@@ -1229,13 +1229,13 @@ class ChatResp extends $pb.GeneratedMessage {
     $core.bool? final_1,
     $core.String? result,
     $core.Iterable<ToolCall>? tools,
-    $core.Iterable<Content>? asked,
+    $core.Iterable<Content>? question,
   }) {
     final result$ = create();
     if (final_1 != null) result$.final_1 = final_1;
     if (result != null) result$.result = result;
     if (tools != null) result$.tools.addAll(tools);
-    if (asked != null) result$.asked.addAll(asked);
+    if (question != null) result$.question.addAll(question);
     return result$;
   }
 
@@ -1256,7 +1256,7 @@ class ChatResp extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'result')
     ..pPM<ToolCall>(3, _omitFieldNames ? '' : 'tools',
         subBuilder: ToolCall.create)
-    ..pPM<Content>(4, _omitFieldNames ? '' : 'asked',
+    ..pPM<Content>(4, _omitFieldNames ? '' : 'question',
         subBuilder: Content.create)
     ..hasRequiredFields = false;
 
@@ -1299,11 +1299,12 @@ class ChatResp extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $pb.PbList<ToolCall> get tools => $_getList(2);
 
-  /// 本轮用户那句**实际被模型读到的样子**:语音(audio_url)已转写成 text,其余原样。
-  /// 只在**开一轮**的 Converse 回包里有(final 与否都带),Resume 不带(那一句在开轮时已经给过)。
+  /// 这一轮的**问题**:请求里的 `conts` 原样、同序,只把每段语音(audio_url)换成 hi-ai 识别出的那段 text。
+  /// 语音转文字只在 hi-ai 做一次(推理前必转,见 service/chat.go 的 Prepare),调用方别另做一遍 ——
+  /// 两处识别结果可能不一致。Converse 与 Resume 的回包都带(final 与否都带,续跑带的是开轮那一句)。
   /// 用途:club 把机器人的语音对话记进聊天记录时,用户那句存成文字而不是一段录音 url。
   @$pb.TagNumber(4)
-  $pb.PbList<Content> get asked => $_getList(3);
+  $pb.PbList<Content> get question => $_getList(3);
 }
 
 /// 流式帧(ConverseStream / ResumeStream)。
@@ -1343,7 +1344,7 @@ class ConverseStreamResp extends $pb.GeneratedMessage {
     $core.String? message,
     $core.String? id,
     $core.Iterable<ToolCall>? tools,
-    $core.Iterable<Content>? asked,
+    $core.Iterable<Content>? question,
   }) {
     final result = create();
     if (code != null) result.code = code;
@@ -1351,7 +1352,7 @@ class ConverseStreamResp extends $pb.GeneratedMessage {
     if (message != null) result.message = message;
     if (id != null) result.id = id;
     if (tools != null) result.tools.addAll(tools);
-    if (asked != null) result.asked.addAll(asked);
+    if (question != null) result.question.addAll(question);
     return result;
   }
 
@@ -1374,7 +1375,7 @@ class ConverseStreamResp extends $pb.GeneratedMessage {
     ..aOS(4, _omitFieldNames ? '' : 'id')
     ..pPM<ToolCall>(5, _omitFieldNames ? '' : 'tools',
         subBuilder: ToolCall.create)
-    ..pPM<Content>(6, _omitFieldNames ? '' : 'asked',
+    ..pPM<Content>(6, _omitFieldNames ? '' : 'question',
         subBuilder: Content.create)
     ..hasRequiredFields = false;
 
@@ -1437,10 +1438,9 @@ class ConverseStreamResp extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $pb.PbList<ToolCall> get tools => $_getList(4);
 
-  /// 同 ChatResp.asked:本轮用户那句转写后的样子。只在 ConverseStream 的收尾帧(`msg` 或 `toolCalls`)上带,
-  /// ResumeStream 不带。
+  /// 同 ChatResp.question。挂在每条流的收尾帧(`msg` 或 `toolCalls`)上,ConverseStream 与 ResumeStream 都带。
   @$pb.TagNumber(6)
-  $pb.PbList<Content> get asked => $_getList(5);
+  $pb.PbList<Content> get question => $_getList(5);
 }
 
 const $core.bool _omitFieldNames =

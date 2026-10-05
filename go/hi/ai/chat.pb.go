@@ -896,10 +896,11 @@ type ChatResp struct {
 	Final  *bool                  `protobuf:"varint,1,opt,name=final,proto3,oneof" json:"final,omitempty"`
 	Result *string                `protobuf:"bytes,2,opt,name=result,proto3,oneof" json:"result,omitempty"`
 	Tools  []*ToolCall            `protobuf:"bytes,3,rep,name=tools,proto3" json:"tools,omitempty"`
-	// 本轮用户那句**实际被模型读到的样子**:语音(audio_url)已转写成 text,其余原样。
-	// 只在**开一轮**的 Converse 回包里有(final 与否都带),Resume 不带(那一句在开轮时已经给过)。
+	// 这一轮的**问题**:请求里的 `conts` 原样、同序,只把每段语音(audio_url)换成 hi-ai 识别出的那段 text。
+	// 语音转文字只在 hi-ai 做一次(推理前必转,见 service/chat.go 的 Prepare),调用方别另做一遍 ——
+	// 两处识别结果可能不一致。Converse 与 Resume 的回包都带(final 与否都带,续跑带的是开轮那一句)。
 	// 用途:club 把机器人的语音对话记进聊天记录时,用户那句存成文字而不是一段录音 url。
-	Asked         []*Content `protobuf:"bytes,4,rep,name=asked,proto3" json:"asked,omitempty"`
+	Question      []*Content `protobuf:"bytes,4,rep,name=question,proto3" json:"question,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -955,9 +956,9 @@ func (x *ChatResp) GetTools() []*ToolCall {
 	return nil
 }
 
-func (x *ChatResp) GetAsked() []*Content {
+func (x *ChatResp) GetQuestion() []*Content {
 	if x != nil {
-		return x.Asked
+		return x.Question
 	}
 	return nil
 }
@@ -1004,9 +1005,8 @@ type ConverseStreamResp struct {
 	// 仅 type="toolCalls" 时有值 —— 与 ChatResp 的 result/tools 同义。
 	Id    *string     `protobuf:"bytes,4,opt,name=id,proto3,oneof" json:"id,omitempty"` // 续跑 id(Resume 时带回)
 	Tools []*ToolCall `protobuf:"bytes,5,rep,name=tools,proto3" json:"tools,omitempty"` // 待客户端执行的工具
-	// 同 ChatResp.asked:本轮用户那句转写后的样子。只在 ConverseStream 的收尾帧(`msg` 或 `toolCalls`)上带,
-	// ResumeStream 不带。
-	Asked         []*Content `protobuf:"bytes,6,rep,name=asked,proto3" json:"asked,omitempty"`
+	// 同 ChatResp.question。挂在每条流的收尾帧(`msg` 或 `toolCalls`)上,ConverseStream 与 ResumeStream 都带。
+	Question      []*Content `protobuf:"bytes,6,rep,name=question,proto3" json:"question,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1076,9 +1076,9 @@ func (x *ConverseStreamResp) GetTools() []*ToolCall {
 	return nil
 }
 
-func (x *ConverseStreamResp) GetAsked() []*Content {
+func (x *ConverseStreamResp) GetQuestion() []*Content {
 	if x != nil {
-		return x.Asked
+		return x.Question
 	}
 	return nil
 }
@@ -1307,21 +1307,21 @@ const file_hi_ai_chat_proto_rawDesc = "" +
 	"\n" +
 	"_arguments:\x04\x98\xb5\x18\x03B\x05\n" +
 	"\x03_idB\a\n" +
-	"\x05_type\"\xc2\x01\n" +
+	"\x05_type\"\xc8\x01\n" +
 	"\bChatResp\x12\x1f\n" +
 	"\x05final\x18\x01 \x01(\bB\x04\x90\xb5\x18\x03H\x00R\x05final\x88\x01\x01\x12!\n" +
 	"\x06result\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x06result\x88\x01\x01\x12+\n" +
-	"\x05tools\x18\x03 \x03(\v2\x0f.hi.ai.ToolCallB\x04\x90\xb5\x18\x03R\x05tools\x12*\n" +
-	"\x05asked\x18\x04 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\x05asked:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x05tools\x18\x03 \x03(\v2\x0f.hi.ai.ToolCallB\x04\x90\xb5\x18\x03R\x05tools\x120\n" +
+	"\bquestion\x18\x04 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\bquestion:\x04\x98\xb5\x18\x03B\b\n" +
 	"\x06_finalB\t\n" +
-	"\a_result\"\x96\x02\n" +
+	"\a_result\"\x9c\x02\n" +
 	"\x12ConverseStreamResp\x12\x1d\n" +
 	"\x04code\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x04code\x88\x01\x01\x12\x1d\n" +
 	"\x04type\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x04type\x88\x01\x01\x12#\n" +
 	"\amessage\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\amessage\x88\x01\x01\x12\x19\n" +
 	"\x02id\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x02id\x88\x01\x01\x12+\n" +
-	"\x05tools\x18\x05 \x03(\v2\x0f.hi.ai.ToolCallB\x04\x90\xb5\x18\x03R\x05tools\x12*\n" +
-	"\x05asked\x18\x06 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\x05asked:\x04\x98\xb5\x18\x03B\a\n" +
+	"\x05tools\x18\x05 \x03(\v2\x0f.hi.ai.ToolCallB\x04\x90\xb5\x18\x03R\x05tools\x120\n" +
+	"\bquestion\x18\x06 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\bquestion:\x04\x98\xb5\x18\x03B\a\n" +
 	"\x05_codeB\a\n" +
 	"\x05_typeB\n" +
 	"\n" +
@@ -1383,9 +1383,9 @@ var file_hi_ai_chat_proto_depIdxs = []int32{
 	14, // 6: hi.ai.ToolSupply.function:type_name -> hi.ai.ToolSupply.Function
 	15, // 7: hi.ai.ToolCall.function:type_name -> hi.ai.ToolCall.Function
 	11, // 8: hi.ai.ChatResp.tools:type_name -> hi.ai.ToolCall
-	0,  // 9: hi.ai.ChatResp.asked:type_name -> hi.ai.Content
+	0,  // 9: hi.ai.ChatResp.question:type_name -> hi.ai.Content
 	11, // 10: hi.ai.ConverseStreamResp.tools:type_name -> hi.ai.ToolCall
-	0,  // 11: hi.ai.ConverseStreamResp.asked:type_name -> hi.ai.Content
+	0,  // 11: hi.ai.ConverseStreamResp.question:type_name -> hi.ai.Content
 	16, // 12: hi.ai.ToolSupply.Function.parameters:type_name -> google.protobuf.Struct
 	17, // 13: hi.ai.Chat.NewSession:input_type -> google.protobuf.Empty
 	3,  // 14: hi.ai.Chat.GetContext:input_type -> hi.ai.GetContextReq
