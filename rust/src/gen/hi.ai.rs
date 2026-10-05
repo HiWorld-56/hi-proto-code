@@ -493,6 +493,11 @@ pub struct ChatResp {
     pub result: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, repeated, tag = "3")]
     pub tools: ::prost::alloc::vec::Vec<ToolCall>,
+    /// 本轮用户那句**实际被模型读到的样子**:语音(audio_url)已转写成 text,其余原样。
+    /// 只在**开一轮**的 Converse 回包里有(final 与否都带),Resume 不带(那一句在开轮时已经给过)。
+    /// 用途:club 把机器人的语音对话记进聊天记录时,用户那句存成文字而不是一段录音 url。
+    #[prost(message, repeated, tag = "4")]
+    pub asked: ::prost::alloc::vec::Vec<Content>,
 }
 /// 流式帧(ConverseStream / ResumeStream)。
 ///
@@ -540,6 +545,10 @@ pub struct ConverseStreamResp {
     /// 待客户端执行的工具
     #[prost(message, repeated, tag = "5")]
     pub tools: ::prost::alloc::vec::Vec<ToolCall>,
+    /// 同 ChatResp.asked:本轮用户那句转写后的样子。只在 ConverseStream 的收尾帧(`msg` 或 `toolCalls`)上带,
+    /// ResumeStream 不带。
+    #[prost(message, repeated, tag = "6")]
+    pub asked: ::prost::alloc::vec::Vec<Content>,
 }
 /// Generated client implementations.
 pub mod chat_client {

@@ -892,10 +892,14 @@ func (x *ToolCall) GetFunction() *ToolCall_Function {
 //	但也可能出现 tools 为空却 final=false 的边界(工具被过滤掉等),此时仍须调 Resume,
 //	否则整轮对话就停在半路,表现为"机器人不理我了"。
 type ChatResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Final         *bool                  `protobuf:"varint,1,opt,name=final,proto3,oneof" json:"final,omitempty"`
-	Result        *string                `protobuf:"bytes,2,opt,name=result,proto3,oneof" json:"result,omitempty"`
-	Tools         []*ToolCall            `protobuf:"bytes,3,rep,name=tools,proto3" json:"tools,omitempty"`
+	state  protoimpl.MessageState `protogen:"open.v1"`
+	Final  *bool                  `protobuf:"varint,1,opt,name=final,proto3,oneof" json:"final,omitempty"`
+	Result *string                `protobuf:"bytes,2,opt,name=result,proto3,oneof" json:"result,omitempty"`
+	Tools  []*ToolCall            `protobuf:"bytes,3,rep,name=tools,proto3" json:"tools,omitempty"`
+	// 本轮用户那句**实际被模型读到的样子**:语音(audio_url)已转写成 text,其余原样。
+	// 只在**开一轮**的 Converse 回包里有(final 与否都带),Resume 不带(那一句在开轮时已经给过)。
+	// 用途:club 把机器人的语音对话记进聊天记录时,用户那句存成文字而不是一段录音 url。
+	Asked         []*Content `protobuf:"bytes,4,rep,name=asked,proto3" json:"asked,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -951,6 +955,13 @@ func (x *ChatResp) GetTools() []*ToolCall {
 	return nil
 }
 
+func (x *ChatResp) GetAsked() []*Content {
+	if x != nil {
+		return x.Asked
+	}
+	return nil
+}
+
 // 流式帧(ConverseStream / ResumeStream)。
 //
 // `type` 取值 —— **一条指令帧,其余是内容/进度/回显**:
@@ -991,8 +1002,11 @@ type ConverseStreamResp struct {
 	Type    *string                `protobuf:"bytes,2,opt,name=type,proto3,oneof" json:"type,omitempty"`
 	Message *string                `protobuf:"bytes,3,opt,name=message,proto3,oneof" json:"message,omitempty"`
 	// 仅 type="toolCalls" 时有值 —— 与 ChatResp 的 result/tools 同义。
-	Id            *string     `protobuf:"bytes,4,opt,name=id,proto3,oneof" json:"id,omitempty"` // 续跑 id(Resume 时带回)
-	Tools         []*ToolCall `protobuf:"bytes,5,rep,name=tools,proto3" json:"tools,omitempty"` // 待客户端执行的工具
+	Id    *string     `protobuf:"bytes,4,opt,name=id,proto3,oneof" json:"id,omitempty"` // 续跑 id(Resume 时带回)
+	Tools []*ToolCall `protobuf:"bytes,5,rep,name=tools,proto3" json:"tools,omitempty"` // 待客户端执行的工具
+	// 同 ChatResp.asked:本轮用户那句转写后的样子。只在 ConverseStream 的收尾帧(`msg` 或 `toolCalls`)上带,
+	// ResumeStream 不带。
+	Asked         []*Content `protobuf:"bytes,6,rep,name=asked,proto3" json:"asked,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1058,6 +1072,13 @@ func (x *ConverseStreamResp) GetId() string {
 func (x *ConverseStreamResp) GetTools() []*ToolCall {
 	if x != nil {
 		return x.Tools
+	}
+	return nil
+}
+
+func (x *ConverseStreamResp) GetAsked() []*Content {
+	if x != nil {
+		return x.Asked
 	}
 	return nil
 }
@@ -1286,19 +1307,21 @@ const file_hi_ai_chat_proto_rawDesc = "" +
 	"\n" +
 	"_arguments:\x04\x98\xb5\x18\x03B\x05\n" +
 	"\x03_idB\a\n" +
-	"\x05_type\"\x96\x01\n" +
+	"\x05_type\"\xc2\x01\n" +
 	"\bChatResp\x12\x1f\n" +
 	"\x05final\x18\x01 \x01(\bB\x04\x90\xb5\x18\x03H\x00R\x05final\x88\x01\x01\x12!\n" +
 	"\x06result\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x06result\x88\x01\x01\x12+\n" +
-	"\x05tools\x18\x03 \x03(\v2\x0f.hi.ai.ToolCallB\x04\x90\xb5\x18\x03R\x05tools:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x05tools\x18\x03 \x03(\v2\x0f.hi.ai.ToolCallB\x04\x90\xb5\x18\x03R\x05tools\x12*\n" +
+	"\x05asked\x18\x04 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\x05asked:\x04\x98\xb5\x18\x03B\b\n" +
 	"\x06_finalB\t\n" +
-	"\a_result\"\xea\x01\n" +
+	"\a_result\"\x96\x02\n" +
 	"\x12ConverseStreamResp\x12\x1d\n" +
 	"\x04code\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x04code\x88\x01\x01\x12\x1d\n" +
 	"\x04type\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x04type\x88\x01\x01\x12#\n" +
 	"\amessage\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\amessage\x88\x01\x01\x12\x19\n" +
 	"\x02id\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x02id\x88\x01\x01\x12+\n" +
-	"\x05tools\x18\x05 \x03(\v2\x0f.hi.ai.ToolCallB\x04\x90\xb5\x18\x03R\x05tools:\x04\x98\xb5\x18\x03B\a\n" +
+	"\x05tools\x18\x05 \x03(\v2\x0f.hi.ai.ToolCallB\x04\x90\xb5\x18\x03R\x05tools\x12*\n" +
+	"\x05asked\x18\x06 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\x05asked:\x04\x98\xb5\x18\x03B\a\n" +
 	"\x05_codeB\a\n" +
 	"\x05_typeB\n" +
 	"\n" +
@@ -1360,29 +1383,31 @@ var file_hi_ai_chat_proto_depIdxs = []int32{
 	14, // 6: hi.ai.ToolSupply.function:type_name -> hi.ai.ToolSupply.Function
 	15, // 7: hi.ai.ToolCall.function:type_name -> hi.ai.ToolCall.Function
 	11, // 8: hi.ai.ChatResp.tools:type_name -> hi.ai.ToolCall
-	11, // 9: hi.ai.ConverseStreamResp.tools:type_name -> hi.ai.ToolCall
-	16, // 10: hi.ai.ToolSupply.Function.parameters:type_name -> google.protobuf.Struct
-	17, // 11: hi.ai.Chat.NewSession:input_type -> google.protobuf.Empty
-	3,  // 12: hi.ai.Chat.GetContext:input_type -> hi.ai.GetContextReq
-	2,  // 13: hi.ai.Chat.ClearContext:input_type -> hi.ai.ClearContextReq
-	4,  // 14: hi.ai.Chat.AppendContext:input_type -> hi.ai.AppendContextReq
-	7,  // 15: hi.ai.Chat.Converse:input_type -> hi.ai.ChatReq
-	7,  // 16: hi.ai.Chat.ConverseStream:input_type -> hi.ai.ChatReq
-	9,  // 17: hi.ai.Chat.Resume:input_type -> hi.ai.ToolCallResultsReq
-	9,  // 18: hi.ai.Chat.ResumeStream:input_type -> hi.ai.ToolCallResultsReq
-	1,  // 19: hi.ai.Chat.NewSession:output_type -> hi.ai.NewSessionResp
-	6,  // 20: hi.ai.Chat.GetContext:output_type -> hi.ai.GetContextResp
-	17, // 21: hi.ai.Chat.ClearContext:output_type -> google.protobuf.Empty
-	17, // 22: hi.ai.Chat.AppendContext:output_type -> google.protobuf.Empty
-	12, // 23: hi.ai.Chat.Converse:output_type -> hi.ai.ChatResp
-	13, // 24: hi.ai.Chat.ConverseStream:output_type -> hi.ai.ConverseStreamResp
-	12, // 25: hi.ai.Chat.Resume:output_type -> hi.ai.ChatResp
-	13, // 26: hi.ai.Chat.ResumeStream:output_type -> hi.ai.ConverseStreamResp
-	19, // [19:27] is the sub-list for method output_type
-	11, // [11:19] is the sub-list for method input_type
-	11, // [11:11] is the sub-list for extension type_name
-	11, // [11:11] is the sub-list for extension extendee
-	0,  // [0:11] is the sub-list for field type_name
+	0,  // 9: hi.ai.ChatResp.asked:type_name -> hi.ai.Content
+	11, // 10: hi.ai.ConverseStreamResp.tools:type_name -> hi.ai.ToolCall
+	0,  // 11: hi.ai.ConverseStreamResp.asked:type_name -> hi.ai.Content
+	16, // 12: hi.ai.ToolSupply.Function.parameters:type_name -> google.protobuf.Struct
+	17, // 13: hi.ai.Chat.NewSession:input_type -> google.protobuf.Empty
+	3,  // 14: hi.ai.Chat.GetContext:input_type -> hi.ai.GetContextReq
+	2,  // 15: hi.ai.Chat.ClearContext:input_type -> hi.ai.ClearContextReq
+	4,  // 16: hi.ai.Chat.AppendContext:input_type -> hi.ai.AppendContextReq
+	7,  // 17: hi.ai.Chat.Converse:input_type -> hi.ai.ChatReq
+	7,  // 18: hi.ai.Chat.ConverseStream:input_type -> hi.ai.ChatReq
+	9,  // 19: hi.ai.Chat.Resume:input_type -> hi.ai.ToolCallResultsReq
+	9,  // 20: hi.ai.Chat.ResumeStream:input_type -> hi.ai.ToolCallResultsReq
+	1,  // 21: hi.ai.Chat.NewSession:output_type -> hi.ai.NewSessionResp
+	6,  // 22: hi.ai.Chat.GetContext:output_type -> hi.ai.GetContextResp
+	17, // 23: hi.ai.Chat.ClearContext:output_type -> google.protobuf.Empty
+	17, // 24: hi.ai.Chat.AppendContext:output_type -> google.protobuf.Empty
+	12, // 25: hi.ai.Chat.Converse:output_type -> hi.ai.ChatResp
+	13, // 26: hi.ai.Chat.ConverseStream:output_type -> hi.ai.ConverseStreamResp
+	12, // 27: hi.ai.Chat.Resume:output_type -> hi.ai.ChatResp
+	13, // 28: hi.ai.Chat.ResumeStream:output_type -> hi.ai.ConverseStreamResp
+	21, // [21:29] is the sub-list for method output_type
+	13, // [13:21] is the sub-list for method input_type
+	13, // [13:13] is the sub-list for extension type_name
+	13, // [13:13] is the sub-list for extension extendee
+	0,  // [0:13] is the sub-list for field type_name
 }
 
 func init() { file_hi_ai_chat_proto_init() }

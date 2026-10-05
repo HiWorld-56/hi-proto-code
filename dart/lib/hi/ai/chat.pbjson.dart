@@ -541,6 +541,15 @@ const ChatResp$json = {
       '8': {},
       '10': 'tools'
     },
+    {
+      '1': 'asked',
+      '3': 4,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.ai.Content',
+      '8': {},
+      '10': 'asked'
+    },
   ],
   '7': {},
   '8': [
@@ -553,7 +562,8 @@ const ChatResp$json = {
 final $typed_data.Uint8List chatRespDescriptor = $convert.base64Decode(
     'CghDaGF0UmVzcBIfCgVmaW5hbBgBIAEoCEIEkLUYA0gAUgVmaW5hbIgBARIhCgZyZXN1bHQYAi'
     'ABKAlCBJC1GANIAVIGcmVzdWx0iAEBEisKBXRvb2xzGAMgAygLMg8uaGkuYWkuVG9vbENhbGxC'
-    'BJC1GANSBXRvb2xzOgSYtRgDQggKBl9maW5hbEIJCgdfcmVzdWx0');
+    'BJC1GANSBXRvb2xzEioKBWFza2VkGAQgAygLMg4uaGkuYWkuQ29udGVudEIEkLUYA1IFYXNrZW'
+    'Q6BJi1GANCCAoGX2ZpbmFsQgkKB19yZXN1bHQ=');
 
 @$core.Deprecated('Use converseStreamRespDescriptor instead')
 const ConverseStreamResp$json = {
@@ -608,6 +618,15 @@ const ConverseStreamResp$json = {
       '8': {},
       '10': 'tools'
     },
+    {
+      '1': 'asked',
+      '3': 6,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.ai.Content',
+      '8': {},
+      '10': 'asked'
+    },
   ],
   '7': {},
   '8': [
@@ -623,5 +642,6 @@ final $typed_data.Uint8List converseStreamRespDescriptor = $convert.base64Decode
     'ChJDb252ZXJzZVN0cmVhbVJlc3ASHQoEY29kZRgBIAEoBUIEkLUYA0gAUgRjb2RliAEBEh0KBH'
     'R5cGUYAiABKAlCBJC1GANIAVIEdHlwZYgBARIjCgdtZXNzYWdlGAMgASgJQgSQtRgDSAJSB21l'
     'c3NhZ2WIAQESGQoCaWQYBCABKAlCBJC1GANIA1ICaWSIAQESKwoFdG9vbHMYBSADKAsyDy5oaS'
-    '5haS5Ub29sQ2FsbEIEkLUYA1IFdG9vbHM6BJi1GANCBwoFX2NvZGVCBwoFX3R5cGVCCgoIX21l'
-    'c3NhZ2VCBQoDX2lk');
+    '5haS5Ub29sQ2FsbEIEkLUYA1IFdG9vbHMSKgoFYXNrZWQYBiADKAsyDi5oaS5haS5Db250ZW50'
+    'QgSQtRgDUgVhc2tlZDoEmLUYA0IHCgVfY29kZUIHCgVfdHlwZUIKCghfbWVzc2FnZUIFCgNfaW'
+    'Q=');
