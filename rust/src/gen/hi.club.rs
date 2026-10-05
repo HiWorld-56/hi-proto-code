@@ -3708,6 +3708,7 @@ pub struct Member {
 /// broadcast   广播
 /// binance     币安操作结果卡      kind=binance(hi.binance.BinanceResult)
 /// binance_cmd 币安指令            kind=binance_cmd(hi.binance.BinanceCommand)—— 群里要 @ 执行的机器人,见 hi/binance/command.proto
+/// chat_record 聊天记录(合并转发)  kind=record(hi.club.ChatRecord)—— 标题 + 若干条原消息,点开看全部
 ///
 /// ⚠️ **注意是 `image_url` 不是 `image`、`audio_url` 不是 `audio`。**
 ///
@@ -3726,11 +3727,11 @@ pub struct Member {
 ///
 /// 为什么不改成枚举:这个字段已在现网多端流通,换 wire 类型要所有端同批发版;
 /// 而**把表写在这里**就已经解决"各自发明"的问题了。新增类型:先往这张表加一行,再去实现。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Content {
     #[prost(string, optional, tag = "1")]
     pub r#type: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(oneof = "content::Kind", tags = "2, 3, 5, 6")]
+    #[prost(oneof = "content::Kind", tags = "2, 3, 5, 6, 7")]
     pub kind: ::core::option::Option<content::Kind>,
 }
 /// Nested message and enum types in `Content`.
@@ -3746,7 +3747,7 @@ pub mod content {
         #[prost(uint32, optional, tag = "4")]
         pub duration: ::core::option::Option<u32>,
     }
-    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Kind {
         #[prost(message, tag = "2")]
         Chat(Chat),
@@ -3761,7 +3762,44 @@ pub mod content {
         /// 给机器人的币安指令。就是一条普通消息:群里 @ 谁谁执行,发令人是信封的 from。
         #[prost(message, tag = "6")]
         BinanceCmd(super::super::binance::BinanceCommand),
+        /// 聊天记录(合并转发):标题 + 若干条原消息,点开看全部。见下面 ChatRecord。
+        #[prost(message, tag = "7")]
+        Record(super::ChatRecord),
     }
+}
+/// 聊天记录 —— **合并转发**出来的那一条(类似微信「聊天记录」卡片)。`Content.type = "chat_record"`。
+///
+/// 它就是一条普通消息的一段内容:中间层(core / 后端 / broker)不认识它、也不需要认识它,
+/// 原样存、原样转;显示是端上的事(卡片显示 `title` 与前几条摘要,点开看 `list` 全部)。
+///
+/// 每一条保留**原消息的内容字节**(`Message.contents` 原样,即序列化后的 `hi.club.Contents`),
+/// 不解开重编 —— 转发方用的 proto 比原消息旧时,解开再编会把新内容类型静默丢掉。
+/// 端上显示时照常解一遍;解不开的那条显示「不支持的消息类型」,不影响其余几条。
+/// 聊天记录里套聊天记录(转发一条已经是聊天记录的消息)是允许的,同样原样。
+///
+/// 逐条转发不用它:那是把原 `contents` 换个 uuid / 会话原样再发一次。
+///
+/// 机器人把语音聊天记录发给主人(内置插件)发的也是这个。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChatRecord {
+    /// 卡片标题,如「张三与李四的聊天记录」;发送方写好
+    #[prost(string, optional, tag = "1")]
+    pub title: ::core::option::Option<::prost::alloc::string::String>,
+    /// 按原时间先后
+    #[prost(message, repeated, tag = "2")]
+    pub list: ::prost::alloc::vec::Vec<ChatRecordItem>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ChatRecordItem {
+    /// 原发件人(原消息信封的 from,原样;Entity=公开门面)
+    #[prost(message, optional, tag = "1")]
+    pub from: ::core::option::Option<super::Entity>,
+    /// 原消息的时间(微秒,服务器时间)
+    #[prost(int64, optional, tag = "2")]
+    pub timestamp: ::core::option::Option<i64>,
+    /// 原消息的 `Message.contents` 原样
+    #[prost(bytes = "vec", optional, tag = "3")]
+    pub contents: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
 }
 /// 群公共信息(所有成员一致)。**群的种类只看 base.type**:single / group-private / group-public / group-open
 /// (取值与各自的规则见 hi/common.proto 的 Entity 注释)。base.update 供前端判断缓存新鲜度。
@@ -3847,6 +3885,45 @@ pub struct ListGroupMessagesResp {
     /// Packet=PARTICIPANT
     #[prost(message, repeated, tag = "1")]
     pub list: ::prost::alloc::vec::Vec<Packet>,
+}
+/// 读一个会话**最近 N 条**(群、单聊、机器人的语音聊天记录都是会话)。
+///
+/// 与 `ListMessages` 的区别:那是**同步**用的 —— 按游标往后翻,并推进这一端的同步指针;
+/// 这个是**看一眼**用的 —— 从最新往回取 N 条,**不碰同步指针**(插件、转发读记录用它,不会让本端同步漏拉)。
+///
+/// 会话二选一:
+/// · `code` —— 群号(或单聊会话号);
+/// · `peer` —— 单聊对方的 did,后端按 `BuildSingleGroupCode(我, peer)` 算会话号。
+/// 机器人读自己的**语音聊天记录**:`peer = "voice_chat"`(语音的固定虚拟对方,见 hi/club/chat.proto 的 Converse)。
+/// 权限:调用者必须是该会话成员(语音会话里机器人是成员);私有群、单聊群对非成员回 NotFound,与 Group.Get 同口径。
+/// 范围:最长保留期之内、且不早于调用者入群的时间(与 ListMessages 同一条可见性规则)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListRecentMessagesReq {
+    /// 群号 / 单聊会话号(与 peer 二选一)
+    #[prost(string, optional, tag = "1")]
+    pub code: ::core::option::Option<::prost::alloc::string::String>,
+    /// 单聊对方 did,含 "voice_chat"(与 code 二选一)
+    #[prost(string, optional, tag = "2")]
+    pub peer: ::core::option::Option<::prost::alloc::string::String>,
+    /// 要几条。**不传 = 20**;不设上限,上限由后端统一做 —— 超了按后端上限截,并在回包里如实说(capped)。
+    /// ≤ 0 → InvalidArgument。
+    #[prost(int32, optional, tag = "3")]
+    pub limit: ::core::option::Option<i32>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListRecentMessagesResp {
+    /// 按时间先后(旧 → 新),最后一条是最新的
+    #[prost(message, repeated, tag = "1")]
+    pub list: ::prost::alloc::vec::Vec<Packet>,
+    /// 实际读的会话号(传 peer 时由后端算出)
+    #[prost(string, optional, tag = "2")]
+    pub code: ::core::option::Option<::prost::alloc::string::String>,
+    /// 这次实际按几条取(没截 = 请求的条数;截了 = 后端上限)
+    #[prost(int32, optional, tag = "3")]
+    pub limit: ::core::option::Option<i32>,
+    /// true = 请求的条数超过后端上限,已按上限截
+    #[prost(bool, optional, tag = "4")]
+    pub capped: ::core::option::Option<bool>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListGroupMembersReq {
@@ -4345,6 +4422,30 @@ pub mod group_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.Group", "ListMessages"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_recent_messages(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListRecentMessagesReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListRecentMessagesResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Group/ListRecentMessages",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Group", "ListRecentMessages"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn set_role(
@@ -5467,10 +5568,43 @@ pub struct Qa {
     pub a: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetHistoryResp {
+pub struct GetContextResp {
     /// QA=SELF
     #[prost(message, repeated, tag = "1")]
     pub list: ::prost::alloc::vec::Vec<Qa>,
+}
+/// ── 上下文(context)的三个入参:club 自己的类型,**不复用 hi.ai 的** ────────────────────
+///
+/// hi.ai 的同名入参多了 `caller` / `master` —— 那是**商户替用户说的话**,只能由服务端填。
+/// 这里若直接复用 hi.ai 的类型,客户端就能自己填 caller 冒充机器人或主人(与 ChatReq 故意不带 master 同理)。
+///
+/// 谁能碰哪个 cid(与 Converse\* / Resume\* 同一条规则,判据见 hi/ai/chat.proto 那段):
+/// · 机器人格式的 cid(`hiclub:embedded|single|group:...:<机器人>`,最后一段是机器人)
+/// → 调用者是该机器人本人,或是它的主人;
+/// · 其它 cid(NewSession 发的 uuid)→ hi-ai 记「第一个用它的人」,此后只认他。
+/// · 不满足 → NotFound「会话不存在」。
+///
+/// ⚠️ 上下文 ≠ 聊天记录:上下文是 hi-ai 喂给模型的问答对;聊天记录在 club 的消息时间线
+/// (`Group.ListMessages` / `Group.ListRecentMessages`)。club **不另存一套上下文**。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetContextReq {
+    #[prost(string, optional, tag = "1")]
+    pub cid: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ClearContextReq {
+    #[prost(string, optional, tag = "1")]
+    pub cid: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 补一对问答进上下文(见 hi/ai/chat.proto 的 AppendContextReq)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct AppendContextReq {
+    #[prost(string, optional, tag = "1")]
+    pub cid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub user: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub assistant: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 对话入参(模态由 conts+style 决定;合原 TextToText/SpeechToText/SpeechToSpeech 与原 CompleteReq)。
 ///
@@ -5669,10 +5803,10 @@ pub mod chat_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Chat", "NewSession"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn get_history(
+        pub async fn get_context(
             &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::GetHistoryReq>,
-        ) -> std::result::Result<tonic::Response<super::GetHistoryResp>, tonic::Status> {
+            request: impl tonic::IntoRequest<super::GetContextReq>,
+        ) -> std::result::Result<tonic::Response<super::GetContextResp>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -5682,14 +5816,14 @@ pub mod chat_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.club.Chat/GetHistory");
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Chat/GetContext");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.Chat", "GetHistory"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Chat", "GetContext"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn clear_history(
+        pub async fn clear_context(
             &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::ClearHistoryReq>,
+            request: impl tonic::IntoRequest<super::ClearContextReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -5701,17 +5835,17 @@ pub mod chat_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Chat/ClearHistory",
+                "/hi.club.Chat/ClearContext",
             );
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.Chat", "ClearHistory"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Chat", "ClearContext"));
             self.inner.unary(req, path, codec).await
         }
         /// 补一对问答进上下文。机器人到点自己做完一件事之后用它 —— 不这么做的话,
-        /// 模型下次对话时对自己刚做过的事一无所知(见 hi/ai/chat.proto 的 AppendHistoryReq)。
-        pub async fn append_history(
+        /// 模型下次对话时对自己刚做过的事一无所知(见 hi/ai/chat.proto 的 AppendContextReq)。
+        pub async fn append_context(
             &mut self,
-            request: impl tonic::IntoRequest<super::super::ai::AppendHistoryReq>,
+            request: impl tonic::IntoRequest<super::AppendContextReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -5723,14 +5857,24 @@ pub mod chat_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.Chat/AppendHistory",
+                "/hi.club.Chat/AppendContext",
             );
             let mut req = request.into_request();
             req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.Chat", "AppendHistory"));
+                .insert(GrpcMethod::new("hi.club.Chat", "AppendContext"));
             self.inner.unary(req, path, codec).await
         }
         /// ── 对话:一轮 = 一个循环,中途只在"轮到客户端"时返回(详见 hi/ai/chat.proto)──
+        ///
+        /// cid 的归属判据同上面 GetContext 那段(机器人格式的 cid 里的机器人还必须就是 `agent`)。
+        ///
+        /// ⭐ **语音聊天记录**:cid == `hiclub:embedded:<调用者自己>`(机器人的语音路)时,club 在调推理的同时
+        /// 把这一轮存进聊天记录 —— 会话是「机器人 + 固定虚拟 did `voice_chat`」的二人会话
+        /// (会话号与单聊同一算法,`BuildSingleGroupCode(机器人, "voice_chat")`;库里一条 single 记录,
+        /// 成员只有机器人)。用户那句一进来就写(from = `voice_chat`,内容 = 本轮 conts 原样);
+        /// 机器人的最终答复在 final=true 时写(from = 机器人)—— 中途轮到客户端执行工具的,
+        /// 最终答复出在 Resume / ResumeStream 里,同样写。存法与普通消息完全一致(Packet 字节、时间线、保留期),
+        /// 读法是 `Group.ListRecentMessages{peer: "voice_chat"}`(只有机器人自己是成员)。
         pub async fn converse(
             &mut self,
             request: impl tonic::IntoRequest<super::ChatReq>,

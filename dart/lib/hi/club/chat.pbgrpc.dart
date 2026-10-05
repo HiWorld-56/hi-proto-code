@@ -46,30 +46,40 @@ class ChatClient extends $grpc.Client {
     return $createUnaryCall(_$newSession, request, options: options);
   }
 
-  $grpc.ResponseFuture<$2.GetHistoryResp> getHistory(
-    $1.GetHistoryReq request, {
+  $grpc.ResponseFuture<$2.GetContextResp> getContext(
+    $2.GetContextReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$getHistory, request, options: options);
+    return $createUnaryCall(_$getContext, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.Empty> clearHistory(
-    $1.ClearHistoryReq request, {
+  $grpc.ResponseFuture<$0.Empty> clearContext(
+    $2.ClearContextReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$clearHistory, request, options: options);
+    return $createUnaryCall(_$clearContext, request, options: options);
   }
 
   /// 补一对问答进上下文。机器人到点自己做完一件事之后用它 —— 不这么做的话,
-  /// 模型下次对话时对自己刚做过的事一无所知(见 hi/ai/chat.proto 的 AppendHistoryReq)。
-  $grpc.ResponseFuture<$0.Empty> appendHistory(
-    $1.AppendHistoryReq request, {
+  /// 模型下次对话时对自己刚做过的事一无所知(见 hi/ai/chat.proto 的 AppendContextReq)。
+  $grpc.ResponseFuture<$0.Empty> appendContext(
+    $2.AppendContextReq request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$appendHistory, request, options: options);
+    return $createUnaryCall(_$appendContext, request, options: options);
   }
 
   /// ── 对话:一轮 = 一个循环,中途只在"轮到客户端"时返回(详见 hi/ai/chat.proto)──
+  ///
+  /// cid 的归属判据同上面 GetContext 那段(机器人格式的 cid 里的机器人还必须就是 `agent`)。
+  ///
+  /// ⭐ **语音聊天记录**:cid == `hiclub:embedded:<调用者自己>`(机器人的语音路)时,club 在调推理的同时
+  ///    把这一轮存进聊天记录 —— 会话是「机器人 + 固定虚拟 did `voice_chat`」的二人会话
+  ///    (会话号与单聊同一算法,`BuildSingleGroupCode(机器人, "voice_chat")`;库里一条 single 记录,
+  ///    成员只有机器人)。用户那句一进来就写(from = `voice_chat`,内容 = 本轮 conts 原样);
+  ///    机器人的最终答复在 final=true 时写(from = 机器人)—— 中途轮到客户端执行工具的,
+  ///    最终答复出在 Resume / ResumeStream 里,同样写。存法与普通消息完全一致(Packet 字节、时间线、保留期),
+  ///    读法是 `Group.ListRecentMessages{peer: "voice_chat"}`(只有机器人自己是成员)。
   $grpc.ResponseFuture<$1.ChatResp> converse(
     $2.ChatReq request, {
     $grpc.CallOptions? options,
@@ -108,20 +118,20 @@ class ChatClient extends $grpc.Client {
       '/hi.club.Chat/NewSession',
       ($0.Empty value) => value.writeToBuffer(),
       $1.NewSessionResp.fromBuffer);
-  static final _$getHistory =
-      $grpc.ClientMethod<$1.GetHistoryReq, $2.GetHistoryResp>(
-          '/hi.club.Chat/GetHistory',
-          ($1.GetHistoryReq value) => value.writeToBuffer(),
-          $2.GetHistoryResp.fromBuffer);
-  static final _$clearHistory =
-      $grpc.ClientMethod<$1.ClearHistoryReq, $0.Empty>(
-          '/hi.club.Chat/ClearHistory',
-          ($1.ClearHistoryReq value) => value.writeToBuffer(),
+  static final _$getContext =
+      $grpc.ClientMethod<$2.GetContextReq, $2.GetContextResp>(
+          '/hi.club.Chat/GetContext',
+          ($2.GetContextReq value) => value.writeToBuffer(),
+          $2.GetContextResp.fromBuffer);
+  static final _$clearContext =
+      $grpc.ClientMethod<$2.ClearContextReq, $0.Empty>(
+          '/hi.club.Chat/ClearContext',
+          ($2.ClearContextReq value) => value.writeToBuffer(),
           $0.Empty.fromBuffer);
-  static final _$appendHistory =
-      $grpc.ClientMethod<$1.AppendHistoryReq, $0.Empty>(
-          '/hi.club.Chat/AppendHistory',
-          ($1.AppendHistoryReq value) => value.writeToBuffer(),
+  static final _$appendContext =
+      $grpc.ClientMethod<$2.AppendContextReq, $0.Empty>(
+          '/hi.club.Chat/AppendContext',
+          ($2.AppendContextReq value) => value.writeToBuffer(),
           $0.Empty.fromBuffer);
   static final _$converse = $grpc.ClientMethod<$2.ChatReq, $1.ChatResp>(
       '/hi.club.Chat/Converse',
@@ -156,26 +166,26 @@ abstract class ChatServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
         ($1.NewSessionResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.GetHistoryReq, $2.GetHistoryResp>(
-        'GetHistory',
-        getHistory_Pre,
+    $addMethod($grpc.ServiceMethod<$2.GetContextReq, $2.GetContextResp>(
+        'GetContext',
+        getContext_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.GetHistoryReq.fromBuffer(value),
-        ($2.GetHistoryResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.ClearHistoryReq, $0.Empty>(
-        'ClearHistory',
-        clearHistory_Pre,
+        ($core.List<$core.int> value) => $2.GetContextReq.fromBuffer(value),
+        ($2.GetContextResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$2.ClearContextReq, $0.Empty>(
+        'ClearContext',
+        clearContext_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.ClearHistoryReq.fromBuffer(value),
+        ($core.List<$core.int> value) => $2.ClearContextReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.AppendHistoryReq, $0.Empty>(
-        'AppendHistory',
-        appendHistory_Pre,
+    $addMethod($grpc.ServiceMethod<$2.AppendContextReq, $0.Empty>(
+        'AppendContext',
+        appendContext_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.AppendHistoryReq.fromBuffer(value),
+        ($core.List<$core.int> value) => $2.AppendContextReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$2.ChatReq, $1.ChatResp>(
         'Converse',
@@ -218,29 +228,29 @@ abstract class ChatServiceBase extends $grpc.Service {
   $async.Future<$1.NewSessionResp> newSession(
       $grpc.ServiceCall call, $0.Empty request);
 
-  $async.Future<$2.GetHistoryResp> getHistory_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.GetHistoryReq> $request) async {
-    return getHistory($call, await $request);
+  $async.Future<$2.GetContextResp> getContext_Pre(
+      $grpc.ServiceCall $call, $async.Future<$2.GetContextReq> $request) async {
+    return getContext($call, await $request);
   }
 
-  $async.Future<$2.GetHistoryResp> getHistory(
-      $grpc.ServiceCall call, $1.GetHistoryReq request);
+  $async.Future<$2.GetContextResp> getContext(
+      $grpc.ServiceCall call, $2.GetContextReq request);
 
-  $async.Future<$0.Empty> clearHistory_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.ClearHistoryReq> $request) async {
-    return clearHistory($call, await $request);
+  $async.Future<$0.Empty> clearContext_Pre($grpc.ServiceCall $call,
+      $async.Future<$2.ClearContextReq> $request) async {
+    return clearContext($call, await $request);
   }
 
-  $async.Future<$0.Empty> clearHistory(
-      $grpc.ServiceCall call, $1.ClearHistoryReq request);
+  $async.Future<$0.Empty> clearContext(
+      $grpc.ServiceCall call, $2.ClearContextReq request);
 
-  $async.Future<$0.Empty> appendHistory_Pre($grpc.ServiceCall $call,
-      $async.Future<$1.AppendHistoryReq> $request) async {
-    return appendHistory($call, await $request);
+  $async.Future<$0.Empty> appendContext_Pre($grpc.ServiceCall $call,
+      $async.Future<$2.AppendContextReq> $request) async {
+    return appendContext($call, await $request);
   }
 
-  $async.Future<$0.Empty> appendHistory(
-      $grpc.ServiceCall call, $1.AppendHistoryReq request);
+  $async.Future<$0.Empty> appendContext(
+      $grpc.ServiceCall call, $2.AppendContextReq request);
 
   $async.Future<$1.ChatResp> converse_Pre(
       $grpc.ServiceCall $call, $async.Future<$2.ChatReq> $request) async {

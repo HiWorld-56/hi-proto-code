@@ -436,6 +436,16 @@ const Content$json = {
       '9': 0,
       '10': 'binanceCmd'
     },
+    {
+      '1': 'record',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ChatRecord',
+      '8': {},
+      '9': 0,
+      '10': 'record'
+    },
   ],
   '3': [Content_Chat$json],
   '7': {},
@@ -505,8 +515,93 @@ final $typed_data.Uint8List contentDescriptor = $convert.base64Decode(
     'UuaGkuY2x1Yi5Db250ZW50LkNoYXRCBJC1GAJIAFIEY2hhdBIxCgV0cmFucxgDIAEoCzITLmhp'
     'LmRpZC5UcmFuc2FjdGlvbkIEkLUYAUgAUgV0cmFucxI7CgdiaW5hbmNlGAUgASgLMhkuaGkuYm'
     'luYW5jZS5CaW5hbmNlUmVzdWx0QgSQtRgCSABSB2JpbmFuY2USQwoLYmluYW5jZV9jbWQYBiAB'
-    'KAsyGi5oaS5iaW5hbmNlLkJpbmFuY2VDb21tYW5kQgSQtRgCSABSCmJpbmFuY2VDbWQawQEKBE'
-    'NoYXQSIwoHY29udGVudBgBIAEoCUIEkLUYAkgAUgdjb250ZW50iAEBEh0KBG5hbWUYAiABKAlC'
-    'BJC1GAJIAVIEbmFtZYgBARIdCgRzaXplGAMgASgNQgSQtRgCSAJSBHNpemWIAQESJQoIZHVyYX'
-    'Rpb24YBCABKA1CBJC1GAJIA1IIZHVyYXRpb26IAQE6BJi1GAJCCgoIX2NvbnRlbnRCBwoFX25h'
-    'bWVCBwoFX3NpemVCCwoJX2R1cmF0aW9uOgSYtRgCQgYKBGtpbmRCBwoFX3R5cGU=');
+    'KAsyGi5oaS5iaW5hbmNlLkJpbmFuY2VDb21tYW5kQgSQtRgCSABSCmJpbmFuY2VDbWQSMwoGcm'
+    'Vjb3JkGAcgASgLMhMuaGkuY2x1Yi5DaGF0UmVjb3JkQgSQtRgCSABSBnJlY29yZBrBAQoEQ2hh'
+    'dBIjCgdjb250ZW50GAEgASgJQgSQtRgCSABSB2NvbnRlbnSIAQESHQoEbmFtZRgCIAEoCUIEkL'
+    'UYAkgBUgRuYW1liAEBEh0KBHNpemUYAyABKA1CBJC1GAJIAlIEc2l6ZYgBARIlCghkdXJhdGlv'
+    'bhgEIAEoDUIEkLUYAkgDUghkdXJhdGlvbogBAToEmLUYAkIKCghfY29udGVudEIHCgVfbmFtZU'
+    'IHCgVfc2l6ZUILCglfZHVyYXRpb246BJi1GAJCBgoEa2luZEIHCgVfdHlwZQ==');
+
+@$core.Deprecated('Use chatRecordDescriptor instead')
+const ChatRecord$json = {
+  '1': 'ChatRecord',
+  '2': [
+    {
+      '1': 'title',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'title',
+      '17': true
+    },
+    {
+      '1': 'list',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.club.ChatRecordItem',
+      '8': {},
+      '10': 'list'
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_title'},
+  ],
+};
+
+/// Descriptor for `ChatRecord`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List chatRecordDescriptor = $convert.base64Decode(
+    'CgpDaGF0UmVjb3JkEh8KBXRpdGxlGAEgASgJQgSQtRgCSABSBXRpdGxliAEBEjEKBGxpc3QYAi'
+    'ADKAsyFy5oaS5jbHViLkNoYXRSZWNvcmRJdGVtQgSQtRgCUgRsaXN0OgSYtRgCQggKBl90aXRs'
+    'ZQ==');
+
+@$core.Deprecated('Use chatRecordItemDescriptor instead')
+const ChatRecordItem$json = {
+  '1': 'ChatRecordItem',
+  '2': [
+    {
+      '1': 'from',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'from'
+    },
+    {
+      '1': 'timestamp',
+      '3': 2,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 0,
+      '10': 'timestamp',
+      '17': true
+    },
+    {
+      '1': 'contents',
+      '3': 3,
+      '4': 1,
+      '5': 12,
+      '8': {},
+      '9': 1,
+      '10': 'contents',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_timestamp'},
+    {'1': '_contents'},
+  ],
+};
+
+/// Descriptor for `ChatRecordItem`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List chatRecordItemDescriptor = $convert.base64Decode(
+    'Cg5DaGF0UmVjb3JkSXRlbRIkCgRmcm9tGAEgASgLMgouaGkuRW50aXR5QgSQtRgBUgRmcm9tEi'
+    'cKCXRpbWVzdGFtcBgCIAEoA0IEkLUYAkgAUgl0aW1lc3RhbXCIAQESJQoIY29udGVudHMYAyAB'
+    'KAxCBJC1GAJIAVIIY29udGVudHOIAQE6BJi1GAJCDAoKX3RpbWVzdGFtcEILCglfY29udGVudH'
+    'M=');

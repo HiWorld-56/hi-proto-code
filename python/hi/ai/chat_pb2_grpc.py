@@ -43,19 +43,19 @@ class ChatStub(object):
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
                 response_deserializer=hi_dot_ai_dot_chat__pb2.NewSessionResp.FromString,
                 _registered_method=True)
-        self.GetHistory = channel.unary_unary(
-                '/hi.ai.Chat/GetHistory',
-                request_serializer=hi_dot_ai_dot_chat__pb2.GetHistoryReq.SerializeToString,
-                response_deserializer=hi_dot_ai_dot_chat__pb2.GetHistoryResp.FromString,
+        self.GetContext = channel.unary_unary(
+                '/hi.ai.Chat/GetContext',
+                request_serializer=hi_dot_ai_dot_chat__pb2.GetContextReq.SerializeToString,
+                response_deserializer=hi_dot_ai_dot_chat__pb2.GetContextResp.FromString,
                 _registered_method=True)
-        self.ClearHistory = channel.unary_unary(
-                '/hi.ai.Chat/ClearHistory',
-                request_serializer=hi_dot_ai_dot_chat__pb2.ClearHistoryReq.SerializeToString,
+        self.ClearContext = channel.unary_unary(
+                '/hi.ai.Chat/ClearContext',
+                request_serializer=hi_dot_ai_dot_chat__pb2.ClearContextReq.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
-        self.AppendHistory = channel.unary_unary(
-                '/hi.ai.Chat/AppendHistory',
-                request_serializer=hi_dot_ai_dot_chat__pb2.AppendHistoryReq.SerializeToString,
+        self.AppendContext = channel.unary_unary(
+                '/hi.ai.Chat/AppendContext',
+                request_serializer=hi_dot_ai_dot_chat__pb2.AppendContextReq.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
         self.Converse = channel.unary_unary(
@@ -113,19 +113,19 @@ class ChatServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GetHistory(self, request, context):
+    def GetContext(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def ClearHistory(self, request, context):
+    def ClearContext(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def AppendHistory(self, request, context):
+    def AppendContext(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -164,19 +164,19 @@ def add_ChatServicer_to_server(servicer, server):
                     request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                     response_serializer=hi_dot_ai_dot_chat__pb2.NewSessionResp.SerializeToString,
             ),
-            'GetHistory': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetHistory,
-                    request_deserializer=hi_dot_ai_dot_chat__pb2.GetHistoryReq.FromString,
-                    response_serializer=hi_dot_ai_dot_chat__pb2.GetHistoryResp.SerializeToString,
+            'GetContext': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetContext,
+                    request_deserializer=hi_dot_ai_dot_chat__pb2.GetContextReq.FromString,
+                    response_serializer=hi_dot_ai_dot_chat__pb2.GetContextResp.SerializeToString,
             ),
-            'ClearHistory': grpc.unary_unary_rpc_method_handler(
-                    servicer.ClearHistory,
-                    request_deserializer=hi_dot_ai_dot_chat__pb2.ClearHistoryReq.FromString,
+            'ClearContext': grpc.unary_unary_rpc_method_handler(
+                    servicer.ClearContext,
+                    request_deserializer=hi_dot_ai_dot_chat__pb2.ClearContextReq.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
-            'AppendHistory': grpc.unary_unary_rpc_method_handler(
-                    servicer.AppendHistory,
-                    request_deserializer=hi_dot_ai_dot_chat__pb2.AppendHistoryReq.FromString,
+            'AppendContext': grpc.unary_unary_rpc_method_handler(
+                    servicer.AppendContext,
+                    request_deserializer=hi_dot_ai_dot_chat__pb2.AppendContextReq.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'Converse': grpc.unary_unary_rpc_method_handler(
@@ -261,7 +261,7 @@ class Chat(object):
             _registered_method=True)
 
     @staticmethod
-    def GetHistory(request,
+    def GetContext(request,
             target,
             options=(),
             channel_credentials=None,
@@ -274,9 +274,9 @@ class Chat(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.ai.Chat/GetHistory',
-            hi_dot_ai_dot_chat__pb2.GetHistoryReq.SerializeToString,
-            hi_dot_ai_dot_chat__pb2.GetHistoryResp.FromString,
+            '/hi.ai.Chat/GetContext',
+            hi_dot_ai_dot_chat__pb2.GetContextReq.SerializeToString,
+            hi_dot_ai_dot_chat__pb2.GetContextResp.FromString,
             options,
             channel_credentials,
             insecure,
@@ -288,7 +288,7 @@ class Chat(object):
             _registered_method=True)
 
     @staticmethod
-    def ClearHistory(request,
+    def ClearContext(request,
             target,
             options=(),
             channel_credentials=None,
@@ -301,8 +301,8 @@ class Chat(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.ai.Chat/ClearHistory',
-            hi_dot_ai_dot_chat__pb2.ClearHistoryReq.SerializeToString,
+            '/hi.ai.Chat/ClearContext',
+            hi_dot_ai_dot_chat__pb2.ClearContextReq.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,
@@ -315,7 +315,7 @@ class Chat(object):
             _registered_method=True)
 
     @staticmethod
-    def AppendHistory(request,
+    def AppendContext(request,
             target,
             options=(),
             channel_credentials=None,
@@ -328,8 +328,8 @@ class Chat(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.ai.Chat/AppendHistory',
-            hi_dot_ai_dot_chat__pb2.AppendHistoryReq.SerializeToString,
+            '/hi.ai.Chat/AppendContext',
+            hi_dot_ai_dot_chat__pb2.AppendContextReq.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,

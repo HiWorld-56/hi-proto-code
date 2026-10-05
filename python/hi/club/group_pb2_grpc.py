@@ -75,6 +75,11 @@ class GroupStub(object):
                 request_serializer=hi_dot_club_dot_group__pb2.ListGroupMessagesReq.SerializeToString,
                 response_deserializer=hi_dot_club_dot_group__pb2.ListGroupMessagesResp.FromString,
                 _registered_method=True)
+        self.ListRecentMessages = channel.unary_unary(
+                '/hi.club.Group/ListRecentMessages',
+                request_serializer=hi_dot_club_dot_group__pb2.ListRecentMessagesReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_group__pb2.ListRecentMessagesResp.FromString,
+                _registered_method=True)
         self.SetRole = channel.unary_unary(
                 '/hi.club.Group/SetRole',
                 request_serializer=hi_dot_club_dot_group__pb2.SetRoleReq.SerializeToString,
@@ -178,6 +183,12 @@ class GroupServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ListRecentMessages(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def SetRole(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -264,6 +275,11 @@ def add_GroupServicer_to_server(servicer, server):
                     servicer.ListMessages,
                     request_deserializer=hi_dot_club_dot_group__pb2.ListGroupMessagesReq.FromString,
                     response_serializer=hi_dot_club_dot_group__pb2.ListGroupMessagesResp.SerializeToString,
+            ),
+            'ListRecentMessages': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListRecentMessages,
+                    request_deserializer=hi_dot_club_dot_group__pb2.ListRecentMessagesReq.FromString,
+                    response_serializer=hi_dot_club_dot_group__pb2.ListRecentMessagesResp.SerializeToString,
             ),
             'SetRole': grpc.unary_unary_rpc_method_handler(
                     servicer.SetRole,
@@ -610,6 +626,33 @@ class Group(object):
             '/hi.club.Group/ListMessages',
             hi_dot_club_dot_group__pb2.ListGroupMessagesReq.SerializeToString,
             hi_dot_club_dot_group__pb2.ListGroupMessagesResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ListRecentMessages(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.Group/ListRecentMessages',
+            hi_dot_club_dot_group__pb2.ListRecentMessagesReq.SerializeToString,
+            hi_dot_club_dot_group__pb2.ListRecentMessagesResp.FromString,
             options,
             channel_credentials,
             insecure,

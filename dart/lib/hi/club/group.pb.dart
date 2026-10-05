@@ -676,6 +676,184 @@ class ListGroupMessagesResp extends $pb.GeneratedMessage {
   $pb.PbList<$3.Packet> get list => $_getList(0);
 }
 
+/// 读一个会话**最近 N 条**(群、单聊、机器人的语音聊天记录都是会话)。
+///
+/// 与 `ListMessages` 的区别:那是**同步**用的 —— 按游标往后翻,并推进这一端的同步指针;
+/// 这个是**看一眼**用的 —— 从最新往回取 N 条,**不碰同步指针**(插件、转发读记录用它,不会让本端同步漏拉)。
+///
+/// 会话二选一:
+///   · `code` —— 群号(或单聊会话号);
+///   · `peer` —— 单聊对方的 did,后端按 `BuildSingleGroupCode(我, peer)` 算会话号。
+///     机器人读自己的**语音聊天记录**:`peer = "voice_chat"`(语音的固定虚拟对方,见 hi/club/chat.proto 的 Converse)。
+/// 权限:调用者必须是该会话成员(语音会话里机器人是成员);私有群、单聊群对非成员回 NotFound,与 Group.Get 同口径。
+/// 范围:最长保留期之内、且不早于调用者入群的时间(与 ListMessages 同一条可见性规则)。
+class ListRecentMessagesReq extends $pb.GeneratedMessage {
+  factory ListRecentMessagesReq({
+    $core.String? code,
+    $core.String? peer,
+    $core.int? limit,
+  }) {
+    final result = create();
+    if (code != null) result.code = code;
+    if (peer != null) result.peer = peer;
+    if (limit != null) result.limit = limit;
+    return result;
+  }
+
+  ListRecentMessagesReq._();
+
+  factory ListRecentMessagesReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListRecentMessagesReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListRecentMessagesReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'code')
+    ..aOS(2, _omitFieldNames ? '' : 'peer')
+    ..aI(3, _omitFieldNames ? '' : 'limit')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListRecentMessagesReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListRecentMessagesReq copyWith(
+          void Function(ListRecentMessagesReq) updates) =>
+      super.copyWith((message) => updates(message as ListRecentMessagesReq))
+          as ListRecentMessagesReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListRecentMessagesReq create() => ListRecentMessagesReq._();
+  @$core.override
+  ListRecentMessagesReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListRecentMessagesReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListRecentMessagesReq>(create);
+  static ListRecentMessagesReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get code => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set code($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasCode() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCode() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get peer => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set peer($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPeer() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPeer() => $_clearField(2);
+
+  /// 要几条。**不传 = 20**;不设上限,上限由后端统一做 —— 超了按后端上限截,并在回包里如实说(capped)。
+  /// ≤ 0 → InvalidArgument。
+  @$pb.TagNumber(3)
+  $core.int get limit => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set limit($core.int value) => $_setSignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasLimit() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearLimit() => $_clearField(3);
+}
+
+class ListRecentMessagesResp extends $pb.GeneratedMessage {
+  factory ListRecentMessagesResp({
+    $core.Iterable<$3.Packet>? list,
+    $core.String? code,
+    $core.int? limit,
+    $core.bool? capped,
+  }) {
+    final result = create();
+    if (list != null) result.list.addAll(list);
+    if (code != null) result.code = code;
+    if (limit != null) result.limit = limit;
+    if (capped != null) result.capped = capped;
+    return result;
+  }
+
+  ListRecentMessagesResp._();
+
+  factory ListRecentMessagesResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListRecentMessagesResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListRecentMessagesResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..pPM<$3.Packet>(1, _omitFieldNames ? '' : 'list',
+        subBuilder: $3.Packet.create)
+    ..aOS(2, _omitFieldNames ? '' : 'code')
+    ..aI(3, _omitFieldNames ? '' : 'limit')
+    ..aOB(4, _omitFieldNames ? '' : 'capped')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListRecentMessagesResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListRecentMessagesResp copyWith(
+          void Function(ListRecentMessagesResp) updates) =>
+      super.copyWith((message) => updates(message as ListRecentMessagesResp))
+          as ListRecentMessagesResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListRecentMessagesResp create() => ListRecentMessagesResp._();
+  @$core.override
+  ListRecentMessagesResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListRecentMessagesResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListRecentMessagesResp>(create);
+  static ListRecentMessagesResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<$3.Packet> get list => $_getList(0);
+
+  @$pb.TagNumber(2)
+  $core.String get code => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set code($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasCode() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearCode() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.int get limit => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set limit($core.int value) => $_setSignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasLimit() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearLimit() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.bool get capped => $_getBF(3);
+  @$pb.TagNumber(4)
+  set capped($core.bool value) => $_setBool(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasCapped() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearCapped() => $_clearField(4);
+}
+
 class ListGroupMembersReq extends $pb.GeneratedMessage {
   factory ListGroupMembersReq({
     $core.String? code,

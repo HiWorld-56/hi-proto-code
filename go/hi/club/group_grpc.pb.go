@@ -20,22 +20,23 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Group_Get_FullMethodName            = "/hi.club.Group/Get"
-	Group_Create_FullMethodName         = "/hi.club.Group/Create"
-	Group_CreateSingle_FullMethodName   = "/hi.club.Group/CreateSingle"
-	Group_Update_FullMethodName         = "/hi.club.Group/Update"
-	Group_ListMembers_FullMethodName    = "/hi.club.Group/ListMembers"
-	Group_GetMemberTotal_FullMethodName = "/hi.club.Group/GetMemberTotal"
-	Group_Invite_FullMethodName         = "/hi.club.Group/Invite"
-	Group_Join_FullMethodName           = "/hi.club.Group/Join"
-	Group_ListByCreator_FullMethodName  = "/hi.club.Group/ListByCreator"
-	Group_Quit_FullMethodName           = "/hi.club.Group/Quit"
-	Group_Remove_FullMethodName         = "/hi.club.Group/Remove"
-	Group_ListMessages_FullMethodName   = "/hi.club.Group/ListMessages"
-	Group_SetRole_FullMethodName        = "/hi.club.Group/SetRole"
-	Group_GetRole_FullMethodName        = "/hi.club.Group/GetRole"
-	Group_SetDnd_FullMethodName         = "/hi.club.Group/SetDnd"
-	Group_MuteMembers_FullMethodName    = "/hi.club.Group/MuteMembers"
+	Group_Get_FullMethodName                = "/hi.club.Group/Get"
+	Group_Create_FullMethodName             = "/hi.club.Group/Create"
+	Group_CreateSingle_FullMethodName       = "/hi.club.Group/CreateSingle"
+	Group_Update_FullMethodName             = "/hi.club.Group/Update"
+	Group_ListMembers_FullMethodName        = "/hi.club.Group/ListMembers"
+	Group_GetMemberTotal_FullMethodName     = "/hi.club.Group/GetMemberTotal"
+	Group_Invite_FullMethodName             = "/hi.club.Group/Invite"
+	Group_Join_FullMethodName               = "/hi.club.Group/Join"
+	Group_ListByCreator_FullMethodName      = "/hi.club.Group/ListByCreator"
+	Group_Quit_FullMethodName               = "/hi.club.Group/Quit"
+	Group_Remove_FullMethodName             = "/hi.club.Group/Remove"
+	Group_ListMessages_FullMethodName       = "/hi.club.Group/ListMessages"
+	Group_ListRecentMessages_FullMethodName = "/hi.club.Group/ListRecentMessages"
+	Group_SetRole_FullMethodName            = "/hi.club.Group/SetRole"
+	Group_GetRole_FullMethodName            = "/hi.club.Group/GetRole"
+	Group_SetDnd_FullMethodName             = "/hi.club.Group/SetDnd"
+	Group_MuteMembers_FullMethodName        = "/hi.club.Group/MuteMembers"
 )
 
 // GroupClient is the client API for Group service.
@@ -60,6 +61,7 @@ type GroupClient interface {
 	Quit(ctx context.Context, in *QuitGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Remove(ctx context.Context, in *RemoveGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListMessages(ctx context.Context, in *ListGroupMessagesReq, opts ...grpc.CallOption) (*ListGroupMessagesResp, error)
+	ListRecentMessages(ctx context.Context, in *ListRecentMessagesReq, opts ...grpc.CallOption) (*ListRecentMessagesResp, error)
 	SetRole(ctx context.Context, in *SetRoleReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetRole(ctx context.Context, in *GetRoleReq, opts ...grpc.CallOption) (*GetRoleResp, error)
 	SetDnd(ctx context.Context, in *SetDndReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -194,6 +196,16 @@ func (c *groupClient) ListMessages(ctx context.Context, in *ListGroupMessagesReq
 	return out, nil
 }
 
+func (c *groupClient) ListRecentMessages(ctx context.Context, in *ListRecentMessagesReq, opts ...grpc.CallOption) (*ListRecentMessagesResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListRecentMessagesResp)
+	err := c.cc.Invoke(ctx, Group_ListRecentMessages_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *groupClient) SetRole(ctx context.Context, in *SetRoleReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -256,6 +268,7 @@ type GroupServer interface {
 	Quit(context.Context, *QuitGroupReq) (*emptypb.Empty, error)
 	Remove(context.Context, *RemoveGroupReq) (*emptypb.Empty, error)
 	ListMessages(context.Context, *ListGroupMessagesReq) (*ListGroupMessagesResp, error)
+	ListRecentMessages(context.Context, *ListRecentMessagesReq) (*ListRecentMessagesResp, error)
 	SetRole(context.Context, *SetRoleReq) (*emptypb.Empty, error)
 	GetRole(context.Context, *GetRoleReq) (*GetRoleResp, error)
 	SetDnd(context.Context, *SetDndReq) (*emptypb.Empty, error)
@@ -304,6 +317,9 @@ func (UnimplementedGroupServer) Remove(context.Context, *RemoveGroupReq) (*empty
 }
 func (UnimplementedGroupServer) ListMessages(context.Context, *ListGroupMessagesReq) (*ListGroupMessagesResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListMessages not implemented")
+}
+func (UnimplementedGroupServer) ListRecentMessages(context.Context, *ListRecentMessagesReq) (*ListRecentMessagesResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListRecentMessages not implemented")
 }
 func (UnimplementedGroupServer) SetRole(context.Context, *SetRoleReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetRole not implemented")
@@ -553,6 +569,24 @@ func _Group_ListMessages_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Group_ListRecentMessages_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListRecentMessagesReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GroupServer).ListRecentMessages(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Group_ListRecentMessages_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GroupServer).ListRecentMessages(ctx, req.(*ListRecentMessagesReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Group_SetRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SetRoleReq)
 	if err := dec(in); err != nil {
@@ -679,6 +713,10 @@ var Group_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListMessages",
 			Handler:    _Group_ListMessages_Handler,
+		},
+		{
+			MethodName: "ListRecentMessages",
+			Handler:    _Group_ListRecentMessages_Handler,
 		},
 		{
 			MethodName: "SetRole",

@@ -21,9 +21,9 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	Chat_NewSession_FullMethodName     = "/hi.ai.Chat/NewSession"
-	Chat_GetHistory_FullMethodName     = "/hi.ai.Chat/GetHistory"
-	Chat_ClearHistory_FullMethodName   = "/hi.ai.Chat/ClearHistory"
-	Chat_AppendHistory_FullMethodName  = "/hi.ai.Chat/AppendHistory"
+	Chat_GetContext_FullMethodName     = "/hi.ai.Chat/GetContext"
+	Chat_ClearContext_FullMethodName   = "/hi.ai.Chat/ClearContext"
+	Chat_AppendContext_FullMethodName  = "/hi.ai.Chat/AppendContext"
 	Chat_Converse_FullMethodName       = "/hi.ai.Chat/Converse"
 	Chat_ConverseStream_FullMethodName = "/hi.ai.Chat/ConverseStream"
 	Chat_Resume_FullMethodName         = "/hi.ai.Chat/Resume"
@@ -62,9 +62,9 @@ const (
 type ChatClient interface {
 	// ── 会话管理 ──
 	NewSession(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*NewSessionResp, error)
-	GetHistory(ctx context.Context, in *GetHistoryReq, opts ...grpc.CallOption) (*GetHistoryResp, error)
-	ClearHistory(ctx context.Context, in *ClearHistoryReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	AppendHistory(ctx context.Context, in *AppendHistoryReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetContext(ctx context.Context, in *GetContextReq, opts ...grpc.CallOption) (*GetContextResp, error)
+	ClearContext(ctx context.Context, in *ClearContextReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	AppendContext(ctx context.Context, in *AppendContextReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// ── 对话:一轮 = 一个循环,中途只在"轮到客户端"时返回 ──
 	Converse(ctx context.Context, in *ChatReq, opts ...grpc.CallOption) (*ChatResp, error)
 	ConverseStream(ctx context.Context, in *ChatReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ConverseStreamResp], error)
@@ -90,30 +90,30 @@ func (c *chatClient) NewSession(ctx context.Context, in *emptypb.Empty, opts ...
 	return out, nil
 }
 
-func (c *chatClient) GetHistory(ctx context.Context, in *GetHistoryReq, opts ...grpc.CallOption) (*GetHistoryResp, error) {
+func (c *chatClient) GetContext(ctx context.Context, in *GetContextReq, opts ...grpc.CallOption) (*GetContextResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetHistoryResp)
-	err := c.cc.Invoke(ctx, Chat_GetHistory_FullMethodName, in, out, cOpts...)
+	out := new(GetContextResp)
+	err := c.cc.Invoke(ctx, Chat_GetContext_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *chatClient) ClearHistory(ctx context.Context, in *ClearHistoryReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *chatClient) ClearContext(ctx context.Context, in *ClearContextReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Chat_ClearHistory_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Chat_ClearContext_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *chatClient) AppendHistory(ctx context.Context, in *AppendHistoryReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *chatClient) AppendContext(ctx context.Context, in *AppendContextReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Chat_AppendHistory_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Chat_AppendContext_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -210,9 +210,9 @@ type Chat_ResumeStreamClient = grpc.ServerStreamingClient[ConverseStreamResp]
 type ChatServer interface {
 	// ── 会话管理 ──
 	NewSession(context.Context, *emptypb.Empty) (*NewSessionResp, error)
-	GetHistory(context.Context, *GetHistoryReq) (*GetHistoryResp, error)
-	ClearHistory(context.Context, *ClearHistoryReq) (*emptypb.Empty, error)
-	AppendHistory(context.Context, *AppendHistoryReq) (*emptypb.Empty, error)
+	GetContext(context.Context, *GetContextReq) (*GetContextResp, error)
+	ClearContext(context.Context, *ClearContextReq) (*emptypb.Empty, error)
+	AppendContext(context.Context, *AppendContextReq) (*emptypb.Empty, error)
 	// ── 对话:一轮 = 一个循环,中途只在"轮到客户端"时返回 ──
 	Converse(context.Context, *ChatReq) (*ChatResp, error)
 	ConverseStream(*ChatReq, grpc.ServerStreamingServer[ConverseStreamResp]) error
@@ -230,14 +230,14 @@ type UnimplementedChatServer struct{}
 func (UnimplementedChatServer) NewSession(context.Context, *emptypb.Empty) (*NewSessionResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method NewSession not implemented")
 }
-func (UnimplementedChatServer) GetHistory(context.Context, *GetHistoryReq) (*GetHistoryResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetHistory not implemented")
+func (UnimplementedChatServer) GetContext(context.Context, *GetContextReq) (*GetContextResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetContext not implemented")
 }
-func (UnimplementedChatServer) ClearHistory(context.Context, *ClearHistoryReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method ClearHistory not implemented")
+func (UnimplementedChatServer) ClearContext(context.Context, *ClearContextReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method ClearContext not implemented")
 }
-func (UnimplementedChatServer) AppendHistory(context.Context, *AppendHistoryReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method AppendHistory not implemented")
+func (UnimplementedChatServer) AppendContext(context.Context, *AppendContextReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method AppendContext not implemented")
 }
 func (UnimplementedChatServer) Converse(context.Context, *ChatReq) (*ChatResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Converse not implemented")
@@ -289,56 +289,56 @@ func _Chat_NewSession_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Chat_GetHistory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetHistoryReq)
+func _Chat_GetContext_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetContextReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChatServer).GetHistory(ctx, in)
+		return srv.(ChatServer).GetContext(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Chat_GetHistory_FullMethodName,
+		FullMethod: Chat_GetContext_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServer).GetHistory(ctx, req.(*GetHistoryReq))
+		return srv.(ChatServer).GetContext(ctx, req.(*GetContextReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Chat_ClearHistory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ClearHistoryReq)
+func _Chat_ClearContext_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ClearContextReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChatServer).ClearHistory(ctx, in)
+		return srv.(ChatServer).ClearContext(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Chat_ClearHistory_FullMethodName,
+		FullMethod: Chat_ClearContext_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServer).ClearHistory(ctx, req.(*ClearHistoryReq))
+		return srv.(ChatServer).ClearContext(ctx, req.(*ClearContextReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Chat_AppendHistory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AppendHistoryReq)
+func _Chat_AppendContext_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AppendContextReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChatServer).AppendHistory(ctx, in)
+		return srv.(ChatServer).AppendContext(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Chat_AppendHistory_FullMethodName,
+		FullMethod: Chat_AppendContext_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServer).AppendHistory(ctx, req.(*AppendHistoryReq))
+		return srv.(ChatServer).AppendContext(ctx, req.(*AppendContextReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -413,16 +413,16 @@ var Chat_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Chat_NewSession_Handler,
 		},
 		{
-			MethodName: "GetHistory",
-			Handler:    _Chat_GetHistory_Handler,
+			MethodName: "GetContext",
+			Handler:    _Chat_GetContext_Handler,
 		},
 		{
-			MethodName: "ClearHistory",
-			Handler:    _Chat_ClearHistory_Handler,
+			MethodName: "ClearContext",
+			Handler:    _Chat_ClearContext_Handler,
 		},
 		{
-			MethodName: "AppendHistory",
-			Handler:    _Chat_AppendHistory_Handler,
+			MethodName: "AppendContext",
+			Handler:    _Chat_AppendContext_Handler,
 		},
 		{
 			MethodName: "Converse",

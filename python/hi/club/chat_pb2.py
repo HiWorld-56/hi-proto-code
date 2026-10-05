@@ -29,7 +29,7 @@ from hi import options_pb2 as hi_dot_options__pb2
 from hi import common_pb2 as hi_dot_common__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12hi/club/chat.proto\x12\x07hi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/ai/chat.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\x1a\x0fhi/common.proto\"O\n\x02QA\x12$\n\x01q\x18\x01 \x03(\x0b\x32\x10.hi.club.ContentB\x04\x90\xb5\x18\x02R\x01q\x12\x17\n\x01\x61\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x01\x61\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x04\n\x02_a\"=\n\x0eGetHistoryResp\x12%\n\x04list\x18\x01 \x03(\x0b\x32\x0b.hi.club.QAB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"\x9b\x04\n\x07\x43hatReq\x12\x19\n\x05\x61gent\x18\x01 \x01(\tH\x00R\x05\x61gent\x88\x01\x01\x12\x15\n\x03\x63id\x18\x02 \x01(\tH\x01R\x03\x63id\x88\x01\x01\x12&\n\x05\x63onts\x18\x03 \x03(\x0b\x32\x10.hi.club.ContentR\x05\x63onts\x12\'\n\x05tools\x18\x04 \x03(\x0b\x32\x11.hi.ai.ToolSupplyR\x05tools\x12$\n\x0btool_choice\x18\x05 \x01(\tH\x02R\ntoolChoice\x88\x01\x01\x12\x1b\n\x06\x63ustom\x18\x06 \x01(\tH\x03R\x06\x63ustom\x88\x01\x01\x12\x19\n\x05state\x18\x07 \x01(\tH\x04R\x05state\x88\x01\x01\x12\x19\n\x05style\x18\x08 \x01(\tH\x05R\x05style\x88\x01\x01\x12+\n\x0f\x65\x63ho_tool_calls\x18\t \x01(\x08H\x06R\rechoToolCalls\x88\x01\x01\x12$\n\x0b\x65\x63ho_memory\x18\n \x01(\x08H\x07R\nechoMemory\x88\x01\x01\x12&\n\x0c\x65\x63ho_context\x18\x0b \x01(\x08H\x08R\x0b\x65\x63hoContext\x88\x01\x01\x12\x19\n\x05\x61sker\x18\x0c \x01(\tH\tR\x05\x61sker\x88\x01\x01\x42\x08\n\x06_agentB\x06\n\x04_cidB\x0e\n\x0c_tool_choiceB\t\n\x07_customB\x08\n\x06_stateB\x08\n\x06_styleB\x12\n\x10_echo_tool_callsB\x0e\n\x0c_echo_memoryB\x0f\n\r_echo_contextB\x08\n\x06_asker\"T\n\x0eToolCallResult\x12\x13\n\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12&\n\x05\x63onts\x18\x02 \x03(\x0b\x32\x10.hi.club.ContentR\x05\x63ontsB\x05\n\x03_id\"]\n\x12ToolCallResultsReq\x12\x13\n\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12+\n\x04list\x18\x02 \x03(\x0b\x32\x17.hi.club.ToolCallResultR\x04listB\x05\n\x03_id2\xac\x04\n\x04\x43hat\x12\x42\n\nNewSession\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.NewSessionResp\"\x05\x8a\xb5\x18\x01\x02\x12\x42\n\nGetHistory\x12\x14.hi.ai.GetHistoryReq\x1a\x17.hi.club.GetHistoryResp\"\x05\x8a\xb5\x18\x01\x02\x12\x45\n\x0c\x43learHistory\x12\x16.hi.ai.ClearHistoryReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12G\n\rAppendHistory\x12\x17.hi.ai.AppendHistoryReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12\x34\n\x08\x43onverse\x12\x10.hi.club.ChatReq\x1a\x0f.hi.ai.ChatResp\"\x05\x8a\xb5\x18\x01\x02\x12\x46\n\x0e\x43onverseStream\x12\x10.hi.club.ChatReq\x1a\x19.hi.ai.ConverseStreamResp\"\x05\x8a\xb5\x18\x01\x02\x30\x01\x12=\n\x06Resume\x12\x1b.hi.club.ToolCallResultsReq\x1a\x0f.hi.ai.ChatResp\"\x05\x8a\xb5\x18\x01\x02\x12O\n\x0cResumeStream\x12\x1b.hi.club.ToolCallResultsReq\x1a\x19.hi.ai.ConverseStreamResp\"\x05\x8a\xb5\x18\x01\x02\x30\x01\x42+Z)github.com/HiWorld-56/hi-proto/go/hi/clubb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12hi/club/chat.proto\x12\x07hi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/ai/chat.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\x1a\x0fhi/common.proto\"O\n\x02QA\x12$\n\x01q\x18\x01 \x03(\x0b\x32\x10.hi.club.ContentB\x04\x90\xb5\x18\x02R\x01q\x12\x17\n\x01\x61\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x01\x61\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x04\n\x02_a\"=\n\x0eGetContextResp\x12%\n\x04list\x18\x01 \x03(\x0b\x32\x0b.hi.club.QAB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\".\n\rGetContextReq\x12\x15\n\x03\x63id\x18\x01 \x01(\tH\x00R\x03\x63id\x88\x01\x01\x42\x06\n\x04_cid\"0\n\x0f\x43learContextReq\x12\x15\n\x03\x63id\x18\x01 \x01(\tH\x00R\x03\x63id\x88\x01\x01\x42\x06\n\x04_cid\"\x84\x01\n\x10\x41ppendContextReq\x12\x15\n\x03\x63id\x18\x01 \x01(\tH\x00R\x03\x63id\x88\x01\x01\x12\x17\n\x04user\x18\x02 \x01(\tH\x01R\x04user\x88\x01\x01\x12!\n\tassistant\x18\x03 \x01(\tH\x02R\tassistant\x88\x01\x01\x42\x06\n\x04_cidB\x07\n\x05_userB\x0c\n\n_assistant\"\x9b\x04\n\x07\x43hatReq\x12\x19\n\x05\x61gent\x18\x01 \x01(\tH\x00R\x05\x61gent\x88\x01\x01\x12\x15\n\x03\x63id\x18\x02 \x01(\tH\x01R\x03\x63id\x88\x01\x01\x12&\n\x05\x63onts\x18\x03 \x03(\x0b\x32\x10.hi.club.ContentR\x05\x63onts\x12\'\n\x05tools\x18\x04 \x03(\x0b\x32\x11.hi.ai.ToolSupplyR\x05tools\x12$\n\x0btool_choice\x18\x05 \x01(\tH\x02R\ntoolChoice\x88\x01\x01\x12\x1b\n\x06\x63ustom\x18\x06 \x01(\tH\x03R\x06\x63ustom\x88\x01\x01\x12\x19\n\x05state\x18\x07 \x01(\tH\x04R\x05state\x88\x01\x01\x12\x19\n\x05style\x18\x08 \x01(\tH\x05R\x05style\x88\x01\x01\x12+\n\x0f\x65\x63ho_tool_calls\x18\t \x01(\x08H\x06R\rechoToolCalls\x88\x01\x01\x12$\n\x0b\x65\x63ho_memory\x18\n \x01(\x08H\x07R\nechoMemory\x88\x01\x01\x12&\n\x0c\x65\x63ho_context\x18\x0b \x01(\x08H\x08R\x0b\x65\x63hoContext\x88\x01\x01\x12\x19\n\x05\x61sker\x18\x0c \x01(\tH\tR\x05\x61sker\x88\x01\x01\x42\x08\n\x06_agentB\x06\n\x04_cidB\x0e\n\x0c_tool_choiceB\t\n\x07_customB\x08\n\x06_stateB\x08\n\x06_styleB\x12\n\x10_echo_tool_callsB\x0e\n\x0c_echo_memoryB\x0f\n\r_echo_contextB\x08\n\x06_asker\"T\n\x0eToolCallResult\x12\x13\n\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12&\n\x05\x63onts\x18\x02 \x03(\x0b\x32\x10.hi.club.ContentR\x05\x63ontsB\x05\n\x03_id\"]\n\x12ToolCallResultsReq\x12\x13\n\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12+\n\x04list\x18\x02 \x03(\x0b\x32\x17.hi.club.ToolCallResultR\x04listB\x05\n\x03_id2\xb2\x04\n\x04\x43hat\x12\x42\n\nNewSession\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.NewSessionResp\"\x05\x8a\xb5\x18\x01\x02\x12\x44\n\nGetContext\x12\x16.hi.club.GetContextReq\x1a\x17.hi.club.GetContextResp\"\x05\x8a\xb5\x18\x01\x02\x12G\n\x0c\x43learContext\x12\x18.hi.club.ClearContextReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12I\n\rAppendContext\x12\x19.hi.club.AppendContextReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12\x34\n\x08\x43onverse\x12\x10.hi.club.ChatReq\x1a\x0f.hi.ai.ChatResp\"\x05\x8a\xb5\x18\x01\x02\x12\x46\n\x0e\x43onverseStream\x12\x10.hi.club.ChatReq\x1a\x19.hi.ai.ConverseStreamResp\"\x05\x8a\xb5\x18\x01\x02\x30\x01\x12=\n\x06Resume\x12\x1b.hi.club.ToolCallResultsReq\x1a\x0f.hi.ai.ChatResp\"\x05\x8a\xb5\x18\x01\x02\x12O\n\x0cResumeStream\x12\x1b.hi.club.ToolCallResultsReq\x1a\x19.hi.ai.ConverseStreamResp\"\x05\x8a\xb5\x18\x01\x02\x30\x01\x42+Z)github.com/HiWorld-56/hi-proto/go/hi/clubb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -43,18 +43,18 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_QA'].fields_by_name['a']._serialized_options = b'\220\265\030\003'
   _globals['_QA']._loaded_options = None
   _globals['_QA']._serialized_options = b'\230\265\030\003'
-  _globals['_GETHISTORYRESP'].fields_by_name['list']._loaded_options = None
-  _globals['_GETHISTORYRESP'].fields_by_name['list']._serialized_options = b'\220\265\030\003'
-  _globals['_GETHISTORYRESP']._loaded_options = None
-  _globals['_GETHISTORYRESP']._serialized_options = b'\230\265\030\003'
+  _globals['_GETCONTEXTRESP'].fields_by_name['list']._loaded_options = None
+  _globals['_GETCONTEXTRESP'].fields_by_name['list']._serialized_options = b'\220\265\030\003'
+  _globals['_GETCONTEXTRESP']._loaded_options = None
+  _globals['_GETCONTEXTRESP']._serialized_options = b'\230\265\030\003'
   _globals['_CHAT'].methods_by_name['NewSession']._loaded_options = None
   _globals['_CHAT'].methods_by_name['NewSession']._serialized_options = b'\212\265\030\001\002'
-  _globals['_CHAT'].methods_by_name['GetHistory']._loaded_options = None
-  _globals['_CHAT'].methods_by_name['GetHistory']._serialized_options = b'\212\265\030\001\002'
-  _globals['_CHAT'].methods_by_name['ClearHistory']._loaded_options = None
-  _globals['_CHAT'].methods_by_name['ClearHistory']._serialized_options = b'\212\265\030\001\002'
-  _globals['_CHAT'].methods_by_name['AppendHistory']._loaded_options = None
-  _globals['_CHAT'].methods_by_name['AppendHistory']._serialized_options = b'\212\265\030\001\002'
+  _globals['_CHAT'].methods_by_name['GetContext']._loaded_options = None
+  _globals['_CHAT'].methods_by_name['GetContext']._serialized_options = b'\212\265\030\001\002'
+  _globals['_CHAT'].methods_by_name['ClearContext']._loaded_options = None
+  _globals['_CHAT'].methods_by_name['ClearContext']._serialized_options = b'\212\265\030\001\002'
+  _globals['_CHAT'].methods_by_name['AppendContext']._loaded_options = None
+  _globals['_CHAT'].methods_by_name['AppendContext']._serialized_options = b'\212\265\030\001\002'
   _globals['_CHAT'].methods_by_name['Converse']._loaded_options = None
   _globals['_CHAT'].methods_by_name['Converse']._serialized_options = b'\212\265\030\001\002'
   _globals['_CHAT'].methods_by_name['ConverseStream']._loaded_options = None
@@ -65,14 +65,20 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_CHAT'].methods_by_name['ResumeStream']._serialized_options = b'\212\265\030\001\002'
   _globals['_QA']._serialized_start=138
   _globals['_QA']._serialized_end=217
-  _globals['_GETHISTORYRESP']._serialized_start=219
-  _globals['_GETHISTORYRESP']._serialized_end=280
-  _globals['_CHATREQ']._serialized_start=283
-  _globals['_CHATREQ']._serialized_end=822
-  _globals['_TOOLCALLRESULT']._serialized_start=824
-  _globals['_TOOLCALLRESULT']._serialized_end=908
-  _globals['_TOOLCALLRESULTSREQ']._serialized_start=910
-  _globals['_TOOLCALLRESULTSREQ']._serialized_end=1003
-  _globals['_CHAT']._serialized_start=1006
-  _globals['_CHAT']._serialized_end=1562
+  _globals['_GETCONTEXTRESP']._serialized_start=219
+  _globals['_GETCONTEXTRESP']._serialized_end=280
+  _globals['_GETCONTEXTREQ']._serialized_start=282
+  _globals['_GETCONTEXTREQ']._serialized_end=328
+  _globals['_CLEARCONTEXTREQ']._serialized_start=330
+  _globals['_CLEARCONTEXTREQ']._serialized_end=378
+  _globals['_APPENDCONTEXTREQ']._serialized_start=381
+  _globals['_APPENDCONTEXTREQ']._serialized_end=513
+  _globals['_CHATREQ']._serialized_start=516
+  _globals['_CHATREQ']._serialized_end=1055
+  _globals['_TOOLCALLRESULT']._serialized_start=1057
+  _globals['_TOOLCALLRESULT']._serialized_end=1141
+  _globals['_TOOLCALLRESULTSREQ']._serialized_start=1143
+  _globals['_TOOLCALLRESULTSREQ']._serialized_end=1236
+  _globals['_CHAT']._serialized_start=1239
+  _globals['_CHAT']._serialized_end=1801
 # @@protoc_insertion_point(module_scope)

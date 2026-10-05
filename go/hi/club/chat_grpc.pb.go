@@ -22,9 +22,9 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	Chat_NewSession_FullMethodName     = "/hi.club.Chat/NewSession"
-	Chat_GetHistory_FullMethodName     = "/hi.club.Chat/GetHistory"
-	Chat_ClearHistory_FullMethodName   = "/hi.club.Chat/ClearHistory"
-	Chat_AppendHistory_FullMethodName  = "/hi.club.Chat/AppendHistory"
+	Chat_GetContext_FullMethodName     = "/hi.club.Chat/GetContext"
+	Chat_ClearContext_FullMethodName   = "/hi.club.Chat/ClearContext"
+	Chat_AppendContext_FullMethodName  = "/hi.club.Chat/AppendContext"
 	Chat_Converse_FullMethodName       = "/hi.club.Chat/Converse"
 	Chat_ConverseStream_FullMethodName = "/hi.club.Chat/ConverseStream"
 	Chat_Resume_FullMethodName         = "/hi.club.Chat/Resume"
@@ -42,12 +42,23 @@ type ChatClient interface {
 	// 故过期不影响本地历史回看。**头像/群头像不要走这里** —— 那是永固资产,各有归属 bucket。
 	// ── 会话管理 ──
 	NewSession(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.NewSessionResp, error)
-	GetHistory(ctx context.Context, in *ai.GetHistoryReq, opts ...grpc.CallOption) (*GetHistoryResp, error)
-	ClearHistory(ctx context.Context, in *ai.ClearHistoryReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetContext(ctx context.Context, in *GetContextReq, opts ...grpc.CallOption) (*GetContextResp, error)
+	ClearContext(ctx context.Context, in *ClearContextReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 补一对问答进上下文。机器人到点自己做完一件事之后用它 —— 不这么做的话,
-	// 模型下次对话时对自己刚做过的事一无所知(见 hi/ai/chat.proto 的 AppendHistoryReq)。
-	AppendHistory(ctx context.Context, in *ai.AppendHistoryReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 模型下次对话时对自己刚做过的事一无所知(见 hi/ai/chat.proto 的 AppendContextReq)。
+	AppendContext(ctx context.Context, in *AppendContextReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// ── 对话:一轮 = 一个循环,中途只在"轮到客户端"时返回(详见 hi/ai/chat.proto)──
+	//
+	// cid 的归属判据同上面 GetContext 那段(机器人格式的 cid 里的机器人还必须就是 `agent`)。
+	//
+	// ⭐ **语音聊天记录**:cid == `hiclub:embedded:<调用者自己>`(机器人的语音路)时,club 在调推理的同时
+	//
+	//	把这一轮存进聊天记录 —— 会话是「机器人 + 固定虚拟 did `voice_chat`」的二人会话
+	//	(会话号与单聊同一算法,`BuildSingleGroupCode(机器人, "voice_chat")`;库里一条 single 记录,
+	//	成员只有机器人)。用户那句一进来就写(from = `voice_chat`,内容 = 本轮 conts 原样);
+	//	机器人的最终答复在 final=true 时写(from = 机器人)—— 中途轮到客户端执行工具的,
+	//	最终答复出在 Resume / ResumeStream 里,同样写。存法与普通消息完全一致(Packet 字节、时间线、保留期),
+	//	读法是 `Group.ListRecentMessages{peer: "voice_chat"}`(只有机器人自己是成员)。
 	Converse(ctx context.Context, in *ChatReq, opts ...grpc.CallOption) (*ai.ChatResp, error)
 	ConverseStream(ctx context.Context, in *ChatReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ai.ConverseStreamResp], error)
 	Resume(ctx context.Context, in *ToolCallResultsReq, opts ...grpc.CallOption) (*ai.ChatResp, error)
@@ -72,30 +83,30 @@ func (c *chatClient) NewSession(ctx context.Context, in *emptypb.Empty, opts ...
 	return out, nil
 }
 
-func (c *chatClient) GetHistory(ctx context.Context, in *ai.GetHistoryReq, opts ...grpc.CallOption) (*GetHistoryResp, error) {
+func (c *chatClient) GetContext(ctx context.Context, in *GetContextReq, opts ...grpc.CallOption) (*GetContextResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetHistoryResp)
-	err := c.cc.Invoke(ctx, Chat_GetHistory_FullMethodName, in, out, cOpts...)
+	out := new(GetContextResp)
+	err := c.cc.Invoke(ctx, Chat_GetContext_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *chatClient) ClearHistory(ctx context.Context, in *ai.ClearHistoryReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *chatClient) ClearContext(ctx context.Context, in *ClearContextReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Chat_ClearHistory_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Chat_ClearContext_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *chatClient) AppendHistory(ctx context.Context, in *ai.AppendHistoryReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *chatClient) AppendContext(ctx context.Context, in *AppendContextReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Chat_AppendHistory_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Chat_AppendContext_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -171,12 +182,23 @@ type ChatServer interface {
 	// 故过期不影响本地历史回看。**头像/群头像不要走这里** —— 那是永固资产,各有归属 bucket。
 	// ── 会话管理 ──
 	NewSession(context.Context, *emptypb.Empty) (*ai.NewSessionResp, error)
-	GetHistory(context.Context, *ai.GetHistoryReq) (*GetHistoryResp, error)
-	ClearHistory(context.Context, *ai.ClearHistoryReq) (*emptypb.Empty, error)
+	GetContext(context.Context, *GetContextReq) (*GetContextResp, error)
+	ClearContext(context.Context, *ClearContextReq) (*emptypb.Empty, error)
 	// 补一对问答进上下文。机器人到点自己做完一件事之后用它 —— 不这么做的话,
-	// 模型下次对话时对自己刚做过的事一无所知(见 hi/ai/chat.proto 的 AppendHistoryReq)。
-	AppendHistory(context.Context, *ai.AppendHistoryReq) (*emptypb.Empty, error)
+	// 模型下次对话时对自己刚做过的事一无所知(见 hi/ai/chat.proto 的 AppendContextReq)。
+	AppendContext(context.Context, *AppendContextReq) (*emptypb.Empty, error)
 	// ── 对话:一轮 = 一个循环,中途只在"轮到客户端"时返回(详见 hi/ai/chat.proto)──
+	//
+	// cid 的归属判据同上面 GetContext 那段(机器人格式的 cid 里的机器人还必须就是 `agent`)。
+	//
+	// ⭐ **语音聊天记录**:cid == `hiclub:embedded:<调用者自己>`(机器人的语音路)时,club 在调推理的同时
+	//
+	//	把这一轮存进聊天记录 —— 会话是「机器人 + 固定虚拟 did `voice_chat`」的二人会话
+	//	(会话号与单聊同一算法,`BuildSingleGroupCode(机器人, "voice_chat")`;库里一条 single 记录,
+	//	成员只有机器人)。用户那句一进来就写(from = `voice_chat`,内容 = 本轮 conts 原样);
+	//	机器人的最终答复在 final=true 时写(from = 机器人)—— 中途轮到客户端执行工具的,
+	//	最终答复出在 Resume / ResumeStream 里,同样写。存法与普通消息完全一致(Packet 字节、时间线、保留期),
+	//	读法是 `Group.ListRecentMessages{peer: "voice_chat"}`(只有机器人自己是成员)。
 	Converse(context.Context, *ChatReq) (*ai.ChatResp, error)
 	ConverseStream(*ChatReq, grpc.ServerStreamingServer[ai.ConverseStreamResp]) error
 	Resume(context.Context, *ToolCallResultsReq) (*ai.ChatResp, error)
@@ -193,14 +215,14 @@ type UnimplementedChatServer struct{}
 func (UnimplementedChatServer) NewSession(context.Context, *emptypb.Empty) (*ai.NewSessionResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method NewSession not implemented")
 }
-func (UnimplementedChatServer) GetHistory(context.Context, *ai.GetHistoryReq) (*GetHistoryResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetHistory not implemented")
+func (UnimplementedChatServer) GetContext(context.Context, *GetContextReq) (*GetContextResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetContext not implemented")
 }
-func (UnimplementedChatServer) ClearHistory(context.Context, *ai.ClearHistoryReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method ClearHistory not implemented")
+func (UnimplementedChatServer) ClearContext(context.Context, *ClearContextReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method ClearContext not implemented")
 }
-func (UnimplementedChatServer) AppendHistory(context.Context, *ai.AppendHistoryReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method AppendHistory not implemented")
+func (UnimplementedChatServer) AppendContext(context.Context, *AppendContextReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method AppendContext not implemented")
 }
 func (UnimplementedChatServer) Converse(context.Context, *ChatReq) (*ai.ChatResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Converse not implemented")
@@ -252,56 +274,56 @@ func _Chat_NewSession_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Chat_GetHistory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.GetHistoryReq)
+func _Chat_GetContext_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetContextReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChatServer).GetHistory(ctx, in)
+		return srv.(ChatServer).GetContext(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Chat_GetHistory_FullMethodName,
+		FullMethod: Chat_GetContext_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServer).GetHistory(ctx, req.(*ai.GetHistoryReq))
+		return srv.(ChatServer).GetContext(ctx, req.(*GetContextReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Chat_ClearHistory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.ClearHistoryReq)
+func _Chat_ClearContext_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ClearContextReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChatServer).ClearHistory(ctx, in)
+		return srv.(ChatServer).ClearContext(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Chat_ClearHistory_FullMethodName,
+		FullMethod: Chat_ClearContext_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServer).ClearHistory(ctx, req.(*ai.ClearHistoryReq))
+		return srv.(ChatServer).ClearContext(ctx, req.(*ClearContextReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Chat_AppendHistory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.AppendHistoryReq)
+func _Chat_AppendContext_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AppendContextReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChatServer).AppendHistory(ctx, in)
+		return srv.(ChatServer).AppendContext(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Chat_AppendHistory_FullMethodName,
+		FullMethod: Chat_AppendContext_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServer).AppendHistory(ctx, req.(*ai.AppendHistoryReq))
+		return srv.(ChatServer).AppendContext(ctx, req.(*AppendContextReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -376,16 +398,16 @@ var Chat_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Chat_NewSession_Handler,
 		},
 		{
-			MethodName: "GetHistory",
-			Handler:    _Chat_GetHistory_Handler,
+			MethodName: "GetContext",
+			Handler:    _Chat_GetContext_Handler,
 		},
 		{
-			MethodName: "ClearHistory",
-			Handler:    _Chat_ClearHistory_Handler,
+			MethodName: "ClearContext",
+			Handler:    _Chat_ClearContext_Handler,
 		},
 		{
-			MethodName: "AppendHistory",
-			Handler:    _Chat_AppendHistory_Handler,
+			MethodName: "AppendContext",
+			Handler:    _Chat_AppendContext_Handler,
 		},
 		{
 			MethodName: "Converse",

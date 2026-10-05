@@ -854,7 +854,7 @@ class Content_Chat extends $pb.GeneratedMessage {
   void clearDuration() => $_clearField(4);
 }
 
-enum Content_Kind { chat, trans, binance, binanceCmd, notSet }
+enum Content_Kind { chat, trans, binance, binanceCmd, record, notSet }
 
 ///
 /// Content.type —— **一条消息里这一段是什么**。字符串,取值就是下面这张表,**别自己发明**。
@@ -867,6 +867,7 @@ enum Content_Kind { chat, trans, binance, binanceCmd, notSet }
 /// broadcast   广播
 /// binance     币安操作结果卡      kind=binance(hi.binance.BinanceResult)
 /// binance_cmd 币安指令            kind=binance_cmd(hi.binance.BinanceCommand)—— 群里要 @ 执行的机器人,见 hi/binance/command.proto
+/// chat_record 聊天记录(合并转发)  kind=record(hi.club.ChatRecord)—— 标题 + 若干条原消息,点开看全部
 ///
 /// ⚠️ **注意是 `image_url` 不是 `image`、`audio_url` 不是 `audio`。**
 ///
@@ -892,6 +893,7 @@ class Content extends $pb.GeneratedMessage {
     $2.Transaction? trans,
     $3.BinanceResult? binance,
     $4.BinanceCommand? binanceCmd,
+    ChatRecord? record,
   }) {
     final result = create();
     if (type != null) result.type = type;
@@ -899,6 +901,7 @@ class Content extends $pb.GeneratedMessage {
     if (trans != null) result.trans = trans;
     if (binance != null) result.binance = binance;
     if (binanceCmd != null) result.binanceCmd = binanceCmd;
+    if (record != null) result.record = record;
     return result;
   }
 
@@ -916,13 +919,14 @@ class Content extends $pb.GeneratedMessage {
     3: Content_Kind.trans,
     5: Content_Kind.binance,
     6: Content_Kind.binanceCmd,
+    7: Content_Kind.record,
     0: Content_Kind.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Content',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3, 5, 6])
+    ..oo(0, [2, 3, 5, 6, 7])
     ..aOS(1, _omitFieldNames ? '' : 'type')
     ..aOM<Content_Chat>(2, _omitFieldNames ? '' : 'chat',
         subBuilder: Content_Chat.create)
@@ -932,6 +936,8 @@ class Content extends $pb.GeneratedMessage {
         subBuilder: $3.BinanceResult.create)
     ..aOM<$4.BinanceCommand>(6, _omitFieldNames ? '' : 'binanceCmd',
         subBuilder: $4.BinanceCommand.create)
+    ..aOM<ChatRecord>(7, _omitFieldNames ? '' : 'record',
+        subBuilder: ChatRecord.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -956,11 +962,13 @@ class Content extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   @$pb.TagNumber(5)
   @$pb.TagNumber(6)
+  @$pb.TagNumber(7)
   Content_Kind whichKind() => _Content_KindByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
   @$pb.TagNumber(5)
   @$pb.TagNumber(6)
+  @$pb.TagNumber(7)
   void clearKind() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -1019,6 +1027,173 @@ class Content extends $pb.GeneratedMessage {
   void clearBinanceCmd() => $_clearField(6);
   @$pb.TagNumber(6)
   $4.BinanceCommand ensureBinanceCmd() => $_ensure(4);
+
+  /// 聊天记录(合并转发):标题 + 若干条原消息,点开看全部。见下面 ChatRecord。
+  @$pb.TagNumber(7)
+  ChatRecord get record => $_getN(5);
+  @$pb.TagNumber(7)
+  set record(ChatRecord value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasRecord() => $_has(5);
+  @$pb.TagNumber(7)
+  void clearRecord() => $_clearField(7);
+  @$pb.TagNumber(7)
+  ChatRecord ensureRecord() => $_ensure(5);
+}
+
+/// 聊天记录 —— **合并转发**出来的那一条(类似微信「聊天记录」卡片)。`Content.type = "chat_record"`。
+///
+/// 它就是一条普通消息的一段内容:中间层(core / 后端 / broker)不认识它、也不需要认识它,
+/// 原样存、原样转;显示是端上的事(卡片显示 `title` 与前几条摘要,点开看 `list` 全部)。
+///
+/// 每一条保留**原消息的内容字节**(`Message.contents` 原样,即序列化后的 `hi.club.Contents`),
+/// 不解开重编 —— 转发方用的 proto 比原消息旧时,解开再编会把新内容类型静默丢掉。
+/// 端上显示时照常解一遍;解不开的那条显示「不支持的消息类型」,不影响其余几条。
+/// 聊天记录里套聊天记录(转发一条已经是聊天记录的消息)是允许的,同样原样。
+///
+/// 逐条转发不用它:那是把原 `contents` 换个 uuid / 会话原样再发一次。
+///
+/// 机器人把语音聊天记录发给主人(内置插件)发的也是这个。
+class ChatRecord extends $pb.GeneratedMessage {
+  factory ChatRecord({
+    $core.String? title,
+    $core.Iterable<ChatRecordItem>? list,
+  }) {
+    final result = create();
+    if (title != null) result.title = title;
+    if (list != null) result.list.addAll(list);
+    return result;
+  }
+
+  ChatRecord._();
+
+  factory ChatRecord.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ChatRecord.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ChatRecord',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'title')
+    ..pPM<ChatRecordItem>(2, _omitFieldNames ? '' : 'list',
+        subBuilder: ChatRecordItem.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ChatRecord clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ChatRecord copyWith(void Function(ChatRecord) updates) =>
+      super.copyWith((message) => updates(message as ChatRecord)) as ChatRecord;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ChatRecord create() => ChatRecord._();
+  @$core.override
+  ChatRecord createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ChatRecord getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ChatRecord>(create);
+  static ChatRecord? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get title => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set title($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasTitle() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTitle() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<ChatRecordItem> get list => $_getList(1);
+}
+
+class ChatRecordItem extends $pb.GeneratedMessage {
+  factory ChatRecordItem({
+    $0.Entity? from,
+    $fixnum.Int64? timestamp,
+    $core.List<$core.int>? contents,
+  }) {
+    final result = create();
+    if (from != null) result.from = from;
+    if (timestamp != null) result.timestamp = timestamp;
+    if (contents != null) result.contents = contents;
+    return result;
+  }
+
+  ChatRecordItem._();
+
+  factory ChatRecordItem.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ChatRecordItem.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ChatRecordItem',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOM<$0.Entity>(1, _omitFieldNames ? '' : 'from',
+        subBuilder: $0.Entity.create)
+    ..aInt64(2, _omitFieldNames ? '' : 'timestamp')
+    ..a<$core.List<$core.int>>(
+        3, _omitFieldNames ? '' : 'contents', $pb.PbFieldType.OY)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ChatRecordItem clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ChatRecordItem copyWith(void Function(ChatRecordItem) updates) =>
+      super.copyWith((message) => updates(message as ChatRecordItem))
+          as ChatRecordItem;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ChatRecordItem create() => ChatRecordItem._();
+  @$core.override
+  ChatRecordItem createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ChatRecordItem getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ChatRecordItem>(create);
+  static ChatRecordItem? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.Entity get from => $_getN(0);
+  @$pb.TagNumber(1)
+  set from($0.Entity value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasFrom() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearFrom() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.Entity ensureFrom() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get timestamp => $_getI64(1);
+  @$pb.TagNumber(2)
+  set timestamp($fixnum.Int64 value) => $_setInt64(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasTimestamp() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearTimestamp() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.List<$core.int> get contents => $_getN(2);
+  @$pb.TagNumber(3)
+  set contents($core.List<$core.int> value) => $_setBytes(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasContents() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearContents() => $_clearField(3);
 }
 
 const $core.bool _omitFieldNames =

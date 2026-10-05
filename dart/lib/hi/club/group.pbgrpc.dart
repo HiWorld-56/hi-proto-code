@@ -123,6 +123,13 @@ class GroupClient extends $grpc.Client {
     return $createUnaryCall(_$listMessages, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.ListRecentMessagesResp> listRecentMessages(
+    $0.ListRecentMessagesReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listRecentMessages, request, options: options);
+  }
+
   $grpc.ResponseFuture<$1.Empty> setRole(
     $0.SetRoleReq request, {
     $grpc.CallOptions? options,
@@ -206,6 +213,11 @@ class GroupClient extends $grpc.Client {
           '/hi.club.Group/ListMessages',
           ($0.ListGroupMessagesReq value) => value.writeToBuffer(),
           $0.ListGroupMessagesResp.fromBuffer);
+  static final _$listRecentMessages =
+      $grpc.ClientMethod<$0.ListRecentMessagesReq, $0.ListRecentMessagesResp>(
+          '/hi.club.Group/ListRecentMessages',
+          ($0.ListRecentMessagesReq value) => value.writeToBuffer(),
+          $0.ListRecentMessagesResp.fromBuffer);
   static final _$setRole = $grpc.ClientMethod<$0.SetRoleReq, $1.Empty>(
       '/hi.club.Group/SetRole',
       ($0.SetRoleReq value) => value.writeToBuffer(),
@@ -320,6 +332,15 @@ abstract class GroupServiceBase extends $grpc.Service {
             ($core.List<$core.int> value) =>
                 $0.ListGroupMessagesReq.fromBuffer(value),
             ($0.ListGroupMessagesResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ListRecentMessagesReq,
+            $0.ListRecentMessagesResp>(
+        'ListRecentMessages',
+        listRecentMessages_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.ListRecentMessagesReq.fromBuffer(value),
+        ($0.ListRecentMessagesResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.SetRoleReq, $1.Empty>(
         'SetRole',
         setRole_Pre,
@@ -446,6 +467,15 @@ abstract class GroupServiceBase extends $grpc.Service {
 
   $async.Future<$0.ListGroupMessagesResp> listMessages(
       $grpc.ServiceCall call, $0.ListGroupMessagesReq request);
+
+  $async.Future<$0.ListRecentMessagesResp> listRecentMessages_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.ListRecentMessagesReq> $request) async {
+    return listRecentMessages($call, await $request);
+  }
+
+  $async.Future<$0.ListRecentMessagesResp> listRecentMessages(
+      $grpc.ServiceCall call, $0.ListRecentMessagesReq request);
 
   $async.Future<$1.Empty> setRole_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.SetRoleReq> $request) async {

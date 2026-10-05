@@ -621,6 +621,7 @@ func (x *Member) GetUser() *hi.Entity {
 // broadcast   广播
 // binance     币安操作结果卡      kind=binance(hi.binance.BinanceResult)
 // binance_cmd 币安指令            kind=binance_cmd(hi.binance.BinanceCommand)—— 群里要 @ 执行的机器人,见 hi/binance/command.proto
+// chat_record 聊天记录(合并转发)  kind=record(hi.club.ChatRecord)—— 标题 + 若干条原消息,点开看全部
 //
 // ⚠️ **注意是 `image_url` 不是 `image`、`audio_url` 不是 `audio`。**
 //
@@ -648,6 +649,7 @@ type Content struct {
 	//	*Content_Trans
 	//	*Content_Binance
 	//	*Content_BinanceCmd
+	//	*Content_Record
 	Kind          isContent_Kind `protobuf_oneof:"kind"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -733,6 +735,15 @@ func (x *Content) GetBinanceCmd() *binance.BinanceCommand {
 	return nil
 }
 
+func (x *Content) GetRecord() *ChatRecord {
+	if x != nil {
+		if x, ok := x.Kind.(*Content_Record); ok {
+			return x.Record
+		}
+	}
+	return nil
+}
+
 type isContent_Kind interface {
 	isContent_Kind()
 }
@@ -759,6 +770,11 @@ type Content_BinanceCmd struct {
 	BinanceCmd *binance.BinanceCommand `protobuf:"bytes,6,opt,name=binance_cmd,json=binanceCmd,proto3,oneof"`
 }
 
+type Content_Record struct {
+	// 聊天记录(合并转发):标题 + 若干条原消息,点开看全部。见下面 ChatRecord。
+	Record *ChatRecord `protobuf:"bytes,7,opt,name=record,proto3,oneof"`
+}
+
 func (*Content_Chat_) isContent_Kind() {}
 
 func (*Content_Trans) isContent_Kind() {}
@@ -766,6 +782,133 @@ func (*Content_Trans) isContent_Kind() {}
 func (*Content_Binance) isContent_Kind() {}
 
 func (*Content_BinanceCmd) isContent_Kind() {}
+
+func (*Content_Record) isContent_Kind() {}
+
+// 聊天记录 —— **合并转发**出来的那一条(类似微信「聊天记录」卡片)。`Content.type = "chat_record"`。
+//
+// 它就是一条普通消息的一段内容:中间层(core / 后端 / broker)不认识它、也不需要认识它,
+// 原样存、原样转;显示是端上的事(卡片显示 `title` 与前几条摘要,点开看 `list` 全部)。
+//
+// 每一条保留**原消息的内容字节**(`Message.contents` 原样,即序列化后的 `hi.club.Contents`),
+// 不解开重编 —— 转发方用的 proto 比原消息旧时,解开再编会把新内容类型静默丢掉。
+// 端上显示时照常解一遍;解不开的那条显示「不支持的消息类型」,不影响其余几条。
+// 聊天记录里套聊天记录(转发一条已经是聊天记录的消息)是允许的,同样原样。
+//
+// 逐条转发不用它:那是把原 `contents` 换个 uuid / 会话原样再发一次。
+//
+// 机器人把语音聊天记录发给主人(内置插件)发的也是这个。
+type ChatRecord struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Title         *string                `protobuf:"bytes,1,opt,name=title,proto3,oneof" json:"title,omitempty"` // 卡片标题,如「张三与李四的聊天记录」;发送方写好
+	List          []*ChatRecordItem      `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"`         // 按原时间先后
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ChatRecord) Reset() {
+	*x = ChatRecord{}
+	mi := &file_hi_club_messaging_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ChatRecord) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChatRecord) ProtoMessage() {}
+
+func (x *ChatRecord) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_messaging_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChatRecord.ProtoReflect.Descriptor instead.
+func (*ChatRecord) Descriptor() ([]byte, []int) {
+	return file_hi_club_messaging_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *ChatRecord) GetTitle() string {
+	if x != nil && x.Title != nil {
+		return *x.Title
+	}
+	return ""
+}
+
+func (x *ChatRecord) GetList() []*ChatRecordItem {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
+type ChatRecordItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	From          *hi.Entity             `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`                  // 原发件人(原消息信封的 from,原样;Entity=公开门面)
+	Timestamp     *int64                 `protobuf:"varint,2,opt,name=timestamp,proto3,oneof" json:"timestamp,omitempty"` // 原消息的时间(微秒,服务器时间)
+	Contents      []byte                 `protobuf:"bytes,3,opt,name=contents,proto3,oneof" json:"contents,omitempty"`    // 原消息的 `Message.contents` 原样
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ChatRecordItem) Reset() {
+	*x = ChatRecordItem{}
+	mi := &file_hi_club_messaging_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ChatRecordItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChatRecordItem) ProtoMessage() {}
+
+func (x *ChatRecordItem) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_messaging_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChatRecordItem.ProtoReflect.Descriptor instead.
+func (*ChatRecordItem) Descriptor() ([]byte, []int) {
+	return file_hi_club_messaging_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *ChatRecordItem) GetFrom() *hi.Entity {
+	if x != nil {
+		return x.From
+	}
+	return nil
+}
+
+func (x *ChatRecordItem) GetTimestamp() int64 {
+	if x != nil && x.Timestamp != nil {
+		return *x.Timestamp
+	}
+	return 0
+}
+
+func (x *ChatRecordItem) GetContents() []byte {
+	if x != nil {
+		return x.Contents
+	}
+	return nil
+}
 
 type Content_Chat struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -779,7 +922,7 @@ type Content_Chat struct {
 
 func (x *Content_Chat) Reset() {
 	*x = Content_Chat{}
-	mi := &file_hi_club_messaging_proto_msgTypes[8]
+	mi := &file_hi_club_messaging_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -791,7 +934,7 @@ func (x *Content_Chat) String() string {
 func (*Content_Chat) ProtoMessage() {}
 
 func (x *Content_Chat) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_messaging_proto_msgTypes[8]
+	mi := &file_hi_club_messaging_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -906,14 +1049,15 @@ const file_hi_club_messaging_proto_rawDesc = "" +
 	"\x05group\x18\x01 \x01(\v2\n" +
 	".hi.EntityR\x05group\x12\x1e\n" +
 	"\x04user\x18\x02 \x01(\v2\n" +
-	".hi.EntityR\x04user\"\xeb\x03\n" +
+	".hi.EntityR\x04user\"\xa0\x04\n" +
 	"\aContent\x12\x1d\n" +
 	"\x04type\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x04type\x88\x01\x01\x121\n" +
 	"\x04chat\x18\x02 \x01(\v2\x15.hi.club.Content.ChatB\x04\x90\xb5\x18\x02H\x00R\x04chat\x121\n" +
 	"\x05trans\x18\x03 \x01(\v2\x13.hi.did.TransactionB\x04\x90\xb5\x18\x01H\x00R\x05trans\x12;\n" +
 	"\abinance\x18\x05 \x01(\v2\x19.hi.binance.BinanceResultB\x04\x90\xb5\x18\x02H\x00R\abinance\x12C\n" +
 	"\vbinance_cmd\x18\x06 \x01(\v2\x1a.hi.binance.BinanceCommandB\x04\x90\xb5\x18\x02H\x00R\n" +
-	"binanceCmd\x1a\xc1\x01\n" +
+	"binanceCmd\x123\n" +
+	"\x06record\x18\a \x01(\v2\x13.hi.club.ChatRecordB\x04\x90\xb5\x18\x02H\x00R\x06record\x1a\xc1\x01\n" +
 	"\x04Chat\x12#\n" +
 	"\acontent\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\acontent\x88\x01\x01\x12\x1d\n" +
 	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x04name\x88\x01\x01\x12\x1d\n" +
@@ -925,7 +1069,20 @@ const file_hi_club_messaging_proto_rawDesc = "" +
 	"\x05_sizeB\v\n" +
 	"\t_duration:\x04\x98\xb5\x18\x02B\x06\n" +
 	"\x04kindB\a\n" +
-	"\x05_typeB\x85\x01\n" +
+	"\x05_type\"p\n" +
+	"\n" +
+	"ChatRecord\x12\x1f\n" +
+	"\x05title\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x05title\x88\x01\x01\x121\n" +
+	"\x04list\x18\x02 \x03(\v2\x17.hi.club.ChatRecordItemB\x04\x90\xb5\x18\x02R\x04list:\x04\x98\xb5\x18\x02B\b\n" +
+	"\x06_title\"\xa7\x01\n" +
+	"\x0eChatRecordItem\x12$\n" +
+	"\x04from\x18\x01 \x01(\v2\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x04from\x12'\n" +
+	"\ttimestamp\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x02H\x00R\ttimestamp\x88\x01\x01\x12%\n" +
+	"\bcontents\x18\x03 \x01(\fB\x04\x90\xb5\x18\x02H\x01R\bcontents\x88\x01\x01:\x04\x98\xb5\x18\x02B\f\n" +
+	"\n" +
+	"_timestampB\v\n" +
+	"\t_contentsB\x85\x01\n" +
 	"\vcom.hi.clubB\x0eMessagingProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (
@@ -940,7 +1097,7 @@ func file_hi_club_messaging_proto_rawDescGZIP() []byte {
 	return file_hi_club_messaging_proto_rawDescData
 }
 
-var file_hi_club_messaging_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_hi_club_messaging_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_hi_club_messaging_proto_goTypes = []any{
 	(*Packet)(nil),                 // 0: hi.club.Packet
 	(*Notice)(nil),                 // 1: hi.club.Notice
@@ -950,36 +1107,41 @@ var file_hi_club_messaging_proto_goTypes = []any{
 	(*Mention)(nil),                // 5: hi.club.Mention
 	(*Member)(nil),                 // 6: hi.club.Member
 	(*Content)(nil),                // 7: hi.club.Content
-	(*Content_Chat)(nil),           // 8: hi.club.Content.Chat
-	(*hi.Entity)(nil),              // 9: hi.Entity
-	(*anypb.Any)(nil),              // 10: google.protobuf.Any
-	(*did.Transaction)(nil),        // 11: hi.did.Transaction
-	(*binance.BinanceResult)(nil),  // 12: hi.binance.BinanceResult
-	(*binance.BinanceCommand)(nil), // 13: hi.binance.BinanceCommand
+	(*ChatRecord)(nil),             // 8: hi.club.ChatRecord
+	(*ChatRecordItem)(nil),         // 9: hi.club.ChatRecordItem
+	(*Content_Chat)(nil),           // 10: hi.club.Content.Chat
+	(*hi.Entity)(nil),              // 11: hi.Entity
+	(*anypb.Any)(nil),              // 12: google.protobuf.Any
+	(*did.Transaction)(nil),        // 13: hi.did.Transaction
+	(*binance.BinanceResult)(nil),  // 14: hi.binance.BinanceResult
+	(*binance.BinanceCommand)(nil), // 15: hi.binance.BinanceCommand
 }
 var file_hi_club_messaging_proto_depIdxs = []int32{
 	1,  // 0: hi.club.Packet.notice:type_name -> hi.club.Notice
 	3,  // 1: hi.club.Packet.message:type_name -> hi.club.Message
-	9,  // 2: hi.club.Notice.from:type_name -> hi.Entity
-	10, // 3: hi.club.Notice.extra:type_name -> google.protobuf.Any
-	9,  // 4: hi.club.Message.from:type_name -> hi.Entity
-	10, // 5: hi.club.Message.extra:type_name -> google.protobuf.Any
-	9,  // 6: hi.club.Message.ghost:type_name -> hi.Entity
+	11, // 2: hi.club.Notice.from:type_name -> hi.Entity
+	12, // 3: hi.club.Notice.extra:type_name -> google.protobuf.Any
+	11, // 4: hi.club.Message.from:type_name -> hi.Entity
+	12, // 5: hi.club.Message.extra:type_name -> google.protobuf.Any
+	11, // 6: hi.club.Message.ghost:type_name -> hi.Entity
 	7,  // 7: hi.club.Contents.list:type_name -> hi.club.Content
 	2,  // 8: hi.club.Contents.prompt:type_name -> hi.club.Prompt
-	9,  // 9: hi.club.Mention.group:type_name -> hi.Entity
-	9,  // 10: hi.club.Mention.list:type_name -> hi.Entity
-	9,  // 11: hi.club.Member.group:type_name -> hi.Entity
-	9,  // 12: hi.club.Member.user:type_name -> hi.Entity
-	8,  // 13: hi.club.Content.chat:type_name -> hi.club.Content.Chat
-	11, // 14: hi.club.Content.trans:type_name -> hi.did.Transaction
-	12, // 15: hi.club.Content.binance:type_name -> hi.binance.BinanceResult
-	13, // 16: hi.club.Content.binance_cmd:type_name -> hi.binance.BinanceCommand
-	17, // [17:17] is the sub-list for method output_type
-	17, // [17:17] is the sub-list for method input_type
-	17, // [17:17] is the sub-list for extension type_name
-	17, // [17:17] is the sub-list for extension extendee
-	0,  // [0:17] is the sub-list for field type_name
+	11, // 9: hi.club.Mention.group:type_name -> hi.Entity
+	11, // 10: hi.club.Mention.list:type_name -> hi.Entity
+	11, // 11: hi.club.Member.group:type_name -> hi.Entity
+	11, // 12: hi.club.Member.user:type_name -> hi.Entity
+	10, // 13: hi.club.Content.chat:type_name -> hi.club.Content.Chat
+	13, // 14: hi.club.Content.trans:type_name -> hi.did.Transaction
+	14, // 15: hi.club.Content.binance:type_name -> hi.binance.BinanceResult
+	15, // 16: hi.club.Content.binance_cmd:type_name -> hi.binance.BinanceCommand
+	8,  // 17: hi.club.Content.record:type_name -> hi.club.ChatRecord
+	9,  // 18: hi.club.ChatRecord.list:type_name -> hi.club.ChatRecordItem
+	11, // 19: hi.club.ChatRecordItem.from:type_name -> hi.Entity
+	20, // [20:20] is the sub-list for method output_type
+	20, // [20:20] is the sub-list for method input_type
+	20, // [20:20] is the sub-list for extension type_name
+	20, // [20:20] is the sub-list for extension extendee
+	0,  // [0:20] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_messaging_proto_init() }
@@ -1000,15 +1162,18 @@ func file_hi_club_messaging_proto_init() {
 		(*Content_Trans)(nil),
 		(*Content_Binance)(nil),
 		(*Content_BinanceCmd)(nil),
+		(*Content_Record)(nil),
 	}
 	file_hi_club_messaging_proto_msgTypes[8].OneofWrappers = []any{}
+	file_hi_club_messaging_proto_msgTypes[9].OneofWrappers = []any{}
+	file_hi_club_messaging_proto_msgTypes[10].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_messaging_proto_rawDesc), len(file_hi_club_messaging_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   9,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -238,16 +238,47 @@ pub struct NewSessionResp {
     #[prost(string, optional, tag = "1")]
     pub cid: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// ── 上下文(context):喂给模型的那几组问答,**不是聊天记录(history)** ─────────────
+///
+/// 二者是两件不相关的事:
+/// · **上下文**在 hi-ai(redis,按 cid 存 QA 成对,最多 30 对、30 天滑动过期),只用于推理;
+/// · **聊天记录**在 hi-club(消息时间线,`Group.ListMessages` / `Group.ListRecentMessages`),给人看、给插件读。
+/// 所以这组方法叫 Get/Clear/AppendContext(曾一度叫 \*History,已改回来)。
+///
+/// ── 谁能碰哪个 cid(Get/Clear/AppendContext 与 Converse\*/Resume\* 同一条规则)──────────
+///
+/// 「调用者」= `caller`(商户替它的用户填,club 填的是登录主体);**不传 = 商户自己**(hiai-web、商户 apikey)。
+/// · **机器人格式的 cid** —— `hiclub:embedded:<机器人>` / `hiclub:single:<对方>:<机器人>` / `hiclub:group:<群>:<机器人>`,
+/// **最后一段是机器人**:该机器人须是本商户的 agent,且调用者 == 该机器人,或 `master` 有值且调用者 == master。
+/// 以 `hiclub:` 开头却不是这三种形状的 → InvalidArgument。
+/// · **其它 cid**(`NewSession` 发的 uuid,web / app 与助手对话用)—— **第一个用它的调用者就是它的主人**,
+/// 此后只认他(归属记录与上下文同 TTL,随对话顶回)。
+/// · 不满足 → **NotFound**「会话不存在」(不替人确认别人的会话存在)。
+///
+/// ⚠️ `caller` / `master` 是**商户替用户说的话**,hi-ai 信商户、不信用户 —— 所以 hi.club 的同名入参
+/// **故意没有**这两个字段(club 用自己的 Req 类型,由服务端按登录主体与 masterOf 现填)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ClearHistoryReq {
+pub struct ClearContextReq {
     #[prost(string, optional, tag = "1")]
     pub cid: ::core::option::Option<::prost::alloc::string::String>,
+    /// 调用者 did(商户替它的用户填);不传 = 商户自己
+    #[prost(string, optional, tag = "2")]
+    pub caller: ::core::option::Option<::prost::alloc::string::String>,
+    /// cid 里那台机器人的主人(商户现取的权威值);没主人不传
+    #[prost(string, optional, tag = "3")]
+    pub master: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetHistoryReq {
-    /// cid 已唯一定位会话,不再带 agent
+pub struct GetContextReq {
+    /// cid 已唯一定位会话,不再带 agent。条数按该会话机器人的 qa_num 截
     #[prost(string, optional, tag = "1")]
     pub cid: ::core::option::Option<::prost::alloc::string::String>,
+    /// 同 ClearContextReq
+    #[prost(string, optional, tag = "2")]
+    pub caller: ::core::option::Option<::prost::alloc::string::String>,
+    /// 同 ClearContextReq
+    #[prost(string, optional, tag = "3")]
+    pub master: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 往会话上下文里补一对问答。
 ///
@@ -262,7 +293,7 @@ pub struct GetHistoryReq {
 /// (高频的周期任务就不该往这里补,否则机器人会"只记得自己在提醒吃药,
 /// 不记得主人昨天说过什么")。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct AppendHistoryReq {
+pub struct AppendContextReq {
     #[prost(string, optional, tag = "1")]
     pub cid: ::core::option::Option<::prost::alloc::string::String>,
     /// 摆成"用户问的"那一句,通常是「执行结果查询：\<摘要>」
@@ -271,6 +302,12 @@ pub struct AppendHistoryReq {
     /// 摆成"机器人答的"那一句,即真正要让它记住的内容
     #[prost(string, optional, tag = "3")]
     pub assistant: ::core::option::Option<::prost::alloc::string::String>,
+    /// 同 ClearContextReq
+    #[prost(string, optional, tag = "4")]
+    pub caller: ::core::option::Option<::prost::alloc::string::String>,
+    /// 同 ClearContextReq
+    #[prost(string, optional, tag = "5")]
+    pub master: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Qa {
@@ -282,7 +319,7 @@ pub struct Qa {
     pub q: ::prost::alloc::vec::Vec<Content>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetHistoryResp {
+pub struct GetContextResp {
     #[prost(message, repeated, tag = "1")]
     pub list: ::prost::alloc::vec::Vec<Qa>,
 }
@@ -373,6 +410,13 @@ pub struct ChatReq {
     /// **动钱一律打给 `master`,不打给 `asker`**(NATIVE 内置插件的 withdraw 就是这么写的)。
     #[prost(string, optional, tag = "13")]
     pub master: ::core::option::Option<::prost::alloc::string::String>,
+    /// 调用者 did —— **谁在调这一轮**(商户替它的用户填;club 填登录主体)。不传 = 商户自己。
+    ///
+    /// 与 `asker` 不是一回事:asker 是"这句话是谁说的"(消息事实),caller 是"谁在用这个 cid"(会话归属的判据)。
+    /// 判据见上面 Get/Clear/AppendContext 那段:机器人格式的 cid 只认机器人本人与它的主人(`master`),
+    /// 且 cid 里的机器人必须就是 `agent`;其它 cid 第一个用它的人就是主人。不满足 → NotFound。
+    #[prost(string, optional, tag = "14")]
+    pub caller: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ToolCallResult {
@@ -388,6 +432,10 @@ pub struct ToolCallResultsReq {
     pub id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, repeated, tag = "2")]
     pub list: ::prost::alloc::vec::Vec<ToolCallResult>,
+    /// 调用者 did(同 ChatReq.caller)。**必须与发起这一轮的那个调用者相同**,否则 NotFound ——
+    /// 续跑 id 背后是那一轮的完整消息数组(含上下文),拿到 id 的别人不能接着跑、也不能看到答复。
+    #[prost(string, optional, tag = "3")]
+    pub caller: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ToolSupply {
@@ -626,10 +674,10 @@ pub mod chat_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "NewSession"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn get_history(
+        pub async fn get_context(
             &mut self,
-            request: impl tonic::IntoRequest<super::GetHistoryReq>,
-        ) -> std::result::Result<tonic::Response<super::GetHistoryResp>, tonic::Status> {
+            request: impl tonic::IntoRequest<super::GetContextReq>,
+        ) -> std::result::Result<tonic::Response<super::GetContextResp>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -639,14 +687,14 @@ pub mod chat_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/GetHistory");
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/GetContext");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "GetHistory"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "GetContext"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn clear_history(
+        pub async fn clear_context(
             &mut self,
-            request: impl tonic::IntoRequest<super::ClearHistoryReq>,
+            request: impl tonic::IntoRequest<super::ClearContextReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -657,14 +705,14 @@ pub mod chat_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/ClearHistory");
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/ClearContext");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "ClearHistory"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "ClearContext"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn append_history(
+        pub async fn append_context(
             &mut self,
-            request: impl tonic::IntoRequest<super::AppendHistoryReq>,
+            request: impl tonic::IntoRequest<super::AppendContextReq>,
         ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
             self.inner
                 .ready()
@@ -675,9 +723,9 @@ pub mod chat_client {
                     )
                 })?;
             let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/AppendHistory");
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/AppendContext");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "AppendHistory"));
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "AppendContext"));
             self.inner.unary(req, path, codec).await
         }
         /// ── 对话:一轮 = 一个循环,中途只在"轮到客户端"时返回 ──

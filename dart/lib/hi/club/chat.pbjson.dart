@@ -41,9 +41,9 @@ final $typed_data.Uint8List qADescriptor = $convert.base64Decode(
     'CgJRQRIkCgFxGAEgAygLMhAuaGkuY2x1Yi5Db250ZW50QgSQtRgCUgFxEhcKAWEYAiABKAlCBJ'
     'C1GANIAFIBYYgBAToEmLUYA0IECgJfYQ==');
 
-@$core.Deprecated('Use getHistoryRespDescriptor instead')
-const GetHistoryResp$json = {
-  '1': 'GetHistoryResp',
+@$core.Deprecated('Use getContextRespDescriptor instead')
+const GetContextResp$json = {
+  '1': 'GetContextResp',
   '2': [
     {
       '1': 'list',
@@ -58,10 +58,69 @@ const GetHistoryResp$json = {
   '7': {},
 };
 
-/// Descriptor for `GetHistoryResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getHistoryRespDescriptor = $convert.base64Decode(
-    'Cg5HZXRIaXN0b3J5UmVzcBIlCgRsaXN0GAEgAygLMgsuaGkuY2x1Yi5RQUIEkLUYA1IEbGlzdD'
+/// Descriptor for `GetContextResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getContextRespDescriptor = $convert.base64Decode(
+    'Cg5HZXRDb250ZXh0UmVzcBIlCgRsaXN0GAEgAygLMgsuaGkuY2x1Yi5RQUIEkLUYA1IEbGlzdD'
     'oEmLUYAw==');
+
+@$core.Deprecated('Use getContextReqDescriptor instead')
+const GetContextReq$json = {
+  '1': 'GetContextReq',
+  '2': [
+    {'1': 'cid', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'cid', '17': true},
+  ],
+  '8': [
+    {'1': '_cid'},
+  ],
+};
+
+/// Descriptor for `GetContextReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getContextReqDescriptor = $convert.base64Decode(
+    'Cg1HZXRDb250ZXh0UmVxEhUKA2NpZBgBIAEoCUgAUgNjaWSIAQFCBgoEX2NpZA==');
+
+@$core.Deprecated('Use clearContextReqDescriptor instead')
+const ClearContextReq$json = {
+  '1': 'ClearContextReq',
+  '2': [
+    {'1': 'cid', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'cid', '17': true},
+  ],
+  '8': [
+    {'1': '_cid'},
+  ],
+};
+
+/// Descriptor for `ClearContextReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List clearContextReqDescriptor = $convert.base64Decode(
+    'Cg9DbGVhckNvbnRleHRSZXESFQoDY2lkGAEgASgJSABSA2NpZIgBAUIGCgRfY2lk');
+
+@$core.Deprecated('Use appendContextReqDescriptor instead')
+const AppendContextReq$json = {
+  '1': 'AppendContextReq',
+  '2': [
+    {'1': 'cid', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'cid', '17': true},
+    {'1': 'user', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'user', '17': true},
+    {
+      '1': 'assistant',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '9': 2,
+      '10': 'assistant',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_cid'},
+    {'1': '_user'},
+    {'1': '_assistant'},
+  ],
+};
+
+/// Descriptor for `AppendContextReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List appendContextReqDescriptor = $convert.base64Decode(
+    'ChBBcHBlbmRDb250ZXh0UmVxEhUKA2NpZBgBIAEoCUgAUgNjaWSIAQESFwoEdXNlchgCIAEoCU'
+    'gBUgR1c2VyiAEBEiEKCWFzc2lzdGFudBgDIAEoCUgCUglhc3Npc3RhbnSIAQFCBgoEX2NpZEIH'
+    'CgVfdXNlckIMCgpfYXNzaXN0YW50');
 
 @$core.Deprecated('Use chatReqDescriptor instead')
 const ChatReq$json = {

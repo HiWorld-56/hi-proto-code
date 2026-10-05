@@ -137,49 +137,74 @@ class NewSessionResp extends $pb.GeneratedMessage {
   void clearCid() => $_clearField(1);
 }
 
-class ClearHistoryReq extends $pb.GeneratedMessage {
-  factory ClearHistoryReq({
+/// ── 上下文(context):喂给模型的那几组问答,**不是聊天记录(history)** ─────────────
+///
+/// 二者是两件不相关的事:
+///   · **上下文**在 hi-ai(redis,按 cid 存 QA 成对,最多 30 对、30 天滑动过期),只用于推理;
+///   · **聊天记录**在 hi-club(消息时间线,`Group.ListMessages` / `Group.ListRecentMessages`),给人看、给插件读。
+/// 所以这组方法叫 Get/Clear/AppendContext(曾一度叫 *History,已改回来)。
+///
+/// ── 谁能碰哪个 cid(Get/Clear/AppendContext 与 Converse*/Resume* 同一条规则)──────────
+///
+/// 「调用者」= `caller`(商户替它的用户填,club 填的是登录主体);**不传 = 商户自己**(hiai-web、商户 apikey)。
+///   · **机器人格式的 cid** —— `hiclub:embedded:<机器人>` / `hiclub:single:<对方>:<机器人>` / `hiclub:group:<群>:<机器人>`,
+///     **最后一段是机器人**:该机器人须是本商户的 agent,且调用者 == 该机器人,或 `master` 有值且调用者 == master。
+///     以 `hiclub:` 开头却不是这三种形状的 → InvalidArgument。
+///   · **其它 cid**(`NewSession` 发的 uuid,web / app 与助手对话用)—— **第一个用它的调用者就是它的主人**,
+///     此后只认他(归属记录与上下文同 TTL,随对话顶回)。
+///   · 不满足 → **NotFound**「会话不存在」(不替人确认别人的会话存在)。
+///
+/// ⚠️ `caller` / `master` 是**商户替用户说的话**,hi-ai 信商户、不信用户 —— 所以 hi.club 的同名入参
+///    **故意没有**这两个字段(club 用自己的 Req 类型,由服务端按登录主体与 masterOf 现填)。
+class ClearContextReq extends $pb.GeneratedMessage {
+  factory ClearContextReq({
     $core.String? cid,
+    $core.String? caller,
+    $core.String? master,
   }) {
     final result = create();
     if (cid != null) result.cid = cid;
+    if (caller != null) result.caller = caller;
+    if (master != null) result.master = master;
     return result;
   }
 
-  ClearHistoryReq._();
+  ClearContextReq._();
 
-  factory ClearHistoryReq.fromBuffer($core.List<$core.int> data,
+  factory ClearContextReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ClearHistoryReq.fromJson($core.String json,
+  factory ClearContextReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ClearHistoryReq',
+      _omitMessageNames ? '' : 'ClearContextReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'cid')
+    ..aOS(2, _omitFieldNames ? '' : 'caller')
+    ..aOS(3, _omitFieldNames ? '' : 'master')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ClearHistoryReq clone() => deepCopy();
+  ClearContextReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ClearHistoryReq copyWith(void Function(ClearHistoryReq) updates) =>
-      super.copyWith((message) => updates(message as ClearHistoryReq))
-          as ClearHistoryReq;
+  ClearContextReq copyWith(void Function(ClearContextReq) updates) =>
+      super.copyWith((message) => updates(message as ClearContextReq))
+          as ClearContextReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ClearHistoryReq create() => ClearHistoryReq._();
+  static ClearContextReq create() => ClearContextReq._();
   @$core.override
-  ClearHistoryReq createEmptyInstance() => create();
+  ClearContextReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static ClearHistoryReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ClearHistoryReq>(create);
-  static ClearHistoryReq? _defaultInstance;
+  static ClearContextReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ClearContextReq>(create);
+  static ClearContextReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get cid => $_getSZ(0);
@@ -189,51 +214,75 @@ class ClearHistoryReq extends $pb.GeneratedMessage {
   $core.bool hasCid() => $_has(0);
   @$pb.TagNumber(1)
   void clearCid() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get caller => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set caller($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasCaller() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearCaller() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get master => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set master($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasMaster() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearMaster() => $_clearField(3);
 }
 
-class GetHistoryReq extends $pb.GeneratedMessage {
-  factory GetHistoryReq({
+class GetContextReq extends $pb.GeneratedMessage {
+  factory GetContextReq({
     $core.String? cid,
+    $core.String? caller,
+    $core.String? master,
   }) {
     final result = create();
     if (cid != null) result.cid = cid;
+    if (caller != null) result.caller = caller;
+    if (master != null) result.master = master;
     return result;
   }
 
-  GetHistoryReq._();
+  GetContextReq._();
 
-  factory GetHistoryReq.fromBuffer($core.List<$core.int> data,
+  factory GetContextReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory GetHistoryReq.fromJson($core.String json,
+  factory GetContextReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetHistoryReq',
+      _omitMessageNames ? '' : 'GetContextReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'cid')
+    ..aOS(2, _omitFieldNames ? '' : 'caller')
+    ..aOS(3, _omitFieldNames ? '' : 'master')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetHistoryReq clone() => deepCopy();
+  GetContextReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetHistoryReq copyWith(void Function(GetHistoryReq) updates) =>
-      super.copyWith((message) => updates(message as GetHistoryReq))
-          as GetHistoryReq;
+  GetContextReq copyWith(void Function(GetContextReq) updates) =>
+      super.copyWith((message) => updates(message as GetContextReq))
+          as GetContextReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static GetHistoryReq create() => GetHistoryReq._();
+  static GetContextReq create() => GetContextReq._();
   @$core.override
-  GetHistoryReq createEmptyInstance() => create();
+  GetContextReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static GetHistoryReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetHistoryReq>(create);
-  static GetHistoryReq? _defaultInstance;
+  static GetContextReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetContextReq>(create);
+  static GetContextReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get cid => $_getSZ(0);
@@ -243,6 +292,24 @@ class GetHistoryReq extends $pb.GeneratedMessage {
   $core.bool hasCid() => $_has(0);
   @$pb.TagNumber(1)
   void clearCid() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get caller => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set caller($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasCaller() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearCaller() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get master => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set master($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasMaster() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearMaster() => $_clearField(3);
 }
 
 /// 往会话上下文里补一对问答。
@@ -257,55 +324,61 @@ class GetHistoryReq extends $pb.GeneratedMessage {
 /// ⚠️ 上下文只保留最近 30 对,补进来的会挤掉最老的 —— 所以**别拿它记流水账**
 /// (高频的周期任务就不该往这里补,否则机器人会"只记得自己在提醒吃药,
 ///  不记得主人昨天说过什么")。
-class AppendHistoryReq extends $pb.GeneratedMessage {
-  factory AppendHistoryReq({
+class AppendContextReq extends $pb.GeneratedMessage {
+  factory AppendContextReq({
     $core.String? cid,
     $core.String? user,
     $core.String? assistant,
+    $core.String? caller,
+    $core.String? master,
   }) {
     final result = create();
     if (cid != null) result.cid = cid;
     if (user != null) result.user = user;
     if (assistant != null) result.assistant = assistant;
+    if (caller != null) result.caller = caller;
+    if (master != null) result.master = master;
     return result;
   }
 
-  AppendHistoryReq._();
+  AppendContextReq._();
 
-  factory AppendHistoryReq.fromBuffer($core.List<$core.int> data,
+  factory AppendContextReq.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory AppendHistoryReq.fromJson($core.String json,
+  factory AppendContextReq.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'AppendHistoryReq',
+      _omitMessageNames ? '' : 'AppendContextReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'cid')
     ..aOS(2, _omitFieldNames ? '' : 'user')
     ..aOS(3, _omitFieldNames ? '' : 'assistant')
+    ..aOS(4, _omitFieldNames ? '' : 'caller')
+    ..aOS(5, _omitFieldNames ? '' : 'master')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  AppendHistoryReq clone() => deepCopy();
+  AppendContextReq clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  AppendHistoryReq copyWith(void Function(AppendHistoryReq) updates) =>
-      super.copyWith((message) => updates(message as AppendHistoryReq))
-          as AppendHistoryReq;
+  AppendContextReq copyWith(void Function(AppendContextReq) updates) =>
+      super.copyWith((message) => updates(message as AppendContextReq))
+          as AppendContextReq;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static AppendHistoryReq create() => AppendHistoryReq._();
+  static AppendContextReq create() => AppendContextReq._();
   @$core.override
-  AppendHistoryReq createEmptyInstance() => create();
+  AppendContextReq createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static AppendHistoryReq getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<AppendHistoryReq>(create);
-  static AppendHistoryReq? _defaultInstance;
+  static AppendContextReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<AppendContextReq>(create);
+  static AppendContextReq? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get cid => $_getSZ(0);
@@ -333,6 +406,24 @@ class AppendHistoryReq extends $pb.GeneratedMessage {
   $core.bool hasAssistant() => $_has(2);
   @$pb.TagNumber(3)
   void clearAssistant() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get caller => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set caller($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasCaller() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearCaller() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get master => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set master($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasMaster() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearMaster() => $_clearField(5);
 }
 
 class QA extends $pb.GeneratedMessage {
@@ -394,8 +485,8 @@ class QA extends $pb.GeneratedMessage {
   $pb.PbList<Content> get q => $_getList(1);
 }
 
-class GetHistoryResp extends $pb.GeneratedMessage {
-  factory GetHistoryResp({
+class GetContextResp extends $pb.GeneratedMessage {
+  factory GetContextResp({
     $core.Iterable<QA>? list,
   }) {
     final result = create();
@@ -403,40 +494,40 @@ class GetHistoryResp extends $pb.GeneratedMessage {
     return result;
   }
 
-  GetHistoryResp._();
+  GetContextResp._();
 
-  factory GetHistoryResp.fromBuffer($core.List<$core.int> data,
+  factory GetContextResp.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory GetHistoryResp.fromJson($core.String json,
+  factory GetContextResp.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetHistoryResp',
+      _omitMessageNames ? '' : 'GetContextResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
       createEmptyInstance: create)
     ..pPM<QA>(1, _omitFieldNames ? '' : 'list', subBuilder: QA.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetHistoryResp clone() => deepCopy();
+  GetContextResp clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetHistoryResp copyWith(void Function(GetHistoryResp) updates) =>
-      super.copyWith((message) => updates(message as GetHistoryResp))
-          as GetHistoryResp;
+  GetContextResp copyWith(void Function(GetContextResp) updates) =>
+      super.copyWith((message) => updates(message as GetContextResp))
+          as GetContextResp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static GetHistoryResp create() => GetHistoryResp._();
+  static GetContextResp create() => GetContextResp._();
   @$core.override
-  GetHistoryResp createEmptyInstance() => create();
+  GetContextResp createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static GetHistoryResp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetHistoryResp>(create);
-  static GetHistoryResp? _defaultInstance;
+  static GetContextResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetContextResp>(create);
+  static GetContextResp? _defaultInstance;
 
   @$pb.TagNumber(1)
   $pb.PbList<QA> get list => $_getList(0);
@@ -470,6 +561,7 @@ class ChatReq extends $pb.GeneratedMessage {
     $core.bool? echoContext,
     $core.String? asker,
     $core.String? master,
+    $core.String? caller,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
@@ -485,6 +577,7 @@ class ChatReq extends $pb.GeneratedMessage {
     if (echoContext != null) result.echoContext = echoContext;
     if (asker != null) result.asker = asker;
     if (master != null) result.master = master;
+    if (caller != null) result.caller = caller;
     return result;
   }
 
@@ -516,6 +609,7 @@ class ChatReq extends $pb.GeneratedMessage {
     ..aOB(11, _omitFieldNames ? '' : 'echoContext')
     ..aOS(12, _omitFieldNames ? '' : 'asker')
     ..aOS(13, _omitFieldNames ? '' : 'master')
+    ..aOS(14, _omitFieldNames ? '' : 'caller')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -672,6 +766,20 @@ class ChatReq extends $pb.GeneratedMessage {
   $core.bool hasMaster() => $_has(12);
   @$pb.TagNumber(13)
   void clearMaster() => $_clearField(13);
+
+  /// 调用者 did —— **谁在调这一轮**(商户替它的用户填;club 填登录主体)。不传 = 商户自己。
+  ///
+  /// 与 `asker` 不是一回事:asker 是"这句话是谁说的"(消息事实),caller 是"谁在用这个 cid"(会话归属的判据)。
+  /// 判据见上面 Get/Clear/AppendContext 那段:机器人格式的 cid 只认机器人本人与它的主人(`master`),
+  /// 且 cid 里的机器人必须就是 `agent`;其它 cid 第一个用它的人就是主人。不满足 → NotFound。
+  @$pb.TagNumber(14)
+  $core.String get caller => $_getSZ(13);
+  @$pb.TagNumber(14)
+  set caller($core.String value) => $_setString(13, value);
+  @$pb.TagNumber(14)
+  $core.bool hasCaller() => $_has(13);
+  @$pb.TagNumber(14)
+  void clearCaller() => $_clearField(14);
 }
 
 class ToolCallResult extends $pb.GeneratedMessage {
@@ -740,10 +848,12 @@ class ToolCallResultsReq extends $pb.GeneratedMessage {
   factory ToolCallResultsReq({
     $core.String? id,
     $core.Iterable<ToolCallResult>? list,
+    $core.String? caller,
   }) {
     final result = create();
     if (id != null) result.id = id;
     if (list != null) result.list.addAll(list);
+    if (caller != null) result.caller = caller;
     return result;
   }
 
@@ -763,6 +873,7 @@ class ToolCallResultsReq extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'id')
     ..pPM<ToolCallResult>(2, _omitFieldNames ? '' : 'list',
         subBuilder: ToolCallResult.create)
+    ..aOS(3, _omitFieldNames ? '' : 'caller')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -795,6 +906,17 @@ class ToolCallResultsReq extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(2)
   $pb.PbList<ToolCallResult> get list => $_getList(1);
+
+  /// 调用者 did(同 ChatReq.caller)。**必须与发起这一轮的那个调用者相同**,否则 NotFound ——
+  /// 续跑 id 背后是那一轮的完整消息数组(含上下文),拿到 id 的别人不能接着跑、也不能看到答复。
+  @$pb.TagNumber(3)
+  $core.String get caller => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set caller($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasCaller() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearCaller() => $_clearField(3);
 }
 
 class ToolSupply_Function extends $pb.GeneratedMessage {

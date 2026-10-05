@@ -298,6 +298,86 @@ final $typed_data.Uint8List listGroupMessagesRespDescriptor = $convert.base64Dec
     'ChVMaXN0R3JvdXBNZXNzYWdlc1Jlc3ASKQoEbGlzdBgBIAMoCzIPLmhpLmNsdWIuUGFja2V0Qg'
     'SQtRgCUgRsaXN0OgSYtRgC');
 
+@$core.Deprecated('Use listRecentMessagesReqDescriptor instead')
+const ListRecentMessagesReq$json = {
+  '1': 'ListRecentMessagesReq',
+  '2': [
+    {'1': 'code', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'code', '17': true},
+    {'1': 'peer', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'peer', '17': true},
+    {'1': 'limit', '3': 3, '4': 1, '5': 5, '9': 2, '10': 'limit', '17': true},
+  ],
+  '8': [
+    {'1': '_code'},
+    {'1': '_peer'},
+    {'1': '_limit'},
+  ],
+};
+
+/// Descriptor for `ListRecentMessagesReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listRecentMessagesReqDescriptor = $convert.base64Decode(
+    'ChVMaXN0UmVjZW50TWVzc2FnZXNSZXESFwoEY29kZRgBIAEoCUgAUgRjb2RliAEBEhcKBHBlZX'
+    'IYAiABKAlIAVIEcGVlcogBARIZCgVsaW1pdBgDIAEoBUgCUgVsaW1pdIgBAUIHCgVfY29kZUIH'
+    'CgVfcGVlckIICgZfbGltaXQ=');
+
+@$core.Deprecated('Use listRecentMessagesRespDescriptor instead')
+const ListRecentMessagesResp$json = {
+  '1': 'ListRecentMessagesResp',
+  '2': [
+    {
+      '1': 'list',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.club.Packet',
+      '8': {},
+      '10': 'list'
+    },
+    {
+      '1': 'code',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'code',
+      '17': true
+    },
+    {
+      '1': 'limit',
+      '3': 3,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '9': 1,
+      '10': 'limit',
+      '17': true
+    },
+    {
+      '1': 'capped',
+      '3': 4,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 2,
+      '10': 'capped',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_code'},
+    {'1': '_limit'},
+    {'1': '_capped'},
+  ],
+};
+
+/// Descriptor for `ListRecentMessagesResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listRecentMessagesRespDescriptor = $convert.base64Decode(
+    'ChZMaXN0UmVjZW50TWVzc2FnZXNSZXNwEikKBGxpc3QYASADKAsyDy5oaS5jbHViLlBhY2tldE'
+    'IEkLUYAlIEbGlzdBIdCgRjb2RlGAIgASgJQgSQtRgCSABSBGNvZGWIAQESHwoFbGltaXQYAyAB'
+    'KAVCBJC1GAJIAVIFbGltaXSIAQESIQoGY2FwcGVkGAQgASgIQgSQtRgCSAJSBmNhcHBlZIgBAT'
+    'oEmLUYAkIHCgVfY29kZUIICgZfbGltaXRCCQoHX2NhcHBlZA==');
+
 @$core.Deprecated('Use listGroupMembersReqDescriptor instead')
 const ListGroupMembersReq$json = {
   '1': 'ListGroupMembersReq',
