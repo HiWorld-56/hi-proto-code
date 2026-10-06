@@ -28,12 +28,14 @@ class LuaCtx extends $pb.GeneratedMessage {
     $core.String? master,
     $core.String? asker,
     $core.int? dark,
+    $core.Iterable<LuaAttachment>? attachments,
   }) {
     final result = create();
     if (me != null) result.me = me;
     if (master != null) result.master = master;
     if (asker != null) result.asker = asker;
     if (dark != null) result.dark = dark;
+    if (attachments != null) result.attachments.addAll(attachments);
     return result;
   }
 
@@ -54,6 +56,8 @@ class LuaCtx extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'master')
     ..aOS(3, _omitFieldNames ? '' : 'asker')
     ..aI(4, _omitFieldNames ? '' : 'dark', fieldType: $pb.PbFieldType.OU3)
+    ..pPM<LuaAttachment>(5, _omitFieldNames ? '' : 'attachments',
+        subBuilder: LuaAttachment.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -112,6 +116,97 @@ class LuaCtx extends $pb.GeneratedMessage {
   $core.bool hasDark() => $_has(3);
   @$pb.TagNumber(4)
   void clearDark() => $_clearField(4);
+
+  /// 引起这次调用的那条消息里带的**媒体**(图片 / 语音 / 文件),按在消息里的先后。
+  /// 脚本里是 `ctx.attachments`(数组,`{type, url, name}`);消息没带媒体就是空数组。
+  ///
+  /// 为什么要给插件:模型看到的图是内联进请求的图片数据(hi.ai 把 url 换成了 base64),
+  /// **它手上没有这张图的地址**。让它把「主人发来的这张图」转给别人,它只能编一个 url ——
+  /// 生产实测(2026-10-06)编出的是 `files.oaiusercontent.com/...`,收件人看到一张裂图。
+  /// 地址是 brain 从消息里拿到的,插件按序号取(「第 1 张图」),不经模型的手。
+  /// 与 `.so` 插件那侧 SDK 的 `Ctx.attachments` 同形。
+  @$pb.TagNumber(5)
+  $pb.PbList<LuaAttachment> get attachments => $_getList(4);
+}
+
+/// LuaAttachment 消息里的一段媒体。`type` 取 hi.club.Content.type 那张表里的词
+/// (`image_url` / `audio_url` / `file`),`url` 是那一段 chat.content 原样。
+class LuaAttachment extends $pb.GeneratedMessage {
+  factory LuaAttachment({
+    $core.String? type,
+    $core.String? url,
+    $core.String? name,
+  }) {
+    final result = create();
+    if (type != null) result.type = type;
+    if (url != null) result.url = url;
+    if (name != null) result.name = name;
+    return result;
+  }
+
+  LuaAttachment._();
+
+  factory LuaAttachment.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory LuaAttachment.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'LuaAttachment',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'type')
+    ..aOS(2, _omitFieldNames ? '' : 'url')
+    ..aOS(3, _omitFieldNames ? '' : 'name')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  LuaAttachment clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  LuaAttachment copyWith(void Function(LuaAttachment) updates) =>
+      super.copyWith((message) => updates(message as LuaAttachment))
+          as LuaAttachment;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static LuaAttachment create() => LuaAttachment._();
+  @$core.override
+  LuaAttachment createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static LuaAttachment getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<LuaAttachment>(create);
+  static LuaAttachment? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get type => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set type($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasType() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearType() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get url => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set url($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasUrl() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUrl() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get name => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set name($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasName() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearName() => $_clearField(3);
 }
 
 /// OpenReq 装一个插件：跑一遍顶层，读出 contract 与 manifest。
