@@ -2837,6 +2837,112 @@ func (*BinanceFuturesPnl) Descriptor() ([]byte, []int) {
 	return file_hi_binance_binance_proto_rawDescGZIP(), []int{35}
 }
 
+// **现货:撤掉所有交易对上的全部挂单**(普通委托 + OCO / OTO 等组合单,含 bStocks)。**没有参数**。
+// **不是币安的一个接口**:币安的「撤全部」(`DELETE /api/v3/openOrders`)必须给交易对,没有不分交易对的撤法。
+// 所以由机器人在自己那边做完:
+//
+//  1. 列出现在挂着的:`GET /api/v3/openOrders`(不给交易对 = 全部)+ `GET /api/v3/openOrderList`(组合单),
+//     **当场问币安**,不用快照(快照里没有别处刚挂的单);两条有一条没取到就**一张都不撤**,原样回那一次的结果;
+//  2. 有挂单的每个交易对各发一次 `DELETE /api/v3/openOrders`(连同它上面的组合单);
+//     **某个交易对没撤成不停**,接着撤下一个,失败的逐个记下;
+//  3. 账户快照作废(与其它写操作同一个时机)。
+//
+// 结果在 `BinanceResult.body`(`http_status` = 200),是**机器人写的 JSON**(不是币安原文):
+//
+//	{ "symbols": [ { "symbol": "BNBUSDT", "orders": 6, "order_lists": 2 },
+//	               { "symbol": "ETHUSDT", "failed": [ { "kind": "orders", "http_status": 429,
+//	                                                    "code": -1003, "msg": "…" } ] } ] }
+//
+//	symbols      列表里挂着单的每个交易对一项(空列表 = 一张挂单都没有,什么都没撤)
+//	orders       撤掉的委托张数(组合单的每条腿各算一张;按币安撤单回包里的数,不是列出来的数)
+//	order_lists  其中组合单的组数
+//	algo_orders  (合约)撤掉的止盈止损单(条件单)张数
+//	failed       这一项里没撤成的那几类:`kind` = orders / algo_orders;
+//	             发出去了被拒 → `http_status` + 币安的 `code` / `msg`;没发出去 → 只有 `msg`(人话)
+//
+// 某一类撤成了才带它的数;没撤成的那一类只出现在 `failed` 里。币安回「订单不存在」(-2011:列出来之后、撤之前
+// 已经成交或被撤)算撤成,数是 0。
+type BinanceSpotCancelAllSymbols struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BinanceSpotCancelAllSymbols) Reset() {
+	*x = BinanceSpotCancelAllSymbols{}
+	mi := &file_hi_binance_binance_proto_msgTypes[36]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BinanceSpotCancelAllSymbols) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BinanceSpotCancelAllSymbols) ProtoMessage() {}
+
+func (x *BinanceSpotCancelAllSymbols) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_binance_binance_proto_msgTypes[36]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BinanceSpotCancelAllSymbols.ProtoReflect.Descriptor instead.
+func (*BinanceSpotCancelAllSymbols) Descriptor() ([]byte, []int) {
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{36}
+}
+
+// **U 本位合约:撤掉所有交易对上的全部挂单**(普通委托 + 止盈止损单(条件单);TradFi 永续在同一个合约账户里,一并撤)。
+// **没有参数**。币安的两个「撤全部」(`DELETE /fapi/v1/allOpenOrders`、`DELETE /fapi/v1/algoOpenOrders`)都必须给交易对。
+//
+// 做法、结果的 JSON 与 `BinanceSpotCancelAllSymbols` 相同,只是:
+//
+//	· 列的是 `GET /fapi/v1/openOrders` + `GET /fapi/v1/openAlgoOrders`(都不给交易对);
+//	· 每个交易对有普通委托就发 `allOpenOrders`、有条件单就发 `algoOpenOrders`,两类各自成败;
+//	· 币安这两个撤单回包不列出撤了哪些(只回 `{"code":200,…}`),**数是撤之前列出来的张数**;
+//	  没有 `order_lists`。
+type BinanceFuturesCancelAllSymbols struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BinanceFuturesCancelAllSymbols) Reset() {
+	*x = BinanceFuturesCancelAllSymbols{}
+	mi := &file_hi_binance_binance_proto_msgTypes[37]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BinanceFuturesCancelAllSymbols) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BinanceFuturesCancelAllSymbols) ProtoMessage() {}
+
+func (x *BinanceFuturesCancelAllSymbols) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_binance_binance_proto_msgTypes[37]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BinanceFuturesCancelAllSymbols.ProtoReflect.Descriptor instead.
+func (*BinanceFuturesCancelAllSymbols) Descriptor() ([]byte, []int) {
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{37}
+}
+
 // 签 **TradFi 永续合约协议**。`POST /fapi/v1/stock/contract`
 //
 // 股票、商品、外汇这类永续(`contractType == TRADIFI_PERPETUAL`)**要先签才能交易**;查询不用签。
@@ -2852,7 +2958,7 @@ type BinanceFuturesSignTradfiContract struct {
 
 func (x *BinanceFuturesSignTradfiContract) Reset() {
 	*x = BinanceFuturesSignTradfiContract{}
-	mi := &file_hi_binance_binance_proto_msgTypes[36]
+	mi := &file_hi_binance_binance_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2864,7 +2970,7 @@ func (x *BinanceFuturesSignTradfiContract) String() string {
 func (*BinanceFuturesSignTradfiContract) ProtoMessage() {}
 
 func (x *BinanceFuturesSignTradfiContract) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[36]
+	mi := &file_hi_binance_binance_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2877,7 +2983,7 @@ func (x *BinanceFuturesSignTradfiContract) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceFuturesSignTradfiContract.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesSignTradfiContract) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{36}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{38}
 }
 
 // 各钱包的余额(现货、资金、合约、理财…,每个钱包带逐币明细)。`GET /sapi/v1/asset/wallet/balance`
@@ -2893,7 +2999,7 @@ type BinanceWalletBalance struct {
 
 func (x *BinanceWalletBalance) Reset() {
 	*x = BinanceWalletBalance{}
-	mi := &file_hi_binance_binance_proto_msgTypes[37]
+	mi := &file_hi_binance_binance_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2905,7 +3011,7 @@ func (x *BinanceWalletBalance) String() string {
 func (*BinanceWalletBalance) ProtoMessage() {}
 
 func (x *BinanceWalletBalance) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[37]
+	mi := &file_hi_binance_binance_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2918,7 +3024,7 @@ func (x *BinanceWalletBalance) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceWalletBalance.ProtoReflect.Descriptor instead.
 func (*BinanceWalletBalance) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{37}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{39}
 }
 
 // 一次币安操作的结果。装在**消息**里回到指令来的那个会话:
@@ -2956,7 +3062,7 @@ type BinanceResult struct {
 
 func (x *BinanceResult) Reset() {
 	*x = BinanceResult{}
-	mi := &file_hi_binance_binance_proto_msgTypes[38]
+	mi := &file_hi_binance_binance_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2968,7 +3074,7 @@ func (x *BinanceResult) String() string {
 func (*BinanceResult) ProtoMessage() {}
 
 func (x *BinanceResult) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[38]
+	mi := &file_hi_binance_binance_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2981,7 +3087,7 @@ func (x *BinanceResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceResult.ProtoReflect.Descriptor instead.
 func (*BinanceResult) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{38}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *BinanceResult) GetRequest() string {
@@ -3054,7 +3160,7 @@ type BinanceRoi struct {
 
 func (x *BinanceRoi) Reset() {
 	*x = BinanceRoi{}
-	mi := &file_hi_binance_binance_proto_msgTypes[39]
+	mi := &file_hi_binance_binance_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3066,7 +3172,7 @@ func (x *BinanceRoi) String() string {
 func (*BinanceRoi) ProtoMessage() {}
 
 func (x *BinanceRoi) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[39]
+	mi := &file_hi_binance_binance_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3079,7 +3185,7 @@ func (x *BinanceRoi) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceRoi.ProtoReflect.Descriptor instead.
 func (*BinanceRoi) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{39}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *BinanceRoi) GetAge() uint32 {
@@ -3142,7 +3248,7 @@ type BinanceHoldings struct {
 
 func (x *BinanceHoldings) Reset() {
 	*x = BinanceHoldings{}
-	mi := &file_hi_binance_binance_proto_msgTypes[40]
+	mi := &file_hi_binance_binance_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3154,7 +3260,7 @@ func (x *BinanceHoldings) String() string {
 func (*BinanceHoldings) ProtoMessage() {}
 
 func (x *BinanceHoldings) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[40]
+	mi := &file_hi_binance_binance_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3167,7 +3273,7 @@ func (x *BinanceHoldings) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceHoldings.ProtoReflect.Descriptor instead.
 func (*BinanceHoldings) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{40}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *BinanceHoldings) GetFutures() *BinanceHeld {
@@ -3197,7 +3303,7 @@ type BinanceHeld struct {
 
 func (x *BinanceHeld) Reset() {
 	*x = BinanceHeld{}
-	mi := &file_hi_binance_binance_proto_msgTypes[41]
+	mi := &file_hi_binance_binance_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3209,7 +3315,7 @@ func (x *BinanceHeld) String() string {
 func (*BinanceHeld) ProtoMessage() {}
 
 func (x *BinanceHeld) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[41]
+	mi := &file_hi_binance_binance_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3222,7 +3328,7 @@ func (x *BinanceHeld) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceHeld.ProtoReflect.Descriptor instead.
 func (*BinanceHeld) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{41}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *BinanceHeld) GetAge() uint32 {
@@ -3568,7 +3674,9 @@ const file_hi_binance_binance_proto_rawDesc = "" +
 	"\v_start_timeB\v\n" +
 	"\t_end_timeB\b\n" +
 	"\x06_limit\"\x19\n" +
-	"\x11BinanceFuturesPnl:\x04\x98\xb5\x18\x02\"(\n" +
+	"\x11BinanceFuturesPnl:\x04\x98\xb5\x18\x02\"#\n" +
+	"\x1bBinanceSpotCancelAllSymbols:\x04\x98\xb5\x18\x02\"&\n" +
+	"\x1eBinanceFuturesCancelAllSymbols:\x04\x98\xb5\x18\x02\"(\n" +
 	" BinanceFuturesSignTradfiContract:\x04\x98\xb5\x18\x02\"\x1c\n" +
 	"\x14BinanceWalletBalance:\x04\x98\xb5\x18\x02\"\xf9\x02\n" +
 	"\rBinanceResult\x12#\n" +
@@ -3667,7 +3775,7 @@ func file_hi_binance_binance_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_binance_binance_proto_enumTypes = make([]protoimpl.EnumInfo, 7)
-var file_hi_binance_binance_proto_msgTypes = make([]protoimpl.MessageInfo, 42)
+var file_hi_binance_binance_proto_msgTypes = make([]protoimpl.MessageInfo, 44)
 var file_hi_binance_binance_proto_goTypes = []any{
 	(BinanceOrderSide)(0),                     // 0: hi.binance.BinanceOrderSide
 	(BinanceOrderType)(0),                     // 1: hi.binance.BinanceOrderType
@@ -3712,12 +3820,14 @@ var file_hi_binance_binance_proto_goTypes = []any{
 	(*BinanceFuturesAllAlgoOrders)(nil),       // 40: hi.binance.BinanceFuturesAllAlgoOrders
 	(*BinanceFuturesIncome)(nil),              // 41: hi.binance.BinanceFuturesIncome
 	(*BinanceFuturesPnl)(nil),                 // 42: hi.binance.BinanceFuturesPnl
-	(*BinanceFuturesSignTradfiContract)(nil),  // 43: hi.binance.BinanceFuturesSignTradfiContract
-	(*BinanceWalletBalance)(nil),              // 44: hi.binance.BinanceWalletBalance
-	(*BinanceResult)(nil),                     // 45: hi.binance.BinanceResult
-	(*BinanceRoi)(nil),                        // 46: hi.binance.BinanceRoi
-	(*BinanceHoldings)(nil),                   // 47: hi.binance.BinanceHoldings
-	(*BinanceHeld)(nil),                       // 48: hi.binance.BinanceHeld
+	(*BinanceSpotCancelAllSymbols)(nil),       // 43: hi.binance.BinanceSpotCancelAllSymbols
+	(*BinanceFuturesCancelAllSymbols)(nil),    // 44: hi.binance.BinanceFuturesCancelAllSymbols
+	(*BinanceFuturesSignTradfiContract)(nil),  // 45: hi.binance.BinanceFuturesSignTradfiContract
+	(*BinanceWalletBalance)(nil),              // 46: hi.binance.BinanceWalletBalance
+	(*BinanceResult)(nil),                     // 47: hi.binance.BinanceResult
+	(*BinanceRoi)(nil),                        // 48: hi.binance.BinanceRoi
+	(*BinanceHoldings)(nil),                   // 49: hi.binance.BinanceHoldings
+	(*BinanceHeld)(nil),                       // 50: hi.binance.BinanceHeld
 }
 var file_hi_binance_binance_proto_depIdxs = []int32{
 	0,  // 0: hi.binance.BinanceSpotNewOrder.side:type_name -> hi.binance.BinanceOrderSide
@@ -3754,10 +3864,10 @@ var file_hi_binance_binance_proto_depIdxs = []int32{
 	6,  // 31: hi.binance.BinanceFuturesNewAlgoOrder.position_side:type_name -> hi.binance.BinancePositionSide
 	5,  // 32: hi.binance.BinanceFuturesNewAlgoOrder.time_in_force:type_name -> hi.binance.BinanceTimeInForce
 	4,  // 33: hi.binance.BinanceFuturesNewAlgoOrder.working_type:type_name -> hi.binance.BinanceWorkingType
-	47, // 34: hi.binance.BinanceResult.held:type_name -> hi.binance.BinanceHoldings
-	46, // 35: hi.binance.BinanceResult.roi:type_name -> hi.binance.BinanceRoi
-	48, // 36: hi.binance.BinanceHoldings.futures:type_name -> hi.binance.BinanceHeld
-	48, // 37: hi.binance.BinanceHoldings.spot:type_name -> hi.binance.BinanceHeld
+	49, // 34: hi.binance.BinanceResult.held:type_name -> hi.binance.BinanceHoldings
+	48, // 35: hi.binance.BinanceResult.roi:type_name -> hi.binance.BinanceRoi
+	50, // 36: hi.binance.BinanceHoldings.futures:type_name -> hi.binance.BinanceHeld
+	50, // 37: hi.binance.BinanceHoldings.spot:type_name -> hi.binance.BinanceHeld
 	38, // [38:38] is the sub-list for method output_type
 	38, // [38:38] is the sub-list for method input_type
 	38, // [38:38] is the sub-list for extension type_name
@@ -3803,17 +3913,17 @@ func file_hi_binance_binance_proto_init() {
 	file_hi_binance_binance_proto_msgTypes[32].OneofWrappers = []any{}
 	file_hi_binance_binance_proto_msgTypes[33].OneofWrappers = []any{}
 	file_hi_binance_binance_proto_msgTypes[34].OneofWrappers = []any{}
-	file_hi_binance_binance_proto_msgTypes[38].OneofWrappers = []any{}
-	file_hi_binance_binance_proto_msgTypes[39].OneofWrappers = []any{}
 	file_hi_binance_binance_proto_msgTypes[40].OneofWrappers = []any{}
 	file_hi_binance_binance_proto_msgTypes[41].OneofWrappers = []any{}
+	file_hi_binance_binance_proto_msgTypes[42].OneofWrappers = []any{}
+	file_hi_binance_binance_proto_msgTypes[43].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_binance_binance_proto_rawDesc), len(file_hi_binance_binance_proto_rawDesc)),
 			NumEnums:      7,
-			NumMessages:   42,
+			NumMessages:   44,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

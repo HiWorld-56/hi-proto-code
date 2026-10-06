@@ -499,6 +499,26 @@ const BinanceCommand$json = {
       '9': 0,
       '10': 'usdsFuturesPnl'
     },
+    {
+      '1': 'spot_cancel_all_symbols',
+      '3': 59,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceSpotCancelAllSymbols',
+      '8': {},
+      '9': 0,
+      '10': 'spotCancelAllSymbols'
+    },
+    {
+      '1': 'usds_futures_cancel_all_symbols',
+      '3': 60,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceFuturesCancelAllSymbols',
+      '8': {},
+      '9': 0,
+      '10': 'usdsFuturesCancelAllSymbols'
+    },
   ],
   '7': {},
   '8': [
@@ -598,4 +618,8 @@ final $typed_data.Uint8List binanceCommandDescriptor = $convert.base64Decode(
     'ChN1c2RzX2Z1dHVyZXNfa2xpbmVzGDkgASgLMiAuaGkuYmluYW5jZS5CaW5hbmNlRnV0dXJlc0'
     'tsaW5lc0IEkLUYAkgAUhF1c2RzRnV0dXJlc0tsaW5lcxJPChB1c2RzX2Z1dHVyZXNfcG5sGDog'
     'ASgLMh0uaGkuYmluYW5jZS5CaW5hbmNlRnV0dXJlc1BubEIEkLUYAkgAUg51c2RzRnV0dXJlc1'
-    'BubDoEmLUYAkILCgJvcBIFukgCCAFCDQoLX2V4cGlyYXRpb24=');
+    'BubBJmChdzcG90X2NhbmNlbF9hbGxfc3ltYm9scxg7IAEoCzInLmhpLmJpbmFuY2UuQmluYW5j'
+    'ZVNwb3RDYW5jZWxBbGxTeW1ib2xzQgSQtRgCSABSFHNwb3RDYW5jZWxBbGxTeW1ib2xzEngKH3'
+    'VzZHNfZnV0dXJlc19jYW5jZWxfYWxsX3N5bWJvbHMYPCABKAsyKi5oaS5iaW5hbmNlLkJpbmFu'
+    'Y2VGdXR1cmVzQ2FuY2VsQWxsU3ltYm9sc0IEkLUYAkgAUht1c2RzRnV0dXJlc0NhbmNlbEFsbF'
+    'N5bWJvbHM6BJi1GAJCCwoCb3ASBbpIAggBQg0KC19leHBpcmF0aW9u');

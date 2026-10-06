@@ -104,6 +104,8 @@ type BinanceCommand struct {
 	//	*BinanceCommand_SpotKlines
 	//	*BinanceCommand_UsdsFuturesKlines
 	//	*BinanceCommand_UsdsFuturesPnl
+	//	*BinanceCommand_SpotCancelAllSymbols
+	//	*BinanceCommand_UsdsFuturesCancelAllSymbols
 	Op            isBinanceCommand_Op `protobuf_oneof:"op"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -576,6 +578,24 @@ func (x *BinanceCommand) GetUsdsFuturesPnl() *BinanceFuturesPnl {
 	return nil
 }
 
+func (x *BinanceCommand) GetSpotCancelAllSymbols() *BinanceSpotCancelAllSymbols {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceCommand_SpotCancelAllSymbols); ok {
+			return x.SpotCancelAllSymbols
+		}
+	}
+	return nil
+}
+
+func (x *BinanceCommand) GetUsdsFuturesCancelAllSymbols() *BinanceFuturesCancelAllSymbols {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceCommand_UsdsFuturesCancelAllSymbols); ok {
+			return x.UsdsFuturesCancelAllSymbols
+		}
+	}
+	return nil
+}
+
 type isBinanceCommand_Op interface {
 	isBinanceCommand_Op()
 }
@@ -770,6 +790,15 @@ type BinanceCommand_UsdsFuturesPnl struct {
 	UsdsFuturesPnl *BinanceFuturesPnl `protobuf:"bytes,58,opt,name=usds_futures_pnl,json=usdsFuturesPnl,proto3,oneof"` // usds_futures.pnl(机器人算的收益率)
 }
 
+type BinanceCommand_SpotCancelAllSymbols struct {
+	// 撤销所有交易对的挂单(币安没有不分交易对的撤法,机器人列出来逐个撤)
+	SpotCancelAllSymbols *BinanceSpotCancelAllSymbols `protobuf:"bytes,59,opt,name=spot_cancel_all_symbols,json=spotCancelAllSymbols,proto3,oneof"` // spot.cancel_all_symbols
+}
+
+type BinanceCommand_UsdsFuturesCancelAllSymbols struct {
+	UsdsFuturesCancelAllSymbols *BinanceFuturesCancelAllSymbols `protobuf:"bytes,60,opt,name=usds_futures_cancel_all_symbols,json=usdsFuturesCancelAllSymbols,proto3,oneof"` // usds_futures.cancel_all_symbols
+}
+
 func (*BinanceCommand_SpotNewOrder) isBinanceCommand_Op() {}
 
 func (*BinanceCommand_SpotCancelOrder) isBinanceCommand_Op() {}
@@ -864,12 +893,16 @@ func (*BinanceCommand_UsdsFuturesKlines) isBinanceCommand_Op() {}
 
 func (*BinanceCommand_UsdsFuturesPnl) isBinanceCommand_Op() {}
 
+func (*BinanceCommand_SpotCancelAllSymbols) isBinanceCommand_Op() {}
+
+func (*BinanceCommand_UsdsFuturesCancelAllSymbols) isBinanceCommand_Op() {}
+
 var File_hi_binance_command_proto protoreflect.FileDescriptor
 
 const file_hi_binance_command_proto_rawDesc = "" +
 	"\n" +
 	"\x18hi/binance/command.proto\x12\n" +
-	"hi.binance\x1a\x1bbuf/validate/validate.proto\x1a\x18hi/binance/binance.proto\x1a\x17hi/binance/stocks.proto\x1a\x10hi/options.proto\"\xf0&\n" +
+	"hi.binance\x1a\x1bbuf/validate/validate.proto\x1a\x18hi/binance/binance.proto\x1a\x17hi/binance/stocks.proto\x1a\x10hi/options.proto\"\xd2(\n" +
 	"\x0eBinanceCommand\x12/\n" +
 	"\n" +
 	"expiration\x18\x01 \x01(\x03B\n" +
@@ -923,7 +956,9 @@ const file_hi_binance_command_proto_rawDesc = "" +
 	"\vspot_klines\x188 \x01(\v2\x1d.hi.binance.BinanceSpotKlinesB\x04\x90\xb5\x18\x02H\x00R\n" +
 	"spotKlines\x12X\n" +
 	"\x13usds_futures_klines\x189 \x01(\v2 .hi.binance.BinanceFuturesKlinesB\x04\x90\xb5\x18\x02H\x00R\x11usdsFuturesKlines\x12O\n" +
-	"\x10usds_futures_pnl\x18: \x01(\v2\x1d.hi.binance.BinanceFuturesPnlB\x04\x90\xb5\x18\x02H\x00R\x0eusdsFuturesPnl:\x04\x98\xb5\x18\x02B\v\n" +
+	"\x10usds_futures_pnl\x18: \x01(\v2\x1d.hi.binance.BinanceFuturesPnlB\x04\x90\xb5\x18\x02H\x00R\x0eusdsFuturesPnl\x12f\n" +
+	"\x17spot_cancel_all_symbols\x18; \x01(\v2'.hi.binance.BinanceSpotCancelAllSymbolsB\x04\x90\xb5\x18\x02H\x00R\x14spotCancelAllSymbols\x12x\n" +
+	"\x1fusds_futures_cancel_all_symbols\x18< \x01(\v2*.hi.binance.BinanceFuturesCancelAllSymbolsB\x04\x90\xb5\x18\x02H\x00R\x1busdsFuturesCancelAllSymbols:\x04\x98\xb5\x18\x02B\v\n" +
 	"\x02op\x12\x05\xbaH\x02\b\x01B\r\n" +
 	"\v_expirationB\x95\x01\n" +
 	"\x0ecom.hi.binanceB\fCommandProtoP\x01Z,github.com/HiWorld-56/hi-proto/go/hi/binance\xa2\x02\x03HBX\xaa\x02\n" +
@@ -992,6 +1027,8 @@ var file_hi_binance_command_proto_goTypes = []any{
 	(*BinanceSpotKlines)(nil),                 // 45: hi.binance.BinanceSpotKlines
 	(*BinanceFuturesKlines)(nil),              // 46: hi.binance.BinanceFuturesKlines
 	(*BinanceFuturesPnl)(nil),                 // 47: hi.binance.BinanceFuturesPnl
+	(*BinanceSpotCancelAllSymbols)(nil),       // 48: hi.binance.BinanceSpotCancelAllSymbols
+	(*BinanceFuturesCancelAllSymbols)(nil),    // 49: hi.binance.BinanceFuturesCancelAllSymbols
 }
 var file_hi_binance_command_proto_depIdxs = []int32{
 	1,  // 0: hi.binance.BinanceCommand.spot_new_order:type_name -> hi.binance.BinanceSpotNewOrder
@@ -1041,11 +1078,13 @@ var file_hi_binance_command_proto_depIdxs = []int32{
 	45, // 44: hi.binance.BinanceCommand.spot_klines:type_name -> hi.binance.BinanceSpotKlines
 	46, // 45: hi.binance.BinanceCommand.usds_futures_klines:type_name -> hi.binance.BinanceFuturesKlines
 	47, // 46: hi.binance.BinanceCommand.usds_futures_pnl:type_name -> hi.binance.BinanceFuturesPnl
-	47, // [47:47] is the sub-list for method output_type
-	47, // [47:47] is the sub-list for method input_type
-	47, // [47:47] is the sub-list for extension type_name
-	47, // [47:47] is the sub-list for extension extendee
-	0,  // [0:47] is the sub-list for field type_name
+	48, // 47: hi.binance.BinanceCommand.spot_cancel_all_symbols:type_name -> hi.binance.BinanceSpotCancelAllSymbols
+	49, // 48: hi.binance.BinanceCommand.usds_futures_cancel_all_symbols:type_name -> hi.binance.BinanceFuturesCancelAllSymbols
+	49, // [49:49] is the sub-list for method output_type
+	49, // [49:49] is the sub-list for method input_type
+	49, // [49:49] is the sub-list for extension type_name
+	49, // [49:49] is the sub-list for extension extendee
+	0,  // [0:49] is the sub-list for field type_name
 }
 
 func init() { file_hi_binance_command_proto_init() }
@@ -1103,6 +1142,8 @@ func file_hi_binance_command_proto_init() {
 		(*BinanceCommand_SpotKlines)(nil),
 		(*BinanceCommand_UsdsFuturesKlines)(nil),
 		(*BinanceCommand_UsdsFuturesPnl)(nil),
+		(*BinanceCommand_SpotCancelAllSymbols)(nil),
+		(*BinanceCommand_UsdsFuturesCancelAllSymbols)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

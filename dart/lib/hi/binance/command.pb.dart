@@ -68,6 +68,8 @@ enum BinanceCommand_Op {
   spotKlines,
   usdsFuturesKlines,
   usdsFuturesPnl,
+  spotCancelAllSymbols,
+  usdsFuturesCancelAllSymbols,
   notSet
 }
 
@@ -147,6 +149,8 @@ class BinanceCommand extends $pb.GeneratedMessage {
     $0.BinanceSpotKlines? spotKlines,
     $0.BinanceFuturesKlines? usdsFuturesKlines,
     $0.BinanceFuturesPnl? usdsFuturesPnl,
+    $0.BinanceSpotCancelAllSymbols? spotCancelAllSymbols,
+    $0.BinanceFuturesCancelAllSymbols? usdsFuturesCancelAllSymbols,
   }) {
     final result = create();
     if (expiration != null) result.expiration = expiration;
@@ -232,6 +236,10 @@ class BinanceCommand extends $pb.GeneratedMessage {
     if (spotKlines != null) result.spotKlines = spotKlines;
     if (usdsFuturesKlines != null) result.usdsFuturesKlines = usdsFuturesKlines;
     if (usdsFuturesPnl != null) result.usdsFuturesPnl = usdsFuturesPnl;
+    if (spotCancelAllSymbols != null)
+      result.spotCancelAllSymbols = spotCancelAllSymbols;
+    if (usdsFuturesCancelAllSymbols != null)
+      result.usdsFuturesCancelAllSymbols = usdsFuturesCancelAllSymbols;
     return result;
   }
 
@@ -293,6 +301,8 @@ class BinanceCommand extends $pb.GeneratedMessage {
     56: BinanceCommand_Op.spotKlines,
     57: BinanceCommand_Op.usdsFuturesKlines,
     58: BinanceCommand_Op.usdsFuturesPnl,
+    59: BinanceCommand_Op.spotCancelAllSymbols,
+    60: BinanceCommand_Op.usdsFuturesCancelAllSymbols,
     0: BinanceCommand_Op.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -346,7 +356,9 @@ class BinanceCommand extends $pb.GeneratedMessage {
       55,
       56,
       57,
-      58
+      58,
+      59,
+      60
     ])
     ..aInt64(1, _omitFieldNames ? '' : 'expiration')
     ..aOM<$0.BinanceSpotNewOrder>(10, _omitFieldNames ? '' : 'spotNewOrder',
@@ -486,6 +498,12 @@ class BinanceCommand extends $pb.GeneratedMessage {
         subBuilder: $0.BinanceFuturesKlines.create)
     ..aOM<$0.BinanceFuturesPnl>(58, _omitFieldNames ? '' : 'usdsFuturesPnl',
         subBuilder: $0.BinanceFuturesPnl.create)
+    ..aOM<$0.BinanceSpotCancelAllSymbols>(
+        59, _omitFieldNames ? '' : 'spotCancelAllSymbols',
+        subBuilder: $0.BinanceSpotCancelAllSymbols.create)
+    ..aOM<$0.BinanceFuturesCancelAllSymbols>(
+        60, _omitFieldNames ? '' : 'usdsFuturesCancelAllSymbols',
+        subBuilder: $0.BinanceFuturesCancelAllSymbols.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -554,6 +572,8 @@ class BinanceCommand extends $pb.GeneratedMessage {
   @$pb.TagNumber(56)
   @$pb.TagNumber(57)
   @$pb.TagNumber(58)
+  @$pb.TagNumber(59)
+  @$pb.TagNumber(60)
   BinanceCommand_Op whichOp() => _BinanceCommand_OpByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(10)
   @$pb.TagNumber(11)
@@ -602,6 +622,8 @@ class BinanceCommand extends $pb.GeneratedMessage {
   @$pb.TagNumber(56)
   @$pb.TagNumber(57)
   @$pb.TagNumber(58)
+  @$pb.TagNumber(59)
+  @$pb.TagNumber(60)
   void clearOp() => $_clearField($_whichOneof(0));
 
   /// 过期时刻,**绝对时间,微秒**(与 `Notice.expiration` 同一口径)。过了机器人不执行、回一条失败;
@@ -1190,6 +1212,33 @@ class BinanceCommand extends $pb.GeneratedMessage {
   void clearUsdsFuturesPnl() => $_clearField(58);
   @$pb.TagNumber(58)
   $0.BinanceFuturesPnl ensureUsdsFuturesPnl() => $_ensure(47);
+
+  /// 撤销所有交易对的挂单(币安没有不分交易对的撤法,机器人列出来逐个撤)
+  @$pb.TagNumber(59)
+  $0.BinanceSpotCancelAllSymbols get spotCancelAllSymbols => $_getN(48);
+  @$pb.TagNumber(59)
+  set spotCancelAllSymbols($0.BinanceSpotCancelAllSymbols value) =>
+      $_setField(59, value);
+  @$pb.TagNumber(59)
+  $core.bool hasSpotCancelAllSymbols() => $_has(48);
+  @$pb.TagNumber(59)
+  void clearSpotCancelAllSymbols() => $_clearField(59);
+  @$pb.TagNumber(59)
+  $0.BinanceSpotCancelAllSymbols ensureSpotCancelAllSymbols() => $_ensure(48);
+
+  @$pb.TagNumber(60)
+  $0.BinanceFuturesCancelAllSymbols get usdsFuturesCancelAllSymbols =>
+      $_getN(49);
+  @$pb.TagNumber(60)
+  set usdsFuturesCancelAllSymbols($0.BinanceFuturesCancelAllSymbols value) =>
+      $_setField(60, value);
+  @$pb.TagNumber(60)
+  $core.bool hasUsdsFuturesCancelAllSymbols() => $_has(49);
+  @$pb.TagNumber(60)
+  void clearUsdsFuturesCancelAllSymbols() => $_clearField(60);
+  @$pb.TagNumber(60)
+  $0.BinanceFuturesCancelAllSymbols ensureUsdsFuturesCancelAllSymbols() =>
+      $_ensure(49);
 }
 
 const $core.bool _omitFieldNames =

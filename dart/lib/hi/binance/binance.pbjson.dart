@@ -2169,6 +2169,26 @@ const BinanceFuturesPnl$json = {
 final $typed_data.Uint8List binanceFuturesPnlDescriptor =
     $convert.base64Decode('ChFCaW5hbmNlRnV0dXJlc1BubDoEmLUYAg==');
 
+@$core.Deprecated('Use binanceSpotCancelAllSymbolsDescriptor instead')
+const BinanceSpotCancelAllSymbols$json = {
+  '1': 'BinanceSpotCancelAllSymbols',
+  '7': {},
+};
+
+/// Descriptor for `BinanceSpotCancelAllSymbols`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List binanceSpotCancelAllSymbolsDescriptor =
+    $convert.base64Decode('ChtCaW5hbmNlU3BvdENhbmNlbEFsbFN5bWJvbHM6BJi1GAI=');
+
+@$core.Deprecated('Use binanceFuturesCancelAllSymbolsDescriptor instead')
+const BinanceFuturesCancelAllSymbols$json = {
+  '1': 'BinanceFuturesCancelAllSymbols',
+  '7': {},
+};
+
+/// Descriptor for `BinanceFuturesCancelAllSymbols`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List binanceFuturesCancelAllSymbolsDescriptor = $convert
+    .base64Decode('Ch5CaW5hbmNlRnV0dXJlc0NhbmNlbEFsbFN5bWJvbHM6BJi1GAI=');
+
 @$core.Deprecated('Use binanceFuturesSignTradfiContractDescriptor instead')
 const BinanceFuturesSignTradfiContract$json = {
   '1': 'BinanceFuturesSignTradfiContract',
