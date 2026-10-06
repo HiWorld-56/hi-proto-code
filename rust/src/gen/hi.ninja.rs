@@ -4,7 +4,7 @@
 ///
 /// 🔴 没主人 / 匿名时**不要给值**（proto3 optional 的 presence），不是空串 ——
 /// 空串会让 `if ctx.master then` 判成真，而那正是"提款只认主人"的判据。
-#[derive(Clone, PartialEq, ::prost::Message)]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct LuaCtx {
     /// 机器人自己的 did
     #[prost(string, optional, tag = "1")]
@@ -18,30 +18,13 @@ pub struct LuaCtx {
     /// 引起这次调用的那条消息的暗语等级(hi.club.Message.dark;不带 = 0 = 普通)。
     /// **只给宿主用,不给 lua 脚本看**:执行器随 HostCallReq.ctx 原样带回,宿主发消息
     /// (host.send_message)就沿用这个等级 —— 问题是哪一级,发出去的就是哪一级。插件不能自己选。
+    ///
+    /// ⚠️ **没有 `attachments`(消息里的媒体),不要加回来**(v1.5.27-dev.1 加过,10-07 删):
+    /// 模型手上没有图的地址、转发时只能编一个 —— 这件事改由 hi.ai 在用户那句话后面附一份
+    /// 附件列表(名字 → url,随问答存进上下文,见 hi/ai/chat.proto `Content`)解决,模型从列表里取 url
+    /// 填进插件参数,插件发之前用 sdk 方法 `probe_url` 真取一次。只有一套机制,不留两条路。
     #[prost(uint32, optional, tag = "4")]
     pub dark: ::core::option::Option<u32>,
-    /// 引起这次调用的那条消息里带的**媒体**(图片 / 语音 / 文件),按在消息里的先后。
-    /// 脚本里是 `ctx.attachments`(数组,`{type, url, name}`);消息没带媒体就是空数组。
-    ///
-    /// 为什么要给插件:模型看到的图是内联进请求的图片数据(hi.ai 把 url 换成了 base64),
-    /// **它手上没有这张图的地址**。让它把「主人发来的这张图」转给别人,它只能编一个 url ——
-    /// 生产实测(2026-10-06)编出的是 `files.oaiusercontent.com/...`,收件人看到一张裂图。
-    /// 地址是 brain 从消息里拿到的,插件按序号取(「第 1 张图」),不经模型的手。
-    /// 与 `.so` 插件那侧 SDK 的 `Ctx.attachments` 同形。
-    #[prost(message, repeated, tag = "5")]
-    pub attachments: ::prost::alloc::vec::Vec<LuaAttachment>,
-}
-/// LuaAttachment 消息里的一段媒体。`type` 取 hi.club.Content.type 那张表里的词
-/// (`image_url` / `audio_url` / `file`),`url` 是那一段 chat.content 原样。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct LuaAttachment {
-    #[prost(string, optional, tag = "1")]
-    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub url: ::core::option::Option<::prost::alloc::string::String>,
-    /// 原文件名;消息里没写就不给
-    #[prost(string, optional, tag = "3")]
-    pub name: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// OpenReq 装一个插件：跑一遍顶层，读出 contract 与 manifest。
 ///
@@ -99,7 +82,7 @@ pub struct OpenResp {
     pub error: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// InvokeReq 调一个方法。
-#[derive(Clone, PartialEq, ::prost::Message)]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct InvokeReq {
     #[prost(string, optional, tag = "1")]
     pub uuid: ::core::option::Option<::prost::alloc::string::String>,
@@ -142,7 +125,7 @@ pub struct CloseReq {
 ///
 /// 🔴 这条是**反向**的：brain 正等着 InvokeResp 的时候，执行器会先发这个过来。
 /// 所以两边都得能在等一个回复的同时处理对方的请求，靠 `req_id` 配对。
-#[derive(Clone, PartialEq, ::prost::Message)]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct HostCallReq {
     /// 能力名，与 `.so` 插件那条路同一份白名单
     #[prost(string, optional, tag = "1")]
@@ -203,7 +186,7 @@ pub mod brain_to_lua {
     }
 }
 /// LuaToBrain 执行器发给 brain 的。
-#[derive(Clone, PartialEq, ::prost::Message)]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct LuaToBrain {
     #[prost(uint64, optional, tag = "1")]
     pub req_id: ::core::option::Option<u64>,
@@ -212,7 +195,7 @@ pub struct LuaToBrain {
 }
 /// Nested message and enum types in `LuaToBrain`.
 pub mod lua_to_brain {
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
     pub enum Cmd {
         #[prost(message, tag = "2")]
         Open(super::OpenResp),

@@ -537,6 +537,55 @@ const ChatRecord$json = {
       '17': true
     },
     {
+      '1': 'url',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'url',
+      '17': true
+    },
+    {
+      '1': 'count',
+      '3': 4,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 2,
+      '10': 'count',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_title'},
+    {'1': '_url'},
+    {'1': '_count'},
+  ],
+};
+
+/// Descriptor for `ChatRecord`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List chatRecordDescriptor = $convert.base64Decode(
+    'CgpDaGF0UmVjb3JkEh8KBXRpdGxlGAEgASgJQgSQtRgCSABSBXRpdGxliAEBEhsKA3VybBgDIA'
+    'EoCUIEkLUYAkgBUgN1cmyIAQESHwoFY291bnQYBCABKA1CBJC1GAJIAlIFY291bnSIAQE6BJi1'
+    'GAJCCAoGX3RpdGxlQgYKBF91cmxCCAoGX2NvdW50');
+
+@$core.Deprecated('Use chatRecordFileDescriptor instead')
+const ChatRecordFile$json = {
+  '1': 'ChatRecordFile',
+  '2': [
+    {
+      '1': 'title',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'title',
+      '17': true
+    },
+    {
       '1': 'list',
       '3': 2,
       '4': 3,
@@ -552,11 +601,11 @@ const ChatRecord$json = {
   ],
 };
 
-/// Descriptor for `ChatRecord`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List chatRecordDescriptor = $convert.base64Decode(
-    'CgpDaGF0UmVjb3JkEh8KBXRpdGxlGAEgASgJQgSQtRgCSABSBXRpdGxliAEBEjEKBGxpc3QYAi'
-    'ADKAsyFy5oaS5jbHViLkNoYXRSZWNvcmRJdGVtQgSQtRgCUgRsaXN0OgSYtRgCQggKBl90aXRs'
-    'ZQ==');
+/// Descriptor for `ChatRecordFile`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List chatRecordFileDescriptor = $convert.base64Decode(
+    'Cg5DaGF0UmVjb3JkRmlsZRIfCgV0aXRsZRgBIAEoCUIEkLUYAkgAUgV0aXRsZYgBARIxCgRsaX'
+    'N0GAIgAygLMhcuaGkuY2x1Yi5DaGF0UmVjb3JkSXRlbUIEkLUYAlIEbGlzdDoEmLUYAkIICgZf'
+    'dGl0bGU=');
 
 @$core.Deprecated('Use chatRecordItemDescriptor instead')
 const ChatRecordItem$json = {

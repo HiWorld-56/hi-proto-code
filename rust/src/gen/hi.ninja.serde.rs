@@ -2371,131 +2371,6 @@ impl<'de> serde::Deserialize<'de> for InvokeResp {
         deserializer.deserialize_struct("hi.ninja.InvokeResp", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for LuaAttachment {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.r#type.is_some() {
-            len += 1;
-        }
-        if self.url.is_some() {
-            len += 1;
-        }
-        if self.name.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.ninja.LuaAttachment", len)?;
-        if let Some(v) = self.r#type.as_ref() {
-            struct_ser.serialize_field("type", v)?;
-        }
-        if let Some(v) = self.url.as_ref() {
-            struct_ser.serialize_field("url", v)?;
-        }
-        if let Some(v) = self.name.as_ref() {
-            struct_ser.serialize_field("name", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for LuaAttachment {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "type",
-            "url",
-            "name",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Type,
-            Url,
-            Name,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "type" => Ok(GeneratedField::Type),
-                            "url" => Ok(GeneratedField::Url),
-                            "name" => Ok(GeneratedField::Name),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = LuaAttachment;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ninja.LuaAttachment")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<LuaAttachment, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut r#type__ = None;
-                let mut url__ = None;
-                let mut name__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Type => {
-                            if r#type__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("type"));
-                            }
-                            r#type__ = map_.next_value()?;
-                        }
-                        GeneratedField::Url => {
-                            if url__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("url"));
-                            }
-                            url__ = map_.next_value()?;
-                        }
-                        GeneratedField::Name => {
-                            if name__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("name"));
-                            }
-                            name__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(LuaAttachment {
-                    r#type: r#type__,
-                    url: url__,
-                    name: name__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.ninja.LuaAttachment", FIELDS, GeneratedVisitor)
-    }
-}
 impl serde::Serialize for LuaCtx {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -2516,9 +2391,6 @@ impl serde::Serialize for LuaCtx {
         if self.dark.is_some() {
             len += 1;
         }
-        if !self.attachments.is_empty() {
-            len += 1;
-        }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.LuaCtx", len)?;
         if let Some(v) = self.me.as_ref() {
             struct_ser.serialize_field("me", v)?;
@@ -2531,9 +2403,6 @@ impl serde::Serialize for LuaCtx {
         }
         if let Some(v) = self.dark.as_ref() {
             struct_ser.serialize_field("dark", v)?;
-        }
-        if !self.attachments.is_empty() {
-            struct_ser.serialize_field("attachments", &self.attachments)?;
         }
         struct_ser.end()
     }
@@ -2549,7 +2418,6 @@ impl<'de> serde::Deserialize<'de> for LuaCtx {
             "master",
             "asker",
             "dark",
-            "attachments",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -2558,7 +2426,6 @@ impl<'de> serde::Deserialize<'de> for LuaCtx {
             Master,
             Asker,
             Dark,
-            Attachments,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -2584,7 +2451,6 @@ impl<'de> serde::Deserialize<'de> for LuaCtx {
                             "master" => Ok(GeneratedField::Master),
                             "asker" => Ok(GeneratedField::Asker),
                             "dark" => Ok(GeneratedField::Dark),
-                            "attachments" => Ok(GeneratedField::Attachments),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -2608,7 +2474,6 @@ impl<'de> serde::Deserialize<'de> for LuaCtx {
                 let mut master__ = None;
                 let mut asker__ = None;
                 let mut dark__ = None;
-                let mut attachments__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Me => {
@@ -2637,12 +2502,6 @@ impl<'de> serde::Deserialize<'de> for LuaCtx {
                                 map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
-                        GeneratedField::Attachments => {
-                            if attachments__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("attachments"));
-                            }
-                            attachments__ = Some(map_.next_value()?);
-                        }
                     }
                 }
                 Ok(LuaCtx {
@@ -2650,7 +2509,6 @@ impl<'de> serde::Deserialize<'de> for LuaCtx {
                     master: master__,
                     asker: asker__,
                     dark: dark__,
-                    attachments: attachments__.unwrap_or_default(),
                 })
             }
         }

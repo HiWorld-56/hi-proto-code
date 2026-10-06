@@ -25,10 +25,28 @@ const (
 )
 
 // ── AI 对话全链路都是私有:会话/上下文/回复只发给发起对话的本人 ──────────────
+//
+// 对话内容的一段。`type` 取 hi.club `Content.type` 那张表里的词(`text` / `image_url` / `audio_url` /
+// `file` / `chat_record`;另有 web 直连用的 `file_url`),`content` 是正文或地址。
+//
+// ## 附件列表:用户那句话里只要有文本以外的内容,hi.ai 就在 Q 后面附一份「【附件】」
+//
+// 每一段非文本(图片 / 语音 / 文件 / 聊天记录)一行「名字 → url」,**是 Q 的一部分**:随这一轮问答一起
+// 存进上下文,几轮之后模型照样能按文件名找到 url(「把刚才那个 xx.pdf 发给某人」)。
+// 图片照旧另作视觉输入;语音照旧识别成文字进 Q,语音本身也进列表。
+// 行的写法**只在 hi.ai 一处生成**(`internal/service/attachments.go` 的 `AttachmentList`),别处不复制。
+//
+// 为什么要有:模型看到的图是内联的图片数据、语音是识别稿 —— **它手上没有地址**。让它转发主人发来的
+// 图,它只能编一个 url(生产 10-06 编出 `files.oaiusercontent.com/…`,7 个好友各收到一张裂图)。
+// 地址本来就在消息里,把它摆到模型面前就够了,「转发哪一个」由模型自己判断。
 type Content struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Type          *string                `protobuf:"bytes,1,opt,name=type,proto3,oneof" json:"type,omitempty"`
-	Content       *string                `protobuf:"bytes,2,opt,name=content,proto3,oneof" json:"content,omitempty"`
+	state   protoimpl.MessageState `protogen:"open.v1"`
+	Type    *string                `protobuf:"bytes,1,opt,name=type,proto3,oneof" json:"type,omitempty"`
+	Content *string                `protobuf:"bytes,2,opt,name=content,proto3,oneof" json:"content,omitempty"`
+	// 名字:文件 / 图片的原文件名,聊天记录的标题。没有就不给。进附件列表那一行。
+	Name *string `protobuf:"bytes,3,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	// 聊天记录里有几条(hi.club `ChatRecord.count`);别的类型不给。进附件列表那一行。
+	Count         *uint32 `protobuf:"varint,4,opt,name=count,proto3,oneof" json:"count,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -75,6 +93,20 @@ func (x *Content) GetContent() string {
 		return *x.Content
 	}
 	return ""
+}
+
+func (x *Content) GetName() string {
+	if x != nil && x.Name != nil {
+		return *x.Name
+	}
+	return ""
+}
+
+func (x *Content) GetCount() uint32 {
+	if x != nil && x.Count != nil {
+		return *x.Count
+	}
+	return 0
 }
 
 type NewSessionResp struct {
@@ -1199,13 +1231,17 @@ var File_hi_ai_chat_proto protoreflect.FileDescriptor
 
 const file_hi_ai_chat_proto_rawDesc = "" +
 	"\n" +
-	"\x10hi/ai/chat.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/options.proto\"h\n" +
+	"\x10hi/ai/chat.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/options.proto\"\xbb\x01\n" +
 	"\aContent\x12\x1d\n" +
 	"\x04type\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04type\x88\x01\x01\x12#\n" +
-	"\acontent\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\acontent\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
+	"\acontent\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\acontent\x88\x01\x01\x12\x1d\n" +
+	"\x04name\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x04name\x88\x01\x01\x12\x1f\n" +
+	"\x05count\x18\x04 \x01(\rB\x04\x90\xb5\x18\x03H\x03R\x05count\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
 	"\x05_typeB\n" +
 	"\n" +
-	"\b_content\";\n" +
+	"\b_contentB\a\n" +
+	"\x05_nameB\b\n" +
+	"\x06_count\";\n" +
 	"\x0eNewSessionResp\x12\x1b\n" +
 	"\x03cid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x03cid\x88\x01\x01:\x04\x98\xb5\x18\x03B\x06\n" +
 	"\x04_cid\"\x80\x01\n" +

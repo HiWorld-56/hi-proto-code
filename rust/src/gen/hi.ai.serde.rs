@@ -1929,12 +1929,24 @@ impl serde::Serialize for Content {
         if self.content.is_some() {
             len += 1;
         }
+        if self.name.is_some() {
+            len += 1;
+        }
+        if self.count.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ai.Content", len)?;
         if let Some(v) = self.r#type.as_ref() {
             struct_ser.serialize_field("type", v)?;
         }
         if let Some(v) = self.content.as_ref() {
             struct_ser.serialize_field("content", v)?;
+        }
+        if let Some(v) = self.name.as_ref() {
+            struct_ser.serialize_field("name", v)?;
+        }
+        if let Some(v) = self.count.as_ref() {
+            struct_ser.serialize_field("count", v)?;
         }
         struct_ser.end()
     }
@@ -1948,12 +1960,16 @@ impl<'de> serde::Deserialize<'de> for Content {
         const FIELDS: &[&str] = &[
             "type",
             "content",
+            "name",
+            "count",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Type,
             Content,
+            Name,
+            Count,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1977,6 +1993,8 @@ impl<'de> serde::Deserialize<'de> for Content {
                         match value {
                             "type" => Ok(GeneratedField::Type),
                             "content" => Ok(GeneratedField::Content),
+                            "name" => Ok(GeneratedField::Name),
+                            "count" => Ok(GeneratedField::Count),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -1998,6 +2016,8 @@ impl<'de> serde::Deserialize<'de> for Content {
             {
                 let mut r#type__ = None;
                 let mut content__ = None;
+                let mut name__ = None;
+                let mut count__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Type => {
@@ -2012,11 +2032,27 @@ impl<'de> serde::Deserialize<'de> for Content {
                             }
                             content__ = map_.next_value()?;
                         }
+                        GeneratedField::Name => {
+                            if name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("name"));
+                            }
+                            name__ = map_.next_value()?;
+                        }
+                        GeneratedField::Count => {
+                            if count__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("count"));
+                            }
+                            count__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
                     }
                 }
                 Ok(Content {
                     r#type: r#type__,
                     content: content__,
+                    name: name__,
+                    count: count__,
                 })
             }
         }

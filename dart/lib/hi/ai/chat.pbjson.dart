@@ -39,18 +39,42 @@ const Content$json = {
       '10': 'content',
       '17': true
     },
+    {
+      '1': 'name',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'name',
+      '17': true
+    },
+    {
+      '1': 'count',
+      '3': 4,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 3,
+      '10': 'count',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
     {'1': '_type'},
     {'1': '_content'},
+    {'1': '_name'},
+    {'1': '_count'},
   ],
 };
 
 /// Descriptor for `Content`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List contentDescriptor = $convert.base64Decode(
     'CgdDb250ZW50Eh0KBHR5cGUYASABKAlCBJC1GANIAFIEdHlwZYgBARIjCgdjb250ZW50GAIgAS'
-    'gJQgSQtRgDSAFSB2NvbnRlbnSIAQE6BJi1GANCBwoFX3R5cGVCCgoIX2NvbnRlbnQ=');
+    'gJQgSQtRgDSAFSB2NvbnRlbnSIAQESHQoEbmFtZRgDIAEoCUIEkLUYA0gCUgRuYW1liAEBEh8K'
+    'BWNvdW50GAQgASgNQgSQtRgDSANSBWNvdW50iAEBOgSYtRgDQgcKBV90eXBlQgoKCF9jb250ZW'
+    '50QgcKBV9uYW1lQggKBl9jb3VudA==');
 
 @$core.Deprecated('Use newSessionRespDescriptor instead')
 const NewSessionResp$json = {

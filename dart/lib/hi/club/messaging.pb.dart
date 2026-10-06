@@ -867,7 +867,7 @@ enum Content_Kind { chat, trans, binance, binanceCmd, record, notSet }
 /// broadcast   广播
 /// binance     币安操作结果卡      kind=binance(hi.binance.BinanceResult)
 /// binance_cmd 币安指令            kind=binance_cmd(hi.binance.BinanceCommand)—— 群里要 @ 执行的机器人,见 hi/binance/command.proto
-/// chat_record 聊天记录(合并转发)  kind=record(hi.club.ChatRecord)—— 标题 + 若干条原消息,点开看全部
+/// chat_record 聊天记录(合并转发)  kind=record(hi.club.ChatRecord)—— 一个聊天记录文件:url / 标题 / 条数,点开按 url 取回
 ///
 /// ⚠️ **注意是 `image_url` 不是 `image`、`audio_url` 不是 `audio`。**
 ///
@@ -1028,7 +1028,7 @@ class Content extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $4.BinanceCommand ensureBinanceCmd() => $_ensure(4);
 
-  /// 聊天记录(合并转发):标题 + 若干条原消息,点开看全部。见下面 ChatRecord。
+  /// 聊天记录(合并转发):一个文件(url / 标题 / 条数),点开按 url 取回。见下面 ChatRecord。
   @$pb.TagNumber(7)
   ChatRecord get record => $_getN(5);
   @$pb.TagNumber(7)
@@ -1043,25 +1043,34 @@ class Content extends $pb.GeneratedMessage {
 
 /// 聊天记录 —— **合并转发**出来的那一条(类似微信「聊天记录」卡片)。`Content.type = "chat_record"`。
 ///
-/// 它就是一条普通消息的一段内容:中间层(core / 后端 / broker)不认识它、也不需要认识它,
-/// 原样存、原样转;显示是端上的事(卡片显示 `title` 与前几条摘要,点开看 `list` 全部)。
+/// **它是一种文件**(本质是文本):记录的内容是一个 JSON 文件(见下面 ChatRecordFile),发送方上传到
+/// 聊天媒体桶(与图片同一个临时桶、同一个保留期)拿到 url;消息里只放 url / 标题 / 条数。
+/// 卡片显示 `title` 与 `count`,点开时按 `url` 取回文件再渲染;**再转发 = 引用同一个 url**,不重新上传。
 ///
-/// 每一条保留**原消息的内容字节**(`Message.contents` 原样,即序列化后的 `hi.club.Contents`),
-/// 不解开重编 —— 转发方用的 proto 比原消息旧时,解开再编会把新内容类型静默丢掉。
-/// 端上显示时照常解一遍;解不开的那条显示「不支持的消息类型」,不影响其余几条。
-/// 聊天记录里套聊天记录(转发一条已经是聊天记录的消息)是允许的,同样原样。
+/// 它就是一条普通消息的一段内容:中间层(core / 后端 / broker)不认识它、也不需要认识它,原样存、原样转。
 ///
-/// 逐条转发不用它:那是把原 `contents` 换个 uuid / 会话原样再发一次。
+/// ⚠️ **没有内嵌的 `list` 了,不要加回来**(原 `repeated ChatRecordItem list = 2`,10-05 ~ 10-07 那一版):
+///    用户 10-07 定「聊天记录作为一个文件类型,本质是文本类型」—— 文件才有 url,有 url 才能
+///    像图片、文件一样出现在给模型的附件列表里(hi.ai `Content` 那段),模型才能在几轮之后
+///    「把那段聊天记录转给某人」时按 url 引用它;内嵌的那份没有地址,模型只能看不能指。
+///    **旧数据**(那一版发出去的,字段 2 在新版里是未知字段、解码时跳过)解出来 `url` 缺席 ——
+///    判据只有这一个:**`url` 没有值 = 旧版聊天记录**,端上显示「旧版聊天记录」、不能点开,
+///    给模型时也只有标题。不迁移、不做读侧兼容(激进开发)。
 ///
-/// 机器人把语音聊天记录发给主人(内置插件)发的也是这个。
+/// 字段号 3 / 4 不复用 2:旧数据的字段 2 是一个嵌套消息,要是把 `url` 放在 2 上,
+/// 那段字节会被当成字符串解 —— 不是合法 UTF-8 时整个 Contents 解不开,一条消息的全部内容一起消失。
+///
+/// 机器人把语音聊天记录发给主人(内置插件 `send_chat_record`)发的也是这个。
 class ChatRecord extends $pb.GeneratedMessage {
   factory ChatRecord({
     $core.String? title,
-    $core.Iterable<ChatRecordItem>? list,
+    $core.String? url,
+    $core.int? count,
   }) {
     final result = create();
     if (title != null) result.title = title;
-    if (list != null) result.list.addAll(list);
+    if (url != null) result.url = url;
+    if (count != null) result.count = count;
     return result;
   }
 
@@ -1079,8 +1088,8 @@ class ChatRecord extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'title')
-    ..pPM<ChatRecordItem>(2, _omitFieldNames ? '' : 'list',
-        subBuilder: ChatRecordItem.create)
+    ..aOS(3, _omitFieldNames ? '' : 'url')
+    ..aI(4, _omitFieldNames ? '' : 'count', fieldType: $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1100,6 +1109,96 @@ class ChatRecord extends $pb.GeneratedMessage {
   static ChatRecord getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<ChatRecord>(create);
   static ChatRecord? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get title => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set title($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasTitle() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTitle() => $_clearField(1);
+
+  @$pb.TagNumber(3)
+  $core.String get url => $_getSZ(1);
+  @$pb.TagNumber(3)
+  set url($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(3)
+  $core.bool hasUrl() => $_has(1);
+  @$pb.TagNumber(3)
+  void clearUrl() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.int get count => $_getIZ(2);
+  @$pb.TagNumber(4)
+  set count($core.int value) => $_setUnsignedInt32(2, value);
+  @$pb.TagNumber(4)
+  $core.bool hasCount() => $_has(2);
+  @$pb.TagNumber(4)
+  void clearCount() => $_clearField(4);
+}
+
+/// 聊天记录文件 —— `ChatRecord.url` 指向的那个文件。
+///
+/// **格式:这个消息的 protojson**(UTF-8 的 JSON,`application/json`,文件名 `chat_record.json`)。
+/// 用 protojson 是因为四种语言都有现成的编解码,字段名就是下面这些(int64 写成字符串、bytes 写成 base64):
+///
+///     {"title":"我和张三的聊天记录",
+///      "list":[{"from":{"did":"z…","name":"张三"},"timestamp":"1759800000000000","contents":"CgYKBHRleHQ…"}]}
+///
+/// 每一条保留**原消息的内容字节**(`Message.contents` 原样,即序列化后的 `hi.club.Contents`),
+/// 不解开重编 —— 转发方用的 proto 比原消息旧时,解开再编会把新内容类型静默丢掉。
+/// 端上显示时照常解一遍;解不开的那条显示「不支持的消息类型」,不影响其余几条。
+/// 聊天记录里套聊天记录(转发一条已经是聊天记录的消息)是允许的,里面那条同样只是 url,点开再取。
+///
+/// 逐条转发不用它:那是把原 `contents` 换个 uuid / 会话原样再发一次。
+class ChatRecordFile extends $pb.GeneratedMessage {
+  factory ChatRecordFile({
+    $core.String? title,
+    $core.Iterable<ChatRecordItem>? list,
+  }) {
+    final result = create();
+    if (title != null) result.title = title;
+    if (list != null) result.list.addAll(list);
+    return result;
+  }
+
+  ChatRecordFile._();
+
+  factory ChatRecordFile.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ChatRecordFile.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ChatRecordFile',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'title')
+    ..pPM<ChatRecordItem>(2, _omitFieldNames ? '' : 'list',
+        subBuilder: ChatRecordItem.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ChatRecordFile clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ChatRecordFile copyWith(void Function(ChatRecordFile) updates) =>
+      super.copyWith((message) => updates(message as ChatRecordFile))
+          as ChatRecordFile;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ChatRecordFile create() => ChatRecordFile._();
+  @$core.override
+  ChatRecordFile createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ChatRecordFile getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ChatRecordFile>(create);
+  static ChatRecordFile? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get title => $_getSZ(0);

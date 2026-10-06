@@ -23,14 +23,6 @@ const LuaCtx$json = {
     {'1': 'master', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'master', '17': true},
     {'1': 'asker', '3': 3, '4': 1, '5': 9, '9': 2, '10': 'asker', '17': true},
     {'1': 'dark', '3': 4, '4': 1, '5': 13, '9': 3, '10': 'dark', '17': true},
-    {
-      '1': 'attachments',
-      '3': 5,
-      '4': 3,
-      '5': 11,
-      '6': '.hi.ninja.LuaAttachment',
-      '10': 'attachments'
-    },
   ],
   '8': [
     {'1': '_me'},
@@ -43,30 +35,8 @@ const LuaCtx$json = {
 /// Descriptor for `LuaCtx`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List luaCtxDescriptor = $convert.base64Decode(
     'CgZMdWFDdHgSEwoCbWUYASABKAlIAFICbWWIAQESGwoGbWFzdGVyGAIgASgJSAFSBm1hc3Rlco'
-    'gBARIZCgVhc2tlchgDIAEoCUgCUgVhc2tlcogBARIXCgRkYXJrGAQgASgNSANSBGRhcmuIAQES'
-    'OQoLYXR0YWNobWVudHMYBSADKAsyFy5oaS5uaW5qYS5MdWFBdHRhY2htZW50UgthdHRhY2htZW'
-    '50c0IFCgNfbWVCCQoHX21hc3RlckIICgZfYXNrZXJCBwoFX2Rhcms=');
-
-@$core.Deprecated('Use luaAttachmentDescriptor instead')
-const LuaAttachment$json = {
-  '1': 'LuaAttachment',
-  '2': [
-    {'1': 'type', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'type', '17': true},
-    {'1': 'url', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'url', '17': true},
-    {'1': 'name', '3': 3, '4': 1, '5': 9, '9': 2, '10': 'name', '17': true},
-  ],
-  '8': [
-    {'1': '_type'},
-    {'1': '_url'},
-    {'1': '_name'},
-  ],
-};
-
-/// Descriptor for `LuaAttachment`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List luaAttachmentDescriptor = $convert.base64Decode(
-    'Cg1MdWFBdHRhY2htZW50EhcKBHR5cGUYASABKAlIAFIEdHlwZYgBARIVCgN1cmwYAiABKAlIAV'
-    'IDdXJsiAEBEhcKBG5hbWUYAyABKAlIAlIEbmFtZYgBAUIHCgVfdHlwZUIGCgRfdXJsQgcKBV9u'
-    'YW1l');
+    'gBARIZCgVhc2tlchgDIAEoCUgCUgVhc2tlcogBARIXCgRkYXJrGAQgASgNSANSBGRhcmuIAQFC'
+    'BQoDX21lQgkKB19tYXN0ZXJCCAoGX2Fza2VyQgcKBV9kYXJr');
 
 @$core.Deprecated('Use openReqDescriptor instead')
 const OpenReq$json = {

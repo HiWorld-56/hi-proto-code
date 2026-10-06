@@ -18,14 +18,32 @@ import 'package:protobuf/well_known_types/google/protobuf/struct.pb.dart' as $2;
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 /// ── AI 对话全链路都是私有:会话/上下文/回复只发给发起对话的本人 ──────────────
+///
+/// 对话内容的一段。`type` 取 hi.club `Content.type` 那张表里的词(`text` / `image_url` / `audio_url` /
+/// `file` / `chat_record`;另有 web 直连用的 `file_url`),`content` 是正文或地址。
+///
+/// ## 附件列表:用户那句话里只要有文本以外的内容,hi.ai 就在 Q 后面附一份「【附件】」
+///
+/// 每一段非文本(图片 / 语音 / 文件 / 聊天记录)一行「名字 → url」,**是 Q 的一部分**:随这一轮问答一起
+/// 存进上下文,几轮之后模型照样能按文件名找到 url(「把刚才那个 xx.pdf 发给某人」)。
+/// 图片照旧另作视觉输入;语音照旧识别成文字进 Q,语音本身也进列表。
+/// 行的写法**只在 hi.ai 一处生成**(`internal/service/attachments.go` 的 `AttachmentList`),别处不复制。
+///
+/// 为什么要有:模型看到的图是内联的图片数据、语音是识别稿 —— **它手上没有地址**。让它转发主人发来的
+/// 图,它只能编一个 url(生产 10-06 编出 `files.oaiusercontent.com/…`,7 个好友各收到一张裂图)。
+/// 地址本来就在消息里,把它摆到模型面前就够了,「转发哪一个」由模型自己判断。
 class Content extends $pb.GeneratedMessage {
   factory Content({
     $core.String? type,
     $core.String? content,
+    $core.String? name,
+    $core.int? count,
   }) {
     final result = create();
     if (type != null) result.type = type;
     if (content != null) result.content = content;
+    if (name != null) result.name = name;
+    if (count != null) result.count = count;
     return result;
   }
 
@@ -44,6 +62,8 @@ class Content extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'type')
     ..aOS(2, _omitFieldNames ? '' : 'content')
+    ..aOS(3, _omitFieldNames ? '' : 'name')
+    ..aI(4, _omitFieldNames ? '' : 'count', fieldType: $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -81,6 +101,26 @@ class Content extends $pb.GeneratedMessage {
   $core.bool hasContent() => $_has(1);
   @$pb.TagNumber(2)
   void clearContent() => $_clearField(2);
+
+  /// 名字:文件 / 图片的原文件名,聊天记录的标题。没有就不给。进附件列表那一行。
+  @$pb.TagNumber(3)
+  $core.String get name => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set name($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasName() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearName() => $_clearField(3);
+
+  /// 聊天记录里有几条(hi.club `ChatRecord.count`);别的类型不给。进附件列表那一行。
+  @$pb.TagNumber(4)
+  $core.int get count => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set count($core.int value) => $_setUnsignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasCount() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearCount() => $_clearField(4);
 }
 
 class NewSessionResp extends $pb.GeneratedMessage {

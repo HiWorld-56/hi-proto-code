@@ -971,10 +971,137 @@ impl serde::Serialize for ChatRecord {
         if self.title.is_some() {
             len += 1;
         }
-        if !self.list.is_empty() {
+        if self.url.is_some() {
+            len += 1;
+        }
+        if self.count.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.club.ChatRecord", len)?;
+        if let Some(v) = self.title.as_ref() {
+            struct_ser.serialize_field("title", v)?;
+        }
+        if let Some(v) = self.url.as_ref() {
+            struct_ser.serialize_field("url", v)?;
+        }
+        if let Some(v) = self.count.as_ref() {
+            struct_ser.serialize_field("count", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ChatRecord {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "title",
+            "url",
+            "count",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Title,
+            Url,
+            Count,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "title" => Ok(GeneratedField::Title),
+                            "url" => Ok(GeneratedField::Url),
+                            "count" => Ok(GeneratedField::Count),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ChatRecord;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.ChatRecord")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ChatRecord, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut title__ = None;
+                let mut url__ = None;
+                let mut count__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Title => {
+                            if title__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("title"));
+                            }
+                            title__ = map_.next_value()?;
+                        }
+                        GeneratedField::Url => {
+                            if url__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("url"));
+                            }
+                            url__ = map_.next_value()?;
+                        }
+                        GeneratedField::Count => {
+                            if count__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("count"));
+                            }
+                            count__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(ChatRecord {
+                    title: title__,
+                    url: url__,
+                    count: count__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.ChatRecord", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ChatRecordFile {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.title.is_some() {
+            len += 1;
+        }
+        if !self.list.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.ChatRecordFile", len)?;
         if let Some(v) = self.title.as_ref() {
             struct_ser.serialize_field("title", v)?;
         }
@@ -984,7 +1111,7 @@ impl serde::Serialize for ChatRecord {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ChatRecord {
+impl<'de> serde::Deserialize<'de> for ChatRecordFile {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -1031,13 +1158,13 @@ impl<'de> serde::Deserialize<'de> for ChatRecord {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ChatRecord;
+            type Value = ChatRecordFile;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.club.ChatRecord")
+                formatter.write_str("struct hi.club.ChatRecordFile")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ChatRecord, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ChatRecordFile, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -1059,13 +1186,13 @@ impl<'de> serde::Deserialize<'de> for ChatRecord {
                         }
                     }
                 }
-                Ok(ChatRecord {
+                Ok(ChatRecordFile {
                     title: title__,
                     list: list__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("hi.club.ChatRecord", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("hi.club.ChatRecordFile", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for ChatRecordItem {
