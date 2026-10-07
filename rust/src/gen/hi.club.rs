@@ -3708,7 +3708,7 @@ pub struct Member {
 /// broadcast   广播
 /// binance     币安操作结果卡      kind=binance(hi.binance.BinanceResult)
 /// binance_cmd 币安指令            kind=binance_cmd(hi.binance.BinanceCommand)—— 群里要 @ 执行的机器人,见 hi/binance/command.proto
-/// chat_record 聊天记录(合并转发)  kind=record(hi.club.ChatRecord)—— 一个聊天记录文件:url / 标题 / 条数,点开按 url 取回
+/// chat_record 聊天记录(合并转发)  kind=record(hi.club.ChatRecord)—— 原样内嵌被转发的那几条完整消息
 ///
 /// ⚠️ **注意是 `image_url` 不是 `image`、`audio_url` 不是 `audio`。**
 ///
@@ -3727,10 +3727,16 @@ pub struct Member {
 ///
 /// 为什么不改成枚举:这个字段已在现网多端流通,换 wire 类型要所有端同批发版;
 /// 而**把表写在这里**就已经解决"各自发明"的问题了。新增类型:先往这张表加一行,再去实现。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Content {
     #[prost(string, optional, tag = "1")]
     pub r#type: ::core::option::Option<::prost::alloc::string::String>,
+    /// 这一段在**本条消息里**的编号:从 1 起按先后编(第一段 1、第二段 2……),同一条消息内天然不重。
+    /// **由 hiclub-core-mqtt 在发出前统一填**(UI / brain 照旧只管组内容,填不填、填什么都会被 core 覆盖);
+    /// 后端自己组的消息(语音聊天记录、软件机器人的回话)由后端按同一规则填。
+    /// 用途:引用消息里的某一段 —— `<消息 uuid>#<id>`,见下面「引用」那段。
+    #[prost(uint32, optional, tag = "8")]
+    pub id: ::core::option::Option<u32>,
     #[prost(oneof = "content::Kind", tags = "2, 3, 5, 6, 7")]
     pub kind: ::core::option::Option<content::Kind>,
 }
@@ -3747,7 +3753,7 @@ pub mod content {
         #[prost(uint32, optional, tag = "4")]
         pub duration: ::core::option::Option<u32>,
     }
-    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Kind {
         #[prost(message, tag = "2")]
         Chat(Chat),
@@ -3762,79 +3768,40 @@ pub mod content {
         /// 给机器人的币安指令。就是一条普通消息:群里 @ 谁谁执行,发令人是信封的 from。
         #[prost(message, tag = "6")]
         BinanceCmd(super::super::binance::BinanceCommand),
-        /// 聊天记录(合并转发):一个文件(url / 标题 / 条数),点开按 url 取回。见下面 ChatRecord。
+        /// 聊天记录(合并转发):原样内嵌被转发的那几条完整消息。见下面 ChatRecord。
         #[prost(message, tag = "7")]
         Record(super::ChatRecord),
     }
 }
 /// 聊天记录 —— **合并转发**出来的那一条(类似微信「聊天记录」卡片)。`Content.type = "chat_record"`。
 ///
-/// **它是一种文件**(本质是文本):记录的内容是一个 JSON 文件(见下面 ChatRecordFile),发送方上传到
-/// 聊天媒体桶(与图片同一个临时桶、同一个保留期)拿到 url;消息里只放 url / 标题 / 条数。
-/// 卡片显示 `title` 与 `count`,点开时按 `url` 取回文件再渲染;**再转发 = 引用同一个 url**,不重新上传。
+/// **原样内嵌被转发消息的完整 `Message`**(信封:uuid / 发件人 / 时间……;内容:`contents` 原字节),
+/// 转发这一段就是把它原样搬过去;展开时每条照常按它自己的内容类型解析、显示。
+/// 套娃(转发一条已经是聊天记录的消息)照样内嵌,一层套一层。
 ///
 /// 它就是一条普通消息的一段内容:中间层(core / 后端 / broker)不认识它、也不需要认识它,原样存、原样转。
 ///
-/// ⚠️ **没有内嵌的 `list` 了,不要加回来**(原 `repeated ChatRecordItem list = 2`,10-05 ~ 10-07 那一版):
-/// 用户 10-07 定「聊天记录作为一个文件类型,本质是文本类型」—— 文件才有 url,有 url 才能
-/// 像图片、文件一样出现在给模型的附件列表里(hi.ai `Content` 那段),模型才能在几轮之后
-/// 「把那段聊天记录转给某人」时按 url 引用它;内嵌的那份没有地址,模型只能看不能指。
-/// **旧数据**(那一版发出去的,字段 2 在新版里是未知字段、解码时跳过)解出来 `url` 缺席 ——
-/// 判据只有这一个:**`url` 没有值 = 旧版聊天记录**,端上显示「旧版聊天记录」、不能点开,
-/// 给模型时也只有标题。不迁移、不做读侧兼容(激进开发)。
+/// ⚠️ **不存成文件、不放 url,不要改回去**(10-07 有过一版:内容做成 JSON 文件传聊天媒体桶,消息里只放 url / 标题 / 条数):
+/// 转发的可能是**别人聊天里的消息**,收件人不一定有权限去取那个文件;内嵌的话,收到这条消息就收到了全部内容。
+/// 那一版的 `url` / `count` 与文件格式 `ChatRecordFile` / `ChatRecordItem` 已删。
+/// **旧数据不做兼容**(用户 10-07 定):10-05 那一版的字段 2(`ChatRecordItem` 列表)与 10-07 那一版的 3 / 4
+/// 在这里都是未知字段,解码跳过,只剩标题、没有条目。`list` 用新号 5,不复用 2 —— 复用的话旧数据的
+/// 条目会被当成 `Message` 解(字段号对不上,uuid 位置上是一个 Entity),整条消息的内容可能一起解不开。
 ///
-/// 字段号 3 / 4 不复用 2:旧数据的字段 2 是一个嵌套消息,要是把 `url` 放在 2 上,
-/// 那段字节会被当成字符串解 —— 不是合法 UTF-8 时整个 Contents 解不开,一条消息的全部内容一起消失。
+/// 每条 `Message.contents` 是原消息的内容字节**原样**,不解开重编 —— 转发方的 proto 比原消息旧时,
+/// 解开再编会把新内容类型静默丢掉。解不开的那条显示「不支持的消息类型」,不影响其余几条。
+///
+/// 引用里面的某一段:`<这条聊天记录所在消息的 uuid>#<这段的 id>/<里面那条消息的 uuid>#<id>`(见上面「引用」)。
 ///
 /// 机器人把语音聊天记录发给主人(内置插件 `send_chat_record`)发的也是这个。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ChatRecord {
-    /// 卡片标题,如「张三与李四的聊天记录」;发送方写好,与文件里的 title 相同
-    #[prost(string, optional, tag = "1")]
-    pub title: ::core::option::Option<::prost::alloc::string::String>,
-    /// 聊天记录文件的地址(内容见 ChatRecordFile);没有值 = 旧版(见上)
-    #[prost(string, optional, tag = "3")]
-    pub url: ::core::option::Option<::prost::alloc::string::String>,
-    /// 文件里有几条(= ChatRecordFile.list 的长度),卡片上显示「共 N 条」
-    #[prost(uint32, optional, tag = "4")]
-    pub count: ::core::option::Option<u32>,
-}
-/// 聊天记录文件 —— `ChatRecord.url` 指向的那个文件。
-///
-/// **格式:这个消息的 protojson**(UTF-8 的 JSON,`application/json`,文件名 `chat_record.json`)。
-/// 用 protojson 是因为四种语言都有现成的编解码,字段名就是下面这些(int64 写成字符串、bytes 写成 base64):
-///
-/// ```text
-/// {"title":"我和张三的聊天记录",
-///   "list":\[{"from":{"did":"z…","name":"张三"},"timestamp":"1759800000000000","contents":"CgYKBHRleHQ…"}\]}
-/// ```
-///
-/// 每一条保留**原消息的内容字节**(`Message.contents` 原样,即序列化后的 `hi.club.Contents`),
-/// 不解开重编 —— 转发方用的 proto 比原消息旧时,解开再编会把新内容类型静默丢掉。
-/// 端上显示时照常解一遍;解不开的那条显示「不支持的消息类型」,不影响其余几条。
-/// 聊天记录里套聊天记录(转发一条已经是聊天记录的消息)是允许的,里面那条同样只是 url,点开再取。
-///
-/// 逐条转发不用它:那是把原 `contents` 换个 uuid / 会话原样再发一次。
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChatRecordFile {
-    /// 与 ChatRecord.title 相同
+pub struct ChatRecord {
+    /// 卡片标题,如「张三与李四的聊天记录」
     #[prost(string, optional, tag = "1")]
     pub title: ::core::option::Option<::prost::alloc::string::String>,
-    /// 按原时间先后
-    #[prost(message, repeated, tag = "2")]
-    pub list: ::prost::alloc::vec::Vec<ChatRecordItem>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ChatRecordItem {
-    /// 原发件人(原消息信封的 from,原样;Entity=公开门面)
-    #[prost(message, optional, tag = "1")]
-    pub from: ::core::option::Option<super::Entity>,
-    /// 原消息的时间(微秒,服务器时间)
-    #[prost(int64, optional, tag = "2")]
-    pub timestamp: ::core::option::Option<i64>,
-    /// 原消息的 `Message.contents` 原样
-    #[prost(bytes = "vec", optional, tag = "3")]
-    pub contents: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
+    /// 被转发的消息,原样(按原时间先后)
+    #[prost(message, repeated, tag = "5")]
+    pub list: ::prost::alloc::vec::Vec<Message>,
 }
 /// 群公共信息(所有成员一致)。**群的种类只看 base.type**:single / group-private / group-public / group-open
 /// (取值与各自的规则见 hi/common.proto 的 Entity 注释)。base.update 供前端判断缓存新鲜度。
@@ -3959,6 +3926,21 @@ pub struct ListRecentMessagesResp {
     /// true = 请求的条数超过后端上限,已按上限截
     #[prost(bool, optional, tag = "4")]
     pub capped: ::core::option::Option<bool>,
+}
+/// 按 uuid 取会话里的**一条**消息(原样:信封 + 内容原字节)。
+///
+/// 用途:引用 `<消息 uuid>#<段 id>` 要拿到那条消息才能取出那一段(hi/club/messaging.proto「引用」)——
+/// hiclub-core-mqtt 先查本机库,本机没有(换了设备、清过本地、早于本机登录)才来这里取。
+/// **只在给定的会话里找**(解析只在本层):不在这个会话的 uuid 一律 NotFound,不替人确认它在别处存在。
+/// 权限与可见范围同 `ListRecentMessages`:调用者必须是该会话成员,最长保留期之内、且不早于调用者入群的时间。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetMessageReq {
+    /// 群号 / 单聊会话号
+    #[prost(string, optional, tag = "1")]
+    pub code: ::core::option::Option<::prost::alloc::string::String>,
+    /// 消息 uuid
+    #[prost(string, optional, tag = "2")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListGroupMembersReq {
@@ -4481,6 +4463,24 @@ pub mod group_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.Group", "ListRecentMessages"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get_message(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetMessageReq>,
+        ) -> std::result::Result<tonic::Response<super::Packet>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.Group/GetMessage");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Group", "GetMessage"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn set_role(
@@ -5705,6 +5705,11 @@ pub struct ChatReq {
     /// ⚠️ 人自己在 app/web 里直接跟助手聊时可以不传,服务端按登录主体推导。
     #[prost(string, optional, tag = "12")]
     pub asker: ::core::option::Option<::prost::alloc::string::String>,
+    /// 这句话所在那条消息的 uuid(IM 路:机器人收到的那条 mqtt 消息的 uuid)。
+    /// club 据此给聊天记录这类原样内嵌的内容写引用 `<uuid>#<段 id>`(附件列表,见 hi/ai/chat.proto `Attachment`)。
+    /// **语音路不用传**:那一轮的 uuid 由 club 在调 hi.ai 之前生成,写进语音聊天记录时用的是同一个。
+    #[prost(string, optional, tag = "13")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ToolCallResult {
@@ -5712,6 +5717,11 @@ pub struct ToolCallResult {
     pub id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, repeated, tag = "2")]
     pub conts: ::prost::alloc::vec::Vec<Content>,
+    /// 这次工具调用发出去的附件(回答侧),club 原样交给 hi.ai(见 hi.ai.ToolCallResult.attachments)。
+    /// 一行的格式与问题侧同一份(hi.ai.Attachment):机器人那侧由 hiclub-core-mqtt 发送时给出,插件把它放进
+    /// 结果的 `attachments` 键,brain 照搬到这里。
+    #[prost(message, repeated, tag = "3")]
+    pub attachments: ::prost::alloc::vec::Vec<super::ai::Attachment>,
 }
 /// 工具结果续跑入参(Resume):客户端执行完工具后把结果交回来,接着跑。
 #[derive(Clone, PartialEq, ::prost::Message)]

@@ -184,6 +184,7 @@ const ChatReq$json = {
       '17': true
     },
     {'1': 'asker', '3': 12, '4': 1, '5': 9, '9': 9, '10': 'asker', '17': true},
+    {'1': 'uuid', '3': 13, '4': 1, '5': 9, '9': 10, '10': 'uuid', '17': true},
   ],
   '8': [
     {'1': '_agent'},
@@ -196,6 +197,7 @@ const ChatReq$json = {
     {'1': '_echo_memory'},
     {'1': '_echo_context'},
     {'1': '_asker'},
+    {'1': '_uuid'},
   ],
 };
 
@@ -208,9 +210,10 @@ final $typed_data.Uint8List chatReqDescriptor = $convert.base64Decode(
     'SARSBXN0YXRliAEBEhkKBXN0eWxlGAggASgJSAVSBXN0eWxliAEBEisKD2VjaG9fdG9vbF9jYW'
     'xscxgJIAEoCEgGUg1lY2hvVG9vbENhbGxziAEBEiQKC2VjaG9fbWVtb3J5GAogASgISAdSCmVj'
     'aG9NZW1vcnmIAQESJgoMZWNob19jb250ZXh0GAsgASgISAhSC2VjaG9Db250ZXh0iAEBEhkKBW'
-    'Fza2VyGAwgASgJSAlSBWFza2VyiAEBQggKBl9hZ2VudEIGCgRfY2lkQg4KDF90b29sX2Nob2lj'
-    'ZUIJCgdfY3VzdG9tQggKBl9zdGF0ZUIICgZfc3R5bGVCEgoQX2VjaG9fdG9vbF9jYWxsc0IOCg'
-    'xfZWNob19tZW1vcnlCDwoNX2VjaG9fY29udGV4dEIICgZfYXNrZXI=');
+    'Fza2VyGAwgASgJSAlSBWFza2VyiAEBEhcKBHV1aWQYDSABKAlIClIEdXVpZIgBAUIICgZfYWdl'
+    'bnRCBgoEX2NpZEIOCgxfdG9vbF9jaG9pY2VCCQoHX2N1c3RvbUIICgZfc3RhdGVCCAoGX3N0eW'
+    'xlQhIKEF9lY2hvX3Rvb2xfY2FsbHNCDgoMX2VjaG9fbWVtb3J5Qg8KDV9lY2hvX2NvbnRleHRC'
+    'CAoGX2Fza2VyQgcKBV91dWlk');
 
 @$core.Deprecated('Use toolCallResultDescriptor instead')
 const ToolCallResult$json = {
@@ -225,6 +228,14 @@ const ToolCallResult$json = {
       '6': '.hi.club.Content',
       '10': 'conts'
     },
+    {
+      '1': 'attachments',
+      '3': 3,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.ai.Attachment',
+      '10': 'attachments'
+    },
   ],
   '8': [
     {'1': '_id'},
@@ -234,7 +245,8 @@ const ToolCallResult$json = {
 /// Descriptor for `ToolCallResult`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List toolCallResultDescriptor = $convert.base64Decode(
     'Cg5Ub29sQ2FsbFJlc3VsdBITCgJpZBgBIAEoCUgAUgJpZIgBARImCgVjb250cxgCIAMoCzIQLm'
-    'hpLmNsdWIuQ29udGVudFIFY29udHNCBQoDX2lk');
+    'hpLmNsdWIuQ29udGVudFIFY29udHMSMwoLYXR0YWNobWVudHMYAyADKAsyES5oaS5haS5BdHRh'
+    'Y2htZW50UgthdHRhY2htZW50c0IFCgNfaWQ=');
 
 @$core.Deprecated('Use toolCallResultsReqDescriptor instead')
 const ToolCallResultsReq$json = {

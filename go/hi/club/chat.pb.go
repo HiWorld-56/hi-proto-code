@@ -335,7 +335,11 @@ type ChatReq struct {
 	//	别拿 `from` 去做流转之外的事。
 	//
 	// ⚠️ 人自己在 app/web 里直接跟助手聊时可以不传,服务端按登录主体推导。
-	Asker         *string `protobuf:"bytes,12,opt,name=asker,proto3,oneof" json:"asker,omitempty"`
+	Asker *string `protobuf:"bytes,12,opt,name=asker,proto3,oneof" json:"asker,omitempty"`
+	// 这句话所在那条消息的 uuid(IM 路:机器人收到的那条 mqtt 消息的 uuid)。
+	// club 据此给聊天记录这类原样内嵌的内容写引用 `<uuid>#<段 id>`(附件列表,见 hi/ai/chat.proto `Attachment`)。
+	// **语音路不用传**:那一轮的 uuid 由 club 在调 hi.ai 之前生成,写进语音聊天记录时用的是同一个。
+	Uuid          *string `protobuf:"bytes,13,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -454,10 +458,21 @@ func (x *ChatReq) GetAsker() string {
 	return ""
 }
 
+func (x *ChatReq) GetUuid() string {
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
+	}
+	return ""
+}
+
 type ToolCallResult struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	Conts         []*Content             `protobuf:"bytes,2,rep,name=conts,proto3" json:"conts,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Id    *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	Conts []*Content             `protobuf:"bytes,2,rep,name=conts,proto3" json:"conts,omitempty"`
+	// 这次工具调用发出去的附件(回答侧),club 原样交给 hi.ai(见 hi.ai.ToolCallResult.attachments)。
+	// 一行的格式与问题侧同一份(hi.ai.Attachment):机器人那侧由 hiclub-core-mqtt 发送时给出,插件把它放进
+	// 结果的 `attachments` 键,brain 照搬到这里。
+	Attachments   []*ai.Attachment `protobuf:"bytes,3,rep,name=attachments,proto3" json:"attachments,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -502,6 +517,13 @@ func (x *ToolCallResult) GetId() string {
 func (x *ToolCallResult) GetConts() []*Content {
 	if x != nil {
 		return x.Conts
+	}
+	return nil
+}
+
+func (x *ToolCallResult) GetAttachments() []*ai.Attachment {
+	if x != nil {
+		return x.Attachments
 	}
 	return nil
 }
@@ -583,7 +605,7 @@ const file_hi_club_chat_proto_rawDesc = "" +
 	"\x04_cidB\a\n" +
 	"\x05_userB\f\n" +
 	"\n" +
-	"_assistant\"\x9b\x04\n" +
+	"_assistant\"\xbd\x04\n" +
 	"\aChatReq\x12\x19\n" +
 	"\x05agent\x18\x01 \x01(\tH\x00R\x05agent\x88\x01\x01\x12\x15\n" +
 	"\x03cid\x18\x02 \x01(\tH\x01R\x03cid\x88\x01\x01\x12&\n" +
@@ -599,7 +621,9 @@ const file_hi_club_chat_proto_rawDesc = "" +
 	" \x01(\bH\aR\n" +
 	"echoMemory\x88\x01\x01\x12&\n" +
 	"\fecho_context\x18\v \x01(\bH\bR\vechoContext\x88\x01\x01\x12\x19\n" +
-	"\x05asker\x18\f \x01(\tH\tR\x05asker\x88\x01\x01B\b\n" +
+	"\x05asker\x18\f \x01(\tH\tR\x05asker\x88\x01\x01\x12\x17\n" +
+	"\x04uuid\x18\r \x01(\tH\n" +
+	"R\x04uuid\x88\x01\x01B\b\n" +
 	"\x06_agentB\x06\n" +
 	"\x04_cidB\x0e\n" +
 	"\f_tool_choiceB\t\n" +
@@ -609,10 +633,12 @@ const file_hi_club_chat_proto_rawDesc = "" +
 	"\x10_echo_tool_callsB\x0e\n" +
 	"\f_echo_memoryB\x0f\n" +
 	"\r_echo_contextB\b\n" +
-	"\x06_asker\"T\n" +
+	"\x06_askerB\a\n" +
+	"\x05_uuid\"\x89\x01\n" +
 	"\x0eToolCallResult\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12&\n" +
-	"\x05conts\x18\x02 \x03(\v2\x10.hi.club.ContentR\x05contsB\x05\n" +
+	"\x05conts\x18\x02 \x03(\v2\x10.hi.club.ContentR\x05conts\x123\n" +
+	"\vattachments\x18\x03 \x03(\v2\x11.hi.ai.AttachmentR\vattachmentsB\x05\n" +
 	"\x03_id\"]\n" +
 	"\x12ToolCallResultsReq\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12+\n" +
@@ -655,10 +681,11 @@ var file_hi_club_chat_proto_goTypes = []any{
 	(*ToolCallResultsReq)(nil),    // 7: hi.club.ToolCallResultsReq
 	(*Content)(nil),               // 8: hi.club.Content
 	(*ai.ToolSupply)(nil),         // 9: hi.ai.ToolSupply
-	(*emptypb.Empty)(nil),         // 10: google.protobuf.Empty
-	(*ai.NewSessionResp)(nil),     // 11: hi.ai.NewSessionResp
-	(*ai.ChatResp)(nil),           // 12: hi.ai.ChatResp
-	(*ai.ConverseStreamResp)(nil), // 13: hi.ai.ConverseStreamResp
+	(*ai.Attachment)(nil),         // 10: hi.ai.Attachment
+	(*emptypb.Empty)(nil),         // 11: google.protobuf.Empty
+	(*ai.NewSessionResp)(nil),     // 12: hi.ai.NewSessionResp
+	(*ai.ChatResp)(nil),           // 13: hi.ai.ChatResp
+	(*ai.ConverseStreamResp)(nil), // 14: hi.ai.ConverseStreamResp
 }
 var file_hi_club_chat_proto_depIdxs = []int32{
 	8,  // 0: hi.club.QA.q:type_name -> hi.club.Content
@@ -666,28 +693,29 @@ var file_hi_club_chat_proto_depIdxs = []int32{
 	8,  // 2: hi.club.ChatReq.conts:type_name -> hi.club.Content
 	9,  // 3: hi.club.ChatReq.tools:type_name -> hi.ai.ToolSupply
 	8,  // 4: hi.club.ToolCallResult.conts:type_name -> hi.club.Content
-	6,  // 5: hi.club.ToolCallResultsReq.list:type_name -> hi.club.ToolCallResult
-	10, // 6: hi.club.Chat.NewSession:input_type -> google.protobuf.Empty
-	2,  // 7: hi.club.Chat.GetContext:input_type -> hi.club.GetContextReq
-	3,  // 8: hi.club.Chat.ClearContext:input_type -> hi.club.ClearContextReq
-	4,  // 9: hi.club.Chat.AppendContext:input_type -> hi.club.AppendContextReq
-	5,  // 10: hi.club.Chat.Converse:input_type -> hi.club.ChatReq
-	5,  // 11: hi.club.Chat.ConverseStream:input_type -> hi.club.ChatReq
-	7,  // 12: hi.club.Chat.Resume:input_type -> hi.club.ToolCallResultsReq
-	7,  // 13: hi.club.Chat.ResumeStream:input_type -> hi.club.ToolCallResultsReq
-	11, // 14: hi.club.Chat.NewSession:output_type -> hi.ai.NewSessionResp
-	1,  // 15: hi.club.Chat.GetContext:output_type -> hi.club.GetContextResp
-	10, // 16: hi.club.Chat.ClearContext:output_type -> google.protobuf.Empty
-	10, // 17: hi.club.Chat.AppendContext:output_type -> google.protobuf.Empty
-	12, // 18: hi.club.Chat.Converse:output_type -> hi.ai.ChatResp
-	13, // 19: hi.club.Chat.ConverseStream:output_type -> hi.ai.ConverseStreamResp
-	12, // 20: hi.club.Chat.Resume:output_type -> hi.ai.ChatResp
-	13, // 21: hi.club.Chat.ResumeStream:output_type -> hi.ai.ConverseStreamResp
-	14, // [14:22] is the sub-list for method output_type
-	6,  // [6:14] is the sub-list for method input_type
-	6,  // [6:6] is the sub-list for extension type_name
-	6,  // [6:6] is the sub-list for extension extendee
-	0,  // [0:6] is the sub-list for field type_name
+	10, // 5: hi.club.ToolCallResult.attachments:type_name -> hi.ai.Attachment
+	6,  // 6: hi.club.ToolCallResultsReq.list:type_name -> hi.club.ToolCallResult
+	11, // 7: hi.club.Chat.NewSession:input_type -> google.protobuf.Empty
+	2,  // 8: hi.club.Chat.GetContext:input_type -> hi.club.GetContextReq
+	3,  // 9: hi.club.Chat.ClearContext:input_type -> hi.club.ClearContextReq
+	4,  // 10: hi.club.Chat.AppendContext:input_type -> hi.club.AppendContextReq
+	5,  // 11: hi.club.Chat.Converse:input_type -> hi.club.ChatReq
+	5,  // 12: hi.club.Chat.ConverseStream:input_type -> hi.club.ChatReq
+	7,  // 13: hi.club.Chat.Resume:input_type -> hi.club.ToolCallResultsReq
+	7,  // 14: hi.club.Chat.ResumeStream:input_type -> hi.club.ToolCallResultsReq
+	12, // 15: hi.club.Chat.NewSession:output_type -> hi.ai.NewSessionResp
+	1,  // 16: hi.club.Chat.GetContext:output_type -> hi.club.GetContextResp
+	11, // 17: hi.club.Chat.ClearContext:output_type -> google.protobuf.Empty
+	11, // 18: hi.club.Chat.AppendContext:output_type -> google.protobuf.Empty
+	13, // 19: hi.club.Chat.Converse:output_type -> hi.ai.ChatResp
+	14, // 20: hi.club.Chat.ConverseStream:output_type -> hi.ai.ConverseStreamResp
+	13, // 21: hi.club.Chat.Resume:output_type -> hi.ai.ChatResp
+	14, // 22: hi.club.Chat.ResumeStream:output_type -> hi.ai.ConverseStreamResp
+	15, // [15:23] is the sub-list for method output_type
+	7,  // [7:15] is the sub-list for method input_type
+	7,  // [7:7] is the sub-list for extension type_name
+	7,  // [7:7] is the sub-list for extension extendee
+	0,  // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_chat_proto_init() }

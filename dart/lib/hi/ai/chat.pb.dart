@@ -19,31 +19,16 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 /// ── AI 对话全链路都是私有:会话/上下文/回复只发给发起对话的本人 ──────────────
 ///
-/// 对话内容的一段。`type` 取 hi.club `Content.type` 那张表里的词(`text` / `image_url` / `audio_url` /
-/// `file` / `chat_record`;另有 web 直连用的 `file_url`),`content` 是正文或地址。
-///
-/// ## 附件列表:用户那句话里只要有文本以外的内容,hi.ai 就在 Q 后面附一份「【附件】」
-///
-/// 每一段非文本(图片 / 语音 / 文件 / 聊天记录)一行「名字 → url」,**是 Q 的一部分**:随这一轮问答一起
-/// 存进上下文,几轮之后模型照样能按文件名找到 url(「把刚才那个 xx.pdf 发给某人」)。
-/// 图片照旧另作视觉输入;语音照旧识别成文字进 Q,语音本身也进列表。
-/// 行的写法**只在 hi.ai 一处生成**(`internal/service/attachments.go` 的 `AttachmentList`),别处不复制。
-///
-/// 为什么要有:模型看到的图是内联的图片数据、语音是识别稿 —— **它手上没有地址**。让它转发主人发来的
-/// 图,它只能编一个 url(生产 10-06 编出 `files.oaiusercontent.com/…`,7 个好友各收到一张裂图)。
-/// 地址本来就在消息里,把它摆到模型面前就够了,「转发哪一个」由模型自己判断。
+/// 对话内容的一段。`type` 取 hi.club `Content.type` 那张表里的词(`text` / `image_url` / `audio_url`;
+/// 另有 web 直连用的 `file_url`),`content` 是正文或地址。图片作视觉输入、语音识别成文字进 Q。
 class Content extends $pb.GeneratedMessage {
   factory Content({
     $core.String? type,
     $core.String? content,
-    $core.String? name,
-    $core.int? count,
   }) {
     final result = create();
     if (type != null) result.type = type;
     if (content != null) result.content = content;
-    if (name != null) result.name = name;
-    if (count != null) result.count = count;
     return result;
   }
 
@@ -62,8 +47,6 @@ class Content extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'type')
     ..aOS(2, _omitFieldNames ? '' : 'content')
-    ..aOS(3, _omitFieldNames ? '' : 'name')
-    ..aI(4, _omitFieldNames ? '' : 'count', fieldType: $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -101,26 +84,105 @@ class Content extends $pb.GeneratedMessage {
   $core.bool hasContent() => $_has(1);
   @$pb.TagNumber(2)
   void clearContent() => $_clearField(2);
+}
 
-  /// 名字:文件 / 图片的原文件名,聊天记录的标题。没有就不给。进附件列表那一行。
-  @$pb.TagNumber(3)
-  $core.String get name => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set name($core.String value) => $_setString(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasName() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearName() => $_clearField(3);
+/// ## 附件列表的一行 —— hiclub 与 hi.ai 之间约定的辅助格式(2026-10-07 定)
+///
+/// 用户那句话里有文本以外的内容(图片 / 语音 / 文件 / 聊天记录),或机器人这一轮发出了附件,
+/// hi.ai 就把它们按**固定规则**拼成文字,附在 Q(问题侧)/ A(回答侧)后面,**随这一轮问答存进上下文**:
+///
+///     【附件】
+///     1. 文件 合同草稿.pdf → https://…/合同草稿.pdf
+///     2. 聊天记录 《我和王总的聊天记录》共 3 条 → 9f1c…#2
+///     3. 图片 图片3 → https://…/a.jpg
+///
+/// 每行「序号. 类型 名字 → 引用」:序号按列表先后从 1 编;类型、名字、引用都是调用方给的字,hi.ai **原样照抄**。
+/// **hi.ai 不认 hiclub 的内容类型、也不需要知道前端怎么用这些引用** —— 它只负责拼成文字、随问答存。
+/// 目的:模型一眼看懂这一轮有哪些附件、各叫什么;几轮之后「把合同草稿转给李总」,它在上下文里按名字找得到引用,
+/// 把「引用 + 名字」原样填进插件参数(内置插件 `send_message` 的 `attachments`)。
+///
+/// 谁来整理:**前端**(app / 机器人)在 hiclub-core-mqtt 里解析与封装 —— 机器人这一轮发出去的附件由 core 发送时给出;
+/// **后端**在 club 里解析与封装 —— 交给 hi.ai 之前从用户那条消息的内容段整理出来(`ChatReq.attachments`)。
+/// 引用的写法与解析规则见 hi/club/messaging.proto「引用」那段(url,或 `<消息 uuid>#<段 id>`)。
+///
+/// 为什么要有:模型看到的图是内联的图片数据、语音是识别稿 —— **它手上没有地址**,转发时只能编一个
+/// (生产 10-06 编出 `files.oaiusercontent.com/…`,7 个好友各收到一张裂图)。
+class Attachment extends $pb.GeneratedMessage {
+  factory Attachment({
+    $core.String? type,
+    $core.String? name,
+    $core.String? ref,
+  }) {
+    final result = create();
+    if (type != null) result.type = type;
+    if (name != null) result.name = name;
+    if (ref != null) result.ref = ref;
+    return result;
+  }
 
-  /// 聊天记录里有几条(hi.club `ChatRecord.count`);别的类型不给。进附件列表那一行。
-  @$pb.TagNumber(4)
-  $core.int get count => $_getIZ(3);
-  @$pb.TagNumber(4)
-  set count($core.int value) => $_setUnsignedInt32(3, value);
-  @$pb.TagNumber(4)
-  $core.bool hasCount() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearCount() => $_clearField(4);
+  Attachment._();
+
+  factory Attachment.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Attachment.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Attachment',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'type')
+    ..aOS(2, _omitFieldNames ? '' : 'name')
+    ..aOS(3, _omitFieldNames ? '' : 'ref')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Attachment clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Attachment copyWith(void Function(Attachment) updates) =>
+      super.copyWith((message) => updates(message as Attachment)) as Attachment;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Attachment create() => Attachment._();
+  @$core.override
+  Attachment createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Attachment getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Attachment>(create);
+  static Attachment? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get type => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set type($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasType() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearType() => $_clearField(1);
+
+  /// 名字:文件是原文件名;聊天记录是「《标题》共 N 条」;图片 / 语音没有名字就是「图片1」「语音2」(数字 = 这一行的序号)
+  @$pb.TagNumber(2)
+  $core.String get name => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set name($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasName() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearName() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get ref => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set ref($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasRef() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearRef() => $_clearField(3);
 }
 
 class NewSessionResp extends $pb.GeneratedMessage {
@@ -602,6 +664,7 @@ class ChatReq extends $pb.GeneratedMessage {
     $core.String? asker,
     $core.String? master,
     $core.String? caller,
+    $core.Iterable<Attachment>? attachments,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
@@ -618,6 +681,7 @@ class ChatReq extends $pb.GeneratedMessage {
     if (asker != null) result.asker = asker;
     if (master != null) result.master = master;
     if (caller != null) result.caller = caller;
+    if (attachments != null) result.attachments.addAll(attachments);
     return result;
   }
 
@@ -650,6 +714,8 @@ class ChatReq extends $pb.GeneratedMessage {
     ..aOS(12, _omitFieldNames ? '' : 'asker')
     ..aOS(13, _omitFieldNames ? '' : 'master')
     ..aOS(14, _omitFieldNames ? '' : 'caller')
+    ..pPM<Attachment>(15, _omitFieldNames ? '' : 'attachments',
+        subBuilder: Attachment.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -820,16 +886,23 @@ class ChatReq extends $pb.GeneratedMessage {
   $core.bool hasCaller() => $_has(13);
   @$pb.TagNumber(14)
   void clearCaller() => $_clearField(14);
+
+  /// 用户这句话里的附件(问题侧),hi.ai 拼成「【附件】」附在 Q 后面、随问答存进上下文(见 `Attachment`)。
+  /// 由调用方整理:club 从那条消息的内容段整理好填这里(hiclub 的前端不直接填)。不给 = 没有附件。
+  @$pb.TagNumber(15)
+  $pb.PbList<Attachment> get attachments => $_getList(14);
 }
 
 class ToolCallResult extends $pb.GeneratedMessage {
   factory ToolCallResult({
     $core.String? id,
     $core.Iterable<Content>? conts,
+    $core.Iterable<Attachment>? attachments,
   }) {
     final result = create();
     if (id != null) result.id = id;
     if (conts != null) result.conts.addAll(conts);
+    if (attachments != null) result.attachments.addAll(attachments);
     return result;
   }
 
@@ -849,6 +922,8 @@ class ToolCallResult extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'id')
     ..pPM<Content>(2, _omitFieldNames ? '' : 'conts',
         subBuilder: Content.create)
+    ..pPM<Attachment>(3, _omitFieldNames ? '' : 'attachments',
+        subBuilder: Attachment.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -881,6 +956,12 @@ class ToolCallResult extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(2)
   $pb.PbList<Content> get conts => $_getList(1);
+
+  /// 这次工具调用**发出去的附件**(回答侧,如拍的照片、转发的文件 / 聊天记录)。hi.ai 把这一轮所有工具调用的
+  /// 这一项按先后合在一起,拼成「【附件】」附在 A 后面存进上下文 —— 几轮之后「刚才那张也发给李总」,模型照样找得到引用。
+  /// hi.ai 只认这一个字段,不看工具结果里写了什么。
+  @$pb.TagNumber(3)
+  $pb.PbList<Attachment> get attachments => $_getList(2);
 }
 
 /// 工具结果续跑入参(Resume):客户端执行完工具后把结果交回来,接着跑。续跑的模态由原始调用的 id 决定。

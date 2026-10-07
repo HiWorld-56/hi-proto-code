@@ -15,8 +15,8 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../common.pb.dart' as $2;
-import 'messaging.pb.dart' as $3;
+import '../common.pb.dart' as $3;
+import 'messaging.pb.dart' as $2;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -27,7 +27,7 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 ///    三处各管一截,于是私有群只能"先建成公开群、再改成私密",单聊群也一直是公开的。已删,只留 type。
 class GroupBase extends $pb.GeneratedMessage {
   factory GroupBase({
-    $2.Entity? base,
+    $3.Entity? base,
     $core.String? background,
   }) {
     final result = create();
@@ -49,8 +49,8 @@ class GroupBase extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'GroupBase',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'base',
-        subBuilder: $2.Entity.create)
+    ..aOM<$3.Entity>(1, _omitFieldNames ? '' : 'base',
+        subBuilder: $3.Entity.create)
     ..aOS(2, _omitFieldNames ? '' : 'background')
     ..hasRequiredFields = false;
 
@@ -73,15 +73,15 @@ class GroupBase extends $pb.GeneratedMessage {
   static GroupBase? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.Entity get base => $_getN(0);
+  $3.Entity get base => $_getN(0);
   @$pb.TagNumber(1)
-  set base($2.Entity value) => $_setField(1, value);
+  set base($3.Entity value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasBase() => $_has(0);
   @$pb.TagNumber(1)
   void clearBase() => $_clearField(1);
   @$pb.TagNumber(1)
-  $2.Entity ensureBase() => $_ensure(0);
+  $3.Entity ensureBase() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $core.String get background => $_getSZ(1);
@@ -162,7 +162,7 @@ class GroupMemberAttr extends $pb.GeneratedMessage {
 
 class GroupMember extends $pb.GeneratedMessage {
   factory GroupMember({
-    $2.Entity? base,
+    $3.Entity? base,
     GroupMemberAttr? attr,
   }) {
     final result = create();
@@ -184,8 +184,8 @@ class GroupMember extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'GroupMember',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'base',
-        subBuilder: $2.Entity.create)
+    ..aOM<$3.Entity>(1, _omitFieldNames ? '' : 'base',
+        subBuilder: $3.Entity.create)
     ..aOM<GroupMemberAttr>(2, _omitFieldNames ? '' : 'attr',
         subBuilder: GroupMemberAttr.create)
     ..hasRequiredFields = false;
@@ -210,15 +210,15 @@ class GroupMember extends $pb.GeneratedMessage {
   static GroupMember? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.Entity get base => $_getN(0);
+  $3.Entity get base => $_getN(0);
   @$pb.TagNumber(1)
-  set base($2.Entity value) => $_setField(1, value);
+  set base($3.Entity value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasBase() => $_has(0);
   @$pb.TagNumber(1)
   void clearBase() => $_clearField(1);
   @$pb.TagNumber(1)
-  $2.Entity ensureBase() => $_ensure(0);
+  $3.Entity ensureBase() => $_ensure(0);
 
   @$pb.TagNumber(2)
   GroupMemberAttr get attr => $_getN(1);
@@ -628,7 +628,7 @@ class ListGroupMessagesReq extends $pb.GeneratedMessage {
 
 class ListGroupMessagesResp extends $pb.GeneratedMessage {
   factory ListGroupMessagesResp({
-    $core.Iterable<$3.Packet>? list,
+    $core.Iterable<$2.Packet>? list,
   }) {
     final result = create();
     if (list != null) result.list.addAll(list);
@@ -648,8 +648,8 @@ class ListGroupMessagesResp extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'ListGroupMessagesResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..pPM<$3.Packet>(1, _omitFieldNames ? '' : 'list',
-        subBuilder: $3.Packet.create)
+    ..pPM<$2.Packet>(1, _omitFieldNames ? '' : 'list',
+        subBuilder: $2.Packet.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -673,7 +673,7 @@ class ListGroupMessagesResp extends $pb.GeneratedMessage {
   static ListGroupMessagesResp? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $pb.PbList<$3.Packet> get list => $_getList(0);
+  $pb.PbList<$2.Packet> get list => $_getList(0);
 }
 
 /// 读一个会话**最近 N 条**(群、单聊、机器人的语音聊天记录都是会话)。
@@ -770,7 +770,7 @@ class ListRecentMessagesReq extends $pb.GeneratedMessage {
 
 class ListRecentMessagesResp extends $pb.GeneratedMessage {
   factory ListRecentMessagesResp({
-    $core.Iterable<$3.Packet>? list,
+    $core.Iterable<$2.Packet>? list,
     $core.String? code,
     $core.int? limit,
     $core.bool? capped,
@@ -796,8 +796,8 @@ class ListRecentMessagesResp extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'ListRecentMessagesResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..pPM<$3.Packet>(1, _omitFieldNames ? '' : 'list',
-        subBuilder: $3.Packet.create)
+    ..pPM<$2.Packet>(1, _omitFieldNames ? '' : 'list',
+        subBuilder: $2.Packet.create)
     ..aOS(2, _omitFieldNames ? '' : 'code')
     ..aI(3, _omitFieldNames ? '' : 'limit')
     ..aOB(4, _omitFieldNames ? '' : 'capped')
@@ -824,7 +824,7 @@ class ListRecentMessagesResp extends $pb.GeneratedMessage {
   static ListRecentMessagesResp? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $pb.PbList<$3.Packet> get list => $_getList(0);
+  $pb.PbList<$2.Packet> get list => $_getList(0);
 
   @$pb.TagNumber(2)
   $core.String get code => $_getSZ(1);
@@ -854,10 +854,82 @@ class ListRecentMessagesResp extends $pb.GeneratedMessage {
   void clearCapped() => $_clearField(4);
 }
 
+/// 按 uuid 取会话里的**一条**消息(原样:信封 + 内容原字节)。
+///
+/// 用途:引用 `<消息 uuid>#<段 id>` 要拿到那条消息才能取出那一段(hi/club/messaging.proto「引用」)——
+/// hiclub-core-mqtt 先查本机库,本机没有(换了设备、清过本地、早于本机登录)才来这里取。
+/// **只在给定的会话里找**(解析只在本层):不在这个会话的 uuid 一律 NotFound,不替人确认它在别处存在。
+/// 权限与可见范围同 `ListRecentMessages`:调用者必须是该会话成员,最长保留期之内、且不早于调用者入群的时间。
+class GetMessageReq extends $pb.GeneratedMessage {
+  factory GetMessageReq({
+    $core.String? code,
+    $core.String? uuid,
+  }) {
+    final result = create();
+    if (code != null) result.code = code;
+    if (uuid != null) result.uuid = uuid;
+    return result;
+  }
+
+  GetMessageReq._();
+
+  factory GetMessageReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetMessageReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetMessageReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'code')
+    ..aOS(2, _omitFieldNames ? '' : 'uuid')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetMessageReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetMessageReq copyWith(void Function(GetMessageReq) updates) =>
+      super.copyWith((message) => updates(message as GetMessageReq))
+          as GetMessageReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetMessageReq create() => GetMessageReq._();
+  @$core.override
+  GetMessageReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GetMessageReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetMessageReq>(create);
+  static GetMessageReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get code => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set code($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasCode() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCode() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get uuid => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set uuid($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasUuid() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUuid() => $_clearField(2);
+}
+
 class ListGroupMembersReq extends $pb.GeneratedMessage {
   factory ListGroupMembersReq({
     $core.String? code,
-    $2.Pagination? pagination,
+    $3.Pagination? pagination,
   }) {
     final result = create();
     if (code != null) result.code = code;
@@ -879,8 +951,8 @@ class ListGroupMembersReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'code')
-    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $2.Pagination.create)
+    ..aOM<$3.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $3.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -912,15 +984,15 @@ class ListGroupMembersReq extends $pb.GeneratedMessage {
   void clearCode() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $2.Pagination get pagination => $_getN(1);
+  $3.Pagination get pagination => $_getN(1);
   @$pb.TagNumber(2)
-  set pagination($2.Pagination value) => $_setField(2, value);
+  set pagination($3.Pagination value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasPagination() => $_has(1);
   @$pb.TagNumber(2)
   void clearPagination() => $_clearField(2);
   @$pb.TagNumber(2)
-  $2.Pagination ensurePagination() => $_ensure(1);
+  $3.Pagination ensurePagination() => $_ensure(1);
 }
 
 class GetGroupMemberTotalReq extends $pb.GeneratedMessage {
@@ -1773,7 +1845,7 @@ class ListGroupsByCreatorReq extends $pb.GeneratedMessage {
 class OpenGroup extends $pb.GeneratedMessage {
   factory OpenGroup({
     $fixnum.Int64? memberTotal,
-    $2.Entity? base,
+    $3.Entity? base,
   }) {
     final result = create();
     if (memberTotal != null) result.memberTotal = memberTotal;
@@ -1795,8 +1867,8 @@ class OpenGroup extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aInt64(3, _omitFieldNames ? '' : 'memberTotal')
-    ..aOM<$2.Entity>(4, _omitFieldNames ? '' : 'base',
-        subBuilder: $2.Entity.create)
+    ..aOM<$3.Entity>(4, _omitFieldNames ? '' : 'base',
+        subBuilder: $3.Entity.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1832,15 +1904,15 @@ class OpenGroup extends $pb.GeneratedMessage {
   /// **新号 4**:1/2 原来是 `code` / `name` 两个字符串,而 string 与 message 在 wire 上
   /// 同为 length-delimited —— 复用同一个号,老客户端解出来是一段乱码而不是报错。
   @$pb.TagNumber(4)
-  $2.Entity get base => $_getN(1);
+  $3.Entity get base => $_getN(1);
   @$pb.TagNumber(4)
-  set base($2.Entity value) => $_setField(4, value);
+  set base($3.Entity value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasBase() => $_has(1);
   @$pb.TagNumber(4)
   void clearBase() => $_clearField(4);
   @$pb.TagNumber(4)
-  $2.Entity ensureBase() => $_ensure(1);
+  $3.Entity ensureBase() => $_ensure(1);
 }
 
 class ListGroupsByCreatorResp extends $pb.GeneratedMessage {

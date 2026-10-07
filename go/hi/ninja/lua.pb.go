@@ -34,7 +34,17 @@ type LuaCtx struct {
 	// 引起这次调用的那条消息的暗语等级(hi.club.Message.dark;不带 = 0 = 普通)。
 	// **只给宿主用,不给 lua 脚本看**:执行器随 HostCallReq.ctx 原样带回,宿主发消息
 	// (host.send_message)就沿用这个等级 —— 问题是哪一级,发出去的就是哪一级。插件不能自己选。
-	Dark          *uint32 `protobuf:"varint,4,opt,name=dark,proto3,oneof" json:"dark,omitempty"`
+	Dark *uint32 `protobuf:"varint,4,opt,name=dark,proto3,oneof" json:"dark,omitempty"`
+	// ⚠️ **没有 `attachments`(消息里的媒体),不要加回来**(v1.5.27-dev.1 加过,10-07 删):
+	//
+	//	模型手上没有图的地址、转发时只能编一个 —— 这件事改由附件列表解决(club 整理、hi.ai 拼进问答,
+	//	见 hi/ai/chat.proto `Attachment`),模型从列表里抄「引用 + 名字」填进插件参数。只有一套机制,不留两条路。
+	//
+	// 引起这次调用的那条消息所在的**会话号**(群号 / 单聊会话号);语音路、币安指令那类没有会话的不给。
+	// **只给宿主用,不给 lua 脚本看**(同 `dark`):插件带附件发消息时(sdk `send_with_attachments`),
+	// `<消息 uuid>#<段 id>` 这种引用只在这个会话里找(hi/club/messaging.proto「引用」:解析只在本层)。
+	// 号用 6 不用 5:5 是 dev.1 ~ dev.2 那几天的 `attachments`(消息型),复用会让还没换的执行器把它解坏。
+	Conv          *string `protobuf:"bytes,6,opt,name=conv,proto3,oneof" json:"conv,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -95,6 +105,13 @@ func (x *LuaCtx) GetDark() uint32 {
 		return *x.Dark
 	}
 	return 0
+}
+
+func (x *LuaCtx) GetConv() string {
+	if x != nil && x.Conv != nil {
+		return *x.Conv
+	}
+	return ""
 }
 
 // OpenReq 装一个插件：跑一遍顶层，读出 contract 与 manifest。
@@ -897,16 +914,18 @@ var File_hi_ninja_lua_proto protoreflect.FileDescriptor
 
 const file_hi_ninja_lua_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/ninja/lua.proto\x12\bhi.ninja\"\x93\x01\n" +
+	"\x12hi/ninja/lua.proto\x12\bhi.ninja\"\xb5\x01\n" +
 	"\x06LuaCtx\x12\x13\n" +
 	"\x02me\x18\x01 \x01(\tH\x00R\x02me\x88\x01\x01\x12\x1b\n" +
 	"\x06master\x18\x02 \x01(\tH\x01R\x06master\x88\x01\x01\x12\x19\n" +
 	"\x05asker\x18\x03 \x01(\tH\x02R\x05asker\x88\x01\x01\x12\x17\n" +
-	"\x04dark\x18\x04 \x01(\rH\x03R\x04dark\x88\x01\x01B\x05\n" +
+	"\x04dark\x18\x04 \x01(\rH\x03R\x04dark\x88\x01\x01\x12\x17\n" +
+	"\x04conv\x18\x06 \x01(\tH\x04R\x04conv\x88\x01\x01B\x05\n" +
 	"\x03_meB\t\n" +
 	"\a_masterB\b\n" +
 	"\x06_askerB\a\n" +
-	"\x05_dark\"\xa5\x01\n" +
+	"\x05_darkB\a\n" +
+	"\x05_conv\"\xa5\x01\n" +
 	"\aOpenReq\x12\x17\n" +
 	"\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x1d\n" +
 	"\aversion\x18\x02 \x01(\tH\x01R\aversion\x88\x01\x01\x12\x1b\n" +

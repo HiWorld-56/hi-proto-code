@@ -18,6 +18,7 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $1;
 
 import 'group.pb.dart' as $0;
+import 'messaging.pb.dart' as $2;
 
 export 'group.pb.dart';
 
@@ -130,6 +131,13 @@ class GroupClient extends $grpc.Client {
     return $createUnaryCall(_$listRecentMessages, request, options: options);
   }
 
+  $grpc.ResponseFuture<$2.Packet> getMessage(
+    $0.GetMessageReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$getMessage, request, options: options);
+  }
+
   $grpc.ResponseFuture<$1.Empty> setRole(
     $0.SetRoleReq request, {
     $grpc.CallOptions? options,
@@ -218,6 +226,10 @@ class GroupClient extends $grpc.Client {
           '/hi.club.Group/ListRecentMessages',
           ($0.ListRecentMessagesReq value) => value.writeToBuffer(),
           $0.ListRecentMessagesResp.fromBuffer);
+  static final _$getMessage = $grpc.ClientMethod<$0.GetMessageReq, $2.Packet>(
+      '/hi.club.Group/GetMessage',
+      ($0.GetMessageReq value) => value.writeToBuffer(),
+      $2.Packet.fromBuffer);
   static final _$setRole = $grpc.ClientMethod<$0.SetRoleReq, $1.Empty>(
       '/hi.club.Group/SetRole',
       ($0.SetRoleReq value) => value.writeToBuffer(),
@@ -341,6 +353,13 @@ abstract class GroupServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $0.ListRecentMessagesReq.fromBuffer(value),
         ($0.ListRecentMessagesResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.GetMessageReq, $2.Packet>(
+        'GetMessage',
+        getMessage_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.GetMessageReq.fromBuffer(value),
+        ($2.Packet value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.SetRoleReq, $1.Empty>(
         'SetRole',
         setRole_Pre,
@@ -476,6 +495,14 @@ abstract class GroupServiceBase extends $grpc.Service {
 
   $async.Future<$0.ListRecentMessagesResp> listRecentMessages(
       $grpc.ServiceCall call, $0.ListRecentMessagesReq request);
+
+  $async.Future<$2.Packet> getMessage_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.GetMessageReq> $request) async {
+    return getMessage($call, await $request);
+  }
+
+  $async.Future<$2.Packet> getMessage(
+      $grpc.ServiceCall call, $0.GetMessageReq request);
 
   $async.Future<$1.Empty> setRole_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.SetRoleReq> $request) async {

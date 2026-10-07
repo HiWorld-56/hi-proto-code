@@ -33,6 +33,7 @@ const (
 	Group_Remove_FullMethodName             = "/hi.club.Group/Remove"
 	Group_ListMessages_FullMethodName       = "/hi.club.Group/ListMessages"
 	Group_ListRecentMessages_FullMethodName = "/hi.club.Group/ListRecentMessages"
+	Group_GetMessage_FullMethodName         = "/hi.club.Group/GetMessage"
 	Group_SetRole_FullMethodName            = "/hi.club.Group/SetRole"
 	Group_GetRole_FullMethodName            = "/hi.club.Group/GetRole"
 	Group_SetDnd_FullMethodName             = "/hi.club.Group/SetDnd"
@@ -62,6 +63,7 @@ type GroupClient interface {
 	Remove(ctx context.Context, in *RemoveGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListMessages(ctx context.Context, in *ListGroupMessagesReq, opts ...grpc.CallOption) (*ListGroupMessagesResp, error)
 	ListRecentMessages(ctx context.Context, in *ListRecentMessagesReq, opts ...grpc.CallOption) (*ListRecentMessagesResp, error)
+	GetMessage(ctx context.Context, in *GetMessageReq, opts ...grpc.CallOption) (*Packet, error)
 	SetRole(ctx context.Context, in *SetRoleReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetRole(ctx context.Context, in *GetRoleReq, opts ...grpc.CallOption) (*GetRoleResp, error)
 	SetDnd(ctx context.Context, in *SetDndReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -206,6 +208,16 @@ func (c *groupClient) ListRecentMessages(ctx context.Context, in *ListRecentMess
 	return out, nil
 }
 
+func (c *groupClient) GetMessage(ctx context.Context, in *GetMessageReq, opts ...grpc.CallOption) (*Packet, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Packet)
+	err := c.cc.Invoke(ctx, Group_GetMessage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *groupClient) SetRole(ctx context.Context, in *SetRoleReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -269,6 +281,7 @@ type GroupServer interface {
 	Remove(context.Context, *RemoveGroupReq) (*emptypb.Empty, error)
 	ListMessages(context.Context, *ListGroupMessagesReq) (*ListGroupMessagesResp, error)
 	ListRecentMessages(context.Context, *ListRecentMessagesReq) (*ListRecentMessagesResp, error)
+	GetMessage(context.Context, *GetMessageReq) (*Packet, error)
 	SetRole(context.Context, *SetRoleReq) (*emptypb.Empty, error)
 	GetRole(context.Context, *GetRoleReq) (*GetRoleResp, error)
 	SetDnd(context.Context, *SetDndReq) (*emptypb.Empty, error)
@@ -320,6 +333,9 @@ func (UnimplementedGroupServer) ListMessages(context.Context, *ListGroupMessages
 }
 func (UnimplementedGroupServer) ListRecentMessages(context.Context, *ListRecentMessagesReq) (*ListRecentMessagesResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListRecentMessages not implemented")
+}
+func (UnimplementedGroupServer) GetMessage(context.Context, *GetMessageReq) (*Packet, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetMessage not implemented")
 }
 func (UnimplementedGroupServer) SetRole(context.Context, *SetRoleReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetRole not implemented")
@@ -587,6 +603,24 @@ func _Group_ListRecentMessages_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Group_GetMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMessageReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GroupServer).GetMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Group_GetMessage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GroupServer).GetMessage(ctx, req.(*GetMessageReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Group_SetRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SetRoleReq)
 	if err := dec(in); err != nil {
@@ -717,6 +751,10 @@ var Group_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListRecentMessages",
 			Handler:    _Group_ListRecentMessages_Handler,
+		},
+		{
+			MethodName: "GetMessage",
+			Handler:    _Group_GetMessage_Handler,
 		},
 		{
 			MethodName: "SetRole",

@@ -26,27 +26,12 @@ const (
 
 // ── AI 对话全链路都是私有:会话/上下文/回复只发给发起对话的本人 ──────────────
 //
-// 对话内容的一段。`type` 取 hi.club `Content.type` 那张表里的词(`text` / `image_url` / `audio_url` /
-// `file` / `chat_record`;另有 web 直连用的 `file_url`),`content` 是正文或地址。
-//
-// ## 附件列表:用户那句话里只要有文本以外的内容,hi.ai 就在 Q 后面附一份「【附件】」
-//
-// 每一段非文本(图片 / 语音 / 文件 / 聊天记录)一行「名字 → url」,**是 Q 的一部分**:随这一轮问答一起
-// 存进上下文,几轮之后模型照样能按文件名找到 url(「把刚才那个 xx.pdf 发给某人」)。
-// 图片照旧另作视觉输入;语音照旧识别成文字进 Q,语音本身也进列表。
-// 行的写法**只在 hi.ai 一处生成**(`internal/service/attachments.go` 的 `AttachmentList`),别处不复制。
-//
-// 为什么要有:模型看到的图是内联的图片数据、语音是识别稿 —— **它手上没有地址**。让它转发主人发来的
-// 图,它只能编一个 url(生产 10-06 编出 `files.oaiusercontent.com/…`,7 个好友各收到一张裂图)。
-// 地址本来就在消息里,把它摆到模型面前就够了,「转发哪一个」由模型自己判断。
+// 对话内容的一段。`type` 取 hi.club `Content.type` 那张表里的词(`text` / `image_url` / `audio_url`;
+// 另有 web 直连用的 `file_url`),`content` 是正文或地址。图片作视觉输入、语音识别成文字进 Q。
 type Content struct {
-	state   protoimpl.MessageState `protogen:"open.v1"`
-	Type    *string                `protobuf:"bytes,1,opt,name=type,proto3,oneof" json:"type,omitempty"`
-	Content *string                `protobuf:"bytes,2,opt,name=content,proto3,oneof" json:"content,omitempty"`
-	// 名字:文件 / 图片的原文件名,聊天记录的标题。没有就不给。进附件列表那一行。
-	Name *string `protobuf:"bytes,3,opt,name=name,proto3,oneof" json:"name,omitempty"`
-	// 聊天记录里有几条(hi.club `ChatRecord.count`);别的类型不给。进附件列表那一行。
-	Count         *uint32 `protobuf:"varint,4,opt,name=count,proto3,oneof" json:"count,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Type          *string                `protobuf:"bytes,1,opt,name=type,proto3,oneof" json:"type,omitempty"`
+	Content       *string                `protobuf:"bytes,2,opt,name=content,proto3,oneof" json:"content,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -95,18 +80,86 @@ func (x *Content) GetContent() string {
 	return ""
 }
 
-func (x *Content) GetName() string {
+// ## 附件列表的一行 —— hiclub 与 hi.ai 之间约定的辅助格式(2026-10-07 定)
+//
+// 用户那句话里有文本以外的内容(图片 / 语音 / 文件 / 聊天记录),或机器人这一轮发出了附件,
+// hi.ai 就把它们按**固定规则**拼成文字,附在 Q(问题侧)/ A(回答侧)后面,**随这一轮问答存进上下文**:
+//
+//	【附件】
+//	1. 文件 合同草稿.pdf → https://…/合同草稿.pdf
+//	2. 聊天记录 《我和王总的聊天记录》共 3 条 → 9f1c…#2
+//	3. 图片 图片3 → https://…/a.jpg
+//
+// 每行「序号. 类型 名字 → 引用」:序号按列表先后从 1 编;类型、名字、引用都是调用方给的字,hi.ai **原样照抄**。
+// **hi.ai 不认 hiclub 的内容类型、也不需要知道前端怎么用这些引用** —— 它只负责拼成文字、随问答存。
+// 目的:模型一眼看懂这一轮有哪些附件、各叫什么;几轮之后「把合同草稿转给李总」,它在上下文里按名字找得到引用,
+// 把「引用 + 名字」原样填进插件参数(内置插件 `send_message` 的 `attachments`)。
+//
+// 谁来整理:**前端**(app / 机器人)在 hiclub-core-mqtt 里解析与封装 —— 机器人这一轮发出去的附件由 core 发送时给出;
+// **后端**在 club 里解析与封装 —— 交给 hi.ai 之前从用户那条消息的内容段整理出来(`ChatReq.attachments`)。
+// 引用的写法与解析规则见 hi/club/messaging.proto「引用」那段(url,或 `<消息 uuid>#<段 id>`)。
+//
+// 为什么要有:模型看到的图是内联的图片数据、语音是识别稿 —— **它手上没有地址**,转发时只能编一个
+// (生产 10-06 编出 `files.oaiusercontent.com/…`,7 个好友各收到一张裂图)。
+type Attachment struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Type  *string                `protobuf:"bytes,1,opt,name=type,proto3,oneof" json:"type,omitempty"` // 类型词:图片 / 语音 / 视频 / 文件 / 聊天记录(调用方给,hi.ai 原样写)
+	// 名字:文件是原文件名;聊天记录是「《标题》共 N 条」;图片 / 语音没有名字就是「图片1」「语音2」(数字 = 这一行的序号)
+	Name          *string `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	Ref           *string `protobuf:"bytes,3,opt,name=ref,proto3,oneof" json:"ref,omitempty"` // 引用:url,或 `<消息 uuid>#<段 id>`(见 hi/club/messaging.proto「引用」)
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Attachment) Reset() {
+	*x = Attachment{}
+	mi := &file_hi_ai_chat_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Attachment) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Attachment) ProtoMessage() {}
+
+func (x *Attachment) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ai_chat_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Attachment.ProtoReflect.Descriptor instead.
+func (*Attachment) Descriptor() ([]byte, []int) {
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *Attachment) GetType() string {
+	if x != nil && x.Type != nil {
+		return *x.Type
+	}
+	return ""
+}
+
+func (x *Attachment) GetName() string {
 	if x != nil && x.Name != nil {
 		return *x.Name
 	}
 	return ""
 }
 
-func (x *Content) GetCount() uint32 {
-	if x != nil && x.Count != nil {
-		return *x.Count
+func (x *Attachment) GetRef() string {
+	if x != nil && x.Ref != nil {
+		return *x.Ref
 	}
-	return 0
+	return ""
 }
 
 type NewSessionResp struct {
@@ -118,7 +171,7 @@ type NewSessionResp struct {
 
 func (x *NewSessionResp) Reset() {
 	*x = NewSessionResp{}
-	mi := &file_hi_ai_chat_proto_msgTypes[1]
+	mi := &file_hi_ai_chat_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -130,7 +183,7 @@ func (x *NewSessionResp) String() string {
 func (*NewSessionResp) ProtoMessage() {}
 
 func (x *NewSessionResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[1]
+	mi := &file_hi_ai_chat_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -143,7 +196,7 @@ func (x *NewSessionResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NewSessionResp.ProtoReflect.Descriptor instead.
 func (*NewSessionResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{1}
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *NewSessionResp) GetCid() string {
@@ -187,7 +240,7 @@ type ClearContextReq struct {
 
 func (x *ClearContextReq) Reset() {
 	*x = ClearContextReq{}
-	mi := &file_hi_ai_chat_proto_msgTypes[2]
+	mi := &file_hi_ai_chat_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -199,7 +252,7 @@ func (x *ClearContextReq) String() string {
 func (*ClearContextReq) ProtoMessage() {}
 
 func (x *ClearContextReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[2]
+	mi := &file_hi_ai_chat_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -212,7 +265,7 @@ func (x *ClearContextReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ClearContextReq.ProtoReflect.Descriptor instead.
 func (*ClearContextReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{2}
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *ClearContextReq) GetCid() string {
@@ -247,7 +300,7 @@ type GetContextReq struct {
 
 func (x *GetContextReq) Reset() {
 	*x = GetContextReq{}
-	mi := &file_hi_ai_chat_proto_msgTypes[3]
+	mi := &file_hi_ai_chat_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -259,7 +312,7 @@ func (x *GetContextReq) String() string {
 func (*GetContextReq) ProtoMessage() {}
 
 func (x *GetContextReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[3]
+	mi := &file_hi_ai_chat_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -272,7 +325,7 @@ func (x *GetContextReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetContextReq.ProtoReflect.Descriptor instead.
 func (*GetContextReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{3}
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GetContextReq) GetCid() string {
@@ -322,7 +375,7 @@ type AppendContextReq struct {
 
 func (x *AppendContextReq) Reset() {
 	*x = AppendContextReq{}
-	mi := &file_hi_ai_chat_proto_msgTypes[4]
+	mi := &file_hi_ai_chat_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -334,7 +387,7 @@ func (x *AppendContextReq) String() string {
 func (*AppendContextReq) ProtoMessage() {}
 
 func (x *AppendContextReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[4]
+	mi := &file_hi_ai_chat_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -347,7 +400,7 @@ func (x *AppendContextReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AppendContextReq.ProtoReflect.Descriptor instead.
 func (*AppendContextReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{4}
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *AppendContextReq) GetCid() string {
@@ -395,7 +448,7 @@ type QA struct {
 
 func (x *QA) Reset() {
 	*x = QA{}
-	mi := &file_hi_ai_chat_proto_msgTypes[5]
+	mi := &file_hi_ai_chat_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -407,7 +460,7 @@ func (x *QA) String() string {
 func (*QA) ProtoMessage() {}
 
 func (x *QA) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[5]
+	mi := &file_hi_ai_chat_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -420,7 +473,7 @@ func (x *QA) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use QA.ProtoReflect.Descriptor instead.
 func (*QA) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{5}
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *QA) GetA() string {
@@ -446,7 +499,7 @@ type GetContextResp struct {
 
 func (x *GetContextResp) Reset() {
 	*x = GetContextResp{}
-	mi := &file_hi_ai_chat_proto_msgTypes[6]
+	mi := &file_hi_ai_chat_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -458,7 +511,7 @@ func (x *GetContextResp) String() string {
 func (*GetContextResp) ProtoMessage() {}
 
 func (x *GetContextResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[6]
+	mi := &file_hi_ai_chat_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -471,7 +524,7 @@ func (x *GetContextResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetContextResp.ProtoReflect.Descriptor instead.
 func (*GetContextResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{6}
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *GetContextResp) GetList() []*QA {
@@ -552,14 +605,17 @@ type ChatReq struct {
 	// 与 `asker` 不是一回事:asker 是"这句话是谁说的"(消息事实),caller 是"谁在用这个 cid"(会话归属的判据)。
 	// 判据见上面 Get/Clear/AppendContext 那段:机器人格式的 cid 只认机器人本人与它的主人(`master`),
 	// 且 cid 里的机器人必须就是 `agent`;其它 cid 第一个用它的人就是主人。不满足 → NotFound。
-	Caller        *string `protobuf:"bytes,14,opt,name=caller,proto3,oneof" json:"caller,omitempty"`
+	Caller *string `protobuf:"bytes,14,opt,name=caller,proto3,oneof" json:"caller,omitempty"`
+	// 用户这句话里的附件(问题侧),hi.ai 拼成「【附件】」附在 Q 后面、随问答存进上下文(见 `Attachment`)。
+	// 由调用方整理:club 从那条消息的内容段整理好填这里(hiclub 的前端不直接填)。不给 = 没有附件。
+	Attachments   []*Attachment `protobuf:"bytes,15,rep,name=attachments,proto3" json:"attachments,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ChatReq) Reset() {
 	*x = ChatReq{}
-	mi := &file_hi_ai_chat_proto_msgTypes[7]
+	mi := &file_hi_ai_chat_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -571,7 +627,7 @@ func (x *ChatReq) String() string {
 func (*ChatReq) ProtoMessage() {}
 
 func (x *ChatReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[7]
+	mi := &file_hi_ai_chat_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -584,7 +640,7 @@ func (x *ChatReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChatReq.ProtoReflect.Descriptor instead.
 func (*ChatReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{7}
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ChatReq) GetAgent() string {
@@ -685,17 +741,28 @@ func (x *ChatReq) GetCaller() string {
 	return ""
 }
 
+func (x *ChatReq) GetAttachments() []*Attachment {
+	if x != nil {
+		return x.Attachments
+	}
+	return nil
+}
+
 type ToolCallResult struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	Conts         []*Content             `protobuf:"bytes,2,rep,name=conts,proto3" json:"conts,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Id    *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	Conts []*Content             `protobuf:"bytes,2,rep,name=conts,proto3" json:"conts,omitempty"`
+	// 这次工具调用**发出去的附件**(回答侧,如拍的照片、转发的文件 / 聊天记录)。hi.ai 把这一轮所有工具调用的
+	// 这一项按先后合在一起,拼成「【附件】」附在 A 后面存进上下文 —— 几轮之后「刚才那张也发给李总」,模型照样找得到引用。
+	// hi.ai 只认这一个字段,不看工具结果里写了什么。
+	Attachments   []*Attachment `protobuf:"bytes,3,rep,name=attachments,proto3" json:"attachments,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ToolCallResult) Reset() {
 	*x = ToolCallResult{}
-	mi := &file_hi_ai_chat_proto_msgTypes[8]
+	mi := &file_hi_ai_chat_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -707,7 +774,7 @@ func (x *ToolCallResult) String() string {
 func (*ToolCallResult) ProtoMessage() {}
 
 func (x *ToolCallResult) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[8]
+	mi := &file_hi_ai_chat_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -720,7 +787,7 @@ func (x *ToolCallResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ToolCallResult.ProtoReflect.Descriptor instead.
 func (*ToolCallResult) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{8}
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *ToolCallResult) GetId() string {
@@ -733,6 +800,13 @@ func (x *ToolCallResult) GetId() string {
 func (x *ToolCallResult) GetConts() []*Content {
 	if x != nil {
 		return x.Conts
+	}
+	return nil
+}
+
+func (x *ToolCallResult) GetAttachments() []*Attachment {
+	if x != nil {
+		return x.Attachments
 	}
 	return nil
 }
@@ -751,7 +825,7 @@ type ToolCallResultsReq struct {
 
 func (x *ToolCallResultsReq) Reset() {
 	*x = ToolCallResultsReq{}
-	mi := &file_hi_ai_chat_proto_msgTypes[9]
+	mi := &file_hi_ai_chat_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -763,7 +837,7 @@ func (x *ToolCallResultsReq) String() string {
 func (*ToolCallResultsReq) ProtoMessage() {}
 
 func (x *ToolCallResultsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[9]
+	mi := &file_hi_ai_chat_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -776,7 +850,7 @@ func (x *ToolCallResultsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ToolCallResultsReq.ProtoReflect.Descriptor instead.
 func (*ToolCallResultsReq) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{9}
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *ToolCallResultsReq) GetId() string {
@@ -810,7 +884,7 @@ type ToolSupply struct {
 
 func (x *ToolSupply) Reset() {
 	*x = ToolSupply{}
-	mi := &file_hi_ai_chat_proto_msgTypes[10]
+	mi := &file_hi_ai_chat_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -822,7 +896,7 @@ func (x *ToolSupply) String() string {
 func (*ToolSupply) ProtoMessage() {}
 
 func (x *ToolSupply) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[10]
+	mi := &file_hi_ai_chat_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -835,7 +909,7 @@ func (x *ToolSupply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ToolSupply.ProtoReflect.Descriptor instead.
 func (*ToolSupply) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{10}
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *ToolSupply) GetType() string {
@@ -863,7 +937,7 @@ type ToolCall struct {
 
 func (x *ToolCall) Reset() {
 	*x = ToolCall{}
-	mi := &file_hi_ai_chat_proto_msgTypes[11]
+	mi := &file_hi_ai_chat_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -875,7 +949,7 @@ func (x *ToolCall) String() string {
 func (*ToolCall) ProtoMessage() {}
 
 func (x *ToolCall) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[11]
+	mi := &file_hi_ai_chat_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -888,7 +962,7 @@ func (x *ToolCall) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ToolCall.ProtoReflect.Descriptor instead.
 func (*ToolCall) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{11}
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *ToolCall) GetId() string {
@@ -939,7 +1013,7 @@ type ChatResp struct {
 
 func (x *ChatResp) Reset() {
 	*x = ChatResp{}
-	mi := &file_hi_ai_chat_proto_msgTypes[12]
+	mi := &file_hi_ai_chat_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -951,7 +1025,7 @@ func (x *ChatResp) String() string {
 func (*ChatResp) ProtoMessage() {}
 
 func (x *ChatResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[12]
+	mi := &file_hi_ai_chat_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -964,7 +1038,7 @@ func (x *ChatResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChatResp.ProtoReflect.Descriptor instead.
 func (*ChatResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{12}
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *ChatResp) GetFinal() bool {
@@ -1045,7 +1119,7 @@ type ConverseStreamResp struct {
 
 func (x *ConverseStreamResp) Reset() {
 	*x = ConverseStreamResp{}
-	mi := &file_hi_ai_chat_proto_msgTypes[13]
+	mi := &file_hi_ai_chat_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1057,7 +1131,7 @@ func (x *ConverseStreamResp) String() string {
 func (*ConverseStreamResp) ProtoMessage() {}
 
 func (x *ConverseStreamResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[13]
+	mi := &file_hi_ai_chat_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1070,7 +1144,7 @@ func (x *ConverseStreamResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConverseStreamResp.ProtoReflect.Descriptor instead.
 func (*ConverseStreamResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{13}
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *ConverseStreamResp) GetCode() int32 {
@@ -1126,7 +1200,7 @@ type ToolSupply_Function struct {
 
 func (x *ToolSupply_Function) Reset() {
 	*x = ToolSupply_Function{}
-	mi := &file_hi_ai_chat_proto_msgTypes[14]
+	mi := &file_hi_ai_chat_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1138,7 +1212,7 @@ func (x *ToolSupply_Function) String() string {
 func (*ToolSupply_Function) ProtoMessage() {}
 
 func (x *ToolSupply_Function) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[14]
+	mi := &file_hi_ai_chat_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1151,7 +1225,7 @@ func (x *ToolSupply_Function) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ToolSupply_Function.ProtoReflect.Descriptor instead.
 func (*ToolSupply_Function) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{10, 0}
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{11, 0}
 }
 
 func (x *ToolSupply_Function) GetName() string {
@@ -1185,7 +1259,7 @@ type ToolCall_Function struct {
 
 func (x *ToolCall_Function) Reset() {
 	*x = ToolCall_Function{}
-	mi := &file_hi_ai_chat_proto_msgTypes[15]
+	mi := &file_hi_ai_chat_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1197,7 +1271,7 @@ func (x *ToolCall_Function) String() string {
 func (*ToolCall_Function) ProtoMessage() {}
 
 func (x *ToolCall_Function) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_chat_proto_msgTypes[15]
+	mi := &file_hi_ai_chat_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1210,7 +1284,7 @@ func (x *ToolCall_Function) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ToolCall_Function.ProtoReflect.Descriptor instead.
 func (*ToolCall_Function) Descriptor() ([]byte, []int) {
-	return file_hi_ai_chat_proto_rawDescGZIP(), []int{11, 0}
+	return file_hi_ai_chat_proto_rawDescGZIP(), []int{12, 0}
 }
 
 func (x *ToolCall_Function) GetName() string {
@@ -1231,17 +1305,21 @@ var File_hi_ai_chat_proto protoreflect.FileDescriptor
 
 const file_hi_ai_chat_proto_rawDesc = "" +
 	"\n" +
-	"\x10hi/ai/chat.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/options.proto\"\xbb\x01\n" +
+	"\x10hi/ai/chat.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/options.proto\"h\n" +
 	"\aContent\x12\x1d\n" +
 	"\x04type\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04type\x88\x01\x01\x12#\n" +
-	"\acontent\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\acontent\x88\x01\x01\x12\x1d\n" +
-	"\x04name\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x04name\x88\x01\x01\x12\x1f\n" +
-	"\x05count\x18\x04 \x01(\rB\x04\x90\xb5\x18\x03H\x03R\x05count\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
+	"\acontent\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\acontent\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
 	"\x05_typeB\n" +
 	"\n" +
-	"\b_contentB\a\n" +
-	"\x05_nameB\b\n" +
-	"\x06_count\";\n" +
+	"\b_content\"\x87\x01\n" +
+	"\n" +
+	"Attachment\x12\x1d\n" +
+	"\x04type\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04type\x88\x01\x01\x12\x1d\n" +
+	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x04name\x88\x01\x01\x12\x1b\n" +
+	"\x03ref\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x03ref\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
+	"\x05_typeB\a\n" +
+	"\x05_nameB\x06\n" +
+	"\x04_ref\";\n" +
 	"\x0eNewSessionResp\x12\x1b\n" +
 	"\x03cid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x03cid\x88\x01\x01:\x04\x98\xb5\x18\x03B\x06\n" +
 	"\x04_cid\"\x80\x01\n" +
@@ -1276,7 +1354,7 @@ const file_hi_ai_chat_proto_rawDesc = "" +
 	"\x01q\x18\x02 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\x01q:\x04\x98\xb5\x18\x03B\x04\n" +
 	"\x02_a\";\n" +
 	"\x0eGetContextResp\x12#\n" +
-	"\x04list\x18\x01 \x03(\v2\t.hi.ai.QAB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"\xe9\x04\n" +
+	"\x04list\x18\x01 \x03(\v2\t.hi.ai.QAB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"\x9e\x05\n" +
 	"\aChatReq\x12\x19\n" +
 	"\x05agent\x18\x01 \x01(\tH\x00R\x05agent\x88\x01\x01\x12\x15\n" +
 	"\x03cid\x18\x02 \x01(\tH\x01R\x03cid\x88\x01\x01\x12$\n" +
@@ -1295,7 +1373,8 @@ const file_hi_ai_chat_proto_rawDesc = "" +
 	"\x05asker\x18\f \x01(\tH\tR\x05asker\x88\x01\x01\x12\x1b\n" +
 	"\x06master\x18\r \x01(\tH\n" +
 	"R\x06master\x88\x01\x01\x12\x1b\n" +
-	"\x06caller\x18\x0e \x01(\tH\vR\x06caller\x88\x01\x01B\b\n" +
+	"\x06caller\x18\x0e \x01(\tH\vR\x06caller\x88\x01\x01\x123\n" +
+	"\vattachments\x18\x0f \x03(\v2\x11.hi.ai.AttachmentR\vattachmentsB\b\n" +
 	"\x06_agentB\x06\n" +
 	"\x04_cidB\x0e\n" +
 	"\f_tool_choiceB\t\n" +
@@ -1307,10 +1386,11 @@ const file_hi_ai_chat_proto_rawDesc = "" +
 	"\r_echo_contextB\b\n" +
 	"\x06_askerB\t\n" +
 	"\a_masterB\t\n" +
-	"\a_caller\"R\n" +
+	"\a_caller\"\x87\x01\n" +
 	"\x0eToolCallResult\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12$\n" +
-	"\x05conts\x18\x02 \x03(\v2\x0e.hi.ai.ContentR\x05contsB\x05\n" +
+	"\x05conts\x18\x02 \x03(\v2\x0e.hi.ai.ContentR\x05conts\x123\n" +
+	"\vattachments\x18\x03 \x03(\v2\x11.hi.ai.AttachmentR\vattachmentsB\x05\n" +
 	"\x03_id\"\x83\x01\n" +
 	"\x12ToolCallResultsReq\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12)\n" +
@@ -1388,62 +1468,65 @@ func file_hi_ai_chat_proto_rawDescGZIP() []byte {
 	return file_hi_ai_chat_proto_rawDescData
 }
 
-var file_hi_ai_chat_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_hi_ai_chat_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_hi_ai_chat_proto_goTypes = []any{
 	(*Content)(nil),             // 0: hi.ai.Content
-	(*NewSessionResp)(nil),      // 1: hi.ai.NewSessionResp
-	(*ClearContextReq)(nil),     // 2: hi.ai.ClearContextReq
-	(*GetContextReq)(nil),       // 3: hi.ai.GetContextReq
-	(*AppendContextReq)(nil),    // 4: hi.ai.AppendContextReq
-	(*QA)(nil),                  // 5: hi.ai.QA
-	(*GetContextResp)(nil),      // 6: hi.ai.GetContextResp
-	(*ChatReq)(nil),             // 7: hi.ai.ChatReq
-	(*ToolCallResult)(nil),      // 8: hi.ai.ToolCallResult
-	(*ToolCallResultsReq)(nil),  // 9: hi.ai.ToolCallResultsReq
-	(*ToolSupply)(nil),          // 10: hi.ai.ToolSupply
-	(*ToolCall)(nil),            // 11: hi.ai.ToolCall
-	(*ChatResp)(nil),            // 12: hi.ai.ChatResp
-	(*ConverseStreamResp)(nil),  // 13: hi.ai.ConverseStreamResp
-	(*ToolSupply_Function)(nil), // 14: hi.ai.ToolSupply.Function
-	(*ToolCall_Function)(nil),   // 15: hi.ai.ToolCall.Function
-	(*structpb.Struct)(nil),     // 16: google.protobuf.Struct
-	(*emptypb.Empty)(nil),       // 17: google.protobuf.Empty
+	(*Attachment)(nil),          // 1: hi.ai.Attachment
+	(*NewSessionResp)(nil),      // 2: hi.ai.NewSessionResp
+	(*ClearContextReq)(nil),     // 3: hi.ai.ClearContextReq
+	(*GetContextReq)(nil),       // 4: hi.ai.GetContextReq
+	(*AppendContextReq)(nil),    // 5: hi.ai.AppendContextReq
+	(*QA)(nil),                  // 6: hi.ai.QA
+	(*GetContextResp)(nil),      // 7: hi.ai.GetContextResp
+	(*ChatReq)(nil),             // 8: hi.ai.ChatReq
+	(*ToolCallResult)(nil),      // 9: hi.ai.ToolCallResult
+	(*ToolCallResultsReq)(nil),  // 10: hi.ai.ToolCallResultsReq
+	(*ToolSupply)(nil),          // 11: hi.ai.ToolSupply
+	(*ToolCall)(nil),            // 12: hi.ai.ToolCall
+	(*ChatResp)(nil),            // 13: hi.ai.ChatResp
+	(*ConverseStreamResp)(nil),  // 14: hi.ai.ConverseStreamResp
+	(*ToolSupply_Function)(nil), // 15: hi.ai.ToolSupply.Function
+	(*ToolCall_Function)(nil),   // 16: hi.ai.ToolCall.Function
+	(*structpb.Struct)(nil),     // 17: google.protobuf.Struct
+	(*emptypb.Empty)(nil),       // 18: google.protobuf.Empty
 }
 var file_hi_ai_chat_proto_depIdxs = []int32{
 	0,  // 0: hi.ai.QA.q:type_name -> hi.ai.Content
-	5,  // 1: hi.ai.GetContextResp.list:type_name -> hi.ai.QA
+	6,  // 1: hi.ai.GetContextResp.list:type_name -> hi.ai.QA
 	0,  // 2: hi.ai.ChatReq.conts:type_name -> hi.ai.Content
-	10, // 3: hi.ai.ChatReq.tools:type_name -> hi.ai.ToolSupply
-	0,  // 4: hi.ai.ToolCallResult.conts:type_name -> hi.ai.Content
-	8,  // 5: hi.ai.ToolCallResultsReq.list:type_name -> hi.ai.ToolCallResult
-	14, // 6: hi.ai.ToolSupply.function:type_name -> hi.ai.ToolSupply.Function
-	15, // 7: hi.ai.ToolCall.function:type_name -> hi.ai.ToolCall.Function
-	11, // 8: hi.ai.ChatResp.tools:type_name -> hi.ai.ToolCall
-	0,  // 9: hi.ai.ChatResp.question:type_name -> hi.ai.Content
-	11, // 10: hi.ai.ConverseStreamResp.tools:type_name -> hi.ai.ToolCall
-	0,  // 11: hi.ai.ConverseStreamResp.question:type_name -> hi.ai.Content
-	16, // 12: hi.ai.ToolSupply.Function.parameters:type_name -> google.protobuf.Struct
-	17, // 13: hi.ai.Chat.NewSession:input_type -> google.protobuf.Empty
-	3,  // 14: hi.ai.Chat.GetContext:input_type -> hi.ai.GetContextReq
-	2,  // 15: hi.ai.Chat.ClearContext:input_type -> hi.ai.ClearContextReq
-	4,  // 16: hi.ai.Chat.AppendContext:input_type -> hi.ai.AppendContextReq
-	7,  // 17: hi.ai.Chat.Converse:input_type -> hi.ai.ChatReq
-	7,  // 18: hi.ai.Chat.ConverseStream:input_type -> hi.ai.ChatReq
-	9,  // 19: hi.ai.Chat.Resume:input_type -> hi.ai.ToolCallResultsReq
-	9,  // 20: hi.ai.Chat.ResumeStream:input_type -> hi.ai.ToolCallResultsReq
-	1,  // 21: hi.ai.Chat.NewSession:output_type -> hi.ai.NewSessionResp
-	6,  // 22: hi.ai.Chat.GetContext:output_type -> hi.ai.GetContextResp
-	17, // 23: hi.ai.Chat.ClearContext:output_type -> google.protobuf.Empty
-	17, // 24: hi.ai.Chat.AppendContext:output_type -> google.protobuf.Empty
-	12, // 25: hi.ai.Chat.Converse:output_type -> hi.ai.ChatResp
-	13, // 26: hi.ai.Chat.ConverseStream:output_type -> hi.ai.ConverseStreamResp
-	12, // 27: hi.ai.Chat.Resume:output_type -> hi.ai.ChatResp
-	13, // 28: hi.ai.Chat.ResumeStream:output_type -> hi.ai.ConverseStreamResp
-	21, // [21:29] is the sub-list for method output_type
-	13, // [13:21] is the sub-list for method input_type
-	13, // [13:13] is the sub-list for extension type_name
-	13, // [13:13] is the sub-list for extension extendee
-	0,  // [0:13] is the sub-list for field type_name
+	11, // 3: hi.ai.ChatReq.tools:type_name -> hi.ai.ToolSupply
+	1,  // 4: hi.ai.ChatReq.attachments:type_name -> hi.ai.Attachment
+	0,  // 5: hi.ai.ToolCallResult.conts:type_name -> hi.ai.Content
+	1,  // 6: hi.ai.ToolCallResult.attachments:type_name -> hi.ai.Attachment
+	9,  // 7: hi.ai.ToolCallResultsReq.list:type_name -> hi.ai.ToolCallResult
+	15, // 8: hi.ai.ToolSupply.function:type_name -> hi.ai.ToolSupply.Function
+	16, // 9: hi.ai.ToolCall.function:type_name -> hi.ai.ToolCall.Function
+	12, // 10: hi.ai.ChatResp.tools:type_name -> hi.ai.ToolCall
+	0,  // 11: hi.ai.ChatResp.question:type_name -> hi.ai.Content
+	12, // 12: hi.ai.ConverseStreamResp.tools:type_name -> hi.ai.ToolCall
+	0,  // 13: hi.ai.ConverseStreamResp.question:type_name -> hi.ai.Content
+	17, // 14: hi.ai.ToolSupply.Function.parameters:type_name -> google.protobuf.Struct
+	18, // 15: hi.ai.Chat.NewSession:input_type -> google.protobuf.Empty
+	4,  // 16: hi.ai.Chat.GetContext:input_type -> hi.ai.GetContextReq
+	3,  // 17: hi.ai.Chat.ClearContext:input_type -> hi.ai.ClearContextReq
+	5,  // 18: hi.ai.Chat.AppendContext:input_type -> hi.ai.AppendContextReq
+	8,  // 19: hi.ai.Chat.Converse:input_type -> hi.ai.ChatReq
+	8,  // 20: hi.ai.Chat.ConverseStream:input_type -> hi.ai.ChatReq
+	10, // 21: hi.ai.Chat.Resume:input_type -> hi.ai.ToolCallResultsReq
+	10, // 22: hi.ai.Chat.ResumeStream:input_type -> hi.ai.ToolCallResultsReq
+	2,  // 23: hi.ai.Chat.NewSession:output_type -> hi.ai.NewSessionResp
+	7,  // 24: hi.ai.Chat.GetContext:output_type -> hi.ai.GetContextResp
+	18, // 25: hi.ai.Chat.ClearContext:output_type -> google.protobuf.Empty
+	18, // 26: hi.ai.Chat.AppendContext:output_type -> google.protobuf.Empty
+	13, // 27: hi.ai.Chat.Converse:output_type -> hi.ai.ChatResp
+	14, // 28: hi.ai.Chat.ConverseStream:output_type -> hi.ai.ConverseStreamResp
+	13, // 29: hi.ai.Chat.Resume:output_type -> hi.ai.ChatResp
+	14, // 30: hi.ai.Chat.ResumeStream:output_type -> hi.ai.ConverseStreamResp
+	23, // [23:31] is the sub-list for method output_type
+	15, // [15:23] is the sub-list for method input_type
+	15, // [15:15] is the sub-list for extension type_name
+	15, // [15:15] is the sub-list for extension extendee
+	0,  // [0:15] is the sub-list for field type_name
 }
 
 func init() { file_hi_ai_chat_proto_init() }
@@ -1457,7 +1540,7 @@ func file_hi_ai_chat_proto_init() {
 	file_hi_ai_chat_proto_msgTypes[3].OneofWrappers = []any{}
 	file_hi_ai_chat_proto_msgTypes[4].OneofWrappers = []any{}
 	file_hi_ai_chat_proto_msgTypes[5].OneofWrappers = []any{}
-	file_hi_ai_chat_proto_msgTypes[7].OneofWrappers = []any{}
+	file_hi_ai_chat_proto_msgTypes[6].OneofWrappers = []any{}
 	file_hi_ai_chat_proto_msgTypes[8].OneofWrappers = []any{}
 	file_hi_ai_chat_proto_msgTypes[9].OneofWrappers = []any{}
 	file_hi_ai_chat_proto_msgTypes[10].OneofWrappers = []any{}
@@ -1466,13 +1549,14 @@ func file_hi_ai_chat_proto_init() {
 	file_hi_ai_chat_proto_msgTypes[13].OneofWrappers = []any{}
 	file_hi_ai_chat_proto_msgTypes[14].OneofWrappers = []any{}
 	file_hi_ai_chat_proto_msgTypes[15].OneofWrappers = []any{}
+	file_hi_ai_chat_proto_msgTypes[16].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ai_chat_proto_rawDesc), len(file_hi_ai_chat_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   16,
+			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

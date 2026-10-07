@@ -39,42 +39,67 @@ const Content$json = {
       '10': 'content',
       '17': true
     },
-    {
-      '1': 'name',
-      '3': 3,
-      '4': 1,
-      '5': 9,
-      '8': {},
-      '9': 2,
-      '10': 'name',
-      '17': true
-    },
-    {
-      '1': 'count',
-      '3': 4,
-      '4': 1,
-      '5': 13,
-      '8': {},
-      '9': 3,
-      '10': 'count',
-      '17': true
-    },
   ],
   '7': {},
   '8': [
     {'1': '_type'},
     {'1': '_content'},
-    {'1': '_name'},
-    {'1': '_count'},
   ],
 };
 
 /// Descriptor for `Content`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List contentDescriptor = $convert.base64Decode(
     'CgdDb250ZW50Eh0KBHR5cGUYASABKAlCBJC1GANIAFIEdHlwZYgBARIjCgdjb250ZW50GAIgAS'
-    'gJQgSQtRgDSAFSB2NvbnRlbnSIAQESHQoEbmFtZRgDIAEoCUIEkLUYA0gCUgRuYW1liAEBEh8K'
-    'BWNvdW50GAQgASgNQgSQtRgDSANSBWNvdW50iAEBOgSYtRgDQgcKBV90eXBlQgoKCF9jb250ZW'
-    '50QgcKBV9uYW1lQggKBl9jb3VudA==');
+    'gJQgSQtRgDSAFSB2NvbnRlbnSIAQE6BJi1GANCBwoFX3R5cGVCCgoIX2NvbnRlbnQ=');
+
+@$core.Deprecated('Use attachmentDescriptor instead')
+const Attachment$json = {
+  '1': 'Attachment',
+  '2': [
+    {
+      '1': 'type',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'type',
+      '17': true
+    },
+    {
+      '1': 'name',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'name',
+      '17': true
+    },
+    {
+      '1': 'ref',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'ref',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_type'},
+    {'1': '_name'},
+    {'1': '_ref'},
+  ],
+};
+
+/// Descriptor for `Attachment`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List attachmentDescriptor = $convert.base64Decode(
+    'CgpBdHRhY2htZW50Eh0KBHR5cGUYASABKAlCBJC1GANIAFIEdHlwZYgBARIdCgRuYW1lGAIgAS'
+    'gJQgSQtRgDSAFSBG5hbWWIAQESGwoDcmVmGAMgASgJQgSQtRgDSAJSA3JlZogBAToEmLUYA0IH'
+    'CgVfdHlwZUIHCgVfbmFtZUIGCgRfcmVm');
 
 @$core.Deprecated('Use newSessionRespDescriptor instead')
 const NewSessionResp$json = {
@@ -306,6 +331,14 @@ const ChatReq$json = {
       '10': 'caller',
       '17': true
     },
+    {
+      '1': 'attachments',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.ai.Attachment',
+      '10': 'attachments'
+    },
   ],
   '8': [
     {'1': '_agent'},
@@ -333,10 +366,11 @@ final $typed_data.Uint8List chatReqDescriptor = $convert.base64Decode(
     'MYCSABKAhIBlINZWNob1Rvb2xDYWxsc4gBARIkCgtlY2hvX21lbW9yeRgKIAEoCEgHUgplY2hv'
     'TWVtb3J5iAEBEiYKDGVjaG9fY29udGV4dBgLIAEoCEgIUgtlY2hvQ29udGV4dIgBARIZCgVhc2'
     'tlchgMIAEoCUgJUgVhc2tlcogBARIbCgZtYXN0ZXIYDSABKAlIClIGbWFzdGVyiAEBEhsKBmNh'
-    'bGxlchgOIAEoCUgLUgZjYWxsZXKIAQFCCAoGX2FnZW50QgYKBF9jaWRCDgoMX3Rvb2xfY2hvaW'
-    'NlQgkKB19jdXN0b21CCAoGX3N0YXRlQggKBl9zdHlsZUISChBfZWNob190b29sX2NhbGxzQg4K'
-    'DF9lY2hvX21lbW9yeUIPCg1fZWNob19jb250ZXh0QggKBl9hc2tlckIJCgdfbWFzdGVyQgkKB1'
-    '9jYWxsZXI=');
+    'bGxlchgOIAEoCUgLUgZjYWxsZXKIAQESMwoLYXR0YWNobWVudHMYDyADKAsyES5oaS5haS5BdH'
+    'RhY2htZW50UgthdHRhY2htZW50c0IICgZfYWdlbnRCBgoEX2NpZEIOCgxfdG9vbF9jaG9pY2VC'
+    'CQoHX2N1c3RvbUIICgZfc3RhdGVCCAoGX3N0eWxlQhIKEF9lY2hvX3Rvb2xfY2FsbHNCDgoMX2'
+    'VjaG9fbWVtb3J5Qg8KDV9lY2hvX2NvbnRleHRCCAoGX2Fza2VyQgkKB19tYXN0ZXJCCQoHX2Nh'
+    'bGxlcg==');
 
 @$core.Deprecated('Use toolCallResultDescriptor instead')
 const ToolCallResult$json = {
@@ -351,6 +385,14 @@ const ToolCallResult$json = {
       '6': '.hi.ai.Content',
       '10': 'conts'
     },
+    {
+      '1': 'attachments',
+      '3': 3,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.ai.Attachment',
+      '10': 'attachments'
+    },
   ],
   '8': [
     {'1': '_id'},
@@ -360,7 +402,8 @@ const ToolCallResult$json = {
 /// Descriptor for `ToolCallResult`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List toolCallResultDescriptor = $convert.base64Decode(
     'Cg5Ub29sQ2FsbFJlc3VsdBITCgJpZBgBIAEoCUgAUgJpZIgBARIkCgVjb250cxgCIAMoCzIOLm'
-    'hpLmFpLkNvbnRlbnRSBWNvbnRzQgUKA19pZA==');
+    'hpLmFpLkNvbnRlbnRSBWNvbnRzEjMKC2F0dGFjaG1lbnRzGAMgAygLMhEuaGkuYWkuQXR0YWNo'
+    'bWVudFILYXR0YWNobWVudHNCBQoDX2lk');
 
 @$core.Deprecated('Use toolCallResultsReqDescriptor instead')
 const ToolCallResultsReq$json = {

@@ -28,12 +28,14 @@ class LuaCtx extends $pb.GeneratedMessage {
     $core.String? master,
     $core.String? asker,
     $core.int? dark,
+    $core.String? conv,
   }) {
     final result = create();
     if (me != null) result.me = me;
     if (master != null) result.master = master;
     if (asker != null) result.asker = asker;
     if (dark != null) result.dark = dark;
+    if (conv != null) result.conv = conv;
     return result;
   }
 
@@ -54,6 +56,7 @@ class LuaCtx extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'master')
     ..aOS(3, _omitFieldNames ? '' : 'asker')
     ..aI(4, _omitFieldNames ? '' : 'dark', fieldType: $pb.PbFieldType.OU3)
+    ..aOS(6, _omitFieldNames ? '' : 'conv')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -112,6 +115,22 @@ class LuaCtx extends $pb.GeneratedMessage {
   $core.bool hasDark() => $_has(3);
   @$pb.TagNumber(4)
   void clearDark() => $_clearField(4);
+
+  /// ⚠️ **没有 `attachments`(消息里的媒体),不要加回来**(v1.5.27-dev.1 加过,10-07 删):
+  ///    模型手上没有图的地址、转发时只能编一个 —— 这件事改由附件列表解决(club 整理、hi.ai 拼进问答,
+  ///    见 hi/ai/chat.proto `Attachment`),模型从列表里抄「引用 + 名字」填进插件参数。只有一套机制,不留两条路。
+  /// 引起这次调用的那条消息所在的**会话号**(群号 / 单聊会话号);语音路、币安指令那类没有会话的不给。
+  /// **只给宿主用,不给 lua 脚本看**(同 `dark`):插件带附件发消息时(sdk `send_with_attachments`),
+  /// `<消息 uuid>#<段 id>` 这种引用只在这个会话里找(hi/club/messaging.proto「引用」:解析只在本层)。
+  /// 号用 6 不用 5:5 是 dev.1 ~ dev.2 那几天的 `attachments`(消息型),复用会让还没换的执行器把它解坏。
+  @$pb.TagNumber(6)
+  $core.String get conv => $_getSZ(4);
+  @$pb.TagNumber(6)
+  set conv($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(6)
+  $core.bool hasConv() => $_has(4);
+  @$pb.TagNumber(6)
+  void clearConv() => $_clearField(6);
 }
 
 /// OpenReq 装一个插件：跑一遍顶层，读出 contract 与 manifest。

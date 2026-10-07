@@ -346,6 +346,7 @@ class ChatReq extends $pb.GeneratedMessage {
     $core.bool? echoMemory,
     $core.bool? echoContext,
     $core.String? asker,
+    $core.String? uuid,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
@@ -360,6 +361,7 @@ class ChatReq extends $pb.GeneratedMessage {
     if (echoMemory != null) result.echoMemory = echoMemory;
     if (echoContext != null) result.echoContext = echoContext;
     if (asker != null) result.asker = asker;
+    if (uuid != null) result.uuid = uuid;
     return result;
   }
 
@@ -390,6 +392,7 @@ class ChatReq extends $pb.GeneratedMessage {
     ..aOB(10, _omitFieldNames ? '' : 'echoMemory')
     ..aOB(11, _omitFieldNames ? '' : 'echoContext')
     ..aOS(12, _omitFieldNames ? '' : 'asker')
+    ..aOS(13, _omitFieldNames ? '' : 'uuid')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -532,16 +535,30 @@ class ChatReq extends $pb.GeneratedMessage {
   $core.bool hasAsker() => $_has(11);
   @$pb.TagNumber(12)
   void clearAsker() => $_clearField(12);
+
+  /// 这句话所在那条消息的 uuid(IM 路:机器人收到的那条 mqtt 消息的 uuid)。
+  /// club 据此给聊天记录这类原样内嵌的内容写引用 `<uuid>#<段 id>`(附件列表,见 hi/ai/chat.proto `Attachment`)。
+  /// **语音路不用传**:那一轮的 uuid 由 club 在调 hi.ai 之前生成,写进语音聊天记录时用的是同一个。
+  @$pb.TagNumber(13)
+  $core.String get uuid => $_getSZ(12);
+  @$pb.TagNumber(13)
+  set uuid($core.String value) => $_setString(12, value);
+  @$pb.TagNumber(13)
+  $core.bool hasUuid() => $_has(12);
+  @$pb.TagNumber(13)
+  void clearUuid() => $_clearField(13);
 }
 
 class ToolCallResult extends $pb.GeneratedMessage {
   factory ToolCallResult({
     $core.String? id,
     $core.Iterable<$3.Content>? conts,
+    $core.Iterable<$1.Attachment>? attachments,
   }) {
     final result = create();
     if (id != null) result.id = id;
     if (conts != null) result.conts.addAll(conts);
+    if (attachments != null) result.attachments.addAll(attachments);
     return result;
   }
 
@@ -561,6 +578,8 @@ class ToolCallResult extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'id')
     ..pPM<$3.Content>(2, _omitFieldNames ? '' : 'conts',
         subBuilder: $3.Content.create)
+    ..pPM<$1.Attachment>(3, _omitFieldNames ? '' : 'attachments',
+        subBuilder: $1.Attachment.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -593,6 +612,12 @@ class ToolCallResult extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(2)
   $pb.PbList<$3.Content> get conts => $_getList(1);
+
+  /// 这次工具调用发出去的附件(回答侧),club 原样交给 hi.ai(见 hi.ai.ToolCallResult.attachments)。
+  /// 一行的格式与问题侧同一份(hi.ai.Attachment):机器人那侧由 hiclub-core-mqtt 发送时给出,插件把它放进
+  /// 结果的 `attachments` 键,brain 照搬到这里。
+  @$pb.TagNumber(3)
+  $pb.PbList<$1.Attachment> get attachments => $_getList(2);
 }
 
 /// 工具结果续跑入参(Resume):客户端执行完工具后把结果交回来,接着跑。
