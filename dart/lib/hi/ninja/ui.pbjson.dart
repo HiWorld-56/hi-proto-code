@@ -402,6 +402,15 @@ const BrainToFace$json = {
       '9': 0,
       '10': 'showTip'
     },
+    {
+      '1': 'show_qr',
+      '3': 25,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.QrCard',
+      '9': 0,
+      '10': 'showQr'
+    },
   ],
   '8': [
     {'1': 'cmd'},
@@ -435,7 +444,34 @@ final $typed_data.Uint8List brainToFaceDescriptor = $convert.base64Decode(
     'YmluYW5jZV9zZXR0aW5ncxgVIAEoCzIZLmhpLm5pbmphLkJpbmFuY2VTZXR0aW5nc0gAUhRldm'
     'VudEJpbmFuY2VTZXR0aW5ncxJCCg5iaW5hbmNlX3Jlc3VsdBgWIAEoCzIZLmhpLmJpbmFuY2Uu'
     'QmluYW5jZVJlc3VsdEgAUg1iaW5hbmNlUmVzdWx0EioKCHNob3dfdGlwGBggASgLMg0uaGkubm'
-    'luamEuVGlwSABSB3Nob3dUaXBCBQoDY21k');
+    'luamEuVGlwSABSB3Nob3dUaXASKwoHc2hvd19xchgZIAEoCzIQLmhpLm5pbmphLlFyQ2FyZEgA'
+    'UgZzaG93UXJCBQoDY21k');
+
+@$core.Deprecated('Use qrCardDescriptor instead')
+const QrCard$json = {
+  '1': 'QrCard',
+  '2': [
+    {
+      '1': 'content',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '9': 0,
+      '10': 'content',
+      '17': true
+    },
+    {'1': 'title', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'title', '17': true},
+  ],
+  '8': [
+    {'1': '_content'},
+    {'1': '_title'},
+  ],
+};
+
+/// Descriptor for `QrCard`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List qrCardDescriptor = $convert.base64Decode(
+    'CgZRckNhcmQSHQoHY29udGVudBgBIAEoCUgAUgdjb250ZW50iAEBEhkKBXRpdGxlGAIgASgJSA'
+    'FSBXRpdGxliAEBQgoKCF9jb250ZW50QggKBl90aXRsZQ==');
 
 @$core.Deprecated('Use tipDescriptor instead')
 const Tip$json = {

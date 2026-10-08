@@ -590,7 +590,7 @@ pub struct BinanceRequest {
 pub struct BrainToFace {
     #[prost(
         oneof = "brain_to_face::Cmd",
-        tags = "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21, 22, 24"
+        tags = "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21, 22, 24, 25"
     )]
     pub cmd: ::core::option::Option<brain_to_face::Cmd>,
 }
@@ -685,7 +685,22 @@ pub mod brain_to_face {
         /// 主人在 App 里问机器人(内置插件的 plugin_status / plugin_retry_install)就能查、能重试。
         #[prost(message, tag = "24")]
         ShowTip(super::Tip),
+        /// 在屏幕上显示一张**内容由调用方给**的二维码(比如插件签好的 `{data,signature}`)。
+        /// 与 `show_qr_code` 分开:那个只显示机器人自己的 did,内容是 face 现取的。
+        #[prost(message, tag = "25")]
+        ShowQr(super::QrCard),
     }
+}
+/// 内容由调用方给的二维码。`content` 原样编进码里,face 不解析、不改写;
+/// 装不下(超过二维码容量)就不显示并在日志里说一句 —— 截断了的码扫出来是另一份数据。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct QrCard {
+    /// 编进二维码的原文
+    #[prost(string, optional, tag = "1")]
+    pub content: ::core::option::Option<::prost::alloc::string::String>,
+    /// 码上方的标题;不传用 face 的默认标题
+    #[prost(string, optional, tag = "2")]
+    pub title: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 通用提示:给人看的一句话。**文案由 brain 定**,face 不另编。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]

@@ -569,6 +569,7 @@ enum BrainToFace_Cmd {
   eventBinanceSettings,
   binanceResult,
   showTip,
+  showQr,
   notSet
 }
 
@@ -598,6 +599,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     BinanceSettings? eventBinanceSettings,
     $7.BinanceResult? binanceResult,
     Tip? showTip,
+    QrCard? showQr,
   }) {
     final result = create();
     if (initRobot != null) result.initRobot = initRobot;
@@ -625,6 +627,7 @@ class BrainToFace extends $pb.GeneratedMessage {
       result.eventBinanceSettings = eventBinanceSettings;
     if (binanceResult != null) result.binanceResult = binanceResult;
     if (showTip != null) result.showTip = showTip;
+    if (showQr != null) result.showQr = showQr;
     return result;
   }
 
@@ -661,6 +664,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     21: BrainToFace_Cmd.eventBinanceSettings,
     22: BrainToFace_Cmd.binanceResult,
     24: BrainToFace_Cmd.showTip,
+    25: BrainToFace_Cmd.showQr,
     0: BrainToFace_Cmd.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -690,7 +694,8 @@ class BrainToFace extends $pb.GeneratedMessage {
       20,
       21,
       22,
-      24
+      24,
+      25
     ])
     ..aOM<RobotInit>(1, _omitFieldNames ? '' : 'initRobot',
         subBuilder: RobotInit.create)
@@ -737,6 +742,8 @@ class BrainToFace extends $pb.GeneratedMessage {
     ..aOM<$7.BinanceResult>(22, _omitFieldNames ? '' : 'binanceResult',
         subBuilder: $7.BinanceResult.create)
     ..aOM<Tip>(24, _omitFieldNames ? '' : 'showTip', subBuilder: Tip.create)
+    ..aOM<QrCard>(25, _omitFieldNames ? '' : 'showQr',
+        subBuilder: QrCard.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -781,6 +788,7 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(21)
   @$pb.TagNumber(22)
   @$pb.TagNumber(24)
+  @$pb.TagNumber(25)
   BrainToFace_Cmd whichCmd() => _BrainToFace_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
@@ -805,6 +813,7 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(21)
   @$pb.TagNumber(22)
   @$pb.TagNumber(24)
+  @$pb.TagNumber(25)
   void clearCmd() => $_clearField($_whichOneof(0));
 
   /// 初始化
@@ -1073,6 +1082,86 @@ class BrainToFace extends $pb.GeneratedMessage {
   void clearShowTip() => $_clearField(24);
   @$pb.TagNumber(24)
   Tip ensureShowTip() => $_ensure(22);
+
+  /// 在屏幕上显示一张**内容由调用方给**的二维码(比如插件签好的 `{data,signature}`)。
+  /// 与 `show_qr_code` 分开:那个只显示机器人自己的 did,内容是 face 现取的。
+  @$pb.TagNumber(25)
+  QrCard get showQr => $_getN(23);
+  @$pb.TagNumber(25)
+  set showQr(QrCard value) => $_setField(25, value);
+  @$pb.TagNumber(25)
+  $core.bool hasShowQr() => $_has(23);
+  @$pb.TagNumber(25)
+  void clearShowQr() => $_clearField(25);
+  @$pb.TagNumber(25)
+  QrCard ensureShowQr() => $_ensure(23);
+}
+
+/// 内容由调用方给的二维码。`content` 原样编进码里,face 不解析、不改写;
+/// 装不下(超过二维码容量)就不显示并在日志里说一句 —— 截断了的码扫出来是另一份数据。
+class QrCard extends $pb.GeneratedMessage {
+  factory QrCard({
+    $core.String? content,
+    $core.String? title,
+  }) {
+    final result = create();
+    if (content != null) result.content = content;
+    if (title != null) result.title = title;
+    return result;
+  }
+
+  QrCard._();
+
+  factory QrCard.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory QrCard.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'QrCard',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'content')
+    ..aOS(2, _omitFieldNames ? '' : 'title')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  QrCard clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  QrCard copyWith(void Function(QrCard) updates) =>
+      super.copyWith((message) => updates(message as QrCard)) as QrCard;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static QrCard create() => QrCard._();
+  @$core.override
+  QrCard createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static QrCard getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<QrCard>(create);
+  static QrCard? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get content => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set content($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasContent() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearContent() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get title => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set title($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasTitle() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearTitle() => $_clearField(2);
 }
 
 /// 通用提示:给人看的一句话。**文案由 brain 定**,face 不另编。
