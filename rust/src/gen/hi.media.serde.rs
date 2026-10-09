@@ -219,6 +219,445 @@ impl<'de> serde::Deserialize<'de> for CancelTaskResp {
         deserializer.deserialize_struct("hi.media.CancelTaskResp", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for CharacterTaskParams {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.input_asset_id.is_some() {
+            len += 1;
+        }
+        if self.prompt.is_some() {
+            len += 1;
+        }
+        if self.seed.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.CharacterTaskParams", len)?;
+        if let Some(v) = self.input_asset_id.as_ref() {
+            struct_ser.serialize_field("inputAssetId", v)?;
+        }
+        if let Some(v) = self.prompt.as_ref() {
+            struct_ser.serialize_field("prompt", v)?;
+        }
+        if let Some(v) = self.seed.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("seed", ToString::to_string(&v).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for CharacterTaskParams {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "input_asset_id",
+            "inputAssetId",
+            "prompt",
+            "seed",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            InputAssetId,
+            Prompt,
+            Seed,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "inputAssetId" | "input_asset_id" => Ok(GeneratedField::InputAssetId),
+                            "prompt" => Ok(GeneratedField::Prompt),
+                            "seed" => Ok(GeneratedField::Seed),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = CharacterTaskParams;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.CharacterTaskParams")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CharacterTaskParams, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut input_asset_id__ = None;
+                let mut prompt__ = None;
+                let mut seed__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::InputAssetId => {
+                            if input_asset_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputAssetId"));
+                            }
+                            input_asset_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Prompt => {
+                            if prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prompt"));
+                            }
+                            prompt__ = map_.next_value()?;
+                        }
+                        GeneratedField::Seed => {
+                            if seed__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("seed"));
+                            }
+                            seed__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(CharacterTaskParams {
+                    input_asset_id: input_asset_id__,
+                    prompt: prompt__,
+                    seed: seed__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.CharacterTaskParams", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for CharacterWorkflowConfig {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.input_image.is_some() {
+            len += 1;
+        }
+        if self.prompt.is_some() {
+            len += 1;
+        }
+        if self.negative_prompt.is_some() {
+            len += 1;
+        }
+        if self.seed.is_some() {
+            len += 1;
+        }
+        if self.prompt_max_length.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.CharacterWorkflowConfig", len)?;
+        if let Some(v) = self.input_image.as_ref() {
+            struct_ser.serialize_field("inputImage", v)?;
+        }
+        if let Some(v) = self.prompt.as_ref() {
+            struct_ser.serialize_field("prompt", v)?;
+        }
+        if let Some(v) = self.negative_prompt.as_ref() {
+            struct_ser.serialize_field("negativePrompt", v)?;
+        }
+        if let Some(v) = self.seed.as_ref() {
+            struct_ser.serialize_field("seed", v)?;
+        }
+        if let Some(v) = self.prompt_max_length.as_ref() {
+            struct_ser.serialize_field("promptMaxLength", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for CharacterWorkflowConfig {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "input_image",
+            "inputImage",
+            "prompt",
+            "negative_prompt",
+            "negativePrompt",
+            "seed",
+            "prompt_max_length",
+            "promptMaxLength",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            InputImage,
+            Prompt,
+            NegativePrompt,
+            Seed,
+            PromptMaxLength,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "inputImage" | "input_image" => Ok(GeneratedField::InputImage),
+                            "prompt" => Ok(GeneratedField::Prompt),
+                            "negativePrompt" | "negative_prompt" => Ok(GeneratedField::NegativePrompt),
+                            "seed" => Ok(GeneratedField::Seed),
+                            "promptMaxLength" | "prompt_max_length" => Ok(GeneratedField::PromptMaxLength),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = CharacterWorkflowConfig;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.CharacterWorkflowConfig")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CharacterWorkflowConfig, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut input_image__ = None;
+                let mut prompt__ = None;
+                let mut negative_prompt__ = None;
+                let mut seed__ = None;
+                let mut prompt_max_length__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::InputImage => {
+                            if input_image__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputImage"));
+                            }
+                            input_image__ = map_.next_value()?;
+                        }
+                        GeneratedField::Prompt => {
+                            if prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prompt"));
+                            }
+                            prompt__ = map_.next_value()?;
+                        }
+                        GeneratedField::NegativePrompt => {
+                            if negative_prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("negativePrompt"));
+                            }
+                            negative_prompt__ = map_.next_value()?;
+                        }
+                        GeneratedField::Seed => {
+                            if seed__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("seed"));
+                            }
+                            seed__ = map_.next_value()?;
+                        }
+                        GeneratedField::PromptMaxLength => {
+                            if prompt_max_length__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("promptMaxLength"));
+                            }
+                            prompt_max_length__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(CharacterWorkflowConfig {
+                    input_image: input_image__,
+                    prompt: prompt__,
+                    negative_prompt: negative_prompt__,
+                    seed: seed__,
+                    prompt_max_length: prompt_max_length__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.CharacterWorkflowConfig", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for CreateCharacterTaskReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.request_id.is_some() {
+            len += 1;
+        }
+        if self.workflow_id.is_some() {
+            len += 1;
+        }
+        if self.input_asset_id.is_some() {
+            len += 1;
+        }
+        if self.prompt.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.CreateCharacterTaskReq", len)?;
+        if let Some(v) = self.request_id.as_ref() {
+            struct_ser.serialize_field("requestId", v)?;
+        }
+        if let Some(v) = self.workflow_id.as_ref() {
+            struct_ser.serialize_field("workflowId", v)?;
+        }
+        if let Some(v) = self.input_asset_id.as_ref() {
+            struct_ser.serialize_field("inputAssetId", v)?;
+        }
+        if let Some(v) = self.prompt.as_ref() {
+            struct_ser.serialize_field("prompt", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for CreateCharacterTaskReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "request_id",
+            "requestId",
+            "workflow_id",
+            "workflowId",
+            "input_asset_id",
+            "inputAssetId",
+            "prompt",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            RequestId,
+            WorkflowId,
+            InputAssetId,
+            Prompt,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
+                            "workflowId" | "workflow_id" => Ok(GeneratedField::WorkflowId),
+                            "inputAssetId" | "input_asset_id" => Ok(GeneratedField::InputAssetId),
+                            "prompt" => Ok(GeneratedField::Prompt),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = CreateCharacterTaskReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.CreateCharacterTaskReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateCharacterTaskReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut request_id__ = None;
+                let mut workflow_id__ = None;
+                let mut input_asset_id__ = None;
+                let mut prompt__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
+                            }
+                            request_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::WorkflowId => {
+                            if workflow_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowId"));
+                            }
+                            workflow_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::InputAssetId => {
+                            if input_asset_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputAssetId"));
+                            }
+                            input_asset_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Prompt => {
+                            if prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prompt"));
+                            }
+                            prompt__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(CreateCharacterTaskReq {
+                    request_id: request_id__,
+                    workflow_id: workflow_id__,
+                    input_asset_id: input_asset_id__,
+                    prompt: prompt__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.CreateCharacterTaskReq", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for CreateImageToVideoTaskReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -622,6 +1061,296 @@ impl<'de> serde::Deserialize<'de> for CreateModelResp {
         deserializer.deserialize_struct("hi.media.CreateModelResp", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for CreateMultipleImageEditTaskReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.request_id.is_some() {
+            len += 1;
+        }
+        if self.workflow_id.is_some() {
+            len += 1;
+        }
+        if !self.input_asset_ids.is_empty() {
+            len += 1;
+        }
+        if self.prompt.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.CreateMultipleImageEditTaskReq", len)?;
+        if let Some(v) = self.request_id.as_ref() {
+            struct_ser.serialize_field("requestId", v)?;
+        }
+        if let Some(v) = self.workflow_id.as_ref() {
+            struct_ser.serialize_field("workflowId", v)?;
+        }
+        if !self.input_asset_ids.is_empty() {
+            struct_ser.serialize_field("inputAssetIds", &self.input_asset_ids)?;
+        }
+        if let Some(v) = self.prompt.as_ref() {
+            struct_ser.serialize_field("prompt", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for CreateMultipleImageEditTaskReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "request_id",
+            "requestId",
+            "workflow_id",
+            "workflowId",
+            "input_asset_ids",
+            "inputAssetIds",
+            "prompt",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            RequestId,
+            WorkflowId,
+            InputAssetIds,
+            Prompt,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
+                            "workflowId" | "workflow_id" => Ok(GeneratedField::WorkflowId),
+                            "inputAssetIds" | "input_asset_ids" => Ok(GeneratedField::InputAssetIds),
+                            "prompt" => Ok(GeneratedField::Prompt),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = CreateMultipleImageEditTaskReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.CreateMultipleImageEditTaskReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateMultipleImageEditTaskReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut request_id__ = None;
+                let mut workflow_id__ = None;
+                let mut input_asset_ids__ = None;
+                let mut prompt__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
+                            }
+                            request_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::WorkflowId => {
+                            if workflow_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowId"));
+                            }
+                            workflow_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::InputAssetIds => {
+                            if input_asset_ids__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputAssetIds"));
+                            }
+                            input_asset_ids__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Prompt => {
+                            if prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prompt"));
+                            }
+                            prompt__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(CreateMultipleImageEditTaskReq {
+                    request_id: request_id__,
+                    workflow_id: workflow_id__,
+                    input_asset_ids: input_asset_ids__.unwrap_or_default(),
+                    prompt: prompt__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.CreateMultipleImageEditTaskReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for CreateSingleImageEditTaskReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.request_id.is_some() {
+            len += 1;
+        }
+        if self.workflow_id.is_some() {
+            len += 1;
+        }
+        if self.input_asset_id.is_some() {
+            len += 1;
+        }
+        if self.prompt.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.CreateSingleImageEditTaskReq", len)?;
+        if let Some(v) = self.request_id.as_ref() {
+            struct_ser.serialize_field("requestId", v)?;
+        }
+        if let Some(v) = self.workflow_id.as_ref() {
+            struct_ser.serialize_field("workflowId", v)?;
+        }
+        if let Some(v) = self.input_asset_id.as_ref() {
+            struct_ser.serialize_field("inputAssetId", v)?;
+        }
+        if let Some(v) = self.prompt.as_ref() {
+            struct_ser.serialize_field("prompt", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for CreateSingleImageEditTaskReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "request_id",
+            "requestId",
+            "workflow_id",
+            "workflowId",
+            "input_asset_id",
+            "inputAssetId",
+            "prompt",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            RequestId,
+            WorkflowId,
+            InputAssetId,
+            Prompt,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
+                            "workflowId" | "workflow_id" => Ok(GeneratedField::WorkflowId),
+                            "inputAssetId" | "input_asset_id" => Ok(GeneratedField::InputAssetId),
+                            "prompt" => Ok(GeneratedField::Prompt),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = CreateSingleImageEditTaskReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.CreateSingleImageEditTaskReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateSingleImageEditTaskReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut request_id__ = None;
+                let mut workflow_id__ = None;
+                let mut input_asset_id__ = None;
+                let mut prompt__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
+                            }
+                            request_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::WorkflowId => {
+                            if workflow_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowId"));
+                            }
+                            workflow_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::InputAssetId => {
+                            if input_asset_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputAssetId"));
+                            }
+                            input_asset_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Prompt => {
+                            if prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prompt"));
+                            }
+                            prompt__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(CreateSingleImageEditTaskReq {
+                    request_id: request_id__,
+                    workflow_id: workflow_id__,
+                    input_asset_id: input_asset_id__,
+                    prompt: prompt__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.CreateSingleImageEditTaskReq", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for CreateTaskResp {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -712,6 +1441,168 @@ impl<'de> serde::Deserialize<'de> for CreateTaskResp {
             }
         }
         deserializer.deserialize_struct("hi.media.CreateTaskResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for CreateTextToImageTaskReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.request_id.is_some() {
+            len += 1;
+        }
+        if self.workflow_id.is_some() {
+            len += 1;
+        }
+        if self.prompt.is_some() {
+            len += 1;
+        }
+        if self.size.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.CreateTextToImageTaskReq", len)?;
+        if let Some(v) = self.request_id.as_ref() {
+            struct_ser.serialize_field("requestId", v)?;
+        }
+        if let Some(v) = self.workflow_id.as_ref() {
+            struct_ser.serialize_field("workflowId", v)?;
+        }
+        if let Some(v) = self.prompt.as_ref() {
+            struct_ser.serialize_field("prompt", v)?;
+        }
+        if let Some(v) = self.size.as_ref() {
+            match v {
+                create_text_to_image_task_req::Size::Dimensions(v) => {
+                    struct_ser.serialize_field("dimensions", v)?;
+                }
+                create_text_to_image_task_req::Size::Resolution(v) => {
+                    struct_ser.serialize_field("resolution", v)?;
+                }
+            }
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for CreateTextToImageTaskReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "request_id",
+            "requestId",
+            "workflow_id",
+            "workflowId",
+            "prompt",
+            "dimensions",
+            "resolution",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            RequestId,
+            WorkflowId,
+            Prompt,
+            Dimensions,
+            Resolution,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
+                            "workflowId" | "workflow_id" => Ok(GeneratedField::WorkflowId),
+                            "prompt" => Ok(GeneratedField::Prompt),
+                            "dimensions" => Ok(GeneratedField::Dimensions),
+                            "resolution" => Ok(GeneratedField::Resolution),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = CreateTextToImageTaskReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.CreateTextToImageTaskReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateTextToImageTaskReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut request_id__ = None;
+                let mut workflow_id__ = None;
+                let mut prompt__ = None;
+                let mut size__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
+                            }
+                            request_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::WorkflowId => {
+                            if workflow_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowId"));
+                            }
+                            workflow_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Prompt => {
+                            if prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prompt"));
+                            }
+                            prompt__ = map_.next_value()?;
+                        }
+                        GeneratedField::Dimensions => {
+                            if size__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("dimensions"));
+                            }
+                            size__ = map_.next_value::<::std::option::Option<_>>()?.map(create_text_to_image_task_req::Size::Dimensions)
+;
+                        }
+                        GeneratedField::Resolution => {
+                            if size__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("resolution"));
+                            }
+                            size__ = map_.next_value::<::std::option::Option<_>>()?.map(create_text_to_image_task_req::Size::Resolution)
+;
+                        }
+                    }
+                }
+                Ok(CreateTextToImageTaskReq {
+                    request_id: request_id__,
+                    workflow_id: workflow_id__,
+                    prompt: prompt__,
+                    size: size__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.CreateTextToImageTaskReq", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for CreateTextToVideoTaskReq {
@@ -3379,6 +4270,444 @@ impl<'de> serde::Deserialize<'de> for GetWorkflowResp {
         deserializer.deserialize_struct("hi.media.GetWorkflowResp", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for ImageDimensions {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.width.is_some() {
+            len += 1;
+        }
+        if self.height.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.ImageDimensions", len)?;
+        if let Some(v) = self.width.as_ref() {
+            struct_ser.serialize_field("width", v)?;
+        }
+        if let Some(v) = self.height.as_ref() {
+            struct_ser.serialize_field("height", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ImageDimensions {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "width",
+            "height",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Width,
+            Height,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "width" => Ok(GeneratedField::Width),
+                            "height" => Ok(GeneratedField::Height),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ImageDimensions;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.ImageDimensions")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ImageDimensions, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut width__ = None;
+                let mut height__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Width => {
+                            if width__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("width"));
+                            }
+                            width__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Height => {
+                            if height__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("height"));
+                            }
+                            height__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(ImageDimensions {
+                    width: width__,
+                    height: height__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.ImageDimensions", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ImageDimensionsConfig {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.width.is_some() {
+            len += 1;
+        }
+        if self.height.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.ImageDimensionsConfig", len)?;
+        if let Some(v) = self.width.as_ref() {
+            struct_ser.serialize_field("width", v)?;
+        }
+        if let Some(v) = self.height.as_ref() {
+            struct_ser.serialize_field("height", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ImageDimensionsConfig {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "width",
+            "height",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Width,
+            Height,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "width" => Ok(GeneratedField::Width),
+                            "height" => Ok(GeneratedField::Height),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ImageDimensionsConfig;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.ImageDimensionsConfig")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ImageDimensionsConfig, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut width__ = None;
+                let mut height__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Width => {
+                            if width__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("width"));
+                            }
+                            width__ = map_.next_value()?;
+                        }
+                        GeneratedField::Height => {
+                            if height__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("height"));
+                            }
+                            height__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ImageDimensionsConfig {
+                    width: width__,
+                    height: height__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.ImageDimensionsConfig", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ImageResolution {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.aspect_ratio.is_some() {
+            len += 1;
+        }
+        if self.megapixels.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.ImageResolution", len)?;
+        if let Some(v) = self.aspect_ratio.as_ref() {
+            struct_ser.serialize_field("aspectRatio", v)?;
+        }
+        if let Some(v) = self.megapixels.as_ref() {
+            struct_ser.serialize_field("megapixels", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ImageResolution {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "aspect_ratio",
+            "aspectRatio",
+            "megapixels",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            AspectRatio,
+            Megapixels,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "aspectRatio" | "aspect_ratio" => Ok(GeneratedField::AspectRatio),
+                            "megapixels" => Ok(GeneratedField::Megapixels),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ImageResolution;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.ImageResolution")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ImageResolution, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut aspect_ratio__ = None;
+                let mut megapixels__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::AspectRatio => {
+                            if aspect_ratio__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("aspectRatio"));
+                            }
+                            aspect_ratio__ = map_.next_value()?;
+                        }
+                        GeneratedField::Megapixels => {
+                            if megapixels__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("megapixels"));
+                            }
+                            megapixels__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ImageResolution {
+                    aspect_ratio: aspect_ratio__,
+                    megapixels: megapixels__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.ImageResolution", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ImageResolutionConfig {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.aspect_ratio.is_some() {
+            len += 1;
+        }
+        if self.megapixels.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.ImageResolutionConfig", len)?;
+        if let Some(v) = self.aspect_ratio.as_ref() {
+            struct_ser.serialize_field("aspectRatio", v)?;
+        }
+        if let Some(v) = self.megapixels.as_ref() {
+            struct_ser.serialize_field("megapixels", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ImageResolutionConfig {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "aspect_ratio",
+            "aspectRatio",
+            "megapixels",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            AspectRatio,
+            Megapixels,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "aspectRatio" | "aspect_ratio" => Ok(GeneratedField::AspectRatio),
+                            "megapixels" => Ok(GeneratedField::Megapixels),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ImageResolutionConfig;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.ImageResolutionConfig")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ImageResolutionConfig, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut aspect_ratio__ = None;
+                let mut megapixels__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::AspectRatio => {
+                            if aspect_ratio__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("aspectRatio"));
+                            }
+                            aspect_ratio__ = map_.next_value()?;
+                        }
+                        GeneratedField::Megapixels => {
+                            if megapixels__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("megapixels"));
+                            }
+                            megapixels__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ImageResolutionConfig {
+                    aspect_ratio: aspect_ratio__,
+                    megapixels: megapixels__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.ImageResolutionConfig", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for ImageToVideoTaskParams {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -3779,6 +5108,118 @@ impl<'de> serde::Deserialize<'de> for ImageToVideoWorkflowConfig {
             }
         }
         deserializer.deserialize_struct("hi.media.ImageToVideoWorkflowConfig", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for InputImagesConfig {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.min.is_some() {
+            len += 1;
+        }
+        if self.max.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.InputImagesConfig", len)?;
+        if let Some(v) = self.min.as_ref() {
+            struct_ser.serialize_field("min", v)?;
+        }
+        if let Some(v) = self.max.as_ref() {
+            struct_ser.serialize_field("max", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for InputImagesConfig {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "min",
+            "max",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Min,
+            Max,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "min" => Ok(GeneratedField::Min),
+                            "max" => Ok(GeneratedField::Max),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = InputImagesConfig;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.InputImagesConfig")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<InputImagesConfig, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut min__ = None;
+                let mut max__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Min => {
+                            if min__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("min"));
+                            }
+                            min__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Max => {
+                            if max__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("max"));
+                            }
+                            max__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(InputImagesConfig {
+                    min: min__,
+                    max: max__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.InputImagesConfig", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for IntRangeConfig {
@@ -6207,6 +7648,300 @@ impl<'de> serde::Deserialize<'de> for Model {
         deserializer.deserialize_struct("hi.media.Model", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for MultipleImageEditTaskParams {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.input_asset_ids.is_empty() {
+            len += 1;
+        }
+        if self.prompt.is_some() {
+            len += 1;
+        }
+        if self.seed.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.MultipleImageEditTaskParams", len)?;
+        if !self.input_asset_ids.is_empty() {
+            struct_ser.serialize_field("inputAssetIds", &self.input_asset_ids)?;
+        }
+        if let Some(v) = self.prompt.as_ref() {
+            struct_ser.serialize_field("prompt", v)?;
+        }
+        if let Some(v) = self.seed.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("seed", ToString::to_string(&v).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for MultipleImageEditTaskParams {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "input_asset_ids",
+            "inputAssetIds",
+            "prompt",
+            "seed",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            InputAssetIds,
+            Prompt,
+            Seed,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "inputAssetIds" | "input_asset_ids" => Ok(GeneratedField::InputAssetIds),
+                            "prompt" => Ok(GeneratedField::Prompt),
+                            "seed" => Ok(GeneratedField::Seed),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = MultipleImageEditTaskParams;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.MultipleImageEditTaskParams")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MultipleImageEditTaskParams, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut input_asset_ids__ = None;
+                let mut prompt__ = None;
+                let mut seed__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::InputAssetIds => {
+                            if input_asset_ids__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputAssetIds"));
+                            }
+                            input_asset_ids__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Prompt => {
+                            if prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prompt"));
+                            }
+                            prompt__ = map_.next_value()?;
+                        }
+                        GeneratedField::Seed => {
+                            if seed__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("seed"));
+                            }
+                            seed__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(MultipleImageEditTaskParams {
+                    input_asset_ids: input_asset_ids__.unwrap_or_default(),
+                    prompt: prompt__,
+                    seed: seed__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.MultipleImageEditTaskParams", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for MultipleImageEditWorkflowConfig {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.input_images.is_some() {
+            len += 1;
+        }
+        if self.prompt.is_some() {
+            len += 1;
+        }
+        if self.prompt_max_length.is_some() {
+            len += 1;
+        }
+        if self.negative_prompt.is_some() {
+            len += 1;
+        }
+        if self.seed.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.MultipleImageEditWorkflowConfig", len)?;
+        if let Some(v) = self.input_images.as_ref() {
+            struct_ser.serialize_field("inputImages", v)?;
+        }
+        if let Some(v) = self.prompt.as_ref() {
+            struct_ser.serialize_field("prompt", v)?;
+        }
+        if let Some(v) = self.prompt_max_length.as_ref() {
+            struct_ser.serialize_field("promptMaxLength", v)?;
+        }
+        if let Some(v) = self.negative_prompt.as_ref() {
+            struct_ser.serialize_field("negativePrompt", v)?;
+        }
+        if let Some(v) = self.seed.as_ref() {
+            struct_ser.serialize_field("seed", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for MultipleImageEditWorkflowConfig {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "input_images",
+            "inputImages",
+            "prompt",
+            "prompt_max_length",
+            "promptMaxLength",
+            "negative_prompt",
+            "negativePrompt",
+            "seed",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            InputImages,
+            Prompt,
+            PromptMaxLength,
+            NegativePrompt,
+            Seed,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "inputImages" | "input_images" => Ok(GeneratedField::InputImages),
+                            "prompt" => Ok(GeneratedField::Prompt),
+                            "promptMaxLength" | "prompt_max_length" => Ok(GeneratedField::PromptMaxLength),
+                            "negativePrompt" | "negative_prompt" => Ok(GeneratedField::NegativePrompt),
+                            "seed" => Ok(GeneratedField::Seed),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = MultipleImageEditWorkflowConfig;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.MultipleImageEditWorkflowConfig")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MultipleImageEditWorkflowConfig, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut input_images__ = None;
+                let mut prompt__ = None;
+                let mut prompt_max_length__ = None;
+                let mut negative_prompt__ = None;
+                let mut seed__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::InputImages => {
+                            if input_images__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputImages"));
+                            }
+                            input_images__ = map_.next_value()?;
+                        }
+                        GeneratedField::Prompt => {
+                            if prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prompt"));
+                            }
+                            prompt__ = map_.next_value()?;
+                        }
+                        GeneratedField::PromptMaxLength => {
+                            if prompt_max_length__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("promptMaxLength"));
+                            }
+                            prompt_max_length__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::NegativePrompt => {
+                            if negative_prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("negativePrompt"));
+                            }
+                            negative_prompt__ = map_.next_value()?;
+                        }
+                        GeneratedField::Seed => {
+                            if seed__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("seed"));
+                            }
+                            seed__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(MultipleImageEditWorkflowConfig {
+                    input_images: input_images__,
+                    prompt: prompt__,
+                    prompt_max_length: prompt_max_length__,
+                    negative_prompt: negative_prompt__,
+                    seed: seed__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.MultipleImageEditWorkflowConfig", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for RecoverSaveTaskReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -6647,6 +8382,300 @@ impl<'de> serde::Deserialize<'de> for SetDefaultWorkflowResp {
         deserializer.deserialize_struct("hi.media.SetDefaultWorkflowResp", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for SingleImageEditTaskParams {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.input_asset_id.is_some() {
+            len += 1;
+        }
+        if self.prompt.is_some() {
+            len += 1;
+        }
+        if self.seed.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.SingleImageEditTaskParams", len)?;
+        if let Some(v) = self.input_asset_id.as_ref() {
+            struct_ser.serialize_field("inputAssetId", v)?;
+        }
+        if let Some(v) = self.prompt.as_ref() {
+            struct_ser.serialize_field("prompt", v)?;
+        }
+        if let Some(v) = self.seed.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("seed", ToString::to_string(&v).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for SingleImageEditTaskParams {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "input_asset_id",
+            "inputAssetId",
+            "prompt",
+            "seed",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            InputAssetId,
+            Prompt,
+            Seed,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "inputAssetId" | "input_asset_id" => Ok(GeneratedField::InputAssetId),
+                            "prompt" => Ok(GeneratedField::Prompt),
+                            "seed" => Ok(GeneratedField::Seed),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = SingleImageEditTaskParams;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.SingleImageEditTaskParams")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SingleImageEditTaskParams, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut input_asset_id__ = None;
+                let mut prompt__ = None;
+                let mut seed__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::InputAssetId => {
+                            if input_asset_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputAssetId"));
+                            }
+                            input_asset_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Prompt => {
+                            if prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prompt"));
+                            }
+                            prompt__ = map_.next_value()?;
+                        }
+                        GeneratedField::Seed => {
+                            if seed__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("seed"));
+                            }
+                            seed__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(SingleImageEditTaskParams {
+                    input_asset_id: input_asset_id__,
+                    prompt: prompt__,
+                    seed: seed__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.SingleImageEditTaskParams", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for SingleImageEditWorkflowConfig {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.input_image.is_some() {
+            len += 1;
+        }
+        if self.prompt.is_some() {
+            len += 1;
+        }
+        if self.prompt_max_length.is_some() {
+            len += 1;
+        }
+        if self.negative_prompt.is_some() {
+            len += 1;
+        }
+        if self.seed.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.SingleImageEditWorkflowConfig", len)?;
+        if let Some(v) = self.input_image.as_ref() {
+            struct_ser.serialize_field("inputImage", v)?;
+        }
+        if let Some(v) = self.prompt.as_ref() {
+            struct_ser.serialize_field("prompt", v)?;
+        }
+        if let Some(v) = self.prompt_max_length.as_ref() {
+            struct_ser.serialize_field("promptMaxLength", v)?;
+        }
+        if let Some(v) = self.negative_prompt.as_ref() {
+            struct_ser.serialize_field("negativePrompt", v)?;
+        }
+        if let Some(v) = self.seed.as_ref() {
+            struct_ser.serialize_field("seed", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for SingleImageEditWorkflowConfig {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "input_image",
+            "inputImage",
+            "prompt",
+            "prompt_max_length",
+            "promptMaxLength",
+            "negative_prompt",
+            "negativePrompt",
+            "seed",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            InputImage,
+            Prompt,
+            PromptMaxLength,
+            NegativePrompt,
+            Seed,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "inputImage" | "input_image" => Ok(GeneratedField::InputImage),
+                            "prompt" => Ok(GeneratedField::Prompt),
+                            "promptMaxLength" | "prompt_max_length" => Ok(GeneratedField::PromptMaxLength),
+                            "negativePrompt" | "negative_prompt" => Ok(GeneratedField::NegativePrompt),
+                            "seed" => Ok(GeneratedField::Seed),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = SingleImageEditWorkflowConfig;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.SingleImageEditWorkflowConfig")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SingleImageEditWorkflowConfig, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut input_image__ = None;
+                let mut prompt__ = None;
+                let mut prompt_max_length__ = None;
+                let mut negative_prompt__ = None;
+                let mut seed__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::InputImage => {
+                            if input_image__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputImage"));
+                            }
+                            input_image__ = map_.next_value()?;
+                        }
+                        GeneratedField::Prompt => {
+                            if prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prompt"));
+                            }
+                            prompt__ = map_.next_value()?;
+                        }
+                        GeneratedField::PromptMaxLength => {
+                            if prompt_max_length__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("promptMaxLength"));
+                            }
+                            prompt_max_length__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::NegativePrompt => {
+                            if negative_prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("negativePrompt"));
+                            }
+                            negative_prompt__ = map_.next_value()?;
+                        }
+                        GeneratedField::Seed => {
+                            if seed__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("seed"));
+                            }
+                            seed__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(SingleImageEditWorkflowConfig {
+                    input_image: input_image__,
+                    prompt: prompt__,
+                    prompt_max_length: prompt_max_length__,
+                    negative_prompt: negative_prompt__,
+                    seed: seed__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.SingleImageEditWorkflowConfig", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for StringOptionConfig {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -6783,6 +8812,18 @@ impl serde::Serialize for TaskDetail {
                 task_detail::EffectiveParams::TextToVideo(v) => {
                     struct_ser.serialize_field("textToVideo", v)?;
                 }
+                task_detail::EffectiveParams::TextToImage(v) => {
+                    struct_ser.serialize_field("textToImage", v)?;
+                }
+                task_detail::EffectiveParams::SingleImageEdit(v) => {
+                    struct_ser.serialize_field("singleImageEdit", v)?;
+                }
+                task_detail::EffectiveParams::MultipleImageEdit(v) => {
+                    struct_ser.serialize_field("multipleImageEdit", v)?;
+                }
+                task_detail::EffectiveParams::Character(v) => {
+                    struct_ser.serialize_field("character", v)?;
+                }
             }
         }
         struct_ser.end()
@@ -6800,6 +8841,13 @@ impl<'de> serde::Deserialize<'de> for TaskDetail {
             "imageToVideo",
             "text_to_video",
             "textToVideo",
+            "text_to_image",
+            "textToImage",
+            "single_image_edit",
+            "singleImageEdit",
+            "multiple_image_edit",
+            "multipleImageEdit",
+            "character",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -6807,6 +8855,10 @@ impl<'de> serde::Deserialize<'de> for TaskDetail {
             Summary,
             ImageToVideo,
             TextToVideo,
+            TextToImage,
+            SingleImageEdit,
+            MultipleImageEdit,
+            Character,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -6831,6 +8883,10 @@ impl<'de> serde::Deserialize<'de> for TaskDetail {
                             "summary" => Ok(GeneratedField::Summary),
                             "imageToVideo" | "image_to_video" => Ok(GeneratedField::ImageToVideo),
                             "textToVideo" | "text_to_video" => Ok(GeneratedField::TextToVideo),
+                            "textToImage" | "text_to_image" => Ok(GeneratedField::TextToImage),
+                            "singleImageEdit" | "single_image_edit" => Ok(GeneratedField::SingleImageEdit),
+                            "multipleImageEdit" | "multiple_image_edit" => Ok(GeneratedField::MultipleImageEdit),
+                            "character" => Ok(GeneratedField::Character),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -6872,6 +8928,34 @@ impl<'de> serde::Deserialize<'de> for TaskDetail {
                                 return Err(serde::de::Error::duplicate_field("textToVideo"));
                             }
                             effective_params__ = map_.next_value::<::std::option::Option<_>>()?.map(task_detail::EffectiveParams::TextToVideo)
+;
+                        }
+                        GeneratedField::TextToImage => {
+                            if effective_params__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("textToImage"));
+                            }
+                            effective_params__ = map_.next_value::<::std::option::Option<_>>()?.map(task_detail::EffectiveParams::TextToImage)
+;
+                        }
+                        GeneratedField::SingleImageEdit => {
+                            if effective_params__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("singleImageEdit"));
+                            }
+                            effective_params__ = map_.next_value::<::std::option::Option<_>>()?.map(task_detail::EffectiveParams::SingleImageEdit)
+;
+                        }
+                        GeneratedField::MultipleImageEdit => {
+                            if effective_params__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("multipleImageEdit"));
+                            }
+                            effective_params__ = map_.next_value::<::std::option::Option<_>>()?.map(task_detail::EffectiveParams::MultipleImageEdit)
+;
+                        }
+                        GeneratedField::Character => {
+                            if effective_params__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("character"));
+                            }
+                            effective_params__ = map_.next_value::<::std::option::Option<_>>()?.map(task_detail::EffectiveParams::Character)
 ;
                         }
                     }
@@ -7787,6 +9871,9 @@ impl serde::Serialize for TestWorkflowReq {
         if self.input_asset_id.is_some() {
             len += 1;
         }
+        if !self.input_asset_ids.is_empty() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.media.TestWorkflowReq", len)?;
         if let Some(v) = self.request_id.as_ref() {
             struct_ser.serialize_field("requestId", v)?;
@@ -7799,6 +9886,9 @@ impl serde::Serialize for TestWorkflowReq {
         }
         if let Some(v) = self.input_asset_id.as_ref() {
             struct_ser.serialize_field("inputAssetId", v)?;
+        }
+        if !self.input_asset_ids.is_empty() {
+            struct_ser.serialize_field("inputAssetIds", &self.input_asset_ids)?;
         }
         struct_ser.end()
     }
@@ -7817,6 +9907,8 @@ impl<'de> serde::Deserialize<'de> for TestWorkflowReq {
             "prompt",
             "input_asset_id",
             "inputAssetId",
+            "input_asset_ids",
+            "inputAssetIds",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -7825,6 +9917,7 @@ impl<'de> serde::Deserialize<'de> for TestWorkflowReq {
             WorkflowId,
             Prompt,
             InputAssetId,
+            InputAssetIds,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -7850,6 +9943,7 @@ impl<'de> serde::Deserialize<'de> for TestWorkflowReq {
                             "workflowId" | "workflow_id" => Ok(GeneratedField::WorkflowId),
                             "prompt" => Ok(GeneratedField::Prompt),
                             "inputAssetId" | "input_asset_id" => Ok(GeneratedField::InputAssetId),
+                            "inputAssetIds" | "input_asset_ids" => Ok(GeneratedField::InputAssetIds),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -7873,6 +9967,7 @@ impl<'de> serde::Deserialize<'de> for TestWorkflowReq {
                 let mut workflow_id__ = None;
                 let mut prompt__ = None;
                 let mut input_asset_id__ = None;
+                let mut input_asset_ids__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::RequestId => {
@@ -7899,6 +9994,12 @@ impl<'de> serde::Deserialize<'de> for TestWorkflowReq {
                             }
                             input_asset_id__ = map_.next_value()?;
                         }
+                        GeneratedField::InputAssetIds => {
+                            if input_asset_ids__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputAssetIds"));
+                            }
+                            input_asset_ids__ = Some(map_.next_value()?);
+                        }
                     }
                 }
                 Ok(TestWorkflowReq {
@@ -7906,6 +10007,7 @@ impl<'de> serde::Deserialize<'de> for TestWorkflowReq {
                     workflow_id: workflow_id__,
                     prompt: prompt__,
                     input_asset_id: input_asset_id__,
+                    input_asset_ids: input_asset_ids__.unwrap_or_default(),
                 })
             }
         }
@@ -8096,6 +10198,372 @@ impl<'de> serde::Deserialize<'de> for TextLimit {
             }
         }
         deserializer.deserialize_struct("hi.media.TextLimit", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for TextToImageTaskParams {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.prompt.is_some() {
+            len += 1;
+        }
+        if self.seed.is_some() {
+            len += 1;
+        }
+        if self.width.is_some() {
+            len += 1;
+        }
+        if self.height.is_some() {
+            len += 1;
+        }
+        if self.aspect_ratio.is_some() {
+            len += 1;
+        }
+        if self.megapixels.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.TextToImageTaskParams", len)?;
+        if let Some(v) = self.prompt.as_ref() {
+            struct_ser.serialize_field("prompt", v)?;
+        }
+        if let Some(v) = self.seed.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("seed", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.width.as_ref() {
+            struct_ser.serialize_field("width", v)?;
+        }
+        if let Some(v) = self.height.as_ref() {
+            struct_ser.serialize_field("height", v)?;
+        }
+        if let Some(v) = self.aspect_ratio.as_ref() {
+            struct_ser.serialize_field("aspectRatio", v)?;
+        }
+        if let Some(v) = self.megapixels.as_ref() {
+            struct_ser.serialize_field("megapixels", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for TextToImageTaskParams {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "prompt",
+            "seed",
+            "width",
+            "height",
+            "aspect_ratio",
+            "aspectRatio",
+            "megapixels",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Prompt,
+            Seed,
+            Width,
+            Height,
+            AspectRatio,
+            Megapixels,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "prompt" => Ok(GeneratedField::Prompt),
+                            "seed" => Ok(GeneratedField::Seed),
+                            "width" => Ok(GeneratedField::Width),
+                            "height" => Ok(GeneratedField::Height),
+                            "aspectRatio" | "aspect_ratio" => Ok(GeneratedField::AspectRatio),
+                            "megapixels" => Ok(GeneratedField::Megapixels),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = TextToImageTaskParams;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.TextToImageTaskParams")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<TextToImageTaskParams, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut prompt__ = None;
+                let mut seed__ = None;
+                let mut width__ = None;
+                let mut height__ = None;
+                let mut aspect_ratio__ = None;
+                let mut megapixels__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Prompt => {
+                            if prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prompt"));
+                            }
+                            prompt__ = map_.next_value()?;
+                        }
+                        GeneratedField::Seed => {
+                            if seed__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("seed"));
+                            }
+                            seed__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Width => {
+                            if width__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("width"));
+                            }
+                            width__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Height => {
+                            if height__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("height"));
+                            }
+                            height__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::AspectRatio => {
+                            if aspect_ratio__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("aspectRatio"));
+                            }
+                            aspect_ratio__ = map_.next_value()?;
+                        }
+                        GeneratedField::Megapixels => {
+                            if megapixels__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("megapixels"));
+                            }
+                            megapixels__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(TextToImageTaskParams {
+                    prompt: prompt__,
+                    seed: seed__,
+                    width: width__,
+                    height: height__,
+                    aspect_ratio: aspect_ratio__,
+                    megapixels: megapixels__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.TextToImageTaskParams", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for TextToImageWorkflowConfig {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.prompt.is_some() {
+            len += 1;
+        }
+        if self.prompt_max_length.is_some() {
+            len += 1;
+        }
+        if self.negative_prompt.is_some() {
+            len += 1;
+        }
+        if self.seed.is_some() {
+            len += 1;
+        }
+        if self.size.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.TextToImageWorkflowConfig", len)?;
+        if let Some(v) = self.prompt.as_ref() {
+            struct_ser.serialize_field("prompt", v)?;
+        }
+        if let Some(v) = self.prompt_max_length.as_ref() {
+            struct_ser.serialize_field("promptMaxLength", v)?;
+        }
+        if let Some(v) = self.negative_prompt.as_ref() {
+            struct_ser.serialize_field("negativePrompt", v)?;
+        }
+        if let Some(v) = self.seed.as_ref() {
+            struct_ser.serialize_field("seed", v)?;
+        }
+        if let Some(v) = self.size.as_ref() {
+            match v {
+                text_to_image_workflow_config::Size::Dimensions(v) => {
+                    struct_ser.serialize_field("dimensions", v)?;
+                }
+                text_to_image_workflow_config::Size::Resolution(v) => {
+                    struct_ser.serialize_field("resolution", v)?;
+                }
+            }
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for TextToImageWorkflowConfig {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "prompt",
+            "prompt_max_length",
+            "promptMaxLength",
+            "negative_prompt",
+            "negativePrompt",
+            "seed",
+            "dimensions",
+            "resolution",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Prompt,
+            PromptMaxLength,
+            NegativePrompt,
+            Seed,
+            Dimensions,
+            Resolution,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "prompt" => Ok(GeneratedField::Prompt),
+                            "promptMaxLength" | "prompt_max_length" => Ok(GeneratedField::PromptMaxLength),
+                            "negativePrompt" | "negative_prompt" => Ok(GeneratedField::NegativePrompt),
+                            "seed" => Ok(GeneratedField::Seed),
+                            "dimensions" => Ok(GeneratedField::Dimensions),
+                            "resolution" => Ok(GeneratedField::Resolution),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = TextToImageWorkflowConfig;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.TextToImageWorkflowConfig")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<TextToImageWorkflowConfig, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut prompt__ = None;
+                let mut prompt_max_length__ = None;
+                let mut negative_prompt__ = None;
+                let mut seed__ = None;
+                let mut size__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Prompt => {
+                            if prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prompt"));
+                            }
+                            prompt__ = map_.next_value()?;
+                        }
+                        GeneratedField::PromptMaxLength => {
+                            if prompt_max_length__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("promptMaxLength"));
+                            }
+                            prompt_max_length__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::NegativePrompt => {
+                            if negative_prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("negativePrompt"));
+                            }
+                            negative_prompt__ = map_.next_value()?;
+                        }
+                        GeneratedField::Seed => {
+                            if seed__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("seed"));
+                            }
+                            seed__ = map_.next_value()?;
+                        }
+                        GeneratedField::Dimensions => {
+                            if size__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("dimensions"));
+                            }
+                            size__ = map_.next_value::<::std::option::Option<_>>()?.map(text_to_image_workflow_config::Size::Dimensions)
+;
+                        }
+                        GeneratedField::Resolution => {
+                            if size__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("resolution"));
+                            }
+                            size__ = map_.next_value::<::std::option::Option<_>>()?.map(text_to_image_workflow_config::Size::Resolution)
+;
+                        }
+                    }
+                }
+                Ok(TextToImageWorkflowConfig {
+                    prompt: prompt__,
+                    prompt_max_length: prompt_max_length__,
+                    negative_prompt: negative_prompt__,
+                    seed: seed__,
+                    size: size__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.TextToImageWorkflowConfig", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for TextToVideoTaskParams {
@@ -10694,6 +13162,12 @@ impl serde::Serialize for VideoParameterConfig {
         if self.frame_rate.is_some() {
             len += 1;
         }
+        if self.input_images.is_some() {
+            len += 1;
+        }
+        if self.image_size.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.media.VideoParameterConfig", len)?;
         if let Some(v) = self.prompt.as_ref() {
             struct_ser.serialize_field("prompt", v)?;
@@ -10709,6 +13183,19 @@ impl serde::Serialize for VideoParameterConfig {
         }
         if let Some(v) = self.frame_rate.as_ref() {
             struct_ser.serialize_field("frameRate", v)?;
+        }
+        if let Some(v) = self.input_images.as_ref() {
+            struct_ser.serialize_field("inputImages", v)?;
+        }
+        if let Some(v) = self.image_size.as_ref() {
+            match v {
+                video_parameter_config::ImageSize::ImageDimensions(v) => {
+                    struct_ser.serialize_field("imageDimensions", v)?;
+                }
+                video_parameter_config::ImageSize::ImageResolution(v) => {
+                    struct_ser.serialize_field("imageResolution", v)?;
+                }
+            }
         }
         struct_ser.end()
     }
@@ -10728,6 +13215,12 @@ impl<'de> serde::Deserialize<'de> for VideoParameterConfig {
             "durationSeconds",
             "frame_rate",
             "frameRate",
+            "input_images",
+            "inputImages",
+            "image_dimensions",
+            "imageDimensions",
+            "image_resolution",
+            "imageResolution",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -10737,6 +13230,9 @@ impl<'de> serde::Deserialize<'de> for VideoParameterConfig {
             Megapixels,
             DurationSeconds,
             FrameRate,
+            InputImages,
+            ImageDimensions,
+            ImageResolution,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -10763,6 +13259,9 @@ impl<'de> serde::Deserialize<'de> for VideoParameterConfig {
                             "megapixels" => Ok(GeneratedField::Megapixels),
                             "durationSeconds" | "duration_seconds" => Ok(GeneratedField::DurationSeconds),
                             "frameRate" | "frame_rate" => Ok(GeneratedField::FrameRate),
+                            "inputImages" | "input_images" => Ok(GeneratedField::InputImages),
+                            "imageDimensions" | "image_dimensions" => Ok(GeneratedField::ImageDimensions),
+                            "imageResolution" | "image_resolution" => Ok(GeneratedField::ImageResolution),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -10787,6 +13286,8 @@ impl<'de> serde::Deserialize<'de> for VideoParameterConfig {
                 let mut megapixels__ = None;
                 let mut duration_seconds__ = None;
                 let mut frame_rate__ = None;
+                let mut input_images__ = None;
+                let mut image_size__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Prompt => {
@@ -10819,6 +13320,26 @@ impl<'de> serde::Deserialize<'de> for VideoParameterConfig {
                             }
                             frame_rate__ = map_.next_value()?;
                         }
+                        GeneratedField::InputImages => {
+                            if input_images__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputImages"));
+                            }
+                            input_images__ = map_.next_value()?;
+                        }
+                        GeneratedField::ImageDimensions => {
+                            if image_size__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("imageDimensions"));
+                            }
+                            image_size__ = map_.next_value::<::std::option::Option<_>>()?.map(video_parameter_config::ImageSize::ImageDimensions)
+;
+                        }
+                        GeneratedField::ImageResolution => {
+                            if image_size__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("imageResolution"));
+                            }
+                            image_size__ = map_.next_value::<::std::option::Option<_>>()?.map(video_parameter_config::ImageSize::ImageResolution)
+;
+                        }
                     }
                 }
                 Ok(VideoParameterConfig {
@@ -10827,6 +13348,8 @@ impl<'de> serde::Deserialize<'de> for VideoParameterConfig {
                     megapixels: megapixels__,
                     duration_seconds: duration_seconds__,
                     frame_rate: frame_rate__,
+                    input_images: input_images__,
+                    image_size: image_size__,
                 })
             }
         }
@@ -11609,6 +14132,18 @@ impl serde::Serialize for WorkflowExecutionConfig {
                 workflow_execution_config::FunctionConfig::TextToVideo(v) => {
                     struct_ser.serialize_field("textToVideo", v)?;
                 }
+                workflow_execution_config::FunctionConfig::TextToImage(v) => {
+                    struct_ser.serialize_field("textToImage", v)?;
+                }
+                workflow_execution_config::FunctionConfig::SingleImageEdit(v) => {
+                    struct_ser.serialize_field("singleImageEdit", v)?;
+                }
+                workflow_execution_config::FunctionConfig::MultipleImageEdit(v) => {
+                    struct_ser.serialize_field("multipleImageEdit", v)?;
+                }
+                workflow_execution_config::FunctionConfig::Character(v) => {
+                    struct_ser.serialize_field("character", v)?;
+                }
             }
         }
         struct_ser.end()
@@ -11628,6 +14163,13 @@ impl<'de> serde::Deserialize<'de> for WorkflowExecutionConfig {
             "imageToVideo",
             "text_to_video",
             "textToVideo",
+            "text_to_image",
+            "textToImage",
+            "single_image_edit",
+            "singleImageEdit",
+            "multiple_image_edit",
+            "multipleImageEdit",
+            "character",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -11636,6 +14178,10 @@ impl<'de> serde::Deserialize<'de> for WorkflowExecutionConfig {
             ExecutionTimeoutSeconds,
             ImageToVideo,
             TextToVideo,
+            TextToImage,
+            SingleImageEdit,
+            MultipleImageEdit,
+            Character,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -11661,6 +14207,10 @@ impl<'de> serde::Deserialize<'de> for WorkflowExecutionConfig {
                             "executionTimeoutSeconds" | "execution_timeout_seconds" => Ok(GeneratedField::ExecutionTimeoutSeconds),
                             "imageToVideo" | "image_to_video" => Ok(GeneratedField::ImageToVideo),
                             "textToVideo" | "text_to_video" => Ok(GeneratedField::TextToVideo),
+                            "textToImage" | "text_to_image" => Ok(GeneratedField::TextToImage),
+                            "singleImageEdit" | "single_image_edit" => Ok(GeneratedField::SingleImageEdit),
+                            "multipleImageEdit" | "multiple_image_edit" => Ok(GeneratedField::MultipleImageEdit),
+                            "character" => Ok(GeneratedField::Character),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -11711,6 +14261,34 @@ impl<'de> serde::Deserialize<'de> for WorkflowExecutionConfig {
                                 return Err(serde::de::Error::duplicate_field("textToVideo"));
                             }
                             function_config__ = map_.next_value::<::std::option::Option<_>>()?.map(workflow_execution_config::FunctionConfig::TextToVideo)
+;
+                        }
+                        GeneratedField::TextToImage => {
+                            if function_config__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("textToImage"));
+                            }
+                            function_config__ = map_.next_value::<::std::option::Option<_>>()?.map(workflow_execution_config::FunctionConfig::TextToImage)
+;
+                        }
+                        GeneratedField::SingleImageEdit => {
+                            if function_config__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("singleImageEdit"));
+                            }
+                            function_config__ = map_.next_value::<::std::option::Option<_>>()?.map(workflow_execution_config::FunctionConfig::SingleImageEdit)
+;
+                        }
+                        GeneratedField::MultipleImageEdit => {
+                            if function_config__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("multipleImageEdit"));
+                            }
+                            function_config__ = map_.next_value::<::std::option::Option<_>>()?.map(workflow_execution_config::FunctionConfig::MultipleImageEdit)
+;
+                        }
+                        GeneratedField::Character => {
+                            if function_config__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("character"));
+                            }
+                            function_config__ = map_.next_value::<::std::option::Option<_>>()?.map(workflow_execution_config::FunctionConfig::Character)
 ;
                         }
                     }
@@ -11815,6 +14393,97 @@ impl<'de> serde::Deserialize<'de> for WorkflowFileMutationResp {
             }
         }
         deserializer.deserialize_struct("hi.media.WorkflowFileMutationResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WorkflowFixedImageInputs {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.bindings.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowFixedImageInputs", len)?;
+        if !self.bindings.is_empty() {
+            struct_ser.serialize_field("bindings", &self.bindings)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowFixedImageInputs {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "bindings",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Bindings,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "bindings" => Ok(GeneratedField::Bindings),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WorkflowFixedImageInputs;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.WorkflowFixedImageInputs")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<WorkflowFixedImageInputs, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut bindings__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Bindings => {
+                            if bindings__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("bindings"));
+                            }
+                            bindings__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(WorkflowFixedImageInputs {
+                    bindings: bindings__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.WorkflowFixedImageInputs", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for WorkflowFixedTextInput {
@@ -12032,6 +14701,223 @@ impl<'de> serde::Deserialize<'de> for WorkflowFrameRateInput {
             }
         }
         deserializer.deserialize_struct("hi.media.WorkflowFrameRateInput", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WorkflowImageDimensions {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.width.is_some() {
+            len += 1;
+        }
+        if self.height.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowImageDimensions", len)?;
+        if let Some(v) = self.width.as_ref() {
+            struct_ser.serialize_field("width", v)?;
+        }
+        if let Some(v) = self.height.as_ref() {
+            struct_ser.serialize_field("height", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowImageDimensions {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "width",
+            "height",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Width,
+            Height,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "width" => Ok(GeneratedField::Width),
+                            "height" => Ok(GeneratedField::Height),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WorkflowImageDimensions;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.WorkflowImageDimensions")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<WorkflowImageDimensions, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut width__ = None;
+                let mut height__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Width => {
+                            if width__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("width"));
+                            }
+                            width__ = map_.next_value()?;
+                        }
+                        GeneratedField::Height => {
+                            if height__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("height"));
+                            }
+                            height__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(WorkflowImageDimensions {
+                    width: width__,
+                    height: height__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.WorkflowImageDimensions", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WorkflowImageResolution {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.aspect_ratio.is_some() {
+            len += 1;
+        }
+        if self.megapixels.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowImageResolution", len)?;
+        if let Some(v) = self.aspect_ratio.as_ref() {
+            struct_ser.serialize_field("aspectRatio", v)?;
+        }
+        if let Some(v) = self.megapixels.as_ref() {
+            struct_ser.serialize_field("megapixels", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowImageResolution {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "aspect_ratio",
+            "aspectRatio",
+            "megapixels",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            AspectRatio,
+            Megapixels,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "aspectRatio" | "aspect_ratio" => Ok(GeneratedField::AspectRatio),
+                            "megapixels" => Ok(GeneratedField::Megapixels),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WorkflowImageResolution;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.WorkflowImageResolution")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<WorkflowImageResolution, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut aspect_ratio__ = None;
+                let mut megapixels__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::AspectRatio => {
+                            if aspect_ratio__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("aspectRatio"));
+                            }
+                            aspect_ratio__ = map_.next_value()?;
+                        }
+                        GeneratedField::Megapixels => {
+                            if megapixels__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("megapixels"));
+                            }
+                            megapixels__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(WorkflowImageResolution {
+                    aspect_ratio: aspect_ratio__,
+                    megapixels: megapixels__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.WorkflowImageResolution", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for WorkflowImportMetadata {
@@ -12726,6 +15612,133 @@ impl<'de> serde::Deserialize<'de> for WorkflowModelOption {
         deserializer.deserialize_struct("hi.media.WorkflowModelOption", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for WorkflowMultipleImageInputs {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.count.is_some() {
+            len += 1;
+        }
+        if self.mode.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowMultipleImageInputs", len)?;
+        if let Some(v) = self.count.as_ref() {
+            struct_ser.serialize_field("count", v)?;
+        }
+        if let Some(v) = self.mode.as_ref() {
+            match v {
+                workflow_multiple_image_inputs::Mode::Fixed(v) => {
+                    struct_ser.serialize_field("fixed", v)?;
+                }
+                workflow_multiple_image_inputs::Mode::QwenDynamic(v) => {
+                    struct_ser.serialize_field("qwenDynamic", v)?;
+                }
+            }
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowMultipleImageInputs {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "count",
+            "fixed",
+            "qwen_dynamic",
+            "qwenDynamic",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Count,
+            Fixed,
+            QwenDynamic,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "count" => Ok(GeneratedField::Count),
+                            "fixed" => Ok(GeneratedField::Fixed),
+                            "qwenDynamic" | "qwen_dynamic" => Ok(GeneratedField::QwenDynamic),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WorkflowMultipleImageInputs;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.WorkflowMultipleImageInputs")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<WorkflowMultipleImageInputs, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut count__ = None;
+                let mut mode__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Count => {
+                            if count__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("count"));
+                            }
+                            count__ = map_.next_value()?;
+                        }
+                        GeneratedField::Fixed => {
+                            if mode__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("fixed"));
+                            }
+                            mode__ = map_.next_value::<::std::option::Option<_>>()?.map(workflow_multiple_image_inputs::Mode::Fixed)
+;
+                        }
+                        GeneratedField::QwenDynamic => {
+                            if mode__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("qwenDynamic"));
+                            }
+                            mode__ = map_.next_value::<::std::option::Option<_>>()?.map(workflow_multiple_image_inputs::Mode::QwenDynamic)
+;
+                        }
+                    }
+                }
+                Ok(WorkflowMultipleImageInputs {
+                    count: count__,
+                    mode: mode__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.WorkflowMultipleImageInputs", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for WorkflowNode {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -13324,6 +16337,116 @@ impl<'de> serde::Deserialize<'de> for WorkflowOutputConfig {
             }
         }
         deserializer.deserialize_struct("hi.media.WorkflowOutputConfig", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WorkflowQwenDynamicImageInputs {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.template_node_id.is_some() {
+            len += 1;
+        }
+        if self.encoder_node_id.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowQwenDynamicImageInputs", len)?;
+        if let Some(v) = self.template_node_id.as_ref() {
+            struct_ser.serialize_field("templateNodeId", v)?;
+        }
+        if let Some(v) = self.encoder_node_id.as_ref() {
+            struct_ser.serialize_field("encoderNodeId", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowQwenDynamicImageInputs {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "template_node_id",
+            "templateNodeId",
+            "encoder_node_id",
+            "encoderNodeId",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            TemplateNodeId,
+            EncoderNodeId,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "templateNodeId" | "template_node_id" => Ok(GeneratedField::TemplateNodeId),
+                            "encoderNodeId" | "encoder_node_id" => Ok(GeneratedField::EncoderNodeId),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WorkflowQwenDynamicImageInputs;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.WorkflowQwenDynamicImageInputs")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<WorkflowQwenDynamicImageInputs, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut template_node_id__ = None;
+                let mut encoder_node_id__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::TemplateNodeId => {
+                            if template_node_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("templateNodeId"));
+                            }
+                            template_node_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::EncoderNodeId => {
+                            if encoder_node_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("encoderNodeId"));
+                            }
+                            encoder_node_id__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(WorkflowQwenDynamicImageInputs {
+                    template_node_id: template_node_id__,
+                    encoder_node_id: encoder_node_id__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.WorkflowQwenDynamicImageInputs", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for WorkflowReplaceFileMetadata {

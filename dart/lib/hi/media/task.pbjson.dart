@@ -895,6 +895,46 @@ const TaskDetail$json = {
       '9': 0,
       '10': 'textToVideo'
     },
+    {
+      '1': 'text_to_image',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.TextToImageTaskParams',
+      '8': {},
+      '9': 0,
+      '10': 'textToImage'
+    },
+    {
+      '1': 'single_image_edit',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.SingleImageEditTaskParams',
+      '8': {},
+      '9': 0,
+      '10': 'singleImageEdit'
+    },
+    {
+      '1': 'multiple_image_edit',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.MultipleImageEditTaskParams',
+      '8': {},
+      '9': 0,
+      '10': 'multipleImageEdit'
+    },
+    {
+      '1': 'character',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.CharacterTaskParams',
+      '8': {},
+      '9': 0,
+      '10': 'character'
+    },
   ],
   '7': {},
   '8': [
@@ -908,7 +948,13 @@ final $typed_data.Uint8List taskDetailDescriptor = $convert.base64Decode(
     'UYA1IHc3VtbWFyeRJOCg5pbWFnZV90b192aWRlbxgCIAEoCzIgLmhpLm1lZGlhLkltYWdlVG9W'
     'aWRlb1Rhc2tQYXJhbXNCBJC1GANIAFIMaW1hZ2VUb1ZpZGVvEksKDXRleHRfdG9fdmlkZW8YAy'
     'ABKAsyHy5oaS5tZWRpYS5UZXh0VG9WaWRlb1Rhc2tQYXJhbXNCBJC1GANIAFILdGV4dFRvVmlk'
-    'ZW86BJi1GANCEgoQZWZmZWN0aXZlX3BhcmFtcw==');
+    'ZW8SSwoNdGV4dF90b19pbWFnZRgEIAEoCzIfLmhpLm1lZGlhLlRleHRUb0ltYWdlVGFza1Bhcm'
+    'Ftc0IEkLUYA0gAUgt0ZXh0VG9JbWFnZRJXChFzaW5nbGVfaW1hZ2VfZWRpdBgFIAEoCzIjLmhp'
+    'Lm1lZGlhLlNpbmdsZUltYWdlRWRpdFRhc2tQYXJhbXNCBJC1GANIAFIPc2luZ2xlSW1hZ2VFZG'
+    'l0El0KE211bHRpcGxlX2ltYWdlX2VkaXQYBiABKAsyJS5oaS5tZWRpYS5NdWx0aXBsZUltYWdl'
+    'RWRpdFRhc2tQYXJhbXNCBJC1GANIAFIRbXVsdGlwbGVJbWFnZUVkaXQSQwoJY2hhcmFjdGVyGA'
+    'cgASgLMh0uaGkubWVkaWEuQ2hhcmFjdGVyVGFza1BhcmFtc0IEkLUYA0gAUgljaGFyYWN0ZXI6'
+    'BJi1GANCEgoQZWZmZWN0aXZlX3BhcmFtcw==');
 
 @$core.Deprecated('Use getTaskReqDescriptor instead')
 const GetTaskReq$json = {

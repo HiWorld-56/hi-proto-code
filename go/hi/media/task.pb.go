@@ -649,23 +649,25 @@ func (x *TextToVideoTaskParams) GetFrameRate() int32 {
 
 // 唯一主产物；size_bytes 为字节，duration_ms 为毫秒，访问地址通过 File.GetAccessUrls 获取。
 // Task.List 的 tasks[].output 与 Task.Get 的 task.summary.output 共用此结构。
-// 实际宽高直接供前端布局使用，无需逐条查询详情或加载视频；尚无产物时不提供宽高。
+// 实际宽高直接供前端布局使用，无需逐条查询详情或加载媒体；尚无产物时不提供宽高。
 type TaskOutput struct {
-	state      protoimpl.MessageState `protogen:"open.v1"`
-	AssetId    *string                `protobuf:"bytes,1,opt,name=asset_id,json=assetId,proto3,oneof" json:"asset_id,omitempty"`
-	Filename   *string                `protobuf:"bytes,2,opt,name=filename,proto3,oneof" json:"filename,omitempty"`
-	MediaType  *MediaType             `protobuf:"varint,3,opt,name=media_type,json=mediaType,proto3,enum=hi.media.MediaType,oneof" json:"media_type,omitempty"`
-	MimeType   *string                `protobuf:"bytes,4,opt,name=mime_type,json=mimeType,proto3,oneof" json:"mime_type,omitempty"`
-	SizeBytes  *uint64                `protobuf:"varint,5,opt,name=size_bytes,json=sizeBytes,proto3,oneof" json:"size_bytes,omitempty"`
-	DurationMs *int64                 `protobuf:"varint,6,opt,name=duration_ms,json=durationMs,proto3,oneof" json:"duration_ms,omitempty"`
+	state     protoimpl.MessageState `protogen:"open.v1"`
+	AssetId   *string                `protobuf:"bytes,1,opt,name=asset_id,json=assetId,proto3,oneof" json:"asset_id,omitempty"`
+	Filename  *string                `protobuf:"bytes,2,opt,name=filename,proto3,oneof" json:"filename,omitempty"`
+	MediaType *MediaType             `protobuf:"varint,3,opt,name=media_type,json=mediaType,proto3,enum=hi.media.MediaType,oneof" json:"media_type,omitempty"`
+	MimeType  *string                `protobuf:"bytes,4,opt,name=mime_type,json=mimeType,proto3,oneof" json:"mime_type,omitempty"`
+	SizeBytes *uint64                `protobuf:"varint,5,opt,name=size_bytes,json=sizeBytes,proto3,oneof" json:"size_bytes,omitempty"`
+	// 仅视频产物返回实际时长；图片省略。
+	DurationMs *int64 `protobuf:"varint,6,opt,name=duration_ms,json=durationMs,proto3,oneof" json:"duration_ms,omitempty"`
 	// 资产删除后任务仍可保持成功，但该值为 false 且不能播放。
 	Available *bool `protobuf:"varint,7,opt,name=available,proto3,oneof" json:"available,omitempty"`
-	// 实际产物宽度，单位像素；读取已保存的视频探测结果，不根据生成参数推算。
+	// 实际产物宽度，单位像素；读取已保存的媒体事实，不根据生成参数推算。
 	Width *uint32 `protobuf:"varint,8,opt,name=width,proto3,oneof" json:"width,omitempty"`
-	// 实际产物高度，单位像素；与 width 一同返回，查询时不重新探测视频。
+	// 实际产物高度，单位像素；与 width 一同返回，查询时不重新读取媒体。
 	Height *uint32 `protobuf:"varint,9,opt,name=height,proto3,oneof" json:"height,omitempty"`
 	// 资产可用且有已保存的视频封面；用 asset_id 申请 COVER 地址时为 true 返回封面，否则返回原文件。
 	// 无封面或资产不可用时为 false，不影响视频任务的成功状态；size_bytes 不含封面。
+	// 图片始终为 false，COVER/PREVIEW 直接返回原图地址，不表示图片不能预览。
 	HasCover      *bool `protobuf:"varint,10,opt,name=has_cover,json=hasCover,proto3,oneof" json:"has_cover,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -776,7 +778,7 @@ type TaskSummary struct {
 	state   protoimpl.MessageState `protogen:"open.v1"`
 	TaskId  *string                `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3,oneof" json:"task_id,omitempty"`
 	Purpose *TaskPurpose           `protobuf:"varint,2,opt,name=purpose,proto3,enum=hi.media.TaskPurpose,oneof" json:"purpose,omitempty"`
-	// 任务受理时确定的功能 ID：video.img2vid 或 video.txt2vid。
+	// 任务受理时确定的功能 ID；六种支持值及中文用途见 FunctionSummary.function_id。
 	FunctionId *string `protobuf:"bytes,3,opt,name=function_id,json=functionId,proto3,oneof" json:"function_id,omitempty"`
 	// 从当前功能记录读取的用户可见名称。
 	FunctionDisplayName *string `protobuf:"bytes,4,opt,name=function_display_name,json=functionDisplayName,proto3,oneof" json:"function_display_name,omitempty"`
@@ -809,7 +811,7 @@ type TaskSummary struct {
 	// 从 created_at 到当前时间或 completed_at 的墙钟秒数。
 	ElapsedSeconds *int64 `protobuf:"varint,18,opt,name=elapsed_seconds,json=elapsedSeconds,proto3,oneof" json:"elapsed_seconds,omitempty"`
 	// 图生视频的原始输入图片资产 ID，列表和详情摘要均返回；文生视频不返回。
-	// 前端通过 File.GetAccessUrls 申请 PREVIEW 地址作为视频封面，不是视频 output.asset_id。
+	// 只表示输入素材，不是视频封面或 output.asset_id；视频封面通过产物 ID 申请 COVER。
 	// 原图删除后仍保留该历史 ID；无法获取预览时显示占位图，不延长原图保留期。
 	InputAssetId *string `protobuf:"bytes,19,opt,name=input_asset_id,json=inputAssetId,proto3,oneof" json:"input_asset_id,omitempty"`
 	// 创建任务时保存的实际业务参数 JSON 字符串，包含已补齐的默认值或固定值。
@@ -817,6 +819,8 @@ type TaskSummary struct {
 	// HTTP 字段为 effectiveParamsJson；解析字符串后，内部键使用 snake_case：
 	// prompt、aspect_ratio、megapixels（字符串）、duration_seconds、frame_rate（整数），
 	// 图生视频另含 input_asset_id；不包含工作流图、节点绑定或管理员负向提示词。
+	// 图片任务另含后端生成的 seed；单图/角色含 input_asset_id，多图含有序 input_asset_ids。
+	// 文生图按尺寸模式包含 width/height 或 aspect_ratio/megapixels；角色 prompt 为用户原文。
 	EffectiveParamsJson *string `protobuf:"bytes,20,opt,name=effective_params_json,json=effectiveParamsJson,proto3,oneof" json:"effective_params_json,omitempty"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
@@ -1000,6 +1004,10 @@ type TaskDetail struct {
 	//
 	//	*TaskDetail_ImageToVideo
 	//	*TaskDetail_TextToVideo
+	//	*TaskDetail_TextToImage
+	//	*TaskDetail_SingleImageEdit
+	//	*TaskDetail_MultipleImageEdit
+	//	*TaskDetail_Character
 	EffectiveParams isTaskDetail_EffectiveParams `protobuf_oneof:"effective_params"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
@@ -1067,6 +1075,42 @@ func (x *TaskDetail) GetTextToVideo() *TextToVideoTaskParams {
 	return nil
 }
 
+func (x *TaskDetail) GetTextToImage() *TextToImageTaskParams {
+	if x != nil {
+		if x, ok := x.EffectiveParams.(*TaskDetail_TextToImage); ok {
+			return x.TextToImage
+		}
+	}
+	return nil
+}
+
+func (x *TaskDetail) GetSingleImageEdit() *SingleImageEditTaskParams {
+	if x != nil {
+		if x, ok := x.EffectiveParams.(*TaskDetail_SingleImageEdit); ok {
+			return x.SingleImageEdit
+		}
+	}
+	return nil
+}
+
+func (x *TaskDetail) GetMultipleImageEdit() *MultipleImageEditTaskParams {
+	if x != nil {
+		if x, ok := x.EffectiveParams.(*TaskDetail_MultipleImageEdit); ok {
+			return x.MultipleImageEdit
+		}
+	}
+	return nil
+}
+
+func (x *TaskDetail) GetCharacter() *CharacterTaskParams {
+	if x != nil {
+		if x, ok := x.EffectiveParams.(*TaskDetail_Character); ok {
+			return x.Character
+		}
+	}
+	return nil
+}
+
 type isTaskDetail_EffectiveParams interface {
 	isTaskDetail_EffectiveParams()
 }
@@ -1079,9 +1123,33 @@ type TaskDetail_TextToVideo struct {
 	TextToVideo *TextToVideoTaskParams `protobuf:"bytes,3,opt,name=text_to_video,json=textToVideo,proto3,oneof"`
 }
 
+type TaskDetail_TextToImage struct {
+	TextToImage *TextToImageTaskParams `protobuf:"bytes,4,opt,name=text_to_image,json=textToImage,proto3,oneof"`
+}
+
+type TaskDetail_SingleImageEdit struct {
+	SingleImageEdit *SingleImageEditTaskParams `protobuf:"bytes,5,opt,name=single_image_edit,json=singleImageEdit,proto3,oneof"`
+}
+
+type TaskDetail_MultipleImageEdit struct {
+	MultipleImageEdit *MultipleImageEditTaskParams `protobuf:"bytes,6,opt,name=multiple_image_edit,json=multipleImageEdit,proto3,oneof"`
+}
+
+type TaskDetail_Character struct {
+	Character *CharacterTaskParams `protobuf:"bytes,7,opt,name=character,proto3,oneof"`
+}
+
 func (*TaskDetail_ImageToVideo) isTaskDetail_EffectiveParams() {}
 
 func (*TaskDetail_TextToVideo) isTaskDetail_EffectiveParams() {}
+
+func (*TaskDetail_TextToImage) isTaskDetail_EffectiveParams() {}
+
+func (*TaskDetail_SingleImageEdit) isTaskDetail_EffectiveParams() {}
+
+func (*TaskDetail_MultipleImageEdit) isTaskDetail_EffectiveParams() {}
+
+func (*TaskDetail_Character) isTaskDetail_EffectiveParams() {}
 
 // 查询本人任务。
 type GetTaskReq struct {
@@ -1558,7 +1626,7 @@ var File_hi_media_task_proto protoreflect.FileDescriptor
 
 const file_hi_media_task_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/media/task.proto\x12\bhi.media\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\x90\x01\n" +
+	"\x13hi/media/task.proto\x12\bhi.media\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x19hi/media/image_task.proto\x1a\x10hi/options.proto\"\x90\x01\n" +
 	"\x0fVideoResolution\x12/\n" +
 	"\faspect_ratio\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x00R\vaspectRatio\x88\x01\x01\x12,\n" +
 	"\n" +
@@ -1722,12 +1790,16 @@ const file_hi_media_task_proto_rawDesc = "" +
 	"\r_completed_atB\x12\n" +
 	"\x10_elapsed_secondsB\x11\n" +
 	"\x0f_input_asset_idB\x18\n" +
-	"\x16_effective_params_json\"\xfa\x01\n" +
+	"\x16_effective_params_json\"\xc4\x04\n" +
 	"\n" +
 	"TaskDetail\x125\n" +
 	"\asummary\x18\x01 \x01(\v2\x15.hi.media.TaskSummaryB\x04\x90\xb5\x18\x03R\asummary\x12N\n" +
 	"\x0eimage_to_video\x18\x02 \x01(\v2 .hi.media.ImageToVideoTaskParamsB\x04\x90\xb5\x18\x03H\x00R\fimageToVideo\x12K\n" +
-	"\rtext_to_video\x18\x03 \x01(\v2\x1f.hi.media.TextToVideoTaskParamsB\x04\x90\xb5\x18\x03H\x00R\vtextToVideo:\x04\x98\xb5\x18\x03B\x12\n" +
+	"\rtext_to_video\x18\x03 \x01(\v2\x1f.hi.media.TextToVideoTaskParamsB\x04\x90\xb5\x18\x03H\x00R\vtextToVideo\x12K\n" +
+	"\rtext_to_image\x18\x04 \x01(\v2\x1f.hi.media.TextToImageTaskParamsB\x04\x90\xb5\x18\x03H\x00R\vtextToImage\x12W\n" +
+	"\x11single_image_edit\x18\x05 \x01(\v2#.hi.media.SingleImageEditTaskParamsB\x04\x90\xb5\x18\x03H\x00R\x0fsingleImageEdit\x12]\n" +
+	"\x13multiple_image_edit\x18\x06 \x01(\v2%.hi.media.MultipleImageEditTaskParamsB\x04\x90\xb5\x18\x03H\x00R\x11multipleImageEdit\x12C\n" +
+	"\tcharacter\x18\a \x01(\v2\x1d.hi.media.CharacterTaskParamsB\x04\x90\xb5\x18\x03H\x00R\tcharacter:\x04\x98\xb5\x18\x03B\x12\n" +
 	"\x10effective_params\"B\n" +
 	"\n" +
 	"GetTaskReq\x12(\n" +
@@ -1801,10 +1873,14 @@ const file_hi_media_task_proto_rawDesc = "" +
 	"\tMediaType\x12\x1a\n" +
 	"\x16MEDIA_TYPE_UNSPECIFIED\x10\x00\x12\x14\n" +
 	"\x10MEDIA_TYPE_IMAGE\x10\x01\x12\x14\n" +
-	"\x10MEDIA_TYPE_VIDEO\x10\x022\x90\x04\n" +
+	"\x10MEDIA_TYPE_VIDEO\x10\x022\x88\a\n" +
 	"\x04Task\x12Z\n" +
 	"\x12CreateImageToVideo\x12#.hi.media.CreateImageToVideoTaskReq\x1a\x18.hi.media.CreateTaskResp\"\x05\x8a\xb5\x18\x01\x02\x12X\n" +
-	"\x11CreateTextToVideo\x12\".hi.media.CreateTextToVideoTaskReq\x1a\x18.hi.media.CreateTaskResp\"\x05\x8a\xb5\x18\x01\x02\x129\n" +
+	"\x11CreateTextToVideo\x12\".hi.media.CreateTextToVideoTaskReq\x1a\x18.hi.media.CreateTaskResp\"\x05\x8a\xb5\x18\x01\x02\x12X\n" +
+	"\x11CreateTextToImage\x12\".hi.media.CreateTextToImageTaskReq\x1a\x18.hi.media.CreateTaskResp\"\x05\x8a\xb5\x18\x01\x02\x12`\n" +
+	"\x15CreateSingleImageEdit\x12&.hi.media.CreateSingleImageEditTaskReq\x1a\x18.hi.media.CreateTaskResp\"\x05\x8a\xb5\x18\x01\x02\x12d\n" +
+	"\x17CreateMultipleImageEdit\x12(.hi.media.CreateMultipleImageEditTaskReq\x1a\x18.hi.media.CreateTaskResp\"\x05\x8a\xb5\x18\x01\x02\x12T\n" +
+	"\x0fCreateCharacter\x12 .hi.media.CreateCharacterTaskReq\x1a\x18.hi.media.CreateTaskResp\"\x05\x8a\xb5\x18\x01\x02\x129\n" +
 	"\x03Get\x12\x14.hi.media.GetTaskReq\x1a\x15.hi.media.GetTaskResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n" +
 	"\x04List\x12\x16.hi.media.ListTasksReq\x1a\x17.hi.media.ListTasksResp\"\x05\x8a\xb5\x18\x01\x02\x12B\n" +
 	"\x06Cancel\x12\x17.hi.media.CancelTaskReq\x1a\x18.hi.media.CancelTaskResp\"\x05\x8a\xb5\x18\x01\x02\x12@\n" +
@@ -1827,29 +1903,37 @@ func file_hi_media_task_proto_rawDescGZIP() []byte {
 var file_hi_media_task_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
 var file_hi_media_task_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_hi_media_task_proto_goTypes = []any{
-	(TaskPurpose)(0),                  // 0: hi.media.TaskPurpose
-	(TaskStatus)(0),                   // 1: hi.media.TaskStatus
-	(MediaType)(0),                    // 2: hi.media.MediaType
-	(*VideoResolution)(nil),           // 3: hi.media.VideoResolution
-	(*CreateImageToVideoTaskReq)(nil), // 4: hi.media.CreateImageToVideoTaskReq
-	(*CreateTextToVideoTaskReq)(nil),  // 5: hi.media.CreateTextToVideoTaskReq
-	(*CreateTaskResp)(nil),            // 6: hi.media.CreateTaskResp
-	(*ImageToVideoTaskParams)(nil),    // 7: hi.media.ImageToVideoTaskParams
-	(*TextToVideoTaskParams)(nil),     // 8: hi.media.TextToVideoTaskParams
-	(*TaskOutput)(nil),                // 9: hi.media.TaskOutput
-	(*TaskSummary)(nil),               // 10: hi.media.TaskSummary
-	(*TaskDetail)(nil),                // 11: hi.media.TaskDetail
-	(*GetTaskReq)(nil),                // 12: hi.media.GetTaskReq
-	(*GetTaskResp)(nil),               // 13: hi.media.GetTaskResp
-	(*ListTasksReq)(nil),              // 14: hi.media.ListTasksReq
-	(*ListTasksResp)(nil),             // 15: hi.media.ListTasksResp
-	(*CancelTaskReq)(nil),             // 16: hi.media.CancelTaskReq
-	(*CancelTaskResp)(nil),            // 17: hi.media.CancelTaskResp
-	(*DeleteTaskReq)(nil),             // 18: hi.media.DeleteTaskReq
-	(*RecoverSaveTaskReq)(nil),        // 19: hi.media.RecoverSaveTaskReq
-	(*RecoverSaveTaskResp)(nil),       // 20: hi.media.RecoverSaveTaskResp
-	(*hi.Pagination)(nil),             // 21: hi.Pagination
-	(*emptypb.Empty)(nil),             // 22: google.protobuf.Empty
+	(TaskPurpose)(0),                       // 0: hi.media.TaskPurpose
+	(TaskStatus)(0),                        // 1: hi.media.TaskStatus
+	(MediaType)(0),                         // 2: hi.media.MediaType
+	(*VideoResolution)(nil),                // 3: hi.media.VideoResolution
+	(*CreateImageToVideoTaskReq)(nil),      // 4: hi.media.CreateImageToVideoTaskReq
+	(*CreateTextToVideoTaskReq)(nil),       // 5: hi.media.CreateTextToVideoTaskReq
+	(*CreateTaskResp)(nil),                 // 6: hi.media.CreateTaskResp
+	(*ImageToVideoTaskParams)(nil),         // 7: hi.media.ImageToVideoTaskParams
+	(*TextToVideoTaskParams)(nil),          // 8: hi.media.TextToVideoTaskParams
+	(*TaskOutput)(nil),                     // 9: hi.media.TaskOutput
+	(*TaskSummary)(nil),                    // 10: hi.media.TaskSummary
+	(*TaskDetail)(nil),                     // 11: hi.media.TaskDetail
+	(*GetTaskReq)(nil),                     // 12: hi.media.GetTaskReq
+	(*GetTaskResp)(nil),                    // 13: hi.media.GetTaskResp
+	(*ListTasksReq)(nil),                   // 14: hi.media.ListTasksReq
+	(*ListTasksResp)(nil),                  // 15: hi.media.ListTasksResp
+	(*CancelTaskReq)(nil),                  // 16: hi.media.CancelTaskReq
+	(*CancelTaskResp)(nil),                 // 17: hi.media.CancelTaskResp
+	(*DeleteTaskReq)(nil),                  // 18: hi.media.DeleteTaskReq
+	(*RecoverSaveTaskReq)(nil),             // 19: hi.media.RecoverSaveTaskReq
+	(*RecoverSaveTaskResp)(nil),            // 20: hi.media.RecoverSaveTaskResp
+	(*TextToImageTaskParams)(nil),          // 21: hi.media.TextToImageTaskParams
+	(*SingleImageEditTaskParams)(nil),      // 22: hi.media.SingleImageEditTaskParams
+	(*MultipleImageEditTaskParams)(nil),    // 23: hi.media.MultipleImageEditTaskParams
+	(*CharacterTaskParams)(nil),            // 24: hi.media.CharacterTaskParams
+	(*hi.Pagination)(nil),                  // 25: hi.Pagination
+	(*CreateTextToImageTaskReq)(nil),       // 26: hi.media.CreateTextToImageTaskReq
+	(*CreateSingleImageEditTaskReq)(nil),   // 27: hi.media.CreateSingleImageEditTaskReq
+	(*CreateMultipleImageEditTaskReq)(nil), // 28: hi.media.CreateMultipleImageEditTaskReq
+	(*CreateCharacterTaskReq)(nil),         // 29: hi.media.CreateCharacterTaskReq
+	(*emptypb.Empty)(nil),                  // 30: google.protobuf.Empty
 }
 var file_hi_media_task_proto_depIdxs = []int32{
 	3,  // 0: hi.media.CreateImageToVideoTaskReq.resolution:type_name -> hi.media.VideoResolution
@@ -1861,31 +1945,43 @@ var file_hi_media_task_proto_depIdxs = []int32{
 	10, // 6: hi.media.TaskDetail.summary:type_name -> hi.media.TaskSummary
 	7,  // 7: hi.media.TaskDetail.image_to_video:type_name -> hi.media.ImageToVideoTaskParams
 	8,  // 8: hi.media.TaskDetail.text_to_video:type_name -> hi.media.TextToVideoTaskParams
-	11, // 9: hi.media.GetTaskResp.task:type_name -> hi.media.TaskDetail
-	21, // 10: hi.media.ListTasksReq.pagination:type_name -> hi.Pagination
-	1,  // 11: hi.media.ListTasksReq.statuses:type_name -> hi.media.TaskStatus
-	10, // 12: hi.media.ListTasksResp.tasks:type_name -> hi.media.TaskSummary
-	1,  // 13: hi.media.CancelTaskResp.status:type_name -> hi.media.TaskStatus
-	1,  // 14: hi.media.RecoverSaveTaskResp.status:type_name -> hi.media.TaskStatus
-	4,  // 15: hi.media.Task.CreateImageToVideo:input_type -> hi.media.CreateImageToVideoTaskReq
-	5,  // 16: hi.media.Task.CreateTextToVideo:input_type -> hi.media.CreateTextToVideoTaskReq
-	12, // 17: hi.media.Task.Get:input_type -> hi.media.GetTaskReq
-	14, // 18: hi.media.Task.List:input_type -> hi.media.ListTasksReq
-	16, // 19: hi.media.Task.Cancel:input_type -> hi.media.CancelTaskReq
-	18, // 20: hi.media.Task.Delete:input_type -> hi.media.DeleteTaskReq
-	19, // 21: hi.media.Task.RecoverSave:input_type -> hi.media.RecoverSaveTaskReq
-	6,  // 22: hi.media.Task.CreateImageToVideo:output_type -> hi.media.CreateTaskResp
-	6,  // 23: hi.media.Task.CreateTextToVideo:output_type -> hi.media.CreateTaskResp
-	13, // 24: hi.media.Task.Get:output_type -> hi.media.GetTaskResp
-	15, // 25: hi.media.Task.List:output_type -> hi.media.ListTasksResp
-	17, // 26: hi.media.Task.Cancel:output_type -> hi.media.CancelTaskResp
-	22, // 27: hi.media.Task.Delete:output_type -> google.protobuf.Empty
-	20, // 28: hi.media.Task.RecoverSave:output_type -> hi.media.RecoverSaveTaskResp
-	22, // [22:29] is the sub-list for method output_type
-	15, // [15:22] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+	21, // 9: hi.media.TaskDetail.text_to_image:type_name -> hi.media.TextToImageTaskParams
+	22, // 10: hi.media.TaskDetail.single_image_edit:type_name -> hi.media.SingleImageEditTaskParams
+	23, // 11: hi.media.TaskDetail.multiple_image_edit:type_name -> hi.media.MultipleImageEditTaskParams
+	24, // 12: hi.media.TaskDetail.character:type_name -> hi.media.CharacterTaskParams
+	11, // 13: hi.media.GetTaskResp.task:type_name -> hi.media.TaskDetail
+	25, // 14: hi.media.ListTasksReq.pagination:type_name -> hi.Pagination
+	1,  // 15: hi.media.ListTasksReq.statuses:type_name -> hi.media.TaskStatus
+	10, // 16: hi.media.ListTasksResp.tasks:type_name -> hi.media.TaskSummary
+	1,  // 17: hi.media.CancelTaskResp.status:type_name -> hi.media.TaskStatus
+	1,  // 18: hi.media.RecoverSaveTaskResp.status:type_name -> hi.media.TaskStatus
+	4,  // 19: hi.media.Task.CreateImageToVideo:input_type -> hi.media.CreateImageToVideoTaskReq
+	5,  // 20: hi.media.Task.CreateTextToVideo:input_type -> hi.media.CreateTextToVideoTaskReq
+	26, // 21: hi.media.Task.CreateTextToImage:input_type -> hi.media.CreateTextToImageTaskReq
+	27, // 22: hi.media.Task.CreateSingleImageEdit:input_type -> hi.media.CreateSingleImageEditTaskReq
+	28, // 23: hi.media.Task.CreateMultipleImageEdit:input_type -> hi.media.CreateMultipleImageEditTaskReq
+	29, // 24: hi.media.Task.CreateCharacter:input_type -> hi.media.CreateCharacterTaskReq
+	12, // 25: hi.media.Task.Get:input_type -> hi.media.GetTaskReq
+	14, // 26: hi.media.Task.List:input_type -> hi.media.ListTasksReq
+	16, // 27: hi.media.Task.Cancel:input_type -> hi.media.CancelTaskReq
+	18, // 28: hi.media.Task.Delete:input_type -> hi.media.DeleteTaskReq
+	19, // 29: hi.media.Task.RecoverSave:input_type -> hi.media.RecoverSaveTaskReq
+	6,  // 30: hi.media.Task.CreateImageToVideo:output_type -> hi.media.CreateTaskResp
+	6,  // 31: hi.media.Task.CreateTextToVideo:output_type -> hi.media.CreateTaskResp
+	6,  // 32: hi.media.Task.CreateTextToImage:output_type -> hi.media.CreateTaskResp
+	6,  // 33: hi.media.Task.CreateSingleImageEdit:output_type -> hi.media.CreateTaskResp
+	6,  // 34: hi.media.Task.CreateMultipleImageEdit:output_type -> hi.media.CreateTaskResp
+	6,  // 35: hi.media.Task.CreateCharacter:output_type -> hi.media.CreateTaskResp
+	13, // 36: hi.media.Task.Get:output_type -> hi.media.GetTaskResp
+	15, // 37: hi.media.Task.List:output_type -> hi.media.ListTasksResp
+	17, // 38: hi.media.Task.Cancel:output_type -> hi.media.CancelTaskResp
+	30, // 39: hi.media.Task.Delete:output_type -> google.protobuf.Empty
+	20, // 40: hi.media.Task.RecoverSave:output_type -> hi.media.RecoverSaveTaskResp
+	30, // [30:41] is the sub-list for method output_type
+	19, // [19:30] is the sub-list for method input_type
+	19, // [19:19] is the sub-list for extension type_name
+	19, // [19:19] is the sub-list for extension extendee
+	0,  // [0:19] is the sub-list for field type_name
 }
 
 func init() { file_hi_media_task_proto_init() }
@@ -1893,6 +1989,7 @@ func file_hi_media_task_proto_init() {
 	if File_hi_media_task_proto != nil {
 		return
 	}
+	file_hi_media_image_task_proto_init()
 	file_hi_media_task_proto_msgTypes[0].OneofWrappers = []any{}
 	file_hi_media_task_proto_msgTypes[1].OneofWrappers = []any{}
 	file_hi_media_task_proto_msgTypes[2].OneofWrappers = []any{}
@@ -1904,6 +2001,10 @@ func file_hi_media_task_proto_init() {
 	file_hi_media_task_proto_msgTypes[8].OneofWrappers = []any{
 		(*TaskDetail_ImageToVideo)(nil),
 		(*TaskDetail_TextToVideo)(nil),
+		(*TaskDetail_TextToImage)(nil),
+		(*TaskDetail_SingleImageEdit)(nil),
+		(*TaskDetail_MultipleImageEdit)(nil),
+		(*TaskDetail_Character)(nil),
 	}
 	file_hi_media_task_proto_msgTypes[9].OneofWrappers = []any{}
 	file_hi_media_task_proto_msgTypes[11].OneofWrappers = []any{}

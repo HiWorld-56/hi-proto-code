@@ -15,7 +15,8 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../common.pb.dart' as $2;
+import '../common.pb.dart' as $3;
+import 'image_task.pb.dart' as $1;
 import 'task.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -633,7 +634,7 @@ class TextToVideoTaskParams extends $pb.GeneratedMessage {
 
 /// 唯一主产物；size_bytes 为字节，duration_ms 为毫秒，访问地址通过 File.GetAccessUrls 获取。
 /// Task.List 的 tasks[].output 与 Task.Get 的 task.summary.output 共用此结构。
-/// 实际宽高直接供前端布局使用，无需逐条查询详情或加载视频；尚无产物时不提供宽高。
+/// 实际宽高直接供前端布局使用，无需逐条查询详情或加载媒体；尚无产物时不提供宽高。
 class TaskOutput extends $pb.GeneratedMessage {
   factory TaskOutput({
     $core.String? assetId,
@@ -752,6 +753,7 @@ class TaskOutput extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   void clearSizeBytes() => $_clearField(5);
 
+  /// 仅视频产物返回实际时长；图片省略。
   @$pb.TagNumber(6)
   $fixnum.Int64 get durationMs => $_getI64(5);
   @$pb.TagNumber(6)
@@ -771,7 +773,7 @@ class TaskOutput extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   void clearAvailable() => $_clearField(7);
 
-  /// 实际产物宽度，单位像素；读取已保存的视频探测结果，不根据生成参数推算。
+  /// 实际产物宽度，单位像素；读取已保存的媒体事实，不根据生成参数推算。
   @$pb.TagNumber(8)
   $core.int get width => $_getIZ(7);
   @$pb.TagNumber(8)
@@ -781,7 +783,7 @@ class TaskOutput extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   void clearWidth() => $_clearField(8);
 
-  /// 实际产物高度，单位像素；与 width 一同返回，查询时不重新探测视频。
+  /// 实际产物高度，单位像素；与 width 一同返回，查询时不重新读取媒体。
   @$pb.TagNumber(9)
   $core.int get height => $_getIZ(8);
   @$pb.TagNumber(9)
@@ -793,6 +795,7 @@ class TaskOutput extends $pb.GeneratedMessage {
 
   /// 资产可用且有已保存的视频封面；用 asset_id 申请 COVER 地址时为 true 返回封面，否则返回原文件。
   /// 无封面或资产不可用时为 false，不影响视频任务的成功状态；size_bytes 不含封面。
+  /// 图片始终为 false，COVER/PREVIEW 直接返回原图地址，不表示图片不能预览。
   @$pb.TagNumber(10)
   $core.bool get hasCover => $_getBF(9);
   @$pb.TagNumber(10)
@@ -929,7 +932,7 @@ class TaskSummary extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearPurpose() => $_clearField(2);
 
-  /// 任务受理时确定的功能 ID：video.img2vid 或 video.txt2vid。
+  /// 任务受理时确定的功能 ID；六种支持值及中文用途见 FunctionSummary.function_id。
   @$pb.TagNumber(3)
   $core.String get functionId => $_getSZ(2);
   @$pb.TagNumber(3)
@@ -1092,7 +1095,7 @@ class TaskSummary extends $pb.GeneratedMessage {
   void clearElapsedSeconds() => $_clearField(18);
 
   /// 图生视频的原始输入图片资产 ID，列表和详情摘要均返回；文生视频不返回。
-  /// 前端通过 File.GetAccessUrls 申请 PREVIEW 地址作为视频封面，不是视频 output.asset_id。
+  /// 只表示输入素材，不是视频封面或 output.asset_id；视频封面通过产物 ID 申请 COVER。
   /// 原图删除后仍保留该历史 ID；无法获取预览时显示占位图，不延长原图保留期。
   @$pb.TagNumber(19)
   $core.String get inputAssetId => $_getSZ(18);
@@ -1108,6 +1111,8 @@ class TaskSummary extends $pb.GeneratedMessage {
   /// HTTP 字段为 effectiveParamsJson；解析字符串后，内部键使用 snake_case：
   /// prompt、aspect_ratio、megapixels（字符串）、duration_seconds、frame_rate（整数），
   /// 图生视频另含 input_asset_id；不包含工作流图、节点绑定或管理员负向提示词。
+  /// 图片任务另含后端生成的 seed；单图/角色含 input_asset_id，多图含有序 input_asset_ids。
+  /// 文生图按尺寸模式包含 width/height 或 aspect_ratio/megapixels；角色 prompt 为用户原文。
   @$pb.TagNumber(20)
   $core.String get effectiveParamsJson => $_getSZ(19);
   @$pb.TagNumber(20)
@@ -1118,7 +1123,15 @@ class TaskSummary extends $pb.GeneratedMessage {
   void clearEffectiveParamsJson() => $_clearField(20);
 }
 
-enum TaskDetail_EffectiveParams { imageToVideo, textToVideo, notSet }
+enum TaskDetail_EffectiveParams {
+  imageToVideo,
+  textToVideo,
+  textToImage,
+  singleImageEdit,
+  multipleImageEdit,
+  character,
+  notSet
+}
 
 /// 任务详情及其实际业务参数；重新生成需重新查询 Function.Get 并使用新 request_id。
 class TaskDetail extends $pb.GeneratedMessage {
@@ -1126,11 +1139,19 @@ class TaskDetail extends $pb.GeneratedMessage {
     TaskSummary? summary,
     ImageToVideoTaskParams? imageToVideo,
     TextToVideoTaskParams? textToVideo,
+    $1.TextToImageTaskParams? textToImage,
+    $1.SingleImageEditTaskParams? singleImageEdit,
+    $1.MultipleImageEditTaskParams? multipleImageEdit,
+    $1.CharacterTaskParams? character,
   }) {
     final result = create();
     if (summary != null) result.summary = summary;
     if (imageToVideo != null) result.imageToVideo = imageToVideo;
     if (textToVideo != null) result.textToVideo = textToVideo;
+    if (textToImage != null) result.textToImage = textToImage;
+    if (singleImageEdit != null) result.singleImageEdit = singleImageEdit;
+    if (multipleImageEdit != null) result.multipleImageEdit = multipleImageEdit;
+    if (character != null) result.character = character;
     return result;
   }
 
@@ -1147,19 +1168,33 @@ class TaskDetail extends $pb.GeneratedMessage {
       _TaskDetail_EffectiveParamsByTag = {
     2: TaskDetail_EffectiveParams.imageToVideo,
     3: TaskDetail_EffectiveParams.textToVideo,
+    4: TaskDetail_EffectiveParams.textToImage,
+    5: TaskDetail_EffectiveParams.singleImageEdit,
+    6: TaskDetail_EffectiveParams.multipleImageEdit,
+    7: TaskDetail_EffectiveParams.character,
     0: TaskDetail_EffectiveParams.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'TaskDetail',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3])
+    ..oo(0, [2, 3, 4, 5, 6, 7])
     ..aOM<TaskSummary>(1, _omitFieldNames ? '' : 'summary',
         subBuilder: TaskSummary.create)
     ..aOM<ImageToVideoTaskParams>(2, _omitFieldNames ? '' : 'imageToVideo',
         subBuilder: ImageToVideoTaskParams.create)
     ..aOM<TextToVideoTaskParams>(3, _omitFieldNames ? '' : 'textToVideo',
         subBuilder: TextToVideoTaskParams.create)
+    ..aOM<$1.TextToImageTaskParams>(4, _omitFieldNames ? '' : 'textToImage',
+        subBuilder: $1.TextToImageTaskParams.create)
+    ..aOM<$1.SingleImageEditTaskParams>(
+        5, _omitFieldNames ? '' : 'singleImageEdit',
+        subBuilder: $1.SingleImageEditTaskParams.create)
+    ..aOM<$1.MultipleImageEditTaskParams>(
+        6, _omitFieldNames ? '' : 'multipleImageEdit',
+        subBuilder: $1.MultipleImageEditTaskParams.create)
+    ..aOM<$1.CharacterTaskParams>(7, _omitFieldNames ? '' : 'character',
+        subBuilder: $1.CharacterTaskParams.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1182,10 +1217,18 @@ class TaskDetail extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
+  @$pb.TagNumber(4)
+  @$pb.TagNumber(5)
+  @$pb.TagNumber(6)
+  @$pb.TagNumber(7)
   TaskDetail_EffectiveParams whichEffectiveParams() =>
       _TaskDetail_EffectiveParamsByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
+  @$pb.TagNumber(4)
+  @$pb.TagNumber(5)
+  @$pb.TagNumber(6)
+  @$pb.TagNumber(7)
   void clearEffectiveParams() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -1220,6 +1263,52 @@ class TaskDetail extends $pb.GeneratedMessage {
   void clearTextToVideo() => $_clearField(3);
   @$pb.TagNumber(3)
   TextToVideoTaskParams ensureTextToVideo() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  $1.TextToImageTaskParams get textToImage => $_getN(3);
+  @$pb.TagNumber(4)
+  set textToImage($1.TextToImageTaskParams value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasTextToImage() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearTextToImage() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $1.TextToImageTaskParams ensureTextToImage() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  $1.SingleImageEditTaskParams get singleImageEdit => $_getN(4);
+  @$pb.TagNumber(5)
+  set singleImageEdit($1.SingleImageEditTaskParams value) =>
+      $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasSingleImageEdit() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearSingleImageEdit() => $_clearField(5);
+  @$pb.TagNumber(5)
+  $1.SingleImageEditTaskParams ensureSingleImageEdit() => $_ensure(4);
+
+  @$pb.TagNumber(6)
+  $1.MultipleImageEditTaskParams get multipleImageEdit => $_getN(5);
+  @$pb.TagNumber(6)
+  set multipleImageEdit($1.MultipleImageEditTaskParams value) =>
+      $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasMultipleImageEdit() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearMultipleImageEdit() => $_clearField(6);
+  @$pb.TagNumber(6)
+  $1.MultipleImageEditTaskParams ensureMultipleImageEdit() => $_ensure(5);
+
+  @$pb.TagNumber(7)
+  $1.CharacterTaskParams get character => $_getN(6);
+  @$pb.TagNumber(7)
+  set character($1.CharacterTaskParams value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasCharacter() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearCharacter() => $_clearField(7);
+  @$pb.TagNumber(7)
+  $1.CharacterTaskParams ensureCharacter() => $_ensure(6);
 }
 
 /// 查询本人任务。
@@ -1337,7 +1426,7 @@ class GetTaskResp extends $pb.GeneratedMessage {
 /// 分页查询本人任务，可按功能与状态过滤。
 class ListTasksReq extends $pb.GeneratedMessage {
   factory ListTasksReq({
-    $2.Pagination? pagination,
+    $3.Pagination? pagination,
     $core.String? functionId,
     $core.Iterable<TaskStatus>? statuses,
   }) {
@@ -1361,8 +1450,8 @@ class ListTasksReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'ListTasksReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
-    ..aOM<$2.Pagination>(1, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $2.Pagination.create)
+    ..aOM<$3.Pagination>(1, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $3.Pagination.create)
     ..aOS(2, _omitFieldNames ? '' : 'functionId')
     ..pc<TaskStatus>(3, _omitFieldNames ? '' : 'statuses', $pb.PbFieldType.KE,
         valueOf: TaskStatus.valueOf,
@@ -1390,15 +1479,15 @@ class ListTasksReq extends $pb.GeneratedMessage {
   static ListTasksReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.Pagination get pagination => $_getN(0);
+  $3.Pagination get pagination => $_getN(0);
   @$pb.TagNumber(1)
-  set pagination($2.Pagination value) => $_setField(1, value);
+  set pagination($3.Pagination value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasPagination() => $_has(0);
   @$pb.TagNumber(1)
   void clearPagination() => $_clearField(1);
   @$pb.TagNumber(1)
-  $2.Pagination ensurePagination() => $_ensure(0);
+  $3.Pagination ensurePagination() => $_ensure(0);
 
   /// 不传表示不过滤；传入 Function.List 返回的功能 ID。
   @$pb.TagNumber(2)

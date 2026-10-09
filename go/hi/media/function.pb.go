@@ -326,7 +326,169 @@ func (*FrameRateConfig_Selectable) isFrameRateConfig_Mode() {}
 
 func (*FrameRateConfig_FixedValue) isFrameRateConfig_Mode() {}
 
-// 工作流向普通用户开放的视频参数，不包含管理员固定输入。
+// 输入图片数量，含 min/max 边界；多图列表始终有序，不另设 ordered 字段。
+type InputImagesConfig struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 单图修改与角色生成为 1；多图修改按工作流配置，当前最少 2 张。
+	Min *uint32 `protobuf:"varint,1,opt,name=min,proto3,oneof" json:"min,omitempty"`
+	// FLUX 多图为 2，Qwen 多图最多 10；创建时由后端强校验。
+	Max           *uint32 `protobuf:"varint,2,opt,name=max,proto3,oneof" json:"max,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *InputImagesConfig) Reset() {
+	*x = InputImagesConfig{}
+	mi := &file_hi_media_function_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *InputImagesConfig) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*InputImagesConfig) ProtoMessage() {}
+
+func (x *InputImagesConfig) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_media_function_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use InputImagesConfig.ProtoReflect.Descriptor instead.
+func (*InputImagesConfig) Descriptor() ([]byte, []int) {
+	return file_hi_media_function_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *InputImagesConfig) GetMin() uint32 {
+	if x != nil && x.Min != nil {
+		return *x.Min
+	}
+	return 0
+}
+
+func (x *InputImagesConfig) GetMax() uint32 {
+	if x != nil && x.Max != nil {
+		return *x.Max
+	}
+	return 0
+}
+
+// 文生图宽高范围与默认值，单位像素；min/max/default 均须为 16 的倍数。
+type ImageDimensionsConfig struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Width         *IntRangeConfig        `protobuf:"bytes,1,opt,name=width,proto3" json:"width,omitempty"`
+	Height        *IntRangeConfig        `protobuf:"bytes,2,opt,name=height,proto3" json:"height,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ImageDimensionsConfig) Reset() {
+	*x = ImageDimensionsConfig{}
+	mi := &file_hi_media_function_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ImageDimensionsConfig) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ImageDimensionsConfig) ProtoMessage() {}
+
+func (x *ImageDimensionsConfig) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_media_function_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ImageDimensionsConfig.ProtoReflect.Descriptor instead.
+func (*ImageDimensionsConfig) Descriptor() ([]byte, []int) {
+	return file_hi_media_function_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *ImageDimensionsConfig) GetWidth() *IntRangeConfig {
+	if x != nil {
+		return x.Width
+	}
+	return nil
+}
+
+func (x *ImageDimensionsConfig) GetHeight() *IntRangeConfig {
+	if x != nil {
+		return x.Height
+	}
+	return nil
+}
+
+// 文生图的 ResolutionSelector 参数，宽高比传完整选项，像素量传十进制字符串。
+type ImageResolutionConfig struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AspectRatio   *StringOptionConfig    `protobuf:"bytes,1,opt,name=aspect_ratio,json=aspectRatio,proto3" json:"aspect_ratio,omitempty"`
+	Megapixels    *DecimalOptionConfig   `protobuf:"bytes,2,opt,name=megapixels,proto3" json:"megapixels,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ImageResolutionConfig) Reset() {
+	*x = ImageResolutionConfig{}
+	mi := &file_hi_media_function_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ImageResolutionConfig) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ImageResolutionConfig) ProtoMessage() {}
+
+func (x *ImageResolutionConfig) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_media_function_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ImageResolutionConfig.ProtoReflect.Descriptor instead.
+func (*ImageResolutionConfig) Descriptor() ([]byte, []int) {
+	return file_hi_media_function_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *ImageResolutionConfig) GetAspectRatio() *StringOptionConfig {
+	if x != nil {
+		return x.AspectRatio
+	}
+	return nil
+}
+
+func (x *ImageResolutionConfig) GetMegapixels() *DecimalOptionConfig {
+	if x != nil {
+		return x.Megapixels
+	}
+	return nil
+}
+
+// 工作流向普通用户开放的参数，不包含节点或管理员固定输入。
+// 为兼容已发布协议保留历史消息名；字段 1～5 是视频参数，图片扩展追加字段。
 type VideoParameterConfig struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	Prompt          *TextLimit             `protobuf:"bytes,1,opt,name=prompt,proto3" json:"prompt,omitempty"`
@@ -334,13 +496,22 @@ type VideoParameterConfig struct {
 	Megapixels      *DecimalOptionConfig   `protobuf:"bytes,3,opt,name=megapixels,proto3" json:"megapixels,omitempty"`
 	DurationSeconds *IntRangeConfig        `protobuf:"bytes,4,opt,name=duration_seconds,json=durationSeconds,proto3" json:"duration_seconds,omitempty"`
 	FrameRate       *FrameRateConfig       `protobuf:"bytes,5,opt,name=frame_rate,json=frameRate,proto3" json:"frame_rate,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	// 单图修改、角色生成及多图修改提供；文生图省略。提交顺序即图片接入顺序。
+	InputImages *InputImagesConfig `protobuf:"bytes,6,opt,name=input_images,json=inputImages,proto3" json:"input_images,omitempty"`
+	// 仅文生图提供一种尺寸模式；图片修改与角色生成的尺寸由工作流决定。
+	//
+	// Types that are valid to be assigned to ImageSize:
+	//
+	//	*VideoParameterConfig_ImageDimensions
+	//	*VideoParameterConfig_ImageResolution
+	ImageSize     isVideoParameterConfig_ImageSize `protobuf_oneof:"image_size"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *VideoParameterConfig) Reset() {
 	*x = VideoParameterConfig{}
-	mi := &file_hi_media_function_proto_msgTypes[5]
+	mi := &file_hi_media_function_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -352,7 +523,7 @@ func (x *VideoParameterConfig) String() string {
 func (*VideoParameterConfig) ProtoMessage() {}
 
 func (x *VideoParameterConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_function_proto_msgTypes[5]
+	mi := &file_hi_media_function_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -365,7 +536,7 @@ func (x *VideoParameterConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VideoParameterConfig.ProtoReflect.Descriptor instead.
 func (*VideoParameterConfig) Descriptor() ([]byte, []int) {
-	return file_hi_media_function_proto_rawDescGZIP(), []int{5}
+	return file_hi_media_function_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *VideoParameterConfig) GetPrompt() *TextLimit {
@@ -403,10 +574,60 @@ func (x *VideoParameterConfig) GetFrameRate() *FrameRateConfig {
 	return nil
 }
 
+func (x *VideoParameterConfig) GetInputImages() *InputImagesConfig {
+	if x != nil {
+		return x.InputImages
+	}
+	return nil
+}
+
+func (x *VideoParameterConfig) GetImageSize() isVideoParameterConfig_ImageSize {
+	if x != nil {
+		return x.ImageSize
+	}
+	return nil
+}
+
+func (x *VideoParameterConfig) GetImageDimensions() *ImageDimensionsConfig {
+	if x != nil {
+		if x, ok := x.ImageSize.(*VideoParameterConfig_ImageDimensions); ok {
+			return x.ImageDimensions
+		}
+	}
+	return nil
+}
+
+func (x *VideoParameterConfig) GetImageResolution() *ImageResolutionConfig {
+	if x != nil {
+		if x, ok := x.ImageSize.(*VideoParameterConfig_ImageResolution); ok {
+			return x.ImageResolution
+		}
+	}
+	return nil
+}
+
+type isVideoParameterConfig_ImageSize interface {
+	isVideoParameterConfig_ImageSize()
+}
+
+type VideoParameterConfig_ImageDimensions struct {
+	ImageDimensions *ImageDimensionsConfig `protobuf:"bytes,7,opt,name=image_dimensions,json=imageDimensions,proto3,oneof"`
+}
+
+type VideoParameterConfig_ImageResolution struct {
+	ImageResolution *ImageResolutionConfig `protobuf:"bytes,8,opt,name=image_resolution,json=imageResolution,proto3,oneof"`
+}
+
+func (*VideoParameterConfig_ImageDimensions) isVideoParameterConfig_ImageSize() {}
+
+func (*VideoParameterConfig_ImageResolution) isVideoParameterConfig_ImageSize() {}
+
 // 系统初始化的功能；客户端从 Function.List 获取 ID，不自行按名称推导。
 type FunctionSummary struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 固定值：video.img2vid（图生视频）、video.txt2vid（文生视频）。
+	// 图片增量：image.txt2img（文生图）、image.edit_single（单图修改）、
+	// image.edit_multiple（多图修改）、image.character（角色生成）。
 	FunctionId    *string `protobuf:"bytes,1,opt,name=function_id,json=functionId,proto3,oneof" json:"function_id,omitempty"`
 	DisplayName   *string `protobuf:"bytes,2,opt,name=display_name,json=displayName,proto3,oneof" json:"display_name,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -415,7 +636,7 @@ type FunctionSummary struct {
 
 func (x *FunctionSummary) Reset() {
 	*x = FunctionSummary{}
-	mi := &file_hi_media_function_proto_msgTypes[6]
+	mi := &file_hi_media_function_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -427,7 +648,7 @@ func (x *FunctionSummary) String() string {
 func (*FunctionSummary) ProtoMessage() {}
 
 func (x *FunctionSummary) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_function_proto_msgTypes[6]
+	mi := &file_hi_media_function_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -440,7 +661,7 @@ func (x *FunctionSummary) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FunctionSummary.ProtoReflect.Descriptor instead.
 func (*FunctionSummary) Descriptor() ([]byte, []int) {
-	return file_hi_media_function_proto_rawDescGZIP(), []int{6}
+	return file_hi_media_function_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *FunctionSummary) GetFunctionId() string {
@@ -467,7 +688,7 @@ type ListFunctionsResp struct {
 
 func (x *ListFunctionsResp) Reset() {
 	*x = ListFunctionsResp{}
-	mi := &file_hi_media_function_proto_msgTypes[7]
+	mi := &file_hi_media_function_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -479,7 +700,7 @@ func (x *ListFunctionsResp) String() string {
 func (*ListFunctionsResp) ProtoMessage() {}
 
 func (x *ListFunctionsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_function_proto_msgTypes[7]
+	mi := &file_hi_media_function_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -492,7 +713,7 @@ func (x *ListFunctionsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListFunctionsResp.ProtoReflect.Descriptor instead.
 func (*ListFunctionsResp) Descriptor() ([]byte, []int) {
-	return file_hi_media_function_proto_rawDescGZIP(), []int{7}
+	return file_hi_media_function_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *ListFunctionsResp) GetFunctions() []*FunctionSummary {
@@ -505,7 +726,7 @@ func (x *ListFunctionsResp) GetFunctions() []*FunctionSummary {
 // 查询选中功能及其当前启用的工作流。
 type GetFunctionReq struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 必须来自 Function.List：video.img2vid 或 video.txt2vid。
+	// 必须来自 Function.List；功能 ID 的支持值及中文用途见 FunctionSummary.function_id。
 	FunctionId    *string `protobuf:"bytes,1,opt,name=function_id,json=functionId,proto3,oneof" json:"function_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -513,7 +734,7 @@ type GetFunctionReq struct {
 
 func (x *GetFunctionReq) Reset() {
 	*x = GetFunctionReq{}
-	mi := &file_hi_media_function_proto_msgTypes[8]
+	mi := &file_hi_media_function_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -525,7 +746,7 @@ func (x *GetFunctionReq) String() string {
 func (*GetFunctionReq) ProtoMessage() {}
 
 func (x *GetFunctionReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_function_proto_msgTypes[8]
+	mi := &file_hi_media_function_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -538,7 +759,7 @@ func (x *GetFunctionReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetFunctionReq.ProtoReflect.Descriptor instead.
 func (*GetFunctionReq) Descriptor() ([]byte, []int) {
-	return file_hi_media_function_proto_rawDescGZIP(), []int{8}
+	return file_hi_media_function_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GetFunctionReq) GetFunctionId() string {
@@ -560,7 +781,7 @@ type WorkflowModelOption struct {
 
 func (x *WorkflowModelOption) Reset() {
 	*x = WorkflowModelOption{}
-	mi := &file_hi_media_function_proto_msgTypes[9]
+	mi := &file_hi_media_function_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -572,7 +793,7 @@ func (x *WorkflowModelOption) String() string {
 func (*WorkflowModelOption) ProtoMessage() {}
 
 func (x *WorkflowModelOption) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_function_proto_msgTypes[9]
+	mi := &file_hi_media_function_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -585,7 +806,7 @@ func (x *WorkflowModelOption) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WorkflowModelOption.ProtoReflect.Descriptor instead.
 func (*WorkflowModelOption) Descriptor() ([]byte, []int) {
-	return file_hi_media_function_proto_rawDescGZIP(), []int{9}
+	return file_hi_media_function_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *WorkflowModelOption) GetModelId() string {
@@ -620,7 +841,7 @@ type WorkflowOption struct {
 
 func (x *WorkflowOption) Reset() {
 	*x = WorkflowOption{}
-	mi := &file_hi_media_function_proto_msgTypes[10]
+	mi := &file_hi_media_function_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -632,7 +853,7 @@ func (x *WorkflowOption) String() string {
 func (*WorkflowOption) ProtoMessage() {}
 
 func (x *WorkflowOption) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_function_proto_msgTypes[10]
+	mi := &file_hi_media_function_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -645,7 +866,7 @@ func (x *WorkflowOption) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WorkflowOption.ProtoReflect.Descriptor instead.
 func (*WorkflowOption) Descriptor() ([]byte, []int) {
-	return file_hi_media_function_proto_rawDescGZIP(), []int{10}
+	return file_hi_media_function_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *WorkflowOption) GetWorkflowId() string {
@@ -695,7 +916,7 @@ type GetFunctionResp struct {
 
 func (x *GetFunctionResp) Reset() {
 	*x = GetFunctionResp{}
-	mi := &file_hi_media_function_proto_msgTypes[11]
+	mi := &file_hi_media_function_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -707,7 +928,7 @@ func (x *GetFunctionResp) String() string {
 func (*GetFunctionResp) ProtoMessage() {}
 
 func (x *GetFunctionResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_function_proto_msgTypes[11]
+	mi := &file_hi_media_function_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -720,7 +941,7 @@ func (x *GetFunctionResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetFunctionResp.ProtoReflect.Descriptor instead.
 func (*GetFunctionResp) Descriptor() ([]byte, []int) {
-	return file_hi_media_function_proto_rawDescGZIP(), []int{11}
+	return file_hi_media_function_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *GetFunctionResp) GetFunction() *FunctionSummary {
@@ -774,7 +995,27 @@ const file_hi_media_function_proto_rawDesc = "" +
 	"selectable\x12.\n" +
 	"\vfixed_value\x18\x02 \x01(\x05B\v\xbaH\x04\x1a\x02 \x00\x90\xb5\x18\x01H\x00R\n" +
 	"fixedValue:\x04\x98\xb5\x18\x01B\r\n" +
-	"\x04mode\x12\x05\xbaH\x02\b\x01\"\xe6\x02\n" +
+	"\x04mode\x12\x05\xbaH\x02\b\x01\"\xc2\x01\n" +
+	"\x11InputImagesConfig\x12%\n" +
+	"\x03min\x18\x01 \x01(\rB\x0e\xbaH\a\xc8\x01\x01*\x02 \x00\x90\xb5\x18\x01H\x00R\x03min\x88\x01\x01\x12'\n" +
+	"\x03max\x18\x02 \x01(\rB\x10\xbaH\t\xc8\x01\x01*\x04\x18\n" +
+	" \x00\x90\xb5\x18\x01H\x01R\x03max\x88\x01\x01:M\xbaHF\x1aD\n" +
+	"\x13input_images.bounds\x12\x17min must not exceed max\x1a\x14this.min <= this.max\x98\xb5\x18\x01B\x06\n" +
+	"\x04_minB\x06\n" +
+	"\x04_max\"\xcf\x03\n" +
+	"\x15ImageDimensionsConfig\x12:\n" +
+	"\x05width\x18\x01 \x01(\v2\x18.hi.media.IntRangeConfigB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x01R\x05width\x12<\n" +
+	"\x06height\x18\x02 \x01(\v2\x18.hi.media.IntRangeConfigB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x01R\x06height:\xbb\x02\xbaH\xb3\x02\x1a\xb0\x02\n" +
+	"\x1aimage_dimensions.alignment\x12<width and height bounds and defaults must be multiples of 16\x1a\xd3\x01this.width.min_value % 16 == 0 && this.width.max_value % 16 == 0 && this.width.default_value % 16 == 0 && this.height.min_value % 16 == 0 && this.height.max_value % 16 == 0 && this.height.default_value % 16 == 0\x98\xb5\x18\x01\"\xb5\x01\n" +
+	"\x15ImageResolutionConfig\x12K\n" +
+	"\faspect_ratio\x18\x01 \x01(\v2\x1c.hi.media.StringOptionConfigB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x01R\vaspectRatio\x12I\n" +
+	"\n" +
+	"megapixels\x18\x02 \x01(\v2\x1d.hi.media.DecimalOptionConfigB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x01R\n" +
+	"megapixels:\x04\x98\xb5\x18\x01\"\xe2\x04\n" +
 	"\x14VideoParameterConfig\x121\n" +
 	"\x06prompt\x18\x01 \x01(\v2\x13.hi.media.TextLimitB\x04\x90\xb5\x18\x01R\x06prompt\x12E\n" +
 	"\faspect_ratio\x18\x02 \x01(\v2\x1c.hi.media.StringOptionConfigB\x04\x90\xb5\x18\x01R\vaspectRatio\x12C\n" +
@@ -783,7 +1024,12 @@ const file_hi_media_function_proto_rawDesc = "" +
 	"megapixels\x12I\n" +
 	"\x10duration_seconds\x18\x04 \x01(\v2\x18.hi.media.IntRangeConfigB\x04\x90\xb5\x18\x01R\x0fdurationSeconds\x12>\n" +
 	"\n" +
-	"frame_rate\x18\x05 \x01(\v2\x19.hi.media.FrameRateConfigB\x04\x90\xb5\x18\x01R\tframeRate:\x04\x98\xb5\x18\x01\"\x92\x01\n" +
+	"frame_rate\x18\x05 \x01(\v2\x19.hi.media.FrameRateConfigB\x04\x90\xb5\x18\x01R\tframeRate\x12D\n" +
+	"\finput_images\x18\x06 \x01(\v2\x1b.hi.media.InputImagesConfigB\x04\x90\xb5\x18\x01R\vinputImages\x12R\n" +
+	"\x10image_dimensions\x18\a \x01(\v2\x1f.hi.media.ImageDimensionsConfigB\x04\x90\xb5\x18\x01H\x00R\x0fimageDimensions\x12R\n" +
+	"\x10image_resolution\x18\b \x01(\v2\x1f.hi.media.ImageResolutionConfigB\x04\x90\xb5\x18\x01H\x00R\x0fimageResolution:\x04\x98\xb5\x18\x01B\f\n" +
+	"\n" +
+	"image_size\"\x92\x01\n" +
 	"\x0fFunctionSummary\x12*\n" +
 	"\vfunction_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\n" +
 	"functionId\x88\x01\x01\x12,\n" +
@@ -833,43 +1079,53 @@ func file_hi_media_function_proto_rawDescGZIP() []byte {
 	return file_hi_media_function_proto_rawDescData
 }
 
-var file_hi_media_function_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_hi_media_function_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
 var file_hi_media_function_proto_goTypes = []any{
-	(*TextLimit)(nil),            // 0: hi.media.TextLimit
-	(*DecimalOptionConfig)(nil),  // 1: hi.media.DecimalOptionConfig
-	(*StringOptionConfig)(nil),   // 2: hi.media.StringOptionConfig
-	(*IntRangeConfig)(nil),       // 3: hi.media.IntRangeConfig
-	(*FrameRateConfig)(nil),      // 4: hi.media.FrameRateConfig
-	(*VideoParameterConfig)(nil), // 5: hi.media.VideoParameterConfig
-	(*FunctionSummary)(nil),      // 6: hi.media.FunctionSummary
-	(*ListFunctionsResp)(nil),    // 7: hi.media.ListFunctionsResp
-	(*GetFunctionReq)(nil),       // 8: hi.media.GetFunctionReq
-	(*WorkflowModelOption)(nil),  // 9: hi.media.WorkflowModelOption
-	(*WorkflowOption)(nil),       // 10: hi.media.WorkflowOption
-	(*GetFunctionResp)(nil),      // 11: hi.media.GetFunctionResp
-	(*emptypb.Empty)(nil),        // 12: google.protobuf.Empty
+	(*TextLimit)(nil),             // 0: hi.media.TextLimit
+	(*DecimalOptionConfig)(nil),   // 1: hi.media.DecimalOptionConfig
+	(*StringOptionConfig)(nil),    // 2: hi.media.StringOptionConfig
+	(*IntRangeConfig)(nil),        // 3: hi.media.IntRangeConfig
+	(*FrameRateConfig)(nil),       // 4: hi.media.FrameRateConfig
+	(*InputImagesConfig)(nil),     // 5: hi.media.InputImagesConfig
+	(*ImageDimensionsConfig)(nil), // 6: hi.media.ImageDimensionsConfig
+	(*ImageResolutionConfig)(nil), // 7: hi.media.ImageResolutionConfig
+	(*VideoParameterConfig)(nil),  // 8: hi.media.VideoParameterConfig
+	(*FunctionSummary)(nil),       // 9: hi.media.FunctionSummary
+	(*ListFunctionsResp)(nil),     // 10: hi.media.ListFunctionsResp
+	(*GetFunctionReq)(nil),        // 11: hi.media.GetFunctionReq
+	(*WorkflowModelOption)(nil),   // 12: hi.media.WorkflowModelOption
+	(*WorkflowOption)(nil),        // 13: hi.media.WorkflowOption
+	(*GetFunctionResp)(nil),       // 14: hi.media.GetFunctionResp
+	(*emptypb.Empty)(nil),         // 15: google.protobuf.Empty
 }
 var file_hi_media_function_proto_depIdxs = []int32{
 	3,  // 0: hi.media.FrameRateConfig.selectable:type_name -> hi.media.IntRangeConfig
-	0,  // 1: hi.media.VideoParameterConfig.prompt:type_name -> hi.media.TextLimit
-	2,  // 2: hi.media.VideoParameterConfig.aspect_ratio:type_name -> hi.media.StringOptionConfig
-	1,  // 3: hi.media.VideoParameterConfig.megapixels:type_name -> hi.media.DecimalOptionConfig
-	3,  // 4: hi.media.VideoParameterConfig.duration_seconds:type_name -> hi.media.IntRangeConfig
-	4,  // 5: hi.media.VideoParameterConfig.frame_rate:type_name -> hi.media.FrameRateConfig
-	6,  // 6: hi.media.ListFunctionsResp.functions:type_name -> hi.media.FunctionSummary
-	9,  // 7: hi.media.WorkflowOption.model:type_name -> hi.media.WorkflowModelOption
-	5,  // 8: hi.media.WorkflowOption.parameter_config:type_name -> hi.media.VideoParameterConfig
-	6,  // 9: hi.media.GetFunctionResp.function:type_name -> hi.media.FunctionSummary
-	10, // 10: hi.media.GetFunctionResp.workflows:type_name -> hi.media.WorkflowOption
-	12, // 11: hi.media.Function.List:input_type -> google.protobuf.Empty
-	8,  // 12: hi.media.Function.Get:input_type -> hi.media.GetFunctionReq
-	7,  // 13: hi.media.Function.List:output_type -> hi.media.ListFunctionsResp
-	11, // 14: hi.media.Function.Get:output_type -> hi.media.GetFunctionResp
-	13, // [13:15] is the sub-list for method output_type
-	11, // [11:13] is the sub-list for method input_type
-	11, // [11:11] is the sub-list for extension type_name
-	11, // [11:11] is the sub-list for extension extendee
-	0,  // [0:11] is the sub-list for field type_name
+	3,  // 1: hi.media.ImageDimensionsConfig.width:type_name -> hi.media.IntRangeConfig
+	3,  // 2: hi.media.ImageDimensionsConfig.height:type_name -> hi.media.IntRangeConfig
+	2,  // 3: hi.media.ImageResolutionConfig.aspect_ratio:type_name -> hi.media.StringOptionConfig
+	1,  // 4: hi.media.ImageResolutionConfig.megapixels:type_name -> hi.media.DecimalOptionConfig
+	0,  // 5: hi.media.VideoParameterConfig.prompt:type_name -> hi.media.TextLimit
+	2,  // 6: hi.media.VideoParameterConfig.aspect_ratio:type_name -> hi.media.StringOptionConfig
+	1,  // 7: hi.media.VideoParameterConfig.megapixels:type_name -> hi.media.DecimalOptionConfig
+	3,  // 8: hi.media.VideoParameterConfig.duration_seconds:type_name -> hi.media.IntRangeConfig
+	4,  // 9: hi.media.VideoParameterConfig.frame_rate:type_name -> hi.media.FrameRateConfig
+	5,  // 10: hi.media.VideoParameterConfig.input_images:type_name -> hi.media.InputImagesConfig
+	6,  // 11: hi.media.VideoParameterConfig.image_dimensions:type_name -> hi.media.ImageDimensionsConfig
+	7,  // 12: hi.media.VideoParameterConfig.image_resolution:type_name -> hi.media.ImageResolutionConfig
+	9,  // 13: hi.media.ListFunctionsResp.functions:type_name -> hi.media.FunctionSummary
+	12, // 14: hi.media.WorkflowOption.model:type_name -> hi.media.WorkflowModelOption
+	8,  // 15: hi.media.WorkflowOption.parameter_config:type_name -> hi.media.VideoParameterConfig
+	9,  // 16: hi.media.GetFunctionResp.function:type_name -> hi.media.FunctionSummary
+	13, // 17: hi.media.GetFunctionResp.workflows:type_name -> hi.media.WorkflowOption
+	15, // 18: hi.media.Function.List:input_type -> google.protobuf.Empty
+	11, // 19: hi.media.Function.Get:input_type -> hi.media.GetFunctionReq
+	10, // 20: hi.media.Function.List:output_type -> hi.media.ListFunctionsResp
+	14, // 21: hi.media.Function.Get:output_type -> hi.media.GetFunctionResp
+	20, // [20:22] is the sub-list for method output_type
+	18, // [18:20] is the sub-list for method input_type
+	18, // [18:18] is the sub-list for extension type_name
+	18, // [18:18] is the sub-list for extension extendee
+	0,  // [0:18] is the sub-list for field type_name
 }
 
 func init() { file_hi_media_function_proto_init() }
@@ -885,17 +1141,22 @@ func file_hi_media_function_proto_init() {
 		(*FrameRateConfig_Selectable)(nil),
 		(*FrameRateConfig_FixedValue)(nil),
 	}
-	file_hi_media_function_proto_msgTypes[6].OneofWrappers = []any{}
-	file_hi_media_function_proto_msgTypes[8].OneofWrappers = []any{}
+	file_hi_media_function_proto_msgTypes[5].OneofWrappers = []any{}
+	file_hi_media_function_proto_msgTypes[8].OneofWrappers = []any{
+		(*VideoParameterConfig_ImageDimensions)(nil),
+		(*VideoParameterConfig_ImageResolution)(nil),
+	}
 	file_hi_media_function_proto_msgTypes[9].OneofWrappers = []any{}
-	file_hi_media_function_proto_msgTypes[10].OneofWrappers = []any{}
+	file_hi_media_function_proto_msgTypes[11].OneofWrappers = []any{}
+	file_hi_media_function_proto_msgTypes[12].OneofWrappers = []any{}
+	file_hi_media_function_proto_msgTypes[13].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_media_function_proto_rawDesc), len(file_hi_media_function_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   12,
+			NumMessages:   15,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

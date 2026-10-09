@@ -3,11 +3,12 @@
 import grpc
 
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
+from hi.media import image_task_pb2 as hi_dot_media_dot_image__task__pb2
 from hi.media import task_pb2 as hi_dot_media_dot_task__pb2
 
 
 class TaskStub(object):
-    """普通用户视频任务创建、查询、取消和一次性恢复保存。
+    """普通用户图片与视频任务创建、查询、取消和一次性恢复保存，共用 FIFO 和任务状态。
     """
 
     def __init__(self, channel):
@@ -24,6 +25,26 @@ class TaskStub(object):
         self.CreateTextToVideo = channel.unary_unary(
                 '/hi.media.Task/CreateTextToVideo',
                 request_serializer=hi_dot_media_dot_task__pb2.CreateTextToVideoTaskReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_task__pb2.CreateTaskResp.FromString,
+                _registered_method=True)
+        self.CreateTextToImage = channel.unary_unary(
+                '/hi.media.Task/CreateTextToImage',
+                request_serializer=hi_dot_media_dot_image__task__pb2.CreateTextToImageTaskReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_task__pb2.CreateTaskResp.FromString,
+                _registered_method=True)
+        self.CreateSingleImageEdit = channel.unary_unary(
+                '/hi.media.Task/CreateSingleImageEdit',
+                request_serializer=hi_dot_media_dot_image__task__pb2.CreateSingleImageEditTaskReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_task__pb2.CreateTaskResp.FromString,
+                _registered_method=True)
+        self.CreateMultipleImageEdit = channel.unary_unary(
+                '/hi.media.Task/CreateMultipleImageEdit',
+                request_serializer=hi_dot_media_dot_image__task__pb2.CreateMultipleImageEditTaskReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_task__pb2.CreateTaskResp.FromString,
+                _registered_method=True)
+        self.CreateCharacter = channel.unary_unary(
+                '/hi.media.Task/CreateCharacter',
+                request_serializer=hi_dot_media_dot_image__task__pb2.CreateCharacterTaskReq.SerializeToString,
                 response_deserializer=hi_dot_media_dot_task__pb2.CreateTaskResp.FromString,
                 _registered_method=True)
         self.Get = channel.unary_unary(
@@ -54,7 +75,7 @@ class TaskStub(object):
 
 
 class TaskServicer(object):
-    """普通用户视频任务创建、查询、取消和一次性恢复保存。
+    """普通用户图片与视频任务创建、查询、取消和一次性恢复保存，共用 FIFO 和任务状态。
     """
 
     def CreateImageToVideo(self, request, context):
@@ -66,6 +87,34 @@ class TaskServicer(object):
 
     def CreateTextToVideo(self, request, context):
         """创建文生视频任务；只提交 workflow_id 与业务参数。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CreateTextToImage(self, request, context):
+        """文生图 image.txt2img；只传工作流 ID、提示词和匹配的尺寸参数，seed 由后端生成。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CreateSingleImageEdit(self, request, context):
+        """单图修改 image.edit_single；一张本人图片和修改要求，不开放尺寸选择。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CreateMultipleImageEdit(self, request, context):
+        """多图修改 image.edit_multiple；图片数量来自工作流配置，顺序不可丢失。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CreateCharacter(self, request, context):
+        """角色生成 image.character；用户提交一张参考图与正向提示词，负向词及内部尺寸由管理员维护。
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -119,6 +168,26 @@ def add_TaskServicer_to_server(servicer, server):
                     request_deserializer=hi_dot_media_dot_task__pb2.CreateTextToVideoTaskReq.FromString,
                     response_serializer=hi_dot_media_dot_task__pb2.CreateTaskResp.SerializeToString,
             ),
+            'CreateTextToImage': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateTextToImage,
+                    request_deserializer=hi_dot_media_dot_image__task__pb2.CreateTextToImageTaskReq.FromString,
+                    response_serializer=hi_dot_media_dot_task__pb2.CreateTaskResp.SerializeToString,
+            ),
+            'CreateSingleImageEdit': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateSingleImageEdit,
+                    request_deserializer=hi_dot_media_dot_image__task__pb2.CreateSingleImageEditTaskReq.FromString,
+                    response_serializer=hi_dot_media_dot_task__pb2.CreateTaskResp.SerializeToString,
+            ),
+            'CreateMultipleImageEdit': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateMultipleImageEdit,
+                    request_deserializer=hi_dot_media_dot_image__task__pb2.CreateMultipleImageEditTaskReq.FromString,
+                    response_serializer=hi_dot_media_dot_task__pb2.CreateTaskResp.SerializeToString,
+            ),
+            'CreateCharacter': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateCharacter,
+                    request_deserializer=hi_dot_media_dot_image__task__pb2.CreateCharacterTaskReq.FromString,
+                    response_serializer=hi_dot_media_dot_task__pb2.CreateTaskResp.SerializeToString,
+            ),
             'Get': grpc.unary_unary_rpc_method_handler(
                     servicer.Get,
                     request_deserializer=hi_dot_media_dot_task__pb2.GetTaskReq.FromString,
@@ -153,7 +222,7 @@ def add_TaskServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class Task(object):
-    """普通用户视频任务创建、查询、取消和一次性恢复保存。
+    """普通用户图片与视频任务创建、查询、取消和一次性恢复保存，共用 FIFO 和任务状态。
     """
 
     @staticmethod
@@ -199,6 +268,114 @@ class Task(object):
             target,
             '/hi.media.Task/CreateTextToVideo',
             hi_dot_media_dot_task__pb2.CreateTextToVideoTaskReq.SerializeToString,
+            hi_dot_media_dot_task__pb2.CreateTaskResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CreateTextToImage(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.media.Task/CreateTextToImage',
+            hi_dot_media_dot_image__task__pb2.CreateTextToImageTaskReq.SerializeToString,
+            hi_dot_media_dot_task__pb2.CreateTaskResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CreateSingleImageEdit(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.media.Task/CreateSingleImageEdit',
+            hi_dot_media_dot_image__task__pb2.CreateSingleImageEditTaskReq.SerializeToString,
+            hi_dot_media_dot_task__pb2.CreateTaskResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CreateMultipleImageEdit(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.media.Task/CreateMultipleImageEdit',
+            hi_dot_media_dot_image__task__pb2.CreateMultipleImageEditTaskReq.SerializeToString,
+            hi_dot_media_dot_task__pb2.CreateTaskResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CreateCharacter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.media.Task/CreateCharacter',
+            hi_dot_media_dot_image__task__pb2.CreateCharacterTaskReq.SerializeToString,
             hi_dot_media_dot_task__pb2.CreateTaskResp.FromString,
             options,
             channel_credentials,

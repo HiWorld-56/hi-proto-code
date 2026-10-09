@@ -183,6 +183,155 @@ pub mod auth_client {
         }
     }
 }
+/// 文生图宽高选择，单位像素；省略某项时使用该工作流对应默认值。
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ImageDimensions {
+    /// FLUX 文生图宽度，必须为 16 的倍数；范围由 Function.Get 返回。
+    #[prost(int32, optional, tag = "1")]
+    pub width: ::core::option::Option<i32>,
+    /// FLUX 文生图高度，必须为 16 的倍数；不是最终产物尺寸声明。
+    #[prost(int32, optional, tag = "2")]
+    pub height: ::core::option::Option<i32>,
+}
+/// 文生图 ResolutionSelector 参数；两项分别按工作流默认值补齐。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ImageResolution {
+    /// 节点接受的完整选项字符串，例如 "1:1 (Square)"，不能只传 "1:1"。
+    #[prost(string, optional, tag = "1")]
+    pub aspect_ratio: ::core::option::Option<::prost::alloc::string::String>,
+    /// 规范十进制字符串，例如 "1" 或 "0.5"；写入 ComfyUI 节点时转为 JSON 数字。
+    #[prost(string, optional, tag = "2")]
+    pub megapixels: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 创建文生图任务，对应 image.txt2img；不接收输入图片、用户 seed 或负向词。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CreateTextToImageTaskReq {
+    /// 本人范围内的幂等键；重发复用，不同值即使参数相同也创建新任务。
+    #[prost(string, optional, tag = "1")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 来自 image.txt2img 的 Function.Get；必须已启用，不再传模型或功能 ID。
+    #[prost(string, optional, tag = "2")]
+    pub workflow_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 正向提示词原文，不翻译、不追加、不增强；按工作流 Unicode 码点上限校验。
+    #[prost(string, optional, tag = "3")]
+    pub prompt: ::core::option::Option<::prost::alloc::string::String>,
+    /// 必须匹配工作流的尺寸模式；整体省略时采用该工作流全部尺寸默认值。
+    #[prost(oneof = "create_text_to_image_task_req::Size", tags = "4, 5")]
+    pub size: ::core::option::Option<create_text_to_image_task_req::Size>,
+}
+/// Nested message and enum types in `CreateTextToImageTaskReq`.
+pub mod create_text_to_image_task_req {
+    /// 必须匹配工作流的尺寸模式；整体省略时采用该工作流全部尺寸默认值。
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Size {
+        #[prost(message, tag = "4")]
+        Dimensions(super::ImageDimensions),
+        #[prost(message, tag = "5")]
+        Resolution(super::ImageResolution),
+    }
+}
+/// 创建单图修改任务，对应 image.edit_single；不开放尺寸或用户 seed。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CreateSingleImageEditTaskReq {
+    /// 本人范围内的创建幂等键。
+    #[prost(string, optional, tag = "1")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 来自 image.edit_single 的 Function.Get，服务端检查归属与启用状态。
+    #[prost(string, optional, tag = "2")]
+    pub workflow_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 本人 available 的静态 JPEG/PNG 资产；创建事务登记引用。
+    #[prost(string, optional, tag = "3")]
+    pub input_asset_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 用户修改要求原文；输出尺寸由工作流按输入图片处理，不保证与原图等宽高。
+    #[prost(string, optional, tag = "4")]
+    pub prompt: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 创建多图修改任务，对应 image.edit_multiple；图片按提交顺序接入，不排序。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CreateMultipleImageEditTaskReq {
+    /// 本人范围内的创建幂等键，相同参数使用不同键可生成用于对比的新结果。
+    #[prost(string, optional, tag = "1")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 来自 image.edit_multiple 的 Function.Get，不按模型名推断图片数量。
+    #[prost(string, optional, tag = "2")]
+    pub workflow_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 图1至图N的本人 available 静态 JPEG/PNG；FLUX 固定2张，Qwen 支持2～10张。
+    /// 工作流的 inputImages.min/max 是创建期强校验依据，全部资产在同一事务登记引用。
+    #[prost(string, repeated, tag = "3")]
+    pub input_asset_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// 第一张为主要编辑对象，其余为参考；图片引用写法按工作流说明填写。
+    #[prost(string, optional, tag = "4")]
+    pub prompt: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 创建角色生成任务，对应 image.character；用户提供参考图和必填正向提示词。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CreateCharacterTaskReq {
+    /// 本人范围内的创建幂等键；新任务由后端生成新的 seed。
+    #[prost(string, optional, tag = "1")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 来自 image.character 的 Function.Get；模型记录可与 FLUX 其他功能共用。
+    #[prost(string, optional, tag = "2")]
+    pub workflow_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 本人 available 的静态 JPEG/PNG 角色参考图；输出为一张完整角色展示 PNG。
+    #[prost(string, optional, tag = "3")]
+    pub input_asset_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 用户正向提示词原文，不拼接管理员文本或回退示例值；长度按工作流配置校验。
+    #[prost(string, optional, tag = "4")]
+    pub prompt: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 文生图实际参数，尺寸为创建时补齐的选择值；最终实际尺寸从 TaskOutput 读取。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TextToImageTaskParams {
+    #[prost(string, optional, tag = "1")]
+    pub prompt: ::core::option::Option<::prost::alloc::string::String>,
+    /// 后端创建时随机生成，重启及恢复保存不改变；uint64 在 HTTP 中为十进制字符串。
+    #[prost(uint64, optional, tag = "2")]
+    pub seed: ::core::option::Option<u64>,
+    /// 宽高模式返回像素宽高，ResolutionSelector 模式省略这两项。
+    #[prost(int32, optional, tag = "3")]
+    pub width: ::core::option::Option<i32>,
+    #[prost(int32, optional, tag = "4")]
+    pub height: ::core::option::Option<i32>,
+    /// ResolutionSelector 模式返回完整宽高比选项与规范像素量，宽高模式省略。
+    #[prost(string, optional, tag = "5")]
+    pub aspect_ratio: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "6")]
+    pub megapixels: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 单图修改实际参数，不含负向词或节点绑定。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SingleImageEditTaskParams {
+    /// 创建时固定的原始素材 ID，素材删除后仍保留，不保证可预览或重新生成。
+    #[prost(string, optional, tag = "1")]
+    pub input_asset_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub prompt: ::core::option::Option<::prost::alloc::string::String>,
+    /// 后端为本任务生成的 seed，不接受用户指定。
+    #[prost(uint64, optional, tag = "3")]
+    pub seed: ::core::option::Option<u64>,
+}
+/// 多图修改实际参数，图片列表保留用户提交顺序。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MultipleImageEditTaskParams {
+    #[prost(string, repeated, tag = "1")]
+    pub input_asset_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub prompt: ::core::option::Option<::prost::alloc::string::String>,
+    /// 后端为本任务生成的 seed；重新生成创建独立任务并生成新值。
+    #[prost(uint64, optional, tag = "3")]
+    pub seed: ::core::option::Option<u64>,
+}
+/// 角色生成实际参数；重新生成预填参考图与用户提示词，确认后创建任务并生成新 seed。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CharacterTaskParams {
+    #[prost(string, optional, tag = "1")]
+    pub input_asset_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 本任务创建时提交的用户正向提示词原文，不随后续配置修改变化。
+    #[prost(string, optional, tag = "2")]
+    pub prompt: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(uint64, optional, tag = "3")]
+    pub seed: ::core::option::Option<u64>,
+}
 /// 视频分辨率选择，不传某项时使用工作流该项默认值。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct VideoResolution {
@@ -280,7 +429,7 @@ pub struct TextToVideoTaskParams {
 }
 /// 唯一主产物；size_bytes 为字节，duration_ms 为毫秒，访问地址通过 File.GetAccessUrls 获取。
 /// Task.List 的 tasks\[\].output 与 Task.Get 的 task.summary.output 共用此结构。
-/// 实际宽高直接供前端布局使用，无需逐条查询详情或加载视频；尚无产物时不提供宽高。
+/// 实际宽高直接供前端布局使用，无需逐条查询详情或加载媒体；尚无产物时不提供宽高。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TaskOutput {
     #[prost(string, optional, tag = "1")]
@@ -293,19 +442,21 @@ pub struct TaskOutput {
     pub mime_type: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(uint64, optional, tag = "5")]
     pub size_bytes: ::core::option::Option<u64>,
+    /// 仅视频产物返回实际时长；图片省略。
     #[prost(int64, optional, tag = "6")]
     pub duration_ms: ::core::option::Option<i64>,
     /// 资产删除后任务仍可保持成功，但该值为 false 且不能播放。
     #[prost(bool, optional, tag = "7")]
     pub available: ::core::option::Option<bool>,
-    /// 实际产物宽度，单位像素；读取已保存的视频探测结果，不根据生成参数推算。
+    /// 实际产物宽度，单位像素；读取已保存的媒体事实，不根据生成参数推算。
     #[prost(uint32, optional, tag = "8")]
     pub width: ::core::option::Option<u32>,
-    /// 实际产物高度，单位像素；与 width 一同返回，查询时不重新探测视频。
+    /// 实际产物高度，单位像素；与 width 一同返回，查询时不重新读取媒体。
     #[prost(uint32, optional, tag = "9")]
     pub height: ::core::option::Option<u32>,
     /// 资产可用且有已保存的视频封面；用 asset_id 申请 COVER 地址时为 true 返回封面，否则返回原文件。
     /// 无封面或资产不可用时为 false，不影响视频任务的成功状态；size_bytes 不含封面。
+    /// 图片始终为 false，COVER/PREVIEW 直接返回原图地址，不表示图片不能预览。
     #[prost(bool, optional, tag = "10")]
     pub has_cover: ::core::option::Option<bool>,
 }
@@ -316,7 +467,7 @@ pub struct TaskSummary {
     pub task_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(enumeration = "TaskPurpose", optional, tag = "2")]
     pub purpose: ::core::option::Option<i32>,
-    /// 任务受理时确定的功能 ID：video.img2vid 或 video.txt2vid。
+    /// 任务受理时确定的功能 ID；六种支持值及中文用途见 FunctionSummary.function_id。
     #[prost(string, optional, tag = "3")]
     pub function_id: ::core::option::Option<::prost::alloc::string::String>,
     /// 从当前功能记录读取的用户可见名称。
@@ -365,7 +516,7 @@ pub struct TaskSummary {
     #[prost(int64, optional, tag = "18")]
     pub elapsed_seconds: ::core::option::Option<i64>,
     /// 图生视频的原始输入图片资产 ID，列表和详情摘要均返回；文生视频不返回。
-    /// 前端通过 File.GetAccessUrls 申请 PREVIEW 地址作为视频封面，不是视频 output.asset_id。
+    /// 只表示输入素材，不是视频封面或 output.asset_id；视频封面通过产物 ID 申请 COVER。
     /// 原图删除后仍保留该历史 ID；无法获取预览时显示占位图，不延长原图保留期。
     #[prost(string, optional, tag = "19")]
     pub input_asset_id: ::core::option::Option<::prost::alloc::string::String>,
@@ -374,6 +525,8 @@ pub struct TaskSummary {
     /// HTTP 字段为 effectiveParamsJson；解析字符串后，内部键使用 snake_case：
     /// prompt、aspect_ratio、megapixels（字符串）、duration_seconds、frame_rate（整数），
     /// 图生视频另含 input_asset_id；不包含工作流图、节点绑定或管理员负向提示词。
+    /// 图片任务另含后端生成的 seed；单图/角色含 input_asset_id，多图含有序 input_asset_ids。
+    /// 文生图按尺寸模式包含 width/height 或 aspect_ratio/megapixels；角色 prompt 为用户原文。
     #[prost(string, optional, tag = "20")]
     pub effective_params_json: ::core::option::Option<::prost::alloc::string::String>,
 }
@@ -382,7 +535,7 @@ pub struct TaskSummary {
 pub struct TaskDetail {
     #[prost(message, optional, tag = "1")]
     pub summary: ::core::option::Option<TaskSummary>,
-    #[prost(oneof = "task_detail::EffectiveParams", tags = "2, 3")]
+    #[prost(oneof = "task_detail::EffectiveParams", tags = "2, 3, 4, 5, 6, 7")]
     pub effective_params: ::core::option::Option<task_detail::EffectiveParams>,
 }
 /// Nested message and enum types in `TaskDetail`.
@@ -393,6 +546,14 @@ pub mod task_detail {
         ImageToVideo(super::ImageToVideoTaskParams),
         #[prost(message, tag = "3")]
         TextToVideo(super::TextToVideoTaskParams),
+        #[prost(message, tag = "4")]
+        TextToImage(super::TextToImageTaskParams),
+        #[prost(message, tag = "5")]
+        SingleImageEdit(super::SingleImageEditTaskParams),
+        #[prost(message, tag = "6")]
+        MultipleImageEdit(super::MultipleImageEditTaskParams),
+        #[prost(message, tag = "7")]
+        Character(super::CharacterTaskParams),
     }
 }
 /// 查询本人任务。
@@ -586,7 +747,7 @@ pub mod task_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// 普通用户视频任务创建、查询、取消和一次性恢复保存。
+    /// 普通用户图片与视频任务创建、查询、取消和一次性恢复保存，共用 FIFO 和任务状态。
     #[derive(Debug, Clone)]
     pub struct TaskClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -709,6 +870,94 @@ pub mod task_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.media.Task", "CreateTextToVideo"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 文生图 image.txt2img；只传工作流 ID、提示词和匹配的尺寸参数，seed 由后端生成。
+        pub async fn create_text_to_image(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateTextToImageTaskReq>,
+        ) -> std::result::Result<tonic::Response<super::CreateTaskResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.Task/CreateTextToImage",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.Task", "CreateTextToImage"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 单图修改 image.edit_single；一张本人图片和修改要求，不开放尺寸选择。
+        pub async fn create_single_image_edit(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateSingleImageEditTaskReq>,
+        ) -> std::result::Result<tonic::Response<super::CreateTaskResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.Task/CreateSingleImageEdit",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.Task", "CreateSingleImageEdit"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 多图修改 image.edit_multiple；图片数量来自工作流配置，顺序不可丢失。
+        pub async fn create_multiple_image_edit(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateMultipleImageEditTaskReq>,
+        ) -> std::result::Result<tonic::Response<super::CreateTaskResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.Task/CreateMultipleImageEdit",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.Task", "CreateMultipleImageEdit"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 角色生成 image.character；用户提交一张参考图与正向提示词，负向词及内部尺寸由管理员维护。
+        pub async fn create_character(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateCharacterTaskReq>,
+        ) -> std::result::Result<tonic::Response<super::CreateTaskResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.Task/CreateCharacter",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.Task", "CreateCharacter"));
             self.inner.unary(req, path, codec).await
         }
         /// 查询本人任务详情及产物资产 ID。
@@ -1078,7 +1327,34 @@ pub mod frame_rate_config {
         FixedValue(i32),
     }
 }
-/// 工作流向普通用户开放的视频参数，不包含管理员固定输入。
+/// 输入图片数量，含 min/max 边界；多图列表始终有序，不另设 ordered 字段。
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct InputImagesConfig {
+    /// 单图修改与角色生成为 1；多图修改按工作流配置，当前最少 2 张。
+    #[prost(uint32, optional, tag = "1")]
+    pub min: ::core::option::Option<u32>,
+    /// FLUX 多图为 2，Qwen 多图最多 10；创建时由后端强校验。
+    #[prost(uint32, optional, tag = "2")]
+    pub max: ::core::option::Option<u32>,
+}
+/// 文生图宽高范围与默认值，单位像素；min/max/default 均须为 16 的倍数。
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ImageDimensionsConfig {
+    #[prost(message, optional, tag = "1")]
+    pub width: ::core::option::Option<IntRangeConfig>,
+    #[prost(message, optional, tag = "2")]
+    pub height: ::core::option::Option<IntRangeConfig>,
+}
+/// 文生图的 ResolutionSelector 参数，宽高比传完整选项，像素量传十进制字符串。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ImageResolutionConfig {
+    #[prost(message, optional, tag = "1")]
+    pub aspect_ratio: ::core::option::Option<StringOptionConfig>,
+    #[prost(message, optional, tag = "2")]
+    pub megapixels: ::core::option::Option<DecimalOptionConfig>,
+}
+/// 工作流向普通用户开放的参数，不包含节点或管理员固定输入。
+/// 为兼容已发布协议保留历史消息名；字段 1～5 是视频参数，图片扩展追加字段。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct VideoParameterConfig {
     #[prost(message, optional, tag = "1")]
@@ -1091,11 +1367,30 @@ pub struct VideoParameterConfig {
     pub duration_seconds: ::core::option::Option<IntRangeConfig>,
     #[prost(message, optional, tag = "5")]
     pub frame_rate: ::core::option::Option<FrameRateConfig>,
+    /// 单图修改、角色生成及多图修改提供；文生图省略。提交顺序即图片接入顺序。
+    #[prost(message, optional, tag = "6")]
+    pub input_images: ::core::option::Option<InputImagesConfig>,
+    /// 仅文生图提供一种尺寸模式；图片修改与角色生成的尺寸由工作流决定。
+    #[prost(oneof = "video_parameter_config::ImageSize", tags = "7, 8")]
+    pub image_size: ::core::option::Option<video_parameter_config::ImageSize>,
+}
+/// Nested message and enum types in `VideoParameterConfig`.
+pub mod video_parameter_config {
+    /// 仅文生图提供一种尺寸模式；图片修改与角色生成的尺寸由工作流决定。
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum ImageSize {
+        #[prost(message, tag = "7")]
+        ImageDimensions(super::ImageDimensionsConfig),
+        #[prost(message, tag = "8")]
+        ImageResolution(super::ImageResolutionConfig),
+    }
 }
 /// 系统初始化的功能；客户端从 Function.List 获取 ID，不自行按名称推导。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct FunctionSummary {
     /// 固定值：video.img2vid（图生视频）、video.txt2vid（文生视频）。
+    /// 图片增量：image.txt2img（文生图）、image.edit_single（单图修改）、
+    /// image.edit_multiple（多图修改）、image.character（角色生成）。
     #[prost(string, optional, tag = "1")]
     pub function_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
@@ -1110,7 +1405,7 @@ pub struct ListFunctionsResp {
 /// 查询选中功能及其当前启用的工作流。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetFunctionReq {
-    /// 必须来自 Function.List：video.img2vid 或 video.txt2vid。
+    /// 必须来自 Function.List；功能 ID 的支持值及中文用途见 FunctionSummary.function_id。
     #[prost(string, optional, tag = "1")]
     pub function_id: ::core::option::Option<::prost::alloc::string::String>,
 }
@@ -1584,7 +1879,8 @@ pub struct WorkflowInputBinding {
     #[prost(string, optional, tag = "2")]
     pub input_name: ::core::option::Option<::prost::alloc::string::String>,
 }
-/// 唯一主输出 SaveVideo 节点，用于解析 history，不绑定 output_name。
+/// 唯一主输出节点：视频为 SaveVideo，图片为 SaveImage 或 SaveImageAdvanced。
+/// 用于解析 history，不绑定 output_name；每个任务必须只产生一个有效主文件。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct WorkflowOutputConfig {
     /// 主输出只绑定节点；后端按节点 class_type 使用固定 history 解析器。
@@ -1607,7 +1903,7 @@ pub struct WorkflowDecimalOptionInput {
     #[prost(message, optional, tag = "2")]
     pub values: ::core::option::Option<DecimalOptionConfig>,
 }
-/// 正整数范围及其写入节点，适用于视频时长。
+/// 正整数范围及其写入节点，适用于视频时长和文生图像素宽高。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct WorkflowIntRangeInput {
     #[prost(message, optional, tag = "1")]
@@ -1692,27 +1988,165 @@ pub struct TextToVideoWorkflowConfig {
     #[prost(message, optional, tag = "7")]
     pub frame_rate: ::core::option::Option<WorkflowFrameRateInput>,
 }
-/// 完整执行配置；功能配置必须与工作流归属一致，保存时不建立产物预占。
+/// 文生图像素宽高绑定；两者的范围与默认值均为 16 的倍数，校验阶段核对。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkflowImageDimensions {
+    #[prost(message, optional, tag = "1")]
+    pub width: ::core::option::Option<WorkflowIntRangeInput>,
+    #[prost(message, optional, tag = "2")]
+    pub height: ::core::option::Option<WorkflowIntRangeInput>,
+}
+/// 文生图 ResolutionSelector 的两项绑定；multiple 保留在工作流文件中。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkflowImageResolution {
+    #[prost(message, optional, tag = "1")]
+    pub aspect_ratio: ::core::option::Option<WorkflowStringOptionInput>,
+    #[prost(message, optional, tag = "2")]
+    pub megapixels: ::core::option::Option<WorkflowDecimalOptionInput>,
+}
+/// 固定图片接入，列表顺序对应用户图1、图2等；不复制节点或改变连线。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct WorkflowFixedImageInputs {
+    /// 当前 FLUX 多图配置两项 LoadImage.image；数量必须与 min/max 一致。
+    #[prost(message, repeated, tag = "1")]
+    pub bindings: ::prost::alloc::vec::Vec<WorkflowInputBinding>,
+}
+/// Qwen 可变图片接入，仅配置两个节点 ID，不保存既有加载节点有序列表。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkflowQwenDynamicImageInputs {
+    /// 克隆模板必须为具有 image 输入的 LoadImage；从用户第3张图片起复制。
+    #[prost(string, optional, tag = "1")]
+    pub template_node_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// TextEncodeQwenImage21；从 images.image_1/image_2 连线读取前两项加载节点并复用。
+    /// images.image_3 至实际图片数量按动态声明追加，不回写原始 API JSON。
+    #[prost(string, optional, tag = "2")]
+    pub encoder_node_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 多图数量与接入方式；FLUX 为固定 2/2，Qwen 为动态 2/10。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct WorkflowMultipleImageInputs {
+    #[prost(message, optional, tag = "1")]
+    pub count: ::core::option::Option<InputImagesConfig>,
+    #[prost(oneof = "workflow_multiple_image_inputs::Mode", tags = "2, 3")]
+    pub mode: ::core::option::Option<workflow_multiple_image_inputs::Mode>,
+}
+/// Nested message and enum types in `WorkflowMultipleImageInputs`.
+pub mod workflow_multiple_image_inputs {
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Mode {
+        #[prost(message, tag = "2")]
+        Fixed(super::WorkflowFixedImageInputs),
+        #[prost(message, tag = "3")]
+        QwenDynamic(super::WorkflowQwenDynamicImageInputs),
+    }
+}
+/// 文生图执行配置，对应 image.txt2img；用户提示词原文写入，后端随机生成 seed。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TextToImageWorkflowConfig {
+    #[prost(message, optional, tag = "1")]
+    pub prompt: ::core::option::Option<WorkflowInputBinding>,
+    /// 正向提示词 Unicode 码点上限，不是字节数。
+    #[prost(uint32, optional, tag = "2")]
+    pub prompt_max_length: ::core::option::Option<u32>,
+    /// 可选固定负向词；省略时保留工作流原值，不向普通用户开放。
+    #[prost(message, optional, tag = "3")]
+    pub negative_prompt: ::core::option::Option<WorkflowFixedTextInput>,
+    /// KSampler.seed 或 RandomNoise.noise_seed；每个新任务及试跑生成并保存一个值。
+    #[prost(message, optional, tag = "4")]
+    pub seed: ::core::option::Option<WorkflowInputBinding>,
+    #[prost(oneof = "text_to_image_workflow_config::Size", tags = "5, 6")]
+    pub size: ::core::option::Option<text_to_image_workflow_config::Size>,
+}
+/// Nested message and enum types in `TextToImageWorkflowConfig`.
+pub mod text_to_image_workflow_config {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Size {
+        #[prost(message, tag = "5")]
+        Dimensions(super::WorkflowImageDimensions),
+        #[prost(message, tag = "6")]
+        Resolution(super::WorkflowImageResolution),
+    }
+}
+/// 单图修改执行配置，对应 image.edit_single；不开放尺寸选择。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SingleImageEditWorkflowConfig {
+    #[prost(message, optional, tag = "1")]
+    pub input_image: ::core::option::Option<WorkflowInputBinding>,
+    #[prost(message, optional, tag = "2")]
+    pub prompt: ::core::option::Option<WorkflowInputBinding>,
+    /// 正向提示词 Unicode 码点上限。
+    #[prost(uint32, optional, tag = "3")]
+    pub prompt_max_length: ::core::option::Option<u32>,
+    /// FLUX 修改类使用 ConditioningZeroOut，省略此项；Qwen 可配置固定负向词。
+    #[prost(message, optional, tag = "4")]
+    pub negative_prompt: ::core::option::Option<WorkflowFixedTextInput>,
+    #[prost(message, optional, tag = "5")]
+    pub seed: ::core::option::Option<WorkflowInputBinding>,
+}
+/// 多图修改执行配置，对应 image.edit_multiple；输入顺序必须保留，不开放尺寸选择。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MultipleImageEditWorkflowConfig {
+    #[prost(message, optional, tag = "1")]
+    pub input_images: ::core::option::Option<WorkflowMultipleImageInputs>,
+    #[prost(message, optional, tag = "2")]
+    pub prompt: ::core::option::Option<WorkflowInputBinding>,
+    /// 正向提示词 Unicode 码点上限。
+    #[prost(uint32, optional, tag = "3")]
+    pub prompt_max_length: ::core::option::Option<u32>,
+    #[prost(message, optional, tag = "4")]
+    pub negative_prompt: ::core::option::Option<WorkflowFixedTextInput>,
+    #[prost(message, optional, tag = "5")]
+    pub seed: ::core::option::Option<WorkflowInputBinding>,
+}
+/// 角色生成执行配置，对应 image.character；用户提供一张角色参考图和正向提示词。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CharacterWorkflowConfig {
+    #[prost(message, optional, tag = "1")]
+    pub input_image: ::core::option::Option<WorkflowInputBinding>,
+    /// 用户正向提示词绑定；执行时写入用户原文，不拼接固定文本或回退示例值。
+    #[prost(message, optional, tag = "2")]
+    pub prompt: ::core::option::Option<WorkflowInputBinding>,
+    /// 可选管理员固定负向词，不向用户开放。
+    #[prost(message, optional, tag = "3")]
+    pub negative_prompt: ::core::option::Option<WorkflowFixedTextInput>,
+    #[prost(message, optional, tag = "4")]
+    pub seed: ::core::option::Option<WorkflowInputBinding>,
+    /// 用户正向提示词 Unicode 码点上限；Function.Get 的 parameterConfig.prompt 返回此长度。
+    #[prost(uint32, optional, tag = "5")]
+    pub prompt_max_length: ::core::option::Option<u32>,
+}
+/// 完整执行配置；功能配置必须与工作流归属一致，保存时不建立产物预占。
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct WorkflowExecutionConfig {
     #[prost(message, optional, tag = "3")]
     pub output: ::core::option::Option<WorkflowOutputConfig>,
     /// 从 ComfyUI 真正开始执行起计时，单位秒；必填正整数，不按模型名称硬编码。
     #[prost(uint32, optional, tag = "4")]
     pub execution_timeout_seconds: ::core::option::Option<u32>,
-    #[prost(oneof = "workflow_execution_config::FunctionConfig", tags = "1, 2")]
+    #[prost(
+        oneof = "workflow_execution_config::FunctionConfig",
+        tags = "1, 2, 5, 6, 7, 8"
+    )]
     pub function_config: ::core::option::Option<
         workflow_execution_config::FunctionConfig,
     >,
 }
 /// Nested message and enum types in `WorkflowExecutionConfig`.
 pub mod workflow_execution_config {
-    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum FunctionConfig {
         #[prost(message, tag = "1")]
         ImageToVideo(super::ImageToVideoWorkflowConfig),
         #[prost(message, tag = "2")]
         TextToVideo(super::TextToVideoWorkflowConfig),
+        #[prost(message, tag = "5")]
+        TextToImage(super::TextToImageWorkflowConfig),
+        #[prost(message, tag = "6")]
+        SingleImageEdit(super::SingleImageEditWorkflowConfig),
+        #[prost(message, tag = "7")]
+        MultipleImageEdit(super::MultipleImageEditWorkflowConfig),
+        #[prost(message, tag = "8")]
+        Character(super::CharacterWorkflowConfig),
     }
 }
 /// 静态校验发现的问题，节点和输入定位信息按需提供。
@@ -1880,7 +2314,7 @@ pub struct WorkflowFileMutationResp {
     pub workflow_id: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 更新说明或完整执行配置，至少提供一项；不接受工作流 JSON 字符串。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateWorkflowReq {
     #[prost(string, optional, tag = "1")]
     pub workflow_id: ::core::option::Option<::prost::alloc::string::String>,
@@ -1955,13 +2389,16 @@ pub struct TestWorkflowReq {
     /// 最近一次静态校验必须通过，无需预先启用。
     #[prost(string, optional, tag = "2")]
     pub workflow_id: ::core::option::Option<::prost::alloc::string::String>,
-    /// 本次真实试跑的正向提示词，按工作流 Unicode 码点上限校验。
+    /// 六类功能均必填正向提示词，角色生成同样使用本次提交的原文；长度按工作流配置校验。
     #[prost(string, optional, tag = "3")]
     pub prompt: ::core::option::Option<::prost::alloc::string::String>,
-    /// 图生视频必须提交管理员本人的可用 JPEG/PNG 资产；文生视频必须省略。
-    /// 分辨率、时长和帧率统一使用工作流默认值或固定值。
+    /// 图生视频、单图修改、角色生成使用管理员本人的可用 JPEG/PNG 资产；其他功能省略。
+    /// 视频分辨率、时长和帧率以及文生图尺寸使用工作流默认值或固定值。
     #[prost(string, optional, tag = "4")]
     pub input_asset_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 仅多图修改使用，提交顺序即图1至图N；FLUX 为2张，Qwen 为2～10张。
+    #[prost(string, repeated, tag = "5")]
+    pub input_asset_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// 返回受理的试跑任务 ID；试跑成功保存并结算后才自动启用草稿，不支持恢复保存。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]

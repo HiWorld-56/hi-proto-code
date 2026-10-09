@@ -208,6 +208,116 @@ final $typed_data.Uint8List frameRateConfigDescriptor = $convert.base64Decode(
     'dlQ29uZmlnQgSQtRgBSABSCnNlbGVjdGFibGUSLgoLZml4ZWRfdmFsdWUYAiABKAVCC7pIBBoC'
     'IACQtRgBSABSCmZpeGVkVmFsdWU6BJi1GAFCDQoEbW9kZRIFukgCCAE=');
 
+@$core.Deprecated('Use inputImagesConfigDescriptor instead')
+const InputImagesConfig$json = {
+  '1': 'InputImagesConfig',
+  '2': [
+    {
+      '1': 'min',
+      '3': 1,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 0,
+      '10': 'min',
+      '17': true
+    },
+    {
+      '1': 'max',
+      '3': 2,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 1,
+      '10': 'max',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_min'},
+    {'1': '_max'},
+  ],
+};
+
+/// Descriptor for `InputImagesConfig`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List inputImagesConfigDescriptor = $convert.base64Decode(
+    'ChFJbnB1dEltYWdlc0NvbmZpZxIlCgNtaW4YASABKA1CDrpIB8gBASoCIACQtRgBSABSA21pbo'
+    'gBARInCgNtYXgYAiABKA1CELpICcgBASoEGAogAJC1GAFIAVIDbWF4iAEBOk26SEYaRAoTaW5w'
+    'dXRfaW1hZ2VzLmJvdW5kcxIXbWluIG11c3Qgbm90IGV4Y2VlZCBtYXgaFHRoaXMubWluIDw9IH'
+    'RoaXMubWF4mLUYAUIGCgRfbWluQgYKBF9tYXg=');
+
+@$core.Deprecated('Use imageDimensionsConfigDescriptor instead')
+const ImageDimensionsConfig$json = {
+  '1': 'ImageDimensionsConfig',
+  '2': [
+    {
+      '1': 'width',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.IntRangeConfig',
+      '8': {},
+      '10': 'width'
+    },
+    {
+      '1': 'height',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.IntRangeConfig',
+      '8': {},
+      '10': 'height'
+    },
+  ],
+  '7': {},
+};
+
+/// Descriptor for `ImageDimensionsConfig`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List imageDimensionsConfigDescriptor = $convert.base64Decode(
+    'ChVJbWFnZURpbWVuc2lvbnNDb25maWcSOgoFd2lkdGgYASABKAsyGC5oaS5tZWRpYS5JbnRSYW'
+    '5nZUNvbmZpZ0IKukgDyAEBkLUYAVIFd2lkdGgSPAoGaGVpZ2h0GAIgASgLMhguaGkubWVkaWEu'
+    'SW50UmFuZ2VDb25maWdCCrpIA8gBAZC1GAFSBmhlaWdodDq7ArpIswIasAIKGmltYWdlX2RpbW'
+    'Vuc2lvbnMuYWxpZ25tZW50Ejx3aWR0aCBhbmQgaGVpZ2h0IGJvdW5kcyBhbmQgZGVmYXVsdHMg'
+    'bXVzdCBiZSBtdWx0aXBsZXMgb2YgMTYa0wF0aGlzLndpZHRoLm1pbl92YWx1ZSAlIDE2ID09ID'
+    'AgJiYgdGhpcy53aWR0aC5tYXhfdmFsdWUgJSAxNiA9PSAwICYmIHRoaXMud2lkdGguZGVmYXVs'
+    'dF92YWx1ZSAlIDE2ID09IDAgJiYgdGhpcy5oZWlnaHQubWluX3ZhbHVlICUgMTYgPT0gMCAmJi'
+    'B0aGlzLmhlaWdodC5tYXhfdmFsdWUgJSAxNiA9PSAwICYmIHRoaXMuaGVpZ2h0LmRlZmF1bHRf'
+    'dmFsdWUgJSAxNiA9PSAwmLUYAQ==');
+
+@$core.Deprecated('Use imageResolutionConfigDescriptor instead')
+const ImageResolutionConfig$json = {
+  '1': 'ImageResolutionConfig',
+  '2': [
+    {
+      '1': 'aspect_ratio',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.StringOptionConfig',
+      '8': {},
+      '10': 'aspectRatio'
+    },
+    {
+      '1': 'megapixels',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.DecimalOptionConfig',
+      '8': {},
+      '10': 'megapixels'
+    },
+  ],
+  '7': {},
+};
+
+/// Descriptor for `ImageResolutionConfig`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List imageResolutionConfigDescriptor = $convert.base64Decode(
+    'ChVJbWFnZVJlc29sdXRpb25Db25maWcSSwoMYXNwZWN0X3JhdGlvGAEgASgLMhwuaGkubWVkaW'
+    'EuU3RyaW5nT3B0aW9uQ29uZmlnQgq6SAPIAQGQtRgBUgthc3BlY3RSYXRpbxJJCgptZWdhcGl4'
+    'ZWxzGAIgASgLMh0uaGkubWVkaWEuRGVjaW1hbE9wdGlvbkNvbmZpZ0IKukgDyAEBkLUYAVIKbW'
+    'VnYXBpeGVsczoEmLUYAQ==');
+
 @$core.Deprecated('Use videoParameterConfigDescriptor instead')
 const VideoParameterConfig$json = {
   '1': 'VideoParameterConfig',
@@ -257,8 +367,40 @@ const VideoParameterConfig$json = {
       '8': {},
       '10': 'frameRate'
     },
+    {
+      '1': 'input_images',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.InputImagesConfig',
+      '8': {},
+      '10': 'inputImages'
+    },
+    {
+      '1': 'image_dimensions',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.ImageDimensionsConfig',
+      '8': {},
+      '9': 0,
+      '10': 'imageDimensions'
+    },
+    {
+      '1': 'image_resolution',
+      '3': 8,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.ImageResolutionConfig',
+      '8': {},
+      '9': 0,
+      '10': 'imageResolution'
+    },
   ],
   '7': {},
+  '8': [
+    {'1': 'image_size'},
+  ],
 };
 
 /// Descriptor for `VideoParameterConfig`. Decode as a `google.protobuf.DescriptorProto`.
@@ -269,7 +411,12 @@ final $typed_data.Uint8List videoParameterConfigDescriptor = $convert.base64Deco
     '5oaS5tZWRpYS5EZWNpbWFsT3B0aW9uQ29uZmlnQgSQtRgBUgptZWdhcGl4ZWxzEkkKEGR1cmF0'
     'aW9uX3NlY29uZHMYBCABKAsyGC5oaS5tZWRpYS5JbnRSYW5nZUNvbmZpZ0IEkLUYAVIPZHVyYX'
     'Rpb25TZWNvbmRzEj4KCmZyYW1lX3JhdGUYBSABKAsyGS5oaS5tZWRpYS5GcmFtZVJhdGVDb25m'
-    'aWdCBJC1GAFSCWZyYW1lUmF0ZToEmLUYAQ==');
+    'aWdCBJC1GAFSCWZyYW1lUmF0ZRJECgxpbnB1dF9pbWFnZXMYBiABKAsyGy5oaS5tZWRpYS5Jbn'
+    'B1dEltYWdlc0NvbmZpZ0IEkLUYAVILaW5wdXRJbWFnZXMSUgoQaW1hZ2VfZGltZW5zaW9ucxgH'
+    'IAEoCzIfLmhpLm1lZGlhLkltYWdlRGltZW5zaW9uc0NvbmZpZ0IEkLUYAUgAUg9pbWFnZURpbW'
+    'Vuc2lvbnMSUgoQaW1hZ2VfcmVzb2x1dGlvbhgIIAEoCzIfLmhpLm1lZGlhLkltYWdlUmVzb2x1'
+    'dGlvbkNvbmZpZ0IEkLUYAUgAUg9pbWFnZVJlc29sdXRpb246BJi1GAFCDAoKaW1hZ2Vfc2l6ZQ'
+    '==');
 
 @$core.Deprecated('Use functionSummaryDescriptor instead')
 const FunctionSummary$json = {

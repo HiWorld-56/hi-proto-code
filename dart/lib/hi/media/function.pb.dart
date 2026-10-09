@@ -365,7 +365,227 @@ class FrameRateConfig extends $pb.GeneratedMessage {
   void clearFixedValue() => $_clearField(2);
 }
 
-/// 工作流向普通用户开放的视频参数，不包含管理员固定输入。
+/// 输入图片数量，含 min/max 边界；多图列表始终有序，不另设 ordered 字段。
+class InputImagesConfig extends $pb.GeneratedMessage {
+  factory InputImagesConfig({
+    $core.int? min,
+    $core.int? max,
+  }) {
+    final result = create();
+    if (min != null) result.min = min;
+    if (max != null) result.max = max;
+    return result;
+  }
+
+  InputImagesConfig._();
+
+  factory InputImagesConfig.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory InputImagesConfig.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'InputImagesConfig',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aI(1, _omitFieldNames ? '' : 'min', fieldType: $pb.PbFieldType.OU3)
+    ..aI(2, _omitFieldNames ? '' : 'max', fieldType: $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  InputImagesConfig clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  InputImagesConfig copyWith(void Function(InputImagesConfig) updates) =>
+      super.copyWith((message) => updates(message as InputImagesConfig))
+          as InputImagesConfig;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static InputImagesConfig create() => InputImagesConfig._();
+  @$core.override
+  InputImagesConfig createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static InputImagesConfig getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<InputImagesConfig>(create);
+  static InputImagesConfig? _defaultInstance;
+
+  /// 单图修改与角色生成为 1；多图修改按工作流配置，当前最少 2 张。
+  @$pb.TagNumber(1)
+  $core.int get min => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set min($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasMin() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearMin() => $_clearField(1);
+
+  /// FLUX 多图为 2，Qwen 多图最多 10；创建时由后端强校验。
+  @$pb.TagNumber(2)
+  $core.int get max => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set max($core.int value) => $_setUnsignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMax() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMax() => $_clearField(2);
+}
+
+/// 文生图宽高范围与默认值，单位像素；min/max/default 均须为 16 的倍数。
+class ImageDimensionsConfig extends $pb.GeneratedMessage {
+  factory ImageDimensionsConfig({
+    IntRangeConfig? width,
+    IntRangeConfig? height,
+  }) {
+    final result = create();
+    if (width != null) result.width = width;
+    if (height != null) result.height = height;
+    return result;
+  }
+
+  ImageDimensionsConfig._();
+
+  factory ImageDimensionsConfig.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ImageDimensionsConfig.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ImageDimensionsConfig',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOM<IntRangeConfig>(1, _omitFieldNames ? '' : 'width',
+        subBuilder: IntRangeConfig.create)
+    ..aOM<IntRangeConfig>(2, _omitFieldNames ? '' : 'height',
+        subBuilder: IntRangeConfig.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ImageDimensionsConfig clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ImageDimensionsConfig copyWith(
+          void Function(ImageDimensionsConfig) updates) =>
+      super.copyWith((message) => updates(message as ImageDimensionsConfig))
+          as ImageDimensionsConfig;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ImageDimensionsConfig create() => ImageDimensionsConfig._();
+  @$core.override
+  ImageDimensionsConfig createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ImageDimensionsConfig getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ImageDimensionsConfig>(create);
+  static ImageDimensionsConfig? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  IntRangeConfig get width => $_getN(0);
+  @$pb.TagNumber(1)
+  set width(IntRangeConfig value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasWidth() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearWidth() => $_clearField(1);
+  @$pb.TagNumber(1)
+  IntRangeConfig ensureWidth() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  IntRangeConfig get height => $_getN(1);
+  @$pb.TagNumber(2)
+  set height(IntRangeConfig value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasHeight() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearHeight() => $_clearField(2);
+  @$pb.TagNumber(2)
+  IntRangeConfig ensureHeight() => $_ensure(1);
+}
+
+/// 文生图的 ResolutionSelector 参数，宽高比传完整选项，像素量传十进制字符串。
+class ImageResolutionConfig extends $pb.GeneratedMessage {
+  factory ImageResolutionConfig({
+    StringOptionConfig? aspectRatio,
+    DecimalOptionConfig? megapixels,
+  }) {
+    final result = create();
+    if (aspectRatio != null) result.aspectRatio = aspectRatio;
+    if (megapixels != null) result.megapixels = megapixels;
+    return result;
+  }
+
+  ImageResolutionConfig._();
+
+  factory ImageResolutionConfig.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ImageResolutionConfig.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ImageResolutionConfig',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOM<StringOptionConfig>(1, _omitFieldNames ? '' : 'aspectRatio',
+        subBuilder: StringOptionConfig.create)
+    ..aOM<DecimalOptionConfig>(2, _omitFieldNames ? '' : 'megapixels',
+        subBuilder: DecimalOptionConfig.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ImageResolutionConfig clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ImageResolutionConfig copyWith(
+          void Function(ImageResolutionConfig) updates) =>
+      super.copyWith((message) => updates(message as ImageResolutionConfig))
+          as ImageResolutionConfig;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ImageResolutionConfig create() => ImageResolutionConfig._();
+  @$core.override
+  ImageResolutionConfig createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ImageResolutionConfig getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ImageResolutionConfig>(create);
+  static ImageResolutionConfig? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  StringOptionConfig get aspectRatio => $_getN(0);
+  @$pb.TagNumber(1)
+  set aspectRatio(StringOptionConfig value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAspectRatio() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAspectRatio() => $_clearField(1);
+  @$pb.TagNumber(1)
+  StringOptionConfig ensureAspectRatio() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  DecimalOptionConfig get megapixels => $_getN(1);
+  @$pb.TagNumber(2)
+  set megapixels(DecimalOptionConfig value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMegapixels() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMegapixels() => $_clearField(2);
+  @$pb.TagNumber(2)
+  DecimalOptionConfig ensureMegapixels() => $_ensure(1);
+}
+
+enum VideoParameterConfig_ImageSize { imageDimensions, imageResolution, notSet }
+
+/// 工作流向普通用户开放的参数，不包含节点或管理员固定输入。
+/// 为兼容已发布协议保留历史消息名；字段 1～5 是视频参数，图片扩展追加字段。
 class VideoParameterConfig extends $pb.GeneratedMessage {
   factory VideoParameterConfig({
     TextLimit? prompt,
@@ -373,6 +593,9 @@ class VideoParameterConfig extends $pb.GeneratedMessage {
     DecimalOptionConfig? megapixels,
     IntRangeConfig? durationSeconds,
     FrameRateConfig? frameRate,
+    InputImagesConfig? inputImages,
+    ImageDimensionsConfig? imageDimensions,
+    ImageResolutionConfig? imageResolution,
   }) {
     final result = create();
     if (prompt != null) result.prompt = prompt;
@@ -380,6 +603,9 @@ class VideoParameterConfig extends $pb.GeneratedMessage {
     if (megapixels != null) result.megapixels = megapixels;
     if (durationSeconds != null) result.durationSeconds = durationSeconds;
     if (frameRate != null) result.frameRate = frameRate;
+    if (inputImages != null) result.inputImages = inputImages;
+    if (imageDimensions != null) result.imageDimensions = imageDimensions;
+    if (imageResolution != null) result.imageResolution = imageResolution;
     return result;
   }
 
@@ -392,10 +618,17 @@ class VideoParameterConfig extends $pb.GeneratedMessage {
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
+  static const $core.Map<$core.int, VideoParameterConfig_ImageSize>
+      _VideoParameterConfig_ImageSizeByTag = {
+    7: VideoParameterConfig_ImageSize.imageDimensions,
+    8: VideoParameterConfig_ImageSize.imageResolution,
+    0: VideoParameterConfig_ImageSize.notSet
+  };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'VideoParameterConfig',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
+    ..oo(0, [7, 8])
     ..aOM<TextLimit>(1, _omitFieldNames ? '' : 'prompt',
         subBuilder: TextLimit.create)
     ..aOM<StringOptionConfig>(2, _omitFieldNames ? '' : 'aspectRatio',
@@ -406,6 +639,12 @@ class VideoParameterConfig extends $pb.GeneratedMessage {
         subBuilder: IntRangeConfig.create)
     ..aOM<FrameRateConfig>(5, _omitFieldNames ? '' : 'frameRate',
         subBuilder: FrameRateConfig.create)
+    ..aOM<InputImagesConfig>(6, _omitFieldNames ? '' : 'inputImages',
+        subBuilder: InputImagesConfig.create)
+    ..aOM<ImageDimensionsConfig>(7, _omitFieldNames ? '' : 'imageDimensions',
+        subBuilder: ImageDimensionsConfig.create)
+    ..aOM<ImageResolutionConfig>(8, _omitFieldNames ? '' : 'imageResolution',
+        subBuilder: ImageResolutionConfig.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -426,6 +665,14 @@ class VideoParameterConfig extends $pb.GeneratedMessage {
   static VideoParameterConfig getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<VideoParameterConfig>(create);
   static VideoParameterConfig? _defaultInstance;
+
+  @$pb.TagNumber(7)
+  @$pb.TagNumber(8)
+  VideoParameterConfig_ImageSize whichImageSize() =>
+      _VideoParameterConfig_ImageSizeByTag[$_whichOneof(0)]!;
+  @$pb.TagNumber(7)
+  @$pb.TagNumber(8)
+  void clearImageSize() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
   TextLimit get prompt => $_getN(0);
@@ -481,6 +728,40 @@ class VideoParameterConfig extends $pb.GeneratedMessage {
   void clearFrameRate() => $_clearField(5);
   @$pb.TagNumber(5)
   FrameRateConfig ensureFrameRate() => $_ensure(4);
+
+  /// 单图修改、角色生成及多图修改提供；文生图省略。提交顺序即图片接入顺序。
+  @$pb.TagNumber(6)
+  InputImagesConfig get inputImages => $_getN(5);
+  @$pb.TagNumber(6)
+  set inputImages(InputImagesConfig value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasInputImages() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearInputImages() => $_clearField(6);
+  @$pb.TagNumber(6)
+  InputImagesConfig ensureInputImages() => $_ensure(5);
+
+  @$pb.TagNumber(7)
+  ImageDimensionsConfig get imageDimensions => $_getN(6);
+  @$pb.TagNumber(7)
+  set imageDimensions(ImageDimensionsConfig value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasImageDimensions() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearImageDimensions() => $_clearField(7);
+  @$pb.TagNumber(7)
+  ImageDimensionsConfig ensureImageDimensions() => $_ensure(6);
+
+  @$pb.TagNumber(8)
+  ImageResolutionConfig get imageResolution => $_getN(7);
+  @$pb.TagNumber(8)
+  set imageResolution(ImageResolutionConfig value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasImageResolution() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearImageResolution() => $_clearField(8);
+  @$pb.TagNumber(8)
+  ImageResolutionConfig ensureImageResolution() => $_ensure(7);
 }
 
 /// 系统初始化的功能；客户端从 Function.List 获取 ID，不自行按名称推导。
@@ -532,6 +813,8 @@ class FunctionSummary extends $pb.GeneratedMessage {
   static FunctionSummary? _defaultInstance;
 
   /// 固定值：video.img2vid（图生视频）、video.txt2vid（文生视频）。
+  /// 图片增量：image.txt2img（文生图）、image.edit_single（单图修改）、
+  /// image.edit_multiple（多图修改）、image.character（角色生成）。
   @$pb.TagNumber(1)
   $core.String get functionId => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -646,7 +929,7 @@ class GetFunctionReq extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<GetFunctionReq>(create);
   static GetFunctionReq? _defaultInstance;
 
-  /// 必须来自 Function.List：video.img2vid 或 video.txt2vid。
+  /// 必须来自 Function.List；功能 ID 的支持值及中文用途见 FunctionSummary.function_id。
   @$pb.TagNumber(1)
   $core.String get functionId => $_getSZ(0);
   @$pb.TagNumber(1)

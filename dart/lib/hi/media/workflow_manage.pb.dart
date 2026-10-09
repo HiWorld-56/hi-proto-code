@@ -94,7 +94,8 @@ class WorkflowInputBinding extends $pb.GeneratedMessage {
   void clearInputName() => $_clearField(2);
 }
 
-/// 唯一主输出 SaveVideo 节点，用于解析 history，不绑定 output_name。
+/// 唯一主输出节点：视频为 SaveVideo，图片为 SaveImage 或 SaveImageAdvanced。
+/// 用于解析 history，不绑定 output_name；每个任务必须只产生一个有效主文件。
 class WorkflowOutputConfig extends $pb.GeneratedMessage {
   factory WorkflowOutputConfig({
     $core.String? nodeId,
@@ -299,7 +300,7 @@ class WorkflowDecimalOptionInput extends $pb.GeneratedMessage {
   $1.DecimalOptionConfig ensureValues() => $_ensure(1);
 }
 
-/// 正整数范围及其写入节点，适用于视频时长。
+/// 正整数范围及其写入节点，适用于视频时长和文生图像素宽高。
 class WorkflowIntRangeInput extends $pb.GeneratedMessage {
   factory WorkflowIntRangeInput({
     WorkflowInputBinding? binding,
@@ -925,9 +926,909 @@ class TextToVideoWorkflowConfig extends $pb.GeneratedMessage {
   WorkflowFrameRateInput ensureFrameRate() => $_ensure(6);
 }
 
+/// 文生图像素宽高绑定；两者的范围与默认值均为 16 的倍数，校验阶段核对。
+class WorkflowImageDimensions extends $pb.GeneratedMessage {
+  factory WorkflowImageDimensions({
+    WorkflowIntRangeInput? width,
+    WorkflowIntRangeInput? height,
+  }) {
+    final result = create();
+    if (width != null) result.width = width;
+    if (height != null) result.height = height;
+    return result;
+  }
+
+  WorkflowImageDimensions._();
+
+  factory WorkflowImageDimensions.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory WorkflowImageDimensions.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'WorkflowImageDimensions',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOM<WorkflowIntRangeInput>(1, _omitFieldNames ? '' : 'width',
+        subBuilder: WorkflowIntRangeInput.create)
+    ..aOM<WorkflowIntRangeInput>(2, _omitFieldNames ? '' : 'height',
+        subBuilder: WorkflowIntRangeInput.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  WorkflowImageDimensions clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  WorkflowImageDimensions copyWith(
+          void Function(WorkflowImageDimensions) updates) =>
+      super.copyWith((message) => updates(message as WorkflowImageDimensions))
+          as WorkflowImageDimensions;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static WorkflowImageDimensions create() => WorkflowImageDimensions._();
+  @$core.override
+  WorkflowImageDimensions createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static WorkflowImageDimensions getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<WorkflowImageDimensions>(create);
+  static WorkflowImageDimensions? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  WorkflowIntRangeInput get width => $_getN(0);
+  @$pb.TagNumber(1)
+  set width(WorkflowIntRangeInput value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasWidth() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearWidth() => $_clearField(1);
+  @$pb.TagNumber(1)
+  WorkflowIntRangeInput ensureWidth() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  WorkflowIntRangeInput get height => $_getN(1);
+  @$pb.TagNumber(2)
+  set height(WorkflowIntRangeInput value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasHeight() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearHeight() => $_clearField(2);
+  @$pb.TagNumber(2)
+  WorkflowIntRangeInput ensureHeight() => $_ensure(1);
+}
+
+/// 文生图 ResolutionSelector 的两项绑定；multiple 保留在工作流文件中。
+class WorkflowImageResolution extends $pb.GeneratedMessage {
+  factory WorkflowImageResolution({
+    WorkflowStringOptionInput? aspectRatio,
+    WorkflowDecimalOptionInput? megapixels,
+  }) {
+    final result = create();
+    if (aspectRatio != null) result.aspectRatio = aspectRatio;
+    if (megapixels != null) result.megapixels = megapixels;
+    return result;
+  }
+
+  WorkflowImageResolution._();
+
+  factory WorkflowImageResolution.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory WorkflowImageResolution.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'WorkflowImageResolution',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOM<WorkflowStringOptionInput>(1, _omitFieldNames ? '' : 'aspectRatio',
+        subBuilder: WorkflowStringOptionInput.create)
+    ..aOM<WorkflowDecimalOptionInput>(2, _omitFieldNames ? '' : 'megapixels',
+        subBuilder: WorkflowDecimalOptionInput.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  WorkflowImageResolution clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  WorkflowImageResolution copyWith(
+          void Function(WorkflowImageResolution) updates) =>
+      super.copyWith((message) => updates(message as WorkflowImageResolution))
+          as WorkflowImageResolution;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static WorkflowImageResolution create() => WorkflowImageResolution._();
+  @$core.override
+  WorkflowImageResolution createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static WorkflowImageResolution getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<WorkflowImageResolution>(create);
+  static WorkflowImageResolution? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  WorkflowStringOptionInput get aspectRatio => $_getN(0);
+  @$pb.TagNumber(1)
+  set aspectRatio(WorkflowStringOptionInput value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAspectRatio() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAspectRatio() => $_clearField(1);
+  @$pb.TagNumber(1)
+  WorkflowStringOptionInput ensureAspectRatio() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  WorkflowDecimalOptionInput get megapixels => $_getN(1);
+  @$pb.TagNumber(2)
+  set megapixels(WorkflowDecimalOptionInput value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMegapixels() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMegapixels() => $_clearField(2);
+  @$pb.TagNumber(2)
+  WorkflowDecimalOptionInput ensureMegapixels() => $_ensure(1);
+}
+
+/// 固定图片接入，列表顺序对应用户图1、图2等；不复制节点或改变连线。
+class WorkflowFixedImageInputs extends $pb.GeneratedMessage {
+  factory WorkflowFixedImageInputs({
+    $core.Iterable<WorkflowInputBinding>? bindings,
+  }) {
+    final result = create();
+    if (bindings != null) result.bindings.addAll(bindings);
+    return result;
+  }
+
+  WorkflowFixedImageInputs._();
+
+  factory WorkflowFixedImageInputs.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory WorkflowFixedImageInputs.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'WorkflowFixedImageInputs',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..pPM<WorkflowInputBinding>(1, _omitFieldNames ? '' : 'bindings',
+        subBuilder: WorkflowInputBinding.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  WorkflowFixedImageInputs clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  WorkflowFixedImageInputs copyWith(
+          void Function(WorkflowFixedImageInputs) updates) =>
+      super.copyWith((message) => updates(message as WorkflowFixedImageInputs))
+          as WorkflowFixedImageInputs;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static WorkflowFixedImageInputs create() => WorkflowFixedImageInputs._();
+  @$core.override
+  WorkflowFixedImageInputs createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static WorkflowFixedImageInputs getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<WorkflowFixedImageInputs>(create);
+  static WorkflowFixedImageInputs? _defaultInstance;
+
+  /// 当前 FLUX 多图配置两项 LoadImage.image；数量必须与 min/max 一致。
+  @$pb.TagNumber(1)
+  $pb.PbList<WorkflowInputBinding> get bindings => $_getList(0);
+}
+
+/// Qwen 可变图片接入，仅配置两个节点 ID，不保存既有加载节点有序列表。
+class WorkflowQwenDynamicImageInputs extends $pb.GeneratedMessage {
+  factory WorkflowQwenDynamicImageInputs({
+    $core.String? templateNodeId,
+    $core.String? encoderNodeId,
+  }) {
+    final result = create();
+    if (templateNodeId != null) result.templateNodeId = templateNodeId;
+    if (encoderNodeId != null) result.encoderNodeId = encoderNodeId;
+    return result;
+  }
+
+  WorkflowQwenDynamicImageInputs._();
+
+  factory WorkflowQwenDynamicImageInputs.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory WorkflowQwenDynamicImageInputs.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'WorkflowQwenDynamicImageInputs',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'templateNodeId')
+    ..aOS(2, _omitFieldNames ? '' : 'encoderNodeId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  WorkflowQwenDynamicImageInputs clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  WorkflowQwenDynamicImageInputs copyWith(
+          void Function(WorkflowQwenDynamicImageInputs) updates) =>
+      super.copyWith(
+              (message) => updates(message as WorkflowQwenDynamicImageInputs))
+          as WorkflowQwenDynamicImageInputs;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static WorkflowQwenDynamicImageInputs create() =>
+      WorkflowQwenDynamicImageInputs._();
+  @$core.override
+  WorkflowQwenDynamicImageInputs createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static WorkflowQwenDynamicImageInputs getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<WorkflowQwenDynamicImageInputs>(create);
+  static WorkflowQwenDynamicImageInputs? _defaultInstance;
+
+  /// 克隆模板必须为具有 image 输入的 LoadImage；从用户第3张图片起复制。
+  @$pb.TagNumber(1)
+  $core.String get templateNodeId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set templateNodeId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasTemplateNodeId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTemplateNodeId() => $_clearField(1);
+
+  /// TextEncodeQwenImage21；从 images.image_1/image_2 连线读取前两项加载节点并复用。
+  /// images.image_3 至实际图片数量按动态声明追加，不回写原始 API JSON。
+  @$pb.TagNumber(2)
+  $core.String get encoderNodeId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set encoderNodeId($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasEncoderNodeId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearEncoderNodeId() => $_clearField(2);
+}
+
+enum WorkflowMultipleImageInputs_Mode { fixed, qwenDynamic, notSet }
+
+/// 多图数量与接入方式；FLUX 为固定 2/2，Qwen 为动态 2/10。
+class WorkflowMultipleImageInputs extends $pb.GeneratedMessage {
+  factory WorkflowMultipleImageInputs({
+    $1.InputImagesConfig? count,
+    WorkflowFixedImageInputs? fixed,
+    WorkflowQwenDynamicImageInputs? qwenDynamic,
+  }) {
+    final result = create();
+    if (count != null) result.count = count;
+    if (fixed != null) result.fixed = fixed;
+    if (qwenDynamic != null) result.qwenDynamic = qwenDynamic;
+    return result;
+  }
+
+  WorkflowMultipleImageInputs._();
+
+  factory WorkflowMultipleImageInputs.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory WorkflowMultipleImageInputs.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, WorkflowMultipleImageInputs_Mode>
+      _WorkflowMultipleImageInputs_ModeByTag = {
+    2: WorkflowMultipleImageInputs_Mode.fixed,
+    3: WorkflowMultipleImageInputs_Mode.qwenDynamic,
+    0: WorkflowMultipleImageInputs_Mode.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'WorkflowMultipleImageInputs',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..oo(0, [2, 3])
+    ..aOM<$1.InputImagesConfig>(1, _omitFieldNames ? '' : 'count',
+        subBuilder: $1.InputImagesConfig.create)
+    ..aOM<WorkflowFixedImageInputs>(2, _omitFieldNames ? '' : 'fixed',
+        subBuilder: WorkflowFixedImageInputs.create)
+    ..aOM<WorkflowQwenDynamicImageInputs>(
+        3, _omitFieldNames ? '' : 'qwenDynamic',
+        subBuilder: WorkflowQwenDynamicImageInputs.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  WorkflowMultipleImageInputs clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  WorkflowMultipleImageInputs copyWith(
+          void Function(WorkflowMultipleImageInputs) updates) =>
+      super.copyWith(
+              (message) => updates(message as WorkflowMultipleImageInputs))
+          as WorkflowMultipleImageInputs;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static WorkflowMultipleImageInputs create() =>
+      WorkflowMultipleImageInputs._();
+  @$core.override
+  WorkflowMultipleImageInputs createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static WorkflowMultipleImageInputs getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<WorkflowMultipleImageInputs>(create);
+  static WorkflowMultipleImageInputs? _defaultInstance;
+
+  @$pb.TagNumber(2)
+  @$pb.TagNumber(3)
+  WorkflowMultipleImageInputs_Mode whichMode() =>
+      _WorkflowMultipleImageInputs_ModeByTag[$_whichOneof(0)]!;
+  @$pb.TagNumber(2)
+  @$pb.TagNumber(3)
+  void clearMode() => $_clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  $1.InputImagesConfig get count => $_getN(0);
+  @$pb.TagNumber(1)
+  set count($1.InputImagesConfig value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasCount() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCount() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $1.InputImagesConfig ensureCount() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  WorkflowFixedImageInputs get fixed => $_getN(1);
+  @$pb.TagNumber(2)
+  set fixed(WorkflowFixedImageInputs value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasFixed() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearFixed() => $_clearField(2);
+  @$pb.TagNumber(2)
+  WorkflowFixedImageInputs ensureFixed() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  WorkflowQwenDynamicImageInputs get qwenDynamic => $_getN(2);
+  @$pb.TagNumber(3)
+  set qwenDynamic(WorkflowQwenDynamicImageInputs value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasQwenDynamic() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearQwenDynamic() => $_clearField(3);
+  @$pb.TagNumber(3)
+  WorkflowQwenDynamicImageInputs ensureQwenDynamic() => $_ensure(2);
+}
+
+enum TextToImageWorkflowConfig_Size { dimensions, resolution, notSet }
+
+/// 文生图执行配置，对应 image.txt2img；用户提示词原文写入，后端随机生成 seed。
+class TextToImageWorkflowConfig extends $pb.GeneratedMessage {
+  factory TextToImageWorkflowConfig({
+    WorkflowInputBinding? prompt,
+    $core.int? promptMaxLength,
+    WorkflowFixedTextInput? negativePrompt,
+    WorkflowInputBinding? seed,
+    WorkflowImageDimensions? dimensions,
+    WorkflowImageResolution? resolution,
+  }) {
+    final result = create();
+    if (prompt != null) result.prompt = prompt;
+    if (promptMaxLength != null) result.promptMaxLength = promptMaxLength;
+    if (negativePrompt != null) result.negativePrompt = negativePrompt;
+    if (seed != null) result.seed = seed;
+    if (dimensions != null) result.dimensions = dimensions;
+    if (resolution != null) result.resolution = resolution;
+    return result;
+  }
+
+  TextToImageWorkflowConfig._();
+
+  factory TextToImageWorkflowConfig.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory TextToImageWorkflowConfig.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, TextToImageWorkflowConfig_Size>
+      _TextToImageWorkflowConfig_SizeByTag = {
+    5: TextToImageWorkflowConfig_Size.dimensions,
+    6: TextToImageWorkflowConfig_Size.resolution,
+    0: TextToImageWorkflowConfig_Size.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'TextToImageWorkflowConfig',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..oo(0, [5, 6])
+    ..aOM<WorkflowInputBinding>(1, _omitFieldNames ? '' : 'prompt',
+        subBuilder: WorkflowInputBinding.create)
+    ..aI(2, _omitFieldNames ? '' : 'promptMaxLength',
+        fieldType: $pb.PbFieldType.OU3)
+    ..aOM<WorkflowFixedTextInput>(3, _omitFieldNames ? '' : 'negativePrompt',
+        subBuilder: WorkflowFixedTextInput.create)
+    ..aOM<WorkflowInputBinding>(4, _omitFieldNames ? '' : 'seed',
+        subBuilder: WorkflowInputBinding.create)
+    ..aOM<WorkflowImageDimensions>(5, _omitFieldNames ? '' : 'dimensions',
+        subBuilder: WorkflowImageDimensions.create)
+    ..aOM<WorkflowImageResolution>(6, _omitFieldNames ? '' : 'resolution',
+        subBuilder: WorkflowImageResolution.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  TextToImageWorkflowConfig clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  TextToImageWorkflowConfig copyWith(
+          void Function(TextToImageWorkflowConfig) updates) =>
+      super.copyWith((message) => updates(message as TextToImageWorkflowConfig))
+          as TextToImageWorkflowConfig;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static TextToImageWorkflowConfig create() => TextToImageWorkflowConfig._();
+  @$core.override
+  TextToImageWorkflowConfig createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static TextToImageWorkflowConfig getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<TextToImageWorkflowConfig>(create);
+  static TextToImageWorkflowConfig? _defaultInstance;
+
+  @$pb.TagNumber(5)
+  @$pb.TagNumber(6)
+  TextToImageWorkflowConfig_Size whichSize() =>
+      _TextToImageWorkflowConfig_SizeByTag[$_whichOneof(0)]!;
+  @$pb.TagNumber(5)
+  @$pb.TagNumber(6)
+  void clearSize() => $_clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  WorkflowInputBinding get prompt => $_getN(0);
+  @$pb.TagNumber(1)
+  set prompt(WorkflowInputBinding value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPrompt() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPrompt() => $_clearField(1);
+  @$pb.TagNumber(1)
+  WorkflowInputBinding ensurePrompt() => $_ensure(0);
+
+  /// 正向提示词 Unicode 码点上限，不是字节数。
+  @$pb.TagNumber(2)
+  $core.int get promptMaxLength => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set promptMaxLength($core.int value) => $_setUnsignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPromptMaxLength() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPromptMaxLength() => $_clearField(2);
+
+  /// 可选固定负向词；省略时保留工作流原值，不向普通用户开放。
+  @$pb.TagNumber(3)
+  WorkflowFixedTextInput get negativePrompt => $_getN(2);
+  @$pb.TagNumber(3)
+  set negativePrompt(WorkflowFixedTextInput value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasNegativePrompt() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearNegativePrompt() => $_clearField(3);
+  @$pb.TagNumber(3)
+  WorkflowFixedTextInput ensureNegativePrompt() => $_ensure(2);
+
+  /// KSampler.seed 或 RandomNoise.noise_seed；每个新任务及试跑生成并保存一个值。
+  @$pb.TagNumber(4)
+  WorkflowInputBinding get seed => $_getN(3);
+  @$pb.TagNumber(4)
+  set seed(WorkflowInputBinding value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasSeed() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearSeed() => $_clearField(4);
+  @$pb.TagNumber(4)
+  WorkflowInputBinding ensureSeed() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  WorkflowImageDimensions get dimensions => $_getN(4);
+  @$pb.TagNumber(5)
+  set dimensions(WorkflowImageDimensions value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasDimensions() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearDimensions() => $_clearField(5);
+  @$pb.TagNumber(5)
+  WorkflowImageDimensions ensureDimensions() => $_ensure(4);
+
+  @$pb.TagNumber(6)
+  WorkflowImageResolution get resolution => $_getN(5);
+  @$pb.TagNumber(6)
+  set resolution(WorkflowImageResolution value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasResolution() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearResolution() => $_clearField(6);
+  @$pb.TagNumber(6)
+  WorkflowImageResolution ensureResolution() => $_ensure(5);
+}
+
+/// 单图修改执行配置，对应 image.edit_single；不开放尺寸选择。
+class SingleImageEditWorkflowConfig extends $pb.GeneratedMessage {
+  factory SingleImageEditWorkflowConfig({
+    WorkflowInputBinding? inputImage,
+    WorkflowInputBinding? prompt,
+    $core.int? promptMaxLength,
+    WorkflowFixedTextInput? negativePrompt,
+    WorkflowInputBinding? seed,
+  }) {
+    final result = create();
+    if (inputImage != null) result.inputImage = inputImage;
+    if (prompt != null) result.prompt = prompt;
+    if (promptMaxLength != null) result.promptMaxLength = promptMaxLength;
+    if (negativePrompt != null) result.negativePrompt = negativePrompt;
+    if (seed != null) result.seed = seed;
+    return result;
+  }
+
+  SingleImageEditWorkflowConfig._();
+
+  factory SingleImageEditWorkflowConfig.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SingleImageEditWorkflowConfig.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SingleImageEditWorkflowConfig',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOM<WorkflowInputBinding>(1, _omitFieldNames ? '' : 'inputImage',
+        subBuilder: WorkflowInputBinding.create)
+    ..aOM<WorkflowInputBinding>(2, _omitFieldNames ? '' : 'prompt',
+        subBuilder: WorkflowInputBinding.create)
+    ..aI(3, _omitFieldNames ? '' : 'promptMaxLength',
+        fieldType: $pb.PbFieldType.OU3)
+    ..aOM<WorkflowFixedTextInput>(4, _omitFieldNames ? '' : 'negativePrompt',
+        subBuilder: WorkflowFixedTextInput.create)
+    ..aOM<WorkflowInputBinding>(5, _omitFieldNames ? '' : 'seed',
+        subBuilder: WorkflowInputBinding.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SingleImageEditWorkflowConfig clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SingleImageEditWorkflowConfig copyWith(
+          void Function(SingleImageEditWorkflowConfig) updates) =>
+      super.copyWith(
+              (message) => updates(message as SingleImageEditWorkflowConfig))
+          as SingleImageEditWorkflowConfig;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SingleImageEditWorkflowConfig create() =>
+      SingleImageEditWorkflowConfig._();
+  @$core.override
+  SingleImageEditWorkflowConfig createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static SingleImageEditWorkflowConfig getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SingleImageEditWorkflowConfig>(create);
+  static SingleImageEditWorkflowConfig? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  WorkflowInputBinding get inputImage => $_getN(0);
+  @$pb.TagNumber(1)
+  set inputImage(WorkflowInputBinding value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasInputImage() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearInputImage() => $_clearField(1);
+  @$pb.TagNumber(1)
+  WorkflowInputBinding ensureInputImage() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  WorkflowInputBinding get prompt => $_getN(1);
+  @$pb.TagNumber(2)
+  set prompt(WorkflowInputBinding value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPrompt() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPrompt() => $_clearField(2);
+  @$pb.TagNumber(2)
+  WorkflowInputBinding ensurePrompt() => $_ensure(1);
+
+  /// 正向提示词 Unicode 码点上限。
+  @$pb.TagNumber(3)
+  $core.int get promptMaxLength => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set promptMaxLength($core.int value) => $_setUnsignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasPromptMaxLength() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearPromptMaxLength() => $_clearField(3);
+
+  /// FLUX 修改类使用 ConditioningZeroOut，省略此项；Qwen 可配置固定负向词。
+  @$pb.TagNumber(4)
+  WorkflowFixedTextInput get negativePrompt => $_getN(3);
+  @$pb.TagNumber(4)
+  set negativePrompt(WorkflowFixedTextInput value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasNegativePrompt() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearNegativePrompt() => $_clearField(4);
+  @$pb.TagNumber(4)
+  WorkflowFixedTextInput ensureNegativePrompt() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  WorkflowInputBinding get seed => $_getN(4);
+  @$pb.TagNumber(5)
+  set seed(WorkflowInputBinding value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasSeed() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearSeed() => $_clearField(5);
+  @$pb.TagNumber(5)
+  WorkflowInputBinding ensureSeed() => $_ensure(4);
+}
+
+/// 多图修改执行配置，对应 image.edit_multiple；输入顺序必须保留，不开放尺寸选择。
+class MultipleImageEditWorkflowConfig extends $pb.GeneratedMessage {
+  factory MultipleImageEditWorkflowConfig({
+    WorkflowMultipleImageInputs? inputImages,
+    WorkflowInputBinding? prompt,
+    $core.int? promptMaxLength,
+    WorkflowFixedTextInput? negativePrompt,
+    WorkflowInputBinding? seed,
+  }) {
+    final result = create();
+    if (inputImages != null) result.inputImages = inputImages;
+    if (prompt != null) result.prompt = prompt;
+    if (promptMaxLength != null) result.promptMaxLength = promptMaxLength;
+    if (negativePrompt != null) result.negativePrompt = negativePrompt;
+    if (seed != null) result.seed = seed;
+    return result;
+  }
+
+  MultipleImageEditWorkflowConfig._();
+
+  factory MultipleImageEditWorkflowConfig.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MultipleImageEditWorkflowConfig.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MultipleImageEditWorkflowConfig',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOM<WorkflowMultipleImageInputs>(1, _omitFieldNames ? '' : 'inputImages',
+        subBuilder: WorkflowMultipleImageInputs.create)
+    ..aOM<WorkflowInputBinding>(2, _omitFieldNames ? '' : 'prompt',
+        subBuilder: WorkflowInputBinding.create)
+    ..aI(3, _omitFieldNames ? '' : 'promptMaxLength',
+        fieldType: $pb.PbFieldType.OU3)
+    ..aOM<WorkflowFixedTextInput>(4, _omitFieldNames ? '' : 'negativePrompt',
+        subBuilder: WorkflowFixedTextInput.create)
+    ..aOM<WorkflowInputBinding>(5, _omitFieldNames ? '' : 'seed',
+        subBuilder: WorkflowInputBinding.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MultipleImageEditWorkflowConfig clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MultipleImageEditWorkflowConfig copyWith(
+          void Function(MultipleImageEditWorkflowConfig) updates) =>
+      super.copyWith(
+              (message) => updates(message as MultipleImageEditWorkflowConfig))
+          as MultipleImageEditWorkflowConfig;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MultipleImageEditWorkflowConfig create() =>
+      MultipleImageEditWorkflowConfig._();
+  @$core.override
+  MultipleImageEditWorkflowConfig createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MultipleImageEditWorkflowConfig getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MultipleImageEditWorkflowConfig>(
+          create);
+  static MultipleImageEditWorkflowConfig? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  WorkflowMultipleImageInputs get inputImages => $_getN(0);
+  @$pb.TagNumber(1)
+  set inputImages(WorkflowMultipleImageInputs value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasInputImages() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearInputImages() => $_clearField(1);
+  @$pb.TagNumber(1)
+  WorkflowMultipleImageInputs ensureInputImages() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  WorkflowInputBinding get prompt => $_getN(1);
+  @$pb.TagNumber(2)
+  set prompt(WorkflowInputBinding value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPrompt() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPrompt() => $_clearField(2);
+  @$pb.TagNumber(2)
+  WorkflowInputBinding ensurePrompt() => $_ensure(1);
+
+  /// 正向提示词 Unicode 码点上限。
+  @$pb.TagNumber(3)
+  $core.int get promptMaxLength => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set promptMaxLength($core.int value) => $_setUnsignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasPromptMaxLength() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearPromptMaxLength() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  WorkflowFixedTextInput get negativePrompt => $_getN(3);
+  @$pb.TagNumber(4)
+  set negativePrompt(WorkflowFixedTextInput value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasNegativePrompt() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearNegativePrompt() => $_clearField(4);
+  @$pb.TagNumber(4)
+  WorkflowFixedTextInput ensureNegativePrompt() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  WorkflowInputBinding get seed => $_getN(4);
+  @$pb.TagNumber(5)
+  set seed(WorkflowInputBinding value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasSeed() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearSeed() => $_clearField(5);
+  @$pb.TagNumber(5)
+  WorkflowInputBinding ensureSeed() => $_ensure(4);
+}
+
+/// 角色生成执行配置，对应 image.character；用户提供一张角色参考图和正向提示词。
+class CharacterWorkflowConfig extends $pb.GeneratedMessage {
+  factory CharacterWorkflowConfig({
+    WorkflowInputBinding? inputImage,
+    WorkflowInputBinding? prompt,
+    WorkflowFixedTextInput? negativePrompt,
+    WorkflowInputBinding? seed,
+    $core.int? promptMaxLength,
+  }) {
+    final result = create();
+    if (inputImage != null) result.inputImage = inputImage;
+    if (prompt != null) result.prompt = prompt;
+    if (negativePrompt != null) result.negativePrompt = negativePrompt;
+    if (seed != null) result.seed = seed;
+    if (promptMaxLength != null) result.promptMaxLength = promptMaxLength;
+    return result;
+  }
+
+  CharacterWorkflowConfig._();
+
+  factory CharacterWorkflowConfig.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CharacterWorkflowConfig.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CharacterWorkflowConfig',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOM<WorkflowInputBinding>(1, _omitFieldNames ? '' : 'inputImage',
+        subBuilder: WorkflowInputBinding.create)
+    ..aOM<WorkflowInputBinding>(2, _omitFieldNames ? '' : 'prompt',
+        subBuilder: WorkflowInputBinding.create)
+    ..aOM<WorkflowFixedTextInput>(3, _omitFieldNames ? '' : 'negativePrompt',
+        subBuilder: WorkflowFixedTextInput.create)
+    ..aOM<WorkflowInputBinding>(4, _omitFieldNames ? '' : 'seed',
+        subBuilder: WorkflowInputBinding.create)
+    ..aI(5, _omitFieldNames ? '' : 'promptMaxLength',
+        fieldType: $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CharacterWorkflowConfig clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CharacterWorkflowConfig copyWith(
+          void Function(CharacterWorkflowConfig) updates) =>
+      super.copyWith((message) => updates(message as CharacterWorkflowConfig))
+          as CharacterWorkflowConfig;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CharacterWorkflowConfig create() => CharacterWorkflowConfig._();
+  @$core.override
+  CharacterWorkflowConfig createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static CharacterWorkflowConfig getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CharacterWorkflowConfig>(create);
+  static CharacterWorkflowConfig? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  WorkflowInputBinding get inputImage => $_getN(0);
+  @$pb.TagNumber(1)
+  set inputImage(WorkflowInputBinding value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasInputImage() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearInputImage() => $_clearField(1);
+  @$pb.TagNumber(1)
+  WorkflowInputBinding ensureInputImage() => $_ensure(0);
+
+  /// 用户正向提示词绑定；执行时写入用户原文，不拼接固定文本或回退示例值。
+  @$pb.TagNumber(2)
+  WorkflowInputBinding get prompt => $_getN(1);
+  @$pb.TagNumber(2)
+  set prompt(WorkflowInputBinding value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPrompt() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPrompt() => $_clearField(2);
+  @$pb.TagNumber(2)
+  WorkflowInputBinding ensurePrompt() => $_ensure(1);
+
+  /// 可选管理员固定负向词，不向用户开放。
+  @$pb.TagNumber(3)
+  WorkflowFixedTextInput get negativePrompt => $_getN(2);
+  @$pb.TagNumber(3)
+  set negativePrompt(WorkflowFixedTextInput value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasNegativePrompt() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearNegativePrompt() => $_clearField(3);
+  @$pb.TagNumber(3)
+  WorkflowFixedTextInput ensureNegativePrompt() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  WorkflowInputBinding get seed => $_getN(3);
+  @$pb.TagNumber(4)
+  set seed(WorkflowInputBinding value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasSeed() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearSeed() => $_clearField(4);
+  @$pb.TagNumber(4)
+  WorkflowInputBinding ensureSeed() => $_ensure(3);
+
+  /// 用户正向提示词 Unicode 码点上限；Function.Get 的 parameterConfig.prompt 返回此长度。
+  @$pb.TagNumber(5)
+  $core.int get promptMaxLength => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set promptMaxLength($core.int value) => $_setUnsignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasPromptMaxLength() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearPromptMaxLength() => $_clearField(5);
+}
+
 enum WorkflowExecutionConfig_FunctionConfig {
   imageToVideo,
   textToVideo,
+  textToImage,
+  singleImageEdit,
+  multipleImageEdit,
+  character,
   notSet
 }
 
@@ -938,6 +1839,10 @@ class WorkflowExecutionConfig extends $pb.GeneratedMessage {
     TextToVideoWorkflowConfig? textToVideo,
     WorkflowOutputConfig? output,
     $core.int? executionTimeoutSeconds,
+    TextToImageWorkflowConfig? textToImage,
+    SingleImageEditWorkflowConfig? singleImageEdit,
+    MultipleImageEditWorkflowConfig? multipleImageEdit,
+    CharacterWorkflowConfig? character,
   }) {
     final result = create();
     if (imageToVideo != null) result.imageToVideo = imageToVideo;
@@ -945,6 +1850,10 @@ class WorkflowExecutionConfig extends $pb.GeneratedMessage {
     if (output != null) result.output = output;
     if (executionTimeoutSeconds != null)
       result.executionTimeoutSeconds = executionTimeoutSeconds;
+    if (textToImage != null) result.textToImage = textToImage;
+    if (singleImageEdit != null) result.singleImageEdit = singleImageEdit;
+    if (multipleImageEdit != null) result.multipleImageEdit = multipleImageEdit;
+    if (character != null) result.character = character;
     return result;
   }
 
@@ -961,13 +1870,17 @@ class WorkflowExecutionConfig extends $pb.GeneratedMessage {
       _WorkflowExecutionConfig_FunctionConfigByTag = {
     1: WorkflowExecutionConfig_FunctionConfig.imageToVideo,
     2: WorkflowExecutionConfig_FunctionConfig.textToVideo,
+    5: WorkflowExecutionConfig_FunctionConfig.textToImage,
+    6: WorkflowExecutionConfig_FunctionConfig.singleImageEdit,
+    7: WorkflowExecutionConfig_FunctionConfig.multipleImageEdit,
+    8: WorkflowExecutionConfig_FunctionConfig.character,
     0: WorkflowExecutionConfig_FunctionConfig.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'WorkflowExecutionConfig',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
-    ..oo(0, [1, 2])
+    ..oo(0, [1, 2, 5, 6, 7, 8])
     ..aOM<ImageToVideoWorkflowConfig>(1, _omitFieldNames ? '' : 'imageToVideo',
         subBuilder: ImageToVideoWorkflowConfig.create)
     ..aOM<TextToVideoWorkflowConfig>(2, _omitFieldNames ? '' : 'textToVideo',
@@ -976,6 +1889,16 @@ class WorkflowExecutionConfig extends $pb.GeneratedMessage {
         subBuilder: WorkflowOutputConfig.create)
     ..aI(4, _omitFieldNames ? '' : 'executionTimeoutSeconds',
         fieldType: $pb.PbFieldType.OU3)
+    ..aOM<TextToImageWorkflowConfig>(5, _omitFieldNames ? '' : 'textToImage',
+        subBuilder: TextToImageWorkflowConfig.create)
+    ..aOM<SingleImageEditWorkflowConfig>(
+        6, _omitFieldNames ? '' : 'singleImageEdit',
+        subBuilder: SingleImageEditWorkflowConfig.create)
+    ..aOM<MultipleImageEditWorkflowConfig>(
+        7, _omitFieldNames ? '' : 'multipleImageEdit',
+        subBuilder: MultipleImageEditWorkflowConfig.create)
+    ..aOM<CharacterWorkflowConfig>(8, _omitFieldNames ? '' : 'character',
+        subBuilder: CharacterWorkflowConfig.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1000,10 +1923,18 @@ class WorkflowExecutionConfig extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
+  @$pb.TagNumber(5)
+  @$pb.TagNumber(6)
+  @$pb.TagNumber(7)
+  @$pb.TagNumber(8)
   WorkflowExecutionConfig_FunctionConfig whichFunctionConfig() =>
       _WorkflowExecutionConfig_FunctionConfigByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
+  @$pb.TagNumber(5)
+  @$pb.TagNumber(6)
+  @$pb.TagNumber(7)
+  @$pb.TagNumber(8)
   void clearFunctionConfig() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -1048,6 +1979,52 @@ class WorkflowExecutionConfig extends $pb.GeneratedMessage {
   $core.bool hasExecutionTimeoutSeconds() => $_has(3);
   @$pb.TagNumber(4)
   void clearExecutionTimeoutSeconds() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  TextToImageWorkflowConfig get textToImage => $_getN(4);
+  @$pb.TagNumber(5)
+  set textToImage(TextToImageWorkflowConfig value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasTextToImage() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearTextToImage() => $_clearField(5);
+  @$pb.TagNumber(5)
+  TextToImageWorkflowConfig ensureTextToImage() => $_ensure(4);
+
+  @$pb.TagNumber(6)
+  SingleImageEditWorkflowConfig get singleImageEdit => $_getN(5);
+  @$pb.TagNumber(6)
+  set singleImageEdit(SingleImageEditWorkflowConfig value) =>
+      $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasSingleImageEdit() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearSingleImageEdit() => $_clearField(6);
+  @$pb.TagNumber(6)
+  SingleImageEditWorkflowConfig ensureSingleImageEdit() => $_ensure(5);
+
+  @$pb.TagNumber(7)
+  MultipleImageEditWorkflowConfig get multipleImageEdit => $_getN(6);
+  @$pb.TagNumber(7)
+  set multipleImageEdit(MultipleImageEditWorkflowConfig value) =>
+      $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasMultipleImageEdit() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearMultipleImageEdit() => $_clearField(7);
+  @$pb.TagNumber(7)
+  MultipleImageEditWorkflowConfig ensureMultipleImageEdit() => $_ensure(6);
+
+  @$pb.TagNumber(8)
+  CharacterWorkflowConfig get character => $_getN(7);
+  @$pb.TagNumber(8)
+  set character(CharacterWorkflowConfig value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasCharacter() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearCharacter() => $_clearField(8);
+  @$pb.TagNumber(8)
+  CharacterWorkflowConfig ensureCharacter() => $_ensure(7);
 }
 
 /// 静态校验发现的问题，节点和输入定位信息按需提供。
@@ -2615,12 +3592,14 @@ class TestWorkflowReq extends $pb.GeneratedMessage {
     $core.String? workflowId,
     $core.String? prompt,
     $core.String? inputAssetId,
+    $core.Iterable<$core.String>? inputAssetIds,
   }) {
     final result = create();
     if (requestId != null) result.requestId = requestId;
     if (workflowId != null) result.workflowId = workflowId;
     if (prompt != null) result.prompt = prompt;
     if (inputAssetId != null) result.inputAssetId = inputAssetId;
+    if (inputAssetIds != null) result.inputAssetIds.addAll(inputAssetIds);
     return result;
   }
 
@@ -2641,6 +3620,7 @@ class TestWorkflowReq extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'workflowId')
     ..aOS(3, _omitFieldNames ? '' : 'prompt')
     ..aOS(4, _omitFieldNames ? '' : 'inputAssetId')
+    ..pPS(5, _omitFieldNames ? '' : 'inputAssetIds')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2682,7 +3662,7 @@ class TestWorkflowReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearWorkflowId() => $_clearField(2);
 
-  /// 本次真实试跑的正向提示词，按工作流 Unicode 码点上限校验。
+  /// 六类功能均必填正向提示词，角色生成同样使用本次提交的原文；长度按工作流配置校验。
   @$pb.TagNumber(3)
   $core.String get prompt => $_getSZ(2);
   @$pb.TagNumber(3)
@@ -2692,8 +3672,8 @@ class TestWorkflowReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearPrompt() => $_clearField(3);
 
-  /// 图生视频必须提交管理员本人的可用 JPEG/PNG 资产；文生视频必须省略。
-  /// 分辨率、时长和帧率统一使用工作流默认值或固定值。
+  /// 图生视频、单图修改、角色生成使用管理员本人的可用 JPEG/PNG 资产；其他功能省略。
+  /// 视频分辨率、时长和帧率以及文生图尺寸使用工作流默认值或固定值。
   @$pb.TagNumber(4)
   $core.String get inputAssetId => $_getSZ(3);
   @$pb.TagNumber(4)
@@ -2702,6 +3682,10 @@ class TestWorkflowReq extends $pb.GeneratedMessage {
   $core.bool hasInputAssetId() => $_has(3);
   @$pb.TagNumber(4)
   void clearInputAssetId() => $_clearField(4);
+
+  /// 仅多图修改使用，提交顺序即图1至图N；FLUX 为2张，Qwen 为2～10张。
+  @$pb.TagNumber(5)
+  $pb.PbList<$core.String> get inputAssetIds => $_getList(4);
 }
 
 /// 返回受理的试跑任务 ID；试跑成功保存并结算后才自动启用草稿，不支持恢复保存。

@@ -20,25 +20,37 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Task_CreateImageToVideo_FullMethodName = "/hi.media.Task/CreateImageToVideo"
-	Task_CreateTextToVideo_FullMethodName  = "/hi.media.Task/CreateTextToVideo"
-	Task_Get_FullMethodName                = "/hi.media.Task/Get"
-	Task_List_FullMethodName               = "/hi.media.Task/List"
-	Task_Cancel_FullMethodName             = "/hi.media.Task/Cancel"
-	Task_Delete_FullMethodName             = "/hi.media.Task/Delete"
-	Task_RecoverSave_FullMethodName        = "/hi.media.Task/RecoverSave"
+	Task_CreateImageToVideo_FullMethodName      = "/hi.media.Task/CreateImageToVideo"
+	Task_CreateTextToVideo_FullMethodName       = "/hi.media.Task/CreateTextToVideo"
+	Task_CreateTextToImage_FullMethodName       = "/hi.media.Task/CreateTextToImage"
+	Task_CreateSingleImageEdit_FullMethodName   = "/hi.media.Task/CreateSingleImageEdit"
+	Task_CreateMultipleImageEdit_FullMethodName = "/hi.media.Task/CreateMultipleImageEdit"
+	Task_CreateCharacter_FullMethodName         = "/hi.media.Task/CreateCharacter"
+	Task_Get_FullMethodName                     = "/hi.media.Task/Get"
+	Task_List_FullMethodName                    = "/hi.media.Task/List"
+	Task_Cancel_FullMethodName                  = "/hi.media.Task/Cancel"
+	Task_Delete_FullMethodName                  = "/hi.media.Task/Delete"
+	Task_RecoverSave_FullMethodName             = "/hi.media.Task/RecoverSave"
 )
 
 // TaskClient is the client API for Task service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// 普通用户视频任务创建、查询、取消和一次性恢复保存。
+// 普通用户图片与视频任务创建、查询、取消和一次性恢复保存，共用 FIFO 和任务状态。
 type TaskClient interface {
 	// 创建图生视频任务；只提交 workflow_id 与业务参数，不组合功能或模型 ID。
 	CreateImageToVideo(ctx context.Context, in *CreateImageToVideoTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error)
 	// 创建文生视频任务；只提交 workflow_id 与业务参数。
 	CreateTextToVideo(ctx context.Context, in *CreateTextToVideoTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error)
+	// 文生图 image.txt2img；只传工作流 ID、提示词和匹配的尺寸参数，seed 由后端生成。
+	CreateTextToImage(ctx context.Context, in *CreateTextToImageTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error)
+	// 单图修改 image.edit_single；一张本人图片和修改要求，不开放尺寸选择。
+	CreateSingleImageEdit(ctx context.Context, in *CreateSingleImageEditTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error)
+	// 多图修改 image.edit_multiple；图片数量来自工作流配置，顺序不可丢失。
+	CreateMultipleImageEdit(ctx context.Context, in *CreateMultipleImageEditTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error)
+	// 角色生成 image.character；用户提交一张参考图与正向提示词，负向词及内部尺寸由管理员维护。
+	CreateCharacter(ctx context.Context, in *CreateCharacterTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error)
 	// 查询本人任务详情及产物资产 ID。
 	Get(ctx context.Context, in *GetTaskReq, opts ...grpc.CallOption) (*GetTaskResp, error)
 	// 分页查询本人任务。
@@ -73,6 +85,46 @@ func (c *taskClient) CreateTextToVideo(ctx context.Context, in *CreateTextToVide
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(CreateTaskResp)
 	err := c.cc.Invoke(ctx, Task_CreateTextToVideo_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *taskClient) CreateTextToImage(ctx context.Context, in *CreateTextToImageTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateTaskResp)
+	err := c.cc.Invoke(ctx, Task_CreateTextToImage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *taskClient) CreateSingleImageEdit(ctx context.Context, in *CreateSingleImageEditTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateTaskResp)
+	err := c.cc.Invoke(ctx, Task_CreateSingleImageEdit_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *taskClient) CreateMultipleImageEdit(ctx context.Context, in *CreateMultipleImageEditTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateTaskResp)
+	err := c.cc.Invoke(ctx, Task_CreateMultipleImageEdit_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *taskClient) CreateCharacter(ctx context.Context, in *CreateCharacterTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateTaskResp)
+	err := c.cc.Invoke(ctx, Task_CreateCharacter_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -133,12 +185,20 @@ func (c *taskClient) RecoverSave(ctx context.Context, in *RecoverSaveTaskReq, op
 // All implementations should embed UnimplementedTaskServer
 // for forward compatibility.
 //
-// 普通用户视频任务创建、查询、取消和一次性恢复保存。
+// 普通用户图片与视频任务创建、查询、取消和一次性恢复保存，共用 FIFO 和任务状态。
 type TaskServer interface {
 	// 创建图生视频任务；只提交 workflow_id 与业务参数，不组合功能或模型 ID。
 	CreateImageToVideo(context.Context, *CreateImageToVideoTaskReq) (*CreateTaskResp, error)
 	// 创建文生视频任务；只提交 workflow_id 与业务参数。
 	CreateTextToVideo(context.Context, *CreateTextToVideoTaskReq) (*CreateTaskResp, error)
+	// 文生图 image.txt2img；只传工作流 ID、提示词和匹配的尺寸参数，seed 由后端生成。
+	CreateTextToImage(context.Context, *CreateTextToImageTaskReq) (*CreateTaskResp, error)
+	// 单图修改 image.edit_single；一张本人图片和修改要求，不开放尺寸选择。
+	CreateSingleImageEdit(context.Context, *CreateSingleImageEditTaskReq) (*CreateTaskResp, error)
+	// 多图修改 image.edit_multiple；图片数量来自工作流配置，顺序不可丢失。
+	CreateMultipleImageEdit(context.Context, *CreateMultipleImageEditTaskReq) (*CreateTaskResp, error)
+	// 角色生成 image.character；用户提交一张参考图与正向提示词，负向词及内部尺寸由管理员维护。
+	CreateCharacter(context.Context, *CreateCharacterTaskReq) (*CreateTaskResp, error)
 	// 查询本人任务详情及产物资产 ID。
 	Get(context.Context, *GetTaskReq) (*GetTaskResp, error)
 	// 分页查询本人任务。
@@ -163,6 +223,18 @@ func (UnimplementedTaskServer) CreateImageToVideo(context.Context, *CreateImageT
 }
 func (UnimplementedTaskServer) CreateTextToVideo(context.Context, *CreateTextToVideoTaskReq) (*CreateTaskResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateTextToVideo not implemented")
+}
+func (UnimplementedTaskServer) CreateTextToImage(context.Context, *CreateTextToImageTaskReq) (*CreateTaskResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateTextToImage not implemented")
+}
+func (UnimplementedTaskServer) CreateSingleImageEdit(context.Context, *CreateSingleImageEditTaskReq) (*CreateTaskResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateSingleImageEdit not implemented")
+}
+func (UnimplementedTaskServer) CreateMultipleImageEdit(context.Context, *CreateMultipleImageEditTaskReq) (*CreateTaskResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateMultipleImageEdit not implemented")
+}
+func (UnimplementedTaskServer) CreateCharacter(context.Context, *CreateCharacterTaskReq) (*CreateTaskResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateCharacter not implemented")
 }
 func (UnimplementedTaskServer) Get(context.Context, *GetTaskReq) (*GetTaskResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
@@ -231,6 +303,78 @@ func _Task_CreateTextToVideo_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(TaskServer).CreateTextToVideo(ctx, req.(*CreateTextToVideoTaskReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Task_CreateTextToImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateTextToImageTaskReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TaskServer).CreateTextToImage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Task_CreateTextToImage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TaskServer).CreateTextToImage(ctx, req.(*CreateTextToImageTaskReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Task_CreateSingleImageEdit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateSingleImageEditTaskReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TaskServer).CreateSingleImageEdit(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Task_CreateSingleImageEdit_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TaskServer).CreateSingleImageEdit(ctx, req.(*CreateSingleImageEditTaskReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Task_CreateMultipleImageEdit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateMultipleImageEditTaskReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TaskServer).CreateMultipleImageEdit(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Task_CreateMultipleImageEdit_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TaskServer).CreateMultipleImageEdit(ctx, req.(*CreateMultipleImageEditTaskReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Task_CreateCharacter_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateCharacterTaskReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TaskServer).CreateCharacter(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Task_CreateCharacter_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TaskServer).CreateCharacter(ctx, req.(*CreateCharacterTaskReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -339,6 +483,22 @@ var Task_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateTextToVideo",
 			Handler:    _Task_CreateTextToVideo_Handler,
+		},
+		{
+			MethodName: "CreateTextToImage",
+			Handler:    _Task_CreateTextToImage_Handler,
+		},
+		{
+			MethodName: "CreateSingleImageEdit",
+			Handler:    _Task_CreateSingleImageEdit_Handler,
+		},
+		{
+			MethodName: "CreateMultipleImageEdit",
+			Handler:    _Task_CreateMultipleImageEdit_Handler,
+		},
+		{
+			MethodName: "CreateCharacter",
+			Handler:    _Task_CreateCharacter_Handler,
 		},
 		{
 			MethodName: "Get",

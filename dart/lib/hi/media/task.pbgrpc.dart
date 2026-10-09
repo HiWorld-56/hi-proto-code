@@ -15,13 +15,14 @@ import 'dart:core' as $core;
 
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $1;
+import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $2;
 
+import 'image_task.pb.dart' as $1;
 import 'task.pb.dart' as $0;
 
 export 'task.pb.dart';
 
-/// 普通用户视频任务创建、查询、取消和一次性恢复保存。
+/// 普通用户图片与视频任务创建、查询、取消和一次性恢复保存，共用 FIFO 和任务状态。
 @$pb.GrpcServiceName('hi.media.Task')
 class TaskClient extends $grpc.Client {
   /// The hostname for this service.
@@ -50,6 +51,39 @@ class TaskClient extends $grpc.Client {
     return $createUnaryCall(_$createTextToVideo, request, options: options);
   }
 
+  /// 文生图 image.txt2img；只传工作流 ID、提示词和匹配的尺寸参数，seed 由后端生成。
+  $grpc.ResponseFuture<$0.CreateTaskResp> createTextToImage(
+    $1.CreateTextToImageTaskReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$createTextToImage, request, options: options);
+  }
+
+  /// 单图修改 image.edit_single；一张本人图片和修改要求，不开放尺寸选择。
+  $grpc.ResponseFuture<$0.CreateTaskResp> createSingleImageEdit(
+    $1.CreateSingleImageEditTaskReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$createSingleImageEdit, request, options: options);
+  }
+
+  /// 多图修改 image.edit_multiple；图片数量来自工作流配置，顺序不可丢失。
+  $grpc.ResponseFuture<$0.CreateTaskResp> createMultipleImageEdit(
+    $1.CreateMultipleImageEditTaskReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$createMultipleImageEdit, request,
+        options: options);
+  }
+
+  /// 角色生成 image.character；用户提交一张参考图与正向提示词，负向词及内部尺寸由管理员维护。
+  $grpc.ResponseFuture<$0.CreateTaskResp> createCharacter(
+    $1.CreateCharacterTaskReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$createCharacter, request, options: options);
+  }
+
   /// 查询本人任务详情及产物资产 ID。
   $grpc.ResponseFuture<$0.GetTaskResp> get(
     $0.GetTaskReq request, {
@@ -75,7 +109,7 @@ class TaskClient extends $grpc.Client {
   }
 
   /// 仅允许删除本人已经失败的普通生成任务；重复删除幂等成功。
-  $grpc.ResponseFuture<$1.Empty> delete(
+  $grpc.ResponseFuture<$2.Empty> delete(
     $0.DeleteTaskReq request, {
     $grpc.CallOptions? options,
   }) {
@@ -102,6 +136,26 @@ class TaskClient extends $grpc.Client {
           '/hi.media.Task/CreateTextToVideo',
           ($0.CreateTextToVideoTaskReq value) => value.writeToBuffer(),
           $0.CreateTaskResp.fromBuffer);
+  static final _$createTextToImage =
+      $grpc.ClientMethod<$1.CreateTextToImageTaskReq, $0.CreateTaskResp>(
+          '/hi.media.Task/CreateTextToImage',
+          ($1.CreateTextToImageTaskReq value) => value.writeToBuffer(),
+          $0.CreateTaskResp.fromBuffer);
+  static final _$createSingleImageEdit =
+      $grpc.ClientMethod<$1.CreateSingleImageEditTaskReq, $0.CreateTaskResp>(
+          '/hi.media.Task/CreateSingleImageEdit',
+          ($1.CreateSingleImageEditTaskReq value) => value.writeToBuffer(),
+          $0.CreateTaskResp.fromBuffer);
+  static final _$createMultipleImageEdit =
+      $grpc.ClientMethod<$1.CreateMultipleImageEditTaskReq, $0.CreateTaskResp>(
+          '/hi.media.Task/CreateMultipleImageEdit',
+          ($1.CreateMultipleImageEditTaskReq value) => value.writeToBuffer(),
+          $0.CreateTaskResp.fromBuffer);
+  static final _$createCharacter =
+      $grpc.ClientMethod<$1.CreateCharacterTaskReq, $0.CreateTaskResp>(
+          '/hi.media.Task/CreateCharacter',
+          ($1.CreateCharacterTaskReq value) => value.writeToBuffer(),
+          $0.CreateTaskResp.fromBuffer);
   static final _$get = $grpc.ClientMethod<$0.GetTaskReq, $0.GetTaskResp>(
       '/hi.media.Task/Get',
       ($0.GetTaskReq value) => value.writeToBuffer(),
@@ -115,10 +169,10 @@ class TaskClient extends $grpc.Client {
           '/hi.media.Task/Cancel',
           ($0.CancelTaskReq value) => value.writeToBuffer(),
           $0.CancelTaskResp.fromBuffer);
-  static final _$delete = $grpc.ClientMethod<$0.DeleteTaskReq, $1.Empty>(
+  static final _$delete = $grpc.ClientMethod<$0.DeleteTaskReq, $2.Empty>(
       '/hi.media.Task/Delete',
       ($0.DeleteTaskReq value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
+      $2.Empty.fromBuffer);
   static final _$recoverSave =
       $grpc.ClientMethod<$0.RecoverSaveTaskReq, $0.RecoverSaveTaskResp>(
           '/hi.media.Task/RecoverSave',
@@ -149,6 +203,42 @@ abstract class TaskServiceBase extends $grpc.Service {
             ($core.List<$core.int> value) =>
                 $0.CreateTextToVideoTaskReq.fromBuffer(value),
             ($0.CreateTaskResp value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$1.CreateTextToImageTaskReq, $0.CreateTaskResp>(
+            'CreateTextToImage',
+            createTextToImage_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $1.CreateTextToImageTaskReq.fromBuffer(value),
+            ($0.CreateTaskResp value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$1.CreateSingleImageEditTaskReq, $0.CreateTaskResp>(
+            'CreateSingleImageEdit',
+            createSingleImageEdit_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $1.CreateSingleImageEditTaskReq.fromBuffer(value),
+            ($0.CreateTaskResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.CreateMultipleImageEditTaskReq,
+            $0.CreateTaskResp>(
+        'CreateMultipleImageEdit',
+        createMultipleImageEdit_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $1.CreateMultipleImageEditTaskReq.fromBuffer(value),
+        ($0.CreateTaskResp value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$1.CreateCharacterTaskReq, $0.CreateTaskResp>(
+            'CreateCharacter',
+            createCharacter_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $1.CreateCharacterTaskReq.fromBuffer(value),
+            ($0.CreateTaskResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.GetTaskReq, $0.GetTaskResp>(
         'Get',
         get_Pre,
@@ -170,13 +260,13 @@ abstract class TaskServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.CancelTaskReq.fromBuffer(value),
         ($0.CancelTaskResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.DeleteTaskReq, $1.Empty>(
+    $addMethod($grpc.ServiceMethod<$0.DeleteTaskReq, $2.Empty>(
         'Delete',
         delete_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.DeleteTaskReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
+        ($2.Empty value) => value.writeToBuffer()));
     $addMethod(
         $grpc.ServiceMethod<$0.RecoverSaveTaskReq, $0.RecoverSaveTaskResp>(
             'RecoverSave',
@@ -206,6 +296,41 @@ abstract class TaskServiceBase extends $grpc.Service {
   $async.Future<$0.CreateTaskResp> createTextToVideo(
       $grpc.ServiceCall call, $0.CreateTextToVideoTaskReq request);
 
+  $async.Future<$0.CreateTaskResp> createTextToImage_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$1.CreateTextToImageTaskReq> $request) async {
+    return createTextToImage($call, await $request);
+  }
+
+  $async.Future<$0.CreateTaskResp> createTextToImage(
+      $grpc.ServiceCall call, $1.CreateTextToImageTaskReq request);
+
+  $async.Future<$0.CreateTaskResp> createSingleImageEdit_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$1.CreateSingleImageEditTaskReq> $request) async {
+    return createSingleImageEdit($call, await $request);
+  }
+
+  $async.Future<$0.CreateTaskResp> createSingleImageEdit(
+      $grpc.ServiceCall call, $1.CreateSingleImageEditTaskReq request);
+
+  $async.Future<$0.CreateTaskResp> createMultipleImageEdit_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$1.CreateMultipleImageEditTaskReq> $request) async {
+    return createMultipleImageEdit($call, await $request);
+  }
+
+  $async.Future<$0.CreateTaskResp> createMultipleImageEdit(
+      $grpc.ServiceCall call, $1.CreateMultipleImageEditTaskReq request);
+
+  $async.Future<$0.CreateTaskResp> createCharacter_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.CreateCharacterTaskReq> $request) async {
+    return createCharacter($call, await $request);
+  }
+
+  $async.Future<$0.CreateTaskResp> createCharacter(
+      $grpc.ServiceCall call, $1.CreateCharacterTaskReq request);
+
   $async.Future<$0.GetTaskResp> get_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.GetTaskReq> $request) async {
     return get($call, await $request);
@@ -230,12 +355,12 @@ abstract class TaskServiceBase extends $grpc.Service {
   $async.Future<$0.CancelTaskResp> cancel(
       $grpc.ServiceCall call, $0.CancelTaskReq request);
 
-  $async.Future<$1.Empty> delete_Pre(
+  $async.Future<$2.Empty> delete_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.DeleteTaskReq> $request) async {
     return delete($call, await $request);
   }
 
-  $async.Future<$1.Empty> delete(
+  $async.Future<$2.Empty> delete(
       $grpc.ServiceCall call, $0.DeleteTaskReq request);
 
   $async.Future<$0.RecoverSaveTaskResp> recoverSave_Pre($grpc.ServiceCall $call,
