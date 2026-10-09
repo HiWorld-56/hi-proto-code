@@ -3977,6 +3977,9 @@ impl serde::Serialize for BinanceRoi {
         if self.pct.is_some() {
             len += 1;
         }
+        if self.risk_tolerance.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.binance.BinanceRoi", len)?;
         if let Some(v) = self.age.as_ref() {
             struct_ser.serialize_field("age", v)?;
@@ -3992,6 +3995,9 @@ impl serde::Serialize for BinanceRoi {
         }
         if let Some(v) = self.pct.as_ref() {
             struct_ser.serialize_field("pct", v)?;
+        }
+        if let Some(v) = self.risk_tolerance.as_ref() {
+            struct_ser.serialize_field("riskTolerance", v)?;
         }
         struct_ser.end()
     }
@@ -4009,6 +4015,8 @@ impl<'de> serde::Deserialize<'de> for BinanceRoi {
             "initialCapital",
             "pnl",
             "pct",
+            "risk_tolerance",
+            "riskTolerance",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -4018,6 +4026,7 @@ impl<'de> serde::Deserialize<'de> for BinanceRoi {
             InitialCapital,
             Pnl,
             Pct,
+            RiskTolerance,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -4044,6 +4053,7 @@ impl<'de> serde::Deserialize<'de> for BinanceRoi {
                             "initialCapital" | "initial_capital" => Ok(GeneratedField::InitialCapital),
                             "pnl" => Ok(GeneratedField::Pnl),
                             "pct" => Ok(GeneratedField::Pct),
+                            "riskTolerance" | "risk_tolerance" => Ok(GeneratedField::RiskTolerance),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -4068,6 +4078,7 @@ impl<'de> serde::Deserialize<'de> for BinanceRoi {
                 let mut initial_capital__ = None;
                 let mut pnl__ = None;
                 let mut pct__ = None;
+                let mut risk_tolerance__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Age => {
@@ -4102,6 +4113,12 @@ impl<'de> serde::Deserialize<'de> for BinanceRoi {
                             }
                             pct__ = map_.next_value()?;
                         }
+                        GeneratedField::RiskTolerance => {
+                            if risk_tolerance__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("riskTolerance"));
+                            }
+                            risk_tolerance__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(BinanceRoi {
@@ -4110,6 +4127,7 @@ impl<'de> serde::Deserialize<'de> for BinanceRoi {
                     initial_capital: initial_capital__,
                     pnl: pnl__,
                     pct: pct__,
+                    risk_tolerance: risk_tolerance__,
                 })
             }
         }

@@ -3182,6 +3182,11 @@ class BinanceFuturesIncome extends $pb.GeneratedMessage {
 ///
 /// 初始资金是主人自己设的数(USDT,存在机器人本地;入口:hiclub app 的 USB 密钥页、对机器人说)。
 /// **没设或设的是 0:不算**,结果里没有收益与收益率 —— 界面写「未设初始资金」,不写 0% 也不留空。
+///
+/// **风险承受率**(2026-10-09 起)与初始资金**一起设、一起存、一起清**:主人能接受亏掉初始资金的百分之几,
+/// 十进制字符串,0 < 值 ≤ 100(100 = 本金亏完也接受)。设初始资金必须同时给它;清初始资金就一并清掉。
+/// 这之前已经设了初始资金的机器人没有它 —— 读方写「未设风险承受率」,不替它编一个默认值。
+/// **现在只设、只显示**:机器人不按它做任何事(不止损、不停交易、不拦单)。
 /// 期间的划转会算进收益(初始资金是一个固定数,机器人不追流水)。
 ///
 /// 当前余额取自机器人的账户快照(后台每 60 秒取一次;快照过期就当场取),全程十进制计算。
@@ -3189,6 +3194,7 @@ class BinanceFuturesIncome extends $pb.GeneratedMessage {
 /// 结果在 `BinanceResult.body` 里,是**机器人写的 JSON**(不是币安原文),键与 `BinanceRoi` 的字段同名:
 ///   balance          当前余额(十进制字符串)
 ///   initial_capital  初始资金;未设为 null
+///   risk_tolerance   风险承受率(百分数,如 "30");未设为 null(没设初始资金时一定是 null)
 ///   pnl              收益;未设为 null
 ///   pct              收益率(百分数,两位小数,如 "12.34" / "-3.10");未设为 null
 ///   age              当前余额是多少秒前从币安取到的
@@ -3596,6 +3602,9 @@ class BinanceResult extends $pb.GeneratedMessage {
 ///   · `BinanceResult.roi` 不带                 = 不知道(界面「未知」)
 ///   · 带了但没有 `initial_capital`              = 主人没设初始资金(或设的是 0)(界面「未设初始资金」)
 ///   · 带了且有 `initial_capital`                = `balance` / `pnl` / `pct` 都有
+///
+/// `risk_tolerance` 跟着 `initial_capital` 走:没有 `initial_capital` 时一定不带;有 `initial_capital` 却不带它
+/// = 主人设初始资金时还没有这个概念(界面「未设风险承受率」)。
 class BinanceRoi extends $pb.GeneratedMessage {
   factory BinanceRoi({
     $core.int? age,
@@ -3603,6 +3612,7 @@ class BinanceRoi extends $pb.GeneratedMessage {
     $core.String? initialCapital,
     $core.String? pnl,
     $core.String? pct,
+    $core.String? riskTolerance,
   }) {
     final result = create();
     if (age != null) result.age = age;
@@ -3610,6 +3620,7 @@ class BinanceRoi extends $pb.GeneratedMessage {
     if (initialCapital != null) result.initialCapital = initialCapital;
     if (pnl != null) result.pnl = pnl;
     if (pct != null) result.pct = pct;
+    if (riskTolerance != null) result.riskTolerance = riskTolerance;
     return result;
   }
 
@@ -3631,6 +3642,7 @@ class BinanceRoi extends $pb.GeneratedMessage {
     ..aOS(3, _omitFieldNames ? '' : 'initialCapital')
     ..aOS(4, _omitFieldNames ? '' : 'pnl')
     ..aOS(5, _omitFieldNames ? '' : 'pct')
+    ..aOS(6, _omitFieldNames ? '' : 'riskTolerance')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3696,6 +3708,17 @@ class BinanceRoi extends $pb.GeneratedMessage {
   $core.bool hasPct() => $_has(4);
   @$pb.TagNumber(5)
   void clearPct() => $_clearField(5);
+
+  /// 风险承受率:主人能接受亏掉初始资金的百分之几(0 < 值 ≤ 100,100 = 本金亏完也接受),主人设的原样。
+  /// 口径见 `BinanceFuturesPnl`。只显示,机器人不按它做任何事。
+  @$pb.TagNumber(6)
+  $core.String get riskTolerance => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set riskTolerance($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasRiskTolerance() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearRiskTolerance() => $_clearField(6);
 }
 
 /// 一台机器人**最近一次知道的**持有情况,按产品线分开。随 `BinanceResult` 顺带回来,好让发令方在下单前

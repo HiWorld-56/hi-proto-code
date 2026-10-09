@@ -2363,6 +2363,16 @@ const BinanceRoi$json = {
       '10': 'pct',
       '17': true
     },
+    {
+      '1': 'risk_tolerance',
+      '3': 6,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 5,
+      '10': 'riskTolerance',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -2371,6 +2381,7 @@ const BinanceRoi$json = {
     {'1': '_initial_capital'},
     {'1': '_pnl'},
     {'1': '_pct'},
+    {'1': '_risk_tolerance'},
   ],
 };
 
@@ -2379,8 +2390,9 @@ final $typed_data.Uint8List binanceRoiDescriptor = $convert.base64Decode(
     'CgpCaW5hbmNlUm9pEhsKA2FnZRgBIAEoDUIEkLUYAkgAUgNhZ2WIAQESIwoHYmFsYW5jZRgCIA'
     'EoCUIEkLUYAkgBUgdiYWxhbmNliAEBEjIKD2luaXRpYWxfY2FwaXRhbBgDIAEoCUIEkLUYAkgC'
     'Ug5pbml0aWFsQ2FwaXRhbIgBARIbCgNwbmwYBCABKAlCBJC1GAJIA1IDcG5siAEBEhsKA3BjdB'
-    'gFIAEoCUIEkLUYAkgEUgNwY3SIAQE6BJi1GAJCBgoEX2FnZUIKCghfYmFsYW5jZUISChBfaW5p'
-    'dGlhbF9jYXBpdGFsQgYKBF9wbmxCBgoEX3BjdA==');
+    'gFIAEoCUIEkLUYAkgEUgNwY3SIAQESMAoOcmlza190b2xlcmFuY2UYBiABKAlCBJC1GAJIBVIN'
+    'cmlza1RvbGVyYW5jZYgBAToEmLUYAkIGCgRfYWdlQgoKCF9iYWxhbmNlQhIKEF9pbml0aWFsX2'
+    'NhcGl0YWxCBgoEX3BubEIGCgRfcGN0QhEKD19yaXNrX3RvbGVyYW5jZQ==');
 
 @$core.Deprecated('Use binanceHoldingsDescriptor instead')
 const BinanceHoldings$json = {

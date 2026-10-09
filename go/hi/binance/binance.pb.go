@@ -2790,6 +2790,11 @@ func (x *BinanceFuturesIncome) GetLimit() int64 {
 //
 // 初始资金是主人自己设的数(USDT,存在机器人本地;入口:hiclub app 的 USB 密钥页、对机器人说)。
 // **没设或设的是 0:不算**,结果里没有收益与收益率 —— 界面写「未设初始资金」,不写 0% 也不留空。
+//
+// **风险承受率**(2026-10-09 起)与初始资金**一起设、一起存、一起清**:主人能接受亏掉初始资金的百分之几,
+// 十进制字符串,0 < 值 ≤ 100(100 = 本金亏完也接受)。设初始资金必须同时给它;清初始资金就一并清掉。
+// 这之前已经设了初始资金的机器人没有它 —— 读方写「未设风险承受率」,不替它编一个默认值。
+// **现在只设、只显示**:机器人不按它做任何事(不止损、不停交易、不拦单)。
 // 期间的划转会算进收益(初始资金是一个固定数,机器人不追流水)。
 //
 // 当前余额取自机器人的账户快照(后台每 60 秒取一次;快照过期就当场取),全程十进制计算。
@@ -2798,6 +2803,7 @@ func (x *BinanceFuturesIncome) GetLimit() int64 {
 //
 //	balance          当前余额(十进制字符串)
 //	initial_capital  初始资金;未设为 null
+//	risk_tolerance   风险承受率(百分数,如 "30");未设为 null(没设初始资金时一定是 null)
 //	pnl              收益;未设为 null
 //	pct              收益率(百分数,两位小数,如 "12.34" / "-3.10");未设为 null
 //	age              当前余额是多少秒前从币安取到的
@@ -3146,6 +3152,9 @@ func (x *BinanceResult) GetRoi() *BinanceRoi {
 //	· `BinanceResult.roi` 不带                 = 不知道(界面「未知」)
 //	· 带了但没有 `initial_capital`              = 主人没设初始资金(或设的是 0)(界面「未设初始资金」)
 //	· 带了且有 `initial_capital`                = `balance` / `pnl` / `pct` 都有
+//
+// `risk_tolerance` 跟着 `initial_capital` 走:没有 `initial_capital` 时一定不带;有 `initial_capital` 却不带它
+// = 主人设初始资金时还没有这个概念(界面「未设风险承受率」)。
 type BinanceRoi struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 当前余额从币安取到之后,到机器人回这条结果,过了多少**秒**(机器人自己的单调计时)。未设初始资金时可能不带。
@@ -3154,8 +3163,11 @@ type BinanceRoi struct {
 	InitialCapital *string `protobuf:"bytes,3,opt,name=initial_capital,json=initialCapital,proto3,oneof" json:"initial_capital,omitempty"` // 初始资金;不带 = 未设
 	Pnl            *string `protobuf:"bytes,4,opt,name=pnl,proto3,oneof" json:"pnl,omitempty"`                                             // 收益 = balance − initial_capital
 	Pct            *string `protobuf:"bytes,5,opt,name=pct,proto3,oneof" json:"pct,omitempty"`                                             // 收益率,百分数,两位小数(如 "12.34")
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	// 风险承受率:主人能接受亏掉初始资金的百分之几(0 < 值 ≤ 100,100 = 本金亏完也接受),主人设的原样。
+	// 口径见 `BinanceFuturesPnl`。只显示,机器人不按它做任何事。
+	RiskTolerance *string `protobuf:"bytes,6,opt,name=risk_tolerance,json=riskTolerance,proto3,oneof" json:"risk_tolerance,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *BinanceRoi) Reset() {
@@ -3219,6 +3231,13 @@ func (x *BinanceRoi) GetPnl() string {
 func (x *BinanceRoi) GetPct() string {
 	if x != nil && x.Pct != nil {
 		return *x.Pct
+	}
+	return ""
+}
+
+func (x *BinanceRoi) GetRiskTolerance() string {
+	if x != nil && x.RiskTolerance != nil {
+		return *x.RiskTolerance
 	}
 	return ""
 }
@@ -3695,20 +3714,22 @@ const file_hi_binance_binance_proto_rawDesc = "" +
 	"\x05_bodyB\b\n" +
 	"\x06_errorB\a\n" +
 	"\x05_heldB\x06\n" +
-	"\x04_roi\"\xfa\x01\n" +
+	"\x04_roi\"\xbf\x02\n" +
 	"\n" +
 	"BinanceRoi\x12\x1b\n" +
 	"\x03age\x18\x01 \x01(\rB\x04\x90\xb5\x18\x02H\x00R\x03age\x88\x01\x01\x12#\n" +
 	"\abalance\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\abalance\x88\x01\x01\x122\n" +
 	"\x0finitial_capital\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02H\x02R\x0einitialCapital\x88\x01\x01\x12\x1b\n" +
 	"\x03pnl\x18\x04 \x01(\tB\x04\x90\xb5\x18\x02H\x03R\x03pnl\x88\x01\x01\x12\x1b\n" +
-	"\x03pct\x18\x05 \x01(\tB\x04\x90\xb5\x18\x02H\x04R\x03pct\x88\x01\x01:\x04\x98\xb5\x18\x02B\x06\n" +
+	"\x03pct\x18\x05 \x01(\tB\x04\x90\xb5\x18\x02H\x04R\x03pct\x88\x01\x01\x120\n" +
+	"\x0erisk_tolerance\x18\x06 \x01(\tB\x04\x90\xb5\x18\x02H\x05R\rriskTolerance\x88\x01\x01:\x04\x98\xb5\x18\x02B\x06\n" +
 	"\x04_ageB\n" +
 	"\n" +
 	"\b_balanceB\x12\n" +
 	"\x10_initial_capitalB\x06\n" +
 	"\x04_pnlB\x06\n" +
-	"\x04_pct\"\xa2\x01\n" +
+	"\x04_pctB\x11\n" +
+	"\x0f_risk_tolerance\"\xa2\x01\n" +
 	"\x0fBinanceHoldings\x12<\n" +
 	"\afutures\x18\x01 \x01(\v2\x17.hi.binance.BinanceHeldB\x04\x90\xb5\x18\x02H\x00R\afutures\x88\x01\x01\x126\n" +
 	"\x04spot\x18\x02 \x01(\v2\x17.hi.binance.BinanceHeldB\x04\x90\xb5\x18\x02H\x01R\x04spot\x88\x01\x01:\x04\x98\xb5\x18\x02B\n" +

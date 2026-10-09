@@ -490,6 +490,11 @@ pub struct BinanceFuturesIncome {
 ///
 /// 初始资金是主人自己设的数(USDT,存在机器人本地;入口:hiclub app 的 USB 密钥页、对机器人说)。
 /// **没设或设的是 0:不算**,结果里没有收益与收益率 —— 界面写「未设初始资金」,不写 0% 也不留空。
+///
+/// **风险承受率**(2026-10-09 起)与初始资金**一起设、一起存、一起清**:主人能接受亏掉初始资金的百分之几,
+/// 十进制字符串,0 \< 值 ≤ 100(100 = 本金亏完也接受)。设初始资金必须同时给它;清初始资金就一并清掉。
+/// 这之前已经设了初始资金的机器人没有它 —— 读方写「未设风险承受率」,不替它编一个默认值。
+/// **现在只设、只显示**:机器人不按它做任何事(不止损、不停交易、不拦单)。
 /// 期间的划转会算进收益(初始资金是一个固定数,机器人不追流水)。
 ///
 /// 当前余额取自机器人的账户快照(后台每 60 秒取一次;快照过期就当场取),全程十进制计算。
@@ -497,6 +502,7 @@ pub struct BinanceFuturesIncome {
 /// 结果在 `BinanceResult.body` 里,是**机器人写的 JSON**(不是币安原文),键与 `BinanceRoi` 的字段同名:
 /// balance          当前余额(十进制字符串)
 /// initial_capital  初始资金;未设为 null
+/// risk_tolerance   风险承受率(百分数,如 "30");未设为 null(没设初始资金时一定是 null)
 /// pnl              收益;未设为 null
 /// pct              收益率(百分数,两位小数,如 "12.34" / "-3.10");未设为 null
 /// age              当前余额是多少秒前从币安取到的
@@ -603,6 +609,9 @@ pub struct BinanceResult {
 /// · `BinanceResult.roi` 不带                 = 不知道(界面「未知」)
 /// · 带了但没有 `initial_capital`              = 主人没设初始资金(或设的是 0)(界面「未设初始资金」)
 /// · 带了且有 `initial_capital`                = `balance` / `pnl` / `pct` 都有
+///
+/// `risk_tolerance` 跟着 `initial_capital` 走:没有 `initial_capital` 时一定不带;有 `initial_capital` 却不带它
+/// = 主人设初始资金时还没有这个概念(界面「未设风险承受率」)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BinanceRoi {
     /// 当前余额从币安取到之后,到机器人回这条结果,过了多少**秒**(机器人自己的单调计时)。未设初始资金时可能不带。
@@ -620,6 +629,10 @@ pub struct BinanceRoi {
     /// 收益率,百分数,两位小数(如 "12.34")
     #[prost(string, optional, tag = "5")]
     pub pct: ::core::option::Option<::prost::alloc::string::String>,
+    /// 风险承受率:主人能接受亏掉初始资金的百分之几(0 \< 值 ≤ 100,100 = 本金亏完也接受),主人设的原样。
+    /// 口径见 `BinanceFuturesPnl`。只显示,机器人不按它做任何事。
+    #[prost(string, optional, tag = "6")]
+    pub risk_tolerance: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 一台机器人**最近一次知道的**持有情况,按产品线分开。随 `BinanceResult` 顺带回来,好让发令方在下单前
 /// 按「谁持有这个币」挑机器人。
