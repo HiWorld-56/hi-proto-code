@@ -460,7 +460,7 @@ class CreateMultipleImageEditTaskReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearWorkflowId() => $_clearField(2);
 
-  /// 图1至图N的本人 available 静态 JPEG/PNG；FLUX 固定2张，Qwen 支持2～10张。
+  /// 图1至图N的本人 available 静态 JPEG/PNG；FLUX 固定2张，Qwen 支持2～4张。
   /// 工作流的 inputImages.min/max 是创建期强校验依据，全部资产在同一事务登记引用。
   @$pb.TagNumber(3)
   $pb.PbList<$core.String> get inputAssetIds => $_getList(2);

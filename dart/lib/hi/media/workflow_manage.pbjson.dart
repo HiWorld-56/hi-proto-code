@@ -622,7 +622,7 @@ const WorkflowFixedImageInputs$json = {
 final $typed_data.Uint8List workflowFixedImageInputsDescriptor =
     $convert.base64Decode(
         'ChhXb3JrZmxvd0ZpeGVkSW1hZ2VJbnB1dHMSSgoIYmluZGluZ3MYASADKAsyHi5oaS5tZWRpYS'
-        '5Xb3JrZmxvd0lucHV0QmluZGluZ0IOukgHkgEECAIQCpC1GANSCGJpbmRpbmdzOgSYtRgD');
+        '5Xb3JrZmxvd0lucHV0QmluZGluZ0IOukgHkgEECAIQBJC1GANSCGJpbmRpbmdzOgSYtRgD');
 
 @$core.Deprecated('Use workflowQwenDynamicImageInputsDescriptor instead')
 const WorkflowQwenDynamicImageInputs$json = {
@@ -2140,7 +2140,7 @@ final $typed_data.Uint8List testWorkflowReqDescriptor = $convert.base64Decode(
     'F1ZXN0SWSIAQESMAoLd29ya2Zsb3dfaWQYAiABKAlCCrpIB8gBAXICEAFIAVIKd29ya2Zsb3dJ'
     'ZIgBARInCgZwcm9tcHQYAyABKAlCCrpIB8gBAXICEAFIAlIGcHJvbXB0iAEBEjIKDmlucHV0X2'
     'Fzc2V0X2lkGAQgASgJQge6SARyAhABSANSDGlucHV0QXNzZXRJZIgBARI2Cg9pbnB1dF9hc3Nl'
-    'dF9pZHMYBSADKAlCDrpIC5IBCBAKIgRyAhABUg1pbnB1dEFzc2V0SWRzQg0KC19yZXF1ZXN0X2'
+    'dF9pZHMYBSADKAlCDrpIC5IBCBAEIgRyAhABUg1pbnB1dEFzc2V0SWRzQg0KC19yZXF1ZXN0X2'
     'lkQg4KDF93b3JrZmxvd19pZEIJCgdfcHJvbXB0QhEKD19pbnB1dF9hc3NldF9pZA==');
 
 @$core.Deprecated('Use testWorkflowRespDescriptor instead')

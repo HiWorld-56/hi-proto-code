@@ -423,7 +423,7 @@ class InputImagesConfig extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearMin() => $_clearField(1);
 
-  /// FLUX 多图为 2，Qwen 多图最多 10；创建时由后端强校验。
+  /// FLUX 多图为 2，Qwen 多图最多 4；创建时由后端强校验。
   @$pb.TagNumber(2)
   $core.int get max => $_getIZ(1);
   @$pb.TagNumber(2)

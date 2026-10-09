@@ -255,7 +255,7 @@ pub struct CreateMultipleImageEditTaskReq {
     /// 来自 image.edit_multiple 的 Function.Get，不按模型名推断图片数量。
     #[prost(string, optional, tag = "2")]
     pub workflow_id: ::core::option::Option<::prost::alloc::string::String>,
-    /// 图1至图N的本人 available 静态 JPEG/PNG；FLUX 固定2张，Qwen 支持2～10张。
+    /// 图1至图N的本人 available 静态 JPEG/PNG；FLUX 固定2张，Qwen 支持2～4张。
     /// 工作流的 inputImages.min/max 是创建期强校验依据，全部资产在同一事务登记引用。
     #[prost(string, repeated, tag = "3")]
     pub input_asset_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
@@ -1333,7 +1333,7 @@ pub struct InputImagesConfig {
     /// 单图修改与角色生成为 1；多图修改按工作流配置，当前最少 2 张。
     #[prost(uint32, optional, tag = "1")]
     pub min: ::core::option::Option<u32>,
-    /// FLUX 多图为 2，Qwen 多图最多 10；创建时由后端强校验。
+    /// FLUX 多图为 2，Qwen 多图最多 4；创建时由后端强校验。
     #[prost(uint32, optional, tag = "2")]
     pub max: ::core::option::Option<u32>,
 }
@@ -2022,7 +2022,7 @@ pub struct WorkflowQwenDynamicImageInputs {
     #[prost(string, optional, tag = "2")]
     pub encoder_node_id: ::core::option::Option<::prost::alloc::string::String>,
 }
-/// 多图数量与接入方式；FLUX 为固定 2/2，Qwen 为动态 2/10。
+/// 多图数量与接入方式；FLUX 为固定 2/2，Qwen 为动态 2/4。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct WorkflowMultipleImageInputs {
     #[prost(message, optional, tag = "1")]
@@ -2396,7 +2396,7 @@ pub struct TestWorkflowReq {
     /// 视频分辨率、时长和帧率以及文生图尺寸使用工作流默认值或固定值。
     #[prost(string, optional, tag = "4")]
     pub input_asset_id: ::core::option::Option<::prost::alloc::string::String>,
-    /// 仅多图修改使用，提交顺序即图1至图N；FLUX 为2张，Qwen 为2～10张。
+    /// 仅多图修改使用，提交顺序即图1至图N；FLUX 为2张，Qwen 为2～4张。
     #[prost(string, repeated, tag = "5")]
     pub input_asset_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }

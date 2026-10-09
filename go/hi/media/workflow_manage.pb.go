@@ -1084,7 +1084,7 @@ func (x *WorkflowQwenDynamicImageInputs) GetEncoderNodeId() string {
 	return ""
 }
 
-// 多图数量与接入方式；FLUX 为固定 2/2，Qwen 为动态 2/10。
+// 多图数量与接入方式；FLUX 为固定 2/2，Qwen 为动态 2/4。
 type WorkflowMultipleImageInputs struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Count *InputImagesConfig     `protobuf:"bytes,1,opt,name=count,proto3" json:"count,omitempty"`
@@ -2903,7 +2903,7 @@ type TestWorkflowReq struct {
 	// 图生视频、单图修改、角色生成使用管理员本人的可用 JPEG/PNG 资产；其他功能省略。
 	// 视频分辨率、时长和帧率以及文生图尺寸使用工作流默认值或固定值。
 	InputAssetId *string `protobuf:"bytes,4,opt,name=input_asset_id,json=inputAssetId,proto3,oneof" json:"input_asset_id,omitempty"`
-	// 仅多图修改使用，提交顺序即图1至图N；FLUX 为2张，Qwen 为2～10张。
+	// 仅多图修改使用，提交顺序即图1至图N；FLUX 为2张，Qwen 为2～4张。
 	InputAssetIds []string `protobuf:"bytes,5,rep,name=input_asset_ids,json=inputAssetIds,proto3" json:"input_asset_ids,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -3422,8 +3422,7 @@ const file_hi_media_workflow_manage_proto_rawDesc = "" +
 	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\n" +
 	"megapixels:\x04\x98\xb5\x18\x03\"l\n" +
 	"\x18WorkflowFixedImageInputs\x12J\n" +
-	"\bbindings\x18\x01 \x03(\v2\x1e.hi.media.WorkflowInputBindingB\x0e\xbaH\a\x92\x01\x04\b\x02\x10\n" +
-	"\x90\xb5\x18\x03R\bbindings:\x04\x98\xb5\x18\x03\"\xcb\x01\n" +
+	"\bbindings\x18\x01 \x03(\v2\x1e.hi.media.WorkflowInputBindingB\x0e\xbaH\a\x92\x01\x04\b\x02\x10\x04\x90\xb5\x18\x03R\bbindings:\x04\x98\xb5\x18\x03\"\xcb\x01\n" +
 	"\x1eWorkflowQwenDynamicImageInputs\x12=\n" +
 	"\x10template_node_id\x18\x01 \x01(\tB\x0e\xbaH\a\xc8\x01\x01r\x02\x10\x01\x90\xb5\x18\x03H\x00R\x0etemplateNodeId\x88\x01\x01\x12;\n" +
 	"\x0fencoder_node_id\x18\x02 \x01(\tB\x0e\xbaH\a\xc8\x01\x01r\x02\x10\x01\x90\xb5\x18\x03H\x01R\rencoderNodeId\x88\x01\x01:\x04\x98\xb5\x18\x03B\x13\n" +
@@ -3669,8 +3668,7 @@ const file_hi_media_workflow_manage_proto_rawDesc = "" +
 	"\x06prompt\x18\x03 \x01(\tB\n" +
 	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x02R\x06prompt\x88\x01\x01\x122\n" +
 	"\x0einput_asset_id\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x03R\finputAssetId\x88\x01\x01\x126\n" +
-	"\x0finput_asset_ids\x18\x05 \x03(\tB\x0e\xbaH\v\x92\x01\b\x10\n" +
-	"\"\x04r\x02\x10\x01R\rinputAssetIdsB\r\n" +
+	"\x0finput_asset_ids\x18\x05 \x03(\tB\x0e\xbaH\v\x92\x01\b\x10\x04\"\x04r\x02\x10\x01R\rinputAssetIdsB\r\n" +
 	"\v_request_idB\x0e\n" +
 	"\f_workflow_idB\t\n" +
 	"\a_promptB\x11\n" +

@@ -331,7 +331,7 @@ type InputImagesConfig struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 单图修改与角色生成为 1；多图修改按工作流配置，当前最少 2 张。
 	Min *uint32 `protobuf:"varint,1,opt,name=min,proto3,oneof" json:"min,omitempty"`
-	// FLUX 多图为 2，Qwen 多图最多 10；创建时由后端强校验。
+	// FLUX 多图为 2，Qwen 多图最多 4；创建时由后端强校验。
 	Max           *uint32 `protobuf:"varint,2,opt,name=max,proto3,oneof" json:"max,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -998,8 +998,7 @@ const file_hi_media_function_proto_rawDesc = "" +
 	"\x04mode\x12\x05\xbaH\x02\b\x01\"\xc2\x01\n" +
 	"\x11InputImagesConfig\x12%\n" +
 	"\x03min\x18\x01 \x01(\rB\x0e\xbaH\a\xc8\x01\x01*\x02 \x00\x90\xb5\x18\x01H\x00R\x03min\x88\x01\x01\x12'\n" +
-	"\x03max\x18\x02 \x01(\rB\x10\xbaH\t\xc8\x01\x01*\x04\x18\n" +
-	" \x00\x90\xb5\x18\x01H\x01R\x03max\x88\x01\x01:M\xbaHF\x1aD\n" +
+	"\x03max\x18\x02 \x01(\rB\x10\xbaH\t\xc8\x01\x01*\x04\x18\x04 \x00\x90\xb5\x18\x01H\x01R\x03max\x88\x01\x01:M\xbaHF\x1aD\n" +
 	"\x13input_images.bounds\x12\x17min must not exceed max\x1a\x14this.min <= this.max\x98\xb5\x18\x01B\x06\n" +
 	"\x04_minB\x06\n" +
 	"\x04_max\"\xcf\x03\n" +

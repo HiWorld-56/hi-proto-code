@@ -325,7 +325,7 @@ type CreateMultipleImageEditTaskReq struct {
 	RequestId *string `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
 	// 来自 image.edit_multiple 的 Function.Get，不按模型名推断图片数量。
 	WorkflowId *string `protobuf:"bytes,2,opt,name=workflow_id,json=workflowId,proto3,oneof" json:"workflow_id,omitempty"`
-	// 图1至图N的本人 available 静态 JPEG/PNG；FLUX 固定2张，Qwen 支持2～10张。
+	// 图1至图N的本人 available 静态 JPEG/PNG；FLUX 固定2张，Qwen 支持2～4张。
 	// 工作流的 inputImages.min/max 是创建期强校验依据，全部资产在同一事务登记引用。
 	InputAssetIds []string `protobuf:"bytes,3,rep,name=input_asset_ids,json=inputAssetIds,proto3" json:"input_asset_ids,omitempty"`
 	// 第一张为主要编辑对象，其余为参考；图片引用写法按工作流说明填写。
@@ -799,8 +799,7 @@ const file_hi_media_image_task_proto_rawDesc = "" +
 	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x01R\n" +
 	"workflowId\x88\x01\x01\x128\n" +
 	"\x0finput_asset_ids\x18\x03 \x03(\tB\x10\xbaH\r\x92\x01\n" +
-	"\b\x02\x10\n" +
-	"\"\x04r\x02\x10\x01R\rinputAssetIds\x12'\n" +
+	"\b\x02\x10\x04\"\x04r\x02\x10\x01R\rinputAssetIds\x12'\n" +
 	"\x06prompt\x18\x04 \x01(\tB\n" +
 	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x02R\x06prompt\x88\x01\x01B\r\n" +
 	"\v_request_idB\x0e\n" +

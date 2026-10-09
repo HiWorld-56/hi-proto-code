@@ -277,7 +277,7 @@ final $typed_data.Uint8List createMultipleImageEditTaskReqDescriptor = $convert.
     'Ch5DcmVhdGVNdWx0aXBsZUltYWdlRWRpdFRhc2tSZXESLgoKcmVxdWVzdF9pZBgBIAEoCUIKuk'
     'gHyAEBcgIQAUgAUglyZXF1ZXN0SWSIAQESMAoLd29ya2Zsb3dfaWQYAiABKAlCCrpIB8gBAXIC'
     'EAFIAVIKd29ya2Zsb3dJZIgBARI4Cg9pbnB1dF9hc3NldF9pZHMYAyADKAlCELpIDZIBCggCEA'
-    'oiBHICEAFSDWlucHV0QXNzZXRJZHMSJwoGcHJvbXB0GAQgASgJQgq6SAfIAQFyAhABSAJSBnBy'
+    'QiBHICEAFSDWlucHV0QXNzZXRJZHMSJwoGcHJvbXB0GAQgASgJQgq6SAfIAQFyAhABSAJSBnBy'
     'b21wdIgBAUINCgtfcmVxdWVzdF9pZEIOCgxfd29ya2Zsb3dfaWRCCQoHX3Byb21wdA==');
 
 @$core.Deprecated('Use createCharacterTaskReqDescriptor instead')

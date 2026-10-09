@@ -1201,7 +1201,7 @@ class WorkflowQwenDynamicImageInputs extends $pb.GeneratedMessage {
 
 enum WorkflowMultipleImageInputs_Mode { fixed, qwenDynamic, notSet }
 
-/// 多图数量与接入方式；FLUX 为固定 2/2，Qwen 为动态 2/10。
+/// 多图数量与接入方式；FLUX 为固定 2/2，Qwen 为动态 2/4。
 class WorkflowMultipleImageInputs extends $pb.GeneratedMessage {
   factory WorkflowMultipleImageInputs({
     $1.InputImagesConfig? count,
@@ -3683,7 +3683,7 @@ class TestWorkflowReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearInputAssetId() => $_clearField(4);
 
-  /// 仅多图修改使用，提交顺序即图1至图N；FLUX 为2张，Qwen 为2～10张。
+  /// 仅多图修改使用，提交顺序即图1至图N；FLUX 为2张，Qwen 为2～4张。
   @$pb.TagNumber(5)
   $pb.PbList<$core.String> get inputAssetIds => $_getList(4);
 }
