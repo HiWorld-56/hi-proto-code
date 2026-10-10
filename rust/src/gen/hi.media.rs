@@ -1385,24 +1385,31 @@ pub mod video_parameter_config {
         ImageResolution(super::ImageResolutionConfig),
     }
 }
-/// 系统初始化的功能；客户端从 Function.List 获取 ID，不自行按名称推导。
+/// 系统初始化的功能，包括已实现和开发中的入口；客户端从 Function.List 获取 ID。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct FunctionSummary {
     /// 固定值：video.img2vid（图生视频）、video.txt2vid（文生视频）。
     /// 图片增量：image.txt2img（文生图）、image.edit_single（单图修改）、
     /// image.edit_multiple（多图修改）、image.character（角色生成）。
+    /// 开发中：video.first_last_frame（首尾帧生成）、video.motion_transfer（模仿生成）、
+    /// video.continuation（引导生成）、video.reference（参考生成）、
+    /// video.advanced_replace（高级替换）；登记入口不代表已实现生成接口。
     #[prost(string, optional, tag = "1")]
     pub function_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
     pub display_name: ::core::option::Option<::prost::alloc::string::String>,
+    /// 管理员控制的开放开关；false 仍展示入口，但普通用户不能创建新任务。
+    /// 与工作流 ENABLED 状态独立，不影响已受理任务或管理员试跑。
+    #[prost(bool, optional, tag = "3")]
+    pub enabled: ::core::option::Option<bool>,
 }
-/// 返回全部固定功能；功能是否可创建任务由 Get 的 workflows 判断。
+/// 返回全部登记功能，不按开放开关或工作流数量过滤。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListFunctionsResp {
     #[prost(message, repeated, tag = "1")]
     pub functions: ::prost::alloc::vec::Vec<FunctionSummary>,
 }
-/// 查询选中功能及其当前启用的工作流。
+/// 查询登记功能；关闭时正常返回功能信息，workflows 为空。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetFunctionReq {
     /// 必须来自 Function.List；功能 ID 的支持值及中文用途见 FunctionSummary.function_id。
@@ -1441,9 +1448,19 @@ pub struct WorkflowOption {
 pub struct GetFunctionResp {
     #[prost(message, optional, tag = "1")]
     pub function: ::core::option::Option<FunctionSummary>,
-    /// 只包含 ENABLED 工作流，按管理员顺序及稳定次序排列；空列表表示当前不可创建。
+    /// 功能关闭时为空；开放时只包含 ENABLED 工作流，按管理员顺序及稳定次序排列。
+    /// enabled=false 提示开发中；enabled=true 且列表为空提示暂无可用工作流。
     #[prost(message, repeated, tag = "2")]
     pub workflows: ::prost::alloc::vec::Vec<WorkflowOption>,
+}
+/// 修改功能开放开关；function_id 与 enabled 必须显式提供，包括 enabled=false。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SetFunctionEnabledReq {
+    #[prost(string, optional, tag = "1")]
+    pub function_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// true 允许普通用户创建新任务；开启不要求已有工作流，不自动启用工作流。
+    #[prost(bool, optional, tag = "2")]
+    pub enabled: ::core::option::Option<bool>,
 }
 /// Generated client implementations.
 pub mod function_client {
@@ -1537,7 +1554,7 @@ pub mod function_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        /// 返回系统固定功能 ID 及显示名。
+        /// 返回全部登记功能的 ID、显示名及开放开关，管理员页面也复用此列表。
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,
@@ -1559,7 +1576,7 @@ pub mod function_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.media.Function", "List"));
             self.inner.unary(req, path, codec).await
         }
-        /// 返回指定功能及全部已启用工作流，各自携带模型信息与用户参数配置。
+        /// 返回指定功能；仅开放时返回全部已启用工作流及用户参数配置。
         pub async fn get(
             &mut self,
             request: impl tonic::IntoRequest<super::GetFunctionReq>,
@@ -1579,6 +1596,123 @@ pub mod function_client {
             let path = http::uri::PathAndQuery::from_static("/hi.media.Function/Get");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.media.Function", "Get"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Generated client implementations.
+pub mod function_manage_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 管理员只调整功能开放开关；功能 ID 和显示名称随开发初始化。
+    #[derive(Debug, Clone)]
+    pub struct FunctionManageClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl FunctionManageClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> FunctionManageClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> FunctionManageClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            FunctionManageClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// 关闭只阻止新建普通任务，不取消已有任务，也不限制管理员配置、校验和试跑。
+        /// 目标功能不存在返回 NotFound；重复设置同一值仍成功。
+        pub async fn set_enabled(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SetFunctionEnabledReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.FunctionManage/SetEnabled",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.FunctionManage", "SetEnabled"));
             self.inner.unary(req, path, codec).await
         }
     }

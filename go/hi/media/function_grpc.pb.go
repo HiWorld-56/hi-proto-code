@@ -30,9 +30,9 @@ const (
 //
 // 普通用户的功能选择入口。
 type FunctionClient interface {
-	// 返回系统固定功能 ID 及显示名。
+	// 返回全部登记功能的 ID、显示名及开放开关，管理员页面也复用此列表。
 	List(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListFunctionsResp, error)
-	// 返回指定功能及全部已启用工作流，各自携带模型信息与用户参数配置。
+	// 返回指定功能；仅开放时返回全部已启用工作流及用户参数配置。
 	Get(ctx context.Context, in *GetFunctionReq, opts ...grpc.CallOption) (*GetFunctionResp, error)
 }
 
@@ -70,9 +70,9 @@ func (c *functionClient) Get(ctx context.Context, in *GetFunctionReq, opts ...gr
 //
 // 普通用户的功能选择入口。
 type FunctionServer interface {
-	// 返回系统固定功能 ID 及显示名。
+	// 返回全部登记功能的 ID、显示名及开放开关，管理员页面也复用此列表。
 	List(context.Context, *emptypb.Empty) (*ListFunctionsResp, error)
-	// 返回指定功能及全部已启用工作流，各自携带模型信息与用户参数配置。
+	// 返回指定功能；仅开放时返回全部已启用工作流及用户参数配置。
 	Get(context.Context, *GetFunctionReq) (*GetFunctionResp, error)
 }
 
@@ -159,6 +159,114 @@ var Function_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Get",
 			Handler:    _Function_Get_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/media/function.proto",
+}
+
+const (
+	FunctionManage_SetEnabled_FullMethodName = "/hi.media.FunctionManage/SetEnabled"
+)
+
+// FunctionManageClient is the client API for FunctionManage service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 管理员只调整功能开放开关；功能 ID 和显示名称随开发初始化。
+type FunctionManageClient interface {
+	// 关闭只阻止新建普通任务，不取消已有任务，也不限制管理员配置、校验和试跑。
+	// 目标功能不存在返回 NotFound；重复设置同一值仍成功。
+	SetEnabled(ctx context.Context, in *SetFunctionEnabledReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+}
+
+type functionManageClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewFunctionManageClient(cc grpc.ClientConnInterface) FunctionManageClient {
+	return &functionManageClient{cc}
+}
+
+func (c *functionManageClient) SetEnabled(ctx context.Context, in *SetFunctionEnabledReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, FunctionManage_SetEnabled_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// FunctionManageServer is the server API for FunctionManage service.
+// All implementations should embed UnimplementedFunctionManageServer
+// for forward compatibility.
+//
+// 管理员只调整功能开放开关；功能 ID 和显示名称随开发初始化。
+type FunctionManageServer interface {
+	// 关闭只阻止新建普通任务，不取消已有任务，也不限制管理员配置、校验和试跑。
+	// 目标功能不存在返回 NotFound；重复设置同一值仍成功。
+	SetEnabled(context.Context, *SetFunctionEnabledReq) (*emptypb.Empty, error)
+}
+
+// UnimplementedFunctionManageServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedFunctionManageServer struct{}
+
+func (UnimplementedFunctionManageServer) SetEnabled(context.Context, *SetFunctionEnabledReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetEnabled not implemented")
+}
+func (UnimplementedFunctionManageServer) testEmbeddedByValue() {}
+
+// UnsafeFunctionManageServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to FunctionManageServer will
+// result in compilation errors.
+type UnsafeFunctionManageServer interface {
+	mustEmbedUnimplementedFunctionManageServer()
+}
+
+func RegisterFunctionManageServer(s grpc.ServiceRegistrar, srv FunctionManageServer) {
+	// If the following call panics, it indicates UnimplementedFunctionManageServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&FunctionManage_ServiceDesc, srv)
+}
+
+func _FunctionManage_SetEnabled_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetFunctionEnabledReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FunctionManageServer).SetEnabled(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FunctionManage_SetEnabled_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FunctionManageServer).SetEnabled(ctx, req.(*SetFunctionEnabledReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// FunctionManage_ServiceDesc is the grpc.ServiceDesc for FunctionManage service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var FunctionManage_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.media.FunctionManage",
+	HandlerType: (*FunctionManageServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "SetEnabled",
+			Handler:    _FunctionManage_SetEnabled_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

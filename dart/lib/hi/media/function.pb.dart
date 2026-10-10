@@ -764,15 +764,17 @@ class VideoParameterConfig extends $pb.GeneratedMessage {
   ImageResolutionConfig ensureImageResolution() => $_ensure(7);
 }
 
-/// 系统初始化的功能；客户端从 Function.List 获取 ID，不自行按名称推导。
+/// 系统初始化的功能，包括已实现和开发中的入口；客户端从 Function.List 获取 ID。
 class FunctionSummary extends $pb.GeneratedMessage {
   factory FunctionSummary({
     $core.String? functionId,
     $core.String? displayName,
+    $core.bool? enabled,
   }) {
     final result = create();
     if (functionId != null) result.functionId = functionId;
     if (displayName != null) result.displayName = displayName;
+    if (enabled != null) result.enabled = enabled;
     return result;
   }
 
@@ -791,6 +793,7 @@ class FunctionSummary extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'functionId')
     ..aOS(2, _omitFieldNames ? '' : 'displayName')
+    ..aOB(3, _omitFieldNames ? '' : 'enabled')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -815,6 +818,9 @@ class FunctionSummary extends $pb.GeneratedMessage {
   /// 固定值：video.img2vid（图生视频）、video.txt2vid（文生视频）。
   /// 图片增量：image.txt2img（文生图）、image.edit_single（单图修改）、
   /// image.edit_multiple（多图修改）、image.character（角色生成）。
+  /// 开发中：video.first_last_frame（首尾帧生成）、video.motion_transfer（模仿生成）、
+  /// video.continuation（引导生成）、video.reference（参考生成）、
+  /// video.advanced_replace（高级替换）；登记入口不代表已实现生成接口。
   @$pb.TagNumber(1)
   $core.String get functionId => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -832,9 +838,20 @@ class FunctionSummary extends $pb.GeneratedMessage {
   $core.bool hasDisplayName() => $_has(1);
   @$pb.TagNumber(2)
   void clearDisplayName() => $_clearField(2);
+
+  /// 管理员控制的开放开关；false 仍展示入口，但普通用户不能创建新任务。
+  /// 与工作流 ENABLED 状态独立，不影响已受理任务或管理员试跑。
+  @$pb.TagNumber(3)
+  $core.bool get enabled => $_getBF(2);
+  @$pb.TagNumber(3)
+  set enabled($core.bool value) => $_setBool(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasEnabled() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearEnabled() => $_clearField(3);
 }
 
-/// 返回全部固定功能；功能是否可创建任务由 Get 的 workflows 判断。
+/// 返回全部登记功能，不按开放开关或工作流数量过滤。
 class ListFunctionsResp extends $pb.GeneratedMessage {
   factory ListFunctionsResp({
     $core.Iterable<FunctionSummary>? functions,
@@ -884,7 +901,7 @@ class ListFunctionsResp extends $pb.GeneratedMessage {
   $pb.PbList<FunctionSummary> get functions => $_getList(0);
 }
 
-/// 查询选中功能及其当前启用的工作流。
+/// 查询登记功能；关闭时正常返回功能信息，workflows 为空。
 class GetFunctionReq extends $pb.GeneratedMessage {
   factory GetFunctionReq({
     $core.String? functionId,
@@ -1182,9 +1199,79 @@ class GetFunctionResp extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   FunctionSummary ensureFunction() => $_ensure(0);
 
-  /// 只包含 ENABLED 工作流，按管理员顺序及稳定次序排列；空列表表示当前不可创建。
+  /// 功能关闭时为空；开放时只包含 ENABLED 工作流，按管理员顺序及稳定次序排列。
+  /// enabled=false 提示开发中；enabled=true 且列表为空提示暂无可用工作流。
   @$pb.TagNumber(2)
   $pb.PbList<WorkflowOption> get workflows => $_getList(1);
+}
+
+/// 修改功能开放开关；function_id 与 enabled 必须显式提供，包括 enabled=false。
+class SetFunctionEnabledReq extends $pb.GeneratedMessage {
+  factory SetFunctionEnabledReq({
+    $core.String? functionId,
+    $core.bool? enabled,
+  }) {
+    final result = create();
+    if (functionId != null) result.functionId = functionId;
+    if (enabled != null) result.enabled = enabled;
+    return result;
+  }
+
+  SetFunctionEnabledReq._();
+
+  factory SetFunctionEnabledReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SetFunctionEnabledReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SetFunctionEnabledReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'functionId')
+    ..aOB(2, _omitFieldNames ? '' : 'enabled')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetFunctionEnabledReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetFunctionEnabledReq copyWith(
+          void Function(SetFunctionEnabledReq) updates) =>
+      super.copyWith((message) => updates(message as SetFunctionEnabledReq))
+          as SetFunctionEnabledReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SetFunctionEnabledReq create() => SetFunctionEnabledReq._();
+  @$core.override
+  SetFunctionEnabledReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static SetFunctionEnabledReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetFunctionEnabledReq>(create);
+  static SetFunctionEnabledReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get functionId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set functionId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasFunctionId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearFunctionId() => $_clearField(1);
+
+  /// true 允许普通用户创建新任务；开启不要求已有工作流，不自动启用工作流。
+  @$pb.TagNumber(2)
+  $core.bool get enabled => $_getBF(1);
+  @$pb.TagNumber(2)
+  set enabled($core.bool value) => $_setBool(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasEnabled() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearEnabled() => $_clearField(2);
 }
 
 const $core.bool _omitFieldNames =

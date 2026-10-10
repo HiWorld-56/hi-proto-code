@@ -442,19 +442,31 @@ const FunctionSummary$json = {
       '10': 'displayName',
       '17': true
     },
+    {
+      '1': 'enabled',
+      '3': 3,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 2,
+      '10': 'enabled',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
     {'1': '_function_id'},
     {'1': '_display_name'},
+    {'1': '_enabled'},
   ],
 };
 
 /// Descriptor for `FunctionSummary`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List functionSummaryDescriptor = $convert.base64Decode(
     'Cg9GdW5jdGlvblN1bW1hcnkSKgoLZnVuY3Rpb25faWQYASABKAlCBJC1GAFIAFIKZnVuY3Rpb2'
-    '5JZIgBARIsCgxkaXNwbGF5X25hbWUYAiABKAlCBJC1GAFIAVILZGlzcGxheU5hbWWIAQE6BJi1'
-    'GAFCDgoMX2Z1bmN0aW9uX2lkQg8KDV9kaXNwbGF5X25hbWU=');
+    '5JZIgBARIsCgxkaXNwbGF5X25hbWUYAiABKAlCBJC1GAFIAVILZGlzcGxheU5hbWWIAQESIwoH'
+    'ZW5hYmxlZBgDIAEoCEIEkLUYAUgCUgdlbmFibGVkiAEBOgSYtRgBQg4KDF9mdW5jdGlvbl9pZE'
+    'IPCg1fZGlzcGxheV9uYW1lQgoKCF9lbmFibGVk');
 
 @$core.Deprecated('Use listFunctionsRespDescriptor instead')
 const ListFunctionsResp$json = {
@@ -643,3 +655,40 @@ final $typed_data.Uint8List getFunctionRespDescriptor = $convert.base64Decode(
     'Cg9HZXRGdW5jdGlvblJlc3ASOwoIZnVuY3Rpb24YASABKAsyGS5oaS5tZWRpYS5GdW5jdGlvbl'
     'N1bW1hcnlCBJC1GAFSCGZ1bmN0aW9uEjwKCXdvcmtmbG93cxgCIAMoCzIYLmhpLm1lZGlhLldv'
     'cmtmbG93T3B0aW9uQgSQtRgBUgl3b3JrZmxvd3M6BJi1GAE=');
+
+@$core.Deprecated('Use setFunctionEnabledReqDescriptor instead')
+const SetFunctionEnabledReq$json = {
+  '1': 'SetFunctionEnabledReq',
+  '2': [
+    {
+      '1': 'function_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'functionId',
+      '17': true
+    },
+    {
+      '1': 'enabled',
+      '3': 2,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 1,
+      '10': 'enabled',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_function_id'},
+    {'1': '_enabled'},
+  ],
+};
+
+/// Descriptor for `SetFunctionEnabledReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setFunctionEnabledReqDescriptor = $convert.base64Decode(
+    'ChVTZXRGdW5jdGlvbkVuYWJsZWRSZXESMAoLZnVuY3Rpb25faWQYASABKAlCCrpIB8gBAXICEA'
+    'FIAFIKZnVuY3Rpb25JZIgBARIlCgdlbmFibGVkGAIgASgIQga6SAPIAQFIAVIHZW5hYmxlZIgB'
+    'AUIOCgxfZnVuY3Rpb25faWRCCgoIX2VuYWJsZWQ=');

@@ -33,14 +33,14 @@ class FunctionServicer(object):
     """
 
     def List(self, request, context):
-        """返回系统固定功能 ID 及显示名。
+        """返回全部登记功能的 ID、显示名及开放开关，管理员页面也复用此列表。
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def Get(self, request, context):
-        """返回指定功能及全部已启用工作流，各自携带模型信息与用户参数配置。
+        """返回指定功能；仅开放时返回全部已启用工作流及用户参数配置。
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -115,6 +115,83 @@ class Function(object):
             '/hi.media.Function/Get',
             hi_dot_media_dot_function__pb2.GetFunctionReq.SerializeToString,
             hi_dot_media_dot_function__pb2.GetFunctionResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+
+class FunctionManageStub(object):
+    """管理员只调整功能开放开关；功能 ID 和显示名称随开发初始化。
+    """
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.SetEnabled = channel.unary_unary(
+                '/hi.media.FunctionManage/SetEnabled',
+                request_serializer=hi_dot_media_dot_function__pb2.SetFunctionEnabledReq.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                _registered_method=True)
+
+
+class FunctionManageServicer(object):
+    """管理员只调整功能开放开关；功能 ID 和显示名称随开发初始化。
+    """
+
+    def SetEnabled(self, request, context):
+        """关闭只阻止新建普通任务，不取消已有任务，也不限制管理员配置、校验和试跑。
+        目标功能不存在返回 NotFound；重复设置同一值仍成功。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_FunctionManageServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'SetEnabled': grpc.unary_unary_rpc_method_handler(
+                    servicer.SetEnabled,
+                    request_deserializer=hi_dot_media_dot_function__pb2.SetFunctionEnabledReq.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'hi.media.FunctionManage', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('hi.media.FunctionManage', rpc_method_handlers)
+
+
+ # This class is part of an EXPERIMENTAL API.
+class FunctionManage(object):
+    """管理员只调整功能开放开关；功能 ID 和显示名称随开发初始化。
+    """
+
+    @staticmethod
+    def SetEnabled(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.media.FunctionManage/SetEnabled',
+            hi_dot_media_dot_function__pb2.SetFunctionEnabledReq.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,
             insecure,

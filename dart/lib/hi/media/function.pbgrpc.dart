@@ -34,7 +34,7 @@ class FunctionClient extends $grpc.Client {
 
   FunctionClient(super.channel, {super.options, super.interceptors});
 
-  /// 返回系统固定功能 ID 及显示名。
+  /// 返回全部登记功能的 ID、显示名及开放开关，管理员页面也复用此列表。
   $grpc.ResponseFuture<$1.ListFunctionsResp> list(
     $0.Empty request, {
     $grpc.CallOptions? options,
@@ -42,7 +42,7 @@ class FunctionClient extends $grpc.Client {
     return $createUnaryCall(_$list, request, options: options);
   }
 
-  /// 返回指定功能及全部已启用工作流，各自携带模型信息与用户参数配置。
+  /// 返回指定功能；仅开放时返回全部已启用工作流及用户参数配置。
   $grpc.ResponseFuture<$1.GetFunctionResp> get(
     $1.GetFunctionReq request, {
     $grpc.CallOptions? options,
@@ -99,4 +99,59 @@ abstract class FunctionServiceBase extends $grpc.Service {
 
   $async.Future<$1.GetFunctionResp> get(
       $grpc.ServiceCall call, $1.GetFunctionReq request);
+}
+
+/// 管理员只调整功能开放开关；功能 ID 和显示名称随开发初始化。
+@$pb.GrpcServiceName('hi.media.FunctionManage')
+class FunctionManageClient extends $grpc.Client {
+  /// The hostname for this service.
+  static const $core.String defaultHost = '';
+
+  /// OAuth scopes needed for the client.
+  static const $core.List<$core.String> oauthScopes = [
+    '',
+  ];
+
+  FunctionManageClient(super.channel, {super.options, super.interceptors});
+
+  /// 关闭只阻止新建普通任务，不取消已有任务，也不限制管理员配置、校验和试跑。
+  /// 目标功能不存在返回 NotFound；重复设置同一值仍成功。
+  $grpc.ResponseFuture<$0.Empty> setEnabled(
+    $1.SetFunctionEnabledReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$setEnabled, request, options: options);
+  }
+
+  // method descriptors
+
+  static final _$setEnabled =
+      $grpc.ClientMethod<$1.SetFunctionEnabledReq, $0.Empty>(
+          '/hi.media.FunctionManage/SetEnabled',
+          ($1.SetFunctionEnabledReq value) => value.writeToBuffer(),
+          $0.Empty.fromBuffer);
+}
+
+@$pb.GrpcServiceName('hi.media.FunctionManage')
+abstract class FunctionManageServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.media.FunctionManage';
+
+  FunctionManageServiceBase() {
+    $addMethod($grpc.ServiceMethod<$1.SetFunctionEnabledReq, $0.Empty>(
+        'SetEnabled',
+        setEnabled_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $1.SetFunctionEnabledReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+  }
+
+  $async.Future<$0.Empty> setEnabled_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.SetFunctionEnabledReq> $request) async {
+    return setEnabled($call, await $request);
+  }
+
+  $async.Future<$0.Empty> setEnabled(
+      $grpc.ServiceCall call, $1.SetFunctionEnabledReq request);
 }

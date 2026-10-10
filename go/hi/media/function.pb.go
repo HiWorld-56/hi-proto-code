@@ -622,14 +622,20 @@ func (*VideoParameterConfig_ImageDimensions) isVideoParameterConfig_ImageSize() 
 
 func (*VideoParameterConfig_ImageResolution) isVideoParameterConfig_ImageSize() {}
 
-// 系统初始化的功能；客户端从 Function.List 获取 ID，不自行按名称推导。
+// 系统初始化的功能，包括已实现和开发中的入口；客户端从 Function.List 获取 ID。
 type FunctionSummary struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 固定值：video.img2vid（图生视频）、video.txt2vid（文生视频）。
 	// 图片增量：image.txt2img（文生图）、image.edit_single（单图修改）、
 	// image.edit_multiple（多图修改）、image.character（角色生成）。
-	FunctionId    *string `protobuf:"bytes,1,opt,name=function_id,json=functionId,proto3,oneof" json:"function_id,omitempty"`
-	DisplayName   *string `protobuf:"bytes,2,opt,name=display_name,json=displayName,proto3,oneof" json:"display_name,omitempty"`
+	// 开发中：video.first_last_frame（首尾帧生成）、video.motion_transfer（模仿生成）、
+	// video.continuation（引导生成）、video.reference（参考生成）、
+	// video.advanced_replace（高级替换）；登记入口不代表已实现生成接口。
+	FunctionId  *string `protobuf:"bytes,1,opt,name=function_id,json=functionId,proto3,oneof" json:"function_id,omitempty"`
+	DisplayName *string `protobuf:"bytes,2,opt,name=display_name,json=displayName,proto3,oneof" json:"display_name,omitempty"`
+	// 管理员控制的开放开关；false 仍展示入口，但普通用户不能创建新任务。
+	// 与工作流 ENABLED 状态独立，不影响已受理任务或管理员试跑。
+	Enabled       *bool `protobuf:"varint,3,opt,name=enabled,proto3,oneof" json:"enabled,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -678,7 +684,14 @@ func (x *FunctionSummary) GetDisplayName() string {
 	return ""
 }
 
-// 返回全部固定功能；功能是否可创建任务由 Get 的 workflows 判断。
+func (x *FunctionSummary) GetEnabled() bool {
+	if x != nil && x.Enabled != nil {
+		return *x.Enabled
+	}
+	return false
+}
+
+// 返回全部登记功能，不按开放开关或工作流数量过滤。
 type ListFunctionsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Functions     []*FunctionSummary     `protobuf:"bytes,1,rep,name=functions,proto3" json:"functions,omitempty"`
@@ -723,7 +736,7 @@ func (x *ListFunctionsResp) GetFunctions() []*FunctionSummary {
 	return nil
 }
 
-// 查询选中功能及其当前启用的工作流。
+// 查询登记功能；关闭时正常返回功能信息，workflows 为空。
 type GetFunctionReq struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 必须来自 Function.List；功能 ID 的支持值及中文用途见 FunctionSummary.function_id。
@@ -908,7 +921,8 @@ func (x *WorkflowOption) GetParameterConfig() *VideoParameterConfig {
 type GetFunctionResp struct {
 	state    protoimpl.MessageState `protogen:"open.v1"`
 	Function *FunctionSummary       `protobuf:"bytes,1,opt,name=function,proto3" json:"function,omitempty"`
-	// 只包含 ENABLED 工作流，按管理员顺序及稳定次序排列；空列表表示当前不可创建。
+	// 功能关闭时为空；开放时只包含 ENABLED 工作流，按管理员顺序及稳定次序排列。
+	// enabled=false 提示开发中；enabled=true 且列表为空提示暂无可用工作流。
 	Workflows     []*WorkflowOption `protobuf:"bytes,2,rep,name=workflows,proto3" json:"workflows,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -956,6 +970,60 @@ func (x *GetFunctionResp) GetWorkflows() []*WorkflowOption {
 		return x.Workflows
 	}
 	return nil
+}
+
+// 修改功能开放开关；function_id 与 enabled 必须显式提供，包括 enabled=false。
+type SetFunctionEnabledReq struct {
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	FunctionId *string                `protobuf:"bytes,1,opt,name=function_id,json=functionId,proto3,oneof" json:"function_id,omitempty"`
+	// true 允许普通用户创建新任务；开启不要求已有工作流，不自动启用工作流。
+	Enabled       *bool `protobuf:"varint,2,opt,name=enabled,proto3,oneof" json:"enabled,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SetFunctionEnabledReq) Reset() {
+	*x = SetFunctionEnabledReq{}
+	mi := &file_hi_media_function_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetFunctionEnabledReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetFunctionEnabledReq) ProtoMessage() {}
+
+func (x *SetFunctionEnabledReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_media_function_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetFunctionEnabledReq.ProtoReflect.Descriptor instead.
+func (*SetFunctionEnabledReq) Descriptor() ([]byte, []int) {
+	return file_hi_media_function_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *SetFunctionEnabledReq) GetFunctionId() string {
+	if x != nil && x.FunctionId != nil {
+		return *x.FunctionId
+	}
+	return ""
+}
+
+func (x *SetFunctionEnabledReq) GetEnabled() bool {
+	if x != nil && x.Enabled != nil {
+		return *x.Enabled
+	}
+	return false
 }
 
 var File_hi_media_function_proto protoreflect.FileDescriptor
@@ -1028,13 +1096,16 @@ const file_hi_media_function_proto_rawDesc = "" +
 	"\x10image_dimensions\x18\a \x01(\v2\x1f.hi.media.ImageDimensionsConfigB\x04\x90\xb5\x18\x01H\x00R\x0fimageDimensions\x12R\n" +
 	"\x10image_resolution\x18\b \x01(\v2\x1f.hi.media.ImageResolutionConfigB\x04\x90\xb5\x18\x01H\x00R\x0fimageResolution:\x04\x98\xb5\x18\x01B\f\n" +
 	"\n" +
-	"image_size\"\x92\x01\n" +
+	"image_size\"\xc3\x01\n" +
 	"\x0fFunctionSummary\x12*\n" +
 	"\vfunction_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\n" +
 	"functionId\x88\x01\x01\x12,\n" +
-	"\fdisplay_name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\vdisplayName\x88\x01\x01:\x04\x98\xb5\x18\x01B\x0e\n" +
+	"\fdisplay_name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\vdisplayName\x88\x01\x01\x12#\n" +
+	"\aenabled\x18\x03 \x01(\bB\x04\x90\xb5\x18\x01H\x02R\aenabled\x88\x01\x01:\x04\x98\xb5\x18\x01B\x0e\n" +
 	"\f_function_idB\x0f\n" +
-	"\r_display_name\"X\n" +
+	"\r_display_nameB\n" +
+	"\n" +
+	"\b_enabled\"X\n" +
 	"\x11ListFunctionsResp\x12=\n" +
 	"\tfunctions\x18\x01 \x03(\v2\x19.hi.media.FunctionSummaryB\x04\x90\xb5\x18\x01R\tfunctions:\x04\x98\xb5\x18\x01\"R\n" +
 	"\x0eGetFunctionReq\x120\n" +
@@ -1060,10 +1131,21 @@ const file_hi_media_function_proto_rawDesc = "" +
 	"\f_description\"\x92\x01\n" +
 	"\x0fGetFunctionResp\x12;\n" +
 	"\bfunction\x18\x01 \x01(\v2\x19.hi.media.FunctionSummaryB\x04\x90\xb5\x18\x01R\bfunction\x12<\n" +
-	"\tworkflows\x18\x02 \x03(\v2\x18.hi.media.WorkflowOptionB\x04\x90\xb5\x18\x01R\tworkflows:\x04\x98\xb5\x18\x012\x91\x01\n" +
+	"\tworkflows\x18\x02 \x03(\v2\x18.hi.media.WorkflowOptionB\x04\x90\xb5\x18\x01R\tworkflows:\x04\x98\xb5\x18\x01\"\x8c\x01\n" +
+	"\x15SetFunctionEnabledReq\x120\n" +
+	"\vfunction_id\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\n" +
+	"functionId\x88\x01\x01\x12%\n" +
+	"\aenabled\x18\x02 \x01(\bB\x06\xbaH\x03\xc8\x01\x01H\x01R\aenabled\x88\x01\x01B\x0e\n" +
+	"\f_function_idB\n" +
+	"\n" +
+	"\b_enabled2\x91\x01\n" +
 	"\bFunction\x12B\n" +
 	"\x04List\x12\x16.google.protobuf.Empty\x1a\x1b.hi.media.ListFunctionsResp\"\x05\x8a\xb5\x18\x01\x02\x12A\n" +
-	"\x03Get\x12\x18.hi.media.GetFunctionReq\x1a\x19.hi.media.GetFunctionResp\"\x05\x8a\xb5\x18\x01\x02B\x8a\x01\n" +
+	"\x03Get\x12\x18.hi.media.GetFunctionReq\x1a\x19.hi.media.GetFunctionResp\"\x05\x8a\xb5\x18\x01\x022^\n" +
+	"\x0eFunctionManage\x12L\n" +
+	"\n" +
+	"SetEnabled\x12\x1f.hi.media.SetFunctionEnabledReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04B\x8a\x01\n" +
 	"\fcom.hi.mediaB\rFunctionProtoP\x01Z*github.com/HiWorld-56/hi-proto/go/hi/media\xa2\x02\x03HMX\xaa\x02\bHi.Media\xca\x02\bHi\\Media\xe2\x02\x14Hi\\Media\\GPBMetadata\xea\x02\tHi::Mediab\x06proto3"
 
 var (
@@ -1078,7 +1160,7 @@ func file_hi_media_function_proto_rawDescGZIP() []byte {
 	return file_hi_media_function_proto_rawDescData
 }
 
-var file_hi_media_function_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
+var file_hi_media_function_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_hi_media_function_proto_goTypes = []any{
 	(*TextLimit)(nil),             // 0: hi.media.TextLimit
 	(*DecimalOptionConfig)(nil),   // 1: hi.media.DecimalOptionConfig
@@ -1095,7 +1177,8 @@ var file_hi_media_function_proto_goTypes = []any{
 	(*WorkflowModelOption)(nil),   // 12: hi.media.WorkflowModelOption
 	(*WorkflowOption)(nil),        // 13: hi.media.WorkflowOption
 	(*GetFunctionResp)(nil),       // 14: hi.media.GetFunctionResp
-	(*emptypb.Empty)(nil),         // 15: google.protobuf.Empty
+	(*SetFunctionEnabledReq)(nil), // 15: hi.media.SetFunctionEnabledReq
+	(*emptypb.Empty)(nil),         // 16: google.protobuf.Empty
 }
 var file_hi_media_function_proto_depIdxs = []int32{
 	3,  // 0: hi.media.FrameRateConfig.selectable:type_name -> hi.media.IntRangeConfig
@@ -1116,12 +1199,14 @@ var file_hi_media_function_proto_depIdxs = []int32{
 	8,  // 15: hi.media.WorkflowOption.parameter_config:type_name -> hi.media.VideoParameterConfig
 	9,  // 16: hi.media.GetFunctionResp.function:type_name -> hi.media.FunctionSummary
 	13, // 17: hi.media.GetFunctionResp.workflows:type_name -> hi.media.WorkflowOption
-	15, // 18: hi.media.Function.List:input_type -> google.protobuf.Empty
+	16, // 18: hi.media.Function.List:input_type -> google.protobuf.Empty
 	11, // 19: hi.media.Function.Get:input_type -> hi.media.GetFunctionReq
-	10, // 20: hi.media.Function.List:output_type -> hi.media.ListFunctionsResp
-	14, // 21: hi.media.Function.Get:output_type -> hi.media.GetFunctionResp
-	20, // [20:22] is the sub-list for method output_type
-	18, // [18:20] is the sub-list for method input_type
+	15, // 20: hi.media.FunctionManage.SetEnabled:input_type -> hi.media.SetFunctionEnabledReq
+	10, // 21: hi.media.Function.List:output_type -> hi.media.ListFunctionsResp
+	14, // 22: hi.media.Function.Get:output_type -> hi.media.GetFunctionResp
+	16, // 23: hi.media.FunctionManage.SetEnabled:output_type -> google.protobuf.Empty
+	21, // [21:24] is the sub-list for method output_type
+	18, // [18:21] is the sub-list for method input_type
 	18, // [18:18] is the sub-list for extension type_name
 	18, // [18:18] is the sub-list for extension extendee
 	0,  // [0:18] is the sub-list for field type_name
@@ -1149,15 +1234,16 @@ func file_hi_media_function_proto_init() {
 	file_hi_media_function_proto_msgTypes[11].OneofWrappers = []any{}
 	file_hi_media_function_proto_msgTypes[12].OneofWrappers = []any{}
 	file_hi_media_function_proto_msgTypes[13].OneofWrappers = []any{}
+	file_hi_media_function_proto_msgTypes[15].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_media_function_proto_rawDesc), len(file_hi_media_function_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   15,
+			NumMessages:   16,
 			NumExtensions: 0,
-			NumServices:   1,
+			NumServices:   2,
 		},
 		GoTypes:           file_hi_media_function_proto_goTypes,
 		DependencyIndexes: file_hi_media_function_proto_depIdxs,
