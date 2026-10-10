@@ -14,10 +14,11 @@ import 'dart:core' as $core;
 
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/struct.pb.dart' as $4;
+import 'package:protobuf/well_known_types/google/protobuf/struct.pb.dart' as $5;
 
+import '../ai/plugin.pb.dart' as $3;
 import '../common.pb.dart' as $1;
-import '../did/base.pb.dart' as $3;
+import '../did/base.pb.dart' as $4;
 import 'market.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -223,17 +224,17 @@ class MarketListingBrief extends $pb.GeneratedMessage {
 class MarketListingDetail extends $pb.GeneratedMessage {
   factory MarketListingDetail({
     MarketListingBrief? brief,
-    $core.String? capabilities,
     $core.Iterable<$core.String>? versions,
     ListingStatus? status,
     $core.String? pluginUuid,
+    $3.PluginVersionPublic? active,
   }) {
     final result = create();
     if (brief != null) result.brief = brief;
-    if (capabilities != null) result.capabilities = capabilities;
     if (versions != null) result.versions.addAll(versions);
     if (status != null) result.status = status;
     if (pluginUuid != null) result.pluginUuid = pluginUuid;
+    if (active != null) result.active = active;
     return result;
   }
 
@@ -252,11 +253,12 @@ class MarketListingDetail extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<MarketListingBrief>(1, _omitFieldNames ? '' : 'brief',
         subBuilder: MarketListingBrief.create)
-    ..aOS(2, _omitFieldNames ? '' : 'capabilities')
     ..pPS(4, _omitFieldNames ? '' : 'versions')
     ..aE<ListingStatus>(5, _omitFieldNames ? '' : 'status',
         enumValues: ListingStatus.values)
     ..aOS(6, _omitFieldNames ? '' : 'pluginUuid')
+    ..aOM<$3.PluginVersionPublic>(7, _omitFieldNames ? '' : 'active',
+        subBuilder: $3.PluginVersionPublic.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -289,34 +291,23 @@ class MarketListingDetail extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   MarketListingBrief ensureBrief() => $_ensure(0);
 
-  /// 这个包提供哪些方法。直接取自 hi.ai 那份 tools 数组(已是最终形态、name 带壳前缀),
-  /// 买家装之前就知道会得到什么能力。
-  @$pb.TagNumber(2)
-  $core.String get capabilities => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set capabilities($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasCapabilities() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearCapabilities() => $_clearField(2);
-
   /// ⚠️ **没有 allow_follow_latest,不要再加回来。**
   /// "要不要自动跟新版"是**使用方自己的事**,归在 hi.ai 的使用行上
   /// (`hi.ai.PluginView.follow_latest`,在"机器人 → 插件"那一行上开关)。
   /// 卖家没有理由替买家决定他用哪一版 —— 买家买到的是这个插件,选版本是他的权利。
   /// 可选版本列表(引用方装好后可在其中切换)。
   @$pb.TagNumber(4)
-  $pb.PbList<$core.String> get versions => $_getList(2);
+  $pb.PbList<$core.String> get versions => $_getList(1);
 
   /// 挂牌状态。**买家侧永远是 LISTED**(搜不到别的),这个字段是给 ListMyListings ——
   /// 出让方自己那张表 —— 用的:草稿/挂牌中/隐藏/已下架必须分得出来,
   /// 否则前端连"该给这行显示上架还是下架"都判断不了,只能把两个按钮都摆上去。
   @$pb.TagNumber(5)
-  ListingStatus get status => $_getN(3);
+  ListingStatus get status => $_getN(2);
   @$pb.TagNumber(5)
   set status(ListingStatus value) => $_setField(5, value);
   @$pb.TagNumber(5)
-  $core.bool hasStatus() => $_has(3);
+  $core.bool hasStatus() => $_has(2);
   @$pb.TagNumber(5)
   void clearStatus() => $_clearField(5);
 
@@ -324,13 +315,30 @@ class MarketListingDetail extends $pb.GeneratedMessage {
   /// 「机器人 → 插件」并直接打开这个插件的版本管理,没有它就只能让人自己去翻。
   /// 公开无妨:壳 uuid 不是秘密(装了它的机器人本来就拿得到),真正私有的是脚本 url。
   @$pb.TagNumber(6)
-  $core.String get pluginUuid => $_getSZ(4);
+  $core.String get pluginUuid => $_getSZ(3);
   @$pb.TagNumber(6)
-  set pluginUuid($core.String value) => $_setString(4, value);
+  set pluginUuid($core.String value) => $_setString(3, value);
   @$pb.TagNumber(6)
-  $core.bool hasPluginUuid() => $_has(4);
+  $core.bool hasPluginUuid() => $_has(3);
   @$pb.TagNumber(6)
   void clearPluginUuid() => $_clearField(6);
+
+  /// 出让方**当前激活版**的公开面(与 brief 的 logo/summary 同一口径):
+  /// `description` 是这个包提供哪些方法(hi.ai 那份 tools 数组,已是最终形态、name 带壳前缀),
+  /// `prompt` 是它给模型加的话。买家装之前就该知道这两样。取不到(ai 抖了)就不带。
+  ///
+  /// ⚠️ 原来这里是拍平的 `capabilities` 字符串(只放了 description),提示词没地方放 ——
+  ///    2026-10-10 换成整个对象,以后版本多一个公开字段,这里一行都不用改。
+  @$pb.TagNumber(7)
+  $3.PluginVersionPublic get active => $_getN(4);
+  @$pb.TagNumber(7)
+  set active($3.PluginVersionPublic value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasActive() => $_has(4);
+  @$pb.TagNumber(7)
+  void clearActive() => $_clearField(7);
+  @$pb.TagNumber(7)
+  $3.PluginVersionPublic ensureActive() => $_ensure(4);
 }
 
 /// MarketGrantBrief 授权摘要 —— **专供单聊 Notice 的 extra**。
@@ -1122,7 +1130,7 @@ class MarketSeller extends $pb.GeneratedMessage {
     $core.String? moment,
     $core.int? stallsCount,
     $core.int? listingCount,
-    $core.Iterable<$3.Coin>? supportCoins,
+    $core.Iterable<$4.Coin>? supportCoins,
     $core.bool? isMerchant,
   }) {
     final result = create();
@@ -1153,8 +1161,8 @@ class MarketSeller extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'moment')
     ..aI(3, _omitFieldNames ? '' : 'stallsCount')
     ..aI(4, _omitFieldNames ? '' : 'listingCount')
-    ..pPM<$3.Coin>(5, _omitFieldNames ? '' : 'supportCoins',
-        subBuilder: $3.Coin.create)
+    ..pPM<$4.Coin>(5, _omitFieldNames ? '' : 'supportCoins',
+        subBuilder: $4.Coin.create)
     ..aOB(6, _omitFieldNames ? '' : 'isMerchant')
     ..hasRequiredFields = false;
 
@@ -1217,7 +1225,7 @@ class MarketSeller extends $pb.GeneratedMessage {
   void clearListingCount() => $_clearField(4);
 
   @$pb.TagNumber(5)
-  $pb.PbList<$3.Coin> get supportCoins => $_getList(4);
+  $pb.PbList<$4.Coin> get supportCoins => $_getList(4);
 
   @$pb.TagNumber(6)
   $core.bool get isMerchant => $_getBF(5);
@@ -2504,7 +2512,7 @@ class ApplyReq extends $pb.GeneratedMessage {
   factory ApplyReq({
     $core.String? listingUuid,
     $core.String? toAgent,
-    $4.Struct? params,
+    $5.Struct? params,
   }) {
     final result = create();
     if (listingUuid != null) result.listingUuid = listingUuid;
@@ -2528,8 +2536,8 @@ class ApplyReq extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'listingUuid')
     ..aOS(2, _omitFieldNames ? '' : 'toAgent')
-    ..aOM<$4.Struct>(4, _omitFieldNames ? '' : 'params',
-        subBuilder: $4.Struct.create)
+    ..aOM<$5.Struct>(4, _omitFieldNames ? '' : 'params',
+        subBuilder: $5.Struct.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2570,15 +2578,15 @@ class ApplyReq extends $pb.GeneratedMessage {
 
   /// ⚠️ 没有 follow_latest:买完之后在"机器人 → 插件"那一行上自己开关(hi.ai 的 c.follow_latest)。
   @$pb.TagNumber(4)
-  $4.Struct get params => $_getN(2);
+  $5.Struct get params => $_getN(2);
   @$pb.TagNumber(4)
-  set params($4.Struct value) => $_setField(4, value);
+  set params($5.Struct value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasParams() => $_has(2);
   @$pb.TagNumber(4)
   void clearParams() => $_clearField(4);
   @$pb.TagNumber(4)
-  $4.Struct ensureParams() => $_ensure(2);
+  $5.Struct ensureParams() => $_ensure(2);
 }
 
 class MarketPayment extends $pb.GeneratedMessage {
@@ -4547,7 +4555,7 @@ class MarketPendingGrant extends $pb.GeneratedMessage {
     $core.String? price,
     $core.String? coin,
     $fixnum.Int64? duration,
-    $4.Struct? params,
+    $5.Struct? params,
     $fixnum.Int64? createdAt,
   }) {
     final result = create();
@@ -4590,8 +4598,8 @@ class MarketPendingGrant extends $pb.GeneratedMessage {
     ..aOS(8, _omitFieldNames ? '' : 'price')
     ..aOS(9, _omitFieldNames ? '' : 'coin')
     ..aInt64(10, _omitFieldNames ? '' : 'duration')
-    ..aOM<$4.Struct>(11, _omitFieldNames ? '' : 'params',
-        subBuilder: $4.Struct.create)
+    ..aOM<$5.Struct>(11, _omitFieldNames ? '' : 'params',
+        subBuilder: $5.Struct.create)
     ..aInt64(12, _omitFieldNames ? '' : 'createdAt')
     ..hasRequiredFields = false;
 
@@ -4708,15 +4716,15 @@ class MarketPendingGrant extends $pb.GeneratedMessage {
   void clearDuration() => $_clearField(10);
 
   @$pb.TagNumber(11)
-  $4.Struct get params => $_getN(10);
+  $5.Struct get params => $_getN(10);
   @$pb.TagNumber(11)
-  set params($4.Struct value) => $_setField(11, value);
+  set params($5.Struct value) => $_setField(11, value);
   @$pb.TagNumber(11)
   $core.bool hasParams() => $_has(10);
   @$pb.TagNumber(11)
   void clearParams() => $_clearField(11);
   @$pb.TagNumber(11)
-  $4.Struct ensureParams() => $_ensure(10);
+  $5.Struct ensureParams() => $_ensure(10);
 
   @$pb.TagNumber(12)
   $fixnum.Int64 get createdAt => $_getI64(11);
@@ -4785,7 +4793,7 @@ class MarketNotifyData extends $pb.GeneratedMessage {
     $core.String? outerId,
     $core.String? result,
     $core.String? reason,
-    $4.Struct? termsOverride,
+    $5.Struct? termsOverride,
     $core.String? nonce,
     $fixnum.Int64? timestamp,
   }) {
@@ -4817,8 +4825,8 @@ class MarketNotifyData extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'outerId')
     ..aOS(3, _omitFieldNames ? '' : 'result')
     ..aOS(4, _omitFieldNames ? '' : 'reason')
-    ..aOM<$4.Struct>(5, _omitFieldNames ? '' : 'termsOverride',
-        subBuilder: $4.Struct.create)
+    ..aOM<$5.Struct>(5, _omitFieldNames ? '' : 'termsOverride',
+        subBuilder: $5.Struct.create)
     ..aOS(6, _omitFieldNames ? '' : 'nonce')
     ..aInt64(7, _omitFieldNames ? '' : 'timestamp')
     ..hasRequiredFields = false;
@@ -4879,15 +4887,15 @@ class MarketNotifyData extends $pb.GeneratedMessage {
   void clearReason() => $_clearField(4);
 
   @$pb.TagNumber(5)
-  $4.Struct get termsOverride => $_getN(4);
+  $5.Struct get termsOverride => $_getN(4);
   @$pb.TagNumber(5)
-  set termsOverride($4.Struct value) => $_setField(5, value);
+  set termsOverride($5.Struct value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasTermsOverride() => $_has(4);
   @$pb.TagNumber(5)
   void clearTermsOverride() => $_clearField(5);
   @$pb.TagNumber(5)
-  $4.Struct ensureTermsOverride() => $_ensure(4);
+  $5.Struct ensureTermsOverride() => $_ensure(4);
 
   @$pb.TagNumber(6)
   $core.String get nonce => $_getSZ(5);

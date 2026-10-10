@@ -243,7 +243,7 @@ class PluginVersion extends $pb.GeneratedMessage {
   ///
   /// 拿它跟包里的文件比对会对不上,**这是预期行为,别当 bug 查**。
   ///
-  /// PUBLIC:买家在挂牌页看的 `MarketListingDetail.capabilities` 就是这一份 ——
+  /// PUBLIC:买家在挂牌页看的 `MarketListingDetail.active.description` 就是这一份 ——
   /// 那边早就是公开的了,源头这边却标着 SELF,两边对不上。以这边为准改成 PUBLIC。
   @$pb.TagNumber(6)
   $core.String get description => $_getSZ(5);
@@ -264,6 +264,117 @@ class PluginVersion extends $pb.GeneratedMessage {
   set prompt($core.String value) => $_setString(6, value);
   @$pb.TagNumber(7)
   $core.bool hasPrompt() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearPrompt() => $_clearField(7);
+}
+
+/// PluginVersionPublic 一个版本**给别人看的那一面** —— PluginVersion 去掉私有字段(壳 uuid、脚本 url)。
+///
+/// 为什么另立一个类型:PluginVersion 里有 SELF 字段,整条放不进 PUBLIC 消息(lint 挡的正是这个)。
+/// **门面是另一个类型,不是另一套值** —— 每个字段都在读侧从 PluginVersion 原样取,不另存、不另填。
+/// 字段号与 PluginVersion 里同名字段一一相同,一眼看得出是同一份东西的子集。
+///
+/// 用在挂牌详情(hi.club.MarketListingDetail.active):买家装之前就该知道这个插件
+/// 提供哪些方法、给模型加了什么话。2026-10-10 起替掉原来那个拍平的 `capabilities` 字符串 ——
+/// 那个只带了方法,提示词没地方放。
+class PluginVersionPublic extends $pb.GeneratedMessage {
+  factory PluginVersionPublic({
+    $core.String? version,
+    $core.String? logo,
+    $core.String? summary,
+    $core.String? description,
+    $core.String? prompt,
+  }) {
+    final result = create();
+    if (version != null) result.version = version;
+    if (logo != null) result.logo = logo;
+    if (summary != null) result.summary = summary;
+    if (description != null) result.description = description;
+    if (prompt != null) result.prompt = prompt;
+    return result;
+  }
+
+  PluginVersionPublic._();
+
+  factory PluginVersionPublic.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PluginVersionPublic.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PluginVersionPublic',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOS(2, _omitFieldNames ? '' : 'version')
+    ..aOS(3, _omitFieldNames ? '' : 'logo')
+    ..aOS(4, _omitFieldNames ? '' : 'summary')
+    ..aOS(6, _omitFieldNames ? '' : 'description')
+    ..aOS(7, _omitFieldNames ? '' : 'prompt')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PluginVersionPublic clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PluginVersionPublic copyWith(void Function(PluginVersionPublic) updates) =>
+      super.copyWith((message) => updates(message as PluginVersionPublic))
+          as PluginVersionPublic;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PluginVersionPublic create() => PluginVersionPublic._();
+  @$core.override
+  PluginVersionPublic createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static PluginVersionPublic getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PluginVersionPublic>(create);
+  static PluginVersionPublic? _defaultInstance;
+
+  @$pb.TagNumber(2)
+  $core.String get version => $_getSZ(0);
+  @$pb.TagNumber(2)
+  set version($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(2)
+  $core.bool hasVersion() => $_has(0);
+  @$pb.TagNumber(2)
+  void clearVersion() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get logo => $_getSZ(1);
+  @$pb.TagNumber(3)
+  set logo($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(3)
+  $core.bool hasLogo() => $_has(1);
+  @$pb.TagNumber(3)
+  void clearLogo() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get summary => $_getSZ(2);
+  @$pb.TagNumber(4)
+  set summary($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(4)
+  $core.bool hasSummary() => $_has(2);
+  @$pb.TagNumber(4)
+  void clearSummary() => $_clearField(4);
+
+  @$pb.TagNumber(6)
+  $core.String get description => $_getSZ(3);
+  @$pb.TagNumber(6)
+  set description($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(6)
+  $core.bool hasDescription() => $_has(3);
+  @$pb.TagNumber(6)
+  void clearDescription() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.String get prompt => $_getSZ(4);
+  @$pb.TagNumber(7)
+  set prompt($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(7)
+  $core.bool hasPrompt() => $_has(4);
   @$pb.TagNumber(7)
   void clearPrompt() => $_clearField(7);
 }

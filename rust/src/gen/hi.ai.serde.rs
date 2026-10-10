@@ -11800,6 +11800,165 @@ impl<'de> serde::Deserialize<'de> for PluginVersion {
         deserializer.deserialize_struct("hi.ai.PluginVersion", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for PluginVersionPublic {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.version.is_some() {
+            len += 1;
+        }
+        if self.logo.is_some() {
+            len += 1;
+        }
+        if self.summary.is_some() {
+            len += 1;
+        }
+        if self.description.is_some() {
+            len += 1;
+        }
+        if self.prompt.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ai.PluginVersionPublic", len)?;
+        if let Some(v) = self.version.as_ref() {
+            struct_ser.serialize_field("version", v)?;
+        }
+        if let Some(v) = self.logo.as_ref() {
+            struct_ser.serialize_field("logo", v)?;
+        }
+        if let Some(v) = self.summary.as_ref() {
+            struct_ser.serialize_field("summary", v)?;
+        }
+        if let Some(v) = self.description.as_ref() {
+            struct_ser.serialize_field("description", v)?;
+        }
+        if let Some(v) = self.prompt.as_ref() {
+            struct_ser.serialize_field("prompt", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for PluginVersionPublic {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "version",
+            "logo",
+            "summary",
+            "description",
+            "prompt",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Version,
+            Logo,
+            Summary,
+            Description,
+            Prompt,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "version" => Ok(GeneratedField::Version),
+                            "logo" => Ok(GeneratedField::Logo),
+                            "summary" => Ok(GeneratedField::Summary),
+                            "description" => Ok(GeneratedField::Description),
+                            "prompt" => Ok(GeneratedField::Prompt),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = PluginVersionPublic;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ai.PluginVersionPublic")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<PluginVersionPublic, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut version__ = None;
+                let mut logo__ = None;
+                let mut summary__ = None;
+                let mut description__ = None;
+                let mut prompt__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Version => {
+                            if version__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("version"));
+                            }
+                            version__ = map_.next_value()?;
+                        }
+                        GeneratedField::Logo => {
+                            if logo__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("logo"));
+                            }
+                            logo__ = map_.next_value()?;
+                        }
+                        GeneratedField::Summary => {
+                            if summary__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("summary"));
+                            }
+                            summary__ = map_.next_value()?;
+                        }
+                        GeneratedField::Description => {
+                            if description__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("description"));
+                            }
+                            description__ = map_.next_value()?;
+                        }
+                        GeneratedField::Prompt => {
+                            if prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prompt"));
+                            }
+                            prompt__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(PluginVersionPublic {
+                    version: version__,
+                    logo: logo__,
+                    summary: summary__,
+                    description: description__,
+                    prompt: prompt__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ai.PluginVersionPublic", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for PluginVersionView {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>

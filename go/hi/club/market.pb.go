@@ -9,6 +9,7 @@ package club
 import (
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	hi "github.com/HiWorld-56/hi-proto/go/hi"
+	ai "github.com/HiWorld-56/hi-proto/go/hi/ai"
 	did "github.com/HiWorld-56/hi-proto/go/hi/did"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -735,9 +736,14 @@ func (x *MarketListingBrief) GetKind() MarketListingKind {
 type MarketListingDetail struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Brief *MarketListingBrief    `protobuf:"bytes,1,opt,name=brief,proto3" json:"brief,omitempty"`
-	// 这个包提供哪些方法。直接取自 hi.ai 那份 tools 数组(已是最终形态、name 带壳前缀),
-	// 买家装之前就知道会得到什么能力。
-	Capabilities *string `protobuf:"bytes,2,opt,name=capabilities,proto3,oneof" json:"capabilities,omitempty"`
+	// 出让方**当前激活版**的公开面(与 brief 的 logo/summary 同一口径):
+	// `description` 是这个包提供哪些方法(hi.ai 那份 tools 数组,已是最终形态、name 带壳前缀),
+	// `prompt` 是它给模型加的话。买家装之前就该知道这两样。取不到(ai 抖了)就不带。
+	//
+	// ⚠️ 原来这里是拍平的 `capabilities` 字符串(只放了 description),提示词没地方放 ——
+	//
+	//	2026-10-10 换成整个对象,以后版本多一个公开字段,这里一行都不用改。
+	Active *ai.PluginVersionPublic `protobuf:"bytes,7,opt,name=active,proto3" json:"active,omitempty"`
 	// ⚠️ **没有 allow_follow_latest,不要再加回来。**
 	// "要不要自动跟新版"是**使用方自己的事**,归在 hi.ai 的使用行上
 	// (`hi.ai.PluginView.follow_latest`,在"机器人 → 插件"那一行上开关)。
@@ -793,11 +799,11 @@ func (x *MarketListingDetail) GetBrief() *MarketListingBrief {
 	return nil
 }
 
-func (x *MarketListingDetail) GetCapabilities() string {
-	if x != nil && x.Capabilities != nil {
-		return *x.Capabilities
+func (x *MarketListingDetail) GetActive() *ai.PluginVersionPublic {
+	if x != nil {
+		return x.Active
 	}
-	return ""
+	return nil
 }
 
 func (x *MarketListingDetail) GetVersions() []string {
@@ -4377,7 +4383,7 @@ var File_hi_club_market_proto protoreflect.FileDescriptor
 
 const file_hi_club_market_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/club/market.proto\x12\ahi.club\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\x1a\x11hi/did/base.proto\"\xe6\x04\n" +
+	"\x14hi/club/market.proto\x12\ahi.club\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\x1a\x12hi/ai/plugin.proto\x1a\x11hi/did/base.proto\"\xe6\x04\n" +
 	"\x12MarketListingBrief\x12\x1d\n" +
 	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x04uuid\x88\x01\x01\x12&\n" +
 	"\x05agent\x18\x02 \x01(\v2\n" +
@@ -4404,15 +4410,14 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\x05_coinB\v\n" +
 	"\t_durationB\x10\n" +
 	"\x0e_install_countB\a\n" +
-	"\x05_kind\"\xb8\x02\n" +
+	"\x05_kind\"\xb2\x02\n" +
 	"\x13MarketListingDetail\x127\n" +
-	"\x05brief\x18\x01 \x01(\v2\x1b.hi.club.MarketListingBriefB\x04\x90\xb5\x18\x01R\x05brief\x12-\n" +
-	"\fcapabilities\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\fcapabilities\x88\x01\x01\x12 \n" +
+	"\x05brief\x18\x01 \x01(\v2\x1b.hi.club.MarketListingBriefB\x04\x90\xb5\x18\x01R\x05brief\x128\n" +
+	"\x06active\x18\a \x01(\v2\x1a.hi.ai.PluginVersionPublicB\x04\x90\xb5\x18\x01R\x06active\x12 \n" +
 	"\bversions\x18\x04 \x03(\tB\x04\x90\xb5\x18\x01R\bversions\x129\n" +
-	"\x06status\x18\x05 \x01(\x0e2\x16.hi.club.ListingStatusB\x04\x90\xb5\x18\x01H\x01R\x06status\x88\x01\x01\x12*\n" +
-	"\vplugin_uuid\x18\x06 \x01(\tB\x04\x90\xb5\x18\x01H\x02R\n" +
-	"pluginUuid\x88\x01\x01:\x04\x98\xb5\x18\x01B\x0f\n" +
-	"\r_capabilitiesB\t\n" +
+	"\x06status\x18\x05 \x01(\x0e2\x16.hi.club.ListingStatusB\x04\x90\xb5\x18\x01H\x00R\x06status\x88\x01\x01\x12*\n" +
+	"\vplugin_uuid\x18\x06 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\n" +
+	"pluginUuid\x88\x01\x01:\x04\x98\xb5\x18\x01B\t\n" +
 	"\a_statusB\x0e\n" +
 	"\f_plugin_uuid\"\xae\x03\n" +
 	"\x10MarketGrantBrief\x12(\n" +
@@ -5036,137 +5041,139 @@ var file_hi_club_market_proto_goTypes = []any{
 	(*MarketPullResp)(nil),              // 57: hi.club.MarketPullResp
 	(*MarketNotifyData)(nil),            // 58: hi.club.MarketNotifyData
 	(*hi.Entity)(nil),                   // 59: hi.Entity
-	(*did.Coin)(nil),                    // 60: hi.did.Coin
-	(*hi.Pagination)(nil),               // 61: hi.Pagination
-	(*structpb.Struct)(nil),             // 62: google.protobuf.Struct
-	(*hi.SignedData)(nil),               // 63: hi.SignedData
-	(*emptypb.Empty)(nil),               // 64: google.protobuf.Empty
+	(*ai.PluginVersionPublic)(nil),      // 60: hi.ai.PluginVersionPublic
+	(*did.Coin)(nil),                    // 61: hi.did.Coin
+	(*hi.Pagination)(nil),               // 62: hi.Pagination
+	(*structpb.Struct)(nil),             // 63: google.protobuf.Struct
+	(*hi.SignedData)(nil),               // 64: hi.SignedData
+	(*emptypb.Empty)(nil),               // 65: google.protobuf.Empty
 }
 var file_hi_club_market_proto_depIdxs = []int32{
 	59, // 0: hi.club.MarketListingBrief.agent:type_name -> hi.Entity
 	0,  // 1: hi.club.MarketListingBrief.settle_mode:type_name -> hi.club.SettleMode
 	2,  // 2: hi.club.MarketListingBrief.kind:type_name -> hi.club.MarketListingKind
 	8,  // 3: hi.club.MarketListingDetail.brief:type_name -> hi.club.MarketListingBrief
-	1,  // 4: hi.club.MarketListingDetail.status:type_name -> hi.club.ListingStatus
-	59, // 5: hi.club.MarketGrantBrief.from_agent:type_name -> hi.Entity
-	59, // 6: hi.club.MarketGrantBrief.to_agent:type_name -> hi.Entity
-	59, // 7: hi.club.MarketGrantBrief.applicant:type_name -> hi.Entity
-	0,  // 8: hi.club.MarketGrantBrief.settle_mode:type_name -> hi.club.SettleMode
-	59, // 9: hi.club.MarketGrantView.from_agent:type_name -> hi.Entity
-	59, // 10: hi.club.MarketGrantView.to_agent:type_name -> hi.Entity
-	59, // 11: hi.club.MarketGrantView.applicant:type_name -> hi.Entity
-	4,  // 12: hi.club.MarketGrantView.status:type_name -> hi.club.GrantStatus
-	0,  // 13: hi.club.MarketGrantView.settle_mode:type_name -> hi.club.SettleMode
-	3,  // 14: hi.club.MarketGrantView.initiator:type_name -> hi.club.GrantInitiator
-	59, // 15: hi.club.MarketStall.agent:type_name -> hi.Entity
-	59, // 16: hi.club.MarketSellerUser.user:type_name -> hi.Entity
-	59, // 17: hi.club.MarketSeller.master:type_name -> hi.Entity
-	60, // 18: hi.club.MarketSeller.support_coins:type_name -> hi.did.Coin
-	15, // 19: hi.club.ListSellersResp.sellers:type_name -> hi.club.MarketSeller
-	61, // 20: hi.club.ListSellerStallsReq.pagination:type_name -> hi.Pagination
-	13, // 21: hi.club.ListSellerStallsResp.stalls:type_name -> hi.club.MarketStall
-	61, // 22: hi.club.ListSellerUsersReq.pagination:type_name -> hi.Pagination
-	14, // 23: hi.club.ListSellerUsersResp.users:type_name -> hi.club.MarketSellerUser
-	61, // 24: hi.club.SearchListingsReq.pagination:type_name -> hi.Pagination
-	61, // 25: hi.club.ListAgentListingsReq.pagination:type_name -> hi.Pagination
-	8,  // 26: hi.club.SearchListingsResp.list:type_name -> hi.club.MarketListingBrief
-	9,  // 27: hi.club.GetListingResp.detail:type_name -> hi.club.MarketListingDetail
-	0,  // 28: hi.club.CreateListingReq.settle_mode:type_name -> hi.club.SettleMode
-	2,  // 29: hi.club.CreateListingReq.kind:type_name -> hi.club.MarketListingKind
-	1,  // 30: hi.club.SetListingStatusReq.status:type_name -> hi.club.ListingStatus
-	61, // 31: hi.club.ListMyListingsReq.pagination:type_name -> hi.Pagination
-	9,  // 32: hi.club.ListMyListingsResp.list:type_name -> hi.club.MarketListingDetail
-	62, // 33: hi.club.ApplyReq.params:type_name -> google.protobuf.Struct
-	7,  // 34: hi.club.MarketPayment.status:type_name -> hi.club.MarketPaymentStatus
-	61, // 35: hi.club.ListTransactionsReq.pagination:type_name -> hi.Pagination
-	34, // 36: hi.club.ListTransactionsResp.list:type_name -> hi.club.MarketPayment
-	5,  // 37: hi.club.MarketOrder.kind:type_name -> hi.club.MarketOrderKind
-	6,  // 38: hi.club.MarketOrder.status:type_name -> hi.club.MarketOrderStatus
-	34, // 39: hi.club.MarketOrder.payment:type_name -> hi.club.MarketPayment
-	34, // 40: hi.club.ListPaymentsResp.list:type_name -> hi.club.MarketPayment
-	4,  // 41: hi.club.ApplyResp.status:type_name -> hi.club.GrantStatus
-	43, // 42: hi.club.ApplyResp.pay:type_name -> hi.club.MarketPayInfo
-	38, // 43: hi.club.ApplyResp.order:type_name -> hi.club.MarketOrder
-	4,  // 44: hi.club.ListGrantsReq.status:type_name -> hi.club.GrantStatus
-	61, // 45: hi.club.ListGrantsReq.pagination:type_name -> hi.Pagination
-	3,  // 46: hi.club.ListGrantsReq.initiator:type_name -> hi.club.GrantInitiator
-	12, // 47: hi.club.ListGrantsResp.list:type_name -> hi.club.MarketGrantView
-	4,  // 48: hi.club.OfferResp.status:type_name -> hi.club.GrantStatus
-	1,  // 49: hi.club.MarketManageListListingsReq.status:type_name -> hi.club.ListingStatus
-	61, // 50: hi.club.MarketManageListListingsReq.pagination:type_name -> hi.Pagination
-	4,  // 51: hi.club.MarketManageListGrantsReq.status:type_name -> hi.club.GrantStatus
-	61, // 52: hi.club.MarketManageListGrantsReq.pagination:type_name -> hi.Pagination
-	0,  // 53: hi.club.MarketPendingGrant.settle_mode:type_name -> hi.club.SettleMode
-	62, // 54: hi.club.MarketPendingGrant.params:type_name -> google.protobuf.Struct
-	56, // 55: hi.club.MarketPullResp.list:type_name -> hi.club.MarketPendingGrant
-	62, // 56: hi.club.MarketNotifyData.terms_override:type_name -> google.protobuf.Struct
-	22, // 57: hi.club.MarketDirectory.SearchListings:input_type -> hi.club.SearchListingsReq
-	61, // 58: hi.club.MarketDirectory.ListSellers:input_type -> hi.Pagination
-	17, // 59: hi.club.MarketDirectory.GetSeller:input_type -> hi.club.GetSellerReq
-	18, // 60: hi.club.MarketDirectory.ListSellerStalls:input_type -> hi.club.ListSellerStallsReq
-	20, // 61: hi.club.MarketDirectory.ListSellerUsers:input_type -> hi.club.ListSellerUsersReq
-	23, // 62: hi.club.MarketDirectory.ListAgentListings:input_type -> hi.club.ListAgentListingsReq
-	24, // 63: hi.club.MarketDirectory.GetListing:input_type -> hi.club.GetListingReq
-	27, // 64: hi.club.Market.CreateListing:input_type -> hi.club.CreateListingReq
-	28, // 65: hi.club.Market.EditListing:input_type -> hi.club.EditListingReq
-	29, // 66: hi.club.Market.SetListingStatus:input_type -> hi.club.SetListingStatusReq
-	30, // 67: hi.club.Market.ListMyListings:input_type -> hi.club.ListMyListingsReq
-	46, // 68: hi.club.Market.ListReceivedRequests:input_type -> hi.club.ListGrantsReq
-	45, // 69: hi.club.Market.Approve:input_type -> hi.club.DecideGrantReq
-	45, // 70: hi.club.Market.Reject:input_type -> hi.club.DecideGrantReq
-	45, // 71: hi.club.Market.Revoke:input_type -> hi.club.DecideGrantReq
-	33, // 72: hi.club.Market.Apply:input_type -> hi.club.ApplyReq
-	42, // 73: hi.club.Market.CreateRenewOrder:input_type -> hi.club.CreateRenewOrderReq
-	39, // 74: hi.club.Market.IssuePayment:input_type -> hi.club.IssuePaymentReq
-	40, // 75: hi.club.Market.ListPayments:input_type -> hi.club.ListPaymentsReq
-	35, // 76: hi.club.Market.ListTransactions:input_type -> hi.club.ListTransactionsReq
-	37, // 77: hi.club.Market.GetTransaction:input_type -> hi.club.GetTransactionReq
-	46, // 78: hi.club.Market.ListMyGrants:input_type -> hi.club.ListGrantsReq
-	49, // 79: hi.club.Market.Offer:input_type -> hi.club.OfferReq
-	51, // 80: hi.club.Market.AcceptOffer:input_type -> hi.club.DecideOfferReq
-	51, // 81: hi.club.Market.DeclineOffer:input_type -> hi.club.DecideOfferReq
-	48, // 82: hi.club.Market.SetAutoRenew:input_type -> hi.club.SetAutoRenewReq
-	63, // 83: hi.club.MarketCallback.Pull:input_type -> hi.SignedData
-	63, // 84: hi.club.MarketCallback.Notify:input_type -> hi.SignedData
-	52, // 85: hi.club.MarketManage.ListListings:input_type -> hi.club.MarketManageListListingsReq
-	53, // 86: hi.club.MarketManage.ListGrants:input_type -> hi.club.MarketManageListGrantsReq
-	54, // 87: hi.club.MarketManage.ForceDelist:input_type -> hi.club.ForceDelistReq
-	25, // 88: hi.club.MarketDirectory.SearchListings:output_type -> hi.club.SearchListingsResp
-	16, // 89: hi.club.MarketDirectory.ListSellers:output_type -> hi.club.ListSellersResp
-	15, // 90: hi.club.MarketDirectory.GetSeller:output_type -> hi.club.MarketSeller
-	19, // 91: hi.club.MarketDirectory.ListSellerStalls:output_type -> hi.club.ListSellerStallsResp
-	21, // 92: hi.club.MarketDirectory.ListSellerUsers:output_type -> hi.club.ListSellerUsersResp
-	25, // 93: hi.club.MarketDirectory.ListAgentListings:output_type -> hi.club.SearchListingsResp
-	26, // 94: hi.club.MarketDirectory.GetListing:output_type -> hi.club.GetListingResp
-	32, // 95: hi.club.Market.CreateListing:output_type -> hi.club.CreateListingResp
-	64, // 96: hi.club.Market.EditListing:output_type -> google.protobuf.Empty
-	64, // 97: hi.club.Market.SetListingStatus:output_type -> google.protobuf.Empty
-	31, // 98: hi.club.Market.ListMyListings:output_type -> hi.club.ListMyListingsResp
-	47, // 99: hi.club.Market.ListReceivedRequests:output_type -> hi.club.ListGrantsResp
-	64, // 100: hi.club.Market.Approve:output_type -> google.protobuf.Empty
-	64, // 101: hi.club.Market.Reject:output_type -> google.protobuf.Empty
-	64, // 102: hi.club.Market.Revoke:output_type -> google.protobuf.Empty
-	44, // 103: hi.club.Market.Apply:output_type -> hi.club.ApplyResp
-	38, // 104: hi.club.Market.CreateRenewOrder:output_type -> hi.club.MarketOrder
-	38, // 105: hi.club.Market.IssuePayment:output_type -> hi.club.MarketOrder
-	41, // 106: hi.club.Market.ListPayments:output_type -> hi.club.ListPaymentsResp
-	36, // 107: hi.club.Market.ListTransactions:output_type -> hi.club.ListTransactionsResp
-	34, // 108: hi.club.Market.GetTransaction:output_type -> hi.club.MarketPayment
-	47, // 109: hi.club.Market.ListMyGrants:output_type -> hi.club.ListGrantsResp
-	50, // 110: hi.club.Market.Offer:output_type -> hi.club.OfferResp
-	64, // 111: hi.club.Market.AcceptOffer:output_type -> google.protobuf.Empty
-	64, // 112: hi.club.Market.DeclineOffer:output_type -> google.protobuf.Empty
-	64, // 113: hi.club.Market.SetAutoRenew:output_type -> google.protobuf.Empty
-	57, // 114: hi.club.MarketCallback.Pull:output_type -> hi.club.MarketPullResp
-	64, // 115: hi.club.MarketCallback.Notify:output_type -> google.protobuf.Empty
-	25, // 116: hi.club.MarketManage.ListListings:output_type -> hi.club.SearchListingsResp
-	47, // 117: hi.club.MarketManage.ListGrants:output_type -> hi.club.ListGrantsResp
-	64, // 118: hi.club.MarketManage.ForceDelist:output_type -> google.protobuf.Empty
-	88, // [88:119] is the sub-list for method output_type
-	57, // [57:88] is the sub-list for method input_type
-	57, // [57:57] is the sub-list for extension type_name
-	57, // [57:57] is the sub-list for extension extendee
-	0,  // [0:57] is the sub-list for field type_name
+	60, // 4: hi.club.MarketListingDetail.active:type_name -> hi.ai.PluginVersionPublic
+	1,  // 5: hi.club.MarketListingDetail.status:type_name -> hi.club.ListingStatus
+	59, // 6: hi.club.MarketGrantBrief.from_agent:type_name -> hi.Entity
+	59, // 7: hi.club.MarketGrantBrief.to_agent:type_name -> hi.Entity
+	59, // 8: hi.club.MarketGrantBrief.applicant:type_name -> hi.Entity
+	0,  // 9: hi.club.MarketGrantBrief.settle_mode:type_name -> hi.club.SettleMode
+	59, // 10: hi.club.MarketGrantView.from_agent:type_name -> hi.Entity
+	59, // 11: hi.club.MarketGrantView.to_agent:type_name -> hi.Entity
+	59, // 12: hi.club.MarketGrantView.applicant:type_name -> hi.Entity
+	4,  // 13: hi.club.MarketGrantView.status:type_name -> hi.club.GrantStatus
+	0,  // 14: hi.club.MarketGrantView.settle_mode:type_name -> hi.club.SettleMode
+	3,  // 15: hi.club.MarketGrantView.initiator:type_name -> hi.club.GrantInitiator
+	59, // 16: hi.club.MarketStall.agent:type_name -> hi.Entity
+	59, // 17: hi.club.MarketSellerUser.user:type_name -> hi.Entity
+	59, // 18: hi.club.MarketSeller.master:type_name -> hi.Entity
+	61, // 19: hi.club.MarketSeller.support_coins:type_name -> hi.did.Coin
+	15, // 20: hi.club.ListSellersResp.sellers:type_name -> hi.club.MarketSeller
+	62, // 21: hi.club.ListSellerStallsReq.pagination:type_name -> hi.Pagination
+	13, // 22: hi.club.ListSellerStallsResp.stalls:type_name -> hi.club.MarketStall
+	62, // 23: hi.club.ListSellerUsersReq.pagination:type_name -> hi.Pagination
+	14, // 24: hi.club.ListSellerUsersResp.users:type_name -> hi.club.MarketSellerUser
+	62, // 25: hi.club.SearchListingsReq.pagination:type_name -> hi.Pagination
+	62, // 26: hi.club.ListAgentListingsReq.pagination:type_name -> hi.Pagination
+	8,  // 27: hi.club.SearchListingsResp.list:type_name -> hi.club.MarketListingBrief
+	9,  // 28: hi.club.GetListingResp.detail:type_name -> hi.club.MarketListingDetail
+	0,  // 29: hi.club.CreateListingReq.settle_mode:type_name -> hi.club.SettleMode
+	2,  // 30: hi.club.CreateListingReq.kind:type_name -> hi.club.MarketListingKind
+	1,  // 31: hi.club.SetListingStatusReq.status:type_name -> hi.club.ListingStatus
+	62, // 32: hi.club.ListMyListingsReq.pagination:type_name -> hi.Pagination
+	9,  // 33: hi.club.ListMyListingsResp.list:type_name -> hi.club.MarketListingDetail
+	63, // 34: hi.club.ApplyReq.params:type_name -> google.protobuf.Struct
+	7,  // 35: hi.club.MarketPayment.status:type_name -> hi.club.MarketPaymentStatus
+	62, // 36: hi.club.ListTransactionsReq.pagination:type_name -> hi.Pagination
+	34, // 37: hi.club.ListTransactionsResp.list:type_name -> hi.club.MarketPayment
+	5,  // 38: hi.club.MarketOrder.kind:type_name -> hi.club.MarketOrderKind
+	6,  // 39: hi.club.MarketOrder.status:type_name -> hi.club.MarketOrderStatus
+	34, // 40: hi.club.MarketOrder.payment:type_name -> hi.club.MarketPayment
+	34, // 41: hi.club.ListPaymentsResp.list:type_name -> hi.club.MarketPayment
+	4,  // 42: hi.club.ApplyResp.status:type_name -> hi.club.GrantStatus
+	43, // 43: hi.club.ApplyResp.pay:type_name -> hi.club.MarketPayInfo
+	38, // 44: hi.club.ApplyResp.order:type_name -> hi.club.MarketOrder
+	4,  // 45: hi.club.ListGrantsReq.status:type_name -> hi.club.GrantStatus
+	62, // 46: hi.club.ListGrantsReq.pagination:type_name -> hi.Pagination
+	3,  // 47: hi.club.ListGrantsReq.initiator:type_name -> hi.club.GrantInitiator
+	12, // 48: hi.club.ListGrantsResp.list:type_name -> hi.club.MarketGrantView
+	4,  // 49: hi.club.OfferResp.status:type_name -> hi.club.GrantStatus
+	1,  // 50: hi.club.MarketManageListListingsReq.status:type_name -> hi.club.ListingStatus
+	62, // 51: hi.club.MarketManageListListingsReq.pagination:type_name -> hi.Pagination
+	4,  // 52: hi.club.MarketManageListGrantsReq.status:type_name -> hi.club.GrantStatus
+	62, // 53: hi.club.MarketManageListGrantsReq.pagination:type_name -> hi.Pagination
+	0,  // 54: hi.club.MarketPendingGrant.settle_mode:type_name -> hi.club.SettleMode
+	63, // 55: hi.club.MarketPendingGrant.params:type_name -> google.protobuf.Struct
+	56, // 56: hi.club.MarketPullResp.list:type_name -> hi.club.MarketPendingGrant
+	63, // 57: hi.club.MarketNotifyData.terms_override:type_name -> google.protobuf.Struct
+	22, // 58: hi.club.MarketDirectory.SearchListings:input_type -> hi.club.SearchListingsReq
+	62, // 59: hi.club.MarketDirectory.ListSellers:input_type -> hi.Pagination
+	17, // 60: hi.club.MarketDirectory.GetSeller:input_type -> hi.club.GetSellerReq
+	18, // 61: hi.club.MarketDirectory.ListSellerStalls:input_type -> hi.club.ListSellerStallsReq
+	20, // 62: hi.club.MarketDirectory.ListSellerUsers:input_type -> hi.club.ListSellerUsersReq
+	23, // 63: hi.club.MarketDirectory.ListAgentListings:input_type -> hi.club.ListAgentListingsReq
+	24, // 64: hi.club.MarketDirectory.GetListing:input_type -> hi.club.GetListingReq
+	27, // 65: hi.club.Market.CreateListing:input_type -> hi.club.CreateListingReq
+	28, // 66: hi.club.Market.EditListing:input_type -> hi.club.EditListingReq
+	29, // 67: hi.club.Market.SetListingStatus:input_type -> hi.club.SetListingStatusReq
+	30, // 68: hi.club.Market.ListMyListings:input_type -> hi.club.ListMyListingsReq
+	46, // 69: hi.club.Market.ListReceivedRequests:input_type -> hi.club.ListGrantsReq
+	45, // 70: hi.club.Market.Approve:input_type -> hi.club.DecideGrantReq
+	45, // 71: hi.club.Market.Reject:input_type -> hi.club.DecideGrantReq
+	45, // 72: hi.club.Market.Revoke:input_type -> hi.club.DecideGrantReq
+	33, // 73: hi.club.Market.Apply:input_type -> hi.club.ApplyReq
+	42, // 74: hi.club.Market.CreateRenewOrder:input_type -> hi.club.CreateRenewOrderReq
+	39, // 75: hi.club.Market.IssuePayment:input_type -> hi.club.IssuePaymentReq
+	40, // 76: hi.club.Market.ListPayments:input_type -> hi.club.ListPaymentsReq
+	35, // 77: hi.club.Market.ListTransactions:input_type -> hi.club.ListTransactionsReq
+	37, // 78: hi.club.Market.GetTransaction:input_type -> hi.club.GetTransactionReq
+	46, // 79: hi.club.Market.ListMyGrants:input_type -> hi.club.ListGrantsReq
+	49, // 80: hi.club.Market.Offer:input_type -> hi.club.OfferReq
+	51, // 81: hi.club.Market.AcceptOffer:input_type -> hi.club.DecideOfferReq
+	51, // 82: hi.club.Market.DeclineOffer:input_type -> hi.club.DecideOfferReq
+	48, // 83: hi.club.Market.SetAutoRenew:input_type -> hi.club.SetAutoRenewReq
+	64, // 84: hi.club.MarketCallback.Pull:input_type -> hi.SignedData
+	64, // 85: hi.club.MarketCallback.Notify:input_type -> hi.SignedData
+	52, // 86: hi.club.MarketManage.ListListings:input_type -> hi.club.MarketManageListListingsReq
+	53, // 87: hi.club.MarketManage.ListGrants:input_type -> hi.club.MarketManageListGrantsReq
+	54, // 88: hi.club.MarketManage.ForceDelist:input_type -> hi.club.ForceDelistReq
+	25, // 89: hi.club.MarketDirectory.SearchListings:output_type -> hi.club.SearchListingsResp
+	16, // 90: hi.club.MarketDirectory.ListSellers:output_type -> hi.club.ListSellersResp
+	15, // 91: hi.club.MarketDirectory.GetSeller:output_type -> hi.club.MarketSeller
+	19, // 92: hi.club.MarketDirectory.ListSellerStalls:output_type -> hi.club.ListSellerStallsResp
+	21, // 93: hi.club.MarketDirectory.ListSellerUsers:output_type -> hi.club.ListSellerUsersResp
+	25, // 94: hi.club.MarketDirectory.ListAgentListings:output_type -> hi.club.SearchListingsResp
+	26, // 95: hi.club.MarketDirectory.GetListing:output_type -> hi.club.GetListingResp
+	32, // 96: hi.club.Market.CreateListing:output_type -> hi.club.CreateListingResp
+	65, // 97: hi.club.Market.EditListing:output_type -> google.protobuf.Empty
+	65, // 98: hi.club.Market.SetListingStatus:output_type -> google.protobuf.Empty
+	31, // 99: hi.club.Market.ListMyListings:output_type -> hi.club.ListMyListingsResp
+	47, // 100: hi.club.Market.ListReceivedRequests:output_type -> hi.club.ListGrantsResp
+	65, // 101: hi.club.Market.Approve:output_type -> google.protobuf.Empty
+	65, // 102: hi.club.Market.Reject:output_type -> google.protobuf.Empty
+	65, // 103: hi.club.Market.Revoke:output_type -> google.protobuf.Empty
+	44, // 104: hi.club.Market.Apply:output_type -> hi.club.ApplyResp
+	38, // 105: hi.club.Market.CreateRenewOrder:output_type -> hi.club.MarketOrder
+	38, // 106: hi.club.Market.IssuePayment:output_type -> hi.club.MarketOrder
+	41, // 107: hi.club.Market.ListPayments:output_type -> hi.club.ListPaymentsResp
+	36, // 108: hi.club.Market.ListTransactions:output_type -> hi.club.ListTransactionsResp
+	34, // 109: hi.club.Market.GetTransaction:output_type -> hi.club.MarketPayment
+	47, // 110: hi.club.Market.ListMyGrants:output_type -> hi.club.ListGrantsResp
+	50, // 111: hi.club.Market.Offer:output_type -> hi.club.OfferResp
+	65, // 112: hi.club.Market.AcceptOffer:output_type -> google.protobuf.Empty
+	65, // 113: hi.club.Market.DeclineOffer:output_type -> google.protobuf.Empty
+	65, // 114: hi.club.Market.SetAutoRenew:output_type -> google.protobuf.Empty
+	57, // 115: hi.club.MarketCallback.Pull:output_type -> hi.club.MarketPullResp
+	65, // 116: hi.club.MarketCallback.Notify:output_type -> google.protobuf.Empty
+	25, // 117: hi.club.MarketManage.ListListings:output_type -> hi.club.SearchListingsResp
+	47, // 118: hi.club.MarketManage.ListGrants:output_type -> hi.club.ListGrantsResp
+	65, // 119: hi.club.MarketManage.ForceDelist:output_type -> google.protobuf.Empty
+	89, // [89:120] is the sub-list for method output_type
+	58, // [58:89] is the sub-list for method input_type
+	58, // [58:58] is the sub-list for extension type_name
+	58, // [58:58] is the sub-list for extension extendee
+	0,  // [0:58] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_market_proto_init() }

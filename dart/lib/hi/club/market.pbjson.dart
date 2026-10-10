@@ -317,14 +317,13 @@ const MarketListingDetail$json = {
       '10': 'brief'
     },
     {
-      '1': 'capabilities',
-      '3': 2,
+      '1': 'active',
+      '3': 7,
       '4': 1,
-      '5': 9,
+      '5': 11,
+      '6': '.hi.ai.PluginVersionPublic',
       '8': {},
-      '9': 0,
-      '10': 'capabilities',
-      '17': true
+      '10': 'active'
     },
     {'1': 'versions', '3': 4, '4': 3, '5': 9, '8': {}, '10': 'versions'},
     {
@@ -334,7 +333,7 @@ const MarketListingDetail$json = {
       '5': 14,
       '6': '.hi.club.ListingStatus',
       '8': {},
-      '9': 1,
+      '9': 0,
       '10': 'status',
       '17': true
     },
@@ -344,14 +343,13 @@ const MarketListingDetail$json = {
       '4': 1,
       '5': 9,
       '8': {},
-      '9': 2,
+      '9': 1,
       '10': 'pluginUuid',
       '17': true
     },
   ],
   '7': {},
   '8': [
-    {'1': '_capabilities'},
     {'1': '_status'},
     {'1': '_plugin_uuid'},
   ],
@@ -360,11 +358,11 @@ const MarketListingDetail$json = {
 /// Descriptor for `MarketListingDetail`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List marketListingDetailDescriptor = $convert.base64Decode(
     'ChNNYXJrZXRMaXN0aW5nRGV0YWlsEjcKBWJyaWVmGAEgASgLMhsuaGkuY2x1Yi5NYXJrZXRMaX'
-    'N0aW5nQnJpZWZCBJC1GAFSBWJyaWVmEi0KDGNhcGFiaWxpdGllcxgCIAEoCUIEkLUYAUgAUgxj'
-    'YXBhYmlsaXRpZXOIAQESIAoIdmVyc2lvbnMYBCADKAlCBJC1GAFSCHZlcnNpb25zEjkKBnN0YX'
-    'R1cxgFIAEoDjIWLmhpLmNsdWIuTGlzdGluZ1N0YXR1c0IEkLUYAUgBUgZzdGF0dXOIAQESKgoL'
-    'cGx1Z2luX3V1aWQYBiABKAlCBJC1GAFIAlIKcGx1Z2luVXVpZIgBAToEmLUYAUIPCg1fY2FwYW'
-    'JpbGl0aWVzQgkKB19zdGF0dXNCDgoMX3BsdWdpbl91dWlk');
+    'N0aW5nQnJpZWZCBJC1GAFSBWJyaWVmEjgKBmFjdGl2ZRgHIAEoCzIaLmhpLmFpLlBsdWdpblZl'
+    'cnNpb25QdWJsaWNCBJC1GAFSBmFjdGl2ZRIgCgh2ZXJzaW9ucxgEIAMoCUIEkLUYAVIIdmVyc2'
+    'lvbnMSOQoGc3RhdHVzGAUgASgOMhYuaGkuY2x1Yi5MaXN0aW5nU3RhdHVzQgSQtRgBSABSBnN0'
+    'YXR1c4gBARIqCgtwbHVnaW5fdXVpZBgGIAEoCUIEkLUYAUgBUgpwbHVnaW5VdWlkiAEBOgSYtR'
+    'gBQgkKB19zdGF0dXNCDgoMX3BsdWdpbl91dWlk');
 
 @$core.Deprecated('Use marketGrantBriefDescriptor instead')
 const MarketGrantBrief$json = {

@@ -210,6 +210,79 @@ final $typed_data.Uint8List pluginVersionDescriptor = $convert.base64Decode(
     'oIX3ZlcnNpb25CBwoFX2xvZ29CCgoIX3N1bW1hcnlCBgoEX3VybEIOCgxfZGVzY3JpcHRpb25C'
     'CQoHX3Byb21wdA==');
 
+@$core.Deprecated('Use pluginVersionPublicDescriptor instead')
+const PluginVersionPublic$json = {
+  '1': 'PluginVersionPublic',
+  '2': [
+    {
+      '1': 'version',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'version',
+      '17': true
+    },
+    {
+      '1': 'logo',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'logo',
+      '17': true
+    },
+    {
+      '1': 'summary',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'summary',
+      '17': true
+    },
+    {
+      '1': 'description',
+      '3': 6,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 3,
+      '10': 'description',
+      '17': true
+    },
+    {
+      '1': 'prompt',
+      '3': 7,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 4,
+      '10': 'prompt',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_version'},
+    {'1': '_logo'},
+    {'1': '_summary'},
+    {'1': '_description'},
+    {'1': '_prompt'},
+  ],
+};
+
+/// Descriptor for `PluginVersionPublic`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List pluginVersionPublicDescriptor = $convert.base64Decode(
+    'ChNQbHVnaW5WZXJzaW9uUHVibGljEiMKB3ZlcnNpb24YAiABKAlCBJC1GAFIAFIHdmVyc2lvbo'
+    'gBARIdCgRsb2dvGAMgASgJQgSQtRgBSAFSBGxvZ2+IAQESIwoHc3VtbWFyeRgEIAEoCUIEkLUY'
+    'AUgCUgdzdW1tYXJ5iAEBEisKC2Rlc2NyaXB0aW9uGAYgASgJQgSQtRgBSANSC2Rlc2NyaXB0aW'
+    '9uiAEBEiEKBnByb21wdBgHIAEoCUIEkLUYAUgEUgZwcm9tcHSIAQE6BJi1GAFCCgoIX3ZlcnNp'
+    'b25CBwoFX2xvZ29CCgoIX3N1bW1hcnlCDgoMX2Rlc2NyaXB0aW9uQgkKB19wcm9tcHQ=');
+
 @$core.Deprecated('Use pluginArtifactDescriptor instead')
 const PluginArtifact$json = {
   '1': 'PluginArtifact',

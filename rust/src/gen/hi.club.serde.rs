@@ -12434,7 +12434,7 @@ impl serde::Serialize for MarketListingDetail {
         if self.brief.is_some() {
             len += 1;
         }
-        if self.capabilities.is_some() {
+        if self.active.is_some() {
             len += 1;
         }
         if !self.versions.is_empty() {
@@ -12450,8 +12450,8 @@ impl serde::Serialize for MarketListingDetail {
         if let Some(v) = self.brief.as_ref() {
             struct_ser.serialize_field("brief", v)?;
         }
-        if let Some(v) = self.capabilities.as_ref() {
-            struct_ser.serialize_field("capabilities", v)?;
+        if let Some(v) = self.active.as_ref() {
+            struct_ser.serialize_field("active", v)?;
         }
         if !self.versions.is_empty() {
             struct_ser.serialize_field("versions", &self.versions)?;
@@ -12475,7 +12475,7 @@ impl<'de> serde::Deserialize<'de> for MarketListingDetail {
     {
         const FIELDS: &[&str] = &[
             "brief",
-            "capabilities",
+            "active",
             "versions",
             "status",
             "plugin_uuid",
@@ -12485,7 +12485,7 @@ impl<'de> serde::Deserialize<'de> for MarketListingDetail {
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Brief,
-            Capabilities,
+            Active,
             Versions,
             Status,
             PluginUuid,
@@ -12511,7 +12511,7 @@ impl<'de> serde::Deserialize<'de> for MarketListingDetail {
                     {
                         match value {
                             "brief" => Ok(GeneratedField::Brief),
-                            "capabilities" => Ok(GeneratedField::Capabilities),
+                            "active" => Ok(GeneratedField::Active),
                             "versions" => Ok(GeneratedField::Versions),
                             "status" => Ok(GeneratedField::Status),
                             "pluginUuid" | "plugin_uuid" => Ok(GeneratedField::PluginUuid),
@@ -12535,7 +12535,7 @@ impl<'de> serde::Deserialize<'de> for MarketListingDetail {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut brief__ = None;
-                let mut capabilities__ = None;
+                let mut active__ = None;
                 let mut versions__ = None;
                 let mut status__ = None;
                 let mut plugin_uuid__ = None;
@@ -12547,11 +12547,11 @@ impl<'de> serde::Deserialize<'de> for MarketListingDetail {
                             }
                             brief__ = map_.next_value()?;
                         }
-                        GeneratedField::Capabilities => {
-                            if capabilities__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("capabilities"));
+                        GeneratedField::Active => {
+                            if active__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("active"));
                             }
-                            capabilities__ = map_.next_value()?;
+                            active__ = map_.next_value()?;
                         }
                         GeneratedField::Versions => {
                             if versions__.is_some() {
@@ -12575,7 +12575,7 @@ impl<'de> serde::Deserialize<'de> for MarketListingDetail {
                 }
                 Ok(MarketListingDetail {
                     brief: brief__,
-                    capabilities: capabilities__,
+                    active: active__,
                     versions: versions__.unwrap_or_default(),
                     status: status__,
                     plugin_uuid: plugin_uuid__,

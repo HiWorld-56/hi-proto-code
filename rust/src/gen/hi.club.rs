@@ -6061,10 +6061,14 @@ pub struct MarketListingBrief {
 pub struct MarketListingDetail {
     #[prost(message, optional, tag = "1")]
     pub brief: ::core::option::Option<MarketListingBrief>,
-    /// 这个包提供哪些方法。直接取自 hi.ai 那份 tools 数组(已是最终形态、name 带壳前缀),
-    /// 买家装之前就知道会得到什么能力。
-    #[prost(string, optional, tag = "2")]
-    pub capabilities: ::core::option::Option<::prost::alloc::string::String>,
+    /// 出让方**当前激活版**的公开面(与 brief 的 logo/summary 同一口径):
+    /// `description` 是这个包提供哪些方法(hi.ai 那份 tools 数组,已是最终形态、name 带壳前缀),
+    /// `prompt` 是它给模型加的话。买家装之前就该知道这两样。取不到(ai 抖了)就不带。
+    ///
+    /// ⚠️ 原来这里是拍平的 `capabilities` 字符串(只放了 description),提示词没地方放 ——
+    /// 2026-10-10 换成整个对象,以后版本多一个公开字段,这里一行都不用改。
+    #[prost(message, optional, tag = "7")]
+    pub active: ::core::option::Option<super::ai::PluginVersionPublic>,
     /// ⚠️ **没有 allow_follow_latest,不要再加回来。**
     /// "要不要自动跟新版"是**使用方自己的事**,归在 hi.ai 的使用行上
     /// (`hi.ai.PluginView.follow_latest`,在"机器人 → 插件"那一行上开关)。

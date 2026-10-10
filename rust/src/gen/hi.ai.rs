@@ -932,7 +932,7 @@ pub struct PluginVersion {
     ///
     /// 拿它跟包里的文件比对会对不上,**这是预期行为,别当 bug 查**。
     ///
-    /// PUBLIC:买家在挂牌页看的 `MarketListingDetail.capabilities` 就是这一份 ——
+    /// PUBLIC:买家在挂牌页看的 `MarketListingDetail.active.description` 就是这一份 ——
     /// 那边早就是公开的了,源头这边却标着 SELF,两边对不上。以这边为准改成 PUBLIC。
     #[prost(string, optional, tag = "6")]
     pub description: ::core::option::Option<::prost::alloc::string::String>,
@@ -940,6 +940,30 @@ pub struct PluginVersion {
     /// 与 description 一样**创建时不用传**,后端在 CreateVersion 时从包里读出、规整后存库
     /// (换行保留,每行去首尾空白、连续空白压成一个,空行去掉;上限 800 字)。不带 = 这个插件没写。
     /// web 拿它展示「这个插件给模型加了什么话」(2026-09-27 起)。可见性同 description:它本来就是喂给模型的。
+    #[prost(string, optional, tag = "7")]
+    pub prompt: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// PluginVersionPublic 一个版本**给别人看的那一面** —— PluginVersion 去掉私有字段(壳 uuid、脚本 url)。
+///
+/// 为什么另立一个类型:PluginVersion 里有 SELF 字段,整条放不进 PUBLIC 消息(lint 挡的正是这个)。
+/// **门面是另一个类型,不是另一套值** —— 每个字段都在读侧从 PluginVersion 原样取,不另存、不另填。
+/// 字段号与 PluginVersion 里同名字段一一相同,一眼看得出是同一份东西的子集。
+///
+/// 用在挂牌详情(hi.club.MarketListingDetail.active):买家装之前就该知道这个插件
+/// 提供哪些方法、给模型加了什么话。2026-10-10 起替掉原来那个拍平的 `capabilities` 字符串 ——
+/// 那个只带了方法,提示词没地方放。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PluginVersionPublic {
+    #[prost(string, optional, tag = "2")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub logo: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub summary: ::core::option::Option<::prost::alloc::string::String>,
+    /// 方法(tools 数组),同 PluginVersion.description
+    #[prost(string, optional, tag = "6")]
+    pub description: ::core::option::Option<::prost::alloc::string::String>,
+    /// 插件提示词,同 PluginVersion.prompt;不带 = 没写
     #[prost(string, optional, tag = "7")]
     pub prompt: ::core::option::Option<::prost::alloc::string::String>,
 }
