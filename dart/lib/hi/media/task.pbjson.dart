@@ -282,6 +282,627 @@ final $typed_data.Uint8List createTextToVideoTaskReqDescriptor = $convert.base64
     'cXVlc3RfaWRCDgoMX3dvcmtmbG93X2lkQgkKB19wcm9tcHRCEwoRX2R1cmF0aW9uX3NlY29uZH'
     'NCDQoLX2ZyYW1lX3JhdGU=');
 
+@$core.Deprecated('Use createFirstLastFrameTaskReqDescriptor instead')
+const CreateFirstLastFrameTaskReq$json = {
+  '1': 'CreateFirstLastFrameTaskReq',
+  '2': [
+    {
+      '1': 'request_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'requestId',
+      '17': true
+    },
+    {
+      '1': 'workflow_id',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'workflowId',
+      '17': true
+    },
+    {
+      '1': 'first_frame_asset_id',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'firstFrameAssetId',
+      '17': true
+    },
+    {
+      '1': 'last_frame_asset_id',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 3,
+      '10': 'lastFrameAssetId',
+      '17': true
+    },
+    {
+      '1': 'prompt',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 4,
+      '10': 'prompt',
+      '17': true
+    },
+    {
+      '1': 'resolution',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.VideoResolution',
+      '10': 'resolution'
+    },
+    {
+      '1': 'duration_seconds',
+      '3': 7,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '9': 5,
+      '10': 'durationSeconds',
+      '17': true
+    },
+    {
+      '1': 'frame_rate',
+      '3': 8,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '9': 6,
+      '10': 'frameRate',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_request_id'},
+    {'1': '_workflow_id'},
+    {'1': '_first_frame_asset_id'},
+    {'1': '_last_frame_asset_id'},
+    {'1': '_prompt'},
+    {'1': '_duration_seconds'},
+    {'1': '_frame_rate'},
+  ],
+};
+
+/// Descriptor for `CreateFirstLastFrameTaskReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List createFirstLastFrameTaskReqDescriptor = $convert.base64Decode(
+    'ChtDcmVhdGVGaXJzdExhc3RGcmFtZVRhc2tSZXESLgoKcmVxdWVzdF9pZBgBIAEoCUIKukgHyA'
+    'EBcgIQAUgAUglyZXF1ZXN0SWSIAQESMAoLd29ya2Zsb3dfaWQYAiABKAlCCrpIB8gBAXICEAFI'
+    'AVIKd29ya2Zsb3dJZIgBARJAChRmaXJzdF9mcmFtZV9hc3NldF9pZBgDIAEoCUIKukgHyAEBcg'
+    'IQAUgCUhFmaXJzdEZyYW1lQXNzZXRJZIgBARI+ChNsYXN0X2ZyYW1lX2Fzc2V0X2lkGAQgASgJ'
+    'Qgq6SAfIAQFyAhABSANSEGxhc3RGcmFtZUFzc2V0SWSIAQESJwoGcHJvbXB0GAUgASgJQgq6SA'
+    'fIAQFyAhABSARSBnByb21wdIgBARI5CgpyZXNvbHV0aW9uGAYgASgLMhkuaGkubWVkaWEuVmlk'
+    'ZW9SZXNvbHV0aW9uUgpyZXNvbHV0aW9uEjcKEGR1cmF0aW9uX3NlY29uZHMYByABKAVCB7pIBB'
+    'oCIABIBVIPZHVyYXRpb25TZWNvbmRziAEBEisKCmZyYW1lX3JhdGUYCCABKAVCB7pIBBoCIABI'
+    'BlIJZnJhbWVSYXRliAEBQg0KC19yZXF1ZXN0X2lkQg4KDF93b3JrZmxvd19pZEIXChVfZmlyc3'
+    'RfZnJhbWVfYXNzZXRfaWRCFgoUX2xhc3RfZnJhbWVfYXNzZXRfaWRCCQoHX3Byb21wdEITChFf'
+    'ZHVyYXRpb25fc2Vjb25kc0INCgtfZnJhbWVfcmF0ZQ==');
+
+@$core.Deprecated('Use createMotionTransferTaskReqDescriptor instead')
+const CreateMotionTransferTaskReq$json = {
+  '1': 'CreateMotionTransferTaskReq',
+  '2': [
+    {
+      '1': 'request_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'requestId',
+      '17': true
+    },
+    {
+      '1': 'workflow_id',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'workflowId',
+      '17': true
+    },
+    {
+      '1': 'input_video_asset_id',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'inputVideoAssetId',
+      '17': true
+    },
+    {
+      '1': 'first_frame_asset_id',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 3,
+      '10': 'firstFrameAssetId',
+      '17': true
+    },
+    {
+      '1': 'prompt',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 4,
+      '10': 'prompt',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_request_id'},
+    {'1': '_workflow_id'},
+    {'1': '_input_video_asset_id'},
+    {'1': '_first_frame_asset_id'},
+    {'1': '_prompt'},
+  ],
+};
+
+/// Descriptor for `CreateMotionTransferTaskReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List createMotionTransferTaskReqDescriptor = $convert.base64Decode(
+    'ChtDcmVhdGVNb3Rpb25UcmFuc2ZlclRhc2tSZXESLgoKcmVxdWVzdF9pZBgBIAEoCUIKukgHyA'
+    'EBcgIQAUgAUglyZXF1ZXN0SWSIAQESMAoLd29ya2Zsb3dfaWQYAiABKAlCCrpIB8gBAXICEAFI'
+    'AVIKd29ya2Zsb3dJZIgBARJAChRpbnB1dF92aWRlb19hc3NldF9pZBgDIAEoCUIKukgHyAEBcg'
+    'IQAUgCUhFpbnB1dFZpZGVvQXNzZXRJZIgBARI9ChRmaXJzdF9mcmFtZV9hc3NldF9pZBgEIAEo'
+    'CUIHukgEcgIQAUgDUhFmaXJzdEZyYW1lQXNzZXRJZIgBARInCgZwcm9tcHQYBSABKAlCCrpIB8'
+    'gBAXICEAFIBFIGcHJvbXB0iAEBQg0KC19yZXF1ZXN0X2lkQg4KDF93b3JrZmxvd19pZEIXChVf'
+    'aW5wdXRfdmlkZW9fYXNzZXRfaWRCFwoVX2ZpcnN0X2ZyYW1lX2Fzc2V0X2lkQgkKB19wcm9tcH'
+    'Q=');
+
+@$core.Deprecated('Use createContinuationTaskReqDescriptor instead')
+const CreateContinuationTaskReq$json = {
+  '1': 'CreateContinuationTaskReq',
+  '2': [
+    {
+      '1': 'request_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'requestId',
+      '17': true
+    },
+    {
+      '1': 'workflow_id',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'workflowId',
+      '17': true
+    },
+    {
+      '1': 'input_video_asset_id',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'inputVideoAssetId',
+      '17': true
+    },
+    {
+      '1': 'input_asset_ids',
+      '3': 4,
+      '4': 3,
+      '5': 9,
+      '8': {},
+      '10': 'inputAssetIds'
+    },
+    {
+      '1': 'prompt',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 3,
+      '10': 'prompt',
+      '17': true
+    },
+    {
+      '1': 'resolution',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.VideoResolution',
+      '10': 'resolution'
+    },
+    {
+      '1': 'duration_seconds',
+      '3': 7,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '9': 4,
+      '10': 'durationSeconds',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_request_id'},
+    {'1': '_workflow_id'},
+    {'1': '_input_video_asset_id'},
+    {'1': '_prompt'},
+    {'1': '_duration_seconds'},
+  ],
+};
+
+/// Descriptor for `CreateContinuationTaskReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List createContinuationTaskReqDescriptor = $convert.base64Decode(
+    'ChlDcmVhdGVDb250aW51YXRpb25UYXNrUmVxEi4KCnJlcXVlc3RfaWQYASABKAlCCrpIB8gBAX'
+    'ICEAFIAFIJcmVxdWVzdElkiAEBEjAKC3dvcmtmbG93X2lkGAIgASgJQgq6SAfIAQFyAhABSAFS'
+    'CndvcmtmbG93SWSIAQESQAoUaW5wdXRfdmlkZW9fYXNzZXRfaWQYAyABKAlCCrpIB8gBAXICEA'
+    'FIAlIRaW5wdXRWaWRlb0Fzc2V0SWSIAQESNgoPaW5wdXRfYXNzZXRfaWRzGAQgAygJQg66SAuS'
+    'AQgQBCIEcgIQAVINaW5wdXRBc3NldElkcxInCgZwcm9tcHQYBSABKAlCCrpIB8gBAXICEAFIA1'
+    'IGcHJvbXB0iAEBEjkKCnJlc29sdXRpb24YBiABKAsyGS5oaS5tZWRpYS5WaWRlb1Jlc29sdXRp'
+    'b25SCnJlc29sdXRpb24SNwoQZHVyYXRpb25fc2Vjb25kcxgHIAEoBUIHukgEGgIgAEgEUg9kdX'
+    'JhdGlvblNlY29uZHOIAQFCDQoLX3JlcXVlc3RfaWRCDgoMX3dvcmtmbG93X2lkQhcKFV9pbnB1'
+    'dF92aWRlb19hc3NldF9pZEIJCgdfcHJvbXB0QhMKEV9kdXJhdGlvbl9zZWNvbmRz');
+
+@$core.Deprecated('Use createReferenceTaskReqDescriptor instead')
+const CreateReferenceTaskReq$json = {
+  '1': 'CreateReferenceTaskReq',
+  '2': [
+    {
+      '1': 'request_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'requestId',
+      '17': true
+    },
+    {
+      '1': 'workflow_id',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'workflowId',
+      '17': true
+    },
+    {
+      '1': 'input_video_asset_id',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'inputVideoAssetId',
+      '17': true
+    },
+    {
+      '1': 'input_asset_ids',
+      '3': 4,
+      '4': 3,
+      '5': 9,
+      '8': {},
+      '10': 'inputAssetIds'
+    },
+    {
+      '1': 'prompt',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 3,
+      '10': 'prompt',
+      '17': true
+    },
+    {
+      '1': 'resolution',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.VideoResolution',
+      '10': 'resolution'
+    },
+    {
+      '1': 'duration_seconds',
+      '3': 7,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '9': 4,
+      '10': 'durationSeconds',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_request_id'},
+    {'1': '_workflow_id'},
+    {'1': '_input_video_asset_id'},
+    {'1': '_prompt'},
+    {'1': '_duration_seconds'},
+  ],
+};
+
+/// Descriptor for `CreateReferenceTaskReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List createReferenceTaskReqDescriptor = $convert.base64Decode(
+    'ChZDcmVhdGVSZWZlcmVuY2VUYXNrUmVxEi4KCnJlcXVlc3RfaWQYASABKAlCCrpIB8gBAXICEA'
+    'FIAFIJcmVxdWVzdElkiAEBEjAKC3dvcmtmbG93X2lkGAIgASgJQgq6SAfIAQFyAhABSAFSCndv'
+    'cmtmbG93SWSIAQESPQoUaW5wdXRfdmlkZW9fYXNzZXRfaWQYAyABKAlCB7pIBHICEAFIAlIRaW'
+    '5wdXRWaWRlb0Fzc2V0SWSIAQESNgoPaW5wdXRfYXNzZXRfaWRzGAQgAygJQg66SAuSAQgQBCIE'
+    'cgIQAVINaW5wdXRBc3NldElkcxInCgZwcm9tcHQYBSABKAlCCrpIB8gBAXICEAFIA1IGcHJvbX'
+    'B0iAEBEjkKCnJlc29sdXRpb24YBiABKAsyGS5oaS5tZWRpYS5WaWRlb1Jlc29sdXRpb25SCnJl'
+    'c29sdXRpb24SNwoQZHVyYXRpb25fc2Vjb25kcxgHIAEoBUIHukgEGgIgAEgEUg9kdXJhdGlvbl'
+    'NlY29uZHOIAQE6lgG6SJIBGo8BChhyZWZlcmVuY2VfdGFzay5tYXRlcmlhbHMSMWF0IGxlYXN0'
+    'IG9uZSB2aWRlbyBvciByZWZlcmVuY2UgaW1hZ2UgaXMgcmVxdWlyZWQaQGhhcyh0aGlzLmlucH'
+    'V0X3ZpZGVvX2Fzc2V0X2lkKSB8fCBzaXplKHRoaXMuaW5wdXRfYXNzZXRfaWRzKSA+IDBCDQoL'
+    'X3JlcXVlc3RfaWRCDgoMX3dvcmtmbG93X2lkQhcKFV9pbnB1dF92aWRlb19hc3NldF9pZEIJCg'
+    'dfcHJvbXB0QhMKEV9kdXJhdGlvbl9zZWNvbmRz');
+
+@$core.Deprecated('Use createAdvancedReplaceTaskReqDescriptor instead')
+const CreateAdvancedReplaceTaskReq$json = {
+  '1': 'CreateAdvancedReplaceTaskReq',
+  '2': [
+    {
+      '1': 'request_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'requestId',
+      '17': true
+    },
+    {
+      '1': 'workflow_id',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'workflowId',
+      '17': true
+    },
+    {
+      '1': 'input_video_asset_id',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'inputVideoAssetId',
+      '17': true
+    },
+    {
+      '1': 'input_asset_ids',
+      '3': 4,
+      '4': 3,
+      '5': 9,
+      '8': {},
+      '10': 'inputAssetIds'
+    },
+    {
+      '1': 'prompt',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 3,
+      '10': 'prompt',
+      '17': true
+    },
+    {
+      '1': 'resolution',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.VideoResolution',
+      '10': 'resolution'
+    },
+    {
+      '1': 'duration_seconds',
+      '3': 7,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '9': 4,
+      '10': 'durationSeconds',
+      '17': true
+    },
+    {
+      '1': 'region_description',
+      '3': 8,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 5,
+      '10': 'regionDescription',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_request_id'},
+    {'1': '_workflow_id'},
+    {'1': '_input_video_asset_id'},
+    {'1': '_prompt'},
+    {'1': '_duration_seconds'},
+    {'1': '_region_description'},
+  ],
+};
+
+/// Descriptor for `CreateAdvancedReplaceTaskReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List createAdvancedReplaceTaskReqDescriptor = $convert.base64Decode(
+    'ChxDcmVhdGVBZHZhbmNlZFJlcGxhY2VUYXNrUmVxEi4KCnJlcXVlc3RfaWQYASABKAlCCrpIB8'
+    'gBAXICEAFIAFIJcmVxdWVzdElkiAEBEjAKC3dvcmtmbG93X2lkGAIgASgJQgq6SAfIAQFyAhAB'
+    'SAFSCndvcmtmbG93SWSIAQESQAoUaW5wdXRfdmlkZW9fYXNzZXRfaWQYAyABKAlCCrpIB8gBAX'
+    'ICEAFIAlIRaW5wdXRWaWRlb0Fzc2V0SWSIAQESNgoPaW5wdXRfYXNzZXRfaWRzGAQgAygJQg66'
+    'SAuSAQgQBCIEcgIQAVINaW5wdXRBc3NldElkcxInCgZwcm9tcHQYBSABKAlCCrpIB8gBAXICEA'
+    'FIA1IGcHJvbXB0iAEBEjkKCnJlc29sdXRpb24YBiABKAsyGS5oaS5tZWRpYS5WaWRlb1Jlc29s'
+    'dXRpb25SCnJlc29sdXRpb24SNwoQZHVyYXRpb25fc2Vjb25kcxgHIAEoBUIHukgEGgIgAEgEUg'
+    '9kdXJhdGlvblNlY29uZHOIAQESQQoScmVnaW9uX2Rlc2NyaXB0aW9uGAggASgJQg26SArIAQFy'
+    'BRABGMgBSAVSEXJlZ2lvbkRlc2NyaXB0aW9uiAEBQg0KC19yZXF1ZXN0X2lkQg4KDF93b3JrZm'
+    'xvd19pZEIXChVfaW5wdXRfdmlkZW9fYXNzZXRfaWRCCQoHX3Byb21wdEITChFfZHVyYXRpb25f'
+    'c2Vjb25kc0IVChNfcmVnaW9uX2Rlc2NyaXB0aW9u');
+
+@$core.Deprecated('Use videoExtensionTaskParamsDescriptor instead')
+const VideoExtensionTaskParams$json = {
+  '1': 'VideoExtensionTaskParams',
+  '2': [
+    {
+      '1': 'input_video_asset_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'inputVideoAssetId',
+      '17': true
+    },
+    {
+      '1': 'first_frame_asset_id',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'firstFrameAssetId',
+      '17': true
+    },
+    {
+      '1': 'last_frame_asset_id',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'lastFrameAssetId',
+      '17': true
+    },
+    {
+      '1': 'input_asset_ids',
+      '3': 4,
+      '4': 3,
+      '5': 9,
+      '8': {},
+      '10': 'inputAssetIds'
+    },
+    {
+      '1': 'prompt',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 3,
+      '10': 'prompt',
+      '17': true
+    },
+    {
+      '1': 'region_description',
+      '3': 6,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 4,
+      '10': 'regionDescription',
+      '17': true
+    },
+    {
+      '1': 'seed',
+      '3': 7,
+      '4': 1,
+      '5': 4,
+      '8': {},
+      '9': 5,
+      '10': 'seed',
+      '17': true
+    },
+    {
+      '1': 'aspect_ratio',
+      '3': 8,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 6,
+      '10': 'aspectRatio',
+      '17': true
+    },
+    {
+      '1': 'megapixels',
+      '3': 9,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 7,
+      '10': 'megapixels',
+      '17': true
+    },
+    {
+      '1': 'duration_seconds',
+      '3': 10,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '9': 8,
+      '10': 'durationSeconds',
+      '17': true
+    },
+    {
+      '1': 'frame_rate',
+      '3': 11,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '9': 9,
+      '10': 'frameRate',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_input_video_asset_id'},
+    {'1': '_first_frame_asset_id'},
+    {'1': '_last_frame_asset_id'},
+    {'1': '_prompt'},
+    {'1': '_region_description'},
+    {'1': '_seed'},
+    {'1': '_aspect_ratio'},
+    {'1': '_megapixels'},
+    {'1': '_duration_seconds'},
+    {'1': '_frame_rate'},
+  ],
+};
+
+/// Descriptor for `VideoExtensionTaskParams`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List videoExtensionTaskParamsDescriptor = $convert.base64Decode(
+    'ChhWaWRlb0V4dGVuc2lvblRhc2tQYXJhbXMSOgoUaW5wdXRfdmlkZW9fYXNzZXRfaWQYASABKA'
+    'lCBJC1GANIAFIRaW5wdXRWaWRlb0Fzc2V0SWSIAQESOgoUZmlyc3RfZnJhbWVfYXNzZXRfaWQY'
+    'AiABKAlCBJC1GANIAVIRZmlyc3RGcmFtZUFzc2V0SWSIAQESOAoTbGFzdF9mcmFtZV9hc3NldF'
+    '9pZBgDIAEoCUIEkLUYA0gCUhBsYXN0RnJhbWVBc3NldElkiAEBEiwKD2lucHV0X2Fzc2V0X2lk'
+    'cxgEIAMoCUIEkLUYA1INaW5wdXRBc3NldElkcxIhCgZwcm9tcHQYBSABKAlCBJC1GANIA1IGcH'
+    'JvbXB0iAEBEjgKEnJlZ2lvbl9kZXNjcmlwdGlvbhgGIAEoCUIEkLUYA0gEUhFyZWdpb25EZXNj'
+    'cmlwdGlvbogBARIdCgRzZWVkGAcgASgEQgSQtRgDSAVSBHNlZWSIAQESLAoMYXNwZWN0X3JhdG'
+    'lvGAggASgJQgSQtRgDSAZSC2FzcGVjdFJhdGlviAEBEikKCm1lZ2FwaXhlbHMYCSABKAlCBJC1'
+    'GANIB1IKbWVnYXBpeGVsc4gBARI0ChBkdXJhdGlvbl9zZWNvbmRzGAogASgFQgSQtRgDSAhSD2'
+    'R1cmF0aW9uU2Vjb25kc4gBARIoCgpmcmFtZV9yYXRlGAsgASgFQgSQtRgDSAlSCWZyYW1lUmF0'
+    'ZYgBAToEmLUYA0IXChVfaW5wdXRfdmlkZW9fYXNzZXRfaWRCFwoVX2ZpcnN0X2ZyYW1lX2Fzc2'
+    'V0X2lkQhYKFF9sYXN0X2ZyYW1lX2Fzc2V0X2lkQgkKB19wcm9tcHRCFQoTX3JlZ2lvbl9kZXNj'
+    'cmlwdGlvbkIHCgVfc2VlZEIPCg1fYXNwZWN0X3JhdGlvQg0KC19tZWdhcGl4ZWxzQhMKEV9kdX'
+    'JhdGlvbl9zZWNvbmRzQg0KC19mcmFtZV9yYXRl');
+
 @$core.Deprecated('Use createTaskRespDescriptor instead')
 const CreateTaskResp$json = {
   '1': 'CreateTaskResp',
@@ -935,6 +1556,16 @@ const TaskDetail$json = {
       '9': 0,
       '10': 'character'
     },
+    {
+      '1': 'video_extension',
+      '3': 8,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.VideoExtensionTaskParams',
+      '8': {},
+      '9': 0,
+      '10': 'videoExtension'
+    },
   ],
   '7': {},
   '8': [
@@ -953,8 +1584,9 @@ final $typed_data.Uint8List taskDetailDescriptor = $convert.base64Decode(
     'Lm1lZGlhLlNpbmdsZUltYWdlRWRpdFRhc2tQYXJhbXNCBJC1GANIAFIPc2luZ2xlSW1hZ2VFZG'
     'l0El0KE211bHRpcGxlX2ltYWdlX2VkaXQYBiABKAsyJS5oaS5tZWRpYS5NdWx0aXBsZUltYWdl'
     'RWRpdFRhc2tQYXJhbXNCBJC1GANIAFIRbXVsdGlwbGVJbWFnZUVkaXQSQwoJY2hhcmFjdGVyGA'
-    'cgASgLMh0uaGkubWVkaWEuQ2hhcmFjdGVyVGFza1BhcmFtc0IEkLUYA0gAUgljaGFyYWN0ZXI6'
-    'BJi1GANCEgoQZWZmZWN0aXZlX3BhcmFtcw==');
+    'cgASgLMh0uaGkubWVkaWEuQ2hhcmFjdGVyVGFza1BhcmFtc0IEkLUYA0gAUgljaGFyYWN0ZXIS'
+    'UwoPdmlkZW9fZXh0ZW5zaW9uGAggASgLMiIuaGkubWVkaWEuVmlkZW9FeHRlbnNpb25UYXNrUG'
+    'FyYW1zQgSQtRgDSABSDnZpZGVvRXh0ZW5zaW9uOgSYtRgDQhIKEGVmZmVjdGl2ZV9wYXJhbXM=');
 
 @$core.Deprecated('Use getTaskReqDescriptor instead')
 const GetTaskReq$json = {

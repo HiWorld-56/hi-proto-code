@@ -101,7 +101,7 @@ abstract class FunctionServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $1.GetFunctionReq request);
 }
 
-/// 管理员只调整功能开放开关；功能 ID 和显示名称随开发初始化。
+/// 管理员调整功能开放开关与分类内顺序；功能 ID 和显示名称随开发初始化。
 @$pb.GrpcServiceName('hi.media.FunctionManage')
 class FunctionManageClient extends $grpc.Client {
   /// The hostname for this service.
@@ -123,12 +123,25 @@ class FunctionManageClient extends $grpc.Client {
     return $createUnaryCall(_$setEnabled, request, options: options);
   }
 
+  /// 设置分类内展示顺序，不影响 FIFO 或工作流排序。
+  $grpc.ResponseFuture<$0.Empty> setSortOrder(
+    $1.SetFunctionSortOrderReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$setSortOrder, request, options: options);
+  }
+
   // method descriptors
 
   static final _$setEnabled =
       $grpc.ClientMethod<$1.SetFunctionEnabledReq, $0.Empty>(
           '/hi.media.FunctionManage/SetEnabled',
           ($1.SetFunctionEnabledReq value) => value.writeToBuffer(),
+          $0.Empty.fromBuffer);
+  static final _$setSortOrder =
+      $grpc.ClientMethod<$1.SetFunctionSortOrderReq, $0.Empty>(
+          '/hi.media.FunctionManage/SetSortOrder',
+          ($1.SetFunctionSortOrderReq value) => value.writeToBuffer(),
           $0.Empty.fromBuffer);
 }
 
@@ -145,6 +158,14 @@ abstract class FunctionManageServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $1.SetFunctionEnabledReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.SetFunctionSortOrderReq, $0.Empty>(
+        'SetSortOrder',
+        setSortOrder_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $1.SetFunctionSortOrderReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.Empty> setEnabled_Pre($grpc.ServiceCall $call,
@@ -154,4 +175,12 @@ abstract class FunctionManageServiceBase extends $grpc.Service {
 
   $async.Future<$0.Empty> setEnabled(
       $grpc.ServiceCall call, $1.SetFunctionEnabledReq request);
+
+  $async.Future<$0.Empty> setSortOrder_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.SetFunctionSortOrderReq> $request) async {
+    return setSortOrder($call, await $request);
+  }
+
+  $async.Future<$0.Empty> setSortOrder(
+      $grpc.ServiceCall call, $1.SetFunctionSortOrderReq request);
 }

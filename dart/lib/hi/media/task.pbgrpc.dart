@@ -84,6 +84,46 @@ class TaskClient extends $grpc.Client {
     return $createUnaryCall(_$createCharacter, request, options: options);
   }
 
+  /// 首尾帧生成 video.first_last_frame，用户明确提交两张图片的角色。
+  $grpc.ResponseFuture<$0.CreateTaskResp> createFirstLastFrame(
+    $0.CreateFirstLastFrameTaskReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$createFirstLastFrame, request, options: options);
+  }
+
+  /// 模仿生成 video.motion_transfer，视频必填、首帧可选，输出参数由素材和工作流决定。
+  $grpc.ResponseFuture<$0.CreateTaskResp> createMotionTransfer(
+    $0.CreateMotionTransferTaskReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$createMotionTransfer, request, options: options);
+  }
+
+  /// 引导生成 video.continuation，时长表示新增片段，不包含原视频或前导。
+  $grpc.ResponseFuture<$0.CreateTaskResp> createContinuation(
+    $0.CreateContinuationTaskReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$createContinuation, request, options: options);
+  }
+
+  /// 参考生成 video.reference，至少一份视频或图片，不接收区域描述。
+  $grpc.ResponseFuture<$0.CreateTaskResp> createReference(
+    $0.CreateReferenceTaskReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$createReference, request, options: options);
+  }
+
+  /// 高级替换 video.advanced_replace，必填视频与自由区域描述，不自动翻译。
+  $grpc.ResponseFuture<$0.CreateTaskResp> createAdvancedReplace(
+    $0.CreateAdvancedReplaceTaskReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$createAdvancedReplace, request, options: options);
+  }
+
   /// 查询本人任务详情及产物资产 ID。
   $grpc.ResponseFuture<$0.GetTaskResp> get(
     $0.GetTaskReq request, {
@@ -155,6 +195,31 @@ class TaskClient extends $grpc.Client {
       $grpc.ClientMethod<$1.CreateCharacterTaskReq, $0.CreateTaskResp>(
           '/hi.media.Task/CreateCharacter',
           ($1.CreateCharacterTaskReq value) => value.writeToBuffer(),
+          $0.CreateTaskResp.fromBuffer);
+  static final _$createFirstLastFrame =
+      $grpc.ClientMethod<$0.CreateFirstLastFrameTaskReq, $0.CreateTaskResp>(
+          '/hi.media.Task/CreateFirstLastFrame',
+          ($0.CreateFirstLastFrameTaskReq value) => value.writeToBuffer(),
+          $0.CreateTaskResp.fromBuffer);
+  static final _$createMotionTransfer =
+      $grpc.ClientMethod<$0.CreateMotionTransferTaskReq, $0.CreateTaskResp>(
+          '/hi.media.Task/CreateMotionTransfer',
+          ($0.CreateMotionTransferTaskReq value) => value.writeToBuffer(),
+          $0.CreateTaskResp.fromBuffer);
+  static final _$createContinuation =
+      $grpc.ClientMethod<$0.CreateContinuationTaskReq, $0.CreateTaskResp>(
+          '/hi.media.Task/CreateContinuation',
+          ($0.CreateContinuationTaskReq value) => value.writeToBuffer(),
+          $0.CreateTaskResp.fromBuffer);
+  static final _$createReference =
+      $grpc.ClientMethod<$0.CreateReferenceTaskReq, $0.CreateTaskResp>(
+          '/hi.media.Task/CreateReference',
+          ($0.CreateReferenceTaskReq value) => value.writeToBuffer(),
+          $0.CreateTaskResp.fromBuffer);
+  static final _$createAdvancedReplace =
+      $grpc.ClientMethod<$0.CreateAdvancedReplaceTaskReq, $0.CreateTaskResp>(
+          '/hi.media.Task/CreateAdvancedReplace',
+          ($0.CreateAdvancedReplaceTaskReq value) => value.writeToBuffer(),
           $0.CreateTaskResp.fromBuffer);
   static final _$get = $grpc.ClientMethod<$0.GetTaskReq, $0.GetTaskResp>(
       '/hi.media.Task/Get',
@@ -238,6 +303,51 @@ abstract class TaskServiceBase extends $grpc.Service {
             false,
             ($core.List<$core.int> value) =>
                 $1.CreateCharacterTaskReq.fromBuffer(value),
+            ($0.CreateTaskResp value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$0.CreateFirstLastFrameTaskReq, $0.CreateTaskResp>(
+            'CreateFirstLastFrame',
+            createFirstLastFrame_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $0.CreateFirstLastFrameTaskReq.fromBuffer(value),
+            ($0.CreateTaskResp value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$0.CreateMotionTransferTaskReq, $0.CreateTaskResp>(
+            'CreateMotionTransfer',
+            createMotionTransfer_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $0.CreateMotionTransferTaskReq.fromBuffer(value),
+            ($0.CreateTaskResp value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$0.CreateContinuationTaskReq, $0.CreateTaskResp>(
+            'CreateContinuation',
+            createContinuation_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $0.CreateContinuationTaskReq.fromBuffer(value),
+            ($0.CreateTaskResp value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$0.CreateReferenceTaskReq, $0.CreateTaskResp>(
+            'CreateReference',
+            createReference_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $0.CreateReferenceTaskReq.fromBuffer(value),
+            ($0.CreateTaskResp value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$0.CreateAdvancedReplaceTaskReq, $0.CreateTaskResp>(
+            'CreateAdvancedReplace',
+            createAdvancedReplace_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $0.CreateAdvancedReplaceTaskReq.fromBuffer(value),
             ($0.CreateTaskResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.GetTaskReq, $0.GetTaskResp>(
         'Get',
@@ -330,6 +440,50 @@ abstract class TaskServiceBase extends $grpc.Service {
 
   $async.Future<$0.CreateTaskResp> createCharacter(
       $grpc.ServiceCall call, $1.CreateCharacterTaskReq request);
+
+  $async.Future<$0.CreateTaskResp> createFirstLastFrame_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.CreateFirstLastFrameTaskReq> $request) async {
+    return createFirstLastFrame($call, await $request);
+  }
+
+  $async.Future<$0.CreateTaskResp> createFirstLastFrame(
+      $grpc.ServiceCall call, $0.CreateFirstLastFrameTaskReq request);
+
+  $async.Future<$0.CreateTaskResp> createMotionTransfer_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.CreateMotionTransferTaskReq> $request) async {
+    return createMotionTransfer($call, await $request);
+  }
+
+  $async.Future<$0.CreateTaskResp> createMotionTransfer(
+      $grpc.ServiceCall call, $0.CreateMotionTransferTaskReq request);
+
+  $async.Future<$0.CreateTaskResp> createContinuation_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.CreateContinuationTaskReq> $request) async {
+    return createContinuation($call, await $request);
+  }
+
+  $async.Future<$0.CreateTaskResp> createContinuation(
+      $grpc.ServiceCall call, $0.CreateContinuationTaskReq request);
+
+  $async.Future<$0.CreateTaskResp> createReference_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.CreateReferenceTaskReq> $request) async {
+    return createReference($call, await $request);
+  }
+
+  $async.Future<$0.CreateTaskResp> createReference(
+      $grpc.ServiceCall call, $0.CreateReferenceTaskReq request);
+
+  $async.Future<$0.CreateTaskResp> createAdvancedReplace_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.CreateAdvancedReplaceTaskReq> $request) async {
+    return createAdvancedReplace($call, await $request);
+  }
+
+  $async.Future<$0.CreateTaskResp> createAdvancedReplace(
+      $grpc.ServiceCall call, $0.CreateAdvancedReplaceTaskReq request);
 
   $async.Future<$0.GetTaskResp> get_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.GetTaskReq> $request) async {

@@ -1530,6 +1530,416 @@ func (x *CharacterWorkflowConfig) GetPromptMaxLength() uint32 {
 	return 0
 }
 
+// 首尾帧执行配置；输出宽高由宽高比和像素量计算后按 32 对齐，分别写入宽、高绑定。
+type FirstLastFrameWorkflowConfig struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 两个 LoadImage.image，分别承担首帧、尾帧；管理员按角色绑定。
+	FirstFrame *WorkflowInputBinding `protobuf:"bytes,1,opt,name=first_frame,json=firstFrame,proto3" json:"first_frame,omitempty"`
+	LastFrame  *WorkflowInputBinding `protobuf:"bytes,2,opt,name=last_frame,json=lastFrame,proto3" json:"last_frame,omitempty"`
+	// 用户原文写入有效路径；不翻译、拼接或启用提示词增强。
+	Prompt          *WorkflowInputBinding `protobuf:"bytes,3,opt,name=prompt,proto3" json:"prompt,omitempty"`
+	PromptMaxLength *uint32               `protobuf:"varint,4,opt,name=prompt_max_length,json=promptMaxLength,proto3,oneof" json:"prompt_max_length,omitempty"`
+	// 可选管理员负向词；省略时保留工作流原值。
+	NegativePrompt *WorkflowFixedTextInput `protobuf:"bytes,5,opt,name=negative_prompt,json=negativePrompt,proto3" json:"negative_prompt,omitempty"`
+	// 计算后的像素宽高绑定；允许整数业务值写入兼容 INT/FLOAT 节点。
+	Width  *WorkflowInputBinding `protobuf:"bytes,6,opt,name=width,proto3" json:"width,omitempty"`
+	Height *WorkflowInputBinding `protobuf:"bytes,7,opt,name=height,proto3" json:"height,omitempty"`
+	// 公开允许值与默认值，不直接写入节点；初始 16:9 (Widescreen)。
+	AspectRatio *StringOptionConfig `protobuf:"bytes,8,opt,name=aspect_ratio,json=aspectRatio,proto3" json:"aspect_ratio,omitempty"`
+	// 规范十进制字符串，初始默认 "0.9"；用于计算像素宽高。
+	Megapixels *DecimalOptionConfig `protobuf:"bytes,9,opt,name=megapixels,proto3" json:"megapixels,omitempty"`
+	// 初始 3～15 秒、默认 5；每个工作流独立可调。
+	DurationSeconds *WorkflowIntRangeInput `protobuf:"bytes,10,opt,name=duration_seconds,json=durationSeconds,proto3" json:"duration_seconds,omitempty"`
+	// 初始默认 24，可选或固定；固定值须与执行图一致。
+	FrameRate *WorkflowFrameRateInput `protobuf:"bytes,11,opt,name=frame_rate,json=frameRate,proto3" json:"frame_rate,omitempty"`
+	// 一个或多个主生成 seed 输入，全部写入同一个后端任务随机值。
+	Seeds         []*WorkflowInputBinding `protobuf:"bytes,12,rep,name=seeds,proto3" json:"seeds,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FirstLastFrameWorkflowConfig) Reset() {
+	*x = FirstLastFrameWorkflowConfig{}
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FirstLastFrameWorkflowConfig) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FirstLastFrameWorkflowConfig) ProtoMessage() {}
+
+func (x *FirstLastFrameWorkflowConfig) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FirstLastFrameWorkflowConfig.ProtoReflect.Descriptor instead.
+func (*FirstLastFrameWorkflowConfig) Descriptor() ([]byte, []int) {
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *FirstLastFrameWorkflowConfig) GetFirstFrame() *WorkflowInputBinding {
+	if x != nil {
+		return x.FirstFrame
+	}
+	return nil
+}
+
+func (x *FirstLastFrameWorkflowConfig) GetLastFrame() *WorkflowInputBinding {
+	if x != nil {
+		return x.LastFrame
+	}
+	return nil
+}
+
+func (x *FirstLastFrameWorkflowConfig) GetPrompt() *WorkflowInputBinding {
+	if x != nil {
+		return x.Prompt
+	}
+	return nil
+}
+
+func (x *FirstLastFrameWorkflowConfig) GetPromptMaxLength() uint32 {
+	if x != nil && x.PromptMaxLength != nil {
+		return *x.PromptMaxLength
+	}
+	return 0
+}
+
+func (x *FirstLastFrameWorkflowConfig) GetNegativePrompt() *WorkflowFixedTextInput {
+	if x != nil {
+		return x.NegativePrompt
+	}
+	return nil
+}
+
+func (x *FirstLastFrameWorkflowConfig) GetWidth() *WorkflowInputBinding {
+	if x != nil {
+		return x.Width
+	}
+	return nil
+}
+
+func (x *FirstLastFrameWorkflowConfig) GetHeight() *WorkflowInputBinding {
+	if x != nil {
+		return x.Height
+	}
+	return nil
+}
+
+func (x *FirstLastFrameWorkflowConfig) GetAspectRatio() *StringOptionConfig {
+	if x != nil {
+		return x.AspectRatio
+	}
+	return nil
+}
+
+func (x *FirstLastFrameWorkflowConfig) GetMegapixels() *DecimalOptionConfig {
+	if x != nil {
+		return x.Megapixels
+	}
+	return nil
+}
+
+func (x *FirstLastFrameWorkflowConfig) GetDurationSeconds() *WorkflowIntRangeInput {
+	if x != nil {
+		return x.DurationSeconds
+	}
+	return nil
+}
+
+func (x *FirstLastFrameWorkflowConfig) GetFrameRate() *WorkflowFrameRateInput {
+	if x != nil {
+		return x.FrameRate
+	}
+	return nil
+}
+
+func (x *FirstLastFrameWorkflowConfig) GetSeeds() []*WorkflowInputBinding {
+	if x != nil {
+		return x.Seeds
+	}
+	return nil
+}
+
+// 模仿生成配置；当前为深度控制，不提供用户输出尺寸、时长或帧率参数。
+type MotionTransferWorkflowConfig struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// LoadVideo.file，执行时写入本次上传响应对应的文件引用。
+	InputVideo *WorkflowInputBinding `protobuf:"bytes,1,opt,name=input_video,json=inputVideo,proto3" json:"input_video,omitempty"`
+	// 可选首帧的 LoadImage.image 位置；绑定必填，用户素材可省略。
+	FirstFrame *WorkflowInputBinding `protobuf:"bytes,2,opt,name=first_frame,json=firstFrame,proto3" json:"first_frame,omitempty"`
+	// 布尔输入，由是否提供首帧决定；无图时后端还须旁路两阶段图片条件并清除无用分支。
+	UseFirstFrame   *WorkflowInputBinding   `protobuf:"bytes,3,opt,name=use_first_frame,json=useFirstFrame,proto3" json:"use_first_frame,omitempty"`
+	Prompt          *WorkflowInputBinding   `protobuf:"bytes,4,opt,name=prompt,proto3" json:"prompt,omitempty"`
+	PromptMaxLength *uint32                 `protobuf:"varint,5,opt,name=prompt_max_length,json=promptMaxLength,proto3,oneof" json:"prompt_max_length,omitempty"`
+	NegativePrompt  *WorkflowFixedTextInput `protobuf:"bytes,6,opt,name=negative_prompt,json=negativePrompt,proto3" json:"negative_prompt,omitempty"`
+	// 多阶段主生成使用同一个后端 seed，不修改原有视频功能的种子行为。
+	Seeds         []*WorkflowInputBinding `protobuf:"bytes,7,rep,name=seeds,proto3" json:"seeds,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MotionTransferWorkflowConfig) Reset() {
+	*x = MotionTransferWorkflowConfig{}
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MotionTransferWorkflowConfig) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MotionTransferWorkflowConfig) ProtoMessage() {}
+
+func (x *MotionTransferWorkflowConfig) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MotionTransferWorkflowConfig.ProtoReflect.Descriptor instead.
+func (*MotionTransferWorkflowConfig) Descriptor() ([]byte, []int) {
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *MotionTransferWorkflowConfig) GetInputVideo() *WorkflowInputBinding {
+	if x != nil {
+		return x.InputVideo
+	}
+	return nil
+}
+
+func (x *MotionTransferWorkflowConfig) GetFirstFrame() *WorkflowInputBinding {
+	if x != nil {
+		return x.FirstFrame
+	}
+	return nil
+}
+
+func (x *MotionTransferWorkflowConfig) GetUseFirstFrame() *WorkflowInputBinding {
+	if x != nil {
+		return x.UseFirstFrame
+	}
+	return nil
+}
+
+func (x *MotionTransferWorkflowConfig) GetPrompt() *WorkflowInputBinding {
+	if x != nil {
+		return x.Prompt
+	}
+	return nil
+}
+
+func (x *MotionTransferWorkflowConfig) GetPromptMaxLength() uint32 {
+	if x != nil && x.PromptMaxLength != nil {
+		return *x.PromptMaxLength
+	}
+	return 0
+}
+
+func (x *MotionTransferWorkflowConfig) GetNegativePrompt() *WorkflowFixedTextInput {
+	if x != nil {
+		return x.NegativePrompt
+	}
+	return nil
+}
+
+func (x *MotionTransferWorkflowConfig) GetSeeds() []*WorkflowInputBinding {
+	if x != nil {
+		return x.Seeds
+	}
+	return nil
+}
+
+// MiniMax 零至四张有序参考图片接入；只配置模板和接收节点，不配置通用重连规则。
+type WorkflowMiniMaxReferenceImages struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 可克隆的 LoadImage，后端按实际图片数量准备加载节点，移除未使用示例。
+	TemplateNodeId *string `protobuf:"bytes,1,opt,name=template_node_id,json=templateNodeId,proto3,oneof" json:"template_node_id,omitempty"`
+	// MiniMaxH3ReferenceToVideo；按顺序写入 ref_images.ref_image_0 至实际图片数。
+	ReferenceNodeId *string `protobuf:"bytes,2,opt,name=reference_node_id,json=referenceNodeId,proto3,oneof" json:"reference_node_id,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *WorkflowMiniMaxReferenceImages) Reset() {
+	*x = WorkflowMiniMaxReferenceImages{}
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WorkflowMiniMaxReferenceImages) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WorkflowMiniMaxReferenceImages) ProtoMessage() {}
+
+func (x *WorkflowMiniMaxReferenceImages) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use WorkflowMiniMaxReferenceImages.ProtoReflect.Descriptor instead.
+func (*WorkflowMiniMaxReferenceImages) Descriptor() ([]byte, []int) {
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *WorkflowMiniMaxReferenceImages) GetTemplateNodeId() string {
+	if x != nil && x.TemplateNodeId != nil {
+		return *x.TemplateNodeId
+	}
+	return ""
+}
+
+func (x *WorkflowMiniMaxReferenceImages) GetReferenceNodeId() string {
+	if x != nil && x.ReferenceNodeId != nil {
+		return *x.ReferenceNodeId
+	}
+	return ""
+}
+
+// 引导、参考及高级替换共用的 MiniMax 参数结构，由外层 function_config 确定功能。
+// 固定输出 24 FPS；输入视频在执行前适配临时副本，不改存储原件。
+type MiniMaxVideoWorkflowConfig struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// LoadVideo.file；绑定必填，参考生成用户可不提供视频，此时断开视频与音频分支。
+	InputVideo *WorkflowInputBinding `protobuf:"bytes,1,opt,name=input_video,json=inputVideo,proto3" json:"input_video,omitempty"`
+	// 用户可选 0～4 张图片，按提交顺序接入；不存在的素材不沿用示例。
+	ReferenceImages *WorkflowMiniMaxReferenceImages `protobuf:"bytes,2,opt,name=reference_images,json=referenceImages,proto3" json:"reference_images,omitempty"`
+	Prompt          *WorkflowInputBinding           `protobuf:"bytes,3,opt,name=prompt,proto3" json:"prompt,omitempty"`
+	PromptMaxLength *uint32                         `protobuf:"varint,4,opt,name=prompt_max_length,json=promptMaxLength,proto3,oneof" json:"prompt_max_length,omitempty"`
+	// ResolutionSelector 完整选项字符串，初始默认 16:9 (Widescreen)。
+	AspectRatio *WorkflowStringOptionInput `protobuf:"bytes,5,opt,name=aspect_ratio,json=aspectRatio,proto3" json:"aspect_ratio,omitempty"`
+	// 业务保存十进制字符串，执行写为 JSON 数字；初始默认 "0.4"。
+	Megapixels *WorkflowDecimalOptionInput `protobuf:"bytes,6,opt,name=megapixels,proto3" json:"megapixels,omitempty"`
+	// 初始 3～10 秒、默认 5；引导生成表示新增片段，后端补前导并裁剪。
+	DurationSeconds *WorkflowIntRangeInput  `protobuf:"bytes,7,opt,name=duration_seconds,json=durationSeconds,proto3" json:"duration_seconds,omitempty"`
+	Seeds           []*WorkflowInputBinding `protobuf:"bytes,8,rep,name=seeds,proto3" json:"seeds,omitempty"`
+	// 仅高级替换必填，其他两类不得配置；用户原文传 SAM，固定最多 200 个码点。
+	RegionDescription *WorkflowInputBinding `protobuf:"bytes,9,opt,name=region_description,json=regionDescription,proto3" json:"region_description,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *MiniMaxVideoWorkflowConfig) Reset() {
+	*x = MiniMaxVideoWorkflowConfig{}
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[22]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MiniMaxVideoWorkflowConfig) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MiniMaxVideoWorkflowConfig) ProtoMessage() {}
+
+func (x *MiniMaxVideoWorkflowConfig) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[22]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MiniMaxVideoWorkflowConfig.ProtoReflect.Descriptor instead.
+func (*MiniMaxVideoWorkflowConfig) Descriptor() ([]byte, []int) {
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{22}
+}
+
+func (x *MiniMaxVideoWorkflowConfig) GetInputVideo() *WorkflowInputBinding {
+	if x != nil {
+		return x.InputVideo
+	}
+	return nil
+}
+
+func (x *MiniMaxVideoWorkflowConfig) GetReferenceImages() *WorkflowMiniMaxReferenceImages {
+	if x != nil {
+		return x.ReferenceImages
+	}
+	return nil
+}
+
+func (x *MiniMaxVideoWorkflowConfig) GetPrompt() *WorkflowInputBinding {
+	if x != nil {
+		return x.Prompt
+	}
+	return nil
+}
+
+func (x *MiniMaxVideoWorkflowConfig) GetPromptMaxLength() uint32 {
+	if x != nil && x.PromptMaxLength != nil {
+		return *x.PromptMaxLength
+	}
+	return 0
+}
+
+func (x *MiniMaxVideoWorkflowConfig) GetAspectRatio() *WorkflowStringOptionInput {
+	if x != nil {
+		return x.AspectRatio
+	}
+	return nil
+}
+
+func (x *MiniMaxVideoWorkflowConfig) GetMegapixels() *WorkflowDecimalOptionInput {
+	if x != nil {
+		return x.Megapixels
+	}
+	return nil
+}
+
+func (x *MiniMaxVideoWorkflowConfig) GetDurationSeconds() *WorkflowIntRangeInput {
+	if x != nil {
+		return x.DurationSeconds
+	}
+	return nil
+}
+
+func (x *MiniMaxVideoWorkflowConfig) GetSeeds() []*WorkflowInputBinding {
+	if x != nil {
+		return x.Seeds
+	}
+	return nil
+}
+
+func (x *MiniMaxVideoWorkflowConfig) GetRegionDescription() *WorkflowInputBinding {
+	if x != nil {
+		return x.RegionDescription
+	}
+	return nil
+}
+
 // 完整执行配置；功能配置必须与工作流归属一致，保存时不建立产物预占。
 type WorkflowExecutionConfig struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -1541,6 +1951,11 @@ type WorkflowExecutionConfig struct {
 	//	*WorkflowExecutionConfig_SingleImageEdit
 	//	*WorkflowExecutionConfig_MultipleImageEdit
 	//	*WorkflowExecutionConfig_Character
+	//	*WorkflowExecutionConfig_FirstLastFrame
+	//	*WorkflowExecutionConfig_MotionTransfer
+	//	*WorkflowExecutionConfig_Continuation
+	//	*WorkflowExecutionConfig_Reference
+	//	*WorkflowExecutionConfig_AdvancedReplace
 	FunctionConfig isWorkflowExecutionConfig_FunctionConfig `protobuf_oneof:"function_config"`
 	Output         *WorkflowOutputConfig                    `protobuf:"bytes,3,opt,name=output,proto3" json:"output,omitempty"`
 	// 从 ComfyUI 真正开始执行起计时，单位秒；必填正整数，不按模型名称硬编码。
@@ -1551,7 +1966,7 @@ type WorkflowExecutionConfig struct {
 
 func (x *WorkflowExecutionConfig) Reset() {
 	*x = WorkflowExecutionConfig{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[19]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1563,7 +1978,7 @@ func (x *WorkflowExecutionConfig) String() string {
 func (*WorkflowExecutionConfig) ProtoMessage() {}
 
 func (x *WorkflowExecutionConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[19]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1576,7 +1991,7 @@ func (x *WorkflowExecutionConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WorkflowExecutionConfig.ProtoReflect.Descriptor instead.
 func (*WorkflowExecutionConfig) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{19}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *WorkflowExecutionConfig) GetFunctionConfig() isWorkflowExecutionConfig_FunctionConfig {
@@ -1640,6 +2055,51 @@ func (x *WorkflowExecutionConfig) GetCharacter() *CharacterWorkflowConfig {
 	return nil
 }
 
+func (x *WorkflowExecutionConfig) GetFirstLastFrame() *FirstLastFrameWorkflowConfig {
+	if x != nil {
+		if x, ok := x.FunctionConfig.(*WorkflowExecutionConfig_FirstLastFrame); ok {
+			return x.FirstLastFrame
+		}
+	}
+	return nil
+}
+
+func (x *WorkflowExecutionConfig) GetMotionTransfer() *MotionTransferWorkflowConfig {
+	if x != nil {
+		if x, ok := x.FunctionConfig.(*WorkflowExecutionConfig_MotionTransfer); ok {
+			return x.MotionTransfer
+		}
+	}
+	return nil
+}
+
+func (x *WorkflowExecutionConfig) GetContinuation() *MiniMaxVideoWorkflowConfig {
+	if x != nil {
+		if x, ok := x.FunctionConfig.(*WorkflowExecutionConfig_Continuation); ok {
+			return x.Continuation
+		}
+	}
+	return nil
+}
+
+func (x *WorkflowExecutionConfig) GetReference() *MiniMaxVideoWorkflowConfig {
+	if x != nil {
+		if x, ok := x.FunctionConfig.(*WorkflowExecutionConfig_Reference); ok {
+			return x.Reference
+		}
+	}
+	return nil
+}
+
+func (x *WorkflowExecutionConfig) GetAdvancedReplace() *MiniMaxVideoWorkflowConfig {
+	if x != nil {
+		if x, ok := x.FunctionConfig.(*WorkflowExecutionConfig_AdvancedReplace); ok {
+			return x.AdvancedReplace
+		}
+	}
+	return nil
+}
+
 func (x *WorkflowExecutionConfig) GetOutput() *WorkflowOutputConfig {
 	if x != nil {
 		return x.Output
@@ -1682,6 +2142,26 @@ type WorkflowExecutionConfig_Character struct {
 	Character *CharacterWorkflowConfig `protobuf:"bytes,8,opt,name=character,proto3,oneof"`
 }
 
+type WorkflowExecutionConfig_FirstLastFrame struct {
+	FirstLastFrame *FirstLastFrameWorkflowConfig `protobuf:"bytes,9,opt,name=first_last_frame,json=firstLastFrame,proto3,oneof"`
+}
+
+type WorkflowExecutionConfig_MotionTransfer struct {
+	MotionTransfer *MotionTransferWorkflowConfig `protobuf:"bytes,10,opt,name=motion_transfer,json=motionTransfer,proto3,oneof"`
+}
+
+type WorkflowExecutionConfig_Continuation struct {
+	Continuation *MiniMaxVideoWorkflowConfig `protobuf:"bytes,11,opt,name=continuation,proto3,oneof"`
+}
+
+type WorkflowExecutionConfig_Reference struct {
+	Reference *MiniMaxVideoWorkflowConfig `protobuf:"bytes,12,opt,name=reference,proto3,oneof"`
+}
+
+type WorkflowExecutionConfig_AdvancedReplace struct {
+	AdvancedReplace *MiniMaxVideoWorkflowConfig `protobuf:"bytes,13,opt,name=advanced_replace,json=advancedReplace,proto3,oneof"`
+}
+
 func (*WorkflowExecutionConfig_ImageToVideo) isWorkflowExecutionConfig_FunctionConfig() {}
 
 func (*WorkflowExecutionConfig_TextToVideo) isWorkflowExecutionConfig_FunctionConfig() {}
@@ -1693,6 +2173,16 @@ func (*WorkflowExecutionConfig_SingleImageEdit) isWorkflowExecutionConfig_Functi
 func (*WorkflowExecutionConfig_MultipleImageEdit) isWorkflowExecutionConfig_FunctionConfig() {}
 
 func (*WorkflowExecutionConfig_Character) isWorkflowExecutionConfig_FunctionConfig() {}
+
+func (*WorkflowExecutionConfig_FirstLastFrame) isWorkflowExecutionConfig_FunctionConfig() {}
+
+func (*WorkflowExecutionConfig_MotionTransfer) isWorkflowExecutionConfig_FunctionConfig() {}
+
+func (*WorkflowExecutionConfig_Continuation) isWorkflowExecutionConfig_FunctionConfig() {}
+
+func (*WorkflowExecutionConfig_Reference) isWorkflowExecutionConfig_FunctionConfig() {}
+
+func (*WorkflowExecutionConfig_AdvancedReplace) isWorkflowExecutionConfig_FunctionConfig() {}
 
 // 静态校验发现的问题，节点和输入定位信息按需提供。
 type WorkflowIssue struct {
@@ -1708,7 +2198,7 @@ type WorkflowIssue struct {
 
 func (x *WorkflowIssue) Reset() {
 	*x = WorkflowIssue{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[20]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1720,7 +2210,7 @@ func (x *WorkflowIssue) String() string {
 func (*WorkflowIssue) ProtoMessage() {}
 
 func (x *WorkflowIssue) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[20]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1733,7 +2223,7 @@ func (x *WorkflowIssue) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WorkflowIssue.ProtoReflect.Descriptor instead.
 func (*WorkflowIssue) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{20}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *WorkflowIssue) GetCode() string {
@@ -1790,7 +2280,7 @@ type WorkflowNodeInput struct {
 
 func (x *WorkflowNodeInput) Reset() {
 	*x = WorkflowNodeInput{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[21]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1802,7 +2292,7 @@ func (x *WorkflowNodeInput) String() string {
 func (*WorkflowNodeInput) ProtoMessage() {}
 
 func (x *WorkflowNodeInput) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[21]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1815,7 +2305,7 @@ func (x *WorkflowNodeInput) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WorkflowNodeInput.ProtoReflect.Descriptor instead.
 func (*WorkflowNodeInput) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{21}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *WorkflowNodeInput) GetInputName() string {
@@ -1874,7 +2364,7 @@ type WorkflowNode struct {
 
 func (x *WorkflowNode) Reset() {
 	*x = WorkflowNode{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[22]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1886,7 +2376,7 @@ func (x *WorkflowNode) String() string {
 func (*WorkflowNode) ProtoMessage() {}
 
 func (x *WorkflowNode) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[22]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1899,7 +2389,7 @@ func (x *WorkflowNode) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WorkflowNode.ProtoReflect.Descriptor instead.
 func (*WorkflowNode) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{22}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *WorkflowNode) GetNodeId() string {
@@ -1948,7 +2438,7 @@ type WorkflowDependencyUsage struct {
 
 func (x *WorkflowDependencyUsage) Reset() {
 	*x = WorkflowDependencyUsage{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[23]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1960,7 +2450,7 @@ func (x *WorkflowDependencyUsage) String() string {
 func (*WorkflowDependencyUsage) ProtoMessage() {}
 
 func (x *WorkflowDependencyUsage) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[23]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1973,7 +2463,7 @@ func (x *WorkflowDependencyUsage) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WorkflowDependencyUsage.ProtoReflect.Descriptor instead.
 func (*WorkflowDependencyUsage) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{23}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *WorkflowDependencyUsage) GetNodeId() string {
@@ -2005,7 +2495,7 @@ type WorkflowDependency struct {
 
 func (x *WorkflowDependency) Reset() {
 	*x = WorkflowDependency{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[24]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2017,7 +2507,7 @@ func (x *WorkflowDependency) String() string {
 func (*WorkflowDependency) ProtoMessage() {}
 
 func (x *WorkflowDependency) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[24]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2030,7 +2520,7 @@ func (x *WorkflowDependency) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WorkflowDependency.ProtoReflect.Descriptor instead.
 func (*WorkflowDependency) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{24}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *WorkflowDependency) GetKind() WorkflowDependencyKind {
@@ -2092,7 +2582,7 @@ type WorkflowSummary struct {
 
 func (x *WorkflowSummary) Reset() {
 	*x = WorkflowSummary{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[25]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2104,7 +2594,7 @@ func (x *WorkflowSummary) String() string {
 func (*WorkflowSummary) ProtoMessage() {}
 
 func (x *WorkflowSummary) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[25]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2117,7 +2607,7 @@ func (x *WorkflowSummary) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WorkflowSummary.ProtoReflect.Descriptor instead.
 func (*WorkflowSummary) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{25}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *WorkflowSummary) GetWorkflowId() string {
@@ -2231,7 +2721,7 @@ type WorkflowDetail struct {
 
 func (x *WorkflowDetail) Reset() {
 	*x = WorkflowDetail{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[26]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2243,7 +2733,7 @@ func (x *WorkflowDetail) String() string {
 func (*WorkflowDetail) ProtoMessage() {}
 
 func (x *WorkflowDetail) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[26]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2256,7 +2746,7 @@ func (x *WorkflowDetail) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WorkflowDetail.ProtoReflect.Descriptor instead.
 func (*WorkflowDetail) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{26}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *WorkflowDetail) GetSummary() *WorkflowSummary {
@@ -2315,7 +2805,7 @@ func (x *WorkflowDetail) GetValidatedAt() int64 {
 // 不接受编辑器 Workflow JSON；组合已存在时返回 Aborted，不覆盖原工作流。
 type WorkflowImportMetadata struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 来自 Function.List 的 video.img2vid 或 video.txt2vid。
+	// 来自 Function.List，支持值及中文用途见 FunctionSummary.function_id。
 	FunctionId *string `protobuf:"bytes,1,opt,name=function_id,json=functionId,proto3,oneof" json:"function_id,omitempty"`
 	// 已创建且尚未关联同一功能工作流的模型 ID。
 	ModelId *string `protobuf:"bytes,2,opt,name=model_id,json=modelId,proto3,oneof" json:"model_id,omitempty"`
@@ -2327,7 +2817,7 @@ type WorkflowImportMetadata struct {
 
 func (x *WorkflowImportMetadata) Reset() {
 	*x = WorkflowImportMetadata{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[27]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2339,7 +2829,7 @@ func (x *WorkflowImportMetadata) String() string {
 func (*WorkflowImportMetadata) ProtoMessage() {}
 
 func (x *WorkflowImportMetadata) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[27]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2352,7 +2842,7 @@ func (x *WorkflowImportMetadata) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WorkflowImportMetadata.ProtoReflect.Descriptor instead.
 func (*WorkflowImportMetadata) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{27}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *WorkflowImportMetadata) GetFunctionId() string {
@@ -2390,7 +2880,7 @@ type WorkflowReplaceFileMetadata struct {
 
 func (x *WorkflowReplaceFileMetadata) Reset() {
 	*x = WorkflowReplaceFileMetadata{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[28]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2402,7 +2892,7 @@ func (x *WorkflowReplaceFileMetadata) String() string {
 func (*WorkflowReplaceFileMetadata) ProtoMessage() {}
 
 func (x *WorkflowReplaceFileMetadata) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[28]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2415,7 +2905,7 @@ func (x *WorkflowReplaceFileMetadata) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WorkflowReplaceFileMetadata.ProtoReflect.Descriptor instead.
 func (*WorkflowReplaceFileMetadata) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{28}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *WorkflowReplaceFileMetadata) GetWorkflowId() string {
@@ -2435,7 +2925,7 @@ type WorkflowFileMutationResp struct {
 
 func (x *WorkflowFileMutationResp) Reset() {
 	*x = WorkflowFileMutationResp{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[29]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2447,7 +2937,7 @@ func (x *WorkflowFileMutationResp) String() string {
 func (*WorkflowFileMutationResp) ProtoMessage() {}
 
 func (x *WorkflowFileMutationResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[29]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2460,7 +2950,7 @@ func (x *WorkflowFileMutationResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WorkflowFileMutationResp.ProtoReflect.Descriptor instead.
 func (*WorkflowFileMutationResp) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{29}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *WorkflowFileMutationResp) GetWorkflowId() string {
@@ -2484,7 +2974,7 @@ type UpdateWorkflowReq struct {
 
 func (x *UpdateWorkflowReq) Reset() {
 	*x = UpdateWorkflowReq{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[30]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2496,7 +2986,7 @@ func (x *UpdateWorkflowReq) String() string {
 func (*UpdateWorkflowReq) ProtoMessage() {}
 
 func (x *UpdateWorkflowReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[30]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2509,7 +2999,7 @@ func (x *UpdateWorkflowReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateWorkflowReq.ProtoReflect.Descriptor instead.
 func (*UpdateWorkflowReq) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{30}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *UpdateWorkflowReq) GetWorkflowId() string {
@@ -2544,7 +3034,7 @@ type UpdateWorkflowResp struct {
 
 func (x *UpdateWorkflowResp) Reset() {
 	*x = UpdateWorkflowResp{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[31]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2556,7 +3046,7 @@ func (x *UpdateWorkflowResp) String() string {
 func (*UpdateWorkflowResp) ProtoMessage() {}
 
 func (x *UpdateWorkflowResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[31]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2569,7 +3059,7 @@ func (x *UpdateWorkflowResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateWorkflowResp.ProtoReflect.Descriptor instead.
 func (*UpdateWorkflowResp) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{31}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *UpdateWorkflowResp) GetWorkflow() *WorkflowDetail {
@@ -2589,7 +3079,7 @@ type GetWorkflowReq struct {
 
 func (x *GetWorkflowReq) Reset() {
 	*x = GetWorkflowReq{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[32]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2601,7 +3091,7 @@ func (x *GetWorkflowReq) String() string {
 func (*GetWorkflowReq) ProtoMessage() {}
 
 func (x *GetWorkflowReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[32]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2614,7 +3104,7 @@ func (x *GetWorkflowReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWorkflowReq.ProtoReflect.Descriptor instead.
 func (*GetWorkflowReq) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{32}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *GetWorkflowReq) GetWorkflowId() string {
@@ -2634,7 +3124,7 @@ type GetWorkflowResp struct {
 
 func (x *GetWorkflowResp) Reset() {
 	*x = GetWorkflowResp{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[33]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2646,7 +3136,7 @@ func (x *GetWorkflowResp) String() string {
 func (*GetWorkflowResp) ProtoMessage() {}
 
 func (x *GetWorkflowResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[33]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2659,7 +3149,7 @@ func (x *GetWorkflowResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWorkflowResp.ProtoReflect.Descriptor instead.
 func (*GetWorkflowResp) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{33}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *GetWorkflowResp) GetWorkflow() *WorkflowDetail {
@@ -2682,7 +3172,7 @@ type ListWorkflowsReq struct {
 
 func (x *ListWorkflowsReq) Reset() {
 	*x = ListWorkflowsReq{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[34]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2694,7 +3184,7 @@ func (x *ListWorkflowsReq) String() string {
 func (*ListWorkflowsReq) ProtoMessage() {}
 
 func (x *ListWorkflowsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[34]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2707,7 +3197,7 @@ func (x *ListWorkflowsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListWorkflowsReq.ProtoReflect.Descriptor instead.
 func (*ListWorkflowsReq) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{34}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *ListWorkflowsReq) GetPagination() *hi.Pagination {
@@ -2742,7 +3232,7 @@ type ListWorkflowsResp struct {
 
 func (x *ListWorkflowsResp) Reset() {
 	*x = ListWorkflowsResp{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[35]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2754,7 +3244,7 @@ func (x *ListWorkflowsResp) String() string {
 func (*ListWorkflowsResp) ProtoMessage() {}
 
 func (x *ListWorkflowsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[35]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2767,7 +3257,7 @@ func (x *ListWorkflowsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListWorkflowsResp.ProtoReflect.Descriptor instead.
 func (*ListWorkflowsResp) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{35}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *ListWorkflowsResp) GetTotal() int32 {
@@ -2794,7 +3284,7 @@ type ValidateWorkflowReq struct {
 
 func (x *ValidateWorkflowReq) Reset() {
 	*x = ValidateWorkflowReq{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[36]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2806,7 +3296,7 @@ func (x *ValidateWorkflowReq) String() string {
 func (*ValidateWorkflowReq) ProtoMessage() {}
 
 func (x *ValidateWorkflowReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[36]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2819,7 +3309,7 @@ func (x *ValidateWorkflowReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ValidateWorkflowReq.ProtoReflect.Descriptor instead.
 func (*ValidateWorkflowReq) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{36}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *ValidateWorkflowReq) GetWorkflowId() string {
@@ -2842,7 +3332,7 @@ type ValidateWorkflowResp struct {
 
 func (x *ValidateWorkflowResp) Reset() {
 	*x = ValidateWorkflowResp{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[37]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2854,7 +3344,7 @@ func (x *ValidateWorkflowResp) String() string {
 func (*ValidateWorkflowResp) ProtoMessage() {}
 
 func (x *ValidateWorkflowResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[37]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2867,7 +3357,7 @@ func (x *ValidateWorkflowResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ValidateWorkflowResp.ProtoReflect.Descriptor instead.
 func (*ValidateWorkflowResp) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{37}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *ValidateWorkflowResp) GetStatus() WorkflowValidationStatus {
@@ -2898,20 +3388,36 @@ type TestWorkflowReq struct {
 	RequestId *string `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
 	// 最近一次静态校验必须通过，无需预先启用。
 	WorkflowId *string `protobuf:"bytes,2,opt,name=workflow_id,json=workflowId,proto3,oneof" json:"workflow_id,omitempty"`
-	// 六类功能均必填正向提示词，角色生成同样使用本次提交的原文；长度按工作流配置校验。
+	// 全部功能均必填用户正向提示词原文；长度按工作流配置校验。
 	Prompt *string `protobuf:"bytes,3,opt,name=prompt,proto3,oneof" json:"prompt,omitempty"`
 	// 图生视频、单图修改、角色生成使用管理员本人的可用 JPEG/PNG 资产；其他功能省略。
 	// 视频分辨率、时长和帧率以及文生图尺寸使用工作流默认值或固定值。
 	InputAssetId *string `protobuf:"bytes,4,opt,name=input_asset_id,json=inputAssetId,proto3,oneof" json:"input_asset_id,omitempty"`
-	// 仅多图修改使用，提交顺序即图1至图N；FLUX 为2张，Qwen 为2～4张。
+	// 多图修改及三个新增 MiniMax 功能使用，提交顺序即图1至图N；最多四张。
+	// FLUX 为2张，Qwen 为2～4张，MiniMax 为0～4张，由目标功能校验。
 	InputAssetIds []string `protobuf:"bytes,5,rep,name=input_asset_ids,json=inputAssetIds,proto3" json:"input_asset_ids,omitempty"`
+	// 模仿、引导及高级替换必填；参考生成可选，但至少一份视频或图片。
+	// 使用管理员本人 available 视频，执行与普通创建相同的格式／大小／时长检查。
+	InputVideoAssetId *string `protobuf:"bytes,6,opt,name=input_video_asset_id,json=inputVideoAssetId,proto3,oneof" json:"input_video_asset_id,omitempty"`
+	// 首尾帧必填首帧，模仿可选；不提供模仿首帧时旁路图片条件。
+	FirstFrameAssetId *string `protobuf:"bytes,7,opt,name=first_frame_asset_id,json=firstFrameAssetId,proto3,oneof" json:"first_frame_asset_id,omitempty"`
+	// 仅首尾帧必填尾帧，其他功能省略。
+	LastFrameAssetId *string `protobuf:"bytes,8,opt,name=last_frame_asset_id,json=lastFrameAssetId,proto3,oneof" json:"last_frame_asset_id,omitempty"`
+	// 仅高级替换必填；最多 200 个码点，原样使用，不翻译或自动补 head。
+	RegionDescription *string `protobuf:"bytes,9,opt,name=region_description,json=regionDescription,proto3,oneof" json:"region_description,omitempty"`
+	// 首尾帧和三个 MiniMax 功能可传；不传补默认。原有六项仍使用其原有试跑规则。
+	Resolution *VideoResolution `protobuf:"bytes,10,opt,name=resolution,proto3" json:"resolution,omitempty"`
+	// 新增功能适用的输出时长，整数秒；引导表示新增片段，模仿不接受。
+	DurationSeconds *int32 `protobuf:"varint,11,opt,name=duration_seconds,json=durationSeconds,proto3,oneof" json:"duration_seconds,omitempty"`
+	// 仅新增首尾帧可传；其他新增功能由素材或工作流固定帧率决定。
+	FrameRate     *int32 `protobuf:"varint,12,opt,name=frame_rate,json=frameRate,proto3,oneof" json:"frame_rate,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *TestWorkflowReq) Reset() {
 	*x = TestWorkflowReq{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[38]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2923,7 +3429,7 @@ func (x *TestWorkflowReq) String() string {
 func (*TestWorkflowReq) ProtoMessage() {}
 
 func (x *TestWorkflowReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[38]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2936,7 +3442,7 @@ func (x *TestWorkflowReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TestWorkflowReq.ProtoReflect.Descriptor instead.
 func (*TestWorkflowReq) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{38}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *TestWorkflowReq) GetRequestId() string {
@@ -2974,6 +3480,55 @@ func (x *TestWorkflowReq) GetInputAssetIds() []string {
 	return nil
 }
 
+func (x *TestWorkflowReq) GetInputVideoAssetId() string {
+	if x != nil && x.InputVideoAssetId != nil {
+		return *x.InputVideoAssetId
+	}
+	return ""
+}
+
+func (x *TestWorkflowReq) GetFirstFrameAssetId() string {
+	if x != nil && x.FirstFrameAssetId != nil {
+		return *x.FirstFrameAssetId
+	}
+	return ""
+}
+
+func (x *TestWorkflowReq) GetLastFrameAssetId() string {
+	if x != nil && x.LastFrameAssetId != nil {
+		return *x.LastFrameAssetId
+	}
+	return ""
+}
+
+func (x *TestWorkflowReq) GetRegionDescription() string {
+	if x != nil && x.RegionDescription != nil {
+		return *x.RegionDescription
+	}
+	return ""
+}
+
+func (x *TestWorkflowReq) GetResolution() *VideoResolution {
+	if x != nil {
+		return x.Resolution
+	}
+	return nil
+}
+
+func (x *TestWorkflowReq) GetDurationSeconds() int32 {
+	if x != nil && x.DurationSeconds != nil {
+		return *x.DurationSeconds
+	}
+	return 0
+}
+
+func (x *TestWorkflowReq) GetFrameRate() int32 {
+	if x != nil && x.FrameRate != nil {
+		return *x.FrameRate
+	}
+	return 0
+}
+
 // 返回受理的试跑任务 ID；试跑成功保存并结算后才自动启用草稿，不支持恢复保存。
 type TestWorkflowResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -2984,7 +3539,7 @@ type TestWorkflowResp struct {
 
 func (x *TestWorkflowResp) Reset() {
 	*x = TestWorkflowResp{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[39]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2996,7 +3551,7 @@ func (x *TestWorkflowResp) String() string {
 func (*TestWorkflowResp) ProtoMessage() {}
 
 func (x *TestWorkflowResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[39]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3009,7 +3564,7 @@ func (x *TestWorkflowResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TestWorkflowResp.ProtoReflect.Descriptor instead.
 func (*TestWorkflowResp) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{39}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *TestWorkflowResp) GetTaskId() string {
@@ -3030,7 +3585,7 @@ type ListWorkflowTestsReq struct {
 
 func (x *ListWorkflowTestsReq) Reset() {
 	*x = ListWorkflowTestsReq{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[40]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3042,7 +3597,7 @@ func (x *ListWorkflowTestsReq) String() string {
 func (*ListWorkflowTestsReq) ProtoMessage() {}
 
 func (x *ListWorkflowTestsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[40]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3055,7 +3610,7 @@ func (x *ListWorkflowTestsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListWorkflowTestsReq.ProtoReflect.Descriptor instead.
 func (*ListWorkflowTestsReq) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{40}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *ListWorkflowTestsReq) GetPagination() *hi.Pagination {
@@ -3083,7 +3638,7 @@ type ListWorkflowTestsResp struct {
 
 func (x *ListWorkflowTestsResp) Reset() {
 	*x = ListWorkflowTestsResp{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[41]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3095,7 +3650,7 @@ func (x *ListWorkflowTestsResp) String() string {
 func (*ListWorkflowTestsResp) ProtoMessage() {}
 
 func (x *ListWorkflowTestsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[41]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3108,7 +3663,7 @@ func (x *ListWorkflowTestsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListWorkflowTestsResp.ProtoReflect.Descriptor instead.
 func (*ListWorkflowTestsResp) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{41}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *ListWorkflowTestsResp) GetTotal() int32 {
@@ -3137,7 +3692,7 @@ type SetDefaultWorkflowReq struct {
 
 func (x *SetDefaultWorkflowReq) Reset() {
 	*x = SetDefaultWorkflowReq{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[42]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3149,7 +3704,7 @@ func (x *SetDefaultWorkflowReq) String() string {
 func (*SetDefaultWorkflowReq) ProtoMessage() {}
 
 func (x *SetDefaultWorkflowReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[42]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3162,7 +3717,7 @@ func (x *SetDefaultWorkflowReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetDefaultWorkflowReq.ProtoReflect.Descriptor instead.
 func (*SetDefaultWorkflowReq) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{42}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *SetDefaultWorkflowReq) GetWorkflowId() string {
@@ -3189,7 +3744,7 @@ type SetDefaultWorkflowResp struct {
 
 func (x *SetDefaultWorkflowResp) Reset() {
 	*x = SetDefaultWorkflowResp{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[43]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[47]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3201,7 +3756,7 @@ func (x *SetDefaultWorkflowResp) String() string {
 func (*SetDefaultWorkflowResp) ProtoMessage() {}
 
 func (x *SetDefaultWorkflowResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[43]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[47]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3214,7 +3769,7 @@ func (x *SetDefaultWorkflowResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetDefaultWorkflowResp.ProtoReflect.Descriptor instead.
 func (*SetDefaultWorkflowResp) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{43}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *SetDefaultWorkflowResp) GetWorkflow() *WorkflowSummary {
@@ -3237,7 +3792,7 @@ type UpdateWorkflowSortOrderReq struct {
 
 func (x *UpdateWorkflowSortOrderReq) Reset() {
 	*x = UpdateWorkflowSortOrderReq{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[44]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[48]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3249,7 +3804,7 @@ func (x *UpdateWorkflowSortOrderReq) String() string {
 func (*UpdateWorkflowSortOrderReq) ProtoMessage() {}
 
 func (x *UpdateWorkflowSortOrderReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[44]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[48]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3262,7 +3817,7 @@ func (x *UpdateWorkflowSortOrderReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateWorkflowSortOrderReq.ProtoReflect.Descriptor instead.
 func (*UpdateWorkflowSortOrderReq) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{44}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{48}
 }
 
 func (x *UpdateWorkflowSortOrderReq) GetFunctionId() string {
@@ -3289,7 +3844,7 @@ type UpdateWorkflowSortOrderResp struct {
 
 func (x *UpdateWorkflowSortOrderResp) Reset() {
 	*x = UpdateWorkflowSortOrderResp{}
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[45]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[49]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3301,7 +3856,7 @@ func (x *UpdateWorkflowSortOrderResp) String() string {
 func (*UpdateWorkflowSortOrderResp) ProtoMessage() {}
 
 func (x *UpdateWorkflowSortOrderResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_workflow_manage_proto_msgTypes[45]
+	mi := &file_hi_media_workflow_manage_proto_msgTypes[49]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3314,7 +3869,7 @@ func (x *UpdateWorkflowSortOrderResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateWorkflowSortOrderResp.ProtoReflect.Descriptor instead.
 func (*UpdateWorkflowSortOrderResp) Descriptor() ([]byte, []int) {
-	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{45}
+	return file_hi_media_workflow_manage_proto_rawDescGZIP(), []int{49}
 }
 
 func (x *UpdateWorkflowSortOrderResp) GetWorkflows() []*WorkflowSummary {
@@ -3480,17 +4035,93 @@ const file_hi_media_workflow_manage_proto_rawDesc = "" +
 	"\x04seed\x18\x04 \x01(\v2\x1e.hi.media.WorkflowInputBindingB\n" +
 	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\x04seed\x12?\n" +
 	"\x11prompt_max_length\x18\x05 \x01(\rB\x0e\xbaH\a\xc8\x01\x01*\x02 \x00\x90\xb5\x18\x03H\x00R\x0fpromptMaxLength\x88\x01\x01:\x04\x98\xb5\x18\x03B\x14\n" +
-	"\x12_prompt_max_length\"\xeb\x05\n" +
+	"\x12_prompt_max_length\"\xaf\a\n" +
+	"\x1cFirstLastFrameWorkflowConfig\x12K\n" +
+	"\vfirst_frame\x18\x01 \x01(\v2\x1e.hi.media.WorkflowInputBindingB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\n" +
+	"firstFrame\x12I\n" +
+	"\n" +
+	"last_frame\x18\x02 \x01(\v2\x1e.hi.media.WorkflowInputBindingB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\tlastFrame\x12B\n" +
+	"\x06prompt\x18\x03 \x01(\v2\x1e.hi.media.WorkflowInputBindingB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\x06prompt\x12?\n" +
+	"\x11prompt_max_length\x18\x04 \x01(\rB\x0e\xbaH\a\xc8\x01\x01*\x02 \x00\x90\xb5\x18\x03H\x00R\x0fpromptMaxLength\x88\x01\x01\x12O\n" +
+	"\x0fnegative_prompt\x18\x05 \x01(\v2 .hi.media.WorkflowFixedTextInputB\x04\x90\xb5\x18\x03R\x0enegativePrompt\x12@\n" +
+	"\x05width\x18\x06 \x01(\v2\x1e.hi.media.WorkflowInputBindingB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\x05width\x12B\n" +
+	"\x06height\x18\a \x01(\v2\x1e.hi.media.WorkflowInputBindingB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\x06height\x12K\n" +
+	"\faspect_ratio\x18\b \x01(\v2\x1c.hi.media.StringOptionConfigB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\vaspectRatio\x12I\n" +
+	"\n" +
+	"megapixels\x18\t \x01(\v2\x1d.hi.media.DecimalOptionConfigB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\n" +
+	"megapixels\x12V\n" +
+	"\x10duration_seconds\x18\n" +
+	" \x01(\v2\x1f.hi.media.WorkflowIntRangeInputB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\x0fdurationSeconds\x12K\n" +
+	"\n" +
+	"frame_rate\x18\v \x01(\v2 .hi.media.WorkflowFrameRateInputB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\tframeRate\x12B\n" +
+	"\x05seeds\x18\f \x03(\v2\x1e.hi.media.WorkflowInputBindingB\f\xbaH\x05\x92\x01\x02\b\x01\x90\xb5\x18\x03R\x05seeds:\x04\x98\xb5\x18\x03B\x14\n" +
+	"\x12_prompt_max_length\"\xc2\x04\n" +
+	"\x1cMotionTransferWorkflowConfig\x12K\n" +
+	"\vinput_video\x18\x01 \x01(\v2\x1e.hi.media.WorkflowInputBindingB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\n" +
+	"inputVideo\x12K\n" +
+	"\vfirst_frame\x18\x02 \x01(\v2\x1e.hi.media.WorkflowInputBindingB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\n" +
+	"firstFrame\x12R\n" +
+	"\x0fuse_first_frame\x18\x03 \x01(\v2\x1e.hi.media.WorkflowInputBindingB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\ruseFirstFrame\x12B\n" +
+	"\x06prompt\x18\x04 \x01(\v2\x1e.hi.media.WorkflowInputBindingB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\x06prompt\x12?\n" +
+	"\x11prompt_max_length\x18\x05 \x01(\rB\x0e\xbaH\a\xc8\x01\x01*\x02 \x00\x90\xb5\x18\x03H\x00R\x0fpromptMaxLength\x88\x01\x01\x12O\n" +
+	"\x0fnegative_prompt\x18\x06 \x01(\v2 .hi.media.WorkflowFixedTextInputB\x04\x90\xb5\x18\x03R\x0enegativePrompt\x12B\n" +
+	"\x05seeds\x18\a \x03(\v2\x1e.hi.media.WorkflowInputBindingB\f\xbaH\x05\x92\x01\x02\b\x01\x90\xb5\x18\x03R\x05seeds:\x04\x98\xb5\x18\x03B\x14\n" +
+	"\x12_prompt_max_length\"\xd1\x01\n" +
+	"\x1eWorkflowMiniMaxReferenceImages\x12=\n" +
+	"\x10template_node_id\x18\x01 \x01(\tB\x0e\xbaH\a\xc8\x01\x01r\x02\x10\x01\x90\xb5\x18\x03H\x00R\x0etemplateNodeId\x88\x01\x01\x12?\n" +
+	"\x11reference_node_id\x18\x02 \x01(\tB\x0e\xbaH\a\xc8\x01\x01r\x02\x10\x01\x90\xb5\x18\x03H\x01R\x0freferenceNodeId\x88\x01\x01:\x04\x98\xb5\x18\x03B\x13\n" +
+	"\x11_template_node_idB\x14\n" +
+	"\x12_reference_node_id\"\x82\x06\n" +
+	"\x1aMiniMaxVideoWorkflowConfig\x12K\n" +
+	"\vinput_video\x18\x01 \x01(\v2\x1e.hi.media.WorkflowInputBindingB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\n" +
+	"inputVideo\x12_\n" +
+	"\x10reference_images\x18\x02 \x01(\v2(.hi.media.WorkflowMiniMaxReferenceImagesB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\x0freferenceImages\x12B\n" +
+	"\x06prompt\x18\x03 \x01(\v2\x1e.hi.media.WorkflowInputBindingB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\x06prompt\x12?\n" +
+	"\x11prompt_max_length\x18\x04 \x01(\rB\x0e\xbaH\a\xc8\x01\x01*\x02 \x00\x90\xb5\x18\x03H\x00R\x0fpromptMaxLength\x88\x01\x01\x12R\n" +
+	"\faspect_ratio\x18\x05 \x01(\v2#.hi.media.WorkflowStringOptionInputB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\vaspectRatio\x12P\n" +
+	"\n" +
+	"megapixels\x18\x06 \x01(\v2$.hi.media.WorkflowDecimalOptionInputB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\n" +
+	"megapixels\x12V\n" +
+	"\x10duration_seconds\x18\a \x01(\v2\x1f.hi.media.WorkflowIntRangeInputB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\x0fdurationSeconds\x12B\n" +
+	"\x05seeds\x18\b \x03(\v2\x1e.hi.media.WorkflowInputBindingB\f\xbaH\x05\x92\x01\x02\b\x01\x90\xb5\x18\x03R\x05seeds\x12S\n" +
+	"\x12region_description\x18\t \x01(\v2\x1e.hi.media.WorkflowInputBindingB\x04\x90\xb5\x18\x03R\x11regionDescription:\x04\x98\xb5\x18\x03B\x14\n" +
+	"\x12_prompt_max_length\"\xd7\v\n" +
 	"\x17WorkflowExecutionConfig\x12R\n" +
 	"\x0eimage_to_video\x18\x01 \x01(\v2$.hi.media.ImageToVideoWorkflowConfigB\x04\x90\xb5\x18\x03H\x00R\fimageToVideo\x12O\n" +
 	"\rtext_to_video\x18\x02 \x01(\v2#.hi.media.TextToVideoWorkflowConfigB\x04\x90\xb5\x18\x03H\x00R\vtextToVideo\x12O\n" +
 	"\rtext_to_image\x18\x05 \x01(\v2#.hi.media.TextToImageWorkflowConfigB\x04\x90\xb5\x18\x03H\x00R\vtextToImage\x12[\n" +
 	"\x11single_image_edit\x18\x06 \x01(\v2'.hi.media.SingleImageEditWorkflowConfigB\x04\x90\xb5\x18\x03H\x00R\x0fsingleImageEdit\x12a\n" +
 	"\x13multiple_image_edit\x18\a \x01(\v2).hi.media.MultipleImageEditWorkflowConfigB\x04\x90\xb5\x18\x03H\x00R\x11multipleImageEdit\x12G\n" +
-	"\tcharacter\x18\b \x01(\v2!.hi.media.CharacterWorkflowConfigB\x04\x90\xb5\x18\x03H\x00R\tcharacter\x12B\n" +
+	"\tcharacter\x18\b \x01(\v2!.hi.media.CharacterWorkflowConfigB\x04\x90\xb5\x18\x03H\x00R\tcharacter\x12X\n" +
+	"\x10first_last_frame\x18\t \x01(\v2&.hi.media.FirstLastFrameWorkflowConfigB\x04\x90\xb5\x18\x03H\x00R\x0efirstLastFrame\x12W\n" +
+	"\x0fmotion_transfer\x18\n" +
+	" \x01(\v2&.hi.media.MotionTransferWorkflowConfigB\x04\x90\xb5\x18\x03H\x00R\x0emotionTransfer\x12P\n" +
+	"\fcontinuation\x18\v \x01(\v2$.hi.media.MiniMaxVideoWorkflowConfigB\x04\x90\xb5\x18\x03H\x00R\fcontinuation\x12J\n" +
+	"\treference\x18\f \x01(\v2$.hi.media.MiniMaxVideoWorkflowConfigB\x04\x90\xb5\x18\x03H\x00R\treference\x12W\n" +
+	"\x10advanced_replace\x18\r \x01(\v2$.hi.media.MiniMaxVideoWorkflowConfigB\x04\x90\xb5\x18\x03H\x00R\x0fadvancedReplace\x12B\n" +
 	"\x06output\x18\x03 \x01(\v2\x1e.hi.media.WorkflowOutputConfigB\n" +
 	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\x06output\x12O\n" +
-	"\x19execution_timeout_seconds\x18\x04 \x01(\rB\x0e\xbaH\a\xc8\x01\x01*\x02 \x00\x90\xb5\x18\x03H\x01R\x17executionTimeoutSeconds\x88\x01\x01:\x04\x98\xb5\x18\x03B\x18\n" +
+	"\x19execution_timeout_seconds\x18\x04 \x01(\rB\x0e\xbaH\a\xc8\x01\x01*\x02 \x00\x90\xb5\x18\x03H\x01R\x17executionTimeoutSeconds\x88\x01\x01:\xc5\x02\xbaH\xbd\x02\x1a\xba\x02\n" +
+	"\x1dvideo_workflow.region_binding\x128region_description is required only for advanced_replace\x1a\xde\x01(!has(this.advanced_replace) || has(this.advanced_replace.region_description)) && (!has(this.continuation) || !has(this.continuation.region_description)) && (!has(this.reference) || !has(this.reference.region_description))\x98\xb5\x18\x03B\x18\n" +
 	"\x0ffunction_config\x12\x05\xbaH\x02\b\x01B\x1c\n" +
 	"\x1a_execution_timeout_seconds\"\xac\x02\n" +
 	"\rWorkflowIssue\x12\x1d\n" +
@@ -3657,7 +4288,7 @@ const file_hi_media_workflow_manage_proto_rawDesc = "" +
 	"\x06issues\x18\x02 \x03(\v2\x17.hi.media.WorkflowIssueB\x04\x90\xb5\x18\x03R\x06issues\x12,\n" +
 	"\fvalidated_at\x18\x03 \x01(\x03B\x04\x90\xb5\x18\x03H\x01R\vvalidatedAt\x88\x01\x01:\x04\x98\xb5\x18\x03B\t\n" +
 	"\a_statusB\x0f\n" +
-	"\r_validated_at\"\xc5\x02\n" +
+	"\r_validated_at\"\xe6\x06\n" +
 	"\x0fTestWorkflowReq\x12.\n" +
 	"\n" +
 	"request_id\x18\x01 \x01(\tB\n" +
@@ -3668,11 +4299,29 @@ const file_hi_media_workflow_manage_proto_rawDesc = "" +
 	"\x06prompt\x18\x03 \x01(\tB\n" +
 	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x02R\x06prompt\x88\x01\x01\x122\n" +
 	"\x0einput_asset_id\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x03R\finputAssetId\x88\x01\x01\x126\n" +
-	"\x0finput_asset_ids\x18\x05 \x03(\tB\x0e\xbaH\v\x92\x01\b\x10\x04\"\x04r\x02\x10\x01R\rinputAssetIdsB\r\n" +
+	"\x0finput_asset_ids\x18\x05 \x03(\tB\x0e\xbaH\v\x92\x01\b\x10\x04\"\x04r\x02\x10\x01R\rinputAssetIds\x12=\n" +
+	"\x14input_video_asset_id\x18\x06 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x04R\x11inputVideoAssetId\x88\x01\x01\x12=\n" +
+	"\x14first_frame_asset_id\x18\a \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x05R\x11firstFrameAssetId\x88\x01\x01\x12;\n" +
+	"\x13last_frame_asset_id\x18\b \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x06R\x10lastFrameAssetId\x88\x01\x01\x12>\n" +
+	"\x12region_description\x18\t \x01(\tB\n" +
+	"\xbaH\ar\x05\x10\x01\x18\xc8\x01H\aR\x11regionDescription\x88\x01\x01\x129\n" +
+	"\n" +
+	"resolution\x18\n" +
+	" \x01(\v2\x19.hi.media.VideoResolutionR\n" +
+	"resolution\x127\n" +
+	"\x10duration_seconds\x18\v \x01(\x05B\a\xbaH\x04\x1a\x02 \x00H\bR\x0fdurationSeconds\x88\x01\x01\x12+\n" +
+	"\n" +
+	"frame_rate\x18\f \x01(\x05B\a\xbaH\x04\x1a\x02 \x00H\tR\tframeRate\x88\x01\x01B\r\n" +
 	"\v_request_idB\x0e\n" +
 	"\f_workflow_idB\t\n" +
 	"\a_promptB\x11\n" +
-	"\x0f_input_asset_id\"H\n" +
+	"\x0f_input_asset_idB\x17\n" +
+	"\x15_input_video_asset_idB\x17\n" +
+	"\x15_first_frame_asset_idB\x16\n" +
+	"\x14_last_frame_asset_idB\x15\n" +
+	"\x13_region_descriptionB\x13\n" +
+	"\x11_duration_secondsB\r\n" +
+	"\v_frame_rate\"H\n" +
 	"\x10TestWorkflowResp\x12\"\n" +
 	"\atask_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x06taskId\x88\x01\x01:\x04\x98\xb5\x18\x03B\n" +
 	"\n" +
@@ -3748,7 +4397,7 @@ func file_hi_media_workflow_manage_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_media_workflow_manage_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
-var file_hi_media_workflow_manage_proto_msgTypes = make([]protoimpl.MessageInfo, 46)
+var file_hi_media_workflow_manage_proto_msgTypes = make([]protoimpl.MessageInfo, 50)
 var file_hi_media_workflow_manage_proto_goTypes = []any{
 	(WorkflowStatus)(0),                     // 0: hi.media.WorkflowStatus
 	(WorkflowValidationStatus)(0),           // 1: hi.media.WorkflowValidationStatus
@@ -3773,144 +4422,180 @@ var file_hi_media_workflow_manage_proto_goTypes = []any{
 	(*SingleImageEditWorkflowConfig)(nil),   // 20: hi.media.SingleImageEditWorkflowConfig
 	(*MultipleImageEditWorkflowConfig)(nil), // 21: hi.media.MultipleImageEditWorkflowConfig
 	(*CharacterWorkflowConfig)(nil),         // 22: hi.media.CharacterWorkflowConfig
-	(*WorkflowExecutionConfig)(nil),         // 23: hi.media.WorkflowExecutionConfig
-	(*WorkflowIssue)(nil),                   // 24: hi.media.WorkflowIssue
-	(*WorkflowNodeInput)(nil),               // 25: hi.media.WorkflowNodeInput
-	(*WorkflowNode)(nil),                    // 26: hi.media.WorkflowNode
-	(*WorkflowDependencyUsage)(nil),         // 27: hi.media.WorkflowDependencyUsage
-	(*WorkflowDependency)(nil),              // 28: hi.media.WorkflowDependency
-	(*WorkflowSummary)(nil),                 // 29: hi.media.WorkflowSummary
-	(*WorkflowDetail)(nil),                  // 30: hi.media.WorkflowDetail
-	(*WorkflowImportMetadata)(nil),          // 31: hi.media.WorkflowImportMetadata
-	(*WorkflowReplaceFileMetadata)(nil),     // 32: hi.media.WorkflowReplaceFileMetadata
-	(*WorkflowFileMutationResp)(nil),        // 33: hi.media.WorkflowFileMutationResp
-	(*UpdateWorkflowReq)(nil),               // 34: hi.media.UpdateWorkflowReq
-	(*UpdateWorkflowResp)(nil),              // 35: hi.media.UpdateWorkflowResp
-	(*GetWorkflowReq)(nil),                  // 36: hi.media.GetWorkflowReq
-	(*GetWorkflowResp)(nil),                 // 37: hi.media.GetWorkflowResp
-	(*ListWorkflowsReq)(nil),                // 38: hi.media.ListWorkflowsReq
-	(*ListWorkflowsResp)(nil),               // 39: hi.media.ListWorkflowsResp
-	(*ValidateWorkflowReq)(nil),             // 40: hi.media.ValidateWorkflowReq
-	(*ValidateWorkflowResp)(nil),            // 41: hi.media.ValidateWorkflowResp
-	(*TestWorkflowReq)(nil),                 // 42: hi.media.TestWorkflowReq
-	(*TestWorkflowResp)(nil),                // 43: hi.media.TestWorkflowResp
-	(*ListWorkflowTestsReq)(nil),            // 44: hi.media.ListWorkflowTestsReq
-	(*ListWorkflowTestsResp)(nil),           // 45: hi.media.ListWorkflowTestsResp
-	(*SetDefaultWorkflowReq)(nil),           // 46: hi.media.SetDefaultWorkflowReq
-	(*SetDefaultWorkflowResp)(nil),          // 47: hi.media.SetDefaultWorkflowResp
-	(*UpdateWorkflowSortOrderReq)(nil),      // 48: hi.media.UpdateWorkflowSortOrderReq
-	(*UpdateWorkflowSortOrderResp)(nil),     // 49: hi.media.UpdateWorkflowSortOrderResp
-	(*StringOptionConfig)(nil),              // 50: hi.media.StringOptionConfig
-	(*DecimalOptionConfig)(nil),             // 51: hi.media.DecimalOptionConfig
-	(*IntRangeConfig)(nil),                  // 52: hi.media.IntRangeConfig
-	(*InputImagesConfig)(nil),               // 53: hi.media.InputImagesConfig
-	(*FunctionSummary)(nil),                 // 54: hi.media.FunctionSummary
-	(*Model)(nil),                           // 55: hi.media.Model
-	(*hi.Pagination)(nil),                   // 56: hi.Pagination
-	(*TaskSummary)(nil),                     // 57: hi.media.TaskSummary
+	(*FirstLastFrameWorkflowConfig)(nil),    // 23: hi.media.FirstLastFrameWorkflowConfig
+	(*MotionTransferWorkflowConfig)(nil),    // 24: hi.media.MotionTransferWorkflowConfig
+	(*WorkflowMiniMaxReferenceImages)(nil),  // 25: hi.media.WorkflowMiniMaxReferenceImages
+	(*MiniMaxVideoWorkflowConfig)(nil),      // 26: hi.media.MiniMaxVideoWorkflowConfig
+	(*WorkflowExecutionConfig)(nil),         // 27: hi.media.WorkflowExecutionConfig
+	(*WorkflowIssue)(nil),                   // 28: hi.media.WorkflowIssue
+	(*WorkflowNodeInput)(nil),               // 29: hi.media.WorkflowNodeInput
+	(*WorkflowNode)(nil),                    // 30: hi.media.WorkflowNode
+	(*WorkflowDependencyUsage)(nil),         // 31: hi.media.WorkflowDependencyUsage
+	(*WorkflowDependency)(nil),              // 32: hi.media.WorkflowDependency
+	(*WorkflowSummary)(nil),                 // 33: hi.media.WorkflowSummary
+	(*WorkflowDetail)(nil),                  // 34: hi.media.WorkflowDetail
+	(*WorkflowImportMetadata)(nil),          // 35: hi.media.WorkflowImportMetadata
+	(*WorkflowReplaceFileMetadata)(nil),     // 36: hi.media.WorkflowReplaceFileMetadata
+	(*WorkflowFileMutationResp)(nil),        // 37: hi.media.WorkflowFileMutationResp
+	(*UpdateWorkflowReq)(nil),               // 38: hi.media.UpdateWorkflowReq
+	(*UpdateWorkflowResp)(nil),              // 39: hi.media.UpdateWorkflowResp
+	(*GetWorkflowReq)(nil),                  // 40: hi.media.GetWorkflowReq
+	(*GetWorkflowResp)(nil),                 // 41: hi.media.GetWorkflowResp
+	(*ListWorkflowsReq)(nil),                // 42: hi.media.ListWorkflowsReq
+	(*ListWorkflowsResp)(nil),               // 43: hi.media.ListWorkflowsResp
+	(*ValidateWorkflowReq)(nil),             // 44: hi.media.ValidateWorkflowReq
+	(*ValidateWorkflowResp)(nil),            // 45: hi.media.ValidateWorkflowResp
+	(*TestWorkflowReq)(nil),                 // 46: hi.media.TestWorkflowReq
+	(*TestWorkflowResp)(nil),                // 47: hi.media.TestWorkflowResp
+	(*ListWorkflowTestsReq)(nil),            // 48: hi.media.ListWorkflowTestsReq
+	(*ListWorkflowTestsResp)(nil),           // 49: hi.media.ListWorkflowTestsResp
+	(*SetDefaultWorkflowReq)(nil),           // 50: hi.media.SetDefaultWorkflowReq
+	(*SetDefaultWorkflowResp)(nil),          // 51: hi.media.SetDefaultWorkflowResp
+	(*UpdateWorkflowSortOrderReq)(nil),      // 52: hi.media.UpdateWorkflowSortOrderReq
+	(*UpdateWorkflowSortOrderResp)(nil),     // 53: hi.media.UpdateWorkflowSortOrderResp
+	(*StringOptionConfig)(nil),              // 54: hi.media.StringOptionConfig
+	(*DecimalOptionConfig)(nil),             // 55: hi.media.DecimalOptionConfig
+	(*IntRangeConfig)(nil),                  // 56: hi.media.IntRangeConfig
+	(*InputImagesConfig)(nil),               // 57: hi.media.InputImagesConfig
+	(*FunctionSummary)(nil),                 // 58: hi.media.FunctionSummary
+	(*Model)(nil),                           // 59: hi.media.Model
+	(*hi.Pagination)(nil),                   // 60: hi.Pagination
+	(*VideoResolution)(nil),                 // 61: hi.media.VideoResolution
+	(*TaskSummary)(nil),                     // 62: hi.media.TaskSummary
 }
 var file_hi_media_workflow_manage_proto_depIdxs = []int32{
-	4,  // 0: hi.media.WorkflowStringOptionInput.binding:type_name -> hi.media.WorkflowInputBinding
-	50, // 1: hi.media.WorkflowStringOptionInput.values:type_name -> hi.media.StringOptionConfig
-	4,  // 2: hi.media.WorkflowDecimalOptionInput.binding:type_name -> hi.media.WorkflowInputBinding
-	51, // 3: hi.media.WorkflowDecimalOptionInput.values:type_name -> hi.media.DecimalOptionConfig
-	4,  // 4: hi.media.WorkflowIntRangeInput.binding:type_name -> hi.media.WorkflowInputBinding
-	52, // 5: hi.media.WorkflowIntRangeInput.values:type_name -> hi.media.IntRangeConfig
-	4,  // 6: hi.media.WorkflowFixedTextInput.binding:type_name -> hi.media.WorkflowInputBinding
-	4,  // 7: hi.media.WorkflowSelectableFrameRate.binding:type_name -> hi.media.WorkflowInputBinding
-	52, // 8: hi.media.WorkflowSelectableFrameRate.values:type_name -> hi.media.IntRangeConfig
-	10, // 9: hi.media.WorkflowFrameRateInput.selectable:type_name -> hi.media.WorkflowSelectableFrameRate
-	4,  // 10: hi.media.ImageToVideoWorkflowConfig.input_image:type_name -> hi.media.WorkflowInputBinding
-	4,  // 11: hi.media.ImageToVideoWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
-	9,  // 12: hi.media.ImageToVideoWorkflowConfig.negative_prompt:type_name -> hi.media.WorkflowFixedTextInput
-	6,  // 13: hi.media.ImageToVideoWorkflowConfig.aspect_ratio:type_name -> hi.media.WorkflowStringOptionInput
-	7,  // 14: hi.media.ImageToVideoWorkflowConfig.megapixels:type_name -> hi.media.WorkflowDecimalOptionInput
-	8,  // 15: hi.media.ImageToVideoWorkflowConfig.duration_seconds:type_name -> hi.media.WorkflowIntRangeInput
-	11, // 16: hi.media.ImageToVideoWorkflowConfig.frame_rate:type_name -> hi.media.WorkflowFrameRateInput
-	4,  // 17: hi.media.TextToVideoWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
-	9,  // 18: hi.media.TextToVideoWorkflowConfig.negative_prompt:type_name -> hi.media.WorkflowFixedTextInput
-	6,  // 19: hi.media.TextToVideoWorkflowConfig.aspect_ratio:type_name -> hi.media.WorkflowStringOptionInput
-	7,  // 20: hi.media.TextToVideoWorkflowConfig.megapixels:type_name -> hi.media.WorkflowDecimalOptionInput
-	8,  // 21: hi.media.TextToVideoWorkflowConfig.duration_seconds:type_name -> hi.media.WorkflowIntRangeInput
-	11, // 22: hi.media.TextToVideoWorkflowConfig.frame_rate:type_name -> hi.media.WorkflowFrameRateInput
-	8,  // 23: hi.media.WorkflowImageDimensions.width:type_name -> hi.media.WorkflowIntRangeInput
-	8,  // 24: hi.media.WorkflowImageDimensions.height:type_name -> hi.media.WorkflowIntRangeInput
-	6,  // 25: hi.media.WorkflowImageResolution.aspect_ratio:type_name -> hi.media.WorkflowStringOptionInput
-	7,  // 26: hi.media.WorkflowImageResolution.megapixels:type_name -> hi.media.WorkflowDecimalOptionInput
-	4,  // 27: hi.media.WorkflowFixedImageInputs.bindings:type_name -> hi.media.WorkflowInputBinding
-	53, // 28: hi.media.WorkflowMultipleImageInputs.count:type_name -> hi.media.InputImagesConfig
-	16, // 29: hi.media.WorkflowMultipleImageInputs.fixed:type_name -> hi.media.WorkflowFixedImageInputs
-	17, // 30: hi.media.WorkflowMultipleImageInputs.qwen_dynamic:type_name -> hi.media.WorkflowQwenDynamicImageInputs
-	4,  // 31: hi.media.TextToImageWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
-	9,  // 32: hi.media.TextToImageWorkflowConfig.negative_prompt:type_name -> hi.media.WorkflowFixedTextInput
-	4,  // 33: hi.media.TextToImageWorkflowConfig.seed:type_name -> hi.media.WorkflowInputBinding
-	14, // 34: hi.media.TextToImageWorkflowConfig.dimensions:type_name -> hi.media.WorkflowImageDimensions
-	15, // 35: hi.media.TextToImageWorkflowConfig.resolution:type_name -> hi.media.WorkflowImageResolution
-	4,  // 36: hi.media.SingleImageEditWorkflowConfig.input_image:type_name -> hi.media.WorkflowInputBinding
-	4,  // 37: hi.media.SingleImageEditWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
-	9,  // 38: hi.media.SingleImageEditWorkflowConfig.negative_prompt:type_name -> hi.media.WorkflowFixedTextInput
-	4,  // 39: hi.media.SingleImageEditWorkflowConfig.seed:type_name -> hi.media.WorkflowInputBinding
-	18, // 40: hi.media.MultipleImageEditWorkflowConfig.input_images:type_name -> hi.media.WorkflowMultipleImageInputs
-	4,  // 41: hi.media.MultipleImageEditWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
-	9,  // 42: hi.media.MultipleImageEditWorkflowConfig.negative_prompt:type_name -> hi.media.WorkflowFixedTextInput
-	4,  // 43: hi.media.MultipleImageEditWorkflowConfig.seed:type_name -> hi.media.WorkflowInputBinding
-	4,  // 44: hi.media.CharacterWorkflowConfig.input_image:type_name -> hi.media.WorkflowInputBinding
-	4,  // 45: hi.media.CharacterWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
-	9,  // 46: hi.media.CharacterWorkflowConfig.negative_prompt:type_name -> hi.media.WorkflowFixedTextInput
-	4,  // 47: hi.media.CharacterWorkflowConfig.seed:type_name -> hi.media.WorkflowInputBinding
-	12, // 48: hi.media.WorkflowExecutionConfig.image_to_video:type_name -> hi.media.ImageToVideoWorkflowConfig
-	13, // 49: hi.media.WorkflowExecutionConfig.text_to_video:type_name -> hi.media.TextToVideoWorkflowConfig
-	19, // 50: hi.media.WorkflowExecutionConfig.text_to_image:type_name -> hi.media.TextToImageWorkflowConfig
-	20, // 51: hi.media.WorkflowExecutionConfig.single_image_edit:type_name -> hi.media.SingleImageEditWorkflowConfig
-	21, // 52: hi.media.WorkflowExecutionConfig.multiple_image_edit:type_name -> hi.media.MultipleImageEditWorkflowConfig
-	22, // 53: hi.media.WorkflowExecutionConfig.character:type_name -> hi.media.CharacterWorkflowConfig
-	5,  // 54: hi.media.WorkflowExecutionConfig.output:type_name -> hi.media.WorkflowOutputConfig
-	2,  // 55: hi.media.WorkflowIssue.severity:type_name -> hi.media.WorkflowIssueSeverity
-	25, // 56: hi.media.WorkflowNode.inputs:type_name -> hi.media.WorkflowNodeInput
-	3,  // 57: hi.media.WorkflowDependency.kind:type_name -> hi.media.WorkflowDependencyKind
-	27, // 58: hi.media.WorkflowDependency.usages:type_name -> hi.media.WorkflowDependencyUsage
-	54, // 59: hi.media.WorkflowSummary.function:type_name -> hi.media.FunctionSummary
-	55, // 60: hi.media.WorkflowSummary.model:type_name -> hi.media.Model
-	0,  // 61: hi.media.WorkflowSummary.status:type_name -> hi.media.WorkflowStatus
-	1,  // 62: hi.media.WorkflowSummary.validation_status:type_name -> hi.media.WorkflowValidationStatus
-	29, // 63: hi.media.WorkflowDetail.summary:type_name -> hi.media.WorkflowSummary
-	23, // 64: hi.media.WorkflowDetail.config:type_name -> hi.media.WorkflowExecutionConfig
-	26, // 65: hi.media.WorkflowDetail.nodes:type_name -> hi.media.WorkflowNode
-	28, // 66: hi.media.WorkflowDetail.dependencies:type_name -> hi.media.WorkflowDependency
-	24, // 67: hi.media.WorkflowDetail.validation_issues:type_name -> hi.media.WorkflowIssue
-	23, // 68: hi.media.UpdateWorkflowReq.config:type_name -> hi.media.WorkflowExecutionConfig
-	30, // 69: hi.media.UpdateWorkflowResp.workflow:type_name -> hi.media.WorkflowDetail
-	30, // 70: hi.media.GetWorkflowResp.workflow:type_name -> hi.media.WorkflowDetail
-	56, // 71: hi.media.ListWorkflowsReq.pagination:type_name -> hi.Pagination
-	0,  // 72: hi.media.ListWorkflowsReq.status:type_name -> hi.media.WorkflowStatus
-	29, // 73: hi.media.ListWorkflowsResp.workflows:type_name -> hi.media.WorkflowSummary
-	1,  // 74: hi.media.ValidateWorkflowResp.status:type_name -> hi.media.WorkflowValidationStatus
-	24, // 75: hi.media.ValidateWorkflowResp.issues:type_name -> hi.media.WorkflowIssue
-	56, // 76: hi.media.ListWorkflowTestsReq.pagination:type_name -> hi.Pagination
-	57, // 77: hi.media.ListWorkflowTestsResp.tasks:type_name -> hi.media.TaskSummary
-	29, // 78: hi.media.SetDefaultWorkflowResp.workflow:type_name -> hi.media.WorkflowSummary
-	29, // 79: hi.media.UpdateWorkflowSortOrderResp.workflows:type_name -> hi.media.WorkflowSummary
-	34, // 80: hi.media.WorkflowManage.Update:input_type -> hi.media.UpdateWorkflowReq
-	40, // 81: hi.media.WorkflowManage.Validate:input_type -> hi.media.ValidateWorkflowReq
-	42, // 82: hi.media.WorkflowManage.Test:input_type -> hi.media.TestWorkflowReq
-	44, // 83: hi.media.WorkflowManage.ListTests:input_type -> hi.media.ListWorkflowTestsReq
-	46, // 84: hi.media.WorkflowManage.SetDefault:input_type -> hi.media.SetDefaultWorkflowReq
-	48, // 85: hi.media.WorkflowManage.UpdateSortOrder:input_type -> hi.media.UpdateWorkflowSortOrderReq
-	38, // 86: hi.media.WorkflowManage.List:input_type -> hi.media.ListWorkflowsReq
-	36, // 87: hi.media.WorkflowManage.Get:input_type -> hi.media.GetWorkflowReq
-	35, // 88: hi.media.WorkflowManage.Update:output_type -> hi.media.UpdateWorkflowResp
-	41, // 89: hi.media.WorkflowManage.Validate:output_type -> hi.media.ValidateWorkflowResp
-	43, // 90: hi.media.WorkflowManage.Test:output_type -> hi.media.TestWorkflowResp
-	45, // 91: hi.media.WorkflowManage.ListTests:output_type -> hi.media.ListWorkflowTestsResp
-	47, // 92: hi.media.WorkflowManage.SetDefault:output_type -> hi.media.SetDefaultWorkflowResp
-	49, // 93: hi.media.WorkflowManage.UpdateSortOrder:output_type -> hi.media.UpdateWorkflowSortOrderResp
-	39, // 94: hi.media.WorkflowManage.List:output_type -> hi.media.ListWorkflowsResp
-	37, // 95: hi.media.WorkflowManage.Get:output_type -> hi.media.GetWorkflowResp
-	88, // [88:96] is the sub-list for method output_type
-	80, // [80:88] is the sub-list for method input_type
-	80, // [80:80] is the sub-list for extension type_name
-	80, // [80:80] is the sub-list for extension extendee
-	0,  // [0:80] is the sub-list for field type_name
+	4,   // 0: hi.media.WorkflowStringOptionInput.binding:type_name -> hi.media.WorkflowInputBinding
+	54,  // 1: hi.media.WorkflowStringOptionInput.values:type_name -> hi.media.StringOptionConfig
+	4,   // 2: hi.media.WorkflowDecimalOptionInput.binding:type_name -> hi.media.WorkflowInputBinding
+	55,  // 3: hi.media.WorkflowDecimalOptionInput.values:type_name -> hi.media.DecimalOptionConfig
+	4,   // 4: hi.media.WorkflowIntRangeInput.binding:type_name -> hi.media.WorkflowInputBinding
+	56,  // 5: hi.media.WorkflowIntRangeInput.values:type_name -> hi.media.IntRangeConfig
+	4,   // 6: hi.media.WorkflowFixedTextInput.binding:type_name -> hi.media.WorkflowInputBinding
+	4,   // 7: hi.media.WorkflowSelectableFrameRate.binding:type_name -> hi.media.WorkflowInputBinding
+	56,  // 8: hi.media.WorkflowSelectableFrameRate.values:type_name -> hi.media.IntRangeConfig
+	10,  // 9: hi.media.WorkflowFrameRateInput.selectable:type_name -> hi.media.WorkflowSelectableFrameRate
+	4,   // 10: hi.media.ImageToVideoWorkflowConfig.input_image:type_name -> hi.media.WorkflowInputBinding
+	4,   // 11: hi.media.ImageToVideoWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
+	9,   // 12: hi.media.ImageToVideoWorkflowConfig.negative_prompt:type_name -> hi.media.WorkflowFixedTextInput
+	6,   // 13: hi.media.ImageToVideoWorkflowConfig.aspect_ratio:type_name -> hi.media.WorkflowStringOptionInput
+	7,   // 14: hi.media.ImageToVideoWorkflowConfig.megapixels:type_name -> hi.media.WorkflowDecimalOptionInput
+	8,   // 15: hi.media.ImageToVideoWorkflowConfig.duration_seconds:type_name -> hi.media.WorkflowIntRangeInput
+	11,  // 16: hi.media.ImageToVideoWorkflowConfig.frame_rate:type_name -> hi.media.WorkflowFrameRateInput
+	4,   // 17: hi.media.TextToVideoWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
+	9,   // 18: hi.media.TextToVideoWorkflowConfig.negative_prompt:type_name -> hi.media.WorkflowFixedTextInput
+	6,   // 19: hi.media.TextToVideoWorkflowConfig.aspect_ratio:type_name -> hi.media.WorkflowStringOptionInput
+	7,   // 20: hi.media.TextToVideoWorkflowConfig.megapixels:type_name -> hi.media.WorkflowDecimalOptionInput
+	8,   // 21: hi.media.TextToVideoWorkflowConfig.duration_seconds:type_name -> hi.media.WorkflowIntRangeInput
+	11,  // 22: hi.media.TextToVideoWorkflowConfig.frame_rate:type_name -> hi.media.WorkflowFrameRateInput
+	8,   // 23: hi.media.WorkflowImageDimensions.width:type_name -> hi.media.WorkflowIntRangeInput
+	8,   // 24: hi.media.WorkflowImageDimensions.height:type_name -> hi.media.WorkflowIntRangeInput
+	6,   // 25: hi.media.WorkflowImageResolution.aspect_ratio:type_name -> hi.media.WorkflowStringOptionInput
+	7,   // 26: hi.media.WorkflowImageResolution.megapixels:type_name -> hi.media.WorkflowDecimalOptionInput
+	4,   // 27: hi.media.WorkflowFixedImageInputs.bindings:type_name -> hi.media.WorkflowInputBinding
+	57,  // 28: hi.media.WorkflowMultipleImageInputs.count:type_name -> hi.media.InputImagesConfig
+	16,  // 29: hi.media.WorkflowMultipleImageInputs.fixed:type_name -> hi.media.WorkflowFixedImageInputs
+	17,  // 30: hi.media.WorkflowMultipleImageInputs.qwen_dynamic:type_name -> hi.media.WorkflowQwenDynamicImageInputs
+	4,   // 31: hi.media.TextToImageWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
+	9,   // 32: hi.media.TextToImageWorkflowConfig.negative_prompt:type_name -> hi.media.WorkflowFixedTextInput
+	4,   // 33: hi.media.TextToImageWorkflowConfig.seed:type_name -> hi.media.WorkflowInputBinding
+	14,  // 34: hi.media.TextToImageWorkflowConfig.dimensions:type_name -> hi.media.WorkflowImageDimensions
+	15,  // 35: hi.media.TextToImageWorkflowConfig.resolution:type_name -> hi.media.WorkflowImageResolution
+	4,   // 36: hi.media.SingleImageEditWorkflowConfig.input_image:type_name -> hi.media.WorkflowInputBinding
+	4,   // 37: hi.media.SingleImageEditWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
+	9,   // 38: hi.media.SingleImageEditWorkflowConfig.negative_prompt:type_name -> hi.media.WorkflowFixedTextInput
+	4,   // 39: hi.media.SingleImageEditWorkflowConfig.seed:type_name -> hi.media.WorkflowInputBinding
+	18,  // 40: hi.media.MultipleImageEditWorkflowConfig.input_images:type_name -> hi.media.WorkflowMultipleImageInputs
+	4,   // 41: hi.media.MultipleImageEditWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
+	9,   // 42: hi.media.MultipleImageEditWorkflowConfig.negative_prompt:type_name -> hi.media.WorkflowFixedTextInput
+	4,   // 43: hi.media.MultipleImageEditWorkflowConfig.seed:type_name -> hi.media.WorkflowInputBinding
+	4,   // 44: hi.media.CharacterWorkflowConfig.input_image:type_name -> hi.media.WorkflowInputBinding
+	4,   // 45: hi.media.CharacterWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
+	9,   // 46: hi.media.CharacterWorkflowConfig.negative_prompt:type_name -> hi.media.WorkflowFixedTextInput
+	4,   // 47: hi.media.CharacterWorkflowConfig.seed:type_name -> hi.media.WorkflowInputBinding
+	4,   // 48: hi.media.FirstLastFrameWorkflowConfig.first_frame:type_name -> hi.media.WorkflowInputBinding
+	4,   // 49: hi.media.FirstLastFrameWorkflowConfig.last_frame:type_name -> hi.media.WorkflowInputBinding
+	4,   // 50: hi.media.FirstLastFrameWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
+	9,   // 51: hi.media.FirstLastFrameWorkflowConfig.negative_prompt:type_name -> hi.media.WorkflowFixedTextInput
+	4,   // 52: hi.media.FirstLastFrameWorkflowConfig.width:type_name -> hi.media.WorkflowInputBinding
+	4,   // 53: hi.media.FirstLastFrameWorkflowConfig.height:type_name -> hi.media.WorkflowInputBinding
+	54,  // 54: hi.media.FirstLastFrameWorkflowConfig.aspect_ratio:type_name -> hi.media.StringOptionConfig
+	55,  // 55: hi.media.FirstLastFrameWorkflowConfig.megapixels:type_name -> hi.media.DecimalOptionConfig
+	8,   // 56: hi.media.FirstLastFrameWorkflowConfig.duration_seconds:type_name -> hi.media.WorkflowIntRangeInput
+	11,  // 57: hi.media.FirstLastFrameWorkflowConfig.frame_rate:type_name -> hi.media.WorkflowFrameRateInput
+	4,   // 58: hi.media.FirstLastFrameWorkflowConfig.seeds:type_name -> hi.media.WorkflowInputBinding
+	4,   // 59: hi.media.MotionTransferWorkflowConfig.input_video:type_name -> hi.media.WorkflowInputBinding
+	4,   // 60: hi.media.MotionTransferWorkflowConfig.first_frame:type_name -> hi.media.WorkflowInputBinding
+	4,   // 61: hi.media.MotionTransferWorkflowConfig.use_first_frame:type_name -> hi.media.WorkflowInputBinding
+	4,   // 62: hi.media.MotionTransferWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
+	9,   // 63: hi.media.MotionTransferWorkflowConfig.negative_prompt:type_name -> hi.media.WorkflowFixedTextInput
+	4,   // 64: hi.media.MotionTransferWorkflowConfig.seeds:type_name -> hi.media.WorkflowInputBinding
+	4,   // 65: hi.media.MiniMaxVideoWorkflowConfig.input_video:type_name -> hi.media.WorkflowInputBinding
+	25,  // 66: hi.media.MiniMaxVideoWorkflowConfig.reference_images:type_name -> hi.media.WorkflowMiniMaxReferenceImages
+	4,   // 67: hi.media.MiniMaxVideoWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
+	6,   // 68: hi.media.MiniMaxVideoWorkflowConfig.aspect_ratio:type_name -> hi.media.WorkflowStringOptionInput
+	7,   // 69: hi.media.MiniMaxVideoWorkflowConfig.megapixels:type_name -> hi.media.WorkflowDecimalOptionInput
+	8,   // 70: hi.media.MiniMaxVideoWorkflowConfig.duration_seconds:type_name -> hi.media.WorkflowIntRangeInput
+	4,   // 71: hi.media.MiniMaxVideoWorkflowConfig.seeds:type_name -> hi.media.WorkflowInputBinding
+	4,   // 72: hi.media.MiniMaxVideoWorkflowConfig.region_description:type_name -> hi.media.WorkflowInputBinding
+	12,  // 73: hi.media.WorkflowExecutionConfig.image_to_video:type_name -> hi.media.ImageToVideoWorkflowConfig
+	13,  // 74: hi.media.WorkflowExecutionConfig.text_to_video:type_name -> hi.media.TextToVideoWorkflowConfig
+	19,  // 75: hi.media.WorkflowExecutionConfig.text_to_image:type_name -> hi.media.TextToImageWorkflowConfig
+	20,  // 76: hi.media.WorkflowExecutionConfig.single_image_edit:type_name -> hi.media.SingleImageEditWorkflowConfig
+	21,  // 77: hi.media.WorkflowExecutionConfig.multiple_image_edit:type_name -> hi.media.MultipleImageEditWorkflowConfig
+	22,  // 78: hi.media.WorkflowExecutionConfig.character:type_name -> hi.media.CharacterWorkflowConfig
+	23,  // 79: hi.media.WorkflowExecutionConfig.first_last_frame:type_name -> hi.media.FirstLastFrameWorkflowConfig
+	24,  // 80: hi.media.WorkflowExecutionConfig.motion_transfer:type_name -> hi.media.MotionTransferWorkflowConfig
+	26,  // 81: hi.media.WorkflowExecutionConfig.continuation:type_name -> hi.media.MiniMaxVideoWorkflowConfig
+	26,  // 82: hi.media.WorkflowExecutionConfig.reference:type_name -> hi.media.MiniMaxVideoWorkflowConfig
+	26,  // 83: hi.media.WorkflowExecutionConfig.advanced_replace:type_name -> hi.media.MiniMaxVideoWorkflowConfig
+	5,   // 84: hi.media.WorkflowExecutionConfig.output:type_name -> hi.media.WorkflowOutputConfig
+	2,   // 85: hi.media.WorkflowIssue.severity:type_name -> hi.media.WorkflowIssueSeverity
+	29,  // 86: hi.media.WorkflowNode.inputs:type_name -> hi.media.WorkflowNodeInput
+	3,   // 87: hi.media.WorkflowDependency.kind:type_name -> hi.media.WorkflowDependencyKind
+	31,  // 88: hi.media.WorkflowDependency.usages:type_name -> hi.media.WorkflowDependencyUsage
+	58,  // 89: hi.media.WorkflowSummary.function:type_name -> hi.media.FunctionSummary
+	59,  // 90: hi.media.WorkflowSummary.model:type_name -> hi.media.Model
+	0,   // 91: hi.media.WorkflowSummary.status:type_name -> hi.media.WorkflowStatus
+	1,   // 92: hi.media.WorkflowSummary.validation_status:type_name -> hi.media.WorkflowValidationStatus
+	33,  // 93: hi.media.WorkflowDetail.summary:type_name -> hi.media.WorkflowSummary
+	27,  // 94: hi.media.WorkflowDetail.config:type_name -> hi.media.WorkflowExecutionConfig
+	30,  // 95: hi.media.WorkflowDetail.nodes:type_name -> hi.media.WorkflowNode
+	32,  // 96: hi.media.WorkflowDetail.dependencies:type_name -> hi.media.WorkflowDependency
+	28,  // 97: hi.media.WorkflowDetail.validation_issues:type_name -> hi.media.WorkflowIssue
+	27,  // 98: hi.media.UpdateWorkflowReq.config:type_name -> hi.media.WorkflowExecutionConfig
+	34,  // 99: hi.media.UpdateWorkflowResp.workflow:type_name -> hi.media.WorkflowDetail
+	34,  // 100: hi.media.GetWorkflowResp.workflow:type_name -> hi.media.WorkflowDetail
+	60,  // 101: hi.media.ListWorkflowsReq.pagination:type_name -> hi.Pagination
+	0,   // 102: hi.media.ListWorkflowsReq.status:type_name -> hi.media.WorkflowStatus
+	33,  // 103: hi.media.ListWorkflowsResp.workflows:type_name -> hi.media.WorkflowSummary
+	1,   // 104: hi.media.ValidateWorkflowResp.status:type_name -> hi.media.WorkflowValidationStatus
+	28,  // 105: hi.media.ValidateWorkflowResp.issues:type_name -> hi.media.WorkflowIssue
+	61,  // 106: hi.media.TestWorkflowReq.resolution:type_name -> hi.media.VideoResolution
+	60,  // 107: hi.media.ListWorkflowTestsReq.pagination:type_name -> hi.Pagination
+	62,  // 108: hi.media.ListWorkflowTestsResp.tasks:type_name -> hi.media.TaskSummary
+	33,  // 109: hi.media.SetDefaultWorkflowResp.workflow:type_name -> hi.media.WorkflowSummary
+	33,  // 110: hi.media.UpdateWorkflowSortOrderResp.workflows:type_name -> hi.media.WorkflowSummary
+	38,  // 111: hi.media.WorkflowManage.Update:input_type -> hi.media.UpdateWorkflowReq
+	44,  // 112: hi.media.WorkflowManage.Validate:input_type -> hi.media.ValidateWorkflowReq
+	46,  // 113: hi.media.WorkflowManage.Test:input_type -> hi.media.TestWorkflowReq
+	48,  // 114: hi.media.WorkflowManage.ListTests:input_type -> hi.media.ListWorkflowTestsReq
+	50,  // 115: hi.media.WorkflowManage.SetDefault:input_type -> hi.media.SetDefaultWorkflowReq
+	52,  // 116: hi.media.WorkflowManage.UpdateSortOrder:input_type -> hi.media.UpdateWorkflowSortOrderReq
+	42,  // 117: hi.media.WorkflowManage.List:input_type -> hi.media.ListWorkflowsReq
+	40,  // 118: hi.media.WorkflowManage.Get:input_type -> hi.media.GetWorkflowReq
+	39,  // 119: hi.media.WorkflowManage.Update:output_type -> hi.media.UpdateWorkflowResp
+	45,  // 120: hi.media.WorkflowManage.Validate:output_type -> hi.media.ValidateWorkflowResp
+	47,  // 121: hi.media.WorkflowManage.Test:output_type -> hi.media.TestWorkflowResp
+	49,  // 122: hi.media.WorkflowManage.ListTests:output_type -> hi.media.ListWorkflowTestsResp
+	51,  // 123: hi.media.WorkflowManage.SetDefault:output_type -> hi.media.SetDefaultWorkflowResp
+	53,  // 124: hi.media.WorkflowManage.UpdateSortOrder:output_type -> hi.media.UpdateWorkflowSortOrderResp
+	43,  // 125: hi.media.WorkflowManage.List:output_type -> hi.media.ListWorkflowsResp
+	41,  // 126: hi.media.WorkflowManage.Get:output_type -> hi.media.GetWorkflowResp
+	119, // [119:127] is the sub-list for method output_type
+	111, // [111:119] is the sub-list for method input_type
+	111, // [111:111] is the sub-list for extension type_name
+	111, // [111:111] is the sub-list for extension extendee
+	0,   // [0:111] is the sub-list for field type_name
 }
 
 func init() { file_hi_media_workflow_manage_proto_init() }
@@ -3942,18 +4627,23 @@ func file_hi_media_workflow_manage_proto_init() {
 	file_hi_media_workflow_manage_proto_msgTypes[16].OneofWrappers = []any{}
 	file_hi_media_workflow_manage_proto_msgTypes[17].OneofWrappers = []any{}
 	file_hi_media_workflow_manage_proto_msgTypes[18].OneofWrappers = []any{}
-	file_hi_media_workflow_manage_proto_msgTypes[19].OneofWrappers = []any{
+	file_hi_media_workflow_manage_proto_msgTypes[19].OneofWrappers = []any{}
+	file_hi_media_workflow_manage_proto_msgTypes[20].OneofWrappers = []any{}
+	file_hi_media_workflow_manage_proto_msgTypes[21].OneofWrappers = []any{}
+	file_hi_media_workflow_manage_proto_msgTypes[22].OneofWrappers = []any{}
+	file_hi_media_workflow_manage_proto_msgTypes[23].OneofWrappers = []any{
 		(*WorkflowExecutionConfig_ImageToVideo)(nil),
 		(*WorkflowExecutionConfig_TextToVideo)(nil),
 		(*WorkflowExecutionConfig_TextToImage)(nil),
 		(*WorkflowExecutionConfig_SingleImageEdit)(nil),
 		(*WorkflowExecutionConfig_MultipleImageEdit)(nil),
 		(*WorkflowExecutionConfig_Character)(nil),
+		(*WorkflowExecutionConfig_FirstLastFrame)(nil),
+		(*WorkflowExecutionConfig_MotionTransfer)(nil),
+		(*WorkflowExecutionConfig_Continuation)(nil),
+		(*WorkflowExecutionConfig_Reference)(nil),
+		(*WorkflowExecutionConfig_AdvancedReplace)(nil),
 	}
-	file_hi_media_workflow_manage_proto_msgTypes[20].OneofWrappers = []any{}
-	file_hi_media_workflow_manage_proto_msgTypes[21].OneofWrappers = []any{}
-	file_hi_media_workflow_manage_proto_msgTypes[22].OneofWrappers = []any{}
-	file_hi_media_workflow_manage_proto_msgTypes[23].OneofWrappers = []any{}
 	file_hi_media_workflow_manage_proto_msgTypes[24].OneofWrappers = []any{}
 	file_hi_media_workflow_manage_proto_msgTypes[25].OneofWrappers = []any{}
 	file_hi_media_workflow_manage_proto_msgTypes[26].OneofWrappers = []any{}
@@ -3961,24 +4651,28 @@ func file_hi_media_workflow_manage_proto_init() {
 	file_hi_media_workflow_manage_proto_msgTypes[28].OneofWrappers = []any{}
 	file_hi_media_workflow_manage_proto_msgTypes[29].OneofWrappers = []any{}
 	file_hi_media_workflow_manage_proto_msgTypes[30].OneofWrappers = []any{}
+	file_hi_media_workflow_manage_proto_msgTypes[31].OneofWrappers = []any{}
 	file_hi_media_workflow_manage_proto_msgTypes[32].OneofWrappers = []any{}
+	file_hi_media_workflow_manage_proto_msgTypes[33].OneofWrappers = []any{}
 	file_hi_media_workflow_manage_proto_msgTypes[34].OneofWrappers = []any{}
-	file_hi_media_workflow_manage_proto_msgTypes[35].OneofWrappers = []any{}
 	file_hi_media_workflow_manage_proto_msgTypes[36].OneofWrappers = []any{}
-	file_hi_media_workflow_manage_proto_msgTypes[37].OneofWrappers = []any{}
 	file_hi_media_workflow_manage_proto_msgTypes[38].OneofWrappers = []any{}
 	file_hi_media_workflow_manage_proto_msgTypes[39].OneofWrappers = []any{}
 	file_hi_media_workflow_manage_proto_msgTypes[40].OneofWrappers = []any{}
 	file_hi_media_workflow_manage_proto_msgTypes[41].OneofWrappers = []any{}
 	file_hi_media_workflow_manage_proto_msgTypes[42].OneofWrappers = []any{}
+	file_hi_media_workflow_manage_proto_msgTypes[43].OneofWrappers = []any{}
 	file_hi_media_workflow_manage_proto_msgTypes[44].OneofWrappers = []any{}
+	file_hi_media_workflow_manage_proto_msgTypes[45].OneofWrappers = []any{}
+	file_hi_media_workflow_manage_proto_msgTypes[46].OneofWrappers = []any{}
+	file_hi_media_workflow_manage_proto_msgTypes[48].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_media_workflow_manage_proto_rawDesc), len(file_hi_media_workflow_manage_proto_rawDesc)),
 			NumEnums:      4,
-			NumMessages:   46,
+			NumMessages:   50,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

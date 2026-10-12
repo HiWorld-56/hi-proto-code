@@ -127,7 +127,7 @@ class Function(object):
 
 
 class FunctionManageStub(object):
-    """管理员只调整功能开放开关；功能 ID 和显示名称随开发初始化。
+    """管理员调整功能开放开关与分类内顺序；功能 ID 和显示名称随开发初始化。
     """
 
     def __init__(self, channel):
@@ -141,15 +141,27 @@ class FunctionManageStub(object):
                 request_serializer=hi_dot_media_dot_function__pb2.SetFunctionEnabledReq.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
+        self.SetSortOrder = channel.unary_unary(
+                '/hi.media.FunctionManage/SetSortOrder',
+                request_serializer=hi_dot_media_dot_function__pb2.SetFunctionSortOrderReq.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                _registered_method=True)
 
 
 class FunctionManageServicer(object):
-    """管理员只调整功能开放开关；功能 ID 和显示名称随开发初始化。
+    """管理员调整功能开放开关与分类内顺序；功能 ID 和显示名称随开发初始化。
     """
 
     def SetEnabled(self, request, context):
         """关闭只阻止新建普通任务，不取消已有任务，也不限制管理员配置、校验和试跑。
         目标功能不存在返回 NotFound；重复设置同一值仍成功。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def SetSortOrder(self, request, context):
+        """设置分类内展示顺序，不影响 FIFO 或工作流排序。
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -163,6 +175,11 @@ def add_FunctionManageServicer_to_server(servicer, server):
                     request_deserializer=hi_dot_media_dot_function__pb2.SetFunctionEnabledReq.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
+            'SetSortOrder': grpc.unary_unary_rpc_method_handler(
+                    servicer.SetSortOrder,
+                    request_deserializer=hi_dot_media_dot_function__pb2.SetFunctionSortOrderReq.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
             'hi.media.FunctionManage', rpc_method_handlers)
@@ -172,7 +189,7 @@ def add_FunctionManageServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class FunctionManage(object):
-    """管理员只调整功能开放开关；功能 ID 和显示名称随开发初始化。
+    """管理员调整功能开放开关与分类内顺序；功能 ID 和显示名称随开发初始化。
     """
 
     @staticmethod
@@ -191,6 +208,33 @@ class FunctionManage(object):
             target,
             '/hi.media.FunctionManage/SetEnabled',
             hi_dot_media_dot_function__pb2.SetFunctionEnabledReq.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def SetSortOrder(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.media.FunctionManage/SetSortOrder',
+            hi_dot_media_dot_function__pb2.SetFunctionSortOrderReq.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,

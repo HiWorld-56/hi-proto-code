@@ -14,7 +14,11 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import 'function.pbenum.dart';
+
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
+
+export 'function.pbenum.dart';
 
 /// 文本长度约束；服务端按 Unicode 码点计数。
 class TextLimit extends $pb.GeneratedMessage {
@@ -413,7 +417,7 @@ class InputImagesConfig extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<InputImagesConfig>(create);
   static InputImagesConfig? _defaultInstance;
 
-  /// 单图修改与角色生成为 1；多图修改按工作流配置，当前最少 2 张。
+  /// 单图修改与角色生成为 1，多图修改最少 2；首尾帧为 2，模仿及 MiniMax 参考图可为 0。
   @$pb.TagNumber(1)
   $core.int get min => $_getIZ(0);
   @$pb.TagNumber(1)
@@ -423,7 +427,8 @@ class InputImagesConfig extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearMin() => $_clearField(1);
 
-  /// FLUX 多图为 2，Qwen 多图最多 4；创建时由后端强校验。
+  /// FLUX 多图为 2，Qwen 多图为 4；首尾帧为 2，模仿为 1，MiniMax 参考图为 4。
+  /// 图片功能原有数量约束不变，创建时按目标功能和工作流配置强校验。
   @$pb.TagNumber(2)
   $core.int get max => $_getIZ(1);
   @$pb.TagNumber(2)
@@ -729,7 +734,8 @@ class VideoParameterConfig extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   FrameRateConfig ensureFrameRate() => $_ensure(4);
 
-  /// 单图修改、角色生成及多图修改提供；文生图省略。提交顺序即图片接入顺序。
+  /// 图片修改、角色及新增视频的图片数量；文生图省略，素材角色由创建接口规定。
+  /// 模仿生成只返回 prompt 和 input_images，省略输出尺寸、时长及帧率配置。
   @$pb.TagNumber(6)
   InputImagesConfig get inputImages => $_getN(5);
   @$pb.TagNumber(6)
@@ -770,11 +776,15 @@ class FunctionSummary extends $pb.GeneratedMessage {
     $core.String? functionId,
     $core.String? displayName,
     $core.bool? enabled,
+    FunctionCategory? category,
+    $core.int? sortOrder,
   }) {
     final result = create();
     if (functionId != null) result.functionId = functionId;
     if (displayName != null) result.displayName = displayName;
     if (enabled != null) result.enabled = enabled;
+    if (category != null) result.category = category;
+    if (sortOrder != null) result.sortOrder = sortOrder;
     return result;
   }
 
@@ -794,6 +804,9 @@ class FunctionSummary extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'functionId')
     ..aOS(2, _omitFieldNames ? '' : 'displayName')
     ..aOB(3, _omitFieldNames ? '' : 'enabled')
+    ..aE<FunctionCategory>(4, _omitFieldNames ? '' : 'category',
+        enumValues: FunctionCategory.values)
+    ..aI(5, _omitFieldNames ? '' : 'sortOrder')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -818,7 +831,7 @@ class FunctionSummary extends $pb.GeneratedMessage {
   /// 固定值：video.img2vid（图生视频）、video.txt2vid（文生视频）。
   /// 图片增量：image.txt2img（文生图）、image.edit_single（单图修改）、
   /// image.edit_multiple（多图修改）、image.character（角色生成）。
-  /// 开发中：video.first_last_frame（首尾帧生成）、video.motion_transfer（模仿生成）、
+  /// 视频扩展：video.first_last_frame（首尾帧生成）、video.motion_transfer（模仿生成）、
   /// video.continuation（引导生成）、video.reference（参考生成）、
   /// video.advanced_replace（高级替换）；登记入口不代表已实现生成接口。
   @$pb.TagNumber(1)
@@ -849,9 +862,30 @@ class FunctionSummary extends $pb.GeneratedMessage {
   $core.bool hasEnabled() => $_has(2);
   @$pb.TagNumber(3)
   void clearEnabled() => $_clearField(3);
+
+  /// 图片或视频分类；与功能开放开关、工作流数量无关。
+  @$pb.TagNumber(4)
+  FunctionCategory get category => $_getN(3);
+  @$pb.TagNumber(4)
+  set category(FunctionCategory value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasCategory() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearCategory() => $_clearField(4);
+
+  /// 分类内展示顺序，越小越靠前；允许同值，不要求连续，不影响任务执行优先级。
+  @$pb.TagNumber(5)
+  $core.int get sortOrder => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set sortOrder($core.int value) => $_setSignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasSortOrder() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearSortOrder() => $_clearField(5);
 }
 
-/// 返回全部登记功能，不按开放开关或工作流数量过滤。
+/// 返回全部登记功能的扁平列表，不按开放开关或工作流数量过滤。
+/// 图片组在前、视频组在后；分类内按 sort_order 升序，同值按 function_id 排序。
 class ListFunctionsResp extends $pb.GeneratedMessage {
   factory ListFunctionsResp({
     $core.Iterable<FunctionSummary>? functions,
@@ -1272,6 +1306,76 @@ class SetFunctionEnabledReq extends $pb.GeneratedMessage {
   $core.bool hasEnabled() => $_has(1);
   @$pb.TagNumber(2)
   void clearEnabled() => $_clearField(2);
+}
+
+/// 修改单个功能的分类内展示顺序；分类不可修改。
+class SetFunctionSortOrderReq extends $pb.GeneratedMessage {
+  factory SetFunctionSortOrderReq({
+    $core.String? functionId,
+    $core.int? sortOrder,
+  }) {
+    final result = create();
+    if (functionId != null) result.functionId = functionId;
+    if (sortOrder != null) result.sortOrder = sortOrder;
+    return result;
+  }
+
+  SetFunctionSortOrderReq._();
+
+  factory SetFunctionSortOrderReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SetFunctionSortOrderReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SetFunctionSortOrderReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'functionId')
+    ..aI(2, _omitFieldNames ? '' : 'sortOrder')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetFunctionSortOrderReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetFunctionSortOrderReq copyWith(
+          void Function(SetFunctionSortOrderReq) updates) =>
+      super.copyWith((message) => updates(message as SetFunctionSortOrderReq))
+          as SetFunctionSortOrderReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SetFunctionSortOrderReq create() => SetFunctionSortOrderReq._();
+  @$core.override
+  SetFunctionSortOrderReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static SetFunctionSortOrderReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetFunctionSortOrderReq>(create);
+  static SetFunctionSortOrderReq? _defaultInstance;
+
+  /// 来自 Function.List；不存在时返回 NotFound。
+  @$pb.TagNumber(1)
+  $core.String get functionId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set functionId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasFunctionId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearFunctionId() => $_clearField(1);
+
+  /// 必须显式提供，包括 0；重复设置同值成功，不改变开放开关或工作流排序。
+  @$pb.TagNumber(2)
+  $core.int get sortOrder => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set sortOrder($core.int value) => $_setSignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSortOrder() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSortOrder() => $_clearField(2);
 }
 
 const $core.bool _omitFieldNames =

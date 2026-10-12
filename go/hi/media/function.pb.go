@@ -24,6 +24,56 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// 固定功能分类，由 image.* / video.* 功能 ID 派生，不另建分类表。
+type FunctionCategory int32
+
+const (
+	FunctionCategory_FUNCTION_CATEGORY_UNSPECIFIED FunctionCategory = 0
+	FunctionCategory_FUNCTION_CATEGORY_IMAGE       FunctionCategory = 1
+	FunctionCategory_FUNCTION_CATEGORY_VIDEO       FunctionCategory = 2
+)
+
+// Enum value maps for FunctionCategory.
+var (
+	FunctionCategory_name = map[int32]string{
+		0: "FUNCTION_CATEGORY_UNSPECIFIED",
+		1: "FUNCTION_CATEGORY_IMAGE",
+		2: "FUNCTION_CATEGORY_VIDEO",
+	}
+	FunctionCategory_value = map[string]int32{
+		"FUNCTION_CATEGORY_UNSPECIFIED": 0,
+		"FUNCTION_CATEGORY_IMAGE":       1,
+		"FUNCTION_CATEGORY_VIDEO":       2,
+	}
+)
+
+func (x FunctionCategory) Enum() *FunctionCategory {
+	p := new(FunctionCategory)
+	*p = x
+	return p
+}
+
+func (x FunctionCategory) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (FunctionCategory) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_media_function_proto_enumTypes[0].Descriptor()
+}
+
+func (FunctionCategory) Type() protoreflect.EnumType {
+	return &file_hi_media_function_proto_enumTypes[0]
+}
+
+func (x FunctionCategory) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use FunctionCategory.Descriptor instead.
+func (FunctionCategory) EnumDescriptor() ([]byte, []int) {
+	return file_hi_media_function_proto_rawDescGZIP(), []int{0}
+}
+
 // 文本长度约束；服务端按 Unicode 码点计数。
 type TextLimit struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -329,9 +379,10 @@ func (*FrameRateConfig_FixedValue) isFrameRateConfig_Mode() {}
 // 输入图片数量，含 min/max 边界；多图列表始终有序，不另设 ordered 字段。
 type InputImagesConfig struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 单图修改与角色生成为 1；多图修改按工作流配置，当前最少 2 张。
+	// 单图修改与角色生成为 1，多图修改最少 2；首尾帧为 2，模仿及 MiniMax 参考图可为 0。
 	Min *uint32 `protobuf:"varint,1,opt,name=min,proto3,oneof" json:"min,omitempty"`
-	// FLUX 多图为 2，Qwen 多图最多 4；创建时由后端强校验。
+	// FLUX 多图为 2，Qwen 多图为 4；首尾帧为 2，模仿为 1，MiniMax 参考图为 4。
+	// 图片功能原有数量约束不变，创建时按目标功能和工作流配置强校验。
 	Max           *uint32 `protobuf:"varint,2,opt,name=max,proto3,oneof" json:"max,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -496,7 +547,8 @@ type VideoParameterConfig struct {
 	Megapixels      *DecimalOptionConfig   `protobuf:"bytes,3,opt,name=megapixels,proto3" json:"megapixels,omitempty"`
 	DurationSeconds *IntRangeConfig        `protobuf:"bytes,4,opt,name=duration_seconds,json=durationSeconds,proto3" json:"duration_seconds,omitempty"`
 	FrameRate       *FrameRateConfig       `protobuf:"bytes,5,opt,name=frame_rate,json=frameRate,proto3" json:"frame_rate,omitempty"`
-	// 单图修改、角色生成及多图修改提供；文生图省略。提交顺序即图片接入顺序。
+	// 图片修改、角色及新增视频的图片数量；文生图省略，素材角色由创建接口规定。
+	// 模仿生成只返回 prompt 和 input_images，省略输出尺寸、时长及帧率配置。
 	InputImages *InputImagesConfig `protobuf:"bytes,6,opt,name=input_images,json=inputImages,proto3" json:"input_images,omitempty"`
 	// 仅文生图提供一种尺寸模式；图片修改与角色生成的尺寸由工作流决定。
 	//
@@ -628,14 +680,18 @@ type FunctionSummary struct {
 	// 固定值：video.img2vid（图生视频）、video.txt2vid（文生视频）。
 	// 图片增量：image.txt2img（文生图）、image.edit_single（单图修改）、
 	// image.edit_multiple（多图修改）、image.character（角色生成）。
-	// 开发中：video.first_last_frame（首尾帧生成）、video.motion_transfer（模仿生成）、
+	// 视频扩展：video.first_last_frame（首尾帧生成）、video.motion_transfer（模仿生成）、
 	// video.continuation（引导生成）、video.reference（参考生成）、
 	// video.advanced_replace（高级替换）；登记入口不代表已实现生成接口。
 	FunctionId  *string `protobuf:"bytes,1,opt,name=function_id,json=functionId,proto3,oneof" json:"function_id,omitempty"`
 	DisplayName *string `protobuf:"bytes,2,opt,name=display_name,json=displayName,proto3,oneof" json:"display_name,omitempty"`
 	// 管理员控制的开放开关；false 仍展示入口，但普通用户不能创建新任务。
 	// 与工作流 ENABLED 状态独立，不影响已受理任务或管理员试跑。
-	Enabled       *bool `protobuf:"varint,3,opt,name=enabled,proto3,oneof" json:"enabled,omitempty"`
+	Enabled *bool `protobuf:"varint,3,opt,name=enabled,proto3,oneof" json:"enabled,omitempty"`
+	// 图片或视频分类；与功能开放开关、工作流数量无关。
+	Category *FunctionCategory `protobuf:"varint,4,opt,name=category,proto3,enum=hi.media.FunctionCategory,oneof" json:"category,omitempty"`
+	// 分类内展示顺序，越小越靠前；允许同值，不要求连续，不影响任务执行优先级。
+	SortOrder     *int32 `protobuf:"varint,5,opt,name=sort_order,json=sortOrder,proto3,oneof" json:"sort_order,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -691,7 +747,22 @@ func (x *FunctionSummary) GetEnabled() bool {
 	return false
 }
 
-// 返回全部登记功能，不按开放开关或工作流数量过滤。
+func (x *FunctionSummary) GetCategory() FunctionCategory {
+	if x != nil && x.Category != nil {
+		return *x.Category
+	}
+	return FunctionCategory_FUNCTION_CATEGORY_UNSPECIFIED
+}
+
+func (x *FunctionSummary) GetSortOrder() int32 {
+	if x != nil && x.SortOrder != nil {
+		return *x.SortOrder
+	}
+	return 0
+}
+
+// 返回全部登记功能的扁平列表，不按开放开关或工作流数量过滤。
+// 图片组在前、视频组在后；分类内按 sort_order 升序，同值按 function_id 排序。
 type ListFunctionsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Functions     []*FunctionSummary     `protobuf:"bytes,1,rep,name=functions,proto3" json:"functions,omitempty"`
@@ -1026,6 +1097,61 @@ func (x *SetFunctionEnabledReq) GetEnabled() bool {
 	return false
 }
 
+// 修改单个功能的分类内展示顺序；分类不可修改。
+type SetFunctionSortOrderReq struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 来自 Function.List；不存在时返回 NotFound。
+	FunctionId *string `protobuf:"bytes,1,opt,name=function_id,json=functionId,proto3,oneof" json:"function_id,omitempty"`
+	// 必须显式提供，包括 0；重复设置同值成功，不改变开放开关或工作流排序。
+	SortOrder     *int32 `protobuf:"varint,2,opt,name=sort_order,json=sortOrder,proto3,oneof" json:"sort_order,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SetFunctionSortOrderReq) Reset() {
+	*x = SetFunctionSortOrderReq{}
+	mi := &file_hi_media_function_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetFunctionSortOrderReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetFunctionSortOrderReq) ProtoMessage() {}
+
+func (x *SetFunctionSortOrderReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_media_function_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetFunctionSortOrderReq.ProtoReflect.Descriptor instead.
+func (*SetFunctionSortOrderReq) Descriptor() ([]byte, []int) {
+	return file_hi_media_function_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *SetFunctionSortOrderReq) GetFunctionId() string {
+	if x != nil && x.FunctionId != nil {
+		return *x.FunctionId
+	}
+	return ""
+}
+
+func (x *SetFunctionSortOrderReq) GetSortOrder() int32 {
+	if x != nil && x.SortOrder != nil {
+		return *x.SortOrder
+	}
+	return 0
+}
+
 var File_hi_media_function_proto protoreflect.FileDescriptor
 
 const file_hi_media_function_proto_rawDesc = "" +
@@ -1063,9 +1189,10 @@ const file_hi_media_function_proto_rawDesc = "" +
 	"selectable\x12.\n" +
 	"\vfixed_value\x18\x02 \x01(\x05B\v\xbaH\x04\x1a\x02 \x00\x90\xb5\x18\x01H\x00R\n" +
 	"fixedValue:\x04\x98\xb5\x18\x01B\r\n" +
-	"\x04mode\x12\x05\xbaH\x02\b\x01\"\xc2\x01\n" +
-	"\x11InputImagesConfig\x12%\n" +
-	"\x03min\x18\x01 \x01(\rB\x0e\xbaH\a\xc8\x01\x01*\x02 \x00\x90\xb5\x18\x01H\x00R\x03min\x88\x01\x01\x12'\n" +
+	"\x04mode\x12\x05\xbaH\x02\b\x01\"\xbe\x01\n" +
+	"\x11InputImagesConfig\x12!\n" +
+	"\x03min\x18\x01 \x01(\rB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x01H\x00R\x03min\x88\x01\x01\x12'\n" +
 	"\x03max\x18\x02 \x01(\rB\x10\xbaH\t\xc8\x01\x01*\x04\x18\x04 \x00\x90\xb5\x18\x01H\x01R\x03max\x88\x01\x01:M\xbaHF\x1aD\n" +
 	"\x13input_images.bounds\x12\x17min must not exceed max\x1a\x14this.min <= this.max\x98\xb5\x18\x01B\x06\n" +
 	"\x04_minB\x06\n" +
@@ -1096,16 +1223,21 @@ const file_hi_media_function_proto_rawDesc = "" +
 	"\x10image_dimensions\x18\a \x01(\v2\x1f.hi.media.ImageDimensionsConfigB\x04\x90\xb5\x18\x01H\x00R\x0fimageDimensions\x12R\n" +
 	"\x10image_resolution\x18\b \x01(\v2\x1f.hi.media.ImageResolutionConfigB\x04\x90\xb5\x18\x01H\x00R\x0fimageResolution:\x04\x98\xb5\x18\x01B\f\n" +
 	"\n" +
-	"image_size\"\xc3\x01\n" +
+	"image_size\"\xcc\x02\n" +
 	"\x0fFunctionSummary\x12*\n" +
 	"\vfunction_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\n" +
 	"functionId\x88\x01\x01\x12,\n" +
 	"\fdisplay_name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\vdisplayName\x88\x01\x01\x12#\n" +
-	"\aenabled\x18\x03 \x01(\bB\x04\x90\xb5\x18\x01H\x02R\aenabled\x88\x01\x01:\x04\x98\xb5\x18\x01B\x0e\n" +
+	"\aenabled\x18\x03 \x01(\bB\x04\x90\xb5\x18\x01H\x02R\aenabled\x88\x01\x01\x12A\n" +
+	"\bcategory\x18\x04 \x01(\x0e2\x1a.hi.media.FunctionCategoryB\x04\x90\xb5\x18\x01H\x03R\bcategory\x88\x01\x01\x12(\n" +
+	"\n" +
+	"sort_order\x18\x05 \x01(\x05B\x04\x90\xb5\x18\x01H\x04R\tsortOrder\x88\x01\x01:\x04\x98\xb5\x18\x01B\x0e\n" +
 	"\f_function_idB\x0f\n" +
 	"\r_display_nameB\n" +
 	"\n" +
-	"\b_enabled\"X\n" +
+	"\b_enabledB\v\n" +
+	"\t_categoryB\r\n" +
+	"\v_sort_order\"X\n" +
 	"\x11ListFunctionsResp\x12=\n" +
 	"\tfunctions\x18\x01 \x03(\v2\x19.hi.media.FunctionSummaryB\x04\x90\xb5\x18\x01R\tfunctions:\x04\x98\xb5\x18\x01\"R\n" +
 	"\x0eGetFunctionReq\x120\n" +
@@ -1139,13 +1271,26 @@ const file_hi_media_function_proto_rawDesc = "" +
 	"\aenabled\x18\x02 \x01(\bB\x06\xbaH\x03\xc8\x01\x01H\x01R\aenabled\x88\x01\x01B\x0e\n" +
 	"\f_function_idB\n" +
 	"\n" +
-	"\b_enabled2\x91\x01\n" +
+	"\b_enabled\"\x96\x01\n" +
+	"\x17SetFunctionSortOrderReq\x120\n" +
+	"\vfunction_id\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\n" +
+	"functionId\x88\x01\x01\x12*\n" +
+	"\n" +
+	"sort_order\x18\x02 \x01(\x05B\x06\xbaH\x03\xc8\x01\x01H\x01R\tsortOrder\x88\x01\x01B\x0e\n" +
+	"\f_function_idB\r\n" +
+	"\v_sort_order*o\n" +
+	"\x10FunctionCategory\x12!\n" +
+	"\x1dFUNCTION_CATEGORY_UNSPECIFIED\x10\x00\x12\x1b\n" +
+	"\x17FUNCTION_CATEGORY_IMAGE\x10\x01\x12\x1b\n" +
+	"\x17FUNCTION_CATEGORY_VIDEO\x10\x022\x91\x01\n" +
 	"\bFunction\x12B\n" +
 	"\x04List\x12\x16.google.protobuf.Empty\x1a\x1b.hi.media.ListFunctionsResp\"\x05\x8a\xb5\x18\x01\x02\x12A\n" +
-	"\x03Get\x12\x18.hi.media.GetFunctionReq\x1a\x19.hi.media.GetFunctionResp\"\x05\x8a\xb5\x18\x01\x022^\n" +
+	"\x03Get\x12\x18.hi.media.GetFunctionReq\x1a\x19.hi.media.GetFunctionResp\"\x05\x8a\xb5\x18\x01\x022\xb0\x01\n" +
 	"\x0eFunctionManage\x12L\n" +
 	"\n" +
-	"SetEnabled\x12\x1f.hi.media.SetFunctionEnabledReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04B\x8a\x01\n" +
+	"SetEnabled\x12\x1f.hi.media.SetFunctionEnabledReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12P\n" +
+	"\fSetSortOrder\x12!.hi.media.SetFunctionSortOrderReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04B\x8a\x01\n" +
 	"\fcom.hi.mediaB\rFunctionProtoP\x01Z*github.com/HiWorld-56/hi-proto/go/hi/media\xa2\x02\x03HMX\xaa\x02\bHi.Media\xca\x02\bHi\\Media\xe2\x02\x14Hi\\Media\\GPBMetadata\xea\x02\tHi::Mediab\x06proto3"
 
 var (
@@ -1160,56 +1305,62 @@ func file_hi_media_function_proto_rawDescGZIP() []byte {
 	return file_hi_media_function_proto_rawDescData
 }
 
-var file_hi_media_function_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_hi_media_function_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_hi_media_function_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_hi_media_function_proto_goTypes = []any{
-	(*TextLimit)(nil),             // 0: hi.media.TextLimit
-	(*DecimalOptionConfig)(nil),   // 1: hi.media.DecimalOptionConfig
-	(*StringOptionConfig)(nil),    // 2: hi.media.StringOptionConfig
-	(*IntRangeConfig)(nil),        // 3: hi.media.IntRangeConfig
-	(*FrameRateConfig)(nil),       // 4: hi.media.FrameRateConfig
-	(*InputImagesConfig)(nil),     // 5: hi.media.InputImagesConfig
-	(*ImageDimensionsConfig)(nil), // 6: hi.media.ImageDimensionsConfig
-	(*ImageResolutionConfig)(nil), // 7: hi.media.ImageResolutionConfig
-	(*VideoParameterConfig)(nil),  // 8: hi.media.VideoParameterConfig
-	(*FunctionSummary)(nil),       // 9: hi.media.FunctionSummary
-	(*ListFunctionsResp)(nil),     // 10: hi.media.ListFunctionsResp
-	(*GetFunctionReq)(nil),        // 11: hi.media.GetFunctionReq
-	(*WorkflowModelOption)(nil),   // 12: hi.media.WorkflowModelOption
-	(*WorkflowOption)(nil),        // 13: hi.media.WorkflowOption
-	(*GetFunctionResp)(nil),       // 14: hi.media.GetFunctionResp
-	(*SetFunctionEnabledReq)(nil), // 15: hi.media.SetFunctionEnabledReq
-	(*emptypb.Empty)(nil),         // 16: google.protobuf.Empty
+	(FunctionCategory)(0),           // 0: hi.media.FunctionCategory
+	(*TextLimit)(nil),               // 1: hi.media.TextLimit
+	(*DecimalOptionConfig)(nil),     // 2: hi.media.DecimalOptionConfig
+	(*StringOptionConfig)(nil),      // 3: hi.media.StringOptionConfig
+	(*IntRangeConfig)(nil),          // 4: hi.media.IntRangeConfig
+	(*FrameRateConfig)(nil),         // 5: hi.media.FrameRateConfig
+	(*InputImagesConfig)(nil),       // 6: hi.media.InputImagesConfig
+	(*ImageDimensionsConfig)(nil),   // 7: hi.media.ImageDimensionsConfig
+	(*ImageResolutionConfig)(nil),   // 8: hi.media.ImageResolutionConfig
+	(*VideoParameterConfig)(nil),    // 9: hi.media.VideoParameterConfig
+	(*FunctionSummary)(nil),         // 10: hi.media.FunctionSummary
+	(*ListFunctionsResp)(nil),       // 11: hi.media.ListFunctionsResp
+	(*GetFunctionReq)(nil),          // 12: hi.media.GetFunctionReq
+	(*WorkflowModelOption)(nil),     // 13: hi.media.WorkflowModelOption
+	(*WorkflowOption)(nil),          // 14: hi.media.WorkflowOption
+	(*GetFunctionResp)(nil),         // 15: hi.media.GetFunctionResp
+	(*SetFunctionEnabledReq)(nil),   // 16: hi.media.SetFunctionEnabledReq
+	(*SetFunctionSortOrderReq)(nil), // 17: hi.media.SetFunctionSortOrderReq
+	(*emptypb.Empty)(nil),           // 18: google.protobuf.Empty
 }
 var file_hi_media_function_proto_depIdxs = []int32{
-	3,  // 0: hi.media.FrameRateConfig.selectable:type_name -> hi.media.IntRangeConfig
-	3,  // 1: hi.media.ImageDimensionsConfig.width:type_name -> hi.media.IntRangeConfig
-	3,  // 2: hi.media.ImageDimensionsConfig.height:type_name -> hi.media.IntRangeConfig
-	2,  // 3: hi.media.ImageResolutionConfig.aspect_ratio:type_name -> hi.media.StringOptionConfig
-	1,  // 4: hi.media.ImageResolutionConfig.megapixels:type_name -> hi.media.DecimalOptionConfig
-	0,  // 5: hi.media.VideoParameterConfig.prompt:type_name -> hi.media.TextLimit
-	2,  // 6: hi.media.VideoParameterConfig.aspect_ratio:type_name -> hi.media.StringOptionConfig
-	1,  // 7: hi.media.VideoParameterConfig.megapixels:type_name -> hi.media.DecimalOptionConfig
-	3,  // 8: hi.media.VideoParameterConfig.duration_seconds:type_name -> hi.media.IntRangeConfig
-	4,  // 9: hi.media.VideoParameterConfig.frame_rate:type_name -> hi.media.FrameRateConfig
-	5,  // 10: hi.media.VideoParameterConfig.input_images:type_name -> hi.media.InputImagesConfig
-	6,  // 11: hi.media.VideoParameterConfig.image_dimensions:type_name -> hi.media.ImageDimensionsConfig
-	7,  // 12: hi.media.VideoParameterConfig.image_resolution:type_name -> hi.media.ImageResolutionConfig
-	9,  // 13: hi.media.ListFunctionsResp.functions:type_name -> hi.media.FunctionSummary
-	12, // 14: hi.media.WorkflowOption.model:type_name -> hi.media.WorkflowModelOption
-	8,  // 15: hi.media.WorkflowOption.parameter_config:type_name -> hi.media.VideoParameterConfig
-	9,  // 16: hi.media.GetFunctionResp.function:type_name -> hi.media.FunctionSummary
-	13, // 17: hi.media.GetFunctionResp.workflows:type_name -> hi.media.WorkflowOption
-	16, // 18: hi.media.Function.List:input_type -> google.protobuf.Empty
-	11, // 19: hi.media.Function.Get:input_type -> hi.media.GetFunctionReq
-	15, // 20: hi.media.FunctionManage.SetEnabled:input_type -> hi.media.SetFunctionEnabledReq
-	10, // 21: hi.media.Function.List:output_type -> hi.media.ListFunctionsResp
-	14, // 22: hi.media.Function.Get:output_type -> hi.media.GetFunctionResp
-	16, // 23: hi.media.FunctionManage.SetEnabled:output_type -> google.protobuf.Empty
-	21, // [21:24] is the sub-list for method output_type
-	18, // [18:21] is the sub-list for method input_type
-	18, // [18:18] is the sub-list for extension type_name
-	18, // [18:18] is the sub-list for extension extendee
-	0,  // [0:18] is the sub-list for field type_name
+	4,  // 0: hi.media.FrameRateConfig.selectable:type_name -> hi.media.IntRangeConfig
+	4,  // 1: hi.media.ImageDimensionsConfig.width:type_name -> hi.media.IntRangeConfig
+	4,  // 2: hi.media.ImageDimensionsConfig.height:type_name -> hi.media.IntRangeConfig
+	3,  // 3: hi.media.ImageResolutionConfig.aspect_ratio:type_name -> hi.media.StringOptionConfig
+	2,  // 4: hi.media.ImageResolutionConfig.megapixels:type_name -> hi.media.DecimalOptionConfig
+	1,  // 5: hi.media.VideoParameterConfig.prompt:type_name -> hi.media.TextLimit
+	3,  // 6: hi.media.VideoParameterConfig.aspect_ratio:type_name -> hi.media.StringOptionConfig
+	2,  // 7: hi.media.VideoParameterConfig.megapixels:type_name -> hi.media.DecimalOptionConfig
+	4,  // 8: hi.media.VideoParameterConfig.duration_seconds:type_name -> hi.media.IntRangeConfig
+	5,  // 9: hi.media.VideoParameterConfig.frame_rate:type_name -> hi.media.FrameRateConfig
+	6,  // 10: hi.media.VideoParameterConfig.input_images:type_name -> hi.media.InputImagesConfig
+	7,  // 11: hi.media.VideoParameterConfig.image_dimensions:type_name -> hi.media.ImageDimensionsConfig
+	8,  // 12: hi.media.VideoParameterConfig.image_resolution:type_name -> hi.media.ImageResolutionConfig
+	0,  // 13: hi.media.FunctionSummary.category:type_name -> hi.media.FunctionCategory
+	10, // 14: hi.media.ListFunctionsResp.functions:type_name -> hi.media.FunctionSummary
+	13, // 15: hi.media.WorkflowOption.model:type_name -> hi.media.WorkflowModelOption
+	9,  // 16: hi.media.WorkflowOption.parameter_config:type_name -> hi.media.VideoParameterConfig
+	10, // 17: hi.media.GetFunctionResp.function:type_name -> hi.media.FunctionSummary
+	14, // 18: hi.media.GetFunctionResp.workflows:type_name -> hi.media.WorkflowOption
+	18, // 19: hi.media.Function.List:input_type -> google.protobuf.Empty
+	12, // 20: hi.media.Function.Get:input_type -> hi.media.GetFunctionReq
+	16, // 21: hi.media.FunctionManage.SetEnabled:input_type -> hi.media.SetFunctionEnabledReq
+	17, // 22: hi.media.FunctionManage.SetSortOrder:input_type -> hi.media.SetFunctionSortOrderReq
+	11, // 23: hi.media.Function.List:output_type -> hi.media.ListFunctionsResp
+	15, // 24: hi.media.Function.Get:output_type -> hi.media.GetFunctionResp
+	18, // 25: hi.media.FunctionManage.SetEnabled:output_type -> google.protobuf.Empty
+	18, // 26: hi.media.FunctionManage.SetSortOrder:output_type -> google.protobuf.Empty
+	23, // [23:27] is the sub-list for method output_type
+	19, // [19:23] is the sub-list for method input_type
+	19, // [19:19] is the sub-list for extension type_name
+	19, // [19:19] is the sub-list for extension extendee
+	0,  // [0:19] is the sub-list for field type_name
 }
 
 func init() { file_hi_media_function_proto_init() }
@@ -1235,18 +1386,20 @@ func file_hi_media_function_proto_init() {
 	file_hi_media_function_proto_msgTypes[12].OneofWrappers = []any{}
 	file_hi_media_function_proto_msgTypes[13].OneofWrappers = []any{}
 	file_hi_media_function_proto_msgTypes[15].OneofWrappers = []any{}
+	file_hi_media_function_proto_msgTypes[16].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_media_function_proto_rawDesc), len(file_hi_media_function_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   16,
+			NumEnums:      1,
+			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   2,
 		},
 		GoTypes:           file_hi_media_function_proto_goTypes,
 		DependencyIndexes: file_hi_media_function_proto_depIdxs,
+		EnumInfos:         file_hi_media_function_proto_enumTypes,
 		MessageInfos:      file_hi_media_function_proto_msgTypes,
 	}.Build()
 	File_hi_media_function_proto = out.File

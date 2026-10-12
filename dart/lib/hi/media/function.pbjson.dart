@@ -15,6 +15,21 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use functionCategoryDescriptor instead')
+const FunctionCategory$json = {
+  '1': 'FunctionCategory',
+  '2': [
+    {'1': 'FUNCTION_CATEGORY_UNSPECIFIED', '2': 0},
+    {'1': 'FUNCTION_CATEGORY_IMAGE', '2': 1},
+    {'1': 'FUNCTION_CATEGORY_VIDEO', '2': 2},
+  ],
+};
+
+/// Descriptor for `FunctionCategory`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List functionCategoryDescriptor = $convert.base64Decode(
+    'ChBGdW5jdGlvbkNhdGVnb3J5EiEKHUZVTkNUSU9OX0NBVEVHT1JZX1VOU1BFQ0lGSUVEEAASGw'
+    'oXRlVOQ1RJT05fQ0FURUdPUllfSU1BR0UQARIbChdGVU5DVElPTl9DQVRFR09SWV9WSURFTxAC');
+
 @$core.Deprecated('Use textLimitDescriptor instead')
 const TextLimit$json = {
   '1': 'TextLimit',
@@ -242,10 +257,10 @@ const InputImagesConfig$json = {
 
 /// Descriptor for `InputImagesConfig`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List inputImagesConfigDescriptor = $convert.base64Decode(
-    'ChFJbnB1dEltYWdlc0NvbmZpZxIlCgNtaW4YASABKA1CDrpIB8gBASoCIACQtRgBSABSA21pbo'
-    'gBARInCgNtYXgYAiABKA1CELpICcgBASoEGAQgAJC1GAFIAVIDbWF4iAEBOk26SEYaRAoTaW5w'
-    'dXRfaW1hZ2VzLmJvdW5kcxIXbWluIG11c3Qgbm90IGV4Y2VlZCBtYXgaFHRoaXMubWluIDw9IH'
-    'RoaXMubWF4mLUYAUIGCgRfbWluQgYKBF9tYXg=');
+    'ChFJbnB1dEltYWdlc0NvbmZpZxIhCgNtaW4YASABKA1CCrpIA8gBAZC1GAFIAFIDbWluiAEBEi'
+    'cKA21heBgCIAEoDUIQukgJyAEBKgQYBCAAkLUYAUgBUgNtYXiIAQE6TbpIRhpEChNpbnB1dF9p'
+    'bWFnZXMuYm91bmRzEhdtaW4gbXVzdCBub3QgZXhjZWVkIG1heBoUdGhpcy5taW4gPD0gdGhpcy'
+    '5tYXiYtRgBQgYKBF9taW5CBgoEX21heA==');
 
 @$core.Deprecated('Use imageDimensionsConfigDescriptor instead')
 const ImageDimensionsConfig$json = {
@@ -452,12 +467,35 @@ const FunctionSummary$json = {
       '10': 'enabled',
       '17': true
     },
+    {
+      '1': 'category',
+      '3': 4,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.media.FunctionCategory',
+      '8': {},
+      '9': 3,
+      '10': 'category',
+      '17': true
+    },
+    {
+      '1': 'sort_order',
+      '3': 5,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '9': 4,
+      '10': 'sortOrder',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
     {'1': '_function_id'},
     {'1': '_display_name'},
     {'1': '_enabled'},
+    {'1': '_category'},
+    {'1': '_sort_order'},
   ],
 };
 
@@ -465,8 +503,10 @@ const FunctionSummary$json = {
 final $typed_data.Uint8List functionSummaryDescriptor = $convert.base64Decode(
     'Cg9GdW5jdGlvblN1bW1hcnkSKgoLZnVuY3Rpb25faWQYASABKAlCBJC1GAFIAFIKZnVuY3Rpb2'
     '5JZIgBARIsCgxkaXNwbGF5X25hbWUYAiABKAlCBJC1GAFIAVILZGlzcGxheU5hbWWIAQESIwoH'
-    'ZW5hYmxlZBgDIAEoCEIEkLUYAUgCUgdlbmFibGVkiAEBOgSYtRgBQg4KDF9mdW5jdGlvbl9pZE'
-    'IPCg1fZGlzcGxheV9uYW1lQgoKCF9lbmFibGVk');
+    'ZW5hYmxlZBgDIAEoCEIEkLUYAUgCUgdlbmFibGVkiAEBEkEKCGNhdGVnb3J5GAQgASgOMhouaG'
+    'kubWVkaWEuRnVuY3Rpb25DYXRlZ29yeUIEkLUYAUgDUghjYXRlZ29yeYgBARIoCgpzb3J0X29y'
+    'ZGVyGAUgASgFQgSQtRgBSARSCXNvcnRPcmRlcogBAToEmLUYAUIOCgxfZnVuY3Rpb25faWRCDw'
+    'oNX2Rpc3BsYXlfbmFtZUIKCghfZW5hYmxlZEILCglfY2F0ZWdvcnlCDQoLX3NvcnRfb3JkZXI=');
 
 @$core.Deprecated('Use listFunctionsRespDescriptor instead')
 const ListFunctionsResp$json = {
@@ -692,3 +732,40 @@ final $typed_data.Uint8List setFunctionEnabledReqDescriptor = $convert.base64Dec
     'ChVTZXRGdW5jdGlvbkVuYWJsZWRSZXESMAoLZnVuY3Rpb25faWQYASABKAlCCrpIB8gBAXICEA'
     'FIAFIKZnVuY3Rpb25JZIgBARIlCgdlbmFibGVkGAIgASgIQga6SAPIAQFIAVIHZW5hYmxlZIgB'
     'AUIOCgxfZnVuY3Rpb25faWRCCgoIX2VuYWJsZWQ=');
+
+@$core.Deprecated('Use setFunctionSortOrderReqDescriptor instead')
+const SetFunctionSortOrderReq$json = {
+  '1': 'SetFunctionSortOrderReq',
+  '2': [
+    {
+      '1': 'function_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'functionId',
+      '17': true
+    },
+    {
+      '1': 'sort_order',
+      '3': 2,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '9': 1,
+      '10': 'sortOrder',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_function_id'},
+    {'1': '_sort_order'},
+  ],
+};
+
+/// Descriptor for `SetFunctionSortOrderReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setFunctionSortOrderReqDescriptor = $convert.base64Decode(
+    'ChdTZXRGdW5jdGlvblNvcnRPcmRlclJlcRIwCgtmdW5jdGlvbl9pZBgBIAEoCUIKukgHyAEBcg'
+    'IQAUgAUgpmdW5jdGlvbklkiAEBEioKCnNvcnRfb3JkZXIYAiABKAVCBrpIA8gBAUgBUglzb3J0'
+    'T3JkZXKIAQFCDgoMX2Z1bmN0aW9uX2lkQg0KC19zb3J0X29yZGVy');

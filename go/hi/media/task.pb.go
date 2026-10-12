@@ -435,6 +435,641 @@ func (x *CreateTextToVideoTaskReq) GetFrameRate() int32 {
 	return 0
 }
 
+// 创建首尾帧视频，对应 video.first_last_frame；两张本人 JPEG/PNG 分别承担首帧和尾帧。
+type CreateFirstLastFrameTaskReq struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 本人范围内幂等键；重新生成使用新值，由后端生成新 seed。
+	RequestId *string `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
+	// 来自对应 Function.Get，必须属于本功能且已启用。
+	WorkflowId *string `protobuf:"bytes,2,opt,name=workflow_id,json=workflowId,proto3,oneof" json:"workflow_id,omitempty"`
+	// 首帧图片资产 ID；允许与尾帧尺寸不同，工作流按目标画面缩放和居中裁剪。
+	FirstFrameAssetId *string `protobuf:"bytes,3,opt,name=first_frame_asset_id,json=firstFrameAssetId,proto3,oneof" json:"first_frame_asset_id,omitempty"`
+	// 尾帧图片资产 ID；素材须属于本人并为 available。
+	LastFrameAssetId *string `protobuf:"bytes,4,opt,name=last_frame_asset_id,json=lastFrameAssetId,proto3,oneof" json:"last_frame_asset_id,omitempty"`
+	// 用户生成要求原文，可以中文；Unicode 码点长度上限由工作流决定。
+	Prompt *string `protobuf:"bytes,5,opt,name=prompt,proto3,oneof" json:"prompt,omitempty"`
+	// 不传某项时采用工作流默认值；后端计算按 32 对齐的目标宽高。
+	Resolution *VideoResolution `protobuf:"bytes,6,opt,name=resolution,proto3" json:"resolution,omitempty"`
+	// 整数秒；初始工作流范围 3～15、默认 5，实际范围以工作流配置为准。
+	DurationSeconds *int32 `protobuf:"varint,7,opt,name=duration_seconds,json=durationSeconds,proto3,oneof" json:"duration_seconds,omitempty"`
+	// 帧/秒；不传时采用默认或固定值，固定模式显式提交时须与固定值相同。
+	FrameRate     *int32 `protobuf:"varint,8,opt,name=frame_rate,json=frameRate,proto3,oneof" json:"frame_rate,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateFirstLastFrameTaskReq) Reset() {
+	*x = CreateFirstLastFrameTaskReq{}
+	mi := &file_hi_media_task_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateFirstLastFrameTaskReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateFirstLastFrameTaskReq) ProtoMessage() {}
+
+func (x *CreateFirstLastFrameTaskReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_media_task_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateFirstLastFrameTaskReq.ProtoReflect.Descriptor instead.
+func (*CreateFirstLastFrameTaskReq) Descriptor() ([]byte, []int) {
+	return file_hi_media_task_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *CreateFirstLastFrameTaskReq) GetRequestId() string {
+	if x != nil && x.RequestId != nil {
+		return *x.RequestId
+	}
+	return ""
+}
+
+func (x *CreateFirstLastFrameTaskReq) GetWorkflowId() string {
+	if x != nil && x.WorkflowId != nil {
+		return *x.WorkflowId
+	}
+	return ""
+}
+
+func (x *CreateFirstLastFrameTaskReq) GetFirstFrameAssetId() string {
+	if x != nil && x.FirstFrameAssetId != nil {
+		return *x.FirstFrameAssetId
+	}
+	return ""
+}
+
+func (x *CreateFirstLastFrameTaskReq) GetLastFrameAssetId() string {
+	if x != nil && x.LastFrameAssetId != nil {
+		return *x.LastFrameAssetId
+	}
+	return ""
+}
+
+func (x *CreateFirstLastFrameTaskReq) GetPrompt() string {
+	if x != nil && x.Prompt != nil {
+		return *x.Prompt
+	}
+	return ""
+}
+
+func (x *CreateFirstLastFrameTaskReq) GetResolution() *VideoResolution {
+	if x != nil {
+		return x.Resolution
+	}
+	return nil
+}
+
+func (x *CreateFirstLastFrameTaskReq) GetDurationSeconds() int32 {
+	if x != nil && x.DurationSeconds != nil {
+		return *x.DurationSeconds
+	}
+	return 0
+}
+
+func (x *CreateFirstLastFrameTaskReq) GetFrameRate() int32 {
+	if x != nil && x.FrameRate != nil {
+		return *x.FrameRate
+	}
+	return 0
+}
+
+// 模仿生成，对应 video.motion_transfer；当前工作流为深度控制，不承诺骨骼姿态控制。
+// 时长、尺寸和帧率由输入视频及工作流确定，不接受对应用户参数。
+type CreateMotionTransferTaskReq struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 本人范围内幂等键，同一次创建重发复用。
+	RequestId *string `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
+	// 来自 video.motion_transfer 的 Function.Get。
+	WorkflowId *string `protobuf:"bytes,2,opt,name=workflow_id,json=workflowId,proto3,oneof" json:"workflow_id,omitempty"`
+	// 本人 available 视频；MP4/WebM、50 MiB、1～15 秒，音轨可选。
+	// 时长上限允许一个帧间隔误差；上传或自产来源均执行相同输入限制。
+	InputVideoAssetId *string `protobuf:"bytes,3,opt,name=input_video_asset_id,json=inputVideoAssetId,proto3,oneof" json:"input_video_asset_id,omitempty"`
+	// 不传则关闭并旁路首帧条件；提供则启用，本人 available JPEG/PNG，不另传开关。
+	FirstFrameAssetId *string `protobuf:"bytes,4,opt,name=first_frame_asset_id,json=firstFrameAssetId,proto3,oneof" json:"first_frame_asset_id,omitempty"`
+	// 用户生成要求原文；可以中文，不自动翻译或增强。
+	Prompt        *string `protobuf:"bytes,5,opt,name=prompt,proto3,oneof" json:"prompt,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateMotionTransferTaskReq) Reset() {
+	*x = CreateMotionTransferTaskReq{}
+	mi := &file_hi_media_task_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateMotionTransferTaskReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateMotionTransferTaskReq) ProtoMessage() {}
+
+func (x *CreateMotionTransferTaskReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_media_task_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateMotionTransferTaskReq.ProtoReflect.Descriptor instead.
+func (*CreateMotionTransferTaskReq) Descriptor() ([]byte, []int) {
+	return file_hi_media_task_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *CreateMotionTransferTaskReq) GetRequestId() string {
+	if x != nil && x.RequestId != nil {
+		return *x.RequestId
+	}
+	return ""
+}
+
+func (x *CreateMotionTransferTaskReq) GetWorkflowId() string {
+	if x != nil && x.WorkflowId != nil {
+		return *x.WorkflowId
+	}
+	return ""
+}
+
+func (x *CreateMotionTransferTaskReq) GetInputVideoAssetId() string {
+	if x != nil && x.InputVideoAssetId != nil {
+		return *x.InputVideoAssetId
+	}
+	return ""
+}
+
+func (x *CreateMotionTransferTaskReq) GetFirstFrameAssetId() string {
+	if x != nil && x.FirstFrameAssetId != nil {
+		return *x.FirstFrameAssetId
+	}
+	return ""
+}
+
+func (x *CreateMotionTransferTaskReq) GetPrompt() string {
+	if x != nil && x.Prompt != nil {
+		return *x.Prompt
+	}
+	return ""
+}
+
+// 引导生成，对应 video.continuation；仅交付新增片段，不拼接完整原视频。
+type CreateContinuationTaskReq struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 本人范围内幂等键；新任务由后端随机生成 seed。
+	RequestId *string `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
+	// 来自 video.continuation 的 Function.Get。
+	WorkflowId *string `protobuf:"bytes,2,opt,name=workflow_id,json=workflowId,proto3,oneof" json:"workflow_id,omitempty"`
+	// 本人 available MP4/WebM，最大 50 MiB、1～15 秒（上限允许一帧误差）。
+	// 后端在执行前准备 24 FPS 临时副本，用户原件不变；音轨可选。
+	InputVideoAssetId *string `protobuf:"bytes,3,opt,name=input_video_asset_id,json=inputVideoAssetId,proto3,oneof" json:"input_video_asset_id,omitempty"`
+	// 零至四张有序参考图片，不传则不接入图片，不用示例或重复图补齐。
+	InputAssetIds []string `protobuf:"bytes,4,rep,name=input_asset_ids,json=inputAssetIds,proto3" json:"input_asset_ids,omitempty"`
+	// 续接内容的生成要求，可以中文；按工作流提示词长度校验。
+	Prompt     *string          `protobuf:"bytes,5,opt,name=prompt,proto3,oneof" json:"prompt,omitempty"`
+	Resolution *VideoResolution `protobuf:"bytes,6,opt,name=resolution,proto3" json:"resolution,omitempty"`
+	// 新增片段的整数秒数，不含前导；不传用默认值，初始 3～10 秒、默认 5。
+	// 输出固定 24 FPS，不提供用户帧率字段。
+	DurationSeconds *int32 `protobuf:"varint,7,opt,name=duration_seconds,json=durationSeconds,proto3,oneof" json:"duration_seconds,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *CreateContinuationTaskReq) Reset() {
+	*x = CreateContinuationTaskReq{}
+	mi := &file_hi_media_task_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateContinuationTaskReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateContinuationTaskReq) ProtoMessage() {}
+
+func (x *CreateContinuationTaskReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_media_task_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateContinuationTaskReq.ProtoReflect.Descriptor instead.
+func (*CreateContinuationTaskReq) Descriptor() ([]byte, []int) {
+	return file_hi_media_task_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *CreateContinuationTaskReq) GetRequestId() string {
+	if x != nil && x.RequestId != nil {
+		return *x.RequestId
+	}
+	return ""
+}
+
+func (x *CreateContinuationTaskReq) GetWorkflowId() string {
+	if x != nil && x.WorkflowId != nil {
+		return *x.WorkflowId
+	}
+	return ""
+}
+
+func (x *CreateContinuationTaskReq) GetInputVideoAssetId() string {
+	if x != nil && x.InputVideoAssetId != nil {
+		return *x.InputVideoAssetId
+	}
+	return ""
+}
+
+func (x *CreateContinuationTaskReq) GetInputAssetIds() []string {
+	if x != nil {
+		return x.InputAssetIds
+	}
+	return nil
+}
+
+func (x *CreateContinuationTaskReq) GetPrompt() string {
+	if x != nil && x.Prompt != nil {
+		return *x.Prompt
+	}
+	return ""
+}
+
+func (x *CreateContinuationTaskReq) GetResolution() *VideoResolution {
+	if x != nil {
+		return x.Resolution
+	}
+	return nil
+}
+
+func (x *CreateContinuationTaskReq) GetDurationSeconds() int32 {
+	if x != nil && x.DurationSeconds != nil {
+		return *x.DurationSeconds
+	}
+	return 0
+}
+
+// 参考生成，对应 video.reference；至少提供视频或一张图片，不承诺局部修补。
+type CreateReferenceTaskReq struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 本人范围内幂等键，同一次创建重发复用。
+	RequestId *string `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
+	// 来自 video.reference 的 Function.Get。
+	WorkflowId *string `protobuf:"bytes,2,opt,name=workflow_id,json=workflowId,proto3,oneof" json:"workflow_id,omitempty"`
+	// 可选本人 available 视频，限制与引导生成相同；不传则断开视频和音频参考。
+	InputVideoAssetId *string `protobuf:"bytes,3,opt,name=input_video_asset_id,json=inputVideoAssetId,proto3,oneof" json:"input_video_asset_id,omitempty"`
+	// 零至四张有序 JPEG/PNG；没有视频时至少一张。
+	InputAssetIds []string `protobuf:"bytes,4,rep,name=input_asset_ids,json=inputAssetIds,proto3" json:"input_asset_ids,omitempty"`
+	// 用户生成要求原文，可以中文。
+	Prompt     *string          `protobuf:"bytes,5,opt,name=prompt,proto3,oneof" json:"prompt,omitempty"`
+	Resolution *VideoResolution `protobuf:"bytes,6,opt,name=resolution,proto3" json:"resolution,omitempty"`
+	// 输出整数秒，不要求与参考视频等长；不传采用默认值，输出固定 24 FPS。
+	DurationSeconds *int32 `protobuf:"varint,7,opt,name=duration_seconds,json=durationSeconds,proto3,oneof" json:"duration_seconds,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *CreateReferenceTaskReq) Reset() {
+	*x = CreateReferenceTaskReq{}
+	mi := &file_hi_media_task_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateReferenceTaskReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateReferenceTaskReq) ProtoMessage() {}
+
+func (x *CreateReferenceTaskReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_media_task_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateReferenceTaskReq.ProtoReflect.Descriptor instead.
+func (*CreateReferenceTaskReq) Descriptor() ([]byte, []int) {
+	return file_hi_media_task_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *CreateReferenceTaskReq) GetRequestId() string {
+	if x != nil && x.RequestId != nil {
+		return *x.RequestId
+	}
+	return ""
+}
+
+func (x *CreateReferenceTaskReq) GetWorkflowId() string {
+	if x != nil && x.WorkflowId != nil {
+		return *x.WorkflowId
+	}
+	return ""
+}
+
+func (x *CreateReferenceTaskReq) GetInputVideoAssetId() string {
+	if x != nil && x.InputVideoAssetId != nil {
+		return *x.InputVideoAssetId
+	}
+	return ""
+}
+
+func (x *CreateReferenceTaskReq) GetInputAssetIds() []string {
+	if x != nil {
+		return x.InputAssetIds
+	}
+	return nil
+}
+
+func (x *CreateReferenceTaskReq) GetPrompt() string {
+	if x != nil && x.Prompt != nil {
+		return *x.Prompt
+	}
+	return ""
+}
+
+func (x *CreateReferenceTaskReq) GetResolution() *VideoResolution {
+	if x != nil {
+		return x.Resolution
+	}
+	return nil
+}
+
+func (x *CreateReferenceTaskReq) GetDurationSeconds() int32 {
+	if x != nil && x.DurationSeconds != nil {
+		return *x.DurationSeconds
+	}
+	return 0
+}
+
+// 高级替换，对应 video.advanced_replace；SAM 遮盖选区后参考生成，不是像素级局部修补。
+type CreateAdvancedReplaceTaskReq struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 本人范围内幂等键；重新生成用新键和新 seed。
+	RequestId *string `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
+	// 来自 video.advanced_replace 的 Function.Get。
+	WorkflowId *string `protobuf:"bytes,2,opt,name=workflow_id,json=workflowId,proto3,oneof" json:"workflow_id,omitempty"`
+	// 必填本人 available 视频；输入限制与引导生成相同，音轨可选。
+	InputVideoAssetId *string `protobuf:"bytes,3,opt,name=input_video_asset_id,json=inputVideoAssetId,proto3,oneof" json:"input_video_asset_id,omitempty"`
+	// 零至四张有序参考图片；不传时由生成提示词描述替换后的外观。
+	InputAssetIds []string `protobuf:"bytes,4,rep,name=input_asset_ids,json=inputAssetIds,proto3" json:"input_asset_ids,omitempty"`
+	// 描述目标外观和动作，可以中文，与 SAM 区域描述独立。
+	Prompt     *string          `protobuf:"bytes,5,opt,name=prompt,proto3,oneof" json:"prompt,omitempty"`
+	Resolution *VideoResolution `protobuf:"bytes,6,opt,name=resolution,proto3" json:"resolution,omitempty"`
+	// 不传采用工作流默认秒数；固定 24 FPS，无用户帧率字段。
+	DurationSeconds *int32 `protobuf:"varint,7,opt,name=duration_seconds,json=durationSeconds,proto3,oneof" json:"duration_seconds,omitempty"`
+	// 必填，最多 200 个 Unicode 码点，去除首尾空白后须非空。
+	// 页面初始 head，提示简短英文；原样传 SAM，不识别语言、不翻译、不回退默认。
+	RegionDescription *string `protobuf:"bytes,8,opt,name=region_description,json=regionDescription,proto3,oneof" json:"region_description,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *CreateAdvancedReplaceTaskReq) Reset() {
+	*x = CreateAdvancedReplaceTaskReq{}
+	mi := &file_hi_media_task_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateAdvancedReplaceTaskReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateAdvancedReplaceTaskReq) ProtoMessage() {}
+
+func (x *CreateAdvancedReplaceTaskReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_media_task_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateAdvancedReplaceTaskReq.ProtoReflect.Descriptor instead.
+func (*CreateAdvancedReplaceTaskReq) Descriptor() ([]byte, []int) {
+	return file_hi_media_task_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *CreateAdvancedReplaceTaskReq) GetRequestId() string {
+	if x != nil && x.RequestId != nil {
+		return *x.RequestId
+	}
+	return ""
+}
+
+func (x *CreateAdvancedReplaceTaskReq) GetWorkflowId() string {
+	if x != nil && x.WorkflowId != nil {
+		return *x.WorkflowId
+	}
+	return ""
+}
+
+func (x *CreateAdvancedReplaceTaskReq) GetInputVideoAssetId() string {
+	if x != nil && x.InputVideoAssetId != nil {
+		return *x.InputVideoAssetId
+	}
+	return ""
+}
+
+func (x *CreateAdvancedReplaceTaskReq) GetInputAssetIds() []string {
+	if x != nil {
+		return x.InputAssetIds
+	}
+	return nil
+}
+
+func (x *CreateAdvancedReplaceTaskReq) GetPrompt() string {
+	if x != nil && x.Prompt != nil {
+		return *x.Prompt
+	}
+	return ""
+}
+
+func (x *CreateAdvancedReplaceTaskReq) GetResolution() *VideoResolution {
+	if x != nil {
+		return x.Resolution
+	}
+	return nil
+}
+
+func (x *CreateAdvancedReplaceTaskReq) GetDurationSeconds() int32 {
+	if x != nil && x.DurationSeconds != nil {
+		return *x.DurationSeconds
+	}
+	return 0
+}
+
+func (x *CreateAdvancedReplaceTaskReq) GetRegionDescription() string {
+	if x != nil && x.RegionDescription != nil {
+		return *x.RegionDescription
+	}
+	return ""
+}
+
+// 五项新增视频的实际参数；按功能只返回适用字段，不另建素材或执行图快照。
+type VideoExtensionTaskParams struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 首尾帧省略视频；其他功能按本次实际素材返回，参考生成可省略。
+	InputVideoAssetId *string `protobuf:"bytes,1,opt,name=input_video_asset_id,json=inputVideoAssetId,proto3,oneof" json:"input_video_asset_id,omitempty"`
+	// 首尾帧必有，模仿可选；三个 MiniMax 功能省略。
+	FirstFrameAssetId *string `protobuf:"bytes,2,opt,name=first_frame_asset_id,json=firstFrameAssetId,proto3,oneof" json:"first_frame_asset_id,omitempty"`
+	// 仅首尾帧生成返回。
+	LastFrameAssetId *string `protobuf:"bytes,3,opt,name=last_frame_asset_id,json=lastFrameAssetId,proto3,oneof" json:"last_frame_asset_id,omitempty"`
+	// 三个 MiniMax 功能的参考图片，保持用户提交顺序。
+	InputAssetIds []string `protobuf:"bytes,4,rep,name=input_asset_ids,json=inputAssetIds,proto3" json:"input_asset_ids,omitempty"`
+	Prompt        *string  `protobuf:"bytes,5,opt,name=prompt,proto3,oneof" json:"prompt,omitempty"`
+	// 仅高级替换返回用户提交的原文。
+	RegionDescription *string `protobuf:"bytes,6,opt,name=region_description,json=regionDescription,proto3,oneof" json:"region_description,omitempty"`
+	// 后端为新任务生成；重发、重启、恢复保存不改，重新生成创建新值。
+	Seed *uint64 `protobuf:"varint,7,opt,name=seed,proto3,oneof" json:"seed,omitempty"`
+	// 适用输出参数的实际选择值；模仿生成省略，不代表最终产物尺寸或时长。
+	AspectRatio     *string `protobuf:"bytes,8,opt,name=aspect_ratio,json=aspectRatio,proto3,oneof" json:"aspect_ratio,omitempty"`
+	Megapixels      *string `protobuf:"bytes,9,opt,name=megapixels,proto3,oneof" json:"megapixels,omitempty"`
+	DurationSeconds *int32  `protobuf:"varint,10,opt,name=duration_seconds,json=durationSeconds,proto3,oneof" json:"duration_seconds,omitempty"`
+	// 首尾帧实际选择值，三个 MiniMax 为 24；模仿省略。
+	FrameRate     *int32 `protobuf:"varint,11,opt,name=frame_rate,json=frameRate,proto3,oneof" json:"frame_rate,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *VideoExtensionTaskParams) Reset() {
+	*x = VideoExtensionTaskParams{}
+	mi := &file_hi_media_task_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *VideoExtensionTaskParams) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*VideoExtensionTaskParams) ProtoMessage() {}
+
+func (x *VideoExtensionTaskParams) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_media_task_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use VideoExtensionTaskParams.ProtoReflect.Descriptor instead.
+func (*VideoExtensionTaskParams) Descriptor() ([]byte, []int) {
+	return file_hi_media_task_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *VideoExtensionTaskParams) GetInputVideoAssetId() string {
+	if x != nil && x.InputVideoAssetId != nil {
+		return *x.InputVideoAssetId
+	}
+	return ""
+}
+
+func (x *VideoExtensionTaskParams) GetFirstFrameAssetId() string {
+	if x != nil && x.FirstFrameAssetId != nil {
+		return *x.FirstFrameAssetId
+	}
+	return ""
+}
+
+func (x *VideoExtensionTaskParams) GetLastFrameAssetId() string {
+	if x != nil && x.LastFrameAssetId != nil {
+		return *x.LastFrameAssetId
+	}
+	return ""
+}
+
+func (x *VideoExtensionTaskParams) GetInputAssetIds() []string {
+	if x != nil {
+		return x.InputAssetIds
+	}
+	return nil
+}
+
+func (x *VideoExtensionTaskParams) GetPrompt() string {
+	if x != nil && x.Prompt != nil {
+		return *x.Prompt
+	}
+	return ""
+}
+
+func (x *VideoExtensionTaskParams) GetRegionDescription() string {
+	if x != nil && x.RegionDescription != nil {
+		return *x.RegionDescription
+	}
+	return ""
+}
+
+func (x *VideoExtensionTaskParams) GetSeed() uint64 {
+	if x != nil && x.Seed != nil {
+		return *x.Seed
+	}
+	return 0
+}
+
+func (x *VideoExtensionTaskParams) GetAspectRatio() string {
+	if x != nil && x.AspectRatio != nil {
+		return *x.AspectRatio
+	}
+	return ""
+}
+
+func (x *VideoExtensionTaskParams) GetMegapixels() string {
+	if x != nil && x.Megapixels != nil {
+		return *x.Megapixels
+	}
+	return ""
+}
+
+func (x *VideoExtensionTaskParams) GetDurationSeconds() int32 {
+	if x != nil && x.DurationSeconds != nil {
+		return *x.DurationSeconds
+	}
+	return 0
+}
+
+func (x *VideoExtensionTaskParams) GetFrameRate() int32 {
+	if x != nil && x.FrameRate != nil {
+		return *x.FrameRate
+	}
+	return 0
+}
+
 // 返回已受理任务的 ID；同一 request_id 重发返回原任务，不比较重发参数。
 type CreateTaskResp struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -446,7 +1081,7 @@ type CreateTaskResp struct {
 
 func (x *CreateTaskResp) Reset() {
 	*x = CreateTaskResp{}
-	mi := &file_hi_media_task_proto_msgTypes[3]
+	mi := &file_hi_media_task_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -458,7 +1093,7 @@ func (x *CreateTaskResp) String() string {
 func (*CreateTaskResp) ProtoMessage() {}
 
 func (x *CreateTaskResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_task_proto_msgTypes[3]
+	mi := &file_hi_media_task_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -471,7 +1106,7 @@ func (x *CreateTaskResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateTaskResp.ProtoReflect.Descriptor instead.
 func (*CreateTaskResp) Descriptor() ([]byte, []int) {
-	return file_hi_media_task_proto_rawDescGZIP(), []int{3}
+	return file_hi_media_task_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *CreateTaskResp) GetTaskId() string {
@@ -498,7 +1133,7 @@ type ImageToVideoTaskParams struct {
 
 func (x *ImageToVideoTaskParams) Reset() {
 	*x = ImageToVideoTaskParams{}
-	mi := &file_hi_media_task_proto_msgTypes[4]
+	mi := &file_hi_media_task_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -510,7 +1145,7 @@ func (x *ImageToVideoTaskParams) String() string {
 func (*ImageToVideoTaskParams) ProtoMessage() {}
 
 func (x *ImageToVideoTaskParams) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_task_proto_msgTypes[4]
+	mi := &file_hi_media_task_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -523,7 +1158,7 @@ func (x *ImageToVideoTaskParams) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ImageToVideoTaskParams.ProtoReflect.Descriptor instead.
 func (*ImageToVideoTaskParams) Descriptor() ([]byte, []int) {
-	return file_hi_media_task_proto_rawDescGZIP(), []int{4}
+	return file_hi_media_task_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *ImageToVideoTaskParams) GetInputAssetId() string {
@@ -584,7 +1219,7 @@ type TextToVideoTaskParams struct {
 
 func (x *TextToVideoTaskParams) Reset() {
 	*x = TextToVideoTaskParams{}
-	mi := &file_hi_media_task_proto_msgTypes[5]
+	mi := &file_hi_media_task_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -596,7 +1231,7 @@ func (x *TextToVideoTaskParams) String() string {
 func (*TextToVideoTaskParams) ProtoMessage() {}
 
 func (x *TextToVideoTaskParams) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_task_proto_msgTypes[5]
+	mi := &file_hi_media_task_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -609,7 +1244,7 @@ func (x *TextToVideoTaskParams) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TextToVideoTaskParams.ProtoReflect.Descriptor instead.
 func (*TextToVideoTaskParams) Descriptor() ([]byte, []int) {
-	return file_hi_media_task_proto_rawDescGZIP(), []int{5}
+	return file_hi_media_task_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *TextToVideoTaskParams) GetPrompt() string {
@@ -675,7 +1310,7 @@ type TaskOutput struct {
 
 func (x *TaskOutput) Reset() {
 	*x = TaskOutput{}
-	mi := &file_hi_media_task_proto_msgTypes[6]
+	mi := &file_hi_media_task_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -687,7 +1322,7 @@ func (x *TaskOutput) String() string {
 func (*TaskOutput) ProtoMessage() {}
 
 func (x *TaskOutput) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_task_proto_msgTypes[6]
+	mi := &file_hi_media_task_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -700,7 +1335,7 @@ func (x *TaskOutput) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TaskOutput.ProtoReflect.Descriptor instead.
 func (*TaskOutput) Descriptor() ([]byte, []int) {
-	return file_hi_media_task_proto_rawDescGZIP(), []int{6}
+	return file_hi_media_task_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *TaskOutput) GetAssetId() string {
@@ -778,7 +1413,7 @@ type TaskSummary struct {
 	state   protoimpl.MessageState `protogen:"open.v1"`
 	TaskId  *string                `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3,oneof" json:"task_id,omitempty"`
 	Purpose *TaskPurpose           `protobuf:"varint,2,opt,name=purpose,proto3,enum=hi.media.TaskPurpose,oneof" json:"purpose,omitempty"`
-	// 任务受理时确定的功能 ID；六种支持值及中文用途见 FunctionSummary.function_id。
+	// 任务受理时确定的功能 ID；支持值及中文用途见 FunctionSummary.function_id。
 	FunctionId *string `protobuf:"bytes,3,opt,name=function_id,json=functionId,proto3,oneof" json:"function_id,omitempty"`
 	// 从当前功能记录读取的用户可见名称。
 	FunctionDisplayName *string `protobuf:"bytes,4,opt,name=function_display_name,json=functionDisplayName,proto3,oneof" json:"function_display_name,omitempty"`
@@ -821,6 +1456,8 @@ type TaskSummary struct {
 	// 图生视频另含 input_asset_id；不包含工作流图、节点绑定或管理员负向提示词。
 	// 图片任务另含后端生成的 seed；单图/角色含 input_asset_id，多图含有序 input_asset_ids。
 	// 文生图按尺寸模式包含 width/height 或 aspect_ratio/megapixels；角色 prompt 为用户原文。
+	// 新增视频含 seed 及适用的 input_video_asset_id/first_frame_asset_id/last_frame_asset_id/
+	// input_asset_ids/region_description；模仿不返回输出尺寸、时长或帧率选择值。
 	EffectiveParamsJson *string `protobuf:"bytes,20,opt,name=effective_params_json,json=effectiveParamsJson,proto3,oneof" json:"effective_params_json,omitempty"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
@@ -828,7 +1465,7 @@ type TaskSummary struct {
 
 func (x *TaskSummary) Reset() {
 	*x = TaskSummary{}
-	mi := &file_hi_media_task_proto_msgTypes[7]
+	mi := &file_hi_media_task_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -840,7 +1477,7 @@ func (x *TaskSummary) String() string {
 func (*TaskSummary) ProtoMessage() {}
 
 func (x *TaskSummary) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_task_proto_msgTypes[7]
+	mi := &file_hi_media_task_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -853,7 +1490,7 @@ func (x *TaskSummary) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TaskSummary.ProtoReflect.Descriptor instead.
 func (*TaskSummary) Descriptor() ([]byte, []int) {
-	return file_hi_media_task_proto_rawDescGZIP(), []int{7}
+	return file_hi_media_task_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *TaskSummary) GetTaskId() string {
@@ -1008,6 +1645,7 @@ type TaskDetail struct {
 	//	*TaskDetail_SingleImageEdit
 	//	*TaskDetail_MultipleImageEdit
 	//	*TaskDetail_Character
+	//	*TaskDetail_VideoExtension
 	EffectiveParams isTaskDetail_EffectiveParams `protobuf_oneof:"effective_params"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
@@ -1015,7 +1653,7 @@ type TaskDetail struct {
 
 func (x *TaskDetail) Reset() {
 	*x = TaskDetail{}
-	mi := &file_hi_media_task_proto_msgTypes[8]
+	mi := &file_hi_media_task_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1027,7 +1665,7 @@ func (x *TaskDetail) String() string {
 func (*TaskDetail) ProtoMessage() {}
 
 func (x *TaskDetail) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_task_proto_msgTypes[8]
+	mi := &file_hi_media_task_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1040,7 +1678,7 @@ func (x *TaskDetail) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TaskDetail.ProtoReflect.Descriptor instead.
 func (*TaskDetail) Descriptor() ([]byte, []int) {
-	return file_hi_media_task_proto_rawDescGZIP(), []int{8}
+	return file_hi_media_task_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *TaskDetail) GetSummary() *TaskSummary {
@@ -1111,6 +1749,15 @@ func (x *TaskDetail) GetCharacter() *CharacterTaskParams {
 	return nil
 }
 
+func (x *TaskDetail) GetVideoExtension() *VideoExtensionTaskParams {
+	if x != nil {
+		if x, ok := x.EffectiveParams.(*TaskDetail_VideoExtension); ok {
+			return x.VideoExtension
+		}
+	}
+	return nil
+}
+
 type isTaskDetail_EffectiveParams interface {
 	isTaskDetail_EffectiveParams()
 }
@@ -1139,6 +1786,11 @@ type TaskDetail_Character struct {
 	Character *CharacterTaskParams `protobuf:"bytes,7,opt,name=character,proto3,oneof"`
 }
 
+type TaskDetail_VideoExtension struct {
+	// 五项新增视频共用参数结构，通过 summary.function_id 区分适用字段。
+	VideoExtension *VideoExtensionTaskParams `protobuf:"bytes,8,opt,name=video_extension,json=videoExtension,proto3,oneof"`
+}
+
 func (*TaskDetail_ImageToVideo) isTaskDetail_EffectiveParams() {}
 
 func (*TaskDetail_TextToVideo) isTaskDetail_EffectiveParams() {}
@@ -1151,6 +1803,8 @@ func (*TaskDetail_MultipleImageEdit) isTaskDetail_EffectiveParams() {}
 
 func (*TaskDetail_Character) isTaskDetail_EffectiveParams() {}
 
+func (*TaskDetail_VideoExtension) isTaskDetail_EffectiveParams() {}
+
 // 查询本人任务。
 type GetTaskReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -1161,7 +1815,7 @@ type GetTaskReq struct {
 
 func (x *GetTaskReq) Reset() {
 	*x = GetTaskReq{}
-	mi := &file_hi_media_task_proto_msgTypes[9]
+	mi := &file_hi_media_task_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1173,7 +1827,7 @@ func (x *GetTaskReq) String() string {
 func (*GetTaskReq) ProtoMessage() {}
 
 func (x *GetTaskReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_task_proto_msgTypes[9]
+	mi := &file_hi_media_task_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1186,7 +1840,7 @@ func (x *GetTaskReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTaskReq.ProtoReflect.Descriptor instead.
 func (*GetTaskReq) Descriptor() ([]byte, []int) {
-	return file_hi_media_task_proto_rawDescGZIP(), []int{9}
+	return file_hi_media_task_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *GetTaskReq) GetTaskId() string {
@@ -1206,7 +1860,7 @@ type GetTaskResp struct {
 
 func (x *GetTaskResp) Reset() {
 	*x = GetTaskResp{}
-	mi := &file_hi_media_task_proto_msgTypes[10]
+	mi := &file_hi_media_task_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1218,7 +1872,7 @@ func (x *GetTaskResp) String() string {
 func (*GetTaskResp) ProtoMessage() {}
 
 func (x *GetTaskResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_task_proto_msgTypes[10]
+	mi := &file_hi_media_task_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1231,7 +1885,7 @@ func (x *GetTaskResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTaskResp.ProtoReflect.Descriptor instead.
 func (*GetTaskResp) Descriptor() ([]byte, []int) {
-	return file_hi_media_task_proto_rawDescGZIP(), []int{10}
+	return file_hi_media_task_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *GetTaskResp) GetTask() *TaskDetail {
@@ -1254,7 +1908,7 @@ type ListTasksReq struct {
 
 func (x *ListTasksReq) Reset() {
 	*x = ListTasksReq{}
-	mi := &file_hi_media_task_proto_msgTypes[11]
+	mi := &file_hi_media_task_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1266,7 +1920,7 @@ func (x *ListTasksReq) String() string {
 func (*ListTasksReq) ProtoMessage() {}
 
 func (x *ListTasksReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_task_proto_msgTypes[11]
+	mi := &file_hi_media_task_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1279,7 +1933,7 @@ func (x *ListTasksReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListTasksReq.ProtoReflect.Descriptor instead.
 func (*ListTasksReq) Descriptor() ([]byte, []int) {
-	return file_hi_media_task_proto_rawDescGZIP(), []int{11}
+	return file_hi_media_task_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *ListTasksReq) GetPagination() *hi.Pagination {
@@ -1314,7 +1968,7 @@ type ListTasksResp struct {
 
 func (x *ListTasksResp) Reset() {
 	*x = ListTasksResp{}
-	mi := &file_hi_media_task_proto_msgTypes[12]
+	mi := &file_hi_media_task_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1326,7 +1980,7 @@ func (x *ListTasksResp) String() string {
 func (*ListTasksResp) ProtoMessage() {}
 
 func (x *ListTasksResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_task_proto_msgTypes[12]
+	mi := &file_hi_media_task_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1339,7 +1993,7 @@ func (x *ListTasksResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListTasksResp.ProtoReflect.Descriptor instead.
 func (*ListTasksResp) Descriptor() ([]byte, []int) {
-	return file_hi_media_task_proto_rawDescGZIP(), []int{12}
+	return file_hi_media_task_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *ListTasksResp) GetTotal() int32 {
@@ -1366,7 +2020,7 @@ type CancelTaskReq struct {
 
 func (x *CancelTaskReq) Reset() {
 	*x = CancelTaskReq{}
-	mi := &file_hi_media_task_proto_msgTypes[13]
+	mi := &file_hi_media_task_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1378,7 +2032,7 @@ func (x *CancelTaskReq) String() string {
 func (*CancelTaskReq) ProtoMessage() {}
 
 func (x *CancelTaskReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_task_proto_msgTypes[13]
+	mi := &file_hi_media_task_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1391,7 +2045,7 @@ func (x *CancelTaskReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CancelTaskReq.ProtoReflect.Descriptor instead.
 func (*CancelTaskReq) Descriptor() ([]byte, []int) {
-	return file_hi_media_task_proto_rawDescGZIP(), []int{13}
+	return file_hi_media_task_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *CancelTaskReq) GetTaskId() string {
@@ -1413,7 +2067,7 @@ type CancelTaskResp struct {
 
 func (x *CancelTaskResp) Reset() {
 	*x = CancelTaskResp{}
-	mi := &file_hi_media_task_proto_msgTypes[14]
+	mi := &file_hi_media_task_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1425,7 +2079,7 @@ func (x *CancelTaskResp) String() string {
 func (*CancelTaskResp) ProtoMessage() {}
 
 func (x *CancelTaskResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_task_proto_msgTypes[14]
+	mi := &file_hi_media_task_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1438,7 +2092,7 @@ func (x *CancelTaskResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CancelTaskResp.ProtoReflect.Descriptor instead.
 func (*CancelTaskResp) Descriptor() ([]byte, []int) {
-	return file_hi_media_task_proto_rawDescGZIP(), []int{14}
+	return file_hi_media_task_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *CancelTaskResp) GetTaskId() string {
@@ -1472,7 +2126,7 @@ type DeleteTaskReq struct {
 
 func (x *DeleteTaskReq) Reset() {
 	*x = DeleteTaskReq{}
-	mi := &file_hi_media_task_proto_msgTypes[15]
+	mi := &file_hi_media_task_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1484,7 +2138,7 @@ func (x *DeleteTaskReq) String() string {
 func (*DeleteTaskReq) ProtoMessage() {}
 
 func (x *DeleteTaskReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_task_proto_msgTypes[15]
+	mi := &file_hi_media_task_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1497,7 +2151,7 @@ func (x *DeleteTaskReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteTaskReq.ProtoReflect.Descriptor instead.
 func (*DeleteTaskReq) Descriptor() ([]byte, []int) {
-	return file_hi_media_task_proto_rawDescGZIP(), []int{15}
+	return file_hi_media_task_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *DeleteTaskReq) GetTaskId() string {
@@ -1519,7 +2173,7 @@ type RecoverSaveTaskReq struct {
 
 func (x *RecoverSaveTaskReq) Reset() {
 	*x = RecoverSaveTaskReq{}
-	mi := &file_hi_media_task_proto_msgTypes[16]
+	mi := &file_hi_media_task_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1531,7 +2185,7 @@ func (x *RecoverSaveTaskReq) String() string {
 func (*RecoverSaveTaskReq) ProtoMessage() {}
 
 func (x *RecoverSaveTaskReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_task_proto_msgTypes[16]
+	mi := &file_hi_media_task_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1544,7 +2198,7 @@ func (x *RecoverSaveTaskReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RecoverSaveTaskReq.ProtoReflect.Descriptor instead.
 func (*RecoverSaveTaskReq) Descriptor() ([]byte, []int) {
-	return file_hi_media_task_proto_rawDescGZIP(), []int{16}
+	return file_hi_media_task_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *RecoverSaveTaskReq) GetRequestId() string {
@@ -1573,7 +2227,7 @@ type RecoverSaveTaskResp struct {
 
 func (x *RecoverSaveTaskResp) Reset() {
 	*x = RecoverSaveTaskResp{}
-	mi := &file_hi_media_task_proto_msgTypes[17]
+	mi := &file_hi_media_task_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1585,7 +2239,7 @@ func (x *RecoverSaveTaskResp) String() string {
 func (*RecoverSaveTaskResp) ProtoMessage() {}
 
 func (x *RecoverSaveTaskResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_task_proto_msgTypes[17]
+	mi := &file_hi_media_task_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1598,7 +2252,7 @@ func (x *RecoverSaveTaskResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RecoverSaveTaskResp.ProtoReflect.Descriptor instead.
 func (*RecoverSaveTaskResp) Descriptor() ([]byte, []int) {
-	return file_hi_media_task_proto_rawDescGZIP(), []int{17}
+	return file_hi_media_task_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *RecoverSaveTaskResp) GetTaskId() string {
@@ -1675,6 +2329,141 @@ const file_hi_media_task_proto_rawDesc = "" +
 	"\v_request_idB\x0e\n" +
 	"\f_workflow_idB\t\n" +
 	"\a_promptB\x13\n" +
+	"\x11_duration_secondsB\r\n" +
+	"\v_frame_rate\"\xca\x04\n" +
+	"\x1bCreateFirstLastFrameTaskReq\x12.\n" +
+	"\n" +
+	"request_id\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\trequestId\x88\x01\x01\x120\n" +
+	"\vworkflow_id\x18\x02 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x01R\n" +
+	"workflowId\x88\x01\x01\x12@\n" +
+	"\x14first_frame_asset_id\x18\x03 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x02R\x11firstFrameAssetId\x88\x01\x01\x12>\n" +
+	"\x13last_frame_asset_id\x18\x04 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x03R\x10lastFrameAssetId\x88\x01\x01\x12'\n" +
+	"\x06prompt\x18\x05 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x04R\x06prompt\x88\x01\x01\x129\n" +
+	"\n" +
+	"resolution\x18\x06 \x01(\v2\x19.hi.media.VideoResolutionR\n" +
+	"resolution\x127\n" +
+	"\x10duration_seconds\x18\a \x01(\x05B\a\xbaH\x04\x1a\x02 \x00H\x05R\x0fdurationSeconds\x88\x01\x01\x12+\n" +
+	"\n" +
+	"frame_rate\x18\b \x01(\x05B\a\xbaH\x04\x1a\x02 \x00H\x06R\tframeRate\x88\x01\x01B\r\n" +
+	"\v_request_idB\x0e\n" +
+	"\f_workflow_idB\x17\n" +
+	"\x15_first_frame_asset_idB\x16\n" +
+	"\x14_last_frame_asset_idB\t\n" +
+	"\a_promptB\x13\n" +
+	"\x11_duration_secondsB\r\n" +
+	"\v_frame_rate\"\x85\x03\n" +
+	"\x1bCreateMotionTransferTaskReq\x12.\n" +
+	"\n" +
+	"request_id\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\trequestId\x88\x01\x01\x120\n" +
+	"\vworkflow_id\x18\x02 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x01R\n" +
+	"workflowId\x88\x01\x01\x12@\n" +
+	"\x14input_video_asset_id\x18\x03 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x02R\x11inputVideoAssetId\x88\x01\x01\x12=\n" +
+	"\x14first_frame_asset_id\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x03R\x11firstFrameAssetId\x88\x01\x01\x12'\n" +
+	"\x06prompt\x18\x05 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x04R\x06prompt\x88\x01\x01B\r\n" +
+	"\v_request_idB\x0e\n" +
+	"\f_workflow_idB\x17\n" +
+	"\x15_input_video_asset_idB\x17\n" +
+	"\x15_first_frame_asset_idB\t\n" +
+	"\a_prompt\"\xec\x03\n" +
+	"\x19CreateContinuationTaskReq\x12.\n" +
+	"\n" +
+	"request_id\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\trequestId\x88\x01\x01\x120\n" +
+	"\vworkflow_id\x18\x02 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x01R\n" +
+	"workflowId\x88\x01\x01\x12@\n" +
+	"\x14input_video_asset_id\x18\x03 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x02R\x11inputVideoAssetId\x88\x01\x01\x126\n" +
+	"\x0finput_asset_ids\x18\x04 \x03(\tB\x0e\xbaH\v\x92\x01\b\x10\x04\"\x04r\x02\x10\x01R\rinputAssetIds\x12'\n" +
+	"\x06prompt\x18\x05 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x03R\x06prompt\x88\x01\x01\x129\n" +
+	"\n" +
+	"resolution\x18\x06 \x01(\v2\x19.hi.media.VideoResolutionR\n" +
+	"resolution\x127\n" +
+	"\x10duration_seconds\x18\a \x01(\x05B\a\xbaH\x04\x1a\x02 \x00H\x04R\x0fdurationSeconds\x88\x01\x01B\r\n" +
+	"\v_request_idB\x0e\n" +
+	"\f_workflow_idB\x17\n" +
+	"\x15_input_video_asset_idB\t\n" +
+	"\a_promptB\x13\n" +
+	"\x11_duration_seconds\"\xff\x04\n" +
+	"\x16CreateReferenceTaskReq\x12.\n" +
+	"\n" +
+	"request_id\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\trequestId\x88\x01\x01\x120\n" +
+	"\vworkflow_id\x18\x02 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x01R\n" +
+	"workflowId\x88\x01\x01\x12=\n" +
+	"\x14input_video_asset_id\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x02R\x11inputVideoAssetId\x88\x01\x01\x126\n" +
+	"\x0finput_asset_ids\x18\x04 \x03(\tB\x0e\xbaH\v\x92\x01\b\x10\x04\"\x04r\x02\x10\x01R\rinputAssetIds\x12'\n" +
+	"\x06prompt\x18\x05 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x03R\x06prompt\x88\x01\x01\x129\n" +
+	"\n" +
+	"resolution\x18\x06 \x01(\v2\x19.hi.media.VideoResolutionR\n" +
+	"resolution\x127\n" +
+	"\x10duration_seconds\x18\a \x01(\x05B\a\xbaH\x04\x1a\x02 \x00H\x04R\x0fdurationSeconds\x88\x01\x01:\x96\x01\xbaH\x92\x01\x1a\x8f\x01\n" +
+	"\x18reference_task.materials\x121at least one video or reference image is required\x1a@has(this.input_video_asset_id) || size(this.input_asset_ids) > 0B\r\n" +
+	"\v_request_idB\x0e\n" +
+	"\f_workflow_idB\x17\n" +
+	"\x15_input_video_asset_idB\t\n" +
+	"\a_promptB\x13\n" +
+	"\x11_duration_seconds\"\xc9\x04\n" +
+	"\x1cCreateAdvancedReplaceTaskReq\x12.\n" +
+	"\n" +
+	"request_id\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\trequestId\x88\x01\x01\x120\n" +
+	"\vworkflow_id\x18\x02 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x01R\n" +
+	"workflowId\x88\x01\x01\x12@\n" +
+	"\x14input_video_asset_id\x18\x03 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x02R\x11inputVideoAssetId\x88\x01\x01\x126\n" +
+	"\x0finput_asset_ids\x18\x04 \x03(\tB\x0e\xbaH\v\x92\x01\b\x10\x04\"\x04r\x02\x10\x01R\rinputAssetIds\x12'\n" +
+	"\x06prompt\x18\x05 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x03R\x06prompt\x88\x01\x01\x129\n" +
+	"\n" +
+	"resolution\x18\x06 \x01(\v2\x19.hi.media.VideoResolutionR\n" +
+	"resolution\x127\n" +
+	"\x10duration_seconds\x18\a \x01(\x05B\a\xbaH\x04\x1a\x02 \x00H\x04R\x0fdurationSeconds\x88\x01\x01\x12A\n" +
+	"\x12region_description\x18\b \x01(\tB\r\xbaH\n" +
+	"\xc8\x01\x01r\x05\x10\x01\x18\xc8\x01H\x05R\x11regionDescription\x88\x01\x01B\r\n" +
+	"\v_request_idB\x0e\n" +
+	"\f_workflow_idB\x17\n" +
+	"\x15_input_video_asset_idB\t\n" +
+	"\a_promptB\x13\n" +
+	"\x11_duration_secondsB\x15\n" +
+	"\x13_region_description\"\xee\x05\n" +
+	"\x18VideoExtensionTaskParams\x12:\n" +
+	"\x14input_video_asset_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x11inputVideoAssetId\x88\x01\x01\x12:\n" +
+	"\x14first_frame_asset_id\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x11firstFrameAssetId\x88\x01\x01\x128\n" +
+	"\x13last_frame_asset_id\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x10lastFrameAssetId\x88\x01\x01\x12,\n" +
+	"\x0finput_asset_ids\x18\x04 \x03(\tB\x04\x90\xb5\x18\x03R\rinputAssetIds\x12!\n" +
+	"\x06prompt\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x06prompt\x88\x01\x01\x128\n" +
+	"\x12region_description\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03H\x04R\x11regionDescription\x88\x01\x01\x12\x1d\n" +
+	"\x04seed\x18\a \x01(\x04B\x04\x90\xb5\x18\x03H\x05R\x04seed\x88\x01\x01\x12,\n" +
+	"\faspect_ratio\x18\b \x01(\tB\x04\x90\xb5\x18\x03H\x06R\vaspectRatio\x88\x01\x01\x12)\n" +
+	"\n" +
+	"megapixels\x18\t \x01(\tB\x04\x90\xb5\x18\x03H\aR\n" +
+	"megapixels\x88\x01\x01\x124\n" +
+	"\x10duration_seconds\x18\n" +
+	" \x01(\x05B\x04\x90\xb5\x18\x03H\bR\x0fdurationSeconds\x88\x01\x01\x12(\n" +
+	"\n" +
+	"frame_rate\x18\v \x01(\x05B\x04\x90\xb5\x18\x03H\tR\tframeRate\x88\x01\x01:\x04\x98\xb5\x18\x03B\x17\n" +
+	"\x15_input_video_asset_idB\x17\n" +
+	"\x15_first_frame_asset_idB\x16\n" +
+	"\x14_last_frame_asset_idB\t\n" +
+	"\a_promptB\x15\n" +
+	"\x13_region_descriptionB\a\n" +
+	"\x05_seedB\x0f\n" +
+	"\r_aspect_ratioB\r\n" +
+	"\v_megapixelsB\x13\n" +
 	"\x11_duration_secondsB\r\n" +
 	"\v_frame_rate\"F\n" +
 	"\x0eCreateTaskResp\x12\"\n" +
@@ -1790,7 +2579,7 @@ const file_hi_media_task_proto_rawDesc = "" +
 	"\r_completed_atB\x12\n" +
 	"\x10_elapsed_secondsB\x11\n" +
 	"\x0f_input_asset_idB\x18\n" +
-	"\x16_effective_params_json\"\xc4\x04\n" +
+	"\x16_effective_params_json\"\x99\x05\n" +
 	"\n" +
 	"TaskDetail\x125\n" +
 	"\asummary\x18\x01 \x01(\v2\x15.hi.media.TaskSummaryB\x04\x90\xb5\x18\x03R\asummary\x12N\n" +
@@ -1799,7 +2588,8 @@ const file_hi_media_task_proto_rawDesc = "" +
 	"\rtext_to_image\x18\x04 \x01(\v2\x1f.hi.media.TextToImageTaskParamsB\x04\x90\xb5\x18\x03H\x00R\vtextToImage\x12W\n" +
 	"\x11single_image_edit\x18\x05 \x01(\v2#.hi.media.SingleImageEditTaskParamsB\x04\x90\xb5\x18\x03H\x00R\x0fsingleImageEdit\x12]\n" +
 	"\x13multiple_image_edit\x18\x06 \x01(\v2%.hi.media.MultipleImageEditTaskParamsB\x04\x90\xb5\x18\x03H\x00R\x11multipleImageEdit\x12C\n" +
-	"\tcharacter\x18\a \x01(\v2\x1d.hi.media.CharacterTaskParamsB\x04\x90\xb5\x18\x03H\x00R\tcharacter:\x04\x98\xb5\x18\x03B\x12\n" +
+	"\tcharacter\x18\a \x01(\v2\x1d.hi.media.CharacterTaskParamsB\x04\x90\xb5\x18\x03H\x00R\tcharacter\x12S\n" +
+	"\x0fvideo_extension\x18\b \x01(\v2\".hi.media.VideoExtensionTaskParamsB\x04\x90\xb5\x18\x03H\x00R\x0evideoExtension:\x04\x98\xb5\x18\x03B\x12\n" +
 	"\x10effective_params\"B\n" +
 	"\n" +
 	"GetTaskReq\x12(\n" +
@@ -1873,14 +2663,20 @@ const file_hi_media_task_proto_rawDesc = "" +
 	"\tMediaType\x12\x1a\n" +
 	"\x16MEDIA_TYPE_UNSPECIFIED\x10\x00\x12\x14\n" +
 	"\x10MEDIA_TYPE_IMAGE\x10\x01\x12\x14\n" +
-	"\x10MEDIA_TYPE_VIDEO\x10\x022\x88\a\n" +
+	"\x10MEDIA_TYPE_VIDEO\x10\x022\xdc\n" +
+	"\n" +
 	"\x04Task\x12Z\n" +
 	"\x12CreateImageToVideo\x12#.hi.media.CreateImageToVideoTaskReq\x1a\x18.hi.media.CreateTaskResp\"\x05\x8a\xb5\x18\x01\x02\x12X\n" +
 	"\x11CreateTextToVideo\x12\".hi.media.CreateTextToVideoTaskReq\x1a\x18.hi.media.CreateTaskResp\"\x05\x8a\xb5\x18\x01\x02\x12X\n" +
 	"\x11CreateTextToImage\x12\".hi.media.CreateTextToImageTaskReq\x1a\x18.hi.media.CreateTaskResp\"\x05\x8a\xb5\x18\x01\x02\x12`\n" +
 	"\x15CreateSingleImageEdit\x12&.hi.media.CreateSingleImageEditTaskReq\x1a\x18.hi.media.CreateTaskResp\"\x05\x8a\xb5\x18\x01\x02\x12d\n" +
 	"\x17CreateMultipleImageEdit\x12(.hi.media.CreateMultipleImageEditTaskReq\x1a\x18.hi.media.CreateTaskResp\"\x05\x8a\xb5\x18\x01\x02\x12T\n" +
-	"\x0fCreateCharacter\x12 .hi.media.CreateCharacterTaskReq\x1a\x18.hi.media.CreateTaskResp\"\x05\x8a\xb5\x18\x01\x02\x129\n" +
+	"\x0fCreateCharacter\x12 .hi.media.CreateCharacterTaskReq\x1a\x18.hi.media.CreateTaskResp\"\x05\x8a\xb5\x18\x01\x02\x12^\n" +
+	"\x14CreateFirstLastFrame\x12%.hi.media.CreateFirstLastFrameTaskReq\x1a\x18.hi.media.CreateTaskResp\"\x05\x8a\xb5\x18\x01\x02\x12^\n" +
+	"\x14CreateMotionTransfer\x12%.hi.media.CreateMotionTransferTaskReq\x1a\x18.hi.media.CreateTaskResp\"\x05\x8a\xb5\x18\x01\x02\x12Z\n" +
+	"\x12CreateContinuation\x12#.hi.media.CreateContinuationTaskReq\x1a\x18.hi.media.CreateTaskResp\"\x05\x8a\xb5\x18\x01\x02\x12T\n" +
+	"\x0fCreateReference\x12 .hi.media.CreateReferenceTaskReq\x1a\x18.hi.media.CreateTaskResp\"\x05\x8a\xb5\x18\x01\x02\x12`\n" +
+	"\x15CreateAdvancedReplace\x12&.hi.media.CreateAdvancedReplaceTaskReq\x1a\x18.hi.media.CreateTaskResp\"\x05\x8a\xb5\x18\x01\x02\x129\n" +
 	"\x03Get\x12\x14.hi.media.GetTaskReq\x1a\x15.hi.media.GetTaskResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n" +
 	"\x04List\x12\x16.hi.media.ListTasksReq\x1a\x17.hi.media.ListTasksResp\"\x05\x8a\xb5\x18\x01\x02\x12B\n" +
 	"\x06Cancel\x12\x17.hi.media.CancelTaskReq\x1a\x18.hi.media.CancelTaskResp\"\x05\x8a\xb5\x18\x01\x02\x12@\n" +
@@ -1901,7 +2697,7 @@ func file_hi_media_task_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_media_task_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_hi_media_task_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_hi_media_task_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
 var file_hi_media_task_proto_goTypes = []any{
 	(TaskPurpose)(0),                       // 0: hi.media.TaskPurpose
 	(TaskStatus)(0),                        // 1: hi.media.TaskStatus
@@ -1909,79 +2705,100 @@ var file_hi_media_task_proto_goTypes = []any{
 	(*VideoResolution)(nil),                // 3: hi.media.VideoResolution
 	(*CreateImageToVideoTaskReq)(nil),      // 4: hi.media.CreateImageToVideoTaskReq
 	(*CreateTextToVideoTaskReq)(nil),       // 5: hi.media.CreateTextToVideoTaskReq
-	(*CreateTaskResp)(nil),                 // 6: hi.media.CreateTaskResp
-	(*ImageToVideoTaskParams)(nil),         // 7: hi.media.ImageToVideoTaskParams
-	(*TextToVideoTaskParams)(nil),          // 8: hi.media.TextToVideoTaskParams
-	(*TaskOutput)(nil),                     // 9: hi.media.TaskOutput
-	(*TaskSummary)(nil),                    // 10: hi.media.TaskSummary
-	(*TaskDetail)(nil),                     // 11: hi.media.TaskDetail
-	(*GetTaskReq)(nil),                     // 12: hi.media.GetTaskReq
-	(*GetTaskResp)(nil),                    // 13: hi.media.GetTaskResp
-	(*ListTasksReq)(nil),                   // 14: hi.media.ListTasksReq
-	(*ListTasksResp)(nil),                  // 15: hi.media.ListTasksResp
-	(*CancelTaskReq)(nil),                  // 16: hi.media.CancelTaskReq
-	(*CancelTaskResp)(nil),                 // 17: hi.media.CancelTaskResp
-	(*DeleteTaskReq)(nil),                  // 18: hi.media.DeleteTaskReq
-	(*RecoverSaveTaskReq)(nil),             // 19: hi.media.RecoverSaveTaskReq
-	(*RecoverSaveTaskResp)(nil),            // 20: hi.media.RecoverSaveTaskResp
-	(*TextToImageTaskParams)(nil),          // 21: hi.media.TextToImageTaskParams
-	(*SingleImageEditTaskParams)(nil),      // 22: hi.media.SingleImageEditTaskParams
-	(*MultipleImageEditTaskParams)(nil),    // 23: hi.media.MultipleImageEditTaskParams
-	(*CharacterTaskParams)(nil),            // 24: hi.media.CharacterTaskParams
-	(*hi.Pagination)(nil),                  // 25: hi.Pagination
-	(*CreateTextToImageTaskReq)(nil),       // 26: hi.media.CreateTextToImageTaskReq
-	(*CreateSingleImageEditTaskReq)(nil),   // 27: hi.media.CreateSingleImageEditTaskReq
-	(*CreateMultipleImageEditTaskReq)(nil), // 28: hi.media.CreateMultipleImageEditTaskReq
-	(*CreateCharacterTaskReq)(nil),         // 29: hi.media.CreateCharacterTaskReq
-	(*emptypb.Empty)(nil),                  // 30: google.protobuf.Empty
+	(*CreateFirstLastFrameTaskReq)(nil),    // 6: hi.media.CreateFirstLastFrameTaskReq
+	(*CreateMotionTransferTaskReq)(nil),    // 7: hi.media.CreateMotionTransferTaskReq
+	(*CreateContinuationTaskReq)(nil),      // 8: hi.media.CreateContinuationTaskReq
+	(*CreateReferenceTaskReq)(nil),         // 9: hi.media.CreateReferenceTaskReq
+	(*CreateAdvancedReplaceTaskReq)(nil),   // 10: hi.media.CreateAdvancedReplaceTaskReq
+	(*VideoExtensionTaskParams)(nil),       // 11: hi.media.VideoExtensionTaskParams
+	(*CreateTaskResp)(nil),                 // 12: hi.media.CreateTaskResp
+	(*ImageToVideoTaskParams)(nil),         // 13: hi.media.ImageToVideoTaskParams
+	(*TextToVideoTaskParams)(nil),          // 14: hi.media.TextToVideoTaskParams
+	(*TaskOutput)(nil),                     // 15: hi.media.TaskOutput
+	(*TaskSummary)(nil),                    // 16: hi.media.TaskSummary
+	(*TaskDetail)(nil),                     // 17: hi.media.TaskDetail
+	(*GetTaskReq)(nil),                     // 18: hi.media.GetTaskReq
+	(*GetTaskResp)(nil),                    // 19: hi.media.GetTaskResp
+	(*ListTasksReq)(nil),                   // 20: hi.media.ListTasksReq
+	(*ListTasksResp)(nil),                  // 21: hi.media.ListTasksResp
+	(*CancelTaskReq)(nil),                  // 22: hi.media.CancelTaskReq
+	(*CancelTaskResp)(nil),                 // 23: hi.media.CancelTaskResp
+	(*DeleteTaskReq)(nil),                  // 24: hi.media.DeleteTaskReq
+	(*RecoverSaveTaskReq)(nil),             // 25: hi.media.RecoverSaveTaskReq
+	(*RecoverSaveTaskResp)(nil),            // 26: hi.media.RecoverSaveTaskResp
+	(*TextToImageTaskParams)(nil),          // 27: hi.media.TextToImageTaskParams
+	(*SingleImageEditTaskParams)(nil),      // 28: hi.media.SingleImageEditTaskParams
+	(*MultipleImageEditTaskParams)(nil),    // 29: hi.media.MultipleImageEditTaskParams
+	(*CharacterTaskParams)(nil),            // 30: hi.media.CharacterTaskParams
+	(*hi.Pagination)(nil),                  // 31: hi.Pagination
+	(*CreateTextToImageTaskReq)(nil),       // 32: hi.media.CreateTextToImageTaskReq
+	(*CreateSingleImageEditTaskReq)(nil),   // 33: hi.media.CreateSingleImageEditTaskReq
+	(*CreateMultipleImageEditTaskReq)(nil), // 34: hi.media.CreateMultipleImageEditTaskReq
+	(*CreateCharacterTaskReq)(nil),         // 35: hi.media.CreateCharacterTaskReq
+	(*emptypb.Empty)(nil),                  // 36: google.protobuf.Empty
 }
 var file_hi_media_task_proto_depIdxs = []int32{
 	3,  // 0: hi.media.CreateImageToVideoTaskReq.resolution:type_name -> hi.media.VideoResolution
 	3,  // 1: hi.media.CreateTextToVideoTaskReq.resolution:type_name -> hi.media.VideoResolution
-	2,  // 2: hi.media.TaskOutput.media_type:type_name -> hi.media.MediaType
-	0,  // 3: hi.media.TaskSummary.purpose:type_name -> hi.media.TaskPurpose
-	1,  // 4: hi.media.TaskSummary.status:type_name -> hi.media.TaskStatus
-	9,  // 5: hi.media.TaskSummary.output:type_name -> hi.media.TaskOutput
-	10, // 6: hi.media.TaskDetail.summary:type_name -> hi.media.TaskSummary
-	7,  // 7: hi.media.TaskDetail.image_to_video:type_name -> hi.media.ImageToVideoTaskParams
-	8,  // 8: hi.media.TaskDetail.text_to_video:type_name -> hi.media.TextToVideoTaskParams
-	21, // 9: hi.media.TaskDetail.text_to_image:type_name -> hi.media.TextToImageTaskParams
-	22, // 10: hi.media.TaskDetail.single_image_edit:type_name -> hi.media.SingleImageEditTaskParams
-	23, // 11: hi.media.TaskDetail.multiple_image_edit:type_name -> hi.media.MultipleImageEditTaskParams
-	24, // 12: hi.media.TaskDetail.character:type_name -> hi.media.CharacterTaskParams
-	11, // 13: hi.media.GetTaskResp.task:type_name -> hi.media.TaskDetail
-	25, // 14: hi.media.ListTasksReq.pagination:type_name -> hi.Pagination
-	1,  // 15: hi.media.ListTasksReq.statuses:type_name -> hi.media.TaskStatus
-	10, // 16: hi.media.ListTasksResp.tasks:type_name -> hi.media.TaskSummary
-	1,  // 17: hi.media.CancelTaskResp.status:type_name -> hi.media.TaskStatus
-	1,  // 18: hi.media.RecoverSaveTaskResp.status:type_name -> hi.media.TaskStatus
-	4,  // 19: hi.media.Task.CreateImageToVideo:input_type -> hi.media.CreateImageToVideoTaskReq
-	5,  // 20: hi.media.Task.CreateTextToVideo:input_type -> hi.media.CreateTextToVideoTaskReq
-	26, // 21: hi.media.Task.CreateTextToImage:input_type -> hi.media.CreateTextToImageTaskReq
-	27, // 22: hi.media.Task.CreateSingleImageEdit:input_type -> hi.media.CreateSingleImageEditTaskReq
-	28, // 23: hi.media.Task.CreateMultipleImageEdit:input_type -> hi.media.CreateMultipleImageEditTaskReq
-	29, // 24: hi.media.Task.CreateCharacter:input_type -> hi.media.CreateCharacterTaskReq
-	12, // 25: hi.media.Task.Get:input_type -> hi.media.GetTaskReq
-	14, // 26: hi.media.Task.List:input_type -> hi.media.ListTasksReq
-	16, // 27: hi.media.Task.Cancel:input_type -> hi.media.CancelTaskReq
-	18, // 28: hi.media.Task.Delete:input_type -> hi.media.DeleteTaskReq
-	19, // 29: hi.media.Task.RecoverSave:input_type -> hi.media.RecoverSaveTaskReq
-	6,  // 30: hi.media.Task.CreateImageToVideo:output_type -> hi.media.CreateTaskResp
-	6,  // 31: hi.media.Task.CreateTextToVideo:output_type -> hi.media.CreateTaskResp
-	6,  // 32: hi.media.Task.CreateTextToImage:output_type -> hi.media.CreateTaskResp
-	6,  // 33: hi.media.Task.CreateSingleImageEdit:output_type -> hi.media.CreateTaskResp
-	6,  // 34: hi.media.Task.CreateMultipleImageEdit:output_type -> hi.media.CreateTaskResp
-	6,  // 35: hi.media.Task.CreateCharacter:output_type -> hi.media.CreateTaskResp
-	13, // 36: hi.media.Task.Get:output_type -> hi.media.GetTaskResp
-	15, // 37: hi.media.Task.List:output_type -> hi.media.ListTasksResp
-	17, // 38: hi.media.Task.Cancel:output_type -> hi.media.CancelTaskResp
-	30, // 39: hi.media.Task.Delete:output_type -> google.protobuf.Empty
-	20, // 40: hi.media.Task.RecoverSave:output_type -> hi.media.RecoverSaveTaskResp
-	30, // [30:41] is the sub-list for method output_type
-	19, // [19:30] is the sub-list for method input_type
-	19, // [19:19] is the sub-list for extension type_name
-	19, // [19:19] is the sub-list for extension extendee
-	0,  // [0:19] is the sub-list for field type_name
+	3,  // 2: hi.media.CreateFirstLastFrameTaskReq.resolution:type_name -> hi.media.VideoResolution
+	3,  // 3: hi.media.CreateContinuationTaskReq.resolution:type_name -> hi.media.VideoResolution
+	3,  // 4: hi.media.CreateReferenceTaskReq.resolution:type_name -> hi.media.VideoResolution
+	3,  // 5: hi.media.CreateAdvancedReplaceTaskReq.resolution:type_name -> hi.media.VideoResolution
+	2,  // 6: hi.media.TaskOutput.media_type:type_name -> hi.media.MediaType
+	0,  // 7: hi.media.TaskSummary.purpose:type_name -> hi.media.TaskPurpose
+	1,  // 8: hi.media.TaskSummary.status:type_name -> hi.media.TaskStatus
+	15, // 9: hi.media.TaskSummary.output:type_name -> hi.media.TaskOutput
+	16, // 10: hi.media.TaskDetail.summary:type_name -> hi.media.TaskSummary
+	13, // 11: hi.media.TaskDetail.image_to_video:type_name -> hi.media.ImageToVideoTaskParams
+	14, // 12: hi.media.TaskDetail.text_to_video:type_name -> hi.media.TextToVideoTaskParams
+	27, // 13: hi.media.TaskDetail.text_to_image:type_name -> hi.media.TextToImageTaskParams
+	28, // 14: hi.media.TaskDetail.single_image_edit:type_name -> hi.media.SingleImageEditTaskParams
+	29, // 15: hi.media.TaskDetail.multiple_image_edit:type_name -> hi.media.MultipleImageEditTaskParams
+	30, // 16: hi.media.TaskDetail.character:type_name -> hi.media.CharacterTaskParams
+	11, // 17: hi.media.TaskDetail.video_extension:type_name -> hi.media.VideoExtensionTaskParams
+	17, // 18: hi.media.GetTaskResp.task:type_name -> hi.media.TaskDetail
+	31, // 19: hi.media.ListTasksReq.pagination:type_name -> hi.Pagination
+	1,  // 20: hi.media.ListTasksReq.statuses:type_name -> hi.media.TaskStatus
+	16, // 21: hi.media.ListTasksResp.tasks:type_name -> hi.media.TaskSummary
+	1,  // 22: hi.media.CancelTaskResp.status:type_name -> hi.media.TaskStatus
+	1,  // 23: hi.media.RecoverSaveTaskResp.status:type_name -> hi.media.TaskStatus
+	4,  // 24: hi.media.Task.CreateImageToVideo:input_type -> hi.media.CreateImageToVideoTaskReq
+	5,  // 25: hi.media.Task.CreateTextToVideo:input_type -> hi.media.CreateTextToVideoTaskReq
+	32, // 26: hi.media.Task.CreateTextToImage:input_type -> hi.media.CreateTextToImageTaskReq
+	33, // 27: hi.media.Task.CreateSingleImageEdit:input_type -> hi.media.CreateSingleImageEditTaskReq
+	34, // 28: hi.media.Task.CreateMultipleImageEdit:input_type -> hi.media.CreateMultipleImageEditTaskReq
+	35, // 29: hi.media.Task.CreateCharacter:input_type -> hi.media.CreateCharacterTaskReq
+	6,  // 30: hi.media.Task.CreateFirstLastFrame:input_type -> hi.media.CreateFirstLastFrameTaskReq
+	7,  // 31: hi.media.Task.CreateMotionTransfer:input_type -> hi.media.CreateMotionTransferTaskReq
+	8,  // 32: hi.media.Task.CreateContinuation:input_type -> hi.media.CreateContinuationTaskReq
+	9,  // 33: hi.media.Task.CreateReference:input_type -> hi.media.CreateReferenceTaskReq
+	10, // 34: hi.media.Task.CreateAdvancedReplace:input_type -> hi.media.CreateAdvancedReplaceTaskReq
+	18, // 35: hi.media.Task.Get:input_type -> hi.media.GetTaskReq
+	20, // 36: hi.media.Task.List:input_type -> hi.media.ListTasksReq
+	22, // 37: hi.media.Task.Cancel:input_type -> hi.media.CancelTaskReq
+	24, // 38: hi.media.Task.Delete:input_type -> hi.media.DeleteTaskReq
+	25, // 39: hi.media.Task.RecoverSave:input_type -> hi.media.RecoverSaveTaskReq
+	12, // 40: hi.media.Task.CreateImageToVideo:output_type -> hi.media.CreateTaskResp
+	12, // 41: hi.media.Task.CreateTextToVideo:output_type -> hi.media.CreateTaskResp
+	12, // 42: hi.media.Task.CreateTextToImage:output_type -> hi.media.CreateTaskResp
+	12, // 43: hi.media.Task.CreateSingleImageEdit:output_type -> hi.media.CreateTaskResp
+	12, // 44: hi.media.Task.CreateMultipleImageEdit:output_type -> hi.media.CreateTaskResp
+	12, // 45: hi.media.Task.CreateCharacter:output_type -> hi.media.CreateTaskResp
+	12, // 46: hi.media.Task.CreateFirstLastFrame:output_type -> hi.media.CreateTaskResp
+	12, // 47: hi.media.Task.CreateMotionTransfer:output_type -> hi.media.CreateTaskResp
+	12, // 48: hi.media.Task.CreateContinuation:output_type -> hi.media.CreateTaskResp
+	12, // 49: hi.media.Task.CreateReference:output_type -> hi.media.CreateTaskResp
+	12, // 50: hi.media.Task.CreateAdvancedReplace:output_type -> hi.media.CreateTaskResp
+	19, // 51: hi.media.Task.Get:output_type -> hi.media.GetTaskResp
+	21, // 52: hi.media.Task.List:output_type -> hi.media.ListTasksResp
+	23, // 53: hi.media.Task.Cancel:output_type -> hi.media.CancelTaskResp
+	36, // 54: hi.media.Task.Delete:output_type -> google.protobuf.Empty
+	26, // 55: hi.media.Task.RecoverSave:output_type -> hi.media.RecoverSaveTaskResp
+	40, // [40:56] is the sub-list for method output_type
+	24, // [24:40] is the sub-list for method input_type
+	24, // [24:24] is the sub-list for extension type_name
+	24, // [24:24] is the sub-list for extension extendee
+	0,  // [0:24] is the sub-list for field type_name
 }
 
 func init() { file_hi_media_task_proto_init() }
@@ -1998,29 +2815,36 @@ func file_hi_media_task_proto_init() {
 	file_hi_media_task_proto_msgTypes[5].OneofWrappers = []any{}
 	file_hi_media_task_proto_msgTypes[6].OneofWrappers = []any{}
 	file_hi_media_task_proto_msgTypes[7].OneofWrappers = []any{}
-	file_hi_media_task_proto_msgTypes[8].OneofWrappers = []any{
+	file_hi_media_task_proto_msgTypes[8].OneofWrappers = []any{}
+	file_hi_media_task_proto_msgTypes[9].OneofWrappers = []any{}
+	file_hi_media_task_proto_msgTypes[10].OneofWrappers = []any{}
+	file_hi_media_task_proto_msgTypes[11].OneofWrappers = []any{}
+	file_hi_media_task_proto_msgTypes[12].OneofWrappers = []any{}
+	file_hi_media_task_proto_msgTypes[13].OneofWrappers = []any{}
+	file_hi_media_task_proto_msgTypes[14].OneofWrappers = []any{
 		(*TaskDetail_ImageToVideo)(nil),
 		(*TaskDetail_TextToVideo)(nil),
 		(*TaskDetail_TextToImage)(nil),
 		(*TaskDetail_SingleImageEdit)(nil),
 		(*TaskDetail_MultipleImageEdit)(nil),
 		(*TaskDetail_Character)(nil),
+		(*TaskDetail_VideoExtension)(nil),
 	}
-	file_hi_media_task_proto_msgTypes[9].OneofWrappers = []any{}
-	file_hi_media_task_proto_msgTypes[11].OneofWrappers = []any{}
-	file_hi_media_task_proto_msgTypes[12].OneofWrappers = []any{}
-	file_hi_media_task_proto_msgTypes[13].OneofWrappers = []any{}
-	file_hi_media_task_proto_msgTypes[14].OneofWrappers = []any{}
 	file_hi_media_task_proto_msgTypes[15].OneofWrappers = []any{}
-	file_hi_media_task_proto_msgTypes[16].OneofWrappers = []any{}
 	file_hi_media_task_proto_msgTypes[17].OneofWrappers = []any{}
+	file_hi_media_task_proto_msgTypes[18].OneofWrappers = []any{}
+	file_hi_media_task_proto_msgTypes[19].OneofWrappers = []any{}
+	file_hi_media_task_proto_msgTypes[20].OneofWrappers = []any{}
+	file_hi_media_task_proto_msgTypes[21].OneofWrappers = []any{}
+	file_hi_media_task_proto_msgTypes[22].OneofWrappers = []any{}
+	file_hi_media_task_proto_msgTypes[23].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_media_task_proto_rawDesc), len(file_hi_media_task_proto_rawDesc)),
 			NumEnums:      3,
-			NumMessages:   18,
+			NumMessages:   24,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

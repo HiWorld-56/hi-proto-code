@@ -997,6 +997,386 @@ final $typed_data.Uint8List characterWorkflowConfigDescriptor = $convert.base64D
     'Z3RoGAUgASgNQg66SAfIAQEqAiAAkLUYA0gAUg9wcm9tcHRNYXhMZW5ndGiIAQE6BJi1GANCFA'
     'oSX3Byb21wdF9tYXhfbGVuZ3Ro');
 
+@$core.Deprecated('Use firstLastFrameWorkflowConfigDescriptor instead')
+const FirstLastFrameWorkflowConfig$json = {
+  '1': 'FirstLastFrameWorkflowConfig',
+  '2': [
+    {
+      '1': 'first_frame',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.WorkflowInputBinding',
+      '8': {},
+      '10': 'firstFrame'
+    },
+    {
+      '1': 'last_frame',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.WorkflowInputBinding',
+      '8': {},
+      '10': 'lastFrame'
+    },
+    {
+      '1': 'prompt',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.WorkflowInputBinding',
+      '8': {},
+      '10': 'prompt'
+    },
+    {
+      '1': 'prompt_max_length',
+      '3': 4,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 0,
+      '10': 'promptMaxLength',
+      '17': true
+    },
+    {
+      '1': 'negative_prompt',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.WorkflowFixedTextInput',
+      '8': {},
+      '10': 'negativePrompt'
+    },
+    {
+      '1': 'width',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.WorkflowInputBinding',
+      '8': {},
+      '10': 'width'
+    },
+    {
+      '1': 'height',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.WorkflowInputBinding',
+      '8': {},
+      '10': 'height'
+    },
+    {
+      '1': 'aspect_ratio',
+      '3': 8,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.StringOptionConfig',
+      '8': {},
+      '10': 'aspectRatio'
+    },
+    {
+      '1': 'megapixels',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.DecimalOptionConfig',
+      '8': {},
+      '10': 'megapixels'
+    },
+    {
+      '1': 'duration_seconds',
+      '3': 10,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.WorkflowIntRangeInput',
+      '8': {},
+      '10': 'durationSeconds'
+    },
+    {
+      '1': 'frame_rate',
+      '3': 11,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.WorkflowFrameRateInput',
+      '8': {},
+      '10': 'frameRate'
+    },
+    {
+      '1': 'seeds',
+      '3': 12,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.media.WorkflowInputBinding',
+      '8': {},
+      '10': 'seeds'
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_prompt_max_length'},
+  ],
+};
+
+/// Descriptor for `FirstLastFrameWorkflowConfig`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List firstLastFrameWorkflowConfigDescriptor = $convert.base64Decode(
+    'ChxGaXJzdExhc3RGcmFtZVdvcmtmbG93Q29uZmlnEksKC2ZpcnN0X2ZyYW1lGAEgASgLMh4uaG'
+    'kubWVkaWEuV29ya2Zsb3dJbnB1dEJpbmRpbmdCCrpIA8gBAZC1GANSCmZpcnN0RnJhbWUSSQoK'
+    'bGFzdF9mcmFtZRgCIAEoCzIeLmhpLm1lZGlhLldvcmtmbG93SW5wdXRCaW5kaW5nQgq6SAPIAQ'
+    'GQtRgDUglsYXN0RnJhbWUSQgoGcHJvbXB0GAMgASgLMh4uaGkubWVkaWEuV29ya2Zsb3dJbnB1'
+    'dEJpbmRpbmdCCrpIA8gBAZC1GANSBnByb21wdBI/ChFwcm9tcHRfbWF4X2xlbmd0aBgEIAEoDU'
+    'IOukgHyAEBKgIgAJC1GANIAFIPcHJvbXB0TWF4TGVuZ3RoiAEBEk8KD25lZ2F0aXZlX3Byb21w'
+    'dBgFIAEoCzIgLmhpLm1lZGlhLldvcmtmbG93Rml4ZWRUZXh0SW5wdXRCBJC1GANSDm5lZ2F0aX'
+    'ZlUHJvbXB0EkAKBXdpZHRoGAYgASgLMh4uaGkubWVkaWEuV29ya2Zsb3dJbnB1dEJpbmRpbmdC'
+    'CrpIA8gBAZC1GANSBXdpZHRoEkIKBmhlaWdodBgHIAEoCzIeLmhpLm1lZGlhLldvcmtmbG93SW'
+    '5wdXRCaW5kaW5nQgq6SAPIAQGQtRgDUgZoZWlnaHQSSwoMYXNwZWN0X3JhdGlvGAggASgLMhwu'
+    'aGkubWVkaWEuU3RyaW5nT3B0aW9uQ29uZmlnQgq6SAPIAQGQtRgDUgthc3BlY3RSYXRpbxJJCg'
+    'ptZWdhcGl4ZWxzGAkgASgLMh0uaGkubWVkaWEuRGVjaW1hbE9wdGlvbkNvbmZpZ0IKukgDyAEB'
+    'kLUYA1IKbWVnYXBpeGVscxJWChBkdXJhdGlvbl9zZWNvbmRzGAogASgLMh8uaGkubWVkaWEuV2'
+    '9ya2Zsb3dJbnRSYW5nZUlucHV0Qgq6SAPIAQGQtRgDUg9kdXJhdGlvblNlY29uZHMSSwoKZnJh'
+    'bWVfcmF0ZRgLIAEoCzIgLmhpLm1lZGlhLldvcmtmbG93RnJhbWVSYXRlSW5wdXRCCrpIA8gBAZ'
+    'C1GANSCWZyYW1lUmF0ZRJCCgVzZWVkcxgMIAMoCzIeLmhpLm1lZGlhLldvcmtmbG93SW5wdXRC'
+    'aW5kaW5nQgy6SAWSAQIIAZC1GANSBXNlZWRzOgSYtRgDQhQKEl9wcm9tcHRfbWF4X2xlbmd0aA'
+    '==');
+
+@$core.Deprecated('Use motionTransferWorkflowConfigDescriptor instead')
+const MotionTransferWorkflowConfig$json = {
+  '1': 'MotionTransferWorkflowConfig',
+  '2': [
+    {
+      '1': 'input_video',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.WorkflowInputBinding',
+      '8': {},
+      '10': 'inputVideo'
+    },
+    {
+      '1': 'first_frame',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.WorkflowInputBinding',
+      '8': {},
+      '10': 'firstFrame'
+    },
+    {
+      '1': 'use_first_frame',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.WorkflowInputBinding',
+      '8': {},
+      '10': 'useFirstFrame'
+    },
+    {
+      '1': 'prompt',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.WorkflowInputBinding',
+      '8': {},
+      '10': 'prompt'
+    },
+    {
+      '1': 'prompt_max_length',
+      '3': 5,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 0,
+      '10': 'promptMaxLength',
+      '17': true
+    },
+    {
+      '1': 'negative_prompt',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.WorkflowFixedTextInput',
+      '8': {},
+      '10': 'negativePrompt'
+    },
+    {
+      '1': 'seeds',
+      '3': 7,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.media.WorkflowInputBinding',
+      '8': {},
+      '10': 'seeds'
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_prompt_max_length'},
+  ],
+};
+
+/// Descriptor for `MotionTransferWorkflowConfig`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List motionTransferWorkflowConfigDescriptor = $convert.base64Decode(
+    'ChxNb3Rpb25UcmFuc2ZlcldvcmtmbG93Q29uZmlnEksKC2lucHV0X3ZpZGVvGAEgASgLMh4uaG'
+    'kubWVkaWEuV29ya2Zsb3dJbnB1dEJpbmRpbmdCCrpIA8gBAZC1GANSCmlucHV0VmlkZW8SSwoL'
+    'Zmlyc3RfZnJhbWUYAiABKAsyHi5oaS5tZWRpYS5Xb3JrZmxvd0lucHV0QmluZGluZ0IKukgDyA'
+    'EBkLUYA1IKZmlyc3RGcmFtZRJSCg91c2VfZmlyc3RfZnJhbWUYAyABKAsyHi5oaS5tZWRpYS5X'
+    'b3JrZmxvd0lucHV0QmluZGluZ0IKukgDyAEBkLUYA1INdXNlRmlyc3RGcmFtZRJCCgZwcm9tcH'
+    'QYBCABKAsyHi5oaS5tZWRpYS5Xb3JrZmxvd0lucHV0QmluZGluZ0IKukgDyAEBkLUYA1IGcHJv'
+    'bXB0Ej8KEXByb21wdF9tYXhfbGVuZ3RoGAUgASgNQg66SAfIAQEqAiAAkLUYA0gAUg9wcm9tcH'
+    'RNYXhMZW5ndGiIAQESTwoPbmVnYXRpdmVfcHJvbXB0GAYgASgLMiAuaGkubWVkaWEuV29ya2Zs'
+    'b3dGaXhlZFRleHRJbnB1dEIEkLUYA1IObmVnYXRpdmVQcm9tcHQSQgoFc2VlZHMYByADKAsyHi'
+    '5oaS5tZWRpYS5Xb3JrZmxvd0lucHV0QmluZGluZ0IMukgFkgECCAGQtRgDUgVzZWVkczoEmLUY'
+    'A0IUChJfcHJvbXB0X21heF9sZW5ndGg=');
+
+@$core.Deprecated('Use workflowMiniMaxReferenceImagesDescriptor instead')
+const WorkflowMiniMaxReferenceImages$json = {
+  '1': 'WorkflowMiniMaxReferenceImages',
+  '2': [
+    {
+      '1': 'template_node_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'templateNodeId',
+      '17': true
+    },
+    {
+      '1': 'reference_node_id',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'referenceNodeId',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_template_node_id'},
+    {'1': '_reference_node_id'},
+  ],
+};
+
+/// Descriptor for `WorkflowMiniMaxReferenceImages`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List workflowMiniMaxReferenceImagesDescriptor =
+    $convert.base64Decode(
+        'Ch5Xb3JrZmxvd01pbmlNYXhSZWZlcmVuY2VJbWFnZXMSPQoQdGVtcGxhdGVfbm9kZV9pZBgBIA'
+        'EoCUIOukgHyAEBcgIQAZC1GANIAFIOdGVtcGxhdGVOb2RlSWSIAQESPwoRcmVmZXJlbmNlX25v'
+        'ZGVfaWQYAiABKAlCDrpIB8gBAXICEAGQtRgDSAFSD3JlZmVyZW5jZU5vZGVJZIgBAToEmLUYA0'
+        'ITChFfdGVtcGxhdGVfbm9kZV9pZEIUChJfcmVmZXJlbmNlX25vZGVfaWQ=');
+
+@$core.Deprecated('Use miniMaxVideoWorkflowConfigDescriptor instead')
+const MiniMaxVideoWorkflowConfig$json = {
+  '1': 'MiniMaxVideoWorkflowConfig',
+  '2': [
+    {
+      '1': 'input_video',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.WorkflowInputBinding',
+      '8': {},
+      '10': 'inputVideo'
+    },
+    {
+      '1': 'reference_images',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.WorkflowMiniMaxReferenceImages',
+      '8': {},
+      '10': 'referenceImages'
+    },
+    {
+      '1': 'prompt',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.WorkflowInputBinding',
+      '8': {},
+      '10': 'prompt'
+    },
+    {
+      '1': 'prompt_max_length',
+      '3': 4,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 0,
+      '10': 'promptMaxLength',
+      '17': true
+    },
+    {
+      '1': 'aspect_ratio',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.WorkflowStringOptionInput',
+      '8': {},
+      '10': 'aspectRatio'
+    },
+    {
+      '1': 'megapixels',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.WorkflowDecimalOptionInput',
+      '8': {},
+      '10': 'megapixels'
+    },
+    {
+      '1': 'duration_seconds',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.WorkflowIntRangeInput',
+      '8': {},
+      '10': 'durationSeconds'
+    },
+    {
+      '1': 'seeds',
+      '3': 8,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.media.WorkflowInputBinding',
+      '8': {},
+      '10': 'seeds'
+    },
+    {
+      '1': 'region_description',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.WorkflowInputBinding',
+      '8': {},
+      '10': 'regionDescription'
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_prompt_max_length'},
+  ],
+};
+
+/// Descriptor for `MiniMaxVideoWorkflowConfig`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List miniMaxVideoWorkflowConfigDescriptor = $convert.base64Decode(
+    'ChpNaW5pTWF4VmlkZW9Xb3JrZmxvd0NvbmZpZxJLCgtpbnB1dF92aWRlbxgBIAEoCzIeLmhpLm'
+    '1lZGlhLldvcmtmbG93SW5wdXRCaW5kaW5nQgq6SAPIAQGQtRgDUgppbnB1dFZpZGVvEl8KEHJl'
+    'ZmVyZW5jZV9pbWFnZXMYAiABKAsyKC5oaS5tZWRpYS5Xb3JrZmxvd01pbmlNYXhSZWZlcmVuY2'
+    'VJbWFnZXNCCrpIA8gBAZC1GANSD3JlZmVyZW5jZUltYWdlcxJCCgZwcm9tcHQYAyABKAsyHi5o'
+    'aS5tZWRpYS5Xb3JrZmxvd0lucHV0QmluZGluZ0IKukgDyAEBkLUYA1IGcHJvbXB0Ej8KEXByb2'
+    '1wdF9tYXhfbGVuZ3RoGAQgASgNQg66SAfIAQEqAiAAkLUYA0gAUg9wcm9tcHRNYXhMZW5ndGiI'
+    'AQESUgoMYXNwZWN0X3JhdGlvGAUgASgLMiMuaGkubWVkaWEuV29ya2Zsb3dTdHJpbmdPcHRpb2'
+    '5JbnB1dEIKukgDyAEBkLUYA1ILYXNwZWN0UmF0aW8SUAoKbWVnYXBpeGVscxgGIAEoCzIkLmhp'
+    'Lm1lZGlhLldvcmtmbG93RGVjaW1hbE9wdGlvbklucHV0Qgq6SAPIAQGQtRgDUgptZWdhcGl4ZW'
+    'xzElYKEGR1cmF0aW9uX3NlY29uZHMYByABKAsyHy5oaS5tZWRpYS5Xb3JrZmxvd0ludFJhbmdl'
+    'SW5wdXRCCrpIA8gBAZC1GANSD2R1cmF0aW9uU2Vjb25kcxJCCgVzZWVkcxgIIAMoCzIeLmhpLm'
+    '1lZGlhLldvcmtmbG93SW5wdXRCaW5kaW5nQgy6SAWSAQIIAZC1GANSBXNlZWRzElMKEnJlZ2lv'
+    'bl9kZXNjcmlwdGlvbhgJIAEoCzIeLmhpLm1lZGlhLldvcmtmbG93SW5wdXRCaW5kaW5nQgSQtR'
+    'gDUhFyZWdpb25EZXNjcmlwdGlvbjoEmLUYA0IUChJfcHJvbXB0X21heF9sZW5ndGg=');
+
 @$core.Deprecated('Use workflowExecutionConfigDescriptor instead')
 const WorkflowExecutionConfig$json = {
   '1': 'WorkflowExecutionConfig',
@@ -1062,6 +1442,56 @@ const WorkflowExecutionConfig$json = {
       '10': 'character'
     },
     {
+      '1': 'first_last_frame',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.FirstLastFrameWorkflowConfig',
+      '8': {},
+      '9': 0,
+      '10': 'firstLastFrame'
+    },
+    {
+      '1': 'motion_transfer',
+      '3': 10,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.MotionTransferWorkflowConfig',
+      '8': {},
+      '9': 0,
+      '10': 'motionTransfer'
+    },
+    {
+      '1': 'continuation',
+      '3': 11,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.MiniMaxVideoWorkflowConfig',
+      '8': {},
+      '9': 0,
+      '10': 'continuation'
+    },
+    {
+      '1': 'reference',
+      '3': 12,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.MiniMaxVideoWorkflowConfig',
+      '8': {},
+      '9': 0,
+      '10': 'reference'
+    },
+    {
+      '1': 'advanced_replace',
+      '3': 13,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.MiniMaxVideoWorkflowConfig',
+      '8': {},
+      '9': 0,
+      '10': 'advancedReplace'
+    },
+    {
       '1': 'output',
       '3': 3,
       '4': 1,
@@ -1099,11 +1529,24 @@ final $typed_data.Uint8List workflowExecutionConfigDescriptor = $convert.base64D
     'Q29uZmlnQgSQtRgDSABSD3NpbmdsZUltYWdlRWRpdBJhChNtdWx0aXBsZV9pbWFnZV9lZGl0GA'
     'cgASgLMikuaGkubWVkaWEuTXVsdGlwbGVJbWFnZUVkaXRXb3JrZmxvd0NvbmZpZ0IEkLUYA0gA'
     'UhFtdWx0aXBsZUltYWdlRWRpdBJHCgljaGFyYWN0ZXIYCCABKAsyIS5oaS5tZWRpYS5DaGFyYW'
-    'N0ZXJXb3JrZmxvd0NvbmZpZ0IEkLUYA0gAUgljaGFyYWN0ZXISQgoGb3V0cHV0GAMgASgLMh4u'
-    'aGkubWVkaWEuV29ya2Zsb3dPdXRwdXRDb25maWdCCrpIA8gBAZC1GANSBm91dHB1dBJPChlleG'
-    'VjdXRpb25fdGltZW91dF9zZWNvbmRzGAQgASgNQg66SAfIAQEqAiAAkLUYA0gBUhdleGVjdXRp'
-    'b25UaW1lb3V0U2Vjb25kc4gBAToEmLUYA0IYCg9mdW5jdGlvbl9jb25maWcSBbpIAggBQhwKGl'
-    '9leGVjdXRpb25fdGltZW91dF9zZWNvbmRz');
+    'N0ZXJXb3JrZmxvd0NvbmZpZ0IEkLUYA0gAUgljaGFyYWN0ZXISWAoQZmlyc3RfbGFzdF9mcmFt'
+    'ZRgJIAEoCzImLmhpLm1lZGlhLkZpcnN0TGFzdEZyYW1lV29ya2Zsb3dDb25maWdCBJC1GANIAF'
+    'IOZmlyc3RMYXN0RnJhbWUSVwoPbW90aW9uX3RyYW5zZmVyGAogASgLMiYuaGkubWVkaWEuTW90'
+    'aW9uVHJhbnNmZXJXb3JrZmxvd0NvbmZpZ0IEkLUYA0gAUg5tb3Rpb25UcmFuc2ZlchJQCgxjb2'
+    '50aW51YXRpb24YCyABKAsyJC5oaS5tZWRpYS5NaW5pTWF4VmlkZW9Xb3JrZmxvd0NvbmZpZ0IE'
+    'kLUYA0gAUgxjb250aW51YXRpb24SSgoJcmVmZXJlbmNlGAwgASgLMiQuaGkubWVkaWEuTWluaU'
+    '1heFZpZGVvV29ya2Zsb3dDb25maWdCBJC1GANIAFIJcmVmZXJlbmNlElcKEGFkdmFuY2VkX3Jl'
+    'cGxhY2UYDSABKAsyJC5oaS5tZWRpYS5NaW5pTWF4VmlkZW9Xb3JrZmxvd0NvbmZpZ0IEkLUYA0'
+    'gAUg9hZHZhbmNlZFJlcGxhY2USQgoGb3V0cHV0GAMgASgLMh4uaGkubWVkaWEuV29ya2Zsb3dP'
+    'dXRwdXRDb25maWdCCrpIA8gBAZC1GANSBm91dHB1dBJPChlleGVjdXRpb25fdGltZW91dF9zZW'
+    'NvbmRzGAQgASgNQg66SAfIAQEqAiAAkLUYA0gBUhdleGVjdXRpb25UaW1lb3V0U2Vjb25kc4gB'
+    'ATrFArpIvQIaugIKHXZpZGVvX3dvcmtmbG93LnJlZ2lvbl9iaW5kaW5nEjhyZWdpb25fZGVzY3'
+    'JpcHRpb24gaXMgcmVxdWlyZWQgb25seSBmb3IgYWR2YW5jZWRfcmVwbGFjZRreASghaGFzKHRo'
+    'aXMuYWR2YW5jZWRfcmVwbGFjZSkgfHwgaGFzKHRoaXMuYWR2YW5jZWRfcmVwbGFjZS5yZWdpb2'
+    '5fZGVzY3JpcHRpb24pKSAmJiAoIWhhcyh0aGlzLmNvbnRpbnVhdGlvbikgfHwgIWhhcyh0aGlz'
+    'LmNvbnRpbnVhdGlvbi5yZWdpb25fZGVzY3JpcHRpb24pKSAmJiAoIWhhcyh0aGlzLnJlZmVyZW'
+    '5jZSkgfHwgIWhhcyh0aGlzLnJlZmVyZW5jZS5yZWdpb25fZGVzY3JpcHRpb24pKZi1GANCGAoP'
+    'ZnVuY3Rpb25fY29uZmlnEgW6SAIIAUIcChpfZXhlY3V0aW9uX3RpbWVvdXRfc2Vjb25kcw==');
 
 @$core.Deprecated('Use workflowIssueDescriptor instead')
 const WorkflowIssue$json = {
@@ -2125,12 +2568,86 @@ const TestWorkflowReq$json = {
       '8': {},
       '10': 'inputAssetIds'
     },
+    {
+      '1': 'input_video_asset_id',
+      '3': 6,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 4,
+      '10': 'inputVideoAssetId',
+      '17': true
+    },
+    {
+      '1': 'first_frame_asset_id',
+      '3': 7,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 5,
+      '10': 'firstFrameAssetId',
+      '17': true
+    },
+    {
+      '1': 'last_frame_asset_id',
+      '3': 8,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 6,
+      '10': 'lastFrameAssetId',
+      '17': true
+    },
+    {
+      '1': 'region_description',
+      '3': 9,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 7,
+      '10': 'regionDescription',
+      '17': true
+    },
+    {
+      '1': 'resolution',
+      '3': 10,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.VideoResolution',
+      '10': 'resolution'
+    },
+    {
+      '1': 'duration_seconds',
+      '3': 11,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '9': 8,
+      '10': 'durationSeconds',
+      '17': true
+    },
+    {
+      '1': 'frame_rate',
+      '3': 12,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '9': 9,
+      '10': 'frameRate',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_request_id'},
     {'1': '_workflow_id'},
     {'1': '_prompt'},
     {'1': '_input_asset_id'},
+    {'1': '_input_video_asset_id'},
+    {'1': '_first_frame_asset_id'},
+    {'1': '_last_frame_asset_id'},
+    {'1': '_region_description'},
+    {'1': '_duration_seconds'},
+    {'1': '_frame_rate'},
   ],
 };
 
@@ -2140,8 +2657,18 @@ final $typed_data.Uint8List testWorkflowReqDescriptor = $convert.base64Decode(
     'F1ZXN0SWSIAQESMAoLd29ya2Zsb3dfaWQYAiABKAlCCrpIB8gBAXICEAFIAVIKd29ya2Zsb3dJ'
     'ZIgBARInCgZwcm9tcHQYAyABKAlCCrpIB8gBAXICEAFIAlIGcHJvbXB0iAEBEjIKDmlucHV0X2'
     'Fzc2V0X2lkGAQgASgJQge6SARyAhABSANSDGlucHV0QXNzZXRJZIgBARI2Cg9pbnB1dF9hc3Nl'
-    'dF9pZHMYBSADKAlCDrpIC5IBCBAEIgRyAhABUg1pbnB1dEFzc2V0SWRzQg0KC19yZXF1ZXN0X2'
-    'lkQg4KDF93b3JrZmxvd19pZEIJCgdfcHJvbXB0QhEKD19pbnB1dF9hc3NldF9pZA==');
+    'dF9pZHMYBSADKAlCDrpIC5IBCBAEIgRyAhABUg1pbnB1dEFzc2V0SWRzEj0KFGlucHV0X3ZpZG'
+    'VvX2Fzc2V0X2lkGAYgASgJQge6SARyAhABSARSEWlucHV0VmlkZW9Bc3NldElkiAEBEj0KFGZp'
+    'cnN0X2ZyYW1lX2Fzc2V0X2lkGAcgASgJQge6SARyAhABSAVSEWZpcnN0RnJhbWVBc3NldElkiA'
+    'EBEjsKE2xhc3RfZnJhbWVfYXNzZXRfaWQYCCABKAlCB7pIBHICEAFIBlIQbGFzdEZyYW1lQXNz'
+    'ZXRJZIgBARI+ChJyZWdpb25fZGVzY3JpcHRpb24YCSABKAlCCrpIB3IFEAEYyAFIB1IRcmVnaW'
+    '9uRGVzY3JpcHRpb26IAQESOQoKcmVzb2x1dGlvbhgKIAEoCzIZLmhpLm1lZGlhLlZpZGVvUmVz'
+    'b2x1dGlvblIKcmVzb2x1dGlvbhI3ChBkdXJhdGlvbl9zZWNvbmRzGAsgASgFQge6SAQaAiAASA'
+    'hSD2R1cmF0aW9uU2Vjb25kc4gBARIrCgpmcmFtZV9yYXRlGAwgASgFQge6SAQaAiAASAlSCWZy'
+    'YW1lUmF0ZYgBAUINCgtfcmVxdWVzdF9pZEIOCgxfd29ya2Zsb3dfaWRCCQoHX3Byb21wdEIRCg'
+    '9faW5wdXRfYXNzZXRfaWRCFwoVX2lucHV0X3ZpZGVvX2Fzc2V0X2lkQhcKFV9maXJzdF9mcmFt'
+    'ZV9hc3NldF9pZEIWChRfbGFzdF9mcmFtZV9hc3NldF9pZEIVChNfcmVnaW9uX2Rlc2NyaXB0aW'
+    '9uQhMKEV9kdXJhdGlvbl9zZWNvbmRzQg0KC19mcmFtZV9yYXRl');
 
 @$core.Deprecated('Use testWorkflowRespDescriptor instead')
 const TestWorkflowResp$json = {

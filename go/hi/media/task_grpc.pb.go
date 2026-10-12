@@ -26,6 +26,11 @@ const (
 	Task_CreateSingleImageEdit_FullMethodName   = "/hi.media.Task/CreateSingleImageEdit"
 	Task_CreateMultipleImageEdit_FullMethodName = "/hi.media.Task/CreateMultipleImageEdit"
 	Task_CreateCharacter_FullMethodName         = "/hi.media.Task/CreateCharacter"
+	Task_CreateFirstLastFrame_FullMethodName    = "/hi.media.Task/CreateFirstLastFrame"
+	Task_CreateMotionTransfer_FullMethodName    = "/hi.media.Task/CreateMotionTransfer"
+	Task_CreateContinuation_FullMethodName      = "/hi.media.Task/CreateContinuation"
+	Task_CreateReference_FullMethodName         = "/hi.media.Task/CreateReference"
+	Task_CreateAdvancedReplace_FullMethodName   = "/hi.media.Task/CreateAdvancedReplace"
 	Task_Get_FullMethodName                     = "/hi.media.Task/Get"
 	Task_List_FullMethodName                    = "/hi.media.Task/List"
 	Task_Cancel_FullMethodName                  = "/hi.media.Task/Cancel"
@@ -51,6 +56,16 @@ type TaskClient interface {
 	CreateMultipleImageEdit(ctx context.Context, in *CreateMultipleImageEditTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error)
 	// 角色生成 image.character；用户提交一张参考图与正向提示词，负向词及内部尺寸由管理员维护。
 	CreateCharacter(ctx context.Context, in *CreateCharacterTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error)
+	// 首尾帧生成 video.first_last_frame，用户明确提交两张图片的角色。
+	CreateFirstLastFrame(ctx context.Context, in *CreateFirstLastFrameTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error)
+	// 模仿生成 video.motion_transfer，视频必填、首帧可选，输出参数由素材和工作流决定。
+	CreateMotionTransfer(ctx context.Context, in *CreateMotionTransferTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error)
+	// 引导生成 video.continuation，时长表示新增片段，不包含原视频或前导。
+	CreateContinuation(ctx context.Context, in *CreateContinuationTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error)
+	// 参考生成 video.reference，至少一份视频或图片，不接收区域描述。
+	CreateReference(ctx context.Context, in *CreateReferenceTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error)
+	// 高级替换 video.advanced_replace，必填视频与自由区域描述，不自动翻译。
+	CreateAdvancedReplace(ctx context.Context, in *CreateAdvancedReplaceTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error)
 	// 查询本人任务详情及产物资产 ID。
 	Get(ctx context.Context, in *GetTaskReq, opts ...grpc.CallOption) (*GetTaskResp, error)
 	// 分页查询本人任务。
@@ -131,6 +146,56 @@ func (c *taskClient) CreateCharacter(ctx context.Context, in *CreateCharacterTas
 	return out, nil
 }
 
+func (c *taskClient) CreateFirstLastFrame(ctx context.Context, in *CreateFirstLastFrameTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateTaskResp)
+	err := c.cc.Invoke(ctx, Task_CreateFirstLastFrame_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *taskClient) CreateMotionTransfer(ctx context.Context, in *CreateMotionTransferTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateTaskResp)
+	err := c.cc.Invoke(ctx, Task_CreateMotionTransfer_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *taskClient) CreateContinuation(ctx context.Context, in *CreateContinuationTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateTaskResp)
+	err := c.cc.Invoke(ctx, Task_CreateContinuation_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *taskClient) CreateReference(ctx context.Context, in *CreateReferenceTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateTaskResp)
+	err := c.cc.Invoke(ctx, Task_CreateReference_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *taskClient) CreateAdvancedReplace(ctx context.Context, in *CreateAdvancedReplaceTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateTaskResp)
+	err := c.cc.Invoke(ctx, Task_CreateAdvancedReplace_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *taskClient) Get(ctx context.Context, in *GetTaskReq, opts ...grpc.CallOption) (*GetTaskResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetTaskResp)
@@ -199,6 +264,16 @@ type TaskServer interface {
 	CreateMultipleImageEdit(context.Context, *CreateMultipleImageEditTaskReq) (*CreateTaskResp, error)
 	// 角色生成 image.character；用户提交一张参考图与正向提示词，负向词及内部尺寸由管理员维护。
 	CreateCharacter(context.Context, *CreateCharacterTaskReq) (*CreateTaskResp, error)
+	// 首尾帧生成 video.first_last_frame，用户明确提交两张图片的角色。
+	CreateFirstLastFrame(context.Context, *CreateFirstLastFrameTaskReq) (*CreateTaskResp, error)
+	// 模仿生成 video.motion_transfer，视频必填、首帧可选，输出参数由素材和工作流决定。
+	CreateMotionTransfer(context.Context, *CreateMotionTransferTaskReq) (*CreateTaskResp, error)
+	// 引导生成 video.continuation，时长表示新增片段，不包含原视频或前导。
+	CreateContinuation(context.Context, *CreateContinuationTaskReq) (*CreateTaskResp, error)
+	// 参考生成 video.reference，至少一份视频或图片，不接收区域描述。
+	CreateReference(context.Context, *CreateReferenceTaskReq) (*CreateTaskResp, error)
+	// 高级替换 video.advanced_replace，必填视频与自由区域描述，不自动翻译。
+	CreateAdvancedReplace(context.Context, *CreateAdvancedReplaceTaskReq) (*CreateTaskResp, error)
 	// 查询本人任务详情及产物资产 ID。
 	Get(context.Context, *GetTaskReq) (*GetTaskResp, error)
 	// 分页查询本人任务。
@@ -235,6 +310,21 @@ func (UnimplementedTaskServer) CreateMultipleImageEdit(context.Context, *CreateM
 }
 func (UnimplementedTaskServer) CreateCharacter(context.Context, *CreateCharacterTaskReq) (*CreateTaskResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateCharacter not implemented")
+}
+func (UnimplementedTaskServer) CreateFirstLastFrame(context.Context, *CreateFirstLastFrameTaskReq) (*CreateTaskResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateFirstLastFrame not implemented")
+}
+func (UnimplementedTaskServer) CreateMotionTransfer(context.Context, *CreateMotionTransferTaskReq) (*CreateTaskResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateMotionTransfer not implemented")
+}
+func (UnimplementedTaskServer) CreateContinuation(context.Context, *CreateContinuationTaskReq) (*CreateTaskResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateContinuation not implemented")
+}
+func (UnimplementedTaskServer) CreateReference(context.Context, *CreateReferenceTaskReq) (*CreateTaskResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateReference not implemented")
+}
+func (UnimplementedTaskServer) CreateAdvancedReplace(context.Context, *CreateAdvancedReplaceTaskReq) (*CreateTaskResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateAdvancedReplace not implemented")
 }
 func (UnimplementedTaskServer) Get(context.Context, *GetTaskReq) (*GetTaskResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
@@ -379,6 +469,96 @@ func _Task_CreateCharacter_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Task_CreateFirstLastFrame_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateFirstLastFrameTaskReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TaskServer).CreateFirstLastFrame(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Task_CreateFirstLastFrame_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TaskServer).CreateFirstLastFrame(ctx, req.(*CreateFirstLastFrameTaskReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Task_CreateMotionTransfer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateMotionTransferTaskReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TaskServer).CreateMotionTransfer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Task_CreateMotionTransfer_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TaskServer).CreateMotionTransfer(ctx, req.(*CreateMotionTransferTaskReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Task_CreateContinuation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateContinuationTaskReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TaskServer).CreateContinuation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Task_CreateContinuation_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TaskServer).CreateContinuation(ctx, req.(*CreateContinuationTaskReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Task_CreateReference_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateReferenceTaskReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TaskServer).CreateReference(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Task_CreateReference_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TaskServer).CreateReference(ctx, req.(*CreateReferenceTaskReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Task_CreateAdvancedReplace_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAdvancedReplaceTaskReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TaskServer).CreateAdvancedReplace(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Task_CreateAdvancedReplace_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TaskServer).CreateAdvancedReplace(ctx, req.(*CreateAdvancedReplaceTaskReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Task_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetTaskReq)
 	if err := dec(in); err != nil {
@@ -499,6 +679,26 @@ var Task_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateCharacter",
 			Handler:    _Task_CreateCharacter_Handler,
+		},
+		{
+			MethodName: "CreateFirstLastFrame",
+			Handler:    _Task_CreateFirstLastFrame_Handler,
+		},
+		{
+			MethodName: "CreateMotionTransfer",
+			Handler:    _Task_CreateMotionTransfer_Handler,
+		},
+		{
+			MethodName: "CreateContinuation",
+			Handler:    _Task_CreateContinuation_Handler,
+		},
+		{
+			MethodName: "CreateReference",
+			Handler:    _Task_CreateReference_Handler,
+		},
+		{
+			MethodName: "CreateAdvancedReplace",
+			Handler:    _Task_CreateAdvancedReplace_Handler,
 		},
 		{
 			MethodName: "Get",

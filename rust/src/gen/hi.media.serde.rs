@@ -513,6 +513,224 @@ impl<'de> serde::Deserialize<'de> for CharacterWorkflowConfig {
         deserializer.deserialize_struct("hi.media.CharacterWorkflowConfig", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for CreateAdvancedReplaceTaskReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.request_id.is_some() {
+            len += 1;
+        }
+        if self.workflow_id.is_some() {
+            len += 1;
+        }
+        if self.input_video_asset_id.is_some() {
+            len += 1;
+        }
+        if !self.input_asset_ids.is_empty() {
+            len += 1;
+        }
+        if self.prompt.is_some() {
+            len += 1;
+        }
+        if self.resolution.is_some() {
+            len += 1;
+        }
+        if self.duration_seconds.is_some() {
+            len += 1;
+        }
+        if self.region_description.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.CreateAdvancedReplaceTaskReq", len)?;
+        if let Some(v) = self.request_id.as_ref() {
+            struct_ser.serialize_field("requestId", v)?;
+        }
+        if let Some(v) = self.workflow_id.as_ref() {
+            struct_ser.serialize_field("workflowId", v)?;
+        }
+        if let Some(v) = self.input_video_asset_id.as_ref() {
+            struct_ser.serialize_field("inputVideoAssetId", v)?;
+        }
+        if !self.input_asset_ids.is_empty() {
+            struct_ser.serialize_field("inputAssetIds", &self.input_asset_ids)?;
+        }
+        if let Some(v) = self.prompt.as_ref() {
+            struct_ser.serialize_field("prompt", v)?;
+        }
+        if let Some(v) = self.resolution.as_ref() {
+            struct_ser.serialize_field("resolution", v)?;
+        }
+        if let Some(v) = self.duration_seconds.as_ref() {
+            struct_ser.serialize_field("durationSeconds", v)?;
+        }
+        if let Some(v) = self.region_description.as_ref() {
+            struct_ser.serialize_field("regionDescription", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for CreateAdvancedReplaceTaskReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "request_id",
+            "requestId",
+            "workflow_id",
+            "workflowId",
+            "input_video_asset_id",
+            "inputVideoAssetId",
+            "input_asset_ids",
+            "inputAssetIds",
+            "prompt",
+            "resolution",
+            "duration_seconds",
+            "durationSeconds",
+            "region_description",
+            "regionDescription",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            RequestId,
+            WorkflowId,
+            InputVideoAssetId,
+            InputAssetIds,
+            Prompt,
+            Resolution,
+            DurationSeconds,
+            RegionDescription,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
+                            "workflowId" | "workflow_id" => Ok(GeneratedField::WorkflowId),
+                            "inputVideoAssetId" | "input_video_asset_id" => Ok(GeneratedField::InputVideoAssetId),
+                            "inputAssetIds" | "input_asset_ids" => Ok(GeneratedField::InputAssetIds),
+                            "prompt" => Ok(GeneratedField::Prompt),
+                            "resolution" => Ok(GeneratedField::Resolution),
+                            "durationSeconds" | "duration_seconds" => Ok(GeneratedField::DurationSeconds),
+                            "regionDescription" | "region_description" => Ok(GeneratedField::RegionDescription),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = CreateAdvancedReplaceTaskReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.CreateAdvancedReplaceTaskReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateAdvancedReplaceTaskReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut request_id__ = None;
+                let mut workflow_id__ = None;
+                let mut input_video_asset_id__ = None;
+                let mut input_asset_ids__ = None;
+                let mut prompt__ = None;
+                let mut resolution__ = None;
+                let mut duration_seconds__ = None;
+                let mut region_description__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
+                            }
+                            request_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::WorkflowId => {
+                            if workflow_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowId"));
+                            }
+                            workflow_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::InputVideoAssetId => {
+                            if input_video_asset_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputVideoAssetId"));
+                            }
+                            input_video_asset_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::InputAssetIds => {
+                            if input_asset_ids__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputAssetIds"));
+                            }
+                            input_asset_ids__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Prompt => {
+                            if prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prompt"));
+                            }
+                            prompt__ = map_.next_value()?;
+                        }
+                        GeneratedField::Resolution => {
+                            if resolution__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("resolution"));
+                            }
+                            resolution__ = map_.next_value()?;
+                        }
+                        GeneratedField::DurationSeconds => {
+                            if duration_seconds__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("durationSeconds"));
+                            }
+                            duration_seconds__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::RegionDescription => {
+                            if region_description__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("regionDescription"));
+                            }
+                            region_description__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(CreateAdvancedReplaceTaskReq {
+                    request_id: request_id__,
+                    workflow_id: workflow_id__,
+                    input_video_asset_id: input_video_asset_id__,
+                    input_asset_ids: input_asset_ids__.unwrap_or_default(),
+                    prompt: prompt__,
+                    resolution: resolution__,
+                    duration_seconds: duration_seconds__,
+                    region_description: region_description__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.CreateAdvancedReplaceTaskReq", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for CreateCharacterTaskReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -656,6 +874,426 @@ impl<'de> serde::Deserialize<'de> for CreateCharacterTaskReq {
             }
         }
         deserializer.deserialize_struct("hi.media.CreateCharacterTaskReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for CreateContinuationTaskReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.request_id.is_some() {
+            len += 1;
+        }
+        if self.workflow_id.is_some() {
+            len += 1;
+        }
+        if self.input_video_asset_id.is_some() {
+            len += 1;
+        }
+        if !self.input_asset_ids.is_empty() {
+            len += 1;
+        }
+        if self.prompt.is_some() {
+            len += 1;
+        }
+        if self.resolution.is_some() {
+            len += 1;
+        }
+        if self.duration_seconds.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.CreateContinuationTaskReq", len)?;
+        if let Some(v) = self.request_id.as_ref() {
+            struct_ser.serialize_field("requestId", v)?;
+        }
+        if let Some(v) = self.workflow_id.as_ref() {
+            struct_ser.serialize_field("workflowId", v)?;
+        }
+        if let Some(v) = self.input_video_asset_id.as_ref() {
+            struct_ser.serialize_field("inputVideoAssetId", v)?;
+        }
+        if !self.input_asset_ids.is_empty() {
+            struct_ser.serialize_field("inputAssetIds", &self.input_asset_ids)?;
+        }
+        if let Some(v) = self.prompt.as_ref() {
+            struct_ser.serialize_field("prompt", v)?;
+        }
+        if let Some(v) = self.resolution.as_ref() {
+            struct_ser.serialize_field("resolution", v)?;
+        }
+        if let Some(v) = self.duration_seconds.as_ref() {
+            struct_ser.serialize_field("durationSeconds", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for CreateContinuationTaskReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "request_id",
+            "requestId",
+            "workflow_id",
+            "workflowId",
+            "input_video_asset_id",
+            "inputVideoAssetId",
+            "input_asset_ids",
+            "inputAssetIds",
+            "prompt",
+            "resolution",
+            "duration_seconds",
+            "durationSeconds",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            RequestId,
+            WorkflowId,
+            InputVideoAssetId,
+            InputAssetIds,
+            Prompt,
+            Resolution,
+            DurationSeconds,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
+                            "workflowId" | "workflow_id" => Ok(GeneratedField::WorkflowId),
+                            "inputVideoAssetId" | "input_video_asset_id" => Ok(GeneratedField::InputVideoAssetId),
+                            "inputAssetIds" | "input_asset_ids" => Ok(GeneratedField::InputAssetIds),
+                            "prompt" => Ok(GeneratedField::Prompt),
+                            "resolution" => Ok(GeneratedField::Resolution),
+                            "durationSeconds" | "duration_seconds" => Ok(GeneratedField::DurationSeconds),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = CreateContinuationTaskReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.CreateContinuationTaskReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateContinuationTaskReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut request_id__ = None;
+                let mut workflow_id__ = None;
+                let mut input_video_asset_id__ = None;
+                let mut input_asset_ids__ = None;
+                let mut prompt__ = None;
+                let mut resolution__ = None;
+                let mut duration_seconds__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
+                            }
+                            request_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::WorkflowId => {
+                            if workflow_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowId"));
+                            }
+                            workflow_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::InputVideoAssetId => {
+                            if input_video_asset_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputVideoAssetId"));
+                            }
+                            input_video_asset_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::InputAssetIds => {
+                            if input_asset_ids__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputAssetIds"));
+                            }
+                            input_asset_ids__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Prompt => {
+                            if prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prompt"));
+                            }
+                            prompt__ = map_.next_value()?;
+                        }
+                        GeneratedField::Resolution => {
+                            if resolution__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("resolution"));
+                            }
+                            resolution__ = map_.next_value()?;
+                        }
+                        GeneratedField::DurationSeconds => {
+                            if duration_seconds__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("durationSeconds"));
+                            }
+                            duration_seconds__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(CreateContinuationTaskReq {
+                    request_id: request_id__,
+                    workflow_id: workflow_id__,
+                    input_video_asset_id: input_video_asset_id__,
+                    input_asset_ids: input_asset_ids__.unwrap_or_default(),
+                    prompt: prompt__,
+                    resolution: resolution__,
+                    duration_seconds: duration_seconds__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.CreateContinuationTaskReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for CreateFirstLastFrameTaskReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.request_id.is_some() {
+            len += 1;
+        }
+        if self.workflow_id.is_some() {
+            len += 1;
+        }
+        if self.first_frame_asset_id.is_some() {
+            len += 1;
+        }
+        if self.last_frame_asset_id.is_some() {
+            len += 1;
+        }
+        if self.prompt.is_some() {
+            len += 1;
+        }
+        if self.resolution.is_some() {
+            len += 1;
+        }
+        if self.duration_seconds.is_some() {
+            len += 1;
+        }
+        if self.frame_rate.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.CreateFirstLastFrameTaskReq", len)?;
+        if let Some(v) = self.request_id.as_ref() {
+            struct_ser.serialize_field("requestId", v)?;
+        }
+        if let Some(v) = self.workflow_id.as_ref() {
+            struct_ser.serialize_field("workflowId", v)?;
+        }
+        if let Some(v) = self.first_frame_asset_id.as_ref() {
+            struct_ser.serialize_field("firstFrameAssetId", v)?;
+        }
+        if let Some(v) = self.last_frame_asset_id.as_ref() {
+            struct_ser.serialize_field("lastFrameAssetId", v)?;
+        }
+        if let Some(v) = self.prompt.as_ref() {
+            struct_ser.serialize_field("prompt", v)?;
+        }
+        if let Some(v) = self.resolution.as_ref() {
+            struct_ser.serialize_field("resolution", v)?;
+        }
+        if let Some(v) = self.duration_seconds.as_ref() {
+            struct_ser.serialize_field("durationSeconds", v)?;
+        }
+        if let Some(v) = self.frame_rate.as_ref() {
+            struct_ser.serialize_field("frameRate", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for CreateFirstLastFrameTaskReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "request_id",
+            "requestId",
+            "workflow_id",
+            "workflowId",
+            "first_frame_asset_id",
+            "firstFrameAssetId",
+            "last_frame_asset_id",
+            "lastFrameAssetId",
+            "prompt",
+            "resolution",
+            "duration_seconds",
+            "durationSeconds",
+            "frame_rate",
+            "frameRate",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            RequestId,
+            WorkflowId,
+            FirstFrameAssetId,
+            LastFrameAssetId,
+            Prompt,
+            Resolution,
+            DurationSeconds,
+            FrameRate,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
+                            "workflowId" | "workflow_id" => Ok(GeneratedField::WorkflowId),
+                            "firstFrameAssetId" | "first_frame_asset_id" => Ok(GeneratedField::FirstFrameAssetId),
+                            "lastFrameAssetId" | "last_frame_asset_id" => Ok(GeneratedField::LastFrameAssetId),
+                            "prompt" => Ok(GeneratedField::Prompt),
+                            "resolution" => Ok(GeneratedField::Resolution),
+                            "durationSeconds" | "duration_seconds" => Ok(GeneratedField::DurationSeconds),
+                            "frameRate" | "frame_rate" => Ok(GeneratedField::FrameRate),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = CreateFirstLastFrameTaskReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.CreateFirstLastFrameTaskReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateFirstLastFrameTaskReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut request_id__ = None;
+                let mut workflow_id__ = None;
+                let mut first_frame_asset_id__ = None;
+                let mut last_frame_asset_id__ = None;
+                let mut prompt__ = None;
+                let mut resolution__ = None;
+                let mut duration_seconds__ = None;
+                let mut frame_rate__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
+                            }
+                            request_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::WorkflowId => {
+                            if workflow_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowId"));
+                            }
+                            workflow_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::FirstFrameAssetId => {
+                            if first_frame_asset_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("firstFrameAssetId"));
+                            }
+                            first_frame_asset_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::LastFrameAssetId => {
+                            if last_frame_asset_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("lastFrameAssetId"));
+                            }
+                            last_frame_asset_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Prompt => {
+                            if prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prompt"));
+                            }
+                            prompt__ = map_.next_value()?;
+                        }
+                        GeneratedField::Resolution => {
+                            if resolution__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("resolution"));
+                            }
+                            resolution__ = map_.next_value()?;
+                        }
+                        GeneratedField::DurationSeconds => {
+                            if duration_seconds__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("durationSeconds"));
+                            }
+                            duration_seconds__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::FrameRate => {
+                            if frame_rate__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("frameRate"));
+                            }
+                            frame_rate__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(CreateFirstLastFrameTaskReq {
+                    request_id: request_id__,
+                    workflow_id: workflow_id__,
+                    first_frame_asset_id: first_frame_asset_id__,
+                    last_frame_asset_id: last_frame_asset_id__,
+                    prompt: prompt__,
+                    resolution: resolution__,
+                    duration_seconds: duration_seconds__,
+                    frame_rate: frame_rate__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.CreateFirstLastFrameTaskReq", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for CreateImageToVideoTaskReq {
@@ -1061,6 +1699,169 @@ impl<'de> serde::Deserialize<'de> for CreateModelResp {
         deserializer.deserialize_struct("hi.media.CreateModelResp", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for CreateMotionTransferTaskReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.request_id.is_some() {
+            len += 1;
+        }
+        if self.workflow_id.is_some() {
+            len += 1;
+        }
+        if self.input_video_asset_id.is_some() {
+            len += 1;
+        }
+        if self.first_frame_asset_id.is_some() {
+            len += 1;
+        }
+        if self.prompt.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.CreateMotionTransferTaskReq", len)?;
+        if let Some(v) = self.request_id.as_ref() {
+            struct_ser.serialize_field("requestId", v)?;
+        }
+        if let Some(v) = self.workflow_id.as_ref() {
+            struct_ser.serialize_field("workflowId", v)?;
+        }
+        if let Some(v) = self.input_video_asset_id.as_ref() {
+            struct_ser.serialize_field("inputVideoAssetId", v)?;
+        }
+        if let Some(v) = self.first_frame_asset_id.as_ref() {
+            struct_ser.serialize_field("firstFrameAssetId", v)?;
+        }
+        if let Some(v) = self.prompt.as_ref() {
+            struct_ser.serialize_field("prompt", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for CreateMotionTransferTaskReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "request_id",
+            "requestId",
+            "workflow_id",
+            "workflowId",
+            "input_video_asset_id",
+            "inputVideoAssetId",
+            "first_frame_asset_id",
+            "firstFrameAssetId",
+            "prompt",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            RequestId,
+            WorkflowId,
+            InputVideoAssetId,
+            FirstFrameAssetId,
+            Prompt,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
+                            "workflowId" | "workflow_id" => Ok(GeneratedField::WorkflowId),
+                            "inputVideoAssetId" | "input_video_asset_id" => Ok(GeneratedField::InputVideoAssetId),
+                            "firstFrameAssetId" | "first_frame_asset_id" => Ok(GeneratedField::FirstFrameAssetId),
+                            "prompt" => Ok(GeneratedField::Prompt),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = CreateMotionTransferTaskReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.CreateMotionTransferTaskReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateMotionTransferTaskReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut request_id__ = None;
+                let mut workflow_id__ = None;
+                let mut input_video_asset_id__ = None;
+                let mut first_frame_asset_id__ = None;
+                let mut prompt__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
+                            }
+                            request_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::WorkflowId => {
+                            if workflow_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowId"));
+                            }
+                            workflow_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::InputVideoAssetId => {
+                            if input_video_asset_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputVideoAssetId"));
+                            }
+                            input_video_asset_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::FirstFrameAssetId => {
+                            if first_frame_asset_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("firstFrameAssetId"));
+                            }
+                            first_frame_asset_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Prompt => {
+                            if prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prompt"));
+                            }
+                            prompt__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(CreateMotionTransferTaskReq {
+                    request_id: request_id__,
+                    workflow_id: workflow_id__,
+                    input_video_asset_id: input_video_asset_id__,
+                    first_frame_asset_id: first_frame_asset_id__,
+                    prompt: prompt__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.CreateMotionTransferTaskReq", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for CreateMultipleImageEditTaskReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -1204,6 +2005,206 @@ impl<'de> serde::Deserialize<'de> for CreateMultipleImageEditTaskReq {
             }
         }
         deserializer.deserialize_struct("hi.media.CreateMultipleImageEditTaskReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for CreateReferenceTaskReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.request_id.is_some() {
+            len += 1;
+        }
+        if self.workflow_id.is_some() {
+            len += 1;
+        }
+        if self.input_video_asset_id.is_some() {
+            len += 1;
+        }
+        if !self.input_asset_ids.is_empty() {
+            len += 1;
+        }
+        if self.prompt.is_some() {
+            len += 1;
+        }
+        if self.resolution.is_some() {
+            len += 1;
+        }
+        if self.duration_seconds.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.CreateReferenceTaskReq", len)?;
+        if let Some(v) = self.request_id.as_ref() {
+            struct_ser.serialize_field("requestId", v)?;
+        }
+        if let Some(v) = self.workflow_id.as_ref() {
+            struct_ser.serialize_field("workflowId", v)?;
+        }
+        if let Some(v) = self.input_video_asset_id.as_ref() {
+            struct_ser.serialize_field("inputVideoAssetId", v)?;
+        }
+        if !self.input_asset_ids.is_empty() {
+            struct_ser.serialize_field("inputAssetIds", &self.input_asset_ids)?;
+        }
+        if let Some(v) = self.prompt.as_ref() {
+            struct_ser.serialize_field("prompt", v)?;
+        }
+        if let Some(v) = self.resolution.as_ref() {
+            struct_ser.serialize_field("resolution", v)?;
+        }
+        if let Some(v) = self.duration_seconds.as_ref() {
+            struct_ser.serialize_field("durationSeconds", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for CreateReferenceTaskReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "request_id",
+            "requestId",
+            "workflow_id",
+            "workflowId",
+            "input_video_asset_id",
+            "inputVideoAssetId",
+            "input_asset_ids",
+            "inputAssetIds",
+            "prompt",
+            "resolution",
+            "duration_seconds",
+            "durationSeconds",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            RequestId,
+            WorkflowId,
+            InputVideoAssetId,
+            InputAssetIds,
+            Prompt,
+            Resolution,
+            DurationSeconds,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
+                            "workflowId" | "workflow_id" => Ok(GeneratedField::WorkflowId),
+                            "inputVideoAssetId" | "input_video_asset_id" => Ok(GeneratedField::InputVideoAssetId),
+                            "inputAssetIds" | "input_asset_ids" => Ok(GeneratedField::InputAssetIds),
+                            "prompt" => Ok(GeneratedField::Prompt),
+                            "resolution" => Ok(GeneratedField::Resolution),
+                            "durationSeconds" | "duration_seconds" => Ok(GeneratedField::DurationSeconds),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = CreateReferenceTaskReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.CreateReferenceTaskReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateReferenceTaskReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut request_id__ = None;
+                let mut workflow_id__ = None;
+                let mut input_video_asset_id__ = None;
+                let mut input_asset_ids__ = None;
+                let mut prompt__ = None;
+                let mut resolution__ = None;
+                let mut duration_seconds__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
+                            }
+                            request_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::WorkflowId => {
+                            if workflow_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workflowId"));
+                            }
+                            workflow_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::InputVideoAssetId => {
+                            if input_video_asset_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputVideoAssetId"));
+                            }
+                            input_video_asset_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::InputAssetIds => {
+                            if input_asset_ids__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputAssetIds"));
+                            }
+                            input_asset_ids__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Prompt => {
+                            if prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prompt"));
+                            }
+                            prompt__ = map_.next_value()?;
+                        }
+                        GeneratedField::Resolution => {
+                            if resolution__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("resolution"));
+                            }
+                            resolution__ = map_.next_value()?;
+                        }
+                        GeneratedField::DurationSeconds => {
+                            if duration_seconds__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("durationSeconds"));
+                            }
+                            duration_seconds__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(CreateReferenceTaskReq {
+                    request_id: request_id__,
+                    workflow_id: workflow_id__,
+                    input_video_asset_id: input_video_asset_id__,
+                    input_asset_ids: input_asset_ids__.unwrap_or_default(),
+                    prompt: prompt__,
+                    resolution: resolution__,
+                    duration_seconds: duration_seconds__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.CreateReferenceTaskReq", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for CreateSingleImageEditTaskReq {
@@ -2581,6 +3582,15 @@ impl serde::Serialize for FileSummary {
         if self.has_cover.is_some() {
             len += 1;
         }
+        if self.width.is_some() {
+            len += 1;
+        }
+        if self.height.is_some() {
+            len += 1;
+        }
+        if self.duration_ms.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.media.FileSummary", len)?;
         if let Some(v) = self.asset_id.as_ref() {
             struct_ser.serialize_field("assetId", v)?;
@@ -2614,6 +3624,17 @@ impl serde::Serialize for FileSummary {
         if let Some(v) = self.has_cover.as_ref() {
             struct_ser.serialize_field("hasCover", v)?;
         }
+        if let Some(v) = self.width.as_ref() {
+            struct_ser.serialize_field("width", v)?;
+        }
+        if let Some(v) = self.height.as_ref() {
+            struct_ser.serialize_field("height", v)?;
+        }
+        if let Some(v) = self.duration_ms.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("durationMs", ToString::to_string(&v).as_str())?;
+        }
         struct_ser.end()
     }
 }
@@ -2638,6 +3659,10 @@ impl<'de> serde::Deserialize<'de> for FileSummary {
             "createdAt",
             "has_cover",
             "hasCover",
+            "width",
+            "height",
+            "duration_ms",
+            "durationMs",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -2650,6 +3675,9 @@ impl<'de> serde::Deserialize<'de> for FileSummary {
             Source,
             CreatedAt,
             HasCover,
+            Width,
+            Height,
+            DurationMs,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -2679,6 +3707,9 @@ impl<'de> serde::Deserialize<'de> for FileSummary {
                             "source" => Ok(GeneratedField::Source),
                             "createdAt" | "created_at" => Ok(GeneratedField::CreatedAt),
                             "hasCover" | "has_cover" => Ok(GeneratedField::HasCover),
+                            "width" => Ok(GeneratedField::Width),
+                            "height" => Ok(GeneratedField::Height),
+                            "durationMs" | "duration_ms" => Ok(GeneratedField::DurationMs),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -2706,6 +3737,9 @@ impl<'de> serde::Deserialize<'de> for FileSummary {
                 let mut source__ = None;
                 let mut created_at__ = None;
                 let mut has_cover__ = None;
+                let mut width__ = None;
+                let mut height__ = None;
+                let mut duration_ms__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::AssetId => {
@@ -2760,6 +3794,30 @@ impl<'de> serde::Deserialize<'de> for FileSummary {
                             }
                             has_cover__ = map_.next_value()?;
                         }
+                        GeneratedField::Width => {
+                            if width__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("width"));
+                            }
+                            width__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Height => {
+                            if height__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("height"));
+                            }
+                            height__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::DurationMs => {
+                            if duration_ms__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("durationMs"));
+                            }
+                            duration_ms__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
                     }
                 }
                 Ok(FileSummary {
@@ -2771,10 +3829,300 @@ impl<'de> serde::Deserialize<'de> for FileSummary {
                     source: source__,
                     created_at: created_at__,
                     has_cover: has_cover__,
+                    width: width__,
+                    height: height__,
+                    duration_ms: duration_ms__,
                 })
             }
         }
         deserializer.deserialize_struct("hi.media.FileSummary", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for FirstLastFrameWorkflowConfig {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.first_frame.is_some() {
+            len += 1;
+        }
+        if self.last_frame.is_some() {
+            len += 1;
+        }
+        if self.prompt.is_some() {
+            len += 1;
+        }
+        if self.prompt_max_length.is_some() {
+            len += 1;
+        }
+        if self.negative_prompt.is_some() {
+            len += 1;
+        }
+        if self.width.is_some() {
+            len += 1;
+        }
+        if self.height.is_some() {
+            len += 1;
+        }
+        if self.aspect_ratio.is_some() {
+            len += 1;
+        }
+        if self.megapixels.is_some() {
+            len += 1;
+        }
+        if self.duration_seconds.is_some() {
+            len += 1;
+        }
+        if self.frame_rate.is_some() {
+            len += 1;
+        }
+        if !self.seeds.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.FirstLastFrameWorkflowConfig", len)?;
+        if let Some(v) = self.first_frame.as_ref() {
+            struct_ser.serialize_field("firstFrame", v)?;
+        }
+        if let Some(v) = self.last_frame.as_ref() {
+            struct_ser.serialize_field("lastFrame", v)?;
+        }
+        if let Some(v) = self.prompt.as_ref() {
+            struct_ser.serialize_field("prompt", v)?;
+        }
+        if let Some(v) = self.prompt_max_length.as_ref() {
+            struct_ser.serialize_field("promptMaxLength", v)?;
+        }
+        if let Some(v) = self.negative_prompt.as_ref() {
+            struct_ser.serialize_field("negativePrompt", v)?;
+        }
+        if let Some(v) = self.width.as_ref() {
+            struct_ser.serialize_field("width", v)?;
+        }
+        if let Some(v) = self.height.as_ref() {
+            struct_ser.serialize_field("height", v)?;
+        }
+        if let Some(v) = self.aspect_ratio.as_ref() {
+            struct_ser.serialize_field("aspectRatio", v)?;
+        }
+        if let Some(v) = self.megapixels.as_ref() {
+            struct_ser.serialize_field("megapixels", v)?;
+        }
+        if let Some(v) = self.duration_seconds.as_ref() {
+            struct_ser.serialize_field("durationSeconds", v)?;
+        }
+        if let Some(v) = self.frame_rate.as_ref() {
+            struct_ser.serialize_field("frameRate", v)?;
+        }
+        if !self.seeds.is_empty() {
+            struct_ser.serialize_field("seeds", &self.seeds)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for FirstLastFrameWorkflowConfig {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "first_frame",
+            "firstFrame",
+            "last_frame",
+            "lastFrame",
+            "prompt",
+            "prompt_max_length",
+            "promptMaxLength",
+            "negative_prompt",
+            "negativePrompt",
+            "width",
+            "height",
+            "aspect_ratio",
+            "aspectRatio",
+            "megapixels",
+            "duration_seconds",
+            "durationSeconds",
+            "frame_rate",
+            "frameRate",
+            "seeds",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            FirstFrame,
+            LastFrame,
+            Prompt,
+            PromptMaxLength,
+            NegativePrompt,
+            Width,
+            Height,
+            AspectRatio,
+            Megapixels,
+            DurationSeconds,
+            FrameRate,
+            Seeds,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "firstFrame" | "first_frame" => Ok(GeneratedField::FirstFrame),
+                            "lastFrame" | "last_frame" => Ok(GeneratedField::LastFrame),
+                            "prompt" => Ok(GeneratedField::Prompt),
+                            "promptMaxLength" | "prompt_max_length" => Ok(GeneratedField::PromptMaxLength),
+                            "negativePrompt" | "negative_prompt" => Ok(GeneratedField::NegativePrompt),
+                            "width" => Ok(GeneratedField::Width),
+                            "height" => Ok(GeneratedField::Height),
+                            "aspectRatio" | "aspect_ratio" => Ok(GeneratedField::AspectRatio),
+                            "megapixels" => Ok(GeneratedField::Megapixels),
+                            "durationSeconds" | "duration_seconds" => Ok(GeneratedField::DurationSeconds),
+                            "frameRate" | "frame_rate" => Ok(GeneratedField::FrameRate),
+                            "seeds" => Ok(GeneratedField::Seeds),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = FirstLastFrameWorkflowConfig;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.FirstLastFrameWorkflowConfig")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<FirstLastFrameWorkflowConfig, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut first_frame__ = None;
+                let mut last_frame__ = None;
+                let mut prompt__ = None;
+                let mut prompt_max_length__ = None;
+                let mut negative_prompt__ = None;
+                let mut width__ = None;
+                let mut height__ = None;
+                let mut aspect_ratio__ = None;
+                let mut megapixels__ = None;
+                let mut duration_seconds__ = None;
+                let mut frame_rate__ = None;
+                let mut seeds__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::FirstFrame => {
+                            if first_frame__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("firstFrame"));
+                            }
+                            first_frame__ = map_.next_value()?;
+                        }
+                        GeneratedField::LastFrame => {
+                            if last_frame__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("lastFrame"));
+                            }
+                            last_frame__ = map_.next_value()?;
+                        }
+                        GeneratedField::Prompt => {
+                            if prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prompt"));
+                            }
+                            prompt__ = map_.next_value()?;
+                        }
+                        GeneratedField::PromptMaxLength => {
+                            if prompt_max_length__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("promptMaxLength"));
+                            }
+                            prompt_max_length__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::NegativePrompt => {
+                            if negative_prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("negativePrompt"));
+                            }
+                            negative_prompt__ = map_.next_value()?;
+                        }
+                        GeneratedField::Width => {
+                            if width__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("width"));
+                            }
+                            width__ = map_.next_value()?;
+                        }
+                        GeneratedField::Height => {
+                            if height__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("height"));
+                            }
+                            height__ = map_.next_value()?;
+                        }
+                        GeneratedField::AspectRatio => {
+                            if aspect_ratio__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("aspectRatio"));
+                            }
+                            aspect_ratio__ = map_.next_value()?;
+                        }
+                        GeneratedField::Megapixels => {
+                            if megapixels__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("megapixels"));
+                            }
+                            megapixels__ = map_.next_value()?;
+                        }
+                        GeneratedField::DurationSeconds => {
+                            if duration_seconds__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("durationSeconds"));
+                            }
+                            duration_seconds__ = map_.next_value()?;
+                        }
+                        GeneratedField::FrameRate => {
+                            if frame_rate__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("frameRate"));
+                            }
+                            frame_rate__ = map_.next_value()?;
+                        }
+                        GeneratedField::Seeds => {
+                            if seeds__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("seeds"));
+                            }
+                            seeds__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(FirstLastFrameWorkflowConfig {
+                    first_frame: first_frame__,
+                    last_frame: last_frame__,
+                    prompt: prompt__,
+                    prompt_max_length: prompt_max_length__,
+                    negative_prompt: negative_prompt__,
+                    width: width__,
+                    height: height__,
+                    aspect_ratio: aspect_ratio__,
+                    megapixels: megapixels__,
+                    duration_seconds: duration_seconds__,
+                    frame_rate: frame_rate__,
+                    seeds: seeds__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.FirstLastFrameWorkflowConfig", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for FrameRateConfig {
@@ -2886,6 +4234,80 @@ impl<'de> serde::Deserialize<'de> for FrameRateConfig {
         deserializer.deserialize_struct("hi.media.FrameRateConfig", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for FunctionCategory {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unspecified => "FUNCTION_CATEGORY_UNSPECIFIED",
+            Self::Image => "FUNCTION_CATEGORY_IMAGE",
+            Self::Video => "FUNCTION_CATEGORY_VIDEO",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for FunctionCategory {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "FUNCTION_CATEGORY_UNSPECIFIED",
+            "FUNCTION_CATEGORY_IMAGE",
+            "FUNCTION_CATEGORY_VIDEO",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = FunctionCategory;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "FUNCTION_CATEGORY_UNSPECIFIED" => Ok(FunctionCategory::Unspecified),
+                    "FUNCTION_CATEGORY_IMAGE" => Ok(FunctionCategory::Image),
+                    "FUNCTION_CATEGORY_VIDEO" => Ok(FunctionCategory::Video),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
 impl serde::Serialize for FunctionSummary {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -2903,6 +4325,12 @@ impl serde::Serialize for FunctionSummary {
         if self.enabled.is_some() {
             len += 1;
         }
+        if self.category.is_some() {
+            len += 1;
+        }
+        if self.sort_order.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.media.FunctionSummary", len)?;
         if let Some(v) = self.function_id.as_ref() {
             struct_ser.serialize_field("functionId", v)?;
@@ -2912,6 +4340,14 @@ impl serde::Serialize for FunctionSummary {
         }
         if let Some(v) = self.enabled.as_ref() {
             struct_ser.serialize_field("enabled", v)?;
+        }
+        if let Some(v) = self.category.as_ref() {
+            let v = FunctionCategory::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("category", &v)?;
+        }
+        if let Some(v) = self.sort_order.as_ref() {
+            struct_ser.serialize_field("sortOrder", v)?;
         }
         struct_ser.end()
     }
@@ -2928,6 +4364,9 @@ impl<'de> serde::Deserialize<'de> for FunctionSummary {
             "display_name",
             "displayName",
             "enabled",
+            "category",
+            "sort_order",
+            "sortOrder",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -2935,6 +4374,8 @@ impl<'de> serde::Deserialize<'de> for FunctionSummary {
             FunctionId,
             DisplayName,
             Enabled,
+            Category,
+            SortOrder,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -2959,6 +4400,8 @@ impl<'de> serde::Deserialize<'de> for FunctionSummary {
                             "functionId" | "function_id" => Ok(GeneratedField::FunctionId),
                             "displayName" | "display_name" => Ok(GeneratedField::DisplayName),
                             "enabled" => Ok(GeneratedField::Enabled),
+                            "category" => Ok(GeneratedField::Category),
+                            "sortOrder" | "sort_order" => Ok(GeneratedField::SortOrder),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -2981,6 +4424,8 @@ impl<'de> serde::Deserialize<'de> for FunctionSummary {
                 let mut function_id__ = None;
                 let mut display_name__ = None;
                 let mut enabled__ = None;
+                let mut category__ = None;
+                let mut sort_order__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::FunctionId => {
@@ -3001,12 +4446,28 @@ impl<'de> serde::Deserialize<'de> for FunctionSummary {
                             }
                             enabled__ = map_.next_value()?;
                         }
+                        GeneratedField::Category => {
+                            if category__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("category"));
+                            }
+                            category__ = map_.next_value::<::std::option::Option<FunctionCategory>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::SortOrder => {
+                            if sort_order__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sortOrder"));
+                            }
+                            sort_order__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
                     }
                 }
                 Ok(FunctionSummary {
                     function_id: function_id__,
                     display_name: display_name__,
                     enabled: enabled__,
+                    category: category__,
+                    sort_order: sort_order__,
                 })
             }
         }
@@ -7493,6 +8954,241 @@ impl<'de> serde::Deserialize<'de> for MediaType {
         deserializer.deserialize_any(GeneratedVisitor)
     }
 }
+impl serde::Serialize for MiniMaxVideoWorkflowConfig {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.input_video.is_some() {
+            len += 1;
+        }
+        if self.reference_images.is_some() {
+            len += 1;
+        }
+        if self.prompt.is_some() {
+            len += 1;
+        }
+        if self.prompt_max_length.is_some() {
+            len += 1;
+        }
+        if self.aspect_ratio.is_some() {
+            len += 1;
+        }
+        if self.megapixels.is_some() {
+            len += 1;
+        }
+        if self.duration_seconds.is_some() {
+            len += 1;
+        }
+        if !self.seeds.is_empty() {
+            len += 1;
+        }
+        if self.region_description.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.MiniMaxVideoWorkflowConfig", len)?;
+        if let Some(v) = self.input_video.as_ref() {
+            struct_ser.serialize_field("inputVideo", v)?;
+        }
+        if let Some(v) = self.reference_images.as_ref() {
+            struct_ser.serialize_field("referenceImages", v)?;
+        }
+        if let Some(v) = self.prompt.as_ref() {
+            struct_ser.serialize_field("prompt", v)?;
+        }
+        if let Some(v) = self.prompt_max_length.as_ref() {
+            struct_ser.serialize_field("promptMaxLength", v)?;
+        }
+        if let Some(v) = self.aspect_ratio.as_ref() {
+            struct_ser.serialize_field("aspectRatio", v)?;
+        }
+        if let Some(v) = self.megapixels.as_ref() {
+            struct_ser.serialize_field("megapixels", v)?;
+        }
+        if let Some(v) = self.duration_seconds.as_ref() {
+            struct_ser.serialize_field("durationSeconds", v)?;
+        }
+        if !self.seeds.is_empty() {
+            struct_ser.serialize_field("seeds", &self.seeds)?;
+        }
+        if let Some(v) = self.region_description.as_ref() {
+            struct_ser.serialize_field("regionDescription", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for MiniMaxVideoWorkflowConfig {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "input_video",
+            "inputVideo",
+            "reference_images",
+            "referenceImages",
+            "prompt",
+            "prompt_max_length",
+            "promptMaxLength",
+            "aspect_ratio",
+            "aspectRatio",
+            "megapixels",
+            "duration_seconds",
+            "durationSeconds",
+            "seeds",
+            "region_description",
+            "regionDescription",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            InputVideo,
+            ReferenceImages,
+            Prompt,
+            PromptMaxLength,
+            AspectRatio,
+            Megapixels,
+            DurationSeconds,
+            Seeds,
+            RegionDescription,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "inputVideo" | "input_video" => Ok(GeneratedField::InputVideo),
+                            "referenceImages" | "reference_images" => Ok(GeneratedField::ReferenceImages),
+                            "prompt" => Ok(GeneratedField::Prompt),
+                            "promptMaxLength" | "prompt_max_length" => Ok(GeneratedField::PromptMaxLength),
+                            "aspectRatio" | "aspect_ratio" => Ok(GeneratedField::AspectRatio),
+                            "megapixels" => Ok(GeneratedField::Megapixels),
+                            "durationSeconds" | "duration_seconds" => Ok(GeneratedField::DurationSeconds),
+                            "seeds" => Ok(GeneratedField::Seeds),
+                            "regionDescription" | "region_description" => Ok(GeneratedField::RegionDescription),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = MiniMaxVideoWorkflowConfig;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.MiniMaxVideoWorkflowConfig")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MiniMaxVideoWorkflowConfig, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut input_video__ = None;
+                let mut reference_images__ = None;
+                let mut prompt__ = None;
+                let mut prompt_max_length__ = None;
+                let mut aspect_ratio__ = None;
+                let mut megapixels__ = None;
+                let mut duration_seconds__ = None;
+                let mut seeds__ = None;
+                let mut region_description__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::InputVideo => {
+                            if input_video__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputVideo"));
+                            }
+                            input_video__ = map_.next_value()?;
+                        }
+                        GeneratedField::ReferenceImages => {
+                            if reference_images__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("referenceImages"));
+                            }
+                            reference_images__ = map_.next_value()?;
+                        }
+                        GeneratedField::Prompt => {
+                            if prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prompt"));
+                            }
+                            prompt__ = map_.next_value()?;
+                        }
+                        GeneratedField::PromptMaxLength => {
+                            if prompt_max_length__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("promptMaxLength"));
+                            }
+                            prompt_max_length__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::AspectRatio => {
+                            if aspect_ratio__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("aspectRatio"));
+                            }
+                            aspect_ratio__ = map_.next_value()?;
+                        }
+                        GeneratedField::Megapixels => {
+                            if megapixels__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("megapixels"));
+                            }
+                            megapixels__ = map_.next_value()?;
+                        }
+                        GeneratedField::DurationSeconds => {
+                            if duration_seconds__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("durationSeconds"));
+                            }
+                            duration_seconds__ = map_.next_value()?;
+                        }
+                        GeneratedField::Seeds => {
+                            if seeds__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("seeds"));
+                            }
+                            seeds__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::RegionDescription => {
+                            if region_description__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("regionDescription"));
+                            }
+                            region_description__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(MiniMaxVideoWorkflowConfig {
+                    input_video: input_video__,
+                    reference_images: reference_images__,
+                    prompt: prompt__,
+                    prompt_max_length: prompt_max_length__,
+                    aspect_ratio: aspect_ratio__,
+                    megapixels: megapixels__,
+                    duration_seconds: duration_seconds__,
+                    seeds: seeds__.unwrap_or_default(),
+                    region_description: region_description__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.MiniMaxVideoWorkflowConfig", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for Model {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -7663,6 +9359,206 @@ impl<'de> serde::Deserialize<'de> for Model {
             }
         }
         deserializer.deserialize_struct("hi.media.Model", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for MotionTransferWorkflowConfig {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.input_video.is_some() {
+            len += 1;
+        }
+        if self.first_frame.is_some() {
+            len += 1;
+        }
+        if self.use_first_frame.is_some() {
+            len += 1;
+        }
+        if self.prompt.is_some() {
+            len += 1;
+        }
+        if self.prompt_max_length.is_some() {
+            len += 1;
+        }
+        if self.negative_prompt.is_some() {
+            len += 1;
+        }
+        if !self.seeds.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.MotionTransferWorkflowConfig", len)?;
+        if let Some(v) = self.input_video.as_ref() {
+            struct_ser.serialize_field("inputVideo", v)?;
+        }
+        if let Some(v) = self.first_frame.as_ref() {
+            struct_ser.serialize_field("firstFrame", v)?;
+        }
+        if let Some(v) = self.use_first_frame.as_ref() {
+            struct_ser.serialize_field("useFirstFrame", v)?;
+        }
+        if let Some(v) = self.prompt.as_ref() {
+            struct_ser.serialize_field("prompt", v)?;
+        }
+        if let Some(v) = self.prompt_max_length.as_ref() {
+            struct_ser.serialize_field("promptMaxLength", v)?;
+        }
+        if let Some(v) = self.negative_prompt.as_ref() {
+            struct_ser.serialize_field("negativePrompt", v)?;
+        }
+        if !self.seeds.is_empty() {
+            struct_ser.serialize_field("seeds", &self.seeds)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for MotionTransferWorkflowConfig {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "input_video",
+            "inputVideo",
+            "first_frame",
+            "firstFrame",
+            "use_first_frame",
+            "useFirstFrame",
+            "prompt",
+            "prompt_max_length",
+            "promptMaxLength",
+            "negative_prompt",
+            "negativePrompt",
+            "seeds",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            InputVideo,
+            FirstFrame,
+            UseFirstFrame,
+            Prompt,
+            PromptMaxLength,
+            NegativePrompt,
+            Seeds,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "inputVideo" | "input_video" => Ok(GeneratedField::InputVideo),
+                            "firstFrame" | "first_frame" => Ok(GeneratedField::FirstFrame),
+                            "useFirstFrame" | "use_first_frame" => Ok(GeneratedField::UseFirstFrame),
+                            "prompt" => Ok(GeneratedField::Prompt),
+                            "promptMaxLength" | "prompt_max_length" => Ok(GeneratedField::PromptMaxLength),
+                            "negativePrompt" | "negative_prompt" => Ok(GeneratedField::NegativePrompt),
+                            "seeds" => Ok(GeneratedField::Seeds),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = MotionTransferWorkflowConfig;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.MotionTransferWorkflowConfig")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MotionTransferWorkflowConfig, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut input_video__ = None;
+                let mut first_frame__ = None;
+                let mut use_first_frame__ = None;
+                let mut prompt__ = None;
+                let mut prompt_max_length__ = None;
+                let mut negative_prompt__ = None;
+                let mut seeds__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::InputVideo => {
+                            if input_video__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputVideo"));
+                            }
+                            input_video__ = map_.next_value()?;
+                        }
+                        GeneratedField::FirstFrame => {
+                            if first_frame__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("firstFrame"));
+                            }
+                            first_frame__ = map_.next_value()?;
+                        }
+                        GeneratedField::UseFirstFrame => {
+                            if use_first_frame__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("useFirstFrame"));
+                            }
+                            use_first_frame__ = map_.next_value()?;
+                        }
+                        GeneratedField::Prompt => {
+                            if prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prompt"));
+                            }
+                            prompt__ = map_.next_value()?;
+                        }
+                        GeneratedField::PromptMaxLength => {
+                            if prompt_max_length__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("promptMaxLength"));
+                            }
+                            prompt_max_length__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::NegativePrompt => {
+                            if negative_prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("negativePrompt"));
+                            }
+                            negative_prompt__ = map_.next_value()?;
+                        }
+                        GeneratedField::Seeds => {
+                            if seeds__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("seeds"));
+                            }
+                            seeds__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(MotionTransferWorkflowConfig {
+                    input_video: input_video__,
+                    first_frame: first_frame__,
+                    use_first_frame: use_first_frame__,
+                    prompt: prompt__,
+                    prompt_max_length: prompt_max_length__,
+                    negative_prompt: negative_prompt__,
+                    seeds: seeds__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.MotionTransferWorkflowConfig", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for MultipleImageEditTaskParams {
@@ -8508,6 +10404,118 @@ impl<'de> serde::Deserialize<'de> for SetFunctionEnabledReq {
         deserializer.deserialize_struct("hi.media.SetFunctionEnabledReq", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for SetFunctionSortOrderReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.function_id.is_some() {
+            len += 1;
+        }
+        if self.sort_order.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.SetFunctionSortOrderReq", len)?;
+        if let Some(v) = self.function_id.as_ref() {
+            struct_ser.serialize_field("functionId", v)?;
+        }
+        if let Some(v) = self.sort_order.as_ref() {
+            struct_ser.serialize_field("sortOrder", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for SetFunctionSortOrderReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "function_id",
+            "functionId",
+            "sort_order",
+            "sortOrder",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            FunctionId,
+            SortOrder,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "functionId" | "function_id" => Ok(GeneratedField::FunctionId),
+                            "sortOrder" | "sort_order" => Ok(GeneratedField::SortOrder),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = SetFunctionSortOrderReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.SetFunctionSortOrderReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SetFunctionSortOrderReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut function_id__ = None;
+                let mut sort_order__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::FunctionId => {
+                            if function_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("functionId"));
+                            }
+                            function_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::SortOrder => {
+                            if sort_order__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sortOrder"));
+                            }
+                            sort_order__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(SetFunctionSortOrderReq {
+                    function_id: function_id__,
+                    sort_order: sort_order__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.SetFunctionSortOrderReq", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for SingleImageEditTaskParams {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -8950,6 +10958,9 @@ impl serde::Serialize for TaskDetail {
                 task_detail::EffectiveParams::Character(v) => {
                     struct_ser.serialize_field("character", v)?;
                 }
+                task_detail::EffectiveParams::VideoExtension(v) => {
+                    struct_ser.serialize_field("videoExtension", v)?;
+                }
             }
         }
         struct_ser.end()
@@ -8974,6 +10985,8 @@ impl<'de> serde::Deserialize<'de> for TaskDetail {
             "multiple_image_edit",
             "multipleImageEdit",
             "character",
+            "video_extension",
+            "videoExtension",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -8985,6 +10998,7 @@ impl<'de> serde::Deserialize<'de> for TaskDetail {
             SingleImageEdit,
             MultipleImageEdit,
             Character,
+            VideoExtension,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -9013,6 +11027,7 @@ impl<'de> serde::Deserialize<'de> for TaskDetail {
                             "singleImageEdit" | "single_image_edit" => Ok(GeneratedField::SingleImageEdit),
                             "multipleImageEdit" | "multiple_image_edit" => Ok(GeneratedField::MultipleImageEdit),
                             "character" => Ok(GeneratedField::Character),
+                            "videoExtension" | "video_extension" => Ok(GeneratedField::VideoExtension),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -9082,6 +11097,13 @@ impl<'de> serde::Deserialize<'de> for TaskDetail {
                                 return Err(serde::de::Error::duplicate_field("character"));
                             }
                             effective_params__ = map_.next_value::<::std::option::Option<_>>()?.map(task_detail::EffectiveParams::Character)
+;
+                        }
+                        GeneratedField::VideoExtension => {
+                            if effective_params__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("videoExtension"));
+                            }
+                            effective_params__ = map_.next_value::<::std::option::Option<_>>()?.map(task_detail::EffectiveParams::VideoExtension)
 ;
                         }
                     }
@@ -10000,6 +12022,27 @@ impl serde::Serialize for TestWorkflowReq {
         if !self.input_asset_ids.is_empty() {
             len += 1;
         }
+        if self.input_video_asset_id.is_some() {
+            len += 1;
+        }
+        if self.first_frame_asset_id.is_some() {
+            len += 1;
+        }
+        if self.last_frame_asset_id.is_some() {
+            len += 1;
+        }
+        if self.region_description.is_some() {
+            len += 1;
+        }
+        if self.resolution.is_some() {
+            len += 1;
+        }
+        if self.duration_seconds.is_some() {
+            len += 1;
+        }
+        if self.frame_rate.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.media.TestWorkflowReq", len)?;
         if let Some(v) = self.request_id.as_ref() {
             struct_ser.serialize_field("requestId", v)?;
@@ -10015,6 +12058,27 @@ impl serde::Serialize for TestWorkflowReq {
         }
         if !self.input_asset_ids.is_empty() {
             struct_ser.serialize_field("inputAssetIds", &self.input_asset_ids)?;
+        }
+        if let Some(v) = self.input_video_asset_id.as_ref() {
+            struct_ser.serialize_field("inputVideoAssetId", v)?;
+        }
+        if let Some(v) = self.first_frame_asset_id.as_ref() {
+            struct_ser.serialize_field("firstFrameAssetId", v)?;
+        }
+        if let Some(v) = self.last_frame_asset_id.as_ref() {
+            struct_ser.serialize_field("lastFrameAssetId", v)?;
+        }
+        if let Some(v) = self.region_description.as_ref() {
+            struct_ser.serialize_field("regionDescription", v)?;
+        }
+        if let Some(v) = self.resolution.as_ref() {
+            struct_ser.serialize_field("resolution", v)?;
+        }
+        if let Some(v) = self.duration_seconds.as_ref() {
+            struct_ser.serialize_field("durationSeconds", v)?;
+        }
+        if let Some(v) = self.frame_rate.as_ref() {
+            struct_ser.serialize_field("frameRate", v)?;
         }
         struct_ser.end()
     }
@@ -10035,6 +12099,19 @@ impl<'de> serde::Deserialize<'de> for TestWorkflowReq {
             "inputAssetId",
             "input_asset_ids",
             "inputAssetIds",
+            "input_video_asset_id",
+            "inputVideoAssetId",
+            "first_frame_asset_id",
+            "firstFrameAssetId",
+            "last_frame_asset_id",
+            "lastFrameAssetId",
+            "region_description",
+            "regionDescription",
+            "resolution",
+            "duration_seconds",
+            "durationSeconds",
+            "frame_rate",
+            "frameRate",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -10044,6 +12121,13 @@ impl<'de> serde::Deserialize<'de> for TestWorkflowReq {
             Prompt,
             InputAssetId,
             InputAssetIds,
+            InputVideoAssetId,
+            FirstFrameAssetId,
+            LastFrameAssetId,
+            RegionDescription,
+            Resolution,
+            DurationSeconds,
+            FrameRate,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -10070,6 +12154,13 @@ impl<'de> serde::Deserialize<'de> for TestWorkflowReq {
                             "prompt" => Ok(GeneratedField::Prompt),
                             "inputAssetId" | "input_asset_id" => Ok(GeneratedField::InputAssetId),
                             "inputAssetIds" | "input_asset_ids" => Ok(GeneratedField::InputAssetIds),
+                            "inputVideoAssetId" | "input_video_asset_id" => Ok(GeneratedField::InputVideoAssetId),
+                            "firstFrameAssetId" | "first_frame_asset_id" => Ok(GeneratedField::FirstFrameAssetId),
+                            "lastFrameAssetId" | "last_frame_asset_id" => Ok(GeneratedField::LastFrameAssetId),
+                            "regionDescription" | "region_description" => Ok(GeneratedField::RegionDescription),
+                            "resolution" => Ok(GeneratedField::Resolution),
+                            "durationSeconds" | "duration_seconds" => Ok(GeneratedField::DurationSeconds),
+                            "frameRate" | "frame_rate" => Ok(GeneratedField::FrameRate),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -10094,6 +12185,13 @@ impl<'de> serde::Deserialize<'de> for TestWorkflowReq {
                 let mut prompt__ = None;
                 let mut input_asset_id__ = None;
                 let mut input_asset_ids__ = None;
+                let mut input_video_asset_id__ = None;
+                let mut first_frame_asset_id__ = None;
+                let mut last_frame_asset_id__ = None;
+                let mut region_description__ = None;
+                let mut resolution__ = None;
+                let mut duration_seconds__ = None;
+                let mut frame_rate__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::RequestId => {
@@ -10126,6 +12224,52 @@ impl<'de> serde::Deserialize<'de> for TestWorkflowReq {
                             }
                             input_asset_ids__ = Some(map_.next_value()?);
                         }
+                        GeneratedField::InputVideoAssetId => {
+                            if input_video_asset_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputVideoAssetId"));
+                            }
+                            input_video_asset_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::FirstFrameAssetId => {
+                            if first_frame_asset_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("firstFrameAssetId"));
+                            }
+                            first_frame_asset_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::LastFrameAssetId => {
+                            if last_frame_asset_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("lastFrameAssetId"));
+                            }
+                            last_frame_asset_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::RegionDescription => {
+                            if region_description__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("regionDescription"));
+                            }
+                            region_description__ = map_.next_value()?;
+                        }
+                        GeneratedField::Resolution => {
+                            if resolution__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("resolution"));
+                            }
+                            resolution__ = map_.next_value()?;
+                        }
+                        GeneratedField::DurationSeconds => {
+                            if duration_seconds__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("durationSeconds"));
+                            }
+                            duration_seconds__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::FrameRate => {
+                            if frame_rate__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("frameRate"));
+                            }
+                            frame_rate__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
                     }
                 }
                 Ok(TestWorkflowReq {
@@ -10134,6 +12278,13 @@ impl<'de> serde::Deserialize<'de> for TestWorkflowReq {
                     prompt: prompt__,
                     input_asset_id: input_asset_id__,
                     input_asset_ids: input_asset_ids__.unwrap_or_default(),
+                    input_video_asset_id: input_video_asset_id__,
+                    first_frame_asset_id: first_frame_asset_id__,
+                    last_frame_asset_id: last_frame_asset_id__,
+                    region_description: region_description__,
+                    resolution: resolution__,
+                    duration_seconds: duration_seconds__,
+                    frame_rate: frame_rate__,
                 })
             }
         }
@@ -11968,6 +14119,15 @@ impl serde::Serialize for UploadFileResult {
         if self.error_message.is_some() {
             len += 1;
         }
+        if self.width.is_some() {
+            len += 1;
+        }
+        if self.height.is_some() {
+            len += 1;
+        }
+        if self.duration_ms.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.media.UploadFileResult", len)?;
         if let Some(v) = self.client_file_id.as_ref() {
             struct_ser.serialize_field("clientFileId", v)?;
@@ -11997,6 +14157,17 @@ impl serde::Serialize for UploadFileResult {
         if let Some(v) = self.error_message.as_ref() {
             struct_ser.serialize_field("errorMessage", v)?;
         }
+        if let Some(v) = self.width.as_ref() {
+            struct_ser.serialize_field("width", v)?;
+        }
+        if let Some(v) = self.height.as_ref() {
+            struct_ser.serialize_field("height", v)?;
+        }
+        if let Some(v) = self.duration_ms.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("durationMs", ToString::to_string(&v).as_str())?;
+        }
         struct_ser.end()
     }
 }
@@ -12021,6 +14192,10 @@ impl<'de> serde::Deserialize<'de> for UploadFileResult {
             "errorCode",
             "error_message",
             "errorMessage",
+            "width",
+            "height",
+            "duration_ms",
+            "durationMs",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -12033,6 +14208,9 @@ impl<'de> serde::Deserialize<'de> for UploadFileResult {
             SizeBytes,
             ErrorCode,
             ErrorMessage,
+            Width,
+            Height,
+            DurationMs,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -12062,6 +14240,9 @@ impl<'de> serde::Deserialize<'de> for UploadFileResult {
                             "sizeBytes" | "size_bytes" => Ok(GeneratedField::SizeBytes),
                             "errorCode" | "error_code" => Ok(GeneratedField::ErrorCode),
                             "errorMessage" | "error_message" => Ok(GeneratedField::ErrorMessage),
+                            "width" => Ok(GeneratedField::Width),
+                            "height" => Ok(GeneratedField::Height),
+                            "durationMs" | "duration_ms" => Ok(GeneratedField::DurationMs),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -12089,6 +14270,9 @@ impl<'de> serde::Deserialize<'de> for UploadFileResult {
                 let mut size_bytes__ = None;
                 let mut error_code__ = None;
                 let mut error_message__ = None;
+                let mut width__ = None;
+                let mut height__ = None;
+                let mut duration_ms__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::ClientFileId => {
@@ -12141,6 +14325,30 @@ impl<'de> serde::Deserialize<'de> for UploadFileResult {
                             }
                             error_message__ = map_.next_value()?;
                         }
+                        GeneratedField::Width => {
+                            if width__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("width"));
+                            }
+                            width__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Height => {
+                            if height__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("height"));
+                            }
+                            height__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::DurationMs => {
+                            if duration_ms__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("durationMs"));
+                            }
+                            duration_ms__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
                     }
                 }
                 Ok(UploadFileResult {
@@ -12152,6 +14360,9 @@ impl<'de> serde::Deserialize<'de> for UploadFileResult {
                     size_bytes: size_bytes__,
                     error_code: error_code__,
                     error_message: error_message__,
+                    width: width__,
+                    height: height__,
+                    duration_ms: duration_ms__,
                 })
             }
         }
@@ -13265,6 +15476,283 @@ impl<'de> serde::Deserialize<'de> for ValidateWorkflowResp {
         deserializer.deserialize_struct("hi.media.ValidateWorkflowResp", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for VideoExtensionTaskParams {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.input_video_asset_id.is_some() {
+            len += 1;
+        }
+        if self.first_frame_asset_id.is_some() {
+            len += 1;
+        }
+        if self.last_frame_asset_id.is_some() {
+            len += 1;
+        }
+        if !self.input_asset_ids.is_empty() {
+            len += 1;
+        }
+        if self.prompt.is_some() {
+            len += 1;
+        }
+        if self.region_description.is_some() {
+            len += 1;
+        }
+        if self.seed.is_some() {
+            len += 1;
+        }
+        if self.aspect_ratio.is_some() {
+            len += 1;
+        }
+        if self.megapixels.is_some() {
+            len += 1;
+        }
+        if self.duration_seconds.is_some() {
+            len += 1;
+        }
+        if self.frame_rate.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.VideoExtensionTaskParams", len)?;
+        if let Some(v) = self.input_video_asset_id.as_ref() {
+            struct_ser.serialize_field("inputVideoAssetId", v)?;
+        }
+        if let Some(v) = self.first_frame_asset_id.as_ref() {
+            struct_ser.serialize_field("firstFrameAssetId", v)?;
+        }
+        if let Some(v) = self.last_frame_asset_id.as_ref() {
+            struct_ser.serialize_field("lastFrameAssetId", v)?;
+        }
+        if !self.input_asset_ids.is_empty() {
+            struct_ser.serialize_field("inputAssetIds", &self.input_asset_ids)?;
+        }
+        if let Some(v) = self.prompt.as_ref() {
+            struct_ser.serialize_field("prompt", v)?;
+        }
+        if let Some(v) = self.region_description.as_ref() {
+            struct_ser.serialize_field("regionDescription", v)?;
+        }
+        if let Some(v) = self.seed.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("seed", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.aspect_ratio.as_ref() {
+            struct_ser.serialize_field("aspectRatio", v)?;
+        }
+        if let Some(v) = self.megapixels.as_ref() {
+            struct_ser.serialize_field("megapixels", v)?;
+        }
+        if let Some(v) = self.duration_seconds.as_ref() {
+            struct_ser.serialize_field("durationSeconds", v)?;
+        }
+        if let Some(v) = self.frame_rate.as_ref() {
+            struct_ser.serialize_field("frameRate", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for VideoExtensionTaskParams {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "input_video_asset_id",
+            "inputVideoAssetId",
+            "first_frame_asset_id",
+            "firstFrameAssetId",
+            "last_frame_asset_id",
+            "lastFrameAssetId",
+            "input_asset_ids",
+            "inputAssetIds",
+            "prompt",
+            "region_description",
+            "regionDescription",
+            "seed",
+            "aspect_ratio",
+            "aspectRatio",
+            "megapixels",
+            "duration_seconds",
+            "durationSeconds",
+            "frame_rate",
+            "frameRate",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            InputVideoAssetId,
+            FirstFrameAssetId,
+            LastFrameAssetId,
+            InputAssetIds,
+            Prompt,
+            RegionDescription,
+            Seed,
+            AspectRatio,
+            Megapixels,
+            DurationSeconds,
+            FrameRate,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "inputVideoAssetId" | "input_video_asset_id" => Ok(GeneratedField::InputVideoAssetId),
+                            "firstFrameAssetId" | "first_frame_asset_id" => Ok(GeneratedField::FirstFrameAssetId),
+                            "lastFrameAssetId" | "last_frame_asset_id" => Ok(GeneratedField::LastFrameAssetId),
+                            "inputAssetIds" | "input_asset_ids" => Ok(GeneratedField::InputAssetIds),
+                            "prompt" => Ok(GeneratedField::Prompt),
+                            "regionDescription" | "region_description" => Ok(GeneratedField::RegionDescription),
+                            "seed" => Ok(GeneratedField::Seed),
+                            "aspectRatio" | "aspect_ratio" => Ok(GeneratedField::AspectRatio),
+                            "megapixels" => Ok(GeneratedField::Megapixels),
+                            "durationSeconds" | "duration_seconds" => Ok(GeneratedField::DurationSeconds),
+                            "frameRate" | "frame_rate" => Ok(GeneratedField::FrameRate),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = VideoExtensionTaskParams;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.VideoExtensionTaskParams")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<VideoExtensionTaskParams, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut input_video_asset_id__ = None;
+                let mut first_frame_asset_id__ = None;
+                let mut last_frame_asset_id__ = None;
+                let mut input_asset_ids__ = None;
+                let mut prompt__ = None;
+                let mut region_description__ = None;
+                let mut seed__ = None;
+                let mut aspect_ratio__ = None;
+                let mut megapixels__ = None;
+                let mut duration_seconds__ = None;
+                let mut frame_rate__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::InputVideoAssetId => {
+                            if input_video_asset_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputVideoAssetId"));
+                            }
+                            input_video_asset_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::FirstFrameAssetId => {
+                            if first_frame_asset_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("firstFrameAssetId"));
+                            }
+                            first_frame_asset_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::LastFrameAssetId => {
+                            if last_frame_asset_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("lastFrameAssetId"));
+                            }
+                            last_frame_asset_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::InputAssetIds => {
+                            if input_asset_ids__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inputAssetIds"));
+                            }
+                            input_asset_ids__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Prompt => {
+                            if prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prompt"));
+                            }
+                            prompt__ = map_.next_value()?;
+                        }
+                        GeneratedField::RegionDescription => {
+                            if region_description__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("regionDescription"));
+                            }
+                            region_description__ = map_.next_value()?;
+                        }
+                        GeneratedField::Seed => {
+                            if seed__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("seed"));
+                            }
+                            seed__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::AspectRatio => {
+                            if aspect_ratio__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("aspectRatio"));
+                            }
+                            aspect_ratio__ = map_.next_value()?;
+                        }
+                        GeneratedField::Megapixels => {
+                            if megapixels__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("megapixels"));
+                            }
+                            megapixels__ = map_.next_value()?;
+                        }
+                        GeneratedField::DurationSeconds => {
+                            if duration_seconds__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("durationSeconds"));
+                            }
+                            duration_seconds__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::FrameRate => {
+                            if frame_rate__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("frameRate"));
+                            }
+                            frame_rate__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(VideoExtensionTaskParams {
+                    input_video_asset_id: input_video_asset_id__,
+                    first_frame_asset_id: first_frame_asset_id__,
+                    last_frame_asset_id: last_frame_asset_id__,
+                    input_asset_ids: input_asset_ids__.unwrap_or_default(),
+                    prompt: prompt__,
+                    region_description: region_description__,
+                    seed: seed__,
+                    aspect_ratio: aspect_ratio__,
+                    megapixels: megapixels__,
+                    duration_seconds: duration_seconds__,
+                    frame_rate: frame_rate__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.VideoExtensionTaskParams", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for VideoParameterConfig {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -14270,6 +16758,21 @@ impl serde::Serialize for WorkflowExecutionConfig {
                 workflow_execution_config::FunctionConfig::Character(v) => {
                     struct_ser.serialize_field("character", v)?;
                 }
+                workflow_execution_config::FunctionConfig::FirstLastFrame(v) => {
+                    struct_ser.serialize_field("firstLastFrame", v)?;
+                }
+                workflow_execution_config::FunctionConfig::MotionTransfer(v) => {
+                    struct_ser.serialize_field("motionTransfer", v)?;
+                }
+                workflow_execution_config::FunctionConfig::Continuation(v) => {
+                    struct_ser.serialize_field("continuation", v)?;
+                }
+                workflow_execution_config::FunctionConfig::Reference(v) => {
+                    struct_ser.serialize_field("reference", v)?;
+                }
+                workflow_execution_config::FunctionConfig::AdvancedReplace(v) => {
+                    struct_ser.serialize_field("advancedReplace", v)?;
+                }
             }
         }
         struct_ser.end()
@@ -14296,6 +16799,14 @@ impl<'de> serde::Deserialize<'de> for WorkflowExecutionConfig {
             "multiple_image_edit",
             "multipleImageEdit",
             "character",
+            "first_last_frame",
+            "firstLastFrame",
+            "motion_transfer",
+            "motionTransfer",
+            "continuation",
+            "reference",
+            "advanced_replace",
+            "advancedReplace",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -14308,6 +16819,11 @@ impl<'de> serde::Deserialize<'de> for WorkflowExecutionConfig {
             SingleImageEdit,
             MultipleImageEdit,
             Character,
+            FirstLastFrame,
+            MotionTransfer,
+            Continuation,
+            Reference,
+            AdvancedReplace,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -14337,6 +16853,11 @@ impl<'de> serde::Deserialize<'de> for WorkflowExecutionConfig {
                             "singleImageEdit" | "single_image_edit" => Ok(GeneratedField::SingleImageEdit),
                             "multipleImageEdit" | "multiple_image_edit" => Ok(GeneratedField::MultipleImageEdit),
                             "character" => Ok(GeneratedField::Character),
+                            "firstLastFrame" | "first_last_frame" => Ok(GeneratedField::FirstLastFrame),
+                            "motionTransfer" | "motion_transfer" => Ok(GeneratedField::MotionTransfer),
+                            "continuation" => Ok(GeneratedField::Continuation),
+                            "reference" => Ok(GeneratedField::Reference),
+                            "advancedReplace" | "advanced_replace" => Ok(GeneratedField::AdvancedReplace),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -14415,6 +16936,41 @@ impl<'de> serde::Deserialize<'de> for WorkflowExecutionConfig {
                                 return Err(serde::de::Error::duplicate_field("character"));
                             }
                             function_config__ = map_.next_value::<::std::option::Option<_>>()?.map(workflow_execution_config::FunctionConfig::Character)
+;
+                        }
+                        GeneratedField::FirstLastFrame => {
+                            if function_config__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("firstLastFrame"));
+                            }
+                            function_config__ = map_.next_value::<::std::option::Option<_>>()?.map(workflow_execution_config::FunctionConfig::FirstLastFrame)
+;
+                        }
+                        GeneratedField::MotionTransfer => {
+                            if function_config__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("motionTransfer"));
+                            }
+                            function_config__ = map_.next_value::<::std::option::Option<_>>()?.map(workflow_execution_config::FunctionConfig::MotionTransfer)
+;
+                        }
+                        GeneratedField::Continuation => {
+                            if function_config__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("continuation"));
+                            }
+                            function_config__ = map_.next_value::<::std::option::Option<_>>()?.map(workflow_execution_config::FunctionConfig::Continuation)
+;
+                        }
+                        GeneratedField::Reference => {
+                            if function_config__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("reference"));
+                            }
+                            function_config__ = map_.next_value::<::std::option::Option<_>>()?.map(workflow_execution_config::FunctionConfig::Reference)
+;
+                        }
+                        GeneratedField::AdvancedReplace => {
+                            if function_config__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("advancedReplace"));
+                            }
+                            function_config__ = map_.next_value::<::std::option::Option<_>>()?.map(workflow_execution_config::FunctionConfig::AdvancedReplace)
 ;
                         }
                     }
@@ -15626,6 +18182,116 @@ impl<'de> serde::Deserialize<'de> for WorkflowIssueSeverity {
             }
         }
         deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for WorkflowMiniMaxReferenceImages {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.template_node_id.is_some() {
+            len += 1;
+        }
+        if self.reference_node_id.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.WorkflowMiniMaxReferenceImages", len)?;
+        if let Some(v) = self.template_node_id.as_ref() {
+            struct_ser.serialize_field("templateNodeId", v)?;
+        }
+        if let Some(v) = self.reference_node_id.as_ref() {
+            struct_ser.serialize_field("referenceNodeId", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for WorkflowMiniMaxReferenceImages {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "template_node_id",
+            "templateNodeId",
+            "reference_node_id",
+            "referenceNodeId",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            TemplateNodeId,
+            ReferenceNodeId,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "templateNodeId" | "template_node_id" => Ok(GeneratedField::TemplateNodeId),
+                            "referenceNodeId" | "reference_node_id" => Ok(GeneratedField::ReferenceNodeId),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = WorkflowMiniMaxReferenceImages;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.WorkflowMiniMaxReferenceImages")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<WorkflowMiniMaxReferenceImages, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut template_node_id__ = None;
+                let mut reference_node_id__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::TemplateNodeId => {
+                            if template_node_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("templateNodeId"));
+                            }
+                            template_node_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::ReferenceNodeId => {
+                            if reference_node_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("referenceNodeId"));
+                            }
+                            reference_node_id__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(WorkflowMiniMaxReferenceImages {
+                    template_node_id: template_node_id__,
+                    reference_node_id: reference_node_id__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.WorkflowMiniMaxReferenceImages", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for WorkflowModelOption {

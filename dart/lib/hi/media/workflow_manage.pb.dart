@@ -1822,6 +1822,627 @@ class CharacterWorkflowConfig extends $pb.GeneratedMessage {
   void clearPromptMaxLength() => $_clearField(5);
 }
 
+/// 首尾帧执行配置；输出宽高由宽高比和像素量计算后按 32 对齐，分别写入宽、高绑定。
+class FirstLastFrameWorkflowConfig extends $pb.GeneratedMessage {
+  factory FirstLastFrameWorkflowConfig({
+    WorkflowInputBinding? firstFrame,
+    WorkflowInputBinding? lastFrame,
+    WorkflowInputBinding? prompt,
+    $core.int? promptMaxLength,
+    WorkflowFixedTextInput? negativePrompt,
+    WorkflowInputBinding? width,
+    WorkflowInputBinding? height,
+    $1.StringOptionConfig? aspectRatio,
+    $1.DecimalOptionConfig? megapixels,
+    WorkflowIntRangeInput? durationSeconds,
+    WorkflowFrameRateInput? frameRate,
+    $core.Iterable<WorkflowInputBinding>? seeds,
+  }) {
+    final result = create();
+    if (firstFrame != null) result.firstFrame = firstFrame;
+    if (lastFrame != null) result.lastFrame = lastFrame;
+    if (prompt != null) result.prompt = prompt;
+    if (promptMaxLength != null) result.promptMaxLength = promptMaxLength;
+    if (negativePrompt != null) result.negativePrompt = negativePrompt;
+    if (width != null) result.width = width;
+    if (height != null) result.height = height;
+    if (aspectRatio != null) result.aspectRatio = aspectRatio;
+    if (megapixels != null) result.megapixels = megapixels;
+    if (durationSeconds != null) result.durationSeconds = durationSeconds;
+    if (frameRate != null) result.frameRate = frameRate;
+    if (seeds != null) result.seeds.addAll(seeds);
+    return result;
+  }
+
+  FirstLastFrameWorkflowConfig._();
+
+  factory FirstLastFrameWorkflowConfig.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory FirstLastFrameWorkflowConfig.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'FirstLastFrameWorkflowConfig',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOM<WorkflowInputBinding>(1, _omitFieldNames ? '' : 'firstFrame',
+        subBuilder: WorkflowInputBinding.create)
+    ..aOM<WorkflowInputBinding>(2, _omitFieldNames ? '' : 'lastFrame',
+        subBuilder: WorkflowInputBinding.create)
+    ..aOM<WorkflowInputBinding>(3, _omitFieldNames ? '' : 'prompt',
+        subBuilder: WorkflowInputBinding.create)
+    ..aI(4, _omitFieldNames ? '' : 'promptMaxLength',
+        fieldType: $pb.PbFieldType.OU3)
+    ..aOM<WorkflowFixedTextInput>(5, _omitFieldNames ? '' : 'negativePrompt',
+        subBuilder: WorkflowFixedTextInput.create)
+    ..aOM<WorkflowInputBinding>(6, _omitFieldNames ? '' : 'width',
+        subBuilder: WorkflowInputBinding.create)
+    ..aOM<WorkflowInputBinding>(7, _omitFieldNames ? '' : 'height',
+        subBuilder: WorkflowInputBinding.create)
+    ..aOM<$1.StringOptionConfig>(8, _omitFieldNames ? '' : 'aspectRatio',
+        subBuilder: $1.StringOptionConfig.create)
+    ..aOM<$1.DecimalOptionConfig>(9, _omitFieldNames ? '' : 'megapixels',
+        subBuilder: $1.DecimalOptionConfig.create)
+    ..aOM<WorkflowIntRangeInput>(10, _omitFieldNames ? '' : 'durationSeconds',
+        subBuilder: WorkflowIntRangeInput.create)
+    ..aOM<WorkflowFrameRateInput>(11, _omitFieldNames ? '' : 'frameRate',
+        subBuilder: WorkflowFrameRateInput.create)
+    ..pPM<WorkflowInputBinding>(12, _omitFieldNames ? '' : 'seeds',
+        subBuilder: WorkflowInputBinding.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  FirstLastFrameWorkflowConfig clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  FirstLastFrameWorkflowConfig copyWith(
+          void Function(FirstLastFrameWorkflowConfig) updates) =>
+      super.copyWith(
+              (message) => updates(message as FirstLastFrameWorkflowConfig))
+          as FirstLastFrameWorkflowConfig;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static FirstLastFrameWorkflowConfig create() =>
+      FirstLastFrameWorkflowConfig._();
+  @$core.override
+  FirstLastFrameWorkflowConfig createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static FirstLastFrameWorkflowConfig getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<FirstLastFrameWorkflowConfig>(create);
+  static FirstLastFrameWorkflowConfig? _defaultInstance;
+
+  /// 两个 LoadImage.image，分别承担首帧、尾帧；管理员按角色绑定。
+  @$pb.TagNumber(1)
+  WorkflowInputBinding get firstFrame => $_getN(0);
+  @$pb.TagNumber(1)
+  set firstFrame(WorkflowInputBinding value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasFirstFrame() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearFirstFrame() => $_clearField(1);
+  @$pb.TagNumber(1)
+  WorkflowInputBinding ensureFirstFrame() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  WorkflowInputBinding get lastFrame => $_getN(1);
+  @$pb.TagNumber(2)
+  set lastFrame(WorkflowInputBinding value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasLastFrame() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearLastFrame() => $_clearField(2);
+  @$pb.TagNumber(2)
+  WorkflowInputBinding ensureLastFrame() => $_ensure(1);
+
+  /// 用户原文写入有效路径；不翻译、拼接或启用提示词增强。
+  @$pb.TagNumber(3)
+  WorkflowInputBinding get prompt => $_getN(2);
+  @$pb.TagNumber(3)
+  set prompt(WorkflowInputBinding value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasPrompt() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearPrompt() => $_clearField(3);
+  @$pb.TagNumber(3)
+  WorkflowInputBinding ensurePrompt() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  $core.int get promptMaxLength => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set promptMaxLength($core.int value) => $_setUnsignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasPromptMaxLength() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearPromptMaxLength() => $_clearField(4);
+
+  /// 可选管理员负向词；省略时保留工作流原值。
+  @$pb.TagNumber(5)
+  WorkflowFixedTextInput get negativePrompt => $_getN(4);
+  @$pb.TagNumber(5)
+  set negativePrompt(WorkflowFixedTextInput value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasNegativePrompt() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearNegativePrompt() => $_clearField(5);
+  @$pb.TagNumber(5)
+  WorkflowFixedTextInput ensureNegativePrompt() => $_ensure(4);
+
+  /// 计算后的像素宽高绑定；允许整数业务值写入兼容 INT/FLOAT 节点。
+  @$pb.TagNumber(6)
+  WorkflowInputBinding get width => $_getN(5);
+  @$pb.TagNumber(6)
+  set width(WorkflowInputBinding value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasWidth() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearWidth() => $_clearField(6);
+  @$pb.TagNumber(6)
+  WorkflowInputBinding ensureWidth() => $_ensure(5);
+
+  @$pb.TagNumber(7)
+  WorkflowInputBinding get height => $_getN(6);
+  @$pb.TagNumber(7)
+  set height(WorkflowInputBinding value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasHeight() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearHeight() => $_clearField(7);
+  @$pb.TagNumber(7)
+  WorkflowInputBinding ensureHeight() => $_ensure(6);
+
+  /// 公开允许值与默认值，不直接写入节点；初始 16:9 (Widescreen)。
+  @$pb.TagNumber(8)
+  $1.StringOptionConfig get aspectRatio => $_getN(7);
+  @$pb.TagNumber(8)
+  set aspectRatio($1.StringOptionConfig value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasAspectRatio() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearAspectRatio() => $_clearField(8);
+  @$pb.TagNumber(8)
+  $1.StringOptionConfig ensureAspectRatio() => $_ensure(7);
+
+  /// 规范十进制字符串，初始默认 "0.9"；用于计算像素宽高。
+  @$pb.TagNumber(9)
+  $1.DecimalOptionConfig get megapixels => $_getN(8);
+  @$pb.TagNumber(9)
+  set megapixels($1.DecimalOptionConfig value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasMegapixels() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearMegapixels() => $_clearField(9);
+  @$pb.TagNumber(9)
+  $1.DecimalOptionConfig ensureMegapixels() => $_ensure(8);
+
+  /// 初始 3～15 秒、默认 5；每个工作流独立可调。
+  @$pb.TagNumber(10)
+  WorkflowIntRangeInput get durationSeconds => $_getN(9);
+  @$pb.TagNumber(10)
+  set durationSeconds(WorkflowIntRangeInput value) => $_setField(10, value);
+  @$pb.TagNumber(10)
+  $core.bool hasDurationSeconds() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearDurationSeconds() => $_clearField(10);
+  @$pb.TagNumber(10)
+  WorkflowIntRangeInput ensureDurationSeconds() => $_ensure(9);
+
+  /// 初始默认 24，可选或固定；固定值须与执行图一致。
+  @$pb.TagNumber(11)
+  WorkflowFrameRateInput get frameRate => $_getN(10);
+  @$pb.TagNumber(11)
+  set frameRate(WorkflowFrameRateInput value) => $_setField(11, value);
+  @$pb.TagNumber(11)
+  $core.bool hasFrameRate() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearFrameRate() => $_clearField(11);
+  @$pb.TagNumber(11)
+  WorkflowFrameRateInput ensureFrameRate() => $_ensure(10);
+
+  /// 一个或多个主生成 seed 输入，全部写入同一个后端任务随机值。
+  @$pb.TagNumber(12)
+  $pb.PbList<WorkflowInputBinding> get seeds => $_getList(11);
+}
+
+/// 模仿生成配置；当前为深度控制，不提供用户输出尺寸、时长或帧率参数。
+class MotionTransferWorkflowConfig extends $pb.GeneratedMessage {
+  factory MotionTransferWorkflowConfig({
+    WorkflowInputBinding? inputVideo,
+    WorkflowInputBinding? firstFrame,
+    WorkflowInputBinding? useFirstFrame,
+    WorkflowInputBinding? prompt,
+    $core.int? promptMaxLength,
+    WorkflowFixedTextInput? negativePrompt,
+    $core.Iterable<WorkflowInputBinding>? seeds,
+  }) {
+    final result = create();
+    if (inputVideo != null) result.inputVideo = inputVideo;
+    if (firstFrame != null) result.firstFrame = firstFrame;
+    if (useFirstFrame != null) result.useFirstFrame = useFirstFrame;
+    if (prompt != null) result.prompt = prompt;
+    if (promptMaxLength != null) result.promptMaxLength = promptMaxLength;
+    if (negativePrompt != null) result.negativePrompt = negativePrompt;
+    if (seeds != null) result.seeds.addAll(seeds);
+    return result;
+  }
+
+  MotionTransferWorkflowConfig._();
+
+  factory MotionTransferWorkflowConfig.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MotionTransferWorkflowConfig.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MotionTransferWorkflowConfig',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOM<WorkflowInputBinding>(1, _omitFieldNames ? '' : 'inputVideo',
+        subBuilder: WorkflowInputBinding.create)
+    ..aOM<WorkflowInputBinding>(2, _omitFieldNames ? '' : 'firstFrame',
+        subBuilder: WorkflowInputBinding.create)
+    ..aOM<WorkflowInputBinding>(3, _omitFieldNames ? '' : 'useFirstFrame',
+        subBuilder: WorkflowInputBinding.create)
+    ..aOM<WorkflowInputBinding>(4, _omitFieldNames ? '' : 'prompt',
+        subBuilder: WorkflowInputBinding.create)
+    ..aI(5, _omitFieldNames ? '' : 'promptMaxLength',
+        fieldType: $pb.PbFieldType.OU3)
+    ..aOM<WorkflowFixedTextInput>(6, _omitFieldNames ? '' : 'negativePrompt',
+        subBuilder: WorkflowFixedTextInput.create)
+    ..pPM<WorkflowInputBinding>(7, _omitFieldNames ? '' : 'seeds',
+        subBuilder: WorkflowInputBinding.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MotionTransferWorkflowConfig clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MotionTransferWorkflowConfig copyWith(
+          void Function(MotionTransferWorkflowConfig) updates) =>
+      super.copyWith(
+              (message) => updates(message as MotionTransferWorkflowConfig))
+          as MotionTransferWorkflowConfig;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MotionTransferWorkflowConfig create() =>
+      MotionTransferWorkflowConfig._();
+  @$core.override
+  MotionTransferWorkflowConfig createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MotionTransferWorkflowConfig getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MotionTransferWorkflowConfig>(create);
+  static MotionTransferWorkflowConfig? _defaultInstance;
+
+  /// LoadVideo.file，执行时写入本次上传响应对应的文件引用。
+  @$pb.TagNumber(1)
+  WorkflowInputBinding get inputVideo => $_getN(0);
+  @$pb.TagNumber(1)
+  set inputVideo(WorkflowInputBinding value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasInputVideo() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearInputVideo() => $_clearField(1);
+  @$pb.TagNumber(1)
+  WorkflowInputBinding ensureInputVideo() => $_ensure(0);
+
+  /// 可选首帧的 LoadImage.image 位置；绑定必填，用户素材可省略。
+  @$pb.TagNumber(2)
+  WorkflowInputBinding get firstFrame => $_getN(1);
+  @$pb.TagNumber(2)
+  set firstFrame(WorkflowInputBinding value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasFirstFrame() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearFirstFrame() => $_clearField(2);
+  @$pb.TagNumber(2)
+  WorkflowInputBinding ensureFirstFrame() => $_ensure(1);
+
+  /// 布尔输入，由是否提供首帧决定；无图时后端还须旁路两阶段图片条件并清除无用分支。
+  @$pb.TagNumber(3)
+  WorkflowInputBinding get useFirstFrame => $_getN(2);
+  @$pb.TagNumber(3)
+  set useFirstFrame(WorkflowInputBinding value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasUseFirstFrame() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearUseFirstFrame() => $_clearField(3);
+  @$pb.TagNumber(3)
+  WorkflowInputBinding ensureUseFirstFrame() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  WorkflowInputBinding get prompt => $_getN(3);
+  @$pb.TagNumber(4)
+  set prompt(WorkflowInputBinding value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasPrompt() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearPrompt() => $_clearField(4);
+  @$pb.TagNumber(4)
+  WorkflowInputBinding ensurePrompt() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  $core.int get promptMaxLength => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set promptMaxLength($core.int value) => $_setUnsignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasPromptMaxLength() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearPromptMaxLength() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  WorkflowFixedTextInput get negativePrompt => $_getN(5);
+  @$pb.TagNumber(6)
+  set negativePrompt(WorkflowFixedTextInput value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasNegativePrompt() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearNegativePrompt() => $_clearField(6);
+  @$pb.TagNumber(6)
+  WorkflowFixedTextInput ensureNegativePrompt() => $_ensure(5);
+
+  /// 多阶段主生成使用同一个后端 seed，不修改原有视频功能的种子行为。
+  @$pb.TagNumber(7)
+  $pb.PbList<WorkflowInputBinding> get seeds => $_getList(6);
+}
+
+/// MiniMax 零至四张有序参考图片接入；只配置模板和接收节点，不配置通用重连规则。
+class WorkflowMiniMaxReferenceImages extends $pb.GeneratedMessage {
+  factory WorkflowMiniMaxReferenceImages({
+    $core.String? templateNodeId,
+    $core.String? referenceNodeId,
+  }) {
+    final result = create();
+    if (templateNodeId != null) result.templateNodeId = templateNodeId;
+    if (referenceNodeId != null) result.referenceNodeId = referenceNodeId;
+    return result;
+  }
+
+  WorkflowMiniMaxReferenceImages._();
+
+  factory WorkflowMiniMaxReferenceImages.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory WorkflowMiniMaxReferenceImages.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'WorkflowMiniMaxReferenceImages',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'templateNodeId')
+    ..aOS(2, _omitFieldNames ? '' : 'referenceNodeId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  WorkflowMiniMaxReferenceImages clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  WorkflowMiniMaxReferenceImages copyWith(
+          void Function(WorkflowMiniMaxReferenceImages) updates) =>
+      super.copyWith(
+              (message) => updates(message as WorkflowMiniMaxReferenceImages))
+          as WorkflowMiniMaxReferenceImages;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static WorkflowMiniMaxReferenceImages create() =>
+      WorkflowMiniMaxReferenceImages._();
+  @$core.override
+  WorkflowMiniMaxReferenceImages createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static WorkflowMiniMaxReferenceImages getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<WorkflowMiniMaxReferenceImages>(create);
+  static WorkflowMiniMaxReferenceImages? _defaultInstance;
+
+  /// 可克隆的 LoadImage，后端按实际图片数量准备加载节点，移除未使用示例。
+  @$pb.TagNumber(1)
+  $core.String get templateNodeId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set templateNodeId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasTemplateNodeId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTemplateNodeId() => $_clearField(1);
+
+  /// MiniMaxH3ReferenceToVideo；按顺序写入 ref_images.ref_image_0 至实际图片数。
+  @$pb.TagNumber(2)
+  $core.String get referenceNodeId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set referenceNodeId($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasReferenceNodeId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearReferenceNodeId() => $_clearField(2);
+}
+
+/// 引导、参考及高级替换共用的 MiniMax 参数结构，由外层 function_config 确定功能。
+/// 固定输出 24 FPS；输入视频在执行前适配临时副本，不改存储原件。
+class MiniMaxVideoWorkflowConfig extends $pb.GeneratedMessage {
+  factory MiniMaxVideoWorkflowConfig({
+    WorkflowInputBinding? inputVideo,
+    WorkflowMiniMaxReferenceImages? referenceImages,
+    WorkflowInputBinding? prompt,
+    $core.int? promptMaxLength,
+    WorkflowStringOptionInput? aspectRatio,
+    WorkflowDecimalOptionInput? megapixels,
+    WorkflowIntRangeInput? durationSeconds,
+    $core.Iterable<WorkflowInputBinding>? seeds,
+    WorkflowInputBinding? regionDescription,
+  }) {
+    final result = create();
+    if (inputVideo != null) result.inputVideo = inputVideo;
+    if (referenceImages != null) result.referenceImages = referenceImages;
+    if (prompt != null) result.prompt = prompt;
+    if (promptMaxLength != null) result.promptMaxLength = promptMaxLength;
+    if (aspectRatio != null) result.aspectRatio = aspectRatio;
+    if (megapixels != null) result.megapixels = megapixels;
+    if (durationSeconds != null) result.durationSeconds = durationSeconds;
+    if (seeds != null) result.seeds.addAll(seeds);
+    if (regionDescription != null) result.regionDescription = regionDescription;
+    return result;
+  }
+
+  MiniMaxVideoWorkflowConfig._();
+
+  factory MiniMaxVideoWorkflowConfig.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MiniMaxVideoWorkflowConfig.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MiniMaxVideoWorkflowConfig',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOM<WorkflowInputBinding>(1, _omitFieldNames ? '' : 'inputVideo',
+        subBuilder: WorkflowInputBinding.create)
+    ..aOM<WorkflowMiniMaxReferenceImages>(
+        2, _omitFieldNames ? '' : 'referenceImages',
+        subBuilder: WorkflowMiniMaxReferenceImages.create)
+    ..aOM<WorkflowInputBinding>(3, _omitFieldNames ? '' : 'prompt',
+        subBuilder: WorkflowInputBinding.create)
+    ..aI(4, _omitFieldNames ? '' : 'promptMaxLength',
+        fieldType: $pb.PbFieldType.OU3)
+    ..aOM<WorkflowStringOptionInput>(5, _omitFieldNames ? '' : 'aspectRatio',
+        subBuilder: WorkflowStringOptionInput.create)
+    ..aOM<WorkflowDecimalOptionInput>(6, _omitFieldNames ? '' : 'megapixels',
+        subBuilder: WorkflowDecimalOptionInput.create)
+    ..aOM<WorkflowIntRangeInput>(7, _omitFieldNames ? '' : 'durationSeconds',
+        subBuilder: WorkflowIntRangeInput.create)
+    ..pPM<WorkflowInputBinding>(8, _omitFieldNames ? '' : 'seeds',
+        subBuilder: WorkflowInputBinding.create)
+    ..aOM<WorkflowInputBinding>(9, _omitFieldNames ? '' : 'regionDescription',
+        subBuilder: WorkflowInputBinding.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MiniMaxVideoWorkflowConfig clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MiniMaxVideoWorkflowConfig copyWith(
+          void Function(MiniMaxVideoWorkflowConfig) updates) =>
+      super.copyWith(
+              (message) => updates(message as MiniMaxVideoWorkflowConfig))
+          as MiniMaxVideoWorkflowConfig;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MiniMaxVideoWorkflowConfig create() => MiniMaxVideoWorkflowConfig._();
+  @$core.override
+  MiniMaxVideoWorkflowConfig createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MiniMaxVideoWorkflowConfig getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MiniMaxVideoWorkflowConfig>(create);
+  static MiniMaxVideoWorkflowConfig? _defaultInstance;
+
+  /// LoadVideo.file；绑定必填，参考生成用户可不提供视频，此时断开视频与音频分支。
+  @$pb.TagNumber(1)
+  WorkflowInputBinding get inputVideo => $_getN(0);
+  @$pb.TagNumber(1)
+  set inputVideo(WorkflowInputBinding value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasInputVideo() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearInputVideo() => $_clearField(1);
+  @$pb.TagNumber(1)
+  WorkflowInputBinding ensureInputVideo() => $_ensure(0);
+
+  /// 用户可选 0～4 张图片，按提交顺序接入；不存在的素材不沿用示例。
+  @$pb.TagNumber(2)
+  WorkflowMiniMaxReferenceImages get referenceImages => $_getN(1);
+  @$pb.TagNumber(2)
+  set referenceImages(WorkflowMiniMaxReferenceImages value) =>
+      $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasReferenceImages() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearReferenceImages() => $_clearField(2);
+  @$pb.TagNumber(2)
+  WorkflowMiniMaxReferenceImages ensureReferenceImages() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  WorkflowInputBinding get prompt => $_getN(2);
+  @$pb.TagNumber(3)
+  set prompt(WorkflowInputBinding value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasPrompt() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearPrompt() => $_clearField(3);
+  @$pb.TagNumber(3)
+  WorkflowInputBinding ensurePrompt() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  $core.int get promptMaxLength => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set promptMaxLength($core.int value) => $_setUnsignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasPromptMaxLength() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearPromptMaxLength() => $_clearField(4);
+
+  /// ResolutionSelector 完整选项字符串，初始默认 16:9 (Widescreen)。
+  @$pb.TagNumber(5)
+  WorkflowStringOptionInput get aspectRatio => $_getN(4);
+  @$pb.TagNumber(5)
+  set aspectRatio(WorkflowStringOptionInput value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasAspectRatio() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearAspectRatio() => $_clearField(5);
+  @$pb.TagNumber(5)
+  WorkflowStringOptionInput ensureAspectRatio() => $_ensure(4);
+
+  /// 业务保存十进制字符串，执行写为 JSON 数字；初始默认 "0.4"。
+  @$pb.TagNumber(6)
+  WorkflowDecimalOptionInput get megapixels => $_getN(5);
+  @$pb.TagNumber(6)
+  set megapixels(WorkflowDecimalOptionInput value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasMegapixels() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearMegapixels() => $_clearField(6);
+  @$pb.TagNumber(6)
+  WorkflowDecimalOptionInput ensureMegapixels() => $_ensure(5);
+
+  /// 初始 3～10 秒、默认 5；引导生成表示新增片段，后端补前导并裁剪。
+  @$pb.TagNumber(7)
+  WorkflowIntRangeInput get durationSeconds => $_getN(6);
+  @$pb.TagNumber(7)
+  set durationSeconds(WorkflowIntRangeInput value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasDurationSeconds() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearDurationSeconds() => $_clearField(7);
+  @$pb.TagNumber(7)
+  WorkflowIntRangeInput ensureDurationSeconds() => $_ensure(6);
+
+  @$pb.TagNumber(8)
+  $pb.PbList<WorkflowInputBinding> get seeds => $_getList(7);
+
+  /// 仅高级替换必填，其他两类不得配置；用户原文传 SAM，固定最多 200 个码点。
+  @$pb.TagNumber(9)
+  WorkflowInputBinding get regionDescription => $_getN(8);
+  @$pb.TagNumber(9)
+  set regionDescription(WorkflowInputBinding value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasRegionDescription() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearRegionDescription() => $_clearField(9);
+  @$pb.TagNumber(9)
+  WorkflowInputBinding ensureRegionDescription() => $_ensure(8);
+}
+
 enum WorkflowExecutionConfig_FunctionConfig {
   imageToVideo,
   textToVideo,
@@ -1829,6 +2450,11 @@ enum WorkflowExecutionConfig_FunctionConfig {
   singleImageEdit,
   multipleImageEdit,
   character,
+  firstLastFrame,
+  motionTransfer,
+  continuation,
+  reference,
+  advancedReplace,
   notSet
 }
 
@@ -1843,6 +2469,11 @@ class WorkflowExecutionConfig extends $pb.GeneratedMessage {
     SingleImageEditWorkflowConfig? singleImageEdit,
     MultipleImageEditWorkflowConfig? multipleImageEdit,
     CharacterWorkflowConfig? character,
+    FirstLastFrameWorkflowConfig? firstLastFrame,
+    MotionTransferWorkflowConfig? motionTransfer,
+    MiniMaxVideoWorkflowConfig? continuation,
+    MiniMaxVideoWorkflowConfig? reference,
+    MiniMaxVideoWorkflowConfig? advancedReplace,
   }) {
     final result = create();
     if (imageToVideo != null) result.imageToVideo = imageToVideo;
@@ -1854,6 +2485,11 @@ class WorkflowExecutionConfig extends $pb.GeneratedMessage {
     if (singleImageEdit != null) result.singleImageEdit = singleImageEdit;
     if (multipleImageEdit != null) result.multipleImageEdit = multipleImageEdit;
     if (character != null) result.character = character;
+    if (firstLastFrame != null) result.firstLastFrame = firstLastFrame;
+    if (motionTransfer != null) result.motionTransfer = motionTransfer;
+    if (continuation != null) result.continuation = continuation;
+    if (reference != null) result.reference = reference;
+    if (advancedReplace != null) result.advancedReplace = advancedReplace;
     return result;
   }
 
@@ -1874,13 +2510,18 @@ class WorkflowExecutionConfig extends $pb.GeneratedMessage {
     6: WorkflowExecutionConfig_FunctionConfig.singleImageEdit,
     7: WorkflowExecutionConfig_FunctionConfig.multipleImageEdit,
     8: WorkflowExecutionConfig_FunctionConfig.character,
+    9: WorkflowExecutionConfig_FunctionConfig.firstLastFrame,
+    10: WorkflowExecutionConfig_FunctionConfig.motionTransfer,
+    11: WorkflowExecutionConfig_FunctionConfig.continuation,
+    12: WorkflowExecutionConfig_FunctionConfig.reference,
+    13: WorkflowExecutionConfig_FunctionConfig.advancedReplace,
     0: WorkflowExecutionConfig_FunctionConfig.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'WorkflowExecutionConfig',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
-    ..oo(0, [1, 2, 5, 6, 7, 8])
+    ..oo(0, [1, 2, 5, 6, 7, 8, 9, 10, 11, 12, 13])
     ..aOM<ImageToVideoWorkflowConfig>(1, _omitFieldNames ? '' : 'imageToVideo',
         subBuilder: ImageToVideoWorkflowConfig.create)
     ..aOM<TextToVideoWorkflowConfig>(2, _omitFieldNames ? '' : 'textToVideo',
@@ -1899,6 +2540,19 @@ class WorkflowExecutionConfig extends $pb.GeneratedMessage {
         subBuilder: MultipleImageEditWorkflowConfig.create)
     ..aOM<CharacterWorkflowConfig>(8, _omitFieldNames ? '' : 'character',
         subBuilder: CharacterWorkflowConfig.create)
+    ..aOM<FirstLastFrameWorkflowConfig>(
+        9, _omitFieldNames ? '' : 'firstLastFrame',
+        subBuilder: FirstLastFrameWorkflowConfig.create)
+    ..aOM<MotionTransferWorkflowConfig>(
+        10, _omitFieldNames ? '' : 'motionTransfer',
+        subBuilder: MotionTransferWorkflowConfig.create)
+    ..aOM<MiniMaxVideoWorkflowConfig>(11, _omitFieldNames ? '' : 'continuation',
+        subBuilder: MiniMaxVideoWorkflowConfig.create)
+    ..aOM<MiniMaxVideoWorkflowConfig>(12, _omitFieldNames ? '' : 'reference',
+        subBuilder: MiniMaxVideoWorkflowConfig.create)
+    ..aOM<MiniMaxVideoWorkflowConfig>(
+        13, _omitFieldNames ? '' : 'advancedReplace',
+        subBuilder: MiniMaxVideoWorkflowConfig.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1927,6 +2581,11 @@ class WorkflowExecutionConfig extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   @$pb.TagNumber(7)
   @$pb.TagNumber(8)
+  @$pb.TagNumber(9)
+  @$pb.TagNumber(10)
+  @$pb.TagNumber(11)
+  @$pb.TagNumber(12)
+  @$pb.TagNumber(13)
   WorkflowExecutionConfig_FunctionConfig whichFunctionConfig() =>
       _WorkflowExecutionConfig_FunctionConfigByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
@@ -1935,6 +2594,11 @@ class WorkflowExecutionConfig extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   @$pb.TagNumber(7)
   @$pb.TagNumber(8)
+  @$pb.TagNumber(9)
+  @$pb.TagNumber(10)
+  @$pb.TagNumber(11)
+  @$pb.TagNumber(12)
+  @$pb.TagNumber(13)
   void clearFunctionConfig() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -2025,6 +2689,64 @@ class WorkflowExecutionConfig extends $pb.GeneratedMessage {
   void clearCharacter() => $_clearField(8);
   @$pb.TagNumber(8)
   CharacterWorkflowConfig ensureCharacter() => $_ensure(7);
+
+  @$pb.TagNumber(9)
+  FirstLastFrameWorkflowConfig get firstLastFrame => $_getN(8);
+  @$pb.TagNumber(9)
+  set firstLastFrame(FirstLastFrameWorkflowConfig value) =>
+      $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasFirstLastFrame() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearFirstLastFrame() => $_clearField(9);
+  @$pb.TagNumber(9)
+  FirstLastFrameWorkflowConfig ensureFirstLastFrame() => $_ensure(8);
+
+  @$pb.TagNumber(10)
+  MotionTransferWorkflowConfig get motionTransfer => $_getN(9);
+  @$pb.TagNumber(10)
+  set motionTransfer(MotionTransferWorkflowConfig value) =>
+      $_setField(10, value);
+  @$pb.TagNumber(10)
+  $core.bool hasMotionTransfer() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearMotionTransfer() => $_clearField(10);
+  @$pb.TagNumber(10)
+  MotionTransferWorkflowConfig ensureMotionTransfer() => $_ensure(9);
+
+  @$pb.TagNumber(11)
+  MiniMaxVideoWorkflowConfig get continuation => $_getN(10);
+  @$pb.TagNumber(11)
+  set continuation(MiniMaxVideoWorkflowConfig value) => $_setField(11, value);
+  @$pb.TagNumber(11)
+  $core.bool hasContinuation() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearContinuation() => $_clearField(11);
+  @$pb.TagNumber(11)
+  MiniMaxVideoWorkflowConfig ensureContinuation() => $_ensure(10);
+
+  @$pb.TagNumber(12)
+  MiniMaxVideoWorkflowConfig get reference => $_getN(11);
+  @$pb.TagNumber(12)
+  set reference(MiniMaxVideoWorkflowConfig value) => $_setField(12, value);
+  @$pb.TagNumber(12)
+  $core.bool hasReference() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearReference() => $_clearField(12);
+  @$pb.TagNumber(12)
+  MiniMaxVideoWorkflowConfig ensureReference() => $_ensure(11);
+
+  @$pb.TagNumber(13)
+  MiniMaxVideoWorkflowConfig get advancedReplace => $_getN(12);
+  @$pb.TagNumber(13)
+  set advancedReplace(MiniMaxVideoWorkflowConfig value) =>
+      $_setField(13, value);
+  @$pb.TagNumber(13)
+  $core.bool hasAdvancedReplace() => $_has(12);
+  @$pb.TagNumber(13)
+  void clearAdvancedReplace() => $_clearField(13);
+  @$pb.TagNumber(13)
+  MiniMaxVideoWorkflowConfig ensureAdvancedReplace() => $_ensure(12);
 }
 
 /// 静态校验发现的问题，节点和输入定位信息按需提供。
@@ -2903,7 +3625,7 @@ class WorkflowImportMetadata extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<WorkflowImportMetadata>(create);
   static WorkflowImportMetadata? _defaultInstance;
 
-  /// 来自 Function.List 的 video.img2vid 或 video.txt2vid。
+  /// 来自 Function.List，支持值及中文用途见 FunctionSummary.function_id。
   @$pb.TagNumber(1)
   $core.String get functionId => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -3593,6 +4315,13 @@ class TestWorkflowReq extends $pb.GeneratedMessage {
     $core.String? prompt,
     $core.String? inputAssetId,
     $core.Iterable<$core.String>? inputAssetIds,
+    $core.String? inputVideoAssetId,
+    $core.String? firstFrameAssetId,
+    $core.String? lastFrameAssetId,
+    $core.String? regionDescription,
+    $4.VideoResolution? resolution,
+    $core.int? durationSeconds,
+    $core.int? frameRate,
   }) {
     final result = create();
     if (requestId != null) result.requestId = requestId;
@@ -3600,6 +4329,13 @@ class TestWorkflowReq extends $pb.GeneratedMessage {
     if (prompt != null) result.prompt = prompt;
     if (inputAssetId != null) result.inputAssetId = inputAssetId;
     if (inputAssetIds != null) result.inputAssetIds.addAll(inputAssetIds);
+    if (inputVideoAssetId != null) result.inputVideoAssetId = inputVideoAssetId;
+    if (firstFrameAssetId != null) result.firstFrameAssetId = firstFrameAssetId;
+    if (lastFrameAssetId != null) result.lastFrameAssetId = lastFrameAssetId;
+    if (regionDescription != null) result.regionDescription = regionDescription;
+    if (resolution != null) result.resolution = resolution;
+    if (durationSeconds != null) result.durationSeconds = durationSeconds;
+    if (frameRate != null) result.frameRate = frameRate;
     return result;
   }
 
@@ -3621,6 +4357,14 @@ class TestWorkflowReq extends $pb.GeneratedMessage {
     ..aOS(3, _omitFieldNames ? '' : 'prompt')
     ..aOS(4, _omitFieldNames ? '' : 'inputAssetId')
     ..pPS(5, _omitFieldNames ? '' : 'inputAssetIds')
+    ..aOS(6, _omitFieldNames ? '' : 'inputVideoAssetId')
+    ..aOS(7, _omitFieldNames ? '' : 'firstFrameAssetId')
+    ..aOS(8, _omitFieldNames ? '' : 'lastFrameAssetId')
+    ..aOS(9, _omitFieldNames ? '' : 'regionDescription')
+    ..aOM<$4.VideoResolution>(10, _omitFieldNames ? '' : 'resolution',
+        subBuilder: $4.VideoResolution.create)
+    ..aI(11, _omitFieldNames ? '' : 'durationSeconds')
+    ..aI(12, _omitFieldNames ? '' : 'frameRate')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3662,7 +4406,7 @@ class TestWorkflowReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearWorkflowId() => $_clearField(2);
 
-  /// 六类功能均必填正向提示词，角色生成同样使用本次提交的原文；长度按工作流配置校验。
+  /// 全部功能均必填用户正向提示词原文；长度按工作流配置校验。
   @$pb.TagNumber(3)
   $core.String get prompt => $_getSZ(2);
   @$pb.TagNumber(3)
@@ -3683,9 +4427,83 @@ class TestWorkflowReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearInputAssetId() => $_clearField(4);
 
-  /// 仅多图修改使用，提交顺序即图1至图N；FLUX 为2张，Qwen 为2～4张。
+  /// 多图修改及三个新增 MiniMax 功能使用，提交顺序即图1至图N；最多四张。
+  /// FLUX 为2张，Qwen 为2～4张，MiniMax 为0～4张，由目标功能校验。
   @$pb.TagNumber(5)
   $pb.PbList<$core.String> get inputAssetIds => $_getList(4);
+
+  /// 模仿、引导及高级替换必填；参考生成可选，但至少一份视频或图片。
+  /// 使用管理员本人 available 视频，执行与普通创建相同的格式／大小／时长检查。
+  @$pb.TagNumber(6)
+  $core.String get inputVideoAssetId => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set inputVideoAssetId($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasInputVideoAssetId() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearInputVideoAssetId() => $_clearField(6);
+
+  /// 首尾帧必填首帧，模仿可选；不提供模仿首帧时旁路图片条件。
+  @$pb.TagNumber(7)
+  $core.String get firstFrameAssetId => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set firstFrameAssetId($core.String value) => $_setString(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasFirstFrameAssetId() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearFirstFrameAssetId() => $_clearField(7);
+
+  /// 仅首尾帧必填尾帧，其他功能省略。
+  @$pb.TagNumber(8)
+  $core.String get lastFrameAssetId => $_getSZ(7);
+  @$pb.TagNumber(8)
+  set lastFrameAssetId($core.String value) => $_setString(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasLastFrameAssetId() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearLastFrameAssetId() => $_clearField(8);
+
+  /// 仅高级替换必填；最多 200 个码点，原样使用，不翻译或自动补 head。
+  @$pb.TagNumber(9)
+  $core.String get regionDescription => $_getSZ(8);
+  @$pb.TagNumber(9)
+  set regionDescription($core.String value) => $_setString(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasRegionDescription() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearRegionDescription() => $_clearField(9);
+
+  /// 首尾帧和三个 MiniMax 功能可传；不传补默认。原有六项仍使用其原有试跑规则。
+  @$pb.TagNumber(10)
+  $4.VideoResolution get resolution => $_getN(9);
+  @$pb.TagNumber(10)
+  set resolution($4.VideoResolution value) => $_setField(10, value);
+  @$pb.TagNumber(10)
+  $core.bool hasResolution() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearResolution() => $_clearField(10);
+  @$pb.TagNumber(10)
+  $4.VideoResolution ensureResolution() => $_ensure(9);
+
+  /// 新增功能适用的输出时长，整数秒；引导表示新增片段，模仿不接受。
+  @$pb.TagNumber(11)
+  $core.int get durationSeconds => $_getIZ(10);
+  @$pb.TagNumber(11)
+  set durationSeconds($core.int value) => $_setSignedInt32(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasDurationSeconds() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearDurationSeconds() => $_clearField(11);
+
+  /// 仅新增首尾帧可传；其他新增功能由素材或工作流固定帧率决定。
+  @$pb.TagNumber(12)
+  $core.int get frameRate => $_getIZ(11);
+  @$pb.TagNumber(12)
+  set frameRate($core.int value) => $_setSignedInt32(11, value);
+  @$pb.TagNumber(12)
+  $core.bool hasFrameRate() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearFrameRate() => $_clearField(12);
 }
 
 /// 返回受理的试跑任务 ID；试跑成功保存并结算后才自动启用草稿，不支持恢复保存。

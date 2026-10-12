@@ -34,6 +34,9 @@ class FileSummary extends $pb.GeneratedMessage {
     FileSource? source,
     $fixnum.Int64? createdAt,
     $core.bool? hasCover,
+    $core.int? width,
+    $core.int? height,
+    $fixnum.Int64? durationMs,
   }) {
     final result = create();
     if (assetId != null) result.assetId = assetId;
@@ -44,6 +47,9 @@ class FileSummary extends $pb.GeneratedMessage {
     if (source != null) result.source = source;
     if (createdAt != null) result.createdAt = createdAt;
     if (hasCover != null) result.hasCover = hasCover;
+    if (width != null) result.width = width;
+    if (height != null) result.height = height;
+    if (durationMs != null) result.durationMs = durationMs;
     return result;
   }
 
@@ -72,6 +78,9 @@ class FileSummary extends $pb.GeneratedMessage {
         enumValues: FileSource.values)
     ..aInt64(7, _omitFieldNames ? '' : 'createdAt')
     ..aOB(8, _omitFieldNames ? '' : 'hasCover')
+    ..aI(9, _omitFieldNames ? '' : 'width', fieldType: $pb.PbFieldType.OU3)
+    ..aI(10, _omitFieldNames ? '' : 'height', fieldType: $pb.PbFieldType.OU3)
+    ..aInt64(11, _omitFieldNames ? '' : 'durationMs')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -166,6 +175,36 @@ class FileSummary extends $pb.GeneratedMessage {
   $core.bool hasHasCover() => $_has(7);
   @$pb.TagNumber(8)
   void clearHasCover() => $_clearField(8);
+
+  /// 后端检测并保存的实际宽度，单位像素；查询不重新探测，无媒体信息的历史资产省略。
+  @$pb.TagNumber(9)
+  $core.int get width => $_getIZ(8);
+  @$pb.TagNumber(9)
+  set width($core.int value) => $_setUnsignedInt32(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasWidth() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearWidth() => $_clearField(9);
+
+  /// 实际高度，单位像素；不是生成请求的目标尺寸。
+  @$pb.TagNumber(10)
+  $core.int get height => $_getIZ(9);
+  @$pb.TagNumber(10)
+  set height($core.int value) => $_setUnsignedInt32(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasHeight() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearHeight() => $_clearField(10);
+
+  /// 视频实际时长，单位毫秒；图片省略，视频是否可复用仍由创建接口检查。
+  @$pb.TagNumber(11)
+  $fixnum.Int64 get durationMs => $_getI64(10);
+  @$pb.TagNumber(11)
+  set durationMs($fixnum.Int64 value) => $_setInt64(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasDurationMs() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearDurationMs() => $_clearField(11);
 }
 
 /// 分页查询本人 available 资产，不传筛选字段表示不过滤。
@@ -616,7 +655,8 @@ class GetFileAccessUrlsResp extends $pb.GeneratedMessage {
   $pb.PbList<FileAccessUrl> get files => $_getList(0);
 }
 
-/// POST /api/v1/file/upload 的单文件清单项。该上传口为 HiMedia 手写的
+/// 图片 POST /api/v1/file/upload、视频 POST /api/v1/file/upload/video 的单文件清单项。
+/// 两个上传口均为 HiMedia 手写的 AUTH_USER
 /// multipart/form-data HTTP 接口，不是 gRPC RPC；文件项的 form name
 /// 必须与 metadata 中的 clientFileId 一致，filename 也必须与清单一致。
 class UploadFileMetadata extends $pb.GeneratedMessage {
@@ -701,7 +741,11 @@ class UploadFileMetadata extends $pb.GeneratedMessage {
   void clearSizeBytes() => $_clearField(3);
 }
 
-/// POST /api/v1/file/upload 的 metadata 项。metadata 必须是 multipart 第一项，
+/// 两个上传口共用的 metadata；图片入口保持不变，视频入口独立检查媒体类型。
+/// 图片只接受静态 JPEG/PNG；视频接受 MP4/WebM，最大 50 MiB、1～15 秒，
+/// 上限允许一个帧间隔的对齐误差，音轨可选，不额外限制分辨率或帧率。
+/// 上传保存原件；MiniMax 24 FPS 适配仅在任务执行前处理临时副本。
+/// metadata 必须是 multipart 第一项，
 /// Content-Type 必须是 application/json，且 Content-Disposition 不能携带 filename。
 /// JSON 仅接受 lowerCamelCase：requestId/files/clientFileId/filename/sizeBytes，
 /// 不兼容 snake_case；其中 sizeBytes 按 uint64 十进制字符串传递。
@@ -780,6 +824,9 @@ class UploadFileResult extends $pb.GeneratedMessage {
     $fixnum.Int64? sizeBytes,
     $core.String? errorCode,
     $core.String? errorMessage,
+    $core.int? width,
+    $core.int? height,
+    $fixnum.Int64? durationMs,
   }) {
     final result = create();
     if (clientFileId != null) result.clientFileId = clientFileId;
@@ -790,6 +837,9 @@ class UploadFileResult extends $pb.GeneratedMessage {
     if (sizeBytes != null) result.sizeBytes = sizeBytes;
     if (errorCode != null) result.errorCode = errorCode;
     if (errorMessage != null) result.errorMessage = errorMessage;
+    if (width != null) result.width = width;
+    if (height != null) result.height = height;
+    if (durationMs != null) result.durationMs = durationMs;
     return result;
   }
 
@@ -817,6 +867,9 @@ class UploadFileResult extends $pb.GeneratedMessage {
         defaultOrMaker: $fixnum.Int64.ZERO)
     ..aOS(7, _omitFieldNames ? '' : 'errorCode')
     ..aOS(8, _omitFieldNames ? '' : 'errorMessage')
+    ..aI(9, _omitFieldNames ? '' : 'width', fieldType: $pb.PbFieldType.OU3)
+    ..aI(10, _omitFieldNames ? '' : 'height', fieldType: $pb.PbFieldType.OU3)
+    ..aInt64(11, _omitFieldNames ? '' : 'durationMs')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -909,10 +962,40 @@ class UploadFileResult extends $pb.GeneratedMessage {
   $core.bool hasErrorMessage() => $_has(7);
   @$pb.TagNumber(8)
   void clearErrorMessage() => $_clearField(8);
+
+  /// 成功时返回实际像素宽度，由后端检测，不从 metadata 接收。
+  @$pb.TagNumber(9)
+  $core.int get width => $_getIZ(8);
+  @$pb.TagNumber(9)
+  set width($core.int value) => $_setUnsignedInt32(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasWidth() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearWidth() => $_clearField(9);
+
+  /// 成功时返回实际像素高度；失败或无媒体信息时省略。
+  @$pb.TagNumber(10)
+  $core.int get height => $_getIZ(9);
+  @$pb.TagNumber(10)
+  set height($core.int value) => $_setUnsignedInt32(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasHeight() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearHeight() => $_clearField(10);
+
+  /// 成功上传视频的实际毫秒时长；图片不返回。
+  @$pb.TagNumber(11)
+  $fixnum.Int64 get durationMs => $_getI64(10);
+  @$pb.TagNumber(11)
+  set durationMs($fixnum.Int64 value) => $_setInt64(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasDurationMs() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearDurationMs() => $_clearField(11);
 }
 
-/// POST /api/v1/file/upload 的 data 响应，同时也是 GetUploadResult 的批次结果。
-/// HTTP 上使用 protojson lowerCamelCase 字段；成功文件的 assetId 用于图生视频任务。
+/// 图片和视频上传的 data 响应，同时也是 GetUploadResult 的批次结果。
+/// HTTP 使用 protojson lowerCamelCase；成功 assetId 用于对应任务素材，不回传宽高或时长。
 class UploadBatchResult extends $pb.GeneratedMessage {
   factory UploadBatchResult({
     $core.String? requestId,

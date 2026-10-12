@@ -166,18 +166,21 @@ var Function_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	FunctionManage_SetEnabled_FullMethodName = "/hi.media.FunctionManage/SetEnabled"
+	FunctionManage_SetEnabled_FullMethodName   = "/hi.media.FunctionManage/SetEnabled"
+	FunctionManage_SetSortOrder_FullMethodName = "/hi.media.FunctionManage/SetSortOrder"
 )
 
 // FunctionManageClient is the client API for FunctionManage service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// 管理员只调整功能开放开关；功能 ID 和显示名称随开发初始化。
+// 管理员调整功能开放开关与分类内顺序；功能 ID 和显示名称随开发初始化。
 type FunctionManageClient interface {
 	// 关闭只阻止新建普通任务，不取消已有任务，也不限制管理员配置、校验和试跑。
 	// 目标功能不存在返回 NotFound；重复设置同一值仍成功。
 	SetEnabled(ctx context.Context, in *SetFunctionEnabledReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 设置分类内展示顺序，不影响 FIFO 或工作流排序。
+	SetSortOrder(ctx context.Context, in *SetFunctionSortOrderReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type functionManageClient struct {
@@ -198,15 +201,27 @@ func (c *functionManageClient) SetEnabled(ctx context.Context, in *SetFunctionEn
 	return out, nil
 }
 
+func (c *functionManageClient) SetSortOrder(ctx context.Context, in *SetFunctionSortOrderReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, FunctionManage_SetSortOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FunctionManageServer is the server API for FunctionManage service.
 // All implementations should embed UnimplementedFunctionManageServer
 // for forward compatibility.
 //
-// 管理员只调整功能开放开关；功能 ID 和显示名称随开发初始化。
+// 管理员调整功能开放开关与分类内顺序；功能 ID 和显示名称随开发初始化。
 type FunctionManageServer interface {
 	// 关闭只阻止新建普通任务，不取消已有任务，也不限制管理员配置、校验和试跑。
 	// 目标功能不存在返回 NotFound；重复设置同一值仍成功。
 	SetEnabled(context.Context, *SetFunctionEnabledReq) (*emptypb.Empty, error)
+	// 设置分类内展示顺序，不影响 FIFO 或工作流排序。
+	SetSortOrder(context.Context, *SetFunctionSortOrderReq) (*emptypb.Empty, error)
 }
 
 // UnimplementedFunctionManageServer should be embedded to have
@@ -218,6 +233,9 @@ type UnimplementedFunctionManageServer struct{}
 
 func (UnimplementedFunctionManageServer) SetEnabled(context.Context, *SetFunctionEnabledReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetEnabled not implemented")
+}
+func (UnimplementedFunctionManageServer) SetSortOrder(context.Context, *SetFunctionSortOrderReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetSortOrder not implemented")
 }
 func (UnimplementedFunctionManageServer) testEmbeddedByValue() {}
 
@@ -257,6 +275,24 @@ func _FunctionManage_SetEnabled_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FunctionManage_SetSortOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetFunctionSortOrderReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FunctionManageServer).SetSortOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FunctionManage_SetSortOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FunctionManageServer).SetSortOrder(ctx, req.(*SetFunctionSortOrderReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // FunctionManage_ServiceDesc is the grpc.ServiceDesc for FunctionManage service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -267,6 +303,10 @@ var FunctionManage_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetEnabled",
 			Handler:    _FunctionManage_SetEnabled_Handler,
+		},
+		{
+			MethodName: "SetSortOrder",
+			Handler:    _FunctionManage_SetSortOrder_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

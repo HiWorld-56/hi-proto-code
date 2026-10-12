@@ -248,7 +248,13 @@ type FileSummary struct {
 	CreatedAt *int64                 `protobuf:"varint,7,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
 	// 是否有已保存且可访问的视频封面；本字段为 true 时 COVER 返回封面，否则返回原文件。
 	// 用户上传图片、历史未补图视频及封面生成失败的视频为 false。
-	HasCover      *bool `protobuf:"varint,8,opt,name=has_cover,json=hasCover,proto3,oneof" json:"has_cover,omitempty"`
+	HasCover *bool `protobuf:"varint,8,opt,name=has_cover,json=hasCover,proto3,oneof" json:"has_cover,omitempty"`
+	// 后端检测并保存的实际宽度，单位像素；查询不重新探测，无媒体信息的历史资产省略。
+	Width *uint32 `protobuf:"varint,9,opt,name=width,proto3,oneof" json:"width,omitempty"`
+	// 实际高度，单位像素；不是生成请求的目标尺寸。
+	Height *uint32 `protobuf:"varint,10,opt,name=height,proto3,oneof" json:"height,omitempty"`
+	// 视频实际时长，单位毫秒；图片省略，视频是否可复用仍由创建接口检查。
+	DurationMs    *int64 `protobuf:"varint,11,opt,name=duration_ms,json=durationMs,proto3,oneof" json:"duration_ms,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -337,6 +343,27 @@ func (x *FileSummary) GetHasCover() bool {
 		return *x.HasCover
 	}
 	return false
+}
+
+func (x *FileSummary) GetWidth() uint32 {
+	if x != nil && x.Width != nil {
+		return *x.Width
+	}
+	return 0
+}
+
+func (x *FileSummary) GetHeight() uint32 {
+	if x != nil && x.Height != nil {
+		return *x.Height
+	}
+	return 0
+}
+
+func (x *FileSummary) GetDurationMs() int64 {
+	if x != nil && x.DurationMs != nil {
+		return *x.DurationMs
+	}
+	return 0
 }
 
 // 分页查询本人 available 资产，不传筛选字段表示不过滤。
@@ -702,7 +729,8 @@ func (x *GetFileAccessUrlsResp) GetFiles() []*FileAccessUrl {
 	return nil
 }
 
-// POST /api/v1/file/upload 的单文件清单项。该上传口为 HiMedia 手写的
+// 图片 POST /api/v1/file/upload、视频 POST /api/v1/file/upload/video 的单文件清单项。
+// 两个上传口均为 HiMedia 手写的 AUTH_USER
 // multipart/form-data HTTP 接口，不是 gRPC RPC；文件项的 form name
 // 必须与 metadata 中的 clientFileId 一致，filename 也必须与清单一致。
 type UploadFileMetadata struct {
@@ -767,7 +795,11 @@ func (x *UploadFileMetadata) GetSizeBytes() uint64 {
 	return 0
 }
 
-// POST /api/v1/file/upload 的 metadata 项。metadata 必须是 multipart 第一项，
+// 两个上传口共用的 metadata；图片入口保持不变，视频入口独立检查媒体类型。
+// 图片只接受静态 JPEG/PNG；视频接受 MP4/WebM，最大 50 MiB、1～15 秒，
+// 上限允许一个帧间隔的对齐误差，音轨可选，不额外限制分辨率或帧率。
+// 上传保存原件；MiniMax 24 FPS 适配仅在任务执行前处理临时副本。
+// metadata 必须是 multipart 第一项，
 // Content-Type 必须是 application/json，且 Content-Disposition 不能携带 filename。
 // JSON 仅接受 lowerCamelCase：requestId/files/clientFileId/filename/sizeBytes，
 // 不兼容 snake_case；其中 sizeBytes 按 uint64 十进制字符串传递。
@@ -828,15 +860,21 @@ func (x *UploadMetadata) GetFiles() []*UploadFileMetadata {
 
 // 单文件上传结果；成功时提供资产、类型和字节数，失败时提供稳定错误码及说明。
 type UploadFileResult struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	ClientFileId  *string                `protobuf:"bytes,1,opt,name=client_file_id,json=clientFileId,proto3,oneof" json:"client_file_id,omitempty"`
-	Filename      *string                `protobuf:"bytes,2,opt,name=filename,proto3,oneof" json:"filename,omitempty"`
-	Status        *UploadFileStatus      `protobuf:"varint,3,opt,name=status,proto3,enum=hi.media.UploadFileStatus,oneof" json:"status,omitempty"`
-	AssetId       *string                `protobuf:"bytes,4,opt,name=asset_id,json=assetId,proto3,oneof" json:"asset_id,omitempty"`
-	MimeType      *string                `protobuf:"bytes,5,opt,name=mime_type,json=mimeType,proto3,oneof" json:"mime_type,omitempty"`
-	SizeBytes     *uint64                `protobuf:"varint,6,opt,name=size_bytes,json=sizeBytes,proto3,oneof" json:"size_bytes,omitempty"`
-	ErrorCode     *string                `protobuf:"bytes,7,opt,name=error_code,json=errorCode,proto3,oneof" json:"error_code,omitempty"`
-	ErrorMessage  *string                `protobuf:"bytes,8,opt,name=error_message,json=errorMessage,proto3,oneof" json:"error_message,omitempty"`
+	state        protoimpl.MessageState `protogen:"open.v1"`
+	ClientFileId *string                `protobuf:"bytes,1,opt,name=client_file_id,json=clientFileId,proto3,oneof" json:"client_file_id,omitempty"`
+	Filename     *string                `protobuf:"bytes,2,opt,name=filename,proto3,oneof" json:"filename,omitempty"`
+	Status       *UploadFileStatus      `protobuf:"varint,3,opt,name=status,proto3,enum=hi.media.UploadFileStatus,oneof" json:"status,omitempty"`
+	AssetId      *string                `protobuf:"bytes,4,opt,name=asset_id,json=assetId,proto3,oneof" json:"asset_id,omitempty"`
+	MimeType     *string                `protobuf:"bytes,5,opt,name=mime_type,json=mimeType,proto3,oneof" json:"mime_type,omitempty"`
+	SizeBytes    *uint64                `protobuf:"varint,6,opt,name=size_bytes,json=sizeBytes,proto3,oneof" json:"size_bytes,omitempty"`
+	ErrorCode    *string                `protobuf:"bytes,7,opt,name=error_code,json=errorCode,proto3,oneof" json:"error_code,omitempty"`
+	ErrorMessage *string                `protobuf:"bytes,8,opt,name=error_message,json=errorMessage,proto3,oneof" json:"error_message,omitempty"`
+	// 成功时返回实际像素宽度，由后端检测，不从 metadata 接收。
+	Width *uint32 `protobuf:"varint,9,opt,name=width,proto3,oneof" json:"width,omitempty"`
+	// 成功时返回实际像素高度；失败或无媒体信息时省略。
+	Height *uint32 `protobuf:"varint,10,opt,name=height,proto3,oneof" json:"height,omitempty"`
+	// 成功上传视频的实际毫秒时长；图片不返回。
+	DurationMs    *int64 `protobuf:"varint,11,opt,name=duration_ms,json=durationMs,proto3,oneof" json:"duration_ms,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -927,8 +965,29 @@ func (x *UploadFileResult) GetErrorMessage() string {
 	return ""
 }
 
-// POST /api/v1/file/upload 的 data 响应，同时也是 GetUploadResult 的批次结果。
-// HTTP 上使用 protojson lowerCamelCase 字段；成功文件的 assetId 用于图生视频任务。
+func (x *UploadFileResult) GetWidth() uint32 {
+	if x != nil && x.Width != nil {
+		return *x.Width
+	}
+	return 0
+}
+
+func (x *UploadFileResult) GetHeight() uint32 {
+	if x != nil && x.Height != nil {
+		return *x.Height
+	}
+	return 0
+}
+
+func (x *UploadFileResult) GetDurationMs() int64 {
+	if x != nil && x.DurationMs != nil {
+		return *x.DurationMs
+	}
+	return 0
+}
+
+// 图片和视频上传的 data 响应，同时也是 GetUploadResult 的批次结果。
+// HTTP 使用 protojson lowerCamelCase；成功 assetId 用于对应任务素材，不回传宽高或时长。
 type UploadBatchResult struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	RequestId     *string                `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
@@ -1085,7 +1144,7 @@ var File_hi_media_file_proto protoreflect.FileDescriptor
 
 const file_hi_media_file_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/media/file.proto\x12\bhi.media\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x13hi/media/task.proto\x1a\x10hi/options.proto\"\xea\x03\n" +
+	"\x13hi/media/file.proto\x12\bhi.media\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x13hi/media/task.proto\x1a\x10hi/options.proto\"\xff\x04\n" +
 	"\vFileSummary\x12$\n" +
 	"\basset_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\aassetId\x88\x01\x01\x12%\n" +
 	"\bfilename\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\bfilename\x88\x01\x01\x12=\n" +
@@ -1097,7 +1156,13 @@ const file_hi_media_file_proto_rawDesc = "" +
 	"\x06source\x18\x06 \x01(\x0e2\x14.hi.media.FileSourceB\x04\x90\xb5\x18\x03H\x05R\x06source\x88\x01\x01\x12(\n" +
 	"\n" +
 	"created_at\x18\a \x01(\x03B\x04\x90\xb5\x18\x03H\x06R\tcreatedAt\x88\x01\x01\x12&\n" +
-	"\thas_cover\x18\b \x01(\bB\x04\x90\xb5\x18\x03H\aR\bhasCover\x88\x01\x01:\x04\x98\xb5\x18\x03B\v\n" +
+	"\thas_cover\x18\b \x01(\bB\x04\x90\xb5\x18\x03H\aR\bhasCover\x88\x01\x01\x12\x1f\n" +
+	"\x05width\x18\t \x01(\rB\x04\x90\xb5\x18\x03H\bR\x05width\x88\x01\x01\x12!\n" +
+	"\x06height\x18\n" +
+	" \x01(\rB\x04\x90\xb5\x18\x03H\tR\x06height\x88\x01\x01\x12*\n" +
+	"\vduration_ms\x18\v \x01(\x03B\x04\x90\xb5\x18\x03H\n" +
+	"R\n" +
+	"durationMs\x88\x01\x01:\x04\x98\xb5\x18\x03B\v\n" +
 	"\t_asset_idB\v\n" +
 	"\t_filenameB\r\n" +
 	"\v_media_typeB\f\n" +
@@ -1107,7 +1172,10 @@ const file_hi_media_file_proto_rawDesc = "" +
 	"\a_sourceB\r\n" +
 	"\v_created_atB\f\n" +
 	"\n" +
-	"_has_cover\"\xc4\x01\n" +
+	"_has_coverB\b\n" +
+	"\x06_widthB\t\n" +
+	"\a_heightB\x0e\n" +
+	"\f_duration_ms\"\xc4\x01\n" +
 	"\fListFilesReq\x12.\n" +
 	"\n" +
 	"pagination\x18\x01 \x01(\v2\x0e.hi.PaginationR\n" +
@@ -1161,7 +1229,7 @@ const file_hi_media_file_proto_rawDesc = "" +
 	"request_id\x18\x01 \x01(\tB\n" +
 	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\trequestId\x88\x01\x01\x12<\n" +
 	"\x05files\x18\x02 \x03(\v2\x1c.hi.media.UploadFileMetadataB\b\xbaH\x05\x92\x01\x02\b\x01R\x05filesB\r\n" +
-	"\v_request_id\"\xf7\x03\n" +
+	"\v_request_id\"\x8c\x05\n" +
 	"\x10UploadFileResult\x12/\n" +
 	"\x0eclient_file_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\fclientFileId\x88\x01\x01\x12%\n" +
 	"\bfilename\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\bfilename\x88\x01\x01\x12=\n" +
@@ -1172,7 +1240,13 @@ const file_hi_media_file_proto_rawDesc = "" +
 	"size_bytes\x18\x06 \x01(\x04B\x04\x90\xb5\x18\x03H\x05R\tsizeBytes\x88\x01\x01\x12(\n" +
 	"\n" +
 	"error_code\x18\a \x01(\tB\x04\x90\xb5\x18\x03H\x06R\terrorCode\x88\x01\x01\x12.\n" +
-	"\rerror_message\x18\b \x01(\tB\x04\x90\xb5\x18\x03H\aR\ferrorMessage\x88\x01\x01:\x04\x98\xb5\x18\x03B\x11\n" +
+	"\rerror_message\x18\b \x01(\tB\x04\x90\xb5\x18\x03H\aR\ferrorMessage\x88\x01\x01\x12\x1f\n" +
+	"\x05width\x18\t \x01(\rB\x04\x90\xb5\x18\x03H\bR\x05width\x88\x01\x01\x12!\n" +
+	"\x06height\x18\n" +
+	" \x01(\rB\x04\x90\xb5\x18\x03H\tR\x06height\x88\x01\x01\x12*\n" +
+	"\vduration_ms\x18\v \x01(\x03B\x04\x90\xb5\x18\x03H\n" +
+	"R\n" +
+	"durationMs\x88\x01\x01:\x04\x98\xb5\x18\x03B\x11\n" +
 	"\x0f_client_file_idB\v\n" +
 	"\t_filenameB\t\n" +
 	"\a_statusB\v\n" +
@@ -1181,7 +1255,10 @@ const file_hi_media_file_proto_rawDesc = "" +
 	"_mime_typeB\r\n" +
 	"\v_size_bytesB\r\n" +
 	"\v_error_codeB\x10\n" +
-	"\x0e_error_message\"\xd0\x01\n" +
+	"\x0e_error_messageB\b\n" +
+	"\x06_widthB\t\n" +
+	"\a_heightB\x0e\n" +
+	"\f_duration_ms\"\xd0\x01\n" +
 	"\x11UploadBatchResult\x12(\n" +
 	"\n" +
 	"request_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\trequestId\x88\x01\x01\x129\n" +

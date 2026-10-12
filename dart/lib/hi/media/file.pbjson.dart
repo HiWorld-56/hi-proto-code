@@ -167,6 +167,36 @@ const FileSummary$json = {
       '10': 'hasCover',
       '17': true
     },
+    {
+      '1': 'width',
+      '3': 9,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 8,
+      '10': 'width',
+      '17': true
+    },
+    {
+      '1': 'height',
+      '3': 10,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 9,
+      '10': 'height',
+      '17': true
+    },
+    {
+      '1': 'duration_ms',
+      '3': 11,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 10,
+      '10': 'durationMs',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -178,6 +208,9 @@ const FileSummary$json = {
     {'1': '_source'},
     {'1': '_created_at'},
     {'1': '_has_cover'},
+    {'1': '_width'},
+    {'1': '_height'},
+    {'1': '_duration_ms'},
   ],
 };
 
@@ -189,9 +222,12 @@ final $typed_data.Uint8List fileSummaryDescriptor = $convert.base64Decode(
     'gEIAEoCUIEkLUYA0gDUghtaW1lVHlwZYgBARIoCgpzaXplX2J5dGVzGAUgASgEQgSQtRgDSARS'
     'CXNpemVCeXRlc4gBARI3CgZzb3VyY2UYBiABKA4yFC5oaS5tZWRpYS5GaWxlU291cmNlQgSQtR'
     'gDSAVSBnNvdXJjZYgBARIoCgpjcmVhdGVkX2F0GAcgASgDQgSQtRgDSAZSCWNyZWF0ZWRBdIgB'
-    'ARImCgloYXNfY292ZXIYCCABKAhCBJC1GANIB1IIaGFzQ292ZXKIAQE6BJi1GANCCwoJX2Fzc2'
-    'V0X2lkQgsKCV9maWxlbmFtZUINCgtfbWVkaWFfdHlwZUIMCgpfbWltZV90eXBlQg0KC19zaXpl'
-    'X2J5dGVzQgkKB19zb3VyY2VCDQoLX2NyZWF0ZWRfYXRCDAoKX2hhc19jb3Zlcg==');
+    'ARImCgloYXNfY292ZXIYCCABKAhCBJC1GANIB1IIaGFzQ292ZXKIAQESHwoFd2lkdGgYCSABKA'
+    '1CBJC1GANICFIFd2lkdGiIAQESIQoGaGVpZ2h0GAogASgNQgSQtRgDSAlSBmhlaWdodIgBARIq'
+    'CgtkdXJhdGlvbl9tcxgLIAEoA0IEkLUYA0gKUgpkdXJhdGlvbk1ziAEBOgSYtRgDQgsKCV9hc3'
+    'NldF9pZEILCglfZmlsZW5hbWVCDQoLX21lZGlhX3R5cGVCDAoKX21pbWVfdHlwZUINCgtfc2l6'
+    'ZV9ieXRlc0IJCgdfc291cmNlQg0KC19jcmVhdGVkX2F0QgwKCl9oYXNfY292ZXJCCAoGX3dpZH'
+    'RoQgkKB19oZWlnaHRCDgoMX2R1cmF0aW9uX21z');
 
 @$core.Deprecated('Use listFilesReqDescriptor instead')
 const ListFilesReq$json = {
@@ -594,6 +630,36 @@ const UploadFileResult$json = {
       '10': 'errorMessage',
       '17': true
     },
+    {
+      '1': 'width',
+      '3': 9,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 8,
+      '10': 'width',
+      '17': true
+    },
+    {
+      '1': 'height',
+      '3': 10,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 9,
+      '10': 'height',
+      '17': true
+    },
+    {
+      '1': 'duration_ms',
+      '3': 11,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 10,
+      '10': 'durationMs',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -605,6 +671,9 @@ const UploadFileResult$json = {
     {'1': '_size_bytes'},
     {'1': '_error_code'},
     {'1': '_error_message'},
+    {'1': '_width'},
+    {'1': '_height'},
+    {'1': '_duration_ms'},
   ],
 };
 
@@ -616,10 +685,12 @@ final $typed_data.Uint8List uploadFileResultDescriptor = $convert.base64Decode(
     'gBARIkCghhc3NldF9pZBgEIAEoCUIEkLUYA0gDUgdhc3NldElkiAEBEiYKCW1pbWVfdHlwZRgF'
     'IAEoCUIEkLUYA0gEUghtaW1lVHlwZYgBARIoCgpzaXplX2J5dGVzGAYgASgEQgSQtRgDSAVSCX'
     'NpemVCeXRlc4gBARIoCgplcnJvcl9jb2RlGAcgASgJQgSQtRgDSAZSCWVycm9yQ29kZYgBARIu'
-    'Cg1lcnJvcl9tZXNzYWdlGAggASgJQgSQtRgDSAdSDGVycm9yTWVzc2FnZYgBAToEmLUYA0IRCg'
-    '9fY2xpZW50X2ZpbGVfaWRCCwoJX2ZpbGVuYW1lQgkKB19zdGF0dXNCCwoJX2Fzc2V0X2lkQgwK'
-    'Cl9taW1lX3R5cGVCDQoLX3NpemVfYnl0ZXNCDQoLX2Vycm9yX2NvZGVCEAoOX2Vycm9yX21lc3'
-    'NhZ2U=');
+    'Cg1lcnJvcl9tZXNzYWdlGAggASgJQgSQtRgDSAdSDGVycm9yTWVzc2FnZYgBARIfCgV3aWR0aB'
+    'gJIAEoDUIEkLUYA0gIUgV3aWR0aIgBARIhCgZoZWlnaHQYCiABKA1CBJC1GANICVIGaGVpZ2h0'
+    'iAEBEioKC2R1cmF0aW9uX21zGAsgASgDQgSQtRgDSApSCmR1cmF0aW9uTXOIAQE6BJi1GANCEQ'
+    'oPX2NsaWVudF9maWxlX2lkQgsKCV9maWxlbmFtZUIJCgdfc3RhdHVzQgsKCV9hc3NldF9pZEIM'
+    'CgpfbWltZV90eXBlQg0KC19zaXplX2J5dGVzQg0KC19lcnJvcl9jb2RlQhAKDl9lcnJvcl9tZX'
+    'NzYWdlQggKBl93aWR0aEIJCgdfaGVpZ2h0Qg4KDF9kdXJhdGlvbl9tcw==');
 
 @$core.Deprecated('Use uploadBatchResultDescriptor instead')
 const UploadBatchResult$json = {

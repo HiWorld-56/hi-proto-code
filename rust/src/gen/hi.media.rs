@@ -386,6 +386,167 @@ pub struct CreateTextToVideoTaskReq {
     #[prost(int32, optional, tag = "6")]
     pub frame_rate: ::core::option::Option<i32>,
 }
+/// 创建首尾帧视频，对应 video.first_last_frame；两张本人 JPEG/PNG 分别承担首帧和尾帧。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CreateFirstLastFrameTaskReq {
+    /// 本人范围内幂等键；重新生成使用新值，由后端生成新 seed。
+    #[prost(string, optional, tag = "1")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 来自对应 Function.Get，必须属于本功能且已启用。
+    #[prost(string, optional, tag = "2")]
+    pub workflow_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 首帧图片资产 ID；允许与尾帧尺寸不同，工作流按目标画面缩放和居中裁剪。
+    #[prost(string, optional, tag = "3")]
+    pub first_frame_asset_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 尾帧图片资产 ID；素材须属于本人并为 available。
+    #[prost(string, optional, tag = "4")]
+    pub last_frame_asset_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 用户生成要求原文，可以中文；Unicode 码点长度上限由工作流决定。
+    #[prost(string, optional, tag = "5")]
+    pub prompt: ::core::option::Option<::prost::alloc::string::String>,
+    /// 不传某项时采用工作流默认值；后端计算按 32 对齐的目标宽高。
+    #[prost(message, optional, tag = "6")]
+    pub resolution: ::core::option::Option<VideoResolution>,
+    /// 整数秒；初始工作流范围 3～15、默认 5，实际范围以工作流配置为准。
+    #[prost(int32, optional, tag = "7")]
+    pub duration_seconds: ::core::option::Option<i32>,
+    /// 帧/秒；不传时采用默认或固定值，固定模式显式提交时须与固定值相同。
+    #[prost(int32, optional, tag = "8")]
+    pub frame_rate: ::core::option::Option<i32>,
+}
+/// 模仿生成，对应 video.motion_transfer；当前工作流为深度控制，不承诺骨骼姿态控制。
+/// 时长、尺寸和帧率由输入视频及工作流确定，不接受对应用户参数。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CreateMotionTransferTaskReq {
+    /// 本人范围内幂等键，同一次创建重发复用。
+    #[prost(string, optional, tag = "1")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 来自 video.motion_transfer 的 Function.Get。
+    #[prost(string, optional, tag = "2")]
+    pub workflow_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 本人 available 视频；MP4/WebM、50 MiB、1～15 秒，音轨可选。
+    /// 时长上限允许一个帧间隔误差；上传或自产来源均执行相同输入限制。
+    #[prost(string, optional, tag = "3")]
+    pub input_video_asset_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 不传则关闭并旁路首帧条件；提供则启用，本人 available JPEG/PNG，不另传开关。
+    #[prost(string, optional, tag = "4")]
+    pub first_frame_asset_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 用户生成要求原文；可以中文，不自动翻译或增强。
+    #[prost(string, optional, tag = "5")]
+    pub prompt: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 引导生成，对应 video.continuation；仅交付新增片段，不拼接完整原视频。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CreateContinuationTaskReq {
+    /// 本人范围内幂等键；新任务由后端随机生成 seed。
+    #[prost(string, optional, tag = "1")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 来自 video.continuation 的 Function.Get。
+    #[prost(string, optional, tag = "2")]
+    pub workflow_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 本人 available MP4/WebM，最大 50 MiB、1～15 秒（上限允许一帧误差）。
+    /// 后端在执行前准备 24 FPS 临时副本，用户原件不变；音轨可选。
+    #[prost(string, optional, tag = "3")]
+    pub input_video_asset_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 零至四张有序参考图片，不传则不接入图片，不用示例或重复图补齐。
+    #[prost(string, repeated, tag = "4")]
+    pub input_asset_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// 续接内容的生成要求，可以中文；按工作流提示词长度校验。
+    #[prost(string, optional, tag = "5")]
+    pub prompt: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "6")]
+    pub resolution: ::core::option::Option<VideoResolution>,
+    /// 新增片段的整数秒数，不含前导；不传用默认值，初始 3～10 秒、默认 5。
+    /// 输出固定 24 FPS，不提供用户帧率字段。
+    #[prost(int32, optional, tag = "7")]
+    pub duration_seconds: ::core::option::Option<i32>,
+}
+/// 参考生成，对应 video.reference；至少提供视频或一张图片，不承诺局部修补。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CreateReferenceTaskReq {
+    /// 本人范围内幂等键，同一次创建重发复用。
+    #[prost(string, optional, tag = "1")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 来自 video.reference 的 Function.Get。
+    #[prost(string, optional, tag = "2")]
+    pub workflow_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 可选本人 available 视频，限制与引导生成相同；不传则断开视频和音频参考。
+    #[prost(string, optional, tag = "3")]
+    pub input_video_asset_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 零至四张有序 JPEG/PNG；没有视频时至少一张。
+    #[prost(string, repeated, tag = "4")]
+    pub input_asset_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// 用户生成要求原文，可以中文。
+    #[prost(string, optional, tag = "5")]
+    pub prompt: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "6")]
+    pub resolution: ::core::option::Option<VideoResolution>,
+    /// 输出整数秒，不要求与参考视频等长；不传采用默认值，输出固定 24 FPS。
+    #[prost(int32, optional, tag = "7")]
+    pub duration_seconds: ::core::option::Option<i32>,
+}
+/// 高级替换，对应 video.advanced_replace；SAM 遮盖选区后参考生成，不是像素级局部修补。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CreateAdvancedReplaceTaskReq {
+    /// 本人范围内幂等键；重新生成用新键和新 seed。
+    #[prost(string, optional, tag = "1")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 来自 video.advanced_replace 的 Function.Get。
+    #[prost(string, optional, tag = "2")]
+    pub workflow_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 必填本人 available 视频；输入限制与引导生成相同，音轨可选。
+    #[prost(string, optional, tag = "3")]
+    pub input_video_asset_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 零至四张有序参考图片；不传时由生成提示词描述替换后的外观。
+    #[prost(string, repeated, tag = "4")]
+    pub input_asset_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// 描述目标外观和动作，可以中文，与 SAM 区域描述独立。
+    #[prost(string, optional, tag = "5")]
+    pub prompt: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "6")]
+    pub resolution: ::core::option::Option<VideoResolution>,
+    /// 不传采用工作流默认秒数；固定 24 FPS，无用户帧率字段。
+    #[prost(int32, optional, tag = "7")]
+    pub duration_seconds: ::core::option::Option<i32>,
+    /// 必填，最多 200 个 Unicode 码点，去除首尾空白后须非空。
+    /// 页面初始 head，提示简短英文；原样传 SAM，不识别语言、不翻译、不回退默认。
+    #[prost(string, optional, tag = "8")]
+    pub region_description: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 五项新增视频的实际参数；按功能只返回适用字段，不另建素材或执行图快照。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VideoExtensionTaskParams {
+    /// 首尾帧省略视频；其他功能按本次实际素材返回，参考生成可省略。
+    #[prost(string, optional, tag = "1")]
+    pub input_video_asset_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 首尾帧必有，模仿可选；三个 MiniMax 功能省略。
+    #[prost(string, optional, tag = "2")]
+    pub first_frame_asset_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 仅首尾帧生成返回。
+    #[prost(string, optional, tag = "3")]
+    pub last_frame_asset_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 三个 MiniMax 功能的参考图片，保持用户提交顺序。
+    #[prost(string, repeated, tag = "4")]
+    pub input_asset_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "5")]
+    pub prompt: ::core::option::Option<::prost::alloc::string::String>,
+    /// 仅高级替换返回用户提交的原文。
+    #[prost(string, optional, tag = "6")]
+    pub region_description: ::core::option::Option<::prost::alloc::string::String>,
+    /// 后端为新任务生成；重发、重启、恢复保存不改，重新生成创建新值。
+    #[prost(uint64, optional, tag = "7")]
+    pub seed: ::core::option::Option<u64>,
+    /// 适用输出参数的实际选择值；模仿生成省略，不代表最终产物尺寸或时长。
+    #[prost(string, optional, tag = "8")]
+    pub aspect_ratio: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "9")]
+    pub megapixels: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int32, optional, tag = "10")]
+    pub duration_seconds: ::core::option::Option<i32>,
+    /// 首尾帧实际选择值，三个 MiniMax 为 24；模仿省略。
+    #[prost(int32, optional, tag = "11")]
+    pub frame_rate: ::core::option::Option<i32>,
+}
 /// 返回已受理任务的 ID；同一 request_id 重发返回原任务，不比较重发参数。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateTaskResp {
@@ -467,7 +628,7 @@ pub struct TaskSummary {
     pub task_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(enumeration = "TaskPurpose", optional, tag = "2")]
     pub purpose: ::core::option::Option<i32>,
-    /// 任务受理时确定的功能 ID；六种支持值及中文用途见 FunctionSummary.function_id。
+    /// 任务受理时确定的功能 ID；支持值及中文用途见 FunctionSummary.function_id。
     #[prost(string, optional, tag = "3")]
     pub function_id: ::core::option::Option<::prost::alloc::string::String>,
     /// 从当前功能记录读取的用户可见名称。
@@ -527,6 +688,8 @@ pub struct TaskSummary {
     /// 图生视频另含 input_asset_id；不包含工作流图、节点绑定或管理员负向提示词。
     /// 图片任务另含后端生成的 seed；单图/角色含 input_asset_id，多图含有序 input_asset_ids。
     /// 文生图按尺寸模式包含 width/height 或 aspect_ratio/megapixels；角色 prompt 为用户原文。
+    /// 新增视频含 seed 及适用的 input_video_asset_id/first_frame_asset_id/last_frame_asset_id/
+    /// input_asset_ids/region_description；模仿不返回输出尺寸、时长或帧率选择值。
     #[prost(string, optional, tag = "20")]
     pub effective_params_json: ::core::option::Option<::prost::alloc::string::String>,
 }
@@ -535,7 +698,7 @@ pub struct TaskSummary {
 pub struct TaskDetail {
     #[prost(message, optional, tag = "1")]
     pub summary: ::core::option::Option<TaskSummary>,
-    #[prost(oneof = "task_detail::EffectiveParams", tags = "2, 3, 4, 5, 6, 7")]
+    #[prost(oneof = "task_detail::EffectiveParams", tags = "2, 3, 4, 5, 6, 7, 8")]
     pub effective_params: ::core::option::Option<task_detail::EffectiveParams>,
 }
 /// Nested message and enum types in `TaskDetail`.
@@ -554,6 +717,9 @@ pub mod task_detail {
         MultipleImageEdit(super::MultipleImageEditTaskParams),
         #[prost(message, tag = "7")]
         Character(super::CharacterTaskParams),
+        /// 五项新增视频共用参数结构，通过 summary.function_id 区分适用字段。
+        #[prost(message, tag = "8")]
+        VideoExtension(super::VideoExtensionTaskParams),
     }
 }
 /// 查询本人任务。
@@ -960,6 +1126,116 @@ pub mod task_client {
                 .insert(GrpcMethod::new("hi.media.Task", "CreateCharacter"));
             self.inner.unary(req, path, codec).await
         }
+        /// 首尾帧生成 video.first_last_frame，用户明确提交两张图片的角色。
+        pub async fn create_first_last_frame(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateFirstLastFrameTaskReq>,
+        ) -> std::result::Result<tonic::Response<super::CreateTaskResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.Task/CreateFirstLastFrame",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.Task", "CreateFirstLastFrame"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 模仿生成 video.motion_transfer，视频必填、首帧可选，输出参数由素材和工作流决定。
+        pub async fn create_motion_transfer(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateMotionTransferTaskReq>,
+        ) -> std::result::Result<tonic::Response<super::CreateTaskResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.Task/CreateMotionTransfer",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.Task", "CreateMotionTransfer"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 引导生成 video.continuation，时长表示新增片段，不包含原视频或前导。
+        pub async fn create_continuation(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateContinuationTaskReq>,
+        ) -> std::result::Result<tonic::Response<super::CreateTaskResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.Task/CreateContinuation",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.Task", "CreateContinuation"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 参考生成 video.reference，至少一份视频或图片，不接收区域描述。
+        pub async fn create_reference(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateReferenceTaskReq>,
+        ) -> std::result::Result<tonic::Response<super::CreateTaskResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.Task/CreateReference",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.Task", "CreateReference"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 高级替换 video.advanced_replace，必填视频与自由区域描述，不自动翻译。
+        pub async fn create_advanced_replace(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateAdvancedReplaceTaskReq>,
+        ) -> std::result::Result<tonic::Response<super::CreateTaskResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.Task/CreateAdvancedReplace",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.Task", "CreateAdvancedReplace"));
+            self.inner.unary(req, path, codec).await
+        }
         /// 查询本人任务详情及产物资产 ID。
         pub async fn get(
             &mut self,
@@ -1330,10 +1606,11 @@ pub mod frame_rate_config {
 /// 输入图片数量，含 min/max 边界；多图列表始终有序，不另设 ordered 字段。
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct InputImagesConfig {
-    /// 单图修改与角色生成为 1；多图修改按工作流配置，当前最少 2 张。
+    /// 单图修改与角色生成为 1，多图修改最少 2；首尾帧为 2，模仿及 MiniMax 参考图可为 0。
     #[prost(uint32, optional, tag = "1")]
     pub min: ::core::option::Option<u32>,
-    /// FLUX 多图为 2，Qwen 多图最多 4；创建时由后端强校验。
+    /// FLUX 多图为 2，Qwen 多图为 4；首尾帧为 2，模仿为 1，MiniMax 参考图为 4。
+    /// 图片功能原有数量约束不变，创建时按目标功能和工作流配置强校验。
     #[prost(uint32, optional, tag = "2")]
     pub max: ::core::option::Option<u32>,
 }
@@ -1367,7 +1644,8 @@ pub struct VideoParameterConfig {
     pub duration_seconds: ::core::option::Option<IntRangeConfig>,
     #[prost(message, optional, tag = "5")]
     pub frame_rate: ::core::option::Option<FrameRateConfig>,
-    /// 单图修改、角色生成及多图修改提供；文生图省略。提交顺序即图片接入顺序。
+    /// 图片修改、角色及新增视频的图片数量；文生图省略，素材角色由创建接口规定。
+    /// 模仿生成只返回 prompt 和 input_images，省略输出尺寸、时长及帧率配置。
     #[prost(message, optional, tag = "6")]
     pub input_images: ::core::option::Option<InputImagesConfig>,
     /// 仅文生图提供一种尺寸模式；图片修改与角色生成的尺寸由工作流决定。
@@ -1391,7 +1669,7 @@ pub struct FunctionSummary {
     /// 固定值：video.img2vid（图生视频）、video.txt2vid（文生视频）。
     /// 图片增量：image.txt2img（文生图）、image.edit_single（单图修改）、
     /// image.edit_multiple（多图修改）、image.character（角色生成）。
-    /// 开发中：video.first_last_frame（首尾帧生成）、video.motion_transfer（模仿生成）、
+    /// 视频扩展：video.first_last_frame（首尾帧生成）、video.motion_transfer（模仿生成）、
     /// video.continuation（引导生成）、video.reference（参考生成）、
     /// video.advanced_replace（高级替换）；登记入口不代表已实现生成接口。
     #[prost(string, optional, tag = "1")]
@@ -1402,8 +1680,15 @@ pub struct FunctionSummary {
     /// 与工作流 ENABLED 状态独立，不影响已受理任务或管理员试跑。
     #[prost(bool, optional, tag = "3")]
     pub enabled: ::core::option::Option<bool>,
+    /// 图片或视频分类；与功能开放开关、工作流数量无关。
+    #[prost(enumeration = "FunctionCategory", optional, tag = "4")]
+    pub category: ::core::option::Option<i32>,
+    /// 分类内展示顺序，越小越靠前；允许同值，不要求连续，不影响任务执行优先级。
+    #[prost(int32, optional, tag = "5")]
+    pub sort_order: ::core::option::Option<i32>,
 }
-/// 返回全部登记功能，不按开放开关或工作流数量过滤。
+/// 返回全部登记功能的扁平列表，不按开放开关或工作流数量过滤。
+/// 图片组在前、视频组在后；分类内按 sort_order 升序，同值按 function_id 排序。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListFunctionsResp {
     #[prost(message, repeated, tag = "1")]
@@ -1461,6 +1746,46 @@ pub struct SetFunctionEnabledReq {
     /// true 允许普通用户创建新任务；开启不要求已有工作流，不自动启用工作流。
     #[prost(bool, optional, tag = "2")]
     pub enabled: ::core::option::Option<bool>,
+}
+/// 修改单个功能的分类内展示顺序；分类不可修改。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SetFunctionSortOrderReq {
+    /// 来自 Function.List；不存在时返回 NotFound。
+    #[prost(string, optional, tag = "1")]
+    pub function_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 必须显式提供，包括 0；重复设置同值成功，不改变开放开关或工作流排序。
+    #[prost(int32, optional, tag = "2")]
+    pub sort_order: ::core::option::Option<i32>,
+}
+/// 固定功能分类，由 image.\* / video.\* 功能 ID 派生，不另建分类表。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum FunctionCategory {
+    Unspecified = 0,
+    Image = 1,
+    Video = 2,
+}
+impl FunctionCategory {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "FUNCTION_CATEGORY_UNSPECIFIED",
+            Self::Image => "FUNCTION_CATEGORY_IMAGE",
+            Self::Video => "FUNCTION_CATEGORY_VIDEO",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "FUNCTION_CATEGORY_UNSPECIFIED" => Some(Self::Unspecified),
+            "FUNCTION_CATEGORY_IMAGE" => Some(Self::Image),
+            "FUNCTION_CATEGORY_VIDEO" => Some(Self::Video),
+            _ => None,
+        }
+    }
 }
 /// Generated client implementations.
 pub mod function_client {
@@ -1611,7 +1936,7 @@ pub mod function_manage_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// 管理员只调整功能开放开关；功能 ID 和显示名称随开发初始化。
+    /// 管理员调整功能开放开关与分类内顺序；功能 ID 和显示名称随开发初始化。
     #[derive(Debug, Clone)]
     pub struct FunctionManageClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -1713,6 +2038,28 @@ pub mod function_manage_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.media.FunctionManage", "SetEnabled"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 设置分类内展示顺序，不影响 FIFO 或工作流排序。
+        pub async fn set_sort_order(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SetFunctionSortOrderReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.FunctionManage/SetSortOrder",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.FunctionManage", "SetSortOrder"));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -2249,6 +2596,104 @@ pub struct CharacterWorkflowConfig {
     #[prost(uint32, optional, tag = "5")]
     pub prompt_max_length: ::core::option::Option<u32>,
 }
+/// 首尾帧执行配置；输出宽高由宽高比和像素量计算后按 32 对齐，分别写入宽、高绑定。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FirstLastFrameWorkflowConfig {
+    /// 两个 LoadImage.image，分别承担首帧、尾帧；管理员按角色绑定。
+    #[prost(message, optional, tag = "1")]
+    pub first_frame: ::core::option::Option<WorkflowInputBinding>,
+    #[prost(message, optional, tag = "2")]
+    pub last_frame: ::core::option::Option<WorkflowInputBinding>,
+    /// 用户原文写入有效路径；不翻译、拼接或启用提示词增强。
+    #[prost(message, optional, tag = "3")]
+    pub prompt: ::core::option::Option<WorkflowInputBinding>,
+    #[prost(uint32, optional, tag = "4")]
+    pub prompt_max_length: ::core::option::Option<u32>,
+    /// 可选管理员负向词；省略时保留工作流原值。
+    #[prost(message, optional, tag = "5")]
+    pub negative_prompt: ::core::option::Option<WorkflowFixedTextInput>,
+    /// 计算后的像素宽高绑定；允许整数业务值写入兼容 INT/FLOAT 节点。
+    #[prost(message, optional, tag = "6")]
+    pub width: ::core::option::Option<WorkflowInputBinding>,
+    #[prost(message, optional, tag = "7")]
+    pub height: ::core::option::Option<WorkflowInputBinding>,
+    /// 公开允许值与默认值，不直接写入节点；初始 16:9 (Widescreen)。
+    #[prost(message, optional, tag = "8")]
+    pub aspect_ratio: ::core::option::Option<StringOptionConfig>,
+    /// 规范十进制字符串，初始默认 "0.9"；用于计算像素宽高。
+    #[prost(message, optional, tag = "9")]
+    pub megapixels: ::core::option::Option<DecimalOptionConfig>,
+    /// 初始 3～15 秒、默认 5；每个工作流独立可调。
+    #[prost(message, optional, tag = "10")]
+    pub duration_seconds: ::core::option::Option<WorkflowIntRangeInput>,
+    /// 初始默认 24，可选或固定；固定值须与执行图一致。
+    #[prost(message, optional, tag = "11")]
+    pub frame_rate: ::core::option::Option<WorkflowFrameRateInput>,
+    /// 一个或多个主生成 seed 输入，全部写入同一个后端任务随机值。
+    #[prost(message, repeated, tag = "12")]
+    pub seeds: ::prost::alloc::vec::Vec<WorkflowInputBinding>,
+}
+/// 模仿生成配置；当前为深度控制，不提供用户输出尺寸、时长或帧率参数。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MotionTransferWorkflowConfig {
+    /// LoadVideo.file，执行时写入本次上传响应对应的文件引用。
+    #[prost(message, optional, tag = "1")]
+    pub input_video: ::core::option::Option<WorkflowInputBinding>,
+    /// 可选首帧的 LoadImage.image 位置；绑定必填，用户素材可省略。
+    #[prost(message, optional, tag = "2")]
+    pub first_frame: ::core::option::Option<WorkflowInputBinding>,
+    /// 布尔输入，由是否提供首帧决定；无图时后端还须旁路两阶段图片条件并清除无用分支。
+    #[prost(message, optional, tag = "3")]
+    pub use_first_frame: ::core::option::Option<WorkflowInputBinding>,
+    #[prost(message, optional, tag = "4")]
+    pub prompt: ::core::option::Option<WorkflowInputBinding>,
+    #[prost(uint32, optional, tag = "5")]
+    pub prompt_max_length: ::core::option::Option<u32>,
+    #[prost(message, optional, tag = "6")]
+    pub negative_prompt: ::core::option::Option<WorkflowFixedTextInput>,
+    /// 多阶段主生成使用同一个后端 seed，不修改原有视频功能的种子行为。
+    #[prost(message, repeated, tag = "7")]
+    pub seeds: ::prost::alloc::vec::Vec<WorkflowInputBinding>,
+}
+/// MiniMax 零至四张有序参考图片接入；只配置模板和接收节点，不配置通用重连规则。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkflowMiniMaxReferenceImages {
+    /// 可克隆的 LoadImage，后端按实际图片数量准备加载节点，移除未使用示例。
+    #[prost(string, optional, tag = "1")]
+    pub template_node_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// MiniMaxH3ReferenceToVideo；按顺序写入 ref_images.ref_image_0 至实际图片数。
+    #[prost(string, optional, tag = "2")]
+    pub reference_node_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 引导、参考及高级替换共用的 MiniMax 参数结构，由外层 function_config 确定功能。
+/// 固定输出 24 FPS；输入视频在执行前适配临时副本，不改存储原件。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MiniMaxVideoWorkflowConfig {
+    /// LoadVideo.file；绑定必填，参考生成用户可不提供视频，此时断开视频与音频分支。
+    #[prost(message, optional, tag = "1")]
+    pub input_video: ::core::option::Option<WorkflowInputBinding>,
+    /// 用户可选 0～4 张图片，按提交顺序接入；不存在的素材不沿用示例。
+    #[prost(message, optional, tag = "2")]
+    pub reference_images: ::core::option::Option<WorkflowMiniMaxReferenceImages>,
+    #[prost(message, optional, tag = "3")]
+    pub prompt: ::core::option::Option<WorkflowInputBinding>,
+    #[prost(uint32, optional, tag = "4")]
+    pub prompt_max_length: ::core::option::Option<u32>,
+    /// ResolutionSelector 完整选项字符串，初始默认 16:9 (Widescreen)。
+    #[prost(message, optional, tag = "5")]
+    pub aspect_ratio: ::core::option::Option<WorkflowStringOptionInput>,
+    /// 业务保存十进制字符串，执行写为 JSON 数字；初始默认 "0.4"。
+    #[prost(message, optional, tag = "6")]
+    pub megapixels: ::core::option::Option<WorkflowDecimalOptionInput>,
+    /// 初始 3～10 秒、默认 5；引导生成表示新增片段，后端补前导并裁剪。
+    #[prost(message, optional, tag = "7")]
+    pub duration_seconds: ::core::option::Option<WorkflowIntRangeInput>,
+    #[prost(message, repeated, tag = "8")]
+    pub seeds: ::prost::alloc::vec::Vec<WorkflowInputBinding>,
+    /// 仅高级替换必填，其他两类不得配置；用户原文传 SAM，固定最多 200 个码点。
+    #[prost(message, optional, tag = "9")]
+    pub region_description: ::core::option::Option<WorkflowInputBinding>,
+}
 /// 完整执行配置；功能配置必须与工作流归属一致，保存时不建立产物预占。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct WorkflowExecutionConfig {
@@ -2259,7 +2704,7 @@ pub struct WorkflowExecutionConfig {
     pub execution_timeout_seconds: ::core::option::Option<u32>,
     #[prost(
         oneof = "workflow_execution_config::FunctionConfig",
-        tags = "1, 2, 5, 6, 7, 8"
+        tags = "1, 2, 5, 6, 7, 8, 9, 10, 11, 12, 13"
     )]
     pub function_config: ::core::option::Option<
         workflow_execution_config::FunctionConfig,
@@ -2281,6 +2726,16 @@ pub mod workflow_execution_config {
         MultipleImageEdit(super::MultipleImageEditWorkflowConfig),
         #[prost(message, tag = "8")]
         Character(super::CharacterWorkflowConfig),
+        #[prost(message, tag = "9")]
+        FirstLastFrame(super::FirstLastFrameWorkflowConfig),
+        #[prost(message, tag = "10")]
+        MotionTransfer(super::MotionTransferWorkflowConfig),
+        #[prost(message, tag = "11")]
+        Continuation(super::MiniMaxVideoWorkflowConfig),
+        #[prost(message, tag = "12")]
+        Reference(super::MiniMaxVideoWorkflowConfig),
+        #[prost(message, tag = "13")]
+        AdvancedReplace(super::MiniMaxVideoWorkflowConfig),
     }
 }
 /// 静态校验发现的问题，节点和输入定位信息按需提供。
@@ -2421,7 +2876,7 @@ pub struct WorkflowDetail {
 /// 不接受编辑器 Workflow JSON；组合已存在时返回 Aborted，不覆盖原工作流。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct WorkflowImportMetadata {
-    /// 来自 Function.List 的 video.img2vid 或 video.txt2vid。
+    /// 来自 Function.List，支持值及中文用途见 FunctionSummary.function_id。
     #[prost(string, optional, tag = "1")]
     pub function_id: ::core::option::Option<::prost::alloc::string::String>,
     /// 已创建且尚未关联同一功能工作流的模型 ID。
@@ -2523,16 +2978,39 @@ pub struct TestWorkflowReq {
     /// 最近一次静态校验必须通过，无需预先启用。
     #[prost(string, optional, tag = "2")]
     pub workflow_id: ::core::option::Option<::prost::alloc::string::String>,
-    /// 六类功能均必填正向提示词，角色生成同样使用本次提交的原文；长度按工作流配置校验。
+    /// 全部功能均必填用户正向提示词原文；长度按工作流配置校验。
     #[prost(string, optional, tag = "3")]
     pub prompt: ::core::option::Option<::prost::alloc::string::String>,
     /// 图生视频、单图修改、角色生成使用管理员本人的可用 JPEG/PNG 资产；其他功能省略。
     /// 视频分辨率、时长和帧率以及文生图尺寸使用工作流默认值或固定值。
     #[prost(string, optional, tag = "4")]
     pub input_asset_id: ::core::option::Option<::prost::alloc::string::String>,
-    /// 仅多图修改使用，提交顺序即图1至图N；FLUX 为2张，Qwen 为2～4张。
+    /// 多图修改及三个新增 MiniMax 功能使用，提交顺序即图1至图N；最多四张。
+    /// FLUX 为2张，Qwen 为2～4张，MiniMax 为0～4张，由目标功能校验。
     #[prost(string, repeated, tag = "5")]
     pub input_asset_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// 模仿、引导及高级替换必填；参考生成可选，但至少一份视频或图片。
+    /// 使用管理员本人 available 视频，执行与普通创建相同的格式／大小／时长检查。
+    #[prost(string, optional, tag = "6")]
+    pub input_video_asset_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 首尾帧必填首帧，模仿可选；不提供模仿首帧时旁路图片条件。
+    #[prost(string, optional, tag = "7")]
+    pub first_frame_asset_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 仅首尾帧必填尾帧，其他功能省略。
+    #[prost(string, optional, tag = "8")]
+    pub last_frame_asset_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 仅高级替换必填；最多 200 个码点，原样使用，不翻译或自动补 head。
+    #[prost(string, optional, tag = "9")]
+    pub region_description: ::core::option::Option<::prost::alloc::string::String>,
+    /// 首尾帧和三个 MiniMax 功能可传；不传补默认。原有六项仍使用其原有试跑规则。
+    #[prost(message, optional, tag = "10")]
+    pub resolution: ::core::option::Option<VideoResolution>,
+    /// 新增功能适用的输出时长，整数秒；引导表示新增片段，模仿不接受。
+    #[prost(int32, optional, tag = "11")]
+    pub duration_seconds: ::core::option::Option<i32>,
+    /// 仅新增首尾帧可传；其他新增功能由素材或工作流固定帧率决定。
+    #[prost(int32, optional, tag = "12")]
+    pub frame_rate: ::core::option::Option<i32>,
 }
 /// 返回受理的试跑任务 ID；试跑成功保存并结算后才自动启用草稿，不支持恢复保存。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -3766,6 +4244,15 @@ pub struct FileSummary {
     /// 用户上传图片、历史未补图视频及封面生成失败的视频为 false。
     #[prost(bool, optional, tag = "8")]
     pub has_cover: ::core::option::Option<bool>,
+    /// 后端检测并保存的实际宽度，单位像素；查询不重新探测，无媒体信息的历史资产省略。
+    #[prost(uint32, optional, tag = "9")]
+    pub width: ::core::option::Option<u32>,
+    /// 实际高度，单位像素；不是生成请求的目标尺寸。
+    #[prost(uint32, optional, tag = "10")]
+    pub height: ::core::option::Option<u32>,
+    /// 视频实际时长，单位毫秒；图片省略，视频是否可复用仍由创建接口检查。
+    #[prost(int64, optional, tag = "11")]
+    pub duration_ms: ::core::option::Option<i64>,
 }
 /// 分页查询本人 available 资产，不传筛选字段表示不过滤。
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
@@ -3821,7 +4308,8 @@ pub struct GetFileAccessUrlsResp {
     #[prost(message, repeated, tag = "1")]
     pub files: ::prost::alloc::vec::Vec<FileAccessUrl>,
 }
-/// POST /api/v1/file/upload 的单文件清单项。该上传口为 HiMedia 手写的
+/// 图片 POST /api/v1/file/upload、视频 POST /api/v1/file/upload/video 的单文件清单项。
+/// 两个上传口均为 HiMedia 手写的 AUTH_USER
 /// multipart/form-data HTTP 接口，不是 gRPC RPC；文件项的 form name
 /// 必须与 metadata 中的 clientFileId 一致，filename 也必须与清单一致。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -3835,7 +4323,11 @@ pub struct UploadFileMetadata {
     #[prost(uint64, optional, tag = "3")]
     pub size_bytes: ::core::option::Option<u64>,
 }
-/// POST /api/v1/file/upload 的 metadata 项。metadata 必须是 multipart 第一项，
+/// 两个上传口共用的 metadata；图片入口保持不变，视频入口独立检查媒体类型。
+/// 图片只接受静态 JPEG/PNG；视频接受 MP4/WebM，最大 50 MiB、1～15 秒，
+/// 上限允许一个帧间隔的对齐误差，音轨可选，不额外限制分辨率或帧率。
+/// 上传保存原件；MiniMax 24 FPS 适配仅在任务执行前处理临时副本。
+/// metadata 必须是 multipart 第一项，
 /// Content-Type 必须是 application/json，且 Content-Disposition 不能携带 filename。
 /// JSON 仅接受 lowerCamelCase：requestId/files/clientFileId/filename/sizeBytes，
 /// 不兼容 snake_case；其中 sizeBytes 按 uint64 十进制字符串传递。
@@ -3868,9 +4360,18 @@ pub struct UploadFileResult {
     pub error_code: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "8")]
     pub error_message: ::core::option::Option<::prost::alloc::string::String>,
+    /// 成功时返回实际像素宽度，由后端检测，不从 metadata 接收。
+    #[prost(uint32, optional, tag = "9")]
+    pub width: ::core::option::Option<u32>,
+    /// 成功时返回实际像素高度；失败或无媒体信息时省略。
+    #[prost(uint32, optional, tag = "10")]
+    pub height: ::core::option::Option<u32>,
+    /// 成功上传视频的实际毫秒时长；图片不返回。
+    #[prost(int64, optional, tag = "11")]
+    pub duration_ms: ::core::option::Option<i64>,
 }
-/// POST /api/v1/file/upload 的 data 响应，同时也是 GetUploadResult 的批次结果。
-/// HTTP 上使用 protojson lowerCamelCase 字段；成功文件的 assetId 用于图生视频任务。
+/// 图片和视频上传的 data 响应，同时也是 GetUploadResult 的批次结果。
+/// HTTP 使用 protojson lowerCamelCase；成功 assetId 用于对应任务素材，不回传宽高或时长。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UploadBatchResult {
     #[prost(string, optional, tag = "1")]

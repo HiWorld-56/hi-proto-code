@@ -352,6 +352,862 @@ class CreateTextToVideoTaskReq extends $pb.GeneratedMessage {
   void clearFrameRate() => $_clearField(6);
 }
 
+/// 创建首尾帧视频，对应 video.first_last_frame；两张本人 JPEG/PNG 分别承担首帧和尾帧。
+class CreateFirstLastFrameTaskReq extends $pb.GeneratedMessage {
+  factory CreateFirstLastFrameTaskReq({
+    $core.String? requestId,
+    $core.String? workflowId,
+    $core.String? firstFrameAssetId,
+    $core.String? lastFrameAssetId,
+    $core.String? prompt,
+    VideoResolution? resolution,
+    $core.int? durationSeconds,
+    $core.int? frameRate,
+  }) {
+    final result = create();
+    if (requestId != null) result.requestId = requestId;
+    if (workflowId != null) result.workflowId = workflowId;
+    if (firstFrameAssetId != null) result.firstFrameAssetId = firstFrameAssetId;
+    if (lastFrameAssetId != null) result.lastFrameAssetId = lastFrameAssetId;
+    if (prompt != null) result.prompt = prompt;
+    if (resolution != null) result.resolution = resolution;
+    if (durationSeconds != null) result.durationSeconds = durationSeconds;
+    if (frameRate != null) result.frameRate = frameRate;
+    return result;
+  }
+
+  CreateFirstLastFrameTaskReq._();
+
+  factory CreateFirstLastFrameTaskReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CreateFirstLastFrameTaskReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CreateFirstLastFrameTaskReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'requestId')
+    ..aOS(2, _omitFieldNames ? '' : 'workflowId')
+    ..aOS(3, _omitFieldNames ? '' : 'firstFrameAssetId')
+    ..aOS(4, _omitFieldNames ? '' : 'lastFrameAssetId')
+    ..aOS(5, _omitFieldNames ? '' : 'prompt')
+    ..aOM<VideoResolution>(6, _omitFieldNames ? '' : 'resolution',
+        subBuilder: VideoResolution.create)
+    ..aI(7, _omitFieldNames ? '' : 'durationSeconds')
+    ..aI(8, _omitFieldNames ? '' : 'frameRate')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreateFirstLastFrameTaskReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreateFirstLastFrameTaskReq copyWith(
+          void Function(CreateFirstLastFrameTaskReq) updates) =>
+      super.copyWith(
+              (message) => updates(message as CreateFirstLastFrameTaskReq))
+          as CreateFirstLastFrameTaskReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CreateFirstLastFrameTaskReq create() =>
+      CreateFirstLastFrameTaskReq._();
+  @$core.override
+  CreateFirstLastFrameTaskReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static CreateFirstLastFrameTaskReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CreateFirstLastFrameTaskReq>(create);
+  static CreateFirstLastFrameTaskReq? _defaultInstance;
+
+  /// 本人范围内幂等键；重新生成使用新值，由后端生成新 seed。
+  @$pb.TagNumber(1)
+  $core.String get requestId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set requestId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRequestId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRequestId() => $_clearField(1);
+
+  /// 来自对应 Function.Get，必须属于本功能且已启用。
+  @$pb.TagNumber(2)
+  $core.String get workflowId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set workflowId($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasWorkflowId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearWorkflowId() => $_clearField(2);
+
+  /// 首帧图片资产 ID；允许与尾帧尺寸不同，工作流按目标画面缩放和居中裁剪。
+  @$pb.TagNumber(3)
+  $core.String get firstFrameAssetId => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set firstFrameAssetId($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasFirstFrameAssetId() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearFirstFrameAssetId() => $_clearField(3);
+
+  /// 尾帧图片资产 ID；素材须属于本人并为 available。
+  @$pb.TagNumber(4)
+  $core.String get lastFrameAssetId => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set lastFrameAssetId($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasLastFrameAssetId() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearLastFrameAssetId() => $_clearField(4);
+
+  /// 用户生成要求原文，可以中文；Unicode 码点长度上限由工作流决定。
+  @$pb.TagNumber(5)
+  $core.String get prompt => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set prompt($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasPrompt() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearPrompt() => $_clearField(5);
+
+  /// 不传某项时采用工作流默认值；后端计算按 32 对齐的目标宽高。
+  @$pb.TagNumber(6)
+  VideoResolution get resolution => $_getN(5);
+  @$pb.TagNumber(6)
+  set resolution(VideoResolution value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasResolution() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearResolution() => $_clearField(6);
+  @$pb.TagNumber(6)
+  VideoResolution ensureResolution() => $_ensure(5);
+
+  /// 整数秒；初始工作流范围 3～15、默认 5，实际范围以工作流配置为准。
+  @$pb.TagNumber(7)
+  $core.int get durationSeconds => $_getIZ(6);
+  @$pb.TagNumber(7)
+  set durationSeconds($core.int value) => $_setSignedInt32(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasDurationSeconds() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearDurationSeconds() => $_clearField(7);
+
+  /// 帧/秒；不传时采用默认或固定值，固定模式显式提交时须与固定值相同。
+  @$pb.TagNumber(8)
+  $core.int get frameRate => $_getIZ(7);
+  @$pb.TagNumber(8)
+  set frameRate($core.int value) => $_setSignedInt32(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasFrameRate() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearFrameRate() => $_clearField(8);
+}
+
+/// 模仿生成，对应 video.motion_transfer；当前工作流为深度控制，不承诺骨骼姿态控制。
+/// 时长、尺寸和帧率由输入视频及工作流确定，不接受对应用户参数。
+class CreateMotionTransferTaskReq extends $pb.GeneratedMessage {
+  factory CreateMotionTransferTaskReq({
+    $core.String? requestId,
+    $core.String? workflowId,
+    $core.String? inputVideoAssetId,
+    $core.String? firstFrameAssetId,
+    $core.String? prompt,
+  }) {
+    final result = create();
+    if (requestId != null) result.requestId = requestId;
+    if (workflowId != null) result.workflowId = workflowId;
+    if (inputVideoAssetId != null) result.inputVideoAssetId = inputVideoAssetId;
+    if (firstFrameAssetId != null) result.firstFrameAssetId = firstFrameAssetId;
+    if (prompt != null) result.prompt = prompt;
+    return result;
+  }
+
+  CreateMotionTransferTaskReq._();
+
+  factory CreateMotionTransferTaskReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CreateMotionTransferTaskReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CreateMotionTransferTaskReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'requestId')
+    ..aOS(2, _omitFieldNames ? '' : 'workflowId')
+    ..aOS(3, _omitFieldNames ? '' : 'inputVideoAssetId')
+    ..aOS(4, _omitFieldNames ? '' : 'firstFrameAssetId')
+    ..aOS(5, _omitFieldNames ? '' : 'prompt')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreateMotionTransferTaskReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreateMotionTransferTaskReq copyWith(
+          void Function(CreateMotionTransferTaskReq) updates) =>
+      super.copyWith(
+              (message) => updates(message as CreateMotionTransferTaskReq))
+          as CreateMotionTransferTaskReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CreateMotionTransferTaskReq create() =>
+      CreateMotionTransferTaskReq._();
+  @$core.override
+  CreateMotionTransferTaskReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static CreateMotionTransferTaskReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CreateMotionTransferTaskReq>(create);
+  static CreateMotionTransferTaskReq? _defaultInstance;
+
+  /// 本人范围内幂等键，同一次创建重发复用。
+  @$pb.TagNumber(1)
+  $core.String get requestId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set requestId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRequestId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRequestId() => $_clearField(1);
+
+  /// 来自 video.motion_transfer 的 Function.Get。
+  @$pb.TagNumber(2)
+  $core.String get workflowId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set workflowId($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasWorkflowId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearWorkflowId() => $_clearField(2);
+
+  /// 本人 available 视频；MP4/WebM、50 MiB、1～15 秒，音轨可选。
+  /// 时长上限允许一个帧间隔误差；上传或自产来源均执行相同输入限制。
+  @$pb.TagNumber(3)
+  $core.String get inputVideoAssetId => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set inputVideoAssetId($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasInputVideoAssetId() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearInputVideoAssetId() => $_clearField(3);
+
+  /// 不传则关闭并旁路首帧条件；提供则启用，本人 available JPEG/PNG，不另传开关。
+  @$pb.TagNumber(4)
+  $core.String get firstFrameAssetId => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set firstFrameAssetId($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasFirstFrameAssetId() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearFirstFrameAssetId() => $_clearField(4);
+
+  /// 用户生成要求原文；可以中文，不自动翻译或增强。
+  @$pb.TagNumber(5)
+  $core.String get prompt => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set prompt($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasPrompt() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearPrompt() => $_clearField(5);
+}
+
+/// 引导生成，对应 video.continuation；仅交付新增片段，不拼接完整原视频。
+class CreateContinuationTaskReq extends $pb.GeneratedMessage {
+  factory CreateContinuationTaskReq({
+    $core.String? requestId,
+    $core.String? workflowId,
+    $core.String? inputVideoAssetId,
+    $core.Iterable<$core.String>? inputAssetIds,
+    $core.String? prompt,
+    VideoResolution? resolution,
+    $core.int? durationSeconds,
+  }) {
+    final result = create();
+    if (requestId != null) result.requestId = requestId;
+    if (workflowId != null) result.workflowId = workflowId;
+    if (inputVideoAssetId != null) result.inputVideoAssetId = inputVideoAssetId;
+    if (inputAssetIds != null) result.inputAssetIds.addAll(inputAssetIds);
+    if (prompt != null) result.prompt = prompt;
+    if (resolution != null) result.resolution = resolution;
+    if (durationSeconds != null) result.durationSeconds = durationSeconds;
+    return result;
+  }
+
+  CreateContinuationTaskReq._();
+
+  factory CreateContinuationTaskReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CreateContinuationTaskReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CreateContinuationTaskReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'requestId')
+    ..aOS(2, _omitFieldNames ? '' : 'workflowId')
+    ..aOS(3, _omitFieldNames ? '' : 'inputVideoAssetId')
+    ..pPS(4, _omitFieldNames ? '' : 'inputAssetIds')
+    ..aOS(5, _omitFieldNames ? '' : 'prompt')
+    ..aOM<VideoResolution>(6, _omitFieldNames ? '' : 'resolution',
+        subBuilder: VideoResolution.create)
+    ..aI(7, _omitFieldNames ? '' : 'durationSeconds')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreateContinuationTaskReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreateContinuationTaskReq copyWith(
+          void Function(CreateContinuationTaskReq) updates) =>
+      super.copyWith((message) => updates(message as CreateContinuationTaskReq))
+          as CreateContinuationTaskReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CreateContinuationTaskReq create() => CreateContinuationTaskReq._();
+  @$core.override
+  CreateContinuationTaskReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static CreateContinuationTaskReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CreateContinuationTaskReq>(create);
+  static CreateContinuationTaskReq? _defaultInstance;
+
+  /// 本人范围内幂等键；新任务由后端随机生成 seed。
+  @$pb.TagNumber(1)
+  $core.String get requestId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set requestId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRequestId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRequestId() => $_clearField(1);
+
+  /// 来自 video.continuation 的 Function.Get。
+  @$pb.TagNumber(2)
+  $core.String get workflowId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set workflowId($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasWorkflowId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearWorkflowId() => $_clearField(2);
+
+  /// 本人 available MP4/WebM，最大 50 MiB、1～15 秒（上限允许一帧误差）。
+  /// 后端在执行前准备 24 FPS 临时副本，用户原件不变；音轨可选。
+  @$pb.TagNumber(3)
+  $core.String get inputVideoAssetId => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set inputVideoAssetId($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasInputVideoAssetId() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearInputVideoAssetId() => $_clearField(3);
+
+  /// 零至四张有序参考图片，不传则不接入图片，不用示例或重复图补齐。
+  @$pb.TagNumber(4)
+  $pb.PbList<$core.String> get inputAssetIds => $_getList(3);
+
+  /// 续接内容的生成要求，可以中文；按工作流提示词长度校验。
+  @$pb.TagNumber(5)
+  $core.String get prompt => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set prompt($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasPrompt() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearPrompt() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  VideoResolution get resolution => $_getN(5);
+  @$pb.TagNumber(6)
+  set resolution(VideoResolution value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasResolution() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearResolution() => $_clearField(6);
+  @$pb.TagNumber(6)
+  VideoResolution ensureResolution() => $_ensure(5);
+
+  /// 新增片段的整数秒数，不含前导；不传用默认值，初始 3～10 秒、默认 5。
+  /// 输出固定 24 FPS，不提供用户帧率字段。
+  @$pb.TagNumber(7)
+  $core.int get durationSeconds => $_getIZ(6);
+  @$pb.TagNumber(7)
+  set durationSeconds($core.int value) => $_setSignedInt32(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasDurationSeconds() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearDurationSeconds() => $_clearField(7);
+}
+
+/// 参考生成，对应 video.reference；至少提供视频或一张图片，不承诺局部修补。
+class CreateReferenceTaskReq extends $pb.GeneratedMessage {
+  factory CreateReferenceTaskReq({
+    $core.String? requestId,
+    $core.String? workflowId,
+    $core.String? inputVideoAssetId,
+    $core.Iterable<$core.String>? inputAssetIds,
+    $core.String? prompt,
+    VideoResolution? resolution,
+    $core.int? durationSeconds,
+  }) {
+    final result = create();
+    if (requestId != null) result.requestId = requestId;
+    if (workflowId != null) result.workflowId = workflowId;
+    if (inputVideoAssetId != null) result.inputVideoAssetId = inputVideoAssetId;
+    if (inputAssetIds != null) result.inputAssetIds.addAll(inputAssetIds);
+    if (prompt != null) result.prompt = prompt;
+    if (resolution != null) result.resolution = resolution;
+    if (durationSeconds != null) result.durationSeconds = durationSeconds;
+    return result;
+  }
+
+  CreateReferenceTaskReq._();
+
+  factory CreateReferenceTaskReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CreateReferenceTaskReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CreateReferenceTaskReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'requestId')
+    ..aOS(2, _omitFieldNames ? '' : 'workflowId')
+    ..aOS(3, _omitFieldNames ? '' : 'inputVideoAssetId')
+    ..pPS(4, _omitFieldNames ? '' : 'inputAssetIds')
+    ..aOS(5, _omitFieldNames ? '' : 'prompt')
+    ..aOM<VideoResolution>(6, _omitFieldNames ? '' : 'resolution',
+        subBuilder: VideoResolution.create)
+    ..aI(7, _omitFieldNames ? '' : 'durationSeconds')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreateReferenceTaskReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreateReferenceTaskReq copyWith(
+          void Function(CreateReferenceTaskReq) updates) =>
+      super.copyWith((message) => updates(message as CreateReferenceTaskReq))
+          as CreateReferenceTaskReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CreateReferenceTaskReq create() => CreateReferenceTaskReq._();
+  @$core.override
+  CreateReferenceTaskReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static CreateReferenceTaskReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CreateReferenceTaskReq>(create);
+  static CreateReferenceTaskReq? _defaultInstance;
+
+  /// 本人范围内幂等键，同一次创建重发复用。
+  @$pb.TagNumber(1)
+  $core.String get requestId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set requestId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRequestId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRequestId() => $_clearField(1);
+
+  /// 来自 video.reference 的 Function.Get。
+  @$pb.TagNumber(2)
+  $core.String get workflowId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set workflowId($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasWorkflowId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearWorkflowId() => $_clearField(2);
+
+  /// 可选本人 available 视频，限制与引导生成相同；不传则断开视频和音频参考。
+  @$pb.TagNumber(3)
+  $core.String get inputVideoAssetId => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set inputVideoAssetId($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasInputVideoAssetId() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearInputVideoAssetId() => $_clearField(3);
+
+  /// 零至四张有序 JPEG/PNG；没有视频时至少一张。
+  @$pb.TagNumber(4)
+  $pb.PbList<$core.String> get inputAssetIds => $_getList(3);
+
+  /// 用户生成要求原文，可以中文。
+  @$pb.TagNumber(5)
+  $core.String get prompt => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set prompt($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasPrompt() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearPrompt() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  VideoResolution get resolution => $_getN(5);
+  @$pb.TagNumber(6)
+  set resolution(VideoResolution value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasResolution() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearResolution() => $_clearField(6);
+  @$pb.TagNumber(6)
+  VideoResolution ensureResolution() => $_ensure(5);
+
+  /// 输出整数秒，不要求与参考视频等长；不传采用默认值，输出固定 24 FPS。
+  @$pb.TagNumber(7)
+  $core.int get durationSeconds => $_getIZ(6);
+  @$pb.TagNumber(7)
+  set durationSeconds($core.int value) => $_setSignedInt32(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasDurationSeconds() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearDurationSeconds() => $_clearField(7);
+}
+
+/// 高级替换，对应 video.advanced_replace；SAM 遮盖选区后参考生成，不是像素级局部修补。
+class CreateAdvancedReplaceTaskReq extends $pb.GeneratedMessage {
+  factory CreateAdvancedReplaceTaskReq({
+    $core.String? requestId,
+    $core.String? workflowId,
+    $core.String? inputVideoAssetId,
+    $core.Iterable<$core.String>? inputAssetIds,
+    $core.String? prompt,
+    VideoResolution? resolution,
+    $core.int? durationSeconds,
+    $core.String? regionDescription,
+  }) {
+    final result = create();
+    if (requestId != null) result.requestId = requestId;
+    if (workflowId != null) result.workflowId = workflowId;
+    if (inputVideoAssetId != null) result.inputVideoAssetId = inputVideoAssetId;
+    if (inputAssetIds != null) result.inputAssetIds.addAll(inputAssetIds);
+    if (prompt != null) result.prompt = prompt;
+    if (resolution != null) result.resolution = resolution;
+    if (durationSeconds != null) result.durationSeconds = durationSeconds;
+    if (regionDescription != null) result.regionDescription = regionDescription;
+    return result;
+  }
+
+  CreateAdvancedReplaceTaskReq._();
+
+  factory CreateAdvancedReplaceTaskReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CreateAdvancedReplaceTaskReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CreateAdvancedReplaceTaskReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'requestId')
+    ..aOS(2, _omitFieldNames ? '' : 'workflowId')
+    ..aOS(3, _omitFieldNames ? '' : 'inputVideoAssetId')
+    ..pPS(4, _omitFieldNames ? '' : 'inputAssetIds')
+    ..aOS(5, _omitFieldNames ? '' : 'prompt')
+    ..aOM<VideoResolution>(6, _omitFieldNames ? '' : 'resolution',
+        subBuilder: VideoResolution.create)
+    ..aI(7, _omitFieldNames ? '' : 'durationSeconds')
+    ..aOS(8, _omitFieldNames ? '' : 'regionDescription')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreateAdvancedReplaceTaskReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreateAdvancedReplaceTaskReq copyWith(
+          void Function(CreateAdvancedReplaceTaskReq) updates) =>
+      super.copyWith(
+              (message) => updates(message as CreateAdvancedReplaceTaskReq))
+          as CreateAdvancedReplaceTaskReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CreateAdvancedReplaceTaskReq create() =>
+      CreateAdvancedReplaceTaskReq._();
+  @$core.override
+  CreateAdvancedReplaceTaskReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static CreateAdvancedReplaceTaskReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CreateAdvancedReplaceTaskReq>(create);
+  static CreateAdvancedReplaceTaskReq? _defaultInstance;
+
+  /// 本人范围内幂等键；重新生成用新键和新 seed。
+  @$pb.TagNumber(1)
+  $core.String get requestId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set requestId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRequestId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRequestId() => $_clearField(1);
+
+  /// 来自 video.advanced_replace 的 Function.Get。
+  @$pb.TagNumber(2)
+  $core.String get workflowId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set workflowId($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasWorkflowId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearWorkflowId() => $_clearField(2);
+
+  /// 必填本人 available 视频；输入限制与引导生成相同，音轨可选。
+  @$pb.TagNumber(3)
+  $core.String get inputVideoAssetId => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set inputVideoAssetId($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasInputVideoAssetId() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearInputVideoAssetId() => $_clearField(3);
+
+  /// 零至四张有序参考图片；不传时由生成提示词描述替换后的外观。
+  @$pb.TagNumber(4)
+  $pb.PbList<$core.String> get inputAssetIds => $_getList(3);
+
+  /// 描述目标外观和动作，可以中文，与 SAM 区域描述独立。
+  @$pb.TagNumber(5)
+  $core.String get prompt => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set prompt($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasPrompt() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearPrompt() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  VideoResolution get resolution => $_getN(5);
+  @$pb.TagNumber(6)
+  set resolution(VideoResolution value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasResolution() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearResolution() => $_clearField(6);
+  @$pb.TagNumber(6)
+  VideoResolution ensureResolution() => $_ensure(5);
+
+  /// 不传采用工作流默认秒数；固定 24 FPS，无用户帧率字段。
+  @$pb.TagNumber(7)
+  $core.int get durationSeconds => $_getIZ(6);
+  @$pb.TagNumber(7)
+  set durationSeconds($core.int value) => $_setSignedInt32(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasDurationSeconds() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearDurationSeconds() => $_clearField(7);
+
+  /// 必填，最多 200 个 Unicode 码点，去除首尾空白后须非空。
+  /// 页面初始 head，提示简短英文；原样传 SAM，不识别语言、不翻译、不回退默认。
+  @$pb.TagNumber(8)
+  $core.String get regionDescription => $_getSZ(7);
+  @$pb.TagNumber(8)
+  set regionDescription($core.String value) => $_setString(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasRegionDescription() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearRegionDescription() => $_clearField(8);
+}
+
+/// 五项新增视频的实际参数；按功能只返回适用字段，不另建素材或执行图快照。
+class VideoExtensionTaskParams extends $pb.GeneratedMessage {
+  factory VideoExtensionTaskParams({
+    $core.String? inputVideoAssetId,
+    $core.String? firstFrameAssetId,
+    $core.String? lastFrameAssetId,
+    $core.Iterable<$core.String>? inputAssetIds,
+    $core.String? prompt,
+    $core.String? regionDescription,
+    $fixnum.Int64? seed,
+    $core.String? aspectRatio,
+    $core.String? megapixels,
+    $core.int? durationSeconds,
+    $core.int? frameRate,
+  }) {
+    final result = create();
+    if (inputVideoAssetId != null) result.inputVideoAssetId = inputVideoAssetId;
+    if (firstFrameAssetId != null) result.firstFrameAssetId = firstFrameAssetId;
+    if (lastFrameAssetId != null) result.lastFrameAssetId = lastFrameAssetId;
+    if (inputAssetIds != null) result.inputAssetIds.addAll(inputAssetIds);
+    if (prompt != null) result.prompt = prompt;
+    if (regionDescription != null) result.regionDescription = regionDescription;
+    if (seed != null) result.seed = seed;
+    if (aspectRatio != null) result.aspectRatio = aspectRatio;
+    if (megapixels != null) result.megapixels = megapixels;
+    if (durationSeconds != null) result.durationSeconds = durationSeconds;
+    if (frameRate != null) result.frameRate = frameRate;
+    return result;
+  }
+
+  VideoExtensionTaskParams._();
+
+  factory VideoExtensionTaskParams.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory VideoExtensionTaskParams.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'VideoExtensionTaskParams',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'inputVideoAssetId')
+    ..aOS(2, _omitFieldNames ? '' : 'firstFrameAssetId')
+    ..aOS(3, _omitFieldNames ? '' : 'lastFrameAssetId')
+    ..pPS(4, _omitFieldNames ? '' : 'inputAssetIds')
+    ..aOS(5, _omitFieldNames ? '' : 'prompt')
+    ..aOS(6, _omitFieldNames ? '' : 'regionDescription')
+    ..a<$fixnum.Int64>(7, _omitFieldNames ? '' : 'seed', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..aOS(8, _omitFieldNames ? '' : 'aspectRatio')
+    ..aOS(9, _omitFieldNames ? '' : 'megapixels')
+    ..aI(10, _omitFieldNames ? '' : 'durationSeconds')
+    ..aI(11, _omitFieldNames ? '' : 'frameRate')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  VideoExtensionTaskParams clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  VideoExtensionTaskParams copyWith(
+          void Function(VideoExtensionTaskParams) updates) =>
+      super.copyWith((message) => updates(message as VideoExtensionTaskParams))
+          as VideoExtensionTaskParams;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static VideoExtensionTaskParams create() => VideoExtensionTaskParams._();
+  @$core.override
+  VideoExtensionTaskParams createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static VideoExtensionTaskParams getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<VideoExtensionTaskParams>(create);
+  static VideoExtensionTaskParams? _defaultInstance;
+
+  /// 首尾帧省略视频；其他功能按本次实际素材返回，参考生成可省略。
+  @$pb.TagNumber(1)
+  $core.String get inputVideoAssetId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set inputVideoAssetId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasInputVideoAssetId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearInputVideoAssetId() => $_clearField(1);
+
+  /// 首尾帧必有，模仿可选；三个 MiniMax 功能省略。
+  @$pb.TagNumber(2)
+  $core.String get firstFrameAssetId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set firstFrameAssetId($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasFirstFrameAssetId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearFirstFrameAssetId() => $_clearField(2);
+
+  /// 仅首尾帧生成返回。
+  @$pb.TagNumber(3)
+  $core.String get lastFrameAssetId => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set lastFrameAssetId($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasLastFrameAssetId() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearLastFrameAssetId() => $_clearField(3);
+
+  /// 三个 MiniMax 功能的参考图片，保持用户提交顺序。
+  @$pb.TagNumber(4)
+  $pb.PbList<$core.String> get inputAssetIds => $_getList(3);
+
+  @$pb.TagNumber(5)
+  $core.String get prompt => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set prompt($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasPrompt() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearPrompt() => $_clearField(5);
+
+  /// 仅高级替换返回用户提交的原文。
+  @$pb.TagNumber(6)
+  $core.String get regionDescription => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set regionDescription($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasRegionDescription() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearRegionDescription() => $_clearField(6);
+
+  /// 后端为新任务生成；重发、重启、恢复保存不改，重新生成创建新值。
+  @$pb.TagNumber(7)
+  $fixnum.Int64 get seed => $_getI64(6);
+  @$pb.TagNumber(7)
+  set seed($fixnum.Int64 value) => $_setInt64(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasSeed() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearSeed() => $_clearField(7);
+
+  /// 适用输出参数的实际选择值；模仿生成省略，不代表最终产物尺寸或时长。
+  @$pb.TagNumber(8)
+  $core.String get aspectRatio => $_getSZ(7);
+  @$pb.TagNumber(8)
+  set aspectRatio($core.String value) => $_setString(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasAspectRatio() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearAspectRatio() => $_clearField(8);
+
+  @$pb.TagNumber(9)
+  $core.String get megapixels => $_getSZ(8);
+  @$pb.TagNumber(9)
+  set megapixels($core.String value) => $_setString(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasMegapixels() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearMegapixels() => $_clearField(9);
+
+  @$pb.TagNumber(10)
+  $core.int get durationSeconds => $_getIZ(9);
+  @$pb.TagNumber(10)
+  set durationSeconds($core.int value) => $_setSignedInt32(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasDurationSeconds() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearDurationSeconds() => $_clearField(10);
+
+  /// 首尾帧实际选择值，三个 MiniMax 为 24；模仿省略。
+  @$pb.TagNumber(11)
+  $core.int get frameRate => $_getIZ(10);
+  @$pb.TagNumber(11)
+  set frameRate($core.int value) => $_setSignedInt32(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasFrameRate() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearFrameRate() => $_clearField(11);
+}
+
 /// 返回已受理任务的 ID；同一 request_id 重发返回原任务，不比较重发参数。
 class CreateTaskResp extends $pb.GeneratedMessage {
   factory CreateTaskResp({
@@ -932,7 +1788,7 @@ class TaskSummary extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearPurpose() => $_clearField(2);
 
-  /// 任务受理时确定的功能 ID；六种支持值及中文用途见 FunctionSummary.function_id。
+  /// 任务受理时确定的功能 ID；支持值及中文用途见 FunctionSummary.function_id。
   @$pb.TagNumber(3)
   $core.String get functionId => $_getSZ(2);
   @$pb.TagNumber(3)
@@ -1113,6 +1969,8 @@ class TaskSummary extends $pb.GeneratedMessage {
   /// 图生视频另含 input_asset_id；不包含工作流图、节点绑定或管理员负向提示词。
   /// 图片任务另含后端生成的 seed；单图/角色含 input_asset_id，多图含有序 input_asset_ids。
   /// 文生图按尺寸模式包含 width/height 或 aspect_ratio/megapixels；角色 prompt 为用户原文。
+  /// 新增视频含 seed 及适用的 input_video_asset_id/first_frame_asset_id/last_frame_asset_id/
+  /// input_asset_ids/region_description；模仿不返回输出尺寸、时长或帧率选择值。
   @$pb.TagNumber(20)
   $core.String get effectiveParamsJson => $_getSZ(19);
   @$pb.TagNumber(20)
@@ -1130,6 +1988,7 @@ enum TaskDetail_EffectiveParams {
   singleImageEdit,
   multipleImageEdit,
   character,
+  videoExtension,
   notSet
 }
 
@@ -1143,6 +2002,7 @@ class TaskDetail extends $pb.GeneratedMessage {
     $1.SingleImageEditTaskParams? singleImageEdit,
     $1.MultipleImageEditTaskParams? multipleImageEdit,
     $1.CharacterTaskParams? character,
+    VideoExtensionTaskParams? videoExtension,
   }) {
     final result = create();
     if (summary != null) result.summary = summary;
@@ -1152,6 +2012,7 @@ class TaskDetail extends $pb.GeneratedMessage {
     if (singleImageEdit != null) result.singleImageEdit = singleImageEdit;
     if (multipleImageEdit != null) result.multipleImageEdit = multipleImageEdit;
     if (character != null) result.character = character;
+    if (videoExtension != null) result.videoExtension = videoExtension;
     return result;
   }
 
@@ -1172,13 +2033,14 @@ class TaskDetail extends $pb.GeneratedMessage {
     5: TaskDetail_EffectiveParams.singleImageEdit,
     6: TaskDetail_EffectiveParams.multipleImageEdit,
     7: TaskDetail_EffectiveParams.character,
+    8: TaskDetail_EffectiveParams.videoExtension,
     0: TaskDetail_EffectiveParams.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'TaskDetail',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3, 4, 5, 6, 7])
+    ..oo(0, [2, 3, 4, 5, 6, 7, 8])
     ..aOM<TaskSummary>(1, _omitFieldNames ? '' : 'summary',
         subBuilder: TaskSummary.create)
     ..aOM<ImageToVideoTaskParams>(2, _omitFieldNames ? '' : 'imageToVideo',
@@ -1195,6 +2057,8 @@ class TaskDetail extends $pb.GeneratedMessage {
         subBuilder: $1.MultipleImageEditTaskParams.create)
     ..aOM<$1.CharacterTaskParams>(7, _omitFieldNames ? '' : 'character',
         subBuilder: $1.CharacterTaskParams.create)
+    ..aOM<VideoExtensionTaskParams>(8, _omitFieldNames ? '' : 'videoExtension',
+        subBuilder: VideoExtensionTaskParams.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1221,6 +2085,7 @@ class TaskDetail extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   @$pb.TagNumber(6)
   @$pb.TagNumber(7)
+  @$pb.TagNumber(8)
   TaskDetail_EffectiveParams whichEffectiveParams() =>
       _TaskDetail_EffectiveParamsByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(2)
@@ -1229,6 +2094,7 @@ class TaskDetail extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   @$pb.TagNumber(6)
   @$pb.TagNumber(7)
+  @$pb.TagNumber(8)
   void clearEffectiveParams() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -1309,6 +2175,18 @@ class TaskDetail extends $pb.GeneratedMessage {
   void clearCharacter() => $_clearField(7);
   @$pb.TagNumber(7)
   $1.CharacterTaskParams ensureCharacter() => $_ensure(6);
+
+  /// 五项新增视频共用参数结构，通过 summary.function_id 区分适用字段。
+  @$pb.TagNumber(8)
+  VideoExtensionTaskParams get videoExtension => $_getN(7);
+  @$pb.TagNumber(8)
+  set videoExtension(VideoExtensionTaskParams value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasVideoExtension() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearVideoExtension() => $_clearField(8);
+  @$pb.TagNumber(8)
+  VideoExtensionTaskParams ensureVideoExtension() => $_ensure(7);
 }
 
 /// 查询本人任务。

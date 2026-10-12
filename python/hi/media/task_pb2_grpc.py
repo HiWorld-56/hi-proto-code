@@ -47,6 +47,31 @@ class TaskStub(object):
                 request_serializer=hi_dot_media_dot_image__task__pb2.CreateCharacterTaskReq.SerializeToString,
                 response_deserializer=hi_dot_media_dot_task__pb2.CreateTaskResp.FromString,
                 _registered_method=True)
+        self.CreateFirstLastFrame = channel.unary_unary(
+                '/hi.media.Task/CreateFirstLastFrame',
+                request_serializer=hi_dot_media_dot_task__pb2.CreateFirstLastFrameTaskReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_task__pb2.CreateTaskResp.FromString,
+                _registered_method=True)
+        self.CreateMotionTransfer = channel.unary_unary(
+                '/hi.media.Task/CreateMotionTransfer',
+                request_serializer=hi_dot_media_dot_task__pb2.CreateMotionTransferTaskReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_task__pb2.CreateTaskResp.FromString,
+                _registered_method=True)
+        self.CreateContinuation = channel.unary_unary(
+                '/hi.media.Task/CreateContinuation',
+                request_serializer=hi_dot_media_dot_task__pb2.CreateContinuationTaskReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_task__pb2.CreateTaskResp.FromString,
+                _registered_method=True)
+        self.CreateReference = channel.unary_unary(
+                '/hi.media.Task/CreateReference',
+                request_serializer=hi_dot_media_dot_task__pb2.CreateReferenceTaskReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_task__pb2.CreateTaskResp.FromString,
+                _registered_method=True)
+        self.CreateAdvancedReplace = channel.unary_unary(
+                '/hi.media.Task/CreateAdvancedReplace',
+                request_serializer=hi_dot_media_dot_task__pb2.CreateAdvancedReplaceTaskReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_task__pb2.CreateTaskResp.FromString,
+                _registered_method=True)
         self.Get = channel.unary_unary(
                 '/hi.media.Task/Get',
                 request_serializer=hi_dot_media_dot_task__pb2.GetTaskReq.SerializeToString,
@@ -120,6 +145,41 @@ class TaskServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def CreateFirstLastFrame(self, request, context):
+        """首尾帧生成 video.first_last_frame，用户明确提交两张图片的角色。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CreateMotionTransfer(self, request, context):
+        """模仿生成 video.motion_transfer，视频必填、首帧可选，输出参数由素材和工作流决定。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CreateContinuation(self, request, context):
+        """引导生成 video.continuation，时长表示新增片段，不包含原视频或前导。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CreateReference(self, request, context):
+        """参考生成 video.reference，至少一份视频或图片，不接收区域描述。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CreateAdvancedReplace(self, request, context):
+        """高级替换 video.advanced_replace，必填视频与自由区域描述，不自动翻译。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def Get(self, request, context):
         """查询本人任务详情及产物资产 ID。
         """
@@ -186,6 +246,31 @@ def add_TaskServicer_to_server(servicer, server):
             'CreateCharacter': grpc.unary_unary_rpc_method_handler(
                     servicer.CreateCharacter,
                     request_deserializer=hi_dot_media_dot_image__task__pb2.CreateCharacterTaskReq.FromString,
+                    response_serializer=hi_dot_media_dot_task__pb2.CreateTaskResp.SerializeToString,
+            ),
+            'CreateFirstLastFrame': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateFirstLastFrame,
+                    request_deserializer=hi_dot_media_dot_task__pb2.CreateFirstLastFrameTaskReq.FromString,
+                    response_serializer=hi_dot_media_dot_task__pb2.CreateTaskResp.SerializeToString,
+            ),
+            'CreateMotionTransfer': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateMotionTransfer,
+                    request_deserializer=hi_dot_media_dot_task__pb2.CreateMotionTransferTaskReq.FromString,
+                    response_serializer=hi_dot_media_dot_task__pb2.CreateTaskResp.SerializeToString,
+            ),
+            'CreateContinuation': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateContinuation,
+                    request_deserializer=hi_dot_media_dot_task__pb2.CreateContinuationTaskReq.FromString,
+                    response_serializer=hi_dot_media_dot_task__pb2.CreateTaskResp.SerializeToString,
+            ),
+            'CreateReference': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateReference,
+                    request_deserializer=hi_dot_media_dot_task__pb2.CreateReferenceTaskReq.FromString,
+                    response_serializer=hi_dot_media_dot_task__pb2.CreateTaskResp.SerializeToString,
+            ),
+            'CreateAdvancedReplace': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateAdvancedReplace,
+                    request_deserializer=hi_dot_media_dot_task__pb2.CreateAdvancedReplaceTaskReq.FromString,
                     response_serializer=hi_dot_media_dot_task__pb2.CreateTaskResp.SerializeToString,
             ),
             'Get': grpc.unary_unary_rpc_method_handler(
@@ -376,6 +461,141 @@ class Task(object):
             target,
             '/hi.media.Task/CreateCharacter',
             hi_dot_media_dot_image__task__pb2.CreateCharacterTaskReq.SerializeToString,
+            hi_dot_media_dot_task__pb2.CreateTaskResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CreateFirstLastFrame(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.media.Task/CreateFirstLastFrame',
+            hi_dot_media_dot_task__pb2.CreateFirstLastFrameTaskReq.SerializeToString,
+            hi_dot_media_dot_task__pb2.CreateTaskResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CreateMotionTransfer(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.media.Task/CreateMotionTransfer',
+            hi_dot_media_dot_task__pb2.CreateMotionTransferTaskReq.SerializeToString,
+            hi_dot_media_dot_task__pb2.CreateTaskResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CreateContinuation(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.media.Task/CreateContinuation',
+            hi_dot_media_dot_task__pb2.CreateContinuationTaskReq.SerializeToString,
+            hi_dot_media_dot_task__pb2.CreateTaskResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CreateReference(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.media.Task/CreateReference',
+            hi_dot_media_dot_task__pb2.CreateReferenceTaskReq.SerializeToString,
+            hi_dot_media_dot_task__pb2.CreateTaskResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CreateAdvancedReplace(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.media.Task/CreateAdvancedReplace',
+            hi_dot_media_dot_task__pb2.CreateAdvancedReplaceTaskReq.SerializeToString,
             hi_dot_media_dot_task__pb2.CreateTaskResp.FromString,
             options,
             channel_credentials,
