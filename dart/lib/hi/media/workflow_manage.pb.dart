@@ -1950,6 +1950,7 @@ class FirstLastFrameWorkflowConfig extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   WorkflowInputBinding ensurePrompt() => $_ensure(2);
 
+  /// 用户提示词上限，单位 Unicode 码点；不能按 UTF-8 字节计数。
   @$pb.TagNumber(4)
   $core.int get promptMaxLength => $_getIZ(3);
   @$pb.TagNumber(4)
@@ -2167,6 +2168,7 @@ class MotionTransferWorkflowConfig extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   WorkflowInputBinding ensurePrompt() => $_ensure(3);
 
+  /// 用户提示词 Unicode 码点上限。
   @$pb.TagNumber(5)
   $core.int get promptMaxLength => $_getIZ(4);
   @$pb.TagNumber(5)
@@ -2382,6 +2384,7 @@ class MiniMaxVideoWorkflowConfig extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   WorkflowInputBinding ensurePrompt() => $_ensure(2);
 
+  /// 用户提示词 Unicode 码点上限，各工作流独立配置。
   @$pb.TagNumber(4)
   $core.int get promptMaxLength => $_getIZ(3);
   @$pb.TagNumber(4)

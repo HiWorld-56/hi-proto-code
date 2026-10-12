@@ -2607,6 +2607,7 @@ pub struct FirstLastFrameWorkflowConfig {
     /// 用户原文写入有效路径；不翻译、拼接或启用提示词增强。
     #[prost(message, optional, tag = "3")]
     pub prompt: ::core::option::Option<WorkflowInputBinding>,
+    /// 用户提示词上限，单位 Unicode 码点；不能按 UTF-8 字节计数。
     #[prost(uint32, optional, tag = "4")]
     pub prompt_max_length: ::core::option::Option<u32>,
     /// 可选管理员负向词；省略时保留工作流原值。
@@ -2647,6 +2648,7 @@ pub struct MotionTransferWorkflowConfig {
     pub use_first_frame: ::core::option::Option<WorkflowInputBinding>,
     #[prost(message, optional, tag = "4")]
     pub prompt: ::core::option::Option<WorkflowInputBinding>,
+    /// 用户提示词 Unicode 码点上限。
     #[prost(uint32, optional, tag = "5")]
     pub prompt_max_length: ::core::option::Option<u32>,
     #[prost(message, optional, tag = "6")]
@@ -2677,6 +2679,7 @@ pub struct MiniMaxVideoWorkflowConfig {
     pub reference_images: ::core::option::Option<WorkflowMiniMaxReferenceImages>,
     #[prost(message, optional, tag = "3")]
     pub prompt: ::core::option::Option<WorkflowInputBinding>,
+    /// 用户提示词 Unicode 码点上限，各工作流独立配置。
     #[prost(uint32, optional, tag = "4")]
     pub prompt_max_length: ::core::option::Option<u32>,
     /// ResolutionSelector 完整选项字符串，初始默认 16:9 (Widescreen)。

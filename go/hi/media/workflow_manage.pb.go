@@ -1537,8 +1537,9 @@ type FirstLastFrameWorkflowConfig struct {
 	FirstFrame *WorkflowInputBinding `protobuf:"bytes,1,opt,name=first_frame,json=firstFrame,proto3" json:"first_frame,omitempty"`
 	LastFrame  *WorkflowInputBinding `protobuf:"bytes,2,opt,name=last_frame,json=lastFrame,proto3" json:"last_frame,omitempty"`
 	// 用户原文写入有效路径；不翻译、拼接或启用提示词增强。
-	Prompt          *WorkflowInputBinding `protobuf:"bytes,3,opt,name=prompt,proto3" json:"prompt,omitempty"`
-	PromptMaxLength *uint32               `protobuf:"varint,4,opt,name=prompt_max_length,json=promptMaxLength,proto3,oneof" json:"prompt_max_length,omitempty"`
+	Prompt *WorkflowInputBinding `protobuf:"bytes,3,opt,name=prompt,proto3" json:"prompt,omitempty"`
+	// 用户提示词上限，单位 Unicode 码点；不能按 UTF-8 字节计数。
+	PromptMaxLength *uint32 `protobuf:"varint,4,opt,name=prompt_max_length,json=promptMaxLength,proto3,oneof" json:"prompt_max_length,omitempty"`
 	// 可选管理员负向词；省略时保留工作流原值。
 	NegativePrompt *WorkflowFixedTextInput `protobuf:"bytes,5,opt,name=negative_prompt,json=negativePrompt,proto3" json:"negative_prompt,omitempty"`
 	// 计算后的像素宽高绑定；允许整数业务值写入兼容 INT/FLOAT 节点。
@@ -1680,8 +1681,9 @@ type MotionTransferWorkflowConfig struct {
 	// 可选首帧的 LoadImage.image 位置；绑定必填，用户素材可省略。
 	FirstFrame *WorkflowInputBinding `protobuf:"bytes,2,opt,name=first_frame,json=firstFrame,proto3" json:"first_frame,omitempty"`
 	// 布尔输入，由是否提供首帧决定；无图时后端还须旁路两阶段图片条件并清除无用分支。
-	UseFirstFrame   *WorkflowInputBinding   `protobuf:"bytes,3,opt,name=use_first_frame,json=useFirstFrame,proto3" json:"use_first_frame,omitempty"`
-	Prompt          *WorkflowInputBinding   `protobuf:"bytes,4,opt,name=prompt,proto3" json:"prompt,omitempty"`
+	UseFirstFrame *WorkflowInputBinding `protobuf:"bytes,3,opt,name=use_first_frame,json=useFirstFrame,proto3" json:"use_first_frame,omitempty"`
+	Prompt        *WorkflowInputBinding `protobuf:"bytes,4,opt,name=prompt,proto3" json:"prompt,omitempty"`
+	// 用户提示词 Unicode 码点上限。
 	PromptMaxLength *uint32                 `protobuf:"varint,5,opt,name=prompt_max_length,json=promptMaxLength,proto3,oneof" json:"prompt_max_length,omitempty"`
 	NegativePrompt  *WorkflowFixedTextInput `protobuf:"bytes,6,opt,name=negative_prompt,json=negativePrompt,proto3" json:"negative_prompt,omitempty"`
 	// 多阶段主生成使用同一个后端 seed，不修改原有视频功能的种子行为。
@@ -1833,7 +1835,8 @@ type MiniMaxVideoWorkflowConfig struct {
 	// 用户可选 0～4 张图片，按提交顺序接入；不存在的素材不沿用示例。
 	ReferenceImages *WorkflowMiniMaxReferenceImages `protobuf:"bytes,2,opt,name=reference_images,json=referenceImages,proto3" json:"reference_images,omitempty"`
 	Prompt          *WorkflowInputBinding           `protobuf:"bytes,3,opt,name=prompt,proto3" json:"prompt,omitempty"`
-	PromptMaxLength *uint32                         `protobuf:"varint,4,opt,name=prompt_max_length,json=promptMaxLength,proto3,oneof" json:"prompt_max_length,omitempty"`
+	// 用户提示词 Unicode 码点上限，各工作流独立配置。
+	PromptMaxLength *uint32 `protobuf:"varint,4,opt,name=prompt_max_length,json=promptMaxLength,proto3,oneof" json:"prompt_max_length,omitempty"`
 	// ResolutionSelector 完整选项字符串，初始默认 16:9 (Widescreen)。
 	AspectRatio *WorkflowStringOptionInput `protobuf:"bytes,5,opt,name=aspect_ratio,json=aspectRatio,proto3" json:"aspect_ratio,omitempty"`
 	// 业务保存十进制字符串，执行写为 JSON 数字；初始默认 "0.4"。
