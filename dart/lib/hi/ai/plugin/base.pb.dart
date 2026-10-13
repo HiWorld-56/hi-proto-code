@@ -713,17 +713,19 @@ class VerifyLuaReq extends $pb.GeneratedMessage {
 class VerifyLuaResp extends $pb.GeneratedMessage {
   factory VerifyLuaResp({
     $core.bool? ok,
-    $core.int? contract,
     $core.String? manifest,
     $core.String? error,
     $core.String? log,
+    $core.String? sdkVersion,
+    $core.String? script,
   }) {
     final result = create();
     if (ok != null) result.ok = ok;
-    if (contract != null) result.contract = contract;
     if (manifest != null) result.manifest = manifest;
     if (error != null) result.error = error;
     if (log != null) result.log = log;
+    if (sdkVersion != null) result.sdkVersion = sdkVersion;
+    if (script != null) result.script = script;
     return result;
   }
 
@@ -741,10 +743,11 @@ class VerifyLuaResp extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai.plugin'),
       createEmptyInstance: create)
     ..aOB(1, _omitFieldNames ? '' : 'ok')
-    ..aI(2, _omitFieldNames ? '' : 'contract', fieldType: $pb.PbFieldType.OU3)
     ..aOS(3, _omitFieldNames ? '' : 'manifest')
     ..aOS(4, _omitFieldNames ? '' : 'error')
     ..aOS(5, _omitFieldNames ? '' : 'log')
+    ..aOS(6, _omitFieldNames ? '' : 'sdkVersion')
+    ..aOS(7, _omitFieldNames ? '' : 'script')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -777,48 +780,61 @@ class VerifyLuaResp extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearOk() => $_clearField(1);
 
-  /// 脚本里声明的契约号(`contract`)。**机器人加载前拿它比对,不匹配拒载。**
-  ///
-  /// 🔴 它与 RUST 的 C ABI 号**各涨各的,不共用计数器** —— 共用的话撞一次 C ABI
-  /// 就逼所有 lua 插件重发,而它们根本不受影响。
-  @$pb.TagNumber(2)
-  $core.int get contract => $_getIZ(1);
-  @$pb.TagNumber(2)
-  set contract($core.int value) => $_setUnsignedInt32(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasContract() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearContract() => $_clearField(2);
-
   /// 从**脚本里真跑出来的** manifest(OpenAI tools 数组,原始名、不带壳前缀)。
   /// hi-ai 拿它跟包里的 description.json 比对 —— 不一致说明作者改了 json 却没改代码
   /// (或反过来),那种插件装到机器人上就是"模型看得见、调不动"。
   @$pb.TagNumber(3)
-  $core.String get manifest => $_getSZ(2);
+  $core.String get manifest => $_getSZ(1);
   @$pb.TagNumber(3)
-  set manifest($core.String value) => $_setString(2, value);
+  set manifest($core.String value) => $_setString(1, value);
   @$pb.TagNumber(3)
-  $core.bool hasManifest() => $_has(2);
+  $core.bool hasManifest() => $_has(1);
   @$pb.TagNumber(3)
   void clearManifest() => $_clearField(3);
 
   @$pb.TagNumber(4)
-  $core.String get error => $_getSZ(3);
+  $core.String get error => $_getSZ(2);
   @$pb.TagNumber(4)
-  set error($core.String value) => $_setString(3, value);
+  set error($core.String value) => $_setString(2, value);
   @$pb.TagNumber(4)
-  $core.bool hasError() => $_has(3);
+  $core.bool hasError() => $_has(2);
   @$pb.TagNumber(4)
   void clearError() => $_clearField(4);
 
   @$pb.TagNumber(5)
-  $core.String get log => $_getSZ(4);
+  $core.String get log => $_getSZ(3);
   @$pb.TagNumber(5)
-  set log($core.String value) => $_setString(4, value);
+  set log($core.String value) => $_setString(3, value);
   @$pb.TagNumber(5)
-  $core.bool hasLog() => $_has(4);
+  $core.bool hasLog() => $_has(3);
   @$pb.TagNumber(5)
   void clearLog() => $_clearField(5);
+
+  /// 验收用的 SDK 版本(构建服务镜像里那一份)。只给人看、记日志;
+  /// 机器人认的是 `script` 第一行的版本头,不是这个字段。
+  @$pb.TagNumber(6)
+  $core.String get sdkVersion => $_getSZ(4);
+  @$pb.TagNumber(6)
+  set sdkVersion($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(6)
+  $core.bool hasSdkVersion() => $_has(4);
+  @$pb.TagNumber(6)
+  void clearSdkVersion() => $_clearField(6);
+
+  /// 🔴 **盖过 SDK 版本头的脚本,也就是验过的那串字节**,hi-ai 必须拿它当产物下发。
+  ///
+  /// 构建服务在 `req.script` 第一行盖上 `--@hinj-sdk <版本>`(一行 lua 注释,见 SDK `lua_stamp`),
+  /// 验收的就是盖过章的这一份 —— 「验的和发的必须是同一串字节」。
+  /// 机器人加载时读这一行判兼容(SDK `compatible`),没有这一行一律不启用。
+  /// ok=true 时必有;没有说明构建服务是旧版本,hi-ai 应拒绝发版。
+  @$pb.TagNumber(7)
+  $core.String get script => $_getSZ(5);
+  @$pb.TagNumber(7)
+  set script($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(7)
+  $core.bool hasScript() => $_has(5);
+  @$pb.TagNumber(7)
+  void clearScript() => $_clearField(7);
 }
 
 /// 设备端插件的**产出与验收**(内部面)。只由父服务 ai 经 grpc 转发调用。

@@ -193,12 +193,6 @@ pub struct VerifyLuaResp {
     /// 「脚本层面的错不是 rpc 错误」,要把原因原样交给发版的人看。
     #[prost(bool, optional, tag = "1")]
     pub ok: ::core::option::Option<bool>,
-    /// 脚本里声明的契约号(`contract`)。**机器人加载前拿它比对,不匹配拒载。**
-    ///
-    /// 🔴 它与 RUST 的 C ABI 号**各涨各的,不共用计数器** —— 共用的话撞一次 C ABI
-    /// 就逼所有 lua 插件重发,而它们根本不受影响。
-    #[prost(uint32, optional, tag = "2")]
-    pub contract: ::core::option::Option<u32>,
     /// 从**脚本里真跑出来的** manifest(OpenAI tools 数组,原始名、不带壳前缀)。
     /// hi-ai 拿它跟包里的 description.json 比对 —— 不一致说明作者改了 json 却没改代码
     /// (或反过来),那种插件装到机器人上就是"模型看得见、调不动"。
@@ -210,6 +204,18 @@ pub struct VerifyLuaResp {
     /// 细节(语法错的行号、命中的禁用项)
     #[prost(string, optional, tag = "5")]
     pub log: ::core::option::Option<::prost::alloc::string::String>,
+    /// 验收用的 SDK 版本(构建服务镜像里那一份)。只给人看、记日志;
+    /// 机器人认的是 `script` 第一行的版本头,不是这个字段。
+    #[prost(string, optional, tag = "6")]
+    pub sdk_version: ::core::option::Option<::prost::alloc::string::String>,
+    /// 🔴 **盖过 SDK 版本头的脚本,也就是验过的那串字节**,hi-ai 必须拿它当产物下发。
+    ///
+    /// 构建服务在 `req.script` 第一行盖上 `--@hinj-sdk <版本>`(一行 lua 注释,见 SDK `lua_stamp`),
+    /// 验收的就是盖过章的这一份 —— 「验的和发的必须是同一串字节」。
+    /// 机器人加载时读这一行判兼容(SDK `compatible`),没有这一行一律不启用。
+    /// ok=true 时必有;没有说明构建服务是旧版本,hi-ai 应拒绝发版。
+    #[prost(string, optional, tag = "7")]
+    pub script: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 设备端插件的**产出与验收**(内部面)。只由父服务 ai 经 grpc 转发调用。
 ///

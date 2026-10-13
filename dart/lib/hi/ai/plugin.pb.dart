@@ -503,9 +503,8 @@ class PluginArtifact extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   void clearSha256() => $_clearField(5);
 
-  /// 设备端插件的契约号。RUST 是从 `.so` 里真读出来的 C ABI 号(hinj_plugin_abi),
-  /// LUA 是脚本里声明的 contract。**两者各涨各的,不共用计数器** ——
-  /// 共用的话撞一次 C ABI 就逼所有 lua 插件重发,而它们根本不受影响。
+  /// RUST 产物的 C ABI 号,从 `.so` 里真读出来的(hinj_plugin_abi)。LUA 没有这一项。
+  /// 兼容与否机器人只看 SDK 版本(编进 `.so` / 盖在 lua 脚本第一行),不看这个号。
   @$pb.TagNumber(6)
   $core.int get abiVersion => $_getIZ(5);
   @$pb.TagNumber(6)
@@ -3182,8 +3181,8 @@ class DevicePlugin extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   void clearSha256() => $_clearField(6);
 
-  /// 契约号。RUST 是 `.so` 里的 C ABI 号,LUA 是脚本里声明的 contract。
-  /// 机器人可据此先筛掉对不上的,省一次下载。**两种语言各涨各的,不共用计数器。**
+  /// RUST 产物的 C ABI 号;LUA 没有这一项。
+  /// 机器人判兼容只看 SDK 版本(在产物自己身上),不看这个号。
   @$pb.TagNumber(7)
   $core.int get abiVersion => $_getIZ(6);
   @$pb.TagNumber(7)
@@ -3208,7 +3207,7 @@ class DevicePlugin extends $pb.GeneratedMessage {
   void clearTarget() => $_clearField(8);
 
   /// ⭐ **这份产物是什么语言的** —— 机器人据此决定:落地成什么扩展名(`.so` / `.lua`)、
-  /// 用哪条装载路径(dlopen + 对 C ABI / 沙箱里 load + 对 contract)。
+  /// 用哪条装载路径(dlopen / 沙箱里 load)。
   ///
   /// 不给的话机器人只能猜(比如按 url 后缀),而猜错的表现是"下下来了、装不上",
   /// 原因只在它自己的本地日志里。

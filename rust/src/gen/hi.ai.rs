@@ -993,9 +993,8 @@ pub struct PluginArtifact {
     /// 产物摘要,机器人下完照此核对
     #[prost(string, optional, tag = "5")]
     pub sha256: ::core::option::Option<::prost::alloc::string::String>,
-    /// 设备端插件的契约号。RUST 是从 `.so` 里真读出来的 C ABI 号(hinj_plugin_abi),
-    /// LUA 是脚本里声明的 contract。**两者各涨各的,不共用计数器** ——
-    /// 共用的话撞一次 C ABI 就逼所有 lua 插件重发,而它们根本不受影响。
+    /// RUST 产物的 C ABI 号,从 `.so` 里真读出来的(hinj_plugin_abi)。LUA 没有这一项。
+    /// 兼容与否机器人只看 SDK 版本(编进 `.so` / 盖在 lua 脚本第一行),不看这个号。
     #[prost(uint32, optional, tag = "6")]
     pub abi_version: ::core::option::Option<u32>,
     /// 失败原因(一句话)
@@ -1442,8 +1441,8 @@ pub struct DevicePlugin {
     /// 下完必须核对;对不上就是没下全或被改过
     #[prost(string, optional, tag = "6")]
     pub sha256: ::core::option::Option<::prost::alloc::string::String>,
-    /// 契约号。RUST 是 `.so` 里的 C ABI 号,LUA 是脚本里声明的 contract。
-    /// 机器人可据此先筛掉对不上的,省一次下载。**两种语言各涨各的,不共用计数器。**
+    /// RUST 产物的 C ABI 号;LUA 没有这一项。
+    /// 机器人判兼容只看 SDK 版本(在产物自己身上),不看这个号。
     #[prost(uint32, optional, tag = "7")]
     pub abi_version: ::core::option::Option<u32>,
     /// 这份产物是给哪个 target 的。RUST 是 `aarch64` / `x86_64`;LUA 是 `any`。
@@ -1454,7 +1453,7 @@ pub struct DevicePlugin {
     #[prost(string, optional, tag = "8")]
     pub target: ::core::option::Option<::prost::alloc::string::String>,
     /// ⭐ **这份产物是什么语言的** —— 机器人据此决定:落地成什么扩展名(`.so` / `.lua`)、
-    /// 用哪条装载路径(dlopen + 对 C ABI / 沙箱里 load + 对 contract)。
+    /// 用哪条装载路径(dlopen / 沙箱里 load)。
     ///
     /// 不给的话机器人只能猜(比如按 url 后缀),而猜错的表现是"下下来了、装不上",
     /// 原因只在它自己的本地日志里。

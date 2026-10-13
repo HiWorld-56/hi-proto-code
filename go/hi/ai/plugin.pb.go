@@ -571,9 +571,8 @@ type PluginArtifact struct {
 	// 都在私有桶,下发时现签 presigned。
 	ArtifactUrl *string `protobuf:"bytes,4,opt,name=artifact_url,json=artifactUrl,proto3,oneof" json:"artifact_url,omitempty"`
 	Sha256      *string `protobuf:"bytes,5,opt,name=sha256,proto3,oneof" json:"sha256,omitempty"` // 产物摘要,机器人下完照此核对
-	// 设备端插件的契约号。RUST 是从 `.so` 里真读出来的 C ABI 号(hinj_plugin_abi),
-	// LUA 是脚本里声明的 contract。**两者各涨各的,不共用计数器** ——
-	// 共用的话撞一次 C ABI 就逼所有 lua 插件重发,而它们根本不受影响。
+	// RUST 产物的 C ABI 号,从 `.so` 里真读出来的(hinj_plugin_abi)。LUA 没有这一项。
+	// 兼容与否机器人只看 SDK 版本(编进 `.so` / 盖在 lua 脚本第一行),不看这个号。
 	AbiVersion    *uint32 `protobuf:"varint,6,opt,name=abi_version,json=abiVersion,proto3,oneof" json:"abi_version,omitempty"`
 	Error         *string `protobuf:"bytes,7,opt,name=error,proto3,oneof" json:"error,omitempty"` // 失败原因(一句话)
 	Log           *string `protobuf:"bytes,8,opt,name=log,proto3,oneof" json:"log,omitempty"`     // 编译/校验日志尾部
@@ -2647,8 +2646,8 @@ type DevicePlugin struct {
 	// 产物下载地址。私有桶,**每次拉清单现签**(限期),不存库。
 	Url    *string `protobuf:"bytes,5,opt,name=url,proto3,oneof" json:"url,omitempty"`
 	Sha256 *string `protobuf:"bytes,6,opt,name=sha256,proto3,oneof" json:"sha256,omitempty"` // 下完必须核对;对不上就是没下全或被改过
-	// 契约号。RUST 是 `.so` 里的 C ABI 号,LUA 是脚本里声明的 contract。
-	// 机器人可据此先筛掉对不上的,省一次下载。**两种语言各涨各的,不共用计数器。**
+	// RUST 产物的 C ABI 号;LUA 没有这一项。
+	// 机器人判兼容只看 SDK 版本(在产物自己身上),不看这个号。
 	AbiVersion *uint32 `protobuf:"varint,7,opt,name=abi_version,json=abiVersion,proto3,oneof" json:"abi_version,omitempty"`
 	// 这份产物是给哪个 target 的。RUST 是 `aarch64` / `x86_64`;LUA 是 `any`。
 	//
@@ -2658,7 +2657,7 @@ type DevicePlugin struct {
 	//	机器人拿到清单先比这个,不符就跳过并说清楚。
 	Target *string `protobuf:"bytes,8,opt,name=target,proto3,oneof" json:"target,omitempty"`
 	// ⭐ **这份产物是什么语言的** —— 机器人据此决定:落地成什么扩展名(`.so` / `.lua`)、
-	// 用哪条装载路径(dlopen + 对 C ABI / 沙箱里 load + 对 contract)。
+	// 用哪条装载路径(dlopen / 沙箱里 load)。
 	//
 	// 不给的话机器人只能猜(比如按 url 后缀),而猜错的表现是"下下来了、装不上",
 	// 原因只在它自己的本地日志里。

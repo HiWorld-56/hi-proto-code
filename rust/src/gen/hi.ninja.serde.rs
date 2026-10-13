@@ -3141,9 +3141,6 @@ impl serde::Serialize for OpenResp {
         if self.ok.is_some() {
             len += 1;
         }
-        if self.contract.is_some() {
-            len += 1;
-        }
         if self.manifest.is_some() {
             len += 1;
         }
@@ -3153,9 +3150,6 @@ impl serde::Serialize for OpenResp {
         let mut struct_ser = serializer.serialize_struct("hi.ninja.OpenResp", len)?;
         if let Some(v) = self.ok.as_ref() {
             struct_ser.serialize_field("ok", v)?;
-        }
-        if let Some(v) = self.contract.as_ref() {
-            struct_ser.serialize_field("contract", v)?;
         }
         if let Some(v) = self.manifest.as_ref() {
             struct_ser.serialize_field("manifest", v)?;
@@ -3174,7 +3168,6 @@ impl<'de> serde::Deserialize<'de> for OpenResp {
     {
         const FIELDS: &[&str] = &[
             "ok",
-            "contract",
             "manifest",
             "error",
         ];
@@ -3182,7 +3175,6 @@ impl<'de> serde::Deserialize<'de> for OpenResp {
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Ok,
-            Contract,
             Manifest,
             Error,
         }
@@ -3207,7 +3199,6 @@ impl<'de> serde::Deserialize<'de> for OpenResp {
                     {
                         match value {
                             "ok" => Ok(GeneratedField::Ok),
-                            "contract" => Ok(GeneratedField::Contract),
                             "manifest" => Ok(GeneratedField::Manifest),
                             "error" => Ok(GeneratedField::Error),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
@@ -3230,7 +3221,6 @@ impl<'de> serde::Deserialize<'de> for OpenResp {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut ok__ = None;
-                let mut contract__ = None;
                 let mut manifest__ = None;
                 let mut error__ = None;
                 while let Some(k) = map_.next_key()? {
@@ -3240,14 +3230,6 @@ impl<'de> serde::Deserialize<'de> for OpenResp {
                                 return Err(serde::de::Error::duplicate_field("ok"));
                             }
                             ok__ = map_.next_value()?;
-                        }
-                        GeneratedField::Contract => {
-                            if contract__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("contract"));
-                            }
-                            contract__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
                         }
                         GeneratedField::Manifest => {
                             if manifest__.is_some() {
@@ -3265,7 +3247,6 @@ impl<'de> serde::Deserialize<'de> for OpenResp {
                 }
                 Ok(OpenResp {
                     ok: ok__,
-                    contract: contract__,
                     manifest: manifest__,
                     error: error__,
                 })

@@ -614,17 +614,22 @@ type VerifyLuaResp struct {
 	// 验过了没有。**false 时 rpc 本身仍是成功的** —— 同 BuildResp,
 	// 「脚本层面的错不是 rpc 错误」,要把原因原样交给发版的人看。
 	Ok *bool `protobuf:"varint,1,opt,name=ok,proto3,oneof" json:"ok,omitempty"`
-	// 脚本里声明的契约号(`contract`)。**机器人加载前拿它比对,不匹配拒载。**
-	//
-	// 🔴 它与 RUST 的 C ABI 号**各涨各的,不共用计数器** —— 共用的话撞一次 C ABI
-	// 就逼所有 lua 插件重发,而它们根本不受影响。
-	Contract *uint32 `protobuf:"varint,2,opt,name=contract,proto3,oneof" json:"contract,omitempty"`
 	// 从**脚本里真跑出来的** manifest(OpenAI tools 数组,原始名、不带壳前缀)。
 	// hi-ai 拿它跟包里的 description.json 比对 —— 不一致说明作者改了 json 却没改代码
 	// (或反过来),那种插件装到机器人上就是"模型看得见、调不动"。
-	Manifest      *string `protobuf:"bytes,3,opt,name=manifest,proto3,oneof" json:"manifest,omitempty"`
-	Error         *string `protobuf:"bytes,4,opt,name=error,proto3,oneof" json:"error,omitempty"` // 失败原因(给发版的人看的一句话)
-	Log           *string `protobuf:"bytes,5,opt,name=log,proto3,oneof" json:"log,omitempty"`     // 细节(语法错的行号、命中的禁用项)
+	Manifest *string `protobuf:"bytes,3,opt,name=manifest,proto3,oneof" json:"manifest,omitempty"`
+	Error    *string `protobuf:"bytes,4,opt,name=error,proto3,oneof" json:"error,omitempty"` // 失败原因(给发版的人看的一句话)
+	Log      *string `protobuf:"bytes,5,opt,name=log,proto3,oneof" json:"log,omitempty"`     // 细节(语法错的行号、命中的禁用项)
+	// 验收用的 SDK 版本(构建服务镜像里那一份)。只给人看、记日志;
+	// 机器人认的是 `script` 第一行的版本头,不是这个字段。
+	SdkVersion *string `protobuf:"bytes,6,opt,name=sdk_version,json=sdkVersion,proto3,oneof" json:"sdk_version,omitempty"`
+	// 🔴 **盖过 SDK 版本头的脚本,也就是验过的那串字节**,hi-ai 必须拿它当产物下发。
+	//
+	// 构建服务在 `req.script` 第一行盖上 `--@hinj-sdk <版本>`(一行 lua 注释,见 SDK `lua_stamp`),
+	// 验收的就是盖过章的这一份 —— 「验的和发的必须是同一串字节」。
+	// 机器人加载时读这一行判兼容(SDK `compatible`),没有这一行一律不启用。
+	// ok=true 时必有;没有说明构建服务是旧版本,hi-ai 应拒绝发版。
+	Script        *string `protobuf:"bytes,7,opt,name=script,proto3,oneof" json:"script,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -666,13 +671,6 @@ func (x *VerifyLuaResp) GetOk() bool {
 	return false
 }
 
-func (x *VerifyLuaResp) GetContract() uint32 {
-	if x != nil && x.Contract != nil {
-		return *x.Contract
-	}
-	return 0
-}
-
 func (x *VerifyLuaResp) GetManifest() string {
 	if x != nil && x.Manifest != nil {
 		return *x.Manifest
@@ -690,6 +688,20 @@ func (x *VerifyLuaResp) GetError() string {
 func (x *VerifyLuaResp) GetLog() string {
 	if x != nil && x.Log != nil {
 		return *x.Log
+	}
+	return ""
+}
+
+func (x *VerifyLuaResp) GetSdkVersion() string {
+	if x != nil && x.SdkVersion != nil {
+		return *x.SdkVersion
+	}
+	return ""
+}
+
+func (x *VerifyLuaResp) GetScript() string {
+	if x != nil && x.Script != nil {
+		return *x.Script
 	}
 	return ""
 }
@@ -1187,18 +1199,21 @@ const file_hi_ai_plugin_base_proto_rawDesc = "" +
 	"\a_scriptB\a\n" +
 	"\x05_uuidB\n" +
 	"\n" +
-	"\b_version\"\xef\x01\n" +
+	"\b_version\"\xa5\x02\n" +
 	"\rVerifyLuaResp\x12\x19\n" +
 	"\x02ok\x18\x01 \x01(\bB\x04\x90\xb5\x18\x03H\x00R\x02ok\x88\x01\x01\x12%\n" +
-	"\bcontract\x18\x02 \x01(\rB\x04\x90\xb5\x18\x03H\x01R\bcontract\x88\x01\x01\x12%\n" +
-	"\bmanifest\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\bmanifest\x88\x01\x01\x12\x1f\n" +
-	"\x05error\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x05error\x88\x01\x01\x12\x1b\n" +
-	"\x03log\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x04R\x03log\x88\x01\x01:\x04\x98\xb5\x18\x03B\x05\n" +
+	"\bmanifest\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\bmanifest\x88\x01\x01\x12\x1f\n" +
+	"\x05error\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x05error\x88\x01\x01\x12\x1b\n" +
+	"\x03log\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x03log\x88\x01\x01\x12*\n" +
+	"\vsdk_version\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03H\x04R\n" +
+	"sdkVersion\x88\x01\x01\x12!\n" +
+	"\x06script\x18\a \x01(\tB\x04\x90\xb5\x18\x03H\x05R\x06script\x88\x01\x01:\x04\x98\xb5\x18\x03B\x05\n" +
 	"\x03_okB\v\n" +
-	"\t_contractB\v\n" +
 	"\t_manifestB\b\n" +
 	"\x06_errorB\x06\n" +
-	"\x04_log\"\x85\x01\n" +
+	"\x04_logB\x0e\n" +
+	"\f_sdk_versionB\t\n" +
+	"\a_script\"\x85\x01\n" +
 	"\x0eBuildLuaDepReq\x12\x17\n" +
 	"\x04rock\x18\x01 \x01(\tH\x00R\x04rock\x88\x01\x01\x12\x1d\n" +
 	"\aversion\x18\x02 \x01(\tH\x01R\aversion\x88\x01\x01\x12\x1b\n" +

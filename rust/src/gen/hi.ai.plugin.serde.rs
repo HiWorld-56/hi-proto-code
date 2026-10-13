@@ -1771,9 +1771,6 @@ impl serde::Serialize for VerifyLuaResp {
         if self.ok.is_some() {
             len += 1;
         }
-        if self.contract.is_some() {
-            len += 1;
-        }
         if self.manifest.is_some() {
             len += 1;
         }
@@ -1783,12 +1780,15 @@ impl serde::Serialize for VerifyLuaResp {
         if self.log.is_some() {
             len += 1;
         }
+        if self.sdk_version.is_some() {
+            len += 1;
+        }
+        if self.script.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ai.plugin.VerifyLuaResp", len)?;
         if let Some(v) = self.ok.as_ref() {
             struct_ser.serialize_field("ok", v)?;
-        }
-        if let Some(v) = self.contract.as_ref() {
-            struct_ser.serialize_field("contract", v)?;
         }
         if let Some(v) = self.manifest.as_ref() {
             struct_ser.serialize_field("manifest", v)?;
@@ -1798,6 +1798,12 @@ impl serde::Serialize for VerifyLuaResp {
         }
         if let Some(v) = self.log.as_ref() {
             struct_ser.serialize_field("log", v)?;
+        }
+        if let Some(v) = self.sdk_version.as_ref() {
+            struct_ser.serialize_field("sdkVersion", v)?;
+        }
+        if let Some(v) = self.script.as_ref() {
+            struct_ser.serialize_field("script", v)?;
         }
         struct_ser.end()
     }
@@ -1810,19 +1816,22 @@ impl<'de> serde::Deserialize<'de> for VerifyLuaResp {
     {
         const FIELDS: &[&str] = &[
             "ok",
-            "contract",
             "manifest",
             "error",
             "log",
+            "sdk_version",
+            "sdkVersion",
+            "script",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Ok,
-            Contract,
             Manifest,
             Error,
             Log,
+            SdkVersion,
+            Script,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1845,10 +1854,11 @@ impl<'de> serde::Deserialize<'de> for VerifyLuaResp {
                     {
                         match value {
                             "ok" => Ok(GeneratedField::Ok),
-                            "contract" => Ok(GeneratedField::Contract),
                             "manifest" => Ok(GeneratedField::Manifest),
                             "error" => Ok(GeneratedField::Error),
                             "log" => Ok(GeneratedField::Log),
+                            "sdkVersion" | "sdk_version" => Ok(GeneratedField::SdkVersion),
+                            "script" => Ok(GeneratedField::Script),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -1869,10 +1879,11 @@ impl<'de> serde::Deserialize<'de> for VerifyLuaResp {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut ok__ = None;
-                let mut contract__ = None;
                 let mut manifest__ = None;
                 let mut error__ = None;
                 let mut log__ = None;
+                let mut sdk_version__ = None;
+                let mut script__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Ok => {
@@ -1880,14 +1891,6 @@ impl<'de> serde::Deserialize<'de> for VerifyLuaResp {
                                 return Err(serde::de::Error::duplicate_field("ok"));
                             }
                             ok__ = map_.next_value()?;
-                        }
-                        GeneratedField::Contract => {
-                            if contract__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("contract"));
-                            }
-                            contract__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
                         }
                         GeneratedField::Manifest => {
                             if manifest__.is_some() {
@@ -1907,14 +1910,27 @@ impl<'de> serde::Deserialize<'de> for VerifyLuaResp {
                             }
                             log__ = map_.next_value()?;
                         }
+                        GeneratedField::SdkVersion => {
+                            if sdk_version__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sdkVersion"));
+                            }
+                            sdk_version__ = map_.next_value()?;
+                        }
+                        GeneratedField::Script => {
+                            if script__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("script"));
+                            }
+                            script__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(VerifyLuaResp {
                     ok: ok__,
-                    contract: contract__,
                     manifest: manifest__,
                     error: error__,
                     log: log__,
+                    sdk_version: sdk_version__,
+                    script: script__,
                 })
             }
         }

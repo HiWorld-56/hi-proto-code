@@ -114,7 +114,9 @@ func (x *LuaCtx) GetConv() string {
 	return ""
 }
 
-// OpenReq 装一个插件：跑一遍顶层，读出 contract 与 manifest。
+// OpenReq 装一个插件：跑一遍顶层，读出 manifest。
+//
+// 兼容与否(SDK 版本头)由 brain 在发过来之前就判完了,执行器不再管版本。
 //
 // **脚本按字节传，不传路径。** 插件产物是 brain 下载并校验过的，执行器不该也
 // 够不着那个目录（它只需要 `/opt/hinj/luadeps/`）。现在制品是 KB 量级
@@ -260,8 +262,7 @@ func (x *LuaRock) GetVersion() string {
 type OpenResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Ok            *bool                  `protobuf:"varint,1,opt,name=ok,proto3,oneof" json:"ok,omitempty"`
-	Contract      *uint32                `protobuf:"varint,2,opt,name=contract,proto3,oneof" json:"contract,omitempty"` // 插件声明的契约号
-	Manifest      *string                `protobuf:"bytes,3,opt,name=manifest,proto3,oneof" json:"manifest,omitempty"`  // 原始字符串，由 brain 按与 .so 同一条路径解析
+	Manifest      *string                `protobuf:"bytes,3,opt,name=manifest,proto3,oneof" json:"manifest,omitempty"` // 原始字符串，由 brain 按与 .so 同一条路径解析
 	Error         *string                `protobuf:"bytes,4,opt,name=error,proto3,oneof" json:"error,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -302,13 +303,6 @@ func (x *OpenResp) GetOk() bool {
 		return *x.Ok
 	}
 	return false
-}
-
-func (x *OpenResp) GetContract() uint32 {
-	if x != nil && x.Contract != nil {
-		return *x.Contract
-	}
-	return 0
 }
 
 func (x *OpenResp) GetManifest() string {
@@ -940,14 +934,12 @@ const file_hi_ninja_lua_proto_rawDesc = "" +
 	"\aversion\x18\x02 \x01(\tH\x01R\aversion\x88\x01\x01B\a\n" +
 	"\x05_rockB\n" +
 	"\n" +
-	"\b_version\"\xa7\x01\n" +
+	"\b_version\"y\n" +
 	"\bOpenResp\x12\x13\n" +
 	"\x02ok\x18\x01 \x01(\bH\x00R\x02ok\x88\x01\x01\x12\x1f\n" +
-	"\bcontract\x18\x02 \x01(\rH\x01R\bcontract\x88\x01\x01\x12\x1f\n" +
-	"\bmanifest\x18\x03 \x01(\tH\x02R\bmanifest\x88\x01\x01\x12\x19\n" +
-	"\x05error\x18\x04 \x01(\tH\x03R\x05error\x88\x01\x01B\x05\n" +
+	"\bmanifest\x18\x03 \x01(\tH\x01R\bmanifest\x88\x01\x01\x12\x19\n" +
+	"\x05error\x18\x04 \x01(\tH\x02R\x05error\x88\x01\x01B\x05\n" +
 	"\x03_okB\v\n" +
-	"\t_contractB\v\n" +
 	"\t_manifestB\b\n" +
 	"\x06_error\"\x94\x02\n" +
 	"\tInvokeReq\x12\x17\n" +

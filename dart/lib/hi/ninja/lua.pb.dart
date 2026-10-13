@@ -133,7 +133,9 @@ class LuaCtx extends $pb.GeneratedMessage {
   void clearConv() => $_clearField(6);
 }
 
-/// OpenReq 装一个插件：跑一遍顶层，读出 contract 与 manifest。
+/// OpenReq 装一个插件：跑一遍顶层，读出 manifest。
+///
+/// 兼容与否(SDK 版本头)由 brain 在发过来之前就判完了,执行器不再管版本。
 ///
 /// **脚本按字节传，不传路径。** 插件产物是 brain 下载并校验过的，执行器不该也
 /// 够不着那个目录（它只需要 `/opt/hinj/luadeps/`）。现在制品是 KB 量级
@@ -308,13 +310,11 @@ class LuaRock extends $pb.GeneratedMessage {
 class OpenResp extends $pb.GeneratedMessage {
   factory OpenResp({
     $core.bool? ok,
-    $core.int? contract,
     $core.String? manifest,
     $core.String? error,
   }) {
     final result = create();
     if (ok != null) result.ok = ok;
-    if (contract != null) result.contract = contract;
     if (manifest != null) result.manifest = manifest;
     if (error != null) result.error = error;
     return result;
@@ -334,7 +334,6 @@ class OpenResp extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
     ..aOB(1, _omitFieldNames ? '' : 'ok')
-    ..aI(2, _omitFieldNames ? '' : 'contract', fieldType: $pb.PbFieldType.OU3)
     ..aOS(3, _omitFieldNames ? '' : 'manifest')
     ..aOS(4, _omitFieldNames ? '' : 'error')
     ..hasRequiredFields = false;
@@ -366,30 +365,21 @@ class OpenResp extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearOk() => $_clearField(1);
 
-  @$pb.TagNumber(2)
-  $core.int get contract => $_getIZ(1);
-  @$pb.TagNumber(2)
-  set contract($core.int value) => $_setUnsignedInt32(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasContract() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearContract() => $_clearField(2);
-
   @$pb.TagNumber(3)
-  $core.String get manifest => $_getSZ(2);
+  $core.String get manifest => $_getSZ(1);
   @$pb.TagNumber(3)
-  set manifest($core.String value) => $_setString(2, value);
+  set manifest($core.String value) => $_setString(1, value);
   @$pb.TagNumber(3)
-  $core.bool hasManifest() => $_has(2);
+  $core.bool hasManifest() => $_has(1);
   @$pb.TagNumber(3)
   void clearManifest() => $_clearField(3);
 
   @$pb.TagNumber(4)
-  $core.String get error => $_getSZ(3);
+  $core.String get error => $_getSZ(2);
   @$pb.TagNumber(4)
-  set error($core.String value) => $_setString(3, value);
+  set error($core.String value) => $_setString(2, value);
   @$pb.TagNumber(4)
-  $core.bool hasError() => $_has(3);
+  $core.bool hasError() => $_has(2);
   @$pb.TagNumber(4)
   void clearError() => $_clearField(4);
 }

@@ -30,7 +30,9 @@ pub struct LuaCtx {
     #[prost(string, optional, tag = "6")]
     pub conv: ::core::option::Option<::prost::alloc::string::String>,
 }
-/// OpenReq 装一个插件：跑一遍顶层，读出 contract 与 manifest。
+/// OpenReq 装一个插件：跑一遍顶层，读出 manifest。
+///
+/// 兼容与否(SDK 版本头)由 brain 在发过来之前就判完了,执行器不再管版本。
 ///
 /// **脚本按字节传，不传路径。** 插件产物是 brain 下载并校验过的，执行器不该也
 /// 够不着那个目录（它只需要 `/opt/hinj/luadeps/`）。现在制品是 KB 量级
@@ -76,9 +78,6 @@ pub struct LuaRock {
 pub struct OpenResp {
     #[prost(bool, optional, tag = "1")]
     pub ok: ::core::option::Option<bool>,
-    /// 插件声明的契约号
-    #[prost(uint32, optional, tag = "2")]
-    pub contract: ::core::option::Option<u32>,
     /// 原始字符串，由 brain 按与 .so 同一条路径解析
     #[prost(string, optional, tag = "3")]
     pub manifest: ::core::option::Option<::prost::alloc::string::String>,

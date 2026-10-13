@@ -328,22 +328,12 @@ const VerifyLuaResp$json = {
       '17': true
     },
     {
-      '1': 'contract',
-      '3': 2,
-      '4': 1,
-      '5': 13,
-      '8': {},
-      '9': 1,
-      '10': 'contract',
-      '17': true
-    },
-    {
       '1': 'manifest',
       '3': 3,
       '4': 1,
       '5': 9,
       '8': {},
-      '9': 2,
+      '9': 1,
       '10': 'manifest',
       '17': true
     },
@@ -353,7 +343,7 @@ const VerifyLuaResp$json = {
       '4': 1,
       '5': 9,
       '8': {},
-      '9': 3,
+      '9': 2,
       '10': 'error',
       '17': true
     },
@@ -363,28 +353,50 @@ const VerifyLuaResp$json = {
       '4': 1,
       '5': 9,
       '8': {},
-      '9': 4,
+      '9': 3,
       '10': 'log',
+      '17': true
+    },
+    {
+      '1': 'sdk_version',
+      '3': 6,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 4,
+      '10': 'sdkVersion',
+      '17': true
+    },
+    {
+      '1': 'script',
+      '3': 7,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 5,
+      '10': 'script',
       '17': true
     },
   ],
   '7': {},
   '8': [
     {'1': '_ok'},
-    {'1': '_contract'},
     {'1': '_manifest'},
     {'1': '_error'},
     {'1': '_log'},
+    {'1': '_sdk_version'},
+    {'1': '_script'},
   ],
 };
 
 /// Descriptor for `VerifyLuaResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List verifyLuaRespDescriptor = $convert.base64Decode(
-    'Cg1WZXJpZnlMdWFSZXNwEhkKAm9rGAEgASgIQgSQtRgDSABSAm9riAEBEiUKCGNvbnRyYWN0GA'
-    'IgASgNQgSQtRgDSAFSCGNvbnRyYWN0iAEBEiUKCG1hbmlmZXN0GAMgASgJQgSQtRgDSAJSCG1h'
-    'bmlmZXN0iAEBEh8KBWVycm9yGAQgASgJQgSQtRgDSANSBWVycm9yiAEBEhsKA2xvZxgFIAEoCU'
-    'IEkLUYA0gEUgNsb2eIAQE6BJi1GANCBQoDX29rQgsKCV9jb250cmFjdEILCglfbWFuaWZlc3RC'
-    'CAoGX2Vycm9yQgYKBF9sb2c=');
+    'Cg1WZXJpZnlMdWFSZXNwEhkKAm9rGAEgASgIQgSQtRgDSABSAm9riAEBEiUKCG1hbmlmZXN0GA'
+    'MgASgJQgSQtRgDSAFSCG1hbmlmZXN0iAEBEh8KBWVycm9yGAQgASgJQgSQtRgDSAJSBWVycm9y'
+    'iAEBEhsKA2xvZxgFIAEoCUIEkLUYA0gDUgNsb2eIAQESKgoLc2RrX3ZlcnNpb24YBiABKAlCBJ'
+    'C1GANIBFIKc2RrVmVyc2lvbogBARIhCgZzY3JpcHQYByABKAlCBJC1GANIBVIGc2NyaXB0iAEB'
+    'OgSYtRgDQgUKA19va0ILCglfbWFuaWZlc3RCCAoGX2Vycm9yQgYKBF9sb2dCDgoMX3Nka192ZX'
+    'JzaW9uQgkKB19zY3JpcHQ=');
 
 @$core.Deprecated('Use buildLuaDepReqDescriptor instead')
 const BuildLuaDepReq$json = {

@@ -118,28 +118,18 @@ const OpenResp$json = {
   '2': [
     {'1': 'ok', '3': 1, '4': 1, '5': 8, '9': 0, '10': 'ok', '17': true},
     {
-      '1': 'contract',
-      '3': 2,
-      '4': 1,
-      '5': 13,
-      '9': 1,
-      '10': 'contract',
-      '17': true
-    },
-    {
       '1': 'manifest',
       '3': 3,
       '4': 1,
       '5': 9,
-      '9': 2,
+      '9': 1,
       '10': 'manifest',
       '17': true
     },
-    {'1': 'error', '3': 4, '4': 1, '5': 9, '9': 3, '10': 'error', '17': true},
+    {'1': 'error', '3': 4, '4': 1, '5': 9, '9': 2, '10': 'error', '17': true},
   ],
   '8': [
     {'1': '_ok'},
-    {'1': '_contract'},
     {'1': '_manifest'},
     {'1': '_error'},
   ],
@@ -147,10 +137,9 @@ const OpenResp$json = {
 
 /// Descriptor for `OpenResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List openRespDescriptor = $convert.base64Decode(
-    'CghPcGVuUmVzcBITCgJvaxgBIAEoCEgAUgJva4gBARIfCghjb250cmFjdBgCIAEoDUgBUghjb2'
-    '50cmFjdIgBARIfCghtYW5pZmVzdBgDIAEoCUgCUghtYW5pZmVzdIgBARIZCgVlcnJvchgEIAEo'
-    'CUgDUgVlcnJvcogBAUIFCgNfb2tCCwoJX2NvbnRyYWN0QgsKCV9tYW5pZmVzdEIICgZfZXJyb3'
-    'I=');
+    'CghPcGVuUmVzcBITCgJvaxgBIAEoCEgAUgJva4gBARIfCghtYW5pZmVzdBgDIAEoCUgBUghtYW'
+    '5pZmVzdIgBARIZCgVlcnJvchgEIAEoCUgCUgVlcnJvcogBAUIFCgNfb2tCCwoJX21hbmlmZXN0'
+    'QggKBl9lcnJvcg==');
 
 @$core.Deprecated('Use invokeReqDescriptor instead')
 const InvokeReq$json = {
