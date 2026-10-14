@@ -1048,29 +1048,11 @@ const FirstLastFrameWorkflowConfig$json = {
       '10': 'negativePrompt'
     },
     {
-      '1': 'width',
-      '3': 6,
-      '4': 1,
-      '5': 11,
-      '6': '.hi.media.WorkflowInputBinding',
-      '8': {},
-      '10': 'width'
-    },
-    {
-      '1': 'height',
-      '3': 7,
-      '4': 1,
-      '5': 11,
-      '6': '.hi.media.WorkflowInputBinding',
-      '8': {},
-      '10': 'height'
-    },
-    {
       '1': 'aspect_ratio',
       '3': 8,
       '4': 1,
       '5': 11,
-      '6': '.hi.media.StringOptionConfig',
+      '6': '.hi.media.WorkflowStringOptionInput',
       '8': {},
       '10': 'aspectRatio'
     },
@@ -1079,7 +1061,7 @@ const FirstLastFrameWorkflowConfig$json = {
       '3': 9,
       '4': 1,
       '5': 11,
-      '6': '.hi.media.DecimalOptionConfig',
+      '6': '.hi.media.WorkflowDecimalOptionInput',
       '8': {},
       '10': 'megapixels'
     },
@@ -1126,17 +1108,14 @@ final $typed_data.Uint8List firstLastFrameWorkflowConfigDescriptor = $convert.ba
     'dEJpbmRpbmdCCrpIA8gBAZC1GANSBnByb21wdBI/ChFwcm9tcHRfbWF4X2xlbmd0aBgEIAEoDU'
     'IOukgHyAEBKgIgAJC1GANIAFIPcHJvbXB0TWF4TGVuZ3RoiAEBEk8KD25lZ2F0aXZlX3Byb21w'
     'dBgFIAEoCzIgLmhpLm1lZGlhLldvcmtmbG93Rml4ZWRUZXh0SW5wdXRCBJC1GANSDm5lZ2F0aX'
-    'ZlUHJvbXB0EkAKBXdpZHRoGAYgASgLMh4uaGkubWVkaWEuV29ya2Zsb3dJbnB1dEJpbmRpbmdC'
-    'CrpIA8gBAZC1GANSBXdpZHRoEkIKBmhlaWdodBgHIAEoCzIeLmhpLm1lZGlhLldvcmtmbG93SW'
-    '5wdXRCaW5kaW5nQgq6SAPIAQGQtRgDUgZoZWlnaHQSSwoMYXNwZWN0X3JhdGlvGAggASgLMhwu'
-    'aGkubWVkaWEuU3RyaW5nT3B0aW9uQ29uZmlnQgq6SAPIAQGQtRgDUgthc3BlY3RSYXRpbxJJCg'
-    'ptZWdhcGl4ZWxzGAkgASgLMh0uaGkubWVkaWEuRGVjaW1hbE9wdGlvbkNvbmZpZ0IKukgDyAEB'
-    'kLUYA1IKbWVnYXBpeGVscxJWChBkdXJhdGlvbl9zZWNvbmRzGAogASgLMh8uaGkubWVkaWEuV2'
-    '9ya2Zsb3dJbnRSYW5nZUlucHV0Qgq6SAPIAQGQtRgDUg9kdXJhdGlvblNlY29uZHMSSwoKZnJh'
-    'bWVfcmF0ZRgLIAEoCzIgLmhpLm1lZGlhLldvcmtmbG93RnJhbWVSYXRlSW5wdXRCCrpIA8gBAZ'
-    'C1GANSCWZyYW1lUmF0ZRJCCgVzZWVkcxgMIAMoCzIeLmhpLm1lZGlhLldvcmtmbG93SW5wdXRC'
-    'aW5kaW5nQgy6SAWSAQIIAZC1GANSBXNlZWRzOgSYtRgDQhQKEl9wcm9tcHRfbWF4X2xlbmd0aA'
-    '==');
+    'ZlUHJvbXB0ElIKDGFzcGVjdF9yYXRpbxgIIAEoCzIjLmhpLm1lZGlhLldvcmtmbG93U3RyaW5n'
+    'T3B0aW9uSW5wdXRCCrpIA8gBAZC1GANSC2FzcGVjdFJhdGlvElAKCm1lZ2FwaXhlbHMYCSABKA'
+    'syJC5oaS5tZWRpYS5Xb3JrZmxvd0RlY2ltYWxPcHRpb25JbnB1dEIKukgDyAEBkLUYA1IKbWVn'
+    'YXBpeGVscxJWChBkdXJhdGlvbl9zZWNvbmRzGAogASgLMh8uaGkubWVkaWEuV29ya2Zsb3dJbn'
+    'RSYW5nZUlucHV0Qgq6SAPIAQGQtRgDUg9kdXJhdGlvblNlY29uZHMSSwoKZnJhbWVfcmF0ZRgL'
+    'IAEoCzIgLmhpLm1lZGlhLldvcmtmbG93RnJhbWVSYXRlSW5wdXRCCrpIA8gBAZC1GANSCWZyYW'
+    '1lUmF0ZRJCCgVzZWVkcxgMIAMoCzIeLmhpLm1lZGlhLldvcmtmbG93SW5wdXRCaW5kaW5nQgy6'
+    'SAWSAQIIAZC1GANSBXNlZWRzOgSYtRgDQhQKEl9wcm9tcHRfbWF4X2xlbmd0aA==');
 
 @$core.Deprecated('Use motionTransferWorkflowConfigDescriptor instead')
 const MotionTransferWorkflowConfig$json = {

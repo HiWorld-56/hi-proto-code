@@ -2613,17 +2613,14 @@ pub struct FirstLastFrameWorkflowConfig {
     /// 可选管理员负向词；省略时保留工作流原值。
     #[prost(message, optional, tag = "5")]
     pub negative_prompt: ::core::option::Option<WorkflowFixedTextInput>,
-    /// 计算后的像素宽高绑定；允许整数业务值写入兼容 INT/FLOAT 节点。
-    #[prost(message, optional, tag = "6")]
-    pub width: ::core::option::Option<WorkflowInputBinding>,
-    #[prost(message, optional, tag = "7")]
-    pub height: ::core::option::Option<WorkflowInputBinding>,
-    /// 公开允许值与默认值，不直接写入节点；初始 16:9 (Widescreen)。
+    /// 直接绑定工作流的比例输入，含允许值与默认值；初始 16:9 (Widescreen)。
+    /// 宽高由工作流内部计算，不再配置宽高绑定或由 HiMedia 换算尺寸。
     #[prost(message, optional, tag = "8")]
-    pub aspect_ratio: ::core::option::Option<StringOptionConfig>,
-    /// 规范十进制字符串，初始默认 "0.9"；用于计算像素宽高。
+    pub aspect_ratio: ::core::option::Option<WorkflowStringOptionInput>,
+    /// 直接绑定工作流 FLOAT 输入；配置用规范十进制字符串，执行时写入 JSON 数字。
+    /// 初始默认 "0.9"；用户端仍选择比例与像素量，不填写宽高。
     #[prost(message, optional, tag = "9")]
-    pub megapixels: ::core::option::Option<DecimalOptionConfig>,
+    pub megapixels: ::core::option::Option<WorkflowDecimalOptionInput>,
     /// 初始 3～15 秒、默认 5；每个工作流独立可调。
     #[prost(message, optional, tag = "10")]
     pub duration_seconds: ::core::option::Option<WorkflowIntRangeInput>,

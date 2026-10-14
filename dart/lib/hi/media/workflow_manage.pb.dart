@@ -1830,10 +1830,8 @@ class FirstLastFrameWorkflowConfig extends $pb.GeneratedMessage {
     WorkflowInputBinding? prompt,
     $core.int? promptMaxLength,
     WorkflowFixedTextInput? negativePrompt,
-    WorkflowInputBinding? width,
-    WorkflowInputBinding? height,
-    $1.StringOptionConfig? aspectRatio,
-    $1.DecimalOptionConfig? megapixels,
+    WorkflowStringOptionInput? aspectRatio,
+    WorkflowDecimalOptionInput? megapixels,
     WorkflowIntRangeInput? durationSeconds,
     WorkflowFrameRateInput? frameRate,
     $core.Iterable<WorkflowInputBinding>? seeds,
@@ -1844,8 +1842,6 @@ class FirstLastFrameWorkflowConfig extends $pb.GeneratedMessage {
     if (prompt != null) result.prompt = prompt;
     if (promptMaxLength != null) result.promptMaxLength = promptMaxLength;
     if (negativePrompt != null) result.negativePrompt = negativePrompt;
-    if (width != null) result.width = width;
-    if (height != null) result.height = height;
     if (aspectRatio != null) result.aspectRatio = aspectRatio;
     if (megapixels != null) result.megapixels = megapixels;
     if (durationSeconds != null) result.durationSeconds = durationSeconds;
@@ -1877,14 +1873,10 @@ class FirstLastFrameWorkflowConfig extends $pb.GeneratedMessage {
         fieldType: $pb.PbFieldType.OU3)
     ..aOM<WorkflowFixedTextInput>(5, _omitFieldNames ? '' : 'negativePrompt',
         subBuilder: WorkflowFixedTextInput.create)
-    ..aOM<WorkflowInputBinding>(6, _omitFieldNames ? '' : 'width',
-        subBuilder: WorkflowInputBinding.create)
-    ..aOM<WorkflowInputBinding>(7, _omitFieldNames ? '' : 'height',
-        subBuilder: WorkflowInputBinding.create)
-    ..aOM<$1.StringOptionConfig>(8, _omitFieldNames ? '' : 'aspectRatio',
-        subBuilder: $1.StringOptionConfig.create)
-    ..aOM<$1.DecimalOptionConfig>(9, _omitFieldNames ? '' : 'megapixels',
-        subBuilder: $1.DecimalOptionConfig.create)
+    ..aOM<WorkflowStringOptionInput>(8, _omitFieldNames ? '' : 'aspectRatio',
+        subBuilder: WorkflowStringOptionInput.create)
+    ..aOM<WorkflowDecimalOptionInput>(9, _omitFieldNames ? '' : 'megapixels',
+        subBuilder: WorkflowDecimalOptionInput.create)
     ..aOM<WorkflowIntRangeInput>(10, _omitFieldNames ? '' : 'durationSeconds',
         subBuilder: WorkflowIntRangeInput.create)
     ..aOM<WorkflowFrameRateInput>(11, _omitFieldNames ? '' : 'frameRate',
@@ -1972,80 +1964,59 @@ class FirstLastFrameWorkflowConfig extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   WorkflowFixedTextInput ensureNegativePrompt() => $_ensure(4);
 
-  /// 计算后的像素宽高绑定；允许整数业务值写入兼容 INT/FLOAT 节点。
-  @$pb.TagNumber(6)
-  WorkflowInputBinding get width => $_getN(5);
-  @$pb.TagNumber(6)
-  set width(WorkflowInputBinding value) => $_setField(6, value);
-  @$pb.TagNumber(6)
-  $core.bool hasWidth() => $_has(5);
-  @$pb.TagNumber(6)
-  void clearWidth() => $_clearField(6);
-  @$pb.TagNumber(6)
-  WorkflowInputBinding ensureWidth() => $_ensure(5);
-
-  @$pb.TagNumber(7)
-  WorkflowInputBinding get height => $_getN(6);
-  @$pb.TagNumber(7)
-  set height(WorkflowInputBinding value) => $_setField(7, value);
-  @$pb.TagNumber(7)
-  $core.bool hasHeight() => $_has(6);
-  @$pb.TagNumber(7)
-  void clearHeight() => $_clearField(7);
-  @$pb.TagNumber(7)
-  WorkflowInputBinding ensureHeight() => $_ensure(6);
-
-  /// 公开允许值与默认值，不直接写入节点；初始 16:9 (Widescreen)。
+  /// 直接绑定工作流的比例输入，含允许值与默认值；初始 16:9 (Widescreen)。
+  /// 宽高由工作流内部计算，不再配置宽高绑定或由 HiMedia 换算尺寸。
   @$pb.TagNumber(8)
-  $1.StringOptionConfig get aspectRatio => $_getN(7);
+  WorkflowStringOptionInput get aspectRatio => $_getN(5);
   @$pb.TagNumber(8)
-  set aspectRatio($1.StringOptionConfig value) => $_setField(8, value);
+  set aspectRatio(WorkflowStringOptionInput value) => $_setField(8, value);
   @$pb.TagNumber(8)
-  $core.bool hasAspectRatio() => $_has(7);
+  $core.bool hasAspectRatio() => $_has(5);
   @$pb.TagNumber(8)
   void clearAspectRatio() => $_clearField(8);
   @$pb.TagNumber(8)
-  $1.StringOptionConfig ensureAspectRatio() => $_ensure(7);
+  WorkflowStringOptionInput ensureAspectRatio() => $_ensure(5);
 
-  /// 规范十进制字符串，初始默认 "0.9"；用于计算像素宽高。
+  /// 直接绑定工作流 FLOAT 输入；配置用规范十进制字符串，执行时写入 JSON 数字。
+  /// 初始默认 "0.9"；用户端仍选择比例与像素量，不填写宽高。
   @$pb.TagNumber(9)
-  $1.DecimalOptionConfig get megapixels => $_getN(8);
+  WorkflowDecimalOptionInput get megapixels => $_getN(6);
   @$pb.TagNumber(9)
-  set megapixels($1.DecimalOptionConfig value) => $_setField(9, value);
+  set megapixels(WorkflowDecimalOptionInput value) => $_setField(9, value);
   @$pb.TagNumber(9)
-  $core.bool hasMegapixels() => $_has(8);
+  $core.bool hasMegapixels() => $_has(6);
   @$pb.TagNumber(9)
   void clearMegapixels() => $_clearField(9);
   @$pb.TagNumber(9)
-  $1.DecimalOptionConfig ensureMegapixels() => $_ensure(8);
+  WorkflowDecimalOptionInput ensureMegapixels() => $_ensure(6);
 
   /// 初始 3～15 秒、默认 5；每个工作流独立可调。
   @$pb.TagNumber(10)
-  WorkflowIntRangeInput get durationSeconds => $_getN(9);
+  WorkflowIntRangeInput get durationSeconds => $_getN(7);
   @$pb.TagNumber(10)
   set durationSeconds(WorkflowIntRangeInput value) => $_setField(10, value);
   @$pb.TagNumber(10)
-  $core.bool hasDurationSeconds() => $_has(9);
+  $core.bool hasDurationSeconds() => $_has(7);
   @$pb.TagNumber(10)
   void clearDurationSeconds() => $_clearField(10);
   @$pb.TagNumber(10)
-  WorkflowIntRangeInput ensureDurationSeconds() => $_ensure(9);
+  WorkflowIntRangeInput ensureDurationSeconds() => $_ensure(7);
 
   /// 初始默认 24，可选或固定；固定值须与执行图一致。
   @$pb.TagNumber(11)
-  WorkflowFrameRateInput get frameRate => $_getN(10);
+  WorkflowFrameRateInput get frameRate => $_getN(8);
   @$pb.TagNumber(11)
   set frameRate(WorkflowFrameRateInput value) => $_setField(11, value);
   @$pb.TagNumber(11)
-  $core.bool hasFrameRate() => $_has(10);
+  $core.bool hasFrameRate() => $_has(8);
   @$pb.TagNumber(11)
   void clearFrameRate() => $_clearField(11);
   @$pb.TagNumber(11)
-  WorkflowFrameRateInput ensureFrameRate() => $_ensure(10);
+  WorkflowFrameRateInput ensureFrameRate() => $_ensure(8);
 
   /// 一个或多个主生成 seed 输入，全部写入同一个后端任务随机值。
   @$pb.TagNumber(12)
-  $pb.PbList<WorkflowInputBinding> get seeds => $_getList(11);
+  $pb.PbList<WorkflowInputBinding> get seeds => $_getList(9);
 }
 
 /// 模仿生成配置；当前为深度控制，不提供用户输出尺寸、时长或帧率参数。

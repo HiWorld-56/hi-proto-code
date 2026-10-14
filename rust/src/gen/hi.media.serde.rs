@@ -3861,12 +3861,6 @@ impl serde::Serialize for FirstLastFrameWorkflowConfig {
         if self.negative_prompt.is_some() {
             len += 1;
         }
-        if self.width.is_some() {
-            len += 1;
-        }
-        if self.height.is_some() {
-            len += 1;
-        }
         if self.aspect_ratio.is_some() {
             len += 1;
         }
@@ -3897,12 +3891,6 @@ impl serde::Serialize for FirstLastFrameWorkflowConfig {
         }
         if let Some(v) = self.negative_prompt.as_ref() {
             struct_ser.serialize_field("negativePrompt", v)?;
-        }
-        if let Some(v) = self.width.as_ref() {
-            struct_ser.serialize_field("width", v)?;
-        }
-        if let Some(v) = self.height.as_ref() {
-            struct_ser.serialize_field("height", v)?;
         }
         if let Some(v) = self.aspect_ratio.as_ref() {
             struct_ser.serialize_field("aspectRatio", v)?;
@@ -3938,8 +3926,6 @@ impl<'de> serde::Deserialize<'de> for FirstLastFrameWorkflowConfig {
             "promptMaxLength",
             "negative_prompt",
             "negativePrompt",
-            "width",
-            "height",
             "aspect_ratio",
             "aspectRatio",
             "megapixels",
@@ -3957,8 +3943,6 @@ impl<'de> serde::Deserialize<'de> for FirstLastFrameWorkflowConfig {
             Prompt,
             PromptMaxLength,
             NegativePrompt,
-            Width,
-            Height,
             AspectRatio,
             Megapixels,
             DurationSeconds,
@@ -3990,8 +3974,6 @@ impl<'de> serde::Deserialize<'de> for FirstLastFrameWorkflowConfig {
                             "prompt" => Ok(GeneratedField::Prompt),
                             "promptMaxLength" | "prompt_max_length" => Ok(GeneratedField::PromptMaxLength),
                             "negativePrompt" | "negative_prompt" => Ok(GeneratedField::NegativePrompt),
-                            "width" => Ok(GeneratedField::Width),
-                            "height" => Ok(GeneratedField::Height),
                             "aspectRatio" | "aspect_ratio" => Ok(GeneratedField::AspectRatio),
                             "megapixels" => Ok(GeneratedField::Megapixels),
                             "durationSeconds" | "duration_seconds" => Ok(GeneratedField::DurationSeconds),
@@ -4021,8 +4003,6 @@ impl<'de> serde::Deserialize<'de> for FirstLastFrameWorkflowConfig {
                 let mut prompt__ = None;
                 let mut prompt_max_length__ = None;
                 let mut negative_prompt__ = None;
-                let mut width__ = None;
-                let mut height__ = None;
                 let mut aspect_ratio__ = None;
                 let mut megapixels__ = None;
                 let mut duration_seconds__ = None;
@@ -4062,18 +4042,6 @@ impl<'de> serde::Deserialize<'de> for FirstLastFrameWorkflowConfig {
                             }
                             negative_prompt__ = map_.next_value()?;
                         }
-                        GeneratedField::Width => {
-                            if width__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("width"));
-                            }
-                            width__ = map_.next_value()?;
-                        }
-                        GeneratedField::Height => {
-                            if height__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("height"));
-                            }
-                            height__ = map_.next_value()?;
-                        }
                         GeneratedField::AspectRatio => {
                             if aspect_ratio__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("aspectRatio"));
@@ -4112,8 +4080,6 @@ impl<'de> serde::Deserialize<'de> for FirstLastFrameWorkflowConfig {
                     prompt: prompt__,
                     prompt_max_length: prompt_max_length__,
                     negative_prompt: negative_prompt__,
-                    width: width__,
-                    height: height__,
                     aspect_ratio: aspect_ratio__,
                     megapixels: megapixels__,
                     duration_seconds: duration_seconds__,
