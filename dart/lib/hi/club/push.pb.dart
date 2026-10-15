@@ -26,11 +26,13 @@ class PushRegisterReq extends $pb.GeneratedMessage {
     $2.ClientInfo? node,
     $core.String? token,
     PushChannel? channel,
+    $core.String? topic,
   }) {
     final result = create();
     if (node != null) result.node = node;
     if (token != null) result.token = token;
     if (channel != null) result.channel = channel;
+    if (topic != null) result.topic = topic;
     return result;
   }
 
@@ -52,6 +54,7 @@ class PushRegisterReq extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'token')
     ..aE<PushChannel>(3, _omitFieldNames ? '' : 'channel',
         enumValues: PushChannel.values)
+    ..aOS(4, _omitFieldNames ? '' : 'topic')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -103,6 +106,18 @@ class PushRegisterReq extends $pb.GeneratedMessage {
   $core.bool hasChannel() => $_has(2);
   @$pb.TagNumber(3)
   void clearChannel() => $_clearField(3);
+
+  /// 苹果设备(APNS / APNS_SANDBOX)必填:这个 app 的套装 ID,即 APNs 投递时的 apns-topic
+  /// (手机版 com.mados.hiclub、Mac 桌面版 com.mados.hiclubsimple)。后端只认配置里列出的几个,别的回 InvalidArgument。
+  /// FCM 不传(传了回 InvalidArgument)—— FCM 的 token 本身就绑着 app。
+  @$pb.TagNumber(4)
+  $core.String get topic => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set topic($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasTopic() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearTopic() => $_clearField(4);
 }
 
 class PushUnregisterReq extends $pb.GeneratedMessage {

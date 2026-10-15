@@ -27,7 +27,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12hi/club/push.proto\x12\x07hi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\x9b\x01\n\x0fPushRegisterReq\x12\"\n\x04node\x18\x01 \x01(\x0b\x32\x0e.hi.ClientInfoR\x04node\x12\x19\n\x05token\x18\x02 \x01(\tH\x00R\x05token\x88\x01\x01\x12\x33\n\x07\x63hannel\x18\x03 \x01(\x0e\x32\x14.hi.club.PushChannelH\x01R\x07\x63hannel\x88\x01\x01\x42\x08\n\x06_tokenB\n\n\x08_channel\"8\n\x11PushUnregisterReq\x12\x19\n\x05token\x18\x01 \x01(\tH\x00R\x05token\x88\x01\x01\x42\x08\n\x06_token*w\n\x0bPushChannel\x12\x1c\n\x18PUSH_CHANNEL_UNSPECIFIED\x10\x00\x12\x14\n\x10PUSH_CHANNEL_FCM\x10\x01\x12\x15\n\x11PUSH_CHANNEL_APNS\x10\x02\x12\x1d\n\x19PUSH_CHANNEL_APNS_SANDBOX\x10\x03\x32\x9b\x01\n\x0bPushManager\x12\x43\n\x08Register\x12\x18.hi.club.PushRegisterReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12G\n\nUnregister\x12\x1a.hi.club.PushUnregisterReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x42+Z)github.com/HiWorld-56/hi-proto/go/hi/clubb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12hi/club/push.proto\x12\x07hi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xc0\x01\n\x0fPushRegisterReq\x12\"\n\x04node\x18\x01 \x01(\x0b\x32\x0e.hi.ClientInfoR\x04node\x12\x19\n\x05token\x18\x02 \x01(\tH\x00R\x05token\x88\x01\x01\x12\x33\n\x07\x63hannel\x18\x03 \x01(\x0e\x32\x14.hi.club.PushChannelH\x01R\x07\x63hannel\x88\x01\x01\x12\x19\n\x05topic\x18\x04 \x01(\tH\x02R\x05topic\x88\x01\x01\x42\x08\n\x06_tokenB\n\n\x08_channelB\x08\n\x06_topic\"8\n\x11PushUnregisterReq\x12\x19\n\x05token\x18\x01 \x01(\tH\x00R\x05token\x88\x01\x01\x42\x08\n\x06_token*w\n\x0bPushChannel\x12\x1c\n\x18PUSH_CHANNEL_UNSPECIFIED\x10\x00\x12\x14\n\x10PUSH_CHANNEL_FCM\x10\x01\x12\x15\n\x11PUSH_CHANNEL_APNS\x10\x02\x12\x1d\n\x19PUSH_CHANNEL_APNS_SANDBOX\x10\x03\x32\x9b\x01\n\x0bPushManager\x12\x43\n\x08Register\x12\x18.hi.club.PushRegisterReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12G\n\nUnregister\x12\x1a.hi.club.PushUnregisterReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x42+Z)github.com/HiWorld-56/hi-proto/go/hi/clubb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -39,12 +39,12 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_PUSHMANAGER'].methods_by_name['Register']._serialized_options = b'\212\265\030\001\002'
   _globals['_PUSHMANAGER'].methods_by_name['Unregister']._loaded_options = None
   _globals['_PUSHMANAGER'].methods_by_name['Unregister']._serialized_options = b'\212\265\030\001\002'
-  _globals['_PUSHCHANNEL']._serialized_start=311
-  _globals['_PUSHCHANNEL']._serialized_end=430
+  _globals['_PUSHCHANNEL']._serialized_start=348
+  _globals['_PUSHCHANNEL']._serialized_end=467
   _globals['_PUSHREGISTERREQ']._serialized_start=96
-  _globals['_PUSHREGISTERREQ']._serialized_end=251
-  _globals['_PUSHUNREGISTERREQ']._serialized_start=253
-  _globals['_PUSHUNREGISTERREQ']._serialized_end=309
-  _globals['_PUSHMANAGER']._serialized_start=433
-  _globals['_PUSHMANAGER']._serialized_end=588
+  _globals['_PUSHREGISTERREQ']._serialized_end=288
+  _globals['_PUSHUNREGISTERREQ']._serialized_start=290
+  _globals['_PUSHUNREGISTERREQ']._serialized_end=346
+  _globals['_PUSHMANAGER']._serialized_start=470
+  _globals['_PUSHMANAGER']._serialized_end=625
 # @@protoc_insertion_point(module_scope)

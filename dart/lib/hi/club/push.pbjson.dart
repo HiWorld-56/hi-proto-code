@@ -48,10 +48,12 @@ const PushRegisterReq$json = {
       '10': 'channel',
       '17': true
     },
+    {'1': 'topic', '3': 4, '4': 1, '5': 9, '9': 2, '10': 'topic', '17': true},
   ],
   '8': [
     {'1': '_token'},
     {'1': '_channel'},
+    {'1': '_topic'},
   ],
 };
 
@@ -59,7 +61,8 @@ const PushRegisterReq$json = {
 final $typed_data.Uint8List pushRegisterReqDescriptor = $convert.base64Decode(
     'Cg9QdXNoUmVnaXN0ZXJSZXESIgoEbm9kZRgBIAEoCzIOLmhpLkNsaWVudEluZm9SBG5vZGUSGQ'
     'oFdG9rZW4YAiABKAlIAFIFdG9rZW6IAQESMwoHY2hhbm5lbBgDIAEoDjIULmhpLmNsdWIuUHVz'
-    'aENoYW5uZWxIAVIHY2hhbm5lbIgBAUIICgZfdG9rZW5CCgoIX2NoYW5uZWw=');
+    'aENoYW5uZWxIAVIHY2hhbm5lbIgBARIZCgV0b3BpYxgEIAEoCUgCUgV0b3BpY4gBAUIICgZfdG'
+    '9rZW5CCgoIX2NoYW5uZWxCCAoGX3RvcGlj');
 
 @$core.Deprecated('Use pushUnregisterReqDescriptor instead')
 const PushUnregisterReq$json = {

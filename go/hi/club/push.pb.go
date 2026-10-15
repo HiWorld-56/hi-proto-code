@@ -84,7 +84,11 @@ type PushRegisterReq struct {
 	Token *string                `protobuf:"bytes,2,opt,name=token,proto3,oneof" json:"token,omitempty"` // 设备Token
 	// 不传 = FCM —— 加这个字段之前登记的全是 FCM token,在跑的安卓包也不会传。
 	// 传了 UNSPECIFIED 或不认识的值回 InvalidArgument。
-	Channel       *PushChannel `protobuf:"varint,3,opt,name=channel,proto3,enum=hi.club.PushChannel,oneof" json:"channel,omitempty"`
+	Channel *PushChannel `protobuf:"varint,3,opt,name=channel,proto3,enum=hi.club.PushChannel,oneof" json:"channel,omitempty"`
+	// 苹果设备(APNS / APNS_SANDBOX)必填:这个 app 的套装 ID,即 APNs 投递时的 apns-topic
+	// (手机版 com.mados.hiclub、Mac 桌面版 com.mados.hiclubsimple)。后端只认配置里列出的几个,别的回 InvalidArgument。
+	// FCM 不传(传了回 InvalidArgument)—— FCM 的 token 本身就绑着 app。
+	Topic         *string `protobuf:"bytes,4,opt,name=topic,proto3,oneof" json:"topic,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -140,6 +144,13 @@ func (x *PushRegisterReq) GetChannel() PushChannel {
 	return PushChannel_PUSH_CHANNEL_UNSPECIFIED
 }
 
+func (x *PushRegisterReq) GetTopic() string {
+	if x != nil && x.Topic != nil {
+		return *x.Topic
+	}
+	return ""
+}
+
 type PushUnregisterReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Token         *string                `protobuf:"bytes,1,opt,name=token,proto3,oneof" json:"token,omitempty"` // 设备Token
@@ -188,14 +199,16 @@ var File_hi_club_push_proto protoreflect.FileDescriptor
 
 const file_hi_club_push_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/club/push.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\x9b\x01\n" +
+	"\x12hi/club/push.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xc0\x01\n" +
 	"\x0fPushRegisterReq\x12\"\n" +
 	"\x04node\x18\x01 \x01(\v2\x0e.hi.ClientInfoR\x04node\x12\x19\n" +
 	"\x05token\x18\x02 \x01(\tH\x00R\x05token\x88\x01\x01\x123\n" +
-	"\achannel\x18\x03 \x01(\x0e2\x14.hi.club.PushChannelH\x01R\achannel\x88\x01\x01B\b\n" +
+	"\achannel\x18\x03 \x01(\x0e2\x14.hi.club.PushChannelH\x01R\achannel\x88\x01\x01\x12\x19\n" +
+	"\x05topic\x18\x04 \x01(\tH\x02R\x05topic\x88\x01\x01B\b\n" +
 	"\x06_tokenB\n" +
 	"\n" +
-	"\b_channel\"8\n" +
+	"\b_channelB\b\n" +
+	"\x06_topic\"8\n" +
 	"\x11PushUnregisterReq\x12\x19\n" +
 	"\x05token\x18\x01 \x01(\tH\x00R\x05token\x88\x01\x01B\b\n" +
 	"\x06_token*w\n" +

@@ -17444,6 +17444,9 @@ impl serde::Serialize for PushRegisterReq {
         if self.channel.is_some() {
             len += 1;
         }
+        if self.topic.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.club.PushRegisterReq", len)?;
         if let Some(v) = self.node.as_ref() {
             struct_ser.serialize_field("node", v)?;
@@ -17455,6 +17458,9 @@ impl serde::Serialize for PushRegisterReq {
             let v = PushChannel::try_from(*v)
                 .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
             struct_ser.serialize_field("channel", &v)?;
+        }
+        if let Some(v) = self.topic.as_ref() {
+            struct_ser.serialize_field("topic", v)?;
         }
         struct_ser.end()
     }
@@ -17469,6 +17475,7 @@ impl<'de> serde::Deserialize<'de> for PushRegisterReq {
             "node",
             "token",
             "channel",
+            "topic",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -17476,6 +17483,7 @@ impl<'de> serde::Deserialize<'de> for PushRegisterReq {
             Node,
             Token,
             Channel,
+            Topic,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -17500,6 +17508,7 @@ impl<'de> serde::Deserialize<'de> for PushRegisterReq {
                             "node" => Ok(GeneratedField::Node),
                             "token" => Ok(GeneratedField::Token),
                             "channel" => Ok(GeneratedField::Channel),
+                            "topic" => Ok(GeneratedField::Topic),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -17522,6 +17531,7 @@ impl<'de> serde::Deserialize<'de> for PushRegisterReq {
                 let mut node__ = None;
                 let mut token__ = None;
                 let mut channel__ = None;
+                let mut topic__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Node => {
@@ -17542,12 +17552,19 @@ impl<'de> serde::Deserialize<'de> for PushRegisterReq {
                             }
                             channel__ = map_.next_value::<::std::option::Option<PushChannel>>()?.map(|x| x as i32);
                         }
+                        GeneratedField::Topic => {
+                            if topic__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("topic"));
+                            }
+                            topic__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(PushRegisterReq {
                     node: node__,
                     token: token__,
                     channel: channel__,
+                    topic: topic__,
                 })
             }
         }

@@ -2773,6 +2773,11 @@ pub struct PushRegisterReq {
     /// 传了 UNSPECIFIED 或不认识的值回 InvalidArgument。
     #[prost(enumeration = "PushChannel", optional, tag = "3")]
     pub channel: ::core::option::Option<i32>,
+    /// 苹果设备(APNS / APNS_SANDBOX)必填:这个 app 的套装 ID,即 APNs 投递时的 apns-topic
+    /// (手机版 com.mados.hiclub、Mac 桌面版 com.mados.hiclubsimple)。后端只认配置里列出的几个,别的回 InvalidArgument。
+    /// FCM 不传(传了回 InvalidArgument)—— FCM 的 token 本身就绑着 app。
+    #[prost(string, optional, tag = "4")]
+    pub topic: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PushUnregisterReq {
