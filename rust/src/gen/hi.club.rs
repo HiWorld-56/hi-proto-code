@@ -4747,6 +4747,55 @@ pub struct DeleteFriendReq {
     #[prost(string, tag = "1")]
     pub did: ::prost::alloc::string::String,
 }
+/// ---- 拉黑与举报(App Store 对有用户生成内容的 app 的要求)----
+///
+/// 拉黑是**我这一侧**的事：对方不会收到任何通知，也看不出自己被拉黑了。效果:
+/// · 对方发来的消息不再给我推送(单聊、群聊都算);
+/// · 对方加我好友当场按「对方设了自动拒绝」回 REJECTED(与真的自动拒绝分不出来);
+/// · 端上把对方的消息与好友申请藏起来(后端照常存转 —— 中间层只解信封，不按发件人丢消息)。
+/// 不解除好友关系、不退群：要断关系另走 DeleteFriend / 退群。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BlockReq {
+    #[prost(string, tag = "1")]
+    pub did: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListBlockedResp {
+    #[prost(message, repeated, tag = "1")]
+    pub users: ::prost::alloc::vec::Vec<super::Entity>,
+}
+/// 举报一个人、一个群，或其中的某条消息。后端存下来并转到运维值守的群里，由人处理。
+///
+/// 消息内容由**举报人端上带上来**(message_text):后端是中间层，只解信封、不解析消息内容
+/// (见 hi/club/messaging.proto),而举报人手里本来就有解开的那条消息。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ReportReq {
+    #[prost(enumeration = "ReportReason", optional, tag = "3")]
+    pub reason: ::core::option::Option<i32>,
+    /// 举报人补充说明
+    #[prost(string, optional, tag = "4")]
+    pub description: ::core::option::Option<::prost::alloc::string::String>,
+    /// 举报的是某条消息时带上
+    #[prost(string, optional, tag = "5")]
+    pub message_uuid: ::core::option::Option<::prost::alloc::string::String>,
+    /// 那条消息举报人看到的文字(媒体写类型，如「\[图片\]」)
+    #[prost(string, optional, tag = "6")]
+    pub message_text: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(oneof = "report_req::Target", tags = "1, 2")]
+    pub target: ::core::option::Option<report_req::Target>,
+}
+/// Nested message and enum types in `ReportReq`.
+pub mod report_req {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Target {
+        /// 举报某个人(含机器人)
+        #[prost(string, tag = "1")]
+        Did(::prost::alloc::string::String),
+        /// 举报某个群
+        #[prost(string, tag = "2")]
+        GroupCode(::prost::alloc::string::String),
+    }
+}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListGroupsResp {
     /// 每个 GroupBase 本身公开(GroupBase=PUBLIC)
@@ -4848,6 +4897,53 @@ impl FriendRequestStatus {
             "FRIEND_REQUEST_STATUS_ADDED" => Some(Self::Added),
             "FRIEND_REQUEST_STATUS_ALREADY_FRIEND" => Some(Self::AlreadyFriend),
             "FRIEND_REQUEST_STATUS_PENDING_EXISTS" => Some(Self::PendingExists),
+            _ => None,
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum ReportReason {
+    Unspecified = 0,
+    /// 色情低俗
+    Porn = 1,
+    /// 暴力恐怖
+    Violence = 2,
+    /// 骚扰辱骂
+    Harassment = 3,
+    /// 诈骗
+    Fraud = 4,
+    /// 违法违规
+    Illegal = 5,
+    /// 其它(看 description)
+    Other = 6,
+}
+impl ReportReason {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "REPORT_REASON_UNSPECIFIED",
+            Self::Porn => "REPORT_REASON_PORN",
+            Self::Violence => "REPORT_REASON_VIOLENCE",
+            Self::Harassment => "REPORT_REASON_HARASSMENT",
+            Self::Fraud => "REPORT_REASON_FRAUD",
+            Self::Illegal => "REPORT_REASON_ILLEGAL",
+            Self::Other => "REPORT_REASON_OTHER",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "REPORT_REASON_UNSPECIFIED" => Some(Self::Unspecified),
+            "REPORT_REASON_PORN" => Some(Self::Porn),
+            "REPORT_REASON_VIOLENCE" => Some(Self::Violence),
+            "REPORT_REASON_HARASSMENT" => Some(Self::Harassment),
+            "REPORT_REASON_FRAUD" => Some(Self::Fraud),
+            "REPORT_REASON_ILLEGAL" => Some(Self::Illegal),
+            "REPORT_REASON_OTHER" => Some(Self::Other),
             _ => None,
         }
     }
@@ -5245,6 +5341,81 @@ pub mod user_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.User", "DeleteAccount"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn block(
+            &mut self,
+            request: impl tonic::IntoRequest<super::BlockReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.User/Block");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.User", "Block"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn unblock(
+            &mut self,
+            request: impl tonic::IntoRequest<super::BlockReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.User/Unblock");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.User", "Unblock"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_blocked(
+            &mut self,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListBlockedResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.User/ListBlocked");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.User", "ListBlocked"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn report(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ReportReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.User/Report");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.User", "Report"));
             self.inner.unary(req, path, codec).await
         }
     }

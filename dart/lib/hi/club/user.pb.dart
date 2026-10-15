@@ -916,6 +916,248 @@ class DeleteFriendReq extends $pb.GeneratedMessage {
   void clearDid() => $_clearField(1);
 }
 
+/// ---- 拉黑与举报(App Store 对有用户生成内容的 app 的要求)----
+///
+/// 拉黑是**我这一侧**的事：对方不会收到任何通知，也看不出自己被拉黑了。效果:
+///   · 对方发来的消息不再给我推送(单聊、群聊都算);
+///   · 对方加我好友当场按「对方设了自动拒绝」回 REJECTED(与真的自动拒绝分不出来);
+///   · 端上把对方的消息与好友申请藏起来(后端照常存转 —— 中间层只解信封，不按发件人丢消息)。
+/// 不解除好友关系、不退群：要断关系另走 DeleteFriend / 退群。
+class BlockReq extends $pb.GeneratedMessage {
+  factory BlockReq({
+    $core.String? did,
+  }) {
+    final result = create();
+    if (did != null) result.did = did;
+    return result;
+  }
+
+  BlockReq._();
+
+  factory BlockReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BlockReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BlockReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'did')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BlockReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BlockReq copyWith(void Function(BlockReq) updates) =>
+      super.copyWith((message) => updates(message as BlockReq)) as BlockReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BlockReq create() => BlockReq._();
+  @$core.override
+  BlockReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BlockReq getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<BlockReq>(create);
+  static BlockReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get did => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set did($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasDid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDid() => $_clearField(1);
+}
+
+class ListBlockedResp extends $pb.GeneratedMessage {
+  factory ListBlockedResp({
+    $core.Iterable<$2.Entity>? users,
+  }) {
+    final result = create();
+    if (users != null) result.users.addAll(users);
+    return result;
+  }
+
+  ListBlockedResp._();
+
+  factory ListBlockedResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListBlockedResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListBlockedResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..pPM<$2.Entity>(1, _omitFieldNames ? '' : 'users',
+        subBuilder: $2.Entity.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListBlockedResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListBlockedResp copyWith(void Function(ListBlockedResp) updates) =>
+      super.copyWith((message) => updates(message as ListBlockedResp))
+          as ListBlockedResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListBlockedResp create() => ListBlockedResp._();
+  @$core.override
+  ListBlockedResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListBlockedResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListBlockedResp>(create);
+  static ListBlockedResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<$2.Entity> get users => $_getList(0);
+}
+
+enum ReportReq_Target { did, groupCode, notSet }
+
+/// 举报一个人、一个群，或其中的某条消息。后端存下来并转到运维值守的群里，由人处理。
+///
+/// 消息内容由**举报人端上带上来**(message_text):后端是中间层，只解信封、不解析消息内容
+/// (见 hi/club/messaging.proto),而举报人手里本来就有解开的那条消息。
+class ReportReq extends $pb.GeneratedMessage {
+  factory ReportReq({
+    $core.String? did,
+    $core.String? groupCode,
+    ReportReason? reason,
+    $core.String? description,
+    $core.String? messageUuid,
+    $core.String? messageText,
+  }) {
+    final result = create();
+    if (did != null) result.did = did;
+    if (groupCode != null) result.groupCode = groupCode;
+    if (reason != null) result.reason = reason;
+    if (description != null) result.description = description;
+    if (messageUuid != null) result.messageUuid = messageUuid;
+    if (messageText != null) result.messageText = messageText;
+    return result;
+  }
+
+  ReportReq._();
+
+  factory ReportReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ReportReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, ReportReq_Target> _ReportReq_TargetByTag = {
+    1: ReportReq_Target.did,
+    2: ReportReq_Target.groupCode,
+    0: ReportReq_Target.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ReportReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..oo(0, [1, 2])
+    ..aOS(1, _omitFieldNames ? '' : 'did')
+    ..aOS(2, _omitFieldNames ? '' : 'groupCode')
+    ..aE<ReportReason>(3, _omitFieldNames ? '' : 'reason',
+        enumValues: ReportReason.values)
+    ..aOS(4, _omitFieldNames ? '' : 'description')
+    ..aOS(5, _omitFieldNames ? '' : 'messageUuid')
+    ..aOS(6, _omitFieldNames ? '' : 'messageText')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReportReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReportReq copyWith(void Function(ReportReq) updates) =>
+      super.copyWith((message) => updates(message as ReportReq)) as ReportReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ReportReq create() => ReportReq._();
+  @$core.override
+  ReportReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ReportReq getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ReportReq>(create);
+  static ReportReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
+  ReportReq_Target whichTarget() => _ReportReq_TargetByTag[$_whichOneof(0)]!;
+  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
+  void clearTarget() => $_clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  $core.String get did => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set did($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasDid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDid() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get groupCode => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set groupCode($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasGroupCode() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearGroupCode() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  ReportReason get reason => $_getN(2);
+  @$pb.TagNumber(3)
+  set reason(ReportReason value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasReason() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearReason() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get description => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set description($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasDescription() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearDescription() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get messageUuid => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set messageUuid($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasMessageUuid() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearMessageUuid() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.String get messageText => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set messageText($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasMessageText() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearMessageText() => $_clearField(6);
+}
+
 class ListGroupsResp extends $pb.GeneratedMessage {
   factory ListGroupsResp({
     $core.Iterable<$4.GroupBase>? list,

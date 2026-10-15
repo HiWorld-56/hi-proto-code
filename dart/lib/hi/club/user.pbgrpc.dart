@@ -153,6 +153,34 @@ class UserClient extends $grpc.Client {
     return $createUnaryCall(_$deleteAccount, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.Empty> block(
+    $1.BlockReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$block, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Empty> unblock(
+    $1.BlockReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$unblock, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$1.ListBlockedResp> listBlocked(
+    $0.Empty request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listBlocked, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Empty> report(
+    $1.ReportReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$report, request, options: options);
+  }
+
   // method descriptors
 
   static final _$getCurrent = $grpc.ClientMethod<$0.Empty, $1.UserInfo>(
@@ -218,6 +246,22 @@ class UserClient extends $grpc.Client {
   static final _$deleteAccount = $grpc.ClientMethod<$0.Empty, $0.Empty>(
       '/hi.club.User/DeleteAccount',
       ($0.Empty value) => value.writeToBuffer(),
+      $0.Empty.fromBuffer);
+  static final _$block = $grpc.ClientMethod<$1.BlockReq, $0.Empty>(
+      '/hi.club.User/Block',
+      ($1.BlockReq value) => value.writeToBuffer(),
+      $0.Empty.fromBuffer);
+  static final _$unblock = $grpc.ClientMethod<$1.BlockReq, $0.Empty>(
+      '/hi.club.User/Unblock',
+      ($1.BlockReq value) => value.writeToBuffer(),
+      $0.Empty.fromBuffer);
+  static final _$listBlocked = $grpc.ClientMethod<$0.Empty, $1.ListBlockedResp>(
+      '/hi.club.User/ListBlocked',
+      ($0.Empty value) => value.writeToBuffer(),
+      $1.ListBlockedResp.fromBuffer);
+  static final _$report = $grpc.ClientMethod<$1.ReportReq, $0.Empty>(
+      '/hi.club.User/Report',
+      ($1.ReportReq value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
 }
 
@@ -326,6 +370,34 @@ abstract class UserServiceBase extends $grpc.Service {
         false,
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.BlockReq, $0.Empty>(
+        'Block',
+        block_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.BlockReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.BlockReq, $0.Empty>(
+        'Unblock',
+        unblock_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.BlockReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Empty, $1.ListBlockedResp>(
+        'ListBlocked',
+        listBlocked_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
+        ($1.ListBlockedResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.ReportReq, $0.Empty>(
+        'Report',
+        report_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.ReportReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
   }
 
@@ -441,6 +513,35 @@ abstract class UserServiceBase extends $grpc.Service {
 
   $async.Future<$0.Empty> deleteAccount(
       $grpc.ServiceCall call, $0.Empty request);
+
+  $async.Future<$0.Empty> block_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.BlockReq> $request) async {
+    return block($call, await $request);
+  }
+
+  $async.Future<$0.Empty> block($grpc.ServiceCall call, $1.BlockReq request);
+
+  $async.Future<$0.Empty> unblock_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.BlockReq> $request) async {
+    return unblock($call, await $request);
+  }
+
+  $async.Future<$0.Empty> unblock($grpc.ServiceCall call, $1.BlockReq request);
+
+  $async.Future<$1.ListBlockedResp> listBlocked_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
+    return listBlocked($call, await $request);
+  }
+
+  $async.Future<$1.ListBlockedResp> listBlocked(
+      $grpc.ServiceCall call, $0.Empty request);
+
+  $async.Future<$0.Empty> report_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.ReportReq> $request) async {
+    return report($call, await $request);
+  }
+
+  $async.Future<$0.Empty> report($grpc.ServiceCall call, $1.ReportReq request);
 }
 
 /// 在线用户目录(**公开**)。与 User(用户自服务)主体不同,故拆 service ——

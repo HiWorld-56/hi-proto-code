@@ -36,6 +36,27 @@ final $typed_data.Uint8List friendRequestStatusDescriptor = $convert.base64Decod
     'JJRU5EX1JFUVVFU1RfU1RBVFVTX0FMUkVBRFlfRlJJRU5EEAQSKAokRlJJRU5EX1JFUVVFU1Rf'
     'U1RBVFVTX1BFTkRJTkdfRVhJU1RTEAU=');
 
+@$core.Deprecated('Use reportReasonDescriptor instead')
+const ReportReason$json = {
+  '1': 'ReportReason',
+  '2': [
+    {'1': 'REPORT_REASON_UNSPECIFIED', '2': 0},
+    {'1': 'REPORT_REASON_PORN', '2': 1},
+    {'1': 'REPORT_REASON_VIOLENCE', '2': 2},
+    {'1': 'REPORT_REASON_HARASSMENT', '2': 3},
+    {'1': 'REPORT_REASON_FRAUD', '2': 4},
+    {'1': 'REPORT_REASON_ILLEGAL', '2': 5},
+    {'1': 'REPORT_REASON_OTHER', '2': 6},
+  ],
+};
+
+/// Descriptor for `ReportReason`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List reportReasonDescriptor = $convert.base64Decode(
+    'CgxSZXBvcnRSZWFzb24SHQoZUkVQT1JUX1JFQVNPTl9VTlNQRUNJRklFRBAAEhYKElJFUE9SVF'
+    '9SRUFTT05fUE9SThABEhoKFlJFUE9SVF9SRUFTT05fVklPTEVOQ0UQAhIcChhSRVBPUlRfUkVB'
+    'U09OX0hBUkFTU01FTlQQAxIXChNSRVBPUlRfUkVBU09OX0ZSQVVEEAQSGQoVUkVQT1JUX1JFQV'
+    'NPTl9JTExFR0FMEAUSFwoTUkVQT1JUX1JFQVNPTl9PVEhFUhAG');
+
 @$core.Deprecated('Use userInfoDescriptor instead')
 const UserInfo$json = {
   '1': 'UserInfo',
@@ -429,6 +450,102 @@ const DeleteFriendReq$json = {
 /// Descriptor for `DeleteFriendReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List deleteFriendReqDescriptor =
     $convert.base64Decode('Cg9EZWxldGVGcmllbmRSZXESEAoDZGlkGAEgASgJUgNkaWQ=');
+
+@$core.Deprecated('Use blockReqDescriptor instead')
+const BlockReq$json = {
+  '1': 'BlockReq',
+  '2': [
+    {'1': 'did', '3': 1, '4': 1, '5': 9, '10': 'did'},
+  ],
+};
+
+/// Descriptor for `BlockReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List blockReqDescriptor =
+    $convert.base64Decode('CghCbG9ja1JlcRIQCgNkaWQYASABKAlSA2RpZA==');
+
+@$core.Deprecated('Use listBlockedRespDescriptor instead')
+const ListBlockedResp$json = {
+  '1': 'ListBlockedResp',
+  '2': [
+    {
+      '1': 'users',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'users'
+    },
+  ],
+  '7': {},
+};
+
+/// Descriptor for `ListBlockedResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listBlockedRespDescriptor = $convert.base64Decode(
+    'Cg9MaXN0QmxvY2tlZFJlc3ASJgoFdXNlcnMYASADKAsyCi5oaS5FbnRpdHlCBJC1GANSBXVzZX'
+    'JzOgSYtRgD');
+
+@$core.Deprecated('Use reportReqDescriptor instead')
+const ReportReq$json = {
+  '1': 'ReportReq',
+  '2': [
+    {'1': 'did', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'did'},
+    {'1': 'group_code', '3': 2, '4': 1, '5': 9, '9': 0, '10': 'groupCode'},
+    {
+      '1': 'reason',
+      '3': 3,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.club.ReportReason',
+      '9': 1,
+      '10': 'reason',
+      '17': true
+    },
+    {
+      '1': 'description',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '9': 2,
+      '10': 'description',
+      '17': true
+    },
+    {
+      '1': 'message_uuid',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '9': 3,
+      '10': 'messageUuid',
+      '17': true
+    },
+    {
+      '1': 'message_text',
+      '3': 6,
+      '4': 1,
+      '5': 9,
+      '9': 4,
+      '10': 'messageText',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': 'target'},
+    {'1': '_reason'},
+    {'1': '_description'},
+    {'1': '_message_uuid'},
+    {'1': '_message_text'},
+  ],
+};
+
+/// Descriptor for `ReportReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List reportReqDescriptor = $convert.base64Decode(
+    'CglSZXBvcnRSZXESEgoDZGlkGAEgASgJSABSA2RpZBIfCgpncm91cF9jb2RlGAIgASgJSABSCW'
+    'dyb3VwQ29kZRIyCgZyZWFzb24YAyABKA4yFS5oaS5jbHViLlJlcG9ydFJlYXNvbkgBUgZyZWFz'
+    'b26IAQESJQoLZGVzY3JpcHRpb24YBCABKAlIAlILZGVzY3JpcHRpb26IAQESJgoMbWVzc2FnZV'
+    '91dWlkGAUgASgJSANSC21lc3NhZ2VVdWlkiAEBEiYKDG1lc3NhZ2VfdGV4dBgGIAEoCUgEUgtt'
+    'ZXNzYWdlVGV4dIgBAUIICgZ0YXJnZXRCCQoHX3JlYXNvbkIOCgxfZGVzY3JpcHRpb25CDwoNX2'
+    '1lc3NhZ2VfdXVpZEIPCg1fbWVzc2FnZV90ZXh0');
 
 @$core.Deprecated('Use listGroupsRespDescriptor instead')
 const ListGroupsResp$json = {

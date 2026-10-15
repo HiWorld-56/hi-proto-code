@@ -35,6 +35,10 @@ const (
 	User_GetOther_FullMethodName            = "/hi.club.User/GetOther"
 	User_SetRemark_FullMethodName           = "/hi.club.User/SetRemark"
 	User_DeleteAccount_FullMethodName       = "/hi.club.User/DeleteAccount"
+	User_Block_FullMethodName               = "/hi.club.User/Block"
+	User_Unblock_FullMethodName             = "/hi.club.User/Unblock"
+	User_ListBlocked_FullMethodName         = "/hi.club.User/ListBlocked"
+	User_Report_FullMethodName              = "/hi.club.User/Report"
 )
 
 // UserClient is the client API for User service.
@@ -77,6 +81,10 @@ type UserClient interface {
 	//	  没付的订单取消、MQTT 权限收回,最后删账号行。中途失败可以重调,做过的不会重做
 	//	· 删完用同一个助记词再登录 = 一个全新的空账号
 	DeleteAccount(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Block(ctx context.Context, in *BlockReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Unblock(ctx context.Context, in *BlockReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ListBlocked(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListBlockedResp, error)
+	Report(ctx context.Context, in *ReportReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type userClient struct {
@@ -227,6 +235,46 @@ func (c *userClient) DeleteAccount(ctx context.Context, in *emptypb.Empty, opts 
 	return out, nil
 }
 
+func (c *userClient) Block(ctx context.Context, in *BlockReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, User_Block_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) Unblock(ctx context.Context, in *BlockReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, User_Unblock_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) ListBlocked(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListBlockedResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListBlockedResp)
+	err := c.cc.Invoke(ctx, User_ListBlocked_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) Report(ctx context.Context, in *ReportReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, User_Report_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations should embed UnimplementedUserServer
 // for forward compatibility.
@@ -267,6 +315,10 @@ type UserServer interface {
 	//	  没付的订单取消、MQTT 权限收回,最后删账号行。中途失败可以重调,做过的不会重做
 	//	· 删完用同一个助记词再登录 = 一个全新的空账号
 	DeleteAccount(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	Block(context.Context, *BlockReq) (*emptypb.Empty, error)
+	Unblock(context.Context, *BlockReq) (*emptypb.Empty, error)
+	ListBlocked(context.Context, *emptypb.Empty) (*ListBlockedResp, error)
+	Report(context.Context, *ReportReq) (*emptypb.Empty, error)
 }
 
 // UnimplementedUserServer should be embedded to have
@@ -317,6 +369,18 @@ func (UnimplementedUserServer) SetRemark(context.Context, *SetRemarkReq) (*empty
 }
 func (UnimplementedUserServer) DeleteAccount(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteAccount not implemented")
+}
+func (UnimplementedUserServer) Block(context.Context, *BlockReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Block not implemented")
+}
+func (UnimplementedUserServer) Unblock(context.Context, *BlockReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Unblock not implemented")
+}
+func (UnimplementedUserServer) ListBlocked(context.Context, *emptypb.Empty) (*ListBlockedResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListBlocked not implemented")
+}
+func (UnimplementedUserServer) Report(context.Context, *ReportReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Report not implemented")
 }
 func (UnimplementedUserServer) testEmbeddedByValue() {}
 
@@ -590,6 +654,78 @@ func _User_DeleteAccount_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_Block_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BlockReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).Block(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_Block_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).Block(ctx, req.(*BlockReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_Unblock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BlockReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).Unblock(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_Unblock_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).Unblock(ctx, req.(*BlockReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_ListBlocked_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).ListBlocked(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_ListBlocked_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).ListBlocked(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_Report_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReportReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).Report(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_Report_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).Report(ctx, req.(*ReportReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -652,6 +788,22 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteAccount",
 			Handler:    _User_DeleteAccount_Handler,
+		},
+		{
+			MethodName: "Block",
+			Handler:    _User_Block_Handler,
+		},
+		{
+			MethodName: "Unblock",
+			Handler:    _User_Unblock_Handler,
+		},
+		{
+			MethodName: "ListBlocked",
+			Handler:    _User_ListBlocked_Handler,
+		},
+		{
+			MethodName: "Report",
+			Handler:    _User_Report_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -59,5 +59,39 @@ class FriendRequestStatus extends $pb.ProtobufEnum {
   const FriendRequestStatus._(super.value, super.name);
 }
 
+class ReportReason extends $pb.ProtobufEnum {
+  static const ReportReason REPORT_REASON_UNSPECIFIED =
+      ReportReason._(0, _omitEnumNames ? '' : 'REPORT_REASON_UNSPECIFIED');
+  static const ReportReason REPORT_REASON_PORN =
+      ReportReason._(1, _omitEnumNames ? '' : 'REPORT_REASON_PORN');
+  static const ReportReason REPORT_REASON_VIOLENCE =
+      ReportReason._(2, _omitEnumNames ? '' : 'REPORT_REASON_VIOLENCE');
+  static const ReportReason REPORT_REASON_HARASSMENT =
+      ReportReason._(3, _omitEnumNames ? '' : 'REPORT_REASON_HARASSMENT');
+  static const ReportReason REPORT_REASON_FRAUD =
+      ReportReason._(4, _omitEnumNames ? '' : 'REPORT_REASON_FRAUD');
+  static const ReportReason REPORT_REASON_ILLEGAL =
+      ReportReason._(5, _omitEnumNames ? '' : 'REPORT_REASON_ILLEGAL');
+  static const ReportReason REPORT_REASON_OTHER =
+      ReportReason._(6, _omitEnumNames ? '' : 'REPORT_REASON_OTHER');
+
+  static const $core.List<ReportReason> values = <ReportReason>[
+    REPORT_REASON_UNSPECIFIED,
+    REPORT_REASON_PORN,
+    REPORT_REASON_VIOLENCE,
+    REPORT_REASON_HARASSMENT,
+    REPORT_REASON_FRAUD,
+    REPORT_REASON_ILLEGAL,
+    REPORT_REASON_OTHER,
+  ];
+
+  static final $core.List<ReportReason?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 6);
+  static ReportReason? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const ReportReason._(super.value, super.name);
+}
+
 const $core.bool _omitEnumNames =
     $core.bool.fromEnvironment('protobuf.omit_enum_names');
