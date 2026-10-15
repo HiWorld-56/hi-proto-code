@@ -15,22 +15,51 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use pushChannelDescriptor instead')
+const PushChannel$json = {
+  '1': 'PushChannel',
+  '2': [
+    {'1': 'PUSH_CHANNEL_UNSPECIFIED', '2': 0},
+    {'1': 'PUSH_CHANNEL_FCM', '2': 1},
+    {'1': 'PUSH_CHANNEL_APNS', '2': 2},
+    {'1': 'PUSH_CHANNEL_APNS_SANDBOX', '2': 3},
+  ],
+};
+
+/// Descriptor for `PushChannel`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List pushChannelDescriptor = $convert.base64Decode(
+    'CgtQdXNoQ2hhbm5lbBIcChhQVVNIX0NIQU5ORUxfVU5TUEVDSUZJRUQQABIUChBQVVNIX0NIQU'
+    '5ORUxfRkNNEAESFQoRUFVTSF9DSEFOTkVMX0FQTlMQAhIdChlQVVNIX0NIQU5ORUxfQVBOU19T'
+    'QU5EQk9YEAM=');
+
 @$core.Deprecated('Use pushRegisterReqDescriptor instead')
 const PushRegisterReq$json = {
   '1': 'PushRegisterReq',
   '2': [
     {'1': 'node', '3': 1, '4': 1, '5': 11, '6': '.hi.ClientInfo', '10': 'node'},
     {'1': 'token', '3': 2, '4': 1, '5': 9, '9': 0, '10': 'token', '17': true},
+    {
+      '1': 'channel',
+      '3': 3,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.club.PushChannel',
+      '9': 1,
+      '10': 'channel',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_token'},
+    {'1': '_channel'},
   ],
 };
 
 /// Descriptor for `PushRegisterReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pushRegisterReqDescriptor = $convert.base64Decode(
     'Cg9QdXNoUmVnaXN0ZXJSZXESIgoEbm9kZRgBIAEoCzIOLmhpLkNsaWVudEluZm9SBG5vZGUSGQ'
-    'oFdG9rZW4YAiABKAlIAFIFdG9rZW6IAQFCCAoGX3Rva2Vu');
+    'oFdG9rZW4YAiABKAlIAFIFdG9rZW6IAQESMwoHY2hhbm5lbBgDIAEoDjIULmhpLmNsdWIuUHVz'
+    'aENoYW5uZWxIAVIHY2hhbm5lbIgBAUIICgZfdG9rZW5CCgoIX2NoYW5uZWw=');
 
 @$core.Deprecated('Use pushUnregisterReqDescriptor instead')
 const PushUnregisterReq$json = {

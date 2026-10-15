@@ -2769,12 +2769,53 @@ pub struct PushRegisterReq {
     /// 设备Token
     #[prost(string, optional, tag = "2")]
     pub token: ::core::option::Option<::prost::alloc::string::String>,
+    /// 不传 = FCM —— 加这个字段之前登记的全是 FCM token,在跑的安卓包也不会传。
+    /// 传了 UNSPECIFIED 或不认识的值回 InvalidArgument。
+    #[prost(enumeration = "PushChannel", optional, tag = "3")]
+    pub channel: ::core::option::Option<i32>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PushUnregisterReq {
     /// 设备Token
     #[prost(string, optional, tag = "1")]
     pub token: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 推送 token 是哪条通道发的，后端按它决定怎么投递。
+/// 安卓走 FCM;苹果设备直连 APNs(FCM 要先连 Google 才领得到 token,大陆网络领不到)。
+/// APNs 分两个环境，token 不通用：推错环境苹果回 BadDeviceToken。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum PushChannel {
+    Unspecified = 0,
+    Fcm = 1,
+    /// 苹果正式环境:TestFlight / App Store 装的包
+    Apns = 2,
+    /// 苹果沙盒环境:Xcode 直接装到设备上的包
+    ApnsSandbox = 3,
+}
+impl PushChannel {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "PUSH_CHANNEL_UNSPECIFIED",
+            Self::Fcm => "PUSH_CHANNEL_FCM",
+            Self::Apns => "PUSH_CHANNEL_APNS",
+            Self::ApnsSandbox => "PUSH_CHANNEL_APNS_SANDBOX",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "PUSH_CHANNEL_UNSPECIFIED" => Some(Self::Unspecified),
+            "PUSH_CHANNEL_FCM" => Some(Self::Fcm),
+            "PUSH_CHANNEL_APNS" => Some(Self::Apns),
+            "PUSH_CHANNEL_APNS_SANDBOX" => Some(Self::ApnsSandbox),
+            _ => None,
+        }
+    }
 }
 /// Generated client implementations.
 pub mod push_manager_client {

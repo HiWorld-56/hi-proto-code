@@ -15,17 +15,22 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../common.pb.dart' as $2;
+import 'push.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
+
+export 'push.pbenum.dart';
 
 class PushRegisterReq extends $pb.GeneratedMessage {
   factory PushRegisterReq({
     $2.ClientInfo? node,
     $core.String? token,
+    PushChannel? channel,
   }) {
     final result = create();
     if (node != null) result.node = node;
     if (token != null) result.token = token;
+    if (channel != null) result.channel = channel;
     return result;
   }
 
@@ -45,6 +50,8 @@ class PushRegisterReq extends $pb.GeneratedMessage {
     ..aOM<$2.ClientInfo>(1, _omitFieldNames ? '' : 'node',
         subBuilder: $2.ClientInfo.create)
     ..aOS(2, _omitFieldNames ? '' : 'token')
+    ..aE<PushChannel>(3, _omitFieldNames ? '' : 'channel',
+        enumValues: PushChannel.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -85,6 +92,17 @@ class PushRegisterReq extends $pb.GeneratedMessage {
   $core.bool hasToken() => $_has(1);
   @$pb.TagNumber(2)
   void clearToken() => $_clearField(2);
+
+  /// 不传 = FCM —— 加这个字段之前登记的全是 FCM token,在跑的安卓包也不会传。
+  /// 传了 UNSPECIFIED 或不认识的值回 InvalidArgument。
+  @$pb.TagNumber(3)
+  PushChannel get channel => $_getN(2);
+  @$pb.TagNumber(3)
+  set channel(PushChannel value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasChannel() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearChannel() => $_clearField(3);
 }
 
 class PushUnregisterReq extends $pb.GeneratedMessage {

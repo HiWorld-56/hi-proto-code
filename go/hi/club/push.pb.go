@@ -23,10 +23,68 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// 推送 token 是哪条通道发的，后端按它决定怎么投递。
+// 安卓走 FCM;苹果设备直连 APNs(FCM 要先连 Google 才领得到 token,大陆网络领不到)。
+// APNs 分两个环境，token 不通用：推错环境苹果回 BadDeviceToken。
+type PushChannel int32
+
+const (
+	PushChannel_PUSH_CHANNEL_UNSPECIFIED  PushChannel = 0
+	PushChannel_PUSH_CHANNEL_FCM          PushChannel = 1
+	PushChannel_PUSH_CHANNEL_APNS         PushChannel = 2 // 苹果正式环境:TestFlight / App Store 装的包
+	PushChannel_PUSH_CHANNEL_APNS_SANDBOX PushChannel = 3 // 苹果沙盒环境:Xcode 直接装到设备上的包
+)
+
+// Enum value maps for PushChannel.
+var (
+	PushChannel_name = map[int32]string{
+		0: "PUSH_CHANNEL_UNSPECIFIED",
+		1: "PUSH_CHANNEL_FCM",
+		2: "PUSH_CHANNEL_APNS",
+		3: "PUSH_CHANNEL_APNS_SANDBOX",
+	}
+	PushChannel_value = map[string]int32{
+		"PUSH_CHANNEL_UNSPECIFIED":  0,
+		"PUSH_CHANNEL_FCM":          1,
+		"PUSH_CHANNEL_APNS":         2,
+		"PUSH_CHANNEL_APNS_SANDBOX": 3,
+	}
+)
+
+func (x PushChannel) Enum() *PushChannel {
+	p := new(PushChannel)
+	*p = x
+	return p
+}
+
+func (x PushChannel) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (PushChannel) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_club_push_proto_enumTypes[0].Descriptor()
+}
+
+func (PushChannel) Type() protoreflect.EnumType {
+	return &file_hi_club_push_proto_enumTypes[0]
+}
+
+func (x PushChannel) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use PushChannel.Descriptor instead.
+func (PushChannel) EnumDescriptor() ([]byte, []int) {
+	return file_hi_club_push_proto_rawDescGZIP(), []int{0}
+}
+
 type PushRegisterReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Node          *hi.ClientInfo         `protobuf:"bytes,1,opt,name=node,proto3" json:"node,omitempty"`
-	Token         *string                `protobuf:"bytes,2,opt,name=token,proto3,oneof" json:"token,omitempty"` // 设备Token
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Node  *hi.ClientInfo         `protobuf:"bytes,1,opt,name=node,proto3" json:"node,omitempty"`
+	Token *string                `protobuf:"bytes,2,opt,name=token,proto3,oneof" json:"token,omitempty"` // 设备Token
+	// 不传 = FCM —— 加这个字段之前登记的全是 FCM token,在跑的安卓包也不会传。
+	// 传了 UNSPECIFIED 或不认识的值回 InvalidArgument。
+	Channel       *PushChannel `protobuf:"varint,3,opt,name=channel,proto3,enum=hi.club.PushChannel,oneof" json:"channel,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -73,6 +131,13 @@ func (x *PushRegisterReq) GetToken() string {
 		return *x.Token
 	}
 	return ""
+}
+
+func (x *PushRegisterReq) GetChannel() PushChannel {
+	if x != nil && x.Channel != nil {
+		return *x.Channel
+	}
+	return PushChannel_PUSH_CHANNEL_UNSPECIFIED
 }
 
 type PushUnregisterReq struct {
@@ -123,14 +188,22 @@ var File_hi_club_push_proto protoreflect.FileDescriptor
 
 const file_hi_club_push_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/club/push.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"Z\n" +
+	"\x12hi/club/push.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\x9b\x01\n" +
 	"\x0fPushRegisterReq\x12\"\n" +
 	"\x04node\x18\x01 \x01(\v2\x0e.hi.ClientInfoR\x04node\x12\x19\n" +
-	"\x05token\x18\x02 \x01(\tH\x00R\x05token\x88\x01\x01B\b\n" +
-	"\x06_token\"8\n" +
+	"\x05token\x18\x02 \x01(\tH\x00R\x05token\x88\x01\x01\x123\n" +
+	"\achannel\x18\x03 \x01(\x0e2\x14.hi.club.PushChannelH\x01R\achannel\x88\x01\x01B\b\n" +
+	"\x06_tokenB\n" +
+	"\n" +
+	"\b_channel\"8\n" +
 	"\x11PushUnregisterReq\x12\x19\n" +
 	"\x05token\x18\x01 \x01(\tH\x00R\x05token\x88\x01\x01B\b\n" +
-	"\x06_token2\x9b\x01\n" +
+	"\x06_token*w\n" +
+	"\vPushChannel\x12\x1c\n" +
+	"\x18PUSH_CHANNEL_UNSPECIFIED\x10\x00\x12\x14\n" +
+	"\x10PUSH_CHANNEL_FCM\x10\x01\x12\x15\n" +
+	"\x11PUSH_CHANNEL_APNS\x10\x02\x12\x1d\n" +
+	"\x19PUSH_CHANNEL_APNS_SANDBOX\x10\x032\x9b\x01\n" +
 	"\vPushManager\x12C\n" +
 	"\bRegister\x12\x18.hi.club.PushRegisterReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12G\n" +
 	"\n" +
@@ -149,24 +222,27 @@ func file_hi_club_push_proto_rawDescGZIP() []byte {
 	return file_hi_club_push_proto_rawDescData
 }
 
+var file_hi_club_push_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_hi_club_push_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_hi_club_push_proto_goTypes = []any{
-	(*PushRegisterReq)(nil),   // 0: hi.club.PushRegisterReq
-	(*PushUnregisterReq)(nil), // 1: hi.club.PushUnregisterReq
-	(*hi.ClientInfo)(nil),     // 2: hi.ClientInfo
-	(*emptypb.Empty)(nil),     // 3: google.protobuf.Empty
+	(PushChannel)(0),          // 0: hi.club.PushChannel
+	(*PushRegisterReq)(nil),   // 1: hi.club.PushRegisterReq
+	(*PushUnregisterReq)(nil), // 2: hi.club.PushUnregisterReq
+	(*hi.ClientInfo)(nil),     // 3: hi.ClientInfo
+	(*emptypb.Empty)(nil),     // 4: google.protobuf.Empty
 }
 var file_hi_club_push_proto_depIdxs = []int32{
-	2, // 0: hi.club.PushRegisterReq.node:type_name -> hi.ClientInfo
-	0, // 1: hi.club.PushManager.Register:input_type -> hi.club.PushRegisterReq
-	1, // 2: hi.club.PushManager.Unregister:input_type -> hi.club.PushUnregisterReq
-	3, // 3: hi.club.PushManager.Register:output_type -> google.protobuf.Empty
-	3, // 4: hi.club.PushManager.Unregister:output_type -> google.protobuf.Empty
-	3, // [3:5] is the sub-list for method output_type
-	1, // [1:3] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	3, // 0: hi.club.PushRegisterReq.node:type_name -> hi.ClientInfo
+	0, // 1: hi.club.PushRegisterReq.channel:type_name -> hi.club.PushChannel
+	1, // 2: hi.club.PushManager.Register:input_type -> hi.club.PushRegisterReq
+	2, // 3: hi.club.PushManager.Unregister:input_type -> hi.club.PushUnregisterReq
+	4, // 4: hi.club.PushManager.Register:output_type -> google.protobuf.Empty
+	4, // 5: hi.club.PushManager.Unregister:output_type -> google.protobuf.Empty
+	4, // [4:6] is the sub-list for method output_type
+	2, // [2:4] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_push_proto_init() }
@@ -181,13 +257,14 @@ func file_hi_club_push_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_push_proto_rawDesc), len(file_hi_club_push_proto_rawDesc)),
-			NumEnums:      0,
+			NumEnums:      1,
 			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_hi_club_push_proto_goTypes,
 		DependencyIndexes: file_hi_club_push_proto_depIdxs,
+		EnumInfos:         file_hi_club_push_proto_enumTypes,
 		MessageInfos:      file_hi_club_push_proto_msgTypes,
 	}.Build()
 	File_hi_club_push_proto = out.File
