@@ -1219,7 +1219,7 @@ const file_hi_club_user_proto_rawDesc = "" +
 	"\x1aFRIEND_REQUEST_STATUS_SENT\x10\x02\x12\x1f\n" +
 	"\x1bFRIEND_REQUEST_STATUS_ADDED\x10\x03\x12(\n" +
 	"$FRIEND_REQUEST_STATUS_ALREADY_FRIEND\x10\x04\x12(\n" +
-	"$FRIEND_REQUEST_STATUS_PENDING_EXISTS\x10\x052\xb4\a\n" +
+	"$FRIEND_REQUEST_STATUS_PENDING_EXISTS\x10\x052\xfc\a\n" +
 	"\x04User\x12>\n" +
 	"\n" +
 	"GetCurrent\x12\x16.google.protobuf.Empty\x1a\x11.hi.club.UserInfo\"\x05\x8a\xb5\x18\x01\x02\x12:\n" +
@@ -1236,7 +1236,8 @@ const file_hi_club_user_proto_rawDesc = "" +
 	"ListGroups\x12\x16.google.protobuf.Empty\x1a\x17.hi.club.ListGroupsResp\"\x05\x8a\xb5\x18\x01\x02\x122\n" +
 	"\bGetOther\x12\x13.hi.club.GetUserReq\x1a\n" +
 	".hi.Entity\"\x05\x8a\xb5\x18\x01\x02\x12A\n" +
-	"\tSetRemark\x12\x15.hi.club.SetRemarkReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x022_\n" +
+	"\tSetRemark\x12\x15.hi.club.SetRemarkReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12F\n" +
+	"\rDeleteAccount\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x022_\n" +
 	"\rUserDirectory\x12N\n" +
 	"\n" +
 	"ListOnline\x12\x1b.hi.club.ListOnlineUsersReq\x1a\x1c.hi.club.ListOnlineUsersResp\"\x05\x8a\xb5\x18\x01\x01B\x80\x01\n" +
@@ -1308,23 +1309,25 @@ var file_hi_club_user_proto_depIdxs = []int32{
 	24, // 21: hi.club.User.ListGroups:input_type -> google.protobuf.Empty
 	16, // 22: hi.club.User.GetOther:input_type -> hi.club.GetUserReq
 	18, // 23: hi.club.User.SetRemark:input_type -> hi.club.SetRemarkReq
-	19, // 24: hi.club.UserDirectory.ListOnline:input_type -> hi.club.ListOnlineUsersReq
-	1,  // 25: hi.club.User.GetCurrent:output_type -> hi.club.UserInfo
-	1,  // 26: hi.club.User.Update:output_type -> hi.club.UserInfo
-	3,  // 27: hi.club.User.ListNotices:output_type -> hi.club.ListNoticesResp
-	4,  // 28: hi.club.User.ListPendingNotices:output_type -> hi.club.ListPendingNoticesResp
-	7,  // 29: hi.club.User.ListNoticeStatuses:output_type -> hi.club.ListNoticeStatusesResp
-	24, // 30: hi.club.User.HandleNotice:output_type -> google.protobuf.Empty
-	24, // 31: hi.club.User.MarkNoticeProcessed:output_type -> google.protobuf.Empty
-	11, // 32: hi.club.User.ListRelations:output_type -> hi.club.ListRelationsResp
-	13, // 33: hi.club.User.AddFriend:output_type -> hi.club.AddFriendResp
-	24, // 34: hi.club.User.DeleteFriend:output_type -> google.protobuf.Empty
-	15, // 35: hi.club.User.ListGroups:output_type -> hi.club.ListGroupsResp
-	21, // 36: hi.club.User.GetOther:output_type -> hi.Entity
-	24, // 37: hi.club.User.SetRemark:output_type -> google.protobuf.Empty
-	20, // 38: hi.club.UserDirectory.ListOnline:output_type -> hi.club.ListOnlineUsersResp
-	25, // [25:39] is the sub-list for method output_type
-	11, // [11:25] is the sub-list for method input_type
+	24, // 24: hi.club.User.DeleteAccount:input_type -> google.protobuf.Empty
+	19, // 25: hi.club.UserDirectory.ListOnline:input_type -> hi.club.ListOnlineUsersReq
+	1,  // 26: hi.club.User.GetCurrent:output_type -> hi.club.UserInfo
+	1,  // 27: hi.club.User.Update:output_type -> hi.club.UserInfo
+	3,  // 28: hi.club.User.ListNotices:output_type -> hi.club.ListNoticesResp
+	4,  // 29: hi.club.User.ListPendingNotices:output_type -> hi.club.ListPendingNoticesResp
+	7,  // 30: hi.club.User.ListNoticeStatuses:output_type -> hi.club.ListNoticeStatusesResp
+	24, // 31: hi.club.User.HandleNotice:output_type -> google.protobuf.Empty
+	24, // 32: hi.club.User.MarkNoticeProcessed:output_type -> google.protobuf.Empty
+	11, // 33: hi.club.User.ListRelations:output_type -> hi.club.ListRelationsResp
+	13, // 34: hi.club.User.AddFriend:output_type -> hi.club.AddFriendResp
+	24, // 35: hi.club.User.DeleteFriend:output_type -> google.protobuf.Empty
+	15, // 36: hi.club.User.ListGroups:output_type -> hi.club.ListGroupsResp
+	21, // 37: hi.club.User.GetOther:output_type -> hi.Entity
+	24, // 38: hi.club.User.SetRemark:output_type -> google.protobuf.Empty
+	24, // 39: hi.club.User.DeleteAccount:output_type -> google.protobuf.Empty
+	20, // 40: hi.club.UserDirectory.ListOnline:output_type -> hi.club.ListOnlineUsersResp
+	26, // [26:41] is the sub-list for method output_type
+	11, // [11:26] is the sub-list for method input_type
 	11, // [11:11] is the sub-list for extension type_name
 	11, // [11:11] is the sub-list for extension extendee
 	0,  // [0:11] is the sub-list for field type_name

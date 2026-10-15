@@ -21,8 +21,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	User_Edit_FullMethodName  = "/hi.did.User/Edit"
-	User_Query_FullMethodName = "/hi.did.User/Query"
+	User_Edit_FullMethodName          = "/hi.did.User/Edit"
+	User_Query_FullMethodName         = "/hi.did.User/Query"
+	User_DeleteAccount_FullMethodName = "/hi.did.User/DeleteAccount"
 )
 
 // UserClient is the client API for User service.
@@ -38,6 +39,15 @@ type UserClient interface {
 	// 两个时钟,会倒退(实测客户端微秒 vs 服务端整秒差 0.6s)。回权威值,调用方不必再查一次。
 	Edit(ctx context.Context, in *EditProfileReq, opts ...grpc.CallOption) (*hi.Entity, error)
 	Query(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*hi.Entity, error)
+	// 注销 HiDID 账号(App Store 要求 app 内能注销)。**只删 hidid 这边的数据**:资料、钱包地址、资产记录、
+	// 全部登录态、各商户扩展表里的这一行。club 等依赖方的数据不动(它们拿不到名字头像，下次登录会重新注册)。
+	//
+	//	· 商户 did 拒删(FailedPrecondition):商户号被网页扫码登录在用;超管拒删(PermissionDenied)
+	//	· MQTT 账号不动 —— 它是 club 与 hidid 共用的连接身份，删了会让还在用的 hiclub 静默收不到消息;
+	//	  由 hi.club.User.DeleteAccount 收回
+	//	· 链上资产不受影响;助记词在端上，由 app 自己删
+	//	· 删完用同一个助记词再登录 = 一个全新的空账号
+	DeleteAccount(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type userClient struct {
@@ -68,6 +78,16 @@ func (c *userClient) Query(ctx context.Context, in *emptypb.Empty, opts ...grpc.
 	return out, nil
 }
 
+func (c *userClient) DeleteAccount(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, User_DeleteAccount_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations should embed UnimplementedUserServer
 // for forward compatibility.
@@ -81,6 +101,15 @@ type UserServer interface {
 	// 两个时钟,会倒退(实测客户端微秒 vs 服务端整秒差 0.6s)。回权威值,调用方不必再查一次。
 	Edit(context.Context, *EditProfileReq) (*hi.Entity, error)
 	Query(context.Context, *emptypb.Empty) (*hi.Entity, error)
+	// 注销 HiDID 账号(App Store 要求 app 内能注销)。**只删 hidid 这边的数据**:资料、钱包地址、资产记录、
+	// 全部登录态、各商户扩展表里的这一行。club 等依赖方的数据不动(它们拿不到名字头像，下次登录会重新注册)。
+	//
+	//	· 商户 did 拒删(FailedPrecondition):商户号被网页扫码登录在用;超管拒删(PermissionDenied)
+	//	· MQTT 账号不动 —— 它是 club 与 hidid 共用的连接身份，删了会让还在用的 hiclub 静默收不到消息;
+	//	  由 hi.club.User.DeleteAccount 收回
+	//	· 链上资产不受影响;助记词在端上，由 app 自己删
+	//	· 删完用同一个助记词再登录 = 一个全新的空账号
+	DeleteAccount(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 }
 
 // UnimplementedUserServer should be embedded to have
@@ -95,6 +124,9 @@ func (UnimplementedUserServer) Edit(context.Context, *EditProfileReq) (*hi.Entit
 }
 func (UnimplementedUserServer) Query(context.Context, *emptypb.Empty) (*hi.Entity, error) {
 	return nil, status.Error(codes.Unimplemented, "method Query not implemented")
+}
+func (UnimplementedUserServer) DeleteAccount(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteAccount not implemented")
 }
 func (UnimplementedUserServer) testEmbeddedByValue() {}
 
@@ -152,6 +184,24 @@ func _User_Query_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_DeleteAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).DeleteAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_DeleteAccount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).DeleteAccount(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -166,6 +216,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Query",
 			Handler:    _User_Query_Handler,
+		},
+		{
+			MethodName: "DeleteAccount",
+			Handler:    _User_DeleteAccount_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

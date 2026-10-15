@@ -5219,6 +5219,34 @@ pub mod user_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.User", "SetRemark"));
             self.inner.unary(req, path, codec).await
         }
+        /// 注销 hiclub 账号(App Store 要求 app 内能注销)。**只删 club 这边的数据**,hidid 的身份另由 hi.did.Auth.DeleteAccount 删。
+        /// · 只有 type=user 能调(机器人也拿得到 AUTH_USER 的 token)—— 否则 PermissionDenied
+        /// · 拦下的情况(FailedPrecondition,话里说清为什么):有一笔付款钱已上链、还在确认;
+        /// 名下软件机器人有删不掉的(如还有插件挂在市场上)
+        /// · 关系全部解除(好友、名下机器人解绑、自己的主人)、名下软件机器人删除、自己建的群解散、所在的群退出、
+        /// 没付的订单取消、MQTT 权限收回,最后删账号行。中途失败可以重调,做过的不会重做
+        /// · 删完用同一个助记词再登录 = 一个全新的空账号
+        pub async fn delete_account(
+            &mut self,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.User/DeleteAccount",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.User", "DeleteAccount"));
+            self.inner.unary(req, path, codec).await
+        }
     }
 }
 /// Generated client implementations.

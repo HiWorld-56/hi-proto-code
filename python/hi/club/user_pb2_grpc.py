@@ -81,6 +81,11 @@ class UserStub(object):
                 request_serializer=hi_dot_club_dot_user__pb2.SetRemarkReq.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
+        self.DeleteAccount = channel.unary_unary(
+                '/hi.club.User/DeleteAccount',
+                request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                _registered_method=True)
 
 
 class UserServicer(object):
@@ -178,6 +183,19 @@ class UserServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def DeleteAccount(self, request, context):
+        """注销 hiclub 账号(App Store 要求 app 内能注销)。**只删 club 这边的数据**,hidid 的身份另由 hi.did.Auth.DeleteAccount 删。
+        · 只有 type=user 能调(机器人也拿得到 AUTH_USER 的 token)—— 否则 PermissionDenied
+        · 拦下的情况(FailedPrecondition,话里说清为什么):有一笔付款钱已上链、还在确认;
+        名下软件机器人有删不掉的(如还有插件挂在市场上)
+        · 关系全部解除(好友、名下机器人解绑、自己的主人)、名下软件机器人删除、自己建的群解散、所在的群退出、
+        没付的订单取消、MQTT 权限收回,最后删账号行。中途失败可以重调,做过的不会重做
+        · 删完用同一个助记词再登录 = 一个全新的空账号
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_UserServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -244,6 +262,11 @@ def add_UserServicer_to_server(servicer, server):
             'SetRemark': grpc.unary_unary_rpc_method_handler(
                     servicer.SetRemark,
                     request_deserializer=hi_dot_club_dot_user__pb2.SetRemarkReq.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'DeleteAccount': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeleteAccount,
+                    request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
     }
@@ -597,6 +620,33 @@ class User(object):
             target,
             '/hi.club.User/SetRemark',
             hi_dot_club_dot_user__pb2.SetRemarkReq.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def DeleteAccount(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.User/DeleteAccount',
+            google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,

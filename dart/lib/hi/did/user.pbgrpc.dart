@@ -55,6 +55,20 @@ class UserClient extends $grpc.Client {
     return $createUnaryCall(_$query, request, options: options);
   }
 
+  /// 注销 HiDID 账号(App Store 要求 app 内能注销)。**只删 hidid 这边的数据**:资料、钱包地址、资产记录、
+  /// 全部登录态、各商户扩展表里的这一行。club 等依赖方的数据不动(它们拿不到名字头像，下次登录会重新注册)。
+  ///   · 商户 did 拒删(FailedPrecondition):商户号被网页扫码登录在用;超管拒删(PermissionDenied)
+  ///   · MQTT 账号不动 —— 它是 club 与 hidid 共用的连接身份，删了会让还在用的 hiclub 静默收不到消息;
+  ///     由 hi.club.User.DeleteAccount 收回
+  ///   · 链上资产不受影响;助记词在端上，由 app 自己删
+  ///   · 删完用同一个助记词再登录 = 一个全新的空账号
+  $grpc.ResponseFuture<$2.Empty> deleteAccount(
+    $2.Empty request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$deleteAccount, request, options: options);
+  }
+
   // method descriptors
 
   static final _$edit = $grpc.ClientMethod<$0.EditProfileReq, $1.Entity>(
@@ -65,6 +79,10 @@ class UserClient extends $grpc.Client {
       '/hi.did.User/Query',
       ($2.Empty value) => value.writeToBuffer(),
       $1.Entity.fromBuffer);
+  static final _$deleteAccount = $grpc.ClientMethod<$2.Empty, $2.Empty>(
+      '/hi.did.User/DeleteAccount',
+      ($2.Empty value) => value.writeToBuffer(),
+      $2.Empty.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.did.User')
@@ -86,6 +104,13 @@ abstract class UserServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $2.Empty.fromBuffer(value),
         ($1.Entity value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$2.Empty, $2.Empty>(
+        'DeleteAccount',
+        deleteAccount_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $2.Empty.fromBuffer(value),
+        ($2.Empty value) => value.writeToBuffer()));
   }
 
   $async.Future<$1.Entity> edit_Pre($grpc.ServiceCall $call,
@@ -102,4 +127,12 @@ abstract class UserServiceBase extends $grpc.Service {
   }
 
   $async.Future<$1.Entity> query($grpc.ServiceCall call, $2.Empty request);
+
+  $async.Future<$2.Empty> deleteAccount_Pre(
+      $grpc.ServiceCall $call, $async.Future<$2.Empty> $request) async {
+    return deleteAccount($call, await $request);
+  }
+
+  $async.Future<$2.Empty> deleteAccount(
+      $grpc.ServiceCall call, $2.Empty request);
 }

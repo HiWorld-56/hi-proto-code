@@ -92,12 +92,13 @@ const file_hi_did_user_proto_rawDesc = "" +
 	"\x04name\x18\x01 \x01(\tH\x00R\x04name\x88\x01\x01\x12\x1b\n" +
 	"\x06avatar\x18\x02 \x01(\tH\x01R\x06avatar\x88\x01\x01B\a\n" +
 	"\x05_nameB\t\n" +
-	"\a_avatar2m\n" +
+	"\a_avatar2\xb5\x01\n" +
 	"\x04User\x121\n" +
 	"\x04Edit\x12\x16.hi.did.EditProfileReq\x1a\n" +
 	".hi.Entity\"\x05\x8a\xb5\x18\x01\x02\x122\n" +
 	"\x05Query\x12\x16.google.protobuf.Empty\x1a\n" +
-	".hi.Entity\"\x05\x8a\xb5\x18\x01\x02Bz\n" +
+	".hi.Entity\"\x05\x8a\xb5\x18\x01\x02\x12F\n" +
+	"\rDeleteAccount\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02Bz\n" +
 	"\n" +
 	"com.hi.didB\tUserProtoP\x01Z(github.com/HiWorld-56/hi-proto/go/hi/did\xa2\x02\x03HDX\xaa\x02\x06Hi.Did\xca\x02\x06Hi\\Did\xe2\x02\x12Hi\\Did\\GPBMetadata\xea\x02\aHi::Didb\x06proto3"
 
@@ -122,10 +123,12 @@ var file_hi_did_user_proto_goTypes = []any{
 var file_hi_did_user_proto_depIdxs = []int32{
 	0, // 0: hi.did.User.Edit:input_type -> hi.did.EditProfileReq
 	1, // 1: hi.did.User.Query:input_type -> google.protobuf.Empty
-	2, // 2: hi.did.User.Edit:output_type -> hi.Entity
-	2, // 3: hi.did.User.Query:output_type -> hi.Entity
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
+	1, // 2: hi.did.User.DeleteAccount:input_type -> google.protobuf.Empty
+	2, // 3: hi.did.User.Edit:output_type -> hi.Entity
+	2, // 4: hi.did.User.Query:output_type -> hi.Entity
+	1, // 5: hi.did.User.DeleteAccount:output_type -> google.protobuf.Empty
+	3, // [3:6] is the sub-list for method output_type
+	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name

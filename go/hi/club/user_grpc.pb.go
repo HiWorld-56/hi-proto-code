@@ -34,6 +34,7 @@ const (
 	User_ListGroups_FullMethodName          = "/hi.club.User/ListGroups"
 	User_GetOther_FullMethodName            = "/hi.club.User/GetOther"
 	User_SetRemark_FullMethodName           = "/hi.club.User/SetRemark"
+	User_DeleteAccount_FullMethodName       = "/hi.club.User/DeleteAccount"
 )
 
 // UserClient is the client API for User service.
@@ -67,6 +68,15 @@ type UserClient interface {
 	ListGroups(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListGroupsResp, error)
 	GetOther(ctx context.Context, in *GetUserReq, opts ...grpc.CallOption) (*hi.Entity, error)
 	SetRemark(ctx context.Context, in *SetRemarkReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 注销 hiclub 账号(App Store 要求 app 内能注销)。**只删 club 这边的数据**,hidid 的身份另由 hi.did.Auth.DeleteAccount 删。
+	//
+	//	· 只有 type=user 能调(机器人也拿得到 AUTH_USER 的 token)—— 否则 PermissionDenied
+	//	· 拦下的情况(FailedPrecondition,话里说清为什么):有一笔付款钱已上链、还在确认;
+	//	  名下软件机器人有删不掉的(如还有插件挂在市场上)
+	//	· 关系全部解除(好友、名下机器人解绑、自己的主人)、名下软件机器人删除、自己建的群解散、所在的群退出、
+	//	  没付的订单取消、MQTT 权限收回,最后删账号行。中途失败可以重调,做过的不会重做
+	//	· 删完用同一个助记词再登录 = 一个全新的空账号
+	DeleteAccount(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type userClient struct {
@@ -207,6 +217,16 @@ func (c *userClient) SetRemark(ctx context.Context, in *SetRemarkReq, opts ...gr
 	return out, nil
 }
 
+func (c *userClient) DeleteAccount(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, User_DeleteAccount_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations should embed UnimplementedUserServer
 // for forward compatibility.
@@ -238,6 +258,15 @@ type UserServer interface {
 	ListGroups(context.Context, *emptypb.Empty) (*ListGroupsResp, error)
 	GetOther(context.Context, *GetUserReq) (*hi.Entity, error)
 	SetRemark(context.Context, *SetRemarkReq) (*emptypb.Empty, error)
+	// 注销 hiclub 账号(App Store 要求 app 内能注销)。**只删 club 这边的数据**,hidid 的身份另由 hi.did.Auth.DeleteAccount 删。
+	//
+	//	· 只有 type=user 能调(机器人也拿得到 AUTH_USER 的 token)—— 否则 PermissionDenied
+	//	· 拦下的情况(FailedPrecondition,话里说清为什么):有一笔付款钱已上链、还在确认;
+	//	  名下软件机器人有删不掉的(如还有插件挂在市场上)
+	//	· 关系全部解除(好友、名下机器人解绑、自己的主人)、名下软件机器人删除、自己建的群解散、所在的群退出、
+	//	  没付的订单取消、MQTT 权限收回,最后删账号行。中途失败可以重调,做过的不会重做
+	//	· 删完用同一个助记词再登录 = 一个全新的空账号
+	DeleteAccount(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 }
 
 // UnimplementedUserServer should be embedded to have
@@ -285,6 +314,9 @@ func (UnimplementedUserServer) GetOther(context.Context, *GetUserReq) (*hi.Entit
 }
 func (UnimplementedUserServer) SetRemark(context.Context, *SetRemarkReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetRemark not implemented")
+}
+func (UnimplementedUserServer) DeleteAccount(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteAccount not implemented")
 }
 func (UnimplementedUserServer) testEmbeddedByValue() {}
 
@@ -540,6 +572,24 @@ func _User_SetRemark_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_DeleteAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).DeleteAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_DeleteAccount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).DeleteAccount(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -598,6 +648,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetRemark",
 			Handler:    _User_SetRemark_Handler,
+		},
+		{
+			MethodName: "DeleteAccount",
+			Handler:    _User_DeleteAccount_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

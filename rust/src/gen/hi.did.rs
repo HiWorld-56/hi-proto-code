@@ -4305,6 +4305,33 @@ pub mod user_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.did.User", "Query"));
             self.inner.unary(req, path, codec).await
         }
+        /// 注销 HiDID 账号(App Store 要求 app 内能注销)。**只删 hidid 这边的数据**:资料、钱包地址、资产记录、
+        /// 全部登录态、各商户扩展表里的这一行。club 等依赖方的数据不动(它们拿不到名字头像，下次登录会重新注册)。
+        /// · 商户 did 拒删(FailedPrecondition):商户号被网页扫码登录在用;超管拒删(PermissionDenied)
+        /// · MQTT 账号不动 —— 它是 club 与 hidid 共用的连接身份，删了会让还在用的 hiclub 静默收不到消息;
+        /// 由 hi.club.User.DeleteAccount 收回
+        /// · 链上资产不受影响;助记词在端上，由 app 自己删
+        /// · 删完用同一个助记词再登录 = 一个全新的空账号
+        pub async fn delete_account(
+            &mut self,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.User/DeleteAccount",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.User", "DeleteAccount"));
+            self.inner.unary(req, path, codec).await
+        }
     }
 }
 /// 付款方付完款交给 hidid 的回执载荷(`Pay.Notify` 的 SignedData.Data 反序列化进它,JSON)。

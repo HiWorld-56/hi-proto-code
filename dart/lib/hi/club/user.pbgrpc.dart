@@ -139,6 +139,20 @@ class UserClient extends $grpc.Client {
     return $createUnaryCall(_$setRemark, request, options: options);
   }
 
+  /// 注销 hiclub 账号(App Store 要求 app 内能注销)。**只删 club 这边的数据**,hidid 的身份另由 hi.did.Auth.DeleteAccount 删。
+  ///   · 只有 type=user 能调(机器人也拿得到 AUTH_USER 的 token)—— 否则 PermissionDenied
+  ///   · 拦下的情况(FailedPrecondition,话里说清为什么):有一笔付款钱已上链、还在确认;
+  ///     名下软件机器人有删不掉的(如还有插件挂在市场上)
+  ///   · 关系全部解除(好友、名下机器人解绑、自己的主人)、名下软件机器人删除、自己建的群解散、所在的群退出、
+  ///     没付的订单取消、MQTT 权限收回,最后删账号行。中途失败可以重调,做过的不会重做
+  ///   · 删完用同一个助记词再登录 = 一个全新的空账号
+  $grpc.ResponseFuture<$0.Empty> deleteAccount(
+    $0.Empty request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$deleteAccount, request, options: options);
+  }
+
   // method descriptors
 
   static final _$getCurrent = $grpc.ClientMethod<$0.Empty, $1.UserInfo>(
@@ -200,6 +214,10 @@ class UserClient extends $grpc.Client {
   static final _$setRemark = $grpc.ClientMethod<$1.SetRemarkReq, $0.Empty>(
       '/hi.club.User/SetRemark',
       ($1.SetRemarkReq value) => value.writeToBuffer(),
+      $0.Empty.fromBuffer);
+  static final _$deleteAccount = $grpc.ClientMethod<$0.Empty, $0.Empty>(
+      '/hi.club.User/DeleteAccount',
+      ($0.Empty value) => value.writeToBuffer(),
       $0.Empty.fromBuffer);
 }
 
@@ -301,6 +319,13 @@ abstract class UserServiceBase extends $grpc.Service {
         false,
         false,
         ($core.List<$core.int> value) => $1.SetRemarkReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Empty, $0.Empty>(
+        'DeleteAccount',
+        deleteAccount_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
   }
 
@@ -408,6 +433,14 @@ abstract class UserServiceBase extends $grpc.Service {
 
   $async.Future<$0.Empty> setRemark(
       $grpc.ServiceCall call, $1.SetRemarkReq request);
+
+  $async.Future<$0.Empty> deleteAccount_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
+    return deleteAccount($call, await $request);
+  }
+
+  $async.Future<$0.Empty> deleteAccount(
+      $grpc.ServiceCall call, $0.Empty request);
 }
 
 /// 在线用户目录(**公开**)。与 User(用户自服务)主体不同,故拆 service ——

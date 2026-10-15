@@ -27,7 +27,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11hi/did/user.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"Z\n\x0e\x45\x64itProfileReq\x12\x17\n\x04name\x18\x01 \x01(\tH\x00R\x04name\x88\x01\x01\x12\x1b\n\x06\x61vatar\x18\x02 \x01(\tH\x01R\x06\x61vatar\x88\x01\x01\x42\x07\n\x05_nameB\t\n\x07_avatar2m\n\x04User\x12\x31\n\x04\x45\x64it\x12\x16.hi.did.EditProfileReq\x1a\n.hi.Entity\"\x05\x8a\xb5\x18\x01\x02\x12\x32\n\x05Query\x12\x16.google.protobuf.Empty\x1a\n.hi.Entity\"\x05\x8a\xb5\x18\x01\x02\x42*Z(github.com/HiWorld-56/hi-proto/go/hi/didb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11hi/did/user.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"Z\n\x0e\x45\x64itProfileReq\x12\x17\n\x04name\x18\x01 \x01(\tH\x00R\x04name\x88\x01\x01\x12\x1b\n\x06\x61vatar\x18\x02 \x01(\tH\x01R\x06\x61vatar\x88\x01\x01\x42\x07\n\x05_nameB\t\n\x07_avatar2\xb5\x01\n\x04User\x12\x31\n\x04\x45\x64it\x12\x16.hi.did.EditProfileReq\x1a\n.hi.Entity\"\x05\x8a\xb5\x18\x01\x02\x12\x32\n\x05Query\x12\x16.google.protobuf.Empty\x1a\n.hi.Entity\"\x05\x8a\xb5\x18\x01\x02\x12\x46\n\rDeleteAccount\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x42*Z(github.com/HiWorld-56/hi-proto/go/hi/didb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -39,8 +39,10 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_USER'].methods_by_name['Edit']._serialized_options = b'\212\265\030\001\002'
   _globals['_USER'].methods_by_name['Query']._loaded_options = None
   _globals['_USER'].methods_by_name['Query']._serialized_options = b'\212\265\030\001\002'
+  _globals['_USER'].methods_by_name['DeleteAccount']._loaded_options = None
+  _globals['_USER'].methods_by_name['DeleteAccount']._serialized_options = b'\212\265\030\001\002'
   _globals['_EDITPROFILEREQ']._serialized_start=93
   _globals['_EDITPROFILEREQ']._serialized_end=183
-  _globals['_USER']._serialized_start=185
-  _globals['_USER']._serialized_end=294
+  _globals['_USER']._serialized_start=186
+  _globals['_USER']._serialized_end=367
 # @@protoc_insertion_point(module_scope)

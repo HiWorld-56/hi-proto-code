@@ -26,6 +26,11 @@ class UserStub(object):
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
                 response_deserializer=hi_dot_common__pb2.Entity.FromString,
                 _registered_method=True)
+        self.DeleteAccount = channel.unary_unary(
+                '/hi.did.User/DeleteAccount',
+                request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                _registered_method=True)
 
 
 class UserServicer(object):
@@ -50,6 +55,19 @@ class UserServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def DeleteAccount(self, request, context):
+        """注销 HiDID 账号(App Store 要求 app 内能注销)。**只删 hidid 这边的数据**:资料、钱包地址、资产记录、
+        全部登录态、各商户扩展表里的这一行。club 等依赖方的数据不动(它们拿不到名字头像，下次登录会重新注册)。
+        · 商户 did 拒删(FailedPrecondition):商户号被网页扫码登录在用;超管拒删(PermissionDenied)
+        · MQTT 账号不动 —— 它是 club 与 hidid 共用的连接身份，删了会让还在用的 hiclub 静默收不到消息;
+        由 hi.club.User.DeleteAccount 收回
+        · 链上资产不受影响;助记词在端上，由 app 自己删
+        · 删完用同一个助记词再登录 = 一个全新的空账号
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_UserServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -62,6 +80,11 @@ def add_UserServicer_to_server(servicer, server):
                     servicer.Query,
                     request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                     response_serializer=hi_dot_common__pb2.Entity.SerializeToString,
+            ),
+            'DeleteAccount': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeleteAccount,
+                    request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -118,6 +141,33 @@ class User(object):
             '/hi.did.User/Query',
             google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             hi_dot_common__pb2.Entity.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def DeleteAccount(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.did.User/DeleteAccount',
+            google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,
             insecure,
