@@ -683,7 +683,8 @@ type FunctionSummary struct {
 	// 视频扩展：video.first_last_frame（首尾帧生成）、video.motion_transfer（模仿生成）、
 	// video.continuation（引导生成）、video.reference（参考生成）、
 	// video.advanced_replace（高级替换）；登记入口不代表已实现生成接口。
-	FunctionId  *string `protobuf:"bytes,1,opt,name=function_id,json=functionId,proto3,oneof" json:"function_id,omitempty"`
+	FunctionId *string `protobuf:"bytes,1,opt,name=function_id,json=functionId,proto3,oneof" json:"function_id,omitempty"`
+	// 当前用户可见名称，系统提供初始值，管理员可修改；客户端不按名称识别功能。
 	DisplayName *string `protobuf:"bytes,2,opt,name=display_name,json=displayName,proto3,oneof" json:"display_name,omitempty"`
 	// 管理员控制的开放开关；false 仍展示入口，但普通用户不能创建新任务。
 	// 与工作流 ENABLED 状态独立，不影响已受理任务或管理员试跑。
@@ -1152,6 +1153,62 @@ func (x *SetFunctionSortOrderReq) GetSortOrder() int32 {
 	return 0
 }
 
+// 修改用户可见功能名称，不改变功能 ID、分类、开放开关或排序。
+type SetFunctionDisplayNameReq struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 来自 Function.List；不存在时返回 NotFound。
+	FunctionId *string `protobuf:"bytes,1,opt,name=function_id,json=functionId,proto3,oneof" json:"function_id,omitempty"`
+	// 服务端去除首尾空白后保存，长度为 1～255 个 Unicode 字符。
+	// 查询统一返回当前名称，包括历史任务；重复设置同名成功。
+	DisplayName   *string `protobuf:"bytes,2,opt,name=display_name,json=displayName,proto3,oneof" json:"display_name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SetFunctionDisplayNameReq) Reset() {
+	*x = SetFunctionDisplayNameReq{}
+	mi := &file_hi_media_function_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetFunctionDisplayNameReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetFunctionDisplayNameReq) ProtoMessage() {}
+
+func (x *SetFunctionDisplayNameReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_media_function_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetFunctionDisplayNameReq.ProtoReflect.Descriptor instead.
+func (*SetFunctionDisplayNameReq) Descriptor() ([]byte, []int) {
+	return file_hi_media_function_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *SetFunctionDisplayNameReq) GetFunctionId() string {
+	if x != nil && x.FunctionId != nil {
+		return *x.FunctionId
+	}
+	return ""
+}
+
+func (x *SetFunctionDisplayNameReq) GetDisplayName() string {
+	if x != nil && x.DisplayName != nil {
+		return *x.DisplayName
+	}
+	return ""
+}
+
 var File_hi_media_function_proto protoreflect.FileDescriptor
 
 const file_hi_media_function_proto_rawDesc = "" +
@@ -1279,15 +1336,24 @@ const file_hi_media_function_proto_rawDesc = "" +
 	"\n" +
 	"sort_order\x18\x02 \x01(\x05B\x06\xbaH\x03\xc8\x01\x01H\x01R\tsortOrder\x88\x01\x01B\x0e\n" +
 	"\f_function_idB\r\n" +
-	"\v_sort_order*o\n" +
+	"\v_sort_order\"\xa5\x01\n" +
+	"\x19SetFunctionDisplayNameReq\x120\n" +
+	"\vfunction_id\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\n" +
+	"functionId\x88\x01\x01\x125\n" +
+	"\fdisplay_name\x18\x02 \x01(\tB\r\xbaH\n" +
+	"\xc8\x01\x01r\x05\x10\x01\x18\xff\x01H\x01R\vdisplayName\x88\x01\x01B\x0e\n" +
+	"\f_function_idB\x0f\n" +
+	"\r_display_name*o\n" +
 	"\x10FunctionCategory\x12!\n" +
 	"\x1dFUNCTION_CATEGORY_UNSPECIFIED\x10\x00\x12\x1b\n" +
 	"\x17FUNCTION_CATEGORY_IMAGE\x10\x01\x12\x1b\n" +
 	"\x17FUNCTION_CATEGORY_VIDEO\x10\x022\x91\x01\n" +
 	"\bFunction\x12B\n" +
 	"\x04List\x12\x16.google.protobuf.Empty\x1a\x1b.hi.media.ListFunctionsResp\"\x05\x8a\xb5\x18\x01\x02\x12A\n" +
-	"\x03Get\x12\x18.hi.media.GetFunctionReq\x1a\x19.hi.media.GetFunctionResp\"\x05\x8a\xb5\x18\x01\x022\xb0\x01\n" +
-	"\x0eFunctionManage\x12L\n" +
+	"\x03Get\x12\x18.hi.media.GetFunctionReq\x1a\x19.hi.media.GetFunctionResp\"\x05\x8a\xb5\x18\x01\x022\x86\x02\n" +
+	"\x0eFunctionManage\x12T\n" +
+	"\x0eSetDisplayName\x12#.hi.media.SetFunctionDisplayNameReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12L\n" +
 	"\n" +
 	"SetEnabled\x12\x1f.hi.media.SetFunctionEnabledReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12P\n" +
 	"\fSetSortOrder\x12!.hi.media.SetFunctionSortOrderReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04B\x8a\x01\n" +
@@ -1306,27 +1372,28 @@ func file_hi_media_function_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_media_function_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_hi_media_function_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
+var file_hi_media_function_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_hi_media_function_proto_goTypes = []any{
-	(FunctionCategory)(0),           // 0: hi.media.FunctionCategory
-	(*TextLimit)(nil),               // 1: hi.media.TextLimit
-	(*DecimalOptionConfig)(nil),     // 2: hi.media.DecimalOptionConfig
-	(*StringOptionConfig)(nil),      // 3: hi.media.StringOptionConfig
-	(*IntRangeConfig)(nil),          // 4: hi.media.IntRangeConfig
-	(*FrameRateConfig)(nil),         // 5: hi.media.FrameRateConfig
-	(*InputImagesConfig)(nil),       // 6: hi.media.InputImagesConfig
-	(*ImageDimensionsConfig)(nil),   // 7: hi.media.ImageDimensionsConfig
-	(*ImageResolutionConfig)(nil),   // 8: hi.media.ImageResolutionConfig
-	(*VideoParameterConfig)(nil),    // 9: hi.media.VideoParameterConfig
-	(*FunctionSummary)(nil),         // 10: hi.media.FunctionSummary
-	(*ListFunctionsResp)(nil),       // 11: hi.media.ListFunctionsResp
-	(*GetFunctionReq)(nil),          // 12: hi.media.GetFunctionReq
-	(*WorkflowModelOption)(nil),     // 13: hi.media.WorkflowModelOption
-	(*WorkflowOption)(nil),          // 14: hi.media.WorkflowOption
-	(*GetFunctionResp)(nil),         // 15: hi.media.GetFunctionResp
-	(*SetFunctionEnabledReq)(nil),   // 16: hi.media.SetFunctionEnabledReq
-	(*SetFunctionSortOrderReq)(nil), // 17: hi.media.SetFunctionSortOrderReq
-	(*emptypb.Empty)(nil),           // 18: google.protobuf.Empty
+	(FunctionCategory)(0),             // 0: hi.media.FunctionCategory
+	(*TextLimit)(nil),                 // 1: hi.media.TextLimit
+	(*DecimalOptionConfig)(nil),       // 2: hi.media.DecimalOptionConfig
+	(*StringOptionConfig)(nil),        // 3: hi.media.StringOptionConfig
+	(*IntRangeConfig)(nil),            // 4: hi.media.IntRangeConfig
+	(*FrameRateConfig)(nil),           // 5: hi.media.FrameRateConfig
+	(*InputImagesConfig)(nil),         // 6: hi.media.InputImagesConfig
+	(*ImageDimensionsConfig)(nil),     // 7: hi.media.ImageDimensionsConfig
+	(*ImageResolutionConfig)(nil),     // 8: hi.media.ImageResolutionConfig
+	(*VideoParameterConfig)(nil),      // 9: hi.media.VideoParameterConfig
+	(*FunctionSummary)(nil),           // 10: hi.media.FunctionSummary
+	(*ListFunctionsResp)(nil),         // 11: hi.media.ListFunctionsResp
+	(*GetFunctionReq)(nil),            // 12: hi.media.GetFunctionReq
+	(*WorkflowModelOption)(nil),       // 13: hi.media.WorkflowModelOption
+	(*WorkflowOption)(nil),            // 14: hi.media.WorkflowOption
+	(*GetFunctionResp)(nil),           // 15: hi.media.GetFunctionResp
+	(*SetFunctionEnabledReq)(nil),     // 16: hi.media.SetFunctionEnabledReq
+	(*SetFunctionSortOrderReq)(nil),   // 17: hi.media.SetFunctionSortOrderReq
+	(*SetFunctionDisplayNameReq)(nil), // 18: hi.media.SetFunctionDisplayNameReq
+	(*emptypb.Empty)(nil),             // 19: google.protobuf.Empty
 }
 var file_hi_media_function_proto_depIdxs = []int32{
 	4,  // 0: hi.media.FrameRateConfig.selectable:type_name -> hi.media.IntRangeConfig
@@ -1348,16 +1415,18 @@ var file_hi_media_function_proto_depIdxs = []int32{
 	9,  // 16: hi.media.WorkflowOption.parameter_config:type_name -> hi.media.VideoParameterConfig
 	10, // 17: hi.media.GetFunctionResp.function:type_name -> hi.media.FunctionSummary
 	14, // 18: hi.media.GetFunctionResp.workflows:type_name -> hi.media.WorkflowOption
-	18, // 19: hi.media.Function.List:input_type -> google.protobuf.Empty
+	19, // 19: hi.media.Function.List:input_type -> google.protobuf.Empty
 	12, // 20: hi.media.Function.Get:input_type -> hi.media.GetFunctionReq
-	16, // 21: hi.media.FunctionManage.SetEnabled:input_type -> hi.media.SetFunctionEnabledReq
-	17, // 22: hi.media.FunctionManage.SetSortOrder:input_type -> hi.media.SetFunctionSortOrderReq
-	11, // 23: hi.media.Function.List:output_type -> hi.media.ListFunctionsResp
-	15, // 24: hi.media.Function.Get:output_type -> hi.media.GetFunctionResp
-	18, // 25: hi.media.FunctionManage.SetEnabled:output_type -> google.protobuf.Empty
-	18, // 26: hi.media.FunctionManage.SetSortOrder:output_type -> google.protobuf.Empty
-	23, // [23:27] is the sub-list for method output_type
-	19, // [19:23] is the sub-list for method input_type
+	18, // 21: hi.media.FunctionManage.SetDisplayName:input_type -> hi.media.SetFunctionDisplayNameReq
+	16, // 22: hi.media.FunctionManage.SetEnabled:input_type -> hi.media.SetFunctionEnabledReq
+	17, // 23: hi.media.FunctionManage.SetSortOrder:input_type -> hi.media.SetFunctionSortOrderReq
+	11, // 24: hi.media.Function.List:output_type -> hi.media.ListFunctionsResp
+	15, // 25: hi.media.Function.Get:output_type -> hi.media.GetFunctionResp
+	19, // 26: hi.media.FunctionManage.SetDisplayName:output_type -> google.protobuf.Empty
+	19, // 27: hi.media.FunctionManage.SetEnabled:output_type -> google.protobuf.Empty
+	19, // 28: hi.media.FunctionManage.SetSortOrder:output_type -> google.protobuf.Empty
+	24, // [24:29] is the sub-list for method output_type
+	19, // [19:24] is the sub-list for method input_type
 	19, // [19:19] is the sub-list for extension type_name
 	19, // [19:19] is the sub-list for extension extendee
 	0,  // [0:19] is the sub-list for field type_name
@@ -1387,13 +1456,14 @@ func file_hi_media_function_proto_init() {
 	file_hi_media_function_proto_msgTypes[13].OneofWrappers = []any{}
 	file_hi_media_function_proto_msgTypes[15].OneofWrappers = []any{}
 	file_hi_media_function_proto_msgTypes[16].OneofWrappers = []any{}
+	file_hi_media_function_proto_msgTypes[17].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_media_function_proto_rawDesc), len(file_hi_media_function_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   17,
+			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

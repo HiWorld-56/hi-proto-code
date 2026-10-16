@@ -101,7 +101,7 @@ abstract class FunctionServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $1.GetFunctionReq request);
 }
 
-/// 管理员调整功能开放开关与分类内顺序；功能 ID 和显示名称随开发初始化。
+/// 管理员调整功能名称、开放开关与分类内顺序；功能 ID 随开发初始化且不可修改。
 @$pb.GrpcServiceName('hi.media.FunctionManage')
 class FunctionManageClient extends $grpc.Client {
   /// The hostname for this service.
@@ -113,6 +113,14 @@ class FunctionManageClient extends $grpc.Client {
   ];
 
   FunctionManageClient(super.channel, {super.options, super.interceptors});
+
+  /// 修改名称后刷新 Function.List；成功返回空业务数据，不影响工作流和任务执行。
+  $grpc.ResponseFuture<$0.Empty> setDisplayName(
+    $1.SetFunctionDisplayNameReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$setDisplayName, request, options: options);
+  }
 
   /// 关闭只阻止新建普通任务，不取消已有任务，也不限制管理员配置、校验和试跑。
   /// 目标功能不存在返回 NotFound；重复设置同一值仍成功。
@@ -133,6 +141,11 @@ class FunctionManageClient extends $grpc.Client {
 
   // method descriptors
 
+  static final _$setDisplayName =
+      $grpc.ClientMethod<$1.SetFunctionDisplayNameReq, $0.Empty>(
+          '/hi.media.FunctionManage/SetDisplayName',
+          ($1.SetFunctionDisplayNameReq value) => value.writeToBuffer(),
+          $0.Empty.fromBuffer);
   static final _$setEnabled =
       $grpc.ClientMethod<$1.SetFunctionEnabledReq, $0.Empty>(
           '/hi.media.FunctionManage/SetEnabled',
@@ -150,6 +163,14 @@ abstract class FunctionManageServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.media.FunctionManage';
 
   FunctionManageServiceBase() {
+    $addMethod($grpc.ServiceMethod<$1.SetFunctionDisplayNameReq, $0.Empty>(
+        'SetDisplayName',
+        setDisplayName_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $1.SetFunctionDisplayNameReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.SetFunctionEnabledReq, $0.Empty>(
         'SetEnabled',
         setEnabled_Pre,
@@ -167,6 +188,14 @@ abstract class FunctionManageServiceBase extends $grpc.Service {
             $1.SetFunctionSortOrderReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
   }
+
+  $async.Future<$0.Empty> setDisplayName_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.SetFunctionDisplayNameReq> $request) async {
+    return setDisplayName($call, await $request);
+  }
+
+  $async.Future<$0.Empty> setDisplayName(
+      $grpc.ServiceCall call, $1.SetFunctionDisplayNameReq request);
 
   $async.Future<$0.Empty> setEnabled_Pre($grpc.ServiceCall $call,
       $async.Future<$1.SetFunctionEnabledReq> $request) async {

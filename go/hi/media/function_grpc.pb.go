@@ -166,16 +166,19 @@ var Function_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	FunctionManage_SetEnabled_FullMethodName   = "/hi.media.FunctionManage/SetEnabled"
-	FunctionManage_SetSortOrder_FullMethodName = "/hi.media.FunctionManage/SetSortOrder"
+	FunctionManage_SetDisplayName_FullMethodName = "/hi.media.FunctionManage/SetDisplayName"
+	FunctionManage_SetEnabled_FullMethodName     = "/hi.media.FunctionManage/SetEnabled"
+	FunctionManage_SetSortOrder_FullMethodName   = "/hi.media.FunctionManage/SetSortOrder"
 )
 
 // FunctionManageClient is the client API for FunctionManage service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// 管理员调整功能开放开关与分类内顺序；功能 ID 和显示名称随开发初始化。
+// 管理员调整功能名称、开放开关与分类内顺序；功能 ID 随开发初始化且不可修改。
 type FunctionManageClient interface {
+	// 修改名称后刷新 Function.List；成功返回空业务数据，不影响工作流和任务执行。
+	SetDisplayName(ctx context.Context, in *SetFunctionDisplayNameReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 关闭只阻止新建普通任务，不取消已有任务，也不限制管理员配置、校验和试跑。
 	// 目标功能不存在返回 NotFound；重复设置同一值仍成功。
 	SetEnabled(ctx context.Context, in *SetFunctionEnabledReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -189,6 +192,16 @@ type functionManageClient struct {
 
 func NewFunctionManageClient(cc grpc.ClientConnInterface) FunctionManageClient {
 	return &functionManageClient{cc}
+}
+
+func (c *functionManageClient) SetDisplayName(ctx context.Context, in *SetFunctionDisplayNameReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, FunctionManage_SetDisplayName_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *functionManageClient) SetEnabled(ctx context.Context, in *SetFunctionEnabledReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
@@ -215,8 +228,10 @@ func (c *functionManageClient) SetSortOrder(ctx context.Context, in *SetFunction
 // All implementations should embed UnimplementedFunctionManageServer
 // for forward compatibility.
 //
-// 管理员调整功能开放开关与分类内顺序；功能 ID 和显示名称随开发初始化。
+// 管理员调整功能名称、开放开关与分类内顺序；功能 ID 随开发初始化且不可修改。
 type FunctionManageServer interface {
+	// 修改名称后刷新 Function.List；成功返回空业务数据，不影响工作流和任务执行。
+	SetDisplayName(context.Context, *SetFunctionDisplayNameReq) (*emptypb.Empty, error)
 	// 关闭只阻止新建普通任务，不取消已有任务，也不限制管理员配置、校验和试跑。
 	// 目标功能不存在返回 NotFound；重复设置同一值仍成功。
 	SetEnabled(context.Context, *SetFunctionEnabledReq) (*emptypb.Empty, error)
@@ -231,6 +246,9 @@ type FunctionManageServer interface {
 // pointer dereference when methods are called.
 type UnimplementedFunctionManageServer struct{}
 
+func (UnimplementedFunctionManageServer) SetDisplayName(context.Context, *SetFunctionDisplayNameReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetDisplayName not implemented")
+}
 func (UnimplementedFunctionManageServer) SetEnabled(context.Context, *SetFunctionEnabledReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetEnabled not implemented")
 }
@@ -255,6 +273,24 @@ func RegisterFunctionManageServer(s grpc.ServiceRegistrar, srv FunctionManageSer
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&FunctionManage_ServiceDesc, srv)
+}
+
+func _FunctionManage_SetDisplayName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetFunctionDisplayNameReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FunctionManageServer).SetDisplayName(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FunctionManage_SetDisplayName_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FunctionManageServer).SetDisplayName(ctx, req.(*SetFunctionDisplayNameReq))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _FunctionManage_SetEnabled_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -300,6 +336,10 @@ var FunctionManage_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "hi.media.FunctionManage",
 	HandlerType: (*FunctionManageServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "SetDisplayName",
+			Handler:    _FunctionManage_SetDisplayName_Handler,
+		},
 		{
 			MethodName: "SetEnabled",
 			Handler:    _FunctionManage_SetEnabled_Handler,

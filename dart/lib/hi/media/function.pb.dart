@@ -843,6 +843,7 @@ class FunctionSummary extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearFunctionId() => $_clearField(1);
 
+  /// 当前用户可见名称，系统提供初始值，管理员可修改；客户端不按名称识别功能。
   @$pb.TagNumber(2)
   $core.String get displayName => $_getSZ(1);
   @$pb.TagNumber(2)
@@ -1376,6 +1377,77 @@ class SetFunctionSortOrderReq extends $pb.GeneratedMessage {
   $core.bool hasSortOrder() => $_has(1);
   @$pb.TagNumber(2)
   void clearSortOrder() => $_clearField(2);
+}
+
+/// 修改用户可见功能名称，不改变功能 ID、分类、开放开关或排序。
+class SetFunctionDisplayNameReq extends $pb.GeneratedMessage {
+  factory SetFunctionDisplayNameReq({
+    $core.String? functionId,
+    $core.String? displayName,
+  }) {
+    final result = create();
+    if (functionId != null) result.functionId = functionId;
+    if (displayName != null) result.displayName = displayName;
+    return result;
+  }
+
+  SetFunctionDisplayNameReq._();
+
+  factory SetFunctionDisplayNameReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SetFunctionDisplayNameReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SetFunctionDisplayNameReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'functionId')
+    ..aOS(2, _omitFieldNames ? '' : 'displayName')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetFunctionDisplayNameReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetFunctionDisplayNameReq copyWith(
+          void Function(SetFunctionDisplayNameReq) updates) =>
+      super.copyWith((message) => updates(message as SetFunctionDisplayNameReq))
+          as SetFunctionDisplayNameReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SetFunctionDisplayNameReq create() => SetFunctionDisplayNameReq._();
+  @$core.override
+  SetFunctionDisplayNameReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static SetFunctionDisplayNameReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetFunctionDisplayNameReq>(create);
+  static SetFunctionDisplayNameReq? _defaultInstance;
+
+  /// 来自 Function.List；不存在时返回 NotFound。
+  @$pb.TagNumber(1)
+  $core.String get functionId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set functionId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasFunctionId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearFunctionId() => $_clearField(1);
+
+  /// 服务端去除首尾空白后保存，长度为 1～255 个 Unicode 字符。
+  /// 查询统一返回当前名称，包括历史任务；重复设置同名成功。
+  @$pb.TagNumber(2)
+  $core.String get displayName => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set displayName($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasDisplayName() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearDisplayName() => $_clearField(2);
 }
 
 const $core.bool _omitFieldNames =

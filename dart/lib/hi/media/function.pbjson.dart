@@ -769,3 +769,40 @@ final $typed_data.Uint8List setFunctionSortOrderReqDescriptor = $convert.base64D
     'ChdTZXRGdW5jdGlvblNvcnRPcmRlclJlcRIwCgtmdW5jdGlvbl9pZBgBIAEoCUIKukgHyAEBcg'
     'IQAUgAUgpmdW5jdGlvbklkiAEBEioKCnNvcnRfb3JkZXIYAiABKAVCBrpIA8gBAUgBUglzb3J0'
     'T3JkZXKIAQFCDgoMX2Z1bmN0aW9uX2lkQg0KC19zb3J0X29yZGVy');
+
+@$core.Deprecated('Use setFunctionDisplayNameReqDescriptor instead')
+const SetFunctionDisplayNameReq$json = {
+  '1': 'SetFunctionDisplayNameReq',
+  '2': [
+    {
+      '1': 'function_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'functionId',
+      '17': true
+    },
+    {
+      '1': 'display_name',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'displayName',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_function_id'},
+    {'1': '_display_name'},
+  ],
+};
+
+/// Descriptor for `SetFunctionDisplayNameReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setFunctionDisplayNameReqDescriptor = $convert.base64Decode(
+    'ChlTZXRGdW5jdGlvbkRpc3BsYXlOYW1lUmVxEjAKC2Z1bmN0aW9uX2lkGAEgASgJQgq6SAfIAQ'
+    'FyAhABSABSCmZ1bmN0aW9uSWSIAQESNQoMZGlzcGxheV9uYW1lGAIgASgJQg26SArIAQFyBRAB'
+    'GP8BSAFSC2Rpc3BsYXlOYW1liAEBQg4KDF9mdW5jdGlvbl9pZEIPCg1fZGlzcGxheV9uYW1l');

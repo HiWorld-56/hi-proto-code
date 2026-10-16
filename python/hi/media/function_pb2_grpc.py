@@ -127,7 +127,7 @@ class Function(object):
 
 
 class FunctionManageStub(object):
-    """管理员调整功能开放开关与分类内顺序；功能 ID 和显示名称随开发初始化。
+    """管理员调整功能名称、开放开关与分类内顺序；功能 ID 随开发初始化且不可修改。
     """
 
     def __init__(self, channel):
@@ -136,6 +136,11 @@ class FunctionManageStub(object):
         Args:
             channel: A grpc.Channel.
         """
+        self.SetDisplayName = channel.unary_unary(
+                '/hi.media.FunctionManage/SetDisplayName',
+                request_serializer=hi_dot_media_dot_function__pb2.SetFunctionDisplayNameReq.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                _registered_method=True)
         self.SetEnabled = channel.unary_unary(
                 '/hi.media.FunctionManage/SetEnabled',
                 request_serializer=hi_dot_media_dot_function__pb2.SetFunctionEnabledReq.SerializeToString,
@@ -149,8 +154,15 @@ class FunctionManageStub(object):
 
 
 class FunctionManageServicer(object):
-    """管理员调整功能开放开关与分类内顺序；功能 ID 和显示名称随开发初始化。
+    """管理员调整功能名称、开放开关与分类内顺序；功能 ID 随开发初始化且不可修改。
     """
+
+    def SetDisplayName(self, request, context):
+        """修改名称后刷新 Function.List；成功返回空业务数据，不影响工作流和任务执行。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def SetEnabled(self, request, context):
         """关闭只阻止新建普通任务，不取消已有任务，也不限制管理员配置、校验和试跑。
@@ -170,6 +182,11 @@ class FunctionManageServicer(object):
 
 def add_FunctionManageServicer_to_server(servicer, server):
     rpc_method_handlers = {
+            'SetDisplayName': grpc.unary_unary_rpc_method_handler(
+                    servicer.SetDisplayName,
+                    request_deserializer=hi_dot_media_dot_function__pb2.SetFunctionDisplayNameReq.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
             'SetEnabled': grpc.unary_unary_rpc_method_handler(
                     servicer.SetEnabled,
                     request_deserializer=hi_dot_media_dot_function__pb2.SetFunctionEnabledReq.FromString,
@@ -189,8 +206,35 @@ def add_FunctionManageServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class FunctionManage(object):
-    """管理员调整功能开放开关与分类内顺序；功能 ID 和显示名称随开发初始化。
+    """管理员调整功能名称、开放开关与分类内顺序；功能 ID 随开发初始化且不可修改。
     """
+
+    @staticmethod
+    def SetDisplayName(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.media.FunctionManage/SetDisplayName',
+            hi_dot_media_dot_function__pb2.SetFunctionDisplayNameReq.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
 
     @staticmethod
     def SetEnabled(request,

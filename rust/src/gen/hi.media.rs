@@ -1674,6 +1674,7 @@ pub struct FunctionSummary {
     /// video.advanced_replace（高级替换）；登记入口不代表已实现生成接口。
     #[prost(string, optional, tag = "1")]
     pub function_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 当前用户可见名称，系统提供初始值，管理员可修改；客户端不按名称识别功能。
     #[prost(string, optional, tag = "2")]
     pub display_name: ::core::option::Option<::prost::alloc::string::String>,
     /// 管理员控制的开放开关；false 仍展示入口，但普通用户不能创建新任务。
@@ -1756,6 +1757,17 @@ pub struct SetFunctionSortOrderReq {
     /// 必须显式提供，包括 0；重复设置同值成功，不改变开放开关或工作流排序。
     #[prost(int32, optional, tag = "2")]
     pub sort_order: ::core::option::Option<i32>,
+}
+/// 修改用户可见功能名称，不改变功能 ID、分类、开放开关或排序。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SetFunctionDisplayNameReq {
+    /// 来自 Function.List；不存在时返回 NotFound。
+    #[prost(string, optional, tag = "1")]
+    pub function_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 服务端去除首尾空白后保存，长度为 1～255 个 Unicode 字符。
+    /// 查询统一返回当前名称，包括历史任务；重复设置同名成功。
+    #[prost(string, optional, tag = "2")]
+    pub display_name: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 固定功能分类，由 image.\* / video.\* 功能 ID 派生，不另建分类表。
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1936,7 +1948,7 @@ pub mod function_manage_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// 管理员调整功能开放开关与分类内顺序；功能 ID 和显示名称随开发初始化。
+    /// 管理员调整功能名称、开放开关与分类内顺序；功能 ID 随开发初始化且不可修改。
     #[derive(Debug, Clone)]
     pub struct FunctionManageClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -2016,6 +2028,28 @@ pub mod function_manage_client {
         pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
+        }
+        /// 修改名称后刷新 Function.List；成功返回空业务数据，不影响工作流和任务执行。
+        pub async fn set_display_name(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SetFunctionDisplayNameReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.FunctionManage/SetDisplayName",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.FunctionManage", "SetDisplayName"));
+            self.inner.unary(req, path, codec).await
         }
         /// 关闭只阻止新建普通任务，不取消已有任务，也不限制管理员配置、校验和试跑。
         /// 目标功能不存在返回 NotFound；重复设置同一值仍成功。
