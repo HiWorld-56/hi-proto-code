@@ -1421,29 +1421,25 @@ pub mod binance_command {
         UsdsFuturesCancelAllSymbols(super::BinanceFuturesCancelAllSymbols),
     }
 }
-/// **跟单信号**:一台机器人(信号源)账户上的变化,广播给群里别的机器人跟。
+/// **开单信号**:一台机器人(信号源)账户上新开 / 加了仓,广播给群里别的机器人。
 /// 装在消息里:`Content.type = "binance_signal"`、`Content.kind = binance_signal`。
 ///
 /// ## 谁发、发到哪(判据只在信号源的 brain)
 ///
 /// 信号源 = 在某个群里**能发言**、且那个群的发言等级(`GroupBase.speak`)不是 `all` 的机器人。
-/// 它每轮把这一轮的变化发到**自己当前能发言的所有这种群**,一律 @所有人(机器人只处理 @ 到自己或 @所有人的)。
-/// 群的发言等级就是这道闸 —— 收信号的一方**不校验**发信号的是谁。
+/// 它每轮把这一轮新开的仓发到**自己当前能发言的所有这种群**,一律 @所有人(机器人只处理 @ 到自己或 @所有人的)。
+/// 群的发言等级就是白名单 —— 收信号的一方**不校验**发信号的是谁。
 /// 同一份信号发往几个群,`seq` 相同;收的一方按「信封 from + seq」去重。
 ///
-/// ## 口径:一律按占自己资金的比例(各人本金不同)
+/// ## 只有开单(2026-10-18 用户定)
 ///
-/// 比例都是**十进制小数字符串**(`"0.05"` = 5%),不用浮点:
-/// · `ratio`    —— 开仓那一侧:这部分的**保证金**(现货:价值)÷ 信号源的**总资金**
-/// (合约 = `totalMarginBalance`;现货 = 全部资产折成 USDT 的总价值)。跟单方 × 自己的总资金。
-/// · `fraction` —— 减仓那一侧:这次减掉的数量 ÷ 信号源减之前的持仓数量,(0, 1\]。
-/// 跟单方 × **自己跟这个信号源开出来的那份**(不是自己的全部持仓)。
+/// 只报**持仓变大**(新开仓、加仓;限价单成交让持仓变大也算 —— 挂单本身不算开单)。
+/// 平仓、减仓、挂单、撤单一概不报:跟出来的仓位之后完全由跟单方的用户自己管。
 ///
-/// ## 是事件,不是状态
+/// ## 收到之后
 ///
-/// 只报这一轮**发生了什么**。挂单的成交由挂单事件负责(跟单方自己的镜像单会照样成交),
-/// 所以持仓事件只报**挂单解释不了**的那部分变化(在币安 App 里市价下的单、充值划转……)。
-/// 刚成为信号源的那一轮只建基线,已有的持仓不报。
+/// 跟单方**不自动下单**:在机器人屏幕上弹一张卡(信号源开了什么 + 我们打算开什么),
+/// 人点「确认」才开。卡在本地只留 15 分钟(从收到那一刻算),过了就当放弃。见 hi/ninja/ui.proto 的 `BinanceOffer`。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BinanceSignal {
     /// 信号源自己的递增序号
@@ -1452,34 +1448,20 @@ pub struct BinanceSignal {
     /// 发现这些变化的时刻,绝对微秒
     #[prost(int64, optional, tag = "2")]
     pub at: ::core::option::Option<i64>,
-    /// 过期时刻,绝对微秒。过了跟单方不跟(行情早变了)。
+    /// 过期时刻,绝对微秒(= at + 15 分钟)。消息在路上耽搁过了这个点,跟单方就不弹卡。
     #[prost(int64, optional, tag = "3")]
     pub expiration: ::core::option::Option<i64>,
     #[prost(message, repeated, tag = "4")]
-    pub events: ::prost::alloc::vec::Vec<BinanceSignalEvent>,
+    pub opens: ::prost::alloc::vec::Vec<BinanceOpen>,
 }
+/// 信号源新开 / 加的一笔仓。
+/// · 合约:按交易对 + 方向(单向持仓按 positionAmt 正负算 LONG / SHORT);方向翻转时,翻过去那一侧算新开。
+/// · 现货:按**币**(稳定币是现金,不算持仓);数量 = free + locked。跟单方用「币 + USDT」交易对买。
+///
+/// `ratio`:新增这部分的**保证金**(现货:价值)÷ 信号源的**总资金**(合约 = `totalMarginBalance`;
+/// 现货 = 全部资产折成 USDT 的总价值),十进制小数字符串(`"0.05"` = 5%)。各人本金不同,一律按比例。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct BinanceSignalEvent {
-    #[prost(oneof = "binance_signal_event::Kind", tags = "1, 2, 3")]
-    pub kind: ::core::option::Option<binance_signal_event::Kind>,
-}
-/// Nested message and enum types in `BinanceSignalEvent`.
-pub mod binance_signal_event {
-    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
-    pub enum Kind {
-        #[prost(message, tag = "1")]
-        Position(super::BinancePositionChange),
-        #[prost(message, tag = "2")]
-        Placed(super::BinanceOrderPlaced),
-        #[prost(message, tag = "3")]
-        Done(super::BinanceOrderDone),
-    }
-}
-/// 持仓变了(挂单解释不了的那部分)。
-/// · 合约:按交易对 + 方向(单向持仓按 positionAmt 正负算 LONG / SHORT)。方向翻转 = 先一条平 1.0、再一条开。
-/// · 现货:按**币**(稳定币是现金,不算持仓);数量 = free + locked。跟单方用「币 + USDT」交易对去买卖。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct BinancePositionChange {
+pub struct BinanceOpen {
     #[prost(enumeration = "BinanceMarket", optional, tag = "1")]
     pub market: ::core::option::Option<i32>,
     /// 合约 = 交易对;现货 = 币(如 BTC)
@@ -1488,79 +1470,14 @@ pub struct BinancePositionChange {
     /// 合约:LONG / SHORT;现货不带
     #[prost(enumeration = "BinancePositionSide", optional, tag = "3")]
     pub side: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "4")]
+    pub ratio: ::core::option::Option<::prost::alloc::string::String>,
     /// 合约:信号源这个交易对的杠杆
-    #[prost(uint32, optional, tag = "6")]
+    #[prost(uint32, optional, tag = "5")]
     pub leverage: ::core::option::Option<u32>,
-    /// 发现时的参考价(合约标记价、现货最新价),只作记录
-    #[prost(string, optional, tag = "7")]
+    /// 发现时的参考价(合约标记价、现货最新价)
+    #[prost(string, optional, tag = "6")]
     pub price: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(oneof = "binance_position_change::Change", tags = "4, 5")]
-    pub change: ::core::option::Option<binance_position_change::Change>,
-}
-/// Nested message and enum types in `BinancePositionChange`.
-pub mod binance_position_change {
-    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
-    pub enum Change {
-        /// 加仓 / 开仓:新增这部分的比例(见文件头)
-        #[prost(string, tag = "4")]
-        Ratio(::prost::alloc::string::String),
-        /// 减仓 / 平仓:减掉的占之前持仓的比例,1 = 全平
-        #[prost(string, tag = "5")]
-        Fraction(::prost::alloc::string::String),
-    }
-}
-/// 信号源挂了一张单。跟单方照样挂一张镜像单:同交易对、同方向、同价格、同类型,数量按比例换算。
-/// `order` 里的 quantity / quote_order_qty / percent **不带**(信号源的数量对跟单方没意义),由 ratio / fraction 换算。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct BinanceOrderPlaced {
-    /// 信号源那边的单号(现货 / 合约普通单 = orderId,条件单 = algoId)。跟单方的镜像单号由「信号源 did + 这个号」确定性算出,
-    /// 之后撤 / 查都靠它。
-    #[prost(string, optional, tag = "1")]
-    pub id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(oneof = "binance_order_placed::Order", tags = "2, 3, 4")]
-    pub order: ::core::option::Option<binance_order_placed::Order>,
-    #[prost(oneof = "binance_order_placed::Size", tags = "5, 6")]
-    pub size: ::core::option::Option<binance_order_placed::Size>,
-}
-/// Nested message and enum types in `BinanceOrderPlaced`.
-pub mod binance_order_placed {
-    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
-    pub enum Order {
-        #[prost(message, tag = "2")]
-        Spot(super::BinanceSpotNewOrder),
-        #[prost(message, tag = "3")]
-        Futures(super::BinanceFuturesNewOrder),
-        #[prost(message, tag = "4")]
-        FuturesAlgo(super::BinanceFuturesNewAlgoOrder),
-    }
-    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
-    pub enum Size {
-        /// 开仓单 / 现货买单
-        #[prost(string, tag = "5")]
-        Ratio(::prost::alloc::string::String),
-        /// 减仓单(reduce_only、close_position、双向持仓里的平仓方向)/ 现货卖单
-        #[prost(string, tag = "6")]
-        Fraction(::prost::alloc::string::String),
-    }
-}
-/// 信号源的一张挂单没了。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct BinanceOrderDone {
-    #[prost(enumeration = "BinanceMarket", optional, tag = "1")]
-    pub market: ::core::option::Option<i32>,
-    #[prost(string, optional, tag = "2")]
-    pub symbol: ::core::option::Option<::prost::alloc::string::String>,
-    /// 同 BinanceOrderPlaced.id
-    #[prost(string, optional, tag = "3")]
-    pub id: ::core::option::Option<::prost::alloc::string::String>,
-    /// 是不是合约条件单
-    #[prost(bool, optional, tag = "4")]
-    pub algo: ::core::option::Option<bool>,
-    /// 为什么没了:
-    /// · FILLED   —— 成交了(条件单:触发了)。跟单方查自己的镜像单,没成交完就撤掉、剩下的市价补上。
-    /// · CANCELED —— 撤了 / 过期了 / 被拒了。跟单方撤掉镜像单(已成交的那部分留着)。
-    #[prost(enumeration = "BinanceOrderDoneReason", optional, tag = "5")]
-    pub reason: ::core::option::Option<i32>,
 }
 /// 市场。
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1589,35 +1506,6 @@ impl BinanceMarket {
             "BINANCE_MARKET_UNSPECIFIED" => Some(Self::Unspecified),
             "BINANCE_MARKET_SPOT" => Some(Self::Spot),
             "BINANCE_MARKET_USDS_FUTURES" => Some(Self::UsdsFutures),
-            _ => None,
-        }
-    }
-}
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum BinanceOrderDoneReason {
-    Unspecified = 0,
-    Filled = 1,
-    Canceled = 2,
-}
-impl BinanceOrderDoneReason {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Self::Unspecified => "BINANCE_ORDER_DONE_REASON_UNSPECIFIED",
-            Self::Filled => "BINANCE_ORDER_DONE_REASON_FILLED",
-            Self::Canceled => "BINANCE_ORDER_DONE_REASON_CANCELED",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "BINANCE_ORDER_DONE_REASON_UNSPECIFIED" => Some(Self::Unspecified),
-            "BINANCE_ORDER_DONE_REASON_FILLED" => Some(Self::Filled),
-            "BINANCE_ORDER_DONE_REASON_CANCELED" => Some(Self::Canceled),
             _ => None,
         }
     }

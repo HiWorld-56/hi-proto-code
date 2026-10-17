@@ -73,86 +73,32 @@ func (BinanceMarket) EnumDescriptor() ([]byte, []int) {
 	return file_hi_binance_signal_proto_rawDescGZIP(), []int{0}
 }
 
-type BinanceOrderDoneReason int32
-
-const (
-	BinanceOrderDoneReason_BINANCE_ORDER_DONE_REASON_UNSPECIFIED BinanceOrderDoneReason = 0
-	BinanceOrderDoneReason_BINANCE_ORDER_DONE_REASON_FILLED      BinanceOrderDoneReason = 1
-	BinanceOrderDoneReason_BINANCE_ORDER_DONE_REASON_CANCELED    BinanceOrderDoneReason = 2
-)
-
-// Enum value maps for BinanceOrderDoneReason.
-var (
-	BinanceOrderDoneReason_name = map[int32]string{
-		0: "BINANCE_ORDER_DONE_REASON_UNSPECIFIED",
-		1: "BINANCE_ORDER_DONE_REASON_FILLED",
-		2: "BINANCE_ORDER_DONE_REASON_CANCELED",
-	}
-	BinanceOrderDoneReason_value = map[string]int32{
-		"BINANCE_ORDER_DONE_REASON_UNSPECIFIED": 0,
-		"BINANCE_ORDER_DONE_REASON_FILLED":      1,
-		"BINANCE_ORDER_DONE_REASON_CANCELED":    2,
-	}
-)
-
-func (x BinanceOrderDoneReason) Enum() *BinanceOrderDoneReason {
-	p := new(BinanceOrderDoneReason)
-	*p = x
-	return p
-}
-
-func (x BinanceOrderDoneReason) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (BinanceOrderDoneReason) Descriptor() protoreflect.EnumDescriptor {
-	return file_hi_binance_signal_proto_enumTypes[1].Descriptor()
-}
-
-func (BinanceOrderDoneReason) Type() protoreflect.EnumType {
-	return &file_hi_binance_signal_proto_enumTypes[1]
-}
-
-func (x BinanceOrderDoneReason) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use BinanceOrderDoneReason.Descriptor instead.
-func (BinanceOrderDoneReason) EnumDescriptor() ([]byte, []int) {
-	return file_hi_binance_signal_proto_rawDescGZIP(), []int{1}
-}
-
-// **跟单信号**:一台机器人(信号源)账户上的变化,广播给群里别的机器人跟。
+// **开单信号**:一台机器人(信号源)账户上新开 / 加了仓,广播给群里别的机器人。
 // 装在消息里:`Content.type = "binance_signal"`、`Content.kind = binance_signal`。
 //
 // ## 谁发、发到哪(判据只在信号源的 brain)
 //
 // 信号源 = 在某个群里**能发言**、且那个群的发言等级(`GroupBase.speak`)不是 `all` 的机器人。
-// 它每轮把这一轮的变化发到**自己当前能发言的所有这种群**,一律 @所有人(机器人只处理 @ 到自己或 @所有人的)。
-// 群的发言等级就是这道闸 —— 收信号的一方**不校验**发信号的是谁。
+// 它每轮把这一轮新开的仓发到**自己当前能发言的所有这种群**,一律 @所有人(机器人只处理 @ 到自己或 @所有人的)。
+// 群的发言等级就是白名单 —— 收信号的一方**不校验**发信号的是谁。
 // 同一份信号发往几个群,`seq` 相同;收的一方按「信封 from + seq」去重。
 //
-// ## 口径:一律按占自己资金的比例(各人本金不同)
+// ## 只有开单(2026-10-18 用户定)
 //
-// 比例都是**十进制小数字符串**(`"0.05"` = 5%),不用浮点:
+// 只报**持仓变大**(新开仓、加仓;限价单成交让持仓变大也算 —— 挂单本身不算开单)。
+// 平仓、减仓、挂单、撤单一概不报:跟出来的仓位之后完全由跟单方的用户自己管。
 //
-//	· `ratio`    —— 开仓那一侧:这部分的**保证金**(现货:价值)÷ 信号源的**总资金**
-//	               (合约 = `totalMarginBalance`;现货 = 全部资产折成 USDT 的总价值)。跟单方 × 自己的总资金。
-//	· `fraction` —— 减仓那一侧:这次减掉的数量 ÷ 信号源减之前的持仓数量,(0, 1]。
-//	               跟单方 × **自己跟这个信号源开出来的那份**(不是自己的全部持仓)。
+// ## 收到之后
 //
-// ## 是事件,不是状态
-//
-// 只报这一轮**发生了什么**。挂单的成交由挂单事件负责(跟单方自己的镜像单会照样成交),
-// 所以持仓事件只报**挂单解释不了**的那部分变化(在币安 App 里市价下的单、充值划转……)。
-// 刚成为信号源的那一轮只建基线,已有的持仓不报。
+// 跟单方**不自动下单**:在机器人屏幕上弹一张卡(信号源开了什么 + 我们打算开什么),
+// 人点「确认」才开。卡在本地只留 15 分钟(从收到那一刻算),过了就当放弃。见 hi/ninja/ui.proto 的 `BinanceOffer`。
 type BinanceSignal struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Seq   *uint64                `protobuf:"varint,1,opt,name=seq,proto3,oneof" json:"seq,omitempty"` // 信号源自己的递增序号
 	At    *int64                 `protobuf:"varint,2,opt,name=at,proto3,oneof" json:"at,omitempty"`   // 发现这些变化的时刻,绝对微秒
-	// 过期时刻,绝对微秒。过了跟单方不跟(行情早变了)。
-	Expiration    *int64                `protobuf:"varint,3,opt,name=expiration,proto3,oneof" json:"expiration,omitempty"`
-	Events        []*BinanceSignalEvent `protobuf:"bytes,4,rep,name=events,proto3" json:"events,omitempty"`
+	// 过期时刻,绝对微秒(= at + 15 分钟)。消息在路上耽搁过了这个点,跟单方就不弹卡。
+	Expiration    *int64         `protobuf:"varint,3,opt,name=expiration,proto3,oneof" json:"expiration,omitempty"`
+	Opens         []*BinanceOpen `protobuf:"bytes,4,rep,name=opens,proto3" json:"opens,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -208,39 +154,46 @@ func (x *BinanceSignal) GetExpiration() int64 {
 	return 0
 }
 
-func (x *BinanceSignal) GetEvents() []*BinanceSignalEvent {
+func (x *BinanceSignal) GetOpens() []*BinanceOpen {
 	if x != nil {
-		return x.Events
+		return x.Opens
 	}
 	return nil
 }
 
-type BinanceSignalEvent struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Types that are valid to be assigned to Kind:
-	//
-	//	*BinanceSignalEvent_Position
-	//	*BinanceSignalEvent_Placed
-	//	*BinanceSignalEvent_Done
-	Kind          isBinanceSignalEvent_Kind `protobuf_oneof:"kind"`
+// 信号源新开 / 加的一笔仓。
+//
+//	· 合约:按交易对 + 方向(单向持仓按 positionAmt 正负算 LONG / SHORT);方向翻转时,翻过去那一侧算新开。
+//	· 现货:按**币**(稳定币是现金,不算持仓);数量 = free + locked。跟单方用「币 + USDT」交易对买。
+//
+// `ratio`:新增这部分的**保证金**(现货:价值)÷ 信号源的**总资金**(合约 = `totalMarginBalance`;
+// 现货 = 全部资产折成 USDT 的总价值),十进制小数字符串(`"0.05"` = 5%)。各人本金不同,一律按比例。
+type BinanceOpen struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Market        *BinanceMarket         `protobuf:"varint,1,opt,name=market,proto3,enum=hi.binance.BinanceMarket,oneof" json:"market,omitempty"`
+	Symbol        *string                `protobuf:"bytes,2,opt,name=symbol,proto3,oneof" json:"symbol,omitempty"`                                  // 合约 = 交易对;现货 = 币(如 BTC)
+	Side          *BinancePositionSide   `protobuf:"varint,3,opt,name=side,proto3,enum=hi.binance.BinancePositionSide,oneof" json:"side,omitempty"` // 合约:LONG / SHORT;现货不带
+	Ratio         *string                `protobuf:"bytes,4,opt,name=ratio,proto3,oneof" json:"ratio,omitempty"`
+	Leverage      *uint32                `protobuf:"varint,5,opt,name=leverage,proto3,oneof" json:"leverage,omitempty"` // 合约:信号源这个交易对的杠杆
+	Price         *string                `protobuf:"bytes,6,opt,name=price,proto3,oneof" json:"price,omitempty"`        // 发现时的参考价(合约标记价、现货最新价)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *BinanceSignalEvent) Reset() {
-	*x = BinanceSignalEvent{}
+func (x *BinanceOpen) Reset() {
+	*x = BinanceOpen{}
 	mi := &file_hi_binance_signal_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *BinanceSignalEvent) String() string {
+func (x *BinanceOpen) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*BinanceSignalEvent) ProtoMessage() {}
+func (*BinanceOpen) ProtoMessage() {}
 
-func (x *BinanceSignalEvent) ProtoReflect() protoreflect.Message {
+func (x *BinanceOpen) ProtoReflect() protoreflect.Message {
 	mi := &file_hi_binance_signal_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -252,428 +205,51 @@ func (x *BinanceSignalEvent) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use BinanceSignalEvent.ProtoReflect.Descriptor instead.
-func (*BinanceSignalEvent) Descriptor() ([]byte, []int) {
+// Deprecated: Use BinanceOpen.ProtoReflect.Descriptor instead.
+func (*BinanceOpen) Descriptor() ([]byte, []int) {
 	return file_hi_binance_signal_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *BinanceSignalEvent) GetKind() isBinanceSignalEvent_Kind {
-	if x != nil {
-		return x.Kind
-	}
-	return nil
-}
-
-func (x *BinanceSignalEvent) GetPosition() *BinancePositionChange {
-	if x != nil {
-		if x, ok := x.Kind.(*BinanceSignalEvent_Position); ok {
-			return x.Position
-		}
-	}
-	return nil
-}
-
-func (x *BinanceSignalEvent) GetPlaced() *BinanceOrderPlaced {
-	if x != nil {
-		if x, ok := x.Kind.(*BinanceSignalEvent_Placed); ok {
-			return x.Placed
-		}
-	}
-	return nil
-}
-
-func (x *BinanceSignalEvent) GetDone() *BinanceOrderDone {
-	if x != nil {
-		if x, ok := x.Kind.(*BinanceSignalEvent_Done); ok {
-			return x.Done
-		}
-	}
-	return nil
-}
-
-type isBinanceSignalEvent_Kind interface {
-	isBinanceSignalEvent_Kind()
-}
-
-type BinanceSignalEvent_Position struct {
-	Position *BinancePositionChange `protobuf:"bytes,1,opt,name=position,proto3,oneof"`
-}
-
-type BinanceSignalEvent_Placed struct {
-	Placed *BinanceOrderPlaced `protobuf:"bytes,2,opt,name=placed,proto3,oneof"`
-}
-
-type BinanceSignalEvent_Done struct {
-	Done *BinanceOrderDone `protobuf:"bytes,3,opt,name=done,proto3,oneof"`
-}
-
-func (*BinanceSignalEvent_Position) isBinanceSignalEvent_Kind() {}
-
-func (*BinanceSignalEvent_Placed) isBinanceSignalEvent_Kind() {}
-
-func (*BinanceSignalEvent_Done) isBinanceSignalEvent_Kind() {}
-
-// 持仓变了(挂单解释不了的那部分)。
-//
-//	· 合约:按交易对 + 方向(单向持仓按 positionAmt 正负算 LONG / SHORT)。方向翻转 = 先一条平 1.0、再一条开。
-//	· 现货:按**币**(稳定币是现金,不算持仓);数量 = free + locked。跟单方用「币 + USDT」交易对去买卖。
-type BinancePositionChange struct {
-	state  protoimpl.MessageState `protogen:"open.v1"`
-	Market *BinanceMarket         `protobuf:"varint,1,opt,name=market,proto3,enum=hi.binance.BinanceMarket,oneof" json:"market,omitempty"`
-	Symbol *string                `protobuf:"bytes,2,opt,name=symbol,proto3,oneof" json:"symbol,omitempty"`                                  // 合约 = 交易对;现货 = 币(如 BTC)
-	Side   *BinancePositionSide   `protobuf:"varint,3,opt,name=side,proto3,enum=hi.binance.BinancePositionSide,oneof" json:"side,omitempty"` // 合约:LONG / SHORT;现货不带
-	// Types that are valid to be assigned to Change:
-	//
-	//	*BinancePositionChange_Ratio
-	//	*BinancePositionChange_Fraction
-	Change        isBinancePositionChange_Change `protobuf_oneof:"change"`
-	Leverage      *uint32                        `protobuf:"varint,6,opt,name=leverage,proto3,oneof" json:"leverage,omitempty"` // 合约:信号源这个交易对的杠杆
-	Price         *string                        `protobuf:"bytes,7,opt,name=price,proto3,oneof" json:"price,omitempty"`        // 发现时的参考价(合约标记价、现货最新价),只作记录
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *BinancePositionChange) Reset() {
-	*x = BinancePositionChange{}
-	mi := &file_hi_binance_signal_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *BinancePositionChange) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*BinancePositionChange) ProtoMessage() {}
-
-func (x *BinancePositionChange) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_signal_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use BinancePositionChange.ProtoReflect.Descriptor instead.
-func (*BinancePositionChange) Descriptor() ([]byte, []int) {
-	return file_hi_binance_signal_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *BinancePositionChange) GetMarket() BinanceMarket {
+func (x *BinanceOpen) GetMarket() BinanceMarket {
 	if x != nil && x.Market != nil {
 		return *x.Market
 	}
 	return BinanceMarket_BINANCE_MARKET_UNSPECIFIED
 }
 
-func (x *BinancePositionChange) GetSymbol() string {
+func (x *BinanceOpen) GetSymbol() string {
 	if x != nil && x.Symbol != nil {
 		return *x.Symbol
 	}
 	return ""
 }
 
-func (x *BinancePositionChange) GetSide() BinancePositionSide {
+func (x *BinanceOpen) GetSide() BinancePositionSide {
 	if x != nil && x.Side != nil {
 		return *x.Side
 	}
 	return BinancePositionSide_BINANCE_POSITION_SIDE_UNSPECIFIED
 }
 
-func (x *BinancePositionChange) GetChange() isBinancePositionChange_Change {
-	if x != nil {
-		return x.Change
-	}
-	return nil
-}
-
-func (x *BinancePositionChange) GetRatio() string {
-	if x != nil {
-		if x, ok := x.Change.(*BinancePositionChange_Ratio); ok {
-			return x.Ratio
-		}
+func (x *BinanceOpen) GetRatio() string {
+	if x != nil && x.Ratio != nil {
+		return *x.Ratio
 	}
 	return ""
 }
 
-func (x *BinancePositionChange) GetFraction() string {
-	if x != nil {
-		if x, ok := x.Change.(*BinancePositionChange_Fraction); ok {
-			return x.Fraction
-		}
-	}
-	return ""
-}
-
-func (x *BinancePositionChange) GetLeverage() uint32 {
+func (x *BinanceOpen) GetLeverage() uint32 {
 	if x != nil && x.Leverage != nil {
 		return *x.Leverage
 	}
 	return 0
 }
 
-func (x *BinancePositionChange) GetPrice() string {
+func (x *BinanceOpen) GetPrice() string {
 	if x != nil && x.Price != nil {
 		return *x.Price
 	}
 	return ""
-}
-
-type isBinancePositionChange_Change interface {
-	isBinancePositionChange_Change()
-}
-
-type BinancePositionChange_Ratio struct {
-	Ratio string `protobuf:"bytes,4,opt,name=ratio,proto3,oneof"` // 加仓 / 开仓:新增这部分的比例(见文件头)
-}
-
-type BinancePositionChange_Fraction struct {
-	Fraction string `protobuf:"bytes,5,opt,name=fraction,proto3,oneof"` // 减仓 / 平仓:减掉的占之前持仓的比例,1 = 全平
-}
-
-func (*BinancePositionChange_Ratio) isBinancePositionChange_Change() {}
-
-func (*BinancePositionChange_Fraction) isBinancePositionChange_Change() {}
-
-// 信号源挂了一张单。跟单方照样挂一张镜像单:同交易对、同方向、同价格、同类型,数量按比例换算。
-// `order` 里的 quantity / quote_order_qty / percent **不带**(信号源的数量对跟单方没意义),由 ratio / fraction 换算。
-type BinanceOrderPlaced struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// 信号源那边的单号(现货 / 合约普通单 = orderId,条件单 = algoId)。跟单方的镜像单号由「信号源 did + 这个号」确定性算出,
-	// 之后撤 / 查都靠它。
-	Id *string `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// Types that are valid to be assigned to Order:
-	//
-	//	*BinanceOrderPlaced_Spot
-	//	*BinanceOrderPlaced_Futures
-	//	*BinanceOrderPlaced_FuturesAlgo
-	Order isBinanceOrderPlaced_Order `protobuf_oneof:"order"`
-	// Types that are valid to be assigned to Size:
-	//
-	//	*BinanceOrderPlaced_Ratio
-	//	*BinanceOrderPlaced_Fraction
-	Size          isBinanceOrderPlaced_Size `protobuf_oneof:"size"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *BinanceOrderPlaced) Reset() {
-	*x = BinanceOrderPlaced{}
-	mi := &file_hi_binance_signal_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *BinanceOrderPlaced) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*BinanceOrderPlaced) ProtoMessage() {}
-
-func (x *BinanceOrderPlaced) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_signal_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use BinanceOrderPlaced.ProtoReflect.Descriptor instead.
-func (*BinanceOrderPlaced) Descriptor() ([]byte, []int) {
-	return file_hi_binance_signal_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *BinanceOrderPlaced) GetId() string {
-	if x != nil && x.Id != nil {
-		return *x.Id
-	}
-	return ""
-}
-
-func (x *BinanceOrderPlaced) GetOrder() isBinanceOrderPlaced_Order {
-	if x != nil {
-		return x.Order
-	}
-	return nil
-}
-
-func (x *BinanceOrderPlaced) GetSpot() *BinanceSpotNewOrder {
-	if x != nil {
-		if x, ok := x.Order.(*BinanceOrderPlaced_Spot); ok {
-			return x.Spot
-		}
-	}
-	return nil
-}
-
-func (x *BinanceOrderPlaced) GetFutures() *BinanceFuturesNewOrder {
-	if x != nil {
-		if x, ok := x.Order.(*BinanceOrderPlaced_Futures); ok {
-			return x.Futures
-		}
-	}
-	return nil
-}
-
-func (x *BinanceOrderPlaced) GetFuturesAlgo() *BinanceFuturesNewAlgoOrder {
-	if x != nil {
-		if x, ok := x.Order.(*BinanceOrderPlaced_FuturesAlgo); ok {
-			return x.FuturesAlgo
-		}
-	}
-	return nil
-}
-
-func (x *BinanceOrderPlaced) GetSize() isBinanceOrderPlaced_Size {
-	if x != nil {
-		return x.Size
-	}
-	return nil
-}
-
-func (x *BinanceOrderPlaced) GetRatio() string {
-	if x != nil {
-		if x, ok := x.Size.(*BinanceOrderPlaced_Ratio); ok {
-			return x.Ratio
-		}
-	}
-	return ""
-}
-
-func (x *BinanceOrderPlaced) GetFraction() string {
-	if x != nil {
-		if x, ok := x.Size.(*BinanceOrderPlaced_Fraction); ok {
-			return x.Fraction
-		}
-	}
-	return ""
-}
-
-type isBinanceOrderPlaced_Order interface {
-	isBinanceOrderPlaced_Order()
-}
-
-type BinanceOrderPlaced_Spot struct {
-	Spot *BinanceSpotNewOrder `protobuf:"bytes,2,opt,name=spot,proto3,oneof"`
-}
-
-type BinanceOrderPlaced_Futures struct {
-	Futures *BinanceFuturesNewOrder `protobuf:"bytes,3,opt,name=futures,proto3,oneof"`
-}
-
-type BinanceOrderPlaced_FuturesAlgo struct {
-	FuturesAlgo *BinanceFuturesNewAlgoOrder `protobuf:"bytes,4,opt,name=futures_algo,json=futuresAlgo,proto3,oneof"`
-}
-
-func (*BinanceOrderPlaced_Spot) isBinanceOrderPlaced_Order() {}
-
-func (*BinanceOrderPlaced_Futures) isBinanceOrderPlaced_Order() {}
-
-func (*BinanceOrderPlaced_FuturesAlgo) isBinanceOrderPlaced_Order() {}
-
-type isBinanceOrderPlaced_Size interface {
-	isBinanceOrderPlaced_Size()
-}
-
-type BinanceOrderPlaced_Ratio struct {
-	Ratio string `protobuf:"bytes,5,opt,name=ratio,proto3,oneof"` // 开仓单 / 现货买单
-}
-
-type BinanceOrderPlaced_Fraction struct {
-	Fraction string `protobuf:"bytes,6,opt,name=fraction,proto3,oneof"` // 减仓单(reduce_only、close_position、双向持仓里的平仓方向)/ 现货卖单
-}
-
-func (*BinanceOrderPlaced_Ratio) isBinanceOrderPlaced_Size() {}
-
-func (*BinanceOrderPlaced_Fraction) isBinanceOrderPlaced_Size() {}
-
-// 信号源的一张挂单没了。
-type BinanceOrderDone struct {
-	state  protoimpl.MessageState `protogen:"open.v1"`
-	Market *BinanceMarket         `protobuf:"varint,1,opt,name=market,proto3,enum=hi.binance.BinanceMarket,oneof" json:"market,omitempty"`
-	Symbol *string                `protobuf:"bytes,2,opt,name=symbol,proto3,oneof" json:"symbol,omitempty"`
-	Id     *string                `protobuf:"bytes,3,opt,name=id,proto3,oneof" json:"id,omitempty"`      // 同 BinanceOrderPlaced.id
-	Algo   *bool                  `protobuf:"varint,4,opt,name=algo,proto3,oneof" json:"algo,omitempty"` // 是不是合约条件单
-	// 为什么没了:
-	//
-	//	· FILLED   —— 成交了(条件单:触发了)。跟单方查自己的镜像单,没成交完就撤掉、剩下的市价补上。
-	//	· CANCELED —— 撤了 / 过期了 / 被拒了。跟单方撤掉镜像单(已成交的那部分留着)。
-	Reason        *BinanceOrderDoneReason `protobuf:"varint,5,opt,name=reason,proto3,enum=hi.binance.BinanceOrderDoneReason,oneof" json:"reason,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *BinanceOrderDone) Reset() {
-	*x = BinanceOrderDone{}
-	mi := &file_hi_binance_signal_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *BinanceOrderDone) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*BinanceOrderDone) ProtoMessage() {}
-
-func (x *BinanceOrderDone) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_signal_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use BinanceOrderDone.ProtoReflect.Descriptor instead.
-func (*BinanceOrderDone) Descriptor() ([]byte, []int) {
-	return file_hi_binance_signal_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *BinanceOrderDone) GetMarket() BinanceMarket {
-	if x != nil && x.Market != nil {
-		return *x.Market
-	}
-	return BinanceMarket_BINANCE_MARKET_UNSPECIFIED
-}
-
-func (x *BinanceOrderDone) GetSymbol() string {
-	if x != nil && x.Symbol != nil {
-		return *x.Symbol
-	}
-	return ""
-}
-
-func (x *BinanceOrderDone) GetId() string {
-	if x != nil && x.Id != nil {
-		return *x.Id
-	}
-	return ""
-}
-
-func (x *BinanceOrderDone) GetAlgo() bool {
-	if x != nil && x.Algo != nil {
-		return *x.Algo
-	}
-	return false
-}
-
-func (x *BinanceOrderDone) GetReason() BinanceOrderDoneReason {
-	if x != nil && x.Reason != nil {
-		return *x.Reason
-	}
-	return BinanceOrderDoneReason_BINANCE_ORDER_DONE_REASON_UNSPECIFIED
 }
 
 var File_hi_binance_signal_proto protoreflect.FileDescriptor
@@ -681,7 +257,7 @@ var File_hi_binance_signal_proto protoreflect.FileDescriptor
 const file_hi_binance_signal_proto_rawDesc = "" +
 	"\n" +
 	"\x17hi/binance/signal.proto\x12\n" +
-	"hi.binance\x1a\x1bbuf/validate/validate.proto\x1a\x18hi/binance/binance.proto\x1a\x10hi/options.proto\"\xe6\x01\n" +
+	"hi.binance\x1a\x1bbuf/validate/validate.proto\x1a\x18hi/binance/binance.proto\x1a\x10hi/options.proto\"\xdd\x01\n" +
 	"\rBinanceSignal\x12!\n" +
 	"\x03seq\x18\x01 \x01(\x04B\n" +
 	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x00R\x03seq\x88\x01\x01\x12\x1f\n" +
@@ -690,64 +266,30 @@ const file_hi_binance_signal_proto_rawDesc = "" +
 	"\n" +
 	"expiration\x18\x03 \x01(\x03B\n" +
 	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x02R\n" +
-	"expiration\x88\x01\x01\x12<\n" +
-	"\x06events\x18\x04 \x03(\v2\x1e.hi.binance.BinanceSignalEventB\x04\x90\xb5\x18\x02R\x06events:\x04\x98\xb5\x18\x02B\x06\n" +
+	"expiration\x88\x01\x01\x123\n" +
+	"\x05opens\x18\x04 \x03(\v2\x17.hi.binance.BinanceOpenB\x04\x90\xb5\x18\x02R\x05opens:\x04\x98\xb5\x18\x02B\x06\n" +
 	"\x04_seqB\x05\n" +
 	"\x03_atB\r\n" +
-	"\v_expiration\"\xea\x01\n" +
-	"\x12BinanceSignalEvent\x12E\n" +
-	"\bposition\x18\x01 \x01(\v2!.hi.binance.BinancePositionChangeB\x04\x90\xb5\x18\x02H\x00R\bposition\x12>\n" +
-	"\x06placed\x18\x02 \x01(\v2\x1e.hi.binance.BinanceOrderPlacedB\x04\x90\xb5\x18\x02H\x00R\x06placed\x128\n" +
-	"\x04done\x18\x03 \x01(\v2\x1c.hi.binance.BinanceOrderDoneB\x04\x90\xb5\x18\x02H\x00R\x04done:\x04\x98\xb5\x18\x02B\r\n" +
-	"\x04kind\x12\x05\xbaH\x02\b\x01\"\xaa\x03\n" +
-	"\x15BinancePositionChange\x12B\n" +
-	"\x06market\x18\x01 \x01(\x0e2\x19.hi.binance.BinanceMarketB\n" +
-	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x01R\x06market\x88\x01\x01\x126\n" +
-	"\x06symbol\x18\x02 \x01(\tB\x19\xbaH\x12\xc8\x01\x01r\r2\v^[A-Z0-9]+$\x90\xb5\x18\x02H\x02R\x06symbol\x88\x01\x01\x12>\n" +
-	"\x04side\x18\x03 \x01(\x0e2\x1f.hi.binance.BinancePositionSideB\x04\x90\xb5\x18\x02H\x03R\x04side\x88\x01\x01\x12\x1c\n" +
-	"\x05ratio\x18\x04 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x05ratio\x12\"\n" +
-	"\bfraction\x18\x05 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\bfraction\x12%\n" +
-	"\bleverage\x18\x06 \x01(\rB\x04\x90\xb5\x18\x02H\x04R\bleverage\x88\x01\x01\x12\x1f\n" +
-	"\x05price\x18\a \x01(\tB\x04\x90\xb5\x18\x02H\x05R\x05price\x88\x01\x01:\x04\x98\xb5\x18\x02B\x0f\n" +
-	"\x06change\x12\x05\xbaH\x02\b\x01B\t\n" +
-	"\a_marketB\t\n" +
-	"\a_symbolB\a\n" +
-	"\x05_sideB\v\n" +
-	"\t_leverageB\b\n" +
-	"\x06_price\"\xf9\x02\n" +
-	"\x12BinanceOrderPlaced\x12\x1f\n" +
-	"\x02id\x18\x01 \x01(\tB\n" +
-	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x02R\x02id\x88\x01\x01\x12;\n" +
-	"\x04spot\x18\x02 \x01(\v2\x1f.hi.binance.BinanceSpotNewOrderB\x04\x90\xb5\x18\x02H\x00R\x04spot\x12D\n" +
-	"\afutures\x18\x03 \x01(\v2\".hi.binance.BinanceFuturesNewOrderB\x04\x90\xb5\x18\x02H\x00R\afutures\x12Q\n" +
-	"\ffutures_algo\x18\x04 \x01(\v2&.hi.binance.BinanceFuturesNewAlgoOrderB\x04\x90\xb5\x18\x02H\x00R\vfuturesAlgo\x12\x1c\n" +
-	"\x05ratio\x18\x05 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x05ratio\x12\"\n" +
-	"\bfraction\x18\x06 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\bfraction:\x04\x98\xb5\x18\x02B\x0e\n" +
-	"\x05order\x12\x05\xbaH\x02\b\x01B\r\n" +
-	"\x04size\x12\x05\xbaH\x02\b\x01B\x05\n" +
-	"\x03_id\"\xd2\x02\n" +
-	"\x10BinanceOrderDone\x12B\n" +
+	"\v_expiration\"\xfe\x02\n" +
+	"\vBinanceOpen\x12B\n" +
 	"\x06market\x18\x01 \x01(\x0e2\x19.hi.binance.BinanceMarketB\n" +
 	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x00R\x06market\x88\x01\x01\x126\n" +
-	"\x06symbol\x18\x02 \x01(\tB\x19\xbaH\x12\xc8\x01\x01r\r2\v^[A-Z0-9]+$\x90\xb5\x18\x02H\x01R\x06symbol\x88\x01\x01\x12\x1f\n" +
-	"\x02id\x18\x03 \x01(\tB\n" +
-	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x02R\x02id\x88\x01\x01\x12\x1d\n" +
-	"\x04algo\x18\x04 \x01(\bB\x04\x90\xb5\x18\x02H\x03R\x04algo\x88\x01\x01\x12K\n" +
-	"\x06reason\x18\x05 \x01(\x0e2\".hi.binance.BinanceOrderDoneReasonB\n" +
-	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x04R\x06reason\x88\x01\x01:\x04\x98\xb5\x18\x02B\t\n" +
+	"\x06symbol\x18\x02 \x01(\tB\x19\xbaH\x12\xc8\x01\x01r\r2\v^[A-Z0-9]+$\x90\xb5\x18\x02H\x01R\x06symbol\x88\x01\x01\x12>\n" +
+	"\x04side\x18\x03 \x01(\x0e2\x1f.hi.binance.BinancePositionSideB\x04\x90\xb5\x18\x02H\x02R\x04side\x88\x01\x01\x12%\n" +
+	"\x05ratio\x18\x04 \x01(\tB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x03R\x05ratio\x88\x01\x01\x12%\n" +
+	"\bleverage\x18\x05 \x01(\rB\x04\x90\xb5\x18\x02H\x04R\bleverage\x88\x01\x01\x12\x1f\n" +
+	"\x05price\x18\x06 \x01(\tB\x04\x90\xb5\x18\x02H\x05R\x05price\x88\x01\x01:\x04\x98\xb5\x18\x02B\t\n" +
 	"\a_marketB\t\n" +
-	"\a_symbolB\x05\n" +
-	"\x03_idB\a\n" +
-	"\x05_algoB\t\n" +
-	"\a_reason*i\n" +
+	"\a_symbolB\a\n" +
+	"\x05_sideB\b\n" +
+	"\x06_ratioB\v\n" +
+	"\t_leverageB\b\n" +
+	"\x06_price*i\n" +
 	"\rBinanceMarket\x12\x1e\n" +
 	"\x1aBINANCE_MARKET_UNSPECIFIED\x10\x00\x12\x17\n" +
 	"\x13BINANCE_MARKET_SPOT\x10\x01\x12\x1f\n" +
-	"\x1bBINANCE_MARKET_USDS_FUTURES\x10\x02*\x91\x01\n" +
-	"\x16BinanceOrderDoneReason\x12)\n" +
-	"%BINANCE_ORDER_DONE_REASON_UNSPECIFIED\x10\x00\x12$\n" +
-	" BINANCE_ORDER_DONE_REASON_FILLED\x10\x01\x12&\n" +
-	"\"BINANCE_ORDER_DONE_REASON_CANCELED\x10\x02B\x94\x01\n" +
+	"\x1bBINANCE_MARKET_USDS_FUTURES\x10\x02B\x94\x01\n" +
 	"\x0ecom.hi.binanceB\vSignalProtoP\x01Z,github.com/HiWorld-56/hi-proto/go/hi/binance\xa2\x02\x03HBX\xaa\x02\n" +
 	"Hi.Binance\xca\x02\n" +
 	"Hi\\Binance\xe2\x02\x16Hi\\Binance\\GPBMetadata\xea\x02\vHi::Binanceb\x06proto3"
@@ -764,38 +306,23 @@ func file_hi_binance_signal_proto_rawDescGZIP() []byte {
 	return file_hi_binance_signal_proto_rawDescData
 }
 
-var file_hi_binance_signal_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_hi_binance_signal_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_hi_binance_signal_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_hi_binance_signal_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_hi_binance_signal_proto_goTypes = []any{
-	(BinanceMarket)(0),                 // 0: hi.binance.BinanceMarket
-	(BinanceOrderDoneReason)(0),        // 1: hi.binance.BinanceOrderDoneReason
-	(*BinanceSignal)(nil),              // 2: hi.binance.BinanceSignal
-	(*BinanceSignalEvent)(nil),         // 3: hi.binance.BinanceSignalEvent
-	(*BinancePositionChange)(nil),      // 4: hi.binance.BinancePositionChange
-	(*BinanceOrderPlaced)(nil),         // 5: hi.binance.BinanceOrderPlaced
-	(*BinanceOrderDone)(nil),           // 6: hi.binance.BinanceOrderDone
-	(BinancePositionSide)(0),           // 7: hi.binance.BinancePositionSide
-	(*BinanceSpotNewOrder)(nil),        // 8: hi.binance.BinanceSpotNewOrder
-	(*BinanceFuturesNewOrder)(nil),     // 9: hi.binance.BinanceFuturesNewOrder
-	(*BinanceFuturesNewAlgoOrder)(nil), // 10: hi.binance.BinanceFuturesNewAlgoOrder
+	(BinanceMarket)(0),       // 0: hi.binance.BinanceMarket
+	(*BinanceSignal)(nil),    // 1: hi.binance.BinanceSignal
+	(*BinanceOpen)(nil),      // 2: hi.binance.BinanceOpen
+	(BinancePositionSide)(0), // 3: hi.binance.BinancePositionSide
 }
 var file_hi_binance_signal_proto_depIdxs = []int32{
-	3,  // 0: hi.binance.BinanceSignal.events:type_name -> hi.binance.BinanceSignalEvent
-	4,  // 1: hi.binance.BinanceSignalEvent.position:type_name -> hi.binance.BinancePositionChange
-	5,  // 2: hi.binance.BinanceSignalEvent.placed:type_name -> hi.binance.BinanceOrderPlaced
-	6,  // 3: hi.binance.BinanceSignalEvent.done:type_name -> hi.binance.BinanceOrderDone
-	0,  // 4: hi.binance.BinancePositionChange.market:type_name -> hi.binance.BinanceMarket
-	7,  // 5: hi.binance.BinancePositionChange.side:type_name -> hi.binance.BinancePositionSide
-	8,  // 6: hi.binance.BinanceOrderPlaced.spot:type_name -> hi.binance.BinanceSpotNewOrder
-	9,  // 7: hi.binance.BinanceOrderPlaced.futures:type_name -> hi.binance.BinanceFuturesNewOrder
-	10, // 8: hi.binance.BinanceOrderPlaced.futures_algo:type_name -> hi.binance.BinanceFuturesNewAlgoOrder
-	0,  // 9: hi.binance.BinanceOrderDone.market:type_name -> hi.binance.BinanceMarket
-	1,  // 10: hi.binance.BinanceOrderDone.reason:type_name -> hi.binance.BinanceOrderDoneReason
-	11, // [11:11] is the sub-list for method output_type
-	11, // [11:11] is the sub-list for method input_type
-	11, // [11:11] is the sub-list for extension type_name
-	11, // [11:11] is the sub-list for extension extendee
-	0,  // [0:11] is the sub-list for field type_name
+	2, // 0: hi.binance.BinanceSignal.opens:type_name -> hi.binance.BinanceOpen
+	0, // 1: hi.binance.BinanceOpen.market:type_name -> hi.binance.BinanceMarket
+	3, // 2: hi.binance.BinanceOpen.side:type_name -> hi.binance.BinancePositionSide
+	3, // [3:3] is the sub-list for method output_type
+	3, // [3:3] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_hi_binance_signal_proto_init() }
@@ -805,30 +332,14 @@ func file_hi_binance_signal_proto_init() {
 	}
 	file_hi_binance_binance_proto_init()
 	file_hi_binance_signal_proto_msgTypes[0].OneofWrappers = []any{}
-	file_hi_binance_signal_proto_msgTypes[1].OneofWrappers = []any{
-		(*BinanceSignalEvent_Position)(nil),
-		(*BinanceSignalEvent_Placed)(nil),
-		(*BinanceSignalEvent_Done)(nil),
-	}
-	file_hi_binance_signal_proto_msgTypes[2].OneofWrappers = []any{
-		(*BinancePositionChange_Ratio)(nil),
-		(*BinancePositionChange_Fraction)(nil),
-	}
-	file_hi_binance_signal_proto_msgTypes[3].OneofWrappers = []any{
-		(*BinanceOrderPlaced_Spot)(nil),
-		(*BinanceOrderPlaced_Futures)(nil),
-		(*BinanceOrderPlaced_FuturesAlgo)(nil),
-		(*BinanceOrderPlaced_Ratio)(nil),
-		(*BinanceOrderPlaced_Fraction)(nil),
-	}
-	file_hi_binance_signal_proto_msgTypes[4].OneofWrappers = []any{}
+	file_hi_binance_signal_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_binance_signal_proto_rawDesc), len(file_hi_binance_signal_proto_rawDesc)),
-			NumEnums:      2,
-			NumMessages:   5,
+			NumEnums:      1,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -37,31 +37,5 @@ class BinanceMarket extends $pb.ProtobufEnum {
   const BinanceMarket._(super.value, super.name);
 }
 
-class BinanceOrderDoneReason extends $pb.ProtobufEnum {
-  static const BinanceOrderDoneReason BINANCE_ORDER_DONE_REASON_UNSPECIFIED =
-      BinanceOrderDoneReason._(
-          0, _omitEnumNames ? '' : 'BINANCE_ORDER_DONE_REASON_UNSPECIFIED');
-  static const BinanceOrderDoneReason BINANCE_ORDER_DONE_REASON_FILLED =
-      BinanceOrderDoneReason._(
-          1, _omitEnumNames ? '' : 'BINANCE_ORDER_DONE_REASON_FILLED');
-  static const BinanceOrderDoneReason BINANCE_ORDER_DONE_REASON_CANCELED =
-      BinanceOrderDoneReason._(
-          2, _omitEnumNames ? '' : 'BINANCE_ORDER_DONE_REASON_CANCELED');
-
-  static const $core.List<BinanceOrderDoneReason> values =
-      <BinanceOrderDoneReason>[
-    BINANCE_ORDER_DONE_REASON_UNSPECIFIED,
-    BINANCE_ORDER_DONE_REASON_FILLED,
-    BINANCE_ORDER_DONE_REASON_CANCELED,
-  ];
-
-  static final $core.List<BinanceOrderDoneReason?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 2);
-  static BinanceOrderDoneReason? valueOf($core.int value) =>
-      value < 0 || value >= _byValue.length ? null : _byValue[value];
-
-  const BinanceOrderDoneReason._(super.value, super.name);
-}
-
 const $core.bool _omitEnumNames =
     $core.bool.fromEnvironment('protobuf.omit_enum_names');

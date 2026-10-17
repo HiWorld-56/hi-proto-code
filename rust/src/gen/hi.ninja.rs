@@ -589,7 +589,7 @@ pub struct BinanceRequest {
 pub struct BrainToFace {
     #[prost(
         oneof = "brain_to_face::Cmd",
-        tags = "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21, 22, 24, 25"
+        tags = "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21, 22, 24, 25, 26"
     )]
     pub cmd: ::core::option::Option<brain_to_face::Cmd>,
 }
@@ -688,6 +688,10 @@ pub mod brain_to_face {
         /// 与 `show_qr_code` 分开:那个只显示机器人自己的 did,内容是 face 现取的。
         #[prost(message, tag = "25")]
         ShowQr(super::QrCard),
+        /// 待确认的开单卡**全量列表**(每次变化推一整份:来了新的、确认 / 取消 / 过期 / 执行完)。空列表 = 一张都没有。
+        /// face 重启后用 `get_binance_offers` 要一次。
+        #[prost(message, tag = "26")]
+        BinanceOffers(super::BinanceOffers),
     }
 }
 /// 内容由调用方给的二维码。`content` 原样编进码里,face 不解析、不改写;
@@ -722,7 +726,7 @@ pub struct StatusEvent {
 /// face -> brain
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct FaceToBrain {
-    #[prost(oneof = "face_to_brain::Cmd", tags = "1, 2, 3, 4, 5")]
+    #[prost(oneof = "face_to_brain::Cmd", tags = "1, 2, 3, 4, 5, 6, 7")]
     pub cmd: ::core::option::Option<face_to_brain::Cmd>,
 }
 /// Nested message and enum types in `FaceToBrain`.
@@ -752,7 +756,136 @@ pub mod face_to_brain {
         /// 替我去币安做一次（face 自己不连币安，见 BinanceRequest 的说明）
         #[prost(message, tag = "5")]
         BinanceRequest(super::BinanceRequest),
+        /// 人在开单卡上点的「确认 / 取消」
+        #[prost(message, tag = "6")]
+        BinanceOfferReply(super::BinanceOfferReply),
+        /// face 重启后要一次当前的开单卡列表(回 `BrainToFace.binance_offers`)
+        #[prost(message, tag = "7")]
+        GetBinanceOffers(::pbjson_types::Empty),
     }
+}
+/// ── 跟单:开单卡 ──────────────────────────────────────────────
+///
+/// 群里的信号源机器人开了仓(`hi.binance.BinanceSignal`),本机**不自动跟**:brain 把每一笔算成一张卡
+/// —— 信号源开了什么 + 我们打算开什么(由币安插件按简单策略算)—— 推到屏幕上,人点「确认」才下单。
+/// 卡在 brain 本地落库,**从收到那一刻起只留 15 分钟**,过了就当放弃(不执行、从列表里拿掉)。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BinanceOffers {
+    #[prost(message, repeated, tag = "1")]
+    pub list: ::prost::alloc::vec::Vec<BinanceOffer>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceOffer {
+    /// brain 给的卡号;回复时原样带回
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 信号源机器人(did + 名字)
+    #[prost(message, optional, tag = "2")]
+    pub source: ::core::option::Option<super::Entity>,
+    /// 信号源开了什么
+    #[prost(message, optional, tag = "3")]
+    pub open: ::core::option::Option<super::binance::BinanceOpen>,
+    /// 我们打算开什么
+    #[prost(message, optional, tag = "4")]
+    pub plan: ::core::option::Option<BinanceOfferPlan>,
+    /// 本机收到的时刻,绝对微秒
+    #[prost(int64, optional, tag = "5")]
+    pub received_at: ::core::option::Option<i64>,
+    /// = received_at + 15 分钟,绝对微秒;face 按它倒计时
+    #[prost(int64, optional, tag = "6")]
+    pub expires_at: ::core::option::Option<i64>,
+    #[prost(enumeration = "binance_offer::State", optional, tag = "7")]
+    pub state: ::core::option::Option<i32>,
+    /// STATE_DONE 时带:下单的原样结果
+    #[prost(message, optional, tag = "8")]
+    pub result: ::core::option::Option<super::binance::BinanceResult>,
+}
+/// Nested message and enum types in `BinanceOffer`.
+pub mod binance_offer {
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        Unspecified = 0,
+        /// 等人点
+        Pending = 1,
+        /// 点了确认,正在下单
+        Executing = 2,
+        /// 下完了,结果在 result(成败看 result.http_status / error);留在列表里给人看,到期一起拿掉
+        Done = 3,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Self::Unspecified => "STATE_UNSPECIFIED",
+                Self::Pending => "STATE_PENDING",
+                Self::Executing => "STATE_EXECUTING",
+                Self::Done => "STATE_DONE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "STATE_PENDING" => Some(Self::Pending),
+                "STATE_EXECUTING" => Some(Self::Executing),
+                "STATE_DONE" => Some(Self::Done),
+                _ => None,
+            }
+        }
+    }
+}
+/// 我们打算开的那一单。**数量与保证金是收到时的估算**,点确认时 brain 按当时的价格与余额重算再下。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceOfferPlan {
+    /// 操作名,如 `usds_futures.new_order`
+    #[prost(string, optional, tag = "1")]
+    pub op: ::core::option::Option<::prost::alloc::string::String>,
+    /// 实际下单的交易对(现货 = 币 + USDT)
+    #[prost(string, optional, tag = "2")]
+    pub symbol: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "super::binance::BinanceOrderSide", optional, tag = "3")]
+    pub side: ::core::option::Option<i32>,
+    /// 合约:LONG / SHORT
+    #[prost(enumeration = "super::binance::BinancePositionSide", optional, tag = "4")]
+    pub position_side: ::core::option::Option<i32>,
+    /// 合约
+    #[prost(uint32, optional, tag = "5")]
+    pub leverage: ::core::option::Option<u32>,
+    /// 占本机总资金的比例(十进制小数)
+    #[prost(string, optional, tag = "6")]
+    pub ratio: ::core::option::Option<::prost::alloc::string::String>,
+    /// 估算保证金(合约)/ 金额(现货),计价币,十进制字符串
+    #[prost(string, optional, tag = "7")]
+    pub margin: ::core::option::Option<::prost::alloc::string::String>,
+    /// 估算数量
+    #[prost(string, optional, tag = "8")]
+    pub quantity: ::core::option::Option<::prost::alloc::string::String>,
+    /// 估算用的参考价
+    #[prost(string, optional, tag = "9")]
+    pub price: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceOfferReply {
+    /// BinanceOffer.id
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    /// true = 确认开单,false = 取消。**必传**
+    #[prost(bool, optional, tag = "2")]
+    pub confirm: ::core::option::Option<bool>,
 }
 /// 插件下载/安装进度。
 ///

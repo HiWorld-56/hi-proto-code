@@ -18,6 +18,7 @@ import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $3;
 
 import '../ai/plugin.pb.dart' as $4;
 import '../binance/binance.pb.dart' as $7;
+import '../binance/signal.pb.dart' as $8;
 import '../club/group.pb.dart' as $1;
 import '../club/messaging.pb.dart' as $2;
 import '../common.pb.dart' as $0;
@@ -570,6 +571,7 @@ enum BrainToFace_Cmd {
   binanceResult,
   showTip,
   showQr,
+  binanceOffers,
   notSet
 }
 
@@ -600,6 +602,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     $7.BinanceResult? binanceResult,
     Tip? showTip,
     QrCard? showQr,
+    BinanceOffers? binanceOffers,
   }) {
     final result = create();
     if (initRobot != null) result.initRobot = initRobot;
@@ -628,6 +631,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     if (binanceResult != null) result.binanceResult = binanceResult;
     if (showTip != null) result.showTip = showTip;
     if (showQr != null) result.showQr = showQr;
+    if (binanceOffers != null) result.binanceOffers = binanceOffers;
     return result;
   }
 
@@ -665,6 +669,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     22: BrainToFace_Cmd.binanceResult,
     24: BrainToFace_Cmd.showTip,
     25: BrainToFace_Cmd.showQr,
+    26: BrainToFace_Cmd.binanceOffers,
     0: BrainToFace_Cmd.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -695,7 +700,8 @@ class BrainToFace extends $pb.GeneratedMessage {
       21,
       22,
       24,
-      25
+      25,
+      26
     ])
     ..aOM<RobotInit>(1, _omitFieldNames ? '' : 'initRobot',
         subBuilder: RobotInit.create)
@@ -744,6 +750,8 @@ class BrainToFace extends $pb.GeneratedMessage {
     ..aOM<Tip>(24, _omitFieldNames ? '' : 'showTip', subBuilder: Tip.create)
     ..aOM<QrCard>(25, _omitFieldNames ? '' : 'showQr',
         subBuilder: QrCard.create)
+    ..aOM<BinanceOffers>(26, _omitFieldNames ? '' : 'binanceOffers',
+        subBuilder: BinanceOffers.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -789,6 +797,7 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(22)
   @$pb.TagNumber(24)
   @$pb.TagNumber(25)
+  @$pb.TagNumber(26)
   BrainToFace_Cmd whichCmd() => _BrainToFace_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
@@ -814,6 +823,7 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(22)
   @$pb.TagNumber(24)
   @$pb.TagNumber(25)
+  @$pb.TagNumber(26)
   void clearCmd() => $_clearField($_whichOneof(0));
 
   /// 初始化
@@ -1095,6 +1105,19 @@ class BrainToFace extends $pb.GeneratedMessage {
   void clearShowQr() => $_clearField(25);
   @$pb.TagNumber(25)
   QrCard ensureShowQr() => $_ensure(23);
+
+  /// 待确认的开单卡**全量列表**(每次变化推一整份:来了新的、确认 / 取消 / 过期 / 执行完)。空列表 = 一张都没有。
+  /// face 重启后用 `get_binance_offers` 要一次。
+  @$pb.TagNumber(26)
+  BinanceOffers get binanceOffers => $_getN(24);
+  @$pb.TagNumber(26)
+  set binanceOffers(BinanceOffers value) => $_setField(26, value);
+  @$pb.TagNumber(26)
+  $core.bool hasBinanceOffers() => $_has(24);
+  @$pb.TagNumber(26)
+  void clearBinanceOffers() => $_clearField(26);
+  @$pb.TagNumber(26)
+  BinanceOffers ensureBinanceOffers() => $_ensure(24);
 }
 
 /// 内容由调用方给的二维码。`content` 原样编进码里,face 不解析、不改写;
@@ -1305,6 +1328,8 @@ enum FaceToBrain_Cmd {
   getBinanceSettings,
   requestInit,
   binanceRequest,
+  binanceOfferReply,
+  getBinanceOffers,
   notSet
 }
 
@@ -1316,6 +1341,8 @@ class FaceToBrain extends $pb.GeneratedMessage {
     $3.Empty? getBinanceSettings,
     $3.Empty? requestInit,
     BinanceRequest? binanceRequest,
+    BinanceOfferReply? binanceOfferReply,
+    $3.Empty? getBinanceOffers,
   }) {
     final result = create();
     if (voiceState != null) result.voiceState = voiceState;
@@ -1324,6 +1351,8 @@ class FaceToBrain extends $pb.GeneratedMessage {
       result.getBinanceSettings = getBinanceSettings;
     if (requestInit != null) result.requestInit = requestInit;
     if (binanceRequest != null) result.binanceRequest = binanceRequest;
+    if (binanceOfferReply != null) result.binanceOfferReply = binanceOfferReply;
+    if (getBinanceOffers != null) result.getBinanceOffers = getBinanceOffers;
     return result;
   }
 
@@ -1342,13 +1371,15 @@ class FaceToBrain extends $pb.GeneratedMessage {
     3: FaceToBrain_Cmd.getBinanceSettings,
     4: FaceToBrain_Cmd.requestInit,
     5: FaceToBrain_Cmd.binanceRequest,
+    6: FaceToBrain_Cmd.binanceOfferReply,
+    7: FaceToBrain_Cmd.getBinanceOffers,
     0: FaceToBrain_Cmd.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'FaceToBrain',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..oo(0, [1, 2, 3, 4, 5])
+    ..oo(0, [1, 2, 3, 4, 5, 6, 7])
     ..aE<StateToggle>(1, _omitFieldNames ? '' : 'voiceState',
         enumValues: StateToggle.values)
     ..aOM<UpdateAction>(2, _omitFieldNames ? '' : 'updateAction',
@@ -1359,6 +1390,10 @@ class FaceToBrain extends $pb.GeneratedMessage {
         subBuilder: $3.Empty.create)
     ..aOM<BinanceRequest>(5, _omitFieldNames ? '' : 'binanceRequest',
         subBuilder: BinanceRequest.create)
+    ..aOM<BinanceOfferReply>(6, _omitFieldNames ? '' : 'binanceOfferReply',
+        subBuilder: BinanceOfferReply.create)
+    ..aOM<$3.Empty>(7, _omitFieldNames ? '' : 'getBinanceOffers',
+        subBuilder: $3.Empty.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1385,12 +1420,16 @@ class FaceToBrain extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   @$pb.TagNumber(4)
   @$pb.TagNumber(5)
+  @$pb.TagNumber(6)
+  @$pb.TagNumber(7)
   FaceToBrain_Cmd whichCmd() => _FaceToBrain_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
   @$pb.TagNumber(4)
   @$pb.TagNumber(5)
+  @$pb.TagNumber(6)
+  @$pb.TagNumber(7)
   void clearCmd() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -1457,6 +1496,454 @@ class FaceToBrain extends $pb.GeneratedMessage {
   void clearBinanceRequest() => $_clearField(5);
   @$pb.TagNumber(5)
   BinanceRequest ensureBinanceRequest() => $_ensure(4);
+
+  /// 人在开单卡上点的「确认 / 取消」
+  @$pb.TagNumber(6)
+  BinanceOfferReply get binanceOfferReply => $_getN(5);
+  @$pb.TagNumber(6)
+  set binanceOfferReply(BinanceOfferReply value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasBinanceOfferReply() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearBinanceOfferReply() => $_clearField(6);
+  @$pb.TagNumber(6)
+  BinanceOfferReply ensureBinanceOfferReply() => $_ensure(5);
+
+  /// face 重启后要一次当前的开单卡列表(回 `BrainToFace.binance_offers`)
+  @$pb.TagNumber(7)
+  $3.Empty get getBinanceOffers => $_getN(6);
+  @$pb.TagNumber(7)
+  set getBinanceOffers($3.Empty value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasGetBinanceOffers() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearGetBinanceOffers() => $_clearField(7);
+  @$pb.TagNumber(7)
+  $3.Empty ensureGetBinanceOffers() => $_ensure(6);
+}
+
+/// ── 跟单:开单卡 ──────────────────────────────────────────────
+///
+/// 群里的信号源机器人开了仓(`hi.binance.BinanceSignal`),本机**不自动跟**:brain 把每一笔算成一张卡
+/// —— 信号源开了什么 + 我们打算开什么(由币安插件按简单策略算)—— 推到屏幕上,人点「确认」才下单。
+/// 卡在 brain 本地落库,**从收到那一刻起只留 15 分钟**,过了就当放弃(不执行、从列表里拿掉)。
+class BinanceOffers extends $pb.GeneratedMessage {
+  factory BinanceOffers({
+    $core.Iterable<BinanceOffer>? list,
+  }) {
+    final result = create();
+    if (list != null) result.list.addAll(list);
+    return result;
+  }
+
+  BinanceOffers._();
+
+  factory BinanceOffers.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceOffers.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceOffers',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..pPM<BinanceOffer>(1, _omitFieldNames ? '' : 'list',
+        subBuilder: BinanceOffer.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceOffers clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceOffers copyWith(void Function(BinanceOffers) updates) =>
+      super.copyWith((message) => updates(message as BinanceOffers))
+          as BinanceOffers;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceOffers create() => BinanceOffers._();
+  @$core.override
+  BinanceOffers createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceOffers getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceOffers>(create);
+  static BinanceOffers? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<BinanceOffer> get list => $_getList(0);
+}
+
+class BinanceOffer extends $pb.GeneratedMessage {
+  factory BinanceOffer({
+    $core.String? id,
+    $0.Entity? source,
+    $8.BinanceOpen? open,
+    BinanceOfferPlan? plan,
+    $fixnum.Int64? receivedAt,
+    $fixnum.Int64? expiresAt,
+    BinanceOffer_State? state,
+    $7.BinanceResult? result,
+  }) {
+    final result$ = create();
+    if (id != null) result$.id = id;
+    if (source != null) result$.source = source;
+    if (open != null) result$.open = open;
+    if (plan != null) result$.plan = plan;
+    if (receivedAt != null) result$.receivedAt = receivedAt;
+    if (expiresAt != null) result$.expiresAt = expiresAt;
+    if (state != null) result$.state = state;
+    if (result != null) result$.result = result;
+    return result$;
+  }
+
+  BinanceOffer._();
+
+  factory BinanceOffer.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceOffer.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceOffer',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'id')
+    ..aOM<$0.Entity>(2, _omitFieldNames ? '' : 'source',
+        subBuilder: $0.Entity.create)
+    ..aOM<$8.BinanceOpen>(3, _omitFieldNames ? '' : 'open',
+        subBuilder: $8.BinanceOpen.create)
+    ..aOM<BinanceOfferPlan>(4, _omitFieldNames ? '' : 'plan',
+        subBuilder: BinanceOfferPlan.create)
+    ..aInt64(5, _omitFieldNames ? '' : 'receivedAt')
+    ..aInt64(6, _omitFieldNames ? '' : 'expiresAt')
+    ..aE<BinanceOffer_State>(7, _omitFieldNames ? '' : 'state',
+        enumValues: BinanceOffer_State.values)
+    ..aOM<$7.BinanceResult>(8, _omitFieldNames ? '' : 'result',
+        subBuilder: $7.BinanceResult.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceOffer clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceOffer copyWith(void Function(BinanceOffer) updates) =>
+      super.copyWith((message) => updates(message as BinanceOffer))
+          as BinanceOffer;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceOffer create() => BinanceOffer._();
+  @$core.override
+  BinanceOffer createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceOffer getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceOffer>(create);
+  static BinanceOffer? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get id => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set id($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $0.Entity get source => $_getN(1);
+  @$pb.TagNumber(2)
+  set source($0.Entity value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSource() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSource() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $0.Entity ensureSource() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  $8.BinanceOpen get open => $_getN(2);
+  @$pb.TagNumber(3)
+  set open($8.BinanceOpen value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasOpen() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearOpen() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $8.BinanceOpen ensureOpen() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  BinanceOfferPlan get plan => $_getN(3);
+  @$pb.TagNumber(4)
+  set plan(BinanceOfferPlan value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasPlan() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearPlan() => $_clearField(4);
+  @$pb.TagNumber(4)
+  BinanceOfferPlan ensurePlan() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  $fixnum.Int64 get receivedAt => $_getI64(4);
+  @$pb.TagNumber(5)
+  set receivedAt($fixnum.Int64 value) => $_setInt64(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasReceivedAt() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearReceivedAt() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $fixnum.Int64 get expiresAt => $_getI64(5);
+  @$pb.TagNumber(6)
+  set expiresAt($fixnum.Int64 value) => $_setInt64(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasExpiresAt() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearExpiresAt() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  BinanceOffer_State get state => $_getN(6);
+  @$pb.TagNumber(7)
+  set state(BinanceOffer_State value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasState() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearState() => $_clearField(7);
+
+  @$pb.TagNumber(8)
+  $7.BinanceResult get result => $_getN(7);
+  @$pb.TagNumber(8)
+  set result($7.BinanceResult value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasResult() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearResult() => $_clearField(8);
+  @$pb.TagNumber(8)
+  $7.BinanceResult ensureResult() => $_ensure(7);
+}
+
+/// 我们打算开的那一单。**数量与保证金是收到时的估算**,点确认时 brain 按当时的价格与余额重算再下。
+class BinanceOfferPlan extends $pb.GeneratedMessage {
+  factory BinanceOfferPlan({
+    $core.String? op,
+    $core.String? symbol,
+    $7.BinanceOrderSide? side,
+    $7.BinancePositionSide? positionSide,
+    $core.int? leverage,
+    $core.String? ratio,
+    $core.String? margin,
+    $core.String? quantity,
+    $core.String? price,
+  }) {
+    final result = create();
+    if (op != null) result.op = op;
+    if (symbol != null) result.symbol = symbol;
+    if (side != null) result.side = side;
+    if (positionSide != null) result.positionSide = positionSide;
+    if (leverage != null) result.leverage = leverage;
+    if (ratio != null) result.ratio = ratio;
+    if (margin != null) result.margin = margin;
+    if (quantity != null) result.quantity = quantity;
+    if (price != null) result.price = price;
+    return result;
+  }
+
+  BinanceOfferPlan._();
+
+  factory BinanceOfferPlan.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceOfferPlan.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceOfferPlan',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'op')
+    ..aOS(2, _omitFieldNames ? '' : 'symbol')
+    ..aE<$7.BinanceOrderSide>(3, _omitFieldNames ? '' : 'side',
+        enumValues: $7.BinanceOrderSide.values)
+    ..aE<$7.BinancePositionSide>(4, _omitFieldNames ? '' : 'positionSide',
+        enumValues: $7.BinancePositionSide.values)
+    ..aI(5, _omitFieldNames ? '' : 'leverage', fieldType: $pb.PbFieldType.OU3)
+    ..aOS(6, _omitFieldNames ? '' : 'ratio')
+    ..aOS(7, _omitFieldNames ? '' : 'margin')
+    ..aOS(8, _omitFieldNames ? '' : 'quantity')
+    ..aOS(9, _omitFieldNames ? '' : 'price')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceOfferPlan clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceOfferPlan copyWith(void Function(BinanceOfferPlan) updates) =>
+      super.copyWith((message) => updates(message as BinanceOfferPlan))
+          as BinanceOfferPlan;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceOfferPlan create() => BinanceOfferPlan._();
+  @$core.override
+  BinanceOfferPlan createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceOfferPlan getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceOfferPlan>(create);
+  static BinanceOfferPlan? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get op => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set op($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasOp() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearOp() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get symbol => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set symbol($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSymbol() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSymbol() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $7.BinanceOrderSide get side => $_getN(2);
+  @$pb.TagNumber(3)
+  set side($7.BinanceOrderSide value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSide() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSide() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $7.BinancePositionSide get positionSide => $_getN(3);
+  @$pb.TagNumber(4)
+  set positionSide($7.BinancePositionSide value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasPositionSide() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearPositionSide() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.int get leverage => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set leverage($core.int value) => $_setUnsignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasLeverage() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearLeverage() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.String get ratio => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set ratio($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasRatio() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearRatio() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.String get margin => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set margin($core.String value) => $_setString(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasMargin() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearMargin() => $_clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.String get quantity => $_getSZ(7);
+  @$pb.TagNumber(8)
+  set quantity($core.String value) => $_setString(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasQuantity() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearQuantity() => $_clearField(8);
+
+  @$pb.TagNumber(9)
+  $core.String get price => $_getSZ(8);
+  @$pb.TagNumber(9)
+  set price($core.String value) => $_setString(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasPrice() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearPrice() => $_clearField(9);
+}
+
+class BinanceOfferReply extends $pb.GeneratedMessage {
+  factory BinanceOfferReply({
+    $core.String? id,
+    $core.bool? confirm,
+  }) {
+    final result = create();
+    if (id != null) result.id = id;
+    if (confirm != null) result.confirm = confirm;
+    return result;
+  }
+
+  BinanceOfferReply._();
+
+  factory BinanceOfferReply.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceOfferReply.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceOfferReply',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'id')
+    ..aOB(2, _omitFieldNames ? '' : 'confirm')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceOfferReply clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceOfferReply copyWith(void Function(BinanceOfferReply) updates) =>
+      super.copyWith((message) => updates(message as BinanceOfferReply))
+          as BinanceOfferReply;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceOfferReply create() => BinanceOfferReply._();
+  @$core.override
+  BinanceOfferReply createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceOfferReply getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceOfferReply>(create);
+  static BinanceOfferReply? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get id => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set id($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.bool get confirm => $_getBF(1);
+  @$pb.TagNumber(2)
+  set confirm($core.bool value) => $_setBool(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasConfirm() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearConfirm() => $_clearField(2);
 }
 
 /// 插件下载/安装进度。
