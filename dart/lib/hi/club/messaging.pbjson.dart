@@ -447,6 +447,16 @@ const Content$json = {
       '10': 'record'
     },
     {
+      '1': 'binance_signal',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceSignal',
+      '8': {},
+      '9': 0,
+      '10': 'binanceSignal'
+    },
+    {
       '1': 'id',
       '3': 8,
       '4': 1,
@@ -527,12 +537,13 @@ final $typed_data.Uint8List contentDescriptor = $convert.base64Decode(
     'LmRpZC5UcmFuc2FjdGlvbkIEkLUYAUgAUgV0cmFucxI7CgdiaW5hbmNlGAUgASgLMhkuaGkuYm'
     'luYW5jZS5CaW5hbmNlUmVzdWx0QgSQtRgCSABSB2JpbmFuY2USQwoLYmluYW5jZV9jbWQYBiAB'
     'KAsyGi5oaS5iaW5hbmNlLkJpbmFuY2VDb21tYW5kQgSQtRgCSABSCmJpbmFuY2VDbWQSMwoGcm'
-    'Vjb3JkGAcgASgLMhMuaGkuY2x1Yi5DaGF0UmVjb3JkQgSQtRgCSABSBnJlY29yZBIZCgJpZBgI'
-    'IAEoDUIEkLUYAkgCUgJpZIgBARrBAQoEQ2hhdBIjCgdjb250ZW50GAEgASgJQgSQtRgCSABSB2'
-    'NvbnRlbnSIAQESHQoEbmFtZRgCIAEoCUIEkLUYAkgBUgRuYW1liAEBEh0KBHNpemUYAyABKA1C'
-    'BJC1GAJIAlIEc2l6ZYgBARIlCghkdXJhdGlvbhgEIAEoDUIEkLUYAkgDUghkdXJhdGlvbogBAT'
-    'oEmLUYAkIKCghfY29udGVudEIHCgVfbmFtZUIHCgVfc2l6ZUILCglfZHVyYXRpb246BJi1GAJC'
-    'BgoEa2luZEIHCgVfdHlwZUIFCgNfaWQ=');
+    'Vjb3JkGAcgASgLMhMuaGkuY2x1Yi5DaGF0UmVjb3JkQgSQtRgCSABSBnJlY29yZBJICg5iaW5h'
+    'bmNlX3NpZ25hbBgJIAEoCzIZLmhpLmJpbmFuY2UuQmluYW5jZVNpZ25hbEIEkLUYAkgAUg1iaW'
+    '5hbmNlU2lnbmFsEhkKAmlkGAggASgNQgSQtRgCSAJSAmlkiAEBGsEBCgRDaGF0EiMKB2NvbnRl'
+    'bnQYASABKAlCBJC1GAJIAFIHY29udGVudIgBARIdCgRuYW1lGAIgASgJQgSQtRgCSAFSBG5hbW'
+    'WIAQESHQoEc2l6ZRgDIAEoDUIEkLUYAkgCUgRzaXpliAEBEiUKCGR1cmF0aW9uGAQgASgNQgSQ'
+    'tRgCSANSCGR1cmF0aW9uiAEBOgSYtRgCQgoKCF9jb250ZW50QgcKBV9uYW1lQgcKBV9zaXplQg'
+    'sKCV9kdXJhdGlvbjoEmLUYAkIGCgRraW5kQgcKBV90eXBlQgUKA19pZA==');
 
 @$core.Deprecated('Use chatRecordDescriptor instead')
 const ChatRecord$json = {

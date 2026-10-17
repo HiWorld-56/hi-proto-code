@@ -18,6 +18,7 @@ import 'package:protobuf/well_known_types/google/protobuf/any.pb.dart' as $1;
 
 import '../binance/binance.pb.dart' as $3;
 import '../binance/command.pb.dart' as $4;
+import '../binance/signal.pb.dart' as $5;
 import '../common.pb.dart' as $0;
 import '../did/transfer.pb.dart' as $2;
 
@@ -854,7 +855,15 @@ class Content_Chat extends $pb.GeneratedMessage {
   void clearDuration() => $_clearField(4);
 }
 
-enum Content_Kind { chat, trans, binance, binanceCmd, record, notSet }
+enum Content_Kind {
+  chat,
+  trans,
+  binance,
+  binanceCmd,
+  record,
+  binanceSignal,
+  notSet
+}
 
 ///
 /// Content.type —— **一条消息里这一段是什么**。字符串,取值就是下面这张表,**别自己发明**。
@@ -867,6 +876,7 @@ enum Content_Kind { chat, trans, binance, binanceCmd, record, notSet }
 /// broadcast   广播
 /// binance     币安操作结果卡      kind=binance(hi.binance.BinanceResult)
 /// binance_cmd 币安指令            kind=binance_cmd(hi.binance.BinanceCommand)—— 群里要 @ 执行的机器人,见 hi/binance/command.proto
+/// binance_signal 币安跟单信号     kind=binance_signal(hi.binance.BinanceSignal)—— 信号源机器人发、@所有人,见 hi/binance/signal.proto
 /// chat_record 聊天记录(合并转发)  kind=record(hi.club.ChatRecord)—— 原样内嵌被转发的那几条完整消息
 ///
 /// ⚠️ **注意是 `image_url` 不是 `image`、`audio_url` 不是 `audio`。**
@@ -895,6 +905,7 @@ class Content extends $pb.GeneratedMessage {
     $4.BinanceCommand? binanceCmd,
     ChatRecord? record,
     $core.int? id,
+    $5.BinanceSignal? binanceSignal,
   }) {
     final result = create();
     if (type != null) result.type = type;
@@ -904,6 +915,7 @@ class Content extends $pb.GeneratedMessage {
     if (binanceCmd != null) result.binanceCmd = binanceCmd;
     if (record != null) result.record = record;
     if (id != null) result.id = id;
+    if (binanceSignal != null) result.binanceSignal = binanceSignal;
     return result;
   }
 
@@ -922,13 +934,14 @@ class Content extends $pb.GeneratedMessage {
     5: Content_Kind.binance,
     6: Content_Kind.binanceCmd,
     7: Content_Kind.record,
+    9: Content_Kind.binanceSignal,
     0: Content_Kind.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Content',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3, 5, 6, 7])
+    ..oo(0, [2, 3, 5, 6, 7, 9])
     ..aOS(1, _omitFieldNames ? '' : 'type')
     ..aOM<Content_Chat>(2, _omitFieldNames ? '' : 'chat',
         subBuilder: Content_Chat.create)
@@ -941,6 +954,8 @@ class Content extends $pb.GeneratedMessage {
     ..aOM<ChatRecord>(7, _omitFieldNames ? '' : 'record',
         subBuilder: ChatRecord.create)
     ..aI(8, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
+    ..aOM<$5.BinanceSignal>(9, _omitFieldNames ? '' : 'binanceSignal',
+        subBuilder: $5.BinanceSignal.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -966,12 +981,14 @@ class Content extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   @$pb.TagNumber(6)
   @$pb.TagNumber(7)
+  @$pb.TagNumber(9)
   Content_Kind whichKind() => _Content_KindByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
   @$pb.TagNumber(5)
   @$pb.TagNumber(6)
   @$pb.TagNumber(7)
+  @$pb.TagNumber(9)
   void clearKind() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -1055,6 +1072,18 @@ class Content extends $pb.GeneratedMessage {
   $core.bool hasId() => $_has(6);
   @$pb.TagNumber(8)
   void clearId() => $_clearField(8);
+
+  /// 币安跟单信号:信号源机器人账户上的变化,广播给群里别的机器人跟。见 hi/binance/signal.proto。
+  @$pb.TagNumber(9)
+  $5.BinanceSignal get binanceSignal => $_getN(7);
+  @$pb.TagNumber(9)
+  set binanceSignal($5.BinanceSignal value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasBinanceSignal() => $_has(7);
+  @$pb.TagNumber(9)
+  void clearBinanceSignal() => $_clearField(9);
+  @$pb.TagNumber(9)
+  $5.BinanceSignal ensureBinanceSignal() => $_ensure(7);
 }
 
 /// 聊天记录 —— **合并转发**出来的那一条(类似微信「聊天记录」卡片)。`Content.type = "chat_record"`。

@@ -29,10 +29,12 @@ class GroupBase extends $pb.GeneratedMessage {
   factory GroupBase({
     $3.Entity? base,
     $core.String? background,
+    $core.String? speak,
   }) {
     final result = create();
     if (base != null) result.base = base;
     if (background != null) result.background = background;
+    if (speak != null) result.speak = speak;
     return result;
   }
 
@@ -52,6 +54,7 @@ class GroupBase extends $pb.GeneratedMessage {
     ..aOM<$3.Entity>(1, _omitFieldNames ? '' : 'base',
         subBuilder: $3.Entity.create)
     ..aOS(2, _omitFieldNames ? '' : 'background')
+    ..aOS(3, _omitFieldNames ? '' : 'speak')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -91,6 +94,21 @@ class GroupBase extends $pb.GeneratedMessage {
   $core.bool hasBackground() => $_has(1);
   @$pb.TagNumber(2)
   void clearBackground() => $_clearField(2);
+
+  /// 发言等级:谁能在群里发言。后端回包一律填(存量群 = all)。
+  ///   · all   —— 全员
+  ///   · admin —— 群主 + 管理员
+  ///   · owner —— 仅群主
+  /// **能发言 = 角色够得着这个等级,且自己没被禁言(GroupMemberAttr.muted)。** 判据只在后端一处(mqtt 群 topic 的读写权限按它给),
+  /// 前端按同一句判断要不要把输入框收起来。只有群主能改(UpdateGroupReq.speak)。
+  @$pb.TagNumber(3)
+  $core.String get speak => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set speak($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSpeak() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSpeak() => $_clearField(3);
 }
 
 /// 成员相关属性(**对外可见**:成员列表里人人可见谁是什么角色、谁被禁言)。
@@ -1656,8 +1674,8 @@ class MuteMembersReq extends $pb.GeneratedMessage {
 /// 成员权限矩阵(后端强制,只允许高级别对低级别操作:owner>admin>member)。
 /// ⚠️ **这张表是唯一口径**,别在各个 rpc 的行尾另写一份:2026-09-23 就是行尾那句
 /// 「改群类型仅 owner」与本表冲突,后端照行尾实现,前端照本表放出了入口,管理员一点就是 7。
-///   owner   : 全允许(含解散群、加管理员)
-///   admin   : 拉/踢人、拉/踢机器人、禁言、改群信息、设群类型;不可解散群、不可加管理员;不可操作 owner/admin
+///   owner   : 全允许(含解散群、加管理员、改发言等级)
+///   admin   : 拉/踢人、拉/踢机器人、禁言、改群信息、设群类型;不可解散群、不可加管理员、不可改发言等级;不可操作 owner/admin
 ///   member(公开群): 仅可拉人;其余禁止
 ///   member(私密群): 全禁止(只能被邀请)
 /// 改群信息。**入参不复用 GroupBase** —— 那是返回类型(群公共信息视图),
@@ -1678,6 +1696,7 @@ class UpdateGroupReq extends $pb.GeneratedMessage {
     $core.String? avatar,
     $core.String? background,
     $core.String? type,
+    $core.String? speak,
   }) {
     final result = create();
     if (group != null) result.group = group;
@@ -1685,6 +1704,7 @@ class UpdateGroupReq extends $pb.GeneratedMessage {
     if (avatar != null) result.avatar = avatar;
     if (background != null) result.background = background;
     if (type != null) result.type = type;
+    if (speak != null) result.speak = speak;
     return result;
   }
 
@@ -1706,6 +1726,7 @@ class UpdateGroupReq extends $pb.GeneratedMessage {
     ..aOS(3, _omitFieldNames ? '' : 'avatar')
     ..aOS(4, _omitFieldNames ? '' : 'background')
     ..aOS(7, _omitFieldNames ? '' : 'type')
+    ..aOS(8, _omitFieldNames ? '' : 'speak')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1773,6 +1794,16 @@ class UpdateGroupReq extends $pb.GeneratedMessage {
   $core.bool hasType() => $_has(4);
   @$pb.TagNumber(7)
   void clearType() => $_clearField(7);
+
+  /// 改发言等级(取值见 GroupBase.speak)。不传=不动。**只有群主可以**(见上面的权限矩阵);单聊群不能改。
+  @$pb.TagNumber(8)
+  $core.String get speak => $_getSZ(5);
+  @$pb.TagNumber(8)
+  set speak($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(8)
+  $core.bool hasSpeak() => $_has(5);
+  @$pb.TagNumber(8)
+  void clearSpeak() => $_clearField(8);
 }
 
 /// 按创建者找群。**只回透明群(group-open)** —— 私有群、公开群都不会被这样翻出来。

@@ -1590,6 +1590,9 @@ impl serde::Serialize for Content {
                 content::Kind::Record(v) => {
                     struct_ser.serialize_field("record", v)?;
                 }
+                content::Kind::BinanceSignal(v) => {
+                    struct_ser.serialize_field("binanceSignal", v)?;
+                }
             }
         }
         struct_ser.end()
@@ -1610,6 +1613,8 @@ impl<'de> serde::Deserialize<'de> for Content {
             "binance_cmd",
             "binanceCmd",
             "record",
+            "binance_signal",
+            "binanceSignal",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -1621,6 +1626,7 @@ impl<'de> serde::Deserialize<'de> for Content {
             Binance,
             BinanceCmd,
             Record,
+            BinanceSignal,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1649,6 +1655,7 @@ impl<'de> serde::Deserialize<'de> for Content {
                             "binance" => Ok(GeneratedField::Binance),
                             "binanceCmd" | "binance_cmd" => Ok(GeneratedField::BinanceCmd),
                             "record" => Ok(GeneratedField::Record),
+                            "binanceSignal" | "binance_signal" => Ok(GeneratedField::BinanceSignal),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -1720,6 +1727,13 @@ impl<'de> serde::Deserialize<'de> for Content {
                                 return Err(serde::de::Error::duplicate_field("record"));
                             }
                             kind__ = map_.next_value::<::std::option::Option<_>>()?.map(content::Kind::Record)
+;
+                        }
+                        GeneratedField::BinanceSignal => {
+                            if kind__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("binanceSignal"));
+                            }
+                            kind__ = map_.next_value::<::std::option::Option<_>>()?.map(content::Kind::BinanceSignal)
 ;
                         }
                     }
@@ -5910,12 +5924,18 @@ impl serde::Serialize for GroupBase {
         if self.background.is_some() {
             len += 1;
         }
+        if self.speak.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.club.GroupBase", len)?;
         if let Some(v) = self.base.as_ref() {
             struct_ser.serialize_field("base", v)?;
         }
         if let Some(v) = self.background.as_ref() {
             struct_ser.serialize_field("background", v)?;
+        }
+        if let Some(v) = self.speak.as_ref() {
+            struct_ser.serialize_field("speak", v)?;
         }
         struct_ser.end()
     }
@@ -5929,12 +5949,14 @@ impl<'de> serde::Deserialize<'de> for GroupBase {
         const FIELDS: &[&str] = &[
             "base",
             "background",
+            "speak",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Base,
             Background,
+            Speak,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -5958,6 +5980,7 @@ impl<'de> serde::Deserialize<'de> for GroupBase {
                         match value {
                             "base" => Ok(GeneratedField::Base),
                             "background" => Ok(GeneratedField::Background),
+                            "speak" => Ok(GeneratedField::Speak),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -5979,6 +6002,7 @@ impl<'de> serde::Deserialize<'de> for GroupBase {
             {
                 let mut base__ = None;
                 let mut background__ = None;
+                let mut speak__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Base => {
@@ -5993,11 +6017,18 @@ impl<'de> serde::Deserialize<'de> for GroupBase {
                             }
                             background__ = map_.next_value()?;
                         }
+                        GeneratedField::Speak => {
+                            if speak__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("speak"));
+                            }
+                            speak__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(GroupBase {
                     base: base__,
                     background: background__,
+                    speak: speak__,
                 })
             }
         }
@@ -19907,6 +19938,9 @@ impl serde::Serialize for UpdateGroupReq {
         if self.r#type.is_some() {
             len += 1;
         }
+        if self.speak.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.club.UpdateGroupReq", len)?;
         if let Some(v) = self.group.as_ref() {
             struct_ser.serialize_field("group", v)?;
@@ -19923,6 +19957,9 @@ impl serde::Serialize for UpdateGroupReq {
         if let Some(v) = self.r#type.as_ref() {
             struct_ser.serialize_field("type", v)?;
         }
+        if let Some(v) = self.speak.as_ref() {
+            struct_ser.serialize_field("speak", v)?;
+        }
         struct_ser.end()
     }
 }
@@ -19938,6 +19975,7 @@ impl<'de> serde::Deserialize<'de> for UpdateGroupReq {
             "avatar",
             "background",
             "type",
+            "speak",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -19947,6 +19985,7 @@ impl<'de> serde::Deserialize<'de> for UpdateGroupReq {
             Avatar,
             Background,
             Type,
+            Speak,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -19973,6 +20012,7 @@ impl<'de> serde::Deserialize<'de> for UpdateGroupReq {
                             "avatar" => Ok(GeneratedField::Avatar),
                             "background" => Ok(GeneratedField::Background),
                             "type" => Ok(GeneratedField::Type),
+                            "speak" => Ok(GeneratedField::Speak),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -19997,6 +20037,7 @@ impl<'de> serde::Deserialize<'de> for UpdateGroupReq {
                 let mut avatar__ = None;
                 let mut background__ = None;
                 let mut r#type__ = None;
+                let mut speak__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Group => {
@@ -20029,6 +20070,12 @@ impl<'de> serde::Deserialize<'de> for UpdateGroupReq {
                             }
                             r#type__ = map_.next_value()?;
                         }
+                        GeneratedField::Speak => {
+                            if speak__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("speak"));
+                            }
+                            speak__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(UpdateGroupReq {
@@ -20037,6 +20084,7 @@ impl<'de> serde::Deserialize<'de> for UpdateGroupReq {
                     avatar: avatar__,
                     background: background__,
                     r#type: r#type__,
+                    speak: speak__,
                 })
             }
         }

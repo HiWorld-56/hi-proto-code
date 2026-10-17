@@ -31,9 +31,18 @@ const (
 //
 //	三处各管一截,于是私有群只能"先建成公开群、再改成私密",单聊群也一直是公开的。已删,只留 type。
 type GroupBase struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Base          *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
-	Background    *string                `protobuf:"bytes,2,opt,name=background,proto3,oneof" json:"background,omitempty"`
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	Base       *hi.Entity             `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
+	Background *string                `protobuf:"bytes,2,opt,name=background,proto3,oneof" json:"background,omitempty"`
+	// 发言等级:谁能在群里发言。后端回包一律填(存量群 = all)。
+	//
+	//	· all   —— 全员
+	//	· admin —— 群主 + 管理员
+	//	· owner —— 仅群主
+	//
+	// **能发言 = 角色够得着这个等级,且自己没被禁言(GroupMemberAttr.muted)。** 判据只在后端一处(mqtt 群 topic 的读写权限按它给),
+	// 前端按同一句判断要不要把输入框收起来。只有群主能改(UpdateGroupReq.speak)。
+	Speak         *string `protobuf:"bytes,3,opt,name=speak,proto3,oneof" json:"speak,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -78,6 +87,13 @@ func (x *GroupBase) GetBase() *hi.Entity {
 func (x *GroupBase) GetBackground() string {
 	if x != nil && x.Background != nil {
 		return *x.Background
+	}
+	return ""
+}
+
+func (x *GroupBase) GetSpeak() string {
+	if x != nil && x.Speak != nil {
+		return *x.Speak
 	}
 	return ""
 }
@@ -1346,8 +1362,8 @@ func (x *MuteMembersReq) GetMuted() bool {
 // ⚠️ **这张表是唯一口径**,别在各个 rpc 的行尾另写一份:2026-09-23 就是行尾那句
 // 「改群类型仅 owner」与本表冲突,后端照行尾实现,前端照本表放出了入口,管理员一点就是 7。
 //
-//	owner   : 全允许(含解散群、加管理员)
-//	admin   : 拉/踢人、拉/踢机器人、禁言、改群信息、设群类型;不可解散群、不可加管理员;不可操作 owner/admin
+//	owner   : 全允许(含解散群、加管理员、改发言等级)
+//	admin   : 拉/踢人、拉/踢机器人、禁言、改群信息、设群类型;不可解散群、不可加管理员、不可改发言等级;不可操作 owner/admin
 //	member(公开群): 仅可拉人;其余禁止
 //	member(私密群): 全禁止(只能被邀请)
 //
@@ -1371,7 +1387,9 @@ type UpdateGroupReq struct {
 	Background *string                `protobuf:"bytes,4,opt,name=background,proto3,oneof" json:"background,omitempty"` // 群背景 url;**有 presence**:不传=不动,传空串=清空
 	// 改群类型:group-private / group-public / group-open 之间互换。不传=不动。
 	// **群主与管理员都可以**(与改名字/头像/背景同一档权限,见上面的权限矩阵)。单聊群不能改。
-	Type          *string `protobuf:"bytes,7,opt,name=type,proto3,oneof" json:"type,omitempty"` // 新号:5/6 原是 private/findable(bool),复用会让老客户端的请求解不开
+	Type *string `protobuf:"bytes,7,opt,name=type,proto3,oneof" json:"type,omitempty"` // 新号:5/6 原是 private/findable(bool),复用会让老客户端的请求解不开
+	// 改发言等级(取值见 GroupBase.speak)。不传=不动。**只有群主可以**(见上面的权限矩阵);单聊群不能改。
+	Speak         *string `protobuf:"bytes,8,opt,name=speak,proto3,oneof" json:"speak,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1437,6 +1455,13 @@ func (x *UpdateGroupReq) GetBackground() string {
 func (x *UpdateGroupReq) GetType() string {
 	if x != nil && x.Type != nil {
 		return *x.Type
+	}
+	return ""
+}
+
+func (x *UpdateGroupReq) GetSpeak() string {
+	if x != nil && x.Speak != nil {
+		return *x.Speak
 	}
 	return ""
 }
@@ -1602,14 +1627,16 @@ var File_hi_club_group_proto protoreflect.FileDescriptor
 
 const file_hi_club_group_proto_rawDesc = "" +
 	"\n" +
-	"\x13hi/club/group.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\x1a\x1bbuf/validate/validate.proto\"q\n" +
+	"\x13hi/club/group.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\x1a\x1bbuf/validate/validate.proto\"\x9c\x01\n" +
 	"\tGroupBase\x12$\n" +
 	"\x04base\x18\x01 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\x04base\x12)\n" +
 	"\n" +
 	"background\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\n" +
-	"background\x88\x01\x01:\x04\x98\xb5\x18\x01B\r\n" +
-	"\v_background\"j\n" +
+	"background\x88\x01\x01\x12\x1f\n" +
+	"\x05speak\x18\x03 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x05speak\x88\x01\x01:\x04\x98\xb5\x18\x01B\r\n" +
+	"\v_backgroundB\b\n" +
+	"\x06_speak\"j\n" +
 	"\x0fGroupMemberAttr\x12\x1d\n" +
 	"\x04role\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x04role\x88\x01\x01\x12\x1f\n" +
 	"\x05muted\x18\x02 \x01(\bB\x04\x90\xb5\x18\x02H\x01R\x05muted\x88\x01\x01:\x04\x98\xb5\x18\x02B\a\n" +
@@ -1716,7 +1743,7 @@ const file_hi_club_group_proto_rawDesc = "" +
 	"\amembers\x18\x02 \x03(\tR\amembers\x12\x19\n" +
 	"\x05muted\x18\x03 \x01(\bH\x01R\x05muted\x88\x01\x01B\a\n" +
 	"\x05_codeB\b\n" +
-	"\x06_muted\"\x96\x02\n" +
+	"\x06_muted\"\xd5\x02\n" +
 	"\x0eUpdateGroupReq\x12*\n" +
 	"\x05group\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x05group\x88\x01\x01\x12\x17\n" +
 	"\x04name\x18\x02 \x01(\tH\x01R\x04name\x88\x01\x01\x12\x1b\n" +
@@ -1725,12 +1752,14 @@ const file_hi_club_group_proto_rawDesc = "" +
 	"background\x18\x04 \x01(\tH\x03R\n" +
 	"background\x88\x01\x01\x12G\n" +
 	"\x04type\x18\a \x01(\tB.\xbaH+r)R\rgroup-privateR\fgroup-publicR\n" +
-	"group-openH\x04R\x04type\x88\x01\x01B\b\n" +
+	"group-openH\x04R\x04type\x88\x01\x01\x123\n" +
+	"\x05speak\x18\b \x01(\tB\x18\xbaH\x15r\x13R\x03allR\x05adminR\x05ownerH\x05R\x05speak\x88\x01\x01B\b\n" +
 	"\x06_groupB\a\n" +
 	"\x05_nameB\t\n" +
 	"\a_avatarB\r\n" +
 	"\v_backgroundB\a\n" +
-	"\x05_type\"T\n" +
+	"\x05_typeB\b\n" +
+	"\x06_speak\"T\n" +
 	"\x16ListGroupsByCreatorReq\x12.\n" +
 	"\acreator\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\acreator\x88\x01\x01B\n" +
 	"\n" +

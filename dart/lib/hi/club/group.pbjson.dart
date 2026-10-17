@@ -38,18 +38,29 @@ const GroupBase$json = {
       '10': 'background',
       '17': true
     },
+    {
+      '1': 'speak',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'speak',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
     {'1': '_background'},
+    {'1': '_speak'},
   ],
 };
 
 /// Descriptor for `GroupBase`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List groupBaseDescriptor = $convert.base64Decode(
     'CglHcm91cEJhc2USJAoEYmFzZRgBIAEoCzIKLmhpLkVudGl0eUIEkLUYAVIEYmFzZRIpCgpiYW'
-    'NrZ3JvdW5kGAIgASgJQgSQtRgBSABSCmJhY2tncm91bmSIAQE6BJi1GAFCDQoLX2JhY2tncm91'
-    'bmQ=');
+    'NrZ3JvdW5kGAIgASgJQgSQtRgBSABSCmJhY2tncm91bmSIAQESHwoFc3BlYWsYAyABKAlCBJC1'
+    'GAFIAVIFc3BlYWuIAQE6BJi1GAFCDQoLX2JhY2tncm91bmRCCAoGX3NwZWFr');
 
 @$core.Deprecated('Use groupMemberAttrDescriptor instead')
 const GroupMemberAttr$json = {
@@ -680,6 +691,16 @@ const UpdateGroupReq$json = {
       '10': 'type',
       '17': true
     },
+    {
+      '1': 'speak',
+      '3': 8,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 5,
+      '10': 'speak',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_group'},
@@ -687,6 +708,7 @@ const UpdateGroupReq$json = {
     {'1': '_avatar'},
     {'1': '_background'},
     {'1': '_type'},
+    {'1': '_speak'},
   ],
 };
 
@@ -696,8 +718,9 @@ final $typed_data.Uint8List updateGroupReqDescriptor = $convert.base64Decode(
     'VwiAEBEhcKBG5hbWUYAiABKAlIAVIEbmFtZYgBARIbCgZhdmF0YXIYAyABKAlIAlIGYXZhdGFy'
     'iAEBEiMKCmJhY2tncm91bmQYBCABKAlIA1IKYmFja2dyb3VuZIgBARJHCgR0eXBlGAcgASgJQi'
     '66SCtyKVINZ3JvdXAtcHJpdmF0ZVIMZ3JvdXAtcHVibGljUgpncm91cC1vcGVuSARSBHR5cGWI'
-    'AQFCCAoGX2dyb3VwQgcKBV9uYW1lQgkKB19hdmF0YXJCDQoLX2JhY2tncm91bmRCBwoFX3R5cG'
-    'U=');
+    'AQESMwoFc3BlYWsYCCABKAlCGLpIFXITUgNhbGxSBWFkbWluUgVvd25lckgFUgVzcGVha4gBAU'
+    'IICgZfZ3JvdXBCBwoFX25hbWVCCQoHX2F2YXRhckINCgtfYmFja2dyb3VuZEIHCgVfdHlwZUII'
+    'CgZfc3BlYWs=');
 
 @$core.Deprecated('Use listGroupsByCreatorReqDescriptor instead')
 const ListGroupsByCreatorReq$json = {

@@ -3754,6 +3754,7 @@ pub struct Member {
 /// broadcast   广播
 /// binance     币安操作结果卡      kind=binance(hi.binance.BinanceResult)
 /// binance_cmd 币安指令            kind=binance_cmd(hi.binance.BinanceCommand)—— 群里要 @ 执行的机器人,见 hi/binance/command.proto
+/// binance_signal 币安跟单信号     kind=binance_signal(hi.binance.BinanceSignal)—— 信号源机器人发、@所有人,见 hi/binance/signal.proto
 /// chat_record 聊天记录(合并转发)  kind=record(hi.club.ChatRecord)—— 原样内嵌被转发的那几条完整消息
 ///
 /// ⚠️ **注意是 `image_url` 不是 `image`、`audio_url` 不是 `audio`。**
@@ -3783,7 +3784,7 @@ pub struct Content {
     /// 用途:引用消息里的某一段 —— `<消息 uuid>#<id>`,见下面「引用」那段。
     #[prost(uint32, optional, tag = "8")]
     pub id: ::core::option::Option<u32>,
-    #[prost(oneof = "content::Kind", tags = "2, 3, 5, 6, 7")]
+    #[prost(oneof = "content::Kind", tags = "2, 3, 5, 6, 7, 9")]
     pub kind: ::core::option::Option<content::Kind>,
 }
 /// Nested message and enum types in `Content`.
@@ -3817,6 +3818,9 @@ pub mod content {
         /// 聊天记录(合并转发):原样内嵌被转发的那几条完整消息。见下面 ChatRecord。
         #[prost(message, tag = "7")]
         Record(super::ChatRecord),
+        /// 币安跟单信号:信号源机器人账户上的变化,广播给群里别的机器人跟。见 hi/binance/signal.proto。
+        #[prost(message, tag = "9")]
+        BinanceSignal(super::super::binance::BinanceSignal),
     }
 }
 /// 聊天记录 —— **合并转发**出来的那一条(类似微信「聊天记录」卡片)。`Content.type = "chat_record"`。
@@ -3860,6 +3864,14 @@ pub struct GroupBase {
     pub base: ::core::option::Option<super::Entity>,
     #[prost(string, optional, tag = "2")]
     pub background: ::core::option::Option<::prost::alloc::string::String>,
+    /// 发言等级:谁能在群里发言。后端回包一律填(存量群 = all)。
+    /// · all   —— 全员
+    /// · admin —— 群主 + 管理员
+    /// · owner —— 仅群主
+    /// **能发言 = 角色够得着这个等级,且自己没被禁言(GroupMemberAttr.muted)。** 判据只在后端一处(mqtt 群 topic 的读写权限按它给),
+    /// 前端按同一句判断要不要把输入框收起来。只有群主能改(UpdateGroupReq.speak)。
+    #[prost(string, optional, tag = "3")]
+    pub speak: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 成员相关属性(**对外可见**:成员列表里人人可见谁是什么角色、谁被禁言)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -4076,8 +4088,8 @@ pub struct MuteMembersReq {
 /// 成员权限矩阵(后端强制,只允许高级别对低级别操作:owner>admin>member)。
 /// ⚠️ **这张表是唯一口径**,别在各个 rpc 的行尾另写一份:2026-09-23 就是行尾那句
 /// 「改群类型仅 owner」与本表冲突,后端照行尾实现,前端照本表放出了入口,管理员一点就是 7。
-/// owner   : 全允许(含解散群、加管理员)
-/// admin   : 拉/踢人、拉/踢机器人、禁言、改群信息、设群类型;不可解散群、不可加管理员;不可操作 owner/admin
+/// owner   : 全允许(含解散群、加管理员、改发言等级)
+/// admin   : 拉/踢人、拉/踢机器人、禁言、改群信息、设群类型;不可解散群、不可加管理员、不可改发言等级;不可操作 owner/admin
 /// member(公开群): 仅可拉人;其余禁止
 /// member(私密群): 全禁止(只能被邀请)
 /// 改群信息。**入参不复用 GroupBase** —— 那是返回类型(群公共信息视图),
@@ -4112,6 +4124,9 @@ pub struct UpdateGroupReq {
     /// 新号:5/6 原是 private/findable(bool),复用会让老客户端的请求解不开
     #[prost(string, optional, tag = "7")]
     pub r#type: ::core::option::Option<::prost::alloc::string::String>,
+    /// 改发言等级(取值见 GroupBase.speak)。不传=不动。**只有群主可以**(见上面的权限矩阵);单聊群不能改。
+    #[prost(string, optional, tag = "8")]
+    pub speak: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 按创建者找群。**只回透明群(group-open)** —— 私有群、公开群都不会被这样翻出来。
 ///
