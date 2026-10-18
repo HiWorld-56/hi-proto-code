@@ -136,7 +136,7 @@ const (
 	BinanceOffer_STATE_UNSPECIFIED BinanceOffer_State = 0
 	BinanceOffer_STATE_PENDING     BinanceOffer_State = 1 // 等人点
 	BinanceOffer_STATE_EXECUTING   BinanceOffer_State = 2 // 点了确认,正在下单
-	BinanceOffer_STATE_DONE        BinanceOffer_State = 3 // 下完了,结果在 result(成败看 result.http_status / error);留在列表里给人看,到期一起拿掉
+	BinanceOffer_STATE_DONE        BinanceOffer_State = 3 // 下完了,结果在 result(成败看 result.http_status / error);留在列表里给人看,
 )
 
 // Enum value maps for BinanceOffer_State.
@@ -1801,9 +1801,12 @@ func (x *BinanceOfferPlan) GetShortfall() string {
 }
 
 type BinanceOfferReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`            // BinanceOffer.id
-	Confirm       *bool                  `protobuf:"varint,2,opt,name=confirm,proto3,oneof" json:"confirm,omitempty"` // true = 确认开单,false = 取消。**必传**
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Id    *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"` // BinanceOffer.id
+	// **必传**。true = 确认开单(只认 STATE_PENDING)。
+	// false = 这张卡我不要了:STATE_PENDING → 取消(不下单);STATE_DONE → 从列表里拿掉(落库,重启后也不再推);
+	// STATE_EXECUTING → 不理(正在下的单收不回来,下完照常变 STATE_DONE 给人看)
+	Confirm       *bool `protobuf:"varint,2,opt,name=confirm,proto3,oneof" json:"confirm,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }

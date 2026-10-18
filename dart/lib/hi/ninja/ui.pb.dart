@@ -1949,6 +1949,9 @@ class BinanceOfferReply extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearId() => $_clearField(1);
 
+  /// **必传**。true = 确认开单(只认 STATE_PENDING)。
+  /// false = 这张卡我不要了:STATE_PENDING → 取消(不下单);STATE_DONE → 从列表里拿掉(落库,重启后也不再推);
+  /// STATE_EXECUTING → 不理(正在下的单收不回来,下完照常变 STATE_DONE 给人看)
   @$pb.TagNumber(2)
   $core.bool get confirm => $_getBF(1);
   @$pb.TagNumber(2)

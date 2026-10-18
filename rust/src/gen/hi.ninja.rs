@@ -820,7 +820,7 @@ pub mod binance_offer {
         Pending = 1,
         /// 点了确认,正在下单
         Executing = 2,
-        /// 下完了,结果在 result(成败看 result.http_status / error);留在列表里给人看,到期一起拿掉
+        /// 下完了,结果在 result(成败看 result.http_status / error);留在列表里给人看,
         Done = 3,
     }
     impl State {
@@ -887,7 +887,9 @@ pub struct BinanceOfferReply {
     /// BinanceOffer.id
     #[prost(string, optional, tag = "1")]
     pub id: ::core::option::Option<::prost::alloc::string::String>,
-    /// true = 确认开单,false = 取消。**必传**
+    /// **必传**。true = 确认开单(只认 STATE_PENDING)。
+    /// false = 这张卡我不要了:STATE_PENDING → 取消(不下单);STATE_DONE → 从列表里拿掉(落库,重启后也不再推);
+    /// STATE_EXECUTING → 不理(正在下的单收不回来,下完照常变 STATE_DONE 给人看)
     #[prost(bool, optional, tag = "2")]
     pub confirm: ::core::option::Option<bool>,
 }
