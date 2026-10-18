@@ -848,7 +848,8 @@ pub mod binance_offer {
         }
     }
 }
-/// 我们打算开的那一单。**数量与保证金是收到时的估算**,点确认时 brain 按当时的价格与余额重算再下。
+/// 我们打算开的那一单。保证金 / 数量 / 参考价由 brain 在收到时按**与下单同一条换算**算出(按交易对的
+/// 步长、价格精度取整,下单时也就是这个数);点确认时 brain 按当时的价格与余额重算再下,行情不动就是同一个数。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BinanceOfferPlan {
     /// 操作名,如 `usds_futures.new_order`
@@ -868,15 +869,18 @@ pub struct BinanceOfferPlan {
     /// 占本机总资金的比例(十进制小数)
     #[prost(string, optional, tag = "6")]
     pub ratio: ::core::option::Option<::prost::alloc::string::String>,
-    /// 估算保证金(合约)/ 金额(现货),计价币,十进制字符串
+    /// 保证金(合约 = 数量 × 参考价 ÷ 杠杆)/ 金额(现货),计价币,两位小数
     #[prost(string, optional, tag = "7")]
     pub margin: ::core::option::Option<::prost::alloc::string::String>,
-    /// 估算数量
+    /// 数量,按步长向下取整、写到步长那一位;现货市价买按金额下,这是按参考价折的
     #[prost(string, optional, tag = "8")]
     pub quantity: ::core::option::Option<::prost::alloc::string::String>,
-    /// 估算用的参考价
+    /// 参考价(合约标记价、现货最新价),写到价格精度那一位
     #[prost(string, optional, tag = "9")]
     pub price: ::core::option::Option<::prost::alloc::string::String>,
+    /// 按本机资金下不了这一单的原因(一句话);带了 face 就不给确认按钮,只能取消
+    #[prost(string, optional, tag = "10")]
+    pub shortfall: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BinanceOfferReply {

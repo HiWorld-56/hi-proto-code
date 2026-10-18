@@ -1475,7 +1475,7 @@ pub struct BinanceOpen {
     /// 合约:信号源这个交易对的杠杆
     #[prost(uint32, optional, tag = "5")]
     pub leverage: ::core::option::Option<u32>,
-    /// 发现时的参考价(合约标记价、现货最新价)
+    /// 发现时的参考价(合约标记价、现货最新价),写到这个交易对的价格精度那一位
     #[prost(string, optional, tag = "6")]
     pub price: ::core::option::Option<::prost::alloc::string::String>,
 }

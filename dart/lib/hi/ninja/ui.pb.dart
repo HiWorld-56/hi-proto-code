@@ -1727,7 +1727,8 @@ class BinanceOffer extends $pb.GeneratedMessage {
   $7.BinanceResult ensureResult() => $_ensure(7);
 }
 
-/// 我们打算开的那一单。**数量与保证金是收到时的估算**,点确认时 brain 按当时的价格与余额重算再下。
+/// 我们打算开的那一单。保证金 / 数量 / 参考价由 brain 在收到时按**与下单同一条换算**算出(按交易对的
+/// 步长、价格精度取整,下单时也就是这个数);点确认时 brain 按当时的价格与余额重算再下,行情不动就是同一个数。
 class BinanceOfferPlan extends $pb.GeneratedMessage {
   factory BinanceOfferPlan({
     $core.String? op,
@@ -1739,6 +1740,7 @@ class BinanceOfferPlan extends $pb.GeneratedMessage {
     $core.String? margin,
     $core.String? quantity,
     $core.String? price,
+    $core.String? shortfall,
   }) {
     final result = create();
     if (op != null) result.op = op;
@@ -1750,6 +1752,7 @@ class BinanceOfferPlan extends $pb.GeneratedMessage {
     if (margin != null) result.margin = margin;
     if (quantity != null) result.quantity = quantity;
     if (price != null) result.price = price;
+    if (shortfall != null) result.shortfall = shortfall;
     return result;
   }
 
@@ -1777,6 +1780,7 @@ class BinanceOfferPlan extends $pb.GeneratedMessage {
     ..aOS(7, _omitFieldNames ? '' : 'margin')
     ..aOS(8, _omitFieldNames ? '' : 'quantity')
     ..aOS(9, _omitFieldNames ? '' : 'price')
+    ..aOS(10, _omitFieldNames ? '' : 'shortfall')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1878,6 +1882,15 @@ class BinanceOfferPlan extends $pb.GeneratedMessage {
   $core.bool hasPrice() => $_has(8);
   @$pb.TagNumber(9)
   void clearPrice() => $_clearField(9);
+
+  @$pb.TagNumber(10)
+  $core.String get shortfall => $_getSZ(9);
+  @$pb.TagNumber(10)
+  set shortfall($core.String value) => $_setString(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasShortfall() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearShortfall() => $_clearField(10);
 }
 
 class BinanceOfferReply extends $pb.GeneratedMessage {

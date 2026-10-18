@@ -1682,7 +1682,8 @@ func (x *BinanceOffer) GetResult() *binance.BinanceResult {
 	return nil
 }
 
-// 我们打算开的那一单。**数量与保证金是收到时的估算**,点确认时 brain 按当时的价格与余额重算再下。
+// 我们打算开的那一单。保证金 / 数量 / 参考价由 brain 在收到时按**与下单同一条换算**算出(按交易对的
+// 步长、价格精度取整,下单时也就是这个数);点确认时 brain 按当时的价格与余额重算再下,行情不动就是同一个数。
 type BinanceOfferPlan struct {
 	state         protoimpl.MessageState       `protogen:"open.v1"`
 	Op            *string                      `protobuf:"bytes,1,opt,name=op,proto3,oneof" json:"op,omitempty"`         // 操作名,如 `usds_futures.new_order`
@@ -1691,9 +1692,10 @@ type BinanceOfferPlan struct {
 	PositionSide  *binance.BinancePositionSide `protobuf:"varint,4,opt,name=position_side,json=positionSide,proto3,enum=hi.binance.BinancePositionSide,oneof" json:"position_side,omitempty"` // 合约:LONG / SHORT
 	Leverage      *uint32                      `protobuf:"varint,5,opt,name=leverage,proto3,oneof" json:"leverage,omitempty"`                                                                 // 合约
 	Ratio         *string                      `protobuf:"bytes,6,opt,name=ratio,proto3,oneof" json:"ratio,omitempty"`                                                                        // 占本机总资金的比例(十进制小数)
-	Margin        *string                      `protobuf:"bytes,7,opt,name=margin,proto3,oneof" json:"margin,omitempty"`                                                                      // 估算保证金(合约)/ 金额(现货),计价币,十进制字符串
-	Quantity      *string                      `protobuf:"bytes,8,opt,name=quantity,proto3,oneof" json:"quantity,omitempty"`                                                                  // 估算数量
-	Price         *string                      `protobuf:"bytes,9,opt,name=price,proto3,oneof" json:"price,omitempty"`                                                                        // 估算用的参考价
+	Margin        *string                      `protobuf:"bytes,7,opt,name=margin,proto3,oneof" json:"margin,omitempty"`                                                                      // 保证金(合约 = 数量 × 参考价 ÷ 杠杆)/ 金额(现货),计价币,两位小数
+	Quantity      *string                      `protobuf:"bytes,8,opt,name=quantity,proto3,oneof" json:"quantity,omitempty"`                                                                  // 数量,按步长向下取整、写到步长那一位;现货市价买按金额下,这是按参考价折的
+	Price         *string                      `protobuf:"bytes,9,opt,name=price,proto3,oneof" json:"price,omitempty"`                                                                        // 参考价(合约标记价、现货最新价),写到价格精度那一位
+	Shortfall     *string                      `protobuf:"bytes,10,opt,name=shortfall,proto3,oneof" json:"shortfall,omitempty"`                                                               // 按本机资金下不了这一单的原因(一句话);带了 face 就不给确认按钮,只能取消
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1787,6 +1789,13 @@ func (x *BinanceOfferPlan) GetQuantity() string {
 func (x *BinanceOfferPlan) GetPrice() string {
 	if x != nil && x.Price != nil {
 		return *x.Price
+	}
+	return ""
+}
+
+func (x *BinanceOfferPlan) GetShortfall() string {
+	if x != nil && x.Shortfall != nil {
+		return *x.Shortfall
 	}
 	return ""
 }
@@ -2123,7 +2132,7 @@ const file_hi_ninja_ui_proto_rawDesc = "" +
 	"\f_received_atB\r\n" +
 	"\v_expires_atB\b\n" +
 	"\x06_stateB\t\n" +
-	"\a_result\"\xc1\x03\n" +
+	"\a_result\"\xf2\x03\n" +
 	"\x10BinanceOfferPlan\x12\x13\n" +
 	"\x02op\x18\x01 \x01(\tH\x00R\x02op\x88\x01\x01\x12\x1b\n" +
 	"\x06symbol\x18\x02 \x01(\tH\x01R\x06symbol\x88\x01\x01\x125\n" +
@@ -2133,7 +2142,9 @@ const file_hi_ninja_ui_proto_rawDesc = "" +
 	"\x05ratio\x18\x06 \x01(\tH\x05R\x05ratio\x88\x01\x01\x12\x1b\n" +
 	"\x06margin\x18\a \x01(\tH\x06R\x06margin\x88\x01\x01\x12\x1f\n" +
 	"\bquantity\x18\b \x01(\tH\aR\bquantity\x88\x01\x01\x12\x19\n" +
-	"\x05price\x18\t \x01(\tH\bR\x05price\x88\x01\x01B\x05\n" +
+	"\x05price\x18\t \x01(\tH\bR\x05price\x88\x01\x01\x12!\n" +
+	"\tshortfall\x18\n" +
+	" \x01(\tH\tR\tshortfall\x88\x01\x01B\x05\n" +
 	"\x03_opB\t\n" +
 	"\a_symbolB\a\n" +
 	"\x05_sideB\x10\n" +
@@ -2142,7 +2153,9 @@ const file_hi_ninja_ui_proto_rawDesc = "" +
 	"\x06_ratioB\t\n" +
 	"\a_marginB\v\n" +
 	"\t_quantityB\b\n" +
-	"\x06_price\"Z\n" +
+	"\x06_priceB\f\n" +
+	"\n" +
+	"_shortfall\"Z\n" +
 	"\x11BinanceOfferReply\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x1d\n" +
 	"\aconfirm\x18\x02 \x01(\bH\x01R\aconfirm\x88\x01\x01B\x05\n" +

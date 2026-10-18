@@ -781,6 +781,15 @@ const BinanceOfferPlan$json = {
       '17': true
     },
     {'1': 'price', '3': 9, '4': 1, '5': 9, '9': 8, '10': 'price', '17': true},
+    {
+      '1': 'shortfall',
+      '3': 10,
+      '4': 1,
+      '5': 9,
+      '9': 9,
+      '10': 'shortfall',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_op'},
@@ -792,6 +801,7 @@ const BinanceOfferPlan$json = {
     {'1': '_margin'},
     {'1': '_quantity'},
     {'1': '_price'},
+    {'1': '_shortfall'},
   ],
 };
 
@@ -803,9 +813,9 @@ final $typed_data.Uint8List binanceOfferPlanDescriptor = $convert.base64Decode(
     'VQb3NpdGlvblNpZGVIA1IMcG9zaXRpb25TaWRliAEBEh8KCGxldmVyYWdlGAUgASgNSARSCGxl'
     'dmVyYWdliAEBEhkKBXJhdGlvGAYgASgJSAVSBXJhdGlviAEBEhsKBm1hcmdpbhgHIAEoCUgGUg'
     'ZtYXJnaW6IAQESHwoIcXVhbnRpdHkYCCABKAlIB1IIcXVhbnRpdHmIAQESGQoFcHJpY2UYCSAB'
-    'KAlICFIFcHJpY2WIAQFCBQoDX29wQgkKB19zeW1ib2xCBwoFX3NpZGVCEAoOX3Bvc2l0aW9uX3'
-    'NpZGVCCwoJX2xldmVyYWdlQggKBl9yYXRpb0IJCgdfbWFyZ2luQgsKCV9xdWFudGl0eUIICgZf'
-    'cHJpY2U=');
+    'KAlICFIFcHJpY2WIAQESIQoJc2hvcnRmYWxsGAogASgJSAlSCXNob3J0ZmFsbIgBAUIFCgNfb3'
+    'BCCQoHX3N5bWJvbEIHCgVfc2lkZUIQCg5fcG9zaXRpb25fc2lkZUILCglfbGV2ZXJhZ2VCCAoG'
+    'X3JhdGlvQgkKB19tYXJnaW5CCwoJX3F1YW50aXR5QggKBl9wcmljZUIMCgpfc2hvcnRmYWxs');
 
 @$core.Deprecated('Use binanceOfferReplyDescriptor instead')
 const BinanceOfferReply$json = {

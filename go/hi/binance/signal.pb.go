@@ -175,7 +175,7 @@ type BinanceOpen struct {
 	Side          *BinancePositionSide   `protobuf:"varint,3,opt,name=side,proto3,enum=hi.binance.BinancePositionSide,oneof" json:"side,omitempty"` // 合约:LONG / SHORT;现货不带
 	Ratio         *string                `protobuf:"bytes,4,opt,name=ratio,proto3,oneof" json:"ratio,omitempty"`
 	Leverage      *uint32                `protobuf:"varint,5,opt,name=leverage,proto3,oneof" json:"leverage,omitempty"` // 合约:信号源这个交易对的杠杆
-	Price         *string                `protobuf:"bytes,6,opt,name=price,proto3,oneof" json:"price,omitempty"`        // 发现时的参考价(合约标记价、现货最新价)
+	Price         *string                `protobuf:"bytes,6,opt,name=price,proto3,oneof" json:"price,omitempty"`        // 发现时的参考价(合约标记价、现货最新价),写到这个交易对的价格精度那一位
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
