@@ -622,6 +622,8 @@ func (x *Member) GetUser() *hi.Entity {
 // binance     币安操作结果卡      kind=binance(hi.binance.BinanceResult)
 // binance_cmd 币安指令            kind=binance_cmd(hi.binance.BinanceCommand)—— 群里要 @ 执行的机器人,见 hi/binance/command.proto
 // binance_signal 币安跟单信号     kind=binance_signal(hi.binance.BinanceSignal)—— 信号源机器人发、@所有人,见 hi/binance/signal.proto
+// binance_offer 币安开单卡       kind=binance_offer(hi.binance.BinanceOffer)—— 跟单方机器人发给主人,同一 id 叠成一张,见 hi/binance/offer.proto
+// binance_offer_reply 开单卡回复  kind=binance_offer_reply(hi.binance.BinanceOfferReply)—— 主人发给机器人,只认主人
 // chat_record 聊天记录(合并转发)  kind=record(hi.club.ChatRecord)—— 原样内嵌被转发的那几条完整消息
 //
 // ⚠️ **注意是 `image_url` 不是 `image`、`audio_url` 不是 `audio`。**
@@ -652,6 +654,8 @@ type Content struct {
 	//	*Content_BinanceCmd
 	//	*Content_Record
 	//	*Content_BinanceSignal
+	//	*Content_BinanceOffer
+	//	*Content_BinanceOfferReply
 	Kind isContent_Kind `protobuf_oneof:"kind"`
 	// 这一段在**本条消息里**的编号:从 1 起按先后编(第一段 1、第二段 2……),同一条消息内天然不重。
 	// **由 hiclub-core-mqtt 在发出前统一填**(UI / brain 照旧只管组内容,填不填、填什么都会被 core 覆盖);
@@ -760,6 +764,24 @@ func (x *Content) GetBinanceSignal() *binance.BinanceSignal {
 	return nil
 }
 
+func (x *Content) GetBinanceOffer() *binance.BinanceOffer {
+	if x != nil {
+		if x, ok := x.Kind.(*Content_BinanceOffer); ok {
+			return x.BinanceOffer
+		}
+	}
+	return nil
+}
+
+func (x *Content) GetBinanceOfferReply() *binance.BinanceOfferReply {
+	if x != nil {
+		if x, ok := x.Kind.(*Content_BinanceOfferReply); ok {
+			return x.BinanceOfferReply
+		}
+	}
+	return nil
+}
+
 func (x *Content) GetId() uint32 {
 	if x != nil && x.Id != nil {
 		return *x.Id
@@ -803,6 +825,16 @@ type Content_BinanceSignal struct {
 	BinanceSignal *binance.BinanceSignal `protobuf:"bytes,9,opt,name=binance_signal,json=binanceSignal,proto3,oneof"`
 }
 
+type Content_BinanceOffer struct {
+	// 币安开单卡:跟单方机器人发给主人,主人在 app 上点确认 / 取消。见 hi/binance/offer.proto。
+	BinanceOffer *binance.BinanceOffer `protobuf:"bytes,10,opt,name=binance_offer,json=binanceOffer,proto3,oneof"`
+}
+
+type Content_BinanceOfferReply struct {
+	// 主人对开单卡的回复(确认 / 取消),发给那台机器人。只认主人。见 hi/binance/offer.proto。
+	BinanceOfferReply *binance.BinanceOfferReply `protobuf:"bytes,11,opt,name=binance_offer_reply,json=binanceOfferReply,proto3,oneof"`
+}
+
 func (*Content_Chat_) isContent_Kind() {}
 
 func (*Content_Trans) isContent_Kind() {}
@@ -814,6 +846,10 @@ func (*Content_BinanceCmd) isContent_Kind() {}
 func (*Content_Record) isContent_Kind() {}
 
 func (*Content_BinanceSignal) isContent_Kind() {}
+
+func (*Content_BinanceOffer) isContent_Kind() {}
+
+func (*Content_BinanceOfferReply) isContent_Kind() {}
 
 // 聊天记录 —— **合并转发**出来的那一条(类似微信「聊天记录」卡片)。`Content.type = "chat_record"`。
 //
@@ -961,7 +997,7 @@ var File_hi_club_messaging_proto protoreflect.FileDescriptor
 
 const file_hi_club_messaging_proto_rawDesc = "" +
 	"\n" +
-	"\x17hi/club/messaging.proto\x12\ahi.club\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/transfer.proto\x1a\x18hi/binance/binance.proto\x1a\x18hi/binance/command.proto\x1a\x17hi/binance/signal.proto\x1a\x10hi/options.proto\"{\n" +
+	"\x17hi/club/messaging.proto\x12\ahi.club\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/transfer.proto\x1a\x18hi/binance/binance.proto\x1a\x18hi/binance/command.proto\x1a\x16hi/binance/offer.proto\x1a\x17hi/binance/signal.proto\x1a\x10hi/options.proto\"{\n" +
 	"\x06Packet\x12/\n" +
 	"\x06notice\x18\x01 \x01(\v2\x0f.hi.club.NoticeB\x04\x90\xb5\x18\x02H\x00R\x06notice\x122\n" +
 	"\amessage\x18\x02 \x01(\v2\x10.hi.club.MessageB\x04\x90\xb5\x18\x02H\x00R\amessage:\x04\x98\xb5\x18\x02B\x06\n" +
@@ -1028,7 +1064,7 @@ const file_hi_club_messaging_proto_rawDesc = "" +
 	"\x05group\x18\x01 \x01(\v2\n" +
 	".hi.EntityR\x05group\x12\x1e\n" +
 	"\x04user\x18\x02 \x01(\v2\n" +
-	".hi.EntityR\x04user\"\x8c\x05\n" +
+	".hi.EntityR\x04user\"\xaa\x06\n" +
 	"\aContent\x12\x1d\n" +
 	"\x04type\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x04type\x88\x01\x01\x121\n" +
 	"\x04chat\x18\x02 \x01(\v2\x15.hi.club.Content.ChatB\x04\x90\xb5\x18\x02H\x00R\x04chat\x121\n" +
@@ -1037,7 +1073,10 @@ const file_hi_club_messaging_proto_rawDesc = "" +
 	"\vbinance_cmd\x18\x06 \x01(\v2\x1a.hi.binance.BinanceCommandB\x04\x90\xb5\x18\x02H\x00R\n" +
 	"binanceCmd\x123\n" +
 	"\x06record\x18\a \x01(\v2\x13.hi.club.ChatRecordB\x04\x90\xb5\x18\x02H\x00R\x06record\x12H\n" +
-	"\x0ebinance_signal\x18\t \x01(\v2\x19.hi.binance.BinanceSignalB\x04\x90\xb5\x18\x02H\x00R\rbinanceSignal\x12\x19\n" +
+	"\x0ebinance_signal\x18\t \x01(\v2\x19.hi.binance.BinanceSignalB\x04\x90\xb5\x18\x02H\x00R\rbinanceSignal\x12E\n" +
+	"\rbinance_offer\x18\n" +
+	" \x01(\v2\x18.hi.binance.BinanceOfferB\x04\x90\xb5\x18\x02H\x00R\fbinanceOffer\x12U\n" +
+	"\x13binance_offer_reply\x18\v \x01(\v2\x1d.hi.binance.BinanceOfferReplyB\x04\x90\xb5\x18\x02H\x00R\x11binanceOfferReply\x12\x19\n" +
 	"\x02id\x18\b \x01(\rB\x04\x90\xb5\x18\x02H\x02R\x02id\x88\x01\x01\x1a\xc1\x01\n" +
 	"\x04Chat\x12#\n" +
 	"\acontent\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\acontent\x88\x01\x01\x12\x1d\n" +
@@ -1073,22 +1112,24 @@ func file_hi_club_messaging_proto_rawDescGZIP() []byte {
 
 var file_hi_club_messaging_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_hi_club_messaging_proto_goTypes = []any{
-	(*Packet)(nil),                 // 0: hi.club.Packet
-	(*Notice)(nil),                 // 1: hi.club.Notice
-	(*Prompt)(nil),                 // 2: hi.club.Prompt
-	(*Message)(nil),                // 3: hi.club.Message
-	(*Contents)(nil),               // 4: hi.club.Contents
-	(*Mention)(nil),                // 5: hi.club.Mention
-	(*Member)(nil),                 // 6: hi.club.Member
-	(*Content)(nil),                // 7: hi.club.Content
-	(*ChatRecord)(nil),             // 8: hi.club.ChatRecord
-	(*Content_Chat)(nil),           // 9: hi.club.Content.Chat
-	(*hi.Entity)(nil),              // 10: hi.Entity
-	(*anypb.Any)(nil),              // 11: google.protobuf.Any
-	(*did.Transaction)(nil),        // 12: hi.did.Transaction
-	(*binance.BinanceResult)(nil),  // 13: hi.binance.BinanceResult
-	(*binance.BinanceCommand)(nil), // 14: hi.binance.BinanceCommand
-	(*binance.BinanceSignal)(nil),  // 15: hi.binance.BinanceSignal
+	(*Packet)(nil),                    // 0: hi.club.Packet
+	(*Notice)(nil),                    // 1: hi.club.Notice
+	(*Prompt)(nil),                    // 2: hi.club.Prompt
+	(*Message)(nil),                   // 3: hi.club.Message
+	(*Contents)(nil),                  // 4: hi.club.Contents
+	(*Mention)(nil),                   // 5: hi.club.Mention
+	(*Member)(nil),                    // 6: hi.club.Member
+	(*Content)(nil),                   // 7: hi.club.Content
+	(*ChatRecord)(nil),                // 8: hi.club.ChatRecord
+	(*Content_Chat)(nil),              // 9: hi.club.Content.Chat
+	(*hi.Entity)(nil),                 // 10: hi.Entity
+	(*anypb.Any)(nil),                 // 11: google.protobuf.Any
+	(*did.Transaction)(nil),           // 12: hi.did.Transaction
+	(*binance.BinanceResult)(nil),     // 13: hi.binance.BinanceResult
+	(*binance.BinanceCommand)(nil),    // 14: hi.binance.BinanceCommand
+	(*binance.BinanceSignal)(nil),     // 15: hi.binance.BinanceSignal
+	(*binance.BinanceOffer)(nil),      // 16: hi.binance.BinanceOffer
+	(*binance.BinanceOfferReply)(nil), // 17: hi.binance.BinanceOfferReply
 }
 var file_hi_club_messaging_proto_depIdxs = []int32{
 	1,  // 0: hi.club.Packet.notice:type_name -> hi.club.Notice
@@ -1110,12 +1151,14 @@ var file_hi_club_messaging_proto_depIdxs = []int32{
 	14, // 16: hi.club.Content.binance_cmd:type_name -> hi.binance.BinanceCommand
 	8,  // 17: hi.club.Content.record:type_name -> hi.club.ChatRecord
 	15, // 18: hi.club.Content.binance_signal:type_name -> hi.binance.BinanceSignal
-	3,  // 19: hi.club.ChatRecord.list:type_name -> hi.club.Message
-	20, // [20:20] is the sub-list for method output_type
-	20, // [20:20] is the sub-list for method input_type
-	20, // [20:20] is the sub-list for extension type_name
-	20, // [20:20] is the sub-list for extension extendee
-	0,  // [0:20] is the sub-list for field type_name
+	16, // 19: hi.club.Content.binance_offer:type_name -> hi.binance.BinanceOffer
+	17, // 20: hi.club.Content.binance_offer_reply:type_name -> hi.binance.BinanceOfferReply
+	3,  // 21: hi.club.ChatRecord.list:type_name -> hi.club.Message
+	22, // [22:22] is the sub-list for method output_type
+	22, // [22:22] is the sub-list for method input_type
+	22, // [22:22] is the sub-list for extension type_name
+	22, // [22:22] is the sub-list for extension extendee
+	0,  // [0:22] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_messaging_proto_init() }
@@ -1138,6 +1181,8 @@ func file_hi_club_messaging_proto_init() {
 		(*Content_BinanceCmd)(nil),
 		(*Content_Record)(nil),
 		(*Content_BinanceSignal)(nil),
+		(*Content_BinanceOffer)(nil),
+		(*Content_BinanceOfferReply)(nil),
 	}
 	file_hi_club_messaging_proto_msgTypes[8].OneofWrappers = []any{}
 	file_hi_club_messaging_proto_msgTypes[9].OneofWrappers = []any{}

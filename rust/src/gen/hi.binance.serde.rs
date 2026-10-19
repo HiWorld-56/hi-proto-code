@@ -3607,6 +3607,670 @@ impl<'de> serde::Deserialize<'de> for BinanceMarket {
         deserializer.deserialize_any(GeneratedVisitor)
     }
 }
+impl serde::Serialize for BinanceOffer {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.id.is_some() {
+            len += 1;
+        }
+        if self.source.is_some() {
+            len += 1;
+        }
+        if self.open.is_some() {
+            len += 1;
+        }
+        if self.plan.is_some() {
+            len += 1;
+        }
+        if self.received_at.is_some() {
+            len += 1;
+        }
+        if self.expires_at.is_some() {
+            len += 1;
+        }
+        if self.state.is_some() {
+            len += 1;
+        }
+        if self.result.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.binance.BinanceOffer", len)?;
+        if let Some(v) = self.id.as_ref() {
+            struct_ser.serialize_field("id", v)?;
+        }
+        if let Some(v) = self.source.as_ref() {
+            struct_ser.serialize_field("source", v)?;
+        }
+        if let Some(v) = self.open.as_ref() {
+            struct_ser.serialize_field("open", v)?;
+        }
+        if let Some(v) = self.plan.as_ref() {
+            struct_ser.serialize_field("plan", v)?;
+        }
+        if let Some(v) = self.received_at.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("receivedAt", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.expires_at.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("expiresAt", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.state.as_ref() {
+            let v = binance_offer::State::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("state", &v)?;
+        }
+        if let Some(v) = self.result.as_ref() {
+            struct_ser.serialize_field("result", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for BinanceOffer {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "id",
+            "source",
+            "open",
+            "plan",
+            "received_at",
+            "receivedAt",
+            "expires_at",
+            "expiresAt",
+            "state",
+            "result",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Id,
+            Source,
+            Open,
+            Plan,
+            ReceivedAt,
+            ExpiresAt,
+            State,
+            Result,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "id" => Ok(GeneratedField::Id),
+                            "source" => Ok(GeneratedField::Source),
+                            "open" => Ok(GeneratedField::Open),
+                            "plan" => Ok(GeneratedField::Plan),
+                            "receivedAt" | "received_at" => Ok(GeneratedField::ReceivedAt),
+                            "expiresAt" | "expires_at" => Ok(GeneratedField::ExpiresAt),
+                            "state" => Ok(GeneratedField::State),
+                            "result" => Ok(GeneratedField::Result),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = BinanceOffer;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.binance.BinanceOffer")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<BinanceOffer, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut id__ = None;
+                let mut source__ = None;
+                let mut open__ = None;
+                let mut plan__ = None;
+                let mut received_at__ = None;
+                let mut expires_at__ = None;
+                let mut state__ = None;
+                let mut result__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Id => {
+                            if id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("id"));
+                            }
+                            id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Source => {
+                            if source__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("source"));
+                            }
+                            source__ = map_.next_value()?;
+                        }
+                        GeneratedField::Open => {
+                            if open__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("open"));
+                            }
+                            open__ = map_.next_value()?;
+                        }
+                        GeneratedField::Plan => {
+                            if plan__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("plan"));
+                            }
+                            plan__ = map_.next_value()?;
+                        }
+                        GeneratedField::ReceivedAt => {
+                            if received_at__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("receivedAt"));
+                            }
+                            received_at__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::ExpiresAt => {
+                            if expires_at__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("expiresAt"));
+                            }
+                            expires_at__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::State => {
+                            if state__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("state"));
+                            }
+                            state__ = map_.next_value::<::std::option::Option<binance_offer::State>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::Result => {
+                            if result__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("result"));
+                            }
+                            result__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(BinanceOffer {
+                    id: id__,
+                    source: source__,
+                    open: open__,
+                    plan: plan__,
+                    received_at: received_at__,
+                    expires_at: expires_at__,
+                    state: state__,
+                    result: result__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.binance.BinanceOffer", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for binance_offer::State {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unspecified => "STATE_UNSPECIFIED",
+            Self::Pending => "STATE_PENDING",
+            Self::Executing => "STATE_EXECUTING",
+            Self::Done => "STATE_DONE",
+            Self::Canceled => "STATE_CANCELED",
+            Self::Expired => "STATE_EXPIRED",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for binance_offer::State {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "STATE_UNSPECIFIED",
+            "STATE_PENDING",
+            "STATE_EXECUTING",
+            "STATE_DONE",
+            "STATE_CANCELED",
+            "STATE_EXPIRED",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = binance_offer::State;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "STATE_UNSPECIFIED" => Ok(binance_offer::State::Unspecified),
+                    "STATE_PENDING" => Ok(binance_offer::State::Pending),
+                    "STATE_EXECUTING" => Ok(binance_offer::State::Executing),
+                    "STATE_DONE" => Ok(binance_offer::State::Done),
+                    "STATE_CANCELED" => Ok(binance_offer::State::Canceled),
+                    "STATE_EXPIRED" => Ok(binance_offer::State::Expired),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for BinanceOfferPlan {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.op.is_some() {
+            len += 1;
+        }
+        if self.symbol.is_some() {
+            len += 1;
+        }
+        if self.side.is_some() {
+            len += 1;
+        }
+        if self.position_side.is_some() {
+            len += 1;
+        }
+        if self.leverage.is_some() {
+            len += 1;
+        }
+        if self.ratio.is_some() {
+            len += 1;
+        }
+        if self.margin.is_some() {
+            len += 1;
+        }
+        if self.quantity.is_some() {
+            len += 1;
+        }
+        if self.price.is_some() {
+            len += 1;
+        }
+        if self.shortfall.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.binance.BinanceOfferPlan", len)?;
+        if let Some(v) = self.op.as_ref() {
+            struct_ser.serialize_field("op", v)?;
+        }
+        if let Some(v) = self.symbol.as_ref() {
+            struct_ser.serialize_field("symbol", v)?;
+        }
+        if let Some(v) = self.side.as_ref() {
+            let v = BinanceOrderSide::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("side", &v)?;
+        }
+        if let Some(v) = self.position_side.as_ref() {
+            let v = BinancePositionSide::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("positionSide", &v)?;
+        }
+        if let Some(v) = self.leverage.as_ref() {
+            struct_ser.serialize_field("leverage", v)?;
+        }
+        if let Some(v) = self.ratio.as_ref() {
+            struct_ser.serialize_field("ratio", v)?;
+        }
+        if let Some(v) = self.margin.as_ref() {
+            struct_ser.serialize_field("margin", v)?;
+        }
+        if let Some(v) = self.quantity.as_ref() {
+            struct_ser.serialize_field("quantity", v)?;
+        }
+        if let Some(v) = self.price.as_ref() {
+            struct_ser.serialize_field("price", v)?;
+        }
+        if let Some(v) = self.shortfall.as_ref() {
+            struct_ser.serialize_field("shortfall", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for BinanceOfferPlan {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "op",
+            "symbol",
+            "side",
+            "position_side",
+            "positionSide",
+            "leverage",
+            "ratio",
+            "margin",
+            "quantity",
+            "price",
+            "shortfall",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Op,
+            Symbol,
+            Side,
+            PositionSide,
+            Leverage,
+            Ratio,
+            Margin,
+            Quantity,
+            Price,
+            Shortfall,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "op" => Ok(GeneratedField::Op),
+                            "symbol" => Ok(GeneratedField::Symbol),
+                            "side" => Ok(GeneratedField::Side),
+                            "positionSide" | "position_side" => Ok(GeneratedField::PositionSide),
+                            "leverage" => Ok(GeneratedField::Leverage),
+                            "ratio" => Ok(GeneratedField::Ratio),
+                            "margin" => Ok(GeneratedField::Margin),
+                            "quantity" => Ok(GeneratedField::Quantity),
+                            "price" => Ok(GeneratedField::Price),
+                            "shortfall" => Ok(GeneratedField::Shortfall),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = BinanceOfferPlan;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.binance.BinanceOfferPlan")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<BinanceOfferPlan, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut op__ = None;
+                let mut symbol__ = None;
+                let mut side__ = None;
+                let mut position_side__ = None;
+                let mut leverage__ = None;
+                let mut ratio__ = None;
+                let mut margin__ = None;
+                let mut quantity__ = None;
+                let mut price__ = None;
+                let mut shortfall__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Op => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("op"));
+                            }
+                            op__ = map_.next_value()?;
+                        }
+                        GeneratedField::Symbol => {
+                            if symbol__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("symbol"));
+                            }
+                            symbol__ = map_.next_value()?;
+                        }
+                        GeneratedField::Side => {
+                            if side__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("side"));
+                            }
+                            side__ = map_.next_value::<::std::option::Option<BinanceOrderSide>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::PositionSide => {
+                            if position_side__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("positionSide"));
+                            }
+                            position_side__ = map_.next_value::<::std::option::Option<BinancePositionSide>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::Leverage => {
+                            if leverage__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("leverage"));
+                            }
+                            leverage__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Ratio => {
+                            if ratio__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("ratio"));
+                            }
+                            ratio__ = map_.next_value()?;
+                        }
+                        GeneratedField::Margin => {
+                            if margin__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("margin"));
+                            }
+                            margin__ = map_.next_value()?;
+                        }
+                        GeneratedField::Quantity => {
+                            if quantity__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("quantity"));
+                            }
+                            quantity__ = map_.next_value()?;
+                        }
+                        GeneratedField::Price => {
+                            if price__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("price"));
+                            }
+                            price__ = map_.next_value()?;
+                        }
+                        GeneratedField::Shortfall => {
+                            if shortfall__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("shortfall"));
+                            }
+                            shortfall__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(BinanceOfferPlan {
+                    op: op__,
+                    symbol: symbol__,
+                    side: side__,
+                    position_side: position_side__,
+                    leverage: leverage__,
+                    ratio: ratio__,
+                    margin: margin__,
+                    quantity: quantity__,
+                    price: price__,
+                    shortfall: shortfall__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.binance.BinanceOfferPlan", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for BinanceOfferReply {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.id.is_some() {
+            len += 1;
+        }
+        if self.confirm.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.binance.BinanceOfferReply", len)?;
+        if let Some(v) = self.id.as_ref() {
+            struct_ser.serialize_field("id", v)?;
+        }
+        if let Some(v) = self.confirm.as_ref() {
+            struct_ser.serialize_field("confirm", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for BinanceOfferReply {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "id",
+            "confirm",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Id,
+            Confirm,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "id" => Ok(GeneratedField::Id),
+                            "confirm" => Ok(GeneratedField::Confirm),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = BinanceOfferReply;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.binance.BinanceOfferReply")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<BinanceOfferReply, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut id__ = None;
+                let mut confirm__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Id => {
+                            if id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("id"));
+                            }
+                            id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Confirm => {
+                            if confirm__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("confirm"));
+                            }
+                            confirm__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(BinanceOfferReply {
+                    id: id__,
+                    confirm: confirm__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.binance.BinanceOfferReply", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for BinanceOpen {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>

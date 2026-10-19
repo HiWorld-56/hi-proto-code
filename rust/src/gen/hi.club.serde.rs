@@ -1593,6 +1593,12 @@ impl serde::Serialize for Content {
                 content::Kind::BinanceSignal(v) => {
                     struct_ser.serialize_field("binanceSignal", v)?;
                 }
+                content::Kind::BinanceOffer(v) => {
+                    struct_ser.serialize_field("binanceOffer", v)?;
+                }
+                content::Kind::BinanceOfferReply(v) => {
+                    struct_ser.serialize_field("binanceOfferReply", v)?;
+                }
             }
         }
         struct_ser.end()
@@ -1615,6 +1621,10 @@ impl<'de> serde::Deserialize<'de> for Content {
             "record",
             "binance_signal",
             "binanceSignal",
+            "binance_offer",
+            "binanceOffer",
+            "binance_offer_reply",
+            "binanceOfferReply",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -1627,6 +1637,8 @@ impl<'de> serde::Deserialize<'de> for Content {
             BinanceCmd,
             Record,
             BinanceSignal,
+            BinanceOffer,
+            BinanceOfferReply,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1656,6 +1668,8 @@ impl<'de> serde::Deserialize<'de> for Content {
                             "binanceCmd" | "binance_cmd" => Ok(GeneratedField::BinanceCmd),
                             "record" => Ok(GeneratedField::Record),
                             "binanceSignal" | "binance_signal" => Ok(GeneratedField::BinanceSignal),
+                            "binanceOffer" | "binance_offer" => Ok(GeneratedField::BinanceOffer),
+                            "binanceOfferReply" | "binance_offer_reply" => Ok(GeneratedField::BinanceOfferReply),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -1734,6 +1748,20 @@ impl<'de> serde::Deserialize<'de> for Content {
                                 return Err(serde::de::Error::duplicate_field("binanceSignal"));
                             }
                             kind__ = map_.next_value::<::std::option::Option<_>>()?.map(content::Kind::BinanceSignal)
+;
+                        }
+                        GeneratedField::BinanceOffer => {
+                            if kind__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("binanceOffer"));
+                            }
+                            kind__ = map_.next_value::<::std::option::Option<_>>()?.map(content::Kind::BinanceOffer)
+;
+                        }
+                        GeneratedField::BinanceOfferReply => {
+                            if kind__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("binanceOfferReply"));
+                            }
+                            kind__ = map_.next_value::<::std::option::Option<_>>()?.map(content::Kind::BinanceOfferReply)
 ;
                         }
                     }

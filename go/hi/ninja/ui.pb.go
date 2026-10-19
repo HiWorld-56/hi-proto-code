@@ -130,58 +130,6 @@ func (Emotion) EnumDescriptor() ([]byte, []int) {
 	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{1}
 }
 
-type BinanceOffer_State int32
-
-const (
-	BinanceOffer_STATE_UNSPECIFIED BinanceOffer_State = 0
-	BinanceOffer_STATE_PENDING     BinanceOffer_State = 1 // 等人点
-	BinanceOffer_STATE_EXECUTING   BinanceOffer_State = 2 // 点了确认,正在下单
-	BinanceOffer_STATE_DONE        BinanceOffer_State = 3 // 下完了,结果在 result(成败看 result.http_status / error);留在列表里给人看,
-)
-
-// Enum value maps for BinanceOffer_State.
-var (
-	BinanceOffer_State_name = map[int32]string{
-		0: "STATE_UNSPECIFIED",
-		1: "STATE_PENDING",
-		2: "STATE_EXECUTING",
-		3: "STATE_DONE",
-	}
-	BinanceOffer_State_value = map[string]int32{
-		"STATE_UNSPECIFIED": 0,
-		"STATE_PENDING":     1,
-		"STATE_EXECUTING":   2,
-		"STATE_DONE":        3,
-	}
-)
-
-func (x BinanceOffer_State) Enum() *BinanceOffer_State {
-	p := new(BinanceOffer_State)
-	*p = x
-	return p
-}
-
-func (x BinanceOffer_State) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (BinanceOffer_State) Descriptor() protoreflect.EnumDescriptor {
-	return file_hi_ninja_ui_proto_enumTypes[2].Descriptor()
-}
-
-func (BinanceOffer_State) Type() protoreflect.EnumType {
-	return &file_hi_ninja_ui_proto_enumTypes[2]
-}
-
-func (x BinanceOffer_State) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use BinanceOffer_State.Descriptor instead.
-func (BinanceOffer_State) EnumDescriptor() ([]byte, []int) {
-	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{14, 0}
-}
-
 type PluginProgress_State int32
 
 const (
@@ -221,11 +169,11 @@ func (x PluginProgress_State) String() string {
 }
 
 func (PluginProgress_State) Descriptor() protoreflect.EnumDescriptor {
-	return file_hi_ninja_ui_proto_enumTypes[3].Descriptor()
+	return file_hi_ninja_ui_proto_enumTypes[2].Descriptor()
 }
 
 func (PluginProgress_State) Type() protoreflect.EnumType {
-	return &file_hi_ninja_ui_proto_enumTypes[3]
+	return &file_hi_ninja_ui_proto_enumTypes[2]
 }
 
 func (x PluginProgress_State) Number() protoreflect.EnumNumber {
@@ -234,7 +182,7 @@ func (x PluginProgress_State) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use PluginProgress_State.Descriptor instead.
 func (PluginProgress_State) EnumDescriptor() ([]byte, []int) {
-	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{17, 0}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{14, 0}
 }
 
 type UpdateAction_Action int32
@@ -279,11 +227,11 @@ func (x UpdateAction_Action) String() string {
 }
 
 func (UpdateAction_Action) Descriptor() protoreflect.EnumDescriptor {
-	return file_hi_ninja_ui_proto_enumTypes[4].Descriptor()
+	return file_hi_ninja_ui_proto_enumTypes[3].Descriptor()
 }
 
 func (UpdateAction_Action) Type() protoreflect.EnumType {
-	return &file_hi_ninja_ui_proto_enumTypes[4]
+	return &file_hi_ninja_ui_proto_enumTypes[3]
 }
 
 func (x UpdateAction_Action) Number() protoreflect.EnumNumber {
@@ -292,7 +240,7 @@ func (x UpdateAction_Action) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use UpdateAction_Action.Descriptor instead.
 func (UpdateAction_Action) EnumDescriptor() ([]byte, []int) {
-	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{18, 0}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{15, 0}
 }
 
 // 机器人初始化：自身身份 + 当前所有者
@@ -1455,7 +1403,7 @@ func (x *FaceToBrain) GetBinanceRequest() *BinanceRequest {
 	return nil
 }
 
-func (x *FaceToBrain) GetBinanceOfferReply() *BinanceOfferReply {
+func (x *FaceToBrain) GetBinanceOfferReply() *binance.BinanceOfferReply {
 	if x != nil {
 		if x, ok := x.Cmd.(*FaceToBrain_BinanceOfferReply); ok {
 			return x.BinanceOfferReply
@@ -1511,7 +1459,7 @@ type FaceToBrain_BinanceRequest struct {
 
 type FaceToBrain_BinanceOfferReply struct {
 	// 人在开单卡上点的「确认 / 取消」
-	BinanceOfferReply *BinanceOfferReply `protobuf:"bytes,6,opt,name=binance_offer_reply,json=binanceOfferReply,proto3,oneof"`
+	BinanceOfferReply *binance.BinanceOfferReply `protobuf:"bytes,6,opt,name=binance_offer_reply,json=binanceOfferReply,proto3,oneof"`
 }
 
 type FaceToBrain_GetBinanceOffers struct {
@@ -1535,12 +1483,11 @@ func (*FaceToBrain_GetBinanceOffers) isFaceToBrain_Cmd() {}
 
 // ── 跟单:开单卡 ──────────────────────────────────────────────
 //
-// 群里的信号源机器人开了仓(`hi.binance.BinanceSignal`),本机**不自动跟**:brain 把每一笔算成一张卡
-// —— 信号源开了什么 + 我们打算开什么(由币安插件按简单策略算)—— 推到屏幕上,人点「确认」才下单。
-// 卡在 brain 本地落库,**从收到那一刻起只留 15 分钟**,过了就当放弃(不执行、从列表里拿掉)。
+// 群里的信号源机器人开了仓(`hi.binance.BinanceSignal`),本机**不自动跟**:brain 把每一笔算成一张卡,
+// 推到屏幕上,人点「确认」才下单。卡本身定义在 hi/binance/offer.proto —— 同一张卡也会作为聊天消息发给主人。
 type BinanceOffers struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	List          []*BinanceOffer        `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	state         protoimpl.MessageState  `protogen:"open.v1"`
+	List          []*binance.BinanceOffer `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"` // 只含屏幕上要显示的:待确认 / 下单中 / 已下完未关闭
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1575,284 +1522,11 @@ func (*BinanceOffers) Descriptor() ([]byte, []int) {
 	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *BinanceOffers) GetList() []*BinanceOffer {
+func (x *BinanceOffers) GetList() []*binance.BinanceOffer {
 	if x != nil {
 		return x.List
 	}
 	return nil
-}
-
-type BinanceOffer struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`                                    // brain 给的卡号;回复时原样带回
-	Source        *hi.Entity             `protobuf:"bytes,2,opt,name=source,proto3,oneof" json:"source,omitempty"`                            // 信号源机器人(did + 名字)
-	Open          *binance.BinanceOpen   `protobuf:"bytes,3,opt,name=open,proto3,oneof" json:"open,omitempty"`                                // 信号源开了什么
-	Plan          *BinanceOfferPlan      `protobuf:"bytes,4,opt,name=plan,proto3,oneof" json:"plan,omitempty"`                                // 我们打算开什么
-	ReceivedAt    *int64                 `protobuf:"varint,5,opt,name=received_at,json=receivedAt,proto3,oneof" json:"received_at,omitempty"` // 本机收到的时刻,绝对微秒
-	ExpiresAt     *int64                 `protobuf:"varint,6,opt,name=expires_at,json=expiresAt,proto3,oneof" json:"expires_at,omitempty"`    // = received_at + 15 分钟,绝对微秒;face 按它倒计时
-	State         *BinanceOffer_State    `protobuf:"varint,7,opt,name=state,proto3,enum=hi.ninja.BinanceOffer_State,oneof" json:"state,omitempty"`
-	Result        *binance.BinanceResult `protobuf:"bytes,8,opt,name=result,proto3,oneof" json:"result,omitempty"` // STATE_DONE 时带:下单的原样结果
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *BinanceOffer) Reset() {
-	*x = BinanceOffer{}
-	mi := &file_hi_ninja_ui_proto_msgTypes[14]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *BinanceOffer) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*BinanceOffer) ProtoMessage() {}
-
-func (x *BinanceOffer) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ui_proto_msgTypes[14]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use BinanceOffer.ProtoReflect.Descriptor instead.
-func (*BinanceOffer) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{14}
-}
-
-func (x *BinanceOffer) GetId() string {
-	if x != nil && x.Id != nil {
-		return *x.Id
-	}
-	return ""
-}
-
-func (x *BinanceOffer) GetSource() *hi.Entity {
-	if x != nil {
-		return x.Source
-	}
-	return nil
-}
-
-func (x *BinanceOffer) GetOpen() *binance.BinanceOpen {
-	if x != nil {
-		return x.Open
-	}
-	return nil
-}
-
-func (x *BinanceOffer) GetPlan() *BinanceOfferPlan {
-	if x != nil {
-		return x.Plan
-	}
-	return nil
-}
-
-func (x *BinanceOffer) GetReceivedAt() int64 {
-	if x != nil && x.ReceivedAt != nil {
-		return *x.ReceivedAt
-	}
-	return 0
-}
-
-func (x *BinanceOffer) GetExpiresAt() int64 {
-	if x != nil && x.ExpiresAt != nil {
-		return *x.ExpiresAt
-	}
-	return 0
-}
-
-func (x *BinanceOffer) GetState() BinanceOffer_State {
-	if x != nil && x.State != nil {
-		return *x.State
-	}
-	return BinanceOffer_STATE_UNSPECIFIED
-}
-
-func (x *BinanceOffer) GetResult() *binance.BinanceResult {
-	if x != nil {
-		return x.Result
-	}
-	return nil
-}
-
-// 我们打算开的那一单。保证金 / 数量 / 参考价由 brain 在收到时按**与下单同一条换算**算出(按交易对的
-// 步长、价格精度取整,下单时也就是这个数);点确认时 brain 按当时的价格与余额重算再下,行情不动就是同一个数。
-type BinanceOfferPlan struct {
-	state         protoimpl.MessageState       `protogen:"open.v1"`
-	Op            *string                      `protobuf:"bytes,1,opt,name=op,proto3,oneof" json:"op,omitempty"`         // 操作名,如 `usds_futures.new_order`
-	Symbol        *string                      `protobuf:"bytes,2,opt,name=symbol,proto3,oneof" json:"symbol,omitempty"` // 实际下单的交易对(现货 = 币 + USDT)
-	Side          *binance.BinanceOrderSide    `protobuf:"varint,3,opt,name=side,proto3,enum=hi.binance.BinanceOrderSide,oneof" json:"side,omitempty"`
-	PositionSide  *binance.BinancePositionSide `protobuf:"varint,4,opt,name=position_side,json=positionSide,proto3,enum=hi.binance.BinancePositionSide,oneof" json:"position_side,omitempty"` // 合约:LONG / SHORT
-	Leverage      *uint32                      `protobuf:"varint,5,opt,name=leverage,proto3,oneof" json:"leverage,omitempty"`                                                                 // 合约
-	Ratio         *string                      `protobuf:"bytes,6,opt,name=ratio,proto3,oneof" json:"ratio,omitempty"`                                                                        // 占本机总资金的比例(十进制小数)
-	Margin        *string                      `protobuf:"bytes,7,opt,name=margin,proto3,oneof" json:"margin,omitempty"`                                                                      // 保证金(合约 = 数量 × 参考价 ÷ 杠杆)/ 金额(现货),计价币,两位小数
-	Quantity      *string                      `protobuf:"bytes,8,opt,name=quantity,proto3,oneof" json:"quantity,omitempty"`                                                                  // 数量,按步长向下取整、写到步长那一位;现货市价买按金额下,这是按参考价折的
-	Price         *string                      `protobuf:"bytes,9,opt,name=price,proto3,oneof" json:"price,omitempty"`                                                                        // 参考价(合约标记价、现货最新价),写到价格精度那一位
-	Shortfall     *string                      `protobuf:"bytes,10,opt,name=shortfall,proto3,oneof" json:"shortfall,omitempty"`                                                               // 按本机资金下不了这一单的原因(一句话);带了 face 就不给确认按钮,只能取消
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *BinanceOfferPlan) Reset() {
-	*x = BinanceOfferPlan{}
-	mi := &file_hi_ninja_ui_proto_msgTypes[15]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *BinanceOfferPlan) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*BinanceOfferPlan) ProtoMessage() {}
-
-func (x *BinanceOfferPlan) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ui_proto_msgTypes[15]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use BinanceOfferPlan.ProtoReflect.Descriptor instead.
-func (*BinanceOfferPlan) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{15}
-}
-
-func (x *BinanceOfferPlan) GetOp() string {
-	if x != nil && x.Op != nil {
-		return *x.Op
-	}
-	return ""
-}
-
-func (x *BinanceOfferPlan) GetSymbol() string {
-	if x != nil && x.Symbol != nil {
-		return *x.Symbol
-	}
-	return ""
-}
-
-func (x *BinanceOfferPlan) GetSide() binance.BinanceOrderSide {
-	if x != nil && x.Side != nil {
-		return *x.Side
-	}
-	return binance.BinanceOrderSide(0)
-}
-
-func (x *BinanceOfferPlan) GetPositionSide() binance.BinancePositionSide {
-	if x != nil && x.PositionSide != nil {
-		return *x.PositionSide
-	}
-	return binance.BinancePositionSide(0)
-}
-
-func (x *BinanceOfferPlan) GetLeverage() uint32 {
-	if x != nil && x.Leverage != nil {
-		return *x.Leverage
-	}
-	return 0
-}
-
-func (x *BinanceOfferPlan) GetRatio() string {
-	if x != nil && x.Ratio != nil {
-		return *x.Ratio
-	}
-	return ""
-}
-
-func (x *BinanceOfferPlan) GetMargin() string {
-	if x != nil && x.Margin != nil {
-		return *x.Margin
-	}
-	return ""
-}
-
-func (x *BinanceOfferPlan) GetQuantity() string {
-	if x != nil && x.Quantity != nil {
-		return *x.Quantity
-	}
-	return ""
-}
-
-func (x *BinanceOfferPlan) GetPrice() string {
-	if x != nil && x.Price != nil {
-		return *x.Price
-	}
-	return ""
-}
-
-func (x *BinanceOfferPlan) GetShortfall() string {
-	if x != nil && x.Shortfall != nil {
-		return *x.Shortfall
-	}
-	return ""
-}
-
-type BinanceOfferReply struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	Id    *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"` // BinanceOffer.id
-	// **必传**。true = 确认开单(只认 STATE_PENDING)。
-	// false = 这张卡我不要了:STATE_PENDING → 取消(不下单);STATE_DONE → 从列表里拿掉(落库,重启后也不再推);
-	// STATE_EXECUTING → 不理(正在下的单收不回来,下完照常变 STATE_DONE 给人看)
-	Confirm       *bool `protobuf:"varint,2,opt,name=confirm,proto3,oneof" json:"confirm,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *BinanceOfferReply) Reset() {
-	*x = BinanceOfferReply{}
-	mi := &file_hi_ninja_ui_proto_msgTypes[16]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *BinanceOfferReply) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*BinanceOfferReply) ProtoMessage() {}
-
-func (x *BinanceOfferReply) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ui_proto_msgTypes[16]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use BinanceOfferReply.ProtoReflect.Descriptor instead.
-func (*BinanceOfferReply) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{16}
-}
-
-func (x *BinanceOfferReply) GetId() string {
-	if x != nil && x.Id != nil {
-		return *x.Id
-	}
-	return ""
-}
-
-func (x *BinanceOfferReply) GetConfirm() bool {
-	if x != nil && x.Confirm != nil {
-		return *x.Confirm
-	}
-	return false
 }
 
 // 插件下载/安装进度。
@@ -1880,7 +1554,7 @@ type PluginProgress struct {
 
 func (x *PluginProgress) Reset() {
 	*x = PluginProgress{}
-	mi := &file_hi_ninja_ui_proto_msgTypes[17]
+	mi := &file_hi_ninja_ui_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1892,7 +1566,7 @@ func (x *PluginProgress) String() string {
 func (*PluginProgress) ProtoMessage() {}
 
 func (x *PluginProgress) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ui_proto_msgTypes[17]
+	mi := &file_hi_ninja_ui_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1905,7 +1579,7 @@ func (x *PluginProgress) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PluginProgress.ProtoReflect.Descriptor instead.
 func (*PluginProgress) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{17}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *PluginProgress) GetUuid() string {
@@ -1970,7 +1644,7 @@ type UpdateAction struct {
 
 func (x *UpdateAction) Reset() {
 	*x = UpdateAction{}
-	mi := &file_hi_ninja_ui_proto_msgTypes[18]
+	mi := &file_hi_ninja_ui_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1982,7 +1656,7 @@ func (x *UpdateAction) String() string {
 func (*UpdateAction) ProtoMessage() {}
 
 func (x *UpdateAction) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ui_proto_msgTypes[18]
+	mi := &file_hi_ninja_ui_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1995,7 +1669,7 @@ func (x *UpdateAction) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateAction.ProtoReflect.Descriptor instead.
 func (*UpdateAction) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{18}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *UpdateAction) GetAction() UpdateAction_Action {
@@ -2009,7 +1683,7 @@ var File_hi_ninja_ui_proto protoreflect.FileDescriptor
 
 const file_hi_ninja_ui_proto_rawDesc = "" +
 	"\n" +
-	"\x11hi/ninja/ui.proto\x12\bhi.ninja\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x13hi/club/group.proto\x1a\x17hi/club/messaging.proto\x1a\x12hi/ai/plugin.proto\x1a\x18hi/binance/binance.proto\x1a\x17hi/binance/signal.proto\x1a\x15hi/did/transfer.proto\x1a\x16hi/ninja/updater.proto\"Q\n" +
+	"\x11hi/ninja/ui.proto\x12\bhi.ninja\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x13hi/club/group.proto\x1a\x17hi/club/messaging.proto\x1a\x12hi/ai/plugin.proto\x1a\x18hi/binance/binance.proto\x1a\x16hi/binance/offer.proto\x1a\x15hi/did/transfer.proto\x1a\x16hi/ninja/updater.proto\"Q\n" +
 	"\tRobotInit\x12 \n" +
 	"\x05robot\x18\x01 \x01(\v2\n" +
 	".hi.EntityR\x05robot\x12\"\n" +
@@ -2097,74 +1771,19 @@ const file_hi_ninja_ui_proto_rawDesc = "" +
 	"\x03usb\x18\x03 \x01(\bH\x02R\x03usb\x88\x01\x01B\x06\n" +
 	"\x04_ntpB\a\n" +
 	"\x05_wifiB\x06\n" +
-	"\x04_usb\"\xf2\x03\n" +
+	"\x04_usb\"\xf4\x03\n" +
 	"\vFaceToBrain\x128\n" +
 	"\vvoice_state\x18\x01 \x01(\x0e2\x15.hi.ninja.StateToggleH\x00R\n" +
 	"voiceState\x12=\n" +
 	"\rupdate_action\x18\x02 \x01(\v2\x16.hi.ninja.UpdateActionH\x00R\fupdateAction\x12J\n" +
 	"\x14get_binance_settings\x18\x03 \x01(\v2\x16.google.protobuf.EmptyH\x00R\x12getBinanceSettings\x12;\n" +
 	"\frequest_init\x18\x04 \x01(\v2\x16.google.protobuf.EmptyH\x00R\vrequestInit\x12C\n" +
-	"\x0fbinance_request\x18\x05 \x01(\v2\x18.hi.ninja.BinanceRequestH\x00R\x0ebinanceRequest\x12M\n" +
-	"\x13binance_offer_reply\x18\x06 \x01(\v2\x1b.hi.ninja.BinanceOfferReplyH\x00R\x11binanceOfferReply\x12F\n" +
+	"\x0fbinance_request\x18\x05 \x01(\v2\x18.hi.ninja.BinanceRequestH\x00R\x0ebinanceRequest\x12O\n" +
+	"\x13binance_offer_reply\x18\x06 \x01(\v2\x1d.hi.binance.BinanceOfferReplyH\x00R\x11binanceOfferReply\x12F\n" +
 	"\x12get_binance_offers\x18\a \x01(\v2\x16.google.protobuf.EmptyH\x00R\x10getBinanceOffersB\x05\n" +
-	"\x03cmd\";\n" +
-	"\rBinanceOffers\x12*\n" +
-	"\x04list\x18\x01 \x03(\v2\x16.hi.ninja.BinanceOfferR\x04list\"\x9e\x04\n" +
-	"\fBinanceOffer\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12'\n" +
-	"\x06source\x18\x02 \x01(\v2\n" +
-	".hi.EntityH\x01R\x06source\x88\x01\x01\x120\n" +
-	"\x04open\x18\x03 \x01(\v2\x17.hi.binance.BinanceOpenH\x02R\x04open\x88\x01\x01\x123\n" +
-	"\x04plan\x18\x04 \x01(\v2\x1a.hi.ninja.BinanceOfferPlanH\x03R\x04plan\x88\x01\x01\x12$\n" +
-	"\vreceived_at\x18\x05 \x01(\x03H\x04R\n" +
-	"receivedAt\x88\x01\x01\x12\"\n" +
-	"\n" +
-	"expires_at\x18\x06 \x01(\x03H\x05R\texpiresAt\x88\x01\x01\x127\n" +
-	"\x05state\x18\a \x01(\x0e2\x1c.hi.ninja.BinanceOffer.StateH\x06R\x05state\x88\x01\x01\x126\n" +
-	"\x06result\x18\b \x01(\v2\x19.hi.binance.BinanceResultH\aR\x06result\x88\x01\x01\"V\n" +
-	"\x05State\x12\x15\n" +
-	"\x11STATE_UNSPECIFIED\x10\x00\x12\x11\n" +
-	"\rSTATE_PENDING\x10\x01\x12\x13\n" +
-	"\x0fSTATE_EXECUTING\x10\x02\x12\x0e\n" +
-	"\n" +
-	"STATE_DONE\x10\x03B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_sourceB\a\n" +
-	"\x05_openB\a\n" +
-	"\x05_planB\x0e\n" +
-	"\f_received_atB\r\n" +
-	"\v_expires_atB\b\n" +
-	"\x06_stateB\t\n" +
-	"\a_result\"\xf2\x03\n" +
-	"\x10BinanceOfferPlan\x12\x13\n" +
-	"\x02op\x18\x01 \x01(\tH\x00R\x02op\x88\x01\x01\x12\x1b\n" +
-	"\x06symbol\x18\x02 \x01(\tH\x01R\x06symbol\x88\x01\x01\x125\n" +
-	"\x04side\x18\x03 \x01(\x0e2\x1c.hi.binance.BinanceOrderSideH\x02R\x04side\x88\x01\x01\x12I\n" +
-	"\rposition_side\x18\x04 \x01(\x0e2\x1f.hi.binance.BinancePositionSideH\x03R\fpositionSide\x88\x01\x01\x12\x1f\n" +
-	"\bleverage\x18\x05 \x01(\rH\x04R\bleverage\x88\x01\x01\x12\x19\n" +
-	"\x05ratio\x18\x06 \x01(\tH\x05R\x05ratio\x88\x01\x01\x12\x1b\n" +
-	"\x06margin\x18\a \x01(\tH\x06R\x06margin\x88\x01\x01\x12\x1f\n" +
-	"\bquantity\x18\b \x01(\tH\aR\bquantity\x88\x01\x01\x12\x19\n" +
-	"\x05price\x18\t \x01(\tH\bR\x05price\x88\x01\x01\x12!\n" +
-	"\tshortfall\x18\n" +
-	" \x01(\tH\tR\tshortfall\x88\x01\x01B\x05\n" +
-	"\x03_opB\t\n" +
-	"\a_symbolB\a\n" +
-	"\x05_sideB\x10\n" +
-	"\x0e_position_sideB\v\n" +
-	"\t_leverageB\b\n" +
-	"\x06_ratioB\t\n" +
-	"\a_marginB\v\n" +
-	"\t_quantityB\b\n" +
-	"\x06_priceB\f\n" +
-	"\n" +
-	"_shortfall\"Z\n" +
-	"\x11BinanceOfferReply\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x1d\n" +
-	"\aconfirm\x18\x02 \x01(\bH\x01R\aconfirm\x88\x01\x01B\x05\n" +
-	"\x03_idB\n" +
-	"\n" +
-	"\b_confirm\"\xdb\x03\n" +
+	"\x03cmd\"=\n" +
+	"\rBinanceOffers\x12,\n" +
+	"\x04list\x18\x01 \x03(\v2\x18.hi.binance.BinanceOfferR\x04list\"\xdb\x03\n" +
 	"\x0ePluginProgress\x12\x17\n" +
 	"\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x19\n" +
 	"\x05title\x18\x02 \x01(\tH\x01R\x05title\x88\x01\x01\x129\n" +
@@ -2220,98 +1839,86 @@ func file_hi_ninja_ui_proto_rawDescGZIP() []byte {
 	return file_hi_ninja_ui_proto_rawDescData
 }
 
-var file_hi_ninja_ui_proto_enumTypes = make([]protoimpl.EnumInfo, 5)
-var file_hi_ninja_ui_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
+var file_hi_ninja_ui_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
+var file_hi_ninja_ui_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_hi_ninja_ui_proto_goTypes = []any{
-	(StateToggle)(0),                 // 0: hi.ninja.StateToggle
-	(Emotion)(0),                     // 1: hi.ninja.Emotion
-	(BinanceOffer_State)(0),          // 2: hi.ninja.BinanceOffer.State
-	(PluginProgress_State)(0),        // 3: hi.ninja.PluginProgress.State
-	(UpdateAction_Action)(0),         // 4: hi.ninja.UpdateAction.Action
-	(*RobotInit)(nil),                // 5: hi.ninja.RobotInit
-	(*FriendList)(nil),               // 6: hi.ninja.FriendList
-	(*GroupInfoList)(nil),            // 7: hi.ninja.GroupInfoList
-	(*MasterEvent)(nil),              // 8: hi.ninja.MasterEvent
-	(*TextReply)(nil),                // 9: hi.ninja.TextReply
-	(*AudioPlay)(nil),                // 10: hi.ninja.AudioPlay
-	(*BinanceSettings)(nil),          // 11: hi.ninja.BinanceSettings
-	(*BinanceRequest)(nil),           // 12: hi.ninja.BinanceRequest
-	(*BrainToFace)(nil),              // 13: hi.ninja.BrainToFace
-	(*QrCard)(nil),                   // 14: hi.ninja.QrCard
-	(*Tip)(nil),                      // 15: hi.ninja.Tip
-	(*StatusEvent)(nil),              // 16: hi.ninja.StatusEvent
-	(*FaceToBrain)(nil),              // 17: hi.ninja.FaceToBrain
-	(*BinanceOffers)(nil),            // 18: hi.ninja.BinanceOffers
-	(*BinanceOffer)(nil),             // 19: hi.ninja.BinanceOffer
-	(*BinanceOfferPlan)(nil),         // 20: hi.ninja.BinanceOfferPlan
-	(*BinanceOfferReply)(nil),        // 21: hi.ninja.BinanceOfferReply
-	(*PluginProgress)(nil),           // 22: hi.ninja.PluginProgress
-	(*UpdateAction)(nil),             // 23: hi.ninja.UpdateAction
-	(*hi.Entity)(nil),                // 24: hi.Entity
-	(*club.GroupInfo)(nil),           // 25: hi.club.GroupInfo
-	(*club.Message)(nil),             // 26: hi.club.Message
-	(*emptypb.Empty)(nil),            // 27: google.protobuf.Empty
-	(*ai.PluginView)(nil),            // 28: hi.ai.PluginView
-	(*did.Transaction)(nil),          // 29: hi.did.Transaction
-	(*UpdateStatus)(nil),             // 30: hi.ninja.UpdateStatus
-	(*binance.BinanceResult)(nil),    // 31: hi.binance.BinanceResult
-	(*binance.BinanceOpen)(nil),      // 32: hi.binance.BinanceOpen
-	(binance.BinanceOrderSide)(0),    // 33: hi.binance.BinanceOrderSide
-	(binance.BinancePositionSide)(0), // 34: hi.binance.BinancePositionSide
+	(StateToggle)(0),                  // 0: hi.ninja.StateToggle
+	(Emotion)(0),                      // 1: hi.ninja.Emotion
+	(PluginProgress_State)(0),         // 2: hi.ninja.PluginProgress.State
+	(UpdateAction_Action)(0),          // 3: hi.ninja.UpdateAction.Action
+	(*RobotInit)(nil),                 // 4: hi.ninja.RobotInit
+	(*FriendList)(nil),                // 5: hi.ninja.FriendList
+	(*GroupInfoList)(nil),             // 6: hi.ninja.GroupInfoList
+	(*MasterEvent)(nil),               // 7: hi.ninja.MasterEvent
+	(*TextReply)(nil),                 // 8: hi.ninja.TextReply
+	(*AudioPlay)(nil),                 // 9: hi.ninja.AudioPlay
+	(*BinanceSettings)(nil),           // 10: hi.ninja.BinanceSettings
+	(*BinanceRequest)(nil),            // 11: hi.ninja.BinanceRequest
+	(*BrainToFace)(nil),               // 12: hi.ninja.BrainToFace
+	(*QrCard)(nil),                    // 13: hi.ninja.QrCard
+	(*Tip)(nil),                       // 14: hi.ninja.Tip
+	(*StatusEvent)(nil),               // 15: hi.ninja.StatusEvent
+	(*FaceToBrain)(nil),               // 16: hi.ninja.FaceToBrain
+	(*BinanceOffers)(nil),             // 17: hi.ninja.BinanceOffers
+	(*PluginProgress)(nil),            // 18: hi.ninja.PluginProgress
+	(*UpdateAction)(nil),              // 19: hi.ninja.UpdateAction
+	(*hi.Entity)(nil),                 // 20: hi.Entity
+	(*club.GroupInfo)(nil),            // 21: hi.club.GroupInfo
+	(*club.Message)(nil),              // 22: hi.club.Message
+	(*emptypb.Empty)(nil),             // 23: google.protobuf.Empty
+	(*ai.PluginView)(nil),             // 24: hi.ai.PluginView
+	(*did.Transaction)(nil),           // 25: hi.did.Transaction
+	(*UpdateStatus)(nil),              // 26: hi.ninja.UpdateStatus
+	(*binance.BinanceResult)(nil),     // 27: hi.binance.BinanceResult
+	(*binance.BinanceOfferReply)(nil), // 28: hi.binance.BinanceOfferReply
+	(*binance.BinanceOffer)(nil),      // 29: hi.binance.BinanceOffer
 }
 var file_hi_ninja_ui_proto_depIdxs = []int32{
-	24, // 0: hi.ninja.RobotInit.robot:type_name -> hi.Entity
-	24, // 1: hi.ninja.RobotInit.master:type_name -> hi.Entity
-	24, // 2: hi.ninja.FriendList.list:type_name -> hi.Entity
-	25, // 3: hi.ninja.GroupInfoList.list:type_name -> hi.club.GroupInfo
-	24, // 4: hi.ninja.MasterEvent.master:type_name -> hi.Entity
-	5,  // 5: hi.ninja.BrainToFace.init_robot:type_name -> hi.ninja.RobotInit
+	20, // 0: hi.ninja.RobotInit.robot:type_name -> hi.Entity
+	20, // 1: hi.ninja.RobotInit.master:type_name -> hi.Entity
+	20, // 2: hi.ninja.FriendList.list:type_name -> hi.Entity
+	21, // 3: hi.ninja.GroupInfoList.list:type_name -> hi.club.GroupInfo
+	20, // 4: hi.ninja.MasterEvent.master:type_name -> hi.Entity
+	4,  // 5: hi.ninja.BrainToFace.init_robot:type_name -> hi.ninja.RobotInit
 	0,  // 6: hi.ninja.BrainToFace.show_listen:type_name -> hi.ninja.StateToggle
 	1,  // 7: hi.ninja.BrainToFace.show_emotion:type_name -> hi.ninja.Emotion
-	26, // 8: hi.ninja.BrainToFace.show_im_request:type_name -> hi.club.Message
-	9,  // 9: hi.ninja.BrainToFace.show_im_reply:type_name -> hi.ninja.TextReply
-	9,  // 10: hi.ninja.BrainToFace.show_voice_reply:type_name -> hi.ninja.TextReply
-	27, // 11: hi.ninja.BrainToFace.show_qr_code:type_name -> google.protobuf.Empty
-	24, // 12: hi.ninja.BrainToFace.event_robot:type_name -> hi.Entity
-	8,  // 13: hi.ninja.BrainToFace.event_master:type_name -> hi.ninja.MasterEvent
-	25, // 14: hi.ninja.BrainToFace.event_members:type_name -> hi.club.GroupInfo
-	28, // 15: hi.ninja.BrainToFace.event_plugin:type_name -> hi.ai.PluginView
-	22, // 16: hi.ninja.BrainToFace.event_plugin_progress:type_name -> hi.ninja.PluginProgress
-	29, // 17: hi.ninja.BrainToFace.event_transaction:type_name -> hi.did.Transaction
-	10, // 18: hi.ninja.BrainToFace.play_audio:type_name -> hi.ninja.AudioPlay
-	6,  // 19: hi.ninja.BrainToFace.event_friends:type_name -> hi.ninja.FriendList
-	24, // 20: hi.ninja.BrainToFace.event_friend_delete:type_name -> hi.Entity
-	24, // 21: hi.ninja.BrainToFace.event_friend_add:type_name -> hi.Entity
-	7,  // 22: hi.ninja.BrainToFace.members_init:type_name -> hi.ninja.GroupInfoList
-	16, // 23: hi.ninja.BrainToFace.event_status:type_name -> hi.ninja.StatusEvent
-	30, // 24: hi.ninja.BrainToFace.event_update:type_name -> hi.ninja.UpdateStatus
-	11, // 25: hi.ninja.BrainToFace.event_binance_settings:type_name -> hi.ninja.BinanceSettings
-	31, // 26: hi.ninja.BrainToFace.binance_result:type_name -> hi.binance.BinanceResult
-	15, // 27: hi.ninja.BrainToFace.show_tip:type_name -> hi.ninja.Tip
-	14, // 28: hi.ninja.BrainToFace.show_qr:type_name -> hi.ninja.QrCard
-	18, // 29: hi.ninja.BrainToFace.binance_offers:type_name -> hi.ninja.BinanceOffers
+	22, // 8: hi.ninja.BrainToFace.show_im_request:type_name -> hi.club.Message
+	8,  // 9: hi.ninja.BrainToFace.show_im_reply:type_name -> hi.ninja.TextReply
+	8,  // 10: hi.ninja.BrainToFace.show_voice_reply:type_name -> hi.ninja.TextReply
+	23, // 11: hi.ninja.BrainToFace.show_qr_code:type_name -> google.protobuf.Empty
+	20, // 12: hi.ninja.BrainToFace.event_robot:type_name -> hi.Entity
+	7,  // 13: hi.ninja.BrainToFace.event_master:type_name -> hi.ninja.MasterEvent
+	21, // 14: hi.ninja.BrainToFace.event_members:type_name -> hi.club.GroupInfo
+	24, // 15: hi.ninja.BrainToFace.event_plugin:type_name -> hi.ai.PluginView
+	18, // 16: hi.ninja.BrainToFace.event_plugin_progress:type_name -> hi.ninja.PluginProgress
+	25, // 17: hi.ninja.BrainToFace.event_transaction:type_name -> hi.did.Transaction
+	9,  // 18: hi.ninja.BrainToFace.play_audio:type_name -> hi.ninja.AudioPlay
+	5,  // 19: hi.ninja.BrainToFace.event_friends:type_name -> hi.ninja.FriendList
+	20, // 20: hi.ninja.BrainToFace.event_friend_delete:type_name -> hi.Entity
+	20, // 21: hi.ninja.BrainToFace.event_friend_add:type_name -> hi.Entity
+	6,  // 22: hi.ninja.BrainToFace.members_init:type_name -> hi.ninja.GroupInfoList
+	15, // 23: hi.ninja.BrainToFace.event_status:type_name -> hi.ninja.StatusEvent
+	26, // 24: hi.ninja.BrainToFace.event_update:type_name -> hi.ninja.UpdateStatus
+	10, // 25: hi.ninja.BrainToFace.event_binance_settings:type_name -> hi.ninja.BinanceSettings
+	27, // 26: hi.ninja.BrainToFace.binance_result:type_name -> hi.binance.BinanceResult
+	14, // 27: hi.ninja.BrainToFace.show_tip:type_name -> hi.ninja.Tip
+	13, // 28: hi.ninja.BrainToFace.show_qr:type_name -> hi.ninja.QrCard
+	17, // 29: hi.ninja.BrainToFace.binance_offers:type_name -> hi.ninja.BinanceOffers
 	0,  // 30: hi.ninja.FaceToBrain.voice_state:type_name -> hi.ninja.StateToggle
-	23, // 31: hi.ninja.FaceToBrain.update_action:type_name -> hi.ninja.UpdateAction
-	27, // 32: hi.ninja.FaceToBrain.get_binance_settings:type_name -> google.protobuf.Empty
-	27, // 33: hi.ninja.FaceToBrain.request_init:type_name -> google.protobuf.Empty
-	12, // 34: hi.ninja.FaceToBrain.binance_request:type_name -> hi.ninja.BinanceRequest
-	21, // 35: hi.ninja.FaceToBrain.binance_offer_reply:type_name -> hi.ninja.BinanceOfferReply
-	27, // 36: hi.ninja.FaceToBrain.get_binance_offers:type_name -> google.protobuf.Empty
-	19, // 37: hi.ninja.BinanceOffers.list:type_name -> hi.ninja.BinanceOffer
-	24, // 38: hi.ninja.BinanceOffer.source:type_name -> hi.Entity
-	32, // 39: hi.ninja.BinanceOffer.open:type_name -> hi.binance.BinanceOpen
-	20, // 40: hi.ninja.BinanceOffer.plan:type_name -> hi.ninja.BinanceOfferPlan
-	2,  // 41: hi.ninja.BinanceOffer.state:type_name -> hi.ninja.BinanceOffer.State
-	31, // 42: hi.ninja.BinanceOffer.result:type_name -> hi.binance.BinanceResult
-	33, // 43: hi.ninja.BinanceOfferPlan.side:type_name -> hi.binance.BinanceOrderSide
-	34, // 44: hi.ninja.BinanceOfferPlan.position_side:type_name -> hi.binance.BinancePositionSide
-	3,  // 45: hi.ninja.PluginProgress.state:type_name -> hi.ninja.PluginProgress.State
-	4,  // 46: hi.ninja.UpdateAction.action:type_name -> hi.ninja.UpdateAction.Action
-	47, // [47:47] is the sub-list for method output_type
-	47, // [47:47] is the sub-list for method input_type
-	47, // [47:47] is the sub-list for extension type_name
-	47, // [47:47] is the sub-list for extension extendee
-	0,  // [0:47] is the sub-list for field type_name
+	19, // 31: hi.ninja.FaceToBrain.update_action:type_name -> hi.ninja.UpdateAction
+	23, // 32: hi.ninja.FaceToBrain.get_binance_settings:type_name -> google.protobuf.Empty
+	23, // 33: hi.ninja.FaceToBrain.request_init:type_name -> google.protobuf.Empty
+	11, // 34: hi.ninja.FaceToBrain.binance_request:type_name -> hi.ninja.BinanceRequest
+	28, // 35: hi.ninja.FaceToBrain.binance_offer_reply:type_name -> hi.binance.BinanceOfferReply
+	23, // 36: hi.ninja.FaceToBrain.get_binance_offers:type_name -> google.protobuf.Empty
+	29, // 37: hi.ninja.BinanceOffers.list:type_name -> hi.binance.BinanceOffer
+	2,  // 38: hi.ninja.PluginProgress.state:type_name -> hi.ninja.PluginProgress.State
+	3,  // 39: hi.ninja.UpdateAction.action:type_name -> hi.ninja.UpdateAction.Action
+	40, // [40:40] is the sub-list for method output_type
+	40, // [40:40] is the sub-list for method input_type
+	40, // [40:40] is the sub-list for extension type_name
+	40, // [40:40] is the sub-list for extension extendee
+	0,  // [0:40] is the sub-list for field type_name
 }
 
 func init() { file_hi_ninja_ui_proto_init() }
@@ -2365,16 +1972,13 @@ func file_hi_ninja_ui_proto_init() {
 	}
 	file_hi_ninja_ui_proto_msgTypes[14].OneofWrappers = []any{}
 	file_hi_ninja_ui_proto_msgTypes[15].OneofWrappers = []any{}
-	file_hi_ninja_ui_proto_msgTypes[16].OneofWrappers = []any{}
-	file_hi_ninja_ui_proto_msgTypes[17].OneofWrappers = []any{}
-	file_hi_ninja_ui_proto_msgTypes[18].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ninja_ui_proto_rawDesc), len(file_hi_ninja_ui_proto_rawDesc)),
-			NumEnums:      5,
-			NumMessages:   19,
+			NumEnums:      4,
+			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

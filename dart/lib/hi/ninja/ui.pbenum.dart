@@ -63,31 +63,6 @@ class Emotion extends $pb.ProtobufEnum {
   const Emotion._(super.value, super.name);
 }
 
-class BinanceOffer_State extends $pb.ProtobufEnum {
-  static const BinanceOffer_State STATE_UNSPECIFIED =
-      BinanceOffer_State._(0, _omitEnumNames ? '' : 'STATE_UNSPECIFIED');
-  static const BinanceOffer_State STATE_PENDING =
-      BinanceOffer_State._(1, _omitEnumNames ? '' : 'STATE_PENDING');
-  static const BinanceOffer_State STATE_EXECUTING =
-      BinanceOffer_State._(2, _omitEnumNames ? '' : 'STATE_EXECUTING');
-  static const BinanceOffer_State STATE_DONE =
-      BinanceOffer_State._(3, _omitEnumNames ? '' : 'STATE_DONE');
-
-  static const $core.List<BinanceOffer_State> values = <BinanceOffer_State>[
-    STATE_UNSPECIFIED,
-    STATE_PENDING,
-    STATE_EXECUTING,
-    STATE_DONE,
-  ];
-
-  static final $core.List<BinanceOffer_State?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 3);
-  static BinanceOffer_State? valueOf($core.int value) =>
-      value < 0 || value >= _byValue.length ? null : _byValue[value];
-
-  const BinanceOffer_State._(super.value, super.name);
-}
-
 class PluginProgress_State extends $pb.ProtobufEnum {
   static const PluginProgress_State STATE_UNKNOWN =
       PluginProgress_State._(0, _omitEnumNames ? '' : 'STATE_UNKNOWN');

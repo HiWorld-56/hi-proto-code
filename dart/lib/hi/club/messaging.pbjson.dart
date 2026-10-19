@@ -457,6 +457,26 @@ const Content$json = {
       '10': 'binanceSignal'
     },
     {
+      '1': 'binance_offer',
+      '3': 10,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceOffer',
+      '8': {},
+      '9': 0,
+      '10': 'binanceOffer'
+    },
+    {
+      '1': 'binance_offer_reply',
+      '3': 11,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceOfferReply',
+      '8': {},
+      '9': 0,
+      '10': 'binanceOfferReply'
+    },
+    {
       '1': 'id',
       '3': 8,
       '4': 1,
@@ -539,11 +559,14 @@ final $typed_data.Uint8List contentDescriptor = $convert.base64Decode(
     'KAsyGi5oaS5iaW5hbmNlLkJpbmFuY2VDb21tYW5kQgSQtRgCSABSCmJpbmFuY2VDbWQSMwoGcm'
     'Vjb3JkGAcgASgLMhMuaGkuY2x1Yi5DaGF0UmVjb3JkQgSQtRgCSABSBnJlY29yZBJICg5iaW5h'
     'bmNlX3NpZ25hbBgJIAEoCzIZLmhpLmJpbmFuY2UuQmluYW5jZVNpZ25hbEIEkLUYAkgAUg1iaW'
-    '5hbmNlU2lnbmFsEhkKAmlkGAggASgNQgSQtRgCSAJSAmlkiAEBGsEBCgRDaGF0EiMKB2NvbnRl'
-    'bnQYASABKAlCBJC1GAJIAFIHY29udGVudIgBARIdCgRuYW1lGAIgASgJQgSQtRgCSAFSBG5hbW'
-    'WIAQESHQoEc2l6ZRgDIAEoDUIEkLUYAkgCUgRzaXpliAEBEiUKCGR1cmF0aW9uGAQgASgNQgSQ'
-    'tRgCSANSCGR1cmF0aW9uiAEBOgSYtRgCQgoKCF9jb250ZW50QgcKBV9uYW1lQgcKBV9zaXplQg'
-    'sKCV9kdXJhdGlvbjoEmLUYAkIGCgRraW5kQgcKBV90eXBlQgUKA19pZA==');
+    '5hbmNlU2lnbmFsEkUKDWJpbmFuY2Vfb2ZmZXIYCiABKAsyGC5oaS5iaW5hbmNlLkJpbmFuY2VP'
+    'ZmZlckIEkLUYAkgAUgxiaW5hbmNlT2ZmZXISVQoTYmluYW5jZV9vZmZlcl9yZXBseRgLIAEoCz'
+    'IdLmhpLmJpbmFuY2UuQmluYW5jZU9mZmVyUmVwbHlCBJC1GAJIAFIRYmluYW5jZU9mZmVyUmVw'
+    'bHkSGQoCaWQYCCABKA1CBJC1GAJIAlICaWSIAQEawQEKBENoYXQSIwoHY29udGVudBgBIAEoCU'
+    'IEkLUYAkgAUgdjb250ZW50iAEBEh0KBG5hbWUYAiABKAlCBJC1GAJIAVIEbmFtZYgBARIdCgRz'
+    'aXplGAMgASgNQgSQtRgCSAJSBHNpemWIAQESJQoIZHVyYXRpb24YBCABKA1CBJC1GAJIA1IIZH'
+    'VyYXRpb26IAQE6BJi1GAJCCgoIX2NvbnRlbnRCBwoFX25hbWVCBwoFX3NpemVCCwoJX2R1cmF0'
+    'aW9uOgSYtRgCQgYKBGtpbmRCBwoFX3R5cGVCBQoDX2lk');
 
 @$core.Deprecated('Use chatRecordDescriptor instead')
 const ChatRecord$json = {

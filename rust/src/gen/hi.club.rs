@@ -3755,6 +3755,8 @@ pub struct Member {
 /// binance     币安操作结果卡      kind=binance(hi.binance.BinanceResult)
 /// binance_cmd 币安指令            kind=binance_cmd(hi.binance.BinanceCommand)—— 群里要 @ 执行的机器人,见 hi/binance/command.proto
 /// binance_signal 币安跟单信号     kind=binance_signal(hi.binance.BinanceSignal)—— 信号源机器人发、@所有人,见 hi/binance/signal.proto
+/// binance_offer 币安开单卡       kind=binance_offer(hi.binance.BinanceOffer)—— 跟单方机器人发给主人,同一 id 叠成一张,见 hi/binance/offer.proto
+/// binance_offer_reply 开单卡回复  kind=binance_offer_reply(hi.binance.BinanceOfferReply)—— 主人发给机器人,只认主人
 /// chat_record 聊天记录(合并转发)  kind=record(hi.club.ChatRecord)—— 原样内嵌被转发的那几条完整消息
 ///
 /// ⚠️ **注意是 `image_url` 不是 `image`、`audio_url` 不是 `audio`。**
@@ -3784,7 +3786,7 @@ pub struct Content {
     /// 用途:引用消息里的某一段 —— `<消息 uuid>#<id>`,见下面「引用」那段。
     #[prost(uint32, optional, tag = "8")]
     pub id: ::core::option::Option<u32>,
-    #[prost(oneof = "content::Kind", tags = "2, 3, 5, 6, 7, 9")]
+    #[prost(oneof = "content::Kind", tags = "2, 3, 5, 6, 7, 9, 10, 11")]
     pub kind: ::core::option::Option<content::Kind>,
 }
 /// Nested message and enum types in `Content`.
@@ -3821,6 +3823,12 @@ pub mod content {
         /// 币安跟单信号:信号源机器人账户上的变化,广播给群里别的机器人跟。见 hi/binance/signal.proto。
         #[prost(message, tag = "9")]
         BinanceSignal(super::super::binance::BinanceSignal),
+        /// 币安开单卡:跟单方机器人发给主人,主人在 app 上点确认 / 取消。见 hi/binance/offer.proto。
+        #[prost(message, tag = "10")]
+        BinanceOffer(super::super::binance::BinanceOffer),
+        /// 主人对开单卡的回复(确认 / 取消),发给那台机器人。只认主人。见 hi/binance/offer.proto。
+        #[prost(message, tag = "11")]
+        BinanceOfferReply(super::super::binance::BinanceOfferReply),
     }
 }
 /// 聊天记录 —— **合并转发**出来的那一条(类似微信「聊天记录」卡片)。`Content.type = "chat_record"`。

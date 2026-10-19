@@ -28,12 +28,12 @@ from hi.club import group_pb2 as hi_dot_club_dot_group__pb2
 from hi.club import messaging_pb2 as hi_dot_club_dot_messaging__pb2
 from hi.ai import plugin_pb2 as hi_dot_ai_dot_plugin__pb2
 from hi.binance import binance_pb2 as hi_dot_binance_dot_binance__pb2
-from hi.binance import signal_pb2 as hi_dot_binance_dot_signal__pb2
+from hi.binance import offer_pb2 as hi_dot_binance_dot_offer__pb2
 from hi.did import transfer_pb2 as hi_dot_did_dot_transfer__pb2
 from hi.ninja import updater_pb2 as hi_dot_ninja_dot_updater__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11hi/ninja/ui.proto\x12\x08hi.ninja\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x13hi/club/group.proto\x1a\x17hi/club/messaging.proto\x1a\x12hi/ai/plugin.proto\x1a\x18hi/binance/binance.proto\x1a\x17hi/binance/signal.proto\x1a\x15hi/did/transfer.proto\x1a\x16hi/ninja/updater.proto\"Q\n\tRobotInit\x12 \n\x05robot\x18\x01 \x01(\x0b\x32\n.hi.EntityR\x05robot\x12\"\n\x06master\x18\x02 \x01(\x0b\x32\n.hi.EntityR\x06master\",\n\nFriendList\x12\x1e\n\x04list\x18\x01 \x03(\x0b\x32\n.hi.EntityR\x04list\"7\n\rGroupInfoList\x12&\n\x04list\x18\x01 \x03(\x0b\x32\x12.hi.club.GroupInfoR\x04list\"\\\n\x0bMasterEvent\x12\"\n\x06master\x18\x01 \x01(\x0b\x32\n.hi.EntityR\x06master\x12\x1d\n\x07trigger\x18\x02 \x01(\tH\x00R\x07trigger\x88\x01\x01\x42\n\n\x08_trigger\"R\n\tTextReply\x12\x17\n\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x19\n\x05value\x18\x02 \x01(\tH\x01R\x05value\x88\x01\x01\x42\x07\n\x05_uuidB\x08\n\x06_value\"R\n\tAudioPlay\x12\x17\n\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x19\n\x05\x61udio\x18\x02 \x01(\x0cH\x01R\x05\x61udio\x88\x01\x01\x42\x07\n\x05_uuidB\x08\n\x06_audio\"\x11\n\x0f\x42inanceSettings\"~\n\x0e\x42inanceRequest\x12\x13\n\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x13\n\x02op\x18\x02 \x01(\tH\x01R\x02op\x88\x01\x01\x12$\n\x0bparams_json\x18\x03 \x01(\tH\x02R\nparamsJson\x88\x01\x01\x42\x05\n\x03_idB\x05\n\x03_opB\x0e\n\x0c_params_json\"\xf4\x0b\n\x0b\x42rainToFace\x12\x34\n\ninit_robot\x18\x01 \x01(\x0b\x32\x13.hi.ninja.RobotInitH\x00R\tinitRobot\x12\x38\n\x0bshow_listen\x18\x02 \x01(\x0e\x32\x15.hi.ninja.StateToggleH\x00R\nshowListen\x12\x36\n\x0cshow_emotion\x18\x03 \x01(\x0e\x32\x11.hi.ninja.EmotionH\x00R\x0bshowEmotion\x12:\n\x0fshow_im_request\x18\x04 \x01(\x0b\x32\x10.hi.club.MessageH\x00R\rshowImRequest\x12\x39\n\rshow_im_reply\x18\x05 \x01(\x0b\x32\x13.hi.ninja.TextReplyH\x00R\x0bshowImReply\x12?\n\x10show_voice_reply\x18\x06 \x01(\x0b\x32\x13.hi.ninja.TextReplyH\x00R\x0eshowVoiceReply\x12:\n\x0cshow_qr_code\x18\x07 \x01(\x0b\x32\x16.google.protobuf.EmptyH\x00R\nshowQrCode\x12-\n\x0b\x65vent_robot\x18\x08 \x01(\x0b\x32\n.hi.EntityH\x00R\neventRobot\x12:\n\x0c\x65vent_master\x18\t \x01(\x0b\x32\x15.hi.ninja.MasterEventH\x00R\x0b\x65ventMaster\x12\x39\n\revent_members\x18\n \x01(\x0b\x32\x12.hi.club.GroupInfoH\x00R\x0c\x65ventMembers\x12\x36\n\x0c\x65vent_plugin\x18\x0b \x01(\x0b\x32\x11.hi.ai.PluginViewH\x00R\x0b\x65ventPlugin\x12N\n\x15\x65vent_plugin_progress\x18\x14 \x01(\x0b\x32\x18.hi.ninja.PluginProgressH\x00R\x13\x65ventPluginProgress\x12\x42\n\x11\x65vent_transaction\x18\x0c \x01(\x0b\x32\x13.hi.did.TransactionH\x00R\x10\x65ventTransaction\x12\x34\n\nplay_audio\x18\r \x01(\x0b\x32\x13.hi.ninja.AudioPlayH\x00R\tplayAudio\x12;\n\revent_friends\x18\x0f \x01(\x0b\x32\x14.hi.ninja.FriendListH\x00R\x0c\x65ventFriends\x12<\n\x13\x65vent_friend_delete\x18\x0e \x01(\x0b\x32\n.hi.EntityH\x00R\x11\x65ventFriendDelete\x12\x36\n\x10\x65vent_friend_add\x18\x10 \x01(\x0b\x32\n.hi.EntityH\x00R\x0e\x65ventFriendAdd\x12<\n\x0cmembers_init\x18\x11 \x01(\x0b\x32\x17.hi.ninja.GroupInfoListH\x00R\x0bmembersInit\x12:\n\x0c\x65vent_status\x18\x12 \x01(\x0b\x32\x15.hi.ninja.StatusEventH\x00R\x0b\x65ventStatus\x12;\n\x0c\x65vent_update\x18\x13 \x01(\x0b\x32\x16.hi.ninja.UpdateStatusH\x00R\x0b\x65ventUpdate\x12Q\n\x16\x65vent_binance_settings\x18\x15 \x01(\x0b\x32\x19.hi.ninja.BinanceSettingsH\x00R\x14\x65ventBinanceSettings\x12\x42\n\x0e\x62inance_result\x18\x16 \x01(\x0b\x32\x19.hi.binance.BinanceResultH\x00R\rbinanceResult\x12*\n\x08show_tip\x18\x18 \x01(\x0b\x32\r.hi.ninja.TipH\x00R\x07showTip\x12+\n\x07show_qr\x18\x19 \x01(\x0b\x32\x10.hi.ninja.QrCardH\x00R\x06showQr\x12@\n\x0e\x62inance_offers\x18\x1a \x01(\x0b\x32\x17.hi.ninja.BinanceOffersH\x00R\rbinanceOffersB\x05\n\x03\x63md\"X\n\x06QrCard\x12\x1d\n\x07\x63ontent\x18\x01 \x01(\tH\x00R\x07\x63ontent\x88\x01\x01\x12\x19\n\x05title\x18\x02 \x01(\tH\x01R\x05title\x88\x01\x01\x42\n\n\x08_contentB\x08\n\x06_title\"\'\n\x03Tip\x12\x17\n\x04text\x18\x01 \x01(\tH\x00R\x04text\x88\x01\x01\x42\x07\n\x05_text\"m\n\x0bStatusEvent\x12\x15\n\x03ntp\x18\x01 \x01(\x08H\x00R\x03ntp\x88\x01\x01\x12\x17\n\x04wifi\x18\x02 \x01(\x08H\x01R\x04wifi\x88\x01\x01\x12\x15\n\x03usb\x18\x03 \x01(\x08H\x02R\x03usb\x88\x01\x01\x42\x06\n\x04_ntpB\x07\n\x05_wifiB\x06\n\x04_usb\"\xf2\x03\n\x0b\x46\x61\x63\x65ToBrain\x12\x38\n\x0bvoice_state\x18\x01 \x01(\x0e\x32\x15.hi.ninja.StateToggleH\x00R\nvoiceState\x12=\n\rupdate_action\x18\x02 \x01(\x0b\x32\x16.hi.ninja.UpdateActionH\x00R\x0cupdateAction\x12J\n\x14get_binance_settings\x18\x03 \x01(\x0b\x32\x16.google.protobuf.EmptyH\x00R\x12getBinanceSettings\x12;\n\x0crequest_init\x18\x04 \x01(\x0b\x32\x16.google.protobuf.EmptyH\x00R\x0brequestInit\x12\x43\n\x0f\x62inance_request\x18\x05 \x01(\x0b\x32\x18.hi.ninja.BinanceRequestH\x00R\x0e\x62inanceRequest\x12M\n\x13\x62inance_offer_reply\x18\x06 \x01(\x0b\x32\x1b.hi.ninja.BinanceOfferReplyH\x00R\x11\x62inanceOfferReply\x12\x46\n\x12get_binance_offers\x18\x07 \x01(\x0b\x32\x16.google.protobuf.EmptyH\x00R\x10getBinanceOffersB\x05\n\x03\x63md\";\n\rBinanceOffers\x12*\n\x04list\x18\x01 \x03(\x0b\x32\x16.hi.ninja.BinanceOfferR\x04list\"\x9e\x04\n\x0c\x42inanceOffer\x12\x13\n\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\'\n\x06source\x18\x02 \x01(\x0b\x32\n.hi.EntityH\x01R\x06source\x88\x01\x01\x12\x30\n\x04open\x18\x03 \x01(\x0b\x32\x17.hi.binance.BinanceOpenH\x02R\x04open\x88\x01\x01\x12\x33\n\x04plan\x18\x04 \x01(\x0b\x32\x1a.hi.ninja.BinanceOfferPlanH\x03R\x04plan\x88\x01\x01\x12$\n\x0breceived_at\x18\x05 \x01(\x03H\x04R\nreceivedAt\x88\x01\x01\x12\"\n\nexpires_at\x18\x06 \x01(\x03H\x05R\texpiresAt\x88\x01\x01\x12\x37\n\x05state\x18\x07 \x01(\x0e\x32\x1c.hi.ninja.BinanceOffer.StateH\x06R\x05state\x88\x01\x01\x12\x36\n\x06result\x18\x08 \x01(\x0b\x32\x19.hi.binance.BinanceResultH\x07R\x06result\x88\x01\x01\"V\n\x05State\x12\x15\n\x11STATE_UNSPECIFIED\x10\x00\x12\x11\n\rSTATE_PENDING\x10\x01\x12\x13\n\x0fSTATE_EXECUTING\x10\x02\x12\x0e\n\nSTATE_DONE\x10\x03\x42\x05\n\x03_idB\t\n\x07_sourceB\x07\n\x05_openB\x07\n\x05_planB\x0e\n\x0c_received_atB\r\n\x0b_expires_atB\x08\n\x06_stateB\t\n\x07_result\"\xf2\x03\n\x10\x42inanceOfferPlan\x12\x13\n\x02op\x18\x01 \x01(\tH\x00R\x02op\x88\x01\x01\x12\x1b\n\x06symbol\x18\x02 \x01(\tH\x01R\x06symbol\x88\x01\x01\x12\x35\n\x04side\x18\x03 \x01(\x0e\x32\x1c.hi.binance.BinanceOrderSideH\x02R\x04side\x88\x01\x01\x12I\n\rposition_side\x18\x04 \x01(\x0e\x32\x1f.hi.binance.BinancePositionSideH\x03R\x0cpositionSide\x88\x01\x01\x12\x1f\n\x08leverage\x18\x05 \x01(\rH\x04R\x08leverage\x88\x01\x01\x12\x19\n\x05ratio\x18\x06 \x01(\tH\x05R\x05ratio\x88\x01\x01\x12\x1b\n\x06margin\x18\x07 \x01(\tH\x06R\x06margin\x88\x01\x01\x12\x1f\n\x08quantity\x18\x08 \x01(\tH\x07R\x08quantity\x88\x01\x01\x12\x19\n\x05price\x18\t \x01(\tH\x08R\x05price\x88\x01\x01\x12!\n\tshortfall\x18\n \x01(\tH\tR\tshortfall\x88\x01\x01\x42\x05\n\x03_opB\t\n\x07_symbolB\x07\n\x05_sideB\x10\n\x0e_position_sideB\x0b\n\t_leverageB\x08\n\x06_ratioB\t\n\x07_marginB\x0b\n\t_quantityB\x08\n\x06_priceB\x0c\n\n_shortfall\"Z\n\x11\x42inanceOfferReply\x12\x13\n\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x1d\n\x07\x63onfirm\x18\x02 \x01(\x08H\x01R\x07\x63onfirm\x88\x01\x01\x42\x05\n\x03_idB\n\n\x08_confirm\"\xdb\x03\n\x0ePluginProgress\x12\x17\n\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x19\n\x05title\x18\x02 \x01(\tH\x01R\x05title\x88\x01\x01\x12\x39\n\x05state\x18\x03 \x01(\x0e\x32\x1e.hi.ninja.PluginProgress.StateH\x02R\x05state\x88\x01\x01\x12\x1f\n\x08progress\x18\x04 \x01(\rH\x03R\x08progress\x88\x01\x01\x12.\n\x10\x64ownloaded_bytes\x18\x05 \x01(\x04H\x04R\x0f\x64ownloadedBytes\x88\x01\x01\x12$\n\x0btotal_bytes\x18\x06 \x01(\x04H\x05R\ntotalBytes\x88\x01\x01\x12\x1d\n\x07message\x18\x07 \x01(\tH\x06R\x07message\x88\x01\x01\"i\n\x05State\x12\x11\n\rSTATE_UNKNOWN\x10\x00\x12\x15\n\x11STATE_DOWNLOADING\x10\x01\x12\x14\n\x10STATE_INSTALLING\x10\x02\x12\x0e\n\nSTATE_DONE\x10\x03\x12\x10\n\x0cSTATE_FAILED\x10\x04\x42\x07\n\x05_uuidB\x08\n\x06_titleB\x08\n\x06_stateB\x0b\n\t_progressB\x13\n\x11_downloaded_bytesB\x0e\n\x0c_total_bytesB\n\n\x08_message\"\xab\x01\n\x0cUpdateAction\x12:\n\x06\x61\x63tion\x18\x01 \x01(\x0e\x32\x1d.hi.ninja.UpdateAction.ActionH\x00R\x06\x61\x63tion\x88\x01\x01\"T\n\x06\x41\x63tion\x12\x12\n\x0e\x41\x43TION_UNKNOWN\x10\x00\x12\x10\n\x0c\x41\x43TION_CHECK\x10\x01\x12\x10\n\x0c\x41\x43TION_APPLY\x10\x02\x12\x12\n\x0e\x41\x43TION_DISMISS\x10\x03\x42\t\n\x07_action*@\n\x0bStateToggle\x12\x11\n\rSTATE_UNKNOWN\x10\x00\x12\x0f\n\x0bSTATE_START\x10\x01\x12\r\n\tSTATE_END\x10\x02*[\n\x07\x45motion\x12\x13\n\x0f\x45MOTION_UNKNOWN\x10\x00\x12\x11\n\rEMOTION_ANGER\x10\x01\x12\x11\n\rEMOTION_LAUGH\x10\x02\x12\x15\n\x11\x45MOTION_FRUSTRATE\x10\x03\x42,Z*github.com/HiWorld-56/hi-proto/go/hi/ninjab\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11hi/ninja/ui.proto\x12\x08hi.ninja\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x13hi/club/group.proto\x1a\x17hi/club/messaging.proto\x1a\x12hi/ai/plugin.proto\x1a\x18hi/binance/binance.proto\x1a\x16hi/binance/offer.proto\x1a\x15hi/did/transfer.proto\x1a\x16hi/ninja/updater.proto\"Q\n\tRobotInit\x12 \n\x05robot\x18\x01 \x01(\x0b\x32\n.hi.EntityR\x05robot\x12\"\n\x06master\x18\x02 \x01(\x0b\x32\n.hi.EntityR\x06master\",\n\nFriendList\x12\x1e\n\x04list\x18\x01 \x03(\x0b\x32\n.hi.EntityR\x04list\"7\n\rGroupInfoList\x12&\n\x04list\x18\x01 \x03(\x0b\x32\x12.hi.club.GroupInfoR\x04list\"\\\n\x0bMasterEvent\x12\"\n\x06master\x18\x01 \x01(\x0b\x32\n.hi.EntityR\x06master\x12\x1d\n\x07trigger\x18\x02 \x01(\tH\x00R\x07trigger\x88\x01\x01\x42\n\n\x08_trigger\"R\n\tTextReply\x12\x17\n\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x19\n\x05value\x18\x02 \x01(\tH\x01R\x05value\x88\x01\x01\x42\x07\n\x05_uuidB\x08\n\x06_value\"R\n\tAudioPlay\x12\x17\n\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x19\n\x05\x61udio\x18\x02 \x01(\x0cH\x01R\x05\x61udio\x88\x01\x01\x42\x07\n\x05_uuidB\x08\n\x06_audio\"\x11\n\x0f\x42inanceSettings\"~\n\x0e\x42inanceRequest\x12\x13\n\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x13\n\x02op\x18\x02 \x01(\tH\x01R\x02op\x88\x01\x01\x12$\n\x0bparams_json\x18\x03 \x01(\tH\x02R\nparamsJson\x88\x01\x01\x42\x05\n\x03_idB\x05\n\x03_opB\x0e\n\x0c_params_json\"\xf4\x0b\n\x0b\x42rainToFace\x12\x34\n\ninit_robot\x18\x01 \x01(\x0b\x32\x13.hi.ninja.RobotInitH\x00R\tinitRobot\x12\x38\n\x0bshow_listen\x18\x02 \x01(\x0e\x32\x15.hi.ninja.StateToggleH\x00R\nshowListen\x12\x36\n\x0cshow_emotion\x18\x03 \x01(\x0e\x32\x11.hi.ninja.EmotionH\x00R\x0bshowEmotion\x12:\n\x0fshow_im_request\x18\x04 \x01(\x0b\x32\x10.hi.club.MessageH\x00R\rshowImRequest\x12\x39\n\rshow_im_reply\x18\x05 \x01(\x0b\x32\x13.hi.ninja.TextReplyH\x00R\x0bshowImReply\x12?\n\x10show_voice_reply\x18\x06 \x01(\x0b\x32\x13.hi.ninja.TextReplyH\x00R\x0eshowVoiceReply\x12:\n\x0cshow_qr_code\x18\x07 \x01(\x0b\x32\x16.google.protobuf.EmptyH\x00R\nshowQrCode\x12-\n\x0b\x65vent_robot\x18\x08 \x01(\x0b\x32\n.hi.EntityH\x00R\neventRobot\x12:\n\x0c\x65vent_master\x18\t \x01(\x0b\x32\x15.hi.ninja.MasterEventH\x00R\x0b\x65ventMaster\x12\x39\n\revent_members\x18\n \x01(\x0b\x32\x12.hi.club.GroupInfoH\x00R\x0c\x65ventMembers\x12\x36\n\x0c\x65vent_plugin\x18\x0b \x01(\x0b\x32\x11.hi.ai.PluginViewH\x00R\x0b\x65ventPlugin\x12N\n\x15\x65vent_plugin_progress\x18\x14 \x01(\x0b\x32\x18.hi.ninja.PluginProgressH\x00R\x13\x65ventPluginProgress\x12\x42\n\x11\x65vent_transaction\x18\x0c \x01(\x0b\x32\x13.hi.did.TransactionH\x00R\x10\x65ventTransaction\x12\x34\n\nplay_audio\x18\r \x01(\x0b\x32\x13.hi.ninja.AudioPlayH\x00R\tplayAudio\x12;\n\revent_friends\x18\x0f \x01(\x0b\x32\x14.hi.ninja.FriendListH\x00R\x0c\x65ventFriends\x12<\n\x13\x65vent_friend_delete\x18\x0e \x01(\x0b\x32\n.hi.EntityH\x00R\x11\x65ventFriendDelete\x12\x36\n\x10\x65vent_friend_add\x18\x10 \x01(\x0b\x32\n.hi.EntityH\x00R\x0e\x65ventFriendAdd\x12<\n\x0cmembers_init\x18\x11 \x01(\x0b\x32\x17.hi.ninja.GroupInfoListH\x00R\x0bmembersInit\x12:\n\x0c\x65vent_status\x18\x12 \x01(\x0b\x32\x15.hi.ninja.StatusEventH\x00R\x0b\x65ventStatus\x12;\n\x0c\x65vent_update\x18\x13 \x01(\x0b\x32\x16.hi.ninja.UpdateStatusH\x00R\x0b\x65ventUpdate\x12Q\n\x16\x65vent_binance_settings\x18\x15 \x01(\x0b\x32\x19.hi.ninja.BinanceSettingsH\x00R\x14\x65ventBinanceSettings\x12\x42\n\x0e\x62inance_result\x18\x16 \x01(\x0b\x32\x19.hi.binance.BinanceResultH\x00R\rbinanceResult\x12*\n\x08show_tip\x18\x18 \x01(\x0b\x32\r.hi.ninja.TipH\x00R\x07showTip\x12+\n\x07show_qr\x18\x19 \x01(\x0b\x32\x10.hi.ninja.QrCardH\x00R\x06showQr\x12@\n\x0e\x62inance_offers\x18\x1a \x01(\x0b\x32\x17.hi.ninja.BinanceOffersH\x00R\rbinanceOffersB\x05\n\x03\x63md\"X\n\x06QrCard\x12\x1d\n\x07\x63ontent\x18\x01 \x01(\tH\x00R\x07\x63ontent\x88\x01\x01\x12\x19\n\x05title\x18\x02 \x01(\tH\x01R\x05title\x88\x01\x01\x42\n\n\x08_contentB\x08\n\x06_title\"\'\n\x03Tip\x12\x17\n\x04text\x18\x01 \x01(\tH\x00R\x04text\x88\x01\x01\x42\x07\n\x05_text\"m\n\x0bStatusEvent\x12\x15\n\x03ntp\x18\x01 \x01(\x08H\x00R\x03ntp\x88\x01\x01\x12\x17\n\x04wifi\x18\x02 \x01(\x08H\x01R\x04wifi\x88\x01\x01\x12\x15\n\x03usb\x18\x03 \x01(\x08H\x02R\x03usb\x88\x01\x01\x42\x06\n\x04_ntpB\x07\n\x05_wifiB\x06\n\x04_usb\"\xf4\x03\n\x0b\x46\x61\x63\x65ToBrain\x12\x38\n\x0bvoice_state\x18\x01 \x01(\x0e\x32\x15.hi.ninja.StateToggleH\x00R\nvoiceState\x12=\n\rupdate_action\x18\x02 \x01(\x0b\x32\x16.hi.ninja.UpdateActionH\x00R\x0cupdateAction\x12J\n\x14get_binance_settings\x18\x03 \x01(\x0b\x32\x16.google.protobuf.EmptyH\x00R\x12getBinanceSettings\x12;\n\x0crequest_init\x18\x04 \x01(\x0b\x32\x16.google.protobuf.EmptyH\x00R\x0brequestInit\x12\x43\n\x0f\x62inance_request\x18\x05 \x01(\x0b\x32\x18.hi.ninja.BinanceRequestH\x00R\x0e\x62inanceRequest\x12O\n\x13\x62inance_offer_reply\x18\x06 \x01(\x0b\x32\x1d.hi.binance.BinanceOfferReplyH\x00R\x11\x62inanceOfferReply\x12\x46\n\x12get_binance_offers\x18\x07 \x01(\x0b\x32\x16.google.protobuf.EmptyH\x00R\x10getBinanceOffersB\x05\n\x03\x63md\"=\n\rBinanceOffers\x12,\n\x04list\x18\x01 \x03(\x0b\x32\x18.hi.binance.BinanceOfferR\x04list\"\xdb\x03\n\x0ePluginProgress\x12\x17\n\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x19\n\x05title\x18\x02 \x01(\tH\x01R\x05title\x88\x01\x01\x12\x39\n\x05state\x18\x03 \x01(\x0e\x32\x1e.hi.ninja.PluginProgress.StateH\x02R\x05state\x88\x01\x01\x12\x1f\n\x08progress\x18\x04 \x01(\rH\x03R\x08progress\x88\x01\x01\x12.\n\x10\x64ownloaded_bytes\x18\x05 \x01(\x04H\x04R\x0f\x64ownloadedBytes\x88\x01\x01\x12$\n\x0btotal_bytes\x18\x06 \x01(\x04H\x05R\ntotalBytes\x88\x01\x01\x12\x1d\n\x07message\x18\x07 \x01(\tH\x06R\x07message\x88\x01\x01\"i\n\x05State\x12\x11\n\rSTATE_UNKNOWN\x10\x00\x12\x15\n\x11STATE_DOWNLOADING\x10\x01\x12\x14\n\x10STATE_INSTALLING\x10\x02\x12\x0e\n\nSTATE_DONE\x10\x03\x12\x10\n\x0cSTATE_FAILED\x10\x04\x42\x07\n\x05_uuidB\x08\n\x06_titleB\x08\n\x06_stateB\x0b\n\t_progressB\x13\n\x11_downloaded_bytesB\x0e\n\x0c_total_bytesB\n\n\x08_message\"\xab\x01\n\x0cUpdateAction\x12:\n\x06\x61\x63tion\x18\x01 \x01(\x0e\x32\x1d.hi.ninja.UpdateAction.ActionH\x00R\x06\x61\x63tion\x88\x01\x01\"T\n\x06\x41\x63tion\x12\x12\n\x0e\x41\x43TION_UNKNOWN\x10\x00\x12\x10\n\x0c\x41\x43TION_CHECK\x10\x01\x12\x10\n\x0c\x41\x43TION_APPLY\x10\x02\x12\x12\n\x0e\x41\x43TION_DISMISS\x10\x03\x42\t\n\x07_action*@\n\x0bStateToggle\x12\x11\n\rSTATE_UNKNOWN\x10\x00\x12\x0f\n\x0bSTATE_START\x10\x01\x12\r\n\tSTATE_END\x10\x02*[\n\x07\x45motion\x12\x13\n\x0f\x45MOTION_UNKNOWN\x10\x00\x12\x11\n\rEMOTION_ANGER\x10\x01\x12\x11\n\rEMOTION_LAUGH\x10\x02\x12\x15\n\x11\x45MOTION_FRUSTRATE\x10\x03\x42,Z*github.com/HiWorld-56/hi-proto/go/hi/ninjab\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -41,52 +41,44 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'hi.ninja.ui_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'Z*github.com/HiWorld-56/hi-proto/go/hi/ninja'
-  _globals['_STATETOGGLE']._serialized_start=4957
-  _globals['_STATETOGGLE']._serialized_end=5021
-  _globals['_EMOTION']._serialized_start=5023
-  _globals['_EMOTION']._serialized_end=5114
-  _globals['_ROBOTINIT']._serialized_start=241
-  _globals['_ROBOTINIT']._serialized_end=322
-  _globals['_FRIENDLIST']._serialized_start=324
-  _globals['_FRIENDLIST']._serialized_end=368
-  _globals['_GROUPINFOLIST']._serialized_start=370
-  _globals['_GROUPINFOLIST']._serialized_end=425
-  _globals['_MASTEREVENT']._serialized_start=427
-  _globals['_MASTEREVENT']._serialized_end=519
-  _globals['_TEXTREPLY']._serialized_start=521
-  _globals['_TEXTREPLY']._serialized_end=603
-  _globals['_AUDIOPLAY']._serialized_start=605
-  _globals['_AUDIOPLAY']._serialized_end=687
-  _globals['_BINANCESETTINGS']._serialized_start=689
-  _globals['_BINANCESETTINGS']._serialized_end=706
-  _globals['_BINANCEREQUEST']._serialized_start=708
-  _globals['_BINANCEREQUEST']._serialized_end=834
-  _globals['_BRAINTOFACE']._serialized_start=837
-  _globals['_BRAINTOFACE']._serialized_end=2361
-  _globals['_QRCARD']._serialized_start=2363
-  _globals['_QRCARD']._serialized_end=2451
-  _globals['_TIP']._serialized_start=2453
-  _globals['_TIP']._serialized_end=2492
-  _globals['_STATUSEVENT']._serialized_start=2494
-  _globals['_STATUSEVENT']._serialized_end=2603
-  _globals['_FACETOBRAIN']._serialized_start=2606
-  _globals['_FACETOBRAIN']._serialized_end=3104
-  _globals['_BINANCEOFFERS']._serialized_start=3106
-  _globals['_BINANCEOFFERS']._serialized_end=3165
-  _globals['_BINANCEOFFER']._serialized_start=3168
-  _globals['_BINANCEOFFER']._serialized_end=3710
-  _globals['_BINANCEOFFER_STATE']._serialized_start=3536
-  _globals['_BINANCEOFFER_STATE']._serialized_end=3622
-  _globals['_BINANCEOFFERPLAN']._serialized_start=3713
-  _globals['_BINANCEOFFERPLAN']._serialized_end=4211
-  _globals['_BINANCEOFFERREPLY']._serialized_start=4213
-  _globals['_BINANCEOFFERREPLY']._serialized_end=4303
-  _globals['_PLUGINPROGRESS']._serialized_start=4306
-  _globals['_PLUGINPROGRESS']._serialized_end=4781
-  _globals['_PLUGINPROGRESS_STATE']._serialized_start=4585
-  _globals['_PLUGINPROGRESS_STATE']._serialized_end=4690
-  _globals['_UPDATEACTION']._serialized_start=4784
-  _globals['_UPDATEACTION']._serialized_end=4955
-  _globals['_UPDATEACTION_ACTION']._serialized_start=4860
-  _globals['_UPDATEACTION_ACTION']._serialized_end=4944
+  _globals['_STATETOGGLE']._serialized_start=3822
+  _globals['_STATETOGGLE']._serialized_end=3886
+  _globals['_EMOTION']._serialized_start=3888
+  _globals['_EMOTION']._serialized_end=3979
+  _globals['_ROBOTINIT']._serialized_start=240
+  _globals['_ROBOTINIT']._serialized_end=321
+  _globals['_FRIENDLIST']._serialized_start=323
+  _globals['_FRIENDLIST']._serialized_end=367
+  _globals['_GROUPINFOLIST']._serialized_start=369
+  _globals['_GROUPINFOLIST']._serialized_end=424
+  _globals['_MASTEREVENT']._serialized_start=426
+  _globals['_MASTEREVENT']._serialized_end=518
+  _globals['_TEXTREPLY']._serialized_start=520
+  _globals['_TEXTREPLY']._serialized_end=602
+  _globals['_AUDIOPLAY']._serialized_start=604
+  _globals['_AUDIOPLAY']._serialized_end=686
+  _globals['_BINANCESETTINGS']._serialized_start=688
+  _globals['_BINANCESETTINGS']._serialized_end=705
+  _globals['_BINANCEREQUEST']._serialized_start=707
+  _globals['_BINANCEREQUEST']._serialized_end=833
+  _globals['_BRAINTOFACE']._serialized_start=836
+  _globals['_BRAINTOFACE']._serialized_end=2360
+  _globals['_QRCARD']._serialized_start=2362
+  _globals['_QRCARD']._serialized_end=2450
+  _globals['_TIP']._serialized_start=2452
+  _globals['_TIP']._serialized_end=2491
+  _globals['_STATUSEVENT']._serialized_start=2493
+  _globals['_STATUSEVENT']._serialized_end=2602
+  _globals['_FACETOBRAIN']._serialized_start=2605
+  _globals['_FACETOBRAIN']._serialized_end=3105
+  _globals['_BINANCEOFFERS']._serialized_start=3107
+  _globals['_BINANCEOFFERS']._serialized_end=3168
+  _globals['_PLUGINPROGRESS']._serialized_start=3171
+  _globals['_PLUGINPROGRESS']._serialized_end=3646
+  _globals['_PLUGINPROGRESS_STATE']._serialized_start=3450
+  _globals['_PLUGINPROGRESS_STATE']._serialized_end=3555
+  _globals['_UPDATEACTION']._serialized_start=3649
+  _globals['_UPDATEACTION']._serialized_end=3820
+  _globals['_UPDATEACTION_ACTION']._serialized_start=3725
+  _globals['_UPDATEACTION_ACTION']._serialized_end=3809
 # @@protoc_insertion_point(module_scope)
