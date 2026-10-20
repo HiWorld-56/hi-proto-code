@@ -3351,6 +3351,196 @@ class BinanceFuturesCancelAllSymbols extends $pb.GeneratedMessage {
   static BinanceFuturesCancelAllSymbols? _defaultInstance;
 }
 
+/// **给一个合约持仓设止盈 / 止损**,整仓:触发时平掉这个方向的全部仓位(之后加仓减仓了也照样整仓平),
+/// 同币安 App 在持仓上点的「止盈止损」。
+/// **不是币安的一个接口**:人只说「BTC 止盈 20%、止损 10%」,方向、数量、触发价都由机器人从持仓算 ——
+/// 要人把方向、触发价、数量一项项说出来,他还不如自己去币安 App 上点(2026-10-20 用户定)。机器人那边:
+///
+///   1. **当场问币安**这个交易对的持仓(不用快照:开仓均价随加仓变)。没有持仓就不做,回一句;
+///      双向持仓两个方向都有仓、又没给 `position_side`,不做,回一句要给哪个方向。
+///   2. 算触发价,全程十进制,**对齐到这个交易对的价格步长**(tickSize,不对齐币安回 -1111):
+///        给价格   → 就用它;
+///        给百分比 p(正数;写成负数按绝对值)→ 先得涨跌幅 m:
+///                   basis = ROE(默认)m = p ÷ 杠杆(杠杆是这个交易对现在设的,`/fapi/v1/symbolConfig`);
+///                   basis = PRICE      m = p;
+///                   多仓止盈 = 开仓价 × (1 + m%),止损 = 开仓价 × (1 − m%);空仓反过来。算出来 ≤ 0 就不做。
+///   3. **先验后动**:触发价要在现价的对侧(现价按 `working_type`:不传 = 最新成交价,MARK_PRICE = 标记价格)——
+///      多仓止盈高于现价、止损低于现价,空仓相反。有一条不满足就**一张都不撤、一张都不挂**,回一句(否则挂上就立刻触发)。
+///   4. 每一条腿(止盈、止损各自,各自成败):这个方向上已有的**整仓**同类单先撤 —— 币安同一个方向只收一张整仓同类单
+///      (止盈 = TAKE_PROFIT_MARKET / TAKE_PROFIT,止损 = STOP_MARKET / STOP,带 closePosition 的;再挂回 -4130);
+///      撤不掉就不挂新的。再挂新的:止盈 TAKE_PROFIT_MARKET、止损 STOP_MARKET,`closePosition`,方向与持仓相反。
+///      按数量挂的(不是整仓的)止盈止损单不动。
+///   5. 账户快照作废(与其它写操作同一个时机)。
+///
+/// 结果在 `BinanceResult.body`(`http_status` = 200),是**机器人写的 JSON**(不是币安原文):
+///
+///   { "symbol": "BTCUSDT", "position_side": "LONG", "position_amt": "0.010", "entry_price": "65000.1",
+///     "leverage": 10, "basis": "ROE",
+///     "legs": [ { "kind": "take_profit", "trigger_price": "66300.1", "move_pct": "2.00", "roe_pct": "20.00",
+///                 "est_pnl": "13.00", "algo_id": 1000002632964185, "replaced": [1000002632960001] },
+///               { "kind": "stop_loss", "trigger_price": "64350.1", "move_pct": "-1.00", "roe_pct": "-10.00",
+///                 "est_pnl": "-6.50", "replaced": [1000002632960002],
+///                 "failed": { "http_status": 400, "code": -2021, "msg": "Order would immediately trigger." } } ] }
+///
+///   position_side  持仓方向:单向持仓 = BOTH 时这里写 LONG / SHORT(按持仓数量的正负)
+///   position_amt   持仓数量(币,空仓为负,币安原文)
+///   entry_price    开仓均价(币安原文)
+///   leverage       算 ROE 用的杠杆;basis = PRICE 且没给百分比时不查,为 null
+///   legs           给了的腿各一项,止盈在前
+///     move_pct     触发价相对开仓价的涨跌幅(%,两位小数,对齐步长之后的;跌为负)
+///     roe_pct      对应的收益率(%,两位小数)= move_pct × 杠杆,方向按持仓(空仓价跌为正);杠杆为 null 时为 null
+///     est_pnl      在触发价全部平掉的预估盈亏(计价币,两位小数;不含手续费与滑点)
+///     algo_id      新挂上的那张单;没挂上就没有这一项
+///     replaced     撤掉的旧单(没有就没有这一项)
+///     failed       这条腿没做成:发出去了被拒 → `http_status` + 币安的 `code` / `msg`;没发出去 → 只有 `msg`
+///                  ⚠️ 带 `replaced` 又带 `failed` = **旧的已撤、新的没挂上**,这个方向现在没有这条腿,要告诉人
+class BinanceFuturesPositionTpsl extends $pb.GeneratedMessage {
+  factory BinanceFuturesPositionTpsl({
+    $core.String? symbol,
+    BinancePositionSide? positionSide,
+    $core.String? takeProfitPrice,
+    $core.String? takeProfitPct,
+    $core.String? stopLossPrice,
+    $core.String? stopLossPct,
+    BinanceTpslBasis? basis,
+    BinanceWorkingType? workingType,
+  }) {
+    final result = create();
+    if (symbol != null) result.symbol = symbol;
+    if (positionSide != null) result.positionSide = positionSide;
+    if (takeProfitPrice != null) result.takeProfitPrice = takeProfitPrice;
+    if (takeProfitPct != null) result.takeProfitPct = takeProfitPct;
+    if (stopLossPrice != null) result.stopLossPrice = stopLossPrice;
+    if (stopLossPct != null) result.stopLossPct = stopLossPct;
+    if (basis != null) result.basis = basis;
+    if (workingType != null) result.workingType = workingType;
+    return result;
+  }
+
+  BinanceFuturesPositionTpsl._();
+
+  factory BinanceFuturesPositionTpsl.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceFuturesPositionTpsl.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceFuturesPositionTpsl',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'symbol')
+    ..aE<BinancePositionSide>(2, _omitFieldNames ? '' : 'positionSide',
+        enumValues: BinancePositionSide.values)
+    ..aOS(3, _omitFieldNames ? '' : 'takeProfitPrice')
+    ..aOS(4, _omitFieldNames ? '' : 'takeProfitPct')
+    ..aOS(5, _omitFieldNames ? '' : 'stopLossPrice')
+    ..aOS(6, _omitFieldNames ? '' : 'stopLossPct')
+    ..aE<BinanceTpslBasis>(7, _omitFieldNames ? '' : 'basis',
+        enumValues: BinanceTpslBasis.values)
+    ..aE<BinanceWorkingType>(8, _omitFieldNames ? '' : 'workingType',
+        enumValues: BinanceWorkingType.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceFuturesPositionTpsl clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceFuturesPositionTpsl copyWith(
+          void Function(BinanceFuturesPositionTpsl) updates) =>
+      super.copyWith(
+              (message) => updates(message as BinanceFuturesPositionTpsl))
+          as BinanceFuturesPositionTpsl;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceFuturesPositionTpsl create() => BinanceFuturesPositionTpsl._();
+  @$core.override
+  BinanceFuturesPositionTpsl createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceFuturesPositionTpsl getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceFuturesPositionTpsl>(create);
+  static BinanceFuturesPositionTpsl? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get symbol => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set symbol($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSymbol() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSymbol() => $_clearField(1);
+
+  /// 哪个方向的持仓:只有双向持仓、两个方向都有仓时才要给(LONG / SHORT);单向持仓不用给。
+  @$pb.TagNumber(2)
+  BinancePositionSide get positionSide => $_getN(1);
+  @$pb.TagNumber(2)
+  set positionSide(BinancePositionSide value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPositionSide() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPositionSide() => $_clearField(2);
+
+  /// 止盈、止损各自:价格与百分比**最多给一个**;两条腿至少给一条。价格、百分比都是十进制字符串。
+  @$pb.TagNumber(3)
+  $core.String get takeProfitPrice => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set takeProfitPrice($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasTakeProfitPrice() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearTakeProfitPrice() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get takeProfitPct => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set takeProfitPct($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasTakeProfitPct() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearTakeProfitPct() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get stopLossPrice => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set stopLossPrice($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasStopLossPrice() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearStopLossPrice() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.String get stopLossPct => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set stopLossPct($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasStopLossPct() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearStopLossPct() => $_clearField(6);
+
+  /// 百分比的口径,不传 = ROE。
+  @$pb.TagNumber(7)
+  BinanceTpslBasis get basis => $_getN(6);
+  @$pb.TagNumber(7)
+  set basis(BinanceTpslBasis value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasBasis() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearBasis() => $_clearField(7);
+
+  /// 触发看哪个价,不传 = 最新成交价(币安的默认)。
+  @$pb.TagNumber(8)
+  BinanceWorkingType get workingType => $_getN(7);
+  @$pb.TagNumber(8)
+  set workingType(BinanceWorkingType value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasWorkingType() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearWorkingType() => $_clearField(8);
+}
+
 /// 签 **TradFi 永续合约协议**。`POST /fapi/v1/stock/contract`
 ///
 /// 股票、商品、外汇这类永续(`contractType == TRADIFI_PERPETUAL`)**要先签才能交易**;查询不用签。

@@ -519,6 +519,16 @@ const BinanceCommand$json = {
       '9': 0,
       '10': 'usdsFuturesCancelAllSymbols'
     },
+    {
+      '1': 'usds_futures_position_tpsl',
+      '3': 61,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceFuturesPositionTpsl',
+      '8': {},
+      '9': 0,
+      '10': 'usdsFuturesPositionTpsl'
+    },
   ],
   '7': {},
   '8': [
@@ -622,4 +632,6 @@ final $typed_data.Uint8List binanceCommandDescriptor = $convert.base64Decode(
     'ZVNwb3RDYW5jZWxBbGxTeW1ib2xzQgSQtRgCSABSFHNwb3RDYW5jZWxBbGxTeW1ib2xzEngKH3'
     'VzZHNfZnV0dXJlc19jYW5jZWxfYWxsX3N5bWJvbHMYPCABKAsyKi5oaS5iaW5hbmNlLkJpbmFu'
     'Y2VGdXR1cmVzQ2FuY2VsQWxsU3ltYm9sc0IEkLUYAkgAUht1c2RzRnV0dXJlc0NhbmNlbEFsbF'
-    'N5bWJvbHM6BJi1GAJCCwoCb3ASBbpIAggBQg0KC19leHBpcmF0aW9u');
+    'N5bWJvbHMSawoadXNkc19mdXR1cmVzX3Bvc2l0aW9uX3Rwc2wYPSABKAsyJi5oaS5iaW5hbmNl'
+    'LkJpbmFuY2VGdXR1cmVzUG9zaXRpb25UcHNsQgSQtRgCSABSF3VzZHNGdXR1cmVzUG9zaXRpb2'
+    '5UcHNsOgSYtRgCQgsKAm9wEgW6SAIIAUINCgtfZXhwaXJhdGlvbg==');

@@ -167,6 +167,9 @@ impl serde::Serialize for BinanceCommand {
                 binance_command::Op::UsdsFuturesCancelAllSymbols(v) => {
                     struct_ser.serialize_field("usdsFuturesCancelAllSymbols", v)?;
                 }
+                binance_command::Op::UsdsFuturesPositionTpsl(v) => {
+                    struct_ser.serialize_field("usdsFuturesPositionTpsl", v)?;
+                }
             }
         }
         struct_ser.end()
@@ -278,6 +281,8 @@ impl<'de> serde::Deserialize<'de> for BinanceCommand {
             "spotCancelAllSymbols",
             "usds_futures_cancel_all_symbols",
             "usdsFuturesCancelAllSymbols",
+            "usds_futures_position_tpsl",
+            "usdsFuturesPositionTpsl",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -332,6 +337,7 @@ impl<'de> serde::Deserialize<'de> for BinanceCommand {
             UsdsFuturesPnl,
             SpotCancelAllSymbols,
             UsdsFuturesCancelAllSymbols,
+            UsdsFuturesPositionTpsl,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -403,6 +409,7 @@ impl<'de> serde::Deserialize<'de> for BinanceCommand {
                             "usdsFuturesPnl" | "usds_futures_pnl" => Ok(GeneratedField::UsdsFuturesPnl),
                             "spotCancelAllSymbols" | "spot_cancel_all_symbols" => Ok(GeneratedField::SpotCancelAllSymbols),
                             "usdsFuturesCancelAllSymbols" | "usds_futures_cancel_all_symbols" => Ok(GeneratedField::UsdsFuturesCancelAllSymbols),
+                            "usdsFuturesPositionTpsl" | "usds_futures_position_tpsl" => Ok(GeneratedField::UsdsFuturesPositionTpsl),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -775,6 +782,13 @@ impl<'de> serde::Deserialize<'de> for BinanceCommand {
                                 return Err(serde::de::Error::duplicate_field("usdsFuturesCancelAllSymbols"));
                             }
                             op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::UsdsFuturesCancelAllSymbols)
+;
+                        }
+                        GeneratedField::UsdsFuturesPositionTpsl => {
+                            if op__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("usdsFuturesPositionTpsl"));
+                            }
+                            op__ = map_.next_value::<::std::option::Option<_>>()?.map(binance_command::Op::UsdsFuturesPositionTpsl)
 ;
                         }
                     }
@@ -3060,6 +3074,228 @@ impl<'de> serde::Deserialize<'de> for BinanceFuturesPnl {
             }
         }
         deserializer.deserialize_struct("hi.binance.BinanceFuturesPnl", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for BinanceFuturesPositionTpsl {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.symbol.is_some() {
+            len += 1;
+        }
+        if self.position_side.is_some() {
+            len += 1;
+        }
+        if self.take_profit_price.is_some() {
+            len += 1;
+        }
+        if self.take_profit_pct.is_some() {
+            len += 1;
+        }
+        if self.stop_loss_price.is_some() {
+            len += 1;
+        }
+        if self.stop_loss_pct.is_some() {
+            len += 1;
+        }
+        if self.basis.is_some() {
+            len += 1;
+        }
+        if self.working_type.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.binance.BinanceFuturesPositionTpsl", len)?;
+        if let Some(v) = self.symbol.as_ref() {
+            struct_ser.serialize_field("symbol", v)?;
+        }
+        if let Some(v) = self.position_side.as_ref() {
+            let v = BinancePositionSide::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("positionSide", &v)?;
+        }
+        if let Some(v) = self.take_profit_price.as_ref() {
+            struct_ser.serialize_field("takeProfitPrice", v)?;
+        }
+        if let Some(v) = self.take_profit_pct.as_ref() {
+            struct_ser.serialize_field("takeProfitPct", v)?;
+        }
+        if let Some(v) = self.stop_loss_price.as_ref() {
+            struct_ser.serialize_field("stopLossPrice", v)?;
+        }
+        if let Some(v) = self.stop_loss_pct.as_ref() {
+            struct_ser.serialize_field("stopLossPct", v)?;
+        }
+        if let Some(v) = self.basis.as_ref() {
+            let v = BinanceTpslBasis::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("basis", &v)?;
+        }
+        if let Some(v) = self.working_type.as_ref() {
+            let v = BinanceWorkingType::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("workingType", &v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for BinanceFuturesPositionTpsl {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "symbol",
+            "position_side",
+            "positionSide",
+            "take_profit_price",
+            "takeProfitPrice",
+            "take_profit_pct",
+            "takeProfitPct",
+            "stop_loss_price",
+            "stopLossPrice",
+            "stop_loss_pct",
+            "stopLossPct",
+            "basis",
+            "working_type",
+            "workingType",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Symbol,
+            PositionSide,
+            TakeProfitPrice,
+            TakeProfitPct,
+            StopLossPrice,
+            StopLossPct,
+            Basis,
+            WorkingType,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "symbol" => Ok(GeneratedField::Symbol),
+                            "positionSide" | "position_side" => Ok(GeneratedField::PositionSide),
+                            "takeProfitPrice" | "take_profit_price" => Ok(GeneratedField::TakeProfitPrice),
+                            "takeProfitPct" | "take_profit_pct" => Ok(GeneratedField::TakeProfitPct),
+                            "stopLossPrice" | "stop_loss_price" => Ok(GeneratedField::StopLossPrice),
+                            "stopLossPct" | "stop_loss_pct" => Ok(GeneratedField::StopLossPct),
+                            "basis" => Ok(GeneratedField::Basis),
+                            "workingType" | "working_type" => Ok(GeneratedField::WorkingType),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = BinanceFuturesPositionTpsl;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.binance.BinanceFuturesPositionTpsl")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<BinanceFuturesPositionTpsl, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut symbol__ = None;
+                let mut position_side__ = None;
+                let mut take_profit_price__ = None;
+                let mut take_profit_pct__ = None;
+                let mut stop_loss_price__ = None;
+                let mut stop_loss_pct__ = None;
+                let mut basis__ = None;
+                let mut working_type__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Symbol => {
+                            if symbol__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("symbol"));
+                            }
+                            symbol__ = map_.next_value()?;
+                        }
+                        GeneratedField::PositionSide => {
+                            if position_side__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("positionSide"));
+                            }
+                            position_side__ = map_.next_value::<::std::option::Option<BinancePositionSide>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::TakeProfitPrice => {
+                            if take_profit_price__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("takeProfitPrice"));
+                            }
+                            take_profit_price__ = map_.next_value()?;
+                        }
+                        GeneratedField::TakeProfitPct => {
+                            if take_profit_pct__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("takeProfitPct"));
+                            }
+                            take_profit_pct__ = map_.next_value()?;
+                        }
+                        GeneratedField::StopLossPrice => {
+                            if stop_loss_price__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("stopLossPrice"));
+                            }
+                            stop_loss_price__ = map_.next_value()?;
+                        }
+                        GeneratedField::StopLossPct => {
+                            if stop_loss_pct__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("stopLossPct"));
+                            }
+                            stop_loss_pct__ = map_.next_value()?;
+                        }
+                        GeneratedField::Basis => {
+                            if basis__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("basis"));
+                            }
+                            basis__ = map_.next_value::<::std::option::Option<BinanceTpslBasis>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::WorkingType => {
+                            if working_type__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("workingType"));
+                            }
+                            working_type__ = map_.next_value::<::std::option::Option<BinanceWorkingType>>()?.map(|x| x as i32);
+                        }
+                    }
+                }
+                Ok(BinanceFuturesPositionTpsl {
+                    symbol: symbol__,
+                    position_side: position_side__,
+                    take_profit_price: take_profit_price__,
+                    take_profit_pct: take_profit_pct__,
+                    stop_loss_price: stop_loss_price__,
+                    stop_loss_pct: stop_loss_pct__,
+                    basis: basis__,
+                    working_type: working_type__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.binance.BinanceFuturesPositionTpsl", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for BinanceFuturesPositions {
@@ -9776,6 +10012,80 @@ impl<'de> serde::Deserialize<'de> for BinanceTimeInForce {
                     "BINANCE_TIME_IN_FORCE_IOC" => Ok(BinanceTimeInForce::Ioc),
                     "BINANCE_TIME_IN_FORCE_FOK" => Ok(BinanceTimeInForce::Fok),
                     "BINANCE_TIME_IN_FORCE_GTX" => Ok(BinanceTimeInForce::Gtx),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for BinanceTpslBasis {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unspecified => "BINANCE_TPSL_BASIS_UNSPECIFIED",
+            Self::Roe => "BINANCE_TPSL_BASIS_ROE",
+            Self::Price => "BINANCE_TPSL_BASIS_PRICE",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for BinanceTpslBasis {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "BINANCE_TPSL_BASIS_UNSPECIFIED",
+            "BINANCE_TPSL_BASIS_ROE",
+            "BINANCE_TPSL_BASIS_PRICE",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = BinanceTpslBasis;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "BINANCE_TPSL_BASIS_UNSPECIFIED" => Ok(BinanceTpslBasis::Unspecified),
+                    "BINANCE_TPSL_BASIS_ROE" => Ok(BinanceTpslBasis::Roe),
+                    "BINANCE_TPSL_BASIS_PRICE" => Ok(BinanceTpslBasis::Price),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }

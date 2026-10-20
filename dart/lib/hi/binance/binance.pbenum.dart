@@ -272,5 +272,29 @@ class BinancePositionSide extends $pb.ProtobufEnum {
   const BinancePositionSide._(super.value, super.name);
 }
 
+/// 持仓止盈止损里「百分之几」的口径(见 `BinanceFuturesPositionTpsl`)。
+class BinanceTpslBasis extends $pb.ProtobufEnum {
+  static const BinanceTpslBasis BINANCE_TPSL_BASIS_UNSPECIFIED =
+      BinanceTpslBasis._(
+          0, _omitEnumNames ? '' : 'BINANCE_TPSL_BASIS_UNSPECIFIED');
+  static const BinanceTpslBasis BINANCE_TPSL_BASIS_ROE =
+      BinanceTpslBasis._(1, _omitEnumNames ? '' : 'BINANCE_TPSL_BASIS_ROE');
+  static const BinanceTpslBasis BINANCE_TPSL_BASIS_PRICE =
+      BinanceTpslBasis._(2, _omitEnumNames ? '' : 'BINANCE_TPSL_BASIS_PRICE');
+
+  static const $core.List<BinanceTpslBasis> values = <BinanceTpslBasis>[
+    BINANCE_TPSL_BASIS_UNSPECIFIED,
+    BINANCE_TPSL_BASIS_ROE,
+    BINANCE_TPSL_BASIS_PRICE,
+  ];
+
+  static final $core.List<BinanceTpslBasis?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static BinanceTpslBasis? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const BinanceTpslBasis._(super.value, super.name);
+}
+
 const $core.bool _omitEnumNames =
     $core.bool.fromEnvironment('protobuf.omit_enum_names');

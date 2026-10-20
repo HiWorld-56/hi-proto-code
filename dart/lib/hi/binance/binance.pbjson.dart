@@ -145,6 +145,22 @@ final $typed_data.Uint8List binancePositionSideDescriptor = $convert.base64Decod
     'lFRBAAEh4KGkJJTkFOQ0VfUE9TSVRJT05fU0lERV9CT1RIEAESHgoaQklOQU5DRV9QT1NJVElP'
     'Tl9TSURFX0xPTkcQAhIfChtCSU5BTkNFX1BPU0lUSU9OX1NJREVfU0hPUlQQAw==');
 
+@$core.Deprecated('Use binanceTpslBasisDescriptor instead')
+const BinanceTpslBasis$json = {
+  '1': 'BinanceTpslBasis',
+  '2': [
+    {'1': 'BINANCE_TPSL_BASIS_UNSPECIFIED', '2': 0},
+    {'1': 'BINANCE_TPSL_BASIS_ROE', '2': 1},
+    {'1': 'BINANCE_TPSL_BASIS_PRICE', '2': 2},
+  ],
+};
+
+/// Descriptor for `BinanceTpslBasis`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List binanceTpslBasisDescriptor = $convert.base64Decode(
+    'ChBCaW5hbmNlVHBzbEJhc2lzEiIKHkJJTkFOQ0VfVFBTTF9CQVNJU19VTlNQRUNJRklFRBAAEh'
+    'oKFkJJTkFOQ0VfVFBTTF9CQVNJU19ST0UQARIcChhCSU5BTkNFX1RQU0xfQkFTSVNfUFJJQ0UQ'
+    'Ag==');
+
 @$core.Deprecated('Use binanceSpotNewOrderDescriptor instead')
 const BinanceSpotNewOrder$json = {
   '1': 'BinanceSpotNewOrder',
@@ -2188,6 +2204,122 @@ const BinanceFuturesCancelAllSymbols$json = {
 /// Descriptor for `BinanceFuturesCancelAllSymbols`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List binanceFuturesCancelAllSymbolsDescriptor = $convert
     .base64Decode('Ch5CaW5hbmNlRnV0dXJlc0NhbmNlbEFsbFN5bWJvbHM6BJi1GAI=');
+
+@$core.Deprecated('Use binanceFuturesPositionTpslDescriptor instead')
+const BinanceFuturesPositionTpsl$json = {
+  '1': 'BinanceFuturesPositionTpsl',
+  '2': [
+    {
+      '1': 'symbol',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'symbol',
+      '17': true
+    },
+    {
+      '1': 'position_side',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.binance.BinancePositionSide',
+      '8': {},
+      '9': 1,
+      '10': 'positionSide',
+      '17': true
+    },
+    {
+      '1': 'take_profit_price',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'takeProfitPrice',
+      '17': true
+    },
+    {
+      '1': 'take_profit_pct',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 3,
+      '10': 'takeProfitPct',
+      '17': true
+    },
+    {
+      '1': 'stop_loss_price',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 4,
+      '10': 'stopLossPrice',
+      '17': true
+    },
+    {
+      '1': 'stop_loss_pct',
+      '3': 6,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 5,
+      '10': 'stopLossPct',
+      '17': true
+    },
+    {
+      '1': 'basis',
+      '3': 7,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.binance.BinanceTpslBasis',
+      '8': {},
+      '9': 6,
+      '10': 'basis',
+      '17': true
+    },
+    {
+      '1': 'working_type',
+      '3': 8,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.binance.BinanceWorkingType',
+      '8': {},
+      '9': 7,
+      '10': 'workingType',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_symbol'},
+    {'1': '_position_side'},
+    {'1': '_take_profit_price'},
+    {'1': '_take_profit_pct'},
+    {'1': '_stop_loss_price'},
+    {'1': '_stop_loss_pct'},
+    {'1': '_basis'},
+    {'1': '_working_type'},
+  ],
+};
+
+/// Descriptor for `BinanceFuturesPositionTpsl`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List binanceFuturesPositionTpslDescriptor = $convert.base64Decode(
+    'ChpCaW5hbmNlRnV0dXJlc1Bvc2l0aW9uVHBzbBI2CgZzeW1ib2wYASABKAlCGbpIEsgBAXINMg'
+    'teW0EtWjAtOV0rJJC1GAJIAFIGc3ltYm9siAEBEk8KDXBvc2l0aW9uX3NpZGUYAiABKA4yHy5o'
+    'aS5iaW5hbmNlLkJpbmFuY2VQb3NpdGlvblNpZGVCBJC1GAJIAVIMcG9zaXRpb25TaWRliAEBEj'
+    'UKEXRha2VfcHJvZml0X3ByaWNlGAMgASgJQgSQtRgCSAJSD3Rha2VQcm9maXRQcmljZYgBARIx'
+    'Cg90YWtlX3Byb2ZpdF9wY3QYBCABKAlCBJC1GAJIA1INdGFrZVByb2ZpdFBjdIgBARIxCg9zdG'
+    '9wX2xvc3NfcHJpY2UYBSABKAlCBJC1GAJIBFINc3RvcExvc3NQcmljZYgBARItCg1zdG9wX2xv'
+    'c3NfcGN0GAYgASgJQgSQtRgCSAVSC3N0b3BMb3NzUGN0iAEBEj0KBWJhc2lzGAcgASgOMhwuaG'
+    'kuYmluYW5jZS5CaW5hbmNlVHBzbEJhc2lzQgSQtRgCSAZSBWJhc2lziAEBEkwKDHdvcmtpbmdf'
+    'dHlwZRgIIAEoDjIeLmhpLmJpbmFuY2UuQmluYW5jZVdvcmtpbmdUeXBlQgSQtRgCSAdSC3dvcm'
+    'tpbmdUeXBliAEBOgSYtRgCQgkKB19zeW1ib2xCEAoOX3Bvc2l0aW9uX3NpZGVCFAoSX3Rha2Vf'
+    'cHJvZml0X3ByaWNlQhIKEF90YWtlX3Byb2ZpdF9wY3RCEgoQX3N0b3BfbG9zc19wcmljZUIQCg'
+    '5fc3RvcF9sb3NzX3BjdEIICgZfYmFzaXNCDwoNX3dvcmtpbmdfdHlwZQ==');
 
 @$core.Deprecated('Use binanceFuturesSignTradfiContractDescriptor instead')
 const BinanceFuturesSignTradfiContract$json = {

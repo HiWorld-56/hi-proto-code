@@ -545,6 +545,72 @@ pub struct BinanceSpotCancelAllSymbols {}
 /// 没有 `order_lists`。
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BinanceFuturesCancelAllSymbols {}
+/// **给一个合约持仓设止盈 / 止损**,整仓:触发时平掉这个方向的全部仓位(之后加仓减仓了也照样整仓平),
+/// 同币安 App 在持仓上点的「止盈止损」。
+/// **不是币安的一个接口**:人只说「BTC 止盈 20%、止损 10%」,方向、数量、触发价都由机器人从持仓算 ——
+/// 要人把方向、触发价、数量一项项说出来,他还不如自己去币安 App 上点(2026-10-20 用户定)。机器人那边:
+///
+/// 1. **当场问币安**这个交易对的持仓(不用快照:开仓均价随加仓变)。没有持仓就不做,回一句;
+///    双向持仓两个方向都有仓、又没给 `position_side`,不做,回一句要给哪个方向。
+/// 1. 算触发价,全程十进制,**对齐到这个交易对的价格步长**(tickSize,不对齐币安回 -1111):
+///    给价格   → 就用它;
+///    给百分比 p(正数;写成负数按绝对值)→ 先得涨跌幅 m:
+///    basis = ROE(默认)m = p ÷ 杠杆(杠杆是这个交易对现在设的,`/fapi/v1/symbolConfig`);
+///    basis = PRICE      m = p;
+///    多仓止盈 = 开仓价 × (1 + m%),止损 = 开仓价 × (1 − m%);空仓反过来。算出来 ≤ 0 就不做。
+/// 1. **先验后动**:触发价要在现价的对侧(现价按 `working_type`:不传 = 最新成交价,MARK_PRICE = 标记价格)——
+///    多仓止盈高于现价、止损低于现价,空仓相反。有一条不满足就**一张都不撤、一张都不挂**,回一句(否则挂上就立刻触发)。
+/// 1. 每一条腿(止盈、止损各自,各自成败):这个方向上已有的**整仓**同类单先撤 —— 币安同一个方向只收一张整仓同类单
+///    (止盈 = TAKE_PROFIT_MARKET / TAKE_PROFIT,止损 = STOP_MARKET / STOP,带 closePosition 的;再挂回 -4130);
+///    撤不掉就不挂新的。再挂新的:止盈 TAKE_PROFIT_MARKET、止损 STOP_MARKET,`closePosition`,方向与持仓相反。
+///    按数量挂的(不是整仓的)止盈止损单不动。
+/// 1. 账户快照作废(与其它写操作同一个时机)。
+///
+/// 结果在 `BinanceResult.body`(`http_status` = 200),是**机器人写的 JSON**(不是币安原文):
+///
+/// { "symbol": "BTCUSDT", "position_side": "LONG", "position_amt": "0.010", "entry_price": "65000.1",
+/// "leverage": 10, "basis": "ROE",
+/// "legs": \[ { "kind": "take_profit", "trigger_price": "66300.1", "move_pct": "2.00", "roe_pct": "20.00",
+/// "est_pnl": "13.00", "algo_id": 1000002632964185, "replaced": \[1000002632960001\] },
+/// { "kind": "stop_loss", "trigger_price": "64350.1", "move_pct": "-1.00", "roe_pct": "-10.00",
+/// "est_pnl": "-6.50", "replaced": \[1000002632960002\],
+/// "failed": { "http_status": 400, "code": -2021, "msg": "Order would immediately trigger." } } \] }
+///
+/// position_side  持仓方向:单向持仓 = BOTH 时这里写 LONG / SHORT(按持仓数量的正负)
+/// position_amt   持仓数量(币,空仓为负,币安原文)
+/// entry_price    开仓均价(币安原文)
+/// leverage       算 ROE 用的杠杆;basis = PRICE 且没给百分比时不查,为 null
+/// legs           给了的腿各一项,止盈在前
+/// move_pct     触发价相对开仓价的涨跌幅(%,两位小数,对齐步长之后的;跌为负)
+/// roe_pct      对应的收益率(%,两位小数)= move_pct × 杠杆,方向按持仓(空仓价跌为正);杠杆为 null 时为 null
+/// est_pnl      在触发价全部平掉的预估盈亏(计价币,两位小数;不含手续费与滑点)
+/// algo_id      新挂上的那张单;没挂上就没有这一项
+/// replaced     撤掉的旧单(没有就没有这一项)
+/// failed       这条腿没做成:发出去了被拒 → `http_status` + 币安的 `code` / `msg`;没发出去 → 只有 `msg`
+/// ⚠️ 带 `replaced` 又带 `failed` = **旧的已撤、新的没挂上**,这个方向现在没有这条腿,要告诉人
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceFuturesPositionTpsl {
+    #[prost(string, optional, tag = "1")]
+    pub symbol: ::core::option::Option<::prost::alloc::string::String>,
+    /// 哪个方向的持仓:只有双向持仓、两个方向都有仓时才要给(LONG / SHORT);单向持仓不用给。
+    #[prost(enumeration = "BinancePositionSide", optional, tag = "2")]
+    pub position_side: ::core::option::Option<i32>,
+    /// 止盈、止损各自:价格与百分比**最多给一个**;两条腿至少给一条。价格、百分比都是十进制字符串。
+    #[prost(string, optional, tag = "3")]
+    pub take_profit_price: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub take_profit_pct: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "5")]
+    pub stop_loss_price: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "6")]
+    pub stop_loss_pct: ::core::option::Option<::prost::alloc::string::String>,
+    /// 百分比的口径,不传 = ROE。
+    #[prost(enumeration = "BinanceTpslBasis", optional, tag = "7")]
+    pub basis: ::core::option::Option<i32>,
+    /// 触发看哪个价,不传 = 最新成交价(币安的默认)。
+    #[prost(enumeration = "BinanceWorkingType", optional, tag = "8")]
+    pub working_type: ::core::option::Option<i32>,
+}
 /// 签 **TradFi 永续合约协议**。`POST /fapi/v1/stock/contract`
 ///
 /// 股票、商品、外汇这类永续(`contractType == TRADIFI_PERPETUAL`)**要先签才能交易**;查询不用签。
@@ -946,6 +1012,39 @@ impl BinancePositionSide {
         }
     }
 }
+/// 持仓止盈止损里「百分之几」的口径(见 `BinanceFuturesPositionTpsl`)。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum BinanceTpslBasis {
+    /// 不传 = ROE
+    Unspecified = 0,
+    /// 收益率:按保证金算的盈亏百分比(同币安 App 止盈止损里的「收益率」),价格涨跌幅 = p ÷ 杠杆
+    Roe = 1,
+    /// 开仓价的涨跌幅,与杠杆无关
+    Price = 2,
+}
+impl BinanceTpslBasis {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "BINANCE_TPSL_BASIS_UNSPECIFIED",
+            Self::Roe => "BINANCE_TPSL_BASIS_ROE",
+            Self::Price => "BINANCE_TPSL_BASIS_PRICE",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "BINANCE_TPSL_BASIS_UNSPECIFIED" => Some(Self::Unspecified),
+            "BINANCE_TPSL_BASIS_ROE" => Some(Self::Roe),
+            "BINANCE_TPSL_BASIS_PRICE" => Some(Self::Price),
+            _ => None,
+        }
+    }
+}
 /// 美股下单。
 ///
 /// 三种填法(币安的规则,我们不替它判,也不替它猜):
@@ -1258,7 +1357,7 @@ pub struct BinanceCommand {
     pub expiration: ::core::option::Option<i64>,
     #[prost(
         oneof = "binance_command::Op",
-        tags = "10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 40, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60"
+        tags = "10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 40, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61"
     )]
     pub op: ::core::option::Option<binance_command::Op>,
 }
@@ -1419,6 +1518,11 @@ pub mod binance_command {
         /// usds_futures.cancel_all_symbols
         #[prost(message, tag = "60")]
         UsdsFuturesCancelAllSymbols(super::BinanceFuturesCancelAllSymbols),
+        /// 持仓止盈止损(机器人从持仓算方向、触发价,整仓)
+        ///
+        /// usds_futures.position_tpsl
+        #[prost(message, tag = "61")]
+        UsdsFuturesPositionTpsl(super::BinanceFuturesPositionTpsl),
     }
 }
 /// **开单信号**:一台机器人(信号源)账户上新开 / 加了仓,广播给群里别的机器人。
