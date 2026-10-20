@@ -2271,14 +2271,25 @@ const BinanceFuturesPositionTpsl$json = {
       '17': true
     },
     {
-      '1': 'basis',
+      '1': 'take_profit_basis',
       '3': 7,
       '4': 1,
       '5': 14,
       '6': '.hi.binance.BinanceTpslBasis',
       '8': {},
       '9': 6,
-      '10': 'basis',
+      '10': 'takeProfitBasis',
+      '17': true
+    },
+    {
+      '1': 'stop_loss_basis',
+      '3': 9,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.binance.BinanceTpslBasis',
+      '8': {},
+      '9': 7,
+      '10': 'stopLossBasis',
       '17': true
     },
     {
@@ -2288,7 +2299,7 @@ const BinanceFuturesPositionTpsl$json = {
       '5': 14,
       '6': '.hi.binance.BinanceWorkingType',
       '8': {},
-      '9': 7,
+      '9': 8,
       '10': 'workingType',
       '17': true
     },
@@ -2301,7 +2312,8 @@ const BinanceFuturesPositionTpsl$json = {
     {'1': '_take_profit_pct'},
     {'1': '_stop_loss_price'},
     {'1': '_stop_loss_pct'},
-    {'1': '_basis'},
+    {'1': '_take_profit_basis'},
+    {'1': '_stop_loss_basis'},
     {'1': '_working_type'},
   ],
 };
@@ -2314,12 +2326,15 @@ final $typed_data.Uint8List binanceFuturesPositionTpslDescriptor = $convert.base
     'UKEXRha2VfcHJvZml0X3ByaWNlGAMgASgJQgSQtRgCSAJSD3Rha2VQcm9maXRQcmljZYgBARIx'
     'Cg90YWtlX3Byb2ZpdF9wY3QYBCABKAlCBJC1GAJIA1INdGFrZVByb2ZpdFBjdIgBARIxCg9zdG'
     '9wX2xvc3NfcHJpY2UYBSABKAlCBJC1GAJIBFINc3RvcExvc3NQcmljZYgBARItCg1zdG9wX2xv'
-    'c3NfcGN0GAYgASgJQgSQtRgCSAVSC3N0b3BMb3NzUGN0iAEBEj0KBWJhc2lzGAcgASgOMhwuaG'
-    'kuYmluYW5jZS5CaW5hbmNlVHBzbEJhc2lzQgSQtRgCSAZSBWJhc2lziAEBEkwKDHdvcmtpbmdf'
-    'dHlwZRgIIAEoDjIeLmhpLmJpbmFuY2UuQmluYW5jZVdvcmtpbmdUeXBlQgSQtRgCSAdSC3dvcm'
-    'tpbmdUeXBliAEBOgSYtRgCQgkKB19zeW1ib2xCEAoOX3Bvc2l0aW9uX3NpZGVCFAoSX3Rha2Vf'
-    'cHJvZml0X3ByaWNlQhIKEF90YWtlX3Byb2ZpdF9wY3RCEgoQX3N0b3BfbG9zc19wcmljZUIQCg'
-    '5fc3RvcF9sb3NzX3BjdEIICgZfYmFzaXNCDwoNX3dvcmtpbmdfdHlwZQ==');
+    'c3NfcGN0GAYgASgJQgSQtRgCSAVSC3N0b3BMb3NzUGN0iAEBElMKEXRha2VfcHJvZml0X2Jhc2'
+    'lzGAcgASgOMhwuaGkuYmluYW5jZS5CaW5hbmNlVHBzbEJhc2lzQgSQtRgCSAZSD3Rha2VQcm9m'
+    'aXRCYXNpc4gBARJPCg9zdG9wX2xvc3NfYmFzaXMYCSABKA4yHC5oaS5iaW5hbmNlLkJpbmFuY2'
+    'VUcHNsQmFzaXNCBJC1GAJIB1INc3RvcExvc3NCYXNpc4gBARJMCgx3b3JraW5nX3R5cGUYCCAB'
+    'KA4yHi5oaS5iaW5hbmNlLkJpbmFuY2VXb3JraW5nVHlwZUIEkLUYAkgIUgt3b3JraW5nVHlwZY'
+    'gBAToEmLUYAkIJCgdfc3ltYm9sQhAKDl9wb3NpdGlvbl9zaWRlQhQKEl90YWtlX3Byb2ZpdF9w'
+    'cmljZUISChBfdGFrZV9wcm9maXRfcGN0QhIKEF9zdG9wX2xvc3NfcHJpY2VCEAoOX3N0b3BfbG'
+    '9zc19wY3RCFAoSX3Rha2VfcHJvZml0X2Jhc2lzQhIKEF9zdG9wX2xvc3NfYmFzaXNCDwoNX3dv'
+    'cmtpbmdfdHlwZQ==');
 
 @$core.Deprecated('Use binanceFuturesSignTradfiContractDescriptor instead')
 const BinanceFuturesSignTradfiContract$json = {

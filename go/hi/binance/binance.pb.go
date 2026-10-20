@@ -3008,13 +3008,15 @@ func (*BinanceFuturesCancelAllSymbols) Descriptor() ([]byte, []int) {
 //     双向持仓两个方向都有仓、又没给 `position_side`,不做,回一句要给哪个方向。
 //  2. 算触发价,全程十进制,**对齐到这个交易对的价格步长**(tickSize,不对齐币安回 -1111):
 //     给价格   → 就用它;
-//     给百分比 p(正数;写成负数按绝对值)→ 先得涨跌幅 m:
-//     basis = ROE(默认)m = p ÷ 杠杆(杠杆是这个交易对现在设的,`/fapi/v1/symbolConfig`);
-//     basis = PRICE      m = p;
+//     给百分比 p(正数;写成负数按绝对值)→ 先得涨跌幅 m,口径**每条腿各自**(`*_basis`):
+//     ROE(默认)m = p ÷ 杠杆(杠杆是这个交易对现在设的,`/fapi/v1/symbolConfig`);
+//     PRICE      m = p;
+//     ⚠️ 口径不能两条腿共用:人只说「止盈改成涨 5%」时,模型会把上一轮的「止损 200%(收益率)」一起带上,
+//     共用一个口径就把它也按价格算成负价、整次被拒(10-20 实测)。
 //     多仓止盈 = 开仓价 × (1 + m%),止损 = 开仓价 × (1 − m%);空仓反过来。算出来 ≤ 0 就不做。
 //  3. **先验后动**:触发价要在现价的对侧(现价按 `working_type`:不传 = 最新成交价,MARK_PRICE = 标记价格)——
 //     多仓止盈高于现价、止损低于现价,空仓相反。有一条不满足就**一张都不撤、一张都不挂**,回一句(否则挂上就立刻触发)。
-//  4. 每一条腿(止盈、止损各自,各自成败):这个方向上已有的**整仓**同类单先撤 —— 币安同一个方向只收一张整仓同类单
+//  4. **只动给了的腿**,没给的那条原样不动。每一条腿(止盈、止损各自,各自成败):这个方向上已有的**整仓**同类单先撤 —— 币安同一个方向只收一张整仓同类单
 //     (止盈 = TAKE_PROFIT_MARKET / TAKE_PROFIT,止损 = STOP_MARKET / STOP,带 closePosition 的;再挂回 -4130);
 //     撤不掉就不挂新的。再挂新的:止盈 TAKE_PROFIT_MARKET、止损 STOP_MARKET,`closePosition`,方向与持仓相反。
 //     按数量挂的(不是整仓的)止盈止损单不动。
@@ -3023,10 +3025,10 @@ func (*BinanceFuturesCancelAllSymbols) Descriptor() ([]byte, []int) {
 // 结果在 `BinanceResult.body`(`http_status` = 200),是**机器人写的 JSON**(不是币安原文):
 //
 //	{ "symbol": "BTCUSDT", "position_side": "LONG", "position_amt": "0.010", "entry_price": "65000.1",
-//	  "leverage": 10, "basis": "ROE",
-//	  "legs": [ { "kind": "take_profit", "trigger_price": "66300.1", "move_pct": "2.00", "roe_pct": "20.00",
+//	  "leverage": 10,
+//	  "legs": [ { "kind": "take_profit", "basis": "ROE", "trigger_price": "66300.1", "move_pct": "2.00", "roe_pct": "20.00",
 //	              "est_pnl": "13.00", "algo_id": 1000002632964185, "replaced": [1000002632960001] },
-//	            { "kind": "stop_loss", "trigger_price": "64350.1", "move_pct": "-1.00", "roe_pct": "-10.00",
+//	            { "kind": "stop_loss", "basis": "PRICE", "trigger_price": "64350.1", "move_pct": "-1.00", "roe_pct": "-10.00",
 //	              "est_pnl": "-6.50", "replaced": [1000002632960002],
 //	              "failed": { "http_status": 400, "code": -2021, "msg": "Order would immediately trigger." } } ] }
 //
@@ -3035,6 +3037,7 @@ func (*BinanceFuturesCancelAllSymbols) Descriptor() ([]byte, []int) {
 //	entry_price    开仓均价(币安原文)
 //	leverage       这个交易对现在设的杠杆(一律查,每条腿的 roe_pct 按它算)
 //	legs           给了的腿各一项,止盈在前
+//	  basis        这条腿百分比的口径(给的是价格时为 null)
 //	  move_pct     触发价相对开仓价的涨跌幅(%,两位小数,对齐步长之后的;跌为负)
 //	  roe_pct      对应的收益率(%,两位小数)= 按持仓方向的涨跌幅 × 杠杆(空仓价跌为正)
 //	  est_pnl      在触发价全部平掉的预估盈亏(计价币,两位小数;不含手续费与滑点)
@@ -3052,8 +3055,9 @@ type BinanceFuturesPositionTpsl struct {
 	TakeProfitPct   *string `protobuf:"bytes,4,opt,name=take_profit_pct,json=takeProfitPct,proto3,oneof" json:"take_profit_pct,omitempty"`
 	StopLossPrice   *string `protobuf:"bytes,5,opt,name=stop_loss_price,json=stopLossPrice,proto3,oneof" json:"stop_loss_price,omitempty"`
 	StopLossPct     *string `protobuf:"bytes,6,opt,name=stop_loss_pct,json=stopLossPct,proto3,oneof" json:"stop_loss_pct,omitempty"`
-	// 百分比的口径,不传 = ROE。
-	Basis *BinanceTpslBasis `protobuf:"varint,7,opt,name=basis,proto3,enum=hi.binance.BinanceTpslBasis,oneof" json:"basis,omitempty"`
+	// 各自百分比的口径,不传 = ROE。
+	TakeProfitBasis *BinanceTpslBasis `protobuf:"varint,7,opt,name=take_profit_basis,json=takeProfitBasis,proto3,enum=hi.binance.BinanceTpslBasis,oneof" json:"take_profit_basis,omitempty"`
+	StopLossBasis   *BinanceTpslBasis `protobuf:"varint,9,opt,name=stop_loss_basis,json=stopLossBasis,proto3,enum=hi.binance.BinanceTpslBasis,oneof" json:"stop_loss_basis,omitempty"`
 	// 触发看哪个价,不传 = 最新成交价(币安的默认)。
 	WorkingType   *BinanceWorkingType `protobuf:"varint,8,opt,name=working_type,json=workingType,proto3,enum=hi.binance.BinanceWorkingType,oneof" json:"working_type,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -3132,9 +3136,16 @@ func (x *BinanceFuturesPositionTpsl) GetStopLossPct() string {
 	return ""
 }
 
-func (x *BinanceFuturesPositionTpsl) GetBasis() BinanceTpslBasis {
-	if x != nil && x.Basis != nil {
-		return *x.Basis
+func (x *BinanceFuturesPositionTpsl) GetTakeProfitBasis() BinanceTpslBasis {
+	if x != nil && x.TakeProfitBasis != nil {
+		return *x.TakeProfitBasis
+	}
+	return BinanceTpslBasis_BINANCE_TPSL_BASIS_UNSPECIFIED
+}
+
+func (x *BinanceFuturesPositionTpsl) GetStopLossBasis() BinanceTpslBasis {
+	if x != nil && x.StopLossBasis != nil {
+		return *x.StopLossBasis
 	}
 	return BinanceTpslBasis_BINANCE_TPSL_BASIS_UNSPECIFIED
 }
@@ -3892,23 +3903,25 @@ const file_hi_binance_binance_proto_rawDesc = "" +
 	"\x06_limit\"\x19\n" +
 	"\x11BinanceFuturesPnl:\x04\x98\xb5\x18\x02\"#\n" +
 	"\x1bBinanceSpotCancelAllSymbols:\x04\x98\xb5\x18\x02\"&\n" +
-	"\x1eBinanceFuturesCancelAllSymbols:\x04\x98\xb5\x18\x02\"\x8c\x05\n" +
+	"\x1eBinanceFuturesCancelAllSymbols:\x04\x98\xb5\x18\x02\"\x93\x06\n" +
 	"\x1aBinanceFuturesPositionTpsl\x126\n" +
 	"\x06symbol\x18\x01 \x01(\tB\x19\xbaH\x12\xc8\x01\x01r\r2\v^[A-Z0-9]+$\x90\xb5\x18\x02H\x00R\x06symbol\x88\x01\x01\x12O\n" +
 	"\rposition_side\x18\x02 \x01(\x0e2\x1f.hi.binance.BinancePositionSideB\x04\x90\xb5\x18\x02H\x01R\fpositionSide\x88\x01\x01\x125\n" +
 	"\x11take_profit_price\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02H\x02R\x0ftakeProfitPrice\x88\x01\x01\x121\n" +
 	"\x0ftake_profit_pct\x18\x04 \x01(\tB\x04\x90\xb5\x18\x02H\x03R\rtakeProfitPct\x88\x01\x01\x121\n" +
 	"\x0fstop_loss_price\x18\x05 \x01(\tB\x04\x90\xb5\x18\x02H\x04R\rstopLossPrice\x88\x01\x01\x12-\n" +
-	"\rstop_loss_pct\x18\x06 \x01(\tB\x04\x90\xb5\x18\x02H\x05R\vstopLossPct\x88\x01\x01\x12=\n" +
-	"\x05basis\x18\a \x01(\x0e2\x1c.hi.binance.BinanceTpslBasisB\x04\x90\xb5\x18\x02H\x06R\x05basis\x88\x01\x01\x12L\n" +
-	"\fworking_type\x18\b \x01(\x0e2\x1e.hi.binance.BinanceWorkingTypeB\x04\x90\xb5\x18\x02H\aR\vworkingType\x88\x01\x01:\x04\x98\xb5\x18\x02B\t\n" +
+	"\rstop_loss_pct\x18\x06 \x01(\tB\x04\x90\xb5\x18\x02H\x05R\vstopLossPct\x88\x01\x01\x12S\n" +
+	"\x11take_profit_basis\x18\a \x01(\x0e2\x1c.hi.binance.BinanceTpslBasisB\x04\x90\xb5\x18\x02H\x06R\x0ftakeProfitBasis\x88\x01\x01\x12O\n" +
+	"\x0fstop_loss_basis\x18\t \x01(\x0e2\x1c.hi.binance.BinanceTpslBasisB\x04\x90\xb5\x18\x02H\aR\rstopLossBasis\x88\x01\x01\x12L\n" +
+	"\fworking_type\x18\b \x01(\x0e2\x1e.hi.binance.BinanceWorkingTypeB\x04\x90\xb5\x18\x02H\bR\vworkingType\x88\x01\x01:\x04\x98\xb5\x18\x02B\t\n" +
 	"\a_symbolB\x10\n" +
 	"\x0e_position_sideB\x14\n" +
 	"\x12_take_profit_priceB\x12\n" +
 	"\x10_take_profit_pctB\x12\n" +
 	"\x10_stop_loss_priceB\x10\n" +
-	"\x0e_stop_loss_pctB\b\n" +
-	"\x06_basisB\x0f\n" +
+	"\x0e_stop_loss_pctB\x14\n" +
+	"\x12_take_profit_basisB\x12\n" +
+	"\x10_stop_loss_basisB\x0f\n" +
 	"\r_working_type\"(\n" +
 	" BinanceFuturesSignTradfiContract:\x04\x98\xb5\x18\x02\"\x1c\n" +
 	"\x14BinanceWalletBalance:\x04\x98\xb5\x18\x02\"\xf9\x02\n" +
@@ -4106,17 +4119,18 @@ var file_hi_binance_binance_proto_depIdxs = []int32{
 	5,  // 32: hi.binance.BinanceFuturesNewAlgoOrder.time_in_force:type_name -> hi.binance.BinanceTimeInForce
 	4,  // 33: hi.binance.BinanceFuturesNewAlgoOrder.working_type:type_name -> hi.binance.BinanceWorkingType
 	6,  // 34: hi.binance.BinanceFuturesPositionTpsl.position_side:type_name -> hi.binance.BinancePositionSide
-	7,  // 35: hi.binance.BinanceFuturesPositionTpsl.basis:type_name -> hi.binance.BinanceTpslBasis
-	4,  // 36: hi.binance.BinanceFuturesPositionTpsl.working_type:type_name -> hi.binance.BinanceWorkingType
-	51, // 37: hi.binance.BinanceResult.held:type_name -> hi.binance.BinanceHoldings
-	50, // 38: hi.binance.BinanceResult.roi:type_name -> hi.binance.BinanceRoi
-	52, // 39: hi.binance.BinanceHoldings.futures:type_name -> hi.binance.BinanceHeld
-	52, // 40: hi.binance.BinanceHoldings.spot:type_name -> hi.binance.BinanceHeld
-	41, // [41:41] is the sub-list for method output_type
-	41, // [41:41] is the sub-list for method input_type
-	41, // [41:41] is the sub-list for extension type_name
-	41, // [41:41] is the sub-list for extension extendee
-	0,  // [0:41] is the sub-list for field type_name
+	7,  // 35: hi.binance.BinanceFuturesPositionTpsl.take_profit_basis:type_name -> hi.binance.BinanceTpslBasis
+	7,  // 36: hi.binance.BinanceFuturesPositionTpsl.stop_loss_basis:type_name -> hi.binance.BinanceTpslBasis
+	4,  // 37: hi.binance.BinanceFuturesPositionTpsl.working_type:type_name -> hi.binance.BinanceWorkingType
+	51, // 38: hi.binance.BinanceResult.held:type_name -> hi.binance.BinanceHoldings
+	50, // 39: hi.binance.BinanceResult.roi:type_name -> hi.binance.BinanceRoi
+	52, // 40: hi.binance.BinanceHoldings.futures:type_name -> hi.binance.BinanceHeld
+	52, // 41: hi.binance.BinanceHoldings.spot:type_name -> hi.binance.BinanceHeld
+	42, // [42:42] is the sub-list for method output_type
+	42, // [42:42] is the sub-list for method input_type
+	42, // [42:42] is the sub-list for extension type_name
+	42, // [42:42] is the sub-list for extension extendee
+	0,  // [0:42] is the sub-list for field type_name
 }
 
 func init() { file_hi_binance_binance_proto_init() }

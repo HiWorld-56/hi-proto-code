@@ -3102,7 +3102,10 @@ impl serde::Serialize for BinanceFuturesPositionTpsl {
         if self.stop_loss_pct.is_some() {
             len += 1;
         }
-        if self.basis.is_some() {
+        if self.take_profit_basis.is_some() {
+            len += 1;
+        }
+        if self.stop_loss_basis.is_some() {
             len += 1;
         }
         if self.working_type.is_some() {
@@ -3129,10 +3132,15 @@ impl serde::Serialize for BinanceFuturesPositionTpsl {
         if let Some(v) = self.stop_loss_pct.as_ref() {
             struct_ser.serialize_field("stopLossPct", v)?;
         }
-        if let Some(v) = self.basis.as_ref() {
+        if let Some(v) = self.take_profit_basis.as_ref() {
             let v = BinanceTpslBasis::try_from(*v)
                 .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
-            struct_ser.serialize_field("basis", &v)?;
+            struct_ser.serialize_field("takeProfitBasis", &v)?;
+        }
+        if let Some(v) = self.stop_loss_basis.as_ref() {
+            let v = BinanceTpslBasis::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("stopLossBasis", &v)?;
         }
         if let Some(v) = self.working_type.as_ref() {
             let v = BinanceWorkingType::try_from(*v)
@@ -3160,7 +3168,10 @@ impl<'de> serde::Deserialize<'de> for BinanceFuturesPositionTpsl {
             "stopLossPrice",
             "stop_loss_pct",
             "stopLossPct",
-            "basis",
+            "take_profit_basis",
+            "takeProfitBasis",
+            "stop_loss_basis",
+            "stopLossBasis",
             "working_type",
             "workingType",
         ];
@@ -3173,7 +3184,8 @@ impl<'de> serde::Deserialize<'de> for BinanceFuturesPositionTpsl {
             TakeProfitPct,
             StopLossPrice,
             StopLossPct,
-            Basis,
+            TakeProfitBasis,
+            StopLossBasis,
             WorkingType,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -3202,7 +3214,8 @@ impl<'de> serde::Deserialize<'de> for BinanceFuturesPositionTpsl {
                             "takeProfitPct" | "take_profit_pct" => Ok(GeneratedField::TakeProfitPct),
                             "stopLossPrice" | "stop_loss_price" => Ok(GeneratedField::StopLossPrice),
                             "stopLossPct" | "stop_loss_pct" => Ok(GeneratedField::StopLossPct),
-                            "basis" => Ok(GeneratedField::Basis),
+                            "takeProfitBasis" | "take_profit_basis" => Ok(GeneratedField::TakeProfitBasis),
+                            "stopLossBasis" | "stop_loss_basis" => Ok(GeneratedField::StopLossBasis),
                             "workingType" | "working_type" => Ok(GeneratedField::WorkingType),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -3229,7 +3242,8 @@ impl<'de> serde::Deserialize<'de> for BinanceFuturesPositionTpsl {
                 let mut take_profit_pct__ = None;
                 let mut stop_loss_price__ = None;
                 let mut stop_loss_pct__ = None;
-                let mut basis__ = None;
+                let mut take_profit_basis__ = None;
+                let mut stop_loss_basis__ = None;
                 let mut working_type__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
@@ -3269,11 +3283,17 @@ impl<'de> serde::Deserialize<'de> for BinanceFuturesPositionTpsl {
                             }
                             stop_loss_pct__ = map_.next_value()?;
                         }
-                        GeneratedField::Basis => {
-                            if basis__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("basis"));
+                        GeneratedField::TakeProfitBasis => {
+                            if take_profit_basis__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("takeProfitBasis"));
                             }
-                            basis__ = map_.next_value::<::std::option::Option<BinanceTpslBasis>>()?.map(|x| x as i32);
+                            take_profit_basis__ = map_.next_value::<::std::option::Option<BinanceTpslBasis>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::StopLossBasis => {
+                            if stop_loss_basis__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("stopLossBasis"));
+                            }
+                            stop_loss_basis__ = map_.next_value::<::std::option::Option<BinanceTpslBasis>>()?.map(|x| x as i32);
                         }
                         GeneratedField::WorkingType => {
                             if working_type__.is_some() {
@@ -3290,7 +3310,8 @@ impl<'de> serde::Deserialize<'de> for BinanceFuturesPositionTpsl {
                     take_profit_pct: take_profit_pct__,
                     stop_loss_price: stop_loss_price__,
                     stop_loss_pct: stop_loss_pct__,
-                    basis: basis__,
+                    take_profit_basis: take_profit_basis__,
+                    stop_loss_basis: stop_loss_basis__,
                     working_type: working_type__,
                 })
             }
