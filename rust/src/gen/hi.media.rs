@@ -183,6 +183,222 @@ pub mod auth_client {
         }
     }
 }
+/// 本人所属的服务调用凭据；明文保存，创建及列表均返回完整值，不应写入日志或交给模型。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ApiKeyInfo {
+    /// 完整 Key，业务调用通过 ApiKey 请求头传入。
+    #[prost(string, optional, tag = "1")]
+    pub value: ::core::option::Option<::prost::alloc::string::String>,
+    /// 所属 HiMedia 账号，素材和产物归此账号。
+    #[prost(string, optional, tag = "2")]
+    pub did: ::core::option::Option<::prost::alloc::string::String>,
+    /// 本人填写的备注。
+    #[prost(string, optional, tag = "3")]
+    pub note: ::core::option::Option<::prost::alloc::string::String>,
+    /// 创建时间，Unix 秒。
+    #[prost(int64, optional, tag = "4")]
+    pub created_at: ::core::option::Option<i64>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CreateApiKeyResp {
+    #[prost(message, optional, tag = "1")]
+    pub info: ::core::option::Option<ApiKeyInfo>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct EditApiKeyReq {
+    #[prost(string, optional, tag = "1")]
+    pub api_key: ::core::option::Option<::prost::alloc::string::String>,
+    /// 必填，空字符串清空备注；不改变凭据值或所属账号。
+    #[prost(string, optional, tag = "2")]
+    pub note: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListApiKeysResp {
+    #[prost(int32, optional, tag = "1")]
+    pub total: ::core::option::Option<i32>,
+    #[prost(message, repeated, tag = "2")]
+    pub infos: ::prost::alloc::vec::Vec<ApiKeyInfo>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DeleteApiKeyReq {
+    #[prost(string, optional, tag = "1")]
+    pub api_key: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// Generated client implementations.
+pub mod api_key_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 只能使用本人登录态管理 Key，不能用 API Key 管理自身或继承管理员权限。
+    /// 业务 Key 仅用于图片上传、上传结果、三类图片创建、任务详情及资产访问地址；
+    /// 不开放视频创建或上传、角色生成、删除资源或管理接口，不限定具体模型。
+    #[derive(Debug, Clone)]
+    pub struct ApiKeyClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl ApiKeyClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> ApiKeyClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ApiKeyClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            ApiKeyClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn create(
+            &mut self,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
+        ) -> std::result::Result<
+            tonic::Response<super::CreateApiKeyResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.media.ApiKey/Create");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.media.ApiKey", "Create"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn edit(
+            &mut self,
+            request: impl tonic::IntoRequest<super::EditApiKeyReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.media.ApiKey/Edit");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.media.ApiKey", "Edit"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::Pagination>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListApiKeysResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.media.ApiKey/List");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.media.ApiKey", "List"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 删除后新请求立即拒绝；已经受理的生成任务不因此取消。
+        pub async fn delete(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteApiKeyReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.media.ApiKey/Delete");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.media.ApiKey", "Delete"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
 /// 文生图宽高选择，单位像素；省略某项时使用该工作流对应默认值。
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ImageDimensions {
@@ -4575,9 +4791,11 @@ pub mod file_client {
     use tonic::codegen::http::Uri;
     /// 用户文件查询与管理。
     ///
-    /// 上传例外：HTTP 客户端通过 AUTH_USER 的 `POST /api/v1/file/upload` 上传静态
+    /// 上传例外：HTTP 客户端通过 `POST /api/v1/file/upload` 上传静态
     /// JPEG/PNG。该路由 HiMedia 手写 HTTP Handler 接收 multipart/form-data，因此没有
-    /// File.Upload RPC，也不由 grpc-gateway 生成。请求使用 UploadMetadata，成功响应
+    /// File.Upload RPC。接受 AUTH_USER 登录 Bearer 或 ApiKey 请求头，二者不可同时提供；
+    /// API Key 仅能代表所属账号上传图片，不能上传视频或调用文件删除等管理操作。
+    /// 不由 grpc-gateway 生成。请求使用 UploadMetadata，成功响应
     /// 包装的 data 是 UploadBatchResult。超时或响应丢失时，使用同一 request_id 调用
     /// GetUploadResult 查询，不要换新 ID 重复上传。
     #[derive(Debug, Clone)]
