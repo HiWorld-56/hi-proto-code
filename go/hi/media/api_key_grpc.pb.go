@@ -31,7 +31,8 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// 只能使用本人登录态管理 Key，不能用 API Key 管理自身或继承管理员权限。
+// 仅超级管理员可使用本人 Bearer 登录态管理自己的商户 Key，普通用户不可调用。
+// API Key 不能管理自身，也不继承管理员权限；资源和额度仍归 Key 所属账号。
 // 业务 Key 仅用于图片上传、上传结果、三类图片创建、任务详情及资产访问地址；
 // 不开放视频创建或上传、角色生成、删除资源或管理接口，不限定具体模型。
 type ApiKeyClient interface {
@@ -94,7 +95,8 @@ func (c *apiKeyClient) Delete(ctx context.Context, in *DeleteApiKeyReq, opts ...
 // All implementations should embed UnimplementedApiKeyServer
 // for forward compatibility.
 //
-// 只能使用本人登录态管理 Key，不能用 API Key 管理自身或继承管理员权限。
+// 仅超级管理员可使用本人 Bearer 登录态管理自己的商户 Key，普通用户不可调用。
+// API Key 不能管理自身，也不继承管理员权限；资源和额度仍归 Key 所属账号。
 // 业务 Key 仅用于图片上传、上传结果、三类图片创建、任务详情及资产访问地址；
 // 不开放视频创建或上传、角色生成、删除资源或管理接口，不限定具体模型。
 type ApiKeyServer interface {

@@ -8,7 +8,8 @@ from hi.media import api_key_pb2 as hi_dot_media_dot_api__key__pb2
 
 
 class ApiKeyStub(object):
-    """只能使用本人登录态管理 Key，不能用 API Key 管理自身或继承管理员权限。
+    """仅超级管理员可使用本人 Bearer 登录态管理自己的商户 Key，普通用户不可调用。
+    API Key 不能管理自身，也不继承管理员权限；资源和额度仍归 Key 所属账号。
     业务 Key 仅用于图片上传、上传结果、三类图片创建、任务详情及资产访问地址；
     不开放视频创建或上传、角色生成、删除资源或管理接口，不限定具体模型。
     """
@@ -42,7 +43,8 @@ class ApiKeyStub(object):
 
 
 class ApiKeyServicer(object):
-    """只能使用本人登录态管理 Key，不能用 API Key 管理自身或继承管理员权限。
+    """仅超级管理员可使用本人 Bearer 登录态管理自己的商户 Key，普通用户不可调用。
+    API Key 不能管理自身，也不继承管理员权限；资源和额度仍归 Key 所属账号。
     业务 Key 仅用于图片上传、上传结果、三类图片创建、任务详情及资产访问地址；
     不开放视频创建或上传、角色生成、删除资源或管理接口，不限定具体模型。
     """
@@ -104,7 +106,8 @@ def add_ApiKeyServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class ApiKey(object):
-    """只能使用本人登录态管理 Key，不能用 API Key 管理自身或继承管理员权限。
+    """仅超级管理员可使用本人 Bearer 登录态管理自己的商户 Key，普通用户不可调用。
+    API Key 不能管理自身，也不继承管理员权限；资源和额度仍归 Key 所属账号。
     业务 Key 仅用于图片上传、上传结果、三类图片创建、任务详情及资产访问地址；
     不开放视频创建或上传、角色生成、删除资源或管理接口，不限定具体模型。
     """

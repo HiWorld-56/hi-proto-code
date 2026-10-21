@@ -319,10 +319,10 @@ const file_hi_media_api_key_proto_rawDesc = "" +
 	"\n" +
 	"\b_api_key2\x8b\x02\n" +
 	"\x06ApiKey\x12C\n" +
-	"\x06Create\x12\x16.google.protobuf.Empty\x1a\x1a.hi.media.CreateApiKeyResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n" +
-	"\x04Edit\x12\x17.hi.media.EditApiKeyReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x128\n" +
-	"\x04List\x12\x0e.hi.Pagination\x1a\x19.hi.media.ListApiKeysResp\"\x05\x8a\xb5\x18\x01\x02\x12B\n" +
-	"\x06Delete\x12\x19.hi.media.DeleteApiKeyReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02B\x88\x01\n" +
+	"\x06Create\x12\x16.google.protobuf.Empty\x1a\x1a.hi.media.CreateApiKeyResp\"\x05\x8a\xb5\x18\x01\x04\x12>\n" +
+	"\x04Edit\x12\x17.hi.media.EditApiKeyReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x128\n" +
+	"\x04List\x12\x0e.hi.Pagination\x1a\x19.hi.media.ListApiKeysResp\"\x05\x8a\xb5\x18\x01\x04\x12B\n" +
+	"\x06Delete\x12\x19.hi.media.DeleteApiKeyReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04B\x88\x01\n" +
 	"\fcom.hi.mediaB\vApiKeyProtoP\x01Z*github.com/HiWorld-56/hi-proto/go/hi/media\xa2\x02\x03HMX\xaa\x02\bHi.Media\xca\x02\bHi\\Media\xe2\x02\x14Hi\\Media\\GPBMetadata\xea\x02\tHi::Mediab\x06proto3"
 
 var (
