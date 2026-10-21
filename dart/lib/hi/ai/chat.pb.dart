@@ -15,6 +15,8 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/struct.pb.dart' as $2;
 
+import 'reply_image.pb.dart' as $3;
+
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 /// ── AI 对话全链路都是私有:会话/上下文/回复只发给发起对话的本人 ──────────────
@@ -1351,12 +1353,14 @@ class ChatResp extends $pb.GeneratedMessage {
     $core.String? result,
     $core.Iterable<ToolCall>? tools,
     $core.Iterable<Content>? question,
+    $core.Iterable<$3.ReplyImage>? replyImages,
   }) {
     final result$ = create();
     if (final_1 != null) result$.final_1 = final_1;
     if (result != null) result$.result = result;
     if (tools != null) result$.tools.addAll(tools);
     if (question != null) result$.question.addAll(question);
+    if (replyImages != null) result$.replyImages.addAll(replyImages);
     return result$;
   }
 
@@ -1379,6 +1383,8 @@ class ChatResp extends $pb.GeneratedMessage {
         subBuilder: ToolCall.create)
     ..pPM<Content>(4, _omitFieldNames ? '' : 'question',
         subBuilder: Content.create)
+    ..pPM<$3.ReplyImage>(5, _omitFieldNames ? '' : 'replyImages',
+        subBuilder: $3.ReplyImage.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1426,6 +1432,11 @@ class ChatResp extends $pb.GeneratedMessage {
   /// 用途:club 把机器人的语音对话记进聊天记录时,用户那句存成文字而不是一段录音 url。
   @$pb.TagNumber(4)
   $pb.PbList<Content> get question => $_getList(3);
+
+  /// 非流式最终回复的待发送图片，按工具取得顺序排列，不依赖 result 中出现 URL。
+  /// 普通文字或含 URL 的 JSON 不会自动变成图片；中途等待客户端工具时不交付图片。
+  @$pb.TagNumber(5)
+  $pb.PbList<$3.ReplyImage> get replyImages => $_getList(4);
 }
 
 /// 流式帧(ConverseStream / ResumeStream)。

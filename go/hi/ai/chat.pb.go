@@ -1006,7 +1006,10 @@ type ChatResp struct {
 	// 语音转文字只在 hi-ai 做一次(推理前必转,见 service/chat.go 的 Prepare),调用方别另做一遍 ——
 	// 两处识别结果可能不一致。Converse 与 Resume 的回包都带(final 与否都带,续跑带的是开轮那一句)。
 	// 用途:club 把机器人的语音对话记进聊天记录时,用户那句存成文字而不是一段录音 url。
-	Question      []*Content `protobuf:"bytes,4,rep,name=question,proto3" json:"question,omitempty"`
+	Question []*Content `protobuf:"bytes,4,rep,name=question,proto3" json:"question,omitempty"`
+	// 非流式最终回复的待发送图片，按工具取得顺序排列，不依赖 result 中出现 URL。
+	// 普通文字或含 URL 的 JSON 不会自动变成图片；中途等待客户端工具时不交付图片。
+	ReplyImages   []*ReplyImage `protobuf:"bytes,5,rep,name=reply_images,json=replyImages,proto3" json:"reply_images,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1065,6 +1068,13 @@ func (x *ChatResp) GetTools() []*ToolCall {
 func (x *ChatResp) GetQuestion() []*Content {
 	if x != nil {
 		return x.Question
+	}
+	return nil
+}
+
+func (x *ChatResp) GetReplyImages() []*ReplyImage {
+	if x != nil {
+		return x.ReplyImages
 	}
 	return nil
 }
@@ -1305,7 +1315,7 @@ var File_hi_ai_chat_proto protoreflect.FileDescriptor
 
 const file_hi_ai_chat_proto_rawDesc = "" +
 	"\n" +
-	"\x10hi/ai/chat.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/options.proto\"h\n" +
+	"\x10hi/ai/chat.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x17hi/ai/reply_image.proto\x1a\x10hi/options.proto\"h\n" +
 	"\aContent\x12\x1d\n" +
 	"\x04type\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04type\x88\x01\x01\x12#\n" +
 	"\acontent\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\acontent\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
@@ -1423,12 +1433,13 @@ const file_hi_ai_chat_proto_rawDesc = "" +
 	"\n" +
 	"_arguments:\x04\x98\xb5\x18\x03B\x05\n" +
 	"\x03_idB\a\n" +
-	"\x05_type\"\xc8\x01\n" +
+	"\x05_type\"\x84\x02\n" +
 	"\bChatResp\x12\x1f\n" +
 	"\x05final\x18\x01 \x01(\bB\x04\x90\xb5\x18\x03H\x00R\x05final\x88\x01\x01\x12!\n" +
 	"\x06result\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x06result\x88\x01\x01\x12+\n" +
 	"\x05tools\x18\x03 \x03(\v2\x0f.hi.ai.ToolCallB\x04\x90\xb5\x18\x03R\x05tools\x120\n" +
-	"\bquestion\x18\x04 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\bquestion:\x04\x98\xb5\x18\x03B\b\n" +
+	"\bquestion\x18\x04 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\bquestion\x12:\n" +
+	"\freply_images\x18\x05 \x03(\v2\x11.hi.ai.ReplyImageB\x04\x90\xb5\x18\x03R\vreplyImages:\x04\x98\xb5\x18\x03B\b\n" +
 	"\x06_finalB\t\n" +
 	"\a_result\"\x9c\x02\n" +
 	"\x12ConverseStreamResp\x12\x1d\n" +
@@ -1487,8 +1498,9 @@ var file_hi_ai_chat_proto_goTypes = []any{
 	(*ConverseStreamResp)(nil),  // 14: hi.ai.ConverseStreamResp
 	(*ToolSupply_Function)(nil), // 15: hi.ai.ToolSupply.Function
 	(*ToolCall_Function)(nil),   // 16: hi.ai.ToolCall.Function
-	(*structpb.Struct)(nil),     // 17: google.protobuf.Struct
-	(*emptypb.Empty)(nil),       // 18: google.protobuf.Empty
+	(*ReplyImage)(nil),          // 17: hi.ai.ReplyImage
+	(*structpb.Struct)(nil),     // 18: google.protobuf.Struct
+	(*emptypb.Empty)(nil),       // 19: google.protobuf.Empty
 }
 var file_hi_ai_chat_proto_depIdxs = []int32{
 	0,  // 0: hi.ai.QA.q:type_name -> hi.ai.Content
@@ -1503,30 +1515,31 @@ var file_hi_ai_chat_proto_depIdxs = []int32{
 	16, // 9: hi.ai.ToolCall.function:type_name -> hi.ai.ToolCall.Function
 	12, // 10: hi.ai.ChatResp.tools:type_name -> hi.ai.ToolCall
 	0,  // 11: hi.ai.ChatResp.question:type_name -> hi.ai.Content
-	12, // 12: hi.ai.ConverseStreamResp.tools:type_name -> hi.ai.ToolCall
-	0,  // 13: hi.ai.ConverseStreamResp.question:type_name -> hi.ai.Content
-	17, // 14: hi.ai.ToolSupply.Function.parameters:type_name -> google.protobuf.Struct
-	18, // 15: hi.ai.Chat.NewSession:input_type -> google.protobuf.Empty
-	4,  // 16: hi.ai.Chat.GetContext:input_type -> hi.ai.GetContextReq
-	3,  // 17: hi.ai.Chat.ClearContext:input_type -> hi.ai.ClearContextReq
-	5,  // 18: hi.ai.Chat.AppendContext:input_type -> hi.ai.AppendContextReq
-	8,  // 19: hi.ai.Chat.Converse:input_type -> hi.ai.ChatReq
-	8,  // 20: hi.ai.Chat.ConverseStream:input_type -> hi.ai.ChatReq
-	10, // 21: hi.ai.Chat.Resume:input_type -> hi.ai.ToolCallResultsReq
-	10, // 22: hi.ai.Chat.ResumeStream:input_type -> hi.ai.ToolCallResultsReq
-	2,  // 23: hi.ai.Chat.NewSession:output_type -> hi.ai.NewSessionResp
-	7,  // 24: hi.ai.Chat.GetContext:output_type -> hi.ai.GetContextResp
-	18, // 25: hi.ai.Chat.ClearContext:output_type -> google.protobuf.Empty
-	18, // 26: hi.ai.Chat.AppendContext:output_type -> google.protobuf.Empty
-	13, // 27: hi.ai.Chat.Converse:output_type -> hi.ai.ChatResp
-	14, // 28: hi.ai.Chat.ConverseStream:output_type -> hi.ai.ConverseStreamResp
-	13, // 29: hi.ai.Chat.Resume:output_type -> hi.ai.ChatResp
-	14, // 30: hi.ai.Chat.ResumeStream:output_type -> hi.ai.ConverseStreamResp
-	23, // [23:31] is the sub-list for method output_type
-	15, // [15:23] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+	17, // 12: hi.ai.ChatResp.reply_images:type_name -> hi.ai.ReplyImage
+	12, // 13: hi.ai.ConverseStreamResp.tools:type_name -> hi.ai.ToolCall
+	0,  // 14: hi.ai.ConverseStreamResp.question:type_name -> hi.ai.Content
+	18, // 15: hi.ai.ToolSupply.Function.parameters:type_name -> google.protobuf.Struct
+	19, // 16: hi.ai.Chat.NewSession:input_type -> google.protobuf.Empty
+	4,  // 17: hi.ai.Chat.GetContext:input_type -> hi.ai.GetContextReq
+	3,  // 18: hi.ai.Chat.ClearContext:input_type -> hi.ai.ClearContextReq
+	5,  // 19: hi.ai.Chat.AppendContext:input_type -> hi.ai.AppendContextReq
+	8,  // 20: hi.ai.Chat.Converse:input_type -> hi.ai.ChatReq
+	8,  // 21: hi.ai.Chat.ConverseStream:input_type -> hi.ai.ChatReq
+	10, // 22: hi.ai.Chat.Resume:input_type -> hi.ai.ToolCallResultsReq
+	10, // 23: hi.ai.Chat.ResumeStream:input_type -> hi.ai.ToolCallResultsReq
+	2,  // 24: hi.ai.Chat.NewSession:output_type -> hi.ai.NewSessionResp
+	7,  // 25: hi.ai.Chat.GetContext:output_type -> hi.ai.GetContextResp
+	19, // 26: hi.ai.Chat.ClearContext:output_type -> google.protobuf.Empty
+	19, // 27: hi.ai.Chat.AppendContext:output_type -> google.protobuf.Empty
+	13, // 28: hi.ai.Chat.Converse:output_type -> hi.ai.ChatResp
+	14, // 29: hi.ai.Chat.ConverseStream:output_type -> hi.ai.ConverseStreamResp
+	13, // 30: hi.ai.Chat.Resume:output_type -> hi.ai.ChatResp
+	14, // 31: hi.ai.Chat.ResumeStream:output_type -> hi.ai.ConverseStreamResp
+	24, // [24:32] is the sub-list for method output_type
+	16, // [16:24] is the sub-list for method input_type
+	16, // [16:16] is the sub-list for extension type_name
+	16, // [16:16] is the sub-list for extension extendee
+	0,  // [0:16] is the sub-list for field type_name
 }
 
 func init() { file_hi_ai_chat_proto_init() }
@@ -1534,6 +1547,7 @@ func file_hi_ai_chat_proto_init() {
 	if File_hi_ai_chat_proto != nil {
 		return
 	}
+	file_hi_ai_reply_image_proto_init()
 	file_hi_ai_chat_proto_msgTypes[0].OneofWrappers = []any{}
 	file_hi_ai_chat_proto_msgTypes[1].OneofWrappers = []any{}
 	file_hi_ai_chat_proto_msgTypes[2].OneofWrappers = []any{}

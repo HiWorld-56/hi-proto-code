@@ -617,6 +617,15 @@ const ChatResp$json = {
       '8': {},
       '10': 'question'
     },
+    {
+      '1': 'reply_images',
+      '3': 5,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.ai.ReplyImage',
+      '8': {},
+      '10': 'replyImages'
+    },
   ],
   '7': {},
   '8': [
@@ -630,7 +639,8 @@ final $typed_data.Uint8List chatRespDescriptor = $convert.base64Decode(
     'CghDaGF0UmVzcBIfCgVmaW5hbBgBIAEoCEIEkLUYA0gAUgVmaW5hbIgBARIhCgZyZXN1bHQYAi'
     'ABKAlCBJC1GANIAVIGcmVzdWx0iAEBEisKBXRvb2xzGAMgAygLMg8uaGkuYWkuVG9vbENhbGxC'
     'BJC1GANSBXRvb2xzEjAKCHF1ZXN0aW9uGAQgAygLMg4uaGkuYWkuQ29udGVudEIEkLUYA1IIcX'
-    'Vlc3Rpb246BJi1GANCCAoGX2ZpbmFsQgkKB19yZXN1bHQ=');
+    'Vlc3Rpb24SOgoMcmVwbHlfaW1hZ2VzGAUgAygLMhEuaGkuYWkuUmVwbHlJbWFnZUIEkLUYA1IL'
+    'cmVwbHlJbWFnZXM6BJi1GANCCAoGX2ZpbmFsQgkKB19yZXN1bHQ=');
 
 @$core.Deprecated('Use converseStreamRespDescriptor instead')
 const ConverseStreamResp$json = {

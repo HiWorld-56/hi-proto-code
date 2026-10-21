@@ -224,6 +224,20 @@ pub mod api_key_client {
         }
     }
 }
+/// 插件成功取得、已转存到聊天桶的待发送图片；不表示已投递给用户。
+/// 元数据来自后台转存结果，不由模型填写；与模型视觉输入 Content 分开传递。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ReplyImage {
+    /// 聊天桶原图地址，不是 ComfyUI 或 HiMedia 的临时地址。
+    #[prost(string, optional, tag = "1")]
+    pub url: ::core::option::Option<::prost::alloc::string::String>,
+    /// 实际文件名，映射聊天内容的 chat.name。
+    #[prost(string, optional, tag = "2")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    /// 实际字节数，映射 chat.size；JSON 为 sizeBytes。
+    #[prost(uint64, optional, tag = "3")]
+    pub size_bytes: ::core::option::Option<u64>,
+}
 /// ── AI 对话全链路都是私有:会话/上下文/回复只发给发起对话的本人 ──────────────
 ///
 /// 对话内容的一段。`type` 取 hi.club `Content.type` 那张表里的词(`text` / `image_url` / `audio_url`;
@@ -548,6 +562,10 @@ pub struct ChatResp {
     /// 用途:club 把机器人的语音对话记进聊天记录时,用户那句存成文字而不是一段录音 url。
     #[prost(message, repeated, tag = "4")]
     pub question: ::prost::alloc::vec::Vec<Content>,
+    /// 非流式最终回复的待发送图片，按工具取得顺序排列，不依赖 result 中出现 URL。
+    /// 普通文字或含 URL 的 JSON 不会自动变成图片；中途等待客户端工具时不交付图片。
+    #[prost(message, repeated, tag = "5")]
+    pub reply_images: ::prost::alloc::vec::Vec<ReplyImage>,
 }
 /// 流式帧(ConverseStream / ResumeStream)。
 ///

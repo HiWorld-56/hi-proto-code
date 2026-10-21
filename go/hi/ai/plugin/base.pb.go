@@ -225,8 +225,11 @@ func (x *RunReq) GetMaster() string {
 }
 
 type RunResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Conts         []*ai.Content          `protobuf:"bytes,1,rep,name=conts,proto3" json:"conts,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Conts []*ai.Content          `protobuf:"bytes,1,rep,name=conts,proto3" json:"conts,omitempty"`
+	// 仅显式 image_result 返回的图片；stdout 日志、普通字符串和字典仍属于 conts。
+	// 执行失败或超时不返回本次调用的图片；不包含收信人或生成任务状态。
+	ReplyImages   []*ai.ReplyImage `protobuf:"bytes,2,rep,name=reply_images,json=replyImages,proto3" json:"reply_images,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -264,6 +267,13 @@ func (*RunResp) Descriptor() ([]byte, []int) {
 func (x *RunResp) GetConts() []*ai.Content {
 	if x != nil {
 		return x.Conts
+	}
+	return nil
+}
+
+func (x *RunResp) GetReplyImages() []*ai.ReplyImage {
+	if x != nil {
+		return x.ReplyImages
 	}
 	return nil
 }
@@ -1140,7 +1150,7 @@ var File_hi_ai_plugin_base_proto protoreflect.FileDescriptor
 
 const file_hi_ai_plugin_base_proto_rawDesc = "" +
 	"\n" +
-	"\x17hi/ai/plugin/base.proto\x12\fhi.ai.plugin\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/ai/chat.proto\x1a\x12hi/ai/plugin.proto\x1a\x10hi/options.proto\":\n" +
+	"\x17hi/ai/plugin/base.proto\x12\fhi.ai.plugin\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/ai/chat.proto\x1a\x12hi/ai/plugin.proto\x1a\x17hi/ai/reply_image.proto\x1a\x10hi/options.proto\":\n" +
 	"\vPluginAnnex\x12+\n" +
 	"\x04data\x18\x01 \x01(\v2\x17.google.protobuf.StructR\x04data\"\xe4\x02\n" +
 	"\x06RunReq\x12-\n" +
@@ -1158,9 +1168,10 @@ const file_hi_ai_plugin_base_proto_rawDesc = "" +
 	"\x05_uuidB\v\n" +
 	"\t_functionB\b\n" +
 	"\x06_askerB\t\n" +
-	"\a_master\";\n" +
+	"\a_master\"w\n" +
 	"\aRunResp\x12*\n" +
-	"\x05conts\x18\x01 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\x05conts:\x04\x98\xb5\x18\x03\"P\n" +
+	"\x05conts\x18\x01 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\x05conts\x12:\n" +
+	"\freply_images\x18\x02 \x03(\v2\x11.hi.ai.ReplyImageB\x04\x90\xb5\x18\x03R\vreplyImages:\x04\x98\xb5\x18\x03\"P\n" +
 	"\n" +
 	"CleanupReq\x12-\n" +
 	"\x10code_archive_url\x18\x01 \x01(\tH\x00R\x0ecodeArchiveUrl\x88\x01\x01B\x13\n" +
@@ -1301,34 +1312,36 @@ var file_hi_ai_plugin_base_proto_goTypes = []any{
 	(*LuaDepRef)(nil),          // 13: hi.ai.plugin.LuaDepRef
 	(*structpb.Struct)(nil),    // 14: google.protobuf.Struct
 	(*ai.Content)(nil),         // 15: hi.ai.Content
-	(*ai.LuaDep)(nil),          // 16: hi.ai.LuaDep
-	(*emptypb.Empty)(nil),      // 17: google.protobuf.Empty
+	(*ai.ReplyImage)(nil),      // 16: hi.ai.ReplyImage
+	(*ai.LuaDep)(nil),          // 17: hi.ai.LuaDep
+	(*emptypb.Empty)(nil),      // 18: google.protobuf.Empty
 }
 var file_hi_ai_plugin_base_proto_depIdxs = []int32{
 	14, // 0: hi.ai.plugin.PluginAnnex.data:type_name -> google.protobuf.Struct
 	0,  // 1: hi.ai.plugin.RunReq.annex:type_name -> hi.ai.plugin.PluginAnnex
 	15, // 2: hi.ai.plugin.RunResp.conts:type_name -> hi.ai.Content
-	16, // 3: hi.ai.plugin.VerifyLuaReq.deps:type_name -> hi.ai.LuaDep
-	10, // 4: hi.ai.plugin.BuildLuaDepResp.so_files:type_name -> hi.ai.plugin.LuaDepBuiltFile
-	10, // 5: hi.ai.plugin.BuildLuaDepResp.lua_files:type_name -> hi.ai.plugin.LuaDepBuiltFile
-	13, // 6: hi.ai.plugin.LuaDepRequiresResp.requires:type_name -> hi.ai.plugin.LuaDepRef
-	1,  // 7: hi.ai.plugin.Runner.Run:input_type -> hi.ai.plugin.RunReq
-	3,  // 8: hi.ai.plugin.Runner.Cleanup:input_type -> hi.ai.plugin.CleanupReq
-	4,  // 9: hi.ai.plugin.Builder.Build:input_type -> hi.ai.plugin.BuildReq
-	11, // 10: hi.ai.plugin.Builder.LuaDepRequires:input_type -> hi.ai.plugin.LuaDepRequiresReq
-	8,  // 11: hi.ai.plugin.Builder.BuildLuaDep:input_type -> hi.ai.plugin.BuildLuaDepReq
-	6,  // 12: hi.ai.plugin.Builder.VerifyLua:input_type -> hi.ai.plugin.VerifyLuaReq
-	2,  // 13: hi.ai.plugin.Runner.Run:output_type -> hi.ai.plugin.RunResp
-	17, // 14: hi.ai.plugin.Runner.Cleanup:output_type -> google.protobuf.Empty
-	5,  // 15: hi.ai.plugin.Builder.Build:output_type -> hi.ai.plugin.BuildResp
-	12, // 16: hi.ai.plugin.Builder.LuaDepRequires:output_type -> hi.ai.plugin.LuaDepRequiresResp
-	9,  // 17: hi.ai.plugin.Builder.BuildLuaDep:output_type -> hi.ai.plugin.BuildLuaDepResp
-	7,  // 18: hi.ai.plugin.Builder.VerifyLua:output_type -> hi.ai.plugin.VerifyLuaResp
-	13, // [13:19] is the sub-list for method output_type
-	7,  // [7:13] is the sub-list for method input_type
-	7,  // [7:7] is the sub-list for extension type_name
-	7,  // [7:7] is the sub-list for extension extendee
-	0,  // [0:7] is the sub-list for field type_name
+	16, // 3: hi.ai.plugin.RunResp.reply_images:type_name -> hi.ai.ReplyImage
+	17, // 4: hi.ai.plugin.VerifyLuaReq.deps:type_name -> hi.ai.LuaDep
+	10, // 5: hi.ai.plugin.BuildLuaDepResp.so_files:type_name -> hi.ai.plugin.LuaDepBuiltFile
+	10, // 6: hi.ai.plugin.BuildLuaDepResp.lua_files:type_name -> hi.ai.plugin.LuaDepBuiltFile
+	13, // 7: hi.ai.plugin.LuaDepRequiresResp.requires:type_name -> hi.ai.plugin.LuaDepRef
+	1,  // 8: hi.ai.plugin.Runner.Run:input_type -> hi.ai.plugin.RunReq
+	3,  // 9: hi.ai.plugin.Runner.Cleanup:input_type -> hi.ai.plugin.CleanupReq
+	4,  // 10: hi.ai.plugin.Builder.Build:input_type -> hi.ai.plugin.BuildReq
+	11, // 11: hi.ai.plugin.Builder.LuaDepRequires:input_type -> hi.ai.plugin.LuaDepRequiresReq
+	8,  // 12: hi.ai.plugin.Builder.BuildLuaDep:input_type -> hi.ai.plugin.BuildLuaDepReq
+	6,  // 13: hi.ai.plugin.Builder.VerifyLua:input_type -> hi.ai.plugin.VerifyLuaReq
+	2,  // 14: hi.ai.plugin.Runner.Run:output_type -> hi.ai.plugin.RunResp
+	18, // 15: hi.ai.plugin.Runner.Cleanup:output_type -> google.protobuf.Empty
+	5,  // 16: hi.ai.plugin.Builder.Build:output_type -> hi.ai.plugin.BuildResp
+	12, // 17: hi.ai.plugin.Builder.LuaDepRequires:output_type -> hi.ai.plugin.LuaDepRequiresResp
+	9,  // 18: hi.ai.plugin.Builder.BuildLuaDep:output_type -> hi.ai.plugin.BuildLuaDepResp
+	7,  // 19: hi.ai.plugin.Builder.VerifyLua:output_type -> hi.ai.plugin.VerifyLuaResp
+	14, // [14:20] is the sub-list for method output_type
+	8,  // [8:14] is the sub-list for method input_type
+	8,  // [8:8] is the sub-list for extension type_name
+	8,  // [8:8] is the sub-list for extension extendee
+	0,  // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_hi_ai_plugin_base_proto_init() }

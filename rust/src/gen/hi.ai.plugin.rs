@@ -64,6 +64,10 @@ pub struct RunReq {
 pub struct RunResp {
     #[prost(message, repeated, tag = "1")]
     pub conts: ::prost::alloc::vec::Vec<super::Content>,
+    /// 仅显式 image_result 返回的图片；stdout 日志、普通字符串和字典仍属于 conts。
+    /// 执行失败或超时不返回本次调用的图片；不包含收信人或生成任务状态。
+    #[prost(message, repeated, tag = "2")]
+    pub reply_images: ::prost::alloc::vec::Vec<super::ReplyImage>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CleanupReq {

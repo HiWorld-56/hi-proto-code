@@ -1538,9 +1538,15 @@ impl serde::Serialize for RunResp {
         if !self.conts.is_empty() {
             len += 1;
         }
+        if !self.reply_images.is_empty() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ai.plugin.RunResp", len)?;
         if !self.conts.is_empty() {
             struct_ser.serialize_field("conts", &self.conts)?;
+        }
+        if !self.reply_images.is_empty() {
+            struct_ser.serialize_field("replyImages", &self.reply_images)?;
         }
         struct_ser.end()
     }
@@ -1553,11 +1559,14 @@ impl<'de> serde::Deserialize<'de> for RunResp {
     {
         const FIELDS: &[&str] = &[
             "conts",
+            "reply_images",
+            "replyImages",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Conts,
+            ReplyImages,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1580,6 +1589,7 @@ impl<'de> serde::Deserialize<'de> for RunResp {
                     {
                         match value {
                             "conts" => Ok(GeneratedField::Conts),
+                            "replyImages" | "reply_images" => Ok(GeneratedField::ReplyImages),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -1600,6 +1610,7 @@ impl<'de> serde::Deserialize<'de> for RunResp {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut conts__ = None;
+                let mut reply_images__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Conts => {
@@ -1608,10 +1619,17 @@ impl<'de> serde::Deserialize<'de> for RunResp {
                             }
                             conts__ = Some(map_.next_value()?);
                         }
+                        GeneratedField::ReplyImages => {
+                            if reply_images__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("replyImages"));
+                            }
+                            reply_images__ = Some(map_.next_value()?);
+                        }
                     }
                 }
                 Ok(RunResp {
                     conts: conts__.unwrap_or_default(),
+                    reply_images: reply_images__.unwrap_or_default(),
                 })
             }
         }
