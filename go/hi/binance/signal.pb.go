@@ -88,6 +88,12 @@ func (BinanceMarket) EnumDescriptor() ([]byte, []int) {
 // 只报**持仓变大**(新开仓、加仓;限价单成交让持仓变大也算 —— 挂单本身不算开单)。
 // 平仓、减仓、挂单、撤单一概不报:跟出来的仓位之后完全由跟单方的用户自己管。
 //
+// ## 先等 5 分钟,赚了才发(2026-10-21 用户定)
+//
+// 信号源发现一笔开单后**先压 5 分钟**:到点按方向算涨跌幅、扣掉开平各一次的标准吃单费
+// (合约 0.05% × 2、现货 0.1% × 2)之后还赚才发;跌的、这期间平了 / 减了仓的、宕机错过(到点后又过 5 分钟)的都不发。
+// 所以跟单方收到的开单都是信号源那边 5 分钟后还赚着的;`BinanceOpen` 的比例、杠杆、参考价仍是**发现时**的。
+//
 // ## 收到之后
 //
 // 跟单方**不自动下单**:在机器人屏幕上弹一张卡(信号源开了什么 + 我们打算开什么),
@@ -95,7 +101,7 @@ func (BinanceMarket) EnumDescriptor() ([]byte, []int) {
 type BinanceSignal struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Seq   *uint64                `protobuf:"varint,1,opt,name=seq,proto3,oneof" json:"seq,omitempty"` // 信号源自己的递增序号
-	At    *int64                 `protobuf:"varint,2,opt,name=at,proto3,oneof" json:"at,omitempty"`   // 发现这些变化的时刻,绝对微秒
+	At    *int64                 `protobuf:"varint,2,opt,name=at,proto3,oneof" json:"at,omitempty"`   // 发出的时刻(发现后约 5 分钟),绝对微秒
 	// 过期时刻,绝对微秒(= at + 15 分钟)。消息在路上耽搁过了这个点,跟单方就不弹卡。
 	Expiration    *int64         `protobuf:"varint,3,opt,name=expiration,proto3,oneof" json:"expiration,omitempty"`
 	Opens         []*BinanceOpen `protobuf:"bytes,4,rep,name=opens,proto3" json:"opens,omitempty"`
