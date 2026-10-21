@@ -2209,6 +2209,9 @@ impl serde::Serialize for ConverseStreamResp {
         if !self.question.is_empty() {
             len += 1;
         }
+        if !self.reply_images.is_empty() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ai.ConverseStreamResp", len)?;
         if let Some(v) = self.code.as_ref() {
             struct_ser.serialize_field("code", v)?;
@@ -2228,6 +2231,9 @@ impl serde::Serialize for ConverseStreamResp {
         if !self.question.is_empty() {
             struct_ser.serialize_field("question", &self.question)?;
         }
+        if !self.reply_images.is_empty() {
+            struct_ser.serialize_field("replyImages", &self.reply_images)?;
+        }
         struct_ser.end()
     }
 }
@@ -2244,6 +2250,8 @@ impl<'de> serde::Deserialize<'de> for ConverseStreamResp {
             "id",
             "tools",
             "question",
+            "reply_images",
+            "replyImages",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -2254,6 +2262,7 @@ impl<'de> serde::Deserialize<'de> for ConverseStreamResp {
             Id,
             Tools,
             Question,
+            ReplyImages,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -2281,6 +2290,7 @@ impl<'de> serde::Deserialize<'de> for ConverseStreamResp {
                             "id" => Ok(GeneratedField::Id),
                             "tools" => Ok(GeneratedField::Tools),
                             "question" => Ok(GeneratedField::Question),
+                            "replyImages" | "reply_images" => Ok(GeneratedField::ReplyImages),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -2306,6 +2316,7 @@ impl<'de> serde::Deserialize<'de> for ConverseStreamResp {
                 let mut id__ = None;
                 let mut tools__ = None;
                 let mut question__ = None;
+                let mut reply_images__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Code => {
@@ -2346,6 +2357,12 @@ impl<'de> serde::Deserialize<'de> for ConverseStreamResp {
                             }
                             question__ = Some(map_.next_value()?);
                         }
+                        GeneratedField::ReplyImages => {
+                            if reply_images__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("replyImages"));
+                            }
+                            reply_images__ = Some(map_.next_value()?);
+                        }
                     }
                 }
                 Ok(ConverseStreamResp {
@@ -2355,6 +2372,7 @@ impl<'de> serde::Deserialize<'de> for ConverseStreamResp {
                     id: id__,
                     tools: tools__.unwrap_or_default(),
                     question: question__.unwrap_or_default(),
+                    reply_images: reply_images__.unwrap_or_default(),
                 })
             }
         }

@@ -704,6 +704,15 @@ const ConverseStreamResp$json = {
       '8': {},
       '10': 'question'
     },
+    {
+      '1': 'reply_images',
+      '3': 7,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.ai.ReplyImage',
+      '8': {},
+      '10': 'replyImages'
+    },
   ],
   '7': {},
   '8': [
@@ -720,5 +729,6 @@ final $typed_data.Uint8List converseStreamRespDescriptor = $convert.base64Decode
     'R5cGUYAiABKAlCBJC1GANIAVIEdHlwZYgBARIjCgdtZXNzYWdlGAMgASgJQgSQtRgDSAJSB21l'
     'c3NhZ2WIAQESGQoCaWQYBCABKAlCBJC1GANIA1ICaWSIAQESKwoFdG9vbHMYBSADKAsyDy5oaS'
     '5haS5Ub29sQ2FsbEIEkLUYA1IFdG9vbHMSMAoIcXVlc3Rpb24YBiADKAsyDi5oaS5haS5Db250'
-    'ZW50QgSQtRgDUghxdWVzdGlvbjoEmLUYA0IHCgVfY29kZUIHCgVfdHlwZUIKCghfbWVzc2FnZU'
-    'IFCgNfaWQ=');
+    'ZW50QgSQtRgDUghxdWVzdGlvbhI6CgxyZXBseV9pbWFnZXMYByADKAsyES5oaS5haS5SZXBseU'
+    'ltYWdlQgSQtRgDUgtyZXBseUltYWdlczoEmLUYA0IHCgVfY29kZUIHCgVfdHlwZUIKCghfbWVz'
+    'c2FnZUIFCgNfaWQ=');

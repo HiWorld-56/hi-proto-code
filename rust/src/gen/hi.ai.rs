@@ -570,7 +570,7 @@ pub struct ChatResp {
 /// 流式帧(ConverseStream / ResumeStream)。
 ///
 /// `type` 取值 —— **一条指令帧,其余是内容/进度/回显**:
-/// msg           —— 答复。⚠️ **是整段,不是分片**(见下)
+/// msg           —— 完整答复及待展示图片，不是分片；图片见 reply_images
 /// end           —— 本条流正常收尾
 /// info          —— 出错了。⚠️ 流式下错误**走帧不走 grpc status** ——
 /// 否则客户端收了半截流再拿到 error,两套错误通道并存反而更难排查
@@ -616,6 +616,11 @@ pub struct ConverseStreamResp {
     /// 同 ChatResp.question。挂在每条流的收尾帧(`msg` 或 `toolCalls`)上,ConverseStream 与 ResumeStream 都带。
     #[prost(message, repeated, tag = "6")]
     pub question: ::prost::alloc::vec::Vec<Content>,
+    /// 仅成功的最终 msg 帧交付，顺序同工具结果；ConverseStream / ResumeStream 共用。
+    /// 与 ChatResp.reply_images 使用同一结构，不依赖 message 中包含图片链接。
+    /// toolCalls、进度及 end 帧不重复携带；客户端应独立渲染图片，message 允许为空。
+    #[prost(message, repeated, tag = "7")]
+    pub reply_images: ::prost::alloc::vec::Vec<ReplyImage>,
 }
 /// Generated client implementations.
 pub mod chat_client {

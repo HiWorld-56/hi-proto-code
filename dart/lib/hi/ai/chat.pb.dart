@@ -1442,7 +1442,7 @@ class ChatResp extends $pb.GeneratedMessage {
 /// 流式帧(ConverseStream / ResumeStream)。
 ///
 /// `type` 取值 —— **一条指令帧,其余是内容/进度/回显**:
-///   msg           —— 答复。⚠️ **是整段,不是分片**(见下)
+///   msg           —— 完整答复及待展示图片，不是分片；图片见 reply_images
 ///   end           —— 本条流正常收尾
 ///   info          —— 出错了。⚠️ 流式下错误**走帧不走 grpc status** ——
 ///                    否则客户端收了半截流再拿到 error,两套错误通道并存反而更难排查
@@ -1477,6 +1477,7 @@ class ConverseStreamResp extends $pb.GeneratedMessage {
     $core.String? id,
     $core.Iterable<ToolCall>? tools,
     $core.Iterable<Content>? question,
+    $core.Iterable<$3.ReplyImage>? replyImages,
   }) {
     final result = create();
     if (code != null) result.code = code;
@@ -1485,6 +1486,7 @@ class ConverseStreamResp extends $pb.GeneratedMessage {
     if (id != null) result.id = id;
     if (tools != null) result.tools.addAll(tools);
     if (question != null) result.question.addAll(question);
+    if (replyImages != null) result.replyImages.addAll(replyImages);
     return result;
   }
 
@@ -1509,6 +1511,8 @@ class ConverseStreamResp extends $pb.GeneratedMessage {
         subBuilder: ToolCall.create)
     ..pPM<Content>(6, _omitFieldNames ? '' : 'question',
         subBuilder: Content.create)
+    ..pPM<$3.ReplyImage>(7, _omitFieldNames ? '' : 'replyImages',
+        subBuilder: $3.ReplyImage.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1573,6 +1577,12 @@ class ConverseStreamResp extends $pb.GeneratedMessage {
   /// 同 ChatResp.question。挂在每条流的收尾帧(`msg` 或 `toolCalls`)上,ConverseStream 与 ResumeStream 都带。
   @$pb.TagNumber(6)
   $pb.PbList<Content> get question => $_getList(5);
+
+  /// 仅成功的最终 msg 帧交付，顺序同工具结果；ConverseStream / ResumeStream 共用。
+  /// 与 ChatResp.reply_images 使用同一结构，不依赖 message 中包含图片链接。
+  /// toolCalls、进度及 end 帧不重复携带；客户端应独立渲染图片，message 允许为空。
+  @$pb.TagNumber(7)
+  $pb.PbList<$3.ReplyImage> get replyImages => $_getList(6);
 }
 
 const $core.bool _omitFieldNames =
