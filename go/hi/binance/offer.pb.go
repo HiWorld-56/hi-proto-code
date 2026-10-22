@@ -271,7 +271,8 @@ type BinanceOfferPlan struct {
 	// 开单前这个方向已有仓位就不挂(整仓单会盖到原有仓位)。现货在市价买入成交后,按实际买到的数量挂一对 OCO 卖单
 	// (涨到止盈价限价卖、跌到止损价止损卖),只管这次买到的,不碰原有的币。
 	//
-	// 两个百分比要么都带、要么都不带;不带时 `tpsl_unavailable` 说为什么(face / app 把勾选框置灰、写这句话)。
+	// **能不能自动设只看 `tpsl_unavailable`**:带了就不能(face / app 把勾选框置灰、写这句话),带 auto_tpsl 也不设。
+	// 没设风险承受率时两个百分比都不带;这个方向已有仓位时百分比照带(给人看),但 `tpsl_unavailable` 也带。
 	StopLossPct   *string `protobuf:"bytes,11,opt,name=stop_loss_pct,json=stopLossPct,proto3,oneof" json:"stop_loss_pct,omitempty"` // 十进制,不带 %(如 "30")
 	TakeProfitPct *string `protobuf:"bytes,12,opt,name=take_profit_pct,json=takeProfitPct,proto3,oneof" json:"take_profit_pct,omitempty"`
 	// 估算的触发价:按 `price`(参考价)算、对齐价格精度。真正挂的按成交后的开仓均价(现货:成交均价)重算,行情动了会差一点。
