@@ -28,7 +28,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1ahi/media/user_manage.proto\x12\x08hi.media\x1a\x1b\x62uf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xa1\x01\n\x11UserManageListReq\x12&\n\x03\x64id\x18\x01 \x01(\tB\x0f\xbaH\x0cr\n\x18\xff\x01\x32\x05^\\S+$H\x00R\x03\x64id\x88\x01\x01\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npagination\x12#\n\x04name\x18\x03 \x01(\tB\n\xbaH\x07r\x05\x10\x01\x18\xff\x01H\x01R\x04name\x88\x01\x01\x42\x06\n\x04_didB\x07\n\x05_name\"\xb7\x03\n\x12UserManageListResp\x12\x1f\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12=\n\x05users\x18\x02 \x03(\x0b\x32!.hi.media.UserManageListResp.UnitB\x04\x90\xb5\x18\x03R\x05users\x1a\xb0\x02\n\x04Unit\x12\x1b\n\x03\x64id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x03\x64id\x88\x01\x01\x12.\n\rregistered_at\x18\x02 \x01(\x03\x42\x04\x90\xb5\x18\x03H\x01R\x0cregisteredAt\x88\x01\x01\x12\x1d\n\x04name\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x04name\x88\x01\x01\x12\x1d\n\x04note\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x04note\x88\x01\x01\x12%\n\x08\x64\x65leting\x18\x05 \x01(\x08\x42\x04\x90\xb5\x18\x03H\x04R\x08\x64\x65leting\x88\x01\x01\x12(\n\ndeleted_at\x18\x06 \x01(\x03\x42\x04\x90\xb5\x18\x03H\x05R\tdeletedAt\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x06\n\x04_didB\x10\n\x0e_registered_atB\x07\n\x05_nameB\x07\n\x05_noteB\x0b\n\t_deletingB\r\n\x0b_deleted_at:\x04\x98\xb5\x18\x03\x42\x08\n\x06_total\"p\n\x11UserManageEditReq\x12$\n\x03\x64id\x18\x01 \x01(\tB\r\xbaH\nr\x05\x10\x01\x18\xff\x01\xc8\x01\x01H\x00R\x03\x64id\x88\x01\x01\x12$\n\x04note\x18\x02 \x01(\tB\x0b\xbaH\x08r\x03\x18\xff\x01\xc8\x01\x01H\x01R\x04note\x88\x01\x01\x42\x06\n\x04_didB\x07\n\x05_note\"C\n\x13UserManageDeleteReq\x12$\n\x03\x64id\x18\x01 \x01(\tB\r\xbaH\nr\x05\x10\x01\x18\xff\x01\xc8\x01\x01H\x00R\x03\x64id\x88\x01\x01\x42\x06\n\x04_did2\xe2\x01\n\nUserManage\x12H\n\x04List\x12\x1b.hi.media.UserManageListReq\x1a\x1c.hi.media.UserManageListResp\"\x05\x8a\xb5\x18\x01\x04\x12\x42\n\x04\x45\x64it\x12\x1b.hi.media.UserManageEditReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12\x46\n\x06\x44\x65lete\x12\x1d.hi.media.UserManageDeleteReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x42,Z*github.com/HiWorld-56/hi-proto/go/hi/mediab\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1ahi/media/user_manage.proto\x12\x08hi.media\x1a\x1b\x62uf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xa1\x01\n\x11UserManageListReq\x12&\n\x03\x64id\x18\x01 \x01(\tB\x0f\xbaH\x0cr\n\x18\xff\x01\x32\x05^\\S+$H\x00R\x03\x64id\x88\x01\x01\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npagination\x12#\n\x04name\x18\x03 \x01(\tB\n\xbaH\x07r\x05\x10\x01\x18\xff\x01H\x01R\x04name\x88\x01\x01\x42\x06\n\x04_didB\x07\n\x05_name\"\xf6\x03\n\x12UserManageListResp\x12\x1f\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12=\n\x05users\x18\x02 \x03(\x0b\x32!.hi.media.UserManageListResp.UnitB\x04\x90\xb5\x18\x03R\x05users\x1a\xef\x02\n\x04Unit\x12\x1b\n\x03\x64id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x03\x64id\x88\x01\x01\x12.\n\rregistered_at\x18\x02 \x01(\x03\x42\x04\x90\xb5\x18\x03H\x01R\x0cregisteredAt\x88\x01\x01\x12\x1d\n\x04name\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x04name\x88\x01\x01\x12\x1d\n\x04note\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x04note\x88\x01\x01\x12%\n\x08\x64\x65leting\x18\x05 \x01(\x08\x42\x04\x90\xb5\x18\x03H\x04R\x08\x64\x65leting\x88\x01\x01\x12(\n\ndeleted_at\x18\x06 \x01(\x03\x42\x04\x90\xb5\x18\x03H\x05R\tdeletedAt\x88\x01\x01\x12\x34\n\x04kind\x18\x07 \x01(\x0e\x32\x15.hi.media.AccountKindB\x04\x90\xb5\x18\x03H\x06R\x04kind\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x06\n\x04_didB\x10\n\x0e_registered_atB\x07\n\x05_nameB\x07\n\x05_noteB\x0b\n\t_deletingB\r\n\x0b_deleted_atB\x07\n\x05_kind:\x04\x98\xb5\x18\x03\x42\x08\n\x06_total\"p\n\x11UserManageEditReq\x12$\n\x03\x64id\x18\x01 \x01(\tB\r\xbaH\nr\x05\x10\x01\x18\xff\x01\xc8\x01\x01H\x00R\x03\x64id\x88\x01\x01\x12$\n\x04note\x18\x02 \x01(\tB\x0b\xbaH\x08r\x03\x18\xff\x01\xc8\x01\x01H\x01R\x04note\x88\x01\x01\x42\x06\n\x04_didB\x07\n\x05_note\"C\n\x13UserManageDeleteReq\x12$\n\x03\x64id\x18\x01 \x01(\tB\r\xbaH\nr\x05\x10\x01\x18\xff\x01\xc8\x01\x01H\x00R\x03\x64id\x88\x01\x01\x42\x06\n\x04_did\"J\n\x1aUserManageResetPasswordReq\x12$\n\x03\x64id\x18\x01 \x01(\tB\r\xbaH\nr\x05\x10\x01\x18\xff\x01\xc8\x01\x01H\x00R\x03\x64id\x88\x01\x01\x42\x06\n\x04_did\"W\n\x1bUserManageResetPasswordResp\x12%\n\x08password\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x08password\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x0b\n\t_password*[\n\x0b\x41\x63\x63ountKind\x12\x1c\n\x18\x41\x43\x43OUNT_KIND_UNSPECIFIED\x10\x00\x12\x16\n\x12\x41\x43\x43OUNT_KIND_HIDID\x10\x01\x12\x16\n\x12\x41\x43\x43OUNT_KIND_EMAIL\x10\x02\x32\xc7\x02\n\nUserManage\x12H\n\x04List\x12\x1b.hi.media.UserManageListReq\x1a\x1c.hi.media.UserManageListResp\"\x05\x8a\xb5\x18\x01\x04\x12\x42\n\x04\x45\x64it\x12\x1b.hi.media.UserManageEditReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12\x46\n\x06\x44\x65lete\x12\x1d.hi.media.UserManageDeleteReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12\x63\n\rResetPassword\x12$.hi.media.UserManageResetPasswordReq\x1a%.hi.media.UserManageResetPasswordResp\"\x05\x8a\xb5\x18\x01\x04\x42,Z*github.com/HiWorld-56/hi-proto/go/hi/mediab\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -52,6 +52,8 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_USERMANAGELISTRESP_UNIT'].fields_by_name['deleting']._serialized_options = b'\220\265\030\003'
   _globals['_USERMANAGELISTRESP_UNIT'].fields_by_name['deleted_at']._loaded_options = None
   _globals['_USERMANAGELISTRESP_UNIT'].fields_by_name['deleted_at']._serialized_options = b'\220\265\030\003'
+  _globals['_USERMANAGELISTRESP_UNIT'].fields_by_name['kind']._loaded_options = None
+  _globals['_USERMANAGELISTRESP_UNIT'].fields_by_name['kind']._serialized_options = b'\220\265\030\003'
   _globals['_USERMANAGELISTRESP_UNIT']._loaded_options = None
   _globals['_USERMANAGELISTRESP_UNIT']._serialized_options = b'\230\265\030\003'
   _globals['_USERMANAGELISTRESP'].fields_by_name['total']._loaded_options = None
@@ -66,22 +68,36 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_USERMANAGEEDITREQ'].fields_by_name['note']._serialized_options = b'\272H\010r\003\030\377\001\310\001\001'
   _globals['_USERMANAGEDELETEREQ'].fields_by_name['did']._loaded_options = None
   _globals['_USERMANAGEDELETEREQ'].fields_by_name['did']._serialized_options = b'\272H\nr\005\020\001\030\377\001\310\001\001'
+  _globals['_USERMANAGERESETPASSWORDREQ'].fields_by_name['did']._loaded_options = None
+  _globals['_USERMANAGERESETPASSWORDREQ'].fields_by_name['did']._serialized_options = b'\272H\nr\005\020\001\030\377\001\310\001\001'
+  _globals['_USERMANAGERESETPASSWORDRESP'].fields_by_name['password']._loaded_options = None
+  _globals['_USERMANAGERESETPASSWORDRESP'].fields_by_name['password']._serialized_options = b'\220\265\030\003'
+  _globals['_USERMANAGERESETPASSWORDRESP']._loaded_options = None
+  _globals['_USERMANAGERESETPASSWORDRESP']._serialized_options = b'\230\265\030\003'
   _globals['_USERMANAGE'].methods_by_name['List']._loaded_options = None
   _globals['_USERMANAGE'].methods_by_name['List']._serialized_options = b'\212\265\030\001\004'
   _globals['_USERMANAGE'].methods_by_name['Edit']._loaded_options = None
   _globals['_USERMANAGE'].methods_by_name['Edit']._serialized_options = b'\212\265\030\001\004'
   _globals['_USERMANAGE'].methods_by_name['Delete']._loaded_options = None
   _globals['_USERMANAGE'].methods_by_name['Delete']._serialized_options = b'\212\265\030\001\004'
+  _globals['_USERMANAGE'].methods_by_name['ResetPassword']._loaded_options = None
+  _globals['_USERMANAGE'].methods_by_name['ResetPassword']._serialized_options = b'\212\265\030\001\004'
+  _globals['_ACCOUNTKIND']._serialized_start=1150
+  _globals['_ACCOUNTKIND']._serialized_end=1241
   _globals['_USERMANAGELISTREQ']._serialized_start=134
   _globals['_USERMANAGELISTREQ']._serialized_end=295
   _globals['_USERMANAGELISTRESP']._serialized_start=298
-  _globals['_USERMANAGELISTRESP']._serialized_end=737
+  _globals['_USERMANAGELISTRESP']._serialized_end=800
   _globals['_USERMANAGELISTRESP_UNIT']._serialized_start=417
-  _globals['_USERMANAGELISTRESP_UNIT']._serialized_end=721
-  _globals['_USERMANAGEEDITREQ']._serialized_start=739
-  _globals['_USERMANAGEEDITREQ']._serialized_end=851
-  _globals['_USERMANAGEDELETEREQ']._serialized_start=853
-  _globals['_USERMANAGEDELETEREQ']._serialized_end=920
-  _globals['_USERMANAGE']._serialized_start=923
-  _globals['_USERMANAGE']._serialized_end=1149
+  _globals['_USERMANAGELISTRESP_UNIT']._serialized_end=784
+  _globals['_USERMANAGEEDITREQ']._serialized_start=802
+  _globals['_USERMANAGEEDITREQ']._serialized_end=914
+  _globals['_USERMANAGEDELETEREQ']._serialized_start=916
+  _globals['_USERMANAGEDELETEREQ']._serialized_end=983
+  _globals['_USERMANAGERESETPASSWORDREQ']._serialized_start=985
+  _globals['_USERMANAGERESETPASSWORDREQ']._serialized_end=1059
+  _globals['_USERMANAGERESETPASSWORDRESP']._serialized_start=1061
+  _globals['_USERMANAGERESETPASSWORDRESP']._serialized_end=1148
+  _globals['_USERMANAGE']._serialized_start=1244
+  _globals['_USERMANAGE']._serialized_end=1571
 # @@protoc_insertion_point(module_scope)

@@ -20,9 +20,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	UserManage_List_FullMethodName   = "/hi.media.UserManage/List"
-	UserManage_Edit_FullMethodName   = "/hi.media.UserManage/Edit"
-	UserManage_Delete_FullMethodName = "/hi.media.UserManage/Delete"
+	UserManage_List_FullMethodName          = "/hi.media.UserManage/List"
+	UserManage_Edit_FullMethodName          = "/hi.media.UserManage/Edit"
+	UserManage_Delete_FullMethodName        = "/hi.media.UserManage/Delete"
+	UserManage_ResetPassword_FullMethodName = "/hi.media.UserManage/ResetPassword"
 )
 
 // UserManageClient is the client API for UserManage service.
@@ -36,6 +37,8 @@ type UserManageClient interface {
 	Edit(ctx context.Context, in *UserManageEditReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 标记删除 HiMedia 用户，清除任务历史与全部私有资产文件；保留本地用户行及 HiDID 账号。
 	Delete(ctx context.Context, in *UserManageDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 重置邮箱账号的密码；HiDID 账号没有密码，回 FailedPrecondition。
+	ResetPassword(ctx context.Context, in *UserManageResetPasswordReq, opts ...grpc.CallOption) (*UserManageResetPasswordResp, error)
 }
 
 type userManageClient struct {
@@ -76,6 +79,16 @@ func (c *userManageClient) Delete(ctx context.Context, in *UserManageDeleteReq, 
 	return out, nil
 }
 
+func (c *userManageClient) ResetPassword(ctx context.Context, in *UserManageResetPasswordReq, opts ...grpc.CallOption) (*UserManageResetPasswordResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserManageResetPasswordResp)
+	err := c.cc.Invoke(ctx, UserManage_ResetPassword_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserManageServer is the server API for UserManage service.
 // All implementations should embed UnimplementedUserManageServer
 // for forward compatibility.
@@ -87,6 +100,8 @@ type UserManageServer interface {
 	Edit(context.Context, *UserManageEditReq) (*emptypb.Empty, error)
 	// 标记删除 HiMedia 用户，清除任务历史与全部私有资产文件；保留本地用户行及 HiDID 账号。
 	Delete(context.Context, *UserManageDeleteReq) (*emptypb.Empty, error)
+	// 重置邮箱账号的密码；HiDID 账号没有密码，回 FailedPrecondition。
+	ResetPassword(context.Context, *UserManageResetPasswordReq) (*UserManageResetPasswordResp, error)
 }
 
 // UnimplementedUserManageServer should be embedded to have
@@ -104,6 +119,9 @@ func (UnimplementedUserManageServer) Edit(context.Context, *UserManageEditReq) (
 }
 func (UnimplementedUserManageServer) Delete(context.Context, *UserManageDeleteReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
+}
+func (UnimplementedUserManageServer) ResetPassword(context.Context, *UserManageResetPasswordReq) (*UserManageResetPasswordResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ResetPassword not implemented")
 }
 func (UnimplementedUserManageServer) testEmbeddedByValue() {}
 
@@ -179,6 +197,24 @@ func _UserManage_Delete_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserManage_ResetPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserManageResetPasswordReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserManageServer).ResetPassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserManage_ResetPassword_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserManageServer).ResetPassword(ctx, req.(*UserManageResetPasswordReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserManage_ServiceDesc is the grpc.ServiceDesc for UserManage service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -197,6 +233,10 @@ var UserManage_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Delete",
 			Handler:    _UserManage_Delete_Handler,
+		},
+		{
+			MethodName: "ResetPassword",
+			Handler:    _UserManage_ResetPassword_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

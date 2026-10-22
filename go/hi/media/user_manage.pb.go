@@ -24,6 +24,56 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// 账号种类：HiDID 扫码登录的账号，或 HiMedia 本地的邮箱账号（见 account.proto）。
+type AccountKind int32
+
+const (
+	AccountKind_ACCOUNT_KIND_UNSPECIFIED AccountKind = 0
+	AccountKind_ACCOUNT_KIND_HIDID       AccountKind = 1
+	AccountKind_ACCOUNT_KIND_EMAIL       AccountKind = 2
+)
+
+// Enum value maps for AccountKind.
+var (
+	AccountKind_name = map[int32]string{
+		0: "ACCOUNT_KIND_UNSPECIFIED",
+		1: "ACCOUNT_KIND_HIDID",
+		2: "ACCOUNT_KIND_EMAIL",
+	}
+	AccountKind_value = map[string]int32{
+		"ACCOUNT_KIND_UNSPECIFIED": 0,
+		"ACCOUNT_KIND_HIDID":       1,
+		"ACCOUNT_KIND_EMAIL":       2,
+	}
+)
+
+func (x AccountKind) Enum() *AccountKind {
+	p := new(AccountKind)
+	*p = x
+	return p
+}
+
+func (x AccountKind) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (AccountKind) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_media_user_manage_proto_enumTypes[0].Descriptor()
+}
+
+func (AccountKind) Type() protoreflect.EnumType {
+	return &file_hi_media_user_manage_proto_enumTypes[0]
+}
+
+func (x AccountKind) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use AccountKind.Descriptor instead.
+func (AccountKind) EnumDescriptor() ([]byte, []int) {
+	return file_hi_media_user_manage_proto_rawDescGZIP(), []int{0}
+}
+
 type UserManageListReq struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 可选：按用户 DID 子串模糊查询；不传表示不筛选。
@@ -235,21 +285,111 @@ func (x *UserManageDeleteReq) GetDid() string {
 	return ""
 }
 
+// 超管重置邮箱账号的密码：服务端生成随机密码，返回给超管转告用户；该账号已登录的会话全部作废。
+type UserManageResetPasswordReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Did           *string                `protobuf:"bytes,1,opt,name=did,proto3,oneof" json:"did,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UserManageResetPasswordReq) Reset() {
+	*x = UserManageResetPasswordReq{}
+	mi := &file_hi_media_user_manage_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UserManageResetPasswordReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserManageResetPasswordReq) ProtoMessage() {}
+
+func (x *UserManageResetPasswordReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_media_user_manage_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserManageResetPasswordReq.ProtoReflect.Descriptor instead.
+func (*UserManageResetPasswordReq) Descriptor() ([]byte, []int) {
+	return file_hi_media_user_manage_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *UserManageResetPasswordReq) GetDid() string {
+	if x != nil && x.Did != nil {
+		return *x.Did
+	}
+	return ""
+}
+
+type UserManageResetPasswordResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Password      *string                `protobuf:"bytes,1,opt,name=password,proto3,oneof" json:"password,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UserManageResetPasswordResp) Reset() {
+	*x = UserManageResetPasswordResp{}
+	mi := &file_hi_media_user_manage_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UserManageResetPasswordResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserManageResetPasswordResp) ProtoMessage() {}
+
+func (x *UserManageResetPasswordResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_media_user_manage_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserManageResetPasswordResp.ProtoReflect.Descriptor instead.
+func (*UserManageResetPasswordResp) Descriptor() ([]byte, []int) {
+	return file_hi_media_user_manage_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *UserManageResetPasswordResp) GetPassword() string {
+	if x != nil && x.Password != nil {
+		return *x.Password
+	}
+	return ""
+}
+
 type UserManageListResp_Unit struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Did           *string                `protobuf:"bytes,1,opt,name=did,proto3,oneof" json:"did,omitempty"`
 	RegisteredAt  *int64                 `protobuf:"varint,2,opt,name=registered_at,json=registeredAt,proto3,oneof" json:"registered_at,omitempty"` // Unix 秒
-	Name          *string                `protobuf:"bytes,3,opt,name=name,proto3,oneof" json:"name,omitempty"`                                      // HiDID 当前用户名
+	Name          *string                `protobuf:"bytes,3,opt,name=name,proto3,oneof" json:"name,omitempty"`                                      // HiDID 当前用户名；邮箱账号没有，不返回
 	Note          *string                `protobuf:"bytes,4,opt,name=note,proto3,oneof" json:"note,omitempty"`                                      // HiMedia 管理员填写的用户备注
 	Deleting      *bool                  `protobuf:"varint,5,opt,name=deleting,proto3,oneof" json:"deleting,omitempty"`                             // 正在清理资产，可用 DID 重试删除
 	DeletedAt     *int64                 `protobuf:"varint,6,opt,name=deleted_at,json=deletedAt,proto3,oneof" json:"deleted_at,omitempty"`          // 删除完成时间，Unix 秒；未删除时不返回
+	Kind          *AccountKind           `protobuf:"varint,7,opt,name=kind,proto3,enum=hi.media.AccountKind,oneof" json:"kind,omitempty"`           // 账号种类；邮箱账号的 did 就是邮箱，name 不返回
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *UserManageListResp_Unit) Reset() {
 	*x = UserManageListResp_Unit{}
-	mi := &file_hi_media_user_manage_proto_msgTypes[4]
+	mi := &file_hi_media_user_manage_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -261,7 +401,7 @@ func (x *UserManageListResp_Unit) String() string {
 func (*UserManageListResp_Unit) ProtoMessage() {}
 
 func (x *UserManageListResp_Unit) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_media_user_manage_proto_msgTypes[4]
+	mi := &file_hi_media_user_manage_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -319,6 +459,13 @@ func (x *UserManageListResp_Unit) GetDeletedAt() int64 {
 	return 0
 }
 
+func (x *UserManageListResp_Unit) GetKind() AccountKind {
+	if x != nil && x.Kind != nil {
+		return *x.Kind
+	}
+	return AccountKind_ACCOUNT_KIND_UNSPECIFIED
+}
+
 var File_hi_media_user_manage_proto protoreflect.FileDescriptor
 
 const file_hi_media_user_manage_proto_rawDesc = "" +
@@ -333,10 +480,10 @@ const file_hi_media_user_manage_proto_rawDesc = "" +
 	"\x04name\x18\x03 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\xff\x01H\x01R\x04name\x88\x01\x01B\x06\n" +
 	"\x04_didB\a\n" +
-	"\x05_name\"\xb7\x03\n" +
+	"\x05_name\"\xf6\x03\n" +
 	"\x12UserManageListResp\x12\x1f\n" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12=\n" +
-	"\x05users\x18\x02 \x03(\v2!.hi.media.UserManageListResp.UnitB\x04\x90\xb5\x18\x03R\x05users\x1a\xb0\x02\n" +
+	"\x05users\x18\x02 \x03(\v2!.hi.media.UserManageListResp.UnitB\x04\x90\xb5\x18\x03R\x05users\x1a\xef\x02\n" +
 	"\x04Unit\x12\x1b\n" +
 	"\x03did\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x03did\x88\x01\x01\x12.\n" +
 	"\rregistered_at\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x03H\x01R\fregisteredAt\x88\x01\x01\x12\x1d\n" +
@@ -344,13 +491,15 @@ const file_hi_media_user_manage_proto_rawDesc = "" +
 	"\x04note\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x04note\x88\x01\x01\x12%\n" +
 	"\bdeleting\x18\x05 \x01(\bB\x04\x90\xb5\x18\x03H\x04R\bdeleting\x88\x01\x01\x12(\n" +
 	"\n" +
-	"deleted_at\x18\x06 \x01(\x03B\x04\x90\xb5\x18\x03H\x05R\tdeletedAt\x88\x01\x01:\x04\x98\xb5\x18\x03B\x06\n" +
+	"deleted_at\x18\x06 \x01(\x03B\x04\x90\xb5\x18\x03H\x05R\tdeletedAt\x88\x01\x01\x124\n" +
+	"\x04kind\x18\a \x01(\x0e2\x15.hi.media.AccountKindB\x04\x90\xb5\x18\x03H\x06R\x04kind\x88\x01\x01:\x04\x98\xb5\x18\x03B\x06\n" +
 	"\x04_didB\x10\n" +
 	"\x0e_registered_atB\a\n" +
 	"\x05_nameB\a\n" +
 	"\x05_noteB\v\n" +
 	"\t_deletingB\r\n" +
-	"\v_deleted_at:\x04\x98\xb5\x18\x03B\b\n" +
+	"\v_deleted_atB\a\n" +
+	"\x05_kind:\x04\x98\xb5\x18\x03B\b\n" +
 	"\x06_total\"p\n" +
 	"\x11UserManageEditReq\x12$\n" +
 	"\x03did\x18\x01 \x01(\tB\r\xbaH\n" +
@@ -361,12 +510,24 @@ const file_hi_media_user_manage_proto_rawDesc = "" +
 	"\x13UserManageDeleteReq\x12$\n" +
 	"\x03did\x18\x01 \x01(\tB\r\xbaH\n" +
 	"\xc8\x01\x01r\x05\x10\x01\x18\xff\x01H\x00R\x03did\x88\x01\x01B\x06\n" +
-	"\x04_did2\xe2\x01\n" +
+	"\x04_did\"J\n" +
+	"\x1aUserManageResetPasswordReq\x12$\n" +
+	"\x03did\x18\x01 \x01(\tB\r\xbaH\n" +
+	"\xc8\x01\x01r\x05\x10\x01\x18\xff\x01H\x00R\x03did\x88\x01\x01B\x06\n" +
+	"\x04_did\"W\n" +
+	"\x1bUserManageResetPasswordResp\x12%\n" +
+	"\bpassword\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\bpassword\x88\x01\x01:\x04\x98\xb5\x18\x03B\v\n" +
+	"\t_password*[\n" +
+	"\vAccountKind\x12\x1c\n" +
+	"\x18ACCOUNT_KIND_UNSPECIFIED\x10\x00\x12\x16\n" +
+	"\x12ACCOUNT_KIND_HIDID\x10\x01\x12\x16\n" +
+	"\x12ACCOUNT_KIND_EMAIL\x10\x022\xc7\x02\n" +
 	"\n" +
 	"UserManage\x12H\n" +
 	"\x04List\x12\x1b.hi.media.UserManageListReq\x1a\x1c.hi.media.UserManageListResp\"\x05\x8a\xb5\x18\x01\x04\x12B\n" +
 	"\x04Edit\x12\x1b.hi.media.UserManageEditReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12F\n" +
-	"\x06Delete\x12\x1d.hi.media.UserManageDeleteReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04B\x8c\x01\n" +
+	"\x06Delete\x12\x1d.hi.media.UserManageDeleteReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12c\n" +
+	"\rResetPassword\x12$.hi.media.UserManageResetPasswordReq\x1a%.hi.media.UserManageResetPasswordResp\"\x05\x8a\xb5\x18\x01\x04B\x8c\x01\n" +
 	"\fcom.hi.mediaB\x0fUserManageProtoP\x01Z*github.com/HiWorld-56/hi-proto/go/hi/media\xa2\x02\x03HMX\xaa\x02\bHi.Media\xca\x02\bHi\\Media\xe2\x02\x14Hi\\Media\\GPBMetadata\xea\x02\tHi::Mediab\x06proto3"
 
 var (
@@ -381,30 +542,37 @@ func file_hi_media_user_manage_proto_rawDescGZIP() []byte {
 	return file_hi_media_user_manage_proto_rawDescData
 }
 
-var file_hi_media_user_manage_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_hi_media_user_manage_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_hi_media_user_manage_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_hi_media_user_manage_proto_goTypes = []any{
-	(*UserManageListReq)(nil),       // 0: hi.media.UserManageListReq
-	(*UserManageListResp)(nil),      // 1: hi.media.UserManageListResp
-	(*UserManageEditReq)(nil),       // 2: hi.media.UserManageEditReq
-	(*UserManageDeleteReq)(nil),     // 3: hi.media.UserManageDeleteReq
-	(*UserManageListResp_Unit)(nil), // 4: hi.media.UserManageListResp.Unit
-	(*hi.Pagination)(nil),           // 5: hi.Pagination
-	(*emptypb.Empty)(nil),           // 6: google.protobuf.Empty
+	(AccountKind)(0),                    // 0: hi.media.AccountKind
+	(*UserManageListReq)(nil),           // 1: hi.media.UserManageListReq
+	(*UserManageListResp)(nil),          // 2: hi.media.UserManageListResp
+	(*UserManageEditReq)(nil),           // 3: hi.media.UserManageEditReq
+	(*UserManageDeleteReq)(nil),         // 4: hi.media.UserManageDeleteReq
+	(*UserManageResetPasswordReq)(nil),  // 5: hi.media.UserManageResetPasswordReq
+	(*UserManageResetPasswordResp)(nil), // 6: hi.media.UserManageResetPasswordResp
+	(*UserManageListResp_Unit)(nil),     // 7: hi.media.UserManageListResp.Unit
+	(*hi.Pagination)(nil),               // 8: hi.Pagination
+	(*emptypb.Empty)(nil),               // 9: google.protobuf.Empty
 }
 var file_hi_media_user_manage_proto_depIdxs = []int32{
-	5, // 0: hi.media.UserManageListReq.pagination:type_name -> hi.Pagination
-	4, // 1: hi.media.UserManageListResp.users:type_name -> hi.media.UserManageListResp.Unit
-	0, // 2: hi.media.UserManage.List:input_type -> hi.media.UserManageListReq
-	2, // 3: hi.media.UserManage.Edit:input_type -> hi.media.UserManageEditReq
-	3, // 4: hi.media.UserManage.Delete:input_type -> hi.media.UserManageDeleteReq
-	1, // 5: hi.media.UserManage.List:output_type -> hi.media.UserManageListResp
-	6, // 6: hi.media.UserManage.Edit:output_type -> google.protobuf.Empty
-	6, // 7: hi.media.UserManage.Delete:output_type -> google.protobuf.Empty
-	5, // [5:8] is the sub-list for method output_type
-	2, // [2:5] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	8, // 0: hi.media.UserManageListReq.pagination:type_name -> hi.Pagination
+	7, // 1: hi.media.UserManageListResp.users:type_name -> hi.media.UserManageListResp.Unit
+	0, // 2: hi.media.UserManageListResp.Unit.kind:type_name -> hi.media.AccountKind
+	1, // 3: hi.media.UserManage.List:input_type -> hi.media.UserManageListReq
+	3, // 4: hi.media.UserManage.Edit:input_type -> hi.media.UserManageEditReq
+	4, // 5: hi.media.UserManage.Delete:input_type -> hi.media.UserManageDeleteReq
+	5, // 6: hi.media.UserManage.ResetPassword:input_type -> hi.media.UserManageResetPasswordReq
+	2, // 7: hi.media.UserManage.List:output_type -> hi.media.UserManageListResp
+	9, // 8: hi.media.UserManage.Edit:output_type -> google.protobuf.Empty
+	9, // 9: hi.media.UserManage.Delete:output_type -> google.protobuf.Empty
+	6, // 10: hi.media.UserManage.ResetPassword:output_type -> hi.media.UserManageResetPasswordResp
+	7, // [7:11] is the sub-list for method output_type
+	3, // [3:7] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_hi_media_user_manage_proto_init() }
@@ -417,18 +585,21 @@ func file_hi_media_user_manage_proto_init() {
 	file_hi_media_user_manage_proto_msgTypes[2].OneofWrappers = []any{}
 	file_hi_media_user_manage_proto_msgTypes[3].OneofWrappers = []any{}
 	file_hi_media_user_manage_proto_msgTypes[4].OneofWrappers = []any{}
+	file_hi_media_user_manage_proto_msgTypes[5].OneofWrappers = []any{}
+	file_hi_media_user_manage_proto_msgTypes[6].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_media_user_manage_proto_rawDesc), len(file_hi_media_user_manage_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   5,
+			NumEnums:      1,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_hi_media_user_manage_proto_goTypes,
 		DependencyIndexes: file_hi_media_user_manage_proto_depIdxs,
+		EnumInfos:         file_hi_media_user_manage_proto_enumTypes,
 		MessageInfos:      file_hi_media_user_manage_proto_msgTypes,
 	}.Build()
 	File_hi_media_user_manage_proto = out.File

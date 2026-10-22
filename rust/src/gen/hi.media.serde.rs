@@ -1,3 +1,77 @@
+impl serde::Serialize for AccountKind {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unspecified => "ACCOUNT_KIND_UNSPECIFIED",
+            Self::Hidid => "ACCOUNT_KIND_HIDID",
+            Self::Email => "ACCOUNT_KIND_EMAIL",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for AccountKind {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "ACCOUNT_KIND_UNSPECIFIED",
+            "ACCOUNT_KIND_HIDID",
+            "ACCOUNT_KIND_EMAIL",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = AccountKind;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "ACCOUNT_KIND_UNSPECIFIED" => Ok(AccountKind::Unspecified),
+                    "ACCOUNT_KIND_HIDID" => Ok(AccountKind::Hidid),
+                    "ACCOUNT_KIND_EMAIL" => Ok(AccountKind::Email),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
 impl serde::Serialize for CancelTaskReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -217,6 +291,116 @@ impl<'de> serde::Deserialize<'de> for CancelTaskResp {
             }
         }
         deserializer.deserialize_struct("hi.media.CancelTaskResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ChangePasswordReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.old_password.is_some() {
+            len += 1;
+        }
+        if self.new_password.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.ChangePasswordReq", len)?;
+        if let Some(v) = self.old_password.as_ref() {
+            struct_ser.serialize_field("oldPassword", v)?;
+        }
+        if let Some(v) = self.new_password.as_ref() {
+            struct_ser.serialize_field("newPassword", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ChangePasswordReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "old_password",
+            "oldPassword",
+            "new_password",
+            "newPassword",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            OldPassword,
+            NewPassword,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "oldPassword" | "old_password" => Ok(GeneratedField::OldPassword),
+                            "newPassword" | "new_password" => Ok(GeneratedField::NewPassword),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ChangePasswordReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.ChangePasswordReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ChangePasswordReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut old_password__ = None;
+                let mut new_password__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::OldPassword => {
+                            if old_password__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("oldPassword"));
+                            }
+                            old_password__ = map_.next_value()?;
+                        }
+                        GeneratedField::NewPassword => {
+                            if new_password__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("newPassword"));
+                            }
+                            new_password__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ChangePasswordReq {
+                    old_password: old_password__,
+                    new_password: new_password__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.ChangePasswordReq", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for CharacterTaskParams {
@@ -3266,6 +3450,694 @@ impl<'de> serde::Deserialize<'de> for DeleteTaskReq {
             }
         }
         deserializer.deserialize_struct("hi.media.DeleteTaskReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for EmailCodePurpose {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unspecified => "EMAIL_CODE_PURPOSE_UNSPECIFIED",
+            Self::Register => "EMAIL_CODE_PURPOSE_REGISTER",
+            Self::ResetPassword => "EMAIL_CODE_PURPOSE_RESET_PASSWORD",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for EmailCodePurpose {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "EMAIL_CODE_PURPOSE_UNSPECIFIED",
+            "EMAIL_CODE_PURPOSE_REGISTER",
+            "EMAIL_CODE_PURPOSE_RESET_PASSWORD",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = EmailCodePurpose;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "EMAIL_CODE_PURPOSE_UNSPECIFIED" => Ok(EmailCodePurpose::Unspecified),
+                    "EMAIL_CODE_PURPOSE_REGISTER" => Ok(EmailCodePurpose::Register),
+                    "EMAIL_CODE_PURPOSE_RESET_PASSWORD" => Ok(EmailCodePurpose::ResetPassword),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for EmailCodeSendReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.email.is_some() {
+            len += 1;
+        }
+        if self.purpose.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.EmailCodeSendReq", len)?;
+        if let Some(v) = self.email.as_ref() {
+            struct_ser.serialize_field("email", v)?;
+        }
+        if let Some(v) = self.purpose.as_ref() {
+            let v = EmailCodePurpose::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("purpose", &v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for EmailCodeSendReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "email",
+            "purpose",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Email,
+            Purpose,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "email" => Ok(GeneratedField::Email),
+                            "purpose" => Ok(GeneratedField::Purpose),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = EmailCodeSendReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.EmailCodeSendReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<EmailCodeSendReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut email__ = None;
+                let mut purpose__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Email => {
+                            if email__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("email"));
+                            }
+                            email__ = map_.next_value()?;
+                        }
+                        GeneratedField::Purpose => {
+                            if purpose__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("purpose"));
+                            }
+                            purpose__ = map_.next_value::<::std::option::Option<EmailCodePurpose>>()?.map(|x| x as i32);
+                        }
+                    }
+                }
+                Ok(EmailCodeSendReq {
+                    email: email__,
+                    purpose: purpose__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.EmailCodeSendReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for EmailLoginReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.email.is_some() {
+            len += 1;
+        }
+        if self.password.is_some() {
+            len += 1;
+        }
+        if self.node.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.EmailLoginReq", len)?;
+        if let Some(v) = self.email.as_ref() {
+            struct_ser.serialize_field("email", v)?;
+        }
+        if let Some(v) = self.password.as_ref() {
+            struct_ser.serialize_field("password", v)?;
+        }
+        if let Some(v) = self.node.as_ref() {
+            struct_ser.serialize_field("node", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for EmailLoginReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "email",
+            "password",
+            "node",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Email,
+            Password,
+            Node,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "email" => Ok(GeneratedField::Email),
+                            "password" => Ok(GeneratedField::Password),
+                            "node" => Ok(GeneratedField::Node),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = EmailLoginReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.EmailLoginReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<EmailLoginReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut email__ = None;
+                let mut password__ = None;
+                let mut node__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Email => {
+                            if email__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("email"));
+                            }
+                            email__ = map_.next_value()?;
+                        }
+                        GeneratedField::Password => {
+                            if password__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("password"));
+                            }
+                            password__ = map_.next_value()?;
+                        }
+                        GeneratedField::Node => {
+                            if node__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("node"));
+                            }
+                            node__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(EmailLoginReq {
+                    email: email__,
+                    password: password__,
+                    node: node__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.EmailLoginReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for EmailLoginResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.did.is_some() {
+            len += 1;
+        }
+        if self.token.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.EmailLoginResp", len)?;
+        if let Some(v) = self.did.as_ref() {
+            struct_ser.serialize_field("did", v)?;
+        }
+        if let Some(v) = self.token.as_ref() {
+            struct_ser.serialize_field("token", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for EmailLoginResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "did",
+            "token",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Did,
+            Token,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "did" => Ok(GeneratedField::Did),
+                            "token" => Ok(GeneratedField::Token),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = EmailLoginResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.EmailLoginResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<EmailLoginResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut did__ = None;
+                let mut token__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Did => {
+                            if did__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("did"));
+                            }
+                            did__ = map_.next_value()?;
+                        }
+                        GeneratedField::Token => {
+                            if token__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("token"));
+                            }
+                            token__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(EmailLoginResp {
+                    did: did__,
+                    token: token__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.EmailLoginResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for EmailRegisterReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.email.is_some() {
+            len += 1;
+        }
+        if self.email_code.is_some() {
+            len += 1;
+        }
+        if self.invite_code.is_some() {
+            len += 1;
+        }
+        if self.node.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.EmailRegisterReq", len)?;
+        if let Some(v) = self.email.as_ref() {
+            struct_ser.serialize_field("email", v)?;
+        }
+        if let Some(v) = self.email_code.as_ref() {
+            struct_ser.serialize_field("emailCode", v)?;
+        }
+        if let Some(v) = self.invite_code.as_ref() {
+            struct_ser.serialize_field("inviteCode", v)?;
+        }
+        if let Some(v) = self.node.as_ref() {
+            struct_ser.serialize_field("node", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for EmailRegisterReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "email",
+            "email_code",
+            "emailCode",
+            "invite_code",
+            "inviteCode",
+            "node",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Email,
+            EmailCode,
+            InviteCode,
+            Node,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "email" => Ok(GeneratedField::Email),
+                            "emailCode" | "email_code" => Ok(GeneratedField::EmailCode),
+                            "inviteCode" | "invite_code" => Ok(GeneratedField::InviteCode),
+                            "node" => Ok(GeneratedField::Node),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = EmailRegisterReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.EmailRegisterReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<EmailRegisterReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut email__ = None;
+                let mut email_code__ = None;
+                let mut invite_code__ = None;
+                let mut node__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Email => {
+                            if email__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("email"));
+                            }
+                            email__ = map_.next_value()?;
+                        }
+                        GeneratedField::EmailCode => {
+                            if email_code__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("emailCode"));
+                            }
+                            email_code__ = map_.next_value()?;
+                        }
+                        GeneratedField::InviteCode => {
+                            if invite_code__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("inviteCode"));
+                            }
+                            invite_code__ = map_.next_value()?;
+                        }
+                        GeneratedField::Node => {
+                            if node__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("node"));
+                            }
+                            node__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(EmailRegisterReq {
+                    email: email__,
+                    email_code: email_code__,
+                    invite_code: invite_code__,
+                    node: node__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.EmailRegisterReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for EmailResetPasswordReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.email.is_some() {
+            len += 1;
+        }
+        if self.email_code.is_some() {
+            len += 1;
+        }
+        if self.new_password.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.EmailResetPasswordReq", len)?;
+        if let Some(v) = self.email.as_ref() {
+            struct_ser.serialize_field("email", v)?;
+        }
+        if let Some(v) = self.email_code.as_ref() {
+            struct_ser.serialize_field("emailCode", v)?;
+        }
+        if let Some(v) = self.new_password.as_ref() {
+            struct_ser.serialize_field("newPassword", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for EmailResetPasswordReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "email",
+            "email_code",
+            "emailCode",
+            "new_password",
+            "newPassword",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Email,
+            EmailCode,
+            NewPassword,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "email" => Ok(GeneratedField::Email),
+                            "emailCode" | "email_code" => Ok(GeneratedField::EmailCode),
+                            "newPassword" | "new_password" => Ok(GeneratedField::NewPassword),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = EmailResetPasswordReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.EmailResetPasswordReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<EmailResetPasswordReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut email__ = None;
+                let mut email_code__ = None;
+                let mut new_password__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Email => {
+                            if email__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("email"));
+                            }
+                            email__ = map_.next_value()?;
+                        }
+                        GeneratedField::EmailCode => {
+                            if email_code__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("emailCode"));
+                            }
+                            email_code__ = map_.next_value()?;
+                        }
+                        GeneratedField::NewPassword => {
+                            if new_password__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("newPassword"));
+                            }
+                            new_password__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(EmailResetPasswordReq {
+                    email: email__,
+                    email_code: email_code__,
+                    new_password: new_password__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.EmailResetPasswordReq", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for FileAccessPurpose {
@@ -15168,6 +16040,9 @@ impl serde::Serialize for user_manage_list_resp::Unit {
         if self.deleted_at.is_some() {
             len += 1;
         }
+        if self.kind.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.media.UserManageListResp.Unit", len)?;
         if let Some(v) = self.did.as_ref() {
             struct_ser.serialize_field("did", v)?;
@@ -15191,6 +16066,11 @@ impl serde::Serialize for user_manage_list_resp::Unit {
             #[allow(clippy::needless_borrows_for_generic_args)]
             struct_ser.serialize_field("deletedAt", ToString::to_string(&v).as_str())?;
         }
+        if let Some(v) = self.kind.as_ref() {
+            let v = AccountKind::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("kind", &v)?;
+        }
         struct_ser.end()
     }
 }
@@ -15209,6 +16089,7 @@ impl<'de> serde::Deserialize<'de> for user_manage_list_resp::Unit {
             "deleting",
             "deleted_at",
             "deletedAt",
+            "kind",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -15219,6 +16100,7 @@ impl<'de> serde::Deserialize<'de> for user_manage_list_resp::Unit {
             Note,
             Deleting,
             DeletedAt,
+            Kind,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -15246,6 +16128,7 @@ impl<'de> serde::Deserialize<'de> for user_manage_list_resp::Unit {
                             "note" => Ok(GeneratedField::Note),
                             "deleting" => Ok(GeneratedField::Deleting),
                             "deletedAt" | "deleted_at" => Ok(GeneratedField::DeletedAt),
+                            "kind" => Ok(GeneratedField::Kind),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -15271,6 +16154,7 @@ impl<'de> serde::Deserialize<'de> for user_manage_list_resp::Unit {
                 let mut note__ = None;
                 let mut deleting__ = None;
                 let mut deleted_at__ = None;
+                let mut kind__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Did => {
@@ -15313,6 +16197,12 @@ impl<'de> serde::Deserialize<'de> for user_manage_list_resp::Unit {
                                 map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
+                        GeneratedField::Kind => {
+                            if kind__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("kind"));
+                            }
+                            kind__ = map_.next_value::<::std::option::Option<AccountKind>>()?.map(|x| x as i32);
+                        }
                     }
                 }
                 Ok(user_manage_list_resp::Unit {
@@ -15322,10 +16212,193 @@ impl<'de> serde::Deserialize<'de> for user_manage_list_resp::Unit {
                     note: note__,
                     deleting: deleting__,
                     deleted_at: deleted_at__,
+                    kind: kind__,
                 })
             }
         }
         deserializer.deserialize_struct("hi.media.UserManageListResp.Unit", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for UserManageResetPasswordReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.did.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.UserManageResetPasswordReq", len)?;
+        if let Some(v) = self.did.as_ref() {
+            struct_ser.serialize_field("did", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for UserManageResetPasswordReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "did",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Did,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "did" => Ok(GeneratedField::Did),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = UserManageResetPasswordReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.UserManageResetPasswordReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UserManageResetPasswordReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut did__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Did => {
+                            if did__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("did"));
+                            }
+                            did__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(UserManageResetPasswordReq {
+                    did: did__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.UserManageResetPasswordReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for UserManageResetPasswordResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.password.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.UserManageResetPasswordResp", len)?;
+        if let Some(v) = self.password.as_ref() {
+            struct_ser.serialize_field("password", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for UserManageResetPasswordResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "password",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Password,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "password" => Ok(GeneratedField::Password),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = UserManageResetPasswordResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.UserManageResetPasswordResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UserManageResetPasswordResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut password__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Password => {
+                            if password__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("password"));
+                            }
+                            password__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(UserManageResetPasswordResp {
+                    password: password__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.UserManageResetPasswordResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for ValidateWorkflowReq {

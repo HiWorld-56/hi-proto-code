@@ -15,6 +15,21 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use accountKindDescriptor instead')
+const AccountKind$json = {
+  '1': 'AccountKind',
+  '2': [
+    {'1': 'ACCOUNT_KIND_UNSPECIFIED', '2': 0},
+    {'1': 'ACCOUNT_KIND_HIDID', '2': 1},
+    {'1': 'ACCOUNT_KIND_EMAIL', '2': 2},
+  ],
+};
+
+/// Descriptor for `AccountKind`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List accountKindDescriptor = $convert.base64Decode(
+    'CgtBY2NvdW50S2luZBIcChhBQ0NPVU5UX0tJTkRfVU5TUEVDSUZJRUQQABIWChJBQ0NPVU5UX0'
+    'tJTkRfSElESUQQARIWChJBQ0NPVU5UX0tJTkRfRU1BSUwQAg==');
+
 @$core.Deprecated('Use userManageListReqDescriptor instead')
 const UserManageListReq$json = {
   '1': 'UserManageListReq',
@@ -155,6 +170,17 @@ const UserManageListResp_Unit$json = {
       '10': 'deletedAt',
       '17': true
     },
+    {
+      '1': 'kind',
+      '3': 7,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.media.AccountKind',
+      '8': {},
+      '9': 6,
+      '10': 'kind',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -164,6 +190,7 @@ const UserManageListResp_Unit$json = {
     {'1': '_note'},
     {'1': '_deleting'},
     {'1': '_deleted_at'},
+    {'1': '_kind'},
   ],
 };
 
@@ -171,12 +198,14 @@ const UserManageListResp_Unit$json = {
 final $typed_data.Uint8List userManageListRespDescriptor = $convert.base64Decode(
     'ChJVc2VyTWFuYWdlTGlzdFJlc3ASHwoFdG90YWwYASABKAVCBJC1GANIAFIFdG90YWyIAQESPQ'
     'oFdXNlcnMYAiADKAsyIS5oaS5tZWRpYS5Vc2VyTWFuYWdlTGlzdFJlc3AuVW5pdEIEkLUYA1IF'
-    'dXNlcnMasAIKBFVuaXQSGwoDZGlkGAEgASgJQgSQtRgDSABSA2RpZIgBARIuCg1yZWdpc3Rlcm'
+    'dXNlcnMa7wIKBFVuaXQSGwoDZGlkGAEgASgJQgSQtRgDSABSA2RpZIgBARIuCg1yZWdpc3Rlcm'
     'VkX2F0GAIgASgDQgSQtRgDSAFSDHJlZ2lzdGVyZWRBdIgBARIdCgRuYW1lGAMgASgJQgSQtRgD'
     'SAJSBG5hbWWIAQESHQoEbm90ZRgEIAEoCUIEkLUYA0gDUgRub3RliAEBEiUKCGRlbGV0aW5nGA'
     'UgASgIQgSQtRgDSARSCGRlbGV0aW5niAEBEigKCmRlbGV0ZWRfYXQYBiABKANCBJC1GANIBVIJ'
-    'ZGVsZXRlZEF0iAEBOgSYtRgDQgYKBF9kaWRCEAoOX3JlZ2lzdGVyZWRfYXRCBwoFX25hbWVCBw'
-    'oFX25vdGVCCwoJX2RlbGV0aW5nQg0KC19kZWxldGVkX2F0OgSYtRgDQggKBl90b3RhbA==');
+    'ZGVsZXRlZEF0iAEBEjQKBGtpbmQYByABKA4yFS5oaS5tZWRpYS5BY2NvdW50S2luZEIEkLUYA0'
+    'gGUgRraW5kiAEBOgSYtRgDQgYKBF9kaWRCEAoOX3JlZ2lzdGVyZWRfYXRCBwoFX25hbWVCBwoF'
+    'X25vdGVCCwoJX2RlbGV0aW5nQg0KC19kZWxldGVkX2F0QgcKBV9raW5kOgSYtRgDQggKBl90b3'
+    'RhbA==');
 
 @$core.Deprecated('Use userManageEditReqDescriptor instead')
 const UserManageEditReq$json = {
@@ -239,3 +268,56 @@ const UserManageDeleteReq$json = {
 final $typed_data.Uint8List userManageDeleteReqDescriptor = $convert.base64Decode(
     'ChNVc2VyTWFuYWdlRGVsZXRlUmVxEiQKA2RpZBgBIAEoCUINukgKyAEBcgUQARj/AUgAUgNkaW'
     'SIAQFCBgoEX2RpZA==');
+
+@$core.Deprecated('Use userManageResetPasswordReqDescriptor instead')
+const UserManageResetPasswordReq$json = {
+  '1': 'UserManageResetPasswordReq',
+  '2': [
+    {
+      '1': 'did',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'did',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_did'},
+  ],
+};
+
+/// Descriptor for `UserManageResetPasswordReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List userManageResetPasswordReqDescriptor =
+    $convert.base64Decode(
+        'ChpVc2VyTWFuYWdlUmVzZXRQYXNzd29yZFJlcRIkCgNkaWQYASABKAlCDbpICsgBAXIFEAEY/w'
+        'FIAFIDZGlkiAEBQgYKBF9kaWQ=');
+
+@$core.Deprecated('Use userManageResetPasswordRespDescriptor instead')
+const UserManageResetPasswordResp$json = {
+  '1': 'UserManageResetPasswordResp',
+  '2': [
+    {
+      '1': 'password',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'password',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_password'},
+  ],
+};
+
+/// Descriptor for `UserManageResetPasswordResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List userManageResetPasswordRespDescriptor =
+    $convert.base64Decode(
+        'ChtVc2VyTWFuYWdlUmVzZXRQYXNzd29yZFJlc3ASJQoIcGFzc3dvcmQYASABKAlCBJC1GANIAF'
+        'IIcGFzc3dvcmSIAQE6BJi1GANCCwoJX3Bhc3N3b3Jk');

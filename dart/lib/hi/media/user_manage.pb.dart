@@ -16,8 +16,11 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../common.pb.dart' as $2;
+import 'user_manage.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
+
+export 'user_manage.pbenum.dart';
 
 class UserManageListReq extends $pb.GeneratedMessage {
   factory UserManageListReq({
@@ -110,6 +113,7 @@ class UserManageListResp_Unit extends $pb.GeneratedMessage {
     $core.String? note,
     $core.bool? deleting,
     $fixnum.Int64? deletedAt,
+    AccountKind? kind,
   }) {
     final result = create();
     if (did != null) result.did = did;
@@ -118,6 +122,7 @@ class UserManageListResp_Unit extends $pb.GeneratedMessage {
     if (note != null) result.note = note;
     if (deleting != null) result.deleting = deleting;
     if (deletedAt != null) result.deletedAt = deletedAt;
+    if (kind != null) result.kind = kind;
     return result;
   }
 
@@ -140,6 +145,8 @@ class UserManageListResp_Unit extends $pb.GeneratedMessage {
     ..aOS(4, _omitFieldNames ? '' : 'note')
     ..aOB(5, _omitFieldNames ? '' : 'deleting')
     ..aInt64(6, _omitFieldNames ? '' : 'deletedAt')
+    ..aE<AccountKind>(7, _omitFieldNames ? '' : 'kind',
+        enumValues: AccountKind.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -215,6 +222,15 @@ class UserManageListResp_Unit extends $pb.GeneratedMessage {
   $core.bool hasDeletedAt() => $_has(5);
   @$pb.TagNumber(6)
   void clearDeletedAt() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  AccountKind get kind => $_getN(6);
+  @$pb.TagNumber(7)
+  set kind(AccountKind value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasKind() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearKind() => $_clearField(7);
 }
 
 class UserManageListResp extends $pb.GeneratedMessage {
@@ -397,6 +413,120 @@ class UserManageDeleteReq extends $pb.GeneratedMessage {
   $core.bool hasDid() => $_has(0);
   @$pb.TagNumber(1)
   void clearDid() => $_clearField(1);
+}
+
+/// 超管重置邮箱账号的密码：服务端生成随机密码，返回给超管转告用户；该账号已登录的会话全部作废。
+class UserManageResetPasswordReq extends $pb.GeneratedMessage {
+  factory UserManageResetPasswordReq({
+    $core.String? did,
+  }) {
+    final result = create();
+    if (did != null) result.did = did;
+    return result;
+  }
+
+  UserManageResetPasswordReq._();
+
+  factory UserManageResetPasswordReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory UserManageResetPasswordReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UserManageResetPasswordReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'did')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UserManageResetPasswordReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UserManageResetPasswordReq copyWith(
+          void Function(UserManageResetPasswordReq) updates) =>
+      super.copyWith(
+              (message) => updates(message as UserManageResetPasswordReq))
+          as UserManageResetPasswordReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static UserManageResetPasswordReq create() => UserManageResetPasswordReq._();
+  @$core.override
+  UserManageResetPasswordReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static UserManageResetPasswordReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UserManageResetPasswordReq>(create);
+  static UserManageResetPasswordReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get did => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set did($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasDid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDid() => $_clearField(1);
+}
+
+class UserManageResetPasswordResp extends $pb.GeneratedMessage {
+  factory UserManageResetPasswordResp({
+    $core.String? password,
+  }) {
+    final result = create();
+    if (password != null) result.password = password;
+    return result;
+  }
+
+  UserManageResetPasswordResp._();
+
+  factory UserManageResetPasswordResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory UserManageResetPasswordResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UserManageResetPasswordResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'password')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UserManageResetPasswordResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UserManageResetPasswordResp copyWith(
+          void Function(UserManageResetPasswordResp) updates) =>
+      super.copyWith(
+              (message) => updates(message as UserManageResetPasswordResp))
+          as UserManageResetPasswordResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static UserManageResetPasswordResp create() =>
+      UserManageResetPasswordResp._();
+  @$core.override
+  UserManageResetPasswordResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static UserManageResetPasswordResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UserManageResetPasswordResp>(create);
+  static UserManageResetPasswordResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get password => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set password($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPassword() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPassword() => $_clearField(1);
 }
 
 const $core.bool _omitFieldNames =

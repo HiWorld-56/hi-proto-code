@@ -31,6 +31,11 @@ class UserManageStub(object):
                 request_serializer=hi_dot_media_dot_user__manage__pb2.UserManageDeleteReq.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
+        self.ResetPassword = channel.unary_unary(
+                '/hi.media.UserManage/ResetPassword',
+                request_serializer=hi_dot_media_dot_user__manage__pb2.UserManageResetPasswordReq.SerializeToString,
+                response_deserializer=hi_dot_media_dot_user__manage__pb2.UserManageResetPasswordResp.FromString,
+                _registered_method=True)
 
 
 class UserManageServicer(object):
@@ -57,6 +62,13 @@ class UserManageServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ResetPassword(self, request, context):
+        """重置邮箱账号的密码；HiDID 账号没有密码，回 FailedPrecondition。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_UserManageServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -74,6 +86,11 @@ def add_UserManageServicer_to_server(servicer, server):
                     servicer.Delete,
                     request_deserializer=hi_dot_media_dot_user__manage__pb2.UserManageDeleteReq.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'ResetPassword': grpc.unary_unary_rpc_method_handler(
+                    servicer.ResetPassword,
+                    request_deserializer=hi_dot_media_dot_user__manage__pb2.UserManageResetPasswordReq.FromString,
+                    response_serializer=hi_dot_media_dot_user__manage__pb2.UserManageResetPasswordResp.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -158,6 +175,33 @@ class UserManage(object):
             '/hi.media.UserManage/Delete',
             hi_dot_media_dot_user__manage__pb2.UserManageDeleteReq.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ResetPassword(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.media.UserManage/ResetPassword',
+            hi_dot_media_dot_user__manage__pb2.UserManageResetPasswordReq.SerializeToString,
+            hi_dot_media_dot_user__manage__pb2.UserManageResetPasswordResp.FromString,
             options,
             channel_credentials,
             insecure,

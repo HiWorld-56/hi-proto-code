@@ -57,6 +57,14 @@ class UserManageClient extends $grpc.Client {
     return $createUnaryCall(_$delete, request, options: options);
   }
 
+  /// 重置邮箱账号的密码；HiDID 账号没有密码，回 FailedPrecondition。
+  $grpc.ResponseFuture<$0.UserManageResetPasswordResp> resetPassword(
+    $0.UserManageResetPasswordReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$resetPassword, request, options: options);
+  }
+
   // method descriptors
 
   static final _$list =
@@ -72,6 +80,11 @@ class UserManageClient extends $grpc.Client {
       '/hi.media.UserManage/Delete',
       ($0.UserManageDeleteReq value) => value.writeToBuffer(),
       $1.Empty.fromBuffer);
+  static final _$resetPassword = $grpc.ClientMethod<
+          $0.UserManageResetPasswordReq, $0.UserManageResetPasswordResp>(
+      '/hi.media.UserManage/ResetPassword',
+      ($0.UserManageResetPasswordReq value) => value.writeToBuffer(),
+      $0.UserManageResetPasswordResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.media.UserManage')
@@ -101,6 +114,15 @@ abstract class UserManageServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $0.UserManageDeleteReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.UserManageResetPasswordReq,
+            $0.UserManageResetPasswordResp>(
+        'ResetPassword',
+        resetPassword_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.UserManageResetPasswordReq.fromBuffer(value),
+        ($0.UserManageResetPasswordResp value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.UserManageListResp> list_Pre($grpc.ServiceCall $call,
@@ -126,4 +148,13 @@ abstract class UserManageServiceBase extends $grpc.Service {
 
   $async.Future<$1.Empty> delete(
       $grpc.ServiceCall call, $0.UserManageDeleteReq request);
+
+  $async.Future<$0.UserManageResetPasswordResp> resetPassword_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.UserManageResetPasswordReq> $request) async {
+    return resetPassword($call, await $request);
+  }
+
+  $async.Future<$0.UserManageResetPasswordResp> resetPassword(
+      $grpc.ServiceCall call, $0.UserManageResetPasswordReq request);
 }

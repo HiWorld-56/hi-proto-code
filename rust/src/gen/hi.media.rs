@@ -183,6 +183,382 @@ pub mod auth_client {
         }
     }
 }
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct EmailCodeSendReq {
+    #[prost(string, optional, tag = "1")]
+    pub email: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "EmailCodePurpose", optional, tag = "2")]
+    pub purpose: ::core::option::Option<i32>,
+}
+/// 注册:邮箱验证码证明邮箱是本人的,邀请码证明有资格进入 HiMedia。
+/// **邀请码字符串就是初始密码**,用户不另设密码;注册后密码与邀请码再无关系(可改)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct EmailRegisterReq {
+    #[prost(string, optional, tag = "1")]
+    pub email: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub email_code: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub invite_code: ::core::option::Option<::prost::alloc::string::String>,
+    /// 被登录的这一端;HiMedia 只收 HiMedia/web
+    #[prost(message, optional, tag = "4")]
+    pub node: ::core::option::Option<super::ClientInfo>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct EmailLoginReq {
+    #[prost(string, optional, tag = "1")]
+    pub email: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub password: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "3")]
+    pub node: ::core::option::Option<super::ClientInfo>,
+}
+/// 注册 / 登录成功:did 就是这个邮箱(后续 RefreshToken / Logout 的 did 填它)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct EmailLoginResp {
+    #[prost(string, optional, tag = "1")]
+    pub did: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub token: ::core::option::Option<super::AuthToken>,
+}
+/// 忘记密码:凭邮箱验证码设新密码。成功后该账号所有已登录的会话作废。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct EmailResetPasswordReq {
+    #[prost(string, optional, tag = "1")]
+    pub email: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub email_code: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub new_password: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 已登录的邮箱账号改密码。HiDID 扫码账号没有密码,调用回 FailedPrecondition。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ChangePasswordReq {
+    #[prost(string, optional, tag = "1")]
+    pub old_password: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub new_password: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum EmailCodePurpose {
+    Unspecified = 0,
+    /// 注册:该邮箱必须还没注册
+    Register = 1,
+    /// 忘记密码:该邮箱必须已注册
+    ResetPassword = 2,
+}
+impl EmailCodePurpose {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "EMAIL_CODE_PURPOSE_UNSPECIFIED",
+            Self::Register => "EMAIL_CODE_PURPOSE_REGISTER",
+            Self::ResetPassword => "EMAIL_CODE_PURPOSE_RESET_PASSWORD",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "EMAIL_CODE_PURPOSE_UNSPECIFIED" => Some(Self::Unspecified),
+            "EMAIL_CODE_PURPOSE_REGISTER" => Some(Self::Register),
+            "EMAIL_CODE_PURPOSE_RESET_PASSWORD" => Some(Self::ResetPassword),
+            _ => None,
+        }
+    }
+}
+/// Generated client implementations.
+pub mod account_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    #[derive(Debug, Clone)]
+    pub struct AccountClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl AccountClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> AccountClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> AccountClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            AccountClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// 发邮箱验证码(6 位,10 分钟有效;同一邮箱 60 秒内只发一次)。
+        pub async fn send_email_code(
+            &mut self,
+            request: impl tonic::IntoRequest<super::EmailCodeSendReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.Account/SendEmailCode",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.Account", "SendEmailCode"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn register(
+            &mut self,
+            request: impl tonic::IntoRequest<super::EmailRegisterReq>,
+        ) -> std::result::Result<tonic::Response<super::EmailLoginResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.Account/Register",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.media.Account", "Register"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn login(
+            &mut self,
+            request: impl tonic::IntoRequest<super::EmailLoginReq>,
+        ) -> std::result::Result<tonic::Response<super::EmailLoginResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.media.Account/Login");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.media.Account", "Login"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn reset_password(
+            &mut self,
+            request: impl tonic::IntoRequest<super::EmailResetPasswordReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.Account/ResetPassword",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.Account", "ResetPassword"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Generated client implementations.
+pub mod account_self_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 已登录的邮箱账号管理自己的账号(与公开的 Account 分开:鉴权档位不同)。
+    #[derive(Debug, Clone)]
+    pub struct AccountSelfClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl AccountSelfClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> AccountSelfClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> AccountSelfClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            AccountSelfClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn change_password(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ChangePasswordReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.AccountSelf/ChangePassword",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.AccountSelf", "ChangePassword"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
 /// 文生图宽高选择，单位像素；省略某项时使用该工作流对应默认值。
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ImageDimensions {
@@ -1365,7 +1741,7 @@ pub mod user_manage_list_resp {
         /// Unix 秒
         #[prost(int64, optional, tag = "2")]
         pub registered_at: ::core::option::Option<i64>,
-        /// HiDID 当前用户名
+        /// HiDID 当前用户名；邮箱账号没有，不返回
         #[prost(string, optional, tag = "3")]
         pub name: ::core::option::Option<::prost::alloc::string::String>,
         /// HiMedia 管理员填写的用户备注
@@ -1377,6 +1753,9 @@ pub mod user_manage_list_resp {
         /// 删除完成时间，Unix 秒；未删除时不返回
         #[prost(int64, optional, tag = "6")]
         pub deleted_at: ::core::option::Option<i64>,
+        /// 账号种类；邮箱账号的 did 就是邮箱，name 不返回
+        #[prost(enumeration = "super::AccountKind", optional, tag = "7")]
+        pub kind: ::core::option::Option<i32>,
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1391,6 +1770,47 @@ pub struct UserManageEditReq {
 pub struct UserManageDeleteReq {
     #[prost(string, optional, tag = "1")]
     pub did: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 超管重置邮箱账号的密码：服务端生成随机密码，返回给超管转告用户；该账号已登录的会话全部作废。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UserManageResetPasswordReq {
+    #[prost(string, optional, tag = "1")]
+    pub did: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UserManageResetPasswordResp {
+    #[prost(string, optional, tag = "1")]
+    pub password: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 账号种类：HiDID 扫码登录的账号，或 HiMedia 本地的邮箱账号（见 account.proto）。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum AccountKind {
+    Unspecified = 0,
+    Hidid = 1,
+    Email = 2,
+}
+impl AccountKind {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "ACCOUNT_KIND_UNSPECIFIED",
+            Self::Hidid => "ACCOUNT_KIND_HIDID",
+            Self::Email => "ACCOUNT_KIND_EMAIL",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "ACCOUNT_KIND_UNSPECIFIED" => Some(Self::Unspecified),
+            "ACCOUNT_KIND_HIDID" => Some(Self::Hidid),
+            "ACCOUNT_KIND_EMAIL" => Some(Self::Email),
+            _ => None,
+        }
+    }
 }
 /// Generated client implementations.
 pub mod user_manage_client {
@@ -1544,6 +1964,31 @@ pub mod user_manage_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.media.UserManage", "Delete"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 重置邮箱账号的密码；HiDID 账号没有密码，回 FailedPrecondition。
+        pub async fn reset_password(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UserManageResetPasswordReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::UserManageResetPasswordResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.media.UserManage/ResetPassword",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.media.UserManage", "ResetPassword"));
             self.inner.unary(req, path, codec).await
         }
     }
