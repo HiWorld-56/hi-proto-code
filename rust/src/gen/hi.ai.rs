@@ -224,20 +224,6 @@ pub mod api_key_client {
         }
     }
 }
-/// 插件成功取得、已转存到聊天桶的待发送图片；不表示已投递给用户。
-/// 元数据来自后台转存结果，不由模型填写；与模型视觉输入 Content 分开传递。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ReplyImage {
-    /// 聊天桶原图地址，不是 ComfyUI 或 HiMedia 的临时地址。
-    #[prost(string, optional, tag = "1")]
-    pub url: ::core::option::Option<::prost::alloc::string::String>,
-    /// 实际文件名，映射聊天内容的 chat.name。
-    #[prost(string, optional, tag = "2")]
-    pub name: ::core::option::Option<::prost::alloc::string::String>,
-    /// 实际字节数，映射 chat.size；JSON 为 sizeBytes。
-    #[prost(uint64, optional, tag = "3")]
-    pub size_bytes: ::core::option::Option<u64>,
-}
 /// ── AI 对话全链路都是私有:会话/上下文/回复只发给发起对话的本人 ──────────────
 ///
 /// 对话内容的一段。`type` 取 hi.club `Content.type` 那张表里的词(`text` / `image_url` / `audio_url`;
@@ -562,15 +548,11 @@ pub struct ChatResp {
     /// 用途:club 把机器人的语音对话记进聊天记录时,用户那句存成文字而不是一段录音 url。
     #[prost(message, repeated, tag = "4")]
     pub question: ::prost::alloc::vec::Vec<Content>,
-    /// 非流式最终回复的待发送图片，按工具取得顺序排列，不依赖 result 中出现 URL。
-    /// 普通文字或含 URL 的 JSON 不会自动变成图片；中途等待客户端工具时不交付图片。
-    #[prost(message, repeated, tag = "5")]
-    pub reply_images: ::prost::alloc::vec::Vec<ReplyImage>,
 }
 /// 流式帧(ConverseStream / ResumeStream)。
 ///
 /// `type` 取值 —— **一条指令帧,其余是内容/进度/回显**:
-/// msg           —— 完整答复及待展示图片，不是分片；图片见 reply_images
+/// msg           —— 答复。⚠️ **是整段,不是分片**(见下)
 /// end           —— 本条流正常收尾
 /// info          —— 出错了。⚠️ 流式下错误**走帧不走 grpc status** ——
 /// 否则客户端收了半截流再拿到 error,两套错误通道并存反而更难排查
@@ -616,11 +598,6 @@ pub struct ConverseStreamResp {
     /// 同 ChatResp.question。挂在每条流的收尾帧(`msg` 或 `toolCalls`)上,ConverseStream 与 ResumeStream 都带。
     #[prost(message, repeated, tag = "6")]
     pub question: ::prost::alloc::vec::Vec<Content>,
-    /// 仅成功的最终 msg 帧交付，顺序同工具结果；ConverseStream / ResumeStream 共用。
-    /// 与 ChatResp.reply_images 使用同一结构，不依赖 message 中包含图片链接。
-    /// toolCalls、进度及 end 帧不重复携带；客户端应独立渲染图片，message 允许为空。
-    #[prost(message, repeated, tag = "7")]
-    pub reply_images: ::prost::alloc::vec::Vec<ReplyImage>,
 }
 /// Generated client implementations.
 pub mod chat_client {

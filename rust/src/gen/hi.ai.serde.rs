@@ -1719,9 +1719,6 @@ impl serde::Serialize for ChatResp {
         if !self.question.is_empty() {
             len += 1;
         }
-        if !self.reply_images.is_empty() {
-            len += 1;
-        }
         let mut struct_ser = serializer.serialize_struct("hi.ai.ChatResp", len)?;
         if let Some(v) = self.r#final.as_ref() {
             struct_ser.serialize_field("final", v)?;
@@ -1734,9 +1731,6 @@ impl serde::Serialize for ChatResp {
         }
         if !self.question.is_empty() {
             struct_ser.serialize_field("question", &self.question)?;
-        }
-        if !self.reply_images.is_empty() {
-            struct_ser.serialize_field("replyImages", &self.reply_images)?;
         }
         struct_ser.end()
     }
@@ -1752,8 +1746,6 @@ impl<'de> serde::Deserialize<'de> for ChatResp {
             "result",
             "tools",
             "question",
-            "reply_images",
-            "replyImages",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -1762,7 +1754,6 @@ impl<'de> serde::Deserialize<'de> for ChatResp {
             Result,
             Tools,
             Question,
-            ReplyImages,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1788,7 +1779,6 @@ impl<'de> serde::Deserialize<'de> for ChatResp {
                             "result" => Ok(GeneratedField::Result),
                             "tools" => Ok(GeneratedField::Tools),
                             "question" => Ok(GeneratedField::Question),
-                            "replyImages" | "reply_images" => Ok(GeneratedField::ReplyImages),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -1812,7 +1802,6 @@ impl<'de> serde::Deserialize<'de> for ChatResp {
                 let mut result__ = None;
                 let mut tools__ = None;
                 let mut question__ = None;
-                let mut reply_images__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Final => {
@@ -1839,12 +1828,6 @@ impl<'de> serde::Deserialize<'de> for ChatResp {
                             }
                             question__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::ReplyImages => {
-                            if reply_images__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("replyImages"));
-                            }
-                            reply_images__ = Some(map_.next_value()?);
-                        }
                     }
                 }
                 Ok(ChatResp {
@@ -1852,7 +1835,6 @@ impl<'de> serde::Deserialize<'de> for ChatResp {
                     result: result__,
                     tools: tools__.unwrap_or_default(),
                     question: question__.unwrap_or_default(),
-                    reply_images: reply_images__.unwrap_or_default(),
                 })
             }
         }
@@ -2209,9 +2191,6 @@ impl serde::Serialize for ConverseStreamResp {
         if !self.question.is_empty() {
             len += 1;
         }
-        if !self.reply_images.is_empty() {
-            len += 1;
-        }
         let mut struct_ser = serializer.serialize_struct("hi.ai.ConverseStreamResp", len)?;
         if let Some(v) = self.code.as_ref() {
             struct_ser.serialize_field("code", v)?;
@@ -2231,9 +2210,6 @@ impl serde::Serialize for ConverseStreamResp {
         if !self.question.is_empty() {
             struct_ser.serialize_field("question", &self.question)?;
         }
-        if !self.reply_images.is_empty() {
-            struct_ser.serialize_field("replyImages", &self.reply_images)?;
-        }
         struct_ser.end()
     }
 }
@@ -2250,8 +2226,6 @@ impl<'de> serde::Deserialize<'de> for ConverseStreamResp {
             "id",
             "tools",
             "question",
-            "reply_images",
-            "replyImages",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -2262,7 +2236,6 @@ impl<'de> serde::Deserialize<'de> for ConverseStreamResp {
             Id,
             Tools,
             Question,
-            ReplyImages,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -2290,7 +2263,6 @@ impl<'de> serde::Deserialize<'de> for ConverseStreamResp {
                             "id" => Ok(GeneratedField::Id),
                             "tools" => Ok(GeneratedField::Tools),
                             "question" => Ok(GeneratedField::Question),
-                            "replyImages" | "reply_images" => Ok(GeneratedField::ReplyImages),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -2316,7 +2288,6 @@ impl<'de> serde::Deserialize<'de> for ConverseStreamResp {
                 let mut id__ = None;
                 let mut tools__ = None;
                 let mut question__ = None;
-                let mut reply_images__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Code => {
@@ -2357,12 +2328,6 @@ impl<'de> serde::Deserialize<'de> for ConverseStreamResp {
                             }
                             question__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::ReplyImages => {
-                            if reply_images__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("replyImages"));
-                            }
-                            reply_images__ = Some(map_.next_value()?);
-                        }
                     }
                 }
                 Ok(ConverseStreamResp {
@@ -2372,7 +2337,6 @@ impl<'de> serde::Deserialize<'de> for ConverseStreamResp {
                     id: id__,
                     tools: tools__.unwrap_or_default(),
                     question: question__.unwrap_or_default(),
-                    reply_images: reply_images__.unwrap_or_default(),
                 })
             }
         }
@@ -12892,136 +12856,6 @@ impl<'de> serde::Deserialize<'de> for RegisterRobotReq {
             }
         }
         deserializer.deserialize_struct("hi.ai.RegisterRobotReq", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for ReplyImage {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.url.is_some() {
-            len += 1;
-        }
-        if self.name.is_some() {
-            len += 1;
-        }
-        if self.size_bytes.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.ai.ReplyImage", len)?;
-        if let Some(v) = self.url.as_ref() {
-            struct_ser.serialize_field("url", v)?;
-        }
-        if let Some(v) = self.name.as_ref() {
-            struct_ser.serialize_field("name", v)?;
-        }
-        if let Some(v) = self.size_bytes.as_ref() {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("sizeBytes", ToString::to_string(&v).as_str())?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for ReplyImage {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "url",
-            "name",
-            "size_bytes",
-            "sizeBytes",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Url,
-            Name,
-            SizeBytes,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "url" => Ok(GeneratedField::Url),
-                            "name" => Ok(GeneratedField::Name),
-                            "sizeBytes" | "size_bytes" => Ok(GeneratedField::SizeBytes),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ReplyImage;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ai.ReplyImage")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ReplyImage, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut url__ = None;
-                let mut name__ = None;
-                let mut size_bytes__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Url => {
-                            if url__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("url"));
-                            }
-                            url__ = map_.next_value()?;
-                        }
-                        GeneratedField::Name => {
-                            if name__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("name"));
-                            }
-                            name__ = map_.next_value()?;
-                        }
-                        GeneratedField::SizeBytes => {
-                            if size_bytes__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("sizeBytes"));
-                            }
-                            size_bytes__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                    }
-                }
-                Ok(ReplyImage {
-                    url: url__,
-                    name: name__,
-                    size_bytes: size_bytes__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.ai.ReplyImage", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for ResetToDefaultReq {

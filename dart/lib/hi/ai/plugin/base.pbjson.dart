@@ -112,24 +112,14 @@ const RunResp$json = {
       '8': {},
       '10': 'conts'
     },
-    {
-      '1': 'reply_images',
-      '3': 2,
-      '4': 3,
-      '5': 11,
-      '6': '.hi.ai.ReplyImage',
-      '8': {},
-      '10': 'replyImages'
-    },
   ],
   '7': {},
 };
 
 /// Descriptor for `RunResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List runRespDescriptor = $convert.base64Decode(
-    'CgdSdW5SZXNwEioKBWNvbnRzGAEgAygLMg4uaGkuYWkuQ29udGVudEIEkLUYA1IFY29udHMSOg'
-    'oMcmVwbHlfaW1hZ2VzGAIgAygLMhEuaGkuYWkuUmVwbHlJbWFnZUIEkLUYA1ILcmVwbHlJbWFn'
-    'ZXM6BJi1GAM=');
+    'CgdSdW5SZXNwEioKBWNvbnRzGAEgAygLMg4uaGkuYWkuQ29udGVudEIEkLUYA1IFY29udHM6BJ'
+    'i1GAM=');
 
 @$core.Deprecated('Use cleanupReqDescriptor instead')
 const CleanupReq$json = {

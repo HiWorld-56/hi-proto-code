@@ -15,8 +15,6 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/struct.pb.dart' as $2;
 
-import 'reply_image.pb.dart' as $3;
-
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 /// ── AI 对话全链路都是私有:会话/上下文/回复只发给发起对话的本人 ──────────────
@@ -1353,14 +1351,12 @@ class ChatResp extends $pb.GeneratedMessage {
     $core.String? result,
     $core.Iterable<ToolCall>? tools,
     $core.Iterable<Content>? question,
-    $core.Iterable<$3.ReplyImage>? replyImages,
   }) {
     final result$ = create();
     if (final_1 != null) result$.final_1 = final_1;
     if (result != null) result$.result = result;
     if (tools != null) result$.tools.addAll(tools);
     if (question != null) result$.question.addAll(question);
-    if (replyImages != null) result$.replyImages.addAll(replyImages);
     return result$;
   }
 
@@ -1383,8 +1379,6 @@ class ChatResp extends $pb.GeneratedMessage {
         subBuilder: ToolCall.create)
     ..pPM<Content>(4, _omitFieldNames ? '' : 'question',
         subBuilder: Content.create)
-    ..pPM<$3.ReplyImage>(5, _omitFieldNames ? '' : 'replyImages',
-        subBuilder: $3.ReplyImage.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1432,17 +1426,12 @@ class ChatResp extends $pb.GeneratedMessage {
   /// 用途:club 把机器人的语音对话记进聊天记录时,用户那句存成文字而不是一段录音 url。
   @$pb.TagNumber(4)
   $pb.PbList<Content> get question => $_getList(3);
-
-  /// 非流式最终回复的待发送图片，按工具取得顺序排列，不依赖 result 中出现 URL。
-  /// 普通文字或含 URL 的 JSON 不会自动变成图片；中途等待客户端工具时不交付图片。
-  @$pb.TagNumber(5)
-  $pb.PbList<$3.ReplyImage> get replyImages => $_getList(4);
 }
 
 /// 流式帧(ConverseStream / ResumeStream)。
 ///
 /// `type` 取值 —— **一条指令帧,其余是内容/进度/回显**:
-///   msg           —— 完整答复及待展示图片，不是分片；图片见 reply_images
+///   msg           —— 答复。⚠️ **是整段,不是分片**(见下)
 ///   end           —— 本条流正常收尾
 ///   info          —— 出错了。⚠️ 流式下错误**走帧不走 grpc status** ——
 ///                    否则客户端收了半截流再拿到 error,两套错误通道并存反而更难排查
@@ -1477,7 +1466,6 @@ class ConverseStreamResp extends $pb.GeneratedMessage {
     $core.String? id,
     $core.Iterable<ToolCall>? tools,
     $core.Iterable<Content>? question,
-    $core.Iterable<$3.ReplyImage>? replyImages,
   }) {
     final result = create();
     if (code != null) result.code = code;
@@ -1486,7 +1474,6 @@ class ConverseStreamResp extends $pb.GeneratedMessage {
     if (id != null) result.id = id;
     if (tools != null) result.tools.addAll(tools);
     if (question != null) result.question.addAll(question);
-    if (replyImages != null) result.replyImages.addAll(replyImages);
     return result;
   }
 
@@ -1511,8 +1498,6 @@ class ConverseStreamResp extends $pb.GeneratedMessage {
         subBuilder: ToolCall.create)
     ..pPM<Content>(6, _omitFieldNames ? '' : 'question',
         subBuilder: Content.create)
-    ..pPM<$3.ReplyImage>(7, _omitFieldNames ? '' : 'replyImages',
-        subBuilder: $3.ReplyImage.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1577,12 +1562,6 @@ class ConverseStreamResp extends $pb.GeneratedMessage {
   /// 同 ChatResp.question。挂在每条流的收尾帧(`msg` 或 `toolCalls`)上,ConverseStream 与 ResumeStream 都带。
   @$pb.TagNumber(6)
   $pb.PbList<Content> get question => $_getList(5);
-
-  /// 仅成功的最终 msg 帧交付，顺序同工具结果；ConverseStream / ResumeStream 共用。
-  /// 与 ChatResp.reply_images 使用同一结构，不依赖 message 中包含图片链接。
-  /// toolCalls、进度及 end 帧不重复携带；客户端应独立渲染图片，message 允许为空。
-  @$pb.TagNumber(7)
-  $pb.PbList<$3.ReplyImage> get replyImages => $_getList(6);
 }
 
 const $core.bool _omitFieldNames =

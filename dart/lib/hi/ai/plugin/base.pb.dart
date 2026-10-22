@@ -17,8 +17,7 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/struct.pb.dart' as $2;
 
 import '../chat.pb.dart' as $3;
-import '../plugin.pb.dart' as $5;
-import '../reply_image.pb.dart' as $4;
+import '../plugin.pb.dart' as $4;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -245,11 +244,9 @@ class RunReq extends $pb.GeneratedMessage {
 class RunResp extends $pb.GeneratedMessage {
   factory RunResp({
     $core.Iterable<$3.Content>? conts,
-    $core.Iterable<$4.ReplyImage>? replyImages,
   }) {
     final result = create();
     if (conts != null) result.conts.addAll(conts);
-    if (replyImages != null) result.replyImages.addAll(replyImages);
     return result;
   }
 
@@ -268,8 +265,6 @@ class RunResp extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..pPM<$3.Content>(1, _omitFieldNames ? '' : 'conts',
         subBuilder: $3.Content.create)
-    ..pPM<$4.ReplyImage>(2, _omitFieldNames ? '' : 'replyImages',
-        subBuilder: $4.ReplyImage.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -292,11 +287,6 @@ class RunResp extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(1)
   $pb.PbList<$3.Content> get conts => $_getList(0);
-
-  /// 仅显式 image_result 返回的图片；stdout 日志、普通字符串和字典仍属于 conts。
-  /// 执行失败或超时不返回本次调用的图片；不包含收信人或生成任务状态。
-  @$pb.TagNumber(2)
-  $pb.PbList<$4.ReplyImage> get replyImages => $_getList(1);
 }
 
 class CleanupReq extends $pb.GeneratedMessage {
@@ -624,7 +614,7 @@ class VerifyLuaReq extends $pb.GeneratedMessage {
     $core.String? script,
     $core.String? uuid,
     $core.String? version,
-    $core.Iterable<$5.LuaDep>? deps,
+    $core.Iterable<$4.LuaDep>? deps,
   }) {
     final result = create();
     if (script != null) result.script = script;
@@ -650,8 +640,8 @@ class VerifyLuaReq extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'script')
     ..aOS(2, _omitFieldNames ? '' : 'uuid')
     ..aOS(3, _omitFieldNames ? '' : 'version')
-    ..pPM<$5.LuaDep>(4, _omitFieldNames ? '' : 'deps',
-        subBuilder: $5.LuaDep.create)
+    ..pPM<$4.LuaDep>(4, _omitFieldNames ? '' : 'deps',
+        subBuilder: $4.LuaDep.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -717,7 +707,7 @@ class VerifyLuaReq extends $pb.GeneratedMessage {
   /// 🔴 更要紧的是**验的必须是发的**:装着依赖 load 一遍,才等于机器人上会发生的事。
   /// 给个空壳 `__native` 也能让验收变绿,但那种绿是假的。
   @$pb.TagNumber(4)
-  $pb.PbList<$5.LuaDep> get deps => $_getList(3);
+  $pb.PbList<$4.LuaDep> get deps => $_getList(3);
 }
 
 class VerifyLuaResp extends $pb.GeneratedMessage {
