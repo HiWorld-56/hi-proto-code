@@ -1650,6 +1650,9 @@ pub struct BinanceOffer {
     /// STATE_DONE 时带:下单的原样结果
     #[prost(message, optional, tag = "8")]
     pub result: ::core::option::Option<BinanceResult>,
+    /// STATE_DONE 且开仓成功时带:自动止盈止损做了什么。不带 = 这张卡没走到这一步(开仓失败,或机器人版本还没有这个功能)。
+    #[prost(message, optional, tag = "9")]
+    pub tpsl: ::core::option::Option<BinanceOfferTpsl>,
 }
 /// Nested message and enum types in `BinanceOffer`.
 pub mod binance_offer {
@@ -1743,6 +1746,100 @@ pub struct BinanceOfferPlan {
     /// 按本机资金下不了这一单的原因(一句话);带了 face 就不给确认按钮,只能取消
     #[prost(string, optional, tag = "10")]
     pub shortfall: ::core::option::Option<::prost::alloc::string::String>,
+    /// ── 自动止盈止损(2026-10-23 用户定;开单卡上一个**默认勾选**的「自动设置止盈止损」)──
+    ///
+    /// 口径(只在币安插件出计划单那一处):R = 主人设的风险承受率(`BinanceRoi.risk_tolerance`)。
+    /// · 止损 = 这一笔亏到它保证金的 R%:合约按收益率 −R%(价格反向 R% ÷ 杠杆);现货按价格下跌 R%。
+    /// · 止盈 = 盈亏比 2:1:合约收益率 +2R%;现货价格上涨 2R%。
+    /// 合约挂的是**整仓**止盈止损(同币安 App 持仓上的「止盈止损」),触发价按**成交后的开仓均价**现算;
+    /// 开单前这个方向已有仓位就不挂(整仓单会盖到原有仓位)。现货在市价买入成交后,按实际买到的数量挂一对 OCO 卖单
+    /// (涨到止盈价限价卖、跌到止损价止损卖),只管这次买到的,不碰原有的币。
+    ///
+    /// 两个百分比要么都带、要么都不带;不带时 `tpsl_unavailable` 说为什么(face / app 把勾选框置灰、写这句话)。
+    ///
+    /// 十进制,不带 %(如 "30")
+    #[prost(string, optional, tag = "11")]
+    pub stop_loss_pct: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "12")]
+    pub take_profit_pct: ::core::option::Option<::prost::alloc::string::String>,
+    /// 估算的触发价:按 `price`(参考价)算、对齐价格精度。真正挂的按成交后的开仓均价(现货:成交均价)重算,行情动了会差一点。
+    #[prost(string, optional, tag = "13")]
+    pub stop_loss_price: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "14")]
+    pub take_profit_price: ::core::option::Option<::prost::alloc::string::String>,
+    /// 不能自动设的原因(一句话):没设风险承受率 / 这个方向已有仓位
+    #[prost(string, optional, tag = "15")]
+    pub tpsl_unavailable: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 自动止盈止损的结果(`BinanceOffer.tpsl`)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceOfferTpsl {
+    #[prost(enumeration = "binance_offer_tpsl::State", optional, tag = "1")]
+    pub state: ::core::option::Option<i32>,
+    /// 实际挂上的止损触发价
+    #[prost(string, optional, tag = "2")]
+    pub stop_loss_price: ::core::option::Option<::prost::alloc::string::String>,
+    /// 实际挂上的止盈价(合约:触发价;现货:限价)
+    #[prost(string, optional, tag = "3")]
+    pub take_profit_price: ::core::option::Option<::prost::alloc::string::String>,
+    /// SKIPPED / FAILED 时的原因,一句话
+    #[prost(string, optional, tag = "4")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
+    /// 挂上了但要提醒的(如止损价在爆仓价之外,可能先爆仓)
+    #[prost(string, optional, tag = "5")]
+    pub warning: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// Nested message and enum types in `BinanceOfferTpsl`.
+pub mod binance_offer_tpsl {
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        Unspecified = 0,
+        /// 止盈、止损都挂上了(价格在下面两个字段)
+        Set = 1,
+        /// 人没勾「自动设置止盈止损」
+        Off = 2,
+        /// 没挂:没设风险承受率 / 这个方向开单前已有仓位(原因在 reason)
+        Skipped = 3,
+        /// 仓开成了,止盈止损没挂上或只挂上一条(原因在 reason)—— **这个仓位可能没有止损**,界面要显眼
+        Failed = 4,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Self::Unspecified => "STATE_UNSPECIFIED",
+                Self::Set => "STATE_SET",
+                Self::Off => "STATE_OFF",
+                Self::Skipped => "STATE_SKIPPED",
+                Self::Failed => "STATE_FAILED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "STATE_SET" => Some(Self::Set),
+                "STATE_OFF" => Some(Self::Off),
+                "STATE_SKIPPED" => Some(Self::Skipped),
+                "STATE_FAILED" => Some(Self::Failed),
+                _ => None,
+            }
+        }
+    }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BinanceOfferReply {
@@ -1754,4 +1851,8 @@ pub struct BinanceOfferReply {
     /// STATE_EXECUTING → 不理(正在下的单收不回来,下完照常变 STATE_DONE 给人看)
     #[prost(bool, optional, tag = "2")]
     pub confirm: ::core::option::Option<bool>,
+    /// 只在 confirm = true 时看:开仓后要不要自动设置止盈止损。**不带 = 要**(卡上默认勾选;老版本 app 回复里没有这一项)。
+    /// 计划单带了 `tpsl_unavailable` 时,带 true 也不设(结果 STATE_SKIPPED)。
+    #[prost(bool, optional, tag = "3")]
+    pub auto_tpsl: ::core::option::Option<bool>,
 }

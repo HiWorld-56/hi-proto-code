@@ -104,6 +104,17 @@ const BinanceOffer$json = {
       '10': 'result',
       '17': true
     },
+    {
+      '1': 'tpsl',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceOfferTpsl',
+      '8': {},
+      '9': 8,
+      '10': 'tpsl',
+      '17': true
+    },
   ],
   '4': [BinanceOffer_State$json],
   '7': {},
@@ -116,6 +127,7 @@ const BinanceOffer$json = {
     {'1': '_expires_at'},
     {'1': '_state'},
     {'1': '_result'},
+    {'1': '_tpsl'},
   ],
 };
 
@@ -141,11 +153,12 @@ final $typed_data.Uint8List binanceOfferDescriptor = $convert.base64Decode(
     'IAEoA0IEkLUYAkgEUgpyZWNlaXZlZEF0iAEBEigKCmV4cGlyZXNfYXQYBiABKANCBJC1GAJIBV'
     'IJZXhwaXJlc0F0iAEBEj8KBXN0YXRlGAcgASgOMh4uaGkuYmluYW5jZS5CaW5hbmNlT2ZmZXIu'
     'U3RhdGVCBJC1GAJIBlIFc3RhdGWIAQESPAoGcmVzdWx0GAggASgLMhkuaGkuYmluYW5jZS5CaW'
-    '5hbmNlUmVzdWx0QgSQtRgCSAdSBnJlc3VsdIgBASJ9CgVTdGF0ZRIVChFTVEFURV9VTlNQRUNJ'
-    'RklFRBAAEhEKDVNUQVRFX1BFTkRJTkcQARITCg9TVEFURV9FWEVDVVRJTkcQAhIOCgpTVEFURV'
-    '9ET05FEAMSEgoOU1RBVEVfQ0FOQ0VMRUQQBBIRCg1TVEFURV9FWFBJUkVEEAU6BJi1GAJCBQoD'
-    'X2lkQgkKB19zb3VyY2VCBwoFX29wZW5CBwoFX3BsYW5CDgoMX3JlY2VpdmVkX2F0Qg0KC19leH'
-    'BpcmVzX2F0QggKBl9zdGF0ZUIJCgdfcmVzdWx0');
+    '5hbmNlUmVzdWx0QgSQtRgCSAdSBnJlc3VsdIgBARI7CgR0cHNsGAkgASgLMhwuaGkuYmluYW5j'
+    'ZS5CaW5hbmNlT2ZmZXJUcHNsQgSQtRgCSAhSBHRwc2yIAQEifQoFU3RhdGUSFQoRU1RBVEVfVU'
+    '5TUEVDSUZJRUQQABIRCg1TVEFURV9QRU5ESU5HEAESEwoPU1RBVEVfRVhFQ1VUSU5HEAISDgoK'
+    'U1RBVEVfRE9ORRADEhIKDlNUQVRFX0NBTkNFTEVEEAQSEQoNU1RBVEVfRVhQSVJFRBAFOgSYtR'
+    'gCQgUKA19pZEIJCgdfc291cmNlQgcKBV9vcGVuQgcKBV9wbGFuQg4KDF9yZWNlaXZlZF9hdEIN'
+    'CgtfZXhwaXJlc19hdEIICgZfc3RhdGVCCQoHX3Jlc3VsdEIHCgVfdHBzbA==');
 
 @$core.Deprecated('Use binanceOfferPlanDescriptor instead')
 const BinanceOfferPlan$json = {
@@ -253,6 +266,56 @@ const BinanceOfferPlan$json = {
       '10': 'shortfall',
       '17': true
     },
+    {
+      '1': 'stop_loss_pct',
+      '3': 11,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 10,
+      '10': 'stopLossPct',
+      '17': true
+    },
+    {
+      '1': 'take_profit_pct',
+      '3': 12,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 11,
+      '10': 'takeProfitPct',
+      '17': true
+    },
+    {
+      '1': 'stop_loss_price',
+      '3': 13,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 12,
+      '10': 'stopLossPrice',
+      '17': true
+    },
+    {
+      '1': 'take_profit_price',
+      '3': 14,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 13,
+      '10': 'takeProfitPrice',
+      '17': true
+    },
+    {
+      '1': 'tpsl_unavailable',
+      '3': 15,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 14,
+      '10': 'tpslUnavailable',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -266,6 +329,11 @@ const BinanceOfferPlan$json = {
     {'1': '_quantity'},
     {'1': '_price'},
     {'1': '_shortfall'},
+    {'1': '_stop_loss_pct'},
+    {'1': '_take_profit_pct'},
+    {'1': '_stop_loss_price'},
+    {'1': '_take_profit_price'},
+    {'1': '_tpsl_unavailable'},
   ],
 };
 
@@ -278,10 +346,107 @@ final $typed_data.Uint8List binanceOfferPlanDescriptor = $convert.base64Decode(
     'EiUKCGxldmVyYWdlGAUgASgNQgSQtRgCSARSCGxldmVyYWdliAEBEh8KBXJhdGlvGAYgASgJQg'
     'SQtRgCSAVSBXJhdGlviAEBEiEKBm1hcmdpbhgHIAEoCUIEkLUYAkgGUgZtYXJnaW6IAQESJQoI'
     'cXVhbnRpdHkYCCABKAlCBJC1GAJIB1IIcXVhbnRpdHmIAQESHwoFcHJpY2UYCSABKAlCBJC1GA'
-    'JICFIFcHJpY2WIAQESJwoJc2hvcnRmYWxsGAogASgJQgSQtRgCSAlSCXNob3J0ZmFsbIgBAToE'
-    'mLUYAkIFCgNfb3BCCQoHX3N5bWJvbEIHCgVfc2lkZUIQCg5fcG9zaXRpb25fc2lkZUILCglfbG'
-    'V2ZXJhZ2VCCAoGX3JhdGlvQgkKB19tYXJnaW5CCwoJX3F1YW50aXR5QggKBl9wcmljZUIMCgpf'
-    'c2hvcnRmYWxs');
+    'JICFIFcHJpY2WIAQESJwoJc2hvcnRmYWxsGAogASgJQgSQtRgCSAlSCXNob3J0ZmFsbIgBARIt'
+    'Cg1zdG9wX2xvc3NfcGN0GAsgASgJQgSQtRgCSApSC3N0b3BMb3NzUGN0iAEBEjEKD3Rha2VfcH'
+    'JvZml0X3BjdBgMIAEoCUIEkLUYAkgLUg10YWtlUHJvZml0UGN0iAEBEjEKD3N0b3BfbG9zc19w'
+    'cmljZRgNIAEoCUIEkLUYAkgMUg1zdG9wTG9zc1ByaWNliAEBEjUKEXRha2VfcHJvZml0X3ByaW'
+    'NlGA4gASgJQgSQtRgCSA1SD3Rha2VQcm9maXRQcmljZYgBARI0ChB0cHNsX3VuYXZhaWxhYmxl'
+    'GA8gASgJQgSQtRgCSA5SD3Rwc2xVbmF2YWlsYWJsZYgBAToEmLUYAkIFCgNfb3BCCQoHX3N5bW'
+    'JvbEIHCgVfc2lkZUIQCg5fcG9zaXRpb25fc2lkZUILCglfbGV2ZXJhZ2VCCAoGX3JhdGlvQgkK'
+    'B19tYXJnaW5CCwoJX3F1YW50aXR5QggKBl9wcmljZUIMCgpfc2hvcnRmYWxsQhAKDl9zdG9wX2'
+    'xvc3NfcGN0QhIKEF90YWtlX3Byb2ZpdF9wY3RCEgoQX3N0b3BfbG9zc19wcmljZUIUChJfdGFr'
+    'ZV9wcm9maXRfcHJpY2VCEwoRX3Rwc2xfdW5hdmFpbGFibGU=');
+
+@$core.Deprecated('Use binanceOfferTpslDescriptor instead')
+const BinanceOfferTpsl$json = {
+  '1': 'BinanceOfferTpsl',
+  '2': [
+    {
+      '1': 'state',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.binance.BinanceOfferTpsl.State',
+      '8': {},
+      '9': 0,
+      '10': 'state',
+      '17': true
+    },
+    {
+      '1': 'stop_loss_price',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'stopLossPrice',
+      '17': true
+    },
+    {
+      '1': 'take_profit_price',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'takeProfitPrice',
+      '17': true
+    },
+    {
+      '1': 'reason',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 3,
+      '10': 'reason',
+      '17': true
+    },
+    {
+      '1': 'warning',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 4,
+      '10': 'warning',
+      '17': true
+    },
+  ],
+  '4': [BinanceOfferTpsl_State$json],
+  '7': {},
+  '8': [
+    {'1': '_state'},
+    {'1': '_stop_loss_price'},
+    {'1': '_take_profit_price'},
+    {'1': '_reason'},
+    {'1': '_warning'},
+  ],
+};
+
+@$core.Deprecated('Use binanceOfferTpslDescriptor instead')
+const BinanceOfferTpsl_State$json = {
+  '1': 'State',
+  '2': [
+    {'1': 'STATE_UNSPECIFIED', '2': 0},
+    {'1': 'STATE_SET', '2': 1},
+    {'1': 'STATE_OFF', '2': 2},
+    {'1': 'STATE_SKIPPED', '2': 3},
+    {'1': 'STATE_FAILED', '2': 4},
+  ],
+};
+
+/// Descriptor for `BinanceOfferTpsl`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List binanceOfferTpslDescriptor = $convert.base64Decode(
+    'ChBCaW5hbmNlT2ZmZXJUcHNsEkMKBXN0YXRlGAEgASgOMiIuaGkuYmluYW5jZS5CaW5hbmNlT2'
+    'ZmZXJUcHNsLlN0YXRlQgSQtRgCSABSBXN0YXRliAEBEjEKD3N0b3BfbG9zc19wcmljZRgCIAEo'
+    'CUIEkLUYAkgBUg1zdG9wTG9zc1ByaWNliAEBEjUKEXRha2VfcHJvZml0X3ByaWNlGAMgASgJQg'
+    'SQtRgCSAJSD3Rha2VQcm9maXRQcmljZYgBARIhCgZyZWFzb24YBCABKAlCBJC1GAJIA1IGcmVh'
+    'c29uiAEBEiMKB3dhcm5pbmcYBSABKAlCBJC1GAJIBFIHd2FybmluZ4gBASJhCgVTdGF0ZRIVCh'
+    'FTVEFURV9VTlNQRUNJRklFRBAAEg0KCVNUQVRFX1NFVBABEg0KCVNUQVRFX09GRhACEhEKDVNU'
+    'QVRFX1NLSVBQRUQQAxIQCgxTVEFURV9GQUlMRUQQBDoEmLUYAkIICgZfc3RhdGVCEgoQX3N0b3'
+    'BfbG9zc19wcmljZUIUChJfdGFrZV9wcm9maXRfcHJpY2VCCQoHX3JlYXNvbkIKCghfd2Fybmlu'
+    'Zw==');
 
 @$core.Deprecated('Use binanceOfferReplyDescriptor instead')
 const BinanceOfferReply$json = {
@@ -307,15 +472,27 @@ const BinanceOfferReply$json = {
       '10': 'confirm',
       '17': true
     },
+    {
+      '1': 'auto_tpsl',
+      '3': 3,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 2,
+      '10': 'autoTpsl',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
     {'1': '_id'},
     {'1': '_confirm'},
+    {'1': '_auto_tpsl'},
   ],
 };
 
 /// Descriptor for `BinanceOfferReply`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List binanceOfferReplyDescriptor = $convert.base64Decode(
     'ChFCaW5hbmNlT2ZmZXJSZXBseRIZCgJpZBgBIAEoCUIEkLUYAkgAUgJpZIgBARIjCgdjb25maX'
-    'JtGAIgASgIQgSQtRgCSAFSB2NvbmZpcm2IAQE6BJi1GAJCBQoDX2lkQgoKCF9jb25maXJt');
+    'JtGAIgASgIQgSQtRgCSAFSB2NvbmZpcm2IAQESJgoJYXV0b190cHNsGAMgASgIQgSQtRgCSAJS'
+    'CGF1dG9UcHNsiAEBOgSYtRgCQgUKA19pZEIKCghfY29uZmlybUIMCgpfYXV0b190cHNs');
