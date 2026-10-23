@@ -285,6 +285,8 @@ class RunResp extends $pb.GeneratedMessage {
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<RunResp>(create);
   static RunResp? _defaultInstance;
 
+  /// 普通工具结果。供模型展示图片时，以 text 返回真实地址和 Markdown 展示要求；
+  /// 不使用 image_url 触发额外识图，也不表示图片已经发给用户。
   @$pb.TagNumber(1)
   $pb.PbList<$3.Content> get conts => $_getList(0);
 }
