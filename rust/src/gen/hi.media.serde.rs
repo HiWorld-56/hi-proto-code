@@ -72,6 +72,153 @@ impl<'de> serde::Deserialize<'de> for AccountKind {
         deserializer.deserialize_any(GeneratedVisitor)
     }
 }
+impl serde::Serialize for ApiKeyInfo {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.value.is_some() {
+            len += 1;
+        }
+        if self.did.is_some() {
+            len += 1;
+        }
+        if self.note.is_some() {
+            len += 1;
+        }
+        if self.created_at.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.ApiKeyInfo", len)?;
+        if let Some(v) = self.value.as_ref() {
+            struct_ser.serialize_field("value", v)?;
+        }
+        if let Some(v) = self.did.as_ref() {
+            struct_ser.serialize_field("did", v)?;
+        }
+        if let Some(v) = self.note.as_ref() {
+            struct_ser.serialize_field("note", v)?;
+        }
+        if let Some(v) = self.created_at.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("createdAt", ToString::to_string(&v).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ApiKeyInfo {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "value",
+            "did",
+            "note",
+            "created_at",
+            "createdAt",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Value,
+            Did,
+            Note,
+            CreatedAt,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "value" => Ok(GeneratedField::Value),
+                            "did" => Ok(GeneratedField::Did),
+                            "note" => Ok(GeneratedField::Note),
+                            "createdAt" | "created_at" => Ok(GeneratedField::CreatedAt),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ApiKeyInfo;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.ApiKeyInfo")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ApiKeyInfo, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut value__ = None;
+                let mut did__ = None;
+                let mut note__ = None;
+                let mut created_at__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Value => {
+                            if value__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("value"));
+                            }
+                            value__ = map_.next_value()?;
+                        }
+                        GeneratedField::Did => {
+                            if did__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("did"));
+                            }
+                            did__ = map_.next_value()?;
+                        }
+                        GeneratedField::Note => {
+                            if note__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("note"));
+                            }
+                            note__ = map_.next_value()?;
+                        }
+                        GeneratedField::CreatedAt => {
+                            if created_at__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("createdAt"));
+                            }
+                            created_at__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(ApiKeyInfo {
+                    value: value__,
+                    did: did__,
+                    note: note__,
+                    created_at: created_at__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.ApiKeyInfo", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for CancelTaskReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -913,6 +1060,97 @@ impl<'de> serde::Deserialize<'de> for CreateAdvancedReplaceTaskReq {
             }
         }
         deserializer.deserialize_struct("hi.media.CreateAdvancedReplaceTaskReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for CreateApiKeyResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.info.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.CreateApiKeyResp", len)?;
+        if let Some(v) = self.info.as_ref() {
+            struct_ser.serialize_field("info", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for CreateApiKeyResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "info",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Info,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "info" => Ok(GeneratedField::Info),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = CreateApiKeyResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.CreateApiKeyResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateApiKeyResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut info__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Info => {
+                            if info__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("info"));
+                            }
+                            info__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(CreateApiKeyResp {
+                    info: info__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.CreateApiKeyResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for CreateCharacterTaskReq {
@@ -3084,6 +3322,98 @@ impl<'de> serde::Deserialize<'de> for DecimalOptionConfig {
         deserializer.deserialize_struct("hi.media.DecimalOptionConfig", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for DeleteApiKeyReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.api_key.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.DeleteApiKeyReq", len)?;
+        if let Some(v) = self.api_key.as_ref() {
+            struct_ser.serialize_field("apiKey", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for DeleteApiKeyReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "api_key",
+            "apiKey",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            ApiKey,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "apiKey" | "api_key" => Ok(GeneratedField::ApiKey),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = DeleteApiKeyReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.DeleteApiKeyReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<DeleteApiKeyReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut api_key__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::ApiKey => {
+                            if api_key__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("apiKey"));
+                            }
+                            api_key__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(DeleteApiKeyReq {
+                    api_key: api_key__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.DeleteApiKeyReq", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for DeleteFileReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -3450,6 +3780,115 @@ impl<'de> serde::Deserialize<'de> for DeleteTaskReq {
             }
         }
         deserializer.deserialize_struct("hi.media.DeleteTaskReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for EditApiKeyReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.api_key.is_some() {
+            len += 1;
+        }
+        if self.note.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.EditApiKeyReq", len)?;
+        if let Some(v) = self.api_key.as_ref() {
+            struct_ser.serialize_field("apiKey", v)?;
+        }
+        if let Some(v) = self.note.as_ref() {
+            struct_ser.serialize_field("note", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for EditApiKeyReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "api_key",
+            "apiKey",
+            "note",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            ApiKey,
+            Note,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "apiKey" | "api_key" => Ok(GeneratedField::ApiKey),
+                            "note" => Ok(GeneratedField::Note),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = EditApiKeyReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.EditApiKeyReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<EditApiKeyReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut api_key__ = None;
+                let mut note__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::ApiKey => {
+                            if api_key__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("apiKey"));
+                            }
+                            api_key__ = map_.next_value()?;
+                        }
+                        GeneratedField::Note => {
+                            if note__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("note"));
+                            }
+                            note__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(EditApiKeyReq {
+                    api_key: api_key__,
+                    note: note__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.EditApiKeyReq", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for EmailCodePurpose {
@@ -8487,6 +8926,116 @@ impl<'de> serde::Deserialize<'de> for InviteCodeVerifyReq {
             }
         }
         deserializer.deserialize_struct("hi.media.InviteCodeVerifyReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ListApiKeysResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.total.is_some() {
+            len += 1;
+        }
+        if !self.infos.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.media.ListApiKeysResp", len)?;
+        if let Some(v) = self.total.as_ref() {
+            struct_ser.serialize_field("total", v)?;
+        }
+        if !self.infos.is_empty() {
+            struct_ser.serialize_field("infos", &self.infos)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ListApiKeysResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "total",
+            "infos",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Total,
+            Infos,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "total" => Ok(GeneratedField::Total),
+                            "infos" => Ok(GeneratedField::Infos),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ListApiKeysResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.media.ListApiKeysResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListApiKeysResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut total__ = None;
+                let mut infos__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Total => {
+                            if total__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("total"));
+                            }
+                            total__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Infos => {
+                            if infos__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("infos"));
+                            }
+                            infos__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(ListApiKeysResp {
+                    total: total__,
+                    infos: infos__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.media.ListApiKeysResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for ListFilesReq {

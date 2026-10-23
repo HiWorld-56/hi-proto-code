@@ -552,7 +552,7 @@ pub struct ChatResp {
 /// 流式帧(ConverseStream / ResumeStream)。
 ///
 /// `type` 取值 —— **一条指令帧,其余是内容/进度/回显**:
-/// msg           —— 答复。⚠️ **是整段,不是分片**(见下)
+/// msg           —— 完整回答文字，不是分片；图片使用 message 中的 Markdown
 /// end           —— 本条流正常收尾
 /// info          —— 出错了。⚠️ 流式下错误**走帧不走 grpc status** ——
 /// 否则客户端收了半截流再拿到 error,两套错误通道并存反而更难排查

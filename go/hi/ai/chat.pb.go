@@ -1073,7 +1073,7 @@ func (x *ChatResp) GetQuestion() []*Content {
 //
 // `type` 取值 —— **一条指令帧,其余是内容/进度/回显**:
 //
-//	msg           —— 答复。⚠️ **是整段,不是分片**(见下)
+//	msg           —— 完整回答文字，不是分片；图片使用 message 中的 Markdown
 //	end           —— 本条流正常收尾
 //	info          —— 出错了。⚠️ 流式下错误**走帧不走 grpc status** ——
 //	                 否则客户端收了半截流再拿到 error,两套错误通道并存反而更难排查
@@ -1423,14 +1423,14 @@ const file_hi_ai_chat_proto_rawDesc = "" +
 	"\n" +
 	"_arguments:\x04\x98\xb5\x18\x03B\x05\n" +
 	"\x03_idB\a\n" +
-	"\x05_type\"\xc8\x01\n" +
+	"\x05_type\"\xdc\x01\n" +
 	"\bChatResp\x12\x1f\n" +
 	"\x05final\x18\x01 \x01(\bB\x04\x90\xb5\x18\x03H\x00R\x05final\x88\x01\x01\x12!\n" +
 	"\x06result\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x06result\x88\x01\x01\x12+\n" +
 	"\x05tools\x18\x03 \x03(\v2\x0f.hi.ai.ToolCallB\x04\x90\xb5\x18\x03R\x05tools\x120\n" +
 	"\bquestion\x18\x04 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\bquestion:\x04\x98\xb5\x18\x03B\b\n" +
 	"\x06_finalB\t\n" +
-	"\a_result\"\x9c\x02\n" +
+	"\a_resultJ\x04\b\x05\x10\x06R\freply_images\"\xb0\x02\n" +
 	"\x12ConverseStreamResp\x12\x1d\n" +
 	"\x04code\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x04code\x88\x01\x01\x12\x1d\n" +
 	"\x04type\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x04type\x88\x01\x01\x12#\n" +
@@ -1442,7 +1442,7 @@ const file_hi_ai_chat_proto_rawDesc = "" +
 	"\x05_typeB\n" +
 	"\n" +
 	"\b_messageB\x05\n" +
-	"\x03_id2\xa2\x04\n" +
+	"\x03_idJ\x04\b\a\x10\bR\freply_images2\xa2\x04\n" +
 	"\x04Chat\x12B\n" +
 	"\n" +
 	"NewSession\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.NewSessionResp\"\x05\x8a\xb5\x18\x01\x03\x12@\n" +

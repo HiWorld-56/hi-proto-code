@@ -225,8 +225,10 @@ func (x *RunReq) GetMaster() string {
 }
 
 type RunResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Conts         []*ai.Content          `protobuf:"bytes,1,rep,name=conts,proto3" json:"conts,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 普通工具结果。供模型展示图片时，以 text 返回真实地址和 Markdown 展示要求；
+	// 不使用 image_url 触发额外识图，也不表示图片已经发给用户。
+	Conts         []*ai.Content `protobuf:"bytes,1,rep,name=conts,proto3" json:"conts,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1158,9 +1160,9 @@ const file_hi_ai_plugin_base_proto_rawDesc = "" +
 	"\x05_uuidB\v\n" +
 	"\t_functionB\b\n" +
 	"\x06_askerB\t\n" +
-	"\a_master\";\n" +
+	"\a_master\"O\n" +
 	"\aRunResp\x12*\n" +
-	"\x05conts\x18\x01 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\x05conts:\x04\x98\xb5\x18\x03\"P\n" +
+	"\x05conts\x18\x01 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\x05conts:\x04\x98\xb5\x18\x03J\x04\b\x02\x10\x03R\freply_images\"P\n" +
 	"\n" +
 	"CleanupReq\x12-\n" +
 	"\x10code_archive_url\x18\x01 \x01(\tH\x00R\x0ecodeArchiveUrl\x88\x01\x01B\x13\n" +
