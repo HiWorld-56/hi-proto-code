@@ -556,9 +556,13 @@ type VideoParameterConfig struct {
 	//
 	//	*VideoParameterConfig_ImageDimensions
 	//	*VideoParameterConfig_ImageResolution
-	ImageSize     isVideoParameterConfig_ImageSize `protobuf_oneof:"image_size"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	ImageSize isVideoParameterConfig_ImageSize `protobuf_oneof:"image_size"`
+	// 算力预算，单位「百万像素 × 帧数」（像素量 × 时长秒 × 帧率），规范十进制字符串。
+	// 只有带像素量与时长的视频功能返回；三者乘积超过它的组合提交会被拒（InvalidArgument），
+	// 客户端可据此禁用会超的选项。未返回表示不限制组合。
+	MaxMegapixelFrames *string `protobuf:"bytes,9,opt,name=max_megapixel_frames,json=maxMegapixelFrames,proto3,oneof" json:"max_megapixel_frames,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
 }
 
 func (x *VideoParameterConfig) Reset() {
@@ -656,6 +660,13 @@ func (x *VideoParameterConfig) GetImageResolution() *ImageResolutionConfig {
 		}
 	}
 	return nil
+}
+
+func (x *VideoParameterConfig) GetMaxMegapixelFrames() string {
+	if x != nil && x.MaxMegapixelFrames != nil {
+		return *x.MaxMegapixelFrames
+	}
+	return ""
 }
 
 type isVideoParameterConfig_ImageSize interface {
@@ -1266,7 +1277,7 @@ const file_hi_media_function_proto_rawDesc = "" +
 	"\n" +
 	"megapixels\x18\x02 \x01(\v2\x1d.hi.media.DecimalOptionConfigB\n" +
 	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x01R\n" +
-	"megapixels:\x04\x98\xb5\x18\x01\"\xe2\x04\n" +
+	"megapixels:\x04\x98\xb5\x18\x01\"\xb8\x05\n" +
 	"\x14VideoParameterConfig\x121\n" +
 	"\x06prompt\x18\x01 \x01(\v2\x13.hi.media.TextLimitB\x04\x90\xb5\x18\x01R\x06prompt\x12E\n" +
 	"\faspect_ratio\x18\x02 \x01(\v2\x1c.hi.media.StringOptionConfigB\x04\x90\xb5\x18\x01R\vaspectRatio\x12C\n" +
@@ -1278,9 +1289,11 @@ const file_hi_media_function_proto_rawDesc = "" +
 	"frame_rate\x18\x05 \x01(\v2\x19.hi.media.FrameRateConfigB\x04\x90\xb5\x18\x01R\tframeRate\x12D\n" +
 	"\finput_images\x18\x06 \x01(\v2\x1b.hi.media.InputImagesConfigB\x04\x90\xb5\x18\x01R\vinputImages\x12R\n" +
 	"\x10image_dimensions\x18\a \x01(\v2\x1f.hi.media.ImageDimensionsConfigB\x04\x90\xb5\x18\x01H\x00R\x0fimageDimensions\x12R\n" +
-	"\x10image_resolution\x18\b \x01(\v2\x1f.hi.media.ImageResolutionConfigB\x04\x90\xb5\x18\x01H\x00R\x0fimageResolution:\x04\x98\xb5\x18\x01B\f\n" +
+	"\x10image_resolution\x18\b \x01(\v2\x1f.hi.media.ImageResolutionConfigB\x04\x90\xb5\x18\x01H\x00R\x0fimageResolution\x12;\n" +
+	"\x14max_megapixel_frames\x18\t \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x12maxMegapixelFrames\x88\x01\x01:\x04\x98\xb5\x18\x01B\f\n" +
 	"\n" +
-	"image_size\"\xcc\x02\n" +
+	"image_sizeB\x17\n" +
+	"\x15_max_megapixel_frames\"\xcc\x02\n" +
 	"\x0fFunctionSummary\x12*\n" +
 	"\vfunction_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\n" +
 	"functionId\x88\x01\x01\x12,\n" +

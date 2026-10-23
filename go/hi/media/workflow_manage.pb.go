@@ -691,8 +691,13 @@ type ImageToVideoWorkflowConfig struct {
 	Megapixels      *WorkflowDecimalOptionInput `protobuf:"bytes,6,opt,name=megapixels,proto3" json:"megapixels,omitempty"`
 	DurationSeconds *WorkflowIntRangeInput      `protobuf:"bytes,7,opt,name=duration_seconds,json=durationSeconds,proto3" json:"duration_seconds,omitempty"`
 	FrameRate       *WorkflowFrameRateInput     `protobuf:"bytes,8,opt,name=frame_rate,json=frameRate,proto3" json:"frame_rate,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	// 算力预算，单位「百万像素 × 帧数」（像素量 × 时长秒 × 帧率），规范十进制字符串，如 "576"。
+	// 用户提交时像素量、时长、帧率三者乘积超过它即被拒（InvalidArgument）；
+	// 用来挡住单项都合法、组合起来必然超时或显存溢出的参数。proto 不标必填以便读出存量配置，
+	// 保存与校验工作流时缺失、非正数或最小组合即超预算都报错。
+	MaxMegapixelFrames *string `protobuf:"bytes,9,opt,name=max_megapixel_frames,json=maxMegapixelFrames,proto3,oneof" json:"max_megapixel_frames,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
 }
 
 func (x *ImageToVideoWorkflowConfig) Reset() {
@@ -781,6 +786,13 @@ func (x *ImageToVideoWorkflowConfig) GetFrameRate() *WorkflowFrameRateInput {
 	return nil
 }
 
+func (x *ImageToVideoWorkflowConfig) GetMaxMegapixelFrames() string {
+	if x != nil && x.MaxMegapixelFrames != nil {
+		return *x.MaxMegapixelFrames
+	}
+	return ""
+}
+
 // 文生视频执行配置，对应功能 video.txt2vid。
 type TextToVideoWorkflowConfig struct {
 	state  protoimpl.MessageState `protogen:"open.v1"`
@@ -793,8 +805,13 @@ type TextToVideoWorkflowConfig struct {
 	Megapixels      *WorkflowDecimalOptionInput `protobuf:"bytes,5,opt,name=megapixels,proto3" json:"megapixels,omitempty"`
 	DurationSeconds *WorkflowIntRangeInput      `protobuf:"bytes,6,opt,name=duration_seconds,json=durationSeconds,proto3" json:"duration_seconds,omitempty"`
 	FrameRate       *WorkflowFrameRateInput     `protobuf:"bytes,7,opt,name=frame_rate,json=frameRate,proto3" json:"frame_rate,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	// 算力预算，单位「百万像素 × 帧数」（像素量 × 时长秒 × 帧率），规范十进制字符串，如 "576"。
+	// 用户提交时像素量、时长、帧率三者乘积超过它即被拒（InvalidArgument）；
+	// 用来挡住单项都合法、组合起来必然超时或显存溢出的参数。proto 不标必填以便读出存量配置，
+	// 保存与校验工作流时缺失、非正数或最小组合即超预算都报错。
+	MaxMegapixelFrames *string `protobuf:"bytes,8,opt,name=max_megapixel_frames,json=maxMegapixelFrames,proto3,oneof" json:"max_megapixel_frames,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
 }
 
 func (x *TextToVideoWorkflowConfig) Reset() {
@@ -874,6 +891,13 @@ func (x *TextToVideoWorkflowConfig) GetFrameRate() *WorkflowFrameRateInput {
 		return x.FrameRate
 	}
 	return nil
+}
+
+func (x *TextToVideoWorkflowConfig) GetMaxMegapixelFrames() string {
+	if x != nil && x.MaxMegapixelFrames != nil {
+		return *x.MaxMegapixelFrames
+	}
+	return ""
 }
 
 // 文生图像素宽高绑定；两者的范围与默认值均为 16 的倍数，校验阶段核对。
@@ -1553,9 +1577,14 @@ type FirstLastFrameWorkflowConfig struct {
 	// 初始默认 24，可选或固定；固定值须与执行图一致。
 	FrameRate *WorkflowFrameRateInput `protobuf:"bytes,11,opt,name=frame_rate,json=frameRate,proto3" json:"frame_rate,omitempty"`
 	// 一个或多个主生成 seed 输入，全部写入同一个后端任务随机值。
-	Seeds         []*WorkflowInputBinding `protobuf:"bytes,12,rep,name=seeds,proto3" json:"seeds,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	Seeds []*WorkflowInputBinding `protobuf:"bytes,12,rep,name=seeds,proto3" json:"seeds,omitempty"`
+	// 算力预算，单位「百万像素 × 帧数」（像素量 × 时长秒 × 帧率），规范十进制字符串，如 "576"。
+	// 用户提交时像素量、时长、帧率三者乘积超过它即被拒（InvalidArgument）；
+	// 用来挡住单项都合法、组合起来必然超时或显存溢出的参数。proto 不标必填以便读出存量配置，
+	// 保存与校验工作流时缺失、非正数或最小组合即超预算都报错。
+	MaxMegapixelFrames *string `protobuf:"bytes,13,opt,name=max_megapixel_frames,json=maxMegapixelFrames,proto3,oneof" json:"max_megapixel_frames,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
 }
 
 func (x *FirstLastFrameWorkflowConfig) Reset() {
@@ -1656,6 +1685,13 @@ func (x *FirstLastFrameWorkflowConfig) GetSeeds() []*WorkflowInputBinding {
 		return x.Seeds
 	}
 	return nil
+}
+
+func (x *FirstLastFrameWorkflowConfig) GetMaxMegapixelFrames() string {
+	if x != nil && x.MaxMegapixelFrames != nil {
+		return *x.MaxMegapixelFrames
+	}
+	return ""
 }
 
 // 模仿生成配置；当前为深度控制，不提供用户输出尺寸、时长或帧率参数。
@@ -1831,8 +1867,14 @@ type MiniMaxVideoWorkflowConfig struct {
 	Seeds           []*WorkflowInputBinding `protobuf:"bytes,8,rep,name=seeds,proto3" json:"seeds,omitempty"`
 	// 仅高级替换必填，其他两类不得配置；用户原文传 SAM，固定最多 200 个码点。
 	RegionDescription *WorkflowInputBinding `protobuf:"bytes,9,opt,name=region_description,json=regionDescription,proto3" json:"region_description,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	// 算力预算，单位「百万像素 × 帧数」（像素量 × 时长秒 × 帧率），规范十进制字符串，如 "576"。
+	// 用户提交时像素量、时长、帧率三者乘积超过它即被拒（InvalidArgument）；
+	// 用来挡住单项都合法、组合起来必然超时或显存溢出的参数。proto 不标必填以便读出存量配置，
+	// 保存与校验工作流时缺失、非正数或最小组合即超预算都报错。
+	// MiniMax 固定 24 FPS，按 24 计算。
+	MaxMegapixelFrames *string `protobuf:"bytes,10,opt,name=max_megapixel_frames,json=maxMegapixelFrames,proto3,oneof" json:"max_megapixel_frames,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
 }
 
 func (x *MiniMaxVideoWorkflowConfig) Reset() {
@@ -1926,6 +1968,13 @@ func (x *MiniMaxVideoWorkflowConfig) GetRegionDescription() *WorkflowInputBindin
 		return x.RegionDescription
 	}
 	return nil
+}
+
+func (x *MiniMaxVideoWorkflowConfig) GetMaxMegapixelFrames() string {
+	if x != nil && x.MaxMegapixelFrames != nil {
+		return *x.MaxMegapixelFrames
+	}
+	return ""
 }
 
 // 完整执行配置；功能配置必须与工作流归属一致，保存时不建立产物预占。
@@ -3914,7 +3963,7 @@ const file_hi_media_workflow_manage_proto_rawDesc = "" +
 	"selectable\x12.\n" +
 	"\vfixed_value\x18\x02 \x01(\x05B\v\xbaH\x04\x1a\x02 \x00\x90\xb5\x18\x03H\x00R\n" +
 	"fixedValue:\x04\x98\xb5\x18\x03B\r\n" +
-	"\x04mode\x12\x05\xbaH\x02\b\x01\"\xa6\x05\n" +
+	"\x04mode\x12\x05\xbaH\x02\b\x01\"\xfc\x05\n" +
 	"\x1aImageToVideoWorkflowConfig\x12K\n" +
 	"\vinput_image\x18\x01 \x01(\v2\x1e.hi.media.WorkflowInputBindingB\n" +
 	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\n" +
@@ -3933,8 +3982,10 @@ const file_hi_media_workflow_manage_proto_rawDesc = "" +
 	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\x0fdurationSeconds\x12K\n" +
 	"\n" +
 	"frame_rate\x18\b \x01(\v2 .hi.media.WorkflowFrameRateInputB\n" +
-	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\tframeRate:\x04\x98\xb5\x18\x03B\x14\n" +
-	"\x12_prompt_max_length\"\xd8\x04\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\tframeRate\x12;\n" +
+	"\x14max_megapixel_frames\x18\t \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x12maxMegapixelFrames\x88\x01\x01:\x04\x98\xb5\x18\x03B\x14\n" +
+	"\x12_prompt_max_lengthB\x17\n" +
+	"\x15_max_megapixel_frames\"\xae\x05\n" +
 	"\x19TextToVideoWorkflowConfig\x12B\n" +
 	"\x06prompt\x18\x01 \x01(\v2\x1e.hi.media.WorkflowInputBindingB\n" +
 	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\x06prompt\x12?\n" +
@@ -3950,8 +4001,10 @@ const file_hi_media_workflow_manage_proto_rawDesc = "" +
 	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\x0fdurationSeconds\x12K\n" +
 	"\n" +
 	"frame_rate\x18\a \x01(\v2 .hi.media.WorkflowFrameRateInputB\n" +
-	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\tframeRate:\x04\x98\xb5\x18\x03B\x14\n" +
-	"\x12_prompt_max_length\"\xa7\x01\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\tframeRate\x12;\n" +
+	"\x14max_megapixel_frames\x18\b \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x12maxMegapixelFrames\x88\x01\x01:\x04\x98\xb5\x18\x03B\x14\n" +
+	"\x12_prompt_max_lengthB\x17\n" +
+	"\x15_max_megapixel_frames\"\xa7\x01\n" +
 	"\x17WorkflowImageDimensions\x12A\n" +
 	"\x05width\x18\x01 \x01(\v2\x1f.hi.media.WorkflowIntRangeInputB\n" +
 	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\x05width\x12C\n" +
@@ -4023,7 +4076,7 @@ const file_hi_media_workflow_manage_proto_rawDesc = "" +
 	"\x04seed\x18\x04 \x01(\v2\x1e.hi.media.WorkflowInputBindingB\n" +
 	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\x04seed\x12?\n" +
 	"\x11prompt_max_length\x18\x05 \x01(\rB\x0e\xbaH\a\xc8\x01\x01*\x02 \x00\x90\xb5\x18\x03H\x00R\x0fpromptMaxLength\x88\x01\x01:\x04\x98\xb5\x18\x03B\x14\n" +
-	"\x12_prompt_max_length\"\xb7\x06\n" +
+	"\x12_prompt_max_length\"\x8d\a\n" +
 	"\x1cFirstLastFrameWorkflowConfig\x12K\n" +
 	"\vfirst_frame\x18\x01 \x01(\v2\x1e.hi.media.WorkflowInputBindingB\n" +
 	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\n" +
@@ -4047,8 +4100,10 @@ const file_hi_media_workflow_manage_proto_rawDesc = "" +
 	"\n" +
 	"frame_rate\x18\v \x01(\v2 .hi.media.WorkflowFrameRateInputB\n" +
 	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\tframeRate\x12B\n" +
-	"\x05seeds\x18\f \x03(\v2\x1e.hi.media.WorkflowInputBindingB\f\xbaH\x05\x92\x01\x02\b\x01\x90\xb5\x18\x03R\x05seeds:\x04\x98\xb5\x18\x03B\x14\n" +
-	"\x12_prompt_max_length\"\xc2\x04\n" +
+	"\x05seeds\x18\f \x03(\v2\x1e.hi.media.WorkflowInputBindingB\f\xbaH\x05\x92\x01\x02\b\x01\x90\xb5\x18\x03R\x05seeds\x12;\n" +
+	"\x14max_megapixel_frames\x18\r \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x12maxMegapixelFrames\x88\x01\x01:\x04\x98\xb5\x18\x03B\x14\n" +
+	"\x12_prompt_max_lengthB\x17\n" +
+	"\x15_max_megapixel_frames\"\xc2\x04\n" +
 	"\x1cMotionTransferWorkflowConfig\x12K\n" +
 	"\vinput_video\x18\x01 \x01(\v2\x1e.hi.media.WorkflowInputBindingB\n" +
 	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\n" +
@@ -4068,7 +4123,7 @@ const file_hi_media_workflow_manage_proto_rawDesc = "" +
 	"\x10template_node_id\x18\x01 \x01(\tB\x0e\xbaH\a\xc8\x01\x01r\x02\x10\x01\x90\xb5\x18\x03H\x00R\x0etemplateNodeId\x88\x01\x01\x12?\n" +
 	"\x11reference_node_id\x18\x02 \x01(\tB\x0e\xbaH\a\xc8\x01\x01r\x02\x10\x01\x90\xb5\x18\x03H\x01R\x0freferenceNodeId\x88\x01\x01:\x04\x98\xb5\x18\x03B\x13\n" +
 	"\x11_template_node_idB\x14\n" +
-	"\x12_reference_node_id\"\x82\x06\n" +
+	"\x12_reference_node_id\"\xd8\x06\n" +
 	"\x1aMiniMaxVideoWorkflowConfig\x12K\n" +
 	"\vinput_video\x18\x01 \x01(\v2\x1e.hi.media.WorkflowInputBindingB\n" +
 	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\n" +
@@ -4087,8 +4142,11 @@ const file_hi_media_workflow_manage_proto_rawDesc = "" +
 	"\x10duration_seconds\x18\a \x01(\v2\x1f.hi.media.WorkflowIntRangeInputB\n" +
 	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\x0fdurationSeconds\x12B\n" +
 	"\x05seeds\x18\b \x03(\v2\x1e.hi.media.WorkflowInputBindingB\f\xbaH\x05\x92\x01\x02\b\x01\x90\xb5\x18\x03R\x05seeds\x12S\n" +
-	"\x12region_description\x18\t \x01(\v2\x1e.hi.media.WorkflowInputBindingB\x04\x90\xb5\x18\x03R\x11regionDescription:\x04\x98\xb5\x18\x03B\x14\n" +
-	"\x12_prompt_max_length\"\xd7\v\n" +
+	"\x12region_description\x18\t \x01(\v2\x1e.hi.media.WorkflowInputBindingB\x04\x90\xb5\x18\x03R\x11regionDescription\x12;\n" +
+	"\x14max_megapixel_frames\x18\n" +
+	" \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x12maxMegapixelFrames\x88\x01\x01:\x04\x98\xb5\x18\x03B\x14\n" +
+	"\x12_prompt_max_lengthB\x17\n" +
+	"\x15_max_megapixel_frames\"\xd7\v\n" +
 	"\x17WorkflowExecutionConfig\x12R\n" +
 	"\x0eimage_to_video\x18\x01 \x01(\v2$.hi.media.ImageToVideoWorkflowConfigB\x04\x90\xb5\x18\x03H\x00R\fimageToVideo\x12O\n" +
 	"\rtext_to_video\x18\x02 \x01(\v2#.hi.media.TextToVideoWorkflowConfigB\x04\x90\xb5\x18\x03H\x00R\vtextToVideo\x12O\n" +

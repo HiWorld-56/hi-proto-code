@@ -411,10 +411,21 @@ const VideoParameterConfig$json = {
       '9': 0,
       '10': 'imageResolution'
     },
+    {
+      '1': 'max_megapixel_frames',
+      '3': 9,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'maxMegapixelFrames',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
     {'1': 'image_size'},
+    {'1': '_max_megapixel_frames'},
   ],
 };
 
@@ -430,8 +441,9 @@ final $typed_data.Uint8List videoParameterConfigDescriptor = $convert.base64Deco
     'B1dEltYWdlc0NvbmZpZ0IEkLUYAVILaW5wdXRJbWFnZXMSUgoQaW1hZ2VfZGltZW5zaW9ucxgH'
     'IAEoCzIfLmhpLm1lZGlhLkltYWdlRGltZW5zaW9uc0NvbmZpZ0IEkLUYAUgAUg9pbWFnZURpbW'
     'Vuc2lvbnMSUgoQaW1hZ2VfcmVzb2x1dGlvbhgIIAEoCzIfLmhpLm1lZGlhLkltYWdlUmVzb2x1'
-    'dGlvbkNvbmZpZ0IEkLUYAUgAUg9pbWFnZVJlc29sdXRpb246BJi1GAFCDAoKaW1hZ2Vfc2l6ZQ'
-    '==');
+    'dGlvbkNvbmZpZ0IEkLUYAUgAUg9pbWFnZVJlc29sdXRpb24SOwoUbWF4X21lZ2FwaXhlbF9mcm'
+    'FtZXMYCSABKAlCBJC1GAFIAVISbWF4TWVnYXBpeGVsRnJhbWVziAEBOgSYtRgBQgwKCmltYWdl'
+    'X3NpemVCFwoVX21heF9tZWdhcGl4ZWxfZnJhbWVz');
 
 @$core.Deprecated('Use functionSummaryDescriptor instead')
 const FunctionSummary$json = {

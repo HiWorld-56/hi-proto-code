@@ -623,6 +623,7 @@ class ImageToVideoWorkflowConfig extends $pb.GeneratedMessage {
     WorkflowDecimalOptionInput? megapixels,
     WorkflowIntRangeInput? durationSeconds,
     WorkflowFrameRateInput? frameRate,
+    $core.String? maxMegapixelFrames,
   }) {
     final result = create();
     if (inputImage != null) result.inputImage = inputImage;
@@ -633,6 +634,8 @@ class ImageToVideoWorkflowConfig extends $pb.GeneratedMessage {
     if (megapixels != null) result.megapixels = megapixels;
     if (durationSeconds != null) result.durationSeconds = durationSeconds;
     if (frameRate != null) result.frameRate = frameRate;
+    if (maxMegapixelFrames != null)
+      result.maxMegapixelFrames = maxMegapixelFrames;
     return result;
   }
 
@@ -665,6 +668,7 @@ class ImageToVideoWorkflowConfig extends $pb.GeneratedMessage {
         subBuilder: WorkflowIntRangeInput.create)
     ..aOM<WorkflowFrameRateInput>(8, _omitFieldNames ? '' : 'frameRate',
         subBuilder: WorkflowFrameRateInput.create)
+    ..aOS(9, _omitFieldNames ? '' : 'maxMegapixelFrames')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -775,6 +779,19 @@ class ImageToVideoWorkflowConfig extends $pb.GeneratedMessage {
   void clearFrameRate() => $_clearField(8);
   @$pb.TagNumber(8)
   WorkflowFrameRateInput ensureFrameRate() => $_ensure(7);
+
+  /// 算力预算，单位「百万像素 × 帧数」（像素量 × 时长秒 × 帧率），规范十进制字符串，如 "576"。
+  /// 用户提交时像素量、时长、帧率三者乘积超过它即被拒（InvalidArgument）；
+  /// 用来挡住单项都合法、组合起来必然超时或显存溢出的参数。proto 不标必填以便读出存量配置，
+  /// 保存与校验工作流时缺失、非正数或最小组合即超预算都报错。
+  @$pb.TagNumber(9)
+  $core.String get maxMegapixelFrames => $_getSZ(8);
+  @$pb.TagNumber(9)
+  set maxMegapixelFrames($core.String value) => $_setString(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasMaxMegapixelFrames() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearMaxMegapixelFrames() => $_clearField(9);
 }
 
 /// 文生视频执行配置，对应功能 video.txt2vid。
@@ -787,6 +804,7 @@ class TextToVideoWorkflowConfig extends $pb.GeneratedMessage {
     WorkflowDecimalOptionInput? megapixels,
     WorkflowIntRangeInput? durationSeconds,
     WorkflowFrameRateInput? frameRate,
+    $core.String? maxMegapixelFrames,
   }) {
     final result = create();
     if (prompt != null) result.prompt = prompt;
@@ -796,6 +814,8 @@ class TextToVideoWorkflowConfig extends $pb.GeneratedMessage {
     if (megapixels != null) result.megapixels = megapixels;
     if (durationSeconds != null) result.durationSeconds = durationSeconds;
     if (frameRate != null) result.frameRate = frameRate;
+    if (maxMegapixelFrames != null)
+      result.maxMegapixelFrames = maxMegapixelFrames;
     return result;
   }
 
@@ -826,6 +846,7 @@ class TextToVideoWorkflowConfig extends $pb.GeneratedMessage {
         subBuilder: WorkflowIntRangeInput.create)
     ..aOM<WorkflowFrameRateInput>(7, _omitFieldNames ? '' : 'frameRate',
         subBuilder: WorkflowFrameRateInput.create)
+    ..aOS(8, _omitFieldNames ? '' : 'maxMegapixelFrames')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -924,6 +945,19 @@ class TextToVideoWorkflowConfig extends $pb.GeneratedMessage {
   void clearFrameRate() => $_clearField(7);
   @$pb.TagNumber(7)
   WorkflowFrameRateInput ensureFrameRate() => $_ensure(6);
+
+  /// 算力预算，单位「百万像素 × 帧数」（像素量 × 时长秒 × 帧率），规范十进制字符串，如 "576"。
+  /// 用户提交时像素量、时长、帧率三者乘积超过它即被拒（InvalidArgument）；
+  /// 用来挡住单项都合法、组合起来必然超时或显存溢出的参数。proto 不标必填以便读出存量配置，
+  /// 保存与校验工作流时缺失、非正数或最小组合即超预算都报错。
+  @$pb.TagNumber(8)
+  $core.String get maxMegapixelFrames => $_getSZ(7);
+  @$pb.TagNumber(8)
+  set maxMegapixelFrames($core.String value) => $_setString(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasMaxMegapixelFrames() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearMaxMegapixelFrames() => $_clearField(8);
 }
 
 /// 文生图像素宽高绑定；两者的范围与默认值均为 16 的倍数，校验阶段核对。
@@ -1835,6 +1869,7 @@ class FirstLastFrameWorkflowConfig extends $pb.GeneratedMessage {
     WorkflowIntRangeInput? durationSeconds,
     WorkflowFrameRateInput? frameRate,
     $core.Iterable<WorkflowInputBinding>? seeds,
+    $core.String? maxMegapixelFrames,
   }) {
     final result = create();
     if (firstFrame != null) result.firstFrame = firstFrame;
@@ -1847,6 +1882,8 @@ class FirstLastFrameWorkflowConfig extends $pb.GeneratedMessage {
     if (durationSeconds != null) result.durationSeconds = durationSeconds;
     if (frameRate != null) result.frameRate = frameRate;
     if (seeds != null) result.seeds.addAll(seeds);
+    if (maxMegapixelFrames != null)
+      result.maxMegapixelFrames = maxMegapixelFrames;
     return result;
   }
 
@@ -1883,6 +1920,7 @@ class FirstLastFrameWorkflowConfig extends $pb.GeneratedMessage {
         subBuilder: WorkflowFrameRateInput.create)
     ..pPM<WorkflowInputBinding>(12, _omitFieldNames ? '' : 'seeds',
         subBuilder: WorkflowInputBinding.create)
+    ..aOS(13, _omitFieldNames ? '' : 'maxMegapixelFrames')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2017,6 +2055,19 @@ class FirstLastFrameWorkflowConfig extends $pb.GeneratedMessage {
   /// 一个或多个主生成 seed 输入，全部写入同一个后端任务随机值。
   @$pb.TagNumber(12)
   $pb.PbList<WorkflowInputBinding> get seeds => $_getList(9);
+
+  /// 算力预算，单位「百万像素 × 帧数」（像素量 × 时长秒 × 帧率），规范十进制字符串，如 "576"。
+  /// 用户提交时像素量、时长、帧率三者乘积超过它即被拒（InvalidArgument）；
+  /// 用来挡住单项都合法、组合起来必然超时或显存溢出的参数。proto 不标必填以便读出存量配置，
+  /// 保存与校验工作流时缺失、非正数或最小组合即超预算都报错。
+  @$pb.TagNumber(13)
+  $core.String get maxMegapixelFrames => $_getSZ(10);
+  @$pb.TagNumber(13)
+  set maxMegapixelFrames($core.String value) => $_setString(10, value);
+  @$pb.TagNumber(13)
+  $core.bool hasMaxMegapixelFrames() => $_has(10);
+  @$pb.TagNumber(13)
+  void clearMaxMegapixelFrames() => $_clearField(13);
 }
 
 /// 模仿生成配置；当前为深度控制，不提供用户输出尺寸、时长或帧率参数。
@@ -2250,6 +2301,7 @@ class MiniMaxVideoWorkflowConfig extends $pb.GeneratedMessage {
     WorkflowIntRangeInput? durationSeconds,
     $core.Iterable<WorkflowInputBinding>? seeds,
     WorkflowInputBinding? regionDescription,
+    $core.String? maxMegapixelFrames,
   }) {
     final result = create();
     if (inputVideo != null) result.inputVideo = inputVideo;
@@ -2261,6 +2313,8 @@ class MiniMaxVideoWorkflowConfig extends $pb.GeneratedMessage {
     if (durationSeconds != null) result.durationSeconds = durationSeconds;
     if (seeds != null) result.seeds.addAll(seeds);
     if (regionDescription != null) result.regionDescription = regionDescription;
+    if (maxMegapixelFrames != null)
+      result.maxMegapixelFrames = maxMegapixelFrames;
     return result;
   }
 
@@ -2296,6 +2350,7 @@ class MiniMaxVideoWorkflowConfig extends $pb.GeneratedMessage {
         subBuilder: WorkflowInputBinding.create)
     ..aOM<WorkflowInputBinding>(9, _omitFieldNames ? '' : 'regionDescription',
         subBuilder: WorkflowInputBinding.create)
+    ..aOS(10, _omitFieldNames ? '' : 'maxMegapixelFrames')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2415,6 +2470,20 @@ class MiniMaxVideoWorkflowConfig extends $pb.GeneratedMessage {
   void clearRegionDescription() => $_clearField(9);
   @$pb.TagNumber(9)
   WorkflowInputBinding ensureRegionDescription() => $_ensure(8);
+
+  /// 算力预算，单位「百万像素 × 帧数」（像素量 × 时长秒 × 帧率），规范十进制字符串，如 "576"。
+  /// 用户提交时像素量、时长、帧率三者乘积超过它即被拒（InvalidArgument）；
+  /// 用来挡住单项都合法、组合起来必然超时或显存溢出的参数。proto 不标必填以便读出存量配置，
+  /// 保存与校验工作流时缺失、非正数或最小组合即超预算都报错。
+  /// MiniMax 固定 24 FPS，按 24 计算。
+  @$pb.TagNumber(10)
+  $core.String get maxMegapixelFrames => $_getSZ(9);
+  @$pb.TagNumber(10)
+  set maxMegapixelFrames($core.String value) => $_setString(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasMaxMegapixelFrames() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearMaxMegapixelFrames() => $_clearField(10);
 }
 
 enum WorkflowExecutionConfig_FunctionConfig {

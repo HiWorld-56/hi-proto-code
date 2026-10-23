@@ -601,6 +601,7 @@ class VideoParameterConfig extends $pb.GeneratedMessage {
     InputImagesConfig? inputImages,
     ImageDimensionsConfig? imageDimensions,
     ImageResolutionConfig? imageResolution,
+    $core.String? maxMegapixelFrames,
   }) {
     final result = create();
     if (prompt != null) result.prompt = prompt;
@@ -611,6 +612,8 @@ class VideoParameterConfig extends $pb.GeneratedMessage {
     if (inputImages != null) result.inputImages = inputImages;
     if (imageDimensions != null) result.imageDimensions = imageDimensions;
     if (imageResolution != null) result.imageResolution = imageResolution;
+    if (maxMegapixelFrames != null)
+      result.maxMegapixelFrames = maxMegapixelFrames;
     return result;
   }
 
@@ -650,6 +653,7 @@ class VideoParameterConfig extends $pb.GeneratedMessage {
         subBuilder: ImageDimensionsConfig.create)
     ..aOM<ImageResolutionConfig>(8, _omitFieldNames ? '' : 'imageResolution',
         subBuilder: ImageResolutionConfig.create)
+    ..aOS(9, _omitFieldNames ? '' : 'maxMegapixelFrames')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -768,6 +772,18 @@ class VideoParameterConfig extends $pb.GeneratedMessage {
   void clearImageResolution() => $_clearField(8);
   @$pb.TagNumber(8)
   ImageResolutionConfig ensureImageResolution() => $_ensure(7);
+
+  /// 算力预算，单位「百万像素 × 帧数」（像素量 × 时长秒 × 帧率），规范十进制字符串。
+  /// 只有带像素量与时长的视频功能返回；三者乘积超过它的组合提交会被拒（InvalidArgument），
+  /// 客户端可据此禁用会超的选项。未返回表示不限制组合。
+  @$pb.TagNumber(9)
+  $core.String get maxMegapixelFrames => $_getSZ(8);
+  @$pb.TagNumber(9)
+  set maxMegapixelFrames($core.String value) => $_setString(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasMaxMegapixelFrames() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearMaxMegapixelFrames() => $_clearField(9);
 }
 
 /// 系统初始化的功能，包括已实现和开发中的入口；客户端从 Function.List 获取 ID。

@@ -2808,6 +2808,11 @@ pub struct VideoParameterConfig {
     /// 模仿生成只返回 prompt 和 input_images，省略输出尺寸、时长及帧率配置。
     #[prost(message, optional, tag = "6")]
     pub input_images: ::core::option::Option<InputImagesConfig>,
+    /// 算力预算，单位「百万像素 × 帧数」（像素量 × 时长秒 × 帧率），规范十进制字符串。
+    /// 只有带像素量与时长的视频功能返回；三者乘积超过它的组合提交会被拒（InvalidArgument），
+    /// 客户端可据此禁用会超的选项。未返回表示不限制组合。
+    #[prost(string, optional, tag = "9")]
+    pub max_megapixel_frames: ::core::option::Option<::prost::alloc::string::String>,
     /// 仅文生图提供一种尺寸模式；图片修改与角色生成的尺寸由工作流决定。
     #[prost(oneof = "video_parameter_config::ImageSize", tags = "7, 8")]
     pub image_size: ::core::option::Option<video_parameter_config::ImageSize>,
@@ -3642,6 +3647,12 @@ pub struct ImageToVideoWorkflowConfig {
     pub duration_seconds: ::core::option::Option<WorkflowIntRangeInput>,
     #[prost(message, optional, tag = "8")]
     pub frame_rate: ::core::option::Option<WorkflowFrameRateInput>,
+    /// 算力预算，单位「百万像素 × 帧数」（像素量 × 时长秒 × 帧率），规范十进制字符串，如 "576"。
+    /// 用户提交时像素量、时长、帧率三者乘积超过它即被拒（InvalidArgument）；
+    /// 用来挡住单项都合法、组合起来必然超时或显存溢出的参数。proto 不标必填以便读出存量配置，
+    /// 保存与校验工作流时缺失、非正数或最小组合即超预算都报错。
+    #[prost(string, optional, tag = "9")]
+    pub max_megapixel_frames: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 文生视频执行配置，对应功能 video.txt2vid。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -3662,6 +3673,12 @@ pub struct TextToVideoWorkflowConfig {
     pub duration_seconds: ::core::option::Option<WorkflowIntRangeInput>,
     #[prost(message, optional, tag = "7")]
     pub frame_rate: ::core::option::Option<WorkflowFrameRateInput>,
+    /// 算力预算，单位「百万像素 × 帧数」（像素量 × 时长秒 × 帧率），规范十进制字符串，如 "576"。
+    /// 用户提交时像素量、时长、帧率三者乘积超过它即被拒（InvalidArgument）；
+    /// 用来挡住单项都合法、组合起来必然超时或显存溢出的参数。proto 不标必填以便读出存量配置，
+    /// 保存与校验工作流时缺失、非正数或最小组合即超预算都报错。
+    #[prost(string, optional, tag = "8")]
+    pub max_megapixel_frames: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 文生图像素宽高绑定；两者的范围与默认值均为 16 的倍数，校验阶段核对。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -3824,6 +3841,12 @@ pub struct FirstLastFrameWorkflowConfig {
     /// 一个或多个主生成 seed 输入，全部写入同一个后端任务随机值。
     #[prost(message, repeated, tag = "12")]
     pub seeds: ::prost::alloc::vec::Vec<WorkflowInputBinding>,
+    /// 算力预算，单位「百万像素 × 帧数」（像素量 × 时长秒 × 帧率），规范十进制字符串，如 "576"。
+    /// 用户提交时像素量、时长、帧率三者乘积超过它即被拒（InvalidArgument）；
+    /// 用来挡住单项都合法、组合起来必然超时或显存溢出的参数。proto 不标必填以便读出存量配置，
+    /// 保存与校验工作流时缺失、非正数或最小组合即超预算都报错。
+    #[prost(string, optional, tag = "13")]
+    pub max_megapixel_frames: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 模仿生成配置；当前为深度控制，不提供用户输出尺寸、时长或帧率参数。
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -3887,6 +3910,13 @@ pub struct MiniMaxVideoWorkflowConfig {
     /// 仅高级替换必填，其他两类不得配置；用户原文传 SAM，固定最多 200 个码点。
     #[prost(message, optional, tag = "9")]
     pub region_description: ::core::option::Option<WorkflowInputBinding>,
+    /// 算力预算，单位「百万像素 × 帧数」（像素量 × 时长秒 × 帧率），规范十进制字符串，如 "576"。
+    /// 用户提交时像素量、时长、帧率三者乘积超过它即被拒（InvalidArgument）；
+    /// 用来挡住单项都合法、组合起来必然超时或显存溢出的参数。proto 不标必填以便读出存量配置，
+    /// 保存与校验工作流时缺失、非正数或最小组合即超预算都报错。
+    /// MiniMax 固定 24 FPS，按 24 计算。
+    #[prost(string, optional, tag = "10")]
+    pub max_megapixel_frames: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 完整执行配置；功能配置必须与工作流归属一致，保存时不建立产物预占。
 #[derive(Clone, PartialEq, ::prost::Message)]
