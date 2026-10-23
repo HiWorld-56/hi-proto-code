@@ -35,6 +35,7 @@ class BinanceOffer extends $pb.GeneratedMessage {
     BinanceOffer_State? state,
     $2.BinanceResult? result,
     BinanceOfferTpsl? tpsl,
+    $1.BinancePending? pending,
   }) {
     final result$ = create();
     if (id != null) result$.id = id;
@@ -46,6 +47,7 @@ class BinanceOffer extends $pb.GeneratedMessage {
     if (state != null) result$.state = state;
     if (result != null) result$.result = result;
     if (tpsl != null) result$.tpsl = tpsl;
+    if (pending != null) result$.pending = pending;
     return result$;
   }
 
@@ -77,6 +79,8 @@ class BinanceOffer extends $pb.GeneratedMessage {
         subBuilder: $2.BinanceResult.create)
     ..aOM<BinanceOfferTpsl>(9, _omitFieldNames ? '' : 'tpsl',
         subBuilder: BinanceOfferTpsl.create)
+    ..aOM<$1.BinancePending>(10, _omitFieldNames ? '' : 'pending',
+        subBuilder: $1.BinancePending.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -189,6 +193,17 @@ class BinanceOffer extends $pb.GeneratedMessage {
   void clearTpsl() => $_clearField(9);
   @$pb.TagNumber(9)
   BinanceOfferTpsl ensureTpsl() => $_ensure(8);
+
+  @$pb.TagNumber(10)
+  $1.BinancePending get pending => $_getN(9);
+  @$pb.TagNumber(10)
+  set pending($1.BinancePending value) => $_setField(10, value);
+  @$pb.TagNumber(10)
+  $core.bool hasPending() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearPending() => $_clearField(10);
+  @$pb.TagNumber(10)
+  $1.BinancePending ensurePending() => $_ensure(9);
 }
 
 /// 我们打算开的那一单。保证金 / 数量 / 参考价由 brain 在收到时按**与下单同一条换算**算出(按交易对的
@@ -210,6 +225,10 @@ class BinanceOfferPlan extends $pb.GeneratedMessage {
     $core.String? stopLossPrice,
     $core.String? takeProfitPrice,
     $core.String? tpslUnavailable,
+    $core.String? orderType,
+    $core.String? limitPrice,
+    $core.String? triggerPrice,
+    $core.String? callbackRate,
   }) {
     final result = create();
     if (op != null) result.op = op;
@@ -227,6 +246,10 @@ class BinanceOfferPlan extends $pb.GeneratedMessage {
     if (stopLossPrice != null) result.stopLossPrice = stopLossPrice;
     if (takeProfitPrice != null) result.takeProfitPrice = takeProfitPrice;
     if (tpslUnavailable != null) result.tpslUnavailable = tpslUnavailable;
+    if (orderType != null) result.orderType = orderType;
+    if (limitPrice != null) result.limitPrice = limitPrice;
+    if (triggerPrice != null) result.triggerPrice = triggerPrice;
+    if (callbackRate != null) result.callbackRate = callbackRate;
     return result;
   }
 
@@ -260,6 +283,10 @@ class BinanceOfferPlan extends $pb.GeneratedMessage {
     ..aOS(13, _omitFieldNames ? '' : 'stopLossPrice')
     ..aOS(14, _omitFieldNames ? '' : 'takeProfitPrice')
     ..aOS(15, _omitFieldNames ? '' : 'tpslUnavailable')
+    ..aOS(16, _omitFieldNames ? '' : 'orderType')
+    ..aOS(17, _omitFieldNames ? '' : 'limitPrice')
+    ..aOS(18, _omitFieldNames ? '' : 'triggerPrice')
+    ..aOS(19, _omitFieldNames ? '' : 'callbackRate')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -427,6 +454,44 @@ class BinanceOfferPlan extends $pb.GeneratedMessage {
   $core.bool hasTpslUnavailable() => $_has(14);
   @$pb.TagNumber(15)
   void clearTpslUnavailable() => $_clearField(15);
+
+  /// ── 跟挂卡(2026-10-23)── 我们打算挂的那一单;开单卡(市价)不带这几个。
+  /// 跟挂卡上的自动止盈止损:**成交后**才挂(跟单方轮询自己挂的那张单),估算价按挂单价(没有就按触发价)算。
+  @$pb.TagNumber(16)
+  $core.String get orderType => $_getSZ(15);
+  @$pb.TagNumber(16)
+  set orderType($core.String value) => $_setString(15, value);
+  @$pb.TagNumber(16)
+  $core.bool hasOrderType() => $_has(15);
+  @$pb.TagNumber(16)
+  void clearOrderType() => $_clearField(16);
+
+  @$pb.TagNumber(17)
+  $core.String get limitPrice => $_getSZ(16);
+  @$pb.TagNumber(17)
+  set limitPrice($core.String value) => $_setString(16, value);
+  @$pb.TagNumber(17)
+  $core.bool hasLimitPrice() => $_has(16);
+  @$pb.TagNumber(17)
+  void clearLimitPrice() => $_clearField(17);
+
+  @$pb.TagNumber(18)
+  $core.String get triggerPrice => $_getSZ(17);
+  @$pb.TagNumber(18)
+  set triggerPrice($core.String value) => $_setString(17, value);
+  @$pb.TagNumber(18)
+  $core.bool hasTriggerPrice() => $_has(17);
+  @$pb.TagNumber(18)
+  void clearTriggerPrice() => $_clearField(18);
+
+  @$pb.TagNumber(19)
+  $core.String get callbackRate => $_getSZ(18);
+  @$pb.TagNumber(19)
+  set callbackRate($core.String value) => $_setString(18, value);
+  @$pb.TagNumber(19)
+  $core.bool hasCallbackRate() => $_has(18);
+  @$pb.TagNumber(19)
+  void clearCallbackRate() => $_clearField(19);
 }
 
 /// 自动止盈止损的结果(`BinanceOffer.tpsl`)。

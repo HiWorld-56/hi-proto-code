@@ -73,6 +73,24 @@ const BinanceSignal$json = {
       '8': {},
       '10': 'opens'
     },
+    {
+      '1': 'pendings',
+      '3': 5,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.binance.BinancePending',
+      '8': {},
+      '10': 'pendings'
+    },
+    {
+      '1': 'cancels',
+      '3': 6,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.binance.BinancePendingCancel',
+      '8': {},
+      '10': 'cancels'
+    },
   ],
   '7': {},
   '8': [
@@ -87,7 +105,10 @@ final $typed_data.Uint8List binanceSignalDescriptor = $convert.base64Decode(
     'Cg1CaW5hbmNlU2lnbmFsEiEKA3NlcRgBIAEoBEIKukgDyAEBkLUYAkgAUgNzZXGIAQESHwoCYX'
     'QYAiABKANCCrpIA8gBAZC1GAJIAVICYXSIAQESLwoKZXhwaXJhdGlvbhgDIAEoA0IKukgDyAEB'
     'kLUYAkgCUgpleHBpcmF0aW9uiAEBEjMKBW9wZW5zGAQgAygLMhcuaGkuYmluYW5jZS5CaW5hbm'
-    'NlT3BlbkIEkLUYAlIFb3BlbnM6BJi1GAJCBgoEX3NlcUIFCgNfYXRCDQoLX2V4cGlyYXRpb24=');
+    'NlT3BlbkIEkLUYAlIFb3BlbnMSPAoIcGVuZGluZ3MYBSADKAsyGi5oaS5iaW5hbmNlLkJpbmFu'
+    'Y2VQZW5kaW5nQgSQtRgCUghwZW5kaW5ncxJACgdjYW5jZWxzGAYgAygLMiAuaGkuYmluYW5jZS'
+    '5CaW5hbmNlUGVuZGluZ0NhbmNlbEIEkLUYAlIHY2FuY2VsczoEmLUYAkIGCgRfc2VxQgUKA19h'
+    'dEINCgtfZXhwaXJhdGlvbg==');
 
 @$core.Deprecated('Use binanceOpenDescriptor instead')
 const BinanceOpen$json = {
@@ -176,3 +197,103 @@ final $typed_data.Uint8List binanceOpenDescriptor = $convert.base64Decode(
     'AQGQtRgCSANSBXJhdGlviAEBEiUKCGxldmVyYWdlGAUgASgNQgSQtRgCSARSCGxldmVyYWdliA'
     'EBEh8KBXByaWNlGAYgASgJQgSQtRgCSAVSBXByaWNliAEBOgSYtRgCQgkKB19tYXJrZXRCCQoH'
     'X3N5bWJvbEIHCgVfc2lkZUIICgZfcmF0aW9CCwoJX2xldmVyYWdlQggKBl9wcmljZQ==');
+
+@$core.Deprecated('Use binancePendingDescriptor instead')
+const BinancePending$json = {
+  '1': 'BinancePending',
+  '2': [
+    {
+      '1': 'id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'id',
+      '17': true
+    },
+    {
+      '1': 'ratio',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'ratio',
+      '17': true
+    },
+    {
+      '1': 'spot_new_order',
+      '3': 10,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceSpotNewOrder',
+      '8': {},
+      '9': 0,
+      '10': 'spotNewOrder'
+    },
+    {
+      '1': 'usds_futures_new_order',
+      '3': 11,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceFuturesNewOrder',
+      '8': {},
+      '9': 0,
+      '10': 'usdsFuturesNewOrder'
+    },
+    {
+      '1': 'usds_futures_new_algo_order',
+      '3': 12,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceFuturesNewAlgoOrder',
+      '8': {},
+      '9': 0,
+      '10': 'usdsFuturesNewAlgoOrder'
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': 'order'},
+    {'1': '_id'},
+    {'1': '_ratio'},
+  ],
+};
+
+/// Descriptor for `BinancePending`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List binancePendingDescriptor = $convert.base64Decode(
+    'Cg5CaW5hbmNlUGVuZGluZxIfCgJpZBgBIAEoCUIKukgDyAEBkLUYAkgBUgJpZIgBARIlCgVyYX'
+    'RpbxgCIAEoCUIKukgDyAEBkLUYAkgCUgVyYXRpb4gBARJNCg5zcG90X25ld19vcmRlchgKIAEo'
+    'CzIfLmhpLmJpbmFuY2UuQmluYW5jZVNwb3ROZXdPcmRlckIEkLUYAkgAUgxzcG90TmV3T3JkZX'
+    'ISXwoWdXNkc19mdXR1cmVzX25ld19vcmRlchgLIAEoCzIiLmhpLmJpbmFuY2UuQmluYW5jZUZ1'
+    'dHVyZXNOZXdPcmRlckIEkLUYAkgAUhN1c2RzRnV0dXJlc05ld09yZGVyEmwKG3VzZHNfZnV0dX'
+    'Jlc19uZXdfYWxnb19vcmRlchgMIAEoCzImLmhpLmJpbmFuY2UuQmluYW5jZUZ1dHVyZXNOZXdB'
+    'bGdvT3JkZXJCBJC1GAJIAFIXdXNkc0Z1dHVyZXNOZXdBbGdvT3JkZXI6BJi1GAJCBwoFb3JkZX'
+    'JCBQoDX2lkQggKBl9yYXRpbw==');
+
+@$core.Deprecated('Use binancePendingCancelDescriptor instead')
+const BinancePendingCancel$json = {
+  '1': 'BinancePendingCancel',
+  '2': [
+    {
+      '1': 'id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'id',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_id'},
+  ],
+};
+
+/// Descriptor for `BinancePendingCancel`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List binancePendingCancelDescriptor = $convert.base64Decode(
+    'ChRCaW5hbmNlUGVuZGluZ0NhbmNlbBIfCgJpZBgBIAEoCUIKukgDyAEBkLUYAkgAUgJpZIgBAT'
+    'oEmLUYAkIFCgNfaWQ=');

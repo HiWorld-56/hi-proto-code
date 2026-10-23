@@ -27,7 +27,7 @@ from hi.binance import binance_pb2 as hi_dot_binance_dot_binance__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x17hi/binance/signal.proto\x12\nhi.binance\x1a\x1b\x62uf/validate/validate.proto\x1a\x18hi/binance/binance.proto\x1a\x10hi/options.proto\"\xdd\x01\n\rBinanceSignal\x12!\n\x03seq\x18\x01 \x01(\x04\x42\n\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x00R\x03seq\x88\x01\x01\x12\x1f\n\x02\x61t\x18\x02 \x01(\x03\x42\n\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x01R\x02\x61t\x88\x01\x01\x12/\n\nexpiration\x18\x03 \x01(\x03\x42\n\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x02R\nexpiration\x88\x01\x01\x12\x33\n\x05opens\x18\x04 \x03(\x0b\x32\x17.hi.binance.BinanceOpenB\x04\x90\xb5\x18\x02R\x05opens:\x04\x98\xb5\x18\x02\x42\x06\n\x04_seqB\x05\n\x03_atB\r\n\x0b_expiration\"\xfe\x02\n\x0b\x42inanceOpen\x12\x42\n\x06market\x18\x01 \x01(\x0e\x32\x19.hi.binance.BinanceMarketB\n\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x00R\x06market\x88\x01\x01\x12\x36\n\x06symbol\x18\x02 \x01(\tB\x19\xbaH\x12r\r2\x0b^[A-Z0-9]+$\xc8\x01\x01\x90\xb5\x18\x02H\x01R\x06symbol\x88\x01\x01\x12>\n\x04side\x18\x03 \x01(\x0e\x32\x1f.hi.binance.BinancePositionSideB\x04\x90\xb5\x18\x02H\x02R\x04side\x88\x01\x01\x12%\n\x05ratio\x18\x04 \x01(\tB\n\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x03R\x05ratio\x88\x01\x01\x12%\n\x08leverage\x18\x05 \x01(\rB\x04\x90\xb5\x18\x02H\x04R\x08leverage\x88\x01\x01\x12\x1f\n\x05price\x18\x06 \x01(\tB\x04\x90\xb5\x18\x02H\x05R\x05price\x88\x01\x01:\x04\x98\xb5\x18\x02\x42\t\n\x07_marketB\t\n\x07_symbolB\x07\n\x05_sideB\x08\n\x06_ratioB\x0b\n\t_leverageB\x08\n\x06_price*i\n\rBinanceMarket\x12\x1e\n\x1a\x42INANCE_MARKET_UNSPECIFIED\x10\x00\x12\x17\n\x13\x42INANCE_MARKET_SPOT\x10\x01\x12\x1f\n\x1b\x42INANCE_MARKET_USDS_FUTURES\x10\x02\x42.Z,github.com/HiWorld-56/hi-proto/go/hi/binanceb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x17hi/binance/signal.proto\x12\nhi.binance\x1a\x1b\x62uf/validate/validate.proto\x1a\x18hi/binance/binance.proto\x1a\x10hi/options.proto\"\xdd\x02\n\rBinanceSignal\x12!\n\x03seq\x18\x01 \x01(\x04\x42\n\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x00R\x03seq\x88\x01\x01\x12\x1f\n\x02\x61t\x18\x02 \x01(\x03\x42\n\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x01R\x02\x61t\x88\x01\x01\x12/\n\nexpiration\x18\x03 \x01(\x03\x42\n\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x02R\nexpiration\x88\x01\x01\x12\x33\n\x05opens\x18\x04 \x03(\x0b\x32\x17.hi.binance.BinanceOpenB\x04\x90\xb5\x18\x02R\x05opens\x12<\n\x08pendings\x18\x05 \x03(\x0b\x32\x1a.hi.binance.BinancePendingB\x04\x90\xb5\x18\x02R\x08pendings\x12@\n\x07\x63\x61ncels\x18\x06 \x03(\x0b\x32 .hi.binance.BinancePendingCancelB\x04\x90\xb5\x18\x02R\x07\x63\x61ncels:\x04\x98\xb5\x18\x02\x42\x06\n\x04_seqB\x05\n\x03_atB\r\n\x0b_expiration\"\xfe\x02\n\x0b\x42inanceOpen\x12\x42\n\x06market\x18\x01 \x01(\x0e\x32\x19.hi.binance.BinanceMarketB\n\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x00R\x06market\x88\x01\x01\x12\x36\n\x06symbol\x18\x02 \x01(\tB\x19\xbaH\x12r\r2\x0b^[A-Z0-9]+$\xc8\x01\x01\x90\xb5\x18\x02H\x01R\x06symbol\x88\x01\x01\x12>\n\x04side\x18\x03 \x01(\x0e\x32\x1f.hi.binance.BinancePositionSideB\x04\x90\xb5\x18\x02H\x02R\x04side\x88\x01\x01\x12%\n\x05ratio\x18\x04 \x01(\tB\n\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x03R\x05ratio\x88\x01\x01\x12%\n\x08leverage\x18\x05 \x01(\rB\x04\x90\xb5\x18\x02H\x04R\x08leverage\x88\x01\x01\x12\x1f\n\x05price\x18\x06 \x01(\tB\x04\x90\xb5\x18\x02H\x05R\x05price\x88\x01\x01:\x04\x98\xb5\x18\x02\x42\t\n\x07_marketB\t\n\x07_symbolB\x07\n\x05_sideB\x08\n\x06_ratioB\x0b\n\t_leverageB\x08\n\x06_price\"\x96\x03\n\x0e\x42inancePending\x12\x1f\n\x02id\x18\x01 \x01(\tB\n\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x01R\x02id\x88\x01\x01\x12%\n\x05ratio\x18\x02 \x01(\tB\n\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x02R\x05ratio\x88\x01\x01\x12M\n\x0espot_new_order\x18\n \x01(\x0b\x32\x1f.hi.binance.BinanceSpotNewOrderB\x04\x90\xb5\x18\x02H\x00R\x0cspotNewOrder\x12_\n\x16usds_futures_new_order\x18\x0b \x01(\x0b\x32\".hi.binance.BinanceFuturesNewOrderB\x04\x90\xb5\x18\x02H\x00R\x13usdsFuturesNewOrder\x12l\n\x1busds_futures_new_algo_order\x18\x0c \x01(\x0b\x32&.hi.binance.BinanceFuturesNewAlgoOrderB\x04\x90\xb5\x18\x02H\x00R\x17usdsFuturesNewAlgoOrder:\x04\x98\xb5\x18\x02\x42\x07\n\x05orderB\x05\n\x03_idB\x08\n\x06_ratio\"D\n\x14\x42inancePendingCancel\x12\x1f\n\x02id\x18\x01 \x01(\tB\n\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x00R\x02id\x88\x01\x01:\x04\x98\xb5\x18\x02\x42\x05\n\x03_id*i\n\rBinanceMarket\x12\x1e\n\x1a\x42INANCE_MARKET_UNSPECIFIED\x10\x00\x12\x17\n\x13\x42INANCE_MARKET_SPOT\x10\x01\x12\x1f\n\x1b\x42INANCE_MARKET_USDS_FUTURES\x10\x02\x42.Z,github.com/HiWorld-56/hi-proto/go/hi/binanceb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -43,6 +43,10 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_BINANCESIGNAL'].fields_by_name['expiration']._serialized_options = b'\272H\003\310\001\001\220\265\030\002'
   _globals['_BINANCESIGNAL'].fields_by_name['opens']._loaded_options = None
   _globals['_BINANCESIGNAL'].fields_by_name['opens']._serialized_options = b'\220\265\030\002'
+  _globals['_BINANCESIGNAL'].fields_by_name['pendings']._loaded_options = None
+  _globals['_BINANCESIGNAL'].fields_by_name['pendings']._serialized_options = b'\220\265\030\002'
+  _globals['_BINANCESIGNAL'].fields_by_name['cancels']._loaded_options = None
+  _globals['_BINANCESIGNAL'].fields_by_name['cancels']._serialized_options = b'\220\265\030\002'
   _globals['_BINANCESIGNAL']._loaded_options = None
   _globals['_BINANCESIGNAL']._serialized_options = b'\230\265\030\002'
   _globals['_BINANCEOPEN'].fields_by_name['market']._loaded_options = None
@@ -59,10 +63,30 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_BINANCEOPEN'].fields_by_name['price']._serialized_options = b'\220\265\030\002'
   _globals['_BINANCEOPEN']._loaded_options = None
   _globals['_BINANCEOPEN']._serialized_options = b'\230\265\030\002'
-  _globals['_BINANCEMARKET']._serialized_start=721
-  _globals['_BINANCEMARKET']._serialized_end=826
+  _globals['_BINANCEPENDING'].fields_by_name['id']._loaded_options = None
+  _globals['_BINANCEPENDING'].fields_by_name['id']._serialized_options = b'\272H\003\310\001\001\220\265\030\002'
+  _globals['_BINANCEPENDING'].fields_by_name['ratio']._loaded_options = None
+  _globals['_BINANCEPENDING'].fields_by_name['ratio']._serialized_options = b'\272H\003\310\001\001\220\265\030\002'
+  _globals['_BINANCEPENDING'].fields_by_name['spot_new_order']._loaded_options = None
+  _globals['_BINANCEPENDING'].fields_by_name['spot_new_order']._serialized_options = b'\220\265\030\002'
+  _globals['_BINANCEPENDING'].fields_by_name['usds_futures_new_order']._loaded_options = None
+  _globals['_BINANCEPENDING'].fields_by_name['usds_futures_new_order']._serialized_options = b'\220\265\030\002'
+  _globals['_BINANCEPENDING'].fields_by_name['usds_futures_new_algo_order']._loaded_options = None
+  _globals['_BINANCEPENDING'].fields_by_name['usds_futures_new_algo_order']._serialized_options = b'\220\265\030\002'
+  _globals['_BINANCEPENDING']._loaded_options = None
+  _globals['_BINANCEPENDING']._serialized_options = b'\230\265\030\002'
+  _globals['_BINANCEPENDINGCANCEL'].fields_by_name['id']._loaded_options = None
+  _globals['_BINANCEPENDINGCANCEL'].fields_by_name['id']._serialized_options = b'\272H\003\310\001\001\220\265\030\002'
+  _globals['_BINANCEPENDINGCANCEL']._loaded_options = None
+  _globals['_BINANCEPENDINGCANCEL']._serialized_options = b'\230\265\030\002'
+  _globals['_BINANCEMARKET']._serialized_start=1328
+  _globals['_BINANCEMARKET']._serialized_end=1433
   _globals['_BINANCESIGNAL']._serialized_start=113
-  _globals['_BINANCESIGNAL']._serialized_end=334
-  _globals['_BINANCEOPEN']._serialized_start=337
-  _globals['_BINANCEOPEN']._serialized_end=719
+  _globals['_BINANCESIGNAL']._serialized_end=462
+  _globals['_BINANCEOPEN']._serialized_start=465
+  _globals['_BINANCEOPEN']._serialized_end=847
+  _globals['_BINANCEPENDING']._serialized_start=850
+  _globals['_BINANCEPENDING']._serialized_end=1256
+  _globals['_BINANCEPENDINGCANCEL']._serialized_start=1258
+  _globals['_BINANCEPENDINGCANCEL']._serialized_end=1326
 # @@protoc_insertion_point(module_scope)

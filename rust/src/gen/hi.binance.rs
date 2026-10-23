@@ -1530,31 +1530,35 @@ pub mod binance_command {
         UsdsFuturesPositionTpsl(super::BinanceFuturesPositionTpsl),
     }
 }
-/// **开单信号**:一台机器人(信号源)账户上新开 / 加了仓,广播给群里别的机器人。
+/// **开单信号**:一台机器人(信号源)经 hi 开了仓 / 挂了开仓单,广播给群里别的机器人。
 /// 装在消息里:`Content.type = "binance_signal"`、`Content.kind = binance_signal`。
 ///
 /// ## 谁发、发到哪(判据只在信号源的 brain)
 ///
 /// 信号源 = 在某个群里**能发言**、且那个群的发言等级(`GroupBase.speak`)不是 `all` 的机器人。
-/// 它每轮把这一轮新开的仓发到**自己当前能发言的所有这种群**,一律 @所有人(机器人只处理 @ 到自己或 @所有人的)。
+/// 它把信号发到**自己当前能发言的所有这种群**(发来这笔指令的那个群除外),一律 @所有人(机器人只处理 @ 到自己或 @所有人的)。
 /// 群的发言等级就是白名单 —— 收信号的一方**不校验**发信号的是谁。
 /// 同一份信号发往几个群,`seq` 相同;收的一方按「信封 from + seq」去重。
 ///
-/// ## 只有开单(2026-10-18 用户定)
+/// ## 信号从哪来(2026-10-23 用户定,取代 10-18 的「按持仓轮询」)
 ///
-/// 只报**持仓变大**(新开仓、加仓;限价单成交让持仓变大也算 —— 挂单本身不算开单)。
-/// 平仓、减仓、挂单、撤单一概不报:跟出来的仓位之后完全由跟单方的用户自己管。
+/// **只认经 hi 下的单**:代理(指令消息)或主人(聊天里让机器人下、机器人屏幕上点)经这台机器人下的开仓单。
+/// 币安 App 上的操作一律不跟、不检测(那边抓不到事件,只能拿持仓反推);hi 之外的撤单、改单一律无视。
+/// 跟单方自己执行开单卡、自动止盈止损挂的单不算(否则成环)。平仓 / 减仓 / 只减仓 / 整仓平 / 止盈止损都不发。
+/// 按**单型**分两路(不看下单回包的状态 —— 合约市价单回包是 `NEW`、成交量 0):
 ///
-/// ## 先等 5 分钟,赚了才发(2026-10-21 用户定)
+/// |单型|怎么发|
+/// |--|---|
+/// |市价单 → `opens`|**先压 5 分钟**:到点按方向算涨跌幅、扣掉开平各一次的标准吃单费(合约 0.05% × 2、现货 0.1% × 2)还赚才发;跌的、期间平了 / 减到不足这一单的量的、宕机错过(到点后又过 5 分钟)的都不发(2026-10-21 用户定)。`BinanceOpen` 的比例、杠杆、参考价是**下单时**的|
+/// |挂单(限价、条件单)→ `pendings`|**当场发,不看盈亏**;跟单方挂同价、同条件的单|
+/// |信号源经 hi 撤掉一张发过的挂单 → `cancels`|当场发;跟单方卡没确认就取消、已跟挂就自动撤掉自己那张|
 ///
-/// 信号源发现一笔开单后**先压 5 分钟**:到点按方向算涨跌幅、扣掉开平各一次的标准吃单费
-/// (合约 0.05% × 2、现货 0.1% × 2)之后还赚才发;跌的、这期间平了 / 减了仓的、宕机错过(到点后又过 5 分钟)的都不发。
-/// 所以跟单方收到的开单都是信号源那边 5 分钟后还赚着的;`BinanceOpen` 的比例、杠杆、参考价仍是**发现时**的。
+/// ⚠️ 旧 brain(≤ v0.6.28)当信号源时仍按持仓轮询发 `opens`(含币安 App 上开的仓、挂单成交后的仓位),新旧共存到 OTA 铺开。
 ///
 /// ## 收到之后
 ///
-/// 跟单方**不自动下单**:在机器人屏幕上弹一张卡(信号源开了什么 + 我们打算开什么),
-/// 人点「确认」才开。卡在本地只留 15 分钟(从收到那一刻算),过了就当放弃。见 hi/ninja/ui.proto 的 `BinanceOffer`。
+/// 跟单方**不自动下单**:在机器人屏幕上弹一张卡(信号源开了 / 挂了什么 + 我们打算开 / 挂什么),
+/// 人点「确认」才下。卡在本地只留 15 分钟(从收到那一刻算),过了就当放弃。见 hi/binance/offer.proto 的 `BinanceOffer`。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BinanceSignal {
     /// 信号源自己的递增序号
@@ -1566,15 +1570,23 @@ pub struct BinanceSignal {
     /// 过期时刻,绝对微秒(= at + 15 分钟)。消息在路上耽搁过了这个点,跟单方就不弹卡。
     #[prost(int64, optional, tag = "3")]
     pub expiration: ::core::option::Option<i64>,
+    /// 市价单开的仓(压过 5 分钟、还赚)
     #[prost(message, repeated, tag = "4")]
     pub opens: ::prost::alloc::vec::Vec<BinanceOpen>,
+    /// 挂单(当场发)
+    #[prost(message, repeated, tag = "5")]
+    pub pendings: ::prost::alloc::vec::Vec<BinancePending>,
+    /// 撤掉的挂单(当场发)
+    #[prost(message, repeated, tag = "6")]
+    pub cancels: ::prost::alloc::vec::Vec<BinancePendingCancel>,
 }
-/// 信号源新开 / 加的一笔仓。
-/// · 合约:按交易对 + 方向(单向持仓按 positionAmt 正负算 LONG / SHORT);方向翻转时,翻过去那一侧算新开。
-/// · 现货:按**币**(稳定币是现金,不算持仓);数量 = free + locked。跟单方用「币 + USDT」交易对买。
+/// 信号源市价开 / 加的一笔仓。
+/// · 合约:交易对 + 方向(LONG / SHORT)。
+/// · 现货:**币**(稳定币是现金,不跟)。跟单方用「币 + USDT」交易对买。
 ///
-/// `ratio`:新增这部分的**保证金**(现货:价值)÷ 信号源的**总资金**(合约 = `totalMarginBalance`;
+/// `ratio`:这一单的**保证金**(合约 = 数量 × 参考价 ÷ 杠杆;现货:金额)÷ 信号源的**总资金**(合约 = `totalMarginBalance`;
 /// 现货 = 全部资产折成 USDT 的总价值),十进制小数字符串(`"0.05"` = 5%)。各人本金不同,一律按比例。
+/// (旧 brain 按持仓轮询发的:新增那部分持仓的保证金 / 价值。)
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BinanceOpen {
     #[prost(enumeration = "BinanceMarket", optional, tag = "1")]
@@ -1593,6 +1605,44 @@ pub struct BinanceOpen {
     /// 发现时的参考价(合约标记价、现货最新价),写到这个交易对的价格精度那一位
     #[prost(string, optional, tag = "6")]
     pub price: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 信号源经 hi 挂的一张**开仓**挂单(限价、条件单),当场转发。跟单方挂同价、同条件的单,数量按自己总资金的同比例。
+///
+/// `order` 是信号源下的那一单的原样参数(**`quantity` / `quote_order_qty` / `percent` 清空**,杠杆照带):
+/// · 现货买:`LIMIT` / `LIMIT_MAKER` / `STOP_LOSS` / `STOP_LOSS_LIMIT` / `TAKE_PROFIT` / `TAKE_PROFIT_LIMIT`;
+/// · 合约限价开仓:`BinanceFuturesNewOrder`(`LIMIT`,不带 `reduce_only`);
+/// · 合约条件开仓:`BinanceFuturesNewAlgoOrder`(`STOP` / `STOP_MARKET` / `TAKE_PROFIT` / `TAKE_PROFIT_MARKET` / `TRAILING_STOP_MARKET`,
+/// 不带 `reduce_only` / `close_position`)。
+/// 组合单(OCO / OTO / OTOCO / OPOCO)不发(跟单方按比例换算数量不支持组合单)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinancePending {
+    /// 信号源给这张挂单的号(= 它下单时的 newClientOrderId / clientAlgoId)。撤单信号(`BinancePendingCancel.id`)按它认。
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 按挂单价算的**保证金**(合约 = 数量 × 挂单价(没有就触发价)÷ 杠杆;现货:数量 × 价)÷ 信号源的**总资金**,十进制小数字符串。
+    #[prost(string, optional, tag = "2")]
+    pub ratio: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(oneof = "binance_pending::Order", tags = "10, 11, 12")]
+    pub order: ::core::option::Option<binance_pending::Order>,
+}
+/// Nested message and enum types in `BinancePending`.
+pub mod binance_pending {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Order {
+        #[prost(message, tag = "10")]
+        SpotNewOrder(super::BinanceSpotNewOrder),
+        #[prost(message, tag = "11")]
+        UsdsFuturesNewOrder(super::BinanceFuturesNewOrder),
+        #[prost(message, tag = "12")]
+        UsdsFuturesNewAlgoOrder(super::BinanceFuturesNewAlgoOrder),
+    }
+}
+/// 信号源经 hi 撤掉了一张**发过**的挂单。跟单方:那张跟挂卡还没确认 → 取消;已经跟挂、还挂着 → 自动撤掉自己那张(不再确认)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinancePendingCancel {
+    /// `BinancePending.id`
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 市场。
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1633,7 +1683,7 @@ pub struct BinanceOffer {
     /// 信号源机器人(did + 名字)
     #[prost(message, optional, tag = "2")]
     pub source: ::core::option::Option<super::Entity>,
-    /// 信号源开了什么
+    /// 开单卡:信号源开了什么(与 `pending` 二选一)
     #[prost(message, optional, tag = "3")]
     pub open: ::core::option::Option<BinanceOpen>,
     /// 我们打算开什么
@@ -1653,6 +1703,9 @@ pub struct BinanceOffer {
     /// STATE_DONE 且开仓成功时带:自动止盈止损做了什么。不带 = 这张卡没走到这一步(开仓失败,或机器人版本还没有这个功能)。
     #[prost(message, optional, tag = "9")]
     pub tpsl: ::core::option::Option<BinanceOfferTpsl>,
+    /// 跟挂卡:信号源挂了什么(与 `open` 二选一)
+    #[prost(message, optional, tag = "10")]
+    pub pending: ::core::option::Option<BinancePending>,
 }
 /// Nested message and enum types in `BinanceOffer`.
 pub mod binance_offer {
@@ -1771,6 +1824,21 @@ pub struct BinanceOfferPlan {
     /// 不能自动设的原因(一句话):没设风险承受率 / 这个方向已有仓位
     #[prost(string, optional, tag = "15")]
     pub tpsl_unavailable: ::core::option::Option<::prost::alloc::string::String>,
+    /// ── 跟挂卡(2026-10-23)── 我们打算挂的那一单;开单卡(市价)不带这几个。
+    /// 跟挂卡上的自动止盈止损:**成交后**才挂(跟单方轮询自己挂的那张单),估算价按挂单价(没有就按触发价)算。
+    ///
+    /// 币安的单型原名,如 LIMIT、STOP_MARKET、TAKE_PROFIT_LIMIT、TRAILING_STOP_MARKET
+    #[prost(string, optional, tag = "16")]
+    pub order_type: ::core::option::Option<::prost::alloc::string::String>,
+    /// 限价(限价单、\*\_LIMIT、STOP / TAKE_PROFIT);市价触发的不带
+    #[prost(string, optional, tag = "17")]
+    pub limit_price: ::core::option::Option<::prost::alloc::string::String>,
+    /// 触发价(条件单);限价单不带
+    #[prost(string, optional, tag = "18")]
+    pub trigger_price: ::core::option::Option<::prost::alloc::string::String>,
+    /// 跟踪止损的回调幅度(%);只有 TRAILING_STOP_MARKET 带
+    #[prost(string, optional, tag = "19")]
+    pub callback_rate: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 自动止盈止损的结果(`BinanceOffer.tpsl`)。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
