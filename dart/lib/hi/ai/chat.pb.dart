@@ -1408,7 +1408,6 @@ class ChatResp extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearFinal_1() => $_clearField(1);
 
-  /// 最终回答中的图片由模型以 Markdown 写入 result，不另设媒体返回通道。
   @$pb.TagNumber(2)
   $core.String get result => $_getSZ(1);
   @$pb.TagNumber(2)
@@ -1432,7 +1431,7 @@ class ChatResp extends $pb.GeneratedMessage {
 /// 流式帧(ConverseStream / ResumeStream)。
 ///
 /// `type` 取值 —— **一条指令帧,其余是内容/进度/回显**:
-///   msg           —— 完整回答文字，不是分片；图片使用 message 中的 Markdown
+///   msg           —— 答复。⚠️ **是整段,不是分片**(见下)
 ///   end           —— 本条流正常收尾
 ///   info          —— 出错了。⚠️ 流式下错误**走帧不走 grpc status** ——
 ///                    否则客户端收了半截流再拿到 error,两套错误通道并存反而更难排查
@@ -1538,7 +1537,6 @@ class ConverseStreamResp extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearType() => $_clearField(2);
 
-  /// type="msg" 时为完整回答；图片使用其中的 Markdown，客户端沿用原有文字渲染。
   @$pb.TagNumber(3)
   $core.String get message => $_getSZ(2);
   @$pb.TagNumber(3)

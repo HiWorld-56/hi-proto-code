@@ -998,11 +998,10 @@ func (x *ToolCall) GetFunction() *ToolCall_Function {
 //	但也可能出现 tools 为空却 final=false 的边界(工具被过滤掉等),此时仍须调 Resume,
 //	否则整轮对话就停在半路,表现为"机器人不理我了"。
 type ChatResp struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	Final *bool                  `protobuf:"varint,1,opt,name=final,proto3,oneof" json:"final,omitempty"`
-	// 最终回答中的图片由模型以 Markdown 写入 result，不另设媒体返回通道。
-	Result *string     `protobuf:"bytes,2,opt,name=result,proto3,oneof" json:"result,omitempty"`
-	Tools  []*ToolCall `protobuf:"bytes,3,rep,name=tools,proto3" json:"tools,omitempty"`
+	state  protoimpl.MessageState `protogen:"open.v1"`
+	Final  *bool                  `protobuf:"varint,1,opt,name=final,proto3,oneof" json:"final,omitempty"`
+	Result *string                `protobuf:"bytes,2,opt,name=result,proto3,oneof" json:"result,omitempty"`
+	Tools  []*ToolCall            `protobuf:"bytes,3,rep,name=tools,proto3" json:"tools,omitempty"`
 	// 这一轮的**问题**:请求里的 `conts` 原样、同序,只把每段语音(audio_url)换成 hi-ai 识别出的那段 text。
 	// 语音转文字只在 hi-ai 做一次(推理前必转,见 service/chat.go 的 Prepare),调用方别另做一遍 ——
 	// 两处识别结果可能不一致。Converse 与 Resume 的回包都带(final 与否都带,续跑带的是开轮那一句)。
@@ -1074,7 +1073,7 @@ func (x *ChatResp) GetQuestion() []*Content {
 //
 // `type` 取值 —— **一条指令帧,其余是内容/进度/回显**:
 //
-//	msg           —— 完整回答文字，不是分片；图片使用 message 中的 Markdown
+//	msg           —— 答复。⚠️ **是整段,不是分片**(见下)
 //	end           —— 本条流正常收尾
 //	info          —— 出错了。⚠️ 流式下错误**走帧不走 grpc status** ——
 //	                 否则客户端收了半截流再拿到 error,两套错误通道并存反而更难排查
@@ -1105,11 +1104,10 @@ func (x *ChatResp) GetQuestion() []*Content {
 //
 // 收到 `toolCalls`:本条流到此结束,客户端执行 `tools`,再调 ResumeStream(带 `id`)续跑。
 type ConverseStreamResp struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	Code  *int32                 `protobuf:"varint,1,opt,name=code,proto3,oneof" json:"code,omitempty"`
-	Type  *string                `protobuf:"bytes,2,opt,name=type,proto3,oneof" json:"type,omitempty"`
-	// type="msg" 时为完整回答；图片使用其中的 Markdown，客户端沿用原有文字渲染。
-	Message *string `protobuf:"bytes,3,opt,name=message,proto3,oneof" json:"message,omitempty"`
+	state   protoimpl.MessageState `protogen:"open.v1"`
+	Code    *int32                 `protobuf:"varint,1,opt,name=code,proto3,oneof" json:"code,omitempty"`
+	Type    *string                `protobuf:"bytes,2,opt,name=type,proto3,oneof" json:"type,omitempty"`
+	Message *string                `protobuf:"bytes,3,opt,name=message,proto3,oneof" json:"message,omitempty"`
 	// 仅 type="toolCalls" 时有值 —— 与 ChatResp 的 result/tools 同义。
 	Id    *string     `protobuf:"bytes,4,opt,name=id,proto3,oneof" json:"id,omitempty"` // 续跑 id(Resume 时带回)
 	Tools []*ToolCall `protobuf:"bytes,5,rep,name=tools,proto3" json:"tools,omitempty"` // 待客户端执行的工具

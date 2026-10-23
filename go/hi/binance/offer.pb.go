@@ -90,7 +90,7 @@ const (
 	BinanceOfferTpsl_STATE_OFF         BinanceOfferTpsl_State = 2 // 人没勾「自动设置止盈止损」
 	BinanceOfferTpsl_STATE_SKIPPED     BinanceOfferTpsl_State = 3 // 没挂:没设风险承受率 / 这个方向开单前已有仓位(原因在 reason)
 	BinanceOfferTpsl_STATE_FAILED      BinanceOfferTpsl_State = 4 // 仓开成了,止盈止损没挂上或只挂上一条(原因在 reason)—— **这个仓位可能没有止损**,界面要显眼
-	BinanceOfferTpsl_STATE_WAITING     BinanceOfferTpsl_State = 5 // 跟挂卡:单挂上了、还没成交,成交后再挂止盈止损(之后的结果另给主人发一句话,不改这张卡)
+	BinanceOfferTpsl_STATE_WAITING     BinanceOfferTpsl_State = 5 // 跟挂卡:单挂上了、还没成交。之后有了下文(成交后挂上 / 没挂上、没成交就没了、信号源撤单自动撤掉),机器人把这张卡的 tpsl 改成 SET / FAILED / SKIPPED 再推一次,并另给主人发一句话
 )
 
 // Enum value maps for BinanceOfferTpsl_State.

@@ -538,7 +538,6 @@ pub mod tool_call {
 pub struct ChatResp {
     #[prost(bool, optional, tag = "1")]
     pub r#final: ::core::option::Option<bool>,
-    /// 最终回答中的图片由模型以 Markdown 写入 result，不另设媒体返回通道。
     #[prost(string, optional, tag = "2")]
     pub result: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, repeated, tag = "3")]
@@ -553,7 +552,7 @@ pub struct ChatResp {
 /// 流式帧(ConverseStream / ResumeStream)。
 ///
 /// `type` 取值 —— **一条指令帧,其余是内容/进度/回显**:
-/// msg           —— 完整回答文字，不是分片；图片使用 message 中的 Markdown
+/// msg           —— 答复。⚠️ **是整段,不是分片**(见下)
 /// end           —— 本条流正常收尾
 /// info          —— 出错了。⚠️ 流式下错误**走帧不走 grpc status** ——
 /// 否则客户端收了半截流再拿到 error,两套错误通道并存反而更难排查
@@ -586,7 +585,6 @@ pub struct ConverseStreamResp {
     pub code: ::core::option::Option<i32>,
     #[prost(string, optional, tag = "2")]
     pub r#type: ::core::option::Option<::prost::alloc::string::String>,
-    /// type="msg" 时为完整回答；图片使用其中的 Markdown，客户端沿用原有文字渲染。
     #[prost(string, optional, tag = "3")]
     pub message: ::core::option::Option<::prost::alloc::string::String>,
     /// 仅 type="toolCalls" 时有值 —— 与 ChatResp 的 result/tools 同义。
