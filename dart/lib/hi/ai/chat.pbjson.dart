@@ -623,10 +623,6 @@ const ChatResp$json = {
     {'1': '_final'},
     {'1': '_result'},
   ],
-  '9': [
-    {'1': 5, '2': 6},
-  ],
-  '10': ['reply_images'],
 };
 
 /// Descriptor for `ChatResp`. Decode as a `google.protobuf.DescriptorProto`.
@@ -634,7 +630,7 @@ final $typed_data.Uint8List chatRespDescriptor = $convert.base64Decode(
     'CghDaGF0UmVzcBIfCgVmaW5hbBgBIAEoCEIEkLUYA0gAUgVmaW5hbIgBARIhCgZyZXN1bHQYAi'
     'ABKAlCBJC1GANIAVIGcmVzdWx0iAEBEisKBXRvb2xzGAMgAygLMg8uaGkuYWkuVG9vbENhbGxC'
     'BJC1GANSBXRvb2xzEjAKCHF1ZXN0aW9uGAQgAygLMg4uaGkuYWkuQ29udGVudEIEkLUYA1IIcX'
-    'Vlc3Rpb246BJi1GANCCAoGX2ZpbmFsQgkKB19yZXN1bHRKBAgFEAZSDHJlcGx5X2ltYWdlcw==');
+    'Vlc3Rpb246BJi1GANCCAoGX2ZpbmFsQgkKB19yZXN1bHQ=');
 
 @$core.Deprecated('Use converseStreamRespDescriptor instead')
 const ConverseStreamResp$json = {
@@ -706,10 +702,6 @@ const ConverseStreamResp$json = {
     {'1': '_message'},
     {'1': '_id'},
   ],
-  '9': [
-    {'1': 7, '2': 8},
-  ],
-  '10': ['reply_images'],
 };
 
 /// Descriptor for `ConverseStreamResp`. Decode as a `google.protobuf.DescriptorProto`.
@@ -719,4 +711,4 @@ final $typed_data.Uint8List converseStreamRespDescriptor = $convert.base64Decode
     'c3NhZ2WIAQESGQoCaWQYBCABKAlCBJC1GANIA1ICaWSIAQESKwoFdG9vbHMYBSADKAsyDy5oaS'
     '5haS5Ub29sQ2FsbEIEkLUYA1IFdG9vbHMSMAoIcXVlc3Rpb24YBiADKAsyDi5oaS5haS5Db250'
     'ZW50QgSQtRgDUghxdWVzdGlvbjoEmLUYA0IHCgVfY29kZUIHCgVfdHlwZUIKCghfbWVzc2FnZU'
-    'IFCgNfaWRKBAgHEAhSDHJlcGx5X2ltYWdlcw==');
+    'IFCgNfaWQ=');

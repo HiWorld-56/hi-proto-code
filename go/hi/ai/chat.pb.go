@@ -998,10 +998,11 @@ func (x *ToolCall) GetFunction() *ToolCall_Function {
 //	但也可能出现 tools 为空却 final=false 的边界(工具被过滤掉等),此时仍须调 Resume,
 //	否则整轮对话就停在半路,表现为"机器人不理我了"。
 type ChatResp struct {
-	state  protoimpl.MessageState `protogen:"open.v1"`
-	Final  *bool                  `protobuf:"varint,1,opt,name=final,proto3,oneof" json:"final,omitempty"`
-	Result *string                `protobuf:"bytes,2,opt,name=result,proto3,oneof" json:"result,omitempty"`
-	Tools  []*ToolCall            `protobuf:"bytes,3,rep,name=tools,proto3" json:"tools,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Final *bool                  `protobuf:"varint,1,opt,name=final,proto3,oneof" json:"final,omitempty"`
+	// 最终回答中的图片由模型以 Markdown 写入 result，不另设媒体返回通道。
+	Result *string     `protobuf:"bytes,2,opt,name=result,proto3,oneof" json:"result,omitempty"`
+	Tools  []*ToolCall `protobuf:"bytes,3,rep,name=tools,proto3" json:"tools,omitempty"`
 	// 这一轮的**问题**:请求里的 `conts` 原样、同序,只把每段语音(audio_url)换成 hi-ai 识别出的那段 text。
 	// 语音转文字只在 hi-ai 做一次(推理前必转,见 service/chat.go 的 Prepare),调用方别另做一遍 ——
 	// 两处识别结果可能不一致。Converse 与 Resume 的回包都带(final 与否都带,续跑带的是开轮那一句)。
@@ -1104,10 +1105,11 @@ func (x *ChatResp) GetQuestion() []*Content {
 //
 // 收到 `toolCalls`:本条流到此结束,客户端执行 `tools`,再调 ResumeStream(带 `id`)续跑。
 type ConverseStreamResp struct {
-	state   protoimpl.MessageState `protogen:"open.v1"`
-	Code    *int32                 `protobuf:"varint,1,opt,name=code,proto3,oneof" json:"code,omitempty"`
-	Type    *string                `protobuf:"bytes,2,opt,name=type,proto3,oneof" json:"type,omitempty"`
-	Message *string                `protobuf:"bytes,3,opt,name=message,proto3,oneof" json:"message,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Code  *int32                 `protobuf:"varint,1,opt,name=code,proto3,oneof" json:"code,omitempty"`
+	Type  *string                `protobuf:"bytes,2,opt,name=type,proto3,oneof" json:"type,omitempty"`
+	// type="msg" 时为完整回答；图片使用其中的 Markdown，客户端沿用原有文字渲染。
+	Message *string `protobuf:"bytes,3,opt,name=message,proto3,oneof" json:"message,omitempty"`
 	// 仅 type="toolCalls" 时有值 —— 与 ChatResp 的 result/tools 同义。
 	Id    *string     `protobuf:"bytes,4,opt,name=id,proto3,oneof" json:"id,omitempty"` // 续跑 id(Resume 时带回)
 	Tools []*ToolCall `protobuf:"bytes,5,rep,name=tools,proto3" json:"tools,omitempty"` // 待客户端执行的工具
@@ -1423,14 +1425,14 @@ const file_hi_ai_chat_proto_rawDesc = "" +
 	"\n" +
 	"_arguments:\x04\x98\xb5\x18\x03B\x05\n" +
 	"\x03_idB\a\n" +
-	"\x05_type\"\xdc\x01\n" +
+	"\x05_type\"\xc8\x01\n" +
 	"\bChatResp\x12\x1f\n" +
 	"\x05final\x18\x01 \x01(\bB\x04\x90\xb5\x18\x03H\x00R\x05final\x88\x01\x01\x12!\n" +
 	"\x06result\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x06result\x88\x01\x01\x12+\n" +
 	"\x05tools\x18\x03 \x03(\v2\x0f.hi.ai.ToolCallB\x04\x90\xb5\x18\x03R\x05tools\x120\n" +
 	"\bquestion\x18\x04 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\bquestion:\x04\x98\xb5\x18\x03B\b\n" +
 	"\x06_finalB\t\n" +
-	"\a_resultJ\x04\b\x05\x10\x06R\freply_images\"\xb0\x02\n" +
+	"\a_result\"\x9c\x02\n" +
 	"\x12ConverseStreamResp\x12\x1d\n" +
 	"\x04code\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x04code\x88\x01\x01\x12\x1d\n" +
 	"\x04type\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x04type\x88\x01\x01\x12#\n" +
@@ -1442,7 +1444,7 @@ const file_hi_ai_chat_proto_rawDesc = "" +
 	"\x05_typeB\n" +
 	"\n" +
 	"\b_messageB\x05\n" +
-	"\x03_idJ\x04\b\a\x10\bR\freply_images2\xa2\x04\n" +
+	"\x03_id2\xa2\x04\n" +
 	"\x04Chat\x12B\n" +
 	"\n" +
 	"NewSession\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.NewSessionResp\"\x05\x8a\xb5\x18\x01\x03\x12@\n" +

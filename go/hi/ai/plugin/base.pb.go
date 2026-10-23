@@ -1160,9 +1160,9 @@ const file_hi_ai_plugin_base_proto_rawDesc = "" +
 	"\x05_uuidB\v\n" +
 	"\t_functionB\b\n" +
 	"\x06_askerB\t\n" +
-	"\a_master\"O\n" +
+	"\a_master\";\n" +
 	"\aRunResp\x12*\n" +
-	"\x05conts\x18\x01 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\x05conts:\x04\x98\xb5\x18\x03J\x04\b\x02\x10\x03R\freply_images\"P\n" +
+	"\x05conts\x18\x01 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\x05conts:\x04\x98\xb5\x18\x03\"P\n" +
 	"\n" +
 	"CleanupReq\x12-\n" +
 	"\x10code_archive_url\x18\x01 \x01(\tH\x00R\x0ecodeArchiveUrl\x88\x01\x01B\x13\n" +

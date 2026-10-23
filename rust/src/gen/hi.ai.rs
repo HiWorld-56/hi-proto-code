@@ -538,6 +538,7 @@ pub mod tool_call {
 pub struct ChatResp {
     #[prost(bool, optional, tag = "1")]
     pub r#final: ::core::option::Option<bool>,
+    /// 最终回答中的图片由模型以 Markdown 写入 result，不另设媒体返回通道。
     #[prost(string, optional, tag = "2")]
     pub result: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, repeated, tag = "3")]
@@ -585,6 +586,7 @@ pub struct ConverseStreamResp {
     pub code: ::core::option::Option<i32>,
     #[prost(string, optional, tag = "2")]
     pub r#type: ::core::option::Option<::prost::alloc::string::String>,
+    /// type="msg" 时为完整回答；图片使用其中的 Markdown，客户端沿用原有文字渲染。
     #[prost(string, optional, tag = "3")]
     pub message: ::core::option::Option<::prost::alloc::string::String>,
     /// 仅 type="toolCalls" 时有值 —— 与 ChatResp 的 result/tools 同义。

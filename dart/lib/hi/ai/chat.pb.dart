@@ -1408,6 +1408,7 @@ class ChatResp extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearFinal_1() => $_clearField(1);
 
+  /// 最终回答中的图片由模型以 Markdown 写入 result，不另设媒体返回通道。
   @$pb.TagNumber(2)
   $core.String get result => $_getSZ(1);
   @$pb.TagNumber(2)
@@ -1537,6 +1538,7 @@ class ConverseStreamResp extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearType() => $_clearField(2);
 
+  /// type="msg" 时为完整回答；图片使用其中的 Markdown，客户端沿用原有文字渲染。
   @$pb.TagNumber(3)
   $core.String get message => $_getSZ(2);
   @$pb.TagNumber(3)
