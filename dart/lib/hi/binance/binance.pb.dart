@@ -1911,6 +1911,87 @@ class BinanceFuturesCancelOrder extends $pb.GeneratedMessage {
   void clearOrigClientOrderId() => $_clearField(3);
 }
 
+/// 查一张合约订单。`GET /fapi/v1/order`
+/// `order_id` 与 `orig_client_order_id` 给一个即可(都不给由币安报错)。跟单方查自己跟挂的限价单成交没有(10-23)。
+class BinanceFuturesGetOrder extends $pb.GeneratedMessage {
+  factory BinanceFuturesGetOrder({
+    $core.String? symbol,
+    $fixnum.Int64? orderId,
+    $core.String? origClientOrderId,
+  }) {
+    final result = create();
+    if (symbol != null) result.symbol = symbol;
+    if (orderId != null) result.orderId = orderId;
+    if (origClientOrderId != null) result.origClientOrderId = origClientOrderId;
+    return result;
+  }
+
+  BinanceFuturesGetOrder._();
+
+  factory BinanceFuturesGetOrder.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceFuturesGetOrder.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceFuturesGetOrder',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'symbol')
+    ..aInt64(2, _omitFieldNames ? '' : 'orderId')
+    ..aOS(3, _omitFieldNames ? '' : 'origClientOrderId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceFuturesGetOrder clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceFuturesGetOrder copyWith(
+          void Function(BinanceFuturesGetOrder) updates) =>
+      super.copyWith((message) => updates(message as BinanceFuturesGetOrder))
+          as BinanceFuturesGetOrder;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceFuturesGetOrder create() => BinanceFuturesGetOrder._();
+  @$core.override
+  BinanceFuturesGetOrder createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceFuturesGetOrder getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceFuturesGetOrder>(create);
+  static BinanceFuturesGetOrder? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get symbol => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set symbol($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSymbol() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSymbol() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get orderId => $_getI64(1);
+  @$pb.TagNumber(2)
+  set orderId($fixnum.Int64 value) => $_setInt64(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasOrderId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearOrderId() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get origClientOrderId => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set origClientOrderId($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasOrigClientOrderId() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearOrigClientOrderId() => $_clearField(3);
+}
+
 /// 合约撤掉某个交易对的全部挂单。`DELETE /fapi/v1/allOpenOrders`
 class BinanceFuturesCancelAllOrders extends $pb.GeneratedMessage {
   factory BinanceFuturesCancelAllOrders({

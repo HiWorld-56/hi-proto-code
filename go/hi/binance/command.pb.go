@@ -107,6 +107,7 @@ type BinanceCommand struct {
 	//	*BinanceCommand_SpotCancelAllSymbols
 	//	*BinanceCommand_UsdsFuturesCancelAllSymbols
 	//	*BinanceCommand_UsdsFuturesPositionTpsl
+	//	*BinanceCommand_UsdsFuturesQueryOrder
 	Op            isBinanceCommand_Op `protobuf_oneof:"op"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -606,6 +607,15 @@ func (x *BinanceCommand) GetUsdsFuturesPositionTpsl() *BinanceFuturesPositionTps
 	return nil
 }
 
+func (x *BinanceCommand) GetUsdsFuturesQueryOrder() *BinanceFuturesGetOrder {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceCommand_UsdsFuturesQueryOrder); ok {
+			return x.UsdsFuturesQueryOrder
+		}
+	}
+	return nil
+}
+
 type isBinanceCommand_Op interface {
 	isBinanceCommand_Op()
 }
@@ -814,6 +824,10 @@ type BinanceCommand_UsdsFuturesPositionTpsl struct {
 	UsdsFuturesPositionTpsl *BinanceFuturesPositionTpsl `protobuf:"bytes,61,opt,name=usds_futures_position_tpsl,json=usdsFuturesPositionTpsl,proto3,oneof"` // usds_futures.position_tpsl
 }
 
+type BinanceCommand_UsdsFuturesQueryOrder struct {
+	UsdsFuturesQueryOrder *BinanceFuturesGetOrder `protobuf:"bytes,62,opt,name=usds_futures_query_order,json=usdsFuturesQueryOrder,proto3,oneof"` // usds_futures.query_order
+}
+
 func (*BinanceCommand_SpotNewOrder) isBinanceCommand_Op() {}
 
 func (*BinanceCommand_SpotCancelOrder) isBinanceCommand_Op() {}
@@ -914,12 +928,14 @@ func (*BinanceCommand_UsdsFuturesCancelAllSymbols) isBinanceCommand_Op() {}
 
 func (*BinanceCommand_UsdsFuturesPositionTpsl) isBinanceCommand_Op() {}
 
+func (*BinanceCommand_UsdsFuturesQueryOrder) isBinanceCommand_Op() {}
+
 var File_hi_binance_command_proto protoreflect.FileDescriptor
 
 const file_hi_binance_command_proto_rawDesc = "" +
 	"\n" +
 	"\x18hi/binance/command.proto\x12\n" +
-	"hi.binance\x1a\x1bbuf/validate/validate.proto\x1a\x18hi/binance/binance.proto\x1a\x17hi/binance/stocks.proto\x1a\x10hi/options.proto\"\xbf)\n" +
+	"hi.binance\x1a\x1bbuf/validate/validate.proto\x1a\x18hi/binance/binance.proto\x1a\x17hi/binance/stocks.proto\x1a\x10hi/options.proto\"\xa4*\n" +
 	"\x0eBinanceCommand\x12/\n" +
 	"\n" +
 	"expiration\x18\x01 \x01(\x03B\n" +
@@ -976,7 +992,8 @@ const file_hi_binance_command_proto_rawDesc = "" +
 	"\x10usds_futures_pnl\x18: \x01(\v2\x1d.hi.binance.BinanceFuturesPnlB\x04\x90\xb5\x18\x02H\x00R\x0eusdsFuturesPnl\x12f\n" +
 	"\x17spot_cancel_all_symbols\x18; \x01(\v2'.hi.binance.BinanceSpotCancelAllSymbolsB\x04\x90\xb5\x18\x02H\x00R\x14spotCancelAllSymbols\x12x\n" +
 	"\x1fusds_futures_cancel_all_symbols\x18< \x01(\v2*.hi.binance.BinanceFuturesCancelAllSymbolsB\x04\x90\xb5\x18\x02H\x00R\x1busdsFuturesCancelAllSymbols\x12k\n" +
-	"\x1ausds_futures_position_tpsl\x18= \x01(\v2&.hi.binance.BinanceFuturesPositionTpslB\x04\x90\xb5\x18\x02H\x00R\x17usdsFuturesPositionTpsl:\x04\x98\xb5\x18\x02B\v\n" +
+	"\x1ausds_futures_position_tpsl\x18= \x01(\v2&.hi.binance.BinanceFuturesPositionTpslB\x04\x90\xb5\x18\x02H\x00R\x17usdsFuturesPositionTpsl\x12c\n" +
+	"\x18usds_futures_query_order\x18> \x01(\v2\".hi.binance.BinanceFuturesGetOrderB\x04\x90\xb5\x18\x02H\x00R\x15usdsFuturesQueryOrder:\x04\x98\xb5\x18\x02B\v\n" +
 	"\x02op\x12\x05\xbaH\x02\b\x01B\r\n" +
 	"\v_expirationB\x95\x01\n" +
 	"\x0ecom.hi.binanceB\fCommandProtoP\x01Z,github.com/HiWorld-56/hi-proto/go/hi/binance\xa2\x02\x03HBX\xaa\x02\n" +
@@ -1048,6 +1065,7 @@ var file_hi_binance_command_proto_goTypes = []any{
 	(*BinanceSpotCancelAllSymbols)(nil),       // 48: hi.binance.BinanceSpotCancelAllSymbols
 	(*BinanceFuturesCancelAllSymbols)(nil),    // 49: hi.binance.BinanceFuturesCancelAllSymbols
 	(*BinanceFuturesPositionTpsl)(nil),        // 50: hi.binance.BinanceFuturesPositionTpsl
+	(*BinanceFuturesGetOrder)(nil),            // 51: hi.binance.BinanceFuturesGetOrder
 }
 var file_hi_binance_command_proto_depIdxs = []int32{
 	1,  // 0: hi.binance.BinanceCommand.spot_new_order:type_name -> hi.binance.BinanceSpotNewOrder
@@ -1100,11 +1118,12 @@ var file_hi_binance_command_proto_depIdxs = []int32{
 	48, // 47: hi.binance.BinanceCommand.spot_cancel_all_symbols:type_name -> hi.binance.BinanceSpotCancelAllSymbols
 	49, // 48: hi.binance.BinanceCommand.usds_futures_cancel_all_symbols:type_name -> hi.binance.BinanceFuturesCancelAllSymbols
 	50, // 49: hi.binance.BinanceCommand.usds_futures_position_tpsl:type_name -> hi.binance.BinanceFuturesPositionTpsl
-	50, // [50:50] is the sub-list for method output_type
-	50, // [50:50] is the sub-list for method input_type
-	50, // [50:50] is the sub-list for extension type_name
-	50, // [50:50] is the sub-list for extension extendee
-	0,  // [0:50] is the sub-list for field type_name
+	51, // 50: hi.binance.BinanceCommand.usds_futures_query_order:type_name -> hi.binance.BinanceFuturesGetOrder
+	51, // [51:51] is the sub-list for method output_type
+	51, // [51:51] is the sub-list for method input_type
+	51, // [51:51] is the sub-list for extension type_name
+	51, // [51:51] is the sub-list for extension extendee
+	0,  // [0:51] is the sub-list for field type_name
 }
 
 func init() { file_hi_binance_command_proto_init() }
@@ -1165,6 +1184,7 @@ func file_hi_binance_command_proto_init() {
 		(*BinanceCommand_SpotCancelAllSymbols)(nil),
 		(*BinanceCommand_UsdsFuturesCancelAllSymbols)(nil),
 		(*BinanceCommand_UsdsFuturesPositionTpsl)(nil),
+		(*BinanceCommand_UsdsFuturesQueryOrder)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

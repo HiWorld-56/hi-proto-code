@@ -1377,6 +1377,57 @@ final $typed_data.Uint8List binanceFuturesCancelOrderDescriptor = $convert.base6
     'xpZW50T3JkZXJJZIgBAToEmLUYAkIJCgdfc3ltYm9sQgsKCV9vcmRlcl9pZEIXChVfb3JpZ19j'
     'bGllbnRfb3JkZXJfaWQ=');
 
+@$core.Deprecated('Use binanceFuturesGetOrderDescriptor instead')
+const BinanceFuturesGetOrder$json = {
+  '1': 'BinanceFuturesGetOrder',
+  '2': [
+    {
+      '1': 'symbol',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'symbol',
+      '17': true
+    },
+    {
+      '1': 'order_id',
+      '3': 2,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 1,
+      '10': 'orderId',
+      '17': true
+    },
+    {
+      '1': 'orig_client_order_id',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'origClientOrderId',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_symbol'},
+    {'1': '_order_id'},
+    {'1': '_orig_client_order_id'},
+  ],
+};
+
+/// Descriptor for `BinanceFuturesGetOrder`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List binanceFuturesGetOrderDescriptor = $convert.base64Decode(
+    'ChZCaW5hbmNlRnV0dXJlc0dldE9yZGVyEjYKBnN5bWJvbBgBIAEoCUIZukgSyAEBcg0yC15bQS'
+    '1aMC05XSskkLUYAkgAUgZzeW1ib2yIAQESJAoIb3JkZXJfaWQYAiABKANCBJC1GAJIAVIHb3Jk'
+    'ZXJJZIgBARI6ChRvcmlnX2NsaWVudF9vcmRlcl9pZBgDIAEoCUIEkLUYAkgCUhFvcmlnQ2xpZW'
+    '50T3JkZXJJZIgBAToEmLUYAkIJCgdfc3ltYm9sQgsKCV9vcmRlcl9pZEIXChVfb3JpZ19jbGll'
+    'bnRfb3JkZXJfaWQ=');
+
 @$core.Deprecated('Use binanceFuturesCancelAllOrdersDescriptor instead')
 const BinanceFuturesCancelAllOrders$json = {
   '1': 'BinanceFuturesCancelAllOrders',

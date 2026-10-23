@@ -71,6 +71,7 @@ enum BinanceCommand_Op {
   spotCancelAllSymbols,
   usdsFuturesCancelAllSymbols,
   usdsFuturesPositionTpsl,
+  usdsFuturesQueryOrder,
   notSet
 }
 
@@ -153,6 +154,7 @@ class BinanceCommand extends $pb.GeneratedMessage {
     $0.BinanceSpotCancelAllSymbols? spotCancelAllSymbols,
     $0.BinanceFuturesCancelAllSymbols? usdsFuturesCancelAllSymbols,
     $0.BinanceFuturesPositionTpsl? usdsFuturesPositionTpsl,
+    $0.BinanceFuturesGetOrder? usdsFuturesQueryOrder,
   }) {
     final result = create();
     if (expiration != null) result.expiration = expiration;
@@ -244,6 +246,8 @@ class BinanceCommand extends $pb.GeneratedMessage {
       result.usdsFuturesCancelAllSymbols = usdsFuturesCancelAllSymbols;
     if (usdsFuturesPositionTpsl != null)
       result.usdsFuturesPositionTpsl = usdsFuturesPositionTpsl;
+    if (usdsFuturesQueryOrder != null)
+      result.usdsFuturesQueryOrder = usdsFuturesQueryOrder;
     return result;
   }
 
@@ -308,6 +312,7 @@ class BinanceCommand extends $pb.GeneratedMessage {
     59: BinanceCommand_Op.spotCancelAllSymbols,
     60: BinanceCommand_Op.usdsFuturesCancelAllSymbols,
     61: BinanceCommand_Op.usdsFuturesPositionTpsl,
+    62: BinanceCommand_Op.usdsFuturesQueryOrder,
     0: BinanceCommand_Op.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -364,7 +369,8 @@ class BinanceCommand extends $pb.GeneratedMessage {
       58,
       59,
       60,
-      61
+      61,
+      62
     ])
     ..aInt64(1, _omitFieldNames ? '' : 'expiration')
     ..aOM<$0.BinanceSpotNewOrder>(10, _omitFieldNames ? '' : 'spotNewOrder',
@@ -513,6 +519,9 @@ class BinanceCommand extends $pb.GeneratedMessage {
     ..aOM<$0.BinanceFuturesPositionTpsl>(
         61, _omitFieldNames ? '' : 'usdsFuturesPositionTpsl',
         subBuilder: $0.BinanceFuturesPositionTpsl.create)
+    ..aOM<$0.BinanceFuturesGetOrder>(
+        62, _omitFieldNames ? '' : 'usdsFuturesQueryOrder',
+        subBuilder: $0.BinanceFuturesGetOrder.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -584,6 +593,7 @@ class BinanceCommand extends $pb.GeneratedMessage {
   @$pb.TagNumber(59)
   @$pb.TagNumber(60)
   @$pb.TagNumber(61)
+  @$pb.TagNumber(62)
   BinanceCommand_Op whichOp() => _BinanceCommand_OpByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(10)
   @$pb.TagNumber(11)
@@ -635,6 +645,7 @@ class BinanceCommand extends $pb.GeneratedMessage {
   @$pb.TagNumber(59)
   @$pb.TagNumber(60)
   @$pb.TagNumber(61)
+  @$pb.TagNumber(62)
   void clearOp() => $_clearField($_whichOneof(0));
 
   /// 过期时刻,**绝对时间,微秒**(与 `Notice.expiration` 同一口径)。过了机器人不执行、回一条失败;
@@ -1263,6 +1274,18 @@ class BinanceCommand extends $pb.GeneratedMessage {
   void clearUsdsFuturesPositionTpsl() => $_clearField(61);
   @$pb.TagNumber(61)
   $0.BinanceFuturesPositionTpsl ensureUsdsFuturesPositionTpsl() => $_ensure(50);
+
+  @$pb.TagNumber(62)
+  $0.BinanceFuturesGetOrder get usdsFuturesQueryOrder => $_getN(51);
+  @$pb.TagNumber(62)
+  set usdsFuturesQueryOrder($0.BinanceFuturesGetOrder value) =>
+      $_setField(62, value);
+  @$pb.TagNumber(62)
+  $core.bool hasUsdsFuturesQueryOrder() => $_has(51);
+  @$pb.TagNumber(62)
+  void clearUsdsFuturesQueryOrder() => $_clearField(62);
+  @$pb.TagNumber(62)
+  $0.BinanceFuturesGetOrder ensureUsdsFuturesQueryOrder() => $_ensure(51);
 }
 
 const $core.bool _omitFieldNames =

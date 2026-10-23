@@ -290,6 +290,17 @@ pub struct BinanceFuturesCancelOrder {
     #[prost(string, optional, tag = "3")]
     pub orig_client_order_id: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 查一张合约订单。`GET /fapi/v1/order`
+/// `order_id` 与 `orig_client_order_id` 给一个即可(都不给由币安报错)。跟单方查自己跟挂的限价单成交没有(10-23)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceFuturesGetOrder {
+    #[prost(string, optional, tag = "1")]
+    pub symbol: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "2")]
+    pub order_id: ::core::option::Option<i64>,
+    #[prost(string, optional, tag = "3")]
+    pub orig_client_order_id: ::core::option::Option<::prost::alloc::string::String>,
+}
 /// 合约撤掉某个交易对的全部挂单。`DELETE /fapi/v1/allOpenOrders`
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BinanceFuturesCancelAllOrders {
@@ -1362,7 +1373,7 @@ pub struct BinanceCommand {
     pub expiration: ::core::option::Option<i64>,
     #[prost(
         oneof = "binance_command::Op",
-        tags = "10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 40, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61"
+        tags = "10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 40, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62"
     )]
     pub op: ::core::option::Option<binance_command::Op>,
 }
@@ -1528,6 +1539,9 @@ pub mod binance_command {
         /// usds_futures.position_tpsl
         #[prost(message, tag = "61")]
         UsdsFuturesPositionTpsl(super::BinanceFuturesPositionTpsl),
+        /// usds_futures.query_order
+        #[prost(message, tag = "62")]
+        UsdsFuturesQueryOrder(super::BinanceFuturesGetOrder),
     }
 }
 /// **开单信号**:一台机器人(信号源)经 hi 开了仓 / 挂了开仓单,广播给群里别的机器人。

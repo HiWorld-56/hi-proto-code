@@ -1878,6 +1878,68 @@ func (x *BinanceFuturesCancelOrder) GetOrigClientOrderId() string {
 	return ""
 }
 
+// 查一张合约订单。`GET /fapi/v1/order`
+// `order_id` 与 `orig_client_order_id` 给一个即可(都不给由币安报错)。跟单方查自己跟挂的限价单成交没有(10-23)。
+type BinanceFuturesGetOrder struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	Symbol            *string                `protobuf:"bytes,1,opt,name=symbol,proto3,oneof" json:"symbol,omitempty"`
+	OrderId           *int64                 `protobuf:"varint,2,opt,name=order_id,json=orderId,proto3,oneof" json:"order_id,omitempty"`
+	OrigClientOrderId *string                `protobuf:"bytes,3,opt,name=orig_client_order_id,json=origClientOrderId,proto3,oneof" json:"orig_client_order_id,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *BinanceFuturesGetOrder) Reset() {
+	*x = BinanceFuturesGetOrder{}
+	mi := &file_hi_binance_binance_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BinanceFuturesGetOrder) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BinanceFuturesGetOrder) ProtoMessage() {}
+
+func (x *BinanceFuturesGetOrder) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_binance_binance_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BinanceFuturesGetOrder.ProtoReflect.Descriptor instead.
+func (*BinanceFuturesGetOrder) Descriptor() ([]byte, []int) {
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *BinanceFuturesGetOrder) GetSymbol() string {
+	if x != nil && x.Symbol != nil {
+		return *x.Symbol
+	}
+	return ""
+}
+
+func (x *BinanceFuturesGetOrder) GetOrderId() int64 {
+	if x != nil && x.OrderId != nil {
+		return *x.OrderId
+	}
+	return 0
+}
+
+func (x *BinanceFuturesGetOrder) GetOrigClientOrderId() string {
+	if x != nil && x.OrigClientOrderId != nil {
+		return *x.OrigClientOrderId
+	}
+	return ""
+}
+
 // 合约撤掉某个交易对的全部挂单。`DELETE /fapi/v1/allOpenOrders`
 type BinanceFuturesCancelAllOrders struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -1888,7 +1950,7 @@ type BinanceFuturesCancelAllOrders struct {
 
 func (x *BinanceFuturesCancelAllOrders) Reset() {
 	*x = BinanceFuturesCancelAllOrders{}
-	mi := &file_hi_binance_binance_proto_msgTypes[20]
+	mi := &file_hi_binance_binance_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1900,7 +1962,7 @@ func (x *BinanceFuturesCancelAllOrders) String() string {
 func (*BinanceFuturesCancelAllOrders) ProtoMessage() {}
 
 func (x *BinanceFuturesCancelAllOrders) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[20]
+	mi := &file_hi_binance_binance_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1913,7 +1975,7 @@ func (x *BinanceFuturesCancelAllOrders) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceFuturesCancelAllOrders.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesCancelAllOrders) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{20}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *BinanceFuturesCancelAllOrders) GetSymbol() string {
@@ -1934,7 +1996,7 @@ type BinanceFuturesLeverage struct {
 
 func (x *BinanceFuturesLeverage) Reset() {
 	*x = BinanceFuturesLeverage{}
-	mi := &file_hi_binance_binance_proto_msgTypes[21]
+	mi := &file_hi_binance_binance_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1946,7 +2008,7 @@ func (x *BinanceFuturesLeverage) String() string {
 func (*BinanceFuturesLeverage) ProtoMessage() {}
 
 func (x *BinanceFuturesLeverage) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[21]
+	mi := &file_hi_binance_binance_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1959,7 +2021,7 @@ func (x *BinanceFuturesLeverage) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceFuturesLeverage.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesLeverage) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{21}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *BinanceFuturesLeverage) GetSymbol() string {
@@ -1991,7 +2053,7 @@ type BinanceSpotKlines struct {
 
 func (x *BinanceSpotKlines) Reset() {
 	*x = BinanceSpotKlines{}
-	mi := &file_hi_binance_binance_proto_msgTypes[22]
+	mi := &file_hi_binance_binance_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2003,7 +2065,7 @@ func (x *BinanceSpotKlines) String() string {
 func (*BinanceSpotKlines) ProtoMessage() {}
 
 func (x *BinanceSpotKlines) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[22]
+	mi := &file_hi_binance_binance_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2016,7 +2078,7 @@ func (x *BinanceSpotKlines) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceSpotKlines.ProtoReflect.Descriptor instead.
 func (*BinanceSpotKlines) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{22}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *BinanceSpotKlines) GetSymbol() string {
@@ -2067,7 +2129,7 @@ type BinanceFuturesKlines struct {
 
 func (x *BinanceFuturesKlines) Reset() {
 	*x = BinanceFuturesKlines{}
-	mi := &file_hi_binance_binance_proto_msgTypes[23]
+	mi := &file_hi_binance_binance_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2079,7 +2141,7 @@ func (x *BinanceFuturesKlines) String() string {
 func (*BinanceFuturesKlines) ProtoMessage() {}
 
 func (x *BinanceFuturesKlines) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[23]
+	mi := &file_hi_binance_binance_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2092,7 +2154,7 @@ func (x *BinanceFuturesKlines) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceFuturesKlines.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesKlines) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{23}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *BinanceFuturesKlines) GetSymbol() string {
@@ -2141,7 +2203,7 @@ type BinanceFuturesTicker24H struct {
 
 func (x *BinanceFuturesTicker24H) Reset() {
 	*x = BinanceFuturesTicker24H{}
-	mi := &file_hi_binance_binance_proto_msgTypes[24]
+	mi := &file_hi_binance_binance_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2153,7 +2215,7 @@ func (x *BinanceFuturesTicker24H) String() string {
 func (*BinanceFuturesTicker24H) ProtoMessage() {}
 
 func (x *BinanceFuturesTicker24H) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[24]
+	mi := &file_hi_binance_binance_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2166,7 +2228,7 @@ func (x *BinanceFuturesTicker24H) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceFuturesTicker24H.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesTicker24H) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{24}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *BinanceFuturesTicker24H) GetSymbol() string {
@@ -2186,7 +2248,7 @@ type BinanceFuturesPositions struct {
 
 func (x *BinanceFuturesPositions) Reset() {
 	*x = BinanceFuturesPositions{}
-	mi := &file_hi_binance_binance_proto_msgTypes[25]
+	mi := &file_hi_binance_binance_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2198,7 +2260,7 @@ func (x *BinanceFuturesPositions) String() string {
 func (*BinanceFuturesPositions) ProtoMessage() {}
 
 func (x *BinanceFuturesPositions) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[25]
+	mi := &file_hi_binance_binance_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2211,7 +2273,7 @@ func (x *BinanceFuturesPositions) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceFuturesPositions.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesPositions) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{25}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *BinanceFuturesPositions) GetSymbol() string {
@@ -2231,7 +2293,7 @@ type BinanceFuturesAccount struct {
 
 func (x *BinanceFuturesAccount) Reset() {
 	*x = BinanceFuturesAccount{}
-	mi := &file_hi_binance_binance_proto_msgTypes[26]
+	mi := &file_hi_binance_binance_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2243,7 +2305,7 @@ func (x *BinanceFuturesAccount) String() string {
 func (*BinanceFuturesAccount) ProtoMessage() {}
 
 func (x *BinanceFuturesAccount) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[26]
+	mi := &file_hi_binance_binance_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2256,7 +2318,7 @@ func (x *BinanceFuturesAccount) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceFuturesAccount.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesAccount) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{26}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{27}
 }
 
 // 合约当前挂单。`GET /fapi/v1/openOrders`
@@ -2269,7 +2331,7 @@ type BinanceFuturesOpenOrders struct {
 
 func (x *BinanceFuturesOpenOrders) Reset() {
 	*x = BinanceFuturesOpenOrders{}
-	mi := &file_hi_binance_binance_proto_msgTypes[27]
+	mi := &file_hi_binance_binance_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2281,7 +2343,7 @@ func (x *BinanceFuturesOpenOrders) String() string {
 func (*BinanceFuturesOpenOrders) ProtoMessage() {}
 
 func (x *BinanceFuturesOpenOrders) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[27]
+	mi := &file_hi_binance_binance_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2294,7 +2356,7 @@ func (x *BinanceFuturesOpenOrders) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceFuturesOpenOrders.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesOpenOrders) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{27}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *BinanceFuturesOpenOrders) GetSymbol() string {
@@ -2315,7 +2377,7 @@ type BinanceFuturesOpenAlgoOrders struct {
 
 func (x *BinanceFuturesOpenAlgoOrders) Reset() {
 	*x = BinanceFuturesOpenAlgoOrders{}
-	mi := &file_hi_binance_binance_proto_msgTypes[28]
+	mi := &file_hi_binance_binance_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2327,7 +2389,7 @@ func (x *BinanceFuturesOpenAlgoOrders) String() string {
 func (*BinanceFuturesOpenAlgoOrders) ProtoMessage() {}
 
 func (x *BinanceFuturesOpenAlgoOrders) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[28]
+	mi := &file_hi_binance_binance_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2340,7 +2402,7 @@ func (x *BinanceFuturesOpenAlgoOrders) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceFuturesOpenAlgoOrders.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesOpenAlgoOrders) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{28}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *BinanceFuturesOpenAlgoOrders) GetSymbol() string {
@@ -2384,7 +2446,7 @@ type BinanceFuturesNewAlgoOrder struct {
 
 func (x *BinanceFuturesNewAlgoOrder) Reset() {
 	*x = BinanceFuturesNewAlgoOrder{}
-	mi := &file_hi_binance_binance_proto_msgTypes[29]
+	mi := &file_hi_binance_binance_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2396,7 +2458,7 @@ func (x *BinanceFuturesNewAlgoOrder) String() string {
 func (*BinanceFuturesNewAlgoOrder) ProtoMessage() {}
 
 func (x *BinanceFuturesNewAlgoOrder) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[29]
+	mi := &file_hi_binance_binance_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2409,7 +2471,7 @@ func (x *BinanceFuturesNewAlgoOrder) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceFuturesNewAlgoOrder.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesNewAlgoOrder) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{29}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *BinanceFuturesNewAlgoOrder) GetSymbol() string {
@@ -2535,7 +2597,7 @@ type BinanceFuturesCancelAlgoOrder struct {
 
 func (x *BinanceFuturesCancelAlgoOrder) Reset() {
 	*x = BinanceFuturesCancelAlgoOrder{}
-	mi := &file_hi_binance_binance_proto_msgTypes[30]
+	mi := &file_hi_binance_binance_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2547,7 +2609,7 @@ func (x *BinanceFuturesCancelAlgoOrder) String() string {
 func (*BinanceFuturesCancelAlgoOrder) ProtoMessage() {}
 
 func (x *BinanceFuturesCancelAlgoOrder) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[30]
+	mi := &file_hi_binance_binance_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2560,7 +2622,7 @@ func (x *BinanceFuturesCancelAlgoOrder) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceFuturesCancelAlgoOrder.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesCancelAlgoOrder) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{30}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *BinanceFuturesCancelAlgoOrder) GetAlgoId() int64 {
@@ -2587,7 +2649,7 @@ type BinanceFuturesCancelAllAlgoOrders struct {
 
 func (x *BinanceFuturesCancelAllAlgoOrders) Reset() {
 	*x = BinanceFuturesCancelAllAlgoOrders{}
-	mi := &file_hi_binance_binance_proto_msgTypes[31]
+	mi := &file_hi_binance_binance_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2599,7 +2661,7 @@ func (x *BinanceFuturesCancelAllAlgoOrders) String() string {
 func (*BinanceFuturesCancelAllAlgoOrders) ProtoMessage() {}
 
 func (x *BinanceFuturesCancelAllAlgoOrders) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[31]
+	mi := &file_hi_binance_binance_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2612,7 +2674,7 @@ func (x *BinanceFuturesCancelAllAlgoOrders) ProtoReflect() protoreflect.Message 
 
 // Deprecated: Use BinanceFuturesCancelAllAlgoOrders.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesCancelAllAlgoOrders) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{31}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *BinanceFuturesCancelAllAlgoOrders) GetSymbol() string {
@@ -2633,7 +2695,7 @@ type BinanceFuturesGetAlgoOrder struct {
 
 func (x *BinanceFuturesGetAlgoOrder) Reset() {
 	*x = BinanceFuturesGetAlgoOrder{}
-	mi := &file_hi_binance_binance_proto_msgTypes[32]
+	mi := &file_hi_binance_binance_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2645,7 +2707,7 @@ func (x *BinanceFuturesGetAlgoOrder) String() string {
 func (*BinanceFuturesGetAlgoOrder) ProtoMessage() {}
 
 func (x *BinanceFuturesGetAlgoOrder) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[32]
+	mi := &file_hi_binance_binance_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2658,7 +2720,7 @@ func (x *BinanceFuturesGetAlgoOrder) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceFuturesGetAlgoOrder.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesGetAlgoOrder) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{32}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *BinanceFuturesGetAlgoOrder) GetAlgoId() int64 {
@@ -2689,7 +2751,7 @@ type BinanceFuturesAllAlgoOrders struct {
 
 func (x *BinanceFuturesAllAlgoOrders) Reset() {
 	*x = BinanceFuturesAllAlgoOrders{}
-	mi := &file_hi_binance_binance_proto_msgTypes[33]
+	mi := &file_hi_binance_binance_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2701,7 +2763,7 @@ func (x *BinanceFuturesAllAlgoOrders) String() string {
 func (*BinanceFuturesAllAlgoOrders) ProtoMessage() {}
 
 func (x *BinanceFuturesAllAlgoOrders) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[33]
+	mi := &file_hi_binance_binance_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2714,7 +2776,7 @@ func (x *BinanceFuturesAllAlgoOrders) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceFuturesAllAlgoOrders.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesAllAlgoOrders) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{33}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *BinanceFuturesAllAlgoOrders) GetSymbol() string {
@@ -2767,7 +2829,7 @@ type BinanceFuturesIncome struct {
 
 func (x *BinanceFuturesIncome) Reset() {
 	*x = BinanceFuturesIncome{}
-	mi := &file_hi_binance_binance_proto_msgTypes[34]
+	mi := &file_hi_binance_binance_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2779,7 +2841,7 @@ func (x *BinanceFuturesIncome) String() string {
 func (*BinanceFuturesIncome) ProtoMessage() {}
 
 func (x *BinanceFuturesIncome) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[34]
+	mi := &file_hi_binance_binance_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2792,7 +2854,7 @@ func (x *BinanceFuturesIncome) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceFuturesIncome.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesIncome) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{34}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *BinanceFuturesIncome) GetSymbol() string {
@@ -2865,7 +2927,7 @@ type BinanceFuturesPnl struct {
 
 func (x *BinanceFuturesPnl) Reset() {
 	*x = BinanceFuturesPnl{}
-	mi := &file_hi_binance_binance_proto_msgTypes[35]
+	mi := &file_hi_binance_binance_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2877,7 +2939,7 @@ func (x *BinanceFuturesPnl) String() string {
 func (*BinanceFuturesPnl) ProtoMessage() {}
 
 func (x *BinanceFuturesPnl) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[35]
+	mi := &file_hi_binance_binance_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2890,7 +2952,7 @@ func (x *BinanceFuturesPnl) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceFuturesPnl.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesPnl) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{35}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{36}
 }
 
 // **现货:撤掉所有交易对上的全部挂单**(普通委托 + OCO / OTO 等组合单,含 bStocks)。**没有参数**。
@@ -2926,7 +2988,7 @@ type BinanceSpotCancelAllSymbols struct {
 
 func (x *BinanceSpotCancelAllSymbols) Reset() {
 	*x = BinanceSpotCancelAllSymbols{}
-	mi := &file_hi_binance_binance_proto_msgTypes[36]
+	mi := &file_hi_binance_binance_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2938,7 +3000,7 @@ func (x *BinanceSpotCancelAllSymbols) String() string {
 func (*BinanceSpotCancelAllSymbols) ProtoMessage() {}
 
 func (x *BinanceSpotCancelAllSymbols) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[36]
+	mi := &file_hi_binance_binance_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2951,7 +3013,7 @@ func (x *BinanceSpotCancelAllSymbols) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceSpotCancelAllSymbols.ProtoReflect.Descriptor instead.
 func (*BinanceSpotCancelAllSymbols) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{36}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{37}
 }
 
 // **U 本位合约:撤掉所有交易对上的全部挂单**(普通委托 + 止盈止损单(条件单);TradFi 永续在同一个合约账户里,一并撤)。
@@ -2971,7 +3033,7 @@ type BinanceFuturesCancelAllSymbols struct {
 
 func (x *BinanceFuturesCancelAllSymbols) Reset() {
 	*x = BinanceFuturesCancelAllSymbols{}
-	mi := &file_hi_binance_binance_proto_msgTypes[37]
+	mi := &file_hi_binance_binance_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2983,7 +3045,7 @@ func (x *BinanceFuturesCancelAllSymbols) String() string {
 func (*BinanceFuturesCancelAllSymbols) ProtoMessage() {}
 
 func (x *BinanceFuturesCancelAllSymbols) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[37]
+	mi := &file_hi_binance_binance_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2996,7 +3058,7 @@ func (x *BinanceFuturesCancelAllSymbols) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceFuturesCancelAllSymbols.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesCancelAllSymbols) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{37}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{38}
 }
 
 // **给一个合约持仓设止盈 / 止损**,整仓:触发时平掉这个方向的全部仓位(之后加仓减仓了也照样整仓平),
@@ -3066,7 +3128,7 @@ type BinanceFuturesPositionTpsl struct {
 
 func (x *BinanceFuturesPositionTpsl) Reset() {
 	*x = BinanceFuturesPositionTpsl{}
-	mi := &file_hi_binance_binance_proto_msgTypes[38]
+	mi := &file_hi_binance_binance_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3078,7 +3140,7 @@ func (x *BinanceFuturesPositionTpsl) String() string {
 func (*BinanceFuturesPositionTpsl) ProtoMessage() {}
 
 func (x *BinanceFuturesPositionTpsl) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[38]
+	mi := &file_hi_binance_binance_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3091,7 +3153,7 @@ func (x *BinanceFuturesPositionTpsl) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceFuturesPositionTpsl.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesPositionTpsl) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{38}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *BinanceFuturesPositionTpsl) GetSymbol() string {
@@ -3172,7 +3234,7 @@ type BinanceFuturesSignTradfiContract struct {
 
 func (x *BinanceFuturesSignTradfiContract) Reset() {
 	*x = BinanceFuturesSignTradfiContract{}
-	mi := &file_hi_binance_binance_proto_msgTypes[39]
+	mi := &file_hi_binance_binance_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3184,7 +3246,7 @@ func (x *BinanceFuturesSignTradfiContract) String() string {
 func (*BinanceFuturesSignTradfiContract) ProtoMessage() {}
 
 func (x *BinanceFuturesSignTradfiContract) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[39]
+	mi := &file_hi_binance_binance_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3197,7 +3259,7 @@ func (x *BinanceFuturesSignTradfiContract) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceFuturesSignTradfiContract.ProtoReflect.Descriptor instead.
 func (*BinanceFuturesSignTradfiContract) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{39}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{40}
 }
 
 // 各钱包的余额(现货、资金、合约、理财…,每个钱包带逐币明细)。`GET /sapi/v1/asset/wallet/balance`
@@ -3213,7 +3275,7 @@ type BinanceWalletBalance struct {
 
 func (x *BinanceWalletBalance) Reset() {
 	*x = BinanceWalletBalance{}
-	mi := &file_hi_binance_binance_proto_msgTypes[40]
+	mi := &file_hi_binance_binance_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3225,7 +3287,7 @@ func (x *BinanceWalletBalance) String() string {
 func (*BinanceWalletBalance) ProtoMessage() {}
 
 func (x *BinanceWalletBalance) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[40]
+	mi := &file_hi_binance_binance_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3238,7 +3300,7 @@ func (x *BinanceWalletBalance) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceWalletBalance.ProtoReflect.Descriptor instead.
 func (*BinanceWalletBalance) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{40}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{41}
 }
 
 // 一次币安操作的结果。装在**消息**里回到指令来的那个会话:
@@ -3276,7 +3338,7 @@ type BinanceResult struct {
 
 func (x *BinanceResult) Reset() {
 	*x = BinanceResult{}
-	mi := &file_hi_binance_binance_proto_msgTypes[41]
+	mi := &file_hi_binance_binance_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3288,7 +3350,7 @@ func (x *BinanceResult) String() string {
 func (*BinanceResult) ProtoMessage() {}
 
 func (x *BinanceResult) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[41]
+	mi := &file_hi_binance_binance_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3301,7 +3363,7 @@ func (x *BinanceResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceResult.ProtoReflect.Descriptor instead.
 func (*BinanceResult) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{41}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *BinanceResult) GetRequest() string {
@@ -3380,7 +3442,7 @@ type BinanceRoi struct {
 
 func (x *BinanceRoi) Reset() {
 	*x = BinanceRoi{}
-	mi := &file_hi_binance_binance_proto_msgTypes[42]
+	mi := &file_hi_binance_binance_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3392,7 +3454,7 @@ func (x *BinanceRoi) String() string {
 func (*BinanceRoi) ProtoMessage() {}
 
 func (x *BinanceRoi) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[42]
+	mi := &file_hi_binance_binance_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3405,7 +3467,7 @@ func (x *BinanceRoi) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceRoi.ProtoReflect.Descriptor instead.
 func (*BinanceRoi) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{42}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *BinanceRoi) GetAge() uint32 {
@@ -3475,7 +3537,7 @@ type BinanceHoldings struct {
 
 func (x *BinanceHoldings) Reset() {
 	*x = BinanceHoldings{}
-	mi := &file_hi_binance_binance_proto_msgTypes[43]
+	mi := &file_hi_binance_binance_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3487,7 +3549,7 @@ func (x *BinanceHoldings) String() string {
 func (*BinanceHoldings) ProtoMessage() {}
 
 func (x *BinanceHoldings) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[43]
+	mi := &file_hi_binance_binance_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3500,7 +3562,7 @@ func (x *BinanceHoldings) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceHoldings.ProtoReflect.Descriptor instead.
 func (*BinanceHoldings) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{43}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *BinanceHoldings) GetFutures() *BinanceHeld {
@@ -3530,7 +3592,7 @@ type BinanceHeld struct {
 
 func (x *BinanceHeld) Reset() {
 	*x = BinanceHeld{}
-	mi := &file_hi_binance_binance_proto_msgTypes[44]
+	mi := &file_hi_binance_binance_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3542,7 +3604,7 @@ func (x *BinanceHeld) String() string {
 func (*BinanceHeld) ProtoMessage() {}
 
 func (x *BinanceHeld) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[44]
+	mi := &file_hi_binance_binance_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3555,7 +3617,7 @@ func (x *BinanceHeld) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceHeld.ProtoReflect.Descriptor instead.
 func (*BinanceHeld) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{44}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *BinanceHeld) GetAge() uint32 {
@@ -3770,6 +3832,13 @@ const file_hi_binance_binance_proto_rawDesc = "" +
 	"\b_percentB\v\n" +
 	"\t_leverage\"\xec\x01\n" +
 	"\x19BinanceFuturesCancelOrder\x126\n" +
+	"\x06symbol\x18\x01 \x01(\tB\x19\xbaH\x12\xc8\x01\x01r\r2\v^[A-Z0-9]+$\x90\xb5\x18\x02H\x00R\x06symbol\x88\x01\x01\x12$\n" +
+	"\border_id\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x02H\x01R\aorderId\x88\x01\x01\x12:\n" +
+	"\x14orig_client_order_id\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02H\x02R\x11origClientOrderId\x88\x01\x01:\x04\x98\xb5\x18\x02B\t\n" +
+	"\a_symbolB\v\n" +
+	"\t_order_idB\x17\n" +
+	"\x15_orig_client_order_id\"\xe9\x01\n" +
+	"\x16BinanceFuturesGetOrder\x126\n" +
 	"\x06symbol\x18\x01 \x01(\tB\x19\xbaH\x12\xc8\x01\x01r\r2\v^[A-Z0-9]+$\x90\xb5\x18\x02H\x00R\x06symbol\x88\x01\x01\x12$\n" +
 	"\border_id\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x02H\x01R\aorderId\x88\x01\x01\x12:\n" +
 	"\x14orig_client_order_id\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02H\x02R\x11origClientOrderId\x88\x01\x01:\x04\x98\xb5\x18\x02B\t\n" +
@@ -4027,7 +4096,7 @@ func file_hi_binance_binance_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_binance_binance_proto_enumTypes = make([]protoimpl.EnumInfo, 8)
-var file_hi_binance_binance_proto_msgTypes = make([]protoimpl.MessageInfo, 45)
+var file_hi_binance_binance_proto_msgTypes = make([]protoimpl.MessageInfo, 46)
 var file_hi_binance_binance_proto_goTypes = []any{
 	(BinanceOrderSide)(0),                     // 0: hi.binance.BinanceOrderSide
 	(BinanceOrderType)(0),                     // 1: hi.binance.BinanceOrderType
@@ -4057,31 +4126,32 @@ var file_hi_binance_binance_proto_goTypes = []any{
 	(*BinanceSpotAllOrderLists)(nil),          // 25: hi.binance.BinanceSpotAllOrderLists
 	(*BinanceFuturesNewOrder)(nil),            // 26: hi.binance.BinanceFuturesNewOrder
 	(*BinanceFuturesCancelOrder)(nil),         // 27: hi.binance.BinanceFuturesCancelOrder
-	(*BinanceFuturesCancelAllOrders)(nil),     // 28: hi.binance.BinanceFuturesCancelAllOrders
-	(*BinanceFuturesLeverage)(nil),            // 29: hi.binance.BinanceFuturesLeverage
-	(*BinanceSpotKlines)(nil),                 // 30: hi.binance.BinanceSpotKlines
-	(*BinanceFuturesKlines)(nil),              // 31: hi.binance.BinanceFuturesKlines
-	(*BinanceFuturesTicker24H)(nil),           // 32: hi.binance.BinanceFuturesTicker24h
-	(*BinanceFuturesPositions)(nil),           // 33: hi.binance.BinanceFuturesPositions
-	(*BinanceFuturesAccount)(nil),             // 34: hi.binance.BinanceFuturesAccount
-	(*BinanceFuturesOpenOrders)(nil),          // 35: hi.binance.BinanceFuturesOpenOrders
-	(*BinanceFuturesOpenAlgoOrders)(nil),      // 36: hi.binance.BinanceFuturesOpenAlgoOrders
-	(*BinanceFuturesNewAlgoOrder)(nil),        // 37: hi.binance.BinanceFuturesNewAlgoOrder
-	(*BinanceFuturesCancelAlgoOrder)(nil),     // 38: hi.binance.BinanceFuturesCancelAlgoOrder
-	(*BinanceFuturesCancelAllAlgoOrders)(nil), // 39: hi.binance.BinanceFuturesCancelAllAlgoOrders
-	(*BinanceFuturesGetAlgoOrder)(nil),        // 40: hi.binance.BinanceFuturesGetAlgoOrder
-	(*BinanceFuturesAllAlgoOrders)(nil),       // 41: hi.binance.BinanceFuturesAllAlgoOrders
-	(*BinanceFuturesIncome)(nil),              // 42: hi.binance.BinanceFuturesIncome
-	(*BinanceFuturesPnl)(nil),                 // 43: hi.binance.BinanceFuturesPnl
-	(*BinanceSpotCancelAllSymbols)(nil),       // 44: hi.binance.BinanceSpotCancelAllSymbols
-	(*BinanceFuturesCancelAllSymbols)(nil),    // 45: hi.binance.BinanceFuturesCancelAllSymbols
-	(*BinanceFuturesPositionTpsl)(nil),        // 46: hi.binance.BinanceFuturesPositionTpsl
-	(*BinanceFuturesSignTradfiContract)(nil),  // 47: hi.binance.BinanceFuturesSignTradfiContract
-	(*BinanceWalletBalance)(nil),              // 48: hi.binance.BinanceWalletBalance
-	(*BinanceResult)(nil),                     // 49: hi.binance.BinanceResult
-	(*BinanceRoi)(nil),                        // 50: hi.binance.BinanceRoi
-	(*BinanceHoldings)(nil),                   // 51: hi.binance.BinanceHoldings
-	(*BinanceHeld)(nil),                       // 52: hi.binance.BinanceHeld
+	(*BinanceFuturesGetOrder)(nil),            // 28: hi.binance.BinanceFuturesGetOrder
+	(*BinanceFuturesCancelAllOrders)(nil),     // 29: hi.binance.BinanceFuturesCancelAllOrders
+	(*BinanceFuturesLeverage)(nil),            // 30: hi.binance.BinanceFuturesLeverage
+	(*BinanceSpotKlines)(nil),                 // 31: hi.binance.BinanceSpotKlines
+	(*BinanceFuturesKlines)(nil),              // 32: hi.binance.BinanceFuturesKlines
+	(*BinanceFuturesTicker24H)(nil),           // 33: hi.binance.BinanceFuturesTicker24h
+	(*BinanceFuturesPositions)(nil),           // 34: hi.binance.BinanceFuturesPositions
+	(*BinanceFuturesAccount)(nil),             // 35: hi.binance.BinanceFuturesAccount
+	(*BinanceFuturesOpenOrders)(nil),          // 36: hi.binance.BinanceFuturesOpenOrders
+	(*BinanceFuturesOpenAlgoOrders)(nil),      // 37: hi.binance.BinanceFuturesOpenAlgoOrders
+	(*BinanceFuturesNewAlgoOrder)(nil),        // 38: hi.binance.BinanceFuturesNewAlgoOrder
+	(*BinanceFuturesCancelAlgoOrder)(nil),     // 39: hi.binance.BinanceFuturesCancelAlgoOrder
+	(*BinanceFuturesCancelAllAlgoOrders)(nil), // 40: hi.binance.BinanceFuturesCancelAllAlgoOrders
+	(*BinanceFuturesGetAlgoOrder)(nil),        // 41: hi.binance.BinanceFuturesGetAlgoOrder
+	(*BinanceFuturesAllAlgoOrders)(nil),       // 42: hi.binance.BinanceFuturesAllAlgoOrders
+	(*BinanceFuturesIncome)(nil),              // 43: hi.binance.BinanceFuturesIncome
+	(*BinanceFuturesPnl)(nil),                 // 44: hi.binance.BinanceFuturesPnl
+	(*BinanceSpotCancelAllSymbols)(nil),       // 45: hi.binance.BinanceSpotCancelAllSymbols
+	(*BinanceFuturesCancelAllSymbols)(nil),    // 46: hi.binance.BinanceFuturesCancelAllSymbols
+	(*BinanceFuturesPositionTpsl)(nil),        // 47: hi.binance.BinanceFuturesPositionTpsl
+	(*BinanceFuturesSignTradfiContract)(nil),  // 48: hi.binance.BinanceFuturesSignTradfiContract
+	(*BinanceWalletBalance)(nil),              // 49: hi.binance.BinanceWalletBalance
+	(*BinanceResult)(nil),                     // 50: hi.binance.BinanceResult
+	(*BinanceRoi)(nil),                        // 51: hi.binance.BinanceRoi
+	(*BinanceHoldings)(nil),                   // 52: hi.binance.BinanceHoldings
+	(*BinanceHeld)(nil),                       // 53: hi.binance.BinanceHeld
 }
 var file_hi_binance_binance_proto_depIdxs = []int32{
 	0,  // 0: hi.binance.BinanceSpotNewOrder.side:type_name -> hi.binance.BinanceOrderSide
@@ -4122,10 +4192,10 @@ var file_hi_binance_binance_proto_depIdxs = []int32{
 	7,  // 35: hi.binance.BinanceFuturesPositionTpsl.take_profit_basis:type_name -> hi.binance.BinanceTpslBasis
 	7,  // 36: hi.binance.BinanceFuturesPositionTpsl.stop_loss_basis:type_name -> hi.binance.BinanceTpslBasis
 	4,  // 37: hi.binance.BinanceFuturesPositionTpsl.working_type:type_name -> hi.binance.BinanceWorkingType
-	51, // 38: hi.binance.BinanceResult.held:type_name -> hi.binance.BinanceHoldings
-	50, // 39: hi.binance.BinanceResult.roi:type_name -> hi.binance.BinanceRoi
-	52, // 40: hi.binance.BinanceHoldings.futures:type_name -> hi.binance.BinanceHeld
-	52, // 41: hi.binance.BinanceHoldings.spot:type_name -> hi.binance.BinanceHeld
+	52, // 38: hi.binance.BinanceResult.held:type_name -> hi.binance.BinanceHoldings
+	51, // 39: hi.binance.BinanceResult.roi:type_name -> hi.binance.BinanceRoi
+	53, // 40: hi.binance.BinanceHoldings.futures:type_name -> hi.binance.BinanceHeld
+	53, // 41: hi.binance.BinanceHoldings.spot:type_name -> hi.binance.BinanceHeld
 	42, // [42:42] is the sub-list for method output_type
 	42, // [42:42] is the sub-list for method input_type
 	42, // [42:42] is the sub-list for extension type_name
@@ -4163,7 +4233,7 @@ func file_hi_binance_binance_proto_init() {
 	file_hi_binance_binance_proto_msgTypes[23].OneofWrappers = []any{}
 	file_hi_binance_binance_proto_msgTypes[24].OneofWrappers = []any{}
 	file_hi_binance_binance_proto_msgTypes[25].OneofWrappers = []any{}
-	file_hi_binance_binance_proto_msgTypes[27].OneofWrappers = []any{}
+	file_hi_binance_binance_proto_msgTypes[26].OneofWrappers = []any{}
 	file_hi_binance_binance_proto_msgTypes[28].OneofWrappers = []any{}
 	file_hi_binance_binance_proto_msgTypes[29].OneofWrappers = []any{}
 	file_hi_binance_binance_proto_msgTypes[30].OneofWrappers = []any{}
@@ -4171,18 +4241,19 @@ func file_hi_binance_binance_proto_init() {
 	file_hi_binance_binance_proto_msgTypes[32].OneofWrappers = []any{}
 	file_hi_binance_binance_proto_msgTypes[33].OneofWrappers = []any{}
 	file_hi_binance_binance_proto_msgTypes[34].OneofWrappers = []any{}
-	file_hi_binance_binance_proto_msgTypes[38].OneofWrappers = []any{}
-	file_hi_binance_binance_proto_msgTypes[41].OneofWrappers = []any{}
+	file_hi_binance_binance_proto_msgTypes[35].OneofWrappers = []any{}
+	file_hi_binance_binance_proto_msgTypes[39].OneofWrappers = []any{}
 	file_hi_binance_binance_proto_msgTypes[42].OneofWrappers = []any{}
 	file_hi_binance_binance_proto_msgTypes[43].OneofWrappers = []any{}
 	file_hi_binance_binance_proto_msgTypes[44].OneofWrappers = []any{}
+	file_hi_binance_binance_proto_msgTypes[45].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_binance_binance_proto_rawDesc), len(file_hi_binance_binance_proto_rawDesc)),
 			NumEnums:      8,
-			NumMessages:   45,
+			NumMessages:   46,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
