@@ -225,8 +225,10 @@ func (x *RunReq) GetMaster() string {
 }
 
 type RunResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Conts         []*ai.Content          `protobuf:"bytes,1,rep,name=conts,proto3" json:"conts,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 普通工具结果。供模型展示图片时，以 text 返回真实地址和 Markdown 展示要求；
+	// 不使用 image_url 触发额外识图，也不表示图片已经发给用户。
+	Conts         []*ai.Content `protobuf:"bytes,1,rep,name=conts,proto3" json:"conts,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
