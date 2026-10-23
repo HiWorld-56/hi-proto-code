@@ -3338,7 +3338,8 @@ class BinanceFuturesPnl extends $pb.GeneratedMessage {
 ///   order_lists  其中组合单的组数
 ///   algo_orders  (合约)撤掉的止盈止损单(条件单)张数
 ///   failed       这一项里没撤成的那几类:`kind` = orders / algo_orders;
-///                发出去了被拒 → `http_status` + 币安的 `code` / `msg`;没发出去 → 只有 `msg`(人话)
+///                发出去了被拒 → `http_status` + 币安的 `code` / `msg` + `error`(给人看的一句,同 `BinanceResult.error`);
+///                没发出去 → 只有 `msg`(人话)
 ///
 /// 某一类撤成了才带它的数;没撤成的那一类只出现在 `failed` 里。币安回「订单不存在」(-2011:列出来之后、撤之前
 /// 已经成交或被撤)算撤成,数是 0。
@@ -3476,7 +3477,8 @@ class BinanceFuturesCancelAllSymbols extends $pb.GeneratedMessage {
 ///     est_pnl      在触发价全部平掉的预估盈亏(计价币,两位小数;不含手续费与滑点)
 ///     algo_id      新挂上的那张单;没挂上就没有这一项
 ///     replaced     撤掉的旧单(没有就没有这一项)
-///     failed       这条腿没做成:发出去了被拒 → `http_status` + 币安的 `code` / `msg`;没发出去 → 只有 `msg`
+///     failed       这条腿没做成:发出去了被拒 → `http_status` + 币安的 `code` / `msg` + `error`(给人看的一句,
+///                  同 `BinanceResult.error`);没发出去 → 只有 `msg`
 ///                  ⚠️ 带 `replaced` 又带 `failed` = **旧的已撤、新的没挂上**,这个方向现在没有这条腿,要告诉人
 class BinanceFuturesPositionTpsl extends $pb.GeneratedMessage {
   factory BinanceFuturesPositionTpsl({
@@ -3731,6 +3733,102 @@ class BinanceWalletBalance extends $pb.GeneratedMessage {
   static BinanceWalletBalance? _defaultInstance;
 }
 
+/// **合约平仓**(机器人算的操作,`usds_futures.close_position`)。**不是币安的一个接口** —— 币安没有「平仓」,
+/// 它是一张反向的市价单。机器人当场查持仓,按持有的方向与数量逐笔下反向市价单:
+///   · 单向持仓带 `reduce_only`(只减不增);双向持仓按 `position_side` 平(两个方向都有仓就两笔);
+///   · `quantity` / `percent` 都不给 = **全平**(数量取自当场查到的持仓,不让下指令的一方报数);
+///     给了就只能给一个;`percent` 按**这一侧**持仓的百分比换算(与 `BinanceFuturesNewOrder.percent` 平仓那条同一个换算)。
+///
+/// 结果在 `BinanceResult.body`(`http_status` = 200),是**机器人写的 JSON**:
+///
+///   { "symbol": "BNBUSDT",
+///     "closed": [ { "position_side": "BOTH", "side": "BUY", "quantity": "0.3", "ok": true, "order": { <币安下单回包> } },
+///                 { "position_side": "LONG", "side": "SELL", "percent": "50", "ok": false, "error": "币安拒绝(-2019):…" } ],
+///     "note": "BNBUSDT 现在没有持仓" }
+///
+///   closed  每个有仓的方向一笔(**逐笔报账**,一笔失败不影响已经平掉的那笔);没有持仓就是空列表,并带 `note`
+///   order   下成了:币安的下单回包;error:没下成的那一句(同 `BinanceResult.error` 的口径)
+class BinanceFuturesClosePosition extends $pb.GeneratedMessage {
+  factory BinanceFuturesClosePosition({
+    $core.String? symbol,
+    $core.String? quantity,
+    $core.String? percent,
+  }) {
+    final result = create();
+    if (symbol != null) result.symbol = symbol;
+    if (quantity != null) result.quantity = quantity;
+    if (percent != null) result.percent = percent;
+    return result;
+  }
+
+  BinanceFuturesClosePosition._();
+
+  factory BinanceFuturesClosePosition.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceFuturesClosePosition.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceFuturesClosePosition',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'symbol')
+    ..aOS(2, _omitFieldNames ? '' : 'quantity')
+    ..aOS(3, _omitFieldNames ? '' : 'percent')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceFuturesClosePosition clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceFuturesClosePosition copyWith(
+          void Function(BinanceFuturesClosePosition) updates) =>
+      super.copyWith(
+              (message) => updates(message as BinanceFuturesClosePosition))
+          as BinanceFuturesClosePosition;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceFuturesClosePosition create() =>
+      BinanceFuturesClosePosition._();
+  @$core.override
+  BinanceFuturesClosePosition createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceFuturesClosePosition getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceFuturesClosePosition>(create);
+  static BinanceFuturesClosePosition? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get symbol => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set symbol($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSymbol() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSymbol() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get quantity => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set quantity($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasQuantity() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearQuantity() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get percent => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set percent($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasPercent() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearPercent() => $_clearField(3);
+}
+
 /// 一次币安操作的结果。装在**消息**里回到指令来的那个会话:
 /// `Content.type = "binance"`、`Content.kind = binance`。
 ///
@@ -3742,9 +3840,11 @@ class BinanceWalletBalance extends $pb.GeneratedMessage {
 /// ## 三种结局,靠字段区分
 ///
 ///   · 发出去了,币安回了 2xx  → `http_status` = 200,`body` = 它的 JSON
-///   · 发出去了,币安拒了      → `http_status` = 4xx/5xx,`body` = `{"code":-1121,"msg":"Invalid symbol."}`
+///   · 发出去了,币安拒了      → `http_status` = 4xx/5xx,`body` = `{"code":-1121,"msg":"Invalid symbol."}`,
+///                               `error` = 机器人从回包剪出的**一句事实**(认得的码说人话,如 -5022「这个价会立刻成交」,
+///                               会立刻成交 / 触发的还带上现价;其余写成「币安拒绝(码):原话」)。显示优先用它,原文仍在 `body`
 ///   · **根本没发出去**       → 没有 `http_status`,`error` 写人话
-///     (没配凭据、指令过期、系统时钟不可信、不认发令人、没装币安插件……)
+///     (没配凭据、指令过期、系统时钟不可信、不认发令人、没开通币安……)
 class BinanceResult extends $pb.GeneratedMessage {
   factory BinanceResult({
     $core.String? request,

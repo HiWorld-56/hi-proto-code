@@ -108,6 +108,8 @@ type BinanceCommand struct {
 	//	*BinanceCommand_UsdsFuturesCancelAllSymbols
 	//	*BinanceCommand_UsdsFuturesPositionTpsl
 	//	*BinanceCommand_UsdsFuturesQueryOrder
+	//	*BinanceCommand_UsdsFuturesClosePosition
+	//	*BinanceCommand_StocksHoldings
 	Op            isBinanceCommand_Op `protobuf_oneof:"op"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -616,6 +618,24 @@ func (x *BinanceCommand) GetUsdsFuturesQueryOrder() *BinanceFuturesGetOrder {
 	return nil
 }
 
+func (x *BinanceCommand) GetUsdsFuturesClosePosition() *BinanceFuturesClosePosition {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceCommand_UsdsFuturesClosePosition); ok {
+			return x.UsdsFuturesClosePosition
+		}
+	}
+	return nil
+}
+
+func (x *BinanceCommand) GetStocksHoldings() *BinanceStockHoldings {
+	if x != nil {
+		if x, ok := x.Op.(*BinanceCommand_StocksHoldings); ok {
+			return x.StocksHoldings
+		}
+	}
+	return nil
+}
+
 type isBinanceCommand_Op interface {
 	isBinanceCommand_Op()
 }
@@ -828,6 +848,14 @@ type BinanceCommand_UsdsFuturesQueryOrder struct {
 	UsdsFuturesQueryOrder *BinanceFuturesGetOrder `protobuf:"bytes,62,opt,name=usds_futures_query_order,json=usdsFuturesQueryOrder,proto3,oneof"` // usds_futures.query_order
 }
 
+type BinanceCommand_UsdsFuturesClosePosition struct {
+	UsdsFuturesClosePosition *BinanceFuturesClosePosition `protobuf:"bytes,63,opt,name=usds_futures_close_position,json=usdsFuturesClosePosition,proto3,oneof"` // usds_futures.close_position(机器人算的平仓)
+}
+
+type BinanceCommand_StocksHoldings struct {
+	StocksHoldings *BinanceStockHoldings `protobuf:"bytes,64,opt,name=stocks_holdings,json=stocksHoldings,proto3,oneof"` // stocks.holdings(机器人按成交记录算的持仓)
+}
+
 func (*BinanceCommand_SpotNewOrder) isBinanceCommand_Op() {}
 
 func (*BinanceCommand_SpotCancelOrder) isBinanceCommand_Op() {}
@@ -930,12 +958,16 @@ func (*BinanceCommand_UsdsFuturesPositionTpsl) isBinanceCommand_Op() {}
 
 func (*BinanceCommand_UsdsFuturesQueryOrder) isBinanceCommand_Op() {}
 
+func (*BinanceCommand_UsdsFuturesClosePosition) isBinanceCommand_Op() {}
+
+func (*BinanceCommand_StocksHoldings) isBinanceCommand_Op() {}
+
 var File_hi_binance_command_proto protoreflect.FileDescriptor
 
 const file_hi_binance_command_proto_rawDesc = "" +
 	"\n" +
 	"\x18hi/binance/command.proto\x12\n" +
-	"hi.binance\x1a\x1bbuf/validate/validate.proto\x1a\x18hi/binance/binance.proto\x1a\x17hi/binance/stocks.proto\x1a\x10hi/options.proto\"\xa4*\n" +
+	"hi.binance\x1a\x1bbuf/validate/validate.proto\x1a\x18hi/binance/binance.proto\x1a\x17hi/binance/stocks.proto\x1a\x10hi/options.proto\"\xe7+\n" +
 	"\x0eBinanceCommand\x12/\n" +
 	"\n" +
 	"expiration\x18\x01 \x01(\x03B\n" +
@@ -993,7 +1025,9 @@ const file_hi_binance_command_proto_rawDesc = "" +
 	"\x17spot_cancel_all_symbols\x18; \x01(\v2'.hi.binance.BinanceSpotCancelAllSymbolsB\x04\x90\xb5\x18\x02H\x00R\x14spotCancelAllSymbols\x12x\n" +
 	"\x1fusds_futures_cancel_all_symbols\x18< \x01(\v2*.hi.binance.BinanceFuturesCancelAllSymbolsB\x04\x90\xb5\x18\x02H\x00R\x1busdsFuturesCancelAllSymbols\x12k\n" +
 	"\x1ausds_futures_position_tpsl\x18= \x01(\v2&.hi.binance.BinanceFuturesPositionTpslB\x04\x90\xb5\x18\x02H\x00R\x17usdsFuturesPositionTpsl\x12c\n" +
-	"\x18usds_futures_query_order\x18> \x01(\v2\".hi.binance.BinanceFuturesGetOrderB\x04\x90\xb5\x18\x02H\x00R\x15usdsFuturesQueryOrder:\x04\x98\xb5\x18\x02B\v\n" +
+	"\x18usds_futures_query_order\x18> \x01(\v2\".hi.binance.BinanceFuturesGetOrderB\x04\x90\xb5\x18\x02H\x00R\x15usdsFuturesQueryOrder\x12n\n" +
+	"\x1busds_futures_close_position\x18? \x01(\v2'.hi.binance.BinanceFuturesClosePositionB\x04\x90\xb5\x18\x02H\x00R\x18usdsFuturesClosePosition\x12Q\n" +
+	"\x0fstocks_holdings\x18@ \x01(\v2 .hi.binance.BinanceStockHoldingsB\x04\x90\xb5\x18\x02H\x00R\x0estocksHoldings:\x04\x98\xb5\x18\x02B\v\n" +
 	"\x02op\x12\x05\xbaH\x02\b\x01B\r\n" +
 	"\v_expirationB\x95\x01\n" +
 	"\x0ecom.hi.binanceB\fCommandProtoP\x01Z,github.com/HiWorld-56/hi-proto/go/hi/binance\xa2\x02\x03HBX\xaa\x02\n" +
@@ -1066,6 +1100,8 @@ var file_hi_binance_command_proto_goTypes = []any{
 	(*BinanceFuturesCancelAllSymbols)(nil),    // 49: hi.binance.BinanceFuturesCancelAllSymbols
 	(*BinanceFuturesPositionTpsl)(nil),        // 50: hi.binance.BinanceFuturesPositionTpsl
 	(*BinanceFuturesGetOrder)(nil),            // 51: hi.binance.BinanceFuturesGetOrder
+	(*BinanceFuturesClosePosition)(nil),       // 52: hi.binance.BinanceFuturesClosePosition
+	(*BinanceStockHoldings)(nil),              // 53: hi.binance.BinanceStockHoldings
 }
 var file_hi_binance_command_proto_depIdxs = []int32{
 	1,  // 0: hi.binance.BinanceCommand.spot_new_order:type_name -> hi.binance.BinanceSpotNewOrder
@@ -1119,11 +1155,13 @@ var file_hi_binance_command_proto_depIdxs = []int32{
 	49, // 48: hi.binance.BinanceCommand.usds_futures_cancel_all_symbols:type_name -> hi.binance.BinanceFuturesCancelAllSymbols
 	50, // 49: hi.binance.BinanceCommand.usds_futures_position_tpsl:type_name -> hi.binance.BinanceFuturesPositionTpsl
 	51, // 50: hi.binance.BinanceCommand.usds_futures_query_order:type_name -> hi.binance.BinanceFuturesGetOrder
-	51, // [51:51] is the sub-list for method output_type
-	51, // [51:51] is the sub-list for method input_type
-	51, // [51:51] is the sub-list for extension type_name
-	51, // [51:51] is the sub-list for extension extendee
-	0,  // [0:51] is the sub-list for field type_name
+	52, // 51: hi.binance.BinanceCommand.usds_futures_close_position:type_name -> hi.binance.BinanceFuturesClosePosition
+	53, // 52: hi.binance.BinanceCommand.stocks_holdings:type_name -> hi.binance.BinanceStockHoldings
+	53, // [53:53] is the sub-list for method output_type
+	53, // [53:53] is the sub-list for method input_type
+	53, // [53:53] is the sub-list for extension type_name
+	53, // [53:53] is the sub-list for extension extendee
+	0,  // [0:53] is the sub-list for field type_name
 }
 
 func init() { file_hi_binance_command_proto_init() }
@@ -1185,6 +1223,8 @@ func file_hi_binance_command_proto_init() {
 		(*BinanceCommand_UsdsFuturesCancelAllSymbols)(nil),
 		(*BinanceCommand_UsdsFuturesPositionTpsl)(nil),
 		(*BinanceCommand_UsdsFuturesQueryOrder)(nil),
+		(*BinanceCommand_UsdsFuturesClosePosition)(nil),
+		(*BinanceCommand_StocksHoldings)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

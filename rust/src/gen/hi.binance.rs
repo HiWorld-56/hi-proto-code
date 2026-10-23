@@ -540,7 +540,8 @@ pub struct BinanceFuturesPnl {}
 /// order_lists  其中组合单的组数
 /// algo_orders  (合约)撤掉的止盈止损单(条件单)张数
 /// failed       这一项里没撤成的那几类:`kind` = orders / algo_orders;
-/// 发出去了被拒 → `http_status` + 币安的 `code` / `msg`;没发出去 → 只有 `msg`(人话)
+/// 发出去了被拒 → `http_status` + 币安的 `code` / `msg` + `error`(给人看的一句,同 `BinanceResult.error`);
+/// 没发出去 → 只有 `msg`(人话)
 ///
 /// 某一类撤成了才带它的数;没撤成的那一类只出现在 `failed` 里。币安回「订单不存在」(-2011:列出来之后、撤之前
 /// 已经成交或被撤)算撤成,数是 0。
@@ -600,7 +601,8 @@ pub struct BinanceFuturesCancelAllSymbols {}
 /// est_pnl      在触发价全部平掉的预估盈亏(计价币,两位小数;不含手续费与滑点)
 /// algo_id      新挂上的那张单;没挂上就没有这一项
 /// replaced     撤掉的旧单(没有就没有这一项)
-/// failed       这条腿没做成:发出去了被拒 → `http_status` + 币安的 `code` / `msg`;没发出去 → 只有 `msg`
+/// failed       这条腿没做成:发出去了被拒 → `http_status` + 币安的 `code` / `msg` + `error`(给人看的一句,
+/// 同 `BinanceResult.error`);没发出去 → 只有 `msg`
 /// ⚠️ 带 `replaced` 又带 `failed` = **旧的已撤、新的没挂上**,这个方向现在没有这条腿,要告诉人
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BinanceFuturesPositionTpsl {
@@ -643,6 +645,32 @@ pub struct BinanceFuturesSignTradfiContract {}
 /// 美股的买入扣款与卖出回款(USDC)都在这里看,美股模块本身没有查余额的接口。
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BinanceWalletBalance {}
+/// **合约平仓**(机器人算的操作,`usds_futures.close_position`)。**不是币安的一个接口** —— 币安没有「平仓」,
+/// 它是一张反向的市价单。机器人当场查持仓,按持有的方向与数量逐笔下反向市价单:
+/// · 单向持仓带 `reduce_only`(只减不增);双向持仓按 `position_side` 平(两个方向都有仓就两笔);
+/// · `quantity` / `percent` 都不给 = **全平**(数量取自当场查到的持仓,不让下指令的一方报数);
+/// 给了就只能给一个;`percent` 按**这一侧**持仓的百分比换算(与 `BinanceFuturesNewOrder.percent` 平仓那条同一个换算)。
+///
+/// 结果在 `BinanceResult.body`(`http_status` = 200),是**机器人写的 JSON**:
+///
+/// { "symbol": "BNBUSDT",
+/// "closed": \[ { "position_side": "BOTH", "side": "BUY", "quantity": "0.3", "ok": true, "order": { \<币安下单回包> } },
+/// { "position_side": "LONG", "side": "SELL", "percent": "50", "ok": false, "error": "币安拒绝(-2019):…" } \],
+/// "note": "BNBUSDT 现在没有持仓" }
+///
+/// closed  每个有仓的方向一笔(**逐笔报账**,一笔失败不影响已经平掉的那笔);没有持仓就是空列表,并带 `note`
+/// order   下成了:币安的下单回包;error:没下成的那一句(同 `BinanceResult.error` 的口径)
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceFuturesClosePosition {
+    #[prost(string, optional, tag = "1")]
+    pub symbol: ::core::option::Option<::prost::alloc::string::String>,
+    /// 平多少(不给 = 全平);与 percent 二选一
+    #[prost(string, optional, tag = "2")]
+    pub quantity: ::core::option::Option<::prost::alloc::string::String>,
+    /// 平这一侧持仓的百分之几(0 \< p ≤ 100);与 quantity 二选一
+    #[prost(string, optional, tag = "3")]
+    pub percent: ::core::option::Option<::prost::alloc::string::String>,
+}
 /// 一次币安操作的结果。装在**消息**里回到指令来的那个会话:
 /// `Content.type = "binance"`、`Content.kind = binance`。
 ///
@@ -654,9 +682,11 @@ pub struct BinanceWalletBalance {}
 /// ## 三种结局,靠字段区分
 ///
 /// · 发出去了,币安回了 2xx  → `http_status` = 200,`body` = 它的 JSON
-/// · 发出去了,币安拒了      → `http_status` = 4xx/5xx,`body` = `{"code":-1121,"msg":"Invalid symbol."}`
+/// · 发出去了,币安拒了      → `http_status` = 4xx/5xx,`body` = `{"code":-1121,"msg":"Invalid symbol."}`,
+/// `error` = 机器人从回包剪出的**一句事实**(认得的码说人话,如 -5022「这个价会立刻成交」,
+/// 会立刻成交 / 触发的还带上现价;其余写成「币安拒绝(码):原话」)。显示优先用它,原文仍在 `body`
 /// · **根本没发出去**       → 没有 `http_status`,`error` 写人话
-/// (没配凭据、指令过期、系统时钟不可信、不认发令人、没装币安插件……)
+/// (没配凭据、指令过期、系统时钟不可信、不认发令人、没开通币安……)
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BinanceResult {
     /// 指令那条消息的 uuid,配对用
@@ -671,7 +701,7 @@ pub struct BinanceResult {
     /// 币安返回的原始 JSON,一个字不改
     #[prost(string, optional, tag = "4")]
     pub body: ::core::option::Option<::prost::alloc::string::String>,
-    /// 没发出去时的原因(人话);发出去了就不带
+    /// 没发出去时的原因(人话);币安拒了时是剪出的那句事实;成功不带
     #[prost(string, optional, tag = "5")]
     pub error: ::core::option::Option<::prost::alloc::string::String>,
     /// 回这条结果时,这台机器人**手里已有的**持有情况(见 `BinanceHoldings`)。
@@ -1199,6 +1229,19 @@ pub struct BinanceStockTokenizedAssets {}
 /// 它是法律动作,不开放给 AI。
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BinanceStockSignDisclaimer {}
+/// **美股持仓**(机器人算的操作,`stocks.holdings`)。**没有参数**。币安没有查持仓的接口,钱包里也看不到股票 ——
+/// 机器人按近 365 天、最多 100 笔成交记录算(买入股数 − 卖出股数)。
+///
+/// 结果在 `BinanceResult.body`(`http_status` = 200),是**机器人写的 JSON**:
+///
+/// { "holdings":  \[ { "symbol": "AAPL", "shares": "0.3" } \],
+/// "by_symbol": \[ { "symbol": "AAPL", "bought_shares": "0.5", "bought_usdc": "110.25", "sold_shares": "0.2", "sold_usdc": "45.10" } \],
+/// "trades_counted": 4, "complete": true, "note": "…" }
+///
+/// holdings   现在还持有的(卖光的不在里面);by_symbol:每只股票买卖各多少股、花了 / 回了多少 USDC
+/// complete   false = 成交记录超过 100 笔,只算了最近的这些
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BinanceStockHoldings {}
 /// 订单有效方式。**与现货/合约的 `BinanceTimeInForce` 不是一回事**(那边是 GTC/IOC/FOK),
 /// 并进那个枚举会让合约也收 DAY、到了币安才被拒。
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1373,7 +1416,7 @@ pub struct BinanceCommand {
     pub expiration: ::core::option::Option<i64>,
     #[prost(
         oneof = "binance_command::Op",
-        tags = "10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 40, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62"
+        tags = "10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 40, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64"
     )]
     pub op: ::core::option::Option<binance_command::Op>,
 }
@@ -1542,6 +1585,12 @@ pub mod binance_command {
         /// usds_futures.query_order
         #[prost(message, tag = "62")]
         UsdsFuturesQueryOrder(super::BinanceFuturesGetOrder),
+        /// usds_futures.close_position(机器人算的平仓)
+        #[prost(message, tag = "63")]
+        UsdsFuturesClosePosition(super::BinanceFuturesClosePosition),
+        /// stocks.holdings(机器人按成交记录算的持仓)
+        #[prost(message, tag = "64")]
+        StocksHoldings(super::BinanceStockHoldings),
     }
 }
 /// **开单信号**:一台机器人(信号源)经 hi 开了仓 / 挂了开仓单,广播给群里别的机器人。

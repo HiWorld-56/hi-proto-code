@@ -539,6 +539,26 @@ const BinanceCommand$json = {
       '9': 0,
       '10': 'usdsFuturesQueryOrder'
     },
+    {
+      '1': 'usds_futures_close_position',
+      '3': 63,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceFuturesClosePosition',
+      '8': {},
+      '9': 0,
+      '10': 'usdsFuturesClosePosition'
+    },
+    {
+      '1': 'stocks_holdings',
+      '3': 64,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.binance.BinanceStockHoldings',
+      '8': {},
+      '9': 0,
+      '10': 'stocksHoldings'
+    },
   ],
   '7': {},
   '8': [
@@ -645,5 +665,9 @@ final $typed_data.Uint8List binanceCommandDescriptor = $convert.base64Decode(
     'N5bWJvbHMSawoadXNkc19mdXR1cmVzX3Bvc2l0aW9uX3Rwc2wYPSABKAsyJi5oaS5iaW5hbmNl'
     'LkJpbmFuY2VGdXR1cmVzUG9zaXRpb25UcHNsQgSQtRgCSABSF3VzZHNGdXR1cmVzUG9zaXRpb2'
     '5UcHNsEmMKGHVzZHNfZnV0dXJlc19xdWVyeV9vcmRlchg+IAEoCzIiLmhpLmJpbmFuY2UuQmlu'
-    'YW5jZUZ1dHVyZXNHZXRPcmRlckIEkLUYAkgAUhV1c2RzRnV0dXJlc1F1ZXJ5T3JkZXI6BJi1GA'
-    'JCCwoCb3ASBbpIAggBQg0KC19leHBpcmF0aW9u');
+    'YW5jZUZ1dHVyZXNHZXRPcmRlckIEkLUYAkgAUhV1c2RzRnV0dXJlc1F1ZXJ5T3JkZXISbgobdX'
+    'Nkc19mdXR1cmVzX2Nsb3NlX3Bvc2l0aW9uGD8gASgLMicuaGkuYmluYW5jZS5CaW5hbmNlRnV0'
+    'dXJlc0Nsb3NlUG9zaXRpb25CBJC1GAJIAFIYdXNkc0Z1dHVyZXNDbG9zZVBvc2l0aW9uElEKD3'
+    'N0b2Nrc19ob2xkaW5ncxhAIAEoCzIgLmhpLmJpbmFuY2UuQmluYW5jZVN0b2NrSG9sZGluZ3NC'
+    'BJC1GAJIAFIOc3RvY2tzSG9sZGluZ3M6BJi1GAJCCwoCb3ASBbpIAggBQg0KC19leHBpcmF0aW'
+    '9u');

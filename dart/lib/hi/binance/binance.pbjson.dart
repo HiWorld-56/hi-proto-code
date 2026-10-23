@@ -2408,6 +2408,56 @@ const BinanceWalletBalance$json = {
 final $typed_data.Uint8List binanceWalletBalanceDescriptor =
     $convert.base64Decode('ChRCaW5hbmNlV2FsbGV0QmFsYW5jZToEmLUYAg==');
 
+@$core.Deprecated('Use binanceFuturesClosePositionDescriptor instead')
+const BinanceFuturesClosePosition$json = {
+  '1': 'BinanceFuturesClosePosition',
+  '2': [
+    {
+      '1': 'symbol',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'symbol',
+      '17': true
+    },
+    {
+      '1': 'quantity',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'quantity',
+      '17': true
+    },
+    {
+      '1': 'percent',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'percent',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_symbol'},
+    {'1': '_quantity'},
+    {'1': '_percent'},
+  ],
+};
+
+/// Descriptor for `BinanceFuturesClosePosition`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List binanceFuturesClosePositionDescriptor = $convert.base64Decode(
+    'ChtCaW5hbmNlRnV0dXJlc0Nsb3NlUG9zaXRpb24SNgoGc3ltYm9sGAEgASgJQhm6SBLIAQFyDT'
+    'ILXltBLVowLTldKySQtRgCSABSBnN5bWJvbIgBARIlCghxdWFudGl0eRgCIAEoCUIEkLUYAkgB'
+    'UghxdWFudGl0eYgBARIjCgdwZXJjZW50GAMgASgJQgSQtRgCSAJSB3BlcmNlbnSIAQE6BJi1GA'
+    'JCCQoHX3N5bWJvbEILCglfcXVhbnRpdHlCCgoIX3BlcmNlbnQ=');
+
 @$core.Deprecated('Use binanceResultDescriptor instead')
 const BinanceResult$json = {
   '1': 'BinanceResult',

@@ -869,6 +869,55 @@ class BinanceStockSignDisclaimer extends $pb.GeneratedMessage {
   static BinanceStockSignDisclaimer? _defaultInstance;
 }
 
+/// **美股持仓**(机器人算的操作,`stocks.holdings`)。**没有参数**。币安没有查持仓的接口,钱包里也看不到股票 ——
+/// 机器人按近 365 天、最多 100 笔成交记录算(买入股数 − 卖出股数)。
+///
+/// 结果在 `BinanceResult.body`(`http_status` = 200),是**机器人写的 JSON**:
+///
+///   { "holdings":  [ { "symbol": "AAPL", "shares": "0.3" } ],
+///     "by_symbol": [ { "symbol": "AAPL", "bought_shares": "0.5", "bought_usdc": "110.25", "sold_shares": "0.2", "sold_usdc": "45.10" } ],
+///     "trades_counted": 4, "complete": true, "note": "…" }
+///
+///   holdings   现在还持有的(卖光的不在里面);by_symbol:每只股票买卖各多少股、花了 / 回了多少 USDC
+///   complete   false = 成交记录超过 100 笔,只算了最近的这些
+class BinanceStockHoldings extends $pb.GeneratedMessage {
+  factory BinanceStockHoldings() => create();
+
+  BinanceStockHoldings._();
+
+  factory BinanceStockHoldings.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceStockHoldings.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceStockHoldings',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceStockHoldings clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceStockHoldings copyWith(void Function(BinanceStockHoldings) updates) =>
+      super.copyWith((message) => updates(message as BinanceStockHoldings))
+          as BinanceStockHoldings;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceStockHoldings create() => BinanceStockHoldings._();
+  @$core.override
+  BinanceStockHoldings createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceStockHoldings getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceStockHoldings>(create);
+  static BinanceStockHoldings? _defaultInstance;
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

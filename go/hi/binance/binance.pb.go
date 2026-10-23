@@ -2976,7 +2976,8 @@ func (*BinanceFuturesPnl) Descriptor() ([]byte, []int) {
 //	order_lists  其中组合单的组数
 //	algo_orders  (合约)撤掉的止盈止损单(条件单)张数
 //	failed       这一项里没撤成的那几类:`kind` = orders / algo_orders;
-//	             发出去了被拒 → `http_status` + 币安的 `code` / `msg`;没发出去 → 只有 `msg`(人话)
+//	             发出去了被拒 → `http_status` + 币安的 `code` / `msg` + `error`(给人看的一句,同 `BinanceResult.error`);
+//	             没发出去 → 只有 `msg`(人话)
 //
 // 某一类撤成了才带它的数;没撤成的那一类只出现在 `failed` 里。币安回「订单不存在」(-2011:列出来之后、撤之前
 // 已经成交或被撤)算撤成,数是 0。
@@ -3105,7 +3106,8 @@ func (*BinanceFuturesCancelAllSymbols) Descriptor() ([]byte, []int) {
 //	  est_pnl      在触发价全部平掉的预估盈亏(计价币,两位小数;不含手续费与滑点)
 //	  algo_id      新挂上的那张单;没挂上就没有这一项
 //	  replaced     撤掉的旧单(没有就没有这一项)
-//	  failed       这条腿没做成:发出去了被拒 → `http_status` + 币安的 `code` / `msg`;没发出去 → 只有 `msg`
+//	  failed       这条腿没做成:发出去了被拒 → `http_status` + 币安的 `code` / `msg` + `error`(给人看的一句,
+//	               同 `BinanceResult.error`);没发出去 → 只有 `msg`
 //	               ⚠️ 带 `replaced` 又带 `failed` = **旧的已撤、新的没挂上**,这个方向现在没有这条腿,要告诉人
 type BinanceFuturesPositionTpsl struct {
 	state  protoimpl.MessageState `protogen:"open.v1"`
@@ -3303,6 +3305,82 @@ func (*BinanceWalletBalance) Descriptor() ([]byte, []int) {
 	return file_hi_binance_binance_proto_rawDescGZIP(), []int{41}
 }
 
+// **合约平仓**(机器人算的操作,`usds_futures.close_position`)。**不是币安的一个接口** —— 币安没有「平仓」,
+// 它是一张反向的市价单。机器人当场查持仓,按持有的方向与数量逐笔下反向市价单:
+//
+//	· 单向持仓带 `reduce_only`(只减不增);双向持仓按 `position_side` 平(两个方向都有仓就两笔);
+//	· `quantity` / `percent` 都不给 = **全平**(数量取自当场查到的持仓,不让下指令的一方报数);
+//	  给了就只能给一个;`percent` 按**这一侧**持仓的百分比换算(与 `BinanceFuturesNewOrder.percent` 平仓那条同一个换算)。
+//
+// 结果在 `BinanceResult.body`(`http_status` = 200),是**机器人写的 JSON**:
+//
+//	{ "symbol": "BNBUSDT",
+//	  "closed": [ { "position_side": "BOTH", "side": "BUY", "quantity": "0.3", "ok": true, "order": { <币安下单回包> } },
+//	              { "position_side": "LONG", "side": "SELL", "percent": "50", "ok": false, "error": "币安拒绝(-2019):…" } ],
+//	  "note": "BNBUSDT 现在没有持仓" }
+//
+//	closed  每个有仓的方向一笔(**逐笔报账**,一笔失败不影响已经平掉的那笔);没有持仓就是空列表,并带 `note`
+//	order   下成了:币安的下单回包;error:没下成的那一句(同 `BinanceResult.error` 的口径)
+type BinanceFuturesClosePosition struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Symbol        *string                `protobuf:"bytes,1,opt,name=symbol,proto3,oneof" json:"symbol,omitempty"`
+	Quantity      *string                `protobuf:"bytes,2,opt,name=quantity,proto3,oneof" json:"quantity,omitempty"` // 平多少(不给 = 全平);与 percent 二选一
+	Percent       *string                `protobuf:"bytes,3,opt,name=percent,proto3,oneof" json:"percent,omitempty"`   // 平这一侧持仓的百分之几(0 < p ≤ 100);与 quantity 二选一
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BinanceFuturesClosePosition) Reset() {
+	*x = BinanceFuturesClosePosition{}
+	mi := &file_hi_binance_binance_proto_msgTypes[42]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BinanceFuturesClosePosition) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BinanceFuturesClosePosition) ProtoMessage() {}
+
+func (x *BinanceFuturesClosePosition) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_binance_binance_proto_msgTypes[42]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BinanceFuturesClosePosition.ProtoReflect.Descriptor instead.
+func (*BinanceFuturesClosePosition) Descriptor() ([]byte, []int) {
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{42}
+}
+
+func (x *BinanceFuturesClosePosition) GetSymbol() string {
+	if x != nil && x.Symbol != nil {
+		return *x.Symbol
+	}
+	return ""
+}
+
+func (x *BinanceFuturesClosePosition) GetQuantity() string {
+	if x != nil && x.Quantity != nil {
+		return *x.Quantity
+	}
+	return ""
+}
+
+func (x *BinanceFuturesClosePosition) GetPercent() string {
+	if x != nil && x.Percent != nil {
+		return *x.Percent
+	}
+	return ""
+}
+
 // 一次币安操作的结果。装在**消息**里回到指令来的那个会话:
 // `Content.type = "binance"`、`Content.kind = binance`。
 //
@@ -3314,16 +3392,18 @@ func (*BinanceWalletBalance) Descriptor() ([]byte, []int) {
 // ## 三种结局,靠字段区分
 //
 //	· 发出去了,币安回了 2xx  → `http_status` = 200,`body` = 它的 JSON
-//	· 发出去了,币安拒了      → `http_status` = 4xx/5xx,`body` = `{"code":-1121,"msg":"Invalid symbol."}`
+//	· 发出去了,币安拒了      → `http_status` = 4xx/5xx,`body` = `{"code":-1121,"msg":"Invalid symbol."}`,
+//	                            `error` = 机器人从回包剪出的**一句事实**(认得的码说人话,如 -5022「这个价会立刻成交」,
+//	                            会立刻成交 / 触发的还带上现价;其余写成「币安拒绝(码):原话」)。显示优先用它,原文仍在 `body`
 //	· **根本没发出去**       → 没有 `http_status`,`error` 写人话
-//	  (没配凭据、指令过期、系统时钟不可信、不认发令人、没装币安插件……)
+//	  (没配凭据、指令过期、系统时钟不可信、不认发令人、没开通币安……)
 type BinanceResult struct {
 	state      protoimpl.MessageState `protogen:"open.v1"`
 	Request    *string                `protobuf:"bytes,1,opt,name=request,proto3,oneof" json:"request,omitempty"`                          // 指令那条消息的 uuid,配对用
 	Op         *string                `protobuf:"bytes,2,opt,name=op,proto3,oneof" json:"op,omitempty"`                                    // 操作名(「模块.方法」)
 	HttpStatus *uint32                `protobuf:"varint,3,opt,name=http_status,json=httpStatus,proto3,oneof" json:"http_status,omitempty"` // 币安的 HTTP 状态码;没发出去就不带
 	Body       *string                `protobuf:"bytes,4,opt,name=body,proto3,oneof" json:"body,omitempty"`                                // 币安返回的原始 JSON,一个字不改
-	Error      *string                `protobuf:"bytes,5,opt,name=error,proto3,oneof" json:"error,omitempty"`                              // 没发出去时的原因(人话);发出去了就不带
+	Error      *string                `protobuf:"bytes,5,opt,name=error,proto3,oneof" json:"error,omitempty"`                              // 没发出去时的原因(人话);币安拒了时是剪出的那句事实;成功不带
 	// 回这条结果时,这台机器人**手里已有的**持有情况(见 `BinanceHoldings`)。
 	// **不带 = 这条结果没有报告持有情况**(指令被拒 / 过期 / 没装插件,或机器人版本还没有这个字段) ——
 	// 不是「没持仓」,也不是「不知道」,读方应沿用这台之前报告过的那一份。
@@ -3338,7 +3418,7 @@ type BinanceResult struct {
 
 func (x *BinanceResult) Reset() {
 	*x = BinanceResult{}
-	mi := &file_hi_binance_binance_proto_msgTypes[42]
+	mi := &file_hi_binance_binance_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3350,7 +3430,7 @@ func (x *BinanceResult) String() string {
 func (*BinanceResult) ProtoMessage() {}
 
 func (x *BinanceResult) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[42]
+	mi := &file_hi_binance_binance_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3363,7 +3443,7 @@ func (x *BinanceResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceResult.ProtoReflect.Descriptor instead.
 func (*BinanceResult) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{42}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *BinanceResult) GetRequest() string {
@@ -3442,7 +3522,7 @@ type BinanceRoi struct {
 
 func (x *BinanceRoi) Reset() {
 	*x = BinanceRoi{}
-	mi := &file_hi_binance_binance_proto_msgTypes[43]
+	mi := &file_hi_binance_binance_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3454,7 +3534,7 @@ func (x *BinanceRoi) String() string {
 func (*BinanceRoi) ProtoMessage() {}
 
 func (x *BinanceRoi) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[43]
+	mi := &file_hi_binance_binance_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3467,7 +3547,7 @@ func (x *BinanceRoi) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceRoi.ProtoReflect.Descriptor instead.
 func (*BinanceRoi) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{43}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *BinanceRoi) GetAge() uint32 {
@@ -3537,7 +3617,7 @@ type BinanceHoldings struct {
 
 func (x *BinanceHoldings) Reset() {
 	*x = BinanceHoldings{}
-	mi := &file_hi_binance_binance_proto_msgTypes[44]
+	mi := &file_hi_binance_binance_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3549,7 +3629,7 @@ func (x *BinanceHoldings) String() string {
 func (*BinanceHoldings) ProtoMessage() {}
 
 func (x *BinanceHoldings) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[44]
+	mi := &file_hi_binance_binance_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3562,7 +3642,7 @@ func (x *BinanceHoldings) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceHoldings.ProtoReflect.Descriptor instead.
 func (*BinanceHoldings) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{44}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *BinanceHoldings) GetFutures() *BinanceHeld {
@@ -3592,7 +3672,7 @@ type BinanceHeld struct {
 
 func (x *BinanceHeld) Reset() {
 	*x = BinanceHeld{}
-	mi := &file_hi_binance_binance_proto_msgTypes[45]
+	mi := &file_hi_binance_binance_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3604,7 +3684,7 @@ func (x *BinanceHeld) String() string {
 func (*BinanceHeld) ProtoMessage() {}
 
 func (x *BinanceHeld) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[45]
+	mi := &file_hi_binance_binance_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3617,7 +3697,7 @@ func (x *BinanceHeld) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceHeld.ProtoReflect.Descriptor instead.
 func (*BinanceHeld) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{45}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *BinanceHeld) GetAge() uint32 {
@@ -3993,7 +4073,15 @@ const file_hi_binance_binance_proto_rawDesc = "" +
 	"\x10_stop_loss_basisB\x0f\n" +
 	"\r_working_type\"(\n" +
 	" BinanceFuturesSignTradfiContract:\x04\x98\xb5\x18\x02\"\x1c\n" +
-	"\x14BinanceWalletBalance:\x04\x98\xb5\x18\x02\"\xf9\x02\n" +
+	"\x14BinanceWalletBalance:\x04\x98\xb5\x18\x02\"\xcb\x01\n" +
+	"\x1bBinanceFuturesClosePosition\x126\n" +
+	"\x06symbol\x18\x01 \x01(\tB\x19\xbaH\x12\xc8\x01\x01r\r2\v^[A-Z0-9]+$\x90\xb5\x18\x02H\x00R\x06symbol\x88\x01\x01\x12%\n" +
+	"\bquantity\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\bquantity\x88\x01\x01\x12#\n" +
+	"\apercent\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02H\x02R\apercent\x88\x01\x01:\x04\x98\xb5\x18\x02B\t\n" +
+	"\a_symbolB\v\n" +
+	"\t_quantityB\n" +
+	"\n" +
+	"\b_percent\"\xf9\x02\n" +
 	"\rBinanceResult\x12#\n" +
 	"\arequest\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\arequest\x88\x01\x01\x12\x19\n" +
 	"\x02op\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x02op\x88\x01\x01\x12*\n" +
@@ -4096,7 +4184,7 @@ func file_hi_binance_binance_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_binance_binance_proto_enumTypes = make([]protoimpl.EnumInfo, 8)
-var file_hi_binance_binance_proto_msgTypes = make([]protoimpl.MessageInfo, 46)
+var file_hi_binance_binance_proto_msgTypes = make([]protoimpl.MessageInfo, 47)
 var file_hi_binance_binance_proto_goTypes = []any{
 	(BinanceOrderSide)(0),                     // 0: hi.binance.BinanceOrderSide
 	(BinanceOrderType)(0),                     // 1: hi.binance.BinanceOrderType
@@ -4148,10 +4236,11 @@ var file_hi_binance_binance_proto_goTypes = []any{
 	(*BinanceFuturesPositionTpsl)(nil),        // 47: hi.binance.BinanceFuturesPositionTpsl
 	(*BinanceFuturesSignTradfiContract)(nil),  // 48: hi.binance.BinanceFuturesSignTradfiContract
 	(*BinanceWalletBalance)(nil),              // 49: hi.binance.BinanceWalletBalance
-	(*BinanceResult)(nil),                     // 50: hi.binance.BinanceResult
-	(*BinanceRoi)(nil),                        // 51: hi.binance.BinanceRoi
-	(*BinanceHoldings)(nil),                   // 52: hi.binance.BinanceHoldings
-	(*BinanceHeld)(nil),                       // 53: hi.binance.BinanceHeld
+	(*BinanceFuturesClosePosition)(nil),       // 50: hi.binance.BinanceFuturesClosePosition
+	(*BinanceResult)(nil),                     // 51: hi.binance.BinanceResult
+	(*BinanceRoi)(nil),                        // 52: hi.binance.BinanceRoi
+	(*BinanceHoldings)(nil),                   // 53: hi.binance.BinanceHoldings
+	(*BinanceHeld)(nil),                       // 54: hi.binance.BinanceHeld
 }
 var file_hi_binance_binance_proto_depIdxs = []int32{
 	0,  // 0: hi.binance.BinanceSpotNewOrder.side:type_name -> hi.binance.BinanceOrderSide
@@ -4192,10 +4281,10 @@ var file_hi_binance_binance_proto_depIdxs = []int32{
 	7,  // 35: hi.binance.BinanceFuturesPositionTpsl.take_profit_basis:type_name -> hi.binance.BinanceTpslBasis
 	7,  // 36: hi.binance.BinanceFuturesPositionTpsl.stop_loss_basis:type_name -> hi.binance.BinanceTpslBasis
 	4,  // 37: hi.binance.BinanceFuturesPositionTpsl.working_type:type_name -> hi.binance.BinanceWorkingType
-	52, // 38: hi.binance.BinanceResult.held:type_name -> hi.binance.BinanceHoldings
-	51, // 39: hi.binance.BinanceResult.roi:type_name -> hi.binance.BinanceRoi
-	53, // 40: hi.binance.BinanceHoldings.futures:type_name -> hi.binance.BinanceHeld
-	53, // 41: hi.binance.BinanceHoldings.spot:type_name -> hi.binance.BinanceHeld
+	53, // 38: hi.binance.BinanceResult.held:type_name -> hi.binance.BinanceHoldings
+	52, // 39: hi.binance.BinanceResult.roi:type_name -> hi.binance.BinanceRoi
+	54, // 40: hi.binance.BinanceHoldings.futures:type_name -> hi.binance.BinanceHeld
+	54, // 41: hi.binance.BinanceHoldings.spot:type_name -> hi.binance.BinanceHeld
 	42, // [42:42] is the sub-list for method output_type
 	42, // [42:42] is the sub-list for method input_type
 	42, // [42:42] is the sub-list for extension type_name
@@ -4247,13 +4336,14 @@ func file_hi_binance_binance_proto_init() {
 	file_hi_binance_binance_proto_msgTypes[43].OneofWrappers = []any{}
 	file_hi_binance_binance_proto_msgTypes[44].OneofWrappers = []any{}
 	file_hi_binance_binance_proto_msgTypes[45].OneofWrappers = []any{}
+	file_hi_binance_binance_proto_msgTypes[46].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_binance_binance_proto_rawDesc), len(file_hi_binance_binance_proto_rawDesc)),
 			NumEnums:      8,
-			NumMessages:   46,
+			NumMessages:   47,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

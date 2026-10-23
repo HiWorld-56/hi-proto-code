@@ -72,6 +72,8 @@ enum BinanceCommand_Op {
   usdsFuturesCancelAllSymbols,
   usdsFuturesPositionTpsl,
   usdsFuturesQueryOrder,
+  usdsFuturesClosePosition,
+  stocksHoldings,
   notSet
 }
 
@@ -155,6 +157,8 @@ class BinanceCommand extends $pb.GeneratedMessage {
     $0.BinanceFuturesCancelAllSymbols? usdsFuturesCancelAllSymbols,
     $0.BinanceFuturesPositionTpsl? usdsFuturesPositionTpsl,
     $0.BinanceFuturesGetOrder? usdsFuturesQueryOrder,
+    $0.BinanceFuturesClosePosition? usdsFuturesClosePosition,
+    $1.BinanceStockHoldings? stocksHoldings,
   }) {
     final result = create();
     if (expiration != null) result.expiration = expiration;
@@ -248,6 +252,9 @@ class BinanceCommand extends $pb.GeneratedMessage {
       result.usdsFuturesPositionTpsl = usdsFuturesPositionTpsl;
     if (usdsFuturesQueryOrder != null)
       result.usdsFuturesQueryOrder = usdsFuturesQueryOrder;
+    if (usdsFuturesClosePosition != null)
+      result.usdsFuturesClosePosition = usdsFuturesClosePosition;
+    if (stocksHoldings != null) result.stocksHoldings = stocksHoldings;
     return result;
   }
 
@@ -313,6 +320,8 @@ class BinanceCommand extends $pb.GeneratedMessage {
     60: BinanceCommand_Op.usdsFuturesCancelAllSymbols,
     61: BinanceCommand_Op.usdsFuturesPositionTpsl,
     62: BinanceCommand_Op.usdsFuturesQueryOrder,
+    63: BinanceCommand_Op.usdsFuturesClosePosition,
+    64: BinanceCommand_Op.stocksHoldings,
     0: BinanceCommand_Op.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -370,7 +379,9 @@ class BinanceCommand extends $pb.GeneratedMessage {
       59,
       60,
       61,
-      62
+      62,
+      63,
+      64
     ])
     ..aInt64(1, _omitFieldNames ? '' : 'expiration')
     ..aOM<$0.BinanceSpotNewOrder>(10, _omitFieldNames ? '' : 'spotNewOrder',
@@ -522,6 +533,11 @@ class BinanceCommand extends $pb.GeneratedMessage {
     ..aOM<$0.BinanceFuturesGetOrder>(
         62, _omitFieldNames ? '' : 'usdsFuturesQueryOrder',
         subBuilder: $0.BinanceFuturesGetOrder.create)
+    ..aOM<$0.BinanceFuturesClosePosition>(
+        63, _omitFieldNames ? '' : 'usdsFuturesClosePosition',
+        subBuilder: $0.BinanceFuturesClosePosition.create)
+    ..aOM<$1.BinanceStockHoldings>(64, _omitFieldNames ? '' : 'stocksHoldings',
+        subBuilder: $1.BinanceStockHoldings.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -594,6 +610,8 @@ class BinanceCommand extends $pb.GeneratedMessage {
   @$pb.TagNumber(60)
   @$pb.TagNumber(61)
   @$pb.TagNumber(62)
+  @$pb.TagNumber(63)
+  @$pb.TagNumber(64)
   BinanceCommand_Op whichOp() => _BinanceCommand_OpByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(10)
   @$pb.TagNumber(11)
@@ -646,6 +664,8 @@ class BinanceCommand extends $pb.GeneratedMessage {
   @$pb.TagNumber(60)
   @$pb.TagNumber(61)
   @$pb.TagNumber(62)
+  @$pb.TagNumber(63)
+  @$pb.TagNumber(64)
   void clearOp() => $_clearField($_whichOneof(0));
 
   /// 过期时刻,**绝对时间,微秒**(与 `Notice.expiration` 同一口径)。过了机器人不执行、回一条失败;
@@ -1286,6 +1306,30 @@ class BinanceCommand extends $pb.GeneratedMessage {
   void clearUsdsFuturesQueryOrder() => $_clearField(62);
   @$pb.TagNumber(62)
   $0.BinanceFuturesGetOrder ensureUsdsFuturesQueryOrder() => $_ensure(51);
+
+  @$pb.TagNumber(63)
+  $0.BinanceFuturesClosePosition get usdsFuturesClosePosition => $_getN(52);
+  @$pb.TagNumber(63)
+  set usdsFuturesClosePosition($0.BinanceFuturesClosePosition value) =>
+      $_setField(63, value);
+  @$pb.TagNumber(63)
+  $core.bool hasUsdsFuturesClosePosition() => $_has(52);
+  @$pb.TagNumber(63)
+  void clearUsdsFuturesClosePosition() => $_clearField(63);
+  @$pb.TagNumber(63)
+  $0.BinanceFuturesClosePosition ensureUsdsFuturesClosePosition() =>
+      $_ensure(52);
+
+  @$pb.TagNumber(64)
+  $1.BinanceStockHoldings get stocksHoldings => $_getN(53);
+  @$pb.TagNumber(64)
+  set stocksHoldings($1.BinanceStockHoldings value) => $_setField(64, value);
+  @$pb.TagNumber(64)
+  $core.bool hasStocksHoldings() => $_has(53);
+  @$pb.TagNumber(64)
+  void clearStocksHoldings() => $_clearField(64);
+  @$pb.TagNumber(64)
+  $1.BinanceStockHoldings ensureStocksHoldings() => $_ensure(53);
 }
 
 const $core.bool _omitFieldNames =
