@@ -62,8 +62,6 @@ pub struct RunReq {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RunResp {
-    /// 普通工具结果。供模型展示图片时，以 text 返回真实地址和 Markdown 展示要求；
-    /// 不使用 image_url 触发额外识图，也不表示图片已经发给用户。
     #[prost(message, repeated, tag = "1")]
     pub conts: ::prost::alloc::vec::Vec<super::Content>,
 }
