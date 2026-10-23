@@ -1882,6 +1882,8 @@ pub mod binance_offer_tpsl {
         Skipped = 3,
         /// 仓开成了,止盈止损没挂上或只挂上一条(原因在 reason)—— **这个仓位可能没有止损**,界面要显眼
         Failed = 4,
+        /// 跟挂卡:单挂上了、还没成交,成交后再挂止盈止损(之后的结果另给主人发一句话,不改这张卡)
+        Waiting = 5,
     }
     impl State {
         /// String value of the enum field names used in the ProtoBuf definition.
@@ -1895,6 +1897,7 @@ pub mod binance_offer_tpsl {
                 Self::Off => "STATE_OFF",
                 Self::Skipped => "STATE_SKIPPED",
                 Self::Failed => "STATE_FAILED",
+                Self::Waiting => "STATE_WAITING",
             }
         }
         /// Creates an enum from field names used in the ProtoBuf definition.
@@ -1905,6 +1908,7 @@ pub mod binance_offer_tpsl {
                 "STATE_OFF" => Some(Self::Off),
                 "STATE_SKIPPED" => Some(Self::Skipped),
                 "STATE_FAILED" => Some(Self::Failed),
+                "STATE_WAITING" => Some(Self::Waiting),
                 _ => None,
             }
         }

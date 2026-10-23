@@ -4917,6 +4917,7 @@ impl serde::Serialize for binance_offer_tpsl::State {
             Self::Off => "STATE_OFF",
             Self::Skipped => "STATE_SKIPPED",
             Self::Failed => "STATE_FAILED",
+            Self::Waiting => "STATE_WAITING",
         };
         serializer.serialize_str(variant)
     }
@@ -4933,6 +4934,7 @@ impl<'de> serde::Deserialize<'de> for binance_offer_tpsl::State {
             "STATE_OFF",
             "STATE_SKIPPED",
             "STATE_FAILED",
+            "STATE_WAITING",
         ];
 
         struct GeneratedVisitor;
@@ -4978,6 +4980,7 @@ impl<'de> serde::Deserialize<'de> for binance_offer_tpsl::State {
                     "STATE_OFF" => Ok(binance_offer_tpsl::State::Off),
                     "STATE_SKIPPED" => Ok(binance_offer_tpsl::State::Skipped),
                     "STATE_FAILED" => Ok(binance_offer_tpsl::State::Failed),
+                    "STATE_WAITING" => Ok(binance_offer_tpsl::State::Waiting),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }

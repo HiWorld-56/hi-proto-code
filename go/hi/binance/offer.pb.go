@@ -90,6 +90,7 @@ const (
 	BinanceOfferTpsl_STATE_OFF         BinanceOfferTpsl_State = 2 // 人没勾「自动设置止盈止损」
 	BinanceOfferTpsl_STATE_SKIPPED     BinanceOfferTpsl_State = 3 // 没挂:没设风险承受率 / 这个方向开单前已有仓位(原因在 reason)
 	BinanceOfferTpsl_STATE_FAILED      BinanceOfferTpsl_State = 4 // 仓开成了,止盈止损没挂上或只挂上一条(原因在 reason)—— **这个仓位可能没有止损**,界面要显眼
+	BinanceOfferTpsl_STATE_WAITING     BinanceOfferTpsl_State = 5 // 跟挂卡:单挂上了、还没成交,成交后再挂止盈止损(之后的结果另给主人发一句话,不改这张卡)
 )
 
 // Enum value maps for BinanceOfferTpsl_State.
@@ -100,6 +101,7 @@ var (
 		2: "STATE_OFF",
 		3: "STATE_SKIPPED",
 		4: "STATE_FAILED",
+		5: "STATE_WAITING",
 	}
 	BinanceOfferTpsl_State_value = map[string]int32{
 		"STATE_UNSPECIFIED": 0,
@@ -107,6 +109,7 @@ var (
 		"STATE_OFF":         2,
 		"STATE_SKIPPED":     3,
 		"STATE_FAILED":      4,
+		"STATE_WAITING":     5,
 	}
 )
 
@@ -685,19 +688,20 @@ const file_hi_binance_offer_proto_rawDesc = "" +
 	"\v_order_typeB\x0e\n" +
 	"\f_limit_priceB\x10\n" +
 	"\x0e_trigger_priceB\x10\n" +
-	"\x0e_callback_rate\"\xbd\x03\n" +
+	"\x0e_callback_rate\"\xd0\x03\n" +
 	"\x10BinanceOfferTpsl\x12C\n" +
 	"\x05state\x18\x01 \x01(\x0e2\".hi.binance.BinanceOfferTpsl.StateB\x04\x90\xb5\x18\x02H\x00R\x05state\x88\x01\x01\x121\n" +
 	"\x0fstop_loss_price\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\rstopLossPrice\x88\x01\x01\x125\n" +
 	"\x11take_profit_price\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02H\x02R\x0ftakeProfitPrice\x88\x01\x01\x12!\n" +
 	"\x06reason\x18\x04 \x01(\tB\x04\x90\xb5\x18\x02H\x03R\x06reason\x88\x01\x01\x12#\n" +
-	"\awarning\x18\x05 \x01(\tB\x04\x90\xb5\x18\x02H\x04R\awarning\x88\x01\x01\"a\n" +
+	"\awarning\x18\x05 \x01(\tB\x04\x90\xb5\x18\x02H\x04R\awarning\x88\x01\x01\"t\n" +
 	"\x05State\x12\x15\n" +
 	"\x11STATE_UNSPECIFIED\x10\x00\x12\r\n" +
 	"\tSTATE_SET\x10\x01\x12\r\n" +
 	"\tSTATE_OFF\x10\x02\x12\x11\n" +
 	"\rSTATE_SKIPPED\x10\x03\x12\x10\n" +
-	"\fSTATE_FAILED\x10\x04:\x04\x98\xb5\x18\x02B\b\n" +
+	"\fSTATE_FAILED\x10\x04\x12\x11\n" +
+	"\rSTATE_WAITING\x10\x05:\x04\x98\xb5\x18\x02B\b\n" +
 	"\x06_stateB\x12\n" +
 	"\x10_stop_loss_priceB\x14\n" +
 	"\x12_take_profit_priceB\t\n" +

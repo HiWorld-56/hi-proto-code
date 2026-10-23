@@ -496,6 +496,7 @@ const BinanceOfferTpsl_State$json = {
     {'1': 'STATE_OFF', '2': 2},
     {'1': 'STATE_SKIPPED', '2': 3},
     {'1': 'STATE_FAILED', '2': 4},
+    {'1': 'STATE_WAITING', '2': 5},
   ],
 };
 
@@ -505,11 +506,11 @@ final $typed_data.Uint8List binanceOfferTpslDescriptor = $convert.base64Decode(
     'ZmZXJUcHNsLlN0YXRlQgSQtRgCSABSBXN0YXRliAEBEjEKD3N0b3BfbG9zc19wcmljZRgCIAEo'
     'CUIEkLUYAkgBUg1zdG9wTG9zc1ByaWNliAEBEjUKEXRha2VfcHJvZml0X3ByaWNlGAMgASgJQg'
     'SQtRgCSAJSD3Rha2VQcm9maXRQcmljZYgBARIhCgZyZWFzb24YBCABKAlCBJC1GAJIA1IGcmVh'
-    'c29uiAEBEiMKB3dhcm5pbmcYBSABKAlCBJC1GAJIBFIHd2FybmluZ4gBASJhCgVTdGF0ZRIVCh'
+    'c29uiAEBEiMKB3dhcm5pbmcYBSABKAlCBJC1GAJIBFIHd2FybmluZ4gBASJ0CgVTdGF0ZRIVCh'
     'FTVEFURV9VTlNQRUNJRklFRBAAEg0KCVNUQVRFX1NFVBABEg0KCVNUQVRFX09GRhACEhEKDVNU'
-    'QVRFX1NLSVBQRUQQAxIQCgxTVEFURV9GQUlMRUQQBDoEmLUYAkIICgZfc3RhdGVCEgoQX3N0b3'
-    'BfbG9zc19wcmljZUIUChJfdGFrZV9wcm9maXRfcHJpY2VCCQoHX3JlYXNvbkIKCghfd2Fybmlu'
-    'Zw==');
+    'QVRFX1NLSVBQRUQQAxIQCgxTVEFURV9GQUlMRUQQBBIRCg1TVEFURV9XQUlUSU5HEAU6BJi1GA'
+    'JCCAoGX3N0YXRlQhIKEF9zdG9wX2xvc3NfcHJpY2VCFAoSX3Rha2VfcHJvZml0X3ByaWNlQgkK'
+    'B19yZWFzb25CCgoIX3dhcm5pbmc=');
 
 @$core.Deprecated('Use binanceOfferReplyDescriptor instead')
 const BinanceOfferReply$json = {

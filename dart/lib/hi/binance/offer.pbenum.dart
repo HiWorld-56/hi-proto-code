@@ -59,6 +59,8 @@ class BinanceOfferTpsl_State extends $pb.ProtobufEnum {
       BinanceOfferTpsl_State._(3, _omitEnumNames ? '' : 'STATE_SKIPPED');
   static const BinanceOfferTpsl_State STATE_FAILED =
       BinanceOfferTpsl_State._(4, _omitEnumNames ? '' : 'STATE_FAILED');
+  static const BinanceOfferTpsl_State STATE_WAITING =
+      BinanceOfferTpsl_State._(5, _omitEnumNames ? '' : 'STATE_WAITING');
 
   static const $core.List<BinanceOfferTpsl_State> values =
       <BinanceOfferTpsl_State>[
@@ -67,10 +69,11 @@ class BinanceOfferTpsl_State extends $pb.ProtobufEnum {
     STATE_OFF,
     STATE_SKIPPED,
     STATE_FAILED,
+    STATE_WAITING,
   ];
 
   static final $core.List<BinanceOfferTpsl_State?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 4);
+      $pb.ProtobufEnum.$_initByValueList(values, 5);
   static BinanceOfferTpsl_State? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
