@@ -610,10 +610,13 @@ func (*BinanceSettings) Descriptor() ([]byte, []int) {
 // 参数为什么是 JSON 字符串：brain 的操作表本来就按 JSON 收参数并**在那里校验**
 // （不合法当场拒，还会在报错里给出正确写法）。再定义一遍 proto 参数就是第二套判据。
 type BinanceRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`                                   // face 给的流水号，brain 原样带回 `BinanceResult.request`
-	Op            *string                `protobuf:"bytes,2,opt,name=op,proto3,oneof" json:"op,omitempty"`                                   // 操作名，如 `usds_futures.account_information_v3`
-	ParamsJson    *string                `protobuf:"bytes,3,opt,name=params_json,json=paramsJson,proto3,oneof" json:"params_json,omitempty"` // 参数，一个 JSON 对象；不传 = 没有参数
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	Id         *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`                                   // face 给的流水号，brain 原样带回 `BinanceResult.request`
+	Op         *string                `protobuf:"bytes,2,opt,name=op,proto3,oneof" json:"op,omitempty"`                                   // 操作名，如 `usds_futures.account_information_v3`
+	ParamsJson *string                `protobuf:"bytes,3,opt,name=params_json,json=paramsJson,proto3,oneof" json:"params_json,omitempty"` // 参数，一个 JSON 对象；不传 = 没有参数
+	// 开仓单下完后要不要按风险承受率自动设置止盈止损(下单面板上默认勾选的那个框);结果在 `BinanceResult.tpsl`。
+	// 口径同 `hi.binance.BinanceCommand.auto_tpsl`:**不带 = 不设**,不是开仓单带了也不看。
+	AutoTpsl      *bool `protobuf:"varint,4,opt,name=auto_tpsl,json=autoTpsl,proto3,oneof" json:"auto_tpsl,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -667,6 +670,13 @@ func (x *BinanceRequest) GetParamsJson() string {
 		return *x.ParamsJson
 	}
 	return ""
+}
+
+func (x *BinanceRequest) GetAutoTpsl() bool {
+	if x != nil && x.AutoTpsl != nil {
+		return *x.AutoTpsl
+	}
+	return false
 }
 
 // brain -> face：所有指令通过 oneof 路由
@@ -1711,15 +1721,18 @@ const file_hi_ninja_ui_proto_rawDesc = "" +
 	"\x05audio\x18\x02 \x01(\fH\x01R\x05audio\x88\x01\x01B\a\n" +
 	"\x05_uuidB\b\n" +
 	"\x06_audio\"\x11\n" +
-	"\x0fBinanceSettings\"~\n" +
+	"\x0fBinanceSettings\"\xae\x01\n" +
 	"\x0eBinanceRequest\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x13\n" +
 	"\x02op\x18\x02 \x01(\tH\x01R\x02op\x88\x01\x01\x12$\n" +
 	"\vparams_json\x18\x03 \x01(\tH\x02R\n" +
-	"paramsJson\x88\x01\x01B\x05\n" +
+	"paramsJson\x88\x01\x01\x12 \n" +
+	"\tauto_tpsl\x18\x04 \x01(\bH\x03R\bautoTpsl\x88\x01\x01B\x05\n" +
 	"\x03_idB\x05\n" +
 	"\x03_opB\x0e\n" +
-	"\f_params_json\"\xf4\v\n" +
+	"\f_params_jsonB\f\n" +
+	"\n" +
+	"_auto_tpsl\"\xf4\v\n" +
 	"\vBrainToFace\x124\n" +
 	"\n" +
 	"init_robot\x18\x01 \x01(\v2\x13.hi.ninja.RobotInitH\x00R\tinitRobot\x128\n" +

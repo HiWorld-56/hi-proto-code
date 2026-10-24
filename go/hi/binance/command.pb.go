@@ -55,6 +55,10 @@ type BinanceCommand struct {
 	// 过期时刻,**绝对时间,微秒**(与 `Notice.expiration` 同一口径)。过了机器人不执行、回一条失败;
 	// 机器人系统时钟不可信时也不执行。
 	Expiration *int64 `protobuf:"varint,1,opt,name=expiration,proto3,oneof" json:"expiration,omitempty"`
+	// 开仓单(合约开多 / 开空、合约开仓条件单、现货买入)下完后要不要按风险承受率**自动设置止盈止损**,
+	// 结果在 `BinanceResult.tpsl`。处理与开单卡同一套(见 `BinanceAutoTpsl`)。
+	// **不带 = 不设**(老版本端上发的指令没有这一项,照旧只下单)。不是开仓单的指令带了也不看。
+	AutoTpsl *bool `protobuf:"varint,2,opt,name=auto_tpsl,json=autoTpsl,proto3,oneof" json:"auto_tpsl,omitempty"`
 	// Types that are valid to be assigned to Op:
 	//
 	//	*BinanceCommand_SpotNewOrder
@@ -150,6 +154,13 @@ func (x *BinanceCommand) GetExpiration() int64 {
 		return *x.Expiration
 	}
 	return 0
+}
+
+func (x *BinanceCommand) GetAutoTpsl() bool {
+	if x != nil && x.AutoTpsl != nil {
+		return *x.AutoTpsl
+	}
+	return false
 }
 
 func (x *BinanceCommand) GetOp() isBinanceCommand_Op {
@@ -967,12 +978,13 @@ var File_hi_binance_command_proto protoreflect.FileDescriptor
 const file_hi_binance_command_proto_rawDesc = "" +
 	"\n" +
 	"\x18hi/binance/command.proto\x12\n" +
-	"hi.binance\x1a\x1bbuf/validate/validate.proto\x1a\x18hi/binance/binance.proto\x1a\x17hi/binance/stocks.proto\x1a\x10hi/options.proto\"\xe7+\n" +
+	"hi.binance\x1a\x1bbuf/validate/validate.proto\x1a\x18hi/binance/binance.proto\x1a\x17hi/binance/stocks.proto\x1a\x10hi/options.proto\"\x9d,\n" +
 	"\x0eBinanceCommand\x12/\n" +
 	"\n" +
 	"expiration\x18\x01 \x01(\x03B\n" +
 	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x02H\x01R\n" +
-	"expiration\x88\x01\x01\x12M\n" +
+	"expiration\x88\x01\x01\x12&\n" +
+	"\tauto_tpsl\x18\x02 \x01(\bB\x04\x90\xb5\x18\x02H\x02R\bautoTpsl\x88\x01\x01\x12M\n" +
 	"\x0espot_new_order\x18\n" +
 	" \x01(\v2\x1f.hi.binance.BinanceSpotNewOrderB\x04\x90\xb5\x18\x02H\x00R\fspotNewOrder\x12V\n" +
 	"\x11spot_cancel_order\x18\v \x01(\v2\".hi.binance.BinanceSpotCancelOrderB\x04\x90\xb5\x18\x02H\x00R\x0fspotCancelOrder\x12l\n" +
@@ -1029,7 +1041,9 @@ const file_hi_binance_command_proto_rawDesc = "" +
 	"\x1busds_futures_close_position\x18? \x01(\v2'.hi.binance.BinanceFuturesClosePositionB\x04\x90\xb5\x18\x02H\x00R\x18usdsFuturesClosePosition\x12Q\n" +
 	"\x0fstocks_holdings\x18@ \x01(\v2 .hi.binance.BinanceStockHoldingsB\x04\x90\xb5\x18\x02H\x00R\x0estocksHoldings:\x04\x98\xb5\x18\x02B\v\n" +
 	"\x02op\x12\x05\xbaH\x02\b\x01B\r\n" +
-	"\v_expirationB\x95\x01\n" +
+	"\v_expirationB\f\n" +
+	"\n" +
+	"_auto_tpslB\x95\x01\n" +
 	"\x0ecom.hi.binanceB\fCommandProtoP\x01Z,github.com/HiWorld-56/hi-proto/go/hi/binance\xa2\x02\x03HBX\xaa\x02\n" +
 	"Hi.Binance\xca\x02\n" +
 	"Hi\\Binance\xe2\x02\x16Hi\\Binance\\GPBMetadata\xea\x02\vHi::Binanceb\x06proto3"

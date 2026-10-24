@@ -3857,6 +3857,7 @@ class BinanceResult extends $pb.GeneratedMessage {
     $core.String? error,
     BinanceHoldings? held,
     BinanceRoi? roi,
+    BinanceAutoTpsl? tpsl,
   }) {
     final result = create();
     if (request != null) result.request = request;
@@ -3866,6 +3867,7 @@ class BinanceResult extends $pb.GeneratedMessage {
     if (error != null) result.error = error;
     if (held != null) result.held = held;
     if (roi != null) result.roi = roi;
+    if (tpsl != null) result.tpsl = tpsl;
     return result;
   }
 
@@ -3891,6 +3893,8 @@ class BinanceResult extends $pb.GeneratedMessage {
         subBuilder: BinanceHoldings.create)
     ..aOM<BinanceRoi>(7, _omitFieldNames ? '' : 'roi',
         subBuilder: BinanceRoi.create)
+    ..aOM<BinanceAutoTpsl>(8, _omitFieldNames ? '' : 'tpsl',
+        subBuilder: BinanceAutoTpsl.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3984,6 +3988,129 @@ class BinanceResult extends $pb.GeneratedMessage {
   void clearRoi() => $_clearField(7);
   @$pb.TagNumber(7)
   BinanceRoi ensureRoi() => $_ensure(6);
+
+  /// 这一单是开仓、而且下单时说了要不要自动设止盈止损(`BinanceCommand.auto_tpsl` / face 的 `BinanceRequest.auto_tpsl`)才带:
+  /// 自动止盈止损的结果(见 `BinanceAutoTpsl`)。挂单是 STATE_WAITING,成交后的下文另发给主人。
+  /// **不带 = 这一单不涉及自动止盈止损**(不是开仓、没说要不要,或机器人版本还没有这个字段)。
+  @$pb.TagNumber(8)
+  BinanceAutoTpsl get tpsl => $_getN(7);
+  @$pb.TagNumber(8)
+  set tpsl(BinanceAutoTpsl value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasTpsl() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearTpsl() => $_clearField(8);
+  @$pb.TagNumber(8)
+  BinanceAutoTpsl ensureTpsl() => $_ensure(7);
+}
+
+/// **自动止盈止损的结果**。开单卡、跟挂卡(`BinanceOffer.tpsl`)与经 hi 直接下的开仓单(`BinanceResult.tpsl`:
+/// 端上的币安指令、主人对话、face 下单面板)是同一套处理、同一个结果(2026-10-24 用户定:入口不同,处理复用同一套)。
+///
+/// 口径:R = 主人设的风险承受率(`BinanceRoi.risk_tolerance`)。止损 = 这一笔亏到它保证金的 R%(合约按收益率、现货按价格),
+/// 止盈 = 2R%。合约挂**整仓**止盈止损,触发价按成交后的开仓均价现算;开单前这个方向已有仓位就不挂(整仓单会盖到原有仓位)。
+/// 现货按这次实际买到的数量挂一对 OCO 卖单。挂单(限价、条件单)成交后才挂。
+class BinanceAutoTpsl extends $pb.GeneratedMessage {
+  factory BinanceAutoTpsl({
+    BinanceAutoTpsl_State? state,
+    $core.String? stopLossPrice,
+    $core.String? takeProfitPrice,
+    $core.String? reason,
+    $core.String? warning,
+  }) {
+    final result = create();
+    if (state != null) result.state = state;
+    if (stopLossPrice != null) result.stopLossPrice = stopLossPrice;
+    if (takeProfitPrice != null) result.takeProfitPrice = takeProfitPrice;
+    if (reason != null) result.reason = reason;
+    if (warning != null) result.warning = warning;
+    return result;
+  }
+
+  BinanceAutoTpsl._();
+
+  factory BinanceAutoTpsl.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BinanceAutoTpsl.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BinanceAutoTpsl',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
+      createEmptyInstance: create)
+    ..aE<BinanceAutoTpsl_State>(1, _omitFieldNames ? '' : 'state',
+        enumValues: BinanceAutoTpsl_State.values)
+    ..aOS(2, _omitFieldNames ? '' : 'stopLossPrice')
+    ..aOS(3, _omitFieldNames ? '' : 'takeProfitPrice')
+    ..aOS(4, _omitFieldNames ? '' : 'reason')
+    ..aOS(5, _omitFieldNames ? '' : 'warning')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceAutoTpsl clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BinanceAutoTpsl copyWith(void Function(BinanceAutoTpsl) updates) =>
+      super.copyWith((message) => updates(message as BinanceAutoTpsl))
+          as BinanceAutoTpsl;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BinanceAutoTpsl create() => BinanceAutoTpsl._();
+  @$core.override
+  BinanceAutoTpsl createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BinanceAutoTpsl getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BinanceAutoTpsl>(create);
+  static BinanceAutoTpsl? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  BinanceAutoTpsl_State get state => $_getN(0);
+  @$pb.TagNumber(1)
+  set state(BinanceAutoTpsl_State value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasState() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearState() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get stopLossPrice => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set stopLossPrice($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasStopLossPrice() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearStopLossPrice() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get takeProfitPrice => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set takeProfitPrice($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasTakeProfitPrice() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearTakeProfitPrice() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get reason => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set reason($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasReason() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearReason() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get warning => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set warning($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasWarning() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearWarning() => $_clearField(5);
 }
 
 /// 一台机器人的收益率快照。公式与口径只写在 `BinanceFuturesPnl` 那条注释里。

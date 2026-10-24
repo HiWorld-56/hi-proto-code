@@ -583,6 +583,10 @@ pub struct BinanceRequest {
     /// 参数，一个 JSON 对象；不传 = 没有参数
     #[prost(string, optional, tag = "3")]
     pub params_json: ::core::option::Option<::prost::alloc::string::String>,
+    /// 开仓单下完后要不要按风险承受率自动设置止盈止损(下单面板上默认勾选的那个框);结果在 `BinanceResult.tpsl`。
+    /// 口径同 `hi.binance.BinanceCommand.auto_tpsl`:**不带 = 不设**,不是开仓单带了也不看。
+    #[prost(bool, optional, tag = "4")]
+    pub auto_tpsl: ::core::option::Option<bool>,
 }
 /// brain -> face：所有指令通过 oneof 路由
 #[derive(Clone, PartialEq, ::prost::Message)]

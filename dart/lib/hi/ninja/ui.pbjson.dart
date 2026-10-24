@@ -177,19 +177,30 @@ const BinanceRequest$json = {
       '10': 'paramsJson',
       '17': true
     },
+    {
+      '1': 'auto_tpsl',
+      '3': 4,
+      '4': 1,
+      '5': 8,
+      '9': 3,
+      '10': 'autoTpsl',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_id'},
     {'1': '_op'},
     {'1': '_params_json'},
+    {'1': '_auto_tpsl'},
   ],
 };
 
 /// Descriptor for `BinanceRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List binanceRequestDescriptor = $convert.base64Decode(
     'Cg5CaW5hbmNlUmVxdWVzdBITCgJpZBgBIAEoCUgAUgJpZIgBARITCgJvcBgCIAEoCUgBUgJvcI'
-    'gBARIkCgtwYXJhbXNfanNvbhgDIAEoCUgCUgpwYXJhbXNKc29uiAEBQgUKA19pZEIFCgNfb3BC'
-    'DgoMX3BhcmFtc19qc29u');
+    'gBARIkCgtwYXJhbXNfanNvbhgDIAEoCUgCUgpwYXJhbXNKc29uiAEBEiAKCWF1dG9fdHBzbBgE'
+    'IAEoCEgDUghhdXRvVHBzbIgBAUIFCgNfaWRCBQoDX29wQg4KDF9wYXJhbXNfanNvbkIMCgpfYX'
+    'V0b190cHNs');
 
 @$core.Deprecated('Use brainToFaceDescriptor instead')
 const BrainToFace$json = {

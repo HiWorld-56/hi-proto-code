@@ -34,7 +34,7 @@ class BinanceOffer extends $pb.GeneratedMessage {
     $fixnum.Int64? expiresAt,
     BinanceOffer_State? state,
     $2.BinanceResult? result,
-    BinanceOfferTpsl? tpsl,
+    $2.BinanceAutoTpsl? tpsl,
     $1.BinancePending? pending,
   }) {
     final result$ = create();
@@ -77,8 +77,8 @@ class BinanceOffer extends $pb.GeneratedMessage {
         enumValues: BinanceOffer_State.values)
     ..aOM<$2.BinanceResult>(8, _omitFieldNames ? '' : 'result',
         subBuilder: $2.BinanceResult.create)
-    ..aOM<BinanceOfferTpsl>(9, _omitFieldNames ? '' : 'tpsl',
-        subBuilder: BinanceOfferTpsl.create)
+    ..aOM<$2.BinanceAutoTpsl>(9, _omitFieldNames ? '' : 'tpsl',
+        subBuilder: $2.BinanceAutoTpsl.create)
     ..aOM<$1.BinancePending>(10, _omitFieldNames ? '' : 'pending',
         subBuilder: $1.BinancePending.create)
     ..hasRequiredFields = false;
@@ -184,15 +184,15 @@ class BinanceOffer extends $pb.GeneratedMessage {
 
   /// STATE_DONE 且开仓成功时带:自动止盈止损做了什么。不带 = 这张卡没走到这一步(开仓失败,或机器人版本还没有这个功能)。
   @$pb.TagNumber(9)
-  BinanceOfferTpsl get tpsl => $_getN(8);
+  $2.BinanceAutoTpsl get tpsl => $_getN(8);
   @$pb.TagNumber(9)
-  set tpsl(BinanceOfferTpsl value) => $_setField(9, value);
+  set tpsl($2.BinanceAutoTpsl value) => $_setField(9, value);
   @$pb.TagNumber(9)
   $core.bool hasTpsl() => $_has(8);
   @$pb.TagNumber(9)
   void clearTpsl() => $_clearField(9);
   @$pb.TagNumber(9)
-  BinanceOfferTpsl ensureTpsl() => $_ensure(8);
+  $2.BinanceAutoTpsl ensureTpsl() => $_ensure(8);
 
   @$pb.TagNumber(10)
   $1.BinancePending get pending => $_getN(9);
@@ -492,110 +492,6 @@ class BinanceOfferPlan extends $pb.GeneratedMessage {
   $core.bool hasCallbackRate() => $_has(18);
   @$pb.TagNumber(19)
   void clearCallbackRate() => $_clearField(19);
-}
-
-/// 自动止盈止损的结果(`BinanceOffer.tpsl`)。
-class BinanceOfferTpsl extends $pb.GeneratedMessage {
-  factory BinanceOfferTpsl({
-    BinanceOfferTpsl_State? state,
-    $core.String? stopLossPrice,
-    $core.String? takeProfitPrice,
-    $core.String? reason,
-    $core.String? warning,
-  }) {
-    final result = create();
-    if (state != null) result.state = state;
-    if (stopLossPrice != null) result.stopLossPrice = stopLossPrice;
-    if (takeProfitPrice != null) result.takeProfitPrice = takeProfitPrice;
-    if (reason != null) result.reason = reason;
-    if (warning != null) result.warning = warning;
-    return result;
-  }
-
-  BinanceOfferTpsl._();
-
-  factory BinanceOfferTpsl.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory BinanceOfferTpsl.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'BinanceOfferTpsl',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.binance'),
-      createEmptyInstance: create)
-    ..aE<BinanceOfferTpsl_State>(1, _omitFieldNames ? '' : 'state',
-        enumValues: BinanceOfferTpsl_State.values)
-    ..aOS(2, _omitFieldNames ? '' : 'stopLossPrice')
-    ..aOS(3, _omitFieldNames ? '' : 'takeProfitPrice')
-    ..aOS(4, _omitFieldNames ? '' : 'reason')
-    ..aOS(5, _omitFieldNames ? '' : 'warning')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  BinanceOfferTpsl clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  BinanceOfferTpsl copyWith(void Function(BinanceOfferTpsl) updates) =>
-      super.copyWith((message) => updates(message as BinanceOfferTpsl))
-          as BinanceOfferTpsl;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static BinanceOfferTpsl create() => BinanceOfferTpsl._();
-  @$core.override
-  BinanceOfferTpsl createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static BinanceOfferTpsl getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<BinanceOfferTpsl>(create);
-  static BinanceOfferTpsl? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  BinanceOfferTpsl_State get state => $_getN(0);
-  @$pb.TagNumber(1)
-  set state(BinanceOfferTpsl_State value) => $_setField(1, value);
-  @$pb.TagNumber(1)
-  $core.bool hasState() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearState() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get stopLossPrice => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set stopLossPrice($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasStopLossPrice() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearStopLossPrice() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.String get takeProfitPrice => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set takeProfitPrice($core.String value) => $_setString(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasTakeProfitPrice() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearTakeProfitPrice() => $_clearField(3);
-
-  @$pb.TagNumber(4)
-  $core.String get reason => $_getSZ(3);
-  @$pb.TagNumber(4)
-  set reason($core.String value) => $_setString(3, value);
-  @$pb.TagNumber(4)
-  $core.bool hasReason() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearReason() => $_clearField(4);
-
-  @$pb.TagNumber(5)
-  $core.String get warning => $_getSZ(4);
-  @$pb.TagNumber(5)
-  set warning($core.String value) => $_setString(4, value);
-  @$pb.TagNumber(5)
-  $core.bool hasWarning() => $_has(4);
-  @$pb.TagNumber(5)
-  void clearWarning() => $_clearField(5);
 }
 
 class BinanceOfferReply extends $pb.GeneratedMessage {

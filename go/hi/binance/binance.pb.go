@@ -479,6 +479,64 @@ func (BinanceTpslBasis) EnumDescriptor() ([]byte, []int) {
 	return file_hi_binance_binance_proto_rawDescGZIP(), []int{7}
 }
 
+type BinanceAutoTpsl_State int32
+
+const (
+	BinanceAutoTpsl_STATE_UNSPECIFIED BinanceAutoTpsl_State = 0
+	BinanceAutoTpsl_STATE_SET         BinanceAutoTpsl_State = 1 // 止盈、止损都挂上了(价格在下面两个字段)
+	BinanceAutoTpsl_STATE_OFF         BinanceAutoTpsl_State = 2 // 人没勾「自动设置止盈止损」(或说了不要)
+	BinanceAutoTpsl_STATE_SKIPPED     BinanceAutoTpsl_State = 3 // 没挂:没设风险承受率 / 这个方向开单前已有仓位 / 这一单不是开仓(原因在 reason)
+	BinanceAutoTpsl_STATE_FAILED      BinanceAutoTpsl_State = 4 // 仓开成了,止盈止损没挂上或只挂上一条(原因在 reason)—— **这个仓位可能没有止损**,界面要显眼
+	BinanceAutoTpsl_STATE_WAITING     BinanceAutoTpsl_State = 5 // 挂单挂上了、还没成交。之后有了下文(成交后挂上 / 没挂上、没成交就没了、信号源撤单自动撤掉),机器人另给主人发一句话(卡片还会把 tpsl 改成 SET / FAILED / SKIPPED 再推一次)
+)
+
+// Enum value maps for BinanceAutoTpsl_State.
+var (
+	BinanceAutoTpsl_State_name = map[int32]string{
+		0: "STATE_UNSPECIFIED",
+		1: "STATE_SET",
+		2: "STATE_OFF",
+		3: "STATE_SKIPPED",
+		4: "STATE_FAILED",
+		5: "STATE_WAITING",
+	}
+	BinanceAutoTpsl_State_value = map[string]int32{
+		"STATE_UNSPECIFIED": 0,
+		"STATE_SET":         1,
+		"STATE_OFF":         2,
+		"STATE_SKIPPED":     3,
+		"STATE_FAILED":      4,
+		"STATE_WAITING":     5,
+	}
+)
+
+func (x BinanceAutoTpsl_State) Enum() *BinanceAutoTpsl_State {
+	p := new(BinanceAutoTpsl_State)
+	*p = x
+	return p
+}
+
+func (x BinanceAutoTpsl_State) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (BinanceAutoTpsl_State) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_binance_binance_proto_enumTypes[8].Descriptor()
+}
+
+func (BinanceAutoTpsl_State) Type() protoreflect.EnumType {
+	return &file_hi_binance_binance_proto_enumTypes[8]
+}
+
+func (x BinanceAutoTpsl_State) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use BinanceAutoTpsl_State.Descriptor instead.
+func (BinanceAutoTpsl_State) EnumDescriptor() ([]byte, []int) {
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{44, 0}
+}
+
 // 现货下单。`POST /api/v3/order`
 type BinanceSpotNewOrder struct {
 	state       protoimpl.MessageState `protogen:"open.v1"`
@@ -3414,7 +3472,11 @@ type BinanceResult struct {
 	// 回这条结果时,这台机器人的**收益率**快照(公式见 `BinanceFuturesPnl`,只在机器人算一份)。
 	// 与 `held` 同样只在插件认了发令人(主人 / 代理)之后才带。
 	// **不带 = 不知道**(这条没报告、机器人还没取到过余额,或机器人版本还没有这个字段)—— 读方显示「未知」。
-	Roi           *BinanceRoi `protobuf:"bytes,7,opt,name=roi,proto3,oneof" json:"roi,omitempty"`
+	Roi *BinanceRoi `protobuf:"bytes,7,opt,name=roi,proto3,oneof" json:"roi,omitempty"`
+	// 这一单是开仓、而且下单时说了要不要自动设止盈止损(`BinanceCommand.auto_tpsl` / face 的 `BinanceRequest.auto_tpsl`)才带:
+	// 自动止盈止损的结果(见 `BinanceAutoTpsl`)。挂单是 STATE_WAITING,成交后的下文另发给主人。
+	// **不带 = 这一单不涉及自动止盈止损**(不是开仓、没说要不要,或机器人版本还没有这个字段)。
+	Tpsl          *BinanceAutoTpsl `protobuf:"bytes,8,opt,name=tpsl,proto3,oneof" json:"tpsl,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3498,6 +3560,95 @@ func (x *BinanceResult) GetRoi() *BinanceRoi {
 	return nil
 }
 
+func (x *BinanceResult) GetTpsl() *BinanceAutoTpsl {
+	if x != nil {
+		return x.Tpsl
+	}
+	return nil
+}
+
+// **自动止盈止损的结果**。开单卡、跟挂卡(`BinanceOffer.tpsl`)与经 hi 直接下的开仓单(`BinanceResult.tpsl`:
+// 端上的币安指令、主人对话、face 下单面板)是同一套处理、同一个结果(2026-10-24 用户定:入口不同,处理复用同一套)。
+//
+// 口径:R = 主人设的风险承受率(`BinanceRoi.risk_tolerance`)。止损 = 这一笔亏到它保证金的 R%(合约按收益率、现货按价格),
+// 止盈 = 2R%。合约挂**整仓**止盈止损,触发价按成交后的开仓均价现算;开单前这个方向已有仓位就不挂(整仓单会盖到原有仓位)。
+// 现货按这次实际买到的数量挂一对 OCO 卖单。挂单(限价、条件单)成交后才挂。
+type BinanceAutoTpsl struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	State           *BinanceAutoTpsl_State `protobuf:"varint,1,opt,name=state,proto3,enum=hi.binance.BinanceAutoTpsl_State,oneof" json:"state,omitempty"`
+	StopLossPrice   *string                `protobuf:"bytes,2,opt,name=stop_loss_price,json=stopLossPrice,proto3,oneof" json:"stop_loss_price,omitempty"`       // 实际挂上的止损触发价
+	TakeProfitPrice *string                `protobuf:"bytes,3,opt,name=take_profit_price,json=takeProfitPrice,proto3,oneof" json:"take_profit_price,omitempty"` // 实际挂上的止盈价(合约:触发价;现货:限价)
+	Reason          *string                `protobuf:"bytes,4,opt,name=reason,proto3,oneof" json:"reason,omitempty"`                                            // SKIPPED / FAILED 时的原因,一句话
+	Warning         *string                `protobuf:"bytes,5,opt,name=warning,proto3,oneof" json:"warning,omitempty"`                                          // 挂上了但要提醒的(如止损价在爆仓价之外,可能先爆仓)
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *BinanceAutoTpsl) Reset() {
+	*x = BinanceAutoTpsl{}
+	mi := &file_hi_binance_binance_proto_msgTypes[44]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BinanceAutoTpsl) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BinanceAutoTpsl) ProtoMessage() {}
+
+func (x *BinanceAutoTpsl) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_binance_binance_proto_msgTypes[44]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BinanceAutoTpsl.ProtoReflect.Descriptor instead.
+func (*BinanceAutoTpsl) Descriptor() ([]byte, []int) {
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{44}
+}
+
+func (x *BinanceAutoTpsl) GetState() BinanceAutoTpsl_State {
+	if x != nil && x.State != nil {
+		return *x.State
+	}
+	return BinanceAutoTpsl_STATE_UNSPECIFIED
+}
+
+func (x *BinanceAutoTpsl) GetStopLossPrice() string {
+	if x != nil && x.StopLossPrice != nil {
+		return *x.StopLossPrice
+	}
+	return ""
+}
+
+func (x *BinanceAutoTpsl) GetTakeProfitPrice() string {
+	if x != nil && x.TakeProfitPrice != nil {
+		return *x.TakeProfitPrice
+	}
+	return ""
+}
+
+func (x *BinanceAutoTpsl) GetReason() string {
+	if x != nil && x.Reason != nil {
+		return *x.Reason
+	}
+	return ""
+}
+
+func (x *BinanceAutoTpsl) GetWarning() string {
+	if x != nil && x.Warning != nil {
+		return *x.Warning
+	}
+	return ""
+}
+
 // 一台机器人的收益率快照。公式与口径只写在 `BinanceFuturesPnl` 那条注释里。
 //
 // 三种状态:
@@ -3524,7 +3675,7 @@ type BinanceRoi struct {
 
 func (x *BinanceRoi) Reset() {
 	*x = BinanceRoi{}
-	mi := &file_hi_binance_binance_proto_msgTypes[44]
+	mi := &file_hi_binance_binance_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3536,7 +3687,7 @@ func (x *BinanceRoi) String() string {
 func (*BinanceRoi) ProtoMessage() {}
 
 func (x *BinanceRoi) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[44]
+	mi := &file_hi_binance_binance_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3549,7 +3700,7 @@ func (x *BinanceRoi) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceRoi.ProtoReflect.Descriptor instead.
 func (*BinanceRoi) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{44}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *BinanceRoi) GetAge() uint32 {
@@ -3619,7 +3770,7 @@ type BinanceHoldings struct {
 
 func (x *BinanceHoldings) Reset() {
 	*x = BinanceHoldings{}
-	mi := &file_hi_binance_binance_proto_msgTypes[45]
+	mi := &file_hi_binance_binance_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3631,7 +3782,7 @@ func (x *BinanceHoldings) String() string {
 func (*BinanceHoldings) ProtoMessage() {}
 
 func (x *BinanceHoldings) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[45]
+	mi := &file_hi_binance_binance_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3644,7 +3795,7 @@ func (x *BinanceHoldings) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceHoldings.ProtoReflect.Descriptor instead.
 func (*BinanceHoldings) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{45}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *BinanceHoldings) GetFutures() *BinanceHeld {
@@ -3674,7 +3825,7 @@ type BinanceHeld struct {
 
 func (x *BinanceHeld) Reset() {
 	*x = BinanceHeld{}
-	mi := &file_hi_binance_binance_proto_msgTypes[46]
+	mi := &file_hi_binance_binance_proto_msgTypes[47]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3686,7 +3837,7 @@ func (x *BinanceHeld) String() string {
 func (*BinanceHeld) ProtoMessage() {}
 
 func (x *BinanceHeld) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_binance_proto_msgTypes[46]
+	mi := &file_hi_binance_binance_proto_msgTypes[47]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3699,7 +3850,7 @@ func (x *BinanceHeld) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceHeld.ProtoReflect.Descriptor instead.
 func (*BinanceHeld) Descriptor() ([]byte, []int) {
-	return file_hi_binance_binance_proto_rawDescGZIP(), []int{46}
+	return file_hi_binance_binance_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *BinanceHeld) GetAge() uint32 {
@@ -4083,7 +4234,7 @@ const file_hi_binance_binance_proto_rawDesc = "" +
 	"\a_symbolB\v\n" +
 	"\t_quantityB\n" +
 	"\n" +
-	"\b_percent\"\xf9\x02\n" +
+	"\b_percent\"\xbe\x03\n" +
 	"\rBinanceResult\x12#\n" +
 	"\arequest\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\arequest\x88\x01\x01\x12\x19\n" +
 	"\x02op\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x02op\x88\x01\x01\x12*\n" +
@@ -4092,7 +4243,8 @@ const file_hi_binance_binance_proto_rawDesc = "" +
 	"\x04body\x18\x04 \x01(\tB\x04\x90\xb5\x18\x02H\x03R\x04body\x88\x01\x01\x12\x1f\n" +
 	"\x05error\x18\x05 \x01(\tB\x04\x90\xb5\x18\x02H\x04R\x05error\x88\x01\x01\x12:\n" +
 	"\x04held\x18\x06 \x01(\v2\x1b.hi.binance.BinanceHoldingsB\x04\x90\xb5\x18\x02H\x05R\x04held\x88\x01\x01\x123\n" +
-	"\x03roi\x18\a \x01(\v2\x16.hi.binance.BinanceRoiB\x04\x90\xb5\x18\x02H\x06R\x03roi\x88\x01\x01:\x04\x98\xb5\x18\x02B\n" +
+	"\x03roi\x18\a \x01(\v2\x16.hi.binance.BinanceRoiB\x04\x90\xb5\x18\x02H\x06R\x03roi\x88\x01\x01\x12:\n" +
+	"\x04tpsl\x18\b \x01(\v2\x1b.hi.binance.BinanceAutoTpslB\x04\x90\xb5\x18\x02H\aR\x04tpsl\x88\x01\x01:\x04\x98\xb5\x18\x02B\n" +
 	"\n" +
 	"\b_requestB\x05\n" +
 	"\x03_opB\x0e\n" +
@@ -4100,7 +4252,27 @@ const file_hi_binance_binance_proto_rawDesc = "" +
 	"\x05_bodyB\b\n" +
 	"\x06_errorB\a\n" +
 	"\x05_heldB\x06\n" +
-	"\x04_roi\"\xbf\x02\n" +
+	"\x04_roiB\a\n" +
+	"\x05_tpsl\"\xce\x03\n" +
+	"\x0fBinanceAutoTpsl\x12B\n" +
+	"\x05state\x18\x01 \x01(\x0e2!.hi.binance.BinanceAutoTpsl.StateB\x04\x90\xb5\x18\x02H\x00R\x05state\x88\x01\x01\x121\n" +
+	"\x0fstop_loss_price\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\rstopLossPrice\x88\x01\x01\x125\n" +
+	"\x11take_profit_price\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02H\x02R\x0ftakeProfitPrice\x88\x01\x01\x12!\n" +
+	"\x06reason\x18\x04 \x01(\tB\x04\x90\xb5\x18\x02H\x03R\x06reason\x88\x01\x01\x12#\n" +
+	"\awarning\x18\x05 \x01(\tB\x04\x90\xb5\x18\x02H\x04R\awarning\x88\x01\x01\"t\n" +
+	"\x05State\x12\x15\n" +
+	"\x11STATE_UNSPECIFIED\x10\x00\x12\r\n" +
+	"\tSTATE_SET\x10\x01\x12\r\n" +
+	"\tSTATE_OFF\x10\x02\x12\x11\n" +
+	"\rSTATE_SKIPPED\x10\x03\x12\x10\n" +
+	"\fSTATE_FAILED\x10\x04\x12\x11\n" +
+	"\rSTATE_WAITING\x10\x05:\x04\x98\xb5\x18\x02B\b\n" +
+	"\x06_stateB\x12\n" +
+	"\x10_stop_loss_priceB\x14\n" +
+	"\x12_take_profit_priceB\t\n" +
+	"\a_reasonB\n" +
+	"\n" +
+	"\b_warning\"\xbf\x02\n" +
 	"\n" +
 	"BinanceRoi\x12\x1b\n" +
 	"\x03age\x18\x01 \x01(\rB\x04\x90\xb5\x18\x02H\x00R\x03age\x88\x01\x01\x12#\n" +
@@ -4185,8 +4357,8 @@ func file_hi_binance_binance_proto_rawDescGZIP() []byte {
 	return file_hi_binance_binance_proto_rawDescData
 }
 
-var file_hi_binance_binance_proto_enumTypes = make([]protoimpl.EnumInfo, 8)
-var file_hi_binance_binance_proto_msgTypes = make([]protoimpl.MessageInfo, 47)
+var file_hi_binance_binance_proto_enumTypes = make([]protoimpl.EnumInfo, 9)
+var file_hi_binance_binance_proto_msgTypes = make([]protoimpl.MessageInfo, 48)
 var file_hi_binance_binance_proto_goTypes = []any{
 	(BinanceOrderSide)(0),                     // 0: hi.binance.BinanceOrderSide
 	(BinanceOrderType)(0),                     // 1: hi.binance.BinanceOrderType
@@ -4196,53 +4368,55 @@ var file_hi_binance_binance_proto_goTypes = []any{
 	(BinanceTimeInForce)(0),                   // 5: hi.binance.BinanceTimeInForce
 	(BinancePositionSide)(0),                  // 6: hi.binance.BinancePositionSide
 	(BinanceTpslBasis)(0),                     // 7: hi.binance.BinanceTpslBasis
-	(*BinanceSpotNewOrder)(nil),               // 8: hi.binance.BinanceSpotNewOrder
-	(*BinanceSpotCancelOrder)(nil),            // 9: hi.binance.BinanceSpotCancelOrder
-	(*BinanceSpotCancelAllOrders)(nil),        // 10: hi.binance.BinanceSpotCancelAllOrders
-	(*BinanceSpotOpenOrders)(nil),             // 11: hi.binance.BinanceSpotOpenOrders
-	(*BinanceSpotAccount)(nil),                // 12: hi.binance.BinanceSpotAccount
-	(*BinanceSpotGetOrder)(nil),               // 13: hi.binance.BinanceSpotGetOrder
-	(*BinanceSpotOpenOrderLists)(nil),         // 14: hi.binance.BinanceSpotOpenOrderLists
-	(*BinanceSpotTicker24H)(nil),              // 15: hi.binance.BinanceSpotTicker24h
-	(*BinanceSpotListLeg)(nil),                // 16: hi.binance.BinanceSpotListLeg
-	(*BinanceSpotWorkingOrder)(nil),           // 17: hi.binance.BinanceSpotWorkingOrder
-	(*BinanceSpotOrderListOco)(nil),           // 18: hi.binance.BinanceSpotOrderListOco
-	(*BinanceSpotOrderListOto)(nil),           // 19: hi.binance.BinanceSpotOrderListOto
-	(*BinanceSpotOrderListOtoco)(nil),         // 20: hi.binance.BinanceSpotOrderListOtoco
-	(*BinanceSpotOrderListOpo)(nil),           // 21: hi.binance.BinanceSpotOrderListOpo
-	(*BinanceSpotOrderListOpoco)(nil),         // 22: hi.binance.BinanceSpotOrderListOpoco
-	(*BinanceSpotCancelOrderList)(nil),        // 23: hi.binance.BinanceSpotCancelOrderList
-	(*BinanceSpotGetOrderList)(nil),           // 24: hi.binance.BinanceSpotGetOrderList
-	(*BinanceSpotAllOrderLists)(nil),          // 25: hi.binance.BinanceSpotAllOrderLists
-	(*BinanceFuturesNewOrder)(nil),            // 26: hi.binance.BinanceFuturesNewOrder
-	(*BinanceFuturesCancelOrder)(nil),         // 27: hi.binance.BinanceFuturesCancelOrder
-	(*BinanceFuturesGetOrder)(nil),            // 28: hi.binance.BinanceFuturesGetOrder
-	(*BinanceFuturesCancelAllOrders)(nil),     // 29: hi.binance.BinanceFuturesCancelAllOrders
-	(*BinanceFuturesLeverage)(nil),            // 30: hi.binance.BinanceFuturesLeverage
-	(*BinanceSpotKlines)(nil),                 // 31: hi.binance.BinanceSpotKlines
-	(*BinanceFuturesKlines)(nil),              // 32: hi.binance.BinanceFuturesKlines
-	(*BinanceFuturesTicker24H)(nil),           // 33: hi.binance.BinanceFuturesTicker24h
-	(*BinanceFuturesPositions)(nil),           // 34: hi.binance.BinanceFuturesPositions
-	(*BinanceFuturesAccount)(nil),             // 35: hi.binance.BinanceFuturesAccount
-	(*BinanceFuturesOpenOrders)(nil),          // 36: hi.binance.BinanceFuturesOpenOrders
-	(*BinanceFuturesOpenAlgoOrders)(nil),      // 37: hi.binance.BinanceFuturesOpenAlgoOrders
-	(*BinanceFuturesNewAlgoOrder)(nil),        // 38: hi.binance.BinanceFuturesNewAlgoOrder
-	(*BinanceFuturesCancelAlgoOrder)(nil),     // 39: hi.binance.BinanceFuturesCancelAlgoOrder
-	(*BinanceFuturesCancelAllAlgoOrders)(nil), // 40: hi.binance.BinanceFuturesCancelAllAlgoOrders
-	(*BinanceFuturesGetAlgoOrder)(nil),        // 41: hi.binance.BinanceFuturesGetAlgoOrder
-	(*BinanceFuturesAllAlgoOrders)(nil),       // 42: hi.binance.BinanceFuturesAllAlgoOrders
-	(*BinanceFuturesIncome)(nil),              // 43: hi.binance.BinanceFuturesIncome
-	(*BinanceFuturesPnl)(nil),                 // 44: hi.binance.BinanceFuturesPnl
-	(*BinanceSpotCancelAllSymbols)(nil),       // 45: hi.binance.BinanceSpotCancelAllSymbols
-	(*BinanceFuturesCancelAllSymbols)(nil),    // 46: hi.binance.BinanceFuturesCancelAllSymbols
-	(*BinanceFuturesPositionTpsl)(nil),        // 47: hi.binance.BinanceFuturesPositionTpsl
-	(*BinanceFuturesSignTradfiContract)(nil),  // 48: hi.binance.BinanceFuturesSignTradfiContract
-	(*BinanceWalletBalance)(nil),              // 49: hi.binance.BinanceWalletBalance
-	(*BinanceFuturesClosePosition)(nil),       // 50: hi.binance.BinanceFuturesClosePosition
-	(*BinanceResult)(nil),                     // 51: hi.binance.BinanceResult
-	(*BinanceRoi)(nil),                        // 52: hi.binance.BinanceRoi
-	(*BinanceHoldings)(nil),                   // 53: hi.binance.BinanceHoldings
-	(*BinanceHeld)(nil),                       // 54: hi.binance.BinanceHeld
+	(BinanceAutoTpsl_State)(0),                // 8: hi.binance.BinanceAutoTpsl.State
+	(*BinanceSpotNewOrder)(nil),               // 9: hi.binance.BinanceSpotNewOrder
+	(*BinanceSpotCancelOrder)(nil),            // 10: hi.binance.BinanceSpotCancelOrder
+	(*BinanceSpotCancelAllOrders)(nil),        // 11: hi.binance.BinanceSpotCancelAllOrders
+	(*BinanceSpotOpenOrders)(nil),             // 12: hi.binance.BinanceSpotOpenOrders
+	(*BinanceSpotAccount)(nil),                // 13: hi.binance.BinanceSpotAccount
+	(*BinanceSpotGetOrder)(nil),               // 14: hi.binance.BinanceSpotGetOrder
+	(*BinanceSpotOpenOrderLists)(nil),         // 15: hi.binance.BinanceSpotOpenOrderLists
+	(*BinanceSpotTicker24H)(nil),              // 16: hi.binance.BinanceSpotTicker24h
+	(*BinanceSpotListLeg)(nil),                // 17: hi.binance.BinanceSpotListLeg
+	(*BinanceSpotWorkingOrder)(nil),           // 18: hi.binance.BinanceSpotWorkingOrder
+	(*BinanceSpotOrderListOco)(nil),           // 19: hi.binance.BinanceSpotOrderListOco
+	(*BinanceSpotOrderListOto)(nil),           // 20: hi.binance.BinanceSpotOrderListOto
+	(*BinanceSpotOrderListOtoco)(nil),         // 21: hi.binance.BinanceSpotOrderListOtoco
+	(*BinanceSpotOrderListOpo)(nil),           // 22: hi.binance.BinanceSpotOrderListOpo
+	(*BinanceSpotOrderListOpoco)(nil),         // 23: hi.binance.BinanceSpotOrderListOpoco
+	(*BinanceSpotCancelOrderList)(nil),        // 24: hi.binance.BinanceSpotCancelOrderList
+	(*BinanceSpotGetOrderList)(nil),           // 25: hi.binance.BinanceSpotGetOrderList
+	(*BinanceSpotAllOrderLists)(nil),          // 26: hi.binance.BinanceSpotAllOrderLists
+	(*BinanceFuturesNewOrder)(nil),            // 27: hi.binance.BinanceFuturesNewOrder
+	(*BinanceFuturesCancelOrder)(nil),         // 28: hi.binance.BinanceFuturesCancelOrder
+	(*BinanceFuturesGetOrder)(nil),            // 29: hi.binance.BinanceFuturesGetOrder
+	(*BinanceFuturesCancelAllOrders)(nil),     // 30: hi.binance.BinanceFuturesCancelAllOrders
+	(*BinanceFuturesLeverage)(nil),            // 31: hi.binance.BinanceFuturesLeverage
+	(*BinanceSpotKlines)(nil),                 // 32: hi.binance.BinanceSpotKlines
+	(*BinanceFuturesKlines)(nil),              // 33: hi.binance.BinanceFuturesKlines
+	(*BinanceFuturesTicker24H)(nil),           // 34: hi.binance.BinanceFuturesTicker24h
+	(*BinanceFuturesPositions)(nil),           // 35: hi.binance.BinanceFuturesPositions
+	(*BinanceFuturesAccount)(nil),             // 36: hi.binance.BinanceFuturesAccount
+	(*BinanceFuturesOpenOrders)(nil),          // 37: hi.binance.BinanceFuturesOpenOrders
+	(*BinanceFuturesOpenAlgoOrders)(nil),      // 38: hi.binance.BinanceFuturesOpenAlgoOrders
+	(*BinanceFuturesNewAlgoOrder)(nil),        // 39: hi.binance.BinanceFuturesNewAlgoOrder
+	(*BinanceFuturesCancelAlgoOrder)(nil),     // 40: hi.binance.BinanceFuturesCancelAlgoOrder
+	(*BinanceFuturesCancelAllAlgoOrders)(nil), // 41: hi.binance.BinanceFuturesCancelAllAlgoOrders
+	(*BinanceFuturesGetAlgoOrder)(nil),        // 42: hi.binance.BinanceFuturesGetAlgoOrder
+	(*BinanceFuturesAllAlgoOrders)(nil),       // 43: hi.binance.BinanceFuturesAllAlgoOrders
+	(*BinanceFuturesIncome)(nil),              // 44: hi.binance.BinanceFuturesIncome
+	(*BinanceFuturesPnl)(nil),                 // 45: hi.binance.BinanceFuturesPnl
+	(*BinanceSpotCancelAllSymbols)(nil),       // 46: hi.binance.BinanceSpotCancelAllSymbols
+	(*BinanceFuturesCancelAllSymbols)(nil),    // 47: hi.binance.BinanceFuturesCancelAllSymbols
+	(*BinanceFuturesPositionTpsl)(nil),        // 48: hi.binance.BinanceFuturesPositionTpsl
+	(*BinanceFuturesSignTradfiContract)(nil),  // 49: hi.binance.BinanceFuturesSignTradfiContract
+	(*BinanceWalletBalance)(nil),              // 50: hi.binance.BinanceWalletBalance
+	(*BinanceFuturesClosePosition)(nil),       // 51: hi.binance.BinanceFuturesClosePosition
+	(*BinanceResult)(nil),                     // 52: hi.binance.BinanceResult
+	(*BinanceAutoTpsl)(nil),                   // 53: hi.binance.BinanceAutoTpsl
+	(*BinanceRoi)(nil),                        // 54: hi.binance.BinanceRoi
+	(*BinanceHoldings)(nil),                   // 55: hi.binance.BinanceHoldings
+	(*BinanceHeld)(nil),                       // 56: hi.binance.BinanceHeld
 }
 var file_hi_binance_binance_proto_depIdxs = []int32{
 	0,  // 0: hi.binance.BinanceSpotNewOrder.side:type_name -> hi.binance.BinanceOrderSide
@@ -4254,22 +4428,22 @@ var file_hi_binance_binance_proto_depIdxs = []int32{
 	0,  // 6: hi.binance.BinanceSpotWorkingOrder.side:type_name -> hi.binance.BinanceOrderSide
 	5,  // 7: hi.binance.BinanceSpotWorkingOrder.time_in_force:type_name -> hi.binance.BinanceTimeInForce
 	0,  // 8: hi.binance.BinanceSpotOrderListOco.side:type_name -> hi.binance.BinanceOrderSide
-	16, // 9: hi.binance.BinanceSpotOrderListOco.above:type_name -> hi.binance.BinanceSpotListLeg
-	16, // 10: hi.binance.BinanceSpotOrderListOco.below:type_name -> hi.binance.BinanceSpotListLeg
-	17, // 11: hi.binance.BinanceSpotOrderListOto.working:type_name -> hi.binance.BinanceSpotWorkingOrder
+	17, // 9: hi.binance.BinanceSpotOrderListOco.above:type_name -> hi.binance.BinanceSpotListLeg
+	17, // 10: hi.binance.BinanceSpotOrderListOco.below:type_name -> hi.binance.BinanceSpotListLeg
+	18, // 11: hi.binance.BinanceSpotOrderListOto.working:type_name -> hi.binance.BinanceSpotWorkingOrder
 	0,  // 12: hi.binance.BinanceSpotOrderListOto.pending_side:type_name -> hi.binance.BinanceOrderSide
-	16, // 13: hi.binance.BinanceSpotOrderListOto.pending:type_name -> hi.binance.BinanceSpotListLeg
-	17, // 14: hi.binance.BinanceSpotOrderListOtoco.working:type_name -> hi.binance.BinanceSpotWorkingOrder
+	17, // 13: hi.binance.BinanceSpotOrderListOto.pending:type_name -> hi.binance.BinanceSpotListLeg
+	18, // 14: hi.binance.BinanceSpotOrderListOtoco.working:type_name -> hi.binance.BinanceSpotWorkingOrder
 	0,  // 15: hi.binance.BinanceSpotOrderListOtoco.pending_side:type_name -> hi.binance.BinanceOrderSide
-	16, // 16: hi.binance.BinanceSpotOrderListOtoco.pending_above:type_name -> hi.binance.BinanceSpotListLeg
-	16, // 17: hi.binance.BinanceSpotOrderListOtoco.pending_below:type_name -> hi.binance.BinanceSpotListLeg
-	17, // 18: hi.binance.BinanceSpotOrderListOpo.working:type_name -> hi.binance.BinanceSpotWorkingOrder
+	17, // 16: hi.binance.BinanceSpotOrderListOtoco.pending_above:type_name -> hi.binance.BinanceSpotListLeg
+	17, // 17: hi.binance.BinanceSpotOrderListOtoco.pending_below:type_name -> hi.binance.BinanceSpotListLeg
+	18, // 18: hi.binance.BinanceSpotOrderListOpo.working:type_name -> hi.binance.BinanceSpotWorkingOrder
 	0,  // 19: hi.binance.BinanceSpotOrderListOpo.pending_side:type_name -> hi.binance.BinanceOrderSide
-	16, // 20: hi.binance.BinanceSpotOrderListOpo.pending:type_name -> hi.binance.BinanceSpotListLeg
-	17, // 21: hi.binance.BinanceSpotOrderListOpoco.working:type_name -> hi.binance.BinanceSpotWorkingOrder
+	17, // 20: hi.binance.BinanceSpotOrderListOpo.pending:type_name -> hi.binance.BinanceSpotListLeg
+	18, // 21: hi.binance.BinanceSpotOrderListOpoco.working:type_name -> hi.binance.BinanceSpotWorkingOrder
 	0,  // 22: hi.binance.BinanceSpotOrderListOpoco.pending_side:type_name -> hi.binance.BinanceOrderSide
-	16, // 23: hi.binance.BinanceSpotOrderListOpoco.pending_above:type_name -> hi.binance.BinanceSpotListLeg
-	16, // 24: hi.binance.BinanceSpotOrderListOpoco.pending_below:type_name -> hi.binance.BinanceSpotListLeg
+	17, // 23: hi.binance.BinanceSpotOrderListOpoco.pending_above:type_name -> hi.binance.BinanceSpotListLeg
+	17, // 24: hi.binance.BinanceSpotOrderListOpoco.pending_below:type_name -> hi.binance.BinanceSpotListLeg
 	0,  // 25: hi.binance.BinanceFuturesNewOrder.side:type_name -> hi.binance.BinanceOrderSide
 	1,  // 26: hi.binance.BinanceFuturesNewOrder.type:type_name -> hi.binance.BinanceOrderType
 	6,  // 27: hi.binance.BinanceFuturesNewOrder.position_side:type_name -> hi.binance.BinancePositionSide
@@ -4283,15 +4457,17 @@ var file_hi_binance_binance_proto_depIdxs = []int32{
 	7,  // 35: hi.binance.BinanceFuturesPositionTpsl.take_profit_basis:type_name -> hi.binance.BinanceTpslBasis
 	7,  // 36: hi.binance.BinanceFuturesPositionTpsl.stop_loss_basis:type_name -> hi.binance.BinanceTpslBasis
 	4,  // 37: hi.binance.BinanceFuturesPositionTpsl.working_type:type_name -> hi.binance.BinanceWorkingType
-	53, // 38: hi.binance.BinanceResult.held:type_name -> hi.binance.BinanceHoldings
-	52, // 39: hi.binance.BinanceResult.roi:type_name -> hi.binance.BinanceRoi
-	54, // 40: hi.binance.BinanceHoldings.futures:type_name -> hi.binance.BinanceHeld
-	54, // 41: hi.binance.BinanceHoldings.spot:type_name -> hi.binance.BinanceHeld
-	42, // [42:42] is the sub-list for method output_type
-	42, // [42:42] is the sub-list for method input_type
-	42, // [42:42] is the sub-list for extension type_name
-	42, // [42:42] is the sub-list for extension extendee
-	0,  // [0:42] is the sub-list for field type_name
+	55, // 38: hi.binance.BinanceResult.held:type_name -> hi.binance.BinanceHoldings
+	54, // 39: hi.binance.BinanceResult.roi:type_name -> hi.binance.BinanceRoi
+	53, // 40: hi.binance.BinanceResult.tpsl:type_name -> hi.binance.BinanceAutoTpsl
+	8,  // 41: hi.binance.BinanceAutoTpsl.state:type_name -> hi.binance.BinanceAutoTpsl.State
+	56, // 42: hi.binance.BinanceHoldings.futures:type_name -> hi.binance.BinanceHeld
+	56, // 43: hi.binance.BinanceHoldings.spot:type_name -> hi.binance.BinanceHeld
+	44, // [44:44] is the sub-list for method output_type
+	44, // [44:44] is the sub-list for method input_type
+	44, // [44:44] is the sub-list for extension type_name
+	44, // [44:44] is the sub-list for extension extendee
+	0,  // [0:44] is the sub-list for field type_name
 }
 
 func init() { file_hi_binance_binance_proto_init() }
@@ -4339,13 +4515,14 @@ func file_hi_binance_binance_proto_init() {
 	file_hi_binance_binance_proto_msgTypes[44].OneofWrappers = []any{}
 	file_hi_binance_binance_proto_msgTypes[45].OneofWrappers = []any{}
 	file_hi_binance_binance_proto_msgTypes[46].OneofWrappers = []any{}
+	file_hi_binance_binance_proto_msgTypes[47].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_binance_binance_proto_rawDesc), len(file_hi_binance_binance_proto_rawDesc)),
-			NumEnums:      8,
-			NumMessages:   47,
+			NumEnums:      9,
+			NumMessages:   48,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -473,11 +473,13 @@ class BinanceRequest extends $pb.GeneratedMessage {
     $core.String? id,
     $core.String? op,
     $core.String? paramsJson,
+    $core.bool? autoTpsl,
   }) {
     final result = create();
     if (id != null) result.id = id;
     if (op != null) result.op = op;
     if (paramsJson != null) result.paramsJson = paramsJson;
+    if (autoTpsl != null) result.autoTpsl = autoTpsl;
     return result;
   }
 
@@ -497,6 +499,7 @@ class BinanceRequest extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'id')
     ..aOS(2, _omitFieldNames ? '' : 'op')
     ..aOS(3, _omitFieldNames ? '' : 'paramsJson')
+    ..aOB(4, _omitFieldNames ? '' : 'autoTpsl')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -544,6 +547,17 @@ class BinanceRequest extends $pb.GeneratedMessage {
   $core.bool hasParamsJson() => $_has(2);
   @$pb.TagNumber(3)
   void clearParamsJson() => $_clearField(3);
+
+  /// 开仓单下完后要不要按风险承受率自动设置止盈止损(下单面板上默认勾选的那个框);结果在 `BinanceResult.tpsl`。
+  /// 口径同 `hi.binance.BinanceCommand.auto_tpsl`:**不带 = 不设**,不是开仓单带了也不看。
+  @$pb.TagNumber(4)
+  $core.bool get autoTpsl => $_getBF(3);
+  @$pb.TagNumber(4)
+  set autoTpsl($core.bool value) => $_setBool(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasAutoTpsl() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearAutoTpsl() => $_clearField(4);
 }
 
 enum BrainToFace_Cmd {

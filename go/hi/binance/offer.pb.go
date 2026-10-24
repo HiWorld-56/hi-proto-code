@@ -82,64 +82,6 @@ func (BinanceOffer_State) EnumDescriptor() ([]byte, []int) {
 	return file_hi_binance_offer_proto_rawDescGZIP(), []int{0, 0}
 }
 
-type BinanceOfferTpsl_State int32
-
-const (
-	BinanceOfferTpsl_STATE_UNSPECIFIED BinanceOfferTpsl_State = 0
-	BinanceOfferTpsl_STATE_SET         BinanceOfferTpsl_State = 1 // 止盈、止损都挂上了(价格在下面两个字段)
-	BinanceOfferTpsl_STATE_OFF         BinanceOfferTpsl_State = 2 // 人没勾「自动设置止盈止损」
-	BinanceOfferTpsl_STATE_SKIPPED     BinanceOfferTpsl_State = 3 // 没挂:没设风险承受率 / 这个方向开单前已有仓位(原因在 reason)
-	BinanceOfferTpsl_STATE_FAILED      BinanceOfferTpsl_State = 4 // 仓开成了,止盈止损没挂上或只挂上一条(原因在 reason)—— **这个仓位可能没有止损**,界面要显眼
-	BinanceOfferTpsl_STATE_WAITING     BinanceOfferTpsl_State = 5 // 跟挂卡:单挂上了、还没成交。之后有了下文(成交后挂上 / 没挂上、没成交就没了、信号源撤单自动撤掉),机器人把这张卡的 tpsl 改成 SET / FAILED / SKIPPED 再推一次,并另给主人发一句话
-)
-
-// Enum value maps for BinanceOfferTpsl_State.
-var (
-	BinanceOfferTpsl_State_name = map[int32]string{
-		0: "STATE_UNSPECIFIED",
-		1: "STATE_SET",
-		2: "STATE_OFF",
-		3: "STATE_SKIPPED",
-		4: "STATE_FAILED",
-		5: "STATE_WAITING",
-	}
-	BinanceOfferTpsl_State_value = map[string]int32{
-		"STATE_UNSPECIFIED": 0,
-		"STATE_SET":         1,
-		"STATE_OFF":         2,
-		"STATE_SKIPPED":     3,
-		"STATE_FAILED":      4,
-		"STATE_WAITING":     5,
-	}
-)
-
-func (x BinanceOfferTpsl_State) Enum() *BinanceOfferTpsl_State {
-	p := new(BinanceOfferTpsl_State)
-	*p = x
-	return p
-}
-
-func (x BinanceOfferTpsl_State) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (BinanceOfferTpsl_State) Descriptor() protoreflect.EnumDescriptor {
-	return file_hi_binance_offer_proto_enumTypes[1].Descriptor()
-}
-
-func (BinanceOfferTpsl_State) Type() protoreflect.EnumType {
-	return &file_hi_binance_offer_proto_enumTypes[1]
-}
-
-func (x BinanceOfferTpsl_State) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use BinanceOfferTpsl_State.Descriptor instead.
-func (BinanceOfferTpsl_State) EnumDescriptor() ([]byte, []int) {
-	return file_hi_binance_offer_proto_rawDescGZIP(), []int{2, 0}
-}
-
 type BinanceOffer struct {
 	state      protoimpl.MessageState `protogen:"open.v1"`
 	Id         *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`                                    // brain 给的卡号;回复时原样带回
@@ -151,8 +93,8 @@ type BinanceOffer struct {
 	State      *BinanceOffer_State    `protobuf:"varint,7,opt,name=state,proto3,enum=hi.binance.BinanceOffer_State,oneof" json:"state,omitempty"`
 	Result     *BinanceResult         `protobuf:"bytes,8,opt,name=result,proto3,oneof" json:"result,omitempty"` // STATE_DONE 时带:下单的原样结果
 	// STATE_DONE 且开仓成功时带:自动止盈止损做了什么。不带 = 这张卡没走到这一步(开仓失败,或机器人版本还没有这个功能)。
-	Tpsl          *BinanceOfferTpsl `protobuf:"bytes,9,opt,name=tpsl,proto3,oneof" json:"tpsl,omitempty"`
-	Pending       *BinancePending   `protobuf:"bytes,10,opt,name=pending,proto3,oneof" json:"pending,omitempty"` // 跟挂卡:信号源挂了什么(与 `open` 二选一)
+	Tpsl          *BinanceAutoTpsl `protobuf:"bytes,9,opt,name=tpsl,proto3,oneof" json:"tpsl,omitempty"`
+	Pending       *BinancePending  `protobuf:"bytes,10,opt,name=pending,proto3,oneof" json:"pending,omitempty"` // 跟挂卡:信号源挂了什么(与 `open` 二选一)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -243,7 +185,7 @@ func (x *BinanceOffer) GetResult() *BinanceResult {
 	return nil
 }
 
-func (x *BinanceOffer) GetTpsl() *BinanceOfferTpsl {
+func (x *BinanceOffer) GetTpsl() *BinanceAutoTpsl {
 	if x != nil {
 		return x.Tpsl
 	}
@@ -463,83 +405,6 @@ func (x *BinanceOfferPlan) GetCallbackRate() string {
 	return ""
 }
 
-// 自动止盈止损的结果(`BinanceOffer.tpsl`)。
-type BinanceOfferTpsl struct {
-	state           protoimpl.MessageState  `protogen:"open.v1"`
-	State           *BinanceOfferTpsl_State `protobuf:"varint,1,opt,name=state,proto3,enum=hi.binance.BinanceOfferTpsl_State,oneof" json:"state,omitempty"`
-	StopLossPrice   *string                 `protobuf:"bytes,2,opt,name=stop_loss_price,json=stopLossPrice,proto3,oneof" json:"stop_loss_price,omitempty"`       // 实际挂上的止损触发价
-	TakeProfitPrice *string                 `protobuf:"bytes,3,opt,name=take_profit_price,json=takeProfitPrice,proto3,oneof" json:"take_profit_price,omitempty"` // 实际挂上的止盈价(合约:触发价;现货:限价)
-	Reason          *string                 `protobuf:"bytes,4,opt,name=reason,proto3,oneof" json:"reason,omitempty"`                                            // SKIPPED / FAILED 时的原因,一句话
-	Warning         *string                 `protobuf:"bytes,5,opt,name=warning,proto3,oneof" json:"warning,omitempty"`                                          // 挂上了但要提醒的(如止损价在爆仓价之外,可能先爆仓)
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
-}
-
-func (x *BinanceOfferTpsl) Reset() {
-	*x = BinanceOfferTpsl{}
-	mi := &file_hi_binance_offer_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *BinanceOfferTpsl) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*BinanceOfferTpsl) ProtoMessage() {}
-
-func (x *BinanceOfferTpsl) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_offer_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use BinanceOfferTpsl.ProtoReflect.Descriptor instead.
-func (*BinanceOfferTpsl) Descriptor() ([]byte, []int) {
-	return file_hi_binance_offer_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *BinanceOfferTpsl) GetState() BinanceOfferTpsl_State {
-	if x != nil && x.State != nil {
-		return *x.State
-	}
-	return BinanceOfferTpsl_STATE_UNSPECIFIED
-}
-
-func (x *BinanceOfferTpsl) GetStopLossPrice() string {
-	if x != nil && x.StopLossPrice != nil {
-		return *x.StopLossPrice
-	}
-	return ""
-}
-
-func (x *BinanceOfferTpsl) GetTakeProfitPrice() string {
-	if x != nil && x.TakeProfitPrice != nil {
-		return *x.TakeProfitPrice
-	}
-	return ""
-}
-
-func (x *BinanceOfferTpsl) GetReason() string {
-	if x != nil && x.Reason != nil {
-		return *x.Reason
-	}
-	return ""
-}
-
-func (x *BinanceOfferTpsl) GetWarning() string {
-	if x != nil && x.Warning != nil {
-		return *x.Warning
-	}
-	return ""
-}
-
 type BinanceOfferReply struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Id    *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"` // BinanceOffer.id
@@ -556,7 +421,7 @@ type BinanceOfferReply struct {
 
 func (x *BinanceOfferReply) Reset() {
 	*x = BinanceOfferReply{}
-	mi := &file_hi_binance_offer_proto_msgTypes[3]
+	mi := &file_hi_binance_offer_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -568,7 +433,7 @@ func (x *BinanceOfferReply) String() string {
 func (*BinanceOfferReply) ProtoMessage() {}
 
 func (x *BinanceOfferReply) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_binance_offer_proto_msgTypes[3]
+	mi := &file_hi_binance_offer_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -581,7 +446,7 @@ func (x *BinanceOfferReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceOfferReply.ProtoReflect.Descriptor instead.
 func (*BinanceOfferReply) Descriptor() ([]byte, []int) {
-	return file_hi_binance_offer_proto_rawDescGZIP(), []int{3}
+	return file_hi_binance_offer_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *BinanceOfferReply) GetId() string {
@@ -610,7 +475,7 @@ var File_hi_binance_offer_proto protoreflect.FileDescriptor
 const file_hi_binance_offer_proto_rawDesc = "" +
 	"\n" +
 	"\x16hi/binance/offer.proto\x12\n" +
-	"hi.binance\x1a\x0fhi/common.proto\x1a\x18hi/binance/binance.proto\x1a\x17hi/binance/signal.proto\x1a\x10hi/options.proto\"\x92\x06\n" +
+	"hi.binance\x1a\x0fhi/common.proto\x1a\x18hi/binance/binance.proto\x1a\x17hi/binance/signal.proto\x1a\x10hi/options.proto\"\x91\x06\n" +
 	"\fBinanceOffer\x12\x19\n" +
 	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x02id\x88\x01\x01\x12-\n" +
 	"\x06source\x18\x02 \x01(\v2\n" +
@@ -622,8 +487,8 @@ const file_hi_binance_offer_proto_rawDesc = "" +
 	"\n" +
 	"expires_at\x18\x06 \x01(\x03B\x04\x90\xb5\x18\x02H\x05R\texpiresAt\x88\x01\x01\x12?\n" +
 	"\x05state\x18\a \x01(\x0e2\x1e.hi.binance.BinanceOffer.StateB\x04\x90\xb5\x18\x02H\x06R\x05state\x88\x01\x01\x12<\n" +
-	"\x06result\x18\b \x01(\v2\x19.hi.binance.BinanceResultB\x04\x90\xb5\x18\x02H\aR\x06result\x88\x01\x01\x12;\n" +
-	"\x04tpsl\x18\t \x01(\v2\x1c.hi.binance.BinanceOfferTpslB\x04\x90\xb5\x18\x02H\bR\x04tpsl\x88\x01\x01\x12?\n" +
+	"\x06result\x18\b \x01(\v2\x19.hi.binance.BinanceResultB\x04\x90\xb5\x18\x02H\aR\x06result\x88\x01\x01\x12:\n" +
+	"\x04tpsl\x18\t \x01(\v2\x1b.hi.binance.BinanceAutoTpslB\x04\x90\xb5\x18\x02H\bR\x04tpsl\x88\x01\x01\x12?\n" +
 	"\apending\x18\n" +
 	" \x01(\v2\x1a.hi.binance.BinancePendingB\x04\x90\xb5\x18\x02H\tR\apending\x88\x01\x01\"}\n" +
 	"\x05State\x12\x15\n" +
@@ -688,26 +553,7 @@ const file_hi_binance_offer_proto_rawDesc = "" +
 	"\v_order_typeB\x0e\n" +
 	"\f_limit_priceB\x10\n" +
 	"\x0e_trigger_priceB\x10\n" +
-	"\x0e_callback_rate\"\xd0\x03\n" +
-	"\x10BinanceOfferTpsl\x12C\n" +
-	"\x05state\x18\x01 \x01(\x0e2\".hi.binance.BinanceOfferTpsl.StateB\x04\x90\xb5\x18\x02H\x00R\x05state\x88\x01\x01\x121\n" +
-	"\x0fstop_loss_price\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\rstopLossPrice\x88\x01\x01\x125\n" +
-	"\x11take_profit_price\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02H\x02R\x0ftakeProfitPrice\x88\x01\x01\x12!\n" +
-	"\x06reason\x18\x04 \x01(\tB\x04\x90\xb5\x18\x02H\x03R\x06reason\x88\x01\x01\x12#\n" +
-	"\awarning\x18\x05 \x01(\tB\x04\x90\xb5\x18\x02H\x04R\awarning\x88\x01\x01\"t\n" +
-	"\x05State\x12\x15\n" +
-	"\x11STATE_UNSPECIFIED\x10\x00\x12\r\n" +
-	"\tSTATE_SET\x10\x01\x12\r\n" +
-	"\tSTATE_OFF\x10\x02\x12\x11\n" +
-	"\rSTATE_SKIPPED\x10\x03\x12\x10\n" +
-	"\fSTATE_FAILED\x10\x04\x12\x11\n" +
-	"\rSTATE_WAITING\x10\x05:\x04\x98\xb5\x18\x02B\b\n" +
-	"\x06_stateB\x12\n" +
-	"\x10_stop_loss_priceB\x14\n" +
-	"\x12_take_profit_priceB\t\n" +
-	"\a_reasonB\n" +
-	"\n" +
-	"\b_warning\"\xa2\x01\n" +
+	"\x0e_callback_rate\"\xa2\x01\n" +
 	"\x11BinanceOfferReply\x12\x19\n" +
 	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x02id\x88\x01\x01\x12#\n" +
 	"\aconfirm\x18\x02 \x01(\bB\x04\x90\xb5\x18\x02H\x01R\aconfirm\x88\x01\x01\x12&\n" +
@@ -734,38 +580,36 @@ func file_hi_binance_offer_proto_rawDescGZIP() []byte {
 	return file_hi_binance_offer_proto_rawDescData
 }
 
-var file_hi_binance_offer_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_hi_binance_offer_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_hi_binance_offer_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_hi_binance_offer_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_hi_binance_offer_proto_goTypes = []any{
-	(BinanceOffer_State)(0),     // 0: hi.binance.BinanceOffer.State
-	(BinanceOfferTpsl_State)(0), // 1: hi.binance.BinanceOfferTpsl.State
-	(*BinanceOffer)(nil),        // 2: hi.binance.BinanceOffer
-	(*BinanceOfferPlan)(nil),    // 3: hi.binance.BinanceOfferPlan
-	(*BinanceOfferTpsl)(nil),    // 4: hi.binance.BinanceOfferTpsl
-	(*BinanceOfferReply)(nil),   // 5: hi.binance.BinanceOfferReply
-	(*hi.Entity)(nil),           // 6: hi.Entity
-	(*BinanceOpen)(nil),         // 7: hi.binance.BinanceOpen
-	(*BinanceResult)(nil),       // 8: hi.binance.BinanceResult
-	(*BinancePending)(nil),      // 9: hi.binance.BinancePending
-	(BinanceOrderSide)(0),       // 10: hi.binance.BinanceOrderSide
-	(BinancePositionSide)(0),    // 11: hi.binance.BinancePositionSide
+	(BinanceOffer_State)(0),   // 0: hi.binance.BinanceOffer.State
+	(*BinanceOffer)(nil),      // 1: hi.binance.BinanceOffer
+	(*BinanceOfferPlan)(nil),  // 2: hi.binance.BinanceOfferPlan
+	(*BinanceOfferReply)(nil), // 3: hi.binance.BinanceOfferReply
+	(*hi.Entity)(nil),         // 4: hi.Entity
+	(*BinanceOpen)(nil),       // 5: hi.binance.BinanceOpen
+	(*BinanceResult)(nil),     // 6: hi.binance.BinanceResult
+	(*BinanceAutoTpsl)(nil),   // 7: hi.binance.BinanceAutoTpsl
+	(*BinancePending)(nil),    // 8: hi.binance.BinancePending
+	(BinanceOrderSide)(0),     // 9: hi.binance.BinanceOrderSide
+	(BinancePositionSide)(0),  // 10: hi.binance.BinancePositionSide
 }
 var file_hi_binance_offer_proto_depIdxs = []int32{
-	6,  // 0: hi.binance.BinanceOffer.source:type_name -> hi.Entity
-	7,  // 1: hi.binance.BinanceOffer.open:type_name -> hi.binance.BinanceOpen
-	3,  // 2: hi.binance.BinanceOffer.plan:type_name -> hi.binance.BinanceOfferPlan
+	4,  // 0: hi.binance.BinanceOffer.source:type_name -> hi.Entity
+	5,  // 1: hi.binance.BinanceOffer.open:type_name -> hi.binance.BinanceOpen
+	2,  // 2: hi.binance.BinanceOffer.plan:type_name -> hi.binance.BinanceOfferPlan
 	0,  // 3: hi.binance.BinanceOffer.state:type_name -> hi.binance.BinanceOffer.State
-	8,  // 4: hi.binance.BinanceOffer.result:type_name -> hi.binance.BinanceResult
-	4,  // 5: hi.binance.BinanceOffer.tpsl:type_name -> hi.binance.BinanceOfferTpsl
-	9,  // 6: hi.binance.BinanceOffer.pending:type_name -> hi.binance.BinancePending
-	10, // 7: hi.binance.BinanceOfferPlan.side:type_name -> hi.binance.BinanceOrderSide
-	11, // 8: hi.binance.BinanceOfferPlan.position_side:type_name -> hi.binance.BinancePositionSide
-	1,  // 9: hi.binance.BinanceOfferTpsl.state:type_name -> hi.binance.BinanceOfferTpsl.State
-	10, // [10:10] is the sub-list for method output_type
-	10, // [10:10] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	6,  // 4: hi.binance.BinanceOffer.result:type_name -> hi.binance.BinanceResult
+	7,  // 5: hi.binance.BinanceOffer.tpsl:type_name -> hi.binance.BinanceAutoTpsl
+	8,  // 6: hi.binance.BinanceOffer.pending:type_name -> hi.binance.BinancePending
+	9,  // 7: hi.binance.BinanceOfferPlan.side:type_name -> hi.binance.BinanceOrderSide
+	10, // 8: hi.binance.BinanceOfferPlan.position_side:type_name -> hi.binance.BinancePositionSide
+	9,  // [9:9] is the sub-list for method output_type
+	9,  // [9:9] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_hi_binance_offer_proto_init() }
@@ -778,14 +622,13 @@ func file_hi_binance_offer_proto_init() {
 	file_hi_binance_offer_proto_msgTypes[0].OneofWrappers = []any{}
 	file_hi_binance_offer_proto_msgTypes[1].OneofWrappers = []any{}
 	file_hi_binance_offer_proto_msgTypes[2].OneofWrappers = []any{}
-	file_hi_binance_offer_proto_msgTypes[3].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_binance_offer_proto_rawDesc), len(file_hi_binance_offer_proto_rawDesc)),
-			NumEnums:      2,
-			NumMessages:   4,
+			NumEnums:      1,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

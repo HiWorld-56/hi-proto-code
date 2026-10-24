@@ -218,6 +218,9 @@ impl serde::Serialize for BinanceRequest {
         if self.params_json.is_some() {
             len += 1;
         }
+        if self.auto_tpsl.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.BinanceRequest", len)?;
         if let Some(v) = self.id.as_ref() {
             struct_ser.serialize_field("id", v)?;
@@ -227,6 +230,9 @@ impl serde::Serialize for BinanceRequest {
         }
         if let Some(v) = self.params_json.as_ref() {
             struct_ser.serialize_field("paramsJson", v)?;
+        }
+        if let Some(v) = self.auto_tpsl.as_ref() {
+            struct_ser.serialize_field("autoTpsl", v)?;
         }
         struct_ser.end()
     }
@@ -242,6 +248,8 @@ impl<'de> serde::Deserialize<'de> for BinanceRequest {
             "op",
             "params_json",
             "paramsJson",
+            "auto_tpsl",
+            "autoTpsl",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -249,6 +257,7 @@ impl<'de> serde::Deserialize<'de> for BinanceRequest {
             Id,
             Op,
             ParamsJson,
+            AutoTpsl,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -273,6 +282,7 @@ impl<'de> serde::Deserialize<'de> for BinanceRequest {
                             "id" => Ok(GeneratedField::Id),
                             "op" => Ok(GeneratedField::Op),
                             "paramsJson" | "params_json" => Ok(GeneratedField::ParamsJson),
+                            "autoTpsl" | "auto_tpsl" => Ok(GeneratedField::AutoTpsl),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -295,6 +305,7 @@ impl<'de> serde::Deserialize<'de> for BinanceRequest {
                 let mut id__ = None;
                 let mut op__ = None;
                 let mut params_json__ = None;
+                let mut auto_tpsl__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Id => {
@@ -315,12 +326,19 @@ impl<'de> serde::Deserialize<'de> for BinanceRequest {
                             }
                             params_json__ = map_.next_value()?;
                         }
+                        GeneratedField::AutoTpsl => {
+                            if auto_tpsl__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("autoTpsl"));
+                            }
+                            auto_tpsl__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(BinanceRequest {
                     id: id__,
                     op: op__,
                     params_json: params_json__,
+                    auto_tpsl: auto_tpsl__,
                 })
             }
         }

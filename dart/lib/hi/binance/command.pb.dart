@@ -106,6 +106,7 @@ enum BinanceCommand_Op {
 class BinanceCommand extends $pb.GeneratedMessage {
   factory BinanceCommand({
     $fixnum.Int64? expiration,
+    $core.bool? autoTpsl,
     $0.BinanceSpotNewOrder? spotNewOrder,
     $0.BinanceSpotCancelOrder? spotCancelOrder,
     $0.BinanceSpotCancelAllOrders? spotCancelAllOpenOrders,
@@ -162,6 +163,7 @@ class BinanceCommand extends $pb.GeneratedMessage {
   }) {
     final result = create();
     if (expiration != null) result.expiration = expiration;
+    if (autoTpsl != null) result.autoTpsl = autoTpsl;
     if (spotNewOrder != null) result.spotNewOrder = spotNewOrder;
     if (spotCancelOrder != null) result.spotCancelOrder = spotCancelOrder;
     if (spotCancelAllOpenOrders != null)
@@ -384,6 +386,7 @@ class BinanceCommand extends $pb.GeneratedMessage {
       64
     ])
     ..aInt64(1, _omitFieldNames ? '' : 'expiration')
+    ..aOB(2, _omitFieldNames ? '' : 'autoTpsl')
     ..aOM<$0.BinanceSpotNewOrder>(10, _omitFieldNames ? '' : 'spotNewOrder',
         subBuilder: $0.BinanceSpotNewOrder.create)
     ..aOM<$0.BinanceSpotCancelOrder>(
@@ -679,657 +682,669 @@ class BinanceCommand extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearExpiration() => $_clearField(1);
 
+  /// 开仓单(合约开多 / 开空、合约开仓条件单、现货买入)下完后要不要按风险承受率**自动设置止盈止损**,
+  /// 结果在 `BinanceResult.tpsl`。处理与开单卡同一套(见 `BinanceAutoTpsl`)。
+  /// **不带 = 不设**(老版本端上发的指令没有这一项,照旧只下单)。不是开仓单的指令带了也不看。
+  @$pb.TagNumber(2)
+  $core.bool get autoTpsl => $_getBF(1);
+  @$pb.TagNumber(2)
+  set autoTpsl($core.bool value) => $_setBool(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAutoTpsl() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAutoTpsl() => $_clearField(2);
+
   @$pb.TagNumber(10)
-  $0.BinanceSpotNewOrder get spotNewOrder => $_getN(1);
+  $0.BinanceSpotNewOrder get spotNewOrder => $_getN(2);
   @$pb.TagNumber(10)
   set spotNewOrder($0.BinanceSpotNewOrder value) => $_setField(10, value);
   @$pb.TagNumber(10)
-  $core.bool hasSpotNewOrder() => $_has(1);
+  $core.bool hasSpotNewOrder() => $_has(2);
   @$pb.TagNumber(10)
   void clearSpotNewOrder() => $_clearField(10);
   @$pb.TagNumber(10)
-  $0.BinanceSpotNewOrder ensureSpotNewOrder() => $_ensure(1);
+  $0.BinanceSpotNewOrder ensureSpotNewOrder() => $_ensure(2);
 
   @$pb.TagNumber(11)
-  $0.BinanceSpotCancelOrder get spotCancelOrder => $_getN(2);
+  $0.BinanceSpotCancelOrder get spotCancelOrder => $_getN(3);
   @$pb.TagNumber(11)
   set spotCancelOrder($0.BinanceSpotCancelOrder value) => $_setField(11, value);
   @$pb.TagNumber(11)
-  $core.bool hasSpotCancelOrder() => $_has(2);
+  $core.bool hasSpotCancelOrder() => $_has(3);
   @$pb.TagNumber(11)
   void clearSpotCancelOrder() => $_clearField(11);
   @$pb.TagNumber(11)
-  $0.BinanceSpotCancelOrder ensureSpotCancelOrder() => $_ensure(2);
+  $0.BinanceSpotCancelOrder ensureSpotCancelOrder() => $_ensure(3);
 
   @$pb.TagNumber(12)
-  $0.BinanceSpotCancelAllOrders get spotCancelAllOpenOrders => $_getN(3);
+  $0.BinanceSpotCancelAllOrders get spotCancelAllOpenOrders => $_getN(4);
   @$pb.TagNumber(12)
   set spotCancelAllOpenOrders($0.BinanceSpotCancelAllOrders value) =>
       $_setField(12, value);
   @$pb.TagNumber(12)
-  $core.bool hasSpotCancelAllOpenOrders() => $_has(3);
+  $core.bool hasSpotCancelAllOpenOrders() => $_has(4);
   @$pb.TagNumber(12)
   void clearSpotCancelAllOpenOrders() => $_clearField(12);
   @$pb.TagNumber(12)
-  $0.BinanceSpotCancelAllOrders ensureSpotCancelAllOpenOrders() => $_ensure(3);
+  $0.BinanceSpotCancelAllOrders ensureSpotCancelAllOpenOrders() => $_ensure(4);
 
   @$pb.TagNumber(13)
-  $0.BinanceSpotOpenOrders get spotGetOpenOrders => $_getN(4);
+  $0.BinanceSpotOpenOrders get spotGetOpenOrders => $_getN(5);
   @$pb.TagNumber(13)
   set spotGetOpenOrders($0.BinanceSpotOpenOrders value) =>
       $_setField(13, value);
   @$pb.TagNumber(13)
-  $core.bool hasSpotGetOpenOrders() => $_has(4);
+  $core.bool hasSpotGetOpenOrders() => $_has(5);
   @$pb.TagNumber(13)
   void clearSpotGetOpenOrders() => $_clearField(13);
   @$pb.TagNumber(13)
-  $0.BinanceSpotOpenOrders ensureSpotGetOpenOrders() => $_ensure(4);
+  $0.BinanceSpotOpenOrders ensureSpotGetOpenOrders() => $_ensure(5);
 
   @$pb.TagNumber(14)
-  $0.BinanceSpotAccount get spotAccountInformation => $_getN(5);
+  $0.BinanceSpotAccount get spotAccountInformation => $_getN(6);
   @$pb.TagNumber(14)
   set spotAccountInformation($0.BinanceSpotAccount value) =>
       $_setField(14, value);
   @$pb.TagNumber(14)
-  $core.bool hasSpotAccountInformation() => $_has(5);
+  $core.bool hasSpotAccountInformation() => $_has(6);
   @$pb.TagNumber(14)
   void clearSpotAccountInformation() => $_clearField(14);
   @$pb.TagNumber(14)
-  $0.BinanceSpotAccount ensureSpotAccountInformation() => $_ensure(5);
+  $0.BinanceSpotAccount ensureSpotAccountInformation() => $_ensure(6);
 
   @$pb.TagNumber(15)
-  $0.BinanceSpotGetOrder get spotGetOrder => $_getN(6);
+  $0.BinanceSpotGetOrder get spotGetOrder => $_getN(7);
   @$pb.TagNumber(15)
   set spotGetOrder($0.BinanceSpotGetOrder value) => $_setField(15, value);
   @$pb.TagNumber(15)
-  $core.bool hasSpotGetOrder() => $_has(6);
+  $core.bool hasSpotGetOrder() => $_has(7);
   @$pb.TagNumber(15)
   void clearSpotGetOrder() => $_clearField(15);
   @$pb.TagNumber(15)
-  $0.BinanceSpotGetOrder ensureSpotGetOrder() => $_ensure(6);
+  $0.BinanceSpotGetOrder ensureSpotGetOrder() => $_ensure(7);
 
   @$pb.TagNumber(16)
-  $0.BinanceSpotOpenOrderLists get spotGetOpenOrderLists => $_getN(7);
+  $0.BinanceSpotOpenOrderLists get spotGetOpenOrderLists => $_getN(8);
   @$pb.TagNumber(16)
   set spotGetOpenOrderLists($0.BinanceSpotOpenOrderLists value) =>
       $_setField(16, value);
   @$pb.TagNumber(16)
-  $core.bool hasSpotGetOpenOrderLists() => $_has(7);
+  $core.bool hasSpotGetOpenOrderLists() => $_has(8);
   @$pb.TagNumber(16)
   void clearSpotGetOpenOrderLists() => $_clearField(16);
   @$pb.TagNumber(16)
-  $0.BinanceSpotOpenOrderLists ensureSpotGetOpenOrderLists() => $_ensure(7);
+  $0.BinanceSpotOpenOrderLists ensureSpotGetOpenOrderLists() => $_ensure(8);
 
   @$pb.TagNumber(17)
-  $0.BinanceSpotTicker24h get spotTicker24h => $_getN(8);
+  $0.BinanceSpotTicker24h get spotTicker24h => $_getN(9);
   @$pb.TagNumber(17)
   set spotTicker24h($0.BinanceSpotTicker24h value) => $_setField(17, value);
   @$pb.TagNumber(17)
-  $core.bool hasSpotTicker24h() => $_has(8);
+  $core.bool hasSpotTicker24h() => $_has(9);
   @$pb.TagNumber(17)
   void clearSpotTicker24h() => $_clearField(17);
   @$pb.TagNumber(17)
-  $0.BinanceSpotTicker24h ensureSpotTicker24h() => $_ensure(8);
+  $0.BinanceSpotTicker24h ensureSpotTicker24h() => $_ensure(9);
 
   @$pb.TagNumber(20)
-  $0.BinanceFuturesNewOrder get usdsFuturesNewOrder => $_getN(9);
+  $0.BinanceFuturesNewOrder get usdsFuturesNewOrder => $_getN(10);
   @$pb.TagNumber(20)
   set usdsFuturesNewOrder($0.BinanceFuturesNewOrder value) =>
       $_setField(20, value);
   @$pb.TagNumber(20)
-  $core.bool hasUsdsFuturesNewOrder() => $_has(9);
+  $core.bool hasUsdsFuturesNewOrder() => $_has(10);
   @$pb.TagNumber(20)
   void clearUsdsFuturesNewOrder() => $_clearField(20);
   @$pb.TagNumber(20)
-  $0.BinanceFuturesNewOrder ensureUsdsFuturesNewOrder() => $_ensure(9);
+  $0.BinanceFuturesNewOrder ensureUsdsFuturesNewOrder() => $_ensure(10);
 
   @$pb.TagNumber(21)
-  $0.BinanceFuturesCancelOrder get usdsFuturesCancelOrder => $_getN(10);
+  $0.BinanceFuturesCancelOrder get usdsFuturesCancelOrder => $_getN(11);
   @$pb.TagNumber(21)
   set usdsFuturesCancelOrder($0.BinanceFuturesCancelOrder value) =>
       $_setField(21, value);
   @$pb.TagNumber(21)
-  $core.bool hasUsdsFuturesCancelOrder() => $_has(10);
+  $core.bool hasUsdsFuturesCancelOrder() => $_has(11);
   @$pb.TagNumber(21)
   void clearUsdsFuturesCancelOrder() => $_clearField(21);
   @$pb.TagNumber(21)
-  $0.BinanceFuturesCancelOrder ensureUsdsFuturesCancelOrder() => $_ensure(10);
+  $0.BinanceFuturesCancelOrder ensureUsdsFuturesCancelOrder() => $_ensure(11);
 
   @$pb.TagNumber(22)
   $0.BinanceFuturesCancelAllOrders get usdsFuturesCancelAllOpenOrders =>
-      $_getN(11);
+      $_getN(12);
   @$pb.TagNumber(22)
   set usdsFuturesCancelAllOpenOrders($0.BinanceFuturesCancelAllOrders value) =>
       $_setField(22, value);
   @$pb.TagNumber(22)
-  $core.bool hasUsdsFuturesCancelAllOpenOrders() => $_has(11);
+  $core.bool hasUsdsFuturesCancelAllOpenOrders() => $_has(12);
   @$pb.TagNumber(22)
   void clearUsdsFuturesCancelAllOpenOrders() => $_clearField(22);
   @$pb.TagNumber(22)
   $0.BinanceFuturesCancelAllOrders ensureUsdsFuturesCancelAllOpenOrders() =>
-      $_ensure(11);
+      $_ensure(12);
 
   @$pb.TagNumber(23)
-  $0.BinanceFuturesLeverage get usdsFuturesChangeInitialLeverage => $_getN(12);
+  $0.BinanceFuturesLeverage get usdsFuturesChangeInitialLeverage => $_getN(13);
   @$pb.TagNumber(23)
   set usdsFuturesChangeInitialLeverage($0.BinanceFuturesLeverage value) =>
       $_setField(23, value);
   @$pb.TagNumber(23)
-  $core.bool hasUsdsFuturesChangeInitialLeverage() => $_has(12);
+  $core.bool hasUsdsFuturesChangeInitialLeverage() => $_has(13);
   @$pb.TagNumber(23)
   void clearUsdsFuturesChangeInitialLeverage() => $_clearField(23);
   @$pb.TagNumber(23)
   $0.BinanceFuturesLeverage ensureUsdsFuturesChangeInitialLeverage() =>
-      $_ensure(12);
+      $_ensure(13);
 
   @$pb.TagNumber(24)
-  $0.BinanceFuturesPositions get usdsFuturesPositionInformationV3 => $_getN(13);
+  $0.BinanceFuturesPositions get usdsFuturesPositionInformationV3 => $_getN(14);
   @$pb.TagNumber(24)
   set usdsFuturesPositionInformationV3($0.BinanceFuturesPositions value) =>
       $_setField(24, value);
   @$pb.TagNumber(24)
-  $core.bool hasUsdsFuturesPositionInformationV3() => $_has(13);
+  $core.bool hasUsdsFuturesPositionInformationV3() => $_has(14);
   @$pb.TagNumber(24)
   void clearUsdsFuturesPositionInformationV3() => $_clearField(24);
   @$pb.TagNumber(24)
   $0.BinanceFuturesPositions ensureUsdsFuturesPositionInformationV3() =>
-      $_ensure(13);
+      $_ensure(14);
 
   @$pb.TagNumber(25)
-  $0.BinanceFuturesAccount get usdsFuturesAccountInformationV3 => $_getN(14);
+  $0.BinanceFuturesAccount get usdsFuturesAccountInformationV3 => $_getN(15);
   @$pb.TagNumber(25)
   set usdsFuturesAccountInformationV3($0.BinanceFuturesAccount value) =>
       $_setField(25, value);
   @$pb.TagNumber(25)
-  $core.bool hasUsdsFuturesAccountInformationV3() => $_has(14);
+  $core.bool hasUsdsFuturesAccountInformationV3() => $_has(15);
   @$pb.TagNumber(25)
   void clearUsdsFuturesAccountInformationV3() => $_clearField(25);
   @$pb.TagNumber(25)
   $0.BinanceFuturesAccount ensureUsdsFuturesAccountInformationV3() =>
-      $_ensure(14);
+      $_ensure(15);
 
   @$pb.TagNumber(26)
-  $0.BinanceFuturesOpenOrders get usdsFuturesCurrentAllOpenOrders => $_getN(15);
+  $0.BinanceFuturesOpenOrders get usdsFuturesCurrentAllOpenOrders => $_getN(16);
   @$pb.TagNumber(26)
   set usdsFuturesCurrentAllOpenOrders($0.BinanceFuturesOpenOrders value) =>
       $_setField(26, value);
   @$pb.TagNumber(26)
-  $core.bool hasUsdsFuturesCurrentAllOpenOrders() => $_has(15);
+  $core.bool hasUsdsFuturesCurrentAllOpenOrders() => $_has(16);
   @$pb.TagNumber(26)
   void clearUsdsFuturesCurrentAllOpenOrders() => $_clearField(26);
   @$pb.TagNumber(26)
   $0.BinanceFuturesOpenOrders ensureUsdsFuturesCurrentAllOpenOrders() =>
-      $_ensure(15);
+      $_ensure(16);
 
   @$pb.TagNumber(27)
-  $0.BinanceFuturesOpenAlgoOrders get usdsFuturesOpenAlgoOrders => $_getN(16);
+  $0.BinanceFuturesOpenAlgoOrders get usdsFuturesOpenAlgoOrders => $_getN(17);
   @$pb.TagNumber(27)
   set usdsFuturesOpenAlgoOrders($0.BinanceFuturesOpenAlgoOrders value) =>
       $_setField(27, value);
   @$pb.TagNumber(27)
-  $core.bool hasUsdsFuturesOpenAlgoOrders() => $_has(16);
+  $core.bool hasUsdsFuturesOpenAlgoOrders() => $_has(17);
   @$pb.TagNumber(27)
   void clearUsdsFuturesOpenAlgoOrders() => $_clearField(27);
   @$pb.TagNumber(27)
   $0.BinanceFuturesOpenAlgoOrders ensureUsdsFuturesOpenAlgoOrders() =>
-      $_ensure(16);
+      $_ensure(17);
 
   @$pb.TagNumber(28)
-  $0.BinanceFuturesIncome get usdsFuturesIncome => $_getN(17);
+  $0.BinanceFuturesIncome get usdsFuturesIncome => $_getN(18);
   @$pb.TagNumber(28)
   set usdsFuturesIncome($0.BinanceFuturesIncome value) => $_setField(28, value);
   @$pb.TagNumber(28)
-  $core.bool hasUsdsFuturesIncome() => $_has(17);
+  $core.bool hasUsdsFuturesIncome() => $_has(18);
   @$pb.TagNumber(28)
   void clearUsdsFuturesIncome() => $_clearField(28);
   @$pb.TagNumber(28)
-  $0.BinanceFuturesIncome ensureUsdsFuturesIncome() => $_ensure(17);
+  $0.BinanceFuturesIncome ensureUsdsFuturesIncome() => $_ensure(18);
 
   @$pb.TagNumber(29)
   $0.BinanceFuturesSignTradfiContract get usdsFuturesSignTradfiContract =>
-      $_getN(18);
+      $_getN(19);
   @$pb.TagNumber(29)
   set usdsFuturesSignTradfiContract(
           $0.BinanceFuturesSignTradfiContract value) =>
       $_setField(29, value);
   @$pb.TagNumber(29)
-  $core.bool hasUsdsFuturesSignTradfiContract() => $_has(18);
+  $core.bool hasUsdsFuturesSignTradfiContract() => $_has(19);
   @$pb.TagNumber(29)
   void clearUsdsFuturesSignTradfiContract() => $_clearField(29);
   @$pb.TagNumber(29)
   $0.BinanceFuturesSignTradfiContract ensureUsdsFuturesSignTradfiContract() =>
-      $_ensure(18);
+      $_ensure(19);
 
   @$pb.TagNumber(30)
-  $1.BinanceStockNewOrder get stocksPlaceEquityOrder => $_getN(19);
+  $1.BinanceStockNewOrder get stocksPlaceEquityOrder => $_getN(20);
   @$pb.TagNumber(30)
   set stocksPlaceEquityOrder($1.BinanceStockNewOrder value) =>
       $_setField(30, value);
   @$pb.TagNumber(30)
-  $core.bool hasStocksPlaceEquityOrder() => $_has(19);
+  $core.bool hasStocksPlaceEquityOrder() => $_has(20);
   @$pb.TagNumber(30)
   void clearStocksPlaceEquityOrder() => $_clearField(30);
   @$pb.TagNumber(30)
-  $1.BinanceStockNewOrder ensureStocksPlaceEquityOrder() => $_ensure(19);
+  $1.BinanceStockNewOrder ensureStocksPlaceEquityOrder() => $_ensure(20);
 
   @$pb.TagNumber(31)
-  $1.BinanceStockCancelOrder get stocksCancelEquityOrder => $_getN(20);
+  $1.BinanceStockCancelOrder get stocksCancelEquityOrder => $_getN(21);
   @$pb.TagNumber(31)
   set stocksCancelEquityOrder($1.BinanceStockCancelOrder value) =>
       $_setField(31, value);
   @$pb.TagNumber(31)
-  $core.bool hasStocksCancelEquityOrder() => $_has(20);
+  $core.bool hasStocksCancelEquityOrder() => $_has(21);
   @$pb.TagNumber(31)
   void clearStocksCancelEquityOrder() => $_clearField(31);
   @$pb.TagNumber(31)
-  $1.BinanceStockCancelOrder ensureStocksCancelEquityOrder() => $_ensure(20);
+  $1.BinanceStockCancelOrder ensureStocksCancelEquityOrder() => $_ensure(21);
 
   @$pb.TagNumber(32)
-  $1.BinanceStockCancelAllOrders get stocksCancelAllEquityOrders => $_getN(21);
+  $1.BinanceStockCancelAllOrders get stocksCancelAllEquityOrders => $_getN(22);
   @$pb.TagNumber(32)
   set stocksCancelAllEquityOrders($1.BinanceStockCancelAllOrders value) =>
       $_setField(32, value);
   @$pb.TagNumber(32)
-  $core.bool hasStocksCancelAllEquityOrders() => $_has(21);
+  $core.bool hasStocksCancelAllEquityOrders() => $_has(22);
   @$pb.TagNumber(32)
   void clearStocksCancelAllEquityOrders() => $_clearField(32);
   @$pb.TagNumber(32)
   $1.BinanceStockCancelAllOrders ensureStocksCancelAllEquityOrders() =>
-      $_ensure(21);
+      $_ensure(22);
 
   @$pb.TagNumber(33)
-  $1.BinanceStockOpenOrders get stocksCurrentOpenOrders => $_getN(22);
+  $1.BinanceStockOpenOrders get stocksCurrentOpenOrders => $_getN(23);
   @$pb.TagNumber(33)
   set stocksCurrentOpenOrders($1.BinanceStockOpenOrders value) =>
       $_setField(33, value);
   @$pb.TagNumber(33)
-  $core.bool hasStocksCurrentOpenOrders() => $_has(22);
+  $core.bool hasStocksCurrentOpenOrders() => $_has(23);
   @$pb.TagNumber(33)
   void clearStocksCurrentOpenOrders() => $_clearField(33);
   @$pb.TagNumber(33)
-  $1.BinanceStockOpenOrders ensureStocksCurrentOpenOrders() => $_ensure(22);
+  $1.BinanceStockOpenOrders ensureStocksCurrentOpenOrders() => $_ensure(23);
 
   @$pb.TagNumber(34)
-  $1.BinanceStockGetOrder get stocksEquityOrderDetail => $_getN(23);
+  $1.BinanceStockGetOrder get stocksEquityOrderDetail => $_getN(24);
   @$pb.TagNumber(34)
   set stocksEquityOrderDetail($1.BinanceStockGetOrder value) =>
       $_setField(34, value);
   @$pb.TagNumber(34)
-  $core.bool hasStocksEquityOrderDetail() => $_has(23);
+  $core.bool hasStocksEquityOrderDetail() => $_has(24);
   @$pb.TagNumber(34)
   void clearStocksEquityOrderDetail() => $_clearField(34);
   @$pb.TagNumber(34)
-  $1.BinanceStockGetOrder ensureStocksEquityOrderDetail() => $_ensure(23);
+  $1.BinanceStockGetOrder ensureStocksEquityOrderDetail() => $_ensure(24);
 
   @$pb.TagNumber(35)
-  $1.BinanceStockOrderHistory get stocksEquityOrderHistory => $_getN(24);
+  $1.BinanceStockOrderHistory get stocksEquityOrderHistory => $_getN(25);
   @$pb.TagNumber(35)
   set stocksEquityOrderHistory($1.BinanceStockOrderHistory value) =>
       $_setField(35, value);
   @$pb.TagNumber(35)
-  $core.bool hasStocksEquityOrderHistory() => $_has(24);
+  $core.bool hasStocksEquityOrderHistory() => $_has(25);
   @$pb.TagNumber(35)
   void clearStocksEquityOrderHistory() => $_clearField(35);
   @$pb.TagNumber(35)
-  $1.BinanceStockOrderHistory ensureStocksEquityOrderHistory() => $_ensure(24);
+  $1.BinanceStockOrderHistory ensureStocksEquityOrderHistory() => $_ensure(25);
 
   @$pb.TagNumber(36)
-  $1.BinanceStockTradeHistory get stocksEquityTradeHistory => $_getN(25);
+  $1.BinanceStockTradeHistory get stocksEquityTradeHistory => $_getN(26);
   @$pb.TagNumber(36)
   set stocksEquityTradeHistory($1.BinanceStockTradeHistory value) =>
       $_setField(36, value);
   @$pb.TagNumber(36)
-  $core.bool hasStocksEquityTradeHistory() => $_has(25);
+  $core.bool hasStocksEquityTradeHistory() => $_has(26);
   @$pb.TagNumber(36)
   void clearStocksEquityTradeHistory() => $_clearField(36);
   @$pb.TagNumber(36)
-  $1.BinanceStockTradeHistory ensureStocksEquityTradeHistory() => $_ensure(25);
+  $1.BinanceStockTradeHistory ensureStocksEquityTradeHistory() => $_ensure(26);
 
   @$pb.TagNumber(37)
-  $1.BinanceStockExchangeInfo get stocksExchangeInfo => $_getN(26);
+  $1.BinanceStockExchangeInfo get stocksExchangeInfo => $_getN(27);
   @$pb.TagNumber(37)
   set stocksExchangeInfo($1.BinanceStockExchangeInfo value) =>
       $_setField(37, value);
   @$pb.TagNumber(37)
-  $core.bool hasStocksExchangeInfo() => $_has(26);
+  $core.bool hasStocksExchangeInfo() => $_has(27);
   @$pb.TagNumber(37)
   void clearStocksExchangeInfo() => $_clearField(37);
   @$pb.TagNumber(37)
-  $1.BinanceStockExchangeInfo ensureStocksExchangeInfo() => $_ensure(26);
+  $1.BinanceStockExchangeInfo ensureStocksExchangeInfo() => $_ensure(27);
 
   @$pb.TagNumber(38)
-  $1.BinanceStockQuote get stocksLatestQuote => $_getN(27);
+  $1.BinanceStockQuote get stocksLatestQuote => $_getN(28);
   @$pb.TagNumber(38)
   set stocksLatestQuote($1.BinanceStockQuote value) => $_setField(38, value);
   @$pb.TagNumber(38)
-  $core.bool hasStocksLatestQuote() => $_has(27);
+  $core.bool hasStocksLatestQuote() => $_has(28);
   @$pb.TagNumber(38)
   void clearStocksLatestQuote() => $_clearField(38);
   @$pb.TagNumber(38)
-  $1.BinanceStockQuote ensureStocksLatestQuote() => $_ensure(27);
+  $1.BinanceStockQuote ensureStocksLatestQuote() => $_ensure(28);
 
   @$pb.TagNumber(39)
-  $1.BinanceStockTokenizedAssets get stocksTokenizedAssets => $_getN(28);
+  $1.BinanceStockTokenizedAssets get stocksTokenizedAssets => $_getN(29);
   @$pb.TagNumber(39)
   set stocksTokenizedAssets($1.BinanceStockTokenizedAssets value) =>
       $_setField(39, value);
   @$pb.TagNumber(39)
-  $core.bool hasStocksTokenizedAssets() => $_has(28);
+  $core.bool hasStocksTokenizedAssets() => $_has(29);
   @$pb.TagNumber(39)
   void clearStocksTokenizedAssets() => $_clearField(39);
   @$pb.TagNumber(39)
-  $1.BinanceStockTokenizedAssets ensureStocksTokenizedAssets() => $_ensure(28);
+  $1.BinanceStockTokenizedAssets ensureStocksTokenizedAssets() => $_ensure(29);
 
   @$pb.TagNumber(40)
-  $0.BinanceWalletBalance get walletQueryUserWalletBalance => $_getN(29);
+  $0.BinanceWalletBalance get walletQueryUserWalletBalance => $_getN(30);
   @$pb.TagNumber(40)
   set walletQueryUserWalletBalance($0.BinanceWalletBalance value) =>
       $_setField(40, value);
   @$pb.TagNumber(40)
-  $core.bool hasWalletQueryUserWalletBalance() => $_has(29);
+  $core.bool hasWalletQueryUserWalletBalance() => $_has(30);
   @$pb.TagNumber(40)
   void clearWalletQueryUserWalletBalance() => $_clearField(40);
   @$pb.TagNumber(40)
-  $0.BinanceWalletBalance ensureWalletQueryUserWalletBalance() => $_ensure(29);
+  $0.BinanceWalletBalance ensureWalletQueryUserWalletBalance() => $_ensure(30);
 
   @$pb.TagNumber(41)
-  $1.BinanceStockSignDisclaimer get stocksSignUsEquityDisclaimer => $_getN(30);
+  $1.BinanceStockSignDisclaimer get stocksSignUsEquityDisclaimer => $_getN(31);
   @$pb.TagNumber(41)
   set stocksSignUsEquityDisclaimer($1.BinanceStockSignDisclaimer value) =>
       $_setField(41, value);
   @$pb.TagNumber(41)
-  $core.bool hasStocksSignUsEquityDisclaimer() => $_has(30);
+  $core.bool hasStocksSignUsEquityDisclaimer() => $_has(31);
   @$pb.TagNumber(41)
   void clearStocksSignUsEquityDisclaimer() => $_clearField(41);
   @$pb.TagNumber(41)
   $1.BinanceStockSignDisclaimer ensureStocksSignUsEquityDisclaimer() =>
-      $_ensure(30);
+      $_ensure(31);
 
   /// 现货组合单(止盈止损一起挂、成交后自动挂止损…)
   @$pb.TagNumber(42)
-  $0.BinanceSpotOrderListOco get spotOrderListOco => $_getN(31);
+  $0.BinanceSpotOrderListOco get spotOrderListOco => $_getN(32);
   @$pb.TagNumber(42)
   set spotOrderListOco($0.BinanceSpotOrderListOco value) =>
       $_setField(42, value);
   @$pb.TagNumber(42)
-  $core.bool hasSpotOrderListOco() => $_has(31);
+  $core.bool hasSpotOrderListOco() => $_has(32);
   @$pb.TagNumber(42)
   void clearSpotOrderListOco() => $_clearField(42);
   @$pb.TagNumber(42)
-  $0.BinanceSpotOrderListOco ensureSpotOrderListOco() => $_ensure(31);
+  $0.BinanceSpotOrderListOco ensureSpotOrderListOco() => $_ensure(32);
 
   @$pb.TagNumber(43)
-  $0.BinanceSpotOrderListOto get spotOrderListOto => $_getN(32);
+  $0.BinanceSpotOrderListOto get spotOrderListOto => $_getN(33);
   @$pb.TagNumber(43)
   set spotOrderListOto($0.BinanceSpotOrderListOto value) =>
       $_setField(43, value);
   @$pb.TagNumber(43)
-  $core.bool hasSpotOrderListOto() => $_has(32);
+  $core.bool hasSpotOrderListOto() => $_has(33);
   @$pb.TagNumber(43)
   void clearSpotOrderListOto() => $_clearField(43);
   @$pb.TagNumber(43)
-  $0.BinanceSpotOrderListOto ensureSpotOrderListOto() => $_ensure(32);
+  $0.BinanceSpotOrderListOto ensureSpotOrderListOto() => $_ensure(33);
 
   @$pb.TagNumber(44)
-  $0.BinanceSpotOrderListOtoco get spotOrderListOtoco => $_getN(33);
+  $0.BinanceSpotOrderListOtoco get spotOrderListOtoco => $_getN(34);
   @$pb.TagNumber(44)
   set spotOrderListOtoco($0.BinanceSpotOrderListOtoco value) =>
       $_setField(44, value);
   @$pb.TagNumber(44)
-  $core.bool hasSpotOrderListOtoco() => $_has(33);
+  $core.bool hasSpotOrderListOtoco() => $_has(34);
   @$pb.TagNumber(44)
   void clearSpotOrderListOtoco() => $_clearField(44);
   @$pb.TagNumber(44)
-  $0.BinanceSpotOrderListOtoco ensureSpotOrderListOtoco() => $_ensure(33);
+  $0.BinanceSpotOrderListOtoco ensureSpotOrderListOtoco() => $_ensure(34);
 
   @$pb.TagNumber(45)
-  $0.BinanceSpotOrderListOpo get spotOrderListOpo => $_getN(34);
+  $0.BinanceSpotOrderListOpo get spotOrderListOpo => $_getN(35);
   @$pb.TagNumber(45)
   set spotOrderListOpo($0.BinanceSpotOrderListOpo value) =>
       $_setField(45, value);
   @$pb.TagNumber(45)
-  $core.bool hasSpotOrderListOpo() => $_has(34);
+  $core.bool hasSpotOrderListOpo() => $_has(35);
   @$pb.TagNumber(45)
   void clearSpotOrderListOpo() => $_clearField(45);
   @$pb.TagNumber(45)
-  $0.BinanceSpotOrderListOpo ensureSpotOrderListOpo() => $_ensure(34);
+  $0.BinanceSpotOrderListOpo ensureSpotOrderListOpo() => $_ensure(35);
 
   @$pb.TagNumber(46)
-  $0.BinanceSpotOrderListOpoco get spotOrderListOpoco => $_getN(35);
+  $0.BinanceSpotOrderListOpoco get spotOrderListOpoco => $_getN(36);
   @$pb.TagNumber(46)
   set spotOrderListOpoco($0.BinanceSpotOrderListOpoco value) =>
       $_setField(46, value);
   @$pb.TagNumber(46)
-  $core.bool hasSpotOrderListOpoco() => $_has(35);
+  $core.bool hasSpotOrderListOpoco() => $_has(36);
   @$pb.TagNumber(46)
   void clearSpotOrderListOpoco() => $_clearField(46);
   @$pb.TagNumber(46)
-  $0.BinanceSpotOrderListOpoco ensureSpotOrderListOpoco() => $_ensure(35);
+  $0.BinanceSpotOrderListOpoco ensureSpotOrderListOpoco() => $_ensure(36);
 
   @$pb.TagNumber(47)
-  $0.BinanceSpotCancelOrderList get spotDeleteOrderList => $_getN(36);
+  $0.BinanceSpotCancelOrderList get spotDeleteOrderList => $_getN(37);
   @$pb.TagNumber(47)
   set spotDeleteOrderList($0.BinanceSpotCancelOrderList value) =>
       $_setField(47, value);
   @$pb.TagNumber(47)
-  $core.bool hasSpotDeleteOrderList() => $_has(36);
+  $core.bool hasSpotDeleteOrderList() => $_has(37);
   @$pb.TagNumber(47)
   void clearSpotDeleteOrderList() => $_clearField(47);
   @$pb.TagNumber(47)
-  $0.BinanceSpotCancelOrderList ensureSpotDeleteOrderList() => $_ensure(36);
+  $0.BinanceSpotCancelOrderList ensureSpotDeleteOrderList() => $_ensure(37);
 
   @$pb.TagNumber(48)
-  $0.BinanceSpotGetOrderList get spotGetOrderList => $_getN(37);
+  $0.BinanceSpotGetOrderList get spotGetOrderList => $_getN(38);
   @$pb.TagNumber(48)
   set spotGetOrderList($0.BinanceSpotGetOrderList value) =>
       $_setField(48, value);
   @$pb.TagNumber(48)
-  $core.bool hasSpotGetOrderList() => $_has(37);
+  $core.bool hasSpotGetOrderList() => $_has(38);
   @$pb.TagNumber(48)
   void clearSpotGetOrderList() => $_clearField(48);
   @$pb.TagNumber(48)
-  $0.BinanceSpotGetOrderList ensureSpotGetOrderList() => $_ensure(37);
+  $0.BinanceSpotGetOrderList ensureSpotGetOrderList() => $_ensure(38);
 
   @$pb.TagNumber(49)
-  $0.BinanceSpotAllOrderLists get spotAllOrderList => $_getN(38);
+  $0.BinanceSpotAllOrderLists get spotAllOrderList => $_getN(39);
   @$pb.TagNumber(49)
   set spotAllOrderList($0.BinanceSpotAllOrderLists value) =>
       $_setField(49, value);
   @$pb.TagNumber(49)
-  $core.bool hasSpotAllOrderList() => $_has(38);
+  $core.bool hasSpotAllOrderList() => $_has(39);
   @$pb.TagNumber(49)
   void clearSpotAllOrderList() => $_clearField(49);
   @$pb.TagNumber(49)
-  $0.BinanceSpotAllOrderLists ensureSpotAllOrderList() => $_ensure(38);
+  $0.BinanceSpotAllOrderLists ensureSpotAllOrderList() => $_ensure(39);
 
   /// 合约策略委托(止盈、止损、跟踪止损)
   @$pb.TagNumber(50)
-  $0.BinanceFuturesNewAlgoOrder get usdsFuturesNewAlgoOrder => $_getN(39);
+  $0.BinanceFuturesNewAlgoOrder get usdsFuturesNewAlgoOrder => $_getN(40);
   @$pb.TagNumber(50)
   set usdsFuturesNewAlgoOrder($0.BinanceFuturesNewAlgoOrder value) =>
       $_setField(50, value);
   @$pb.TagNumber(50)
-  $core.bool hasUsdsFuturesNewAlgoOrder() => $_has(39);
+  $core.bool hasUsdsFuturesNewAlgoOrder() => $_has(40);
   @$pb.TagNumber(50)
   void clearUsdsFuturesNewAlgoOrder() => $_clearField(50);
   @$pb.TagNumber(50)
-  $0.BinanceFuturesNewAlgoOrder ensureUsdsFuturesNewAlgoOrder() => $_ensure(39);
+  $0.BinanceFuturesNewAlgoOrder ensureUsdsFuturesNewAlgoOrder() => $_ensure(40);
 
   @$pb.TagNumber(51)
-  $0.BinanceFuturesCancelAlgoOrder get usdsFuturesCancelAlgoOrder => $_getN(40);
+  $0.BinanceFuturesCancelAlgoOrder get usdsFuturesCancelAlgoOrder => $_getN(41);
   @$pb.TagNumber(51)
   set usdsFuturesCancelAlgoOrder($0.BinanceFuturesCancelAlgoOrder value) =>
       $_setField(51, value);
   @$pb.TagNumber(51)
-  $core.bool hasUsdsFuturesCancelAlgoOrder() => $_has(40);
+  $core.bool hasUsdsFuturesCancelAlgoOrder() => $_has(41);
   @$pb.TagNumber(51)
   void clearUsdsFuturesCancelAlgoOrder() => $_clearField(51);
   @$pb.TagNumber(51)
   $0.BinanceFuturesCancelAlgoOrder ensureUsdsFuturesCancelAlgoOrder() =>
-      $_ensure(40);
+      $_ensure(41);
 
   @$pb.TagNumber(52)
   $0.BinanceFuturesCancelAllAlgoOrders get usdsFuturesCancelAllAlgoOpenOrders =>
-      $_getN(41);
+      $_getN(42);
   @$pb.TagNumber(52)
   set usdsFuturesCancelAllAlgoOpenOrders(
           $0.BinanceFuturesCancelAllAlgoOrders value) =>
       $_setField(52, value);
   @$pb.TagNumber(52)
-  $core.bool hasUsdsFuturesCancelAllAlgoOpenOrders() => $_has(41);
+  $core.bool hasUsdsFuturesCancelAllAlgoOpenOrders() => $_has(42);
   @$pb.TagNumber(52)
   void clearUsdsFuturesCancelAllAlgoOpenOrders() => $_clearField(52);
   @$pb.TagNumber(52)
   $0.BinanceFuturesCancelAllAlgoOrders
-      ensureUsdsFuturesCancelAllAlgoOpenOrders() => $_ensure(41);
+      ensureUsdsFuturesCancelAllAlgoOpenOrders() => $_ensure(42);
 
   @$pb.TagNumber(53)
-  $0.BinanceFuturesGetAlgoOrder get usdsFuturesQueryAlgoOrder => $_getN(42);
+  $0.BinanceFuturesGetAlgoOrder get usdsFuturesQueryAlgoOrder => $_getN(43);
   @$pb.TagNumber(53)
   set usdsFuturesQueryAlgoOrder($0.BinanceFuturesGetAlgoOrder value) =>
       $_setField(53, value);
   @$pb.TagNumber(53)
-  $core.bool hasUsdsFuturesQueryAlgoOrder() => $_has(42);
+  $core.bool hasUsdsFuturesQueryAlgoOrder() => $_has(43);
   @$pb.TagNumber(53)
   void clearUsdsFuturesQueryAlgoOrder() => $_clearField(53);
   @$pb.TagNumber(53)
   $0.BinanceFuturesGetAlgoOrder ensureUsdsFuturesQueryAlgoOrder() =>
-      $_ensure(42);
+      $_ensure(43);
 
   @$pb.TagNumber(54)
   $0.BinanceFuturesAllAlgoOrders get usdsFuturesQueryAllAlgoOrders =>
-      $_getN(43);
+      $_getN(44);
   @$pb.TagNumber(54)
   set usdsFuturesQueryAllAlgoOrders($0.BinanceFuturesAllAlgoOrders value) =>
       $_setField(54, value);
   @$pb.TagNumber(54)
-  $core.bool hasUsdsFuturesQueryAllAlgoOrders() => $_has(43);
+  $core.bool hasUsdsFuturesQueryAllAlgoOrders() => $_has(44);
   @$pb.TagNumber(54)
   void clearUsdsFuturesQueryAllAlgoOrders() => $_clearField(54);
   @$pb.TagNumber(54)
   $0.BinanceFuturesAllAlgoOrders ensureUsdsFuturesQueryAllAlgoOrders() =>
-      $_ensure(43);
+      $_ensure(44);
 
   @$pb.TagNumber(55)
-  $0.BinanceFuturesTicker24h get usdsFuturesTicker24h => $_getN(44);
+  $0.BinanceFuturesTicker24h get usdsFuturesTicker24h => $_getN(45);
   @$pb.TagNumber(55)
   set usdsFuturesTicker24h($0.BinanceFuturesTicker24h value) =>
       $_setField(55, value);
   @$pb.TagNumber(55)
-  $core.bool hasUsdsFuturesTicker24h() => $_has(44);
+  $core.bool hasUsdsFuturesTicker24h() => $_has(45);
   @$pb.TagNumber(55)
   void clearUsdsFuturesTicker24h() => $_clearField(55);
   @$pb.TagNumber(55)
-  $0.BinanceFuturesTicker24h ensureUsdsFuturesTicker24h() => $_ensure(44);
+  $0.BinanceFuturesTicker24h ensureUsdsFuturesTicker24h() => $_ensure(45);
 
   @$pb.TagNumber(56)
-  $0.BinanceSpotKlines get spotKlines => $_getN(45);
+  $0.BinanceSpotKlines get spotKlines => $_getN(46);
   @$pb.TagNumber(56)
   set spotKlines($0.BinanceSpotKlines value) => $_setField(56, value);
   @$pb.TagNumber(56)
-  $core.bool hasSpotKlines() => $_has(45);
+  $core.bool hasSpotKlines() => $_has(46);
   @$pb.TagNumber(56)
   void clearSpotKlines() => $_clearField(56);
   @$pb.TagNumber(56)
-  $0.BinanceSpotKlines ensureSpotKlines() => $_ensure(45);
+  $0.BinanceSpotKlines ensureSpotKlines() => $_ensure(46);
 
   @$pb.TagNumber(57)
-  $0.BinanceFuturesKlines get usdsFuturesKlines => $_getN(46);
+  $0.BinanceFuturesKlines get usdsFuturesKlines => $_getN(47);
   @$pb.TagNumber(57)
   set usdsFuturesKlines($0.BinanceFuturesKlines value) => $_setField(57, value);
   @$pb.TagNumber(57)
-  $core.bool hasUsdsFuturesKlines() => $_has(46);
+  $core.bool hasUsdsFuturesKlines() => $_has(47);
   @$pb.TagNumber(57)
   void clearUsdsFuturesKlines() => $_clearField(57);
   @$pb.TagNumber(57)
-  $0.BinanceFuturesKlines ensureUsdsFuturesKlines() => $_ensure(46);
+  $0.BinanceFuturesKlines ensureUsdsFuturesKlines() => $_ensure(47);
 
   @$pb.TagNumber(58)
-  $0.BinanceFuturesPnl get usdsFuturesPnl => $_getN(47);
+  $0.BinanceFuturesPnl get usdsFuturesPnl => $_getN(48);
   @$pb.TagNumber(58)
   set usdsFuturesPnl($0.BinanceFuturesPnl value) => $_setField(58, value);
   @$pb.TagNumber(58)
-  $core.bool hasUsdsFuturesPnl() => $_has(47);
+  $core.bool hasUsdsFuturesPnl() => $_has(48);
   @$pb.TagNumber(58)
   void clearUsdsFuturesPnl() => $_clearField(58);
   @$pb.TagNumber(58)
-  $0.BinanceFuturesPnl ensureUsdsFuturesPnl() => $_ensure(47);
+  $0.BinanceFuturesPnl ensureUsdsFuturesPnl() => $_ensure(48);
 
   /// 撤销所有交易对的挂单(币安没有不分交易对的撤法,机器人列出来逐个撤)
   @$pb.TagNumber(59)
-  $0.BinanceSpotCancelAllSymbols get spotCancelAllSymbols => $_getN(48);
+  $0.BinanceSpotCancelAllSymbols get spotCancelAllSymbols => $_getN(49);
   @$pb.TagNumber(59)
   set spotCancelAllSymbols($0.BinanceSpotCancelAllSymbols value) =>
       $_setField(59, value);
   @$pb.TagNumber(59)
-  $core.bool hasSpotCancelAllSymbols() => $_has(48);
+  $core.bool hasSpotCancelAllSymbols() => $_has(49);
   @$pb.TagNumber(59)
   void clearSpotCancelAllSymbols() => $_clearField(59);
   @$pb.TagNumber(59)
-  $0.BinanceSpotCancelAllSymbols ensureSpotCancelAllSymbols() => $_ensure(48);
+  $0.BinanceSpotCancelAllSymbols ensureSpotCancelAllSymbols() => $_ensure(49);
 
   @$pb.TagNumber(60)
   $0.BinanceFuturesCancelAllSymbols get usdsFuturesCancelAllSymbols =>
-      $_getN(49);
+      $_getN(50);
   @$pb.TagNumber(60)
   set usdsFuturesCancelAllSymbols($0.BinanceFuturesCancelAllSymbols value) =>
       $_setField(60, value);
   @$pb.TagNumber(60)
-  $core.bool hasUsdsFuturesCancelAllSymbols() => $_has(49);
+  $core.bool hasUsdsFuturesCancelAllSymbols() => $_has(50);
   @$pb.TagNumber(60)
   void clearUsdsFuturesCancelAllSymbols() => $_clearField(60);
   @$pb.TagNumber(60)
   $0.BinanceFuturesCancelAllSymbols ensureUsdsFuturesCancelAllSymbols() =>
-      $_ensure(49);
+      $_ensure(50);
 
   /// 持仓止盈止损(机器人从持仓算方向、触发价,整仓)
   @$pb.TagNumber(61)
-  $0.BinanceFuturesPositionTpsl get usdsFuturesPositionTpsl => $_getN(50);
+  $0.BinanceFuturesPositionTpsl get usdsFuturesPositionTpsl => $_getN(51);
   @$pb.TagNumber(61)
   set usdsFuturesPositionTpsl($0.BinanceFuturesPositionTpsl value) =>
       $_setField(61, value);
   @$pb.TagNumber(61)
-  $core.bool hasUsdsFuturesPositionTpsl() => $_has(50);
+  $core.bool hasUsdsFuturesPositionTpsl() => $_has(51);
   @$pb.TagNumber(61)
   void clearUsdsFuturesPositionTpsl() => $_clearField(61);
   @$pb.TagNumber(61)
-  $0.BinanceFuturesPositionTpsl ensureUsdsFuturesPositionTpsl() => $_ensure(50);
+  $0.BinanceFuturesPositionTpsl ensureUsdsFuturesPositionTpsl() => $_ensure(51);
 
   @$pb.TagNumber(62)
-  $0.BinanceFuturesGetOrder get usdsFuturesQueryOrder => $_getN(51);
+  $0.BinanceFuturesGetOrder get usdsFuturesQueryOrder => $_getN(52);
   @$pb.TagNumber(62)
   set usdsFuturesQueryOrder($0.BinanceFuturesGetOrder value) =>
       $_setField(62, value);
   @$pb.TagNumber(62)
-  $core.bool hasUsdsFuturesQueryOrder() => $_has(51);
+  $core.bool hasUsdsFuturesQueryOrder() => $_has(52);
   @$pb.TagNumber(62)
   void clearUsdsFuturesQueryOrder() => $_clearField(62);
   @$pb.TagNumber(62)
-  $0.BinanceFuturesGetOrder ensureUsdsFuturesQueryOrder() => $_ensure(51);
+  $0.BinanceFuturesGetOrder ensureUsdsFuturesQueryOrder() => $_ensure(52);
 
   @$pb.TagNumber(63)
-  $0.BinanceFuturesClosePosition get usdsFuturesClosePosition => $_getN(52);
+  $0.BinanceFuturesClosePosition get usdsFuturesClosePosition => $_getN(53);
   @$pb.TagNumber(63)
   set usdsFuturesClosePosition($0.BinanceFuturesClosePosition value) =>
       $_setField(63, value);
   @$pb.TagNumber(63)
-  $core.bool hasUsdsFuturesClosePosition() => $_has(52);
+  $core.bool hasUsdsFuturesClosePosition() => $_has(53);
   @$pb.TagNumber(63)
   void clearUsdsFuturesClosePosition() => $_clearField(63);
   @$pb.TagNumber(63)
   $0.BinanceFuturesClosePosition ensureUsdsFuturesClosePosition() =>
-      $_ensure(52);
+      $_ensure(53);
 
   @$pb.TagNumber(64)
-  $1.BinanceStockHoldings get stocksHoldings => $_getN(53);
+  $1.BinanceStockHoldings get stocksHoldings => $_getN(54);
   @$pb.TagNumber(64)
   set stocksHoldings($1.BinanceStockHoldings value) => $_setField(64, value);
   @$pb.TagNumber(64)
-  $core.bool hasStocksHoldings() => $_has(53);
+  $core.bool hasStocksHoldings() => $_has(54);
   @$pb.TagNumber(64)
   void clearStocksHoldings() => $_clearField(64);
   @$pb.TagNumber(64)
-  $1.BinanceStockHoldings ensureStocksHoldings() => $_ensure(53);
+  $1.BinanceStockHoldings ensureStocksHoldings() => $_ensure(54);
 }
 
 const $core.bool _omitFieldNames =

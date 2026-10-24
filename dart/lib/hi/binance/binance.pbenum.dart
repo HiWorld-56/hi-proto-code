@@ -296,5 +296,37 @@ class BinanceTpslBasis extends $pb.ProtobufEnum {
   const BinanceTpslBasis._(super.value, super.name);
 }
 
+class BinanceAutoTpsl_State extends $pb.ProtobufEnum {
+  static const BinanceAutoTpsl_State STATE_UNSPECIFIED =
+      BinanceAutoTpsl_State._(0, _omitEnumNames ? '' : 'STATE_UNSPECIFIED');
+  static const BinanceAutoTpsl_State STATE_SET =
+      BinanceAutoTpsl_State._(1, _omitEnumNames ? '' : 'STATE_SET');
+  static const BinanceAutoTpsl_State STATE_OFF =
+      BinanceAutoTpsl_State._(2, _omitEnumNames ? '' : 'STATE_OFF');
+  static const BinanceAutoTpsl_State STATE_SKIPPED =
+      BinanceAutoTpsl_State._(3, _omitEnumNames ? '' : 'STATE_SKIPPED');
+  static const BinanceAutoTpsl_State STATE_FAILED =
+      BinanceAutoTpsl_State._(4, _omitEnumNames ? '' : 'STATE_FAILED');
+  static const BinanceAutoTpsl_State STATE_WAITING =
+      BinanceAutoTpsl_State._(5, _omitEnumNames ? '' : 'STATE_WAITING');
+
+  static const $core.List<BinanceAutoTpsl_State> values =
+      <BinanceAutoTpsl_State>[
+    STATE_UNSPECIFIED,
+    STATE_SET,
+    STATE_OFF,
+    STATE_SKIPPED,
+    STATE_FAILED,
+    STATE_WAITING,
+  ];
+
+  static final $core.List<BinanceAutoTpsl_State?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 5);
+  static BinanceAutoTpsl_State? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const BinanceAutoTpsl_State._(super.value, super.name);
+}
+
 const $core.bool _omitEnumNames =
     $core.bool.fromEnvironment('protobuf.omit_enum_names');
