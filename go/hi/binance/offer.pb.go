@@ -273,7 +273,7 @@ type BinanceOfferPlan struct {
 	Shortfall    *string                `protobuf:"bytes,10,opt,name=shortfall,proto3,oneof" json:"shortfall,omitempty"`                                                               // 按本机资金下不了这一单的原因(一句话);带了 face 就不给确认按钮,只能取消
 	// ── 自动止盈止损(2026-10-23 用户定;开单卡上一个**默认勾选**的「自动设置止盈止损」)──
 	//
-	// 口径(只在币安插件出计划单那一处):R = 主人设的风险承受率(`BinanceRoi.risk_tolerance`)。
+	// 口径(只在 brain `binance::plan` 出计划单那一处;10-24 前在币安插件):R = 主人设的风险承受率(`BinanceRoi.risk_tolerance`)。
 	//
 	//	· 止损 = 这一笔亏到它保证金的 R%:合约按收益率 −R%(价格反向 R% ÷ 杠杆);现货按价格下跌 R%。
 	//	· 止盈 = 盈亏比 2:1:合约收益率 +2R%;现货价格上涨 2R%。
