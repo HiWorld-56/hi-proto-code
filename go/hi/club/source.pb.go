@@ -192,8 +192,11 @@ func (x *TranscodeForRobotReq) GetUrl() string {
 }
 
 type TranscodeForRobotResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Url           *string                `protobuf:"bytes,1,opt,name=url,proto3,oneof" json:"url,omitempty"` // Ogg Theora(画面 + Vorbis 声音)
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Url   *string                `protobuf:"bytes,1,opt,name=url,proto3,oneof" json:"url,omitempty"` // Ogg Theora(画面 + Vorbis 声音)
+	// 时长(毫秒)。LÖVE 的 Video 没有取时长的接口(没声轨的连音频那条路都没有),
+	// 机器人屏幕上的进度条只能靠这一个数;读不出 = 不传(屏上只显示已放的时间)。
+	DurationMs    *uint32 `protobuf:"varint,2,opt,name=duration_ms,json=durationMs,proto3,oneof" json:"duration_ms,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -233,6 +236,13 @@ func (x *TranscodeForRobotResp) GetUrl() string {
 		return *x.Url
 	}
 	return ""
+}
+
+func (x *TranscodeForRobotResp) GetDurationMs() uint32 {
+	if x != nil && x.DurationMs != nil {
+		return *x.DurationMs
+	}
+	return 0
 }
 
 type DownloadResourceReq struct {
@@ -344,10 +354,13 @@ const file_hi_club_source_proto_rawDesc = "" +
 	"\x05_size\"F\n" +
 	"\x14TranscodeForRobotReq\x12&\n" +
 	"\x03url\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x03url\x88\x01\x01B\x06\n" +
-	"\x04_url\"B\n" +
+	"\x04_url\"~\n" +
 	"\x15TranscodeForRobotResp\x12\x1b\n" +
-	"\x03url\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x03url\x88\x01\x01:\x04\x98\xb5\x18\x01B\x06\n" +
-	"\x04_url\"E\n" +
+	"\x03url\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x03url\x88\x01\x01\x12*\n" +
+	"\vduration_ms\x18\x02 \x01(\rB\x04\x90\xb5\x18\x01H\x01R\n" +
+	"durationMs\x88\x01\x01:\x04\x98\xb5\x18\x01B\x06\n" +
+	"\x04_urlB\x0e\n" +
+	"\f_duration_ms\"E\n" +
 	"\x13DownloadResourceReq\x12&\n" +
 	"\x03url\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x03url\x88\x01\x01B\x06\n" +
 	"\x04_url\"M\n" +

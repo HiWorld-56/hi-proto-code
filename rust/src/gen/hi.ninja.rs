@@ -725,6 +725,9 @@ pub struct VideoReady {
     /// 给人看的一句;原因只进 brain 日志。成了 = 不传
     #[prost(string, optional, tag = "3")]
     pub error: ::core::option::Option<::prost::alloc::string::String>,
+    /// 时长(毫秒),原样转 club 的 TranscodeForRobotResp.duration_ms;不知道 = 不传
+    #[prost(uint32, optional, tag = "4")]
+    pub duration_ms: ::core::option::Option<u32>,
 }
 /// 内容由调用方给的二维码。`content` 原样编进码里,face 不解析、不改写;
 /// 装不下(超过二维码容量)就不显示并在日志里说一句 —— 截断了的码扫出来是另一份数据。

@@ -152,17 +152,29 @@ const TranscodeForRobotResp$json = {
       '10': 'url',
       '17': true
     },
+    {
+      '1': 'duration_ms',
+      '3': 2,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 1,
+      '10': 'durationMs',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
     {'1': '_url'},
+    {'1': '_duration_ms'},
   ],
 };
 
 /// Descriptor for `TranscodeForRobotResp`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List transcodeForRobotRespDescriptor = $convert.base64Decode(
-    'ChVUcmFuc2NvZGVGb3JSb2JvdFJlc3ASGwoDdXJsGAEgASgJQgSQtRgBSABSA3VybIgBAToEmL'
-    'UYAUIGCgRfdXJs');
+    'ChVUcmFuc2NvZGVGb3JSb2JvdFJlc3ASGwoDdXJsGAEgASgJQgSQtRgBSABSA3VybIgBARIqCg'
+    'tkdXJhdGlvbl9tcxgCIAEoDUIEkLUYAUgBUgpkdXJhdGlvbk1ziAEBOgSYtRgBQgYKBF91cmxC'
+    'DgoMX2R1cmF0aW9uX21z');
 
 @$core.Deprecated('Use downloadResourceReqDescriptor instead')
 const DownloadResourceReq$json = {

@@ -1231,11 +1231,13 @@ class VideoReady extends $pb.GeneratedMessage {
     $core.String? id,
     $core.String? url,
     $core.String? error,
+    $core.int? durationMs,
   }) {
     final result = create();
     if (id != null) result.id = id;
     if (url != null) result.url = url;
     if (error != null) result.error = error;
+    if (durationMs != null) result.durationMs = durationMs;
     return result;
   }
 
@@ -1255,6 +1257,7 @@ class VideoReady extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'id')
     ..aOS(2, _omitFieldNames ? '' : 'url')
     ..aOS(3, _omitFieldNames ? '' : 'error')
+    ..aI(4, _omitFieldNames ? '' : 'durationMs', fieldType: $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1301,6 +1304,15 @@ class VideoReady extends $pb.GeneratedMessage {
   $core.bool hasError() => $_has(2);
   @$pb.TagNumber(3)
   void clearError() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.int get durationMs => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set durationMs($core.int value) => $_setUnsignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasDurationMs() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearDurationMs() => $_clearField(4);
 }
 
 /// 内容由调用方给的二维码。`content` 原样编进码里,face 不解析、不改写;

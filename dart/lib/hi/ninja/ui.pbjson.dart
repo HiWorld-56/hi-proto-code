@@ -503,18 +503,29 @@ const VideoReady$json = {
     {'1': 'id', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'id', '17': true},
     {'1': 'url', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'url', '17': true},
     {'1': 'error', '3': 3, '4': 1, '5': 9, '9': 2, '10': 'error', '17': true},
+    {
+      '1': 'duration_ms',
+      '3': 4,
+      '4': 1,
+      '5': 13,
+      '9': 3,
+      '10': 'durationMs',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_id'},
     {'1': '_url'},
     {'1': '_error'},
+    {'1': '_duration_ms'},
   ],
 };
 
 /// Descriptor for `VideoReady`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List videoReadyDescriptor = $convert.base64Decode(
     'CgpWaWRlb1JlYWR5EhMKAmlkGAEgASgJSABSAmlkiAEBEhUKA3VybBgCIAEoCUgBUgN1cmyIAQ'
-    'ESGQoFZXJyb3IYAyABKAlIAlIFZXJyb3KIAQFCBQoDX2lkQgYKBF91cmxCCAoGX2Vycm9y');
+    'ESGQoFZXJyb3IYAyABKAlIAlIFZXJyb3KIAQESJAoLZHVyYXRpb25fbXMYBCABKA1IA1IKZHVy'
+    'YXRpb25Nc4gBAUIFCgNfaWRCBgoEX3VybEIICgZfZXJyb3JCDgoMX2R1cmF0aW9uX21z');
 
 @$core.Deprecated('Use qrCardDescriptor instead')
 const QrCard$json = {

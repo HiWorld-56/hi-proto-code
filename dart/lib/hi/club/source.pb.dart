@@ -230,9 +230,11 @@ class TranscodeForRobotReq extends $pb.GeneratedMessage {
 class TranscodeForRobotResp extends $pb.GeneratedMessage {
   factory TranscodeForRobotResp({
     $core.String? url,
+    $core.int? durationMs,
   }) {
     final result = create();
     if (url != null) result.url = url;
+    if (durationMs != null) result.durationMs = durationMs;
     return result;
   }
 
@@ -250,6 +252,7 @@ class TranscodeForRobotResp extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'url')
+    ..aI(2, _omitFieldNames ? '' : 'durationMs', fieldType: $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -280,6 +283,17 @@ class TranscodeForRobotResp extends $pb.GeneratedMessage {
   $core.bool hasUrl() => $_has(0);
   @$pb.TagNumber(1)
   void clearUrl() => $_clearField(1);
+
+  /// 时长(毫秒)。LÖVE 的 Video 没有取时长的接口(没声轨的连音频那条路都没有),
+  /// 机器人屏幕上的进度条只能靠这一个数;读不出 = 不传(屏上只显示已放的时间)。
+  @$pb.TagNumber(2)
+  $core.int get durationMs => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set durationMs($core.int value) => $_setUnsignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasDurationMs() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearDurationMs() => $_clearField(2);
 }
 
 class DownloadResourceReq extends $pb.GeneratedMessage {

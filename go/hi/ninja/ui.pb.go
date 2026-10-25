@@ -1229,8 +1229,9 @@ func (x *VideoRequest) GetUrl() string {
 type VideoReady struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	Url           *string                `protobuf:"bytes,2,opt,name=url,proto3,oneof" json:"url,omitempty"`     // Ogg Theora;没成 = 不传
-	Error         *string                `protobuf:"bytes,3,opt,name=error,proto3,oneof" json:"error,omitempty"` // 给人看的一句;原因只进 brain 日志。成了 = 不传
+	Url           *string                `protobuf:"bytes,2,opt,name=url,proto3,oneof" json:"url,omitempty"`                                  // Ogg Theora;没成 = 不传
+	Error         *string                `protobuf:"bytes,3,opt,name=error,proto3,oneof" json:"error,omitempty"`                              // 给人看的一句;原因只进 brain 日志。成了 = 不传
+	DurationMs    *uint32                `protobuf:"varint,4,opt,name=duration_ms,json=durationMs,proto3,oneof" json:"duration_ms,omitempty"` // 时长(毫秒),原样转 club 的 TranscodeForRobotResp.duration_ms;不知道 = 不传
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1284,6 +1285,13 @@ func (x *VideoReady) GetError() string {
 		return *x.Error
 	}
 	return ""
+}
+
+func (x *VideoReady) GetDurationMs() uint32 {
+	if x != nil && x.DurationMs != nil {
+		return *x.DurationMs
+	}
+	return 0
 }
 
 // 内容由调用方给的二维码。`content` 原样编进码里,face 不解析、不改写;
@@ -1926,15 +1934,18 @@ const file_hi_ninja_ui_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x15\n" +
 	"\x03url\x18\x02 \x01(\tH\x01R\x03url\x88\x01\x01B\x05\n" +
 	"\x03_idB\x06\n" +
-	"\x04_url\"l\n" +
+	"\x04_url\"\xa2\x01\n" +
 	"\n" +
 	"VideoReady\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x15\n" +
 	"\x03url\x18\x02 \x01(\tH\x01R\x03url\x88\x01\x01\x12\x19\n" +
-	"\x05error\x18\x03 \x01(\tH\x02R\x05error\x88\x01\x01B\x05\n" +
+	"\x05error\x18\x03 \x01(\tH\x02R\x05error\x88\x01\x01\x12$\n" +
+	"\vduration_ms\x18\x04 \x01(\rH\x03R\n" +
+	"durationMs\x88\x01\x01B\x05\n" +
 	"\x03_idB\x06\n" +
 	"\x04_urlB\b\n" +
-	"\x06_error\"X\n" +
+	"\x06_errorB\x0e\n" +
+	"\f_duration_ms\"X\n" +
 	"\x06QrCard\x12\x1d\n" +
 	"\acontent\x18\x01 \x01(\tH\x00R\acontent\x88\x01\x01\x12\x19\n" +
 	"\x05title\x18\x02 \x01(\tH\x01R\x05title\x88\x01\x01B\n" +

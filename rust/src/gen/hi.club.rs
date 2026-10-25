@@ -762,6 +762,10 @@ pub struct TranscodeForRobotResp {
     /// Ogg Theora(画面 + Vorbis 声音)
     #[prost(string, optional, tag = "1")]
     pub url: ::core::option::Option<::prost::alloc::string::String>,
+    /// 时长(毫秒)。LÖVE 的 Video 没有取时长的接口(没声轨的连音频那条路都没有),
+    /// 机器人屏幕上的进度条只能靠这一个数;读不出 = 不传(屏上只显示已放的时间)。
+    #[prost(uint32, optional, tag = "2")]
+    pub duration_ms: ::core::option::Option<u32>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DownloadResourceReq {
