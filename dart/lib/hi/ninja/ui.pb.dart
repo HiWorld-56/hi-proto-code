@@ -286,12 +286,10 @@ class TextReply extends $pb.GeneratedMessage {
   factory TextReply({
     $core.String? uuid,
     $core.String? value,
-    $core.Iterable<$2.Content>? media,
   }) {
     final result = create();
     if (uuid != null) result.uuid = uuid;
     if (value != null) result.value = value;
-    if (media != null) result.media.addAll(media);
     return result;
   }
 
@@ -310,8 +308,6 @@ class TextReply extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'uuid')
     ..aOS(2, _omitFieldNames ? '' : 'value')
-    ..pPM<$2.Content>(3, _omitFieldNames ? '' : 'media',
-        subBuilder: $2.Content.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -349,11 +345,6 @@ class TextReply extends $pb.GeneratedMessage {
   $core.bool hasValue() => $_has(1);
   @$pb.TagNumber(2)
   void clearValue() => $_clearField(2);
-
-  /// 这一轮随回答一起发出去的**媒体段**(现在只有视频:插件回了 `video_url`)。
-  /// 与发进聊天的那条消息里的段一字不差,face 画在文字下面;没有 = 空列表。
-  @$pb.TagNumber(3)
-  $pb.PbList<$2.Content> get media => $_getList(2);
 }
 
 /// TTS 音频播放

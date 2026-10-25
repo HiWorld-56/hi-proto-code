@@ -453,12 +453,9 @@ func (x *MasterEvent) GetTrigger() string {
 // 和 show_im_reply / show_voice_reply 两端传递，face 据此将回复路由到对应的对话框。
 // value 为 AI 输出的纯文本，不封装为 Message 结构。
 type TextReply struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	Uuid  *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
-	Value *string                `protobuf:"bytes,2,opt,name=value,proto3,oneof" json:"value,omitempty"`
-	// 这一轮随回答一起发出去的**媒体段**(现在只有视频:插件回了 `video_url`)。
-	// 与发进聊天的那条消息里的段一字不差,face 画在文字下面;没有 = 空列表。
-	Media         []*club.Content `protobuf:"bytes,3,rep,name=media,proto3" json:"media,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Uuid          *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
+	Value         *string                `protobuf:"bytes,2,opt,name=value,proto3,oneof" json:"value,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -505,13 +502,6 @@ func (x *TextReply) GetValue() string {
 		return *x.Value
 	}
 	return ""
-}
-
-func (x *TextReply) GetMedia() []*club.Content {
-	if x != nil {
-		return x.Media
-	}
-	return nil
 }
 
 // TTS 音频播放
@@ -1871,11 +1861,10 @@ const file_hi_ninja_ui_proto_rawDesc = "" +
 	".hi.EntityR\x06master\x12\x1d\n" +
 	"\atrigger\x18\x02 \x01(\tH\x00R\atrigger\x88\x01\x01B\n" +
 	"\n" +
-	"\b_trigger\"z\n" +
+	"\b_trigger\"R\n" +
 	"\tTextReply\x12\x17\n" +
 	"\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x19\n" +
-	"\x05value\x18\x02 \x01(\tH\x01R\x05value\x88\x01\x01\x12&\n" +
-	"\x05media\x18\x03 \x03(\v2\x10.hi.club.ContentR\x05mediaB\a\n" +
+	"\x05value\x18\x02 \x01(\tH\x01R\x05value\x88\x01\x01B\a\n" +
 	"\x05_uuidB\b\n" +
 	"\x06_value\"R\n" +
 	"\tAudioPlay\x12\x17\n" +
@@ -2057,15 +2046,14 @@ var file_hi_ninja_ui_proto_goTypes = []any{
 	(*UpdateAction)(nil),              // 21: hi.ninja.UpdateAction
 	(*hi.Entity)(nil),                 // 22: hi.Entity
 	(*club.GroupInfo)(nil),            // 23: hi.club.GroupInfo
-	(*club.Content)(nil),              // 24: hi.club.Content
-	(*club.Message)(nil),              // 25: hi.club.Message
-	(*emptypb.Empty)(nil),             // 26: google.protobuf.Empty
-	(*ai.PluginView)(nil),             // 27: hi.ai.PluginView
-	(*did.Transaction)(nil),           // 28: hi.did.Transaction
-	(*UpdateStatus)(nil),              // 29: hi.ninja.UpdateStatus
-	(*binance.BinanceResult)(nil),     // 30: hi.binance.BinanceResult
-	(*binance.BinanceOfferReply)(nil), // 31: hi.binance.BinanceOfferReply
-	(*binance.BinanceOffer)(nil),      // 32: hi.binance.BinanceOffer
+	(*club.Message)(nil),              // 24: hi.club.Message
+	(*emptypb.Empty)(nil),             // 25: google.protobuf.Empty
+	(*ai.PluginView)(nil),             // 26: hi.ai.PluginView
+	(*did.Transaction)(nil),           // 27: hi.did.Transaction
+	(*UpdateStatus)(nil),              // 28: hi.ninja.UpdateStatus
+	(*binance.BinanceResult)(nil),     // 29: hi.binance.BinanceResult
+	(*binance.BinanceOfferReply)(nil), // 30: hi.binance.BinanceOfferReply
+	(*binance.BinanceOffer)(nil),      // 31: hi.binance.BinanceOffer
 }
 var file_hi_ninja_ui_proto_depIdxs = []int32{
 	22, // 0: hi.ninja.RobotInit.robot:type_name -> hi.Entity
@@ -2073,49 +2061,48 @@ var file_hi_ninja_ui_proto_depIdxs = []int32{
 	22, // 2: hi.ninja.FriendList.list:type_name -> hi.Entity
 	23, // 3: hi.ninja.GroupInfoList.list:type_name -> hi.club.GroupInfo
 	22, // 4: hi.ninja.MasterEvent.master:type_name -> hi.Entity
-	24, // 5: hi.ninja.TextReply.media:type_name -> hi.club.Content
-	4,  // 6: hi.ninja.BrainToFace.init_robot:type_name -> hi.ninja.RobotInit
-	0,  // 7: hi.ninja.BrainToFace.show_listen:type_name -> hi.ninja.StateToggle
-	1,  // 8: hi.ninja.BrainToFace.show_emotion:type_name -> hi.ninja.Emotion
-	25, // 9: hi.ninja.BrainToFace.show_im_request:type_name -> hi.club.Message
-	8,  // 10: hi.ninja.BrainToFace.show_im_reply:type_name -> hi.ninja.TextReply
-	8,  // 11: hi.ninja.BrainToFace.show_voice_reply:type_name -> hi.ninja.TextReply
-	26, // 12: hi.ninja.BrainToFace.show_qr_code:type_name -> google.protobuf.Empty
-	22, // 13: hi.ninja.BrainToFace.event_robot:type_name -> hi.Entity
-	7,  // 14: hi.ninja.BrainToFace.event_master:type_name -> hi.ninja.MasterEvent
-	23, // 15: hi.ninja.BrainToFace.event_members:type_name -> hi.club.GroupInfo
-	27, // 16: hi.ninja.BrainToFace.event_plugin:type_name -> hi.ai.PluginView
-	20, // 17: hi.ninja.BrainToFace.event_plugin_progress:type_name -> hi.ninja.PluginProgress
-	28, // 18: hi.ninja.BrainToFace.event_transaction:type_name -> hi.did.Transaction
-	9,  // 19: hi.ninja.BrainToFace.play_audio:type_name -> hi.ninja.AudioPlay
-	5,  // 20: hi.ninja.BrainToFace.event_friends:type_name -> hi.ninja.FriendList
-	22, // 21: hi.ninja.BrainToFace.event_friend_delete:type_name -> hi.Entity
-	22, // 22: hi.ninja.BrainToFace.event_friend_add:type_name -> hi.Entity
-	6,  // 23: hi.ninja.BrainToFace.members_init:type_name -> hi.ninja.GroupInfoList
-	17, // 24: hi.ninja.BrainToFace.event_status:type_name -> hi.ninja.StatusEvent
-	29, // 25: hi.ninja.BrainToFace.event_update:type_name -> hi.ninja.UpdateStatus
-	10, // 26: hi.ninja.BrainToFace.event_binance_settings:type_name -> hi.ninja.BinanceSettings
-	30, // 27: hi.ninja.BrainToFace.binance_result:type_name -> hi.binance.BinanceResult
-	16, // 28: hi.ninja.BrainToFace.show_tip:type_name -> hi.ninja.Tip
-	15, // 29: hi.ninja.BrainToFace.show_qr:type_name -> hi.ninja.QrCard
-	19, // 30: hi.ninja.BrainToFace.binance_offers:type_name -> hi.ninja.BinanceOffers
-	14, // 31: hi.ninja.BrainToFace.video_ready:type_name -> hi.ninja.VideoReady
-	0,  // 32: hi.ninja.FaceToBrain.voice_state:type_name -> hi.ninja.StateToggle
-	21, // 33: hi.ninja.FaceToBrain.update_action:type_name -> hi.ninja.UpdateAction
-	26, // 34: hi.ninja.FaceToBrain.get_binance_settings:type_name -> google.protobuf.Empty
-	26, // 35: hi.ninja.FaceToBrain.request_init:type_name -> google.protobuf.Empty
-	11, // 36: hi.ninja.FaceToBrain.binance_request:type_name -> hi.ninja.BinanceRequest
-	31, // 37: hi.ninja.FaceToBrain.binance_offer_reply:type_name -> hi.binance.BinanceOfferReply
-	26, // 38: hi.ninja.FaceToBrain.get_binance_offers:type_name -> google.protobuf.Empty
-	13, // 39: hi.ninja.FaceToBrain.video_request:type_name -> hi.ninja.VideoRequest
-	32, // 40: hi.ninja.BinanceOffers.list:type_name -> hi.binance.BinanceOffer
-	2,  // 41: hi.ninja.PluginProgress.state:type_name -> hi.ninja.PluginProgress.State
-	3,  // 42: hi.ninja.UpdateAction.action:type_name -> hi.ninja.UpdateAction.Action
-	43, // [43:43] is the sub-list for method output_type
-	43, // [43:43] is the sub-list for method input_type
-	43, // [43:43] is the sub-list for extension type_name
-	43, // [43:43] is the sub-list for extension extendee
-	0,  // [0:43] is the sub-list for field type_name
+	4,  // 5: hi.ninja.BrainToFace.init_robot:type_name -> hi.ninja.RobotInit
+	0,  // 6: hi.ninja.BrainToFace.show_listen:type_name -> hi.ninja.StateToggle
+	1,  // 7: hi.ninja.BrainToFace.show_emotion:type_name -> hi.ninja.Emotion
+	24, // 8: hi.ninja.BrainToFace.show_im_request:type_name -> hi.club.Message
+	8,  // 9: hi.ninja.BrainToFace.show_im_reply:type_name -> hi.ninja.TextReply
+	8,  // 10: hi.ninja.BrainToFace.show_voice_reply:type_name -> hi.ninja.TextReply
+	25, // 11: hi.ninja.BrainToFace.show_qr_code:type_name -> google.protobuf.Empty
+	22, // 12: hi.ninja.BrainToFace.event_robot:type_name -> hi.Entity
+	7,  // 13: hi.ninja.BrainToFace.event_master:type_name -> hi.ninja.MasterEvent
+	23, // 14: hi.ninja.BrainToFace.event_members:type_name -> hi.club.GroupInfo
+	26, // 15: hi.ninja.BrainToFace.event_plugin:type_name -> hi.ai.PluginView
+	20, // 16: hi.ninja.BrainToFace.event_plugin_progress:type_name -> hi.ninja.PluginProgress
+	27, // 17: hi.ninja.BrainToFace.event_transaction:type_name -> hi.did.Transaction
+	9,  // 18: hi.ninja.BrainToFace.play_audio:type_name -> hi.ninja.AudioPlay
+	5,  // 19: hi.ninja.BrainToFace.event_friends:type_name -> hi.ninja.FriendList
+	22, // 20: hi.ninja.BrainToFace.event_friend_delete:type_name -> hi.Entity
+	22, // 21: hi.ninja.BrainToFace.event_friend_add:type_name -> hi.Entity
+	6,  // 22: hi.ninja.BrainToFace.members_init:type_name -> hi.ninja.GroupInfoList
+	17, // 23: hi.ninja.BrainToFace.event_status:type_name -> hi.ninja.StatusEvent
+	28, // 24: hi.ninja.BrainToFace.event_update:type_name -> hi.ninja.UpdateStatus
+	10, // 25: hi.ninja.BrainToFace.event_binance_settings:type_name -> hi.ninja.BinanceSettings
+	29, // 26: hi.ninja.BrainToFace.binance_result:type_name -> hi.binance.BinanceResult
+	16, // 27: hi.ninja.BrainToFace.show_tip:type_name -> hi.ninja.Tip
+	15, // 28: hi.ninja.BrainToFace.show_qr:type_name -> hi.ninja.QrCard
+	19, // 29: hi.ninja.BrainToFace.binance_offers:type_name -> hi.ninja.BinanceOffers
+	14, // 30: hi.ninja.BrainToFace.video_ready:type_name -> hi.ninja.VideoReady
+	0,  // 31: hi.ninja.FaceToBrain.voice_state:type_name -> hi.ninja.StateToggle
+	21, // 32: hi.ninja.FaceToBrain.update_action:type_name -> hi.ninja.UpdateAction
+	25, // 33: hi.ninja.FaceToBrain.get_binance_settings:type_name -> google.protobuf.Empty
+	25, // 34: hi.ninja.FaceToBrain.request_init:type_name -> google.protobuf.Empty
+	11, // 35: hi.ninja.FaceToBrain.binance_request:type_name -> hi.ninja.BinanceRequest
+	30, // 36: hi.ninja.FaceToBrain.binance_offer_reply:type_name -> hi.binance.BinanceOfferReply
+	25, // 37: hi.ninja.FaceToBrain.get_binance_offers:type_name -> google.protobuf.Empty
+	13, // 38: hi.ninja.FaceToBrain.video_request:type_name -> hi.ninja.VideoRequest
+	31, // 39: hi.ninja.BinanceOffers.list:type_name -> hi.binance.BinanceOffer
+	2,  // 40: hi.ninja.PluginProgress.state:type_name -> hi.ninja.PluginProgress.State
+	3,  // 41: hi.ninja.UpdateAction.action:type_name -> hi.ninja.UpdateAction.Action
+	42, // [42:42] is the sub-list for method output_type
+	42, // [42:42] is the sub-list for method input_type
+	42, // [42:42] is the sub-list for extension type_name
+	42, // [42:42] is the sub-list for extension extendee
+	0,  // [0:42] is the sub-list for field type_name
 }
 
 func init() { file_hi_ninja_ui_proto_init() }

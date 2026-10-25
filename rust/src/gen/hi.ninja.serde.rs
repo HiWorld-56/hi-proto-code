@@ -4150,18 +4150,12 @@ impl serde::Serialize for TextReply {
         if self.value.is_some() {
             len += 1;
         }
-        if !self.media.is_empty() {
-            len += 1;
-        }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.TextReply", len)?;
         if let Some(v) = self.uuid.as_ref() {
             struct_ser.serialize_field("uuid", v)?;
         }
         if let Some(v) = self.value.as_ref() {
             struct_ser.serialize_field("value", v)?;
-        }
-        if !self.media.is_empty() {
-            struct_ser.serialize_field("media", &self.media)?;
         }
         struct_ser.end()
     }
@@ -4175,14 +4169,12 @@ impl<'de> serde::Deserialize<'de> for TextReply {
         const FIELDS: &[&str] = &[
             "uuid",
             "value",
-            "media",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Uuid,
             Value,
-            Media,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -4206,7 +4198,6 @@ impl<'de> serde::Deserialize<'de> for TextReply {
                         match value {
                             "uuid" => Ok(GeneratedField::Uuid),
                             "value" => Ok(GeneratedField::Value),
-                            "media" => Ok(GeneratedField::Media),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -4228,7 +4219,6 @@ impl<'de> serde::Deserialize<'de> for TextReply {
             {
                 let mut uuid__ = None;
                 let mut value__ = None;
-                let mut media__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Uuid => {
@@ -4243,18 +4233,11 @@ impl<'de> serde::Deserialize<'de> for TextReply {
                             }
                             value__ = map_.next_value()?;
                         }
-                        GeneratedField::Media => {
-                            if media__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("media"));
-                            }
-                            media__ = Some(map_.next_value()?);
-                        }
                     }
                 }
                 Ok(TextReply {
                     uuid: uuid__,
                     value: value__,
-                    media: media__.unwrap_or_default(),
                 })
             }
         }

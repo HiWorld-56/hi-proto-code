@@ -123,14 +123,6 @@ const TextReply$json = {
   '2': [
     {'1': 'uuid', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'uuid', '17': true},
     {'1': 'value', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'value', '17': true},
-    {
-      '1': 'media',
-      '3': 3,
-      '4': 3,
-      '5': 11,
-      '6': '.hi.club.Content',
-      '10': 'media'
-    },
   ],
   '8': [
     {'1': '_uuid'},
@@ -141,8 +133,7 @@ const TextReply$json = {
 /// Descriptor for `TextReply`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List textReplyDescriptor = $convert.base64Decode(
     'CglUZXh0UmVwbHkSFwoEdXVpZBgBIAEoCUgAUgR1dWlkiAEBEhkKBXZhbHVlGAIgASgJSAFSBX'
-    'ZhbHVliAEBEiYKBW1lZGlhGAMgAygLMhAuaGkuY2x1Yi5Db250ZW50UgVtZWRpYUIHCgVfdXVp'
-    'ZEIICgZfdmFsdWU=');
+    'ZhbHVliAEBQgcKBV91dWlkQggKBl92YWx1ZQ==');
 
 @$core.Deprecated('Use audioPlayDescriptor instead')
 const AudioPlay$json = {

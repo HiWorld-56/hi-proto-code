@@ -539,16 +539,12 @@ pub struct MasterEvent {
 /// uuid 由 brain 在本次对话开始时生成，通过 show_im_request（覆写 Message.uuid）
 /// 和 show_im_reply / show_voice_reply 两端传递，face 据此将回复路由到对应的对话框。
 /// value 为 AI 输出的纯文本，不封装为 Message 结构。
-#[derive(Clone, PartialEq, ::prost::Message)]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TextReply {
     #[prost(string, optional, tag = "1")]
     pub uuid: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
     pub value: ::core::option::Option<::prost::alloc::string::String>,
-    /// 这一轮随回答一起发出去的**媒体段**(现在只有视频:插件回了 `video_url`)。
-    /// 与发进聊天的那条消息里的段一字不差,face 画在文字下面;没有 = 空列表。
-    #[prost(message, repeated, tag = "3")]
-    pub media: ::prost::alloc::vec::Vec<super::club::Content>,
 }
 /// TTS 音频播放
 /// uuid 与对应的 TextReply.uuid 一致，audio 为完整音频文件的原始字节。
