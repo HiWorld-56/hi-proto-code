@@ -3170,7 +3170,7 @@ var File_hi_ai_plugin_proto protoreflect.FileDescriptor
 
 const file_hi_ai_plugin_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/ai/plugin.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x10hi/ai/chat.proto\x1a\x0fhi/common.proto\x1a\x1bbuf/validate/validate.proto\x1a\x10hi/options.proto\"\x9e\x01\n" +
+	"\x12hi/ai/plugin.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x0fhi/common.proto\x1a\x1bbuf/validate/validate.proto\x1a\x10hi/options.proto\"\x9e\x01\n" +
 	"\vPluginShell\x12\x1d\n" +
 	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04uuid\x88\x01\x01\x12\x1d\n" +
 	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x04name\x88\x01\x01\x120\n" +
@@ -3696,7 +3696,6 @@ func file_hi_ai_plugin_proto_init() {
 	if File_hi_ai_plugin_proto != nil {
 		return
 	}
-	file_hi_ai_chat_proto_init()
 	file_hi_ai_plugin_proto_msgTypes[0].OneofWrappers = []any{}
 	file_hi_ai_plugin_proto_msgTypes[1].OneofWrappers = []any{}
 	file_hi_ai_plugin_proto_msgTypes[2].OneofWrappers = []any{}

@@ -111,6 +111,28 @@ class SourceClient extends $grpc.Client {
         options: options);
   }
 
+  /// ── 视频。两个方法都只认**公开桶**的 url(桶边界同 Download),产物落 temp 桶(14 天过期,与视频本身一样)──
+  ///
+  /// ProbeVideo:发视频消息之前调一次,拿 `video_url` 内容段要填的封面、宽高、时长、大小
+  /// (messaging.proto `Content.Chat`)。放在服务端是因为发视频的不只有 app —— 机器人转发插件生成的视频时
+  /// 设备上没有任何解码能力;各端各自截帧也会是四套口径。
+  $grpc.ResponseFuture<$1.ProbeVideoResp> probeVideo(
+    $1.ProbeVideoReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$probeVideo, request, options: options);
+  }
+
+  /// TranscodeForRobot:机器人的屏幕(hinj-face,LÖVE)只能放 Ogg Theora,设备上也没有别的解码器 ——
+  /// 聊天里的 mp4 要转一份 Ogg Theora(长边不超过 1280)才放得了。回转好的那份的 url;
+  /// 同一个视频转过就直接回上次那份。要整段重新编码,**慢**:调用方给足超时。
+  $grpc.ResponseFuture<$1.TranscodeForRobotResp> transcodeForRobot(
+    $1.TranscodeForRobotReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$transcodeForRobot, request, options: options);
+  }
+
   /// ── 临时:temp 桶,**14 天自动过期**。聊天/AI 媒体,按年月分目录便于人工排查 ──
   $grpc.ResponseFuture<$0.UploadResp> uploadTemp(
     $0.UploadReq request, {
@@ -233,6 +255,16 @@ class SourceClient extends $grpc.Client {
           '/hi.club.Source/DownloadStream',
           ($2.DownloadStreamReq value) => value.writeToBuffer(),
           $2.DownloadStreamResp.fromBuffer);
+  static final _$probeVideo =
+      $grpc.ClientMethod<$1.ProbeVideoReq, $1.ProbeVideoResp>(
+          '/hi.club.Source/ProbeVideo',
+          ($1.ProbeVideoReq value) => value.writeToBuffer(),
+          $1.ProbeVideoResp.fromBuffer);
+  static final _$transcodeForRobot =
+      $grpc.ClientMethod<$1.TranscodeForRobotReq, $1.TranscodeForRobotResp>(
+          '/hi.club.Source/TranscodeForRobot',
+          ($1.TranscodeForRobotReq value) => value.writeToBuffer(),
+          $1.TranscodeForRobotResp.fromBuffer);
   static final _$uploadTemp = $grpc.ClientMethod<$0.UploadReq, $0.UploadResp>(
       '/hi.club.Source/UploadTemp',
       ($0.UploadReq value) => value.writeToBuffer(),
@@ -327,6 +359,22 @@ abstract class SourceServiceBase extends $grpc.Service {
         true,
         ($core.List<$core.int> value) => $2.DownloadStreamReq.fromBuffer(value),
         ($2.DownloadStreamResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.ProbeVideoReq, $1.ProbeVideoResp>(
+        'ProbeVideo',
+        probeVideo_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.ProbeVideoReq.fromBuffer(value),
+        ($1.ProbeVideoResp value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$1.TranscodeForRobotReq, $1.TranscodeForRobotResp>(
+            'TranscodeForRobot',
+            transcodeForRobot_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $1.TranscodeForRobotReq.fromBuffer(value),
+            ($1.TranscodeForRobotResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.UploadReq, $0.UploadResp>(
         'UploadTemp',
         uploadTemp_Pre,
@@ -446,6 +494,23 @@ abstract class SourceServiceBase extends $grpc.Service {
 
   $async.Stream<$2.DownloadStreamResp> downloadStream(
       $grpc.ServiceCall call, $2.DownloadStreamReq request);
+
+  $async.Future<$1.ProbeVideoResp> probeVideo_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.ProbeVideoReq> $request) async {
+    return probeVideo($call, await $request);
+  }
+
+  $async.Future<$1.ProbeVideoResp> probeVideo(
+      $grpc.ServiceCall call, $1.ProbeVideoReq request);
+
+  $async.Future<$1.TranscodeForRobotResp> transcodeForRobot_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$1.TranscodeForRobotReq> $request) async {
+    return transcodeForRobot($call, await $request);
+  }
+
+  $async.Future<$1.TranscodeForRobotResp> transcodeForRobot(
+      $grpc.ServiceCall call, $1.TranscodeForRobotReq request);
 
   $async.Future<$0.UploadResp> uploadTemp_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.UploadReq> $request) async {

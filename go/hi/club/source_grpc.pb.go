@@ -28,6 +28,8 @@ const (
 	Source_UploadGroupBackground_FullMethodName = "/hi.club.Source/UploadGroupBackground"
 	Source_Download_FullMethodName              = "/hi.club.Source/Download"
 	Source_DownloadStream_FullMethodName        = "/hi.club.Source/DownloadStream"
+	Source_ProbeVideo_FullMethodName            = "/hi.club.Source/ProbeVideo"
+	Source_TranscodeForRobot_FullMethodName     = "/hi.club.Source/TranscodeForRobot"
 	Source_UploadTemp_FullMethodName            = "/hi.club.Source/UploadTemp"
 	Source_UploadTempStream_FullMethodName      = "/hi.club.Source/UploadTempStream"
 	Source_UploadLog_FullMethodName             = "/hi.club.Source/UploadLog"
@@ -91,6 +93,16 @@ type SourceClient interface {
 	// 桶边界与 Download 一致(只放 temp/hiclub/hidid 公开桶),私有资源仍走 DownloadScript / DownloadTrainingFile。
 	// 透传 hi-source 的 File.DownloadStream。
 	DownloadStream(ctx context.Context, in *source.DownloadStreamReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[source.DownloadStreamResp], error)
+	// ── 视频。两个方法都只认**公开桶**的 url(桶边界同 Download),产物落 temp 桶(14 天过期,与视频本身一样)──
+	//
+	// ProbeVideo:发视频消息之前调一次,拿 `video_url` 内容段要填的封面、宽高、时长、大小
+	// (messaging.proto `Content.Chat`)。放在服务端是因为发视频的不只有 app —— 机器人转发插件生成的视频时
+	// 设备上没有任何解码能力;各端各自截帧也会是四套口径。
+	ProbeVideo(ctx context.Context, in *ProbeVideoReq, opts ...grpc.CallOption) (*ProbeVideoResp, error)
+	// TranscodeForRobot:机器人的屏幕(hinj-face,LÖVE)只能放 Ogg Theora,设备上也没有别的解码器 ——
+	// 聊天里的 mp4 要转一份 Ogg Theora(长边不超过 1280)才放得了。回转好的那份的 url;
+	// 同一个视频转过就直接回上次那份。要整段重新编码,**慢**:调用方给足超时。
+	TranscodeForRobot(ctx context.Context, in *TranscodeForRobotReq, opts ...grpc.CallOption) (*TranscodeForRobotResp, error)
 	// ── 临时:temp 桶,**14 天自动过期**。聊天/AI 媒体,按年月分目录便于人工排查 ──
 	UploadTemp(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
 	UploadTempStream(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[hi.UploadStreamReq, hi.UploadResp], error)
@@ -189,6 +201,26 @@ func (c *sourceClient) DownloadStream(ctx context.Context, in *source.DownloadSt
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type Source_DownloadStreamClient = grpc.ServerStreamingClient[source.DownloadStreamResp]
+
+func (c *sourceClient) ProbeVideo(ctx context.Context, in *ProbeVideoReq, opts ...grpc.CallOption) (*ProbeVideoResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ProbeVideoResp)
+	err := c.cc.Invoke(ctx, Source_ProbeVideo_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sourceClient) TranscodeForRobot(ctx context.Context, in *TranscodeForRobotReq, opts ...grpc.CallOption) (*TranscodeForRobotResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TranscodeForRobotResp)
+	err := c.cc.Invoke(ctx, Source_TranscodeForRobot_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
 
 func (c *sourceClient) UploadTemp(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
@@ -356,6 +388,16 @@ type SourceServer interface {
 	// 桶边界与 Download 一致(只放 temp/hiclub/hidid 公开桶),私有资源仍走 DownloadScript / DownloadTrainingFile。
 	// 透传 hi-source 的 File.DownloadStream。
 	DownloadStream(*source.DownloadStreamReq, grpc.ServerStreamingServer[source.DownloadStreamResp]) error
+	// ── 视频。两个方法都只认**公开桶**的 url(桶边界同 Download),产物落 temp 桶(14 天过期,与视频本身一样)──
+	//
+	// ProbeVideo:发视频消息之前调一次,拿 `video_url` 内容段要填的封面、宽高、时长、大小
+	// (messaging.proto `Content.Chat`)。放在服务端是因为发视频的不只有 app —— 机器人转发插件生成的视频时
+	// 设备上没有任何解码能力;各端各自截帧也会是四套口径。
+	ProbeVideo(context.Context, *ProbeVideoReq) (*ProbeVideoResp, error)
+	// TranscodeForRobot:机器人的屏幕(hinj-face,LÖVE)只能放 Ogg Theora,设备上也没有别的解码器 ——
+	// 聊天里的 mp4 要转一份 Ogg Theora(长边不超过 1280)才放得了。回转好的那份的 url;
+	// 同一个视频转过就直接回上次那份。要整段重新编码,**慢**:调用方给足超时。
+	TranscodeForRobot(context.Context, *TranscodeForRobotReq) (*TranscodeForRobotResp, error)
 	// ── 临时:temp 桶,**14 天自动过期**。聊天/AI 媒体,按年月分目录便于人工排查 ──
 	UploadTemp(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
 	UploadTempStream(grpc.ClientStreamingServer[hi.UploadStreamReq, hi.UploadResp]) error
@@ -409,6 +451,12 @@ func (UnimplementedSourceServer) Download(context.Context, *DownloadResourceReq)
 }
 func (UnimplementedSourceServer) DownloadStream(*source.DownloadStreamReq, grpc.ServerStreamingServer[source.DownloadStreamResp]) error {
 	return status.Error(codes.Unimplemented, "method DownloadStream not implemented")
+}
+func (UnimplementedSourceServer) ProbeVideo(context.Context, *ProbeVideoReq) (*ProbeVideoResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ProbeVideo not implemented")
+}
+func (UnimplementedSourceServer) TranscodeForRobot(context.Context, *TranscodeForRobotReq) (*TranscodeForRobotResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method TranscodeForRobot not implemented")
 }
 func (UnimplementedSourceServer) UploadTemp(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method UploadTemp not implemented")
@@ -545,6 +593,42 @@ func _Source_DownloadStream_Handler(srv interface{}, stream grpc.ServerStream) e
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type Source_DownloadStreamServer = grpc.ServerStreamingServer[source.DownloadStreamResp]
+
+func _Source_ProbeVideo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProbeVideoReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SourceServer).ProbeVideo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Source_ProbeVideo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SourceServer).ProbeVideo(ctx, req.(*ProbeVideoReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Source_TranscodeForRobot_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TranscodeForRobotReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SourceServer).TranscodeForRobot(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Source_TranscodeForRobot_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SourceServer).TranscodeForRobot(ctx, req.(*TranscodeForRobotReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
 
 func _Source_UploadTemp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(hi.UploadReq)
@@ -744,6 +828,14 @@ var Source_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Download",
 			Handler:    _Source_Download_Handler,
+		},
+		{
+			MethodName: "ProbeVideo",
+			Handler:    _Source_ProbeVideo_Handler,
+		},
+		{
+			MethodName: "TranscodeForRobot",
+			Handler:    _Source_TranscodeForRobot_Handler,
 		},
 		{
 			MethodName: "UploadTemp",

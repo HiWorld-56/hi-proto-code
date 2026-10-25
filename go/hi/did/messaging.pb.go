@@ -175,7 +175,7 @@ var File_hi_did_messaging_proto protoreflect.FileDescriptor
 
 const file_hi_did_messaging_proto_rawDesc = "" +
 	"\n" +
-	"\x16hi/did/messaging.proto\x12\x06hi.did\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/transfer.proto\x1a\x10hi/options.proto\":\n" +
+	"\x16hi/did/messaging.proto\x12\x06hi.did\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\":\n" +
 	"\x06Packet\x12(\n" +
 	"\x06notice\x18\x01 \x01(\v2\x0e.hi.did.NoticeH\x00R\x06noticeB\x06\n" +
 	"\x04kind\"\xc2\x01\n" +
@@ -234,7 +234,6 @@ func file_hi_did_messaging_proto_init() {
 	if File_hi_did_messaging_proto != nil {
 		return
 	}
-	file_hi_did_transfer_proto_init()
 	file_hi_did_messaging_proto_msgTypes[0].OneofWrappers = []any{
 		(*Packet_Notice)(nil),
 	}

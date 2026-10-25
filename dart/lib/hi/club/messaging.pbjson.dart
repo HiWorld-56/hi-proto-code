@@ -540,6 +540,36 @@ const Content_Chat$json = {
       '10': 'duration',
       '17': true
     },
+    {
+      '1': 'cover',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 4,
+      '10': 'cover',
+      '17': true
+    },
+    {
+      '1': 'width',
+      '3': 6,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 5,
+      '10': 'width',
+      '17': true
+    },
+    {
+      '1': 'height',
+      '3': 7,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 6,
+      '10': 'height',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -547,6 +577,9 @@ const Content_Chat$json = {
     {'1': '_name'},
     {'1': '_size'},
     {'1': '_duration'},
+    {'1': '_cover'},
+    {'1': '_width'},
+    {'1': '_height'},
   ],
 };
 
@@ -562,11 +595,13 @@ final $typed_data.Uint8List contentDescriptor = $convert.base64Decode(
     '5hbmNlU2lnbmFsEkUKDWJpbmFuY2Vfb2ZmZXIYCiABKAsyGC5oaS5iaW5hbmNlLkJpbmFuY2VP'
     'ZmZlckIEkLUYAkgAUgxiaW5hbmNlT2ZmZXISVQoTYmluYW5jZV9vZmZlcl9yZXBseRgLIAEoCz'
     'IdLmhpLmJpbmFuY2UuQmluYW5jZU9mZmVyUmVwbHlCBJC1GAJIAFIRYmluYW5jZU9mZmVyUmVw'
-    'bHkSGQoCaWQYCCABKA1CBJC1GAJIAlICaWSIAQEawQEKBENoYXQSIwoHY29udGVudBgBIAEoCU'
+    'bHkSGQoCaWQYCCABKA1CBJC1GAJIAlICaWSIAQEaxQIKBENoYXQSIwoHY29udGVudBgBIAEoCU'
     'IEkLUYAkgAUgdjb250ZW50iAEBEh0KBG5hbWUYAiABKAlCBJC1GAJIAVIEbmFtZYgBARIdCgRz'
     'aXplGAMgASgNQgSQtRgCSAJSBHNpemWIAQESJQoIZHVyYXRpb24YBCABKA1CBJC1GAJIA1IIZH'
-    'VyYXRpb26IAQE6BJi1GAJCCgoIX2NvbnRlbnRCBwoFX25hbWVCBwoFX3NpemVCCwoJX2R1cmF0'
-    'aW9uOgSYtRgCQgYKBGtpbmRCBwoFX3R5cGVCBQoDX2lk');
+    'VyYXRpb26IAQESHwoFY292ZXIYBSABKAlCBJC1GAJIBFIFY292ZXKIAQESHwoFd2lkdGgYBiAB'
+    'KA1CBJC1GAJIBVIFd2lkdGiIAQESIQoGaGVpZ2h0GAcgASgNQgSQtRgCSAZSBmhlaWdodIgBAT'
+    'oEmLUYAkIKCghfY29udGVudEIHCgVfbmFtZUIHCgVfc2l6ZUILCglfZHVyYXRpb25CCAoGX2Nv'
+    'dmVyQggKBl93aWR0aEIJCgdfaGVpZ2h0OgSYtRgCQgYKBGtpbmRCBwoFX3R5cGVCBQoDX2lk');
 
 @$core.Deprecated('Use chatRecordDescriptor instead')
 const ChatRecord$json = {

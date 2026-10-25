@@ -123,6 +123,14 @@ const TextReply$json = {
   '2': [
     {'1': 'uuid', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'uuid', '17': true},
     {'1': 'value', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'value', '17': true},
+    {
+      '1': 'media',
+      '3': 3,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.club.Content',
+      '10': 'media'
+    },
   ],
   '8': [
     {'1': '_uuid'},
@@ -133,7 +141,8 @@ const TextReply$json = {
 /// Descriptor for `TextReply`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List textReplyDescriptor = $convert.base64Decode(
     'CglUZXh0UmVwbHkSFwoEdXVpZBgBIAEoCUgAUgR1dWlkiAEBEhkKBXZhbHVlGAIgASgJSAFSBX'
-    'ZhbHVliAEBQgcKBV91dWlkQggKBl92YWx1ZQ==');
+    'ZhbHVliAEBEiYKBW1lZGlhGAMgAygLMhAuaGkuY2x1Yi5Db250ZW50UgVtZWRpYUIHCgVfdXVp'
+    'ZEIICgZfdmFsdWU=');
 
 @$core.Deprecated('Use audioPlayDescriptor instead')
 const AudioPlay$json = {
@@ -431,6 +440,15 @@ const BrainToFace$json = {
       '9': 0,
       '10': 'binanceOffers'
     },
+    {
+      '1': 'video_ready',
+      '3': 27,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.VideoReady',
+      '9': 0,
+      '10': 'videoReady'
+    },
   ],
   '8': [
     {'1': 'cmd'},
@@ -466,7 +484,46 @@ final $typed_data.Uint8List brainToFaceDescriptor = $convert.base64Decode(
     'QmluYW5jZVJlc3VsdEgAUg1iaW5hbmNlUmVzdWx0EioKCHNob3dfdGlwGBggASgLMg0uaGkubm'
     'luamEuVGlwSABSB3Nob3dUaXASKwoHc2hvd19xchgZIAEoCzIQLmhpLm5pbmphLlFyQ2FyZEgA'
     'UgZzaG93UXISQAoOYmluYW5jZV9vZmZlcnMYGiABKAsyFy5oaS5uaW5qYS5CaW5hbmNlT2ZmZX'
-    'JzSABSDWJpbmFuY2VPZmZlcnNCBQoDY21k');
+    'JzSABSDWJpbmFuY2VPZmZlcnMSNwoLdmlkZW9fcmVhZHkYGyABKAsyFC5oaS5uaW5qYS5WaWRl'
+    'b1JlYWR5SABSCnZpZGVvUmVhZHlCBQoDY21k');
+
+@$core.Deprecated('Use videoRequestDescriptor instead')
+const VideoRequest$json = {
+  '1': 'VideoRequest',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'id', '17': true},
+    {'1': 'url', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'url', '17': true},
+  ],
+  '8': [
+    {'1': '_id'},
+    {'1': '_url'},
+  ],
+};
+
+/// Descriptor for `VideoRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List videoRequestDescriptor = $convert.base64Decode(
+    'CgxWaWRlb1JlcXVlc3QSEwoCaWQYASABKAlIAFICaWSIAQESFQoDdXJsGAIgASgJSAFSA3VybI'
+    'gBAUIFCgNfaWRCBgoEX3VybA==');
+
+@$core.Deprecated('Use videoReadyDescriptor instead')
+const VideoReady$json = {
+  '1': 'VideoReady',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'id', '17': true},
+    {'1': 'url', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'url', '17': true},
+    {'1': 'error', '3': 3, '4': 1, '5': 9, '9': 2, '10': 'error', '17': true},
+  ],
+  '8': [
+    {'1': '_id'},
+    {'1': '_url'},
+    {'1': '_error'},
+  ],
+};
+
+/// Descriptor for `VideoReady`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List videoReadyDescriptor = $convert.base64Decode(
+    'CgpWaWRlb1JlYWR5EhMKAmlkGAEgASgJSABSAmlkiAEBEhUKA3VybBgCIAEoCUgBUgN1cmyIAQ'
+    'ESGQoFZXJyb3IYAyABKAlIAlIFZXJyb3KIAQFCBQoDX2lkQgYKBF91cmxCCAoGX2Vycm9y');
 
 @$core.Deprecated('Use qrCardDescriptor instead')
 const QrCard$json = {
@@ -596,6 +653,15 @@ const FaceToBrain$json = {
       '9': 0,
       '10': 'getBinanceOffers'
     },
+    {
+      '1': 'video_request',
+      '3': 8,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.VideoRequest',
+      '9': 0,
+      '10': 'videoRequest'
+    },
   ],
   '8': [
     {'1': 'cmd'},
@@ -612,8 +678,9 @@ final $typed_data.Uint8List faceToBrainDescriptor = $convert.base64Decode(
     '5hbmNlX3JlcXVlc3QYBSABKAsyGC5oaS5uaW5qYS5CaW5hbmNlUmVxdWVzdEgAUg5iaW5hbmNl'
     'UmVxdWVzdBJPChNiaW5hbmNlX29mZmVyX3JlcGx5GAYgASgLMh0uaGkuYmluYW5jZS5CaW5hbm'
     'NlT2ZmZXJSZXBseUgAUhFiaW5hbmNlT2ZmZXJSZXBseRJGChJnZXRfYmluYW5jZV9vZmZlcnMY'
-    'ByABKAsyFi5nb29nbGUucHJvdG9idWYuRW1wdHlIAFIQZ2V0QmluYW5jZU9mZmVyc0IFCgNjbW'
-    'Q=');
+    'ByABKAsyFi5nb29nbGUucHJvdG9idWYuRW1wdHlIAFIQZ2V0QmluYW5jZU9mZmVycxI9Cg12aW'
+    'Rlb19yZXF1ZXN0GAggASgLMhYuaGkubmluamEuVmlkZW9SZXF1ZXN0SABSDHZpZGVvUmVxdWVz'
+    'dEIFCgNjbWQ=');
 
 @$core.Deprecated('Use binanceOffersDescriptor instead')
 const BinanceOffers$json = {

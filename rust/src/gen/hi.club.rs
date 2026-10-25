@@ -730,6 +730,40 @@ pub mod api_key_client {
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProbeVideoReq {
+    #[prost(string, optional, tag = "1")]
+    pub url: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 各字段原样填进 `video_url` 段的 `Content.Chat`;**读不出来的就不传**(端上照样能发、能放,只是没有封面 / 时长)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProbeVideoResp {
+    /// 封面图 url(开头附近截的一帧,JPEG)
+    #[prost(string, optional, tag = "1")]
+    pub cover: ::core::option::Option<::prost::alloc::string::String>,
+    /// 画面像素,已按旋转信息转正(见 Content.Chat.width)
+    #[prost(uint32, optional, tag = "2")]
+    pub width: ::core::option::Option<u32>,
+    #[prost(uint32, optional, tag = "3")]
+    pub height: ::core::option::Option<u32>,
+    /// 秒,四舍五入;不到 1 秒的写 1
+    #[prost(uint32, optional, tag = "4")]
+    pub duration: ::core::option::Option<u32>,
+    /// 字节数(同 Content.Chat.size,超 4GB 不传)
+    #[prost(uint32, optional, tag = "5")]
+    pub size: ::core::option::Option<u32>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TranscodeForRobotReq {
+    #[prost(string, optional, tag = "1")]
+    pub url: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TranscodeForRobotResp {
+    /// Ogg Theora(画面 + Vorbis 声音)
+    #[prost(string, optional, tag = "1")]
+    pub url: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DownloadResourceReq {
     #[prost(string, optional, tag = "1")]
     pub url: ::core::option::Option<::prost::alloc::string::String>,
@@ -987,6 +1021,58 @@ pub mod source_client {
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.Source", "DownloadStream"));
             self.inner.server_streaming(req, path, codec).await
+        }
+        /// ── 视频。两个方法都只认**公开桶**的 url(桶边界同 Download),产物落 temp 桶(14 天过期,与视频本身一样)──
+        ///
+        /// ProbeVideo:发视频消息之前调一次,拿 `video_url` 内容段要填的封面、宽高、时长、大小
+        /// (messaging.proto `Content.Chat`)。放在服务端是因为发视频的不只有 app —— 机器人转发插件生成的视频时
+        /// 设备上没有任何解码能力;各端各自截帧也会是四套口径。
+        pub async fn probe_video(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ProbeVideoReq>,
+        ) -> std::result::Result<tonic::Response<super::ProbeVideoResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Source/ProbeVideo",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.Source", "ProbeVideo"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// TranscodeForRobot:机器人的屏幕(hinj-face,LÖVE)只能放 Ogg Theora,设备上也没有别的解码器 ——
+        /// 聊天里的 mp4 要转一份 Ogg Theora(长边不超过 1280)才放得了。回转好的那份的 url;
+        /// 同一个视频转过就直接回上次那份。要整段重新编码,**慢**:调用方给足超时。
+        pub async fn transcode_for_robot(
+            &mut self,
+            request: impl tonic::IntoRequest<super::TranscodeForRobotReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::TranscodeForRobotResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Source/TranscodeForRobot",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Source", "TranscodeForRobot"));
+            self.inner.unary(req, path, codec).await
         }
         /// ── 临时:temp 桶,**14 天自动过期**。聊天/AI 媒体,按年月分目录便于人工排查 ──
         pub async fn upload_temp(
@@ -3750,6 +3836,7 @@ pub struct Member {
 /// image_url   图片              chat.content = 图片 url(name=原文件名, size=字节数)
 /// audio_url   语音              chat.content = 音频 url(duration=秒)
 /// file        文件              chat.content = 文件 url(name/size)
+/// video_url   视频              chat.content = 视频 url(name/size;duration=秒;cover=封面图 url;width/height=画面像素)
 /// transfer    转账卡            kind=trans(hi.did.Transaction)
 /// broadcast   广播
 /// binance     币安操作结果卡      kind=binance(hi.binance.BinanceResult)
@@ -3767,6 +3854,10 @@ pub struct Member {
 /// 所以**别看着别扭就"顺手改成 image"**:改了既背离上游那套约定,也当场打断
 /// Android 端(hiclub-app)与硬件端(hinj-brain)—— 它们现网都按这张表收发。
 /// 同理,以后加多模态类型**先看 OpenAI 那边叫什么**,能对齐就对齐。
+/// `video_url` 就是这么来的:OpenAI 兼容接口里收视频的那一类(vLLM、通义)叫 `video_url`。
+///
+/// `video_url` 的封面 / 宽高 / 时长 / 大小**由发送方调 `hi.club.Source/ProbeVideo` 取**,端上不自己截帧
+/// (发视频的不只有 app,机器人转发插件生成的视频时手上没有解码能力;各端各截一份就是四套口径)。
 ///
 /// 这张表原先**只存在于各端的代码里**(Android 的 MQTTConfig、brain 的 pb_ext),proto 这边
 /// 只写了 `string type = 1`。代价:hiclub-simple-app 自己发明了 `image`,于是
@@ -3801,6 +3892,17 @@ pub mod content {
         pub size: ::core::option::Option<u32>,
         #[prost(uint32, optional, tag = "4")]
         pub duration: ::core::option::Option<u32>,
+        /// 下面三个现在只有 `video_url` 用。不传 = 不知道(气泡按默认比例占位、不画封面)。
+        /// width/height 是**画面**的像素,**已按旋转信息转正**:手机竖拍的视频文件里存的是 1920×1080 + 旋转 90°,
+        /// 这里写 1080×1920 —— 端上拿它直接定气泡比例、决定全屏时要不要横过来,不用再懂旋转。
+        ///
+        /// 封面图 url(JPEG)
+        #[prost(string, optional, tag = "5")]
+        pub cover: ::core::option::Option<::prost::alloc::string::String>,
+        #[prost(uint32, optional, tag = "6")]
+        pub width: ::core::option::Option<u32>,
+        #[prost(uint32, optional, tag = "7")]
+        pub height: ::core::option::Option<u32>,
     }
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Kind {

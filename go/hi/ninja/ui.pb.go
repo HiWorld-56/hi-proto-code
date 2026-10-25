@@ -182,7 +182,7 @@ func (x PluginProgress_State) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use PluginProgress_State.Descriptor instead.
 func (PluginProgress_State) EnumDescriptor() ([]byte, []int) {
-	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{14, 0}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{16, 0}
 }
 
 type UpdateAction_Action int32
@@ -240,7 +240,7 @@ func (x UpdateAction_Action) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use UpdateAction_Action.Descriptor instead.
 func (UpdateAction_Action) EnumDescriptor() ([]byte, []int) {
-	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{15, 0}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{17, 0}
 }
 
 // 机器人初始化：自身身份 + 当前所有者
@@ -453,9 +453,12 @@ func (x *MasterEvent) GetTrigger() string {
 // 和 show_im_reply / show_voice_reply 两端传递，face 据此将回复路由到对应的对话框。
 // value 为 AI 输出的纯文本，不封装为 Message 结构。
 type TextReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
-	Value         *string                `protobuf:"bytes,2,opt,name=value,proto3,oneof" json:"value,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Uuid  *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
+	Value *string                `protobuf:"bytes,2,opt,name=value,proto3,oneof" json:"value,omitempty"`
+	// 这一轮随回答一起发出去的**媒体段**(现在只有视频:插件回了 `video_url`)。
+	// 与发进聊天的那条消息里的段一字不差,face 画在文字下面;没有 = 空列表。
+	Media         []*club.Content `protobuf:"bytes,3,rep,name=media,proto3" json:"media,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -502,6 +505,13 @@ func (x *TextReply) GetValue() string {
 		return *x.Value
 	}
 	return ""
+}
+
+func (x *TextReply) GetMedia() []*club.Content {
+	if x != nil {
+		return x.Media
+	}
+	return nil
 }
 
 // TTS 音频播放
@@ -709,6 +719,7 @@ type BrainToFace struct {
 	//	*BrainToFace_ShowTip
 	//	*BrainToFace_ShowQr
 	//	*BrainToFace_BinanceOffers
+	//	*BrainToFace_VideoReady
 	Cmd           isBrainToFace_Cmd `protobuf_oneof:"cmd"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -976,6 +987,15 @@ func (x *BrainToFace) GetBinanceOffers() *BinanceOffers {
 	return nil
 }
 
+func (x *BrainToFace) GetVideoReady() *VideoReady {
+	if x != nil {
+		if x, ok := x.Cmd.(*BrainToFace_VideoReady); ok {
+			return x.VideoReady
+		}
+	}
+	return nil
+}
+
 type isBrainToFace_Cmd interface {
 	isBrainToFace_Cmd()
 }
@@ -1102,6 +1122,11 @@ type BrainToFace_BinanceOffers struct {
 	BinanceOffers *BinanceOffers `protobuf:"bytes,26,opt,name=binance_offers,json=binanceOffers,proto3,oneof"`
 }
 
+type BrainToFace_VideoReady struct {
+	// 回 `FaceToBrain.video_request`
+	VideoReady *VideoReady `protobuf:"bytes,27,opt,name=video_ready,json=videoReady,proto3,oneof"`
+}
+
 func (*BrainToFace_InitRobot) isBrainToFace_Cmd() {}
 
 func (*BrainToFace_ShowListen) isBrainToFace_Cmd() {}
@@ -1152,6 +1177,125 @@ func (*BrainToFace_ShowQr) isBrainToFace_Cmd() {}
 
 func (*BrainToFace_BinanceOffers) isBrainToFace_Cmd() {}
 
+func (*BrainToFace_VideoReady) isBrainToFace_Cmd() {}
+
+// face -> brain:要一份屏幕放得了的视频。
+//
+// face(LÖVE)只能放 Ogg Theora,聊天里的视频是 mp4 —— brain 去 club 要转好的那份
+// (`hi.club.Source/TranscodeForRobot`);face 自己不连 club。
+type VideoRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`   // face 给的流水号,brain 原样带回 `VideoReady.id`
+	Url           *string                `protobuf:"bytes,2,opt,name=url,proto3,oneof" json:"url,omitempty"` // 聊天里那个视频的 url(`video_url` 段的 chat.content)
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *VideoRequest) Reset() {
+	*x = VideoRequest{}
+	mi := &file_hi_ninja_ui_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *VideoRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*VideoRequest) ProtoMessage() {}
+
+func (x *VideoRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ninja_ui_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use VideoRequest.ProtoReflect.Descriptor instead.
+func (*VideoRequest) Descriptor() ([]byte, []int) {
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *VideoRequest) GetId() string {
+	if x != nil && x.Id != nil {
+		return *x.Id
+	}
+	return ""
+}
+
+func (x *VideoRequest) GetUrl() string {
+	if x != nil && x.Url != nil {
+		return *x.Url
+	}
+	return ""
+}
+
+// brain -> face:回 VideoRequest。成了给 url(face 自己下载来放),没成给一句话。
+type VideoReady struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	Url           *string                `protobuf:"bytes,2,opt,name=url,proto3,oneof" json:"url,omitempty"`     // Ogg Theora;没成 = 不传
+	Error         *string                `protobuf:"bytes,3,opt,name=error,proto3,oneof" json:"error,omitempty"` // 给人看的一句;原因只进 brain 日志。成了 = 不传
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *VideoReady) Reset() {
+	*x = VideoReady{}
+	mi := &file_hi_ninja_ui_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *VideoReady) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*VideoReady) ProtoMessage() {}
+
+func (x *VideoReady) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ninja_ui_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use VideoReady.ProtoReflect.Descriptor instead.
+func (*VideoReady) Descriptor() ([]byte, []int) {
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *VideoReady) GetId() string {
+	if x != nil && x.Id != nil {
+		return *x.Id
+	}
+	return ""
+}
+
+func (x *VideoReady) GetUrl() string {
+	if x != nil && x.Url != nil {
+		return *x.Url
+	}
+	return ""
+}
+
+func (x *VideoReady) GetError() string {
+	if x != nil && x.Error != nil {
+		return *x.Error
+	}
+	return ""
+}
+
 // 内容由调用方给的二维码。`content` 原样编进码里,face 不解析、不改写;
 // 装不下(超过二维码容量)就不显示并在日志里说一句 —— 截断了的码扫出来是另一份数据。
 type QrCard struct {
@@ -1164,7 +1308,7 @@ type QrCard struct {
 
 func (x *QrCard) Reset() {
 	*x = QrCard{}
-	mi := &file_hi_ninja_ui_proto_msgTypes[9]
+	mi := &file_hi_ninja_ui_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1176,7 +1320,7 @@ func (x *QrCard) String() string {
 func (*QrCard) ProtoMessage() {}
 
 func (x *QrCard) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ui_proto_msgTypes[9]
+	mi := &file_hi_ninja_ui_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1189,7 +1333,7 @@ func (x *QrCard) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use QrCard.ProtoReflect.Descriptor instead.
 func (*QrCard) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{9}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *QrCard) GetContent() string {
@@ -1216,7 +1360,7 @@ type Tip struct {
 
 func (x *Tip) Reset() {
 	*x = Tip{}
-	mi := &file_hi_ninja_ui_proto_msgTypes[10]
+	mi := &file_hi_ninja_ui_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1228,7 +1372,7 @@ func (x *Tip) String() string {
 func (*Tip) ProtoMessage() {}
 
 func (x *Tip) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ui_proto_msgTypes[10]
+	mi := &file_hi_ninja_ui_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1241,7 +1385,7 @@ func (x *Tip) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Tip.ProtoReflect.Descriptor instead.
 func (*Tip) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{10}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *Tip) GetText() string {
@@ -1265,7 +1409,7 @@ type StatusEvent struct {
 
 func (x *StatusEvent) Reset() {
 	*x = StatusEvent{}
-	mi := &file_hi_ninja_ui_proto_msgTypes[11]
+	mi := &file_hi_ninja_ui_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1277,7 +1421,7 @@ func (x *StatusEvent) String() string {
 func (*StatusEvent) ProtoMessage() {}
 
 func (x *StatusEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ui_proto_msgTypes[11]
+	mi := &file_hi_ninja_ui_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1290,7 +1434,7 @@ func (x *StatusEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StatusEvent.ProtoReflect.Descriptor instead.
 func (*StatusEvent) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{11}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *StatusEvent) GetNtp() bool {
@@ -1326,6 +1470,7 @@ type FaceToBrain struct {
 	//	*FaceToBrain_BinanceRequest
 	//	*FaceToBrain_BinanceOfferReply
 	//	*FaceToBrain_GetBinanceOffers
+	//	*FaceToBrain_VideoRequest
 	Cmd           isFaceToBrain_Cmd `protobuf_oneof:"cmd"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1333,7 +1478,7 @@ type FaceToBrain struct {
 
 func (x *FaceToBrain) Reset() {
 	*x = FaceToBrain{}
-	mi := &file_hi_ninja_ui_proto_msgTypes[12]
+	mi := &file_hi_ninja_ui_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1345,7 +1490,7 @@ func (x *FaceToBrain) String() string {
 func (*FaceToBrain) ProtoMessage() {}
 
 func (x *FaceToBrain) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ui_proto_msgTypes[12]
+	mi := &file_hi_ninja_ui_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1358,7 +1503,7 @@ func (x *FaceToBrain) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FaceToBrain.ProtoReflect.Descriptor instead.
 func (*FaceToBrain) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{12}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *FaceToBrain) GetCmd() isFaceToBrain_Cmd {
@@ -1431,6 +1576,15 @@ func (x *FaceToBrain) GetGetBinanceOffers() *emptypb.Empty {
 	return nil
 }
 
+func (x *FaceToBrain) GetVideoRequest() *VideoRequest {
+	if x != nil {
+		if x, ok := x.Cmd.(*FaceToBrain_VideoRequest); ok {
+			return x.VideoRequest
+		}
+	}
+	return nil
+}
+
 type isFaceToBrain_Cmd interface {
 	isFaceToBrain_Cmd()
 }
@@ -1477,6 +1631,11 @@ type FaceToBrain_GetBinanceOffers struct {
 	GetBinanceOffers *emptypb.Empty `protobuf:"bytes,7,opt,name=get_binance_offers,json=getBinanceOffers,proto3,oneof"`
 }
 
+type FaceToBrain_VideoRequest struct {
+	// 人在屏上点了一个视频:替我要一份屏幕放得了的(见 VideoRequest)
+	VideoRequest *VideoRequest `protobuf:"bytes,8,opt,name=video_request,json=videoRequest,proto3,oneof"`
+}
+
 func (*FaceToBrain_VoiceState) isFaceToBrain_Cmd() {}
 
 func (*FaceToBrain_UpdateAction) isFaceToBrain_Cmd() {}
@@ -1491,6 +1650,8 @@ func (*FaceToBrain_BinanceOfferReply) isFaceToBrain_Cmd() {}
 
 func (*FaceToBrain_GetBinanceOffers) isFaceToBrain_Cmd() {}
 
+func (*FaceToBrain_VideoRequest) isFaceToBrain_Cmd() {}
+
 // ── 跟单:开单卡 ──────────────────────────────────────────────
 //
 // 群里的信号源机器人开了仓(`hi.binance.BinanceSignal`),本机**不自动跟**:brain 把每一笔算成一张卡,
@@ -1504,7 +1665,7 @@ type BinanceOffers struct {
 
 func (x *BinanceOffers) Reset() {
 	*x = BinanceOffers{}
-	mi := &file_hi_ninja_ui_proto_msgTypes[13]
+	mi := &file_hi_ninja_ui_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1516,7 +1677,7 @@ func (x *BinanceOffers) String() string {
 func (*BinanceOffers) ProtoMessage() {}
 
 func (x *BinanceOffers) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ui_proto_msgTypes[13]
+	mi := &file_hi_ninja_ui_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1529,7 +1690,7 @@ func (x *BinanceOffers) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BinanceOffers.ProtoReflect.Descriptor instead.
 func (*BinanceOffers) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{13}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *BinanceOffers) GetList() []*binance.BinanceOffer {
@@ -1564,7 +1725,7 @@ type PluginProgress struct {
 
 func (x *PluginProgress) Reset() {
 	*x = PluginProgress{}
-	mi := &file_hi_ninja_ui_proto_msgTypes[14]
+	mi := &file_hi_ninja_ui_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1576,7 +1737,7 @@ func (x *PluginProgress) String() string {
 func (*PluginProgress) ProtoMessage() {}
 
 func (x *PluginProgress) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ui_proto_msgTypes[14]
+	mi := &file_hi_ninja_ui_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1589,7 +1750,7 @@ func (x *PluginProgress) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PluginProgress.ProtoReflect.Descriptor instead.
 func (*PluginProgress) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{14}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *PluginProgress) GetUuid() string {
@@ -1654,7 +1815,7 @@ type UpdateAction struct {
 
 func (x *UpdateAction) Reset() {
 	*x = UpdateAction{}
-	mi := &file_hi_ninja_ui_proto_msgTypes[15]
+	mi := &file_hi_ninja_ui_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1666,7 +1827,7 @@ func (x *UpdateAction) String() string {
 func (*UpdateAction) ProtoMessage() {}
 
 func (x *UpdateAction) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ui_proto_msgTypes[15]
+	mi := &file_hi_ninja_ui_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1679,7 +1840,7 @@ func (x *UpdateAction) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateAction.ProtoReflect.Descriptor instead.
 func (*UpdateAction) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{15}
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *UpdateAction) GetAction() UpdateAction_Action {
@@ -1710,10 +1871,11 @@ const file_hi_ninja_ui_proto_rawDesc = "" +
 	".hi.EntityR\x06master\x12\x1d\n" +
 	"\atrigger\x18\x02 \x01(\tH\x00R\atrigger\x88\x01\x01B\n" +
 	"\n" +
-	"\b_trigger\"R\n" +
+	"\b_trigger\"z\n" +
 	"\tTextReply\x12\x17\n" +
 	"\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x19\n" +
-	"\x05value\x18\x02 \x01(\tH\x01R\x05value\x88\x01\x01B\a\n" +
+	"\x05value\x18\x02 \x01(\tH\x01R\x05value\x88\x01\x01\x12&\n" +
+	"\x05media\x18\x03 \x03(\v2\x10.hi.club.ContentR\x05mediaB\a\n" +
 	"\x05_uuidB\b\n" +
 	"\x06_value\"R\n" +
 	"\tAudioPlay\x12\x17\n" +
@@ -1732,7 +1894,7 @@ const file_hi_ninja_ui_proto_rawDesc = "" +
 	"\x03_opB\x0e\n" +
 	"\f_params_jsonB\f\n" +
 	"\n" +
-	"_auto_tpsl\"\xf4\v\n" +
+	"_auto_tpsl\"\xad\f\n" +
 	"\vBrainToFace\x124\n" +
 	"\n" +
 	"init_robot\x18\x01 \x01(\v2\x13.hi.ninja.RobotInitH\x00R\tinitRobot\x128\n" +
@@ -1767,8 +1929,23 @@ const file_hi_ninja_ui_proto_rawDesc = "" +
 	"\x0ebinance_result\x18\x16 \x01(\v2\x19.hi.binance.BinanceResultH\x00R\rbinanceResult\x12*\n" +
 	"\bshow_tip\x18\x18 \x01(\v2\r.hi.ninja.TipH\x00R\ashowTip\x12+\n" +
 	"\ashow_qr\x18\x19 \x01(\v2\x10.hi.ninja.QrCardH\x00R\x06showQr\x12@\n" +
-	"\x0ebinance_offers\x18\x1a \x01(\v2\x17.hi.ninja.BinanceOffersH\x00R\rbinanceOffersB\x05\n" +
-	"\x03cmd\"X\n" +
+	"\x0ebinance_offers\x18\x1a \x01(\v2\x17.hi.ninja.BinanceOffersH\x00R\rbinanceOffers\x127\n" +
+	"\vvideo_ready\x18\x1b \x01(\v2\x14.hi.ninja.VideoReadyH\x00R\n" +
+	"videoReadyB\x05\n" +
+	"\x03cmd\"I\n" +
+	"\fVideoRequest\x12\x13\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x15\n" +
+	"\x03url\x18\x02 \x01(\tH\x01R\x03url\x88\x01\x01B\x05\n" +
+	"\x03_idB\x06\n" +
+	"\x04_url\"l\n" +
+	"\n" +
+	"VideoReady\x12\x13\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x15\n" +
+	"\x03url\x18\x02 \x01(\tH\x01R\x03url\x88\x01\x01\x12\x19\n" +
+	"\x05error\x18\x03 \x01(\tH\x02R\x05error\x88\x01\x01B\x05\n" +
+	"\x03_idB\x06\n" +
+	"\x04_urlB\b\n" +
+	"\x06_error\"X\n" +
 	"\x06QrCard\x12\x1d\n" +
 	"\acontent\x18\x01 \x01(\tH\x00R\acontent\x88\x01\x01\x12\x19\n" +
 	"\x05title\x18\x02 \x01(\tH\x01R\x05title\x88\x01\x01B\n" +
@@ -1784,7 +1961,7 @@ const file_hi_ninja_ui_proto_rawDesc = "" +
 	"\x03usb\x18\x03 \x01(\bH\x02R\x03usb\x88\x01\x01B\x06\n" +
 	"\x04_ntpB\a\n" +
 	"\x05_wifiB\x06\n" +
-	"\x04_usb\"\xf4\x03\n" +
+	"\x04_usb\"\xb3\x04\n" +
 	"\vFaceToBrain\x128\n" +
 	"\vvoice_state\x18\x01 \x01(\x0e2\x15.hi.ninja.StateToggleH\x00R\n" +
 	"voiceState\x12=\n" +
@@ -1793,7 +1970,8 @@ const file_hi_ninja_ui_proto_rawDesc = "" +
 	"\frequest_init\x18\x04 \x01(\v2\x16.google.protobuf.EmptyH\x00R\vrequestInit\x12C\n" +
 	"\x0fbinance_request\x18\x05 \x01(\v2\x18.hi.ninja.BinanceRequestH\x00R\x0ebinanceRequest\x12O\n" +
 	"\x13binance_offer_reply\x18\x06 \x01(\v2\x1d.hi.binance.BinanceOfferReplyH\x00R\x11binanceOfferReply\x12F\n" +
-	"\x12get_binance_offers\x18\a \x01(\v2\x16.google.protobuf.EmptyH\x00R\x10getBinanceOffersB\x05\n" +
+	"\x12get_binance_offers\x18\a \x01(\v2\x16.google.protobuf.EmptyH\x00R\x10getBinanceOffers\x12=\n" +
+	"\rvideo_request\x18\b \x01(\v2\x16.hi.ninja.VideoRequestH\x00R\fvideoRequestB\x05\n" +
 	"\x03cmd\"=\n" +
 	"\rBinanceOffers\x12,\n" +
 	"\x04list\x18\x01 \x03(\v2\x18.hi.binance.BinanceOfferR\x04list\"\xdb\x03\n" +
@@ -1853,7 +2031,7 @@ func file_hi_ninja_ui_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_ninja_ui_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
-var file_hi_ninja_ui_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_hi_ninja_ui_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_hi_ninja_ui_proto_goTypes = []any{
 	(StateToggle)(0),                  // 0: hi.ninja.StateToggle
 	(Emotion)(0),                      // 1: hi.ninja.Emotion
@@ -1868,70 +2046,76 @@ var file_hi_ninja_ui_proto_goTypes = []any{
 	(*BinanceSettings)(nil),           // 10: hi.ninja.BinanceSettings
 	(*BinanceRequest)(nil),            // 11: hi.ninja.BinanceRequest
 	(*BrainToFace)(nil),               // 12: hi.ninja.BrainToFace
-	(*QrCard)(nil),                    // 13: hi.ninja.QrCard
-	(*Tip)(nil),                       // 14: hi.ninja.Tip
-	(*StatusEvent)(nil),               // 15: hi.ninja.StatusEvent
-	(*FaceToBrain)(nil),               // 16: hi.ninja.FaceToBrain
-	(*BinanceOffers)(nil),             // 17: hi.ninja.BinanceOffers
-	(*PluginProgress)(nil),            // 18: hi.ninja.PluginProgress
-	(*UpdateAction)(nil),              // 19: hi.ninja.UpdateAction
-	(*hi.Entity)(nil),                 // 20: hi.Entity
-	(*club.GroupInfo)(nil),            // 21: hi.club.GroupInfo
-	(*club.Message)(nil),              // 22: hi.club.Message
-	(*emptypb.Empty)(nil),             // 23: google.protobuf.Empty
-	(*ai.PluginView)(nil),             // 24: hi.ai.PluginView
-	(*did.Transaction)(nil),           // 25: hi.did.Transaction
-	(*UpdateStatus)(nil),              // 26: hi.ninja.UpdateStatus
-	(*binance.BinanceResult)(nil),     // 27: hi.binance.BinanceResult
-	(*binance.BinanceOfferReply)(nil), // 28: hi.binance.BinanceOfferReply
-	(*binance.BinanceOffer)(nil),      // 29: hi.binance.BinanceOffer
+	(*VideoRequest)(nil),              // 13: hi.ninja.VideoRequest
+	(*VideoReady)(nil),                // 14: hi.ninja.VideoReady
+	(*QrCard)(nil),                    // 15: hi.ninja.QrCard
+	(*Tip)(nil),                       // 16: hi.ninja.Tip
+	(*StatusEvent)(nil),               // 17: hi.ninja.StatusEvent
+	(*FaceToBrain)(nil),               // 18: hi.ninja.FaceToBrain
+	(*BinanceOffers)(nil),             // 19: hi.ninja.BinanceOffers
+	(*PluginProgress)(nil),            // 20: hi.ninja.PluginProgress
+	(*UpdateAction)(nil),              // 21: hi.ninja.UpdateAction
+	(*hi.Entity)(nil),                 // 22: hi.Entity
+	(*club.GroupInfo)(nil),            // 23: hi.club.GroupInfo
+	(*club.Content)(nil),              // 24: hi.club.Content
+	(*club.Message)(nil),              // 25: hi.club.Message
+	(*emptypb.Empty)(nil),             // 26: google.protobuf.Empty
+	(*ai.PluginView)(nil),             // 27: hi.ai.PluginView
+	(*did.Transaction)(nil),           // 28: hi.did.Transaction
+	(*UpdateStatus)(nil),              // 29: hi.ninja.UpdateStatus
+	(*binance.BinanceResult)(nil),     // 30: hi.binance.BinanceResult
+	(*binance.BinanceOfferReply)(nil), // 31: hi.binance.BinanceOfferReply
+	(*binance.BinanceOffer)(nil),      // 32: hi.binance.BinanceOffer
 }
 var file_hi_ninja_ui_proto_depIdxs = []int32{
-	20, // 0: hi.ninja.RobotInit.robot:type_name -> hi.Entity
-	20, // 1: hi.ninja.RobotInit.master:type_name -> hi.Entity
-	20, // 2: hi.ninja.FriendList.list:type_name -> hi.Entity
-	21, // 3: hi.ninja.GroupInfoList.list:type_name -> hi.club.GroupInfo
-	20, // 4: hi.ninja.MasterEvent.master:type_name -> hi.Entity
-	4,  // 5: hi.ninja.BrainToFace.init_robot:type_name -> hi.ninja.RobotInit
-	0,  // 6: hi.ninja.BrainToFace.show_listen:type_name -> hi.ninja.StateToggle
-	1,  // 7: hi.ninja.BrainToFace.show_emotion:type_name -> hi.ninja.Emotion
-	22, // 8: hi.ninja.BrainToFace.show_im_request:type_name -> hi.club.Message
-	8,  // 9: hi.ninja.BrainToFace.show_im_reply:type_name -> hi.ninja.TextReply
-	8,  // 10: hi.ninja.BrainToFace.show_voice_reply:type_name -> hi.ninja.TextReply
-	23, // 11: hi.ninja.BrainToFace.show_qr_code:type_name -> google.protobuf.Empty
-	20, // 12: hi.ninja.BrainToFace.event_robot:type_name -> hi.Entity
-	7,  // 13: hi.ninja.BrainToFace.event_master:type_name -> hi.ninja.MasterEvent
-	21, // 14: hi.ninja.BrainToFace.event_members:type_name -> hi.club.GroupInfo
-	24, // 15: hi.ninja.BrainToFace.event_plugin:type_name -> hi.ai.PluginView
-	18, // 16: hi.ninja.BrainToFace.event_plugin_progress:type_name -> hi.ninja.PluginProgress
-	25, // 17: hi.ninja.BrainToFace.event_transaction:type_name -> hi.did.Transaction
-	9,  // 18: hi.ninja.BrainToFace.play_audio:type_name -> hi.ninja.AudioPlay
-	5,  // 19: hi.ninja.BrainToFace.event_friends:type_name -> hi.ninja.FriendList
-	20, // 20: hi.ninja.BrainToFace.event_friend_delete:type_name -> hi.Entity
-	20, // 21: hi.ninja.BrainToFace.event_friend_add:type_name -> hi.Entity
-	6,  // 22: hi.ninja.BrainToFace.members_init:type_name -> hi.ninja.GroupInfoList
-	15, // 23: hi.ninja.BrainToFace.event_status:type_name -> hi.ninja.StatusEvent
-	26, // 24: hi.ninja.BrainToFace.event_update:type_name -> hi.ninja.UpdateStatus
-	10, // 25: hi.ninja.BrainToFace.event_binance_settings:type_name -> hi.ninja.BinanceSettings
-	27, // 26: hi.ninja.BrainToFace.binance_result:type_name -> hi.binance.BinanceResult
-	14, // 27: hi.ninja.BrainToFace.show_tip:type_name -> hi.ninja.Tip
-	13, // 28: hi.ninja.BrainToFace.show_qr:type_name -> hi.ninja.QrCard
-	17, // 29: hi.ninja.BrainToFace.binance_offers:type_name -> hi.ninja.BinanceOffers
-	0,  // 30: hi.ninja.FaceToBrain.voice_state:type_name -> hi.ninja.StateToggle
-	19, // 31: hi.ninja.FaceToBrain.update_action:type_name -> hi.ninja.UpdateAction
-	23, // 32: hi.ninja.FaceToBrain.get_binance_settings:type_name -> google.protobuf.Empty
-	23, // 33: hi.ninja.FaceToBrain.request_init:type_name -> google.protobuf.Empty
-	11, // 34: hi.ninja.FaceToBrain.binance_request:type_name -> hi.ninja.BinanceRequest
-	28, // 35: hi.ninja.FaceToBrain.binance_offer_reply:type_name -> hi.binance.BinanceOfferReply
-	23, // 36: hi.ninja.FaceToBrain.get_binance_offers:type_name -> google.protobuf.Empty
-	29, // 37: hi.ninja.BinanceOffers.list:type_name -> hi.binance.BinanceOffer
-	2,  // 38: hi.ninja.PluginProgress.state:type_name -> hi.ninja.PluginProgress.State
-	3,  // 39: hi.ninja.UpdateAction.action:type_name -> hi.ninja.UpdateAction.Action
-	40, // [40:40] is the sub-list for method output_type
-	40, // [40:40] is the sub-list for method input_type
-	40, // [40:40] is the sub-list for extension type_name
-	40, // [40:40] is the sub-list for extension extendee
-	0,  // [0:40] is the sub-list for field type_name
+	22, // 0: hi.ninja.RobotInit.robot:type_name -> hi.Entity
+	22, // 1: hi.ninja.RobotInit.master:type_name -> hi.Entity
+	22, // 2: hi.ninja.FriendList.list:type_name -> hi.Entity
+	23, // 3: hi.ninja.GroupInfoList.list:type_name -> hi.club.GroupInfo
+	22, // 4: hi.ninja.MasterEvent.master:type_name -> hi.Entity
+	24, // 5: hi.ninja.TextReply.media:type_name -> hi.club.Content
+	4,  // 6: hi.ninja.BrainToFace.init_robot:type_name -> hi.ninja.RobotInit
+	0,  // 7: hi.ninja.BrainToFace.show_listen:type_name -> hi.ninja.StateToggle
+	1,  // 8: hi.ninja.BrainToFace.show_emotion:type_name -> hi.ninja.Emotion
+	25, // 9: hi.ninja.BrainToFace.show_im_request:type_name -> hi.club.Message
+	8,  // 10: hi.ninja.BrainToFace.show_im_reply:type_name -> hi.ninja.TextReply
+	8,  // 11: hi.ninja.BrainToFace.show_voice_reply:type_name -> hi.ninja.TextReply
+	26, // 12: hi.ninja.BrainToFace.show_qr_code:type_name -> google.protobuf.Empty
+	22, // 13: hi.ninja.BrainToFace.event_robot:type_name -> hi.Entity
+	7,  // 14: hi.ninja.BrainToFace.event_master:type_name -> hi.ninja.MasterEvent
+	23, // 15: hi.ninja.BrainToFace.event_members:type_name -> hi.club.GroupInfo
+	27, // 16: hi.ninja.BrainToFace.event_plugin:type_name -> hi.ai.PluginView
+	20, // 17: hi.ninja.BrainToFace.event_plugin_progress:type_name -> hi.ninja.PluginProgress
+	28, // 18: hi.ninja.BrainToFace.event_transaction:type_name -> hi.did.Transaction
+	9,  // 19: hi.ninja.BrainToFace.play_audio:type_name -> hi.ninja.AudioPlay
+	5,  // 20: hi.ninja.BrainToFace.event_friends:type_name -> hi.ninja.FriendList
+	22, // 21: hi.ninja.BrainToFace.event_friend_delete:type_name -> hi.Entity
+	22, // 22: hi.ninja.BrainToFace.event_friend_add:type_name -> hi.Entity
+	6,  // 23: hi.ninja.BrainToFace.members_init:type_name -> hi.ninja.GroupInfoList
+	17, // 24: hi.ninja.BrainToFace.event_status:type_name -> hi.ninja.StatusEvent
+	29, // 25: hi.ninja.BrainToFace.event_update:type_name -> hi.ninja.UpdateStatus
+	10, // 26: hi.ninja.BrainToFace.event_binance_settings:type_name -> hi.ninja.BinanceSettings
+	30, // 27: hi.ninja.BrainToFace.binance_result:type_name -> hi.binance.BinanceResult
+	16, // 28: hi.ninja.BrainToFace.show_tip:type_name -> hi.ninja.Tip
+	15, // 29: hi.ninja.BrainToFace.show_qr:type_name -> hi.ninja.QrCard
+	19, // 30: hi.ninja.BrainToFace.binance_offers:type_name -> hi.ninja.BinanceOffers
+	14, // 31: hi.ninja.BrainToFace.video_ready:type_name -> hi.ninja.VideoReady
+	0,  // 32: hi.ninja.FaceToBrain.voice_state:type_name -> hi.ninja.StateToggle
+	21, // 33: hi.ninja.FaceToBrain.update_action:type_name -> hi.ninja.UpdateAction
+	26, // 34: hi.ninja.FaceToBrain.get_binance_settings:type_name -> google.protobuf.Empty
+	26, // 35: hi.ninja.FaceToBrain.request_init:type_name -> google.protobuf.Empty
+	11, // 36: hi.ninja.FaceToBrain.binance_request:type_name -> hi.ninja.BinanceRequest
+	31, // 37: hi.ninja.FaceToBrain.binance_offer_reply:type_name -> hi.binance.BinanceOfferReply
+	26, // 38: hi.ninja.FaceToBrain.get_binance_offers:type_name -> google.protobuf.Empty
+	13, // 39: hi.ninja.FaceToBrain.video_request:type_name -> hi.ninja.VideoRequest
+	32, // 40: hi.ninja.BinanceOffers.list:type_name -> hi.binance.BinanceOffer
+	2,  // 41: hi.ninja.PluginProgress.state:type_name -> hi.ninja.PluginProgress.State
+	3,  // 42: hi.ninja.UpdateAction.action:type_name -> hi.ninja.UpdateAction.Action
+	43, // [43:43] is the sub-list for method output_type
+	43, // [43:43] is the sub-list for method input_type
+	43, // [43:43] is the sub-list for extension type_name
+	43, // [43:43] is the sub-list for extension extendee
+	0,  // [0:43] is the sub-list for field type_name
 }
 
 func init() { file_hi_ninja_ui_proto_init() }
@@ -1970,11 +2154,14 @@ func file_hi_ninja_ui_proto_init() {
 		(*BrainToFace_ShowTip)(nil),
 		(*BrainToFace_ShowQr)(nil),
 		(*BrainToFace_BinanceOffers)(nil),
+		(*BrainToFace_VideoReady)(nil),
 	}
 	file_hi_ninja_ui_proto_msgTypes[9].OneofWrappers = []any{}
 	file_hi_ninja_ui_proto_msgTypes[10].OneofWrappers = []any{}
 	file_hi_ninja_ui_proto_msgTypes[11].OneofWrappers = []any{}
-	file_hi_ninja_ui_proto_msgTypes[12].OneofWrappers = []any{
+	file_hi_ninja_ui_proto_msgTypes[12].OneofWrappers = []any{}
+	file_hi_ninja_ui_proto_msgTypes[13].OneofWrappers = []any{}
+	file_hi_ninja_ui_proto_msgTypes[14].OneofWrappers = []any{
 		(*FaceToBrain_VoiceState)(nil),
 		(*FaceToBrain_UpdateAction)(nil),
 		(*FaceToBrain_GetBinanceSettings)(nil),
@@ -1982,16 +2169,17 @@ func file_hi_ninja_ui_proto_init() {
 		(*FaceToBrain_BinanceRequest)(nil),
 		(*FaceToBrain_BinanceOfferReply)(nil),
 		(*FaceToBrain_GetBinanceOffers)(nil),
+		(*FaceToBrain_VideoRequest)(nil),
 	}
-	file_hi_ninja_ui_proto_msgTypes[14].OneofWrappers = []any{}
-	file_hi_ninja_ui_proto_msgTypes[15].OneofWrappers = []any{}
+	file_hi_ninja_ui_proto_msgTypes[16].OneofWrappers = []any{}
+	file_hi_ninja_ui_proto_msgTypes[17].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ninja_ui_proto_rawDesc), len(file_hi_ninja_ui_proto_rawDesc)),
 			NumEnums:      4,
-			NumMessages:   16,
+			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

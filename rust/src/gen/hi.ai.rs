@@ -224,653 +224,6 @@ pub mod api_key_client {
         }
     }
 }
-/// ── AI 对话全链路都是私有:会话/上下文/回复只发给发起对话的本人 ──────────────
-///
-/// 对话内容的一段。`type` 取 hi.club `Content.type` 那张表里的词(`text` / `image_url` / `audio_url`;
-/// 另有 web 直连用的 `file_url`),`content` 是正文或地址。图片作视觉输入、语音识别成文字进 Q。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct Content {
-    #[prost(string, optional, tag = "1")]
-    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
-    /// ⚠️ 没有 `name` / `count`(10-07 加过一版,同日删):附件的名字与条数现在在 `Attachment` 里,
-    /// 由调用方整理好交过来,hi.ai 不再从内容段里推。
-    #[prost(string, optional, tag = "2")]
-    pub content: ::core::option::Option<::prost::alloc::string::String>,
-}
-/// ## 附件列表的一行 —— hiclub 与 hi.ai 之间约定的辅助格式(2026-10-07 定)
-///
-/// 用户那句话里有文本以外的内容(图片 / 语音 / 文件 / 聊天记录),或机器人这一轮发出了附件,
-/// hi.ai 就把它们按**固定规则**拼成文字,附在 Q(问题侧)/ A(回答侧)后面,**随这一轮问答存进上下文**:
-///
-/// ```text
-/// 【附件】
-/// 1. 文件 合同草稿.pdf → <https://…/合同草稿.pdf>
-/// 2. 聊天记录 《我和王总的聊天记录》共 3 条 → 9f1c…#2
-/// 3. 图片 图片3 → <https://…/a.jpg>
-/// ```
-///
-/// 每行「序号. 类型 名字 → 引用」:序号按列表先后从 1 编;类型、名字、引用都是调用方给的字,hi.ai **原样照抄**。
-/// **hi.ai 不认 hiclub 的内容类型、也不需要知道前端怎么用这些引用** —— 它只负责拼成文字、随问答存。
-/// 目的:模型一眼看懂这一轮有哪些附件、各叫什么;几轮之后「把合同草稿转给李总」,它在上下文里按名字找得到引用,
-/// 把「引用 + 名字」原样填进插件参数(内置插件 `send_message` 的 `attachments`)。
-///
-/// 谁来整理:**前端**(app / 机器人)在 hiclub-core-mqtt 里解析与封装 —— 机器人这一轮发出去的附件由 core 发送时给出;
-/// **后端**在 club 里解析与封装 —— 交给 hi.ai 之前从用户那条消息的内容段整理出来(`ChatReq.attachments`)。
-/// 引用的写法与解析规则见 hi/club/messaging.proto「引用」那段(url,或 `<消息 uuid>#<段 id>`)。
-///
-/// 为什么要有:模型看到的图是内联的图片数据、语音是识别稿 —— **它手上没有地址**,转发时只能编一个
-/// (生产 10-06 编出 `files.oaiusercontent.com/…`,7 个好友各收到一张裂图)。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct Attachment {
-    /// 类型词:图片 / 语音 / 视频 / 文件 / 聊天记录(调用方给,hi.ai 原样写)
-    #[prost(string, optional, tag = "1")]
-    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
-    /// 名字:文件是原文件名;聊天记录是「《标题》共 N 条」;图片 / 语音没有名字就是「图片1」「语音2」(数字 = 这一行的序号)
-    #[prost(string, optional, tag = "2")]
-    pub name: ::core::option::Option<::prost::alloc::string::String>,
-    /// 引用:url,或 `<消息 uuid>#<段 id>`(见 hi/club/messaging.proto「引用」)
-    #[prost(string, optional, tag = "3")]
-    pub r#ref: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct NewSessionResp {
-    /// 新会话 id;原 GenerateCidResp
-    #[prost(string, optional, tag = "1")]
-    pub cid: ::core::option::Option<::prost::alloc::string::String>,
-}
-/// ── 上下文(context):喂给模型的那几组问答,**不是聊天记录(history)** ─────────────
-///
-/// 二者是两件不相关的事:
-/// · **上下文**在 hi-ai(redis,按 cid 存 QA 成对,最多 30 对、30 天滑动过期),只用于推理;
-/// · **聊天记录**在 hi-club(消息时间线,`Group.ListMessages` / `Group.ListRecentMessages`),给人看、给插件读。
-/// 所以这组方法叫 Get/Clear/AppendContext(曾一度叫 \*History,已改回来)。
-///
-/// ── 谁能碰哪个 cid(Get/Clear/AppendContext 与 Converse\*/Resume\* 同一条规则)──────────
-///
-/// 「调用者」= `caller`(商户替它的用户填,club 填的是登录主体);**不传 = 商户自己**(hiai-web、商户 apikey)。
-/// · **机器人格式的 cid** —— `hiclub:embedded:<机器人>` / `hiclub:single:<对方>:<机器人>` / `hiclub:group:<群>:<机器人>`,
-/// **最后一段是机器人**:该机器人须是本商户的 agent,且调用者 == 该机器人,或 `master` 有值且调用者 == master。
-/// 以 `hiclub:` 开头却不是这三种形状的 → InvalidArgument。
-/// · **其它 cid**(`NewSession` 发的 uuid,web / app 与助手对话用)—— **第一个用它的调用者就是它的主人**,
-/// 此后只认他(归属记录与上下文同 TTL,随对话顶回)。
-/// · 不满足 → **NotFound**「会话不存在」(不替人确认别人的会话存在)。
-///
-/// ⚠️ `caller` / `master` 是**商户替用户说的话**,hi-ai 信商户、不信用户 —— 所以 hi.club 的同名入参
-/// **故意没有**这两个字段(club 用自己的 Req 类型,由服务端按登录主体与 masterOf 现填)。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ClearContextReq {
-    #[prost(string, optional, tag = "1")]
-    pub cid: ::core::option::Option<::prost::alloc::string::String>,
-    /// 调用者 did(商户替它的用户填);不传 = 商户自己
-    #[prost(string, optional, tag = "2")]
-    pub caller: ::core::option::Option<::prost::alloc::string::String>,
-    /// cid 里那台机器人的主人(商户现取的权威值);没主人不传
-    #[prost(string, optional, tag = "3")]
-    pub master: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetContextReq {
-    /// cid 已唯一定位会话,不再带 agent。条数按该会话机器人的 qa_num 截
-    #[prost(string, optional, tag = "1")]
-    pub cid: ::core::option::Option<::prost::alloc::string::String>,
-    /// 同 ClearContextReq
-    #[prost(string, optional, tag = "2")]
-    pub caller: ::core::option::Option<::prost::alloc::string::String>,
-    /// 同 ClearContextReq
-    #[prost(string, optional, tag = "3")]
-    pub master: ::core::option::Option<::prost::alloc::string::String>,
-}
-/// 往会话上下文里补一对问答。
-///
-/// 🔴 **给"机器人自己做完一件事"用的。** 主人交代过「等王总通过就带话给他」,
-/// 机器人到点自己做了 —— 这件事得让模型知道,否则下次对话时它对自己刚做过的事一无所知,
-/// 主人问起来只能瞎猜。
-///
-/// 为什么不走一轮 `Converse`:那要真跑一次模型(慢、花钱),而且它可能把
-/// "做成了"说成别的样子。这里补的是**既成事实**,内容在登记那一刻就写好了。
-///
-/// ⚠️ 上下文只保留最近 30 对,补进来的会挤掉最老的 —— 所以**别拿它记流水账**
-/// (高频的周期任务就不该往这里补,否则机器人会"只记得自己在提醒吃药,
-/// 不记得主人昨天说过什么")。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct AppendContextReq {
-    #[prost(string, optional, tag = "1")]
-    pub cid: ::core::option::Option<::prost::alloc::string::String>,
-    /// 摆成"用户问的"那一句,通常是「执行结果查询：\<摘要>」
-    #[prost(string, optional, tag = "2")]
-    pub user: ::core::option::Option<::prost::alloc::string::String>,
-    /// 摆成"机器人答的"那一句,即真正要让它记住的内容
-    #[prost(string, optional, tag = "3")]
-    pub assistant: ::core::option::Option<::prost::alloc::string::String>,
-    /// 同 ClearContextReq
-    #[prost(string, optional, tag = "4")]
-    pub caller: ::core::option::Option<::prost::alloc::string::String>,
-    /// 同 ClearContextReq
-    #[prost(string, optional, tag = "5")]
-    pub master: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Qa {
-    /// assistant
-    #[prost(string, optional, tag = "1")]
-    pub a: ::core::option::Option<::prost::alloc::string::String>,
-    /// User
-    #[prost(message, repeated, tag = "2")]
-    pub q: ::prost::alloc::vec::Vec<Content>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetContextResp {
-    #[prost(message, repeated, tag = "1")]
-    pub list: ::prost::alloc::vec::Vec<Qa>,
-}
-/// ── 对话入参(Converse/ConverseStream;续跑走 Resume/ResumeStream)──────────────
-///
-/// 一轮对话 = 服务端一个**循环**:模型要调工具就调、调完把结果喂回去接着问,直到模型给出答复。
-/// 循环中若遇到**必须由客户端执行**的工具(客户端在 `tools` 里上报的那些),就中途返回
-/// (`final=false`)把它们交出去;客户端执行完调 Resume 交回结果,**进同一个循环**继续。
-///
-/// ⚠️ **`tools` 是「我这边能执行哪些工具」,不是「这轮可用的全部工具」。**
-/// 服务端会把该 agent 的插件工具**追加**在它后面一起喂给模型;模型返回后按名字分流 ——
-/// 服务端插件服务端自己跑,客户端上报的那些才交回客户端。
-/// 所以不上报 tools(web/软件机器人)= 全部由服务端跑完 = 一次调用拿到最终答复。
-///
-/// 模态(文/语音、输出音色)由 conts + style 决定 —— 合并原 TextToText/SpeechToText/SpeechToSpeech。
-/// 命名读作模态转换但**不是字面格式转换**;真 STT/TTS 在 Speech service(Transcribe/Synthesize)。
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChatReq {
-    #[prost(string, optional, tag = "1")]
-    pub agent: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub cid: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(message, repeated, tag = "3")]
-    pub conts: ::prost::alloc::vec::Vec<Content>,
-    /// **客户端自己能执行的工具**;空 = 全交服务端跑完
-    #[prost(message, repeated, tag = "4")]
-    pub tools: ::prost::alloc::vec::Vec<ToolSupply>,
-    #[prost(string, optional, tag = "5")]
-    pub tool_choice: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "6")]
-    pub custom: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "7")]
-    pub state: ::core::option::Option<::prost::alloc::string::String>,
-    /// 语音出的音色等;纯文本场景不传
-    #[prost(string, optional, tag = "8")]
-    pub style: ::core::option::Option<::prost::alloc::string::String>,
-    /// ── 过程回显开关:要不要把中间过程一并流给调用方(**只管输出,不管行为**)──────────
-    ///
-    /// 一律 `echo_` 前缀,对应流式帧 `echoXxx`。**仅流式(ConverseStream/ResumeStream)有意义。**
-    ///
-    /// ⚠️ 别把它读成"要不要调插件":**调不调是模型决定的**(标准 function call:
-    /// 模型看着 tools 自己决定 → 调 → 结果回喂 → 模型接着回复)。这几个开关只决定
-    /// 过程数据要不要一并流出去,与行为无关。
-    ///
-    /// ⚠️ 旧名是 `return_plugin_use` / `return_training_data` / `return_context` ——
-    /// `return_` 读起来像"要不要返回结果",而它们回的是**过程**;`plugin_use` 更是词不达意
-    /// (回的是 function call,不是"插件用量")。已统一改名。
-    ///
-    /// ⚠️ 这几个字段原属已删除的 `CompleteReq`。它们在 dev45 那次迁移(Stream→CompleteStream)时
-    /// **从请求里漏掉过**,而读它们的代码原样留着 → 恒 false → 回显帧与记忆片段
-    /// 从此再没发出去过,**不报错、类型也对,只是值永远是零值**。搬家时别再漏第二次。
-    ///
-    /// 发 type="echoToolCalls" 帧:模型调了哪个函数、传了什么参数、工具返回什么
-    #[prost(bool, optional, tag = "9")]
-    pub echo_tool_calls: ::core::option::Option<bool>,
-    /// 发 type="echoMemory" 帧:本轮命中的记忆片段(旧名 return_training_data)
-    #[prost(bool, optional, tag = "10")]
-    pub echo_memory: ::core::option::Option<bool>,
-    /// 发 type="echoContext" 帧:**这次真正喂给模型的那份上下文**(系统提示词,已含【插件】段 +
-    /// 按 qa_num 截出的历史;**不含本轮提问**),即 GetCompleteMessage 产物里本轮提问之前的那部分。调不准的时候要看的就是它 ——
-    /// 光看历史列表看不出实际截了几轮、系统提示词长什么样、记忆片段拼没拼进去。
-    ///
-    /// ── 这一轮的两个身份(**都不进提示词、不进 tools schema,模型看不见也改不了**)────
-    ///
-    /// 走接口而不走提示词:凡模型看得见的用户都能覆盖,而这两个正是插件"认人"的依据。
-    /// 塞进提示词让模型填参数的话,用户在自己那句话里改一句就能冒名,且**失败是静默的**。
-    /// (同一条规矩在 NATIVE 那侧已经立着:插件 manifest 里模型看得见的参数
-    /// 不许有 `to`/`payee` —— 身份与收款方一律由宿主注入。)
-    ///
-    /// ⚠️ ai 只**透传**,不解释也不推导:它不认识 club,算不出谁是主人。
-    #[prost(bool, optional, tag = "11")]
-    pub echo_context: ::core::option::Option<bool>,
-    /// 这句话是谁说的。**不是"谁在调"** —— 调用方几乎永远是机器人自己(`agent`),
-    /// 提问者在它收到的那条 mqtt 消息的 `from` 里,由 club 带过来。
-    /// **证明不了就空**(机器人语音路 = 现场人声,无法证明身份)。
-    ///
-    /// 🔴 它是**消息事实,不是权限凭据**。判权限用下面的 `master` 比对,别单独拿它当依据。
-    #[prost(string, optional, tag = "12")]
-    pub asker: ::core::option::Option<::prost::alloc::string::String>,
-    /// 这台机器人的主人。**服务端每轮现取的权威值**(club 的 masterOf),没主人时**不传**。
-    ///
-    /// 🔴 **只能服务端算,不收客户端的** —— 所以 hi.club.ChatReq 里**故意没有**这个字段。
-    /// ⚠️ 每轮现取、不做长缓存:换主人(解绑/重绑)要立刻生效 —— 主人是活体,不是单据快照。
-    ///
-    /// 插件判"是不是主人"的唯一正确写法:`master` **有值**且 `asker == master`;
-    /// (以前两个"没有"都是空串,`asker == master` 在皆空时会成立 —— 现在两者都是 null,
-    /// null != null 不成立,但**仍然必须先判 master 有值**,别只写相等。)
-    /// **动钱一律打给 `master`,不打给 `asker`**(NATIVE 内置插件的 withdraw 就是这么写的)。
-    #[prost(string, optional, tag = "13")]
-    pub master: ::core::option::Option<::prost::alloc::string::String>,
-    /// 调用者 did —— **谁在调这一轮**(商户替它的用户填;club 填登录主体)。不传 = 商户自己。
-    ///
-    /// 与 `asker` 不是一回事:asker 是"这句话是谁说的"(消息事实),caller 是"谁在用这个 cid"(会话归属的判据)。
-    /// 判据见上面 Get/Clear/AppendContext 那段:机器人格式的 cid 只认机器人本人与它的主人(`master`),
-    /// 且 cid 里的机器人必须就是 `agent`;其它 cid 第一个用它的人就是主人。不满足 → NotFound。
-    #[prost(string, optional, tag = "14")]
-    pub caller: ::core::option::Option<::prost::alloc::string::String>,
-    /// 用户这句话里的附件(问题侧),hi.ai 拼成「【附件】」附在 Q 后面、随问答存进上下文(见 `Attachment`)。
-    /// 由调用方整理:club 从那条消息的内容段整理好填这里(hiclub 的前端不直接填)。不给 = 没有附件。
-    #[prost(message, repeated, tag = "15")]
-    pub attachments: ::prost::alloc::vec::Vec<Attachment>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ToolCallResult {
-    #[prost(string, optional, tag = "1")]
-    pub id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(message, repeated, tag = "2")]
-    pub conts: ::prost::alloc::vec::Vec<Content>,
-    /// 这次工具调用**发出去的附件**(回答侧,如拍的照片、转发的文件 / 聊天记录)。hi.ai 把这一轮所有工具调用的
-    /// 这一项按先后合在一起,拼成「【附件】」附在 A 后面存进上下文 —— 几轮之后「刚才那张也发给李总」,模型照样找得到引用。
-    /// hi.ai 只认这一个字段,不看工具结果里写了什么。
-    #[prost(message, repeated, tag = "3")]
-    pub attachments: ::prost::alloc::vec::Vec<Attachment>,
-}
-/// 工具结果续跑入参(Resume):客户端执行完工具后把结果交回来,接着跑。续跑的模态由原始调用的 id 决定。
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ToolCallResultsReq {
-    #[prost(string, optional, tag = "1")]
-    pub id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(message, repeated, tag = "2")]
-    pub list: ::prost::alloc::vec::Vec<ToolCallResult>,
-    /// 调用者 did(同 ChatReq.caller)。**必须与发起这一轮的那个调用者相同**,否则 NotFound ——
-    /// 续跑 id 背后是那一轮的完整消息数组(含上下文),拿到 id 的别人不能接着跑、也不能看到答复。
-    #[prost(string, optional, tag = "3")]
-    pub caller: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ToolSupply {
-    #[prost(string, optional, tag = "1")]
-    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(message, optional, tag = "2")]
-    pub function: ::core::option::Option<tool_supply::Function>,
-}
-/// Nested message and enum types in `ToolSupply`.
-pub mod tool_supply {
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Function {
-        #[prost(string, optional, tag = "1")]
-        pub name: ::core::option::Option<::prost::alloc::string::String>,
-        #[prost(string, optional, tag = "2")]
-        pub description: ::core::option::Option<::prost::alloc::string::String>,
-        #[prost(message, optional, tag = "3")]
-        pub parameters: ::core::option::Option<::pbjson_types::Struct>,
-    }
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ToolCall {
-    #[prost(string, optional, tag = "1")]
-    pub id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(message, optional, tag = "3")]
-    pub function: ::core::option::Option<tool_call::Function>,
-}
-/// Nested message and enum types in `ToolCall`.
-pub mod tool_call {
-    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-    pub struct Function {
-        #[prost(string, optional, tag = "1")]
-        pub name: ::core::option::Option<::prost::alloc::string::String>,
-        #[prost(string, optional, tag = "2")]
-        pub arguments: ::core::option::Option<::prost::alloc::string::String>,
-    }
-}
-/// `final` = **这轮还需不需要你做事**,不是"模型有没有调工具"。
-///
-/// final == true  → 服务端已经跑完(可能内部调过若干轮工具),result = 最终答复 text/url,tools 空
-/// final == false → **轮到你了**:result = 续跑用的 tool_id,tools = 待客户端执行的工具
-/// 客户端执行完调 Resume(带上这个 id)接着跑
-///
-/// ⚠️ **判据只能是 `final`,不能是"tools 非空"。**
-/// 模型这轮可能只调了服务端插件 —— 那些由服务端自己跑完,`final` 直接是 true;
-/// 但也可能出现 tools 为空却 final=false 的边界(工具被过滤掉等),此时仍须调 Resume,
-/// 否则整轮对话就停在半路,表现为"机器人不理我了"。
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChatResp {
-    #[prost(bool, optional, tag = "1")]
-    pub r#final: ::core::option::Option<bool>,
-    /// 最终回答中的图片由模型以 Markdown 写入 result，不另设媒体返回通道。
-    #[prost(string, optional, tag = "2")]
-    pub result: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(message, repeated, tag = "3")]
-    pub tools: ::prost::alloc::vec::Vec<ToolCall>,
-    /// 这一轮的**问题**:请求里的 `conts` 原样、同序,只把每段语音(audio_url)换成 hi-ai 识别出的那段 text。
-    /// 语音转文字只在 hi-ai 做一次(推理前必转,见 service/chat.go 的 Prepare),调用方别另做一遍 ——
-    /// 两处识别结果可能不一致。Converse 与 Resume 的回包都带(final 与否都带,续跑带的是开轮那一句)。
-    /// 用途:club 把机器人的语音对话记进聊天记录时,用户那句存成文字而不是一段录音 url。
-    #[prost(message, repeated, tag = "4")]
-    pub question: ::prost::alloc::vec::Vec<Content>,
-}
-/// 流式帧(ConverseStream / ResumeStream)。
-///
-/// `type` 取值 —— **一条指令帧,其余是内容/进度/回显**:
-/// msg           —— 完整回答文字，不是分片；图片使用 message 中的 Markdown
-/// end           —— 本条流正常收尾
-/// info          —— 出错了。⚠️ 流式下错误**走帧不走 grpc status** ——
-/// 否则客户端收了半截流再拿到 error,两套错误通道并存反而更难排查
-/// event         —— 进度提示("正在执行插件..."),给人看的,别拿它做流程判断
-/// toolCalls     —— **指令**:轮到客户端执行工具了。见下,不可关
-/// echoToolCalls —— 回显:模型调了哪个函数、传了什么参数、工具返回什么(由 echo_tool_calls 打开)
-/// echoMemory    —— 回显:本轮命中的记忆片段(由 echo_memory 打开)
-/// echoContext   —— 回显:这次真正喂给模型的上下文(系统提示词含【插件】段 + 截出的历史,不含本轮提问;由 echo_context 打开)
-///
-/// ⚠️ **`msg` 里是完整答复,不是 token 分片。** 服务端跑完整个循环、Finish 之后
-/// 一次性发出来 —— 所以现在这条"流式"路的价值在于:错误走帧、进度可见、
-/// 以及那条 toolCalls 指令帧,**不在于逐字输出**。想要真正的增量输出,
-/// 要改的是 Finish/emit 那一段,不是把这里改个名。
-///
-/// ⚠️ 这段原来写的是 `text —— 答复分片`,而实现从来发的是 `msg`,还另有 end/info/event
-/// 三种没写进来。**照着这段文档写的客户端会一个字都渲染不出来** ——
-/// 是补流式冒烟时当场撞出来的(见 ~/ci/smoke-stream.sh)。契约漂了没人会报错,
-/// 只有真去收一次流才看得见。
-///
-/// ⚠️ **`toolCalls`(指令)与 `echoToolCalls`(回显)必须是两个 type,别合。**
-/// 前者是**指令性**的:要你去执行,是流程的一环,**不可关**;
-/// 后者是**信息性**的:只是给你看服务端调了什么,**可关**。
-/// 合成一个的话有两个后果:①客户端分不清收到的是"给你看的"还是"要你做的";
-/// ②一个本该可关的调试开关会把流程必需的信号一起关掉。
-///
-/// 收到 `toolCalls`:本条流到此结束,客户端执行 `tools`,再调 ResumeStream(带 `id`)续跑。
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ConverseStreamResp {
-    #[prost(int32, optional, tag = "1")]
-    pub code: ::core::option::Option<i32>,
-    #[prost(string, optional, tag = "2")]
-    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
-    /// type="msg" 时为完整回答；图片使用其中的 Markdown，客户端沿用原有文字渲染。
-    #[prost(string, optional, tag = "3")]
-    pub message: ::core::option::Option<::prost::alloc::string::String>,
-    /// 仅 type="toolCalls" 时有值 —— 与 ChatResp 的 result/tools 同义。
-    ///
-    /// 续跑 id(Resume 时带回)
-    #[prost(string, optional, tag = "4")]
-    pub id: ::core::option::Option<::prost::alloc::string::String>,
-    /// 待客户端执行的工具
-    #[prost(message, repeated, tag = "5")]
-    pub tools: ::prost::alloc::vec::Vec<ToolCall>,
-    /// 同 ChatResp.question。挂在每条流的收尾帧(`msg` 或 `toolCalls`)上,ConverseStream 与 ResumeStream 都带。
-    #[prost(message, repeated, tag = "6")]
-    pub question: ::prost::alloc::vec::Vec<Content>,
-}
-/// Generated client implementations.
-pub mod chat_client {
-    #![allow(
-        unused_variables,
-        dead_code,
-        missing_docs,
-        clippy::wildcard_imports,
-        clippy::let_unit_value,
-    )]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// 对话(主体=会话)。商户档:hiai web(token)与商户后台服务(apikey)都会调。
-    ///
-    /// ── 只有一条对话路 ──────────────────────────────────────────────────────────
-    /// 服务端跑一个循环:模型要调工具就调、结果喂回去接着问,直到给出答复。
-    /// 只有遇到**必须由客户端执行**的工具时才中途返回,客户端执行完调 Resume 进同一个循环。
-    /// 于是「跑不跑得完」是**动态判断**,不是调用方选路:
-    /// · web / 软件机器人不上报 tools  → 恒一次调用拿到最终答复
-    /// · 硬件机器人只调了服务端插件    → 同样一次拿到,**不多一个来回**
-    /// · 硬件机器人要调本地工具        → 中途返回一次,Resume 续跑
-    ///
-    /// ⚠️ 曾经这里是**两个方法家族**:`Complete/CompleteStream`(服务端整流程跑完)与
-    /// `Converse/Resume`(客户端两阶段)。那不是两种对话方式,而是同一件事的两个特例 ——
-    /// 前者其实只是"客户端没有工具要执行"这个特例的专用入口(给 web 测试用,web 上全是软件机器人)。
-    /// 并存的代价有三:
-    /// ① 服务端 `Chat()` 要收一个 `types` 参数分岔,两条分支各写一遍装配与回喂;
-    /// ② 硬件机器人**即使只调服务端插件也被迫多一个 RTT**(旧 Converse 一律先返回、
-    /// 真正执行推迟到 Resume);
-    /// ③ 两条分支都没有循环概念,只有"第一次/第二次" —— 模型连着调两批工具时,
-    /// 第二次返回的是 toolcalls 而非文本,`answer = resp.Content` 取到空串,
-    /// **不报错,只是答复凭空消失**。
-    /// 合并成一个循环后这三条一起消失。**别再拆回去。**
-    ///
-    /// (原 Simple 已删;真 STT/TTS 已拆去 Speech;延迟统计已拆去 AgentBench。)
-    #[derive(Debug, Clone)]
-    pub struct ChatClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl ChatClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> ChatClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::Body>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> ChatClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
-        {
-            ChatClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        /// ── 会话管理 ──
-        pub async fn new_session(
-            &mut self,
-            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
-        ) -> std::result::Result<tonic::Response<super::NewSessionResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/NewSession");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "NewSession"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn get_context(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetContextReq>,
-        ) -> std::result::Result<tonic::Response<super::GetContextResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/GetContext");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "GetContext"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn clear_context(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ClearContextReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/ClearContext");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "ClearContext"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn append_context(
-            &mut self,
-            request: impl tonic::IntoRequest<super::AppendContextReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/AppendContext");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "AppendContext"));
-            self.inner.unary(req, path, codec).await
-        }
-        /// ── 对话:一轮 = 一个循环,中途只在"轮到客户端"时返回 ──
-        pub async fn converse(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ChatReq>,
-        ) -> std::result::Result<tonic::Response<super::ChatResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/Converse");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "Converse"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn converse_stream(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ChatReq>,
-        ) -> std::result::Result<
-            tonic::Response<tonic::codec::Streaming<super::ConverseStreamResp>>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.ai.Chat/ConverseStream",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "ConverseStream"));
-            self.inner.server_streaming(req, path, codec).await
-        }
-        pub async fn resume(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ToolCallResultsReq>,
-        ) -> std::result::Result<tonic::Response<super::ChatResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/Resume");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "Resume"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn resume_stream(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ToolCallResultsReq>,
-        ) -> std::result::Result<
-            tonic::Response<tonic::codec::Streaming<super::ConverseStreamResp>>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/ResumeStream");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "ResumeStream"));
-            self.inner.server_streaming(req, path, codec).await
-        }
-    }
-}
 /// ⚠️ **消息 audience 是 SELF,但里面几个字段是 PUBLIC —— 这不矛盾。**
 /// lint 规则是 `level(field) <= level(message)`(见 hi/options.proto),
 /// 挡的只有"把私字段塞进公消息",PUBLIC 字段放进 SELF 消息本来就合法。
@@ -3534,6 +2887,653 @@ pub mod agent_manage_client {
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.AgentManage", "List"));
             self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// ── AI 对话全链路都是私有:会话/上下文/回复只发给发起对话的本人 ──────────────
+///
+/// 对话内容的一段。`type` 取 hi.club `Content.type` 那张表里的词(`text` / `image_url` / `audio_url`;
+/// 另有 web 直连用的 `file_url`),`content` 是正文或地址。图片作视觉输入、语音识别成文字进 Q。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct Content {
+    #[prost(string, optional, tag = "1")]
+    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
+    /// ⚠️ 没有 `name` / `count`(10-07 加过一版,同日删):附件的名字与条数现在在 `Attachment` 里,
+    /// 由调用方整理好交过来,hi.ai 不再从内容段里推。
+    #[prost(string, optional, tag = "2")]
+    pub content: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// ## 附件列表的一行 —— hiclub 与 hi.ai 之间约定的辅助格式(2026-10-07 定)
+///
+/// 用户那句话里有文本以外的内容(图片 / 语音 / 文件 / 聊天记录),或机器人这一轮发出了附件,
+/// hi.ai 就把它们按**固定规则**拼成文字,附在 Q(问题侧)/ A(回答侧)后面,**随这一轮问答存进上下文**:
+///
+/// ```text
+/// 【附件】
+/// 1. 文件 合同草稿.pdf → <https://…/合同草稿.pdf>
+/// 2. 聊天记录 《我和王总的聊天记录》共 3 条 → 9f1c…#2
+/// 3. 图片 图片3 → <https://…/a.jpg>
+/// ```
+///
+/// 每行「序号. 类型 名字 → 引用」:序号按列表先后从 1 编;类型、名字、引用都是调用方给的字,hi.ai **原样照抄**。
+/// **hi.ai 不认 hiclub 的内容类型、也不需要知道前端怎么用这些引用** —— 它只负责拼成文字、随问答存。
+/// 目的:模型一眼看懂这一轮有哪些附件、各叫什么;几轮之后「把合同草稿转给李总」,它在上下文里按名字找得到引用,
+/// 把「引用 + 名字」原样填进插件参数(内置插件 `send_message` 的 `attachments`)。
+///
+/// 谁来整理:**前端**(app / 机器人)在 hiclub-core-mqtt 里解析与封装 —— 机器人这一轮发出去的附件由 core 发送时给出;
+/// **后端**在 club 里解析与封装 —— 交给 hi.ai 之前从用户那条消息的内容段整理出来(`ChatReq.attachments`)。
+/// 引用的写法与解析规则见 hi/club/messaging.proto「引用」那段(url,或 `<消息 uuid>#<段 id>`)。
+///
+/// 为什么要有:模型看到的图是内联的图片数据、语音是识别稿 —— **它手上没有地址**,转发时只能编一个
+/// (生产 10-06 编出 `files.oaiusercontent.com/…`,7 个好友各收到一张裂图)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct Attachment {
+    /// 类型词:图片 / 语音 / 视频 / 文件 / 聊天记录(调用方给,hi.ai 原样写)
+    #[prost(string, optional, tag = "1")]
+    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
+    /// 名字:文件是原文件名;聊天记录是「《标题》共 N 条」;图片 / 语音没有名字就是「图片1」「语音2」(数字 = 这一行的序号)
+    #[prost(string, optional, tag = "2")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    /// 引用:url,或 `<消息 uuid>#<段 id>`(见 hi/club/messaging.proto「引用」)
+    #[prost(string, optional, tag = "3")]
+    pub r#ref: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct NewSessionResp {
+    /// 新会话 id;原 GenerateCidResp
+    #[prost(string, optional, tag = "1")]
+    pub cid: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// ── 上下文(context):喂给模型的那几组问答,**不是聊天记录(history)** ─────────────
+///
+/// 二者是两件不相关的事:
+/// · **上下文**在 hi-ai(redis,按 cid 存 QA 成对,最多 30 对、30 天滑动过期),只用于推理;
+/// · **聊天记录**在 hi-club(消息时间线,`Group.ListMessages` / `Group.ListRecentMessages`),给人看、给插件读。
+/// 所以这组方法叫 Get/Clear/AppendContext(曾一度叫 \*History,已改回来)。
+///
+/// ── 谁能碰哪个 cid(Get/Clear/AppendContext 与 Converse\*/Resume\* 同一条规则)──────────
+///
+/// 「调用者」= `caller`(商户替它的用户填,club 填的是登录主体);**不传 = 商户自己**(hiai-web、商户 apikey)。
+/// · **机器人格式的 cid** —— `hiclub:embedded:<机器人>` / `hiclub:single:<对方>:<机器人>` / `hiclub:group:<群>:<机器人>`,
+/// **最后一段是机器人**:该机器人须是本商户的 agent,且调用者 == 该机器人,或 `master` 有值且调用者 == master。
+/// 以 `hiclub:` 开头却不是这三种形状的 → InvalidArgument。
+/// · **其它 cid**(`NewSession` 发的 uuid,web / app 与助手对话用)—— **第一个用它的调用者就是它的主人**,
+/// 此后只认他(归属记录与上下文同 TTL,随对话顶回)。
+/// · 不满足 → **NotFound**「会话不存在」(不替人确认别人的会话存在)。
+///
+/// ⚠️ `caller` / `master` 是**商户替用户说的话**,hi-ai 信商户、不信用户 —— 所以 hi.club 的同名入参
+/// **故意没有**这两个字段(club 用自己的 Req 类型,由服务端按登录主体与 masterOf 现填)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ClearContextReq {
+    #[prost(string, optional, tag = "1")]
+    pub cid: ::core::option::Option<::prost::alloc::string::String>,
+    /// 调用者 did(商户替它的用户填);不传 = 商户自己
+    #[prost(string, optional, tag = "2")]
+    pub caller: ::core::option::Option<::prost::alloc::string::String>,
+    /// cid 里那台机器人的主人(商户现取的权威值);没主人不传
+    #[prost(string, optional, tag = "3")]
+    pub master: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetContextReq {
+    /// cid 已唯一定位会话,不再带 agent。条数按该会话机器人的 qa_num 截
+    #[prost(string, optional, tag = "1")]
+    pub cid: ::core::option::Option<::prost::alloc::string::String>,
+    /// 同 ClearContextReq
+    #[prost(string, optional, tag = "2")]
+    pub caller: ::core::option::Option<::prost::alloc::string::String>,
+    /// 同 ClearContextReq
+    #[prost(string, optional, tag = "3")]
+    pub master: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 往会话上下文里补一对问答。
+///
+/// 🔴 **给"机器人自己做完一件事"用的。** 主人交代过「等王总通过就带话给他」,
+/// 机器人到点自己做了 —— 这件事得让模型知道,否则下次对话时它对自己刚做过的事一无所知,
+/// 主人问起来只能瞎猜。
+///
+/// 为什么不走一轮 `Converse`:那要真跑一次模型(慢、花钱),而且它可能把
+/// "做成了"说成别的样子。这里补的是**既成事实**,内容在登记那一刻就写好了。
+///
+/// ⚠️ 上下文只保留最近 30 对,补进来的会挤掉最老的 —— 所以**别拿它记流水账**
+/// (高频的周期任务就不该往这里补,否则机器人会"只记得自己在提醒吃药,
+/// 不记得主人昨天说过什么")。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct AppendContextReq {
+    #[prost(string, optional, tag = "1")]
+    pub cid: ::core::option::Option<::prost::alloc::string::String>,
+    /// 摆成"用户问的"那一句,通常是「执行结果查询：\<摘要>」
+    #[prost(string, optional, tag = "2")]
+    pub user: ::core::option::Option<::prost::alloc::string::String>,
+    /// 摆成"机器人答的"那一句,即真正要让它记住的内容
+    #[prost(string, optional, tag = "3")]
+    pub assistant: ::core::option::Option<::prost::alloc::string::String>,
+    /// 同 ClearContextReq
+    #[prost(string, optional, tag = "4")]
+    pub caller: ::core::option::Option<::prost::alloc::string::String>,
+    /// 同 ClearContextReq
+    #[prost(string, optional, tag = "5")]
+    pub master: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Qa {
+    /// assistant
+    #[prost(string, optional, tag = "1")]
+    pub a: ::core::option::Option<::prost::alloc::string::String>,
+    /// User
+    #[prost(message, repeated, tag = "2")]
+    pub q: ::prost::alloc::vec::Vec<Content>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetContextResp {
+    #[prost(message, repeated, tag = "1")]
+    pub list: ::prost::alloc::vec::Vec<Qa>,
+}
+/// ── 对话入参(Converse/ConverseStream;续跑走 Resume/ResumeStream)──────────────
+///
+/// 一轮对话 = 服务端一个**循环**:模型要调工具就调、调完把结果喂回去接着问,直到模型给出答复。
+/// 循环中若遇到**必须由客户端执行**的工具(客户端在 `tools` 里上报的那些),就中途返回
+/// (`final=false`)把它们交出去;客户端执行完调 Resume 交回结果,**进同一个循环**继续。
+///
+/// ⚠️ **`tools` 是「我这边能执行哪些工具」,不是「这轮可用的全部工具」。**
+/// 服务端会把该 agent 的插件工具**追加**在它后面一起喂给模型;模型返回后按名字分流 ——
+/// 服务端插件服务端自己跑,客户端上报的那些才交回客户端。
+/// 所以不上报 tools(web/软件机器人)= 全部由服务端跑完 = 一次调用拿到最终答复。
+///
+/// 模态(文/语音、输出音色)由 conts + style 决定 —— 合并原 TextToText/SpeechToText/SpeechToSpeech。
+/// 命名读作模态转换但**不是字面格式转换**;真 STT/TTS 在 Speech service(Transcribe/Synthesize)。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChatReq {
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub cid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, repeated, tag = "3")]
+    pub conts: ::prost::alloc::vec::Vec<Content>,
+    /// **客户端自己能执行的工具**;空 = 全交服务端跑完
+    #[prost(message, repeated, tag = "4")]
+    pub tools: ::prost::alloc::vec::Vec<ToolSupply>,
+    #[prost(string, optional, tag = "5")]
+    pub tool_choice: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "6")]
+    pub custom: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "7")]
+    pub state: ::core::option::Option<::prost::alloc::string::String>,
+    /// 语音出的音色等;纯文本场景不传
+    #[prost(string, optional, tag = "8")]
+    pub style: ::core::option::Option<::prost::alloc::string::String>,
+    /// ── 过程回显开关:要不要把中间过程一并流给调用方(**只管输出,不管行为**)──────────
+    ///
+    /// 一律 `echo_` 前缀,对应流式帧 `echoXxx`。**仅流式(ConverseStream/ResumeStream)有意义。**
+    ///
+    /// ⚠️ 别把它读成"要不要调插件":**调不调是模型决定的**(标准 function call:
+    /// 模型看着 tools 自己决定 → 调 → 结果回喂 → 模型接着回复)。这几个开关只决定
+    /// 过程数据要不要一并流出去,与行为无关。
+    ///
+    /// ⚠️ 旧名是 `return_plugin_use` / `return_training_data` / `return_context` ——
+    /// `return_` 读起来像"要不要返回结果",而它们回的是**过程**;`plugin_use` 更是词不达意
+    /// (回的是 function call,不是"插件用量")。已统一改名。
+    ///
+    /// ⚠️ 这几个字段原属已删除的 `CompleteReq`。它们在 dev45 那次迁移(Stream→CompleteStream)时
+    /// **从请求里漏掉过**,而读它们的代码原样留着 → 恒 false → 回显帧与记忆片段
+    /// 从此再没发出去过,**不报错、类型也对,只是值永远是零值**。搬家时别再漏第二次。
+    ///
+    /// 发 type="echoToolCalls" 帧:模型调了哪个函数、传了什么参数、工具返回什么
+    #[prost(bool, optional, tag = "9")]
+    pub echo_tool_calls: ::core::option::Option<bool>,
+    /// 发 type="echoMemory" 帧:本轮命中的记忆片段(旧名 return_training_data)
+    #[prost(bool, optional, tag = "10")]
+    pub echo_memory: ::core::option::Option<bool>,
+    /// 发 type="echoContext" 帧:**这次真正喂给模型的那份上下文**(系统提示词,已含【插件】段 +
+    /// 按 qa_num 截出的历史;**不含本轮提问**),即 GetCompleteMessage 产物里本轮提问之前的那部分。调不准的时候要看的就是它 ——
+    /// 光看历史列表看不出实际截了几轮、系统提示词长什么样、记忆片段拼没拼进去。
+    ///
+    /// ── 这一轮的两个身份(**都不进提示词、不进 tools schema,模型看不见也改不了**)────
+    ///
+    /// 走接口而不走提示词:凡模型看得见的用户都能覆盖,而这两个正是插件"认人"的依据。
+    /// 塞进提示词让模型填参数的话,用户在自己那句话里改一句就能冒名,且**失败是静默的**。
+    /// (同一条规矩在 NATIVE 那侧已经立着:插件 manifest 里模型看得见的参数
+    /// 不许有 `to`/`payee` —— 身份与收款方一律由宿主注入。)
+    ///
+    /// ⚠️ ai 只**透传**,不解释也不推导:它不认识 club,算不出谁是主人。
+    #[prost(bool, optional, tag = "11")]
+    pub echo_context: ::core::option::Option<bool>,
+    /// 这句话是谁说的。**不是"谁在调"** —— 调用方几乎永远是机器人自己(`agent`),
+    /// 提问者在它收到的那条 mqtt 消息的 `from` 里,由 club 带过来。
+    /// **证明不了就空**(机器人语音路 = 现场人声,无法证明身份)。
+    ///
+    /// 🔴 它是**消息事实,不是权限凭据**。判权限用下面的 `master` 比对,别单独拿它当依据。
+    #[prost(string, optional, tag = "12")]
+    pub asker: ::core::option::Option<::prost::alloc::string::String>,
+    /// 这台机器人的主人。**服务端每轮现取的权威值**(club 的 masterOf),没主人时**不传**。
+    ///
+    /// 🔴 **只能服务端算,不收客户端的** —— 所以 hi.club.ChatReq 里**故意没有**这个字段。
+    /// ⚠️ 每轮现取、不做长缓存:换主人(解绑/重绑)要立刻生效 —— 主人是活体,不是单据快照。
+    ///
+    /// 插件判"是不是主人"的唯一正确写法:`master` **有值**且 `asker == master`;
+    /// (以前两个"没有"都是空串,`asker == master` 在皆空时会成立 —— 现在两者都是 null,
+    /// null != null 不成立,但**仍然必须先判 master 有值**,别只写相等。)
+    /// **动钱一律打给 `master`,不打给 `asker`**(NATIVE 内置插件的 withdraw 就是这么写的)。
+    #[prost(string, optional, tag = "13")]
+    pub master: ::core::option::Option<::prost::alloc::string::String>,
+    /// 调用者 did —— **谁在调这一轮**(商户替它的用户填;club 填登录主体)。不传 = 商户自己。
+    ///
+    /// 与 `asker` 不是一回事:asker 是"这句话是谁说的"(消息事实),caller 是"谁在用这个 cid"(会话归属的判据)。
+    /// 判据见上面 Get/Clear/AppendContext 那段:机器人格式的 cid 只认机器人本人与它的主人(`master`),
+    /// 且 cid 里的机器人必须就是 `agent`;其它 cid 第一个用它的人就是主人。不满足 → NotFound。
+    #[prost(string, optional, tag = "14")]
+    pub caller: ::core::option::Option<::prost::alloc::string::String>,
+    /// 用户这句话里的附件(问题侧),hi.ai 拼成「【附件】」附在 Q 后面、随问答存进上下文(见 `Attachment`)。
+    /// 由调用方整理:club 从那条消息的内容段整理好填这里(hiclub 的前端不直接填)。不给 = 没有附件。
+    #[prost(message, repeated, tag = "15")]
+    pub attachments: ::prost::alloc::vec::Vec<Attachment>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ToolCallResult {
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, repeated, tag = "2")]
+    pub conts: ::prost::alloc::vec::Vec<Content>,
+    /// 这次工具调用**发出去的附件**(回答侧,如拍的照片、转发的文件 / 聊天记录)。hi.ai 把这一轮所有工具调用的
+    /// 这一项按先后合在一起,拼成「【附件】」附在 A 后面存进上下文 —— 几轮之后「刚才那张也发给李总」,模型照样找得到引用。
+    /// hi.ai 只认这一个字段,不看工具结果里写了什么。
+    #[prost(message, repeated, tag = "3")]
+    pub attachments: ::prost::alloc::vec::Vec<Attachment>,
+}
+/// 工具结果续跑入参(Resume):客户端执行完工具后把结果交回来,接着跑。续跑的模态由原始调用的 id 决定。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ToolCallResultsReq {
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, repeated, tag = "2")]
+    pub list: ::prost::alloc::vec::Vec<ToolCallResult>,
+    /// 调用者 did(同 ChatReq.caller)。**必须与发起这一轮的那个调用者相同**,否则 NotFound ——
+    /// 续跑 id 背后是那一轮的完整消息数组(含上下文),拿到 id 的别人不能接着跑、也不能看到答复。
+    #[prost(string, optional, tag = "3")]
+    pub caller: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ToolSupply {
+    #[prost(string, optional, tag = "1")]
+    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub function: ::core::option::Option<tool_supply::Function>,
+}
+/// Nested message and enum types in `ToolSupply`.
+pub mod tool_supply {
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Function {
+        #[prost(string, optional, tag = "1")]
+        pub name: ::core::option::Option<::prost::alloc::string::String>,
+        #[prost(string, optional, tag = "2")]
+        pub description: ::core::option::Option<::prost::alloc::string::String>,
+        #[prost(message, optional, tag = "3")]
+        pub parameters: ::core::option::Option<::pbjson_types::Struct>,
+    }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ToolCall {
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "3")]
+    pub function: ::core::option::Option<tool_call::Function>,
+}
+/// Nested message and enum types in `ToolCall`.
+pub mod tool_call {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+    pub struct Function {
+        #[prost(string, optional, tag = "1")]
+        pub name: ::core::option::Option<::prost::alloc::string::String>,
+        #[prost(string, optional, tag = "2")]
+        pub arguments: ::core::option::Option<::prost::alloc::string::String>,
+    }
+}
+/// `final` = **这轮还需不需要你做事**,不是"模型有没有调工具"。
+///
+/// final == true  → 服务端已经跑完(可能内部调过若干轮工具),result = 最终答复 text/url,tools 空
+/// final == false → **轮到你了**:result = 续跑用的 tool_id,tools = 待客户端执行的工具
+/// 客户端执行完调 Resume(带上这个 id)接着跑
+///
+/// ⚠️ **判据只能是 `final`,不能是"tools 非空"。**
+/// 模型这轮可能只调了服务端插件 —— 那些由服务端自己跑完,`final` 直接是 true;
+/// 但也可能出现 tools 为空却 final=false 的边界(工具被过滤掉等),此时仍须调 Resume,
+/// 否则整轮对话就停在半路,表现为"机器人不理我了"。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChatResp {
+    #[prost(bool, optional, tag = "1")]
+    pub r#final: ::core::option::Option<bool>,
+    /// 最终回答中的图片由模型以 Markdown 写入 result，不另设媒体返回通道。
+    #[prost(string, optional, tag = "2")]
+    pub result: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, repeated, tag = "3")]
+    pub tools: ::prost::alloc::vec::Vec<ToolCall>,
+    /// 这一轮的**问题**:请求里的 `conts` 原样、同序,只把每段语音(audio_url)换成 hi-ai 识别出的那段 text。
+    /// 语音转文字只在 hi-ai 做一次(推理前必转,见 service/chat.go 的 Prepare),调用方别另做一遍 ——
+    /// 两处识别结果可能不一致。Converse 与 Resume 的回包都带(final 与否都带,续跑带的是开轮那一句)。
+    /// 用途:club 把机器人的语音对话记进聊天记录时,用户那句存成文字而不是一段录音 url。
+    #[prost(message, repeated, tag = "4")]
+    pub question: ::prost::alloc::vec::Vec<Content>,
+}
+/// 流式帧(ConverseStream / ResumeStream)。
+///
+/// `type` 取值 —— **一条指令帧,其余是内容/进度/回显**:
+/// msg           —— 完整回答文字，不是分片；图片使用 message 中的 Markdown
+/// end           —— 本条流正常收尾
+/// info          —— 出错了。⚠️ 流式下错误**走帧不走 grpc status** ——
+/// 否则客户端收了半截流再拿到 error,两套错误通道并存反而更难排查
+/// event         —— 进度提示("正在执行插件..."),给人看的,别拿它做流程判断
+/// toolCalls     —— **指令**:轮到客户端执行工具了。见下,不可关
+/// echoToolCalls —— 回显:模型调了哪个函数、传了什么参数、工具返回什么(由 echo_tool_calls 打开)
+/// echoMemory    —— 回显:本轮命中的记忆片段(由 echo_memory 打开)
+/// echoContext   —— 回显:这次真正喂给模型的上下文(系统提示词含【插件】段 + 截出的历史,不含本轮提问;由 echo_context 打开)
+///
+/// ⚠️ **`msg` 里是完整答复,不是 token 分片。** 服务端跑完整个循环、Finish 之后
+/// 一次性发出来 —— 所以现在这条"流式"路的价值在于:错误走帧、进度可见、
+/// 以及那条 toolCalls 指令帧,**不在于逐字输出**。想要真正的增量输出,
+/// 要改的是 Finish/emit 那一段,不是把这里改个名。
+///
+/// ⚠️ 这段原来写的是 `text —— 答复分片`,而实现从来发的是 `msg`,还另有 end/info/event
+/// 三种没写进来。**照着这段文档写的客户端会一个字都渲染不出来** ——
+/// 是补流式冒烟时当场撞出来的(见 ~/ci/smoke-stream.sh)。契约漂了没人会报错,
+/// 只有真去收一次流才看得见。
+///
+/// ⚠️ **`toolCalls`(指令)与 `echoToolCalls`(回显)必须是两个 type,别合。**
+/// 前者是**指令性**的:要你去执行,是流程的一环,**不可关**;
+/// 后者是**信息性**的:只是给你看服务端调了什么,**可关**。
+/// 合成一个的话有两个后果:①客户端分不清收到的是"给你看的"还是"要你做的";
+/// ②一个本该可关的调试开关会把流程必需的信号一起关掉。
+///
+/// 收到 `toolCalls`:本条流到此结束,客户端执行 `tools`,再调 ResumeStream(带 `id`)续跑。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ConverseStreamResp {
+    #[prost(int32, optional, tag = "1")]
+    pub code: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "2")]
+    pub r#type: ::core::option::Option<::prost::alloc::string::String>,
+    /// type="msg" 时为完整回答；图片使用其中的 Markdown，客户端沿用原有文字渲染。
+    #[prost(string, optional, tag = "3")]
+    pub message: ::core::option::Option<::prost::alloc::string::String>,
+    /// 仅 type="toolCalls" 时有值 —— 与 ChatResp 的 result/tools 同义。
+    ///
+    /// 续跑 id(Resume 时带回)
+    #[prost(string, optional, tag = "4")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 待客户端执行的工具
+    #[prost(message, repeated, tag = "5")]
+    pub tools: ::prost::alloc::vec::Vec<ToolCall>,
+    /// 同 ChatResp.question。挂在每条流的收尾帧(`msg` 或 `toolCalls`)上,ConverseStream 与 ResumeStream 都带。
+    #[prost(message, repeated, tag = "6")]
+    pub question: ::prost::alloc::vec::Vec<Content>,
+}
+/// Generated client implementations.
+pub mod chat_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 对话(主体=会话)。商户档:hiai web(token)与商户后台服务(apikey)都会调。
+    ///
+    /// ── 只有一条对话路 ──────────────────────────────────────────────────────────
+    /// 服务端跑一个循环:模型要调工具就调、结果喂回去接着问,直到给出答复。
+    /// 只有遇到**必须由客户端执行**的工具时才中途返回,客户端执行完调 Resume 进同一个循环。
+    /// 于是「跑不跑得完」是**动态判断**,不是调用方选路:
+    /// · web / 软件机器人不上报 tools  → 恒一次调用拿到最终答复
+    /// · 硬件机器人只调了服务端插件    → 同样一次拿到,**不多一个来回**
+    /// · 硬件机器人要调本地工具        → 中途返回一次,Resume 续跑
+    ///
+    /// ⚠️ 曾经这里是**两个方法家族**:`Complete/CompleteStream`(服务端整流程跑完)与
+    /// `Converse/Resume`(客户端两阶段)。那不是两种对话方式,而是同一件事的两个特例 ——
+    /// 前者其实只是"客户端没有工具要执行"这个特例的专用入口(给 web 测试用,web 上全是软件机器人)。
+    /// 并存的代价有三:
+    /// ① 服务端 `Chat()` 要收一个 `types` 参数分岔,两条分支各写一遍装配与回喂;
+    /// ② 硬件机器人**即使只调服务端插件也被迫多一个 RTT**(旧 Converse 一律先返回、
+    /// 真正执行推迟到 Resume);
+    /// ③ 两条分支都没有循环概念,只有"第一次/第二次" —— 模型连着调两批工具时,
+    /// 第二次返回的是 toolcalls 而非文本,`answer = resp.Content` 取到空串,
+    /// **不报错,只是答复凭空消失**。
+    /// 合并成一个循环后这三条一起消失。**别再拆回去。**
+    ///
+    /// (原 Simple 已删;真 STT/TTS 已拆去 Speech;延迟统计已拆去 AgentBench。)
+    #[derive(Debug, Clone)]
+    pub struct ChatClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl ChatClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> ChatClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ChatClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            ChatClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// ── 会话管理 ──
+        pub async fn new_session(
+            &mut self,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
+        ) -> std::result::Result<tonic::Response<super::NewSessionResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/NewSession");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "NewSession"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get_context(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetContextReq>,
+        ) -> std::result::Result<tonic::Response<super::GetContextResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/GetContext");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "GetContext"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn clear_context(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ClearContextReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/ClearContext");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "ClearContext"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn append_context(
+            &mut self,
+            request: impl tonic::IntoRequest<super::AppendContextReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/AppendContext");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "AppendContext"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// ── 对话:一轮 = 一个循环,中途只在"轮到客户端"时返回 ──
+        pub async fn converse(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ChatReq>,
+        ) -> std::result::Result<tonic::Response<super::ChatResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/Converse");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "Converse"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn converse_stream(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ChatReq>,
+        ) -> std::result::Result<
+            tonic::Response<tonic::codec::Streaming<super::ConverseStreamResp>>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.ai.Chat/ConverseStream",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "ConverseStream"));
+            self.inner.server_streaming(req, path, codec).await
+        }
+        pub async fn resume(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ToolCallResultsReq>,
+        ) -> std::result::Result<tonic::Response<super::ChatResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/Resume");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "Resume"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn resume_stream(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ToolCallResultsReq>,
+        ) -> std::result::Result<
+            tonic::Response<tonic::codec::Streaming<super::ConverseStreamResp>>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Chat/ResumeStream");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "ResumeStream"));
+            self.inner.server_streaming(req, path, codec).await
         }
     }
 }

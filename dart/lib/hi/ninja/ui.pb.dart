@@ -286,10 +286,12 @@ class TextReply extends $pb.GeneratedMessage {
   factory TextReply({
     $core.String? uuid,
     $core.String? value,
+    $core.Iterable<$2.Content>? media,
   }) {
     final result = create();
     if (uuid != null) result.uuid = uuid;
     if (value != null) result.value = value;
+    if (media != null) result.media.addAll(media);
     return result;
   }
 
@@ -308,6 +310,8 @@ class TextReply extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'uuid')
     ..aOS(2, _omitFieldNames ? '' : 'value')
+    ..pPM<$2.Content>(3, _omitFieldNames ? '' : 'media',
+        subBuilder: $2.Content.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -345,6 +349,11 @@ class TextReply extends $pb.GeneratedMessage {
   $core.bool hasValue() => $_has(1);
   @$pb.TagNumber(2)
   void clearValue() => $_clearField(2);
+
+  /// 这一轮随回答一起发出去的**媒体段**(现在只有视频:插件回了 `video_url`)。
+  /// 与发进聊天的那条消息里的段一字不差,face 画在文字下面;没有 = 空列表。
+  @$pb.TagNumber(3)
+  $pb.PbList<$2.Content> get media => $_getList(2);
 }
 
 /// TTS 音频播放
@@ -586,6 +595,7 @@ enum BrainToFace_Cmd {
   showTip,
   showQr,
   binanceOffers,
+  videoReady,
   notSet
 }
 
@@ -617,6 +627,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     Tip? showTip,
     QrCard? showQr,
     BinanceOffers? binanceOffers,
+    VideoReady? videoReady,
   }) {
     final result = create();
     if (initRobot != null) result.initRobot = initRobot;
@@ -646,6 +657,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     if (showTip != null) result.showTip = showTip;
     if (showQr != null) result.showQr = showQr;
     if (binanceOffers != null) result.binanceOffers = binanceOffers;
+    if (videoReady != null) result.videoReady = videoReady;
     return result;
   }
 
@@ -684,6 +696,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     24: BrainToFace_Cmd.showTip,
     25: BrainToFace_Cmd.showQr,
     26: BrainToFace_Cmd.binanceOffers,
+    27: BrainToFace_Cmd.videoReady,
     0: BrainToFace_Cmd.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -715,7 +728,8 @@ class BrainToFace extends $pb.GeneratedMessage {
       22,
       24,
       25,
-      26
+      26,
+      27
     ])
     ..aOM<RobotInit>(1, _omitFieldNames ? '' : 'initRobot',
         subBuilder: RobotInit.create)
@@ -766,6 +780,8 @@ class BrainToFace extends $pb.GeneratedMessage {
         subBuilder: QrCard.create)
     ..aOM<BinanceOffers>(26, _omitFieldNames ? '' : 'binanceOffers',
         subBuilder: BinanceOffers.create)
+    ..aOM<VideoReady>(27, _omitFieldNames ? '' : 'videoReady',
+        subBuilder: VideoReady.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -812,6 +828,7 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(24)
   @$pb.TagNumber(25)
   @$pb.TagNumber(26)
+  @$pb.TagNumber(27)
   BrainToFace_Cmd whichCmd() => _BrainToFace_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
@@ -838,6 +855,7 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(24)
   @$pb.TagNumber(25)
   @$pb.TagNumber(26)
+  @$pb.TagNumber(27)
   void clearCmd() => $_clearField($_whichOneof(0));
 
   /// 初始化
@@ -1132,6 +1150,166 @@ class BrainToFace extends $pb.GeneratedMessage {
   void clearBinanceOffers() => $_clearField(26);
   @$pb.TagNumber(26)
   BinanceOffers ensureBinanceOffers() => $_ensure(24);
+
+  /// 回 `FaceToBrain.video_request`
+  @$pb.TagNumber(27)
+  VideoReady get videoReady => $_getN(25);
+  @$pb.TagNumber(27)
+  set videoReady(VideoReady value) => $_setField(27, value);
+  @$pb.TagNumber(27)
+  $core.bool hasVideoReady() => $_has(25);
+  @$pb.TagNumber(27)
+  void clearVideoReady() => $_clearField(27);
+  @$pb.TagNumber(27)
+  VideoReady ensureVideoReady() => $_ensure(25);
+}
+
+/// face -> brain:要一份屏幕放得了的视频。
+///
+/// face(LÖVE)只能放 Ogg Theora,聊天里的视频是 mp4 —— brain 去 club 要转好的那份
+/// (`hi.club.Source/TranscodeForRobot`);face 自己不连 club。
+class VideoRequest extends $pb.GeneratedMessage {
+  factory VideoRequest({
+    $core.String? id,
+    $core.String? url,
+  }) {
+    final result = create();
+    if (id != null) result.id = id;
+    if (url != null) result.url = url;
+    return result;
+  }
+
+  VideoRequest._();
+
+  factory VideoRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory VideoRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'VideoRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'id')
+    ..aOS(2, _omitFieldNames ? '' : 'url')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  VideoRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  VideoRequest copyWith(void Function(VideoRequest) updates) =>
+      super.copyWith((message) => updates(message as VideoRequest))
+          as VideoRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static VideoRequest create() => VideoRequest._();
+  @$core.override
+  VideoRequest createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static VideoRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<VideoRequest>(create);
+  static VideoRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get id => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set id($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get url => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set url($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasUrl() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUrl() => $_clearField(2);
+}
+
+/// brain -> face:回 VideoRequest。成了给 url(face 自己下载来放),没成给一句话。
+class VideoReady extends $pb.GeneratedMessage {
+  factory VideoReady({
+    $core.String? id,
+    $core.String? url,
+    $core.String? error,
+  }) {
+    final result = create();
+    if (id != null) result.id = id;
+    if (url != null) result.url = url;
+    if (error != null) result.error = error;
+    return result;
+  }
+
+  VideoReady._();
+
+  factory VideoReady.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory VideoReady.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'VideoReady',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'id')
+    ..aOS(2, _omitFieldNames ? '' : 'url')
+    ..aOS(3, _omitFieldNames ? '' : 'error')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  VideoReady clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  VideoReady copyWith(void Function(VideoReady) updates) =>
+      super.copyWith((message) => updates(message as VideoReady)) as VideoReady;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static VideoReady create() => VideoReady._();
+  @$core.override
+  VideoReady createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static VideoReady getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<VideoReady>(create);
+  static VideoReady? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get id => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set id($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get url => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set url($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasUrl() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUrl() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get error => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set error($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasError() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearError() => $_clearField(3);
 }
 
 /// 内容由调用方给的二维码。`content` 原样编进码里,face 不解析、不改写;
@@ -1344,6 +1522,7 @@ enum FaceToBrain_Cmd {
   binanceRequest,
   binanceOfferReply,
   getBinanceOffers,
+  videoRequest,
   notSet
 }
 
@@ -1357,6 +1536,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
     BinanceRequest? binanceRequest,
     $8.BinanceOfferReply? binanceOfferReply,
     $3.Empty? getBinanceOffers,
+    VideoRequest? videoRequest,
   }) {
     final result = create();
     if (voiceState != null) result.voiceState = voiceState;
@@ -1367,6 +1547,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
     if (binanceRequest != null) result.binanceRequest = binanceRequest;
     if (binanceOfferReply != null) result.binanceOfferReply = binanceOfferReply;
     if (getBinanceOffers != null) result.getBinanceOffers = getBinanceOffers;
+    if (videoRequest != null) result.videoRequest = videoRequest;
     return result;
   }
 
@@ -1387,13 +1568,14 @@ class FaceToBrain extends $pb.GeneratedMessage {
     5: FaceToBrain_Cmd.binanceRequest,
     6: FaceToBrain_Cmd.binanceOfferReply,
     7: FaceToBrain_Cmd.getBinanceOffers,
+    8: FaceToBrain_Cmd.videoRequest,
     0: FaceToBrain_Cmd.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'FaceToBrain',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..oo(0, [1, 2, 3, 4, 5, 6, 7])
+    ..oo(0, [1, 2, 3, 4, 5, 6, 7, 8])
     ..aE<StateToggle>(1, _omitFieldNames ? '' : 'voiceState',
         enumValues: StateToggle.values)
     ..aOM<UpdateAction>(2, _omitFieldNames ? '' : 'updateAction',
@@ -1408,6 +1590,8 @@ class FaceToBrain extends $pb.GeneratedMessage {
         subBuilder: $8.BinanceOfferReply.create)
     ..aOM<$3.Empty>(7, _omitFieldNames ? '' : 'getBinanceOffers',
         subBuilder: $3.Empty.create)
+    ..aOM<VideoRequest>(8, _omitFieldNames ? '' : 'videoRequest',
+        subBuilder: VideoRequest.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1436,6 +1620,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   @$pb.TagNumber(6)
   @$pb.TagNumber(7)
+  @$pb.TagNumber(8)
   FaceToBrain_Cmd whichCmd() => _FaceToBrain_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
@@ -1444,6 +1629,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   @$pb.TagNumber(6)
   @$pb.TagNumber(7)
+  @$pb.TagNumber(8)
   void clearCmd() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -1534,6 +1720,18 @@ class FaceToBrain extends $pb.GeneratedMessage {
   void clearGetBinanceOffers() => $_clearField(7);
   @$pb.TagNumber(7)
   $3.Empty ensureGetBinanceOffers() => $_ensure(6);
+
+  /// 人在屏上点了一个视频:替我要一份屏幕放得了的(见 VideoRequest)
+  @$pb.TagNumber(8)
+  VideoRequest get videoRequest => $_getN(7);
+  @$pb.TagNumber(8)
+  set videoRequest(VideoRequest value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasVideoRequest() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearVideoRequest() => $_clearField(8);
+  @$pb.TagNumber(8)
+  VideoRequest ensureVideoRequest() => $_ensure(7);
 }
 
 /// ── 跟单:开单卡 ──────────────────────────────────────────────

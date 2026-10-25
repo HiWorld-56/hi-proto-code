@@ -63,6 +63,16 @@ class SourceStub(object):
                 request_serializer=hi_dot_source_dot_source__pb2.DownloadStreamReq.SerializeToString,
                 response_deserializer=hi_dot_source_dot_source__pb2.DownloadStreamResp.FromString,
                 _registered_method=True)
+        self.ProbeVideo = channel.unary_unary(
+                '/hi.club.Source/ProbeVideo',
+                request_serializer=hi_dot_club_dot_source__pb2.ProbeVideoReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_source__pb2.ProbeVideoResp.FromString,
+                _registered_method=True)
+        self.TranscodeForRobot = channel.unary_unary(
+                '/hi.club.Source/TranscodeForRobot',
+                request_serializer=hi_dot_club_dot_source__pb2.TranscodeForRobotReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_source__pb2.TranscodeForRobotResp.FromString,
+                _registered_method=True)
         self.UploadTemp = channel.unary_unary(
                 '/hi.club.Source/UploadTemp',
                 request_serializer=hi_dot_common__pb2.UploadReq.SerializeToString,
@@ -190,6 +200,26 @@ class SourceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ProbeVideo(self, request, context):
+        """── 视频。两个方法都只认**公开桶**的 url(桶边界同 Download),产物落 temp 桶(14 天过期,与视频本身一样)──
+
+        ProbeVideo:发视频消息之前调一次,拿 `video_url` 内容段要填的封面、宽高、时长、大小
+        (messaging.proto `Content.Chat`)。放在服务端是因为发视频的不只有 app —— 机器人转发插件生成的视频时
+        设备上没有任何解码能力;各端各自截帧也会是四套口径。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def TranscodeForRobot(self, request, context):
+        """TranscodeForRobot:机器人的屏幕(hinj-face,LÖVE)只能放 Ogg Theora,设备上也没有别的解码器 ——
+        聊天里的 mp4 要转一份 Ogg Theora(长边不超过 1280)才放得了。回转好的那份的 url;
+        同一个视频转过就直接回上次那份。要整段重新编码,**慢**:调用方给足超时。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def UploadTemp(self, request, context):
         """── 临时:temp 桶,**14 天自动过期**。聊天/AI 媒体,按年月分目录便于人工排查 ──
         """
@@ -300,6 +330,16 @@ def add_SourceServicer_to_server(servicer, server):
                     servicer.DownloadStream,
                     request_deserializer=hi_dot_source_dot_source__pb2.DownloadStreamReq.FromString,
                     response_serializer=hi_dot_source_dot_source__pb2.DownloadStreamResp.SerializeToString,
+            ),
+            'ProbeVideo': grpc.unary_unary_rpc_method_handler(
+                    servicer.ProbeVideo,
+                    request_deserializer=hi_dot_club_dot_source__pb2.ProbeVideoReq.FromString,
+                    response_serializer=hi_dot_club_dot_source__pb2.ProbeVideoResp.SerializeToString,
+            ),
+            'TranscodeForRobot': grpc.unary_unary_rpc_method_handler(
+                    servicer.TranscodeForRobot,
+                    request_deserializer=hi_dot_club_dot_source__pb2.TranscodeForRobotReq.FromString,
+                    response_serializer=hi_dot_club_dot_source__pb2.TranscodeForRobotResp.SerializeToString,
             ),
             'UploadTemp': grpc.unary_unary_rpc_method_handler(
                     servicer.UploadTemp,
@@ -511,6 +551,60 @@ class Source(object):
             '/hi.club.Source/DownloadStream',
             hi_dot_source_dot_source__pb2.DownloadStreamReq.SerializeToString,
             hi_dot_source_dot_source__pb2.DownloadStreamResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ProbeVideo(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.Source/ProbeVideo',
+            hi_dot_club_dot_source__pb2.ProbeVideoReq.SerializeToString,
+            hi_dot_club_dot_source__pb2.ProbeVideoResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def TranscodeForRobot(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.Source/TranscodeForRobot',
+            hi_dot_club_dot_source__pb2.TranscodeForRobotReq.SerializeToString,
+            hi_dot_club_dot_source__pb2.TranscodeForRobotResp.FromString,
             options,
             channel_credentials,
             insecure,

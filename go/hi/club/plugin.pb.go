@@ -198,7 +198,7 @@ var File_hi_club_plugin_proto protoreflect.FileDescriptor
 
 const file_hi_club_plugin_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/club/plugin.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12hi/ai/plugin.proto\x1a\x10hi/options.proto\x1a\x0fhi/common.proto\"W\n" +
+	"\x14hi/club/plugin.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12hi/ai/plugin.proto\x1a\x10hi/options.proto\"W\n" +
 	"\x0fListOnDeviceReq\x12\x17\n" +
 	"\x04arch\x18\x01 \x01(\tH\x00R\x04arch\x88\x01\x01\x12\"\n" +
 	"\x04have\x18\x02 \x03(\v2\x0e.hi.ai.HaveDepR\x04haveB\a\n" +

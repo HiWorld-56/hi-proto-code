@@ -31,7 +31,7 @@ from hi.source import source_pb2 as hi_dot_source_dot_source__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14hi/club/source.proto\x12\x07hi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12hi/ai/plugin.proto\x1a\x14hi/ai/training.proto\x1a\x1b\x62uf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x16hi/source/source.proto\x1a\x10hi/options.proto\"E\n\x13\x44ownloadResourceReq\x12&\n\x03url\x18\x01 \x01(\tB\x0f\xbaH\x0cr\x07\x32\x05^\\S+$\xc8\x01\x01H\x00R\x03url\x88\x01\x01\x42\x06\n\x04_url\"M\n\x14\x44ownloadResourceResp\x12#\n\x07\x63ontent\x18\x01 \x01(\x0c\x42\x04\x90\xb5\x18\x01H\x00R\x07\x63ontent\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\n\n\x08_content2\x97\x08\n\x06Source\x12\x34\n\x0cUploadAvatar\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12\x39\n\x11UploadGroupAvatar\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12=\n\x15UploadGroupBackground\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12N\n\x08\x44ownload\x12\x1c.hi.club.DownloadResourceReq\x1a\x1d.hi.club.DownloadResourceResp\"\x05\x8a\xb5\x18\x01\x02\x12V\n\x0e\x44ownloadStream\x12\x1c.hi.source.DownloadStreamReq\x1a\x1d.hi.source.DownloadStreamResp\"\x05\x8a\xb5\x18\x01\x02\x30\x01\x12\x32\n\nUploadTemp\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12@\n\x10UploadTempStream\x12\x13.hi.UploadStreamReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02(\x01\x12\x31\n\tUploadLog\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12\x34\n\x0cUploadScript\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12\x42\n\x12UploadScriptStream\x12\x13.hi.UploadStreamReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02(\x01\x12L\n\x0e\x44ownloadScript\x12\x18.hi.ai.DownloadScriptReq\x1a\x19.hi.ai.DownloadScriptResp\"\x05\x8a\xb5\x18\x01\x02\x12I\n\x12UploadTrainingFile\x12\x14.hi.ai.UploadFileReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12N\n\x14\x44ownloadTrainingFile\x12\x16.hi.ai.DownloadFileReq\x1a\x17.hi.ai.DownloadFileResp\"\x05\x8a\xb5\x18\x01\x02\x12\x32\n\nUploadLogo\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12\x35\n\rUploadSummary\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n\x06\x44\x65lete\x12\x15.hi.DeleteResourceReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x42+Z)github.com/HiWorld-56/hi-proto/go/hi/clubb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14hi/club/source.proto\x12\x07hi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12hi/ai/plugin.proto\x1a\x14hi/ai/training.proto\x1a\x1b\x62uf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x16hi/source/source.proto\x1a\x10hi/options.proto\"?\n\rProbeVideoReq\x12&\n\x03url\x18\x01 \x01(\tB\x0f\xbaH\x0cr\x07\x32\x05^\\S+$\xc8\x01\x01H\x00R\x03url\x88\x01\x01\x42\x06\n\x04_url\"\xf6\x01\n\x0eProbeVideoResp\x12\x1f\n\x05\x63over\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x05\x63over\x88\x01\x01\x12\x1f\n\x05width\x18\x02 \x01(\rB\x04\x90\xb5\x18\x01H\x01R\x05width\x88\x01\x01\x12!\n\x06height\x18\x03 \x01(\rB\x04\x90\xb5\x18\x01H\x02R\x06height\x88\x01\x01\x12%\n\x08\x64uration\x18\x04 \x01(\rB\x04\x90\xb5\x18\x01H\x03R\x08\x64uration\x88\x01\x01\x12\x1d\n\x04size\x18\x05 \x01(\rB\x04\x90\xb5\x18\x01H\x04R\x04size\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\x08\n\x06_coverB\x08\n\x06_widthB\t\n\x07_heightB\x0b\n\t_durationB\x07\n\x05_size\"F\n\x14TranscodeForRobotReq\x12&\n\x03url\x18\x01 \x01(\tB\x0f\xbaH\x0cr\x07\x32\x05^\\S+$\xc8\x01\x01H\x00R\x03url\x88\x01\x01\x42\x06\n\x04_url\"B\n\x15TranscodeForRobotResp\x12\x1b\n\x03url\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x03url\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\x06\n\x04_url\"E\n\x13\x44ownloadResourceReq\x12&\n\x03url\x18\x01 \x01(\tB\x0f\xbaH\x0cr\x07\x32\x05^\\S+$\xc8\x01\x01H\x00R\x03url\x88\x01\x01\x42\x06\n\x04_url\"M\n\x14\x44ownloadResourceResp\x12#\n\x07\x63ontent\x18\x01 \x01(\x0c\x42\x04\x90\xb5\x18\x01H\x00R\x07\x63ontent\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\n\n\x08_content2\xb8\t\n\x06Source\x12\x34\n\x0cUploadAvatar\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12\x39\n\x11UploadGroupAvatar\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12=\n\x15UploadGroupBackground\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12N\n\x08\x44ownload\x12\x1c.hi.club.DownloadResourceReq\x1a\x1d.hi.club.DownloadResourceResp\"\x05\x8a\xb5\x18\x01\x02\x12V\n\x0e\x44ownloadStream\x12\x1c.hi.source.DownloadStreamReq\x1a\x1d.hi.source.DownloadStreamResp\"\x05\x8a\xb5\x18\x01\x02\x30\x01\x12\x44\n\nProbeVideo\x12\x16.hi.club.ProbeVideoReq\x1a\x17.hi.club.ProbeVideoResp\"\x05\x8a\xb5\x18\x01\x02\x12Y\n\x11TranscodeForRobot\x12\x1d.hi.club.TranscodeForRobotReq\x1a\x1e.hi.club.TranscodeForRobotResp\"\x05\x8a\xb5\x18\x01\x02\x12\x32\n\nUploadTemp\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12@\n\x10UploadTempStream\x12\x13.hi.UploadStreamReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02(\x01\x12\x31\n\tUploadLog\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12\x34\n\x0cUploadScript\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12\x42\n\x12UploadScriptStream\x12\x13.hi.UploadStreamReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02(\x01\x12L\n\x0e\x44ownloadScript\x12\x18.hi.ai.DownloadScriptReq\x1a\x19.hi.ai.DownloadScriptResp\"\x05\x8a\xb5\x18\x01\x02\x12I\n\x12UploadTrainingFile\x12\x14.hi.ai.UploadFileReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12N\n\x14\x44ownloadTrainingFile\x12\x16.hi.ai.DownloadFileReq\x1a\x17.hi.ai.DownloadFileResp\"\x05\x8a\xb5\x18\x01\x02\x12\x32\n\nUploadLogo\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12\x35\n\rUploadSummary\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n\x06\x44\x65lete\x12\x15.hi.DeleteResourceReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x42+Z)github.com/HiWorld-56/hi-proto/go/hi/clubb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -39,6 +39,26 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'hi.club.source_pb2', _globa
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'Z)github.com/HiWorld-56/hi-proto/go/hi/club'
+  _globals['_PROBEVIDEOREQ'].fields_by_name['url']._loaded_options = None
+  _globals['_PROBEVIDEOREQ'].fields_by_name['url']._serialized_options = b'\272H\014r\0072\005^\\S+$\310\001\001'
+  _globals['_PROBEVIDEORESP'].fields_by_name['cover']._loaded_options = None
+  _globals['_PROBEVIDEORESP'].fields_by_name['cover']._serialized_options = b'\220\265\030\001'
+  _globals['_PROBEVIDEORESP'].fields_by_name['width']._loaded_options = None
+  _globals['_PROBEVIDEORESP'].fields_by_name['width']._serialized_options = b'\220\265\030\001'
+  _globals['_PROBEVIDEORESP'].fields_by_name['height']._loaded_options = None
+  _globals['_PROBEVIDEORESP'].fields_by_name['height']._serialized_options = b'\220\265\030\001'
+  _globals['_PROBEVIDEORESP'].fields_by_name['duration']._loaded_options = None
+  _globals['_PROBEVIDEORESP'].fields_by_name['duration']._serialized_options = b'\220\265\030\001'
+  _globals['_PROBEVIDEORESP'].fields_by_name['size']._loaded_options = None
+  _globals['_PROBEVIDEORESP'].fields_by_name['size']._serialized_options = b'\220\265\030\001'
+  _globals['_PROBEVIDEORESP']._loaded_options = None
+  _globals['_PROBEVIDEORESP']._serialized_options = b'\230\265\030\001'
+  _globals['_TRANSCODEFORROBOTREQ'].fields_by_name['url']._loaded_options = None
+  _globals['_TRANSCODEFORROBOTREQ'].fields_by_name['url']._serialized_options = b'\272H\014r\0072\005^\\S+$\310\001\001'
+  _globals['_TRANSCODEFORROBOTRESP'].fields_by_name['url']._loaded_options = None
+  _globals['_TRANSCODEFORROBOTRESP'].fields_by_name['url']._serialized_options = b'\220\265\030\001'
+  _globals['_TRANSCODEFORROBOTRESP']._loaded_options = None
+  _globals['_TRANSCODEFORROBOTRESP']._serialized_options = b'\230\265\030\001'
   _globals['_DOWNLOADRESOURCEREQ'].fields_by_name['url']._loaded_options = None
   _globals['_DOWNLOADRESOURCEREQ'].fields_by_name['url']._serialized_options = b'\272H\014r\0072\005^\\S+$\310\001\001'
   _globals['_DOWNLOADRESOURCERESP'].fields_by_name['content']._loaded_options = None
@@ -55,6 +75,10 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_SOURCE'].methods_by_name['Download']._serialized_options = b'\212\265\030\001\002'
   _globals['_SOURCE'].methods_by_name['DownloadStream']._loaded_options = None
   _globals['_SOURCE'].methods_by_name['DownloadStream']._serialized_options = b'\212\265\030\001\002'
+  _globals['_SOURCE'].methods_by_name['ProbeVideo']._loaded_options = None
+  _globals['_SOURCE'].methods_by_name['ProbeVideo']._serialized_options = b'\212\265\030\001\002'
+  _globals['_SOURCE'].methods_by_name['TranscodeForRobot']._loaded_options = None
+  _globals['_SOURCE'].methods_by_name['TranscodeForRobot']._serialized_options = b'\212\265\030\001\002'
   _globals['_SOURCE'].methods_by_name['UploadTemp']._loaded_options = None
   _globals['_SOURCE'].methods_by_name['UploadTemp']._serialized_options = b'\212\265\030\001\002'
   _globals['_SOURCE'].methods_by_name['UploadTempStream']._loaded_options = None
@@ -77,10 +101,18 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_SOURCE'].methods_by_name['UploadSummary']._serialized_options = b'\212\265\030\001\002'
   _globals['_SOURCE'].methods_by_name['Delete']._loaded_options = None
   _globals['_SOURCE'].methods_by_name['Delete']._serialized_options = b'\212\265\030\001\002'
-  _globals['_DOWNLOADRESOURCEREQ']._serialized_start=192
-  _globals['_DOWNLOADRESOURCEREQ']._serialized_end=261
-  _globals['_DOWNLOADRESOURCERESP']._serialized_start=263
-  _globals['_DOWNLOADRESOURCERESP']._serialized_end=340
-  _globals['_SOURCE']._serialized_start=343
-  _globals['_SOURCE']._serialized_end=1390
+  _globals['_PROBEVIDEOREQ']._serialized_start=192
+  _globals['_PROBEVIDEOREQ']._serialized_end=255
+  _globals['_PROBEVIDEORESP']._serialized_start=258
+  _globals['_PROBEVIDEORESP']._serialized_end=504
+  _globals['_TRANSCODEFORROBOTREQ']._serialized_start=506
+  _globals['_TRANSCODEFORROBOTREQ']._serialized_end=576
+  _globals['_TRANSCODEFORROBOTRESP']._serialized_start=578
+  _globals['_TRANSCODEFORROBOTRESP']._serialized_end=644
+  _globals['_DOWNLOADRESOURCEREQ']._serialized_start=646
+  _globals['_DOWNLOADRESOURCEREQ']._serialized_end=715
+  _globals['_DOWNLOADRESOURCERESP']._serialized_start=717
+  _globals['_DOWNLOADRESOURCERESP']._serialized_end=794
+  _globals['_SOURCE']._serialized_start=797
+  _globals['_SOURCE']._serialized_end=2005
 # @@protoc_insertion_point(module_scope)

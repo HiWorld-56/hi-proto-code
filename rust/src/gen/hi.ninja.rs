@@ -539,12 +539,16 @@ pub struct MasterEvent {
 /// uuid 由 brain 在本次对话开始时生成，通过 show_im_request（覆写 Message.uuid）
 /// 和 show_im_reply / show_voice_reply 两端传递，face 据此将回复路由到对应的对话框。
 /// value 为 AI 输出的纯文本，不封装为 Message 结构。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TextReply {
     #[prost(string, optional, tag = "1")]
     pub uuid: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
     pub value: ::core::option::Option<::prost::alloc::string::String>,
+    /// 这一轮随回答一起发出去的**媒体段**(现在只有视频:插件回了 `video_url`)。
+    /// 与发进聊天的那条消息里的段一字不差,face 画在文字下面;没有 = 空列表。
+    #[prost(message, repeated, tag = "3")]
+    pub media: ::prost::alloc::vec::Vec<super::club::Content>,
 }
 /// TTS 音频播放
 /// uuid 与对应的 TextReply.uuid 一致，audio 为完整音频文件的原始字节。
@@ -593,7 +597,7 @@ pub struct BinanceRequest {
 pub struct BrainToFace {
     #[prost(
         oneof = "brain_to_face::Cmd",
-        tags = "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21, 22, 24, 25, 26"
+        tags = "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21, 22, 24, 25, 26, 27"
     )]
     pub cmd: ::core::option::Option<brain_to_face::Cmd>,
 }
@@ -696,7 +700,35 @@ pub mod brain_to_face {
         /// face 重启后用 `get_binance_offers` 要一次。
         #[prost(message, tag = "26")]
         BinanceOffers(super::BinanceOffers),
+        /// 回 `FaceToBrain.video_request`
+        #[prost(message, tag = "27")]
+        VideoReady(super::VideoReady),
     }
+}
+/// face -> brain:要一份屏幕放得了的视频。
+///
+/// face(LÖVE)只能放 Ogg Theora,聊天里的视频是 mp4 —— brain 去 club 要转好的那份
+/// (`hi.club.Source/TranscodeForRobot`);face 自己不连 club。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VideoRequest {
+    /// face 给的流水号,brain 原样带回 `VideoReady.id`
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 聊天里那个视频的 url(`video_url` 段的 chat.content)
+    #[prost(string, optional, tag = "2")]
+    pub url: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// brain -> face:回 VideoRequest。成了给 url(face 自己下载来放),没成给一句话。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VideoReady {
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    /// Ogg Theora;没成 = 不传
+    #[prost(string, optional, tag = "2")]
+    pub url: ::core::option::Option<::prost::alloc::string::String>,
+    /// 给人看的一句;原因只进 brain 日志。成了 = 不传
+    #[prost(string, optional, tag = "3")]
+    pub error: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 内容由调用方给的二维码。`content` 原样编进码里,face 不解析、不改写;
 /// 装不下(超过二维码容量)就不显示并在日志里说一句 —— 截断了的码扫出来是另一份数据。
@@ -730,7 +762,7 @@ pub struct StatusEvent {
 /// face -> brain
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct FaceToBrain {
-    #[prost(oneof = "face_to_brain::Cmd", tags = "1, 2, 3, 4, 5, 6, 7")]
+    #[prost(oneof = "face_to_brain::Cmd", tags = "1, 2, 3, 4, 5, 6, 7, 8")]
     pub cmd: ::core::option::Option<face_to_brain::Cmd>,
 }
 /// Nested message and enum types in `FaceToBrain`.
@@ -766,6 +798,9 @@ pub mod face_to_brain {
         /// face 重启后要一次当前的开单卡列表(回 `BrainToFace.binance_offers`)
         #[prost(message, tag = "7")]
         GetBinanceOffers(::pbjson_types::Empty),
+        /// 人在屏上点了一个视频:替我要一份屏幕放得了的(见 VideoRequest)
+        #[prost(message, tag = "8")]
+        VideoRequest(super::VideoRequest),
     }
 }
 /// ── 跟单:开单卡 ──────────────────────────────────────────────

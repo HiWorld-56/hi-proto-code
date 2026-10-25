@@ -772,12 +772,18 @@ class Content_Chat extends $pb.GeneratedMessage {
     $core.String? name,
     $core.int? size,
     $core.int? duration,
+    $core.String? cover,
+    $core.int? width,
+    $core.int? height,
   }) {
     final result = create();
     if (content != null) result.content = content;
     if (name != null) result.name = name;
     if (size != null) result.size = size;
     if (duration != null) result.duration = duration;
+    if (cover != null) result.cover = cover;
+    if (width != null) result.width = width;
+    if (height != null) result.height = height;
     return result;
   }
 
@@ -798,6 +804,9 @@ class Content_Chat extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'name')
     ..aI(3, _omitFieldNames ? '' : 'size', fieldType: $pb.PbFieldType.OU3)
     ..aI(4, _omitFieldNames ? '' : 'duration', fieldType: $pb.PbFieldType.OU3)
+    ..aOS(5, _omitFieldNames ? '' : 'cover')
+    ..aI(6, _omitFieldNames ? '' : 'width', fieldType: $pb.PbFieldType.OU3)
+    ..aI(7, _omitFieldNames ? '' : 'height', fieldType: $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -854,6 +863,36 @@ class Content_Chat extends $pb.GeneratedMessage {
   $core.bool hasDuration() => $_has(3);
   @$pb.TagNumber(4)
   void clearDuration() => $_clearField(4);
+
+  /// 下面三个现在只有 `video_url` 用。不传 = 不知道(气泡按默认比例占位、不画封面)。
+  /// width/height 是**画面**的像素,**已按旋转信息转正**:手机竖拍的视频文件里存的是 1920×1080 + 旋转 90°,
+  /// 这里写 1080×1920 —— 端上拿它直接定气泡比例、决定全屏时要不要横过来,不用再懂旋转。
+  @$pb.TagNumber(5)
+  $core.String get cover => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set cover($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasCover() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearCover() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.int get width => $_getIZ(5);
+  @$pb.TagNumber(6)
+  set width($core.int value) => $_setUnsignedInt32(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasWidth() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearWidth() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.int get height => $_getIZ(6);
+  @$pb.TagNumber(7)
+  set height($core.int value) => $_setUnsignedInt32(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasHeight() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearHeight() => $_clearField(7);
 }
 
 enum Content_Kind {
@@ -875,6 +914,7 @@ enum Content_Kind {
 /// image_url   图片              chat.content = 图片 url(name=原文件名, size=字节数)
 /// audio_url   语音              chat.content = 音频 url(duration=秒)
 /// file        文件              chat.content = 文件 url(name/size)
+/// video_url   视频              chat.content = 视频 url(name/size;duration=秒;cover=封面图 url;width/height=画面像素)
 /// transfer    转账卡            kind=trans(hi.did.Transaction)
 /// broadcast   广播
 /// binance     币安操作结果卡      kind=binance(hi.binance.BinanceResult)
@@ -892,6 +932,10 @@ enum Content_Kind {
 /// 所以**别看着别扭就"顺手改成 image"**:改了既背离上游那套约定,也当场打断
 /// Android 端(hiclub-app)与硬件端(hinj-brain)—— 它们现网都按这张表收发。
 /// 同理,以后加多模态类型**先看 OpenAI 那边叫什么**,能对齐就对齐。
+/// `video_url` 就是这么来的:OpenAI 兼容接口里收视频的那一类(vLLM、通义)叫 `video_url`。
+///
+/// `video_url` 的封面 / 宽高 / 时长 / 大小**由发送方调 `hi.club.Source/ProbeVideo` 取**,端上不自己截帧
+/// (发视频的不只有 app,机器人转发插件生成的视频时手上没有解码能力;各端各截一份就是四套口径)。
 ///
 /// 这张表原先**只存在于各端的代码里**(Android 的 MQTTConfig、brain 的 pb_ext),proto 这边
 /// 只写了 `string type = 1`。代价:hiclub-simple-app 自己发明了 `image`,于是

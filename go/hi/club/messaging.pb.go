@@ -13,7 +13,6 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	anypb "google.golang.org/protobuf/types/known/anypb"
-	_ "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -617,6 +616,7 @@ func (x *Member) GetUser() *hi.Entity {
 // image_url   图片              chat.content = 图片 url(name=原文件名, size=字节数)
 // audio_url   语音              chat.content = 音频 url(duration=秒)
 // file        文件              chat.content = 文件 url(name/size)
+// video_url   视频              chat.content = 视频 url(name/size;duration=秒;cover=封面图 url;width/height=画面像素)
 // transfer    转账卡            kind=trans(hi.did.Transaction)
 // broadcast   广播
 // binance     币安操作结果卡      kind=binance(hi.binance.BinanceResult)
@@ -634,6 +634,10 @@ func (x *Member) GetUser() *hi.Entity {
 // 所以**别看着别扭就"顺手改成 image"**:改了既背离上游那套约定,也当场打断
 // Android 端(hiclub-app)与硬件端(hinj-brain)—— 它们现网都按这张表收发。
 // 同理,以后加多模态类型**先看 OpenAI 那边叫什么**,能对齐就对齐。
+// `video_url` 就是这么来的:OpenAI 兼容接口里收视频的那一类(vLLM、通义)叫 `video_url`。
+//
+// `video_url` 的封面 / 宽高 / 时长 / 大小**由发送方调 `hi.club.Source/ProbeVideo` 取**,端上不自己截帧
+// (发视频的不只有 app,机器人转发插件生成的视频时手上没有解码能力;各端各截一份就是四套口径)。
 //
 // 这张表原先**只存在于各端的代码里**(Android 的 MQTTConfig、brain 的 pb_ext),proto 这边
 // 只写了 `string type = 1`。代价:hiclub-simple-app 自己发明了 `image`,于是
@@ -926,11 +930,17 @@ func (x *ChatRecord) GetList() []*Message {
 }
 
 type Content_Chat struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Content       *string                `protobuf:"bytes,1,opt,name=content,proto3,oneof" json:"content,omitempty"`
-	Name          *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
-	Size          *uint32                `protobuf:"varint,3,opt,name=size,proto3,oneof" json:"size,omitempty"`
-	Duration      *uint32                `protobuf:"varint,4,opt,name=duration,proto3,oneof" json:"duration,omitempty"`
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	Content  *string                `protobuf:"bytes,1,opt,name=content,proto3,oneof" json:"content,omitempty"`
+	Name     *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	Size     *uint32                `protobuf:"varint,3,opt,name=size,proto3,oneof" json:"size,omitempty"`
+	Duration *uint32                `protobuf:"varint,4,opt,name=duration,proto3,oneof" json:"duration,omitempty"`
+	// 下面三个现在只有 `video_url` 用。不传 = 不知道(气泡按默认比例占位、不画封面)。
+	// width/height 是**画面**的像素,**已按旋转信息转正**:手机竖拍的视频文件里存的是 1920×1080 + 旋转 90°,
+	// 这里写 1080×1920 —— 端上拿它直接定气泡比例、决定全屏时要不要横过来,不用再懂旋转。
+	Cover         *string `protobuf:"bytes,5,opt,name=cover,proto3,oneof" json:"cover,omitempty"` // 封面图 url(JPEG)
+	Width         *uint32 `protobuf:"varint,6,opt,name=width,proto3,oneof" json:"width,omitempty"`
+	Height        *uint32 `protobuf:"varint,7,opt,name=height,proto3,oneof" json:"height,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -993,11 +1003,32 @@ func (x *Content_Chat) GetDuration() uint32 {
 	return 0
 }
 
+func (x *Content_Chat) GetCover() string {
+	if x != nil && x.Cover != nil {
+		return *x.Cover
+	}
+	return ""
+}
+
+func (x *Content_Chat) GetWidth() uint32 {
+	if x != nil && x.Width != nil {
+		return *x.Width
+	}
+	return 0
+}
+
+func (x *Content_Chat) GetHeight() uint32 {
+	if x != nil && x.Height != nil {
+		return *x.Height
+	}
+	return 0
+}
+
 var File_hi_club_messaging_proto protoreflect.FileDescriptor
 
 const file_hi_club_messaging_proto_rawDesc = "" +
 	"\n" +
-	"\x17hi/club/messaging.proto\x12\ahi.club\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/transfer.proto\x1a\x18hi/binance/binance.proto\x1a\x18hi/binance/command.proto\x1a\x16hi/binance/offer.proto\x1a\x17hi/binance/signal.proto\x1a\x10hi/options.proto\"{\n" +
+	"\x17hi/club/messaging.proto\x12\ahi.club\x1a\x19google/protobuf/any.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/transfer.proto\x1a\x18hi/binance/binance.proto\x1a\x18hi/binance/command.proto\x1a\x16hi/binance/offer.proto\x1a\x17hi/binance/signal.proto\x1a\x10hi/options.proto\"{\n" +
 	"\x06Packet\x12/\n" +
 	"\x06notice\x18\x01 \x01(\v2\x0f.hi.club.NoticeB\x04\x90\xb5\x18\x02H\x00R\x06notice\x122\n" +
 	"\amessage\x18\x02 \x01(\v2\x10.hi.club.MessageB\x04\x90\xb5\x18\x02H\x00R\amessage:\x04\x98\xb5\x18\x02B\x06\n" +
@@ -1064,7 +1095,7 @@ const file_hi_club_messaging_proto_rawDesc = "" +
 	"\x05group\x18\x01 \x01(\v2\n" +
 	".hi.EntityR\x05group\x12\x1e\n" +
 	"\x04user\x18\x02 \x01(\v2\n" +
-	".hi.EntityR\x04user\"\xaa\x06\n" +
+	".hi.EntityR\x04user\"\xae\a\n" +
 	"\aContent\x12\x1d\n" +
 	"\x04type\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x04type\x88\x01\x01\x121\n" +
 	"\x04chat\x18\x02 \x01(\v2\x15.hi.club.Content.ChatB\x04\x90\xb5\x18\x02H\x00R\x04chat\x121\n" +
@@ -1077,17 +1108,23 @@ const file_hi_club_messaging_proto_rawDesc = "" +
 	"\rbinance_offer\x18\n" +
 	" \x01(\v2\x18.hi.binance.BinanceOfferB\x04\x90\xb5\x18\x02H\x00R\fbinanceOffer\x12U\n" +
 	"\x13binance_offer_reply\x18\v \x01(\v2\x1d.hi.binance.BinanceOfferReplyB\x04\x90\xb5\x18\x02H\x00R\x11binanceOfferReply\x12\x19\n" +
-	"\x02id\x18\b \x01(\rB\x04\x90\xb5\x18\x02H\x02R\x02id\x88\x01\x01\x1a\xc1\x01\n" +
+	"\x02id\x18\b \x01(\rB\x04\x90\xb5\x18\x02H\x02R\x02id\x88\x01\x01\x1a\xc5\x02\n" +
 	"\x04Chat\x12#\n" +
 	"\acontent\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\acontent\x88\x01\x01\x12\x1d\n" +
 	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x04name\x88\x01\x01\x12\x1d\n" +
 	"\x04size\x18\x03 \x01(\rB\x04\x90\xb5\x18\x02H\x02R\x04size\x88\x01\x01\x12%\n" +
-	"\bduration\x18\x04 \x01(\rB\x04\x90\xb5\x18\x02H\x03R\bduration\x88\x01\x01:\x04\x98\xb5\x18\x02B\n" +
+	"\bduration\x18\x04 \x01(\rB\x04\x90\xb5\x18\x02H\x03R\bduration\x88\x01\x01\x12\x1f\n" +
+	"\x05cover\x18\x05 \x01(\tB\x04\x90\xb5\x18\x02H\x04R\x05cover\x88\x01\x01\x12\x1f\n" +
+	"\x05width\x18\x06 \x01(\rB\x04\x90\xb5\x18\x02H\x05R\x05width\x88\x01\x01\x12!\n" +
+	"\x06height\x18\a \x01(\rB\x04\x90\xb5\x18\x02H\x06R\x06height\x88\x01\x01:\x04\x98\xb5\x18\x02B\n" +
 	"\n" +
 	"\b_contentB\a\n" +
 	"\x05_nameB\a\n" +
 	"\x05_sizeB\v\n" +
-	"\t_duration:\x04\x98\xb5\x18\x02B\x06\n" +
+	"\t_durationB\b\n" +
+	"\x06_coverB\b\n" +
+	"\x06_widthB\t\n" +
+	"\a_height:\x04\x98\xb5\x18\x02B\x06\n" +
 	"\x04kindB\a\n" +
 	"\x05_typeB\x05\n" +
 	"\x03_id\"i\n" +
