@@ -537,7 +537,7 @@ class ChatReq extends $pb.GeneratedMessage {
   void clearAsker() => $_clearField(12);
 
   /// 这句话所在那条消息的 uuid(IM 路:机器人收到的那条 mqtt 消息的 uuid)。
-  /// club 据此给聊天记录这类原样内嵌的内容写引用 `<uuid>#<段 id>`(附件列表,见 hi/ai/chat.proto `Attachment`)。
+  /// club 据此给聊天记录这类原样内嵌的内容写引用 `<uuid 末 8 位>#<段 id>`(附件列表,见 hi/ai/chat.proto `Attachment`)。
   /// **语音路不用传**:那一轮的 uuid 由 club 在调 hi.ai 之前生成,写进语音聊天记录时用的是同一个。
   @$pb.TagNumber(13)
   $core.String get uuid => $_getSZ(12);

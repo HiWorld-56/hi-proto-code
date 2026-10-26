@@ -3888,8 +3888,8 @@ pub struct Content {
     #[prost(string, optional, tag = "1")]
     pub r#type: ::core::option::Option<::prost::alloc::string::String>,
     /// 这一段在**本条消息里**的编号:从 1 起按先后编(第一段 1、第二段 2……),同一条消息内天然不重。
-    /// **由 hiclub-core-mqtt 在发出前统一填**(UI / brain 照旧只管组内容,填不填、填什么都会被 core 覆盖);
-    /// 后端自己组的消息(语音聊天记录、软件机器人的回话)由后端按同一规则填。
+    /// **由组内容的前端填**:app 与 brain 发消息前统一经 hiclub-front `ids::seal`(用户 10-26 定);
+    /// core 只管信封,不碰内容、不填编号。后端自己组的消息(语音聊天记录、软件机器人的回话)由后端按同一规则填。
     /// 用途:引用消息里的某一段 —— `<消息 uuid>#<id>`,见下面「引用」那段。
     #[prost(uint32, optional, tag = "8")]
     pub id: ::core::option::Option<u32>,
@@ -3967,7 +3967,7 @@ pub mod content {
 /// 每条 `Message.contents` 是原消息的内容字节**原样**,不解开重编 —— 转发方的 proto 比原消息旧时,
 /// 解开再编会把新内容类型静默丢掉。解不开的那条显示「不支持的消息类型」,不影响其余几条。
 ///
-/// 引用里面的某一段:`<这条聊天记录所在消息的 uuid>#<这段的 id>/<里面那条消息的 uuid>#<id>`(见上面「引用」)。
+/// 引用里面的某一段:`<里面那条消息的 uuid>#<这段的 id>`,不带外层路径(见上面「引用」)。
 ///
 /// 机器人把语音聊天记录发给主人(内置插件 `send_chat_record`)发的也是这个。
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -6092,7 +6092,7 @@ pub struct ChatReq {
     #[prost(string, optional, tag = "12")]
     pub asker: ::core::option::Option<::prost::alloc::string::String>,
     /// 这句话所在那条消息的 uuid(IM 路:机器人收到的那条 mqtt 消息的 uuid)。
-    /// club 据此给聊天记录这类原样内嵌的内容写引用 `<uuid>#<段 id>`(附件列表,见 hi/ai/chat.proto `Attachment`)。
+    /// club 据此给聊天记录这类原样内嵌的内容写引用 `<uuid 末 8 位>#<段 id>`(附件列表,见 hi/ai/chat.proto `Attachment`)。
     /// **语音路不用传**:那一轮的 uuid 由 club 在调 hi.ai 之前生成,写进语音聊天记录时用的是同一个。
     #[prost(string, optional, tag = "13")]
     pub uuid: ::core::option::Option<::prost::alloc::string::String>,

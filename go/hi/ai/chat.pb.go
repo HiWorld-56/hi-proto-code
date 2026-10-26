@@ -106,7 +106,7 @@ type Attachment struct {
 	Type  *string                `protobuf:"bytes,1,opt,name=type,proto3,oneof" json:"type,omitempty"` // 类型词:图片 / 语音 / 视频 / 文件 / 聊天记录(调用方给,hi.ai 原样写)
 	// 名字:文件是原文件名;聊天记录是「《标题》共 N 条」;图片 / 语音没有名字就是「图片1」「语音2」(数字 = 这一行的序号)
 	Name          *string `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
-	Ref           *string `protobuf:"bytes,3,opt,name=ref,proto3,oneof" json:"ref,omitempty"` // 引用:url,或 `<消息 uuid>#<段 id>`(见 hi/club/messaging.proto「引用」)
+	Ref           *string `protobuf:"bytes,3,opt,name=ref,proto3,oneof" json:"ref,omitempty"` // 引用:url,或 `<消息 uuid 末 8 位>#<段 id>`(见 hi/club/messaging.proto「引用」)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }

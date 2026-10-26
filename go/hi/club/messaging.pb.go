@@ -674,8 +674,8 @@ type Content struct {
 	//	*Content_BinanceOfferReply
 	Kind isContent_Kind `protobuf_oneof:"kind"`
 	// 这一段在**本条消息里**的编号:从 1 起按先后编(第一段 1、第二段 2……),同一条消息内天然不重。
-	// **由 hiclub-core-mqtt 在发出前统一填**(UI / brain 照旧只管组内容,填不填、填什么都会被 core 覆盖);
-	// 后端自己组的消息(语音聊天记录、软件机器人的回话)由后端按同一规则填。
+	// **由组内容的前端填**:app 与 brain 发消息前统一经 hiclub-front `ids::seal`(用户 10-26 定);
+	// core 只管信封,不碰内容、不填编号。后端自己组的消息(语音聊天记录、软件机器人的回话)由后端按同一规则填。
 	// 用途:引用消息里的某一段 —— `<消息 uuid>#<id>`,见下面「引用」那段。
 	Id            *uint32 `protobuf:"varint,8,opt,name=id,proto3,oneof" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -886,7 +886,7 @@ func (*Content_BinanceOfferReply) isContent_Kind() {}
 // 每条 `Message.contents` 是原消息的内容字节**原样**,不解开重编 —— 转发方的 proto 比原消息旧时,
 // 解开再编会把新内容类型静默丢掉。解不开的那条显示「不支持的消息类型」,不影响其余几条。
 //
-// 引用里面的某一段:`<这条聊天记录所在消息的 uuid>#<这段的 id>/<里面那条消息的 uuid>#<id>`(见上面「引用」)。
+// 引用里面的某一段:`<里面那条消息的 uuid>#<这段的 id>`,不带外层路径(见上面「引用」)。
 //
 // 机器人把语音聊天记录发给主人(内置插件 `send_chat_record`)发的也是这个。
 type ChatRecord struct {

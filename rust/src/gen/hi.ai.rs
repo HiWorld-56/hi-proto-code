@@ -2934,7 +2934,7 @@ pub struct Attachment {
     /// 名字:文件是原文件名;聊天记录是「《标题》共 N 条」;图片 / 语音没有名字就是「图片1」「语音2」(数字 = 这一行的序号)
     #[prost(string, optional, tag = "2")]
     pub name: ::core::option::Option<::prost::alloc::string::String>,
-    /// 引用:url,或 `<消息 uuid>#<段 id>`(见 hi/club/messaging.proto「引用」)
+    /// 引用:url,或 `<消息 uuid 末 8 位>#<段 id>`(见 hi/club/messaging.proto「引用」)
     #[prost(string, optional, tag = "3")]
     pub r#ref: ::core::option::Option<::prost::alloc::string::String>,
 }
