@@ -4111,21 +4111,6 @@ pub struct ListRecentMessagesResp {
     #[prost(bool, optional, tag = "4")]
     pub capped: ::core::option::Option<bool>,
 }
-/// 按 uuid 取会话里的**一条**消息(原样:信封 + 内容原字节)。
-///
-/// 用途:引用 `<消息 uuid>#<段 id>` 要拿到那条消息才能取出那一段(hi/club/messaging.proto「引用」)——
-/// hiclub-core-mqtt 先查本机库,本机没有(换了设备、清过本地、早于本机登录)才来这里取。
-/// **只在给定的会话里找**(解析只在本层):不在这个会话的 uuid 一律 NotFound,不替人确认它在别处存在。
-/// 权限与可见范围同 `ListRecentMessages`:调用者必须是该会话成员,最长保留期之内、且不早于调用者入群的时间。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetMessageReq {
-    /// 群号 / 单聊会话号
-    #[prost(string, optional, tag = "1")]
-    pub code: ::core::option::Option<::prost::alloc::string::String>,
-    /// 消息 uuid
-    #[prost(string, optional, tag = "2")]
-    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
-}
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListGroupMembersReq {
     #[prost(string, optional, tag = "1")]
@@ -4650,24 +4635,6 @@ pub mod group_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.Group", "ListRecentMessages"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn get_message(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetMessageReq>,
-        ) -> std::result::Result<tonic::Response<super::Packet>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.club.Group/GetMessage");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.Group", "GetMessage"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn set_role(
