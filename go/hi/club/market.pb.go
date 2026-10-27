@@ -2095,9 +2095,15 @@ type CreateListingReq struct {
 	// 挂牌类型。**只有平台那个 did 能设 OFFICIAL / BUILTIN**,别人传了直接拒。
 	// BUILTIN 会被强制成免费 / 永久 / 免审(见 MarketListingKind) ——
 	// 不是"帮你改一下",是那三个值与"内置"这件事互相矛盾时,以内置为准并如实报错。
-	Kind          *MarketListingKind `protobuf:"varint,13,opt,name=kind,proto3,enum=hi.club.MarketListingKind,oneof" json:"kind,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	Kind *MarketListingKind `protobuf:"varint,13,opt,name=kind,proto3,enum=hi.club.MarketListingKind,oneof" json:"kind,omitempty"`
+	// 付费挂牌(SETTLE_MODE_PAID)时,卖家确认**这个插件提供的是在 app 外执行的服务**
+	// (在交易所下单、链上收发、操作实体设备之类),不是在聊天里交付的数字内容(问答、生成的文字 / 图片等)。
+	// 数字内容只能免费或授权型。市场是卖家自己负责的跳蚤市场,平台不审;这一项是卖家的声明,后端只记下确认时刻。
+	//
+	// PAID 时必须为 true,否则拒;其它结算方式忽略。
+	PaidServiceDeclared *bool `protobuf:"varint,15,opt,name=paid_service_declared,json=paidServiceDeclared,proto3,oneof" json:"paid_service_declared,omitempty"`
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
 }
 
 func (x *CreateListingReq) Reset() {
@@ -2198,6 +2204,13 @@ func (x *CreateListingReq) GetKind() MarketListingKind {
 		return *x.Kind
 	}
 	return MarketListingKind_MARKET_LISTING_KIND_UNSPECIFIED
+}
+
+func (x *CreateListingReq) GetPaidServiceDeclared() bool {
+	if x != nil && x.PaidServiceDeclared != nil {
+		return *x.PaidServiceDeclared
+	}
+	return false
 }
 
 // EditListingReq 改挂牌。**没有 settle_mode** —— 定价三元组可改,结算方式不可改。
@@ -4585,7 +4598,7 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\x04list\x18\x02 \x03(\v2\x1b.hi.club.MarketListingBriefB\x04\x90\xb5\x18\x01R\x04list:\x04\x98\xb5\x18\x01B\b\n" +
 	"\x06_total\"R\n" +
 	"\x0eGetListingResp\x12:\n" +
-	"\x06detail\x18\x01 \x01(\v2\x1c.hi.club.MarketListingDetailB\x04\x90\xb5\x18\x01R\x06detail:\x04\x98\xb5\x18\x01\"\x95\x04\n" +
+	"\x06detail\x18\x01 \x01(\v2\x1c.hi.club.MarketListingDetailB\x04\x90\xb5\x18\x01R\x06detail:\x04\x98\xb5\x18\x01\"\xe8\x04\n" +
 	"\x10CreateListingReq\x12*\n" +
 	"\x05agent\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x05agent\x88\x01\x01\x125\n" +
 	"\vplugin_uuid\x18\x02 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x01R\n" +
@@ -4600,7 +4613,8 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\x0fpayee_to_master\x18\x0e \x01(\bH\x06R\rpayeeToMaster\x88\x01\x01\x12\"\n" +
 	"\n" +
 	"action_url\x18\f \x01(\tH\aR\tactionUrl\x88\x01\x01\x123\n" +
-	"\x04kind\x18\r \x01(\x0e2\x1a.hi.club.MarketListingKindH\bR\x04kind\x88\x01\x01B\b\n" +
+	"\x04kind\x18\r \x01(\x0e2\x1a.hi.club.MarketListingKindH\bR\x04kind\x88\x01\x01\x127\n" +
+	"\x15paid_service_declared\x18\x0f \x01(\bH\tR\x13paidServiceDeclared\x88\x01\x01B\b\n" +
 	"\x06_agentB\x0e\n" +
 	"\f_plugin_uuidB\x0e\n" +
 	"\f_settle_modeB\b\n" +
@@ -4609,7 +4623,8 @@ const file_hi_club_market_proto_rawDesc = "" +
 	"\t_durationB\x12\n" +
 	"\x10_payee_to_masterB\r\n" +
 	"\v_action_urlB\a\n" +
-	"\x05_kind\"\xc0\x02\n" +
+	"\x05_kindB\x18\n" +
+	"\x16_paid_service_declared\"\xc0\x02\n" +
 	"\x0eEditListingReq\x12(\n" +
 	"\x04uuid\x18\x01 \x01(\tB\x0f\xbaH\f\xc8\x01\x01r\a2\x05^\\S+$H\x00R\x04uuid\x88\x01\x01\x12\x19\n" +
 	"\x05price\x18\x02 \x01(\tH\x01R\x05price\x88\x01\x01\x12\x17\n" +

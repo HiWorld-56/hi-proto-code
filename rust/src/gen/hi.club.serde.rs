@@ -2413,6 +2413,9 @@ impl serde::Serialize for CreateListingReq {
         if self.kind.is_some() {
             len += 1;
         }
+        if self.paid_service_declared.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.club.CreateListingReq", len)?;
         if let Some(v) = self.agent.as_ref() {
             struct_ser.serialize_field("agent", v)?;
@@ -2450,6 +2453,9 @@ impl serde::Serialize for CreateListingReq {
                 .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
             struct_ser.serialize_field("kind", &v)?;
         }
+        if let Some(v) = self.paid_service_declared.as_ref() {
+            struct_ser.serialize_field("paidServiceDeclared", v)?;
+        }
         struct_ser.end()
     }
 }
@@ -2474,6 +2480,8 @@ impl<'de> serde::Deserialize<'de> for CreateListingReq {
             "action_url",
             "actionUrl",
             "kind",
+            "paid_service_declared",
+            "paidServiceDeclared",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -2488,6 +2496,7 @@ impl<'de> serde::Deserialize<'de> for CreateListingReq {
             PayeeToMaster,
             ActionUrl,
             Kind,
+            PaidServiceDeclared,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -2519,6 +2528,7 @@ impl<'de> serde::Deserialize<'de> for CreateListingReq {
                             "payeeToMaster" | "payee_to_master" => Ok(GeneratedField::PayeeToMaster),
                             "actionUrl" | "action_url" => Ok(GeneratedField::ActionUrl),
                             "kind" => Ok(GeneratedField::Kind),
+                            "paidServiceDeclared" | "paid_service_declared" => Ok(GeneratedField::PaidServiceDeclared),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -2548,6 +2558,7 @@ impl<'de> serde::Deserialize<'de> for CreateListingReq {
                 let mut payee_to_master__ = None;
                 let mut action_url__ = None;
                 let mut kind__ = None;
+                let mut paid_service_declared__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Agent => {
@@ -2612,6 +2623,12 @@ impl<'de> serde::Deserialize<'de> for CreateListingReq {
                             }
                             kind__ = map_.next_value::<::std::option::Option<MarketListingKind>>()?.map(|x| x as i32);
                         }
+                        GeneratedField::PaidServiceDeclared => {
+                            if paid_service_declared__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("paidServiceDeclared"));
+                            }
+                            paid_service_declared__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(CreateListingReq {
@@ -2625,6 +2642,7 @@ impl<'de> serde::Deserialize<'de> for CreateListingReq {
                     payee_to_master: payee_to_master__,
                     action_url: action_url__,
                     kind: kind__,
+                    paid_service_declared: paid_service_declared__,
                 })
             }
         }

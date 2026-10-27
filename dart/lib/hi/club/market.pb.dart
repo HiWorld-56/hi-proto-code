@@ -1952,6 +1952,7 @@ class CreateListingReq extends $pb.GeneratedMessage {
     $core.String? actionUrl,
     MarketListingKind? kind,
     $core.bool? payeeToMaster,
+    $core.bool? paidServiceDeclared,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
@@ -1964,6 +1965,8 @@ class CreateListingReq extends $pb.GeneratedMessage {
     if (actionUrl != null) result.actionUrl = actionUrl;
     if (kind != null) result.kind = kind;
     if (payeeToMaster != null) result.payeeToMaster = payeeToMaster;
+    if (paidServiceDeclared != null)
+      result.paidServiceDeclared = paidServiceDeclared;
     return result;
   }
 
@@ -1992,6 +1995,7 @@ class CreateListingReq extends $pb.GeneratedMessage {
     ..aE<MarketListingKind>(13, _omitFieldNames ? '' : 'kind',
         enumValues: MarketListingKind.values)
     ..aOB(14, _omitFieldNames ? '' : 'payeeToMaster')
+    ..aOB(15, _omitFieldNames ? '' : 'paidServiceDeclared')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2119,6 +2123,20 @@ class CreateListingReq extends $pb.GeneratedMessage {
   $core.bool hasPayeeToMaster() => $_has(9);
   @$pb.TagNumber(14)
   void clearPayeeToMaster() => $_clearField(14);
+
+  /// 付费挂牌(SETTLE_MODE_PAID)时,卖家确认**这个插件提供的是在 app 外执行的服务**
+  /// (在交易所下单、链上收发、操作实体设备之类),不是在聊天里交付的数字内容(问答、生成的文字 / 图片等)。
+  /// 数字内容只能免费或授权型。市场是卖家自己负责的跳蚤市场,平台不审;这一项是卖家的声明,后端只记下确认时刻。
+  ///
+  /// PAID 时必须为 true,否则拒;其它结算方式忽略。
+  @$pb.TagNumber(15)
+  $core.bool get paidServiceDeclared => $_getBF(10);
+  @$pb.TagNumber(15)
+  set paidServiceDeclared($core.bool value) => $_setBool(10, value);
+  @$pb.TagNumber(15)
+  $core.bool hasPaidServiceDeclared() => $_has(10);
+  @$pb.TagNumber(15)
+  void clearPaidServiceDeclared() => $_clearField(15);
 }
 
 /// EditListingReq 改挂牌。**没有 settle_mode** —— 定价三元组可改,结算方式不可改。

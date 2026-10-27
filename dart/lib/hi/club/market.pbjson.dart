@@ -1407,6 +1407,15 @@ const CreateListingReq$json = {
       '10': 'kind',
       '17': true
     },
+    {
+      '1': 'paid_service_declared',
+      '3': 15,
+      '4': 1,
+      '5': 8,
+      '9': 9,
+      '10': 'paidServiceDeclared',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_agent'},
@@ -1418,6 +1427,7 @@ const CreateListingReq$json = {
     {'1': '_payee_to_master'},
     {'1': '_action_url'},
     {'1': '_kind'},
+    {'1': '_paid_service_declared'},
   ],
 };
 
@@ -1430,9 +1440,11 @@ final $typed_data.Uint8List createListingReqDescriptor = $convert.base64Decode(
     'b2luiAEBEh8KCGR1cmF0aW9uGAYgASgDSAVSCGR1cmF0aW9uiAEBEhIKBHRhZ3MYCiADKAlSBH'
     'RhZ3MSKwoPcGF5ZWVfdG9fbWFzdGVyGA4gASgISAZSDXBheWVlVG9NYXN0ZXKIAQESIgoKYWN0'
     'aW9uX3VybBgMIAEoCUgHUglhY3Rpb25VcmyIAQESMwoEa2luZBgNIAEoDjIaLmhpLmNsdWIuTW'
-    'Fya2V0TGlzdGluZ0tpbmRICFIEa2luZIgBAUIICgZfYWdlbnRCDgoMX3BsdWdpbl91dWlkQg4K'
-    'DF9zZXR0bGVfbW9kZUIICgZfcHJpY2VCBwoFX2NvaW5CCwoJX2R1cmF0aW9uQhIKEF9wYXllZV'
-    '90b19tYXN0ZXJCDQoLX2FjdGlvbl91cmxCBwoFX2tpbmQ=');
+    'Fya2V0TGlzdGluZ0tpbmRICFIEa2luZIgBARI3ChVwYWlkX3NlcnZpY2VfZGVjbGFyZWQYDyAB'
+    'KAhICVITcGFpZFNlcnZpY2VEZWNsYXJlZIgBAUIICgZfYWdlbnRCDgoMX3BsdWdpbl91dWlkQg'
+    '4KDF9zZXR0bGVfbW9kZUIICgZfcHJpY2VCBwoFX2NvaW5CCwoJX2R1cmF0aW9uQhIKEF9wYXll'
+    'ZV90b19tYXN0ZXJCDQoLX2FjdGlvbl91cmxCBwoFX2tpbmRCGAoWX3BhaWRfc2VydmljZV9kZW'
+    'NsYXJlZA==');
 
 @$core.Deprecated('Use editListingReqDescriptor instead')
 const EditListingReq$json = {

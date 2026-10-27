@@ -6780,6 +6780,13 @@ pub struct CreateListingReq {
     /// 不是"帮你改一下",是那三个值与"内置"这件事互相矛盾时,以内置为准并如实报错。
     #[prost(enumeration = "MarketListingKind", optional, tag = "13")]
     pub kind: ::core::option::Option<i32>,
+    /// 付费挂牌(SETTLE_MODE_PAID)时,卖家确认**这个插件提供的是在 app 外执行的服务**
+    /// (在交易所下单、链上收发、操作实体设备之类),不是在聊天里交付的数字内容(问答、生成的文字 / 图片等)。
+    /// 数字内容只能免费或授权型。市场是卖家自己负责的跳蚤市场,平台不审;这一项是卖家的声明,后端只记下确认时刻。
+    ///
+    /// PAID 时必须为 true,否则拒;其它结算方式忽略。
+    #[prost(bool, optional, tag = "15")]
+    pub paid_service_declared: ::core::option::Option<bool>,
 }
 /// EditListingReq 改挂牌。**没有 settle_mode** —— 定价三元组可改,结算方式不可改。
 ///
