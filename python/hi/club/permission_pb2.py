@@ -22,12 +22,13 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
+from buf.validate import validate_pb2 as buf_dot_validate_dot_validate__pb2
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
-from hi.ai import permission_pb2 as hi_dot_ai_dot_permission__pb2
+from hi import common_pb2 as hi_dot_common__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18hi/club/permission.proto\x12\x07hi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x16hi/ai/permission.proto\x1a\x10hi/options.proto2\x99\x01\n\nPermission\x12;\n\x03Get\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.PermissionInfo\"\x05\x8a\xb5\x18\x01\x02\x12N\n\x04List\x12\x1e.hi.ai.ListAgentPermissionsReq\x1a\x1f.hi.ai.ListAgentPermissionsResp\"\x05\x8a\xb5\x18\x01\x02\x32\x9b\x02\n\x10PermissionManage\x12=\n\x03\x41\x64\x64\x12\x17.hi.ai.PermissionAddReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12\x43\n\x06\x44\x65lete\x12\x1a.hi.ai.PermissionDeleteReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12?\n\x04\x45\x64it\x12\x18.hi.ai.PermissionEditReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12\x42\n\x04List\x12\x18.hi.ai.PermissionListReq\x1a\x19.hi.ai.PermissionListResp\"\x05\x8a\xb5\x18\x01\x04\x42+Z)github.com/HiWorld-56/hi-proto/go/hi/clubb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18hi/club/permission.proto\x12\x07hi.club\x1a\x1b\x62uf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\x97\x01\n\x0ePermissionInfo\x12\x16\n\x03\x64id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03R\x03\x64id\x12?\n\x0bpermissions\x18\x02 \x03(\x0e\x32\x17.hi.club.PermissionTypeB\x04\x90\xb5\x18\x03R\x0bpermissions\x12\x1d\n\x04note\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04note\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x07\n\x05_note\"1\n\x17ListAgentPermissionsReq\x12\x16\n\x06\x61gents\x18\x01 \x03(\tR\x06\x61gents\"U\n\x18ListAgentPermissionsResp\x12\x33\n\x05infos\x18\x01 \x03(\x0b\x32\x17.hi.club.PermissionInfoB\x04\x90\xb5\x18\x03R\x05infos:\x04\x98\xb5\x18\x03\"m\n\x10PermissionAddReq\x12\x1e\n\x03\x64id\x18\x01 \x01(\tB\x0c\xbaH\tr\x07\x32\x05^\\S+$R\x03\x64id\x12\x30\n\x04type\x18\x02 \x01(\x0e\x32\x17.hi.club.PermissionTypeH\x00R\x04type\x88\x01\x01\x42\x07\n\x05_type\"p\n\x13PermissionDeleteReq\x12\x1e\n\x03\x64id\x18\x01 \x01(\tB\x0c\xbaH\tr\x07\x32\x05^\\S+$R\x03\x64id\x12\x30\n\x04type\x18\x02 \x01(\x0e\x32\x17.hi.club.PermissionTypeH\x00R\x04type\x88\x01\x01\x42\x07\n\x05_type\"\x9d\x01\n\x11PermissionListReq\x12\x15\n\x03\x64id\x18\x01 \x01(\tH\x00R\x03\x64id\x88\x01\x01\x12\x30\n\x04type\x18\x02 \x01(\x0e\x32\x17.hi.club.PermissionTypeH\x01R\x04type\x88\x01\x01\x12.\n\npagination\x18\x03 \x01(\x0b\x32\x0e.hi.PaginationR\npaginationB\x06\n\x04_didB\x07\n\x05_type\"z\n\x12PermissionListResp\x12\x1f\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12\x33\n\x05infos\x18\x02 \x03(\x0b\x32\x17.hi.club.PermissionInfoB\x04\x90\xb5\x18\x03R\x05infos:\x04\x98\xb5\x18\x03\x42\x08\n\x06_total\"U\n\x11PermissionEditReq\x12\x1e\n\x03\x64id\x18\x01 \x01(\tB\x0c\xbaH\tr\x07\x32\x05^\\S+$R\x03\x64id\x12\x17\n\x04note\x18\x02 \x01(\tH\x00R\x04note\x88\x01\x01\x42\x07\n\x05_note*\x87\x01\n\x0ePermissionType\x12\x1a\n\x16PERMISSION_UNSPECIFIED\x10\x00\x12\x15\n\x11PERMISSION_NORMAL\x10\x01\x12\x17\n\x13PERMISSION_ADVANCED\x10\x02\x12\x12\n\x0ePERMISSION_MEM\x10\x03\x12\x15\n\x11PERMISSION_PLUGIN\x10\x04\x32\x9f\x01\n\nPermission\x12=\n\x03Get\x12\x16.google.protobuf.Empty\x1a\x17.hi.club.PermissionInfo\"\x05\x8a\xb5\x18\x01\x02\x12R\n\x04List\x12 .hi.club.ListAgentPermissionsReq\x1a!.hi.club.ListAgentPermissionsResp\"\x05\x8a\xb5\x18\x01\x02\x32\xa5\x02\n\x10PermissionManage\x12?\n\x03\x41\x64\x64\x12\x19.hi.club.PermissionAddReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12\x45\n\x06\x44\x65lete\x12\x1c.hi.club.PermissionDeleteReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12\x41\n\x04\x45\x64it\x12\x1a.hi.club.PermissionEditReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12\x46\n\x04List\x12\x1a.hi.club.PermissionListReq\x1a\x1b.hi.club.PermissionListResp\"\x05\x8a\xb5\x18\x01\x04\x42+Z)github.com/HiWorld-56/hi-proto/go/hi/clubb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -35,6 +36,30 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'hi.club.permission_pb2', _g
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'Z)github.com/HiWorld-56/hi-proto/go/hi/club'
+  _globals['_PERMISSIONINFO'].fields_by_name['did']._loaded_options = None
+  _globals['_PERMISSIONINFO'].fields_by_name['did']._serialized_options = b'\220\265\030\003'
+  _globals['_PERMISSIONINFO'].fields_by_name['permissions']._loaded_options = None
+  _globals['_PERMISSIONINFO'].fields_by_name['permissions']._serialized_options = b'\220\265\030\003'
+  _globals['_PERMISSIONINFO'].fields_by_name['note']._loaded_options = None
+  _globals['_PERMISSIONINFO'].fields_by_name['note']._serialized_options = b'\220\265\030\003'
+  _globals['_PERMISSIONINFO']._loaded_options = None
+  _globals['_PERMISSIONINFO']._serialized_options = b'\230\265\030\003'
+  _globals['_LISTAGENTPERMISSIONSRESP'].fields_by_name['infos']._loaded_options = None
+  _globals['_LISTAGENTPERMISSIONSRESP'].fields_by_name['infos']._serialized_options = b'\220\265\030\003'
+  _globals['_LISTAGENTPERMISSIONSRESP']._loaded_options = None
+  _globals['_LISTAGENTPERMISSIONSRESP']._serialized_options = b'\230\265\030\003'
+  _globals['_PERMISSIONADDREQ'].fields_by_name['did']._loaded_options = None
+  _globals['_PERMISSIONADDREQ'].fields_by_name['did']._serialized_options = b'\272H\tr\0072\005^\\S+$'
+  _globals['_PERMISSIONDELETEREQ'].fields_by_name['did']._loaded_options = None
+  _globals['_PERMISSIONDELETEREQ'].fields_by_name['did']._serialized_options = b'\272H\tr\0072\005^\\S+$'
+  _globals['_PERMISSIONLISTRESP'].fields_by_name['total']._loaded_options = None
+  _globals['_PERMISSIONLISTRESP'].fields_by_name['total']._serialized_options = b'\220\265\030\003'
+  _globals['_PERMISSIONLISTRESP'].fields_by_name['infos']._loaded_options = None
+  _globals['_PERMISSIONLISTRESP'].fields_by_name['infos']._serialized_options = b'\220\265\030\003'
+  _globals['_PERMISSIONLISTRESP']._loaded_options = None
+  _globals['_PERMISSIONLISTRESP']._serialized_options = b'\230\265\030\003'
+  _globals['_PERMISSIONEDITREQ'].fields_by_name['did']._loaded_options = None
+  _globals['_PERMISSIONEDITREQ'].fields_by_name['did']._serialized_options = b'\272H\tr\0072\005^\\S+$'
   _globals['_PERMISSION'].methods_by_name['Get']._loaded_options = None
   _globals['_PERMISSION'].methods_by_name['Get']._serialized_options = b'\212\265\030\001\002'
   _globals['_PERMISSION'].methods_by_name['List']._loaded_options = None
@@ -47,8 +72,26 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_PERMISSIONMANAGE'].methods_by_name['Edit']._serialized_options = b'\212\265\030\001\004'
   _globals['_PERMISSIONMANAGE'].methods_by_name['List']._loaded_options = None
   _globals['_PERMISSIONMANAGE'].methods_by_name['List']._serialized_options = b'\212\265\030\001\004'
-  _globals['_PERMISSION']._serialized_start=109
-  _globals['_PERMISSION']._serialized_end=262
-  _globals['_PERMISSIONMANAGE']._serialized_start=265
-  _globals['_PERMISSIONMANAGE']._serialized_end=548
+  _globals['_PERMISSIONTYPE']._serialized_start=1019
+  _globals['_PERMISSIONTYPE']._serialized_end=1154
+  _globals['_PERMISSIONINFO']._serialized_start=131
+  _globals['_PERMISSIONINFO']._serialized_end=282
+  _globals['_LISTAGENTPERMISSIONSREQ']._serialized_start=284
+  _globals['_LISTAGENTPERMISSIONSREQ']._serialized_end=333
+  _globals['_LISTAGENTPERMISSIONSRESP']._serialized_start=335
+  _globals['_LISTAGENTPERMISSIONSRESP']._serialized_end=420
+  _globals['_PERMISSIONADDREQ']._serialized_start=422
+  _globals['_PERMISSIONADDREQ']._serialized_end=531
+  _globals['_PERMISSIONDELETEREQ']._serialized_start=533
+  _globals['_PERMISSIONDELETEREQ']._serialized_end=645
+  _globals['_PERMISSIONLISTREQ']._serialized_start=648
+  _globals['_PERMISSIONLISTREQ']._serialized_end=805
+  _globals['_PERMISSIONLISTRESP']._serialized_start=807
+  _globals['_PERMISSIONLISTRESP']._serialized_end=929
+  _globals['_PERMISSIONEDITREQ']._serialized_start=931
+  _globals['_PERMISSIONEDITREQ']._serialized_end=1016
+  _globals['_PERMISSION']._serialized_start=1157
+  _globals['_PERMISSION']._serialized_end=1316
+  _globals['_PERMISSIONMANAGE']._serialized_start=1319
+  _globals['_PERMISSIONMANAGE']._serialized_end=1612
 # @@protoc_insertion_point(module_scope)

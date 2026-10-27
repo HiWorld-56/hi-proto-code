@@ -8,7 +8,6 @@ package club
 
 import (
 	context "context"
-	ai "github.com/HiWorld-56/hi-proto/go/hi/ai"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -38,8 +37,7 @@ const (
 //
 // ⚠️ **入参为空 = 强制查自己**。原 `UserACL.List(did, ...)` 带 did 参数,
 //
-//	**传谁的 did 都能查 → 任意用户可读他人 ACL**(原注释里的 TODO 早已指出)。
-//	与 did 的 Merchant.Get 越权同一类病:身份必须来自 token,不能来自入参。
+//	**传谁的 did 都能查 → 任意用户可读他人 ACL**。身份必须来自 token,不能来自入参。
 type PermissionClient interface {
 	// 机器人查**自己**的权限。无参数 —— 身份取自 token/apikey,不接受入参指定。
 	//
@@ -47,8 +45,8 @@ type PermissionClient interface {
 	//
 	//	(robot_memory / robot_plugin / robot_setup)要看的是机器人能干什么:
 	//	机器人自己调 Get,master 代查走 List。
-	Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.PermissionInfo, error)
-	List(ctx context.Context, in *ai.ListAgentPermissionsReq, opts ...grpc.CallOption) (*ai.ListAgentPermissionsResp, error)
+	Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*PermissionInfo, error)
+	List(ctx context.Context, in *ListAgentPermissionsReq, opts ...grpc.CallOption) (*ListAgentPermissionsResp, error)
 }
 
 type permissionClient struct {
@@ -59,9 +57,9 @@ func NewPermissionClient(cc grpc.ClientConnInterface) PermissionClient {
 	return &permissionClient{cc}
 }
 
-func (c *permissionClient) Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.PermissionInfo, error) {
+func (c *permissionClient) Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*PermissionInfo, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.PermissionInfo)
+	out := new(PermissionInfo)
 	err := c.cc.Invoke(ctx, Permission_Get_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -69,9 +67,9 @@ func (c *permissionClient) Get(ctx context.Context, in *emptypb.Empty, opts ...g
 	return out, nil
 }
 
-func (c *permissionClient) List(ctx context.Context, in *ai.ListAgentPermissionsReq, opts ...grpc.CallOption) (*ai.ListAgentPermissionsResp, error) {
+func (c *permissionClient) List(ctx context.Context, in *ListAgentPermissionsReq, opts ...grpc.CallOption) (*ListAgentPermissionsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.ListAgentPermissionsResp)
+	out := new(ListAgentPermissionsResp)
 	err := c.cc.Invoke(ctx, Permission_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -92,8 +90,7 @@ func (c *permissionClient) List(ctx context.Context, in *ai.ListAgentPermissions
 //
 // ⚠️ **入参为空 = 强制查自己**。原 `UserACL.List(did, ...)` 带 did 参数,
 //
-//	**传谁的 did 都能查 → 任意用户可读他人 ACL**(原注释里的 TODO 早已指出)。
-//	与 did 的 Merchant.Get 越权同一类病:身份必须来自 token,不能来自入参。
+//	**传谁的 did 都能查 → 任意用户可读他人 ACL**。身份必须来自 token,不能来自入参。
 type PermissionServer interface {
 	// 机器人查**自己**的权限。无参数 —— 身份取自 token/apikey,不接受入参指定。
 	//
@@ -101,8 +98,8 @@ type PermissionServer interface {
 	//
 	//	(robot_memory / robot_plugin / robot_setup)要看的是机器人能干什么:
 	//	机器人自己调 Get,master 代查走 List。
-	Get(context.Context, *emptypb.Empty) (*ai.PermissionInfo, error)
-	List(context.Context, *ai.ListAgentPermissionsReq) (*ai.ListAgentPermissionsResp, error)
+	Get(context.Context, *emptypb.Empty) (*PermissionInfo, error)
+	List(context.Context, *ListAgentPermissionsReq) (*ListAgentPermissionsResp, error)
 }
 
 // UnimplementedPermissionServer should be embedded to have
@@ -112,10 +109,10 @@ type PermissionServer interface {
 // pointer dereference when methods are called.
 type UnimplementedPermissionServer struct{}
 
-func (UnimplementedPermissionServer) Get(context.Context, *emptypb.Empty) (*ai.PermissionInfo, error) {
+func (UnimplementedPermissionServer) Get(context.Context, *emptypb.Empty) (*PermissionInfo, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
 }
-func (UnimplementedPermissionServer) List(context.Context, *ai.ListAgentPermissionsReq) (*ai.ListAgentPermissionsResp, error) {
+func (UnimplementedPermissionServer) List(context.Context, *ListAgentPermissionsReq) (*ListAgentPermissionsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
 func (UnimplementedPermissionServer) testEmbeddedByValue() {}
@@ -157,7 +154,7 @@ func _Permission_Get_Handler(srv interface{}, ctx context.Context, dec func(inte
 }
 
 func _Permission_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.ListAgentPermissionsReq)
+	in := new(ListAgentPermissionsReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -169,7 +166,7 @@ func _Permission_List_Handler(srv interface{}, ctx context.Context, dec func(int
 		FullMethod: Permission_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServer).List(ctx, req.(*ai.ListAgentPermissionsReq))
+		return srv.(PermissionServer).List(ctx, req.(*ListAgentPermissionsReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -205,21 +202,12 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// 权限管理(超管)。**存储在 hi.ai,这里是穿透门面** ——
-// club 超管在 web 上操作,后端以「club 商户」的身份转发到 hi.ai.Permission(商户档)。
-//
-// ⚠️ 为什么不在 club 自己存:插件与记忆的**执行**在 ai,校验必须跟执行同一侧。
-//
-//	曾经 club 存一份、ai 无权限层,结果撤了权限的机器人照样调插件用记忆 ——
-//	club 那几处检查全在"改配置"的路径上,拦得住改、拦不住用。
-//	两边各存一份也不行:同步必漂移,一漂移就是安全问题。
-//
-// club 侧仍执行自己的副作用(取消高级 → 群缩容踢人等,见文件头)。
+// 权限管理(超管)。
 type PermissionManageClient interface {
-	Add(ctx context.Context, in *ai.PermissionAddReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	Delete(ctx context.Context, in *ai.PermissionDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	Edit(ctx context.Context, in *ai.PermissionEditReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	List(ctx context.Context, in *ai.PermissionListReq, opts ...grpc.CallOption) (*ai.PermissionListResp, error)
+	Add(ctx context.Context, in *PermissionAddReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Delete(ctx context.Context, in *PermissionDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Edit(ctx context.Context, in *PermissionEditReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	List(ctx context.Context, in *PermissionListReq, opts ...grpc.CallOption) (*PermissionListResp, error)
 }
 
 type permissionManageClient struct {
@@ -230,7 +218,7 @@ func NewPermissionManageClient(cc grpc.ClientConnInterface) PermissionManageClie
 	return &permissionManageClient{cc}
 }
 
-func (c *permissionManageClient) Add(ctx context.Context, in *ai.PermissionAddReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *permissionManageClient) Add(ctx context.Context, in *PermissionAddReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, PermissionManage_Add_FullMethodName, in, out, cOpts...)
@@ -240,7 +228,7 @@ func (c *permissionManageClient) Add(ctx context.Context, in *ai.PermissionAddRe
 	return out, nil
 }
 
-func (c *permissionManageClient) Delete(ctx context.Context, in *ai.PermissionDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *permissionManageClient) Delete(ctx context.Context, in *PermissionDeleteReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, PermissionManage_Delete_FullMethodName, in, out, cOpts...)
@@ -250,7 +238,7 @@ func (c *permissionManageClient) Delete(ctx context.Context, in *ai.PermissionDe
 	return out, nil
 }
 
-func (c *permissionManageClient) Edit(ctx context.Context, in *ai.PermissionEditReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *permissionManageClient) Edit(ctx context.Context, in *PermissionEditReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, PermissionManage_Edit_FullMethodName, in, out, cOpts...)
@@ -260,9 +248,9 @@ func (c *permissionManageClient) Edit(ctx context.Context, in *ai.PermissionEdit
 	return out, nil
 }
 
-func (c *permissionManageClient) List(ctx context.Context, in *ai.PermissionListReq, opts ...grpc.CallOption) (*ai.PermissionListResp, error) {
+func (c *permissionManageClient) List(ctx context.Context, in *PermissionListReq, opts ...grpc.CallOption) (*PermissionListResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ai.PermissionListResp)
+	out := new(PermissionListResp)
 	err := c.cc.Invoke(ctx, PermissionManage_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -274,21 +262,12 @@ func (c *permissionManageClient) List(ctx context.Context, in *ai.PermissionList
 // All implementations should embed UnimplementedPermissionManageServer
 // for forward compatibility.
 //
-// 权限管理(超管)。**存储在 hi.ai,这里是穿透门面** ——
-// club 超管在 web 上操作,后端以「club 商户」的身份转发到 hi.ai.Permission(商户档)。
-//
-// ⚠️ 为什么不在 club 自己存:插件与记忆的**执行**在 ai,校验必须跟执行同一侧。
-//
-//	曾经 club 存一份、ai 无权限层,结果撤了权限的机器人照样调插件用记忆 ——
-//	club 那几处检查全在"改配置"的路径上,拦得住改、拦不住用。
-//	两边各存一份也不行:同步必漂移,一漂移就是安全问题。
-//
-// club 侧仍执行自己的副作用(取消高级 → 群缩容踢人等,见文件头)。
+// 权限管理(超管)。
 type PermissionManageServer interface {
-	Add(context.Context, *ai.PermissionAddReq) (*emptypb.Empty, error)
-	Delete(context.Context, *ai.PermissionDeleteReq) (*emptypb.Empty, error)
-	Edit(context.Context, *ai.PermissionEditReq) (*emptypb.Empty, error)
-	List(context.Context, *ai.PermissionListReq) (*ai.PermissionListResp, error)
+	Add(context.Context, *PermissionAddReq) (*emptypb.Empty, error)
+	Delete(context.Context, *PermissionDeleteReq) (*emptypb.Empty, error)
+	Edit(context.Context, *PermissionEditReq) (*emptypb.Empty, error)
+	List(context.Context, *PermissionListReq) (*PermissionListResp, error)
 }
 
 // UnimplementedPermissionManageServer should be embedded to have
@@ -298,16 +277,16 @@ type PermissionManageServer interface {
 // pointer dereference when methods are called.
 type UnimplementedPermissionManageServer struct{}
 
-func (UnimplementedPermissionManageServer) Add(context.Context, *ai.PermissionAddReq) (*emptypb.Empty, error) {
+func (UnimplementedPermissionManageServer) Add(context.Context, *PermissionAddReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Add not implemented")
 }
-func (UnimplementedPermissionManageServer) Delete(context.Context, *ai.PermissionDeleteReq) (*emptypb.Empty, error) {
+func (UnimplementedPermissionManageServer) Delete(context.Context, *PermissionDeleteReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
 }
-func (UnimplementedPermissionManageServer) Edit(context.Context, *ai.PermissionEditReq) (*emptypb.Empty, error) {
+func (UnimplementedPermissionManageServer) Edit(context.Context, *PermissionEditReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
 }
-func (UnimplementedPermissionManageServer) List(context.Context, *ai.PermissionListReq) (*ai.PermissionListResp, error) {
+func (UnimplementedPermissionManageServer) List(context.Context, *PermissionListReq) (*PermissionListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
 func (UnimplementedPermissionManageServer) testEmbeddedByValue() {}
@@ -331,7 +310,7 @@ func RegisterPermissionManageServer(s grpc.ServiceRegistrar, srv PermissionManag
 }
 
 func _PermissionManage_Add_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.PermissionAddReq)
+	in := new(PermissionAddReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -343,13 +322,13 @@ func _PermissionManage_Add_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: PermissionManage_Add_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionManageServer).Add(ctx, req.(*ai.PermissionAddReq))
+		return srv.(PermissionManageServer).Add(ctx, req.(*PermissionAddReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _PermissionManage_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.PermissionDeleteReq)
+	in := new(PermissionDeleteReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -361,13 +340,13 @@ func _PermissionManage_Delete_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: PermissionManage_Delete_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionManageServer).Delete(ctx, req.(*ai.PermissionDeleteReq))
+		return srv.(PermissionManageServer).Delete(ctx, req.(*PermissionDeleteReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _PermissionManage_Edit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.PermissionEditReq)
+	in := new(PermissionEditReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -379,13 +358,13 @@ func _PermissionManage_Edit_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: PermissionManage_Edit_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionManageServer).Edit(ctx, req.(*ai.PermissionEditReq))
+		return srv.(PermissionManageServer).Edit(ctx, req.(*PermissionEditReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _PermissionManage_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ai.PermissionListReq)
+	in := new(PermissionListReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -397,7 +376,7 @@ func _PermissionManage_List_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: PermissionManage_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionManageServer).List(ctx, req.(*ai.PermissionListReq))
+		return srv.(PermissionManageServer).List(ctx, req.(*PermissionListReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

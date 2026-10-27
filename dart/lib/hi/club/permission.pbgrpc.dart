@@ -17,7 +17,7 @@ import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $0;
 
-import '../ai/permission.pb.dart' as $1;
+import 'permission.pb.dart' as $1;
 
 export 'permission.pb.dart';
 
@@ -28,8 +28,7 @@ export 'permission.pb.dart';
 ///    SUPERADMIN,普通用户当场 PermissionDenied。故按主体拆成 查(用户)/ 管(超管)两个 service。
 ///
 /// ⚠️ **入参为空 = 强制查自己**。原 `UserACL.List(did, ...)` 带 did 参数,
-///    **传谁的 did 都能查 → 任意用户可读他人 ACL**(原注释里的 TODO 早已指出)。
-///    与 did 的 Merchant.Get 越权同一类病:身份必须来自 token,不能来自入参。
+///    **传谁的 did 都能查 → 任意用户可读他人 ACL**。身份必须来自 token,不能来自入参。
 @$pb.GrpcServiceName('hi.club.Permission')
 class PermissionClient extends $grpc.Client {
   /// The hostname for this service.
@@ -114,14 +113,7 @@ abstract class PermissionServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $1.ListAgentPermissionsReq request);
 }
 
-/// 权限管理(超管)。**存储在 hi.ai,这里是穿透门面** ——
-/// club 超管在 web 上操作,后端以「club 商户」的身份转发到 hi.ai.Permission(商户档)。
-///
-/// ⚠️ 为什么不在 club 自己存:插件与记忆的**执行**在 ai,校验必须跟执行同一侧。
-///    曾经 club 存一份、ai 无权限层,结果撤了权限的机器人照样调插件用记忆 ——
-///    club 那几处检查全在"改配置"的路径上,拦得住改、拦不住用。
-///    两边各存一份也不行:同步必漂移,一漂移就是安全问题。
-/// club 侧仍执行自己的副作用(取消高级 → 群缩容踢人等,见文件头)。
+/// 权限管理(超管)。
 @$pb.GrpcServiceName('hi.club.PermissionManage')
 class PermissionManageClient extends $grpc.Client {
   /// The hostname for this service.

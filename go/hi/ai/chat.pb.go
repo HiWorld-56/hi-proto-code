@@ -608,7 +608,15 @@ type ChatReq struct {
 	Caller *string `protobuf:"bytes,14,opt,name=caller,proto3,oneof" json:"caller,omitempty"`
 	// 用户这句话里的附件(问题侧),hi.ai 拼成「【附件】」附在 Q 后面、随问答存进上下文(见 `Attachment`)。
 	// 由调用方整理:club 从那条消息的内容段整理好填这里(hiclub 的前端不直接填)。不给 = 没有附件。
-	Attachments   []*Attachment `protobuf:"bytes,15,rep,name=attachments,proto3" json:"attachments,omitempty"`
+	Attachments []*Attachment `protobuf:"bytes,15,rep,name=attachments,proto3" json:"attachments,omitempty"`
+	// ── 这一轮能用哪些能力(**调用方定**;hi.ai 没有权限概念,照做不判)──────────────
+	//
+	// 权限是商户自己的规则(多个商户各管各的),hi.ai 只是机器人容器。club 按它自己存的机器人权限,
+	// **每一条 ChatReq 都显式填**这两个字段(见 hi/club/permission.proto)。
+	// **不传 = 允许**:商户直接调 hi.ai 时,机器人就是它自己的,用不用由它自己决定。
+	// 只管这一轮;续跑(Resume)沿用发起那一轮的结论。
+	AllowPlugins  *bool `protobuf:"varint,16,opt,name=allow_plugins,json=allowPlugins,proto3,oneof" json:"allow_plugins,omitempty"` // false:插件不挂进 tools(撤了插件权限)
+	AllowMem      *bool `protobuf:"varint,17,opt,name=allow_mem,json=allowMem,proto3,oneof" json:"allow_mem,omitempty"`             // false:记忆片段不拼进上下文(撤了记忆权限)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -746,6 +754,20 @@ func (x *ChatReq) GetAttachments() []*Attachment {
 		return x.Attachments
 	}
 	return nil
+}
+
+func (x *ChatReq) GetAllowPlugins() bool {
+	if x != nil && x.AllowPlugins != nil {
+		return *x.AllowPlugins
+	}
+	return false
+}
+
+func (x *ChatReq) GetAllowMem() bool {
+	if x != nil && x.AllowMem != nil {
+		return *x.AllowMem
+	}
+	return false
 }
 
 type ToolCallResult struct {
@@ -1356,7 +1378,7 @@ const file_hi_ai_chat_proto_rawDesc = "" +
 	"\x01q\x18\x02 \x03(\v2\x0e.hi.ai.ContentB\x04\x90\xb5\x18\x03R\x01q:\x04\x98\xb5\x18\x03B\x04\n" +
 	"\x02_a\";\n" +
 	"\x0eGetContextResp\x12#\n" +
-	"\x04list\x18\x01 \x03(\v2\t.hi.ai.QAB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"\x9e\x05\n" +
+	"\x04list\x18\x01 \x03(\v2\t.hi.ai.QAB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"\x8a\x06\n" +
 	"\aChatReq\x12\x19\n" +
 	"\x05agent\x18\x01 \x01(\tH\x00R\x05agent\x88\x01\x01\x12\x15\n" +
 	"\x03cid\x18\x02 \x01(\tH\x01R\x03cid\x88\x01\x01\x12$\n" +
@@ -1376,7 +1398,9 @@ const file_hi_ai_chat_proto_rawDesc = "" +
 	"\x06master\x18\r \x01(\tH\n" +
 	"R\x06master\x88\x01\x01\x12\x1b\n" +
 	"\x06caller\x18\x0e \x01(\tH\vR\x06caller\x88\x01\x01\x123\n" +
-	"\vattachments\x18\x0f \x03(\v2\x11.hi.ai.AttachmentR\vattachmentsB\b\n" +
+	"\vattachments\x18\x0f \x03(\v2\x11.hi.ai.AttachmentR\vattachments\x12(\n" +
+	"\rallow_plugins\x18\x10 \x01(\bH\fR\fallowPlugins\x88\x01\x01\x12 \n" +
+	"\tallow_mem\x18\x11 \x01(\bH\rR\ballowMem\x88\x01\x01B\b\n" +
 	"\x06_agentB\x06\n" +
 	"\x04_cidB\x0e\n" +
 	"\f_tool_choiceB\t\n" +
@@ -1388,7 +1412,10 @@ const file_hi_ai_chat_proto_rawDesc = "" +
 	"\r_echo_contextB\b\n" +
 	"\x06_askerB\t\n" +
 	"\a_masterB\t\n" +
-	"\a_caller\"\x87\x01\n" +
+	"\a_callerB\x10\n" +
+	"\x0e_allow_pluginsB\f\n" +
+	"\n" +
+	"_allow_mem\"\x87\x01\n" +
 	"\x0eToolCallResult\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12$\n" +
 	"\x05conts\x18\x02 \x03(\v2\x0e.hi.ai.ContentR\x05conts\x123\n" +

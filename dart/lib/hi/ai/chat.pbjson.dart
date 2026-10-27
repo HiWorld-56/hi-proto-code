@@ -339,6 +339,24 @@ const ChatReq$json = {
       '6': '.hi.ai.Attachment',
       '10': 'attachments'
     },
+    {
+      '1': 'allow_plugins',
+      '3': 16,
+      '4': 1,
+      '5': 8,
+      '9': 12,
+      '10': 'allowPlugins',
+      '17': true
+    },
+    {
+      '1': 'allow_mem',
+      '3': 17,
+      '4': 1,
+      '5': 8,
+      '9': 13,
+      '10': 'allowMem',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_agent'},
@@ -353,6 +371,8 @@ const ChatReq$json = {
     {'1': '_asker'},
     {'1': '_master'},
     {'1': '_caller'},
+    {'1': '_allow_plugins'},
+    {'1': '_allow_mem'},
   ],
 };
 
@@ -367,10 +387,12 @@ final $typed_data.Uint8List chatReqDescriptor = $convert.base64Decode(
     'TWVtb3J5iAEBEiYKDGVjaG9fY29udGV4dBgLIAEoCEgIUgtlY2hvQ29udGV4dIgBARIZCgVhc2'
     'tlchgMIAEoCUgJUgVhc2tlcogBARIbCgZtYXN0ZXIYDSABKAlIClIGbWFzdGVyiAEBEhsKBmNh'
     'bGxlchgOIAEoCUgLUgZjYWxsZXKIAQESMwoLYXR0YWNobWVudHMYDyADKAsyES5oaS5haS5BdH'
-    'RhY2htZW50UgthdHRhY2htZW50c0IICgZfYWdlbnRCBgoEX2NpZEIOCgxfdG9vbF9jaG9pY2VC'
-    'CQoHX2N1c3RvbUIICgZfc3RhdGVCCAoGX3N0eWxlQhIKEF9lY2hvX3Rvb2xfY2FsbHNCDgoMX2'
-    'VjaG9fbWVtb3J5Qg8KDV9lY2hvX2NvbnRleHRCCAoGX2Fza2VyQgkKB19tYXN0ZXJCCQoHX2Nh'
-    'bGxlcg==');
+    'RhY2htZW50UgthdHRhY2htZW50cxIoCg1hbGxvd19wbHVnaW5zGBAgASgISAxSDGFsbG93UGx1'
+    'Z2luc4gBARIgCglhbGxvd19tZW0YESABKAhIDVIIYWxsb3dNZW2IAQFCCAoGX2FnZW50QgYKBF'
+    '9jaWRCDgoMX3Rvb2xfY2hvaWNlQgkKB19jdXN0b21CCAoGX3N0YXRlQggKBl9zdHlsZUISChBf'
+    'ZWNob190b29sX2NhbGxzQg4KDF9lY2hvX21lbW9yeUIPCg1fZWNob19jb250ZXh0QggKBl9hc2'
+    'tlckIJCgdfbWFzdGVyQgkKB19jYWxsZXJCEAoOX2FsbG93X3BsdWdpbnNCDAoKX2FsbG93X21l'
+    'bQ==');
 
 @$core.Deprecated('Use toolCallResultDescriptor instead')
 const ToolCallResult$json = {

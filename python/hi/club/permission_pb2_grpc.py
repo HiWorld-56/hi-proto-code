@@ -3,49 +3,18 @@
 import grpc
 
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
-from hi.ai import permission_pb2 as hi_dot_ai_dot_permission__pb2
+from hi.club import permission_pb2 as hi_dot_club_dot_permission__pb2
 
 
 class PermissionStub(object):
-    """── 权限(原 UserACL)────────────────────────────────────────────────────────
-    **继承 hi.ai 的权限分类**(设计文档《HiClub.权限控制》开篇即写"继承 HiAI.模型权限控制"):
-    normal 普通 / advanced 高级 / mem 记忆 / plugin 插件
-    类型直接复用 hi.ai(有意为之,见 agent.proto 顶部说明)。
-
-    ⚠️ **但 club 不是纯门面** —— 它在继承之上**增加了自己的控制项**(文档《HiClub.权限控制》):
-    - 普通:群人数上限 **300**
-    - 高级:APP 侧语音转文本默认开启;群人数上限 **1200**
-
-    ⚠️⚠️ **取消高级权限的 club 侧副作用(重!后端必须实现)**:
-    1. 群成员分 3 类:群主 / 管理员 / 草民
-    2. 保留前 300 人,优先级 **群主 > 管理员 > 草民**
-    3. **其余人全部自动"退群"**(无视是否含管理员)
-    另:添加高级 → 用户所有群人数上限调 1200、新建群默认 1200;去除高级 → APP 侧语音转文本自动关闭。
-
-    未决(后端阶段定):授权限这个动作的入口在哪 —— 倾向 club 超管面为入口,
-    转发 ai 的 PermissionManage 成功后,club 再执行自己的收尾(群上限/踢人/语音开关)。
-
-    ── 权限模型:**直接复用 hi.ai 的那套** ────────────────────────────────────
-
-    PermissionType / PermissionInfo / PermissionAddReq / PermissionDeleteReq /
-    PermissionEditReq / PermissionListReq / PermissionListResp /
-    ListAgentPermissionsReq / ListAgentPermissionsResp —— 全部用 `hi.ai.*`。
-
-    曾经这里原样抄了一套一模一样的(字段、枚举值都一致),理由是"两边各存各的表、
-    各判各的"。现在权威只有 ai 一处、club 是穿透门面,那份副本就纯粹是**同一个东西
-    定义两遍**:改一处忘另一处就开始漂移。与 hi.club.Agent 复用 hi.ai.EditAgentReq 同一范式。
-
-    前端无感:字段名、枚举值、路由都没变(ai 那边的字段本就叫 did)。
-
-    权限查询(用户档)。前端 robot_memory / robot_plugin / robot_setup 三个**普通用户页面**
+    """权限查询(用户档)。前端 robot_memory / robot_plugin / robot_setup 三个**普通用户页面**
     拿它当 getPermissions 用(查自己有哪些权限以显隐功能)。
 
     ⚠️ **绝不能标超管** —— 前人在此犯过实打实的回归:按"整个 service 都是管理面"把它标成
     SUPERADMIN,普通用户当场 PermissionDenied。故按主体拆成 查(用户)/ 管(超管)两个 service。
 
     ⚠️ **入参为空 = 强制查自己**。原 `UserACL.List(did, ...)` 带 did 参数,
-    **传谁的 did 都能查 → 任意用户可读他人 ACL**(原注释里的 TODO 早已指出)。
-    与 did 的 Merchant.Get 越权同一类病:身份必须来自 token,不能来自入参。
+    **传谁的 did 都能查 → 任意用户可读他人 ACL**。身份必须来自 token,不能来自入参。
     """
 
     def __init__(self, channel):
@@ -57,55 +26,24 @@ class PermissionStub(object):
         self.Get = channel.unary_unary(
                 '/hi.club.Permission/Get',
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-                response_deserializer=hi_dot_ai_dot_permission__pb2.PermissionInfo.FromString,
+                response_deserializer=hi_dot_club_dot_permission__pb2.PermissionInfo.FromString,
                 _registered_method=True)
         self.List = channel.unary_unary(
                 '/hi.club.Permission/List',
-                request_serializer=hi_dot_ai_dot_permission__pb2.ListAgentPermissionsReq.SerializeToString,
-                response_deserializer=hi_dot_ai_dot_permission__pb2.ListAgentPermissionsResp.FromString,
+                request_serializer=hi_dot_club_dot_permission__pb2.ListAgentPermissionsReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_permission__pb2.ListAgentPermissionsResp.FromString,
                 _registered_method=True)
 
 
 class PermissionServicer(object):
-    """── 权限(原 UserACL)────────────────────────────────────────────────────────
-    **继承 hi.ai 的权限分类**(设计文档《HiClub.权限控制》开篇即写"继承 HiAI.模型权限控制"):
-    normal 普通 / advanced 高级 / mem 记忆 / plugin 插件
-    类型直接复用 hi.ai(有意为之,见 agent.proto 顶部说明)。
-
-    ⚠️ **但 club 不是纯门面** —— 它在继承之上**增加了自己的控制项**(文档《HiClub.权限控制》):
-    - 普通:群人数上限 **300**
-    - 高级:APP 侧语音转文本默认开启;群人数上限 **1200**
-
-    ⚠️⚠️ **取消高级权限的 club 侧副作用(重!后端必须实现)**:
-    1. 群成员分 3 类:群主 / 管理员 / 草民
-    2. 保留前 300 人,优先级 **群主 > 管理员 > 草民**
-    3. **其余人全部自动"退群"**(无视是否含管理员)
-    另:添加高级 → 用户所有群人数上限调 1200、新建群默认 1200;去除高级 → APP 侧语音转文本自动关闭。
-
-    未决(后端阶段定):授权限这个动作的入口在哪 —— 倾向 club 超管面为入口,
-    转发 ai 的 PermissionManage 成功后,club 再执行自己的收尾(群上限/踢人/语音开关)。
-
-    ── 权限模型:**直接复用 hi.ai 的那套** ────────────────────────────────────
-
-    PermissionType / PermissionInfo / PermissionAddReq / PermissionDeleteReq /
-    PermissionEditReq / PermissionListReq / PermissionListResp /
-    ListAgentPermissionsReq / ListAgentPermissionsResp —— 全部用 `hi.ai.*`。
-
-    曾经这里原样抄了一套一模一样的(字段、枚举值都一致),理由是"两边各存各的表、
-    各判各的"。现在权威只有 ai 一处、club 是穿透门面,那份副本就纯粹是**同一个东西
-    定义两遍**:改一处忘另一处就开始漂移。与 hi.club.Agent 复用 hi.ai.EditAgentReq 同一范式。
-
-    前端无感:字段名、枚举值、路由都没变(ai 那边的字段本就叫 did)。
-
-    权限查询(用户档)。前端 robot_memory / robot_plugin / robot_setup 三个**普通用户页面**
+    """权限查询(用户档)。前端 robot_memory / robot_plugin / robot_setup 三个**普通用户页面**
     拿它当 getPermissions 用(查自己有哪些权限以显隐功能)。
 
     ⚠️ **绝不能标超管** —— 前人在此犯过实打实的回归:按"整个 service 都是管理面"把它标成
     SUPERADMIN,普通用户当场 PermissionDenied。故按主体拆成 查(用户)/ 管(超管)两个 service。
 
     ⚠️ **入参为空 = 强制查自己**。原 `UserACL.List(did, ...)` 带 did 参数,
-    **传谁的 did 都能查 → 任意用户可读他人 ACL**(原注释里的 TODO 早已指出)。
-    与 did 的 Merchant.Get 越权同一类病:身份必须来自 token,不能来自入参。
+    **传谁的 did 都能查 → 任意用户可读他人 ACL**。身份必须来自 token,不能来自入参。
     """
 
     def Get(self, request, context):
@@ -131,12 +69,12 @@ def add_PermissionServicer_to_server(servicer, server):
             'Get': grpc.unary_unary_rpc_method_handler(
                     servicer.Get,
                     request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                    response_serializer=hi_dot_ai_dot_permission__pb2.PermissionInfo.SerializeToString,
+                    response_serializer=hi_dot_club_dot_permission__pb2.PermissionInfo.SerializeToString,
             ),
             'List': grpc.unary_unary_rpc_method_handler(
                     servicer.List,
-                    request_deserializer=hi_dot_ai_dot_permission__pb2.ListAgentPermissionsReq.FromString,
-                    response_serializer=hi_dot_ai_dot_permission__pb2.ListAgentPermissionsResp.SerializeToString,
+                    request_deserializer=hi_dot_club_dot_permission__pb2.ListAgentPermissionsReq.FromString,
+                    response_serializer=hi_dot_club_dot_permission__pb2.ListAgentPermissionsResp.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -147,45 +85,14 @@ def add_PermissionServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class Permission(object):
-    """── 权限(原 UserACL)────────────────────────────────────────────────────────
-    **继承 hi.ai 的权限分类**(设计文档《HiClub.权限控制》开篇即写"继承 HiAI.模型权限控制"):
-    normal 普通 / advanced 高级 / mem 记忆 / plugin 插件
-    类型直接复用 hi.ai(有意为之,见 agent.proto 顶部说明)。
-
-    ⚠️ **但 club 不是纯门面** —— 它在继承之上**增加了自己的控制项**(文档《HiClub.权限控制》):
-    - 普通:群人数上限 **300**
-    - 高级:APP 侧语音转文本默认开启;群人数上限 **1200**
-
-    ⚠️⚠️ **取消高级权限的 club 侧副作用(重!后端必须实现)**:
-    1. 群成员分 3 类:群主 / 管理员 / 草民
-    2. 保留前 300 人,优先级 **群主 > 管理员 > 草民**
-    3. **其余人全部自动"退群"**(无视是否含管理员)
-    另:添加高级 → 用户所有群人数上限调 1200、新建群默认 1200;去除高级 → APP 侧语音转文本自动关闭。
-
-    未决(后端阶段定):授权限这个动作的入口在哪 —— 倾向 club 超管面为入口,
-    转发 ai 的 PermissionManage 成功后,club 再执行自己的收尾(群上限/踢人/语音开关)。
-
-    ── 权限模型:**直接复用 hi.ai 的那套** ────────────────────────────────────
-
-    PermissionType / PermissionInfo / PermissionAddReq / PermissionDeleteReq /
-    PermissionEditReq / PermissionListReq / PermissionListResp /
-    ListAgentPermissionsReq / ListAgentPermissionsResp —— 全部用 `hi.ai.*`。
-
-    曾经这里原样抄了一套一模一样的(字段、枚举值都一致),理由是"两边各存各的表、
-    各判各的"。现在权威只有 ai 一处、club 是穿透门面,那份副本就纯粹是**同一个东西
-    定义两遍**:改一处忘另一处就开始漂移。与 hi.club.Agent 复用 hi.ai.EditAgentReq 同一范式。
-
-    前端无感:字段名、枚举值、路由都没变(ai 那边的字段本就叫 did)。
-
-    权限查询(用户档)。前端 robot_memory / robot_plugin / robot_setup 三个**普通用户页面**
+    """权限查询(用户档)。前端 robot_memory / robot_plugin / robot_setup 三个**普通用户页面**
     拿它当 getPermissions 用(查自己有哪些权限以显隐功能)。
 
     ⚠️ **绝不能标超管** —— 前人在此犯过实打实的回归:按"整个 service 都是管理面"把它标成
     SUPERADMIN,普通用户当场 PermissionDenied。故按主体拆成 查(用户)/ 管(超管)两个 service。
 
     ⚠️ **入参为空 = 强制查自己**。原 `UserACL.List(did, ...)` 带 did 参数,
-    **传谁的 did 都能查 → 任意用户可读他人 ACL**(原注释里的 TODO 早已指出)。
-    与 did 的 Merchant.Get 越权同一类病:身份必须来自 token,不能来自入参。
+    **传谁的 did 都能查 → 任意用户可读他人 ACL**。身份必须来自 token,不能来自入参。
     """
 
     @staticmethod
@@ -204,7 +111,7 @@ class Permission(object):
             target,
             '/hi.club.Permission/Get',
             google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-            hi_dot_ai_dot_permission__pb2.PermissionInfo.FromString,
+            hi_dot_club_dot_permission__pb2.PermissionInfo.FromString,
             options,
             channel_credentials,
             insecure,
@@ -230,8 +137,8 @@ class Permission(object):
             request,
             target,
             '/hi.club.Permission/List',
-            hi_dot_ai_dot_permission__pb2.ListAgentPermissionsReq.SerializeToString,
-            hi_dot_ai_dot_permission__pb2.ListAgentPermissionsResp.FromString,
+            hi_dot_club_dot_permission__pb2.ListAgentPermissionsReq.SerializeToString,
+            hi_dot_club_dot_permission__pb2.ListAgentPermissionsResp.FromString,
             options,
             channel_credentials,
             insecure,
@@ -244,14 +151,7 @@ class Permission(object):
 
 
 class PermissionManageStub(object):
-    """权限管理(超管)。**存储在 hi.ai,这里是穿透门面** ——
-    club 超管在 web 上操作,后端以「club 商户」的身份转发到 hi.ai.Permission(商户档)。
-
-    ⚠️ 为什么不在 club 自己存:插件与记忆的**执行**在 ai,校验必须跟执行同一侧。
-    曾经 club 存一份、ai 无权限层,结果撤了权限的机器人照样调插件用记忆 ——
-    club 那几处检查全在"改配置"的路径上,拦得住改、拦不住用。
-    两边各存一份也不行:同步必漂移,一漂移就是安全问题。
-    club 侧仍执行自己的副作用(取消高级 → 群缩容踢人等,见文件头)。
+    """权限管理(超管)。
     """
 
     def __init__(self, channel):
@@ -262,35 +162,28 @@ class PermissionManageStub(object):
         """
         self.Add = channel.unary_unary(
                 '/hi.club.PermissionManage/Add',
-                request_serializer=hi_dot_ai_dot_permission__pb2.PermissionAddReq.SerializeToString,
+                request_serializer=hi_dot_club_dot_permission__pb2.PermissionAddReq.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
         self.Delete = channel.unary_unary(
                 '/hi.club.PermissionManage/Delete',
-                request_serializer=hi_dot_ai_dot_permission__pb2.PermissionDeleteReq.SerializeToString,
+                request_serializer=hi_dot_club_dot_permission__pb2.PermissionDeleteReq.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
         self.Edit = channel.unary_unary(
                 '/hi.club.PermissionManage/Edit',
-                request_serializer=hi_dot_ai_dot_permission__pb2.PermissionEditReq.SerializeToString,
+                request_serializer=hi_dot_club_dot_permission__pb2.PermissionEditReq.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
         self.List = channel.unary_unary(
                 '/hi.club.PermissionManage/List',
-                request_serializer=hi_dot_ai_dot_permission__pb2.PermissionListReq.SerializeToString,
-                response_deserializer=hi_dot_ai_dot_permission__pb2.PermissionListResp.FromString,
+                request_serializer=hi_dot_club_dot_permission__pb2.PermissionListReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_permission__pb2.PermissionListResp.FromString,
                 _registered_method=True)
 
 
 class PermissionManageServicer(object):
-    """权限管理(超管)。**存储在 hi.ai,这里是穿透门面** ——
-    club 超管在 web 上操作,后端以「club 商户」的身份转发到 hi.ai.Permission(商户档)。
-
-    ⚠️ 为什么不在 club 自己存:插件与记忆的**执行**在 ai,校验必须跟执行同一侧。
-    曾经 club 存一份、ai 无权限层,结果撤了权限的机器人照样调插件用记忆 ——
-    club 那几处检查全在"改配置"的路径上,拦得住改、拦不住用。
-    两边各存一份也不行:同步必漂移,一漂移就是安全问题。
-    club 侧仍执行自己的副作用(取消高级 → 群缩容踢人等,见文件头)。
+    """权限管理(超管)。
     """
 
     def Add(self, request, context):
@@ -322,23 +215,23 @@ def add_PermissionManageServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'Add': grpc.unary_unary_rpc_method_handler(
                     servicer.Add,
-                    request_deserializer=hi_dot_ai_dot_permission__pb2.PermissionAddReq.FromString,
+                    request_deserializer=hi_dot_club_dot_permission__pb2.PermissionAddReq.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'Delete': grpc.unary_unary_rpc_method_handler(
                     servicer.Delete,
-                    request_deserializer=hi_dot_ai_dot_permission__pb2.PermissionDeleteReq.FromString,
+                    request_deserializer=hi_dot_club_dot_permission__pb2.PermissionDeleteReq.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'Edit': grpc.unary_unary_rpc_method_handler(
                     servicer.Edit,
-                    request_deserializer=hi_dot_ai_dot_permission__pb2.PermissionEditReq.FromString,
+                    request_deserializer=hi_dot_club_dot_permission__pb2.PermissionEditReq.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'List': grpc.unary_unary_rpc_method_handler(
                     servicer.List,
-                    request_deserializer=hi_dot_ai_dot_permission__pb2.PermissionListReq.FromString,
-                    response_serializer=hi_dot_ai_dot_permission__pb2.PermissionListResp.SerializeToString,
+                    request_deserializer=hi_dot_club_dot_permission__pb2.PermissionListReq.FromString,
+                    response_serializer=hi_dot_club_dot_permission__pb2.PermissionListResp.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -349,14 +242,7 @@ def add_PermissionManageServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class PermissionManage(object):
-    """权限管理(超管)。**存储在 hi.ai,这里是穿透门面** ——
-    club 超管在 web 上操作,后端以「club 商户」的身份转发到 hi.ai.Permission(商户档)。
-
-    ⚠️ 为什么不在 club 自己存:插件与记忆的**执行**在 ai,校验必须跟执行同一侧。
-    曾经 club 存一份、ai 无权限层,结果撤了权限的机器人照样调插件用记忆 ——
-    club 那几处检查全在"改配置"的路径上,拦得住改、拦不住用。
-    两边各存一份也不行:同步必漂移,一漂移就是安全问题。
-    club 侧仍执行自己的副作用(取消高级 → 群缩容踢人等,见文件头)。
+    """权限管理(超管)。
     """
 
     @staticmethod
@@ -374,7 +260,7 @@ class PermissionManage(object):
             request,
             target,
             '/hi.club.PermissionManage/Add',
-            hi_dot_ai_dot_permission__pb2.PermissionAddReq.SerializeToString,
+            hi_dot_club_dot_permission__pb2.PermissionAddReq.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,
@@ -401,7 +287,7 @@ class PermissionManage(object):
             request,
             target,
             '/hi.club.PermissionManage/Delete',
-            hi_dot_ai_dot_permission__pb2.PermissionDeleteReq.SerializeToString,
+            hi_dot_club_dot_permission__pb2.PermissionDeleteReq.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,
@@ -428,7 +314,7 @@ class PermissionManage(object):
             request,
             target,
             '/hi.club.PermissionManage/Edit',
-            hi_dot_ai_dot_permission__pb2.PermissionEditReq.SerializeToString,
+            hi_dot_club_dot_permission__pb2.PermissionEditReq.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,
@@ -455,8 +341,8 @@ class PermissionManage(object):
             request,
             target,
             '/hi.club.PermissionManage/List',
-            hi_dot_ai_dot_permission__pb2.PermissionListReq.SerializeToString,
-            hi_dot_ai_dot_permission__pb2.PermissionListResp.FromString,
+            hi_dot_club_dot_permission__pb2.PermissionListReq.SerializeToString,
+            hi_dot_club_dot_permission__pb2.PermissionListResp.FromString,
             options,
             channel_credentials,
             insecure,

@@ -665,6 +665,8 @@ class ChatReq extends $pb.GeneratedMessage {
     $core.String? master,
     $core.String? caller,
     $core.Iterable<Attachment>? attachments,
+    $core.bool? allowPlugins,
+    $core.bool? allowMem,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
@@ -682,6 +684,8 @@ class ChatReq extends $pb.GeneratedMessage {
     if (master != null) result.master = master;
     if (caller != null) result.caller = caller;
     if (attachments != null) result.attachments.addAll(attachments);
+    if (allowPlugins != null) result.allowPlugins = allowPlugins;
+    if (allowMem != null) result.allowMem = allowMem;
     return result;
   }
 
@@ -716,6 +720,8 @@ class ChatReq extends $pb.GeneratedMessage {
     ..aOS(14, _omitFieldNames ? '' : 'caller')
     ..pPM<Attachment>(15, _omitFieldNames ? '' : 'attachments',
         subBuilder: Attachment.create)
+    ..aOB(16, _omitFieldNames ? '' : 'allowPlugins')
+    ..aOB(17, _omitFieldNames ? '' : 'allowMem')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -891,6 +897,30 @@ class ChatReq extends $pb.GeneratedMessage {
   /// 由调用方整理:club 从那条消息的内容段整理好填这里(hiclub 的前端不直接填)。不给 = 没有附件。
   @$pb.TagNumber(15)
   $pb.PbList<Attachment> get attachments => $_getList(14);
+
+  /// ── 这一轮能用哪些能力(**调用方定**;hi.ai 没有权限概念,照做不判)──────────────
+  ///
+  /// 权限是商户自己的规则(多个商户各管各的),hi.ai 只是机器人容器。club 按它自己存的机器人权限,
+  /// **每一条 ChatReq 都显式填**这两个字段(见 hi/club/permission.proto)。
+  /// **不传 = 允许**:商户直接调 hi.ai 时,机器人就是它自己的,用不用由它自己决定。
+  /// 只管这一轮;续跑(Resume)沿用发起那一轮的结论。
+  @$pb.TagNumber(16)
+  $core.bool get allowPlugins => $_getBF(15);
+  @$pb.TagNumber(16)
+  set allowPlugins($core.bool value) => $_setBool(15, value);
+  @$pb.TagNumber(16)
+  $core.bool hasAllowPlugins() => $_has(15);
+  @$pb.TagNumber(16)
+  void clearAllowPlugins() => $_clearField(16);
+
+  @$pb.TagNumber(17)
+  $core.bool get allowMem => $_getBF(16);
+  @$pb.TagNumber(17)
+  set allowMem($core.bool value) => $_setBool(16, value);
+  @$pb.TagNumber(17)
+  $core.bool hasAllowMem() => $_has(16);
+  @$pb.TagNumber(17)
+  void clearAllowMem() => $_clearField(17);
 }
 
 class ToolCallResult extends $pb.GeneratedMessage {
