@@ -1,6 +1,6 @@
 // This is a generated file - do not edit.
 //
-// Generated from hi/club/media_image.proto.
+// Generated from hi/club/media.proto.
 
 // @dart = 3.3
 
@@ -16,9 +16,9 @@ import 'dart:core' as $core;
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'media_image.pb.dart' as $0;
+import 'media.pb.dart' as $0;
 
-export 'media_image.pb.dart';
+export 'media.pb.dart';
 
 /// Python 宿主经机器人 ApiKey 调用的内部 gRPC 转发面，不注册前端 HTTP 路由。
 /// 不接收收信人，不发送聊天，不重复检查插件安装、启用或市场授权。
@@ -224,4 +224,179 @@ abstract class MediaImageServiceBase extends $grpc.Service {
 
   $async.Future<$0.MediaImageResult> getResult(
       $grpc.ServiceCall call, $0.MediaImageTaskReq request);
+}
+
+/// Python 宿主经机器人 ApiKey 调用的内部 gRPC 转发面，不注册前端 HTTP 路由。
+/// 插件入口使用宿主注入的 asker/master 做主人校验；本服务认证机器人并检查任务归属。
+/// 不接收收信人，不发送聊天，不重复检查插件安装、启用或市场授权。
+@$pb.GrpcServiceName('hi.club.MediaVideo')
+class MediaVideoClient extends $grpc.Client {
+  /// The hostname for this service.
+  static const $core.String defaultHost = '';
+
+  /// OAuth scopes needed for the client.
+  static const $core.List<$core.String> oauthScopes = [
+    '',
+  ];
+
+  MediaVideoClient(super.channel, {super.options, super.interceptors});
+
+  $grpc.ResponseFuture<$0.PrepareMediaVideoImageResp> prepareInputImage(
+    $0.PrepareMediaVideoImageReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$prepareInputImage, request, options: options);
+  }
+
+  /// 固定后台 LTX 文生视频工作流，明确提交 5 秒、24 FPS、16:9 (Widescreen)、0.9 MP。
+  $grpc.ResponseFuture<$0.CreateMediaVideoResp> createTextToVideo(
+    $0.CreateMediaVideoReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$createTextToVideo, request, options: options);
+  }
+
+  /// 使用同一 request_id 已准备的一张图片；固定输出参数与文生视频相同。
+  $grpc.ResponseFuture<$0.CreateMediaVideoResp> createImageToVideo(
+    $0.CreateMediaVideoReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$createImageToVideo, request, options: options);
+  }
+
+  /// 只查询实时状态，不下载或转存；等待超时不取消任务，不重新生成。
+  $grpc.ResponseFuture<$0.MediaVideoTaskResp> getTask(
+    $0.MediaVideoTaskReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$getTask, request, options: options);
+  }
+
+  /// 仅成功任务独立转存，旧任务取回不依赖当前配置的工作流；失败可重试转存，不重新生成。
+  $grpc.ResponseFuture<$0.MediaVideoResult> getResult(
+    $0.MediaVideoTaskReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$getResult, request, options: options);
+  }
+
+  // method descriptors
+
+  static final _$prepareInputImage = $grpc.ClientMethod<
+          $0.PrepareMediaVideoImageReq, $0.PrepareMediaVideoImageResp>(
+      '/hi.club.MediaVideo/PrepareInputImage',
+      ($0.PrepareMediaVideoImageReq value) => value.writeToBuffer(),
+      $0.PrepareMediaVideoImageResp.fromBuffer);
+  static final _$createTextToVideo =
+      $grpc.ClientMethod<$0.CreateMediaVideoReq, $0.CreateMediaVideoResp>(
+          '/hi.club.MediaVideo/CreateTextToVideo',
+          ($0.CreateMediaVideoReq value) => value.writeToBuffer(),
+          $0.CreateMediaVideoResp.fromBuffer);
+  static final _$createImageToVideo =
+      $grpc.ClientMethod<$0.CreateMediaVideoReq, $0.CreateMediaVideoResp>(
+          '/hi.club.MediaVideo/CreateImageToVideo',
+          ($0.CreateMediaVideoReq value) => value.writeToBuffer(),
+          $0.CreateMediaVideoResp.fromBuffer);
+  static final _$getTask =
+      $grpc.ClientMethod<$0.MediaVideoTaskReq, $0.MediaVideoTaskResp>(
+          '/hi.club.MediaVideo/GetTask',
+          ($0.MediaVideoTaskReq value) => value.writeToBuffer(),
+          $0.MediaVideoTaskResp.fromBuffer);
+  static final _$getResult =
+      $grpc.ClientMethod<$0.MediaVideoTaskReq, $0.MediaVideoResult>(
+          '/hi.club.MediaVideo/GetResult',
+          ($0.MediaVideoTaskReq value) => value.writeToBuffer(),
+          $0.MediaVideoResult.fromBuffer);
+}
+
+@$pb.GrpcServiceName('hi.club.MediaVideo')
+abstract class MediaVideoServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.club.MediaVideo';
+
+  MediaVideoServiceBase() {
+    $addMethod($grpc.ServiceMethod<$0.PrepareMediaVideoImageReq,
+            $0.PrepareMediaVideoImageResp>(
+        'PrepareInputImage',
+        prepareInputImage_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.PrepareMediaVideoImageReq.fromBuffer(value),
+        ($0.PrepareMediaVideoImageResp value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$0.CreateMediaVideoReq, $0.CreateMediaVideoResp>(
+            'CreateTextToVideo',
+            createTextToVideo_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $0.CreateMediaVideoReq.fromBuffer(value),
+            ($0.CreateMediaVideoResp value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$0.CreateMediaVideoReq, $0.CreateMediaVideoResp>(
+            'CreateImageToVideo',
+            createImageToVideo_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $0.CreateMediaVideoReq.fromBuffer(value),
+            ($0.CreateMediaVideoResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.MediaVideoTaskReq, $0.MediaVideoTaskResp>(
+        'GetTask',
+        getTask_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.MediaVideoTaskReq.fromBuffer(value),
+        ($0.MediaVideoTaskResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.MediaVideoTaskReq, $0.MediaVideoResult>(
+        'GetResult',
+        getResult_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.MediaVideoTaskReq.fromBuffer(value),
+        ($0.MediaVideoResult value) => value.writeToBuffer()));
+  }
+
+  $async.Future<$0.PrepareMediaVideoImageResp> prepareInputImage_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.PrepareMediaVideoImageReq> $request) async {
+    return prepareInputImage($call, await $request);
+  }
+
+  $async.Future<$0.PrepareMediaVideoImageResp> prepareInputImage(
+      $grpc.ServiceCall call, $0.PrepareMediaVideoImageReq request);
+
+  $async.Future<$0.CreateMediaVideoResp> createTextToVideo_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.CreateMediaVideoReq> $request) async {
+    return createTextToVideo($call, await $request);
+  }
+
+  $async.Future<$0.CreateMediaVideoResp> createTextToVideo(
+      $grpc.ServiceCall call, $0.CreateMediaVideoReq request);
+
+  $async.Future<$0.CreateMediaVideoResp> createImageToVideo_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.CreateMediaVideoReq> $request) async {
+    return createImageToVideo($call, await $request);
+  }
+
+  $async.Future<$0.CreateMediaVideoResp> createImageToVideo(
+      $grpc.ServiceCall call, $0.CreateMediaVideoReq request);
+
+  $async.Future<$0.MediaVideoTaskResp> getTask_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.MediaVideoTaskReq> $request) async {
+    return getTask($call, await $request);
+  }
+
+  $async.Future<$0.MediaVideoTaskResp> getTask(
+      $grpc.ServiceCall call, $0.MediaVideoTaskReq request);
+
+  $async.Future<$0.MediaVideoResult> getResult_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.MediaVideoTaskReq> $request) async {
+    return getResult($call, await $request);
+  }
+
+  $async.Future<$0.MediaVideoResult> getResult(
+      $grpc.ServiceCall call, $0.MediaVideoTaskReq request);
 }

@@ -433,6 +433,15 @@ const ImageToVideoWorkflowConfig$json = {
       '10': 'maxMegapixelFrames',
       '17': true
     },
+    {
+      '1': 'seeds',
+      '3': 10,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.media.WorkflowInputBinding',
+      '8': {},
+      '10': 'seeds'
+    },
   ],
   '7': {},
   '8': [
@@ -455,8 +464,9 @@ final $typed_data.Uint8List imageToVideoWorkflowConfigDescriptor = $convert.base
     'Vjb25kcxgHIAEoCzIfLmhpLm1lZGlhLldvcmtmbG93SW50UmFuZ2VJbnB1dEIKukgDyAEBkLUY'
     'A1IPZHVyYXRpb25TZWNvbmRzEksKCmZyYW1lX3JhdGUYCCABKAsyIC5oaS5tZWRpYS5Xb3JrZm'
     'xvd0ZyYW1lUmF0ZUlucHV0Qgq6SAPIAQGQtRgDUglmcmFtZVJhdGUSOwoUbWF4X21lZ2FwaXhl'
-    'bF9mcmFtZXMYCSABKAlCBJC1GANIAVISbWF4TWVnYXBpeGVsRnJhbWVziAEBOgSYtRgDQhQKEl'
-    '9wcm9tcHRfbWF4X2xlbmd0aEIXChVfbWF4X21lZ2FwaXhlbF9mcmFtZXM=');
+    'bF9mcmFtZXMYCSABKAlCBJC1GANIAVISbWF4TWVnYXBpeGVsRnJhbWVziAEBEjoKBXNlZWRzGA'
+    'ogAygLMh4uaGkubWVkaWEuV29ya2Zsb3dJbnB1dEJpbmRpbmdCBJC1GANSBXNlZWRzOgSYtRgD'
+    'QhQKEl9wcm9tcHRfbWF4X2xlbmd0aEIXChVfbWF4X21lZ2FwaXhlbF9mcmFtZXM=');
 
 @$core.Deprecated('Use textToVideoWorkflowConfigDescriptor instead')
 const TextToVideoWorkflowConfig$json = {
@@ -536,6 +546,15 @@ const TextToVideoWorkflowConfig$json = {
       '10': 'maxMegapixelFrames',
       '17': true
     },
+    {
+      '1': 'seeds',
+      '3': 9,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.media.WorkflowInputBinding',
+      '8': {},
+      '10': 'seeds'
+    },
   ],
   '7': {},
   '8': [
@@ -557,8 +576,9 @@ final $typed_data.Uint8List textToVideoWorkflowConfigDescriptor = $convert.base6
     'LldvcmtmbG93SW50UmFuZ2VJbnB1dEIKukgDyAEBkLUYA1IPZHVyYXRpb25TZWNvbmRzEksKCm'
     'ZyYW1lX3JhdGUYByABKAsyIC5oaS5tZWRpYS5Xb3JrZmxvd0ZyYW1lUmF0ZUlucHV0Qgq6SAPI'
     'AQGQtRgDUglmcmFtZVJhdGUSOwoUbWF4X21lZ2FwaXhlbF9mcmFtZXMYCCABKAlCBJC1GANIAV'
-    'ISbWF4TWVnYXBpeGVsRnJhbWVziAEBOgSYtRgDQhQKEl9wcm9tcHRfbWF4X2xlbmd0aEIXChVf'
-    'bWF4X21lZ2FwaXhlbF9mcmFtZXM=');
+    'ISbWF4TWVnYXBpeGVsRnJhbWVziAEBEjoKBXNlZWRzGAkgAygLMh4uaGkubWVkaWEuV29ya2Zs'
+    'b3dJbnB1dEJpbmRpbmdCBJC1GANSBXNlZWRzOgSYtRgDQhQKEl9wcm9tcHRfbWF4X2xlbmd0aE'
+    'IXChVfbWF4X21lZ2FwaXhlbF9mcmFtZXM=');
 
 @$core.Deprecated('Use workflowImageDimensionsDescriptor instead')
 const WorkflowImageDimensions$json = {

@@ -503,6 +503,7 @@ pub struct TaskSummary {
     /// prompt、aspect_ratio、megapixels（字符串）、duration_seconds、frame_rate（整数），
     /// 图生视频另含 input_asset_id；不包含工作流图、节点绑定或管理员负向提示词。
     /// 图片任务另含后端生成的 seed；单图/角色含 input_asset_id，多图含有序 input_asset_ids。
+    /// 文生视频、图生视频仅在配置了种子绑定时另含 seed；未绑定的存量配置保留原行为。
     /// 文生图按尺寸模式包含 width/height 或 aspect_ratio/megapixels；角色 prompt 为用户原文。
     /// 新增视频含 seed 及适用的 input_video_asset_id/first_frame_asset_id/last_frame_asset_id/
     /// input_asset_ids/region_description；模仿不返回输出尺寸、时长或帧率选择值。
@@ -3627,7 +3628,7 @@ pub mod workflow_frame_rate_input {
     }
 }
 /// 图生视频执行配置，对应功能 video.img2vid。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImageToVideoWorkflowConfig {
     #[prost(message, optional, tag = "1")]
     pub input_image: ::core::option::Option<WorkflowInputBinding>,
@@ -3653,9 +3654,13 @@ pub struct ImageToVideoWorkflowConfig {
     /// 保存与校验工作流时缺失、非正数或最小组合即超预算都报错。
     #[prost(string, optional, tag = "9")]
     pub max_megapixel_frames: ::core::option::Option<::prost::alloc::string::String>,
+    /// 可选的采样种子绑定，必须是有效执行路径上的 INT 直接输入；多个输入使用同一个任务种子。
+    /// 配置后新任务由后端随机生成并保存 seed，重发、重启及结果取回不改变它；未配置时保留工作流原值。
+    #[prost(message, repeated, tag = "10")]
+    pub seeds: ::prost::alloc::vec::Vec<WorkflowInputBinding>,
 }
 /// 文生视频执行配置，对应功能 video.txt2vid。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TextToVideoWorkflowConfig {
     #[prost(message, optional, tag = "1")]
     pub prompt: ::core::option::Option<WorkflowInputBinding>,
@@ -3679,6 +3684,10 @@ pub struct TextToVideoWorkflowConfig {
     /// 保存与校验工作流时缺失、非正数或最小组合即超预算都报错。
     #[prost(string, optional, tag = "8")]
     pub max_megapixel_frames: ::core::option::Option<::prost::alloc::string::String>,
+    /// 可选的采样种子绑定，必须是有效执行路径上的 INT 直接输入；多个输入使用同一个任务种子。
+    /// 配置后新任务由后端随机生成并保存 seed，重发、重启及结果取回不改变它；未配置时保留工作流原值。
+    #[prost(message, repeated, tag = "9")]
+    pub seeds: ::prost::alloc::vec::Vec<WorkflowInputBinding>,
 }
 /// 文生图像素宽高绑定；两者的范围与默认值均为 16 的倍数，校验阶段核对。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]

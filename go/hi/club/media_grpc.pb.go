@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.6.2
 // - protoc             (unknown)
-// source: hi/club/media_image.proto
+// source: hi/club/media.proto
 
 package club
 
@@ -321,5 +321,273 @@ var MediaImage_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "hi/club/media_image.proto",
+	Metadata: "hi/club/media.proto",
+}
+
+const (
+	MediaVideo_PrepareInputImage_FullMethodName  = "/hi.club.MediaVideo/PrepareInputImage"
+	MediaVideo_CreateTextToVideo_FullMethodName  = "/hi.club.MediaVideo/CreateTextToVideo"
+	MediaVideo_CreateImageToVideo_FullMethodName = "/hi.club.MediaVideo/CreateImageToVideo"
+	MediaVideo_GetTask_FullMethodName            = "/hi.club.MediaVideo/GetTask"
+	MediaVideo_GetResult_FullMethodName          = "/hi.club.MediaVideo/GetResult"
+)
+
+// MediaVideoClient is the client API for MediaVideo service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// Python 宿主经机器人 ApiKey 调用的内部 gRPC 转发面，不注册前端 HTTP 路由。
+// 插件入口使用宿主注入的 asker/master 做主人校验；本服务认证机器人并检查任务归属。
+// 不接收收信人，不发送聊天，不重复检查插件安装、启用或市场授权。
+type MediaVideoClient interface {
+	PrepareInputImage(ctx context.Context, in *PrepareMediaVideoImageReq, opts ...grpc.CallOption) (*PrepareMediaVideoImageResp, error)
+	// 固定后台 LTX 文生视频工作流，明确提交 5 秒、24 FPS、16:9 (Widescreen)、0.9 MP。
+	CreateTextToVideo(ctx context.Context, in *CreateMediaVideoReq, opts ...grpc.CallOption) (*CreateMediaVideoResp, error)
+	// 使用同一 request_id 已准备的一张图片；固定输出参数与文生视频相同。
+	CreateImageToVideo(ctx context.Context, in *CreateMediaVideoReq, opts ...grpc.CallOption) (*CreateMediaVideoResp, error)
+	// 只查询实时状态，不下载或转存；等待超时不取消任务，不重新生成。
+	GetTask(ctx context.Context, in *MediaVideoTaskReq, opts ...grpc.CallOption) (*MediaVideoTaskResp, error)
+	// 仅成功任务独立转存，旧任务取回不依赖当前配置的工作流；失败可重试转存，不重新生成。
+	GetResult(ctx context.Context, in *MediaVideoTaskReq, opts ...grpc.CallOption) (*MediaVideoResult, error)
+}
+
+type mediaVideoClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewMediaVideoClient(cc grpc.ClientConnInterface) MediaVideoClient {
+	return &mediaVideoClient{cc}
+}
+
+func (c *mediaVideoClient) PrepareInputImage(ctx context.Context, in *PrepareMediaVideoImageReq, opts ...grpc.CallOption) (*PrepareMediaVideoImageResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PrepareMediaVideoImageResp)
+	err := c.cc.Invoke(ctx, MediaVideo_PrepareInputImage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *mediaVideoClient) CreateTextToVideo(ctx context.Context, in *CreateMediaVideoReq, opts ...grpc.CallOption) (*CreateMediaVideoResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateMediaVideoResp)
+	err := c.cc.Invoke(ctx, MediaVideo_CreateTextToVideo_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *mediaVideoClient) CreateImageToVideo(ctx context.Context, in *CreateMediaVideoReq, opts ...grpc.CallOption) (*CreateMediaVideoResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateMediaVideoResp)
+	err := c.cc.Invoke(ctx, MediaVideo_CreateImageToVideo_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *mediaVideoClient) GetTask(ctx context.Context, in *MediaVideoTaskReq, opts ...grpc.CallOption) (*MediaVideoTaskResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MediaVideoTaskResp)
+	err := c.cc.Invoke(ctx, MediaVideo_GetTask_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *mediaVideoClient) GetResult(ctx context.Context, in *MediaVideoTaskReq, opts ...grpc.CallOption) (*MediaVideoResult, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MediaVideoResult)
+	err := c.cc.Invoke(ctx, MediaVideo_GetResult_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// MediaVideoServer is the server API for MediaVideo service.
+// All implementations should embed UnimplementedMediaVideoServer
+// for forward compatibility.
+//
+// Python 宿主经机器人 ApiKey 调用的内部 gRPC 转发面，不注册前端 HTTP 路由。
+// 插件入口使用宿主注入的 asker/master 做主人校验；本服务认证机器人并检查任务归属。
+// 不接收收信人，不发送聊天，不重复检查插件安装、启用或市场授权。
+type MediaVideoServer interface {
+	PrepareInputImage(context.Context, *PrepareMediaVideoImageReq) (*PrepareMediaVideoImageResp, error)
+	// 固定后台 LTX 文生视频工作流，明确提交 5 秒、24 FPS、16:9 (Widescreen)、0.9 MP。
+	CreateTextToVideo(context.Context, *CreateMediaVideoReq) (*CreateMediaVideoResp, error)
+	// 使用同一 request_id 已准备的一张图片；固定输出参数与文生视频相同。
+	CreateImageToVideo(context.Context, *CreateMediaVideoReq) (*CreateMediaVideoResp, error)
+	// 只查询实时状态，不下载或转存；等待超时不取消任务，不重新生成。
+	GetTask(context.Context, *MediaVideoTaskReq) (*MediaVideoTaskResp, error)
+	// 仅成功任务独立转存，旧任务取回不依赖当前配置的工作流；失败可重试转存，不重新生成。
+	GetResult(context.Context, *MediaVideoTaskReq) (*MediaVideoResult, error)
+}
+
+// UnimplementedMediaVideoServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedMediaVideoServer struct{}
+
+func (UnimplementedMediaVideoServer) PrepareInputImage(context.Context, *PrepareMediaVideoImageReq) (*PrepareMediaVideoImageResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method PrepareInputImage not implemented")
+}
+func (UnimplementedMediaVideoServer) CreateTextToVideo(context.Context, *CreateMediaVideoReq) (*CreateMediaVideoResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateTextToVideo not implemented")
+}
+func (UnimplementedMediaVideoServer) CreateImageToVideo(context.Context, *CreateMediaVideoReq) (*CreateMediaVideoResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateImageToVideo not implemented")
+}
+func (UnimplementedMediaVideoServer) GetTask(context.Context, *MediaVideoTaskReq) (*MediaVideoTaskResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetTask not implemented")
+}
+func (UnimplementedMediaVideoServer) GetResult(context.Context, *MediaVideoTaskReq) (*MediaVideoResult, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetResult not implemented")
+}
+func (UnimplementedMediaVideoServer) testEmbeddedByValue() {}
+
+// UnsafeMediaVideoServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to MediaVideoServer will
+// result in compilation errors.
+type UnsafeMediaVideoServer interface {
+	mustEmbedUnimplementedMediaVideoServer()
+}
+
+func RegisterMediaVideoServer(s grpc.ServiceRegistrar, srv MediaVideoServer) {
+	// If the following call panics, it indicates UnimplementedMediaVideoServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&MediaVideo_ServiceDesc, srv)
+}
+
+func _MediaVideo_PrepareInputImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PrepareMediaVideoImageReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MediaVideoServer).PrepareInputImage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MediaVideo_PrepareInputImage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MediaVideoServer).PrepareInputImage(ctx, req.(*PrepareMediaVideoImageReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MediaVideo_CreateTextToVideo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateMediaVideoReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MediaVideoServer).CreateTextToVideo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MediaVideo_CreateTextToVideo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MediaVideoServer).CreateTextToVideo(ctx, req.(*CreateMediaVideoReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MediaVideo_CreateImageToVideo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateMediaVideoReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MediaVideoServer).CreateImageToVideo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MediaVideo_CreateImageToVideo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MediaVideoServer).CreateImageToVideo(ctx, req.(*CreateMediaVideoReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MediaVideo_GetTask_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MediaVideoTaskReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MediaVideoServer).GetTask(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MediaVideo_GetTask_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MediaVideoServer).GetTask(ctx, req.(*MediaVideoTaskReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MediaVideo_GetResult_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MediaVideoTaskReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MediaVideoServer).GetResult(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MediaVideo_GetResult_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MediaVideoServer).GetResult(ctx, req.(*MediaVideoTaskReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// MediaVideo_ServiceDesc is the grpc.ServiceDesc for MediaVideo service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var MediaVideo_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.club.MediaVideo",
+	HandlerType: (*MediaVideoServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "PrepareInputImage",
+			Handler:    _MediaVideo_PrepareInputImage_Handler,
+		},
+		{
+			MethodName: "CreateTextToVideo",
+			Handler:    _MediaVideo_CreateTextToVideo_Handler,
+		},
+		{
+			MethodName: "CreateImageToVideo",
+			Handler:    _MediaVideo_CreateImageToVideo_Handler,
+		},
+		{
+			MethodName: "GetTask",
+			Handler:    _MediaVideo_GetTask_Handler,
+		},
+		{
+			MethodName: "GetResult",
+			Handler:    _MediaVideo_GetResult_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/club/media.proto",
 }

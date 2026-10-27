@@ -1,6 +1,6 @@
 // This is a generated file - do not edit.
 //
-// Generated from hi/club/media_image.proto.
+// Generated from hi/club/media.proto.
 
 // @dart = 3.3
 
@@ -516,6 +516,512 @@ class MediaImageResult extends $pb.GeneratedMessage {
   $core.bool hasSizeBytes() => $_has(2);
   @$pb.TagNumber(3)
   void clearSizeBytes() => $_clearField(3);
+}
+
+/// 图生视频先独立准备一张聊天原图；图片字节不经过 Python 或模型。
+class PrepareMediaVideoImageReq extends $pb.GeneratedMessage {
+  factory PrepareMediaVideoImageReq({
+    $core.String? requestId,
+    $core.String? imageUrl,
+  }) {
+    final result = create();
+    if (requestId != null) result.requestId = requestId;
+    if (imageUrl != null) result.imageUrl = imageUrl;
+    return result;
+  }
+
+  PrepareMediaVideoImageReq._();
+
+  factory PrepareMediaVideoImageReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PrepareMediaVideoImageReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PrepareMediaVideoImageReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'requestId')
+    ..aOS(2, _omitFieldNames ? '' : 'imageUrl')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PrepareMediaVideoImageReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PrepareMediaVideoImageReq copyWith(
+          void Function(PrepareMediaVideoImageReq) updates) =>
+      super.copyWith((message) => updates(message as PrepareMediaVideoImageReq))
+          as PrepareMediaVideoImageReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PrepareMediaVideoImageReq create() => PrepareMediaVideoImageReq._();
+  @$core.override
+  PrepareMediaVideoImageReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static PrepareMediaVideoImageReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PrepareMediaVideoImageReq>(create);
+  static PrepareMediaVideoImageReq? _defaultInstance;
+
+  /// 由 Python 生成，同次准备和创建重试复用；不是模型填写的业务参数。
+  @$pb.TagNumber(1)
+  $core.String get requestId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set requestId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRequestId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRequestId() => $_clearField(1);
+
+  /// JPEG/PNG 聊天原图地址，不是缩略图、Base64 或 HiMedia 资产 ID；单张上限 50 MiB。
+  @$pb.TagNumber(2)
+  $core.String get imageUrl => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set imageUrl($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasImageUrl() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearImageUrl() => $_clearField(2);
+}
+
+class PrepareMediaVideoImageResp extends $pb.GeneratedMessage {
+  factory PrepareMediaVideoImageResp({
+    $1.UploadFileStatus? status,
+    $core.String? errorMessage,
+  }) {
+    final result = create();
+    if (status != null) result.status = status;
+    if (errorMessage != null) result.errorMessage = errorMessage;
+    return result;
+  }
+
+  PrepareMediaVideoImageResp._();
+
+  factory PrepareMediaVideoImageResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PrepareMediaVideoImageResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PrepareMediaVideoImageResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aE<$1.UploadFileStatus>(1, _omitFieldNames ? '' : 'status',
+        enumValues: $1.UploadFileStatus.values)
+    ..aOS(2, _omitFieldNames ? '' : 'errorMessage')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PrepareMediaVideoImageResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PrepareMediaVideoImageResp copyWith(
+          void Function(PrepareMediaVideoImageResp) updates) =>
+      super.copyWith(
+              (message) => updates(message as PrepareMediaVideoImageResp))
+          as PrepareMediaVideoImageResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PrepareMediaVideoImageResp create() => PrepareMediaVideoImageResp._();
+  @$core.override
+  PrepareMediaVideoImageResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static PrepareMediaVideoImageResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PrepareMediaVideoImageResp>(create);
+  static PrepareMediaVideoImageResp? _defaultInstance;
+
+  /// SUCCESS 才能创建；PENDING/PROCESSING 可稍后重查，FAILED 不创建任务。
+  @$pb.TagNumber(1)
+  $1.UploadFileStatus get status => $_getN(0);
+  @$pb.TagNumber(1)
+  set status($1.UploadFileStatus value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasStatus() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearStatus() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get errorMessage => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set errorMessage($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasErrorMessage() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearErrorMessage() => $_clearField(2);
+}
+
+/// 身份取自机器人凭据；不接收 DID、模型、工作流、尺寸、种子或 HiMedia 资产 ID。
+class CreateMediaVideoReq extends $pb.GeneratedMessage {
+  factory CreateMediaVideoReq({
+    $core.String? requestId,
+    $core.String? prompt,
+  }) {
+    final result = create();
+    if (requestId != null) result.requestId = requestId;
+    if (prompt != null) result.prompt = prompt;
+    return result;
+  }
+
+  CreateMediaVideoReq._();
+
+  factory CreateMediaVideoReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CreateMediaVideoReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CreateMediaVideoReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'requestId')
+    ..aOS(2, _omitFieldNames ? '' : 'prompt')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreateMediaVideoReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreateMediaVideoReq copyWith(void Function(CreateMediaVideoReq) updates) =>
+      super.copyWith((message) => updates(message as CreateMediaVideoReq))
+          as CreateMediaVideoReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CreateMediaVideoReq create() => CreateMediaVideoReq._();
+  @$core.override
+  CreateMediaVideoReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static CreateMediaVideoReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CreateMediaVideoReq>(create);
+  static CreateMediaVideoReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get requestId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set requestId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRequestId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRequestId() => $_clearField(1);
+
+  /// 用户生成描述，首尾去空白后不能为空，最多 4000 个 Unicode 码点；不自动截断或翻译。
+  @$pb.TagNumber(2)
+  $core.String get prompt => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set prompt($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPrompt() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPrompt() => $_clearField(2);
+}
+
+class CreateMediaVideoResp extends $pb.GeneratedMessage {
+  factory CreateMediaVideoResp({
+    $core.String? taskId,
+  }) {
+    final result = create();
+    if (taskId != null) result.taskId = taskId;
+    return result;
+  }
+
+  CreateMediaVideoResp._();
+
+  factory CreateMediaVideoResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CreateMediaVideoResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CreateMediaVideoResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'taskId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreateMediaVideoResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreateMediaVideoResp copyWith(void Function(CreateMediaVideoResp) updates) =>
+      super.copyWith((message) => updates(message as CreateMediaVideoResp))
+          as CreateMediaVideoResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CreateMediaVideoResp create() => CreateMediaVideoResp._();
+  @$core.override
+  CreateMediaVideoResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static CreateMediaVideoResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CreateMediaVideoResp>(create);
+  static CreateMediaVideoResp? _defaultInstance;
+
+  /// HiMedia 任务号；重发同一 request_id 返回同一任务及种子。等待超时后仍用于取回结果。
+  @$pb.TagNumber(1)
+  $core.String get taskId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set taskId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasTaskId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTaskId() => $_clearField(1);
+}
+
+class MediaVideoTaskReq extends $pb.GeneratedMessage {
+  factory MediaVideoTaskReq({
+    $core.String? taskId,
+  }) {
+    final result = create();
+    if (taskId != null) result.taskId = taskId;
+    return result;
+  }
+
+  MediaVideoTaskReq._();
+
+  factory MediaVideoTaskReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MediaVideoTaskReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MediaVideoTaskReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'taskId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MediaVideoTaskReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MediaVideoTaskReq copyWith(void Function(MediaVideoTaskReq) updates) =>
+      super.copyWith((message) => updates(message as MediaVideoTaskReq))
+          as MediaVideoTaskReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MediaVideoTaskReq create() => MediaVideoTaskReq._();
+  @$core.override
+  MediaVideoTaskReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MediaVideoTaskReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MediaVideoTaskReq>(create);
+  static MediaVideoTaskReq? _defaultInstance;
+
+  /// 只允许访问当前机器人关联的任务；不接受任意商户任务或 ComfyUI prompt_id。
+  @$pb.TagNumber(1)
+  $core.String get taskId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set taskId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasTaskId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTaskId() => $_clearField(1);
+}
+
+class MediaVideoTaskResp extends $pb.GeneratedMessage {
+  factory MediaVideoTaskResp({
+    $core.String? taskId,
+    $2.TaskStatus? status,
+    $core.String? statusMessage,
+    $core.String? errorCode,
+  }) {
+    final result = create();
+    if (taskId != null) result.taskId = taskId;
+    if (status != null) result.status = status;
+    if (statusMessage != null) result.statusMessage = statusMessage;
+    if (errorCode != null) result.errorCode = errorCode;
+    return result;
+  }
+
+  MediaVideoTaskResp._();
+
+  factory MediaVideoTaskResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MediaVideoTaskResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MediaVideoTaskResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'taskId')
+    ..aE<$2.TaskStatus>(2, _omitFieldNames ? '' : 'status',
+        enumValues: $2.TaskStatus.values)
+    ..aOS(3, _omitFieldNames ? '' : 'statusMessage')
+    ..aOS(4, _omitFieldNames ? '' : 'errorCode')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MediaVideoTaskResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MediaVideoTaskResp copyWith(void Function(MediaVideoTaskResp) updates) =>
+      super.copyWith((message) => updates(message as MediaVideoTaskResp))
+          as MediaVideoTaskResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MediaVideoTaskResp create() => MediaVideoTaskResp._();
+  @$core.override
+  MediaVideoTaskResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MediaVideoTaskResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MediaVideoTaskResp>(create);
+  static MediaVideoTaskResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get taskId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set taskId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasTaskId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTaskId() => $_clearField(1);
+
+  /// 复用 HiMedia 实时状态，包含保存中、取消中及已取消；不另存状态机。
+  @$pb.TagNumber(2)
+  $2.TaskStatus get status => $_getN(1);
+  @$pb.TagNumber(2)
+  set status($2.TaskStatus value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasStatus() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearStatus() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get statusMessage => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set statusMessage($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasStatusMessage() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearStatusMessage() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get errorCode => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set errorCode($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasErrorCode() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearErrorCode() => $_clearField(4);
+}
+
+/// 成功转存原始 MP4 到聊天 temp 桶后返回；保留字节及音轨，不代表已发送聊天消息。
+/// Python 将真实地址作为普通文字交给模型生成 Markdown；不新增专用聊天返回通道。
+class MediaVideoResult extends $pb.GeneratedMessage {
+  factory MediaVideoResult({
+    $core.String? url,
+    $core.String? name,
+    $fixnum.Int64? sizeBytes,
+    $core.String? coverUrl,
+  }) {
+    final result = create();
+    if (url != null) result.url = url;
+    if (name != null) result.name = name;
+    if (sizeBytes != null) result.sizeBytes = sizeBytes;
+    if (coverUrl != null) result.coverUrl = coverUrl;
+    return result;
+  }
+
+  MediaVideoResult._();
+
+  factory MediaVideoResult.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MediaVideoResult.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MediaVideoResult',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'url')
+    ..aOS(2, _omitFieldNames ? '' : 'name')
+    ..a<$fixnum.Int64>(
+        3, _omitFieldNames ? '' : 'sizeBytes', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..aOS(4, _omitFieldNames ? '' : 'coverUrl')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MediaVideoResult clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MediaVideoResult copyWith(void Function(MediaVideoResult) updates) =>
+      super.copyWith((message) => updates(message as MediaVideoResult))
+          as MediaVideoResult;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MediaVideoResult create() => MediaVideoResult._();
+  @$core.override
+  MediaVideoResult createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MediaVideoResult getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MediaVideoResult>(create);
+  static MediaVideoResult? _defaultInstance;
+
+  /// 聊天桶的视频地址，保留 .mp4 后缀；不是 HiMedia 临时签名地址。
+  @$pb.TagNumber(1)
+  $core.String get url => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set url($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasUrl() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUrl() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get name => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set name($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasName() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearName() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $fixnum.Int64 get sizeBytes => $_getI64(2);
+  @$pb.TagNumber(3)
+  set sizeBytes($fixnum.Int64 value) => $_setInt64(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSizeBytes() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSizeBytes() => $_clearField(3);
+
+  /// 可选封面地址；未取得封面仍可用视频链接播放。
+  @$pb.TagNumber(4)
+  $core.String get coverUrl => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set coverUrl($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasCoverUrl() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearCoverUrl() => $_clearField(4);
 }
 
 const $core.bool _omitFieldNames =

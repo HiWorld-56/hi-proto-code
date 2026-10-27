@@ -696,8 +696,11 @@ type ImageToVideoWorkflowConfig struct {
 	// 用来挡住单项都合法、组合起来必然超时或显存溢出的参数。proto 不标必填以便读出存量配置，
 	// 保存与校验工作流时缺失、非正数或最小组合即超预算都报错。
 	MaxMegapixelFrames *string `protobuf:"bytes,9,opt,name=max_megapixel_frames,json=maxMegapixelFrames,proto3,oneof" json:"max_megapixel_frames,omitempty"`
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
+	// 可选的采样种子绑定，必须是有效执行路径上的 INT 直接输入；多个输入使用同一个任务种子。
+	// 配置后新任务由后端随机生成并保存 seed，重发、重启及结果取回不改变它；未配置时保留工作流原值。
+	Seeds         []*WorkflowInputBinding `protobuf:"bytes,10,rep,name=seeds,proto3" json:"seeds,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ImageToVideoWorkflowConfig) Reset() {
@@ -793,6 +796,13 @@ func (x *ImageToVideoWorkflowConfig) GetMaxMegapixelFrames() string {
 	return ""
 }
 
+func (x *ImageToVideoWorkflowConfig) GetSeeds() []*WorkflowInputBinding {
+	if x != nil {
+		return x.Seeds
+	}
+	return nil
+}
+
 // 文生视频执行配置，对应功能 video.txt2vid。
 type TextToVideoWorkflowConfig struct {
 	state  protoimpl.MessageState `protogen:"open.v1"`
@@ -810,8 +820,11 @@ type TextToVideoWorkflowConfig struct {
 	// 用来挡住单项都合法、组合起来必然超时或显存溢出的参数。proto 不标必填以便读出存量配置，
 	// 保存与校验工作流时缺失、非正数或最小组合即超预算都报错。
 	MaxMegapixelFrames *string `protobuf:"bytes,8,opt,name=max_megapixel_frames,json=maxMegapixelFrames,proto3,oneof" json:"max_megapixel_frames,omitempty"`
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
+	// 可选的采样种子绑定，必须是有效执行路径上的 INT 直接输入；多个输入使用同一个任务种子。
+	// 配置后新任务由后端随机生成并保存 seed，重发、重启及结果取回不改变它；未配置时保留工作流原值。
+	Seeds         []*WorkflowInputBinding `protobuf:"bytes,9,rep,name=seeds,proto3" json:"seeds,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *TextToVideoWorkflowConfig) Reset() {
@@ -898,6 +911,13 @@ func (x *TextToVideoWorkflowConfig) GetMaxMegapixelFrames() string {
 		return *x.MaxMegapixelFrames
 	}
 	return ""
+}
+
+func (x *TextToVideoWorkflowConfig) GetSeeds() []*WorkflowInputBinding {
+	if x != nil {
+		return x.Seeds
+	}
+	return nil
 }
 
 // 文生图像素宽高绑定；两者的范围与默认值均为 16 的倍数，校验阶段核对。
@@ -3963,7 +3983,7 @@ const file_hi_media_workflow_manage_proto_rawDesc = "" +
 	"selectable\x12.\n" +
 	"\vfixed_value\x18\x02 \x01(\x05B\v\xbaH\x04\x1a\x02 \x00\x90\xb5\x18\x03H\x00R\n" +
 	"fixedValue:\x04\x98\xb5\x18\x03B\r\n" +
-	"\x04mode\x12\x05\xbaH\x02\b\x01\"\xfc\x05\n" +
+	"\x04mode\x12\x05\xbaH\x02\b\x01\"\xb8\x06\n" +
 	"\x1aImageToVideoWorkflowConfig\x12K\n" +
 	"\vinput_image\x18\x01 \x01(\v2\x1e.hi.media.WorkflowInputBindingB\n" +
 	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\n" +
@@ -3983,9 +4003,11 @@ const file_hi_media_workflow_manage_proto_rawDesc = "" +
 	"\n" +
 	"frame_rate\x18\b \x01(\v2 .hi.media.WorkflowFrameRateInputB\n" +
 	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\tframeRate\x12;\n" +
-	"\x14max_megapixel_frames\x18\t \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x12maxMegapixelFrames\x88\x01\x01:\x04\x98\xb5\x18\x03B\x14\n" +
+	"\x14max_megapixel_frames\x18\t \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x12maxMegapixelFrames\x88\x01\x01\x12:\n" +
+	"\x05seeds\x18\n" +
+	" \x03(\v2\x1e.hi.media.WorkflowInputBindingB\x04\x90\xb5\x18\x03R\x05seeds:\x04\x98\xb5\x18\x03B\x14\n" +
 	"\x12_prompt_max_lengthB\x17\n" +
-	"\x15_max_megapixel_frames\"\xae\x05\n" +
+	"\x15_max_megapixel_frames\"\xea\x05\n" +
 	"\x19TextToVideoWorkflowConfig\x12B\n" +
 	"\x06prompt\x18\x01 \x01(\v2\x1e.hi.media.WorkflowInputBindingB\n" +
 	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\x06prompt\x12?\n" +
@@ -4002,7 +4024,8 @@ const file_hi_media_workflow_manage_proto_rawDesc = "" +
 	"\n" +
 	"frame_rate\x18\a \x01(\v2 .hi.media.WorkflowFrameRateInputB\n" +
 	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\tframeRate\x12;\n" +
-	"\x14max_megapixel_frames\x18\b \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x12maxMegapixelFrames\x88\x01\x01:\x04\x98\xb5\x18\x03B\x14\n" +
+	"\x14max_megapixel_frames\x18\b \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x12maxMegapixelFrames\x88\x01\x01\x12:\n" +
+	"\x05seeds\x18\t \x03(\v2\x1e.hi.media.WorkflowInputBindingB\x04\x90\xb5\x18\x03R\x05seeds:\x04\x98\xb5\x18\x03B\x14\n" +
 	"\x12_prompt_max_lengthB\x17\n" +
 	"\x15_max_megapixel_frames\"\xa7\x01\n" +
 	"\x17WorkflowImageDimensions\x12A\n" +
@@ -4523,119 +4546,121 @@ var file_hi_media_workflow_manage_proto_depIdxs = []int32{
 	7,   // 14: hi.media.ImageToVideoWorkflowConfig.megapixels:type_name -> hi.media.WorkflowDecimalOptionInput
 	8,   // 15: hi.media.ImageToVideoWorkflowConfig.duration_seconds:type_name -> hi.media.WorkflowIntRangeInput
 	11,  // 16: hi.media.ImageToVideoWorkflowConfig.frame_rate:type_name -> hi.media.WorkflowFrameRateInput
-	4,   // 17: hi.media.TextToVideoWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
-	9,   // 18: hi.media.TextToVideoWorkflowConfig.negative_prompt:type_name -> hi.media.WorkflowFixedTextInput
-	6,   // 19: hi.media.TextToVideoWorkflowConfig.aspect_ratio:type_name -> hi.media.WorkflowStringOptionInput
-	7,   // 20: hi.media.TextToVideoWorkflowConfig.megapixels:type_name -> hi.media.WorkflowDecimalOptionInput
-	8,   // 21: hi.media.TextToVideoWorkflowConfig.duration_seconds:type_name -> hi.media.WorkflowIntRangeInput
-	11,  // 22: hi.media.TextToVideoWorkflowConfig.frame_rate:type_name -> hi.media.WorkflowFrameRateInput
-	8,   // 23: hi.media.WorkflowImageDimensions.width:type_name -> hi.media.WorkflowIntRangeInput
-	8,   // 24: hi.media.WorkflowImageDimensions.height:type_name -> hi.media.WorkflowIntRangeInput
-	6,   // 25: hi.media.WorkflowImageResolution.aspect_ratio:type_name -> hi.media.WorkflowStringOptionInput
-	7,   // 26: hi.media.WorkflowImageResolution.megapixels:type_name -> hi.media.WorkflowDecimalOptionInput
-	4,   // 27: hi.media.WorkflowFixedImageInputs.bindings:type_name -> hi.media.WorkflowInputBinding
-	57,  // 28: hi.media.WorkflowMultipleImageInputs.count:type_name -> hi.media.InputImagesConfig
-	16,  // 29: hi.media.WorkflowMultipleImageInputs.fixed:type_name -> hi.media.WorkflowFixedImageInputs
-	17,  // 30: hi.media.WorkflowMultipleImageInputs.qwen_dynamic:type_name -> hi.media.WorkflowQwenDynamicImageInputs
-	4,   // 31: hi.media.TextToImageWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
-	9,   // 32: hi.media.TextToImageWorkflowConfig.negative_prompt:type_name -> hi.media.WorkflowFixedTextInput
-	4,   // 33: hi.media.TextToImageWorkflowConfig.seed:type_name -> hi.media.WorkflowInputBinding
-	14,  // 34: hi.media.TextToImageWorkflowConfig.dimensions:type_name -> hi.media.WorkflowImageDimensions
-	15,  // 35: hi.media.TextToImageWorkflowConfig.resolution:type_name -> hi.media.WorkflowImageResolution
-	4,   // 36: hi.media.SingleImageEditWorkflowConfig.input_image:type_name -> hi.media.WorkflowInputBinding
-	4,   // 37: hi.media.SingleImageEditWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
-	9,   // 38: hi.media.SingleImageEditWorkflowConfig.negative_prompt:type_name -> hi.media.WorkflowFixedTextInput
-	4,   // 39: hi.media.SingleImageEditWorkflowConfig.seed:type_name -> hi.media.WorkflowInputBinding
-	18,  // 40: hi.media.MultipleImageEditWorkflowConfig.input_images:type_name -> hi.media.WorkflowMultipleImageInputs
-	4,   // 41: hi.media.MultipleImageEditWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
-	9,   // 42: hi.media.MultipleImageEditWorkflowConfig.negative_prompt:type_name -> hi.media.WorkflowFixedTextInput
-	4,   // 43: hi.media.MultipleImageEditWorkflowConfig.seed:type_name -> hi.media.WorkflowInputBinding
-	4,   // 44: hi.media.CharacterWorkflowConfig.input_image:type_name -> hi.media.WorkflowInputBinding
-	4,   // 45: hi.media.CharacterWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
-	9,   // 46: hi.media.CharacterWorkflowConfig.negative_prompt:type_name -> hi.media.WorkflowFixedTextInput
-	4,   // 47: hi.media.CharacterWorkflowConfig.seed:type_name -> hi.media.WorkflowInputBinding
-	4,   // 48: hi.media.FirstLastFrameWorkflowConfig.first_frame:type_name -> hi.media.WorkflowInputBinding
-	4,   // 49: hi.media.FirstLastFrameWorkflowConfig.last_frame:type_name -> hi.media.WorkflowInputBinding
-	4,   // 50: hi.media.FirstLastFrameWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
-	9,   // 51: hi.media.FirstLastFrameWorkflowConfig.negative_prompt:type_name -> hi.media.WorkflowFixedTextInput
-	6,   // 52: hi.media.FirstLastFrameWorkflowConfig.aspect_ratio:type_name -> hi.media.WorkflowStringOptionInput
-	7,   // 53: hi.media.FirstLastFrameWorkflowConfig.megapixels:type_name -> hi.media.WorkflowDecimalOptionInput
-	8,   // 54: hi.media.FirstLastFrameWorkflowConfig.duration_seconds:type_name -> hi.media.WorkflowIntRangeInput
-	11,  // 55: hi.media.FirstLastFrameWorkflowConfig.frame_rate:type_name -> hi.media.WorkflowFrameRateInput
-	4,   // 56: hi.media.FirstLastFrameWorkflowConfig.seeds:type_name -> hi.media.WorkflowInputBinding
-	4,   // 57: hi.media.MotionTransferWorkflowConfig.input_video:type_name -> hi.media.WorkflowInputBinding
-	4,   // 58: hi.media.MotionTransferWorkflowConfig.first_frame:type_name -> hi.media.WorkflowInputBinding
-	4,   // 59: hi.media.MotionTransferWorkflowConfig.use_first_frame:type_name -> hi.media.WorkflowInputBinding
-	4,   // 60: hi.media.MotionTransferWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
-	9,   // 61: hi.media.MotionTransferWorkflowConfig.negative_prompt:type_name -> hi.media.WorkflowFixedTextInput
-	4,   // 62: hi.media.MotionTransferWorkflowConfig.seeds:type_name -> hi.media.WorkflowInputBinding
-	4,   // 63: hi.media.MiniMaxVideoWorkflowConfig.input_video:type_name -> hi.media.WorkflowInputBinding
-	25,  // 64: hi.media.MiniMaxVideoWorkflowConfig.reference_images:type_name -> hi.media.WorkflowMiniMaxReferenceImages
-	4,   // 65: hi.media.MiniMaxVideoWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
-	6,   // 66: hi.media.MiniMaxVideoWorkflowConfig.aspect_ratio:type_name -> hi.media.WorkflowStringOptionInput
-	7,   // 67: hi.media.MiniMaxVideoWorkflowConfig.megapixels:type_name -> hi.media.WorkflowDecimalOptionInput
-	8,   // 68: hi.media.MiniMaxVideoWorkflowConfig.duration_seconds:type_name -> hi.media.WorkflowIntRangeInput
-	4,   // 69: hi.media.MiniMaxVideoWorkflowConfig.seeds:type_name -> hi.media.WorkflowInputBinding
-	4,   // 70: hi.media.MiniMaxVideoWorkflowConfig.region_description:type_name -> hi.media.WorkflowInputBinding
-	12,  // 71: hi.media.WorkflowExecutionConfig.image_to_video:type_name -> hi.media.ImageToVideoWorkflowConfig
-	13,  // 72: hi.media.WorkflowExecutionConfig.text_to_video:type_name -> hi.media.TextToVideoWorkflowConfig
-	19,  // 73: hi.media.WorkflowExecutionConfig.text_to_image:type_name -> hi.media.TextToImageWorkflowConfig
-	20,  // 74: hi.media.WorkflowExecutionConfig.single_image_edit:type_name -> hi.media.SingleImageEditWorkflowConfig
-	21,  // 75: hi.media.WorkflowExecutionConfig.multiple_image_edit:type_name -> hi.media.MultipleImageEditWorkflowConfig
-	22,  // 76: hi.media.WorkflowExecutionConfig.character:type_name -> hi.media.CharacterWorkflowConfig
-	23,  // 77: hi.media.WorkflowExecutionConfig.first_last_frame:type_name -> hi.media.FirstLastFrameWorkflowConfig
-	24,  // 78: hi.media.WorkflowExecutionConfig.motion_transfer:type_name -> hi.media.MotionTransferWorkflowConfig
-	26,  // 79: hi.media.WorkflowExecutionConfig.continuation:type_name -> hi.media.MiniMaxVideoWorkflowConfig
-	26,  // 80: hi.media.WorkflowExecutionConfig.reference:type_name -> hi.media.MiniMaxVideoWorkflowConfig
-	26,  // 81: hi.media.WorkflowExecutionConfig.advanced_replace:type_name -> hi.media.MiniMaxVideoWorkflowConfig
-	5,   // 82: hi.media.WorkflowExecutionConfig.output:type_name -> hi.media.WorkflowOutputConfig
-	2,   // 83: hi.media.WorkflowIssue.severity:type_name -> hi.media.WorkflowIssueSeverity
-	29,  // 84: hi.media.WorkflowNode.inputs:type_name -> hi.media.WorkflowNodeInput
-	3,   // 85: hi.media.WorkflowDependency.kind:type_name -> hi.media.WorkflowDependencyKind
-	31,  // 86: hi.media.WorkflowDependency.usages:type_name -> hi.media.WorkflowDependencyUsage
-	58,  // 87: hi.media.WorkflowSummary.function:type_name -> hi.media.FunctionSummary
-	59,  // 88: hi.media.WorkflowSummary.model:type_name -> hi.media.Model
-	0,   // 89: hi.media.WorkflowSummary.status:type_name -> hi.media.WorkflowStatus
-	1,   // 90: hi.media.WorkflowSummary.validation_status:type_name -> hi.media.WorkflowValidationStatus
-	33,  // 91: hi.media.WorkflowDetail.summary:type_name -> hi.media.WorkflowSummary
-	27,  // 92: hi.media.WorkflowDetail.config:type_name -> hi.media.WorkflowExecutionConfig
-	30,  // 93: hi.media.WorkflowDetail.nodes:type_name -> hi.media.WorkflowNode
-	32,  // 94: hi.media.WorkflowDetail.dependencies:type_name -> hi.media.WorkflowDependency
-	28,  // 95: hi.media.WorkflowDetail.validation_issues:type_name -> hi.media.WorkflowIssue
-	27,  // 96: hi.media.UpdateWorkflowReq.config:type_name -> hi.media.WorkflowExecutionConfig
-	34,  // 97: hi.media.UpdateWorkflowResp.workflow:type_name -> hi.media.WorkflowDetail
-	34,  // 98: hi.media.GetWorkflowResp.workflow:type_name -> hi.media.WorkflowDetail
-	60,  // 99: hi.media.ListWorkflowsReq.pagination:type_name -> hi.Pagination
-	0,   // 100: hi.media.ListWorkflowsReq.status:type_name -> hi.media.WorkflowStatus
-	33,  // 101: hi.media.ListWorkflowsResp.workflows:type_name -> hi.media.WorkflowSummary
-	1,   // 102: hi.media.ValidateWorkflowResp.status:type_name -> hi.media.WorkflowValidationStatus
-	28,  // 103: hi.media.ValidateWorkflowResp.issues:type_name -> hi.media.WorkflowIssue
-	61,  // 104: hi.media.TestWorkflowReq.resolution:type_name -> hi.media.VideoResolution
-	60,  // 105: hi.media.ListWorkflowTestsReq.pagination:type_name -> hi.Pagination
-	62,  // 106: hi.media.ListWorkflowTestsResp.tasks:type_name -> hi.media.TaskSummary
-	33,  // 107: hi.media.SetDefaultWorkflowResp.workflow:type_name -> hi.media.WorkflowSummary
-	33,  // 108: hi.media.UpdateWorkflowSortOrderResp.workflows:type_name -> hi.media.WorkflowSummary
-	38,  // 109: hi.media.WorkflowManage.Update:input_type -> hi.media.UpdateWorkflowReq
-	44,  // 110: hi.media.WorkflowManage.Validate:input_type -> hi.media.ValidateWorkflowReq
-	46,  // 111: hi.media.WorkflowManage.Test:input_type -> hi.media.TestWorkflowReq
-	48,  // 112: hi.media.WorkflowManage.ListTests:input_type -> hi.media.ListWorkflowTestsReq
-	50,  // 113: hi.media.WorkflowManage.SetDefault:input_type -> hi.media.SetDefaultWorkflowReq
-	52,  // 114: hi.media.WorkflowManage.UpdateSortOrder:input_type -> hi.media.UpdateWorkflowSortOrderReq
-	42,  // 115: hi.media.WorkflowManage.List:input_type -> hi.media.ListWorkflowsReq
-	40,  // 116: hi.media.WorkflowManage.Get:input_type -> hi.media.GetWorkflowReq
-	39,  // 117: hi.media.WorkflowManage.Update:output_type -> hi.media.UpdateWorkflowResp
-	45,  // 118: hi.media.WorkflowManage.Validate:output_type -> hi.media.ValidateWorkflowResp
-	47,  // 119: hi.media.WorkflowManage.Test:output_type -> hi.media.TestWorkflowResp
-	49,  // 120: hi.media.WorkflowManage.ListTests:output_type -> hi.media.ListWorkflowTestsResp
-	51,  // 121: hi.media.WorkflowManage.SetDefault:output_type -> hi.media.SetDefaultWorkflowResp
-	53,  // 122: hi.media.WorkflowManage.UpdateSortOrder:output_type -> hi.media.UpdateWorkflowSortOrderResp
-	43,  // 123: hi.media.WorkflowManage.List:output_type -> hi.media.ListWorkflowsResp
-	41,  // 124: hi.media.WorkflowManage.Get:output_type -> hi.media.GetWorkflowResp
-	117, // [117:125] is the sub-list for method output_type
-	109, // [109:117] is the sub-list for method input_type
-	109, // [109:109] is the sub-list for extension type_name
-	109, // [109:109] is the sub-list for extension extendee
-	0,   // [0:109] is the sub-list for field type_name
+	4,   // 17: hi.media.ImageToVideoWorkflowConfig.seeds:type_name -> hi.media.WorkflowInputBinding
+	4,   // 18: hi.media.TextToVideoWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
+	9,   // 19: hi.media.TextToVideoWorkflowConfig.negative_prompt:type_name -> hi.media.WorkflowFixedTextInput
+	6,   // 20: hi.media.TextToVideoWorkflowConfig.aspect_ratio:type_name -> hi.media.WorkflowStringOptionInput
+	7,   // 21: hi.media.TextToVideoWorkflowConfig.megapixels:type_name -> hi.media.WorkflowDecimalOptionInput
+	8,   // 22: hi.media.TextToVideoWorkflowConfig.duration_seconds:type_name -> hi.media.WorkflowIntRangeInput
+	11,  // 23: hi.media.TextToVideoWorkflowConfig.frame_rate:type_name -> hi.media.WorkflowFrameRateInput
+	4,   // 24: hi.media.TextToVideoWorkflowConfig.seeds:type_name -> hi.media.WorkflowInputBinding
+	8,   // 25: hi.media.WorkflowImageDimensions.width:type_name -> hi.media.WorkflowIntRangeInput
+	8,   // 26: hi.media.WorkflowImageDimensions.height:type_name -> hi.media.WorkflowIntRangeInput
+	6,   // 27: hi.media.WorkflowImageResolution.aspect_ratio:type_name -> hi.media.WorkflowStringOptionInput
+	7,   // 28: hi.media.WorkflowImageResolution.megapixels:type_name -> hi.media.WorkflowDecimalOptionInput
+	4,   // 29: hi.media.WorkflowFixedImageInputs.bindings:type_name -> hi.media.WorkflowInputBinding
+	57,  // 30: hi.media.WorkflowMultipleImageInputs.count:type_name -> hi.media.InputImagesConfig
+	16,  // 31: hi.media.WorkflowMultipleImageInputs.fixed:type_name -> hi.media.WorkflowFixedImageInputs
+	17,  // 32: hi.media.WorkflowMultipleImageInputs.qwen_dynamic:type_name -> hi.media.WorkflowQwenDynamicImageInputs
+	4,   // 33: hi.media.TextToImageWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
+	9,   // 34: hi.media.TextToImageWorkflowConfig.negative_prompt:type_name -> hi.media.WorkflowFixedTextInput
+	4,   // 35: hi.media.TextToImageWorkflowConfig.seed:type_name -> hi.media.WorkflowInputBinding
+	14,  // 36: hi.media.TextToImageWorkflowConfig.dimensions:type_name -> hi.media.WorkflowImageDimensions
+	15,  // 37: hi.media.TextToImageWorkflowConfig.resolution:type_name -> hi.media.WorkflowImageResolution
+	4,   // 38: hi.media.SingleImageEditWorkflowConfig.input_image:type_name -> hi.media.WorkflowInputBinding
+	4,   // 39: hi.media.SingleImageEditWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
+	9,   // 40: hi.media.SingleImageEditWorkflowConfig.negative_prompt:type_name -> hi.media.WorkflowFixedTextInput
+	4,   // 41: hi.media.SingleImageEditWorkflowConfig.seed:type_name -> hi.media.WorkflowInputBinding
+	18,  // 42: hi.media.MultipleImageEditWorkflowConfig.input_images:type_name -> hi.media.WorkflowMultipleImageInputs
+	4,   // 43: hi.media.MultipleImageEditWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
+	9,   // 44: hi.media.MultipleImageEditWorkflowConfig.negative_prompt:type_name -> hi.media.WorkflowFixedTextInput
+	4,   // 45: hi.media.MultipleImageEditWorkflowConfig.seed:type_name -> hi.media.WorkflowInputBinding
+	4,   // 46: hi.media.CharacterWorkflowConfig.input_image:type_name -> hi.media.WorkflowInputBinding
+	4,   // 47: hi.media.CharacterWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
+	9,   // 48: hi.media.CharacterWorkflowConfig.negative_prompt:type_name -> hi.media.WorkflowFixedTextInput
+	4,   // 49: hi.media.CharacterWorkflowConfig.seed:type_name -> hi.media.WorkflowInputBinding
+	4,   // 50: hi.media.FirstLastFrameWorkflowConfig.first_frame:type_name -> hi.media.WorkflowInputBinding
+	4,   // 51: hi.media.FirstLastFrameWorkflowConfig.last_frame:type_name -> hi.media.WorkflowInputBinding
+	4,   // 52: hi.media.FirstLastFrameWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
+	9,   // 53: hi.media.FirstLastFrameWorkflowConfig.negative_prompt:type_name -> hi.media.WorkflowFixedTextInput
+	6,   // 54: hi.media.FirstLastFrameWorkflowConfig.aspect_ratio:type_name -> hi.media.WorkflowStringOptionInput
+	7,   // 55: hi.media.FirstLastFrameWorkflowConfig.megapixels:type_name -> hi.media.WorkflowDecimalOptionInput
+	8,   // 56: hi.media.FirstLastFrameWorkflowConfig.duration_seconds:type_name -> hi.media.WorkflowIntRangeInput
+	11,  // 57: hi.media.FirstLastFrameWorkflowConfig.frame_rate:type_name -> hi.media.WorkflowFrameRateInput
+	4,   // 58: hi.media.FirstLastFrameWorkflowConfig.seeds:type_name -> hi.media.WorkflowInputBinding
+	4,   // 59: hi.media.MotionTransferWorkflowConfig.input_video:type_name -> hi.media.WorkflowInputBinding
+	4,   // 60: hi.media.MotionTransferWorkflowConfig.first_frame:type_name -> hi.media.WorkflowInputBinding
+	4,   // 61: hi.media.MotionTransferWorkflowConfig.use_first_frame:type_name -> hi.media.WorkflowInputBinding
+	4,   // 62: hi.media.MotionTransferWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
+	9,   // 63: hi.media.MotionTransferWorkflowConfig.negative_prompt:type_name -> hi.media.WorkflowFixedTextInput
+	4,   // 64: hi.media.MotionTransferWorkflowConfig.seeds:type_name -> hi.media.WorkflowInputBinding
+	4,   // 65: hi.media.MiniMaxVideoWorkflowConfig.input_video:type_name -> hi.media.WorkflowInputBinding
+	25,  // 66: hi.media.MiniMaxVideoWorkflowConfig.reference_images:type_name -> hi.media.WorkflowMiniMaxReferenceImages
+	4,   // 67: hi.media.MiniMaxVideoWorkflowConfig.prompt:type_name -> hi.media.WorkflowInputBinding
+	6,   // 68: hi.media.MiniMaxVideoWorkflowConfig.aspect_ratio:type_name -> hi.media.WorkflowStringOptionInput
+	7,   // 69: hi.media.MiniMaxVideoWorkflowConfig.megapixels:type_name -> hi.media.WorkflowDecimalOptionInput
+	8,   // 70: hi.media.MiniMaxVideoWorkflowConfig.duration_seconds:type_name -> hi.media.WorkflowIntRangeInput
+	4,   // 71: hi.media.MiniMaxVideoWorkflowConfig.seeds:type_name -> hi.media.WorkflowInputBinding
+	4,   // 72: hi.media.MiniMaxVideoWorkflowConfig.region_description:type_name -> hi.media.WorkflowInputBinding
+	12,  // 73: hi.media.WorkflowExecutionConfig.image_to_video:type_name -> hi.media.ImageToVideoWorkflowConfig
+	13,  // 74: hi.media.WorkflowExecutionConfig.text_to_video:type_name -> hi.media.TextToVideoWorkflowConfig
+	19,  // 75: hi.media.WorkflowExecutionConfig.text_to_image:type_name -> hi.media.TextToImageWorkflowConfig
+	20,  // 76: hi.media.WorkflowExecutionConfig.single_image_edit:type_name -> hi.media.SingleImageEditWorkflowConfig
+	21,  // 77: hi.media.WorkflowExecutionConfig.multiple_image_edit:type_name -> hi.media.MultipleImageEditWorkflowConfig
+	22,  // 78: hi.media.WorkflowExecutionConfig.character:type_name -> hi.media.CharacterWorkflowConfig
+	23,  // 79: hi.media.WorkflowExecutionConfig.first_last_frame:type_name -> hi.media.FirstLastFrameWorkflowConfig
+	24,  // 80: hi.media.WorkflowExecutionConfig.motion_transfer:type_name -> hi.media.MotionTransferWorkflowConfig
+	26,  // 81: hi.media.WorkflowExecutionConfig.continuation:type_name -> hi.media.MiniMaxVideoWorkflowConfig
+	26,  // 82: hi.media.WorkflowExecutionConfig.reference:type_name -> hi.media.MiniMaxVideoWorkflowConfig
+	26,  // 83: hi.media.WorkflowExecutionConfig.advanced_replace:type_name -> hi.media.MiniMaxVideoWorkflowConfig
+	5,   // 84: hi.media.WorkflowExecutionConfig.output:type_name -> hi.media.WorkflowOutputConfig
+	2,   // 85: hi.media.WorkflowIssue.severity:type_name -> hi.media.WorkflowIssueSeverity
+	29,  // 86: hi.media.WorkflowNode.inputs:type_name -> hi.media.WorkflowNodeInput
+	3,   // 87: hi.media.WorkflowDependency.kind:type_name -> hi.media.WorkflowDependencyKind
+	31,  // 88: hi.media.WorkflowDependency.usages:type_name -> hi.media.WorkflowDependencyUsage
+	58,  // 89: hi.media.WorkflowSummary.function:type_name -> hi.media.FunctionSummary
+	59,  // 90: hi.media.WorkflowSummary.model:type_name -> hi.media.Model
+	0,   // 91: hi.media.WorkflowSummary.status:type_name -> hi.media.WorkflowStatus
+	1,   // 92: hi.media.WorkflowSummary.validation_status:type_name -> hi.media.WorkflowValidationStatus
+	33,  // 93: hi.media.WorkflowDetail.summary:type_name -> hi.media.WorkflowSummary
+	27,  // 94: hi.media.WorkflowDetail.config:type_name -> hi.media.WorkflowExecutionConfig
+	30,  // 95: hi.media.WorkflowDetail.nodes:type_name -> hi.media.WorkflowNode
+	32,  // 96: hi.media.WorkflowDetail.dependencies:type_name -> hi.media.WorkflowDependency
+	28,  // 97: hi.media.WorkflowDetail.validation_issues:type_name -> hi.media.WorkflowIssue
+	27,  // 98: hi.media.UpdateWorkflowReq.config:type_name -> hi.media.WorkflowExecutionConfig
+	34,  // 99: hi.media.UpdateWorkflowResp.workflow:type_name -> hi.media.WorkflowDetail
+	34,  // 100: hi.media.GetWorkflowResp.workflow:type_name -> hi.media.WorkflowDetail
+	60,  // 101: hi.media.ListWorkflowsReq.pagination:type_name -> hi.Pagination
+	0,   // 102: hi.media.ListWorkflowsReq.status:type_name -> hi.media.WorkflowStatus
+	33,  // 103: hi.media.ListWorkflowsResp.workflows:type_name -> hi.media.WorkflowSummary
+	1,   // 104: hi.media.ValidateWorkflowResp.status:type_name -> hi.media.WorkflowValidationStatus
+	28,  // 105: hi.media.ValidateWorkflowResp.issues:type_name -> hi.media.WorkflowIssue
+	61,  // 106: hi.media.TestWorkflowReq.resolution:type_name -> hi.media.VideoResolution
+	60,  // 107: hi.media.ListWorkflowTestsReq.pagination:type_name -> hi.Pagination
+	62,  // 108: hi.media.ListWorkflowTestsResp.tasks:type_name -> hi.media.TaskSummary
+	33,  // 109: hi.media.SetDefaultWorkflowResp.workflow:type_name -> hi.media.WorkflowSummary
+	33,  // 110: hi.media.UpdateWorkflowSortOrderResp.workflows:type_name -> hi.media.WorkflowSummary
+	38,  // 111: hi.media.WorkflowManage.Update:input_type -> hi.media.UpdateWorkflowReq
+	44,  // 112: hi.media.WorkflowManage.Validate:input_type -> hi.media.ValidateWorkflowReq
+	46,  // 113: hi.media.WorkflowManage.Test:input_type -> hi.media.TestWorkflowReq
+	48,  // 114: hi.media.WorkflowManage.ListTests:input_type -> hi.media.ListWorkflowTestsReq
+	50,  // 115: hi.media.WorkflowManage.SetDefault:input_type -> hi.media.SetDefaultWorkflowReq
+	52,  // 116: hi.media.WorkflowManage.UpdateSortOrder:input_type -> hi.media.UpdateWorkflowSortOrderReq
+	42,  // 117: hi.media.WorkflowManage.List:input_type -> hi.media.ListWorkflowsReq
+	40,  // 118: hi.media.WorkflowManage.Get:input_type -> hi.media.GetWorkflowReq
+	39,  // 119: hi.media.WorkflowManage.Update:output_type -> hi.media.UpdateWorkflowResp
+	45,  // 120: hi.media.WorkflowManage.Validate:output_type -> hi.media.ValidateWorkflowResp
+	47,  // 121: hi.media.WorkflowManage.Test:output_type -> hi.media.TestWorkflowResp
+	49,  // 122: hi.media.WorkflowManage.ListTests:output_type -> hi.media.ListWorkflowTestsResp
+	51,  // 123: hi.media.WorkflowManage.SetDefault:output_type -> hi.media.SetDefaultWorkflowResp
+	53,  // 124: hi.media.WorkflowManage.UpdateSortOrder:output_type -> hi.media.UpdateWorkflowSortOrderResp
+	43,  // 125: hi.media.WorkflowManage.List:output_type -> hi.media.ListWorkflowsResp
+	41,  // 126: hi.media.WorkflowManage.Get:output_type -> hi.media.GetWorkflowResp
+	119, // [119:127] is the sub-list for method output_type
+	111, // [111:119] is the sub-list for method input_type
+	111, // [111:111] is the sub-list for extension type_name
+	111, // [111:111] is the sub-list for extension extendee
+	0,   // [0:111] is the sub-list for field type_name
 }
 
 func init() { file_hi_media_workflow_manage_proto_init() }

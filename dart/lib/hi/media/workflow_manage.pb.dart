@@ -624,6 +624,7 @@ class ImageToVideoWorkflowConfig extends $pb.GeneratedMessage {
     WorkflowIntRangeInput? durationSeconds,
     WorkflowFrameRateInput? frameRate,
     $core.String? maxMegapixelFrames,
+    $core.Iterable<WorkflowInputBinding>? seeds,
   }) {
     final result = create();
     if (inputImage != null) result.inputImage = inputImage;
@@ -636,6 +637,7 @@ class ImageToVideoWorkflowConfig extends $pb.GeneratedMessage {
     if (frameRate != null) result.frameRate = frameRate;
     if (maxMegapixelFrames != null)
       result.maxMegapixelFrames = maxMegapixelFrames;
+    if (seeds != null) result.seeds.addAll(seeds);
     return result;
   }
 
@@ -669,6 +671,8 @@ class ImageToVideoWorkflowConfig extends $pb.GeneratedMessage {
     ..aOM<WorkflowFrameRateInput>(8, _omitFieldNames ? '' : 'frameRate',
         subBuilder: WorkflowFrameRateInput.create)
     ..aOS(9, _omitFieldNames ? '' : 'maxMegapixelFrames')
+    ..pPM<WorkflowInputBinding>(10, _omitFieldNames ? '' : 'seeds',
+        subBuilder: WorkflowInputBinding.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -792,6 +796,11 @@ class ImageToVideoWorkflowConfig extends $pb.GeneratedMessage {
   $core.bool hasMaxMegapixelFrames() => $_has(8);
   @$pb.TagNumber(9)
   void clearMaxMegapixelFrames() => $_clearField(9);
+
+  /// 可选的采样种子绑定，必须是有效执行路径上的 INT 直接输入；多个输入使用同一个任务种子。
+  /// 配置后新任务由后端随机生成并保存 seed，重发、重启及结果取回不改变它；未配置时保留工作流原值。
+  @$pb.TagNumber(10)
+  $pb.PbList<WorkflowInputBinding> get seeds => $_getList(9);
 }
 
 /// 文生视频执行配置，对应功能 video.txt2vid。
@@ -805,6 +814,7 @@ class TextToVideoWorkflowConfig extends $pb.GeneratedMessage {
     WorkflowIntRangeInput? durationSeconds,
     WorkflowFrameRateInput? frameRate,
     $core.String? maxMegapixelFrames,
+    $core.Iterable<WorkflowInputBinding>? seeds,
   }) {
     final result = create();
     if (prompt != null) result.prompt = prompt;
@@ -816,6 +826,7 @@ class TextToVideoWorkflowConfig extends $pb.GeneratedMessage {
     if (frameRate != null) result.frameRate = frameRate;
     if (maxMegapixelFrames != null)
       result.maxMegapixelFrames = maxMegapixelFrames;
+    if (seeds != null) result.seeds.addAll(seeds);
     return result;
   }
 
@@ -847,6 +858,8 @@ class TextToVideoWorkflowConfig extends $pb.GeneratedMessage {
     ..aOM<WorkflowFrameRateInput>(7, _omitFieldNames ? '' : 'frameRate',
         subBuilder: WorkflowFrameRateInput.create)
     ..aOS(8, _omitFieldNames ? '' : 'maxMegapixelFrames')
+    ..pPM<WorkflowInputBinding>(9, _omitFieldNames ? '' : 'seeds',
+        subBuilder: WorkflowInputBinding.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -958,6 +971,11 @@ class TextToVideoWorkflowConfig extends $pb.GeneratedMessage {
   $core.bool hasMaxMegapixelFrames() => $_has(7);
   @$pb.TagNumber(8)
   void clearMaxMegapixelFrames() => $_clearField(8);
+
+  /// 可选的采样种子绑定，必须是有效执行路径上的 INT 直接输入；多个输入使用同一个任务种子。
+  /// 配置后新任务由后端随机生成并保存 seed，重发、重启及结果取回不改变它；未配置时保留工作流原值。
+  @$pb.TagNumber(9)
+  $pb.PbList<WorkflowInputBinding> get seeds => $_getList(8);
 }
 
 /// 文生图像素宽高绑定；两者的范围与默认值均为 16 的倍数，校验阶段核对。

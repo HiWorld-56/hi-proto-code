@@ -7700,6 +7700,9 @@ impl serde::Serialize for ImageToVideoWorkflowConfig {
         if self.max_megapixel_frames.is_some() {
             len += 1;
         }
+        if !self.seeds.is_empty() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.media.ImageToVideoWorkflowConfig", len)?;
         if let Some(v) = self.input_image.as_ref() {
             struct_ser.serialize_field("inputImage", v)?;
@@ -7728,6 +7731,9 @@ impl serde::Serialize for ImageToVideoWorkflowConfig {
         if let Some(v) = self.max_megapixel_frames.as_ref() {
             struct_ser.serialize_field("maxMegapixelFrames", v)?;
         }
+        if !self.seeds.is_empty() {
+            struct_ser.serialize_field("seeds", &self.seeds)?;
+        }
         struct_ser.end()
     }
 }
@@ -7754,6 +7760,7 @@ impl<'de> serde::Deserialize<'de> for ImageToVideoWorkflowConfig {
             "frameRate",
             "max_megapixel_frames",
             "maxMegapixelFrames",
+            "seeds",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -7767,6 +7774,7 @@ impl<'de> serde::Deserialize<'de> for ImageToVideoWorkflowConfig {
             DurationSeconds,
             FrameRate,
             MaxMegapixelFrames,
+            Seeds,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -7797,6 +7805,7 @@ impl<'de> serde::Deserialize<'de> for ImageToVideoWorkflowConfig {
                             "durationSeconds" | "duration_seconds" => Ok(GeneratedField::DurationSeconds),
                             "frameRate" | "frame_rate" => Ok(GeneratedField::FrameRate),
                             "maxMegapixelFrames" | "max_megapixel_frames" => Ok(GeneratedField::MaxMegapixelFrames),
+                            "seeds" => Ok(GeneratedField::Seeds),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -7825,6 +7834,7 @@ impl<'de> serde::Deserialize<'de> for ImageToVideoWorkflowConfig {
                 let mut duration_seconds__ = None;
                 let mut frame_rate__ = None;
                 let mut max_megapixel_frames__ = None;
+                let mut seeds__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::InputImage => {
@@ -7883,6 +7893,12 @@ impl<'de> serde::Deserialize<'de> for ImageToVideoWorkflowConfig {
                             }
                             max_megapixel_frames__ = map_.next_value()?;
                         }
+                        GeneratedField::Seeds => {
+                            if seeds__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("seeds"));
+                            }
+                            seeds__ = Some(map_.next_value()?);
+                        }
                     }
                 }
                 Ok(ImageToVideoWorkflowConfig {
@@ -7895,6 +7911,7 @@ impl<'de> serde::Deserialize<'de> for ImageToVideoWorkflowConfig {
                     duration_seconds: duration_seconds__,
                     frame_rate: frame_rate__,
                     max_megapixel_frames: max_megapixel_frames__,
+                    seeds: seeds__.unwrap_or_default(),
                 })
             }
         }
@@ -14592,6 +14609,9 @@ impl serde::Serialize for TextToVideoWorkflowConfig {
         if self.max_megapixel_frames.is_some() {
             len += 1;
         }
+        if !self.seeds.is_empty() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.media.TextToVideoWorkflowConfig", len)?;
         if let Some(v) = self.prompt.as_ref() {
             struct_ser.serialize_field("prompt", v)?;
@@ -14617,6 +14637,9 @@ impl serde::Serialize for TextToVideoWorkflowConfig {
         if let Some(v) = self.max_megapixel_frames.as_ref() {
             struct_ser.serialize_field("maxMegapixelFrames", v)?;
         }
+        if !self.seeds.is_empty() {
+            struct_ser.serialize_field("seeds", &self.seeds)?;
+        }
         struct_ser.end()
     }
 }
@@ -14641,6 +14664,7 @@ impl<'de> serde::Deserialize<'de> for TextToVideoWorkflowConfig {
             "frameRate",
             "max_megapixel_frames",
             "maxMegapixelFrames",
+            "seeds",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -14653,6 +14677,7 @@ impl<'de> serde::Deserialize<'de> for TextToVideoWorkflowConfig {
             DurationSeconds,
             FrameRate,
             MaxMegapixelFrames,
+            Seeds,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -14682,6 +14707,7 @@ impl<'de> serde::Deserialize<'de> for TextToVideoWorkflowConfig {
                             "durationSeconds" | "duration_seconds" => Ok(GeneratedField::DurationSeconds),
                             "frameRate" | "frame_rate" => Ok(GeneratedField::FrameRate),
                             "maxMegapixelFrames" | "max_megapixel_frames" => Ok(GeneratedField::MaxMegapixelFrames),
+                            "seeds" => Ok(GeneratedField::Seeds),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -14709,6 +14735,7 @@ impl<'de> serde::Deserialize<'de> for TextToVideoWorkflowConfig {
                 let mut duration_seconds__ = None;
                 let mut frame_rate__ = None;
                 let mut max_megapixel_frames__ = None;
+                let mut seeds__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Prompt => {
@@ -14761,6 +14788,12 @@ impl<'de> serde::Deserialize<'de> for TextToVideoWorkflowConfig {
                             }
                             max_megapixel_frames__ = map_.next_value()?;
                         }
+                        GeneratedField::Seeds => {
+                            if seeds__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("seeds"));
+                            }
+                            seeds__ = Some(map_.next_value()?);
+                        }
                     }
                 }
                 Ok(TextToVideoWorkflowConfig {
@@ -14772,6 +14805,7 @@ impl<'de> serde::Deserialize<'de> for TextToVideoWorkflowConfig {
                     duration_seconds: duration_seconds__,
                     frame_rate: frame_rate__,
                     max_megapixel_frames: max_megapixel_frames__,
+                    seeds: seeds__.unwrap_or_default(),
                 })
             }
         }

@@ -1,6 +1,6 @@
 // This is a generated file - do not edit.
 //
-// Generated from hi/club/media_image.proto.
+// Generated from hi/club/media.proto.
 
 // @dart = 3.3
 

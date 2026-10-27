@@ -2941,6 +2941,207 @@ impl<'de> serde::Deserialize<'de> for CreateMediaImageResp {
         deserializer.deserialize_struct("hi.club.CreateMediaImageResp", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for CreateMediaVideoReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.request_id.is_some() {
+            len += 1;
+        }
+        if self.prompt.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.CreateMediaVideoReq", len)?;
+        if let Some(v) = self.request_id.as_ref() {
+            struct_ser.serialize_field("requestId", v)?;
+        }
+        if let Some(v) = self.prompt.as_ref() {
+            struct_ser.serialize_field("prompt", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for CreateMediaVideoReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "request_id",
+            "requestId",
+            "prompt",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            RequestId,
+            Prompt,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
+                            "prompt" => Ok(GeneratedField::Prompt),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = CreateMediaVideoReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.CreateMediaVideoReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateMediaVideoReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut request_id__ = None;
+                let mut prompt__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
+                            }
+                            request_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Prompt => {
+                            if prompt__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prompt"));
+                            }
+                            prompt__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(CreateMediaVideoReq {
+                    request_id: request_id__,
+                    prompt: prompt__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.CreateMediaVideoReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for CreateMediaVideoResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.task_id.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.CreateMediaVideoResp", len)?;
+        if let Some(v) = self.task_id.as_ref() {
+            struct_ser.serialize_field("taskId", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for CreateMediaVideoResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "task_id",
+            "taskId",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            TaskId,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "taskId" | "task_id" => Ok(GeneratedField::TaskId),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = CreateMediaVideoResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.CreateMediaVideoResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateMediaVideoResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut task_id__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::TaskId => {
+                            if task_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("taskId"));
+                            }
+                            task_id__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(CreateMediaVideoResp {
+                    task_id: task_id__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.CreateMediaVideoResp", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for CreateRenewOrderReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -16091,6 +16292,393 @@ impl<'de> serde::Deserialize<'de> for MediaImageTaskResp {
         deserializer.deserialize_struct("hi.club.MediaImageTaskResp", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for MediaVideoResult {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.url.is_some() {
+            len += 1;
+        }
+        if self.name.is_some() {
+            len += 1;
+        }
+        if self.size_bytes.is_some() {
+            len += 1;
+        }
+        if self.cover_url.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.MediaVideoResult", len)?;
+        if let Some(v) = self.url.as_ref() {
+            struct_ser.serialize_field("url", v)?;
+        }
+        if let Some(v) = self.name.as_ref() {
+            struct_ser.serialize_field("name", v)?;
+        }
+        if let Some(v) = self.size_bytes.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("sizeBytes", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.cover_url.as_ref() {
+            struct_ser.serialize_field("coverUrl", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for MediaVideoResult {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "url",
+            "name",
+            "size_bytes",
+            "sizeBytes",
+            "cover_url",
+            "coverUrl",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Url,
+            Name,
+            SizeBytes,
+            CoverUrl,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "url" => Ok(GeneratedField::Url),
+                            "name" => Ok(GeneratedField::Name),
+                            "sizeBytes" | "size_bytes" => Ok(GeneratedField::SizeBytes),
+                            "coverUrl" | "cover_url" => Ok(GeneratedField::CoverUrl),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = MediaVideoResult;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.MediaVideoResult")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaVideoResult, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut url__ = None;
+                let mut name__ = None;
+                let mut size_bytes__ = None;
+                let mut cover_url__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Url => {
+                            if url__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("url"));
+                            }
+                            url__ = map_.next_value()?;
+                        }
+                        GeneratedField::Name => {
+                            if name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("name"));
+                            }
+                            name__ = map_.next_value()?;
+                        }
+                        GeneratedField::SizeBytes => {
+                            if size_bytes__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sizeBytes"));
+                            }
+                            size_bytes__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::CoverUrl => {
+                            if cover_url__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("coverUrl"));
+                            }
+                            cover_url__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(MediaVideoResult {
+                    url: url__,
+                    name: name__,
+                    size_bytes: size_bytes__,
+                    cover_url: cover_url__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.MediaVideoResult", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for MediaVideoTaskReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.task_id.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.MediaVideoTaskReq", len)?;
+        if let Some(v) = self.task_id.as_ref() {
+            struct_ser.serialize_field("taskId", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for MediaVideoTaskReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "task_id",
+            "taskId",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            TaskId,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "taskId" | "task_id" => Ok(GeneratedField::TaskId),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = MediaVideoTaskReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.MediaVideoTaskReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaVideoTaskReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut task_id__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::TaskId => {
+                            if task_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("taskId"));
+                            }
+                            task_id__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(MediaVideoTaskReq {
+                    task_id: task_id__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.MediaVideoTaskReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for MediaVideoTaskResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.task_id.is_some() {
+            len += 1;
+        }
+        if self.status.is_some() {
+            len += 1;
+        }
+        if self.status_message.is_some() {
+            len += 1;
+        }
+        if self.error_code.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.MediaVideoTaskResp", len)?;
+        if let Some(v) = self.task_id.as_ref() {
+            struct_ser.serialize_field("taskId", v)?;
+        }
+        if let Some(v) = self.status.as_ref() {
+            let v = super::media::TaskStatus::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("status", &v)?;
+        }
+        if let Some(v) = self.status_message.as_ref() {
+            struct_ser.serialize_field("statusMessage", v)?;
+        }
+        if let Some(v) = self.error_code.as_ref() {
+            struct_ser.serialize_field("errorCode", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for MediaVideoTaskResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "task_id",
+            "taskId",
+            "status",
+            "status_message",
+            "statusMessage",
+            "error_code",
+            "errorCode",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            TaskId,
+            Status,
+            StatusMessage,
+            ErrorCode,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "taskId" | "task_id" => Ok(GeneratedField::TaskId),
+                            "status" => Ok(GeneratedField::Status),
+                            "statusMessage" | "status_message" => Ok(GeneratedField::StatusMessage),
+                            "errorCode" | "error_code" => Ok(GeneratedField::ErrorCode),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = MediaVideoTaskResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.MediaVideoTaskResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<MediaVideoTaskResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut task_id__ = None;
+                let mut status__ = None;
+                let mut status_message__ = None;
+                let mut error_code__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::TaskId => {
+                            if task_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("taskId"));
+                            }
+                            task_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Status => {
+                            if status__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("status"));
+                            }
+                            status__ = map_.next_value::<::std::option::Option<super::media::TaskStatus>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::StatusMessage => {
+                            if status_message__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("statusMessage"));
+                            }
+                            status_message__ = map_.next_value()?;
+                        }
+                        GeneratedField::ErrorCode => {
+                            if error_code__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("errorCode"));
+                            }
+                            error_code__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(MediaVideoTaskResp {
+                    task_id: task_id__,
+                    status: status__,
+                    status_message: status_message__,
+                    error_code: error_code__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.MediaVideoTaskResp", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for Member {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -18075,6 +18663,227 @@ impl<'de> serde::Deserialize<'de> for PrepareMediaImageResp {
             }
         }
         deserializer.deserialize_struct("hi.club.PrepareMediaImageResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for PrepareMediaVideoImageReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.request_id.is_some() {
+            len += 1;
+        }
+        if self.image_url.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.PrepareMediaVideoImageReq", len)?;
+        if let Some(v) = self.request_id.as_ref() {
+            struct_ser.serialize_field("requestId", v)?;
+        }
+        if let Some(v) = self.image_url.as_ref() {
+            struct_ser.serialize_field("imageUrl", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for PrepareMediaVideoImageReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "request_id",
+            "requestId",
+            "image_url",
+            "imageUrl",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            RequestId,
+            ImageUrl,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
+                            "imageUrl" | "image_url" => Ok(GeneratedField::ImageUrl),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = PrepareMediaVideoImageReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.PrepareMediaVideoImageReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<PrepareMediaVideoImageReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut request_id__ = None;
+                let mut image_url__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
+                            }
+                            request_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::ImageUrl => {
+                            if image_url__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("imageUrl"));
+                            }
+                            image_url__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(PrepareMediaVideoImageReq {
+                    request_id: request_id__,
+                    image_url: image_url__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.PrepareMediaVideoImageReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for PrepareMediaVideoImageResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.status.is_some() {
+            len += 1;
+        }
+        if self.error_message.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.PrepareMediaVideoImageResp", len)?;
+        if let Some(v) = self.status.as_ref() {
+            let v = super::media::UploadFileStatus::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("status", &v)?;
+        }
+        if let Some(v) = self.error_message.as_ref() {
+            struct_ser.serialize_field("errorMessage", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for PrepareMediaVideoImageResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "status",
+            "error_message",
+            "errorMessage",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Status,
+            ErrorMessage,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "status" => Ok(GeneratedField::Status),
+                            "errorMessage" | "error_message" => Ok(GeneratedField::ErrorMessage),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = PrepareMediaVideoImageResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.PrepareMediaVideoImageResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<PrepareMediaVideoImageResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut status__ = None;
+                let mut error_message__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Status => {
+                            if status__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("status"));
+                            }
+                            status__ = map_.next_value::<::std::option::Option<super::media::UploadFileStatus>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::ErrorMessage => {
+                            if error_message__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("errorMessage"));
+                            }
+                            error_message__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(PrepareMediaVideoImageResp {
+                    status: status__,
+                    error_message: error_message__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.PrepareMediaVideoImageResp", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for ProbeVideoReq {

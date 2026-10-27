@@ -9192,6 +9192,601 @@ pub mod assets_client {
         }
     }
 }
+/// 插件单次执行内部使用；request_id 由 Python 生成，不由模型填写。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PrepareMediaImageReq {
+    #[prost(string, optional, tag = "1")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 有序素材槽位，仅 1 或 2；同一次执行重试同一槽位复用原上传结果。
+    #[prost(uint32, optional, tag = "2")]
+    pub image_index: ::core::option::Option<u32>,
+    /// 聊天附件原图地址，不能填写模型预览图、Base64 或 HiMedia 资产 ID。
+    #[prost(string, optional, tag = "3")]
+    pub image_url: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PrepareMediaImageResp {
+    /// 复用 HiMedia 文件状态：SUCCESS 表示可以创建，PENDING/PROCESSING 时稍后重查，FAILED 结束本次执行。
+    #[prost(enumeration = "super::media::UploadFileStatus", optional, tag = "1")]
+    pub status: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "2")]
+    pub error_message: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 不允许传机器人 DID、工作流、尺寸或资产 ID；身份取自凭据，工作流取自 HiClub 配置。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CreateMediaImageReq {
+    #[prost(string, optional, tag = "1")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 画面描述或修改要求，保留原文；长度上限继续由 HiMedia 对应工作流校验。
+    #[prost(string, optional, tag = "2")]
+    pub prompt: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CreateMediaImageResp {
+    /// HiMedia 任务 ID，同次创建重试返回同一任务。
+    #[prost(string, optional, tag = "1")]
+    pub task_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MediaImageTaskReq {
+    #[prost(string, optional, tag = "1")]
+    pub task_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MediaImageTaskResp {
+    #[prost(string, optional, tag = "1")]
+    pub task_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// HiMedia 实时状态，不另存一套状态机。
+    #[prost(enumeration = "super::media::TaskStatus", optional, tag = "2")]
+    pub status: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "3")]
+    pub status_message: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub error_code: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 成功转存到聊天 temp 桶后才返回；不是 HiMedia 签名地址，也不代表已发送聊天消息。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MediaImageResult {
+    #[prost(string, optional, tag = "1")]
+    pub url: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    /// 实际转存字节数。
+    #[prost(uint64, optional, tag = "3")]
+    pub size_bytes: ::core::option::Option<u64>,
+}
+/// 图生视频先独立准备一张聊天原图；图片字节不经过 Python 或模型。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PrepareMediaVideoImageReq {
+    /// 由 Python 生成，同次准备和创建重试复用；不是模型填写的业务参数。
+    #[prost(string, optional, tag = "1")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// JPEG/PNG 聊天原图地址，不是缩略图、Base64 或 HiMedia 资产 ID；单张上限 50 MiB。
+    #[prost(string, optional, tag = "2")]
+    pub image_url: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PrepareMediaVideoImageResp {
+    /// SUCCESS 才能创建；PENDING/PROCESSING 可稍后重查，FAILED 不创建任务。
+    #[prost(enumeration = "super::media::UploadFileStatus", optional, tag = "1")]
+    pub status: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "2")]
+    pub error_message: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 身份取自机器人凭据；不接收 DID、模型、工作流、尺寸、种子或 HiMedia 资产 ID。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CreateMediaVideoReq {
+    #[prost(string, optional, tag = "1")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 用户生成描述，首尾去空白后不能为空，最多 4000 个 Unicode 码点；不自动截断或翻译。
+    #[prost(string, optional, tag = "2")]
+    pub prompt: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CreateMediaVideoResp {
+    /// HiMedia 任务号；重发同一 request_id 返回同一任务及种子。等待超时后仍用于取回结果。
+    #[prost(string, optional, tag = "1")]
+    pub task_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MediaVideoTaskReq {
+    /// 只允许访问当前机器人关联的任务；不接受任意商户任务或 ComfyUI prompt_id。
+    #[prost(string, optional, tag = "1")]
+    pub task_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MediaVideoTaskResp {
+    #[prost(string, optional, tag = "1")]
+    pub task_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 复用 HiMedia 实时状态，包含保存中、取消中及已取消；不另存状态机。
+    #[prost(enumeration = "super::media::TaskStatus", optional, tag = "2")]
+    pub status: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "3")]
+    pub status_message: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub error_code: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 成功转存原始 MP4 到聊天 temp 桶后返回；保留字节及音轨，不代表已发送聊天消息。
+/// Python 将真实地址作为普通文字交给模型生成 Markdown；不新增专用聊天返回通道。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MediaVideoResult {
+    /// 聊天桶的视频地址，保留 .mp4 后缀；不是 HiMedia 临时签名地址。
+    #[prost(string, optional, tag = "1")]
+    pub url: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(uint64, optional, tag = "3")]
+    pub size_bytes: ::core::option::Option<u64>,
+    /// 可选封面地址；未取得封面仍可用视频链接播放。
+    #[prost(string, optional, tag = "4")]
+    pub cover_url: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// Generated client implementations.
+pub mod media_image_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Python 宿主经机器人 ApiKey 调用的内部 gRPC 转发面，不注册前端 HTTP 路由。
+    /// 不接收收信人，不发送聊天，不重复检查插件安装、启用或市场授权。
+    #[derive(Debug, Clone)]
+    pub struct MediaImageClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl MediaImageClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> MediaImageClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> MediaImageClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            MediaImageClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn prepare_input_image(
+            &mut self,
+            request: impl tonic::IntoRequest<super::PrepareMediaImageReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::PrepareMediaImageResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.MediaImage/PrepareInputImage",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.MediaImage", "PrepareInputImage"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 固定文生图工作流，显式提交 1024×1024；不回退其他尺寸或工作流。
+        pub async fn create_text_to_image(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateMediaImageReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::CreateMediaImageResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.MediaImage/CreateTextToImage",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.MediaImage", "CreateTextToImage"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 使用本次 request_id 的第 1 张已准备素材。
+        pub async fn create_single_image_edit(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateMediaImageReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::CreateMediaImageResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.MediaImage/CreateSingleImageEdit",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.MediaImage", "CreateSingleImageEdit"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 固定两张，按槽位 1、2 传给工作流，缺少任何一张都不创建任务。
+        pub async fn create_multiple_image_edit(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateMediaImageReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::CreateMediaImageResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.MediaImage/CreateMultipleImageEdit",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("hi.club.MediaImage", "CreateMultipleImageEdit"),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// 检查任务属于当前机器人；仅取状态，不下载、转存产物。
+        pub async fn get_task(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MediaImageTaskReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::MediaImageTaskResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.MediaImage/GetTask",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.MediaImage", "GetTask"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 成功后独立转存原图；失败不触发重新生成，原任务和原图保留。
+        pub async fn get_result(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MediaImageTaskReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::MediaImageResult>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.MediaImage/GetResult",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.MediaImage", "GetResult"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Generated client implementations.
+pub mod media_video_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Python 宿主经机器人 ApiKey 调用的内部 gRPC 转发面，不注册前端 HTTP 路由。
+    /// 插件入口使用宿主注入的 asker/master 做主人校验；本服务认证机器人并检查任务归属。
+    /// 不接收收信人，不发送聊天，不重复检查插件安装、启用或市场授权。
+    #[derive(Debug, Clone)]
+    pub struct MediaVideoClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl MediaVideoClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> MediaVideoClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> MediaVideoClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            MediaVideoClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn prepare_input_image(
+            &mut self,
+            request: impl tonic::IntoRequest<super::PrepareMediaVideoImageReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::PrepareMediaVideoImageResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.MediaVideo/PrepareInputImage",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.MediaVideo", "PrepareInputImage"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 固定后台 LTX 文生视频工作流，明确提交 5 秒、24 FPS、16:9 (Widescreen)、0.9 MP。
+        pub async fn create_text_to_video(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateMediaVideoReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::CreateMediaVideoResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.MediaVideo/CreateTextToVideo",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.MediaVideo", "CreateTextToVideo"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 使用同一 request_id 已准备的一张图片；固定输出参数与文生视频相同。
+        pub async fn create_image_to_video(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateMediaVideoReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::CreateMediaVideoResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.MediaVideo/CreateImageToVideo",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.MediaVideo", "CreateImageToVideo"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 只查询实时状态，不下载或转存；等待超时不取消任务，不重新生成。
+        pub async fn get_task(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MediaVideoTaskReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::MediaVideoTaskResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.MediaVideo/GetTask",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.MediaVideo", "GetTask"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 仅成功任务独立转存，旧任务取回不依赖当前配置的工作流；失败可重试转存，不重新生成。
+        pub async fn get_result(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MediaVideoTaskReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::MediaVideoResult>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.MediaVideo/GetResult",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.MediaVideo", "GetResult"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
 /// Generated client implementations.
 pub mod model_client {
     #![allow(
@@ -9707,315 +10302,6 @@ pub mod permission_manage_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.PermissionManage", "List"));
-            self.inner.unary(req, path, codec).await
-        }
-    }
-}
-/// 插件单次执行内部使用；request_id 由 Python 生成，不由模型填写。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct PrepareMediaImageReq {
-    #[prost(string, optional, tag = "1")]
-    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
-    /// 有序素材槽位，仅 1 或 2；同一次执行重试同一槽位复用原上传结果。
-    #[prost(uint32, optional, tag = "2")]
-    pub image_index: ::core::option::Option<u32>,
-    /// 聊天附件原图地址，不能填写模型预览图、Base64 或 HiMedia 资产 ID。
-    #[prost(string, optional, tag = "3")]
-    pub image_url: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct PrepareMediaImageResp {
-    /// 复用 HiMedia 文件状态：SUCCESS 表示可以创建，PENDING/PROCESSING 时稍后重查，FAILED 结束本次执行。
-    #[prost(enumeration = "super::media::UploadFileStatus", optional, tag = "1")]
-    pub status: ::core::option::Option<i32>,
-    #[prost(string, optional, tag = "2")]
-    pub error_message: ::core::option::Option<::prost::alloc::string::String>,
-}
-/// 不允许传机器人 DID、工作流、尺寸或资产 ID；身份取自凭据，工作流取自 HiClub 配置。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct CreateMediaImageReq {
-    #[prost(string, optional, tag = "1")]
-    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
-    /// 画面描述或修改要求，保留原文；长度上限继续由 HiMedia 对应工作流校验。
-    #[prost(string, optional, tag = "2")]
-    pub prompt: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct CreateMediaImageResp {
-    /// HiMedia 任务 ID，同次创建重试返回同一任务。
-    #[prost(string, optional, tag = "1")]
-    pub task_id: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MediaImageTaskReq {
-    #[prost(string, optional, tag = "1")]
-    pub task_id: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MediaImageTaskResp {
-    #[prost(string, optional, tag = "1")]
-    pub task_id: ::core::option::Option<::prost::alloc::string::String>,
-    /// HiMedia 实时状态，不另存一套状态机。
-    #[prost(enumeration = "super::media::TaskStatus", optional, tag = "2")]
-    pub status: ::core::option::Option<i32>,
-    #[prost(string, optional, tag = "3")]
-    pub status_message: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "4")]
-    pub error_code: ::core::option::Option<::prost::alloc::string::String>,
-}
-/// 成功转存到聊天 temp 桶后才返回；不是 HiMedia 签名地址，也不代表已发送聊天消息。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MediaImageResult {
-    #[prost(string, optional, tag = "1")]
-    pub url: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub name: ::core::option::Option<::prost::alloc::string::String>,
-    /// 实际转存字节数。
-    #[prost(uint64, optional, tag = "3")]
-    pub size_bytes: ::core::option::Option<u64>,
-}
-/// Generated client implementations.
-pub mod media_image_client {
-    #![allow(
-        unused_variables,
-        dead_code,
-        missing_docs,
-        clippy::wildcard_imports,
-        clippy::let_unit_value,
-    )]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Python 宿主经机器人 ApiKey 调用的内部 gRPC 转发面，不注册前端 HTTP 路由。
-    /// 不接收收信人，不发送聊天，不重复检查插件安装、启用或市场授权。
-    #[derive(Debug, Clone)]
-    pub struct MediaImageClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl MediaImageClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> MediaImageClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::Body>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> MediaImageClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
-        {
-            MediaImageClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        pub async fn prepare_input_image(
-            &mut self,
-            request: impl tonic::IntoRequest<super::PrepareMediaImageReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::PrepareMediaImageResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.MediaImage/PrepareInputImage",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.MediaImage", "PrepareInputImage"));
-            self.inner.unary(req, path, codec).await
-        }
-        /// 固定文生图工作流，显式提交 1024×1024；不回退其他尺寸或工作流。
-        pub async fn create_text_to_image(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateMediaImageReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::CreateMediaImageResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.MediaImage/CreateTextToImage",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.MediaImage", "CreateTextToImage"));
-            self.inner.unary(req, path, codec).await
-        }
-        /// 使用本次 request_id 的第 1 张已准备素材。
-        pub async fn create_single_image_edit(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateMediaImageReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::CreateMediaImageResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.MediaImage/CreateSingleImageEdit",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.MediaImage", "CreateSingleImageEdit"));
-            self.inner.unary(req, path, codec).await
-        }
-        /// 固定两张，按槽位 1、2 传给工作流，缺少任何一张都不创建任务。
-        pub async fn create_multiple_image_edit(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateMediaImageReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::CreateMediaImageResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.MediaImage/CreateMultipleImageEdit",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new("hi.club.MediaImage", "CreateMultipleImageEdit"),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-        /// 检查任务属于当前机器人；仅取状态，不下载、转存产物。
-        pub async fn get_task(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MediaImageTaskReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::MediaImageTaskResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.MediaImage/GetTask",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.MediaImage", "GetTask"));
-            self.inner.unary(req, path, codec).await
-        }
-        /// 成功后独立转存原图；失败不触发重新生成，原任务和原图保留。
-        pub async fn get_result(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MediaImageTaskReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::MediaImageResult>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.MediaImage/GetResult",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.MediaImage", "GetResult"));
             self.inner.unary(req, path, codec).await
         }
     }

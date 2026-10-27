@@ -1,6 +1,6 @@
 // This is a generated file - do not edit.
 //
-// Generated from hi/club/media_image.proto.
+// Generated from hi/club/media.proto.
 
 // @dart = 3.3
 
@@ -303,3 +303,292 @@ final $typed_data.Uint8List mediaImageResultDescriptor = $convert.base64Decode(
     'ChBNZWRpYUltYWdlUmVzdWx0EhsKA3VybBgBIAEoCUIEkLUYA0gAUgN1cmyIAQESHQoEbmFtZR'
     'gCIAEoCUIEkLUYA0gBUgRuYW1liAEBEigKCnNpemVfYnl0ZXMYAyABKARCBJC1GANIAlIJc2l6'
     'ZUJ5dGVziAEBOgSYtRgDQgYKBF91cmxCBwoFX25hbWVCDQoLX3NpemVfYnl0ZXM=');
+
+@$core.Deprecated('Use prepareMediaVideoImageReqDescriptor instead')
+const PrepareMediaVideoImageReq$json = {
+  '1': 'PrepareMediaVideoImageReq',
+  '2': [
+    {
+      '1': 'request_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'requestId',
+      '17': true
+    },
+    {
+      '1': 'image_url',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'imageUrl',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_request_id'},
+    {'1': '_image_url'},
+  ],
+};
+
+/// Descriptor for `PrepareMediaVideoImageReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List prepareMediaVideoImageReqDescriptor = $convert.base64Decode(
+    'ChlQcmVwYXJlTWVkaWFWaWRlb0ltYWdlUmVxEi8KCnJlcXVlc3RfaWQYASABKAlCC7pICMgBAX'
+    'IDsAEBSABSCXJlcXVlc3RJZIgBARIsCglpbWFnZV91cmwYAiABKAlCCrpIB8gBAXICEAFIAVII'
+    'aW1hZ2VVcmyIAQFCDQoLX3JlcXVlc3RfaWRCDAoKX2ltYWdlX3VybA==');
+
+@$core.Deprecated('Use prepareMediaVideoImageRespDescriptor instead')
+const PrepareMediaVideoImageResp$json = {
+  '1': 'PrepareMediaVideoImageResp',
+  '2': [
+    {
+      '1': 'status',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.media.UploadFileStatus',
+      '8': {},
+      '9': 0,
+      '10': 'status',
+      '17': true
+    },
+    {
+      '1': 'error_message',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'errorMessage',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_status'},
+    {'1': '_error_message'},
+  ],
+};
+
+/// Descriptor for `PrepareMediaVideoImageResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List prepareMediaVideoImageRespDescriptor = $convert.base64Decode(
+    'ChpQcmVwYXJlTWVkaWFWaWRlb0ltYWdlUmVzcBI9CgZzdGF0dXMYASABKA4yGi5oaS5tZWRpYS'
+    '5VcGxvYWRGaWxlU3RhdHVzQgSQtRgDSABSBnN0YXR1c4gBARIuCg1lcnJvcl9tZXNzYWdlGAIg'
+    'ASgJQgSQtRgDSAFSDGVycm9yTWVzc2FnZYgBAToEmLUYA0IJCgdfc3RhdHVzQhAKDl9lcnJvcl'
+    '9tZXNzYWdl');
+
+@$core.Deprecated('Use createMediaVideoReqDescriptor instead')
+const CreateMediaVideoReq$json = {
+  '1': 'CreateMediaVideoReq',
+  '2': [
+    {
+      '1': 'request_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'requestId',
+      '17': true
+    },
+    {
+      '1': 'prompt',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'prompt',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_request_id'},
+    {'1': '_prompt'},
+  ],
+};
+
+/// Descriptor for `CreateMediaVideoReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List createMediaVideoReqDescriptor = $convert.base64Decode(
+    'ChNDcmVhdGVNZWRpYVZpZGVvUmVxEi8KCnJlcXVlc3RfaWQYASABKAlCC7pICMgBAXIDsAEBSA'
+    'BSCXJlcXVlc3RJZIgBARIqCgZwcm9tcHQYAiABKAlCDbpICsgBAXIFEAEYoB9IAVIGcHJvbXB0'
+    'iAEBQg0KC19yZXF1ZXN0X2lkQgkKB19wcm9tcHQ=');
+
+@$core.Deprecated('Use createMediaVideoRespDescriptor instead')
+const CreateMediaVideoResp$json = {
+  '1': 'CreateMediaVideoResp',
+  '2': [
+    {
+      '1': 'task_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'taskId',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_task_id'},
+  ],
+};
+
+/// Descriptor for `CreateMediaVideoResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List createMediaVideoRespDescriptor = $convert.base64Decode(
+    'ChRDcmVhdGVNZWRpYVZpZGVvUmVzcBIiCgd0YXNrX2lkGAEgASgJQgSQtRgDSABSBnRhc2tJZI'
+    'gBAToEmLUYA0IKCghfdGFza19pZA==');
+
+@$core.Deprecated('Use mediaVideoTaskReqDescriptor instead')
+const MediaVideoTaskReq$json = {
+  '1': 'MediaVideoTaskReq',
+  '2': [
+    {
+      '1': 'task_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'taskId',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_task_id'},
+  ],
+};
+
+/// Descriptor for `MediaVideoTaskReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List mediaVideoTaskReqDescriptor = $convert.base64Decode(
+    'ChFNZWRpYVZpZGVvVGFza1JlcRIoCgd0YXNrX2lkGAEgASgJQgq6SAfIAQFyAhABSABSBnRhc2'
+    'tJZIgBAUIKCghfdGFza19pZA==');
+
+@$core.Deprecated('Use mediaVideoTaskRespDescriptor instead')
+const MediaVideoTaskResp$json = {
+  '1': 'MediaVideoTaskResp',
+  '2': [
+    {
+      '1': 'task_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'taskId',
+      '17': true
+    },
+    {
+      '1': 'status',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.media.TaskStatus',
+      '8': {},
+      '9': 1,
+      '10': 'status',
+      '17': true
+    },
+    {
+      '1': 'status_message',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'statusMessage',
+      '17': true
+    },
+    {
+      '1': 'error_code',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 3,
+      '10': 'errorCode',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_task_id'},
+    {'1': '_status'},
+    {'1': '_status_message'},
+    {'1': '_error_code'},
+  ],
+};
+
+/// Descriptor for `MediaVideoTaskResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List mediaVideoTaskRespDescriptor = $convert.base64Decode(
+    'ChJNZWRpYVZpZGVvVGFza1Jlc3ASIgoHdGFza19pZBgBIAEoCUIEkLUYA0gAUgZ0YXNrSWSIAQ'
+    'ESNwoGc3RhdHVzGAIgASgOMhQuaGkubWVkaWEuVGFza1N0YXR1c0IEkLUYA0gBUgZzdGF0dXOI'
+    'AQESMAoOc3RhdHVzX21lc3NhZ2UYAyABKAlCBJC1GANIAlINc3RhdHVzTWVzc2FnZYgBARIoCg'
+    'plcnJvcl9jb2RlGAQgASgJQgSQtRgDSANSCWVycm9yQ29kZYgBAToEmLUYA0IKCghfdGFza19p'
+    'ZEIJCgdfc3RhdHVzQhEKD19zdGF0dXNfbWVzc2FnZUINCgtfZXJyb3JfY29kZQ==');
+
+@$core.Deprecated('Use mediaVideoResultDescriptor instead')
+const MediaVideoResult$json = {
+  '1': 'MediaVideoResult',
+  '2': [
+    {
+      '1': 'url',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'url',
+      '17': true
+    },
+    {
+      '1': 'name',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'name',
+      '17': true
+    },
+    {
+      '1': 'size_bytes',
+      '3': 3,
+      '4': 1,
+      '5': 4,
+      '8': {},
+      '9': 2,
+      '10': 'sizeBytes',
+      '17': true
+    },
+    {
+      '1': 'cover_url',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 3,
+      '10': 'coverUrl',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_url'},
+    {'1': '_name'},
+    {'1': '_size_bytes'},
+    {'1': '_cover_url'},
+  ],
+};
+
+/// Descriptor for `MediaVideoResult`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List mediaVideoResultDescriptor = $convert.base64Decode(
+    'ChBNZWRpYVZpZGVvUmVzdWx0EhsKA3VybBgBIAEoCUIEkLUYA0gAUgN1cmyIAQESHQoEbmFtZR'
+    'gCIAEoCUIEkLUYA0gBUgRuYW1liAEBEigKCnNpemVfYnl0ZXMYAyABKARCBJC1GANIAlIJc2l6'
+    'ZUJ5dGVziAEBEiYKCWNvdmVyX3VybBgEIAEoCUIEkLUYA0gDUghjb3ZlclVybIgBAToEmLUYA0'
+    'IGCgRfdXJsQgcKBV9uYW1lQg0KC19zaXplX2J5dGVzQgwKCl9jb3Zlcl91cmw=');
