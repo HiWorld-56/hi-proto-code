@@ -374,6 +374,9 @@ const (
 	Market_CreateListing_FullMethodName        = "/hi.club.Market/CreateListing"
 	Market_EditListing_FullMethodName          = "/hi.club.Market/EditListing"
 	Market_SetListingStatus_FullMethodName     = "/hi.club.Market/SetListingStatus"
+	Market_ForceDelist_FullMethodName          = "/hi.club.Market/ForceDelist"
+	Market_ListListingUsers_FullMethodName     = "/hi.club.Market/ListListingUsers"
+	Market_RevokeListingUser_FullMethodName    = "/hi.club.Market/RevokeListingUser"
 	Market_ListMyListings_FullMethodName       = "/hi.club.Market/ListMyListings"
 	Market_ListReceivedRequests_FullMethodName = "/hi.club.Market/ListReceivedRequests"
 	Market_Approve_FullMethodName              = "/hi.club.Market/Approve"
@@ -402,6 +405,10 @@ type MarketClient interface {
 	CreateListing(ctx context.Context, in *CreateListingReq, opts ...grpc.CallOption) (*CreateListingResp, error)
 	EditListing(ctx context.Context, in *EditListingReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetListingStatus(ctx context.Context, in *SetListingStatusReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 卖家强制下架:先禁止新增使用,移除全部实际引用并处理授权/未完成订单,最后落已下架。
+	ForceDelist(ctx context.Context, in *ForceDelistReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ListListingUsers(ctx context.Context, in *ListListingUsersReq, opts ...grpc.CallOption) (*ListListingUsersResp, error)
+	RevokeListingUser(ctx context.Context, in *RevokeListingUserReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListMyListings(ctx context.Context, in *ListMyListingsReq, opts ...grpc.CallOption) (*ListMyListingsResp, error)
 	// 我**当前**名下机器人卖出去的(申请中 + 已成立 + 历史)。范围 = `from_agent ∈ 我现在的机器人`。
 	// 摊主转让/解绑之后这里立刻没有它 —— 见文件头「归属」那节。
@@ -459,6 +466,36 @@ func (c *marketClient) SetListingStatus(ctx context.Context, in *SetListingStatu
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Market_SetListingStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *marketClient) ForceDelist(ctx context.Context, in *ForceDelistReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Market_ForceDelist_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *marketClient) ListListingUsers(ctx context.Context, in *ListListingUsersReq, opts ...grpc.CallOption) (*ListListingUsersResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListListingUsersResp)
+	err := c.cc.Invoke(ctx, Market_ListListingUsers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *marketClient) RevokeListingUser(ctx context.Context, in *RevokeListingUserReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Market_RevokeListingUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -635,6 +672,10 @@ type MarketServer interface {
 	CreateListing(context.Context, *CreateListingReq) (*CreateListingResp, error)
 	EditListing(context.Context, *EditListingReq) (*emptypb.Empty, error)
 	SetListingStatus(context.Context, *SetListingStatusReq) (*emptypb.Empty, error)
+	// 卖家强制下架:先禁止新增使用,移除全部实际引用并处理授权/未完成订单,最后落已下架。
+	ForceDelist(context.Context, *ForceDelistReq) (*emptypb.Empty, error)
+	ListListingUsers(context.Context, *ListListingUsersReq) (*ListListingUsersResp, error)
+	RevokeListingUser(context.Context, *RevokeListingUserReq) (*emptypb.Empty, error)
 	ListMyListings(context.Context, *ListMyListingsReq) (*ListMyListingsResp, error)
 	// 我**当前**名下机器人卖出去的(申请中 + 已成立 + 历史)。范围 = `from_agent ∈ 我现在的机器人`。
 	// 摊主转让/解绑之后这里立刻没有它 —— 见文件头「归属」那节。
@@ -675,6 +716,15 @@ func (UnimplementedMarketServer) EditListing(context.Context, *EditListingReq) (
 }
 func (UnimplementedMarketServer) SetListingStatus(context.Context, *SetListingStatusReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetListingStatus not implemented")
+}
+func (UnimplementedMarketServer) ForceDelist(context.Context, *ForceDelistReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method ForceDelist not implemented")
+}
+func (UnimplementedMarketServer) ListListingUsers(context.Context, *ListListingUsersReq) (*ListListingUsersResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListListingUsers not implemented")
+}
+func (UnimplementedMarketServer) RevokeListingUser(context.Context, *RevokeListingUserReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method RevokeListingUser not implemented")
 }
 func (UnimplementedMarketServer) ListMyListings(context.Context, *ListMyListingsReq) (*ListMyListingsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListMyListings not implemented")
@@ -794,6 +844,60 @@ func _Market_SetListingStatus_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MarketServer).SetListingStatus(ctx, req.(*SetListingStatusReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Market_ForceDelist_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ForceDelistReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketServer).ForceDelist(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Market_ForceDelist_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketServer).ForceDelist(ctx, req.(*ForceDelistReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Market_ListListingUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListListingUsersReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketServer).ListListingUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Market_ListListingUsers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketServer).ListListingUsers(ctx, req.(*ListListingUsersReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Market_RevokeListingUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RevokeListingUserReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketServer).RevokeListingUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Market_RevokeListingUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketServer).RevokeListingUser(ctx, req.(*RevokeListingUserReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1104,6 +1208,18 @@ var Market_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetListingStatus",
 			Handler:    _Market_SetListingStatus_Handler,
+		},
+		{
+			MethodName: "ForceDelist",
+			Handler:    _Market_ForceDelist_Handler,
+		},
+		{
+			MethodName: "ListListingUsers",
+			Handler:    _Market_ListListingUsers_Handler,
+		},
+		{
+			MethodName: "RevokeListingUser",
+			Handler:    _Market_RevokeListingUser_Handler,
 		},
 		{
 			MethodName: "ListMyListings",

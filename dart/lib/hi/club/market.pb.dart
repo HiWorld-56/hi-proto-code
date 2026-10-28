@@ -2152,6 +2152,7 @@ class EditListingReq extends $pb.GeneratedMessage {
     $core.Iterable<$core.String>? tags,
     $core.String? actionUrl,
     $core.bool? payeeToMaster,
+    $core.bool? perpetual,
   }) {
     final result = create();
     if (uuid != null) result.uuid = uuid;
@@ -2161,6 +2162,7 @@ class EditListingReq extends $pb.GeneratedMessage {
     if (tags != null) result.tags.addAll(tags);
     if (actionUrl != null) result.actionUrl = actionUrl;
     if (payeeToMaster != null) result.payeeToMaster = payeeToMaster;
+    if (perpetual != null) result.perpetual = perpetual;
     return result;
   }
 
@@ -2184,6 +2186,7 @@ class EditListingReq extends $pb.GeneratedMessage {
     ..pPS(8, _omitFieldNames ? '' : 'tags')
     ..aOS(10, _omitFieldNames ? '' : 'actionUrl')
     ..aOB(11, _omitFieldNames ? '' : 'payeeToMaster')
+    ..aOB(12, _omitFieldNames ? '' : 'perpetual')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2241,7 +2244,6 @@ class EditListingReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearDuration() => $_clearField(4);
 
-  /// 那是"换商品规格",走下架重挂
   /// 同 CreateListingReq:展示信息以插件自身为准,改名字改简介去改插件。
   @$pb.TagNumber(8)
   $pb.PbList<$core.String> get tags => $_getList(4);
@@ -2263,6 +2265,15 @@ class EditListingReq extends $pb.GeneratedMessage {
   $core.bool hasPayeeToMaster() => $_has(6);
   @$pb.TagNumber(11)
   void clearPayeeToMaster() => $_clearField(11);
+
+  @$pb.TagNumber(12)
+  $core.bool get perpetual => $_getBF(7);
+  @$pb.TagNumber(12)
+  set perpetual($core.bool value) => $_setBool(7, value);
+  @$pb.TagNumber(12)
+  $core.bool hasPerpetual() => $_has(7);
+  @$pb.TagNumber(12)
+  void clearPerpetual() => $_clearField(12);
 }
 
 class SetListingStatusReq extends $pb.GeneratedMessage {
@@ -2336,10 +2347,12 @@ class ListMyListingsReq extends $pb.GeneratedMessage {
   factory ListMyListingsReq({
     $core.String? agent,
     $1.Pagination? pagination,
+    $core.bool? includeDelisted,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
     if (pagination != null) result.pagination = pagination;
+    if (includeDelisted != null) result.includeDelisted = includeDelisted;
     return result;
   }
 
@@ -2359,6 +2372,7 @@ class ListMyListingsReq extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'agent')
     ..aOM<$1.Pagination>(2, _omitFieldNames ? '' : 'pagination',
         subBuilder: $1.Pagination.create)
+    ..aOB(3, _omitFieldNames ? '' : 'includeDelisted')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2399,6 +2413,15 @@ class ListMyListingsReq extends $pb.GeneratedMessage {
   void clearPagination() => $_clearField(2);
   @$pb.TagNumber(2)
   $1.Pagination ensurePagination() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  $core.bool get includeDelisted => $_getBF(2);
+  @$pb.TagNumber(3)
+  set includeDelisted($core.bool value) => $_setBool(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasIncludeDelisted() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearIncludeDelisted() => $_clearField(3);
 }
 
 class ListMyListingsResp extends $pb.GeneratedMessage {
@@ -4251,6 +4274,225 @@ class DecideOfferReq extends $pb.GeneratedMessage {
   $core.bool hasReason() => $_has(1);
   @$pb.TagNumber(2)
   void clearReason() => $_clearField(2);
+}
+
+/// 实际使用者来自 hi.ai 引用关系,包括没有市场 grant 的自动安装用户。
+/// 机器人始终返回 Entity,不拆成 did/name/avatar 等散字段。
+class ListListingUsersReq extends $pb.GeneratedMessage {
+  factory ListListingUsersReq({
+    GetListingReq? listing,
+    $1.Pagination? pagination,
+  }) {
+    final result = create();
+    if (listing != null) result.listing = listing;
+    if (pagination != null) result.pagination = pagination;
+    return result;
+  }
+
+  ListListingUsersReq._();
+
+  factory ListListingUsersReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListListingUsersReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListListingUsersReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOM<GetListingReq>(1, _omitFieldNames ? '' : 'listing',
+        subBuilder: GetListingReq.create)
+    ..aOM<$1.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $1.Pagination.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListListingUsersReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListListingUsersReq copyWith(void Function(ListListingUsersReq) updates) =>
+      super.copyWith((message) => updates(message as ListListingUsersReq))
+          as ListListingUsersReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListListingUsersReq create() => ListListingUsersReq._();
+  @$core.override
+  ListListingUsersReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListListingUsersReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListListingUsersReq>(create);
+  static ListListingUsersReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  GetListingReq get listing => $_getN(0);
+  @$pb.TagNumber(1)
+  set listing(GetListingReq value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasListing() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearListing() => $_clearField(1);
+  @$pb.TagNumber(1)
+  GetListingReq ensureListing() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $1.Pagination get pagination => $_getN(1);
+  @$pb.TagNumber(2)
+  set pagination($1.Pagination value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPagination() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPagination() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $1.Pagination ensurePagination() => $_ensure(1);
+}
+
+class ListListingUsersResp extends $pb.GeneratedMessage {
+  factory ListListingUsersResp({
+    $core.Iterable<$1.Entity>? users,
+    $core.int? total,
+  }) {
+    final result = create();
+    if (users != null) result.users.addAll(users);
+    if (total != null) result.total = total;
+    return result;
+  }
+
+  ListListingUsersResp._();
+
+  factory ListListingUsersResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListListingUsersResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListListingUsersResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..pPM<$1.Entity>(1, _omitFieldNames ? '' : 'users',
+        subBuilder: $1.Entity.create)
+    ..aI(2, _omitFieldNames ? '' : 'total')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListListingUsersResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListListingUsersResp copyWith(void Function(ListListingUsersResp) updates) =>
+      super.copyWith((message) => updates(message as ListListingUsersResp))
+          as ListListingUsersResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListListingUsersResp create() => ListListingUsersResp._();
+  @$core.override
+  ListListingUsersResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListListingUsersResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListListingUsersResp>(create);
+  static ListListingUsersResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<$1.Entity> get users => $_getList(0);
+
+  @$pb.TagNumber(2)
+  $core.int get total => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set total($core.int value) => $_setSignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasTotal() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearTotal() => $_clearField(2);
+}
+
+class RevokeListingUserReq extends $pb.GeneratedMessage {
+  factory RevokeListingUserReq({
+    GetListingReq? listing,
+    $1.Entity? agent,
+    $core.String? reason,
+  }) {
+    final result = create();
+    if (listing != null) result.listing = listing;
+    if (agent != null) result.agent = agent;
+    if (reason != null) result.reason = reason;
+    return result;
+  }
+
+  RevokeListingUserReq._();
+
+  factory RevokeListingUserReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RevokeListingUserReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RevokeListingUserReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOM<GetListingReq>(1, _omitFieldNames ? '' : 'listing',
+        subBuilder: GetListingReq.create)
+    ..aOM<$1.Entity>(2, _omitFieldNames ? '' : 'agent',
+        subBuilder: $1.Entity.create)
+    ..aOS(3, _omitFieldNames ? '' : 'reason')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RevokeListingUserReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RevokeListingUserReq copyWith(void Function(RevokeListingUserReq) updates) =>
+      super.copyWith((message) => updates(message as RevokeListingUserReq))
+          as RevokeListingUserReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RevokeListingUserReq create() => RevokeListingUserReq._();
+  @$core.override
+  RevokeListingUserReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static RevokeListingUserReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RevokeListingUserReq>(create);
+  static RevokeListingUserReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  GetListingReq get listing => $_getN(0);
+  @$pb.TagNumber(1)
+  set listing(GetListingReq value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasListing() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearListing() => $_clearField(1);
+  @$pb.TagNumber(1)
+  GetListingReq ensureListing() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $1.Entity get agent => $_getN(1);
+  @$pb.TagNumber(2)
+  set agent($1.Entity value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAgent() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAgent() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $1.Entity ensureAgent() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  $core.String get reason => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set reason($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasReason() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearReason() => $_clearField(3);
 }
 
 class MarketManageListListingsReq extends $pb.GeneratedMessage {

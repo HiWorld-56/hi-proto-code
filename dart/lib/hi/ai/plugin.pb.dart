@@ -2816,6 +2816,143 @@ class PluginRef extends $pb.GeneratedMessage {
   void clearUuid() => $_clearField(2);
 }
 
+/// 创建者按插件对象分页枚举实际引用,不依赖市场授权记录。
+/// 这是服务间的引用键列表;展示侧由 club 批量补全 Entity。
+class ListPluginReferencesReq extends $pb.GeneratedMessage {
+  factory ListPluginReferencesReq({
+    PluginRef? plugin,
+    $3.Pagination? pagination,
+  }) {
+    final result = create();
+    if (plugin != null) result.plugin = plugin;
+    if (pagination != null) result.pagination = pagination;
+    return result;
+  }
+
+  ListPluginReferencesReq._();
+
+  factory ListPluginReferencesReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListPluginReferencesReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListPluginReferencesReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOM<PluginRef>(1, _omitFieldNames ? '' : 'plugin',
+        subBuilder: PluginRef.create)
+    ..aOM<$3.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $3.Pagination.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListPluginReferencesReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListPluginReferencesReq copyWith(
+          void Function(ListPluginReferencesReq) updates) =>
+      super.copyWith((message) => updates(message as ListPluginReferencesReq))
+          as ListPluginReferencesReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListPluginReferencesReq create() => ListPluginReferencesReq._();
+  @$core.override
+  ListPluginReferencesReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListPluginReferencesReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListPluginReferencesReq>(create);
+  static ListPluginReferencesReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  PluginRef get plugin => $_getN(0);
+  @$pb.TagNumber(1)
+  set plugin(PluginRef value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPlugin() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPlugin() => $_clearField(1);
+  @$pb.TagNumber(1)
+  PluginRef ensurePlugin() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $3.Pagination get pagination => $_getN(1);
+  @$pb.TagNumber(2)
+  set pagination($3.Pagination value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPagination() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPagination() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $3.Pagination ensurePagination() => $_ensure(1);
+}
+
+class ListPluginReferencesResp extends $pb.GeneratedMessage {
+  factory ListPluginReferencesResp({
+    $core.Iterable<PluginRef>? refs,
+    $core.int? total,
+  }) {
+    final result = create();
+    if (refs != null) result.refs.addAll(refs);
+    if (total != null) result.total = total;
+    return result;
+  }
+
+  ListPluginReferencesResp._();
+
+  factory ListPluginReferencesResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListPluginReferencesResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListPluginReferencesResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..pPM<PluginRef>(1, _omitFieldNames ? '' : 'refs',
+        subBuilder: PluginRef.create)
+    ..aI(2, _omitFieldNames ? '' : 'total')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListPluginReferencesResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListPluginReferencesResp copyWith(
+          void Function(ListPluginReferencesResp) updates) =>
+      super.copyWith((message) => updates(message as ListPluginReferencesResp))
+          as ListPluginReferencesResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListPluginReferencesResp create() => ListPluginReferencesResp._();
+  @$core.override
+  ListPluginReferencesResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListPluginReferencesResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListPluginReferencesResp>(create);
+  static ListPluginReferencesResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<PluginRef> get refs => $_getList(0);
+
+  @$pb.TagNumber(2)
+  $core.int get total => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set total($core.int value) => $_setSignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasTotal() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearTotal() => $_clearField(2);
+}
+
 class PublicBriefsReq extends $pb.GeneratedMessage {
   factory PublicBriefsReq({
     $core.Iterable<PluginRef>? refs,

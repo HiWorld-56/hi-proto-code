@@ -167,6 +167,13 @@ class PluginClient extends $grpc.Client {
     return $createUnaryCall(_$retryBuild, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.ListPluginReferencesResp> listReferences(
+    $0.ListPluginReferencesReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listReferences, request, options: options);
+  }
+
   $grpc.ResponseFuture<$0.PublicBriefsResp> publicBriefs(
     $0.PublicBriefsReq request, {
     $grpc.CallOptions? options,
@@ -264,6 +271,11 @@ class PluginClient extends $grpc.Client {
       '/hi.ai.Plugin/RetryBuild',
       ($0.RetryBuildReq value) => value.writeToBuffer(),
       $1.Empty.fromBuffer);
+  static final _$listReferences = $grpc.ClientMethod<$0.ListPluginReferencesReq,
+          $0.ListPluginReferencesResp>(
+      '/hi.ai.Plugin/ListReferences',
+      ($0.ListPluginReferencesReq value) => value.writeToBuffer(),
+      $0.ListPluginReferencesResp.fromBuffer);
   static final _$publicBriefs =
       $grpc.ClientMethod<$0.PublicBriefsReq, $0.PublicBriefsResp>(
           '/hi.ai.Plugin/PublicBriefs',
@@ -413,6 +425,15 @@ abstract class PluginServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.RetryBuildReq.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ListPluginReferencesReq,
+            $0.ListPluginReferencesResp>(
+        'ListReferences',
+        listReferences_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.ListPluginReferencesReq.fromBuffer(value),
+        ($0.ListPluginReferencesResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.PublicBriefsReq, $0.PublicBriefsResp>(
         'PublicBriefs',
         publicBriefs_Pre,
@@ -573,6 +594,15 @@ abstract class PluginServiceBase extends $grpc.Service {
 
   $async.Future<$1.Empty> retryBuild(
       $grpc.ServiceCall call, $0.RetryBuildReq request);
+
+  $async.Future<$0.ListPluginReferencesResp> listReferences_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.ListPluginReferencesReq> $request) async {
+    return listReferences($call, await $request);
+  }
+
+  $async.Future<$0.ListPluginReferencesResp> listReferences(
+      $grpc.ServiceCall call, $0.ListPluginReferencesReq request);
 
   $async.Future<$0.PublicBriefsResp> publicBriefs_Pre($grpc.ServiceCall $call,
       $async.Future<$0.PublicBriefsReq> $request) async {

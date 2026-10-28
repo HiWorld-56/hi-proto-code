@@ -724,6 +724,23 @@ pub struct PluginRef {
     #[prost(string, optional, tag = "2")]
     pub uuid: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 创建者按插件对象分页枚举实际引用,不依赖市场授权记录。
+/// 这是服务间的引用键列表;展示侧由 club 批量补全 Entity。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListPluginReferencesReq {
+    /// 创建者的插件
+    #[prost(message, optional, tag = "1")]
+    pub plugin: ::core::option::Option<PluginRef>,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListPluginReferencesResp {
+    #[prost(message, repeated, tag = "1")]
+    pub refs: ::prost::alloc::vec::Vec<PluginRef>,
+    #[prost(int32, optional, tag = "2")]
+    pub total: ::core::option::Option<i32>,
+}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PublicBriefsReq {
     #[prost(message, repeated, tag = "1")]
@@ -1593,6 +1610,30 @@ pub mod plugin_client {
             let path = http::uri::PathAndQuery::from_static("/hi.ai.Plugin/RetryBuild");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Plugin", "RetryBuild"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_references(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListPluginReferencesReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListPluginReferencesResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.ai.Plugin/ListReferences",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.ai.Plugin", "ListReferences"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn public_briefs(

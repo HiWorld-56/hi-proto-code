@@ -111,6 +111,11 @@ class PluginStub(object):
                 request_serializer=hi_dot_ai_dot_plugin__pb2.RetryBuildReq.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
+        self.ListReferences = channel.unary_unary(
+                '/hi.ai.Plugin/ListReferences',
+                request_serializer=hi_dot_ai_dot_plugin__pb2.ListPluginReferencesReq.SerializeToString,
+                response_deserializer=hi_dot_ai_dot_plugin__pb2.ListPluginReferencesResp.FromString,
+                _registered_method=True)
         self.PublicBriefs = channel.unary_unary(
                 '/hi.ai.Plugin/PublicBriefs',
                 request_serializer=hi_dot_ai_dot_plugin__pb2.PublicBriefsReq.SerializeToString,
@@ -236,6 +241,12 @@ class PluginServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ListReferences(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def PublicBriefs(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -339,6 +350,11 @@ def add_PluginServicer_to_server(servicer, server):
                     servicer.RetryBuild,
                     request_deserializer=hi_dot_ai_dot_plugin__pb2.RetryBuildReq.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'ListReferences': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListReferences,
+                    request_deserializer=hi_dot_ai_dot_plugin__pb2.ListPluginReferencesReq.FromString,
+                    response_serializer=hi_dot_ai_dot_plugin__pb2.ListPluginReferencesResp.SerializeToString,
             ),
             'PublicBriefs': grpc.unary_unary_rpc_method_handler(
                     servicer.PublicBriefs,
@@ -860,6 +876,33 @@ class Plugin(object):
             '/hi.ai.Plugin/RetryBuild',
             hi_dot_ai_dot_plugin__pb2.RetryBuildReq.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ListReferences(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.ai.Plugin/ListReferences',
+            hi_dot_ai_dot_plugin__pb2.ListPluginReferencesReq.SerializeToString,
+            hi_dot_ai_dot_plugin__pb2.ListPluginReferencesResp.FromString,
             options,
             channel_credentials,
             insecure,

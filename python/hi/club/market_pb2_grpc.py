@@ -407,6 +407,21 @@ class MarketStub(object):
                 request_serializer=hi_dot_club_dot_market__pb2.SetListingStatusReq.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
+        self.ForceDelist = channel.unary_unary(
+                '/hi.club.Market/ForceDelist',
+                request_serializer=hi_dot_club_dot_market__pb2.ForceDelistReq.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                _registered_method=True)
+        self.ListListingUsers = channel.unary_unary(
+                '/hi.club.Market/ListListingUsers',
+                request_serializer=hi_dot_club_dot_market__pb2.ListListingUsersReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_market__pb2.ListListingUsersResp.FromString,
+                _registered_method=True)
+        self.RevokeListingUser = channel.unary_unary(
+                '/hi.club.Market/RevokeListingUser',
+                request_serializer=hi_dot_club_dot_market__pb2.RevokeListingUserReq.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                _registered_method=True)
         self.ListMyListings = channel.unary_unary(
                 '/hi.club.Market/ListMyListings',
                 request_serializer=hi_dot_club_dot_market__pb2.ListMyListingsReq.SerializeToString,
@@ -507,6 +522,25 @@ class MarketServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def SetListingStatus(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ForceDelist(self, request, context):
+        """卖家强制下架:先禁止新增使用,移除全部实际引用并处理授权/未完成订单,最后落已下架。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListListingUsers(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def RevokeListingUser(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -631,6 +665,21 @@ def add_MarketServicer_to_server(servicer, server):
             'SetListingStatus': grpc.unary_unary_rpc_method_handler(
                     servicer.SetListingStatus,
                     request_deserializer=hi_dot_club_dot_market__pb2.SetListingStatusReq.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'ForceDelist': grpc.unary_unary_rpc_method_handler(
+                    servicer.ForceDelist,
+                    request_deserializer=hi_dot_club_dot_market__pb2.ForceDelistReq.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'ListListingUsers': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListListingUsers,
+                    request_deserializer=hi_dot_club_dot_market__pb2.ListListingUsersReq.FromString,
+                    response_serializer=hi_dot_club_dot_market__pb2.ListListingUsersResp.SerializeToString,
+            ),
+            'RevokeListingUser': grpc.unary_unary_rpc_method_handler(
+                    servicer.RevokeListingUser,
+                    request_deserializer=hi_dot_club_dot_market__pb2.RevokeListingUserReq.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'ListMyListings': grpc.unary_unary_rpc_method_handler(
@@ -795,6 +844,87 @@ class Market(object):
             target,
             '/hi.club.Market/SetListingStatus',
             hi_dot_club_dot_market__pb2.SetListingStatusReq.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ForceDelist(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.Market/ForceDelist',
+            hi_dot_club_dot_market__pb2.ForceDelistReq.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ListListingUsers(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.Market/ListListingUsers',
+            hi_dot_club_dot_market__pb2.ListListingUsersReq.SerializeToString,
+            hi_dot_club_dot_market__pb2.ListListingUsersResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def RevokeListingUser(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.Market/RevokeListingUser',
+            hi_dot_club_dot_market__pb2.RevokeListingUserReq.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,

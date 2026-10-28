@@ -289,6 +289,28 @@ class MarketClient extends $grpc.Client {
     return $createUnaryCall(_$setListingStatus, request, options: options);
   }
 
+  /// 卖家强制下架:先禁止新增使用,移除全部实际引用并处理授权/未完成订单,最后落已下架。
+  $grpc.ResponseFuture<$2.Empty> forceDelist(
+    $0.ForceDelistReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$forceDelist, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.ListListingUsersResp> listListingUsers(
+    $0.ListListingUsersReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listListingUsers, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$2.Empty> revokeListingUser(
+    $0.RevokeListingUserReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$revokeListingUser, request, options: options);
+  }
+
   $grpc.ResponseFuture<$0.ListMyListingsResp> listMyListings(
     $0.ListMyListingsReq request, {
     $grpc.CallOptions? options,
@@ -424,6 +446,20 @@ class MarketClient extends $grpc.Client {
           '/hi.club.Market/SetListingStatus',
           ($0.SetListingStatusReq value) => value.writeToBuffer(),
           $2.Empty.fromBuffer);
+  static final _$forceDelist = $grpc.ClientMethod<$0.ForceDelistReq, $2.Empty>(
+      '/hi.club.Market/ForceDelist',
+      ($0.ForceDelistReq value) => value.writeToBuffer(),
+      $2.Empty.fromBuffer);
+  static final _$listListingUsers =
+      $grpc.ClientMethod<$0.ListListingUsersReq, $0.ListListingUsersResp>(
+          '/hi.club.Market/ListListingUsers',
+          ($0.ListListingUsersReq value) => value.writeToBuffer(),
+          $0.ListListingUsersResp.fromBuffer);
+  static final _$revokeListingUser =
+      $grpc.ClientMethod<$0.RevokeListingUserReq, $2.Empty>(
+          '/hi.club.Market/RevokeListingUser',
+          ($0.RevokeListingUserReq value) => value.writeToBuffer(),
+          $2.Empty.fromBuffer);
   static final _$listMyListings =
       $grpc.ClientMethod<$0.ListMyListingsReq, $0.ListMyListingsResp>(
           '/hi.club.Market/ListMyListings',
@@ -525,6 +561,30 @@ abstract class MarketServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) =>
             $0.SetListingStatusReq.fromBuffer(value),
+        ($2.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ForceDelistReq, $2.Empty>(
+        'ForceDelist',
+        forceDelist_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.ForceDelistReq.fromBuffer(value),
+        ($2.Empty value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$0.ListListingUsersReq, $0.ListListingUsersResp>(
+            'ListListingUsers',
+            listListingUsers_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $0.ListListingUsersReq.fromBuffer(value),
+            ($0.ListListingUsersResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.RevokeListingUserReq, $2.Empty>(
+        'RevokeListingUser',
+        revokeListingUser_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.RevokeListingUserReq.fromBuffer(value),
         ($2.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.ListMyListingsReq, $0.ListMyListingsResp>(
         'ListMyListings',
@@ -666,6 +726,31 @@ abstract class MarketServiceBase extends $grpc.Service {
 
   $async.Future<$2.Empty> setListingStatus(
       $grpc.ServiceCall call, $0.SetListingStatusReq request);
+
+  $async.Future<$2.Empty> forceDelist_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.ForceDelistReq> $request) async {
+    return forceDelist($call, await $request);
+  }
+
+  $async.Future<$2.Empty> forceDelist(
+      $grpc.ServiceCall call, $0.ForceDelistReq request);
+
+  $async.Future<$0.ListListingUsersResp> listListingUsers_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.ListListingUsersReq> $request) async {
+    return listListingUsers($call, await $request);
+  }
+
+  $async.Future<$0.ListListingUsersResp> listListingUsers(
+      $grpc.ServiceCall call, $0.ListListingUsersReq request);
+
+  $async.Future<$2.Empty> revokeListingUser_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.RevokeListingUserReq> $request) async {
+    return revokeListingUser($call, await $request);
+  }
+
+  $async.Future<$2.Empty> revokeListingUser(
+      $grpc.ServiceCall call, $0.RevokeListingUserReq request);
 
   $async.Future<$0.ListMyListingsResp> listMyListings_Pre(
       $grpc.ServiceCall $call,

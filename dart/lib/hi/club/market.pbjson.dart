@@ -42,6 +42,7 @@ const ListingStatus$json = {
     {'1': 'LISTING_STATUS_LISTED', '2': 2},
     {'1': 'LISTING_STATUS_HIDDEN', '2': 3},
     {'1': 'LISTING_STATUS_DELISTED', '2': 4},
+    {'1': 'LISTING_STATUS_DELISTING', '2': 5},
   ],
 };
 
@@ -49,7 +50,8 @@ const ListingStatus$json = {
 final $typed_data.Uint8List listingStatusDescriptor = $convert.base64Decode(
     'Cg1MaXN0aW5nU3RhdHVzEh4KGkxJU1RJTkdfU1RBVFVTX1VOU1BFQ0lGSUVEEAASGAoUTElTVE'
     'lOR19TVEFUVVNfRFJBRlQQARIZChVMSVNUSU5HX1NUQVRVU19MSVNURUQQAhIZChVMSVNUSU5H'
-    'X1NUQVRVU19ISURERU4QAxIbChdMSVNUSU5HX1NUQVRVU19ERUxJU1RFRBAE');
+    'X1NUQVRVU19ISURERU4QAxIbChdMSVNUSU5HX1NUQVRVU19ERUxJU1RFRBAEEhwKGExJU1RJTk'
+    'dfU1RBVFVTX0RFTElTVElORxAF');
 
 @$core.Deprecated('Use marketListingKindDescriptor instead')
 const MarketListingKind$json = {
@@ -1471,13 +1473,22 @@ const EditListingReq$json = {
       '10': 'duration',
       '17': true
     },
+    {
+      '1': 'perpetual',
+      '3': 12,
+      '4': 1,
+      '5': 8,
+      '9': 4,
+      '10': 'perpetual',
+      '17': true
+    },
     {'1': 'tags', '3': 8, '4': 3, '5': 9, '10': 'tags'},
     {
       '1': 'payee_to_master',
       '3': 11,
       '4': 1,
       '5': 8,
-      '9': 4,
+      '9': 5,
       '10': 'payeeToMaster',
       '17': true
     },
@@ -1486,7 +1497,7 @@ const EditListingReq$json = {
       '3': 10,
       '4': 1,
       '5': 9,
-      '9': 5,
+      '9': 6,
       '10': 'actionUrl',
       '17': true
     },
@@ -1496,6 +1507,7 @@ const EditListingReq$json = {
     {'1': '_price'},
     {'1': '_coin'},
     {'1': '_duration'},
+    {'1': '_perpetual'},
     {'1': '_payee_to_master'},
     {'1': '_action_url'},
   ],
@@ -1505,10 +1517,11 @@ const EditListingReq$json = {
 final $typed_data.Uint8List editListingReqDescriptor = $convert.base64Decode(
     'Cg5FZGl0TGlzdGluZ1JlcRIoCgR1dWlkGAEgASgJQg+6SAzIAQFyBzIFXlxTKyRIAFIEdXVpZI'
     'gBARIZCgVwcmljZRgCIAEoCUgBUgVwcmljZYgBARIXCgRjb2luGAMgASgJSAJSBGNvaW6IAQES'
-    'HwoIZHVyYXRpb24YBCABKANIA1IIZHVyYXRpb26IAQESEgoEdGFncxgIIAMoCVIEdGFncxIrCg'
-    '9wYXllZV90b19tYXN0ZXIYCyABKAhIBFINcGF5ZWVUb01hc3RlcogBARIiCgphY3Rpb25fdXJs'
-    'GAogASgJSAVSCWFjdGlvblVybIgBAUIHCgVfdXVpZEIICgZfcHJpY2VCBwoFX2NvaW5CCwoJX2'
-    'R1cmF0aW9uQhIKEF9wYXllZV90b19tYXN0ZXJCDQoLX2FjdGlvbl91cmw=');
+    'HwoIZHVyYXRpb24YBCABKANIA1IIZHVyYXRpb26IAQESIQoJcGVycGV0dWFsGAwgASgISARSCX'
+    'BlcnBldHVhbIgBARISCgR0YWdzGAggAygJUgR0YWdzEisKD3BheWVlX3RvX21hc3RlchgLIAEo'
+    'CEgFUg1wYXllZVRvTWFzdGVyiAEBEiIKCmFjdGlvbl91cmwYCiABKAlIBlIJYWN0aW9uVXJsiA'
+    'EBQgcKBV91dWlkQggKBl9wcmljZUIHCgVfY29pbkILCglfZHVyYXRpb25CDAoKX3BlcnBldHVh'
+    'bEISChBfcGF5ZWVfdG9fbWFzdGVyQg0KC19hY3Rpb25fdXJs');
 
 @$core.Deprecated('Use setListingStatusReqDescriptor instead')
 const SetListingStatusReq$json = {
@@ -1560,16 +1573,28 @@ const ListMyListingsReq$json = {
       '6': '.hi.Pagination',
       '10': 'pagination'
     },
+    {
+      '1': 'include_delisted',
+      '3': 3,
+      '4': 1,
+      '5': 8,
+      '9': 1,
+      '10': 'includeDelisted',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_agent'},
+    {'1': '_include_delisted'},
   ],
 };
 
 /// Descriptor for `ListMyListingsReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listMyListingsReqDescriptor = $convert.base64Decode(
     'ChFMaXN0TXlMaXN0aW5nc1JlcRIZCgVhZ2VudBgBIAEoCUgAUgVhZ2VudIgBARIuCgpwYWdpbm'
-    'F0aW9uGAIgASgLMg4uaGkuUGFnaW5hdGlvblIKcGFnaW5hdGlvbkIICgZfYWdlbnQ=');
+    'F0aW9uGAIgASgLMg4uaGkuUGFnaW5hdGlvblIKcGFnaW5hdGlvbhIuChBpbmNsdWRlX2RlbGlz'
+    'dGVkGAMgASgISAFSD2luY2x1ZGVEZWxpc3RlZIgBAUIICgZfYWdlbnRCEwoRX2luY2x1ZGVfZG'
+    'VsaXN0ZWQ=');
 
 @$core.Deprecated('Use listMyListingsRespDescriptor instead')
 const ListMyListingsResp$json = {
@@ -2604,6 +2629,106 @@ final $typed_data.Uint8List decideOfferReqDescriptor = $convert.base64Decode(
     'Cg5EZWNpZGVPZmZlclJlcRIzCgpncmFudF91dWlkGAEgASgJQg+6SAzIAQFyBzIFXlxTKyRIAF'
     'IJZ3JhbnRVdWlkiAEBEhsKBnJlYXNvbhgCIAEoCUgBUgZyZWFzb26IAQFCDQoLX2dyYW50X3V1'
     'aWRCCQoHX3JlYXNvbg==');
+
+@$core.Deprecated('Use listListingUsersReqDescriptor instead')
+const ListListingUsersReq$json = {
+  '1': 'ListListingUsersReq',
+  '2': [
+    {
+      '1': 'listing',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.GetListingReq',
+      '8': {},
+      '10': 'listing'
+    },
+    {
+      '1': 'pagination',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Pagination',
+      '10': 'pagination'
+    },
+  ],
+};
+
+/// Descriptor for `ListListingUsersReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listListingUsersReqDescriptor = $convert.base64Decode(
+    'ChNMaXN0TGlzdGluZ1VzZXJzUmVxEjgKB2xpc3RpbmcYASABKAsyFi5oaS5jbHViLkdldExpc3'
+    'RpbmdSZXFCBrpIA8gBAVIHbGlzdGluZxIuCgpwYWdpbmF0aW9uGAIgASgLMg4uaGkuUGFnaW5h'
+    'dGlvblIKcGFnaW5hdGlvbg==');
+
+@$core.Deprecated('Use listListingUsersRespDescriptor instead')
+const ListListingUsersResp$json = {
+  '1': 'ListListingUsersResp',
+  '2': [
+    {
+      '1': 'users',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'users'
+    },
+    {
+      '1': 'total',
+      '3': 2,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '9': 0,
+      '10': 'total',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_total'},
+  ],
+};
+
+/// Descriptor for `ListListingUsersResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listListingUsersRespDescriptor = $convert.base64Decode(
+    'ChRMaXN0TGlzdGluZ1VzZXJzUmVzcBImCgV1c2VycxgBIAMoCzIKLmhpLkVudGl0eUIEkLUYA1'
+    'IFdXNlcnMSHwoFdG90YWwYAiABKAVCBJC1GANIAFIFdG90YWyIAQE6BJi1GANCCAoGX3RvdGFs');
+
+@$core.Deprecated('Use revokeListingUserReqDescriptor instead')
+const RevokeListingUserReq$json = {
+  '1': 'RevokeListingUserReq',
+  '2': [
+    {
+      '1': 'listing',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.GetListingReq',
+      '8': {},
+      '10': 'listing'
+    },
+    {
+      '1': 'agent',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'agent'
+    },
+    {'1': 'reason', '3': 3, '4': 1, '5': 9, '9': 0, '10': 'reason', '17': true},
+  ],
+  '8': [
+    {'1': '_reason'},
+  ],
+};
+
+/// Descriptor for `RevokeListingUserReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List revokeListingUserReqDescriptor = $convert.base64Decode(
+    'ChRSZXZva2VMaXN0aW5nVXNlclJlcRI4CgdsaXN0aW5nGAEgASgLMhYuaGkuY2x1Yi5HZXRMaX'
+    'N0aW5nUmVxQga6SAPIAQFSB2xpc3RpbmcSKAoFYWdlbnQYAiABKAsyCi5oaS5FbnRpdHlCBrpI'
+    'A8gBAVIFYWdlbnQSGwoGcmVhc29uGAMgASgJSABSBnJlYXNvbogBAUIJCgdfcmVhc29u');
 
 @$core.Deprecated('Use marketManageListListingsReqDescriptor instead')
 const MarketManageListListingsReq$json = {

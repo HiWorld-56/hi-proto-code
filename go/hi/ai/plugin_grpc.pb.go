@@ -39,6 +39,7 @@ const (
 	Plugin_SetFollowLatest_FullMethodName   = "/hi.ai.Plugin/SetFollowLatest"
 	Plugin_ListOnDevice_FullMethodName      = "/hi.ai.Plugin/ListOnDevice"
 	Plugin_RetryBuild_FullMethodName        = "/hi.ai.Plugin/RetryBuild"
+	Plugin_ListReferences_FullMethodName    = "/hi.ai.Plugin/ListReferences"
 	Plugin_PublicBriefs_FullMethodName      = "/hi.ai.Plugin/PublicBriefs"
 )
 
@@ -67,6 +68,7 @@ type PluginClient interface {
 	SetFollowLatest(ctx context.Context, in *SetFollowLatestReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListOnDevice(ctx context.Context, in *ListOnDeviceReq, opts ...grpc.CallOption) (*ListOnDeviceResp, error)
 	RetryBuild(ctx context.Context, in *RetryBuildReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ListReferences(ctx context.Context, in *ListPluginReferencesReq, opts ...grpc.CallOption) (*ListPluginReferencesResp, error)
 	PublicBriefs(ctx context.Context, in *PublicBriefsReq, opts ...grpc.CallOption) (*PublicBriefsResp, error)
 }
 
@@ -268,6 +270,16 @@ func (c *pluginClient) RetryBuild(ctx context.Context, in *RetryBuildReq, opts .
 	return out, nil
 }
 
+func (c *pluginClient) ListReferences(ctx context.Context, in *ListPluginReferencesReq, opts ...grpc.CallOption) (*ListPluginReferencesResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListPluginReferencesResp)
+	err := c.cc.Invoke(ctx, Plugin_ListReferences_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *pluginClient) PublicBriefs(ctx context.Context, in *PublicBriefsReq, opts ...grpc.CallOption) (*PublicBriefsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(PublicBriefsResp)
@@ -303,6 +315,7 @@ type PluginServer interface {
 	SetFollowLatest(context.Context, *SetFollowLatestReq) (*emptypb.Empty, error)
 	ListOnDevice(context.Context, *ListOnDeviceReq) (*ListOnDeviceResp, error)
 	RetryBuild(context.Context, *RetryBuildReq) (*emptypb.Empty, error)
+	ListReferences(context.Context, *ListPluginReferencesReq) (*ListPluginReferencesResp, error)
 	PublicBriefs(context.Context, *PublicBriefsReq) (*PublicBriefsResp, error)
 }
 
@@ -369,6 +382,9 @@ func (UnimplementedPluginServer) ListOnDevice(context.Context, *ListOnDeviceReq)
 }
 func (UnimplementedPluginServer) RetryBuild(context.Context, *RetryBuildReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method RetryBuild not implemented")
+}
+func (UnimplementedPluginServer) ListReferences(context.Context, *ListPluginReferencesReq) (*ListPluginReferencesResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListReferences not implemented")
 }
 func (UnimplementedPluginServer) PublicBriefs(context.Context, *PublicBriefsReq) (*PublicBriefsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method PublicBriefs not implemented")
@@ -735,6 +751,24 @@ func _Plugin_RetryBuild_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Plugin_ListReferences_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPluginReferencesReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PluginServer).ListReferences(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Plugin_ListReferences_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PluginServer).ListReferences(ctx, req.(*ListPluginReferencesReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Plugin_PublicBriefs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PublicBriefsReq)
 	if err := dec(in); err != nil {
@@ -835,6 +869,10 @@ var Plugin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RetryBuild",
 			Handler:    _Plugin_RetryBuild_Handler,
+		},
+		{
+			MethodName: "ListReferences",
+			Handler:    _Plugin_ListReferences_Handler,
 		},
 		{
 			MethodName: "PublicBriefs",

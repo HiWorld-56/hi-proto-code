@@ -79,6 +79,8 @@ class ListingStatus extends $pb.ProtobufEnum {
       ListingStatus._(3, _omitEnumNames ? '' : 'LISTING_STATUS_HIDDEN');
   static const ListingStatus LISTING_STATUS_DELISTED =
       ListingStatus._(4, _omitEnumNames ? '' : 'LISTING_STATUS_DELISTED');
+  static const ListingStatus LISTING_STATUS_DELISTING =
+      ListingStatus._(5, _omitEnumNames ? '' : 'LISTING_STATUS_DELISTING');
 
   static const $core.List<ListingStatus> values = <ListingStatus>[
     LISTING_STATUS_UNSPECIFIED,
@@ -86,10 +88,11 @@ class ListingStatus extends $pb.ProtobufEnum {
     LISTING_STATUS_LISTED,
     LISTING_STATUS_HIDDEN,
     LISTING_STATUS_DELISTED,
+    LISTING_STATUS_DELISTING,
   ];
 
   static final $core.List<ListingStatus?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 4);
+      $pb.ProtobufEnum.$_initByValueList(values, 5);
   static ListingStatus? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
@@ -102,19 +105,9 @@ class ListingStatus extends $pb.ProtobufEnum {
 /// backend-hi-club 的 `Market.OFFICIAL_DID`）。别人传了直接拒 ——
 /// 否则任何商户都能给自己的插件贴个"官方"，而"官方"这两个字的全部价值就是没人能自封。
 ///
-/// ## BUILTIN 是「每台硬件机器人都该有」的那一档
-///
-/// 它不是一个更醒目的 OFFICIAL，而是多了两条**机制**：
-///
-///   · 新硬件机器人在 club 注册时**自动引用**它（不走申请，不需要主人点头）；
-///   · 发新版时**全网一起切**（`hi.ai.Plugin.SetActiveAll`），不看 follow_latest ——
-///     内置能力跟 brain 的 ABI 绑在一起，一台机器人停在老版就是设备能力与固件对不上。
-///
-/// 所以 BUILTIN 强制：免费、永久、免审。收费的"内置"是自相矛盾的 ——
-/// 出厂就该有的能力，不能等用户付款。
-///
-/// ⚠️ **它照样挂在市场里**，而不是藏在系统里：主人把内置插件关了/删了之后，
-/// 得有个地方让他自己拿回来（0 元购）。藏起来的东西找不回来。
+/// BUILTIN 只是自动安装标记,不是售卖方式。新硬件机器人注册时自动引用,
+/// 此后与普通插件一样可停用、删除、撤权;删除后不自动补装,不强制跟版。
+/// 自动安装必须免费永久,与普通免费插件遵守同一期限规则。
 class MarketListingKind extends $pb.ProtobufEnum {
   static const MarketListingKind MARKET_LISTING_KIND_UNSPECIFIED =
       MarketListingKind._(

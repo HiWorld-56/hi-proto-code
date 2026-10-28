@@ -6744,7 +6744,7 @@ pub struct CreateListingReq {
     pub price: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "5")]
     pub coin: ::core::option::Option<::prost::alloc::string::String>,
-    /// 秒;**不传 = 永久**(0 秒 = 买了立刻过期,是合法但没人要的值)
+    /// 秒;不传 = 永久,传入必须 > 0;FREE 统一永久
     #[prost(int64, optional, tag = "6")]
     pub duration: ::core::option::Option<i64>,
     /// ⚠️ **没有 title / summary / logo,不要再加回来。** 7/8/9 是它们原来的位置。
@@ -6800,10 +6800,12 @@ pub struct EditListingReq {
     pub price: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "3")]
     pub coin: ::core::option::Option<::prost::alloc::string::String>,
-    /// 秒;不传=不改。要改成永久没有办法用这个字段表达,
+    /// 秒;不传=不改,传入必须 > 0
     #[prost(int64, optional, tag = "4")]
     pub duration: ::core::option::Option<i64>,
-    /// 那是"换商品规格",走下架重挂
+    /// true=清除期限,改为永久;与 duration 互斥。FREE 始终永久
+    #[prost(bool, optional, tag = "12")]
+    pub perpetual: ::core::option::Option<bool>,
     /// 同 CreateListingReq:展示信息以插件自身为准,改名字改简介去改插件。
     #[prost(string, repeated, tag = "8")]
     pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
@@ -6827,6 +6829,9 @@ pub struct ListMyListingsReq {
     pub agent: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
+    /// 卖家继续管理已下架插件的实际使用者
+    #[prost(bool, optional, tag = "3")]
+    pub include_delisted: ::core::option::Option<bool>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListMyListingsResp {
@@ -7210,6 +7215,32 @@ pub struct DecideOfferReq {
     #[prost(string, optional, tag = "2")]
     pub reason: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 实际使用者来自 hi.ai 引用关系,包括没有市场 grant 的自动安装用户。
+/// 机器人始终返回 Entity,不拆成 did/name/avatar 等散字段。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListListingUsersReq {
+    #[prost(message, optional, tag = "1")]
+    pub listing: ::core::option::Option<GetListingReq>,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListListingUsersResp {
+    #[prost(message, repeated, tag = "1")]
+    pub users: ::prost::alloc::vec::Vec<super::Entity>,
+    #[prost(int32, optional, tag = "2")]
+    pub total: ::core::option::Option<i32>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct RevokeListingUserReq {
+    #[prost(message, optional, tag = "1")]
+    pub listing: ::core::option::Option<GetListingReq>,
+    /// 只以 did 点名,身份门面不作为权限依据
+    #[prost(message, optional, tag = "2")]
+    pub agent: ::core::option::Option<super::Entity>,
+    #[prost(string, optional, tag = "3")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
+}
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MarketManageListListingsReq {
     /// 可选:按机器人筛
@@ -7304,7 +7335,7 @@ pub struct MarketNotifyData {
     pub result: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "4")]
     pub reason: ::core::option::Option<::prost::alloc::string::String>,
-    /// 可选:商户回填实际生效条款(实付金额 / 有效期)
+    /// 可选:商户回填条款;duration 为正整数秒或 null(永久),不带键沿用挂牌期限
     #[prost(message, optional, tag = "5")]
     pub terms_override: ::core::option::Option<::pbjson_types::Struct>,
     #[prost(string, optional, tag = "6")]
@@ -7322,7 +7353,7 @@ pub struct MarketNotifyData {
 #[repr(i32)]
 pub enum SettleMode {
     Unspecified = 0,
-    /// 免费:申请即成立
+    /// 免费:申请即成立,永久使用(卖家仍可撤权)
     Free = 1,
     /// 人工审批,不收钱 —— 出让方 master 点头即成立
     Approval = 2,
@@ -7387,6 +7418,8 @@ pub enum ListingStatus {
     Hidden = 3,
     /// 已下架:不再接新申请
     Delisted = 4,
+    /// 强制下架清退中:禁止新增使用,清退完成后落 DELISTED
+    Delisting = 5,
 }
 impl ListingStatus {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -7400,6 +7433,7 @@ impl ListingStatus {
             Self::Listed => "LISTING_STATUS_LISTED",
             Self::Hidden => "LISTING_STATUS_HIDDEN",
             Self::Delisted => "LISTING_STATUS_DELISTED",
+            Self::Delisting => "LISTING_STATUS_DELISTING",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -7410,6 +7444,7 @@ impl ListingStatus {
             "LISTING_STATUS_LISTED" => Some(Self::Listed),
             "LISTING_STATUS_HIDDEN" => Some(Self::Hidden),
             "LISTING_STATUS_DELISTED" => Some(Self::Delisted),
+            "LISTING_STATUS_DELISTING" => Some(Self::Delisting),
             _ => None,
         }
     }
@@ -7420,19 +7455,9 @@ impl ListingStatus {
 /// backend-hi-club 的 `Market.OFFICIAL_DID`）。别人传了直接拒 ——
 /// 否则任何商户都能给自己的插件贴个"官方"，而"官方"这两个字的全部价值就是没人能自封。
 ///
-/// ## BUILTIN 是「每台硬件机器人都该有」的那一档
-///
-/// 它不是一个更醒目的 OFFICIAL，而是多了两条**机制**：
-///
-/// · 新硬件机器人在 club 注册时**自动引用**它（不走申请，不需要主人点头）；
-/// · 发新版时**全网一起切**（`hi.ai.Plugin.SetActiveAll`），不看 follow_latest ——
-/// 内置能力跟 brain 的 ABI 绑在一起，一台机器人停在老版就是设备能力与固件对不上。
-///
-/// 所以 BUILTIN 强制：免费、永久、免审。收费的"内置"是自相矛盾的 ——
-/// 出厂就该有的能力，不能等用户付款。
-///
-/// ⚠️ **它照样挂在市场里**，而不是藏在系统里：主人把内置插件关了/删了之后，
-/// 得有个地方让他自己拿回来（0 元购）。藏起来的东西找不回来。
+/// BUILTIN 只是自动安装标记,不是售卖方式。新硬件机器人注册时自动引用,
+/// 此后与普通插件一样可停用、删除、撤权;删除后不自动补装,不强制跟版。
+/// 自动安装必须免费永久,与普通免费插件遵守同一期限规则。
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum MarketListingKind {
@@ -8152,6 +8177,73 @@ pub mod market_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.Market", "SetListingStatus"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 卖家强制下架:先禁止新增使用,移除全部实际引用并处理授权/未完成订单,最后落已下架。
+        pub async fn force_delist(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ForceDelistReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Market/ForceDelist",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Market", "ForceDelist"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_listing_users(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListListingUsersReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListListingUsersResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Market/ListListingUsers",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Market", "ListListingUsers"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn revoke_listing_user(
+            &mut self,
+            request: impl tonic::IntoRequest<super::RevokeListingUserReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Market/RevokeListingUser",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Market", "RevokeListingUser"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn list_my_listings(

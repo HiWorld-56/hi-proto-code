@@ -4023,6 +4023,9 @@ impl serde::Serialize for EditListingReq {
         if self.duration.is_some() {
             len += 1;
         }
+        if self.perpetual.is_some() {
+            len += 1;
+        }
         if !self.tags.is_empty() {
             len += 1;
         }
@@ -4047,6 +4050,9 @@ impl serde::Serialize for EditListingReq {
             #[allow(clippy::needless_borrows_for_generic_args)]
             struct_ser.serialize_field("duration", ToString::to_string(&v).as_str())?;
         }
+        if let Some(v) = self.perpetual.as_ref() {
+            struct_ser.serialize_field("perpetual", v)?;
+        }
         if !self.tags.is_empty() {
             struct_ser.serialize_field("tags", &self.tags)?;
         }
@@ -4070,6 +4076,7 @@ impl<'de> serde::Deserialize<'de> for EditListingReq {
             "price",
             "coin",
             "duration",
+            "perpetual",
             "tags",
             "payee_to_master",
             "payeeToMaster",
@@ -4083,6 +4090,7 @@ impl<'de> serde::Deserialize<'de> for EditListingReq {
             Price,
             Coin,
             Duration,
+            Perpetual,
             Tags,
             PayeeToMaster,
             ActionUrl,
@@ -4111,6 +4119,7 @@ impl<'de> serde::Deserialize<'de> for EditListingReq {
                             "price" => Ok(GeneratedField::Price),
                             "coin" => Ok(GeneratedField::Coin),
                             "duration" => Ok(GeneratedField::Duration),
+                            "perpetual" => Ok(GeneratedField::Perpetual),
                             "tags" => Ok(GeneratedField::Tags),
                             "payeeToMaster" | "payee_to_master" => Ok(GeneratedField::PayeeToMaster),
                             "actionUrl" | "action_url" => Ok(GeneratedField::ActionUrl),
@@ -4137,6 +4146,7 @@ impl<'de> serde::Deserialize<'de> for EditListingReq {
                 let mut price__ = None;
                 let mut coin__ = None;
                 let mut duration__ = None;
+                let mut perpetual__ = None;
                 let mut tags__ = None;
                 let mut payee_to_master__ = None;
                 let mut action_url__ = None;
@@ -4168,6 +4178,12 @@ impl<'de> serde::Deserialize<'de> for EditListingReq {
                                 map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
+                        GeneratedField::Perpetual => {
+                            if perpetual__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("perpetual"));
+                            }
+                            perpetual__ = map_.next_value()?;
+                        }
                         GeneratedField::Tags => {
                             if tags__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("tags"));
@@ -4193,6 +4209,7 @@ impl<'de> serde::Deserialize<'de> for EditListingReq {
                     price: price__,
                     coin: coin__,
                     duration: duration__,
+                    perpetual: perpetual__,
                     tags: tags__.unwrap_or_default(),
                     payee_to_master: payee_to_master__,
                     action_url: action_url__,
@@ -9313,6 +9330,224 @@ impl<'de> serde::Deserialize<'de> for ListGroupsResp {
         deserializer.deserialize_struct("hi.club.ListGroupsResp", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for ListListingUsersReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.listing.is_some() {
+            len += 1;
+        }
+        if self.pagination.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.ListListingUsersReq", len)?;
+        if let Some(v) = self.listing.as_ref() {
+            struct_ser.serialize_field("listing", v)?;
+        }
+        if let Some(v) = self.pagination.as_ref() {
+            struct_ser.serialize_field("pagination", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ListListingUsersReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "listing",
+            "pagination",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Listing,
+            Pagination,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "listing" => Ok(GeneratedField::Listing),
+                            "pagination" => Ok(GeneratedField::Pagination),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ListListingUsersReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.ListListingUsersReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListListingUsersReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut listing__ = None;
+                let mut pagination__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Listing => {
+                            if listing__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("listing"));
+                            }
+                            listing__ = map_.next_value()?;
+                        }
+                        GeneratedField::Pagination => {
+                            if pagination__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("pagination"));
+                            }
+                            pagination__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ListListingUsersReq {
+                    listing: listing__,
+                    pagination: pagination__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.ListListingUsersReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ListListingUsersResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.users.is_empty() {
+            len += 1;
+        }
+        if self.total.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.ListListingUsersResp", len)?;
+        if !self.users.is_empty() {
+            struct_ser.serialize_field("users", &self.users)?;
+        }
+        if let Some(v) = self.total.as_ref() {
+            struct_ser.serialize_field("total", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ListListingUsersResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "users",
+            "total",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Users,
+            Total,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "users" => Ok(GeneratedField::Users),
+                            "total" => Ok(GeneratedField::Total),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ListListingUsersResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.ListListingUsersResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListListingUsersResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut users__ = None;
+                let mut total__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Users => {
+                            if users__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("users"));
+                            }
+                            users__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Total => {
+                            if total__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("total"));
+                            }
+                            total__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(ListListingUsersResp {
+                    users: users__.unwrap_or_default(),
+                    total: total__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.ListListingUsersResp", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for ListMerchantUsersReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -9435,12 +9670,18 @@ impl serde::Serialize for ListMyListingsReq {
         if self.pagination.is_some() {
             len += 1;
         }
+        if self.include_delisted.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.club.ListMyListingsReq", len)?;
         if let Some(v) = self.agent.as_ref() {
             struct_ser.serialize_field("agent", v)?;
         }
         if let Some(v) = self.pagination.as_ref() {
             struct_ser.serialize_field("pagination", v)?;
+        }
+        if let Some(v) = self.include_delisted.as_ref() {
+            struct_ser.serialize_field("includeDelisted", v)?;
         }
         struct_ser.end()
     }
@@ -9454,12 +9695,15 @@ impl<'de> serde::Deserialize<'de> for ListMyListingsReq {
         const FIELDS: &[&str] = &[
             "agent",
             "pagination",
+            "include_delisted",
+            "includeDelisted",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Agent,
             Pagination,
+            IncludeDelisted,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -9483,6 +9727,7 @@ impl<'de> serde::Deserialize<'de> for ListMyListingsReq {
                         match value {
                             "agent" => Ok(GeneratedField::Agent),
                             "pagination" => Ok(GeneratedField::Pagination),
+                            "includeDelisted" | "include_delisted" => Ok(GeneratedField::IncludeDelisted),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -9504,6 +9749,7 @@ impl<'de> serde::Deserialize<'de> for ListMyListingsReq {
             {
                 let mut agent__ = None;
                 let mut pagination__ = None;
+                let mut include_delisted__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Agent => {
@@ -9518,11 +9764,18 @@ impl<'de> serde::Deserialize<'de> for ListMyListingsReq {
                             }
                             pagination__ = map_.next_value()?;
                         }
+                        GeneratedField::IncludeDelisted => {
+                            if include_delisted__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("includeDelisted"));
+                            }
+                            include_delisted__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(ListMyListingsReq {
                     agent: agent__,
                     pagination: pagination__,
+                    include_delisted: include_delisted__,
                 })
             }
         }
@@ -11959,6 +12212,7 @@ impl serde::Serialize for ListingStatus {
             Self::Listed => "LISTING_STATUS_LISTED",
             Self::Hidden => "LISTING_STATUS_HIDDEN",
             Self::Delisted => "LISTING_STATUS_DELISTED",
+            Self::Delisting => "LISTING_STATUS_DELISTING",
         };
         serializer.serialize_str(variant)
     }
@@ -11975,6 +12229,7 @@ impl<'de> serde::Deserialize<'de> for ListingStatus {
             "LISTING_STATUS_LISTED",
             "LISTING_STATUS_HIDDEN",
             "LISTING_STATUS_DELISTED",
+            "LISTING_STATUS_DELISTING",
         ];
 
         struct GeneratedVisitor;
@@ -12020,6 +12275,7 @@ impl<'de> serde::Deserialize<'de> for ListingStatus {
                     "LISTING_STATUS_LISTED" => Ok(ListingStatus::Listed),
                     "LISTING_STATUS_HIDDEN" => Ok(ListingStatus::Hidden),
                     "LISTING_STATUS_DELISTED" => Ok(ListingStatus::Delisted),
+                    "LISTING_STATUS_DELISTING" => Ok(ListingStatus::Delisting),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }
@@ -21416,6 +21672,131 @@ impl<'de> serde::Deserialize<'de> for ReportReq {
             }
         }
         deserializer.deserialize_struct("hi.club.ReportReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for RevokeListingUserReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.listing.is_some() {
+            len += 1;
+        }
+        if self.agent.is_some() {
+            len += 1;
+        }
+        if self.reason.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.RevokeListingUserReq", len)?;
+        if let Some(v) = self.listing.as_ref() {
+            struct_ser.serialize_field("listing", v)?;
+        }
+        if let Some(v) = self.agent.as_ref() {
+            struct_ser.serialize_field("agent", v)?;
+        }
+        if let Some(v) = self.reason.as_ref() {
+            struct_ser.serialize_field("reason", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for RevokeListingUserReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "listing",
+            "agent",
+            "reason",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Listing,
+            Agent,
+            Reason,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "listing" => Ok(GeneratedField::Listing),
+                            "agent" => Ok(GeneratedField::Agent),
+                            "reason" => Ok(GeneratedField::Reason),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = RevokeListingUserReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.RevokeListingUserReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<RevokeListingUserReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut listing__ = None;
+                let mut agent__ = None;
+                let mut reason__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Listing => {
+                            if listing__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("listing"));
+                            }
+                            listing__ = map_.next_value()?;
+                        }
+                        GeneratedField::Agent => {
+                            if agent__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("agent"));
+                            }
+                            agent__ = map_.next_value()?;
+                        }
+                        GeneratedField::Reason => {
+                            if reason__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("reason"));
+                            }
+                            reason__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(RevokeListingUserReq {
+                    listing: listing__,
+                    agent: agent__,
+                    reason: reason__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.RevokeListingUserReq", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for SearchListingsReq {

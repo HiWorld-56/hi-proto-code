@@ -1537,6 +1537,7 @@ const PluginRef$json = {
       '17': true
     },
   ],
+  '7': {},
   '8': [
     {'1': '_agent'},
     {'1': '_uuid'},
@@ -1545,9 +1546,75 @@ const PluginRef$json = {
 
 /// Descriptor for `PluginRef`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pluginRefDescriptor = $convert.base64Decode(
-    'CglQbHVnaW5SZWYSKgoFYWdlbnQYASABKAlCD7pIDMgBAXIHMgVeXFMrJEgAUgVhZ2VudIgBAR'
-    'IoCgR1dWlkGAIgASgJQg+6SAzIAQFyBzIFXlxTKyRIAVIEdXVpZIgBAUIICgZfYWdlbnRCBwoF'
-    'X3V1aWQ=');
+    'CglQbHVnaW5SZWYSLgoFYWdlbnQYASABKAlCE7pIDMgBAXIHMgVeXFMrJJC1GANIAFIFYWdlbn'
+    'SIAQESLAoEdXVpZBgCIAEoCUITukgMyAEBcgcyBV5cUyskkLUYA0gBUgR1dWlkiAEBOgSYtRgD'
+    'QggKBl9hZ2VudEIHCgVfdXVpZA==');
+
+@$core.Deprecated('Use listPluginReferencesReqDescriptor instead')
+const ListPluginReferencesReq$json = {
+  '1': 'ListPluginReferencesReq',
+  '2': [
+    {
+      '1': 'plugin',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ai.PluginRef',
+      '8': {},
+      '10': 'plugin'
+    },
+    {
+      '1': 'pagination',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Pagination',
+      '10': 'pagination'
+    },
+  ],
+};
+
+/// Descriptor for `ListPluginReferencesReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listPluginReferencesReqDescriptor = $convert.base64Decode(
+    'ChdMaXN0UGx1Z2luUmVmZXJlbmNlc1JlcRIwCgZwbHVnaW4YASABKAsyEC5oaS5haS5QbHVnaW'
+    '5SZWZCBrpIA8gBAVIGcGx1Z2luEi4KCnBhZ2luYXRpb24YAiABKAsyDi5oaS5QYWdpbmF0aW9u'
+    'UgpwYWdpbmF0aW9u');
+
+@$core.Deprecated('Use listPluginReferencesRespDescriptor instead')
+const ListPluginReferencesResp$json = {
+  '1': 'ListPluginReferencesResp',
+  '2': [
+    {
+      '1': 'refs',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.ai.PluginRef',
+      '8': {},
+      '10': 'refs'
+    },
+    {
+      '1': 'total',
+      '3': 2,
+      '4': 1,
+      '5': 5,
+      '8': {},
+      '9': 0,
+      '10': 'total',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_total'},
+  ],
+};
+
+/// Descriptor for `ListPluginReferencesResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listPluginReferencesRespDescriptor = $convert.base64Decode(
+    'ChhMaXN0UGx1Z2luUmVmZXJlbmNlc1Jlc3ASKgoEcmVmcxgBIAMoCzIQLmhpLmFpLlBsdWdpbl'
+    'JlZkIEkLUYA1IEcmVmcxIfCgV0b3RhbBgCIAEoBUIEkLUYA0gAUgV0b3RhbIgBAToEmLUYA0II'
+    'CgZfdG90YWw=');
 
 @$core.Deprecated('Use publicBriefsReqDescriptor instead')
 const PublicBriefsReq$json = {
