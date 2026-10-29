@@ -16,6 +16,7 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../common.pb.dart' as $1;
+import 'model.pbenum.dart' as $3;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -199,6 +200,7 @@ class AgentConfig extends $pb.GeneratedMessage {
     ModelSet? model,
     $core.int? qaNum,
     $core.bool? useMem,
+    $3.ReasoningLevel? reasoningLevel,
   }) {
     final result = create();
     if (prompt != null) result.prompt = prompt;
@@ -206,6 +208,7 @@ class AgentConfig extends $pb.GeneratedMessage {
     if (model != null) result.model = model;
     if (qaNum != null) result.qaNum = qaNum;
     if (useMem != null) result.useMem = useMem;
+    if (reasoningLevel != null) result.reasoningLevel = reasoningLevel;
     return result;
   }
 
@@ -228,6 +231,8 @@ class AgentConfig extends $pb.GeneratedMessage {
         subBuilder: ModelSet.create)
     ..aI(4, _omitFieldNames ? '' : 'qaNum')
     ..aOB(5, _omitFieldNames ? '' : 'useMem')
+    ..aE<$3.ReasoningLevel>(6, _omitFieldNames ? '' : 'reasoningLevel',
+        enumValues: $3.ReasoningLevel.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -297,6 +302,17 @@ class AgentConfig extends $pb.GeneratedMessage {
   $core.bool hasUseMem() => $_has(4);
   @$pb.TagNumber(5)
   void clearUseMem() => $_clearField(5);
+
+  /// 启用需 mem 权限(use-side 判);记忆开关的唯一写入口就是 Agent.Edit(原 SetSwitches 已移除)。
+  /// 不传=不改；NONE 表示明确关闭。模型允许哪些等级由 Model.ListLlms 返回，不能用 UNSPECIFIED 代替未传。
+  @$pb.TagNumber(6)
+  $3.ReasoningLevel get reasoningLevel => $_getN(5);
+  @$pb.TagNumber(6)
+  set reasoningLevel($3.ReasoningLevel value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasReasoningLevel() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearReasoningLevel() => $_clearField(6);
 }
 
 /// 用量/计费数据,只发给资源主人本人。

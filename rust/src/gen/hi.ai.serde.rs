@@ -21,6 +21,9 @@ impl serde::Serialize for AgentConfig {
         if self.use_mem.is_some() {
             len += 1;
         }
+        if self.reasoning_level.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ai.AgentConfig", len)?;
         if let Some(v) = self.prompt.as_ref() {
             struct_ser.serialize_field("prompt", v)?;
@@ -36,6 +39,11 @@ impl serde::Serialize for AgentConfig {
         }
         if let Some(v) = self.use_mem.as_ref() {
             struct_ser.serialize_field("useMem", v)?;
+        }
+        if let Some(v) = self.reasoning_level.as_ref() {
+            let v = ReasoningLevel::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("reasoningLevel", &v)?;
         }
         struct_ser.end()
     }
@@ -54,6 +62,8 @@ impl<'de> serde::Deserialize<'de> for AgentConfig {
             "qaNum",
             "use_mem",
             "useMem",
+            "reasoning_level",
+            "reasoningLevel",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -63,6 +73,7 @@ impl<'de> serde::Deserialize<'de> for AgentConfig {
             Model,
             QaNum,
             UseMem,
+            ReasoningLevel,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -89,6 +100,7 @@ impl<'de> serde::Deserialize<'de> for AgentConfig {
                             "model" => Ok(GeneratedField::Model),
                             "qaNum" | "qa_num" => Ok(GeneratedField::QaNum),
                             "useMem" | "use_mem" => Ok(GeneratedField::UseMem),
+                            "reasoningLevel" | "reasoning_level" => Ok(GeneratedField::ReasoningLevel),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -113,6 +125,7 @@ impl<'de> serde::Deserialize<'de> for AgentConfig {
                 let mut model__ = None;
                 let mut qa_num__ = None;
                 let mut use_mem__ = None;
+                let mut reasoning_level__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Prompt => {
@@ -149,6 +162,12 @@ impl<'de> serde::Deserialize<'de> for AgentConfig {
                             }
                             use_mem__ = map_.next_value()?;
                         }
+                        GeneratedField::ReasoningLevel => {
+                            if reasoning_level__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("reasoningLevel"));
+                            }
+                            reasoning_level__ = map_.next_value::<::std::option::Option<ReasoningLevel>>()?.map(|x| x as i32);
+                        }
                     }
                 }
                 Ok(AgentConfig {
@@ -157,6 +176,7 @@ impl<'de> serde::Deserialize<'de> for AgentConfig {
                     model: model__,
                     qa_num: qa_num__,
                     use_mem: use_mem__,
+                    reasoning_level: reasoning_level__,
                 })
             }
         }
@@ -8802,6 +8822,230 @@ impl<'de> serde::Deserialize<'de> for ListVersionsResp {
         deserializer.deserialize_struct("hi.ai.ListVersionsResp", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for LlmModel {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.name.is_some() {
+            len += 1;
+        }
+        if !self.reasoning_levels.is_empty() {
+            len += 1;
+        }
+        if self.default_reasoning_level.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ai.LlmModel", len)?;
+        if let Some(v) = self.name.as_ref() {
+            struct_ser.serialize_field("name", v)?;
+        }
+        if !self.reasoning_levels.is_empty() {
+            let v = self.reasoning_levels.iter().cloned().map(|v| {
+                ReasoningLevel::try_from(v)
+                    .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", v)))
+                }).collect::<std::result::Result<Vec<_>, _>>()?;
+            struct_ser.serialize_field("reasoningLevels", &v)?;
+        }
+        if let Some(v) = self.default_reasoning_level.as_ref() {
+            let v = ReasoningLevel::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("defaultReasoningLevel", &v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for LlmModel {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "name",
+            "reasoning_levels",
+            "reasoningLevels",
+            "default_reasoning_level",
+            "defaultReasoningLevel",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Name,
+            ReasoningLevels,
+            DefaultReasoningLevel,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "name" => Ok(GeneratedField::Name),
+                            "reasoningLevels" | "reasoning_levels" => Ok(GeneratedField::ReasoningLevels),
+                            "defaultReasoningLevel" | "default_reasoning_level" => Ok(GeneratedField::DefaultReasoningLevel),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = LlmModel;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ai.LlmModel")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<LlmModel, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut name__ = None;
+                let mut reasoning_levels__ = None;
+                let mut default_reasoning_level__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Name => {
+                            if name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("name"));
+                            }
+                            name__ = map_.next_value()?;
+                        }
+                        GeneratedField::ReasoningLevels => {
+                            if reasoning_levels__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("reasoningLevels"));
+                            }
+                            reasoning_levels__ = Some(map_.next_value::<Vec<ReasoningLevel>>()?.into_iter().map(|x| x as i32).collect());
+                        }
+                        GeneratedField::DefaultReasoningLevel => {
+                            if default_reasoning_level__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("defaultReasoningLevel"));
+                            }
+                            default_reasoning_level__ = map_.next_value::<::std::option::Option<ReasoningLevel>>()?.map(|x| x as i32);
+                        }
+                    }
+                }
+                Ok(LlmModel {
+                    name: name__,
+                    reasoning_levels: reasoning_levels__.unwrap_or_default(),
+                    default_reasoning_level: default_reasoning_level__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ai.LlmModel", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for LlmModelListResp {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.models.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ai.LlmModelListResp", len)?;
+        if !self.models.is_empty() {
+            struct_ser.serialize_field("models", &self.models)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for LlmModelListResp {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "models",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Models,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "models" => Ok(GeneratedField::Models),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = LlmModelListResp;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ai.LlmModelListResp")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<LlmModelListResp, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut models__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Models => {
+                            if models__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("models"));
+                            }
+                            models__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(LlmModelListResp {
+                    models: models__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ai.LlmModelListResp", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for LuaDep {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -12029,6 +12273,92 @@ impl<'de> serde::Deserialize<'de> for Qa {
             }
         }
         deserializer.deserialize_struct("hi.ai.QA", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ReasoningLevel {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unspecified => "REASONING_LEVEL_UNSPECIFIED",
+            Self::None => "REASONING_LEVEL_NONE",
+            Self::Low => "REASONING_LEVEL_LOW",
+            Self::Medium => "REASONING_LEVEL_MEDIUM",
+            Self::High => "REASONING_LEVEL_HIGH",
+            Self::Xhigh => "REASONING_LEVEL_XHIGH",
+            Self::Max => "REASONING_LEVEL_MAX",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for ReasoningLevel {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "REASONING_LEVEL_UNSPECIFIED",
+            "REASONING_LEVEL_NONE",
+            "REASONING_LEVEL_LOW",
+            "REASONING_LEVEL_MEDIUM",
+            "REASONING_LEVEL_HIGH",
+            "REASONING_LEVEL_XHIGH",
+            "REASONING_LEVEL_MAX",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = ReasoningLevel;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "REASONING_LEVEL_UNSPECIFIED" => Ok(ReasoningLevel::Unspecified),
+                    "REASONING_LEVEL_NONE" => Ok(ReasoningLevel::None),
+                    "REASONING_LEVEL_LOW" => Ok(ReasoningLevel::Low),
+                    "REASONING_LEVEL_MEDIUM" => Ok(ReasoningLevel::Medium),
+                    "REASONING_LEVEL_HIGH" => Ok(ReasoningLevel::High),
+                    "REASONING_LEVEL_XHIGH" => Ok(ReasoningLevel::Xhigh),
+                    "REASONING_LEVEL_MAX" => Ok(ReasoningLevel::Max),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
     }
 }
 impl serde::Serialize for RegisterRobotReq {

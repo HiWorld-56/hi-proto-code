@@ -35,7 +35,7 @@ class ModelClient extends $grpc.Client {
 
   ModelClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$1.ModelListResp> listLlms(
+  $grpc.ResponseFuture<$1.LlmModelListResp> listLlms(
     $0.Empty request, {
     $grpc.CallOptions? options,
   }) {
@@ -65,10 +65,10 @@ class ModelClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$listLlms = $grpc.ClientMethod<$0.Empty, $1.ModelListResp>(
+  static final _$listLlms = $grpc.ClientMethod<$0.Empty, $1.LlmModelListResp>(
       '/hi.club.Model/ListLlms',
       ($0.Empty value) => value.writeToBuffer(),
-      $1.ModelListResp.fromBuffer);
+      $1.LlmModelListResp.fromBuffer);
   static final _$listEmbeddings =
       $grpc.ClientMethod<$0.Empty, $1.ModelListResp>(
           '/hi.club.Model/ListEmbeddings',
@@ -89,13 +89,13 @@ abstract class ModelServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.club.Model';
 
   ModelServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.Empty, $1.ModelListResp>(
+    $addMethod($grpc.ServiceMethod<$0.Empty, $1.LlmModelListResp>(
         'ListLlms',
         listLlms_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($1.ModelListResp value) => value.writeToBuffer()));
+        ($1.LlmModelListResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.Empty, $1.ModelListResp>(
         'ListEmbeddings',
         listEmbeddings_Pre,
@@ -119,12 +119,12 @@ abstract class ModelServiceBase extends $grpc.Service {
         ($1.ModelListResp value) => value.writeToBuffer()));
   }
 
-  $async.Future<$1.ModelListResp> listLlms_Pre(
+  $async.Future<$1.LlmModelListResp> listLlms_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
     return listLlms($call, await $request);
   }
 
-  $async.Future<$1.ModelListResp> listLlms(
+  $async.Future<$1.LlmModelListResp> listLlms(
       $grpc.ServiceCall call, $0.Empty request);
 
   $async.Future<$1.ModelListResp> listEmbeddings_Pre(

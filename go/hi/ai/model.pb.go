@@ -7,6 +7,7 @@
 package ai
 
 import (
+	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	_ "github.com/HiWorld-56/hi-proto/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -23,6 +24,173 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// 推理等级是智能体的配置语义，不是供应商请求格式；不支持推理的模型仅列 NONE。
+type ReasoningLevel int32
+
+const (
+	ReasoningLevel_REASONING_LEVEL_UNSPECIFIED ReasoningLevel = 0
+	ReasoningLevel_REASONING_LEVEL_NONE        ReasoningLevel = 1
+	ReasoningLevel_REASONING_LEVEL_LOW         ReasoningLevel = 2
+	ReasoningLevel_REASONING_LEVEL_MEDIUM      ReasoningLevel = 3
+	ReasoningLevel_REASONING_LEVEL_HIGH        ReasoningLevel = 4
+	ReasoningLevel_REASONING_LEVEL_XHIGH       ReasoningLevel = 5
+	ReasoningLevel_REASONING_LEVEL_MAX         ReasoningLevel = 6
+)
+
+// Enum value maps for ReasoningLevel.
+var (
+	ReasoningLevel_name = map[int32]string{
+		0: "REASONING_LEVEL_UNSPECIFIED",
+		1: "REASONING_LEVEL_NONE",
+		2: "REASONING_LEVEL_LOW",
+		3: "REASONING_LEVEL_MEDIUM",
+		4: "REASONING_LEVEL_HIGH",
+		5: "REASONING_LEVEL_XHIGH",
+		6: "REASONING_LEVEL_MAX",
+	}
+	ReasoningLevel_value = map[string]int32{
+		"REASONING_LEVEL_UNSPECIFIED": 0,
+		"REASONING_LEVEL_NONE":        1,
+		"REASONING_LEVEL_LOW":         2,
+		"REASONING_LEVEL_MEDIUM":      3,
+		"REASONING_LEVEL_HIGH":        4,
+		"REASONING_LEVEL_XHIGH":       5,
+		"REASONING_LEVEL_MAX":         6,
+	}
+)
+
+func (x ReasoningLevel) Enum() *ReasoningLevel {
+	p := new(ReasoningLevel)
+	*p = x
+	return p
+}
+
+func (x ReasoningLevel) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ReasoningLevel) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_ai_model_proto_enumTypes[0].Descriptor()
+}
+
+func (ReasoningLevel) Type() protoreflect.EnumType {
+	return &file_hi_ai_model_proto_enumTypes[0]
+}
+
+func (x ReasoningLevel) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ReasoningLevel.Descriptor instead.
+func (ReasoningLevel) EnumDescriptor() ([]byte, []int) {
+	return file_hi_ai_model_proto_rawDescGZIP(), []int{0}
+}
+
+// 一个可选语言模型及其允许的参数。能力由 hi.ai 统一维护，调用方不按型号猜规则。
+type LlmModel struct {
+	state                 protoimpl.MessageState `protogen:"open.v1"`
+	Name                  *string                `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	ReasoningLevels       []ReasoningLevel       `protobuf:"varint,2,rep,packed,name=reasoning_levels,json=reasoningLevels,proto3,enum=hi.ai.ReasoningLevel" json:"reasoning_levels,omitempty"`
+	DefaultReasoningLevel *ReasoningLevel        `protobuf:"varint,3,opt,name=default_reasoning_level,json=defaultReasoningLevel,proto3,enum=hi.ai.ReasoningLevel,oneof" json:"default_reasoning_level,omitempty"`
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
+}
+
+func (x *LlmModel) Reset() {
+	*x = LlmModel{}
+	mi := &file_hi_ai_model_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LlmModel) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LlmModel) ProtoMessage() {}
+
+func (x *LlmModel) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ai_model_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LlmModel.ProtoReflect.Descriptor instead.
+func (*LlmModel) Descriptor() ([]byte, []int) {
+	return file_hi_ai_model_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *LlmModel) GetName() string {
+	if x != nil && x.Name != nil {
+		return *x.Name
+	}
+	return ""
+}
+
+func (x *LlmModel) GetReasoningLevels() []ReasoningLevel {
+	if x != nil {
+		return x.ReasoningLevels
+	}
+	return nil
+}
+
+func (x *LlmModel) GetDefaultReasoningLevel() ReasoningLevel {
+	if x != nil && x.DefaultReasoningLevel != nil {
+		return *x.DefaultReasoningLevel
+	}
+	return ReasoningLevel_REASONING_LEVEL_UNSPECIFIED
+}
+
+type LlmModelListResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Models        []*LlmModel            `protobuf:"bytes,1,rep,name=models,proto3" json:"models,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LlmModelListResp) Reset() {
+	*x = LlmModelListResp{}
+	mi := &file_hi_ai_model_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LlmModelListResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LlmModelListResp) ProtoMessage() {}
+
+func (x *LlmModelListResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ai_model_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LlmModelListResp.ProtoReflect.Descriptor instead.
+func (*LlmModelListResp) Descriptor() ([]byte, []int) {
+	return file_hi_ai_model_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *LlmModelListResp) GetModels() []*LlmModel {
+	if x != nil {
+		return x.Models
+	}
+	return nil
+}
+
 // 通用模型列表(LLM/Embedding/TTS 共用 —— 都只是一串模型名)。
 type ModelListResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -33,7 +201,7 @@ type ModelListResp struct {
 
 func (x *ModelListResp) Reset() {
 	*x = ModelListResp{}
-	mi := &file_hi_ai_model_proto_msgTypes[0]
+	mi := &file_hi_ai_model_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -45,7 +213,7 @@ func (x *ModelListResp) String() string {
 func (*ModelListResp) ProtoMessage() {}
 
 func (x *ModelListResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_model_proto_msgTypes[0]
+	mi := &file_hi_ai_model_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -58,7 +226,7 @@ func (x *ModelListResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ModelListResp.ProtoReflect.Descriptor instead.
 func (*ModelListResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_model_proto_rawDescGZIP(), []int{0}
+	return file_hi_ai_model_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *ModelListResp) GetModels() []string {
@@ -79,7 +247,7 @@ type ListSTTResp struct {
 
 func (x *ListSTTResp) Reset() {
 	*x = ListSTTResp{}
-	mi := &file_hi_ai_model_proto_msgTypes[1]
+	mi := &file_hi_ai_model_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -91,7 +259,7 @@ func (x *ListSTTResp) String() string {
 func (*ListSTTResp) ProtoMessage() {}
 
 func (x *ListSTTResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ai_model_proto_msgTypes[1]
+	mi := &file_hi_ai_model_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -104,7 +272,7 @@ func (x *ListSTTResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListSTTResp.ProtoReflect.Descriptor instead.
 func (*ListSTTResp) Descriptor() ([]byte, []int) {
-	return file_hi_ai_model_proto_rawDescGZIP(), []int{1}
+	return file_hi_ai_model_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *ListSTTResp) GetModels() []string {
@@ -125,14 +293,30 @@ var File_hi_ai_model_proto protoreflect.FileDescriptor
 
 const file_hi_ai_model_proto_rawDesc = "" +
 	"\n" +
-	"\x11hi/ai/model.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/options.proto\"3\n" +
+	"\x11hi/ai/model.proto\x12\x05hi.ai\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/options.proto\"\x80\x02\n" +
+	"\bLlmModel\x12'\n" +
+	"\x04name\x18\x01 \x01(\tB\x0e\xbaH\a\xc8\x01\x01r\x02\x10\x01\x90\xb5\x18\x01H\x00R\x04name\x88\x01\x01\x12F\n" +
+	"\x10reasoning_levels\x18\x02 \x03(\x0e2\x15.hi.ai.ReasoningLevelB\x04\x90\xb5\x18\x01R\x0freasoningLevels\x12X\n" +
+	"\x17default_reasoning_level\x18\x03 \x01(\x0e2\x15.hi.ai.ReasoningLevelB\x04\x90\xb5\x18\x01H\x01R\x15defaultReasoningLevel\x88\x01\x01:\x04\x98\xb5\x18\x01B\a\n" +
+	"\x05_nameB\x1a\n" +
+	"\x18_default_reasoning_level\"G\n" +
+	"\x10LlmModelListResp\x12-\n" +
+	"\x06models\x18\x01 \x03(\v2\x0f.hi.ai.LlmModelB\x04\x90\xb5\x18\x01R\x06models:\x04\x98\xb5\x18\x01\"3\n" +
 	"\rModelListResp\x12\x1c\n" +
 	"\x06models\x18\x01 \x03(\tB\x04\x90\xb5\x18\x01R\x06models:\x04\x98\xb5\x18\x01\"M\n" +
 	"\vListSTTResp\x12\x1c\n" +
 	"\x06models\x18\x01 \x03(\tB\x04\x90\xb5\x18\x01R\x06models\x12\x1a\n" +
-	"\x05langs\x18\x02 \x03(\tB\x04\x90\xb5\x18\x01R\x05langs:\x04\x98\xb5\x18\x012\x8e\x02\n" +
-	"\x05Model\x12?\n" +
-	"\bListLlms\x12\x16.google.protobuf.Empty\x1a\x14.hi.ai.ModelListResp\"\x05\x8a\xb5\x18\x01\x03\x12E\n" +
+	"\x05langs\x18\x02 \x03(\tB\x04\x90\xb5\x18\x01R\x05langs:\x04\x98\xb5\x18\x01*\xce\x01\n" +
+	"\x0eReasoningLevel\x12\x1f\n" +
+	"\x1bREASONING_LEVEL_UNSPECIFIED\x10\x00\x12\x18\n" +
+	"\x14REASONING_LEVEL_NONE\x10\x01\x12\x17\n" +
+	"\x13REASONING_LEVEL_LOW\x10\x02\x12\x1a\n" +
+	"\x16REASONING_LEVEL_MEDIUM\x10\x03\x12\x18\n" +
+	"\x14REASONING_LEVEL_HIGH\x10\x04\x12\x19\n" +
+	"\x15REASONING_LEVEL_XHIGH\x10\x05\x12\x17\n" +
+	"\x13REASONING_LEVEL_MAX\x10\x062\x91\x02\n" +
+	"\x05Model\x12B\n" +
+	"\bListLlms\x12\x16.google.protobuf.Empty\x1a\x17.hi.ai.LlmModelListResp\"\x05\x8a\xb5\x18\x01\x03\x12E\n" +
 	"\x0eListEmbeddings\x12\x16.google.protobuf.Empty\x1a\x14.hi.ai.ModelListResp\"\x05\x8a\xb5\x18\x01\x03\x12=\n" +
 	"\bListStts\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListSTTResp\"\x05\x8a\xb5\x18\x01\x03\x12>\n" +
 	"\aListTts\x12\x16.google.protobuf.Empty\x1a\x14.hi.ai.ModelListResp\"\x05\x8a\xb5\x18\x01\x03Bu\n" +
@@ -151,26 +335,33 @@ func file_hi_ai_model_proto_rawDescGZIP() []byte {
 	return file_hi_ai_model_proto_rawDescData
 }
 
-var file_hi_ai_model_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_hi_ai_model_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_hi_ai_model_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_hi_ai_model_proto_goTypes = []any{
-	(*ModelListResp)(nil), // 0: hi.ai.ModelListResp
-	(*ListSTTResp)(nil),   // 1: hi.ai.ListSTTResp
-	(*emptypb.Empty)(nil), // 2: google.protobuf.Empty
+	(ReasoningLevel)(0),      // 0: hi.ai.ReasoningLevel
+	(*LlmModel)(nil),         // 1: hi.ai.LlmModel
+	(*LlmModelListResp)(nil), // 2: hi.ai.LlmModelListResp
+	(*ModelListResp)(nil),    // 3: hi.ai.ModelListResp
+	(*ListSTTResp)(nil),      // 4: hi.ai.ListSTTResp
+	(*emptypb.Empty)(nil),    // 5: google.protobuf.Empty
 }
 var file_hi_ai_model_proto_depIdxs = []int32{
-	2, // 0: hi.ai.Model.ListLlms:input_type -> google.protobuf.Empty
-	2, // 1: hi.ai.Model.ListEmbeddings:input_type -> google.protobuf.Empty
-	2, // 2: hi.ai.Model.ListStts:input_type -> google.protobuf.Empty
-	2, // 3: hi.ai.Model.ListTts:input_type -> google.protobuf.Empty
-	0, // 4: hi.ai.Model.ListLlms:output_type -> hi.ai.ModelListResp
-	0, // 5: hi.ai.Model.ListEmbeddings:output_type -> hi.ai.ModelListResp
-	1, // 6: hi.ai.Model.ListStts:output_type -> hi.ai.ListSTTResp
-	0, // 7: hi.ai.Model.ListTts:output_type -> hi.ai.ModelListResp
-	4, // [4:8] is the sub-list for method output_type
-	0, // [0:4] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	0, // 0: hi.ai.LlmModel.reasoning_levels:type_name -> hi.ai.ReasoningLevel
+	0, // 1: hi.ai.LlmModel.default_reasoning_level:type_name -> hi.ai.ReasoningLevel
+	1, // 2: hi.ai.LlmModelListResp.models:type_name -> hi.ai.LlmModel
+	5, // 3: hi.ai.Model.ListLlms:input_type -> google.protobuf.Empty
+	5, // 4: hi.ai.Model.ListEmbeddings:input_type -> google.protobuf.Empty
+	5, // 5: hi.ai.Model.ListStts:input_type -> google.protobuf.Empty
+	5, // 6: hi.ai.Model.ListTts:input_type -> google.protobuf.Empty
+	2, // 7: hi.ai.Model.ListLlms:output_type -> hi.ai.LlmModelListResp
+	3, // 8: hi.ai.Model.ListEmbeddings:output_type -> hi.ai.ModelListResp
+	4, // 9: hi.ai.Model.ListStts:output_type -> hi.ai.ListSTTResp
+	3, // 10: hi.ai.Model.ListTts:output_type -> hi.ai.ModelListResp
+	7, // [7:11] is the sub-list for method output_type
+	3, // [3:7] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_hi_ai_model_proto_init() }
@@ -178,18 +369,20 @@ func file_hi_ai_model_proto_init() {
 	if File_hi_ai_model_proto != nil {
 		return
 	}
+	file_hi_ai_model_proto_msgTypes[0].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ai_model_proto_rawDesc), len(file_hi_ai_model_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   2,
+			NumEnums:      1,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_hi_ai_model_proto_goTypes,
 		DependencyIndexes: file_hi_ai_model_proto_depIdxs,
+		EnumInfos:         file_hi_ai_model_proto_enumTypes,
 		MessageInfos:      file_hi_ai_model_proto_msgTypes,
 	}.Build()
 	File_hi_ai_model_proto = out.File

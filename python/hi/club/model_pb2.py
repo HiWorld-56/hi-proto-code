@@ -27,7 +27,7 @@ from hi.ai import model_pb2 as hi_dot_ai_dot_model__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13hi/club/model.proto\x12\x07hi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x11hi/ai/model.proto\x1a\x10hi/options.proto2\x8e\x02\n\x05Model\x12?\n\x08ListLlms\x12\x16.google.protobuf.Empty\x1a\x14.hi.ai.ModelListResp\"\x05\x8a\xb5\x18\x01\x02\x12\x45\n\x0eListEmbeddings\x12\x16.google.protobuf.Empty\x1a\x14.hi.ai.ModelListResp\"\x05\x8a\xb5\x18\x01\x02\x12=\n\x08ListStts\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListSTTResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n\x07ListTts\x12\x16.google.protobuf.Empty\x1a\x14.hi.ai.ModelListResp\"\x05\x8a\xb5\x18\x01\x02\x42+Z)github.com/HiWorld-56/hi-proto/go/hi/clubb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13hi/club/model.proto\x12\x07hi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x11hi/ai/model.proto\x1a\x10hi/options.proto2\x91\x02\n\x05Model\x12\x42\n\x08ListLlms\x12\x16.google.protobuf.Empty\x1a\x17.hi.ai.LlmModelListResp\"\x05\x8a\xb5\x18\x01\x02\x12\x45\n\x0eListEmbeddings\x12\x16.google.protobuf.Empty\x1a\x14.hi.ai.ModelListResp\"\x05\x8a\xb5\x18\x01\x02\x12=\n\x08ListStts\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListSTTResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n\x07ListTts\x12\x16.google.protobuf.Empty\x1a\x14.hi.ai.ModelListResp\"\x05\x8a\xb5\x18\x01\x02\x42+Z)github.com/HiWorld-56/hi-proto/go/hi/clubb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -44,5 +44,5 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_MODEL'].methods_by_name['ListTts']._loaded_options = None
   _globals['_MODEL'].methods_by_name['ListTts']._serialized_options = b'\212\265\030\001\002'
   _globals['_MODEL']._serialized_start=99
-  _globals['_MODEL']._serialized_end=369
+  _globals['_MODEL']._serialized_end=372
 # @@protoc_insertion_point(module_scope)

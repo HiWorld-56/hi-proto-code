@@ -177,12 +177,24 @@ const AgentConfig$json = {
       '10': 'useMem',
       '17': true
     },
+    {
+      '1': 'reasoning_level',
+      '3': 6,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.ai.ReasoningLevel',
+      '8': {},
+      '9': 3,
+      '10': 'reasoningLevel',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
     {'1': '_freedom'},
     {'1': '_qa_num'},
     {'1': '_use_mem'},
+    {'1': '_reasoning_level'},
   ],
 };
 
@@ -191,8 +203,10 @@ final $typed_data.Uint8List agentConfigDescriptor = $convert.base64Decode(
     'CgtBZ2VudENvbmZpZxIrCgZwcm9tcHQYASABKAsyDS5oaS5haS5Qcm9tcHRCBJC1GANSBnByb2'
     '1wdBIjCgdmcmVlZG9tGAIgASgCQgSQtRgDSABSB2ZyZWVkb22IAQESKwoFbW9kZWwYAyABKAsy'
     'Dy5oaS5haS5Nb2RlbFNldEIEkLUYA1IFbW9kZWwSIAoGcWFfbnVtGAQgASgFQgSQtRgDSAFSBX'
-    'FhTnVtiAEBEiIKB3VzZV9tZW0YBSABKAhCBJC1GANIAlIGdXNlTWVtiAEBOgSYtRgDQgoKCF9m'
-    'cmVlZG9tQgkKB19xYV9udW1CCgoIX3VzZV9tZW0=');
+    'FhTnVtiAEBEiIKB3VzZV9tZW0YBSABKAhCBJC1GANIAlIGdXNlTWVtiAEBElMKD3JlYXNvbmlu'
+    'Z19sZXZlbBgGIAEoDjIVLmhpLmFpLlJlYXNvbmluZ0xldmVsQg66SAeCAQQQASAAkLUYA0gDUg'
+    '5yZWFzb25pbmdMZXZlbIgBAToEmLUYA0IKCghfZnJlZWRvbUIJCgdfcWFfbnVtQgoKCF91c2Vf'
+    'bWVtQhIKEF9yZWFzb25pbmdfbGV2ZWw=');
 
 @$core.Deprecated('Use tokenUsageDescriptor instead')
 const TokenUsage$json = {

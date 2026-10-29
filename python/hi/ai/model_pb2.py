@@ -22,11 +22,12 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
+from buf.validate import validate_pb2 as buf_dot_validate_dot_validate__pb2
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11hi/ai/model.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/options.proto\"3\n\rModelListResp\x12\x1c\n\x06models\x18\x01 \x03(\tB\x04\x90\xb5\x18\x01R\x06models:\x04\x98\xb5\x18\x01\"M\n\x0bListSTTResp\x12\x1c\n\x06models\x18\x01 \x03(\tB\x04\x90\xb5\x18\x01R\x06models\x12\x1a\n\x05langs\x18\x02 \x03(\tB\x04\x90\xb5\x18\x01R\x05langs:\x04\x98\xb5\x18\x01\x32\x8e\x02\n\x05Model\x12?\n\x08ListLlms\x12\x16.google.protobuf.Empty\x1a\x14.hi.ai.ModelListResp\"\x05\x8a\xb5\x18\x01\x03\x12\x45\n\x0eListEmbeddings\x12\x16.google.protobuf.Empty\x1a\x14.hi.ai.ModelListResp\"\x05\x8a\xb5\x18\x01\x03\x12=\n\x08ListStts\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListSTTResp\"\x05\x8a\xb5\x18\x01\x03\x12>\n\x07ListTts\x12\x16.google.protobuf.Empty\x1a\x14.hi.ai.ModelListResp\"\x05\x8a\xb5\x18\x01\x03\x42)Z\'github.com/HiWorld-56/hi-proto/go/hi/aib\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11hi/ai/model.proto\x12\x05hi.ai\x1a\x1b\x62uf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/options.proto\"\x80\x02\n\x08LlmModel\x12\'\n\x04name\x18\x01 \x01(\tB\x0e\xbaH\x07r\x02\x10\x01\xc8\x01\x01\x90\xb5\x18\x01H\x00R\x04name\x88\x01\x01\x12\x46\n\x10reasoning_levels\x18\x02 \x03(\x0e\x32\x15.hi.ai.ReasoningLevelB\x04\x90\xb5\x18\x01R\x0freasoningLevels\x12X\n\x17\x64\x65\x66\x61ult_reasoning_level\x18\x03 \x01(\x0e\x32\x15.hi.ai.ReasoningLevelB\x04\x90\xb5\x18\x01H\x01R\x15\x64\x65\x66\x61ultReasoningLevel\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\x07\n\x05_nameB\x1a\n\x18_default_reasoning_level\"G\n\x10LlmModelListResp\x12-\n\x06models\x18\x01 \x03(\x0b\x32\x0f.hi.ai.LlmModelB\x04\x90\xb5\x18\x01R\x06models:\x04\x98\xb5\x18\x01\"3\n\rModelListResp\x12\x1c\n\x06models\x18\x01 \x03(\tB\x04\x90\xb5\x18\x01R\x06models:\x04\x98\xb5\x18\x01\"M\n\x0bListSTTResp\x12\x1c\n\x06models\x18\x01 \x03(\tB\x04\x90\xb5\x18\x01R\x06models\x12\x1a\n\x05langs\x18\x02 \x03(\tB\x04\x90\xb5\x18\x01R\x05langs:\x04\x98\xb5\x18\x01*\xce\x01\n\x0eReasoningLevel\x12\x1f\n\x1bREASONING_LEVEL_UNSPECIFIED\x10\x00\x12\x18\n\x14REASONING_LEVEL_NONE\x10\x01\x12\x17\n\x13REASONING_LEVEL_LOW\x10\x02\x12\x1a\n\x16REASONING_LEVEL_MEDIUM\x10\x03\x12\x18\n\x14REASONING_LEVEL_HIGH\x10\x04\x12\x19\n\x15REASONING_LEVEL_XHIGH\x10\x05\x12\x17\n\x13REASONING_LEVEL_MAX\x10\x06\x32\x91\x02\n\x05Model\x12\x42\n\x08ListLlms\x12\x16.google.protobuf.Empty\x1a\x17.hi.ai.LlmModelListResp\"\x05\x8a\xb5\x18\x01\x03\x12\x45\n\x0eListEmbeddings\x12\x16.google.protobuf.Empty\x1a\x14.hi.ai.ModelListResp\"\x05\x8a\xb5\x18\x01\x03\x12=\n\x08ListStts\x12\x16.google.protobuf.Empty\x1a\x12.hi.ai.ListSTTResp\"\x05\x8a\xb5\x18\x01\x03\x12>\n\x07ListTts\x12\x16.google.protobuf.Empty\x1a\x14.hi.ai.ModelListResp\"\x05\x8a\xb5\x18\x01\x03\x42)Z\'github.com/HiWorld-56/hi-proto/go/hi/aib\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -34,6 +35,18 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'hi.ai.model_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'Z\'github.com/HiWorld-56/hi-proto/go/hi/ai'
+  _globals['_LLMMODEL'].fields_by_name['name']._loaded_options = None
+  _globals['_LLMMODEL'].fields_by_name['name']._serialized_options = b'\272H\007r\002\020\001\310\001\001\220\265\030\001'
+  _globals['_LLMMODEL'].fields_by_name['reasoning_levels']._loaded_options = None
+  _globals['_LLMMODEL'].fields_by_name['reasoning_levels']._serialized_options = b'\220\265\030\001'
+  _globals['_LLMMODEL'].fields_by_name['default_reasoning_level']._loaded_options = None
+  _globals['_LLMMODEL'].fields_by_name['default_reasoning_level']._serialized_options = b'\220\265\030\001'
+  _globals['_LLMMODEL']._loaded_options = None
+  _globals['_LLMMODEL']._serialized_options = b'\230\265\030\001'
+  _globals['_LLMMODELLISTRESP'].fields_by_name['models']._loaded_options = None
+  _globals['_LLMMODELLISTRESP'].fields_by_name['models']._serialized_options = b'\220\265\030\001'
+  _globals['_LLMMODELLISTRESP']._loaded_options = None
+  _globals['_LLMMODELLISTRESP']._serialized_options = b'\230\265\030\001'
   _globals['_MODELLISTRESP'].fields_by_name['models']._loaded_options = None
   _globals['_MODELLISTRESP'].fields_by_name['models']._serialized_options = b'\220\265\030\001'
   _globals['_MODELLISTRESP']._loaded_options = None
@@ -52,10 +65,16 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_MODEL'].methods_by_name['ListStts']._serialized_options = b'\212\265\030\001\003'
   _globals['_MODEL'].methods_by_name['ListTts']._loaded_options = None
   _globals['_MODEL'].methods_by_name['ListTts']._serialized_options = b'\212\265\030\001\003'
-  _globals['_MODELLISTRESP']._serialized_start=75
-  _globals['_MODELLISTRESP']._serialized_end=126
-  _globals['_LISTSTTRESP']._serialized_start=128
-  _globals['_LISTSTTRESP']._serialized_end=205
-  _globals['_MODEL']._serialized_start=208
-  _globals['_MODEL']._serialized_end=478
+  _globals['_REASONINGLEVEL']._serialized_start=569
+  _globals['_REASONINGLEVEL']._serialized_end=775
+  _globals['_LLMMODEL']._serialized_start=105
+  _globals['_LLMMODEL']._serialized_end=361
+  _globals['_LLMMODELLISTRESP']._serialized_start=363
+  _globals['_LLMMODELLISTRESP']._serialized_end=434
+  _globals['_MODELLISTRESP']._serialized_start=436
+  _globals['_MODELLISTRESP']._serialized_end=487
+  _globals['_LISTSTTRESP']._serialized_start=489
+  _globals['_LISTSTTRESP']._serialized_end=566
+  _globals['_MODEL']._serialized_start=778
+  _globals['_MODEL']._serialized_end=1051
 # @@protoc_insertion_point(module_scope)

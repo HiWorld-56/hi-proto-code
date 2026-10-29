@@ -9976,7 +9976,7 @@ pub mod model_client {
             &mut self,
             request: impl tonic::IntoRequest<::pbjson_types::Empty>,
         ) -> std::result::Result<
-            tonic::Response<super::super::ai::ModelListResp>,
+            tonic::Response<super::super::ai::LlmModelListResp>,
             tonic::Status,
         > {
             self.inner

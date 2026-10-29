@@ -2316,6 +2316,251 @@ pub mod speech_client {
         }
     }
 }
+/// 一个可选语言模型及其允许的参数。能力由 hi.ai 统一维护，调用方不按型号猜规则。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct LlmModel {
+    #[prost(string, optional, tag = "1")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "ReasoningLevel", repeated, packed = "false", tag = "2")]
+    pub reasoning_levels: ::prost::alloc::vec::Vec<i32>,
+    #[prost(enumeration = "ReasoningLevel", optional, tag = "3")]
+    pub default_reasoning_level: ::core::option::Option<i32>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LlmModelListResp {
+    #[prost(message, repeated, tag = "1")]
+    pub models: ::prost::alloc::vec::Vec<LlmModel>,
+}
+/// 通用模型列表(LLM/Embedding/TTS 共用 —— 都只是一串模型名)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ModelListResp {
+    #[prost(string, repeated, tag = "1")]
+    pub models: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// STT 单独:除模型名还带支持语言。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListSttResp {
+    #[prost(string, repeated, tag = "1")]
+    pub models: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    #[prost(string, repeated, tag = "2")]
+    pub langs: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// 推理等级是智能体的配置语义，不是供应商请求格式；不支持推理的模型仅列 NONE。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum ReasoningLevel {
+    Unspecified = 0,
+    None = 1,
+    Low = 2,
+    Medium = 3,
+    High = 4,
+    Xhigh = 5,
+    Max = 6,
+}
+impl ReasoningLevel {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "REASONING_LEVEL_UNSPECIFIED",
+            Self::None => "REASONING_LEVEL_NONE",
+            Self::Low => "REASONING_LEVEL_LOW",
+            Self::Medium => "REASONING_LEVEL_MEDIUM",
+            Self::High => "REASONING_LEVEL_HIGH",
+            Self::Xhigh => "REASONING_LEVEL_XHIGH",
+            Self::Max => "REASONING_LEVEL_MAX",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "REASONING_LEVEL_UNSPECIFIED" => Some(Self::Unspecified),
+            "REASONING_LEVEL_NONE" => Some(Self::None),
+            "REASONING_LEVEL_LOW" => Some(Self::Low),
+            "REASONING_LEVEL_MEDIUM" => Some(Self::Medium),
+            "REASONING_LEVEL_HIGH" => Some(Self::High),
+            "REASONING_LEVEL_XHIGH" => Some(Self::Xhigh),
+            "REASONING_LEVEL_MAX" => Some(Self::Max),
+            _ => None,
+        }
+    }
+}
+/// Generated client implementations.
+pub mod model_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 模型目录(主体=模型)。从 Agent 拆出 —— 这些方法查的是"有哪些模型可用",
+    /// 与具体 agent 无关(按调用者商户取该类型模型集),和 agent CRUD 不是一个主体。
+    /// 商户档:hiai web 与商户后台服务都会调。
+    #[derive(Debug, Clone)]
+    pub struct ModelClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl ModelClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> ModelClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ModelClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            ModelClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn list_llms(
+            &mut self,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
+        ) -> std::result::Result<
+            tonic::Response<super::LlmModelListResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Model/ListLlms");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Model", "ListLlms"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_embeddings(
+            &mut self,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
+        ) -> std::result::Result<tonic::Response<super::ModelListResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.ai.Model/ListEmbeddings",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.ai.Model", "ListEmbeddings"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_stts(
+            &mut self,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
+        ) -> std::result::Result<tonic::Response<super::ListSttResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Model/ListStts");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Model", "ListStts"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_tts(
+            &mut self,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
+        ) -> std::result::Result<tonic::Response<super::ModelListResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.ai.Model/ListTts");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Model", "ListTts"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
 /// ///////////////////////////// 智能体 ///////////////////////////////
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Prompt {
@@ -2359,6 +2604,10 @@ pub struct AgentConfig {
     /// 启用记忆（启用训练数据）。optional:Edit 局部更新——不传=不动,避免只改别的字段时把记忆误关。
     #[prost(bool, optional, tag = "5")]
     pub use_mem: ::core::option::Option<bool>,
+    /// 启用需 mem 权限(use-side 判);记忆开关的唯一写入口就是 Agent.Edit(原 SetSwitches 已移除)。
+    /// 不传=不改；NONE 表示明确关闭。模型允许哪些等级由 Model.ListLlms 返回，不能用 UNSPECIFIED 代替未传。
+    #[prost(enumeration = "ReasoningLevel", optional, tag = "6")]
+    pub reasoning_level: ::core::option::Option<i32>,
 }
 /// 用量/计费数据,只发给资源主人本人。
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
@@ -3588,191 +3837,6 @@ pub mod chat_client {
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.ai.Chat", "ResumeStream"));
             self.inner.server_streaming(req, path, codec).await
-        }
-    }
-}
-/// 通用模型列表(LLM/Embedding/TTS 共用 —— 都只是一串模型名)。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ModelListResp {
-    #[prost(string, repeated, tag = "1")]
-    pub models: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// STT 单独:除模型名还带支持语言。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ListSttResp {
-    #[prost(string, repeated, tag = "1")]
-    pub models: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    #[prost(string, repeated, tag = "2")]
-    pub langs: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Generated client implementations.
-pub mod model_client {
-    #![allow(
-        unused_variables,
-        dead_code,
-        missing_docs,
-        clippy::wildcard_imports,
-        clippy::let_unit_value,
-    )]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// 模型目录(主体=模型)。从 Agent 拆出 —— 这些方法查的是"有哪些模型可用",
-    /// 与具体 agent 无关(按调用者商户取该类型模型集),和 agent CRUD 不是一个主体。
-    /// 商户档:hiai web 与商户后台服务都会调。
-    #[derive(Debug, Clone)]
-    pub struct ModelClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl ModelClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> ModelClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::Body>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> ModelClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
-        {
-            ModelClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        pub async fn list_llms(
-            &mut self,
-            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
-        ) -> std::result::Result<tonic::Response<super::ModelListResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Model/ListLlms");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Model", "ListLlms"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn list_embeddings(
-            &mut self,
-            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
-        ) -> std::result::Result<tonic::Response<super::ModelListResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.ai.Model/ListEmbeddings",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.ai.Model", "ListEmbeddings"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn list_stts(
-            &mut self,
-            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
-        ) -> std::result::Result<tonic::Response<super::ListSttResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Model/ListStts");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Model", "ListStts"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn list_tts(
-            &mut self,
-            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
-        ) -> std::result::Result<tonic::Response<super::ModelListResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.ai.Model/ListTts");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.ai.Model", "ListTts"));
-            self.inner.unary(req, path, codec).await
         }
     }
 }

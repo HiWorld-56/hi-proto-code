@@ -161,14 +161,17 @@ func (x *ModelSet) GetMemModel() string {
 //
 //	(原 use_plugin 已删)。故这里只剩 use_mem 一个总开关 —— 记忆模块待重构,重构前暂留。
 type AgentConfig struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Prompt        *Prompt                `protobuf:"bytes,1,opt,name=prompt,proto3" json:"prompt,omitempty"`
-	Freedom       *float32               `protobuf:"fixed32,2,opt,name=freedom,proto3,oneof" json:"freedom,omitempty"` // 控制模型输出的随机性，值越大越随机
-	Model         *ModelSet              `protobuf:"bytes,3,opt,name=model,proto3" json:"model,omitempty"`
-	QaNum         *int32                 `protobuf:"varint,4,opt,name=qa_num,json=qaNum,proto3,oneof" json:"qa_num,omitempty"`    // 上下文组数
-	UseMem        *bool                  `protobuf:"varint,5,opt,name=use_mem,json=useMem,proto3,oneof" json:"use_mem,omitempty"` // 启用记忆（启用训练数据）。optional:Edit 局部更新——不传=不动,避免只改别的字段时把记忆误关。
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state   protoimpl.MessageState `protogen:"open.v1"`
+	Prompt  *Prompt                `protobuf:"bytes,1,opt,name=prompt,proto3" json:"prompt,omitempty"`
+	Freedom *float32               `protobuf:"fixed32,2,opt,name=freedom,proto3,oneof" json:"freedom,omitempty"` // 控制模型输出的随机性，值越大越随机
+	Model   *ModelSet              `protobuf:"bytes,3,opt,name=model,proto3" json:"model,omitempty"`
+	QaNum   *int32                 `protobuf:"varint,4,opt,name=qa_num,json=qaNum,proto3,oneof" json:"qa_num,omitempty"`    // 上下文组数
+	UseMem  *bool                  `protobuf:"varint,5,opt,name=use_mem,json=useMem,proto3,oneof" json:"use_mem,omitempty"` // 启用记忆（启用训练数据）。optional:Edit 局部更新——不传=不动,避免只改别的字段时把记忆误关。
+	// 启用需 mem 权限(use-side 判);记忆开关的唯一写入口就是 Agent.Edit(原 SetSwitches 已移除)。
+	// 不传=不改；NONE 表示明确关闭。模型允许哪些等级由 Model.ListLlms 返回，不能用 UNSPECIFIED 代替未传。
+	ReasoningLevel *ReasoningLevel `protobuf:"varint,6,opt,name=reasoning_level,json=reasoningLevel,proto3,enum=hi.ai.ReasoningLevel,oneof" json:"reasoning_level,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *AgentConfig) Reset() {
@@ -234,6 +237,13 @@ func (x *AgentConfig) GetUseMem() bool {
 		return *x.UseMem
 	}
 	return false
+}
+
+func (x *AgentConfig) GetReasoningLevel() ReasoningLevel {
+	if x != nil && x.ReasoningLevel != nil {
+		return *x.ReasoningLevel
+	}
+	return ReasoningLevel_REASONING_LEVEL_UNSPECIFIED
 }
 
 // 用量/计费数据,只发给资源主人本人。
@@ -1137,7 +1147,7 @@ var File_hi_ai_agent_proto protoreflect.FileDescriptor
 
 const file_hi_ai_agent_proto_rawDesc = "" +
 	"\n" +
-	"\x11hi/ai/agent.proto\x12\x05hi.ai\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"d\n" +
+	"\x11hi/ai/agent.proto\x12\x05hi.ai\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x11hi/ai/model.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"d\n" +
 	"\x06Prompt\x12!\n" +
 	"\x06system\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x06system\x88\x01\x01\x12\x1d\n" +
 	"\x04user\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x04user\x88\x01\x01:\x04\x98\xb5\x18\x03B\t\n" +
@@ -1155,18 +1165,20 @@ const file_hi_ai_agent_proto_rawDesc = "" +
 	"\n" +
 	"_embeddingB\f\n" +
 	"\n" +
-	"_mem_model\"\xfb\x01\n" +
+	"_mem_model\"\xe4\x02\n" +
 	"\vAgentConfig\x12+\n" +
 	"\x06prompt\x18\x01 \x01(\v2\r.hi.ai.PromptB\x04\x90\xb5\x18\x03R\x06prompt\x12#\n" +
 	"\afreedom\x18\x02 \x01(\x02B\x04\x90\xb5\x18\x03H\x00R\afreedom\x88\x01\x01\x12+\n" +
 	"\x05model\x18\x03 \x01(\v2\x0f.hi.ai.ModelSetB\x04\x90\xb5\x18\x03R\x05model\x12 \n" +
 	"\x06qa_num\x18\x04 \x01(\x05B\x04\x90\xb5\x18\x03H\x01R\x05qaNum\x88\x01\x01\x12\"\n" +
-	"\ause_mem\x18\x05 \x01(\bB\x04\x90\xb5\x18\x03H\x02R\x06useMem\x88\x01\x01:\x04\x98\xb5\x18\x03B\n" +
+	"\ause_mem\x18\x05 \x01(\bB\x04\x90\xb5\x18\x03H\x02R\x06useMem\x88\x01\x01\x12S\n" +
+	"\x0freasoning_level\x18\x06 \x01(\x0e2\x15.hi.ai.ReasoningLevelB\x0e\xbaH\a\x82\x01\x04\x10\x01 \x00\x90\xb5\x18\x03H\x03R\x0ereasoningLevel\x88\x01\x01:\x04\x98\xb5\x18\x03B\n" +
 	"\n" +
 	"\b_freedomB\t\n" +
 	"\a_qa_numB\n" +
 	"\n" +
-	"\b_use_mem\"\x90\x01\n" +
+	"\b_use_memB\x12\n" +
+	"\x10_reasoning_level\"\x90\x01\n" +
 	"\n" +
 	"TokenUsage\x12!\n" +
 	"\x06output\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x06output\x88\x01\x01\x12\x1f\n" +
@@ -1297,51 +1309,53 @@ var file_hi_ai_agent_proto_goTypes = []any{
 	(*AgentUsageResp)(nil),     // 16: hi.ai.AgentUsageResp
 	(*ResetToDefaultReq)(nil),  // 17: hi.ai.ResetToDefaultReq
 	(*AgentManageListReq)(nil), // 18: hi.ai.AgentManageListReq
-	(*hi.Entity)(nil),          // 19: hi.Entity
-	(*hi.Pagination)(nil),      // 20: hi.Pagination
-	(*emptypb.Empty)(nil),      // 21: google.protobuf.Empty
+	(ReasoningLevel)(0),        // 19: hi.ai.ReasoningLevel
+	(*hi.Entity)(nil),          // 20: hi.Entity
+	(*hi.Pagination)(nil),      // 21: hi.Pagination
+	(*emptypb.Empty)(nil),      // 22: google.protobuf.Empty
 }
 var file_hi_ai_agent_proto_depIdxs = []int32{
 	0,  // 0: hi.ai.AgentConfig.prompt:type_name -> hi.ai.Prompt
 	1,  // 1: hi.ai.AgentConfig.model:type_name -> hi.ai.ModelSet
-	19, // 2: hi.ai.AgentInfo.base:type_name -> hi.Entity
-	2,  // 3: hi.ai.AgentInfo.config:type_name -> hi.ai.AgentConfig
-	3,  // 4: hi.ai.AgentInfo.token:type_name -> hi.ai.TokenUsage
-	2,  // 5: hi.ai.DefaultConfigResp.config:type_name -> hi.ai.AgentConfig
-	19, // 6: hi.ai.CreateAgentResp.base:type_name -> hi.Entity
-	2,  // 7: hi.ai.CreateAgentResp.config:type_name -> hi.ai.AgentConfig
-	19, // 8: hi.ai.CreateAgentResp.creator:type_name -> hi.Entity
-	2,  // 9: hi.ai.EditAgentReq.config:type_name -> hi.ai.AgentConfig
-	4,  // 10: hi.ai.ListAgentsResp.agents:type_name -> hi.ai.AgentInfo
-	20, // 11: hi.ai.ListAgentsReq.pagination:type_name -> hi.Pagination
-	4,  // 12: hi.ai.GetAgentResp.info:type_name -> hi.ai.AgentInfo
-	3,  // 13: hi.ai.AgentUsageResp.token:type_name -> hi.ai.TokenUsage
-	20, // 14: hi.ai.AgentManageListReq.pagination:type_name -> hi.Pagination
-	6,  // 15: hi.ai.Agent.CreateAssistant:input_type -> hi.ai.CreateAssistantReq
-	7,  // 16: hi.ai.Agent.RegisterRobot:input_type -> hi.ai.RegisterRobotReq
-	9,  // 17: hi.ai.Agent.Edit:input_type -> hi.ai.EditAgentReq
-	12, // 18: hi.ai.Agent.Delete:input_type -> hi.ai.DeleteAgentReq
-	13, // 19: hi.ai.Agent.Get:input_type -> hi.ai.GetAgentReq
-	11, // 20: hi.ai.Agent.List:input_type -> hi.ai.ListAgentsReq
-	15, // 21: hi.ai.Agent.GetUsage:input_type -> hi.ai.AgentUsageReq
-	21, // 22: hi.ai.Agent.GetDefaultConfig:input_type -> google.protobuf.Empty
-	17, // 23: hi.ai.Agent.ResetToDefault:input_type -> hi.ai.ResetToDefaultReq
-	18, // 24: hi.ai.AgentManage.List:input_type -> hi.ai.AgentManageListReq
-	8,  // 25: hi.ai.Agent.CreateAssistant:output_type -> hi.ai.CreateAgentResp
-	8,  // 26: hi.ai.Agent.RegisterRobot:output_type -> hi.ai.CreateAgentResp
-	19, // 27: hi.ai.Agent.Edit:output_type -> hi.Entity
-	21, // 28: hi.ai.Agent.Delete:output_type -> google.protobuf.Empty
-	14, // 29: hi.ai.Agent.Get:output_type -> hi.ai.GetAgentResp
-	10, // 30: hi.ai.Agent.List:output_type -> hi.ai.ListAgentsResp
-	16, // 31: hi.ai.Agent.GetUsage:output_type -> hi.ai.AgentUsageResp
-	5,  // 32: hi.ai.Agent.GetDefaultConfig:output_type -> hi.ai.DefaultConfigResp
-	21, // 33: hi.ai.Agent.ResetToDefault:output_type -> google.protobuf.Empty
-	10, // 34: hi.ai.AgentManage.List:output_type -> hi.ai.ListAgentsResp
-	25, // [25:35] is the sub-list for method output_type
-	15, // [15:25] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+	19, // 2: hi.ai.AgentConfig.reasoning_level:type_name -> hi.ai.ReasoningLevel
+	20, // 3: hi.ai.AgentInfo.base:type_name -> hi.Entity
+	2,  // 4: hi.ai.AgentInfo.config:type_name -> hi.ai.AgentConfig
+	3,  // 5: hi.ai.AgentInfo.token:type_name -> hi.ai.TokenUsage
+	2,  // 6: hi.ai.DefaultConfigResp.config:type_name -> hi.ai.AgentConfig
+	20, // 7: hi.ai.CreateAgentResp.base:type_name -> hi.Entity
+	2,  // 8: hi.ai.CreateAgentResp.config:type_name -> hi.ai.AgentConfig
+	20, // 9: hi.ai.CreateAgentResp.creator:type_name -> hi.Entity
+	2,  // 10: hi.ai.EditAgentReq.config:type_name -> hi.ai.AgentConfig
+	4,  // 11: hi.ai.ListAgentsResp.agents:type_name -> hi.ai.AgentInfo
+	21, // 12: hi.ai.ListAgentsReq.pagination:type_name -> hi.Pagination
+	4,  // 13: hi.ai.GetAgentResp.info:type_name -> hi.ai.AgentInfo
+	3,  // 14: hi.ai.AgentUsageResp.token:type_name -> hi.ai.TokenUsage
+	21, // 15: hi.ai.AgentManageListReq.pagination:type_name -> hi.Pagination
+	6,  // 16: hi.ai.Agent.CreateAssistant:input_type -> hi.ai.CreateAssistantReq
+	7,  // 17: hi.ai.Agent.RegisterRobot:input_type -> hi.ai.RegisterRobotReq
+	9,  // 18: hi.ai.Agent.Edit:input_type -> hi.ai.EditAgentReq
+	12, // 19: hi.ai.Agent.Delete:input_type -> hi.ai.DeleteAgentReq
+	13, // 20: hi.ai.Agent.Get:input_type -> hi.ai.GetAgentReq
+	11, // 21: hi.ai.Agent.List:input_type -> hi.ai.ListAgentsReq
+	15, // 22: hi.ai.Agent.GetUsage:input_type -> hi.ai.AgentUsageReq
+	22, // 23: hi.ai.Agent.GetDefaultConfig:input_type -> google.protobuf.Empty
+	17, // 24: hi.ai.Agent.ResetToDefault:input_type -> hi.ai.ResetToDefaultReq
+	18, // 25: hi.ai.AgentManage.List:input_type -> hi.ai.AgentManageListReq
+	8,  // 26: hi.ai.Agent.CreateAssistant:output_type -> hi.ai.CreateAgentResp
+	8,  // 27: hi.ai.Agent.RegisterRobot:output_type -> hi.ai.CreateAgentResp
+	20, // 28: hi.ai.Agent.Edit:output_type -> hi.Entity
+	22, // 29: hi.ai.Agent.Delete:output_type -> google.protobuf.Empty
+	14, // 30: hi.ai.Agent.Get:output_type -> hi.ai.GetAgentResp
+	10, // 31: hi.ai.Agent.List:output_type -> hi.ai.ListAgentsResp
+	16, // 32: hi.ai.Agent.GetUsage:output_type -> hi.ai.AgentUsageResp
+	5,  // 33: hi.ai.Agent.GetDefaultConfig:output_type -> hi.ai.DefaultConfigResp
+	22, // 34: hi.ai.Agent.ResetToDefault:output_type -> google.protobuf.Empty
+	10, // 35: hi.ai.AgentManage.List:output_type -> hi.ai.ListAgentsResp
+	26, // [26:36] is the sub-list for method output_type
+	16, // [16:26] is the sub-list for method input_type
+	16, // [16:16] is the sub-list for extension type_name
+	16, // [16:16] is the sub-list for extension extendee
+	0,  // [0:16] is the sub-list for field type_name
 }
 
 func init() { file_hi_ai_agent_proto_init() }
@@ -1349,6 +1363,7 @@ func file_hi_ai_agent_proto_init() {
 	if File_hi_ai_agent_proto != nil {
 		return
 	}
+	file_hi_ai_model_proto_init()
 	file_hi_ai_agent_proto_msgTypes[0].OneofWrappers = []any{}
 	file_hi_ai_agent_proto_msgTypes[1].OneofWrappers = []any{}
 	file_hi_ai_agent_proto_msgTypes[2].OneofWrappers = []any{}

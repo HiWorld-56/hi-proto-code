@@ -20,7 +20,7 @@ class ModelStub(object):
         self.ListLlms = channel.unary_unary(
                 '/hi.club.Model/ListLlms',
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-                response_deserializer=hi_dot_ai_dot_model__pb2.ModelListResp.FromString,
+                response_deserializer=hi_dot_ai_dot_model__pb2.LlmModelListResp.FromString,
                 _registered_method=True)
         self.ListEmbeddings = channel.unary_unary(
                 '/hi.club.Model/ListEmbeddings',
@@ -74,7 +74,7 @@ def add_ModelServicer_to_server(servicer, server):
             'ListLlms': grpc.unary_unary_rpc_method_handler(
                     servicer.ListLlms,
                     request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                    response_serializer=hi_dot_ai_dot_model__pb2.ModelListResp.SerializeToString,
+                    response_serializer=hi_dot_ai_dot_model__pb2.LlmModelListResp.SerializeToString,
             ),
             'ListEmbeddings': grpc.unary_unary_rpc_method_handler(
                     servicer.ListEmbeddings,
@@ -120,7 +120,7 @@ class Model(object):
             target,
             '/hi.club.Model/ListLlms',
             google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-            hi_dot_ai_dot_model__pb2.ModelListResp.FromString,
+            hi_dot_ai_dot_model__pb2.LlmModelListResp.FromString,
             options,
             channel_credentials,
             insecure,
