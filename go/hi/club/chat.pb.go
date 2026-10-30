@@ -585,7 +585,7 @@ var File_hi_club_chat_proto protoreflect.FileDescriptor
 
 const file_hi_club_chat_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/club/chat.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/ai/chat.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\"O\n" +
+	"\x12hi/club/chat.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10hi/ai/chat.proto\x1a\x17hi/club/messaging.proto\x1a\x13hi/club/group.proto\x1a\x10hi/options.proto\"O\n" +
 	"\x02QA\x12$\n" +
 	"\x01q\x18\x01 \x03(\v2\x10.hi.club.ContentB\x04\x90\xb5\x18\x02R\x01q\x12\x17\n" +
 	"\x01a\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x01a\x88\x01\x01:\x04\x98\xb5\x18\x03B\x04\n" +
@@ -643,13 +643,14 @@ const file_hi_club_chat_proto_rawDesc = "" +
 	"\x12ToolCallResultsReq\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12+\n" +
 	"\x04list\x18\x02 \x03(\v2\x17.hi.club.ToolCallResultR\x04listB\x05\n" +
-	"\x03_id2\xb2\x04\n" +
+	"\x03_id2\x83\x05\n" +
 	"\x04Chat\x12B\n" +
 	"\n" +
 	"NewSession\x12\x16.google.protobuf.Empty\x1a\x15.hi.ai.NewSessionResp\"\x05\x8a\xb5\x18\x01\x02\x12D\n" +
 	"\n" +
 	"GetContext\x12\x16.hi.club.GetContextReq\x1a\x17.hi.club.GetContextResp\"\x05\x8a\xb5\x18\x01\x02\x12G\n" +
-	"\fClearContext\x12\x18.hi.club.ClearContextReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12I\n" +
+	"\fClearContext\x12\x18.hi.club.ClearContextReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12O\n" +
+	"\x18ClearConversationContext\x12\x14.hi.club.GetGroupReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12I\n" +
 	"\rAppendContext\x12\x19.hi.club.AppendContextReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x124\n" +
 	"\bConverse\x12\x10.hi.club.ChatReq\x1a\x0f.hi.ai.ChatResp\"\x05\x8a\xb5\x18\x01\x02\x12F\n" +
 	"\x0eConverseStream\x12\x10.hi.club.ChatReq\x1a\x19.hi.ai.ConverseStreamResp\"\x05\x8a\xb5\x18\x01\x020\x01\x12=\n" +
@@ -683,9 +684,10 @@ var file_hi_club_chat_proto_goTypes = []any{
 	(*ai.ToolSupply)(nil),         // 9: hi.ai.ToolSupply
 	(*ai.Attachment)(nil),         // 10: hi.ai.Attachment
 	(*emptypb.Empty)(nil),         // 11: google.protobuf.Empty
-	(*ai.NewSessionResp)(nil),     // 12: hi.ai.NewSessionResp
-	(*ai.ChatResp)(nil),           // 13: hi.ai.ChatResp
-	(*ai.ConverseStreamResp)(nil), // 14: hi.ai.ConverseStreamResp
+	(*GetGroupReq)(nil),           // 12: hi.club.GetGroupReq
+	(*ai.NewSessionResp)(nil),     // 13: hi.ai.NewSessionResp
+	(*ai.ChatResp)(nil),           // 14: hi.ai.ChatResp
+	(*ai.ConverseStreamResp)(nil), // 15: hi.ai.ConverseStreamResp
 }
 var file_hi_club_chat_proto_depIdxs = []int32{
 	8,  // 0: hi.club.QA.q:type_name -> hi.club.Content
@@ -698,21 +700,23 @@ var file_hi_club_chat_proto_depIdxs = []int32{
 	11, // 7: hi.club.Chat.NewSession:input_type -> google.protobuf.Empty
 	2,  // 8: hi.club.Chat.GetContext:input_type -> hi.club.GetContextReq
 	3,  // 9: hi.club.Chat.ClearContext:input_type -> hi.club.ClearContextReq
-	4,  // 10: hi.club.Chat.AppendContext:input_type -> hi.club.AppendContextReq
-	5,  // 11: hi.club.Chat.Converse:input_type -> hi.club.ChatReq
-	5,  // 12: hi.club.Chat.ConverseStream:input_type -> hi.club.ChatReq
-	7,  // 13: hi.club.Chat.Resume:input_type -> hi.club.ToolCallResultsReq
-	7,  // 14: hi.club.Chat.ResumeStream:input_type -> hi.club.ToolCallResultsReq
-	12, // 15: hi.club.Chat.NewSession:output_type -> hi.ai.NewSessionResp
-	1,  // 16: hi.club.Chat.GetContext:output_type -> hi.club.GetContextResp
-	11, // 17: hi.club.Chat.ClearContext:output_type -> google.protobuf.Empty
-	11, // 18: hi.club.Chat.AppendContext:output_type -> google.protobuf.Empty
-	13, // 19: hi.club.Chat.Converse:output_type -> hi.ai.ChatResp
-	14, // 20: hi.club.Chat.ConverseStream:output_type -> hi.ai.ConverseStreamResp
-	13, // 21: hi.club.Chat.Resume:output_type -> hi.ai.ChatResp
-	14, // 22: hi.club.Chat.ResumeStream:output_type -> hi.ai.ConverseStreamResp
-	15, // [15:23] is the sub-list for method output_type
-	7,  // [7:15] is the sub-list for method input_type
+	12, // 10: hi.club.Chat.ClearConversationContext:input_type -> hi.club.GetGroupReq
+	4,  // 11: hi.club.Chat.AppendContext:input_type -> hi.club.AppendContextReq
+	5,  // 12: hi.club.Chat.Converse:input_type -> hi.club.ChatReq
+	5,  // 13: hi.club.Chat.ConverseStream:input_type -> hi.club.ChatReq
+	7,  // 14: hi.club.Chat.Resume:input_type -> hi.club.ToolCallResultsReq
+	7,  // 15: hi.club.Chat.ResumeStream:input_type -> hi.club.ToolCallResultsReq
+	13, // 16: hi.club.Chat.NewSession:output_type -> hi.ai.NewSessionResp
+	1,  // 17: hi.club.Chat.GetContext:output_type -> hi.club.GetContextResp
+	11, // 18: hi.club.Chat.ClearContext:output_type -> google.protobuf.Empty
+	11, // 19: hi.club.Chat.ClearConversationContext:output_type -> google.protobuf.Empty
+	11, // 20: hi.club.Chat.AppendContext:output_type -> google.protobuf.Empty
+	14, // 21: hi.club.Chat.Converse:output_type -> hi.ai.ChatResp
+	15, // 22: hi.club.Chat.ConverseStream:output_type -> hi.ai.ConverseStreamResp
+	14, // 23: hi.club.Chat.Resume:output_type -> hi.ai.ChatResp
+	15, // 24: hi.club.Chat.ResumeStream:output_type -> hi.ai.ConverseStreamResp
+	16, // [16:25] is the sub-list for method output_type
+	7,  // [7:16] is the sub-list for method input_type
 	7,  // [7:7] is the sub-list for extension type_name
 	7,  // [7:7] is the sub-list for extension extendee
 	0,  // [0:7] is the sub-list for field type_name
@@ -724,6 +728,7 @@ func file_hi_club_chat_proto_init() {
 		return
 	}
 	file_hi_club_messaging_proto_init()
+	file_hi_club_group_proto_init()
 	file_hi_club_chat_proto_msgTypes[0].OneofWrappers = []any{}
 	file_hi_club_chat_proto_msgTypes[2].OneofWrappers = []any{}
 	file_hi_club_chat_proto_msgTypes[3].OneofWrappers = []any{}

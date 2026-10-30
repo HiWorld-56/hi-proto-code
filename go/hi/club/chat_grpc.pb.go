@@ -21,14 +21,15 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Chat_NewSession_FullMethodName     = "/hi.club.Chat/NewSession"
-	Chat_GetContext_FullMethodName     = "/hi.club.Chat/GetContext"
-	Chat_ClearContext_FullMethodName   = "/hi.club.Chat/ClearContext"
-	Chat_AppendContext_FullMethodName  = "/hi.club.Chat/AppendContext"
-	Chat_Converse_FullMethodName       = "/hi.club.Chat/Converse"
-	Chat_ConverseStream_FullMethodName = "/hi.club.Chat/ConverseStream"
-	Chat_Resume_FullMethodName         = "/hi.club.Chat/Resume"
-	Chat_ResumeStream_FullMethodName   = "/hi.club.Chat/ResumeStream"
+	Chat_NewSession_FullMethodName               = "/hi.club.Chat/NewSession"
+	Chat_GetContext_FullMethodName               = "/hi.club.Chat/GetContext"
+	Chat_ClearContext_FullMethodName             = "/hi.club.Chat/ClearContext"
+	Chat_ClearConversationContext_FullMethodName = "/hi.club.Chat/ClearConversationContext"
+	Chat_AppendContext_FullMethodName            = "/hi.club.Chat/AppendContext"
+	Chat_Converse_FullMethodName                 = "/hi.club.Chat/Converse"
+	Chat_ConverseStream_FullMethodName           = "/hi.club.Chat/ConverseStream"
+	Chat_Resume_FullMethodName                   = "/hi.club.Chat/Resume"
+	Chat_ResumeStream_FullMethodName             = "/hi.club.Chat/ResumeStream"
 )
 
 // ChatClient is the client API for Chat service.
@@ -44,6 +45,10 @@ type ChatClient interface {
 	NewSession(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ai.NewSessionResp, error)
 	GetContext(ctx context.Context, in *GetContextReq, opts ...grpc.CallOption) (*GetContextResp, error)
 	ClearContext(ctx context.Context, in *ClearContextReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 清空当前消息对话中机器人的模型上下文，保留聊天消息。code 使用 Group.Get 的会话号。
+	// 单聊双方可调用；群聊仅群主/管理员可调用。非成员返回 NotFound。
+	// 后台按会话成员和类型解析各机器人的 cid，不接受客户端自填 caller/master 或全局机器人范围。
+	ClearConversationContext(ctx context.Context, in *GetGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 补一对问答进上下文。机器人到点自己做完一件事之后用它 —— 不这么做的话,
 	// 模型下次对话时对自己刚做过的事一无所知(见 hi/ai/chat.proto 的 AppendContextReq)。
 	AppendContext(ctx context.Context, in *AppendContextReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -97,6 +102,16 @@ func (c *chatClient) ClearContext(ctx context.Context, in *ClearContextReq, opts
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Chat_ClearContext_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *chatClient) ClearConversationContext(ctx context.Context, in *GetGroupReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Chat_ClearConversationContext_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -184,6 +199,10 @@ type ChatServer interface {
 	NewSession(context.Context, *emptypb.Empty) (*ai.NewSessionResp, error)
 	GetContext(context.Context, *GetContextReq) (*GetContextResp, error)
 	ClearContext(context.Context, *ClearContextReq) (*emptypb.Empty, error)
+	// 清空当前消息对话中机器人的模型上下文，保留聊天消息。code 使用 Group.Get 的会话号。
+	// 单聊双方可调用；群聊仅群主/管理员可调用。非成员返回 NotFound。
+	// 后台按会话成员和类型解析各机器人的 cid，不接受客户端自填 caller/master 或全局机器人范围。
+	ClearConversationContext(context.Context, *GetGroupReq) (*emptypb.Empty, error)
 	// 补一对问答进上下文。机器人到点自己做完一件事之后用它 —— 不这么做的话,
 	// 模型下次对话时对自己刚做过的事一无所知(见 hi/ai/chat.proto 的 AppendContextReq)。
 	AppendContext(context.Context, *AppendContextReq) (*emptypb.Empty, error)
@@ -220,6 +239,9 @@ func (UnimplementedChatServer) GetContext(context.Context, *GetContextReq) (*Get
 }
 func (UnimplementedChatServer) ClearContext(context.Context, *ClearContextReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method ClearContext not implemented")
+}
+func (UnimplementedChatServer) ClearConversationContext(context.Context, *GetGroupReq) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method ClearConversationContext not implemented")
 }
 func (UnimplementedChatServer) AppendContext(context.Context, *AppendContextReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method AppendContext not implemented")
@@ -306,6 +328,24 @@ func _Chat_ClearContext_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ChatServer).ClearContext(ctx, req.(*ClearContextReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Chat_ClearConversationContext_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGroupReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ChatServer).ClearConversationContext(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Chat_ClearConversationContext_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ChatServer).ClearConversationContext(ctx, req.(*GetGroupReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -404,6 +444,10 @@ var Chat_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ClearContext",
 			Handler:    _Chat_ClearContext_Handler,
+		},
+		{
+			MethodName: "ClearConversationContext",
+			Handler:    _Chat_ClearConversationContext_Handler,
 		},
 		{
 			MethodName: "AppendContext",

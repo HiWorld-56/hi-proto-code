@@ -6239,6 +6239,30 @@ pub mod chat_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Chat", "ClearContext"));
             self.inner.unary(req, path, codec).await
         }
+        /// 清空当前消息对话中机器人的模型上下文，保留聊天消息。code 使用 Group.Get 的会话号。
+        /// 单聊双方可调用；群聊仅群主/管理员可调用。非成员返回 NotFound。
+        /// 后台按会话成员和类型解析各机器人的 cid，不接受客户端自填 caller/master 或全局机器人范围。
+        pub async fn clear_conversation_context(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetGroupReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Chat/ClearConversationContext",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Chat", "ClearConversationContext"));
+            self.inner.unary(req, path, codec).await
+        }
         /// 补一对问答进上下文。机器人到点自己做完一件事之后用它 —— 不这么做的话,
         /// 模型下次对话时对自己刚做过的事一无所知(见 hi/ai/chat.proto 的 AppendContextReq)。
         pub async fn append_context(

@@ -15,13 +15,13 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../ai/chat.pb.dart' as $1;
-import 'messaging.pb.dart' as $3;
+import 'messaging.pb.dart' as $4;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 class QA extends $pb.GeneratedMessage {
   factory QA({
-    $core.Iterable<$3.Content>? q,
+    $core.Iterable<$4.Content>? q,
     $core.String? a,
   }) {
     final result = create();
@@ -43,8 +43,8 @@ class QA extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'QA',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..pPM<$3.Content>(1, _omitFieldNames ? '' : 'q',
-        subBuilder: $3.Content.create)
+    ..pPM<$4.Content>(1, _omitFieldNames ? '' : 'q',
+        subBuilder: $4.Content.create)
     ..aOS(2, _omitFieldNames ? '' : 'a')
     ..hasRequiredFields = false;
 
@@ -67,7 +67,7 @@ class QA extends $pb.GeneratedMessage {
   static QA? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $pb.PbList<$3.Content> get q => $_getList(0);
+  $pb.PbList<$4.Content> get q => $_getList(0);
 
   @$pb.TagNumber(2)
   $core.String get a => $_getSZ(1);
@@ -336,7 +336,7 @@ class ChatReq extends $pb.GeneratedMessage {
   factory ChatReq({
     $core.String? agent,
     $core.String? cid,
-    $core.Iterable<$3.Content>? conts,
+    $core.Iterable<$4.Content>? conts,
     $core.Iterable<$1.ToolSupply>? tools,
     $core.String? toolChoice,
     $core.String? custom,
@@ -380,8 +380,8 @@ class ChatReq extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
     ..aOS(2, _omitFieldNames ? '' : 'cid')
-    ..pPM<$3.Content>(3, _omitFieldNames ? '' : 'conts',
-        subBuilder: $3.Content.create)
+    ..pPM<$4.Content>(3, _omitFieldNames ? '' : 'conts',
+        subBuilder: $4.Content.create)
     ..pPM<$1.ToolSupply>(4, _omitFieldNames ? '' : 'tools',
         subBuilder: $1.ToolSupply.create)
     ..aOS(5, _omitFieldNames ? '' : 'toolChoice')
@@ -432,7 +432,7 @@ class ChatReq extends $pb.GeneratedMessage {
   void clearCid() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $pb.PbList<$3.Content> get conts => $_getList(2);
+  $pb.PbList<$4.Content> get conts => $_getList(2);
 
   @$pb.TagNumber(4)
   $pb.PbList<$1.ToolSupply> get tools => $_getList(3);
@@ -552,7 +552,7 @@ class ChatReq extends $pb.GeneratedMessage {
 class ToolCallResult extends $pb.GeneratedMessage {
   factory ToolCallResult({
     $core.String? id,
-    $core.Iterable<$3.Content>? conts,
+    $core.Iterable<$4.Content>? conts,
     $core.Iterable<$1.Attachment>? attachments,
   }) {
     final result = create();
@@ -576,8 +576,8 @@ class ToolCallResult extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'id')
-    ..pPM<$3.Content>(2, _omitFieldNames ? '' : 'conts',
-        subBuilder: $3.Content.create)
+    ..pPM<$4.Content>(2, _omitFieldNames ? '' : 'conts',
+        subBuilder: $4.Content.create)
     ..pPM<$1.Attachment>(3, _omitFieldNames ? '' : 'attachments',
         subBuilder: $1.Attachment.create)
     ..hasRequiredFields = false;
@@ -611,7 +611,7 @@ class ToolCallResult extends $pb.GeneratedMessage {
   void clearId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $pb.PbList<$3.Content> get conts => $_getList(1);
+  $pb.PbList<$4.Content> get conts => $_getList(1);
 
   /// 这次工具调用发出去的附件(回答侧),club 原样交给 hi.ai(见 hi.ai.ToolCallResult.attachments)。
   /// 一行的格式与问题侧同一份(hi.ai.Attachment):机器人那侧由 hiclub-core-mqtt 发送时给出,插件把它放进

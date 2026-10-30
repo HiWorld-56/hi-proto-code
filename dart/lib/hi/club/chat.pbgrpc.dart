@@ -19,6 +19,7 @@ import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $0;
 
 import '../ai/chat.pb.dart' as $1;
 import 'chat.pb.dart' as $2;
+import 'group.pb.dart' as $3;
 
 export 'chat.pb.dart';
 
@@ -58,6 +59,17 @@ class ChatClient extends $grpc.Client {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$clearContext, request, options: options);
+  }
+
+  /// 清空当前消息对话中机器人的模型上下文，保留聊天消息。code 使用 Group.Get 的会话号。
+  /// 单聊双方可调用；群聊仅群主/管理员可调用。非成员返回 NotFound。
+  /// 后台按会话成员和类型解析各机器人的 cid，不接受客户端自填 caller/master 或全局机器人范围。
+  $grpc.ResponseFuture<$0.Empty> clearConversationContext(
+    $3.GetGroupReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$clearConversationContext, request,
+        options: options);
   }
 
   /// 补一对问答进上下文。机器人到点自己做完一件事之后用它 —— 不这么做的话,
@@ -128,6 +140,11 @@ class ChatClient extends $grpc.Client {
           '/hi.club.Chat/ClearContext',
           ($2.ClearContextReq value) => value.writeToBuffer(),
           $0.Empty.fromBuffer);
+  static final _$clearConversationContext =
+      $grpc.ClientMethod<$3.GetGroupReq, $0.Empty>(
+          '/hi.club.Chat/ClearConversationContext',
+          ($3.GetGroupReq value) => value.writeToBuffer(),
+          $0.Empty.fromBuffer);
   static final _$appendContext =
       $grpc.ClientMethod<$2.AppendContextReq, $0.Empty>(
           '/hi.club.Chat/AppendContext',
@@ -179,6 +196,13 @@ abstract class ChatServiceBase extends $grpc.Service {
         false,
         false,
         ($core.List<$core.int> value) => $2.ClearContextReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$3.GetGroupReq, $0.Empty>(
+        'ClearConversationContext',
+        clearConversationContext_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $3.GetGroupReq.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$2.AppendContextReq, $0.Empty>(
         'AppendContext',
@@ -243,6 +267,14 @@ abstract class ChatServiceBase extends $grpc.Service {
 
   $async.Future<$0.Empty> clearContext(
       $grpc.ServiceCall call, $2.ClearContextReq request);
+
+  $async.Future<$0.Empty> clearConversationContext_Pre(
+      $grpc.ServiceCall $call, $async.Future<$3.GetGroupReq> $request) async {
+    return clearConversationContext($call, await $request);
+  }
+
+  $async.Future<$0.Empty> clearConversationContext(
+      $grpc.ServiceCall call, $3.GetGroupReq request);
 
   $async.Future<$0.Empty> appendContext_Pre($grpc.ServiceCall $call,
       $async.Future<$2.AppendContextReq> $request) async {

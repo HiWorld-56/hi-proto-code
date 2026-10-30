@@ -5,6 +5,7 @@ import grpc
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi.ai import chat_pb2 as hi_dot_ai_dot_chat__pb2
 from hi.club import chat_pb2 as hi_dot_club_dot_chat__pb2
+from hi.club import group_pb2 as hi_dot_club_dot_group__pb2
 
 
 class ChatStub(object):
@@ -30,6 +31,11 @@ class ChatStub(object):
         self.ClearContext = channel.unary_unary(
                 '/hi.club.Chat/ClearContext',
                 request_serializer=hi_dot_club_dot_chat__pb2.ClearContextReq.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                _registered_method=True)
+        self.ClearConversationContext = channel.unary_unary(
+                '/hi.club.Chat/ClearConversationContext',
+                request_serializer=hi_dot_club_dot_group__pb2.GetGroupReq.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
         self.AppendContext = channel.unary_unary(
@@ -81,6 +87,15 @@ class ChatServicer(object):
 
     def ClearContext(self, request, context):
         """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ClearConversationContext(self, request, context):
+        """清空当前消息对话中机器人的模型上下文，保留聊天消息。code 使用 Group.Get 的会话号。
+        单聊双方可调用；群聊仅群主/管理员可调用。非成员返回 NotFound。
+        后台按会话成员和类型解析各机器人的 cid，不接受客户端自填 caller/master 或全局机器人范围。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -144,6 +159,11 @@ def add_ChatServicer_to_server(servicer, server):
             'ClearContext': grpc.unary_unary_rpc_method_handler(
                     servicer.ClearContext,
                     request_deserializer=hi_dot_club_dot_chat__pb2.ClearContextReq.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'ClearConversationContext': grpc.unary_unary_rpc_method_handler(
+                    servicer.ClearConversationContext,
+                    request_deserializer=hi_dot_club_dot_group__pb2.GetGroupReq.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'AppendContext': grpc.unary_unary_rpc_method_handler(
@@ -253,6 +273,33 @@ class Chat(object):
             target,
             '/hi.club.Chat/ClearContext',
             hi_dot_club_dot_chat__pb2.ClearContextReq.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ClearConversationContext(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.Chat/ClearConversationContext',
+            hi_dot_club_dot_group__pb2.GetGroupReq.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,

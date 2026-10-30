@@ -258,6 +258,9 @@ class NewSessionResp extends $pb.GeneratedMessage {
 ///
 /// ⚠️ `caller` / `master` 是**商户替用户说的话**,hi-ai 信商户、不信用户 —— 所以 hi.club 的同名入参
 ///    **故意没有**这两个字段(club 用自己的 Req 类型,由服务端按登录主体与 masterOf 现填)。
+/// 清空时 caller 不传表示商户操作：机器人格式 cid 只校验该机器人属于本商户。
+/// 商户负责自己的用户/群权限；传 caller 仍按上述本人/主人判据，普通 cid 仍校验归属。
+/// 此授权仅用于清空，不放宽读取、追加、生成或续跑。
 class ClearContextReq extends $pb.GeneratedMessage {
   factory ClearContextReq({
     $core.String? cid,
