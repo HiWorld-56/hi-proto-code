@@ -889,6 +889,31 @@ pub mod source_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
+        /// 商品宣传图，永久公开保存到 hiclub/product/，不走14天临时媒体。
+        pub async fn upload_product_image(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::UploadReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::UploadResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Source/UploadProductImage",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Source", "UploadProductImage"));
+            self.inner.unary(req, path, codec).await
+        }
         /// 用户头像 → **hidid/avatar/**(不是 club 自己的桶)。
         ///
         /// 落别家的桶是有意的:`hi/did/source.proto` 定下"所有身份实体的头像都落 hidid/avatar/"。
@@ -1493,6 +1518,267 @@ pub mod speech_client {
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.club.Speech", "Synthesize"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductImage {
+    #[prost(string, optional, tag = "1")]
+    pub url: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub thumb_url: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 创建与回读复用同一份商品资料，不从名称/图片反推身份。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProductInfo {
+    #[prost(string, optional, tag = "1")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, repeated, tag = "2")]
+    pub images: ::prost::alloc::vec::Vec<ProductImage>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Product {
+    /// 系统分配，客户端不能指定
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub info: ::core::option::Option<ProductInfo>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProductListing {
+    #[prost(message, optional, tag = "1")]
+    pub product: ::core::option::Option<Product>,
+    /// 上传者，取自认证主体
+    #[prost(message, optional, tag = "2")]
+    pub merchant: ::core::option::Option<super::Entity>,
+    /// 硬件机器人，完整身份门面
+    #[prost(message, optional, tag = "3")]
+    pub stall: ::core::option::Option<super::Entity>,
+    /// 微秒
+    #[prost(int64, optional, tag = "4")]
+    pub listed_at: ::core::option::Option<i64>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProductAnnouncement {
+    #[prost(message, optional, tag = "1")]
+    pub listing: ::core::option::Option<ProductListing>,
+    /// 单聊上架通知不传；广播必须携带
+    #[prost(message, optional, tag = "2")]
+    pub group: ::core::option::Option<super::Entity>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateProductReq {
+    /// 请求幂等键，不是商品 id。相同主体/请求键重试返回原商品，内容不同则拒绝。
+    #[prost(string, optional, tag = "1")]
+    pub request_uuid: ::core::option::Option<::prost::alloc::string::String>,
+    /// 定位键
+    #[prost(string, optional, tag = "2")]
+    pub stall: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "3")]
+    pub info: ::core::option::Option<ProductInfo>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetProductReq {
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListProductsReq {
+    /// 不传=我上传的；传=该摊位
+    #[prost(string, optional, tag = "1")]
+    pub stall: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListProductsResp {
+    #[prost(message, repeated, tag = "1")]
+    pub list: ::prost::alloc::vec::Vec<ProductListing>,
+    #[prost(int64, optional, tag = "2")]
+    pub total: ::core::option::Option<i64>,
+}
+/// Generated client implementations.
+pub mod product_market_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 商品市场独立于插件授权/订单。商品归商家，摊位是硬件机器人；没有支付状态。
+    /// 用户可向硬件机器人上架自己的商品，不要求是机器人的主人。
+    /// 上架先持久化，再用 product-listed 单聊通知摊主。摊主调用 Broadcast，
+    /// 服务端以当前成员关系校验开放群 + owner/admin，发送 product-broadcast 群通知。
+    /// 两种 Notice.extra 均为 hi.club.ProductAnnouncement；收到广播的机器人只展示，不再转播。
+    #[derive(Debug, Clone)]
+    pub struct ProductMarketClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl ProductMarketClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> ProductMarketClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ProductMarketClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            ProductMarketClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn create(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateProductReq>,
+        ) -> std::result::Result<tonic::Response<super::ProductListing>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductMarket/Create",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductMarket", "Create"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetProductReq>,
+        ) -> std::result::Result<tonic::Response<super::ProductListing>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductMarket/Get",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.ProductMarket", "Get"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListProductsReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListProductsResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductMarket/List",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductMarket", "List"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 只能由商品所属的硬件机器人本人调用。对每个商品/群幂等；不满足条件的群不广播。
+        pub async fn broadcast(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetProductReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductMarket/Broadcast",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductMarket", "Broadcast"));
             self.inner.unary(req, path, codec).await
         }
     }

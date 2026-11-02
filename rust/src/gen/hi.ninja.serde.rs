@@ -509,6 +509,9 @@ impl serde::Serialize for BrainToFace {
                 brain_to_face::Cmd::BinanceOffers(v) => {
                     struct_ser.serialize_field("binanceOffers", v)?;
                 }
+                brain_to_face::Cmd::ProductNotices(v) => {
+                    struct_ser.serialize_field("productNotices", v)?;
+                }
                 brain_to_face::Cmd::VideoReady(v) => {
                     struct_ser.serialize_field("videoReady", v)?;
                 }
@@ -574,6 +577,8 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
             "showQr",
             "binance_offers",
             "binanceOffers",
+            "product_notices",
+            "productNotices",
             "video_ready",
             "videoReady",
         ];
@@ -605,6 +610,7 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
             ShowTip,
             ShowQr,
             BinanceOffers,
+            ProductNotices,
             VideoReady,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -652,6 +658,7 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
                             "showTip" | "show_tip" => Ok(GeneratedField::ShowTip),
                             "showQr" | "show_qr" => Ok(GeneratedField::ShowQr),
                             "binanceOffers" | "binance_offers" => Ok(GeneratedField::BinanceOffers),
+                            "productNotices" | "product_notices" => Ok(GeneratedField::ProductNotices),
                             "videoReady" | "video_ready" => Ok(GeneratedField::VideoReady),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -846,6 +853,13 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
                                 return Err(serde::de::Error::duplicate_field("binanceOffers"));
                             }
                             cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_face::Cmd::BinanceOffers)
+;
+                        }
+                        GeneratedField::ProductNotices => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("productNotices"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_face::Cmd::ProductNotices)
 ;
                         }
                         GeneratedField::VideoReady => {
@@ -1622,6 +1636,9 @@ impl serde::Serialize for FaceToBrain {
                 face_to_brain::Cmd::GetBinanceOffers(v) => {
                     struct_ser.serialize_field("getBinanceOffers", v)?;
                 }
+                face_to_brain::Cmd::ProductNoticeAck(v) => {
+                    struct_ser.serialize_field("productNoticeAck", v)?;
+                }
                 face_to_brain::Cmd::VideoRequest(v) => {
                     struct_ser.serialize_field("videoRequest", v)?;
                 }
@@ -1651,6 +1668,8 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
             "binanceOfferReply",
             "get_binance_offers",
             "getBinanceOffers",
+            "product_notice_ack",
+            "productNoticeAck",
             "video_request",
             "videoRequest",
         ];
@@ -1664,6 +1683,7 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
             BinanceRequest,
             BinanceOfferReply,
             GetBinanceOffers,
+            ProductNoticeAck,
             VideoRequest,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -1693,6 +1713,7 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
                             "binanceRequest" | "binance_request" => Ok(GeneratedField::BinanceRequest),
                             "binanceOfferReply" | "binance_offer_reply" => Ok(GeneratedField::BinanceOfferReply),
                             "getBinanceOffers" | "get_binance_offers" => Ok(GeneratedField::GetBinanceOffers),
+                            "productNoticeAck" | "product_notice_ack" => Ok(GeneratedField::ProductNoticeAck),
                             "videoRequest" | "video_request" => Ok(GeneratedField::VideoRequest),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -1762,6 +1783,13 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
                                 return Err(serde::de::Error::duplicate_field("getBinanceOffers"));
                             }
                             cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(face_to_brain::Cmd::GetBinanceOffers)
+;
+                        }
+                        GeneratedField::ProductNoticeAck => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("productNoticeAck"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(face_to_brain::Cmd::ProductNoticeAck)
 ;
                         }
                         GeneratedField::VideoRequest => {
@@ -3719,6 +3747,296 @@ impl<'de> serde::Deserialize<'de> for plugin_progress::State {
             }
         }
         deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ProductNotice {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.id.is_some() {
+            len += 1;
+        }
+        if self.announcement.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.ProductNotice", len)?;
+        if let Some(v) = self.id.as_ref() {
+            struct_ser.serialize_field("id", v)?;
+        }
+        if let Some(v) = self.announcement.as_ref() {
+            struct_ser.serialize_field("announcement", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ProductNotice {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "id",
+            "announcement",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Id,
+            Announcement,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "id" => Ok(GeneratedField::Id),
+                            "announcement" => Ok(GeneratedField::Announcement),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ProductNotice;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.ProductNotice")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ProductNotice, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut id__ = None;
+                let mut announcement__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Id => {
+                            if id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("id"));
+                            }
+                            id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Announcement => {
+                            if announcement__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("announcement"));
+                            }
+                            announcement__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ProductNotice {
+                    id: id__,
+                    announcement: announcement__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.ProductNotice", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ProductNoticeAck {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.id.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.ProductNoticeAck", len)?;
+        if let Some(v) = self.id.as_ref() {
+            struct_ser.serialize_field("id", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ProductNoticeAck {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "id",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Id,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "id" => Ok(GeneratedField::Id),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ProductNoticeAck;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.ProductNoticeAck")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ProductNoticeAck, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut id__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Id => {
+                            if id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("id"));
+                            }
+                            id__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ProductNoticeAck {
+                    id: id__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.ProductNoticeAck", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ProductNotices {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.list.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.ProductNotices", len)?;
+        if !self.list.is_empty() {
+            struct_ser.serialize_field("list", &self.list)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ProductNotices {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "list",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            List,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "list" => Ok(GeneratedField::List),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ProductNotices;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.ProductNotices")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ProductNotices, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut list__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::List => {
+                            if list__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("list"));
+                            }
+                            list__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(ProductNotices {
+                    list: list__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.ProductNotices", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for QrCard {

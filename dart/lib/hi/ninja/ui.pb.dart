@@ -21,6 +21,7 @@ import '../binance/binance.pb.dart' as $7;
 import '../binance/offer.pb.dart' as $8;
 import '../club/group.pb.dart' as $1;
 import '../club/messaging.pb.dart' as $2;
+import '../club/product.pb.dart' as $9;
 import '../common.pb.dart' as $0;
 import '../did/transfer.pb.dart' as $5;
 import 'ui.pbenum.dart';
@@ -587,6 +588,7 @@ enum BrainToFace_Cmd {
   showQr,
   binanceOffers,
   videoReady,
+  productNotices,
   notSet
 }
 
@@ -619,6 +621,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     QrCard? showQr,
     BinanceOffers? binanceOffers,
     VideoReady? videoReady,
+    ProductNotices? productNotices,
   }) {
     final result = create();
     if (initRobot != null) result.initRobot = initRobot;
@@ -649,6 +652,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     if (showQr != null) result.showQr = showQr;
     if (binanceOffers != null) result.binanceOffers = binanceOffers;
     if (videoReady != null) result.videoReady = videoReady;
+    if (productNotices != null) result.productNotices = productNotices;
     return result;
   }
 
@@ -688,6 +692,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     25: BrainToFace_Cmd.showQr,
     26: BrainToFace_Cmd.binanceOffers,
     27: BrainToFace_Cmd.videoReady,
+    28: BrainToFace_Cmd.productNotices,
     0: BrainToFace_Cmd.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -720,7 +725,8 @@ class BrainToFace extends $pb.GeneratedMessage {
       24,
       25,
       26,
-      27
+      27,
+      28
     ])
     ..aOM<RobotInit>(1, _omitFieldNames ? '' : 'initRobot',
         subBuilder: RobotInit.create)
@@ -773,6 +779,8 @@ class BrainToFace extends $pb.GeneratedMessage {
         subBuilder: BinanceOffers.create)
     ..aOM<VideoReady>(27, _omitFieldNames ? '' : 'videoReady',
         subBuilder: VideoReady.create)
+    ..aOM<ProductNotices>(28, _omitFieldNames ? '' : 'productNotices',
+        subBuilder: ProductNotices.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -820,6 +828,7 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(25)
   @$pb.TagNumber(26)
   @$pb.TagNumber(27)
+  @$pb.TagNumber(28)
   BrainToFace_Cmd whichCmd() => _BrainToFace_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
@@ -847,6 +856,7 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(25)
   @$pb.TagNumber(26)
   @$pb.TagNumber(27)
+  @$pb.TagNumber(28)
   void clearCmd() => $_clearField($_whichOneof(0));
 
   /// 初始化
@@ -1142,7 +1152,6 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(26)
   BinanceOffers ensureBinanceOffers() => $_ensure(24);
 
-  /// 回 `FaceToBrain.video_request`
   @$pb.TagNumber(27)
   VideoReady get videoReady => $_getN(25);
   @$pb.TagNumber(27)
@@ -1153,6 +1162,18 @@ class BrainToFace extends $pb.GeneratedMessage {
   void clearVideoReady() => $_clearField(27);
   @$pb.TagNumber(27)
   VideoReady ensureVideoReady() => $_ensure(25);
+
+  /// 回 `FaceToBrain.video_request`
+  @$pb.TagNumber(28)
+  ProductNotices get productNotices => $_getN(26);
+  @$pb.TagNumber(28)
+  set productNotices(ProductNotices value) => $_setField(28, value);
+  @$pb.TagNumber(28)
+  $core.bool hasProductNotices() => $_has(26);
+  @$pb.TagNumber(28)
+  void clearProductNotices() => $_clearField(28);
+  @$pb.TagNumber(28)
+  ProductNotices ensureProductNotices() => $_ensure(26);
 }
 
 /// face -> brain:要一份屏幕放得了的视频。
@@ -1526,6 +1547,7 @@ enum FaceToBrain_Cmd {
   binanceOfferReply,
   getBinanceOffers,
   videoRequest,
+  productNoticeAck,
   notSet
 }
 
@@ -1540,6 +1562,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
     $8.BinanceOfferReply? binanceOfferReply,
     $3.Empty? getBinanceOffers,
     VideoRequest? videoRequest,
+    ProductNoticeAck? productNoticeAck,
   }) {
     final result = create();
     if (voiceState != null) result.voiceState = voiceState;
@@ -1551,6 +1574,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
     if (binanceOfferReply != null) result.binanceOfferReply = binanceOfferReply;
     if (getBinanceOffers != null) result.getBinanceOffers = getBinanceOffers;
     if (videoRequest != null) result.videoRequest = videoRequest;
+    if (productNoticeAck != null) result.productNoticeAck = productNoticeAck;
     return result;
   }
 
@@ -1572,13 +1596,14 @@ class FaceToBrain extends $pb.GeneratedMessage {
     6: FaceToBrain_Cmd.binanceOfferReply,
     7: FaceToBrain_Cmd.getBinanceOffers,
     8: FaceToBrain_Cmd.videoRequest,
+    9: FaceToBrain_Cmd.productNoticeAck,
     0: FaceToBrain_Cmd.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'FaceToBrain',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..oo(0, [1, 2, 3, 4, 5, 6, 7, 8])
+    ..oo(0, [1, 2, 3, 4, 5, 6, 7, 8, 9])
     ..aE<StateToggle>(1, _omitFieldNames ? '' : 'voiceState',
         enumValues: StateToggle.values)
     ..aOM<UpdateAction>(2, _omitFieldNames ? '' : 'updateAction',
@@ -1595,6 +1620,8 @@ class FaceToBrain extends $pb.GeneratedMessage {
         subBuilder: $3.Empty.create)
     ..aOM<VideoRequest>(8, _omitFieldNames ? '' : 'videoRequest',
         subBuilder: VideoRequest.create)
+    ..aOM<ProductNoticeAck>(9, _omitFieldNames ? '' : 'productNoticeAck',
+        subBuilder: ProductNoticeAck.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1624,6 +1651,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   @$pb.TagNumber(7)
   @$pb.TagNumber(8)
+  @$pb.TagNumber(9)
   FaceToBrain_Cmd whichCmd() => _FaceToBrain_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
@@ -1633,6 +1661,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   @$pb.TagNumber(7)
   @$pb.TagNumber(8)
+  @$pb.TagNumber(9)
   void clearCmd() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -1724,7 +1753,6 @@ class FaceToBrain extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   $3.Empty ensureGetBinanceOffers() => $_ensure(6);
 
-  /// 人在屏上点了一个视频:替我要一份屏幕放得了的(见 VideoRequest)
   @$pb.TagNumber(8)
   VideoRequest get videoRequest => $_getN(7);
   @$pb.TagNumber(8)
@@ -1735,6 +1763,18 @@ class FaceToBrain extends $pb.GeneratedMessage {
   void clearVideoRequest() => $_clearField(8);
   @$pb.TagNumber(8)
   VideoRequest ensureVideoRequest() => $_ensure(7);
+
+  /// 人在屏上点了一个视频:替我要一份屏幕放得了的(见 VideoRequest)
+  @$pb.TagNumber(9)
+  ProductNoticeAck get productNoticeAck => $_getN(8);
+  @$pb.TagNumber(9)
+  set productNoticeAck(ProductNoticeAck value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasProductNoticeAck() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearProductNoticeAck() => $_clearField(9);
+  @$pb.TagNumber(9)
+  ProductNoticeAck ensureProductNoticeAck() => $_ensure(8);
 }
 
 /// ── 跟单:开单卡 ──────────────────────────────────────────────
@@ -1988,6 +2028,179 @@ class UpdateAction extends $pb.GeneratedMessage {
   $core.bool hasAction() => $_has(0);
   @$pb.TagNumber(1)
   void clearAction() => $_clearField(1);
+}
+
+/// brain 本地持久化的商品提示；face 重连 request_init 后重新推送。
+class ProductNotice extends $pb.GeneratedMessage {
+  factory ProductNotice({
+    $core.String? id,
+    $9.ProductAnnouncement? announcement,
+  }) {
+    final result = create();
+    if (id != null) result.id = id;
+    if (announcement != null) result.announcement = announcement;
+    return result;
+  }
+
+  ProductNotice._();
+
+  factory ProductNotice.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ProductNotice.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ProductNotice',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'id')
+    ..aOM<$9.ProductAnnouncement>(2, _omitFieldNames ? '' : 'announcement',
+        subBuilder: $9.ProductAnnouncement.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductNotice clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductNotice copyWith(void Function(ProductNotice) updates) =>
+      super.copyWith((message) => updates(message as ProductNotice))
+          as ProductNotice;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ProductNotice create() => ProductNotice._();
+  @$core.override
+  ProductNotice createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ProductNotice getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ProductNotice>(create);
+  static ProductNotice? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get id => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set id($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $9.ProductAnnouncement get announcement => $_getN(1);
+  @$pb.TagNumber(2)
+  set announcement($9.ProductAnnouncement value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAnnouncement() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAnnouncement() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $9.ProductAnnouncement ensureAnnouncement() => $_ensure(1);
+}
+
+class ProductNotices extends $pb.GeneratedMessage {
+  factory ProductNotices({
+    $core.Iterable<ProductNotice>? list,
+  }) {
+    final result = create();
+    if (list != null) result.list.addAll(list);
+    return result;
+  }
+
+  ProductNotices._();
+
+  factory ProductNotices.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ProductNotices.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ProductNotices',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..pPM<ProductNotice>(1, _omitFieldNames ? '' : 'list',
+        subBuilder: ProductNotice.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductNotices clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductNotices copyWith(void Function(ProductNotices) updates) =>
+      super.copyWith((message) => updates(message as ProductNotices))
+          as ProductNotices;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ProductNotices create() => ProductNotices._();
+  @$core.override
+  ProductNotices createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ProductNotices getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ProductNotices>(create);
+  static ProductNotices? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<ProductNotice> get list => $_getList(0);
+}
+
+class ProductNoticeAck extends $pb.GeneratedMessage {
+  factory ProductNoticeAck({
+    $core.String? id,
+  }) {
+    final result = create();
+    if (id != null) result.id = id;
+    return result;
+  }
+
+  ProductNoticeAck._();
+
+  factory ProductNoticeAck.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ProductNoticeAck.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ProductNoticeAck',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'id')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductNoticeAck clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductNoticeAck copyWith(void Function(ProductNoticeAck) updates) =>
+      super.copyWith((message) => updates(message as ProductNoticeAck))
+          as ProductNoticeAck;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ProductNoticeAck create() => ProductNoticeAck._();
+  @$core.override
+  ProductNoticeAck createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ProductNoticeAck getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ProductNoticeAck>(create);
+  static ProductNoticeAck? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get id => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set id($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
 }
 
 const $core.bool _omitFieldNames =

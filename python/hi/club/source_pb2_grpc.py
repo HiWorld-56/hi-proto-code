@@ -38,6 +38,11 @@ class SourceStub(object):
         Args:
             channel: A grpc.Channel.
         """
+        self.UploadProductImage = channel.unary_unary(
+                '/hi.club.Source/UploadProductImage',
+                request_serializer=hi_dot_common__pb2.UploadReq.SerializeToString,
+                response_deserializer=hi_dot_common__pb2.UploadResp.FromString,
+                _registered_method=True)
         self.UploadAvatar = channel.unary_unary(
                 '/hi.club.Source/UploadAvatar',
                 request_serializer=hi_dot_common__pb2.UploadReq.SerializeToString,
@@ -151,6 +156,13 @@ class SourceServicer(object):
     命名:`UploadAvatar` = **用户头像**(与 `hi.did.Source.UploadAvatar` 同名同义);
     群资源一律带 Group 前缀,`UploadGroupAvatar` / `UploadGroupBackground`。
     """
+
+    def UploadProductImage(self, request, context):
+        """商品宣传图，永久公开保存到 hiclub/product/，不走14天临时媒体。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def UploadAvatar(self, request, context):
         """用户头像 → **hidid/avatar/**(不是 club 自己的桶)。
@@ -306,6 +318,11 @@ class SourceServicer(object):
 
 def add_SourceServicer_to_server(servicer, server):
     rpc_method_handlers = {
+            'UploadProductImage': grpc.unary_unary_rpc_method_handler(
+                    servicer.UploadProductImage,
+                    request_deserializer=hi_dot_common__pb2.UploadReq.FromString,
+                    response_serializer=hi_dot_common__pb2.UploadResp.SerializeToString,
+            ),
             'UploadAvatar': grpc.unary_unary_rpc_method_handler(
                     servicer.UploadAvatar,
                     request_deserializer=hi_dot_common__pb2.UploadReq.FromString,
@@ -425,6 +442,33 @@ class Source(object):
     命名:`UploadAvatar` = **用户头像**(与 `hi.did.Source.UploadAvatar` 同名同义);
     群资源一律带 Group 前缀,`UploadGroupAvatar` / `UploadGroupBackground`。
     """
+
+    @staticmethod
+    def UploadProductImage(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.Source/UploadProductImage',
+            hi_dot_common__pb2.UploadReq.SerializeToString,
+            hi_dot_common__pb2.UploadResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
 
     @staticmethod
     def UploadAvatar(request,

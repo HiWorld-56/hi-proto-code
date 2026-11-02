@@ -367,8 +367,9 @@ const file_hi_club_source_proto_rawDesc = "" +
 	"\x14DownloadResourceResp\x12#\n" +
 	"\acontent\x18\x01 \x01(\fB\x04\x90\xb5\x18\x01H\x00R\acontent\x88\x01\x01:\x04\x98\xb5\x18\x01B\n" +
 	"\n" +
-	"\b_content2\xb8\t\n" +
-	"\x06Source\x124\n" +
+	"\b_content2\xf4\t\n" +
+	"\x06Source\x12:\n" +
+	"\x12UploadProductImage\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x124\n" +
 	"\fUploadAvatar\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x129\n" +
 	"\x11UploadGroupAvatar\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12=\n" +
 	"\x15UploadGroupBackground\x12\r.hi.UploadReq\x1a\x0e.hi.UploadResp\"\x05\x8a\xb5\x18\x01\x02\x12N\n" +
@@ -426,44 +427,46 @@ var file_hi_club_source_proto_goTypes = []any{
 	(*ai.DownloadFileResp)(nil),       // 17: hi.ai.DownloadFileResp
 }
 var file_hi_club_source_proto_depIdxs = []int32{
-	6,  // 0: hi.club.Source.UploadAvatar:input_type -> hi.UploadReq
-	6,  // 1: hi.club.Source.UploadGroupAvatar:input_type -> hi.UploadReq
-	6,  // 2: hi.club.Source.UploadGroupBackground:input_type -> hi.UploadReq
-	4,  // 3: hi.club.Source.Download:input_type -> hi.club.DownloadResourceReq
-	7,  // 4: hi.club.Source.DownloadStream:input_type -> hi.source.DownloadStreamReq
-	0,  // 5: hi.club.Source.ProbeVideo:input_type -> hi.club.ProbeVideoReq
-	2,  // 6: hi.club.Source.TranscodeForRobot:input_type -> hi.club.TranscodeForRobotReq
-	6,  // 7: hi.club.Source.UploadTemp:input_type -> hi.UploadReq
-	8,  // 8: hi.club.Source.UploadTempStream:input_type -> hi.UploadStreamReq
-	6,  // 9: hi.club.Source.UploadLog:input_type -> hi.UploadReq
-	6,  // 10: hi.club.Source.UploadScript:input_type -> hi.UploadReq
-	8,  // 11: hi.club.Source.UploadScriptStream:input_type -> hi.UploadStreamReq
-	9,  // 12: hi.club.Source.DownloadScript:input_type -> hi.ai.DownloadScriptReq
-	10, // 13: hi.club.Source.UploadTrainingFile:input_type -> hi.ai.UploadFileReq
-	11, // 14: hi.club.Source.DownloadTrainingFile:input_type -> hi.ai.DownloadFileReq
-	6,  // 15: hi.club.Source.UploadLogo:input_type -> hi.UploadReq
-	6,  // 16: hi.club.Source.UploadSummary:input_type -> hi.UploadReq
-	12, // 17: hi.club.Source.Delete:input_type -> hi.DeleteResourceReq
-	13, // 18: hi.club.Source.UploadAvatar:output_type -> hi.UploadResp
-	13, // 19: hi.club.Source.UploadGroupAvatar:output_type -> hi.UploadResp
-	13, // 20: hi.club.Source.UploadGroupBackground:output_type -> hi.UploadResp
-	5,  // 21: hi.club.Source.Download:output_type -> hi.club.DownloadResourceResp
-	14, // 22: hi.club.Source.DownloadStream:output_type -> hi.source.DownloadStreamResp
-	1,  // 23: hi.club.Source.ProbeVideo:output_type -> hi.club.ProbeVideoResp
-	3,  // 24: hi.club.Source.TranscodeForRobot:output_type -> hi.club.TranscodeForRobotResp
-	13, // 25: hi.club.Source.UploadTemp:output_type -> hi.UploadResp
-	13, // 26: hi.club.Source.UploadTempStream:output_type -> hi.UploadResp
-	13, // 27: hi.club.Source.UploadLog:output_type -> hi.UploadResp
-	13, // 28: hi.club.Source.UploadScript:output_type -> hi.UploadResp
-	13, // 29: hi.club.Source.UploadScriptStream:output_type -> hi.UploadResp
-	15, // 30: hi.club.Source.DownloadScript:output_type -> hi.ai.DownloadScriptResp
-	16, // 31: hi.club.Source.UploadTrainingFile:output_type -> google.protobuf.Empty
-	17, // 32: hi.club.Source.DownloadTrainingFile:output_type -> hi.ai.DownloadFileResp
-	13, // 33: hi.club.Source.UploadLogo:output_type -> hi.UploadResp
-	13, // 34: hi.club.Source.UploadSummary:output_type -> hi.UploadResp
-	16, // 35: hi.club.Source.Delete:output_type -> google.protobuf.Empty
-	18, // [18:36] is the sub-list for method output_type
-	0,  // [0:18] is the sub-list for method input_type
+	6,  // 0: hi.club.Source.UploadProductImage:input_type -> hi.UploadReq
+	6,  // 1: hi.club.Source.UploadAvatar:input_type -> hi.UploadReq
+	6,  // 2: hi.club.Source.UploadGroupAvatar:input_type -> hi.UploadReq
+	6,  // 3: hi.club.Source.UploadGroupBackground:input_type -> hi.UploadReq
+	4,  // 4: hi.club.Source.Download:input_type -> hi.club.DownloadResourceReq
+	7,  // 5: hi.club.Source.DownloadStream:input_type -> hi.source.DownloadStreamReq
+	0,  // 6: hi.club.Source.ProbeVideo:input_type -> hi.club.ProbeVideoReq
+	2,  // 7: hi.club.Source.TranscodeForRobot:input_type -> hi.club.TranscodeForRobotReq
+	6,  // 8: hi.club.Source.UploadTemp:input_type -> hi.UploadReq
+	8,  // 9: hi.club.Source.UploadTempStream:input_type -> hi.UploadStreamReq
+	6,  // 10: hi.club.Source.UploadLog:input_type -> hi.UploadReq
+	6,  // 11: hi.club.Source.UploadScript:input_type -> hi.UploadReq
+	8,  // 12: hi.club.Source.UploadScriptStream:input_type -> hi.UploadStreamReq
+	9,  // 13: hi.club.Source.DownloadScript:input_type -> hi.ai.DownloadScriptReq
+	10, // 14: hi.club.Source.UploadTrainingFile:input_type -> hi.ai.UploadFileReq
+	11, // 15: hi.club.Source.DownloadTrainingFile:input_type -> hi.ai.DownloadFileReq
+	6,  // 16: hi.club.Source.UploadLogo:input_type -> hi.UploadReq
+	6,  // 17: hi.club.Source.UploadSummary:input_type -> hi.UploadReq
+	12, // 18: hi.club.Source.Delete:input_type -> hi.DeleteResourceReq
+	13, // 19: hi.club.Source.UploadProductImage:output_type -> hi.UploadResp
+	13, // 20: hi.club.Source.UploadAvatar:output_type -> hi.UploadResp
+	13, // 21: hi.club.Source.UploadGroupAvatar:output_type -> hi.UploadResp
+	13, // 22: hi.club.Source.UploadGroupBackground:output_type -> hi.UploadResp
+	5,  // 23: hi.club.Source.Download:output_type -> hi.club.DownloadResourceResp
+	14, // 24: hi.club.Source.DownloadStream:output_type -> hi.source.DownloadStreamResp
+	1,  // 25: hi.club.Source.ProbeVideo:output_type -> hi.club.ProbeVideoResp
+	3,  // 26: hi.club.Source.TranscodeForRobot:output_type -> hi.club.TranscodeForRobotResp
+	13, // 27: hi.club.Source.UploadTemp:output_type -> hi.UploadResp
+	13, // 28: hi.club.Source.UploadTempStream:output_type -> hi.UploadResp
+	13, // 29: hi.club.Source.UploadLog:output_type -> hi.UploadResp
+	13, // 30: hi.club.Source.UploadScript:output_type -> hi.UploadResp
+	13, // 31: hi.club.Source.UploadScriptStream:output_type -> hi.UploadResp
+	15, // 32: hi.club.Source.DownloadScript:output_type -> hi.ai.DownloadScriptResp
+	16, // 33: hi.club.Source.UploadTrainingFile:output_type -> google.protobuf.Empty
+	17, // 34: hi.club.Source.DownloadTrainingFile:output_type -> hi.ai.DownloadFileResp
+	13, // 35: hi.club.Source.UploadLogo:output_type -> hi.UploadResp
+	13, // 36: hi.club.Source.UploadSummary:output_type -> hi.UploadResp
+	16, // 37: hi.club.Source.Delete:output_type -> google.protobuf.Empty
+	19, // [19:38] is the sub-list for method output_type
+	0,  // [0:19] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name

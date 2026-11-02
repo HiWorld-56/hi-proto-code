@@ -593,7 +593,7 @@ pub struct BinanceRequest {
 pub struct BrainToFace {
     #[prost(
         oneof = "brain_to_face::Cmd",
-        tags = "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21, 22, 24, 25, 26, 27"
+        tags = "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21, 22, 24, 25, 26, 28, 27"
     )]
     pub cmd: ::core::option::Option<brain_to_face::Cmd>,
 }
@@ -697,6 +697,10 @@ pub mod brain_to_face {
         #[prost(message, tag = "26")]
         BinanceOffers(super::BinanceOffers),
         /// 回 `FaceToBrain.video_request`
+        ///
+        /// 待确认商品通知全量；确认仅关闭展示
+        #[prost(message, tag = "28")]
+        ProductNotices(super::ProductNotices),
         #[prost(message, tag = "27")]
         VideoReady(super::VideoReady),
     }
@@ -761,7 +765,7 @@ pub struct StatusEvent {
 /// face -> brain
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct FaceToBrain {
-    #[prost(oneof = "face_to_brain::Cmd", tags = "1, 2, 3, 4, 5, 6, 7, 8")]
+    #[prost(oneof = "face_to_brain::Cmd", tags = "1, 2, 3, 4, 5, 6, 7, 9, 8")]
     pub cmd: ::core::option::Option<face_to_brain::Cmd>,
 }
 /// Nested message and enum types in `FaceToBrain`.
@@ -798,6 +802,10 @@ pub mod face_to_brain {
         #[prost(message, tag = "7")]
         GetBinanceOffers(::pbjson_types::Empty),
         /// 人在屏上点了一个视频:替我要一份屏幕放得了的(见 VideoRequest)
+        ///
+        /// 确认一个商品通知，无购买/支付副作用
+        #[prost(message, tag = "9")]
+        ProductNoticeAck(super::ProductNoticeAck),
         #[prost(message, tag = "8")]
         VideoRequest(super::VideoRequest),
     }
@@ -953,6 +961,25 @@ pub mod update_action {
             }
         }
     }
+}
+/// brain 本地持久化的商品提示；face 重连 request_init 后重新推送。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProductNotice {
+    /// 商品 id，也是本机展示去重键
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub announcement: ::core::option::Option<super::club::ProductAnnouncement>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProductNotices {
+    #[prost(message, repeated, tag = "1")]
+    pub list: ::prost::alloc::vec::Vec<ProductNotice>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductNoticeAck {
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 二态开关：语音监听开始/结束、音频播放开始/结束等
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]

@@ -56,6 +56,14 @@ class SourceClient extends $grpc.Client {
 
   SourceClient(super.channel, {super.options, super.interceptors});
 
+  /// 商品宣传图，永久公开保存到 hiclub/product/，不走14天临时媒体。
+  $grpc.ResponseFuture<$0.UploadResp> uploadProductImage(
+    $0.UploadReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$uploadProductImage, request, options: options);
+  }
+
   /// 用户头像 → **hidid/avatar/**(不是 club 自己的桶)。
   ///
   /// 落别家的桶是有意的:`hi/did/source.proto` 定下"所有身份实体的头像都落 hidid/avatar/"。
@@ -231,6 +239,11 @@ class SourceClient extends $grpc.Client {
 
   // method descriptors
 
+  static final _$uploadProductImage =
+      $grpc.ClientMethod<$0.UploadReq, $0.UploadResp>(
+          '/hi.club.Source/UploadProductImage',
+          ($0.UploadReq value) => value.writeToBuffer(),
+          $0.UploadResp.fromBuffer);
   static final _$uploadAvatar = $grpc.ClientMethod<$0.UploadReq, $0.UploadResp>(
       '/hi.club.Source/UploadAvatar',
       ($0.UploadReq value) => value.writeToBuffer(),
@@ -322,6 +335,13 @@ abstract class SourceServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.club.Source';
 
   SourceServiceBase() {
+    $addMethod($grpc.ServiceMethod<$0.UploadReq, $0.UploadResp>(
+        'UploadProductImage',
+        uploadProductImage_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.UploadReq.fromBuffer(value),
+        ($0.UploadResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.UploadReq, $0.UploadResp>(
         'UploadAvatar',
         uploadAvatar_Pre,
@@ -453,6 +473,14 @@ abstract class SourceServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) => $0.DeleteResourceReq.fromBuffer(value),
         ($5.Empty value) => value.writeToBuffer()));
   }
+
+  $async.Future<$0.UploadResp> uploadProductImage_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.UploadReq> $request) async {
+    return uploadProductImage($call, await $request);
+  }
+
+  $async.Future<$0.UploadResp> uploadProductImage(
+      $grpc.ServiceCall call, $0.UploadReq request);
 
   $async.Future<$0.UploadResp> uploadAvatar_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.UploadReq> $request) async {

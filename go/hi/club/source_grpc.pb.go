@@ -23,6 +23,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	Source_UploadProductImage_FullMethodName    = "/hi.club.Source/UploadProductImage"
 	Source_UploadAvatar_FullMethodName          = "/hi.club.Source/UploadAvatar"
 	Source_UploadGroupAvatar_FullMethodName     = "/hi.club.Source/UploadGroupAvatar"
 	Source_UploadGroupBackground_FullMethodName = "/hi.club.Source/UploadGroupBackground"
@@ -69,6 +70,8 @@ const (
 //	命名:`UploadAvatar` = **用户头像**(与 `hi.did.Source.UploadAvatar` 同名同义);
 //	群资源一律带 Group 前缀,`UploadGroupAvatar` / `UploadGroupBackground`。
 type SourceClient interface {
+	// 商品宣传图，永久公开保存到 hiclub/product/，不走14天临时媒体。
+	UploadProductImage(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error)
 	// 用户头像 → **hidid/avatar/**(不是 club 自己的桶)。
 	//
 	// 落别家的桶是有意的:`hi/did/source.proto` 定下"所有身份实体的头像都落 hidid/avatar/"。
@@ -141,6 +144,16 @@ type sourceClient struct {
 
 func NewSourceClient(cc grpc.ClientConnInterface) SourceClient {
 	return &sourceClient{cc}
+}
+
+func (c *sourceClient) UploadProductImage(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(hi.UploadResp)
+	err := c.cc.Invoke(ctx, Source_UploadProductImage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *sourceClient) UploadAvatar(ctx context.Context, in *hi.UploadReq, opts ...grpc.CallOption) (*hi.UploadResp, error) {
@@ -364,6 +377,8 @@ func (c *sourceClient) Delete(ctx context.Context, in *hi.DeleteResourceReq, opt
 //	命名:`UploadAvatar` = **用户头像**(与 `hi.did.Source.UploadAvatar` 同名同义);
 //	群资源一律带 Group 前缀,`UploadGroupAvatar` / `UploadGroupBackground`。
 type SourceServer interface {
+	// 商品宣传图，永久公开保存到 hiclub/product/，不走14天临时媒体。
+	UploadProductImage(context.Context, *hi.UploadReq) (*hi.UploadResp, error)
 	// 用户头像 → **hidid/avatar/**(不是 club 自己的桶)。
 	//
 	// 落别家的桶是有意的:`hi/did/source.proto` 定下"所有身份实体的头像都落 hidid/avatar/"。
@@ -437,6 +452,9 @@ type SourceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedSourceServer struct{}
 
+func (UnimplementedSourceServer) UploadProductImage(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UploadProductImage not implemented")
+}
 func (UnimplementedSourceServer) UploadAvatar(context.Context, *hi.UploadReq) (*hi.UploadResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method UploadAvatar not implemented")
 }
@@ -509,6 +527,24 @@ func RegisterSourceServer(s grpc.ServiceRegistrar, srv SourceServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&Source_ServiceDesc, srv)
+}
+
+func _Source_UploadProductImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(hi.UploadReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SourceServer).UploadProductImage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Source_UploadProductImage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SourceServer).UploadProductImage(ctx, req.(*hi.UploadReq))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Source_UploadAvatar_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -813,6 +849,10 @@ var Source_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "hi.club.Source",
 	HandlerType: (*SourceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "UploadProductImage",
+			Handler:    _Source_UploadProductImage_Handler,
+		},
 		{
 			MethodName: "UploadAvatar",
 			Handler:    _Source_UploadAvatar_Handler,

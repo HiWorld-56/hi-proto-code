@@ -432,6 +432,15 @@ const BrainToFace$json = {
       '10': 'binanceOffers'
     },
     {
+      '1': 'product_notices',
+      '3': 28,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.ProductNotices',
+      '9': 0,
+      '10': 'productNotices'
+    },
+    {
       '1': 'video_ready',
       '3': 27,
       '4': 1,
@@ -475,8 +484,9 @@ final $typed_data.Uint8List brainToFaceDescriptor = $convert.base64Decode(
     'QmluYW5jZVJlc3VsdEgAUg1iaW5hbmNlUmVzdWx0EioKCHNob3dfdGlwGBggASgLMg0uaGkubm'
     'luamEuVGlwSABSB3Nob3dUaXASKwoHc2hvd19xchgZIAEoCzIQLmhpLm5pbmphLlFyQ2FyZEgA'
     'UgZzaG93UXISQAoOYmluYW5jZV9vZmZlcnMYGiABKAsyFy5oaS5uaW5qYS5CaW5hbmNlT2ZmZX'
-    'JzSABSDWJpbmFuY2VPZmZlcnMSNwoLdmlkZW9fcmVhZHkYGyABKAsyFC5oaS5uaW5qYS5WaWRl'
-    'b1JlYWR5SABSCnZpZGVvUmVhZHlCBQoDY21k');
+    'JzSABSDWJpbmFuY2VPZmZlcnMSQwoPcHJvZHVjdF9ub3RpY2VzGBwgASgLMhguaGkubmluamEu'
+    'UHJvZHVjdE5vdGljZXNIAFIOcHJvZHVjdE5vdGljZXMSNwoLdmlkZW9fcmVhZHkYGyABKAsyFC'
+    '5oaS5uaW5qYS5WaWRlb1JlYWR5SABSCnZpZGVvUmVhZHlCBQoDY21k');
 
 @$core.Deprecated('Use videoRequestDescriptor instead')
 const VideoRequest$json = {
@@ -656,6 +666,15 @@ const FaceToBrain$json = {
       '10': 'getBinanceOffers'
     },
     {
+      '1': 'product_notice_ack',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.ProductNoticeAck',
+      '9': 0,
+      '10': 'productNoticeAck'
+    },
+    {
       '1': 'video_request',
       '3': 8,
       '4': 1,
@@ -680,9 +699,10 @@ final $typed_data.Uint8List faceToBrainDescriptor = $convert.base64Decode(
     '5hbmNlX3JlcXVlc3QYBSABKAsyGC5oaS5uaW5qYS5CaW5hbmNlUmVxdWVzdEgAUg5iaW5hbmNl'
     'UmVxdWVzdBJPChNiaW5hbmNlX29mZmVyX3JlcGx5GAYgASgLMh0uaGkuYmluYW5jZS5CaW5hbm'
     'NlT2ZmZXJSZXBseUgAUhFiaW5hbmNlT2ZmZXJSZXBseRJGChJnZXRfYmluYW5jZV9vZmZlcnMY'
-    'ByABKAsyFi5nb29nbGUucHJvdG9idWYuRW1wdHlIAFIQZ2V0QmluYW5jZU9mZmVycxI9Cg12aW'
-    'Rlb19yZXF1ZXN0GAggASgLMhYuaGkubmluamEuVmlkZW9SZXF1ZXN0SABSDHZpZGVvUmVxdWVz'
-    'dEIFCgNjbWQ=');
+    'ByABKAsyFi5nb29nbGUucHJvdG9idWYuRW1wdHlIAFIQZ2V0QmluYW5jZU9mZmVycxJKChJwcm'
+    '9kdWN0X25vdGljZV9hY2sYCSABKAsyGi5oaS5uaW5qYS5Qcm9kdWN0Tm90aWNlQWNrSABSEHBy'
+    'b2R1Y3ROb3RpY2VBY2sSPQoNdmlkZW9fcmVxdWVzdBgIIAEoCzIWLmhpLm5pbmphLlZpZGVvUm'
+    'VxdWVzdEgAUgx2aWRlb1JlcXVlc3RCBQoDY21k');
 
 @$core.Deprecated('Use binanceOffersDescriptor instead')
 const BinanceOffers$json = {
@@ -831,3 +851,62 @@ final $typed_data.Uint8List updateActionDescriptor = $convert.base64Decode(
     'FjdGlvbkgAUgZhY3Rpb26IAQEiVAoGQWN0aW9uEhIKDkFDVElPTl9VTktOT1dOEAASEAoMQUNU'
     'SU9OX0NIRUNLEAESEAoMQUNUSU9OX0FQUExZEAISEgoOQUNUSU9OX0RJU01JU1MQA0IJCgdfYW'
     'N0aW9u');
+
+@$core.Deprecated('Use productNoticeDescriptor instead')
+const ProductNotice$json = {
+  '1': 'ProductNotice',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'id', '17': true},
+    {
+      '1': 'announcement',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductAnnouncement',
+      '10': 'announcement'
+    },
+  ],
+  '8': [
+    {'1': '_id'},
+  ],
+};
+
+/// Descriptor for `ProductNotice`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List productNoticeDescriptor = $convert.base64Decode(
+    'Cg1Qcm9kdWN0Tm90aWNlEhMKAmlkGAEgASgJSABSAmlkiAEBEkAKDGFubm91bmNlbWVudBgCIA'
+    'EoCzIcLmhpLmNsdWIuUHJvZHVjdEFubm91bmNlbWVudFIMYW5ub3VuY2VtZW50QgUKA19pZA==');
+
+@$core.Deprecated('Use productNoticesDescriptor instead')
+const ProductNotices$json = {
+  '1': 'ProductNotices',
+  '2': [
+    {
+      '1': 'list',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.ninja.ProductNotice',
+      '10': 'list'
+    },
+  ],
+};
+
+/// Descriptor for `ProductNotices`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List productNoticesDescriptor = $convert.base64Decode(
+    'Cg5Qcm9kdWN0Tm90aWNlcxIrCgRsaXN0GAEgAygLMhcuaGkubmluamEuUHJvZHVjdE5vdGljZV'
+    'IEbGlzdA==');
+
+@$core.Deprecated('Use productNoticeAckDescriptor instead')
+const ProductNoticeAck$json = {
+  '1': 'ProductNoticeAck',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'id', '17': true},
+  ],
+  '8': [
+    {'1': '_id'},
+  ],
+};
+
+/// Descriptor for `ProductNoticeAck`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List productNoticeAckDescriptor = $convert.base64Decode(
+    'ChBQcm9kdWN0Tm90aWNlQWNrEhMKAmlkGAEgASgJSABSAmlkiAEBQgUKA19pZA==');
