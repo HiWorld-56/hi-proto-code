@@ -11,7 +11,6 @@ import (
 	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -23,6 +22,58 @@ const (
 	// Verify that runtime/protoimpl is sufficiently up-to-date.
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
+
+type ProductListingStatus int32
+
+const (
+	ProductListingStatus_PRODUCT_LISTING_STATUS_UNSPECIFIED ProductListingStatus = 0
+	ProductListingStatus_PRODUCT_LISTING_STATUS_LISTED      ProductListingStatus = 1
+	ProductListingStatus_PRODUCT_LISTING_STATUS_HIDDEN      ProductListingStatus = 2
+	ProductListingStatus_PRODUCT_LISTING_STATUS_DELISTED    ProductListingStatus = 3
+)
+
+// Enum value maps for ProductListingStatus.
+var (
+	ProductListingStatus_name = map[int32]string{
+		0: "PRODUCT_LISTING_STATUS_UNSPECIFIED",
+		1: "PRODUCT_LISTING_STATUS_LISTED",
+		2: "PRODUCT_LISTING_STATUS_HIDDEN",
+		3: "PRODUCT_LISTING_STATUS_DELISTED",
+	}
+	ProductListingStatus_value = map[string]int32{
+		"PRODUCT_LISTING_STATUS_UNSPECIFIED": 0,
+		"PRODUCT_LISTING_STATUS_LISTED":      1,
+		"PRODUCT_LISTING_STATUS_HIDDEN":      2,
+		"PRODUCT_LISTING_STATUS_DELISTED":    3,
+	}
+)
+
+func (x ProductListingStatus) Enum() *ProductListingStatus {
+	p := new(ProductListingStatus)
+	*p = x
+	return p
+}
+
+func (x ProductListingStatus) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ProductListingStatus) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_club_product_proto_enumTypes[0].Descriptor()
+}
+
+func (ProductListingStatus) Type() protoreflect.EnumType {
+	return &file_hi_club_product_proto_enumTypes[0]
+}
+
+func (x ProductListingStatus) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ProductListingStatus.Descriptor instead.
+func (ProductListingStatus) EnumDescriptor() ([]byte, []int) {
+	return file_hi_club_product_proto_rawDescGZIP(), []int{0}
+}
 
 type ProductImage struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -76,7 +127,6 @@ func (x *ProductImage) GetThumbUrl() string {
 	return ""
 }
 
-// 创建与回读复用同一份商品资料，不从名称/图片反推身份。
 type ProductInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          *string                `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"`
@@ -131,8 +181,8 @@ func (x *ProductInfo) GetImages() []*ProductImage {
 
 type Product struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"` // 系统分配，客户端不能指定
-	Info          *ProductInfo           `protobuf:"bytes,2,opt,name=info,proto3" json:"info,omitempty"`
+	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"` // 系统分配
+	Info          *ProductInfo           `protobuf:"bytes,2,opt,name=info,proto3" json:"info,omitempty"`   // 展示资料唯一来源
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -181,19 +231,91 @@ func (x *Product) GetInfo() *ProductInfo {
 	return nil
 }
 
-type ProductListing struct {
+// 仅参与上传的主人与机器人可读。uploaded_by是审计快照，不是永久管理权。
+type ProductInventoryItem struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Product       *Product               `protobuf:"bytes,1,opt,name=product,proto3" json:"product,omitempty"`
-	Merchant      *hi.Entity             `protobuf:"bytes,2,opt,name=merchant,proto3" json:"merchant,omitempty"`                        // 上传者，取自认证主体
-	Stall         *hi.Entity             `protobuf:"bytes,3,opt,name=stall,proto3" json:"stall,omitempty"`                              // 硬件机器人，完整身份门面
-	ListedAt      *int64                 `protobuf:"varint,4,opt,name=listed_at,json=listedAt,proto3,oneof" json:"listed_at,omitempty"` // 微秒
+	Stall         *hi.Entity             `protobuf:"bytes,2,opt,name=stall,proto3" json:"stall,omitempty"`
+	UploadedBy    *hi.Entity             `protobuf:"bytes,3,opt,name=uploaded_by,json=uploadedBy,proto3" json:"uploaded_by,omitempty"`
+	UploadedAt    *int64                 `protobuf:"varint,4,opt,name=uploaded_at,json=uploadedAt,proto3,oneof" json:"uploaded_at,omitempty"` // 微秒
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
+func (x *ProductInventoryItem) Reset() {
+	*x = ProductInventoryItem{}
+	mi := &file_hi_club_product_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ProductInventoryItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ProductInventoryItem) ProtoMessage() {}
+
+func (x *ProductInventoryItem) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_product_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ProductInventoryItem.ProtoReflect.Descriptor instead.
+func (*ProductInventoryItem) Descriptor() ([]byte, []int) {
+	return file_hi_club_product_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *ProductInventoryItem) GetProduct() *Product {
+	if x != nil {
+		return x.Product
+	}
+	return nil
+}
+
+func (x *ProductInventoryItem) GetStall() *hi.Entity {
+	if x != nil {
+		return x.Stall
+	}
+	return nil
+}
+
+func (x *ProductInventoryItem) GetUploadedBy() *hi.Entity {
+	if x != nil {
+		return x.UploadedBy
+	}
+	return nil
+}
+
+func (x *ProductInventoryItem) GetUploadedAt() int64 {
+	if x != nil && x.UploadedAt != nil {
+		return *x.UploadedAt
+	}
+	return 0
+}
+
+type ProductListing struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Product         *Product               `protobuf:"bytes,1,opt,name=product,proto3" json:"product,omitempty"`   // 从库存现取，不复制名称/图片
+	Merchant        *hi.Entity             `protobuf:"bytes,2,opt,name=merchant,proto3" json:"merchant,omitempty"` // 摊主当前主人；无主则不传
+	Stall           *hi.Entity             `protobuf:"bytes,3,opt,name=stall,proto3" json:"stall,omitempty"`
+	ListedAt        *int64                 `protobuf:"varint,4,opt,name=listed_at,json=listedAt,proto3,oneof" json:"listed_at,omitempty"` // 微秒
+	Uuid            *string                `protobuf:"bytes,5,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`                          // 挂牌id，与商品id分开
+	Status          *ProductListingStatus  `protobuf:"varint,6,opt,name=status,proto3,enum=hi.club.ProductListingStatus,oneof" json:"status,omitempty"`
+	PublicationUuid *string                `protobuf:"bytes,7,opt,name=publication_uuid,json=publicationUuid,proto3,oneof" json:"publication_uuid,omitempty"` // 本次上架事件，重试不变，再上架产生新事件
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
 func (x *ProductListing) Reset() {
 	*x = ProductListing{}
-	mi := &file_hi_club_product_proto_msgTypes[3]
+	mi := &file_hi_club_product_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -205,7 +327,7 @@ func (x *ProductListing) String() string {
 func (*ProductListing) ProtoMessage() {}
 
 func (x *ProductListing) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_product_proto_msgTypes[3]
+	mi := &file_hi_club_product_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -218,7 +340,7 @@ func (x *ProductListing) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ProductListing.ProtoReflect.Descriptor instead.
 func (*ProductListing) Descriptor() ([]byte, []int) {
-	return file_hi_club_product_proto_rawDescGZIP(), []int{3}
+	return file_hi_club_product_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *ProductListing) GetProduct() *Product {
@@ -249,17 +371,38 @@ func (x *ProductListing) GetListedAt() int64 {
 	return 0
 }
 
+func (x *ProductListing) GetUuid() string {
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
+	}
+	return ""
+}
+
+func (x *ProductListing) GetStatus() ProductListingStatus {
+	if x != nil && x.Status != nil {
+		return *x.Status
+	}
+	return ProductListingStatus_PRODUCT_LISTING_STATUS_UNSPECIFIED
+}
+
+func (x *ProductListing) GetPublicationUuid() string {
+	if x != nil && x.PublicationUuid != nil {
+		return *x.PublicationUuid
+	}
+	return ""
+}
+
 type ProductAnnouncement struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Listing       *ProductListing        `protobuf:"bytes,1,opt,name=listing,proto3" json:"listing,omitempty"`
-	Group         *hi.Entity             `protobuf:"bytes,2,opt,name=group,proto3" json:"group,omitempty"` // 单聊上架通知不传；广播必须携带
+	Group         *hi.Entity             `protobuf:"bytes,2,opt,name=group,proto3" json:"group,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ProductAnnouncement) Reset() {
 	*x = ProductAnnouncement{}
-	mi := &file_hi_club_product_proto_msgTypes[4]
+	mi := &file_hi_club_product_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -271,7 +414,7 @@ func (x *ProductAnnouncement) String() string {
 func (*ProductAnnouncement) ProtoMessage() {}
 
 func (x *ProductAnnouncement) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_product_proto_msgTypes[4]
+	mi := &file_hi_club_product_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -284,7 +427,7 @@ func (x *ProductAnnouncement) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ProductAnnouncement.ProtoReflect.Descriptor instead.
 func (*ProductAnnouncement) Descriptor() ([]byte, []int) {
-	return file_hi_club_product_proto_rawDescGZIP(), []int{4}
+	return file_hi_club_product_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ProductAnnouncement) GetListing() *ProductListing {
@@ -301,19 +444,130 @@ func (x *ProductAnnouncement) GetGroup() *hi.Entity {
 	return nil
 }
 
+type ProductSeller struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Seller        *hi.Entity             `protobuf:"bytes,1,opt,name=seller,proto3" json:"seller,omitempty"` // 不传=聚合的无主摊位入口
+	StallsCount   *int64                 `protobuf:"varint,2,opt,name=stalls_count,json=stallsCount,proto3,oneof" json:"stalls_count,omitempty"`
+	ListingCount  *int64                 `protobuf:"varint,3,opt,name=listing_count,json=listingCount,proto3,oneof" json:"listing_count,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ProductSeller) Reset() {
+	*x = ProductSeller{}
+	mi := &file_hi_club_product_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ProductSeller) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ProductSeller) ProtoMessage() {}
+
+func (x *ProductSeller) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_product_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ProductSeller.ProtoReflect.Descriptor instead.
+func (*ProductSeller) Descriptor() ([]byte, []int) {
+	return file_hi_club_product_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *ProductSeller) GetSeller() *hi.Entity {
+	if x != nil {
+		return x.Seller
+	}
+	return nil
+}
+
+func (x *ProductSeller) GetStallsCount() int64 {
+	if x != nil && x.StallsCount != nil {
+		return *x.StallsCount
+	}
+	return 0
+}
+
+func (x *ProductSeller) GetListingCount() int64 {
+	if x != nil && x.ListingCount != nil {
+		return *x.ListingCount
+	}
+	return 0
+}
+
+type ProductStall struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Stall         *hi.Entity             `protobuf:"bytes,1,opt,name=stall,proto3" json:"stall,omitempty"`
+	ListingCount  *int64                 `protobuf:"varint,2,opt,name=listing_count,json=listingCount,proto3,oneof" json:"listing_count,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ProductStall) Reset() {
+	*x = ProductStall{}
+	mi := &file_hi_club_product_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ProductStall) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ProductStall) ProtoMessage() {}
+
+func (x *ProductStall) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_product_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ProductStall.ProtoReflect.Descriptor instead.
+func (*ProductStall) Descriptor() ([]byte, []int) {
+	return file_hi_club_product_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *ProductStall) GetStall() *hi.Entity {
+	if x != nil {
+		return x.Stall
+	}
+	return nil
+}
+
+func (x *ProductStall) GetListingCount() int64 {
+	if x != nil && x.ListingCount != nil {
+		return *x.ListingCount
+	}
+	return 0
+}
+
 type CreateProductReq struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// 请求幂等键，不是商品 id。相同主体/请求键重试返回原商品，内容不同则拒绝。
-	RequestUuid   *string      `protobuf:"bytes,1,opt,name=request_uuid,json=requestUuid,proto3,oneof" json:"request_uuid,omitempty"`
-	Stall         *string      `protobuf:"bytes,2,opt,name=stall,proto3,oneof" json:"stall,omitempty"` // 定位键
-	Info          *ProductInfo `protobuf:"bytes,3,opt,name=info,proto3" json:"info,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RequestUuid   *string                `protobuf:"bytes,1,opt,name=request_uuid,json=requestUuid,proto3,oneof" json:"request_uuid,omitempty"`
+	Stall         *string                `protobuf:"bytes,2,opt,name=stall,proto3,oneof" json:"stall,omitempty"` // 必须为本人当前名下硬件机器人
+	Info          *ProductInfo           `protobuf:"bytes,3,opt,name=info,proto3" json:"info,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CreateProductReq) Reset() {
 	*x = CreateProductReq{}
-	mi := &file_hi_club_product_proto_msgTypes[5]
+	mi := &file_hi_club_product_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -325,7 +579,7 @@ func (x *CreateProductReq) String() string {
 func (*CreateProductReq) ProtoMessage() {}
 
 func (x *CreateProductReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_product_proto_msgTypes[5]
+	mi := &file_hi_club_product_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -338,7 +592,7 @@ func (x *CreateProductReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateProductReq.ProtoReflect.Descriptor instead.
 func (*CreateProductReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_product_proto_rawDescGZIP(), []int{5}
+	return file_hi_club_product_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *CreateProductReq) GetRequestUuid() string {
@@ -371,7 +625,7 @@ type GetProductReq struct {
 
 func (x *GetProductReq) Reset() {
 	*x = GetProductReq{}
-	mi := &file_hi_club_product_proto_msgTypes[6]
+	mi := &file_hi_club_product_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -383,7 +637,7 @@ func (x *GetProductReq) String() string {
 func (*GetProductReq) ProtoMessage() {}
 
 func (x *GetProductReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_product_proto_msgTypes[6]
+	mi := &file_hi_club_product_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -396,7 +650,7 @@ func (x *GetProductReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetProductReq.ProtoReflect.Descriptor instead.
 func (*GetProductReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_product_proto_rawDescGZIP(), []int{6}
+	return file_hi_club_product_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *GetProductReq) GetId() string {
@@ -408,7 +662,7 @@ func (x *GetProductReq) GetId() string {
 
 type ListProductsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Stall         *string                `protobuf:"bytes,1,opt,name=stall,proto3,oneof" json:"stall,omitempty"` // 不传=我上传的；传=该摊位
+	Stall         *string                `protobuf:"bytes,1,opt,name=stall,proto3,oneof" json:"stall,omitempty"` // 管理面不传=当前本人名下全部机器人；摊主本人只读自己
 	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -416,7 +670,7 @@ type ListProductsReq struct {
 
 func (x *ListProductsReq) Reset() {
 	*x = ListProductsReq{}
-	mi := &file_hi_club_product_proto_msgTypes[7]
+	mi := &file_hi_club_product_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -428,7 +682,7 @@ func (x *ListProductsReq) String() string {
 func (*ListProductsReq) ProtoMessage() {}
 
 func (x *ListProductsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_product_proto_msgTypes[7]
+	mi := &file_hi_club_product_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -441,7 +695,7 @@ func (x *ListProductsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListProductsReq.ProtoReflect.Descriptor instead.
 func (*ListProductsReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_product_proto_rawDescGZIP(), []int{7}
+	return file_hi_club_product_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *ListProductsReq) GetStall() string {
@@ -458,29 +712,29 @@ func (x *ListProductsReq) GetPagination() *hi.Pagination {
 	return nil
 }
 
-type ListProductsResp struct {
+type SetProductListingStatusReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	List          []*ProductListing      `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
-	Total         *int64                 `protobuf:"varint,2,opt,name=total,proto3,oneof" json:"total,omitempty"`
+	Uuid          *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
+	Status        *ProductListingStatus  `protobuf:"varint,2,opt,name=status,proto3,enum=hi.club.ProductListingStatus,oneof" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListProductsResp) Reset() {
-	*x = ListProductsResp{}
-	mi := &file_hi_club_product_proto_msgTypes[8]
+func (x *SetProductListingStatusReq) Reset() {
+	*x = SetProductListingStatusReq{}
+	mi := &file_hi_club_product_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListProductsResp) String() string {
+func (x *SetProductListingStatusReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListProductsResp) ProtoMessage() {}
+func (*SetProductListingStatusReq) ProtoMessage() {}
 
-func (x *ListProductsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_product_proto_msgTypes[8]
+func (x *SetProductListingStatusReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_product_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -491,19 +745,419 @@ func (x *ListProductsResp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListProductsResp.ProtoReflect.Descriptor instead.
-func (*ListProductsResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_product_proto_rawDescGZIP(), []int{8}
+// Deprecated: Use SetProductListingStatusReq.ProtoReflect.Descriptor instead.
+func (*SetProductListingStatusReq) Descriptor() ([]byte, []int) {
+	return file_hi_club_product_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *ListProductsResp) GetList() []*ProductListing {
+func (x *SetProductListingStatusReq) GetUuid() string {
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
+	}
+	return ""
+}
+
+func (x *SetProductListingStatusReq) GetStatus() ProductListingStatus {
+	if x != nil && x.Status != nil {
+		return *x.Status
+	}
+	return ProductListingStatus_PRODUCT_LISTING_STATUS_UNSPECIFIED
+}
+
+type GetProductListingReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Uuid          *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetProductListingReq) Reset() {
+	*x = GetProductListingReq{}
+	mi := &file_hi_club_product_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetProductListingReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetProductListingReq) ProtoMessage() {}
+
+func (x *GetProductListingReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_product_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetProductListingReq.ProtoReflect.Descriptor instead.
+func (*GetProductListingReq) Descriptor() ([]byte, []int) {
+	return file_hi_club_product_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *GetProductListingReq) GetUuid() string {
+	if x != nil && x.Uuid != nil {
+		return *x.Uuid
+	}
+	return ""
+}
+
+type SearchProductListingsReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Keyword       *string                `protobuf:"bytes,1,opt,name=keyword,proto3,oneof" json:"keyword,omitempty"`
+	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SearchProductListingsReq) Reset() {
+	*x = SearchProductListingsReq{}
+	mi := &file_hi_club_product_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SearchProductListingsReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SearchProductListingsReq) ProtoMessage() {}
+
+func (x *SearchProductListingsReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_product_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SearchProductListingsReq.ProtoReflect.Descriptor instead.
+func (*SearchProductListingsReq) Descriptor() ([]byte, []int) {
+	return file_hi_club_product_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *SearchProductListingsReq) GetKeyword() string {
+	if x != nil && x.Keyword != nil {
+		return *x.Keyword
+	}
+	return ""
+}
+
+func (x *SearchProductListingsReq) GetPagination() *hi.Pagination {
+	if x != nil {
+		return x.Pagination
+	}
+	return nil
+}
+
+type GetProductSellerReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Did           *string                `protobuf:"bytes,1,opt,name=did,proto3,oneof" json:"did,omitempty"` // 不传=无主摊位入口
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetProductSellerReq) Reset() {
+	*x = GetProductSellerReq{}
+	mi := &file_hi_club_product_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetProductSellerReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetProductSellerReq) ProtoMessage() {}
+
+func (x *GetProductSellerReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_product_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetProductSellerReq.ProtoReflect.Descriptor instead.
+func (*GetProductSellerReq) Descriptor() ([]byte, []int) {
+	return file_hi_club_product_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *GetProductSellerReq) GetDid() string {
+	if x != nil && x.Did != nil {
+		return *x.Did
+	}
+	return ""
+}
+
+type ListProductStallsReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Seller        *string                `protobuf:"bytes,1,opt,name=seller,proto3,oneof" json:"seller,omitempty"` // 不传=无主摊位入口
+	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListProductStallsReq) Reset() {
+	*x = ListProductStallsReq{}
+	mi := &file_hi_club_product_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListProductStallsReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListProductStallsReq) ProtoMessage() {}
+
+func (x *ListProductStallsReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_product_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListProductStallsReq.ProtoReflect.Descriptor instead.
+func (*ListProductStallsReq) Descriptor() ([]byte, []int) {
+	return file_hi_club_product_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *ListProductStallsReq) GetSeller() string {
+	if x != nil && x.Seller != nil {
+		return *x.Seller
+	}
+	return ""
+}
+
+func (x *ListProductStallsReq) GetPagination() *hi.Pagination {
+	if x != nil {
+		return x.Pagination
+	}
+	return nil
+}
+
+type ListProductInventoryResp struct {
+	state         protoimpl.MessageState  `protogen:"open.v1"`
+	List          []*ProductInventoryItem `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	Total         *int64                  `protobuf:"varint,2,opt,name=total,proto3,oneof" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListProductInventoryResp) Reset() {
+	*x = ListProductInventoryResp{}
+	mi := &file_hi_club_product_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListProductInventoryResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListProductInventoryResp) ProtoMessage() {}
+
+func (x *ListProductInventoryResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_product_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListProductInventoryResp.ProtoReflect.Descriptor instead.
+func (*ListProductInventoryResp) Descriptor() ([]byte, []int) {
+	return file_hi_club_product_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *ListProductInventoryResp) GetList() []*ProductInventoryItem {
 	if x != nil {
 		return x.List
 	}
 	return nil
 }
 
-func (x *ListProductsResp) GetTotal() int64 {
+func (x *ListProductInventoryResp) GetTotal() int64 {
+	if x != nil && x.Total != nil {
+		return *x.Total
+	}
+	return 0
+}
+
+type ListProductListingsResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	List          []*ProductListing      `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	Total         *int64                 `protobuf:"varint,2,opt,name=total,proto3,oneof" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListProductListingsResp) Reset() {
+	*x = ListProductListingsResp{}
+	mi := &file_hi_club_product_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListProductListingsResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListProductListingsResp) ProtoMessage() {}
+
+func (x *ListProductListingsResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_product_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListProductListingsResp.ProtoReflect.Descriptor instead.
+func (*ListProductListingsResp) Descriptor() ([]byte, []int) {
+	return file_hi_club_product_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *ListProductListingsResp) GetList() []*ProductListing {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
+func (x *ListProductListingsResp) GetTotal() int64 {
+	if x != nil && x.Total != nil {
+		return *x.Total
+	}
+	return 0
+}
+
+type ListProductSellersResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	List          []*ProductSeller       `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	Total         *int64                 `protobuf:"varint,2,opt,name=total,proto3,oneof" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListProductSellersResp) Reset() {
+	*x = ListProductSellersResp{}
+	mi := &file_hi_club_product_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListProductSellersResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListProductSellersResp) ProtoMessage() {}
+
+func (x *ListProductSellersResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_product_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListProductSellersResp.ProtoReflect.Descriptor instead.
+func (*ListProductSellersResp) Descriptor() ([]byte, []int) {
+	return file_hi_club_product_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *ListProductSellersResp) GetList() []*ProductSeller {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
+func (x *ListProductSellersResp) GetTotal() int64 {
+	if x != nil && x.Total != nil {
+		return *x.Total
+	}
+	return 0
+}
+
+type ListProductStallsResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	List          []*ProductStall        `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	Total         *int64                 `protobuf:"varint,2,opt,name=total,proto3,oneof" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListProductStallsResp) Reset() {
+	*x = ListProductStallsResp{}
+	mi := &file_hi_club_product_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListProductStallsResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListProductStallsResp) ProtoMessage() {}
+
+func (x *ListProductStallsResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_product_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListProductStallsResp.ProtoReflect.Descriptor instead.
+func (*ListProductStallsResp) Descriptor() ([]byte, []int) {
+	return file_hi_club_product_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *ListProductStallsResp) GetList() []*ProductStall {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
+func (x *ListProductStallsResp) GetTotal() int64 {
 	if x != nil && x.Total != nil {
 		return *x.Total
 	}
@@ -514,7 +1168,7 @@ var File_hi_club_product_proto protoreflect.FileDescriptor
 
 const file_hi_club_product_proto_rawDesc = "" +
 	"\n" +
-	"\x15hi/club/product.proto\x12\ahi.club\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\x82\x01\n" +
+	"\x15hi/club/product.proto\x12\ahi.club\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\x82\x01\n" +
 	"\fProductImage\x12&\n" +
 	"\x03url\x18\x01 \x01(\tB\x0f\xbaH\b\xc8\x01\x01r\x03\x88\x01\x01\x90\xb5\x18\x01H\x00R\x03url\x88\x01\x01\x12.\n" +
 	"\tthumb_url\x18\x02 \x01(\tB\f\xbaH\x05r\x03\x88\x01\x01\x90\xb5\x18\x01H\x01R\bthumbUrl\x88\x01\x01:\x04\x98\xb5\x18\x01B\x06\n" +
@@ -528,20 +1182,48 @@ const file_hi_club_product_proto_rawDesc = "" +
 	"\aProduct\x12\x19\n" +
 	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x02id\x88\x01\x01\x12.\n" +
 	"\x04info\x18\x02 \x01(\v2\x14.hi.club.ProductInfoB\x04\x90\xb5\x18\x01R\x04info:\x04\x98\xb5\x18\x01B\x05\n" +
-	"\x03_id\"\xd4\x01\n" +
+	"\x03_id\"\xe5\x01\n" +
+	"\x14ProductInventoryItem\x120\n" +
+	"\aproduct\x18\x01 \x01(\v2\x10.hi.club.ProductB\x04\x90\xb5\x18\x01R\aproduct\x12&\n" +
+	"\x05stall\x18\x02 \x01(\v2\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x02R\x05stall\x121\n" +
+	"\vuploaded_by\x18\x03 \x01(\v2\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x02R\n" +
+	"uploadedBy\x12*\n" +
+	"\vuploaded_at\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x02H\x00R\n" +
+	"uploadedAt\x88\x01\x01:\x04\x98\xb5\x18\x02B\x0e\n" +
+	"\f_uploaded_at\"\x94\x03\n" +
 	"\x0eProductListing\x120\n" +
 	"\aproduct\x18\x01 \x01(\v2\x10.hi.club.ProductB\x04\x90\xb5\x18\x01R\aproduct\x12,\n" +
 	"\bmerchant\x18\x02 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\bmerchant\x12&\n" +
 	"\x05stall\x18\x03 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\x05stall\x12&\n" +
-	"\tlisted_at\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x01H\x00R\blistedAt\x88\x01\x01:\x04\x98\xb5\x18\x01B\f\n" +
+	"\tlisted_at\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x01H\x00R\blistedAt\x88\x01\x01\x12\x1d\n" +
+	"\x04uuid\x18\x05 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x04uuid\x88\x01\x01\x12@\n" +
+	"\x06status\x18\x06 \x01(\x0e2\x1d.hi.club.ProductListingStatusB\x04\x90\xb5\x18\x01H\x02R\x06status\x88\x01\x01\x124\n" +
+	"\x10publication_uuid\x18\a \x01(\tB\x04\x90\xb5\x18\x01H\x03R\x0fpublicationUuid\x88\x01\x01:\x04\x98\xb5\x18\x01B\f\n" +
 	"\n" +
-	"_listed_at\"|\n" +
+	"_listed_atB\a\n" +
+	"\x05_uuidB\t\n" +
+	"\a_statusB\x13\n" +
+	"\x11_publication_uuid\"|\n" +
 	"\x13ProductAnnouncement\x127\n" +
 	"\alisting\x18\x01 \x01(\v2\x17.hi.club.ProductListingB\x04\x90\xb5\x18\x01R\alisting\x12&\n" +
 	"\x05group\x18\x02 \x01(\v2\n" +
-	".hi.EntityB\x04\x90\xb5\x18\x01R\x05group:\x04\x98\xb5\x18\x01\"\xbb\x01\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x05group:\x04\x98\xb5\x18\x01\"\xc0\x01\n" +
+	"\rProductSeller\x12(\n" +
+	"\x06seller\x18\x01 \x01(\v2\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x06seller\x12,\n" +
+	"\fstalls_count\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x01H\x00R\vstallsCount\x88\x01\x01\x12.\n" +
+	"\rlisting_count\x18\x03 \x01(\x03B\x04\x90\xb5\x18\x01H\x01R\flistingCount\x88\x01\x01:\x04\x98\xb5\x18\x01B\x0f\n" +
+	"\r_stalls_countB\x10\n" +
+	"\x0e_listing_count\"~\n" +
+	"\fProductStall\x12&\n" +
+	"\x05stall\x18\x01 \x01(\v2\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\x05stall\x12.\n" +
+	"\rlisting_count\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x01H\x00R\flistingCount\x88\x01\x01:\x04\x98\xb5\x18\x01B\x10\n" +
+	"\x0e_listing_count\"\xbb\x01\n" +
 	"\x10CreateProductReq\x123\n" +
 	"\frequest_uuid\x18\x01 \x01(\tB\v\xbaH\b\xc8\x01\x01r\x03\xb0\x01\x01H\x00R\vrequestUuid\x88\x01\x01\x12%\n" +
 	"\x05stall\x18\x02 \x01(\tB\n" +
@@ -558,16 +1240,70 @@ const file_hi_club_product_proto_rawDesc = "" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
 	"paginationB\b\n" +
-	"\x06_stall\"v\n" +
-	"\x10ListProductsResp\x121\n" +
+	"\x06_stall\"\x9e\x01\n" +
+	"\x1aSetProductListingStatusReq\x12#\n" +
+	"\x04uuid\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\x04uuid\x88\x01\x01\x12G\n" +
+	"\x06status\x18\x02 \x01(\x0e2\x1d.hi.club.ProductListingStatusB\v\xbaH\b\xc8\x01\x01\x82\x01\x02\x10\x01H\x01R\x06status\x88\x01\x01B\a\n" +
+	"\x05_uuidB\t\n" +
+	"\a_status\"D\n" +
+	"\x14GetProductListingReq\x12#\n" +
+	"\x04uuid\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\x04uuid\x88\x01\x01B\a\n" +
+	"\x05_uuid\"~\n" +
+	"\x18SearchProductListingsReq\x12&\n" +
+	"\akeyword\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x00R\akeyword\x88\x01\x01\x12.\n" +
+	"\n" +
+	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
+	"paginationB\n" +
+	"\n" +
+	"\b_keyword\"=\n" +
+	"\x13GetProductSellerReq\x12\x1e\n" +
+	"\x03did\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x00R\x03did\x88\x01\x01B\x06\n" +
+	"\x04_did\"w\n" +
+	"\x14ListProductStallsReq\x12$\n" +
+	"\x06seller\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x00R\x06seller\x88\x01\x01\x12.\n" +
+	"\n" +
+	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
+	"paginationB\t\n" +
+	"\a_seller\"\x84\x01\n" +
+	"\x18ListProductInventoryResp\x127\n" +
+	"\x04list\x18\x01 \x03(\v2\x1d.hi.club.ProductInventoryItemB\x04\x90\xb5\x18\x02R\x04list\x12\x1f\n" +
+	"\x05total\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_total\"}\n" +
+	"\x17ListProductListingsResp\x121\n" +
 	"\x04list\x18\x01 \x03(\v2\x17.hi.club.ProductListingB\x04\x90\xb5\x18\x01R\x04list\x12\x1f\n" +
 	"\x05total\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x01H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x01B\b\n" +
-	"\x06_total2\x9b\x02\n" +
-	"\rProductMarket\x12C\n" +
-	"\x06Create\x12\x19.hi.club.CreateProductReq\x1a\x17.hi.club.ProductListing\"\x05\x8a\xb5\x18\x01\x02\x12=\n" +
-	"\x03Get\x12\x16.hi.club.GetProductReq\x1a\x17.hi.club.ProductListing\"\x05\x8a\xb5\x18\x01\x02\x12B\n" +
-	"\x04List\x12\x18.hi.club.ListProductsReq\x1a\x19.hi.club.ListProductsResp\"\x05\x8a\xb5\x18\x01\x02\x12B\n" +
-	"\tBroadcast\x12\x16.hi.club.GetProductReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02B\x83\x01\n" +
+	"\x06_total\"{\n" +
+	"\x16ListProductSellersResp\x120\n" +
+	"\x04list\x18\x01 \x03(\v2\x16.hi.club.ProductSellerB\x04\x90\xb5\x18\x01R\x04list\x12\x1f\n" +
+	"\x05total\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x01H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x01B\b\n" +
+	"\x06_total\"y\n" +
+	"\x15ListProductStallsResp\x12/\n" +
+	"\x04list\x18\x01 \x03(\v2\x15.hi.club.ProductStallB\x04\x90\xb5\x18\x01R\x04list\x12\x1f\n" +
+	"\x05total\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x01H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x01B\b\n" +
+	"\x06_total*\xa9\x01\n" +
+	"\x14ProductListingStatus\x12&\n" +
+	"\"PRODUCT_LISTING_STATUS_UNSPECIFIED\x10\x00\x12!\n" +
+	"\x1dPRODUCT_LISTING_STATUS_LISTED\x10\x01\x12!\n" +
+	"\x1dPRODUCT_LISTING_STATUS_HIDDEN\x10\x02\x12#\n" +
+	"\x1fPRODUCT_LISTING_STATUS_DELISTED\x10\x032\xee\x01\n" +
+	"\x10ProductInventory\x12I\n" +
+	"\x06Create\x12\x19.hi.club.CreateProductReq\x1a\x1d.hi.club.ProductInventoryItem\"\x05\x8a\xb5\x18\x01\x02\x12C\n" +
+	"\x03Get\x12\x16.hi.club.GetProductReq\x1a\x1d.hi.club.ProductInventoryItem\"\x05\x8a\xb5\x18\x01\x02\x12J\n" +
+	"\x04List\x12\x18.hi.club.ListProductsReq\x1a!.hi.club.ListProductInventoryResp\"\x05\x8a\xb5\x18\x01\x022\x80\x02\n" +
+	"\rProductMarket\x12A\n" +
+	"\aPublish\x12\x16.hi.club.GetProductReq\x1a\x17.hi.club.ProductListing\"\x05\x8a\xb5\x18\x01\x02\x12W\n" +
+	"\x10SetListingStatus\x12#.hi.club.SetProductListingStatusReq\x1a\x17.hi.club.ProductListing\"\x05\x8a\xb5\x18\x01\x02\x12S\n" +
+	"\x0eListMyListings\x12\x18.hi.club.ListProductsReq\x1a .hi.club.ListProductListingsResp\"\x05\x8a\xb5\x18\x01\x022\x86\x04\n" +
+	"\x16ProductMarketDirectory\x12E\n" +
+	"\vListSellers\x12\x0e.hi.Pagination\x1a\x1f.hi.club.ListProductSellersResp\"\x05\x8a\xb5\x18\x01\x01\x12H\n" +
+	"\tGetSeller\x12\x1c.hi.club.GetProductSellerReq\x1a\x16.hi.club.ProductSeller\"\x05\x8a\xb5\x18\x01\x01\x12X\n" +
+	"\x10ListSellerStalls\x12\x1d.hi.club.ListProductStallsReq\x1a\x1e.hi.club.ListProductStallsResp\"\x05\x8a\xb5\x18\x01\x01\x12V\n" +
+	"\x11ListStallListings\x12\x18.hi.club.ListProductsReq\x1a .hi.club.ListProductListingsResp\"\x05\x8a\xb5\x18\x01\x01\x12\\\n" +
+	"\x0eSearchListings\x12!.hi.club.SearchProductListingsReq\x1a .hi.club.ListProductListingsResp\"\x05\x8a\xb5\x18\x01\x01\x12K\n" +
+	"\n" +
+	"GetListing\x12\x1d.hi.club.GetProductListingReq\x1a\x17.hi.club.ProductListing\"\x05\x8a\xb5\x18\x01\x01B\x83\x01\n" +
 	"\vcom.hi.clubB\fProductProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (
@@ -582,45 +1318,85 @@ func file_hi_club_product_proto_rawDescGZIP() []byte {
 	return file_hi_club_product_proto_rawDescData
 }
 
-var file_hi_club_product_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_hi_club_product_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_hi_club_product_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
 var file_hi_club_product_proto_goTypes = []any{
-	(*ProductImage)(nil),        // 0: hi.club.ProductImage
-	(*ProductInfo)(nil),         // 1: hi.club.ProductInfo
-	(*Product)(nil),             // 2: hi.club.Product
-	(*ProductListing)(nil),      // 3: hi.club.ProductListing
-	(*ProductAnnouncement)(nil), // 4: hi.club.ProductAnnouncement
-	(*CreateProductReq)(nil),    // 5: hi.club.CreateProductReq
-	(*GetProductReq)(nil),       // 6: hi.club.GetProductReq
-	(*ListProductsReq)(nil),     // 7: hi.club.ListProductsReq
-	(*ListProductsResp)(nil),    // 8: hi.club.ListProductsResp
-	(*hi.Entity)(nil),           // 9: hi.Entity
-	(*hi.Pagination)(nil),       // 10: hi.Pagination
-	(*emptypb.Empty)(nil),       // 11: google.protobuf.Empty
+	(ProductListingStatus)(0),          // 0: hi.club.ProductListingStatus
+	(*ProductImage)(nil),               // 1: hi.club.ProductImage
+	(*ProductInfo)(nil),                // 2: hi.club.ProductInfo
+	(*Product)(nil),                    // 3: hi.club.Product
+	(*ProductInventoryItem)(nil),       // 4: hi.club.ProductInventoryItem
+	(*ProductListing)(nil),             // 5: hi.club.ProductListing
+	(*ProductAnnouncement)(nil),        // 6: hi.club.ProductAnnouncement
+	(*ProductSeller)(nil),              // 7: hi.club.ProductSeller
+	(*ProductStall)(nil),               // 8: hi.club.ProductStall
+	(*CreateProductReq)(nil),           // 9: hi.club.CreateProductReq
+	(*GetProductReq)(nil),              // 10: hi.club.GetProductReq
+	(*ListProductsReq)(nil),            // 11: hi.club.ListProductsReq
+	(*SetProductListingStatusReq)(nil), // 12: hi.club.SetProductListingStatusReq
+	(*GetProductListingReq)(nil),       // 13: hi.club.GetProductListingReq
+	(*SearchProductListingsReq)(nil),   // 14: hi.club.SearchProductListingsReq
+	(*GetProductSellerReq)(nil),        // 15: hi.club.GetProductSellerReq
+	(*ListProductStallsReq)(nil),       // 16: hi.club.ListProductStallsReq
+	(*ListProductInventoryResp)(nil),   // 17: hi.club.ListProductInventoryResp
+	(*ListProductListingsResp)(nil),    // 18: hi.club.ListProductListingsResp
+	(*ListProductSellersResp)(nil),     // 19: hi.club.ListProductSellersResp
+	(*ListProductStallsResp)(nil),      // 20: hi.club.ListProductStallsResp
+	(*hi.Entity)(nil),                  // 21: hi.Entity
+	(*hi.Pagination)(nil),              // 22: hi.Pagination
 }
 var file_hi_club_product_proto_depIdxs = []int32{
-	0,  // 0: hi.club.ProductInfo.images:type_name -> hi.club.ProductImage
-	1,  // 1: hi.club.Product.info:type_name -> hi.club.ProductInfo
-	2,  // 2: hi.club.ProductListing.product:type_name -> hi.club.Product
-	9,  // 3: hi.club.ProductListing.merchant:type_name -> hi.Entity
-	9,  // 4: hi.club.ProductListing.stall:type_name -> hi.Entity
-	3,  // 5: hi.club.ProductAnnouncement.listing:type_name -> hi.club.ProductListing
-	9,  // 6: hi.club.ProductAnnouncement.group:type_name -> hi.Entity
-	1,  // 7: hi.club.CreateProductReq.info:type_name -> hi.club.ProductInfo
-	10, // 8: hi.club.ListProductsReq.pagination:type_name -> hi.Pagination
-	3,  // 9: hi.club.ListProductsResp.list:type_name -> hi.club.ProductListing
-	5,  // 10: hi.club.ProductMarket.Create:input_type -> hi.club.CreateProductReq
-	6,  // 11: hi.club.ProductMarket.Get:input_type -> hi.club.GetProductReq
-	7,  // 12: hi.club.ProductMarket.List:input_type -> hi.club.ListProductsReq
-	6,  // 13: hi.club.ProductMarket.Broadcast:input_type -> hi.club.GetProductReq
-	3,  // 14: hi.club.ProductMarket.Create:output_type -> hi.club.ProductListing
-	3,  // 15: hi.club.ProductMarket.Get:output_type -> hi.club.ProductListing
-	8,  // 16: hi.club.ProductMarket.List:output_type -> hi.club.ListProductsResp
-	11, // 17: hi.club.ProductMarket.Broadcast:output_type -> google.protobuf.Empty
-	14, // [14:18] is the sub-list for method output_type
-	10, // [10:14] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	1,  // 0: hi.club.ProductInfo.images:type_name -> hi.club.ProductImage
+	2,  // 1: hi.club.Product.info:type_name -> hi.club.ProductInfo
+	3,  // 2: hi.club.ProductInventoryItem.product:type_name -> hi.club.Product
+	21, // 3: hi.club.ProductInventoryItem.stall:type_name -> hi.Entity
+	21, // 4: hi.club.ProductInventoryItem.uploaded_by:type_name -> hi.Entity
+	3,  // 5: hi.club.ProductListing.product:type_name -> hi.club.Product
+	21, // 6: hi.club.ProductListing.merchant:type_name -> hi.Entity
+	21, // 7: hi.club.ProductListing.stall:type_name -> hi.Entity
+	0,  // 8: hi.club.ProductListing.status:type_name -> hi.club.ProductListingStatus
+	5,  // 9: hi.club.ProductAnnouncement.listing:type_name -> hi.club.ProductListing
+	21, // 10: hi.club.ProductAnnouncement.group:type_name -> hi.Entity
+	21, // 11: hi.club.ProductSeller.seller:type_name -> hi.Entity
+	21, // 12: hi.club.ProductStall.stall:type_name -> hi.Entity
+	2,  // 13: hi.club.CreateProductReq.info:type_name -> hi.club.ProductInfo
+	22, // 14: hi.club.ListProductsReq.pagination:type_name -> hi.Pagination
+	0,  // 15: hi.club.SetProductListingStatusReq.status:type_name -> hi.club.ProductListingStatus
+	22, // 16: hi.club.SearchProductListingsReq.pagination:type_name -> hi.Pagination
+	22, // 17: hi.club.ListProductStallsReq.pagination:type_name -> hi.Pagination
+	4,  // 18: hi.club.ListProductInventoryResp.list:type_name -> hi.club.ProductInventoryItem
+	5,  // 19: hi.club.ListProductListingsResp.list:type_name -> hi.club.ProductListing
+	7,  // 20: hi.club.ListProductSellersResp.list:type_name -> hi.club.ProductSeller
+	8,  // 21: hi.club.ListProductStallsResp.list:type_name -> hi.club.ProductStall
+	9,  // 22: hi.club.ProductInventory.Create:input_type -> hi.club.CreateProductReq
+	10, // 23: hi.club.ProductInventory.Get:input_type -> hi.club.GetProductReq
+	11, // 24: hi.club.ProductInventory.List:input_type -> hi.club.ListProductsReq
+	10, // 25: hi.club.ProductMarket.Publish:input_type -> hi.club.GetProductReq
+	12, // 26: hi.club.ProductMarket.SetListingStatus:input_type -> hi.club.SetProductListingStatusReq
+	11, // 27: hi.club.ProductMarket.ListMyListings:input_type -> hi.club.ListProductsReq
+	22, // 28: hi.club.ProductMarketDirectory.ListSellers:input_type -> hi.Pagination
+	15, // 29: hi.club.ProductMarketDirectory.GetSeller:input_type -> hi.club.GetProductSellerReq
+	16, // 30: hi.club.ProductMarketDirectory.ListSellerStalls:input_type -> hi.club.ListProductStallsReq
+	11, // 31: hi.club.ProductMarketDirectory.ListStallListings:input_type -> hi.club.ListProductsReq
+	14, // 32: hi.club.ProductMarketDirectory.SearchListings:input_type -> hi.club.SearchProductListingsReq
+	13, // 33: hi.club.ProductMarketDirectory.GetListing:input_type -> hi.club.GetProductListingReq
+	4,  // 34: hi.club.ProductInventory.Create:output_type -> hi.club.ProductInventoryItem
+	4,  // 35: hi.club.ProductInventory.Get:output_type -> hi.club.ProductInventoryItem
+	17, // 36: hi.club.ProductInventory.List:output_type -> hi.club.ListProductInventoryResp
+	5,  // 37: hi.club.ProductMarket.Publish:output_type -> hi.club.ProductListing
+	5,  // 38: hi.club.ProductMarket.SetListingStatus:output_type -> hi.club.ProductListing
+	18, // 39: hi.club.ProductMarket.ListMyListings:output_type -> hi.club.ListProductListingsResp
+	19, // 40: hi.club.ProductMarketDirectory.ListSellers:output_type -> hi.club.ListProductSellersResp
+	7,  // 41: hi.club.ProductMarketDirectory.GetSeller:output_type -> hi.club.ProductSeller
+	20, // 42: hi.club.ProductMarketDirectory.ListSellerStalls:output_type -> hi.club.ListProductStallsResp
+	18, // 43: hi.club.ProductMarketDirectory.ListStallListings:output_type -> hi.club.ListProductListingsResp
+	18, // 44: hi.club.ProductMarketDirectory.SearchListings:output_type -> hi.club.ListProductListingsResp
+	5,  // 45: hi.club.ProductMarketDirectory.GetListing:output_type -> hi.club.ProductListing
+	34, // [34:46] is the sub-list for method output_type
+	22, // [22:34] is the sub-list for method input_type
+	22, // [22:22] is the sub-list for extension type_name
+	22, // [22:22] is the sub-list for extension extendee
+	0,  // [0:22] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_product_proto_init() }
@@ -632,22 +1408,34 @@ func file_hi_club_product_proto_init() {
 	file_hi_club_product_proto_msgTypes[1].OneofWrappers = []any{}
 	file_hi_club_product_proto_msgTypes[2].OneofWrappers = []any{}
 	file_hi_club_product_proto_msgTypes[3].OneofWrappers = []any{}
-	file_hi_club_product_proto_msgTypes[5].OneofWrappers = []any{}
+	file_hi_club_product_proto_msgTypes[4].OneofWrappers = []any{}
 	file_hi_club_product_proto_msgTypes[6].OneofWrappers = []any{}
 	file_hi_club_product_proto_msgTypes[7].OneofWrappers = []any{}
 	file_hi_club_product_proto_msgTypes[8].OneofWrappers = []any{}
+	file_hi_club_product_proto_msgTypes[9].OneofWrappers = []any{}
+	file_hi_club_product_proto_msgTypes[10].OneofWrappers = []any{}
+	file_hi_club_product_proto_msgTypes[11].OneofWrappers = []any{}
+	file_hi_club_product_proto_msgTypes[12].OneofWrappers = []any{}
+	file_hi_club_product_proto_msgTypes[13].OneofWrappers = []any{}
+	file_hi_club_product_proto_msgTypes[14].OneofWrappers = []any{}
+	file_hi_club_product_proto_msgTypes[15].OneofWrappers = []any{}
+	file_hi_club_product_proto_msgTypes[16].OneofWrappers = []any{}
+	file_hi_club_product_proto_msgTypes[17].OneofWrappers = []any{}
+	file_hi_club_product_proto_msgTypes[18].OneofWrappers = []any{}
+	file_hi_club_product_proto_msgTypes[19].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_product_proto_rawDesc), len(file_hi_club_product_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   9,
+			NumEnums:      1,
+			NumMessages:   20,
 			NumExtensions: 0,
-			NumServices:   1,
+			NumServices:   3,
 		},
 		GoTypes:           file_hi_club_product_proto_goTypes,
 		DependencyIndexes: file_hi_club_product_proto_depIdxs,
+		EnumInfos:         file_hi_club_product_proto_enumTypes,
 		MessageInfos:      file_hi_club_product_proto_msgTypes,
 	}.Build()
 	File_hi_club_product_proto = out.File

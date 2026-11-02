@@ -3760,15 +3760,22 @@ impl serde::Serialize for ProductNotice {
         if self.id.is_some() {
             len += 1;
         }
-        if self.announcement.is_some() {
+        if self.event.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.ProductNotice", len)?;
         if let Some(v) = self.id.as_ref() {
             struct_ser.serialize_field("id", v)?;
         }
-        if let Some(v) = self.announcement.as_ref() {
-            struct_ser.serialize_field("announcement", v)?;
+        if let Some(v) = self.event.as_ref() {
+            match v {
+                product_notice::Event::Announcement(v) => {
+                    struct_ser.serialize_field("announcement", v)?;
+                }
+                product_notice::Event::Uploaded(v) => {
+                    struct_ser.serialize_field("uploaded", v)?;
+                }
+            }
         }
         struct_ser.end()
     }
@@ -3782,12 +3789,14 @@ impl<'de> serde::Deserialize<'de> for ProductNotice {
         const FIELDS: &[&str] = &[
             "id",
             "announcement",
+            "uploaded",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Id,
             Announcement,
+            Uploaded,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -3811,6 +3820,7 @@ impl<'de> serde::Deserialize<'de> for ProductNotice {
                         match value {
                             "id" => Ok(GeneratedField::Id),
                             "announcement" => Ok(GeneratedField::Announcement),
+                            "uploaded" => Ok(GeneratedField::Uploaded),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -3831,7 +3841,7 @@ impl<'de> serde::Deserialize<'de> for ProductNotice {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut id__ = None;
-                let mut announcement__ = None;
+                let mut event__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Id => {
@@ -3841,16 +3851,24 @@ impl<'de> serde::Deserialize<'de> for ProductNotice {
                             id__ = map_.next_value()?;
                         }
                         GeneratedField::Announcement => {
-                            if announcement__.is_some() {
+                            if event__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("announcement"));
                             }
-                            announcement__ = map_.next_value()?;
+                            event__ = map_.next_value::<::std::option::Option<_>>()?.map(product_notice::Event::Announcement)
+;
+                        }
+                        GeneratedField::Uploaded => {
+                            if event__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("uploaded"));
+                            }
+                            event__ = map_.next_value::<::std::option::Option<_>>()?.map(product_notice::Event::Uploaded)
+;
                         }
                     }
                 }
                 Ok(ProductNotice {
                     id: id__,
-                    announcement: announcement__,
+                    event: event__,
                 })
             }
         }

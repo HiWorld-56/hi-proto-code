@@ -1529,7 +1529,6 @@ pub struct ProductImage {
     #[prost(string, optional, tag = "2")]
     pub thumb_url: ::core::option::Option<::prost::alloc::string::String>,
 }
-/// 创建与回读复用同一份商品资料，不从名称/图片反推身份。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProductInfo {
     #[prost(string, optional, tag = "1")]
@@ -1539,40 +1538,77 @@ pub struct ProductInfo {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Product {
-    /// 系统分配，客户端不能指定
+    /// 系统分配
     #[prost(string, optional, tag = "1")]
     pub id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 展示资料唯一来源
     #[prost(message, optional, tag = "2")]
     pub info: ::core::option::Option<ProductInfo>,
 }
+/// 仅参与上传的主人与机器人可读。uploaded_by是审计快照，不是永久管理权。
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ProductListing {
+pub struct ProductInventoryItem {
     #[prost(message, optional, tag = "1")]
     pub product: ::core::option::Option<Product>,
-    /// 上传者，取自认证主体
+    #[prost(message, optional, tag = "2")]
+    pub stall: ::core::option::Option<super::Entity>,
+    #[prost(message, optional, tag = "3")]
+    pub uploaded_by: ::core::option::Option<super::Entity>,
+    /// 微秒
+    #[prost(int64, optional, tag = "4")]
+    pub uploaded_at: ::core::option::Option<i64>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProductListing {
+    /// 从库存现取，不复制名称/图片
+    #[prost(message, optional, tag = "1")]
+    pub product: ::core::option::Option<Product>,
+    /// 摊主当前主人；无主则不传
     #[prost(message, optional, tag = "2")]
     pub merchant: ::core::option::Option<super::Entity>,
-    /// 硬件机器人，完整身份门面
     #[prost(message, optional, tag = "3")]
     pub stall: ::core::option::Option<super::Entity>,
     /// 微秒
     #[prost(int64, optional, tag = "4")]
     pub listed_at: ::core::option::Option<i64>,
+    /// 挂牌id，与商品id分开
+    #[prost(string, optional, tag = "5")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "ProductListingStatus", optional, tag = "6")]
+    pub status: ::core::option::Option<i32>,
+    /// 本次上架事件，重试不变，再上架产生新事件
+    #[prost(string, optional, tag = "7")]
+    pub publication_uuid: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProductAnnouncement {
     #[prost(message, optional, tag = "1")]
     pub listing: ::core::option::Option<ProductListing>,
-    /// 单聊上架通知不传；广播必须携带
     #[prost(message, optional, tag = "2")]
     pub group: ::core::option::Option<super::Entity>,
 }
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductSeller {
+    /// 不传=聚合的无主摊位入口
+    #[prost(message, optional, tag = "1")]
+    pub seller: ::core::option::Option<super::Entity>,
+    #[prost(int64, optional, tag = "2")]
+    pub stalls_count: ::core::option::Option<i64>,
+    #[prost(int64, optional, tag = "3")]
+    pub listing_count: ::core::option::Option<i64>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductStall {
+    #[prost(message, optional, tag = "1")]
+    pub stall: ::core::option::Option<super::Entity>,
+    #[prost(int64, optional, tag = "2")]
+    pub listing_count: ::core::option::Option<i64>,
+}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateProductReq {
-    /// 请求幂等键，不是商品 id。相同主体/请求键重试返回原商品，内容不同则拒绝。
     #[prost(string, optional, tag = "1")]
     pub request_uuid: ::core::option::Option<::prost::alloc::string::String>,
-    /// 定位键
+    /// 必须为本人当前名下硬件机器人
     #[prost(string, optional, tag = "2")]
     pub stall: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "3")]
@@ -1585,18 +1621,272 @@ pub struct GetProductReq {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListProductsReq {
-    /// 不传=我上传的；传=该摊位
+    /// 管理面不传=当前本人名下全部机器人；摊主本人只读自己
     #[prost(string, optional, tag = "1")]
     pub stall: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SetProductListingStatusReq {
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "ProductListingStatus", optional, tag = "2")]
+    pub status: ::core::option::Option<i32>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetProductListingReq {
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SearchProductListingsReq {
+    #[prost(string, optional, tag = "1")]
+    pub keyword: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetProductSellerReq {
+    /// 不传=无主摊位入口
+    #[prost(string, optional, tag = "1")]
+    pub did: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListProductStallsReq {
+    /// 不传=无主摊位入口
+    #[prost(string, optional, tag = "1")]
+    pub seller: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListProductsResp {
+pub struct ListProductInventoryResp {
+    #[prost(message, repeated, tag = "1")]
+    pub list: ::prost::alloc::vec::Vec<ProductInventoryItem>,
+    #[prost(int64, optional, tag = "2")]
+    pub total: ::core::option::Option<i64>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListProductListingsResp {
     #[prost(message, repeated, tag = "1")]
     pub list: ::prost::alloc::vec::Vec<ProductListing>,
     #[prost(int64, optional, tag = "2")]
     pub total: ::core::option::Option<i64>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListProductSellersResp {
+    #[prost(message, repeated, tag = "1")]
+    pub list: ::prost::alloc::vec::Vec<ProductSeller>,
+    #[prost(int64, optional, tag = "2")]
+    pub total: ::core::option::Option<i64>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListProductStallsResp {
+    #[prost(message, repeated, tag = "1")]
+    pub list: ::prost::alloc::vec::Vec<ProductStall>,
+    #[prost(int64, optional, tag = "2")]
+    pub total: ::core::option::Option<i64>,
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum ProductListingStatus {
+    Unspecified = 0,
+    Listed = 1,
+    Hidden = 2,
+    Delisted = 3,
+}
+impl ProductListingStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "PRODUCT_LISTING_STATUS_UNSPECIFIED",
+            Self::Listed => "PRODUCT_LISTING_STATUS_LISTED",
+            Self::Hidden => "PRODUCT_LISTING_STATUS_HIDDEN",
+            Self::Delisted => "PRODUCT_LISTING_STATUS_DELISTED",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "PRODUCT_LISTING_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
+            "PRODUCT_LISTING_STATUS_LISTED" => Some(Self::Listed),
+            "PRODUCT_LISTING_STATUS_HIDDEN" => Some(Self::Hidden),
+            "PRODUCT_LISTING_STATUS_DELISTED" => Some(Self::Delisted),
+            _ => None,
+        }
+    }
+}
+/// Generated client implementations.
+pub mod product_inventory_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 商品库与挂牌分离，沿用插件市场的“当前主人 -> 机器人摊位 -> 货”。
+    /// 上传仅入本人硬件机器人的库，不能向任意机器人上传，也不能自动上架/广播。
+    /// 公开目录与管理面分开；本阶段没有订单、价格、支付或履约。
+    #[derive(Debug, Clone)]
+    pub struct ProductInventoryClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl ProductInventoryClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> ProductInventoryClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ProductInventoryClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            ProductInventoryClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn create(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateProductReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ProductInventoryItem>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductInventory/Create",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductInventory", "Create"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetProductReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ProductInventoryItem>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductInventory/Get",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductInventory", "Get"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListProductsReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListProductInventoryResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductInventory/List",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductInventory", "List"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
 }
 /// Generated client implementations.
 pub mod product_market_client {
@@ -1609,11 +1899,6 @@ pub mod product_market_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// 商品市场独立于插件授权/订单。商品归商家，摊位是硬件机器人；没有支付状态。
-    /// 用户可向硬件机器人上架自己的商品，不要求是机器人的主人。
-    /// 上架先持久化，再用 product-listed 单聊通知摊主。摊主调用 Broadcast，
-    /// 服务端以当前成员关系校验开放群 + owner/admin，发送 product-broadcast 群通知。
-    /// 两种 Notice.extra 均为 hi.club.ProductAnnouncement；收到广播的机器人只展示，不再转播。
     #[derive(Debug, Clone)]
     pub struct ProductMarketClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -1694,28 +1979,8 @@ pub mod product_market_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        pub async fn create(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateProductReq>,
-        ) -> std::result::Result<tonic::Response<super::ProductListing>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.ProductMarket/Create",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.ProductMarket", "Create"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn get(
+        /// 允许摊主本人或当前主人操作。插件以机器人身份调用，只能经营自己的库存。
+        pub async fn publish(
             &mut self,
             request: impl tonic::IntoRequest<super::GetProductReq>,
         ) -> std::result::Result<tonic::Response<super::ProductListing>, tonic::Status> {
@@ -1729,17 +1994,39 @@ pub mod product_market_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.ProductMarket/Get",
+                "/hi.club.ProductMarket/Publish",
             );
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.club.ProductMarket", "Get"));
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductMarket", "Publish"));
             self.inner.unary(req, path, codec).await
         }
-        pub async fn list(
+        pub async fn set_listing_status(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SetProductListingStatusReq>,
+        ) -> std::result::Result<tonic::Response<super::ProductListing>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductMarket/SetListingStatus",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductMarket", "SetListingStatus"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_my_listings(
             &mut self,
             request: impl tonic::IntoRequest<super::ListProductsReq>,
         ) -> std::result::Result<
-            tonic::Response<super::ListProductsResp>,
+            tonic::Response<super::ListProductListingsResp>,
             tonic::Status,
         > {
             self.inner
@@ -1752,18 +2039,115 @@ pub mod product_market_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.ProductMarket/List",
+                "/hi.club.ProductMarket/ListMyListings",
             );
             let mut req = request.into_request();
             req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.ProductMarket", "List"));
+                .insert(GrpcMethod::new("hi.club.ProductMarket", "ListMyListings"));
             self.inner.unary(req, path, codec).await
         }
-        /// 只能由商品所属的硬件机器人本人调用。对每个商品/群幂等；不满足条件的群不广播。
-        pub async fn broadcast(
+    }
+}
+/// Generated client implementations.
+pub mod product_market_directory_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    #[derive(Debug, Clone)]
+    pub struct ProductMarketDirectoryClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl ProductMarketDirectoryClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> ProductMarketDirectoryClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ProductMarketDirectoryClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            ProductMarketDirectoryClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn list_sellers(
             &mut self,
-            request: impl tonic::IntoRequest<super::GetProductReq>,
-        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            request: impl tonic::IntoRequest<super::super::Pagination>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListProductSellersResp>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1774,11 +2158,136 @@ pub mod product_market_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.ProductMarket/Broadcast",
+                "/hi.club.ProductMarketDirectory/ListSellers",
             );
             let mut req = request.into_request();
             req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.ProductMarket", "Broadcast"));
+                .insert(
+                    GrpcMethod::new("hi.club.ProductMarketDirectory", "ListSellers"),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get_seller(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetProductSellerReq>,
+        ) -> std::result::Result<tonic::Response<super::ProductSeller>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductMarketDirectory/GetSeller",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductMarketDirectory", "GetSeller"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_seller_stalls(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListProductStallsReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListProductStallsResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductMarketDirectory/ListSellerStalls",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("hi.club.ProductMarketDirectory", "ListSellerStalls"),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_stall_listings(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListProductsReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListProductListingsResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductMarketDirectory/ListStallListings",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "hi.club.ProductMarketDirectory",
+                        "ListStallListings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn search_listings(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SearchProductListingsReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListProductListingsResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductMarketDirectory/SearchListings",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("hi.club.ProductMarketDirectory", "SearchListings"),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get_listing(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetProductListingReq>,
+        ) -> std::result::Result<tonic::Response<super::ProductListing>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductMarketDirectory/GetListing",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductMarketDirectory", "GetListing"));
             self.inner.unary(req, path, codec).await
         }
     }

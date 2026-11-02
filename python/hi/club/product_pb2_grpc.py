@@ -2,16 +2,14 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi.club import product_pb2 as hi_dot_club_dot_product__pb2
+from hi import common_pb2 as hi_dot_common__pb2
 
 
-class ProductMarketStub(object):
-    """商品市场独立于插件授权/订单。商品归商家，摊位是硬件机器人；没有支付状态。
-    用户可向硬件机器人上架自己的商品，不要求是机器人的主人。
-    上架先持久化，再用 product-listed 单聊通知摊主。摊主调用 Broadcast，
-    服务端以当前成员关系校验开放群 + owner/admin，发送 product-broadcast 群通知。
-    两种 Notice.extra 均为 hi.club.ProductAnnouncement；收到广播的机器人只展示，不再转播。
+class ProductInventoryStub(object):
+    """商品库与挂牌分离，沿用插件市场的“当前主人 -> 机器人摊位 -> 货”。
+    上传仅入本人硬件机器人的库，不能向任意机器人上传，也不能自动上架/广播。
+    公开目录与管理面分开；本阶段没有订单、价格、支付或履约。
     """
 
     def __init__(self, channel):
@@ -21,33 +19,26 @@ class ProductMarketStub(object):
             channel: A grpc.Channel.
         """
         self.Create = channel.unary_unary(
-                '/hi.club.ProductMarket/Create',
+                '/hi.club.ProductInventory/Create',
                 request_serializer=hi_dot_club_dot_product__pb2.CreateProductReq.SerializeToString,
-                response_deserializer=hi_dot_club_dot_product__pb2.ProductListing.FromString,
+                response_deserializer=hi_dot_club_dot_product__pb2.ProductInventoryItem.FromString,
                 _registered_method=True)
         self.Get = channel.unary_unary(
-                '/hi.club.ProductMarket/Get',
+                '/hi.club.ProductInventory/Get',
                 request_serializer=hi_dot_club_dot_product__pb2.GetProductReq.SerializeToString,
-                response_deserializer=hi_dot_club_dot_product__pb2.ProductListing.FromString,
+                response_deserializer=hi_dot_club_dot_product__pb2.ProductInventoryItem.FromString,
                 _registered_method=True)
         self.List = channel.unary_unary(
-                '/hi.club.ProductMarket/List',
+                '/hi.club.ProductInventory/List',
                 request_serializer=hi_dot_club_dot_product__pb2.ListProductsReq.SerializeToString,
-                response_deserializer=hi_dot_club_dot_product__pb2.ListProductsResp.FromString,
-                _registered_method=True)
-        self.Broadcast = channel.unary_unary(
-                '/hi.club.ProductMarket/Broadcast',
-                request_serializer=hi_dot_club_dot_product__pb2.GetProductReq.SerializeToString,
-                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                response_deserializer=hi_dot_club_dot_product__pb2.ListProductInventoryResp.FromString,
                 _registered_method=True)
 
 
-class ProductMarketServicer(object):
-    """商品市场独立于插件授权/订单。商品归商家，摊位是硬件机器人；没有支付状态。
-    用户可向硬件机器人上架自己的商品，不要求是机器人的主人。
-    上架先持久化，再用 product-listed 单聊通知摊主。摊主调用 Broadcast，
-    服务端以当前成员关系校验开放群 + owner/admin，发送 product-broadcast 群通知。
-    两种 Notice.extra 均为 hi.club.ProductAnnouncement；收到广播的机器人只展示，不再转播。
+class ProductInventoryServicer(object):
+    """商品库与挂牌分离，沿用插件市场的“当前主人 -> 机器人摊位 -> 货”。
+    上传仅入本人硬件机器人的库，不能向任意机器人上传，也不能自动上架/广播。
+    公开目录与管理面分开；本阶段没有订单、价格、支付或履约。
     """
 
     def Create(self, request, context):
@@ -68,50 +59,36 @@ class ProductMarketServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def Broadcast(self, request, context):
-        """只能由商品所属的硬件机器人本人调用。对每个商品/群幂等；不满足条件的群不广播。
-        """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
 
-
-def add_ProductMarketServicer_to_server(servicer, server):
+def add_ProductInventoryServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'Create': grpc.unary_unary_rpc_method_handler(
                     servicer.Create,
                     request_deserializer=hi_dot_club_dot_product__pb2.CreateProductReq.FromString,
-                    response_serializer=hi_dot_club_dot_product__pb2.ProductListing.SerializeToString,
+                    response_serializer=hi_dot_club_dot_product__pb2.ProductInventoryItem.SerializeToString,
             ),
             'Get': grpc.unary_unary_rpc_method_handler(
                     servicer.Get,
                     request_deserializer=hi_dot_club_dot_product__pb2.GetProductReq.FromString,
-                    response_serializer=hi_dot_club_dot_product__pb2.ProductListing.SerializeToString,
+                    response_serializer=hi_dot_club_dot_product__pb2.ProductInventoryItem.SerializeToString,
             ),
             'List': grpc.unary_unary_rpc_method_handler(
                     servicer.List,
                     request_deserializer=hi_dot_club_dot_product__pb2.ListProductsReq.FromString,
-                    response_serializer=hi_dot_club_dot_product__pb2.ListProductsResp.SerializeToString,
-            ),
-            'Broadcast': grpc.unary_unary_rpc_method_handler(
-                    servicer.Broadcast,
-                    request_deserializer=hi_dot_club_dot_product__pb2.GetProductReq.FromString,
-                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+                    response_serializer=hi_dot_club_dot_product__pb2.ListProductInventoryResp.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'hi.club.ProductMarket', rpc_method_handlers)
+            'hi.club.ProductInventory', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('hi.club.ProductMarket', rpc_method_handlers)
+    server.add_registered_method_handlers('hi.club.ProductInventory', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class ProductMarket(object):
-    """商品市场独立于插件授权/订单。商品归商家，摊位是硬件机器人；没有支付状态。
-    用户可向硬件机器人上架自己的商品，不要求是机器人的主人。
-    上架先持久化，再用 product-listed 单聊通知摊主。摊主调用 Broadcast，
-    服务端以当前成员关系校验开放群 + owner/admin，发送 product-broadcast 群通知。
-    两种 Notice.extra 均为 hi.club.ProductAnnouncement；收到广播的机器人只展示，不再转播。
+class ProductInventory(object):
+    """商品库与挂牌分离，沿用插件市场的“当前主人 -> 机器人摊位 -> 货”。
+    上传仅入本人硬件机器人的库，不能向任意机器人上传，也不能自动上架/广播。
+    公开目录与管理面分开；本阶段没有订单、价格、支付或履约。
     """
 
     @staticmethod
@@ -128,9 +105,9 @@ class ProductMarket(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.club.ProductMarket/Create',
+            '/hi.club.ProductInventory/Create',
             hi_dot_club_dot_product__pb2.CreateProductReq.SerializeToString,
-            hi_dot_club_dot_product__pb2.ProductListing.FromString,
+            hi_dot_club_dot_product__pb2.ProductInventoryItem.FromString,
             options,
             channel_credentials,
             insecure,
@@ -155,9 +132,9 @@ class ProductMarket(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.club.ProductMarket/Get',
+            '/hi.club.ProductInventory/Get',
             hi_dot_club_dot_product__pb2.GetProductReq.SerializeToString,
-            hi_dot_club_dot_product__pb2.ProductListing.FromString,
+            hi_dot_club_dot_product__pb2.ProductInventoryItem.FromString,
             options,
             channel_credentials,
             insecure,
@@ -182,9 +159,9 @@ class ProductMarket(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.club.ProductMarket/List',
+            '/hi.club.ProductInventory/List',
             hi_dot_club_dot_product__pb2.ListProductsReq.SerializeToString,
-            hi_dot_club_dot_product__pb2.ListProductsResp.FromString,
+            hi_dot_club_dot_product__pb2.ListProductInventoryResp.FromString,
             options,
             channel_credentials,
             insecure,
@@ -195,8 +172,86 @@ class ProductMarket(object):
             metadata,
             _registered_method=True)
 
+
+class ProductMarketStub(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.Publish = channel.unary_unary(
+                '/hi.club.ProductMarket/Publish',
+                request_serializer=hi_dot_club_dot_product__pb2.GetProductReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_product__pb2.ProductListing.FromString,
+                _registered_method=True)
+        self.SetListingStatus = channel.unary_unary(
+                '/hi.club.ProductMarket/SetListingStatus',
+                request_serializer=hi_dot_club_dot_product__pb2.SetProductListingStatusReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_product__pb2.ProductListing.FromString,
+                _registered_method=True)
+        self.ListMyListings = channel.unary_unary(
+                '/hi.club.ProductMarket/ListMyListings',
+                request_serializer=hi_dot_club_dot_product__pb2.ListProductsReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_product__pb2.ListProductListingsResp.FromString,
+                _registered_method=True)
+
+
+class ProductMarketServicer(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def Publish(self, request, context):
+        """允许摊主本人或当前主人操作。插件以机器人身份调用，只能经营自己的库存。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def SetListingStatus(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListMyListings(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_ProductMarketServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'Publish': grpc.unary_unary_rpc_method_handler(
+                    servicer.Publish,
+                    request_deserializer=hi_dot_club_dot_product__pb2.GetProductReq.FromString,
+                    response_serializer=hi_dot_club_dot_product__pb2.ProductListing.SerializeToString,
+            ),
+            'SetListingStatus': grpc.unary_unary_rpc_method_handler(
+                    servicer.SetListingStatus,
+                    request_deserializer=hi_dot_club_dot_product__pb2.SetProductListingStatusReq.FromString,
+                    response_serializer=hi_dot_club_dot_product__pb2.ProductListing.SerializeToString,
+            ),
+            'ListMyListings': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListMyListings,
+                    request_deserializer=hi_dot_club_dot_product__pb2.ListProductsReq.FromString,
+                    response_serializer=hi_dot_club_dot_product__pb2.ListProductListingsResp.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'hi.club.ProductMarket', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('hi.club.ProductMarket', rpc_method_handlers)
+
+
+ # This class is part of an EXPERIMENTAL API.
+class ProductMarket(object):
+    """Missing associated documentation comment in .proto file."""
+
     @staticmethod
-    def Broadcast(request,
+    def Publish(request,
             target,
             options=(),
             channel_credentials=None,
@@ -209,9 +264,350 @@ class ProductMarket(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/hi.club.ProductMarket/Broadcast',
+            '/hi.club.ProductMarket/Publish',
             hi_dot_club_dot_product__pb2.GetProductReq.SerializeToString,
-            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            hi_dot_club_dot_product__pb2.ProductListing.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def SetListingStatus(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.ProductMarket/SetListingStatus',
+            hi_dot_club_dot_product__pb2.SetProductListingStatusReq.SerializeToString,
+            hi_dot_club_dot_product__pb2.ProductListing.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ListMyListings(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.ProductMarket/ListMyListings',
+            hi_dot_club_dot_product__pb2.ListProductsReq.SerializeToString,
+            hi_dot_club_dot_product__pb2.ListProductListingsResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+
+class ProductMarketDirectoryStub(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.ListSellers = channel.unary_unary(
+                '/hi.club.ProductMarketDirectory/ListSellers',
+                request_serializer=hi_dot_common__pb2.Pagination.SerializeToString,
+                response_deserializer=hi_dot_club_dot_product__pb2.ListProductSellersResp.FromString,
+                _registered_method=True)
+        self.GetSeller = channel.unary_unary(
+                '/hi.club.ProductMarketDirectory/GetSeller',
+                request_serializer=hi_dot_club_dot_product__pb2.GetProductSellerReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_product__pb2.ProductSeller.FromString,
+                _registered_method=True)
+        self.ListSellerStalls = channel.unary_unary(
+                '/hi.club.ProductMarketDirectory/ListSellerStalls',
+                request_serializer=hi_dot_club_dot_product__pb2.ListProductStallsReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_product__pb2.ListProductStallsResp.FromString,
+                _registered_method=True)
+        self.ListStallListings = channel.unary_unary(
+                '/hi.club.ProductMarketDirectory/ListStallListings',
+                request_serializer=hi_dot_club_dot_product__pb2.ListProductsReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_product__pb2.ListProductListingsResp.FromString,
+                _registered_method=True)
+        self.SearchListings = channel.unary_unary(
+                '/hi.club.ProductMarketDirectory/SearchListings',
+                request_serializer=hi_dot_club_dot_product__pb2.SearchProductListingsReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_product__pb2.ListProductListingsResp.FromString,
+                _registered_method=True)
+        self.GetListing = channel.unary_unary(
+                '/hi.club.ProductMarketDirectory/GetListing',
+                request_serializer=hi_dot_club_dot_product__pb2.GetProductListingReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_product__pb2.ProductListing.FromString,
+                _registered_method=True)
+
+
+class ProductMarketDirectoryServicer(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def ListSellers(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetSeller(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListSellerStalls(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListStallListings(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def SearchListings(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetListing(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_ProductMarketDirectoryServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'ListSellers': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListSellers,
+                    request_deserializer=hi_dot_common__pb2.Pagination.FromString,
+                    response_serializer=hi_dot_club_dot_product__pb2.ListProductSellersResp.SerializeToString,
+            ),
+            'GetSeller': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetSeller,
+                    request_deserializer=hi_dot_club_dot_product__pb2.GetProductSellerReq.FromString,
+                    response_serializer=hi_dot_club_dot_product__pb2.ProductSeller.SerializeToString,
+            ),
+            'ListSellerStalls': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListSellerStalls,
+                    request_deserializer=hi_dot_club_dot_product__pb2.ListProductStallsReq.FromString,
+                    response_serializer=hi_dot_club_dot_product__pb2.ListProductStallsResp.SerializeToString,
+            ),
+            'ListStallListings': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListStallListings,
+                    request_deserializer=hi_dot_club_dot_product__pb2.ListProductsReq.FromString,
+                    response_serializer=hi_dot_club_dot_product__pb2.ListProductListingsResp.SerializeToString,
+            ),
+            'SearchListings': grpc.unary_unary_rpc_method_handler(
+                    servicer.SearchListings,
+                    request_deserializer=hi_dot_club_dot_product__pb2.SearchProductListingsReq.FromString,
+                    response_serializer=hi_dot_club_dot_product__pb2.ListProductListingsResp.SerializeToString,
+            ),
+            'GetListing': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetListing,
+                    request_deserializer=hi_dot_club_dot_product__pb2.GetProductListingReq.FromString,
+                    response_serializer=hi_dot_club_dot_product__pb2.ProductListing.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'hi.club.ProductMarketDirectory', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('hi.club.ProductMarketDirectory', rpc_method_handlers)
+
+
+ # This class is part of an EXPERIMENTAL API.
+class ProductMarketDirectory(object):
+    """Missing associated documentation comment in .proto file."""
+
+    @staticmethod
+    def ListSellers(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.ProductMarketDirectory/ListSellers',
+            hi_dot_common__pb2.Pagination.SerializeToString,
+            hi_dot_club_dot_product__pb2.ListProductSellersResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetSeller(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.ProductMarketDirectory/GetSeller',
+            hi_dot_club_dot_product__pb2.GetProductSellerReq.SerializeToString,
+            hi_dot_club_dot_product__pb2.ProductSeller.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ListSellerStalls(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.ProductMarketDirectory/ListSellerStalls',
+            hi_dot_club_dot_product__pb2.ListProductStallsReq.SerializeToString,
+            hi_dot_club_dot_product__pb2.ListProductStallsResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ListStallListings(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.ProductMarketDirectory/ListStallListings',
+            hi_dot_club_dot_product__pb2.ListProductsReq.SerializeToString,
+            hi_dot_club_dot_product__pb2.ListProductListingsResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def SearchListings(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.ProductMarketDirectory/SearchListings',
+            hi_dot_club_dot_product__pb2.SearchProductListingsReq.SerializeToString,
+            hi_dot_club_dot_product__pb2.ListProductListingsResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetListing(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.ProductMarketDirectory/GetListing',
+            hi_dot_club_dot_product__pb2.GetProductListingReq.SerializeToString,
+            hi_dot_club_dot_product__pb2.ProductListing.FromString,
             options,
             channel_credentials,
             insecure,

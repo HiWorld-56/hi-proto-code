@@ -856,25 +856,38 @@ final $typed_data.Uint8List updateActionDescriptor = $convert.base64Decode(
 const ProductNotice$json = {
   '1': 'ProductNotice',
   '2': [
-    {'1': 'id', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'id', '17': true},
+    {'1': 'id', '3': 1, '4': 1, '5': 9, '9': 1, '10': 'id', '17': true},
     {
       '1': 'announcement',
       '3': 2,
       '4': 1,
       '5': 11,
       '6': '.hi.club.ProductAnnouncement',
+      '9': 0,
       '10': 'announcement'
+    },
+    {
+      '1': 'uploaded',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductInventoryItem',
+      '9': 0,
+      '10': 'uploaded'
     },
   ],
   '8': [
+    {'1': 'event'},
     {'1': '_id'},
   ],
 };
 
 /// Descriptor for `ProductNotice`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List productNoticeDescriptor = $convert.base64Decode(
-    'Cg1Qcm9kdWN0Tm90aWNlEhMKAmlkGAEgASgJSABSAmlkiAEBEkAKDGFubm91bmNlbWVudBgCIA'
-    'EoCzIcLmhpLmNsdWIuUHJvZHVjdEFubm91bmNlbWVudFIMYW5ub3VuY2VtZW50QgUKA19pZA==');
+    'Cg1Qcm9kdWN0Tm90aWNlEhMKAmlkGAEgASgJSAFSAmlkiAEBEkIKDGFubm91bmNlbWVudBgCIA'
+    'EoCzIcLmhpLmNsdWIuUHJvZHVjdEFubm91bmNlbWVudEgAUgxhbm5vdW5jZW1lbnQSOwoIdXBs'
+    'b2FkZWQYAyABKAsyHS5oaS5jbHViLlByb2R1Y3RJbnZlbnRvcnlJdGVtSABSCHVwbG9hZGVkQg'
+    'cKBWV2ZW50QgUKA19pZA==');
 
 @$core.Deprecated('Use productNoticesDescriptor instead')
 const ProductNotices$json = {

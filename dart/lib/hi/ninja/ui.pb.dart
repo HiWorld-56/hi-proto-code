@@ -2030,15 +2030,19 @@ class UpdateAction extends $pb.GeneratedMessage {
   void clearAction() => $_clearField(1);
 }
 
+enum ProductNotice_Event { announcement, uploaded, notSet }
+
 /// brain 本地持久化的商品提示；face 重连 request_init 后重新推送。
 class ProductNotice extends $pb.GeneratedMessage {
   factory ProductNotice({
     $core.String? id,
     $9.ProductAnnouncement? announcement,
+    $9.ProductInventoryItem? uploaded,
   }) {
     final result = create();
     if (id != null) result.id = id;
     if (announcement != null) result.announcement = announcement;
+    if (uploaded != null) result.uploaded = uploaded;
     return result;
   }
 
@@ -2051,13 +2055,22 @@ class ProductNotice extends $pb.GeneratedMessage {
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
+  static const $core.Map<$core.int, ProductNotice_Event>
+      _ProductNotice_EventByTag = {
+    2: ProductNotice_Event.announcement,
+    3: ProductNotice_Event.uploaded,
+    0: ProductNotice_Event.notSet
+  };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ProductNotice',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
+    ..oo(0, [2, 3])
     ..aOS(1, _omitFieldNames ? '' : 'id')
     ..aOM<$9.ProductAnnouncement>(2, _omitFieldNames ? '' : 'announcement',
         subBuilder: $9.ProductAnnouncement.create)
+    ..aOM<$9.ProductInventoryItem>(3, _omitFieldNames ? '' : 'uploaded',
+        subBuilder: $9.ProductInventoryItem.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2079,6 +2092,14 @@ class ProductNotice extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<ProductNotice>(create);
   static ProductNotice? _defaultInstance;
 
+  @$pb.TagNumber(2)
+  @$pb.TagNumber(3)
+  ProductNotice_Event whichEvent() =>
+      _ProductNotice_EventByTag[$_whichOneof(0)]!;
+  @$pb.TagNumber(2)
+  @$pb.TagNumber(3)
+  void clearEvent() => $_clearField($_whichOneof(0));
+
   @$pb.TagNumber(1)
   $core.String get id => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -2098,6 +2119,17 @@ class ProductNotice extends $pb.GeneratedMessage {
   void clearAnnouncement() => $_clearField(2);
   @$pb.TagNumber(2)
   $9.ProductAnnouncement ensureAnnouncement() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  $9.ProductInventoryItem get uploaded => $_getN(2);
+  @$pb.TagNumber(3)
+  set uploaded($9.ProductInventoryItem value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasUploaded() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearUploaded() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $9.ProductInventoryItem ensureUploaded() => $_ensure(2);
 }
 
 class ProductNotices extends $pb.GeneratedMessage {

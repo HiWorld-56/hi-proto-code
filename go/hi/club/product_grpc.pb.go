@@ -8,10 +8,10 @@ package club
 
 import (
 	context "context"
+	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -20,27 +20,203 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ProductMarket_Create_FullMethodName    = "/hi.club.ProductMarket/Create"
-	ProductMarket_Get_FullMethodName       = "/hi.club.ProductMarket/Get"
-	ProductMarket_List_FullMethodName      = "/hi.club.ProductMarket/List"
-	ProductMarket_Broadcast_FullMethodName = "/hi.club.ProductMarket/Broadcast"
+	ProductInventory_Create_FullMethodName = "/hi.club.ProductInventory/Create"
+	ProductInventory_Get_FullMethodName    = "/hi.club.ProductInventory/Get"
+	ProductInventory_List_FullMethodName   = "/hi.club.ProductInventory/List"
+)
+
+// ProductInventoryClient is the client API for ProductInventory service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 商品库与挂牌分离，沿用插件市场的“当前主人 -> 机器人摊位 -> 货”。
+// 上传仅入本人硬件机器人的库，不能向任意机器人上传，也不能自动上架/广播。
+// 公开目录与管理面分开；本阶段没有订单、价格、支付或履约。
+type ProductInventoryClient interface {
+	Create(ctx context.Context, in *CreateProductReq, opts ...grpc.CallOption) (*ProductInventoryItem, error)
+	Get(ctx context.Context, in *GetProductReq, opts ...grpc.CallOption) (*ProductInventoryItem, error)
+	List(ctx context.Context, in *ListProductsReq, opts ...grpc.CallOption) (*ListProductInventoryResp, error)
+}
+
+type productInventoryClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewProductInventoryClient(cc grpc.ClientConnInterface) ProductInventoryClient {
+	return &productInventoryClient{cc}
+}
+
+func (c *productInventoryClient) Create(ctx context.Context, in *CreateProductReq, opts ...grpc.CallOption) (*ProductInventoryItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ProductInventoryItem)
+	err := c.cc.Invoke(ctx, ProductInventory_Create_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *productInventoryClient) Get(ctx context.Context, in *GetProductReq, opts ...grpc.CallOption) (*ProductInventoryItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ProductInventoryItem)
+	err := c.cc.Invoke(ctx, ProductInventory_Get_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *productInventoryClient) List(ctx context.Context, in *ListProductsReq, opts ...grpc.CallOption) (*ListProductInventoryResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListProductInventoryResp)
+	err := c.cc.Invoke(ctx, ProductInventory_List_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ProductInventoryServer is the server API for ProductInventory service.
+// All implementations should embed UnimplementedProductInventoryServer
+// for forward compatibility.
+//
+// 商品库与挂牌分离，沿用插件市场的“当前主人 -> 机器人摊位 -> 货”。
+// 上传仅入本人硬件机器人的库，不能向任意机器人上传，也不能自动上架/广播。
+// 公开目录与管理面分开；本阶段没有订单、价格、支付或履约。
+type ProductInventoryServer interface {
+	Create(context.Context, *CreateProductReq) (*ProductInventoryItem, error)
+	Get(context.Context, *GetProductReq) (*ProductInventoryItem, error)
+	List(context.Context, *ListProductsReq) (*ListProductInventoryResp, error)
+}
+
+// UnimplementedProductInventoryServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedProductInventoryServer struct{}
+
+func (UnimplementedProductInventoryServer) Create(context.Context, *CreateProductReq) (*ProductInventoryItem, error) {
+	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
+}
+func (UnimplementedProductInventoryServer) Get(context.Context, *GetProductReq) (*ProductInventoryItem, error) {
+	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
+}
+func (UnimplementedProductInventoryServer) List(context.Context, *ListProductsReq) (*ListProductInventoryResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method List not implemented")
+}
+func (UnimplementedProductInventoryServer) testEmbeddedByValue() {}
+
+// UnsafeProductInventoryServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ProductInventoryServer will
+// result in compilation errors.
+type UnsafeProductInventoryServer interface {
+	mustEmbedUnimplementedProductInventoryServer()
+}
+
+func RegisterProductInventoryServer(s grpc.ServiceRegistrar, srv ProductInventoryServer) {
+	// If the following call panics, it indicates UnimplementedProductInventoryServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&ProductInventory_ServiceDesc, srv)
+}
+
+func _ProductInventory_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateProductReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductInventoryServer).Create(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductInventory_Create_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductInventoryServer).Create(ctx, req.(*CreateProductReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProductInventory_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetProductReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductInventoryServer).Get(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductInventory_Get_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductInventoryServer).Get(ctx, req.(*GetProductReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProductInventory_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListProductsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductInventoryServer).List(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductInventory_List_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductInventoryServer).List(ctx, req.(*ListProductsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// ProductInventory_ServiceDesc is the grpc.ServiceDesc for ProductInventory service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var ProductInventory_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.club.ProductInventory",
+	HandlerType: (*ProductInventoryServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Create",
+			Handler:    _ProductInventory_Create_Handler,
+		},
+		{
+			MethodName: "Get",
+			Handler:    _ProductInventory_Get_Handler,
+		},
+		{
+			MethodName: "List",
+			Handler:    _ProductInventory_List_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/club/product.proto",
+}
+
+const (
+	ProductMarket_Publish_FullMethodName          = "/hi.club.ProductMarket/Publish"
+	ProductMarket_SetListingStatus_FullMethodName = "/hi.club.ProductMarket/SetListingStatus"
+	ProductMarket_ListMyListings_FullMethodName   = "/hi.club.ProductMarket/ListMyListings"
 )
 
 // ProductMarketClient is the client API for ProductMarket service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-//
-// 商品市场独立于插件授权/订单。商品归商家，摊位是硬件机器人；没有支付状态。
-// 用户可向硬件机器人上架自己的商品，不要求是机器人的主人。
-// 上架先持久化，再用 product-listed 单聊通知摊主。摊主调用 Broadcast，
-// 服务端以当前成员关系校验开放群 + owner/admin，发送 product-broadcast 群通知。
-// 两种 Notice.extra 均为 hi.club.ProductAnnouncement；收到广播的机器人只展示，不再转播。
 type ProductMarketClient interface {
-	Create(ctx context.Context, in *CreateProductReq, opts ...grpc.CallOption) (*ProductListing, error)
-	Get(ctx context.Context, in *GetProductReq, opts ...grpc.CallOption) (*ProductListing, error)
-	List(ctx context.Context, in *ListProductsReq, opts ...grpc.CallOption) (*ListProductsResp, error)
-	// 只能由商品所属的硬件机器人本人调用。对每个商品/群幂等；不满足条件的群不广播。
-	Broadcast(ctx context.Context, in *GetProductReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 允许摊主本人或当前主人操作。插件以机器人身份调用，只能经营自己的库存。
+	Publish(ctx context.Context, in *GetProductReq, opts ...grpc.CallOption) (*ProductListing, error)
+	SetListingStatus(ctx context.Context, in *SetProductListingStatusReq, opts ...grpc.CallOption) (*ProductListing, error)
+	ListMyListings(ctx context.Context, in *ListProductsReq, opts ...grpc.CallOption) (*ListProductListingsResp, error)
 }
 
 type productMarketClient struct {
@@ -51,40 +227,30 @@ func NewProductMarketClient(cc grpc.ClientConnInterface) ProductMarketClient {
 	return &productMarketClient{cc}
 }
 
-func (c *productMarketClient) Create(ctx context.Context, in *CreateProductReq, opts ...grpc.CallOption) (*ProductListing, error) {
+func (c *productMarketClient) Publish(ctx context.Context, in *GetProductReq, opts ...grpc.CallOption) (*ProductListing, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ProductListing)
-	err := c.cc.Invoke(ctx, ProductMarket_Create_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, ProductMarket_Publish_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *productMarketClient) Get(ctx context.Context, in *GetProductReq, opts ...grpc.CallOption) (*ProductListing, error) {
+func (c *productMarketClient) SetListingStatus(ctx context.Context, in *SetProductListingStatusReq, opts ...grpc.CallOption) (*ProductListing, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ProductListing)
-	err := c.cc.Invoke(ctx, ProductMarket_Get_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, ProductMarket_SetListingStatus_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *productMarketClient) List(ctx context.Context, in *ListProductsReq, opts ...grpc.CallOption) (*ListProductsResp, error) {
+func (c *productMarketClient) ListMyListings(ctx context.Context, in *ListProductsReq, opts ...grpc.CallOption) (*ListProductListingsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListProductsResp)
-	err := c.cc.Invoke(ctx, ProductMarket_List_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *productMarketClient) Broadcast(ctx context.Context, in *GetProductReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, ProductMarket_Broadcast_FullMethodName, in, out, cOpts...)
+	out := new(ListProductListingsResp)
+	err := c.cc.Invoke(ctx, ProductMarket_ListMyListings_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -94,18 +260,11 @@ func (c *productMarketClient) Broadcast(ctx context.Context, in *GetProductReq, 
 // ProductMarketServer is the server API for ProductMarket service.
 // All implementations should embed UnimplementedProductMarketServer
 // for forward compatibility.
-//
-// 商品市场独立于插件授权/订单。商品归商家，摊位是硬件机器人；没有支付状态。
-// 用户可向硬件机器人上架自己的商品，不要求是机器人的主人。
-// 上架先持久化，再用 product-listed 单聊通知摊主。摊主调用 Broadcast，
-// 服务端以当前成员关系校验开放群 + owner/admin，发送 product-broadcast 群通知。
-// 两种 Notice.extra 均为 hi.club.ProductAnnouncement；收到广播的机器人只展示，不再转播。
 type ProductMarketServer interface {
-	Create(context.Context, *CreateProductReq) (*ProductListing, error)
-	Get(context.Context, *GetProductReq) (*ProductListing, error)
-	List(context.Context, *ListProductsReq) (*ListProductsResp, error)
-	// 只能由商品所属的硬件机器人本人调用。对每个商品/群幂等；不满足条件的群不广播。
-	Broadcast(context.Context, *GetProductReq) (*emptypb.Empty, error)
+	// 允许摊主本人或当前主人操作。插件以机器人身份调用，只能经营自己的库存。
+	Publish(context.Context, *GetProductReq) (*ProductListing, error)
+	SetListingStatus(context.Context, *SetProductListingStatusReq) (*ProductListing, error)
+	ListMyListings(context.Context, *ListProductsReq) (*ListProductListingsResp, error)
 }
 
 // UnimplementedProductMarketServer should be embedded to have
@@ -115,17 +274,14 @@ type ProductMarketServer interface {
 // pointer dereference when methods are called.
 type UnimplementedProductMarketServer struct{}
 
-func (UnimplementedProductMarketServer) Create(context.Context, *CreateProductReq) (*ProductListing, error) {
-	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
+func (UnimplementedProductMarketServer) Publish(context.Context, *GetProductReq) (*ProductListing, error) {
+	return nil, status.Error(codes.Unimplemented, "method Publish not implemented")
 }
-func (UnimplementedProductMarketServer) Get(context.Context, *GetProductReq) (*ProductListing, error) {
-	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
+func (UnimplementedProductMarketServer) SetListingStatus(context.Context, *SetProductListingStatusReq) (*ProductListing, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetListingStatus not implemented")
 }
-func (UnimplementedProductMarketServer) List(context.Context, *ListProductsReq) (*ListProductsResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method List not implemented")
-}
-func (UnimplementedProductMarketServer) Broadcast(context.Context, *GetProductReq) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method Broadcast not implemented")
+func (UnimplementedProductMarketServer) ListMyListings(context.Context, *ListProductsReq) (*ListProductListingsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListMyListings not implemented")
 }
 func (UnimplementedProductMarketServer) testEmbeddedByValue() {}
 
@@ -147,74 +303,56 @@ func RegisterProductMarketServer(s grpc.ServiceRegistrar, srv ProductMarketServe
 	s.RegisterService(&ProductMarket_ServiceDesc, srv)
 }
 
-func _ProductMarket_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateProductReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ProductMarketServer).Create(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ProductMarket_Create_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProductMarketServer).Create(ctx, req.(*CreateProductReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ProductMarket_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ProductMarket_Publish_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetProductReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProductMarketServer).Get(ctx, in)
+		return srv.(ProductMarketServer).Publish(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ProductMarket_Get_FullMethodName,
+		FullMethod: ProductMarket_Publish_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProductMarketServer).Get(ctx, req.(*GetProductReq))
+		return srv.(ProductMarketServer).Publish(ctx, req.(*GetProductReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProductMarket_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ProductMarket_SetListingStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetProductListingStatusReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductMarketServer).SetListingStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductMarket_SetListingStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductMarketServer).SetListingStatus(ctx, req.(*SetProductListingStatusReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProductMarket_ListMyListings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListProductsReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProductMarketServer).List(ctx, in)
+		return srv.(ProductMarketServer).ListMyListings(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ProductMarket_List_FullMethodName,
+		FullMethod: ProductMarket_ListMyListings_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProductMarketServer).List(ctx, req.(*ListProductsReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ProductMarket_Broadcast_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetProductReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ProductMarketServer).Broadcast(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ProductMarket_Broadcast_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProductMarketServer).Broadcast(ctx, req.(*GetProductReq))
+		return srv.(ProductMarketServer).ListMyListings(ctx, req.(*ListProductsReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -227,20 +365,306 @@ var ProductMarket_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ProductMarketServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Create",
-			Handler:    _ProductMarket_Create_Handler,
+			MethodName: "Publish",
+			Handler:    _ProductMarket_Publish_Handler,
 		},
 		{
-			MethodName: "Get",
-			Handler:    _ProductMarket_Get_Handler,
+			MethodName: "SetListingStatus",
+			Handler:    _ProductMarket_SetListingStatus_Handler,
 		},
 		{
-			MethodName: "List",
-			Handler:    _ProductMarket_List_Handler,
+			MethodName: "ListMyListings",
+			Handler:    _ProductMarket_ListMyListings_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/club/product.proto",
+}
+
+const (
+	ProductMarketDirectory_ListSellers_FullMethodName       = "/hi.club.ProductMarketDirectory/ListSellers"
+	ProductMarketDirectory_GetSeller_FullMethodName         = "/hi.club.ProductMarketDirectory/GetSeller"
+	ProductMarketDirectory_ListSellerStalls_FullMethodName  = "/hi.club.ProductMarketDirectory/ListSellerStalls"
+	ProductMarketDirectory_ListStallListings_FullMethodName = "/hi.club.ProductMarketDirectory/ListStallListings"
+	ProductMarketDirectory_SearchListings_FullMethodName    = "/hi.club.ProductMarketDirectory/SearchListings"
+	ProductMarketDirectory_GetListing_FullMethodName        = "/hi.club.ProductMarketDirectory/GetListing"
+)
+
+// ProductMarketDirectoryClient is the client API for ProductMarketDirectory service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type ProductMarketDirectoryClient interface {
+	ListSellers(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*ListProductSellersResp, error)
+	GetSeller(ctx context.Context, in *GetProductSellerReq, opts ...grpc.CallOption) (*ProductSeller, error)
+	ListSellerStalls(ctx context.Context, in *ListProductStallsReq, opts ...grpc.CallOption) (*ListProductStallsResp, error)
+	ListStallListings(ctx context.Context, in *ListProductsReq, opts ...grpc.CallOption) (*ListProductListingsResp, error)
+	SearchListings(ctx context.Context, in *SearchProductListingsReq, opts ...grpc.CallOption) (*ListProductListingsResp, error)
+	GetListing(ctx context.Context, in *GetProductListingReq, opts ...grpc.CallOption) (*ProductListing, error)
+}
+
+type productMarketDirectoryClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewProductMarketDirectoryClient(cc grpc.ClientConnInterface) ProductMarketDirectoryClient {
+	return &productMarketDirectoryClient{cc}
+}
+
+func (c *productMarketDirectoryClient) ListSellers(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*ListProductSellersResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListProductSellersResp)
+	err := c.cc.Invoke(ctx, ProductMarketDirectory_ListSellers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *productMarketDirectoryClient) GetSeller(ctx context.Context, in *GetProductSellerReq, opts ...grpc.CallOption) (*ProductSeller, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ProductSeller)
+	err := c.cc.Invoke(ctx, ProductMarketDirectory_GetSeller_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *productMarketDirectoryClient) ListSellerStalls(ctx context.Context, in *ListProductStallsReq, opts ...grpc.CallOption) (*ListProductStallsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListProductStallsResp)
+	err := c.cc.Invoke(ctx, ProductMarketDirectory_ListSellerStalls_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *productMarketDirectoryClient) ListStallListings(ctx context.Context, in *ListProductsReq, opts ...grpc.CallOption) (*ListProductListingsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListProductListingsResp)
+	err := c.cc.Invoke(ctx, ProductMarketDirectory_ListStallListings_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *productMarketDirectoryClient) SearchListings(ctx context.Context, in *SearchProductListingsReq, opts ...grpc.CallOption) (*ListProductListingsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListProductListingsResp)
+	err := c.cc.Invoke(ctx, ProductMarketDirectory_SearchListings_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *productMarketDirectoryClient) GetListing(ctx context.Context, in *GetProductListingReq, opts ...grpc.CallOption) (*ProductListing, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ProductListing)
+	err := c.cc.Invoke(ctx, ProductMarketDirectory_GetListing_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ProductMarketDirectoryServer is the server API for ProductMarketDirectory service.
+// All implementations should embed UnimplementedProductMarketDirectoryServer
+// for forward compatibility.
+type ProductMarketDirectoryServer interface {
+	ListSellers(context.Context, *hi.Pagination) (*ListProductSellersResp, error)
+	GetSeller(context.Context, *GetProductSellerReq) (*ProductSeller, error)
+	ListSellerStalls(context.Context, *ListProductStallsReq) (*ListProductStallsResp, error)
+	ListStallListings(context.Context, *ListProductsReq) (*ListProductListingsResp, error)
+	SearchListings(context.Context, *SearchProductListingsReq) (*ListProductListingsResp, error)
+	GetListing(context.Context, *GetProductListingReq) (*ProductListing, error)
+}
+
+// UnimplementedProductMarketDirectoryServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedProductMarketDirectoryServer struct{}
+
+func (UnimplementedProductMarketDirectoryServer) ListSellers(context.Context, *hi.Pagination) (*ListProductSellersResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListSellers not implemented")
+}
+func (UnimplementedProductMarketDirectoryServer) GetSeller(context.Context, *GetProductSellerReq) (*ProductSeller, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetSeller not implemented")
+}
+func (UnimplementedProductMarketDirectoryServer) ListSellerStalls(context.Context, *ListProductStallsReq) (*ListProductStallsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListSellerStalls not implemented")
+}
+func (UnimplementedProductMarketDirectoryServer) ListStallListings(context.Context, *ListProductsReq) (*ListProductListingsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListStallListings not implemented")
+}
+func (UnimplementedProductMarketDirectoryServer) SearchListings(context.Context, *SearchProductListingsReq) (*ListProductListingsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SearchListings not implemented")
+}
+func (UnimplementedProductMarketDirectoryServer) GetListing(context.Context, *GetProductListingReq) (*ProductListing, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetListing not implemented")
+}
+func (UnimplementedProductMarketDirectoryServer) testEmbeddedByValue() {}
+
+// UnsafeProductMarketDirectoryServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ProductMarketDirectoryServer will
+// result in compilation errors.
+type UnsafeProductMarketDirectoryServer interface {
+	mustEmbedUnimplementedProductMarketDirectoryServer()
+}
+
+func RegisterProductMarketDirectoryServer(s grpc.ServiceRegistrar, srv ProductMarketDirectoryServer) {
+	// If the following call panics, it indicates UnimplementedProductMarketDirectoryServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&ProductMarketDirectory_ServiceDesc, srv)
+}
+
+func _ProductMarketDirectory_ListSellers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(hi.Pagination)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductMarketDirectoryServer).ListSellers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductMarketDirectory_ListSellers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductMarketDirectoryServer).ListSellers(ctx, req.(*hi.Pagination))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProductMarketDirectory_GetSeller_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetProductSellerReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductMarketDirectoryServer).GetSeller(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductMarketDirectory_GetSeller_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductMarketDirectoryServer).GetSeller(ctx, req.(*GetProductSellerReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProductMarketDirectory_ListSellerStalls_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListProductStallsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductMarketDirectoryServer).ListSellerStalls(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductMarketDirectory_ListSellerStalls_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductMarketDirectoryServer).ListSellerStalls(ctx, req.(*ListProductStallsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProductMarketDirectory_ListStallListings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListProductsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductMarketDirectoryServer).ListStallListings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductMarketDirectory_ListStallListings_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductMarketDirectoryServer).ListStallListings(ctx, req.(*ListProductsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProductMarketDirectory_SearchListings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchProductListingsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductMarketDirectoryServer).SearchListings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductMarketDirectory_SearchListings_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductMarketDirectoryServer).SearchListings(ctx, req.(*SearchProductListingsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProductMarketDirectory_GetListing_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetProductListingReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductMarketDirectoryServer).GetListing(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductMarketDirectory_GetListing_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductMarketDirectoryServer).GetListing(ctx, req.(*GetProductListingReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// ProductMarketDirectory_ServiceDesc is the grpc.ServiceDesc for ProductMarketDirectory service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var ProductMarketDirectory_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.club.ProductMarketDirectory",
+	HandlerType: (*ProductMarketDirectoryServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "ListSellers",
+			Handler:    _ProductMarketDirectory_ListSellers_Handler,
 		},
 		{
-			MethodName: "Broadcast",
-			Handler:    _ProductMarket_Broadcast_Handler,
+			MethodName: "GetSeller",
+			Handler:    _ProductMarketDirectory_GetSeller_Handler,
+		},
+		{
+			MethodName: "ListSellerStalls",
+			Handler:    _ProductMarketDirectory_ListSellerStalls_Handler,
+		},
+		{
+			MethodName: "ListStallListings",
+			Handler:    _ProductMarketDirectory_ListStallListings_Handler,
+		},
+		{
+			MethodName: "SearchListings",
+			Handler:    _ProductMarketDirectory_SearchListings_Handler,
+		},
+		{
+			MethodName: "GetListing",
+			Handler:    _ProductMarketDirectory_GetListing_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

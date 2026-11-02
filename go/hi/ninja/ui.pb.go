@@ -1882,9 +1882,13 @@ func (x *UpdateAction) GetAction() UpdateAction_Action {
 
 // brain 本地持久化的商品提示；face 重连 request_init 后重新推送。
 type ProductNotice struct {
-	state         protoimpl.MessageState    `protogen:"open.v1"`
-	Id            *string                   `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"` // 商品 id，也是本机展示去重键
-	Announcement  *club.ProductAnnouncement `protobuf:"bytes,2,opt,name=announcement,proto3" json:"announcement,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Id    *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"` // 上传/上架事件去重键；重新上架是新事件
+	// Types that are valid to be assigned to Event:
+	//
+	//	*ProductNotice_Announcement
+	//	*ProductNotice_Uploaded
+	Event         isProductNotice_Event `protobuf_oneof:"event"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1926,12 +1930,46 @@ func (x *ProductNotice) GetId() string {
 	return ""
 }
 
-func (x *ProductNotice) GetAnnouncement() *club.ProductAnnouncement {
+func (x *ProductNotice) GetEvent() isProductNotice_Event {
 	if x != nil {
-		return x.Announcement
+		return x.Event
 	}
 	return nil
 }
+
+func (x *ProductNotice) GetAnnouncement() *club.ProductAnnouncement {
+	if x != nil {
+		if x, ok := x.Event.(*ProductNotice_Announcement); ok {
+			return x.Announcement
+		}
+	}
+	return nil
+}
+
+func (x *ProductNotice) GetUploaded() *club.ProductInventoryItem {
+	if x != nil {
+		if x, ok := x.Event.(*ProductNotice_Uploaded); ok {
+			return x.Uploaded
+		}
+	}
+	return nil
+}
+
+type isProductNotice_Event interface {
+	isProductNotice_Event()
+}
+
+type ProductNotice_Announcement struct {
+	Announcement *club.ProductAnnouncement `protobuf:"bytes,2,opt,name=announcement,proto3,oneof"` // 商品已上架，显示三个占位按钮
+}
+
+type ProductNotice_Uploaded struct {
+	Uploaded *club.ProductInventoryItem `protobuf:"bytes,3,opt,name=uploaded,proto3,oneof"` // 商品已上传，仅入库，不广播
+}
+
+func (*ProductNotice_Announcement) isProductNotice_Event() {}
+
+func (*ProductNotice_Uploaded) isProductNotice_Event() {}
 
 type ProductNotices struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -2181,10 +2219,12 @@ const file_hi_ninja_ui_proto_rawDesc = "" +
 	"\fACTION_CHECK\x10\x01\x12\x10\n" +
 	"\fACTION_APPLY\x10\x02\x12\x12\n" +
 	"\x0eACTION_DISMISS\x10\x03B\t\n" +
-	"\a_action\"m\n" +
+	"\a_action\"\xb5\x01\n" +
 	"\rProductNotice\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12@\n" +
-	"\fannouncement\x18\x02 \x01(\v2\x1c.hi.club.ProductAnnouncementR\fannouncementB\x05\n" +
+	"\x02id\x18\x01 \x01(\tH\x01R\x02id\x88\x01\x01\x12B\n" +
+	"\fannouncement\x18\x02 \x01(\v2\x1c.hi.club.ProductAnnouncementH\x00R\fannouncement\x12;\n" +
+	"\buploaded\x18\x03 \x01(\v2\x1d.hi.club.ProductInventoryItemH\x00R\buploadedB\a\n" +
+	"\x05eventB\x05\n" +
 	"\x03_id\"=\n" +
 	"\x0eProductNotices\x12+\n" +
 	"\x04list\x18\x01 \x03(\v2\x17.hi.ninja.ProductNoticeR\x04list\".\n" +
@@ -2253,6 +2293,7 @@ var file_hi_ninja_ui_proto_goTypes = []any{
 	(*binance.BinanceOfferReply)(nil), // 33: hi.binance.BinanceOfferReply
 	(*binance.BinanceOffer)(nil),      // 34: hi.binance.BinanceOffer
 	(*club.ProductAnnouncement)(nil),  // 35: hi.club.ProductAnnouncement
+	(*club.ProductInventoryItem)(nil), // 36: hi.club.ProductInventoryItem
 }
 var file_hi_ninja_ui_proto_depIdxs = []int32{
 	25, // 0: hi.ninja.RobotInit.robot:type_name -> hi.Entity
@@ -2300,12 +2341,13 @@ var file_hi_ninja_ui_proto_depIdxs = []int32{
 	2,  // 42: hi.ninja.PluginProgress.state:type_name -> hi.ninja.PluginProgress.State
 	3,  // 43: hi.ninja.UpdateAction.action:type_name -> hi.ninja.UpdateAction.Action
 	35, // 44: hi.ninja.ProductNotice.announcement:type_name -> hi.club.ProductAnnouncement
-	22, // 45: hi.ninja.ProductNotices.list:type_name -> hi.ninja.ProductNotice
-	46, // [46:46] is the sub-list for method output_type
-	46, // [46:46] is the sub-list for method input_type
-	46, // [46:46] is the sub-list for extension type_name
-	46, // [46:46] is the sub-list for extension extendee
-	0,  // [0:46] is the sub-list for field type_name
+	36, // 45: hi.ninja.ProductNotice.uploaded:type_name -> hi.club.ProductInventoryItem
+	22, // 46: hi.ninja.ProductNotices.list:type_name -> hi.ninja.ProductNotice
+	47, // [47:47] is the sub-list for method output_type
+	47, // [47:47] is the sub-list for method input_type
+	47, // [47:47] is the sub-list for extension type_name
+	47, // [47:47] is the sub-list for extension extendee
+	0,  // [0:47] is the sub-list for field type_name
 }
 
 func init() { file_hi_ninja_ui_proto_init() }
@@ -2365,7 +2407,10 @@ func file_hi_ninja_ui_proto_init() {
 	}
 	file_hi_ninja_ui_proto_msgTypes[16].OneofWrappers = []any{}
 	file_hi_ninja_ui_proto_msgTypes[17].OneofWrappers = []any{}
-	file_hi_ninja_ui_proto_msgTypes[18].OneofWrappers = []any{}
+	file_hi_ninja_ui_proto_msgTypes[18].OneofWrappers = []any{
+		(*ProductNotice_Announcement)(nil),
+		(*ProductNotice_Uploaded)(nil),
+	}
 	file_hi_ninja_ui_proto_msgTypes[20].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

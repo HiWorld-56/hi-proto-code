@@ -965,11 +965,23 @@ pub mod update_action {
 /// brain 本地持久化的商品提示；face 重连 request_init 后重新推送。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProductNotice {
-    /// 商品 id，也是本机展示去重键
+    /// 上传/上架事件去重键；重新上架是新事件
     #[prost(string, optional, tag = "1")]
     pub id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(message, optional, tag = "2")]
-    pub announcement: ::core::option::Option<super::club::ProductAnnouncement>,
+    #[prost(oneof = "product_notice::Event", tags = "2, 3")]
+    pub event: ::core::option::Option<product_notice::Event>,
+}
+/// Nested message and enum types in `ProductNotice`.
+pub mod product_notice {
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Event {
+        /// 商品已上架，显示三个占位按钮
+        #[prost(message, tag = "2")]
+        Announcement(super::super::club::ProductAnnouncement),
+        /// 商品已上传，仅入库，不广播
+        #[prost(message, tag = "3")]
+        Uploaded(super::super::club::ProductInventoryItem),
+    }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProductNotices {
