@@ -1529,12 +1529,24 @@ pub struct ProductImage {
     #[prost(string, optional, tag = "2")]
     pub thumb_url: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 商品展示报价；不传表示未标价，显式0表示零价，两种报价可独立填写。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductPricing {
+    /// 人民币元
+    #[prost(string, optional, tag = "1")]
+    pub cny_amount: ::core::option::Option<::prost::alloc::string::String>,
+    /// 目录支持的一个币种及其金额
+    #[prost(message, optional, tag = "2")]
+    pub digital: ::core::option::Option<super::did::CoinAmount>,
+}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProductInfo {
     #[prost(string, optional, tag = "1")]
     pub name: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, repeated, tag = "2")]
     pub images: ::prost::alloc::vec::Vec<ProductImage>,
+    #[prost(message, optional, tag = "3")]
+    pub pricing: ::core::option::Option<ProductPricing>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Product {
@@ -1733,7 +1745,7 @@ pub mod product_inventory_client {
     use tonic::codegen::http::Uri;
     /// 商品库与挂牌分离，沿用插件市场的“当前主人 -> 机器人摊位 -> 货”。
     /// 上传仅入本人硬件机器人的库，不能向任意机器人上传，也不能自动上架/广播。
-    /// 公开目录与管理面分开；本阶段没有订单、价格、支付或履约。
+    /// 公开目录与管理面分开；本阶段仅展示报价，没有订单、支付或履约。
     #[derive(Debug, Clone)]
     pub struct ProductInventoryClient<T> {
         inner: tonic::client::Grpc<T>,

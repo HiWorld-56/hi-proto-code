@@ -9,6 +9,7 @@ package club
 import (
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	hi "github.com/HiWorld-56/hi-proto/go/hi"
+	did "github.com/HiWorld-56/hi-proto/go/hi/did"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -127,17 +128,71 @@ func (x *ProductImage) GetThumbUrl() string {
 	return ""
 }
 
+// 商品展示报价；不传表示未标价，显式0表示零价，两种报价可独立填写。
+type ProductPricing struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	CnyAmount     *string                `protobuf:"bytes,1,opt,name=cny_amount,json=cnyAmount,proto3,oneof" json:"cny_amount,omitempty"` // 人民币元
+	Digital       *did.CoinAmount        `protobuf:"bytes,2,opt,name=digital,proto3" json:"digital,omitempty"`                            // 目录支持的一个币种及其金额
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ProductPricing) Reset() {
+	*x = ProductPricing{}
+	mi := &file_hi_club_product_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ProductPricing) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ProductPricing) ProtoMessage() {}
+
+func (x *ProductPricing) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_product_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ProductPricing.ProtoReflect.Descriptor instead.
+func (*ProductPricing) Descriptor() ([]byte, []int) {
+	return file_hi_club_product_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *ProductPricing) GetCnyAmount() string {
+	if x != nil && x.CnyAmount != nil {
+		return *x.CnyAmount
+	}
+	return ""
+}
+
+func (x *ProductPricing) GetDigital() *did.CoinAmount {
+	if x != nil {
+		return x.Digital
+	}
+	return nil
+}
+
 type ProductInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          *string                `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"`
 	Images        []*ProductImage        `protobuf:"bytes,2,rep,name=images,proto3" json:"images,omitempty"`
+	Pricing       *ProductPricing        `protobuf:"bytes,3,opt,name=pricing,proto3" json:"pricing,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ProductInfo) Reset() {
 	*x = ProductInfo{}
-	mi := &file_hi_club_product_proto_msgTypes[1]
+	mi := &file_hi_club_product_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -149,7 +204,7 @@ func (x *ProductInfo) String() string {
 func (*ProductInfo) ProtoMessage() {}
 
 func (x *ProductInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_product_proto_msgTypes[1]
+	mi := &file_hi_club_product_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -162,7 +217,7 @@ func (x *ProductInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ProductInfo.ProtoReflect.Descriptor instead.
 func (*ProductInfo) Descriptor() ([]byte, []int) {
-	return file_hi_club_product_proto_rawDescGZIP(), []int{1}
+	return file_hi_club_product_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *ProductInfo) GetName() string {
@@ -179,6 +234,13 @@ func (x *ProductInfo) GetImages() []*ProductImage {
 	return nil
 }
 
+func (x *ProductInfo) GetPricing() *ProductPricing {
+	if x != nil {
+		return x.Pricing
+	}
+	return nil
+}
+
 type Product struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"` // 系统分配
@@ -189,7 +251,7 @@ type Product struct {
 
 func (x *Product) Reset() {
 	*x = Product{}
-	mi := &file_hi_club_product_proto_msgTypes[2]
+	mi := &file_hi_club_product_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -201,7 +263,7 @@ func (x *Product) String() string {
 func (*Product) ProtoMessage() {}
 
 func (x *Product) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_product_proto_msgTypes[2]
+	mi := &file_hi_club_product_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -214,7 +276,7 @@ func (x *Product) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Product.ProtoReflect.Descriptor instead.
 func (*Product) Descriptor() ([]byte, []int) {
-	return file_hi_club_product_proto_rawDescGZIP(), []int{2}
+	return file_hi_club_product_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *Product) GetId() string {
@@ -244,7 +306,7 @@ type ProductInventoryItem struct {
 
 func (x *ProductInventoryItem) Reset() {
 	*x = ProductInventoryItem{}
-	mi := &file_hi_club_product_proto_msgTypes[3]
+	mi := &file_hi_club_product_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -256,7 +318,7 @@ func (x *ProductInventoryItem) String() string {
 func (*ProductInventoryItem) ProtoMessage() {}
 
 func (x *ProductInventoryItem) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_product_proto_msgTypes[3]
+	mi := &file_hi_club_product_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -269,7 +331,7 @@ func (x *ProductInventoryItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ProductInventoryItem.ProtoReflect.Descriptor instead.
 func (*ProductInventoryItem) Descriptor() ([]byte, []int) {
-	return file_hi_club_product_proto_rawDescGZIP(), []int{3}
+	return file_hi_club_product_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *ProductInventoryItem) GetProduct() *Product {
@@ -315,7 +377,7 @@ type ProductListing struct {
 
 func (x *ProductListing) Reset() {
 	*x = ProductListing{}
-	mi := &file_hi_club_product_proto_msgTypes[4]
+	mi := &file_hi_club_product_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -327,7 +389,7 @@ func (x *ProductListing) String() string {
 func (*ProductListing) ProtoMessage() {}
 
 func (x *ProductListing) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_product_proto_msgTypes[4]
+	mi := &file_hi_club_product_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -340,7 +402,7 @@ func (x *ProductListing) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ProductListing.ProtoReflect.Descriptor instead.
 func (*ProductListing) Descriptor() ([]byte, []int) {
-	return file_hi_club_product_proto_rawDescGZIP(), []int{4}
+	return file_hi_club_product_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ProductListing) GetProduct() *Product {
@@ -402,7 +464,7 @@ type ProductAnnouncement struct {
 
 func (x *ProductAnnouncement) Reset() {
 	*x = ProductAnnouncement{}
-	mi := &file_hi_club_product_proto_msgTypes[5]
+	mi := &file_hi_club_product_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -414,7 +476,7 @@ func (x *ProductAnnouncement) String() string {
 func (*ProductAnnouncement) ProtoMessage() {}
 
 func (x *ProductAnnouncement) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_product_proto_msgTypes[5]
+	mi := &file_hi_club_product_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -427,7 +489,7 @@ func (x *ProductAnnouncement) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ProductAnnouncement.ProtoReflect.Descriptor instead.
 func (*ProductAnnouncement) Descriptor() ([]byte, []int) {
-	return file_hi_club_product_proto_rawDescGZIP(), []int{5}
+	return file_hi_club_product_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ProductAnnouncement) GetListing() *ProductListing {
@@ -455,7 +517,7 @@ type ProductSeller struct {
 
 func (x *ProductSeller) Reset() {
 	*x = ProductSeller{}
-	mi := &file_hi_club_product_proto_msgTypes[6]
+	mi := &file_hi_club_product_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -467,7 +529,7 @@ func (x *ProductSeller) String() string {
 func (*ProductSeller) ProtoMessage() {}
 
 func (x *ProductSeller) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_product_proto_msgTypes[6]
+	mi := &file_hi_club_product_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -480,7 +542,7 @@ func (x *ProductSeller) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ProductSeller.ProtoReflect.Descriptor instead.
 func (*ProductSeller) Descriptor() ([]byte, []int) {
-	return file_hi_club_product_proto_rawDescGZIP(), []int{6}
+	return file_hi_club_product_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ProductSeller) GetSeller() *hi.Entity {
@@ -514,7 +576,7 @@ type ProductStall struct {
 
 func (x *ProductStall) Reset() {
 	*x = ProductStall{}
-	mi := &file_hi_club_product_proto_msgTypes[7]
+	mi := &file_hi_club_product_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -526,7 +588,7 @@ func (x *ProductStall) String() string {
 func (*ProductStall) ProtoMessage() {}
 
 func (x *ProductStall) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_product_proto_msgTypes[7]
+	mi := &file_hi_club_product_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -539,7 +601,7 @@ func (x *ProductStall) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ProductStall.ProtoReflect.Descriptor instead.
 func (*ProductStall) Descriptor() ([]byte, []int) {
-	return file_hi_club_product_proto_rawDescGZIP(), []int{7}
+	return file_hi_club_product_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ProductStall) GetStall() *hi.Entity {
@@ -567,7 +629,7 @@ type CreateProductReq struct {
 
 func (x *CreateProductReq) Reset() {
 	*x = CreateProductReq{}
-	mi := &file_hi_club_product_proto_msgTypes[8]
+	mi := &file_hi_club_product_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -579,7 +641,7 @@ func (x *CreateProductReq) String() string {
 func (*CreateProductReq) ProtoMessage() {}
 
 func (x *CreateProductReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_product_proto_msgTypes[8]
+	mi := &file_hi_club_product_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -592,7 +654,7 @@ func (x *CreateProductReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateProductReq.ProtoReflect.Descriptor instead.
 func (*CreateProductReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_product_proto_rawDescGZIP(), []int{8}
+	return file_hi_club_product_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *CreateProductReq) GetRequestUuid() string {
@@ -625,7 +687,7 @@ type GetProductReq struct {
 
 func (x *GetProductReq) Reset() {
 	*x = GetProductReq{}
-	mi := &file_hi_club_product_proto_msgTypes[9]
+	mi := &file_hi_club_product_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -637,7 +699,7 @@ func (x *GetProductReq) String() string {
 func (*GetProductReq) ProtoMessage() {}
 
 func (x *GetProductReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_product_proto_msgTypes[9]
+	mi := &file_hi_club_product_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -650,7 +712,7 @@ func (x *GetProductReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetProductReq.ProtoReflect.Descriptor instead.
 func (*GetProductReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_product_proto_rawDescGZIP(), []int{9}
+	return file_hi_club_product_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *GetProductReq) GetId() string {
@@ -670,7 +732,7 @@ type ListProductsReq struct {
 
 func (x *ListProductsReq) Reset() {
 	*x = ListProductsReq{}
-	mi := &file_hi_club_product_proto_msgTypes[10]
+	mi := &file_hi_club_product_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -682,7 +744,7 @@ func (x *ListProductsReq) String() string {
 func (*ListProductsReq) ProtoMessage() {}
 
 func (x *ListProductsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_product_proto_msgTypes[10]
+	mi := &file_hi_club_product_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -695,7 +757,7 @@ func (x *ListProductsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListProductsReq.ProtoReflect.Descriptor instead.
 func (*ListProductsReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_product_proto_rawDescGZIP(), []int{10}
+	return file_hi_club_product_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *ListProductsReq) GetStall() string {
@@ -722,7 +784,7 @@ type SetProductListingStatusReq struct {
 
 func (x *SetProductListingStatusReq) Reset() {
 	*x = SetProductListingStatusReq{}
-	mi := &file_hi_club_product_proto_msgTypes[11]
+	mi := &file_hi_club_product_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -734,7 +796,7 @@ func (x *SetProductListingStatusReq) String() string {
 func (*SetProductListingStatusReq) ProtoMessage() {}
 
 func (x *SetProductListingStatusReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_product_proto_msgTypes[11]
+	mi := &file_hi_club_product_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -747,7 +809,7 @@ func (x *SetProductListingStatusReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetProductListingStatusReq.ProtoReflect.Descriptor instead.
 func (*SetProductListingStatusReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_product_proto_rawDescGZIP(), []int{11}
+	return file_hi_club_product_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *SetProductListingStatusReq) GetUuid() string {
@@ -773,7 +835,7 @@ type GetProductListingReq struct {
 
 func (x *GetProductListingReq) Reset() {
 	*x = GetProductListingReq{}
-	mi := &file_hi_club_product_proto_msgTypes[12]
+	mi := &file_hi_club_product_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -785,7 +847,7 @@ func (x *GetProductListingReq) String() string {
 func (*GetProductListingReq) ProtoMessage() {}
 
 func (x *GetProductListingReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_product_proto_msgTypes[12]
+	mi := &file_hi_club_product_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -798,7 +860,7 @@ func (x *GetProductListingReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetProductListingReq.ProtoReflect.Descriptor instead.
 func (*GetProductListingReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_product_proto_rawDescGZIP(), []int{12}
+	return file_hi_club_product_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *GetProductListingReq) GetUuid() string {
@@ -818,7 +880,7 @@ type SearchProductListingsReq struct {
 
 func (x *SearchProductListingsReq) Reset() {
 	*x = SearchProductListingsReq{}
-	mi := &file_hi_club_product_proto_msgTypes[13]
+	mi := &file_hi_club_product_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -830,7 +892,7 @@ func (x *SearchProductListingsReq) String() string {
 func (*SearchProductListingsReq) ProtoMessage() {}
 
 func (x *SearchProductListingsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_product_proto_msgTypes[13]
+	mi := &file_hi_club_product_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -843,7 +905,7 @@ func (x *SearchProductListingsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchProductListingsReq.ProtoReflect.Descriptor instead.
 func (*SearchProductListingsReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_product_proto_rawDescGZIP(), []int{13}
+	return file_hi_club_product_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *SearchProductListingsReq) GetKeyword() string {
@@ -869,7 +931,7 @@ type GetProductSellerReq struct {
 
 func (x *GetProductSellerReq) Reset() {
 	*x = GetProductSellerReq{}
-	mi := &file_hi_club_product_proto_msgTypes[14]
+	mi := &file_hi_club_product_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -881,7 +943,7 @@ func (x *GetProductSellerReq) String() string {
 func (*GetProductSellerReq) ProtoMessage() {}
 
 func (x *GetProductSellerReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_product_proto_msgTypes[14]
+	mi := &file_hi_club_product_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -894,7 +956,7 @@ func (x *GetProductSellerReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetProductSellerReq.ProtoReflect.Descriptor instead.
 func (*GetProductSellerReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_product_proto_rawDescGZIP(), []int{14}
+	return file_hi_club_product_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *GetProductSellerReq) GetDid() string {
@@ -914,7 +976,7 @@ type ListProductStallsReq struct {
 
 func (x *ListProductStallsReq) Reset() {
 	*x = ListProductStallsReq{}
-	mi := &file_hi_club_product_proto_msgTypes[15]
+	mi := &file_hi_club_product_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -926,7 +988,7 @@ func (x *ListProductStallsReq) String() string {
 func (*ListProductStallsReq) ProtoMessage() {}
 
 func (x *ListProductStallsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_product_proto_msgTypes[15]
+	mi := &file_hi_club_product_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -939,7 +1001,7 @@ func (x *ListProductStallsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListProductStallsReq.ProtoReflect.Descriptor instead.
 func (*ListProductStallsReq) Descriptor() ([]byte, []int) {
-	return file_hi_club_product_proto_rawDescGZIP(), []int{15}
+	return file_hi_club_product_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *ListProductStallsReq) GetSeller() string {
@@ -966,7 +1028,7 @@ type ListProductInventoryResp struct {
 
 func (x *ListProductInventoryResp) Reset() {
 	*x = ListProductInventoryResp{}
-	mi := &file_hi_club_product_proto_msgTypes[16]
+	mi := &file_hi_club_product_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -978,7 +1040,7 @@ func (x *ListProductInventoryResp) String() string {
 func (*ListProductInventoryResp) ProtoMessage() {}
 
 func (x *ListProductInventoryResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_product_proto_msgTypes[16]
+	mi := &file_hi_club_product_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -991,7 +1053,7 @@ func (x *ListProductInventoryResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListProductInventoryResp.ProtoReflect.Descriptor instead.
 func (*ListProductInventoryResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_product_proto_rawDescGZIP(), []int{16}
+	return file_hi_club_product_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *ListProductInventoryResp) GetList() []*ProductInventoryItem {
@@ -1018,7 +1080,7 @@ type ListProductListingsResp struct {
 
 func (x *ListProductListingsResp) Reset() {
 	*x = ListProductListingsResp{}
-	mi := &file_hi_club_product_proto_msgTypes[17]
+	mi := &file_hi_club_product_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1030,7 +1092,7 @@ func (x *ListProductListingsResp) String() string {
 func (*ListProductListingsResp) ProtoMessage() {}
 
 func (x *ListProductListingsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_product_proto_msgTypes[17]
+	mi := &file_hi_club_product_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1043,7 +1105,7 @@ func (x *ListProductListingsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListProductListingsResp.ProtoReflect.Descriptor instead.
 func (*ListProductListingsResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_product_proto_rawDescGZIP(), []int{17}
+	return file_hi_club_product_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *ListProductListingsResp) GetList() []*ProductListing {
@@ -1070,7 +1132,7 @@ type ListProductSellersResp struct {
 
 func (x *ListProductSellersResp) Reset() {
 	*x = ListProductSellersResp{}
-	mi := &file_hi_club_product_proto_msgTypes[18]
+	mi := &file_hi_club_product_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1082,7 +1144,7 @@ func (x *ListProductSellersResp) String() string {
 func (*ListProductSellersResp) ProtoMessage() {}
 
 func (x *ListProductSellersResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_product_proto_msgTypes[18]
+	mi := &file_hi_club_product_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1095,7 +1157,7 @@ func (x *ListProductSellersResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListProductSellersResp.ProtoReflect.Descriptor instead.
 func (*ListProductSellersResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_product_proto_rawDescGZIP(), []int{18}
+	return file_hi_club_product_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *ListProductSellersResp) GetList() []*ProductSeller {
@@ -1122,7 +1184,7 @@ type ListProductStallsResp struct {
 
 func (x *ListProductStallsResp) Reset() {
 	*x = ListProductStallsResp{}
-	mi := &file_hi_club_product_proto_msgTypes[19]
+	mi := &file_hi_club_product_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1134,7 +1196,7 @@ func (x *ListProductStallsResp) String() string {
 func (*ListProductStallsResp) ProtoMessage() {}
 
 func (x *ListProductStallsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_club_product_proto_msgTypes[19]
+	mi := &file_hi_club_product_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1147,7 +1209,7 @@ func (x *ListProductStallsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListProductStallsResp.ProtoReflect.Descriptor instead.
 func (*ListProductStallsResp) Descriptor() ([]byte, []int) {
-	return file_hi_club_product_proto_rawDescGZIP(), []int{19}
+	return file_hi_club_product_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *ListProductStallsResp) GetList() []*ProductStall {
@@ -1168,16 +1230,23 @@ var File_hi_club_product_proto protoreflect.FileDescriptor
 
 const file_hi_club_product_proto_rawDesc = "" +
 	"\n" +
-	"\x15hi/club/product.proto\x12\ahi.club\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\x82\x01\n" +
+	"\x15hi/club/product.proto\x12\ahi.club\x1a\x1bbuf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x11hi/did/base.proto\x1a\x10hi/options.proto\"\x82\x01\n" +
 	"\fProductImage\x12&\n" +
 	"\x03url\x18\x01 \x01(\tB\x0f\xbaH\b\xc8\x01\x01r\x03\x88\x01\x01\x90\xb5\x18\x01H\x00R\x03url\x88\x01\x01\x12.\n" +
 	"\tthumb_url\x18\x02 \x01(\tB\f\xbaH\x05r\x03\x88\x01\x01\x90\xb5\x18\x01H\x01R\bthumbUrl\x88\x01\x01:\x04\x98\xb5\x18\x01B\x06\n" +
 	"\x04_urlB\f\n" +
 	"\n" +
-	"_thumb_url\"\x86\x01\n" +
+	"_thumb_url\"\xa5\x02\n" +
+	"\x0eProductPricing\x12Q\n" +
+	"\n" +
+	"cny_amount\x18\x01 \x01(\tB-\xbaH&r$\x18P2 ^(0|[1-9][0-9]*)(\\.[0-9]{1,2})?$\x90\xb5\x18\x01H\x00R\tcnyAmount\x88\x01\x01\x122\n" +
+	"\adigital\x18\x02 \x01(\v2\x12.hi.did.CoinAmountB\x04\x90\xb5\x18\x01R\adigital:}\xbaHv\x1at\n" +
+	"\x18product.pricing.nonempty\x12-请填写人民币价格或数字货币价格\x1a)has(this.cny_amount) || has(this.digital)\x98\xb5\x18\x01B\r\n" +
+	"\v_cny_amount\"\xbf\x01\n" +
 	"\vProductInfo\x12)\n" +
 	"\x04name\x18\x01 \x01(\tB\x10\xbaH\t\xc8\x01\x01r\x04\x10\x01\x18x\x90\xb5\x18\x01H\x00R\x04name\x88\x01\x01\x12=\n" +
-	"\x06images\x18\x02 \x03(\v2\x15.hi.club.ProductImageB\x0e\xbaH\a\x92\x01\x04\b\x01\x10\t\x90\xb5\x18\x01R\x06images:\x04\x98\xb5\x18\x01B\a\n" +
+	"\x06images\x18\x02 \x03(\v2\x15.hi.club.ProductImageB\x0e\xbaH\a\x92\x01\x04\b\x01\x10\t\x90\xb5\x18\x01R\x06images\x127\n" +
+	"\apricing\x18\x03 \x01(\v2\x17.hi.club.ProductPricingB\x04\x90\xb5\x18\x01R\apricing:\x04\x98\xb5\x18\x01B\a\n" +
 	"\x05_name\"a\n" +
 	"\aProduct\x12\x19\n" +
 	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x02id\x88\x01\x01\x12.\n" +
@@ -1319,84 +1388,88 @@ func file_hi_club_product_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_club_product_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_hi_club_product_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
+var file_hi_club_product_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
 var file_hi_club_product_proto_goTypes = []any{
 	(ProductListingStatus)(0),          // 0: hi.club.ProductListingStatus
 	(*ProductImage)(nil),               // 1: hi.club.ProductImage
-	(*ProductInfo)(nil),                // 2: hi.club.ProductInfo
-	(*Product)(nil),                    // 3: hi.club.Product
-	(*ProductInventoryItem)(nil),       // 4: hi.club.ProductInventoryItem
-	(*ProductListing)(nil),             // 5: hi.club.ProductListing
-	(*ProductAnnouncement)(nil),        // 6: hi.club.ProductAnnouncement
-	(*ProductSeller)(nil),              // 7: hi.club.ProductSeller
-	(*ProductStall)(nil),               // 8: hi.club.ProductStall
-	(*CreateProductReq)(nil),           // 9: hi.club.CreateProductReq
-	(*GetProductReq)(nil),              // 10: hi.club.GetProductReq
-	(*ListProductsReq)(nil),            // 11: hi.club.ListProductsReq
-	(*SetProductListingStatusReq)(nil), // 12: hi.club.SetProductListingStatusReq
-	(*GetProductListingReq)(nil),       // 13: hi.club.GetProductListingReq
-	(*SearchProductListingsReq)(nil),   // 14: hi.club.SearchProductListingsReq
-	(*GetProductSellerReq)(nil),        // 15: hi.club.GetProductSellerReq
-	(*ListProductStallsReq)(nil),       // 16: hi.club.ListProductStallsReq
-	(*ListProductInventoryResp)(nil),   // 17: hi.club.ListProductInventoryResp
-	(*ListProductListingsResp)(nil),    // 18: hi.club.ListProductListingsResp
-	(*ListProductSellersResp)(nil),     // 19: hi.club.ListProductSellersResp
-	(*ListProductStallsResp)(nil),      // 20: hi.club.ListProductStallsResp
-	(*hi.Entity)(nil),                  // 21: hi.Entity
-	(*hi.Pagination)(nil),              // 22: hi.Pagination
+	(*ProductPricing)(nil),             // 2: hi.club.ProductPricing
+	(*ProductInfo)(nil),                // 3: hi.club.ProductInfo
+	(*Product)(nil),                    // 4: hi.club.Product
+	(*ProductInventoryItem)(nil),       // 5: hi.club.ProductInventoryItem
+	(*ProductListing)(nil),             // 6: hi.club.ProductListing
+	(*ProductAnnouncement)(nil),        // 7: hi.club.ProductAnnouncement
+	(*ProductSeller)(nil),              // 8: hi.club.ProductSeller
+	(*ProductStall)(nil),               // 9: hi.club.ProductStall
+	(*CreateProductReq)(nil),           // 10: hi.club.CreateProductReq
+	(*GetProductReq)(nil),              // 11: hi.club.GetProductReq
+	(*ListProductsReq)(nil),            // 12: hi.club.ListProductsReq
+	(*SetProductListingStatusReq)(nil), // 13: hi.club.SetProductListingStatusReq
+	(*GetProductListingReq)(nil),       // 14: hi.club.GetProductListingReq
+	(*SearchProductListingsReq)(nil),   // 15: hi.club.SearchProductListingsReq
+	(*GetProductSellerReq)(nil),        // 16: hi.club.GetProductSellerReq
+	(*ListProductStallsReq)(nil),       // 17: hi.club.ListProductStallsReq
+	(*ListProductInventoryResp)(nil),   // 18: hi.club.ListProductInventoryResp
+	(*ListProductListingsResp)(nil),    // 19: hi.club.ListProductListingsResp
+	(*ListProductSellersResp)(nil),     // 20: hi.club.ListProductSellersResp
+	(*ListProductStallsResp)(nil),      // 21: hi.club.ListProductStallsResp
+	(*did.CoinAmount)(nil),             // 22: hi.did.CoinAmount
+	(*hi.Entity)(nil),                  // 23: hi.Entity
+	(*hi.Pagination)(nil),              // 24: hi.Pagination
 }
 var file_hi_club_product_proto_depIdxs = []int32{
-	1,  // 0: hi.club.ProductInfo.images:type_name -> hi.club.ProductImage
-	2,  // 1: hi.club.Product.info:type_name -> hi.club.ProductInfo
-	3,  // 2: hi.club.ProductInventoryItem.product:type_name -> hi.club.Product
-	21, // 3: hi.club.ProductInventoryItem.stall:type_name -> hi.Entity
-	21, // 4: hi.club.ProductInventoryItem.uploaded_by:type_name -> hi.Entity
-	3,  // 5: hi.club.ProductListing.product:type_name -> hi.club.Product
-	21, // 6: hi.club.ProductListing.merchant:type_name -> hi.Entity
-	21, // 7: hi.club.ProductListing.stall:type_name -> hi.Entity
-	0,  // 8: hi.club.ProductListing.status:type_name -> hi.club.ProductListingStatus
-	5,  // 9: hi.club.ProductAnnouncement.listing:type_name -> hi.club.ProductListing
-	21, // 10: hi.club.ProductAnnouncement.group:type_name -> hi.Entity
-	21, // 11: hi.club.ProductSeller.seller:type_name -> hi.Entity
-	21, // 12: hi.club.ProductStall.stall:type_name -> hi.Entity
-	2,  // 13: hi.club.CreateProductReq.info:type_name -> hi.club.ProductInfo
-	22, // 14: hi.club.ListProductsReq.pagination:type_name -> hi.Pagination
-	0,  // 15: hi.club.SetProductListingStatusReq.status:type_name -> hi.club.ProductListingStatus
-	22, // 16: hi.club.SearchProductListingsReq.pagination:type_name -> hi.Pagination
-	22, // 17: hi.club.ListProductStallsReq.pagination:type_name -> hi.Pagination
-	4,  // 18: hi.club.ListProductInventoryResp.list:type_name -> hi.club.ProductInventoryItem
-	5,  // 19: hi.club.ListProductListingsResp.list:type_name -> hi.club.ProductListing
-	7,  // 20: hi.club.ListProductSellersResp.list:type_name -> hi.club.ProductSeller
-	8,  // 21: hi.club.ListProductStallsResp.list:type_name -> hi.club.ProductStall
-	9,  // 22: hi.club.ProductInventory.Create:input_type -> hi.club.CreateProductReq
-	10, // 23: hi.club.ProductInventory.Get:input_type -> hi.club.GetProductReq
-	11, // 24: hi.club.ProductInventory.List:input_type -> hi.club.ListProductsReq
-	10, // 25: hi.club.ProductMarket.Publish:input_type -> hi.club.GetProductReq
-	12, // 26: hi.club.ProductMarket.SetListingStatus:input_type -> hi.club.SetProductListingStatusReq
-	11, // 27: hi.club.ProductMarket.ListMyListings:input_type -> hi.club.ListProductsReq
-	22, // 28: hi.club.ProductMarketDirectory.ListSellers:input_type -> hi.Pagination
-	15, // 29: hi.club.ProductMarketDirectory.GetSeller:input_type -> hi.club.GetProductSellerReq
-	16, // 30: hi.club.ProductMarketDirectory.ListSellerStalls:input_type -> hi.club.ListProductStallsReq
-	11, // 31: hi.club.ProductMarketDirectory.ListStallListings:input_type -> hi.club.ListProductsReq
-	14, // 32: hi.club.ProductMarketDirectory.SearchListings:input_type -> hi.club.SearchProductListingsReq
-	13, // 33: hi.club.ProductMarketDirectory.GetListing:input_type -> hi.club.GetProductListingReq
-	4,  // 34: hi.club.ProductInventory.Create:output_type -> hi.club.ProductInventoryItem
-	4,  // 35: hi.club.ProductInventory.Get:output_type -> hi.club.ProductInventoryItem
-	17, // 36: hi.club.ProductInventory.List:output_type -> hi.club.ListProductInventoryResp
-	5,  // 37: hi.club.ProductMarket.Publish:output_type -> hi.club.ProductListing
-	5,  // 38: hi.club.ProductMarket.SetListingStatus:output_type -> hi.club.ProductListing
-	18, // 39: hi.club.ProductMarket.ListMyListings:output_type -> hi.club.ListProductListingsResp
-	19, // 40: hi.club.ProductMarketDirectory.ListSellers:output_type -> hi.club.ListProductSellersResp
-	7,  // 41: hi.club.ProductMarketDirectory.GetSeller:output_type -> hi.club.ProductSeller
-	20, // 42: hi.club.ProductMarketDirectory.ListSellerStalls:output_type -> hi.club.ListProductStallsResp
-	18, // 43: hi.club.ProductMarketDirectory.ListStallListings:output_type -> hi.club.ListProductListingsResp
-	18, // 44: hi.club.ProductMarketDirectory.SearchListings:output_type -> hi.club.ListProductListingsResp
-	5,  // 45: hi.club.ProductMarketDirectory.GetListing:output_type -> hi.club.ProductListing
-	34, // [34:46] is the sub-list for method output_type
-	22, // [22:34] is the sub-list for method input_type
-	22, // [22:22] is the sub-list for extension type_name
-	22, // [22:22] is the sub-list for extension extendee
-	0,  // [0:22] is the sub-list for field type_name
+	22, // 0: hi.club.ProductPricing.digital:type_name -> hi.did.CoinAmount
+	1,  // 1: hi.club.ProductInfo.images:type_name -> hi.club.ProductImage
+	2,  // 2: hi.club.ProductInfo.pricing:type_name -> hi.club.ProductPricing
+	3,  // 3: hi.club.Product.info:type_name -> hi.club.ProductInfo
+	4,  // 4: hi.club.ProductInventoryItem.product:type_name -> hi.club.Product
+	23, // 5: hi.club.ProductInventoryItem.stall:type_name -> hi.Entity
+	23, // 6: hi.club.ProductInventoryItem.uploaded_by:type_name -> hi.Entity
+	4,  // 7: hi.club.ProductListing.product:type_name -> hi.club.Product
+	23, // 8: hi.club.ProductListing.merchant:type_name -> hi.Entity
+	23, // 9: hi.club.ProductListing.stall:type_name -> hi.Entity
+	0,  // 10: hi.club.ProductListing.status:type_name -> hi.club.ProductListingStatus
+	6,  // 11: hi.club.ProductAnnouncement.listing:type_name -> hi.club.ProductListing
+	23, // 12: hi.club.ProductAnnouncement.group:type_name -> hi.Entity
+	23, // 13: hi.club.ProductSeller.seller:type_name -> hi.Entity
+	23, // 14: hi.club.ProductStall.stall:type_name -> hi.Entity
+	3,  // 15: hi.club.CreateProductReq.info:type_name -> hi.club.ProductInfo
+	24, // 16: hi.club.ListProductsReq.pagination:type_name -> hi.Pagination
+	0,  // 17: hi.club.SetProductListingStatusReq.status:type_name -> hi.club.ProductListingStatus
+	24, // 18: hi.club.SearchProductListingsReq.pagination:type_name -> hi.Pagination
+	24, // 19: hi.club.ListProductStallsReq.pagination:type_name -> hi.Pagination
+	5,  // 20: hi.club.ListProductInventoryResp.list:type_name -> hi.club.ProductInventoryItem
+	6,  // 21: hi.club.ListProductListingsResp.list:type_name -> hi.club.ProductListing
+	8,  // 22: hi.club.ListProductSellersResp.list:type_name -> hi.club.ProductSeller
+	9,  // 23: hi.club.ListProductStallsResp.list:type_name -> hi.club.ProductStall
+	10, // 24: hi.club.ProductInventory.Create:input_type -> hi.club.CreateProductReq
+	11, // 25: hi.club.ProductInventory.Get:input_type -> hi.club.GetProductReq
+	12, // 26: hi.club.ProductInventory.List:input_type -> hi.club.ListProductsReq
+	11, // 27: hi.club.ProductMarket.Publish:input_type -> hi.club.GetProductReq
+	13, // 28: hi.club.ProductMarket.SetListingStatus:input_type -> hi.club.SetProductListingStatusReq
+	12, // 29: hi.club.ProductMarket.ListMyListings:input_type -> hi.club.ListProductsReq
+	24, // 30: hi.club.ProductMarketDirectory.ListSellers:input_type -> hi.Pagination
+	16, // 31: hi.club.ProductMarketDirectory.GetSeller:input_type -> hi.club.GetProductSellerReq
+	17, // 32: hi.club.ProductMarketDirectory.ListSellerStalls:input_type -> hi.club.ListProductStallsReq
+	12, // 33: hi.club.ProductMarketDirectory.ListStallListings:input_type -> hi.club.ListProductsReq
+	15, // 34: hi.club.ProductMarketDirectory.SearchListings:input_type -> hi.club.SearchProductListingsReq
+	14, // 35: hi.club.ProductMarketDirectory.GetListing:input_type -> hi.club.GetProductListingReq
+	5,  // 36: hi.club.ProductInventory.Create:output_type -> hi.club.ProductInventoryItem
+	5,  // 37: hi.club.ProductInventory.Get:output_type -> hi.club.ProductInventoryItem
+	18, // 38: hi.club.ProductInventory.List:output_type -> hi.club.ListProductInventoryResp
+	6,  // 39: hi.club.ProductMarket.Publish:output_type -> hi.club.ProductListing
+	6,  // 40: hi.club.ProductMarket.SetListingStatus:output_type -> hi.club.ProductListing
+	19, // 41: hi.club.ProductMarket.ListMyListings:output_type -> hi.club.ListProductListingsResp
+	20, // 42: hi.club.ProductMarketDirectory.ListSellers:output_type -> hi.club.ListProductSellersResp
+	8,  // 43: hi.club.ProductMarketDirectory.GetSeller:output_type -> hi.club.ProductSeller
+	21, // 44: hi.club.ProductMarketDirectory.ListSellerStalls:output_type -> hi.club.ListProductStallsResp
+	19, // 45: hi.club.ProductMarketDirectory.ListStallListings:output_type -> hi.club.ListProductListingsResp
+	19, // 46: hi.club.ProductMarketDirectory.SearchListings:output_type -> hi.club.ListProductListingsResp
+	6,  // 47: hi.club.ProductMarketDirectory.GetListing:output_type -> hi.club.ProductListing
+	36, // [36:48] is the sub-list for method output_type
+	24, // [24:36] is the sub-list for method input_type
+	24, // [24:24] is the sub-list for extension type_name
+	24, // [24:24] is the sub-list for extension extendee
+	0,  // [0:24] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_product_proto_init() }
@@ -1409,7 +1482,7 @@ func file_hi_club_product_proto_init() {
 	file_hi_club_product_proto_msgTypes[2].OneofWrappers = []any{}
 	file_hi_club_product_proto_msgTypes[3].OneofWrappers = []any{}
 	file_hi_club_product_proto_msgTypes[4].OneofWrappers = []any{}
-	file_hi_club_product_proto_msgTypes[6].OneofWrappers = []any{}
+	file_hi_club_product_proto_msgTypes[5].OneofWrappers = []any{}
 	file_hi_club_product_proto_msgTypes[7].OneofWrappers = []any{}
 	file_hi_club_product_proto_msgTypes[8].OneofWrappers = []any{}
 	file_hi_club_product_proto_msgTypes[9].OneofWrappers = []any{}
@@ -1423,13 +1496,14 @@ func file_hi_club_product_proto_init() {
 	file_hi_club_product_proto_msgTypes[17].OneofWrappers = []any{}
 	file_hi_club_product_proto_msgTypes[18].OneofWrappers = []any{}
 	file_hi_club_product_proto_msgTypes[19].OneofWrappers = []any{}
+	file_hi_club_product_proto_msgTypes[20].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_product_proto_rawDesc), len(file_hi_club_product_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   20,
+			NumMessages:   21,
 			NumExtensions: 0,
 			NumServices:   3,
 		},

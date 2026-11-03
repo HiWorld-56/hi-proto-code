@@ -7,6 +7,7 @@
 package did
 
 import (
+	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -121,6 +122,60 @@ func (x *Coin) GetDecimals() uint32 {
 	return 0
 }
 
+// 数字货币金额；币种门面复用Coin，金额为非负十进制文本，不经过浮点。
+// 金额的小数位由使用方按权威币种目录中的decimals校验。
+type CoinAmount struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Amount        *string                `protobuf:"bytes,1,opt,name=amount,proto3,oneof" json:"amount,omitempty"`
+	Coin          *Coin                  `protobuf:"bytes,2,opt,name=coin,proto3" json:"coin,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CoinAmount) Reset() {
+	*x = CoinAmount{}
+	mi := &file_hi_did_base_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CoinAmount) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CoinAmount) ProtoMessage() {}
+
+func (x *CoinAmount) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_did_base_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CoinAmount.ProtoReflect.Descriptor instead.
+func (*CoinAmount) Descriptor() ([]byte, []int) {
+	return file_hi_did_base_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *CoinAmount) GetAmount() string {
+	if x != nil && x.Amount != nil {
+		return *x.Amount
+	}
+	return ""
+}
+
+func (x *CoinAmount) GetCoin() *Coin {
+	if x != nil {
+		return x.Coin
+	}
+	return nil
+}
+
 type ListCoinsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	List          []*Coin                `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
@@ -130,7 +185,7 @@ type ListCoinsResp struct {
 
 func (x *ListCoinsResp) Reset() {
 	*x = ListCoinsResp{}
-	mi := &file_hi_did_base_proto_msgTypes[1]
+	mi := &file_hi_did_base_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -142,7 +197,7 @@ func (x *ListCoinsResp) String() string {
 func (*ListCoinsResp) ProtoMessage() {}
 
 func (x *ListCoinsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_base_proto_msgTypes[1]
+	mi := &file_hi_did_base_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -155,7 +210,7 @@ func (x *ListCoinsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListCoinsResp.ProtoReflect.Descriptor instead.
 func (*ListCoinsResp) Descriptor() ([]byte, []int) {
-	return file_hi_did_base_proto_rawDescGZIP(), []int{1}
+	return file_hi_did_base_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *ListCoinsResp) GetList() []*Coin {
@@ -176,7 +231,7 @@ type ListSuperAdminUsersResp struct {
 
 func (x *ListSuperAdminUsersResp) Reset() {
 	*x = ListSuperAdminUsersResp{}
-	mi := &file_hi_did_base_proto_msgTypes[2]
+	mi := &file_hi_did_base_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -188,7 +243,7 @@ func (x *ListSuperAdminUsersResp) String() string {
 func (*ListSuperAdminUsersResp) ProtoMessage() {}
 
 func (x *ListSuperAdminUsersResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_base_proto_msgTypes[2]
+	mi := &file_hi_did_base_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -201,7 +256,7 @@ func (x *ListSuperAdminUsersResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListSuperAdminUsersResp.ProtoReflect.Descriptor instead.
 func (*ListSuperAdminUsersResp) Descriptor() ([]byte, []int) {
-	return file_hi_did_base_proto_rawDescGZIP(), []int{2}
+	return file_hi_did_base_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *ListSuperAdminUsersResp) GetList() []string {
@@ -220,7 +275,7 @@ type UserTotalResp struct {
 
 func (x *UserTotalResp) Reset() {
 	*x = UserTotalResp{}
-	mi := &file_hi_did_base_proto_msgTypes[3]
+	mi := &file_hi_did_base_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -232,7 +287,7 @@ func (x *UserTotalResp) String() string {
 func (*UserTotalResp) ProtoMessage() {}
 
 func (x *UserTotalResp) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_base_proto_msgTypes[3]
+	mi := &file_hi_did_base_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -245,7 +300,7 @@ func (x *UserTotalResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserTotalResp.ProtoReflect.Descriptor instead.
 func (*UserTotalResp) Descriptor() ([]byte, []int) {
-	return file_hi_did_base_proto_rawDescGZIP(), []int{3}
+	return file_hi_did_base_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *UserTotalResp) GetTotal() int32 {
@@ -259,7 +314,7 @@ var File_hi_did_base_proto protoreflect.FileDescriptor
 
 const file_hi_did_base_proto_rawDesc = "" +
 	"\n" +
-	"\x11hi/did/base.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\xa3\x02\n" +
+	"\x11hi/did/base.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x1bbuf/validate/validate.proto\x1a\x10hi/options.proto\"\xa3\x02\n" +
 	"\x04Coin\x12\x1d\n" +
 	"\x04icon\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x04icon\x88\x01\x01\x12\x1d\n" +
 	"\x04name\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x04name\x88\x01\x01\x12%\n" +
@@ -272,7 +327,13 @@ const file_hi_did_base_proto_rawDesc = "" +
 	"\t_categoryB\b\n" +
 	"\x06_chainB\v\n" +
 	"\t_contractB\v\n" +
-	"\t_decimals\"=\n" +
+	"\t_decimals\"\x96\x01\n" +
+	"\n" +
+	"CoinAmount\x12I\n" +
+	"\x06amount\x18\x01 \x01(\tB,\xbaH%\xc8\x01\x01r \x18P2\x1c^(0|[1-9][0-9]*)(\\.[0-9]+)?$\x90\xb5\x18\x01H\x00R\x06amount\x88\x01\x01\x12,\n" +
+	"\x04coin\x18\x02 \x01(\v2\f.hi.did.CoinB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x01R\x04coin:\x04\x98\xb5\x18\x01B\t\n" +
+	"\a_amount\"=\n" +
 	"\rListCoinsResp\x12&\n" +
 	"\x04list\x18\x01 \x03(\v2\f.hi.did.CoinB\x04\x90\xb5\x18\x01R\x04list:\x04\x98\xb5\x18\x01\"9\n" +
 	"\x17ListSuperAdminUsersResp\x12\x18\n" +
@@ -302,30 +363,32 @@ func file_hi_did_base_proto_rawDescGZIP() []byte {
 	return file_hi_did_base_proto_rawDescData
 }
 
-var file_hi_did_base_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_hi_did_base_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_hi_did_base_proto_goTypes = []any{
 	(*Coin)(nil),                    // 0: hi.did.Coin
-	(*ListCoinsResp)(nil),           // 1: hi.did.ListCoinsResp
-	(*ListSuperAdminUsersResp)(nil), // 2: hi.did.ListSuperAdminUsersResp
-	(*UserTotalResp)(nil),           // 3: hi.did.UserTotalResp
-	(*emptypb.Empty)(nil),           // 4: google.protobuf.Empty
-	(*hi.ServerVersionResp)(nil),    // 5: hi.ServerVersionResp
+	(*CoinAmount)(nil),              // 1: hi.did.CoinAmount
+	(*ListCoinsResp)(nil),           // 2: hi.did.ListCoinsResp
+	(*ListSuperAdminUsersResp)(nil), // 3: hi.did.ListSuperAdminUsersResp
+	(*UserTotalResp)(nil),           // 4: hi.did.UserTotalResp
+	(*emptypb.Empty)(nil),           // 5: google.protobuf.Empty
+	(*hi.ServerVersionResp)(nil),    // 6: hi.ServerVersionResp
 }
 var file_hi_did_base_proto_depIdxs = []int32{
-	0, // 0: hi.did.ListCoinsResp.list:type_name -> hi.did.Coin
-	4, // 1: hi.did.Base.ListCoins:input_type -> google.protobuf.Empty
-	4, // 2: hi.did.Base.ServerVersion:input_type -> google.protobuf.Empty
-	4, // 3: hi.did.Base.UserTotal:input_type -> google.protobuf.Empty
-	4, // 4: hi.did.SuperAdmin.List:input_type -> google.protobuf.Empty
-	1, // 5: hi.did.Base.ListCoins:output_type -> hi.did.ListCoinsResp
-	5, // 6: hi.did.Base.ServerVersion:output_type -> hi.ServerVersionResp
-	3, // 7: hi.did.Base.UserTotal:output_type -> hi.did.UserTotalResp
-	2, // 8: hi.did.SuperAdmin.List:output_type -> hi.did.ListSuperAdminUsersResp
-	5, // [5:9] is the sub-list for method output_type
-	1, // [1:5] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	0, // 0: hi.did.CoinAmount.coin:type_name -> hi.did.Coin
+	0, // 1: hi.did.ListCoinsResp.list:type_name -> hi.did.Coin
+	5, // 2: hi.did.Base.ListCoins:input_type -> google.protobuf.Empty
+	5, // 3: hi.did.Base.ServerVersion:input_type -> google.protobuf.Empty
+	5, // 4: hi.did.Base.UserTotal:input_type -> google.protobuf.Empty
+	5, // 5: hi.did.SuperAdmin.List:input_type -> google.protobuf.Empty
+	2, // 6: hi.did.Base.ListCoins:output_type -> hi.did.ListCoinsResp
+	6, // 7: hi.did.Base.ServerVersion:output_type -> hi.ServerVersionResp
+	4, // 8: hi.did.Base.UserTotal:output_type -> hi.did.UserTotalResp
+	3, // 9: hi.did.SuperAdmin.List:output_type -> hi.did.ListSuperAdminUsersResp
+	6, // [6:10] is the sub-list for method output_type
+	2, // [2:6] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_hi_did_base_proto_init() }
@@ -334,14 +397,15 @@ func file_hi_did_base_proto_init() {
 		return
 	}
 	file_hi_did_base_proto_msgTypes[0].OneofWrappers = []any{}
-	file_hi_did_base_proto_msgTypes[3].OneofWrappers = []any{}
+	file_hi_did_base_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_did_base_proto_msgTypes[4].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_did_base_proto_rawDesc), len(file_hi_did_base_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

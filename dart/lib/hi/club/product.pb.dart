@@ -16,6 +16,7 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../common.pb.dart' as $1;
+import '../did/base.pb.dart' as $2;
 import 'product.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -88,14 +89,86 @@ class ProductImage extends $pb.GeneratedMessage {
   void clearThumbUrl() => $_clearField(2);
 }
 
+/// 商品展示报价；不传表示未标价，显式0表示零价，两种报价可独立填写。
+class ProductPricing extends $pb.GeneratedMessage {
+  factory ProductPricing({
+    $core.String? cnyAmount,
+    $2.CoinAmount? digital,
+  }) {
+    final result = create();
+    if (cnyAmount != null) result.cnyAmount = cnyAmount;
+    if (digital != null) result.digital = digital;
+    return result;
+  }
+
+  ProductPricing._();
+
+  factory ProductPricing.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ProductPricing.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ProductPricing',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'cnyAmount')
+    ..aOM<$2.CoinAmount>(2, _omitFieldNames ? '' : 'digital',
+        subBuilder: $2.CoinAmount.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductPricing clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductPricing copyWith(void Function(ProductPricing) updates) =>
+      super.copyWith((message) => updates(message as ProductPricing))
+          as ProductPricing;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ProductPricing create() => ProductPricing._();
+  @$core.override
+  ProductPricing createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ProductPricing getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ProductPricing>(create);
+  static ProductPricing? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get cnyAmount => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set cnyAmount($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasCnyAmount() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCnyAmount() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $2.CoinAmount get digital => $_getN(1);
+  @$pb.TagNumber(2)
+  set digital($2.CoinAmount value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasDigital() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearDigital() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $2.CoinAmount ensureDigital() => $_ensure(1);
+}
+
 class ProductInfo extends $pb.GeneratedMessage {
   factory ProductInfo({
     $core.String? name,
     $core.Iterable<ProductImage>? images,
+    ProductPricing? pricing,
   }) {
     final result = create();
     if (name != null) result.name = name;
     if (images != null) result.images.addAll(images);
+    if (pricing != null) result.pricing = pricing;
     return result;
   }
 
@@ -115,6 +188,8 @@ class ProductInfo extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'name')
     ..pPM<ProductImage>(2, _omitFieldNames ? '' : 'images',
         subBuilder: ProductImage.create)
+    ..aOM<ProductPricing>(3, _omitFieldNames ? '' : 'pricing',
+        subBuilder: ProductPricing.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -147,6 +222,17 @@ class ProductInfo extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(2)
   $pb.PbList<ProductImage> get images => $_getList(1);
+
+  @$pb.TagNumber(3)
+  ProductPricing get pricing => $_getN(2);
+  @$pb.TagNumber(3)
+  set pricing(ProductPricing value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasPricing() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearPricing() => $_clearField(3);
+  @$pb.TagNumber(3)
+  ProductPricing ensurePricing() => $_ensure(2);
 }
 
 class Product extends $pb.GeneratedMessage {

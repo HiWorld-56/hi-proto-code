@@ -142,6 +142,75 @@ class Coin extends $pb.GeneratedMessage {
   void clearDecimals() => $_clearField(6);
 }
 
+/// 数字货币金额；币种门面复用Coin，金额为非负十进制文本，不经过浮点。
+/// 金额的小数位由使用方按权威币种目录中的decimals校验。
+class CoinAmount extends $pb.GeneratedMessage {
+  factory CoinAmount({
+    $core.String? amount,
+    Coin? coin,
+  }) {
+    final result = create();
+    if (amount != null) result.amount = amount;
+    if (coin != null) result.coin = coin;
+    return result;
+  }
+
+  CoinAmount._();
+
+  factory CoinAmount.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CoinAmount.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CoinAmount',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'amount')
+    ..aOM<Coin>(2, _omitFieldNames ? '' : 'coin', subBuilder: Coin.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CoinAmount clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CoinAmount copyWith(void Function(CoinAmount) updates) =>
+      super.copyWith((message) => updates(message as CoinAmount)) as CoinAmount;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CoinAmount create() => CoinAmount._();
+  @$core.override
+  CoinAmount createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static CoinAmount getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CoinAmount>(create);
+  static CoinAmount? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get amount => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set amount($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAmount() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAmount() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  Coin get coin => $_getN(1);
+  @$pb.TagNumber(2)
+  set coin(Coin value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasCoin() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearCoin() => $_clearField(2);
+  @$pb.TagNumber(2)
+  Coin ensureCoin() => $_ensure(1);
+}
+
 class ListCoinsResp extends $pb.GeneratedMessage {
   factory ListCoinsResp({
     $core.Iterable<Coin>? list,

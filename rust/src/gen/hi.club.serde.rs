@@ -21758,12 +21758,18 @@ impl serde::Serialize for ProductInfo {
         if !self.images.is_empty() {
             len += 1;
         }
+        if self.pricing.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.club.ProductInfo", len)?;
         if let Some(v) = self.name.as_ref() {
             struct_ser.serialize_field("name", v)?;
         }
         if !self.images.is_empty() {
             struct_ser.serialize_field("images", &self.images)?;
+        }
+        if let Some(v) = self.pricing.as_ref() {
+            struct_ser.serialize_field("pricing", v)?;
         }
         struct_ser.end()
     }
@@ -21777,12 +21783,14 @@ impl<'de> serde::Deserialize<'de> for ProductInfo {
         const FIELDS: &[&str] = &[
             "name",
             "images",
+            "pricing",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Name,
             Images,
+            Pricing,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -21806,6 +21814,7 @@ impl<'de> serde::Deserialize<'de> for ProductInfo {
                         match value {
                             "name" => Ok(GeneratedField::Name),
                             "images" => Ok(GeneratedField::Images),
+                            "pricing" => Ok(GeneratedField::Pricing),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -21827,6 +21836,7 @@ impl<'de> serde::Deserialize<'de> for ProductInfo {
             {
                 let mut name__ = None;
                 let mut images__ = None;
+                let mut pricing__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Name => {
@@ -21841,11 +21851,18 @@ impl<'de> serde::Deserialize<'de> for ProductInfo {
                             }
                             images__ = Some(map_.next_value()?);
                         }
+                        GeneratedField::Pricing => {
+                            if pricing__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("pricing"));
+                            }
+                            pricing__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(ProductInfo {
                     name: name__,
                     images: images__.unwrap_or_default(),
+                    pricing: pricing__,
                 })
             }
         }
@@ -22276,6 +22293,115 @@ impl<'de> serde::Deserialize<'de> for ProductListingStatus {
             }
         }
         deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ProductPricing {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.cny_amount.is_some() {
+            len += 1;
+        }
+        if self.digital.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.ProductPricing", len)?;
+        if let Some(v) = self.cny_amount.as_ref() {
+            struct_ser.serialize_field("cnyAmount", v)?;
+        }
+        if let Some(v) = self.digital.as_ref() {
+            struct_ser.serialize_field("digital", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ProductPricing {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "cny_amount",
+            "cnyAmount",
+            "digital",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            CnyAmount,
+            Digital,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "cnyAmount" | "cny_amount" => Ok(GeneratedField::CnyAmount),
+                            "digital" => Ok(GeneratedField::Digital),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ProductPricing;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.ProductPricing")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ProductPricing, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut cny_amount__ = None;
+                let mut digital__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::CnyAmount => {
+                            if cny_amount__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("cnyAmount"));
+                            }
+                            cny_amount__ = map_.next_value()?;
+                        }
+                        GeneratedField::Digital => {
+                            if digital__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("digital"));
+                            }
+                            digital__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ProductPricing {
+                    cny_amount: cny_amount__,
+                    digital: digital__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.ProductPricing", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for ProductSeller {

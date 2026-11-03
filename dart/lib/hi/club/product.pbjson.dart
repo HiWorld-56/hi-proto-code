@@ -71,6 +71,45 @@ final $typed_data.Uint8List productImageDescriptor = $convert.base64Decode(
     '4KCXRodW1iX3VybBgCIAEoCUIMukgFcgOIAQGQtRgBSAFSCHRodW1iVXJsiAEBOgSYtRgBQgYK'
     'BF91cmxCDAoKX3RodW1iX3VybA==');
 
+@$core.Deprecated('Use productPricingDescriptor instead')
+const ProductPricing$json = {
+  '1': 'ProductPricing',
+  '2': [
+    {
+      '1': 'cny_amount',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'cnyAmount',
+      '17': true
+    },
+    {
+      '1': 'digital',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.did.CoinAmount',
+      '8': {},
+      '10': 'digital'
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_cny_amount'},
+  ],
+};
+
+/// Descriptor for `ProductPricing`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List productPricingDescriptor = $convert.base64Decode(
+    'Cg5Qcm9kdWN0UHJpY2luZxJRCgpjbnlfYW1vdW50GAEgASgJQi26SCZyJBhQMiBeKDB8WzEtOV'
+    '1bMC05XSopKFwuWzAtOV17MSwyfSk/JJC1GAFIAFIJY255QW1vdW50iAEBEjIKB2RpZ2l0YWwY'
+    'AiABKAsyEi5oaS5kaWQuQ29pbkFtb3VudEIEkLUYAVIHZGlnaXRhbDp9ukh2GnQKGHByb2R1Y3'
+    'QucHJpY2luZy5ub25lbXB0eRIt6K+35aGr5YaZ5Lq65rCR5biB5Lu35qC85oiW5pWw5a2X6LSn'
+    '5biB5Lu35qC8GiloYXModGhpcy5jbnlfYW1vdW50KSB8fCBoYXModGhpcy5kaWdpdGFsKZi1GA'
+    'FCDQoLX2NueV9hbW91bnQ=');
+
 @$core.Deprecated('Use productInfoDescriptor instead')
 const ProductInfo$json = {
   '1': 'ProductInfo',
@@ -94,6 +133,15 @@ const ProductInfo$json = {
       '8': {},
       '10': 'images'
     },
+    {
+      '1': 'pricing',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductPricing',
+      '8': {},
+      '10': 'pricing'
+    },
   ],
   '7': {},
   '8': [
@@ -105,7 +153,8 @@ const ProductInfo$json = {
 final $typed_data.Uint8List productInfoDescriptor = $convert.base64Decode(
     'CgtQcm9kdWN0SW5mbxIpCgRuYW1lGAEgASgJQhC6SAnIAQFyBBABGHiQtRgBSABSBG5hbWWIAQ'
     'ESPQoGaW1hZ2VzGAIgAygLMhUuaGkuY2x1Yi5Qcm9kdWN0SW1hZ2VCDrpIB5IBBAgBEAmQtRgB'
-    'UgZpbWFnZXM6BJi1GAFCBwoFX25hbWU=');
+    'UgZpbWFnZXMSNwoHcHJpY2luZxgDIAEoCzIXLmhpLmNsdWIuUHJvZHVjdFByaWNpbmdCBJC1GA'
+    'FSB3ByaWNpbmc6BJi1GAFCBwoFX25hbWU=');
 
 @$core.Deprecated('Use productDescriptor instead')
 const Product$json = {

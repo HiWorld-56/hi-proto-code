@@ -9,7 +9,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 class ProductInventoryStub(object):
     """商品库与挂牌分离，沿用插件市场的“当前主人 -> 机器人摊位 -> 货”。
     上传仅入本人硬件机器人的库，不能向任意机器人上传，也不能自动上架/广播。
-    公开目录与管理面分开；本阶段没有订单、价格、支付或履约。
+    公开目录与管理面分开；本阶段仅展示报价，没有订单、支付或履约。
     """
 
     def __init__(self, channel):
@@ -38,7 +38,7 @@ class ProductInventoryStub(object):
 class ProductInventoryServicer(object):
     """商品库与挂牌分离，沿用插件市场的“当前主人 -> 机器人摊位 -> 货”。
     上传仅入本人硬件机器人的库，不能向任意机器人上传，也不能自动上架/广播。
-    公开目录与管理面分开；本阶段没有订单、价格、支付或履约。
+    公开目录与管理面分开；本阶段仅展示报价，没有订单、支付或履约。
     """
 
     def Create(self, request, context):
@@ -88,7 +88,7 @@ def add_ProductInventoryServicer_to_server(servicer, server):
 class ProductInventory(object):
     """商品库与挂牌分离，沿用插件市场的“当前主人 -> 机器人摊位 -> 货”。
     上传仅入本人硬件机器人的库，不能向任意机器人上传，也不能自动上架/广播。
-    公开目录与管理面分开；本阶段没有订单、价格、支付或履约。
+    公开目录与管理面分开；本阶段仅展示报价，没有订单、支付或履约。
     """
 
     @staticmethod

@@ -346,6 +346,15 @@ pub struct Coin {
     #[prost(uint32, optional, tag = "6")]
     pub decimals: ::core::option::Option<u32>,
 }
+/// 数字货币金额；币种门面复用Coin，金额为非负十进制文本，不经过浮点。
+/// 金额的小数位由使用方按权威币种目录中的decimals校验。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CoinAmount {
+    #[prost(string, optional, tag = "1")]
+    pub amount: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub coin: ::core::option::Option<Coin>,
+}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListCoinsResp {
     #[prost(message, repeated, tag = "1")]

@@ -24,10 +24,11 @@ _sym_db = _symbol_database.Default()
 
 from buf.validate import validate_pb2 as buf_dot_validate_dot_validate__pb2
 from hi import common_pb2 as hi_dot_common__pb2
+from hi.did import base_pb2 as hi_dot_did_dot_base__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15hi/club/product.proto\x12\x07hi.club\x1a\x1b\x62uf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x10hi/options.proto\"\x82\x01\n\x0cProductImage\x12&\n\x03url\x18\x01 \x01(\tB\x0f\xbaH\x08r\x03\x88\x01\x01\xc8\x01\x01\x90\xb5\x18\x01H\x00R\x03url\x88\x01\x01\x12.\n\tthumb_url\x18\x02 \x01(\tB\x0c\xbaH\x05r\x03\x88\x01\x01\x90\xb5\x18\x01H\x01R\x08thumbUrl\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\x06\n\x04_urlB\x0c\n\n_thumb_url\"\x86\x01\n\x0bProductInfo\x12)\n\x04name\x18\x01 \x01(\tB\x10\xbaH\tr\x04\x10\x01\x18x\xc8\x01\x01\x90\xb5\x18\x01H\x00R\x04name\x88\x01\x01\x12=\n\x06images\x18\x02 \x03(\x0b\x32\x15.hi.club.ProductImageB\x0e\xbaH\x07\x92\x01\x04\x08\x01\x10\t\x90\xb5\x18\x01R\x06images:\x04\x98\xb5\x18\x01\x42\x07\n\x05_name\"a\n\x07Product\x12\x19\n\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x02id\x88\x01\x01\x12.\n\x04info\x18\x02 \x01(\x0b\x32\x14.hi.club.ProductInfoB\x04\x90\xb5\x18\x01R\x04info:\x04\x98\xb5\x18\x01\x42\x05\n\x03_id\"\xe5\x01\n\x14ProductInventoryItem\x12\x30\n\x07product\x18\x01 \x01(\x0b\x32\x10.hi.club.ProductB\x04\x90\xb5\x18\x01R\x07product\x12&\n\x05stall\x18\x02 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x02R\x05stall\x12\x31\n\x0buploaded_by\x18\x03 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x02R\nuploadedBy\x12*\n\x0buploaded_at\x18\x04 \x01(\x03\x42\x04\x90\xb5\x18\x02H\x00R\nuploadedAt\x88\x01\x01:\x04\x98\xb5\x18\x02\x42\x0e\n\x0c_uploaded_at\"\x94\x03\n\x0eProductListing\x12\x30\n\x07product\x18\x01 \x01(\x0b\x32\x10.hi.club.ProductB\x04\x90\xb5\x18\x01R\x07product\x12,\n\x08merchant\x18\x02 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x08merchant\x12&\n\x05stall\x18\x03 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x05stall\x12&\n\tlisted_at\x18\x04 \x01(\x03\x42\x04\x90\xb5\x18\x01H\x00R\x08listedAt\x88\x01\x01\x12\x1d\n\x04uuid\x18\x05 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x04uuid\x88\x01\x01\x12@\n\x06status\x18\x06 \x01(\x0e\x32\x1d.hi.club.ProductListingStatusB\x04\x90\xb5\x18\x01H\x02R\x06status\x88\x01\x01\x12\x34\n\x10publication_uuid\x18\x07 \x01(\tB\x04\x90\xb5\x18\x01H\x03R\x0fpublicationUuid\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\x0c\n\n_listed_atB\x07\n\x05_uuidB\t\n\x07_statusB\x13\n\x11_publication_uuid\"|\n\x13ProductAnnouncement\x12\x37\n\x07listing\x18\x01 \x01(\x0b\x32\x17.hi.club.ProductListingB\x04\x90\xb5\x18\x01R\x07listing\x12&\n\x05group\x18\x02 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x05group:\x04\x98\xb5\x18\x01\"\xc0\x01\n\rProductSeller\x12(\n\x06seller\x18\x01 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x06seller\x12,\n\x0cstalls_count\x18\x02 \x01(\x03\x42\x04\x90\xb5\x18\x01H\x00R\x0bstallsCount\x88\x01\x01\x12.\n\rlisting_count\x18\x03 \x01(\x03\x42\x04\x90\xb5\x18\x01H\x01R\x0clistingCount\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\x0f\n\r_stalls_countB\x10\n\x0e_listing_count\"~\n\x0cProductStall\x12&\n\x05stall\x18\x01 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x05stall\x12.\n\rlisting_count\x18\x02 \x01(\x03\x42\x04\x90\xb5\x18\x01H\x00R\x0clistingCount\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\x10\n\x0e_listing_count\"\xbb\x01\n\x10\x43reateProductReq\x12\x33\n\x0crequest_uuid\x18\x01 \x01(\tB\x0b\xbaH\x08r\x03\xb0\x01\x01\xc8\x01\x01H\x00R\x0brequestUuid\x88\x01\x01\x12%\n\x05stall\x18\x02 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x01R\x05stall\x88\x01\x01\x12\x30\n\x04info\x18\x03 \x01(\x0b\x32\x14.hi.club.ProductInfoB\x06\xbaH\x03\xc8\x01\x01R\x04infoB\x0f\n\r_request_uuidB\x08\n\x06_stall\"7\n\rGetProductReq\x12\x1f\n\x02id\x18\x01 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x00R\x02id\x88\x01\x01\x42\x05\n\x03_id\"o\n\x0fListProductsReq\x12\"\n\x05stall\x18\x01 \x01(\tB\x07\xbaH\x04r\x02\x10\x01H\x00R\x05stall\x88\x01\x01\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npaginationB\x08\n\x06_stall\"\x9e\x01\n\x1aSetProductListingStatusReq\x12#\n\x04uuid\x18\x01 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x00R\x04uuid\x88\x01\x01\x12G\n\x06status\x18\x02 \x01(\x0e\x32\x1d.hi.club.ProductListingStatusB\x0b\xbaH\x08\x82\x01\x02\x10\x01\xc8\x01\x01H\x01R\x06status\x88\x01\x01\x42\x07\n\x05_uuidB\t\n\x07_status\"D\n\x14GetProductListingReq\x12#\n\x04uuid\x18\x01 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x00R\x04uuid\x88\x01\x01\x42\x07\n\x05_uuid\"~\n\x18SearchProductListingsReq\x12&\n\x07keyword\x18\x01 \x01(\tB\x07\xbaH\x04r\x02\x10\x01H\x00R\x07keyword\x88\x01\x01\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npaginationB\n\n\x08_keyword\"=\n\x13GetProductSellerReq\x12\x1e\n\x03\x64id\x18\x01 \x01(\tB\x07\xbaH\x04r\x02\x10\x01H\x00R\x03\x64id\x88\x01\x01\x42\x06\n\x04_did\"w\n\x14ListProductStallsReq\x12$\n\x06seller\x18\x01 \x01(\tB\x07\xbaH\x04r\x02\x10\x01H\x00R\x06seller\x88\x01\x01\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npaginationB\t\n\x07_seller\"\x84\x01\n\x18ListProductInventoryResp\x12\x37\n\x04list\x18\x01 \x03(\x0b\x32\x1d.hi.club.ProductInventoryItemB\x04\x90\xb5\x18\x02R\x04list\x12\x1f\n\x05total\x18\x02 \x01(\x03\x42\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x08\n\x06_total\"}\n\x17ListProductListingsResp\x12\x31\n\x04list\x18\x01 \x03(\x0b\x32\x17.hi.club.ProductListingB\x04\x90\xb5\x18\x01R\x04list\x12\x1f\n\x05total\x18\x02 \x01(\x03\x42\x04\x90\xb5\x18\x01H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\x08\n\x06_total\"{\n\x16ListProductSellersResp\x12\x30\n\x04list\x18\x01 \x03(\x0b\x32\x16.hi.club.ProductSellerB\x04\x90\xb5\x18\x01R\x04list\x12\x1f\n\x05total\x18\x02 \x01(\x03\x42\x04\x90\xb5\x18\x01H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\x08\n\x06_total\"y\n\x15ListProductStallsResp\x12/\n\x04list\x18\x01 \x03(\x0b\x32\x15.hi.club.ProductStallB\x04\x90\xb5\x18\x01R\x04list\x12\x1f\n\x05total\x18\x02 \x01(\x03\x42\x04\x90\xb5\x18\x01H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\x08\n\x06_total*\xa9\x01\n\x14ProductListingStatus\x12&\n\"PRODUCT_LISTING_STATUS_UNSPECIFIED\x10\x00\x12!\n\x1dPRODUCT_LISTING_STATUS_LISTED\x10\x01\x12!\n\x1dPRODUCT_LISTING_STATUS_HIDDEN\x10\x02\x12#\n\x1fPRODUCT_LISTING_STATUS_DELISTED\x10\x03\x32\xee\x01\n\x10ProductInventory\x12I\n\x06\x43reate\x12\x19.hi.club.CreateProductReq\x1a\x1d.hi.club.ProductInventoryItem\"\x05\x8a\xb5\x18\x01\x02\x12\x43\n\x03Get\x12\x16.hi.club.GetProductReq\x1a\x1d.hi.club.ProductInventoryItem\"\x05\x8a\xb5\x18\x01\x02\x12J\n\x04List\x12\x18.hi.club.ListProductsReq\x1a!.hi.club.ListProductInventoryResp\"\x05\x8a\xb5\x18\x01\x02\x32\x80\x02\n\rProductMarket\x12\x41\n\x07Publish\x12\x16.hi.club.GetProductReq\x1a\x17.hi.club.ProductListing\"\x05\x8a\xb5\x18\x01\x02\x12W\n\x10SetListingStatus\x12#.hi.club.SetProductListingStatusReq\x1a\x17.hi.club.ProductListing\"\x05\x8a\xb5\x18\x01\x02\x12S\n\x0eListMyListings\x12\x18.hi.club.ListProductsReq\x1a .hi.club.ListProductListingsResp\"\x05\x8a\xb5\x18\x01\x02\x32\x86\x04\n\x16ProductMarketDirectory\x12\x45\n\x0bListSellers\x12\x0e.hi.Pagination\x1a\x1f.hi.club.ListProductSellersResp\"\x05\x8a\xb5\x18\x01\x01\x12H\n\tGetSeller\x12\x1c.hi.club.GetProductSellerReq\x1a\x16.hi.club.ProductSeller\"\x05\x8a\xb5\x18\x01\x01\x12X\n\x10ListSellerStalls\x12\x1d.hi.club.ListProductStallsReq\x1a\x1e.hi.club.ListProductStallsResp\"\x05\x8a\xb5\x18\x01\x01\x12V\n\x11ListStallListings\x12\x18.hi.club.ListProductsReq\x1a .hi.club.ListProductListingsResp\"\x05\x8a\xb5\x18\x01\x01\x12\\\n\x0eSearchListings\x12!.hi.club.SearchProductListingsReq\x1a .hi.club.ListProductListingsResp\"\x05\x8a\xb5\x18\x01\x01\x12K\n\nGetListing\x12\x1d.hi.club.GetProductListingReq\x1a\x17.hi.club.ProductListing\"\x05\x8a\xb5\x18\x01\x01\x42+Z)github.com/HiWorld-56/hi-proto/go/hi/clubb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15hi/club/product.proto\x12\x07hi.club\x1a\x1b\x62uf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x11hi/did/base.proto\x1a\x10hi/options.proto\"\x82\x01\n\x0cProductImage\x12&\n\x03url\x18\x01 \x01(\tB\x0f\xbaH\x08r\x03\x88\x01\x01\xc8\x01\x01\x90\xb5\x18\x01H\x00R\x03url\x88\x01\x01\x12.\n\tthumb_url\x18\x02 \x01(\tB\x0c\xbaH\x05r\x03\x88\x01\x01\x90\xb5\x18\x01H\x01R\x08thumbUrl\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\x06\n\x04_urlB\x0c\n\n_thumb_url\"\xa5\x02\n\x0eProductPricing\x12Q\n\ncny_amount\x18\x01 \x01(\tB-\xbaH&r$\x18P2 ^(0|[1-9][0-9]*)(\\.[0-9]{1,2})?$\x90\xb5\x18\x01H\x00R\tcnyAmount\x88\x01\x01\x12\x32\n\x07\x64igital\x18\x02 \x01(\x0b\x32\x12.hi.did.CoinAmountB\x04\x90\xb5\x18\x01R\x07\x64igital:}\xbaHv\x1at\n\x18product.pricing.nonempty\x12-\xe8\xaf\xb7\xe5\xa1\xab\xe5\x86\x99\xe4\xba\xba\xe6\xb0\x91\xe5\xb8\x81\xe4\xbb\xb7\xe6\xa0\xbc\xe6\x88\x96\xe6\x95\xb0\xe5\xad\x97\xe8\xb4\xa7\xe5\xb8\x81\xe4\xbb\xb7\xe6\xa0\xbc\x1a)has(this.cny_amount) || has(this.digital)\x98\xb5\x18\x01\x42\r\n\x0b_cny_amount\"\xbf\x01\n\x0bProductInfo\x12)\n\x04name\x18\x01 \x01(\tB\x10\xbaH\tr\x04\x10\x01\x18x\xc8\x01\x01\x90\xb5\x18\x01H\x00R\x04name\x88\x01\x01\x12=\n\x06images\x18\x02 \x03(\x0b\x32\x15.hi.club.ProductImageB\x0e\xbaH\x07\x92\x01\x04\x08\x01\x10\t\x90\xb5\x18\x01R\x06images\x12\x37\n\x07pricing\x18\x03 \x01(\x0b\x32\x17.hi.club.ProductPricingB\x04\x90\xb5\x18\x01R\x07pricing:\x04\x98\xb5\x18\x01\x42\x07\n\x05_name\"a\n\x07Product\x12\x19\n\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x02id\x88\x01\x01\x12.\n\x04info\x18\x02 \x01(\x0b\x32\x14.hi.club.ProductInfoB\x04\x90\xb5\x18\x01R\x04info:\x04\x98\xb5\x18\x01\x42\x05\n\x03_id\"\xe5\x01\n\x14ProductInventoryItem\x12\x30\n\x07product\x18\x01 \x01(\x0b\x32\x10.hi.club.ProductB\x04\x90\xb5\x18\x01R\x07product\x12&\n\x05stall\x18\x02 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x02R\x05stall\x12\x31\n\x0buploaded_by\x18\x03 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x02R\nuploadedBy\x12*\n\x0buploaded_at\x18\x04 \x01(\x03\x42\x04\x90\xb5\x18\x02H\x00R\nuploadedAt\x88\x01\x01:\x04\x98\xb5\x18\x02\x42\x0e\n\x0c_uploaded_at\"\x94\x03\n\x0eProductListing\x12\x30\n\x07product\x18\x01 \x01(\x0b\x32\x10.hi.club.ProductB\x04\x90\xb5\x18\x01R\x07product\x12,\n\x08merchant\x18\x02 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x08merchant\x12&\n\x05stall\x18\x03 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x05stall\x12&\n\tlisted_at\x18\x04 \x01(\x03\x42\x04\x90\xb5\x18\x01H\x00R\x08listedAt\x88\x01\x01\x12\x1d\n\x04uuid\x18\x05 \x01(\tB\x04\x90\xb5\x18\x01H\x01R\x04uuid\x88\x01\x01\x12@\n\x06status\x18\x06 \x01(\x0e\x32\x1d.hi.club.ProductListingStatusB\x04\x90\xb5\x18\x01H\x02R\x06status\x88\x01\x01\x12\x34\n\x10publication_uuid\x18\x07 \x01(\tB\x04\x90\xb5\x18\x01H\x03R\x0fpublicationUuid\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\x0c\n\n_listed_atB\x07\n\x05_uuidB\t\n\x07_statusB\x13\n\x11_publication_uuid\"|\n\x13ProductAnnouncement\x12\x37\n\x07listing\x18\x01 \x01(\x0b\x32\x17.hi.club.ProductListingB\x04\x90\xb5\x18\x01R\x07listing\x12&\n\x05group\x18\x02 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x05group:\x04\x98\xb5\x18\x01\"\xc0\x01\n\rProductSeller\x12(\n\x06seller\x18\x01 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x06seller\x12,\n\x0cstalls_count\x18\x02 \x01(\x03\x42\x04\x90\xb5\x18\x01H\x00R\x0bstallsCount\x88\x01\x01\x12.\n\rlisting_count\x18\x03 \x01(\x03\x42\x04\x90\xb5\x18\x01H\x01R\x0clistingCount\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\x0f\n\r_stalls_countB\x10\n\x0e_listing_count\"~\n\x0cProductStall\x12&\n\x05stall\x18\x01 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x05stall\x12.\n\rlisting_count\x18\x02 \x01(\x03\x42\x04\x90\xb5\x18\x01H\x00R\x0clistingCount\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\x10\n\x0e_listing_count\"\xbb\x01\n\x10\x43reateProductReq\x12\x33\n\x0crequest_uuid\x18\x01 \x01(\tB\x0b\xbaH\x08r\x03\xb0\x01\x01\xc8\x01\x01H\x00R\x0brequestUuid\x88\x01\x01\x12%\n\x05stall\x18\x02 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x01R\x05stall\x88\x01\x01\x12\x30\n\x04info\x18\x03 \x01(\x0b\x32\x14.hi.club.ProductInfoB\x06\xbaH\x03\xc8\x01\x01R\x04infoB\x0f\n\r_request_uuidB\x08\n\x06_stall\"7\n\rGetProductReq\x12\x1f\n\x02id\x18\x01 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x00R\x02id\x88\x01\x01\x42\x05\n\x03_id\"o\n\x0fListProductsReq\x12\"\n\x05stall\x18\x01 \x01(\tB\x07\xbaH\x04r\x02\x10\x01H\x00R\x05stall\x88\x01\x01\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npaginationB\x08\n\x06_stall\"\x9e\x01\n\x1aSetProductListingStatusReq\x12#\n\x04uuid\x18\x01 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x00R\x04uuid\x88\x01\x01\x12G\n\x06status\x18\x02 \x01(\x0e\x32\x1d.hi.club.ProductListingStatusB\x0b\xbaH\x08\x82\x01\x02\x10\x01\xc8\x01\x01H\x01R\x06status\x88\x01\x01\x42\x07\n\x05_uuidB\t\n\x07_status\"D\n\x14GetProductListingReq\x12#\n\x04uuid\x18\x01 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x00R\x04uuid\x88\x01\x01\x42\x07\n\x05_uuid\"~\n\x18SearchProductListingsReq\x12&\n\x07keyword\x18\x01 \x01(\tB\x07\xbaH\x04r\x02\x10\x01H\x00R\x07keyword\x88\x01\x01\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npaginationB\n\n\x08_keyword\"=\n\x13GetProductSellerReq\x12\x1e\n\x03\x64id\x18\x01 \x01(\tB\x07\xbaH\x04r\x02\x10\x01H\x00R\x03\x64id\x88\x01\x01\x42\x06\n\x04_did\"w\n\x14ListProductStallsReq\x12$\n\x06seller\x18\x01 \x01(\tB\x07\xbaH\x04r\x02\x10\x01H\x00R\x06seller\x88\x01\x01\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npaginationB\t\n\x07_seller\"\x84\x01\n\x18ListProductInventoryResp\x12\x37\n\x04list\x18\x01 \x03(\x0b\x32\x1d.hi.club.ProductInventoryItemB\x04\x90\xb5\x18\x02R\x04list\x12\x1f\n\x05total\x18\x02 \x01(\x03\x42\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x08\n\x06_total\"}\n\x17ListProductListingsResp\x12\x31\n\x04list\x18\x01 \x03(\x0b\x32\x17.hi.club.ProductListingB\x04\x90\xb5\x18\x01R\x04list\x12\x1f\n\x05total\x18\x02 \x01(\x03\x42\x04\x90\xb5\x18\x01H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\x08\n\x06_total\"{\n\x16ListProductSellersResp\x12\x30\n\x04list\x18\x01 \x03(\x0b\x32\x16.hi.club.ProductSellerB\x04\x90\xb5\x18\x01R\x04list\x12\x1f\n\x05total\x18\x02 \x01(\x03\x42\x04\x90\xb5\x18\x01H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\x08\n\x06_total\"y\n\x15ListProductStallsResp\x12/\n\x04list\x18\x01 \x03(\x0b\x32\x15.hi.club.ProductStallB\x04\x90\xb5\x18\x01R\x04list\x12\x1f\n\x05total\x18\x02 \x01(\x03\x42\x04\x90\xb5\x18\x01H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\x08\n\x06_total*\xa9\x01\n\x14ProductListingStatus\x12&\n\"PRODUCT_LISTING_STATUS_UNSPECIFIED\x10\x00\x12!\n\x1dPRODUCT_LISTING_STATUS_LISTED\x10\x01\x12!\n\x1dPRODUCT_LISTING_STATUS_HIDDEN\x10\x02\x12#\n\x1fPRODUCT_LISTING_STATUS_DELISTED\x10\x03\x32\xee\x01\n\x10ProductInventory\x12I\n\x06\x43reate\x12\x19.hi.club.CreateProductReq\x1a\x1d.hi.club.ProductInventoryItem\"\x05\x8a\xb5\x18\x01\x02\x12\x43\n\x03Get\x12\x16.hi.club.GetProductReq\x1a\x1d.hi.club.ProductInventoryItem\"\x05\x8a\xb5\x18\x01\x02\x12J\n\x04List\x12\x18.hi.club.ListProductsReq\x1a!.hi.club.ListProductInventoryResp\"\x05\x8a\xb5\x18\x01\x02\x32\x80\x02\n\rProductMarket\x12\x41\n\x07Publish\x12\x16.hi.club.GetProductReq\x1a\x17.hi.club.ProductListing\"\x05\x8a\xb5\x18\x01\x02\x12W\n\x10SetListingStatus\x12#.hi.club.SetProductListingStatusReq\x1a\x17.hi.club.ProductListing\"\x05\x8a\xb5\x18\x01\x02\x12S\n\x0eListMyListings\x12\x18.hi.club.ListProductsReq\x1a .hi.club.ListProductListingsResp\"\x05\x8a\xb5\x18\x01\x02\x32\x86\x04\n\x16ProductMarketDirectory\x12\x45\n\x0bListSellers\x12\x0e.hi.Pagination\x1a\x1f.hi.club.ListProductSellersResp\"\x05\x8a\xb5\x18\x01\x01\x12H\n\tGetSeller\x12\x1c.hi.club.GetProductSellerReq\x1a\x16.hi.club.ProductSeller\"\x05\x8a\xb5\x18\x01\x01\x12X\n\x10ListSellerStalls\x12\x1d.hi.club.ListProductStallsReq\x1a\x1e.hi.club.ListProductStallsResp\"\x05\x8a\xb5\x18\x01\x01\x12V\n\x11ListStallListings\x12\x18.hi.club.ListProductsReq\x1a .hi.club.ListProductListingsResp\"\x05\x8a\xb5\x18\x01\x01\x12\\\n\x0eSearchListings\x12!.hi.club.SearchProductListingsReq\x1a .hi.club.ListProductListingsResp\"\x05\x8a\xb5\x18\x01\x01\x12K\n\nGetListing\x12\x1d.hi.club.GetProductListingReq\x1a\x17.hi.club.ProductListing\"\x05\x8a\xb5\x18\x01\x01\x42+Z)github.com/HiWorld-56/hi-proto/go/hi/clubb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -41,10 +42,18 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_PRODUCTIMAGE'].fields_by_name['thumb_url']._serialized_options = b'\272H\005r\003\210\001\001\220\265\030\001'
   _globals['_PRODUCTIMAGE']._loaded_options = None
   _globals['_PRODUCTIMAGE']._serialized_options = b'\230\265\030\001'
+  _globals['_PRODUCTPRICING'].fields_by_name['cny_amount']._loaded_options = None
+  _globals['_PRODUCTPRICING'].fields_by_name['cny_amount']._serialized_options = b'\272H&r$\030P2 ^(0|[1-9][0-9]*)(\\.[0-9]{1,2})?$\220\265\030\001'
+  _globals['_PRODUCTPRICING'].fields_by_name['digital']._loaded_options = None
+  _globals['_PRODUCTPRICING'].fields_by_name['digital']._serialized_options = b'\220\265\030\001'
+  _globals['_PRODUCTPRICING']._loaded_options = None
+  _globals['_PRODUCTPRICING']._serialized_options = b'\272Hv\032t\n\030product.pricing.nonempty\022-\350\257\267\345\241\253\345\206\231\344\272\272\346\260\221\345\270\201\344\273\267\346\240\274\346\210\226\346\225\260\345\255\227\350\264\247\345\270\201\344\273\267\346\240\274\032)has(this.cny_amount) || has(this.digital)\230\265\030\001'
   _globals['_PRODUCTINFO'].fields_by_name['name']._loaded_options = None
   _globals['_PRODUCTINFO'].fields_by_name['name']._serialized_options = b'\272H\tr\004\020\001\030x\310\001\001\220\265\030\001'
   _globals['_PRODUCTINFO'].fields_by_name['images']._loaded_options = None
   _globals['_PRODUCTINFO'].fields_by_name['images']._serialized_options = b'\272H\007\222\001\004\010\001\020\t\220\265\030\001'
+  _globals['_PRODUCTINFO'].fields_by_name['pricing']._loaded_options = None
+  _globals['_PRODUCTINFO'].fields_by_name['pricing']._serialized_options = b'\220\265\030\001'
   _globals['_PRODUCTINFO']._loaded_options = None
   _globals['_PRODUCTINFO']._serialized_options = b'\230\265\030\001'
   _globals['_PRODUCT'].fields_by_name['id']._loaded_options = None
@@ -169,52 +178,54 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_PRODUCTMARKETDIRECTORY'].methods_by_name['SearchListings']._serialized_options = b'\212\265\030\001\001'
   _globals['_PRODUCTMARKETDIRECTORY'].methods_by_name['GetListing']._loaded_options = None
   _globals['_PRODUCTMARKETDIRECTORY'].methods_by_name['GetListing']._serialized_options = b'\212\265\030\001\001'
-  _globals['_PRODUCTLISTINGSTATUS']._serialized_start=2969
-  _globals['_PRODUCTLISTINGSTATUS']._serialized_end=3138
-  _globals['_PRODUCTIMAGE']._serialized_start=99
-  _globals['_PRODUCTIMAGE']._serialized_end=229
-  _globals['_PRODUCTINFO']._serialized_start=232
-  _globals['_PRODUCTINFO']._serialized_end=366
-  _globals['_PRODUCT']._serialized_start=368
-  _globals['_PRODUCT']._serialized_end=465
-  _globals['_PRODUCTINVENTORYITEM']._serialized_start=468
-  _globals['_PRODUCTINVENTORYITEM']._serialized_end=697
-  _globals['_PRODUCTLISTING']._serialized_start=700
-  _globals['_PRODUCTLISTING']._serialized_end=1104
-  _globals['_PRODUCTANNOUNCEMENT']._serialized_start=1106
-  _globals['_PRODUCTANNOUNCEMENT']._serialized_end=1230
-  _globals['_PRODUCTSELLER']._serialized_start=1233
-  _globals['_PRODUCTSELLER']._serialized_end=1425
-  _globals['_PRODUCTSTALL']._serialized_start=1427
-  _globals['_PRODUCTSTALL']._serialized_end=1553
-  _globals['_CREATEPRODUCTREQ']._serialized_start=1556
-  _globals['_CREATEPRODUCTREQ']._serialized_end=1743
-  _globals['_GETPRODUCTREQ']._serialized_start=1745
-  _globals['_GETPRODUCTREQ']._serialized_end=1800
-  _globals['_LISTPRODUCTSREQ']._serialized_start=1802
-  _globals['_LISTPRODUCTSREQ']._serialized_end=1913
-  _globals['_SETPRODUCTLISTINGSTATUSREQ']._serialized_start=1916
-  _globals['_SETPRODUCTLISTINGSTATUSREQ']._serialized_end=2074
-  _globals['_GETPRODUCTLISTINGREQ']._serialized_start=2076
-  _globals['_GETPRODUCTLISTINGREQ']._serialized_end=2144
-  _globals['_SEARCHPRODUCTLISTINGSREQ']._serialized_start=2146
-  _globals['_SEARCHPRODUCTLISTINGSREQ']._serialized_end=2272
-  _globals['_GETPRODUCTSELLERREQ']._serialized_start=2274
-  _globals['_GETPRODUCTSELLERREQ']._serialized_end=2335
-  _globals['_LISTPRODUCTSTALLSREQ']._serialized_start=2337
-  _globals['_LISTPRODUCTSTALLSREQ']._serialized_end=2456
-  _globals['_LISTPRODUCTINVENTORYRESP']._serialized_start=2459
-  _globals['_LISTPRODUCTINVENTORYRESP']._serialized_end=2591
-  _globals['_LISTPRODUCTLISTINGSRESP']._serialized_start=2593
-  _globals['_LISTPRODUCTLISTINGSRESP']._serialized_end=2718
-  _globals['_LISTPRODUCTSELLERSRESP']._serialized_start=2720
-  _globals['_LISTPRODUCTSELLERSRESP']._serialized_end=2843
-  _globals['_LISTPRODUCTSTALLSRESP']._serialized_start=2845
-  _globals['_LISTPRODUCTSTALLSRESP']._serialized_end=2966
-  _globals['_PRODUCTINVENTORY']._serialized_start=3141
-  _globals['_PRODUCTINVENTORY']._serialized_end=3379
-  _globals['_PRODUCTMARKET']._serialized_start=3382
-  _globals['_PRODUCTMARKET']._serialized_end=3638
-  _globals['_PRODUCTMARKETDIRECTORY']._serialized_start=3641
-  _globals['_PRODUCTMARKETDIRECTORY']._serialized_end=4159
+  _globals['_PRODUCTLISTINGSTATUS']._serialized_start=3341
+  _globals['_PRODUCTLISTINGSTATUS']._serialized_end=3510
+  _globals['_PRODUCTIMAGE']._serialized_start=118
+  _globals['_PRODUCTIMAGE']._serialized_end=248
+  _globals['_PRODUCTPRICING']._serialized_start=251
+  _globals['_PRODUCTPRICING']._serialized_end=544
+  _globals['_PRODUCTINFO']._serialized_start=547
+  _globals['_PRODUCTINFO']._serialized_end=738
+  _globals['_PRODUCT']._serialized_start=740
+  _globals['_PRODUCT']._serialized_end=837
+  _globals['_PRODUCTINVENTORYITEM']._serialized_start=840
+  _globals['_PRODUCTINVENTORYITEM']._serialized_end=1069
+  _globals['_PRODUCTLISTING']._serialized_start=1072
+  _globals['_PRODUCTLISTING']._serialized_end=1476
+  _globals['_PRODUCTANNOUNCEMENT']._serialized_start=1478
+  _globals['_PRODUCTANNOUNCEMENT']._serialized_end=1602
+  _globals['_PRODUCTSELLER']._serialized_start=1605
+  _globals['_PRODUCTSELLER']._serialized_end=1797
+  _globals['_PRODUCTSTALL']._serialized_start=1799
+  _globals['_PRODUCTSTALL']._serialized_end=1925
+  _globals['_CREATEPRODUCTREQ']._serialized_start=1928
+  _globals['_CREATEPRODUCTREQ']._serialized_end=2115
+  _globals['_GETPRODUCTREQ']._serialized_start=2117
+  _globals['_GETPRODUCTREQ']._serialized_end=2172
+  _globals['_LISTPRODUCTSREQ']._serialized_start=2174
+  _globals['_LISTPRODUCTSREQ']._serialized_end=2285
+  _globals['_SETPRODUCTLISTINGSTATUSREQ']._serialized_start=2288
+  _globals['_SETPRODUCTLISTINGSTATUSREQ']._serialized_end=2446
+  _globals['_GETPRODUCTLISTINGREQ']._serialized_start=2448
+  _globals['_GETPRODUCTLISTINGREQ']._serialized_end=2516
+  _globals['_SEARCHPRODUCTLISTINGSREQ']._serialized_start=2518
+  _globals['_SEARCHPRODUCTLISTINGSREQ']._serialized_end=2644
+  _globals['_GETPRODUCTSELLERREQ']._serialized_start=2646
+  _globals['_GETPRODUCTSELLERREQ']._serialized_end=2707
+  _globals['_LISTPRODUCTSTALLSREQ']._serialized_start=2709
+  _globals['_LISTPRODUCTSTALLSREQ']._serialized_end=2828
+  _globals['_LISTPRODUCTINVENTORYRESP']._serialized_start=2831
+  _globals['_LISTPRODUCTINVENTORYRESP']._serialized_end=2963
+  _globals['_LISTPRODUCTLISTINGSRESP']._serialized_start=2965
+  _globals['_LISTPRODUCTLISTINGSRESP']._serialized_end=3090
+  _globals['_LISTPRODUCTSELLERSRESP']._serialized_start=3092
+  _globals['_LISTPRODUCTSELLERSRESP']._serialized_end=3215
+  _globals['_LISTPRODUCTSTALLSRESP']._serialized_start=3217
+  _globals['_LISTPRODUCTSTALLSRESP']._serialized_end=3338
+  _globals['_PRODUCTINVENTORY']._serialized_start=3513
+  _globals['_PRODUCTINVENTORY']._serialized_end=3751
+  _globals['_PRODUCTMARKET']._serialized_start=3754
+  _globals['_PRODUCTMARKET']._serialized_end=4010
+  _globals['_PRODUCTMARKETDIRECTORY']._serialized_start=4013
+  _globals['_PRODUCTMARKETDIRECTORY']._serialized_end=4531
 # @@protoc_insertion_point(module_scope)
