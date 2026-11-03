@@ -709,7 +709,8 @@ type BrainToFace struct {
 	//	*BrainToFace_ShowTip
 	//	*BrainToFace_ShowQr
 	//	*BrainToFace_BinanceOffers
-	//	*BrainToFace_ProductNotices
+	//	*BrainToFace_EventProductUploaded
+	//	*BrainToFace_EventProductListed
 	//	*BrainToFace_VideoReady
 	Cmd           isBrainToFace_Cmd `protobuf_oneof:"cmd"`
 	unknownFields protoimpl.UnknownFields
@@ -978,10 +979,19 @@ func (x *BrainToFace) GetBinanceOffers() *BinanceOffers {
 	return nil
 }
 
-func (x *BrainToFace) GetProductNotices() *ProductNotices {
+func (x *BrainToFace) GetEventProductUploaded() *club.ProductInventoryItem {
 	if x != nil {
-		if x, ok := x.Cmd.(*BrainToFace_ProductNotices); ok {
-			return x.ProductNotices
+		if x, ok := x.Cmd.(*BrainToFace_EventProductUploaded); ok {
+			return x.EventProductUploaded
+		}
+	}
+	return nil
+}
+
+func (x *BrainToFace) GetEventProductListed() *club.ProductAnnouncement {
+	if x != nil {
+		if x, ok := x.Cmd.(*BrainToFace_EventProductListed); ok {
+			return x.EventProductListed
 		}
 	}
 	return nil
@@ -1122,9 +1132,13 @@ type BrainToFace_BinanceOffers struct {
 	BinanceOffers *BinanceOffers `protobuf:"bytes,26,opt,name=binance_offers,json=binanceOffers,proto3,oneof"`
 }
 
-type BrainToFace_ProductNotices struct {
+type BrainToFace_EventProductUploaded struct {
 	// 回 `FaceToBrain.video_request`
-	ProductNotices *ProductNotices `protobuf:"bytes,28,opt,name=product_notices,json=productNotices,proto3,oneof"` // 待确认商品通知全量；确认仅关闭展示
+	EventProductUploaded *club.ProductInventoryItem `protobuf:"bytes,29,opt,name=event_product_uploaded,json=eventProductUploaded,proto3,oneof"` // 商品入库事件，沿用普通通知展示
+}
+
+type BrainToFace_EventProductListed struct {
+	EventProductListed *club.ProductAnnouncement `protobuf:"bytes,30,opt,name=event_product_listed,json=eventProductListed,proto3,oneof"` // 商品挂牌事件，沿用普通通知展示
 }
 
 type BrainToFace_VideoReady struct {
@@ -1181,7 +1195,9 @@ func (*BrainToFace_ShowQr) isBrainToFace_Cmd() {}
 
 func (*BrainToFace_BinanceOffers) isBrainToFace_Cmd() {}
 
-func (*BrainToFace_ProductNotices) isBrainToFace_Cmd() {}
+func (*BrainToFace_EventProductUploaded) isBrainToFace_Cmd() {}
+
+func (*BrainToFace_EventProductListed) isBrainToFace_Cmd() {}
 
 func (*BrainToFace_VideoReady) isBrainToFace_Cmd() {}
 
@@ -1484,7 +1500,6 @@ type FaceToBrain struct {
 	//	*FaceToBrain_BinanceRequest
 	//	*FaceToBrain_BinanceOfferReply
 	//	*FaceToBrain_GetBinanceOffers
-	//	*FaceToBrain_ProductNoticeAck
 	//	*FaceToBrain_VideoRequest
 	Cmd           isFaceToBrain_Cmd `protobuf_oneof:"cmd"`
 	unknownFields protoimpl.UnknownFields
@@ -1591,15 +1606,6 @@ func (x *FaceToBrain) GetGetBinanceOffers() *emptypb.Empty {
 	return nil
 }
 
-func (x *FaceToBrain) GetProductNoticeAck() *ProductNoticeAck {
-	if x != nil {
-		if x, ok := x.Cmd.(*FaceToBrain_ProductNoticeAck); ok {
-			return x.ProductNoticeAck
-		}
-	}
-	return nil
-}
-
 func (x *FaceToBrain) GetVideoRequest() *VideoRequest {
 	if x != nil {
 		if x, ok := x.Cmd.(*FaceToBrain_VideoRequest); ok {
@@ -1655,12 +1661,8 @@ type FaceToBrain_GetBinanceOffers struct {
 	GetBinanceOffers *emptypb.Empty `protobuf:"bytes,7,opt,name=get_binance_offers,json=getBinanceOffers,proto3,oneof"`
 }
 
-type FaceToBrain_ProductNoticeAck struct {
-	// 人在屏上点了一个视频:替我要一份屏幕放得了的(见 VideoRequest)
-	ProductNoticeAck *ProductNoticeAck `protobuf:"bytes,9,opt,name=product_notice_ack,json=productNoticeAck,proto3,oneof"` // 确认一个商品通知，无购买/支付副作用
-}
-
 type FaceToBrain_VideoRequest struct {
+	// 人在屏上点了一个视频:替我要一份屏幕放得了的(见 VideoRequest)
 	VideoRequest *VideoRequest `protobuf:"bytes,8,opt,name=video_request,json=videoRequest,proto3,oneof"`
 }
 
@@ -1677,8 +1679,6 @@ func (*FaceToBrain_BinanceRequest) isFaceToBrain_Cmd() {}
 func (*FaceToBrain_BinanceOfferReply) isFaceToBrain_Cmd() {}
 
 func (*FaceToBrain_GetBinanceOffers) isFaceToBrain_Cmd() {}
-
-func (*FaceToBrain_ProductNoticeAck) isFaceToBrain_Cmd() {}
 
 func (*FaceToBrain_VideoRequest) isFaceToBrain_Cmd() {}
 
@@ -1880,185 +1880,6 @@ func (x *UpdateAction) GetAction() UpdateAction_Action {
 	return UpdateAction_ACTION_UNKNOWN
 }
 
-// brain 本地持久化的商品提示；face 重连 request_init 后重新推送。
-type ProductNotice struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	Id    *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"` // 上传/上架事件去重键；重新上架是新事件
-	// Types that are valid to be assigned to Event:
-	//
-	//	*ProductNotice_Announcement
-	//	*ProductNotice_Uploaded
-	Event         isProductNotice_Event `protobuf_oneof:"event"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ProductNotice) Reset() {
-	*x = ProductNotice{}
-	mi := &file_hi_ninja_ui_proto_msgTypes[18]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ProductNotice) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ProductNotice) ProtoMessage() {}
-
-func (x *ProductNotice) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ui_proto_msgTypes[18]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ProductNotice.ProtoReflect.Descriptor instead.
-func (*ProductNotice) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{18}
-}
-
-func (x *ProductNotice) GetId() string {
-	if x != nil && x.Id != nil {
-		return *x.Id
-	}
-	return ""
-}
-
-func (x *ProductNotice) GetEvent() isProductNotice_Event {
-	if x != nil {
-		return x.Event
-	}
-	return nil
-}
-
-func (x *ProductNotice) GetAnnouncement() *club.ProductAnnouncement {
-	if x != nil {
-		if x, ok := x.Event.(*ProductNotice_Announcement); ok {
-			return x.Announcement
-		}
-	}
-	return nil
-}
-
-func (x *ProductNotice) GetUploaded() *club.ProductInventoryItem {
-	if x != nil {
-		if x, ok := x.Event.(*ProductNotice_Uploaded); ok {
-			return x.Uploaded
-		}
-	}
-	return nil
-}
-
-type isProductNotice_Event interface {
-	isProductNotice_Event()
-}
-
-type ProductNotice_Announcement struct {
-	Announcement *club.ProductAnnouncement `protobuf:"bytes,2,opt,name=announcement,proto3,oneof"` // 商品已上架，显示三个占位按钮
-}
-
-type ProductNotice_Uploaded struct {
-	Uploaded *club.ProductInventoryItem `protobuf:"bytes,3,opt,name=uploaded,proto3,oneof"` // 商品已上传，仅入库，不广播
-}
-
-func (*ProductNotice_Announcement) isProductNotice_Event() {}
-
-func (*ProductNotice_Uploaded) isProductNotice_Event() {}
-
-type ProductNotices struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	List          []*ProductNotice       `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ProductNotices) Reset() {
-	*x = ProductNotices{}
-	mi := &file_hi_ninja_ui_proto_msgTypes[19]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ProductNotices) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ProductNotices) ProtoMessage() {}
-
-func (x *ProductNotices) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ui_proto_msgTypes[19]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ProductNotices.ProtoReflect.Descriptor instead.
-func (*ProductNotices) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{19}
-}
-
-func (x *ProductNotices) GetList() []*ProductNotice {
-	if x != nil {
-		return x.List
-	}
-	return nil
-}
-
-type ProductNoticeAck struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ProductNoticeAck) Reset() {
-	*x = ProductNoticeAck{}
-	mi := &file_hi_ninja_ui_proto_msgTypes[20]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ProductNoticeAck) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ProductNoticeAck) ProtoMessage() {}
-
-func (x *ProductNoticeAck) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_ninja_ui_proto_msgTypes[20]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ProductNoticeAck.ProtoReflect.Descriptor instead.
-func (*ProductNoticeAck) Descriptor() ([]byte, []int) {
-	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{20}
-}
-
-func (x *ProductNoticeAck) GetId() string {
-	if x != nil && x.Id != nil {
-		return *x.Id
-	}
-	return ""
-}
-
 var File_hi_ninja_ui_proto protoreflect.FileDescriptor
 
 const file_hi_ninja_ui_proto_rawDesc = "" +
@@ -2102,7 +1923,7 @@ const file_hi_ninja_ui_proto_rawDesc = "" +
 	"\x03_opB\x0e\n" +
 	"\f_params_jsonB\f\n" +
 	"\n" +
-	"_auto_tpsl\"\xf2\f\n" +
+	"_auto_tpsl\"\xd6\r\n" +
 	"\vBrainToFace\x124\n" +
 	"\n" +
 	"init_robot\x18\x01 \x01(\v2\x13.hi.ninja.RobotInitH\x00R\tinitRobot\x128\n" +
@@ -2137,8 +1958,9 @@ const file_hi_ninja_ui_proto_rawDesc = "" +
 	"\x0ebinance_result\x18\x16 \x01(\v2\x19.hi.binance.BinanceResultH\x00R\rbinanceResult\x12*\n" +
 	"\bshow_tip\x18\x18 \x01(\v2\r.hi.ninja.TipH\x00R\ashowTip\x12+\n" +
 	"\ashow_qr\x18\x19 \x01(\v2\x10.hi.ninja.QrCardH\x00R\x06showQr\x12@\n" +
-	"\x0ebinance_offers\x18\x1a \x01(\v2\x17.hi.ninja.BinanceOffersH\x00R\rbinanceOffers\x12C\n" +
-	"\x0fproduct_notices\x18\x1c \x01(\v2\x18.hi.ninja.ProductNoticesH\x00R\x0eproductNotices\x127\n" +
+	"\x0ebinance_offers\x18\x1a \x01(\v2\x17.hi.ninja.BinanceOffersH\x00R\rbinanceOffers\x12U\n" +
+	"\x16event_product_uploaded\x18\x1d \x01(\v2\x1d.hi.club.ProductInventoryItemH\x00R\x14eventProductUploaded\x12P\n" +
+	"\x14event_product_listed\x18\x1e \x01(\v2\x1c.hi.club.ProductAnnouncementH\x00R\x12eventProductListed\x127\n" +
 	"\vvideo_ready\x18\x1b \x01(\v2\x14.hi.ninja.VideoReadyH\x00R\n" +
 	"videoReadyB\x05\n" +
 	"\x03cmd\"I\n" +
@@ -2173,7 +1995,7 @@ const file_hi_ninja_ui_proto_rawDesc = "" +
 	"\x03usb\x18\x03 \x01(\bH\x02R\x03usb\x88\x01\x01B\x06\n" +
 	"\x04_ntpB\a\n" +
 	"\x05_wifiB\x06\n" +
-	"\x04_usb\"\xff\x04\n" +
+	"\x04_usb\"\xb3\x04\n" +
 	"\vFaceToBrain\x128\n" +
 	"\vvoice_state\x18\x01 \x01(\x0e2\x15.hi.ninja.StateToggleH\x00R\n" +
 	"voiceState\x12=\n" +
@@ -2182,8 +2004,7 @@ const file_hi_ninja_ui_proto_rawDesc = "" +
 	"\frequest_init\x18\x04 \x01(\v2\x16.google.protobuf.EmptyH\x00R\vrequestInit\x12C\n" +
 	"\x0fbinance_request\x18\x05 \x01(\v2\x18.hi.ninja.BinanceRequestH\x00R\x0ebinanceRequest\x12O\n" +
 	"\x13binance_offer_reply\x18\x06 \x01(\v2\x1d.hi.binance.BinanceOfferReplyH\x00R\x11binanceOfferReply\x12F\n" +
-	"\x12get_binance_offers\x18\a \x01(\v2\x16.google.protobuf.EmptyH\x00R\x10getBinanceOffers\x12J\n" +
-	"\x12product_notice_ack\x18\t \x01(\v2\x1a.hi.ninja.ProductNoticeAckH\x00R\x10productNoticeAck\x12=\n" +
+	"\x12get_binance_offers\x18\a \x01(\v2\x16.google.protobuf.EmptyH\x00R\x10getBinanceOffers\x12=\n" +
 	"\rvideo_request\x18\b \x01(\v2\x16.hi.ninja.VideoRequestH\x00R\fvideoRequestB\x05\n" +
 	"\x03cmd\"=\n" +
 	"\rBinanceOffers\x12,\n" +
@@ -2219,18 +2040,7 @@ const file_hi_ninja_ui_proto_rawDesc = "" +
 	"\fACTION_CHECK\x10\x01\x12\x10\n" +
 	"\fACTION_APPLY\x10\x02\x12\x12\n" +
 	"\x0eACTION_DISMISS\x10\x03B\t\n" +
-	"\a_action\"\xb5\x01\n" +
-	"\rProductNotice\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x01R\x02id\x88\x01\x01\x12B\n" +
-	"\fannouncement\x18\x02 \x01(\v2\x1c.hi.club.ProductAnnouncementH\x00R\fannouncement\x12;\n" +
-	"\buploaded\x18\x03 \x01(\v2\x1d.hi.club.ProductInventoryItemH\x00R\buploadedB\a\n" +
-	"\x05eventB\x05\n" +
-	"\x03_id\"=\n" +
-	"\x0eProductNotices\x12+\n" +
-	"\x04list\x18\x01 \x03(\v2\x17.hi.ninja.ProductNoticeR\x04list\".\n" +
-	"\x10ProductNoticeAck\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01B\x05\n" +
-	"\x03_id*@\n" +
+	"\a_action*@\n" +
 	"\vStateToggle\x12\x11\n" +
 	"\rSTATE_UNKNOWN\x10\x00\x12\x0f\n" +
 	"\vSTATE_START\x10\x01\x12\r\n" +
@@ -2255,7 +2065,7 @@ func file_hi_ninja_ui_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_ninja_ui_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
-var file_hi_ninja_ui_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
+var file_hi_ninja_ui_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_hi_ninja_ui_proto_goTypes = []any{
 	(StateToggle)(0),                  // 0: hi.ninja.StateToggle
 	(Emotion)(0),                      // 1: hi.ninja.Emotion
@@ -2279,75 +2089,69 @@ var file_hi_ninja_ui_proto_goTypes = []any{
 	(*BinanceOffers)(nil),             // 19: hi.ninja.BinanceOffers
 	(*PluginProgress)(nil),            // 20: hi.ninja.PluginProgress
 	(*UpdateAction)(nil),              // 21: hi.ninja.UpdateAction
-	(*ProductNotice)(nil),             // 22: hi.ninja.ProductNotice
-	(*ProductNotices)(nil),            // 23: hi.ninja.ProductNotices
-	(*ProductNoticeAck)(nil),          // 24: hi.ninja.ProductNoticeAck
-	(*hi.Entity)(nil),                 // 25: hi.Entity
-	(*club.GroupInfo)(nil),            // 26: hi.club.GroupInfo
-	(*club.Message)(nil),              // 27: hi.club.Message
-	(*emptypb.Empty)(nil),             // 28: google.protobuf.Empty
-	(*ai.PluginView)(nil),             // 29: hi.ai.PluginView
-	(*did.Transaction)(nil),           // 30: hi.did.Transaction
-	(*UpdateStatus)(nil),              // 31: hi.ninja.UpdateStatus
-	(*binance.BinanceResult)(nil),     // 32: hi.binance.BinanceResult
-	(*binance.BinanceOfferReply)(nil), // 33: hi.binance.BinanceOfferReply
-	(*binance.BinanceOffer)(nil),      // 34: hi.binance.BinanceOffer
-	(*club.ProductAnnouncement)(nil),  // 35: hi.club.ProductAnnouncement
-	(*club.ProductInventoryItem)(nil), // 36: hi.club.ProductInventoryItem
+	(*hi.Entity)(nil),                 // 22: hi.Entity
+	(*club.GroupInfo)(nil),            // 23: hi.club.GroupInfo
+	(*club.Message)(nil),              // 24: hi.club.Message
+	(*emptypb.Empty)(nil),             // 25: google.protobuf.Empty
+	(*ai.PluginView)(nil),             // 26: hi.ai.PluginView
+	(*did.Transaction)(nil),           // 27: hi.did.Transaction
+	(*UpdateStatus)(nil),              // 28: hi.ninja.UpdateStatus
+	(*binance.BinanceResult)(nil),     // 29: hi.binance.BinanceResult
+	(*club.ProductInventoryItem)(nil), // 30: hi.club.ProductInventoryItem
+	(*club.ProductAnnouncement)(nil),  // 31: hi.club.ProductAnnouncement
+	(*binance.BinanceOfferReply)(nil), // 32: hi.binance.BinanceOfferReply
+	(*binance.BinanceOffer)(nil),      // 33: hi.binance.BinanceOffer
 }
 var file_hi_ninja_ui_proto_depIdxs = []int32{
-	25, // 0: hi.ninja.RobotInit.robot:type_name -> hi.Entity
-	25, // 1: hi.ninja.RobotInit.master:type_name -> hi.Entity
-	25, // 2: hi.ninja.FriendList.list:type_name -> hi.Entity
-	26, // 3: hi.ninja.GroupInfoList.list:type_name -> hi.club.GroupInfo
-	25, // 4: hi.ninja.MasterEvent.master:type_name -> hi.Entity
+	22, // 0: hi.ninja.RobotInit.robot:type_name -> hi.Entity
+	22, // 1: hi.ninja.RobotInit.master:type_name -> hi.Entity
+	22, // 2: hi.ninja.FriendList.list:type_name -> hi.Entity
+	23, // 3: hi.ninja.GroupInfoList.list:type_name -> hi.club.GroupInfo
+	22, // 4: hi.ninja.MasterEvent.master:type_name -> hi.Entity
 	4,  // 5: hi.ninja.BrainToFace.init_robot:type_name -> hi.ninja.RobotInit
 	0,  // 6: hi.ninja.BrainToFace.show_listen:type_name -> hi.ninja.StateToggle
 	1,  // 7: hi.ninja.BrainToFace.show_emotion:type_name -> hi.ninja.Emotion
-	27, // 8: hi.ninja.BrainToFace.show_im_request:type_name -> hi.club.Message
+	24, // 8: hi.ninja.BrainToFace.show_im_request:type_name -> hi.club.Message
 	8,  // 9: hi.ninja.BrainToFace.show_im_reply:type_name -> hi.ninja.TextReply
 	8,  // 10: hi.ninja.BrainToFace.show_voice_reply:type_name -> hi.ninja.TextReply
-	28, // 11: hi.ninja.BrainToFace.show_qr_code:type_name -> google.protobuf.Empty
-	25, // 12: hi.ninja.BrainToFace.event_robot:type_name -> hi.Entity
+	25, // 11: hi.ninja.BrainToFace.show_qr_code:type_name -> google.protobuf.Empty
+	22, // 12: hi.ninja.BrainToFace.event_robot:type_name -> hi.Entity
 	7,  // 13: hi.ninja.BrainToFace.event_master:type_name -> hi.ninja.MasterEvent
-	26, // 14: hi.ninja.BrainToFace.event_members:type_name -> hi.club.GroupInfo
-	29, // 15: hi.ninja.BrainToFace.event_plugin:type_name -> hi.ai.PluginView
+	23, // 14: hi.ninja.BrainToFace.event_members:type_name -> hi.club.GroupInfo
+	26, // 15: hi.ninja.BrainToFace.event_plugin:type_name -> hi.ai.PluginView
 	20, // 16: hi.ninja.BrainToFace.event_plugin_progress:type_name -> hi.ninja.PluginProgress
-	30, // 17: hi.ninja.BrainToFace.event_transaction:type_name -> hi.did.Transaction
+	27, // 17: hi.ninja.BrainToFace.event_transaction:type_name -> hi.did.Transaction
 	9,  // 18: hi.ninja.BrainToFace.play_audio:type_name -> hi.ninja.AudioPlay
 	5,  // 19: hi.ninja.BrainToFace.event_friends:type_name -> hi.ninja.FriendList
-	25, // 20: hi.ninja.BrainToFace.event_friend_delete:type_name -> hi.Entity
-	25, // 21: hi.ninja.BrainToFace.event_friend_add:type_name -> hi.Entity
+	22, // 20: hi.ninja.BrainToFace.event_friend_delete:type_name -> hi.Entity
+	22, // 21: hi.ninja.BrainToFace.event_friend_add:type_name -> hi.Entity
 	6,  // 22: hi.ninja.BrainToFace.members_init:type_name -> hi.ninja.GroupInfoList
 	17, // 23: hi.ninja.BrainToFace.event_status:type_name -> hi.ninja.StatusEvent
-	31, // 24: hi.ninja.BrainToFace.event_update:type_name -> hi.ninja.UpdateStatus
+	28, // 24: hi.ninja.BrainToFace.event_update:type_name -> hi.ninja.UpdateStatus
 	10, // 25: hi.ninja.BrainToFace.event_binance_settings:type_name -> hi.ninja.BinanceSettings
-	32, // 26: hi.ninja.BrainToFace.binance_result:type_name -> hi.binance.BinanceResult
+	29, // 26: hi.ninja.BrainToFace.binance_result:type_name -> hi.binance.BinanceResult
 	16, // 27: hi.ninja.BrainToFace.show_tip:type_name -> hi.ninja.Tip
 	15, // 28: hi.ninja.BrainToFace.show_qr:type_name -> hi.ninja.QrCard
 	19, // 29: hi.ninja.BrainToFace.binance_offers:type_name -> hi.ninja.BinanceOffers
-	23, // 30: hi.ninja.BrainToFace.product_notices:type_name -> hi.ninja.ProductNotices
-	14, // 31: hi.ninja.BrainToFace.video_ready:type_name -> hi.ninja.VideoReady
-	0,  // 32: hi.ninja.FaceToBrain.voice_state:type_name -> hi.ninja.StateToggle
-	21, // 33: hi.ninja.FaceToBrain.update_action:type_name -> hi.ninja.UpdateAction
-	28, // 34: hi.ninja.FaceToBrain.get_binance_settings:type_name -> google.protobuf.Empty
-	28, // 35: hi.ninja.FaceToBrain.request_init:type_name -> google.protobuf.Empty
-	11, // 36: hi.ninja.FaceToBrain.binance_request:type_name -> hi.ninja.BinanceRequest
-	33, // 37: hi.ninja.FaceToBrain.binance_offer_reply:type_name -> hi.binance.BinanceOfferReply
-	28, // 38: hi.ninja.FaceToBrain.get_binance_offers:type_name -> google.protobuf.Empty
-	24, // 39: hi.ninja.FaceToBrain.product_notice_ack:type_name -> hi.ninja.ProductNoticeAck
+	30, // 30: hi.ninja.BrainToFace.event_product_uploaded:type_name -> hi.club.ProductInventoryItem
+	31, // 31: hi.ninja.BrainToFace.event_product_listed:type_name -> hi.club.ProductAnnouncement
+	14, // 32: hi.ninja.BrainToFace.video_ready:type_name -> hi.ninja.VideoReady
+	0,  // 33: hi.ninja.FaceToBrain.voice_state:type_name -> hi.ninja.StateToggle
+	21, // 34: hi.ninja.FaceToBrain.update_action:type_name -> hi.ninja.UpdateAction
+	25, // 35: hi.ninja.FaceToBrain.get_binance_settings:type_name -> google.protobuf.Empty
+	25, // 36: hi.ninja.FaceToBrain.request_init:type_name -> google.protobuf.Empty
+	11, // 37: hi.ninja.FaceToBrain.binance_request:type_name -> hi.ninja.BinanceRequest
+	32, // 38: hi.ninja.FaceToBrain.binance_offer_reply:type_name -> hi.binance.BinanceOfferReply
+	25, // 39: hi.ninja.FaceToBrain.get_binance_offers:type_name -> google.protobuf.Empty
 	13, // 40: hi.ninja.FaceToBrain.video_request:type_name -> hi.ninja.VideoRequest
-	34, // 41: hi.ninja.BinanceOffers.list:type_name -> hi.binance.BinanceOffer
+	33, // 41: hi.ninja.BinanceOffers.list:type_name -> hi.binance.BinanceOffer
 	2,  // 42: hi.ninja.PluginProgress.state:type_name -> hi.ninja.PluginProgress.State
 	3,  // 43: hi.ninja.UpdateAction.action:type_name -> hi.ninja.UpdateAction.Action
-	35, // 44: hi.ninja.ProductNotice.announcement:type_name -> hi.club.ProductAnnouncement
-	36, // 45: hi.ninja.ProductNotice.uploaded:type_name -> hi.club.ProductInventoryItem
-	22, // 46: hi.ninja.ProductNotices.list:type_name -> hi.ninja.ProductNotice
-	47, // [47:47] is the sub-list for method output_type
-	47, // [47:47] is the sub-list for method input_type
-	47, // [47:47] is the sub-list for extension type_name
-	47, // [47:47] is the sub-list for extension extendee
-	0,  // [0:47] is the sub-list for field type_name
+	44, // [44:44] is the sub-list for method output_type
+	44, // [44:44] is the sub-list for method input_type
+	44, // [44:44] is the sub-list for extension type_name
+	44, // [44:44] is the sub-list for extension extendee
+	0,  // [0:44] is the sub-list for field type_name
 }
 
 func init() { file_hi_ninja_ui_proto_init() }
@@ -2386,7 +2190,8 @@ func file_hi_ninja_ui_proto_init() {
 		(*BrainToFace_ShowTip)(nil),
 		(*BrainToFace_ShowQr)(nil),
 		(*BrainToFace_BinanceOffers)(nil),
-		(*BrainToFace_ProductNotices)(nil),
+		(*BrainToFace_EventProductUploaded)(nil),
+		(*BrainToFace_EventProductListed)(nil),
 		(*BrainToFace_VideoReady)(nil),
 	}
 	file_hi_ninja_ui_proto_msgTypes[9].OneofWrappers = []any{}
@@ -2402,23 +2207,17 @@ func file_hi_ninja_ui_proto_init() {
 		(*FaceToBrain_BinanceRequest)(nil),
 		(*FaceToBrain_BinanceOfferReply)(nil),
 		(*FaceToBrain_GetBinanceOffers)(nil),
-		(*FaceToBrain_ProductNoticeAck)(nil),
 		(*FaceToBrain_VideoRequest)(nil),
 	}
 	file_hi_ninja_ui_proto_msgTypes[16].OneofWrappers = []any{}
 	file_hi_ninja_ui_proto_msgTypes[17].OneofWrappers = []any{}
-	file_hi_ninja_ui_proto_msgTypes[18].OneofWrappers = []any{
-		(*ProductNotice_Announcement)(nil),
-		(*ProductNotice_Uploaded)(nil),
-	}
-	file_hi_ninja_ui_proto_msgTypes[20].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ninja_ui_proto_rawDesc), len(file_hi_ninja_ui_proto_rawDesc)),
 			NumEnums:      4,
-			NumMessages:   21,
+			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
