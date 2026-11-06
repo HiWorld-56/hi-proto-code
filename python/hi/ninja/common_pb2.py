@@ -22,9 +22,11 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
+from buf.validate import validate_pb2 as buf_dot_validate_dot_validate__pb2
+from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15hi/ninja/common.proto\x12\x08hi.ninja*Q\n\x08ModuleId\x12\x12\n\x0eMODULE_UNKNOWN\x10\x00\x12\r\n\tMODULE_UI\x10\x01\x12\x0e\n\nMODULE_LUA\x10\x02\x12\x12\n\x0eMODULE_UPDATER\x10\x03\x42,Z*github.com/HiWorld-56/hi-proto/go/hi/ninjab\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15hi/ninja/common.proto\x12\x08hi.ninja\x1a\x1b\x62uf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\"\xf2\x01\n\rModuleSession\x12\x39\n\x10\x62rain_session_id\x18\x01 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x00R\x0e\x62rainSessionId\x88\x01\x01\x12;\n\x11module_session_id\x18\x02 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x01R\x0fmoduleSessionId\x88\x01\x01\x12/\n\ngeneration\x18\x03 \x01(\x04\x42\n\xbaH\x07\x32\x02 \x00\xc8\x01\x01H\x02R\ngeneration\x88\x01\x01\x42\x13\n\x11_brain_session_idB\x14\n\x12_module_session_idB\r\n\x0b_generation\"\xd4\x01\n\x0bModuleHello\x12<\n\x06module\x18\x01 \x01(\x0e\x32\x12.hi.ninja.ModuleIdB\x0b\xbaH\x08\x82\x01\x02\x10\x01\xc8\x01\x01H\x00R\x06module\x88\x01\x01\x12;\n\x11module_session_id\x18\x02 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x01R\x0fmoduleSessionId\x88\x01\x01\x12\x1d\n\x07version\x18\x03 \x01(\tH\x02R\x07version\x88\x01\x01\x42\t\n\x07_moduleB\x14\n\x12_module_session_idB\n\n\x08_version\"\xdb\x01\n\x0bModuleState\x12\x43\n\x05phase\x18\x01 \x01(\x0e\x32\x1b.hi.ninja.ModuleState.PhaseB\x0b\xbaH\x08\x82\x01\x02\x10\x01\xc8\x01\x01H\x00R\x05phase\x88\x01\x01\x12\x19\n\x05\x65rror\x18\x02 \x01(\tH\x01R\x05\x65rror\x88\x01\x01\"X\n\x05Phase\x12\x11\n\rPHASE_UNKNOWN\x10\x00\x12\x13\n\x0fPHASE_CONNECTED\x10\x01\x12\x16\n\x12PHASE_INITIALIZING\x10\x02\x12\x0f\n\x0bPHASE_READY\x10\x03\x42\x08\n\x06_phaseB\x08\n\x06_error\"\xc7\x01\n\x10ModuleInitialize\x12K\n\x06reason\x18\x01 \x01(\x0e\x32!.hi.ninja.ModuleInitialize.ReasonB\x0b\xbaH\x08\x82\x01\x02\x10\x01\xc8\x01\x01H\x00R\x06reason\x88\x01\x01\"[\n\x06Reason\x12\x12\n\x0eREASON_UNKNOWN\x10\x00\x12\x12\n\x0eREASON_STARTUP\x10\x01\x12\x14\n\x10REASON_RECONNECT\x10\x02\x12\x13\n\x0fREASON_RECOVERY\x10\x03\x42\t\n\x07_reason\"\xc2\x01\n\x14\x42rainToModuleControl\x12\x32\n\x05reset\x18\x01 \x01(\x0b\x32\x1a.hi.ninja.ModuleInitializeH\x00R\x05reset\x12\x38\n\ninitialize\x18\x02 \x01(\x0b\x32\x16.google.protobuf.EmptyH\x00R\ninitialize\x12\x35\n\tget_state\x18\x03 \x01(\x0b\x32\x16.google.protobuf.EmptyH\x00R\x08getStateB\x05\n\x03\x63md\"{\n\x14ModuleToBrainControl\x12-\n\x05hello\x18\x01 \x01(\x0b\x32\x15.hi.ninja.ModuleHelloH\x00R\x05hello\x12-\n\x05state\x18\x02 \x01(\x0b\x32\x15.hi.ninja.ModuleStateH\x00R\x05stateB\x05\n\x03\x63md\"\xeb\x02\n\rModuleFailure\x12\x42\n\x04\x63ode\x18\x01 \x01(\x0e\x32\x1c.hi.ninja.ModuleFailure.CodeB\x0b\xbaH\x08\x82\x01\x02\x10\x01\xc8\x01\x01H\x00R\x04\x63ode\x88\x01\x01\x12)\n\x07message\x18\x02 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x01R\x07message\x88\x01\x01\"\xd5\x01\n\x04\x43ode\x12\x10\n\x0c\x43ODE_UNKNOWN\x10\x00\x12\x14\n\x10\x43ODE_UNAVAILABLE\x10\x01\x12\x12\n\x0e\x43ODE_NOT_READY\x10\x02\x12\x0f\n\x0b\x43ODE_DEVICE\x10\x03\x12\r\n\tCODE_BUSY\x10\x04\x12\x10\n\x0c\x43ODE_TIMEOUT\x10\x05\x12\x12\n\x0e\x43ODE_CANCELLED\x10\x06\x12\x16\n\x12\x43ODE_STALE_SESSION\x10\x07\x12\x19\n\x15\x43ODE_INVALID_ARGUMENT\x10\x08\x12\x18\n\x14\x43ODE_OUTCOME_UNKNOWN\x10\tB\x07\n\x05_codeB\n\n\x08_message*`\n\x08ModuleId\x12\x12\n\x0eMODULE_UNKNOWN\x10\x00\x12\r\n\tMODULE_UI\x10\x01\x12\x0e\n\nMODULE_LUA\x10\x02\x12\r\n\tMODULE_IO\x10\x04\x12\x12\n\x0eMODULE_UPDATER\x10\x03\x42,Z*github.com/HiWorld-56/hi-proto/go/hi/ninjab\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -32,6 +34,44 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'hi.ninja.common_pb2', _glob
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'Z*github.com/HiWorld-56/hi-proto/go/hi/ninja'
-  _globals['_MODULEID']._serialized_start=35
-  _globals['_MODULEID']._serialized_end=116
+  _globals['_MODULESESSION'].fields_by_name['brain_session_id']._loaded_options = None
+  _globals['_MODULESESSION'].fields_by_name['brain_session_id']._serialized_options = b'\272H\007r\002\020\001\310\001\001'
+  _globals['_MODULESESSION'].fields_by_name['module_session_id']._loaded_options = None
+  _globals['_MODULESESSION'].fields_by_name['module_session_id']._serialized_options = b'\272H\007r\002\020\001\310\001\001'
+  _globals['_MODULESESSION'].fields_by_name['generation']._loaded_options = None
+  _globals['_MODULESESSION'].fields_by_name['generation']._serialized_options = b'\272H\0072\002 \000\310\001\001'
+  _globals['_MODULEHELLO'].fields_by_name['module']._loaded_options = None
+  _globals['_MODULEHELLO'].fields_by_name['module']._serialized_options = b'\272H\010\202\001\002\020\001\310\001\001'
+  _globals['_MODULEHELLO'].fields_by_name['module_session_id']._loaded_options = None
+  _globals['_MODULEHELLO'].fields_by_name['module_session_id']._serialized_options = b'\272H\007r\002\020\001\310\001\001'
+  _globals['_MODULESTATE'].fields_by_name['phase']._loaded_options = None
+  _globals['_MODULESTATE'].fields_by_name['phase']._serialized_options = b'\272H\010\202\001\002\020\001\310\001\001'
+  _globals['_MODULEINITIALIZE'].fields_by_name['reason']._loaded_options = None
+  _globals['_MODULEINITIALIZE'].fields_by_name['reason']._serialized_options = b'\272H\010\202\001\002\020\001\310\001\001'
+  _globals['_MODULEFAILURE'].fields_by_name['code']._loaded_options = None
+  _globals['_MODULEFAILURE'].fields_by_name['code']._serialized_options = b'\272H\010\202\001\002\020\001\310\001\001'
+  _globals['_MODULEFAILURE'].fields_by_name['message']._loaded_options = None
+  _globals['_MODULEFAILURE'].fields_by_name['message']._serialized_options = b'\272H\007r\002\020\001\310\001\001'
+  _globals['_MODULEID']._serialized_start=1665
+  _globals['_MODULEID']._serialized_end=1761
+  _globals['_MODULESESSION']._serialized_start=94
+  _globals['_MODULESESSION']._serialized_end=336
+  _globals['_MODULEHELLO']._serialized_start=339
+  _globals['_MODULEHELLO']._serialized_end=551
+  _globals['_MODULESTATE']._serialized_start=554
+  _globals['_MODULESTATE']._serialized_end=773
+  _globals['_MODULESTATE_PHASE']._serialized_start=665
+  _globals['_MODULESTATE_PHASE']._serialized_end=753
+  _globals['_MODULEINITIALIZE']._serialized_start=776
+  _globals['_MODULEINITIALIZE']._serialized_end=975
+  _globals['_MODULEINITIALIZE_REASON']._serialized_start=873
+  _globals['_MODULEINITIALIZE_REASON']._serialized_end=964
+  _globals['_BRAINTOMODULECONTROL']._serialized_start=978
+  _globals['_BRAINTOMODULECONTROL']._serialized_end=1172
+  _globals['_MODULETOBRAINCONTROL']._serialized_start=1174
+  _globals['_MODULETOBRAINCONTROL']._serialized_end=1297
+  _globals['_MODULEFAILURE']._serialized_start=1300
+  _globals['_MODULEFAILURE']._serialized_end=1663
+  _globals['_MODULEFAILURE_CODE']._serialized_start=1429
+  _globals['_MODULEFAILURE_CODE']._serialized_end=1642
 # @@protoc_insertion_point(module_scope)

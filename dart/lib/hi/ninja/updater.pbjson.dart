@@ -201,6 +201,14 @@ const BrainToUpdater$json = {
   '1': 'BrainToUpdater',
   '2': [
     {
+      '1': 'session',
+      '3': 99,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.ModuleSession',
+      '10': 'session'
+    },
+    {
       '1': 'request_id',
       '3': 1,
       '4': 1,
@@ -208,6 +216,15 @@ const BrainToUpdater$json = {
       '9': 1,
       '10': 'requestId',
       '17': true
+    },
+    {
+      '1': 'control',
+      '3': 100,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.BrainToModuleControl',
+      '9': 0,
+      '10': 'control'
     },
     {
       '1': 'get_status',
@@ -245,7 +262,9 @@ const BrainToUpdater$json = {
 
 /// Descriptor for `BrainToUpdater`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List brainToUpdaterDescriptor = $convert.base64Decode(
-    'Cg5CcmFpblRvVXBkYXRlchIiCgpyZXF1ZXN0X2lkGAEgASgJSAFSCXJlcXVlc3RJZIgBARI3Cg'
+    'Cg5CcmFpblRvVXBkYXRlchIxCgdzZXNzaW9uGGMgASgLMhcuaGkubmluamEuTW9kdWxlU2Vzc2'
+    'lvblIHc2Vzc2lvbhIiCgpyZXF1ZXN0X2lkGAEgASgJSAFSCXJlcXVlc3RJZIgBARI6Cgdjb250'
+    'cm9sGGQgASgLMh4uaGkubmluamEuQnJhaW5Ub01vZHVsZUNvbnRyb2xIAFIHY29udHJvbBI3Cg'
     'pnZXRfc3RhdHVzGAIgASgLMhYuZ29vZ2xlLnByb3RvYnVmLkVtcHR5SABSCWdldFN0YXR1cxIn'
     'CgVjaGVjaxgDIAEoCzIPLmhpLm5pbmphLkNoZWNrSABSBWNoZWNrEi4KBWFwcGx5GAQgASgLMh'
     'YuZ29vZ2xlLnByb3RvYnVmLkVtcHR5SABSBWFwcGx5QgUKA2NtZEINCgtfcmVxdWVzdF9pZA==');
@@ -280,6 +299,23 @@ const UpdaterToBrain$json = {
   '1': 'UpdaterToBrain',
   '2': [
     {
+      '1': 'session',
+      '3': 99,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.ModuleSession',
+      '10': 'session'
+    },
+    {
+      '1': 'control',
+      '3': 100,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.ModuleToBrainControl',
+      '9': 0,
+      '10': 'control'
+    },
+    {
       '1': 'resp',
       '3': 1,
       '4': 1,
@@ -305,7 +341,9 @@ const UpdaterToBrain$json = {
 
 /// Descriptor for `UpdaterToBrain`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List updaterToBrainDescriptor = $convert.base64Decode(
-    'Cg5VcGRhdGVyVG9CcmFpbhInCgRyZXNwGAEgASgLMhEuaGkubmluamEuQ21kUmVzcEgAUgRyZX'
+    'Cg5VcGRhdGVyVG9CcmFpbhIxCgdzZXNzaW9uGGMgASgLMhcuaGkubmluamEuTW9kdWxlU2Vzc2'
+    'lvblIHc2Vzc2lvbhI6Cgdjb250cm9sGGQgASgLMh4uaGkubmluamEuTW9kdWxlVG9CcmFpbkNv'
+    'bnRyb2xIAFIHY29udHJvbBInCgRyZXNwGAEgASgLMhEuaGkubmluamEuQ21kUmVzcEgAUgRyZX'
     'NwEjsKDGV2ZW50X3N0YXR1cxgCIAEoCzIWLmhpLm5pbmphLlVwZGF0ZVN0YXR1c0gAUgtldmVu'
     'dFN0YXR1c0IFCgNjbWQ=');
 

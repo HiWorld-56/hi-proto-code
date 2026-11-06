@@ -335,12 +335,14 @@ func (x *UpdateStatus) GetTotalBytes() uint64 {
 
 // brain -> updater
 type BrainToUpdater struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
+	state   protoimpl.MessageState `protogen:"open.v1"`
+	Session *ModuleSession         `protobuf:"bytes,99,opt,name=session,proto3" json:"session,omitempty"` // Hello前不传；业务消息必须匹配当前接管会话
 	// 回包按它配对。**每条请求都要带**，updater 原样放回 `CmdResp.request_id`；
 	// 对不上的回包 brain 直接丢（超时之后迟到的那种）。
 	RequestId *string `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
 	// Types that are valid to be assigned to Cmd:
 	//
+	//	*BrainToUpdater_Control
 	//	*BrainToUpdater_GetStatus
 	//	*BrainToUpdater_Check
 	//	*BrainToUpdater_Apply
@@ -379,6 +381,13 @@ func (*BrainToUpdater) Descriptor() ([]byte, []int) {
 	return file_hi_ninja_updater_proto_rawDescGZIP(), []int{1}
 }
 
+func (x *BrainToUpdater) GetSession() *ModuleSession {
+	if x != nil {
+		return x.Session
+	}
+	return nil
+}
+
 func (x *BrainToUpdater) GetRequestId() string {
 	if x != nil && x.RequestId != nil {
 		return *x.RequestId
@@ -389,6 +398,15 @@ func (x *BrainToUpdater) GetRequestId() string {
 func (x *BrainToUpdater) GetCmd() isBrainToUpdater_Cmd {
 	if x != nil {
 		return x.Cmd
+	}
+	return nil
+}
+
+func (x *BrainToUpdater) GetControl() *BrainToModuleControl {
+	if x != nil {
+		if x, ok := x.Cmd.(*BrainToUpdater_Control); ok {
+			return x.Control
+		}
 	}
 	return nil
 }
@@ -424,6 +442,10 @@ type isBrainToUpdater_Cmd interface {
 	isBrainToUpdater_Cmd()
 }
 
+type BrainToUpdater_Control struct {
+	Control *BrainToModuleControl `protobuf:"bytes,100,opt,name=control,proto3,oneof"`
+}
+
 type BrainToUpdater_GetStatus struct {
 	// 取一次当前状态，不触发任何动作。（本文件里空请求一律用 Empty，同 ui.proto）
 	GetStatus *emptypb.Empty `protobuf:"bytes,2,opt,name=get_status,json=getStatus,proto3,oneof"`
@@ -437,6 +459,8 @@ type BrainToUpdater_Apply struct {
 	// 把 `target_version` 那一版装上。**这是不可逆的**：会停 face/brain、换 current。
 	Apply *emptypb.Empty `protobuf:"bytes,4,opt,name=apply,proto3,oneof"`
 }
+
+func (*BrainToUpdater_Control) isBrainToUpdater_Cmd() {}
 
 func (*BrainToUpdater_GetStatus) isBrainToUpdater_Cmd() {}
 
@@ -494,9 +518,11 @@ func (x *Check) GetTrigger() UpdateStatus_Trigger {
 
 // updater -> brain
 type UpdaterToBrain struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
+	state   protoimpl.MessageState `protogen:"open.v1"`
+	Session *ModuleSession         `protobuf:"bytes,99,opt,name=session,proto3" json:"session,omitempty"` // Hello前不传；业务消息必须匹配当前接管会话
 	// Types that are valid to be assigned to Cmd:
 	//
+	//	*UpdaterToBrain_Control
 	//	*UpdaterToBrain_Resp
 	//	*UpdaterToBrain_EventStatus
 	Cmd           isUpdaterToBrain_Cmd `protobuf_oneof:"cmd"`
@@ -534,9 +560,25 @@ func (*UpdaterToBrain) Descriptor() ([]byte, []int) {
 	return file_hi_ninja_updater_proto_rawDescGZIP(), []int{3}
 }
 
+func (x *UpdaterToBrain) GetSession() *ModuleSession {
+	if x != nil {
+		return x.Session
+	}
+	return nil
+}
+
 func (x *UpdaterToBrain) GetCmd() isUpdaterToBrain_Cmd {
 	if x != nil {
 		return x.Cmd
+	}
+	return nil
+}
+
+func (x *UpdaterToBrain) GetControl() *ModuleToBrainControl {
+	if x != nil {
+		if x, ok := x.Cmd.(*UpdaterToBrain_Control); ok {
+			return x.Control
+		}
 	}
 	return nil
 }
@@ -563,6 +605,10 @@ type isUpdaterToBrain_Cmd interface {
 	isUpdaterToBrain_Cmd()
 }
 
+type UpdaterToBrain_Control struct {
+	Control *ModuleToBrainControl `protobuf:"bytes,100,opt,name=control,proto3,oneof"`
+}
+
 type UpdaterToBrain_Resp struct {
 	Resp *CmdResp `protobuf:"bytes,1,opt,name=resp,proto3,oneof"`
 }
@@ -571,6 +617,8 @@ type UpdaterToBrain_EventStatus struct {
 	// updater 主动推的状态变化（不对应任何请求）。装的过程全靠它，一路推到 face。
 	EventStatus *UpdateStatus `protobuf:"bytes,2,opt,name=event_status,json=eventStatus,proto3,oneof"`
 }
+
+func (*UpdaterToBrain_Control) isUpdaterToBrain_Cmd() {}
 
 func (*UpdaterToBrain_Resp) isUpdaterToBrain_Cmd() {}
 
@@ -653,7 +701,7 @@ var File_hi_ninja_updater_proto protoreflect.FileDescriptor
 
 const file_hi_ninja_updater_proto_rawDesc = "" +
 	"\n" +
-	"\x16hi/ninja/updater.proto\x12\bhi.ninja\x1a\x1bgoogle/protobuf/empty.proto\"\xe0\t\n" +
+	"\x16hi/ninja/updater.proto\x12\bhi.ninja\x1a\x15hi/ninja/common.proto\x1a\x1bgoogle/protobuf/empty.proto\"\xe0\t\n" +
 	"\fUpdateStatus\x127\n" +
 	"\x05state\x18\x01 \x01(\x0e2\x1c.hi.ninja.UpdateStatus.StateH\x00R\x05state\x88\x01\x01\x12,\n" +
 	"\x0fcurrent_version\x18\x02 \x01(\tH\x01R\x0ecurrentVersion\x88\x01\x01\x12*\n" +
@@ -714,10 +762,12 @@ const file_hi_ninja_updater_proto_rawDesc = "" +
 	"\v_updated_atB\x10\n" +
 	"\x0e_last_check_atB\x13\n" +
 	"\x11_downloaded_bytesB\x0e\n" +
-	"\f_total_bytes\"\xdc\x01\n" +
-	"\x0eBrainToUpdater\x12\"\n" +
+	"\f_total_bytes\"\xcb\x02\n" +
+	"\x0eBrainToUpdater\x121\n" +
+	"\asession\x18c \x01(\v2\x17.hi.ninja.ModuleSessionR\asession\x12\"\n" +
 	"\n" +
-	"request_id\x18\x01 \x01(\tH\x01R\trequestId\x88\x01\x01\x127\n" +
+	"request_id\x18\x01 \x01(\tH\x01R\trequestId\x88\x01\x01\x12:\n" +
+	"\acontrol\x18d \x01(\v2\x1e.hi.ninja.BrainToModuleControlH\x00R\acontrol\x127\n" +
 	"\n" +
 	"get_status\x18\x02 \x01(\v2\x16.google.protobuf.EmptyH\x00R\tgetStatus\x12'\n" +
 	"\x05check\x18\x03 \x01(\v2\x0f.hi.ninja.CheckH\x00R\x05check\x12.\n" +
@@ -727,8 +777,10 @@ const file_hi_ninja_updater_proto_rawDesc = "" +
 	"\x05Check\x12=\n" +
 	"\atrigger\x18\x01 \x01(\x0e2\x1e.hi.ninja.UpdateStatus.TriggerH\x00R\atrigger\x88\x01\x01B\n" +
 	"\n" +
-	"\b_trigger\"}\n" +
-	"\x0eUpdaterToBrain\x12'\n" +
+	"\b_trigger\"\xec\x01\n" +
+	"\x0eUpdaterToBrain\x121\n" +
+	"\asession\x18c \x01(\v2\x17.hi.ninja.ModuleSessionR\asession\x12:\n" +
+	"\acontrol\x18d \x01(\v2\x1e.hi.ninja.ModuleToBrainControlH\x00R\acontrol\x12'\n" +
 	"\x04resp\x18\x01 \x01(\v2\x11.hi.ninja.CmdRespH\x00R\x04resp\x12;\n" +
 	"\fevent_status\x18\x02 \x01(\v2\x16.hi.ninja.UpdateStatusH\x00R\veventStatusB\x05\n" +
 	"\x03cmd\"\xad\x01\n" +
@@ -758,30 +810,37 @@ func file_hi_ninja_updater_proto_rawDescGZIP() []byte {
 var file_hi_ninja_updater_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_hi_ninja_updater_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_hi_ninja_updater_proto_goTypes = []any{
-	(UpdateStatus_State)(0),   // 0: hi.ninja.UpdateStatus.State
-	(UpdateStatus_Trigger)(0), // 1: hi.ninja.UpdateStatus.Trigger
-	(*UpdateStatus)(nil),      // 2: hi.ninja.UpdateStatus
-	(*BrainToUpdater)(nil),    // 3: hi.ninja.BrainToUpdater
-	(*Check)(nil),             // 4: hi.ninja.Check
-	(*UpdaterToBrain)(nil),    // 5: hi.ninja.UpdaterToBrain
-	(*CmdResp)(nil),           // 6: hi.ninja.CmdResp
-	(*emptypb.Empty)(nil),     // 7: google.protobuf.Empty
+	(UpdateStatus_State)(0),      // 0: hi.ninja.UpdateStatus.State
+	(UpdateStatus_Trigger)(0),    // 1: hi.ninja.UpdateStatus.Trigger
+	(*UpdateStatus)(nil),         // 2: hi.ninja.UpdateStatus
+	(*BrainToUpdater)(nil),       // 3: hi.ninja.BrainToUpdater
+	(*Check)(nil),                // 4: hi.ninja.Check
+	(*UpdaterToBrain)(nil),       // 5: hi.ninja.UpdaterToBrain
+	(*CmdResp)(nil),              // 6: hi.ninja.CmdResp
+	(*ModuleSession)(nil),        // 7: hi.ninja.ModuleSession
+	(*BrainToModuleControl)(nil), // 8: hi.ninja.BrainToModuleControl
+	(*emptypb.Empty)(nil),        // 9: google.protobuf.Empty
+	(*ModuleToBrainControl)(nil), // 10: hi.ninja.ModuleToBrainControl
 }
 var file_hi_ninja_updater_proto_depIdxs = []int32{
-	0, // 0: hi.ninja.UpdateStatus.state:type_name -> hi.ninja.UpdateStatus.State
-	1, // 1: hi.ninja.UpdateStatus.trigger:type_name -> hi.ninja.UpdateStatus.Trigger
-	7, // 2: hi.ninja.BrainToUpdater.get_status:type_name -> google.protobuf.Empty
-	4, // 3: hi.ninja.BrainToUpdater.check:type_name -> hi.ninja.Check
-	7, // 4: hi.ninja.BrainToUpdater.apply:type_name -> google.protobuf.Empty
-	1, // 5: hi.ninja.Check.trigger:type_name -> hi.ninja.UpdateStatus.Trigger
-	6, // 6: hi.ninja.UpdaterToBrain.resp:type_name -> hi.ninja.CmdResp
-	2, // 7: hi.ninja.UpdaterToBrain.event_status:type_name -> hi.ninja.UpdateStatus
-	2, // 8: hi.ninja.CmdResp.status:type_name -> hi.ninja.UpdateStatus
-	9, // [9:9] is the sub-list for method output_type
-	9, // [9:9] is the sub-list for method input_type
-	9, // [9:9] is the sub-list for extension type_name
-	9, // [9:9] is the sub-list for extension extendee
-	0, // [0:9] is the sub-list for field type_name
+	0,  // 0: hi.ninja.UpdateStatus.state:type_name -> hi.ninja.UpdateStatus.State
+	1,  // 1: hi.ninja.UpdateStatus.trigger:type_name -> hi.ninja.UpdateStatus.Trigger
+	7,  // 2: hi.ninja.BrainToUpdater.session:type_name -> hi.ninja.ModuleSession
+	8,  // 3: hi.ninja.BrainToUpdater.control:type_name -> hi.ninja.BrainToModuleControl
+	9,  // 4: hi.ninja.BrainToUpdater.get_status:type_name -> google.protobuf.Empty
+	4,  // 5: hi.ninja.BrainToUpdater.check:type_name -> hi.ninja.Check
+	9,  // 6: hi.ninja.BrainToUpdater.apply:type_name -> google.protobuf.Empty
+	1,  // 7: hi.ninja.Check.trigger:type_name -> hi.ninja.UpdateStatus.Trigger
+	7,  // 8: hi.ninja.UpdaterToBrain.session:type_name -> hi.ninja.ModuleSession
+	10, // 9: hi.ninja.UpdaterToBrain.control:type_name -> hi.ninja.ModuleToBrainControl
+	6,  // 10: hi.ninja.UpdaterToBrain.resp:type_name -> hi.ninja.CmdResp
+	2,  // 11: hi.ninja.UpdaterToBrain.event_status:type_name -> hi.ninja.UpdateStatus
+	2,  // 12: hi.ninja.CmdResp.status:type_name -> hi.ninja.UpdateStatus
+	13, // [13:13] is the sub-list for method output_type
+	13, // [13:13] is the sub-list for method input_type
+	13, // [13:13] is the sub-list for extension type_name
+	13, // [13:13] is the sub-list for extension extendee
+	0,  // [0:13] is the sub-list for field type_name
 }
 
 func init() { file_hi_ninja_updater_proto_init() }
@@ -789,14 +848,17 @@ func file_hi_ninja_updater_proto_init() {
 	if File_hi_ninja_updater_proto != nil {
 		return
 	}
+	file_hi_ninja_common_proto_init()
 	file_hi_ninja_updater_proto_msgTypes[0].OneofWrappers = []any{}
 	file_hi_ninja_updater_proto_msgTypes[1].OneofWrappers = []any{
+		(*BrainToUpdater_Control)(nil),
 		(*BrainToUpdater_GetStatus)(nil),
 		(*BrainToUpdater_Check)(nil),
 		(*BrainToUpdater_Apply)(nil),
 	}
 	file_hi_ninja_updater_proto_msgTypes[2].OneofWrappers = []any{}
 	file_hi_ninja_updater_proto_msgTypes[3].OneofWrappers = []any{
+		(*UpdaterToBrain_Control)(nil),
 		(*UpdaterToBrain_Resp)(nil),
 		(*UpdaterToBrain_EventStatus)(nil),
 	}

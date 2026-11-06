@@ -326,7 +326,24 @@ final $typed_data.Uint8List hostCallRespDescriptor = $convert.base64Decode(
 const BrainToLua$json = {
   '1': 'BrainToLua',
   '2': [
+    {
+      '1': 'session',
+      '3': 99,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.ModuleSession',
+      '10': 'session'
+    },
     {'1': 'req_id', '3': 1, '4': 1, '5': 4, '9': 1, '10': 'reqId', '17': true},
+    {
+      '1': 'control',
+      '3': 100,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.BrainToModuleControl',
+      '9': 0,
+      '10': 'control'
+    },
     {
       '1': 'open',
       '3': 2,
@@ -372,7 +389,9 @@ const BrainToLua$json = {
 
 /// Descriptor for `BrainToLua`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List brainToLuaDescriptor = $convert.base64Decode(
-    'CgpCcmFpblRvTHVhEhoKBnJlcV9pZBgBIAEoBEgBUgVyZXFJZIgBARInCgRvcGVuGAIgASgLMh'
+    'CgpCcmFpblRvTHVhEjEKB3Nlc3Npb24YYyABKAsyFy5oaS5uaW5qYS5Nb2R1bGVTZXNzaW9uUg'
+    'dzZXNzaW9uEhoKBnJlcV9pZBgBIAEoBEgBUgVyZXFJZIgBARI6Cgdjb250cm9sGGQgASgLMh4u'
+    'aGkubmluamEuQnJhaW5Ub01vZHVsZUNvbnRyb2xIAFIHY29udHJvbBInCgRvcGVuGAIgASgLMh'
     'EuaGkubmluamEuT3BlblJlcUgAUgRvcGVuEi0KBmludm9rZRgDIAEoCzITLmhpLm5pbmphLklu'
     'dm9rZVJlcUgAUgZpbnZva2USKgoFY2xvc2UYBCABKAsyEi5oaS5uaW5qYS5DbG9zZVJlcUgAUg'
     'VjbG9zZRI1Cglob3N0X3Jlc3AYBSABKAsyFi5oaS5uaW5qYS5Ib3N0Q2FsbFJlc3BIAFIIaG9z'
@@ -382,7 +401,24 @@ final $typed_data.Uint8List brainToLuaDescriptor = $convert.base64Decode(
 const LuaToBrain$json = {
   '1': 'LuaToBrain',
   '2': [
+    {
+      '1': 'session',
+      '3': 99,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.ModuleSession',
+      '10': 'session'
+    },
     {'1': 'req_id', '3': 1, '4': 1, '5': 4, '9': 1, '10': 'reqId', '17': true},
+    {
+      '1': 'control',
+      '3': 100,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.ModuleToBrainControl',
+      '9': 0,
+      '10': 'control'
+    },
     {
       '1': 'open',
       '3': 2,
@@ -419,7 +455,9 @@ const LuaToBrain$json = {
 
 /// Descriptor for `LuaToBrain`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List luaToBrainDescriptor = $convert.base64Decode(
-    'CgpMdWFUb0JyYWluEhoKBnJlcV9pZBgBIAEoBEgBUgVyZXFJZIgBARIoCgRvcGVuGAIgASgLMh'
+    'CgpMdWFUb0JyYWluEjEKB3Nlc3Npb24YYyABKAsyFy5oaS5uaW5qYS5Nb2R1bGVTZXNzaW9uUg'
+    'dzZXNzaW9uEhoKBnJlcV9pZBgBIAEoBEgBUgVyZXFJZIgBARI6Cgdjb250cm9sGGQgASgLMh4u'
+    'aGkubmluamEuTW9kdWxlVG9CcmFpbkNvbnRyb2xIAFIHY29udHJvbBIoCgRvcGVuGAIgASgLMh'
     'IuaGkubmluamEuT3BlblJlc3BIAFIEb3BlbhIuCgZpbnZva2UYAyABKAsyFC5oaS5uaW5qYS5J'
     'bnZva2VSZXNwSABSBmludm9rZRI0Cglob3N0X2NhbGwYBCABKAsyFS5oaS5uaW5qYS5Ib3N0Q2'
     'FsbFJlcUgAUghob3N0Q2FsbEIFCgNjbWRCCQoHX3JlcV9pZA==');

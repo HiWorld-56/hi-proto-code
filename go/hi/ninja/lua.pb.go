@@ -674,12 +674,14 @@ func (x *HostCallResp) GetCode() uint32 {
 
 // BrainToLua brain 发给执行器的。
 type BrainToLua struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
+	state   protoimpl.MessageState `protogen:"open.v1"`
+	Session *ModuleSession         `protobuf:"bytes,99,opt,name=session,proto3" json:"session,omitempty"` // Hello前不传；业务消息必须匹配当前接管会话
 	// req_id 与回复配对。**两个方向各有一套编号**，互不相干 ——
 	// 回复的类型就说明了该去哪张表里找。
 	ReqId *uint64 `protobuf:"varint,1,opt,name=req_id,json=reqId,proto3,oneof" json:"req_id,omitempty"`
 	// Types that are valid to be assigned to Cmd:
 	//
+	//	*BrainToLua_Control
 	//	*BrainToLua_Open
 	//	*BrainToLua_Invoke
 	//	*BrainToLua_Close
@@ -719,6 +721,13 @@ func (*BrainToLua) Descriptor() ([]byte, []int) {
 	return file_hi_ninja_lua_proto_rawDescGZIP(), []int{9}
 }
 
+func (x *BrainToLua) GetSession() *ModuleSession {
+	if x != nil {
+		return x.Session
+	}
+	return nil
+}
+
 func (x *BrainToLua) GetReqId() uint64 {
 	if x != nil && x.ReqId != nil {
 		return *x.ReqId
@@ -729,6 +738,15 @@ func (x *BrainToLua) GetReqId() uint64 {
 func (x *BrainToLua) GetCmd() isBrainToLua_Cmd {
 	if x != nil {
 		return x.Cmd
+	}
+	return nil
+}
+
+func (x *BrainToLua) GetControl() *BrainToModuleControl {
+	if x != nil {
+		if x, ok := x.Cmd.(*BrainToLua_Control); ok {
+			return x.Control
+		}
 	}
 	return nil
 }
@@ -773,6 +791,10 @@ type isBrainToLua_Cmd interface {
 	isBrainToLua_Cmd()
 }
 
+type BrainToLua_Control struct {
+	Control *BrainToModuleControl `protobuf:"bytes,100,opt,name=control,proto3,oneof"`
+}
+
 type BrainToLua_Open struct {
 	Open *OpenReq `protobuf:"bytes,2,opt,name=open,proto3,oneof"`
 }
@@ -789,6 +811,8 @@ type BrainToLua_HostResp struct {
 	HostResp *HostCallResp `protobuf:"bytes,5,opt,name=host_resp,json=hostResp,proto3,oneof"` // 回执行器发起的那条 HostCallReq
 }
 
+func (*BrainToLua_Control) isBrainToLua_Cmd() {}
+
 func (*BrainToLua_Open) isBrainToLua_Cmd() {}
 
 func (*BrainToLua_Invoke) isBrainToLua_Cmd() {}
@@ -799,10 +823,12 @@ func (*BrainToLua_HostResp) isBrainToLua_Cmd() {}
 
 // LuaToBrain 执行器发给 brain 的。
 type LuaToBrain struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	ReqId *uint64                `protobuf:"varint,1,opt,name=req_id,json=reqId,proto3,oneof" json:"req_id,omitempty"`
+	state   protoimpl.MessageState `protogen:"open.v1"`
+	Session *ModuleSession         `protobuf:"bytes,99,opt,name=session,proto3" json:"session,omitempty"` // Hello前不传；业务消息必须匹配当前接管会话
+	ReqId   *uint64                `protobuf:"varint,1,opt,name=req_id,json=reqId,proto3,oneof" json:"req_id,omitempty"`
 	// Types that are valid to be assigned to Cmd:
 	//
+	//	*LuaToBrain_Control
 	//	*LuaToBrain_Open
 	//	*LuaToBrain_Invoke
 	//	*LuaToBrain_HostCall
@@ -841,6 +867,13 @@ func (*LuaToBrain) Descriptor() ([]byte, []int) {
 	return file_hi_ninja_lua_proto_rawDescGZIP(), []int{10}
 }
 
+func (x *LuaToBrain) GetSession() *ModuleSession {
+	if x != nil {
+		return x.Session
+	}
+	return nil
+}
+
 func (x *LuaToBrain) GetReqId() uint64 {
 	if x != nil && x.ReqId != nil {
 		return *x.ReqId
@@ -851,6 +884,15 @@ func (x *LuaToBrain) GetReqId() uint64 {
 func (x *LuaToBrain) GetCmd() isLuaToBrain_Cmd {
 	if x != nil {
 		return x.Cmd
+	}
+	return nil
+}
+
+func (x *LuaToBrain) GetControl() *ModuleToBrainControl {
+	if x != nil {
+		if x, ok := x.Cmd.(*LuaToBrain_Control); ok {
+			return x.Control
+		}
 	}
 	return nil
 }
@@ -886,6 +928,10 @@ type isLuaToBrain_Cmd interface {
 	isLuaToBrain_Cmd()
 }
 
+type LuaToBrain_Control struct {
+	Control *ModuleToBrainControl `protobuf:"bytes,100,opt,name=control,proto3,oneof"`
+}
+
 type LuaToBrain_Open struct {
 	Open *OpenResp `protobuf:"bytes,2,opt,name=open,proto3,oneof"`
 }
@@ -898,6 +944,8 @@ type LuaToBrain_HostCall struct {
 	HostCall *HostCallReq `protobuf:"bytes,4,opt,name=host_call,json=hostCall,proto3,oneof"` // 反向：插件调 host 能力
 }
 
+func (*LuaToBrain_Control) isLuaToBrain_Cmd() {}
+
 func (*LuaToBrain_Open) isLuaToBrain_Cmd() {}
 
 func (*LuaToBrain_Invoke) isLuaToBrain_Cmd() {}
@@ -908,7 +956,7 @@ var File_hi_ninja_lua_proto protoreflect.FileDescriptor
 
 const file_hi_ninja_lua_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/ninja/lua.proto\x12\bhi.ninja\"\xb5\x01\n" +
+	"\x12hi/ninja/lua.proto\x12\bhi.ninja\x1a\x15hi/ninja/common.proto\"\xb5\x01\n" +
 	"\x06LuaCtx\x12\x13\n" +
 	"\x02me\x18\x01 \x01(\tH\x00R\x02me\x88\x01\x01\x12\x1b\n" +
 	"\x06master\x18\x02 \x01(\tH\x01R\x06master\x88\x01\x01\x12\x19\n" +
@@ -991,19 +1039,23 @@ const file_hi_ninja_lua_proto_rawDesc = "" +
 	"\x05_jsonB\b\n" +
 	"\x06_bytesB\b\n" +
 	"\x06_errorB\a\n" +
-	"\x05_code\"\xf5\x01\n" +
+	"\x05_code\"\xe4\x02\n" +
 	"\n" +
-	"BrainToLua\x12\x1a\n" +
-	"\x06req_id\x18\x01 \x01(\x04H\x01R\x05reqId\x88\x01\x01\x12'\n" +
+	"BrainToLua\x121\n" +
+	"\asession\x18c \x01(\v2\x17.hi.ninja.ModuleSessionR\asession\x12\x1a\n" +
+	"\x06req_id\x18\x01 \x01(\x04H\x01R\x05reqId\x88\x01\x01\x12:\n" +
+	"\acontrol\x18d \x01(\v2\x1e.hi.ninja.BrainToModuleControlH\x00R\acontrol\x12'\n" +
 	"\x04open\x18\x02 \x01(\v2\x11.hi.ninja.OpenReqH\x00R\x04open\x12-\n" +
 	"\x06invoke\x18\x03 \x01(\v2\x13.hi.ninja.InvokeReqH\x00R\x06invoke\x12*\n" +
 	"\x05close\x18\x04 \x01(\v2\x12.hi.ninja.CloseReqH\x00R\x05close\x125\n" +
 	"\thost_resp\x18\x05 \x01(\v2\x16.hi.ninja.HostCallRespH\x00R\bhostRespB\x05\n" +
 	"\x03cmdB\t\n" +
-	"\a_req_id\"\xca\x01\n" +
+	"\a_req_id\"\xb9\x02\n" +
 	"\n" +
-	"LuaToBrain\x12\x1a\n" +
-	"\x06req_id\x18\x01 \x01(\x04H\x01R\x05reqId\x88\x01\x01\x12(\n" +
+	"LuaToBrain\x121\n" +
+	"\asession\x18c \x01(\v2\x17.hi.ninja.ModuleSessionR\asession\x12\x1a\n" +
+	"\x06req_id\x18\x01 \x01(\x04H\x01R\x05reqId\x88\x01\x01\x12:\n" +
+	"\acontrol\x18d \x01(\v2\x1e.hi.ninja.ModuleToBrainControlH\x00R\acontrol\x12(\n" +
 	"\x04open\x18\x02 \x01(\v2\x12.hi.ninja.OpenRespH\x00R\x04open\x12.\n" +
 	"\x06invoke\x18\x03 \x01(\v2\x14.hi.ninja.InvokeRespH\x00R\x06invoke\x124\n" +
 	"\thost_call\x18\x04 \x01(\v2\x15.hi.ninja.HostCallReqH\x00R\bhostCallB\x05\n" +
@@ -1025,34 +1077,41 @@ func file_hi_ninja_lua_proto_rawDescGZIP() []byte {
 
 var file_hi_ninja_lua_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_hi_ninja_lua_proto_goTypes = []any{
-	(*LuaCtx)(nil),       // 0: hi.ninja.LuaCtx
-	(*OpenReq)(nil),      // 1: hi.ninja.OpenReq
-	(*LuaRock)(nil),      // 2: hi.ninja.LuaRock
-	(*OpenResp)(nil),     // 3: hi.ninja.OpenResp
-	(*InvokeReq)(nil),    // 4: hi.ninja.InvokeReq
-	(*InvokeResp)(nil),   // 5: hi.ninja.InvokeResp
-	(*CloseReq)(nil),     // 6: hi.ninja.CloseReq
-	(*HostCallReq)(nil),  // 7: hi.ninja.HostCallReq
-	(*HostCallResp)(nil), // 8: hi.ninja.HostCallResp
-	(*BrainToLua)(nil),   // 9: hi.ninja.BrainToLua
-	(*LuaToBrain)(nil),   // 10: hi.ninja.LuaToBrain
+	(*LuaCtx)(nil),               // 0: hi.ninja.LuaCtx
+	(*OpenReq)(nil),              // 1: hi.ninja.OpenReq
+	(*LuaRock)(nil),              // 2: hi.ninja.LuaRock
+	(*OpenResp)(nil),             // 3: hi.ninja.OpenResp
+	(*InvokeReq)(nil),            // 4: hi.ninja.InvokeReq
+	(*InvokeResp)(nil),           // 5: hi.ninja.InvokeResp
+	(*CloseReq)(nil),             // 6: hi.ninja.CloseReq
+	(*HostCallReq)(nil),          // 7: hi.ninja.HostCallReq
+	(*HostCallResp)(nil),         // 8: hi.ninja.HostCallResp
+	(*BrainToLua)(nil),           // 9: hi.ninja.BrainToLua
+	(*LuaToBrain)(nil),           // 10: hi.ninja.LuaToBrain
+	(*ModuleSession)(nil),        // 11: hi.ninja.ModuleSession
+	(*BrainToModuleControl)(nil), // 12: hi.ninja.BrainToModuleControl
+	(*ModuleToBrainControl)(nil), // 13: hi.ninja.ModuleToBrainControl
 }
 var file_hi_ninja_lua_proto_depIdxs = []int32{
 	2,  // 0: hi.ninja.OpenReq.deps:type_name -> hi.ninja.LuaRock
 	0,  // 1: hi.ninja.InvokeReq.ctx:type_name -> hi.ninja.LuaCtx
 	0,  // 2: hi.ninja.HostCallReq.ctx:type_name -> hi.ninja.LuaCtx
-	1,  // 3: hi.ninja.BrainToLua.open:type_name -> hi.ninja.OpenReq
-	4,  // 4: hi.ninja.BrainToLua.invoke:type_name -> hi.ninja.InvokeReq
-	6,  // 5: hi.ninja.BrainToLua.close:type_name -> hi.ninja.CloseReq
-	8,  // 6: hi.ninja.BrainToLua.host_resp:type_name -> hi.ninja.HostCallResp
-	3,  // 7: hi.ninja.LuaToBrain.open:type_name -> hi.ninja.OpenResp
-	5,  // 8: hi.ninja.LuaToBrain.invoke:type_name -> hi.ninja.InvokeResp
-	7,  // 9: hi.ninja.LuaToBrain.host_call:type_name -> hi.ninja.HostCallReq
-	10, // [10:10] is the sub-list for method output_type
-	10, // [10:10] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	11, // 3: hi.ninja.BrainToLua.session:type_name -> hi.ninja.ModuleSession
+	12, // 4: hi.ninja.BrainToLua.control:type_name -> hi.ninja.BrainToModuleControl
+	1,  // 5: hi.ninja.BrainToLua.open:type_name -> hi.ninja.OpenReq
+	4,  // 6: hi.ninja.BrainToLua.invoke:type_name -> hi.ninja.InvokeReq
+	6,  // 7: hi.ninja.BrainToLua.close:type_name -> hi.ninja.CloseReq
+	8,  // 8: hi.ninja.BrainToLua.host_resp:type_name -> hi.ninja.HostCallResp
+	11, // 9: hi.ninja.LuaToBrain.session:type_name -> hi.ninja.ModuleSession
+	13, // 10: hi.ninja.LuaToBrain.control:type_name -> hi.ninja.ModuleToBrainControl
+	3,  // 11: hi.ninja.LuaToBrain.open:type_name -> hi.ninja.OpenResp
+	5,  // 12: hi.ninja.LuaToBrain.invoke:type_name -> hi.ninja.InvokeResp
+	7,  // 13: hi.ninja.LuaToBrain.host_call:type_name -> hi.ninja.HostCallReq
+	14, // [14:14] is the sub-list for method output_type
+	14, // [14:14] is the sub-list for method input_type
+	14, // [14:14] is the sub-list for extension type_name
+	14, // [14:14] is the sub-list for extension extendee
+	0,  // [0:14] is the sub-list for field type_name
 }
 
 func init() { file_hi_ninja_lua_proto_init() }
@@ -1060,6 +1119,7 @@ func file_hi_ninja_lua_proto_init() {
 	if File_hi_ninja_lua_proto != nil {
 		return
 	}
+	file_hi_ninja_common_proto_init()
 	file_hi_ninja_lua_proto_msgTypes[0].OneofWrappers = []any{}
 	file_hi_ninja_lua_proto_msgTypes[1].OneofWrappers = []any{}
 	file_hi_ninja_lua_proto_msgTypes[2].OneofWrappers = []any{}
@@ -1070,12 +1130,14 @@ func file_hi_ninja_lua_proto_init() {
 	file_hi_ninja_lua_proto_msgTypes[7].OneofWrappers = []any{}
 	file_hi_ninja_lua_proto_msgTypes[8].OneofWrappers = []any{}
 	file_hi_ninja_lua_proto_msgTypes[9].OneofWrappers = []any{
+		(*BrainToLua_Control)(nil),
 		(*BrainToLua_Open)(nil),
 		(*BrainToLua_Invoke)(nil),
 		(*BrainToLua_Close)(nil),
 		(*BrainToLua_HostResp)(nil),
 	}
 	file_hi_ninja_lua_proto_msgTypes[10].OneofWrappers = []any{
+		(*LuaToBrain_Control)(nil),
 		(*LuaToBrain_Open)(nil),
 		(*LuaToBrain_Invoke)(nil),
 		(*LuaToBrain_HostCall)(nil),

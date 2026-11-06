@@ -15,6 +15,8 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import 'common.pb.dart' as $0;
+
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 /// LuaCtx 一次调用的上下文。**这些字段一个都不在 manifest 里** ——
@@ -845,7 +847,7 @@ class HostCallResp extends $pb.GeneratedMessage {
   void clearCode() => $_clearField(4);
 }
 
-enum BrainToLua_Cmd { open, invoke, close, hostResp, notSet }
+enum BrainToLua_Cmd { open, invoke, close, hostResp, control, notSet }
 
 /// BrainToLua brain 发给执行器的。
 class BrainToLua extends $pb.GeneratedMessage {
@@ -855,6 +857,8 @@ class BrainToLua extends $pb.GeneratedMessage {
     InvokeReq? invoke,
     CloseReq? close,
     HostCallResp? hostResp,
+    $0.ModuleSession? session,
+    $0.BrainToModuleControl? control,
   }) {
     final result = create();
     if (reqId != null) result.reqId = reqId;
@@ -862,6 +866,8 @@ class BrainToLua extends $pb.GeneratedMessage {
     if (invoke != null) result.invoke = invoke;
     if (close != null) result.close = close;
     if (hostResp != null) result.hostResp = hostResp;
+    if (session != null) result.session = session;
+    if (control != null) result.control = control;
     return result;
   }
 
@@ -879,13 +885,14 @@ class BrainToLua extends $pb.GeneratedMessage {
     3: BrainToLua_Cmd.invoke,
     4: BrainToLua_Cmd.close,
     5: BrainToLua_Cmd.hostResp,
+    100: BrainToLua_Cmd.control,
     0: BrainToLua_Cmd.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'BrainToLua',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3, 4, 5])
+    ..oo(0, [2, 3, 4, 5, 100])
     ..a<$fixnum.Int64>(1, _omitFieldNames ? '' : 'reqId', $pb.PbFieldType.OU6,
         defaultOrMaker: $fixnum.Int64.ZERO)
     ..aOM<OpenReq>(2, _omitFieldNames ? '' : 'open', subBuilder: OpenReq.create)
@@ -895,6 +902,10 @@ class BrainToLua extends $pb.GeneratedMessage {
         subBuilder: CloseReq.create)
     ..aOM<HostCallResp>(5, _omitFieldNames ? '' : 'hostResp',
         subBuilder: HostCallResp.create)
+    ..aOM<$0.ModuleSession>(99, _omitFieldNames ? '' : 'session',
+        subBuilder: $0.ModuleSession.create)
+    ..aOM<$0.BrainToModuleControl>(100, _omitFieldNames ? '' : 'control',
+        subBuilder: $0.BrainToModuleControl.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -919,11 +930,13 @@ class BrainToLua extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   @$pb.TagNumber(4)
   @$pb.TagNumber(5)
+  @$pb.TagNumber(100)
   BrainToLua_Cmd whichCmd() => _BrainToLua_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
   @$pb.TagNumber(4)
   @$pb.TagNumber(5)
+  @$pb.TagNumber(100)
   void clearCmd() => $_clearField($_whichOneof(0));
 
   /// req_id 与回复配对。**两个方向各有一套编号**，互不相干 ——
@@ -980,9 +993,31 @@ class BrainToLua extends $pb.GeneratedMessage {
   void clearHostResp() => $_clearField(5);
   @$pb.TagNumber(5)
   HostCallResp ensureHostResp() => $_ensure(4);
+
+  @$pb.TagNumber(99)
+  $0.ModuleSession get session => $_getN(5);
+  @$pb.TagNumber(99)
+  set session($0.ModuleSession value) => $_setField(99, value);
+  @$pb.TagNumber(99)
+  $core.bool hasSession() => $_has(5);
+  @$pb.TagNumber(99)
+  void clearSession() => $_clearField(99);
+  @$pb.TagNumber(99)
+  $0.ModuleSession ensureSession() => $_ensure(5);
+
+  @$pb.TagNumber(100)
+  $0.BrainToModuleControl get control => $_getN(6);
+  @$pb.TagNumber(100)
+  set control($0.BrainToModuleControl value) => $_setField(100, value);
+  @$pb.TagNumber(100)
+  $core.bool hasControl() => $_has(6);
+  @$pb.TagNumber(100)
+  void clearControl() => $_clearField(100);
+  @$pb.TagNumber(100)
+  $0.BrainToModuleControl ensureControl() => $_ensure(6);
 }
 
-enum LuaToBrain_Cmd { open, invoke, hostCall, notSet }
+enum LuaToBrain_Cmd { open, invoke, hostCall, control, notSet }
 
 /// LuaToBrain 执行器发给 brain 的。
 class LuaToBrain extends $pb.GeneratedMessage {
@@ -991,12 +1026,16 @@ class LuaToBrain extends $pb.GeneratedMessage {
     OpenResp? open,
     InvokeResp? invoke,
     HostCallReq? hostCall,
+    $0.ModuleSession? session,
+    $0.ModuleToBrainControl? control,
   }) {
     final result = create();
     if (reqId != null) result.reqId = reqId;
     if (open != null) result.open = open;
     if (invoke != null) result.invoke = invoke;
     if (hostCall != null) result.hostCall = hostCall;
+    if (session != null) result.session = session;
+    if (control != null) result.control = control;
     return result;
   }
 
@@ -1013,13 +1052,14 @@ class LuaToBrain extends $pb.GeneratedMessage {
     2: LuaToBrain_Cmd.open,
     3: LuaToBrain_Cmd.invoke,
     4: LuaToBrain_Cmd.hostCall,
+    100: LuaToBrain_Cmd.control,
     0: LuaToBrain_Cmd.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'LuaToBrain',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3, 4])
+    ..oo(0, [2, 3, 4, 100])
     ..a<$fixnum.Int64>(1, _omitFieldNames ? '' : 'reqId', $pb.PbFieldType.OU6,
         defaultOrMaker: $fixnum.Int64.ZERO)
     ..aOM<OpenResp>(2, _omitFieldNames ? '' : 'open',
@@ -1028,6 +1068,10 @@ class LuaToBrain extends $pb.GeneratedMessage {
         subBuilder: InvokeResp.create)
     ..aOM<HostCallReq>(4, _omitFieldNames ? '' : 'hostCall',
         subBuilder: HostCallReq.create)
+    ..aOM<$0.ModuleSession>(99, _omitFieldNames ? '' : 'session',
+        subBuilder: $0.ModuleSession.create)
+    ..aOM<$0.ModuleToBrainControl>(100, _omitFieldNames ? '' : 'control',
+        subBuilder: $0.ModuleToBrainControl.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1051,10 +1095,12 @@ class LuaToBrain extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
   @$pb.TagNumber(4)
+  @$pb.TagNumber(100)
   LuaToBrain_Cmd whichCmd() => _LuaToBrain_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
   @$pb.TagNumber(4)
+  @$pb.TagNumber(100)
   void clearCmd() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -1098,6 +1144,28 @@ class LuaToBrain extends $pb.GeneratedMessage {
   void clearHostCall() => $_clearField(4);
   @$pb.TagNumber(4)
   HostCallReq ensureHostCall() => $_ensure(3);
+
+  @$pb.TagNumber(99)
+  $0.ModuleSession get session => $_getN(4);
+  @$pb.TagNumber(99)
+  set session($0.ModuleSession value) => $_setField(99, value);
+  @$pb.TagNumber(99)
+  $core.bool hasSession() => $_has(4);
+  @$pb.TagNumber(99)
+  void clearSession() => $_clearField(99);
+  @$pb.TagNumber(99)
+  $0.ModuleSession ensureSession() => $_ensure(4);
+
+  @$pb.TagNumber(100)
+  $0.ModuleToBrainControl get control => $_getN(5);
+  @$pb.TagNumber(100)
+  set control($0.ModuleToBrainControl value) => $_setField(100, value);
+  @$pb.TagNumber(100)
+  $core.bool hasControl() => $_has(5);
+  @$pb.TagNumber(100)
+  void clearControl() => $_clearField(100);
+  @$pb.TagNumber(100)
+  $0.ModuleToBrainControl ensureControl() => $_ensure(5);
 }
 
 const $core.bool _omitFieldNames =

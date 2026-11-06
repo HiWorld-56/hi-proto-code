@@ -16,6 +16,7 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $0;
 
+import 'common.pb.dart' as $1;
 import 'updater.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -219,7 +220,7 @@ class UpdateStatus extends $pb.GeneratedMessage {
   void clearTotalBytes() => $_clearField(12);
 }
 
-enum BrainToUpdater_Cmd { getStatus, check_3, apply, notSet }
+enum BrainToUpdater_Cmd { getStatus, check_3, apply, control, notSet }
 
 /// brain -> updater
 class BrainToUpdater extends $pb.GeneratedMessage {
@@ -228,12 +229,16 @@ class BrainToUpdater extends $pb.GeneratedMessage {
     $0.Empty? getStatus,
     Check? check_3,
     $0.Empty? apply,
+    $1.ModuleSession? session,
+    $1.BrainToModuleControl? control,
   }) {
     final result = create();
     if (requestId != null) result.requestId = requestId;
     if (getStatus != null) result.getStatus = getStatus;
     if (check_3 != null) result.check_3 = check_3;
     if (apply != null) result.apply = apply;
+    if (session != null) result.session = session;
+    if (control != null) result.control = control;
     return result;
   }
 
@@ -251,19 +256,24 @@ class BrainToUpdater extends $pb.GeneratedMessage {
     2: BrainToUpdater_Cmd.getStatus,
     3: BrainToUpdater_Cmd.check_3,
     4: BrainToUpdater_Cmd.apply,
+    100: BrainToUpdater_Cmd.control,
     0: BrainToUpdater_Cmd.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'BrainToUpdater',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3, 4])
+    ..oo(0, [2, 3, 4, 100])
     ..aOS(1, _omitFieldNames ? '' : 'requestId')
     ..aOM<$0.Empty>(2, _omitFieldNames ? '' : 'getStatus',
         subBuilder: $0.Empty.create)
     ..aOM<Check>(3, _omitFieldNames ? '' : 'check', subBuilder: Check.create)
     ..aOM<$0.Empty>(4, _omitFieldNames ? '' : 'apply',
         subBuilder: $0.Empty.create)
+    ..aOM<$1.ModuleSession>(99, _omitFieldNames ? '' : 'session',
+        subBuilder: $1.ModuleSession.create)
+    ..aOM<$1.BrainToModuleControl>(100, _omitFieldNames ? '' : 'control',
+        subBuilder: $1.BrainToModuleControl.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -288,10 +298,12 @@ class BrainToUpdater extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
   @$pb.TagNumber(4)
+  @$pb.TagNumber(100)
   BrainToUpdater_Cmd whichCmd() => _BrainToUpdater_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
   @$pb.TagNumber(4)
+  @$pb.TagNumber(100)
   void clearCmd() => $_clearField($_whichOneof(0));
 
   /// 回包按它配对。**每条请求都要带**，updater 原样放回 `CmdResp.request_id`；
@@ -339,6 +351,28 @@ class BrainToUpdater extends $pb.GeneratedMessage {
   void clearApply() => $_clearField(4);
   @$pb.TagNumber(4)
   $0.Empty ensureApply() => $_ensure(3);
+
+  @$pb.TagNumber(99)
+  $1.ModuleSession get session => $_getN(4);
+  @$pb.TagNumber(99)
+  set session($1.ModuleSession value) => $_setField(99, value);
+  @$pb.TagNumber(99)
+  $core.bool hasSession() => $_has(4);
+  @$pb.TagNumber(99)
+  void clearSession() => $_clearField(99);
+  @$pb.TagNumber(99)
+  $1.ModuleSession ensureSession() => $_ensure(4);
+
+  @$pb.TagNumber(100)
+  $1.BrainToModuleControl get control => $_getN(5);
+  @$pb.TagNumber(100)
+  set control($1.BrainToModuleControl value) => $_setField(100, value);
+  @$pb.TagNumber(100)
+  $core.bool hasControl() => $_has(5);
+  @$pb.TagNumber(100)
+  void clearControl() => $_clearField(100);
+  @$pb.TagNumber(100)
+  $1.BrainToModuleControl ensureControl() => $_ensure(5);
 }
 
 /// 现在去问服务端有没有新版。
@@ -399,17 +433,21 @@ class Check extends $pb.GeneratedMessage {
   void clearTrigger() => $_clearField(1);
 }
 
-enum UpdaterToBrain_Cmd { resp, eventStatus, notSet }
+enum UpdaterToBrain_Cmd { resp, eventStatus, control, notSet }
 
 /// updater -> brain
 class UpdaterToBrain extends $pb.GeneratedMessage {
   factory UpdaterToBrain({
     CmdResp? resp,
     UpdateStatus? eventStatus,
+    $1.ModuleSession? session,
+    $1.ModuleToBrainControl? control,
   }) {
     final result = create();
     if (resp != null) result.resp = resp;
     if (eventStatus != null) result.eventStatus = eventStatus;
+    if (session != null) result.session = session;
+    if (control != null) result.control = control;
     return result;
   }
 
@@ -426,16 +464,21 @@ class UpdaterToBrain extends $pb.GeneratedMessage {
       _UpdaterToBrain_CmdByTag = {
     1: UpdaterToBrain_Cmd.resp,
     2: UpdaterToBrain_Cmd.eventStatus,
+    100: UpdaterToBrain_Cmd.control,
     0: UpdaterToBrain_Cmd.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'UpdaterToBrain',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..oo(0, [1, 2])
+    ..oo(0, [1, 2, 100])
     ..aOM<CmdResp>(1, _omitFieldNames ? '' : 'resp', subBuilder: CmdResp.create)
     ..aOM<UpdateStatus>(2, _omitFieldNames ? '' : 'eventStatus',
         subBuilder: UpdateStatus.create)
+    ..aOM<$1.ModuleSession>(99, _omitFieldNames ? '' : 'session',
+        subBuilder: $1.ModuleSession.create)
+    ..aOM<$1.ModuleToBrainControl>(100, _omitFieldNames ? '' : 'control',
+        subBuilder: $1.ModuleToBrainControl.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -459,9 +502,11 @@ class UpdaterToBrain extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
+  @$pb.TagNumber(100)
   UpdaterToBrain_Cmd whichCmd() => _UpdaterToBrain_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
+  @$pb.TagNumber(100)
   void clearCmd() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -486,6 +531,28 @@ class UpdaterToBrain extends $pb.GeneratedMessage {
   void clearEventStatus() => $_clearField(2);
   @$pb.TagNumber(2)
   UpdateStatus ensureEventStatus() => $_ensure(1);
+
+  @$pb.TagNumber(99)
+  $1.ModuleSession get session => $_getN(2);
+  @$pb.TagNumber(99)
+  set session($1.ModuleSession value) => $_setField(99, value);
+  @$pb.TagNumber(99)
+  $core.bool hasSession() => $_has(2);
+  @$pb.TagNumber(99)
+  void clearSession() => $_clearField(99);
+  @$pb.TagNumber(99)
+  $1.ModuleSession ensureSession() => $_ensure(2);
+
+  @$pb.TagNumber(100)
+  $1.ModuleToBrainControl get control => $_getN(3);
+  @$pb.TagNumber(100)
+  set control($1.ModuleToBrainControl value) => $_setField(100, value);
+  @$pb.TagNumber(100)
+  $core.bool hasControl() => $_has(3);
+  @$pb.TagNumber(100)
+  void clearControl() => $_clearField(100);
+  @$pb.TagNumber(100)
+  $1.ModuleToBrainControl ensureControl() => $_ensure(3);
 }
 
 /// 一条控制命令的回包。**状态永远带着**，不管成没成 —— 失败时那份状态正是原因所在。

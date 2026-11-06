@@ -7,8 +7,10 @@
 package ninja
 
 import (
+	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -31,6 +33,7 @@ const (
 	ModuleId_MODULE_UNKNOWN ModuleId = 0
 	ModuleId_MODULE_UI      ModuleId = 1 // hinj_ui（face）
 	ModuleId_MODULE_LUA     ModuleId = 2 // lua 执行器
+	ModuleId_MODULE_IO      ModuleId = 4 // hinj_io（本机采集、VAD、摄像头；不负责播放）
 	ModuleId_MODULE_UPDATER ModuleId = 3 // hinj_updater（OTA 更新，systemd 直接拉起的独立进程）
 )
 
@@ -40,12 +43,14 @@ var (
 		0: "MODULE_UNKNOWN",
 		1: "MODULE_UI",
 		2: "MODULE_LUA",
+		4: "MODULE_IO",
 		3: "MODULE_UPDATER",
 	}
 	ModuleId_value = map[string]int32{
 		"MODULE_UNKNOWN": 0,
 		"MODULE_UI":      1,
 		"MODULE_LUA":     2,
+		"MODULE_IO":      4,
 		"MODULE_UPDATER": 3,
 	}
 )
@@ -77,16 +82,713 @@ func (ModuleId) EnumDescriptor() ([]byte, []int) {
 	return file_hi_ninja_common_proto_rawDescGZIP(), []int{0}
 }
 
+type ModuleState_Phase int32
+
+const (
+	ModuleState_PHASE_UNKNOWN      ModuleState_Phase = 0
+	ModuleState_PHASE_CONNECTED    ModuleState_Phase = 1
+	ModuleState_PHASE_INITIALIZING ModuleState_Phase = 2
+	ModuleState_PHASE_READY        ModuleState_Phase = 3
+)
+
+// Enum value maps for ModuleState_Phase.
+var (
+	ModuleState_Phase_name = map[int32]string{
+		0: "PHASE_UNKNOWN",
+		1: "PHASE_CONNECTED",
+		2: "PHASE_INITIALIZING",
+		3: "PHASE_READY",
+	}
+	ModuleState_Phase_value = map[string]int32{
+		"PHASE_UNKNOWN":      0,
+		"PHASE_CONNECTED":    1,
+		"PHASE_INITIALIZING": 2,
+		"PHASE_READY":        3,
+	}
+)
+
+func (x ModuleState_Phase) Enum() *ModuleState_Phase {
+	p := new(ModuleState_Phase)
+	*p = x
+	return p
+}
+
+func (x ModuleState_Phase) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ModuleState_Phase) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_ninja_common_proto_enumTypes[1].Descriptor()
+}
+
+func (ModuleState_Phase) Type() protoreflect.EnumType {
+	return &file_hi_ninja_common_proto_enumTypes[1]
+}
+
+func (x ModuleState_Phase) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ModuleState_Phase.Descriptor instead.
+func (ModuleState_Phase) EnumDescriptor() ([]byte, []int) {
+	return file_hi_ninja_common_proto_rawDescGZIP(), []int{2, 0}
+}
+
+type ModuleInitialize_Reason int32
+
+const (
+	ModuleInitialize_REASON_UNKNOWN   ModuleInitialize_Reason = 0
+	ModuleInitialize_REASON_STARTUP   ModuleInitialize_Reason = 1
+	ModuleInitialize_REASON_RECONNECT ModuleInitialize_Reason = 2
+	ModuleInitialize_REASON_RECOVERY  ModuleInitialize_Reason = 3
+)
+
+// Enum value maps for ModuleInitialize_Reason.
+var (
+	ModuleInitialize_Reason_name = map[int32]string{
+		0: "REASON_UNKNOWN",
+		1: "REASON_STARTUP",
+		2: "REASON_RECONNECT",
+		3: "REASON_RECOVERY",
+	}
+	ModuleInitialize_Reason_value = map[string]int32{
+		"REASON_UNKNOWN":   0,
+		"REASON_STARTUP":   1,
+		"REASON_RECONNECT": 2,
+		"REASON_RECOVERY":  3,
+	}
+)
+
+func (x ModuleInitialize_Reason) Enum() *ModuleInitialize_Reason {
+	p := new(ModuleInitialize_Reason)
+	*p = x
+	return p
+}
+
+func (x ModuleInitialize_Reason) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ModuleInitialize_Reason) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_ninja_common_proto_enumTypes[2].Descriptor()
+}
+
+func (ModuleInitialize_Reason) Type() protoreflect.EnumType {
+	return &file_hi_ninja_common_proto_enumTypes[2]
+}
+
+func (x ModuleInitialize_Reason) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ModuleInitialize_Reason.Descriptor instead.
+func (ModuleInitialize_Reason) EnumDescriptor() ([]byte, []int) {
+	return file_hi_ninja_common_proto_rawDescGZIP(), []int{3, 0}
+}
+
+type ModuleFailure_Code int32
+
+const (
+	ModuleFailure_CODE_UNKNOWN          ModuleFailure_Code = 0
+	ModuleFailure_CODE_UNAVAILABLE      ModuleFailure_Code = 1
+	ModuleFailure_CODE_NOT_READY        ModuleFailure_Code = 2
+	ModuleFailure_CODE_DEVICE           ModuleFailure_Code = 3
+	ModuleFailure_CODE_BUSY             ModuleFailure_Code = 4
+	ModuleFailure_CODE_TIMEOUT          ModuleFailure_Code = 5
+	ModuleFailure_CODE_CANCELLED        ModuleFailure_Code = 6
+	ModuleFailure_CODE_STALE_SESSION    ModuleFailure_Code = 7
+	ModuleFailure_CODE_INVALID_ARGUMENT ModuleFailure_Code = 8
+	ModuleFailure_CODE_OUTCOME_UNKNOWN  ModuleFailure_Code = 9
+)
+
+// Enum value maps for ModuleFailure_Code.
+var (
+	ModuleFailure_Code_name = map[int32]string{
+		0: "CODE_UNKNOWN",
+		1: "CODE_UNAVAILABLE",
+		2: "CODE_NOT_READY",
+		3: "CODE_DEVICE",
+		4: "CODE_BUSY",
+		5: "CODE_TIMEOUT",
+		6: "CODE_CANCELLED",
+		7: "CODE_STALE_SESSION",
+		8: "CODE_INVALID_ARGUMENT",
+		9: "CODE_OUTCOME_UNKNOWN",
+	}
+	ModuleFailure_Code_value = map[string]int32{
+		"CODE_UNKNOWN":          0,
+		"CODE_UNAVAILABLE":      1,
+		"CODE_NOT_READY":        2,
+		"CODE_DEVICE":           3,
+		"CODE_BUSY":             4,
+		"CODE_TIMEOUT":          5,
+		"CODE_CANCELLED":        6,
+		"CODE_STALE_SESSION":    7,
+		"CODE_INVALID_ARGUMENT": 8,
+		"CODE_OUTCOME_UNKNOWN":  9,
+	}
+)
+
+func (x ModuleFailure_Code) Enum() *ModuleFailure_Code {
+	p := new(ModuleFailure_Code)
+	*p = x
+	return p
+}
+
+func (x ModuleFailure_Code) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ModuleFailure_Code) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_ninja_common_proto_enumTypes[3].Descriptor()
+}
+
+func (ModuleFailure_Code) Type() protoreflect.EnumType {
+	return &file_hi_ninja_common_proto_enumTypes[3]
+}
+
+func (x ModuleFailure_Code) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ModuleFailure_Code.Descriptor instead.
+func (ModuleFailure_Code) EnumDescriptor() ([]byte, []int) {
+	return file_hi_ninja_common_proto_rawDescGZIP(), []int{6, 0}
+}
+
+// 当前一次接管的上下文。每条业务消息都组合它，不能从路由 identity 推断。
+// brain/module_session_id 是进程启动标识；generation 是 brain 对该模块的初始化代次。
+type ModuleSession struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	BrainSessionId  *string                `protobuf:"bytes,1,opt,name=brain_session_id,json=brainSessionId,proto3,oneof" json:"brain_session_id,omitempty"`
+	ModuleSessionId *string                `protobuf:"bytes,2,opt,name=module_session_id,json=moduleSessionId,proto3,oneof" json:"module_session_id,omitempty"`
+	Generation      *uint64                `protobuf:"varint,3,opt,name=generation,proto3,oneof" json:"generation,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *ModuleSession) Reset() {
+	*x = ModuleSession{}
+	mi := &file_hi_ninja_common_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ModuleSession) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ModuleSession) ProtoMessage() {}
+
+func (x *ModuleSession) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ninja_common_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ModuleSession.ProtoReflect.Descriptor instead.
+func (*ModuleSession) Descriptor() ([]byte, []int) {
+	return file_hi_ninja_common_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *ModuleSession) GetBrainSessionId() string {
+	if x != nil && x.BrainSessionId != nil {
+		return *x.BrainSessionId
+	}
+	return ""
+}
+
+func (x *ModuleSession) GetModuleSessionId() string {
+	if x != nil && x.ModuleSessionId != nil {
+		return *x.ModuleSessionId
+	}
+	return ""
+}
+
+func (x *ModuleSession) GetGeneration() uint64 {
+	if x != nil && x.Generation != nil {
+		return *x.Generation
+	}
+	return 0
+}
+
+// PING/PONG 仅证明连接。模块本机准备完成后发 Hello，brain 才开始一次初始化。
+type ModuleHello struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Module          *ModuleId              `protobuf:"varint,1,opt,name=module,proto3,enum=hi.ninja.ModuleId,oneof" json:"module,omitempty"`
+	ModuleSessionId *string                `protobuf:"bytes,2,opt,name=module_session_id,json=moduleSessionId,proto3,oneof" json:"module_session_id,omitempty"`
+	Version         *string                `protobuf:"bytes,3,opt,name=version,proto3,oneof" json:"version,omitempty"` // 不传=未提供制品版本
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *ModuleHello) Reset() {
+	*x = ModuleHello{}
+	mi := &file_hi_ninja_common_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ModuleHello) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ModuleHello) ProtoMessage() {}
+
+func (x *ModuleHello) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ninja_common_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ModuleHello.ProtoReflect.Descriptor instead.
+func (*ModuleHello) Descriptor() ([]byte, []int) {
+	return file_hi_ninja_common_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *ModuleHello) GetModule() ModuleId {
+	if x != nil && x.Module != nil {
+		return *x.Module
+	}
+	return ModuleId_MODULE_UNKNOWN
+}
+
+func (x *ModuleHello) GetModuleSessionId() string {
+	if x != nil && x.ModuleSessionId != nil {
+		return *x.ModuleSessionId
+	}
+	return ""
+}
+
+func (x *ModuleHello) GetVersion() string {
+	if x != nil && x.Version != nil {
+		return *x.Version
+	}
+	return ""
+}
+
+type ModuleState struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Phase         *ModuleState_Phase     `protobuf:"varint,1,opt,name=phase,proto3,enum=hi.ninja.ModuleState_Phase,oneof" json:"phase,omitempty"`
+	Error         *string                `protobuf:"bytes,2,opt,name=error,proto3,oneof" json:"error,omitempty"` // 不传=当前生命周期阶段没有错误；设备错误属于各模块状态
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ModuleState) Reset() {
+	*x = ModuleState{}
+	mi := &file_hi_ninja_common_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ModuleState) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ModuleState) ProtoMessage() {}
+
+func (x *ModuleState) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ninja_common_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ModuleState.ProtoReflect.Descriptor instead.
+func (*ModuleState) Descriptor() ([]byte, []int) {
+	return file_hi_ninja_common_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *ModuleState) GetPhase() ModuleState_Phase {
+	if x != nil && x.Phase != nil {
+		return *x.Phase
+	}
+	return ModuleState_PHASE_UNKNOWN
+}
+
+func (x *ModuleState) GetError() string {
+	if x != nil && x.Error != nil {
+		return *x.Error
+	}
+	return ""
+}
+
+type ModuleInitialize struct {
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	Reason        *ModuleInitialize_Reason `protobuf:"varint,1,opt,name=reason,proto3,enum=hi.ninja.ModuleInitialize_Reason,oneof" json:"reason,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ModuleInitialize) Reset() {
+	*x = ModuleInitialize{}
+	mi := &file_hi_ninja_common_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ModuleInitialize) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ModuleInitialize) ProtoMessage() {}
+
+func (x *ModuleInitialize) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ninja_common_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ModuleInitialize.ProtoReflect.Descriptor instead.
+func (*ModuleInitialize) Descriptor() ([]byte, []int) {
+	return file_hi_ninja_common_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *ModuleInitialize) GetReason() ModuleInitialize_Reason {
+	if x != nil && x.Reason != nil {
+		return *x.Reason
+	}
+	return ModuleInitialize_REASON_UNKNOWN
+}
+
+// 公共层按模块职责调用恢复钩子，不能把 updater 的安装事务清成 idle。
+// reset -> INITIALIZING确认 -> 模块业务快照 -> initialize -> READY确认。
+// 重复同代次命令幂等，旧会话/代次命令拒绝；失败不自动重放业务。
+type BrainToModuleControl struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Types that are valid to be assigned to Cmd:
+	//
+	//	*BrainToModuleControl_Reset_
+	//	*BrainToModuleControl_Initialize
+	//	*BrainToModuleControl_GetState
+	Cmd           isBrainToModuleControl_Cmd `protobuf_oneof:"cmd"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BrainToModuleControl) Reset() {
+	*x = BrainToModuleControl{}
+	mi := &file_hi_ninja_common_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BrainToModuleControl) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BrainToModuleControl) ProtoMessage() {}
+
+func (x *BrainToModuleControl) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ninja_common_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BrainToModuleControl.ProtoReflect.Descriptor instead.
+func (*BrainToModuleControl) Descriptor() ([]byte, []int) {
+	return file_hi_ninja_common_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *BrainToModuleControl) GetCmd() isBrainToModuleControl_Cmd {
+	if x != nil {
+		return x.Cmd
+	}
+	return nil
+}
+
+func (x *BrainToModuleControl) GetReset_() *ModuleInitialize {
+	if x != nil {
+		if x, ok := x.Cmd.(*BrainToModuleControl_Reset_); ok {
+			return x.Reset_
+		}
+	}
+	return nil
+}
+
+func (x *BrainToModuleControl) GetInitialize() *emptypb.Empty {
+	if x != nil {
+		if x, ok := x.Cmd.(*BrainToModuleControl_Initialize); ok {
+			return x.Initialize
+		}
+	}
+	return nil
+}
+
+func (x *BrainToModuleControl) GetGetState() *emptypb.Empty {
+	if x != nil {
+		if x, ok := x.Cmd.(*BrainToModuleControl_GetState); ok {
+			return x.GetState
+		}
+	}
+	return nil
+}
+
+type isBrainToModuleControl_Cmd interface {
+	isBrainToModuleControl_Cmd()
+}
+
+type BrainToModuleControl_Reset_ struct {
+	Reset_ *ModuleInitialize `protobuf:"bytes,1,opt,name=reset,proto3,oneof"`
+}
+
+type BrainToModuleControl_Initialize struct {
+	Initialize *emptypb.Empty `protobuf:"bytes,2,opt,name=initialize,proto3,oneof"`
+}
+
+type BrainToModuleControl_GetState struct {
+	GetState *emptypb.Empty `protobuf:"bytes,3,opt,name=get_state,json=getState,proto3,oneof"`
+}
+
+func (*BrainToModuleControl_Reset_) isBrainToModuleControl_Cmd() {}
+
+func (*BrainToModuleControl_Initialize) isBrainToModuleControl_Cmd() {}
+
+func (*BrainToModuleControl_GetState) isBrainToModuleControl_Cmd() {}
+
+type ModuleToBrainControl struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Types that are valid to be assigned to Cmd:
+	//
+	//	*ModuleToBrainControl_Hello
+	//	*ModuleToBrainControl_State
+	Cmd           isModuleToBrainControl_Cmd `protobuf_oneof:"cmd"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ModuleToBrainControl) Reset() {
+	*x = ModuleToBrainControl{}
+	mi := &file_hi_ninja_common_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ModuleToBrainControl) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ModuleToBrainControl) ProtoMessage() {}
+
+func (x *ModuleToBrainControl) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ninja_common_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ModuleToBrainControl.ProtoReflect.Descriptor instead.
+func (*ModuleToBrainControl) Descriptor() ([]byte, []int) {
+	return file_hi_ninja_common_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *ModuleToBrainControl) GetCmd() isModuleToBrainControl_Cmd {
+	if x != nil {
+		return x.Cmd
+	}
+	return nil
+}
+
+func (x *ModuleToBrainControl) GetHello() *ModuleHello {
+	if x != nil {
+		if x, ok := x.Cmd.(*ModuleToBrainControl_Hello); ok {
+			return x.Hello
+		}
+	}
+	return nil
+}
+
+func (x *ModuleToBrainControl) GetState() *ModuleState {
+	if x != nil {
+		if x, ok := x.Cmd.(*ModuleToBrainControl_State); ok {
+			return x.State
+		}
+	}
+	return nil
+}
+
+type isModuleToBrainControl_Cmd interface {
+	isModuleToBrainControl_Cmd()
+}
+
+type ModuleToBrainControl_Hello struct {
+	Hello *ModuleHello `protobuf:"bytes,1,opt,name=hello,proto3,oneof"`
+}
+
+type ModuleToBrainControl_State struct {
+	State *ModuleState `protobuf:"bytes,2,opt,name=state,proto3,oneof"`
+}
+
+func (*ModuleToBrainControl_Hello) isModuleToBrainControl_Cmd() {}
+
+func (*ModuleToBrainControl_State) isModuleToBrainControl_Cmd() {}
+
+type ModuleFailure struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Code          *ModuleFailure_Code    `protobuf:"varint,1,opt,name=code,proto3,enum=hi.ninja.ModuleFailure_Code,oneof" json:"code,omitempty"`
+	Message       *string                `protobuf:"bytes,2,opt,name=message,proto3,oneof" json:"message,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ModuleFailure) Reset() {
+	*x = ModuleFailure{}
+	mi := &file_hi_ninja_common_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ModuleFailure) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ModuleFailure) ProtoMessage() {}
+
+func (x *ModuleFailure) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ninja_common_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ModuleFailure.ProtoReflect.Descriptor instead.
+func (*ModuleFailure) Descriptor() ([]byte, []int) {
+	return file_hi_ninja_common_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *ModuleFailure) GetCode() ModuleFailure_Code {
+	if x != nil && x.Code != nil {
+		return *x.Code
+	}
+	return ModuleFailure_CODE_UNKNOWN
+}
+
+func (x *ModuleFailure) GetMessage() string {
+	if x != nil && x.Message != nil {
+		return *x.Message
+	}
+	return ""
+}
+
 var File_hi_ninja_common_proto protoreflect.FileDescriptor
 
 const file_hi_ninja_common_proto_rawDesc = "" +
 	"\n" +
-	"\x15hi/ninja/common.proto\x12\bhi.ninja*Q\n" +
+	"\x15hi/ninja/common.proto\x12\bhi.ninja\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\"\xf2\x01\n" +
+	"\rModuleSession\x129\n" +
+	"\x10brain_session_id\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\x0ebrainSessionId\x88\x01\x01\x12;\n" +
+	"\x11module_session_id\x18\x02 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x01R\x0fmoduleSessionId\x88\x01\x01\x12/\n" +
+	"\n" +
+	"generation\x18\x03 \x01(\x04B\n" +
+	"\xbaH\a\xc8\x01\x012\x02 \x00H\x02R\n" +
+	"generation\x88\x01\x01B\x13\n" +
+	"\x11_brain_session_idB\x14\n" +
+	"\x12_module_session_idB\r\n" +
+	"\v_generation\"\xd4\x01\n" +
+	"\vModuleHello\x12<\n" +
+	"\x06module\x18\x01 \x01(\x0e2\x12.hi.ninja.ModuleIdB\v\xbaH\b\xc8\x01\x01\x82\x01\x02\x10\x01H\x00R\x06module\x88\x01\x01\x12;\n" +
+	"\x11module_session_id\x18\x02 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x01R\x0fmoduleSessionId\x88\x01\x01\x12\x1d\n" +
+	"\aversion\x18\x03 \x01(\tH\x02R\aversion\x88\x01\x01B\t\n" +
+	"\a_moduleB\x14\n" +
+	"\x12_module_session_idB\n" +
+	"\n" +
+	"\b_version\"\xdb\x01\n" +
+	"\vModuleState\x12C\n" +
+	"\x05phase\x18\x01 \x01(\x0e2\x1b.hi.ninja.ModuleState.PhaseB\v\xbaH\b\xc8\x01\x01\x82\x01\x02\x10\x01H\x00R\x05phase\x88\x01\x01\x12\x19\n" +
+	"\x05error\x18\x02 \x01(\tH\x01R\x05error\x88\x01\x01\"X\n" +
+	"\x05Phase\x12\x11\n" +
+	"\rPHASE_UNKNOWN\x10\x00\x12\x13\n" +
+	"\x0fPHASE_CONNECTED\x10\x01\x12\x16\n" +
+	"\x12PHASE_INITIALIZING\x10\x02\x12\x0f\n" +
+	"\vPHASE_READY\x10\x03B\b\n" +
+	"\x06_phaseB\b\n" +
+	"\x06_error\"\xc7\x01\n" +
+	"\x10ModuleInitialize\x12K\n" +
+	"\x06reason\x18\x01 \x01(\x0e2!.hi.ninja.ModuleInitialize.ReasonB\v\xbaH\b\xc8\x01\x01\x82\x01\x02\x10\x01H\x00R\x06reason\x88\x01\x01\"[\n" +
+	"\x06Reason\x12\x12\n" +
+	"\x0eREASON_UNKNOWN\x10\x00\x12\x12\n" +
+	"\x0eREASON_STARTUP\x10\x01\x12\x14\n" +
+	"\x10REASON_RECONNECT\x10\x02\x12\x13\n" +
+	"\x0fREASON_RECOVERY\x10\x03B\t\n" +
+	"\a_reason\"\xc2\x01\n" +
+	"\x14BrainToModuleControl\x122\n" +
+	"\x05reset\x18\x01 \x01(\v2\x1a.hi.ninja.ModuleInitializeH\x00R\x05reset\x128\n" +
+	"\n" +
+	"initialize\x18\x02 \x01(\v2\x16.google.protobuf.EmptyH\x00R\n" +
+	"initialize\x125\n" +
+	"\tget_state\x18\x03 \x01(\v2\x16.google.protobuf.EmptyH\x00R\bgetStateB\x05\n" +
+	"\x03cmd\"{\n" +
+	"\x14ModuleToBrainControl\x12-\n" +
+	"\x05hello\x18\x01 \x01(\v2\x15.hi.ninja.ModuleHelloH\x00R\x05hello\x12-\n" +
+	"\x05state\x18\x02 \x01(\v2\x15.hi.ninja.ModuleStateH\x00R\x05stateB\x05\n" +
+	"\x03cmd\"\xeb\x02\n" +
+	"\rModuleFailure\x12B\n" +
+	"\x04code\x18\x01 \x01(\x0e2\x1c.hi.ninja.ModuleFailure.CodeB\v\xbaH\b\xc8\x01\x01\x82\x01\x02\x10\x01H\x00R\x04code\x88\x01\x01\x12)\n" +
+	"\amessage\x18\x02 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x01R\amessage\x88\x01\x01\"\xd5\x01\n" +
+	"\x04Code\x12\x10\n" +
+	"\fCODE_UNKNOWN\x10\x00\x12\x14\n" +
+	"\x10CODE_UNAVAILABLE\x10\x01\x12\x12\n" +
+	"\x0eCODE_NOT_READY\x10\x02\x12\x0f\n" +
+	"\vCODE_DEVICE\x10\x03\x12\r\n" +
+	"\tCODE_BUSY\x10\x04\x12\x10\n" +
+	"\fCODE_TIMEOUT\x10\x05\x12\x12\n" +
+	"\x0eCODE_CANCELLED\x10\x06\x12\x16\n" +
+	"\x12CODE_STALE_SESSION\x10\a\x12\x19\n" +
+	"\x15CODE_INVALID_ARGUMENT\x10\b\x12\x18\n" +
+	"\x14CODE_OUTCOME_UNKNOWN\x10\tB\a\n" +
+	"\x05_codeB\n" +
+	"\n" +
+	"\b_message*`\n" +
 	"\bModuleId\x12\x12\n" +
 	"\x0eMODULE_UNKNOWN\x10\x00\x12\r\n" +
 	"\tMODULE_UI\x10\x01\x12\x0e\n" +
 	"\n" +
-	"MODULE_LUA\x10\x02\x12\x12\n" +
+	"MODULE_LUA\x10\x02\x12\r\n" +
+	"\tMODULE_IO\x10\x04\x12\x12\n" +
 	"\x0eMODULE_UPDATER\x10\x03B\x88\x01\n" +
 	"\fcom.hi.ninjaB\vCommonProtoP\x01Z*github.com/HiWorld-56/hi-proto/go/hi/ninja\xa2\x02\x03HNX\xaa\x02\bHi.Ninja\xca\x02\bHi\\Ninja\xe2\x02\x14Hi\\Ninja\\GPBMetadata\xea\x02\tHi::Ninjab\x06proto3"
 
@@ -102,16 +804,37 @@ func file_hi_ninja_common_proto_rawDescGZIP() []byte {
 	return file_hi_ninja_common_proto_rawDescData
 }
 
-var file_hi_ninja_common_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_hi_ninja_common_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
+var file_hi_ninja_common_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_hi_ninja_common_proto_goTypes = []any{
-	(ModuleId)(0), // 0: hi.ninja.ModuleId
+	(ModuleId)(0),                // 0: hi.ninja.ModuleId
+	(ModuleState_Phase)(0),       // 1: hi.ninja.ModuleState.Phase
+	(ModuleInitialize_Reason)(0), // 2: hi.ninja.ModuleInitialize.Reason
+	(ModuleFailure_Code)(0),      // 3: hi.ninja.ModuleFailure.Code
+	(*ModuleSession)(nil),        // 4: hi.ninja.ModuleSession
+	(*ModuleHello)(nil),          // 5: hi.ninja.ModuleHello
+	(*ModuleState)(nil),          // 6: hi.ninja.ModuleState
+	(*ModuleInitialize)(nil),     // 7: hi.ninja.ModuleInitialize
+	(*BrainToModuleControl)(nil), // 8: hi.ninja.BrainToModuleControl
+	(*ModuleToBrainControl)(nil), // 9: hi.ninja.ModuleToBrainControl
+	(*ModuleFailure)(nil),        // 10: hi.ninja.ModuleFailure
+	(*emptypb.Empty)(nil),        // 11: google.protobuf.Empty
 }
 var file_hi_ninja_common_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	0,  // 0: hi.ninja.ModuleHello.module:type_name -> hi.ninja.ModuleId
+	1,  // 1: hi.ninja.ModuleState.phase:type_name -> hi.ninja.ModuleState.Phase
+	2,  // 2: hi.ninja.ModuleInitialize.reason:type_name -> hi.ninja.ModuleInitialize.Reason
+	7,  // 3: hi.ninja.BrainToModuleControl.reset:type_name -> hi.ninja.ModuleInitialize
+	11, // 4: hi.ninja.BrainToModuleControl.initialize:type_name -> google.protobuf.Empty
+	11, // 5: hi.ninja.BrainToModuleControl.get_state:type_name -> google.protobuf.Empty
+	5,  // 6: hi.ninja.ModuleToBrainControl.hello:type_name -> hi.ninja.ModuleHello
+	6,  // 7: hi.ninja.ModuleToBrainControl.state:type_name -> hi.ninja.ModuleState
+	3,  // 8: hi.ninja.ModuleFailure.code:type_name -> hi.ninja.ModuleFailure.Code
+	9,  // [9:9] is the sub-list for method output_type
+	9,  // [9:9] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_hi_ninja_common_proto_init() }
@@ -119,19 +842,34 @@ func file_hi_ninja_common_proto_init() {
 	if File_hi_ninja_common_proto != nil {
 		return
 	}
+	file_hi_ninja_common_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_ninja_common_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_ninja_common_proto_msgTypes[2].OneofWrappers = []any{}
+	file_hi_ninja_common_proto_msgTypes[3].OneofWrappers = []any{}
+	file_hi_ninja_common_proto_msgTypes[4].OneofWrappers = []any{
+		(*BrainToModuleControl_Reset_)(nil),
+		(*BrainToModuleControl_Initialize)(nil),
+		(*BrainToModuleControl_GetState)(nil),
+	}
+	file_hi_ninja_common_proto_msgTypes[5].OneofWrappers = []any{
+		(*ModuleToBrainControl_Hello)(nil),
+		(*ModuleToBrainControl_State)(nil),
+	}
+	file_hi_ninja_common_proto_msgTypes[6].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ninja_common_proto_rawDesc), len(file_hi_ninja_common_proto_rawDesc)),
-			NumEnums:      1,
-			NumMessages:   0,
+			NumEnums:      4,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_hi_ninja_common_proto_goTypes,
 		DependencyIndexes: file_hi_ninja_common_proto_depIdxs,
 		EnumInfos:         file_hi_ninja_common_proto_enumTypes,
+		MessageInfos:      file_hi_ninja_common_proto_msgTypes,
 	}.Build()
 	File_hi_ninja_common_proto = out.File
 	file_hi_ninja_common_proto_goTypes = nil

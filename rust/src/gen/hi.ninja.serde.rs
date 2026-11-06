@@ -424,12 +424,24 @@ impl serde::Serialize for BrainToFace {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
+        if self.session.is_some() {
+            len += 1;
+        }
         if self.cmd.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.BrainToFace", len)?;
+        if let Some(v) = self.session.as_ref() {
+            struct_ser.serialize_field("session", v)?;
+        }
         if let Some(v) = self.cmd.as_ref() {
             match v {
+                brain_to_face::Cmd::PlaybackPermit(v) => {
+                    struct_ser.serialize_field("playbackPermit", v)?;
+                }
+                brain_to_face::Cmd::Control(v) => {
+                    struct_ser.serialize_field("control", v)?;
+                }
                 brain_to_face::Cmd::InitRobot(v) => {
                     struct_ser.serialize_field("initRobot", v)?;
                 }
@@ -530,6 +542,10 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
+            "session",
+            "playback_permit",
+            "playbackPermit",
+            "control",
             "init_robot",
             "initRobot",
             "show_listen",
@@ -590,6 +606,9 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
+            Session,
+            PlaybackPermit,
+            Control,
             InitRobot,
             ShowListen,
             ShowEmotion,
@@ -639,6 +658,9 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
                         E: serde::de::Error,
                     {
                         match value {
+                            "session" => Ok(GeneratedField::Session),
+                            "playbackPermit" | "playback_permit" => Ok(GeneratedField::PlaybackPermit),
+                            "control" => Ok(GeneratedField::Control),
                             "initRobot" | "init_robot" => Ok(GeneratedField::InitRobot),
                             "showListen" | "show_listen" => Ok(GeneratedField::ShowListen),
                             "showEmotion" | "show_emotion" => Ok(GeneratedField::ShowEmotion),
@@ -686,9 +708,30 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
                 where
                     V: serde::de::MapAccess<'de>,
             {
+                let mut session__ = None;
                 let mut cmd__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
+                        GeneratedField::Session => {
+                            if session__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("session"));
+                            }
+                            session__ = map_.next_value()?;
+                        }
+                        GeneratedField::PlaybackPermit => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("playbackPermit"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_face::Cmd::PlaybackPermit)
+;
+                        }
+                        GeneratedField::Control => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("control"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_face::Cmd::Control)
+;
+                        }
                         GeneratedField::InitRobot => {
                             if cmd__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("initRobot"));
@@ -886,11 +929,243 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
                     }
                 }
                 Ok(BrainToFace {
+                    session: session__,
                     cmd: cmd__,
                 })
             }
         }
         deserializer.deserialize_struct("hi.ninja.BrainToFace", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for BrainToIo {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.session.is_some() {
+            len += 1;
+        }
+        if self.request_id.is_some() {
+            len += 1;
+        }
+        if self.cmd.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.BrainToIo", len)?;
+        if let Some(v) = self.session.as_ref() {
+            struct_ser.serialize_field("session", v)?;
+        }
+        if let Some(v) = self.request_id.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("requestId", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.cmd.as_ref() {
+            match v {
+                brain_to_io::Cmd::Control(v) => {
+                    struct_ser.serialize_field("control", v)?;
+                }
+                brain_to_io::Cmd::SetHearing(v) => {
+                    struct_ser.serialize_field("setHearing", v)?;
+                }
+                brain_to_io::Cmd::GetStatus(v) => {
+                    struct_ser.serialize_field("getStatus", v)?;
+                }
+                brain_to_io::Cmd::CameraOpen(v) => {
+                    struct_ser.serialize_field("cameraOpen", v)?;
+                }
+                brain_to_io::Cmd::CameraClose(v) => {
+                    struct_ser.serialize_field("cameraClose", v)?;
+                }
+                brain_to_io::Cmd::NextFrame(v) => {
+                    struct_ser.serialize_field("nextFrame", v)?;
+                }
+                brain_to_io::Cmd::Capture(v) => {
+                    struct_ser.serialize_field("capture", v)?;
+                }
+                brain_to_io::Cmd::Cancel(v) => {
+                    struct_ser.serialize_field("cancel", v)?;
+                }
+            }
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for BrainToIo {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "session",
+            "request_id",
+            "requestId",
+            "control",
+            "set_hearing",
+            "setHearing",
+            "get_status",
+            "getStatus",
+            "camera_open",
+            "cameraOpen",
+            "camera_close",
+            "cameraClose",
+            "next_frame",
+            "nextFrame",
+            "capture",
+            "cancel",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Session,
+            RequestId,
+            Control,
+            SetHearing,
+            GetStatus,
+            CameraOpen,
+            CameraClose,
+            NextFrame,
+            Capture,
+            Cancel,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "session" => Ok(GeneratedField::Session),
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
+                            "control" => Ok(GeneratedField::Control),
+                            "setHearing" | "set_hearing" => Ok(GeneratedField::SetHearing),
+                            "getStatus" | "get_status" => Ok(GeneratedField::GetStatus),
+                            "cameraOpen" | "camera_open" => Ok(GeneratedField::CameraOpen),
+                            "cameraClose" | "camera_close" => Ok(GeneratedField::CameraClose),
+                            "nextFrame" | "next_frame" => Ok(GeneratedField::NextFrame),
+                            "capture" => Ok(GeneratedField::Capture),
+                            "cancel" => Ok(GeneratedField::Cancel),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = BrainToIo;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.BrainToIo")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<BrainToIo, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut session__ = None;
+                let mut request_id__ = None;
+                let mut cmd__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Session => {
+                            if session__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("session"));
+                            }
+                            session__ = map_.next_value()?;
+                        }
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
+                            }
+                            request_id__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Control => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("control"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_io::Cmd::Control)
+;
+                        }
+                        GeneratedField::SetHearing => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("setHearing"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_io::Cmd::SetHearing)
+;
+                        }
+                        GeneratedField::GetStatus => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("getStatus"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_io::Cmd::GetStatus)
+;
+                        }
+                        GeneratedField::CameraOpen => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("cameraOpen"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_io::Cmd::CameraOpen)
+;
+                        }
+                        GeneratedField::CameraClose => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("cameraClose"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_io::Cmd::CameraClose)
+;
+                        }
+                        GeneratedField::NextFrame => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("nextFrame"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_io::Cmd::NextFrame)
+;
+                        }
+                        GeneratedField::Capture => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("capture"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_io::Cmd::Capture)
+;
+                        }
+                        GeneratedField::Cancel => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("cancel"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_io::Cmd::Cancel)
+;
+                        }
+                    }
+                }
+                Ok(BrainToIo {
+                    session: session__,
+                    request_id: request_id__,
+                    cmd: cmd__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.BrainToIo", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for BrainToLua {
@@ -901,6 +1176,9 @@ impl serde::Serialize for BrainToLua {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
+        if self.session.is_some() {
+            len += 1;
+        }
         if self.req_id.is_some() {
             len += 1;
         }
@@ -908,6 +1186,9 @@ impl serde::Serialize for BrainToLua {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.BrainToLua", len)?;
+        if let Some(v) = self.session.as_ref() {
+            struct_ser.serialize_field("session", v)?;
+        }
         if let Some(v) = self.req_id.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
@@ -915,6 +1196,9 @@ impl serde::Serialize for BrainToLua {
         }
         if let Some(v) = self.cmd.as_ref() {
             match v {
+                brain_to_lua::Cmd::Control(v) => {
+                    struct_ser.serialize_field("control", v)?;
+                }
                 brain_to_lua::Cmd::Open(v) => {
                     struct_ser.serialize_field("open", v)?;
                 }
@@ -939,8 +1223,10 @@ impl<'de> serde::Deserialize<'de> for BrainToLua {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
+            "session",
             "req_id",
             "reqId",
+            "control",
             "open",
             "invoke",
             "close",
@@ -950,7 +1236,9 @@ impl<'de> serde::Deserialize<'de> for BrainToLua {
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
+            Session,
             ReqId,
+            Control,
             Open,
             Invoke,
             Close,
@@ -976,7 +1264,9 @@ impl<'de> serde::Deserialize<'de> for BrainToLua {
                         E: serde::de::Error,
                     {
                         match value {
+                            "session" => Ok(GeneratedField::Session),
                             "reqId" | "req_id" => Ok(GeneratedField::ReqId),
+                            "control" => Ok(GeneratedField::Control),
                             "open" => Ok(GeneratedField::Open),
                             "invoke" => Ok(GeneratedField::Invoke),
                             "close" => Ok(GeneratedField::Close),
@@ -1000,10 +1290,17 @@ impl<'de> serde::Deserialize<'de> for BrainToLua {
                 where
                     V: serde::de::MapAccess<'de>,
             {
+                let mut session__ = None;
                 let mut req_id__ = None;
                 let mut cmd__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
+                        GeneratedField::Session => {
+                            if session__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("session"));
+                            }
+                            session__ = map_.next_value()?;
+                        }
                         GeneratedField::ReqId => {
                             if req_id__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("reqId"));
@@ -1011,6 +1308,13 @@ impl<'de> serde::Deserialize<'de> for BrainToLua {
                             req_id__ = 
                                 map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
+                        }
+                        GeneratedField::Control => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("control"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_lua::Cmd::Control)
+;
                         }
                         GeneratedField::Open => {
                             if cmd__.is_some() {
@@ -1043,12 +1347,136 @@ impl<'de> serde::Deserialize<'de> for BrainToLua {
                     }
                 }
                 Ok(BrainToLua {
+                    session: session__,
                     req_id: req_id__,
                     cmd: cmd__,
                 })
             }
         }
         deserializer.deserialize_struct("hi.ninja.BrainToLua", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for BrainToModuleControl {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.cmd.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.BrainToModuleControl", len)?;
+        if let Some(v) = self.cmd.as_ref() {
+            match v {
+                brain_to_module_control::Cmd::Reset(v) => {
+                    struct_ser.serialize_field("reset", v)?;
+                }
+                brain_to_module_control::Cmd::Initialize(v) => {
+                    struct_ser.serialize_field("initialize", v)?;
+                }
+                brain_to_module_control::Cmd::GetState(v) => {
+                    struct_ser.serialize_field("getState", v)?;
+                }
+            }
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for BrainToModuleControl {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "reset",
+            "initialize",
+            "get_state",
+            "getState",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Reset,
+            Initialize,
+            GetState,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "reset" => Ok(GeneratedField::Reset),
+                            "initialize" => Ok(GeneratedField::Initialize),
+                            "getState" | "get_state" => Ok(GeneratedField::GetState),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = BrainToModuleControl;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.BrainToModuleControl")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<BrainToModuleControl, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut cmd__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Reset => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("reset"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_module_control::Cmd::Reset)
+;
+                        }
+                        GeneratedField::Initialize => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("initialize"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_module_control::Cmd::Initialize)
+;
+                        }
+                        GeneratedField::GetState => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("getState"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_module_control::Cmd::GetState)
+;
+                        }
+                    }
+                }
+                Ok(BrainToModuleControl {
+                    cmd: cmd__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.BrainToModuleControl", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for BrainToUpdater {
@@ -1059,6 +1487,9 @@ impl serde::Serialize for BrainToUpdater {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
+        if self.session.is_some() {
+            len += 1;
+        }
         if self.request_id.is_some() {
             len += 1;
         }
@@ -1066,11 +1497,17 @@ impl serde::Serialize for BrainToUpdater {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.BrainToUpdater", len)?;
+        if let Some(v) = self.session.as_ref() {
+            struct_ser.serialize_field("session", v)?;
+        }
         if let Some(v) = self.request_id.as_ref() {
             struct_ser.serialize_field("requestId", v)?;
         }
         if let Some(v) = self.cmd.as_ref() {
             match v {
+                brain_to_updater::Cmd::Control(v) => {
+                    struct_ser.serialize_field("control", v)?;
+                }
                 brain_to_updater::Cmd::GetStatus(v) => {
                     struct_ser.serialize_field("getStatus", v)?;
                 }
@@ -1092,8 +1529,10 @@ impl<'de> serde::Deserialize<'de> for BrainToUpdater {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
+            "session",
             "request_id",
             "requestId",
+            "control",
             "get_status",
             "getStatus",
             "check",
@@ -1102,7 +1541,9 @@ impl<'de> serde::Deserialize<'de> for BrainToUpdater {
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
+            Session,
             RequestId,
+            Control,
             GetStatus,
             Check,
             Apply,
@@ -1127,7 +1568,9 @@ impl<'de> serde::Deserialize<'de> for BrainToUpdater {
                         E: serde::de::Error,
                     {
                         match value {
+                            "session" => Ok(GeneratedField::Session),
                             "requestId" | "request_id" => Ok(GeneratedField::RequestId),
+                            "control" => Ok(GeneratedField::Control),
                             "getStatus" | "get_status" => Ok(GeneratedField::GetStatus),
                             "check" => Ok(GeneratedField::Check),
                             "apply" => Ok(GeneratedField::Apply),
@@ -1150,15 +1593,29 @@ impl<'de> serde::Deserialize<'de> for BrainToUpdater {
                 where
                     V: serde::de::MapAccess<'de>,
             {
+                let mut session__ = None;
                 let mut request_id__ = None;
                 let mut cmd__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
+                        GeneratedField::Session => {
+                            if session__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("session"));
+                            }
+                            session__ = map_.next_value()?;
+                        }
                         GeneratedField::RequestId => {
                             if request_id__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("requestId"));
                             }
                             request_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Control => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("control"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_updater::Cmd::Control)
+;
                         }
                         GeneratedField::GetStatus => {
                             if cmd__.is_some() {
@@ -1184,6 +1641,7 @@ impl<'de> serde::Deserialize<'de> for BrainToUpdater {
                     }
                 }
                 Ok(BrainToUpdater {
+                    session: session__,
                     request_id: request_id__,
                     cmd: cmd__,
                 })
@@ -1621,12 +2079,27 @@ impl serde::Serialize for FaceToBrain {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
+        if self.session.is_some() {
+            len += 1;
+        }
         if self.cmd.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.FaceToBrain", len)?;
+        if let Some(v) = self.session.as_ref() {
+            struct_ser.serialize_field("session", v)?;
+        }
         if let Some(v) = self.cmd.as_ref() {
             match v {
+                face_to_brain::Cmd::PlaybackEvent(v) => {
+                    struct_ser.serialize_field("playbackEvent", v)?;
+                }
+                face_to_brain::Cmd::ManualMute(v) => {
+                    struct_ser.serialize_field("manualMute", v)?;
+                }
+                face_to_brain::Cmd::Control(v) => {
+                    struct_ser.serialize_field("control", v)?;
+                }
                 face_to_brain::Cmd::VoiceState(v) => {
                     let v = StateToggle::try_from(*v)
                         .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
@@ -1665,6 +2138,12 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
+            "session",
+            "playback_event",
+            "playbackEvent",
+            "manual_mute",
+            "manualMute",
+            "control",
             "voice_state",
             "voiceState",
             "update_action",
@@ -1685,6 +2164,10 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
+            Session,
+            PlaybackEvent,
+            ManualMute,
+            Control,
             VoiceState,
             UpdateAction,
             GetBinanceSettings,
@@ -1714,6 +2197,10 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
                         E: serde::de::Error,
                     {
                         match value {
+                            "session" => Ok(GeneratedField::Session),
+                            "playbackEvent" | "playback_event" => Ok(GeneratedField::PlaybackEvent),
+                            "manualMute" | "manual_mute" => Ok(GeneratedField::ManualMute),
+                            "control" => Ok(GeneratedField::Control),
                             "voiceState" | "voice_state" => Ok(GeneratedField::VoiceState),
                             "updateAction" | "update_action" => Ok(GeneratedField::UpdateAction),
                             "getBinanceSettings" | "get_binance_settings" => Ok(GeneratedField::GetBinanceSettings),
@@ -1741,9 +2228,37 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
                 where
                     V: serde::de::MapAccess<'de>,
             {
+                let mut session__ = None;
                 let mut cmd__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
+                        GeneratedField::Session => {
+                            if session__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("session"));
+                            }
+                            session__ = map_.next_value()?;
+                        }
+                        GeneratedField::PlaybackEvent => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("playbackEvent"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(face_to_brain::Cmd::PlaybackEvent)
+;
+                        }
+                        GeneratedField::ManualMute => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("manualMute"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(face_to_brain::Cmd::ManualMute)
+;
+                        }
+                        GeneratedField::Control => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("control"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(face_to_brain::Cmd::Control)
+;
+                        }
                         GeneratedField::VoiceState => {
                             if cmd__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("voiceState"));
@@ -1802,6 +2317,7 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
                     }
                 }
                 Ok(FaceToBrain {
+                    session: session__,
                     cmd: cmd__,
                 })
             }
@@ -2592,6 +3108,1471 @@ impl<'de> serde::Deserialize<'de> for InvokeResp {
         deserializer.deserialize_struct("hi.ninja.InvokeResp", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for IoCameraLease {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.lease_id.is_some() {
+            len += 1;
+        }
+        if self.width.is_some() {
+            len += 1;
+        }
+        if self.height.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.IoCameraLease", len)?;
+        if let Some(v) = self.lease_id.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("leaseId", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.width.as_ref() {
+            struct_ser.serialize_field("width", v)?;
+        }
+        if let Some(v) = self.height.as_ref() {
+            struct_ser.serialize_field("height", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for IoCameraLease {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "lease_id",
+            "leaseId",
+            "width",
+            "height",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            LeaseId,
+            Width,
+            Height,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "leaseId" | "lease_id" => Ok(GeneratedField::LeaseId),
+                            "width" => Ok(GeneratedField::Width),
+                            "height" => Ok(GeneratedField::Height),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = IoCameraLease;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.IoCameraLease")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<IoCameraLease, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut lease_id__ = None;
+                let mut width__ = None;
+                let mut height__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::LeaseId => {
+                            if lease_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("leaseId"));
+                            }
+                            lease_id__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Width => {
+                            if width__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("width"));
+                            }
+                            width__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Height => {
+                            if height__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("height"));
+                            }
+                            height__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(IoCameraLease {
+                    lease_id: lease_id__,
+                    width: width__,
+                    height: height__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.IoCameraLease", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for IoCameraOpen {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.width.is_some() {
+            len += 1;
+        }
+        if self.height.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.IoCameraOpen", len)?;
+        if let Some(v) = self.width.as_ref() {
+            struct_ser.serialize_field("width", v)?;
+        }
+        if let Some(v) = self.height.as_ref() {
+            struct_ser.serialize_field("height", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for IoCameraOpen {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "width",
+            "height",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Width,
+            Height,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "width" => Ok(GeneratedField::Width),
+                            "height" => Ok(GeneratedField::Height),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = IoCameraOpen;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.IoCameraOpen")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<IoCameraOpen, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut width__ = None;
+                let mut height__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Width => {
+                            if width__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("width"));
+                            }
+                            width__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Height => {
+                            if height__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("height"));
+                            }
+                            height__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(IoCameraOpen {
+                    width: width__,
+                    height: height__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.IoCameraOpen", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for IoCameraRef {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.lease_id.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.IoCameraRef", len)?;
+        if let Some(v) = self.lease_id.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("leaseId", ToString::to_string(&v).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for IoCameraRef {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "lease_id",
+            "leaseId",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            LeaseId,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "leaseId" | "lease_id" => Ok(GeneratedField::LeaseId),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = IoCameraRef;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.IoCameraRef")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<IoCameraRef, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut lease_id__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::LeaseId => {
+                            if lease_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("leaseId"));
+                            }
+                            lease_id__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(IoCameraRef {
+                    lease_id: lease_id__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.IoCameraRef", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for IoCancel {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.request_id.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.IoCancel", len)?;
+        if let Some(v) = self.request_id.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("requestId", ToString::to_string(&v).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for IoCancel {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "request_id",
+            "requestId",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            RequestId,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = IoCancel;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.IoCancel")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<IoCancel, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut request_id__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
+                            }
+                            request_id__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(IoCancel {
+                    request_id: request_id__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.IoCancel", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for IoHearing {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.enabled.is_some() {
+            len += 1;
+        }
+        if self.revision.is_some() {
+            len += 1;
+        }
+        if self.resume_delay_ms.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.IoHearing", len)?;
+        if let Some(v) = self.enabled.as_ref() {
+            struct_ser.serialize_field("enabled", v)?;
+        }
+        if let Some(v) = self.revision.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("revision", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.resume_delay_ms.as_ref() {
+            struct_ser.serialize_field("resumeDelayMs", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for IoHearing {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "enabled",
+            "revision",
+            "resume_delay_ms",
+            "resumeDelayMs",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Enabled,
+            Revision,
+            ResumeDelayMs,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "enabled" => Ok(GeneratedField::Enabled),
+                            "revision" => Ok(GeneratedField::Revision),
+                            "resumeDelayMs" | "resume_delay_ms" => Ok(GeneratedField::ResumeDelayMs),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = IoHearing;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.IoHearing")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<IoHearing, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut enabled__ = None;
+                let mut revision__ = None;
+                let mut resume_delay_ms__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Enabled => {
+                            if enabled__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("enabled"));
+                            }
+                            enabled__ = map_.next_value()?;
+                        }
+                        GeneratedField::Revision => {
+                            if revision__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("revision"));
+                            }
+                            revision__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::ResumeDelayMs => {
+                            if resume_delay_ms__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("resumeDelayMs"));
+                            }
+                            resume_delay_ms__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(IoHearing {
+                    enabled: enabled__,
+                    revision: revision__,
+                    resume_delay_ms: resume_delay_ms__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.IoHearing", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for IoImage {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.jpeg.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.IoImage", len)?;
+        if let Some(v) = self.jpeg.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("jpeg", pbjson::private::base64::encode(&v).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for IoImage {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "jpeg",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Jpeg,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "jpeg" => Ok(GeneratedField::Jpeg),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = IoImage;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.IoImage")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<IoImage, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut jpeg__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Jpeg => {
+                            if jpeg__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("jpeg"));
+                            }
+                            jpeg__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::BytesDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(IoImage {
+                    jpeg: jpeg__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.IoImage", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for IoRecording {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.recording_id.is_some() {
+            len += 1;
+        }
+        if self.state.is_some() {
+            len += 1;
+        }
+        if self.wav.is_some() {
+            len += 1;
+        }
+        if self.sample_rate.is_some() {
+            len += 1;
+        }
+        if self.channels.is_some() {
+            len += 1;
+        }
+        if self.sample_count.is_some() {
+            len += 1;
+        }
+        if self.failure.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.IoRecording", len)?;
+        if let Some(v) = self.recording_id.as_ref() {
+            struct_ser.serialize_field("recordingId", v)?;
+        }
+        if let Some(v) = self.state.as_ref() {
+            let v = io_recording::State::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("state", &v)?;
+        }
+        if let Some(v) = self.wav.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("wav", pbjson::private::base64::encode(&v).as_str())?;
+        }
+        if let Some(v) = self.sample_rate.as_ref() {
+            struct_ser.serialize_field("sampleRate", v)?;
+        }
+        if let Some(v) = self.channels.as_ref() {
+            struct_ser.serialize_field("channels", v)?;
+        }
+        if let Some(v) = self.sample_count.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("sampleCount", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.failure.as_ref() {
+            struct_ser.serialize_field("failure", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for IoRecording {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "recording_id",
+            "recordingId",
+            "state",
+            "wav",
+            "sample_rate",
+            "sampleRate",
+            "channels",
+            "sample_count",
+            "sampleCount",
+            "failure",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            RecordingId,
+            State,
+            Wav,
+            SampleRate,
+            Channels,
+            SampleCount,
+            Failure,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "recordingId" | "recording_id" => Ok(GeneratedField::RecordingId),
+                            "state" => Ok(GeneratedField::State),
+                            "wav" => Ok(GeneratedField::Wav),
+                            "sampleRate" | "sample_rate" => Ok(GeneratedField::SampleRate),
+                            "channels" => Ok(GeneratedField::Channels),
+                            "sampleCount" | "sample_count" => Ok(GeneratedField::SampleCount),
+                            "failure" => Ok(GeneratedField::Failure),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = IoRecording;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.IoRecording")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<IoRecording, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut recording_id__ = None;
+                let mut state__ = None;
+                let mut wav__ = None;
+                let mut sample_rate__ = None;
+                let mut channels__ = None;
+                let mut sample_count__ = None;
+                let mut failure__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::RecordingId => {
+                            if recording_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("recordingId"));
+                            }
+                            recording_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::State => {
+                            if state__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("state"));
+                            }
+                            state__ = map_.next_value::<::std::option::Option<io_recording::State>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::Wav => {
+                            if wav__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("wav"));
+                            }
+                            wav__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::BytesDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::SampleRate => {
+                            if sample_rate__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sampleRate"));
+                            }
+                            sample_rate__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Channels => {
+                            if channels__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("channels"));
+                            }
+                            channels__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::SampleCount => {
+                            if sample_count__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sampleCount"));
+                            }
+                            sample_count__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Failure => {
+                            if failure__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("failure"));
+                            }
+                            failure__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(IoRecording {
+                    recording_id: recording_id__,
+                    state: state__,
+                    wav: wav__,
+                    sample_rate: sample_rate__,
+                    channels: channels__,
+                    sample_count: sample_count__,
+                    failure: failure__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.IoRecording", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for io_recording::State {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unknown => "STATE_UNKNOWN",
+            Self::Started => "STATE_STARTED",
+            Self::Completed => "STATE_COMPLETED",
+            Self::Cancelled => "STATE_CANCELLED",
+            Self::Failed => "STATE_FAILED",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for io_recording::State {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "STATE_UNKNOWN",
+            "STATE_STARTED",
+            "STATE_COMPLETED",
+            "STATE_CANCELLED",
+            "STATE_FAILED",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = io_recording::State;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "STATE_UNKNOWN" => Ok(io_recording::State::Unknown),
+                    "STATE_STARTED" => Ok(io_recording::State::Started),
+                    "STATE_COMPLETED" => Ok(io_recording::State::Completed),
+                    "STATE_CANCELLED" => Ok(io_recording::State::Cancelled),
+                    "STATE_FAILED" => Ok(io_recording::State::Failed),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for IoResponse {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.result.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.IoResponse", len)?;
+        if let Some(v) = self.result.as_ref() {
+            match v {
+                io_response::Result::Ok(v) => {
+                    struct_ser.serialize_field("ok", v)?;
+                }
+                io_response::Result::Status(v) => {
+                    struct_ser.serialize_field("status", v)?;
+                }
+                io_response::Result::Camera(v) => {
+                    struct_ser.serialize_field("camera", v)?;
+                }
+                io_response::Result::Image(v) => {
+                    struct_ser.serialize_field("image", v)?;
+                }
+                io_response::Result::Failure(v) => {
+                    struct_ser.serialize_field("failure", v)?;
+                }
+            }
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for IoResponse {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "ok",
+            "status",
+            "camera",
+            "image",
+            "failure",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Ok,
+            Status,
+            Camera,
+            Image,
+            Failure,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "ok" => Ok(GeneratedField::Ok),
+                            "status" => Ok(GeneratedField::Status),
+                            "camera" => Ok(GeneratedField::Camera),
+                            "image" => Ok(GeneratedField::Image),
+                            "failure" => Ok(GeneratedField::Failure),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = IoResponse;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.IoResponse")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<IoResponse, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut result__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Ok => {
+                            if result__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("ok"));
+                            }
+                            result__ = map_.next_value::<::std::option::Option<_>>()?.map(io_response::Result::Ok)
+;
+                        }
+                        GeneratedField::Status => {
+                            if result__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("status"));
+                            }
+                            result__ = map_.next_value::<::std::option::Option<_>>()?.map(io_response::Result::Status)
+;
+                        }
+                        GeneratedField::Camera => {
+                            if result__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("camera"));
+                            }
+                            result__ = map_.next_value::<::std::option::Option<_>>()?.map(io_response::Result::Camera)
+;
+                        }
+                        GeneratedField::Image => {
+                            if result__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("image"));
+                            }
+                            result__ = map_.next_value::<::std::option::Option<_>>()?.map(io_response::Result::Image)
+;
+                        }
+                        GeneratedField::Failure => {
+                            if result__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("failure"));
+                            }
+                            result__ = map_.next_value::<::std::option::Option<_>>()?.map(io_response::Result::Failure)
+;
+                        }
+                    }
+                }
+                Ok(IoResponse {
+                    result: result__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.IoResponse", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for IoStatus {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.microphone_ready.is_some() {
+            len += 1;
+        }
+        if self.camera_ready.is_some() {
+            len += 1;
+        }
+        if self.hearing_enabled.is_some() {
+            len += 1;
+        }
+        if self.hearing_revision.is_some() {
+            len += 1;
+        }
+        if self.microphone_error.is_some() {
+            len += 1;
+        }
+        if self.camera_error.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.IoStatus", len)?;
+        if let Some(v) = self.microphone_ready.as_ref() {
+            struct_ser.serialize_field("microphoneReady", v)?;
+        }
+        if let Some(v) = self.camera_ready.as_ref() {
+            struct_ser.serialize_field("cameraReady", v)?;
+        }
+        if let Some(v) = self.hearing_enabled.as_ref() {
+            struct_ser.serialize_field("hearingEnabled", v)?;
+        }
+        if let Some(v) = self.hearing_revision.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("hearingRevision", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.microphone_error.as_ref() {
+            struct_ser.serialize_field("microphoneError", v)?;
+        }
+        if let Some(v) = self.camera_error.as_ref() {
+            struct_ser.serialize_field("cameraError", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for IoStatus {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "microphone_ready",
+            "microphoneReady",
+            "camera_ready",
+            "cameraReady",
+            "hearing_enabled",
+            "hearingEnabled",
+            "hearing_revision",
+            "hearingRevision",
+            "microphone_error",
+            "microphoneError",
+            "camera_error",
+            "cameraError",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            MicrophoneReady,
+            CameraReady,
+            HearingEnabled,
+            HearingRevision,
+            MicrophoneError,
+            CameraError,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "microphoneReady" | "microphone_ready" => Ok(GeneratedField::MicrophoneReady),
+                            "cameraReady" | "camera_ready" => Ok(GeneratedField::CameraReady),
+                            "hearingEnabled" | "hearing_enabled" => Ok(GeneratedField::HearingEnabled),
+                            "hearingRevision" | "hearing_revision" => Ok(GeneratedField::HearingRevision),
+                            "microphoneError" | "microphone_error" => Ok(GeneratedField::MicrophoneError),
+                            "cameraError" | "camera_error" => Ok(GeneratedField::CameraError),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = IoStatus;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.IoStatus")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<IoStatus, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut microphone_ready__ = None;
+                let mut camera_ready__ = None;
+                let mut hearing_enabled__ = None;
+                let mut hearing_revision__ = None;
+                let mut microphone_error__ = None;
+                let mut camera_error__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::MicrophoneReady => {
+                            if microphone_ready__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("microphoneReady"));
+                            }
+                            microphone_ready__ = map_.next_value()?;
+                        }
+                        GeneratedField::CameraReady => {
+                            if camera_ready__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("cameraReady"));
+                            }
+                            camera_ready__ = map_.next_value()?;
+                        }
+                        GeneratedField::HearingEnabled => {
+                            if hearing_enabled__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("hearingEnabled"));
+                            }
+                            hearing_enabled__ = map_.next_value()?;
+                        }
+                        GeneratedField::HearingRevision => {
+                            if hearing_revision__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("hearingRevision"));
+                            }
+                            hearing_revision__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::MicrophoneError => {
+                            if microphone_error__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("microphoneError"));
+                            }
+                            microphone_error__ = map_.next_value()?;
+                        }
+                        GeneratedField::CameraError => {
+                            if camera_error__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("cameraError"));
+                            }
+                            camera_error__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(IoStatus {
+                    microphone_ready: microphone_ready__,
+                    camera_ready: camera_ready__,
+                    hearing_enabled: hearing_enabled__,
+                    hearing_revision: hearing_revision__,
+                    microphone_error: microphone_error__,
+                    camera_error: camera_error__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.IoStatus", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for IoToBrain {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.session.is_some() {
+            len += 1;
+        }
+        if self.request_id.is_some() {
+            len += 1;
+        }
+        if self.cmd.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.IoToBrain", len)?;
+        if let Some(v) = self.session.as_ref() {
+            struct_ser.serialize_field("session", v)?;
+        }
+        if let Some(v) = self.request_id.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("requestId", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.cmd.as_ref() {
+            match v {
+                io_to_brain::Cmd::Control(v) => {
+                    struct_ser.serialize_field("control", v)?;
+                }
+                io_to_brain::Cmd::Response(v) => {
+                    struct_ser.serialize_field("response", v)?;
+                }
+                io_to_brain::Cmd::EventStatus(v) => {
+                    struct_ser.serialize_field("eventStatus", v)?;
+                }
+                io_to_brain::Cmd::EventRecording(v) => {
+                    struct_ser.serialize_field("eventRecording", v)?;
+                }
+            }
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for IoToBrain {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "session",
+            "request_id",
+            "requestId",
+            "control",
+            "response",
+            "event_status",
+            "eventStatus",
+            "event_recording",
+            "eventRecording",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Session,
+            RequestId,
+            Control,
+            Response,
+            EventStatus,
+            EventRecording,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "session" => Ok(GeneratedField::Session),
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
+                            "control" => Ok(GeneratedField::Control),
+                            "response" => Ok(GeneratedField::Response),
+                            "eventStatus" | "event_status" => Ok(GeneratedField::EventStatus),
+                            "eventRecording" | "event_recording" => Ok(GeneratedField::EventRecording),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = IoToBrain;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.IoToBrain")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<IoToBrain, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut session__ = None;
+                let mut request_id__ = None;
+                let mut cmd__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Session => {
+                            if session__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("session"));
+                            }
+                            session__ = map_.next_value()?;
+                        }
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
+                            }
+                            request_id__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Control => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("control"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(io_to_brain::Cmd::Control)
+;
+                        }
+                        GeneratedField::Response => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("response"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(io_to_brain::Cmd::Response)
+;
+                        }
+                        GeneratedField::EventStatus => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("eventStatus"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(io_to_brain::Cmd::EventStatus)
+;
+                        }
+                        GeneratedField::EventRecording => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("eventRecording"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(io_to_brain::Cmd::EventRecording)
+;
+                        }
+                    }
+                }
+                Ok(IoToBrain {
+                    session: session__,
+                    request_id: request_id__,
+                    cmd: cmd__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.IoToBrain", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for LuaCtx {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -2869,6 +4850,9 @@ impl serde::Serialize for LuaToBrain {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
+        if self.session.is_some() {
+            len += 1;
+        }
         if self.req_id.is_some() {
             len += 1;
         }
@@ -2876,6 +4860,9 @@ impl serde::Serialize for LuaToBrain {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.LuaToBrain", len)?;
+        if let Some(v) = self.session.as_ref() {
+            struct_ser.serialize_field("session", v)?;
+        }
         if let Some(v) = self.req_id.as_ref() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
@@ -2883,6 +4870,9 @@ impl serde::Serialize for LuaToBrain {
         }
         if let Some(v) = self.cmd.as_ref() {
             match v {
+                lua_to_brain::Cmd::Control(v) => {
+                    struct_ser.serialize_field("control", v)?;
+                }
                 lua_to_brain::Cmd::Open(v) => {
                     struct_ser.serialize_field("open", v)?;
                 }
@@ -2904,8 +4894,10 @@ impl<'de> serde::Deserialize<'de> for LuaToBrain {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
+            "session",
             "req_id",
             "reqId",
+            "control",
             "open",
             "invoke",
             "host_call",
@@ -2914,7 +4906,9 @@ impl<'de> serde::Deserialize<'de> for LuaToBrain {
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
+            Session,
             ReqId,
+            Control,
             Open,
             Invoke,
             HostCall,
@@ -2939,7 +4933,9 @@ impl<'de> serde::Deserialize<'de> for LuaToBrain {
                         E: serde::de::Error,
                     {
                         match value {
+                            "session" => Ok(GeneratedField::Session),
                             "reqId" | "req_id" => Ok(GeneratedField::ReqId),
+                            "control" => Ok(GeneratedField::Control),
                             "open" => Ok(GeneratedField::Open),
                             "invoke" => Ok(GeneratedField::Invoke),
                             "hostCall" | "host_call" => Ok(GeneratedField::HostCall),
@@ -2962,10 +4958,17 @@ impl<'de> serde::Deserialize<'de> for LuaToBrain {
                 where
                     V: serde::de::MapAccess<'de>,
             {
+                let mut session__ = None;
                 let mut req_id__ = None;
                 let mut cmd__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
+                        GeneratedField::Session => {
+                            if session__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("session"));
+                            }
+                            session__ = map_.next_value()?;
+                        }
                         GeneratedField::ReqId => {
                             if req_id__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("reqId"));
@@ -2973,6 +4976,13 @@ impl<'de> serde::Deserialize<'de> for LuaToBrain {
                             req_id__ = 
                                 map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
+                        }
+                        GeneratedField::Control => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("control"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(lua_to_brain::Cmd::Control)
+;
                         }
                         GeneratedField::Open => {
                             if cmd__.is_some() {
@@ -2998,12 +5008,104 @@ impl<'de> serde::Deserialize<'de> for LuaToBrain {
                     }
                 }
                 Ok(LuaToBrain {
+                    session: session__,
                     req_id: req_id__,
                     cmd: cmd__,
                 })
             }
         }
         deserializer.deserialize_struct("hi.ninja.LuaToBrain", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ManualMute {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.muted.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.ManualMute", len)?;
+        if let Some(v) = self.muted.as_ref() {
+            struct_ser.serialize_field("muted", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ManualMute {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "muted",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Muted,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "muted" => Ok(GeneratedField::Muted),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ManualMute;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.ManualMute")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ManualMute, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut muted__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Muted => {
+                            if muted__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("muted"));
+                            }
+                            muted__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ManualMute {
+                    muted: muted__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.ManualMute", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for MasterEvent {
@@ -3114,6 +5216,339 @@ impl<'de> serde::Deserialize<'de> for MasterEvent {
         deserializer.deserialize_struct("hi.ninja.MasterEvent", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for ModuleFailure {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.code.is_some() {
+            len += 1;
+        }
+        if self.message.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.ModuleFailure", len)?;
+        if let Some(v) = self.code.as_ref() {
+            let v = module_failure::Code::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("code", &v)?;
+        }
+        if let Some(v) = self.message.as_ref() {
+            struct_ser.serialize_field("message", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ModuleFailure {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "code",
+            "message",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Code,
+            Message,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "code" => Ok(GeneratedField::Code),
+                            "message" => Ok(GeneratedField::Message),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ModuleFailure;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.ModuleFailure")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ModuleFailure, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut code__ = None;
+                let mut message__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Code => {
+                            if code__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("code"));
+                            }
+                            code__ = map_.next_value::<::std::option::Option<module_failure::Code>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::Message => {
+                            if message__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("message"));
+                            }
+                            message__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ModuleFailure {
+                    code: code__,
+                    message: message__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.ModuleFailure", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for module_failure::Code {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unknown => "CODE_UNKNOWN",
+            Self::Unavailable => "CODE_UNAVAILABLE",
+            Self::NotReady => "CODE_NOT_READY",
+            Self::Device => "CODE_DEVICE",
+            Self::Busy => "CODE_BUSY",
+            Self::Timeout => "CODE_TIMEOUT",
+            Self::Cancelled => "CODE_CANCELLED",
+            Self::StaleSession => "CODE_STALE_SESSION",
+            Self::InvalidArgument => "CODE_INVALID_ARGUMENT",
+            Self::OutcomeUnknown => "CODE_OUTCOME_UNKNOWN",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for module_failure::Code {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "CODE_UNKNOWN",
+            "CODE_UNAVAILABLE",
+            "CODE_NOT_READY",
+            "CODE_DEVICE",
+            "CODE_BUSY",
+            "CODE_TIMEOUT",
+            "CODE_CANCELLED",
+            "CODE_STALE_SESSION",
+            "CODE_INVALID_ARGUMENT",
+            "CODE_OUTCOME_UNKNOWN",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = module_failure::Code;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "CODE_UNKNOWN" => Ok(module_failure::Code::Unknown),
+                    "CODE_UNAVAILABLE" => Ok(module_failure::Code::Unavailable),
+                    "CODE_NOT_READY" => Ok(module_failure::Code::NotReady),
+                    "CODE_DEVICE" => Ok(module_failure::Code::Device),
+                    "CODE_BUSY" => Ok(module_failure::Code::Busy),
+                    "CODE_TIMEOUT" => Ok(module_failure::Code::Timeout),
+                    "CODE_CANCELLED" => Ok(module_failure::Code::Cancelled),
+                    "CODE_STALE_SESSION" => Ok(module_failure::Code::StaleSession),
+                    "CODE_INVALID_ARGUMENT" => Ok(module_failure::Code::InvalidArgument),
+                    "CODE_OUTCOME_UNKNOWN" => Ok(module_failure::Code::OutcomeUnknown),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ModuleHello {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.module.is_some() {
+            len += 1;
+        }
+        if self.module_session_id.is_some() {
+            len += 1;
+        }
+        if self.version.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.ModuleHello", len)?;
+        if let Some(v) = self.module.as_ref() {
+            let v = ModuleId::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("module", &v)?;
+        }
+        if let Some(v) = self.module_session_id.as_ref() {
+            struct_ser.serialize_field("moduleSessionId", v)?;
+        }
+        if let Some(v) = self.version.as_ref() {
+            struct_ser.serialize_field("version", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ModuleHello {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "module",
+            "module_session_id",
+            "moduleSessionId",
+            "version",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Module,
+            ModuleSessionId,
+            Version,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "module" => Ok(GeneratedField::Module),
+                            "moduleSessionId" | "module_session_id" => Ok(GeneratedField::ModuleSessionId),
+                            "version" => Ok(GeneratedField::Version),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ModuleHello;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.ModuleHello")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ModuleHello, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut module__ = None;
+                let mut module_session_id__ = None;
+                let mut version__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Module => {
+                            if module__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("module"));
+                            }
+                            module__ = map_.next_value::<::std::option::Option<ModuleId>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::ModuleSessionId => {
+                            if module_session_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("moduleSessionId"));
+                            }
+                            module_session_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Version => {
+                            if version__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("version"));
+                            }
+                            version__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ModuleHello {
+                    module: module__,
+                    module_session_id: module_session_id__,
+                    version: version__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.ModuleHello", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for ModuleId {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -3124,6 +5559,7 @@ impl serde::Serialize for ModuleId {
             Self::ModuleUnknown => "MODULE_UNKNOWN",
             Self::ModuleUi => "MODULE_UI",
             Self::ModuleLua => "MODULE_LUA",
+            Self::ModuleIo => "MODULE_IO",
             Self::ModuleUpdater => "MODULE_UPDATER",
         };
         serializer.serialize_str(variant)
@@ -3139,6 +5575,7 @@ impl<'de> serde::Deserialize<'de> for ModuleId {
             "MODULE_UNKNOWN",
             "MODULE_UI",
             "MODULE_LUA",
+            "MODULE_IO",
             "MODULE_UPDATER",
         ];
 
@@ -3183,12 +5620,610 @@ impl<'de> serde::Deserialize<'de> for ModuleId {
                     "MODULE_UNKNOWN" => Ok(ModuleId::ModuleUnknown),
                     "MODULE_UI" => Ok(ModuleId::ModuleUi),
                     "MODULE_LUA" => Ok(ModuleId::ModuleLua),
+                    "MODULE_IO" => Ok(ModuleId::ModuleIo),
                     "MODULE_UPDATER" => Ok(ModuleId::ModuleUpdater),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }
         }
         deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ModuleInitialize {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.reason.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.ModuleInitialize", len)?;
+        if let Some(v) = self.reason.as_ref() {
+            let v = module_initialize::Reason::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("reason", &v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ModuleInitialize {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "reason",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Reason,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "reason" => Ok(GeneratedField::Reason),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ModuleInitialize;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.ModuleInitialize")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ModuleInitialize, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut reason__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Reason => {
+                            if reason__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("reason"));
+                            }
+                            reason__ = map_.next_value::<::std::option::Option<module_initialize::Reason>>()?.map(|x| x as i32);
+                        }
+                    }
+                }
+                Ok(ModuleInitialize {
+                    reason: reason__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.ModuleInitialize", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for module_initialize::Reason {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unknown => "REASON_UNKNOWN",
+            Self::Startup => "REASON_STARTUP",
+            Self::Reconnect => "REASON_RECONNECT",
+            Self::Recovery => "REASON_RECOVERY",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for module_initialize::Reason {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "REASON_UNKNOWN",
+            "REASON_STARTUP",
+            "REASON_RECONNECT",
+            "REASON_RECOVERY",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = module_initialize::Reason;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "REASON_UNKNOWN" => Ok(module_initialize::Reason::Unknown),
+                    "REASON_STARTUP" => Ok(module_initialize::Reason::Startup),
+                    "REASON_RECONNECT" => Ok(module_initialize::Reason::Reconnect),
+                    "REASON_RECOVERY" => Ok(module_initialize::Reason::Recovery),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ModuleSession {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.brain_session_id.is_some() {
+            len += 1;
+        }
+        if self.module_session_id.is_some() {
+            len += 1;
+        }
+        if self.generation.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.ModuleSession", len)?;
+        if let Some(v) = self.brain_session_id.as_ref() {
+            struct_ser.serialize_field("brainSessionId", v)?;
+        }
+        if let Some(v) = self.module_session_id.as_ref() {
+            struct_ser.serialize_field("moduleSessionId", v)?;
+        }
+        if let Some(v) = self.generation.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("generation", ToString::to_string(&v).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ModuleSession {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "brain_session_id",
+            "brainSessionId",
+            "module_session_id",
+            "moduleSessionId",
+            "generation",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            BrainSessionId,
+            ModuleSessionId,
+            Generation,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "brainSessionId" | "brain_session_id" => Ok(GeneratedField::BrainSessionId),
+                            "moduleSessionId" | "module_session_id" => Ok(GeneratedField::ModuleSessionId),
+                            "generation" => Ok(GeneratedField::Generation),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ModuleSession;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.ModuleSession")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ModuleSession, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut brain_session_id__ = None;
+                let mut module_session_id__ = None;
+                let mut generation__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::BrainSessionId => {
+                            if brain_session_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("brainSessionId"));
+                            }
+                            brain_session_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::ModuleSessionId => {
+                            if module_session_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("moduleSessionId"));
+                            }
+                            module_session_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Generation => {
+                            if generation__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("generation"));
+                            }
+                            generation__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(ModuleSession {
+                    brain_session_id: brain_session_id__,
+                    module_session_id: module_session_id__,
+                    generation: generation__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.ModuleSession", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ModuleState {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.phase.is_some() {
+            len += 1;
+        }
+        if self.error.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.ModuleState", len)?;
+        if let Some(v) = self.phase.as_ref() {
+            let v = module_state::Phase::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("phase", &v)?;
+        }
+        if let Some(v) = self.error.as_ref() {
+            struct_ser.serialize_field("error", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ModuleState {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "phase",
+            "error",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Phase,
+            Error,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "phase" => Ok(GeneratedField::Phase),
+                            "error" => Ok(GeneratedField::Error),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ModuleState;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.ModuleState")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ModuleState, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut phase__ = None;
+                let mut error__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Phase => {
+                            if phase__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("phase"));
+                            }
+                            phase__ = map_.next_value::<::std::option::Option<module_state::Phase>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::Error => {
+                            if error__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("error"));
+                            }
+                            error__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ModuleState {
+                    phase: phase__,
+                    error: error__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.ModuleState", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for module_state::Phase {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unknown => "PHASE_UNKNOWN",
+            Self::Connected => "PHASE_CONNECTED",
+            Self::Initializing => "PHASE_INITIALIZING",
+            Self::Ready => "PHASE_READY",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for module_state::Phase {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "PHASE_UNKNOWN",
+            "PHASE_CONNECTED",
+            "PHASE_INITIALIZING",
+            "PHASE_READY",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = module_state::Phase;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "PHASE_UNKNOWN" => Ok(module_state::Phase::Unknown),
+                    "PHASE_CONNECTED" => Ok(module_state::Phase::Connected),
+                    "PHASE_INITIALIZING" => Ok(module_state::Phase::Initializing),
+                    "PHASE_READY" => Ok(module_state::Phase::Ready),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ModuleToBrainControl {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.cmd.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.ModuleToBrainControl", len)?;
+        if let Some(v) = self.cmd.as_ref() {
+            match v {
+                module_to_brain_control::Cmd::Hello(v) => {
+                    struct_ser.serialize_field("hello", v)?;
+                }
+                module_to_brain_control::Cmd::State(v) => {
+                    struct_ser.serialize_field("state", v)?;
+                }
+            }
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ModuleToBrainControl {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "hello",
+            "state",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Hello,
+            State,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "hello" => Ok(GeneratedField::Hello),
+                            "state" => Ok(GeneratedField::State),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ModuleToBrainControl;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.ModuleToBrainControl")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ModuleToBrainControl, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut cmd__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Hello => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("hello"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(module_to_brain_control::Cmd::Hello)
+;
+                        }
+                        GeneratedField::State => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("state"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(module_to_brain_control::Cmd::State)
+;
+                        }
+                    }
+                }
+                Ok(ModuleToBrainControl {
+                    cmd: cmd__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.ModuleToBrainControl", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for OpenReq {
@@ -3460,6 +6495,340 @@ impl<'de> serde::Deserialize<'de> for OpenResp {
             }
         }
         deserializer.deserialize_struct("hi.ninja.OpenResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for PlaybackEvent {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.playback_id.is_some() {
+            len += 1;
+        }
+        if self.state.is_some() {
+            len += 1;
+        }
+        if self.error.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.PlaybackEvent", len)?;
+        if let Some(v) = self.playback_id.as_ref() {
+            struct_ser.serialize_field("playbackId", v)?;
+        }
+        if let Some(v) = self.state.as_ref() {
+            let v = playback_event::State::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("state", &v)?;
+        }
+        if let Some(v) = self.error.as_ref() {
+            struct_ser.serialize_field("error", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for PlaybackEvent {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "playback_id",
+            "playbackId",
+            "state",
+            "error",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            PlaybackId,
+            State,
+            Error,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "playbackId" | "playback_id" => Ok(GeneratedField::PlaybackId),
+                            "state" => Ok(GeneratedField::State),
+                            "error" => Ok(GeneratedField::Error),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = PlaybackEvent;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.PlaybackEvent")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<PlaybackEvent, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut playback_id__ = None;
+                let mut state__ = None;
+                let mut error__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::PlaybackId => {
+                            if playback_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("playbackId"));
+                            }
+                            playback_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::State => {
+                            if state__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("state"));
+                            }
+                            state__ = map_.next_value::<::std::option::Option<playback_event::State>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::Error => {
+                            if error__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("error"));
+                            }
+                            error__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(PlaybackEvent {
+                    playback_id: playback_id__,
+                    state: state__,
+                    error: error__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.PlaybackEvent", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for playback_event::State {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unknown => "STATE_UNKNOWN",
+            Self::Requested => "STATE_REQUESTED",
+            Self::Started => "STATE_STARTED",
+            Self::Ended => "STATE_ENDED",
+            Self::Failed => "STATE_FAILED",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for playback_event::State {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "STATE_UNKNOWN",
+            "STATE_REQUESTED",
+            "STATE_STARTED",
+            "STATE_ENDED",
+            "STATE_FAILED",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = playback_event::State;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "STATE_UNKNOWN" => Ok(playback_event::State::Unknown),
+                    "STATE_REQUESTED" => Ok(playback_event::State::Requested),
+                    "STATE_STARTED" => Ok(playback_event::State::Started),
+                    "STATE_ENDED" => Ok(playback_event::State::Ended),
+                    "STATE_FAILED" => Ok(playback_event::State::Failed),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for PlaybackPermit {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.playback_id.is_some() {
+            len += 1;
+        }
+        if self.allowed.is_some() {
+            len += 1;
+        }
+        if self.error.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.PlaybackPermit", len)?;
+        if let Some(v) = self.playback_id.as_ref() {
+            struct_ser.serialize_field("playbackId", v)?;
+        }
+        if let Some(v) = self.allowed.as_ref() {
+            struct_ser.serialize_field("allowed", v)?;
+        }
+        if let Some(v) = self.error.as_ref() {
+            struct_ser.serialize_field("error", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for PlaybackPermit {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "playback_id",
+            "playbackId",
+            "allowed",
+            "error",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            PlaybackId,
+            Allowed,
+            Error,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "playbackId" | "playback_id" => Ok(GeneratedField::PlaybackId),
+                            "allowed" => Ok(GeneratedField::Allowed),
+                            "error" => Ok(GeneratedField::Error),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = PlaybackPermit;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.PlaybackPermit")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<PlaybackPermit, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut playback_id__ = None;
+                let mut allowed__ = None;
+                let mut error__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::PlaybackId => {
+                            if playback_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("playbackId"));
+                            }
+                            playback_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Allowed => {
+                            if allowed__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("allowed"));
+                            }
+                            allowed__ = map_.next_value()?;
+                        }
+                        GeneratedField::Error => {
+                            if error__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("error"));
+                            }
+                            error__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(PlaybackPermit {
+                    playback_id: playback_id__,
+                    allowed: allowed__,
+                    error: error__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.PlaybackPermit", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for PluginProgress {
@@ -5055,12 +8424,21 @@ impl serde::Serialize for UpdaterToBrain {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
+        if self.session.is_some() {
+            len += 1;
+        }
         if self.cmd.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.UpdaterToBrain", len)?;
+        if let Some(v) = self.session.as_ref() {
+            struct_ser.serialize_field("session", v)?;
+        }
         if let Some(v) = self.cmd.as_ref() {
             match v {
+                updater_to_brain::Cmd::Control(v) => {
+                    struct_ser.serialize_field("control", v)?;
+                }
                 updater_to_brain::Cmd::Resp(v) => {
                     struct_ser.serialize_field("resp", v)?;
                 }
@@ -5079,6 +8457,8 @@ impl<'de> serde::Deserialize<'de> for UpdaterToBrain {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
+            "session",
+            "control",
             "resp",
             "event_status",
             "eventStatus",
@@ -5086,6 +8466,8 @@ impl<'de> serde::Deserialize<'de> for UpdaterToBrain {
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
+            Session,
+            Control,
             Resp,
             EventStatus,
         }
@@ -5109,6 +8491,8 @@ impl<'de> serde::Deserialize<'de> for UpdaterToBrain {
                         E: serde::de::Error,
                     {
                         match value {
+                            "session" => Ok(GeneratedField::Session),
+                            "control" => Ok(GeneratedField::Control),
                             "resp" => Ok(GeneratedField::Resp),
                             "eventStatus" | "event_status" => Ok(GeneratedField::EventStatus),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
@@ -5130,9 +8514,23 @@ impl<'de> serde::Deserialize<'de> for UpdaterToBrain {
                 where
                     V: serde::de::MapAccess<'de>,
             {
+                let mut session__ = None;
                 let mut cmd__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
+                        GeneratedField::Session => {
+                            if session__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("session"));
+                            }
+                            session__ = map_.next_value()?;
+                        }
+                        GeneratedField::Control => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("control"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(updater_to_brain::Cmd::Control)
+;
+                        }
                         GeneratedField::Resp => {
                             if cmd__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("resp"));
@@ -5150,6 +8548,7 @@ impl<'de> serde::Deserialize<'de> for UpdaterToBrain {
                     }
                 }
                 Ok(UpdaterToBrain {
+                    session: session__,
                     cmd: cmd__,
                 })
             }

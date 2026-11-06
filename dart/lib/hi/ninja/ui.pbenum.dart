@@ -125,5 +125,33 @@ class UpdateAction_Action extends $pb.ProtobufEnum {
   const UpdateAction_Action._(super.value, super.name);
 }
 
+class PlaybackEvent_State extends $pb.ProtobufEnum {
+  static const PlaybackEvent_State STATE_UNKNOWN =
+      PlaybackEvent_State._(0, _omitEnumNames ? '' : 'STATE_UNKNOWN');
+  static const PlaybackEvent_State STATE_REQUESTED =
+      PlaybackEvent_State._(1, _omitEnumNames ? '' : 'STATE_REQUESTED');
+  static const PlaybackEvent_State STATE_STARTED =
+      PlaybackEvent_State._(2, _omitEnumNames ? '' : 'STATE_STARTED');
+  static const PlaybackEvent_State STATE_ENDED =
+      PlaybackEvent_State._(3, _omitEnumNames ? '' : 'STATE_ENDED');
+  static const PlaybackEvent_State STATE_FAILED =
+      PlaybackEvent_State._(4, _omitEnumNames ? '' : 'STATE_FAILED');
+
+  static const $core.List<PlaybackEvent_State> values = <PlaybackEvent_State>[
+    STATE_UNKNOWN,
+    STATE_REQUESTED,
+    STATE_STARTED,
+    STATE_ENDED,
+    STATE_FAILED,
+  ];
+
+  static final $core.List<PlaybackEvent_State?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 4);
+  static PlaybackEvent_State? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const PlaybackEvent_State._(super.value, super.name);
+}
+
 const $core.bool _omitEnumNames =
     $core.bool.fromEnvironment('protobuf.omit_enum_names');
