@@ -215,6 +215,15 @@ const BrainToFace$json = {
       '10': 'session'
     },
     {
+      '1': 'manual_mute',
+      '3': 32,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.ManualMute',
+      '9': 0,
+      '10': 'manualMute'
+    },
+    {
       '1': 'playback_permit',
       '3': 31,
       '4': 1,
@@ -493,40 +502,41 @@ const BrainToFace$json = {
 /// Descriptor for `BrainToFace`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List brainToFaceDescriptor = $convert.base64Decode(
     'CgtCcmFpblRvRmFjZRIxCgdzZXNzaW9uGGMgASgLMhcuaGkubmluamEuTW9kdWxlU2Vzc2lvbl'
-    'IHc2Vzc2lvbhJDCg9wbGF5YmFja19wZXJtaXQYHyABKAsyGC5oaS5uaW5qYS5QbGF5YmFja1Bl'
-    'cm1pdEgAUg5wbGF5YmFja1Blcm1pdBI6Cgdjb250cm9sGGQgASgLMh4uaGkubmluamEuQnJhaW'
-    '5Ub01vZHVsZUNvbnRyb2xIAFIHY29udHJvbBI0Cgppbml0X3JvYm90GAEgASgLMhMuaGkubmlu'
-    'amEuUm9ib3RJbml0SABSCWluaXRSb2JvdBI4CgtzaG93X2xpc3RlbhgCIAEoDjIVLmhpLm5pbm'
-    'phLlN0YXRlVG9nZ2xlSABSCnNob3dMaXN0ZW4SNgoMc2hvd19lbW90aW9uGAMgASgOMhEuaGku'
-    'bmluamEuRW1vdGlvbkgAUgtzaG93RW1vdGlvbhI6Cg9zaG93X2ltX3JlcXVlc3QYBCABKAsyEC'
-    '5oaS5jbHViLk1lc3NhZ2VIAFINc2hvd0ltUmVxdWVzdBI5Cg1zaG93X2ltX3JlcGx5GAUgASgL'
-    'MhMuaGkubmluamEuVGV4dFJlcGx5SABSC3Nob3dJbVJlcGx5Ej8KEHNob3dfdm9pY2VfcmVwbH'
-    'kYBiABKAsyEy5oaS5uaW5qYS5UZXh0UmVwbHlIAFIOc2hvd1ZvaWNlUmVwbHkSOgoMc2hvd19x'
-    'cl9jb2RlGAcgASgLMhYuZ29vZ2xlLnByb3RvYnVmLkVtcHR5SABSCnNob3dRckNvZGUSLQoLZX'
-    'ZlbnRfcm9ib3QYCCABKAsyCi5oaS5FbnRpdHlIAFIKZXZlbnRSb2JvdBI6CgxldmVudF9tYXN0'
-    'ZXIYCSABKAsyFS5oaS5uaW5qYS5NYXN0ZXJFdmVudEgAUgtldmVudE1hc3RlchI5Cg1ldmVudF'
-    '9tZW1iZXJzGAogASgLMhIuaGkuY2x1Yi5Hcm91cEluZm9IAFIMZXZlbnRNZW1iZXJzEjYKDGV2'
-    'ZW50X3BsdWdpbhgLIAEoCzIRLmhpLmFpLlBsdWdpblZpZXdIAFILZXZlbnRQbHVnaW4STgoVZX'
-    'ZlbnRfcGx1Z2luX3Byb2dyZXNzGBQgASgLMhguaGkubmluamEuUGx1Z2luUHJvZ3Jlc3NIAFIT'
-    'ZXZlbnRQbHVnaW5Qcm9ncmVzcxJCChFldmVudF90cmFuc2FjdGlvbhgMIAEoCzITLmhpLmRpZC'
-    '5UcmFuc2FjdGlvbkgAUhBldmVudFRyYW5zYWN0aW9uEjQKCnBsYXlfYXVkaW8YDSABKAsyEy5o'
-    'aS5uaW5qYS5BdWRpb1BsYXlIAFIJcGxheUF1ZGlvEjsKDWV2ZW50X2ZyaWVuZHMYDyABKAsyFC'
-    '5oaS5uaW5qYS5GcmllbmRMaXN0SABSDGV2ZW50RnJpZW5kcxI8ChNldmVudF9mcmllbmRfZGVs'
-    'ZXRlGA4gASgLMgouaGkuRW50aXR5SABSEWV2ZW50RnJpZW5kRGVsZXRlEjYKEGV2ZW50X2ZyaW'
-    'VuZF9hZGQYECABKAsyCi5oaS5FbnRpdHlIAFIOZXZlbnRGcmllbmRBZGQSPAoMbWVtYmVyc19p'
-    'bml0GBEgASgLMhcuaGkubmluamEuR3JvdXBJbmZvTGlzdEgAUgttZW1iZXJzSW5pdBI6Cgxldm'
-    'VudF9zdGF0dXMYEiABKAsyFS5oaS5uaW5qYS5TdGF0dXNFdmVudEgAUgtldmVudFN0YXR1cxI7'
-    'CgxldmVudF91cGRhdGUYEyABKAsyFi5oaS5uaW5qYS5VcGRhdGVTdGF0dXNIAFILZXZlbnRVcG'
-    'RhdGUSUQoWZXZlbnRfYmluYW5jZV9zZXR0aW5ncxgVIAEoCzIZLmhpLm5pbmphLkJpbmFuY2VT'
-    'ZXR0aW5nc0gAUhRldmVudEJpbmFuY2VTZXR0aW5ncxJCCg5iaW5hbmNlX3Jlc3VsdBgWIAEoCz'
-    'IZLmhpLmJpbmFuY2UuQmluYW5jZVJlc3VsdEgAUg1iaW5hbmNlUmVzdWx0EioKCHNob3dfdGlw'
-    'GBggASgLMg0uaGkubmluamEuVGlwSABSB3Nob3dUaXASKwoHc2hvd19xchgZIAEoCzIQLmhpLm'
-    '5pbmphLlFyQ2FyZEgAUgZzaG93UXISQAoOYmluYW5jZV9vZmZlcnMYGiABKAsyFy5oaS5uaW5q'
-    'YS5CaW5hbmNlT2ZmZXJzSABSDWJpbmFuY2VPZmZlcnMSVQoWZXZlbnRfcHJvZHVjdF91cGxvYW'
-    'RlZBgdIAEoCzIdLmhpLmNsdWIuUHJvZHVjdEludmVudG9yeUl0ZW1IAFIUZXZlbnRQcm9kdWN0'
-    'VXBsb2FkZWQSUAoUZXZlbnRfcHJvZHVjdF9saXN0ZWQYHiABKAsyHC5oaS5jbHViLlByb2R1Y3'
-    'RBbm5vdW5jZW1lbnRIAFISZXZlbnRQcm9kdWN0TGlzdGVkEjcKC3ZpZGVvX3JlYWR5GBsgASgL'
-    'MhQuaGkubmluamEuVmlkZW9SZWFkeUgAUgp2aWRlb1JlYWR5QgUKA2NtZA==');
+    'IHc2Vzc2lvbhI3CgttYW51YWxfbXV0ZRggIAEoCzIULmhpLm5pbmphLk1hbnVhbE11dGVIAFIK'
+    'bWFudWFsTXV0ZRJDCg9wbGF5YmFja19wZXJtaXQYHyABKAsyGC5oaS5uaW5qYS5QbGF5YmFja1'
+    'Blcm1pdEgAUg5wbGF5YmFja1Blcm1pdBI6Cgdjb250cm9sGGQgASgLMh4uaGkubmluamEuQnJh'
+    'aW5Ub01vZHVsZUNvbnRyb2xIAFIHY29udHJvbBI0Cgppbml0X3JvYm90GAEgASgLMhMuaGkubm'
+    'luamEuUm9ib3RJbml0SABSCWluaXRSb2JvdBI4CgtzaG93X2xpc3RlbhgCIAEoDjIVLmhpLm5p'
+    'bmphLlN0YXRlVG9nZ2xlSABSCnNob3dMaXN0ZW4SNgoMc2hvd19lbW90aW9uGAMgASgOMhEuaG'
+    'kubmluamEuRW1vdGlvbkgAUgtzaG93RW1vdGlvbhI6Cg9zaG93X2ltX3JlcXVlc3QYBCABKAsy'
+    'EC5oaS5jbHViLk1lc3NhZ2VIAFINc2hvd0ltUmVxdWVzdBI5Cg1zaG93X2ltX3JlcGx5GAUgAS'
+    'gLMhMuaGkubmluamEuVGV4dFJlcGx5SABSC3Nob3dJbVJlcGx5Ej8KEHNob3dfdm9pY2VfcmVw'
+    'bHkYBiABKAsyEy5oaS5uaW5qYS5UZXh0UmVwbHlIAFIOc2hvd1ZvaWNlUmVwbHkSOgoMc2hvd1'
+    '9xcl9jb2RlGAcgASgLMhYuZ29vZ2xlLnByb3RvYnVmLkVtcHR5SABSCnNob3dRckNvZGUSLQoL'
+    'ZXZlbnRfcm9ib3QYCCABKAsyCi5oaS5FbnRpdHlIAFIKZXZlbnRSb2JvdBI6CgxldmVudF9tYX'
+    'N0ZXIYCSABKAsyFS5oaS5uaW5qYS5NYXN0ZXJFdmVudEgAUgtldmVudE1hc3RlchI5Cg1ldmVu'
+    'dF9tZW1iZXJzGAogASgLMhIuaGkuY2x1Yi5Hcm91cEluZm9IAFIMZXZlbnRNZW1iZXJzEjYKDG'
+    'V2ZW50X3BsdWdpbhgLIAEoCzIRLmhpLmFpLlBsdWdpblZpZXdIAFILZXZlbnRQbHVnaW4STgoV'
+    'ZXZlbnRfcGx1Z2luX3Byb2dyZXNzGBQgASgLMhguaGkubmluamEuUGx1Z2luUHJvZ3Jlc3NIAF'
+    'ITZXZlbnRQbHVnaW5Qcm9ncmVzcxJCChFldmVudF90cmFuc2FjdGlvbhgMIAEoCzITLmhpLmRp'
+    'ZC5UcmFuc2FjdGlvbkgAUhBldmVudFRyYW5zYWN0aW9uEjQKCnBsYXlfYXVkaW8YDSABKAsyEy'
+    '5oaS5uaW5qYS5BdWRpb1BsYXlIAFIJcGxheUF1ZGlvEjsKDWV2ZW50X2ZyaWVuZHMYDyABKAsy'
+    'FC5oaS5uaW5qYS5GcmllbmRMaXN0SABSDGV2ZW50RnJpZW5kcxI8ChNldmVudF9mcmllbmRfZG'
+    'VsZXRlGA4gASgLMgouaGkuRW50aXR5SABSEWV2ZW50RnJpZW5kRGVsZXRlEjYKEGV2ZW50X2Zy'
+    'aWVuZF9hZGQYECABKAsyCi5oaS5FbnRpdHlIAFIOZXZlbnRGcmllbmRBZGQSPAoMbWVtYmVyc1'
+    '9pbml0GBEgASgLMhcuaGkubmluamEuR3JvdXBJbmZvTGlzdEgAUgttZW1iZXJzSW5pdBI6Cgxl'
+    'dmVudF9zdGF0dXMYEiABKAsyFS5oaS5uaW5qYS5TdGF0dXNFdmVudEgAUgtldmVudFN0YXR1cx'
+    'I7CgxldmVudF91cGRhdGUYEyABKAsyFi5oaS5uaW5qYS5VcGRhdGVTdGF0dXNIAFILZXZlbnRV'
+    'cGRhdGUSUQoWZXZlbnRfYmluYW5jZV9zZXR0aW5ncxgVIAEoCzIZLmhpLm5pbmphLkJpbmFuY2'
+    'VTZXR0aW5nc0gAUhRldmVudEJpbmFuY2VTZXR0aW5ncxJCCg5iaW5hbmNlX3Jlc3VsdBgWIAEo'
+    'CzIZLmhpLmJpbmFuY2UuQmluYW5jZVJlc3VsdEgAUg1iaW5hbmNlUmVzdWx0EioKCHNob3dfdG'
+    'lwGBggASgLMg0uaGkubmluamEuVGlwSABSB3Nob3dUaXASKwoHc2hvd19xchgZIAEoCzIQLmhp'
+    'Lm5pbmphLlFyQ2FyZEgAUgZzaG93UXISQAoOYmluYW5jZV9vZmZlcnMYGiABKAsyFy5oaS5uaW'
+    '5qYS5CaW5hbmNlT2ZmZXJzSABSDWJpbmFuY2VPZmZlcnMSVQoWZXZlbnRfcHJvZHVjdF91cGxv'
+    'YWRlZBgdIAEoCzIdLmhpLmNsdWIuUHJvZHVjdEludmVudG9yeUl0ZW1IAFIUZXZlbnRQcm9kdW'
+    'N0VXBsb2FkZWQSUAoUZXZlbnRfcHJvZHVjdF9saXN0ZWQYHiABKAsyHC5oaS5jbHViLlByb2R1'
+    'Y3RBbm5vdW5jZW1lbnRIAFISZXZlbnRQcm9kdWN0TGlzdGVkEjcKC3ZpZGVvX3JlYWR5GBsgAS'
+    'gLMhQuaGkubmluamEuVmlkZW9SZWFkeUgAUgp2aWRlb1JlYWR5QgUKA2NtZA==');
 
 @$core.Deprecated('Use videoRequestDescriptor instead')
 const VideoRequest$json = {

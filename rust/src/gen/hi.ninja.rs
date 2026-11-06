@@ -1090,7 +1090,7 @@ pub struct BrainToFace {
     pub session: ::core::option::Option<ModuleSession>,
     #[prost(
         oneof = "brain_to_face::Cmd",
-        tags = "31, 100, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21, 22, 24, 25, 26, 29, 30, 27"
+        tags = "32, 31, 100, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21, 22, 24, 25, 26, 29, 30, 27"
     )]
     pub cmd: ::core::option::Option<brain_to_face::Cmd>,
 }
@@ -1098,6 +1098,9 @@ pub struct BrainToFace {
 pub mod brain_to_face {
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Cmd {
+        /// brain持久设定，恢复初始化时重推
+        #[prost(message, tag = "32")]
+        ManualMute(super::ManualMute),
         #[prost(message, tag = "31")]
         PlaybackPermit(super::PlaybackPermit),
         #[prost(message, tag = "100")]

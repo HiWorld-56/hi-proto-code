@@ -740,6 +740,7 @@ type BrainToFace struct {
 	Session *ModuleSession         `protobuf:"bytes,99,opt,name=session,proto3" json:"session,omitempty"` // Hello前不传；业务消息必须匹配当前接管会话
 	// Types that are valid to be assigned to Cmd:
 	//
+	//	*BrainToFace_ManualMute
 	//	*BrainToFace_PlaybackPermit
 	//	*BrainToFace_Control
 	//	*BrainToFace_InitRobot
@@ -815,6 +816,15 @@ func (x *BrainToFace) GetSession() *ModuleSession {
 func (x *BrainToFace) GetCmd() isBrainToFace_Cmd {
 	if x != nil {
 		return x.Cmd
+	}
+	return nil
+}
+
+func (x *BrainToFace) GetManualMute() *ManualMute {
+	if x != nil {
+		if x, ok := x.Cmd.(*BrainToFace_ManualMute); ok {
+			return x.ManualMute
+		}
 	}
 	return nil
 }
@@ -1093,6 +1103,10 @@ type isBrainToFace_Cmd interface {
 	isBrainToFace_Cmd()
 }
 
+type BrainToFace_ManualMute struct {
+	ManualMute *ManualMute `protobuf:"bytes,32,opt,name=manual_mute,json=manualMute,proto3,oneof"` // brain持久设定，恢复初始化时重推
+}
+
 type BrainToFace_PlaybackPermit struct {
 	PlaybackPermit *PlaybackPermit `protobuf:"bytes,31,opt,name=playback_permit,json=playbackPermit,proto3,oneof"`
 }
@@ -1235,6 +1249,8 @@ type BrainToFace_EventProductListed struct {
 type BrainToFace_VideoReady struct {
 	VideoReady *VideoReady `protobuf:"bytes,27,opt,name=video_ready,json=videoReady,proto3,oneof"`
 }
+
+func (*BrainToFace_ManualMute) isBrainToFace_Cmd() {}
 
 func (*BrainToFace_PlaybackPermit) isBrainToFace_Cmd() {}
 
@@ -2238,9 +2254,11 @@ const file_hi_ninja_ui_proto_rawDesc = "" +
 	"\x03_opB\x0e\n" +
 	"\f_params_jsonB\f\n" +
 	"\n" +
-	"_auto_tpsl\"\x8a\x0f\n" +
+	"_auto_tpsl\"\xc3\x0f\n" +
 	"\vBrainToFace\x121\n" +
-	"\asession\x18c \x01(\v2\x17.hi.ninja.ModuleSessionR\asession\x12C\n" +
+	"\asession\x18c \x01(\v2\x17.hi.ninja.ModuleSessionR\asession\x127\n" +
+	"\vmanual_mute\x18  \x01(\v2\x14.hi.ninja.ManualMuteH\x00R\n" +
+	"manualMute\x12C\n" +
 	"\x0fplayback_permit\x18\x1f \x01(\v2\x18.hi.ninja.PlaybackPermitH\x00R\x0eplaybackPermit\x12:\n" +
 	"\acontrol\x18d \x01(\v2\x1e.hi.ninja.BrainToModuleControlH\x00R\acontrol\x124\n" +
 	"\n" +
@@ -2467,57 +2485,58 @@ var file_hi_ninja_ui_proto_depIdxs = []int32{
 	27, // 3: hi.ninja.GroupInfoList.list:type_name -> hi.club.GroupInfo
 	26, // 4: hi.ninja.MasterEvent.master:type_name -> hi.Entity
 	28, // 5: hi.ninja.BrainToFace.session:type_name -> hi.ninja.ModuleSession
-	24, // 6: hi.ninja.BrainToFace.playback_permit:type_name -> hi.ninja.PlaybackPermit
-	29, // 7: hi.ninja.BrainToFace.control:type_name -> hi.ninja.BrainToModuleControl
-	5,  // 8: hi.ninja.BrainToFace.init_robot:type_name -> hi.ninja.RobotInit
-	0,  // 9: hi.ninja.BrainToFace.show_listen:type_name -> hi.ninja.StateToggle
-	1,  // 10: hi.ninja.BrainToFace.show_emotion:type_name -> hi.ninja.Emotion
-	30, // 11: hi.ninja.BrainToFace.show_im_request:type_name -> hi.club.Message
-	9,  // 12: hi.ninja.BrainToFace.show_im_reply:type_name -> hi.ninja.TextReply
-	9,  // 13: hi.ninja.BrainToFace.show_voice_reply:type_name -> hi.ninja.TextReply
-	31, // 14: hi.ninja.BrainToFace.show_qr_code:type_name -> google.protobuf.Empty
-	26, // 15: hi.ninja.BrainToFace.event_robot:type_name -> hi.Entity
-	8,  // 16: hi.ninja.BrainToFace.event_master:type_name -> hi.ninja.MasterEvent
-	27, // 17: hi.ninja.BrainToFace.event_members:type_name -> hi.club.GroupInfo
-	32, // 18: hi.ninja.BrainToFace.event_plugin:type_name -> hi.ai.PluginView
-	21, // 19: hi.ninja.BrainToFace.event_plugin_progress:type_name -> hi.ninja.PluginProgress
-	33, // 20: hi.ninja.BrainToFace.event_transaction:type_name -> hi.did.Transaction
-	10, // 21: hi.ninja.BrainToFace.play_audio:type_name -> hi.ninja.AudioPlay
-	6,  // 22: hi.ninja.BrainToFace.event_friends:type_name -> hi.ninja.FriendList
-	26, // 23: hi.ninja.BrainToFace.event_friend_delete:type_name -> hi.Entity
-	26, // 24: hi.ninja.BrainToFace.event_friend_add:type_name -> hi.Entity
-	7,  // 25: hi.ninja.BrainToFace.members_init:type_name -> hi.ninja.GroupInfoList
-	18, // 26: hi.ninja.BrainToFace.event_status:type_name -> hi.ninja.StatusEvent
-	34, // 27: hi.ninja.BrainToFace.event_update:type_name -> hi.ninja.UpdateStatus
-	11, // 28: hi.ninja.BrainToFace.event_binance_settings:type_name -> hi.ninja.BinanceSettings
-	35, // 29: hi.ninja.BrainToFace.binance_result:type_name -> hi.binance.BinanceResult
-	17, // 30: hi.ninja.BrainToFace.show_tip:type_name -> hi.ninja.Tip
-	16, // 31: hi.ninja.BrainToFace.show_qr:type_name -> hi.ninja.QrCard
-	20, // 32: hi.ninja.BrainToFace.binance_offers:type_name -> hi.ninja.BinanceOffers
-	36, // 33: hi.ninja.BrainToFace.event_product_uploaded:type_name -> hi.club.ProductInventoryItem
-	37, // 34: hi.ninja.BrainToFace.event_product_listed:type_name -> hi.club.ProductAnnouncement
-	15, // 35: hi.ninja.BrainToFace.video_ready:type_name -> hi.ninja.VideoReady
-	28, // 36: hi.ninja.FaceToBrain.session:type_name -> hi.ninja.ModuleSession
-	23, // 37: hi.ninja.FaceToBrain.playback_event:type_name -> hi.ninja.PlaybackEvent
-	25, // 38: hi.ninja.FaceToBrain.manual_mute:type_name -> hi.ninja.ManualMute
-	38, // 39: hi.ninja.FaceToBrain.control:type_name -> hi.ninja.ModuleToBrainControl
-	0,  // 40: hi.ninja.FaceToBrain.voice_state:type_name -> hi.ninja.StateToggle
-	22, // 41: hi.ninja.FaceToBrain.update_action:type_name -> hi.ninja.UpdateAction
-	31, // 42: hi.ninja.FaceToBrain.get_binance_settings:type_name -> google.protobuf.Empty
-	31, // 43: hi.ninja.FaceToBrain.request_init:type_name -> google.protobuf.Empty
-	12, // 44: hi.ninja.FaceToBrain.binance_request:type_name -> hi.ninja.BinanceRequest
-	39, // 45: hi.ninja.FaceToBrain.binance_offer_reply:type_name -> hi.binance.BinanceOfferReply
-	31, // 46: hi.ninja.FaceToBrain.get_binance_offers:type_name -> google.protobuf.Empty
-	14, // 47: hi.ninja.FaceToBrain.video_request:type_name -> hi.ninja.VideoRequest
-	40, // 48: hi.ninja.BinanceOffers.list:type_name -> hi.binance.BinanceOffer
-	2,  // 49: hi.ninja.PluginProgress.state:type_name -> hi.ninja.PluginProgress.State
-	3,  // 50: hi.ninja.UpdateAction.action:type_name -> hi.ninja.UpdateAction.Action
-	4,  // 51: hi.ninja.PlaybackEvent.state:type_name -> hi.ninja.PlaybackEvent.State
-	52, // [52:52] is the sub-list for method output_type
-	52, // [52:52] is the sub-list for method input_type
-	52, // [52:52] is the sub-list for extension type_name
-	52, // [52:52] is the sub-list for extension extendee
-	0,  // [0:52] is the sub-list for field type_name
+	25, // 6: hi.ninja.BrainToFace.manual_mute:type_name -> hi.ninja.ManualMute
+	24, // 7: hi.ninja.BrainToFace.playback_permit:type_name -> hi.ninja.PlaybackPermit
+	29, // 8: hi.ninja.BrainToFace.control:type_name -> hi.ninja.BrainToModuleControl
+	5,  // 9: hi.ninja.BrainToFace.init_robot:type_name -> hi.ninja.RobotInit
+	0,  // 10: hi.ninja.BrainToFace.show_listen:type_name -> hi.ninja.StateToggle
+	1,  // 11: hi.ninja.BrainToFace.show_emotion:type_name -> hi.ninja.Emotion
+	30, // 12: hi.ninja.BrainToFace.show_im_request:type_name -> hi.club.Message
+	9,  // 13: hi.ninja.BrainToFace.show_im_reply:type_name -> hi.ninja.TextReply
+	9,  // 14: hi.ninja.BrainToFace.show_voice_reply:type_name -> hi.ninja.TextReply
+	31, // 15: hi.ninja.BrainToFace.show_qr_code:type_name -> google.protobuf.Empty
+	26, // 16: hi.ninja.BrainToFace.event_robot:type_name -> hi.Entity
+	8,  // 17: hi.ninja.BrainToFace.event_master:type_name -> hi.ninja.MasterEvent
+	27, // 18: hi.ninja.BrainToFace.event_members:type_name -> hi.club.GroupInfo
+	32, // 19: hi.ninja.BrainToFace.event_plugin:type_name -> hi.ai.PluginView
+	21, // 20: hi.ninja.BrainToFace.event_plugin_progress:type_name -> hi.ninja.PluginProgress
+	33, // 21: hi.ninja.BrainToFace.event_transaction:type_name -> hi.did.Transaction
+	10, // 22: hi.ninja.BrainToFace.play_audio:type_name -> hi.ninja.AudioPlay
+	6,  // 23: hi.ninja.BrainToFace.event_friends:type_name -> hi.ninja.FriendList
+	26, // 24: hi.ninja.BrainToFace.event_friend_delete:type_name -> hi.Entity
+	26, // 25: hi.ninja.BrainToFace.event_friend_add:type_name -> hi.Entity
+	7,  // 26: hi.ninja.BrainToFace.members_init:type_name -> hi.ninja.GroupInfoList
+	18, // 27: hi.ninja.BrainToFace.event_status:type_name -> hi.ninja.StatusEvent
+	34, // 28: hi.ninja.BrainToFace.event_update:type_name -> hi.ninja.UpdateStatus
+	11, // 29: hi.ninja.BrainToFace.event_binance_settings:type_name -> hi.ninja.BinanceSettings
+	35, // 30: hi.ninja.BrainToFace.binance_result:type_name -> hi.binance.BinanceResult
+	17, // 31: hi.ninja.BrainToFace.show_tip:type_name -> hi.ninja.Tip
+	16, // 32: hi.ninja.BrainToFace.show_qr:type_name -> hi.ninja.QrCard
+	20, // 33: hi.ninja.BrainToFace.binance_offers:type_name -> hi.ninja.BinanceOffers
+	36, // 34: hi.ninja.BrainToFace.event_product_uploaded:type_name -> hi.club.ProductInventoryItem
+	37, // 35: hi.ninja.BrainToFace.event_product_listed:type_name -> hi.club.ProductAnnouncement
+	15, // 36: hi.ninja.BrainToFace.video_ready:type_name -> hi.ninja.VideoReady
+	28, // 37: hi.ninja.FaceToBrain.session:type_name -> hi.ninja.ModuleSession
+	23, // 38: hi.ninja.FaceToBrain.playback_event:type_name -> hi.ninja.PlaybackEvent
+	25, // 39: hi.ninja.FaceToBrain.manual_mute:type_name -> hi.ninja.ManualMute
+	38, // 40: hi.ninja.FaceToBrain.control:type_name -> hi.ninja.ModuleToBrainControl
+	0,  // 41: hi.ninja.FaceToBrain.voice_state:type_name -> hi.ninja.StateToggle
+	22, // 42: hi.ninja.FaceToBrain.update_action:type_name -> hi.ninja.UpdateAction
+	31, // 43: hi.ninja.FaceToBrain.get_binance_settings:type_name -> google.protobuf.Empty
+	31, // 44: hi.ninja.FaceToBrain.request_init:type_name -> google.protobuf.Empty
+	12, // 45: hi.ninja.FaceToBrain.binance_request:type_name -> hi.ninja.BinanceRequest
+	39, // 46: hi.ninja.FaceToBrain.binance_offer_reply:type_name -> hi.binance.BinanceOfferReply
+	31, // 47: hi.ninja.FaceToBrain.get_binance_offers:type_name -> google.protobuf.Empty
+	14, // 48: hi.ninja.FaceToBrain.video_request:type_name -> hi.ninja.VideoRequest
+	40, // 49: hi.ninja.BinanceOffers.list:type_name -> hi.binance.BinanceOffer
+	2,  // 50: hi.ninja.PluginProgress.state:type_name -> hi.ninja.PluginProgress.State
+	3,  // 51: hi.ninja.UpdateAction.action:type_name -> hi.ninja.UpdateAction.Action
+	4,  // 52: hi.ninja.PlaybackEvent.state:type_name -> hi.ninja.PlaybackEvent.State
+	53, // [53:53] is the sub-list for method output_type
+	53, // [53:53] is the sub-list for method input_type
+	53, // [53:53] is the sub-list for extension type_name
+	53, // [53:53] is the sub-list for extension extendee
+	0,  // [0:53] is the sub-list for field type_name
 }
 
 func init() { file_hi_ninja_ui_proto_init() }
@@ -2532,6 +2551,7 @@ func file_hi_ninja_ui_proto_init() {
 	file_hi_ninja_ui_proto_msgTypes[5].OneofWrappers = []any{}
 	file_hi_ninja_ui_proto_msgTypes[7].OneofWrappers = []any{}
 	file_hi_ninja_ui_proto_msgTypes[8].OneofWrappers = []any{
+		(*BrainToFace_ManualMute)(nil),
 		(*BrainToFace_PlaybackPermit)(nil),
 		(*BrainToFace_Control)(nil),
 		(*BrainToFace_InitRobot)(nil),

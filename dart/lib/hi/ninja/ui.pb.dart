@@ -592,6 +592,7 @@ enum BrainToFace_Cmd {
   eventProductUploaded,
   eventProductListed,
   playbackPermit,
+  manualMute,
   control,
   notSet
 }
@@ -628,6 +629,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     $8.ProductInventoryItem? eventProductUploaded,
     $8.ProductAnnouncement? eventProductListed,
     PlaybackPermit? playbackPermit,
+    ManualMute? manualMute,
     $9.ModuleSession? session,
     $9.BrainToModuleControl? control,
   }) {
@@ -665,6 +667,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     if (eventProductListed != null)
       result.eventProductListed = eventProductListed;
     if (playbackPermit != null) result.playbackPermit = playbackPermit;
+    if (manualMute != null) result.manualMute = manualMute;
     if (session != null) result.session = session;
     if (control != null) result.control = control;
     return result;
@@ -709,6 +712,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     29: BrainToFace_Cmd.eventProductUploaded,
     30: BrainToFace_Cmd.eventProductListed,
     31: BrainToFace_Cmd.playbackPermit,
+    32: BrainToFace_Cmd.manualMute,
     100: BrainToFace_Cmd.control,
     0: BrainToFace_Cmd.notSet
   };
@@ -746,6 +750,7 @@ class BrainToFace extends $pb.GeneratedMessage {
       29,
       30,
       31,
+      32,
       100
     ])
     ..aOM<RobotInit>(1, _omitFieldNames ? '' : 'initRobot',
@@ -807,6 +812,8 @@ class BrainToFace extends $pb.GeneratedMessage {
         subBuilder: $8.ProductAnnouncement.create)
     ..aOM<PlaybackPermit>(31, _omitFieldNames ? '' : 'playbackPermit',
         subBuilder: PlaybackPermit.create)
+    ..aOM<ManualMute>(32, _omitFieldNames ? '' : 'manualMute',
+        subBuilder: ManualMute.create)
     ..aOM<$9.ModuleSession>(99, _omitFieldNames ? '' : 'session',
         subBuilder: $9.ModuleSession.create)
     ..aOM<$9.BrainToModuleControl>(100, _omitFieldNames ? '' : 'control',
@@ -861,6 +868,7 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(29)
   @$pb.TagNumber(30)
   @$pb.TagNumber(31)
+  @$pb.TagNumber(32)
   @$pb.TagNumber(100)
   BrainToFace_Cmd whichCmd() => _BrainToFace_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
@@ -892,6 +900,7 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(29)
   @$pb.TagNumber(30)
   @$pb.TagNumber(31)
+  @$pb.TagNumber(32)
   @$pb.TagNumber(100)
   void clearCmd() => $_clearField($_whichOneof(0));
 
@@ -1234,27 +1243,38 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(31)
   PlaybackPermit ensurePlaybackPermit() => $_ensure(28);
 
+  @$pb.TagNumber(32)
+  ManualMute get manualMute => $_getN(29);
+  @$pb.TagNumber(32)
+  set manualMute(ManualMute value) => $_setField(32, value);
+  @$pb.TagNumber(32)
+  $core.bool hasManualMute() => $_has(29);
+  @$pb.TagNumber(32)
+  void clearManualMute() => $_clearField(32);
+  @$pb.TagNumber(32)
+  ManualMute ensureManualMute() => $_ensure(29);
+
   @$pb.TagNumber(99)
-  $9.ModuleSession get session => $_getN(29);
+  $9.ModuleSession get session => $_getN(30);
   @$pb.TagNumber(99)
   set session($9.ModuleSession value) => $_setField(99, value);
   @$pb.TagNumber(99)
-  $core.bool hasSession() => $_has(29);
+  $core.bool hasSession() => $_has(30);
   @$pb.TagNumber(99)
   void clearSession() => $_clearField(99);
   @$pb.TagNumber(99)
-  $9.ModuleSession ensureSession() => $_ensure(29);
+  $9.ModuleSession ensureSession() => $_ensure(30);
 
   @$pb.TagNumber(100)
-  $9.BrainToModuleControl get control => $_getN(30);
+  $9.BrainToModuleControl get control => $_getN(31);
   @$pb.TagNumber(100)
   set control($9.BrainToModuleControl value) => $_setField(100, value);
   @$pb.TagNumber(100)
-  $core.bool hasControl() => $_has(30);
+  $core.bool hasControl() => $_has(31);
   @$pb.TagNumber(100)
   void clearControl() => $_clearField(100);
   @$pb.TagNumber(100)
-  $9.BrainToModuleControl ensureControl() => $_ensure(30);
+  $9.BrainToModuleControl ensureControl() => $_ensure(31);
 }
 
 /// face -> brain:要一份屏幕放得了的视频。

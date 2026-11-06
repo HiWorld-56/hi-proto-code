@@ -436,6 +436,9 @@ impl serde::Serialize for BrainToFace {
         }
         if let Some(v) = self.cmd.as_ref() {
             match v {
+                brain_to_face::Cmd::ManualMute(v) => {
+                    struct_ser.serialize_field("manualMute", v)?;
+                }
                 brain_to_face::Cmd::PlaybackPermit(v) => {
                     struct_ser.serialize_field("playbackPermit", v)?;
                 }
@@ -543,6 +546,8 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
     {
         const FIELDS: &[&str] = &[
             "session",
+            "manual_mute",
+            "manualMute",
             "playback_permit",
             "playbackPermit",
             "control",
@@ -607,6 +612,7 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Session,
+            ManualMute,
             PlaybackPermit,
             Control,
             InitRobot,
@@ -659,6 +665,7 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
                     {
                         match value {
                             "session" => Ok(GeneratedField::Session),
+                            "manualMute" | "manual_mute" => Ok(GeneratedField::ManualMute),
                             "playbackPermit" | "playback_permit" => Ok(GeneratedField::PlaybackPermit),
                             "control" => Ok(GeneratedField::Control),
                             "initRobot" | "init_robot" => Ok(GeneratedField::InitRobot),
@@ -717,6 +724,13 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
                                 return Err(serde::de::Error::duplicate_field("session"));
                             }
                             session__ = map_.next_value()?;
+                        }
+                        GeneratedField::ManualMute => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("manualMute"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_face::Cmd::ManualMute)
+;
                         }
                         GeneratedField::PlaybackPermit => {
                             if cmd__.is_some() {
