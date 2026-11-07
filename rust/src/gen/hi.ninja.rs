@@ -720,6 +720,9 @@ pub struct VisionBox {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VisionObservation {
+    /// IO node boot and brain generation scope the source stream.
+    #[prost(message, optional, tag = "4")]
+    pub source_session: ::core::option::Option<ModuleSession>,
     #[prost(message, optional, tag = "1")]
     pub frame: ::core::option::Option<IoFrameInfo>,
     #[prost(string, optional, tag = "2")]

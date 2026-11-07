@@ -11217,6 +11217,9 @@ impl serde::Serialize for VisionObservation {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
+        if self.source_session.is_some() {
+            len += 1;
+        }
         if self.frame.is_some() {
             len += 1;
         }
@@ -11227,6 +11230,9 @@ impl serde::Serialize for VisionObservation {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.VisionObservation", len)?;
+        if let Some(v) = self.source_session.as_ref() {
+            struct_ser.serialize_field("sourceSession", v)?;
+        }
         if let Some(v) = self.frame.as_ref() {
             struct_ser.serialize_field("frame", v)?;
         }
@@ -11246,6 +11252,8 @@ impl<'de> serde::Deserialize<'de> for VisionObservation {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
+            "source_session",
+            "sourceSession",
             "frame",
             "model",
             "objects",
@@ -11253,6 +11261,7 @@ impl<'de> serde::Deserialize<'de> for VisionObservation {
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
+            SourceSession,
             Frame,
             Model,
             Objects,
@@ -11277,6 +11286,7 @@ impl<'de> serde::Deserialize<'de> for VisionObservation {
                         E: serde::de::Error,
                     {
                         match value {
+                            "sourceSession" | "source_session" => Ok(GeneratedField::SourceSession),
                             "frame" => Ok(GeneratedField::Frame),
                             "model" => Ok(GeneratedField::Model),
                             "objects" => Ok(GeneratedField::Objects),
@@ -11299,11 +11309,18 @@ impl<'de> serde::Deserialize<'de> for VisionObservation {
                 where
                     V: serde::de::MapAccess<'de>,
             {
+                let mut source_session__ = None;
                 let mut frame__ = None;
                 let mut model__ = None;
                 let mut objects__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
+                        GeneratedField::SourceSession => {
+                            if source_session__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sourceSession"));
+                            }
+                            source_session__ = map_.next_value()?;
+                        }
                         GeneratedField::Frame => {
                             if frame__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("frame"));
@@ -11325,6 +11342,7 @@ impl<'de> serde::Deserialize<'de> for VisionObservation {
                     }
                 }
                 Ok(VisionObservation {
+                    source_session: source_session__,
                     frame: frame__,
                     model: model__,
                     objects: objects__.unwrap_or_default(),

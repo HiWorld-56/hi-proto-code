@@ -213,6 +213,7 @@ func (x *VisionBox) GetHeight() float32 {
 
 type VisionObservation struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	SourceSession *ModuleSession         `protobuf:"bytes,4,opt,name=source_session,json=sourceSession,proto3" json:"source_session,omitempty"` // IO node boot and brain generation scope the source stream.
 	Frame         *IoFrameInfo           `protobuf:"bytes,1,opt,name=frame,proto3" json:"frame,omitempty"`
 	Model         *string                `protobuf:"bytes,2,opt,name=model,proto3,oneof" json:"model,omitempty"`
 	Objects       []*VisionObject        `protobuf:"bytes,3,rep,name=objects,proto3" json:"objects,omitempty"` // Empty means this successfully processed frame has no detections.
@@ -248,6 +249,13 @@ func (x *VisionObservation) ProtoReflect() protoreflect.Message {
 // Deprecated: Use VisionObservation.ProtoReflect.Descriptor instead.
 func (*VisionObservation) Descriptor() ([]byte, []int) {
 	return file_hi_ninja_vision_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *VisionObservation) GetSourceSession() *ModuleSession {
+	if x != nil {
+		return x.SourceSession
+	}
+	return nil
 }
 
 func (x *VisionObservation) GetFrame() *IoFrameInfo {
@@ -370,7 +378,7 @@ var File_hi_ninja_vision_proto protoreflect.FileDescriptor
 
 const file_hi_ninja_vision_proto_rawDesc = "" +
 	"\n" +
-	"\x15hi/ninja/vision.proto\x12\bhi.ninja\x1a\x1bbuf/validate/validate.proto\x1a\x11hi/ninja/io.proto\"\xc5\x01\n" +
+	"\x15hi/ninja/vision.proto\x12\bhi.ninja\x1a\x1bbuf/validate/validate.proto\x1a\x15hi/ninja/common.proto\x1a\x11hi/ninja/io.proto\"\xc5\x01\n" +
 	"\fVisionObject\x12+\n" +
 	"\bcategory\x18\x01 \x01(\tB\n" +
 	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\bcategory\x88\x01\x01\x127\n" +
@@ -398,8 +406,9 @@ const file_hi_ninja_vision_proto_rawDesc = "" +
 	"\x02_xB\x04\n" +
 	"\x02_yB\b\n" +
 	"\x06_widthB\t\n" +
-	"\a_height\"\xab\x01\n" +
-	"\x11VisionObservation\x123\n" +
+	"\a_height\"\xf3\x01\n" +
+	"\x11VisionObservation\x12F\n" +
+	"\x0esource_session\x18\x04 \x01(\v2\x17.hi.ninja.ModuleSessionB\x06\xbaH\x03\xc8\x01\x01R\rsourceSession\x123\n" +
 	"\x05frame\x18\x01 \x01(\v2\x15.hi.ninja.IoFrameInfoB\x06\xbaH\x03\xc8\x01\x01R\x05frame\x12%\n" +
 	"\x05model\x18\x02 \x01(\tB\n" +
 	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\x05model\x88\x01\x01\x120\n" +
@@ -451,19 +460,21 @@ var file_hi_ninja_vision_proto_goTypes = []any{
 	(*VisionBox)(nil),         // 2: hi.ninja.VisionBox
 	(*VisionObservation)(nil), // 3: hi.ninja.VisionObservation
 	(*VisionEvent)(nil),       // 4: hi.ninja.VisionEvent
-	(*IoFrameInfo)(nil),       // 5: hi.ninja.IoFrameInfo
+	(*ModuleSession)(nil),     // 5: hi.ninja.ModuleSession
+	(*IoFrameInfo)(nil),       // 6: hi.ninja.IoFrameInfo
 }
 var file_hi_ninja_vision_proto_depIdxs = []int32{
 	2, // 0: hi.ninja.VisionObject.bounds:type_name -> hi.ninja.VisionBox
-	5, // 1: hi.ninja.VisionObservation.frame:type_name -> hi.ninja.IoFrameInfo
-	1, // 2: hi.ninja.VisionObservation.objects:type_name -> hi.ninja.VisionObject
-	0, // 3: hi.ninja.VisionEvent.kind:type_name -> hi.ninja.VisionEvent.Kind
-	3, // 4: hi.ninja.VisionEvent.observation:type_name -> hi.ninja.VisionObservation
-	5, // [5:5] is the sub-list for method output_type
-	5, // [5:5] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	5, // 1: hi.ninja.VisionObservation.source_session:type_name -> hi.ninja.ModuleSession
+	6, // 2: hi.ninja.VisionObservation.frame:type_name -> hi.ninja.IoFrameInfo
+	1, // 3: hi.ninja.VisionObservation.objects:type_name -> hi.ninja.VisionObject
+	0, // 4: hi.ninja.VisionEvent.kind:type_name -> hi.ninja.VisionEvent.Kind
+	3, // 5: hi.ninja.VisionEvent.observation:type_name -> hi.ninja.VisionObservation
+	6, // [6:6] is the sub-list for method output_type
+	6, // [6:6] is the sub-list for method input_type
+	6, // [6:6] is the sub-list for extension type_name
+	6, // [6:6] is the sub-list for extension extendee
+	0, // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_hi_ninja_vision_proto_init() }
@@ -471,6 +482,7 @@ func file_hi_ninja_vision_proto_init() {
 	if File_hi_ninja_vision_proto != nil {
 		return
 	}
+	file_hi_ninja_common_proto_init()
 	file_hi_ninja_io_proto_init()
 	file_hi_ninja_vision_proto_msgTypes[0].OneofWrappers = []any{}
 	file_hi_ninja_vision_proto_msgTypes[1].OneofWrappers = []any{}

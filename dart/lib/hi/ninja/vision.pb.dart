@@ -15,6 +15,7 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import 'common.pb.dart' as $1;
 import 'io.pb.dart' as $0;
 import 'vision.pbenum.dart';
 
@@ -200,11 +201,13 @@ class VisionObservation extends $pb.GeneratedMessage {
     $0.IoFrameInfo? frame,
     $core.String? model,
     $core.Iterable<VisionObject>? objects,
+    $1.ModuleSession? sourceSession,
   }) {
     final result = create();
     if (frame != null) result.frame = frame;
     if (model != null) result.model = model;
     if (objects != null) result.objects.addAll(objects);
+    if (sourceSession != null) result.sourceSession = sourceSession;
     return result;
   }
 
@@ -226,6 +229,8 @@ class VisionObservation extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'model')
     ..pPM<VisionObject>(3, _omitFieldNames ? '' : 'objects',
         subBuilder: VisionObject.create)
+    ..aOM<$1.ModuleSession>(4, _omitFieldNames ? '' : 'sourceSession',
+        subBuilder: $1.ModuleSession.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -269,6 +274,17 @@ class VisionObservation extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(3)
   $pb.PbList<VisionObject> get objects => $_getList(2);
+
+  @$pb.TagNumber(4)
+  $1.ModuleSession get sourceSession => $_getN(3);
+  @$pb.TagNumber(4)
+  set sourceSession($1.ModuleSession value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasSourceSession() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearSourceSession() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $1.ModuleSession ensureSourceSession() => $_ensure(3);
 }
 
 /// Brain produces these events; IO never runs classification or decides visibility.

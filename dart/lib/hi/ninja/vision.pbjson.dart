@@ -109,6 +109,15 @@ const VisionObservation$json = {
   '1': 'VisionObservation',
   '2': [
     {
+      '1': 'source_session',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.ModuleSession',
+      '8': {},
+      '10': 'sourceSession'
+    },
+    {
       '1': 'frame',
       '3': 1,
       '4': 1,
@@ -143,10 +152,11 @@ const VisionObservation$json = {
 
 /// Descriptor for `VisionObservation`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List visionObservationDescriptor = $convert.base64Decode(
-    'ChFWaXNpb25PYnNlcnZhdGlvbhIzCgVmcmFtZRgBIAEoCzIVLmhpLm5pbmphLklvRnJhbWVJbm'
-    'ZvQga6SAPIAQFSBWZyYW1lEiUKBW1vZGVsGAIgASgJQgq6SAfIAQFyAhABSABSBW1vZGVsiAEB'
-    'EjAKB29iamVjdHMYAyADKAsyFi5oaS5uaW5qYS5WaXNpb25PYmplY3RSB29iamVjdHNCCAoGX2'
-    '1vZGVs');
+    'ChFWaXNpb25PYnNlcnZhdGlvbhJGCg5zb3VyY2Vfc2Vzc2lvbhgEIAEoCzIXLmhpLm5pbmphLk'
+    '1vZHVsZVNlc3Npb25CBrpIA8gBAVINc291cmNlU2Vzc2lvbhIzCgVmcmFtZRgBIAEoCzIVLmhp'
+    'Lm5pbmphLklvRnJhbWVJbmZvQga6SAPIAQFSBWZyYW1lEiUKBW1vZGVsGAIgASgJQgq6SAfIAQ'
+    'FyAhABSABSBW1vZGVsiAEBEjAKB29iamVjdHMYAyADKAsyFi5oaS5uaW5qYS5WaXNpb25PYmpl'
+    'Y3RSB29iamVjdHNCCAoGX21vZGVs');
 
 @$core.Deprecated('Use visionEventDescriptor instead')
 const VisionEvent$json = {
