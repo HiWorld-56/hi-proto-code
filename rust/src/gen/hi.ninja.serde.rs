@@ -11162,6 +11162,12 @@ impl serde::Serialize for VisionFace {
         if self.confirmed.is_some() {
             len += 1;
         }
+        if self.last_observed_frame.is_some() {
+            len += 1;
+        }
+        if self.visible.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.VisionFace", len)?;
         if let Some(v) = self.target_id.as_ref() {
             struct_ser.serialize_field("targetId", v)?;
@@ -11181,6 +11187,12 @@ impl serde::Serialize for VisionFace {
         if let Some(v) = self.confirmed.as_ref() {
             struct_ser.serialize_field("confirmed", v)?;
         }
+        if let Some(v) = self.last_observed_frame.as_ref() {
+            struct_ser.serialize_field("lastObservedFrame", v)?;
+        }
+        if let Some(v) = self.visible.as_ref() {
+            struct_ser.serialize_field("visible", v)?;
+        }
         struct_ser.end()
     }
 }
@@ -11198,6 +11210,9 @@ impl<'de> serde::Deserialize<'de> for VisionFace {
             "person",
             "attributes",
             "confirmed",
+            "last_observed_frame",
+            "lastObservedFrame",
+            "visible",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -11208,6 +11223,8 @@ impl<'de> serde::Deserialize<'de> for VisionFace {
             Person,
             Attributes,
             Confirmed,
+            LastObservedFrame,
+            Visible,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -11235,6 +11252,8 @@ impl<'de> serde::Deserialize<'de> for VisionFace {
                             "person" => Ok(GeneratedField::Person),
                             "attributes" => Ok(GeneratedField::Attributes),
                             "confirmed" => Ok(GeneratedField::Confirmed),
+                            "lastObservedFrame" | "last_observed_frame" => Ok(GeneratedField::LastObservedFrame),
+                            "visible" => Ok(GeneratedField::Visible),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -11260,6 +11279,8 @@ impl<'de> serde::Deserialize<'de> for VisionFace {
                 let mut person__ = None;
                 let mut attributes__ = None;
                 let mut confirmed__ = None;
+                let mut last_observed_frame__ = None;
+                let mut visible__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::TargetId => {
@@ -11300,6 +11321,18 @@ impl<'de> serde::Deserialize<'de> for VisionFace {
                             }
                             confirmed__ = map_.next_value()?;
                         }
+                        GeneratedField::LastObservedFrame => {
+                            if last_observed_frame__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("lastObservedFrame"));
+                            }
+                            last_observed_frame__ = map_.next_value()?;
+                        }
+                        GeneratedField::Visible => {
+                            if visible__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("visible"));
+                            }
+                            visible__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(VisionFace {
@@ -11309,6 +11342,8 @@ impl<'de> serde::Deserialize<'de> for VisionFace {
                     person: person__,
                     attributes: attributes__,
                     confirmed: confirmed__,
+                    last_observed_frame: last_observed_frame__,
+                    visible: visible__,
                 })
             }
         }

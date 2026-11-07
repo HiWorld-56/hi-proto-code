@@ -634,15 +634,17 @@ func (x *VisionFaceAttributes) GetReason() string {
 }
 
 type VisionFace struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	TargetId      *string                `protobuf:"bytes,1,opt,name=target_id,json=targetId,proto3,oneof" json:"target_id,omitempty"`
-	Bounds        *VisionBox             `protobuf:"bytes,2,opt,name=bounds,proto3" json:"bounds,omitempty"`
-	Confidence    *float32               `protobuf:"fixed32,3,opt,name=confidence,proto3,oneof" json:"confidence,omitempty"`
-	Person        *VisionObject          `protobuf:"bytes,4,opt,name=person,proto3" json:"person,omitempty"` // Same-frame body association, when unambiguous. Not a DID.
-	Attributes    *VisionFaceAttributes  `protobuf:"bytes,5,opt,name=attributes,proto3" json:"attributes,omitempty"`
-	Confirmed     *bool                  `protobuf:"varint,6,opt,name=confirmed,proto3,oneof" json:"confirmed,omitempty"` // Visibility hysteresis has completed.
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	TargetId          *string                `protobuf:"bytes,1,opt,name=target_id,json=targetId,proto3,oneof" json:"target_id,omitempty"`
+	Bounds            *VisionBox             `protobuf:"bytes,2,opt,name=bounds,proto3" json:"bounds,omitempty"`
+	Confidence        *float32               `protobuf:"fixed32,3,opt,name=confidence,proto3,oneof" json:"confidence,omitempty"`
+	Person            *VisionObject          `protobuf:"bytes,4,opt,name=person,proto3" json:"person,omitempty"` // Same-frame body association, when unambiguous. Not a DID.
+	Attributes        *VisionFaceAttributes  `protobuf:"bytes,5,opt,name=attributes,proto3" json:"attributes,omitempty"`
+	Confirmed         *bool                  `protobuf:"varint,6,opt,name=confirmed,proto3,oneof" json:"confirmed,omitempty"`                                     // Visibility hysteresis has completed.
+	LastObservedFrame *IoFrameInfo           `protobuf:"bytes,7,opt,name=last_observed_frame,json=lastObservedFrame,proto3" json:"last_observed_frame,omitempty"` // Bounds/confidence provenance when temporarily hidden.
+	Visible           *bool                  `protobuf:"varint,8,opt,name=visible,proto3,oneof" json:"visible,omitempty"`                                         // Actually detected in this observation, not just retained by hysteresis.
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
 }
 
 func (x *VisionFace) Reset() {
@@ -717,12 +719,26 @@ func (x *VisionFace) GetConfirmed() bool {
 	return false
 }
 
+func (x *VisionFace) GetLastObservedFrame() *IoFrameInfo {
+	if x != nil {
+		return x.LastObservedFrame
+	}
+	return nil
+}
+
+func (x *VisionFace) GetVisible() bool {
+	if x != nil && x.Visible != nil {
+		return *x.Visible
+	}
+	return false
+}
+
 type VisionFaceObservation struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	SourceSession *ModuleSession         `protobuf:"bytes,1,opt,name=source_session,json=sourceSession,proto3" json:"source_session,omitempty"`
 	Frame         *IoFrameInfo           `protobuf:"bytes,2,opt,name=frame,proto3" json:"frame,omitempty"`
 	Model         *string                `protobuf:"bytes,3,opt,name=model,proto3,oneof" json:"model,omitempty"`
-	Faces         []*VisionFace          `protobuf:"bytes,4,rep,name=faces,proto3" json:"faces,omitempty"` // Successful empty result differs from an interrupted/disabled branch.
+	Faces         []*VisionFace          `protobuf:"bytes,4,rep,name=faces,proto3" json:"faces,omitempty"` // Current and briefly retained targets; visible=false clears attributes. Empty differs from interruption.
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -964,7 +980,7 @@ const file_hi_ninja_vision_proto_rawDesc = "" +
 	"\n" +
 	"_age_yearsB\b\n" +
 	"\x06_modelB\t\n" +
-	"\a_reason\"\xf6\x02\n" +
+	"\a_reason\"\xf8\x03\n" +
 	"\n" +
 	"VisionFace\x12,\n" +
 	"\ttarget_id\x18\x01 \x01(\tB\n" +
@@ -979,12 +995,16 @@ const file_hi_ninja_vision_proto_rawDesc = "" +
 	"\n" +
 	"attributes\x18\x05 \x01(\v2\x1e.hi.ninja.VisionFaceAttributesB\x06\xbaH\x03\xc8\x01\x01R\n" +
 	"attributes\x12)\n" +
-	"\tconfirmed\x18\x06 \x01(\bB\x06\xbaH\x03\xc8\x01\x01H\x02R\tconfirmed\x88\x01\x01B\f\n" +
+	"\tconfirmed\x18\x06 \x01(\bB\x06\xbaH\x03\xc8\x01\x01H\x02R\tconfirmed\x88\x01\x01\x12M\n" +
+	"\x13last_observed_frame\x18\a \x01(\v2\x15.hi.ninja.IoFrameInfoB\x06\xbaH\x03\xc8\x01\x01R\x11lastObservedFrame\x12%\n" +
+	"\avisible\x18\b \x01(\bB\x06\xbaH\x03\xc8\x01\x01H\x03R\avisible\x88\x01\x01B\f\n" +
 	"\n" +
 	"_target_idB\r\n" +
 	"\v_confidenceB\f\n" +
 	"\n" +
-	"_confirmed\"\xf1\x01\n" +
+	"_confirmedB\n" +
+	"\n" +
+	"\b_visible\"\xf1\x01\n" +
 	"\x15VisionFaceObservation\x12F\n" +
 	"\x0esource_session\x18\x01 \x01(\v2\x17.hi.ninja.ModuleSessionB\x06\xbaH\x03\xc8\x01\x01R\rsourceSession\x123\n" +
 	"\x05frame\x18\x02 \x01(\v2\x15.hi.ninja.IoFrameInfoB\x06\xbaH\x03\xc8\x01\x01R\x05frame\x12%\n" +
@@ -1060,16 +1080,17 @@ var file_hi_ninja_vision_proto_depIdxs = []int32{
 	5,  // 8: hi.ninja.VisionFace.bounds:type_name -> hi.ninja.VisionBox
 	4,  // 9: hi.ninja.VisionFace.person:type_name -> hi.ninja.VisionObject
 	8,  // 10: hi.ninja.VisionFace.attributes:type_name -> hi.ninja.VisionFaceAttributes
-	12, // 11: hi.ninja.VisionFaceObservation.source_session:type_name -> hi.ninja.ModuleSession
-	13, // 12: hi.ninja.VisionFaceObservation.frame:type_name -> hi.ninja.IoFrameInfo
-	9,  // 13: hi.ninja.VisionFaceObservation.faces:type_name -> hi.ninja.VisionFace
-	3,  // 14: hi.ninja.VisionFaceEvent.kind:type_name -> hi.ninja.VisionFaceEvent.Kind
-	10, // 15: hi.ninja.VisionFaceEvent.observation:type_name -> hi.ninja.VisionFaceObservation
-	16, // [16:16] is the sub-list for method output_type
-	16, // [16:16] is the sub-list for method input_type
-	16, // [16:16] is the sub-list for extension type_name
-	16, // [16:16] is the sub-list for extension extendee
-	0,  // [0:16] is the sub-list for field type_name
+	13, // 11: hi.ninja.VisionFace.last_observed_frame:type_name -> hi.ninja.IoFrameInfo
+	12, // 12: hi.ninja.VisionFaceObservation.source_session:type_name -> hi.ninja.ModuleSession
+	13, // 13: hi.ninja.VisionFaceObservation.frame:type_name -> hi.ninja.IoFrameInfo
+	9,  // 14: hi.ninja.VisionFaceObservation.faces:type_name -> hi.ninja.VisionFace
+	3,  // 15: hi.ninja.VisionFaceEvent.kind:type_name -> hi.ninja.VisionFaceEvent.Kind
+	10, // 16: hi.ninja.VisionFaceEvent.observation:type_name -> hi.ninja.VisionFaceObservation
+	17, // [17:17] is the sub-list for method output_type
+	17, // [17:17] is the sub-list for method input_type
+	17, // [17:17] is the sub-list for extension type_name
+	17, // [17:17] is the sub-list for extension extendee
+	0,  // [0:17] is the sub-list for field type_name
 }
 
 func init() { file_hi_ninja_vision_proto_init() }

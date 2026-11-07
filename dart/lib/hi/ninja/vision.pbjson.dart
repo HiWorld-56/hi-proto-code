@@ -416,11 +416,31 @@ const VisionFace$json = {
       '10': 'confirmed',
       '17': true
     },
+    {
+      '1': 'last_observed_frame',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.IoFrameInfo',
+      '8': {},
+      '10': 'lastObservedFrame'
+    },
+    {
+      '1': 'visible',
+      '3': 8,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 3,
+      '10': 'visible',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_target_id'},
     {'1': '_confidence'},
     {'1': '_confirmed'},
+    {'1': '_visible'},
   ],
 };
 
@@ -431,8 +451,11 @@ final $typed_data.Uint8List visionFaceDescriptor = $convert.base64Decode(
     'EjcKCmNvbmZpZGVuY2UYAyABKAJCErpID8gBAQoKHQAAgD8tAAAAAEgBUgpjb25maWRlbmNliA'
     'EBEi4KBnBlcnNvbhgEIAEoCzIWLmhpLm5pbmphLlZpc2lvbk9iamVjdFIGcGVyc29uEkYKCmF0'
     'dHJpYnV0ZXMYBSABKAsyHi5oaS5uaW5qYS5WaXNpb25GYWNlQXR0cmlidXRlc0IGukgDyAEBUg'
-    'phdHRyaWJ1dGVzEikKCWNvbmZpcm1lZBgGIAEoCEIGukgDyAEBSAJSCWNvbmZpcm1lZIgBAUIM'
-    'CgpfdGFyZ2V0X2lkQg0KC19jb25maWRlbmNlQgwKCl9jb25maXJtZWQ=');
+    'phdHRyaWJ1dGVzEikKCWNvbmZpcm1lZBgGIAEoCEIGukgDyAEBSAJSCWNvbmZpcm1lZIgBARJN'
+    'ChNsYXN0X29ic2VydmVkX2ZyYW1lGAcgASgLMhUuaGkubmluamEuSW9GcmFtZUluZm9CBrpIA8'
+    'gBAVIRbGFzdE9ic2VydmVkRnJhbWUSJQoHdmlzaWJsZRgIIAEoCEIGukgDyAEBSANSB3Zpc2li'
+    'bGWIAQFCDAoKX3RhcmdldF9pZEINCgtfY29uZmlkZW5jZUIMCgpfY29uZmlybWVkQgoKCF92aX'
+    'NpYmxl');
 
 @$core.Deprecated('Use visionFaceObservationDescriptor instead')
 const VisionFaceObservation$json = {

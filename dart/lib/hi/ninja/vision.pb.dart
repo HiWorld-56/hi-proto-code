@@ -562,6 +562,8 @@ class VisionFace extends $pb.GeneratedMessage {
     VisionObject? person,
     VisionFaceAttributes? attributes,
     $core.bool? confirmed,
+    $0.IoFrameInfo? lastObservedFrame,
+    $core.bool? visible,
   }) {
     final result = create();
     if (targetId != null) result.targetId = targetId;
@@ -570,6 +572,8 @@ class VisionFace extends $pb.GeneratedMessage {
     if (person != null) result.person = person;
     if (attributes != null) result.attributes = attributes;
     if (confirmed != null) result.confirmed = confirmed;
+    if (lastObservedFrame != null) result.lastObservedFrame = lastObservedFrame;
+    if (visible != null) result.visible = visible;
     return result;
   }
 
@@ -595,6 +599,9 @@ class VisionFace extends $pb.GeneratedMessage {
     ..aOM<VisionFaceAttributes>(5, _omitFieldNames ? '' : 'attributes',
         subBuilder: VisionFaceAttributes.create)
     ..aOB(6, _omitFieldNames ? '' : 'confirmed')
+    ..aOM<$0.IoFrameInfo>(7, _omitFieldNames ? '' : 'lastObservedFrame',
+        subBuilder: $0.IoFrameInfo.create)
+    ..aOB(8, _omitFieldNames ? '' : 'visible')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -674,6 +681,26 @@ class VisionFace extends $pb.GeneratedMessage {
   $core.bool hasConfirmed() => $_has(5);
   @$pb.TagNumber(6)
   void clearConfirmed() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $0.IoFrameInfo get lastObservedFrame => $_getN(6);
+  @$pb.TagNumber(7)
+  set lastObservedFrame($0.IoFrameInfo value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasLastObservedFrame() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearLastObservedFrame() => $_clearField(7);
+  @$pb.TagNumber(7)
+  $0.IoFrameInfo ensureLastObservedFrame() => $_ensure(6);
+
+  @$pb.TagNumber(8)
+  $core.bool get visible => $_getBF(7);
+  @$pb.TagNumber(8)
+  set visible($core.bool value) => $_setBool(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasVisible() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearVisible() => $_clearField(8);
 }
 
 class VisionFaceObservation extends $pb.GeneratedMessage {

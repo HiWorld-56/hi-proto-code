@@ -931,6 +931,12 @@ pub struct VisionFace {
     /// Visibility hysteresis has completed.
     #[prost(bool, optional, tag = "6")]
     pub confirmed: ::core::option::Option<bool>,
+    /// Bounds/confidence provenance when temporarily hidden.
+    #[prost(message, optional, tag = "7")]
+    pub last_observed_frame: ::core::option::Option<IoFrameInfo>,
+    /// Actually detected in this observation, not just retained by hysteresis.
+    #[prost(bool, optional, tag = "8")]
+    pub visible: ::core::option::Option<bool>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VisionFaceObservation {
@@ -940,7 +946,7 @@ pub struct VisionFaceObservation {
     pub frame: ::core::option::Option<IoFrameInfo>,
     #[prost(string, optional, tag = "3")]
     pub model: ::core::option::Option<::prost::alloc::string::String>,
-    /// Successful empty result differs from an interrupted/disabled branch.
+    /// Current and briefly retained targets; visible=false clears attributes. Empty differs from interruption.
     #[prost(message, repeated, tag = "4")]
     pub faces: ::prost::alloc::vec::Vec<VisionFace>,
 }
