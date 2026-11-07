@@ -4877,6 +4877,12 @@ impl serde::Serialize for LuaCtx {
         if self.conv.is_some() {
             len += 1;
         }
+        if self.subscription_id.is_some() {
+            len += 1;
+        }
+        if self.subscription_revision.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.LuaCtx", len)?;
         if let Some(v) = self.me.as_ref() {
             struct_ser.serialize_field("me", v)?;
@@ -4893,6 +4899,12 @@ impl serde::Serialize for LuaCtx {
         if let Some(v) = self.conv.as_ref() {
             struct_ser.serialize_field("conv", v)?;
         }
+        if let Some(v) = self.subscription_id.as_ref() {
+            struct_ser.serialize_field("subscriptionId", v)?;
+        }
+        if let Some(v) = self.subscription_revision.as_ref() {
+            struct_ser.serialize_field("subscriptionRevision", v)?;
+        }
         struct_ser.end()
     }
 }
@@ -4908,6 +4920,10 @@ impl<'de> serde::Deserialize<'de> for LuaCtx {
             "asker",
             "dark",
             "conv",
+            "subscription_id",
+            "subscriptionId",
+            "subscription_revision",
+            "subscriptionRevision",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -4917,6 +4933,8 @@ impl<'de> serde::Deserialize<'de> for LuaCtx {
             Asker,
             Dark,
             Conv,
+            SubscriptionId,
+            SubscriptionRevision,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -4943,6 +4961,8 @@ impl<'de> serde::Deserialize<'de> for LuaCtx {
                             "asker" => Ok(GeneratedField::Asker),
                             "dark" => Ok(GeneratedField::Dark),
                             "conv" => Ok(GeneratedField::Conv),
+                            "subscriptionId" | "subscription_id" => Ok(GeneratedField::SubscriptionId),
+                            "subscriptionRevision" | "subscription_revision" => Ok(GeneratedField::SubscriptionRevision),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -4967,6 +4987,8 @@ impl<'de> serde::Deserialize<'de> for LuaCtx {
                 let mut asker__ = None;
                 let mut dark__ = None;
                 let mut conv__ = None;
+                let mut subscription_id__ = None;
+                let mut subscription_revision__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Me => {
@@ -5001,6 +5023,18 @@ impl<'de> serde::Deserialize<'de> for LuaCtx {
                             }
                             conv__ = map_.next_value()?;
                         }
+                        GeneratedField::SubscriptionId => {
+                            if subscription_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("subscriptionId"));
+                            }
+                            subscription_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::SubscriptionRevision => {
+                            if subscription_revision__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("subscriptionRevision"));
+                            }
+                            subscription_revision__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(LuaCtx {
@@ -5009,6 +5043,8 @@ impl<'de> serde::Deserialize<'de> for LuaCtx {
                     asker: asker__,
                     dark: dark__,
                     conv: conv__,
+                    subscription_id: subscription_id__,
+                    subscription_revision: subscription_revision__,
                 })
             }
         }

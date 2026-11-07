@@ -44,9 +44,11 @@ type LuaCtx struct {
 	// **只给宿主用,不给 lua 脚本看**(同 `dark`):插件带附件发消息时(sdk `send_with_attachments`),
 	// `<消息 uuid>#<段 id>` 这种引用只在这个会话里找(hi/club/messaging.proto「引用」)。
 	// 号用 6 不用 5:5 是 dev.1 ~ dev.2 那几天的 `attachments`(消息型),复用会让还没换的执行器把它解坏。
-	Conv          *string `protobuf:"bytes,6,opt,name=conv,proto3,oneof" json:"conv,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	Conv                 *string `protobuf:"bytes,6,opt,name=conv,proto3,oneof" json:"conv,omitempty"`
+	SubscriptionId       *string `protobuf:"bytes,7,opt,name=subscription_id,json=subscriptionId,proto3,oneof" json:"subscription_id,omitempty"`                   // Host-owned cancellation guard, not exposed to scripts.
+	SubscriptionRevision *string `protobuf:"bytes,8,opt,name=subscription_revision,json=subscriptionRevision,proto3,oneof" json:"subscription_revision,omitempty"` // Reject host effects from cancelled/replaced deliveries.
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
 }
 
 func (x *LuaCtx) Reset() {
@@ -110,6 +112,20 @@ func (x *LuaCtx) GetDark() uint32 {
 func (x *LuaCtx) GetConv() string {
 	if x != nil && x.Conv != nil {
 		return *x.Conv
+	}
+	return ""
+}
+
+func (x *LuaCtx) GetSubscriptionId() string {
+	if x != nil && x.SubscriptionId != nil {
+		return *x.SubscriptionId
+	}
+	return ""
+}
+
+func (x *LuaCtx) GetSubscriptionRevision() string {
+	if x != nil && x.SubscriptionRevision != nil {
+		return *x.SubscriptionRevision
 	}
 	return ""
 }
@@ -964,18 +980,22 @@ var File_hi_ninja_lua_proto protoreflect.FileDescriptor
 
 const file_hi_ninja_lua_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/ninja/lua.proto\x12\bhi.ninja\x1a\x15hi/ninja/common.proto\"\xb5\x01\n" +
+	"\x12hi/ninja/lua.proto\x12\bhi.ninja\x1a\x15hi/ninja/common.proto\"\xcb\x02\n" +
 	"\x06LuaCtx\x12\x13\n" +
 	"\x02me\x18\x01 \x01(\tH\x00R\x02me\x88\x01\x01\x12\x1b\n" +
 	"\x06master\x18\x02 \x01(\tH\x01R\x06master\x88\x01\x01\x12\x19\n" +
 	"\x05asker\x18\x03 \x01(\tH\x02R\x05asker\x88\x01\x01\x12\x17\n" +
 	"\x04dark\x18\x04 \x01(\rH\x03R\x04dark\x88\x01\x01\x12\x17\n" +
-	"\x04conv\x18\x06 \x01(\tH\x04R\x04conv\x88\x01\x01B\x05\n" +
+	"\x04conv\x18\x06 \x01(\tH\x04R\x04conv\x88\x01\x01\x12,\n" +
+	"\x0fsubscription_id\x18\a \x01(\tH\x05R\x0esubscriptionId\x88\x01\x01\x128\n" +
+	"\x15subscription_revision\x18\b \x01(\tH\x06R\x14subscriptionRevision\x88\x01\x01B\x05\n" +
 	"\x03_meB\t\n" +
 	"\a_masterB\b\n" +
 	"\x06_askerB\a\n" +
 	"\x05_darkB\a\n" +
-	"\x05_conv\"\xa5\x01\n" +
+	"\x05_convB\x12\n" +
+	"\x10_subscription_idB\x18\n" +
+	"\x16_subscription_revision\"\xa5\x01\n" +
 	"\aOpenReq\x12\x17\n" +
 	"\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x1d\n" +
 	"\aversion\x18\x02 \x01(\tH\x01R\aversion\x88\x01\x01\x12\x1b\n" +

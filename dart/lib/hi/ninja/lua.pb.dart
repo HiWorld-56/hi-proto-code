@@ -31,6 +31,8 @@ class LuaCtx extends $pb.GeneratedMessage {
     $core.String? asker,
     $core.int? dark,
     $core.String? conv,
+    $core.String? subscriptionId,
+    $core.String? subscriptionRevision,
   }) {
     final result = create();
     if (me != null) result.me = me;
@@ -38,6 +40,9 @@ class LuaCtx extends $pb.GeneratedMessage {
     if (asker != null) result.asker = asker;
     if (dark != null) result.dark = dark;
     if (conv != null) result.conv = conv;
+    if (subscriptionId != null) result.subscriptionId = subscriptionId;
+    if (subscriptionRevision != null)
+      result.subscriptionRevision = subscriptionRevision;
     return result;
   }
 
@@ -59,6 +64,8 @@ class LuaCtx extends $pb.GeneratedMessage {
     ..aOS(3, _omitFieldNames ? '' : 'asker')
     ..aI(4, _omitFieldNames ? '' : 'dark', fieldType: $pb.PbFieldType.OU3)
     ..aOS(6, _omitFieldNames ? '' : 'conv')
+    ..aOS(7, _omitFieldNames ? '' : 'subscriptionId')
+    ..aOS(8, _omitFieldNames ? '' : 'subscriptionRevision')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -133,6 +140,24 @@ class LuaCtx extends $pb.GeneratedMessage {
   $core.bool hasConv() => $_has(4);
   @$pb.TagNumber(6)
   void clearConv() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.String get subscriptionId => $_getSZ(5);
+  @$pb.TagNumber(7)
+  set subscriptionId($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(7)
+  $core.bool hasSubscriptionId() => $_has(5);
+  @$pb.TagNumber(7)
+  void clearSubscriptionId() => $_clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.String get subscriptionRevision => $_getSZ(6);
+  @$pb.TagNumber(8)
+  set subscriptionRevision($core.String value) => $_setString(6, value);
+  @$pb.TagNumber(8)
+  $core.bool hasSubscriptionRevision() => $_has(6);
+  @$pb.TagNumber(8)
+  void clearSubscriptionRevision() => $_clearField(8);
 }
 
 /// OpenReq 装一个插件：跑一遍顶层，读出 manifest。

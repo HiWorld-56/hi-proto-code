@@ -1047,6 +1047,12 @@ pub struct LuaCtx {
     /// 号用 6 不用 5:5 是 dev.1 ~ dev.2 那几天的 `attachments`(消息型),复用会让还没换的执行器把它解坏。
     #[prost(string, optional, tag = "6")]
     pub conv: ::core::option::Option<::prost::alloc::string::String>,
+    /// Host-owned cancellation guard, not exposed to scripts.
+    #[prost(string, optional, tag = "7")]
+    pub subscription_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// Reject host effects from cancelled/replaced deliveries.
+    #[prost(string, optional, tag = "8")]
+    pub subscription_revision: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// OpenReq 装一个插件：跑一遍顶层，读出 manifest。
 ///
