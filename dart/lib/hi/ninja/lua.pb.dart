@@ -659,12 +659,14 @@ class HostCallReq extends $pb.GeneratedMessage {
     $core.String? argsJson,
     $core.List<$core.int>? input,
     LuaCtx? ctx,
+    $core.String? pluginId,
   }) {
     final result = create();
     if (name != null) result.name = name;
     if (argsJson != null) result.argsJson = argsJson;
     if (input != null) result.input = input;
     if (ctx != null) result.ctx = ctx;
+    if (pluginId != null) result.pluginId = pluginId;
     return result;
   }
 
@@ -686,6 +688,7 @@ class HostCallReq extends $pb.GeneratedMessage {
     ..a<$core.List<$core.int>>(
         3, _omitFieldNames ? '' : 'input', $pb.PbFieldType.OY)
     ..aOM<LuaCtx>(4, _omitFieldNames ? '' : 'ctx', subBuilder: LuaCtx.create)
+    ..aOS(5, _omitFieldNames ? '' : 'pluginId')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -753,6 +756,15 @@ class HostCallReq extends $pb.GeneratedMessage {
   void clearCtx() => $_clearField(4);
   @$pb.TagNumber(4)
   LuaCtx ensureCtx() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  $core.String get pluginId => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set pluginId($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasPluginId() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearPluginId() => $_clearField(5);
 }
 
 class HostCallResp extends $pb.GeneratedMessage {

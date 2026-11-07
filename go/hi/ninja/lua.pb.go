@@ -541,6 +541,7 @@ type HostCallReq struct {
 	//	把"别人让我做的"说成"主人让我做的"。执行器不是三方代码，它手里那份来自
 	//	brain 发过去的 InvokeReq，脚本碰不到。
 	Ctx           *LuaCtx `protobuf:"bytes,4,opt,name=ctx,proto3,oneof" json:"ctx,omitempty"`
+	PluginId      *string `protobuf:"bytes,5,opt,name=plugin_id,json=pluginId,proto3,oneof" json:"plugin_id,omitempty"` // Runner-owned InvokeReq.uuid; scripts cannot choose subscription ownership.
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -601,6 +602,13 @@ func (x *HostCallReq) GetCtx() *LuaCtx {
 		return x.Ctx
 	}
 	return nil
+}
+
+func (x *HostCallReq) GetPluginId() string {
+	if x != nil && x.PluginId != nil {
+		return *x.PluginId
+	}
+	return ""
 }
 
 type HostCallResp struct {
@@ -1020,17 +1028,20 @@ const file_hi_ninja_lua_proto_rawDesc = "" +
 	"\aversion\x18\x02 \x01(\tH\x01R\aversion\x88\x01\x01B\a\n" +
 	"\x05_uuidB\n" +
 	"\n" +
-	"\b_version\"\xb5\x01\n" +
+	"\b_version\"\xe5\x01\n" +
 	"\vHostCallReq\x12\x17\n" +
 	"\x04name\x18\x01 \x01(\tH\x00R\x04name\x88\x01\x01\x12 \n" +
 	"\targs_json\x18\x02 \x01(\tH\x01R\bargsJson\x88\x01\x01\x12\x19\n" +
 	"\x05input\x18\x03 \x01(\fH\x02R\x05input\x88\x01\x01\x12'\n" +
-	"\x03ctx\x18\x04 \x01(\v2\x10.hi.ninja.LuaCtxH\x03R\x03ctx\x88\x01\x01B\a\n" +
+	"\x03ctx\x18\x04 \x01(\v2\x10.hi.ninja.LuaCtxH\x03R\x03ctx\x88\x01\x01\x12 \n" +
+	"\tplugin_id\x18\x05 \x01(\tH\x04R\bpluginId\x88\x01\x01B\a\n" +
 	"\x05_nameB\f\n" +
 	"\n" +
 	"_args_jsonB\b\n" +
 	"\x06_inputB\x06\n" +
-	"\x04_ctx\"\x9c\x01\n" +
+	"\x04_ctxB\f\n" +
+	"\n" +
+	"_plugin_id\"\x9c\x01\n" +
 	"\fHostCallResp\x12\x17\n" +
 	"\x04json\x18\x01 \x01(\tH\x00R\x04json\x88\x01\x01\x12\x19\n" +
 	"\x05bytes\x18\x02 \x01(\fH\x01R\x05bytes\x88\x01\x01\x12\x19\n" +

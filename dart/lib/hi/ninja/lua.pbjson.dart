@@ -283,12 +283,22 @@ const HostCallReq$json = {
       '10': 'ctx',
       '17': true
     },
+    {
+      '1': 'plugin_id',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '9': 4,
+      '10': 'pluginId',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_name'},
     {'1': '_args_json'},
     {'1': '_input'},
     {'1': '_ctx'},
+    {'1': '_plugin_id'},
   ],
 };
 
@@ -296,8 +306,9 @@ const HostCallReq$json = {
 final $typed_data.Uint8List hostCallReqDescriptor = $convert.base64Decode(
     'CgtIb3N0Q2FsbFJlcRIXCgRuYW1lGAEgASgJSABSBG5hbWWIAQESIAoJYXJnc19qc29uGAIgAS'
     'gJSAFSCGFyZ3NKc29uiAEBEhkKBWlucHV0GAMgASgMSAJSBWlucHV0iAEBEicKA2N0eBgEIAEo'
-    'CzIQLmhpLm5pbmphLkx1YUN0eEgDUgNjdHiIAQFCBwoFX25hbWVCDAoKX2FyZ3NfanNvbkIICg'
-    'ZfaW5wdXRCBgoEX2N0eA==');
+    'CzIQLmhpLm5pbmphLkx1YUN0eEgDUgNjdHiIAQESIAoJcGx1Z2luX2lkGAUgASgJSARSCHBsdW'
+    'dpbklkiAEBQgcKBV9uYW1lQgwKCl9hcmdzX2pzb25CCAoGX2lucHV0QgYKBF9jdHhCDAoKX3Bs'
+    'dWdpbl9pZA==');
 
 @$core.Deprecated('Use hostCallRespDescriptor instead')
 const HostCallResp$json = {

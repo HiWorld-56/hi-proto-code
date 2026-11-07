@@ -806,6 +806,217 @@ pub mod vision_event {
         }
     }
 }
+/// Face attributes are appearance estimates, never identity, permission or verified age.
+/// Every snapshot explicitly replaces the previous one; UNKNOWN must clear old values.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VisionFaceAttributes {
+    #[prost(enumeration = "vision_face_attributes::State", optional, tag = "1")]
+    pub state: ::core::option::Option<i32>,
+    /// Stable multi-frame label; absent until confirmed.
+    #[prost(enumeration = "vision_face_attributes::Gender", optional, tag = "2")]
+    pub gender: ::core::option::Option<i32>,
+    #[prost(float, optional, tag = "3")]
+    pub female_probability: ::core::option::Option<f32>,
+    #[prost(float, optional, tag = "4")]
+    pub male_probability: ::core::option::Option<f32>,
+    /// Optional estimate; this model supplies NO age confidence.
+    #[prost(float, optional, tag = "5")]
+    pub age_years: ::core::option::Option<f32>,
+    #[prost(string, optional, tag = "6")]
+    pub model: ::core::option::Option<::prost::alloc::string::String>,
+    /// Disabled, small/ambiguous face, uncertainty or failure.
+    #[prost(string, optional, tag = "7")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// Nested message and enum types in `VisionFaceAttributes`.
+pub mod vision_face_attributes {
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        Unknown = 0,
+        Disabled = 1,
+        Uncertain = 2,
+        Available = 3,
+        Error = 4,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Self::Unknown => "STATE_UNKNOWN",
+                Self::Disabled => "STATE_DISABLED",
+                Self::Uncertain => "STATE_UNCERTAIN",
+                Self::Available => "STATE_AVAILABLE",
+                Self::Error => "STATE_ERROR",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNKNOWN" => Some(Self::Unknown),
+                "STATE_DISABLED" => Some(Self::Disabled),
+                "STATE_UNCERTAIN" => Some(Self::Uncertain),
+                "STATE_AVAILABLE" => Some(Self::Available),
+                "STATE_ERROR" => Some(Self::Error),
+                _ => None,
+            }
+        }
+    }
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Gender {
+        Unknown = 0,
+        Female = 1,
+        Male = 2,
+    }
+    impl Gender {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Self::Unknown => "GENDER_UNKNOWN",
+                Self::Female => "GENDER_FEMALE",
+                Self::Male => "GENDER_MALE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "GENDER_UNKNOWN" => Some(Self::Unknown),
+                "GENDER_FEMALE" => Some(Self::Female),
+                "GENDER_MALE" => Some(Self::Male),
+                _ => None,
+            }
+        }
+    }
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VisionFace {
+    #[prost(string, optional, tag = "1")]
+    pub target_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub bounds: ::core::option::Option<VisionBox>,
+    #[prost(float, optional, tag = "3")]
+    pub confidence: ::core::option::Option<f32>,
+    /// Same-frame body association, when unambiguous. Not a DID.
+    #[prost(message, optional, tag = "4")]
+    pub person: ::core::option::Option<VisionObject>,
+    #[prost(message, optional, tag = "5")]
+    pub attributes: ::core::option::Option<VisionFaceAttributes>,
+    /// Visibility hysteresis has completed.
+    #[prost(bool, optional, tag = "6")]
+    pub confirmed: ::core::option::Option<bool>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VisionFaceObservation {
+    #[prost(message, optional, tag = "1")]
+    pub source_session: ::core::option::Option<ModuleSession>,
+    #[prost(message, optional, tag = "2")]
+    pub frame: ::core::option::Option<IoFrameInfo>,
+    #[prost(string, optional, tag = "3")]
+    pub model: ::core::option::Option<::prost::alloc::string::String>,
+    /// Successful empty result differs from an interrupted/disabled branch.
+    #[prost(message, repeated, tag = "4")]
+    pub faces: ::prost::alloc::vec::Vec<VisionFace>,
+}
+/// Targets are anonymous short-lived tracks scoped by session_id, NOT identities.
+/// Losing a face does not prove that its body left. Interruptions invalidate all tracks.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VisionFaceEvent {
+    #[prost(string, optional, tag = "1")]
+    pub session_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(uint64, optional, tag = "2")]
+    pub sequence: ::core::option::Option<u64>,
+    #[prost(enumeration = "vision_face_event::Kind", optional, tag = "3")]
+    pub kind: ::core::option::Option<i32>,
+    /// Successful deciding frame; absent only on interruption.
+    #[prost(message, optional, tag = "4")]
+    pub observation: ::core::option::Option<VisionFaceObservation>,
+    /// APPEARED, DISAPPEARED, ATTRIBUTES_UPDATED.
+    #[prost(string, optional, tag = "5")]
+    pub target_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "6")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// Nested message and enum types in `VisionFaceEvent`.
+pub mod vision_face_event {
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Kind {
+        Unknown = 0,
+        Observed = 1,
+        Appeared = 2,
+        Disappeared = 3,
+        AttributesUpdated = 4,
+        Interrupted = 5,
+        Resumed = 6,
+    }
+    impl Kind {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Self::Unknown => "KIND_UNKNOWN",
+                Self::Observed => "KIND_OBSERVED",
+                Self::Appeared => "KIND_APPEARED",
+                Self::Disappeared => "KIND_DISAPPEARED",
+                Self::AttributesUpdated => "KIND_ATTRIBUTES_UPDATED",
+                Self::Interrupted => "KIND_INTERRUPTED",
+                Self::Resumed => "KIND_RESUMED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "KIND_UNKNOWN" => Some(Self::Unknown),
+                "KIND_OBSERVED" => Some(Self::Observed),
+                "KIND_APPEARED" => Some(Self::Appeared),
+                "KIND_DISAPPEARED" => Some(Self::Disappeared),
+                "KIND_ATTRIBUTES_UPDATED" => Some(Self::AttributesUpdated),
+                "KIND_INTERRUPTED" => Some(Self::Interrupted),
+                "KIND_RESUMED" => Some(Self::Resumed),
+                _ => None,
+            }
+        }
+    }
+}
 /// LuaCtx 一次调用的上下文。**这些字段一个都不在 manifest 里** ——
 /// 模型看不见，也就传不了；插件读到的只可能是 brain 填的。
 ///
@@ -956,6 +1167,9 @@ pub struct HostCallReq {
     /// brain 发过去的 InvokeReq，脚本碰不到。
     #[prost(message, optional, tag = "4")]
     pub ctx: ::core::option::Option<LuaCtx>,
+    /// Runner-owned InvokeReq.uuid; scripts cannot choose subscription ownership.
+    #[prost(string, optional, tag = "5")]
+    pub plugin_id: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct HostCallResp {

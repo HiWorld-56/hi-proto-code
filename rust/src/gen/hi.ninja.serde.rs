@@ -2596,6 +2596,9 @@ impl serde::Serialize for HostCallReq {
         if self.ctx.is_some() {
             len += 1;
         }
+        if self.plugin_id.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.HostCallReq", len)?;
         if let Some(v) = self.name.as_ref() {
             struct_ser.serialize_field("name", v)?;
@@ -2610,6 +2613,9 @@ impl serde::Serialize for HostCallReq {
         }
         if let Some(v) = self.ctx.as_ref() {
             struct_ser.serialize_field("ctx", v)?;
+        }
+        if let Some(v) = self.plugin_id.as_ref() {
+            struct_ser.serialize_field("pluginId", v)?;
         }
         struct_ser.end()
     }
@@ -2626,6 +2632,8 @@ impl<'de> serde::Deserialize<'de> for HostCallReq {
             "argsJson",
             "input",
             "ctx",
+            "plugin_id",
+            "pluginId",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -2634,6 +2642,7 @@ impl<'de> serde::Deserialize<'de> for HostCallReq {
             ArgsJson,
             Input,
             Ctx,
+            PluginId,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -2659,6 +2668,7 @@ impl<'de> serde::Deserialize<'de> for HostCallReq {
                             "argsJson" | "args_json" => Ok(GeneratedField::ArgsJson),
                             "input" => Ok(GeneratedField::Input),
                             "ctx" => Ok(GeneratedField::Ctx),
+                            "pluginId" | "plugin_id" => Ok(GeneratedField::PluginId),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -2682,6 +2692,7 @@ impl<'de> serde::Deserialize<'de> for HostCallReq {
                 let mut args_json__ = None;
                 let mut input__ = None;
                 let mut ctx__ = None;
+                let mut plugin_id__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Name => {
@@ -2710,6 +2721,12 @@ impl<'de> serde::Deserialize<'de> for HostCallReq {
                             }
                             ctx__ = map_.next_value()?;
                         }
+                        GeneratedField::PluginId => {
+                            if plugin_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("pluginId"));
+                            }
+                            plugin_id__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(HostCallReq {
@@ -2717,6 +2734,7 @@ impl<'de> serde::Deserialize<'de> for HostCallReq {
                     args_json: args_json__,
                     input: input__,
                     ctx: ctx__,
+                    plugin_id: plugin_id__,
                 })
             }
         }
@@ -11080,6 +11098,958 @@ impl<'de> serde::Deserialize<'de> for vision_event::Kind {
             }
         }
         deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for VisionFace {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.target_id.is_some() {
+            len += 1;
+        }
+        if self.bounds.is_some() {
+            len += 1;
+        }
+        if self.confidence.is_some() {
+            len += 1;
+        }
+        if self.person.is_some() {
+            len += 1;
+        }
+        if self.attributes.is_some() {
+            len += 1;
+        }
+        if self.confirmed.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.VisionFace", len)?;
+        if let Some(v) = self.target_id.as_ref() {
+            struct_ser.serialize_field("targetId", v)?;
+        }
+        if let Some(v) = self.bounds.as_ref() {
+            struct_ser.serialize_field("bounds", v)?;
+        }
+        if let Some(v) = self.confidence.as_ref() {
+            struct_ser.serialize_field("confidence", v)?;
+        }
+        if let Some(v) = self.person.as_ref() {
+            struct_ser.serialize_field("person", v)?;
+        }
+        if let Some(v) = self.attributes.as_ref() {
+            struct_ser.serialize_field("attributes", v)?;
+        }
+        if let Some(v) = self.confirmed.as_ref() {
+            struct_ser.serialize_field("confirmed", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for VisionFace {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "target_id",
+            "targetId",
+            "bounds",
+            "confidence",
+            "person",
+            "attributes",
+            "confirmed",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            TargetId,
+            Bounds,
+            Confidence,
+            Person,
+            Attributes,
+            Confirmed,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "targetId" | "target_id" => Ok(GeneratedField::TargetId),
+                            "bounds" => Ok(GeneratedField::Bounds),
+                            "confidence" => Ok(GeneratedField::Confidence),
+                            "person" => Ok(GeneratedField::Person),
+                            "attributes" => Ok(GeneratedField::Attributes),
+                            "confirmed" => Ok(GeneratedField::Confirmed),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = VisionFace;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.VisionFace")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<VisionFace, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut target_id__ = None;
+                let mut bounds__ = None;
+                let mut confidence__ = None;
+                let mut person__ = None;
+                let mut attributes__ = None;
+                let mut confirmed__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::TargetId => {
+                            if target_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("targetId"));
+                            }
+                            target_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Bounds => {
+                            if bounds__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("bounds"));
+                            }
+                            bounds__ = map_.next_value()?;
+                        }
+                        GeneratedField::Confidence => {
+                            if confidence__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("confidence"));
+                            }
+                            confidence__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Person => {
+                            if person__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("person"));
+                            }
+                            person__ = map_.next_value()?;
+                        }
+                        GeneratedField::Attributes => {
+                            if attributes__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("attributes"));
+                            }
+                            attributes__ = map_.next_value()?;
+                        }
+                        GeneratedField::Confirmed => {
+                            if confirmed__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("confirmed"));
+                            }
+                            confirmed__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(VisionFace {
+                    target_id: target_id__,
+                    bounds: bounds__,
+                    confidence: confidence__,
+                    person: person__,
+                    attributes: attributes__,
+                    confirmed: confirmed__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.VisionFace", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for VisionFaceAttributes {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.state.is_some() {
+            len += 1;
+        }
+        if self.gender.is_some() {
+            len += 1;
+        }
+        if self.female_probability.is_some() {
+            len += 1;
+        }
+        if self.male_probability.is_some() {
+            len += 1;
+        }
+        if self.age_years.is_some() {
+            len += 1;
+        }
+        if self.model.is_some() {
+            len += 1;
+        }
+        if self.reason.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.VisionFaceAttributes", len)?;
+        if let Some(v) = self.state.as_ref() {
+            let v = vision_face_attributes::State::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("state", &v)?;
+        }
+        if let Some(v) = self.gender.as_ref() {
+            let v = vision_face_attributes::Gender::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("gender", &v)?;
+        }
+        if let Some(v) = self.female_probability.as_ref() {
+            struct_ser.serialize_field("femaleProbability", v)?;
+        }
+        if let Some(v) = self.male_probability.as_ref() {
+            struct_ser.serialize_field("maleProbability", v)?;
+        }
+        if let Some(v) = self.age_years.as_ref() {
+            struct_ser.serialize_field("ageYears", v)?;
+        }
+        if let Some(v) = self.model.as_ref() {
+            struct_ser.serialize_field("model", v)?;
+        }
+        if let Some(v) = self.reason.as_ref() {
+            struct_ser.serialize_field("reason", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for VisionFaceAttributes {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "state",
+            "gender",
+            "female_probability",
+            "femaleProbability",
+            "male_probability",
+            "maleProbability",
+            "age_years",
+            "ageYears",
+            "model",
+            "reason",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            State,
+            Gender,
+            FemaleProbability,
+            MaleProbability,
+            AgeYears,
+            Model,
+            Reason,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "state" => Ok(GeneratedField::State),
+                            "gender" => Ok(GeneratedField::Gender),
+                            "femaleProbability" | "female_probability" => Ok(GeneratedField::FemaleProbability),
+                            "maleProbability" | "male_probability" => Ok(GeneratedField::MaleProbability),
+                            "ageYears" | "age_years" => Ok(GeneratedField::AgeYears),
+                            "model" => Ok(GeneratedField::Model),
+                            "reason" => Ok(GeneratedField::Reason),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = VisionFaceAttributes;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.VisionFaceAttributes")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<VisionFaceAttributes, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut state__ = None;
+                let mut gender__ = None;
+                let mut female_probability__ = None;
+                let mut male_probability__ = None;
+                let mut age_years__ = None;
+                let mut model__ = None;
+                let mut reason__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::State => {
+                            if state__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("state"));
+                            }
+                            state__ = map_.next_value::<::std::option::Option<vision_face_attributes::State>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::Gender => {
+                            if gender__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("gender"));
+                            }
+                            gender__ = map_.next_value::<::std::option::Option<vision_face_attributes::Gender>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::FemaleProbability => {
+                            if female_probability__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("femaleProbability"));
+                            }
+                            female_probability__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::MaleProbability => {
+                            if male_probability__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("maleProbability"));
+                            }
+                            male_probability__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::AgeYears => {
+                            if age_years__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("ageYears"));
+                            }
+                            age_years__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Model => {
+                            if model__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("model"));
+                            }
+                            model__ = map_.next_value()?;
+                        }
+                        GeneratedField::Reason => {
+                            if reason__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("reason"));
+                            }
+                            reason__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(VisionFaceAttributes {
+                    state: state__,
+                    gender: gender__,
+                    female_probability: female_probability__,
+                    male_probability: male_probability__,
+                    age_years: age_years__,
+                    model: model__,
+                    reason: reason__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.VisionFaceAttributes", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for vision_face_attributes::Gender {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unknown => "GENDER_UNKNOWN",
+            Self::Female => "GENDER_FEMALE",
+            Self::Male => "GENDER_MALE",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for vision_face_attributes::Gender {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "GENDER_UNKNOWN",
+            "GENDER_FEMALE",
+            "GENDER_MALE",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = vision_face_attributes::Gender;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "GENDER_UNKNOWN" => Ok(vision_face_attributes::Gender::Unknown),
+                    "GENDER_FEMALE" => Ok(vision_face_attributes::Gender::Female),
+                    "GENDER_MALE" => Ok(vision_face_attributes::Gender::Male),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for vision_face_attributes::State {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unknown => "STATE_UNKNOWN",
+            Self::Disabled => "STATE_DISABLED",
+            Self::Uncertain => "STATE_UNCERTAIN",
+            Self::Available => "STATE_AVAILABLE",
+            Self::Error => "STATE_ERROR",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for vision_face_attributes::State {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "STATE_UNKNOWN",
+            "STATE_DISABLED",
+            "STATE_UNCERTAIN",
+            "STATE_AVAILABLE",
+            "STATE_ERROR",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = vision_face_attributes::State;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "STATE_UNKNOWN" => Ok(vision_face_attributes::State::Unknown),
+                    "STATE_DISABLED" => Ok(vision_face_attributes::State::Disabled),
+                    "STATE_UNCERTAIN" => Ok(vision_face_attributes::State::Uncertain),
+                    "STATE_AVAILABLE" => Ok(vision_face_attributes::State::Available),
+                    "STATE_ERROR" => Ok(vision_face_attributes::State::Error),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for VisionFaceEvent {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.session_id.is_some() {
+            len += 1;
+        }
+        if self.sequence.is_some() {
+            len += 1;
+        }
+        if self.kind.is_some() {
+            len += 1;
+        }
+        if self.observation.is_some() {
+            len += 1;
+        }
+        if self.target_id.is_some() {
+            len += 1;
+        }
+        if self.reason.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.VisionFaceEvent", len)?;
+        if let Some(v) = self.session_id.as_ref() {
+            struct_ser.serialize_field("sessionId", v)?;
+        }
+        if let Some(v) = self.sequence.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("sequence", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.kind.as_ref() {
+            let v = vision_face_event::Kind::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("kind", &v)?;
+        }
+        if let Some(v) = self.observation.as_ref() {
+            struct_ser.serialize_field("observation", v)?;
+        }
+        if let Some(v) = self.target_id.as_ref() {
+            struct_ser.serialize_field("targetId", v)?;
+        }
+        if let Some(v) = self.reason.as_ref() {
+            struct_ser.serialize_field("reason", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for VisionFaceEvent {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "session_id",
+            "sessionId",
+            "sequence",
+            "kind",
+            "observation",
+            "target_id",
+            "targetId",
+            "reason",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            SessionId,
+            Sequence,
+            Kind,
+            Observation,
+            TargetId,
+            Reason,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "sessionId" | "session_id" => Ok(GeneratedField::SessionId),
+                            "sequence" => Ok(GeneratedField::Sequence),
+                            "kind" => Ok(GeneratedField::Kind),
+                            "observation" => Ok(GeneratedField::Observation),
+                            "targetId" | "target_id" => Ok(GeneratedField::TargetId),
+                            "reason" => Ok(GeneratedField::Reason),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = VisionFaceEvent;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.VisionFaceEvent")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<VisionFaceEvent, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut session_id__ = None;
+                let mut sequence__ = None;
+                let mut kind__ = None;
+                let mut observation__ = None;
+                let mut target_id__ = None;
+                let mut reason__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::SessionId => {
+                            if session_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sessionId"));
+                            }
+                            session_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Sequence => {
+                            if sequence__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sequence"));
+                            }
+                            sequence__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Kind => {
+                            if kind__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("kind"));
+                            }
+                            kind__ = map_.next_value::<::std::option::Option<vision_face_event::Kind>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::Observation => {
+                            if observation__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("observation"));
+                            }
+                            observation__ = map_.next_value()?;
+                        }
+                        GeneratedField::TargetId => {
+                            if target_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("targetId"));
+                            }
+                            target_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Reason => {
+                            if reason__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("reason"));
+                            }
+                            reason__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(VisionFaceEvent {
+                    session_id: session_id__,
+                    sequence: sequence__,
+                    kind: kind__,
+                    observation: observation__,
+                    target_id: target_id__,
+                    reason: reason__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.VisionFaceEvent", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for vision_face_event::Kind {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unknown => "KIND_UNKNOWN",
+            Self::Observed => "KIND_OBSERVED",
+            Self::Appeared => "KIND_APPEARED",
+            Self::Disappeared => "KIND_DISAPPEARED",
+            Self::AttributesUpdated => "KIND_ATTRIBUTES_UPDATED",
+            Self::Interrupted => "KIND_INTERRUPTED",
+            Self::Resumed => "KIND_RESUMED",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for vision_face_event::Kind {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "KIND_UNKNOWN",
+            "KIND_OBSERVED",
+            "KIND_APPEARED",
+            "KIND_DISAPPEARED",
+            "KIND_ATTRIBUTES_UPDATED",
+            "KIND_INTERRUPTED",
+            "KIND_RESUMED",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = vision_face_event::Kind;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "KIND_UNKNOWN" => Ok(vision_face_event::Kind::Unknown),
+                    "KIND_OBSERVED" => Ok(vision_face_event::Kind::Observed),
+                    "KIND_APPEARED" => Ok(vision_face_event::Kind::Appeared),
+                    "KIND_DISAPPEARED" => Ok(vision_face_event::Kind::Disappeared),
+                    "KIND_ATTRIBUTES_UPDATED" => Ok(vision_face_event::Kind::AttributesUpdated),
+                    "KIND_INTERRUPTED" => Ok(vision_face_event::Kind::Interrupted),
+                    "KIND_RESUMED" => Ok(vision_face_event::Kind::Resumed),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for VisionFaceObservation {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.source_session.is_some() {
+            len += 1;
+        }
+        if self.frame.is_some() {
+            len += 1;
+        }
+        if self.model.is_some() {
+            len += 1;
+        }
+        if !self.faces.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.VisionFaceObservation", len)?;
+        if let Some(v) = self.source_session.as_ref() {
+            struct_ser.serialize_field("sourceSession", v)?;
+        }
+        if let Some(v) = self.frame.as_ref() {
+            struct_ser.serialize_field("frame", v)?;
+        }
+        if let Some(v) = self.model.as_ref() {
+            struct_ser.serialize_field("model", v)?;
+        }
+        if !self.faces.is_empty() {
+            struct_ser.serialize_field("faces", &self.faces)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for VisionFaceObservation {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "source_session",
+            "sourceSession",
+            "frame",
+            "model",
+            "faces",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            SourceSession,
+            Frame,
+            Model,
+            Faces,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "sourceSession" | "source_session" => Ok(GeneratedField::SourceSession),
+                            "frame" => Ok(GeneratedField::Frame),
+                            "model" => Ok(GeneratedField::Model),
+                            "faces" => Ok(GeneratedField::Faces),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = VisionFaceObservation;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.VisionFaceObservation")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<VisionFaceObservation, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut source_session__ = None;
+                let mut frame__ = None;
+                let mut model__ = None;
+                let mut faces__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::SourceSession => {
+                            if source_session__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sourceSession"));
+                            }
+                            source_session__ = map_.next_value()?;
+                        }
+                        GeneratedField::Frame => {
+                            if frame__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("frame"));
+                            }
+                            frame__ = map_.next_value()?;
+                        }
+                        GeneratedField::Model => {
+                            if model__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("model"));
+                            }
+                            model__ = map_.next_value()?;
+                        }
+                        GeneratedField::Faces => {
+                            if faces__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("faces"));
+                            }
+                            faces__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(VisionFaceObservation {
+                    source_session: source_session__,
+                    frame: frame__,
+                    model: model__,
+                    faces: faces__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.VisionFaceObservation", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for VisionObject {

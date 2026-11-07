@@ -80,6 +80,171 @@ func (VisionEvent_Kind) EnumDescriptor() ([]byte, []int) {
 	return file_hi_ninja_vision_proto_rawDescGZIP(), []int{3, 0}
 }
 
+type VisionFaceAttributes_State int32
+
+const (
+	VisionFaceAttributes_STATE_UNKNOWN   VisionFaceAttributes_State = 0
+	VisionFaceAttributes_STATE_DISABLED  VisionFaceAttributes_State = 1
+	VisionFaceAttributes_STATE_UNCERTAIN VisionFaceAttributes_State = 2
+	VisionFaceAttributes_STATE_AVAILABLE VisionFaceAttributes_State = 3
+	VisionFaceAttributes_STATE_ERROR     VisionFaceAttributes_State = 4
+)
+
+// Enum value maps for VisionFaceAttributes_State.
+var (
+	VisionFaceAttributes_State_name = map[int32]string{
+		0: "STATE_UNKNOWN",
+		1: "STATE_DISABLED",
+		2: "STATE_UNCERTAIN",
+		3: "STATE_AVAILABLE",
+		4: "STATE_ERROR",
+	}
+	VisionFaceAttributes_State_value = map[string]int32{
+		"STATE_UNKNOWN":   0,
+		"STATE_DISABLED":  1,
+		"STATE_UNCERTAIN": 2,
+		"STATE_AVAILABLE": 3,
+		"STATE_ERROR":     4,
+	}
+)
+
+func (x VisionFaceAttributes_State) Enum() *VisionFaceAttributes_State {
+	p := new(VisionFaceAttributes_State)
+	*p = x
+	return p
+}
+
+func (x VisionFaceAttributes_State) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (VisionFaceAttributes_State) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_ninja_vision_proto_enumTypes[1].Descriptor()
+}
+
+func (VisionFaceAttributes_State) Type() protoreflect.EnumType {
+	return &file_hi_ninja_vision_proto_enumTypes[1]
+}
+
+func (x VisionFaceAttributes_State) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use VisionFaceAttributes_State.Descriptor instead.
+func (VisionFaceAttributes_State) EnumDescriptor() ([]byte, []int) {
+	return file_hi_ninja_vision_proto_rawDescGZIP(), []int{4, 0}
+}
+
+type VisionFaceAttributes_Gender int32
+
+const (
+	VisionFaceAttributes_GENDER_UNKNOWN VisionFaceAttributes_Gender = 0
+	VisionFaceAttributes_GENDER_FEMALE  VisionFaceAttributes_Gender = 1
+	VisionFaceAttributes_GENDER_MALE    VisionFaceAttributes_Gender = 2
+)
+
+// Enum value maps for VisionFaceAttributes_Gender.
+var (
+	VisionFaceAttributes_Gender_name = map[int32]string{
+		0: "GENDER_UNKNOWN",
+		1: "GENDER_FEMALE",
+		2: "GENDER_MALE",
+	}
+	VisionFaceAttributes_Gender_value = map[string]int32{
+		"GENDER_UNKNOWN": 0,
+		"GENDER_FEMALE":  1,
+		"GENDER_MALE":    2,
+	}
+)
+
+func (x VisionFaceAttributes_Gender) Enum() *VisionFaceAttributes_Gender {
+	p := new(VisionFaceAttributes_Gender)
+	*p = x
+	return p
+}
+
+func (x VisionFaceAttributes_Gender) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (VisionFaceAttributes_Gender) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_ninja_vision_proto_enumTypes[2].Descriptor()
+}
+
+func (VisionFaceAttributes_Gender) Type() protoreflect.EnumType {
+	return &file_hi_ninja_vision_proto_enumTypes[2]
+}
+
+func (x VisionFaceAttributes_Gender) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use VisionFaceAttributes_Gender.Descriptor instead.
+func (VisionFaceAttributes_Gender) EnumDescriptor() ([]byte, []int) {
+	return file_hi_ninja_vision_proto_rawDescGZIP(), []int{4, 1}
+}
+
+type VisionFaceEvent_Kind int32
+
+const (
+	VisionFaceEvent_KIND_UNKNOWN            VisionFaceEvent_Kind = 0
+	VisionFaceEvent_KIND_OBSERVED           VisionFaceEvent_Kind = 1
+	VisionFaceEvent_KIND_APPEARED           VisionFaceEvent_Kind = 2
+	VisionFaceEvent_KIND_DISAPPEARED        VisionFaceEvent_Kind = 3
+	VisionFaceEvent_KIND_ATTRIBUTES_UPDATED VisionFaceEvent_Kind = 4
+	VisionFaceEvent_KIND_INTERRUPTED        VisionFaceEvent_Kind = 5
+	VisionFaceEvent_KIND_RESUMED            VisionFaceEvent_Kind = 6
+)
+
+// Enum value maps for VisionFaceEvent_Kind.
+var (
+	VisionFaceEvent_Kind_name = map[int32]string{
+		0: "KIND_UNKNOWN",
+		1: "KIND_OBSERVED",
+		2: "KIND_APPEARED",
+		3: "KIND_DISAPPEARED",
+		4: "KIND_ATTRIBUTES_UPDATED",
+		5: "KIND_INTERRUPTED",
+		6: "KIND_RESUMED",
+	}
+	VisionFaceEvent_Kind_value = map[string]int32{
+		"KIND_UNKNOWN":            0,
+		"KIND_OBSERVED":           1,
+		"KIND_APPEARED":           2,
+		"KIND_DISAPPEARED":        3,
+		"KIND_ATTRIBUTES_UPDATED": 4,
+		"KIND_INTERRUPTED":        5,
+		"KIND_RESUMED":            6,
+	}
+)
+
+func (x VisionFaceEvent_Kind) Enum() *VisionFaceEvent_Kind {
+	p := new(VisionFaceEvent_Kind)
+	*p = x
+	return p
+}
+
+func (x VisionFaceEvent_Kind) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (VisionFaceEvent_Kind) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_ninja_vision_proto_enumTypes[3].Descriptor()
+}
+
+func (VisionFaceEvent_Kind) Type() protoreflect.EnumType {
+	return &file_hi_ninja_vision_proto_enumTypes[3]
+}
+
+func (x VisionFaceEvent_Kind) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use VisionFaceEvent_Kind.Descriptor instead.
+func (VisionFaceEvent_Kind) EnumDescriptor() ([]byte, []int) {
+	return file_hi_ninja_vision_proto_rawDescGZIP(), []int{7, 0}
+}
+
 // Class names use the COCO80 canonical English labels (person, cat, dog, ...).
 // A category is an observation, never a business identity or authorization.
 type VisionObject struct {
@@ -374,6 +539,338 @@ func (x *VisionEvent) GetReason() string {
 	return ""
 }
 
+// Face attributes are appearance estimates, never identity, permission or verified age.
+// Every snapshot explicitly replaces the previous one; UNKNOWN must clear old values.
+type VisionFaceAttributes struct {
+	state             protoimpl.MessageState       `protogen:"open.v1"`
+	State             *VisionFaceAttributes_State  `protobuf:"varint,1,opt,name=state,proto3,enum=hi.ninja.VisionFaceAttributes_State,oneof" json:"state,omitempty"`
+	Gender            *VisionFaceAttributes_Gender `protobuf:"varint,2,opt,name=gender,proto3,enum=hi.ninja.VisionFaceAttributes_Gender,oneof" json:"gender,omitempty"` // Stable multi-frame label; absent until confirmed.
+	FemaleProbability *float32                     `protobuf:"fixed32,3,opt,name=female_probability,json=femaleProbability,proto3,oneof" json:"female_probability,omitempty"`
+	MaleProbability   *float32                     `protobuf:"fixed32,4,opt,name=male_probability,json=maleProbability,proto3,oneof" json:"male_probability,omitempty"`
+	AgeYears          *float32                     `protobuf:"fixed32,5,opt,name=age_years,json=ageYears,proto3,oneof" json:"age_years,omitempty"` // Optional estimate; this model supplies NO age confidence.
+	Model             *string                      `protobuf:"bytes,6,opt,name=model,proto3,oneof" json:"model,omitempty"`
+	Reason            *string                      `protobuf:"bytes,7,opt,name=reason,proto3,oneof" json:"reason,omitempty"` // Disabled, small/ambiguous face, uncertainty or failure.
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *VisionFaceAttributes) Reset() {
+	*x = VisionFaceAttributes{}
+	mi := &file_hi_ninja_vision_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *VisionFaceAttributes) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*VisionFaceAttributes) ProtoMessage() {}
+
+func (x *VisionFaceAttributes) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ninja_vision_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use VisionFaceAttributes.ProtoReflect.Descriptor instead.
+func (*VisionFaceAttributes) Descriptor() ([]byte, []int) {
+	return file_hi_ninja_vision_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *VisionFaceAttributes) GetState() VisionFaceAttributes_State {
+	if x != nil && x.State != nil {
+		return *x.State
+	}
+	return VisionFaceAttributes_STATE_UNKNOWN
+}
+
+func (x *VisionFaceAttributes) GetGender() VisionFaceAttributes_Gender {
+	if x != nil && x.Gender != nil {
+		return *x.Gender
+	}
+	return VisionFaceAttributes_GENDER_UNKNOWN
+}
+
+func (x *VisionFaceAttributes) GetFemaleProbability() float32 {
+	if x != nil && x.FemaleProbability != nil {
+		return *x.FemaleProbability
+	}
+	return 0
+}
+
+func (x *VisionFaceAttributes) GetMaleProbability() float32 {
+	if x != nil && x.MaleProbability != nil {
+		return *x.MaleProbability
+	}
+	return 0
+}
+
+func (x *VisionFaceAttributes) GetAgeYears() float32 {
+	if x != nil && x.AgeYears != nil {
+		return *x.AgeYears
+	}
+	return 0
+}
+
+func (x *VisionFaceAttributes) GetModel() string {
+	if x != nil && x.Model != nil {
+		return *x.Model
+	}
+	return ""
+}
+
+func (x *VisionFaceAttributes) GetReason() string {
+	if x != nil && x.Reason != nil {
+		return *x.Reason
+	}
+	return ""
+}
+
+type VisionFace struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TargetId      *string                `protobuf:"bytes,1,opt,name=target_id,json=targetId,proto3,oneof" json:"target_id,omitempty"`
+	Bounds        *VisionBox             `protobuf:"bytes,2,opt,name=bounds,proto3" json:"bounds,omitempty"`
+	Confidence    *float32               `protobuf:"fixed32,3,opt,name=confidence,proto3,oneof" json:"confidence,omitempty"`
+	Person        *VisionObject          `protobuf:"bytes,4,opt,name=person,proto3" json:"person,omitempty"` // Same-frame body association, when unambiguous. Not a DID.
+	Attributes    *VisionFaceAttributes  `protobuf:"bytes,5,opt,name=attributes,proto3" json:"attributes,omitempty"`
+	Confirmed     *bool                  `protobuf:"varint,6,opt,name=confirmed,proto3,oneof" json:"confirmed,omitempty"` // Visibility hysteresis has completed.
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *VisionFace) Reset() {
+	*x = VisionFace{}
+	mi := &file_hi_ninja_vision_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *VisionFace) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*VisionFace) ProtoMessage() {}
+
+func (x *VisionFace) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ninja_vision_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use VisionFace.ProtoReflect.Descriptor instead.
+func (*VisionFace) Descriptor() ([]byte, []int) {
+	return file_hi_ninja_vision_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *VisionFace) GetTargetId() string {
+	if x != nil && x.TargetId != nil {
+		return *x.TargetId
+	}
+	return ""
+}
+
+func (x *VisionFace) GetBounds() *VisionBox {
+	if x != nil {
+		return x.Bounds
+	}
+	return nil
+}
+
+func (x *VisionFace) GetConfidence() float32 {
+	if x != nil && x.Confidence != nil {
+		return *x.Confidence
+	}
+	return 0
+}
+
+func (x *VisionFace) GetPerson() *VisionObject {
+	if x != nil {
+		return x.Person
+	}
+	return nil
+}
+
+func (x *VisionFace) GetAttributes() *VisionFaceAttributes {
+	if x != nil {
+		return x.Attributes
+	}
+	return nil
+}
+
+func (x *VisionFace) GetConfirmed() bool {
+	if x != nil && x.Confirmed != nil {
+		return *x.Confirmed
+	}
+	return false
+}
+
+type VisionFaceObservation struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SourceSession *ModuleSession         `protobuf:"bytes,1,opt,name=source_session,json=sourceSession,proto3" json:"source_session,omitempty"`
+	Frame         *IoFrameInfo           `protobuf:"bytes,2,opt,name=frame,proto3" json:"frame,omitempty"`
+	Model         *string                `protobuf:"bytes,3,opt,name=model,proto3,oneof" json:"model,omitempty"`
+	Faces         []*VisionFace          `protobuf:"bytes,4,rep,name=faces,proto3" json:"faces,omitempty"` // Successful empty result differs from an interrupted/disabled branch.
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *VisionFaceObservation) Reset() {
+	*x = VisionFaceObservation{}
+	mi := &file_hi_ninja_vision_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *VisionFaceObservation) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*VisionFaceObservation) ProtoMessage() {}
+
+func (x *VisionFaceObservation) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ninja_vision_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use VisionFaceObservation.ProtoReflect.Descriptor instead.
+func (*VisionFaceObservation) Descriptor() ([]byte, []int) {
+	return file_hi_ninja_vision_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *VisionFaceObservation) GetSourceSession() *ModuleSession {
+	if x != nil {
+		return x.SourceSession
+	}
+	return nil
+}
+
+func (x *VisionFaceObservation) GetFrame() *IoFrameInfo {
+	if x != nil {
+		return x.Frame
+	}
+	return nil
+}
+
+func (x *VisionFaceObservation) GetModel() string {
+	if x != nil && x.Model != nil {
+		return *x.Model
+	}
+	return ""
+}
+
+func (x *VisionFaceObservation) GetFaces() []*VisionFace {
+	if x != nil {
+		return x.Faces
+	}
+	return nil
+}
+
+// Targets are anonymous short-lived tracks scoped by session_id, NOT identities.
+// Losing a face does not prove that its body left. Interruptions invalidate all tracks.
+type VisionFaceEvent struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SessionId     *string                `protobuf:"bytes,1,opt,name=session_id,json=sessionId,proto3,oneof" json:"session_id,omitempty"`
+	Sequence      *uint64                `protobuf:"varint,2,opt,name=sequence,proto3,oneof" json:"sequence,omitempty"`
+	Kind          *VisionFaceEvent_Kind  `protobuf:"varint,3,opt,name=kind,proto3,enum=hi.ninja.VisionFaceEvent_Kind,oneof" json:"kind,omitempty"`
+	Observation   *VisionFaceObservation `protobuf:"bytes,4,opt,name=observation,proto3" json:"observation,omitempty"`                 // Successful deciding frame; absent only on interruption.
+	TargetId      *string                `protobuf:"bytes,5,opt,name=target_id,json=targetId,proto3,oneof" json:"target_id,omitempty"` // APPEARED, DISAPPEARED, ATTRIBUTES_UPDATED.
+	Reason        *string                `protobuf:"bytes,6,opt,name=reason,proto3,oneof" json:"reason,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *VisionFaceEvent) Reset() {
+	*x = VisionFaceEvent{}
+	mi := &file_hi_ninja_vision_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *VisionFaceEvent) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*VisionFaceEvent) ProtoMessage() {}
+
+func (x *VisionFaceEvent) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ninja_vision_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use VisionFaceEvent.ProtoReflect.Descriptor instead.
+func (*VisionFaceEvent) Descriptor() ([]byte, []int) {
+	return file_hi_ninja_vision_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *VisionFaceEvent) GetSessionId() string {
+	if x != nil && x.SessionId != nil {
+		return *x.SessionId
+	}
+	return ""
+}
+
+func (x *VisionFaceEvent) GetSequence() uint64 {
+	if x != nil && x.Sequence != nil {
+		return *x.Sequence
+	}
+	return 0
+}
+
+func (x *VisionFaceEvent) GetKind() VisionFaceEvent_Kind {
+	if x != nil && x.Kind != nil {
+		return *x.Kind
+	}
+	return VisionFaceEvent_KIND_UNKNOWN
+}
+
+func (x *VisionFaceEvent) GetObservation() *VisionFaceObservation {
+	if x != nil {
+		return x.Observation
+	}
+	return nil
+}
+
+func (x *VisionFaceEvent) GetTargetId() string {
+	if x != nil && x.TargetId != nil {
+		return *x.TargetId
+	}
+	return ""
+}
+
+func (x *VisionFaceEvent) GetReason() string {
+	if x != nil && x.Reason != nil {
+		return *x.Reason
+	}
+	return ""
+}
+
 var File_hi_ninja_vision_proto protoreflect.FileDescriptor
 
 const file_hi_ninja_vision_proto_rawDesc = "" +
@@ -437,6 +934,87 @@ const file_hi_ninja_vision_proto_rawDesc = "" +
 	"\x05_kindB\v\n" +
 	"\t_categoryB\b\n" +
 	"\x06_countB\t\n" +
+	"\a_reason\"\x99\x05\n" +
+	"\x14VisionFaceAttributes\x12L\n" +
+	"\x05state\x18\x01 \x01(\x0e2$.hi.ninja.VisionFaceAttributes.StateB\v\xbaH\b\xc8\x01\x01\x82\x01\x02\x10\x01H\x00R\x05state\x88\x01\x01\x12B\n" +
+	"\x06gender\x18\x02 \x01(\x0e2%.hi.ninja.VisionFaceAttributes.GenderH\x01R\x06gender\x88\x01\x01\x12C\n" +
+	"\x12female_probability\x18\x03 \x01(\x02B\x0f\xbaH\f\n" +
+	"\n" +
+	"\x1d\x00\x00\x80?-\x00\x00\x00\x00H\x02R\x11femaleProbability\x88\x01\x01\x12?\n" +
+	"\x10male_probability\x18\x04 \x01(\x02B\x0f\xbaH\f\n" +
+	"\n" +
+	"\x1d\x00\x00\x80?-\x00\x00\x00\x00H\x03R\x0fmaleProbability\x88\x01\x01\x12 \n" +
+	"\tage_years\x18\x05 \x01(\x02H\x04R\bageYears\x88\x01\x01\x12\x19\n" +
+	"\x05model\x18\x06 \x01(\tH\x05R\x05model\x88\x01\x01\x12\x1b\n" +
+	"\x06reason\x18\a \x01(\tH\x06R\x06reason\x88\x01\x01\"i\n" +
+	"\x05State\x12\x11\n" +
+	"\rSTATE_UNKNOWN\x10\x00\x12\x12\n" +
+	"\x0eSTATE_DISABLED\x10\x01\x12\x13\n" +
+	"\x0fSTATE_UNCERTAIN\x10\x02\x12\x13\n" +
+	"\x0fSTATE_AVAILABLE\x10\x03\x12\x0f\n" +
+	"\vSTATE_ERROR\x10\x04\"@\n" +
+	"\x06Gender\x12\x12\n" +
+	"\x0eGENDER_UNKNOWN\x10\x00\x12\x11\n" +
+	"\rGENDER_FEMALE\x10\x01\x12\x0f\n" +
+	"\vGENDER_MALE\x10\x02B\b\n" +
+	"\x06_stateB\t\n" +
+	"\a_genderB\x15\n" +
+	"\x13_female_probabilityB\x13\n" +
+	"\x11_male_probabilityB\f\n" +
+	"\n" +
+	"_age_yearsB\b\n" +
+	"\x06_modelB\t\n" +
+	"\a_reason\"\xf6\x02\n" +
+	"\n" +
+	"VisionFace\x12,\n" +
+	"\ttarget_id\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\btargetId\x88\x01\x01\x123\n" +
+	"\x06bounds\x18\x02 \x01(\v2\x13.hi.ninja.VisionBoxB\x06\xbaH\x03\xc8\x01\x01R\x06bounds\x127\n" +
+	"\n" +
+	"confidence\x18\x03 \x01(\x02B\x12\xbaH\x0f\xc8\x01\x01\n" +
+	"\n" +
+	"\x1d\x00\x00\x80?-\x00\x00\x00\x00H\x01R\n" +
+	"confidence\x88\x01\x01\x12.\n" +
+	"\x06person\x18\x04 \x01(\v2\x16.hi.ninja.VisionObjectR\x06person\x12F\n" +
+	"\n" +
+	"attributes\x18\x05 \x01(\v2\x1e.hi.ninja.VisionFaceAttributesB\x06\xbaH\x03\xc8\x01\x01R\n" +
+	"attributes\x12)\n" +
+	"\tconfirmed\x18\x06 \x01(\bB\x06\xbaH\x03\xc8\x01\x01H\x02R\tconfirmed\x88\x01\x01B\f\n" +
+	"\n" +
+	"_target_idB\r\n" +
+	"\v_confidenceB\f\n" +
+	"\n" +
+	"_confirmed\"\xf1\x01\n" +
+	"\x15VisionFaceObservation\x12F\n" +
+	"\x0esource_session\x18\x01 \x01(\v2\x17.hi.ninja.ModuleSessionB\x06\xbaH\x03\xc8\x01\x01R\rsourceSession\x123\n" +
+	"\x05frame\x18\x02 \x01(\v2\x15.hi.ninja.IoFrameInfoB\x06\xbaH\x03\xc8\x01\x01R\x05frame\x12%\n" +
+	"\x05model\x18\x03 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\x05model\x88\x01\x01\x12*\n" +
+	"\x05faces\x18\x04 \x03(\v2\x14.hi.ninja.VisionFaceR\x05facesB\b\n" +
+	"\x06_model\"\x90\x04\n" +
+	"\x0fVisionFaceEvent\x12.\n" +
+	"\n" +
+	"session_id\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\tsessionId\x88\x01\x01\x12+\n" +
+	"\bsequence\x18\x02 \x01(\x04B\n" +
+	"\xbaH\a\xc8\x01\x012\x02 \x00H\x01R\bsequence\x88\x01\x01\x12D\n" +
+	"\x04kind\x18\x03 \x01(\x0e2\x1e.hi.ninja.VisionFaceEvent.KindB\v\xbaH\b\xc8\x01\x01\x82\x01\x02\x10\x01H\x02R\x04kind\x88\x01\x01\x12A\n" +
+	"\vobservation\x18\x04 \x01(\v2\x1f.hi.ninja.VisionFaceObservationR\vobservation\x12 \n" +
+	"\ttarget_id\x18\x05 \x01(\tH\x03R\btargetId\x88\x01\x01\x12\x1b\n" +
+	"\x06reason\x18\x06 \x01(\tH\x04R\x06reason\x88\x01\x01\"\x99\x01\n" +
+	"\x04Kind\x12\x10\n" +
+	"\fKIND_UNKNOWN\x10\x00\x12\x11\n" +
+	"\rKIND_OBSERVED\x10\x01\x12\x11\n" +
+	"\rKIND_APPEARED\x10\x02\x12\x14\n" +
+	"\x10KIND_DISAPPEARED\x10\x03\x12\x1b\n" +
+	"\x17KIND_ATTRIBUTES_UPDATED\x10\x04\x12\x14\n" +
+	"\x10KIND_INTERRUPTED\x10\x05\x12\x10\n" +
+	"\fKIND_RESUMED\x10\x06B\r\n" +
+	"\v_session_idB\v\n" +
+	"\t_sequenceB\a\n" +
+	"\x05_kindB\f\n" +
+	"\n" +
+	"_target_idB\t\n" +
 	"\a_reasonB\x88\x01\n" +
 	"\fcom.hi.ninjaB\vVisionProtoP\x01Z*github.com/HiWorld-56/hi-proto/go/hi/ninja\xa2\x02\x03HNX\xaa\x02\bHi.Ninja\xca\x02\bHi\\Ninja\xe2\x02\x14Hi\\Ninja\\GPBMetadata\xea\x02\tHi::Ninjab\x06proto3"
 
@@ -452,29 +1030,46 @@ func file_hi_ninja_vision_proto_rawDescGZIP() []byte {
 	return file_hi_ninja_vision_proto_rawDescData
 }
 
-var file_hi_ninja_vision_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_hi_ninja_vision_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_hi_ninja_vision_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
+var file_hi_ninja_vision_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_hi_ninja_vision_proto_goTypes = []any{
-	(VisionEvent_Kind)(0),     // 0: hi.ninja.VisionEvent.Kind
-	(*VisionObject)(nil),      // 1: hi.ninja.VisionObject
-	(*VisionBox)(nil),         // 2: hi.ninja.VisionBox
-	(*VisionObservation)(nil), // 3: hi.ninja.VisionObservation
-	(*VisionEvent)(nil),       // 4: hi.ninja.VisionEvent
-	(*ModuleSession)(nil),     // 5: hi.ninja.ModuleSession
-	(*IoFrameInfo)(nil),       // 6: hi.ninja.IoFrameInfo
+	(VisionEvent_Kind)(0),            // 0: hi.ninja.VisionEvent.Kind
+	(VisionFaceAttributes_State)(0),  // 1: hi.ninja.VisionFaceAttributes.State
+	(VisionFaceAttributes_Gender)(0), // 2: hi.ninja.VisionFaceAttributes.Gender
+	(VisionFaceEvent_Kind)(0),        // 3: hi.ninja.VisionFaceEvent.Kind
+	(*VisionObject)(nil),             // 4: hi.ninja.VisionObject
+	(*VisionBox)(nil),                // 5: hi.ninja.VisionBox
+	(*VisionObservation)(nil),        // 6: hi.ninja.VisionObservation
+	(*VisionEvent)(nil),              // 7: hi.ninja.VisionEvent
+	(*VisionFaceAttributes)(nil),     // 8: hi.ninja.VisionFaceAttributes
+	(*VisionFace)(nil),               // 9: hi.ninja.VisionFace
+	(*VisionFaceObservation)(nil),    // 10: hi.ninja.VisionFaceObservation
+	(*VisionFaceEvent)(nil),          // 11: hi.ninja.VisionFaceEvent
+	(*ModuleSession)(nil),            // 12: hi.ninja.ModuleSession
+	(*IoFrameInfo)(nil),              // 13: hi.ninja.IoFrameInfo
 }
 var file_hi_ninja_vision_proto_depIdxs = []int32{
-	2, // 0: hi.ninja.VisionObject.bounds:type_name -> hi.ninja.VisionBox
-	5, // 1: hi.ninja.VisionObservation.source_session:type_name -> hi.ninja.ModuleSession
-	6, // 2: hi.ninja.VisionObservation.frame:type_name -> hi.ninja.IoFrameInfo
-	1, // 3: hi.ninja.VisionObservation.objects:type_name -> hi.ninja.VisionObject
-	0, // 4: hi.ninja.VisionEvent.kind:type_name -> hi.ninja.VisionEvent.Kind
-	3, // 5: hi.ninja.VisionEvent.observation:type_name -> hi.ninja.VisionObservation
-	6, // [6:6] is the sub-list for method output_type
-	6, // [6:6] is the sub-list for method input_type
-	6, // [6:6] is the sub-list for extension type_name
-	6, // [6:6] is the sub-list for extension extendee
-	0, // [0:6] is the sub-list for field type_name
+	5,  // 0: hi.ninja.VisionObject.bounds:type_name -> hi.ninja.VisionBox
+	12, // 1: hi.ninja.VisionObservation.source_session:type_name -> hi.ninja.ModuleSession
+	13, // 2: hi.ninja.VisionObservation.frame:type_name -> hi.ninja.IoFrameInfo
+	4,  // 3: hi.ninja.VisionObservation.objects:type_name -> hi.ninja.VisionObject
+	0,  // 4: hi.ninja.VisionEvent.kind:type_name -> hi.ninja.VisionEvent.Kind
+	6,  // 5: hi.ninja.VisionEvent.observation:type_name -> hi.ninja.VisionObservation
+	1,  // 6: hi.ninja.VisionFaceAttributes.state:type_name -> hi.ninja.VisionFaceAttributes.State
+	2,  // 7: hi.ninja.VisionFaceAttributes.gender:type_name -> hi.ninja.VisionFaceAttributes.Gender
+	5,  // 8: hi.ninja.VisionFace.bounds:type_name -> hi.ninja.VisionBox
+	4,  // 9: hi.ninja.VisionFace.person:type_name -> hi.ninja.VisionObject
+	8,  // 10: hi.ninja.VisionFace.attributes:type_name -> hi.ninja.VisionFaceAttributes
+	12, // 11: hi.ninja.VisionFaceObservation.source_session:type_name -> hi.ninja.ModuleSession
+	13, // 12: hi.ninja.VisionFaceObservation.frame:type_name -> hi.ninja.IoFrameInfo
+	9,  // 13: hi.ninja.VisionFaceObservation.faces:type_name -> hi.ninja.VisionFace
+	3,  // 14: hi.ninja.VisionFaceEvent.kind:type_name -> hi.ninja.VisionFaceEvent.Kind
+	10, // 15: hi.ninja.VisionFaceEvent.observation:type_name -> hi.ninja.VisionFaceObservation
+	16, // [16:16] is the sub-list for method output_type
+	16, // [16:16] is the sub-list for method input_type
+	16, // [16:16] is the sub-list for extension type_name
+	16, // [16:16] is the sub-list for extension extendee
+	0,  // [0:16] is the sub-list for field type_name
 }
 
 func init() { file_hi_ninja_vision_proto_init() }
@@ -488,13 +1083,17 @@ func file_hi_ninja_vision_proto_init() {
 	file_hi_ninja_vision_proto_msgTypes[1].OneofWrappers = []any{}
 	file_hi_ninja_vision_proto_msgTypes[2].OneofWrappers = []any{}
 	file_hi_ninja_vision_proto_msgTypes[3].OneofWrappers = []any{}
+	file_hi_ninja_vision_proto_msgTypes[4].OneofWrappers = []any{}
+	file_hi_ninja_vision_proto_msgTypes[5].OneofWrappers = []any{}
+	file_hi_ninja_vision_proto_msgTypes[6].OneofWrappers = []any{}
+	file_hi_ninja_vision_proto_msgTypes[7].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ninja_vision_proto_rawDesc), len(file_hi_ninja_vision_proto_rawDesc)),
-			NumEnums:      1,
-			NumMessages:   4,
+			NumEnums:      4,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
