@@ -475,6 +475,334 @@ impl ModuleId {
         }
     }
 }
+/// brain是唯一调度者。IO本机采样/VAD/切句，brain调用STT，face播放。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BrainToIo {
+    #[prost(message, optional, tag = "1")]
+    pub session: ::core::option::Option<ModuleSession>,
+    /// 控制握手可不传；业务请求必须给非零值
+    #[prost(uint64, optional, tag = "2")]
+    pub request_id: ::core::option::Option<u64>,
+    #[prost(oneof = "brain_to_io::Cmd", tags = "3, 4, 5, 6, 7, 8, 9, 10")]
+    pub cmd: ::core::option::Option<brain_to_io::Cmd>,
+}
+/// Nested message and enum types in `BrainToIo`.
+pub mod brain_to_io {
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Cmd {
+        #[prost(message, tag = "3")]
+        Control(super::BrainToModuleControl),
+        #[prost(message, tag = "4")]
+        SetHearing(super::IoHearing),
+        #[prost(message, tag = "5")]
+        GetStatus(::pbjson_types::Empty),
+        #[prost(message, tag = "6")]
+        CameraOpen(super::IoCameraOpen),
+        #[prost(message, tag = "7")]
+        CameraClose(super::IoCameraRef),
+        #[prost(message, tag = "8")]
+        NextFrame(super::IoCameraRef),
+        #[prost(message, tag = "9")]
+        Capture(super::IoCameraOpen),
+        #[prost(message, tag = "10")]
+        Cancel(super::IoCancel),
+    }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct IoToBrain {
+    #[prost(message, optional, tag = "1")]
+    pub session: ::core::option::Option<ModuleSession>,
+    #[prost(uint64, optional, tag = "2")]
+    pub request_id: ::core::option::Option<u64>,
+    #[prost(oneof = "io_to_brain::Cmd", tags = "3, 4, 5, 6")]
+    pub cmd: ::core::option::Option<io_to_brain::Cmd>,
+}
+/// Nested message and enum types in `IoToBrain`.
+pub mod io_to_brain {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Cmd {
+        #[prost(message, tag = "3")]
+        Control(super::ModuleToBrainControl),
+        #[prost(message, tag = "4")]
+        Response(super::IoResponse),
+        #[prost(message, tag = "5")]
+        EventStatus(super::IoStatus),
+        #[prost(message, tag = "6")]
+        EventRecording(super::IoRecording),
+    }
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct IoHearing {
+    #[prost(bool, optional, tag = "1")]
+    pub enabled: ::core::option::Option<bool>,
+    #[prost(uint64, optional, tag = "2")]
+    pub revision: ::core::option::Option<u64>,
+    /// 不传=立即；只在恢复时使用，新revision使旧延时命令失效
+    #[prost(uint32, optional, tag = "3")]
+    pub resume_delay_ms: ::core::option::Option<u32>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct IoStatus {
+    #[prost(bool, optional, tag = "1")]
+    pub microphone_ready: ::core::option::Option<bool>,
+    #[prost(bool, optional, tag = "2")]
+    pub camera_ready: ::core::option::Option<bool>,
+    #[prost(bool, optional, tag = "3")]
+    pub hearing_enabled: ::core::option::Option<bool>,
+    #[prost(uint64, optional, tag = "4")]
+    pub hearing_revision: ::core::option::Option<u64>,
+    #[prost(string, optional, tag = "5")]
+    pub microphone_error: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "6")]
+    pub camera_error: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct IoRecording {
+    #[prost(string, optional, tag = "1")]
+    pub recording_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "io_recording::State", optional, tag = "2")]
+    pub state: ::core::option::Option<i32>,
+    /// 仅COMPLETED给完整文件；VAD在IO对原始采样执行
+    #[prost(bytes = "vec", optional, tag = "3")]
+    pub wav: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
+    #[prost(uint32, optional, tag = "4")]
+    pub sample_rate: ::core::option::Option<u32>,
+    #[prost(uint32, optional, tag = "5")]
+    pub channels: ::core::option::Option<u32>,
+    /// 每声道样本数；时长不得由网络到达节奏计算
+    #[prost(uint64, optional, tag = "6")]
+    pub sample_count: ::core::option::Option<u64>,
+    #[prost(message, optional, tag = "7")]
+    pub failure: ::core::option::Option<ModuleFailure>,
+}
+/// Nested message and enum types in `IoRecording`.
+pub mod io_recording {
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        Unknown = 0,
+        Started = 1,
+        Completed = 2,
+        Cancelled = 3,
+        Failed = 4,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Self::Unknown => "STATE_UNKNOWN",
+                Self::Started => "STATE_STARTED",
+                Self::Completed => "STATE_COMPLETED",
+                Self::Cancelled => "STATE_CANCELLED",
+                Self::Failed => "STATE_FAILED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNKNOWN" => Some(Self::Unknown),
+                "STATE_STARTED" => Some(Self::Started),
+                "STATE_COMPLETED" => Some(Self::Completed),
+                "STATE_CANCELLED" => Some(Self::Cancelled),
+                "STATE_FAILED" => Some(Self::Failed),
+                _ => None,
+            }
+        }
+    }
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct IoCameraOpen {
+    /// 不传=IO配置默认值，返回相机实际接受的尺寸
+    #[prost(uint32, optional, tag = "1")]
+    pub width: ::core::option::Option<u32>,
+    #[prost(uint32, optional, tag = "2")]
+    pub height: ::core::option::Option<u32>,
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct IoCameraRef {
+    #[prost(uint64, optional, tag = "1")]
+    pub lease_id: ::core::option::Option<u64>,
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct IoCameraLease {
+    #[prost(uint64, optional, tag = "1")]
+    pub lease_id: ::core::option::Option<u64>,
+    #[prost(uint32, optional, tag = "2")]
+    pub width: ::core::option::Option<u32>,
+    #[prost(uint32, optional, tag = "3")]
+    pub height: ::core::option::Option<u32>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct IoImage {
+    /// Shared-video clients require source-frame identity and capture time.
+    #[prost(message, optional, tag = "2")]
+    pub frame: ::core::option::Option<IoFrameInfo>,
+    #[prost(bytes = "vec", optional, tag = "1")]
+    pub jpeg: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct IoCancel {
+    #[prost(uint64, optional, tag = "1")]
+    pub request_id: ::core::option::Option<u64>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct IoResponse {
+    #[prost(oneof = "io_response::Result", tags = "1, 2, 3, 4, 5")]
+    pub result: ::core::option::Option<io_response::Result>,
+}
+/// Nested message and enum types in `IoResponse`.
+pub mod io_response {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Result {
+        #[prost(message, tag = "1")]
+        Ok(::pbjson_types::Empty),
+        #[prost(message, tag = "2")]
+        Status(super::IoStatus),
+        #[prost(message, tag = "3")]
+        Camera(super::IoCameraLease),
+        #[prost(message, tag = "4")]
+        Image(super::IoImage),
+        #[prost(message, tag = "5")]
+        Failure(super::ModuleFailure),
+    }
+}
+/// Identity and capture clock of one immutable source frame. The module session
+/// scopes stream_id; sequence and captured_monotonic_ns increase within a stream.
+/// Capture timestamp is libcamera metadata, not network-arrival/wall-clock time.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct IoFrameInfo {
+    #[prost(uint64, optional, tag = "1")]
+    pub stream_id: ::core::option::Option<u64>,
+    #[prost(uint64, optional, tag = "2")]
+    pub sequence: ::core::option::Option<u64>,
+    #[prost(uint64, optional, tag = "3")]
+    pub captured_monotonic_ns: ::core::option::Option<u64>,
+    #[prost(uint32, optional, tag = "4")]
+    pub width: ::core::option::Option<u32>,
+    #[prost(uint32, optional, tag = "5")]
+    pub height: ::core::option::Option<u32>,
+}
+/// Class names use the COCO80 canonical English labels (person, cat, dog, ...).
+/// A category is an observation, never a business identity or authorization.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VisionObject {
+    #[prost(string, optional, tag = "1")]
+    pub category: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(float, optional, tag = "2")]
+    pub confidence: ::core::option::Option<f32>,
+    #[prost(message, optional, tag = "3")]
+    pub bounds: ::core::option::Option<VisionBox>,
+}
+/// Coordinates in the original frame, normalized to \[0,1\]. No resized-input pixels.
+#[derive(Clone, Copy, PartialEq, ::prost::Message)]
+pub struct VisionBox {
+    #[prost(float, optional, tag = "1")]
+    pub x: ::core::option::Option<f32>,
+    #[prost(float, optional, tag = "2")]
+    pub y: ::core::option::Option<f32>,
+    #[prost(float, optional, tag = "3")]
+    pub width: ::core::option::Option<f32>,
+    #[prost(float, optional, tag = "4")]
+    pub height: ::core::option::Option<f32>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VisionObservation {
+    #[prost(message, optional, tag = "1")]
+    pub frame: ::core::option::Option<IoFrameInfo>,
+    #[prost(string, optional, tag = "2")]
+    pub model: ::core::option::Option<::prost::alloc::string::String>,
+    /// Empty means this successfully processed frame has no detections.
+    #[prost(message, repeated, tag = "3")]
+    pub objects: ::prost::alloc::vec::Vec<VisionObject>,
+}
+/// Brain produces these events; IO never runs classification or decides visibility.
+/// APPEARED/DISAPPEARED refer to category presence, not individual object tracking.
+/// Interrupted input/inference invalidates presence; it must not manufacture DISAPPEARED.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VisionEvent {
+    #[prost(string, optional, tag = "1")]
+    pub session_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(uint64, optional, tag = "2")]
+    pub sequence: ::core::option::Option<u64>,
+    #[prost(enumeration = "vision_event::Kind", optional, tag = "3")]
+    pub kind: ::core::option::Option<i32>,
+    /// OBSERVED/APPEARED/DISAPPEARED carry the deciding successful frame.
+    #[prost(message, optional, tag = "4")]
+    pub observation: ::core::option::Option<VisionObservation>,
+    /// APPEARED/DISAPPEARED only; canonical category.
+    #[prost(string, optional, tag = "5")]
+    pub category: ::core::option::Option<::prost::alloc::string::String>,
+    /// APPEARED actual count; DISAPPEARED zero. Not an identity count.
+    #[prost(uint32, optional, tag = "6")]
+    pub count: ::core::option::Option<u32>,
+    /// INTERRUPTED only.
+    #[prost(string, optional, tag = "7")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// Nested message and enum types in `VisionEvent`.
+pub mod vision_event {
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Kind {
+        Unknown = 0,
+        Observed = 1,
+        Appeared = 2,
+        Disappeared = 3,
+        Interrupted = 4,
+        Resumed = 5,
+    }
+    impl Kind {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Self::Unknown => "KIND_UNKNOWN",
+                Self::Observed => "KIND_OBSERVED",
+                Self::Appeared => "KIND_APPEARED",
+                Self::Disappeared => "KIND_DISAPPEARED",
+                Self::Interrupted => "KIND_INTERRUPTED",
+                Self::Resumed => "KIND_RESUMED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "KIND_UNKNOWN" => Some(Self::Unknown),
+                "KIND_OBSERVED" => Some(Self::Observed),
+                "KIND_APPEARED" => Some(Self::Appeared),
+                "KIND_DISAPPEARED" => Some(Self::Disappeared),
+                "KIND_INTERRUPTED" => Some(Self::Interrupted),
+                "KIND_RESUMED" => Some(Self::Resumed),
+                _ => None,
+            }
+        }
+    }
+}
 /// LuaCtx 一次调用的上下文。**这些字段一个都不在 manifest 里** ——
 /// 模型看不见，也就传不了；插件读到的只可能是 brain 填的。
 ///
@@ -693,207 +1021,6 @@ pub mod lua_to_brain {
         /// 反向：插件调 host 能力
         #[prost(message, tag = "4")]
         HostCall(super::HostCallReq),
-    }
-}
-/// brain是唯一调度者。IO本机采样/VAD/切句，brain调用STT，face播放。
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BrainToIo {
-    #[prost(message, optional, tag = "1")]
-    pub session: ::core::option::Option<ModuleSession>,
-    /// 控制握手可不传；业务请求必须给非零值
-    #[prost(uint64, optional, tag = "2")]
-    pub request_id: ::core::option::Option<u64>,
-    #[prost(oneof = "brain_to_io::Cmd", tags = "3, 4, 5, 6, 7, 8, 9, 10")]
-    pub cmd: ::core::option::Option<brain_to_io::Cmd>,
-}
-/// Nested message and enum types in `BrainToIo`.
-pub mod brain_to_io {
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Cmd {
-        #[prost(message, tag = "3")]
-        Control(super::BrainToModuleControl),
-        #[prost(message, tag = "4")]
-        SetHearing(super::IoHearing),
-        #[prost(message, tag = "5")]
-        GetStatus(::pbjson_types::Empty),
-        #[prost(message, tag = "6")]
-        CameraOpen(super::IoCameraOpen),
-        #[prost(message, tag = "7")]
-        CameraClose(super::IoCameraRef),
-        #[prost(message, tag = "8")]
-        NextFrame(super::IoCameraRef),
-        #[prost(message, tag = "9")]
-        Capture(super::IoCameraOpen),
-        #[prost(message, tag = "10")]
-        Cancel(super::IoCancel),
-    }
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct IoToBrain {
-    #[prost(message, optional, tag = "1")]
-    pub session: ::core::option::Option<ModuleSession>,
-    #[prost(uint64, optional, tag = "2")]
-    pub request_id: ::core::option::Option<u64>,
-    #[prost(oneof = "io_to_brain::Cmd", tags = "3, 4, 5, 6")]
-    pub cmd: ::core::option::Option<io_to_brain::Cmd>,
-}
-/// Nested message and enum types in `IoToBrain`.
-pub mod io_to_brain {
-    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
-    pub enum Cmd {
-        #[prost(message, tag = "3")]
-        Control(super::ModuleToBrainControl),
-        #[prost(message, tag = "4")]
-        Response(super::IoResponse),
-        #[prost(message, tag = "5")]
-        EventStatus(super::IoStatus),
-        #[prost(message, tag = "6")]
-        EventRecording(super::IoRecording),
-    }
-}
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct IoHearing {
-    #[prost(bool, optional, tag = "1")]
-    pub enabled: ::core::option::Option<bool>,
-    #[prost(uint64, optional, tag = "2")]
-    pub revision: ::core::option::Option<u64>,
-    /// 不传=立即；只在恢复时使用，新revision使旧延时命令失效
-    #[prost(uint32, optional, tag = "3")]
-    pub resume_delay_ms: ::core::option::Option<u32>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct IoStatus {
-    #[prost(bool, optional, tag = "1")]
-    pub microphone_ready: ::core::option::Option<bool>,
-    #[prost(bool, optional, tag = "2")]
-    pub camera_ready: ::core::option::Option<bool>,
-    #[prost(bool, optional, tag = "3")]
-    pub hearing_enabled: ::core::option::Option<bool>,
-    #[prost(uint64, optional, tag = "4")]
-    pub hearing_revision: ::core::option::Option<u64>,
-    #[prost(string, optional, tag = "5")]
-    pub microphone_error: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "6")]
-    pub camera_error: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct IoRecording {
-    #[prost(string, optional, tag = "1")]
-    pub recording_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(enumeration = "io_recording::State", optional, tag = "2")]
-    pub state: ::core::option::Option<i32>,
-    /// 仅COMPLETED给完整文件；VAD在IO对原始采样执行
-    #[prost(bytes = "vec", optional, tag = "3")]
-    pub wav: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
-    #[prost(uint32, optional, tag = "4")]
-    pub sample_rate: ::core::option::Option<u32>,
-    #[prost(uint32, optional, tag = "5")]
-    pub channels: ::core::option::Option<u32>,
-    /// 每声道样本数；时长不得由网络到达节奏计算
-    #[prost(uint64, optional, tag = "6")]
-    pub sample_count: ::core::option::Option<u64>,
-    #[prost(message, optional, tag = "7")]
-    pub failure: ::core::option::Option<ModuleFailure>,
-}
-/// Nested message and enum types in `IoRecording`.
-pub mod io_recording {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum State {
-        Unknown = 0,
-        Started = 1,
-        Completed = 2,
-        Cancelled = 3,
-        Failed = 4,
-    }
-    impl State {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Self::Unknown => "STATE_UNKNOWN",
-                Self::Started => "STATE_STARTED",
-                Self::Completed => "STATE_COMPLETED",
-                Self::Cancelled => "STATE_CANCELLED",
-                Self::Failed => "STATE_FAILED",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "STATE_UNKNOWN" => Some(Self::Unknown),
-                "STATE_STARTED" => Some(Self::Started),
-                "STATE_COMPLETED" => Some(Self::Completed),
-                "STATE_CANCELLED" => Some(Self::Cancelled),
-                "STATE_FAILED" => Some(Self::Failed),
-                _ => None,
-            }
-        }
-    }
-}
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct IoCameraOpen {
-    /// 不传=IO配置默认值，返回相机实际接受的尺寸
-    #[prost(uint32, optional, tag = "1")]
-    pub width: ::core::option::Option<u32>,
-    #[prost(uint32, optional, tag = "2")]
-    pub height: ::core::option::Option<u32>,
-}
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct IoCameraRef {
-    #[prost(uint64, optional, tag = "1")]
-    pub lease_id: ::core::option::Option<u64>,
-}
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct IoCameraLease {
-    #[prost(uint64, optional, tag = "1")]
-    pub lease_id: ::core::option::Option<u64>,
-    #[prost(uint32, optional, tag = "2")]
-    pub width: ::core::option::Option<u32>,
-    #[prost(uint32, optional, tag = "3")]
-    pub height: ::core::option::Option<u32>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct IoImage {
-    #[prost(bytes = "vec", optional, tag = "1")]
-    pub jpeg: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
-}
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct IoCancel {
-    #[prost(uint64, optional, tag = "1")]
-    pub request_id: ::core::option::Option<u64>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct IoResponse {
-    #[prost(oneof = "io_response::Result", tags = "1, 2, 3, 4, 5")]
-    pub result: ::core::option::Option<io_response::Result>,
-}
-/// Nested message and enum types in `IoResponse`.
-pub mod io_response {
-    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
-    pub enum Result {
-        #[prost(message, tag = "1")]
-        Ok(::pbjson_types::Empty),
-        #[prost(message, tag = "2")]
-        Status(super::IoStatus),
-        #[prost(message, tag = "3")]
-        Camera(super::IoCameraLease),
-        #[prost(message, tag = "4")]
-        Image(super::IoImage),
-        #[prost(message, tag = "5")]
-        Failure(super::ModuleFailure),
     }
 }
 /// 更新状态快照。**updater 是唯一的写方**，brain 与 face 都只读。

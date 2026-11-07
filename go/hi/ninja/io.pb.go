@@ -797,6 +797,7 @@ func (x *IoCameraLease) GetHeight() uint32 {
 
 type IoImage struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	Frame         *IoFrameInfo           `protobuf:"bytes,2,opt,name=frame,proto3" json:"frame,omitempty"` // Shared-video clients require source-frame identity and capture time.
 	Jpeg          []byte                 `protobuf:"bytes,1,opt,name=jpeg,proto3,oneof" json:"jpeg,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -830,6 +831,13 @@ func (x *IoImage) ProtoReflect() protoreflect.Message {
 // Deprecated: Use IoImage.ProtoReflect.Descriptor instead.
 func (*IoImage) Descriptor() ([]byte, []int) {
 	return file_hi_ninja_io_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *IoImage) GetFrame() *IoFrameInfo {
+	if x != nil {
+		return x.Frame
+	}
+	return nil
 }
 
 func (x *IoImage) GetJpeg() []byte {
@@ -1013,6 +1021,85 @@ func (*IoResponse_Image) isIoResponse_Result() {}
 
 func (*IoResponse_Failure) isIoResponse_Result() {}
 
+// Identity and capture clock of one immutable source frame. The module session
+// scopes stream_id; sequence and captured_monotonic_ns increase within a stream.
+// Capture timestamp is libcamera metadata, not network-arrival/wall-clock time.
+type IoFrameInfo struct {
+	state               protoimpl.MessageState `protogen:"open.v1"`
+	StreamId            *uint64                `protobuf:"varint,1,opt,name=stream_id,json=streamId,proto3,oneof" json:"stream_id,omitempty"`
+	Sequence            *uint64                `protobuf:"varint,2,opt,name=sequence,proto3,oneof" json:"sequence,omitempty"`
+	CapturedMonotonicNs *uint64                `protobuf:"varint,3,opt,name=captured_monotonic_ns,json=capturedMonotonicNs,proto3,oneof" json:"captured_monotonic_ns,omitempty"`
+	Width               *uint32                `protobuf:"varint,4,opt,name=width,proto3,oneof" json:"width,omitempty"`
+	Height              *uint32                `protobuf:"varint,5,opt,name=height,proto3,oneof" json:"height,omitempty"`
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
+}
+
+func (x *IoFrameInfo) Reset() {
+	*x = IoFrameInfo{}
+	mi := &file_hi_ninja_io_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *IoFrameInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*IoFrameInfo) ProtoMessage() {}
+
+func (x *IoFrameInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ninja_io_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use IoFrameInfo.ProtoReflect.Descriptor instead.
+func (*IoFrameInfo) Descriptor() ([]byte, []int) {
+	return file_hi_ninja_io_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *IoFrameInfo) GetStreamId() uint64 {
+	if x != nil && x.StreamId != nil {
+		return *x.StreamId
+	}
+	return 0
+}
+
+func (x *IoFrameInfo) GetSequence() uint64 {
+	if x != nil && x.Sequence != nil {
+		return *x.Sequence
+	}
+	return 0
+}
+
+func (x *IoFrameInfo) GetCapturedMonotonicNs() uint64 {
+	if x != nil && x.CapturedMonotonicNs != nil {
+		return *x.CapturedMonotonicNs
+	}
+	return 0
+}
+
+func (x *IoFrameInfo) GetWidth() uint32 {
+	if x != nil && x.Width != nil {
+		return *x.Width
+	}
+	return 0
+}
+
+func (x *IoFrameInfo) GetHeight() uint32 {
+	if x != nil && x.Height != nil {
+		return *x.Height
+	}
+	return 0
+}
+
 var File_hi_ninja_io_proto protoreflect.FileDescriptor
 
 const file_hi_ninja_io_proto_rawDesc = "" +
@@ -1106,8 +1193,9 @@ const file_hi_ninja_io_proto_rawDesc = "" +
 	"\x06height\x18\x03 \x01(\rH\x02R\x06height\x88\x01\x01B\v\n" +
 	"\t_lease_idB\b\n" +
 	"\x06_widthB\t\n" +
-	"\a_height\"7\n" +
-	"\aIoImage\x12#\n" +
+	"\a_height\"d\n" +
+	"\aIoImage\x12+\n" +
+	"\x05frame\x18\x02 \x01(\v2\x15.hi.ninja.IoFrameInfoR\x05frame\x12#\n" +
 	"\x04jpeg\x18\x01 \x01(\fB\n" +
 	"\xbaH\a\xc8\x01\x01z\x02\x10\x01H\x00R\x04jpeg\x88\x01\x01B\a\n" +
 	"\x05_jpeg\"I\n" +
@@ -1123,7 +1211,24 @@ const file_hi_ninja_io_proto_rawDesc = "" +
 	"\x06camera\x18\x03 \x01(\v2\x17.hi.ninja.IoCameraLeaseH\x00R\x06camera\x12)\n" +
 	"\x05image\x18\x04 \x01(\v2\x11.hi.ninja.IoImageH\x00R\x05image\x123\n" +
 	"\afailure\x18\x05 \x01(\v2\x17.hi.ninja.ModuleFailureH\x00R\afailureB\b\n" +
-	"\x06resultB\x84\x01\n" +
+	"\x06result\"\xc7\x02\n" +
+	"\vIoFrameInfo\x12,\n" +
+	"\tstream_id\x18\x01 \x01(\x04B\n" +
+	"\xbaH\a\xc8\x01\x012\x02 \x00H\x00R\bstreamId\x88\x01\x01\x12+\n" +
+	"\bsequence\x18\x02 \x01(\x04B\n" +
+	"\xbaH\a\xc8\x01\x012\x02 \x00H\x01R\bsequence\x88\x01\x01\x12C\n" +
+	"\x15captured_monotonic_ns\x18\x03 \x01(\x04B\n" +
+	"\xbaH\a\xc8\x01\x012\x02 \x00H\x02R\x13capturedMonotonicNs\x88\x01\x01\x12%\n" +
+	"\x05width\x18\x04 \x01(\rB\n" +
+	"\xbaH\a\xc8\x01\x01*\x02 \x00H\x03R\x05width\x88\x01\x01\x12'\n" +
+	"\x06height\x18\x05 \x01(\rB\n" +
+	"\xbaH\a\xc8\x01\x01*\x02 \x00H\x04R\x06height\x88\x01\x01B\f\n" +
+	"\n" +
+	"_stream_idB\v\n" +
+	"\t_sequenceB\x18\n" +
+	"\x16_captured_monotonic_nsB\b\n" +
+	"\x06_widthB\t\n" +
+	"\a_heightB\x84\x01\n" +
 	"\fcom.hi.ninjaB\aIoProtoP\x01Z*github.com/HiWorld-56/hi-proto/go/hi/ninja\xa2\x02\x03HNX\xaa\x02\bHi.Ninja\xca\x02\bHi\\Ninja\xe2\x02\x14Hi\\Ninja\\GPBMetadata\xea\x02\tHi::Ninjab\x06proto3"
 
 var (
@@ -1139,7 +1244,7 @@ func file_hi_ninja_io_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_ninja_io_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_hi_ninja_io_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_hi_ninja_io_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_hi_ninja_io_proto_goTypes = []any{
 	(IoRecording_State)(0),       // 0: hi.ninja.IoRecording.State
 	(*BrainToIo)(nil),            // 1: hi.ninja.BrainToIo
@@ -1153,39 +1258,41 @@ var file_hi_ninja_io_proto_goTypes = []any{
 	(*IoImage)(nil),              // 9: hi.ninja.IoImage
 	(*IoCancel)(nil),             // 10: hi.ninja.IoCancel
 	(*IoResponse)(nil),           // 11: hi.ninja.IoResponse
-	(*ModuleSession)(nil),        // 12: hi.ninja.ModuleSession
-	(*BrainToModuleControl)(nil), // 13: hi.ninja.BrainToModuleControl
-	(*emptypb.Empty)(nil),        // 14: google.protobuf.Empty
-	(*ModuleToBrainControl)(nil), // 15: hi.ninja.ModuleToBrainControl
-	(*ModuleFailure)(nil),        // 16: hi.ninja.ModuleFailure
+	(*IoFrameInfo)(nil),          // 12: hi.ninja.IoFrameInfo
+	(*ModuleSession)(nil),        // 13: hi.ninja.ModuleSession
+	(*BrainToModuleControl)(nil), // 14: hi.ninja.BrainToModuleControl
+	(*emptypb.Empty)(nil),        // 15: google.protobuf.Empty
+	(*ModuleToBrainControl)(nil), // 16: hi.ninja.ModuleToBrainControl
+	(*ModuleFailure)(nil),        // 17: hi.ninja.ModuleFailure
 }
 var file_hi_ninja_io_proto_depIdxs = []int32{
-	12, // 0: hi.ninja.BrainToIo.session:type_name -> hi.ninja.ModuleSession
-	13, // 1: hi.ninja.BrainToIo.control:type_name -> hi.ninja.BrainToModuleControl
+	13, // 0: hi.ninja.BrainToIo.session:type_name -> hi.ninja.ModuleSession
+	14, // 1: hi.ninja.BrainToIo.control:type_name -> hi.ninja.BrainToModuleControl
 	3,  // 2: hi.ninja.BrainToIo.set_hearing:type_name -> hi.ninja.IoHearing
-	14, // 3: hi.ninja.BrainToIo.get_status:type_name -> google.protobuf.Empty
+	15, // 3: hi.ninja.BrainToIo.get_status:type_name -> google.protobuf.Empty
 	6,  // 4: hi.ninja.BrainToIo.camera_open:type_name -> hi.ninja.IoCameraOpen
 	7,  // 5: hi.ninja.BrainToIo.camera_close:type_name -> hi.ninja.IoCameraRef
 	7,  // 6: hi.ninja.BrainToIo.next_frame:type_name -> hi.ninja.IoCameraRef
 	6,  // 7: hi.ninja.BrainToIo.capture:type_name -> hi.ninja.IoCameraOpen
 	10, // 8: hi.ninja.BrainToIo.cancel:type_name -> hi.ninja.IoCancel
-	12, // 9: hi.ninja.IoToBrain.session:type_name -> hi.ninja.ModuleSession
-	15, // 10: hi.ninja.IoToBrain.control:type_name -> hi.ninja.ModuleToBrainControl
+	13, // 9: hi.ninja.IoToBrain.session:type_name -> hi.ninja.ModuleSession
+	16, // 10: hi.ninja.IoToBrain.control:type_name -> hi.ninja.ModuleToBrainControl
 	11, // 11: hi.ninja.IoToBrain.response:type_name -> hi.ninja.IoResponse
 	4,  // 12: hi.ninja.IoToBrain.event_status:type_name -> hi.ninja.IoStatus
 	5,  // 13: hi.ninja.IoToBrain.event_recording:type_name -> hi.ninja.IoRecording
 	0,  // 14: hi.ninja.IoRecording.state:type_name -> hi.ninja.IoRecording.State
-	16, // 15: hi.ninja.IoRecording.failure:type_name -> hi.ninja.ModuleFailure
-	14, // 16: hi.ninja.IoResponse.ok:type_name -> google.protobuf.Empty
-	4,  // 17: hi.ninja.IoResponse.status:type_name -> hi.ninja.IoStatus
-	8,  // 18: hi.ninja.IoResponse.camera:type_name -> hi.ninja.IoCameraLease
-	9,  // 19: hi.ninja.IoResponse.image:type_name -> hi.ninja.IoImage
-	16, // 20: hi.ninja.IoResponse.failure:type_name -> hi.ninja.ModuleFailure
-	21, // [21:21] is the sub-list for method output_type
-	21, // [21:21] is the sub-list for method input_type
-	21, // [21:21] is the sub-list for extension type_name
-	21, // [21:21] is the sub-list for extension extendee
-	0,  // [0:21] is the sub-list for field type_name
+	17, // 15: hi.ninja.IoRecording.failure:type_name -> hi.ninja.ModuleFailure
+	12, // 16: hi.ninja.IoImage.frame:type_name -> hi.ninja.IoFrameInfo
+	15, // 17: hi.ninja.IoResponse.ok:type_name -> google.protobuf.Empty
+	4,  // 18: hi.ninja.IoResponse.status:type_name -> hi.ninja.IoStatus
+	8,  // 19: hi.ninja.IoResponse.camera:type_name -> hi.ninja.IoCameraLease
+	9,  // 20: hi.ninja.IoResponse.image:type_name -> hi.ninja.IoImage
+	17, // 21: hi.ninja.IoResponse.failure:type_name -> hi.ninja.ModuleFailure
+	22, // [22:22] is the sub-list for method output_type
+	22, // [22:22] is the sub-list for method input_type
+	22, // [22:22] is the sub-list for extension type_name
+	22, // [22:22] is the sub-list for extension extendee
+	0,  // [0:22] is the sub-list for field type_name
 }
 
 func init() { file_hi_ninja_io_proto_init() }
@@ -1225,13 +1332,14 @@ func file_hi_ninja_io_proto_init() {
 		(*IoResponse_Image)(nil),
 		(*IoResponse_Failure)(nil),
 	}
+	file_hi_ninja_io_proto_msgTypes[11].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ninja_io_proto_rawDesc), len(file_hi_ninja_io_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   11,
+			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

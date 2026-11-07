@@ -522,6 +522,14 @@ const IoImage$json = {
   '1': 'IoImage',
   '2': [
     {
+      '1': 'frame',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.IoFrameInfo',
+      '10': 'frame'
+    },
+    {
       '1': 'jpeg',
       '3': 1,
       '4': 1,
@@ -539,8 +547,8 @@ const IoImage$json = {
 
 /// Descriptor for `IoImage`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List ioImageDescriptor = $convert.base64Decode(
-    'CgdJb0ltYWdlEiMKBGpwZWcYASABKAxCCrpIB8gBAXoCEAFIAFIEanBlZ4gBAUIHCgVfanBlZw'
-    '==');
+    'CgdJb0ltYWdlEisKBWZyYW1lGAIgASgLMhUuaGkubmluamEuSW9GcmFtZUluZm9SBWZyYW1lEi'
+    'MKBGpwZWcYASABKAxCCrpIB8gBAXoCEAFIAFIEanBlZ4gBAUIHCgVfanBlZw==');
 
 @$core.Deprecated('Use ioCancelDescriptor instead')
 const IoCancel$json = {
@@ -629,3 +637,76 @@ final $typed_data.Uint8List ioResponseDescriptor = $convert.base64Decode(
     'AyABKAsyFy5oaS5uaW5qYS5Jb0NhbWVyYUxlYXNlSABSBmNhbWVyYRIpCgVpbWFnZRgEIAEoCz'
     'IRLmhpLm5pbmphLklvSW1hZ2VIAFIFaW1hZ2USMwoHZmFpbHVyZRgFIAEoCzIXLmhpLm5pbmph'
     'Lk1vZHVsZUZhaWx1cmVIAFIHZmFpbHVyZUIICgZyZXN1bHQ=');
+
+@$core.Deprecated('Use ioFrameInfoDescriptor instead')
+const IoFrameInfo$json = {
+  '1': 'IoFrameInfo',
+  '2': [
+    {
+      '1': 'stream_id',
+      '3': 1,
+      '4': 1,
+      '5': 4,
+      '8': {},
+      '9': 0,
+      '10': 'streamId',
+      '17': true
+    },
+    {
+      '1': 'sequence',
+      '3': 2,
+      '4': 1,
+      '5': 4,
+      '8': {},
+      '9': 1,
+      '10': 'sequence',
+      '17': true
+    },
+    {
+      '1': 'captured_monotonic_ns',
+      '3': 3,
+      '4': 1,
+      '5': 4,
+      '8': {},
+      '9': 2,
+      '10': 'capturedMonotonicNs',
+      '17': true
+    },
+    {
+      '1': 'width',
+      '3': 4,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 3,
+      '10': 'width',
+      '17': true
+    },
+    {
+      '1': 'height',
+      '3': 5,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 4,
+      '10': 'height',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_stream_id'},
+    {'1': '_sequence'},
+    {'1': '_captured_monotonic_ns'},
+    {'1': '_width'},
+    {'1': '_height'},
+  ],
+};
+
+/// Descriptor for `IoFrameInfo`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List ioFrameInfoDescriptor = $convert.base64Decode(
+    'CgtJb0ZyYW1lSW5mbxIsCglzdHJlYW1faWQYASABKARCCrpIB8gBATICIABIAFIIc3RyZWFtSW'
+    'SIAQESKwoIc2VxdWVuY2UYAiABKARCCrpIB8gBATICIABIAVIIc2VxdWVuY2WIAQESQwoVY2Fw'
+    'dHVyZWRfbW9ub3RvbmljX25zGAMgASgEQgq6SAfIAQEyAiAASAJSE2NhcHR1cmVkTW9ub3Rvbm'
+    'ljTnOIAQESJQoFd2lkdGgYBCABKA1CCrpIB8gBASoCIABIA1IFd2lkdGiIAQESJwoGaGVpZ2h0'
+    'GAUgASgNQgq6SAfIAQEqAiAASARSBmhlaWdodIgBAUIMCgpfc3RyZWFtX2lkQgsKCV9zZXF1ZW'
+    '5jZUIYChZfY2FwdHVyZWRfbW9ub3RvbmljX25zQggKBl93aWR0aEIJCgdfaGVpZ2h0');

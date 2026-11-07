@@ -1,0 +1,412 @@
+// This is a generated file - do not edit.
+//
+// Generated from hi/ninja/vision.proto.
+
+// @dart = 3.3
+
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
+// ignore_for_file: constant_identifier_names
+// ignore_for_file: curly_braces_in_flow_control_structures
+// ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_relative_imports
+
+import 'dart:core' as $core;
+
+import 'package:fixnum/fixnum.dart' as $fixnum;
+import 'package:protobuf/protobuf.dart' as $pb;
+
+import 'io.pb.dart' as $0;
+import 'vision.pbenum.dart';
+
+export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
+
+export 'vision.pbenum.dart';
+
+/// Class names use the COCO80 canonical English labels (person, cat, dog, ...).
+/// A category is an observation, never a business identity or authorization.
+class VisionObject extends $pb.GeneratedMessage {
+  factory VisionObject({
+    $core.String? category,
+    $core.double? confidence,
+    VisionBox? bounds,
+  }) {
+    final result = create();
+    if (category != null) result.category = category;
+    if (confidence != null) result.confidence = confidence;
+    if (bounds != null) result.bounds = bounds;
+    return result;
+  }
+
+  VisionObject._();
+
+  factory VisionObject.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory VisionObject.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'VisionObject',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'category')
+    ..aD(2, _omitFieldNames ? '' : 'confidence', fieldType: $pb.PbFieldType.OF)
+    ..aOM<VisionBox>(3, _omitFieldNames ? '' : 'bounds',
+        subBuilder: VisionBox.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  VisionObject clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  VisionObject copyWith(void Function(VisionObject) updates) =>
+      super.copyWith((message) => updates(message as VisionObject))
+          as VisionObject;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static VisionObject create() => VisionObject._();
+  @$core.override
+  VisionObject createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static VisionObject getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<VisionObject>(create);
+  static VisionObject? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get category => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set category($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasCategory() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCategory() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.double get confidence => $_getN(1);
+  @$pb.TagNumber(2)
+  set confidence($core.double value) => $_setFloat(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasConfidence() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearConfidence() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  VisionBox get bounds => $_getN(2);
+  @$pb.TagNumber(3)
+  set bounds(VisionBox value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasBounds() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearBounds() => $_clearField(3);
+  @$pb.TagNumber(3)
+  VisionBox ensureBounds() => $_ensure(2);
+}
+
+/// Coordinates in the original frame, normalized to [0,1]. No resized-input pixels.
+class VisionBox extends $pb.GeneratedMessage {
+  factory VisionBox({
+    $core.double? x,
+    $core.double? y,
+    $core.double? width,
+    $core.double? height,
+  }) {
+    final result = create();
+    if (x != null) result.x = x;
+    if (y != null) result.y = y;
+    if (width != null) result.width = width;
+    if (height != null) result.height = height;
+    return result;
+  }
+
+  VisionBox._();
+
+  factory VisionBox.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory VisionBox.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'VisionBox',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..aD(1, _omitFieldNames ? '' : 'x', fieldType: $pb.PbFieldType.OF)
+    ..aD(2, _omitFieldNames ? '' : 'y', fieldType: $pb.PbFieldType.OF)
+    ..aD(3, _omitFieldNames ? '' : 'width', fieldType: $pb.PbFieldType.OF)
+    ..aD(4, _omitFieldNames ? '' : 'height', fieldType: $pb.PbFieldType.OF)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  VisionBox clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  VisionBox copyWith(void Function(VisionBox) updates) =>
+      super.copyWith((message) => updates(message as VisionBox)) as VisionBox;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static VisionBox create() => VisionBox._();
+  @$core.override
+  VisionBox createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static VisionBox getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<VisionBox>(create);
+  static VisionBox? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.double get x => $_getN(0);
+  @$pb.TagNumber(1)
+  set x($core.double value) => $_setFloat(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasX() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearX() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.double get y => $_getN(1);
+  @$pb.TagNumber(2)
+  set y($core.double value) => $_setFloat(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasY() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearY() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.double get width => $_getN(2);
+  @$pb.TagNumber(3)
+  set width($core.double value) => $_setFloat(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasWidth() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearWidth() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.double get height => $_getN(3);
+  @$pb.TagNumber(4)
+  set height($core.double value) => $_setFloat(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasHeight() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearHeight() => $_clearField(4);
+}
+
+class VisionObservation extends $pb.GeneratedMessage {
+  factory VisionObservation({
+    $0.IoFrameInfo? frame,
+    $core.String? model,
+    $core.Iterable<VisionObject>? objects,
+  }) {
+    final result = create();
+    if (frame != null) result.frame = frame;
+    if (model != null) result.model = model;
+    if (objects != null) result.objects.addAll(objects);
+    return result;
+  }
+
+  VisionObservation._();
+
+  factory VisionObservation.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory VisionObservation.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'VisionObservation',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..aOM<$0.IoFrameInfo>(1, _omitFieldNames ? '' : 'frame',
+        subBuilder: $0.IoFrameInfo.create)
+    ..aOS(2, _omitFieldNames ? '' : 'model')
+    ..pPM<VisionObject>(3, _omitFieldNames ? '' : 'objects',
+        subBuilder: VisionObject.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  VisionObservation clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  VisionObservation copyWith(void Function(VisionObservation) updates) =>
+      super.copyWith((message) => updates(message as VisionObservation))
+          as VisionObservation;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static VisionObservation create() => VisionObservation._();
+  @$core.override
+  VisionObservation createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static VisionObservation getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<VisionObservation>(create);
+  static VisionObservation? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.IoFrameInfo get frame => $_getN(0);
+  @$pb.TagNumber(1)
+  set frame($0.IoFrameInfo value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasFrame() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearFrame() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.IoFrameInfo ensureFrame() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.String get model => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set model($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasModel() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearModel() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $pb.PbList<VisionObject> get objects => $_getList(2);
+}
+
+/// Brain produces these events; IO never runs classification or decides visibility.
+/// APPEARED/DISAPPEARED refer to category presence, not individual object tracking.
+/// Interrupted input/inference invalidates presence; it must not manufacture DISAPPEARED.
+class VisionEvent extends $pb.GeneratedMessage {
+  factory VisionEvent({
+    $core.String? sessionId,
+    $fixnum.Int64? sequence,
+    VisionEvent_Kind? kind,
+    VisionObservation? observation,
+    $core.String? category,
+    $core.int? count,
+    $core.String? reason,
+  }) {
+    final result = create();
+    if (sessionId != null) result.sessionId = sessionId;
+    if (sequence != null) result.sequence = sequence;
+    if (kind != null) result.kind = kind;
+    if (observation != null) result.observation = observation;
+    if (category != null) result.category = category;
+    if (count != null) result.count = count;
+    if (reason != null) result.reason = reason;
+    return result;
+  }
+
+  VisionEvent._();
+
+  factory VisionEvent.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory VisionEvent.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'VisionEvent',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'sessionId')
+    ..a<$fixnum.Int64>(
+        2, _omitFieldNames ? '' : 'sequence', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..aE<VisionEvent_Kind>(3, _omitFieldNames ? '' : 'kind',
+        enumValues: VisionEvent_Kind.values)
+    ..aOM<VisionObservation>(4, _omitFieldNames ? '' : 'observation',
+        subBuilder: VisionObservation.create)
+    ..aOS(5, _omitFieldNames ? '' : 'category')
+    ..aI(6, _omitFieldNames ? '' : 'count', fieldType: $pb.PbFieldType.OU3)
+    ..aOS(7, _omitFieldNames ? '' : 'reason')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  VisionEvent clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  VisionEvent copyWith(void Function(VisionEvent) updates) =>
+      super.copyWith((message) => updates(message as VisionEvent))
+          as VisionEvent;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static VisionEvent create() => VisionEvent._();
+  @$core.override
+  VisionEvent createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static VisionEvent getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<VisionEvent>(create);
+  static VisionEvent? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get sessionId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set sessionId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSessionId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSessionId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get sequence => $_getI64(1);
+  @$pb.TagNumber(2)
+  set sequence($fixnum.Int64 value) => $_setInt64(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSequence() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSequence() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  VisionEvent_Kind get kind => $_getN(2);
+  @$pb.TagNumber(3)
+  set kind(VisionEvent_Kind value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasKind() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearKind() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  VisionObservation get observation => $_getN(3);
+  @$pb.TagNumber(4)
+  set observation(VisionObservation value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasObservation() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearObservation() => $_clearField(4);
+  @$pb.TagNumber(4)
+  VisionObservation ensureObservation() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  $core.String get category => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set category($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasCategory() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearCategory() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.int get count => $_getIZ(5);
+  @$pb.TagNumber(6)
+  set count($core.int value) => $_setUnsignedInt32(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasCount() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearCount() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.String get reason => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set reason($core.String value) => $_setString(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasReason() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearReason() => $_clearField(7);
+}
+
+const $core.bool _omitFieldNames =
+    $core.bool.fromEnvironment('protobuf.omit_field_names');
+const $core.bool _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

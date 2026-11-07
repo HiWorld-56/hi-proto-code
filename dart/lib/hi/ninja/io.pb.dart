@@ -939,9 +939,11 @@ class IoCameraLease extends $pb.GeneratedMessage {
 class IoImage extends $pb.GeneratedMessage {
   factory IoImage({
     $core.List<$core.int>? jpeg,
+    IoFrameInfo? frame,
   }) {
     final result = create();
     if (jpeg != null) result.jpeg = jpeg;
+    if (frame != null) result.frame = frame;
     return result;
   }
 
@@ -960,6 +962,8 @@ class IoImage extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..a<$core.List<$core.int>>(
         1, _omitFieldNames ? '' : 'jpeg', $pb.PbFieldType.OY)
+    ..aOM<IoFrameInfo>(2, _omitFieldNames ? '' : 'frame',
+        subBuilder: IoFrameInfo.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -988,6 +992,17 @@ class IoImage extends $pb.GeneratedMessage {
   $core.bool hasJpeg() => $_has(0);
   @$pb.TagNumber(1)
   void clearJpeg() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  IoFrameInfo get frame => $_getN(1);
+  @$pb.TagNumber(2)
+  set frame(IoFrameInfo value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasFrame() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearFrame() => $_clearField(2);
+  @$pb.TagNumber(2)
+  IoFrameInfo ensureFrame() => $_ensure(1);
 }
 
 class IoCancel extends $pb.GeneratedMessage {
@@ -1183,6 +1198,118 @@ class IoResponse extends $pb.GeneratedMessage {
   void clearFailure() => $_clearField(5);
   @$pb.TagNumber(5)
   $0.ModuleFailure ensureFailure() => $_ensure(4);
+}
+
+/// Identity and capture clock of one immutable source frame. The module session
+/// scopes stream_id; sequence and captured_monotonic_ns increase within a stream.
+/// Capture timestamp is libcamera metadata, not network-arrival/wall-clock time.
+class IoFrameInfo extends $pb.GeneratedMessage {
+  factory IoFrameInfo({
+    $fixnum.Int64? streamId,
+    $fixnum.Int64? sequence,
+    $fixnum.Int64? capturedMonotonicNs,
+    $core.int? width,
+    $core.int? height,
+  }) {
+    final result = create();
+    if (streamId != null) result.streamId = streamId;
+    if (sequence != null) result.sequence = sequence;
+    if (capturedMonotonicNs != null)
+      result.capturedMonotonicNs = capturedMonotonicNs;
+    if (width != null) result.width = width;
+    if (height != null) result.height = height;
+    return result;
+  }
+
+  IoFrameInfo._();
+
+  factory IoFrameInfo.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory IoFrameInfo.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'IoFrameInfo',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..a<$fixnum.Int64>(
+        1, _omitFieldNames ? '' : 'streamId', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$fixnum.Int64>(
+        2, _omitFieldNames ? '' : 'sequence', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$fixnum.Int64>(
+        3, _omitFieldNames ? '' : 'capturedMonotonicNs', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..aI(4, _omitFieldNames ? '' : 'width', fieldType: $pb.PbFieldType.OU3)
+    ..aI(5, _omitFieldNames ? '' : 'height', fieldType: $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  IoFrameInfo clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  IoFrameInfo copyWith(void Function(IoFrameInfo) updates) =>
+      super.copyWith((message) => updates(message as IoFrameInfo))
+          as IoFrameInfo;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static IoFrameInfo create() => IoFrameInfo._();
+  @$core.override
+  IoFrameInfo createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static IoFrameInfo getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<IoFrameInfo>(create);
+  static IoFrameInfo? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $fixnum.Int64 get streamId => $_getI64(0);
+  @$pb.TagNumber(1)
+  set streamId($fixnum.Int64 value) => $_setInt64(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasStreamId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearStreamId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get sequence => $_getI64(1);
+  @$pb.TagNumber(2)
+  set sequence($fixnum.Int64 value) => $_setInt64(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSequence() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSequence() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $fixnum.Int64 get capturedMonotonicNs => $_getI64(2);
+  @$pb.TagNumber(3)
+  set capturedMonotonicNs($fixnum.Int64 value) => $_setInt64(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasCapturedMonotonicNs() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearCapturedMonotonicNs() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.int get width => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set width($core.int value) => $_setUnsignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasWidth() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearWidth() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.int get height => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set height($core.int value) => $_setUnsignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasHeight() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearHeight() => $_clearField(5);
 }
 
 const $core.bool _omitFieldNames =
