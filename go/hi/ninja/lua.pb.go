@@ -7,6 +7,7 @@
 package ninja
 
 import (
+	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -980,7 +981,7 @@ var File_hi_ninja_lua_proto protoreflect.FileDescriptor
 
 const file_hi_ninja_lua_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/ninja/lua.proto\x12\bhi.ninja\x1a\x15hi/ninja/common.proto\"\xcb\x02\n" +
+	"\x12hi/ninja/lua.proto\x12\bhi.ninja\x1a\x15hi/ninja/common.proto\x1a\x1bbuf/validate/validate.proto\"\xcb\x02\n" +
 	"\x06LuaCtx\x12\x13\n" +
 	"\x02me\x18\x01 \x01(\tH\x00R\x02me\x88\x01\x01\x12\x1b\n" +
 	"\x06master\x18\x02 \x01(\tH\x01R\x06master\x88\x01\x01\x12\x19\n" +
@@ -1048,13 +1049,14 @@ const file_hi_ninja_lua_proto_rawDesc = "" +
 	"\aversion\x18\x02 \x01(\tH\x01R\aversion\x88\x01\x01B\a\n" +
 	"\x05_uuidB\n" +
 	"\n" +
-	"\b_version\"\xe5\x01\n" +
+	"\b_version\"\xf9\x01\n" +
 	"\vHostCallReq\x12\x17\n" +
 	"\x04name\x18\x01 \x01(\tH\x00R\x04name\x88\x01\x01\x12 \n" +
 	"\targs_json\x18\x02 \x01(\tH\x01R\bargsJson\x88\x01\x01\x12\x19\n" +
-	"\x05input\x18\x03 \x01(\fH\x02R\x05input\x88\x01\x01\x12'\n" +
-	"\x03ctx\x18\x04 \x01(\v2\x10.hi.ninja.LuaCtxH\x03R\x03ctx\x88\x01\x01\x12 \n" +
-	"\tplugin_id\x18\x05 \x01(\tH\x04R\bpluginId\x88\x01\x01B\a\n" +
+	"\x05input\x18\x03 \x01(\fH\x02R\x05input\x88\x01\x01\x12/\n" +
+	"\x03ctx\x18\x04 \x01(\v2\x10.hi.ninja.LuaCtxB\x06\xbaH\x03\xc8\x01\x01H\x03R\x03ctx\x88\x01\x01\x12,\n" +
+	"\tplugin_id\x18\x05 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x04R\bpluginId\x88\x01\x01B\a\n" +
 	"\x05_nameB\f\n" +
 	"\n" +
 	"_args_jsonB\b\n" +

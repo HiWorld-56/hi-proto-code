@@ -301,6 +301,7 @@ const HostCallReq$json = {
       '4': 1,
       '5': 11,
       '6': '.hi.ninja.LuaCtx',
+      '8': {},
       '9': 3,
       '10': 'ctx',
       '17': true
@@ -310,6 +311,7 @@ const HostCallReq$json = {
       '3': 5,
       '4': 1,
       '5': 9,
+      '8': {},
       '9': 4,
       '10': 'pluginId',
       '17': true
@@ -327,10 +329,10 @@ const HostCallReq$json = {
 /// Descriptor for `HostCallReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List hostCallReqDescriptor = $convert.base64Decode(
     'CgtIb3N0Q2FsbFJlcRIXCgRuYW1lGAEgASgJSABSBG5hbWWIAQESIAoJYXJnc19qc29uGAIgAS'
-    'gJSAFSCGFyZ3NKc29uiAEBEhkKBWlucHV0GAMgASgMSAJSBWlucHV0iAEBEicKA2N0eBgEIAEo'
-    'CzIQLmhpLm5pbmphLkx1YUN0eEgDUgNjdHiIAQESIAoJcGx1Z2luX2lkGAUgASgJSARSCHBsdW'
-    'dpbklkiAEBQgcKBV9uYW1lQgwKCl9hcmdzX2pzb25CCAoGX2lucHV0QgYKBF9jdHhCDAoKX3Bs'
-    'dWdpbl9pZA==');
+    'gJSAFSCGFyZ3NKc29uiAEBEhkKBWlucHV0GAMgASgMSAJSBWlucHV0iAEBEi8KA2N0eBgEIAEo'
+    'CzIQLmhpLm5pbmphLkx1YUN0eEIGukgDyAEBSANSA2N0eIgBARIsCglwbHVnaW5faWQYBSABKA'
+    'lCCrpIB8gBAXICEAFIBFIIcGx1Z2luSWSIAQFCBwoFX25hbWVCDAoKX2FyZ3NfanNvbkIICgZf'
+    'aW5wdXRCBgoEX2N0eEIMCgpfcGx1Z2luX2lk');
 
 @$core.Deprecated('Use hostCallRespDescriptor instead')
 const HostCallResp$json = {
