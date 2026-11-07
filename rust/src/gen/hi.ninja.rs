@@ -278,14 +278,15 @@ pub struct ModuleFileChunk {
     pub data: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
 }
 /// 每条控制均有request_id；重传同update_id/offset必须幂等。
-/// prepare -> chunk\* -> seal -> commit；commit只表示独立安装任务已持久受理。
+/// prepare -> chunk\* -> seal -> commit -> activate。
+/// commit只持久受理；brain收齐受理确认后再activate，避免模块先退出导致确认丢失。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ModuleUpdateCommand {
     #[prost(string, optional, tag = "1")]
     pub request_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
     pub update_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(oneof = "module_update_command::Cmd", tags = "3, 4, 5, 6, 7, 8")]
+    #[prost(oneof = "module_update_command::Cmd", tags = "3, 4, 5, 6, 7, 8, 9")]
     pub cmd: ::core::option::Option<module_update_command::Cmd>,
 }
 /// Nested message and enum types in `ModuleUpdateCommand`.
@@ -304,6 +305,8 @@ pub mod module_update_command {
         Abort(::pbjson_types::Empty),
         #[prost(message, tag = "8")]
         GetStatus(::pbjson_types::Empty),
+        #[prost(message, tag = "9")]
+        Activate(::pbjson_types::Empty),
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]

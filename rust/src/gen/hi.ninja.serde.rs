@@ -6811,6 +6811,9 @@ impl serde::Serialize for ModuleUpdateCommand {
                 module_update_command::Cmd::GetStatus(v) => {
                     struct_ser.serialize_field("getStatus", v)?;
                 }
+                module_update_command::Cmd::Activate(v) => {
+                    struct_ser.serialize_field("activate", v)?;
+                }
             }
         }
         struct_ser.end()
@@ -6834,6 +6837,7 @@ impl<'de> serde::Deserialize<'de> for ModuleUpdateCommand {
             "abort",
             "get_status",
             "getStatus",
+            "activate",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -6846,6 +6850,7 @@ impl<'de> serde::Deserialize<'de> for ModuleUpdateCommand {
             Commit,
             Abort,
             GetStatus,
+            Activate,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -6875,6 +6880,7 @@ impl<'de> serde::Deserialize<'de> for ModuleUpdateCommand {
                             "commit" => Ok(GeneratedField::Commit),
                             "abort" => Ok(GeneratedField::Abort),
                             "getStatus" | "get_status" => Ok(GeneratedField::GetStatus),
+                            "activate" => Ok(GeneratedField::Activate),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -6951,6 +6957,13 @@ impl<'de> serde::Deserialize<'de> for ModuleUpdateCommand {
                                 return Err(serde::de::Error::duplicate_field("getStatus"));
                             }
                             cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(module_update_command::Cmd::GetStatus)
+;
+                        }
+                        GeneratedField::Activate => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("activate"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(module_update_command::Cmd::Activate)
 ;
                         }
                     }

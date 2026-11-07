@@ -894,11 +894,13 @@ enum ModuleUpdateCommand_Cmd {
   commit,
   abort,
   getStatus,
+  activate,
   notSet
 }
 
 /// 每条控制均有request_id；重传同update_id/offset必须幂等。
-/// prepare -> chunk* -> seal -> commit；commit只表示独立安装任务已持久受理。
+/// prepare -> chunk* -> seal -> commit -> activate。
+/// commit只持久受理；brain收齐受理确认后再activate，避免模块先退出导致确认丢失。
 class ModuleUpdateCommand extends $pb.GeneratedMessage {
   factory ModuleUpdateCommand({
     $core.String? requestId,
@@ -909,6 +911,7 @@ class ModuleUpdateCommand extends $pb.GeneratedMessage {
     $0.Empty? commit,
     $0.Empty? abort,
     $0.Empty? getStatus,
+    $0.Empty? activate,
   }) {
     final result = create();
     if (requestId != null) result.requestId = requestId;
@@ -919,6 +922,7 @@ class ModuleUpdateCommand extends $pb.GeneratedMessage {
     if (commit != null) result.commit = commit;
     if (abort != null) result.abort = abort;
     if (getStatus != null) result.getStatus = getStatus;
+    if (activate != null) result.activate = activate;
     return result;
   }
 
@@ -939,13 +943,14 @@ class ModuleUpdateCommand extends $pb.GeneratedMessage {
     6: ModuleUpdateCommand_Cmd.commit,
     7: ModuleUpdateCommand_Cmd.abort,
     8: ModuleUpdateCommand_Cmd.getStatus,
+    9: ModuleUpdateCommand_Cmd.activate,
     0: ModuleUpdateCommand_Cmd.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ModuleUpdateCommand',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..oo(0, [3, 4, 5, 6, 7, 8])
+    ..oo(0, [3, 4, 5, 6, 7, 8, 9])
     ..aOS(1, _omitFieldNames ? '' : 'requestId')
     ..aOS(2, _omitFieldNames ? '' : 'updateId')
     ..aOM<ModuleArtifact>(3, _omitFieldNames ? '' : 'prepare',
@@ -959,6 +964,8 @@ class ModuleUpdateCommand extends $pb.GeneratedMessage {
     ..aOM<$0.Empty>(7, _omitFieldNames ? '' : 'abort',
         subBuilder: $0.Empty.create)
     ..aOM<$0.Empty>(8, _omitFieldNames ? '' : 'getStatus',
+        subBuilder: $0.Empty.create)
+    ..aOM<$0.Empty>(9, _omitFieldNames ? '' : 'activate',
         subBuilder: $0.Empty.create)
     ..hasRequiredFields = false;
 
@@ -987,6 +994,7 @@ class ModuleUpdateCommand extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   @$pb.TagNumber(7)
   @$pb.TagNumber(8)
+  @$pb.TagNumber(9)
   ModuleUpdateCommand_Cmd whichCmd() =>
       _ModuleUpdateCommand_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(3)
@@ -995,6 +1003,7 @@ class ModuleUpdateCommand extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   @$pb.TagNumber(7)
   @$pb.TagNumber(8)
+  @$pb.TagNumber(9)
   void clearCmd() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -1080,6 +1089,17 @@ class ModuleUpdateCommand extends $pb.GeneratedMessage {
   void clearGetStatus() => $_clearField(8);
   @$pb.TagNumber(8)
   $0.Empty ensureGetStatus() => $_ensure(7);
+
+  @$pb.TagNumber(9)
+  $0.Empty get activate => $_getN(8);
+  @$pb.TagNumber(9)
+  set activate($0.Empty value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasActivate() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearActivate() => $_clearField(9);
+  @$pb.TagNumber(9)
+  $0.Empty ensureActivate() => $_ensure(8);
 }
 
 class ModuleUpdateStatus extends $pb.GeneratedMessage {

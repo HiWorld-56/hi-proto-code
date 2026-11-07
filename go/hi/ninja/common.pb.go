@@ -1029,7 +1029,8 @@ func (x *ModuleFileChunk) GetData() []byte {
 }
 
 // 每条控制均有request_id；重传同update_id/offset必须幂等。
-// prepare -> chunk* -> seal -> commit；commit只表示独立安装任务已持久受理。
+// prepare -> chunk* -> seal -> commit -> activate。
+// commit只持久受理；brain收齐受理确认后再activate，避免模块先退出导致确认丢失。
 type ModuleUpdateCommand struct {
 	state     protoimpl.MessageState `protogen:"open.v1"`
 	RequestId *string                `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
@@ -1042,6 +1043,7 @@ type ModuleUpdateCommand struct {
 	//	*ModuleUpdateCommand_Commit
 	//	*ModuleUpdateCommand_Abort
 	//	*ModuleUpdateCommand_GetStatus
+	//	*ModuleUpdateCommand_Activate
 	Cmd           isModuleUpdateCommand_Cmd `protobuf_oneof:"cmd"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1152,6 +1154,15 @@ func (x *ModuleUpdateCommand) GetGetStatus() *emptypb.Empty {
 	return nil
 }
 
+func (x *ModuleUpdateCommand) GetActivate() *emptypb.Empty {
+	if x != nil {
+		if x, ok := x.Cmd.(*ModuleUpdateCommand_Activate); ok {
+			return x.Activate
+		}
+	}
+	return nil
+}
+
 type isModuleUpdateCommand_Cmd interface {
 	isModuleUpdateCommand_Cmd()
 }
@@ -1180,6 +1191,10 @@ type ModuleUpdateCommand_GetStatus struct {
 	GetStatus *emptypb.Empty `protobuf:"bytes,8,opt,name=get_status,json=getStatus,proto3,oneof"`
 }
 
+type ModuleUpdateCommand_Activate struct {
+	Activate *emptypb.Empty `protobuf:"bytes,9,opt,name=activate,proto3,oneof"`
+}
+
 func (*ModuleUpdateCommand_Prepare) isModuleUpdateCommand_Cmd() {}
 
 func (*ModuleUpdateCommand_Chunk) isModuleUpdateCommand_Cmd() {}
@@ -1191,6 +1206,8 @@ func (*ModuleUpdateCommand_Commit) isModuleUpdateCommand_Cmd() {}
 func (*ModuleUpdateCommand_Abort) isModuleUpdateCommand_Cmd() {}
 
 func (*ModuleUpdateCommand_GetStatus) isModuleUpdateCommand_Cmd() {}
+
+func (*ModuleUpdateCommand_Activate) isModuleUpdateCommand_Cmd() {}
 
 type ModuleUpdateStatus struct {
 	state          protoimpl.MessageState    `protogen:"open.v1"`
@@ -1654,7 +1671,7 @@ const file_hi_ninja_common_proto_rawDesc = "" +
 	"\x04data\x18\x03 \x01(\fH\x02R\x04data\x88\x01\x01B\r\n" +
 	"\v_file_indexB\t\n" +
 	"\a_offsetB\a\n" +
-	"\x05_data\"\xb1\x03\n" +
+	"\x05_data\"\xe7\x03\n" +
 	"\x13ModuleUpdateCommand\x12\"\n" +
 	"\n" +
 	"request_id\x18\x01 \x01(\tH\x01R\trequestId\x88\x01\x01\x12 \n" +
@@ -1665,7 +1682,8 @@ const file_hi_ninja_common_proto_rawDesc = "" +
 	"\x06commit\x18\x06 \x01(\v2\x16.google.protobuf.EmptyH\x00R\x06commit\x12.\n" +
 	"\x05abort\x18\a \x01(\v2\x16.google.protobuf.EmptyH\x00R\x05abort\x127\n" +
 	"\n" +
-	"get_status\x18\b \x01(\v2\x16.google.protobuf.EmptyH\x00R\tgetStatusB\x05\n" +
+	"get_status\x18\b \x01(\v2\x16.google.protobuf.EmptyH\x00R\tgetStatus\x124\n" +
+	"\bactivate\x18\t \x01(\v2\x16.google.protobuf.EmptyH\x00R\bactivateB\x05\n" +
 	"\x03cmdB\r\n" +
 	"\v_request_idB\f\n" +
 	"\n" +
@@ -1806,18 +1824,19 @@ var file_hi_ninja_common_proto_depIdxs = []int32{
 	21, // 17: hi.ninja.ModuleUpdateCommand.commit:type_name -> google.protobuf.Empty
 	21, // 18: hi.ninja.ModuleUpdateCommand.abort:type_name -> google.protobuf.Empty
 	21, // 19: hi.ninja.ModuleUpdateCommand.get_status:type_name -> google.protobuf.Empty
-	4,  // 20: hi.ninja.ModuleUpdateStatus.state:type_name -> hi.ninja.ModuleUpdateStatus.State
-	11, // 21: hi.ninja.ModuleUpdateStatus.failure:type_name -> hi.ninja.ModuleFailure
-	23, // 22: hi.ninja.PreparedRelease.release:type_name -> hi.did.ReleaseManifest
-	13, // 23: hi.ninja.PreparedRelease.modules:type_name -> hi.ninja.ModuleReleasePlan
-	0,  // 24: hi.ninja.UpdateFileRequest.module:type_name -> hi.ninja.ModuleId
-	14, // 25: hi.ninja.UpdateFileResponse.chunk:type_name -> hi.ninja.ModuleFileChunk
-	11, // 26: hi.ninja.UpdateFileResponse.failure:type_name -> hi.ninja.ModuleFailure
-	27, // [27:27] is the sub-list for method output_type
-	27, // [27:27] is the sub-list for method input_type
-	27, // [27:27] is the sub-list for extension type_name
-	27, // [27:27] is the sub-list for extension extendee
-	0,  // [0:27] is the sub-list for field type_name
+	21, // 20: hi.ninja.ModuleUpdateCommand.activate:type_name -> google.protobuf.Empty
+	4,  // 21: hi.ninja.ModuleUpdateStatus.state:type_name -> hi.ninja.ModuleUpdateStatus.State
+	11, // 22: hi.ninja.ModuleUpdateStatus.failure:type_name -> hi.ninja.ModuleFailure
+	23, // 23: hi.ninja.PreparedRelease.release:type_name -> hi.did.ReleaseManifest
+	13, // 24: hi.ninja.PreparedRelease.modules:type_name -> hi.ninja.ModuleReleasePlan
+	0,  // 25: hi.ninja.UpdateFileRequest.module:type_name -> hi.ninja.ModuleId
+	14, // 26: hi.ninja.UpdateFileResponse.chunk:type_name -> hi.ninja.ModuleFileChunk
+	11, // 27: hi.ninja.UpdateFileResponse.failure:type_name -> hi.ninja.ModuleFailure
+	28, // [28:28] is the sub-list for method output_type
+	28, // [28:28] is the sub-list for method input_type
+	28, // [28:28] is the sub-list for extension type_name
+	28, // [28:28] is the sub-list for extension extendee
+	0,  // [0:28] is the sub-list for field type_name
 }
 
 func init() { file_hi_ninja_common_proto_init() }
@@ -1851,6 +1870,7 @@ func file_hi_ninja_common_proto_init() {
 		(*ModuleUpdateCommand_Commit)(nil),
 		(*ModuleUpdateCommand_Abort)(nil),
 		(*ModuleUpdateCommand_GetStatus)(nil),
+		(*ModuleUpdateCommand_Activate)(nil),
 	}
 	file_hi_ninja_common_proto_msgTypes[11].OneofWrappers = []any{}
 	file_hi_ninja_common_proto_msgTypes[12].OneofWrappers = []any{}

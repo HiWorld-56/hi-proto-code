@@ -608,6 +608,15 @@ const ModuleUpdateCommand$json = {
       '9': 0,
       '10': 'getStatus'
     },
+    {
+      '1': 'activate',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Empty',
+      '9': 0,
+      '10': 'activate'
+    },
   ],
   '8': [
     {'1': 'cmd'},
@@ -625,7 +634,8 @@ final $typed_data.Uint8List moduleUpdateCommandDescriptor = $convert.base64Decod
     'b3RvYnVmLkVtcHR5SABSBHNlYWwSMAoGY29tbWl0GAYgASgLMhYuZ29vZ2xlLnByb3RvYnVmLk'
     'VtcHR5SABSBmNvbW1pdBIuCgVhYm9ydBgHIAEoCzIWLmdvb2dsZS5wcm90b2J1Zi5FbXB0eUgA'
     'UgVhYm9ydBI3CgpnZXRfc3RhdHVzGAggASgLMhYuZ29vZ2xlLnByb3RvYnVmLkVtcHR5SABSCW'
-    'dldFN0YXR1c0IFCgNjbWRCDQoLX3JlcXVlc3RfaWRCDAoKX3VwZGF0ZV9pZA==');
+    'dldFN0YXR1cxI0CghhY3RpdmF0ZRgJIAEoCzIWLmdvb2dsZS5wcm90b2J1Zi5FbXB0eUgAUghh'
+    'Y3RpdmF0ZUIFCgNjbWRCDQoLX3JlcXVlc3RfaWRCDAoKX3VwZGF0ZV9pZA==');
 
 @$core.Deprecated('Use moduleUpdateStatusDescriptor instead')
 const ModuleUpdateStatus$json = {
