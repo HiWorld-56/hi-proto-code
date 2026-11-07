@@ -1393,6 +1393,9 @@ impl serde::Serialize for BrainToModuleControl {
                 brain_to_module_control::Cmd::GetState(v) => {
                     struct_ser.serialize_field("getState", v)?;
                 }
+                brain_to_module_control::Cmd::Update(v) => {
+                    struct_ser.serialize_field("update", v)?;
+                }
             }
         }
         struct_ser.end()
@@ -1409,6 +1412,7 @@ impl<'de> serde::Deserialize<'de> for BrainToModuleControl {
             "initialize",
             "get_state",
             "getState",
+            "update",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -1416,6 +1420,7 @@ impl<'de> serde::Deserialize<'de> for BrainToModuleControl {
             Reset,
             Initialize,
             GetState,
+            Update,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1440,6 +1445,7 @@ impl<'de> serde::Deserialize<'de> for BrainToModuleControl {
                             "reset" => Ok(GeneratedField::Reset),
                             "initialize" => Ok(GeneratedField::Initialize),
                             "getState" | "get_state" => Ok(GeneratedField::GetState),
+                            "update" => Ok(GeneratedField::Update),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -1481,6 +1487,13 @@ impl<'de> serde::Deserialize<'de> for BrainToModuleControl {
                                 return Err(serde::de::Error::duplicate_field("getState"));
                             }
                             cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_module_control::Cmd::GetState)
+;
+                        }
+                        GeneratedField::Update => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("update"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_module_control::Cmd::Update)
 ;
                         }
                     }
@@ -1531,6 +1544,15 @@ impl serde::Serialize for BrainToUpdater {
                 brain_to_updater::Cmd::Apply(v) => {
                     struct_ser.serialize_field("apply", v)?;
                 }
+                brain_to_updater::Cmd::ReadFile(v) => {
+                    struct_ser.serialize_field("readFile", v)?;
+                }
+                brain_to_updater::Cmd::RestartReady(v) => {
+                    struct_ser.serialize_field("restartReady", v)?;
+                }
+                brain_to_updater::Cmd::BrainReady(v) => {
+                    struct_ser.serialize_field("brainReady", v)?;
+                }
             }
         }
         struct_ser.end()
@@ -1551,6 +1573,12 @@ impl<'de> serde::Deserialize<'de> for BrainToUpdater {
             "getStatus",
             "check",
             "apply",
+            "read_file",
+            "readFile",
+            "restart_ready",
+            "restartReady",
+            "brain_ready",
+            "brainReady",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -1561,6 +1589,9 @@ impl<'de> serde::Deserialize<'de> for BrainToUpdater {
             GetStatus,
             Check,
             Apply,
+            ReadFile,
+            RestartReady,
+            BrainReady,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1588,6 +1619,9 @@ impl<'de> serde::Deserialize<'de> for BrainToUpdater {
                             "getStatus" | "get_status" => Ok(GeneratedField::GetStatus),
                             "check" => Ok(GeneratedField::Check),
                             "apply" => Ok(GeneratedField::Apply),
+                            "readFile" | "read_file" => Ok(GeneratedField::ReadFile),
+                            "restartReady" | "restart_ready" => Ok(GeneratedField::RestartReady),
+                            "brainReady" | "brain_ready" => Ok(GeneratedField::BrainReady),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -1650,6 +1684,27 @@ impl<'de> serde::Deserialize<'de> for BrainToUpdater {
                                 return Err(serde::de::Error::duplicate_field("apply"));
                             }
                             cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_updater::Cmd::Apply)
+;
+                        }
+                        GeneratedField::ReadFile => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("readFile"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_updater::Cmd::ReadFile)
+;
+                        }
+                        GeneratedField::RestartReady => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("restartReady"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_updater::Cmd::RestartReady)
+;
+                        }
+                        GeneratedField::BrainReady => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("brainReady"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_updater::Cmd::BrainReady)
 ;
                         }
                     }
@@ -5230,6 +5285,186 @@ impl<'de> serde::Deserialize<'de> for MasterEvent {
         deserializer.deserialize_struct("hi.ninja.MasterEvent", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for ModuleArtifact {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.module.is_some() {
+            len += 1;
+        }
+        if self.platform.is_some() {
+            len += 1;
+        }
+        if self.version.is_some() {
+            len += 1;
+        }
+        if !self.files.is_empty() {
+            len += 1;
+        }
+        if self.service_file.is_some() {
+            len += 1;
+        }
+        if self.source_dir.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.ModuleArtifact", len)?;
+        if let Some(v) = self.module.as_ref() {
+            let v = ModuleId::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("module", &v)?;
+        }
+        if let Some(v) = self.platform.as_ref() {
+            struct_ser.serialize_field("platform", v)?;
+        }
+        if let Some(v) = self.version.as_ref() {
+            struct_ser.serialize_field("version", v)?;
+        }
+        if !self.files.is_empty() {
+            struct_ser.serialize_field("files", &self.files)?;
+        }
+        if let Some(v) = self.service_file.as_ref() {
+            struct_ser.serialize_field("serviceFile", v)?;
+        }
+        if let Some(v) = self.source_dir.as_ref() {
+            struct_ser.serialize_field("sourceDir", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ModuleArtifact {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "module",
+            "platform",
+            "version",
+            "files",
+            "service_file",
+            "serviceFile",
+            "source_dir",
+            "sourceDir",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Module,
+            Platform,
+            Version,
+            Files,
+            ServiceFile,
+            SourceDir,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "module" => Ok(GeneratedField::Module),
+                            "platform" => Ok(GeneratedField::Platform),
+                            "version" => Ok(GeneratedField::Version),
+                            "files" => Ok(GeneratedField::Files),
+                            "serviceFile" | "service_file" => Ok(GeneratedField::ServiceFile),
+                            "sourceDir" | "source_dir" => Ok(GeneratedField::SourceDir),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ModuleArtifact;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.ModuleArtifact")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ModuleArtifact, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut module__ = None;
+                let mut platform__ = None;
+                let mut version__ = None;
+                let mut files__ = None;
+                let mut service_file__ = None;
+                let mut source_dir__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Module => {
+                            if module__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("module"));
+                            }
+                            module__ = map_.next_value::<::std::option::Option<ModuleId>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::Platform => {
+                            if platform__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("platform"));
+                            }
+                            platform__ = map_.next_value()?;
+                        }
+                        GeneratedField::Version => {
+                            if version__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("version"));
+                            }
+                            version__ = map_.next_value()?;
+                        }
+                        GeneratedField::Files => {
+                            if files__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("files"));
+                            }
+                            files__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::ServiceFile => {
+                            if service_file__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("serviceFile"));
+                            }
+                            service_file__ = map_.next_value()?;
+                        }
+                        GeneratedField::SourceDir => {
+                            if source_dir__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sourceDir"));
+                            }
+                            source_dir__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ModuleArtifact {
+                    module: module__,
+                    platform: platform__,
+                    version: version__,
+                    files: files__.unwrap_or_default(),
+                    service_file: service_file__,
+                    source_dir: source_dir__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.ModuleArtifact", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for ModuleFailure {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -5435,6 +5670,142 @@ impl<'de> serde::Deserialize<'de> for module_failure::Code {
         deserializer.deserialize_any(GeneratedVisitor)
     }
 }
+impl serde::Serialize for ModuleFileChunk {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.file_index.is_some() {
+            len += 1;
+        }
+        if self.offset.is_some() {
+            len += 1;
+        }
+        if self.data.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.ModuleFileChunk", len)?;
+        if let Some(v) = self.file_index.as_ref() {
+            struct_ser.serialize_field("fileIndex", v)?;
+        }
+        if let Some(v) = self.offset.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("offset", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.data.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("data", pbjson::private::base64::encode(&v).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ModuleFileChunk {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "file_index",
+            "fileIndex",
+            "offset",
+            "data",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            FileIndex,
+            Offset,
+            Data,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "fileIndex" | "file_index" => Ok(GeneratedField::FileIndex),
+                            "offset" => Ok(GeneratedField::Offset),
+                            "data" => Ok(GeneratedField::Data),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ModuleFileChunk;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.ModuleFileChunk")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ModuleFileChunk, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut file_index__ = None;
+                let mut offset__ = None;
+                let mut data__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::FileIndex => {
+                            if file_index__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("fileIndex"));
+                            }
+                            file_index__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Offset => {
+                            if offset__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("offset"));
+                            }
+                            offset__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Data => {
+                            if data__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("data"));
+                            }
+                            data__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::BytesDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(ModuleFileChunk {
+                    file_index: file_index__,
+                    offset: offset__,
+                    data: data__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.ModuleFileChunk", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for ModuleHello {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -5452,6 +5823,12 @@ impl serde::Serialize for ModuleHello {
         if self.version.is_some() {
             len += 1;
         }
+        if self.platform.is_some() {
+            len += 1;
+        }
+        if self.update_enabled.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.ModuleHello", len)?;
         if let Some(v) = self.module.as_ref() {
             let v = ModuleId::try_from(*v)
@@ -5463,6 +5840,12 @@ impl serde::Serialize for ModuleHello {
         }
         if let Some(v) = self.version.as_ref() {
             struct_ser.serialize_field("version", v)?;
+        }
+        if let Some(v) = self.platform.as_ref() {
+            struct_ser.serialize_field("platform", v)?;
+        }
+        if let Some(v) = self.update_enabled.as_ref() {
+            struct_ser.serialize_field("updateEnabled", v)?;
         }
         struct_ser.end()
     }
@@ -5478,6 +5861,9 @@ impl<'de> serde::Deserialize<'de> for ModuleHello {
             "module_session_id",
             "moduleSessionId",
             "version",
+            "platform",
+            "update_enabled",
+            "updateEnabled",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -5485,6 +5871,8 @@ impl<'de> serde::Deserialize<'de> for ModuleHello {
             Module,
             ModuleSessionId,
             Version,
+            Platform,
+            UpdateEnabled,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -5509,6 +5897,8 @@ impl<'de> serde::Deserialize<'de> for ModuleHello {
                             "module" => Ok(GeneratedField::Module),
                             "moduleSessionId" | "module_session_id" => Ok(GeneratedField::ModuleSessionId),
                             "version" => Ok(GeneratedField::Version),
+                            "platform" => Ok(GeneratedField::Platform),
+                            "updateEnabled" | "update_enabled" => Ok(GeneratedField::UpdateEnabled),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -5531,6 +5921,8 @@ impl<'de> serde::Deserialize<'de> for ModuleHello {
                 let mut module__ = None;
                 let mut module_session_id__ = None;
                 let mut version__ = None;
+                let mut platform__ = None;
+                let mut update_enabled__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Module => {
@@ -5551,12 +5943,26 @@ impl<'de> serde::Deserialize<'de> for ModuleHello {
                             }
                             version__ = map_.next_value()?;
                         }
+                        GeneratedField::Platform => {
+                            if platform__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("platform"));
+                            }
+                            platform__ = map_.next_value()?;
+                        }
+                        GeneratedField::UpdateEnabled => {
+                            if update_enabled__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("updateEnabled"));
+                            }
+                            update_enabled__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(ModuleHello {
                     module: module__,
                     module_session_id: module_session_id__,
                     version: version__,
+                    platform: platform__,
+                    update_enabled: update_enabled__,
                 })
             }
         }
@@ -5811,6 +6217,114 @@ impl<'de> serde::Deserialize<'de> for module_initialize::Reason {
             }
         }
         deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ModuleReleasePlan {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.version.is_some() {
+            len += 1;
+        }
+        if !self.artifacts.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.ModuleReleasePlan", len)?;
+        if let Some(v) = self.version.as_ref() {
+            struct_ser.serialize_field("version", v)?;
+        }
+        if !self.artifacts.is_empty() {
+            struct_ser.serialize_field("artifacts", &self.artifacts)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ModuleReleasePlan {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "version",
+            "artifacts",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Version,
+            Artifacts,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "version" => Ok(GeneratedField::Version),
+                            "artifacts" => Ok(GeneratedField::Artifacts),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ModuleReleasePlan;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.ModuleReleasePlan")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ModuleReleasePlan, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut version__ = None;
+                let mut artifacts__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Version => {
+                            if version__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("version"));
+                            }
+                            version__ = map_.next_value()?;
+                        }
+                        GeneratedField::Artifacts => {
+                            if artifacts__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("artifacts"));
+                            }
+                            artifacts__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(ModuleReleasePlan {
+                    version: version__,
+                    artifacts: artifacts__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.ModuleReleasePlan", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for ModuleSession {
@@ -6151,6 +6665,9 @@ impl serde::Serialize for ModuleToBrainControl {
                 module_to_brain_control::Cmd::State(v) => {
                     struct_ser.serialize_field("state", v)?;
                 }
+                module_to_brain_control::Cmd::Update(v) => {
+                    struct_ser.serialize_field("update", v)?;
+                }
             }
         }
         struct_ser.end()
@@ -6165,12 +6682,14 @@ impl<'de> serde::Deserialize<'de> for ModuleToBrainControl {
         const FIELDS: &[&str] = &[
             "hello",
             "state",
+            "update",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Hello,
             State,
+            Update,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -6194,6 +6713,7 @@ impl<'de> serde::Deserialize<'de> for ModuleToBrainControl {
                         match value {
                             "hello" => Ok(GeneratedField::Hello),
                             "state" => Ok(GeneratedField::State),
+                            "update" => Ok(GeneratedField::Update),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -6230,6 +6750,13 @@ impl<'de> serde::Deserialize<'de> for ModuleToBrainControl {
                             cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(module_to_brain_control::Cmd::State)
 ;
                         }
+                        GeneratedField::Update => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("update"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(module_to_brain_control::Cmd::Update)
+;
+                        }
                     }
                 }
                 Ok(ModuleToBrainControl {
@@ -6238,6 +6765,481 @@ impl<'de> serde::Deserialize<'de> for ModuleToBrainControl {
             }
         }
         deserializer.deserialize_struct("hi.ninja.ModuleToBrainControl", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ModuleUpdateCommand {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.request_id.is_some() {
+            len += 1;
+        }
+        if self.update_id.is_some() {
+            len += 1;
+        }
+        if self.cmd.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.ModuleUpdateCommand", len)?;
+        if let Some(v) = self.request_id.as_ref() {
+            struct_ser.serialize_field("requestId", v)?;
+        }
+        if let Some(v) = self.update_id.as_ref() {
+            struct_ser.serialize_field("updateId", v)?;
+        }
+        if let Some(v) = self.cmd.as_ref() {
+            match v {
+                module_update_command::Cmd::Prepare(v) => {
+                    struct_ser.serialize_field("prepare", v)?;
+                }
+                module_update_command::Cmd::Chunk(v) => {
+                    struct_ser.serialize_field("chunk", v)?;
+                }
+                module_update_command::Cmd::Seal(v) => {
+                    struct_ser.serialize_field("seal", v)?;
+                }
+                module_update_command::Cmd::Commit(v) => {
+                    struct_ser.serialize_field("commit", v)?;
+                }
+                module_update_command::Cmd::Abort(v) => {
+                    struct_ser.serialize_field("abort", v)?;
+                }
+                module_update_command::Cmd::GetStatus(v) => {
+                    struct_ser.serialize_field("getStatus", v)?;
+                }
+            }
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ModuleUpdateCommand {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "request_id",
+            "requestId",
+            "update_id",
+            "updateId",
+            "prepare",
+            "chunk",
+            "seal",
+            "commit",
+            "abort",
+            "get_status",
+            "getStatus",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            RequestId,
+            UpdateId,
+            Prepare,
+            Chunk,
+            Seal,
+            Commit,
+            Abort,
+            GetStatus,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
+                            "updateId" | "update_id" => Ok(GeneratedField::UpdateId),
+                            "prepare" => Ok(GeneratedField::Prepare),
+                            "chunk" => Ok(GeneratedField::Chunk),
+                            "seal" => Ok(GeneratedField::Seal),
+                            "commit" => Ok(GeneratedField::Commit),
+                            "abort" => Ok(GeneratedField::Abort),
+                            "getStatus" | "get_status" => Ok(GeneratedField::GetStatus),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ModuleUpdateCommand;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.ModuleUpdateCommand")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ModuleUpdateCommand, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut request_id__ = None;
+                let mut update_id__ = None;
+                let mut cmd__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
+                            }
+                            request_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::UpdateId => {
+                            if update_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("updateId"));
+                            }
+                            update_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Prepare => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("prepare"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(module_update_command::Cmd::Prepare)
+;
+                        }
+                        GeneratedField::Chunk => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("chunk"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(module_update_command::Cmd::Chunk)
+;
+                        }
+                        GeneratedField::Seal => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("seal"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(module_update_command::Cmd::Seal)
+;
+                        }
+                        GeneratedField::Commit => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("commit"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(module_update_command::Cmd::Commit)
+;
+                        }
+                        GeneratedField::Abort => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("abort"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(module_update_command::Cmd::Abort)
+;
+                        }
+                        GeneratedField::GetStatus => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("getStatus"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(module_update_command::Cmd::GetStatus)
+;
+                        }
+                    }
+                }
+                Ok(ModuleUpdateCommand {
+                    request_id: request_id__,
+                    update_id: update_id__,
+                    cmd: cmd__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.ModuleUpdateCommand", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ModuleUpdateStatus {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.request_id.is_some() {
+            len += 1;
+        }
+        if self.update_id.is_some() {
+            len += 1;
+        }
+        if self.state.is_some() {
+            len += 1;
+        }
+        if self.target_version.is_some() {
+            len += 1;
+        }
+        if self.current_version.is_some() {
+            len += 1;
+        }
+        if self.failure.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.ModuleUpdateStatus", len)?;
+        if let Some(v) = self.request_id.as_ref() {
+            struct_ser.serialize_field("requestId", v)?;
+        }
+        if let Some(v) = self.update_id.as_ref() {
+            struct_ser.serialize_field("updateId", v)?;
+        }
+        if let Some(v) = self.state.as_ref() {
+            let v = module_update_status::State::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("state", &v)?;
+        }
+        if let Some(v) = self.target_version.as_ref() {
+            struct_ser.serialize_field("targetVersion", v)?;
+        }
+        if let Some(v) = self.current_version.as_ref() {
+            struct_ser.serialize_field("currentVersion", v)?;
+        }
+        if let Some(v) = self.failure.as_ref() {
+            struct_ser.serialize_field("failure", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ModuleUpdateStatus {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "request_id",
+            "requestId",
+            "update_id",
+            "updateId",
+            "state",
+            "target_version",
+            "targetVersion",
+            "current_version",
+            "currentVersion",
+            "failure",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            RequestId,
+            UpdateId,
+            State,
+            TargetVersion,
+            CurrentVersion,
+            Failure,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
+                            "updateId" | "update_id" => Ok(GeneratedField::UpdateId),
+                            "state" => Ok(GeneratedField::State),
+                            "targetVersion" | "target_version" => Ok(GeneratedField::TargetVersion),
+                            "currentVersion" | "current_version" => Ok(GeneratedField::CurrentVersion),
+                            "failure" => Ok(GeneratedField::Failure),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ModuleUpdateStatus;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.ModuleUpdateStatus")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ModuleUpdateStatus, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut request_id__ = None;
+                let mut update_id__ = None;
+                let mut state__ = None;
+                let mut target_version__ = None;
+                let mut current_version__ = None;
+                let mut failure__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
+                            }
+                            request_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::UpdateId => {
+                            if update_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("updateId"));
+                            }
+                            update_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::State => {
+                            if state__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("state"));
+                            }
+                            state__ = map_.next_value::<::std::option::Option<module_update_status::State>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::TargetVersion => {
+                            if target_version__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("targetVersion"));
+                            }
+                            target_version__ = map_.next_value()?;
+                        }
+                        GeneratedField::CurrentVersion => {
+                            if current_version__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("currentVersion"));
+                            }
+                            current_version__ = map_.next_value()?;
+                        }
+                        GeneratedField::Failure => {
+                            if failure__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("failure"));
+                            }
+                            failure__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ModuleUpdateStatus {
+                    request_id: request_id__,
+                    update_id: update_id__,
+                    state: state__,
+                    target_version: target_version__,
+                    current_version: current_version__,
+                    failure: failure__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.ModuleUpdateStatus", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for module_update_status::State {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Idle => "STATE_IDLE",
+            Self::Receiving => "STATE_RECEIVING",
+            Self::Prepared => "STATE_PREPARED",
+            Self::Committing => "STATE_COMMITTING",
+            Self::Activating => "STATE_ACTIVATING",
+            Self::Healthy => "STATE_HEALTHY",
+            Self::Failed => "STATE_FAILED",
+            Self::RollbackDone => "STATE_ROLLBACK_DONE",
+            Self::RollbackFailed => "STATE_ROLLBACK_FAILED",
+            Self::Aborted => "STATE_ABORTED",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for module_update_status::State {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "STATE_IDLE",
+            "STATE_RECEIVING",
+            "STATE_PREPARED",
+            "STATE_COMMITTING",
+            "STATE_ACTIVATING",
+            "STATE_HEALTHY",
+            "STATE_FAILED",
+            "STATE_ROLLBACK_DONE",
+            "STATE_ROLLBACK_FAILED",
+            "STATE_ABORTED",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = module_update_status::State;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "STATE_IDLE" => Ok(module_update_status::State::Idle),
+                    "STATE_RECEIVING" => Ok(module_update_status::State::Receiving),
+                    "STATE_PREPARED" => Ok(module_update_status::State::Prepared),
+                    "STATE_COMMITTING" => Ok(module_update_status::State::Committing),
+                    "STATE_ACTIVATING" => Ok(module_update_status::State::Activating),
+                    "STATE_HEALTHY" => Ok(module_update_status::State::Healthy),
+                    "STATE_FAILED" => Ok(module_update_status::State::Failed),
+                    "STATE_ROLLBACK_DONE" => Ok(module_update_status::State::RollbackDone),
+                    "STATE_ROLLBACK_FAILED" => Ok(module_update_status::State::RollbackFailed),
+                    "STATE_ABORTED" => Ok(module_update_status::State::Aborted),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
     }
 }
 impl serde::Serialize for OpenReq {
@@ -7132,6 +8134,132 @@ impl<'de> serde::Deserialize<'de> for plugin_progress::State {
         deserializer.deserialize_any(GeneratedVisitor)
     }
 }
+impl serde::Serialize for PreparedRelease {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.update_id.is_some() {
+            len += 1;
+        }
+        if self.release.is_some() {
+            len += 1;
+        }
+        if self.modules.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.PreparedRelease", len)?;
+        if let Some(v) = self.update_id.as_ref() {
+            struct_ser.serialize_field("updateId", v)?;
+        }
+        if let Some(v) = self.release.as_ref() {
+            struct_ser.serialize_field("release", v)?;
+        }
+        if let Some(v) = self.modules.as_ref() {
+            struct_ser.serialize_field("modules", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for PreparedRelease {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "update_id",
+            "updateId",
+            "release",
+            "modules",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            UpdateId,
+            Release,
+            Modules,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "updateId" | "update_id" => Ok(GeneratedField::UpdateId),
+                            "release" => Ok(GeneratedField::Release),
+                            "modules" => Ok(GeneratedField::Modules),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = PreparedRelease;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.PreparedRelease")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<PreparedRelease, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut update_id__ = None;
+                let mut release__ = None;
+                let mut modules__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::UpdateId => {
+                            if update_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("updateId"));
+                            }
+                            update_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Release => {
+                            if release__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("release"));
+                            }
+                            release__ = map_.next_value()?;
+                        }
+                        GeneratedField::Modules => {
+                            if modules__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("modules"));
+                            }
+                            modules__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(PreparedRelease {
+                    update_id: update_id__,
+                    release: release__,
+                    modules: modules__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.PreparedRelease", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for QrCard {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -7916,6 +9044,465 @@ impl<'de> serde::Deserialize<'de> for update_action::Action {
         deserializer.deserialize_any(GeneratedVisitor)
     }
 }
+impl serde::Serialize for UpdateDecision {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.update_id.is_some() {
+            len += 1;
+        }
+        if self.allowed.is_some() {
+            len += 1;
+        }
+        if self.reason.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.UpdateDecision", len)?;
+        if let Some(v) = self.update_id.as_ref() {
+            struct_ser.serialize_field("updateId", v)?;
+        }
+        if let Some(v) = self.allowed.as_ref() {
+            struct_ser.serialize_field("allowed", v)?;
+        }
+        if let Some(v) = self.reason.as_ref() {
+            struct_ser.serialize_field("reason", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for UpdateDecision {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "update_id",
+            "updateId",
+            "allowed",
+            "reason",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            UpdateId,
+            Allowed,
+            Reason,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "updateId" | "update_id" => Ok(GeneratedField::UpdateId),
+                            "allowed" => Ok(GeneratedField::Allowed),
+                            "reason" => Ok(GeneratedField::Reason),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = UpdateDecision;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.UpdateDecision")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdateDecision, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut update_id__ = None;
+                let mut allowed__ = None;
+                let mut reason__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::UpdateId => {
+                            if update_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("updateId"));
+                            }
+                            update_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Allowed => {
+                            if allowed__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("allowed"));
+                            }
+                            allowed__ = map_.next_value()?;
+                        }
+                        GeneratedField::Reason => {
+                            if reason__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("reason"));
+                            }
+                            reason__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(UpdateDecision {
+                    update_id: update_id__,
+                    allowed: allowed__,
+                    reason: reason__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.UpdateDecision", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for UpdateFileRequest {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.update_id.is_some() {
+            len += 1;
+        }
+        if self.module.is_some() {
+            len += 1;
+        }
+        if self.platform.is_some() {
+            len += 1;
+        }
+        if self.file_index.is_some() {
+            len += 1;
+        }
+        if self.offset.is_some() {
+            len += 1;
+        }
+        if self.max_bytes.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.UpdateFileRequest", len)?;
+        if let Some(v) = self.update_id.as_ref() {
+            struct_ser.serialize_field("updateId", v)?;
+        }
+        if let Some(v) = self.module.as_ref() {
+            let v = ModuleId::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("module", &v)?;
+        }
+        if let Some(v) = self.platform.as_ref() {
+            struct_ser.serialize_field("platform", v)?;
+        }
+        if let Some(v) = self.file_index.as_ref() {
+            struct_ser.serialize_field("fileIndex", v)?;
+        }
+        if let Some(v) = self.offset.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("offset", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.max_bytes.as_ref() {
+            struct_ser.serialize_field("maxBytes", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for UpdateFileRequest {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "update_id",
+            "updateId",
+            "module",
+            "platform",
+            "file_index",
+            "fileIndex",
+            "offset",
+            "max_bytes",
+            "maxBytes",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            UpdateId,
+            Module,
+            Platform,
+            FileIndex,
+            Offset,
+            MaxBytes,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "updateId" | "update_id" => Ok(GeneratedField::UpdateId),
+                            "module" => Ok(GeneratedField::Module),
+                            "platform" => Ok(GeneratedField::Platform),
+                            "fileIndex" | "file_index" => Ok(GeneratedField::FileIndex),
+                            "offset" => Ok(GeneratedField::Offset),
+                            "maxBytes" | "max_bytes" => Ok(GeneratedField::MaxBytes),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = UpdateFileRequest;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.UpdateFileRequest")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdateFileRequest, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut update_id__ = None;
+                let mut module__ = None;
+                let mut platform__ = None;
+                let mut file_index__ = None;
+                let mut offset__ = None;
+                let mut max_bytes__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::UpdateId => {
+                            if update_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("updateId"));
+                            }
+                            update_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Module => {
+                            if module__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("module"));
+                            }
+                            module__ = map_.next_value::<::std::option::Option<ModuleId>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::Platform => {
+                            if platform__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("platform"));
+                            }
+                            platform__ = map_.next_value()?;
+                        }
+                        GeneratedField::FileIndex => {
+                            if file_index__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("fileIndex"));
+                            }
+                            file_index__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Offset => {
+                            if offset__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("offset"));
+                            }
+                            offset__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::MaxBytes => {
+                            if max_bytes__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("maxBytes"));
+                            }
+                            max_bytes__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(UpdateFileRequest {
+                    update_id: update_id__,
+                    module: module__,
+                    platform: platform__,
+                    file_index: file_index__,
+                    offset: offset__,
+                    max_bytes: max_bytes__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.UpdateFileRequest", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for UpdateFileResponse {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.request_id.is_some() {
+            len += 1;
+        }
+        if self.update_id.is_some() {
+            len += 1;
+        }
+        if self.chunk.is_some() {
+            len += 1;
+        }
+        if self.failure.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.UpdateFileResponse", len)?;
+        if let Some(v) = self.request_id.as_ref() {
+            struct_ser.serialize_field("requestId", v)?;
+        }
+        if let Some(v) = self.update_id.as_ref() {
+            struct_ser.serialize_field("updateId", v)?;
+        }
+        if let Some(v) = self.chunk.as_ref() {
+            struct_ser.serialize_field("chunk", v)?;
+        }
+        if let Some(v) = self.failure.as_ref() {
+            struct_ser.serialize_field("failure", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for UpdateFileResponse {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "request_id",
+            "requestId",
+            "update_id",
+            "updateId",
+            "chunk",
+            "failure",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            RequestId,
+            UpdateId,
+            Chunk,
+            Failure,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
+                            "updateId" | "update_id" => Ok(GeneratedField::UpdateId),
+                            "chunk" => Ok(GeneratedField::Chunk),
+                            "failure" => Ok(GeneratedField::Failure),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = UpdateFileResponse;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.UpdateFileResponse")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdateFileResponse, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut request_id__ = None;
+                let mut update_id__ = None;
+                let mut chunk__ = None;
+                let mut failure__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
+                            }
+                            request_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::UpdateId => {
+                            if update_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("updateId"));
+                            }
+                            update_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Chunk => {
+                            if chunk__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("chunk"));
+                            }
+                            chunk__ = map_.next_value()?;
+                        }
+                        GeneratedField::Failure => {
+                            if failure__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("failure"));
+                            }
+                            failure__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(UpdateFileResponse {
+                    request_id: request_id__,
+                    update_id: update_id__,
+                    chunk: chunk__,
+                    failure: failure__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.UpdateFileResponse", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for UpdateStatus {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -8248,6 +9835,7 @@ impl serde::Serialize for update_status::State {
             Self::Failed => "STATE_FAILED",
             Self::RollbackDone => "STATE_ROLLBACK_DONE",
             Self::RollbackFailed => "STATE_ROLLBACK_FAILED",
+            Self::WaitingBrain => "STATE_WAITING_BRAIN",
         };
         serializer.serialize_str(variant)
     }
@@ -8278,6 +9866,7 @@ impl<'de> serde::Deserialize<'de> for update_status::State {
             "STATE_FAILED",
             "STATE_ROLLBACK_DONE",
             "STATE_ROLLBACK_FAILED",
+            "STATE_WAITING_BRAIN",
         ];
 
         struct GeneratedVisitor;
@@ -8337,6 +9926,7 @@ impl<'de> serde::Deserialize<'de> for update_status::State {
                     "STATE_FAILED" => Ok(update_status::State::Failed),
                     "STATE_ROLLBACK_DONE" => Ok(update_status::State::RollbackDone),
                     "STATE_ROLLBACK_FAILED" => Ok(update_status::State::RollbackFailed),
+                    "STATE_WAITING_BRAIN" => Ok(update_status::State::WaitingBrain),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }
@@ -8459,6 +10049,12 @@ impl serde::Serialize for UpdaterToBrain {
                 updater_to_brain::Cmd::EventStatus(v) => {
                     struct_ser.serialize_field("eventStatus", v)?;
                 }
+                updater_to_brain::Cmd::FilesReady(v) => {
+                    struct_ser.serialize_field("filesReady", v)?;
+                }
+                updater_to_brain::Cmd::File(v) => {
+                    struct_ser.serialize_field("file", v)?;
+                }
             }
         }
         struct_ser.end()
@@ -8476,6 +10072,9 @@ impl<'de> serde::Deserialize<'de> for UpdaterToBrain {
             "resp",
             "event_status",
             "eventStatus",
+            "files_ready",
+            "filesReady",
+            "file",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -8484,6 +10083,8 @@ impl<'de> serde::Deserialize<'de> for UpdaterToBrain {
             Control,
             Resp,
             EventStatus,
+            FilesReady,
+            File,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -8509,6 +10110,8 @@ impl<'de> serde::Deserialize<'de> for UpdaterToBrain {
                             "control" => Ok(GeneratedField::Control),
                             "resp" => Ok(GeneratedField::Resp),
                             "eventStatus" | "event_status" => Ok(GeneratedField::EventStatus),
+                            "filesReady" | "files_ready" => Ok(GeneratedField::FilesReady),
+                            "file" => Ok(GeneratedField::File),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -8557,6 +10160,20 @@ impl<'de> serde::Deserialize<'de> for UpdaterToBrain {
                                 return Err(serde::de::Error::duplicate_field("eventStatus"));
                             }
                             cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(updater_to_brain::Cmd::EventStatus)
+;
+                        }
+                        GeneratedField::FilesReady => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("filesReady"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(updater_to_brain::Cmd::FilesReady)
+;
+                        }
+                        GeneratedField::File => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("file"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(updater_to_brain::Cmd::File)
 ;
                         }
                     }

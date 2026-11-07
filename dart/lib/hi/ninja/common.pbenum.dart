@@ -140,5 +140,51 @@ class ModuleFailure_Code extends $pb.ProtobufEnum {
   const ModuleFailure_Code._(super.value, super.name);
 }
 
+class ModuleUpdateStatus_State extends $pb.ProtobufEnum {
+  static const ModuleUpdateStatus_State STATE_IDLE =
+      ModuleUpdateStatus_State._(0, _omitEnumNames ? '' : 'STATE_IDLE');
+  static const ModuleUpdateStatus_State STATE_RECEIVING =
+      ModuleUpdateStatus_State._(1, _omitEnumNames ? '' : 'STATE_RECEIVING');
+  static const ModuleUpdateStatus_State STATE_PREPARED =
+      ModuleUpdateStatus_State._(2, _omitEnumNames ? '' : 'STATE_PREPARED');
+  static const ModuleUpdateStatus_State STATE_COMMITTING =
+      ModuleUpdateStatus_State._(3, _omitEnumNames ? '' : 'STATE_COMMITTING');
+  static const ModuleUpdateStatus_State STATE_ACTIVATING =
+      ModuleUpdateStatus_State._(4, _omitEnumNames ? '' : 'STATE_ACTIVATING');
+  static const ModuleUpdateStatus_State STATE_HEALTHY =
+      ModuleUpdateStatus_State._(5, _omitEnumNames ? '' : 'STATE_HEALTHY');
+  static const ModuleUpdateStatus_State STATE_FAILED =
+      ModuleUpdateStatus_State._(6, _omitEnumNames ? '' : 'STATE_FAILED');
+  static const ModuleUpdateStatus_State STATE_ROLLBACK_DONE =
+      ModuleUpdateStatus_State._(
+          7, _omitEnumNames ? '' : 'STATE_ROLLBACK_DONE');
+  static const ModuleUpdateStatus_State STATE_ROLLBACK_FAILED =
+      ModuleUpdateStatus_State._(
+          8, _omitEnumNames ? '' : 'STATE_ROLLBACK_FAILED');
+  static const ModuleUpdateStatus_State STATE_ABORTED =
+      ModuleUpdateStatus_State._(9, _omitEnumNames ? '' : 'STATE_ABORTED');
+
+  static const $core.List<ModuleUpdateStatus_State> values =
+      <ModuleUpdateStatus_State>[
+    STATE_IDLE,
+    STATE_RECEIVING,
+    STATE_PREPARED,
+    STATE_COMMITTING,
+    STATE_ACTIVATING,
+    STATE_HEALTHY,
+    STATE_FAILED,
+    STATE_ROLLBACK_DONE,
+    STATE_ROLLBACK_FAILED,
+    STATE_ABORTED,
+  ];
+
+  static final $core.List<ModuleUpdateStatus_State?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 9);
+  static ModuleUpdateStatus_State? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const ModuleUpdateStatus_State._(super.value, super.name);
+}
+
 const $core.bool _omitEnumNames =
     $core.bool.fromEnvironment('protobuf.omit_enum_names');

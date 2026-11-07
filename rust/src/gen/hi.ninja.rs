@@ -20,6 +20,12 @@ pub struct ModuleHello {
     /// 不传=未提供制品版本
     #[prost(string, optional, tag = "3")]
     pub version: ::core::option::Option<::prost::alloc::string::String>,
+    /// 本进程制品平台，如linux-aarch64
+    #[prost(string, optional, tag = "4")]
+    pub platform: ::core::option::Option<::prost::alloc::string::String>,
+    /// 本模块是否已配置公共自更新能力
+    #[prost(bool, optional, tag = "5")]
+    pub update_enabled: ::core::option::Option<bool>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ModuleState {
@@ -127,14 +133,14 @@ pub mod module_initialize {
 /// 公共层按模块职责调用恢复钩子，不能把 updater 的安装事务清成 idle。
 /// reset -> INITIALIZING确认 -> 模块业务快照 -> initialize -> READY确认。
 /// 重复同代次命令幂等，旧会话/代次命令拒绝；失败不自动重放业务。
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BrainToModuleControl {
-    #[prost(oneof = "brain_to_module_control::Cmd", tags = "1, 2, 3")]
+    #[prost(oneof = "brain_to_module_control::Cmd", tags = "1, 2, 3, 4")]
     pub cmd: ::core::option::Option<brain_to_module_control::Cmd>,
 }
 /// Nested message and enum types in `BrainToModuleControl`.
 pub mod brain_to_module_control {
-    #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Oneof)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Cmd {
         #[prost(message, tag = "1")]
         Reset(super::ModuleInitialize),
@@ -142,11 +148,14 @@ pub mod brain_to_module_control {
         Initialize(::pbjson_types::Empty),
         #[prost(message, tag = "3")]
         GetState(::pbjson_types::Empty),
+        /// 同机/分机统一的公共升级控制
+        #[prost(message, tag = "4")]
+        Update(super::ModuleUpdateCommand),
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ModuleToBrainControl {
-    #[prost(oneof = "module_to_brain_control::Cmd", tags = "1, 2")]
+    #[prost(oneof = "module_to_brain_control::Cmd", tags = "1, 2, 3")]
     pub cmd: ::core::option::Option<module_to_brain_control::Cmd>,
 }
 /// Nested message and enum types in `ModuleToBrainControl`.
@@ -157,6 +166,8 @@ pub mod module_to_brain_control {
         Hello(super::ModuleHello),
         #[prost(message, tag = "2")]
         State(super::ModuleState),
+        #[prost(message, tag = "3")]
+        Update(super::ModuleUpdateStatus),
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -228,6 +239,195 @@ pub mod module_failure {
             }
         }
     }
+}
+/// 一个模块的不可变发布制品。文件契约复用hi.did.ReleaseFile。
+/// source_dir只供updater在已校验整包中定位；模块安装不采用远端绝对路径。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ModuleArtifact {
+    #[prost(enumeration = "ModuleId", optional, tag = "1")]
+    pub module: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "2")]
+    pub platform: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, repeated, tag = "4")]
+    pub files: ::prost::alloc::vec::Vec<super::did::ReleaseFile>,
+    /// 制品内的unit文件；安装目标由本模块配置决定
+    #[prost(string, optional, tag = "5")]
+    pub service_file: ::core::option::Option<::prost::alloc::string::String>,
+    /// 整包内相对目录
+    #[prost(string, optional, tag = "6")]
+    pub source_dir: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 整包内modules.pb的schema；由发布工具使用同一协议生成。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ModuleReleasePlan {
+    #[prost(string, optional, tag = "1")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
+    /// 可含同模块不同CPU平台的制品
+    #[prost(message, repeated, tag = "2")]
+    pub artifacts: ::prost::alloc::vec::Vec<ModuleArtifact>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ModuleFileChunk {
+    #[prost(uint32, optional, tag = "1")]
+    pub file_index: ::core::option::Option<u32>,
+    #[prost(uint64, optional, tag = "2")]
+    pub offset: ::core::option::Option<u64>,
+    #[prost(bytes = "vec", optional, tag = "3")]
+    pub data: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
+}
+/// 每条控制均有request_id；重传同update_id/offset必须幂等。
+/// prepare -> chunk\* -> seal -> commit；commit只表示独立安装任务已持久受理。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ModuleUpdateCommand {
+    #[prost(string, optional, tag = "1")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub update_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(oneof = "module_update_command::Cmd", tags = "3, 4, 5, 6, 7, 8")]
+    pub cmd: ::core::option::Option<module_update_command::Cmd>,
+}
+/// Nested message and enum types in `ModuleUpdateCommand`.
+pub mod module_update_command {
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Cmd {
+        #[prost(message, tag = "3")]
+        Prepare(super::ModuleArtifact),
+        #[prost(message, tag = "4")]
+        Chunk(super::ModuleFileChunk),
+        #[prost(message, tag = "5")]
+        Seal(::pbjson_types::Empty),
+        #[prost(message, tag = "6")]
+        Commit(::pbjson_types::Empty),
+        #[prost(message, tag = "7")]
+        Abort(::pbjson_types::Empty),
+        #[prost(message, tag = "8")]
+        GetStatus(::pbjson_types::Empty),
+    }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ModuleUpdateStatus {
+    #[prost(string, optional, tag = "1")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub update_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "module_update_status::State", optional, tag = "3")]
+    pub state: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "4")]
+    pub target_version: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "5")]
+    pub current_version: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "6")]
+    pub failure: ::core::option::Option<ModuleFailure>,
+}
+/// Nested message and enum types in `ModuleUpdateStatus`.
+pub mod module_update_status {
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        Idle = 0,
+        Receiving = 1,
+        Prepared = 2,
+        Committing = 3,
+        Activating = 4,
+        Healthy = 5,
+        Failed = 6,
+        RollbackDone = 7,
+        RollbackFailed = 8,
+        Aborted = 9,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Self::Idle => "STATE_IDLE",
+                Self::Receiving => "STATE_RECEIVING",
+                Self::Prepared => "STATE_PREPARED",
+                Self::Committing => "STATE_COMMITTING",
+                Self::Activating => "STATE_ACTIVATING",
+                Self::Healthy => "STATE_HEALTHY",
+                Self::Failed => "STATE_FAILED",
+                Self::RollbackDone => "STATE_ROLLBACK_DONE",
+                Self::RollbackFailed => "STATE_ROLLBACK_FAILED",
+                Self::Aborted => "STATE_ABORTED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_IDLE" => Some(Self::Idle),
+                "STATE_RECEIVING" => Some(Self::Receiving),
+                "STATE_PREPARED" => Some(Self::Prepared),
+                "STATE_COMMITTING" => Some(Self::Committing),
+                "STATE_ACTIVATING" => Some(Self::Activating),
+                "STATE_HEALTHY" => Some(Self::Healthy),
+                "STATE_FAILED" => Some(Self::Failed),
+                "STATE_ROLLBACK_DONE" => Some(Self::RollbackDone),
+                "STATE_ROLLBACK_FAILED" => Some(Self::RollbackFailed),
+                "STATE_ABORTED" => Some(Self::Aborted),
+                _ => None,
+            }
+        }
+    }
+}
+/// updater拥有文件准备事实；brain拥有模块分发/协调事实。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PreparedRelease {
+    #[prost(string, optional, tag = "1")]
+    pub update_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub release: ::core::option::Option<super::did::ReleaseManifest>,
+    #[prost(message, optional, tag = "3")]
+    pub modules: ::core::option::Option<ModuleReleasePlan>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UpdateFileRequest {
+    #[prost(string, optional, tag = "1")]
+    pub update_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "ModuleId", optional, tag = "2")]
+    pub module: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "3")]
+    pub platform: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(uint32, optional, tag = "4")]
+    pub file_index: ::core::option::Option<u32>,
+    #[prost(uint64, optional, tag = "5")]
+    pub offset: ::core::option::Option<u64>,
+    #[prost(uint32, optional, tag = "6")]
+    pub max_bytes: ::core::option::Option<u32>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UpdateFileResponse {
+    #[prost(string, optional, tag = "1")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub update_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "3")]
+    pub chunk: ::core::option::Option<ModuleFileChunk>,
+    #[prost(message, optional, tag = "4")]
+    pub failure: ::core::option::Option<ModuleFailure>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UpdateDecision {
+    #[prost(string, optional, tag = "1")]
+    pub update_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(bool, optional, tag = "2")]
+    pub allowed: ::core::option::Option<bool>,
+    #[prost(string, optional, tag = "3")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// ModuleId 各子模块的 ZMQ identity。**这就是注册时用的那个身份**。
 ///
@@ -493,7 +693,7 @@ pub mod lua_to_brain {
     }
 }
 /// brain是唯一调度者。IO本机采样/VAD/切句，brain调用STT，face播放。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BrainToIo {
     #[prost(message, optional, tag = "1")]
     pub session: ::core::option::Option<ModuleSession>,
@@ -505,7 +705,7 @@ pub struct BrainToIo {
 }
 /// Nested message and enum types in `BrainToIo`.
 pub mod brain_to_io {
-    #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Oneof)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Cmd {
         #[prost(message, tag = "3")]
         Control(super::BrainToModuleControl),
@@ -798,6 +998,8 @@ pub mod update_status {
         RollbackDone = 17,
         /// 回滚也失败了 —— **人要到现场**
         RollbackFailed = 18,
+        /// 文件就绪，等待brain分发/提交许可
+        WaitingBrain = 19,
     }
     impl State {
         /// String value of the enum field names used in the ProtoBuf definition.
@@ -825,6 +1027,7 @@ pub mod update_status {
                 Self::Failed => "STATE_FAILED",
                 Self::RollbackDone => "STATE_ROLLBACK_DONE",
                 Self::RollbackFailed => "STATE_ROLLBACK_FAILED",
+                Self::WaitingBrain => "STATE_WAITING_BRAIN",
             }
         }
         /// Creates an enum from field names used in the ProtoBuf definition.
@@ -849,6 +1052,7 @@ pub mod update_status {
                 "STATE_FAILED" => Some(Self::Failed),
                 "STATE_ROLLBACK_DONE" => Some(Self::RollbackDone),
                 "STATE_ROLLBACK_FAILED" => Some(Self::RollbackFailed),
+                "STATE_WAITING_BRAIN" => Some(Self::WaitingBrain),
                 _ => None,
             }
         }
@@ -918,7 +1122,7 @@ pub mod update_status {
     }
 }
 /// brain -> updater
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BrainToUpdater {
     /// Hello前不传；业务消息必须匹配当前接管会话
     #[prost(message, optional, tag = "99")]
@@ -927,12 +1131,12 @@ pub struct BrainToUpdater {
     /// 对不上的回包 brain 直接丢（超时之后迟到的那种）。
     #[prost(string, optional, tag = "1")]
     pub request_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(oneof = "brain_to_updater::Cmd", tags = "100, 2, 3, 4")]
+    #[prost(oneof = "brain_to_updater::Cmd", tags = "100, 2, 3, 4, 5, 6, 7")]
     pub cmd: ::core::option::Option<brain_to_updater::Cmd>,
 }
 /// Nested message and enum types in `BrainToUpdater`.
 pub mod brain_to_updater {
-    #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Oneof)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Cmd {
         #[prost(message, tag = "100")]
         Control(super::BrainToModuleControl),
@@ -944,6 +1148,12 @@ pub mod brain_to_updater {
         /// 把 `target_version` 那一版装上。**这是不可逆的**：会停 face/brain、换 current。
         #[prost(message, tag = "4")]
         Apply(::pbjson_types::Empty),
+        #[prost(message, tag = "5")]
+        ReadFile(super::UpdateFileRequest),
+        #[prost(message, tag = "6")]
+        RestartReady(super::UpdateDecision),
+        #[prost(message, tag = "7")]
+        BrainReady(super::UpdateDecision),
     }
 }
 /// 现在去问服务端有没有新版。
@@ -956,17 +1166,17 @@ pub struct Check {
     pub trigger: ::core::option::Option<i32>,
 }
 /// updater -> brain
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdaterToBrain {
     /// Hello前不传；业务消息必须匹配当前接管会话
     #[prost(message, optional, tag = "99")]
     pub session: ::core::option::Option<ModuleSession>,
-    #[prost(oneof = "updater_to_brain::Cmd", tags = "100, 1, 2")]
+    #[prost(oneof = "updater_to_brain::Cmd", tags = "100, 1, 2, 3, 4")]
     pub cmd: ::core::option::Option<updater_to_brain::Cmd>,
 }
 /// Nested message and enum types in `UpdaterToBrain`.
 pub mod updater_to_brain {
-    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Cmd {
         #[prost(message, tag = "100")]
         Control(super::ModuleToBrainControl),
@@ -975,6 +1185,10 @@ pub mod updater_to_brain {
         /// updater 主动推的状态变化（不对应任何请求）。装的过程全靠它，一路推到 face。
         #[prost(message, tag = "2")]
         EventStatus(super::UpdateStatus),
+        #[prost(message, tag = "3")]
+        FilesReady(super::PreparedRelease),
+        #[prost(message, tag = "4")]
+        File(super::UpdateFileResponse),
     }
 }
 /// 一条控制命令的回包。**状态永远带着**，不管成没成 —— 失败时那份状态正是原因所在。

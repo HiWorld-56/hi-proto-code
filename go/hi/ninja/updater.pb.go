@@ -52,6 +52,7 @@ const (
 	UpdateStatus_STATE_FAILED          UpdateStatus_State = 16 // 装/查失败（原因在 error）
 	UpdateStatus_STATE_ROLLBACK_DONE   UpdateStatus_State = 17 // 回滚成功，跑的是旧版本
 	UpdateStatus_STATE_ROLLBACK_FAILED UpdateStatus_State = 18 // 回滚也失败了 —— **人要到现场**
+	UpdateStatus_STATE_WAITING_BRAIN   UpdateStatus_State = 19 // 文件就绪，等待brain分发/提交许可
 )
 
 // Enum value maps for UpdateStatus_State.
@@ -76,6 +77,7 @@ var (
 		16: "STATE_FAILED",
 		17: "STATE_ROLLBACK_DONE",
 		18: "STATE_ROLLBACK_FAILED",
+		19: "STATE_WAITING_BRAIN",
 	}
 	UpdateStatus_State_value = map[string]int32{
 		"STATE_UNKNOWN":          0,
@@ -97,6 +99,7 @@ var (
 		"STATE_FAILED":           16,
 		"STATE_ROLLBACK_DONE":    17,
 		"STATE_ROLLBACK_FAILED":  18,
+		"STATE_WAITING_BRAIN":    19,
 	}
 )
 
@@ -346,6 +349,9 @@ type BrainToUpdater struct {
 	//	*BrainToUpdater_GetStatus
 	//	*BrainToUpdater_Check
 	//	*BrainToUpdater_Apply
+	//	*BrainToUpdater_ReadFile
+	//	*BrainToUpdater_RestartReady
+	//	*BrainToUpdater_BrainReady
 	Cmd           isBrainToUpdater_Cmd `protobuf_oneof:"cmd"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -438,6 +444,33 @@ func (x *BrainToUpdater) GetApply() *emptypb.Empty {
 	return nil
 }
 
+func (x *BrainToUpdater) GetReadFile() *UpdateFileRequest {
+	if x != nil {
+		if x, ok := x.Cmd.(*BrainToUpdater_ReadFile); ok {
+			return x.ReadFile
+		}
+	}
+	return nil
+}
+
+func (x *BrainToUpdater) GetRestartReady() *UpdateDecision {
+	if x != nil {
+		if x, ok := x.Cmd.(*BrainToUpdater_RestartReady); ok {
+			return x.RestartReady
+		}
+	}
+	return nil
+}
+
+func (x *BrainToUpdater) GetBrainReady() *UpdateDecision {
+	if x != nil {
+		if x, ok := x.Cmd.(*BrainToUpdater_BrainReady); ok {
+			return x.BrainReady
+		}
+	}
+	return nil
+}
+
 type isBrainToUpdater_Cmd interface {
 	isBrainToUpdater_Cmd()
 }
@@ -460,6 +493,18 @@ type BrainToUpdater_Apply struct {
 	Apply *emptypb.Empty `protobuf:"bytes,4,opt,name=apply,proto3,oneof"`
 }
 
+type BrainToUpdater_ReadFile struct {
+	ReadFile *UpdateFileRequest `protobuf:"bytes,5,opt,name=read_file,json=readFile,proto3,oneof"`
+}
+
+type BrainToUpdater_RestartReady struct {
+	RestartReady *UpdateDecision `protobuf:"bytes,6,opt,name=restart_ready,json=restartReady,proto3,oneof"`
+}
+
+type BrainToUpdater_BrainReady struct {
+	BrainReady *UpdateDecision `protobuf:"bytes,7,opt,name=brain_ready,json=brainReady,proto3,oneof"`
+}
+
 func (*BrainToUpdater_Control) isBrainToUpdater_Cmd() {}
 
 func (*BrainToUpdater_GetStatus) isBrainToUpdater_Cmd() {}
@@ -467,6 +512,12 @@ func (*BrainToUpdater_GetStatus) isBrainToUpdater_Cmd() {}
 func (*BrainToUpdater_Check) isBrainToUpdater_Cmd() {}
 
 func (*BrainToUpdater_Apply) isBrainToUpdater_Cmd() {}
+
+func (*BrainToUpdater_ReadFile) isBrainToUpdater_Cmd() {}
+
+func (*BrainToUpdater_RestartReady) isBrainToUpdater_Cmd() {}
+
+func (*BrainToUpdater_BrainReady) isBrainToUpdater_Cmd() {}
 
 // 现在去问服务端有没有新版。
 type Check struct {
@@ -525,6 +576,8 @@ type UpdaterToBrain struct {
 	//	*UpdaterToBrain_Control
 	//	*UpdaterToBrain_Resp
 	//	*UpdaterToBrain_EventStatus
+	//	*UpdaterToBrain_FilesReady
+	//	*UpdaterToBrain_File
 	Cmd           isUpdaterToBrain_Cmd `protobuf_oneof:"cmd"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -601,6 +654,24 @@ func (x *UpdaterToBrain) GetEventStatus() *UpdateStatus {
 	return nil
 }
 
+func (x *UpdaterToBrain) GetFilesReady() *PreparedRelease {
+	if x != nil {
+		if x, ok := x.Cmd.(*UpdaterToBrain_FilesReady); ok {
+			return x.FilesReady
+		}
+	}
+	return nil
+}
+
+func (x *UpdaterToBrain) GetFile() *UpdateFileResponse {
+	if x != nil {
+		if x, ok := x.Cmd.(*UpdaterToBrain_File); ok {
+			return x.File
+		}
+	}
+	return nil
+}
+
 type isUpdaterToBrain_Cmd interface {
 	isUpdaterToBrain_Cmd()
 }
@@ -618,11 +689,23 @@ type UpdaterToBrain_EventStatus struct {
 	EventStatus *UpdateStatus `protobuf:"bytes,2,opt,name=event_status,json=eventStatus,proto3,oneof"`
 }
 
+type UpdaterToBrain_FilesReady struct {
+	FilesReady *PreparedRelease `protobuf:"bytes,3,opt,name=files_ready,json=filesReady,proto3,oneof"`
+}
+
+type UpdaterToBrain_File struct {
+	File *UpdateFileResponse `protobuf:"bytes,4,opt,name=file,proto3,oneof"`
+}
+
 func (*UpdaterToBrain_Control) isUpdaterToBrain_Cmd() {}
 
 func (*UpdaterToBrain_Resp) isUpdaterToBrain_Cmd() {}
 
 func (*UpdaterToBrain_EventStatus) isUpdaterToBrain_Cmd() {}
+
+func (*UpdaterToBrain_FilesReady) isUpdaterToBrain_Cmd() {}
+
+func (*UpdaterToBrain_File) isUpdaterToBrain_Cmd() {}
 
 // 一条控制命令的回包。**状态永远带着**，不管成没成 —— 失败时那份状态正是原因所在。
 type CmdResp struct {
@@ -701,7 +784,7 @@ var File_hi_ninja_updater_proto protoreflect.FileDescriptor
 
 const file_hi_ninja_updater_proto_rawDesc = "" +
 	"\n" +
-	"\x16hi/ninja/updater.proto\x12\bhi.ninja\x1a\x15hi/ninja/common.proto\x1a\x1bgoogle/protobuf/empty.proto\"\xe0\t\n" +
+	"\x16hi/ninja/updater.proto\x12\bhi.ninja\x1a\x15hi/ninja/common.proto\x1a\x1bgoogle/protobuf/empty.proto\"\xf9\t\n" +
 	"\fUpdateStatus\x127\n" +
 	"\x05state\x18\x01 \x01(\x0e2\x1c.hi.ninja.UpdateStatus.StateH\x00R\x05state\x88\x01\x01\x12,\n" +
 	"\x0fcurrent_version\x18\x02 \x01(\tH\x01R\x0ecurrentVersion\x88\x01\x01\x12*\n" +
@@ -718,7 +801,7 @@ const file_hi_ninja_updater_proto_rawDesc = "" +
 	"\x10downloaded_bytes\x18\v \x01(\x04H\tR\x0fdownloadedBytes\x88\x01\x01\x12$\n" +
 	"\vtotal_bytes\x18\f \x01(\x04H\n" +
 	"R\n" +
-	"totalBytes\x88\x01\x01\"\x9b\x03\n" +
+	"totalBytes\x88\x01\x01\"\xb4\x03\n" +
 	"\x05State\x12\x11\n" +
 	"\rSTATE_UNKNOWN\x10\x00\x12\x0e\n" +
 	"\n" +
@@ -741,7 +824,8 @@ const file_hi_ninja_updater_proto_rawDesc = "" +
 	"STATE_DONE\x10\x0f\x12\x10\n" +
 	"\fSTATE_FAILED\x10\x10\x12\x17\n" +
 	"\x13STATE_ROLLBACK_DONE\x10\x11\x12\x19\n" +
-	"\x15STATE_ROLLBACK_FAILED\x10\x12\"\xa1\x01\n" +
+	"\x15STATE_ROLLBACK_FAILED\x10\x12\x12\x17\n" +
+	"\x13STATE_WAITING_BRAIN\x10\x13\"\xa1\x01\n" +
 	"\aTrigger\x12\x13\n" +
 	"\x0fTRIGGER_UNKNOWN\x10\x00\x12\x12\n" +
 	"\x0eTRIGGER_MANUAL\x10\x01\x12\x1b\n" +
@@ -762,7 +846,7 @@ const file_hi_ninja_updater_proto_rawDesc = "" +
 	"\v_updated_atB\x10\n" +
 	"\x0e_last_check_atB\x13\n" +
 	"\x11_downloaded_bytesB\x0e\n" +
-	"\f_total_bytes\"\xcb\x02\n" +
+	"\f_total_bytes\"\x85\x04\n" +
 	"\x0eBrainToUpdater\x121\n" +
 	"\asession\x18c \x01(\v2\x17.hi.ninja.ModuleSessionR\asession\x12\"\n" +
 	"\n" +
@@ -771,18 +855,25 @@ const file_hi_ninja_updater_proto_rawDesc = "" +
 	"\n" +
 	"get_status\x18\x02 \x01(\v2\x16.google.protobuf.EmptyH\x00R\tgetStatus\x12'\n" +
 	"\x05check\x18\x03 \x01(\v2\x0f.hi.ninja.CheckH\x00R\x05check\x12.\n" +
-	"\x05apply\x18\x04 \x01(\v2\x16.google.protobuf.EmptyH\x00R\x05applyB\x05\n" +
+	"\x05apply\x18\x04 \x01(\v2\x16.google.protobuf.EmptyH\x00R\x05apply\x12:\n" +
+	"\tread_file\x18\x05 \x01(\v2\x1b.hi.ninja.UpdateFileRequestH\x00R\breadFile\x12?\n" +
+	"\rrestart_ready\x18\x06 \x01(\v2\x18.hi.ninja.UpdateDecisionH\x00R\frestartReady\x12;\n" +
+	"\vbrain_ready\x18\a \x01(\v2\x18.hi.ninja.UpdateDecisionH\x00R\n" +
+	"brainReadyB\x05\n" +
 	"\x03cmdB\r\n" +
 	"\v_request_id\"R\n" +
 	"\x05Check\x12=\n" +
 	"\atrigger\x18\x01 \x01(\x0e2\x1e.hi.ninja.UpdateStatus.TriggerH\x00R\atrigger\x88\x01\x01B\n" +
 	"\n" +
-	"\b_trigger\"\xec\x01\n" +
+	"\b_trigger\"\xde\x02\n" +
 	"\x0eUpdaterToBrain\x121\n" +
 	"\asession\x18c \x01(\v2\x17.hi.ninja.ModuleSessionR\asession\x12:\n" +
 	"\acontrol\x18d \x01(\v2\x1e.hi.ninja.ModuleToBrainControlH\x00R\acontrol\x12'\n" +
 	"\x04resp\x18\x01 \x01(\v2\x11.hi.ninja.CmdRespH\x00R\x04resp\x12;\n" +
-	"\fevent_status\x18\x02 \x01(\v2\x16.hi.ninja.UpdateStatusH\x00R\veventStatusB\x05\n" +
+	"\fevent_status\x18\x02 \x01(\v2\x16.hi.ninja.UpdateStatusH\x00R\veventStatus\x12<\n" +
+	"\vfiles_ready\x18\x03 \x01(\v2\x19.hi.ninja.PreparedReleaseH\x00R\n" +
+	"filesReady\x122\n" +
+	"\x04file\x18\x04 \x01(\v2\x1c.hi.ninja.UpdateFileResponseH\x00R\x04fileB\x05\n" +
 	"\x03cmd\"\xad\x01\n" +
 	"\aCmdResp\x12\"\n" +
 	"\n" +
@@ -820,7 +911,11 @@ var file_hi_ninja_updater_proto_goTypes = []any{
 	(*ModuleSession)(nil),        // 7: hi.ninja.ModuleSession
 	(*BrainToModuleControl)(nil), // 8: hi.ninja.BrainToModuleControl
 	(*emptypb.Empty)(nil),        // 9: google.protobuf.Empty
-	(*ModuleToBrainControl)(nil), // 10: hi.ninja.ModuleToBrainControl
+	(*UpdateFileRequest)(nil),    // 10: hi.ninja.UpdateFileRequest
+	(*UpdateDecision)(nil),       // 11: hi.ninja.UpdateDecision
+	(*ModuleToBrainControl)(nil), // 12: hi.ninja.ModuleToBrainControl
+	(*PreparedRelease)(nil),      // 13: hi.ninja.PreparedRelease
+	(*UpdateFileResponse)(nil),   // 14: hi.ninja.UpdateFileResponse
 }
 var file_hi_ninja_updater_proto_depIdxs = []int32{
 	0,  // 0: hi.ninja.UpdateStatus.state:type_name -> hi.ninja.UpdateStatus.State
@@ -830,17 +925,22 @@ var file_hi_ninja_updater_proto_depIdxs = []int32{
 	9,  // 4: hi.ninja.BrainToUpdater.get_status:type_name -> google.protobuf.Empty
 	4,  // 5: hi.ninja.BrainToUpdater.check:type_name -> hi.ninja.Check
 	9,  // 6: hi.ninja.BrainToUpdater.apply:type_name -> google.protobuf.Empty
-	1,  // 7: hi.ninja.Check.trigger:type_name -> hi.ninja.UpdateStatus.Trigger
-	7,  // 8: hi.ninja.UpdaterToBrain.session:type_name -> hi.ninja.ModuleSession
-	10, // 9: hi.ninja.UpdaterToBrain.control:type_name -> hi.ninja.ModuleToBrainControl
-	6,  // 10: hi.ninja.UpdaterToBrain.resp:type_name -> hi.ninja.CmdResp
-	2,  // 11: hi.ninja.UpdaterToBrain.event_status:type_name -> hi.ninja.UpdateStatus
-	2,  // 12: hi.ninja.CmdResp.status:type_name -> hi.ninja.UpdateStatus
-	13, // [13:13] is the sub-list for method output_type
-	13, // [13:13] is the sub-list for method input_type
-	13, // [13:13] is the sub-list for extension type_name
-	13, // [13:13] is the sub-list for extension extendee
-	0,  // [0:13] is the sub-list for field type_name
+	10, // 7: hi.ninja.BrainToUpdater.read_file:type_name -> hi.ninja.UpdateFileRequest
+	11, // 8: hi.ninja.BrainToUpdater.restart_ready:type_name -> hi.ninja.UpdateDecision
+	11, // 9: hi.ninja.BrainToUpdater.brain_ready:type_name -> hi.ninja.UpdateDecision
+	1,  // 10: hi.ninja.Check.trigger:type_name -> hi.ninja.UpdateStatus.Trigger
+	7,  // 11: hi.ninja.UpdaterToBrain.session:type_name -> hi.ninja.ModuleSession
+	12, // 12: hi.ninja.UpdaterToBrain.control:type_name -> hi.ninja.ModuleToBrainControl
+	6,  // 13: hi.ninja.UpdaterToBrain.resp:type_name -> hi.ninja.CmdResp
+	2,  // 14: hi.ninja.UpdaterToBrain.event_status:type_name -> hi.ninja.UpdateStatus
+	13, // 15: hi.ninja.UpdaterToBrain.files_ready:type_name -> hi.ninja.PreparedRelease
+	14, // 16: hi.ninja.UpdaterToBrain.file:type_name -> hi.ninja.UpdateFileResponse
+	2,  // 17: hi.ninja.CmdResp.status:type_name -> hi.ninja.UpdateStatus
+	18, // [18:18] is the sub-list for method output_type
+	18, // [18:18] is the sub-list for method input_type
+	18, // [18:18] is the sub-list for extension type_name
+	18, // [18:18] is the sub-list for extension extendee
+	0,  // [0:18] is the sub-list for field type_name
 }
 
 func init() { file_hi_ninja_updater_proto_init() }
@@ -855,12 +955,17 @@ func file_hi_ninja_updater_proto_init() {
 		(*BrainToUpdater_GetStatus)(nil),
 		(*BrainToUpdater_Check)(nil),
 		(*BrainToUpdater_Apply)(nil),
+		(*BrainToUpdater_ReadFile)(nil),
+		(*BrainToUpdater_RestartReady)(nil),
+		(*BrainToUpdater_BrainReady)(nil),
 	}
 	file_hi_ninja_updater_proto_msgTypes[2].OneofWrappers = []any{}
 	file_hi_ninja_updater_proto_msgTypes[3].OneofWrappers = []any{
 		(*UpdaterToBrain_Control)(nil),
 		(*UpdaterToBrain_Resp)(nil),
 		(*UpdaterToBrain_EventStatus)(nil),
+		(*UpdaterToBrain_FilesReady)(nil),
+		(*UpdaterToBrain_File)(nil),
 	}
 	file_hi_ninja_updater_proto_msgTypes[4].OneofWrappers = []any{}
 	type x struct{}

@@ -153,6 +153,7 @@ const UpdateStatus_State$json = {
     {'1': 'STATE_FAILED', '2': 16},
     {'1': 'STATE_ROLLBACK_DONE', '2': 17},
     {'1': 'STATE_ROLLBACK_FAILED', '2': 18},
+    {'1': 'STATE_WAITING_BRAIN', '2': 19},
   ],
 };
 
@@ -181,20 +182,20 @@ final $typed_data.Uint8List updateStatusDescriptor = $convert.base64Decode(
     'aWdnZXKIAQESIgoKdXBkYXRlZF9hdBgJIAEoBEgHUgl1cGRhdGVkQXSIAQESJwoNbGFzdF9jaG'
     'Vja19hdBgKIAEoBEgIUgtsYXN0Q2hlY2tBdIgBARIuChBkb3dubG9hZGVkX2J5dGVzGAsgASgE'
     'SAlSD2Rvd25sb2FkZWRCeXRlc4gBARIkCgt0b3RhbF9ieXRlcxgMIAEoBEgKUgp0b3RhbEJ5dG'
-    'VziAEBIpsDCgVTdGF0ZRIRCg1TVEFURV9VTktOT1dOEAASDgoKU1RBVEVfSURMRRABEhIKDlNU'
+    'VziAEBIrQDCgVTdGF0ZRIRCg1TVEFURV9VTktOT1dOEAASDgoKU1RBVEVfSURMRRABEhIKDlNU'
     'QVRFX0NIRUNLSU5HEAISGgoWU1RBVEVfVVBEQVRFX0FWQUlMQUJMRRADEhUKEVNUQVRFX0RPV0'
     '5MT0FESU5HEAQSEwoPU1RBVEVfVkVSSUZZSU5HEAUSEwoPU1RBVEVfVU5QQUNLSU5HEAYSEgoO'
     'U1RBVEVfU1RPUFBJTkcQBxIUChBTVEFURV9QUkVTRVJWSU5HEAgSEwoPU1RBVEVfU1dJVENISU'
     '5HEAkSEgoOU1RBVEVfU1RBUlRJTkcQChIRCg1TVEFURV9IRUFMVEhZEAsSFwoTU1RBVEVfU0VM'
     'Rl9VUERBVElORxAMEhIKDlNUQVRFX1JFVFJZSU5HEA0SFQoRU1RBVEVfUk9MTEJBQ0tJTkcQDh'
     'IOCgpTVEFURV9ET05FEA8SEAoMU1RBVEVfRkFJTEVEEBASFwoTU1RBVEVfUk9MTEJBQ0tfRE9O'
-    'RRAREhkKFVNUQVRFX1JPTExCQUNLX0ZBSUxFRBASIqEBCgdUcmlnZ2VyEhMKD1RSSUdHRVJfVU'
-    '5LTk9XThAAEhIKDlRSSUdHRVJfTUFOVUFMEAESGwoXVFJJR0dFUl9VUERBVEVSX1NUQVJUVVAQ'
-    'AhIZChVUUklHR0VSX0JSQUlOX1NUQVJUVVAQAxIQCgxUUklHR0VSX1BVU0gQBBIQCgxUUklHR0'
-    'VSX1BPTEwQBRIRCg1UUklHR0VSX0FQUExZEAZCCAoGX3N0YXRlQhIKEF9jdXJyZW50X3ZlcnNp'
-    'b25CEQoPX3RhcmdldF92ZXJzaW9uQgsKCV9wcm9ncmVzc0IKCghfbWVzc2FnZUIICgZfZXJyb3'
-    'JCCgoIX3RyaWdnZXJCDQoLX3VwZGF0ZWRfYXRCEAoOX2xhc3RfY2hlY2tfYXRCEwoRX2Rvd25s'
-    'b2FkZWRfYnl0ZXNCDgoMX3RvdGFsX2J5dGVz');
+    'RRAREhkKFVNUQVRFX1JPTExCQUNLX0ZBSUxFRBASEhcKE1NUQVRFX1dBSVRJTkdfQlJBSU4QEy'
+    'KhAQoHVHJpZ2dlchITCg9UUklHR0VSX1VOS05PV04QABISCg5UUklHR0VSX01BTlVBTBABEhsK'
+    'F1RSSUdHRVJfVVBEQVRFUl9TVEFSVFVQEAISGQoVVFJJR0dFUl9CUkFJTl9TVEFSVFVQEAMSEA'
+    'oMVFJJR0dFUl9QVVNIEAQSEAoMVFJJR0dFUl9QT0xMEAUSEQoNVFJJR0dFUl9BUFBMWRAGQggK'
+    'Bl9zdGF0ZUISChBfY3VycmVudF92ZXJzaW9uQhEKD190YXJnZXRfdmVyc2lvbkILCglfcHJvZ3'
+    'Jlc3NCCgoIX21lc3NhZ2VCCAoGX2Vycm9yQgoKCF90cmlnZ2VyQg0KC191cGRhdGVkX2F0QhAK'
+    'Dl9sYXN0X2NoZWNrX2F0QhMKEV9kb3dubG9hZGVkX2J5dGVzQg4KDF90b3RhbF9ieXRlcw==');
 
 @$core.Deprecated('Use brainToUpdaterDescriptor instead')
 const BrainToUpdater$json = {
@@ -253,6 +254,33 @@ const BrainToUpdater$json = {
       '9': 0,
       '10': 'apply'
     },
+    {
+      '1': 'read_file',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.UpdateFileRequest',
+      '9': 0,
+      '10': 'readFile'
+    },
+    {
+      '1': 'restart_ready',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.UpdateDecision',
+      '9': 0,
+      '10': 'restartReady'
+    },
+    {
+      '1': 'brain_ready',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.UpdateDecision',
+      '9': 0,
+      '10': 'brainReady'
+    },
   ],
   '8': [
     {'1': 'cmd'},
@@ -267,7 +295,11 @@ final $typed_data.Uint8List brainToUpdaterDescriptor = $convert.base64Decode(
     'cm9sGGQgASgLMh4uaGkubmluamEuQnJhaW5Ub01vZHVsZUNvbnRyb2xIAFIHY29udHJvbBI3Cg'
     'pnZXRfc3RhdHVzGAIgASgLMhYuZ29vZ2xlLnByb3RvYnVmLkVtcHR5SABSCWdldFN0YXR1cxIn'
     'CgVjaGVjaxgDIAEoCzIPLmhpLm5pbmphLkNoZWNrSABSBWNoZWNrEi4KBWFwcGx5GAQgASgLMh'
-    'YuZ29vZ2xlLnByb3RvYnVmLkVtcHR5SABSBWFwcGx5QgUKA2NtZEINCgtfcmVxdWVzdF9pZA==');
+    'YuZ29vZ2xlLnByb3RvYnVmLkVtcHR5SABSBWFwcGx5EjoKCXJlYWRfZmlsZRgFIAEoCzIbLmhp'
+    'Lm5pbmphLlVwZGF0ZUZpbGVSZXF1ZXN0SABSCHJlYWRGaWxlEj8KDXJlc3RhcnRfcmVhZHkYBi'
+    'ABKAsyGC5oaS5uaW5qYS5VcGRhdGVEZWNpc2lvbkgAUgxyZXN0YXJ0UmVhZHkSOwoLYnJhaW5f'
+    'cmVhZHkYByABKAsyGC5oaS5uaW5qYS5VcGRhdGVEZWNpc2lvbkgAUgpicmFpblJlYWR5QgUKA2'
+    'NtZEINCgtfcmVxdWVzdF9pZA==');
 
 @$core.Deprecated('Use checkDescriptor instead')
 const Check$json = {
@@ -333,6 +365,24 @@ const UpdaterToBrain$json = {
       '9': 0,
       '10': 'eventStatus'
     },
+    {
+      '1': 'files_ready',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.PreparedRelease',
+      '9': 0,
+      '10': 'filesReady'
+    },
+    {
+      '1': 'file',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.UpdateFileResponse',
+      '9': 0,
+      '10': 'file'
+    },
   ],
   '8': [
     {'1': 'cmd'},
@@ -345,7 +395,9 @@ final $typed_data.Uint8List updaterToBrainDescriptor = $convert.base64Decode(
     'lvblIHc2Vzc2lvbhI6Cgdjb250cm9sGGQgASgLMh4uaGkubmluamEuTW9kdWxlVG9CcmFpbkNv'
     'bnRyb2xIAFIHY29udHJvbBInCgRyZXNwGAEgASgLMhEuaGkubmluamEuQ21kUmVzcEgAUgRyZX'
     'NwEjsKDGV2ZW50X3N0YXR1cxgCIAEoCzIWLmhpLm5pbmphLlVwZGF0ZVN0YXR1c0gAUgtldmVu'
-    'dFN0YXR1c0IFCgNjbWQ=');
+    'dFN0YXR1cxI8CgtmaWxlc19yZWFkeRgDIAEoCzIZLmhpLm5pbmphLlByZXBhcmVkUmVsZWFzZU'
+    'gAUgpmaWxlc1JlYWR5EjIKBGZpbGUYBCABKAsyHC5oaS5uaW5qYS5VcGRhdGVGaWxlUmVzcG9u'
+    'c2VIAFIEZmlsZUIFCgNjbWQ=');
 
 @$core.Deprecated('Use cmdRespDescriptor instead')
 const CmdResp$json = {

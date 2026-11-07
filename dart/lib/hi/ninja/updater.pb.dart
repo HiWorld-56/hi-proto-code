@@ -220,7 +220,16 @@ class UpdateStatus extends $pb.GeneratedMessage {
   void clearTotalBytes() => $_clearField(12);
 }
 
-enum BrainToUpdater_Cmd { getStatus, check_3, apply, control, notSet }
+enum BrainToUpdater_Cmd {
+  getStatus,
+  check_3,
+  apply,
+  readFile,
+  restartReady,
+  brainReady,
+  control,
+  notSet
+}
 
 /// brain -> updater
 class BrainToUpdater extends $pb.GeneratedMessage {
@@ -229,6 +238,9 @@ class BrainToUpdater extends $pb.GeneratedMessage {
     $0.Empty? getStatus,
     Check? check_3,
     $0.Empty? apply,
+    $1.UpdateFileRequest? readFile,
+    $1.UpdateDecision? restartReady,
+    $1.UpdateDecision? brainReady,
     $1.ModuleSession? session,
     $1.BrainToModuleControl? control,
   }) {
@@ -237,6 +249,9 @@ class BrainToUpdater extends $pb.GeneratedMessage {
     if (getStatus != null) result.getStatus = getStatus;
     if (check_3 != null) result.check_3 = check_3;
     if (apply != null) result.apply = apply;
+    if (readFile != null) result.readFile = readFile;
+    if (restartReady != null) result.restartReady = restartReady;
+    if (brainReady != null) result.brainReady = brainReady;
     if (session != null) result.session = session;
     if (control != null) result.control = control;
     return result;
@@ -256,6 +271,9 @@ class BrainToUpdater extends $pb.GeneratedMessage {
     2: BrainToUpdater_Cmd.getStatus,
     3: BrainToUpdater_Cmd.check_3,
     4: BrainToUpdater_Cmd.apply,
+    5: BrainToUpdater_Cmd.readFile,
+    6: BrainToUpdater_Cmd.restartReady,
+    7: BrainToUpdater_Cmd.brainReady,
     100: BrainToUpdater_Cmd.control,
     0: BrainToUpdater_Cmd.notSet
   };
@@ -263,13 +281,19 @@ class BrainToUpdater extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'BrainToUpdater',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3, 4, 100])
+    ..oo(0, [2, 3, 4, 5, 6, 7, 100])
     ..aOS(1, _omitFieldNames ? '' : 'requestId')
     ..aOM<$0.Empty>(2, _omitFieldNames ? '' : 'getStatus',
         subBuilder: $0.Empty.create)
     ..aOM<Check>(3, _omitFieldNames ? '' : 'check', subBuilder: Check.create)
     ..aOM<$0.Empty>(4, _omitFieldNames ? '' : 'apply',
         subBuilder: $0.Empty.create)
+    ..aOM<$1.UpdateFileRequest>(5, _omitFieldNames ? '' : 'readFile',
+        subBuilder: $1.UpdateFileRequest.create)
+    ..aOM<$1.UpdateDecision>(6, _omitFieldNames ? '' : 'restartReady',
+        subBuilder: $1.UpdateDecision.create)
+    ..aOM<$1.UpdateDecision>(7, _omitFieldNames ? '' : 'brainReady',
+        subBuilder: $1.UpdateDecision.create)
     ..aOM<$1.ModuleSession>(99, _omitFieldNames ? '' : 'session',
         subBuilder: $1.ModuleSession.create)
     ..aOM<$1.BrainToModuleControl>(100, _omitFieldNames ? '' : 'control',
@@ -298,11 +322,17 @@ class BrainToUpdater extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
   @$pb.TagNumber(4)
+  @$pb.TagNumber(5)
+  @$pb.TagNumber(6)
+  @$pb.TagNumber(7)
   @$pb.TagNumber(100)
   BrainToUpdater_Cmd whichCmd() => _BrainToUpdater_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
   @$pb.TagNumber(4)
+  @$pb.TagNumber(5)
+  @$pb.TagNumber(6)
+  @$pb.TagNumber(7)
   @$pb.TagNumber(100)
   void clearCmd() => $_clearField($_whichOneof(0));
 
@@ -352,27 +382,60 @@ class BrainToUpdater extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $0.Empty ensureApply() => $_ensure(3);
 
+  @$pb.TagNumber(5)
+  $1.UpdateFileRequest get readFile => $_getN(4);
+  @$pb.TagNumber(5)
+  set readFile($1.UpdateFileRequest value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasReadFile() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearReadFile() => $_clearField(5);
+  @$pb.TagNumber(5)
+  $1.UpdateFileRequest ensureReadFile() => $_ensure(4);
+
+  @$pb.TagNumber(6)
+  $1.UpdateDecision get restartReady => $_getN(5);
+  @$pb.TagNumber(6)
+  set restartReady($1.UpdateDecision value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasRestartReady() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearRestartReady() => $_clearField(6);
+  @$pb.TagNumber(6)
+  $1.UpdateDecision ensureRestartReady() => $_ensure(5);
+
+  @$pb.TagNumber(7)
+  $1.UpdateDecision get brainReady => $_getN(6);
+  @$pb.TagNumber(7)
+  set brainReady($1.UpdateDecision value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasBrainReady() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearBrainReady() => $_clearField(7);
+  @$pb.TagNumber(7)
+  $1.UpdateDecision ensureBrainReady() => $_ensure(6);
+
   @$pb.TagNumber(99)
-  $1.ModuleSession get session => $_getN(4);
+  $1.ModuleSession get session => $_getN(7);
   @$pb.TagNumber(99)
   set session($1.ModuleSession value) => $_setField(99, value);
   @$pb.TagNumber(99)
-  $core.bool hasSession() => $_has(4);
+  $core.bool hasSession() => $_has(7);
   @$pb.TagNumber(99)
   void clearSession() => $_clearField(99);
   @$pb.TagNumber(99)
-  $1.ModuleSession ensureSession() => $_ensure(4);
+  $1.ModuleSession ensureSession() => $_ensure(7);
 
   @$pb.TagNumber(100)
-  $1.BrainToModuleControl get control => $_getN(5);
+  $1.BrainToModuleControl get control => $_getN(8);
   @$pb.TagNumber(100)
   set control($1.BrainToModuleControl value) => $_setField(100, value);
   @$pb.TagNumber(100)
-  $core.bool hasControl() => $_has(5);
+  $core.bool hasControl() => $_has(8);
   @$pb.TagNumber(100)
   void clearControl() => $_clearField(100);
   @$pb.TagNumber(100)
-  $1.BrainToModuleControl ensureControl() => $_ensure(5);
+  $1.BrainToModuleControl ensureControl() => $_ensure(8);
 }
 
 /// 现在去问服务端有没有新版。
@@ -433,19 +496,23 @@ class Check extends $pb.GeneratedMessage {
   void clearTrigger() => $_clearField(1);
 }
 
-enum UpdaterToBrain_Cmd { resp, eventStatus, control, notSet }
+enum UpdaterToBrain_Cmd { resp, eventStatus, filesReady, file, control, notSet }
 
 /// updater -> brain
 class UpdaterToBrain extends $pb.GeneratedMessage {
   factory UpdaterToBrain({
     CmdResp? resp,
     UpdateStatus? eventStatus,
+    $1.PreparedRelease? filesReady,
+    $1.UpdateFileResponse? file,
     $1.ModuleSession? session,
     $1.ModuleToBrainControl? control,
   }) {
     final result = create();
     if (resp != null) result.resp = resp;
     if (eventStatus != null) result.eventStatus = eventStatus;
+    if (filesReady != null) result.filesReady = filesReady;
+    if (file != null) result.file = file;
     if (session != null) result.session = session;
     if (control != null) result.control = control;
     return result;
@@ -464,6 +531,8 @@ class UpdaterToBrain extends $pb.GeneratedMessage {
       _UpdaterToBrain_CmdByTag = {
     1: UpdaterToBrain_Cmd.resp,
     2: UpdaterToBrain_Cmd.eventStatus,
+    3: UpdaterToBrain_Cmd.filesReady,
+    4: UpdaterToBrain_Cmd.file,
     100: UpdaterToBrain_Cmd.control,
     0: UpdaterToBrain_Cmd.notSet
   };
@@ -471,10 +540,14 @@ class UpdaterToBrain extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'UpdaterToBrain',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..oo(0, [1, 2, 100])
+    ..oo(0, [1, 2, 3, 4, 100])
     ..aOM<CmdResp>(1, _omitFieldNames ? '' : 'resp', subBuilder: CmdResp.create)
     ..aOM<UpdateStatus>(2, _omitFieldNames ? '' : 'eventStatus',
         subBuilder: UpdateStatus.create)
+    ..aOM<$1.PreparedRelease>(3, _omitFieldNames ? '' : 'filesReady',
+        subBuilder: $1.PreparedRelease.create)
+    ..aOM<$1.UpdateFileResponse>(4, _omitFieldNames ? '' : 'file',
+        subBuilder: $1.UpdateFileResponse.create)
     ..aOM<$1.ModuleSession>(99, _omitFieldNames ? '' : 'session',
         subBuilder: $1.ModuleSession.create)
     ..aOM<$1.ModuleToBrainControl>(100, _omitFieldNames ? '' : 'control',
@@ -502,10 +575,14 @@ class UpdaterToBrain extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
+  @$pb.TagNumber(3)
+  @$pb.TagNumber(4)
   @$pb.TagNumber(100)
   UpdaterToBrain_Cmd whichCmd() => _UpdaterToBrain_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
+  @$pb.TagNumber(3)
+  @$pb.TagNumber(4)
   @$pb.TagNumber(100)
   void clearCmd() => $_clearField($_whichOneof(0));
 
@@ -532,27 +609,49 @@ class UpdaterToBrain extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   UpdateStatus ensureEventStatus() => $_ensure(1);
 
+  @$pb.TagNumber(3)
+  $1.PreparedRelease get filesReady => $_getN(2);
+  @$pb.TagNumber(3)
+  set filesReady($1.PreparedRelease value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasFilesReady() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearFilesReady() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $1.PreparedRelease ensureFilesReady() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  $1.UpdateFileResponse get file => $_getN(3);
+  @$pb.TagNumber(4)
+  set file($1.UpdateFileResponse value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasFile() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearFile() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $1.UpdateFileResponse ensureFile() => $_ensure(3);
+
   @$pb.TagNumber(99)
-  $1.ModuleSession get session => $_getN(2);
+  $1.ModuleSession get session => $_getN(4);
   @$pb.TagNumber(99)
   set session($1.ModuleSession value) => $_setField(99, value);
   @$pb.TagNumber(99)
-  $core.bool hasSession() => $_has(2);
+  $core.bool hasSession() => $_has(4);
   @$pb.TagNumber(99)
   void clearSession() => $_clearField(99);
   @$pb.TagNumber(99)
-  $1.ModuleSession ensureSession() => $_ensure(2);
+  $1.ModuleSession ensureSession() => $_ensure(4);
 
   @$pb.TagNumber(100)
-  $1.ModuleToBrainControl get control => $_getN(3);
+  $1.ModuleToBrainControl get control => $_getN(5);
   @$pb.TagNumber(100)
   set control($1.ModuleToBrainControl value) => $_setField(100, value);
   @$pb.TagNumber(100)
-  $core.bool hasControl() => $_has(3);
+  $core.bool hasControl() => $_has(5);
   @$pb.TagNumber(100)
   void clearControl() => $_clearField(100);
   @$pb.TagNumber(100)
-  $1.ModuleToBrainControl ensureControl() => $_ensure(3);
+  $1.ModuleToBrainControl ensureControl() => $_ensure(5);
 }
 
 /// 一条控制命令的回包。**状态永远带着**，不管成没成 —— 失败时那份状态正是原因所在。

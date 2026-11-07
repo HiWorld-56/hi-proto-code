@@ -64,6 +64,8 @@ class UpdateStatus_State extends $pb.ProtobufEnum {
       UpdateStatus_State._(17, _omitEnumNames ? '' : 'STATE_ROLLBACK_DONE');
   static const UpdateStatus_State STATE_ROLLBACK_FAILED =
       UpdateStatus_State._(18, _omitEnumNames ? '' : 'STATE_ROLLBACK_FAILED');
+  static const UpdateStatus_State STATE_WAITING_BRAIN =
+      UpdateStatus_State._(19, _omitEnumNames ? '' : 'STATE_WAITING_BRAIN');
 
   static const $core.List<UpdateStatus_State> values = <UpdateStatus_State>[
     STATE_UNKNOWN,
@@ -85,10 +87,11 @@ class UpdateStatus_State extends $pb.ProtobufEnum {
     STATE_FAILED,
     STATE_ROLLBACK_DONE,
     STATE_ROLLBACK_FAILED,
+    STATE_WAITING_BRAIN,
   ];
 
   static final $core.List<UpdateStatus_State?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 18);
+      $pb.ProtobufEnum.$_initByValueList(values, 19);
   static UpdateStatus_State? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

@@ -8,6 +8,7 @@ package ninja
 
 import (
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	did "github.com/HiWorld-56/hi-proto/go/hi/did"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -256,6 +257,76 @@ func (ModuleFailure_Code) EnumDescriptor() ([]byte, []int) {
 	return file_hi_ninja_common_proto_rawDescGZIP(), []int{6, 0}
 }
 
+type ModuleUpdateStatus_State int32
+
+const (
+	ModuleUpdateStatus_STATE_IDLE            ModuleUpdateStatus_State = 0
+	ModuleUpdateStatus_STATE_RECEIVING       ModuleUpdateStatus_State = 1
+	ModuleUpdateStatus_STATE_PREPARED        ModuleUpdateStatus_State = 2
+	ModuleUpdateStatus_STATE_COMMITTING      ModuleUpdateStatus_State = 3
+	ModuleUpdateStatus_STATE_ACTIVATING      ModuleUpdateStatus_State = 4
+	ModuleUpdateStatus_STATE_HEALTHY         ModuleUpdateStatus_State = 5
+	ModuleUpdateStatus_STATE_FAILED          ModuleUpdateStatus_State = 6
+	ModuleUpdateStatus_STATE_ROLLBACK_DONE   ModuleUpdateStatus_State = 7
+	ModuleUpdateStatus_STATE_ROLLBACK_FAILED ModuleUpdateStatus_State = 8
+	ModuleUpdateStatus_STATE_ABORTED         ModuleUpdateStatus_State = 9
+)
+
+// Enum value maps for ModuleUpdateStatus_State.
+var (
+	ModuleUpdateStatus_State_name = map[int32]string{
+		0: "STATE_IDLE",
+		1: "STATE_RECEIVING",
+		2: "STATE_PREPARED",
+		3: "STATE_COMMITTING",
+		4: "STATE_ACTIVATING",
+		5: "STATE_HEALTHY",
+		6: "STATE_FAILED",
+		7: "STATE_ROLLBACK_DONE",
+		8: "STATE_ROLLBACK_FAILED",
+		9: "STATE_ABORTED",
+	}
+	ModuleUpdateStatus_State_value = map[string]int32{
+		"STATE_IDLE":            0,
+		"STATE_RECEIVING":       1,
+		"STATE_PREPARED":        2,
+		"STATE_COMMITTING":      3,
+		"STATE_ACTIVATING":      4,
+		"STATE_HEALTHY":         5,
+		"STATE_FAILED":          6,
+		"STATE_ROLLBACK_DONE":   7,
+		"STATE_ROLLBACK_FAILED": 8,
+		"STATE_ABORTED":         9,
+	}
+)
+
+func (x ModuleUpdateStatus_State) Enum() *ModuleUpdateStatus_State {
+	p := new(ModuleUpdateStatus_State)
+	*p = x
+	return p
+}
+
+func (x ModuleUpdateStatus_State) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ModuleUpdateStatus_State) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_ninja_common_proto_enumTypes[4].Descriptor()
+}
+
+func (ModuleUpdateStatus_State) Type() protoreflect.EnumType {
+	return &file_hi_ninja_common_proto_enumTypes[4]
+}
+
+func (x ModuleUpdateStatus_State) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ModuleUpdateStatus_State.Descriptor instead.
+func (ModuleUpdateStatus_State) EnumDescriptor() ([]byte, []int) {
+	return file_hi_ninja_common_proto_rawDescGZIP(), []int{11, 0}
+}
+
 // 当前一次接管的上下文。每条业务消息都组合它，不能从路由 identity 推断。
 // brain/module_session_id 是进程启动标识；generation 是 brain 对该模块的初始化代次。
 type ModuleSession struct {
@@ -323,7 +394,9 @@ type ModuleHello struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	Module          *ModuleId              `protobuf:"varint,1,opt,name=module,proto3,enum=hi.ninja.ModuleId,oneof" json:"module,omitempty"`
 	ModuleSessionId *string                `protobuf:"bytes,2,opt,name=module_session_id,json=moduleSessionId,proto3,oneof" json:"module_session_id,omitempty"`
-	Version         *string                `protobuf:"bytes,3,opt,name=version,proto3,oneof" json:"version,omitempty"` // 不传=未提供制品版本
+	Version         *string                `protobuf:"bytes,3,opt,name=version,proto3,oneof" json:"version,omitempty"`                                   // 不传=未提供制品版本
+	Platform        *string                `protobuf:"bytes,4,opt,name=platform,proto3,oneof" json:"platform,omitempty"`                                 // 本进程制品平台，如linux-aarch64
+	UpdateEnabled   *bool                  `protobuf:"varint,5,opt,name=update_enabled,json=updateEnabled,proto3,oneof" json:"update_enabled,omitempty"` // 本模块是否已配置公共自更新能力
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -377,6 +450,20 @@ func (x *ModuleHello) GetVersion() string {
 		return *x.Version
 	}
 	return ""
+}
+
+func (x *ModuleHello) GetPlatform() string {
+	if x != nil && x.Platform != nil {
+		return *x.Platform
+	}
+	return ""
+}
+
+func (x *ModuleHello) GetUpdateEnabled() bool {
+	if x != nil && x.UpdateEnabled != nil {
+		return *x.UpdateEnabled
+	}
+	return false
 }
 
 type ModuleState struct {
@@ -485,6 +572,7 @@ type BrainToModuleControl struct {
 	//	*BrainToModuleControl_Reset_
 	//	*BrainToModuleControl_Initialize
 	//	*BrainToModuleControl_GetState
+	//	*BrainToModuleControl_Update
 	Cmd           isBrainToModuleControl_Cmd `protobuf_oneof:"cmd"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -554,6 +642,15 @@ func (x *BrainToModuleControl) GetGetState() *emptypb.Empty {
 	return nil
 }
 
+func (x *BrainToModuleControl) GetUpdate() *ModuleUpdateCommand {
+	if x != nil {
+		if x, ok := x.Cmd.(*BrainToModuleControl_Update); ok {
+			return x.Update
+		}
+	}
+	return nil
+}
+
 type isBrainToModuleControl_Cmd interface {
 	isBrainToModuleControl_Cmd()
 }
@@ -570,11 +667,17 @@ type BrainToModuleControl_GetState struct {
 	GetState *emptypb.Empty `protobuf:"bytes,3,opt,name=get_state,json=getState,proto3,oneof"`
 }
 
+type BrainToModuleControl_Update struct {
+	Update *ModuleUpdateCommand `protobuf:"bytes,4,opt,name=update,proto3,oneof"` // 同机/分机统一的公共升级控制
+}
+
 func (*BrainToModuleControl_Reset_) isBrainToModuleControl_Cmd() {}
 
 func (*BrainToModuleControl_Initialize) isBrainToModuleControl_Cmd() {}
 
 func (*BrainToModuleControl_GetState) isBrainToModuleControl_Cmd() {}
+
+func (*BrainToModuleControl_Update) isBrainToModuleControl_Cmd() {}
 
 type ModuleToBrainControl struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -582,6 +685,7 @@ type ModuleToBrainControl struct {
 	//
 	//	*ModuleToBrainControl_Hello
 	//	*ModuleToBrainControl_State
+	//	*ModuleToBrainControl_Update
 	Cmd           isModuleToBrainControl_Cmd `protobuf_oneof:"cmd"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -642,6 +746,15 @@ func (x *ModuleToBrainControl) GetState() *ModuleState {
 	return nil
 }
 
+func (x *ModuleToBrainControl) GetUpdate() *ModuleUpdateStatus {
+	if x != nil {
+		if x, ok := x.Cmd.(*ModuleToBrainControl_Update); ok {
+			return x.Update
+		}
+	}
+	return nil
+}
+
 type isModuleToBrainControl_Cmd interface {
 	isModuleToBrainControl_Cmd()
 }
@@ -654,9 +767,15 @@ type ModuleToBrainControl_State struct {
 	State *ModuleState `protobuf:"bytes,2,opt,name=state,proto3,oneof"`
 }
 
+type ModuleToBrainControl_Update struct {
+	Update *ModuleUpdateStatus `protobuf:"bytes,3,opt,name=update,proto3,oneof"`
+}
+
 func (*ModuleToBrainControl_Hello) isModuleToBrainControl_Cmd() {}
 
 func (*ModuleToBrainControl_State) isModuleToBrainControl_Cmd() {}
+
+func (*ModuleToBrainControl_Update) isModuleToBrainControl_Cmd() {}
 
 type ModuleFailure struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -710,11 +829,731 @@ func (x *ModuleFailure) GetMessage() string {
 	return ""
 }
 
+// 一个模块的不可变发布制品。文件契约复用hi.did.ReleaseFile。
+// source_dir只供updater在已校验整包中定位；模块安装不采用远端绝对路径。
+type ModuleArtifact struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Module        *ModuleId              `protobuf:"varint,1,opt,name=module,proto3,enum=hi.ninja.ModuleId,oneof" json:"module,omitempty"`
+	Platform      *string                `protobuf:"bytes,2,opt,name=platform,proto3,oneof" json:"platform,omitempty"`
+	Version       *string                `protobuf:"bytes,3,opt,name=version,proto3,oneof" json:"version,omitempty"`
+	Files         []*did.ReleaseFile     `protobuf:"bytes,4,rep,name=files,proto3" json:"files,omitempty"`
+	ServiceFile   *string                `protobuf:"bytes,5,opt,name=service_file,json=serviceFile,proto3,oneof" json:"service_file,omitempty"` // 制品内的unit文件；安装目标由本模块配置决定
+	SourceDir     *string                `protobuf:"bytes,6,opt,name=source_dir,json=sourceDir,proto3,oneof" json:"source_dir,omitempty"`       // 整包内相对目录
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ModuleArtifact) Reset() {
+	*x = ModuleArtifact{}
+	mi := &file_hi_ninja_common_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ModuleArtifact) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ModuleArtifact) ProtoMessage() {}
+
+func (x *ModuleArtifact) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ninja_common_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ModuleArtifact.ProtoReflect.Descriptor instead.
+func (*ModuleArtifact) Descriptor() ([]byte, []int) {
+	return file_hi_ninja_common_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *ModuleArtifact) GetModule() ModuleId {
+	if x != nil && x.Module != nil {
+		return *x.Module
+	}
+	return ModuleId_MODULE_UNKNOWN
+}
+
+func (x *ModuleArtifact) GetPlatform() string {
+	if x != nil && x.Platform != nil {
+		return *x.Platform
+	}
+	return ""
+}
+
+func (x *ModuleArtifact) GetVersion() string {
+	if x != nil && x.Version != nil {
+		return *x.Version
+	}
+	return ""
+}
+
+func (x *ModuleArtifact) GetFiles() []*did.ReleaseFile {
+	if x != nil {
+		return x.Files
+	}
+	return nil
+}
+
+func (x *ModuleArtifact) GetServiceFile() string {
+	if x != nil && x.ServiceFile != nil {
+		return *x.ServiceFile
+	}
+	return ""
+}
+
+func (x *ModuleArtifact) GetSourceDir() string {
+	if x != nil && x.SourceDir != nil {
+		return *x.SourceDir
+	}
+	return ""
+}
+
+// 整包内modules.pb的schema；由发布工具使用同一协议生成。
+type ModuleReleasePlan struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Version       *string                `protobuf:"bytes,1,opt,name=version,proto3,oneof" json:"version,omitempty"`
+	Artifacts     []*ModuleArtifact      `protobuf:"bytes,2,rep,name=artifacts,proto3" json:"artifacts,omitempty"` // 可含同模块不同CPU平台的制品
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ModuleReleasePlan) Reset() {
+	*x = ModuleReleasePlan{}
+	mi := &file_hi_ninja_common_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ModuleReleasePlan) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ModuleReleasePlan) ProtoMessage() {}
+
+func (x *ModuleReleasePlan) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ninja_common_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ModuleReleasePlan.ProtoReflect.Descriptor instead.
+func (*ModuleReleasePlan) Descriptor() ([]byte, []int) {
+	return file_hi_ninja_common_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *ModuleReleasePlan) GetVersion() string {
+	if x != nil && x.Version != nil {
+		return *x.Version
+	}
+	return ""
+}
+
+func (x *ModuleReleasePlan) GetArtifacts() []*ModuleArtifact {
+	if x != nil {
+		return x.Artifacts
+	}
+	return nil
+}
+
+type ModuleFileChunk struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	FileIndex     *uint32                `protobuf:"varint,1,opt,name=file_index,json=fileIndex,proto3,oneof" json:"file_index,omitempty"`
+	Offset        *uint64                `protobuf:"varint,2,opt,name=offset,proto3,oneof" json:"offset,omitempty"`
+	Data          []byte                 `protobuf:"bytes,3,opt,name=data,proto3,oneof" json:"data,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ModuleFileChunk) Reset() {
+	*x = ModuleFileChunk{}
+	mi := &file_hi_ninja_common_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ModuleFileChunk) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ModuleFileChunk) ProtoMessage() {}
+
+func (x *ModuleFileChunk) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ninja_common_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ModuleFileChunk.ProtoReflect.Descriptor instead.
+func (*ModuleFileChunk) Descriptor() ([]byte, []int) {
+	return file_hi_ninja_common_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *ModuleFileChunk) GetFileIndex() uint32 {
+	if x != nil && x.FileIndex != nil {
+		return *x.FileIndex
+	}
+	return 0
+}
+
+func (x *ModuleFileChunk) GetOffset() uint64 {
+	if x != nil && x.Offset != nil {
+		return *x.Offset
+	}
+	return 0
+}
+
+func (x *ModuleFileChunk) GetData() []byte {
+	if x != nil {
+		return x.Data
+	}
+	return nil
+}
+
+// 每条控制均有request_id；重传同update_id/offset必须幂等。
+// prepare -> chunk* -> seal -> commit；commit只表示独立安装任务已持久受理。
+type ModuleUpdateCommand struct {
+	state     protoimpl.MessageState `protogen:"open.v1"`
+	RequestId *string                `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
+	UpdateId  *string                `protobuf:"bytes,2,opt,name=update_id,json=updateId,proto3,oneof" json:"update_id,omitempty"`
+	// Types that are valid to be assigned to Cmd:
+	//
+	//	*ModuleUpdateCommand_Prepare
+	//	*ModuleUpdateCommand_Chunk
+	//	*ModuleUpdateCommand_Seal
+	//	*ModuleUpdateCommand_Commit
+	//	*ModuleUpdateCommand_Abort
+	//	*ModuleUpdateCommand_GetStatus
+	Cmd           isModuleUpdateCommand_Cmd `protobuf_oneof:"cmd"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ModuleUpdateCommand) Reset() {
+	*x = ModuleUpdateCommand{}
+	mi := &file_hi_ninja_common_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ModuleUpdateCommand) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ModuleUpdateCommand) ProtoMessage() {}
+
+func (x *ModuleUpdateCommand) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ninja_common_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ModuleUpdateCommand.ProtoReflect.Descriptor instead.
+func (*ModuleUpdateCommand) Descriptor() ([]byte, []int) {
+	return file_hi_ninja_common_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *ModuleUpdateCommand) GetRequestId() string {
+	if x != nil && x.RequestId != nil {
+		return *x.RequestId
+	}
+	return ""
+}
+
+func (x *ModuleUpdateCommand) GetUpdateId() string {
+	if x != nil && x.UpdateId != nil {
+		return *x.UpdateId
+	}
+	return ""
+}
+
+func (x *ModuleUpdateCommand) GetCmd() isModuleUpdateCommand_Cmd {
+	if x != nil {
+		return x.Cmd
+	}
+	return nil
+}
+
+func (x *ModuleUpdateCommand) GetPrepare() *ModuleArtifact {
+	if x != nil {
+		if x, ok := x.Cmd.(*ModuleUpdateCommand_Prepare); ok {
+			return x.Prepare
+		}
+	}
+	return nil
+}
+
+func (x *ModuleUpdateCommand) GetChunk() *ModuleFileChunk {
+	if x != nil {
+		if x, ok := x.Cmd.(*ModuleUpdateCommand_Chunk); ok {
+			return x.Chunk
+		}
+	}
+	return nil
+}
+
+func (x *ModuleUpdateCommand) GetSeal() *emptypb.Empty {
+	if x != nil {
+		if x, ok := x.Cmd.(*ModuleUpdateCommand_Seal); ok {
+			return x.Seal
+		}
+	}
+	return nil
+}
+
+func (x *ModuleUpdateCommand) GetCommit() *emptypb.Empty {
+	if x != nil {
+		if x, ok := x.Cmd.(*ModuleUpdateCommand_Commit); ok {
+			return x.Commit
+		}
+	}
+	return nil
+}
+
+func (x *ModuleUpdateCommand) GetAbort() *emptypb.Empty {
+	if x != nil {
+		if x, ok := x.Cmd.(*ModuleUpdateCommand_Abort); ok {
+			return x.Abort
+		}
+	}
+	return nil
+}
+
+func (x *ModuleUpdateCommand) GetGetStatus() *emptypb.Empty {
+	if x != nil {
+		if x, ok := x.Cmd.(*ModuleUpdateCommand_GetStatus); ok {
+			return x.GetStatus
+		}
+	}
+	return nil
+}
+
+type isModuleUpdateCommand_Cmd interface {
+	isModuleUpdateCommand_Cmd()
+}
+
+type ModuleUpdateCommand_Prepare struct {
+	Prepare *ModuleArtifact `protobuf:"bytes,3,opt,name=prepare,proto3,oneof"`
+}
+
+type ModuleUpdateCommand_Chunk struct {
+	Chunk *ModuleFileChunk `protobuf:"bytes,4,opt,name=chunk,proto3,oneof"`
+}
+
+type ModuleUpdateCommand_Seal struct {
+	Seal *emptypb.Empty `protobuf:"bytes,5,opt,name=seal,proto3,oneof"`
+}
+
+type ModuleUpdateCommand_Commit struct {
+	Commit *emptypb.Empty `protobuf:"bytes,6,opt,name=commit,proto3,oneof"`
+}
+
+type ModuleUpdateCommand_Abort struct {
+	Abort *emptypb.Empty `protobuf:"bytes,7,opt,name=abort,proto3,oneof"`
+}
+
+type ModuleUpdateCommand_GetStatus struct {
+	GetStatus *emptypb.Empty `protobuf:"bytes,8,opt,name=get_status,json=getStatus,proto3,oneof"`
+}
+
+func (*ModuleUpdateCommand_Prepare) isModuleUpdateCommand_Cmd() {}
+
+func (*ModuleUpdateCommand_Chunk) isModuleUpdateCommand_Cmd() {}
+
+func (*ModuleUpdateCommand_Seal) isModuleUpdateCommand_Cmd() {}
+
+func (*ModuleUpdateCommand_Commit) isModuleUpdateCommand_Cmd() {}
+
+func (*ModuleUpdateCommand_Abort) isModuleUpdateCommand_Cmd() {}
+
+func (*ModuleUpdateCommand_GetStatus) isModuleUpdateCommand_Cmd() {}
+
+type ModuleUpdateStatus struct {
+	state          protoimpl.MessageState    `protogen:"open.v1"`
+	RequestId      *string                   `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
+	UpdateId       *string                   `protobuf:"bytes,2,opt,name=update_id,json=updateId,proto3,oneof" json:"update_id,omitempty"`
+	State          *ModuleUpdateStatus_State `protobuf:"varint,3,opt,name=state,proto3,enum=hi.ninja.ModuleUpdateStatus_State,oneof" json:"state,omitempty"`
+	TargetVersion  *string                   `protobuf:"bytes,4,opt,name=target_version,json=targetVersion,proto3,oneof" json:"target_version,omitempty"`
+	CurrentVersion *string                   `protobuf:"bytes,5,opt,name=current_version,json=currentVersion,proto3,oneof" json:"current_version,omitempty"`
+	Failure        *ModuleFailure            `protobuf:"bytes,6,opt,name=failure,proto3" json:"failure,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *ModuleUpdateStatus) Reset() {
+	*x = ModuleUpdateStatus{}
+	mi := &file_hi_ninja_common_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ModuleUpdateStatus) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ModuleUpdateStatus) ProtoMessage() {}
+
+func (x *ModuleUpdateStatus) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ninja_common_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ModuleUpdateStatus.ProtoReflect.Descriptor instead.
+func (*ModuleUpdateStatus) Descriptor() ([]byte, []int) {
+	return file_hi_ninja_common_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *ModuleUpdateStatus) GetRequestId() string {
+	if x != nil && x.RequestId != nil {
+		return *x.RequestId
+	}
+	return ""
+}
+
+func (x *ModuleUpdateStatus) GetUpdateId() string {
+	if x != nil && x.UpdateId != nil {
+		return *x.UpdateId
+	}
+	return ""
+}
+
+func (x *ModuleUpdateStatus) GetState() ModuleUpdateStatus_State {
+	if x != nil && x.State != nil {
+		return *x.State
+	}
+	return ModuleUpdateStatus_STATE_IDLE
+}
+
+func (x *ModuleUpdateStatus) GetTargetVersion() string {
+	if x != nil && x.TargetVersion != nil {
+		return *x.TargetVersion
+	}
+	return ""
+}
+
+func (x *ModuleUpdateStatus) GetCurrentVersion() string {
+	if x != nil && x.CurrentVersion != nil {
+		return *x.CurrentVersion
+	}
+	return ""
+}
+
+func (x *ModuleUpdateStatus) GetFailure() *ModuleFailure {
+	if x != nil {
+		return x.Failure
+	}
+	return nil
+}
+
+// updater拥有文件准备事实；brain拥有模块分发/协调事实。
+type PreparedRelease struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UpdateId      *string                `protobuf:"bytes,1,opt,name=update_id,json=updateId,proto3,oneof" json:"update_id,omitempty"`
+	Release       *did.ReleaseManifest   `protobuf:"bytes,2,opt,name=release,proto3" json:"release,omitempty"`
+	Modules       *ModuleReleasePlan     `protobuf:"bytes,3,opt,name=modules,proto3" json:"modules,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PreparedRelease) Reset() {
+	*x = PreparedRelease{}
+	mi := &file_hi_ninja_common_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PreparedRelease) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PreparedRelease) ProtoMessage() {}
+
+func (x *PreparedRelease) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ninja_common_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PreparedRelease.ProtoReflect.Descriptor instead.
+func (*PreparedRelease) Descriptor() ([]byte, []int) {
+	return file_hi_ninja_common_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *PreparedRelease) GetUpdateId() string {
+	if x != nil && x.UpdateId != nil {
+		return *x.UpdateId
+	}
+	return ""
+}
+
+func (x *PreparedRelease) GetRelease() *did.ReleaseManifest {
+	if x != nil {
+		return x.Release
+	}
+	return nil
+}
+
+func (x *PreparedRelease) GetModules() *ModuleReleasePlan {
+	if x != nil {
+		return x.Modules
+	}
+	return nil
+}
+
+type UpdateFileRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UpdateId      *string                `protobuf:"bytes,1,opt,name=update_id,json=updateId,proto3,oneof" json:"update_id,omitempty"`
+	Module        *ModuleId              `protobuf:"varint,2,opt,name=module,proto3,enum=hi.ninja.ModuleId,oneof" json:"module,omitempty"`
+	Platform      *string                `protobuf:"bytes,3,opt,name=platform,proto3,oneof" json:"platform,omitempty"`
+	FileIndex     *uint32                `protobuf:"varint,4,opt,name=file_index,json=fileIndex,proto3,oneof" json:"file_index,omitempty"`
+	Offset        *uint64                `protobuf:"varint,5,opt,name=offset,proto3,oneof" json:"offset,omitempty"`
+	MaxBytes      *uint32                `protobuf:"varint,6,opt,name=max_bytes,json=maxBytes,proto3,oneof" json:"max_bytes,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateFileRequest) Reset() {
+	*x = UpdateFileRequest{}
+	mi := &file_hi_ninja_common_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateFileRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateFileRequest) ProtoMessage() {}
+
+func (x *UpdateFileRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ninja_common_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateFileRequest.ProtoReflect.Descriptor instead.
+func (*UpdateFileRequest) Descriptor() ([]byte, []int) {
+	return file_hi_ninja_common_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *UpdateFileRequest) GetUpdateId() string {
+	if x != nil && x.UpdateId != nil {
+		return *x.UpdateId
+	}
+	return ""
+}
+
+func (x *UpdateFileRequest) GetModule() ModuleId {
+	if x != nil && x.Module != nil {
+		return *x.Module
+	}
+	return ModuleId_MODULE_UNKNOWN
+}
+
+func (x *UpdateFileRequest) GetPlatform() string {
+	if x != nil && x.Platform != nil {
+		return *x.Platform
+	}
+	return ""
+}
+
+func (x *UpdateFileRequest) GetFileIndex() uint32 {
+	if x != nil && x.FileIndex != nil {
+		return *x.FileIndex
+	}
+	return 0
+}
+
+func (x *UpdateFileRequest) GetOffset() uint64 {
+	if x != nil && x.Offset != nil {
+		return *x.Offset
+	}
+	return 0
+}
+
+func (x *UpdateFileRequest) GetMaxBytes() uint32 {
+	if x != nil && x.MaxBytes != nil {
+		return *x.MaxBytes
+	}
+	return 0
+}
+
+type UpdateFileResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RequestId     *string                `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
+	UpdateId      *string                `protobuf:"bytes,2,opt,name=update_id,json=updateId,proto3,oneof" json:"update_id,omitempty"`
+	Chunk         *ModuleFileChunk       `protobuf:"bytes,3,opt,name=chunk,proto3" json:"chunk,omitempty"`
+	Failure       *ModuleFailure         `protobuf:"bytes,4,opt,name=failure,proto3" json:"failure,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateFileResponse) Reset() {
+	*x = UpdateFileResponse{}
+	mi := &file_hi_ninja_common_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateFileResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateFileResponse) ProtoMessage() {}
+
+func (x *UpdateFileResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ninja_common_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateFileResponse.ProtoReflect.Descriptor instead.
+func (*UpdateFileResponse) Descriptor() ([]byte, []int) {
+	return file_hi_ninja_common_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *UpdateFileResponse) GetRequestId() string {
+	if x != nil && x.RequestId != nil {
+		return *x.RequestId
+	}
+	return ""
+}
+
+func (x *UpdateFileResponse) GetUpdateId() string {
+	if x != nil && x.UpdateId != nil {
+		return *x.UpdateId
+	}
+	return ""
+}
+
+func (x *UpdateFileResponse) GetChunk() *ModuleFileChunk {
+	if x != nil {
+		return x.Chunk
+	}
+	return nil
+}
+
+func (x *UpdateFileResponse) GetFailure() *ModuleFailure {
+	if x != nil {
+		return x.Failure
+	}
+	return nil
+}
+
+type UpdateDecision struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UpdateId      *string                `protobuf:"bytes,1,opt,name=update_id,json=updateId,proto3,oneof" json:"update_id,omitempty"`
+	Allowed       *bool                  `protobuf:"varint,2,opt,name=allowed,proto3,oneof" json:"allowed,omitempty"`
+	Reason        *string                `protobuf:"bytes,3,opt,name=reason,proto3,oneof" json:"reason,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateDecision) Reset() {
+	*x = UpdateDecision{}
+	mi := &file_hi_ninja_common_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateDecision) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateDecision) ProtoMessage() {}
+
+func (x *UpdateDecision) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ninja_common_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateDecision.ProtoReflect.Descriptor instead.
+func (*UpdateDecision) Descriptor() ([]byte, []int) {
+	return file_hi_ninja_common_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *UpdateDecision) GetUpdateId() string {
+	if x != nil && x.UpdateId != nil {
+		return *x.UpdateId
+	}
+	return ""
+}
+
+func (x *UpdateDecision) GetAllowed() bool {
+	if x != nil && x.Allowed != nil {
+		return *x.Allowed
+	}
+	return false
+}
+
+func (x *UpdateDecision) GetReason() string {
+	if x != nil && x.Reason != nil {
+		return *x.Reason
+	}
+	return ""
+}
+
 var File_hi_ninja_common_proto protoreflect.FileDescriptor
 
 const file_hi_ninja_common_proto_rawDesc = "" +
 	"\n" +
-	"\x15hi/ninja/common.proto\x12\bhi.ninja\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\"\xf2\x01\n" +
+	"\x15hi/ninja/common.proto\x12\bhi.ninja\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x14hi/did/release.proto\"\xf2\x01\n" +
 	"\rModuleSession\x129\n" +
 	"\x10brain_session_id\x18\x01 \x01(\tB\n" +
 	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\x0ebrainSessionId\x88\x01\x01\x12;\n" +
@@ -726,16 +1565,20 @@ const file_hi_ninja_common_proto_rawDesc = "" +
 	"generation\x88\x01\x01B\x13\n" +
 	"\x11_brain_session_idB\x14\n" +
 	"\x12_module_session_idB\r\n" +
-	"\v_generation\"\xd4\x01\n" +
+	"\v_generation\"\xc1\x02\n" +
 	"\vModuleHello\x12<\n" +
 	"\x06module\x18\x01 \x01(\x0e2\x12.hi.ninja.ModuleIdB\v\xbaH\b\xc8\x01\x01\x82\x01\x02\x10\x01H\x00R\x06module\x88\x01\x01\x12;\n" +
 	"\x11module_session_id\x18\x02 \x01(\tB\n" +
 	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x01R\x0fmoduleSessionId\x88\x01\x01\x12\x1d\n" +
-	"\aversion\x18\x03 \x01(\tH\x02R\aversion\x88\x01\x01B\t\n" +
+	"\aversion\x18\x03 \x01(\tH\x02R\aversion\x88\x01\x01\x12\x1f\n" +
+	"\bplatform\x18\x04 \x01(\tH\x03R\bplatform\x88\x01\x01\x12*\n" +
+	"\x0eupdate_enabled\x18\x05 \x01(\bH\x04R\rupdateEnabled\x88\x01\x01B\t\n" +
 	"\a_moduleB\x14\n" +
 	"\x12_module_session_idB\n" +
 	"\n" +
-	"\b_version\"\xdb\x01\n" +
+	"\b_versionB\v\n" +
+	"\t_platformB\x11\n" +
+	"\x0f_update_enabled\"\xdb\x01\n" +
 	"\vModuleState\x12C\n" +
 	"\x05phase\x18\x01 \x01(\x0e2\x1b.hi.ninja.ModuleState.PhaseB\v\xbaH\b\xc8\x01\x01\x82\x01\x02\x10\x01H\x00R\x05phase\x88\x01\x01\x12\x19\n" +
 	"\x05error\x18\x02 \x01(\tH\x01R\x05error\x88\x01\x01\"X\n" +
@@ -753,17 +1596,19 @@ const file_hi_ninja_common_proto_rawDesc = "" +
 	"\x0eREASON_STARTUP\x10\x01\x12\x14\n" +
 	"\x10REASON_RECONNECT\x10\x02\x12\x13\n" +
 	"\x0fREASON_RECOVERY\x10\x03B\t\n" +
-	"\a_reason\"\xc2\x01\n" +
+	"\a_reason\"\xfb\x01\n" +
 	"\x14BrainToModuleControl\x122\n" +
 	"\x05reset\x18\x01 \x01(\v2\x1a.hi.ninja.ModuleInitializeH\x00R\x05reset\x128\n" +
 	"\n" +
 	"initialize\x18\x02 \x01(\v2\x16.google.protobuf.EmptyH\x00R\n" +
 	"initialize\x125\n" +
-	"\tget_state\x18\x03 \x01(\v2\x16.google.protobuf.EmptyH\x00R\bgetStateB\x05\n" +
-	"\x03cmd\"{\n" +
+	"\tget_state\x18\x03 \x01(\v2\x16.google.protobuf.EmptyH\x00R\bgetState\x127\n" +
+	"\x06update\x18\x04 \x01(\v2\x1d.hi.ninja.ModuleUpdateCommandH\x00R\x06updateB\x05\n" +
+	"\x03cmd\"\xb3\x01\n" +
 	"\x14ModuleToBrainControl\x12-\n" +
 	"\x05hello\x18\x01 \x01(\v2\x15.hi.ninja.ModuleHelloH\x00R\x05hello\x12-\n" +
-	"\x05state\x18\x02 \x01(\v2\x15.hi.ninja.ModuleStateH\x00R\x05stateB\x05\n" +
+	"\x05state\x18\x02 \x01(\v2\x15.hi.ninja.ModuleStateH\x00R\x05state\x126\n" +
+	"\x06update\x18\x03 \x01(\v2\x1c.hi.ninja.ModuleUpdateStatusH\x00R\x06updateB\x05\n" +
 	"\x03cmd\"\xeb\x02\n" +
 	"\rModuleFailure\x12B\n" +
 	"\x04code\x18\x01 \x01(\x0e2\x1c.hi.ninja.ModuleFailure.CodeB\v\xbaH\b\xc8\x01\x01\x82\x01\x02\x10\x01H\x00R\x04code\x88\x01\x01\x12)\n" +
@@ -782,7 +1627,115 @@ const file_hi_ninja_common_proto_rawDesc = "" +
 	"\x14CODE_OUTCOME_UNKNOWN\x10\tB\a\n" +
 	"\x05_codeB\n" +
 	"\n" +
-	"\b_message*`\n" +
+	"\b_message\"\xbc\x02\n" +
+	"\x0eModuleArtifact\x12/\n" +
+	"\x06module\x18\x01 \x01(\x0e2\x12.hi.ninja.ModuleIdH\x00R\x06module\x88\x01\x01\x12\x1f\n" +
+	"\bplatform\x18\x02 \x01(\tH\x01R\bplatform\x88\x01\x01\x12\x1d\n" +
+	"\aversion\x18\x03 \x01(\tH\x02R\aversion\x88\x01\x01\x12)\n" +
+	"\x05files\x18\x04 \x03(\v2\x13.hi.did.ReleaseFileR\x05files\x12&\n" +
+	"\fservice_file\x18\x05 \x01(\tH\x03R\vserviceFile\x88\x01\x01\x12\"\n" +
+	"\n" +
+	"source_dir\x18\x06 \x01(\tH\x04R\tsourceDir\x88\x01\x01B\t\n" +
+	"\a_moduleB\v\n" +
+	"\t_platformB\n" +
+	"\n" +
+	"\b_versionB\x0f\n" +
+	"\r_service_fileB\r\n" +
+	"\v_source_dir\"v\n" +
+	"\x11ModuleReleasePlan\x12\x1d\n" +
+	"\aversion\x18\x01 \x01(\tH\x00R\aversion\x88\x01\x01\x126\n" +
+	"\tartifacts\x18\x02 \x03(\v2\x18.hi.ninja.ModuleArtifactR\tartifactsB\n" +
+	"\n" +
+	"\b_version\"\x8e\x01\n" +
+	"\x0fModuleFileChunk\x12\"\n" +
+	"\n" +
+	"file_index\x18\x01 \x01(\rH\x00R\tfileIndex\x88\x01\x01\x12\x1b\n" +
+	"\x06offset\x18\x02 \x01(\x04H\x01R\x06offset\x88\x01\x01\x12\x17\n" +
+	"\x04data\x18\x03 \x01(\fH\x02R\x04data\x88\x01\x01B\r\n" +
+	"\v_file_indexB\t\n" +
+	"\a_offsetB\a\n" +
+	"\x05_data\"\xb1\x03\n" +
+	"\x13ModuleUpdateCommand\x12\"\n" +
+	"\n" +
+	"request_id\x18\x01 \x01(\tH\x01R\trequestId\x88\x01\x01\x12 \n" +
+	"\tupdate_id\x18\x02 \x01(\tH\x02R\bupdateId\x88\x01\x01\x124\n" +
+	"\aprepare\x18\x03 \x01(\v2\x18.hi.ninja.ModuleArtifactH\x00R\aprepare\x121\n" +
+	"\x05chunk\x18\x04 \x01(\v2\x19.hi.ninja.ModuleFileChunkH\x00R\x05chunk\x12,\n" +
+	"\x04seal\x18\x05 \x01(\v2\x16.google.protobuf.EmptyH\x00R\x04seal\x120\n" +
+	"\x06commit\x18\x06 \x01(\v2\x16.google.protobuf.EmptyH\x00R\x06commit\x12.\n" +
+	"\x05abort\x18\a \x01(\v2\x16.google.protobuf.EmptyH\x00R\x05abort\x127\n" +
+	"\n" +
+	"get_status\x18\b \x01(\v2\x16.google.protobuf.EmptyH\x00R\tgetStatusB\x05\n" +
+	"\x03cmdB\r\n" +
+	"\v_request_idB\f\n" +
+	"\n" +
+	"_update_id\"\xcf\x04\n" +
+	"\x12ModuleUpdateStatus\x12\"\n" +
+	"\n" +
+	"request_id\x18\x01 \x01(\tH\x00R\trequestId\x88\x01\x01\x12 \n" +
+	"\tupdate_id\x18\x02 \x01(\tH\x01R\bupdateId\x88\x01\x01\x12=\n" +
+	"\x05state\x18\x03 \x01(\x0e2\".hi.ninja.ModuleUpdateStatus.StateH\x02R\x05state\x88\x01\x01\x12*\n" +
+	"\x0etarget_version\x18\x04 \x01(\tH\x03R\rtargetVersion\x88\x01\x01\x12,\n" +
+	"\x0fcurrent_version\x18\x05 \x01(\tH\x04R\x0ecurrentVersion\x88\x01\x01\x121\n" +
+	"\afailure\x18\x06 \x01(\v2\x17.hi.ninja.ModuleFailureR\afailure\"\xd8\x01\n" +
+	"\x05State\x12\x0e\n" +
+	"\n" +
+	"STATE_IDLE\x10\x00\x12\x13\n" +
+	"\x0fSTATE_RECEIVING\x10\x01\x12\x12\n" +
+	"\x0eSTATE_PREPARED\x10\x02\x12\x14\n" +
+	"\x10STATE_COMMITTING\x10\x03\x12\x14\n" +
+	"\x10STATE_ACTIVATING\x10\x04\x12\x11\n" +
+	"\rSTATE_HEALTHY\x10\x05\x12\x10\n" +
+	"\fSTATE_FAILED\x10\x06\x12\x17\n" +
+	"\x13STATE_ROLLBACK_DONE\x10\a\x12\x19\n" +
+	"\x15STATE_ROLLBACK_FAILED\x10\b\x12\x11\n" +
+	"\rSTATE_ABORTED\x10\tB\r\n" +
+	"\v_request_idB\f\n" +
+	"\n" +
+	"_update_idB\b\n" +
+	"\x06_stateB\x11\n" +
+	"\x0f_target_versionB\x12\n" +
+	"\x10_current_version\"\xab\x01\n" +
+	"\x0fPreparedRelease\x12 \n" +
+	"\tupdate_id\x18\x01 \x01(\tH\x00R\bupdateId\x88\x01\x01\x121\n" +
+	"\arelease\x18\x02 \x01(\v2\x17.hi.did.ReleaseManifestR\arelease\x125\n" +
+	"\amodules\x18\x03 \x01(\v2\x1b.hi.ninja.ModuleReleasePlanR\amodulesB\f\n" +
+	"\n" +
+	"_update_id\"\xb8\x02\n" +
+	"\x11UpdateFileRequest\x12 \n" +
+	"\tupdate_id\x18\x01 \x01(\tH\x00R\bupdateId\x88\x01\x01\x12/\n" +
+	"\x06module\x18\x02 \x01(\x0e2\x12.hi.ninja.ModuleIdH\x01R\x06module\x88\x01\x01\x12\x1f\n" +
+	"\bplatform\x18\x03 \x01(\tH\x02R\bplatform\x88\x01\x01\x12\"\n" +
+	"\n" +
+	"file_index\x18\x04 \x01(\rH\x03R\tfileIndex\x88\x01\x01\x12\x1b\n" +
+	"\x06offset\x18\x05 \x01(\x04H\x04R\x06offset\x88\x01\x01\x12 \n" +
+	"\tmax_bytes\x18\x06 \x01(\rH\x05R\bmaxBytes\x88\x01\x01B\f\n" +
+	"\n" +
+	"_update_idB\t\n" +
+	"\a_moduleB\v\n" +
+	"\t_platformB\r\n" +
+	"\v_file_indexB\t\n" +
+	"\a_offsetB\f\n" +
+	"\n" +
+	"_max_bytes\"\xdb\x01\n" +
+	"\x12UpdateFileResponse\x12\"\n" +
+	"\n" +
+	"request_id\x18\x01 \x01(\tH\x00R\trequestId\x88\x01\x01\x12 \n" +
+	"\tupdate_id\x18\x02 \x01(\tH\x01R\bupdateId\x88\x01\x01\x12/\n" +
+	"\x05chunk\x18\x03 \x01(\v2\x19.hi.ninja.ModuleFileChunkR\x05chunk\x121\n" +
+	"\afailure\x18\x04 \x01(\v2\x17.hi.ninja.ModuleFailureR\afailureB\r\n" +
+	"\v_request_idB\f\n" +
+	"\n" +
+	"_update_id\"\x93\x01\n" +
+	"\x0eUpdateDecision\x12 \n" +
+	"\tupdate_id\x18\x01 \x01(\tH\x00R\bupdateId\x88\x01\x01\x12\x1d\n" +
+	"\aallowed\x18\x02 \x01(\bH\x01R\aallowed\x88\x01\x01\x12\x1b\n" +
+	"\x06reason\x18\x03 \x01(\tH\x02R\x06reason\x88\x01\x01B\f\n" +
+	"\n" +
+	"_update_idB\n" +
+	"\n" +
+	"\b_allowedB\t\n" +
+	"\a_reason*`\n" +
 	"\bModuleId\x12\x12\n" +
 	"\x0eMODULE_UNKNOWN\x10\x00\x12\r\n" +
 	"\tMODULE_UI\x10\x01\x12\x0e\n" +
@@ -804,37 +1757,67 @@ func file_hi_ninja_common_proto_rawDescGZIP() []byte {
 	return file_hi_ninja_common_proto_rawDescData
 }
 
-var file_hi_ninja_common_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
-var file_hi_ninja_common_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_hi_ninja_common_proto_enumTypes = make([]protoimpl.EnumInfo, 5)
+var file_hi_ninja_common_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_hi_ninja_common_proto_goTypes = []any{
-	(ModuleId)(0),                // 0: hi.ninja.ModuleId
-	(ModuleState_Phase)(0),       // 1: hi.ninja.ModuleState.Phase
-	(ModuleInitialize_Reason)(0), // 2: hi.ninja.ModuleInitialize.Reason
-	(ModuleFailure_Code)(0),      // 3: hi.ninja.ModuleFailure.Code
-	(*ModuleSession)(nil),        // 4: hi.ninja.ModuleSession
-	(*ModuleHello)(nil),          // 5: hi.ninja.ModuleHello
-	(*ModuleState)(nil),          // 6: hi.ninja.ModuleState
-	(*ModuleInitialize)(nil),     // 7: hi.ninja.ModuleInitialize
-	(*BrainToModuleControl)(nil), // 8: hi.ninja.BrainToModuleControl
-	(*ModuleToBrainControl)(nil), // 9: hi.ninja.ModuleToBrainControl
-	(*ModuleFailure)(nil),        // 10: hi.ninja.ModuleFailure
-	(*emptypb.Empty)(nil),        // 11: google.protobuf.Empty
+	(ModuleId)(0),                 // 0: hi.ninja.ModuleId
+	(ModuleState_Phase)(0),        // 1: hi.ninja.ModuleState.Phase
+	(ModuleInitialize_Reason)(0),  // 2: hi.ninja.ModuleInitialize.Reason
+	(ModuleFailure_Code)(0),       // 3: hi.ninja.ModuleFailure.Code
+	(ModuleUpdateStatus_State)(0), // 4: hi.ninja.ModuleUpdateStatus.State
+	(*ModuleSession)(nil),         // 5: hi.ninja.ModuleSession
+	(*ModuleHello)(nil),           // 6: hi.ninja.ModuleHello
+	(*ModuleState)(nil),           // 7: hi.ninja.ModuleState
+	(*ModuleInitialize)(nil),      // 8: hi.ninja.ModuleInitialize
+	(*BrainToModuleControl)(nil),  // 9: hi.ninja.BrainToModuleControl
+	(*ModuleToBrainControl)(nil),  // 10: hi.ninja.ModuleToBrainControl
+	(*ModuleFailure)(nil),         // 11: hi.ninja.ModuleFailure
+	(*ModuleArtifact)(nil),        // 12: hi.ninja.ModuleArtifact
+	(*ModuleReleasePlan)(nil),     // 13: hi.ninja.ModuleReleasePlan
+	(*ModuleFileChunk)(nil),       // 14: hi.ninja.ModuleFileChunk
+	(*ModuleUpdateCommand)(nil),   // 15: hi.ninja.ModuleUpdateCommand
+	(*ModuleUpdateStatus)(nil),    // 16: hi.ninja.ModuleUpdateStatus
+	(*PreparedRelease)(nil),       // 17: hi.ninja.PreparedRelease
+	(*UpdateFileRequest)(nil),     // 18: hi.ninja.UpdateFileRequest
+	(*UpdateFileResponse)(nil),    // 19: hi.ninja.UpdateFileResponse
+	(*UpdateDecision)(nil),        // 20: hi.ninja.UpdateDecision
+	(*emptypb.Empty)(nil),         // 21: google.protobuf.Empty
+	(*did.ReleaseFile)(nil),       // 22: hi.did.ReleaseFile
+	(*did.ReleaseManifest)(nil),   // 23: hi.did.ReleaseManifest
 }
 var file_hi_ninja_common_proto_depIdxs = []int32{
 	0,  // 0: hi.ninja.ModuleHello.module:type_name -> hi.ninja.ModuleId
 	1,  // 1: hi.ninja.ModuleState.phase:type_name -> hi.ninja.ModuleState.Phase
 	2,  // 2: hi.ninja.ModuleInitialize.reason:type_name -> hi.ninja.ModuleInitialize.Reason
-	7,  // 3: hi.ninja.BrainToModuleControl.reset:type_name -> hi.ninja.ModuleInitialize
-	11, // 4: hi.ninja.BrainToModuleControl.initialize:type_name -> google.protobuf.Empty
-	11, // 5: hi.ninja.BrainToModuleControl.get_state:type_name -> google.protobuf.Empty
-	5,  // 6: hi.ninja.ModuleToBrainControl.hello:type_name -> hi.ninja.ModuleHello
-	6,  // 7: hi.ninja.ModuleToBrainControl.state:type_name -> hi.ninja.ModuleState
-	3,  // 8: hi.ninja.ModuleFailure.code:type_name -> hi.ninja.ModuleFailure.Code
-	9,  // [9:9] is the sub-list for method output_type
-	9,  // [9:9] is the sub-list for method input_type
-	9,  // [9:9] is the sub-list for extension type_name
-	9,  // [9:9] is the sub-list for extension extendee
-	0,  // [0:9] is the sub-list for field type_name
+	8,  // 3: hi.ninja.BrainToModuleControl.reset:type_name -> hi.ninja.ModuleInitialize
+	21, // 4: hi.ninja.BrainToModuleControl.initialize:type_name -> google.protobuf.Empty
+	21, // 5: hi.ninja.BrainToModuleControl.get_state:type_name -> google.protobuf.Empty
+	15, // 6: hi.ninja.BrainToModuleControl.update:type_name -> hi.ninja.ModuleUpdateCommand
+	6,  // 7: hi.ninja.ModuleToBrainControl.hello:type_name -> hi.ninja.ModuleHello
+	7,  // 8: hi.ninja.ModuleToBrainControl.state:type_name -> hi.ninja.ModuleState
+	16, // 9: hi.ninja.ModuleToBrainControl.update:type_name -> hi.ninja.ModuleUpdateStatus
+	3,  // 10: hi.ninja.ModuleFailure.code:type_name -> hi.ninja.ModuleFailure.Code
+	0,  // 11: hi.ninja.ModuleArtifact.module:type_name -> hi.ninja.ModuleId
+	22, // 12: hi.ninja.ModuleArtifact.files:type_name -> hi.did.ReleaseFile
+	12, // 13: hi.ninja.ModuleReleasePlan.artifacts:type_name -> hi.ninja.ModuleArtifact
+	12, // 14: hi.ninja.ModuleUpdateCommand.prepare:type_name -> hi.ninja.ModuleArtifact
+	14, // 15: hi.ninja.ModuleUpdateCommand.chunk:type_name -> hi.ninja.ModuleFileChunk
+	21, // 16: hi.ninja.ModuleUpdateCommand.seal:type_name -> google.protobuf.Empty
+	21, // 17: hi.ninja.ModuleUpdateCommand.commit:type_name -> google.protobuf.Empty
+	21, // 18: hi.ninja.ModuleUpdateCommand.abort:type_name -> google.protobuf.Empty
+	21, // 19: hi.ninja.ModuleUpdateCommand.get_status:type_name -> google.protobuf.Empty
+	4,  // 20: hi.ninja.ModuleUpdateStatus.state:type_name -> hi.ninja.ModuleUpdateStatus.State
+	11, // 21: hi.ninja.ModuleUpdateStatus.failure:type_name -> hi.ninja.ModuleFailure
+	23, // 22: hi.ninja.PreparedRelease.release:type_name -> hi.did.ReleaseManifest
+	13, // 23: hi.ninja.PreparedRelease.modules:type_name -> hi.ninja.ModuleReleasePlan
+	0,  // 24: hi.ninja.UpdateFileRequest.module:type_name -> hi.ninja.ModuleId
+	14, // 25: hi.ninja.UpdateFileResponse.chunk:type_name -> hi.ninja.ModuleFileChunk
+	11, // 26: hi.ninja.UpdateFileResponse.failure:type_name -> hi.ninja.ModuleFailure
+	27, // [27:27] is the sub-list for method output_type
+	27, // [27:27] is the sub-list for method input_type
+	27, // [27:27] is the sub-list for extension type_name
+	27, // [27:27] is the sub-list for extension extendee
+	0,  // [0:27] is the sub-list for field type_name
 }
 
 func init() { file_hi_ninja_common_proto_init() }
@@ -850,19 +1833,37 @@ func file_hi_ninja_common_proto_init() {
 		(*BrainToModuleControl_Reset_)(nil),
 		(*BrainToModuleControl_Initialize)(nil),
 		(*BrainToModuleControl_GetState)(nil),
+		(*BrainToModuleControl_Update)(nil),
 	}
 	file_hi_ninja_common_proto_msgTypes[5].OneofWrappers = []any{
 		(*ModuleToBrainControl_Hello)(nil),
 		(*ModuleToBrainControl_State)(nil),
+		(*ModuleToBrainControl_Update)(nil),
 	}
 	file_hi_ninja_common_proto_msgTypes[6].OneofWrappers = []any{}
+	file_hi_ninja_common_proto_msgTypes[7].OneofWrappers = []any{}
+	file_hi_ninja_common_proto_msgTypes[8].OneofWrappers = []any{}
+	file_hi_ninja_common_proto_msgTypes[9].OneofWrappers = []any{}
+	file_hi_ninja_common_proto_msgTypes[10].OneofWrappers = []any{
+		(*ModuleUpdateCommand_Prepare)(nil),
+		(*ModuleUpdateCommand_Chunk)(nil),
+		(*ModuleUpdateCommand_Seal)(nil),
+		(*ModuleUpdateCommand_Commit)(nil),
+		(*ModuleUpdateCommand_Abort)(nil),
+		(*ModuleUpdateCommand_GetStatus)(nil),
+	}
+	file_hi_ninja_common_proto_msgTypes[11].OneofWrappers = []any{}
+	file_hi_ninja_common_proto_msgTypes[12].OneofWrappers = []any{}
+	file_hi_ninja_common_proto_msgTypes[13].OneofWrappers = []any{}
+	file_hi_ninja_common_proto_msgTypes[14].OneofWrappers = []any{}
+	file_hi_ninja_common_proto_msgTypes[15].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ninja_common_proto_rawDesc), len(file_hi_ninja_common_proto_rawDesc)),
-			NumEnums:      4,
-			NumMessages:   7,
+			NumEnums:      5,
+			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
