@@ -2,3 +2,126 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
+from hi.club import settlement_pb2 as hi_dot_club_dot_settlement__pb2
+from hi import common_pb2 as hi_dot_common__pb2
+
+
+class SettlementExecutionStub(object):
+    """持私钥端只领取实际付款主体的付款任务；业务模块负责建立和授权付款意图。
+    该服务不持私钥、不发送链上交易，也不返回商品收件地址等业务隐私。
+    """
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.List = channel.unary_unary(
+                '/hi.club.SettlementExecution/List',
+                request_serializer=hi_dot_common__pb2.Pagination.SerializeToString,
+                response_deserializer=hi_dot_club_dot_settlement__pb2.ListSettlementPaymentsResp.FromString,
+                _registered_method=True)
+        self.Begin = channel.unary_unary(
+                '/hi.club.SettlementExecution/Begin',
+                request_serializer=hi_dot_club_dot_settlement__pb2.BeginSettlementPaymentReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_settlement__pb2.SettlementPayment.FromString,
+                _registered_method=True)
+
+
+class SettlementExecutionServicer(object):
+    """持私钥端只领取实际付款主体的付款任务；业务模块负责建立和授权付款意图。
+    该服务不持私钥、不发送链上交易，也不返回商品收件地址等业务隐私。
+    """
+
+    def List(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def Begin(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_SettlementExecutionServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'List': grpc.unary_unary_rpc_method_handler(
+                    servicer.List,
+                    request_deserializer=hi_dot_common__pb2.Pagination.FromString,
+                    response_serializer=hi_dot_club_dot_settlement__pb2.ListSettlementPaymentsResp.SerializeToString,
+            ),
+            'Begin': grpc.unary_unary_rpc_method_handler(
+                    servicer.Begin,
+                    request_deserializer=hi_dot_club_dot_settlement__pb2.BeginSettlementPaymentReq.FromString,
+                    response_serializer=hi_dot_club_dot_settlement__pb2.SettlementPayment.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'hi.club.SettlementExecution', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('hi.club.SettlementExecution', rpc_method_handlers)
+
+
+ # This class is part of an EXPERIMENTAL API.
+class SettlementExecution(object):
+    """持私钥端只领取实际付款主体的付款任务；业务模块负责建立和授权付款意图。
+    该服务不持私钥、不发送链上交易，也不返回商品收件地址等业务隐私。
+    """
+
+    @staticmethod
+    def List(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.SettlementExecution/List',
+            hi_dot_common__pb2.Pagination.SerializeToString,
+            hi_dot_club_dot_settlement__pb2.ListSettlementPaymentsResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def Begin(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.SettlementExecution/Begin',
+            hi_dot_club_dot_settlement__pb2.BeginSettlementPaymentReq.SerializeToString,
+            hi_dot_club_dot_settlement__pb2.SettlementPayment.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)

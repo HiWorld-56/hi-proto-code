@@ -418,7 +418,6 @@ const (
 	ProductTrade_Get_FullMethodName               = "/hi.club.ProductTrade/Get"
 	ProductTrade_List_FullMethodName              = "/hi.club.ProductTrade/List"
 	ProductTrade_Cancel_FullMethodName            = "/hi.club.ProductTrade/Cancel"
-	ProductTrade_BeginPayment_FullMethodName      = "/hi.club.ProductTrade/BeginPayment"
 	ProductTrade_ReportFulfillment_FullMethodName = "/hi.club.ProductTrade/ReportFulfillment"
 	ProductTrade_RequestRefund_FullMethodName     = "/hi.club.ProductTrade/RequestRefund"
 	ProductTrade_ApproveRefund_FullMethodName     = "/hi.club.ProductTrade/ApproveRefund"
@@ -434,7 +433,6 @@ type ProductTradeClient interface {
 	Get(ctx context.Context, in *ProductPurchaseQuery, opts ...grpc.CallOption) (*ProductPurchaseOrder, error)
 	List(ctx context.Context, in *ListProductPurchasesReq, opts ...grpc.CallOption) (*ListProductPurchasesResp, error)
 	Cancel(ctx context.Context, in *ProductPurchaseQuery, opts ...grpc.CallOption) (*ProductPurchaseOrder, error)
-	BeginPayment(ctx context.Context, in *BeginProductPaymentReq, opts ...grpc.CallOption) (*ProductPurchaseOrder, error)
 	ReportFulfillment(ctx context.Context, in *ProductFulfillmentReport, opts ...grpc.CallOption) (*ProductPurchaseOrder, error)
 	RequestRefund(ctx context.Context, in *ProductRefundRequest, opts ...grpc.CallOption) (*ProductPurchaseOrder, error)
 	ApproveRefund(ctx context.Context, in *ProductPurchaseQuery, opts ...grpc.CallOption) (*ProductPurchaseOrder, error)
@@ -499,16 +497,6 @@ func (c *productTradeClient) Cancel(ctx context.Context, in *ProductPurchaseQuer
 	return out, nil
 }
 
-func (c *productTradeClient) BeginPayment(ctx context.Context, in *BeginProductPaymentReq, opts ...grpc.CallOption) (*ProductPurchaseOrder, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ProductPurchaseOrder)
-	err := c.cc.Invoke(ctx, ProductTrade_BeginPayment_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *productTradeClient) ReportFulfillment(ctx context.Context, in *ProductFulfillmentReport, opts ...grpc.CallOption) (*ProductPurchaseOrder, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ProductPurchaseOrder)
@@ -558,7 +546,6 @@ type ProductTradeServer interface {
 	Get(context.Context, *ProductPurchaseQuery) (*ProductPurchaseOrder, error)
 	List(context.Context, *ListProductPurchasesReq) (*ListProductPurchasesResp, error)
 	Cancel(context.Context, *ProductPurchaseQuery) (*ProductPurchaseOrder, error)
-	BeginPayment(context.Context, *BeginProductPaymentReq) (*ProductPurchaseOrder, error)
 	ReportFulfillment(context.Context, *ProductFulfillmentReport) (*ProductPurchaseOrder, error)
 	RequestRefund(context.Context, *ProductRefundRequest) (*ProductPurchaseOrder, error)
 	ApproveRefund(context.Context, *ProductPurchaseQuery) (*ProductPurchaseOrder, error)
@@ -586,9 +573,6 @@ func (UnimplementedProductTradeServer) List(context.Context, *ListProductPurchas
 }
 func (UnimplementedProductTradeServer) Cancel(context.Context, *ProductPurchaseQuery) (*ProductPurchaseOrder, error) {
 	return nil, status.Error(codes.Unimplemented, "method Cancel not implemented")
-}
-func (UnimplementedProductTradeServer) BeginPayment(context.Context, *BeginProductPaymentReq) (*ProductPurchaseOrder, error) {
-	return nil, status.Error(codes.Unimplemented, "method BeginPayment not implemented")
 }
 func (UnimplementedProductTradeServer) ReportFulfillment(context.Context, *ProductFulfillmentReport) (*ProductPurchaseOrder, error) {
 	return nil, status.Error(codes.Unimplemented, "method ReportFulfillment not implemented")
@@ -712,24 +696,6 @@ func _ProductTrade_Cancel_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProductTrade_BeginPayment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BeginProductPaymentReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ProductTradeServer).BeginPayment(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ProductTrade_BeginPayment_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProductTradeServer).BeginPayment(ctx, req.(*BeginProductPaymentReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _ProductTrade_ReportFulfillment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ProductFulfillmentReport)
 	if err := dec(in); err != nil {
@@ -828,10 +794,6 @@ var ProductTrade_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Cancel",
 			Handler:    _ProductTrade_Cancel_Handler,
-		},
-		{
-			MethodName: "BeginPayment",
-			Handler:    _ProductTrade_BeginPayment_Handler,
 		},
 		{
 			MethodName: "ReportFulfillment",

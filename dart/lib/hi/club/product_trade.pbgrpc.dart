@@ -323,13 +323,6 @@ class ProductTradeClient extends $grpc.Client {
     return $createUnaryCall(_$cancel, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.ProductPurchaseOrder> beginPayment(
-    $0.BeginProductPaymentReq request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$beginPayment, request, options: options);
-  }
-
   $grpc.ResponseFuture<$0.ProductPurchaseOrder> reportFulfillment(
     $0.ProductFulfillmentReport request, {
     $grpc.CallOptions? options,
@@ -384,11 +377,6 @@ class ProductTradeClient extends $grpc.Client {
       $grpc.ClientMethod<$0.ProductPurchaseQuery, $0.ProductPurchaseOrder>(
           '/hi.club.ProductTrade/Cancel',
           ($0.ProductPurchaseQuery value) => value.writeToBuffer(),
-          $0.ProductPurchaseOrder.fromBuffer);
-  static final _$beginPayment =
-      $grpc.ClientMethod<$0.BeginProductPaymentReq, $0.ProductPurchaseOrder>(
-          '/hi.club.ProductTrade/BeginPayment',
-          ($0.BeginProductPaymentReq value) => value.writeToBuffer(),
           $0.ProductPurchaseOrder.fromBuffer);
   static final _$reportFulfillment =
       $grpc.ClientMethod<$0.ProductFulfillmentReport, $0.ProductPurchaseOrder>(
@@ -461,15 +449,6 @@ abstract class ProductTradeServiceBase extends $grpc.Service {
             false,
             ($core.List<$core.int> value) =>
                 $0.ProductPurchaseQuery.fromBuffer(value),
-            ($0.ProductPurchaseOrder value) => value.writeToBuffer()));
-    $addMethod(
-        $grpc.ServiceMethod<$0.BeginProductPaymentReq, $0.ProductPurchaseOrder>(
-            'BeginPayment',
-            beginPayment_Pre,
-            false,
-            false,
-            ($core.List<$core.int> value) =>
-                $0.BeginProductPaymentReq.fromBuffer(value),
             ($0.ProductPurchaseOrder value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.ProductFulfillmentReport,
             $0.ProductPurchaseOrder>(
@@ -548,15 +527,6 @@ abstract class ProductTradeServiceBase extends $grpc.Service {
 
   $async.Future<$0.ProductPurchaseOrder> cancel(
       $grpc.ServiceCall call, $0.ProductPurchaseQuery request);
-
-  $async.Future<$0.ProductPurchaseOrder> beginPayment_Pre(
-      $grpc.ServiceCall $call,
-      $async.Future<$0.BeginProductPaymentReq> $request) async {
-    return beginPayment($call, await $request);
-  }
-
-  $async.Future<$0.ProductPurchaseOrder> beginPayment(
-      $grpc.ServiceCall call, $0.BeginProductPaymentReq request);
 
   $async.Future<$0.ProductPurchaseOrder> reportFulfillment_Pre(
       $grpc.ServiceCall $call,

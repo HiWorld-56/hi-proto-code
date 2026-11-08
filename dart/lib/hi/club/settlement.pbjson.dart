@@ -227,3 +227,78 @@ final $typed_data.Uint8List settlementPaymentDescriptor = $convert.base64Decode(
     'A19pZEIOCgxfYnVzaW5lc3NfaWRCDwoNX2Zyb21fYWNjb3VudEINCgtfdG9fYWNjb3VudEIPCg'
     '1fZnJvbV9hZGRyZXNzQg0KC190b19hZGRyZXNzQgkKB19zdGF0dXNCDQoLX2NyZWF0ZWRfYXRC'
     'DAoKX2V4cGlyZV9hdEINCgtfcGF5X3JlcV9pZEIKCghfdHhfaGFzaEIJCgdfcmVhc29u');
+
+@$core.Deprecated('Use listSettlementPaymentsRespDescriptor instead')
+const ListSettlementPaymentsResp$json = {
+  '1': 'ListSettlementPaymentsResp',
+  '2': [
+    {
+      '1': 'list',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.club.SettlementPayment',
+      '8': {},
+      '10': 'list'
+    },
+    {
+      '1': 'total',
+      '3': 2,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 0,
+      '10': 'total',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_total'},
+  ],
+};
+
+/// Descriptor for `ListSettlementPaymentsResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listSettlementPaymentsRespDescriptor =
+    $convert.base64Decode(
+        'ChpMaXN0U2V0dGxlbWVudFBheW1lbnRzUmVzcBI0CgRsaXN0GAEgAygLMhouaGkuY2x1Yi5TZX'
+        'R0bGVtZW50UGF5bWVudEIEkLUYAlIEbGlzdBIfCgV0b3RhbBgCIAEoA0IEkLUYAkgAUgV0b3Rh'
+        'bIgBAToEmLUYAkIICgZfdG90YWw=');
+
+@$core.Deprecated('Use beginSettlementPaymentReqDescriptor instead')
+const BeginSettlementPaymentReq$json = {
+  '1': 'BeginSettlementPaymentReq',
+  '2': [
+    {
+      '1': 'payment_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'paymentId',
+      '17': true
+    },
+    {
+      '1': 'execution_uuid',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'executionUuid',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_payment_id'},
+    {'1': '_execution_uuid'},
+  ],
+};
+
+/// Descriptor for `BeginSettlementPaymentReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List beginSettlementPaymentReqDescriptor = $convert.base64Decode(
+    'ChlCZWdpblNldHRsZW1lbnRQYXltZW50UmVxEi4KCnBheW1lbnRfaWQYASABKAlCCrpIB8gBAX'
+    'ICEAFIAFIJcGF5bWVudElkiAEBEjcKDmV4ZWN1dGlvbl91dWlkGAIgASgJQgu6SAjIAQFyA7AB'
+    'AUgBUg1leGVjdXRpb25VdWlkiAEBQg0KC19wYXltZW50X2lkQhEKD19leGVjdXRpb25fdXVpZA'
+    '==');

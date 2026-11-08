@@ -15,8 +15,8 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../common.pb.dart' as $1;
-import '../did/base.pb.dart' as $0;
+import '../common.pb.dart' as $0;
+import '../did/base.pb.dart' as $2;
 import 'settlement.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -27,9 +27,9 @@ class SettlementPayment extends $pb.GeneratedMessage {
   factory SettlementPayment({
     $core.String? id,
     $core.String? businessId,
-    $0.CoinAmount? total,
-    $1.Entity? payer,
-    $1.Entity? payee,
+    $2.CoinAmount? total,
+    $0.Entity? payer,
+    $0.Entity? payee,
     $core.String? fromAccount,
     $core.String? toAccount,
     $core.String? fromAddress,
@@ -75,12 +75,12 @@ class SettlementPayment extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'id')
     ..aOS(2, _omitFieldNames ? '' : 'businessId')
-    ..aOM<$0.CoinAmount>(3, _omitFieldNames ? '' : 'total',
-        subBuilder: $0.CoinAmount.create)
-    ..aOM<$1.Entity>(4, _omitFieldNames ? '' : 'payer',
-        subBuilder: $1.Entity.create)
-    ..aOM<$1.Entity>(5, _omitFieldNames ? '' : 'payee',
-        subBuilder: $1.Entity.create)
+    ..aOM<$2.CoinAmount>(3, _omitFieldNames ? '' : 'total',
+        subBuilder: $2.CoinAmount.create)
+    ..aOM<$0.Entity>(4, _omitFieldNames ? '' : 'payer',
+        subBuilder: $0.Entity.create)
+    ..aOM<$0.Entity>(5, _omitFieldNames ? '' : 'payee',
+        subBuilder: $0.Entity.create)
     ..aOS(6, _omitFieldNames ? '' : 'fromAccount')
     ..aOS(7, _omitFieldNames ? '' : 'toAccount')
     ..aOS(8, _omitFieldNames ? '' : 'fromAddress')
@@ -132,37 +132,37 @@ class SettlementPayment extends $pb.GeneratedMessage {
   void clearBusinessId() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $0.CoinAmount get total => $_getN(2);
+  $2.CoinAmount get total => $_getN(2);
   @$pb.TagNumber(3)
-  set total($0.CoinAmount value) => $_setField(3, value);
+  set total($2.CoinAmount value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasTotal() => $_has(2);
   @$pb.TagNumber(3)
   void clearTotal() => $_clearField(3);
   @$pb.TagNumber(3)
-  $0.CoinAmount ensureTotal() => $_ensure(2);
+  $2.CoinAmount ensureTotal() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  $1.Entity get payer => $_getN(3);
+  $0.Entity get payer => $_getN(3);
   @$pb.TagNumber(4)
-  set payer($1.Entity value) => $_setField(4, value);
+  set payer($0.Entity value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasPayer() => $_has(3);
   @$pb.TagNumber(4)
   void clearPayer() => $_clearField(4);
   @$pb.TagNumber(4)
-  $1.Entity ensurePayer() => $_ensure(3);
+  $0.Entity ensurePayer() => $_ensure(3);
 
   @$pb.TagNumber(5)
-  $1.Entity get payee => $_getN(4);
+  $0.Entity get payee => $_getN(4);
   @$pb.TagNumber(5)
-  set payee($1.Entity value) => $_setField(5, value);
+  set payee($0.Entity value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasPayee() => $_has(4);
   @$pb.TagNumber(5)
   void clearPayee() => $_clearField(5);
   @$pb.TagNumber(5)
-  $1.Entity ensurePayee() => $_ensure(4);
+  $0.Entity ensurePayee() => $_ensure(4);
 
   @$pb.TagNumber(6)
   $core.String get fromAccount => $_getSZ(5);
@@ -253,6 +253,136 @@ class SettlementPayment extends $pb.GeneratedMessage {
   $core.bool hasReason() => $_has(14);
   @$pb.TagNumber(15)
   void clearReason() => $_clearField(15);
+}
+
+class ListSettlementPaymentsResp extends $pb.GeneratedMessage {
+  factory ListSettlementPaymentsResp({
+    $core.Iterable<SettlementPayment>? list,
+    $fixnum.Int64? total,
+  }) {
+    final result = create();
+    if (list != null) result.list.addAll(list);
+    if (total != null) result.total = total;
+    return result;
+  }
+
+  ListSettlementPaymentsResp._();
+
+  factory ListSettlementPaymentsResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListSettlementPaymentsResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListSettlementPaymentsResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..pPM<SettlementPayment>(1, _omitFieldNames ? '' : 'list',
+        subBuilder: SettlementPayment.create)
+    ..aInt64(2, _omitFieldNames ? '' : 'total')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListSettlementPaymentsResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListSettlementPaymentsResp copyWith(
+          void Function(ListSettlementPaymentsResp) updates) =>
+      super.copyWith(
+              (message) => updates(message as ListSettlementPaymentsResp))
+          as ListSettlementPaymentsResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListSettlementPaymentsResp create() => ListSettlementPaymentsResp._();
+  @$core.override
+  ListSettlementPaymentsResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListSettlementPaymentsResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListSettlementPaymentsResp>(create);
+  static ListSettlementPaymentsResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<SettlementPayment> get list => $_getList(0);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get total => $_getI64(1);
+  @$pb.TagNumber(2)
+  set total($fixnum.Int64 value) => $_setInt64(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasTotal() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearTotal() => $_clearField(2);
+}
+
+class BeginSettlementPaymentReq extends $pb.GeneratedMessage {
+  factory BeginSettlementPaymentReq({
+    $core.String? paymentId,
+    $core.String? executionUuid,
+  }) {
+    final result = create();
+    if (paymentId != null) result.paymentId = paymentId;
+    if (executionUuid != null) result.executionUuid = executionUuid;
+    return result;
+  }
+
+  BeginSettlementPaymentReq._();
+
+  factory BeginSettlementPaymentReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BeginSettlementPaymentReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BeginSettlementPaymentReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'paymentId')
+    ..aOS(2, _omitFieldNames ? '' : 'executionUuid')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BeginSettlementPaymentReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BeginSettlementPaymentReq copyWith(
+          void Function(BeginSettlementPaymentReq) updates) =>
+      super.copyWith((message) => updates(message as BeginSettlementPaymentReq))
+          as BeginSettlementPaymentReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BeginSettlementPaymentReq create() => BeginSettlementPaymentReq._();
+  @$core.override
+  BeginSettlementPaymentReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BeginSettlementPaymentReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BeginSettlementPaymentReq>(create);
+  static BeginSettlementPaymentReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get paymentId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set paymentId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPaymentId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPaymentId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get executionUuid => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set executionUuid($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasExecutionUuid() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearExecutionUuid() => $_clearField(2);
 }
 
 const $core.bool _omitFieldNames =

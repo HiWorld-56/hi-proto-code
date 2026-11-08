@@ -10966,6 +10966,20 @@ pub struct SettlementPayment {
     #[prost(string, optional, tag = "15")]
     pub reason: ::core::option::Option<::prost::alloc::string::String>,
 }
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListSettlementPaymentsResp {
+    #[prost(message, repeated, tag = "1")]
+    pub list: ::prost::alloc::vec::Vec<SettlementPayment>,
+    #[prost(int64, optional, tag = "2")]
+    pub total: ::core::option::Option<i64>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BeginSettlementPaymentReq {
+    #[prost(string, optional, tag = "1")]
+    pub payment_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub execution_uuid: ::core::option::Option<::prost::alloc::string::String>,
+}
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum SettlementPaymentStatus {
@@ -11007,6 +11021,149 @@ impl SettlementPaymentStatus {
             "SETTLEMENT_PAYMENT_STATUS_CLOSED" => Some(Self::Closed),
             "SETTLEMENT_PAYMENT_STATUS_REVIEW" => Some(Self::Review),
             _ => None,
+        }
+    }
+}
+/// Generated client implementations.
+pub mod settlement_execution_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 持私钥端只领取实际付款主体的付款任务；业务模块负责建立和授权付款意图。
+    /// 该服务不持私钥、不发送链上交易，也不返回商品收件地址等业务隐私。
+    #[derive(Debug, Clone)]
+    pub struct SettlementExecutionClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl SettlementExecutionClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> SettlementExecutionClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> SettlementExecutionClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            SettlementExecutionClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn list(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::Pagination>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListSettlementPaymentsResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.SettlementExecution/List",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.SettlementExecution", "List"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn begin(
+            &mut self,
+            request: impl tonic::IntoRequest<super::BeginSettlementPaymentReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::SettlementPayment>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.SettlementExecution/Begin",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.SettlementExecution", "Begin"));
+            self.inner.unary(req, path, codec).await
         }
     }
 }
@@ -11870,17 +12027,6 @@ pub struct ListProductPurchasesResp {
     pub total: ::core::option::Option<i64>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct BeginProductPaymentReq {
-    #[prost(string, optional, tag = "1")]
-    pub id: ::core::option::Option<::prost::alloc::string::String>,
-    /// 持久执行资格，未知结果不重新领
-    #[prost(string, optional, tag = "2")]
-    pub execution_uuid: ::core::option::Option<::prost::alloc::string::String>,
-    /// 不传/false=采购付款，true=供应方退款
-    #[prost(bool, optional, tag = "3")]
-    pub refund: ::core::option::Option<bool>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ProductShipment {
     #[prost(string, optional, tag = "1")]
     pub carrier: ::core::option::Option<::prost::alloc::string::String>,
@@ -12668,30 +12814,6 @@ pub mod product_trade_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.ProductTrade", "Cancel"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn begin_payment(
-            &mut self,
-            request: impl tonic::IntoRequest<super::BeginProductPaymentReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::ProductPurchaseOrder>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.ProductTrade/BeginPayment",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.ProductTrade", "BeginPayment"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn report_fulfillment(

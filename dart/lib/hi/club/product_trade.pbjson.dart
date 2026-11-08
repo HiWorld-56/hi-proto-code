@@ -1213,46 +1213,6 @@ final $typed_data.Uint8List listProductPurchasesRespDescriptor = $convert.base64
     'VjdFB1cmNoYXNlT3JkZXJCBJC1GAJSBGxpc3QSHwoFdG90YWwYAiABKANCBJC1GAJIAFIFdG90'
     'YWyIAQE6BJi1GAJCCAoGX3RvdGFs');
 
-@$core.Deprecated('Use beginProductPaymentReqDescriptor instead')
-const BeginProductPaymentReq$json = {
-  '1': 'BeginProductPaymentReq',
-  '2': [
-    {
-      '1': 'id',
-      '3': 1,
-      '4': 1,
-      '5': 9,
-      '8': {},
-      '9': 0,
-      '10': 'id',
-      '17': true
-    },
-    {
-      '1': 'execution_uuid',
-      '3': 2,
-      '4': 1,
-      '5': 9,
-      '8': {},
-      '9': 1,
-      '10': 'executionUuid',
-      '17': true
-    },
-    {'1': 'refund', '3': 3, '4': 1, '5': 8, '9': 2, '10': 'refund', '17': true},
-  ],
-  '8': [
-    {'1': '_id'},
-    {'1': '_execution_uuid'},
-    {'1': '_refund'},
-  ],
-};
-
-/// Descriptor for `BeginProductPaymentReq`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List beginProductPaymentReqDescriptor = $convert.base64Decode(
-    'ChZCZWdpblByb2R1Y3RQYXltZW50UmVxEh8KAmlkGAEgASgJQgq6SAfIAQFyAhABSABSAmlkiA'
-    'EBEjcKDmV4ZWN1dGlvbl91dWlkGAIgASgJQgu6SAjIAQFyA7ABAUgBUg1leGVjdXRpb25VdWlk'
-    'iAEBEhsKBnJlZnVuZBgDIAEoCEgCUgZyZWZ1bmSIAQFCBQoDX2lkQhEKD19leGVjdXRpb25fdX'
-    'VpZEIJCgdfcmVmdW5k');
-
 @$core.Deprecated('Use productShipmentDescriptor instead')
 const ProductShipment$json = {
   '1': 'ProductShipment',

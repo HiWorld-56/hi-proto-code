@@ -402,11 +402,6 @@ class ProductTradeStub(object):
                 request_serializer=hi_dot_club_dot_product__trade__pb2.ProductPurchaseQuery.SerializeToString,
                 response_deserializer=hi_dot_club_dot_product__trade__pb2.ProductPurchaseOrder.FromString,
                 _registered_method=True)
-        self.BeginPayment = channel.unary_unary(
-                '/hi.club.ProductTrade/BeginPayment',
-                request_serializer=hi_dot_club_dot_product__trade__pb2.BeginProductPaymentReq.SerializeToString,
-                response_deserializer=hi_dot_club_dot_product__trade__pb2.ProductPurchaseOrder.FromString,
-                _registered_method=True)
         self.ReportFulfillment = channel.unary_unary(
                 '/hi.club.ProductTrade/ReportFulfillment',
                 request_serializer=hi_dot_club_dot_product__trade__pb2.ProductFulfillmentReport.SerializeToString,
@@ -462,12 +457,6 @@ class ProductTradeServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def BeginPayment(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
     def ReportFulfillment(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -518,11 +507,6 @@ def add_ProductTradeServicer_to_server(servicer, server):
             'Cancel': grpc.unary_unary_rpc_method_handler(
                     servicer.Cancel,
                     request_deserializer=hi_dot_club_dot_product__trade__pb2.ProductPurchaseQuery.FromString,
-                    response_serializer=hi_dot_club_dot_product__trade__pb2.ProductPurchaseOrder.SerializeToString,
-            ),
-            'BeginPayment': grpc.unary_unary_rpc_method_handler(
-                    servicer.BeginPayment,
-                    request_deserializer=hi_dot_club_dot_product__trade__pb2.BeginProductPaymentReq.FromString,
                     response_serializer=hi_dot_club_dot_product__trade__pb2.ProductPurchaseOrder.SerializeToString,
             ),
             'ReportFulfillment': grpc.unary_unary_rpc_method_handler(
@@ -680,33 +664,6 @@ class ProductTrade(object):
             target,
             '/hi.club.ProductTrade/Cancel',
             hi_dot_club_dot_product__trade__pb2.ProductPurchaseQuery.SerializeToString,
-            hi_dot_club_dot_product__trade__pb2.ProductPurchaseOrder.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def BeginPayment(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/hi.club.ProductTrade/BeginPayment',
-            hi_dot_club_dot_product__trade__pb2.BeginProductPaymentReq.SerializeToString,
             hi_dot_club_dot_product__trade__pb2.ProductPurchaseOrder.FromString,
             options,
             channel_credentials,

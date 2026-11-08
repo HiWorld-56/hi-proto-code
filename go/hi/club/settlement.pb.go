@@ -7,6 +7,7 @@
 package club
 
 import (
+	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	did "github.com/HiWorld-56/hi-proto/go/hi/did"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -243,11 +244,115 @@ func (x *SettlementPayment) GetReason() string {
 	return ""
 }
 
+type ListSettlementPaymentsResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	List          []*SettlementPayment   `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	Total         *int64                 `protobuf:"varint,2,opt,name=total,proto3,oneof" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListSettlementPaymentsResp) Reset() {
+	*x = ListSettlementPaymentsResp{}
+	mi := &file_hi_club_settlement_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListSettlementPaymentsResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListSettlementPaymentsResp) ProtoMessage() {}
+
+func (x *ListSettlementPaymentsResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_settlement_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListSettlementPaymentsResp.ProtoReflect.Descriptor instead.
+func (*ListSettlementPaymentsResp) Descriptor() ([]byte, []int) {
+	return file_hi_club_settlement_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *ListSettlementPaymentsResp) GetList() []*SettlementPayment {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
+func (x *ListSettlementPaymentsResp) GetTotal() int64 {
+	if x != nil && x.Total != nil {
+		return *x.Total
+	}
+	return 0
+}
+
+type BeginSettlementPaymentReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	PaymentId     *string                `protobuf:"bytes,1,opt,name=payment_id,json=paymentId,proto3,oneof" json:"payment_id,omitempty"`
+	ExecutionUuid *string                `protobuf:"bytes,2,opt,name=execution_uuid,json=executionUuid,proto3,oneof" json:"execution_uuid,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BeginSettlementPaymentReq) Reset() {
+	*x = BeginSettlementPaymentReq{}
+	mi := &file_hi_club_settlement_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BeginSettlementPaymentReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BeginSettlementPaymentReq) ProtoMessage() {}
+
+func (x *BeginSettlementPaymentReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_settlement_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BeginSettlementPaymentReq.ProtoReflect.Descriptor instead.
+func (*BeginSettlementPaymentReq) Descriptor() ([]byte, []int) {
+	return file_hi_club_settlement_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *BeginSettlementPaymentReq) GetPaymentId() string {
+	if x != nil && x.PaymentId != nil {
+		return *x.PaymentId
+	}
+	return ""
+}
+
+func (x *BeginSettlementPaymentReq) GetExecutionUuid() string {
+	if x != nil && x.ExecutionUuid != nil {
+		return *x.ExecutionUuid
+	}
+	return ""
+}
+
 var File_hi_club_settlement_proto protoreflect.FileDescriptor
 
 const file_hi_club_settlement_proto_rawDesc = "" +
 	"\n" +
-	"\x18hi/club/settlement.proto\x12\ahi.club\x1a\x0fhi/common.proto\x1a\x11hi/did/base.proto\x1a\x10hi/options.proto\"\xbc\x06\n" +
+	"\x18hi/club/settlement.proto\x12\ahi.club\x1a\x0fhi/common.proto\x1a\x11hi/did/base.proto\x1a\x10hi/options.proto\x1a\x1bbuf/validate/validate.proto\"\xbc\x06\n" +
 	"\x11SettlementPayment\x12\x19\n" +
 	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x02id\x88\x01\x01\x12*\n" +
 	"\vbusiness_id\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\n" +
@@ -286,7 +391,18 @@ const file_hi_club_settlement_proto_rawDesc = "" +
 	"\v_pay_req_idB\n" +
 	"\n" +
 	"\b_tx_hashB\t\n" +
-	"\a_reason*\xd4\x02\n" +
+	"\a_reason\"\x83\x01\n" +
+	"\x1aListSettlementPaymentsResp\x124\n" +
+	"\x04list\x18\x01 \x03(\v2\x1a.hi.club.SettlementPaymentB\x04\x90\xb5\x18\x02R\x04list\x12\x1f\n" +
+	"\x05total\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x02H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x02B\b\n" +
+	"\x06_total\"\xa6\x01\n" +
+	"\x19BeginSettlementPaymentReq\x12.\n" +
+	"\n" +
+	"payment_id\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\tpaymentId\x88\x01\x01\x127\n" +
+	"\x0eexecution_uuid\x18\x02 \x01(\tB\v\xbaH\b\xc8\x01\x01r\x03\xb0\x01\x01H\x01R\rexecutionUuid\x88\x01\x01B\r\n" +
+	"\v_payment_idB\x11\n" +
+	"\x0f_execution_uuid*\xd4\x02\n" +
 	"\x17SettlementPaymentStatus\x12)\n" +
 	"%SETTLEMENT_PAYMENT_STATUS_UNSPECIFIED\x10\x00\x12%\n" +
 	"!SETTLEMENT_PAYMENT_STATUS_PENDING\x10\x01\x12'\n" +
@@ -295,7 +411,10 @@ const file_hi_club_settlement_proto_rawDesc = "" +
 	"\x1eSETTLEMENT_PAYMENT_STATUS_PAID\x10\x04\x12$\n" +
 	" SETTLEMENT_PAYMENT_STATUS_FAILED\x10\x05\x12$\n" +
 	" SETTLEMENT_PAYMENT_STATUS_CLOSED\x10\x06\x12$\n" +
-	" SETTLEMENT_PAYMENT_STATUS_REVIEW\x10\aB\x86\x01\n" +
+	" SETTLEMENT_PAYMENT_STATUS_REVIEW\x10\a2\xa9\x01\n" +
+	"\x13SettlementExecution\x12B\n" +
+	"\x04List\x12\x0e.hi.Pagination\x1a#.hi.club.ListSettlementPaymentsResp\"\x05\x8a\xb5\x18\x01\x02\x12N\n" +
+	"\x05Begin\x12\".hi.club.BeginSettlementPaymentReq\x1a\x1a.hi.club.SettlementPayment\"\x05\x8a\xb5\x18\x01\x02B\x86\x01\n" +
 	"\vcom.hi.clubB\x0fSettlementProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (
@@ -311,23 +430,31 @@ func file_hi_club_settlement_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_club_settlement_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_hi_club_settlement_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_hi_club_settlement_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_hi_club_settlement_proto_goTypes = []any{
-	(SettlementPaymentStatus)(0), // 0: hi.club.SettlementPaymentStatus
-	(*SettlementPayment)(nil),    // 1: hi.club.SettlementPayment
-	(*did.CoinAmount)(nil),       // 2: hi.did.CoinAmount
-	(*hi.Entity)(nil),            // 3: hi.Entity
+	(SettlementPaymentStatus)(0),       // 0: hi.club.SettlementPaymentStatus
+	(*SettlementPayment)(nil),          // 1: hi.club.SettlementPayment
+	(*ListSettlementPaymentsResp)(nil), // 2: hi.club.ListSettlementPaymentsResp
+	(*BeginSettlementPaymentReq)(nil),  // 3: hi.club.BeginSettlementPaymentReq
+	(*did.CoinAmount)(nil),             // 4: hi.did.CoinAmount
+	(*hi.Entity)(nil),                  // 5: hi.Entity
+	(*hi.Pagination)(nil),              // 6: hi.Pagination
 }
 var file_hi_club_settlement_proto_depIdxs = []int32{
-	2, // 0: hi.club.SettlementPayment.total:type_name -> hi.did.CoinAmount
-	3, // 1: hi.club.SettlementPayment.payer:type_name -> hi.Entity
-	3, // 2: hi.club.SettlementPayment.payee:type_name -> hi.Entity
+	4, // 0: hi.club.SettlementPayment.total:type_name -> hi.did.CoinAmount
+	5, // 1: hi.club.SettlementPayment.payer:type_name -> hi.Entity
+	5, // 2: hi.club.SettlementPayment.payee:type_name -> hi.Entity
 	0, // 3: hi.club.SettlementPayment.status:type_name -> hi.club.SettlementPaymentStatus
-	4, // [4:4] is the sub-list for method output_type
-	4, // [4:4] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	1, // 4: hi.club.ListSettlementPaymentsResp.list:type_name -> hi.club.SettlementPayment
+	6, // 5: hi.club.SettlementExecution.List:input_type -> hi.Pagination
+	3, // 6: hi.club.SettlementExecution.Begin:input_type -> hi.club.BeginSettlementPaymentReq
+	2, // 7: hi.club.SettlementExecution.List:output_type -> hi.club.ListSettlementPaymentsResp
+	1, // 8: hi.club.SettlementExecution.Begin:output_type -> hi.club.SettlementPayment
+	7, // [7:9] is the sub-list for method output_type
+	5, // [5:7] is the sub-list for method input_type
+	5, // [5:5] is the sub-list for extension type_name
+	5, // [5:5] is the sub-list for extension extendee
+	0, // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_settlement_proto_init() }
@@ -336,15 +463,17 @@ func file_hi_club_settlement_proto_init() {
 		return
 	}
 	file_hi_club_settlement_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_club_settlement_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_club_settlement_proto_msgTypes[2].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_settlement_proto_rawDesc), len(file_hi_club_settlement_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   1,
+			NumMessages:   3,
 			NumExtensions: 0,
-			NumServices:   0,
+			NumServices:   1,
 		},
 		GoTypes:           file_hi_club_settlement_proto_goTypes,
 		DependencyIndexes: file_hi_club_settlement_proto_depIdxs,
