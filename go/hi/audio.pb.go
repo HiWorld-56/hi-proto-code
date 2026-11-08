@@ -277,8 +277,8 @@ func (x *AudioStreamEnd) GetTotalSamples() uint64 {
 	return 0
 }
 
-// start -> chunk* -> end；end仅表示生成完成，不表示声卡播完。
-// 服务端异常通过gRPC status终止，无end/异常终止均不能视为完整合成。
+// start -> chunk* -> end；end仅表示采集/生成完成，不表示声卡播完。
+// 服务端异常通过gRPC status终止，无end/异常终止均不能视为完整音频。
 type AudioStreamEvent struct {
 	state    protoimpl.MessageState `protogen:"open.v1"`
 	StreamId *string                `protobuf:"bytes,1,opt,name=stream_id,json=streamId,proto3,oneof" json:"stream_id,omitempty"`

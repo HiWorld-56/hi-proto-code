@@ -108,3 +108,51 @@ const TranscribeResp$json = {
 final $typed_data.Uint8List transcribeRespDescriptor = $convert.base64Decode(
     'Cg5UcmFuc2NyaWJlUmVzcBIdCgR0ZXh0GAEgASgJQgSQtRgDSABSBHRleHSIAQE6BJi1GANCBw'
     'oFX3RleHQ=');
+
+@$core.Deprecated('Use transcribeStreamReqDescriptor instead')
+const TranscribeStreamReq$json = {
+  '1': 'TranscribeStreamReq',
+  '2': [
+    {
+      '1': 'model',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'model',
+      '17': true
+    },
+    {
+      '1': 'lang',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'lang',
+      '17': true
+    },
+    {
+      '1': 'audio',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.AudioStreamEvent',
+      '8': {},
+      '10': 'audio'
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_model'},
+    {'1': '_lang'},
+  ],
+};
+
+/// Descriptor for `TranscribeStreamReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List transcribeStreamReqDescriptor = $convert.base64Decode(
+    'ChNUcmFuc2NyaWJlU3RyZWFtUmVxEh8KBW1vZGVsGAEgASgJQgSQtRgDSABSBW1vZGVsiAEBEh'
+    '0KBGxhbmcYAiABKAlCBJC1GANIAVIEbGFuZ4gBARI2CgVhdWRpbxgDIAEoCzIULmhpLkF1ZGlv'
+    'U3RyZWFtRXZlbnRCCrpIA8gBAZC1GANSBWF1ZGlvOgSYtRgDQggKBl9tb2RlbEIHCgVfbGFuZw'
+    '==');

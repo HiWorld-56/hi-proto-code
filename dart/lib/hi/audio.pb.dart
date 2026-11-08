@@ -299,8 +299,8 @@ class AudioStreamEnd extends $pb.GeneratedMessage {
 
 enum AudioStreamEvent_Event { start, chunk, end, notSet }
 
-/// start -> chunk* -> end；end仅表示生成完成，不表示声卡播完。
-/// 服务端异常通过gRPC status终止，无end/异常终止均不能视为完整合成。
+/// start -> chunk* -> end；end仅表示采集/生成完成，不表示声卡播完。
+/// 服务端异常通过gRPC status终止，无end/异常终止均不能视为完整音频。
 class AudioStreamEvent extends $pb.GeneratedMessage {
   factory AudioStreamEvent({
     $core.String? streamId,

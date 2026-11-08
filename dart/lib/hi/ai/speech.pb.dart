@@ -14,6 +14,8 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../audio.pb.dart' as $1;
+
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 class SynthesizeReq extends $pb.GeneratedMessage {
@@ -278,6 +280,89 @@ class TranscribeResp extends $pb.GeneratedMessage {
   $core.bool hasText() => $_has(0);
   @$pb.TagNumber(1)
   void clearText() => $_clearField(1);
+}
+
+/// 输入start -> chunk* -> end；model/lang只允许在start设置。
+/// 仅完整end并最终flush后返回TranscribeResp，部分转写不触发任何业务。
+class TranscribeStreamReq extends $pb.GeneratedMessage {
+  factory TranscribeStreamReq({
+    $core.String? model,
+    $core.String? lang,
+    $1.AudioStreamEvent? audio,
+  }) {
+    final result = create();
+    if (model != null) result.model = model;
+    if (lang != null) result.lang = lang;
+    if (audio != null) result.audio = audio;
+    return result;
+  }
+
+  TranscribeStreamReq._();
+
+  factory TranscribeStreamReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory TranscribeStreamReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'TranscribeStreamReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ai'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'model')
+    ..aOS(2, _omitFieldNames ? '' : 'lang')
+    ..aOM<$1.AudioStreamEvent>(3, _omitFieldNames ? '' : 'audio',
+        subBuilder: $1.AudioStreamEvent.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  TranscribeStreamReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  TranscribeStreamReq copyWith(void Function(TranscribeStreamReq) updates) =>
+      super.copyWith((message) => updates(message as TranscribeStreamReq))
+          as TranscribeStreamReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static TranscribeStreamReq create() => TranscribeStreamReq._();
+  @$core.override
+  TranscribeStreamReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static TranscribeStreamReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<TranscribeStreamReq>(create);
+  static TranscribeStreamReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get model => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set model($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasModel() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearModel() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get lang => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set lang($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasLang() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearLang() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $1.AudioStreamEvent get audio => $_getN(2);
+  @$pb.TagNumber(3)
+  set audio($1.AudioStreamEvent value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasAudio() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearAudio() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $1.AudioStreamEvent ensureAudio() => $_ensure(2);
 }
 
 const $core.bool _omitFieldNames =

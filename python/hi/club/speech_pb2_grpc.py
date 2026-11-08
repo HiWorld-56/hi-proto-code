@@ -20,6 +20,11 @@ class SpeechStub(object):
         Args:
             channel: A grpc.Channel.
         """
+        self.TranscribeStream = channel.stream_unary(
+                '/hi.club.Speech/TranscribeStream',
+                request_serializer=hi_dot_ai_dot_speech__pb2.TranscribeStreamReq.SerializeToString,
+                response_deserializer=hi_dot_ai_dot_speech__pb2.TranscribeResp.FromString,
+                _registered_method=True)
         self.SynthesizeStream = channel.unary_stream(
                 '/hi.club.Speech/SynthesizeStream',
                 request_serializer=hi_dot_ai_dot_speech__pb2.SynthesizeReq.SerializeToString,
@@ -45,6 +50,12 @@ class SpeechServicer(object):
     (其实是多模态对话)只靠 "Simple" 前缀区分,读的人分不清。
     """
 
+    def TranscribeStream(self, request_iterator, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def SynthesizeStream(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -66,6 +77,11 @@ class SpeechServicer(object):
 
 def add_SpeechServicer_to_server(servicer, server):
     rpc_method_handlers = {
+            'TranscribeStream': grpc.stream_unary_rpc_method_handler(
+                    servicer.TranscribeStream,
+                    request_deserializer=hi_dot_ai_dot_speech__pb2.TranscribeStreamReq.FromString,
+                    response_serializer=hi_dot_ai_dot_speech__pb2.TranscribeResp.SerializeToString,
+            ),
             'SynthesizeStream': grpc.unary_stream_rpc_method_handler(
                     servicer.SynthesizeStream,
                     request_deserializer=hi_dot_ai_dot_speech__pb2.SynthesizeReq.FromString,
@@ -96,6 +112,33 @@ class Speech(object):
     顺带解掉命名撞车 —— 原 `Chat.SimpleSpeechToText`(真 STT)与 `Chat.SpeechToText`
     (其实是多模态对话)只靠 "Simple" 前缀区分,读的人分不清。
     """
+
+    @staticmethod
+    def TranscribeStream(request_iterator,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.stream_unary(
+            request_iterator,
+            target,
+            '/hi.club.Speech/TranscribeStream',
+            hi_dot_ai_dot_speech__pb2.TranscribeStreamReq.SerializeToString,
+            hi_dot_ai_dot_speech__pb2.TranscribeResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
 
     @staticmethod
     def SynthesizeStream(request,

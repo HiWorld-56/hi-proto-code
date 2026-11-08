@@ -15511,6 +15511,131 @@ impl<'de> serde::Deserialize<'de> for TranscribeResp {
         deserializer.deserialize_struct("hi.ai.TranscribeResp", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for TranscribeStreamReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.model.is_some() {
+            len += 1;
+        }
+        if self.lang.is_some() {
+            len += 1;
+        }
+        if self.audio.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ai.TranscribeStreamReq", len)?;
+        if let Some(v) = self.model.as_ref() {
+            struct_ser.serialize_field("model", v)?;
+        }
+        if let Some(v) = self.lang.as_ref() {
+            struct_ser.serialize_field("lang", v)?;
+        }
+        if let Some(v) = self.audio.as_ref() {
+            struct_ser.serialize_field("audio", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for TranscribeStreamReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "model",
+            "lang",
+            "audio",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Model,
+            Lang,
+            Audio,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "model" => Ok(GeneratedField::Model),
+                            "lang" => Ok(GeneratedField::Lang),
+                            "audio" => Ok(GeneratedField::Audio),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = TranscribeStreamReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ai.TranscribeStreamReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<TranscribeStreamReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut model__ = None;
+                let mut lang__ = None;
+                let mut audio__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Model => {
+                            if model__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("model"));
+                            }
+                            model__ = map_.next_value()?;
+                        }
+                        GeneratedField::Lang => {
+                            if lang__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("lang"));
+                            }
+                            lang__ = map_.next_value()?;
+                        }
+                        GeneratedField::Audio => {
+                            if audio__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("audio"));
+                            }
+                            audio__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(TranscribeStreamReq {
+                    model: model__,
+                    lang: lang__,
+                    audio: audio__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ai.TranscribeStreamReq", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for UpdateContentReq {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>

@@ -404,8 +404,8 @@ pub struct AudioStreamEnd {
     #[prost(uint64, optional, tag = "1")]
     pub total_samples: ::core::option::Option<u64>,
 }
-/// start -> chunk\* -> end；end仅表示生成完成，不表示声卡播完。
-/// 服务端异常通过gRPC status终止，无end/异常终止均不能视为完整合成。
+/// start -> chunk\* -> end；end仅表示采集/生成完成，不表示声卡播完。
+/// 服务端异常通过gRPC status终止，无end/异常终止均不能视为完整音频。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct AudioStreamEvent {
     #[prost(string, optional, tag = "1")]

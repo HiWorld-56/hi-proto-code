@@ -186,6 +186,15 @@ const IoToBrain$json = {
       '9': 0,
       '10': 'eventRecording'
     },
+    {
+      '1': 'event_audio',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.AudioStreamEvent',
+      '9': 0,
+      '10': 'eventAudio'
+    },
   ],
   '8': [
     {'1': 'cmd'},
@@ -201,7 +210,8 @@ final $typed_data.Uint8List ioToBrainDescriptor = $convert.base64Decode(
     '9uc2UYBCABKAsyFC5oaS5uaW5qYS5Jb1Jlc3BvbnNlSABSCHJlc3BvbnNlEjcKDGV2ZW50X3N0'
     'YXR1cxgFIAEoCzISLmhpLm5pbmphLklvU3RhdHVzSABSC2V2ZW50U3RhdHVzEkAKD2V2ZW50X3'
     'JlY29yZGluZxgGIAEoCzIVLmhpLm5pbmphLklvUmVjb3JkaW5nSABSDmV2ZW50UmVjb3JkaW5n'
-    'QgUKA2NtZEINCgtfcmVxdWVzdF9pZA==');
+    'EjcKC2V2ZW50X2F1ZGlvGAcgASgLMhQuaGkuQXVkaW9TdHJlYW1FdmVudEgAUgpldmVudEF1ZG'
+    'lvQgUKA2NtZEINCgtfcmVxdWVzdF9pZA==');
 
 @$core.Deprecated('Use ioHearingDescriptor instead')
 const IoHearing$json = {
@@ -228,11 +238,20 @@ const IoHearing$json = {
       '17': true
     },
     {
+      '1': 'stream_audio',
+      '3': 4,
+      '4': 1,
+      '5': 8,
+      '9': 2,
+      '10': 'streamAudio',
+      '17': true
+    },
+    {
       '1': 'resume_delay_ms',
       '3': 3,
       '4': 1,
       '5': 13,
-      '9': 2,
+      '9': 3,
       '10': 'resumeDelayMs',
       '17': true
     },
@@ -240,6 +259,7 @@ const IoHearing$json = {
   '8': [
     {'1': '_enabled'},
     {'1': '_revision'},
+    {'1': '_stream_audio'},
     {'1': '_resume_delay_ms'},
   ],
 };
@@ -247,9 +267,10 @@ const IoHearing$json = {
 /// Descriptor for `IoHearing`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List ioHearingDescriptor = $convert.base64Decode(
     'CglJb0hlYXJpbmcSJQoHZW5hYmxlZBgBIAEoCEIGukgDyAEBSABSB2VuYWJsZWSIAQESKwoIcm'
-    'V2aXNpb24YAiABKARCCrpIB8gBATICIABIAVIIcmV2aXNpb26IAQESKwoPcmVzdW1lX2RlbGF5'
-    'X21zGAMgASgNSAJSDXJlc3VtZURlbGF5TXOIAQFCCgoIX2VuYWJsZWRCCwoJX3JldmlzaW9uQh'
-    'IKEF9yZXN1bWVfZGVsYXlfbXM=');
+    'V2aXNpb24YAiABKARCCrpIB8gBATICIABIAVIIcmV2aXNpb26IAQESJgoMc3RyZWFtX2F1ZGlv'
+    'GAQgASgISAJSC3N0cmVhbUF1ZGlviAEBEisKD3Jlc3VtZV9kZWxheV9tcxgDIAEoDUgDUg1yZX'
+    'N1bWVEZWxheU1ziAEBQgoKCF9lbmFibGVkQgsKCV9yZXZpc2lvbkIPCg1fc3RyZWFtX2F1ZGlv'
+    'QhIKEF9yZXN1bWVfZGVsYXlfbXM=');
 
 @$core.Deprecated('Use ioStatusDescriptor instead')
 const IoStatus$json = {
@@ -309,6 +330,15 @@ const IoStatus$json = {
       '10': 'cameraError',
       '17': true
     },
+    {
+      '1': 'stream_audio',
+      '3': 7,
+      '4': 1,
+      '5': 8,
+      '9': 6,
+      '10': 'streamAudio',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_microphone_ready'},
@@ -317,6 +347,7 @@ const IoStatus$json = {
     {'1': '_hearing_revision'},
     {'1': '_microphone_error'},
     {'1': '_camera_error'},
+    {'1': '_stream_audio'},
   ],
 };
 
@@ -327,9 +358,10 @@ final $typed_data.Uint8List ioStatusDescriptor = $convert.base64Decode(
     'bmFibGVkGAMgASgISAJSDmhlYXJpbmdFbmFibGVkiAEBEi4KEGhlYXJpbmdfcmV2aXNpb24YBC'
     'ABKARIA1IPaGVhcmluZ1JldmlzaW9uiAEBEi4KEG1pY3JvcGhvbmVfZXJyb3IYBSABKAlIBFIP'
     'bWljcm9waG9uZUVycm9yiAEBEiYKDGNhbWVyYV9lcnJvchgGIAEoCUgFUgtjYW1lcmFFcnJvco'
-    'gBAUITChFfbWljcm9waG9uZV9yZWFkeUIPCg1fY2FtZXJhX3JlYWR5QhIKEF9oZWFyaW5nX2Vu'
-    'YWJsZWRCEwoRX2hlYXJpbmdfcmV2aXNpb25CEwoRX21pY3JvcGhvbmVfZXJyb3JCDwoNX2NhbW'
-    'VyYV9lcnJvcg==');
+    'gBARImCgxzdHJlYW1fYXVkaW8YByABKAhIBlILc3RyZWFtQXVkaW+IAQFCEwoRX21pY3JvcGhv'
+    'bmVfcmVhZHlCDwoNX2NhbWVyYV9yZWFkeUISChBfaGVhcmluZ19lbmFibGVkQhMKEV9oZWFyaW'
+    '5nX3JldmlzaW9uQhMKEV9taWNyb3Bob25lX2Vycm9yQg8KDV9jYW1lcmFfZXJyb3JCDwoNX3N0'
+    'cmVhbV9hdWRpbw==');
 
 @$core.Deprecated('Use ioRecordingDescriptor instead')
 const IoRecording$json = {

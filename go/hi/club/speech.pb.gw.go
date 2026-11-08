@@ -36,6 +36,47 @@ var (
 	_ = metadata.Join
 )
 
+func request_Speech_TranscribeStream_0(ctx context.Context, marshaler runtime.Marshaler, client SpeechClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var metadata runtime.ServerMetadata
+	stream, err := client.TranscribeStream(ctx)
+	if err != nil {
+		grpclog.Errorf("Failed to start streaming: %v", err)
+		return nil, metadata, err
+	}
+	dec := marshaler.NewDecoder(req.Body)
+	for {
+		var protoReq ai.TranscribeStreamReq
+		err = dec.Decode(&protoReq)
+		if errors.Is(err, io.EOF) {
+			break
+		}
+		if err != nil {
+			grpclog.Errorf("Failed to decode request: %v", err)
+			return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+		}
+		if err = stream.Send(&protoReq); err != nil {
+			if errors.Is(err, io.EOF) {
+				break
+			}
+			grpclog.Errorf("Failed to send request: %v", err)
+			return nil, metadata, err
+		}
+	}
+	if err := stream.CloseSend(); err != nil {
+		grpclog.Errorf("Failed to terminate client stream: %v", err)
+		return nil, metadata, err
+	}
+	header, err := stream.Header()
+	if err != nil {
+		grpclog.Errorf("Failed to get header from client: %v", err)
+		return nil, metadata, err
+	}
+	metadata.HeaderMD = header
+	msg, err := stream.CloseAndRecv()
+	metadata.TrailerMD = stream.Trailer()
+	return msg, metadata, err
+}
+
 func request_Speech_SynthesizeStream_0(ctx context.Context, marshaler runtime.Marshaler, client SpeechClient, req *http.Request, pathParams map[string]string) (Speech_SynthesizeStreamClient, runtime.ServerMetadata, error) {
 	var (
 		protoReq ai.SynthesizeReq
@@ -119,6 +160,13 @@ func local_request_Speech_Synthesize_0(ctx context.Context, marshaler runtime.Ma
 // Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterSpeechHandlerFromEndpoint instead.
 // GRPC interceptors will not work for this type of registration. To use interceptors, you must use the "runtime.WithMiddlewares" option in the "runtime.NewServeMux" call.
 func RegisterSpeechHandlerServer(ctx context.Context, mux *runtime.ServeMux, server SpeechServer) error {
+	mux.Handle(http.MethodPost, pattern_Speech_TranscribeStream_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		err := status.Error(codes.Unimplemented, "streaming calls are not yet supported in the in-process transport")
+		_, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+		return
+	})
+
 	mux.Handle(http.MethodPost, pattern_Speech_SynthesizeStream_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		err := status.Error(codes.Unimplemented, "streaming calls are not yet supported in the in-process transport")
 		_, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
@@ -205,6 +253,23 @@ func RegisterSpeechHandler(ctx context.Context, mux *runtime.ServeMux, conn *grp
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
 // "SpeechClient" to call the correct interceptors. This client ignores the HTTP middlewares.
 func RegisterSpeechHandlerClient(ctx context.Context, mux *runtime.ServeMux, client SpeechClient) error {
+	mux.Handle(http.MethodPost, pattern_Speech_TranscribeStream_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Speech/TranscribeStream", runtime.WithHTTPPathPattern("/hi.club.Speech/TranscribeStream"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_Speech_TranscribeStream_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_Speech_TranscribeStream_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
 	mux.Handle(http.MethodPost, pattern_Speech_SynthesizeStream_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -260,12 +325,14 @@ func RegisterSpeechHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 }
 
 var (
+	pattern_Speech_TranscribeStream_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Speech", "TranscribeStream"}, ""))
 	pattern_Speech_SynthesizeStream_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Speech", "SynthesizeStream"}, ""))
 	pattern_Speech_Transcribe_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "speech", "transcribe"}, ""))
 	pattern_Speech_Synthesize_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "speech", "synthesize"}, ""))
 )
 
 var (
+	forward_Speech_TranscribeStream_0 = runtime.ForwardResponseMessage
 	forward_Speech_SynthesizeStream_0 = runtime.ForwardResponseStream
 	forward_Speech_Transcribe_0       = runtime.ForwardResponseMessage
 	forward_Speech_Synthesize_0       = runtime.ForwardResponseMessage

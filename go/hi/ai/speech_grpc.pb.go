@@ -20,6 +20,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	Speech_TranscribeStream_FullMethodName = "/hi.ai.Speech/TranscribeStream"
 	Speech_SynthesizeStream_FullMethodName = "/hi.ai.Speech/SynthesizeStream"
 	Speech_Transcribe_FullMethodName       = "/hi.ai.Speech/Transcribe"
 	Speech_Synthesize_FullMethodName       = "/hi.ai.Speech/Synthesize"
@@ -37,6 +38,7 @@ const (
 //
 // 商户档:hiai web 与商户后台服务都会调。
 type SpeechClient interface {
+	TranscribeStream(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[TranscribeStreamReq, TranscribeResp], error)
 	SynthesizeStream(ctx context.Context, in *SynthesizeReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[hi.AudioStreamEvent], error)
 	Transcribe(ctx context.Context, in *TranscribeReq, opts ...grpc.CallOption) (*TranscribeResp, error)
 	Synthesize(ctx context.Context, in *SynthesizeReq, opts ...grpc.CallOption) (*SynthesizeResp, error)
@@ -50,9 +52,22 @@ func NewSpeechClient(cc grpc.ClientConnInterface) SpeechClient {
 	return &speechClient{cc}
 }
 
+func (c *speechClient) TranscribeStream(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[TranscribeStreamReq, TranscribeResp], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &Speech_ServiceDesc.Streams[0], Speech_TranscribeStream_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[TranscribeStreamReq, TranscribeResp]{ClientStream: stream}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Speech_TranscribeStreamClient = grpc.ClientStreamingClient[TranscribeStreamReq, TranscribeResp]
+
 func (c *speechClient) SynthesizeStream(ctx context.Context, in *SynthesizeReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[hi.AudioStreamEvent], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &Speech_ServiceDesc.Streams[0], Speech_SynthesizeStream_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &Speech_ServiceDesc.Streams[1], Speech_SynthesizeStream_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -101,6 +116,7 @@ func (c *speechClient) Synthesize(ctx context.Context, in *SynthesizeReq, opts .
 //
 // 商户档:hiai web 与商户后台服务都会调。
 type SpeechServer interface {
+	TranscribeStream(grpc.ClientStreamingServer[TranscribeStreamReq, TranscribeResp]) error
 	SynthesizeStream(*SynthesizeReq, grpc.ServerStreamingServer[hi.AudioStreamEvent]) error
 	Transcribe(context.Context, *TranscribeReq) (*TranscribeResp, error)
 	Synthesize(context.Context, *SynthesizeReq) (*SynthesizeResp, error)
@@ -113,6 +129,9 @@ type SpeechServer interface {
 // pointer dereference when methods are called.
 type UnimplementedSpeechServer struct{}
 
+func (UnimplementedSpeechServer) TranscribeStream(grpc.ClientStreamingServer[TranscribeStreamReq, TranscribeResp]) error {
+	return status.Error(codes.Unimplemented, "method TranscribeStream not implemented")
+}
 func (UnimplementedSpeechServer) SynthesizeStream(*SynthesizeReq, grpc.ServerStreamingServer[hi.AudioStreamEvent]) error {
 	return status.Error(codes.Unimplemented, "method SynthesizeStream not implemented")
 }
@@ -141,6 +160,13 @@ func RegisterSpeechServer(s grpc.ServiceRegistrar, srv SpeechServer) {
 	}
 	s.RegisterService(&Speech_ServiceDesc, srv)
 }
+
+func _Speech_TranscribeStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(SpeechServer).TranscribeStream(&grpc.GenericServerStream[TranscribeStreamReq, TranscribeResp]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Speech_TranscribeStreamServer = grpc.ClientStreamingServer[TranscribeStreamReq, TranscribeResp]
 
 func _Speech_SynthesizeStream_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(SynthesizeReq)
@@ -206,6 +232,11 @@ var Speech_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "TranscribeStream",
+			Handler:       _Speech_TranscribeStream_Handler,
+			ClientStreams: true,
+		},
 		{
 			StreamName:    "SynthesizeStream",
 			Handler:       _Speech_SynthesizeStream_Handler,

@@ -1474,6 +1474,32 @@ pub mod speech_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
+        pub async fn transcribe_stream(
+            &mut self,
+            request: impl tonic::IntoStreamingRequest<
+                Message = super::super::ai::TranscribeStreamReq,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<super::super::ai::TranscribeResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Speech/TranscribeStream",
+            );
+            let mut req = request.into_streaming_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Speech", "TranscribeStream"));
+            self.inner.client_streaming(req, path, codec).await
+        }
         pub async fn synthesize_stream(
             &mut self,
             request: impl tonic::IntoRequest<super::super::ai::SynthesizeReq>,

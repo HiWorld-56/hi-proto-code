@@ -27,7 +27,7 @@ from hi import options_pb2 as hi_dot_options__pb2
 from hi import audio_pb2 as hi_dot_audio__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14hi/club/speech.proto\x12\x07hi.club\x1a\x12hi/ai/speech.proto\x1a\x10hi/options.proto\x1a\x0ehi/audio.proto2\xd5\x01\n\x06Speech\x12G\n\x10SynthesizeStream\x12\x14.hi.ai.SynthesizeReq\x1a\x14.hi.AudioStreamEvent\"\x05\x8a\xb5\x18\x01\x02\x30\x01\x12@\n\nTranscribe\x12\x14.hi.ai.TranscribeReq\x1a\x15.hi.ai.TranscribeResp\"\x05\x8a\xb5\x18\x01\x02\x12@\n\nSynthesize\x12\x14.hi.ai.SynthesizeReq\x1a\x15.hi.ai.SynthesizeResp\"\x05\x8a\xb5\x18\x01\x02\x42+Z)github.com/HiWorld-56/hi-proto/go/hi/clubb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14hi/club/speech.proto\x12\x07hi.club\x1a\x12hi/ai/speech.proto\x1a\x10hi/options.proto\x1a\x0ehi/audio.proto2\xa5\x02\n\x06Speech\x12N\n\x10TranscribeStream\x12\x1a.hi.ai.TranscribeStreamReq\x1a\x15.hi.ai.TranscribeResp\"\x05\x8a\xb5\x18\x01\x02(\x01\x12G\n\x10SynthesizeStream\x12\x14.hi.ai.SynthesizeReq\x1a\x14.hi.AudioStreamEvent\"\x05\x8a\xb5\x18\x01\x02\x30\x01\x12@\n\nTranscribe\x12\x14.hi.ai.TranscribeReq\x1a\x15.hi.ai.TranscribeResp\"\x05\x8a\xb5\x18\x01\x02\x12@\n\nSynthesize\x12\x14.hi.ai.SynthesizeReq\x1a\x15.hi.ai.SynthesizeResp\"\x05\x8a\xb5\x18\x01\x02\x42+Z)github.com/HiWorld-56/hi-proto/go/hi/clubb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -35,6 +35,8 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'hi.club.speech_pb2', _globa
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'Z)github.com/HiWorld-56/hi-proto/go/hi/club'
+  _globals['_SPEECH'].methods_by_name['TranscribeStream']._loaded_options = None
+  _globals['_SPEECH'].methods_by_name['TranscribeStream']._serialized_options = b'\212\265\030\001\002'
   _globals['_SPEECH'].methods_by_name['SynthesizeStream']._loaded_options = None
   _globals['_SPEECH'].methods_by_name['SynthesizeStream']._serialized_options = b'\212\265\030\001\002'
   _globals['_SPEECH'].methods_by_name['Transcribe']._loaded_options = None
@@ -42,5 +44,5 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_SPEECH'].methods_by_name['Synthesize']._loaded_options = None
   _globals['_SPEECH'].methods_by_name['Synthesize']._serialized_options = b'\212\265\030\001\002'
   _globals['_SPEECH']._serialized_start=88
-  _globals['_SPEECH']._serialized_end=301
+  _globals['_SPEECH']._serialized_end=381
 # @@protoc_insertion_point(module_scope)

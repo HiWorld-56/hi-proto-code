@@ -16,6 +16,7 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $1;
 
+import '../audio.pb.dart' as $2;
 import 'common.pb.dart' as $0;
 import 'io.pbenum.dart';
 
@@ -257,7 +258,14 @@ class BrainToIo extends $pb.GeneratedMessage {
   IoCancel ensureCancel() => $_ensure(9);
 }
 
-enum IoToBrain_Cmd { control, response, eventStatus, eventRecording, notSet }
+enum IoToBrain_Cmd {
+  control,
+  response,
+  eventStatus,
+  eventRecording,
+  eventAudio,
+  notSet
+}
 
 class IoToBrain extends $pb.GeneratedMessage {
   factory IoToBrain({
@@ -267,6 +275,7 @@ class IoToBrain extends $pb.GeneratedMessage {
     IoResponse? response,
     IoStatus? eventStatus,
     IoRecording? eventRecording,
+    $2.AudioStreamEvent? eventAudio,
   }) {
     final result = create();
     if (session != null) result.session = session;
@@ -275,6 +284,7 @@ class IoToBrain extends $pb.GeneratedMessage {
     if (response != null) result.response = response;
     if (eventStatus != null) result.eventStatus = eventStatus;
     if (eventRecording != null) result.eventRecording = eventRecording;
+    if (eventAudio != null) result.eventAudio = eventAudio;
     return result;
   }
 
@@ -292,13 +302,14 @@ class IoToBrain extends $pb.GeneratedMessage {
     4: IoToBrain_Cmd.response,
     5: IoToBrain_Cmd.eventStatus,
     6: IoToBrain_Cmd.eventRecording,
+    7: IoToBrain_Cmd.eventAudio,
     0: IoToBrain_Cmd.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'IoToBrain',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..oo(0, [3, 4, 5, 6])
+    ..oo(0, [3, 4, 5, 6, 7])
     ..aOM<$0.ModuleSession>(1, _omitFieldNames ? '' : 'session',
         subBuilder: $0.ModuleSession.create)
     ..a<$fixnum.Int64>(
@@ -312,6 +323,8 @@ class IoToBrain extends $pb.GeneratedMessage {
         subBuilder: IoStatus.create)
     ..aOM<IoRecording>(6, _omitFieldNames ? '' : 'eventRecording',
         subBuilder: IoRecording.create)
+    ..aOM<$2.AudioStreamEvent>(7, _omitFieldNames ? '' : 'eventAudio',
+        subBuilder: $2.AudioStreamEvent.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -336,11 +349,13 @@ class IoToBrain extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   @$pb.TagNumber(5)
   @$pb.TagNumber(6)
+  @$pb.TagNumber(7)
   IoToBrain_Cmd whichCmd() => _IoToBrain_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(3)
   @$pb.TagNumber(4)
   @$pb.TagNumber(5)
   @$pb.TagNumber(6)
+  @$pb.TagNumber(7)
   void clearCmd() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -406,6 +421,17 @@ class IoToBrain extends $pb.GeneratedMessage {
   void clearEventRecording() => $_clearField(6);
   @$pb.TagNumber(6)
   IoRecording ensureEventRecording() => $_ensure(5);
+
+  @$pb.TagNumber(7)
+  $2.AudioStreamEvent get eventAudio => $_getN(6);
+  @$pb.TagNumber(7)
+  set eventAudio($2.AudioStreamEvent value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasEventAudio() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearEventAudio() => $_clearField(7);
+  @$pb.TagNumber(7)
+  $2.AudioStreamEvent ensureEventAudio() => $_ensure(6);
 }
 
 class IoHearing extends $pb.GeneratedMessage {
@@ -413,11 +439,13 @@ class IoHearing extends $pb.GeneratedMessage {
     $core.bool? enabled,
     $fixnum.Int64? revision,
     $core.int? resumeDelayMs,
+    $core.bool? streamAudio,
   }) {
     final result = create();
     if (enabled != null) result.enabled = enabled;
     if (revision != null) result.revision = revision;
     if (resumeDelayMs != null) result.resumeDelayMs = resumeDelayMs;
+    if (streamAudio != null) result.streamAudio = streamAudio;
     return result;
   }
 
@@ -440,6 +468,7 @@ class IoHearing extends $pb.GeneratedMessage {
         defaultOrMaker: $fixnum.Int64.ZERO)
     ..aI(3, _omitFieldNames ? '' : 'resumeDelayMs',
         fieldType: $pb.PbFieldType.OU3)
+    ..aOB(4, _omitFieldNames ? '' : 'streamAudio')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -486,6 +515,15 @@ class IoHearing extends $pb.GeneratedMessage {
   $core.bool hasResumeDelayMs() => $_has(2);
   @$pb.TagNumber(3)
   void clearResumeDelayMs() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.bool get streamAudio => $_getBF(3);
+  @$pb.TagNumber(4)
+  set streamAudio($core.bool value) => $_setBool(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasStreamAudio() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearStreamAudio() => $_clearField(4);
 }
 
 class IoStatus extends $pb.GeneratedMessage {
@@ -496,6 +534,7 @@ class IoStatus extends $pb.GeneratedMessage {
     $fixnum.Int64? hearingRevision,
     $core.String? microphoneError,
     $core.String? cameraError,
+    $core.bool? streamAudio,
   }) {
     final result = create();
     if (microphoneReady != null) result.microphoneReady = microphoneReady;
@@ -504,6 +543,7 @@ class IoStatus extends $pb.GeneratedMessage {
     if (hearingRevision != null) result.hearingRevision = hearingRevision;
     if (microphoneError != null) result.microphoneError = microphoneError;
     if (cameraError != null) result.cameraError = cameraError;
+    if (streamAudio != null) result.streamAudio = streamAudio;
     return result;
   }
 
@@ -528,6 +568,7 @@ class IoStatus extends $pb.GeneratedMessage {
         defaultOrMaker: $fixnum.Int64.ZERO)
     ..aOS(5, _omitFieldNames ? '' : 'microphoneError')
     ..aOS(6, _omitFieldNames ? '' : 'cameraError')
+    ..aOB(7, _omitFieldNames ? '' : 'streamAudio')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -601,6 +642,15 @@ class IoStatus extends $pb.GeneratedMessage {
   $core.bool hasCameraError() => $_has(5);
   @$pb.TagNumber(6)
   void clearCameraError() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.bool get streamAudio => $_getBF(6);
+  @$pb.TagNumber(7)
+  set streamAudio($core.bool value) => $_setBool(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasStreamAudio() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearStreamAudio() => $_clearField(7);
 }
 
 class IoRecording extends $pb.GeneratedMessage {

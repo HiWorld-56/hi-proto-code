@@ -2180,6 +2180,19 @@ pub struct TranscribeResp {
     #[prost(string, optional, tag = "1")]
     pub text: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 输入start -> chunk\* -> end；model/lang只允许在start设置。
+/// 仅完整end并最终flush后返回TranscribeResp，部分转写不触发任何业务。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TranscribeStreamReq {
+    /// paraformer-streaming
+    #[prost(string, optional, tag = "1")]
+    pub model: ::core::option::Option<::prost::alloc::string::String>,
+    /// 当前auto/zh；服务端验证支持范围
+    #[prost(string, optional, tag = "2")]
+    pub lang: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "3")]
+    pub audio: ::core::option::Option<super::AudioStreamEvent>,
+}
 /// Generated client implementations.
 pub mod speech_client {
     #![allow(
@@ -2277,6 +2290,29 @@ pub mod speech_client {
         pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
+        }
+        pub async fn transcribe_stream(
+            &mut self,
+            request: impl tonic::IntoStreamingRequest<
+                Message = super::TranscribeStreamReq,
+            >,
+        ) -> std::result::Result<tonic::Response<super::TranscribeResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.ai.Speech/TranscribeStream",
+            );
+            let mut req = request.into_streaming_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.ai.Speech", "TranscribeStream"));
+            self.inner.client_streaming(req, path, codec).await
         }
         pub async fn synthesize_stream(
             &mut self,

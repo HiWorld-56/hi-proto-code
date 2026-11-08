@@ -4234,6 +4234,9 @@ impl serde::Serialize for IoHearing {
         if self.revision.is_some() {
             len += 1;
         }
+        if self.stream_audio.is_some() {
+            len += 1;
+        }
         if self.resume_delay_ms.is_some() {
             len += 1;
         }
@@ -4245,6 +4248,9 @@ impl serde::Serialize for IoHearing {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
             struct_ser.serialize_field("revision", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.stream_audio.as_ref() {
+            struct_ser.serialize_field("streamAudio", v)?;
         }
         if let Some(v) = self.resume_delay_ms.as_ref() {
             struct_ser.serialize_field("resumeDelayMs", v)?;
@@ -4261,6 +4267,8 @@ impl<'de> serde::Deserialize<'de> for IoHearing {
         const FIELDS: &[&str] = &[
             "enabled",
             "revision",
+            "stream_audio",
+            "streamAudio",
             "resume_delay_ms",
             "resumeDelayMs",
         ];
@@ -4269,6 +4277,7 @@ impl<'de> serde::Deserialize<'de> for IoHearing {
         enum GeneratedField {
             Enabled,
             Revision,
+            StreamAudio,
             ResumeDelayMs,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -4293,6 +4302,7 @@ impl<'de> serde::Deserialize<'de> for IoHearing {
                         match value {
                             "enabled" => Ok(GeneratedField::Enabled),
                             "revision" => Ok(GeneratedField::Revision),
+                            "streamAudio" | "stream_audio" => Ok(GeneratedField::StreamAudio),
                             "resumeDelayMs" | "resume_delay_ms" => Ok(GeneratedField::ResumeDelayMs),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -4315,6 +4325,7 @@ impl<'de> serde::Deserialize<'de> for IoHearing {
             {
                 let mut enabled__ = None;
                 let mut revision__ = None;
+                let mut stream_audio__ = None;
                 let mut resume_delay_ms__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
@@ -4332,6 +4343,12 @@ impl<'de> serde::Deserialize<'de> for IoHearing {
                                 map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
+                        GeneratedField::StreamAudio => {
+                            if stream_audio__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("streamAudio"));
+                            }
+                            stream_audio__ = map_.next_value()?;
+                        }
                         GeneratedField::ResumeDelayMs => {
                             if resume_delay_ms__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("resumeDelayMs"));
@@ -4345,6 +4362,7 @@ impl<'de> serde::Deserialize<'de> for IoHearing {
                 Ok(IoHearing {
                     enabled: enabled__,
                     revision: revision__,
+                    stream_audio: stream_audio__,
                     resume_delay_ms: resume_delay_ms__,
                 })
             }
@@ -4928,6 +4946,9 @@ impl serde::Serialize for IoStatus {
         if self.camera_error.is_some() {
             len += 1;
         }
+        if self.stream_audio.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.IoStatus", len)?;
         if let Some(v) = self.microphone_ready.as_ref() {
             struct_ser.serialize_field("microphoneReady", v)?;
@@ -4948,6 +4969,9 @@ impl serde::Serialize for IoStatus {
         }
         if let Some(v) = self.camera_error.as_ref() {
             struct_ser.serialize_field("cameraError", v)?;
+        }
+        if let Some(v) = self.stream_audio.as_ref() {
+            struct_ser.serialize_field("streamAudio", v)?;
         }
         struct_ser.end()
     }
@@ -4971,6 +4995,8 @@ impl<'de> serde::Deserialize<'de> for IoStatus {
             "microphoneError",
             "camera_error",
             "cameraError",
+            "stream_audio",
+            "streamAudio",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -4981,6 +5007,7 @@ impl<'de> serde::Deserialize<'de> for IoStatus {
             HearingRevision,
             MicrophoneError,
             CameraError,
+            StreamAudio,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -5008,6 +5035,7 @@ impl<'de> serde::Deserialize<'de> for IoStatus {
                             "hearingRevision" | "hearing_revision" => Ok(GeneratedField::HearingRevision),
                             "microphoneError" | "microphone_error" => Ok(GeneratedField::MicrophoneError),
                             "cameraError" | "camera_error" => Ok(GeneratedField::CameraError),
+                            "streamAudio" | "stream_audio" => Ok(GeneratedField::StreamAudio),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -5033,6 +5061,7 @@ impl<'de> serde::Deserialize<'de> for IoStatus {
                 let mut hearing_revision__ = None;
                 let mut microphone_error__ = None;
                 let mut camera_error__ = None;
+                let mut stream_audio__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::MicrophoneReady => {
@@ -5073,6 +5102,12 @@ impl<'de> serde::Deserialize<'de> for IoStatus {
                             }
                             camera_error__ = map_.next_value()?;
                         }
+                        GeneratedField::StreamAudio => {
+                            if stream_audio__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("streamAudio"));
+                            }
+                            stream_audio__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(IoStatus {
@@ -5082,6 +5117,7 @@ impl<'de> serde::Deserialize<'de> for IoStatus {
                     hearing_revision: hearing_revision__,
                     microphone_error: microphone_error__,
                     camera_error: camera_error__,
+                    stream_audio: stream_audio__,
                 })
             }
         }
@@ -5128,6 +5164,9 @@ impl serde::Serialize for IoToBrain {
                 io_to_brain::Cmd::EventRecording(v) => {
                     struct_ser.serialize_field("eventRecording", v)?;
                 }
+                io_to_brain::Cmd::EventAudio(v) => {
+                    struct_ser.serialize_field("eventAudio", v)?;
+                }
             }
         }
         struct_ser.end()
@@ -5149,6 +5188,8 @@ impl<'de> serde::Deserialize<'de> for IoToBrain {
             "eventStatus",
             "event_recording",
             "eventRecording",
+            "event_audio",
+            "eventAudio",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -5159,6 +5200,7 @@ impl<'de> serde::Deserialize<'de> for IoToBrain {
             Response,
             EventStatus,
             EventRecording,
+            EventAudio,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -5186,6 +5228,7 @@ impl<'de> serde::Deserialize<'de> for IoToBrain {
                             "response" => Ok(GeneratedField::Response),
                             "eventStatus" | "event_status" => Ok(GeneratedField::EventStatus),
                             "eventRecording" | "event_recording" => Ok(GeneratedField::EventRecording),
+                            "eventAudio" | "event_audio" => Ok(GeneratedField::EventAudio),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -5250,6 +5293,13 @@ impl<'de> serde::Deserialize<'de> for IoToBrain {
                                 return Err(serde::de::Error::duplicate_field("eventRecording"));
                             }
                             cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(io_to_brain::Cmd::EventRecording)
+;
+                        }
+                        GeneratedField::EventAudio => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("eventAudio"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(io_to_brain::Cmd::EventAudio)
 ;
                         }
                     }

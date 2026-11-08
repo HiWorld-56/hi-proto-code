@@ -40,6 +40,14 @@ class SpeechClient extends $grpc.Client {
 
   SpeechClient(super.channel, {super.options, super.interceptors});
 
+  $grpc.ResponseFuture<$0.TranscribeResp> transcribeStream(
+    $async.Stream<$0.TranscribeStreamReq> request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createStreamingCall(_$transcribeStream, request, options: options)
+        .single;
+  }
+
   $grpc.ResponseStream<$1.AudioStreamEvent> synthesizeStream(
     $0.SynthesizeReq request, {
     $grpc.CallOptions? options,
@@ -65,6 +73,11 @@ class SpeechClient extends $grpc.Client {
 
   // method descriptors
 
+  static final _$transcribeStream =
+      $grpc.ClientMethod<$0.TranscribeStreamReq, $0.TranscribeResp>(
+          '/hi.ai.Speech/TranscribeStream',
+          ($0.TranscribeStreamReq value) => value.writeToBuffer(),
+          $0.TranscribeResp.fromBuffer);
   static final _$synthesizeStream =
       $grpc.ClientMethod<$0.SynthesizeReq, $1.AudioStreamEvent>(
           '/hi.ai.Speech/SynthesizeStream',
@@ -87,6 +100,14 @@ abstract class SpeechServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.ai.Speech';
 
   SpeechServiceBase() {
+    $addMethod($grpc.ServiceMethod<$0.TranscribeStreamReq, $0.TranscribeResp>(
+        'TranscribeStream',
+        transcribeStream,
+        true,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.TranscribeStreamReq.fromBuffer(value),
+        ($0.TranscribeResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.SynthesizeReq, $1.AudioStreamEvent>(
         'SynthesizeStream',
         synthesizeStream_Pre,
@@ -109,6 +130,9 @@ abstract class SpeechServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) => $0.SynthesizeReq.fromBuffer(value),
         ($0.SynthesizeResp value) => value.writeToBuffer()));
   }
+
+  $async.Future<$0.TranscribeResp> transcribeStream(
+      $grpc.ServiceCall call, $async.Stream<$0.TranscribeStreamReq> request);
 
   $async.Stream<$1.AudioStreamEvent> synthesizeStream_Pre(
       $grpc.ServiceCall $call,

@@ -24,9 +24,10 @@ _sym_db = _symbol_database.Default()
 
 from hi import options_pb2 as hi_dot_options__pb2
 from hi import audio_pb2 as hi_dot_audio__pb2
+from buf.validate import validate_pb2 as buf_dot_validate_dot_validate__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12hi/ai/speech.proto\x12\x05hi.ai\x1a\x10hi/options.proto\x1a\x0ehi/audio.proto\"{\n\rSynthesizeReq\x12\x17\n\x04text\x18\x01 \x01(\tH\x00R\x04text\x88\x01\x01\x12\x19\n\x05model\x18\x02 \x01(\tH\x01R\x05model\x88\x01\x01\x12\x19\n\x05style\x18\x03 \x01(\tH\x02R\x05style\x88\x01\x01\x42\x07\n\x05_textB\x08\n\x06_modelB\x08\n\x06_style\";\n\x0eSynthesizeResp\x12\x1b\n\x03url\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x03url\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x06\n\x04_url\"u\n\rTranscribeReq\x12\x15\n\x03url\x18\x01 \x01(\tH\x00R\x03url\x88\x01\x01\x12\x19\n\x05model\x18\x02 \x01(\tH\x01R\x05model\x88\x01\x01\x12\x17\n\x04lang\x18\x03 \x01(\tH\x02R\x04lang\x88\x01\x01\x42\x06\n\x04_urlB\x08\n\x06_modelB\x07\n\x05_lang\">\n\x0eTranscribeResp\x12\x1d\n\x04text\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04text\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x07\n\x05_text2\xd5\x01\n\x06Speech\x12G\n\x10SynthesizeStream\x12\x14.hi.ai.SynthesizeReq\x1a\x14.hi.AudioStreamEvent\"\x05\x8a\xb5\x18\x01\x03\x30\x01\x12@\n\nTranscribe\x12\x14.hi.ai.TranscribeReq\x1a\x15.hi.ai.TranscribeResp\"\x05\x8a\xb5\x18\x01\x03\x12@\n\nSynthesize\x12\x14.hi.ai.SynthesizeReq\x1a\x15.hi.ai.SynthesizeResp\"\x05\x8a\xb5\x18\x01\x03\x42)Z\'github.com/HiWorld-56/hi-proto/go/hi/aib\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12hi/ai/speech.proto\x12\x05hi.ai\x1a\x10hi/options.proto\x1a\x0ehi/audio.proto\x1a\x1b\x62uf/validate/validate.proto\"{\n\rSynthesizeReq\x12\x17\n\x04text\x18\x01 \x01(\tH\x00R\x04text\x88\x01\x01\x12\x19\n\x05model\x18\x02 \x01(\tH\x01R\x05model\x88\x01\x01\x12\x19\n\x05style\x18\x03 \x01(\tH\x02R\x05style\x88\x01\x01\x42\x07\n\x05_textB\x08\n\x06_modelB\x08\n\x06_style\";\n\x0eSynthesizeResp\x12\x1b\n\x03url\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x03url\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x06\n\x04_url\"u\n\rTranscribeReq\x12\x15\n\x03url\x18\x01 \x01(\tH\x00R\x03url\x88\x01\x01\x12\x19\n\x05model\x18\x02 \x01(\tH\x01R\x05model\x88\x01\x01\x12\x17\n\x04lang\x18\x03 \x01(\tH\x02R\x04lang\x88\x01\x01\x42\x06\n\x04_urlB\x08\n\x06_modelB\x07\n\x05_lang\">\n\x0eTranscribeResp\x12\x1d\n\x04text\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04text\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x07\n\x05_text\"\xa6\x01\n\x13TranscribeStreamReq\x12\x1f\n\x05model\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x05model\x88\x01\x01\x12\x1d\n\x04lang\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x04lang\x88\x01\x01\x12\x36\n\x05\x61udio\x18\x03 \x01(\x0b\x32\x14.hi.AudioStreamEventB\n\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\x05\x61udio:\x04\x98\xb5\x18\x03\x42\x08\n\x06_modelB\x07\n\x05_lang2\xa5\x02\n\x06Speech\x12N\n\x10TranscribeStream\x12\x1a.hi.ai.TranscribeStreamReq\x1a\x15.hi.ai.TranscribeResp\"\x05\x8a\xb5\x18\x01\x03(\x01\x12G\n\x10SynthesizeStream\x12\x14.hi.ai.SynthesizeReq\x1a\x14.hi.AudioStreamEvent\"\x05\x8a\xb5\x18\x01\x03\x30\x01\x12@\n\nTranscribe\x12\x14.hi.ai.TranscribeReq\x1a\x15.hi.ai.TranscribeResp\"\x05\x8a\xb5\x18\x01\x03\x12@\n\nSynthesize\x12\x14.hi.ai.SynthesizeReq\x1a\x15.hi.ai.SynthesizeResp\"\x05\x8a\xb5\x18\x01\x03\x42)Z\'github.com/HiWorld-56/hi-proto/go/hi/aib\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -42,20 +43,32 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_TRANSCRIBERESP'].fields_by_name['text']._serialized_options = b'\220\265\030\003'
   _globals['_TRANSCRIBERESP']._loaded_options = None
   _globals['_TRANSCRIBERESP']._serialized_options = b'\230\265\030\003'
+  _globals['_TRANSCRIBESTREAMREQ'].fields_by_name['model']._loaded_options = None
+  _globals['_TRANSCRIBESTREAMREQ'].fields_by_name['model']._serialized_options = b'\220\265\030\003'
+  _globals['_TRANSCRIBESTREAMREQ'].fields_by_name['lang']._loaded_options = None
+  _globals['_TRANSCRIBESTREAMREQ'].fields_by_name['lang']._serialized_options = b'\220\265\030\003'
+  _globals['_TRANSCRIBESTREAMREQ'].fields_by_name['audio']._loaded_options = None
+  _globals['_TRANSCRIBESTREAMREQ'].fields_by_name['audio']._serialized_options = b'\272H\003\310\001\001\220\265\030\003'
+  _globals['_TRANSCRIBESTREAMREQ']._loaded_options = None
+  _globals['_TRANSCRIBESTREAMREQ']._serialized_options = b'\230\265\030\003'
+  _globals['_SPEECH'].methods_by_name['TranscribeStream']._loaded_options = None
+  _globals['_SPEECH'].methods_by_name['TranscribeStream']._serialized_options = b'\212\265\030\001\003'
   _globals['_SPEECH'].methods_by_name['SynthesizeStream']._loaded_options = None
   _globals['_SPEECH'].methods_by_name['SynthesizeStream']._serialized_options = b'\212\265\030\001\003'
   _globals['_SPEECH'].methods_by_name['Transcribe']._loaded_options = None
   _globals['_SPEECH'].methods_by_name['Transcribe']._serialized_options = b'\212\265\030\001\003'
   _globals['_SPEECH'].methods_by_name['Synthesize']._loaded_options = None
   _globals['_SPEECH'].methods_by_name['Synthesize']._serialized_options = b'\212\265\030\001\003'
-  _globals['_SYNTHESIZEREQ']._serialized_start=63
-  _globals['_SYNTHESIZEREQ']._serialized_end=186
-  _globals['_SYNTHESIZERESP']._serialized_start=188
-  _globals['_SYNTHESIZERESP']._serialized_end=247
-  _globals['_TRANSCRIBEREQ']._serialized_start=249
-  _globals['_TRANSCRIBEREQ']._serialized_end=366
-  _globals['_TRANSCRIBERESP']._serialized_start=368
-  _globals['_TRANSCRIBERESP']._serialized_end=430
-  _globals['_SPEECH']._serialized_start=433
-  _globals['_SPEECH']._serialized_end=646
+  _globals['_SYNTHESIZEREQ']._serialized_start=92
+  _globals['_SYNTHESIZEREQ']._serialized_end=215
+  _globals['_SYNTHESIZERESP']._serialized_start=217
+  _globals['_SYNTHESIZERESP']._serialized_end=276
+  _globals['_TRANSCRIBEREQ']._serialized_start=278
+  _globals['_TRANSCRIBEREQ']._serialized_end=395
+  _globals['_TRANSCRIBERESP']._serialized_start=397
+  _globals['_TRANSCRIBERESP']._serialized_end=459
+  _globals['_TRANSCRIBESTREAMREQ']._serialized_start=462
+  _globals['_TRANSCRIBESTREAMREQ']._serialized_end=628
+  _globals['_SPEECH']._serialized_start=631
+  _globals['_SPEECH']._serialized_end=924
 # @@protoc_insertion_point(module_scope)

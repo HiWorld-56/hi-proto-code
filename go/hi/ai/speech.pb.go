@@ -7,6 +7,7 @@
 package ai
 
 import (
+	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -230,11 +231,73 @@ func (x *TranscribeResp) GetText() string {
 	return ""
 }
 
+// 输入start -> chunk* -> end；model/lang只允许在start设置。
+// 仅完整end并最终flush后返回TranscribeResp，部分转写不触发任何业务。
+type TranscribeStreamReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Model         *string                `protobuf:"bytes,1,opt,name=model,proto3,oneof" json:"model,omitempty"` // paraformer-streaming
+	Lang          *string                `protobuf:"bytes,2,opt,name=lang,proto3,oneof" json:"lang,omitempty"`   // 当前auto/zh；服务端验证支持范围
+	Audio         *hi.AudioStreamEvent   `protobuf:"bytes,3,opt,name=audio,proto3" json:"audio,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TranscribeStreamReq) Reset() {
+	*x = TranscribeStreamReq{}
+	mi := &file_hi_ai_speech_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TranscribeStreamReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TranscribeStreamReq) ProtoMessage() {}
+
+func (x *TranscribeStreamReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ai_speech_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TranscribeStreamReq.ProtoReflect.Descriptor instead.
+func (*TranscribeStreamReq) Descriptor() ([]byte, []int) {
+	return file_hi_ai_speech_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *TranscribeStreamReq) GetModel() string {
+	if x != nil && x.Model != nil {
+		return *x.Model
+	}
+	return ""
+}
+
+func (x *TranscribeStreamReq) GetLang() string {
+	if x != nil && x.Lang != nil {
+		return *x.Lang
+	}
+	return ""
+}
+
+func (x *TranscribeStreamReq) GetAudio() *hi.AudioStreamEvent {
+	if x != nil {
+		return x.Audio
+	}
+	return nil
+}
+
 var File_hi_ai_speech_proto protoreflect.FileDescriptor
 
 const file_hi_ai_speech_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/ai/speech.proto\x12\x05hi.ai\x1a\x10hi/options.proto\x1a\x0ehi/audio.proto\"{\n" +
+	"\x12hi/ai/speech.proto\x12\x05hi.ai\x1a\x10hi/options.proto\x1a\x0ehi/audio.proto\x1a\x1bbuf/validate/validate.proto\"{\n" +
 	"\rSynthesizeReq\x12\x17\n" +
 	"\x04text\x18\x01 \x01(\tH\x00R\x04text\x88\x01\x01\x12\x19\n" +
 	"\x05model\x18\x02 \x01(\tH\x01R\x05model\x88\x01\x01\x12\x19\n" +
@@ -254,8 +317,16 @@ const file_hi_ai_speech_proto_rawDesc = "" +
 	"\x05_lang\">\n" +
 	"\x0eTranscribeResp\x12\x1d\n" +
 	"\x04text\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04text\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
-	"\x05_text2\xd5\x01\n" +
-	"\x06Speech\x12G\n" +
+	"\x05_text\"\xa6\x01\n" +
+	"\x13TranscribeStreamReq\x12\x1f\n" +
+	"\x05model\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x05model\x88\x01\x01\x12\x1d\n" +
+	"\x04lang\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x04lang\x88\x01\x01\x126\n" +
+	"\x05audio\x18\x03 \x01(\v2\x14.hi.AudioStreamEventB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\x05audio:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_modelB\a\n" +
+	"\x05_lang2\xa5\x02\n" +
+	"\x06Speech\x12N\n" +
+	"\x10TranscribeStream\x12\x1a.hi.ai.TranscribeStreamReq\x1a\x15.hi.ai.TranscribeResp\"\x05\x8a\xb5\x18\x01\x03(\x01\x12G\n" +
 	"\x10SynthesizeStream\x12\x14.hi.ai.SynthesizeReq\x1a\x14.hi.AudioStreamEvent\"\x05\x8a\xb5\x18\x01\x030\x01\x12@\n" +
 	"\n" +
 	"Transcribe\x12\x14.hi.ai.TranscribeReq\x1a\x15.hi.ai.TranscribeResp\"\x05\x8a\xb5\x18\x01\x03\x12@\n" +
@@ -275,26 +346,30 @@ func file_hi_ai_speech_proto_rawDescGZIP() []byte {
 	return file_hi_ai_speech_proto_rawDescData
 }
 
-var file_hi_ai_speech_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_hi_ai_speech_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_hi_ai_speech_proto_goTypes = []any{
 	(*SynthesizeReq)(nil),       // 0: hi.ai.SynthesizeReq
 	(*SynthesizeResp)(nil),      // 1: hi.ai.SynthesizeResp
 	(*TranscribeReq)(nil),       // 2: hi.ai.TranscribeReq
 	(*TranscribeResp)(nil),      // 3: hi.ai.TranscribeResp
-	(*hi.AudioStreamEvent)(nil), // 4: hi.AudioStreamEvent
+	(*TranscribeStreamReq)(nil), // 4: hi.ai.TranscribeStreamReq
+	(*hi.AudioStreamEvent)(nil), // 5: hi.AudioStreamEvent
 }
 var file_hi_ai_speech_proto_depIdxs = []int32{
-	0, // 0: hi.ai.Speech.SynthesizeStream:input_type -> hi.ai.SynthesizeReq
-	2, // 1: hi.ai.Speech.Transcribe:input_type -> hi.ai.TranscribeReq
-	0, // 2: hi.ai.Speech.Synthesize:input_type -> hi.ai.SynthesizeReq
-	4, // 3: hi.ai.Speech.SynthesizeStream:output_type -> hi.AudioStreamEvent
-	3, // 4: hi.ai.Speech.Transcribe:output_type -> hi.ai.TranscribeResp
-	1, // 5: hi.ai.Speech.Synthesize:output_type -> hi.ai.SynthesizeResp
-	3, // [3:6] is the sub-list for method output_type
-	0, // [0:3] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	5, // 0: hi.ai.TranscribeStreamReq.audio:type_name -> hi.AudioStreamEvent
+	4, // 1: hi.ai.Speech.TranscribeStream:input_type -> hi.ai.TranscribeStreamReq
+	0, // 2: hi.ai.Speech.SynthesizeStream:input_type -> hi.ai.SynthesizeReq
+	2, // 3: hi.ai.Speech.Transcribe:input_type -> hi.ai.TranscribeReq
+	0, // 4: hi.ai.Speech.Synthesize:input_type -> hi.ai.SynthesizeReq
+	3, // 5: hi.ai.Speech.TranscribeStream:output_type -> hi.ai.TranscribeResp
+	5, // 6: hi.ai.Speech.SynthesizeStream:output_type -> hi.AudioStreamEvent
+	3, // 7: hi.ai.Speech.Transcribe:output_type -> hi.ai.TranscribeResp
+	1, // 8: hi.ai.Speech.Synthesize:output_type -> hi.ai.SynthesizeResp
+	5, // [5:9] is the sub-list for method output_type
+	1, // [1:5] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_hi_ai_speech_proto_init() }
@@ -306,13 +381,14 @@ func file_hi_ai_speech_proto_init() {
 	file_hi_ai_speech_proto_msgTypes[1].OneofWrappers = []any{}
 	file_hi_ai_speech_proto_msgTypes[2].OneofWrappers = []any{}
 	file_hi_ai_speech_proto_msgTypes[3].OneofWrappers = []any{}
+	file_hi_ai_speech_proto_msgTypes[4].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ai_speech_proto_rawDesc), len(file_hi_ai_speech_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

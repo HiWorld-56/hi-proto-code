@@ -514,7 +514,7 @@ pub struct IoToBrain {
     pub session: ::core::option::Option<ModuleSession>,
     #[prost(uint64, optional, tag = "2")]
     pub request_id: ::core::option::Option<u64>,
-    #[prost(oneof = "io_to_brain::Cmd", tags = "3, 4, 5, 6")]
+    #[prost(oneof = "io_to_brain::Cmd", tags = "3, 4, 5, 6, 7")]
     pub cmd: ::core::option::Option<io_to_brain::Cmd>,
 }
 /// Nested message and enum types in `IoToBrain`.
@@ -529,6 +529,9 @@ pub mod io_to_brain {
         EventStatus(super::IoStatus),
         #[prost(message, tag = "6")]
         EventRecording(super::IoRecording),
+        /// stream_id=recording_id；仅brain启用时发送，补齐起声前缀
+        #[prost(message, tag = "7")]
+        EventAudio(super::super::AudioStreamEvent),
     }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
@@ -537,6 +540,9 @@ pub struct IoHearing {
     pub enabled: ::core::option::Option<bool>,
     #[prost(uint64, optional, tag = "2")]
     pub revision: ::core::option::Option<u64>,
+    /// 不传/false保留整句WAV；true同时推送有序PCM供提前转写
+    #[prost(bool, optional, tag = "4")]
+    pub stream_audio: ::core::option::Option<bool>,
     /// 不传=立即；只在恢复时使用，新revision使旧延时命令失效
     #[prost(uint32, optional, tag = "3")]
     pub resume_delay_ms: ::core::option::Option<u32>,
@@ -555,6 +561,9 @@ pub struct IoStatus {
     pub microphone_error: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "6")]
     pub camera_error: ::core::option::Option<::prost::alloc::string::String>,
+    /// 实际采集模式，启停确认包含此值
+    #[prost(bool, optional, tag = "7")]
+    pub stream_audio: ::core::option::Option<bool>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct IoRecording {

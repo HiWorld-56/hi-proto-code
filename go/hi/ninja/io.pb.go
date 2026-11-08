@@ -8,6 +8,7 @@ package ninja
 
 import (
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -283,6 +284,7 @@ type IoToBrain struct {
 	//	*IoToBrain_Response
 	//	*IoToBrain_EventStatus
 	//	*IoToBrain_EventRecording
+	//	*IoToBrain_EventAudio
 	Cmd           isIoToBrain_Cmd `protobuf_oneof:"cmd"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -375,6 +377,15 @@ func (x *IoToBrain) GetEventRecording() *IoRecording {
 	return nil
 }
 
+func (x *IoToBrain) GetEventAudio() *hi.AudioStreamEvent {
+	if x != nil {
+		if x, ok := x.Cmd.(*IoToBrain_EventAudio); ok {
+			return x.EventAudio
+		}
+	}
+	return nil
+}
+
 type isIoToBrain_Cmd interface {
 	isIoToBrain_Cmd()
 }
@@ -395,6 +406,10 @@ type IoToBrain_EventRecording struct {
 	EventRecording *IoRecording `protobuf:"bytes,6,opt,name=event_recording,json=eventRecording,proto3,oneof"`
 }
 
+type IoToBrain_EventAudio struct {
+	EventAudio *hi.AudioStreamEvent `protobuf:"bytes,7,opt,name=event_audio,json=eventAudio,proto3,oneof"` // stream_id=recording_id；仅brain启用时发送，补齐起声前缀
+}
+
 func (*IoToBrain_Control) isIoToBrain_Cmd() {}
 
 func (*IoToBrain_Response) isIoToBrain_Cmd() {}
@@ -403,10 +418,13 @@ func (*IoToBrain_EventStatus) isIoToBrain_Cmd() {}
 
 func (*IoToBrain_EventRecording) isIoToBrain_Cmd() {}
 
+func (*IoToBrain_EventAudio) isIoToBrain_Cmd() {}
+
 type IoHearing struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Enabled       *bool                  `protobuf:"varint,1,opt,name=enabled,proto3,oneof" json:"enabled,omitempty"`
 	Revision      *uint64                `protobuf:"varint,2,opt,name=revision,proto3,oneof" json:"revision,omitempty"`
+	StreamAudio   *bool                  `protobuf:"varint,4,opt,name=stream_audio,json=streamAudio,proto3,oneof" json:"stream_audio,omitempty"`         // 不传/false保留整句WAV；true同时推送有序PCM供提前转写
 	ResumeDelayMs *uint32                `protobuf:"varint,3,opt,name=resume_delay_ms,json=resumeDelayMs,proto3,oneof" json:"resume_delay_ms,omitempty"` // 不传=立即；只在恢复时使用，新revision使旧延时命令失效
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -456,6 +474,13 @@ func (x *IoHearing) GetRevision() uint64 {
 	return 0
 }
 
+func (x *IoHearing) GetStreamAudio() bool {
+	if x != nil && x.StreamAudio != nil {
+		return *x.StreamAudio
+	}
+	return false
+}
+
 func (x *IoHearing) GetResumeDelayMs() uint32 {
 	if x != nil && x.ResumeDelayMs != nil {
 		return *x.ResumeDelayMs
@@ -471,6 +496,7 @@ type IoStatus struct {
 	HearingRevision *uint64                `protobuf:"varint,4,opt,name=hearing_revision,json=hearingRevision,proto3,oneof" json:"hearing_revision,omitempty"`
 	MicrophoneError *string                `protobuf:"bytes,5,opt,name=microphone_error,json=microphoneError,proto3,oneof" json:"microphone_error,omitempty"`
 	CameraError     *string                `protobuf:"bytes,6,opt,name=camera_error,json=cameraError,proto3,oneof" json:"camera_error,omitempty"`
+	StreamAudio     *bool                  `protobuf:"varint,7,opt,name=stream_audio,json=streamAudio,proto3,oneof" json:"stream_audio,omitempty"` // 实际采集模式，启停确认包含此值
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -545,6 +571,13 @@ func (x *IoStatus) GetCameraError() string {
 		return *x.CameraError
 	}
 	return ""
+}
+
+func (x *IoStatus) GetStreamAudio() bool {
+	if x != nil && x.StreamAudio != nil {
+		return *x.StreamAudio
+	}
+	return false
 }
 
 type IoRecording struct {
@@ -1104,7 +1137,7 @@ var File_hi_ninja_io_proto protoreflect.FileDescriptor
 
 const file_hi_ninja_io_proto_rawDesc = "" +
 	"\n" +
-	"\x11hi/ninja/io.proto\x12\bhi.ninja\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x15hi/ninja/common.proto\"\xb6\x04\n" +
+	"\x11hi/ninja/io.proto\x12\bhi.ninja\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x15hi/ninja/common.proto\x1a\x0ehi/audio.proto\"\xb6\x04\n" +
 	"\tBrainToIo\x121\n" +
 	"\asession\x18\x01 \x01(\v2\x17.hi.ninja.ModuleSessionR\asession\x12\"\n" +
 	"\n" +
@@ -1123,7 +1156,7 @@ const file_hi_ninja_io_proto_rawDesc = "" +
 	"\x06cancel\x18\n" +
 	" \x01(\v2\x12.hi.ninja.IoCancelH\x00R\x06cancelB\x05\n" +
 	"\x03cmdB\r\n" +
-	"\v_request_id\"\xe3\x02\n" +
+	"\v_request_id\"\x9c\x03\n" +
 	"\tIoToBrain\x121\n" +
 	"\asession\x18\x01 \x01(\v2\x17.hi.ninja.ModuleSessionR\asession\x12\"\n" +
 	"\n" +
@@ -1131,31 +1164,37 @@ const file_hi_ninja_io_proto_rawDesc = "" +
 	"\acontrol\x18\x03 \x01(\v2\x1e.hi.ninja.ModuleToBrainControlH\x00R\acontrol\x122\n" +
 	"\bresponse\x18\x04 \x01(\v2\x14.hi.ninja.IoResponseH\x00R\bresponse\x127\n" +
 	"\fevent_status\x18\x05 \x01(\v2\x12.hi.ninja.IoStatusH\x00R\veventStatus\x12@\n" +
-	"\x0fevent_recording\x18\x06 \x01(\v2\x15.hi.ninja.IoRecordingH\x00R\x0eeventRecordingB\x05\n" +
+	"\x0fevent_recording\x18\x06 \x01(\v2\x15.hi.ninja.IoRecordingH\x00R\x0eeventRecording\x127\n" +
+	"\vevent_audio\x18\a \x01(\v2\x14.hi.AudioStreamEventH\x00R\n" +
+	"eventAudioB\x05\n" +
 	"\x03cmdB\r\n" +
-	"\v_request_id\"\xb9\x01\n" +
+	"\v_request_id\"\xf2\x01\n" +
 	"\tIoHearing\x12%\n" +
 	"\aenabled\x18\x01 \x01(\bB\x06\xbaH\x03\xc8\x01\x01H\x00R\aenabled\x88\x01\x01\x12+\n" +
 	"\brevision\x18\x02 \x01(\x04B\n" +
-	"\xbaH\a\xc8\x01\x012\x02 \x00H\x01R\brevision\x88\x01\x01\x12+\n" +
-	"\x0fresume_delay_ms\x18\x03 \x01(\rH\x02R\rresumeDelayMs\x88\x01\x01B\n" +
+	"\xbaH\a\xc8\x01\x012\x02 \x00H\x01R\brevision\x88\x01\x01\x12&\n" +
+	"\fstream_audio\x18\x04 \x01(\bH\x02R\vstreamAudio\x88\x01\x01\x12+\n" +
+	"\x0fresume_delay_ms\x18\x03 \x01(\rH\x03R\rresumeDelayMs\x88\x01\x01B\n" +
 	"\n" +
 	"\b_enabledB\v\n" +
-	"\t_revisionB\x12\n" +
-	"\x10_resume_delay_ms\"\x8d\x03\n" +
+	"\t_revisionB\x0f\n" +
+	"\r_stream_audioB\x12\n" +
+	"\x10_resume_delay_ms\"\xc6\x03\n" +
 	"\bIoStatus\x12.\n" +
 	"\x10microphone_ready\x18\x01 \x01(\bH\x00R\x0fmicrophoneReady\x88\x01\x01\x12&\n" +
 	"\fcamera_ready\x18\x02 \x01(\bH\x01R\vcameraReady\x88\x01\x01\x12,\n" +
 	"\x0fhearing_enabled\x18\x03 \x01(\bH\x02R\x0ehearingEnabled\x88\x01\x01\x12.\n" +
 	"\x10hearing_revision\x18\x04 \x01(\x04H\x03R\x0fhearingRevision\x88\x01\x01\x12.\n" +
 	"\x10microphone_error\x18\x05 \x01(\tH\x04R\x0fmicrophoneError\x88\x01\x01\x12&\n" +
-	"\fcamera_error\x18\x06 \x01(\tH\x05R\vcameraError\x88\x01\x01B\x13\n" +
+	"\fcamera_error\x18\x06 \x01(\tH\x05R\vcameraError\x88\x01\x01\x12&\n" +
+	"\fstream_audio\x18\a \x01(\bH\x06R\vstreamAudio\x88\x01\x01B\x13\n" +
 	"\x11_microphone_readyB\x0f\n" +
 	"\r_camera_readyB\x12\n" +
 	"\x10_hearing_enabledB\x13\n" +
 	"\x11_hearing_revisionB\x13\n" +
 	"\x11_microphone_errorB\x0f\n" +
-	"\r_camera_error\"\xfb\x03\n" +
+	"\r_camera_errorB\x0f\n" +
+	"\r_stream_audio\"\xfb\x03\n" +
 	"\vIoRecording\x122\n" +
 	"\frecording_id\x18\x01 \x01(\tB\n" +
 	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\vrecordingId\x88\x01\x01\x12C\n" +
@@ -1263,7 +1302,8 @@ var file_hi_ninja_io_proto_goTypes = []any{
 	(*BrainToModuleControl)(nil), // 14: hi.ninja.BrainToModuleControl
 	(*emptypb.Empty)(nil),        // 15: google.protobuf.Empty
 	(*ModuleToBrainControl)(nil), // 16: hi.ninja.ModuleToBrainControl
-	(*ModuleFailure)(nil),        // 17: hi.ninja.ModuleFailure
+	(*hi.AudioStreamEvent)(nil),  // 17: hi.AudioStreamEvent
+	(*ModuleFailure)(nil),        // 18: hi.ninja.ModuleFailure
 }
 var file_hi_ninja_io_proto_depIdxs = []int32{
 	13, // 0: hi.ninja.BrainToIo.session:type_name -> hi.ninja.ModuleSession
@@ -1280,19 +1320,20 @@ var file_hi_ninja_io_proto_depIdxs = []int32{
 	11, // 11: hi.ninja.IoToBrain.response:type_name -> hi.ninja.IoResponse
 	4,  // 12: hi.ninja.IoToBrain.event_status:type_name -> hi.ninja.IoStatus
 	5,  // 13: hi.ninja.IoToBrain.event_recording:type_name -> hi.ninja.IoRecording
-	0,  // 14: hi.ninja.IoRecording.state:type_name -> hi.ninja.IoRecording.State
-	17, // 15: hi.ninja.IoRecording.failure:type_name -> hi.ninja.ModuleFailure
-	12, // 16: hi.ninja.IoImage.frame:type_name -> hi.ninja.IoFrameInfo
-	15, // 17: hi.ninja.IoResponse.ok:type_name -> google.protobuf.Empty
-	4,  // 18: hi.ninja.IoResponse.status:type_name -> hi.ninja.IoStatus
-	8,  // 19: hi.ninja.IoResponse.camera:type_name -> hi.ninja.IoCameraLease
-	9,  // 20: hi.ninja.IoResponse.image:type_name -> hi.ninja.IoImage
-	17, // 21: hi.ninja.IoResponse.failure:type_name -> hi.ninja.ModuleFailure
-	22, // [22:22] is the sub-list for method output_type
-	22, // [22:22] is the sub-list for method input_type
-	22, // [22:22] is the sub-list for extension type_name
-	22, // [22:22] is the sub-list for extension extendee
-	0,  // [0:22] is the sub-list for field type_name
+	17, // 14: hi.ninja.IoToBrain.event_audio:type_name -> hi.AudioStreamEvent
+	0,  // 15: hi.ninja.IoRecording.state:type_name -> hi.ninja.IoRecording.State
+	18, // 16: hi.ninja.IoRecording.failure:type_name -> hi.ninja.ModuleFailure
+	12, // 17: hi.ninja.IoImage.frame:type_name -> hi.ninja.IoFrameInfo
+	15, // 18: hi.ninja.IoResponse.ok:type_name -> google.protobuf.Empty
+	4,  // 19: hi.ninja.IoResponse.status:type_name -> hi.ninja.IoStatus
+	8,  // 20: hi.ninja.IoResponse.camera:type_name -> hi.ninja.IoCameraLease
+	9,  // 21: hi.ninja.IoResponse.image:type_name -> hi.ninja.IoImage
+	18, // 22: hi.ninja.IoResponse.failure:type_name -> hi.ninja.ModuleFailure
+	23, // [23:23] is the sub-list for method output_type
+	23, // [23:23] is the sub-list for method input_type
+	23, // [23:23] is the sub-list for extension type_name
+	23, // [23:23] is the sub-list for extension extendee
+	0,  // [0:23] is the sub-list for field type_name
 }
 
 func init() { file_hi_ninja_io_proto_init() }
@@ -1316,6 +1357,7 @@ func file_hi_ninja_io_proto_init() {
 		(*IoToBrain_Response)(nil),
 		(*IoToBrain_EventStatus)(nil),
 		(*IoToBrain_EventRecording)(nil),
+		(*IoToBrain_EventAudio)(nil),
 	}
 	file_hi_ninja_io_proto_msgTypes[2].OneofWrappers = []any{}
 	file_hi_ninja_io_proto_msgTypes[3].OneofWrappers = []any{}
