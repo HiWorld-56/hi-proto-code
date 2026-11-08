@@ -89,24 +89,25 @@ func (SettlementPaymentStatus) EnumDescriptor() ([]byte, []int) {
 }
 
 type SettlementPayment struct {
-	state         protoimpl.MessageState   `protogen:"open.v1"`
-	Id            *string                  `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	BusinessId    *string                  `protobuf:"bytes,2,opt,name=business_id,json=businessId,proto3,oneof" json:"business_id,omitempty"`
-	Total         *did.CoinAmount          `protobuf:"bytes,3,opt,name=total,proto3" json:"total,omitempty"`
-	Payer         *hi.Entity               `protobuf:"bytes,4,opt,name=payer,proto3" json:"payer,omitempty"`
-	Payee         *hi.Entity               `protobuf:"bytes,5,opt,name=payee,proto3" json:"payee,omitempty"`
-	FromAccount   *string                  `protobuf:"bytes,6,opt,name=from_account,json=fromAccount,proto3,oneof" json:"from_account,omitempty"`
-	ToAccount     *string                  `protobuf:"bytes,7,opt,name=to_account,json=toAccount,proto3,oneof" json:"to_account,omitempty"`
-	FromAddress   *string                  `protobuf:"bytes,8,opt,name=from_address,json=fromAddress,proto3,oneof" json:"from_address,omitempty"`
-	ToAddress     *string                  `protobuf:"bytes,9,opt,name=to_address,json=toAddress,proto3,oneof" json:"to_address,omitempty"`
-	Status        *SettlementPaymentStatus `protobuf:"varint,10,opt,name=status,proto3,enum=hi.club.SettlementPaymentStatus,oneof" json:"status,omitempty"`
-	CreatedAt     *int64                   `protobuf:"varint,11,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"` // 秒
-	ExpireAt      *int64                   `protobuf:"varint,12,opt,name=expire_at,json=expireAt,proto3,oneof" json:"expire_at,omitempty"`
-	PayReqId      *string                  `protobuf:"bytes,13,opt,name=pay_req_id,json=payReqId,proto3,oneof" json:"pay_req_id,omitempty"` // HiDID M号
-	TxHash        *string                  `protobuf:"bytes,14,opt,name=tx_hash,json=txHash,proto3,oneof" json:"tx_hash,omitempty"`
-	Reason        *string                  `protobuf:"bytes,15,opt,name=reason,proto3,oneof" json:"reason,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state           protoimpl.MessageState   `protogen:"open.v1"`
+	Id              *string                  `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	BusinessId      *string                  `protobuf:"bytes,2,opt,name=business_id,json=businessId,proto3,oneof" json:"business_id,omitempty"`
+	Total           *did.CoinAmount          `protobuf:"bytes,3,opt,name=total,proto3" json:"total,omitempty"`
+	Payer           *hi.Entity               `protobuf:"bytes,4,opt,name=payer,proto3" json:"payer,omitempty"`
+	Payee           *hi.Entity               `protobuf:"bytes,5,opt,name=payee,proto3" json:"payee,omitempty"`
+	FromAccount     *string                  `protobuf:"bytes,6,opt,name=from_account,json=fromAccount,proto3,oneof" json:"from_account,omitempty"`
+	ToAccount       *string                  `protobuf:"bytes,7,opt,name=to_account,json=toAccount,proto3,oneof" json:"to_account,omitempty"`
+	FromAddress     *string                  `protobuf:"bytes,8,opt,name=from_address,json=fromAddress,proto3,oneof" json:"from_address,omitempty"`
+	ToAddress       *string                  `protobuf:"bytes,9,opt,name=to_address,json=toAddress,proto3,oneof" json:"to_address,omitempty"`
+	Status          *SettlementPaymentStatus `protobuf:"varint,10,opt,name=status,proto3,enum=hi.club.SettlementPaymentStatus,oneof" json:"status,omitempty"`
+	CreatedAt       *int64                   `protobuf:"varint,11,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"` // 秒
+	ExpireAt        *int64                   `protobuf:"varint,12,opt,name=expire_at,json=expireAt,proto3,oneof" json:"expire_at,omitempty"`
+	PayReqId        *string                  `protobuf:"bytes,13,opt,name=pay_req_id,json=payReqId,proto3,oneof" json:"pay_req_id,omitempty"` // HiDID M号
+	TxHash          *string                  `protobuf:"bytes,14,opt,name=tx_hash,json=txHash,proto3,oneof" json:"tx_hash,omitempty"`
+	Reason          *string                  `protobuf:"bytes,15,opt,name=reason,proto3,oneof" json:"reason,omitempty"`
+	CanonicalTxHash *string                  `protobuf:"bytes,16,opt,name=canonical_tx_hash,json=canonicalTxHash,proto3,oneof" json:"canonical_tx_hash,omitempty"` // 经HiDID链事实层规范后的认领键
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *SettlementPayment) Reset() {
@@ -244,6 +245,13 @@ func (x *SettlementPayment) GetReason() string {
 	return ""
 }
 
+func (x *SettlementPayment) GetCanonicalTxHash() string {
+	if x != nil && x.CanonicalTxHash != nil {
+		return *x.CanonicalTxHash
+	}
+	return ""
+}
+
 type ListSettlementPaymentsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	List          []*SettlementPayment   `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
@@ -352,7 +360,7 @@ var File_hi_club_settlement_proto protoreflect.FileDescriptor
 
 const file_hi_club_settlement_proto_rawDesc = "" +
 	"\n" +
-	"\x18hi/club/settlement.proto\x12\ahi.club\x1a\x0fhi/common.proto\x1a\x11hi/did/base.proto\x1a\x10hi/options.proto\x1a\x1bbuf/validate/validate.proto\"\xbc\x06\n" +
+	"\x18hi/club/settlement.proto\x12\ahi.club\x1a\x0fhi/common.proto\x1a\x11hi/did/base.proto\x1a\x10hi/options.proto\x1a\x1bbuf/validate/validate.proto\"\x89\a\n" +
 	"\x11SettlementPayment\x12\x19\n" +
 	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x02id\x88\x01\x01\x12*\n" +
 	"\vbusiness_id\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\n" +
@@ -377,7 +385,8 @@ const file_hi_club_settlement_proto_rawDesc = "" +
 	"pay_req_id\x18\r \x01(\tB\x04\x90\xb5\x18\x02H\tR\bpayReqId\x88\x01\x01\x12\"\n" +
 	"\atx_hash\x18\x0e \x01(\tB\x04\x90\xb5\x18\x02H\n" +
 	"R\x06txHash\x88\x01\x01\x12!\n" +
-	"\x06reason\x18\x0f \x01(\tB\x04\x90\xb5\x18\x02H\vR\x06reason\x88\x01\x01:\x04\x98\xb5\x18\x02B\x05\n" +
+	"\x06reason\x18\x0f \x01(\tB\x04\x90\xb5\x18\x02H\vR\x06reason\x88\x01\x01\x125\n" +
+	"\x11canonical_tx_hash\x18\x10 \x01(\tB\x04\x90\xb5\x18\x02H\fR\x0fcanonicalTxHash\x88\x01\x01:\x04\x98\xb5\x18\x02B\x05\n" +
 	"\x03_idB\x0e\n" +
 	"\f_business_idB\x0f\n" +
 	"\r_from_accountB\r\n" +
@@ -391,7 +400,8 @@ const file_hi_club_settlement_proto_rawDesc = "" +
 	"\v_pay_req_idB\n" +
 	"\n" +
 	"\b_tx_hashB\t\n" +
-	"\a_reason\"\x83\x01\n" +
+	"\a_reasonB\x14\n" +
+	"\x12_canonical_tx_hash\"\x83\x01\n" +
 	"\x1aListSettlementPaymentsResp\x124\n" +
 	"\x04list\x18\x01 \x03(\v2\x1a.hi.club.SettlementPaymentB\x04\x90\xb5\x18\x02R\x04list\x12\x1f\n" +
 	"\x05total\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x02H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x02B\b\n" +

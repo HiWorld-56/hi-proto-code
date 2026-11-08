@@ -2290,6 +2290,9 @@ pub struct TxDetailResp {
     /// 早期设计里 >1 是直接报错的,正因为会误杀真实付款才改成返回次数。
     #[prost(uint32, optional, tag = "8")]
     pub query_count: ::core::option::Option<u32>,
+    /// hidid-core按链规范的交易定位键，业务唯一认领使用它，不自行折叠大小写
+    #[prost(string, optional, tag = "9")]
+    pub canonical_hash: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct VerifyTransactionReq {

@@ -10969,6 +10969,9 @@ pub struct SettlementPayment {
     pub tx_hash: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "15")]
     pub reason: ::core::option::Option<::prost::alloc::string::String>,
+    /// 经HiDID链事实层规范后的认领键
+    #[prost(string, optional, tag = "16")]
+    pub canonical_tx_hash: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListSettlementPaymentsResp {

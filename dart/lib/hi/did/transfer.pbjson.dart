@@ -376,6 +376,16 @@ const TxDetailResp$json = {
       '10': 'queryCount',
       '17': true
     },
+    {
+      '1': 'canonical_hash',
+      '3': 9,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 8,
+      '10': 'canonicalHash',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -387,6 +397,7 @@ const TxDetailResp$json = {
     {'1': '_amount'},
     {'1': '_contract'},
     {'1': '_query_count'},
+    {'1': '_canonical_hash'},
   ],
 };
 
@@ -397,9 +408,10 @@ final $typed_data.Uint8List txDetailRespDescriptor = $convert.base64Decode(
     'YW1wGAMgASgDQgSQtRgBSAJSCXRpbWVzdGFtcIgBARIdCgRmcm9tGAQgASgJQgSQtRgBSANSBG'
     'Zyb22IAQESGQoCdG8YBSABKAlCBJC1GAFIBFICdG+IAQESIQoGYW1vdW50GAYgASgJQgSQtRgB'
     'SAVSBmFtb3VudIgBARIlCghjb250cmFjdBgHIAEoCUIEkLUYAUgGUghjb250cmFjdIgBARIqCg'
-    'txdWVyeV9jb3VudBgIIAEoDUIEkLUYAUgHUgpxdWVyeUNvdW50iAEBOgSYtRgBQggKBl9zdGF0'
-    'ZUITChFfY29uZmlybWVkX2Jsb2Nrc0IMCgpfdGltZXN0YW1wQgcKBV9mcm9tQgUKA190b0IJCg'
-    'dfYW1vdW50QgsKCV9jb250cmFjdEIOCgxfcXVlcnlfY291bnQ=');
+    'txdWVyeV9jb3VudBgIIAEoDUIEkLUYAUgHUgpxdWVyeUNvdW50iAEBEjAKDmNhbm9uaWNhbF9o'
+    'YXNoGAkgASgJQgSQtRgBSAhSDWNhbm9uaWNhbEhhc2iIAQE6BJi1GAFCCAoGX3N0YXRlQhMKEV'
+    '9jb25maXJtZWRfYmxvY2tzQgwKCl90aW1lc3RhbXBCBwoFX2Zyb21CBQoDX3RvQgkKB19hbW91'
+    'bnRCCwoJX2NvbnRyYWN0Qg4KDF9xdWVyeV9jb3VudEIRCg9fY2Fub25pY2FsX2hhc2g=');
 
 @$core.Deprecated('Use verifyTransactionReqDescriptor instead')
 const VerifyTransactionReq$json = {

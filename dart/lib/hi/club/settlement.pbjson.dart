@@ -192,6 +192,16 @@ const SettlementPayment$json = {
       '10': 'reason',
       '17': true
     },
+    {
+      '1': 'canonical_tx_hash',
+      '3': 16,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 12,
+      '10': 'canonicalTxHash',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -207,6 +217,7 @@ const SettlementPayment$json = {
     {'1': '_pay_req_id'},
     {'1': '_tx_hash'},
     {'1': '_reason'},
+    {'1': '_canonical_tx_hash'},
   ],
 };
 
@@ -223,10 +234,12 @@ final $typed_data.Uint8List settlementPaymentDescriptor = $convert.base64Decode(
     'QgSQtRgCSAZSBnN0YXR1c4gBARIoCgpjcmVhdGVkX2F0GAsgASgDQgSQtRgCSAdSCWNyZWF0ZW'
     'RBdIgBARImCglleHBpcmVfYXQYDCABKANCBJC1GAJICFIIZXhwaXJlQXSIAQESJwoKcGF5X3Jl'
     'cV9pZBgNIAEoCUIEkLUYAkgJUghwYXlSZXFJZIgBARIiCgd0eF9oYXNoGA4gASgJQgSQtRgCSA'
-    'pSBnR4SGFzaIgBARIhCgZyZWFzb24YDyABKAlCBJC1GAJIC1IGcmVhc29uiAEBOgSYtRgCQgUK'
-    'A19pZEIOCgxfYnVzaW5lc3NfaWRCDwoNX2Zyb21fYWNjb3VudEINCgtfdG9fYWNjb3VudEIPCg'
-    '1fZnJvbV9hZGRyZXNzQg0KC190b19hZGRyZXNzQgkKB19zdGF0dXNCDQoLX2NyZWF0ZWRfYXRC'
-    'DAoKX2V4cGlyZV9hdEINCgtfcGF5X3JlcV9pZEIKCghfdHhfaGFzaEIJCgdfcmVhc29u');
+    'pSBnR4SGFzaIgBARIhCgZyZWFzb24YDyABKAlCBJC1GAJIC1IGcmVhc29uiAEBEjUKEWNhbm9u'
+    'aWNhbF90eF9oYXNoGBAgASgJQgSQtRgCSAxSD2Nhbm9uaWNhbFR4SGFzaIgBAToEmLUYAkIFCg'
+    'NfaWRCDgoMX2J1c2luZXNzX2lkQg8KDV9mcm9tX2FjY291bnRCDQoLX3RvX2FjY291bnRCDwoN'
+    'X2Zyb21fYWRkcmVzc0INCgtfdG9fYWRkcmVzc0IJCgdfc3RhdHVzQg0KC19jcmVhdGVkX2F0Qg'
+    'wKCl9leHBpcmVfYXRCDQoLX3BheV9yZXFfaWRCCgoIX3R4X2hhc2hCCQoHX3JlYXNvbkIUChJf'
+    'Y2Fub25pY2FsX3R4X2hhc2g=');
 
 @$core.Deprecated('Use listSettlementPaymentsRespDescriptor instead')
 const ListSettlementPaymentsResp$json = {

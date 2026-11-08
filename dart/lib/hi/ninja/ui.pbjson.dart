@@ -608,6 +608,24 @@ const BrainToFace$json = {
       '10': 'eventProductListed'
     },
     {
+      '1': 'event_product_order',
+      '3': 40,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductPurchaseOrder',
+      '9': 0,
+      '10': 'eventProductOrder'
+    },
+    {
+      '1': 'product_action_result',
+      '3': 41,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.ProductActionResult',
+      '9': 0,
+      '10': 'productActionResult'
+    },
+    {
       '1': 'video_ready',
       '3': 27,
       '4': 1,
@@ -661,8 +679,11 @@ final $typed_data.Uint8List brainToFaceDescriptor = $convert.base64Decode(
     'YW5jZU9mZmVycxJVChZldmVudF9wcm9kdWN0X3VwbG9hZGVkGB0gASgLMh0uaGkuY2x1Yi5Qcm'
     '9kdWN0SW52ZW50b3J5SXRlbUgAUhRldmVudFByb2R1Y3RVcGxvYWRlZBJQChRldmVudF9wcm9k'
     'dWN0X2xpc3RlZBgeIAEoCzIcLmhpLmNsdWIuUHJvZHVjdEFubm91bmNlbWVudEgAUhJldmVudF'
-    'Byb2R1Y3RMaXN0ZWQSNwoLdmlkZW9fcmVhZHkYGyABKAsyFC5oaS5uaW5qYS5WaWRlb1JlYWR5'
-    'SABSCnZpZGVvUmVhZHlCBQoDY21k');
+    'Byb2R1Y3RMaXN0ZWQSTwoTZXZlbnRfcHJvZHVjdF9vcmRlchgoIAEoCzIdLmhpLmNsdWIuUHJv'
+    'ZHVjdFB1cmNoYXNlT3JkZXJIAFIRZXZlbnRQcm9kdWN0T3JkZXISUwoVcHJvZHVjdF9hY3Rpb2'
+    '5fcmVzdWx0GCkgASgLMh0uaGkubmluamEuUHJvZHVjdEFjdGlvblJlc3VsdEgAUhNwcm9kdWN0'
+    'QWN0aW9uUmVzdWx0EjcKC3ZpZGVvX3JlYWR5GBsgASgLMhQuaGkubmluamEuVmlkZW9SZWFkeU'
+    'gAUgp2aWRlb1JlYWR5QgUKA2NtZA==');
 
 @$core.Deprecated('Use videoRequestDescriptor instead')
 const VideoRequest$json = {
@@ -796,6 +817,15 @@ const FaceToBrain$json = {
       '10': 'audioStreamProgress'
     },
     {
+      '1': 'product_action',
+      '3': 40,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.ProductAction',
+      '9': 0,
+      '10': 'productAction'
+    },
+    {
       '1': 'playback_event',
       '3': 9,
       '4': 1,
@@ -904,20 +934,22 @@ const FaceToBrain$json = {
 final $typed_data.Uint8List faceToBrainDescriptor = $convert.base64Decode(
     'CgtGYWNlVG9CcmFpbhIxCgdzZXNzaW9uGGMgASgLMhcuaGkubmluamEuTW9kdWxlU2Vzc2lvbl'
     'IHc2Vzc2lvbhJTChVhdWRpb19zdHJlYW1fcHJvZ3Jlc3MYISABKAsyHS5oaS5uaW5qYS5BdWRp'
-    'b1N0cmVhbVByb2dyZXNzSABSE2F1ZGlvU3RyZWFtUHJvZ3Jlc3MSQAoOcGxheWJhY2tfZXZlbn'
-    'QYCSABKAsyFy5oaS5uaW5qYS5QbGF5YmFja0V2ZW50SABSDXBsYXliYWNrRXZlbnQSNwoLbWFu'
-    'dWFsX211dGUYCiABKAsyFC5oaS5uaW5qYS5NYW51YWxNdXRlSABSCm1hbnVhbE11dGUSOgoHY2'
-    '9udHJvbBhkIAEoCzIeLmhpLm5pbmphLk1vZHVsZVRvQnJhaW5Db250cm9sSABSB2NvbnRyb2wS'
-    'OAoLdm9pY2Vfc3RhdGUYASABKA4yFS5oaS5uaW5qYS5TdGF0ZVRvZ2dsZUgAUgp2b2ljZVN0YX'
-    'RlEj0KDXVwZGF0ZV9hY3Rpb24YAiABKAsyFi5oaS5uaW5qYS5VcGRhdGVBY3Rpb25IAFIMdXBk'
-    'YXRlQWN0aW9uEkoKFGdldF9iaW5hbmNlX3NldHRpbmdzGAMgASgLMhYuZ29vZ2xlLnByb3RvYn'
-    'VmLkVtcHR5SABSEmdldEJpbmFuY2VTZXR0aW5ncxI7CgxyZXF1ZXN0X2luaXQYBCABKAsyFi5n'
-    'b29nbGUucHJvdG9idWYuRW1wdHlIAFILcmVxdWVzdEluaXQSQwoPYmluYW5jZV9yZXF1ZXN0GA'
-    'UgASgLMhguaGkubmluamEuQmluYW5jZVJlcXVlc3RIAFIOYmluYW5jZVJlcXVlc3QSTwoTYmlu'
-    'YW5jZV9vZmZlcl9yZXBseRgGIAEoCzIdLmhpLmJpbmFuY2UuQmluYW5jZU9mZmVyUmVwbHlIAF'
-    'IRYmluYW5jZU9mZmVyUmVwbHkSRgoSZ2V0X2JpbmFuY2Vfb2ZmZXJzGAcgASgLMhYuZ29vZ2xl'
-    'LnByb3RvYnVmLkVtcHR5SABSEGdldEJpbmFuY2VPZmZlcnMSPQoNdmlkZW9fcmVxdWVzdBgIIA'
-    'EoCzIWLmhpLm5pbmphLlZpZGVvUmVxdWVzdEgAUgx2aWRlb1JlcXVlc3RCBQoDY21k');
+    'b1N0cmVhbVByb2dyZXNzSABSE2F1ZGlvU3RyZWFtUHJvZ3Jlc3MSQAoOcHJvZHVjdF9hY3Rpb2'
+    '4YKCABKAsyFy5oaS5uaW5qYS5Qcm9kdWN0QWN0aW9uSABSDXByb2R1Y3RBY3Rpb24SQAoOcGxh'
+    'eWJhY2tfZXZlbnQYCSABKAsyFy5oaS5uaW5qYS5QbGF5YmFja0V2ZW50SABSDXBsYXliYWNrRX'
+    'ZlbnQSNwoLbWFudWFsX211dGUYCiABKAsyFC5oaS5uaW5qYS5NYW51YWxNdXRlSABSCm1hbnVh'
+    'bE11dGUSOgoHY29udHJvbBhkIAEoCzIeLmhpLm5pbmphLk1vZHVsZVRvQnJhaW5Db250cm9sSA'
+    'BSB2NvbnRyb2wSOAoLdm9pY2Vfc3RhdGUYASABKA4yFS5oaS5uaW5qYS5TdGF0ZVRvZ2dsZUgA'
+    'Ugp2b2ljZVN0YXRlEj0KDXVwZGF0ZV9hY3Rpb24YAiABKAsyFi5oaS5uaW5qYS5VcGRhdGVBY3'
+    'Rpb25IAFIMdXBkYXRlQWN0aW9uEkoKFGdldF9iaW5hbmNlX3NldHRpbmdzGAMgASgLMhYuZ29v'
+    'Z2xlLnByb3RvYnVmLkVtcHR5SABSEmdldEJpbmFuY2VTZXR0aW5ncxI7CgxyZXF1ZXN0X2luaX'
+    'QYBCABKAsyFi5nb29nbGUucHJvdG9idWYuRW1wdHlIAFILcmVxdWVzdEluaXQSQwoPYmluYW5j'
+    'ZV9yZXF1ZXN0GAUgASgLMhguaGkubmluamEuQmluYW5jZVJlcXVlc3RIAFIOYmluYW5jZVJlcX'
+    'Vlc3QSTwoTYmluYW5jZV9vZmZlcl9yZXBseRgGIAEoCzIdLmhpLmJpbmFuY2UuQmluYW5jZU9m'
+    'ZmVyUmVwbHlIAFIRYmluYW5jZU9mZmVyUmVwbHkSRgoSZ2V0X2JpbmFuY2Vfb2ZmZXJzGAcgAS'
+    'gLMhYuZ29vZ2xlLnByb3RvYnVmLkVtcHR5SABSEGdldEJpbmFuY2VPZmZlcnMSPQoNdmlkZW9f'
+    'cmVxdWVzdBgIIAEoCzIWLmhpLm5pbmphLlZpZGVvUmVxdWVzdEgAUgx2aWRlb1JlcXVlc3RCBQ'
+    'oDY21k');
 
 @$core.Deprecated('Use binanceOffersDescriptor instead')
 const BinanceOffers$json = {
@@ -1173,3 +1205,125 @@ const ManualMute$json = {
 /// Descriptor for `ManualMute`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List manualMuteDescriptor = $convert.base64Decode(
     'CgpNYW51YWxNdXRlEhkKBW11dGVkGAEgASgISABSBW11dGVkiAEBQggKBl9tdXRlZA==');
+
+@$core.Deprecated('Use productActionDescriptor instead')
+const ProductAction$json = {
+  '1': 'ProductAction',
+  '2': [
+    {
+      '1': 'request_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '9': 1,
+      '10': 'requestId',
+      '17': true
+    },
+    {
+      '1': 'join_product',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.GetProductReq',
+      '9': 0,
+      '10': 'joinProduct'
+    },
+    {
+      '1': 'get_detail',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.GetProductReq',
+      '9': 0,
+      '10': 'getDetail'
+    },
+    {
+      '1': 'confirm_purchase',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductPurchaseQuery',
+      '9': 0,
+      '10': 'confirmPurchase'
+    },
+    {
+      '1': 'get_order',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductPurchaseQuery',
+      '9': 0,
+      '10': 'getOrder'
+    },
+  ],
+  '8': [
+    {'1': 'operation'},
+    {'1': '_request_id'},
+  ],
+};
+
+/// Descriptor for `ProductAction`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List productActionDescriptor = $convert.base64Decode(
+    'Cg1Qcm9kdWN0QWN0aW9uEiIKCnJlcXVlc3RfaWQYASABKAlIAVIJcmVxdWVzdElkiAEBEjsKDG'
+    'pvaW5fcHJvZHVjdBgCIAEoCzIWLmhpLmNsdWIuR2V0UHJvZHVjdFJlcUgAUgtqb2luUHJvZHVj'
+    'dBI3CgpnZXRfZGV0YWlsGAMgASgLMhYuaGkuY2x1Yi5HZXRQcm9kdWN0UmVxSABSCWdldERldG'
+    'FpbBJKChBjb25maXJtX3B1cmNoYXNlGAQgASgLMh0uaGkuY2x1Yi5Qcm9kdWN0UHVyY2hhc2VR'
+    'dWVyeUgAUg9jb25maXJtUHVyY2hhc2USPAoJZ2V0X29yZGVyGAUgASgLMh0uaGkuY2x1Yi5Qcm'
+    '9kdWN0UHVyY2hhc2VRdWVyeUgAUghnZXRPcmRlckILCglvcGVyYXRpb25CDQoLX3JlcXVlc3Rf'
+    'aWQ=');
+
+@$core.Deprecated('Use productActionResultDescriptor instead')
+const ProductActionResult$json = {
+  '1': 'ProductActionResult',
+  '2': [
+    {
+      '1': 'request_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '9': 1,
+      '10': 'requestId',
+      '17': true
+    },
+    {
+      '1': 'joined',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductDistributionAgreement',
+      '9': 0,
+      '10': 'joined'
+    },
+    {
+      '1': 'detail',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductDetail',
+      '9': 0,
+      '10': 'detail'
+    },
+    {
+      '1': 'order',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductPurchaseOrder',
+      '9': 0,
+      '10': 'order'
+    },
+    {'1': 'error', '3': 5, '4': 1, '5': 9, '9': 0, '10': 'error'},
+  ],
+  '8': [
+    {'1': 'result'},
+    {'1': '_request_id'},
+  ],
+};
+
+/// Descriptor for `ProductActionResult`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List productActionResultDescriptor = $convert.base64Decode(
+    'ChNQcm9kdWN0QWN0aW9uUmVzdWx0EiIKCnJlcXVlc3RfaWQYASABKAlIAVIJcmVxdWVzdElkiA'
+    'EBEj8KBmpvaW5lZBgCIAEoCzIlLmhpLmNsdWIuUHJvZHVjdERpc3RyaWJ1dGlvbkFncmVlbWVu'
+    'dEgAUgZqb2luZWQSMAoGZGV0YWlsGAMgASgLMhYuaGkuY2x1Yi5Qcm9kdWN0RGV0YWlsSABSBm'
+    'RldGFpbBI1CgVvcmRlchgEIAEoCzIdLmhpLmNsdWIuUHJvZHVjdFB1cmNoYXNlT3JkZXJIAFIF'
+    'b3JkZXISFgoFZXJyb3IYBSABKAlIAFIFZXJyb3JCCAoGcmVzdWx0Qg0KC19yZXF1ZXN0X2lk');

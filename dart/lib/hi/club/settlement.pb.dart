@@ -40,6 +40,7 @@ class SettlementPayment extends $pb.GeneratedMessage {
     $core.String? payReqId,
     $core.String? txHash,
     $core.String? reason,
+    $core.String? canonicalTxHash,
   }) {
     final result = create();
     if (id != null) result.id = id;
@@ -57,6 +58,7 @@ class SettlementPayment extends $pb.GeneratedMessage {
     if (payReqId != null) result.payReqId = payReqId;
     if (txHash != null) result.txHash = txHash;
     if (reason != null) result.reason = reason;
+    if (canonicalTxHash != null) result.canonicalTxHash = canonicalTxHash;
     return result;
   }
 
@@ -92,6 +94,7 @@ class SettlementPayment extends $pb.GeneratedMessage {
     ..aOS(13, _omitFieldNames ? '' : 'payReqId')
     ..aOS(14, _omitFieldNames ? '' : 'txHash')
     ..aOS(15, _omitFieldNames ? '' : 'reason')
+    ..aOS(16, _omitFieldNames ? '' : 'canonicalTxHash')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -253,6 +256,15 @@ class SettlementPayment extends $pb.GeneratedMessage {
   $core.bool hasReason() => $_has(14);
   @$pb.TagNumber(15)
   void clearReason() => $_clearField(15);
+
+  @$pb.TagNumber(16)
+  $core.String get canonicalTxHash => $_getSZ(15);
+  @$pb.TagNumber(16)
+  set canonicalTxHash($core.String value) => $_setString(15, value);
+  @$pb.TagNumber(16)
+  $core.bool hasCanonicalTxHash() => $_has(15);
+  @$pb.TagNumber(16)
+  void clearCanonicalTxHash() => $_clearField(16);
 }
 
 class ListSettlementPaymentsResp extends $pb.GeneratedMessage {

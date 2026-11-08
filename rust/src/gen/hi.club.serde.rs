@@ -30509,6 +30509,9 @@ impl serde::Serialize for SettlementPayment {
         if self.reason.is_some() {
             len += 1;
         }
+        if self.canonical_tx_hash.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.club.SettlementPayment", len)?;
         if let Some(v) = self.id.as_ref() {
             struct_ser.serialize_field("id", v)?;
@@ -30561,6 +30564,9 @@ impl serde::Serialize for SettlementPayment {
         if let Some(v) = self.reason.as_ref() {
             struct_ser.serialize_field("reason", v)?;
         }
+        if let Some(v) = self.canonical_tx_hash.as_ref() {
+            struct_ser.serialize_field("canonicalTxHash", v)?;
+        }
         struct_ser.end()
     }
 }
@@ -30595,6 +30601,8 @@ impl<'de> serde::Deserialize<'de> for SettlementPayment {
             "tx_hash",
             "txHash",
             "reason",
+            "canonical_tx_hash",
+            "canonicalTxHash",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -30614,6 +30622,7 @@ impl<'de> serde::Deserialize<'de> for SettlementPayment {
             PayReqId,
             TxHash,
             Reason,
+            CanonicalTxHash,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -30650,6 +30659,7 @@ impl<'de> serde::Deserialize<'de> for SettlementPayment {
                             "payReqId" | "pay_req_id" => Ok(GeneratedField::PayReqId),
                             "txHash" | "tx_hash" => Ok(GeneratedField::TxHash),
                             "reason" => Ok(GeneratedField::Reason),
+                            "canonicalTxHash" | "canonical_tx_hash" => Ok(GeneratedField::CanonicalTxHash),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -30684,6 +30694,7 @@ impl<'de> serde::Deserialize<'de> for SettlementPayment {
                 let mut pay_req_id__ = None;
                 let mut tx_hash__ = None;
                 let mut reason__ = None;
+                let mut canonical_tx_hash__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Id => {
@@ -30780,6 +30791,12 @@ impl<'de> serde::Deserialize<'de> for SettlementPayment {
                             }
                             reason__ = map_.next_value()?;
                         }
+                        GeneratedField::CanonicalTxHash => {
+                            if canonical_tx_hash__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("canonicalTxHash"));
+                            }
+                            canonical_tx_hash__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(SettlementPayment {
@@ -30798,6 +30815,7 @@ impl<'de> serde::Deserialize<'de> for SettlementPayment {
                     pay_req_id: pay_req_id__,
                     tx_hash: tx_hash__,
                     reason: reason__,
+                    canonical_tx_hash: canonical_tx_hash__,
                 })
             }
         }

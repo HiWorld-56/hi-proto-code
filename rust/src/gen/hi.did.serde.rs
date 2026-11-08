@@ -10963,6 +10963,9 @@ impl serde::Serialize for TxDetailResp {
         if self.query_count.is_some() {
             len += 1;
         }
+        if self.canonical_hash.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.did.TxDetailResp", len)?;
         if let Some(v) = self.state.as_ref() {
             struct_ser.serialize_field("state", v)?;
@@ -10992,6 +10995,9 @@ impl serde::Serialize for TxDetailResp {
         if let Some(v) = self.query_count.as_ref() {
             struct_ser.serialize_field("queryCount", v)?;
         }
+        if let Some(v) = self.canonical_hash.as_ref() {
+            struct_ser.serialize_field("canonicalHash", v)?;
+        }
         struct_ser.end()
     }
 }
@@ -11012,6 +11018,8 @@ impl<'de> serde::Deserialize<'de> for TxDetailResp {
             "contract",
             "query_count",
             "queryCount",
+            "canonical_hash",
+            "canonicalHash",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -11024,6 +11032,7 @@ impl<'de> serde::Deserialize<'de> for TxDetailResp {
             Amount,
             Contract,
             QueryCount,
+            CanonicalHash,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -11053,6 +11062,7 @@ impl<'de> serde::Deserialize<'de> for TxDetailResp {
                             "amount" => Ok(GeneratedField::Amount),
                             "contract" => Ok(GeneratedField::Contract),
                             "queryCount" | "query_count" => Ok(GeneratedField::QueryCount),
+                            "canonicalHash" | "canonical_hash" => Ok(GeneratedField::CanonicalHash),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -11080,6 +11090,7 @@ impl<'de> serde::Deserialize<'de> for TxDetailResp {
                 let mut amount__ = None;
                 let mut contract__ = None;
                 let mut query_count__ = None;
+                let mut canonical_hash__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::State => {
@@ -11136,6 +11147,12 @@ impl<'de> serde::Deserialize<'de> for TxDetailResp {
                                 map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
+                        GeneratedField::CanonicalHash => {
+                            if canonical_hash__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("canonicalHash"));
+                            }
+                            canonical_hash__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(TxDetailResp {
@@ -11147,6 +11164,7 @@ impl<'de> serde::Deserialize<'de> for TxDetailResp {
                     amount: amount__,
                     contract: contract__,
                     query_count: query_count__,
+                    canonical_hash: canonical_hash__,
                 })
             }
         }

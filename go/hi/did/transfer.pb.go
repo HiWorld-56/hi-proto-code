@@ -411,6 +411,7 @@ type TxDetailResp struct {
 	//
 	//	早期设计里 >1 是直接报错的,正因为会误杀真实付款才改成返回次数。
 	QueryCount    *uint32 `protobuf:"varint,8,opt,name=query_count,json=queryCount,proto3,oneof" json:"query_count,omitempty"`
+	CanonicalHash *string `protobuf:"bytes,9,opt,name=canonical_hash,json=canonicalHash,proto3,oneof" json:"canonical_hash,omitempty"` // hidid-core按链规范的交易定位键，业务唯一认领使用它，不自行折叠大小写
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -499,6 +500,13 @@ func (x *TxDetailResp) GetQueryCount() uint32 {
 		return *x.QueryCount
 	}
 	return 0
+}
+
+func (x *TxDetailResp) GetCanonicalHash() string {
+	if x != nil && x.CanonicalHash != nil {
+		return *x.CanonicalHash
+	}
+	return ""
 }
 
 type VerifyTransactionReq struct {
@@ -797,7 +805,7 @@ const file_hi_did_transfer_proto_rawDesc = "" +
 	"\x04coin\x18\x01 \x01(\tH\x00R\x04coin\x88\x01\x01\x12\x17\n" +
 	"\x04hash\x18\x02 \x01(\tH\x01R\x04hash\x88\x01\x01B\a\n" +
 	"\x05_coinB\a\n" +
-	"\x05_hash\"\xa9\x03\n" +
+	"\x05_hash\"\xee\x03\n" +
 	"\fTxDetailResp\x12\x1f\n" +
 	"\x05state\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x05state\x88\x01\x01\x124\n" +
 	"\x10confirmed_blocks\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x01H\x01R\x0fconfirmedBlocks\x88\x01\x01\x12'\n" +
@@ -807,7 +815,8 @@ const file_hi_did_transfer_proto_rawDesc = "" +
 	"\x06amount\x18\x06 \x01(\tB\x04\x90\xb5\x18\x01H\x05R\x06amount\x88\x01\x01\x12%\n" +
 	"\bcontract\x18\a \x01(\tB\x04\x90\xb5\x18\x01H\x06R\bcontract\x88\x01\x01\x12*\n" +
 	"\vquery_count\x18\b \x01(\rB\x04\x90\xb5\x18\x01H\aR\n" +
-	"queryCount\x88\x01\x01:\x04\x98\xb5\x18\x01B\b\n" +
+	"queryCount\x88\x01\x01\x120\n" +
+	"\x0ecanonical_hash\x18\t \x01(\tB\x04\x90\xb5\x18\x01H\bR\rcanonicalHash\x88\x01\x01:\x04\x98\xb5\x18\x01B\b\n" +
 	"\x06_stateB\x13\n" +
 	"\x11_confirmed_blocksB\f\n" +
 	"\n" +
@@ -816,7 +825,8 @@ const file_hi_did_transfer_proto_rawDesc = "" +
 	"\x03_toB\t\n" +
 	"\a_amountB\v\n" +
 	"\t_contractB\x0e\n" +
-	"\f_query_count\"\xc0\x01\n" +
+	"\f_query_countB\x11\n" +
+	"\x0f_canonical_hash\"\xc0\x01\n" +
 	"\x14VerifyTransactionReq\x12\x17\n" +
 	"\x04coin\x18\x01 \x01(\tH\x00R\x04coin\x88\x01\x01\x12\x17\n" +
 	"\x04hash\x18\x02 \x01(\tH\x01R\x04hash\x88\x01\x01\x12\x1b\n" +

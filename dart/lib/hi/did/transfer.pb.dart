@@ -607,6 +607,7 @@ class TxDetailResp extends $pb.GeneratedMessage {
     $core.String? amount,
     $core.String? contract,
     $core.int? queryCount,
+    $core.String? canonicalHash,
   }) {
     final result = create();
     if (state != null) result.state = state;
@@ -617,6 +618,7 @@ class TxDetailResp extends $pb.GeneratedMessage {
     if (amount != null) result.amount = amount;
     if (contract != null) result.contract = contract;
     if (queryCount != null) result.queryCount = queryCount;
+    if (canonicalHash != null) result.canonicalHash = canonicalHash;
     return result;
   }
 
@@ -641,6 +643,7 @@ class TxDetailResp extends $pb.GeneratedMessage {
     ..aOS(6, _omitFieldNames ? '' : 'amount')
     ..aOS(7, _omitFieldNames ? '' : 'contract')
     ..aI(8, _omitFieldNames ? '' : 'queryCount', fieldType: $pb.PbFieldType.OU3)
+    ..aOS(9, _omitFieldNames ? '' : 'canonicalHash')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -736,6 +739,15 @@ class TxDetailResp extends $pb.GeneratedMessage {
   $core.bool hasQueryCount() => $_has(7);
   @$pb.TagNumber(8)
   void clearQueryCount() => $_clearField(8);
+
+  @$pb.TagNumber(9)
+  $core.String get canonicalHash => $_getSZ(8);
+  @$pb.TagNumber(9)
+  set canonicalHash($core.String value) => $_setString(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasCanonicalHash() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearCanonicalHash() => $_clearField(9);
 }
 
 class VerifyTransactionReq extends $pb.GeneratedMessage {

@@ -19,13 +19,14 @@ import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $4;
 import '../ai/plugin.pb.dart' as $5;
 import '../audio.pb.dart' as $2;
 import '../binance/binance.pb.dart' as $8;
-import '../binance/offer.pb.dart' as $11;
+import '../binance/offer.pb.dart' as $12;
 import '../club/group.pb.dart' as $1;
 import '../club/messaging.pb.dart' as $3;
 import '../club/product.pb.dart' as $9;
+import '../club/product_trade.pb.dart' as $10;
 import '../common.pb.dart' as $0;
 import '../did/transfer.pb.dart' as $6;
-import 'common.pb.dart' as $10;
+import 'common.pb.dart' as $11;
 import 'ui.pbenum.dart';
 import 'updater.pb.dart' as $7;
 
@@ -827,6 +828,8 @@ enum BrainToFace_Cmd {
   manualMute,
   audioStream,
   audioStreamCancel,
+  eventProductOrder,
+  productActionResult,
   control,
   notSet
 }
@@ -866,8 +869,10 @@ class BrainToFace extends $pb.GeneratedMessage {
     ManualMute? manualMute,
     AudioStreamPlay? audioStream,
     AudioStreamCancel? audioStreamCancel,
-    $10.ModuleSession? session,
-    $10.BrainToModuleControl? control,
+    $10.ProductPurchaseOrder? eventProductOrder,
+    ProductActionResult? productActionResult,
+    $11.ModuleSession? session,
+    $11.BrainToModuleControl? control,
   }) {
     final result = create();
     if (initRobot != null) result.initRobot = initRobot;
@@ -906,6 +911,9 @@ class BrainToFace extends $pb.GeneratedMessage {
     if (manualMute != null) result.manualMute = manualMute;
     if (audioStream != null) result.audioStream = audioStream;
     if (audioStreamCancel != null) result.audioStreamCancel = audioStreamCancel;
+    if (eventProductOrder != null) result.eventProductOrder = eventProductOrder;
+    if (productActionResult != null)
+      result.productActionResult = productActionResult;
     if (session != null) result.session = session;
     if (control != null) result.control = control;
     return result;
@@ -953,6 +961,8 @@ class BrainToFace extends $pb.GeneratedMessage {
     32: BrainToFace_Cmd.manualMute,
     33: BrainToFace_Cmd.audioStream,
     34: BrainToFace_Cmd.audioStreamCancel,
+    40: BrainToFace_Cmd.eventProductOrder,
+    41: BrainToFace_Cmd.productActionResult,
     100: BrainToFace_Cmd.control,
     0: BrainToFace_Cmd.notSet
   };
@@ -993,6 +1003,8 @@ class BrainToFace extends $pb.GeneratedMessage {
       32,
       33,
       34,
+      40,
+      41,
       100
     ])
     ..aOM<RobotInit>(1, _omitFieldNames ? '' : 'initRobot',
@@ -1060,10 +1072,15 @@ class BrainToFace extends $pb.GeneratedMessage {
         subBuilder: AudioStreamPlay.create)
     ..aOM<AudioStreamCancel>(34, _omitFieldNames ? '' : 'audioStreamCancel',
         subBuilder: AudioStreamCancel.create)
-    ..aOM<$10.ModuleSession>(99, _omitFieldNames ? '' : 'session',
-        subBuilder: $10.ModuleSession.create)
-    ..aOM<$10.BrainToModuleControl>(100, _omitFieldNames ? '' : 'control',
-        subBuilder: $10.BrainToModuleControl.create)
+    ..aOM<$10.ProductPurchaseOrder>(
+        40, _omitFieldNames ? '' : 'eventProductOrder',
+        subBuilder: $10.ProductPurchaseOrder.create)
+    ..aOM<ProductActionResult>(41, _omitFieldNames ? '' : 'productActionResult',
+        subBuilder: ProductActionResult.create)
+    ..aOM<$11.ModuleSession>(99, _omitFieldNames ? '' : 'session',
+        subBuilder: $11.ModuleSession.create)
+    ..aOM<$11.BrainToModuleControl>(100, _omitFieldNames ? '' : 'control',
+        subBuilder: $11.BrainToModuleControl.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1117,6 +1134,8 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(32)
   @$pb.TagNumber(33)
   @$pb.TagNumber(34)
+  @$pb.TagNumber(40)
+  @$pb.TagNumber(41)
   @$pb.TagNumber(100)
   BrainToFace_Cmd whichCmd() => _BrainToFace_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
@@ -1151,6 +1170,8 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(32)
   @$pb.TagNumber(33)
   @$pb.TagNumber(34)
+  @$pb.TagNumber(40)
+  @$pb.TagNumber(41)
   @$pb.TagNumber(100)
   void clearCmd() => $_clearField($_whichOneof(0));
 
@@ -1526,27 +1547,50 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(34)
   AudioStreamCancel ensureAudioStreamCancel() => $_ensure(31);
 
+  @$pb.TagNumber(40)
+  $10.ProductPurchaseOrder get eventProductOrder => $_getN(32);
+  @$pb.TagNumber(40)
+  set eventProductOrder($10.ProductPurchaseOrder value) =>
+      $_setField(40, value);
+  @$pb.TagNumber(40)
+  $core.bool hasEventProductOrder() => $_has(32);
+  @$pb.TagNumber(40)
+  void clearEventProductOrder() => $_clearField(40);
+  @$pb.TagNumber(40)
+  $10.ProductPurchaseOrder ensureEventProductOrder() => $_ensure(32);
+
+  @$pb.TagNumber(41)
+  ProductActionResult get productActionResult => $_getN(33);
+  @$pb.TagNumber(41)
+  set productActionResult(ProductActionResult value) => $_setField(41, value);
+  @$pb.TagNumber(41)
+  $core.bool hasProductActionResult() => $_has(33);
+  @$pb.TagNumber(41)
+  void clearProductActionResult() => $_clearField(41);
+  @$pb.TagNumber(41)
+  ProductActionResult ensureProductActionResult() => $_ensure(33);
+
   @$pb.TagNumber(99)
-  $10.ModuleSession get session => $_getN(32);
+  $11.ModuleSession get session => $_getN(34);
   @$pb.TagNumber(99)
-  set session($10.ModuleSession value) => $_setField(99, value);
+  set session($11.ModuleSession value) => $_setField(99, value);
   @$pb.TagNumber(99)
-  $core.bool hasSession() => $_has(32);
+  $core.bool hasSession() => $_has(34);
   @$pb.TagNumber(99)
   void clearSession() => $_clearField(99);
   @$pb.TagNumber(99)
-  $10.ModuleSession ensureSession() => $_ensure(32);
+  $11.ModuleSession ensureSession() => $_ensure(34);
 
   @$pb.TagNumber(100)
-  $10.BrainToModuleControl get control => $_getN(33);
+  $11.BrainToModuleControl get control => $_getN(35);
   @$pb.TagNumber(100)
-  set control($10.BrainToModuleControl value) => $_setField(100, value);
+  set control($11.BrainToModuleControl value) => $_setField(100, value);
   @$pb.TagNumber(100)
-  $core.bool hasControl() => $_has(33);
+  $core.bool hasControl() => $_has(35);
   @$pb.TagNumber(100)
   void clearControl() => $_clearField(100);
   @$pb.TagNumber(100)
-  $10.BrainToModuleControl ensureControl() => $_ensure(33);
+  $11.BrainToModuleControl ensureControl() => $_ensure(35);
 }
 
 /// face -> brain:要一份屏幕放得了的视频。
@@ -1923,6 +1967,7 @@ enum FaceToBrain_Cmd {
   playbackEvent,
   manualMute,
   audioStreamProgress,
+  productAction,
   control,
   notSet
 }
@@ -1935,14 +1980,15 @@ class FaceToBrain extends $pb.GeneratedMessage {
     $4.Empty? getBinanceSettings,
     $4.Empty? requestInit,
     BinanceRequest? binanceRequest,
-    $11.BinanceOfferReply? binanceOfferReply,
+    $12.BinanceOfferReply? binanceOfferReply,
     $4.Empty? getBinanceOffers,
     VideoRequest? videoRequest,
     PlaybackEvent? playbackEvent,
     ManualMute? manualMute,
     AudioStreamProgress? audioStreamProgress,
-    $10.ModuleSession? session,
-    $10.ModuleToBrainControl? control,
+    ProductAction? productAction,
+    $11.ModuleSession? session,
+    $11.ModuleToBrainControl? control,
   }) {
     final result = create();
     if (voiceState != null) result.voiceState = voiceState;
@@ -1958,6 +2004,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
     if (manualMute != null) result.manualMute = manualMute;
     if (audioStreamProgress != null)
       result.audioStreamProgress = audioStreamProgress;
+    if (productAction != null) result.productAction = productAction;
     if (session != null) result.session = session;
     if (control != null) result.control = control;
     return result;
@@ -1984,6 +2031,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
     9: FaceToBrain_Cmd.playbackEvent,
     10: FaceToBrain_Cmd.manualMute,
     33: FaceToBrain_Cmd.audioStreamProgress,
+    40: FaceToBrain_Cmd.productAction,
     100: FaceToBrain_Cmd.control,
     0: FaceToBrain_Cmd.notSet
   };
@@ -1991,7 +2039,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'FaceToBrain',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..oo(0, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 33, 100])
+    ..oo(0, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 33, 40, 100])
     ..aE<StateToggle>(1, _omitFieldNames ? '' : 'voiceState',
         enumValues: StateToggle.values)
     ..aOM<UpdateAction>(2, _omitFieldNames ? '' : 'updateAction',
@@ -2002,8 +2050,8 @@ class FaceToBrain extends $pb.GeneratedMessage {
         subBuilder: $4.Empty.create)
     ..aOM<BinanceRequest>(5, _omitFieldNames ? '' : 'binanceRequest',
         subBuilder: BinanceRequest.create)
-    ..aOM<$11.BinanceOfferReply>(6, _omitFieldNames ? '' : 'binanceOfferReply',
-        subBuilder: $11.BinanceOfferReply.create)
+    ..aOM<$12.BinanceOfferReply>(6, _omitFieldNames ? '' : 'binanceOfferReply',
+        subBuilder: $12.BinanceOfferReply.create)
     ..aOM<$4.Empty>(7, _omitFieldNames ? '' : 'getBinanceOffers',
         subBuilder: $4.Empty.create)
     ..aOM<VideoRequest>(8, _omitFieldNames ? '' : 'videoRequest',
@@ -2014,10 +2062,12 @@ class FaceToBrain extends $pb.GeneratedMessage {
         subBuilder: ManualMute.create)
     ..aOM<AudioStreamProgress>(33, _omitFieldNames ? '' : 'audioStreamProgress',
         subBuilder: AudioStreamProgress.create)
-    ..aOM<$10.ModuleSession>(99, _omitFieldNames ? '' : 'session',
-        subBuilder: $10.ModuleSession.create)
-    ..aOM<$10.ModuleToBrainControl>(100, _omitFieldNames ? '' : 'control',
-        subBuilder: $10.ModuleToBrainControl.create)
+    ..aOM<ProductAction>(40, _omitFieldNames ? '' : 'productAction',
+        subBuilder: ProductAction.create)
+    ..aOM<$11.ModuleSession>(99, _omitFieldNames ? '' : 'session',
+        subBuilder: $11.ModuleSession.create)
+    ..aOM<$11.ModuleToBrainControl>(100, _omitFieldNames ? '' : 'control',
+        subBuilder: $11.ModuleToBrainControl.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2050,6 +2100,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   @$pb.TagNumber(10)
   @$pb.TagNumber(33)
+  @$pb.TagNumber(40)
   @$pb.TagNumber(100)
   FaceToBrain_Cmd whichCmd() => _FaceToBrain_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
@@ -2063,6 +2114,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   @$pb.TagNumber(10)
   @$pb.TagNumber(33)
+  @$pb.TagNumber(40)
   @$pb.TagNumber(100)
   void clearCmd() => $_clearField($_whichOneof(0));
 
@@ -2133,15 +2185,15 @@ class FaceToBrain extends $pb.GeneratedMessage {
 
   /// 人在开单卡上点的「确认 / 取消」
   @$pb.TagNumber(6)
-  $11.BinanceOfferReply get binanceOfferReply => $_getN(5);
+  $12.BinanceOfferReply get binanceOfferReply => $_getN(5);
   @$pb.TagNumber(6)
-  set binanceOfferReply($11.BinanceOfferReply value) => $_setField(6, value);
+  set binanceOfferReply($12.BinanceOfferReply value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasBinanceOfferReply() => $_has(5);
   @$pb.TagNumber(6)
   void clearBinanceOfferReply() => $_clearField(6);
   @$pb.TagNumber(6)
-  $11.BinanceOfferReply ensureBinanceOfferReply() => $_ensure(5);
+  $12.BinanceOfferReply ensureBinanceOfferReply() => $_ensure(5);
 
   /// face 重启后要一次当前的开单卡列表(回 `BrainToFace.binance_offers`)
   @$pb.TagNumber(7)
@@ -2200,27 +2252,38 @@ class FaceToBrain extends $pb.GeneratedMessage {
   @$pb.TagNumber(33)
   AudioStreamProgress ensureAudioStreamProgress() => $_ensure(10);
 
+  @$pb.TagNumber(40)
+  ProductAction get productAction => $_getN(11);
+  @$pb.TagNumber(40)
+  set productAction(ProductAction value) => $_setField(40, value);
+  @$pb.TagNumber(40)
+  $core.bool hasProductAction() => $_has(11);
+  @$pb.TagNumber(40)
+  void clearProductAction() => $_clearField(40);
+  @$pb.TagNumber(40)
+  ProductAction ensureProductAction() => $_ensure(11);
+
   @$pb.TagNumber(99)
-  $10.ModuleSession get session => $_getN(11);
+  $11.ModuleSession get session => $_getN(12);
   @$pb.TagNumber(99)
-  set session($10.ModuleSession value) => $_setField(99, value);
+  set session($11.ModuleSession value) => $_setField(99, value);
   @$pb.TagNumber(99)
-  $core.bool hasSession() => $_has(11);
+  $core.bool hasSession() => $_has(12);
   @$pb.TagNumber(99)
   void clearSession() => $_clearField(99);
   @$pb.TagNumber(99)
-  $10.ModuleSession ensureSession() => $_ensure(11);
+  $11.ModuleSession ensureSession() => $_ensure(12);
 
   @$pb.TagNumber(100)
-  $10.ModuleToBrainControl get control => $_getN(12);
+  $11.ModuleToBrainControl get control => $_getN(13);
   @$pb.TagNumber(100)
-  set control($10.ModuleToBrainControl value) => $_setField(100, value);
+  set control($11.ModuleToBrainControl value) => $_setField(100, value);
   @$pb.TagNumber(100)
-  $core.bool hasControl() => $_has(12);
+  $core.bool hasControl() => $_has(13);
   @$pb.TagNumber(100)
   void clearControl() => $_clearField(100);
   @$pb.TagNumber(100)
-  $10.ModuleToBrainControl ensureControl() => $_ensure(12);
+  $11.ModuleToBrainControl ensureControl() => $_ensure(13);
 }
 
 /// ── 跟单:开单卡 ──────────────────────────────────────────────
@@ -2229,7 +2292,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
 /// 推到屏幕上,人点「确认」才下单。卡本身定义在 hi/binance/offer.proto —— 同一张卡也会作为聊天消息发给主人。
 class BinanceOffers extends $pb.GeneratedMessage {
   factory BinanceOffers({
-    $core.Iterable<$11.BinanceOffer>? list,
+    $core.Iterable<$12.BinanceOffer>? list,
   }) {
     final result = create();
     if (list != null) result.list.addAll(list);
@@ -2249,8 +2312,8 @@ class BinanceOffers extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'BinanceOffers',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..pPM<$11.BinanceOffer>(1, _omitFieldNames ? '' : 'list',
-        subBuilder: $11.BinanceOffer.create)
+    ..pPM<$12.BinanceOffer>(1, _omitFieldNames ? '' : 'list',
+        subBuilder: $12.BinanceOffer.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2273,7 +2336,7 @@ class BinanceOffers extends $pb.GeneratedMessage {
   static BinanceOffers? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $pb.PbList<$11.BinanceOffer> get list => $_getList(0);
+  $pb.PbList<$12.BinanceOffer> get list => $_getList(0);
 }
 
 /// 插件下载/安装进度。
@@ -2684,6 +2747,284 @@ class ManualMute extends $pb.GeneratedMessage {
   $core.bool hasMuted() => $_has(0);
   @$pb.TagNumber(1)
   void clearMuted() => $_clearField(1);
+}
+
+enum ProductAction_Operation {
+  joinProduct,
+  getDetail,
+  confirmPurchase,
+  getOrder,
+  notSet
+}
+
+/// 操作结果只关联当前请求；UI关闭、倒计时和替换继续归公共通知基类。
+class ProductAction extends $pb.GeneratedMessage {
+  factory ProductAction({
+    $core.String? requestId,
+    $9.GetProductReq? joinProduct,
+    $9.GetProductReq? getDetail,
+    $10.ProductPurchaseQuery? confirmPurchase,
+    $10.ProductPurchaseQuery? getOrder,
+  }) {
+    final result = create();
+    if (requestId != null) result.requestId = requestId;
+    if (joinProduct != null) result.joinProduct = joinProduct;
+    if (getDetail != null) result.getDetail = getDetail;
+    if (confirmPurchase != null) result.confirmPurchase = confirmPurchase;
+    if (getOrder != null) result.getOrder = getOrder;
+    return result;
+  }
+
+  ProductAction._();
+
+  factory ProductAction.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ProductAction.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, ProductAction_Operation>
+      _ProductAction_OperationByTag = {
+    2: ProductAction_Operation.joinProduct,
+    3: ProductAction_Operation.getDetail,
+    4: ProductAction_Operation.confirmPurchase,
+    5: ProductAction_Operation.getOrder,
+    0: ProductAction_Operation.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ProductAction',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..oo(0, [2, 3, 4, 5])
+    ..aOS(1, _omitFieldNames ? '' : 'requestId')
+    ..aOM<$9.GetProductReq>(2, _omitFieldNames ? '' : 'joinProduct',
+        subBuilder: $9.GetProductReq.create)
+    ..aOM<$9.GetProductReq>(3, _omitFieldNames ? '' : 'getDetail',
+        subBuilder: $9.GetProductReq.create)
+    ..aOM<$10.ProductPurchaseQuery>(4, _omitFieldNames ? '' : 'confirmPurchase',
+        subBuilder: $10.ProductPurchaseQuery.create)
+    ..aOM<$10.ProductPurchaseQuery>(5, _omitFieldNames ? '' : 'getOrder',
+        subBuilder: $10.ProductPurchaseQuery.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductAction clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductAction copyWith(void Function(ProductAction) updates) =>
+      super.copyWith((message) => updates(message as ProductAction))
+          as ProductAction;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ProductAction create() => ProductAction._();
+  @$core.override
+  ProductAction createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ProductAction getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ProductAction>(create);
+  static ProductAction? _defaultInstance;
+
+  @$pb.TagNumber(2)
+  @$pb.TagNumber(3)
+  @$pb.TagNumber(4)
+  @$pb.TagNumber(5)
+  ProductAction_Operation whichOperation() =>
+      _ProductAction_OperationByTag[$_whichOneof(0)]!;
+  @$pb.TagNumber(2)
+  @$pb.TagNumber(3)
+  @$pb.TagNumber(4)
+  @$pb.TagNumber(5)
+  void clearOperation() => $_clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  $core.String get requestId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set requestId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRequestId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRequestId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $9.GetProductReq get joinProduct => $_getN(1);
+  @$pb.TagNumber(2)
+  set joinProduct($9.GetProductReq value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasJoinProduct() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearJoinProduct() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $9.GetProductReq ensureJoinProduct() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  $9.GetProductReq get getDetail => $_getN(2);
+  @$pb.TagNumber(3)
+  set getDetail($9.GetProductReq value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasGetDetail() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearGetDetail() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $9.GetProductReq ensureGetDetail() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  $10.ProductPurchaseQuery get confirmPurchase => $_getN(3);
+  @$pb.TagNumber(4)
+  set confirmPurchase($10.ProductPurchaseQuery value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasConfirmPurchase() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearConfirmPurchase() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $10.ProductPurchaseQuery ensureConfirmPurchase() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  $10.ProductPurchaseQuery get getOrder => $_getN(4);
+  @$pb.TagNumber(5)
+  set getOrder($10.ProductPurchaseQuery value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasGetOrder() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearGetOrder() => $_clearField(5);
+  @$pb.TagNumber(5)
+  $10.ProductPurchaseQuery ensureGetOrder() => $_ensure(4);
+}
+
+enum ProductActionResult_Result { joined, detail, order, error, notSet }
+
+class ProductActionResult extends $pb.GeneratedMessage {
+  factory ProductActionResult({
+    $core.String? requestId,
+    $10.ProductDistributionAgreement? joined,
+    $10.ProductDetail? detail,
+    $10.ProductPurchaseOrder? order,
+    $core.String? error,
+  }) {
+    final result = create();
+    if (requestId != null) result.requestId = requestId;
+    if (joined != null) result.joined = joined;
+    if (detail != null) result.detail = detail;
+    if (order != null) result.order = order;
+    if (error != null) result.error = error;
+    return result;
+  }
+
+  ProductActionResult._();
+
+  factory ProductActionResult.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ProductActionResult.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, ProductActionResult_Result>
+      _ProductActionResult_ResultByTag = {
+    2: ProductActionResult_Result.joined,
+    3: ProductActionResult_Result.detail,
+    4: ProductActionResult_Result.order,
+    5: ProductActionResult_Result.error,
+    0: ProductActionResult_Result.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ProductActionResult',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..oo(0, [2, 3, 4, 5])
+    ..aOS(1, _omitFieldNames ? '' : 'requestId')
+    ..aOM<$10.ProductDistributionAgreement>(2, _omitFieldNames ? '' : 'joined',
+        subBuilder: $10.ProductDistributionAgreement.create)
+    ..aOM<$10.ProductDetail>(3, _omitFieldNames ? '' : 'detail',
+        subBuilder: $10.ProductDetail.create)
+    ..aOM<$10.ProductPurchaseOrder>(4, _omitFieldNames ? '' : 'order',
+        subBuilder: $10.ProductPurchaseOrder.create)
+    ..aOS(5, _omitFieldNames ? '' : 'error')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductActionResult clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductActionResult copyWith(void Function(ProductActionResult) updates) =>
+      super.copyWith((message) => updates(message as ProductActionResult))
+          as ProductActionResult;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ProductActionResult create() => ProductActionResult._();
+  @$core.override
+  ProductActionResult createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ProductActionResult getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ProductActionResult>(create);
+  static ProductActionResult? _defaultInstance;
+
+  @$pb.TagNumber(2)
+  @$pb.TagNumber(3)
+  @$pb.TagNumber(4)
+  @$pb.TagNumber(5)
+  ProductActionResult_Result whichResult() =>
+      _ProductActionResult_ResultByTag[$_whichOneof(0)]!;
+  @$pb.TagNumber(2)
+  @$pb.TagNumber(3)
+  @$pb.TagNumber(4)
+  @$pb.TagNumber(5)
+  void clearResult() => $_clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  $core.String get requestId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set requestId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRequestId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRequestId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $10.ProductDistributionAgreement get joined => $_getN(1);
+  @$pb.TagNumber(2)
+  set joined($10.ProductDistributionAgreement value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasJoined() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearJoined() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $10.ProductDistributionAgreement ensureJoined() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  $10.ProductDetail get detail => $_getN(2);
+  @$pb.TagNumber(3)
+  set detail($10.ProductDetail value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasDetail() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearDetail() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $10.ProductDetail ensureDetail() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  $10.ProductPurchaseOrder get order => $_getN(3);
+  @$pb.TagNumber(4)
+  set order($10.ProductPurchaseOrder value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasOrder() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearOrder() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $10.ProductPurchaseOrder ensureOrder() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  $core.String get error => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set error($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasError() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearError() => $_clearField(5);
 }
 
 const $core.bool _omitFieldNames =

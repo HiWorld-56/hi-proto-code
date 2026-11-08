@@ -1701,7 +1701,7 @@ pub struct BrainToFace {
     pub session: ::core::option::Option<ModuleSession>,
     #[prost(
         oneof = "brain_to_face::Cmd",
-        tags = "33, 34, 32, 31, 100, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21, 22, 24, 25, 26, 29, 30, 27"
+        tags = "33, 34, 32, 31, 100, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21, 22, 24, 25, 26, 29, 30, 40, 41, 27"
     )]
     pub cmd: ::core::option::Option<brain_to_face::Cmd>,
 }
@@ -1823,6 +1823,11 @@ pub mod brain_to_face {
         /// 商品挂牌事件，沿用普通通知展示
         #[prost(message, tag = "30")]
         EventProductListed(super::super::club::ProductAnnouncement),
+        /// 经订单权限查询后的本机器人采购/供货通知
+        #[prost(message, tag = "40")]
+        EventProductOrder(super::super::club::ProductPurchaseOrder),
+        #[prost(message, tag = "41")]
+        ProductActionResult(super::ProductActionResult),
         #[prost(message, tag = "27")]
         VideoReady(super::VideoReady),
     }
@@ -1892,7 +1897,7 @@ pub struct FaceToBrain {
     pub session: ::core::option::Option<ModuleSession>,
     #[prost(
         oneof = "face_to_brain::Cmd",
-        tags = "33, 9, 10, 100, 1, 2, 3, 4, 5, 6, 7, 8"
+        tags = "33, 40, 9, 10, 100, 1, 2, 3, 4, 5, 6, 7, 8"
     )]
     pub cmd: ::core::option::Option<face_to_brain::Cmd>,
 }
@@ -1902,6 +1907,9 @@ pub mod face_to_brain {
     pub enum Cmd {
         #[prost(message, tag = "33")]
         AudioStreamProgress(super::AudioStreamProgress),
+        /// 当前face会话的商品业务操作，身份由brain决定
+        #[prost(message, tag = "40")]
+        ProductAction(super::ProductAction),
         #[prost(message, tag = "9")]
         PlaybackEvent(super::PlaybackEvent),
         #[prost(message, tag = "10")]
@@ -2168,6 +2176,49 @@ pub struct PlaybackPermit {
 pub struct ManualMute {
     #[prost(bool, optional, tag = "1")]
     pub muted: ::core::option::Option<bool>,
+}
+/// 操作结果只关联当前请求；UI关闭、倒计时和替换继续归公共通知基类。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductAction {
+    #[prost(string, optional, tag = "1")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(oneof = "product_action::Operation", tags = "2, 3, 4, 5")]
+    pub operation: ::core::option::Option<product_action::Operation>,
+}
+/// Nested message and enum types in `ProductAction`.
+pub mod product_action {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Operation {
+        #[prost(message, tag = "2")]
+        JoinProduct(super::super::club::GetProductReq),
+        #[prost(message, tag = "3")]
+        GetDetail(super::super::club::GetProductReq),
+        #[prost(message, tag = "4")]
+        ConfirmPurchase(super::super::club::ProductPurchaseQuery),
+        #[prost(message, tag = "5")]
+        GetOrder(super::super::club::ProductPurchaseQuery),
+    }
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProductActionResult {
+    #[prost(string, optional, tag = "1")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(oneof = "product_action_result::Result", tags = "2, 3, 4, 5")]
+    pub result: ::core::option::Option<product_action_result::Result>,
+}
+/// Nested message and enum types in `ProductActionResult`.
+pub mod product_action_result {
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Result {
+        #[prost(message, tag = "2")]
+        Joined(super::super::club::ProductDistributionAgreement),
+        #[prost(message, tag = "3")]
+        Detail(super::super::club::ProductDetail),
+        #[prost(message, tag = "4")]
+        Order(super::super::club::ProductPurchaseOrder),
+        #[prost(string, tag = "5")]
+        Error(::prost::alloc::string::String),
+    }
 }
 /// 二态开关：语音监听开始/结束、音频播放开始/结束等
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
