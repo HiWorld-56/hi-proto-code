@@ -421,6 +421,7 @@ const (
 	ProductTrade_ReportFulfillment_FullMethodName = "/hi.club.ProductTrade/ReportFulfillment"
 	ProductTrade_RequestRefund_FullMethodName     = "/hi.club.ProductTrade/RequestRefund"
 	ProductTrade_ApproveRefund_FullMethodName     = "/hi.club.ProductTrade/ApproveRefund"
+	ProductTrade_ListTransactions_FullMethodName  = "/hi.club.ProductTrade/ListTransactions"
 	ProductTrade_ListEvents_FullMethodName        = "/hi.club.ProductTrade/ListEvents"
 )
 
@@ -436,6 +437,7 @@ type ProductTradeClient interface {
 	ReportFulfillment(ctx context.Context, in *ProductFulfillmentReport, opts ...grpc.CallOption) (*ProductPurchaseOrder, error)
 	RequestRefund(ctx context.Context, in *ProductRefundRequest, opts ...grpc.CallOption) (*ProductPurchaseOrder, error)
 	ApproveRefund(ctx context.Context, in *ProductPurchaseQuery, opts ...grpc.CallOption) (*ProductPurchaseOrder, error)
+	ListTransactions(ctx context.Context, in *ProductOrderRecordsReq, opts ...grpc.CallOption) (*ListSettlementReceiptsResp, error)
 	ListEvents(ctx context.Context, in *ProductPurchaseQuery, opts ...grpc.CallOption) (*ListProductOrderEventsResp, error)
 }
 
@@ -527,6 +529,16 @@ func (c *productTradeClient) ApproveRefund(ctx context.Context, in *ProductPurch
 	return out, nil
 }
 
+func (c *productTradeClient) ListTransactions(ctx context.Context, in *ProductOrderRecordsReq, opts ...grpc.CallOption) (*ListSettlementReceiptsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListSettlementReceiptsResp)
+	err := c.cc.Invoke(ctx, ProductTrade_ListTransactions_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *productTradeClient) ListEvents(ctx context.Context, in *ProductPurchaseQuery, opts ...grpc.CallOption) (*ListProductOrderEventsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListProductOrderEventsResp)
@@ -549,6 +561,7 @@ type ProductTradeServer interface {
 	ReportFulfillment(context.Context, *ProductFulfillmentReport) (*ProductPurchaseOrder, error)
 	RequestRefund(context.Context, *ProductRefundRequest) (*ProductPurchaseOrder, error)
 	ApproveRefund(context.Context, *ProductPurchaseQuery) (*ProductPurchaseOrder, error)
+	ListTransactions(context.Context, *ProductOrderRecordsReq) (*ListSettlementReceiptsResp, error)
 	ListEvents(context.Context, *ProductPurchaseQuery) (*ListProductOrderEventsResp, error)
 }
 
@@ -582,6 +595,9 @@ func (UnimplementedProductTradeServer) RequestRefund(context.Context, *ProductRe
 }
 func (UnimplementedProductTradeServer) ApproveRefund(context.Context, *ProductPurchaseQuery) (*ProductPurchaseOrder, error) {
 	return nil, status.Error(codes.Unimplemented, "method ApproveRefund not implemented")
+}
+func (UnimplementedProductTradeServer) ListTransactions(context.Context, *ProductOrderRecordsReq) (*ListSettlementReceiptsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListTransactions not implemented")
 }
 func (UnimplementedProductTradeServer) ListEvents(context.Context, *ProductPurchaseQuery) (*ListProductOrderEventsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListEvents not implemented")
@@ -750,6 +766,24 @@ func _ProductTrade_ApproveRefund_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ProductTrade_ListTransactions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProductOrderRecordsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductTradeServer).ListTransactions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductTrade_ListTransactions_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductTradeServer).ListTransactions(ctx, req.(*ProductOrderRecordsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ProductTrade_ListEvents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ProductPurchaseQuery)
 	if err := dec(in); err != nil {
@@ -806,6 +840,10 @@ var ProductTrade_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ApproveRefund",
 			Handler:    _ProductTrade_ApproveRefund_Handler,
+		},
+		{
+			MethodName: "ListTransactions",
+			Handler:    _ProductTrade_ListTransactions_Handler,
 		},
 		{
 			MethodName: "ListEvents",

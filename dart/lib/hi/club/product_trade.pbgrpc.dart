@@ -18,6 +18,7 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 import 'product.pb.dart' as $1;
 import 'product_trade.pb.dart' as $0;
+import 'settlement.pb.dart' as $2;
 
 export 'product_trade.pb.dart';
 
@@ -344,6 +345,13 @@ class ProductTradeClient extends $grpc.Client {
     return $createUnaryCall(_$approveRefund, request, options: options);
   }
 
+  $grpc.ResponseFuture<$2.ListSettlementReceiptsResp> listTransactions(
+    $0.ProductOrderRecordsReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listTransactions, request, options: options);
+  }
+
   $grpc.ResponseFuture<$0.ListProductOrderEventsResp> listEvents(
     $0.ProductPurchaseQuery request, {
     $grpc.CallOptions? options,
@@ -393,6 +401,11 @@ class ProductTradeClient extends $grpc.Client {
           '/hi.club.ProductTrade/ApproveRefund',
           ($0.ProductPurchaseQuery value) => value.writeToBuffer(),
           $0.ProductPurchaseOrder.fromBuffer);
+  static final _$listTransactions = $grpc.ClientMethod<
+          $0.ProductOrderRecordsReq, $2.ListSettlementReceiptsResp>(
+      '/hi.club.ProductTrade/ListTransactions',
+      ($0.ProductOrderRecordsReq value) => value.writeToBuffer(),
+      $2.ListSettlementReceiptsResp.fromBuffer);
   static final _$listEvents = $grpc.ClientMethod<$0.ProductPurchaseQuery,
           $0.ListProductOrderEventsResp>(
       '/hi.club.ProductTrade/ListEvents',
@@ -477,6 +490,15 @@ abstract class ProductTradeServiceBase extends $grpc.Service {
             ($core.List<$core.int> value) =>
                 $0.ProductPurchaseQuery.fromBuffer(value),
             ($0.ProductPurchaseOrder value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ProductOrderRecordsReq,
+            $2.ListSettlementReceiptsResp>(
+        'ListTransactions',
+        listTransactions_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.ProductOrderRecordsReq.fromBuffer(value),
+        ($2.ListSettlementReceiptsResp value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.ProductPurchaseQuery,
             $0.ListProductOrderEventsResp>(
         'ListEvents',
@@ -554,6 +576,15 @@ abstract class ProductTradeServiceBase extends $grpc.Service {
 
   $async.Future<$0.ProductPurchaseOrder> approveRefund(
       $grpc.ServiceCall call, $0.ProductPurchaseQuery request);
+
+  $async.Future<$2.ListSettlementReceiptsResp> listTransactions_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.ProductOrderRecordsReq> $request) async {
+    return listTransactions($call, await $request);
+  }
+
+  $async.Future<$2.ListSettlementReceiptsResp> listTransactions(
+      $grpc.ServiceCall call, $0.ProductOrderRecordsReq request);
 
   $async.Future<$0.ListProductOrderEventsResp> listEvents_Pre(
       $grpc.ServiceCall $call,

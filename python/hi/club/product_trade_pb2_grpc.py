@@ -4,6 +4,7 @@ import grpc
 
 from hi.club import product_pb2 as hi_dot_club_dot_product__pb2
 from hi.club import product_trade_pb2 as hi_dot_club_dot_product__trade__pb2
+from hi.club import settlement_pb2 as hi_dot_club_dot_settlement__pb2
 
 
 class ProductSupplyStub(object):
@@ -417,6 +418,11 @@ class ProductTradeStub(object):
                 request_serializer=hi_dot_club_dot_product__trade__pb2.ProductPurchaseQuery.SerializeToString,
                 response_deserializer=hi_dot_club_dot_product__trade__pb2.ProductPurchaseOrder.FromString,
                 _registered_method=True)
+        self.ListTransactions = channel.unary_unary(
+                '/hi.club.ProductTrade/ListTransactions',
+                request_serializer=hi_dot_club_dot_product__trade__pb2.ProductOrderRecordsReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_settlement__pb2.ListSettlementReceiptsResp.FromString,
+                _registered_method=True)
         self.ListEvents = channel.unary_unary(
                 '/hi.club.ProductTrade/ListEvents',
                 request_serializer=hi_dot_club_dot_product__trade__pb2.ProductPurchaseQuery.SerializeToString,
@@ -475,6 +481,12 @@ class ProductTradeServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ListTransactions(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def ListEvents(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -523,6 +535,11 @@ def add_ProductTradeServicer_to_server(servicer, server):
                     servicer.ApproveRefund,
                     request_deserializer=hi_dot_club_dot_product__trade__pb2.ProductPurchaseQuery.FromString,
                     response_serializer=hi_dot_club_dot_product__trade__pb2.ProductPurchaseOrder.SerializeToString,
+            ),
+            'ListTransactions': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListTransactions,
+                    request_deserializer=hi_dot_club_dot_product__trade__pb2.ProductOrderRecordsReq.FromString,
+                    response_serializer=hi_dot_club_dot_settlement__pb2.ListSettlementReceiptsResp.SerializeToString,
             ),
             'ListEvents': grpc.unary_unary_rpc_method_handler(
                     servicer.ListEvents,
@@ -746,6 +763,33 @@ class ProductTrade(object):
             '/hi.club.ProductTrade/ApproveRefund',
             hi_dot_club_dot_product__trade__pb2.ProductPurchaseQuery.SerializeToString,
             hi_dot_club_dot_product__trade__pb2.ProductPurchaseOrder.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ListTransactions(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.ProductTrade/ListTransactions',
+            hi_dot_club_dot_product__trade__pb2.ProductOrderRecordsReq.SerializeToString,
+            hi_dot_club_dot_settlement__pb2.ListSettlementReceiptsResp.FromString,
             options,
             channel_credentials,
             insecure,

@@ -278,9 +278,28 @@ final $typed_data.Uint8List txStatusRespDescriptor = $convert.base64Decode(
 const TxDetailReq$json = {
   '1': 'TxDetailReq',
   '2': [
-    {'1': 'coin', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'coin', '17': true},
-    {'1': 'hash', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'hash', '17': true},
+    {
+      '1': 'coin',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'coin',
+      '17': true
+    },
+    {
+      '1': 'hash',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'hash',
+      '17': true
+    },
   ],
+  '7': {},
   '8': [
     {'1': '_coin'},
     {'1': '_hash'},
@@ -289,8 +308,8 @@ const TxDetailReq$json = {
 
 /// Descriptor for `TxDetailReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List txDetailReqDescriptor = $convert.base64Decode(
-    'CgtUeERldGFpbFJlcRIXCgRjb2luGAEgASgJSABSBGNvaW6IAQESFwoEaGFzaBgCIAEoCUgBUg'
-    'RoYXNoiAEBQgcKBV9jb2luQgcKBV9oYXNo');
+    'CgtUeERldGFpbFJlcRIdCgRjb2luGAEgASgJQgSQtRgBSABSBGNvaW6IAQESHQoEaGFzaBgCIA'
+    'EoCUIEkLUYAUgBUgRoYXNoiAEBOgSYtRgBQgcKBV9jb2luQgcKBV9oYXNo');
 
 @$core.Deprecated('Use txDetailRespDescriptor instead')
 const TxDetailResp$json = {

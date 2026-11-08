@@ -315,3 +315,147 @@ final $typed_data.Uint8List beginSettlementPaymentReqDescriptor = $convert.base6
     'ICEAFIAFIJcGF5bWVudElkiAEBEjcKDmV4ZWN1dGlvbl91dWlkGAIgASgJQgu6SAjIAQFyA7AB'
     'AUgBUg1leGVjdXRpb25VdWlkiAEBQg0KC19wYXltZW50X2lkQhEKD19leGVjdXRpb25fdXVpZA'
     '==');
+
+@$core.Deprecated('Use settlementReceiptDescriptor instead')
+const SettlementReceipt$json = {
+  '1': 'SettlementReceipt',
+  '2': [
+    {
+      '1': 'id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'id',
+      '17': true
+    },
+    {
+      '1': 'payment_id',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'paymentId',
+      '17': true
+    },
+    {
+      '1': 'reference',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.did.TxDetailReq',
+      '8': {},
+      '10': 'reference'
+    },
+    {
+      '1': 'reporter',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'reporter',
+      '17': true
+    },
+    {
+      '1': 'fact',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.did.TxDetailResp',
+      '8': {},
+      '10': 'fact'
+    },
+    {
+      '1': 'status',
+      '3': 6,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.club.SettlementPaymentStatus',
+      '8': {},
+      '9': 3,
+      '10': 'status',
+      '17': true
+    },
+    {
+      '1': 'created_at',
+      '3': 7,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 4,
+      '10': 'createdAt',
+      '17': true
+    },
+    {
+      '1': 'reason',
+      '3': 8,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 5,
+      '10': 'reason',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_id'},
+    {'1': '_payment_id'},
+    {'1': '_reporter'},
+    {'1': '_status'},
+    {'1': '_created_at'},
+    {'1': '_reason'},
+  ],
+};
+
+/// Descriptor for `SettlementReceipt`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List settlementReceiptDescriptor = $convert.base64Decode(
+    'ChFTZXR0bGVtZW50UmVjZWlwdBIZCgJpZBgBIAEoCUIEkLUYAkgAUgJpZIgBARIoCgpwYXltZW'
+    '50X2lkGAIgASgJQgSQtRgCSAFSCXBheW1lbnRJZIgBARI3CglyZWZlcmVuY2UYAyABKAsyEy5o'
+    'aS5kaWQuVHhEZXRhaWxSZXFCBJC1GAJSCXJlZmVyZW5jZRIlCghyZXBvcnRlchgEIAEoCUIEkL'
+    'UYAkgCUghyZXBvcnRlcogBARIuCgRmYWN0GAUgASgLMhQuaGkuZGlkLlR4RGV0YWlsUmVzcEIE'
+    'kLUYAlIEZmFjdBJDCgZzdGF0dXMYBiABKA4yIC5oaS5jbHViLlNldHRsZW1lbnRQYXltZW50U3'
+    'RhdHVzQgSQtRgCSANSBnN0YXR1c4gBARIoCgpjcmVhdGVkX2F0GAcgASgDQgSQtRgCSARSCWNy'
+    'ZWF0ZWRBdIgBARIhCgZyZWFzb24YCCABKAlCBJC1GAJIBVIGcmVhc29uiAEBOgSYtRgCQgUKA1'
+    '9pZEINCgtfcGF5bWVudF9pZEILCglfcmVwb3J0ZXJCCQoHX3N0YXR1c0INCgtfY3JlYXRlZF9h'
+    'dEIJCgdfcmVhc29u');
+
+@$core.Deprecated('Use listSettlementReceiptsRespDescriptor instead')
+const ListSettlementReceiptsResp$json = {
+  '1': 'ListSettlementReceiptsResp',
+  '2': [
+    {
+      '1': 'list',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.club.SettlementReceipt',
+      '8': {},
+      '10': 'list'
+    },
+    {
+      '1': 'total',
+      '3': 2,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 0,
+      '10': 'total',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_total'},
+  ],
+};
+
+/// Descriptor for `ListSettlementReceiptsResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listSettlementReceiptsRespDescriptor =
+    $convert.base64Decode(
+        'ChpMaXN0U2V0dGxlbWVudFJlY2VpcHRzUmVzcBI0CgRsaXN0GAEgAygLMhouaGkuY2x1Yi5TZX'
+        'R0bGVtZW50UmVjZWlwdEIEkLUYAlIEbGlzdBIfCgV0b3RhbBgCIAEoA0IEkLUYAkgAUgV0b3Rh'
+        'bIgBAToEmLUYAkIICgZfdG90YWw=');

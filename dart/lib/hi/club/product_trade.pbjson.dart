@@ -1829,3 +1829,37 @@ final $typed_data.Uint8List supplierResponseDescriptor = $convert.base64Decode(
     'ZmlsbG1lbnQYAyABKAsyIS5oaS5jbHViLlByb2R1Y3RGdWxmaWxsbWVudFJlcG9ydEgAUgtmdW'
     'xmaWxsbWVudBI8CgxhY2tub3dsZWRnZWQYBCABKAsyFi5nb29nbGUucHJvdG9idWYuRW1wdHlI'
     'AFIMYWNrbm93bGVkZ2VkQggKBnJlc3VsdEINCgtfcmVxdWVzdF9pZA==');
+
+@$core.Deprecated('Use productOrderRecordsReqDescriptor instead')
+const ProductOrderRecordsReq$json = {
+  '1': 'ProductOrderRecordsReq',
+  '2': [
+    {
+      '1': 'order_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'orderId',
+      '17': true
+    },
+    {
+      '1': 'pagination',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Pagination',
+      '10': 'pagination'
+    },
+  ],
+  '8': [
+    {'1': '_order_id'},
+  ],
+};
+
+/// Descriptor for `ProductOrderRecordsReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List productOrderRecordsReqDescriptor = $convert.base64Decode(
+    'ChZQcm9kdWN0T3JkZXJSZWNvcmRzUmVxEioKCG9yZGVyX2lkGAEgASgJQgq6SAfIAQFyAhABSA'
+    'BSB29yZGVySWSIAQESLgoKcGFnaW5hdGlvbhgCIAEoCzIOLmhpLlBhZ2luYXRpb25SCnBhZ2lu'
+    'YXRpb25CCwoJX29yZGVyX2lk');

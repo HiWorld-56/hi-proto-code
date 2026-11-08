@@ -10987,6 +10987,34 @@ pub struct BeginSettlementPaymentReq {
     #[prost(string, optional, tag = "2")]
     pub execution_uuid: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 付款报告与业务认款分别记录：额外来款/错误付款方也保留报告及链事实，不覆盖原付款。
+/// reference是公开链查询定位键，reporter为验签确认的记账主体引用，不能自报。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SettlementReceipt {
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub payment_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "3")]
+    pub reference: ::core::option::Option<super::did::TxDetailReq>,
+    #[prost(string, optional, tag = "4")]
+    pub reporter: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "5")]
+    pub fact: ::core::option::Option<super::did::TxDetailResp>,
+    #[prost(enumeration = "SettlementPaymentStatus", optional, tag = "6")]
+    pub status: ::core::option::Option<i32>,
+    #[prost(int64, optional, tag = "7")]
+    pub created_at: ::core::option::Option<i64>,
+    #[prost(string, optional, tag = "8")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListSettlementReceiptsResp {
+    #[prost(message, repeated, tag = "1")]
+    pub list: ::prost::alloc::vec::Vec<SettlementReceipt>,
+    #[prost(int64, optional, tag = "2")]
+    pub total: ::core::option::Option<i64>,
+}
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum SettlementPaymentStatus {
@@ -12176,6 +12204,13 @@ pub mod supplier_response {
         Acknowledged(::pbjson_types::Empty),
     }
 }
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductOrderRecordsReq {
+    #[prost(string, optional, tag = "1")]
+    pub order_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum ProductPurchaseStatus {
@@ -12893,6 +12928,30 @@ pub mod product_trade_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.ProductTrade", "ApproveRefund"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_transactions(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ProductOrderRecordsReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListSettlementReceiptsResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductTrade/ListTransactions",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductTrade", "ListTransactions"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn list_events(

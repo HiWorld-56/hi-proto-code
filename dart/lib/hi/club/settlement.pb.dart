@@ -17,6 +17,7 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../common.pb.dart' as $0;
 import '../did/base.pb.dart' as $2;
+import '../did/transfer.pb.dart' as $3;
 import 'settlement.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -395,6 +396,216 @@ class BeginSettlementPaymentReq extends $pb.GeneratedMessage {
   $core.bool hasExecutionUuid() => $_has(1);
   @$pb.TagNumber(2)
   void clearExecutionUuid() => $_clearField(2);
+}
+
+/// 付款报告与业务认款分别记录：额外来款/错误付款方也保留报告及链事实，不覆盖原付款。
+/// reference是公开链查询定位键，reporter为验签确认的记账主体引用，不能自报。
+class SettlementReceipt extends $pb.GeneratedMessage {
+  factory SettlementReceipt({
+    $core.String? id,
+    $core.String? paymentId,
+    $3.TxDetailReq? reference,
+    $core.String? reporter,
+    $3.TxDetailResp? fact,
+    SettlementPaymentStatus? status,
+    $fixnum.Int64? createdAt,
+    $core.String? reason,
+  }) {
+    final result = create();
+    if (id != null) result.id = id;
+    if (paymentId != null) result.paymentId = paymentId;
+    if (reference != null) result.reference = reference;
+    if (reporter != null) result.reporter = reporter;
+    if (fact != null) result.fact = fact;
+    if (status != null) result.status = status;
+    if (createdAt != null) result.createdAt = createdAt;
+    if (reason != null) result.reason = reason;
+    return result;
+  }
+
+  SettlementReceipt._();
+
+  factory SettlementReceipt.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SettlementReceipt.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SettlementReceipt',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'id')
+    ..aOS(2, _omitFieldNames ? '' : 'paymentId')
+    ..aOM<$3.TxDetailReq>(3, _omitFieldNames ? '' : 'reference',
+        subBuilder: $3.TxDetailReq.create)
+    ..aOS(4, _omitFieldNames ? '' : 'reporter')
+    ..aOM<$3.TxDetailResp>(5, _omitFieldNames ? '' : 'fact',
+        subBuilder: $3.TxDetailResp.create)
+    ..aE<SettlementPaymentStatus>(6, _omitFieldNames ? '' : 'status',
+        enumValues: SettlementPaymentStatus.values)
+    ..aInt64(7, _omitFieldNames ? '' : 'createdAt')
+    ..aOS(8, _omitFieldNames ? '' : 'reason')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SettlementReceipt clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SettlementReceipt copyWith(void Function(SettlementReceipt) updates) =>
+      super.copyWith((message) => updates(message as SettlementReceipt))
+          as SettlementReceipt;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SettlementReceipt create() => SettlementReceipt._();
+  @$core.override
+  SettlementReceipt createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static SettlementReceipt getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SettlementReceipt>(create);
+  static SettlementReceipt? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get id => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set id($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get paymentId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set paymentId($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPaymentId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPaymentId() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $3.TxDetailReq get reference => $_getN(2);
+  @$pb.TagNumber(3)
+  set reference($3.TxDetailReq value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasReference() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearReference() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $3.TxDetailReq ensureReference() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  $core.String get reporter => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set reporter($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasReporter() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearReporter() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $3.TxDetailResp get fact => $_getN(4);
+  @$pb.TagNumber(5)
+  set fact($3.TxDetailResp value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasFact() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearFact() => $_clearField(5);
+  @$pb.TagNumber(5)
+  $3.TxDetailResp ensureFact() => $_ensure(4);
+
+  @$pb.TagNumber(6)
+  SettlementPaymentStatus get status => $_getN(5);
+  @$pb.TagNumber(6)
+  set status(SettlementPaymentStatus value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasStatus() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearStatus() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $fixnum.Int64 get createdAt => $_getI64(6);
+  @$pb.TagNumber(7)
+  set createdAt($fixnum.Int64 value) => $_setInt64(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasCreatedAt() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearCreatedAt() => $_clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.String get reason => $_getSZ(7);
+  @$pb.TagNumber(8)
+  set reason($core.String value) => $_setString(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasReason() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearReason() => $_clearField(8);
+}
+
+class ListSettlementReceiptsResp extends $pb.GeneratedMessage {
+  factory ListSettlementReceiptsResp({
+    $core.Iterable<SettlementReceipt>? list,
+    $fixnum.Int64? total,
+  }) {
+    final result = create();
+    if (list != null) result.list.addAll(list);
+    if (total != null) result.total = total;
+    return result;
+  }
+
+  ListSettlementReceiptsResp._();
+
+  factory ListSettlementReceiptsResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListSettlementReceiptsResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListSettlementReceiptsResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..pPM<SettlementReceipt>(1, _omitFieldNames ? '' : 'list',
+        subBuilder: SettlementReceipt.create)
+    ..aInt64(2, _omitFieldNames ? '' : 'total')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListSettlementReceiptsResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListSettlementReceiptsResp copyWith(
+          void Function(ListSettlementReceiptsResp) updates) =>
+      super.copyWith(
+              (message) => updates(message as ListSettlementReceiptsResp))
+          as ListSettlementReceiptsResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListSettlementReceiptsResp create() => ListSettlementReceiptsResp._();
+  @$core.override
+  ListSettlementReceiptsResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListSettlementReceiptsResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListSettlementReceiptsResp>(create);
+  static ListSettlementReceiptsResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<SettlementReceipt> get list => $_getList(0);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get total => $_getI64(1);
+  @$pb.TagNumber(2)
+  set total($fixnum.Int64 value) => $_setInt64(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasTotal() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearTotal() => $_clearField(2);
 }
 
 const $core.bool _omitFieldNames =

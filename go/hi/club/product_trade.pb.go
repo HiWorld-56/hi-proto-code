@@ -2478,6 +2478,58 @@ func (*SupplierResponse_Fulfillment) isSupplierResponse_Result() {}
 
 func (*SupplierResponse_Acknowledged) isSupplierResponse_Result() {}
 
+type ProductOrderRecordsReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	OrderId       *string                `protobuf:"bytes,1,opt,name=order_id,json=orderId,proto3,oneof" json:"order_id,omitempty"`
+	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ProductOrderRecordsReq) Reset() {
+	*x = ProductOrderRecordsReq{}
+	mi := &file_hi_club_product_trade_proto_msgTypes[33]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ProductOrderRecordsReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ProductOrderRecordsReq) ProtoMessage() {}
+
+func (x *ProductOrderRecordsReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_product_trade_proto_msgTypes[33]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ProductOrderRecordsReq.ProtoReflect.Descriptor instead.
+func (*ProductOrderRecordsReq) Descriptor() ([]byte, []int) {
+	return file_hi_club_product_trade_proto_rawDescGZIP(), []int{33}
+}
+
+func (x *ProductOrderRecordsReq) GetOrderId() string {
+	if x != nil && x.OrderId != nil {
+		return *x.OrderId
+	}
+	return ""
+}
+
+func (x *ProductOrderRecordsReq) GetPagination() *hi.Pagination {
+	if x != nil {
+		return x.Pagination
+	}
+	return nil
+}
+
 var File_hi_club_product_trade_proto protoreflect.FileDescriptor
 
 const file_hi_club_product_trade_proto_rawDesc = "" +
@@ -2761,7 +2813,14 @@ const file_hi_club_product_trade_proto_rawDesc = "" +
 	"\vfulfillment\x18\x03 \x01(\v2!.hi.club.ProductFulfillmentReportH\x00R\vfulfillment\x12<\n" +
 	"\facknowledged\x18\x04 \x01(\v2\x16.google.protobuf.EmptyH\x00R\facknowledgedB\b\n" +
 	"\x06resultB\r\n" +
-	"\v_request_id*\xa5\x03\n" +
+	"\v_request_id\"\x81\x01\n" +
+	"\x16ProductOrderRecordsReq\x12*\n" +
+	"\border_id\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\aorderId\x88\x01\x01\x12.\n" +
+	"\n" +
+	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
+	"paginationB\v\n" +
+	"\t_order_id*\xa5\x03\n" +
 	"\x15ProductPurchaseStatus\x12'\n" +
 	"#PRODUCT_PURCHASE_STATUS_UNSPECIFIED\x10\x00\x12$\n" +
 	" PRODUCT_PURCHASE_STATUS_APPROVAL\x10\x01\x12#\n" +
@@ -2788,7 +2847,7 @@ const file_hi_club_product_trade_proto_rawDesc = "" +
 	"\x13ProductDistribution\x12Y\n" +
 	"\x04Join\x12#.hi.club.JoinProductDistributionReq\x1a%.hi.club.ProductDistributionAgreement\"\x05\x8a\xb5\x18\x01\x02\x12O\n" +
 	"\x04List\x12\x1a.hi.club.ProductStallQuery\x1a$.hi.club.ListProductDistributionResp\"\x05\x8a\xb5\x18\x01\x02\x12X\n" +
-	"\x05Leave\x12!.hi.club.ProductDistributionQuery\x1a%.hi.club.ProductDistributionAgreement\"\x05\x8a\xb5\x18\x01\x022\x82\x06\n" +
+	"\x05Leave\x12!.hi.club.ProductDistributionQuery\x1a%.hi.club.ProductDistributionAgreement\"\x05\x8a\xb5\x18\x01\x022\xe3\x06\n" +
 	"\fProductTrade\x12P\n" +
 	"\x06Submit\x12 .hi.club.TerminalOrderSubmission\x1a\x1d.hi.club.ProductPurchaseGroup\"\x05\x8a\xb5\x18\x01\x02\x12N\n" +
 	"\aConfirm\x12\x1d.hi.club.ProductPurchaseQuery\x1a\x1d.hi.club.ProductPurchaseOrder\"\x05\x8a\xb5\x18\x01\x02\x12J\n" +
@@ -2797,7 +2856,8 @@ const file_hi_club_product_trade_proto_rawDesc = "" +
 	"\x06Cancel\x12\x1d.hi.club.ProductPurchaseQuery\x1a\x1d.hi.club.ProductPurchaseOrder\"\x05\x8a\xb5\x18\x01\x02\x12\\\n" +
 	"\x11ReportFulfillment\x12!.hi.club.ProductFulfillmentReport\x1a\x1d.hi.club.ProductPurchaseOrder\"\x05\x8a\xb5\x18\x01\x02\x12T\n" +
 	"\rRequestRefund\x12\x1d.hi.club.ProductRefundRequest\x1a\x1d.hi.club.ProductPurchaseOrder\"\x05\x8a\xb5\x18\x01\x02\x12T\n" +
-	"\rApproveRefund\x12\x1d.hi.club.ProductPurchaseQuery\x1a\x1d.hi.club.ProductPurchaseOrder\"\x05\x8a\xb5\x18\x01\x02\x12W\n" +
+	"\rApproveRefund\x12\x1d.hi.club.ProductPurchaseQuery\x1a\x1d.hi.club.ProductPurchaseOrder\"\x05\x8a\xb5\x18\x01\x02\x12_\n" +
+	"\x10ListTransactions\x12\x1f.hi.club.ProductOrderRecordsReq\x1a#.hi.club.ListSettlementReceiptsResp\"\x05\x8a\xb5\x18\x01\x02\x12W\n" +
 	"\n" +
 	"ListEvents\x12\x1d.hi.club.ProductPurchaseQuery\x1a#.hi.club.ListProductOrderEventsResp\"\x05\x8a\xb5\x18\x01\x02B\x88\x01\n" +
 	"\vcom.hi.clubB\x11ProductTradeProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
@@ -2815,7 +2875,7 @@ func file_hi_club_product_trade_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_club_product_trade_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_hi_club_product_trade_proto_msgTypes = make([]protoimpl.MessageInfo, 33)
+var file_hi_club_product_trade_proto_msgTypes = make([]protoimpl.MessageInfo, 34)
 var file_hi_club_product_trade_proto_goTypes = []any{
 	(ProductPurchaseStatus)(0),            // 0: hi.club.ProductPurchaseStatus
 	(ProductFulfillmentStatus)(0),         // 1: hi.club.ProductFulfillmentStatus
@@ -2852,103 +2912,108 @@ var file_hi_club_product_trade_proto_goTypes = []any{
 	(*ListProductStockMovementsResp)(nil), // 32: hi.club.ListProductStockMovementsResp
 	(*SupplierRequest)(nil),               // 33: hi.club.SupplierRequest
 	(*SupplierResponse)(nil),              // 34: hi.club.SupplierResponse
-	(*hi.Pagination)(nil),                 // 35: hi.Pagination
-	(*hi.Entity)(nil),                     // 36: hi.Entity
-	(*ProductImage)(nil),                  // 37: hi.club.ProductImage
-	(*Product)(nil),                       // 38: hi.club.Product
-	(*did.CoinAmount)(nil),                // 39: hi.did.CoinAmount
-	(*ProductFulfillmentSpec)(nil),        // 40: hi.club.ProductFulfillmentSpec
-	(*SettlementPayment)(nil),             // 41: hi.club.SettlementPayment
-	(*ProductStockBalance)(nil),           // 42: hi.club.ProductStockBalance
-	(*GetProductReq)(nil),                 // 43: hi.club.GetProductReq
-	(*emptypb.Empty)(nil),                 // 44: google.protobuf.Empty
+	(*ProductOrderRecordsReq)(nil),        // 35: hi.club.ProductOrderRecordsReq
+	(*hi.Pagination)(nil),                 // 36: hi.Pagination
+	(*hi.Entity)(nil),                     // 37: hi.Entity
+	(*ProductImage)(nil),                  // 38: hi.club.ProductImage
+	(*Product)(nil),                       // 39: hi.club.Product
+	(*did.CoinAmount)(nil),                // 40: hi.did.CoinAmount
+	(*ProductFulfillmentSpec)(nil),        // 41: hi.club.ProductFulfillmentSpec
+	(*SettlementPayment)(nil),             // 42: hi.club.SettlementPayment
+	(*ProductStockBalance)(nil),           // 43: hi.club.ProductStockBalance
+	(*GetProductReq)(nil),                 // 44: hi.club.GetProductReq
+	(*emptypb.Empty)(nil),                 // 45: google.protobuf.Empty
+	(*ListSettlementReceiptsResp)(nil),    // 46: hi.club.ListSettlementReceiptsResp
 }
 var file_hi_club_product_trade_proto_depIdxs = []int32{
-	35, // 0: hi.club.ProductStallQuery.pagination:type_name -> hi.Pagination
-	35, // 1: hi.club.ProductRecordQuery.pagination:type_name -> hi.Pagination
-	36, // 2: hi.club.SupplierIntegration.stall:type_name -> hi.Entity
+	36, // 0: hi.club.ProductStallQuery.pagination:type_name -> hi.Pagination
+	36, // 1: hi.club.ProductRecordQuery.pagination:type_name -> hi.Pagination
+	37, // 2: hi.club.SupplierIntegration.stall:type_name -> hi.Entity
 	6,  // 3: hi.club.ProductDetail.sections:type_name -> hi.club.ProductDetailSection
-	37, // 4: hi.club.ProductDetailSection.image:type_name -> hi.club.ProductImage
+	38, // 4: hi.club.ProductDetailSection.image:type_name -> hi.club.ProductImage
 	7,  // 5: hi.club.ProductDetailSection.specification:type_name -> hi.club.ProductSpecification
-	36, // 6: hi.club.ProductDistributionAgreement.reseller:type_name -> hi.Entity
-	36, // 7: hi.club.ProductDistributionAgreement.supplier:type_name -> hi.Entity
-	38, // 8: hi.club.ProductDistributionAgreement.product:type_name -> hi.club.Product
+	37, // 6: hi.club.ProductDistributionAgreement.reseller:type_name -> hi.Entity
+	37, // 7: hi.club.ProductDistributionAgreement.supplier:type_name -> hi.Entity
+	39, // 8: hi.club.ProductDistributionAgreement.product:type_name -> hi.club.Product
 	8,  // 9: hi.club.ListProductDistributionResp.list:type_name -> hi.club.ProductDistributionAgreement
 	12, // 10: hi.club.ProductDeliveryTarget.physical:type_name -> hi.club.PhysicalRecipient
 	13, // 11: hi.club.ProductDeliveryTarget.digital:type_name -> hi.club.DigitalRecipient
-	39, // 12: hi.club.ProductPurchaseInput.maximum_total:type_name -> hi.did.CoinAmount
+	40, // 12: hi.club.ProductPurchaseInput.maximum_total:type_name -> hi.did.CoinAmount
 	15, // 13: hi.club.TerminalOrderSubmission.source:type_name -> hi.club.TerminalOrderRef
 	16, // 14: hi.club.TerminalOrderSubmission.lines:type_name -> hi.club.ProductPurchaseInput
 	14, // 15: hi.club.TerminalOrderSubmission.target:type_name -> hi.club.ProductDeliveryTarget
-	38, // 16: hi.club.ProductPurchaseLine.product:type_name -> hi.club.Product
-	39, // 17: hi.club.ProductPurchaseLine.total:type_name -> hi.did.CoinAmount
-	40, // 18: hi.club.ProductPurchaseLine.fulfillment:type_name -> hi.club.ProductFulfillmentSpec
+	39, // 16: hi.club.ProductPurchaseLine.product:type_name -> hi.club.Product
+	40, // 17: hi.club.ProductPurchaseLine.total:type_name -> hi.did.CoinAmount
+	41, // 18: hi.club.ProductPurchaseLine.fulfillment:type_name -> hi.club.ProductFulfillmentSpec
 	5,  // 19: hi.club.ProductPurchaseLine.detail:type_name -> hi.club.ProductDetail
-	36, // 20: hi.club.ProductPurchaseOrder.reseller:type_name -> hi.Entity
-	36, // 21: hi.club.ProductPurchaseOrder.supplier:type_name -> hi.Entity
+	37, // 20: hi.club.ProductPurchaseOrder.reseller:type_name -> hi.Entity
+	37, // 21: hi.club.ProductPurchaseOrder.supplier:type_name -> hi.Entity
 	15, // 22: hi.club.ProductPurchaseOrder.source:type_name -> hi.club.TerminalOrderRef
 	18, // 23: hi.club.ProductPurchaseOrder.line:type_name -> hi.club.ProductPurchaseLine
 	14, // 24: hi.club.ProductPurchaseOrder.target:type_name -> hi.club.ProductDeliveryTarget
 	0,  // 25: hi.club.ProductPurchaseOrder.status:type_name -> hi.club.ProductPurchaseStatus
-	41, // 26: hi.club.ProductPurchaseOrder.payment:type_name -> hi.club.SettlementPayment
+	42, // 26: hi.club.ProductPurchaseOrder.payment:type_name -> hi.club.SettlementPayment
 	26, // 27: hi.club.ProductPurchaseOrder.fulfillment:type_name -> hi.club.ProductFulfillment
-	41, // 28: hi.club.ProductPurchaseOrder.refund:type_name -> hi.club.SettlementPayment
+	42, // 28: hi.club.ProductPurchaseOrder.refund:type_name -> hi.club.SettlementPayment
 	15, // 29: hi.club.ProductPurchaseGroup.source:type_name -> hi.club.TerminalOrderRef
 	19, // 30: hi.club.ProductPurchaseGroup.orders:type_name -> hi.club.ProductPurchaseOrder
-	35, // 31: hi.club.ListProductPurchasesReq.pagination:type_name -> hi.Pagination
+	36, // 31: hi.club.ListProductPurchasesReq.pagination:type_name -> hi.Pagination
 	19, // 32: hi.club.ListProductPurchasesResp.list:type_name -> hi.club.ProductPurchaseOrder
 	1,  // 33: hi.club.ProductFulfillment.status:type_name -> hi.club.ProductFulfillmentStatus
 	24, // 34: hi.club.ProductFulfillment.shipment:type_name -> hi.club.ProductShipment
 	25, // 35: hi.club.ProductFulfillment.digital:type_name -> hi.club.ProductDigitalDelivery
 	26, // 36: hi.club.ProductFulfillmentReport.fulfillment:type_name -> hi.club.ProductFulfillment
-	36, // 37: hi.club.ProductOrderEvent.actor:type_name -> hi.Entity
+	37, // 37: hi.club.ProductOrderEvent.actor:type_name -> hi.Entity
 	29, // 38: hi.club.ListProductOrderEventsResp.list:type_name -> hi.club.ProductOrderEvent
-	42, // 39: hi.club.ProductStockMovement.balance:type_name -> hi.club.ProductStockBalance
+	43, // 39: hi.club.ProductStockMovement.balance:type_name -> hi.club.ProductStockBalance
 	31, // 40: hi.club.ListProductStockMovementsResp.list:type_name -> hi.club.ProductStockMovement
-	38, // 41: hi.club.SupplierRequest.product_registered:type_name -> hi.club.Product
-	43, // 42: hi.club.SupplierRequest.get_detail:type_name -> hi.club.GetProductReq
+	39, // 41: hi.club.SupplierRequest.product_registered:type_name -> hi.club.Product
+	44, // 42: hi.club.SupplierRequest.get_detail:type_name -> hi.club.GetProductReq
 	19, // 43: hi.club.SupplierRequest.fulfill_order:type_name -> hi.club.ProductPurchaseOrder
 	21, // 44: hi.club.SupplierRequest.get_fulfillment:type_name -> hi.club.ProductPurchaseQuery
 	5,  // 45: hi.club.SupplierResponse.detail:type_name -> hi.club.ProductDetail
 	27, // 46: hi.club.SupplierResponse.fulfillment:type_name -> hi.club.ProductFulfillmentReport
-	44, // 47: hi.club.SupplierResponse.acknowledged:type_name -> google.protobuf.Empty
-	4,  // 48: hi.club.ProductSupply.SetIntegration:input_type -> hi.club.SupplierIntegration
-	2,  // 49: hi.club.ProductSupply.GetIntegration:input_type -> hi.club.ProductStallQuery
-	43, // 50: hi.club.ProductSupply.GetDetail:input_type -> hi.club.GetProductReq
-	3,  // 51: hi.club.ProductSupply.ListStockMovements:input_type -> hi.club.ProductRecordQuery
-	9,  // 52: hi.club.ProductDistribution.Join:input_type -> hi.club.JoinProductDistributionReq
-	2,  // 53: hi.club.ProductDistribution.List:input_type -> hi.club.ProductStallQuery
-	10, // 54: hi.club.ProductDistribution.Leave:input_type -> hi.club.ProductDistributionQuery
-	17, // 55: hi.club.ProductTrade.Submit:input_type -> hi.club.TerminalOrderSubmission
-	21, // 56: hi.club.ProductTrade.Confirm:input_type -> hi.club.ProductPurchaseQuery
-	21, // 57: hi.club.ProductTrade.Get:input_type -> hi.club.ProductPurchaseQuery
-	22, // 58: hi.club.ProductTrade.List:input_type -> hi.club.ListProductPurchasesReq
-	21, // 59: hi.club.ProductTrade.Cancel:input_type -> hi.club.ProductPurchaseQuery
-	27, // 60: hi.club.ProductTrade.ReportFulfillment:input_type -> hi.club.ProductFulfillmentReport
-	28, // 61: hi.club.ProductTrade.RequestRefund:input_type -> hi.club.ProductRefundRequest
-	21, // 62: hi.club.ProductTrade.ApproveRefund:input_type -> hi.club.ProductPurchaseQuery
-	21, // 63: hi.club.ProductTrade.ListEvents:input_type -> hi.club.ProductPurchaseQuery
-	4,  // 64: hi.club.ProductSupply.SetIntegration:output_type -> hi.club.SupplierIntegration
-	4,  // 65: hi.club.ProductSupply.GetIntegration:output_type -> hi.club.SupplierIntegration
-	5,  // 66: hi.club.ProductSupply.GetDetail:output_type -> hi.club.ProductDetail
-	32, // 67: hi.club.ProductSupply.ListStockMovements:output_type -> hi.club.ListProductStockMovementsResp
-	8,  // 68: hi.club.ProductDistribution.Join:output_type -> hi.club.ProductDistributionAgreement
-	11, // 69: hi.club.ProductDistribution.List:output_type -> hi.club.ListProductDistributionResp
-	8,  // 70: hi.club.ProductDistribution.Leave:output_type -> hi.club.ProductDistributionAgreement
-	20, // 71: hi.club.ProductTrade.Submit:output_type -> hi.club.ProductPurchaseGroup
-	19, // 72: hi.club.ProductTrade.Confirm:output_type -> hi.club.ProductPurchaseOrder
-	19, // 73: hi.club.ProductTrade.Get:output_type -> hi.club.ProductPurchaseOrder
-	23, // 74: hi.club.ProductTrade.List:output_type -> hi.club.ListProductPurchasesResp
-	19, // 75: hi.club.ProductTrade.Cancel:output_type -> hi.club.ProductPurchaseOrder
-	19, // 76: hi.club.ProductTrade.ReportFulfillment:output_type -> hi.club.ProductPurchaseOrder
-	19, // 77: hi.club.ProductTrade.RequestRefund:output_type -> hi.club.ProductPurchaseOrder
-	19, // 78: hi.club.ProductTrade.ApproveRefund:output_type -> hi.club.ProductPurchaseOrder
-	30, // 79: hi.club.ProductTrade.ListEvents:output_type -> hi.club.ListProductOrderEventsResp
-	64, // [64:80] is the sub-list for method output_type
-	48, // [48:64] is the sub-list for method input_type
-	48, // [48:48] is the sub-list for extension type_name
-	48, // [48:48] is the sub-list for extension extendee
-	0,  // [0:48] is the sub-list for field type_name
+	45, // 47: hi.club.SupplierResponse.acknowledged:type_name -> google.protobuf.Empty
+	36, // 48: hi.club.ProductOrderRecordsReq.pagination:type_name -> hi.Pagination
+	4,  // 49: hi.club.ProductSupply.SetIntegration:input_type -> hi.club.SupplierIntegration
+	2,  // 50: hi.club.ProductSupply.GetIntegration:input_type -> hi.club.ProductStallQuery
+	44, // 51: hi.club.ProductSupply.GetDetail:input_type -> hi.club.GetProductReq
+	3,  // 52: hi.club.ProductSupply.ListStockMovements:input_type -> hi.club.ProductRecordQuery
+	9,  // 53: hi.club.ProductDistribution.Join:input_type -> hi.club.JoinProductDistributionReq
+	2,  // 54: hi.club.ProductDistribution.List:input_type -> hi.club.ProductStallQuery
+	10, // 55: hi.club.ProductDistribution.Leave:input_type -> hi.club.ProductDistributionQuery
+	17, // 56: hi.club.ProductTrade.Submit:input_type -> hi.club.TerminalOrderSubmission
+	21, // 57: hi.club.ProductTrade.Confirm:input_type -> hi.club.ProductPurchaseQuery
+	21, // 58: hi.club.ProductTrade.Get:input_type -> hi.club.ProductPurchaseQuery
+	22, // 59: hi.club.ProductTrade.List:input_type -> hi.club.ListProductPurchasesReq
+	21, // 60: hi.club.ProductTrade.Cancel:input_type -> hi.club.ProductPurchaseQuery
+	27, // 61: hi.club.ProductTrade.ReportFulfillment:input_type -> hi.club.ProductFulfillmentReport
+	28, // 62: hi.club.ProductTrade.RequestRefund:input_type -> hi.club.ProductRefundRequest
+	21, // 63: hi.club.ProductTrade.ApproveRefund:input_type -> hi.club.ProductPurchaseQuery
+	35, // 64: hi.club.ProductTrade.ListTransactions:input_type -> hi.club.ProductOrderRecordsReq
+	21, // 65: hi.club.ProductTrade.ListEvents:input_type -> hi.club.ProductPurchaseQuery
+	4,  // 66: hi.club.ProductSupply.SetIntegration:output_type -> hi.club.SupplierIntegration
+	4,  // 67: hi.club.ProductSupply.GetIntegration:output_type -> hi.club.SupplierIntegration
+	5,  // 68: hi.club.ProductSupply.GetDetail:output_type -> hi.club.ProductDetail
+	32, // 69: hi.club.ProductSupply.ListStockMovements:output_type -> hi.club.ListProductStockMovementsResp
+	8,  // 70: hi.club.ProductDistribution.Join:output_type -> hi.club.ProductDistributionAgreement
+	11, // 71: hi.club.ProductDistribution.List:output_type -> hi.club.ListProductDistributionResp
+	8,  // 72: hi.club.ProductDistribution.Leave:output_type -> hi.club.ProductDistributionAgreement
+	20, // 73: hi.club.ProductTrade.Submit:output_type -> hi.club.ProductPurchaseGroup
+	19, // 74: hi.club.ProductTrade.Confirm:output_type -> hi.club.ProductPurchaseOrder
+	19, // 75: hi.club.ProductTrade.Get:output_type -> hi.club.ProductPurchaseOrder
+	23, // 76: hi.club.ProductTrade.List:output_type -> hi.club.ListProductPurchasesResp
+	19, // 77: hi.club.ProductTrade.Cancel:output_type -> hi.club.ProductPurchaseOrder
+	19, // 78: hi.club.ProductTrade.ReportFulfillment:output_type -> hi.club.ProductPurchaseOrder
+	19, // 79: hi.club.ProductTrade.RequestRefund:output_type -> hi.club.ProductPurchaseOrder
+	19, // 80: hi.club.ProductTrade.ApproveRefund:output_type -> hi.club.ProductPurchaseOrder
+	46, // 81: hi.club.ProductTrade.ListTransactions:output_type -> hi.club.ListSettlementReceiptsResp
+	30, // 82: hi.club.ProductTrade.ListEvents:output_type -> hi.club.ListProductOrderEventsResp
+	66, // [66:83] is the sub-list for method output_type
+	49, // [49:66] is the sub-list for method input_type
+	49, // [49:49] is the sub-list for extension type_name
+	49, // [49:49] is the sub-list for extension extendee
+	0,  // [0:49] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_product_trade_proto_init() }
@@ -3008,13 +3073,14 @@ func file_hi_club_product_trade_proto_init() {
 		(*SupplierResponse_Fulfillment)(nil),
 		(*SupplierResponse_Acknowledged)(nil),
 	}
+	file_hi_club_product_trade_proto_msgTypes[33].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_product_trade_proto_rawDesc), len(file_hi_club_product_trade_proto_rawDesc)),
 			NumEnums:      2,
-			NumMessages:   33,
+			NumMessages:   34,
 			NumExtensions: 0,
 			NumServices:   3,
 		},

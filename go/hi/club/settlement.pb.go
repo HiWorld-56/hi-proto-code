@@ -356,11 +356,165 @@ func (x *BeginSettlementPaymentReq) GetExecutionUuid() string {
 	return ""
 }
 
+// 付款报告与业务认款分别记录：额外来款/错误付款方也保留报告及链事实，不覆盖原付款。
+// reference是公开链查询定位键，reporter为验签确认的记账主体引用，不能自报。
+type SettlementReceipt struct {
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	Id            *string                  `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	PaymentId     *string                  `protobuf:"bytes,2,opt,name=payment_id,json=paymentId,proto3,oneof" json:"payment_id,omitempty"`
+	Reference     *did.TxDetailReq         `protobuf:"bytes,3,opt,name=reference,proto3" json:"reference,omitempty"`
+	Reporter      *string                  `protobuf:"bytes,4,opt,name=reporter,proto3,oneof" json:"reporter,omitempty"`
+	Fact          *did.TxDetailResp        `protobuf:"bytes,5,opt,name=fact,proto3" json:"fact,omitempty"`
+	Status        *SettlementPaymentStatus `protobuf:"varint,6,opt,name=status,proto3,enum=hi.club.SettlementPaymentStatus,oneof" json:"status,omitempty"`
+	CreatedAt     *int64                   `protobuf:"varint,7,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
+	Reason        *string                  `protobuf:"bytes,8,opt,name=reason,proto3,oneof" json:"reason,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SettlementReceipt) Reset() {
+	*x = SettlementReceipt{}
+	mi := &file_hi_club_settlement_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SettlementReceipt) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SettlementReceipt) ProtoMessage() {}
+
+func (x *SettlementReceipt) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_settlement_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SettlementReceipt.ProtoReflect.Descriptor instead.
+func (*SettlementReceipt) Descriptor() ([]byte, []int) {
+	return file_hi_club_settlement_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *SettlementReceipt) GetId() string {
+	if x != nil && x.Id != nil {
+		return *x.Id
+	}
+	return ""
+}
+
+func (x *SettlementReceipt) GetPaymentId() string {
+	if x != nil && x.PaymentId != nil {
+		return *x.PaymentId
+	}
+	return ""
+}
+
+func (x *SettlementReceipt) GetReference() *did.TxDetailReq {
+	if x != nil {
+		return x.Reference
+	}
+	return nil
+}
+
+func (x *SettlementReceipt) GetReporter() string {
+	if x != nil && x.Reporter != nil {
+		return *x.Reporter
+	}
+	return ""
+}
+
+func (x *SettlementReceipt) GetFact() *did.TxDetailResp {
+	if x != nil {
+		return x.Fact
+	}
+	return nil
+}
+
+func (x *SettlementReceipt) GetStatus() SettlementPaymentStatus {
+	if x != nil && x.Status != nil {
+		return *x.Status
+	}
+	return SettlementPaymentStatus_SETTLEMENT_PAYMENT_STATUS_UNSPECIFIED
+}
+
+func (x *SettlementReceipt) GetCreatedAt() int64 {
+	if x != nil && x.CreatedAt != nil {
+		return *x.CreatedAt
+	}
+	return 0
+}
+
+func (x *SettlementReceipt) GetReason() string {
+	if x != nil && x.Reason != nil {
+		return *x.Reason
+	}
+	return ""
+}
+
+type ListSettlementReceiptsResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	List          []*SettlementReceipt   `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	Total         *int64                 `protobuf:"varint,2,opt,name=total,proto3,oneof" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListSettlementReceiptsResp) Reset() {
+	*x = ListSettlementReceiptsResp{}
+	mi := &file_hi_club_settlement_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListSettlementReceiptsResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListSettlementReceiptsResp) ProtoMessage() {}
+
+func (x *ListSettlementReceiptsResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_settlement_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListSettlementReceiptsResp.ProtoReflect.Descriptor instead.
+func (*ListSettlementReceiptsResp) Descriptor() ([]byte, []int) {
+	return file_hi_club_settlement_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *ListSettlementReceiptsResp) GetList() []*SettlementReceipt {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
+func (x *ListSettlementReceiptsResp) GetTotal() int64 {
+	if x != nil && x.Total != nil {
+		return *x.Total
+	}
+	return 0
+}
+
 var File_hi_club_settlement_proto protoreflect.FileDescriptor
 
 const file_hi_club_settlement_proto_rawDesc = "" +
 	"\n" +
-	"\x18hi/club/settlement.proto\x12\ahi.club\x1a\x0fhi/common.proto\x1a\x11hi/did/base.proto\x1a\x10hi/options.proto\x1a\x1bbuf/validate/validate.proto\"\x89\a\n" +
+	"\x18hi/club/settlement.proto\x12\ahi.club\x1a\x0fhi/common.proto\x1a\x11hi/did/base.proto\x1a\x15hi/did/transfer.proto\x1a\x10hi/options.proto\x1a\x1bbuf/validate/validate.proto\"\x89\a\n" +
 	"\x11SettlementPayment\x12\x19\n" +
 	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x02id\x88\x01\x01\x12*\n" +
 	"\vbusiness_id\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\n" +
@@ -412,7 +566,28 @@ const file_hi_club_settlement_proto_rawDesc = "" +
 	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\tpaymentId\x88\x01\x01\x127\n" +
 	"\x0eexecution_uuid\x18\x02 \x01(\tB\v\xbaH\b\xc8\x01\x01r\x03\xb0\x01\x01H\x01R\rexecutionUuid\x88\x01\x01B\r\n" +
 	"\v_payment_idB\x11\n" +
-	"\x0f_execution_uuid*\xd4\x02\n" +
+	"\x0f_execution_uuid\"\xc8\x03\n" +
+	"\x11SettlementReceipt\x12\x19\n" +
+	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x02id\x88\x01\x01\x12(\n" +
+	"\n" +
+	"payment_id\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\tpaymentId\x88\x01\x01\x127\n" +
+	"\treference\x18\x03 \x01(\v2\x13.hi.did.TxDetailReqB\x04\x90\xb5\x18\x02R\treference\x12%\n" +
+	"\breporter\x18\x04 \x01(\tB\x04\x90\xb5\x18\x02H\x02R\breporter\x88\x01\x01\x12.\n" +
+	"\x04fact\x18\x05 \x01(\v2\x14.hi.did.TxDetailRespB\x04\x90\xb5\x18\x02R\x04fact\x12C\n" +
+	"\x06status\x18\x06 \x01(\x0e2 .hi.club.SettlementPaymentStatusB\x04\x90\xb5\x18\x02H\x03R\x06status\x88\x01\x01\x12(\n" +
+	"\n" +
+	"created_at\x18\a \x01(\x03B\x04\x90\xb5\x18\x02H\x04R\tcreatedAt\x88\x01\x01\x12!\n" +
+	"\x06reason\x18\b \x01(\tB\x04\x90\xb5\x18\x02H\x05R\x06reason\x88\x01\x01:\x04\x98\xb5\x18\x02B\x05\n" +
+	"\x03_idB\r\n" +
+	"\v_payment_idB\v\n" +
+	"\t_reporterB\t\n" +
+	"\a_statusB\r\n" +
+	"\v_created_atB\t\n" +
+	"\a_reason\"\x83\x01\n" +
+	"\x1aListSettlementReceiptsResp\x124\n" +
+	"\x04list\x18\x01 \x03(\v2\x1a.hi.club.SettlementReceiptB\x04\x90\xb5\x18\x02R\x04list\x12\x1f\n" +
+	"\x05total\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x02H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x02B\b\n" +
+	"\x06_total*\xd4\x02\n" +
 	"\x17SettlementPaymentStatus\x12)\n" +
 	"%SETTLEMENT_PAYMENT_STATUS_UNSPECIFIED\x10\x00\x12%\n" +
 	"!SETTLEMENT_PAYMENT_STATUS_PENDING\x10\x01\x12'\n" +
@@ -440,31 +615,39 @@ func file_hi_club_settlement_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_club_settlement_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_hi_club_settlement_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_hi_club_settlement_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_hi_club_settlement_proto_goTypes = []any{
 	(SettlementPaymentStatus)(0),       // 0: hi.club.SettlementPaymentStatus
 	(*SettlementPayment)(nil),          // 1: hi.club.SettlementPayment
 	(*ListSettlementPaymentsResp)(nil), // 2: hi.club.ListSettlementPaymentsResp
 	(*BeginSettlementPaymentReq)(nil),  // 3: hi.club.BeginSettlementPaymentReq
-	(*did.CoinAmount)(nil),             // 4: hi.did.CoinAmount
-	(*hi.Entity)(nil),                  // 5: hi.Entity
-	(*hi.Pagination)(nil),              // 6: hi.Pagination
+	(*SettlementReceipt)(nil),          // 4: hi.club.SettlementReceipt
+	(*ListSettlementReceiptsResp)(nil), // 5: hi.club.ListSettlementReceiptsResp
+	(*did.CoinAmount)(nil),             // 6: hi.did.CoinAmount
+	(*hi.Entity)(nil),                  // 7: hi.Entity
+	(*did.TxDetailReq)(nil),            // 8: hi.did.TxDetailReq
+	(*did.TxDetailResp)(nil),           // 9: hi.did.TxDetailResp
+	(*hi.Pagination)(nil),              // 10: hi.Pagination
 }
 var file_hi_club_settlement_proto_depIdxs = []int32{
-	4, // 0: hi.club.SettlementPayment.total:type_name -> hi.did.CoinAmount
-	5, // 1: hi.club.SettlementPayment.payer:type_name -> hi.Entity
-	5, // 2: hi.club.SettlementPayment.payee:type_name -> hi.Entity
-	0, // 3: hi.club.SettlementPayment.status:type_name -> hi.club.SettlementPaymentStatus
-	1, // 4: hi.club.ListSettlementPaymentsResp.list:type_name -> hi.club.SettlementPayment
-	6, // 5: hi.club.SettlementExecution.List:input_type -> hi.Pagination
-	3, // 6: hi.club.SettlementExecution.Begin:input_type -> hi.club.BeginSettlementPaymentReq
-	2, // 7: hi.club.SettlementExecution.List:output_type -> hi.club.ListSettlementPaymentsResp
-	1, // 8: hi.club.SettlementExecution.Begin:output_type -> hi.club.SettlementPayment
-	7, // [7:9] is the sub-list for method output_type
-	5, // [5:7] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	6,  // 0: hi.club.SettlementPayment.total:type_name -> hi.did.CoinAmount
+	7,  // 1: hi.club.SettlementPayment.payer:type_name -> hi.Entity
+	7,  // 2: hi.club.SettlementPayment.payee:type_name -> hi.Entity
+	0,  // 3: hi.club.SettlementPayment.status:type_name -> hi.club.SettlementPaymentStatus
+	1,  // 4: hi.club.ListSettlementPaymentsResp.list:type_name -> hi.club.SettlementPayment
+	8,  // 5: hi.club.SettlementReceipt.reference:type_name -> hi.did.TxDetailReq
+	9,  // 6: hi.club.SettlementReceipt.fact:type_name -> hi.did.TxDetailResp
+	0,  // 7: hi.club.SettlementReceipt.status:type_name -> hi.club.SettlementPaymentStatus
+	4,  // 8: hi.club.ListSettlementReceiptsResp.list:type_name -> hi.club.SettlementReceipt
+	10, // 9: hi.club.SettlementExecution.List:input_type -> hi.Pagination
+	3,  // 10: hi.club.SettlementExecution.Begin:input_type -> hi.club.BeginSettlementPaymentReq
+	2,  // 11: hi.club.SettlementExecution.List:output_type -> hi.club.ListSettlementPaymentsResp
+	1,  // 12: hi.club.SettlementExecution.Begin:output_type -> hi.club.SettlementPayment
+	11, // [11:13] is the sub-list for method output_type
+	9,  // [9:11] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_settlement_proto_init() }
@@ -475,13 +658,15 @@ func file_hi_club_settlement_proto_init() {
 	file_hi_club_settlement_proto_msgTypes[0].OneofWrappers = []any{}
 	file_hi_club_settlement_proto_msgTypes[1].OneofWrappers = []any{}
 	file_hi_club_settlement_proto_msgTypes[2].OneofWrappers = []any{}
+	file_hi_club_settlement_proto_msgTypes[3].OneofWrappers = []any{}
+	file_hi_club_settlement_proto_msgTypes[4].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_settlement_proto_rawDesc), len(file_hi_club_settlement_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   3,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

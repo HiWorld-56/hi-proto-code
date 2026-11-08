@@ -16,11 +16,11 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $5;
 
-import '../common.pb.dart' as $2;
-import '../did/base.pb.dart' as $3;
+import '../common.pb.dart' as $3;
+import '../did/base.pb.dart' as $4;
 import 'product.pb.dart' as $1;
 import 'product_trade.pbenum.dart';
-import 'settlement.pb.dart' as $4;
+import 'settlement.pb.dart' as $2;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -29,7 +29,7 @@ export 'product_trade.pbenum.dart';
 class ProductStallQuery extends $pb.GeneratedMessage {
   factory ProductStallQuery({
     $core.String? stall,
-    $2.Pagination? pagination,
+    $3.Pagination? pagination,
   }) {
     final result = create();
     if (stall != null) result.stall = stall;
@@ -51,8 +51,8 @@ class ProductStallQuery extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'stall')
-    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $2.Pagination.create)
+    ..aOM<$3.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $3.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -84,21 +84,21 @@ class ProductStallQuery extends $pb.GeneratedMessage {
   void clearStall() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $2.Pagination get pagination => $_getN(1);
+  $3.Pagination get pagination => $_getN(1);
   @$pb.TagNumber(2)
-  set pagination($2.Pagination value) => $_setField(2, value);
+  set pagination($3.Pagination value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasPagination() => $_has(1);
   @$pb.TagNumber(2)
   void clearPagination() => $_clearField(2);
   @$pb.TagNumber(2)
-  $2.Pagination ensurePagination() => $_ensure(1);
+  $3.Pagination ensurePagination() => $_ensure(1);
 }
 
 class ProductRecordQuery extends $pb.GeneratedMessage {
   factory ProductRecordQuery({
     $core.String? productId,
-    $2.Pagination? pagination,
+    $3.Pagination? pagination,
   }) {
     final result = create();
     if (productId != null) result.productId = productId;
@@ -120,8 +120,8 @@ class ProductRecordQuery extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'productId')
-    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $2.Pagination.create)
+    ..aOM<$3.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $3.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -153,20 +153,20 @@ class ProductRecordQuery extends $pb.GeneratedMessage {
   void clearProductId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $2.Pagination get pagination => $_getN(1);
+  $3.Pagination get pagination => $_getN(1);
   @$pb.TagNumber(2)
-  set pagination($2.Pagination value) => $_setField(2, value);
+  set pagination($3.Pagination value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasPagination() => $_has(1);
   @$pb.TagNumber(2)
   void clearPagination() => $_clearField(2);
   @$pb.TagNumber(2)
-  $2.Pagination ensurePagination() => $_ensure(1);
+  $3.Pagination ensurePagination() => $_ensure(1);
 }
 
 class SupplierIntegration extends $pb.GeneratedMessage {
   factory SupplierIntegration({
-    $2.Entity? stall,
+    $3.Entity? stall,
     $core.String? endpoint,
     $core.String? authorization,
     $core.bool? enabled,
@@ -194,8 +194,8 @@ class SupplierIntegration extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'SupplierIntegration',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'stall',
-        subBuilder: $2.Entity.create)
+    ..aOM<$3.Entity>(1, _omitFieldNames ? '' : 'stall',
+        subBuilder: $3.Entity.create)
     ..aOS(2, _omitFieldNames ? '' : 'endpoint')
     ..aOS(3, _omitFieldNames ? '' : 'authorization')
     ..aOB(4, _omitFieldNames ? '' : 'enabled')
@@ -222,15 +222,15 @@ class SupplierIntegration extends $pb.GeneratedMessage {
   static SupplierIntegration? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.Entity get stall => $_getN(0);
+  $3.Entity get stall => $_getN(0);
   @$pb.TagNumber(1)
-  set stall($2.Entity value) => $_setField(1, value);
+  set stall($3.Entity value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasStall() => $_has(0);
   @$pb.TagNumber(1)
   void clearStall() => $_clearField(1);
   @$pb.TagNumber(1)
-  $2.Entity ensureStall() => $_ensure(0);
+  $3.Entity ensureStall() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $core.String get endpoint => $_getSZ(1);
@@ -539,8 +539,8 @@ class ProductSpecification extends $pb.GeneratedMessage {
 class ProductDistributionAgreement extends $pb.GeneratedMessage {
   factory ProductDistributionAgreement({
     $core.String? id,
-    $2.Entity? reseller,
-    $2.Entity? supplier,
+    $3.Entity? reseller,
+    $3.Entity? supplier,
     $1.Product? product,
     $core.bool? active,
     $fixnum.Int64? createdAt,
@@ -569,10 +569,10 @@ class ProductDistributionAgreement extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'id')
-    ..aOM<$2.Entity>(2, _omitFieldNames ? '' : 'reseller',
-        subBuilder: $2.Entity.create)
-    ..aOM<$2.Entity>(3, _omitFieldNames ? '' : 'supplier',
-        subBuilder: $2.Entity.create)
+    ..aOM<$3.Entity>(2, _omitFieldNames ? '' : 'reseller',
+        subBuilder: $3.Entity.create)
+    ..aOM<$3.Entity>(3, _omitFieldNames ? '' : 'supplier',
+        subBuilder: $3.Entity.create)
     ..aOM<$1.Product>(4, _omitFieldNames ? '' : 'product',
         subBuilder: $1.Product.create)
     ..aOB(5, _omitFieldNames ? '' : 'active')
@@ -611,26 +611,26 @@ class ProductDistributionAgreement extends $pb.GeneratedMessage {
   void clearId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $2.Entity get reseller => $_getN(1);
+  $3.Entity get reseller => $_getN(1);
   @$pb.TagNumber(2)
-  set reseller($2.Entity value) => $_setField(2, value);
+  set reseller($3.Entity value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasReseller() => $_has(1);
   @$pb.TagNumber(2)
   void clearReseller() => $_clearField(2);
   @$pb.TagNumber(2)
-  $2.Entity ensureReseller() => $_ensure(1);
+  $3.Entity ensureReseller() => $_ensure(1);
 
   @$pb.TagNumber(3)
-  $2.Entity get supplier => $_getN(2);
+  $3.Entity get supplier => $_getN(2);
   @$pb.TagNumber(3)
-  set supplier($2.Entity value) => $_setField(3, value);
+  set supplier($3.Entity value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasSupplier() => $_has(2);
   @$pb.TagNumber(3)
   void clearSupplier() => $_clearField(3);
   @$pb.TagNumber(3)
-  $2.Entity ensureSupplier() => $_ensure(2);
+  $3.Entity ensureSupplier() => $_ensure(2);
 
   @$pb.TagNumber(4)
   $1.Product get product => $_getN(3);
@@ -1178,7 +1178,7 @@ class ProductPurchaseInput extends $pb.GeneratedMessage {
     $core.String? lineId,
     $core.String? productId,
     $fixnum.Int64? quantity,
-    $3.CoinAmount? maximumTotal,
+    $4.CoinAmount? maximumTotal,
   }) {
     final result = create();
     if (lineId != null) result.lineId = lineId;
@@ -1204,8 +1204,8 @@ class ProductPurchaseInput extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'lineId')
     ..aOS(2, _omitFieldNames ? '' : 'productId')
     ..aInt64(3, _omitFieldNames ? '' : 'quantity')
-    ..aOM<$3.CoinAmount>(4, _omitFieldNames ? '' : 'maximumTotal',
-        subBuilder: $3.CoinAmount.create)
+    ..aOM<$4.CoinAmount>(4, _omitFieldNames ? '' : 'maximumTotal',
+        subBuilder: $4.CoinAmount.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1255,15 +1255,15 @@ class ProductPurchaseInput extends $pb.GeneratedMessage {
   void clearQuantity() => $_clearField(3);
 
   @$pb.TagNumber(4)
-  $3.CoinAmount get maximumTotal => $_getN(3);
+  $4.CoinAmount get maximumTotal => $_getN(3);
   @$pb.TagNumber(4)
-  set maximumTotal($3.CoinAmount value) => $_setField(4, value);
+  set maximumTotal($4.CoinAmount value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasMaximumTotal() => $_has(3);
   @$pb.TagNumber(4)
   void clearMaximumTotal() => $_clearField(4);
   @$pb.TagNumber(4)
-  $3.CoinAmount ensureMaximumTotal() => $_ensure(3);
+  $4.CoinAmount ensureMaximumTotal() => $_ensure(3);
 }
 
 class TerminalOrderSubmission extends $pb.GeneratedMessage {
@@ -1374,7 +1374,7 @@ class ProductPurchaseLine extends $pb.GeneratedMessage {
   factory ProductPurchaseLine({
     $1.Product? product,
     $fixnum.Int64? quantity,
-    $3.CoinAmount? total,
+    $4.CoinAmount? total,
     $1.ProductFulfillmentSpec? fulfillment,
     ProductDetail? detail,
     $fixnum.Int64? supplyRevision,
@@ -1405,8 +1405,8 @@ class ProductPurchaseLine extends $pb.GeneratedMessage {
     ..aOM<$1.Product>(1, _omitFieldNames ? '' : 'product',
         subBuilder: $1.Product.create)
     ..aInt64(2, _omitFieldNames ? '' : 'quantity')
-    ..aOM<$3.CoinAmount>(3, _omitFieldNames ? '' : 'total',
-        subBuilder: $3.CoinAmount.create)
+    ..aOM<$4.CoinAmount>(3, _omitFieldNames ? '' : 'total',
+        subBuilder: $4.CoinAmount.create)
     ..aOM<$1.ProductFulfillmentSpec>(4, _omitFieldNames ? '' : 'fulfillment',
         subBuilder: $1.ProductFulfillmentSpec.create)
     ..aOM<ProductDetail>(5, _omitFieldNames ? '' : 'detail',
@@ -1454,15 +1454,15 @@ class ProductPurchaseLine extends $pb.GeneratedMessage {
   void clearQuantity() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $3.CoinAmount get total => $_getN(2);
+  $4.CoinAmount get total => $_getN(2);
   @$pb.TagNumber(3)
-  set total($3.CoinAmount value) => $_setField(3, value);
+  set total($4.CoinAmount value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasTotal() => $_has(2);
   @$pb.TagNumber(3)
   void clearTotal() => $_clearField(3);
   @$pb.TagNumber(3)
-  $3.CoinAmount ensureTotal() => $_ensure(2);
+  $4.CoinAmount ensureTotal() => $_ensure(2);
 
   @$pb.TagNumber(4)
   $1.ProductFulfillmentSpec get fulfillment => $_getN(3);
@@ -1499,19 +1499,19 @@ class ProductPurchaseLine extends $pb.GeneratedMessage {
 class ProductPurchaseOrder extends $pb.GeneratedMessage {
   factory ProductPurchaseOrder({
     $core.String? id,
-    $2.Entity? reseller,
-    $2.Entity? supplier,
+    $3.Entity? reseller,
+    $3.Entity? supplier,
     TerminalOrderRef? source,
     $core.String? sourceLineId,
     ProductPurchaseLine? line,
     ProductDeliveryTarget? target,
     ProductPurchaseStatus? status,
-    $4.SettlementPayment? payment,
+    $2.SettlementPayment? payment,
     ProductFulfillment? fulfillment,
     $fixnum.Int64? createdAt,
     $fixnum.Int64? expireAt,
     $fixnum.Int64? revision,
-    $4.SettlementPayment? refund,
+    $2.SettlementPayment? refund,
     $core.String? refundReason,
   }) {
     final result = create();
@@ -1547,10 +1547,10 @@ class ProductPurchaseOrder extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'id')
-    ..aOM<$2.Entity>(2, _omitFieldNames ? '' : 'reseller',
-        subBuilder: $2.Entity.create)
-    ..aOM<$2.Entity>(3, _omitFieldNames ? '' : 'supplier',
-        subBuilder: $2.Entity.create)
+    ..aOM<$3.Entity>(2, _omitFieldNames ? '' : 'reseller',
+        subBuilder: $3.Entity.create)
+    ..aOM<$3.Entity>(3, _omitFieldNames ? '' : 'supplier',
+        subBuilder: $3.Entity.create)
     ..aOM<TerminalOrderRef>(4, _omitFieldNames ? '' : 'source',
         subBuilder: TerminalOrderRef.create)
     ..aOS(5, _omitFieldNames ? '' : 'sourceLineId')
@@ -1560,15 +1560,15 @@ class ProductPurchaseOrder extends $pb.GeneratedMessage {
         subBuilder: ProductDeliveryTarget.create)
     ..aE<ProductPurchaseStatus>(8, _omitFieldNames ? '' : 'status',
         enumValues: ProductPurchaseStatus.values)
-    ..aOM<$4.SettlementPayment>(9, _omitFieldNames ? '' : 'payment',
-        subBuilder: $4.SettlementPayment.create)
+    ..aOM<$2.SettlementPayment>(9, _omitFieldNames ? '' : 'payment',
+        subBuilder: $2.SettlementPayment.create)
     ..aOM<ProductFulfillment>(10, _omitFieldNames ? '' : 'fulfillment',
         subBuilder: ProductFulfillment.create)
     ..aInt64(11, _omitFieldNames ? '' : 'createdAt')
     ..aInt64(12, _omitFieldNames ? '' : 'expireAt')
     ..aInt64(13, _omitFieldNames ? '' : 'revision')
-    ..aOM<$4.SettlementPayment>(14, _omitFieldNames ? '' : 'refund',
-        subBuilder: $4.SettlementPayment.create)
+    ..aOM<$2.SettlementPayment>(14, _omitFieldNames ? '' : 'refund',
+        subBuilder: $2.SettlementPayment.create)
     ..aOS(15, _omitFieldNames ? '' : 'refundReason')
     ..hasRequiredFields = false;
 
@@ -1601,26 +1601,26 @@ class ProductPurchaseOrder extends $pb.GeneratedMessage {
   void clearId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $2.Entity get reseller => $_getN(1);
+  $3.Entity get reseller => $_getN(1);
   @$pb.TagNumber(2)
-  set reseller($2.Entity value) => $_setField(2, value);
+  set reseller($3.Entity value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasReseller() => $_has(1);
   @$pb.TagNumber(2)
   void clearReseller() => $_clearField(2);
   @$pb.TagNumber(2)
-  $2.Entity ensureReseller() => $_ensure(1);
+  $3.Entity ensureReseller() => $_ensure(1);
 
   @$pb.TagNumber(3)
-  $2.Entity get supplier => $_getN(2);
+  $3.Entity get supplier => $_getN(2);
   @$pb.TagNumber(3)
-  set supplier($2.Entity value) => $_setField(3, value);
+  set supplier($3.Entity value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasSupplier() => $_has(2);
   @$pb.TagNumber(3)
   void clearSupplier() => $_clearField(3);
   @$pb.TagNumber(3)
-  $2.Entity ensureSupplier() => $_ensure(2);
+  $3.Entity ensureSupplier() => $_ensure(2);
 
   @$pb.TagNumber(4)
   TerminalOrderRef get source => $_getN(3);
@@ -1674,15 +1674,15 @@ class ProductPurchaseOrder extends $pb.GeneratedMessage {
   void clearStatus() => $_clearField(8);
 
   @$pb.TagNumber(9)
-  $4.SettlementPayment get payment => $_getN(8);
+  $2.SettlementPayment get payment => $_getN(8);
   @$pb.TagNumber(9)
-  set payment($4.SettlementPayment value) => $_setField(9, value);
+  set payment($2.SettlementPayment value) => $_setField(9, value);
   @$pb.TagNumber(9)
   $core.bool hasPayment() => $_has(8);
   @$pb.TagNumber(9)
   void clearPayment() => $_clearField(9);
   @$pb.TagNumber(9)
-  $4.SettlementPayment ensurePayment() => $_ensure(8);
+  $2.SettlementPayment ensurePayment() => $_ensure(8);
 
   @$pb.TagNumber(10)
   ProductFulfillment get fulfillment => $_getN(9);
@@ -1723,15 +1723,15 @@ class ProductPurchaseOrder extends $pb.GeneratedMessage {
   void clearRevision() => $_clearField(13);
 
   @$pb.TagNumber(14)
-  $4.SettlementPayment get refund => $_getN(13);
+  $2.SettlementPayment get refund => $_getN(13);
   @$pb.TagNumber(14)
-  set refund($4.SettlementPayment value) => $_setField(14, value);
+  set refund($2.SettlementPayment value) => $_setField(14, value);
   @$pb.TagNumber(14)
   $core.bool hasRefund() => $_has(13);
   @$pb.TagNumber(14)
   void clearRefund() => $_clearField(14);
   @$pb.TagNumber(14)
-  $4.SettlementPayment ensureRefund() => $_ensure(13);
+  $2.SettlementPayment ensureRefund() => $_ensure(13);
 
   @$pb.TagNumber(15)
   $core.String get refundReason => $_getSZ(14);
@@ -1864,7 +1864,7 @@ class ProductPurchaseQuery extends $pb.GeneratedMessage {
 class ListProductPurchasesReq extends $pb.GeneratedMessage {
   factory ListProductPurchasesReq({
     $core.String? stall,
-    $2.Pagination? pagination,
+    $3.Pagination? pagination,
   }) {
     final result = create();
     if (stall != null) result.stall = stall;
@@ -1886,8 +1886,8 @@ class ListProductPurchasesReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'stall')
-    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $2.Pagination.create)
+    ..aOM<$3.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $3.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1920,15 +1920,15 @@ class ListProductPurchasesReq extends $pb.GeneratedMessage {
   void clearStall() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $2.Pagination get pagination => $_getN(1);
+  $3.Pagination get pagination => $_getN(1);
   @$pb.TagNumber(2)
-  set pagination($2.Pagination value) => $_setField(2, value);
+  set pagination($3.Pagination value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasPagination() => $_has(1);
   @$pb.TagNumber(2)
   void clearPagination() => $_clearField(2);
   @$pb.TagNumber(2)
-  $2.Pagination ensurePagination() => $_ensure(1);
+  $3.Pagination ensurePagination() => $_ensure(1);
 }
 
 class ListProductPurchasesResp extends $pb.GeneratedMessage {
@@ -2404,7 +2404,7 @@ class ProductOrderEvent extends $pb.GeneratedMessage {
   factory ProductOrderEvent({
     $core.String? id,
     $core.String? orderId,
-    $2.Entity? actor,
+    $3.Entity? actor,
     $core.String? kind,
     $fixnum.Int64? createdAt,
     $core.String? reason,
@@ -2434,8 +2434,8 @@ class ProductOrderEvent extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'id')
     ..aOS(2, _omitFieldNames ? '' : 'orderId')
-    ..aOM<$2.Entity>(3, _omitFieldNames ? '' : 'actor',
-        subBuilder: $2.Entity.create)
+    ..aOM<$3.Entity>(3, _omitFieldNames ? '' : 'actor',
+        subBuilder: $3.Entity.create)
     ..aOS(4, _omitFieldNames ? '' : 'kind')
     ..aInt64(5, _omitFieldNames ? '' : 'createdAt')
     ..aOS(6, _omitFieldNames ? '' : 'reason')
@@ -2479,15 +2479,15 @@ class ProductOrderEvent extends $pb.GeneratedMessage {
   void clearOrderId() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $2.Entity get actor => $_getN(2);
+  $3.Entity get actor => $_getN(2);
   @$pb.TagNumber(3)
-  set actor($2.Entity value) => $_setField(3, value);
+  set actor($3.Entity value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasActor() => $_has(2);
   @$pb.TagNumber(3)
   void clearActor() => $_clearField(3);
   @$pb.TagNumber(3)
-  $2.Entity ensureActor() => $_ensure(2);
+  $3.Entity ensureActor() => $_ensure(2);
 
   @$pb.TagNumber(4)
   $core.String get kind => $_getSZ(3);
@@ -3048,6 +3048,76 @@ class SupplierResponse extends $pb.GeneratedMessage {
   void clearAcknowledged() => $_clearField(4);
   @$pb.TagNumber(4)
   $5.Empty ensureAcknowledged() => $_ensure(3);
+}
+
+class ProductOrderRecordsReq extends $pb.GeneratedMessage {
+  factory ProductOrderRecordsReq({
+    $core.String? orderId,
+    $3.Pagination? pagination,
+  }) {
+    final result = create();
+    if (orderId != null) result.orderId = orderId;
+    if (pagination != null) result.pagination = pagination;
+    return result;
+  }
+
+  ProductOrderRecordsReq._();
+
+  factory ProductOrderRecordsReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ProductOrderRecordsReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ProductOrderRecordsReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'orderId')
+    ..aOM<$3.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $3.Pagination.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductOrderRecordsReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductOrderRecordsReq copyWith(
+          void Function(ProductOrderRecordsReq) updates) =>
+      super.copyWith((message) => updates(message as ProductOrderRecordsReq))
+          as ProductOrderRecordsReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ProductOrderRecordsReq create() => ProductOrderRecordsReq._();
+  @$core.override
+  ProductOrderRecordsReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ProductOrderRecordsReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ProductOrderRecordsReq>(create);
+  static ProductOrderRecordsReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get orderId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set orderId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasOrderId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearOrderId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $3.Pagination get pagination => $_getN(1);
+  @$pb.TagNumber(2)
+  set pagination($3.Pagination value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPagination() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPagination() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $3.Pagination ensurePagination() => $_ensure(1);
 }
 
 const $core.bool _omitFieldNames =
