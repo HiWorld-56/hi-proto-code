@@ -44,8 +44,8 @@ class ApiKeyClient extends $grpc.Client {
     return $createUnaryCall(_$create, request, options: options);
   }
 
-  /// Edit/Delete 按 api_key 定位,**必须校验归属** —— 只有该机器人的 master 能改/删。
-  /// 已落地(handler 里 isMasterOf(调用者, apikey.user));新增同类方法要带同样的守卫。
+  /// Edit/Delete按api_key定位，校验本人/当前代管权限。
+  /// 各入口复用公共关系校验。
   $grpc.ResponseFuture<$0.EditApiKeyResp> edit(
     $1.EditApiKeyReq request, {
     $grpc.CallOptions? options,

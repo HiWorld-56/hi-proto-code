@@ -16,8 +16,11 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../common.pb.dart' as $3;
+import 'api_key.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
+
+export 'api_key.pbenum.dart';
 
 /// apikey 是用户机密(value 可鉴权),只发给归属用户本人。
 class ApiKeyInfo extends $pb.GeneratedMessage {
@@ -26,12 +29,14 @@ class ApiKeyInfo extends $pb.GeneratedMessage {
     $core.String? value,
     $core.String? note,
     $fixnum.Int64? createdAt,
+    ApiKeyPurpose? purpose,
   }) {
     final result = create();
     if (user != null) result.user = user;
     if (value != null) result.value = value;
     if (note != null) result.note = note;
     if (createdAt != null) result.createdAt = createdAt;
+    if (purpose != null) result.purpose = purpose;
     return result;
   }
 
@@ -52,6 +57,8 @@ class ApiKeyInfo extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'value')
     ..aOS(3, _omitFieldNames ? '' : 'note')
     ..aInt64(4, _omitFieldNames ? '' : 'createdAt')
+    ..aE<ApiKeyPurpose>(5, _omitFieldNames ? '' : 'purpose',
+        enumValues: ApiKeyPurpose.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -107,23 +114,25 @@ class ApiKeyInfo extends $pb.GeneratedMessage {
   $core.bool hasCreatedAt() => $_has(3);
   @$pb.TagNumber(4)
   void clearCreatedAt() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  ApiKeyPurpose get purpose => $_getN(4);
+  @$pb.TagNumber(5)
+  set purpose(ApiKeyPurpose value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasPurpose() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearPurpose() => $_clearField(5);
 }
 
-/// ⚠️ **只有机器人能持 apikey** —— 原先设计里"人也能设 apikey",没必要,已废。
-/// 故这里是**机器人 did**。
-///
-/// ⚠️ **归属校验一律走 CheckAgentAccess(机器人自己 / master / 超管),不是"只有 master"。**
-/// 这把 key 就是**机器人自己的身份**(插件拿它以机器人身份调 club),
-/// 而 hiclub 的理念里人和机器人对等 —— 机器人能自己建插件、自己买插件,
-/// 却建不了自己的身份凭据,说不通。
-/// 而且绝大多数硬件机器人**无主**,"只有 master 能建"对它们等于这条路不存在。
-/// (原先废掉 caller==target 的理由是"人不需要 key",顺手把机器人自己也挡了。)
 class CreateApiKeyReq extends $pb.GeneratedMessage {
   factory CreateApiKeyReq({
-    $core.String? agent,
+    $core.String? user,
+    ApiKeyPurpose? purpose,
   }) {
     final result = create();
-    if (agent != null) result.agent = agent;
+    if (user != null) result.user = user;
+    if (purpose != null) result.purpose = purpose;
     return result;
   }
 
@@ -140,7 +149,9 @@ class CreateApiKeyReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'CreateApiKeyReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'agent')
+    ..aOS(1, _omitFieldNames ? '' : 'user')
+    ..aE<ApiKeyPurpose>(2, _omitFieldNames ? '' : 'purpose',
+        enumValues: ApiKeyPurpose.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -163,13 +174,22 @@ class CreateApiKeyReq extends $pb.GeneratedMessage {
   static CreateApiKeyReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get agent => $_getSZ(0);
+  $core.String get user => $_getSZ(0);
   @$pb.TagNumber(1)
-  set agent($core.String value) => $_setString(0, value);
+  set user($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasAgent() => $_has(0);
+  $core.bool hasUser() => $_has(0);
   @$pb.TagNumber(1)
-  void clearAgent() => $_clearField(1);
+  void clearUser() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  ApiKeyPurpose get purpose => $_getN(1);
+  @$pb.TagNumber(2)
+  set purpose(ApiKeyPurpose value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPurpose() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPurpose() => $_clearField(2);
 }
 
 class CreateApiKeyResp extends $pb.GeneratedMessage {
@@ -288,11 +308,11 @@ class EditApiKeyResp extends $pb.GeneratedMessage {
 
 class ListApiKeysReq extends $pb.GeneratedMessage {
   factory ListApiKeysReq({
-    $core.String? agent,
+    $core.String? user,
     $3.Pagination? pagination,
   }) {
     final result = create();
-    if (agent != null) result.agent = agent;
+    if (user != null) result.user = user;
     if (pagination != null) result.pagination = pagination;
     return result;
   }
@@ -310,7 +330,7 @@ class ListApiKeysReq extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'ListApiKeysReq',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'agent')
+    ..aOS(1, _omitFieldNames ? '' : 'user')
     ..aOM<$3.Pagination>(2, _omitFieldNames ? '' : 'pagination',
         subBuilder: $3.Pagination.create)
     ..hasRequiredFields = false;
@@ -335,13 +355,13 @@ class ListApiKeysReq extends $pb.GeneratedMessage {
   static ListApiKeysReq? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get agent => $_getSZ(0);
+  $core.String get user => $_getSZ(0);
   @$pb.TagNumber(1)
-  set agent($core.String value) => $_setString(0, value);
+  set user($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasAgent() => $_has(0);
+  $core.bool hasUser() => $_has(0);
   @$pb.TagNumber(1)
-  void clearAgent() => $_clearField(1);
+  void clearUser() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $3.Pagination get pagination => $_getN(1);

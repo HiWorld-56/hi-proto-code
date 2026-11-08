@@ -15,6 +15,21 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use apiKeyPurposeDescriptor instead')
+const ApiKeyPurpose$json = {
+  '1': 'ApiKeyPurpose',
+  '2': [
+    {'1': 'API_KEY_PURPOSE_UNSPECIFIED', '2': 0},
+    {'1': 'API_KEY_PURPOSE_PLUGIN', '2': 1},
+    {'1': 'API_KEY_PURPOSE_USER_API', '2': 2},
+  ],
+};
+
+/// Descriptor for `ApiKeyPurpose`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List apiKeyPurposeDescriptor = $convert.base64Decode(
+    'Cg1BcGlLZXlQdXJwb3NlEh8KG0FQSV9LRVlfUFVSUE9TRV9VTlNQRUNJRklFRBAAEhoKFkFQSV'
+    '9LRVlfUFVSUE9TRV9QTFVHSU4QARIcChhBUElfS0VZX1BVUlBPU0VfVVNFUl9BUEkQAg==');
+
 @$core.Deprecated('Use apiKeyInfoDescriptor instead')
 const ApiKeyInfo$json = {
   '1': 'ApiKeyInfo',
@@ -59,6 +74,17 @@ const ApiKeyInfo$json = {
       '10': 'createdAt',
       '17': true
     },
+    {
+      '1': 'purpose',
+      '3': 5,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.club.ApiKeyPurpose',
+      '8': {},
+      '9': 4,
+      '10': 'purpose',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -66,6 +92,7 @@ const ApiKeyInfo$json = {
     {'1': '_value'},
     {'1': '_note'},
     {'1': '_created_at'},
+    {'1': '_purpose'},
   ],
 };
 
@@ -73,23 +100,37 @@ const ApiKeyInfo$json = {
 final $typed_data.Uint8List apiKeyInfoDescriptor = $convert.base64Decode(
     'CgpBcGlLZXlJbmZvEh0KBHVzZXIYASABKAlCBJC1GANIAFIEdXNlcogBARIfCgV2YWx1ZRgCIA'
     'EoCUIEkLUYA0gBUgV2YWx1ZYgBARIdCgRub3RlGAMgASgJQgSQtRgDSAJSBG5vdGWIAQESKAoK'
-    'Y3JlYXRlZF9hdBgEIAEoA0IEkLUYA0gDUgljcmVhdGVkQXSIAQE6BJi1GANCBwoFX3VzZXJCCA'
-    'oGX3ZhbHVlQgcKBV9ub3RlQg0KC19jcmVhdGVkX2F0');
+    'Y3JlYXRlZF9hdBgEIAEoA0IEkLUYA0gDUgljcmVhdGVkQXSIAQESOwoHcHVycG9zZRgFIAEoDj'
+    'IWLmhpLmNsdWIuQXBpS2V5UHVycG9zZUIEkLUYA0gEUgdwdXJwb3NliAEBOgSYtRgDQgcKBV91'
+    'c2VyQggKBl92YWx1ZUIHCgVfbm90ZUINCgtfY3JlYXRlZF9hdEIKCghfcHVycG9zZQ==');
 
 @$core.Deprecated('Use createApiKeyReqDescriptor instead')
 const CreateApiKeyReq$json = {
   '1': 'CreateApiKeyReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'agent', '17': true},
+    {'1': 'user', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'user', '17': true},
+    {
+      '1': 'purpose',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.club.ApiKeyPurpose',
+      '9': 1,
+      '10': 'purpose',
+      '17': true
+    },
   ],
   '8': [
-    {'1': '_agent'},
+    {'1': '_user'},
+    {'1': '_purpose'},
   ],
 };
 
 /// Descriptor for `CreateApiKeyReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List createApiKeyReqDescriptor = $convert.base64Decode(
-    'Cg9DcmVhdGVBcGlLZXlSZXESGQoFYWdlbnQYASABKAlIAFIFYWdlbnSIAQFCCAoGX2FnZW50');
+    'Cg9DcmVhdGVBcGlLZXlSZXESFwoEdXNlchgBIAEoCUgAUgR1c2VyiAEBEjUKB3B1cnBvc2UYAi'
+    'ABKA4yFi5oaS5jbHViLkFwaUtleVB1cnBvc2VIAVIHcHVycG9zZYgBAUIHCgVfdXNlckIKCghf'
+    'cHVycG9zZQ==');
 
 @$core.Deprecated('Use createApiKeyRespDescriptor instead')
 const CreateApiKeyResp$json = {
@@ -139,7 +180,7 @@ final $typed_data.Uint8List editApiKeyRespDescriptor = $convert.base64Decode(
 const ListApiKeysReq$json = {
   '1': 'ListApiKeysReq',
   '2': [
-    {'1': 'agent', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'agent', '17': true},
+    {'1': 'user', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'user', '17': true},
     {
       '1': 'pagination',
       '3': 2,
@@ -150,14 +191,14 @@ const ListApiKeysReq$json = {
     },
   ],
   '8': [
-    {'1': '_agent'},
+    {'1': '_user'},
   ],
 };
 
 /// Descriptor for `ListApiKeysReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listApiKeysReqDescriptor = $convert.base64Decode(
-    'Cg5MaXN0QXBpS2V5c1JlcRIZCgVhZ2VudBgBIAEoCUgAUgVhZ2VudIgBARIuCgpwYWdpbmF0aW'
-    '9uGAIgASgLMg4uaGkuUGFnaW5hdGlvblIKcGFnaW5hdGlvbkIICgZfYWdlbnQ=');
+    'Cg5MaXN0QXBpS2V5c1JlcRIXCgR1c2VyGAEgASgJSABSBHVzZXKIAQESLgoKcGFnaW5hdGlvbh'
+    'gCIAEoCzIOLmhpLlBhZ2luYXRpb25SCnBhZ2luYXRpb25CBwoFX3VzZXI=');
 
 @$core.Deprecated('Use listApiKeysRespDescriptor instead')
 const ListApiKeysResp$json = {

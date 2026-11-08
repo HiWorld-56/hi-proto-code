@@ -507,21 +507,17 @@ pub struct ApiKeyInfo {
     pub note: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(int64, optional, tag = "4")]
     pub created_at: ::core::option::Option<i64>,
+    #[prost(enumeration = "ApiKeyPurpose", optional, tag = "5")]
+    pub purpose: ::core::option::Option<i32>,
 }
-/// ⚠️ **只有机器人能持 apikey** —— 原先设计里"人也能设 apikey",没必要,已废。
-/// 故这里是**机器人 did**。
-///
-/// ⚠️ **归属校验一律走 CheckAgentAccess(机器人自己 / master / 超管),不是"只有 master"。**
-/// 这把 key 就是**机器人自己的身份**(插件拿它以机器人身份调 club),
-/// 而 hiclub 的理念里人和机器人对等 —— 机器人能自己建插件、自己买插件,
-/// 却建不了自己的身份凭据,说不通。
-/// 而且绝大多数硬件机器人**无主**,"只有 master 能建"对它们等于这条路不存在。
-/// (原先废掉 caller==target 的理由是"人不需要 key",顺手把机器人自己也挡了。)
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateApiKeyReq {
-    /// 机器人 did;机器人自己 / 它的 master / 超管都能建
+    /// 不传=本人，代管传当前有权管理的用户DID
     #[prost(string, optional, tag = "1")]
-    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    pub user: ::core::option::Option<::prost::alloc::string::String>,
+    /// 不传=PLUGIN；个人Web明确选择USER_API
+    #[prost(enumeration = "ApiKeyPurpose", optional, tag = "2")]
+    pub purpose: ::core::option::Option<i32>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CreateApiKeyResp {
@@ -535,9 +531,9 @@ pub struct EditApiKeyResp {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListApiKeysReq {
-    /// 机器人 did;能查的只有它的 master
+    /// 不传=本人
     #[prost(string, optional, tag = "1")]
-    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    pub user: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
 }
@@ -552,6 +548,39 @@ pub struct ListApiKeysResp {
 pub struct DeleteApiKeyReq {
     #[prost(string, optional, tag = "1")]
     pub api_key: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 人与机器人均可管理本人凭据；当前主人可代管仆从机器人的凭据。
+/// 不传user=调用者本人。用途约束跟随凭据，不按人的类型或机器人类型区分。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum ApiKeyPurpose {
+    Unspecified = 0,
+    /// 既有受限插件用途，不能被后台用途凭据替代注入
+    Plugin = 1,
+    /// 用户身份的外部API，业务权限仍按当前主体/关系校验
+    UserApi = 2,
+}
+impl ApiKeyPurpose {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "API_KEY_PURPOSE_UNSPECIFIED",
+            Self::Plugin => "API_KEY_PURPOSE_PLUGIN",
+            Self::UserApi => "API_KEY_PURPOSE_USER_API",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "API_KEY_PURPOSE_UNSPECIFIED" => Some(Self::Unspecified),
+            "API_KEY_PURPOSE_PLUGIN" => Some(Self::Plugin),
+            "API_KEY_PURPOSE_USER_API" => Some(Self::UserApi),
+            _ => None,
+        }
+    }
 }
 /// Generated client implementations.
 pub mod api_key_client {
@@ -668,8 +697,8 @@ pub mod api_key_client {
             req.extensions_mut().insert(GrpcMethod::new("hi.club.ApiKey", "Create"));
             self.inner.unary(req, path, codec).await
         }
-        /// Edit/Delete 按 api_key 定位,**必须校验归属** —— 只有该机器人的 master 能改/删。
-        /// 已落地(handler 里 isMasterOf(调用者, apikey.user));新增同类方法要带同样的守卫。
+        /// Edit/Delete按api_key定位，校验本人/当前代管权限。
+        /// 各入口复用公共关系校验。
         pub async fn edit(
             &mut self,
             request: impl tonic::IntoRequest<super::super::ai::EditApiKeyReq>,
@@ -1595,8 +1624,12 @@ pub struct ProductInfo {
     pub name: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, repeated, tag = "2")]
     pub images: ::prost::alloc::vec::Vec<ProductImage>,
+    /// 唯一现价来源，订单冻结其快照
     #[prost(message, optional, tag = "3")]
     pub pricing: ::core::option::Option<ProductPricing>,
+    /// 客户系统商品原始ID，仅人工排查，不参与业务定位/幂等/去重
+    #[prost(string, optional, tag = "4")]
+    pub custom_id: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Product {
@@ -1619,6 +1652,12 @@ pub struct ProductInventoryItem {
     /// 微秒
     #[prost(int64, optional, tag = "4")]
     pub uploaded_at: ::core::option::Option<i64>,
+    #[prost(message, optional, tag = "5")]
+    pub stock: ::core::option::Option<ProductStockBalance>,
+    #[prost(message, optional, tag = "6")]
+    pub fulfillment: ::core::option::Option<ProductFulfillmentSpec>,
+    #[prost(int64, optional, tag = "7")]
+    pub revision: ::core::option::Option<i64>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProductListing {
@@ -1641,6 +1680,13 @@ pub struct ProductListing {
     /// 本次上架事件，重试不变，再上架产生新事件
     #[prost(string, optional, tag = "7")]
     pub publication_uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "8")]
+    pub fulfillment: ::core::option::Option<ProductFulfillmentSpec>,
+    /// 未配置不传，不冒充0
+    #[prost(int64, optional, tag = "9")]
+    pub available_quantity: ::core::option::Option<i64>,
+    #[prost(bool, optional, tag = "10")]
+    pub purchasable: ::core::option::Option<bool>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProductAnnouncement {
@@ -1675,6 +1721,11 @@ pub struct CreateProductReq {
     pub stall: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "3")]
     pub info: ::core::option::Option<ProductInfo>,
+    /// 未配置不可采购，0为已配置但无货
+    #[prost(int64, optional, tag = "4")]
+    pub quantity: ::core::option::Option<i64>,
+    #[prost(message, optional, tag = "5")]
+    pub fulfillment: ::core::option::Option<ProductFulfillmentSpec>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetProductReq {
@@ -1750,6 +1801,49 @@ pub struct ListProductStallsResp {
     #[prost(int64, optional, tag = "2")]
     pub total: ::core::option::Option<i64>,
 }
+/// 独立库存只由Club记账，不连接外部库存系统。
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductStockBalance {
+    #[prost(int64, optional, tag = "1")]
+    pub available: ::core::option::Option<i64>,
+    #[prost(int64, optional, tag = "2")]
+    pub held: ::core::option::Option<i64>,
+    #[prost(int64, optional, tag = "3")]
+    pub allocated: ::core::option::Option<i64>,
+    #[prost(int64, optional, tag = "4")]
+    pub shipped: ::core::option::Option<i64>,
+    #[prost(int64, optional, tag = "5")]
+    pub revision: ::core::option::Option<i64>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductFulfillmentSpec {
+    #[prost(enumeration = "ProductDeliveryType", optional, tag = "1")]
+    pub r#type: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "2")]
+    pub description: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ConfigureProductReq {
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "2")]
+    pub revision: ::core::option::Option<i64>,
+    #[prost(message, optional, tag = "3")]
+    pub info: ::core::option::Option<ProductInfo>,
+    #[prost(message, optional, tag = "4")]
+    pub fulfillment: ::core::option::Option<ProductFulfillmentSpec>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct AdjustProductStockReq {
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub request_uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "3")]
+    pub delta: ::core::option::Option<i64>,
+    #[prost(string, optional, tag = "4")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
+}
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum ProductListingStatus {
@@ -1782,6 +1876,35 @@ impl ProductListingStatus {
         }
     }
 }
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum ProductDeliveryType {
+    Unspecified = 0,
+    Physical = 1,
+    Digital = 2,
+}
+impl ProductDeliveryType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "PRODUCT_DELIVERY_TYPE_UNSPECIFIED",
+            Self::Physical => "PRODUCT_DELIVERY_TYPE_PHYSICAL",
+            Self::Digital => "PRODUCT_DELIVERY_TYPE_DIGITAL",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "PRODUCT_DELIVERY_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "PRODUCT_DELIVERY_TYPE_PHYSICAL" => Some(Self::Physical),
+            "PRODUCT_DELIVERY_TYPE_DIGITAL" => Some(Self::Digital),
+            _ => None,
+        }
+    }
+}
 /// Generated client implementations.
 pub mod product_inventory_client {
     #![allow(
@@ -1795,7 +1918,7 @@ pub mod product_inventory_client {
     use tonic::codegen::http::Uri;
     /// 商品库与挂牌分离，沿用插件市场的“当前主人 -> 机器人摊位 -> 货”。
     /// 上传仅入本人硬件机器人的库，不能向任意机器人上传，也不能自动上架/广播。
-    /// 公开目录与管理面分开；本阶段仅展示报价，没有订单、支付或履约。
+    /// 公开目录与管理面分开；采购、库存和履约契约见product_trade.proto。
     #[derive(Debug, Clone)]
     pub struct ProductInventoryClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -1922,6 +2045,54 @@ pub mod product_inventory_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.ProductInventory", "Get"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn configure(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ConfigureProductReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ProductInventoryItem>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductInventory/Configure",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductInventory", "Configure"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn adjust_stock(
+            &mut self,
+            request: impl tonic::IntoRequest<super::AdjustProductStockReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ProductInventoryItem>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductInventory/AdjustStock",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductInventory", "AdjustStock"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn list(
@@ -10760,6 +10931,85 @@ pub mod media_video_client {
         }
     }
 }
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SettlementPayment {
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub business_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "3")]
+    pub total: ::core::option::Option<super::did::CoinAmount>,
+    #[prost(message, optional, tag = "4")]
+    pub payer: ::core::option::Option<super::Entity>,
+    #[prost(message, optional, tag = "5")]
+    pub payee: ::core::option::Option<super::Entity>,
+    #[prost(string, optional, tag = "6")]
+    pub from_account: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "7")]
+    pub to_account: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "8")]
+    pub from_address: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "9")]
+    pub to_address: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "SettlementPaymentStatus", optional, tag = "10")]
+    pub status: ::core::option::Option<i32>,
+    /// 秒
+    #[prost(int64, optional, tag = "11")]
+    pub created_at: ::core::option::Option<i64>,
+    #[prost(int64, optional, tag = "12")]
+    pub expire_at: ::core::option::Option<i64>,
+    /// HiDID M号
+    #[prost(string, optional, tag = "13")]
+    pub pay_req_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "14")]
+    pub tx_hash: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "15")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum SettlementPaymentStatus {
+    Unspecified = 0,
+    Pending = 1,
+    Executing = 2,
+    Confirming = 3,
+    Paid = 4,
+    Failed = 5,
+    Closed = 6,
+    Review = 7,
+}
+impl SettlementPaymentStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "SETTLEMENT_PAYMENT_STATUS_UNSPECIFIED",
+            Self::Pending => "SETTLEMENT_PAYMENT_STATUS_PENDING",
+            Self::Executing => "SETTLEMENT_PAYMENT_STATUS_EXECUTING",
+            Self::Confirming => "SETTLEMENT_PAYMENT_STATUS_CONFIRMING",
+            Self::Paid => "SETTLEMENT_PAYMENT_STATUS_PAID",
+            Self::Failed => "SETTLEMENT_PAYMENT_STATUS_FAILED",
+            Self::Closed => "SETTLEMENT_PAYMENT_STATUS_CLOSED",
+            Self::Review => "SETTLEMENT_PAYMENT_STATUS_REVIEW",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "SETTLEMENT_PAYMENT_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
+            "SETTLEMENT_PAYMENT_STATUS_PENDING" => Some(Self::Pending),
+            "SETTLEMENT_PAYMENT_STATUS_EXECUTING" => Some(Self::Executing),
+            "SETTLEMENT_PAYMENT_STATUS_CONFIRMING" => Some(Self::Confirming),
+            "SETTLEMENT_PAYMENT_STATUS_PAID" => Some(Self::Paid),
+            "SETTLEMENT_PAYMENT_STATUS_FAILED" => Some(Self::Failed),
+            "SETTLEMENT_PAYMENT_STATUS_CLOSED" => Some(Self::Closed),
+            "SETTLEMENT_PAYMENT_STATUS_REVIEW" => Some(Self::Review),
+            _ => None,
+        }
+    }
+}
 /// Generated client implementations.
 pub mod model_client {
     #![allow(
@@ -11371,6 +11621,1173 @@ pub mod permission_manage_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.PermissionManage", "List"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductStallQuery {
+    /// 不传=当前用户名下全部；设置/取单个配置必须传
+    #[prost(string, optional, tag = "1")]
+    pub stall: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductRecordQuery {
+    #[prost(string, optional, tag = "1")]
+    pub product_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SupplierIntegration {
+    #[prost(message, optional, tag = "1")]
+    pub stall: ::core::option::Option<super::Entity>,
+    /// HTTPS服务地址，不用于库存同步
+    #[prost(string, optional, tag = "2")]
+    pub endpoint: ::core::option::Option<::prost::alloc::string::String>,
+    /// 供应链发给Club的回调凭据，仅配置写入/不回显
+    #[prost(string, optional, tag = "3")]
+    pub authorization: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(bool, optional, tag = "4")]
+    pub enabled: ::core::option::Option<bool>,
+    #[prost(int64, optional, tag = "5")]
+    pub revision: ::core::option::Option<i64>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProductDetail {
+    #[prost(string, optional, tag = "1")]
+    pub product_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, repeated, tag = "3")]
+    pub sections: ::prost::alloc::vec::Vec<ProductDetailSection>,
+    #[prost(int64, optional, tag = "4")]
+    pub updated_at: ::core::option::Option<i64>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductDetailSection {
+    #[prost(string, optional, tag = "1")]
+    pub title: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(oneof = "product_detail_section::Content", tags = "2, 3, 4")]
+    pub content: ::core::option::Option<product_detail_section::Content>,
+}
+/// Nested message and enum types in `ProductDetailSection`.
+pub mod product_detail_section {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Content {
+        #[prost(string, tag = "2")]
+        Text(::prost::alloc::string::String),
+        #[prost(message, tag = "3")]
+        Image(super::ProductImage),
+        #[prost(message, tag = "4")]
+        Specification(super::ProductSpecification),
+    }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductSpecification {
+    #[prost(string, optional, tag = "1")]
+    pub label: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub value: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProductDistributionAgreement {
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub reseller: ::core::option::Option<super::Entity>,
+    #[prost(message, optional, tag = "3")]
+    pub supplier: ::core::option::Option<super::Entity>,
+    #[prost(message, optional, tag = "4")]
+    pub product: ::core::option::Option<Product>,
+    #[prost(bool, optional, tag = "5")]
+    pub active: ::core::option::Option<bool>,
+    #[prost(int64, optional, tag = "6")]
+    pub created_at: ::core::option::Option<i64>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct JoinProductDistributionReq {
+    #[prost(string, optional, tag = "1")]
+    pub reseller: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub product_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductDistributionQuery {
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListProductDistributionResp {
+    #[prost(message, repeated, tag = "1")]
+    pub list: ::prost::alloc::vec::Vec<ProductDistributionAgreement>,
+    #[prost(int64, optional, tag = "2")]
+    pub total: ::core::option::Option<i64>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PhysicalRecipient {
+    #[prost(string, optional, tag = "1")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub phone: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub country: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub region: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "5")]
+    pub address: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "6")]
+    pub postal_code: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DigitalRecipient {
+    #[prost(string, optional, tag = "1")]
+    pub email: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductDeliveryTarget {
+    #[prost(oneof = "product_delivery_target::Recipient", tags = "1, 2")]
+    pub recipient: ::core::option::Option<product_delivery_target::Recipient>,
+}
+/// Nested message and enum types in `ProductDeliveryTarget`.
+pub mod product_delivery_target {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Recipient {
+        #[prost(message, tag = "1")]
+        Physical(super::PhysicalRecipient),
+        #[prost(message, tag = "2")]
+        Digital(super::DigitalRecipient),
+    }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TerminalOrderRef {
+    #[prost(string, optional, tag = "1")]
+    pub source_system: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub order_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductPurchaseInput {
+    #[prost(string, optional, tag = "1")]
+    pub line_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub product_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "3")]
+    pub quantity: ::core::option::Option<i64>,
+    /// 防超支，不覆盖供应报价
+    #[prost(message, optional, tag = "4")]
+    pub maximum_total: ::core::option::Option<super::did::CoinAmount>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TerminalOrderSubmission {
+    #[prost(string, optional, tag = "1")]
+    pub request_uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub reseller: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "3")]
+    pub source: ::core::option::Option<TerminalOrderRef>,
+    #[prost(message, repeated, tag = "4")]
+    pub lines: ::prost::alloc::vec::Vec<ProductPurchaseInput>,
+    #[prost(message, optional, tag = "5")]
+    pub target: ::core::option::Option<ProductDeliveryTarget>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProductPurchaseLine {
+    /// 不可变成交快照
+    #[prost(message, optional, tag = "1")]
+    pub product: ::core::option::Option<Product>,
+    #[prost(int64, optional, tag = "2")]
+    pub quantity: ::core::option::Option<i64>,
+    #[prost(message, optional, tag = "3")]
+    pub total: ::core::option::Option<super::did::CoinAmount>,
+    #[prost(message, optional, tag = "4")]
+    pub fulfillment: ::core::option::Option<ProductFulfillmentSpec>,
+    /// 冻结的条款/详情
+    #[prost(message, optional, tag = "5")]
+    pub detail: ::core::option::Option<ProductDetail>,
+    #[prost(int64, optional, tag = "6")]
+    pub supply_revision: ::core::option::Option<i64>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProductPurchaseOrder {
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub reseller: ::core::option::Option<super::Entity>,
+    #[prost(message, optional, tag = "3")]
+    pub supplier: ::core::option::Option<super::Entity>,
+    #[prost(message, optional, tag = "4")]
+    pub source: ::core::option::Option<TerminalOrderRef>,
+    #[prost(string, optional, tag = "5")]
+    pub source_line_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "6")]
+    pub line: ::core::option::Option<ProductPurchaseLine>,
+    #[prost(message, optional, tag = "7")]
+    pub target: ::core::option::Option<ProductDeliveryTarget>,
+    #[prost(enumeration = "ProductPurchaseStatus", optional, tag = "8")]
+    pub status: ::core::option::Option<i32>,
+    #[prost(message, optional, tag = "9")]
+    pub payment: ::core::option::Option<SettlementPayment>,
+    #[prost(message, optional, tag = "10")]
+    pub fulfillment: ::core::option::Option<ProductFulfillment>,
+    #[prost(int64, optional, tag = "11")]
+    pub created_at: ::core::option::Option<i64>,
+    #[prost(int64, optional, tag = "12")]
+    pub expire_at: ::core::option::Option<i64>,
+    #[prost(int64, optional, tag = "13")]
+    pub revision: ::core::option::Option<i64>,
+    #[prost(message, optional, tag = "14")]
+    pub refund: ::core::option::Option<SettlementPayment>,
+    #[prost(string, optional, tag = "15")]
+    pub refund_reason: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProductPurchaseGroup {
+    #[prost(message, optional, tag = "1")]
+    pub source: ::core::option::Option<TerminalOrderRef>,
+    #[prost(message, repeated, tag = "2")]
+    pub orders: ::prost::alloc::vec::Vec<ProductPurchaseOrder>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductPurchaseQuery {
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ListProductPurchasesReq {
+    #[prost(string, optional, tag = "1")]
+    pub stall: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListProductPurchasesResp {
+    #[prost(message, repeated, tag = "1")]
+    pub list: ::prost::alloc::vec::Vec<ProductPurchaseOrder>,
+    #[prost(int64, optional, tag = "2")]
+    pub total: ::core::option::Option<i64>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BeginProductPaymentReq {
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 持久执行资格，未知结果不重新领
+    #[prost(string, optional, tag = "2")]
+    pub execution_uuid: ::core::option::Option<::prost::alloc::string::String>,
+    /// 不传/false=采购付款，true=供应方退款
+    #[prost(bool, optional, tag = "3")]
+    pub refund: ::core::option::Option<bool>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductShipment {
+    #[prost(string, optional, tag = "1")]
+    pub carrier: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub tracking_number: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductDigitalDelivery {
+    #[prost(string, optional, tag = "1")]
+    pub delivery_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// accepted/delivered/failed，不能以accepted冒充投递
+    #[prost(string, optional, tag = "2")]
+    pub state: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductFulfillment {
+    #[prost(enumeration = "ProductFulfillmentStatus", optional, tag = "1")]
+    pub status: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "2")]
+    pub event_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "3")]
+    pub revision: ::core::option::Option<i64>,
+    #[prost(string, optional, tag = "6")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(oneof = "product_fulfillment::Result", tags = "4, 5")]
+    pub result: ::core::option::Option<product_fulfillment::Result>,
+}
+/// Nested message and enum types in `ProductFulfillment`.
+pub mod product_fulfillment {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Result {
+        #[prost(message, tag = "4")]
+        Shipment(super::ProductShipment),
+        #[prost(message, tag = "5")]
+        Digital(super::ProductDigitalDelivery),
+    }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductFulfillmentReport {
+    #[prost(string, optional, tag = "1")]
+    pub order_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub fulfillment: ::core::option::Option<ProductFulfillment>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductRefundRequest {
+    #[prost(string, optional, tag = "1")]
+    pub order_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductOrderEvent {
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub order_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "3")]
+    pub actor: ::core::option::Option<super::Entity>,
+    #[prost(string, optional, tag = "4")]
+    pub kind: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "5")]
+    pub created_at: ::core::option::Option<i64>,
+    #[prost(string, optional, tag = "6")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListProductOrderEventsResp {
+    #[prost(message, repeated, tag = "1")]
+    pub list: ::prost::alloc::vec::Vec<ProductOrderEvent>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductStockMovement {
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub product_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub business_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub kind: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "5")]
+    pub delta: ::core::option::Option<i64>,
+    #[prost(message, optional, tag = "6")]
+    pub balance: ::core::option::Option<ProductStockBalance>,
+    #[prost(int64, optional, tag = "7")]
+    pub created_at: ::core::option::Option<i64>,
+    #[prost(string, optional, tag = "8")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListProductStockMovementsResp {
+    #[prost(message, repeated, tag = "1")]
+    pub list: ::prost::alloc::vec::Vec<ProductStockMovement>,
+    #[prost(int64, optional, tag = "2")]
+    pub total: ::core::option::Option<i64>,
+}
+/// HTTPS POST供应链endpoint，Authorization使用该供应链专门提供的回调凭据。
+/// 绝不转发HiClub用户API Key。供应链以request_id幂等；GET操作也用结构化POST。
+/// 超时重试使用同一ID；订单状态由SupplierResponse/既有ReportFulfillment共同归并。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SupplierRequest {
+    #[prost(string, optional, tag = "1")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "2")]
+    pub created_at: ::core::option::Option<i64>,
+    #[prost(oneof = "supplier_request::Operation", tags = "3, 4, 5, 6")]
+    pub operation: ::core::option::Option<supplier_request::Operation>,
+}
+/// Nested message and enum types in `SupplierRequest`.
+pub mod supplier_request {
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        #[prost(message, tag = "3")]
+        ProductRegistered(super::Product),
+        #[prost(message, tag = "4")]
+        GetDetail(super::GetProductReq),
+        #[prost(message, tag = "5")]
+        FulfillOrder(super::ProductPurchaseOrder),
+        #[prost(message, tag = "6")]
+        GetFulfillment(super::ProductPurchaseQuery),
+    }
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SupplierResponse {
+    #[prost(string, optional, tag = "1")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(oneof = "supplier_response::Result", tags = "2, 3, 4")]
+    pub result: ::core::option::Option<supplier_response::Result>,
+}
+/// Nested message and enum types in `SupplierResponse`.
+pub mod supplier_response {
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Result {
+        #[prost(message, tag = "2")]
+        Detail(super::ProductDetail),
+        #[prost(message, tag = "3")]
+        Fulfillment(super::ProductFulfillmentReport),
+        #[prost(message, tag = "4")]
+        Acknowledged(::pbjson_types::Empty),
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum ProductPurchaseStatus {
+    Unspecified = 0,
+    Approval = 1,
+    Payment = 2,
+    Fulfillment = 3,
+    Complete = 4,
+    Cancelled = 5,
+    Review = 6,
+    RefundRequested = 7,
+    RefundPayment = 8,
+    Refunded = 9,
+}
+impl ProductPurchaseStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "PRODUCT_PURCHASE_STATUS_UNSPECIFIED",
+            Self::Approval => "PRODUCT_PURCHASE_STATUS_APPROVAL",
+            Self::Payment => "PRODUCT_PURCHASE_STATUS_PAYMENT",
+            Self::Fulfillment => "PRODUCT_PURCHASE_STATUS_FULFILLMENT",
+            Self::Complete => "PRODUCT_PURCHASE_STATUS_COMPLETE",
+            Self::Cancelled => "PRODUCT_PURCHASE_STATUS_CANCELLED",
+            Self::Review => "PRODUCT_PURCHASE_STATUS_REVIEW",
+            Self::RefundRequested => "PRODUCT_PURCHASE_STATUS_REFUND_REQUESTED",
+            Self::RefundPayment => "PRODUCT_PURCHASE_STATUS_REFUND_PAYMENT",
+            Self::Refunded => "PRODUCT_PURCHASE_STATUS_REFUNDED",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "PRODUCT_PURCHASE_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
+            "PRODUCT_PURCHASE_STATUS_APPROVAL" => Some(Self::Approval),
+            "PRODUCT_PURCHASE_STATUS_PAYMENT" => Some(Self::Payment),
+            "PRODUCT_PURCHASE_STATUS_FULFILLMENT" => Some(Self::Fulfillment),
+            "PRODUCT_PURCHASE_STATUS_COMPLETE" => Some(Self::Complete),
+            "PRODUCT_PURCHASE_STATUS_CANCELLED" => Some(Self::Cancelled),
+            "PRODUCT_PURCHASE_STATUS_REVIEW" => Some(Self::Review),
+            "PRODUCT_PURCHASE_STATUS_REFUND_REQUESTED" => Some(Self::RefundRequested),
+            "PRODUCT_PURCHASE_STATUS_REFUND_PAYMENT" => Some(Self::RefundPayment),
+            "PRODUCT_PURCHASE_STATUS_REFUNDED" => Some(Self::Refunded),
+            _ => None,
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum ProductFulfillmentStatus {
+    Unspecified = 0,
+    Pending = 1,
+    Accepted = 2,
+    Shipped = 3,
+    Complete = 4,
+    Failed = 5,
+}
+impl ProductFulfillmentStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "PRODUCT_FULFILLMENT_STATUS_UNSPECIFIED",
+            Self::Pending => "PRODUCT_FULFILLMENT_STATUS_PENDING",
+            Self::Accepted => "PRODUCT_FULFILLMENT_STATUS_ACCEPTED",
+            Self::Shipped => "PRODUCT_FULFILLMENT_STATUS_SHIPPED",
+            Self::Complete => "PRODUCT_FULFILLMENT_STATUS_COMPLETE",
+            Self::Failed => "PRODUCT_FULFILLMENT_STATUS_FAILED",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "PRODUCT_FULFILLMENT_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
+            "PRODUCT_FULFILLMENT_STATUS_PENDING" => Some(Self::Pending),
+            "PRODUCT_FULFILLMENT_STATUS_ACCEPTED" => Some(Self::Accepted),
+            "PRODUCT_FULFILLMENT_STATUS_SHIPPED" => Some(Self::Shipped),
+            "PRODUCT_FULFILLMENT_STATUS_COMPLETE" => Some(Self::Complete),
+            "PRODUCT_FULFILLMENT_STATUS_FAILED" => Some(Self::Failed),
+            _ => None,
+        }
+    }
+}
+/// Generated client implementations.
+pub mod product_supply_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 标准API和Web共用；用户身份来自认证，摊位权限每次按当前关系复验。
+    #[derive(Debug, Clone)]
+    pub struct ProductSupplyClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl ProductSupplyClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> ProductSupplyClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ProductSupplyClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            ProductSupplyClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn set_integration(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SupplierIntegration>,
+        ) -> std::result::Result<
+            tonic::Response<super::SupplierIntegration>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductSupply/SetIntegration",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductSupply", "SetIntegration"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get_integration(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ProductStallQuery>,
+        ) -> std::result::Result<
+            tonic::Response<super::SupplierIntegration>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductSupply/GetIntegration",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductSupply", "GetIntegration"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get_detail(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetProductReq>,
+        ) -> std::result::Result<tonic::Response<super::ProductDetail>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductSupply/GetDetail",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductSupply", "GetDetail"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_stock_movements(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ProductRecordQuery>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListProductStockMovementsResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductSupply/ListStockMovements",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductSupply", "ListStockMovements"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Generated client implementations.
+pub mod product_distribution_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    #[derive(Debug, Clone)]
+    pub struct ProductDistributionClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl ProductDistributionClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> ProductDistributionClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ProductDistributionClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            ProductDistributionClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn join(
+            &mut self,
+            request: impl tonic::IntoRequest<super::JoinProductDistributionReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ProductDistributionAgreement>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductDistribution/Join",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductDistribution", "Join"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ProductStallQuery>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListProductDistributionResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductDistribution/List",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductDistribution", "List"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn leave(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ProductDistributionQuery>,
+        ) -> std::result::Result<
+            tonic::Response<super::ProductDistributionAgreement>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductDistribution/Leave",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductDistribution", "Leave"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Generated client implementations.
+pub mod product_trade_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    #[derive(Debug, Clone)]
+    pub struct ProductTradeClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl ProductTradeClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> ProductTradeClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ProductTradeClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            ProductTradeClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn submit(
+            &mut self,
+            request: impl tonic::IntoRequest<super::TerminalOrderSubmission>,
+        ) -> std::result::Result<
+            tonic::Response<super::ProductPurchaseGroup>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductTrade/Submit",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductTrade", "Submit"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn confirm(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ProductPurchaseQuery>,
+        ) -> std::result::Result<
+            tonic::Response<super::ProductPurchaseOrder>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductTrade/Confirm",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductTrade", "Confirm"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ProductPurchaseQuery>,
+        ) -> std::result::Result<
+            tonic::Response<super::ProductPurchaseOrder>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.ProductTrade/Get");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.ProductTrade", "Get"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListProductPurchasesReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListProductPurchasesResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductTrade/List",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.ProductTrade", "List"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn cancel(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ProductPurchaseQuery>,
+        ) -> std::result::Result<
+            tonic::Response<super::ProductPurchaseOrder>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductTrade/Cancel",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductTrade", "Cancel"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn begin_payment(
+            &mut self,
+            request: impl tonic::IntoRequest<super::BeginProductPaymentReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ProductPurchaseOrder>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductTrade/BeginPayment",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductTrade", "BeginPayment"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn report_fulfillment(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ProductFulfillmentReport>,
+        ) -> std::result::Result<
+            tonic::Response<super::ProductPurchaseOrder>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductTrade/ReportFulfillment",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductTrade", "ReportFulfillment"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn request_refund(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ProductRefundRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::ProductPurchaseOrder>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductTrade/RequestRefund",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductTrade", "RequestRefund"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn approve_refund(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ProductPurchaseQuery>,
+        ) -> std::result::Result<
+            tonic::Response<super::ProductPurchaseOrder>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductTrade/ApproveRefund",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductTrade", "ApproveRefund"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn list_events(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ProductPurchaseQuery>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListProductOrderEventsResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductTrade/ListEvents",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductTrade", "ListEvents"));
             self.inner.unary(req, path, codec).await
         }
     }

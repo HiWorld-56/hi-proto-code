@@ -43,5 +43,30 @@ class ProductListingStatus extends $pb.ProtobufEnum {
   const ProductListingStatus._(super.value, super.name);
 }
 
+class ProductDeliveryType extends $pb.ProtobufEnum {
+  static const ProductDeliveryType PRODUCT_DELIVERY_TYPE_UNSPECIFIED =
+      ProductDeliveryType._(
+          0, _omitEnumNames ? '' : 'PRODUCT_DELIVERY_TYPE_UNSPECIFIED');
+  static const ProductDeliveryType PRODUCT_DELIVERY_TYPE_PHYSICAL =
+      ProductDeliveryType._(
+          1, _omitEnumNames ? '' : 'PRODUCT_DELIVERY_TYPE_PHYSICAL');
+  static const ProductDeliveryType PRODUCT_DELIVERY_TYPE_DIGITAL =
+      ProductDeliveryType._(
+          2, _omitEnumNames ? '' : 'PRODUCT_DELIVERY_TYPE_DIGITAL');
+
+  static const $core.List<ProductDeliveryType> values = <ProductDeliveryType>[
+    PRODUCT_DELIVERY_TYPE_UNSPECIFIED,
+    PRODUCT_DELIVERY_TYPE_PHYSICAL,
+    PRODUCT_DELIVERY_TYPE_DIGITAL,
+  ];
+
+  static final $core.List<ProductDeliveryType?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static ProductDeliveryType? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const ProductDeliveryType._(super.value, super.name);
+}
+
 const $core.bool _omitEnumNames =
     $core.bool.fromEnvironment('protobuf.omit_enum_names');

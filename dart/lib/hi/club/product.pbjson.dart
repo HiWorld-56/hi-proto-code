@@ -33,6 +33,22 @@ final $typed_data.Uint8List productListingStatusDescriptor = $convert.base64Deco
     'U1RJTkdfU1RBVFVTX0hJRERFThACEiMKH1BST0RVQ1RfTElTVElOR19TVEFUVVNfREVMSVNURU'
     'QQAw==');
 
+@$core.Deprecated('Use productDeliveryTypeDescriptor instead')
+const ProductDeliveryType$json = {
+  '1': 'ProductDeliveryType',
+  '2': [
+    {'1': 'PRODUCT_DELIVERY_TYPE_UNSPECIFIED', '2': 0},
+    {'1': 'PRODUCT_DELIVERY_TYPE_PHYSICAL', '2': 1},
+    {'1': 'PRODUCT_DELIVERY_TYPE_DIGITAL', '2': 2},
+  ],
+};
+
+/// Descriptor for `ProductDeliveryType`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List productDeliveryTypeDescriptor = $convert.base64Decode(
+    'ChNQcm9kdWN0RGVsaXZlcnlUeXBlEiUKIVBST0RVQ1RfREVMSVZFUllfVFlQRV9VTlNQRUNJRk'
+    'lFRBAAEiIKHlBST0RVQ1RfREVMSVZFUllfVFlQRV9QSFlTSUNBTBABEiEKHVBST0RVQ1RfREVM'
+    'SVZFUllfVFlQRV9ESUdJVEFMEAI=');
+
 @$core.Deprecated('Use productImageDescriptor instead')
 const ProductImage$json = {
   '1': 'ProductImage',
@@ -142,10 +158,21 @@ const ProductInfo$json = {
       '8': {},
       '10': 'pricing'
     },
+    {
+      '1': 'custom_id',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'customId',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
     {'1': '_name'},
+    {'1': '_custom_id'},
   ],
 };
 
@@ -154,7 +181,8 @@ final $typed_data.Uint8List productInfoDescriptor = $convert.base64Decode(
     'CgtQcm9kdWN0SW5mbxIpCgRuYW1lGAEgASgJQhC6SAnIAQFyBBABGHiQtRgBSABSBG5hbWWIAQ'
     'ESPQoGaW1hZ2VzGAIgAygLMhUuaGkuY2x1Yi5Qcm9kdWN0SW1hZ2VCDrpIB5IBBAgBEAmQtRgB'
     'UgZpbWFnZXMSNwoHcHJpY2luZxgDIAEoCzIXLmhpLmNsdWIuUHJvZHVjdFByaWNpbmdCBJC1GA'
-    'FSB3ByaWNpbmc6BJi1GAFCBwoFX25hbWU=');
+    'FSB3ByaWNpbmcSLgoJY3VzdG9tX2lkGAQgASgJQgy6SAVyAxjIAZC1GAFIAVIIY3VzdG9tSWSI'
+    'AQE6BJi1GAFCBwoFX25hbWVCDAoKX2N1c3RvbV9pZA==');
 
 @$core.Deprecated('Use productDescriptor instead')
 const Product$json = {
@@ -232,10 +260,39 @@ const ProductInventoryItem$json = {
       '10': 'uploadedAt',
       '17': true
     },
+    {
+      '1': 'stock',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductStockBalance',
+      '8': {},
+      '10': 'stock'
+    },
+    {
+      '1': 'fulfillment',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductFulfillmentSpec',
+      '8': {},
+      '10': 'fulfillment'
+    },
+    {
+      '1': 'revision',
+      '3': 7,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 1,
+      '10': 'revision',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
     {'1': '_uploaded_at'},
+    {'1': '_revision'},
   ],
 };
 
@@ -244,8 +301,11 @@ final $typed_data.Uint8List productInventoryItemDescriptor = $convert.base64Deco
     'ChRQcm9kdWN0SW52ZW50b3J5SXRlbRIwCgdwcm9kdWN0GAEgASgLMhAuaGkuY2x1Yi5Qcm9kdW'
     'N0QgSQtRgBUgdwcm9kdWN0EiYKBXN0YWxsGAIgASgLMgouaGkuRW50aXR5QgSQtRgCUgVzdGFs'
     'bBIxCgt1cGxvYWRlZF9ieRgDIAEoCzIKLmhpLkVudGl0eUIEkLUYAlIKdXBsb2FkZWRCeRIqCg'
-    't1cGxvYWRlZF9hdBgEIAEoA0IEkLUYAkgAUgp1cGxvYWRlZEF0iAEBOgSYtRgCQg4KDF91cGxv'
-    'YWRlZF9hdA==');
+    't1cGxvYWRlZF9hdBgEIAEoA0IEkLUYAkgAUgp1cGxvYWRlZEF0iAEBEjgKBXN0b2NrGAUgASgL'
+    'MhwuaGkuY2x1Yi5Qcm9kdWN0U3RvY2tCYWxhbmNlQgSQtRgCUgVzdG9jaxJHCgtmdWxmaWxsbW'
+    'VudBgGIAEoCzIfLmhpLmNsdWIuUHJvZHVjdEZ1bGZpbGxtZW50U3BlY0IEkLUYAlILZnVsZmls'
+    'bG1lbnQSJQoIcmV2aXNpb24YByABKANCBJC1GAJIAVIIcmV2aXNpb26IAQE6BJi1GAJCDgoMX3'
+    'VwbG9hZGVkX2F0QgsKCV9yZXZpc2lvbg==');
 
 @$core.Deprecated('Use productListingDescriptor instead')
 const ProductListing$json = {
@@ -319,6 +379,35 @@ const ProductListing$json = {
       '10': 'publicationUuid',
       '17': true
     },
+    {
+      '1': 'fulfillment',
+      '3': 8,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductFulfillmentSpec',
+      '8': {},
+      '10': 'fulfillment'
+    },
+    {
+      '1': 'available_quantity',
+      '3': 9,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 4,
+      '10': 'availableQuantity',
+      '17': true
+    },
+    {
+      '1': 'purchasable',
+      '3': 10,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 5,
+      '10': 'purchasable',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -326,6 +415,8 @@ const ProductListing$json = {
     {'1': '_uuid'},
     {'1': '_status'},
     {'1': '_publication_uuid'},
+    {'1': '_available_quantity'},
+    {'1': '_purchasable'},
   ],
 };
 
@@ -337,8 +428,12 @@ final $typed_data.Uint8List productListingDescriptor = $convert.base64Decode(
     'QgASgDQgSQtRgBSABSCGxpc3RlZEF0iAEBEh0KBHV1aWQYBSABKAlCBJC1GAFIAVIEdXVpZIgB'
     'ARJACgZzdGF0dXMYBiABKA4yHS5oaS5jbHViLlByb2R1Y3RMaXN0aW5nU3RhdHVzQgSQtRgBSA'
     'JSBnN0YXR1c4gBARI0ChBwdWJsaWNhdGlvbl91dWlkGAcgASgJQgSQtRgBSANSD3B1YmxpY2F0'
-    'aW9uVXVpZIgBAToEmLUYAUIMCgpfbGlzdGVkX2F0QgcKBV91dWlkQgkKB19zdGF0dXNCEwoRX3'
-    'B1YmxpY2F0aW9uX3V1aWQ=');
+    'aW9uVXVpZIgBARJHCgtmdWxmaWxsbWVudBgIIAEoCzIfLmhpLmNsdWIuUHJvZHVjdEZ1bGZpbG'
+    'xtZW50U3BlY0IEkLUYAVILZnVsZmlsbG1lbnQSOAoSYXZhaWxhYmxlX3F1YW50aXR5GAkgASgD'
+    'QgSQtRgBSARSEWF2YWlsYWJsZVF1YW50aXR5iAEBEisKC3B1cmNoYXNhYmxlGAogASgIQgSQtR'
+    'gBSAVSC3B1cmNoYXNhYmxliAEBOgSYtRgBQgwKCl9saXN0ZWRfYXRCBwoFX3V1aWRCCQoHX3N0'
+    'YXR1c0ITChFfcHVibGljYXRpb25fdXVpZEIVChNfYXZhaWxhYmxlX3F1YW50aXR5Qg4KDF9wdX'
+    'JjaGFzYWJsZQ==');
 
 @$core.Deprecated('Use productAnnouncementDescriptor instead')
 const ProductAnnouncement$json = {
@@ -489,10 +584,29 @@ const CreateProductReq$json = {
       '8': {},
       '10': 'info'
     },
+    {
+      '1': 'quantity',
+      '3': 4,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 2,
+      '10': 'quantity',
+      '17': true
+    },
+    {
+      '1': 'fulfillment',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductFulfillmentSpec',
+      '10': 'fulfillment'
+    },
   ],
   '8': [
     {'1': '_request_uuid'},
     {'1': '_stall'},
+    {'1': '_quantity'},
   ],
 };
 
@@ -500,8 +614,10 @@ const CreateProductReq$json = {
 final $typed_data.Uint8List createProductReqDescriptor = $convert.base64Decode(
     'ChBDcmVhdGVQcm9kdWN0UmVxEjMKDHJlcXVlc3RfdXVpZBgBIAEoCUILukgIyAEBcgOwAQFIAF'
     'ILcmVxdWVzdFV1aWSIAQESJQoFc3RhbGwYAiABKAlCCrpIB8gBAXICEAFIAVIFc3RhbGyIAQES'
-    'MAoEaW5mbxgDIAEoCzIULmhpLmNsdWIuUHJvZHVjdEluZm9CBrpIA8gBAVIEaW5mb0IPCg1fcm'
-    'VxdWVzdF91dWlkQggKBl9zdGFsbA==');
+    'MAoEaW5mbxgDIAEoCzIULmhpLmNsdWIuUHJvZHVjdEluZm9CBrpIA8gBAVIEaW5mbxIuCghxdW'
+    'FudGl0eRgEIAEoA0INukgKIggYgJTr3AMoAEgCUghxdWFudGl0eYgBARJBCgtmdWxmaWxsbWVu'
+    'dBgFIAEoCzIfLmhpLmNsdWIuUHJvZHVjdEZ1bGZpbGxtZW50U3BlY1ILZnVsZmlsbG1lbnRCDw'
+    'oNX3JlcXVlc3RfdXVpZEIICgZfc3RhbGxCCwoJX3F1YW50aXR5');
 
 @$core.Deprecated('Use getProductReqDescriptor instead')
 const GetProductReq$json = {
@@ -861,3 +977,233 @@ final $typed_data.Uint8List listProductStallsRespDescriptor = $convert.base64Dec
     'ChVMaXN0UHJvZHVjdFN0YWxsc1Jlc3ASLwoEbGlzdBgBIAMoCzIVLmhpLmNsdWIuUHJvZHVjdF'
     'N0YWxsQgSQtRgBUgRsaXN0Eh8KBXRvdGFsGAIgASgDQgSQtRgBSABSBXRvdGFsiAEBOgSYtRgB'
     'QggKBl90b3RhbA==');
+
+@$core.Deprecated('Use productStockBalanceDescriptor instead')
+const ProductStockBalance$json = {
+  '1': 'ProductStockBalance',
+  '2': [
+    {
+      '1': 'available',
+      '3': 1,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 0,
+      '10': 'available',
+      '17': true
+    },
+    {
+      '1': 'held',
+      '3': 2,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 1,
+      '10': 'held',
+      '17': true
+    },
+    {
+      '1': 'allocated',
+      '3': 3,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 2,
+      '10': 'allocated',
+      '17': true
+    },
+    {
+      '1': 'shipped',
+      '3': 4,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 3,
+      '10': 'shipped',
+      '17': true
+    },
+    {
+      '1': 'revision',
+      '3': 5,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 4,
+      '10': 'revision',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_available'},
+    {'1': '_held'},
+    {'1': '_allocated'},
+    {'1': '_shipped'},
+    {'1': '_revision'},
+  ],
+};
+
+/// Descriptor for `ProductStockBalance`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List productStockBalanceDescriptor = $convert.base64Decode(
+    'ChNQcm9kdWN0U3RvY2tCYWxhbmNlEicKCWF2YWlsYWJsZRgBIAEoA0IEkLUYAkgAUglhdmFpbG'
+    'FibGWIAQESHQoEaGVsZBgCIAEoA0IEkLUYAkgBUgRoZWxkiAEBEicKCWFsbG9jYXRlZBgDIAEo'
+    'A0IEkLUYAkgCUglhbGxvY2F0ZWSIAQESIwoHc2hpcHBlZBgEIAEoA0IEkLUYAkgDUgdzaGlwcG'
+    'VkiAEBEiUKCHJldmlzaW9uGAUgASgDQgSQtRgCSARSCHJldmlzaW9uiAEBOgSYtRgCQgwKCl9h'
+    'dmFpbGFibGVCBwoFX2hlbGRCDAoKX2FsbG9jYXRlZEIKCghfc2hpcHBlZEILCglfcmV2aXNpb2'
+    '4=');
+
+@$core.Deprecated('Use productFulfillmentSpecDescriptor instead')
+const ProductFulfillmentSpec$json = {
+  '1': 'ProductFulfillmentSpec',
+  '2': [
+    {
+      '1': 'type',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.club.ProductDeliveryType',
+      '8': {},
+      '9': 0,
+      '10': 'type',
+      '17': true
+    },
+    {
+      '1': 'description',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'description',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_type'},
+    {'1': '_description'},
+  ],
+};
+
+/// Descriptor for `ProductFulfillmentSpec`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List productFulfillmentSpecDescriptor = $convert.base64Decode(
+    'ChZQcm9kdWN0RnVsZmlsbG1lbnRTcGVjEkgKBHR5cGUYASABKA4yHC5oaS5jbHViLlByb2R1Y3'
+    'REZWxpdmVyeVR5cGVCEbpICsgBAYIBBBABIACQtRgBSABSBHR5cGWIAQESMwoLZGVzY3JpcHRp'
+    'b24YAiABKAlCDLpIBXIDGNAPkLUYAUgBUgtkZXNjcmlwdGlvbogBAToEmLUYAUIHCgVfdHlwZU'
+    'IOCgxfZGVzY3JpcHRpb24=');
+
+@$core.Deprecated('Use configureProductReqDescriptor instead')
+const ConfigureProductReq$json = {
+  '1': 'ConfigureProductReq',
+  '2': [
+    {
+      '1': 'id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'id',
+      '17': true
+    },
+    {
+      '1': 'revision',
+      '3': 2,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 1,
+      '10': 'revision',
+      '17': true
+    },
+    {
+      '1': 'info',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductInfo',
+      '10': 'info'
+    },
+    {
+      '1': 'fulfillment',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductFulfillmentSpec',
+      '10': 'fulfillment'
+    },
+  ],
+  '8': [
+    {'1': '_id'},
+    {'1': '_revision'},
+  ],
+};
+
+/// Descriptor for `ConfigureProductReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List configureProductReqDescriptor = $convert.base64Decode(
+    'ChNDb25maWd1cmVQcm9kdWN0UmVxEh8KAmlkGAEgASgJQgq6SAfIAQFyAhABSABSAmlkiAEBEi'
+    'sKCHJldmlzaW9uGAIgASgDQgq6SAfIAQEiAigASAFSCHJldmlzaW9uiAEBEigKBGluZm8YAyAB'
+    'KAsyFC5oaS5jbHViLlByb2R1Y3RJbmZvUgRpbmZvEkEKC2Z1bGZpbGxtZW50GAQgASgLMh8uaG'
+    'kuY2x1Yi5Qcm9kdWN0RnVsZmlsbG1lbnRTcGVjUgtmdWxmaWxsbWVudEIFCgNfaWRCCwoJX3Jl'
+    'dmlzaW9u');
+
+@$core.Deprecated('Use adjustProductStockReqDescriptor instead')
+const AdjustProductStockReq$json = {
+  '1': 'AdjustProductStockReq',
+  '2': [
+    {
+      '1': 'id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'id',
+      '17': true
+    },
+    {
+      '1': 'request_uuid',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'requestUuid',
+      '17': true
+    },
+    {
+      '1': 'delta',
+      '3': 3,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 2,
+      '10': 'delta',
+      '17': true
+    },
+    {
+      '1': 'reason',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 3,
+      '10': 'reason',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_id'},
+    {'1': '_request_uuid'},
+    {'1': '_delta'},
+    {'1': '_reason'},
+  ],
+};
+
+/// Descriptor for `AdjustProductStockReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List adjustProductStockReqDescriptor = $convert.base64Decode(
+    'ChVBZGp1c3RQcm9kdWN0U3RvY2tSZXESHwoCaWQYASABKAlCCrpIB8gBAXICEAFIAFICaWSIAQ'
+    'ESMwoMcmVxdWVzdF91dWlkGAIgASgJQgu6SAjIAQFyA7ABAUgBUgtyZXF1ZXN0VXVpZIgBARI0'
+    'CgVkZWx0YRgDIAEoA0IZukgWyAEBIhEYgJTr3AMogOyUo/z/////AUgCUgVkZWx0YYgBARIqCg'
+    'ZyZWFzb24YBCABKAlCDbpICsgBAXIFEAEYyAFIA1IGcmVhc29uiAEBQgUKA19pZEIPCg1fcmVx'
+    'dWVzdF91dWlkQggKBl9kZWx0YUIJCgdfcmVhc29u');

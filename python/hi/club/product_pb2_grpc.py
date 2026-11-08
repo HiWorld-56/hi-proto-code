@@ -9,7 +9,7 @@ from hi import common_pb2 as hi_dot_common__pb2
 class ProductInventoryStub(object):
     """商品库与挂牌分离，沿用插件市场的“当前主人 -> 机器人摊位 -> 货”。
     上传仅入本人硬件机器人的库，不能向任意机器人上传，也不能自动上架/广播。
-    公开目录与管理面分开；本阶段仅展示报价，没有订单、支付或履约。
+    公开目录与管理面分开；采购、库存和履约契约见product_trade.proto。
     """
 
     def __init__(self, channel):
@@ -28,6 +28,16 @@ class ProductInventoryStub(object):
                 request_serializer=hi_dot_club_dot_product__pb2.GetProductReq.SerializeToString,
                 response_deserializer=hi_dot_club_dot_product__pb2.ProductInventoryItem.FromString,
                 _registered_method=True)
+        self.Configure = channel.unary_unary(
+                '/hi.club.ProductInventory/Configure',
+                request_serializer=hi_dot_club_dot_product__pb2.ConfigureProductReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_product__pb2.ProductInventoryItem.FromString,
+                _registered_method=True)
+        self.AdjustStock = channel.unary_unary(
+                '/hi.club.ProductInventory/AdjustStock',
+                request_serializer=hi_dot_club_dot_product__pb2.AdjustProductStockReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_product__pb2.ProductInventoryItem.FromString,
+                _registered_method=True)
         self.List = channel.unary_unary(
                 '/hi.club.ProductInventory/List',
                 request_serializer=hi_dot_club_dot_product__pb2.ListProductsReq.SerializeToString,
@@ -38,7 +48,7 @@ class ProductInventoryStub(object):
 class ProductInventoryServicer(object):
     """商品库与挂牌分离，沿用插件市场的“当前主人 -> 机器人摊位 -> 货”。
     上传仅入本人硬件机器人的库，不能向任意机器人上传，也不能自动上架/广播。
-    公开目录与管理面分开；本阶段仅展示报价，没有订单、支付或履约。
+    公开目录与管理面分开；采购、库存和履约契约见product_trade.proto。
     """
 
     def Create(self, request, context):
@@ -48,6 +58,18 @@ class ProductInventoryServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def Get(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def Configure(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def AdjustStock(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -72,6 +94,16 @@ def add_ProductInventoryServicer_to_server(servicer, server):
                     request_deserializer=hi_dot_club_dot_product__pb2.GetProductReq.FromString,
                     response_serializer=hi_dot_club_dot_product__pb2.ProductInventoryItem.SerializeToString,
             ),
+            'Configure': grpc.unary_unary_rpc_method_handler(
+                    servicer.Configure,
+                    request_deserializer=hi_dot_club_dot_product__pb2.ConfigureProductReq.FromString,
+                    response_serializer=hi_dot_club_dot_product__pb2.ProductInventoryItem.SerializeToString,
+            ),
+            'AdjustStock': grpc.unary_unary_rpc_method_handler(
+                    servicer.AdjustStock,
+                    request_deserializer=hi_dot_club_dot_product__pb2.AdjustProductStockReq.FromString,
+                    response_serializer=hi_dot_club_dot_product__pb2.ProductInventoryItem.SerializeToString,
+            ),
             'List': grpc.unary_unary_rpc_method_handler(
                     servicer.List,
                     request_deserializer=hi_dot_club_dot_product__pb2.ListProductsReq.FromString,
@@ -88,7 +120,7 @@ def add_ProductInventoryServicer_to_server(servicer, server):
 class ProductInventory(object):
     """商品库与挂牌分离，沿用插件市场的“当前主人 -> 机器人摊位 -> 货”。
     上传仅入本人硬件机器人的库，不能向任意机器人上传，也不能自动上架/广播。
-    公开目录与管理面分开；本阶段仅展示报价，没有订单、支付或履约。
+    公开目录与管理面分开；采购、库存和履约契约见product_trade.proto。
     """
 
     @staticmethod
@@ -134,6 +166,60 @@ class ProductInventory(object):
             target,
             '/hi.club.ProductInventory/Get',
             hi_dot_club_dot_product__pb2.GetProductReq.SerializeToString,
+            hi_dot_club_dot_product__pb2.ProductInventoryItem.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def Configure(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.ProductInventory/Configure',
+            hi_dot_club_dot_product__pb2.ConfigureProductReq.SerializeToString,
+            hi_dot_club_dot_product__pb2.ProductInventoryItem.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def AdjustStock(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.ProductInventory/AdjustStock',
+            hi_dot_club_dot_product__pb2.AdjustProductStockReq.SerializeToString,
             hi_dot_club_dot_product__pb2.ProductInventoryItem.FromString,
             options,
             channel_credentials,

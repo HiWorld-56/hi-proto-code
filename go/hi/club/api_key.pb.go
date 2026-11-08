@@ -24,6 +24,57 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// 人与机器人均可管理本人凭据；当前主人可代管仆从机器人的凭据。
+// 不传user=调用者本人。用途约束跟随凭据，不按人的类型或机器人类型区分。
+type ApiKeyPurpose int32
+
+const (
+	ApiKeyPurpose_API_KEY_PURPOSE_UNSPECIFIED ApiKeyPurpose = 0
+	ApiKeyPurpose_API_KEY_PURPOSE_PLUGIN      ApiKeyPurpose = 1 // 既有受限插件用途，不能被后台用途凭据替代注入
+	ApiKeyPurpose_API_KEY_PURPOSE_USER_API    ApiKeyPurpose = 2 // 用户身份的外部API，业务权限仍按当前主体/关系校验
+)
+
+// Enum value maps for ApiKeyPurpose.
+var (
+	ApiKeyPurpose_name = map[int32]string{
+		0: "API_KEY_PURPOSE_UNSPECIFIED",
+		1: "API_KEY_PURPOSE_PLUGIN",
+		2: "API_KEY_PURPOSE_USER_API",
+	}
+	ApiKeyPurpose_value = map[string]int32{
+		"API_KEY_PURPOSE_UNSPECIFIED": 0,
+		"API_KEY_PURPOSE_PLUGIN":      1,
+		"API_KEY_PURPOSE_USER_API":    2,
+	}
+)
+
+func (x ApiKeyPurpose) Enum() *ApiKeyPurpose {
+	p := new(ApiKeyPurpose)
+	*p = x
+	return p
+}
+
+func (x ApiKeyPurpose) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ApiKeyPurpose) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_club_api_key_proto_enumTypes[0].Descriptor()
+}
+
+func (ApiKeyPurpose) Type() protoreflect.EnumType {
+	return &file_hi_club_api_key_proto_enumTypes[0]
+}
+
+func (x ApiKeyPurpose) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ApiKeyPurpose.Descriptor instead.
+func (ApiKeyPurpose) EnumDescriptor() ([]byte, []int) {
+	return file_hi_club_api_key_proto_rawDescGZIP(), []int{0}
+}
+
 // apikey 是用户机密(value 可鉴权),只发给归属用户本人。
 type ApiKeyInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -31,6 +82,7 @@ type ApiKeyInfo struct {
 	Value         *string                `protobuf:"bytes,2,opt,name=value,proto3,oneof" json:"value,omitempty"`
 	Note          *string                `protobuf:"bytes,3,opt,name=note,proto3,oneof" json:"note,omitempty"`
 	CreatedAt     *int64                 `protobuf:"varint,4,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
+	Purpose       *ApiKeyPurpose         `protobuf:"varint,5,opt,name=purpose,proto3,enum=hi.club.ApiKeyPurpose,oneof" json:"purpose,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -93,18 +145,17 @@ func (x *ApiKeyInfo) GetCreatedAt() int64 {
 	return 0
 }
 
-// ⚠️ **只有机器人能持 apikey** —— 原先设计里"人也能设 apikey",没必要,已废。
-// 故这里是**机器人 did**。
-//
-// ⚠️ **归属校验一律走 CheckAgentAccess(机器人自己 / master / 超管),不是"只有 master"。**
-// 这把 key 就是**机器人自己的身份**(插件拿它以机器人身份调 club),
-// 而 hiclub 的理念里人和机器人对等 —— 机器人能自己建插件、自己买插件,
-// 却建不了自己的身份凭据,说不通。
-// 而且绝大多数硬件机器人**无主**,"只有 master 能建"对它们等于这条路不存在。
-// (原先废掉 caller==target 的理由是"人不需要 key",顺手把机器人自己也挡了。)
+func (x *ApiKeyInfo) GetPurpose() ApiKeyPurpose {
+	if x != nil && x.Purpose != nil {
+		return *x.Purpose
+	}
+	return ApiKeyPurpose_API_KEY_PURPOSE_UNSPECIFIED
+}
+
 type CreateApiKeyReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"` // 机器人 did;机器人自己 / 它的 master / 超管都能建
+	User          *string                `protobuf:"bytes,1,opt,name=user,proto3,oneof" json:"user,omitempty"`                                   // 不传=本人，代管传当前有权管理的用户DID
+	Purpose       *ApiKeyPurpose         `protobuf:"varint,2,opt,name=purpose,proto3,enum=hi.club.ApiKeyPurpose,oneof" json:"purpose,omitempty"` // 不传=PLUGIN；个人Web明确选择USER_API
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -139,11 +190,18 @@ func (*CreateApiKeyReq) Descriptor() ([]byte, []int) {
 	return file_hi_club_api_key_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *CreateApiKeyReq) GetAgent() string {
-	if x != nil && x.Agent != nil {
-		return *x.Agent
+func (x *CreateApiKeyReq) GetUser() string {
+	if x != nil && x.User != nil {
+		return *x.User
 	}
 	return ""
+}
+
+func (x *CreateApiKeyReq) GetPurpose() ApiKeyPurpose {
+	if x != nil && x.Purpose != nil {
+		return *x.Purpose
+	}
+	return ApiKeyPurpose_API_KEY_PURPOSE_UNSPECIFIED
 }
 
 type CreateApiKeyResp struct {
@@ -236,7 +294,7 @@ func (x *EditApiKeyResp) GetInfo() *ApiKeyInfo {
 
 type ListApiKeysReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Agent         *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"` // 机器人 did;能查的只有它的 master
+	User          *string                `protobuf:"bytes,1,opt,name=user,proto3,oneof" json:"user,omitempty"` // 不传=本人
 	Pagination    *hi.Pagination         `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -272,9 +330,9 @@ func (*ListApiKeysReq) Descriptor() ([]byte, []int) {
 	return file_hi_club_api_key_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *ListApiKeysReq) GetAgent() string {
-	if x != nil && x.Agent != nil {
-		return *x.Agent
+func (x *ListApiKeysReq) GetUser() string {
+	if x != nil && x.User != nil {
+		return *x.User
 	}
 	return ""
 }
@@ -386,31 +444,37 @@ var File_hi_club_api_key_proto protoreflect.FileDescriptor
 
 const file_hi_club_api_key_proto_rawDesc = "" +
 	"\n" +
-	"\x15hi/club/api_key.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x13hi/ai/api_key.proto\x1a\x10hi/options.proto\"\xc6\x01\n" +
+	"\x15hi/club/api_key.proto\x12\ahi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x13hi/ai/api_key.proto\x1a\x10hi/options.proto\"\x8f\x02\n" +
 	"\n" +
 	"ApiKeyInfo\x12\x1d\n" +
 	"\x04user\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04user\x88\x01\x01\x12\x1f\n" +
 	"\x05value\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x05value\x88\x01\x01\x12\x1d\n" +
 	"\x04note\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x04note\x88\x01\x01\x12(\n" +
 	"\n" +
-	"created_at\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x03H\x03R\tcreatedAt\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
+	"created_at\x18\x04 \x01(\x03B\x04\x90\xb5\x18\x03H\x03R\tcreatedAt\x88\x01\x01\x12;\n" +
+	"\apurpose\x18\x05 \x01(\x0e2\x16.hi.club.ApiKeyPurposeB\x04\x90\xb5\x18\x03H\x04R\apurpose\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
 	"\x05_userB\b\n" +
 	"\x06_valueB\a\n" +
 	"\x05_noteB\r\n" +
-	"\v_created_at\"6\n" +
-	"\x0fCreateApiKeyReq\x12\x19\n" +
-	"\x05agent\x18\x01 \x01(\tH\x00R\x05agent\x88\x01\x01B\b\n" +
-	"\x06_agent\"G\n" +
+	"\v_created_atB\n" +
+	"\n" +
+	"\b_purpose\"v\n" +
+	"\x0fCreateApiKeyReq\x12\x17\n" +
+	"\x04user\x18\x01 \x01(\tH\x00R\x04user\x88\x01\x01\x125\n" +
+	"\apurpose\x18\x02 \x01(\x0e2\x16.hi.club.ApiKeyPurposeH\x01R\apurpose\x88\x01\x01B\a\n" +
+	"\x05_userB\n" +
+	"\n" +
+	"\b_purpose\"G\n" +
 	"\x10CreateApiKeyResp\x12-\n" +
 	"\x04info\x18\x01 \x01(\v2\x13.hi.club.ApiKeyInfoB\x04\x90\xb5\x18\x03R\x04info:\x04\x98\xb5\x18\x03\"E\n" +
 	"\x0eEditApiKeyResp\x12-\n" +
-	"\x04info\x18\x01 \x01(\v2\x13.hi.club.ApiKeyInfoB\x04\x90\xb5\x18\x03R\x04info:\x04\x98\xb5\x18\x03\"e\n" +
-	"\x0eListApiKeysReq\x12\x19\n" +
-	"\x05agent\x18\x01 \x01(\tH\x00R\x05agent\x88\x01\x01\x12.\n" +
+	"\x04info\x18\x01 \x01(\v2\x13.hi.club.ApiKeyInfoB\x04\x90\xb5\x18\x03R\x04info:\x04\x98\xb5\x18\x03\"b\n" +
+	"\x0eListApiKeysReq\x12\x17\n" +
+	"\x04user\x18\x01 \x01(\tH\x00R\x04user\x88\x01\x01\x12.\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
-	"paginationB\b\n" +
-	"\x06_agent\"s\n" +
+	"paginationB\a\n" +
+	"\x05_user\"s\n" +
 	"\x0fListApiKeysResp\x12\x1f\n" +
 	"\x05total\x18\x01 \x01(\x05B\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12/\n" +
 	"\x05infos\x18\x02 \x03(\v2\x13.hi.club.ApiKeyInfoB\x04\x90\xb5\x18\x03R\x05infos:\x04\x98\xb5\x18\x03B\b\n" +
@@ -418,7 +482,11 @@ const file_hi_club_api_key_proto_rawDesc = "" +
 	"\x0fDeleteApiKeyReq\x12\x1c\n" +
 	"\aapi_key\x18\x01 \x01(\tH\x00R\x06apiKey\x88\x01\x01B\n" +
 	"\n" +
-	"\b_api_key2\x91\x02\n" +
+	"\b_api_key*j\n" +
+	"\rApiKeyPurpose\x12\x1f\n" +
+	"\x1bAPI_KEY_PURPOSE_UNSPECIFIED\x10\x00\x12\x1a\n" +
+	"\x16API_KEY_PURPOSE_PLUGIN\x10\x01\x12\x1c\n" +
+	"\x18API_KEY_PURPOSE_USER_API\x10\x022\x91\x02\n" +
 	"\x06ApiKey\x12D\n" +
 	"\x06Create\x12\x18.hi.club.CreateApiKeyReq\x1a\x19.hi.club.CreateApiKeyResp\"\x05\x8a\xb5\x18\x01\x02\x12<\n" +
 	"\x04Edit\x12\x14.hi.ai.EditApiKeyReq\x1a\x17.hi.club.EditApiKeyResp\"\x05\x8a\xb5\x18\x01\x02\x12@\n" +
@@ -438,37 +506,41 @@ func file_hi_club_api_key_proto_rawDescGZIP() []byte {
 	return file_hi_club_api_key_proto_rawDescData
 }
 
+var file_hi_club_api_key_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_hi_club_api_key_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_hi_club_api_key_proto_goTypes = []any{
-	(*ApiKeyInfo)(nil),       // 0: hi.club.ApiKeyInfo
-	(*CreateApiKeyReq)(nil),  // 1: hi.club.CreateApiKeyReq
-	(*CreateApiKeyResp)(nil), // 2: hi.club.CreateApiKeyResp
-	(*EditApiKeyResp)(nil),   // 3: hi.club.EditApiKeyResp
-	(*ListApiKeysReq)(nil),   // 4: hi.club.ListApiKeysReq
-	(*ListApiKeysResp)(nil),  // 5: hi.club.ListApiKeysResp
-	(*DeleteApiKeyReq)(nil),  // 6: hi.club.DeleteApiKeyReq
-	(*hi.Pagination)(nil),    // 7: hi.Pagination
-	(*ai.EditApiKeyReq)(nil), // 8: hi.ai.EditApiKeyReq
-	(*emptypb.Empty)(nil),    // 9: google.protobuf.Empty
+	(ApiKeyPurpose)(0),       // 0: hi.club.ApiKeyPurpose
+	(*ApiKeyInfo)(nil),       // 1: hi.club.ApiKeyInfo
+	(*CreateApiKeyReq)(nil),  // 2: hi.club.CreateApiKeyReq
+	(*CreateApiKeyResp)(nil), // 3: hi.club.CreateApiKeyResp
+	(*EditApiKeyResp)(nil),   // 4: hi.club.EditApiKeyResp
+	(*ListApiKeysReq)(nil),   // 5: hi.club.ListApiKeysReq
+	(*ListApiKeysResp)(nil),  // 6: hi.club.ListApiKeysResp
+	(*DeleteApiKeyReq)(nil),  // 7: hi.club.DeleteApiKeyReq
+	(*hi.Pagination)(nil),    // 8: hi.Pagination
+	(*ai.EditApiKeyReq)(nil), // 9: hi.ai.EditApiKeyReq
+	(*emptypb.Empty)(nil),    // 10: google.protobuf.Empty
 }
 var file_hi_club_api_key_proto_depIdxs = []int32{
-	0, // 0: hi.club.CreateApiKeyResp.info:type_name -> hi.club.ApiKeyInfo
-	0, // 1: hi.club.EditApiKeyResp.info:type_name -> hi.club.ApiKeyInfo
-	7, // 2: hi.club.ListApiKeysReq.pagination:type_name -> hi.Pagination
-	0, // 3: hi.club.ListApiKeysResp.infos:type_name -> hi.club.ApiKeyInfo
-	1, // 4: hi.club.ApiKey.Create:input_type -> hi.club.CreateApiKeyReq
-	8, // 5: hi.club.ApiKey.Edit:input_type -> hi.ai.EditApiKeyReq
-	4, // 6: hi.club.ApiKey.List:input_type -> hi.club.ListApiKeysReq
-	6, // 7: hi.club.ApiKey.Delete:input_type -> hi.club.DeleteApiKeyReq
-	2, // 8: hi.club.ApiKey.Create:output_type -> hi.club.CreateApiKeyResp
-	3, // 9: hi.club.ApiKey.Edit:output_type -> hi.club.EditApiKeyResp
-	5, // 10: hi.club.ApiKey.List:output_type -> hi.club.ListApiKeysResp
-	9, // 11: hi.club.ApiKey.Delete:output_type -> google.protobuf.Empty
-	8, // [8:12] is the sub-list for method output_type
-	4, // [4:8] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	0,  // 0: hi.club.ApiKeyInfo.purpose:type_name -> hi.club.ApiKeyPurpose
+	0,  // 1: hi.club.CreateApiKeyReq.purpose:type_name -> hi.club.ApiKeyPurpose
+	1,  // 2: hi.club.CreateApiKeyResp.info:type_name -> hi.club.ApiKeyInfo
+	1,  // 3: hi.club.EditApiKeyResp.info:type_name -> hi.club.ApiKeyInfo
+	8,  // 4: hi.club.ListApiKeysReq.pagination:type_name -> hi.Pagination
+	1,  // 5: hi.club.ListApiKeysResp.infos:type_name -> hi.club.ApiKeyInfo
+	2,  // 6: hi.club.ApiKey.Create:input_type -> hi.club.CreateApiKeyReq
+	9,  // 7: hi.club.ApiKey.Edit:input_type -> hi.ai.EditApiKeyReq
+	5,  // 8: hi.club.ApiKey.List:input_type -> hi.club.ListApiKeysReq
+	7,  // 9: hi.club.ApiKey.Delete:input_type -> hi.club.DeleteApiKeyReq
+	3,  // 10: hi.club.ApiKey.Create:output_type -> hi.club.CreateApiKeyResp
+	4,  // 11: hi.club.ApiKey.Edit:output_type -> hi.club.EditApiKeyResp
+	6,  // 12: hi.club.ApiKey.List:output_type -> hi.club.ListApiKeysResp
+	10, // 13: hi.club.ApiKey.Delete:output_type -> google.protobuf.Empty
+	10, // [10:14] is the sub-list for method output_type
+	6,  // [6:10] is the sub-list for method input_type
+	6,  // [6:6] is the sub-list for extension type_name
+	6,  // [6:6] is the sub-list for extension extendee
+	0,  // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_api_key_proto_init() }
@@ -486,13 +558,14 @@ func file_hi_club_api_key_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_api_key_proto_rawDesc), len(file_hi_club_api_key_proto_rawDesc)),
-			NumEnums:      0,
+			NumEnums:      1,
 			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_hi_club_api_key_proto_goTypes,
 		DependencyIndexes: file_hi_club_api_key_proto_depIdxs,
+		EnumInfos:         file_hi_club_api_key_proto_enumTypes,
 		MessageInfos:      file_hi_club_api_key_proto_msgTypes,
 	}.Build()
 	File_hi_club_api_key_proto = out.File

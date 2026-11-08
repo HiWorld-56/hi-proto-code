@@ -20,9 +20,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ProductInventory_Create_FullMethodName = "/hi.club.ProductInventory/Create"
-	ProductInventory_Get_FullMethodName    = "/hi.club.ProductInventory/Get"
-	ProductInventory_List_FullMethodName   = "/hi.club.ProductInventory/List"
+	ProductInventory_Create_FullMethodName      = "/hi.club.ProductInventory/Create"
+	ProductInventory_Get_FullMethodName         = "/hi.club.ProductInventory/Get"
+	ProductInventory_Configure_FullMethodName   = "/hi.club.ProductInventory/Configure"
+	ProductInventory_AdjustStock_FullMethodName = "/hi.club.ProductInventory/AdjustStock"
+	ProductInventory_List_FullMethodName        = "/hi.club.ProductInventory/List"
 )
 
 // ProductInventoryClient is the client API for ProductInventory service.
@@ -31,10 +33,12 @@ const (
 //
 // 商品库与挂牌分离，沿用插件市场的“当前主人 -> 机器人摊位 -> 货”。
 // 上传仅入本人硬件机器人的库，不能向任意机器人上传，也不能自动上架/广播。
-// 公开目录与管理面分开；本阶段仅展示报价，没有订单、支付或履约。
+// 公开目录与管理面分开；采购、库存和履约契约见product_trade.proto。
 type ProductInventoryClient interface {
 	Create(ctx context.Context, in *CreateProductReq, opts ...grpc.CallOption) (*ProductInventoryItem, error)
 	Get(ctx context.Context, in *GetProductReq, opts ...grpc.CallOption) (*ProductInventoryItem, error)
+	Configure(ctx context.Context, in *ConfigureProductReq, opts ...grpc.CallOption) (*ProductInventoryItem, error)
+	AdjustStock(ctx context.Context, in *AdjustProductStockReq, opts ...grpc.CallOption) (*ProductInventoryItem, error)
 	List(ctx context.Context, in *ListProductsReq, opts ...grpc.CallOption) (*ListProductInventoryResp, error)
 }
 
@@ -66,6 +70,26 @@ func (c *productInventoryClient) Get(ctx context.Context, in *GetProductReq, opt
 	return out, nil
 }
 
+func (c *productInventoryClient) Configure(ctx context.Context, in *ConfigureProductReq, opts ...grpc.CallOption) (*ProductInventoryItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ProductInventoryItem)
+	err := c.cc.Invoke(ctx, ProductInventory_Configure_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *productInventoryClient) AdjustStock(ctx context.Context, in *AdjustProductStockReq, opts ...grpc.CallOption) (*ProductInventoryItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ProductInventoryItem)
+	err := c.cc.Invoke(ctx, ProductInventory_AdjustStock_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *productInventoryClient) List(ctx context.Context, in *ListProductsReq, opts ...grpc.CallOption) (*ListProductInventoryResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListProductInventoryResp)
@@ -82,10 +106,12 @@ func (c *productInventoryClient) List(ctx context.Context, in *ListProductsReq, 
 //
 // 商品库与挂牌分离，沿用插件市场的“当前主人 -> 机器人摊位 -> 货”。
 // 上传仅入本人硬件机器人的库，不能向任意机器人上传，也不能自动上架/广播。
-// 公开目录与管理面分开；本阶段仅展示报价，没有订单、支付或履约。
+// 公开目录与管理面分开；采购、库存和履约契约见product_trade.proto。
 type ProductInventoryServer interface {
 	Create(context.Context, *CreateProductReq) (*ProductInventoryItem, error)
 	Get(context.Context, *GetProductReq) (*ProductInventoryItem, error)
+	Configure(context.Context, *ConfigureProductReq) (*ProductInventoryItem, error)
+	AdjustStock(context.Context, *AdjustProductStockReq) (*ProductInventoryItem, error)
 	List(context.Context, *ListProductsReq) (*ListProductInventoryResp, error)
 }
 
@@ -101,6 +127,12 @@ func (UnimplementedProductInventoryServer) Create(context.Context, *CreateProduc
 }
 func (UnimplementedProductInventoryServer) Get(context.Context, *GetProductReq) (*ProductInventoryItem, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
+}
+func (UnimplementedProductInventoryServer) Configure(context.Context, *ConfigureProductReq) (*ProductInventoryItem, error) {
+	return nil, status.Error(codes.Unimplemented, "method Configure not implemented")
+}
+func (UnimplementedProductInventoryServer) AdjustStock(context.Context, *AdjustProductStockReq) (*ProductInventoryItem, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdjustStock not implemented")
 }
 func (UnimplementedProductInventoryServer) List(context.Context, *ListProductsReq) (*ListProductInventoryResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
@@ -161,6 +193,42 @@ func _ProductInventory_Get_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ProductInventory_Configure_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ConfigureProductReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductInventoryServer).Configure(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductInventory_Configure_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductInventoryServer).Configure(ctx, req.(*ConfigureProductReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProductInventory_AdjustStock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdjustProductStockReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductInventoryServer).AdjustStock(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductInventory_AdjustStock_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductInventoryServer).AdjustStock(ctx, req.(*AdjustProductStockReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ProductInventory_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListProductsReq)
 	if err := dec(in); err != nil {
@@ -193,6 +261,14 @@ var ProductInventory_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Get",
 			Handler:    _ProductInventory_Get_Handler,
+		},
+		{
+			MethodName: "Configure",
+			Handler:    _ProductInventory_Configure_Handler,
+		},
+		{
+			MethodName: "AdjustStock",
+			Handler:    _ProductInventory_AdjustStock_Handler,
 		},
 		{
 			MethodName: "List",

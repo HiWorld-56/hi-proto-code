@@ -23,7 +23,7 @@ export 'product.pb.dart';
 
 /// 商品库与挂牌分离，沿用插件市场的“当前主人 -> 机器人摊位 -> 货”。
 /// 上传仅入本人硬件机器人的库，不能向任意机器人上传，也不能自动上架/广播。
-/// 公开目录与管理面分开；本阶段仅展示报价，没有订单、支付或履约。
+/// 公开目录与管理面分开；采购、库存和履约契约见product_trade.proto。
 @$pb.GrpcServiceName('hi.club.ProductInventory')
 class ProductInventoryClient extends $grpc.Client {
   /// The hostname for this service.
@@ -50,6 +50,20 @@ class ProductInventoryClient extends $grpc.Client {
     return $createUnaryCall(_$get, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.ProductInventoryItem> configure(
+    $0.ConfigureProductReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$configure, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.ProductInventoryItem> adjustStock(
+    $0.AdjustProductStockReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$adjustStock, request, options: options);
+  }
+
   $grpc.ResponseFuture<$0.ListProductInventoryResp> list(
     $0.ListProductsReq request, {
     $grpc.CallOptions? options,
@@ -68,6 +82,16 @@ class ProductInventoryClient extends $grpc.Client {
       $grpc.ClientMethod<$0.GetProductReq, $0.ProductInventoryItem>(
           '/hi.club.ProductInventory/Get',
           ($0.GetProductReq value) => value.writeToBuffer(),
+          $0.ProductInventoryItem.fromBuffer);
+  static final _$configure =
+      $grpc.ClientMethod<$0.ConfigureProductReq, $0.ProductInventoryItem>(
+          '/hi.club.ProductInventory/Configure',
+          ($0.ConfigureProductReq value) => value.writeToBuffer(),
+          $0.ProductInventoryItem.fromBuffer);
+  static final _$adjustStock =
+      $grpc.ClientMethod<$0.AdjustProductStockReq, $0.ProductInventoryItem>(
+          '/hi.club.ProductInventory/AdjustStock',
+          ($0.AdjustProductStockReq value) => value.writeToBuffer(),
           $0.ProductInventoryItem.fromBuffer);
   static final _$list =
       $grpc.ClientMethod<$0.ListProductsReq, $0.ListProductInventoryResp>(
@@ -98,6 +122,24 @@ abstract class ProductInventoryServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) => $0.GetProductReq.fromBuffer(value),
         ($0.ProductInventoryItem value) => value.writeToBuffer()));
     $addMethod(
+        $grpc.ServiceMethod<$0.ConfigureProductReq, $0.ProductInventoryItem>(
+            'Configure',
+            configure_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $0.ConfigureProductReq.fromBuffer(value),
+            ($0.ProductInventoryItem value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$0.AdjustProductStockReq, $0.ProductInventoryItem>(
+            'AdjustStock',
+            adjustStock_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $0.AdjustProductStockReq.fromBuffer(value),
+            ($0.ProductInventoryItem value) => value.writeToBuffer()));
+    $addMethod(
         $grpc.ServiceMethod<$0.ListProductsReq, $0.ListProductInventoryResp>(
             'List',
             list_Pre,
@@ -123,6 +165,23 @@ abstract class ProductInventoryServiceBase extends $grpc.Service {
 
   $async.Future<$0.ProductInventoryItem> get(
       $grpc.ServiceCall call, $0.GetProductReq request);
+
+  $async.Future<$0.ProductInventoryItem> configure_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.ConfigureProductReq> $request) async {
+    return configure($call, await $request);
+  }
+
+  $async.Future<$0.ProductInventoryItem> configure(
+      $grpc.ServiceCall call, $0.ConfigureProductReq request);
+
+  $async.Future<$0.ProductInventoryItem> adjustStock_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.AdjustProductStockReq> $request) async {
+    return adjustStock($call, await $request);
+  }
+
+  $async.Future<$0.ProductInventoryItem> adjustStock(
+      $grpc.ServiceCall call, $0.AdjustProductStockReq request);
 
   $async.Future<$0.ListProductInventoryResp> list_Pre($grpc.ServiceCall $call,
       $async.Future<$0.ListProductsReq> $request) async {

@@ -37,8 +37,8 @@ const (
 //	(不吐 rate_limit / is_active),形状看着像、内容不是一回事。
 type ApiKeyClient interface {
 	Create(ctx context.Context, in *CreateApiKeyReq, opts ...grpc.CallOption) (*CreateApiKeyResp, error)
-	// Edit/Delete 按 api_key 定位,**必须校验归属** —— 只有该机器人的 master 能改/删。
-	// 已落地(handler 里 isMasterOf(调用者, apikey.user));新增同类方法要带同样的守卫。
+	// Edit/Delete按api_key定位，校验本人/当前代管权限。
+	// 各入口复用公共关系校验。
 	Edit(ctx context.Context, in *ai.EditApiKeyReq, opts ...grpc.CallOption) (*EditApiKeyResp, error)
 	List(ctx context.Context, in *ListApiKeysReq, opts ...grpc.CallOption) (*ListApiKeysResp, error)
 	Delete(ctx context.Context, in *DeleteApiKeyReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -102,8 +102,8 @@ func (c *apiKeyClient) Delete(ctx context.Context, in *DeleteApiKeyReq, opts ...
 //	(不吐 rate_limit / is_active),形状看着像、内容不是一回事。
 type ApiKeyServer interface {
 	Create(context.Context, *CreateApiKeyReq) (*CreateApiKeyResp, error)
-	// Edit/Delete 按 api_key 定位,**必须校验归属** —— 只有该机器人的 master 能改/删。
-	// 已落地(handler 里 isMasterOf(调用者, apikey.user));新增同类方法要带同样的守卫。
+	// Edit/Delete按api_key定位，校验本人/当前代管权限。
+	// 各入口复用公共关系校验。
 	Edit(context.Context, *ai.EditApiKeyReq) (*EditApiKeyResp, error)
 	List(context.Context, *ListApiKeysReq) (*ListApiKeysResp, error)
 	Delete(context.Context, *DeleteApiKeyReq) (*emptypb.Empty, error)
