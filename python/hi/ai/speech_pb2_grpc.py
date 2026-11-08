@@ -3,6 +3,7 @@
 import grpc
 
 from hi.ai import speech_pb2 as hi_dot_ai_dot_speech__pb2
+from hi import audio_pb2 as hi_dot_audio__pb2
 
 
 class SpeechStub(object):
@@ -21,6 +22,11 @@ class SpeechStub(object):
         Args:
             channel: A grpc.Channel.
         """
+        self.SynthesizeStream = channel.unary_stream(
+                '/hi.ai.Speech/SynthesizeStream',
+                request_serializer=hi_dot_ai_dot_speech__pb2.SynthesizeReq.SerializeToString,
+                response_deserializer=hi_dot_audio__pb2.AudioStreamEvent.FromString,
+                _registered_method=True)
         self.Transcribe = channel.unary_unary(
                 '/hi.ai.Speech/Transcribe',
                 request_serializer=hi_dot_ai_dot_speech__pb2.TranscribeReq.SerializeToString,
@@ -43,6 +49,12 @@ class SpeechServicer(object):
     商户档:hiai web 与商户后台服务都会调。
     """
 
+    def SynthesizeStream(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def Transcribe(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -58,6 +70,11 @@ class SpeechServicer(object):
 
 def add_SpeechServicer_to_server(servicer, server):
     rpc_method_handlers = {
+            'SynthesizeStream': grpc.unary_stream_rpc_method_handler(
+                    servicer.SynthesizeStream,
+                    request_deserializer=hi_dot_ai_dot_speech__pb2.SynthesizeReq.FromString,
+                    response_serializer=hi_dot_audio__pb2.AudioStreamEvent.SerializeToString,
+            ),
             'Transcribe': grpc.unary_unary_rpc_method_handler(
                     servicer.Transcribe,
                     request_deserializer=hi_dot_ai_dot_speech__pb2.TranscribeReq.FromString,
@@ -85,6 +102,33 @@ class Speech(object):
 
     商户档:hiai web 与商户后台服务都会调。
     """
+
+    @staticmethod
+    def SynthesizeStream(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(
+            request,
+            target,
+            '/hi.ai.Speech/SynthesizeStream',
+            hi_dot_ai_dot_speech__pb2.SynthesizeReq.SerializeToString,
+            hi_dot_audio__pb2.AudioStreamEvent.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
 
     @staticmethod
     def Transcribe(request,

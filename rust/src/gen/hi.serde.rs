@@ -1,3 +1,671 @@
+impl serde::Serialize for AudioFormat {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.encoding.is_some() {
+            len += 1;
+        }
+        if self.sample_rate.is_some() {
+            len += 1;
+        }
+        if self.channels.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.AudioFormat", len)?;
+        if let Some(v) = self.encoding.as_ref() {
+            let v = audio_format::Encoding::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("encoding", &v)?;
+        }
+        if let Some(v) = self.sample_rate.as_ref() {
+            struct_ser.serialize_field("sampleRate", v)?;
+        }
+        if let Some(v) = self.channels.as_ref() {
+            struct_ser.serialize_field("channels", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for AudioFormat {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "encoding",
+            "sample_rate",
+            "sampleRate",
+            "channels",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Encoding,
+            SampleRate,
+            Channels,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "encoding" => Ok(GeneratedField::Encoding),
+                            "sampleRate" | "sample_rate" => Ok(GeneratedField::SampleRate),
+                            "channels" => Ok(GeneratedField::Channels),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = AudioFormat;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.AudioFormat")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<AudioFormat, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut encoding__ = None;
+                let mut sample_rate__ = None;
+                let mut channels__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Encoding => {
+                            if encoding__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("encoding"));
+                            }
+                            encoding__ = map_.next_value::<::std::option::Option<audio_format::Encoding>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::SampleRate => {
+                            if sample_rate__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sampleRate"));
+                            }
+                            sample_rate__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Channels => {
+                            if channels__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("channels"));
+                            }
+                            channels__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(AudioFormat {
+                    encoding: encoding__,
+                    sample_rate: sample_rate__,
+                    channels: channels__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.AudioFormat", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for audio_format::Encoding {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unknown => "ENCODING_UNKNOWN",
+            Self::PcmS16le => "ENCODING_PCM_S16LE",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for audio_format::Encoding {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "ENCODING_UNKNOWN",
+            "ENCODING_PCM_S16LE",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = audio_format::Encoding;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "ENCODING_UNKNOWN" => Ok(audio_format::Encoding::Unknown),
+                    "ENCODING_PCM_S16LE" => Ok(audio_format::Encoding::PcmS16le),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for AudioStreamChunk {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.sequence.is_some() {
+            len += 1;
+        }
+        if self.sample_offset.is_some() {
+            len += 1;
+        }
+        if self.pcm.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.AudioStreamChunk", len)?;
+        if let Some(v) = self.sequence.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("sequence", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.sample_offset.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("sampleOffset", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.pcm.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("pcm", pbjson::private::base64::encode(&v).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for AudioStreamChunk {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "sequence",
+            "sample_offset",
+            "sampleOffset",
+            "pcm",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Sequence,
+            SampleOffset,
+            Pcm,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "sequence" => Ok(GeneratedField::Sequence),
+                            "sampleOffset" | "sample_offset" => Ok(GeneratedField::SampleOffset),
+                            "pcm" => Ok(GeneratedField::Pcm),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = AudioStreamChunk;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.AudioStreamChunk")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<AudioStreamChunk, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut sequence__ = None;
+                let mut sample_offset__ = None;
+                let mut pcm__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Sequence => {
+                            if sequence__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sequence"));
+                            }
+                            sequence__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::SampleOffset => {
+                            if sample_offset__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sampleOffset"));
+                            }
+                            sample_offset__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Pcm => {
+                            if pcm__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("pcm"));
+                            }
+                            pcm__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::BytesDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(AudioStreamChunk {
+                    sequence: sequence__,
+                    sample_offset: sample_offset__,
+                    pcm: pcm__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.AudioStreamChunk", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for AudioStreamEnd {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.total_samples.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.AudioStreamEnd", len)?;
+        if let Some(v) = self.total_samples.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("totalSamples", ToString::to_string(&v).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for AudioStreamEnd {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "total_samples",
+            "totalSamples",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            TotalSamples,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "totalSamples" | "total_samples" => Ok(GeneratedField::TotalSamples),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = AudioStreamEnd;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.AudioStreamEnd")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<AudioStreamEnd, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut total_samples__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::TotalSamples => {
+                            if total_samples__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("totalSamples"));
+                            }
+                            total_samples__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(AudioStreamEnd {
+                    total_samples: total_samples__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.AudioStreamEnd", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for AudioStreamEvent {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.stream_id.is_some() {
+            len += 1;
+        }
+        if self.event.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.AudioStreamEvent", len)?;
+        if let Some(v) = self.stream_id.as_ref() {
+            struct_ser.serialize_field("streamId", v)?;
+        }
+        if let Some(v) = self.event.as_ref() {
+            match v {
+                audio_stream_event::Event::Start(v) => {
+                    struct_ser.serialize_field("start", v)?;
+                }
+                audio_stream_event::Event::Chunk(v) => {
+                    struct_ser.serialize_field("chunk", v)?;
+                }
+                audio_stream_event::Event::End(v) => {
+                    struct_ser.serialize_field("end", v)?;
+                }
+            }
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for AudioStreamEvent {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "stream_id",
+            "streamId",
+            "start",
+            "chunk",
+            "end",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            StreamId,
+            Start,
+            Chunk,
+            End,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "streamId" | "stream_id" => Ok(GeneratedField::StreamId),
+                            "start" => Ok(GeneratedField::Start),
+                            "chunk" => Ok(GeneratedField::Chunk),
+                            "end" => Ok(GeneratedField::End),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = AudioStreamEvent;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.AudioStreamEvent")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<AudioStreamEvent, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut stream_id__ = None;
+                let mut event__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::StreamId => {
+                            if stream_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("streamId"));
+                            }
+                            stream_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Start => {
+                            if event__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("start"));
+                            }
+                            event__ = map_.next_value::<::std::option::Option<_>>()?.map(audio_stream_event::Event::Start)
+;
+                        }
+                        GeneratedField::Chunk => {
+                            if event__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("chunk"));
+                            }
+                            event__ = map_.next_value::<::std::option::Option<_>>()?.map(audio_stream_event::Event::Chunk)
+;
+                        }
+                        GeneratedField::End => {
+                            if event__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("end"));
+                            }
+                            event__ = map_.next_value::<::std::option::Option<_>>()?.map(audio_stream_event::Event::End)
+;
+                        }
+                    }
+                }
+                Ok(AudioStreamEvent {
+                    stream_id: stream_id__,
+                    event: event__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.AudioStreamEvent", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for AudioStreamStart {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.format.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.AudioStreamStart", len)?;
+        if let Some(v) = self.format.as_ref() {
+            struct_ser.serialize_field("format", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for AudioStreamStart {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "format",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Format,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "format" => Ok(GeneratedField::Format),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = AudioStreamStart;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.AudioStreamStart")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<AudioStreamStart, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut format__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Format => {
+                            if format__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("format"));
+                            }
+                            format__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(AudioStreamStart {
+                    format: format__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.AudioStreamStart", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for Auth {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>

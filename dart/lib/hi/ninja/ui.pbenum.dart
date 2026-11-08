@@ -136,6 +136,8 @@ class PlaybackEvent_State extends $pb.ProtobufEnum {
       PlaybackEvent_State._(3, _omitEnumNames ? '' : 'STATE_ENDED');
   static const PlaybackEvent_State STATE_FAILED =
       PlaybackEvent_State._(4, _omitEnumNames ? '' : 'STATE_FAILED');
+  static const PlaybackEvent_State STATE_CANCELLED =
+      PlaybackEvent_State._(5, _omitEnumNames ? '' : 'STATE_CANCELLED');
 
   static const $core.List<PlaybackEvent_State> values = <PlaybackEvent_State>[
     STATE_UNKNOWN,
@@ -143,10 +145,11 @@ class PlaybackEvent_State extends $pb.ProtobufEnum {
     STATE_STARTED,
     STATE_ENDED,
     STATE_FAILED,
+    STATE_CANCELLED,
   ];
 
   static final $core.List<PlaybackEvent_State?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 4);
+      $pb.ProtobufEnum.$_initByValueList(values, 5);
   static PlaybackEvent_State? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

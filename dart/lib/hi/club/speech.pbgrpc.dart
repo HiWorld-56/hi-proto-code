@@ -17,6 +17,7 @@ import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../ai/speech.pb.dart' as $0;
+import '../audio.pb.dart' as $1;
 
 export 'speech.pb.dart';
 
@@ -37,6 +38,15 @@ class SpeechClient extends $grpc.Client {
 
   SpeechClient(super.channel, {super.options, super.interceptors});
 
+  $grpc.ResponseStream<$1.AudioStreamEvent> synthesizeStream(
+    $0.SynthesizeReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createStreamingCall(
+        _$synthesizeStream, $async.Stream.fromIterable([request]),
+        options: options);
+  }
+
   $grpc.ResponseFuture<$0.TranscribeResp> transcribe(
     $0.TranscribeReq request, {
     $grpc.CallOptions? options,
@@ -53,6 +63,11 @@ class SpeechClient extends $grpc.Client {
 
   // method descriptors
 
+  static final _$synthesizeStream =
+      $grpc.ClientMethod<$0.SynthesizeReq, $1.AudioStreamEvent>(
+          '/hi.club.Speech/SynthesizeStream',
+          ($0.SynthesizeReq value) => value.writeToBuffer(),
+          $1.AudioStreamEvent.fromBuffer);
   static final _$transcribe =
       $grpc.ClientMethod<$0.TranscribeReq, $0.TranscribeResp>(
           '/hi.club.Speech/Transcribe',
@@ -70,6 +85,13 @@ abstract class SpeechServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.club.Speech';
 
   SpeechServiceBase() {
+    $addMethod($grpc.ServiceMethod<$0.SynthesizeReq, $1.AudioStreamEvent>(
+        'SynthesizeStream',
+        synthesizeStream_Pre,
+        false,
+        true,
+        ($core.List<$core.int> value) => $0.SynthesizeReq.fromBuffer(value),
+        ($1.AudioStreamEvent value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.TranscribeReq, $0.TranscribeResp>(
         'Transcribe',
         transcribe_Pre,
@@ -85,6 +107,15 @@ abstract class SpeechServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) => $0.SynthesizeReq.fromBuffer(value),
         ($0.SynthesizeResp value) => value.writeToBuffer()));
   }
+
+  $async.Stream<$1.AudioStreamEvent> synthesizeStream_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.SynthesizeReq> $request) async* {
+    yield* synthesizeStream($call, await $request);
+  }
+
+  $async.Stream<$1.AudioStreamEvent> synthesizeStream(
+      $grpc.ServiceCall call, $0.SynthesizeReq request);
 
   $async.Future<$0.TranscribeResp> transcribe_Pre(
       $grpc.ServiceCall $call, $async.Future<$0.TranscribeReq> $request) async {

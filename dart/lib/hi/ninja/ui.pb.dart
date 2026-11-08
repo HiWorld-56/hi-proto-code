@@ -14,19 +14,20 @@ import 'dart:core' as $core;
 
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $3;
+import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $4;
 
-import '../ai/plugin.pb.dart' as $4;
-import '../binance/binance.pb.dart' as $7;
-import '../binance/offer.pb.dart' as $10;
+import '../ai/plugin.pb.dart' as $5;
+import '../audio.pb.dart' as $2;
+import '../binance/binance.pb.dart' as $8;
+import '../binance/offer.pb.dart' as $11;
 import '../club/group.pb.dart' as $1;
-import '../club/messaging.pb.dart' as $2;
-import '../club/product.pb.dart' as $8;
+import '../club/messaging.pb.dart' as $3;
+import '../club/product.pb.dart' as $9;
 import '../common.pb.dart' as $0;
-import '../did/transfer.pb.dart' as $5;
-import 'common.pb.dart' as $9;
+import '../did/transfer.pb.dart' as $6;
+import 'common.pb.dart' as $10;
 import 'ui.pbenum.dart';
-import 'updater.pb.dart' as $6;
+import 'updater.pb.dart' as $7;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -417,6 +418,237 @@ class AudioPlay extends $pb.GeneratedMessage {
   void clearAudio() => $_clearField(2);
 }
 
+/// 同一stream_id也是playback_id；连续音频只申请一次播放许可。
+class AudioStreamPlay extends $pb.GeneratedMessage {
+  factory AudioStreamPlay({
+    $core.String? uuid,
+    $2.AudioStreamEvent? event,
+  }) {
+    final result = create();
+    if (uuid != null) result.uuid = uuid;
+    if (event != null) result.event = event;
+    return result;
+  }
+
+  AudioStreamPlay._();
+
+  factory AudioStreamPlay.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory AudioStreamPlay.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'AudioStreamPlay',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'uuid')
+    ..aOM<$2.AudioStreamEvent>(2, _omitFieldNames ? '' : 'event',
+        subBuilder: $2.AudioStreamEvent.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AudioStreamPlay clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AudioStreamPlay copyWith(void Function(AudioStreamPlay) updates) =>
+      super.copyWith((message) => updates(message as AudioStreamPlay))
+          as AudioStreamPlay;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static AudioStreamPlay create() => AudioStreamPlay._();
+  @$core.override
+  AudioStreamPlay createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static AudioStreamPlay getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<AudioStreamPlay>(create);
+  static AudioStreamPlay? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get uuid => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set uuid($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasUuid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUuid() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $2.AudioStreamEvent get event => $_getN(1);
+  @$pb.TagNumber(2)
+  set event($2.AudioStreamEvent value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasEvent() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearEvent() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $2.AudioStreamEvent ensureEvent() => $_ensure(1);
+}
+
+class AudioStreamCancel extends $pb.GeneratedMessage {
+  factory AudioStreamCancel({
+    $core.String? streamId,
+    $core.String? reason,
+  }) {
+    final result = create();
+    if (streamId != null) result.streamId = streamId;
+    if (reason != null) result.reason = reason;
+    return result;
+  }
+
+  AudioStreamCancel._();
+
+  factory AudioStreamCancel.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory AudioStreamCancel.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'AudioStreamCancel',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'streamId')
+    ..aOS(2, _omitFieldNames ? '' : 'reason')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AudioStreamCancel clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AudioStreamCancel copyWith(void Function(AudioStreamCancel) updates) =>
+      super.copyWith((message) => updates(message as AudioStreamCancel))
+          as AudioStreamCancel;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static AudioStreamCancel create() => AudioStreamCancel._();
+  @$core.override
+  AudioStreamCancel createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static AudioStreamCancel getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<AudioStreamCancel>(create);
+  static AudioStreamCancel? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get streamId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set streamId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasStreamId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearStreamId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get reason => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set reason($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasReason() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearReason() => $_clearField(2);
+}
+
+/// face受理开流后发一次ready，再按已消费整块的样本位置回传；容量是可容纳的每声道样本数。
+/// 进度只用于背压，实际开始/结束/取消仍沿用PlaybackEvent。
+class AudioStreamProgress extends $pb.GeneratedMessage {
+  factory AudioStreamProgress({
+    $core.String? streamId,
+    $core.bool? ready,
+    $fixnum.Int64? consumedSamples,
+    $core.int? capacitySamples,
+  }) {
+    final result = create();
+    if (streamId != null) result.streamId = streamId;
+    if (ready != null) result.ready = ready;
+    if (consumedSamples != null) result.consumedSamples = consumedSamples;
+    if (capacitySamples != null) result.capacitySamples = capacitySamples;
+    return result;
+  }
+
+  AudioStreamProgress._();
+
+  factory AudioStreamProgress.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory AudioStreamProgress.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'AudioStreamProgress',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'streamId')
+    ..aOB(2, _omitFieldNames ? '' : 'ready')
+    ..a<$fixnum.Int64>(
+        3, _omitFieldNames ? '' : 'consumedSamples', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..aI(4, _omitFieldNames ? '' : 'capacitySamples',
+        fieldType: $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AudioStreamProgress clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AudioStreamProgress copyWith(void Function(AudioStreamProgress) updates) =>
+      super.copyWith((message) => updates(message as AudioStreamProgress))
+          as AudioStreamProgress;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static AudioStreamProgress create() => AudioStreamProgress._();
+  @$core.override
+  AudioStreamProgress createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static AudioStreamProgress getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<AudioStreamProgress>(create);
+  static AudioStreamProgress? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get streamId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set streamId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasStreamId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearStreamId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.bool get ready => $_getBF(1);
+  @$pb.TagNumber(2)
+  set ready($core.bool value) => $_setBool(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasReady() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearReady() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $fixnum.Int64 get consumedSamples => $_getI64(2);
+  @$pb.TagNumber(3)
+  set consumedSamples($fixnum.Int64 value) => $_setInt64(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasConsumedSamples() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearConsumedSamples() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.int get capacitySamples => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set capacitySamples($core.int value) => $_setUnsignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasCapacitySamples() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearCapacitySamples() => $_clearField(4);
+}
+
 /// 币安接入设置。**密钥不在这里** —— 2026-09-20 起密钥一个字都不出 brain：
 /// face 不再自己连币安，要数据就发 `BinanceRequest`（见下），brain 替它去。
 ///
@@ -593,6 +825,8 @@ enum BrainToFace_Cmd {
   eventProductListed,
   playbackPermit,
   manualMute,
+  audioStream,
+  audioStreamCancel,
   control,
   notSet
 }
@@ -603,35 +837,37 @@ class BrainToFace extends $pb.GeneratedMessage {
     RobotInit? initRobot,
     StateToggle? showListen,
     Emotion? showEmotion,
-    $2.Message? showImRequest,
+    $3.Message? showImRequest,
     TextReply? showImReply,
     TextReply? showVoiceReply,
-    $3.Empty? showQrCode,
+    $4.Empty? showQrCode,
     $0.Entity? eventRobot,
     MasterEvent? eventMaster,
     $1.GroupInfo? eventMembers,
-    $4.PluginView? eventPlugin,
-    $5.Transaction? eventTransaction,
+    $5.PluginView? eventPlugin,
+    $6.Transaction? eventTransaction,
     AudioPlay? playAudio,
     $0.Entity? eventFriendDelete,
     FriendList? eventFriends,
     $0.Entity? eventFriendAdd,
     GroupInfoList? membersInit,
     StatusEvent? eventStatus,
-    $6.UpdateStatus? eventUpdate,
+    $7.UpdateStatus? eventUpdate,
     PluginProgress? eventPluginProgress,
     BinanceSettings? eventBinanceSettings,
-    $7.BinanceResult? binanceResult,
+    $8.BinanceResult? binanceResult,
     Tip? showTip,
     QrCard? showQr,
     BinanceOffers? binanceOffers,
     VideoReady? videoReady,
-    $8.ProductInventoryItem? eventProductUploaded,
-    $8.ProductAnnouncement? eventProductListed,
+    $9.ProductInventoryItem? eventProductUploaded,
+    $9.ProductAnnouncement? eventProductListed,
     PlaybackPermit? playbackPermit,
     ManualMute? manualMute,
-    $9.ModuleSession? session,
-    $9.BrainToModuleControl? control,
+    AudioStreamPlay? audioStream,
+    AudioStreamCancel? audioStreamCancel,
+    $10.ModuleSession? session,
+    $10.BrainToModuleControl? control,
   }) {
     final result = create();
     if (initRobot != null) result.initRobot = initRobot;
@@ -668,6 +904,8 @@ class BrainToFace extends $pb.GeneratedMessage {
       result.eventProductListed = eventProductListed;
     if (playbackPermit != null) result.playbackPermit = playbackPermit;
     if (manualMute != null) result.manualMute = manualMute;
+    if (audioStream != null) result.audioStream = audioStream;
+    if (audioStreamCancel != null) result.audioStreamCancel = audioStreamCancel;
     if (session != null) result.session = session;
     if (control != null) result.control = control;
     return result;
@@ -713,6 +951,8 @@ class BrainToFace extends $pb.GeneratedMessage {
     30: BrainToFace_Cmd.eventProductListed,
     31: BrainToFace_Cmd.playbackPermit,
     32: BrainToFace_Cmd.manualMute,
+    33: BrainToFace_Cmd.audioStream,
+    34: BrainToFace_Cmd.audioStreamCancel,
     100: BrainToFace_Cmd.control,
     0: BrainToFace_Cmd.notSet
   };
@@ -751,6 +991,8 @@ class BrainToFace extends $pb.GeneratedMessage {
       30,
       31,
       32,
+      33,
+      34,
       100
     ])
     ..aOM<RobotInit>(1, _omitFieldNames ? '' : 'initRobot',
@@ -759,24 +1001,24 @@ class BrainToFace extends $pb.GeneratedMessage {
         enumValues: StateToggle.values)
     ..aE<Emotion>(3, _omitFieldNames ? '' : 'showEmotion',
         enumValues: Emotion.values)
-    ..aOM<$2.Message>(4, _omitFieldNames ? '' : 'showImRequest',
-        subBuilder: $2.Message.create)
+    ..aOM<$3.Message>(4, _omitFieldNames ? '' : 'showImRequest',
+        subBuilder: $3.Message.create)
     ..aOM<TextReply>(5, _omitFieldNames ? '' : 'showImReply',
         subBuilder: TextReply.create)
     ..aOM<TextReply>(6, _omitFieldNames ? '' : 'showVoiceReply',
         subBuilder: TextReply.create)
-    ..aOM<$3.Empty>(7, _omitFieldNames ? '' : 'showQrCode',
-        subBuilder: $3.Empty.create)
+    ..aOM<$4.Empty>(7, _omitFieldNames ? '' : 'showQrCode',
+        subBuilder: $4.Empty.create)
     ..aOM<$0.Entity>(8, _omitFieldNames ? '' : 'eventRobot',
         subBuilder: $0.Entity.create)
     ..aOM<MasterEvent>(9, _omitFieldNames ? '' : 'eventMaster',
         subBuilder: MasterEvent.create)
     ..aOM<$1.GroupInfo>(10, _omitFieldNames ? '' : 'eventMembers',
         subBuilder: $1.GroupInfo.create)
-    ..aOM<$4.PluginView>(11, _omitFieldNames ? '' : 'eventPlugin',
-        subBuilder: $4.PluginView.create)
-    ..aOM<$5.Transaction>(12, _omitFieldNames ? '' : 'eventTransaction',
-        subBuilder: $5.Transaction.create)
+    ..aOM<$5.PluginView>(11, _omitFieldNames ? '' : 'eventPlugin',
+        subBuilder: $5.PluginView.create)
+    ..aOM<$6.Transaction>(12, _omitFieldNames ? '' : 'eventTransaction',
+        subBuilder: $6.Transaction.create)
     ..aOM<AudioPlay>(13, _omitFieldNames ? '' : 'playAudio',
         subBuilder: AudioPlay.create)
     ..aOM<$0.Entity>(14, _omitFieldNames ? '' : 'eventFriendDelete',
@@ -789,14 +1031,14 @@ class BrainToFace extends $pb.GeneratedMessage {
         subBuilder: GroupInfoList.create)
     ..aOM<StatusEvent>(18, _omitFieldNames ? '' : 'eventStatus',
         subBuilder: StatusEvent.create)
-    ..aOM<$6.UpdateStatus>(19, _omitFieldNames ? '' : 'eventUpdate',
-        subBuilder: $6.UpdateStatus.create)
+    ..aOM<$7.UpdateStatus>(19, _omitFieldNames ? '' : 'eventUpdate',
+        subBuilder: $7.UpdateStatus.create)
     ..aOM<PluginProgress>(20, _omitFieldNames ? '' : 'eventPluginProgress',
         subBuilder: PluginProgress.create)
     ..aOM<BinanceSettings>(21, _omitFieldNames ? '' : 'eventBinanceSettings',
         subBuilder: BinanceSettings.create)
-    ..aOM<$7.BinanceResult>(22, _omitFieldNames ? '' : 'binanceResult',
-        subBuilder: $7.BinanceResult.create)
+    ..aOM<$8.BinanceResult>(22, _omitFieldNames ? '' : 'binanceResult',
+        subBuilder: $8.BinanceResult.create)
     ..aOM<Tip>(24, _omitFieldNames ? '' : 'showTip', subBuilder: Tip.create)
     ..aOM<QrCard>(25, _omitFieldNames ? '' : 'showQr',
         subBuilder: QrCard.create)
@@ -804,20 +1046,24 @@ class BrainToFace extends $pb.GeneratedMessage {
         subBuilder: BinanceOffers.create)
     ..aOM<VideoReady>(27, _omitFieldNames ? '' : 'videoReady',
         subBuilder: VideoReady.create)
-    ..aOM<$8.ProductInventoryItem>(
+    ..aOM<$9.ProductInventoryItem>(
         29, _omitFieldNames ? '' : 'eventProductUploaded',
-        subBuilder: $8.ProductInventoryItem.create)
-    ..aOM<$8.ProductAnnouncement>(
+        subBuilder: $9.ProductInventoryItem.create)
+    ..aOM<$9.ProductAnnouncement>(
         30, _omitFieldNames ? '' : 'eventProductListed',
-        subBuilder: $8.ProductAnnouncement.create)
+        subBuilder: $9.ProductAnnouncement.create)
     ..aOM<PlaybackPermit>(31, _omitFieldNames ? '' : 'playbackPermit',
         subBuilder: PlaybackPermit.create)
     ..aOM<ManualMute>(32, _omitFieldNames ? '' : 'manualMute',
         subBuilder: ManualMute.create)
-    ..aOM<$9.ModuleSession>(99, _omitFieldNames ? '' : 'session',
-        subBuilder: $9.ModuleSession.create)
-    ..aOM<$9.BrainToModuleControl>(100, _omitFieldNames ? '' : 'control',
-        subBuilder: $9.BrainToModuleControl.create)
+    ..aOM<AudioStreamPlay>(33, _omitFieldNames ? '' : 'audioStream',
+        subBuilder: AudioStreamPlay.create)
+    ..aOM<AudioStreamCancel>(34, _omitFieldNames ? '' : 'audioStreamCancel',
+        subBuilder: AudioStreamCancel.create)
+    ..aOM<$10.ModuleSession>(99, _omitFieldNames ? '' : 'session',
+        subBuilder: $10.ModuleSession.create)
+    ..aOM<$10.BrainToModuleControl>(100, _omitFieldNames ? '' : 'control',
+        subBuilder: $10.BrainToModuleControl.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -869,6 +1115,8 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(30)
   @$pb.TagNumber(31)
   @$pb.TagNumber(32)
+  @$pb.TagNumber(33)
+  @$pb.TagNumber(34)
   @$pb.TagNumber(100)
   BrainToFace_Cmd whichCmd() => _BrainToFace_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
@@ -901,6 +1149,8 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(30)
   @$pb.TagNumber(31)
   @$pb.TagNumber(32)
+  @$pb.TagNumber(33)
+  @$pb.TagNumber(34)
   @$pb.TagNumber(100)
   void clearCmd() => $_clearField($_whichOneof(0));
 
@@ -937,15 +1187,15 @@ class BrainToFace extends $pb.GeneratedMessage {
 
   /// 对话内容
   @$pb.TagNumber(4)
-  $2.Message get showImRequest => $_getN(3);
+  $3.Message get showImRequest => $_getN(3);
   @$pb.TagNumber(4)
-  set showImRequest($2.Message value) => $_setField(4, value);
+  set showImRequest($3.Message value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasShowImRequest() => $_has(3);
   @$pb.TagNumber(4)
   void clearShowImRequest() => $_clearField(4);
   @$pb.TagNumber(4)
-  $2.Message ensureShowImRequest() => $_ensure(3);
+  $3.Message ensureShowImRequest() => $_ensure(3);
 
   @$pb.TagNumber(5)
   TextReply get showImReply => $_getN(4);
@@ -970,15 +1220,15 @@ class BrainToFace extends $pb.GeneratedMessage {
   TextReply ensureShowVoiceReply() => $_ensure(5);
 
   @$pb.TagNumber(7)
-  $3.Empty get showQrCode => $_getN(6);
+  $4.Empty get showQrCode => $_getN(6);
   @$pb.TagNumber(7)
-  set showQrCode($3.Empty value) => $_setField(7, value);
+  set showQrCode($4.Empty value) => $_setField(7, value);
   @$pb.TagNumber(7)
   $core.bool hasShowQrCode() => $_has(6);
   @$pb.TagNumber(7)
   void clearShowQrCode() => $_clearField(7);
   @$pb.TagNumber(7)
-  $3.Empty ensureShowQrCode() => $_ensure(6);
+  $4.Empty ensureShowQrCode() => $_ensure(6);
 
   /// 状态事件
   @$pb.TagNumber(8)
@@ -1015,26 +1265,26 @@ class BrainToFace extends $pb.GeneratedMessage {
   $1.GroupInfo ensureEventMembers() => $_ensure(9);
 
   @$pb.TagNumber(11)
-  $4.PluginView get eventPlugin => $_getN(10);
+  $5.PluginView get eventPlugin => $_getN(10);
   @$pb.TagNumber(11)
-  set eventPlugin($4.PluginView value) => $_setField(11, value);
+  set eventPlugin($5.PluginView value) => $_setField(11, value);
   @$pb.TagNumber(11)
   $core.bool hasEventPlugin() => $_has(10);
   @$pb.TagNumber(11)
   void clearEventPlugin() => $_clearField(11);
   @$pb.TagNumber(11)
-  $4.PluginView ensureEventPlugin() => $_ensure(10);
+  $5.PluginView ensureEventPlugin() => $_ensure(10);
 
   @$pb.TagNumber(12)
-  $5.Transaction get eventTransaction => $_getN(11);
+  $6.Transaction get eventTransaction => $_getN(11);
   @$pb.TagNumber(12)
-  set eventTransaction($5.Transaction value) => $_setField(12, value);
+  set eventTransaction($6.Transaction value) => $_setField(12, value);
   @$pb.TagNumber(12)
   $core.bool hasEventTransaction() => $_has(11);
   @$pb.TagNumber(12)
   void clearEventTransaction() => $_clearField(12);
   @$pb.TagNumber(12)
-  $5.Transaction ensureEventTransaction() => $_ensure(11);
+  $6.Transaction ensureEventTransaction() => $_ensure(11);
 
   /// 媒体：uuid="" 时路由到 dialog_voice，否则按 uuid 路由到对应 IM dialog
   @$pb.TagNumber(13)
@@ -1109,15 +1359,15 @@ class BrainToFace extends $pb.GeneratedMessage {
   /// 固件 OTA 更新的状态。**brain 原样转发 updater 的那份**，不自己攒、不自己改；
   /// 定义在 `hi/ninja/updater.proto`（那条线的契约在那儿）。
   @$pb.TagNumber(19)
-  $6.UpdateStatus get eventUpdate => $_getN(18);
+  $7.UpdateStatus get eventUpdate => $_getN(18);
   @$pb.TagNumber(19)
-  set eventUpdate($6.UpdateStatus value) => $_setField(19, value);
+  set eventUpdate($7.UpdateStatus value) => $_setField(19, value);
   @$pb.TagNumber(19)
   $core.bool hasEventUpdate() => $_has(18);
   @$pb.TagNumber(19)
   void clearEventUpdate() => $_clearField(19);
   @$pb.TagNumber(19)
-  $6.UpdateStatus ensureEventUpdate() => $_ensure(18);
+  $7.UpdateStatus ensureEventUpdate() => $_ensure(18);
 
   @$pb.TagNumber(20)
   PluginProgress get eventPluginProgress => $_getN(19);
@@ -1145,15 +1395,15 @@ class BrainToFace extends $pb.GeneratedMessage {
   /// 币安结果。**与通知那条路回给代理的是同一个消息** —— 同一张操作表、
   /// 同一份账户快照，face 不该为"看板"再学一套形状。`request` 是 face 给的流水号。
   @$pb.TagNumber(22)
-  $7.BinanceResult get binanceResult => $_getN(21);
+  $8.BinanceResult get binanceResult => $_getN(21);
   @$pb.TagNumber(22)
-  set binanceResult($7.BinanceResult value) => $_setField(22, value);
+  set binanceResult($8.BinanceResult value) => $_setField(22, value);
   @$pb.TagNumber(22)
   $core.bool hasBinanceResult() => $_has(21);
   @$pb.TagNumber(22)
   void clearBinanceResult() => $_clearField(22);
   @$pb.TagNumber(22)
-  $7.BinanceResult ensureBinanceResult() => $_ensure(21);
+  $8.BinanceResult ensureBinanceResult() => $_ensure(21);
 
   /// **通用提示**:一句话,不带按钮,到时自动关。
   ///
@@ -1210,27 +1460,27 @@ class BrainToFace extends $pb.GeneratedMessage {
 
   /// 回 `FaceToBrain.video_request`
   @$pb.TagNumber(29)
-  $8.ProductInventoryItem get eventProductUploaded => $_getN(26);
+  $9.ProductInventoryItem get eventProductUploaded => $_getN(26);
   @$pb.TagNumber(29)
-  set eventProductUploaded($8.ProductInventoryItem value) =>
+  set eventProductUploaded($9.ProductInventoryItem value) =>
       $_setField(29, value);
   @$pb.TagNumber(29)
   $core.bool hasEventProductUploaded() => $_has(26);
   @$pb.TagNumber(29)
   void clearEventProductUploaded() => $_clearField(29);
   @$pb.TagNumber(29)
-  $8.ProductInventoryItem ensureEventProductUploaded() => $_ensure(26);
+  $9.ProductInventoryItem ensureEventProductUploaded() => $_ensure(26);
 
   @$pb.TagNumber(30)
-  $8.ProductAnnouncement get eventProductListed => $_getN(27);
+  $9.ProductAnnouncement get eventProductListed => $_getN(27);
   @$pb.TagNumber(30)
-  set eventProductListed($8.ProductAnnouncement value) => $_setField(30, value);
+  set eventProductListed($9.ProductAnnouncement value) => $_setField(30, value);
   @$pb.TagNumber(30)
   $core.bool hasEventProductListed() => $_has(27);
   @$pb.TagNumber(30)
   void clearEventProductListed() => $_clearField(30);
   @$pb.TagNumber(30)
-  $8.ProductAnnouncement ensureEventProductListed() => $_ensure(27);
+  $9.ProductAnnouncement ensureEventProductListed() => $_ensure(27);
 
   @$pb.TagNumber(31)
   PlaybackPermit get playbackPermit => $_getN(28);
@@ -1254,27 +1504,49 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(32)
   ManualMute ensureManualMute() => $_ensure(29);
 
+  @$pb.TagNumber(33)
+  AudioStreamPlay get audioStream => $_getN(30);
+  @$pb.TagNumber(33)
+  set audioStream(AudioStreamPlay value) => $_setField(33, value);
+  @$pb.TagNumber(33)
+  $core.bool hasAudioStream() => $_has(30);
+  @$pb.TagNumber(33)
+  void clearAudioStream() => $_clearField(33);
+  @$pb.TagNumber(33)
+  AudioStreamPlay ensureAudioStream() => $_ensure(30);
+
+  @$pb.TagNumber(34)
+  AudioStreamCancel get audioStreamCancel => $_getN(31);
+  @$pb.TagNumber(34)
+  set audioStreamCancel(AudioStreamCancel value) => $_setField(34, value);
+  @$pb.TagNumber(34)
+  $core.bool hasAudioStreamCancel() => $_has(31);
+  @$pb.TagNumber(34)
+  void clearAudioStreamCancel() => $_clearField(34);
+  @$pb.TagNumber(34)
+  AudioStreamCancel ensureAudioStreamCancel() => $_ensure(31);
+
   @$pb.TagNumber(99)
-  $9.ModuleSession get session => $_getN(30);
+  $10.ModuleSession get session => $_getN(32);
   @$pb.TagNumber(99)
-  set session($9.ModuleSession value) => $_setField(99, value);
+  set session($10.ModuleSession value) => $_setField(99, value);
   @$pb.TagNumber(99)
-  $core.bool hasSession() => $_has(30);
+  $core.bool hasSession() => $_has(32);
   @$pb.TagNumber(99)
   void clearSession() => $_clearField(99);
   @$pb.TagNumber(99)
-  $9.ModuleSession ensureSession() => $_ensure(30);
+  $10.ModuleSession ensureSession() => $_ensure(32);
 
   @$pb.TagNumber(100)
-  $9.BrainToModuleControl get control => $_getN(31);
+  $10.BrainToModuleControl get control => $_getN(33);
   @$pb.TagNumber(100)
-  set control($9.BrainToModuleControl value) => $_setField(100, value);
+  set control($10.BrainToModuleControl value) => $_setField(100, value);
   @$pb.TagNumber(100)
-  $core.bool hasControl() => $_has(31);
+  $core.bool hasControl() => $_has(33);
   @$pb.TagNumber(100)
   void clearControl() => $_clearField(100);
   @$pb.TagNumber(100)
-  $9.BrainToModuleControl ensureControl() => $_ensure(31);
+  $10.BrainToModuleControl ensureControl() => $_ensure(33);
 }
 
 /// face -> brain:要一份屏幕放得了的视频。
@@ -1650,6 +1922,7 @@ enum FaceToBrain_Cmd {
   videoRequest,
   playbackEvent,
   manualMute,
+  audioStreamProgress,
   control,
   notSet
 }
@@ -1659,16 +1932,17 @@ class FaceToBrain extends $pb.GeneratedMessage {
   factory FaceToBrain({
     StateToggle? voiceState,
     UpdateAction? updateAction,
-    $3.Empty? getBinanceSettings,
-    $3.Empty? requestInit,
+    $4.Empty? getBinanceSettings,
+    $4.Empty? requestInit,
     BinanceRequest? binanceRequest,
-    $10.BinanceOfferReply? binanceOfferReply,
-    $3.Empty? getBinanceOffers,
+    $11.BinanceOfferReply? binanceOfferReply,
+    $4.Empty? getBinanceOffers,
     VideoRequest? videoRequest,
     PlaybackEvent? playbackEvent,
     ManualMute? manualMute,
-    $9.ModuleSession? session,
-    $9.ModuleToBrainControl? control,
+    AudioStreamProgress? audioStreamProgress,
+    $10.ModuleSession? session,
+    $10.ModuleToBrainControl? control,
   }) {
     final result = create();
     if (voiceState != null) result.voiceState = voiceState;
@@ -1682,6 +1956,8 @@ class FaceToBrain extends $pb.GeneratedMessage {
     if (videoRequest != null) result.videoRequest = videoRequest;
     if (playbackEvent != null) result.playbackEvent = playbackEvent;
     if (manualMute != null) result.manualMute = manualMute;
+    if (audioStreamProgress != null)
+      result.audioStreamProgress = audioStreamProgress;
     if (session != null) result.session = session;
     if (control != null) result.control = control;
     return result;
@@ -1707,6 +1983,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
     8: FaceToBrain_Cmd.videoRequest,
     9: FaceToBrain_Cmd.playbackEvent,
     10: FaceToBrain_Cmd.manualMute,
+    33: FaceToBrain_Cmd.audioStreamProgress,
     100: FaceToBrain_Cmd.control,
     0: FaceToBrain_Cmd.notSet
   };
@@ -1714,31 +1991,33 @@ class FaceToBrain extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'FaceToBrain',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..oo(0, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 100])
+    ..oo(0, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 33, 100])
     ..aE<StateToggle>(1, _omitFieldNames ? '' : 'voiceState',
         enumValues: StateToggle.values)
     ..aOM<UpdateAction>(2, _omitFieldNames ? '' : 'updateAction',
         subBuilder: UpdateAction.create)
-    ..aOM<$3.Empty>(3, _omitFieldNames ? '' : 'getBinanceSettings',
-        subBuilder: $3.Empty.create)
-    ..aOM<$3.Empty>(4, _omitFieldNames ? '' : 'requestInit',
-        subBuilder: $3.Empty.create)
+    ..aOM<$4.Empty>(3, _omitFieldNames ? '' : 'getBinanceSettings',
+        subBuilder: $4.Empty.create)
+    ..aOM<$4.Empty>(4, _omitFieldNames ? '' : 'requestInit',
+        subBuilder: $4.Empty.create)
     ..aOM<BinanceRequest>(5, _omitFieldNames ? '' : 'binanceRequest',
         subBuilder: BinanceRequest.create)
-    ..aOM<$10.BinanceOfferReply>(6, _omitFieldNames ? '' : 'binanceOfferReply',
-        subBuilder: $10.BinanceOfferReply.create)
-    ..aOM<$3.Empty>(7, _omitFieldNames ? '' : 'getBinanceOffers',
-        subBuilder: $3.Empty.create)
+    ..aOM<$11.BinanceOfferReply>(6, _omitFieldNames ? '' : 'binanceOfferReply',
+        subBuilder: $11.BinanceOfferReply.create)
+    ..aOM<$4.Empty>(7, _omitFieldNames ? '' : 'getBinanceOffers',
+        subBuilder: $4.Empty.create)
     ..aOM<VideoRequest>(8, _omitFieldNames ? '' : 'videoRequest',
         subBuilder: VideoRequest.create)
     ..aOM<PlaybackEvent>(9, _omitFieldNames ? '' : 'playbackEvent',
         subBuilder: PlaybackEvent.create)
     ..aOM<ManualMute>(10, _omitFieldNames ? '' : 'manualMute',
         subBuilder: ManualMute.create)
-    ..aOM<$9.ModuleSession>(99, _omitFieldNames ? '' : 'session',
-        subBuilder: $9.ModuleSession.create)
-    ..aOM<$9.ModuleToBrainControl>(100, _omitFieldNames ? '' : 'control',
-        subBuilder: $9.ModuleToBrainControl.create)
+    ..aOM<AudioStreamProgress>(33, _omitFieldNames ? '' : 'audioStreamProgress',
+        subBuilder: AudioStreamProgress.create)
+    ..aOM<$10.ModuleSession>(99, _omitFieldNames ? '' : 'session',
+        subBuilder: $10.ModuleSession.create)
+    ..aOM<$10.ModuleToBrainControl>(100, _omitFieldNames ? '' : 'control',
+        subBuilder: $10.ModuleToBrainControl.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1770,6 +2049,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   @$pb.TagNumber(9)
   @$pb.TagNumber(10)
+  @$pb.TagNumber(33)
   @$pb.TagNumber(100)
   FaceToBrain_Cmd whichCmd() => _FaceToBrain_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
@@ -1782,6 +2062,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   @$pb.TagNumber(9)
   @$pb.TagNumber(10)
+  @$pb.TagNumber(33)
   @$pb.TagNumber(100)
   void clearCmd() => $_clearField($_whichOneof(0));
 
@@ -1808,15 +2089,15 @@ class FaceToBrain extends $pb.GeneratedMessage {
 
   /// face 重启后内存缓存是空的，用它主动要一次（本文件里空请求一律用 Empty，见 show_qr_code）
   @$pb.TagNumber(3)
-  $3.Empty get getBinanceSettings => $_getN(2);
+  $4.Empty get getBinanceSettings => $_getN(2);
   @$pb.TagNumber(3)
-  set getBinanceSettings($3.Empty value) => $_setField(3, value);
+  set getBinanceSettings($4.Empty value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasGetBinanceSettings() => $_has(2);
   @$pb.TagNumber(3)
   void clearGetBinanceSettings() => $_clearField(3);
   @$pb.TagNumber(3)
-  $3.Empty ensureGetBinanceSettings() => $_ensure(2);
+  $4.Empty ensureGetBinanceSettings() => $_ensure(2);
 
   /// 🔴 **模块就绪了，请把初始化数据推给我。** brain 收到才推 RobotInit + 全量关系列表。
   ///
@@ -1828,15 +2109,15 @@ class FaceToBrain extends $pb.GeneratedMessage {
   /// ⚠️ 这条也是**重连后的恢复口**：brain 重启过、或模块自己重启过，
   /// 都由模块在准备好之后再要一次，不必让 brain 去猜「这次是新上来的还是一直都在」。
   @$pb.TagNumber(4)
-  $3.Empty get requestInit => $_getN(3);
+  $4.Empty get requestInit => $_getN(3);
   @$pb.TagNumber(4)
-  set requestInit($3.Empty value) => $_setField(4, value);
+  set requestInit($4.Empty value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasRequestInit() => $_has(3);
   @$pb.TagNumber(4)
   void clearRequestInit() => $_clearField(4);
   @$pb.TagNumber(4)
-  $3.Empty ensureRequestInit() => $_ensure(3);
+  $4.Empty ensureRequestInit() => $_ensure(3);
 
   /// 替我去币安做一次（face 自己不连币安，见 BinanceRequest 的说明）
   @$pb.TagNumber(5)
@@ -1852,27 +2133,27 @@ class FaceToBrain extends $pb.GeneratedMessage {
 
   /// 人在开单卡上点的「确认 / 取消」
   @$pb.TagNumber(6)
-  $10.BinanceOfferReply get binanceOfferReply => $_getN(5);
+  $11.BinanceOfferReply get binanceOfferReply => $_getN(5);
   @$pb.TagNumber(6)
-  set binanceOfferReply($10.BinanceOfferReply value) => $_setField(6, value);
+  set binanceOfferReply($11.BinanceOfferReply value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasBinanceOfferReply() => $_has(5);
   @$pb.TagNumber(6)
   void clearBinanceOfferReply() => $_clearField(6);
   @$pb.TagNumber(6)
-  $10.BinanceOfferReply ensureBinanceOfferReply() => $_ensure(5);
+  $11.BinanceOfferReply ensureBinanceOfferReply() => $_ensure(5);
 
   /// face 重启后要一次当前的开单卡列表(回 `BrainToFace.binance_offers`)
   @$pb.TagNumber(7)
-  $3.Empty get getBinanceOffers => $_getN(6);
+  $4.Empty get getBinanceOffers => $_getN(6);
   @$pb.TagNumber(7)
-  set getBinanceOffers($3.Empty value) => $_setField(7, value);
+  set getBinanceOffers($4.Empty value) => $_setField(7, value);
   @$pb.TagNumber(7)
   $core.bool hasGetBinanceOffers() => $_has(6);
   @$pb.TagNumber(7)
   void clearGetBinanceOffers() => $_clearField(7);
   @$pb.TagNumber(7)
-  $3.Empty ensureGetBinanceOffers() => $_ensure(6);
+  $4.Empty ensureGetBinanceOffers() => $_ensure(6);
 
   /// 人在屏上点了一个视频:替我要一份屏幕放得了的(见 VideoRequest)
   @$pb.TagNumber(8)
@@ -1908,27 +2189,38 @@ class FaceToBrain extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   ManualMute ensureManualMute() => $_ensure(9);
 
+  @$pb.TagNumber(33)
+  AudioStreamProgress get audioStreamProgress => $_getN(10);
+  @$pb.TagNumber(33)
+  set audioStreamProgress(AudioStreamProgress value) => $_setField(33, value);
+  @$pb.TagNumber(33)
+  $core.bool hasAudioStreamProgress() => $_has(10);
+  @$pb.TagNumber(33)
+  void clearAudioStreamProgress() => $_clearField(33);
+  @$pb.TagNumber(33)
+  AudioStreamProgress ensureAudioStreamProgress() => $_ensure(10);
+
   @$pb.TagNumber(99)
-  $9.ModuleSession get session => $_getN(10);
+  $10.ModuleSession get session => $_getN(11);
   @$pb.TagNumber(99)
-  set session($9.ModuleSession value) => $_setField(99, value);
+  set session($10.ModuleSession value) => $_setField(99, value);
   @$pb.TagNumber(99)
-  $core.bool hasSession() => $_has(10);
+  $core.bool hasSession() => $_has(11);
   @$pb.TagNumber(99)
   void clearSession() => $_clearField(99);
   @$pb.TagNumber(99)
-  $9.ModuleSession ensureSession() => $_ensure(10);
+  $10.ModuleSession ensureSession() => $_ensure(11);
 
   @$pb.TagNumber(100)
-  $9.ModuleToBrainControl get control => $_getN(11);
+  $10.ModuleToBrainControl get control => $_getN(12);
   @$pb.TagNumber(100)
-  set control($9.ModuleToBrainControl value) => $_setField(100, value);
+  set control($10.ModuleToBrainControl value) => $_setField(100, value);
   @$pb.TagNumber(100)
-  $core.bool hasControl() => $_has(11);
+  $core.bool hasControl() => $_has(12);
   @$pb.TagNumber(100)
   void clearControl() => $_clearField(100);
   @$pb.TagNumber(100)
-  $9.ModuleToBrainControl ensureControl() => $_ensure(11);
+  $10.ModuleToBrainControl ensureControl() => $_ensure(12);
 }
 
 /// ── 跟单:开单卡 ──────────────────────────────────────────────
@@ -1937,7 +2229,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
 /// 推到屏幕上,人点「确认」才下单。卡本身定义在 hi/binance/offer.proto —— 同一张卡也会作为聊天消息发给主人。
 class BinanceOffers extends $pb.GeneratedMessage {
   factory BinanceOffers({
-    $core.Iterable<$10.BinanceOffer>? list,
+    $core.Iterable<$11.BinanceOffer>? list,
   }) {
     final result = create();
     if (list != null) result.list.addAll(list);
@@ -1957,8 +2249,8 @@ class BinanceOffers extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'BinanceOffers',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..pPM<$10.BinanceOffer>(1, _omitFieldNames ? '' : 'list',
-        subBuilder: $10.BinanceOffer.create)
+    ..pPM<$11.BinanceOffer>(1, _omitFieldNames ? '' : 'list',
+        subBuilder: $11.BinanceOffer.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1981,7 +2273,7 @@ class BinanceOffers extends $pb.GeneratedMessage {
   static BinanceOffers? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $pb.PbList<$10.BinanceOffer> get list => $_getList(0);
+  $pb.PbList<$11.BinanceOffer> get list => $_getList(0);
 }
 
 /// 插件下载/安装进度。

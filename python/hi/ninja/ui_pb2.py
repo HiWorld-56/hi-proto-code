@@ -25,6 +25,8 @@ _sym_db = _symbol_database.Default()
 from hi.ninja import common_pb2 as hi_dot_ninja_dot_common__pb2
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi import common_pb2 as hi_dot_common__pb2
+from hi import audio_pb2 as hi_dot_audio__pb2
+from buf.validate import validate_pb2 as buf_dot_validate_dot_validate__pb2
 from hi.club import group_pb2 as hi_dot_club_dot_group__pb2
 from hi.club import product_pb2 as hi_dot_club_dot_product__pb2
 from hi.club import messaging_pb2 as hi_dot_club_dot_messaging__pb2
@@ -35,7 +37,7 @@ from hi.did import transfer_pb2 as hi_dot_did_dot_transfer__pb2
 from hi.ninja import updater_pb2 as hi_dot_ninja_dot_updater__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11hi/ninja/ui.proto\x12\x08hi.ninja\x1a\x15hi/ninja/common.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x13hi/club/group.proto\x1a\x15hi/club/product.proto\x1a\x17hi/club/messaging.proto\x1a\x12hi/ai/plugin.proto\x1a\x18hi/binance/binance.proto\x1a\x16hi/binance/offer.proto\x1a\x15hi/did/transfer.proto\x1a\x16hi/ninja/updater.proto\"Q\n\tRobotInit\x12 \n\x05robot\x18\x01 \x01(\x0b\x32\n.hi.EntityR\x05robot\x12\"\n\x06master\x18\x02 \x01(\x0b\x32\n.hi.EntityR\x06master\",\n\nFriendList\x12\x1e\n\x04list\x18\x01 \x03(\x0b\x32\n.hi.EntityR\x04list\"7\n\rGroupInfoList\x12&\n\x04list\x18\x01 \x03(\x0b\x32\x12.hi.club.GroupInfoR\x04list\"\\\n\x0bMasterEvent\x12\"\n\x06master\x18\x01 \x01(\x0b\x32\n.hi.EntityR\x06master\x12\x1d\n\x07trigger\x18\x02 \x01(\tH\x00R\x07trigger\x88\x01\x01\x42\n\n\x08_trigger\"R\n\tTextReply\x12\x17\n\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x19\n\x05value\x18\x02 \x01(\tH\x01R\x05value\x88\x01\x01\x42\x07\n\x05_uuidB\x08\n\x06_value\"R\n\tAudioPlay\x12\x17\n\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x19\n\x05\x61udio\x18\x02 \x01(\x0cH\x01R\x05\x61udio\x88\x01\x01\x42\x07\n\x05_uuidB\x08\n\x06_audio\"\x11\n\x0f\x42inanceSettings\"\xae\x01\n\x0e\x42inanceRequest\x12\x13\n\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x13\n\x02op\x18\x02 \x01(\tH\x01R\x02op\x88\x01\x01\x12$\n\x0bparams_json\x18\x03 \x01(\tH\x02R\nparamsJson\x88\x01\x01\x12 \n\tauto_tpsl\x18\x04 \x01(\x08H\x03R\x08\x61utoTpsl\x88\x01\x01\x42\x05\n\x03_idB\x05\n\x03_opB\x0e\n\x0c_params_jsonB\x0c\n\n_auto_tpsl\"\xc3\x0f\n\x0b\x42rainToFace\x12\x31\n\x07session\x18\x63 \x01(\x0b\x32\x17.hi.ninja.ModuleSessionR\x07session\x12\x37\n\x0bmanual_mute\x18  \x01(\x0b\x32\x14.hi.ninja.ManualMuteH\x00R\nmanualMute\x12\x43\n\x0fplayback_permit\x18\x1f \x01(\x0b\x32\x18.hi.ninja.PlaybackPermitH\x00R\x0eplaybackPermit\x12:\n\x07\x63ontrol\x18\x64 \x01(\x0b\x32\x1e.hi.ninja.BrainToModuleControlH\x00R\x07\x63ontrol\x12\x34\n\ninit_robot\x18\x01 \x01(\x0b\x32\x13.hi.ninja.RobotInitH\x00R\tinitRobot\x12\x38\n\x0bshow_listen\x18\x02 \x01(\x0e\x32\x15.hi.ninja.StateToggleH\x00R\nshowListen\x12\x36\n\x0cshow_emotion\x18\x03 \x01(\x0e\x32\x11.hi.ninja.EmotionH\x00R\x0bshowEmotion\x12:\n\x0fshow_im_request\x18\x04 \x01(\x0b\x32\x10.hi.club.MessageH\x00R\rshowImRequest\x12\x39\n\rshow_im_reply\x18\x05 \x01(\x0b\x32\x13.hi.ninja.TextReplyH\x00R\x0bshowImReply\x12?\n\x10show_voice_reply\x18\x06 \x01(\x0b\x32\x13.hi.ninja.TextReplyH\x00R\x0eshowVoiceReply\x12:\n\x0cshow_qr_code\x18\x07 \x01(\x0b\x32\x16.google.protobuf.EmptyH\x00R\nshowQrCode\x12-\n\x0b\x65vent_robot\x18\x08 \x01(\x0b\x32\n.hi.EntityH\x00R\neventRobot\x12:\n\x0c\x65vent_master\x18\t \x01(\x0b\x32\x15.hi.ninja.MasterEventH\x00R\x0b\x65ventMaster\x12\x39\n\revent_members\x18\n \x01(\x0b\x32\x12.hi.club.GroupInfoH\x00R\x0c\x65ventMembers\x12\x36\n\x0c\x65vent_plugin\x18\x0b \x01(\x0b\x32\x11.hi.ai.PluginViewH\x00R\x0b\x65ventPlugin\x12N\n\x15\x65vent_plugin_progress\x18\x14 \x01(\x0b\x32\x18.hi.ninja.PluginProgressH\x00R\x13\x65ventPluginProgress\x12\x42\n\x11\x65vent_transaction\x18\x0c \x01(\x0b\x32\x13.hi.did.TransactionH\x00R\x10\x65ventTransaction\x12\x34\n\nplay_audio\x18\r \x01(\x0b\x32\x13.hi.ninja.AudioPlayH\x00R\tplayAudio\x12;\n\revent_friends\x18\x0f \x01(\x0b\x32\x14.hi.ninja.FriendListH\x00R\x0c\x65ventFriends\x12<\n\x13\x65vent_friend_delete\x18\x0e \x01(\x0b\x32\n.hi.EntityH\x00R\x11\x65ventFriendDelete\x12\x36\n\x10\x65vent_friend_add\x18\x10 \x01(\x0b\x32\n.hi.EntityH\x00R\x0e\x65ventFriendAdd\x12<\n\x0cmembers_init\x18\x11 \x01(\x0b\x32\x17.hi.ninja.GroupInfoListH\x00R\x0bmembersInit\x12:\n\x0c\x65vent_status\x18\x12 \x01(\x0b\x32\x15.hi.ninja.StatusEventH\x00R\x0b\x65ventStatus\x12;\n\x0c\x65vent_update\x18\x13 \x01(\x0b\x32\x16.hi.ninja.UpdateStatusH\x00R\x0b\x65ventUpdate\x12Q\n\x16\x65vent_binance_settings\x18\x15 \x01(\x0b\x32\x19.hi.ninja.BinanceSettingsH\x00R\x14\x65ventBinanceSettings\x12\x42\n\x0e\x62inance_result\x18\x16 \x01(\x0b\x32\x19.hi.binance.BinanceResultH\x00R\rbinanceResult\x12*\n\x08show_tip\x18\x18 \x01(\x0b\x32\r.hi.ninja.TipH\x00R\x07showTip\x12+\n\x07show_qr\x18\x19 \x01(\x0b\x32\x10.hi.ninja.QrCardH\x00R\x06showQr\x12@\n\x0e\x62inance_offers\x18\x1a \x01(\x0b\x32\x17.hi.ninja.BinanceOffersH\x00R\rbinanceOffers\x12U\n\x16\x65vent_product_uploaded\x18\x1d \x01(\x0b\x32\x1d.hi.club.ProductInventoryItemH\x00R\x14\x65ventProductUploaded\x12P\n\x14\x65vent_product_listed\x18\x1e \x01(\x0b\x32\x1c.hi.club.ProductAnnouncementH\x00R\x12\x65ventProductListed\x12\x37\n\x0bvideo_ready\x18\x1b \x01(\x0b\x32\x14.hi.ninja.VideoReadyH\x00R\nvideoReadyB\x05\n\x03\x63md\"I\n\x0cVideoRequest\x12\x13\n\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x15\n\x03url\x18\x02 \x01(\tH\x01R\x03url\x88\x01\x01\x42\x05\n\x03_idB\x06\n\x04_url\"\xa2\x01\n\nVideoReady\x12\x13\n\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x15\n\x03url\x18\x02 \x01(\tH\x01R\x03url\x88\x01\x01\x12\x19\n\x05\x65rror\x18\x03 \x01(\tH\x02R\x05\x65rror\x88\x01\x01\x12$\n\x0b\x64uration_ms\x18\x04 \x01(\rH\x03R\ndurationMs\x88\x01\x01\x42\x05\n\x03_idB\x06\n\x04_urlB\x08\n\x06_errorB\x0e\n\x0c_duration_ms\"X\n\x06QrCard\x12\x1d\n\x07\x63ontent\x18\x01 \x01(\tH\x00R\x07\x63ontent\x88\x01\x01\x12\x19\n\x05title\x18\x02 \x01(\tH\x01R\x05title\x88\x01\x01\x42\n\n\x08_contentB\x08\n\x06_title\"\'\n\x03Tip\x12\x17\n\x04text\x18\x01 \x01(\tH\x00R\x04text\x88\x01\x01\x42\x07\n\x05_text\"m\n\x0bStatusEvent\x12\x15\n\x03ntp\x18\x01 \x01(\x08H\x00R\x03ntp\x88\x01\x01\x12\x17\n\x04wifi\x18\x02 \x01(\x08H\x01R\x04wifi\x88\x01\x01\x12\x15\n\x03usb\x18\x03 \x01(\x08H\x02R\x03usb\x88\x01\x01\x42\x06\n\x04_ntpB\x07\n\x05_wifiB\x06\n\x04_usb\"\x9d\x06\n\x0b\x46\x61\x63\x65ToBrain\x12\x31\n\x07session\x18\x63 \x01(\x0b\x32\x17.hi.ninja.ModuleSessionR\x07session\x12@\n\x0eplayback_event\x18\t \x01(\x0b\x32\x17.hi.ninja.PlaybackEventH\x00R\rplaybackEvent\x12\x37\n\x0bmanual_mute\x18\n \x01(\x0b\x32\x14.hi.ninja.ManualMuteH\x00R\nmanualMute\x12:\n\x07\x63ontrol\x18\x64 \x01(\x0b\x32\x1e.hi.ninja.ModuleToBrainControlH\x00R\x07\x63ontrol\x12\x38\n\x0bvoice_state\x18\x01 \x01(\x0e\x32\x15.hi.ninja.StateToggleH\x00R\nvoiceState\x12=\n\rupdate_action\x18\x02 \x01(\x0b\x32\x16.hi.ninja.UpdateActionH\x00R\x0cupdateAction\x12J\n\x14get_binance_settings\x18\x03 \x01(\x0b\x32\x16.google.protobuf.EmptyH\x00R\x12getBinanceSettings\x12;\n\x0crequest_init\x18\x04 \x01(\x0b\x32\x16.google.protobuf.EmptyH\x00R\x0brequestInit\x12\x43\n\x0f\x62inance_request\x18\x05 \x01(\x0b\x32\x18.hi.ninja.BinanceRequestH\x00R\x0e\x62inanceRequest\x12O\n\x13\x62inance_offer_reply\x18\x06 \x01(\x0b\x32\x1d.hi.binance.BinanceOfferReplyH\x00R\x11\x62inanceOfferReply\x12\x46\n\x12get_binance_offers\x18\x07 \x01(\x0b\x32\x16.google.protobuf.EmptyH\x00R\x10getBinanceOffers\x12=\n\rvideo_request\x18\x08 \x01(\x0b\x32\x16.hi.ninja.VideoRequestH\x00R\x0cvideoRequestB\x05\n\x03\x63md\"=\n\rBinanceOffers\x12,\n\x04list\x18\x01 \x03(\x0b\x32\x18.hi.binance.BinanceOfferR\x04list\"\xdb\x03\n\x0ePluginProgress\x12\x17\n\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x19\n\x05title\x18\x02 \x01(\tH\x01R\x05title\x88\x01\x01\x12\x39\n\x05state\x18\x03 \x01(\x0e\x32\x1e.hi.ninja.PluginProgress.StateH\x02R\x05state\x88\x01\x01\x12\x1f\n\x08progress\x18\x04 \x01(\rH\x03R\x08progress\x88\x01\x01\x12.\n\x10\x64ownloaded_bytes\x18\x05 \x01(\x04H\x04R\x0f\x64ownloadedBytes\x88\x01\x01\x12$\n\x0btotal_bytes\x18\x06 \x01(\x04H\x05R\ntotalBytes\x88\x01\x01\x12\x1d\n\x07message\x18\x07 \x01(\tH\x06R\x07message\x88\x01\x01\"i\n\x05State\x12\x11\n\rSTATE_UNKNOWN\x10\x00\x12\x15\n\x11STATE_DOWNLOADING\x10\x01\x12\x14\n\x10STATE_INSTALLING\x10\x02\x12\x0e\n\nSTATE_DONE\x10\x03\x12\x10\n\x0cSTATE_FAILED\x10\x04\x42\x07\n\x05_uuidB\x08\n\x06_titleB\x08\n\x06_stateB\x0b\n\t_progressB\x13\n\x11_downloaded_bytesB\x0e\n\x0c_total_bytesB\n\n\x08_message\"\xab\x01\n\x0cUpdateAction\x12:\n\x06\x61\x63tion\x18\x01 \x01(\x0e\x32\x1d.hi.ninja.UpdateAction.ActionH\x00R\x06\x61\x63tion\x88\x01\x01\"T\n\x06\x41\x63tion\x12\x12\n\x0e\x41\x43TION_UNKNOWN\x10\x00\x12\x10\n\x0c\x41\x43TION_CHECK\x10\x01\x12\x10\n\x0c\x41\x43TION_APPLY\x10\x02\x12\x12\n\x0e\x41\x43TION_DISMISS\x10\x03\x42\t\n\x07_action\"\x95\x02\n\rPlaybackEvent\x12$\n\x0bplayback_id\x18\x01 \x01(\tH\x00R\nplaybackId\x88\x01\x01\x12\x38\n\x05state\x18\x02 \x01(\x0e\x32\x1d.hi.ninja.PlaybackEvent.StateH\x01R\x05state\x88\x01\x01\x12\x19\n\x05\x65rror\x18\x03 \x01(\tH\x02R\x05\x65rror\x88\x01\x01\"e\n\x05State\x12\x11\n\rSTATE_UNKNOWN\x10\x00\x12\x13\n\x0fSTATE_REQUESTED\x10\x01\x12\x11\n\rSTATE_STARTED\x10\x02\x12\x0f\n\x0bSTATE_ENDED\x10\x03\x12\x10\n\x0cSTATE_FAILED\x10\x04\x42\x0e\n\x0c_playback_idB\x08\n\x06_stateB\x08\n\x06_error\"\x96\x01\n\x0ePlaybackPermit\x12$\n\x0bplayback_id\x18\x01 \x01(\tH\x00R\nplaybackId\x88\x01\x01\x12\x1d\n\x07\x61llowed\x18\x02 \x01(\x08H\x01R\x07\x61llowed\x88\x01\x01\x12\x19\n\x05\x65rror\x18\x03 \x01(\tH\x02R\x05\x65rror\x88\x01\x01\x42\x0e\n\x0c_playback_idB\n\n\x08_allowedB\x08\n\x06_error\"1\n\nManualMute\x12\x19\n\x05muted\x18\x01 \x01(\x08H\x00R\x05muted\x88\x01\x01\x42\x08\n\x06_muted*@\n\x0bStateToggle\x12\x11\n\rSTATE_UNKNOWN\x10\x00\x12\x0f\n\x0bSTATE_START\x10\x01\x12\r\n\tSTATE_END\x10\x02*[\n\x07\x45motion\x12\x13\n\x0f\x45MOTION_UNKNOWN\x10\x00\x12\x11\n\rEMOTION_ANGER\x10\x01\x12\x11\n\rEMOTION_LAUGH\x10\x02\x12\x15\n\x11\x45MOTION_FRUSTRATE\x10\x03\x42,Z*github.com/HiWorld-56/hi-proto/go/hi/ninjab\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11hi/ninja/ui.proto\x12\x08hi.ninja\x1a\x15hi/ninja/common.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x0fhi/common.proto\x1a\x0ehi/audio.proto\x1a\x1b\x62uf/validate/validate.proto\x1a\x13hi/club/group.proto\x1a\x15hi/club/product.proto\x1a\x17hi/club/messaging.proto\x1a\x12hi/ai/plugin.proto\x1a\x18hi/binance/binance.proto\x1a\x16hi/binance/offer.proto\x1a\x15hi/did/transfer.proto\x1a\x16hi/ninja/updater.proto\"Q\n\tRobotInit\x12 \n\x05robot\x18\x01 \x01(\x0b\x32\n.hi.EntityR\x05robot\x12\"\n\x06master\x18\x02 \x01(\x0b\x32\n.hi.EntityR\x06master\",\n\nFriendList\x12\x1e\n\x04list\x18\x01 \x03(\x0b\x32\n.hi.EntityR\x04list\"7\n\rGroupInfoList\x12&\n\x04list\x18\x01 \x03(\x0b\x32\x12.hi.club.GroupInfoR\x04list\"\\\n\x0bMasterEvent\x12\"\n\x06master\x18\x01 \x01(\x0b\x32\n.hi.EntityR\x06master\x12\x1d\n\x07trigger\x18\x02 \x01(\tH\x00R\x07trigger\x88\x01\x01\x42\n\n\x08_trigger\"R\n\tTextReply\x12\x17\n\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x19\n\x05value\x18\x02 \x01(\tH\x01R\x05value\x88\x01\x01\x42\x07\n\x05_uuidB\x08\n\x06_value\"R\n\tAudioPlay\x12\x17\n\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x19\n\x05\x61udio\x18\x02 \x01(\x0cH\x01R\x05\x61udio\x88\x01\x01\x42\x07\n\x05_uuidB\x08\n\x06_audio\"g\n\x0f\x41udioStreamPlay\x12\x17\n\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x32\n\x05\x65vent\x18\x02 \x01(\x0b\x32\x14.hi.AudioStreamEventB\x06\xbaH\x03\xc8\x01\x01R\x05\x65ventB\x07\n\x05_uuid\"w\n\x11\x41udioStreamCancel\x12,\n\tstream_id\x18\x01 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x00R\x08streamId\x88\x01\x01\x12\x1b\n\x06reason\x18\x02 \x01(\tH\x01R\x06reason\x88\x01\x01\x42\x0c\n\n_stream_idB\t\n\x07_reason\"\x94\x02\n\x13\x41udioStreamProgress\x12,\n\tstream_id\x18\x01 \x01(\tB\n\xbaH\x07r\x02\x10\x01\xc8\x01\x01H\x00R\x08streamId\x88\x01\x01\x12\x19\n\x05ready\x18\x02 \x01(\x08H\x01R\x05ready\x88\x01\x01\x12\x36\n\x10\x63onsumed_samples\x18\x03 \x01(\x04\x42\x06\xbaH\x03\xc8\x01\x01H\x02R\x0f\x63onsumedSamples\x88\x01\x01\x12:\n\x10\x63\x61pacity_samples\x18\x04 \x01(\rB\n\xbaH\x07*\x02 \x00\xc8\x01\x01H\x03R\x0f\x63\x61pacitySamples\x88\x01\x01\x42\x0c\n\n_stream_idB\x08\n\x06_readyB\x13\n\x11_consumed_samplesB\x13\n\x11_capacity_samples\"\x11\n\x0f\x42inanceSettings\"\xae\x01\n\x0e\x42inanceRequest\x12\x13\n\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x13\n\x02op\x18\x02 \x01(\tH\x01R\x02op\x88\x01\x01\x12$\n\x0bparams_json\x18\x03 \x01(\tH\x02R\nparamsJson\x88\x01\x01\x12 \n\tauto_tpsl\x18\x04 \x01(\x08H\x03R\x08\x61utoTpsl\x88\x01\x01\x42\x05\n\x03_idB\x05\n\x03_opB\x0e\n\x0c_params_jsonB\x0c\n\n_auto_tpsl\"\xd2\x10\n\x0b\x42rainToFace\x12\x31\n\x07session\x18\x63 \x01(\x0b\x32\x17.hi.ninja.ModuleSessionR\x07session\x12>\n\x0c\x61udio_stream\x18! \x01(\x0b\x32\x19.hi.ninja.AudioStreamPlayH\x00R\x0b\x61udioStream\x12M\n\x13\x61udio_stream_cancel\x18\" \x01(\x0b\x32\x1b.hi.ninja.AudioStreamCancelH\x00R\x11\x61udioStreamCancel\x12\x37\n\x0bmanual_mute\x18  \x01(\x0b\x32\x14.hi.ninja.ManualMuteH\x00R\nmanualMute\x12\x43\n\x0fplayback_permit\x18\x1f \x01(\x0b\x32\x18.hi.ninja.PlaybackPermitH\x00R\x0eplaybackPermit\x12:\n\x07\x63ontrol\x18\x64 \x01(\x0b\x32\x1e.hi.ninja.BrainToModuleControlH\x00R\x07\x63ontrol\x12\x34\n\ninit_robot\x18\x01 \x01(\x0b\x32\x13.hi.ninja.RobotInitH\x00R\tinitRobot\x12\x38\n\x0bshow_listen\x18\x02 \x01(\x0e\x32\x15.hi.ninja.StateToggleH\x00R\nshowListen\x12\x36\n\x0cshow_emotion\x18\x03 \x01(\x0e\x32\x11.hi.ninja.EmotionH\x00R\x0bshowEmotion\x12:\n\x0fshow_im_request\x18\x04 \x01(\x0b\x32\x10.hi.club.MessageH\x00R\rshowImRequest\x12\x39\n\rshow_im_reply\x18\x05 \x01(\x0b\x32\x13.hi.ninja.TextReplyH\x00R\x0bshowImReply\x12?\n\x10show_voice_reply\x18\x06 \x01(\x0b\x32\x13.hi.ninja.TextReplyH\x00R\x0eshowVoiceReply\x12:\n\x0cshow_qr_code\x18\x07 \x01(\x0b\x32\x16.google.protobuf.EmptyH\x00R\nshowQrCode\x12-\n\x0b\x65vent_robot\x18\x08 \x01(\x0b\x32\n.hi.EntityH\x00R\neventRobot\x12:\n\x0c\x65vent_master\x18\t \x01(\x0b\x32\x15.hi.ninja.MasterEventH\x00R\x0b\x65ventMaster\x12\x39\n\revent_members\x18\n \x01(\x0b\x32\x12.hi.club.GroupInfoH\x00R\x0c\x65ventMembers\x12\x36\n\x0c\x65vent_plugin\x18\x0b \x01(\x0b\x32\x11.hi.ai.PluginViewH\x00R\x0b\x65ventPlugin\x12N\n\x15\x65vent_plugin_progress\x18\x14 \x01(\x0b\x32\x18.hi.ninja.PluginProgressH\x00R\x13\x65ventPluginProgress\x12\x42\n\x11\x65vent_transaction\x18\x0c \x01(\x0b\x32\x13.hi.did.TransactionH\x00R\x10\x65ventTransaction\x12\x34\n\nplay_audio\x18\r \x01(\x0b\x32\x13.hi.ninja.AudioPlayH\x00R\tplayAudio\x12;\n\revent_friends\x18\x0f \x01(\x0b\x32\x14.hi.ninja.FriendListH\x00R\x0c\x65ventFriends\x12<\n\x13\x65vent_friend_delete\x18\x0e \x01(\x0b\x32\n.hi.EntityH\x00R\x11\x65ventFriendDelete\x12\x36\n\x10\x65vent_friend_add\x18\x10 \x01(\x0b\x32\n.hi.EntityH\x00R\x0e\x65ventFriendAdd\x12<\n\x0cmembers_init\x18\x11 \x01(\x0b\x32\x17.hi.ninja.GroupInfoListH\x00R\x0bmembersInit\x12:\n\x0c\x65vent_status\x18\x12 \x01(\x0b\x32\x15.hi.ninja.StatusEventH\x00R\x0b\x65ventStatus\x12;\n\x0c\x65vent_update\x18\x13 \x01(\x0b\x32\x16.hi.ninja.UpdateStatusH\x00R\x0b\x65ventUpdate\x12Q\n\x16\x65vent_binance_settings\x18\x15 \x01(\x0b\x32\x19.hi.ninja.BinanceSettingsH\x00R\x14\x65ventBinanceSettings\x12\x42\n\x0e\x62inance_result\x18\x16 \x01(\x0b\x32\x19.hi.binance.BinanceResultH\x00R\rbinanceResult\x12*\n\x08show_tip\x18\x18 \x01(\x0b\x32\r.hi.ninja.TipH\x00R\x07showTip\x12+\n\x07show_qr\x18\x19 \x01(\x0b\x32\x10.hi.ninja.QrCardH\x00R\x06showQr\x12@\n\x0e\x62inance_offers\x18\x1a \x01(\x0b\x32\x17.hi.ninja.BinanceOffersH\x00R\rbinanceOffers\x12U\n\x16\x65vent_product_uploaded\x18\x1d \x01(\x0b\x32\x1d.hi.club.ProductInventoryItemH\x00R\x14\x65ventProductUploaded\x12P\n\x14\x65vent_product_listed\x18\x1e \x01(\x0b\x32\x1c.hi.club.ProductAnnouncementH\x00R\x12\x65ventProductListed\x12\x37\n\x0bvideo_ready\x18\x1b \x01(\x0b\x32\x14.hi.ninja.VideoReadyH\x00R\nvideoReadyB\x05\n\x03\x63md\"I\n\x0cVideoRequest\x12\x13\n\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x15\n\x03url\x18\x02 \x01(\tH\x01R\x03url\x88\x01\x01\x42\x05\n\x03_idB\x06\n\x04_url\"\xa2\x01\n\nVideoReady\x12\x13\n\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x15\n\x03url\x18\x02 \x01(\tH\x01R\x03url\x88\x01\x01\x12\x19\n\x05\x65rror\x18\x03 \x01(\tH\x02R\x05\x65rror\x88\x01\x01\x12$\n\x0b\x64uration_ms\x18\x04 \x01(\rH\x03R\ndurationMs\x88\x01\x01\x42\x05\n\x03_idB\x06\n\x04_urlB\x08\n\x06_errorB\x0e\n\x0c_duration_ms\"X\n\x06QrCard\x12\x1d\n\x07\x63ontent\x18\x01 \x01(\tH\x00R\x07\x63ontent\x88\x01\x01\x12\x19\n\x05title\x18\x02 \x01(\tH\x01R\x05title\x88\x01\x01\x42\n\n\x08_contentB\x08\n\x06_title\"\'\n\x03Tip\x12\x17\n\x04text\x18\x01 \x01(\tH\x00R\x04text\x88\x01\x01\x42\x07\n\x05_text\"m\n\x0bStatusEvent\x12\x15\n\x03ntp\x18\x01 \x01(\x08H\x00R\x03ntp\x88\x01\x01\x12\x17\n\x04wifi\x18\x02 \x01(\x08H\x01R\x04wifi\x88\x01\x01\x12\x15\n\x03usb\x18\x03 \x01(\x08H\x02R\x03usb\x88\x01\x01\x42\x06\n\x04_ntpB\x07\n\x05_wifiB\x06\n\x04_usb\"\xf2\x06\n\x0b\x46\x61\x63\x65ToBrain\x12\x31\n\x07session\x18\x63 \x01(\x0b\x32\x17.hi.ninja.ModuleSessionR\x07session\x12S\n\x15\x61udio_stream_progress\x18! \x01(\x0b\x32\x1d.hi.ninja.AudioStreamProgressH\x00R\x13\x61udioStreamProgress\x12@\n\x0eplayback_event\x18\t \x01(\x0b\x32\x17.hi.ninja.PlaybackEventH\x00R\rplaybackEvent\x12\x37\n\x0bmanual_mute\x18\n \x01(\x0b\x32\x14.hi.ninja.ManualMuteH\x00R\nmanualMute\x12:\n\x07\x63ontrol\x18\x64 \x01(\x0b\x32\x1e.hi.ninja.ModuleToBrainControlH\x00R\x07\x63ontrol\x12\x38\n\x0bvoice_state\x18\x01 \x01(\x0e\x32\x15.hi.ninja.StateToggleH\x00R\nvoiceState\x12=\n\rupdate_action\x18\x02 \x01(\x0b\x32\x16.hi.ninja.UpdateActionH\x00R\x0cupdateAction\x12J\n\x14get_binance_settings\x18\x03 \x01(\x0b\x32\x16.google.protobuf.EmptyH\x00R\x12getBinanceSettings\x12;\n\x0crequest_init\x18\x04 \x01(\x0b\x32\x16.google.protobuf.EmptyH\x00R\x0brequestInit\x12\x43\n\x0f\x62inance_request\x18\x05 \x01(\x0b\x32\x18.hi.ninja.BinanceRequestH\x00R\x0e\x62inanceRequest\x12O\n\x13\x62inance_offer_reply\x18\x06 \x01(\x0b\x32\x1d.hi.binance.BinanceOfferReplyH\x00R\x11\x62inanceOfferReply\x12\x46\n\x12get_binance_offers\x18\x07 \x01(\x0b\x32\x16.google.protobuf.EmptyH\x00R\x10getBinanceOffers\x12=\n\rvideo_request\x18\x08 \x01(\x0b\x32\x16.hi.ninja.VideoRequestH\x00R\x0cvideoRequestB\x05\n\x03\x63md\"=\n\rBinanceOffers\x12,\n\x04list\x18\x01 \x03(\x0b\x32\x18.hi.binance.BinanceOfferR\x04list\"\xdb\x03\n\x0ePluginProgress\x12\x17\n\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x19\n\x05title\x18\x02 \x01(\tH\x01R\x05title\x88\x01\x01\x12\x39\n\x05state\x18\x03 \x01(\x0e\x32\x1e.hi.ninja.PluginProgress.StateH\x02R\x05state\x88\x01\x01\x12\x1f\n\x08progress\x18\x04 \x01(\rH\x03R\x08progress\x88\x01\x01\x12.\n\x10\x64ownloaded_bytes\x18\x05 \x01(\x04H\x04R\x0f\x64ownloadedBytes\x88\x01\x01\x12$\n\x0btotal_bytes\x18\x06 \x01(\x04H\x05R\ntotalBytes\x88\x01\x01\x12\x1d\n\x07message\x18\x07 \x01(\tH\x06R\x07message\x88\x01\x01\"i\n\x05State\x12\x11\n\rSTATE_UNKNOWN\x10\x00\x12\x15\n\x11STATE_DOWNLOADING\x10\x01\x12\x14\n\x10STATE_INSTALLING\x10\x02\x12\x0e\n\nSTATE_DONE\x10\x03\x12\x10\n\x0cSTATE_FAILED\x10\x04\x42\x07\n\x05_uuidB\x08\n\x06_titleB\x08\n\x06_stateB\x0b\n\t_progressB\x13\n\x11_downloaded_bytesB\x0e\n\x0c_total_bytesB\n\n\x08_message\"\xab\x01\n\x0cUpdateAction\x12:\n\x06\x61\x63tion\x18\x01 \x01(\x0e\x32\x1d.hi.ninja.UpdateAction.ActionH\x00R\x06\x61\x63tion\x88\x01\x01\"T\n\x06\x41\x63tion\x12\x12\n\x0e\x41\x43TION_UNKNOWN\x10\x00\x12\x10\n\x0c\x41\x43TION_CHECK\x10\x01\x12\x10\n\x0c\x41\x43TION_APPLY\x10\x02\x12\x12\n\x0e\x41\x43TION_DISMISS\x10\x03\x42\t\n\x07_action\"\xaa\x02\n\rPlaybackEvent\x12$\n\x0bplayback_id\x18\x01 \x01(\tH\x00R\nplaybackId\x88\x01\x01\x12\x38\n\x05state\x18\x02 \x01(\x0e\x32\x1d.hi.ninja.PlaybackEvent.StateH\x01R\x05state\x88\x01\x01\x12\x19\n\x05\x65rror\x18\x03 \x01(\tH\x02R\x05\x65rror\x88\x01\x01\"z\n\x05State\x12\x11\n\rSTATE_UNKNOWN\x10\x00\x12\x13\n\x0fSTATE_REQUESTED\x10\x01\x12\x11\n\rSTATE_STARTED\x10\x02\x12\x0f\n\x0bSTATE_ENDED\x10\x03\x12\x10\n\x0cSTATE_FAILED\x10\x04\x12\x13\n\x0fSTATE_CANCELLED\x10\x05\x42\x0e\n\x0c_playback_idB\x08\n\x06_stateB\x08\n\x06_error\"\x96\x01\n\x0ePlaybackPermit\x12$\n\x0bplayback_id\x18\x01 \x01(\tH\x00R\nplaybackId\x88\x01\x01\x12\x1d\n\x07\x61llowed\x18\x02 \x01(\x08H\x01R\x07\x61llowed\x88\x01\x01\x12\x19\n\x05\x65rror\x18\x03 \x01(\tH\x02R\x05\x65rror\x88\x01\x01\x42\x0e\n\x0c_playback_idB\n\n\x08_allowedB\x08\n\x06_error\"1\n\nManualMute\x12\x19\n\x05muted\x18\x01 \x01(\x08H\x00R\x05muted\x88\x01\x01\x42\x08\n\x06_muted*@\n\x0bStateToggle\x12\x11\n\rSTATE_UNKNOWN\x10\x00\x12\x0f\n\x0bSTATE_START\x10\x01\x12\r\n\tSTATE_END\x10\x02*[\n\x07\x45motion\x12\x13\n\x0f\x45MOTION_UNKNOWN\x10\x00\x12\x11\n\rEMOTION_ANGER\x10\x01\x12\x11\n\rEMOTION_LAUGH\x10\x02\x12\x15\n\x11\x45MOTION_FRUSTRATE\x10\x03\x42,Z*github.com/HiWorld-56/hi-proto/go/hi/ninjab\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -43,56 +45,72 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'hi.ninja.ui_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'Z*github.com/HiWorld-56/hi-proto/go/hi/ninja'
-  _globals['_STATETOGGLE']._serialized_start=5401
-  _globals['_STATETOGGLE']._serialized_end=5465
-  _globals['_EMOTION']._serialized_start=5467
-  _globals['_EMOTION']._serialized_end=5558
-  _globals['_ROBOTINIT']._serialized_start=286
-  _globals['_ROBOTINIT']._serialized_end=367
-  _globals['_FRIENDLIST']._serialized_start=369
-  _globals['_FRIENDLIST']._serialized_end=413
-  _globals['_GROUPINFOLIST']._serialized_start=415
-  _globals['_GROUPINFOLIST']._serialized_end=470
-  _globals['_MASTEREVENT']._serialized_start=472
-  _globals['_MASTEREVENT']._serialized_end=564
-  _globals['_TEXTREPLY']._serialized_start=566
-  _globals['_TEXTREPLY']._serialized_end=648
-  _globals['_AUDIOPLAY']._serialized_start=650
-  _globals['_AUDIOPLAY']._serialized_end=732
-  _globals['_BINANCESETTINGS']._serialized_start=734
-  _globals['_BINANCESETTINGS']._serialized_end=751
-  _globals['_BINANCEREQUEST']._serialized_start=754
-  _globals['_BINANCEREQUEST']._serialized_end=928
-  _globals['_BRAINTOFACE']._serialized_start=931
-  _globals['_BRAINTOFACE']._serialized_end=2918
-  _globals['_VIDEOREQUEST']._serialized_start=2920
-  _globals['_VIDEOREQUEST']._serialized_end=2993
-  _globals['_VIDEOREADY']._serialized_start=2996
-  _globals['_VIDEOREADY']._serialized_end=3158
-  _globals['_QRCARD']._serialized_start=3160
-  _globals['_QRCARD']._serialized_end=3248
-  _globals['_TIP']._serialized_start=3250
-  _globals['_TIP']._serialized_end=3289
-  _globals['_STATUSEVENT']._serialized_start=3291
-  _globals['_STATUSEVENT']._serialized_end=3400
-  _globals['_FACETOBRAIN']._serialized_start=3403
-  _globals['_FACETOBRAIN']._serialized_end=4200
-  _globals['_BINANCEOFFERS']._serialized_start=4202
-  _globals['_BINANCEOFFERS']._serialized_end=4263
-  _globals['_PLUGINPROGRESS']._serialized_start=4266
-  _globals['_PLUGINPROGRESS']._serialized_end=4741
-  _globals['_PLUGINPROGRESS_STATE']._serialized_start=4545
-  _globals['_PLUGINPROGRESS_STATE']._serialized_end=4650
-  _globals['_UPDATEACTION']._serialized_start=4744
-  _globals['_UPDATEACTION']._serialized_end=4915
-  _globals['_UPDATEACTION_ACTION']._serialized_start=4820
-  _globals['_UPDATEACTION_ACTION']._serialized_end=4904
-  _globals['_PLAYBACKEVENT']._serialized_start=4918
-  _globals['_PLAYBACKEVENT']._serialized_end=5195
-  _globals['_PLAYBACKEVENT_STATE']._serialized_start=5058
-  _globals['_PLAYBACKEVENT_STATE']._serialized_end=5159
-  _globals['_PLAYBACKPERMIT']._serialized_start=5198
-  _globals['_PLAYBACKPERMIT']._serialized_end=5348
-  _globals['_MANUALMUTE']._serialized_start=5350
-  _globals['_MANUALMUTE']._serialized_end=5399
+  _globals['_AUDIOSTREAMPLAY'].fields_by_name['event']._loaded_options = None
+  _globals['_AUDIOSTREAMPLAY'].fields_by_name['event']._serialized_options = b'\272H\003\310\001\001'
+  _globals['_AUDIOSTREAMCANCEL'].fields_by_name['stream_id']._loaded_options = None
+  _globals['_AUDIOSTREAMCANCEL'].fields_by_name['stream_id']._serialized_options = b'\272H\007r\002\020\001\310\001\001'
+  _globals['_AUDIOSTREAMPROGRESS'].fields_by_name['stream_id']._loaded_options = None
+  _globals['_AUDIOSTREAMPROGRESS'].fields_by_name['stream_id']._serialized_options = b'\272H\007r\002\020\001\310\001\001'
+  _globals['_AUDIOSTREAMPROGRESS'].fields_by_name['consumed_samples']._loaded_options = None
+  _globals['_AUDIOSTREAMPROGRESS'].fields_by_name['consumed_samples']._serialized_options = b'\272H\003\310\001\001'
+  _globals['_AUDIOSTREAMPROGRESS'].fields_by_name['capacity_samples']._loaded_options = None
+  _globals['_AUDIOSTREAMPROGRESS'].fields_by_name['capacity_samples']._serialized_options = b'\272H\007*\002 \000\310\001\001'
+  _globals['_STATETOGGLE']._serialized_start=6200
+  _globals['_STATETOGGLE']._serialized_end=6264
+  _globals['_EMOTION']._serialized_start=6266
+  _globals['_EMOTION']._serialized_end=6357
+  _globals['_ROBOTINIT']._serialized_start=331
+  _globals['_ROBOTINIT']._serialized_end=412
+  _globals['_FRIENDLIST']._serialized_start=414
+  _globals['_FRIENDLIST']._serialized_end=458
+  _globals['_GROUPINFOLIST']._serialized_start=460
+  _globals['_GROUPINFOLIST']._serialized_end=515
+  _globals['_MASTEREVENT']._serialized_start=517
+  _globals['_MASTEREVENT']._serialized_end=609
+  _globals['_TEXTREPLY']._serialized_start=611
+  _globals['_TEXTREPLY']._serialized_end=693
+  _globals['_AUDIOPLAY']._serialized_start=695
+  _globals['_AUDIOPLAY']._serialized_end=777
+  _globals['_AUDIOSTREAMPLAY']._serialized_start=779
+  _globals['_AUDIOSTREAMPLAY']._serialized_end=882
+  _globals['_AUDIOSTREAMCANCEL']._serialized_start=884
+  _globals['_AUDIOSTREAMCANCEL']._serialized_end=1003
+  _globals['_AUDIOSTREAMPROGRESS']._serialized_start=1006
+  _globals['_AUDIOSTREAMPROGRESS']._serialized_end=1282
+  _globals['_BINANCESETTINGS']._serialized_start=1284
+  _globals['_BINANCESETTINGS']._serialized_end=1301
+  _globals['_BINANCEREQUEST']._serialized_start=1304
+  _globals['_BINANCEREQUEST']._serialized_end=1478
+  _globals['_BRAINTOFACE']._serialized_start=1481
+  _globals['_BRAINTOFACE']._serialized_end=3611
+  _globals['_VIDEOREQUEST']._serialized_start=3613
+  _globals['_VIDEOREQUEST']._serialized_end=3686
+  _globals['_VIDEOREADY']._serialized_start=3689
+  _globals['_VIDEOREADY']._serialized_end=3851
+  _globals['_QRCARD']._serialized_start=3853
+  _globals['_QRCARD']._serialized_end=3941
+  _globals['_TIP']._serialized_start=3943
+  _globals['_TIP']._serialized_end=3982
+  _globals['_STATUSEVENT']._serialized_start=3984
+  _globals['_STATUSEVENT']._serialized_end=4093
+  _globals['_FACETOBRAIN']._serialized_start=4096
+  _globals['_FACETOBRAIN']._serialized_end=4978
+  _globals['_BINANCEOFFERS']._serialized_start=4980
+  _globals['_BINANCEOFFERS']._serialized_end=5041
+  _globals['_PLUGINPROGRESS']._serialized_start=5044
+  _globals['_PLUGINPROGRESS']._serialized_end=5519
+  _globals['_PLUGINPROGRESS_STATE']._serialized_start=5323
+  _globals['_PLUGINPROGRESS_STATE']._serialized_end=5428
+  _globals['_UPDATEACTION']._serialized_start=5522
+  _globals['_UPDATEACTION']._serialized_end=5693
+  _globals['_UPDATEACTION_ACTION']._serialized_start=5598
+  _globals['_UPDATEACTION_ACTION']._serialized_end=5682
+  _globals['_PLAYBACKEVENT']._serialized_start=5696
+  _globals['_PLAYBACKEVENT']._serialized_end=5994
+  _globals['_PLAYBACKEVENT_STATE']._serialized_start=5836
+  _globals['_PLAYBACKEVENT_STATE']._serialized_end=5958
+  _globals['_PLAYBACKPERMIT']._serialized_start=5997
+  _globals['_PLAYBACKPERMIT']._serialized_end=6147
+  _globals['_MANUALMUTE']._serialized_start=6149
+  _globals['_MANUALMUTE']._serialized_end=6198
 # @@protoc_insertion_point(module_scope)

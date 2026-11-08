@@ -7,7 +7,7 @@
 package club
 
 import (
-	_ "github.com/HiWorld-56/hi-proto/go/hi"
+	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	ai "github.com/HiWorld-56/hi-proto/go/hi/ai"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -26,8 +26,9 @@ var File_hi_club_speech_proto protoreflect.FileDescriptor
 
 const file_hi_club_speech_proto_rawDesc = "" +
 	"\n" +
-	"\x14hi/club/speech.proto\x12\ahi.club\x1a\x12hi/ai/speech.proto\x1a\x10hi/options.proto2\x8c\x01\n" +
-	"\x06Speech\x12@\n" +
+	"\x14hi/club/speech.proto\x12\ahi.club\x1a\x12hi/ai/speech.proto\x1a\x10hi/options.proto\x1a\x0ehi/audio.proto2\xd5\x01\n" +
+	"\x06Speech\x12G\n" +
+	"\x10SynthesizeStream\x12\x14.hi.ai.SynthesizeReq\x1a\x14.hi.AudioStreamEvent\"\x05\x8a\xb5\x18\x01\x020\x01\x12@\n" +
 	"\n" +
 	"Transcribe\x12\x14.hi.ai.TranscribeReq\x1a\x15.hi.ai.TranscribeResp\"\x05\x8a\xb5\x18\x01\x02\x12@\n" +
 	"\n" +
@@ -35,18 +36,21 @@ const file_hi_club_speech_proto_rawDesc = "" +
 	"\vcom.hi.clubB\vSpeechProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var file_hi_club_speech_proto_goTypes = []any{
-	(*ai.TranscribeReq)(nil),  // 0: hi.ai.TranscribeReq
-	(*ai.SynthesizeReq)(nil),  // 1: hi.ai.SynthesizeReq
-	(*ai.TranscribeResp)(nil), // 2: hi.ai.TranscribeResp
-	(*ai.SynthesizeResp)(nil), // 3: hi.ai.SynthesizeResp
+	(*ai.SynthesizeReq)(nil),    // 0: hi.ai.SynthesizeReq
+	(*ai.TranscribeReq)(nil),    // 1: hi.ai.TranscribeReq
+	(*hi.AudioStreamEvent)(nil), // 2: hi.AudioStreamEvent
+	(*ai.TranscribeResp)(nil),   // 3: hi.ai.TranscribeResp
+	(*ai.SynthesizeResp)(nil),   // 4: hi.ai.SynthesizeResp
 }
 var file_hi_club_speech_proto_depIdxs = []int32{
-	0, // 0: hi.club.Speech.Transcribe:input_type -> hi.ai.TranscribeReq
-	1, // 1: hi.club.Speech.Synthesize:input_type -> hi.ai.SynthesizeReq
-	2, // 2: hi.club.Speech.Transcribe:output_type -> hi.ai.TranscribeResp
-	3, // 3: hi.club.Speech.Synthesize:output_type -> hi.ai.SynthesizeResp
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
+	0, // 0: hi.club.Speech.SynthesizeStream:input_type -> hi.ai.SynthesizeReq
+	1, // 1: hi.club.Speech.Transcribe:input_type -> hi.ai.TranscribeReq
+	0, // 2: hi.club.Speech.Synthesize:input_type -> hi.ai.SynthesizeReq
+	2, // 3: hi.club.Speech.SynthesizeStream:output_type -> hi.AudioStreamEvent
+	3, // 4: hi.club.Speech.Transcribe:output_type -> hi.ai.TranscribeResp
+	4, // 5: hi.club.Speech.Synthesize:output_type -> hi.ai.SynthesizeResp
+	3, // [3:6] is the sub-list for method output_type
+	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name

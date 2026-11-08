@@ -8,6 +8,7 @@ package ai
 
 import (
 	context "context"
+	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -19,8 +20,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Speech_Transcribe_FullMethodName = "/hi.ai.Speech/Transcribe"
-	Speech_Synthesize_FullMethodName = "/hi.ai.Speech/Synthesize"
+	Speech_SynthesizeStream_FullMethodName = "/hi.ai.Speech/SynthesizeStream"
+	Speech_Transcribe_FullMethodName       = "/hi.ai.Speech/Transcribe"
+	Speech_Synthesize_FullMethodName       = "/hi.ai.Speech/Synthesize"
 )
 
 // SpeechClient is the client API for Speech service.
@@ -35,6 +37,7 @@ const (
 //
 // 商户档:hiai web 与商户后台服务都会调。
 type SpeechClient interface {
+	SynthesizeStream(ctx context.Context, in *SynthesizeReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[hi.AudioStreamEvent], error)
 	Transcribe(ctx context.Context, in *TranscribeReq, opts ...grpc.CallOption) (*TranscribeResp, error)
 	Synthesize(ctx context.Context, in *SynthesizeReq, opts ...grpc.CallOption) (*SynthesizeResp, error)
 }
@@ -46,6 +49,25 @@ type speechClient struct {
 func NewSpeechClient(cc grpc.ClientConnInterface) SpeechClient {
 	return &speechClient{cc}
 }
+
+func (c *speechClient) SynthesizeStream(ctx context.Context, in *SynthesizeReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[hi.AudioStreamEvent], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &Speech_ServiceDesc.Streams[0], Speech_SynthesizeStream_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[SynthesizeReq, hi.AudioStreamEvent]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Speech_SynthesizeStreamClient = grpc.ServerStreamingClient[hi.AudioStreamEvent]
 
 func (c *speechClient) Transcribe(ctx context.Context, in *TranscribeReq, opts ...grpc.CallOption) (*TranscribeResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
@@ -79,6 +101,7 @@ func (c *speechClient) Synthesize(ctx context.Context, in *SynthesizeReq, opts .
 //
 // 商户档:hiai web 与商户后台服务都会调。
 type SpeechServer interface {
+	SynthesizeStream(*SynthesizeReq, grpc.ServerStreamingServer[hi.AudioStreamEvent]) error
 	Transcribe(context.Context, *TranscribeReq) (*TranscribeResp, error)
 	Synthesize(context.Context, *SynthesizeReq) (*SynthesizeResp, error)
 }
@@ -90,6 +113,9 @@ type SpeechServer interface {
 // pointer dereference when methods are called.
 type UnimplementedSpeechServer struct{}
 
+func (UnimplementedSpeechServer) SynthesizeStream(*SynthesizeReq, grpc.ServerStreamingServer[hi.AudioStreamEvent]) error {
+	return status.Error(codes.Unimplemented, "method SynthesizeStream not implemented")
+}
 func (UnimplementedSpeechServer) Transcribe(context.Context, *TranscribeReq) (*TranscribeResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Transcribe not implemented")
 }
@@ -115,6 +141,17 @@ func RegisterSpeechServer(s grpc.ServiceRegistrar, srv SpeechServer) {
 	}
 	s.RegisterService(&Speech_ServiceDesc, srv)
 }
+
+func _Speech_SynthesizeStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(SynthesizeReq)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(SpeechServer).SynthesizeStream(m, &grpc.GenericServerStream[SynthesizeReq, hi.AudioStreamEvent]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Speech_SynthesizeStreamServer = grpc.ServerStreamingServer[hi.AudioStreamEvent]
 
 func _Speech_Transcribe_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(TranscribeReq)
@@ -168,6 +205,12 @@ var Speech_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Speech_Synthesize_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "SynthesizeStream",
+			Handler:       _Speech_SynthesizeStream_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "hi/ai/speech.proto",
 }

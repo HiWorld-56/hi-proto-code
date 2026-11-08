@@ -336,3 +336,92 @@ pub struct DeleteResourceReq {
     #[prost(string, optional, tag = "1")]
     pub url: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 音频载荷与采集、合成及播放会话独立；位置/长度按每声道样本计，不采用网络到达间隔。
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct AudioFormat {
+    #[prost(enumeration = "audio_format::Encoding", optional, tag = "1")]
+    pub encoding: ::core::option::Option<i32>,
+    #[prost(uint32, optional, tag = "2")]
+    pub sample_rate: ::core::option::Option<u32>,
+    #[prost(uint32, optional, tag = "3")]
+    pub channels: ::core::option::Option<u32>,
+}
+/// Nested message and enum types in `AudioFormat`.
+pub mod audio_format {
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Encoding {
+        Unknown = 0,
+        PcmS16le = 1,
+    }
+    impl Encoding {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Self::Unknown => "ENCODING_UNKNOWN",
+                Self::PcmS16le => "ENCODING_PCM_S16LE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "ENCODING_UNKNOWN" => Some(Self::Unknown),
+                "ENCODING_PCM_S16LE" => Some(Self::PcmS16le),
+                _ => None,
+            }
+        }
+    }
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct AudioStreamStart {
+    #[prost(message, optional, tag = "1")]
+    pub format: ::core::option::Option<AudioFormat>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct AudioStreamChunk {
+    #[prost(uint64, optional, tag = "1")]
+    pub sequence: ::core::option::Option<u64>,
+    #[prost(uint64, optional, tag = "2")]
+    pub sample_offset: ::core::option::Option<u64>,
+    #[prost(bytes = "vec", optional, tag = "3")]
+    pub pcm: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct AudioStreamEnd {
+    #[prost(uint64, optional, tag = "1")]
+    pub total_samples: ::core::option::Option<u64>,
+}
+/// start -> chunk\* -> end；end仅表示生成完成，不表示声卡播完。
+/// 服务端异常通过gRPC status终止，无end/异常终止均不能视为完整合成。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct AudioStreamEvent {
+    #[prost(string, optional, tag = "1")]
+    pub stream_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(oneof = "audio_stream_event::Event", tags = "2, 3, 4")]
+    pub event: ::core::option::Option<audio_stream_event::Event>,
+}
+/// Nested message and enum types in `AudioStreamEvent`.
+pub mod audio_stream_event {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Event {
+        #[prost(message, tag = "2")]
+        Start(super::AudioStreamStart),
+        #[prost(message, tag = "3")]
+        Chunk(super::AudioStreamChunk),
+        #[prost(message, tag = "4")]
+        End(super::AudioStreamEnd),
+    }
+}

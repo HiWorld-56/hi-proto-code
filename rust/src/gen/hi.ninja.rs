@@ -1622,6 +1622,35 @@ pub struct AudioPlay {
     #[prost(bytes = "vec", optional, tag = "2")]
     pub audio: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
 }
+/// 同一stream_id也是playback_id；连续音频只申请一次播放许可。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct AudioStreamPlay {
+    /// 关联TextReply；空串为当前现场语音对话
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub event: ::core::option::Option<super::AudioStreamEvent>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct AudioStreamCancel {
+    #[prost(string, optional, tag = "1")]
+    pub stream_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// face受理开流后发一次ready，再按已消费整块的样本位置回传；容量是可容纳的每声道样本数。
+/// 进度只用于背压，实际开始/结束/取消仍沿用PlaybackEvent。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct AudioStreamProgress {
+    #[prost(string, optional, tag = "1")]
+    pub stream_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(bool, optional, tag = "2")]
+    pub ready: ::core::option::Option<bool>,
+    #[prost(uint64, optional, tag = "3")]
+    pub consumed_samples: ::core::option::Option<u64>,
+    #[prost(uint32, optional, tag = "4")]
+    pub capacity_samples: ::core::option::Option<u32>,
+}
 /// 币安接入设置。**密钥不在这里** —— 2026-09-20 起密钥一个字都不出 brain：
 /// face 不再自己连币安，要数据就发 `BinanceRequest`（见下），brain 替它去。
 ///
@@ -1663,7 +1692,7 @@ pub struct BrainToFace {
     pub session: ::core::option::Option<ModuleSession>,
     #[prost(
         oneof = "brain_to_face::Cmd",
-        tags = "32, 31, 100, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21, 22, 24, 25, 26, 29, 30, 27"
+        tags = "33, 34, 32, 31, 100, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21, 22, 24, 25, 26, 29, 30, 27"
     )]
     pub cmd: ::core::option::Option<brain_to_face::Cmd>,
 }
@@ -1671,6 +1700,10 @@ pub struct BrainToFace {
 pub mod brain_to_face {
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Cmd {
+        #[prost(message, tag = "33")]
+        AudioStream(super::AudioStreamPlay),
+        #[prost(message, tag = "34")]
+        AudioStreamCancel(super::AudioStreamCancel),
         /// brain持久设定，恢复初始化时重推
         #[prost(message, tag = "32")]
         ManualMute(super::ManualMute),
@@ -1848,13 +1881,18 @@ pub struct FaceToBrain {
     /// Hello前不传；业务消息必须匹配当前接管会话
     #[prost(message, optional, tag = "99")]
     pub session: ::core::option::Option<ModuleSession>,
-    #[prost(oneof = "face_to_brain::Cmd", tags = "9, 10, 100, 1, 2, 3, 4, 5, 6, 7, 8")]
+    #[prost(
+        oneof = "face_to_brain::Cmd",
+        tags = "33, 9, 10, 100, 1, 2, 3, 4, 5, 6, 7, 8"
+    )]
     pub cmd: ::core::option::Option<face_to_brain::Cmd>,
 }
 /// Nested message and enum types in `FaceToBrain`.
 pub mod face_to_brain {
     #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
     pub enum Cmd {
+        #[prost(message, tag = "33")]
+        AudioStreamProgress(super::AudioStreamProgress),
         #[prost(message, tag = "9")]
         PlaybackEvent(super::PlaybackEvent),
         #[prost(message, tag = "10")]
@@ -2076,6 +2114,8 @@ pub mod playback_event {
         Started = 2,
         Ended = 3,
         Failed = 4,
+        /// 主动停止，不冒充自然播完
+        Cancelled = 5,
     }
     impl State {
         /// String value of the enum field names used in the ProtoBuf definition.
@@ -2089,6 +2129,7 @@ pub mod playback_event {
                 Self::Started => "STATE_STARTED",
                 Self::Ended => "STATE_ENDED",
                 Self::Failed => "STATE_FAILED",
+                Self::Cancelled => "STATE_CANCELLED",
             }
         }
         /// Creates an enum from field names used in the ProtoBuf definition.
@@ -2099,6 +2140,7 @@ pub mod playback_event {
                 "STATE_STARTED" => Some(Self::Started),
                 "STATE_ENDED" => Some(Self::Ended),
                 "STATE_FAILED" => Some(Self::Failed),
+                "STATE_CANCELLED" => Some(Self::Cancelled),
                 _ => None,
             }
         }

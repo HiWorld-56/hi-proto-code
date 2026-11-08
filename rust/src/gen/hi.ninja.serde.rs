@@ -110,6 +110,374 @@ impl<'de> serde::Deserialize<'de> for AudioPlay {
         deserializer.deserialize_struct("hi.ninja.AudioPlay", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for AudioStreamCancel {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.stream_id.is_some() {
+            len += 1;
+        }
+        if self.reason.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.AudioStreamCancel", len)?;
+        if let Some(v) = self.stream_id.as_ref() {
+            struct_ser.serialize_field("streamId", v)?;
+        }
+        if let Some(v) = self.reason.as_ref() {
+            struct_ser.serialize_field("reason", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for AudioStreamCancel {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "stream_id",
+            "streamId",
+            "reason",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            StreamId,
+            Reason,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "streamId" | "stream_id" => Ok(GeneratedField::StreamId),
+                            "reason" => Ok(GeneratedField::Reason),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = AudioStreamCancel;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.AudioStreamCancel")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<AudioStreamCancel, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut stream_id__ = None;
+                let mut reason__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::StreamId => {
+                            if stream_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("streamId"));
+                            }
+                            stream_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Reason => {
+                            if reason__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("reason"));
+                            }
+                            reason__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(AudioStreamCancel {
+                    stream_id: stream_id__,
+                    reason: reason__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.AudioStreamCancel", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for AudioStreamPlay {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.uuid.is_some() {
+            len += 1;
+        }
+        if self.event.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.AudioStreamPlay", len)?;
+        if let Some(v) = self.uuid.as_ref() {
+            struct_ser.serialize_field("uuid", v)?;
+        }
+        if let Some(v) = self.event.as_ref() {
+            struct_ser.serialize_field("event", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for AudioStreamPlay {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "uuid",
+            "event",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Uuid,
+            Event,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "uuid" => Ok(GeneratedField::Uuid),
+                            "event" => Ok(GeneratedField::Event),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = AudioStreamPlay;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.AudioStreamPlay")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<AudioStreamPlay, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut uuid__ = None;
+                let mut event__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Uuid => {
+                            if uuid__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("uuid"));
+                            }
+                            uuid__ = map_.next_value()?;
+                        }
+                        GeneratedField::Event => {
+                            if event__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("event"));
+                            }
+                            event__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(AudioStreamPlay {
+                    uuid: uuid__,
+                    event: event__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.AudioStreamPlay", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for AudioStreamProgress {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.stream_id.is_some() {
+            len += 1;
+        }
+        if self.ready.is_some() {
+            len += 1;
+        }
+        if self.consumed_samples.is_some() {
+            len += 1;
+        }
+        if self.capacity_samples.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.AudioStreamProgress", len)?;
+        if let Some(v) = self.stream_id.as_ref() {
+            struct_ser.serialize_field("streamId", v)?;
+        }
+        if let Some(v) = self.ready.as_ref() {
+            struct_ser.serialize_field("ready", v)?;
+        }
+        if let Some(v) = self.consumed_samples.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("consumedSamples", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.capacity_samples.as_ref() {
+            struct_ser.serialize_field("capacitySamples", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for AudioStreamProgress {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "stream_id",
+            "streamId",
+            "ready",
+            "consumed_samples",
+            "consumedSamples",
+            "capacity_samples",
+            "capacitySamples",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            StreamId,
+            Ready,
+            ConsumedSamples,
+            CapacitySamples,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "streamId" | "stream_id" => Ok(GeneratedField::StreamId),
+                            "ready" => Ok(GeneratedField::Ready),
+                            "consumedSamples" | "consumed_samples" => Ok(GeneratedField::ConsumedSamples),
+                            "capacitySamples" | "capacity_samples" => Ok(GeneratedField::CapacitySamples),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = AudioStreamProgress;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.AudioStreamProgress")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<AudioStreamProgress, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut stream_id__ = None;
+                let mut ready__ = None;
+                let mut consumed_samples__ = None;
+                let mut capacity_samples__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::StreamId => {
+                            if stream_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("streamId"));
+                            }
+                            stream_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Ready => {
+                            if ready__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("ready"));
+                            }
+                            ready__ = map_.next_value()?;
+                        }
+                        GeneratedField::ConsumedSamples => {
+                            if consumed_samples__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("consumedSamples"));
+                            }
+                            consumed_samples__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::CapacitySamples => {
+                            if capacity_samples__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("capacitySamples"));
+                            }
+                            capacity_samples__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(AudioStreamProgress {
+                    stream_id: stream_id__,
+                    ready: ready__,
+                    consumed_samples: consumed_samples__,
+                    capacity_samples: capacity_samples__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.AudioStreamProgress", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for BinanceOffers {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -436,6 +804,12 @@ impl serde::Serialize for BrainToFace {
         }
         if let Some(v) = self.cmd.as_ref() {
             match v {
+                brain_to_face::Cmd::AudioStream(v) => {
+                    struct_ser.serialize_field("audioStream", v)?;
+                }
+                brain_to_face::Cmd::AudioStreamCancel(v) => {
+                    struct_ser.serialize_field("audioStreamCancel", v)?;
+                }
                 brain_to_face::Cmd::ManualMute(v) => {
                     struct_ser.serialize_field("manualMute", v)?;
                 }
@@ -546,6 +920,10 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
     {
         const FIELDS: &[&str] = &[
             "session",
+            "audio_stream",
+            "audioStream",
+            "audio_stream_cancel",
+            "audioStreamCancel",
             "manual_mute",
             "manualMute",
             "playback_permit",
@@ -612,6 +990,8 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Session,
+            AudioStream,
+            AudioStreamCancel,
             ManualMute,
             PlaybackPermit,
             Control,
@@ -665,6 +1045,8 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
                     {
                         match value {
                             "session" => Ok(GeneratedField::Session),
+                            "audioStream" | "audio_stream" => Ok(GeneratedField::AudioStream),
+                            "audioStreamCancel" | "audio_stream_cancel" => Ok(GeneratedField::AudioStreamCancel),
                             "manualMute" | "manual_mute" => Ok(GeneratedField::ManualMute),
                             "playbackPermit" | "playback_permit" => Ok(GeneratedField::PlaybackPermit),
                             "control" => Ok(GeneratedField::Control),
@@ -724,6 +1106,20 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
                                 return Err(serde::de::Error::duplicate_field("session"));
                             }
                             session__ = map_.next_value()?;
+                        }
+                        GeneratedField::AudioStream => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("audioStream"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_face::Cmd::AudioStream)
+;
+                        }
+                        GeneratedField::AudioStreamCancel => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("audioStreamCancel"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_face::Cmd::AudioStreamCancel)
+;
                         }
                         GeneratedField::ManualMute => {
                             if cmd__.is_some() {
@@ -2160,6 +2556,9 @@ impl serde::Serialize for FaceToBrain {
         }
         if let Some(v) = self.cmd.as_ref() {
             match v {
+                face_to_brain::Cmd::AudioStreamProgress(v) => {
+                    struct_ser.serialize_field("audioStreamProgress", v)?;
+                }
                 face_to_brain::Cmd::PlaybackEvent(v) => {
                     struct_ser.serialize_field("playbackEvent", v)?;
                 }
@@ -2208,6 +2607,8 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
     {
         const FIELDS: &[&str] = &[
             "session",
+            "audio_stream_progress",
+            "audioStreamProgress",
             "playback_event",
             "playbackEvent",
             "manual_mute",
@@ -2234,6 +2635,7 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Session,
+            AudioStreamProgress,
             PlaybackEvent,
             ManualMute,
             Control,
@@ -2267,6 +2669,7 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
                     {
                         match value {
                             "session" => Ok(GeneratedField::Session),
+                            "audioStreamProgress" | "audio_stream_progress" => Ok(GeneratedField::AudioStreamProgress),
                             "playbackEvent" | "playback_event" => Ok(GeneratedField::PlaybackEvent),
                             "manualMute" | "manual_mute" => Ok(GeneratedField::ManualMute),
                             "control" => Ok(GeneratedField::Control),
@@ -2306,6 +2709,13 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
                                 return Err(serde::de::Error::duplicate_field("session"));
                             }
                             session__ = map_.next_value()?;
+                        }
+                        GeneratedField::AudioStreamProgress => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("audioStreamProgress"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(face_to_brain::Cmd::AudioStreamProgress)
+;
                         }
                         GeneratedField::PlaybackEvent => {
                             if cmd__.is_some() {
@@ -7914,6 +8324,7 @@ impl serde::Serialize for playback_event::State {
             Self::Started => "STATE_STARTED",
             Self::Ended => "STATE_ENDED",
             Self::Failed => "STATE_FAILED",
+            Self::Cancelled => "STATE_CANCELLED",
         };
         serializer.serialize_str(variant)
     }
@@ -7930,6 +8341,7 @@ impl<'de> serde::Deserialize<'de> for playback_event::State {
             "STATE_STARTED",
             "STATE_ENDED",
             "STATE_FAILED",
+            "STATE_CANCELLED",
         ];
 
         struct GeneratedVisitor;
@@ -7975,6 +8387,7 @@ impl<'de> serde::Deserialize<'de> for playback_event::State {
                     "STATE_STARTED" => Ok(playback_event::State::Started),
                     "STATE_ENDED" => Ok(playback_event::State::Ended),
                     "STATE_FAILED" => Ok(playback_event::State::Failed),
+                    "STATE_CANCELLED" => Ok(playback_event::State::Cancelled),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }

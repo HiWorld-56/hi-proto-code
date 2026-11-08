@@ -7,7 +7,7 @@
 package ai
 
 import (
-	_ "github.com/HiWorld-56/hi-proto/go/hi"
+	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -234,7 +234,7 @@ var File_hi_ai_speech_proto protoreflect.FileDescriptor
 
 const file_hi_ai_speech_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/ai/speech.proto\x12\x05hi.ai\x1a\x10hi/options.proto\"{\n" +
+	"\x12hi/ai/speech.proto\x12\x05hi.ai\x1a\x10hi/options.proto\x1a\x0ehi/audio.proto\"{\n" +
 	"\rSynthesizeReq\x12\x17\n" +
 	"\x04text\x18\x01 \x01(\tH\x00R\x04text\x88\x01\x01\x12\x19\n" +
 	"\x05model\x18\x02 \x01(\tH\x01R\x05model\x88\x01\x01\x12\x19\n" +
@@ -254,8 +254,9 @@ const file_hi_ai_speech_proto_rawDesc = "" +
 	"\x05_lang\">\n" +
 	"\x0eTranscribeResp\x12\x1d\n" +
 	"\x04text\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04text\x88\x01\x01:\x04\x98\xb5\x18\x03B\a\n" +
-	"\x05_text2\x8c\x01\n" +
-	"\x06Speech\x12@\n" +
+	"\x05_text2\xd5\x01\n" +
+	"\x06Speech\x12G\n" +
+	"\x10SynthesizeStream\x12\x14.hi.ai.SynthesizeReq\x1a\x14.hi.AudioStreamEvent\"\x05\x8a\xb5\x18\x01\x030\x01\x12@\n" +
 	"\n" +
 	"Transcribe\x12\x14.hi.ai.TranscribeReq\x1a\x15.hi.ai.TranscribeResp\"\x05\x8a\xb5\x18\x01\x03\x12@\n" +
 	"\n" +
@@ -276,18 +277,21 @@ func file_hi_ai_speech_proto_rawDescGZIP() []byte {
 
 var file_hi_ai_speech_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_hi_ai_speech_proto_goTypes = []any{
-	(*SynthesizeReq)(nil),  // 0: hi.ai.SynthesizeReq
-	(*SynthesizeResp)(nil), // 1: hi.ai.SynthesizeResp
-	(*TranscribeReq)(nil),  // 2: hi.ai.TranscribeReq
-	(*TranscribeResp)(nil), // 3: hi.ai.TranscribeResp
+	(*SynthesizeReq)(nil),       // 0: hi.ai.SynthesizeReq
+	(*SynthesizeResp)(nil),      // 1: hi.ai.SynthesizeResp
+	(*TranscribeReq)(nil),       // 2: hi.ai.TranscribeReq
+	(*TranscribeResp)(nil),      // 3: hi.ai.TranscribeResp
+	(*hi.AudioStreamEvent)(nil), // 4: hi.AudioStreamEvent
 }
 var file_hi_ai_speech_proto_depIdxs = []int32{
-	2, // 0: hi.ai.Speech.Transcribe:input_type -> hi.ai.TranscribeReq
-	0, // 1: hi.ai.Speech.Synthesize:input_type -> hi.ai.SynthesizeReq
-	3, // 2: hi.ai.Speech.Transcribe:output_type -> hi.ai.TranscribeResp
-	1, // 3: hi.ai.Speech.Synthesize:output_type -> hi.ai.SynthesizeResp
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
+	0, // 0: hi.ai.Speech.SynthesizeStream:input_type -> hi.ai.SynthesizeReq
+	2, // 1: hi.ai.Speech.Transcribe:input_type -> hi.ai.TranscribeReq
+	0, // 2: hi.ai.Speech.Synthesize:input_type -> hi.ai.SynthesizeReq
+	4, // 3: hi.ai.Speech.SynthesizeStream:output_type -> hi.AudioStreamEvent
+	3, // 4: hi.ai.Speech.Transcribe:output_type -> hi.ai.TranscribeResp
+	1, // 5: hi.ai.Speech.Synthesize:output_type -> hi.ai.SynthesizeResp
+	3, // [3:6] is the sub-list for method output_type
+	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
