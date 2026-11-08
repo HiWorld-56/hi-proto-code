@@ -6484,9 +6484,15 @@ impl serde::Serialize for GetProductListingReq {
         if self.uuid.is_some() {
             len += 1;
         }
+        if self.product_id.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.club.GetProductListingReq", len)?;
         if let Some(v) = self.uuid.as_ref() {
             struct_ser.serialize_field("uuid", v)?;
+        }
+        if let Some(v) = self.product_id.as_ref() {
+            struct_ser.serialize_field("productId", v)?;
         }
         struct_ser.end()
     }
@@ -6499,11 +6505,14 @@ impl<'de> serde::Deserialize<'de> for GetProductListingReq {
     {
         const FIELDS: &[&str] = &[
             "uuid",
+            "product_id",
+            "productId",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Uuid,
+            ProductId,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -6526,6 +6535,7 @@ impl<'de> serde::Deserialize<'de> for GetProductListingReq {
                     {
                         match value {
                             "uuid" => Ok(GeneratedField::Uuid),
+                            "productId" | "product_id" => Ok(GeneratedField::ProductId),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -6546,6 +6556,7 @@ impl<'de> serde::Deserialize<'de> for GetProductListingReq {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut uuid__ = None;
+                let mut product_id__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Uuid => {
@@ -6554,10 +6565,17 @@ impl<'de> serde::Deserialize<'de> for GetProductListingReq {
                             }
                             uuid__ = map_.next_value()?;
                         }
+                        GeneratedField::ProductId => {
+                            if product_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("productId"));
+                            }
+                            product_id__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(GetProductListingReq {
                     uuid: uuid__,
+                    product_id: product_id__,
                 })
             }
         }

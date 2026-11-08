@@ -730,16 +730,31 @@ const GetProductListingReq$json = {
       '10': 'uuid',
       '17': true
     },
+    {
+      '1': 'product_id',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'productId',
+      '17': true
+    },
   ],
+  '7': {},
   '8': [
     {'1': '_uuid'},
+    {'1': '_product_id'},
   ],
 };
 
 /// Descriptor for `GetProductListingReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List getProductListingReqDescriptor = $convert.base64Decode(
-    'ChRHZXRQcm9kdWN0TGlzdGluZ1JlcRIjCgR1dWlkGAEgASgJQgq6SAfIAQFyAhABSABSBHV1aW'
-    'SIAQFCBwoFX3V1aWQ=');
+    'ChRHZXRQcm9kdWN0TGlzdGluZ1JlcRIgCgR1dWlkGAEgASgJQge6SARyAhABSABSBHV1aWSIAQ'
+    'ESKwoKcHJvZHVjdF9pZBgCIAEoCUIHukgEcgIQAUgBUglwcm9kdWN0SWSIAQE6crpIbxptChlw'
+    'cm9kdWN0Lmxpc3RpbmcucmVmZXJlbmNlEijor7fmj5DkvpvmjILniYxJROaIluW5s+WPsOWVhu'
+    'WTgUlE5LmL5LiAGiZoYXModGhpcy51dWlkKSAhPSBoYXModGhpcy5wcm9kdWN0X2lkKUIHCgVf'
+    'dXVpZEINCgtfcHJvZHVjdF9pZA==');
 
 @$core.Deprecated('Use searchProductListingsReqDescriptor instead')
 const SearchProductListingsReq$json = {

@@ -1749,8 +1749,12 @@ pub struct SetProductListingStatusReq {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetProductListingReq {
+    /// 定位挂牌
     #[prost(string, optional, tag = "1")]
     pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    /// 定位已上架平台商品，供承销后取当前供货信息
+    #[prost(string, optional, tag = "2")]
+    pub product_id: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SearchProductListingsReq {

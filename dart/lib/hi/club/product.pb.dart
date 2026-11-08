@@ -1157,9 +1157,11 @@ class SetProductListingStatusReq extends $pb.GeneratedMessage {
 class GetProductListingReq extends $pb.GeneratedMessage {
   factory GetProductListingReq({
     $core.String? uuid,
+    $core.String? productId,
   }) {
     final result = create();
     if (uuid != null) result.uuid = uuid;
+    if (productId != null) result.productId = productId;
     return result;
   }
 
@@ -1177,6 +1179,7 @@ class GetProductListingReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'uuid')
+    ..aOS(2, _omitFieldNames ? '' : 'productId')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1206,6 +1209,15 @@ class GetProductListingReq extends $pb.GeneratedMessage {
   $core.bool hasUuid() => $_has(0);
   @$pb.TagNumber(1)
   void clearUuid() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get productId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set productId($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasProductId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearProductId() => $_clearField(2);
 }
 
 class SearchProductListingsReq extends $pb.GeneratedMessage {
