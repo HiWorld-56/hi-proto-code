@@ -360,6 +360,7 @@ type ProductInventoryItem struct {
 	Stock         *ProductStockBalance    `protobuf:"bytes,5,opt,name=stock,proto3" json:"stock,omitempty"`
 	Fulfillment   *ProductFulfillmentSpec `protobuf:"bytes,6,opt,name=fulfillment,proto3" json:"fulfillment,omitempty"`
 	Revision      *int64                  `protobuf:"varint,7,opt,name=revision,proto3,oneof" json:"revision,omitempty"`
+	Integration   *SupplierIntegration    `protobuf:"bytes,8,opt,name=integration,proto3" json:"integration,omitempty"` // 逐商品配置，凭据写入不回显
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -441,6 +442,13 @@ func (x *ProductInventoryItem) GetRevision() int64 {
 		return *x.Revision
 	}
 	return 0
+}
+
+func (x *ProductInventoryItem) GetIntegration() *SupplierIntegration {
+	if x != nil {
+		return x.Integration
+	}
+	return nil
 }
 
 type ProductListing struct {
@@ -730,6 +738,7 @@ type CreateProductReq struct {
 	Info          *ProductInfo            `protobuf:"bytes,3,opt,name=info,proto3" json:"info,omitempty"`
 	Quantity      *int64                  `protobuf:"varint,4,opt,name=quantity,proto3,oneof" json:"quantity,omitempty"` // 未配置不可采购，0为已配置但无货
 	Fulfillment   *ProductFulfillmentSpec `protobuf:"bytes,5,opt,name=fulfillment,proto3" json:"fulfillment,omitempty"`
+	Integration   *SupplierIntegration    `protobuf:"bytes,6,opt,name=integration,proto3" json:"integration,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -795,6 +804,13 @@ func (x *CreateProductReq) GetQuantity() int64 {
 func (x *CreateProductReq) GetFulfillment() *ProductFulfillmentSpec {
 	if x != nil {
 		return x.Fulfillment
+	}
+	return nil
+}
+
+func (x *CreateProductReq) GetIntegration() *SupplierIntegration {
+	if x != nil {
+		return x.Integration
 	}
 	return nil
 }
@@ -1490,6 +1506,7 @@ type ConfigureProductReq struct {
 	Revision      *int64                  `protobuf:"varint,2,opt,name=revision,proto3,oneof" json:"revision,omitempty"`
 	Info          *ProductInfo            `protobuf:"bytes,3,opt,name=info,proto3" json:"info,omitempty"`
 	Fulfillment   *ProductFulfillmentSpec `protobuf:"bytes,4,opt,name=fulfillment,proto3" json:"fulfillment,omitempty"`
+	Integration   *SupplierIntegration    `protobuf:"bytes,5,opt,name=integration,proto3" json:"integration,omitempty"` // presence更新；未提供不改原商品回调
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1548,6 +1565,13 @@ func (x *ConfigureProductReq) GetInfo() *ProductInfo {
 func (x *ConfigureProductReq) GetFulfillment() *ProductFulfillmentSpec {
 	if x != nil {
 		return x.Fulfillment
+	}
+	return nil
+}
+
+func (x *ConfigureProductReq) GetIntegration() *SupplierIntegration {
+	if x != nil {
+		return x.Integration
 	}
 	return nil
 }
@@ -1620,6 +1644,203 @@ func (x *AdjustProductStockReq) GetReason() string {
 	return ""
 }
 
+// 逐商品绑定。批量上传的同一配置仅在批请求传一次，创建时分别绑定，后续独立修改。
+type SupplierIntegration struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Endpoint       *string                `protobuf:"bytes,2,opt,name=endpoint,proto3,oneof" json:"endpoint,omitempty"`           // 可选履约服务，SupplierRequest/SupplierResponse
+	Authorization  *string                `protobuf:"bytes,3,opt,name=authorization,proto3,oneof" json:"authorization,omitempty"` // 专用Bearer凭据，仅写入，不回显
+	Enabled        *bool                  `protobuf:"varint,4,opt,name=enabled,proto3,oneof" json:"enabled,omitempty"`
+	DetailEndpoint *string                `protobuf:"bytes,6,opt,name=detail_endpoint,json=detailEndpoint,proto3,oneof" json:"detail_endpoint,omitempty"` // HTTPS详情方法：输入GetProductReq，仅平台id；返回ProductDetail
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *SupplierIntegration) Reset() {
+	*x = SupplierIntegration{}
+	mi := &file_hi_club_product_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SupplierIntegration) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SupplierIntegration) ProtoMessage() {}
+
+func (x *SupplierIntegration) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_product_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SupplierIntegration.ProtoReflect.Descriptor instead.
+func (*SupplierIntegration) Descriptor() ([]byte, []int) {
+	return file_hi_club_product_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *SupplierIntegration) GetEndpoint() string {
+	if x != nil && x.Endpoint != nil {
+		return *x.Endpoint
+	}
+	return ""
+}
+
+func (x *SupplierIntegration) GetAuthorization() string {
+	if x != nil && x.Authorization != nil {
+		return *x.Authorization
+	}
+	return ""
+}
+
+func (x *SupplierIntegration) GetEnabled() bool {
+	if x != nil && x.Enabled != nil {
+		return *x.Enabled
+	}
+	return false
+}
+
+func (x *SupplierIntegration) GetDetailEndpoint() string {
+	if x != nil && x.DetailEndpoint != nil {
+		return *x.DetailEndpoint
+	}
+	return ""
+}
+
+type ProductUpload struct {
+	state         protoimpl.MessageState  `protogen:"open.v1"`
+	Info          *ProductInfo            `protobuf:"bytes,1,opt,name=info,proto3" json:"info,omitempty"`
+	Quantity      *int64                  `protobuf:"varint,2,opt,name=quantity,proto3,oneof" json:"quantity,omitempty"`
+	Fulfillment   *ProductFulfillmentSpec `protobuf:"bytes,3,opt,name=fulfillment,proto3" json:"fulfillment,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ProductUpload) Reset() {
+	*x = ProductUpload{}
+	mi := &file_hi_club_product_proto_msgTypes[26]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ProductUpload) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ProductUpload) ProtoMessage() {}
+
+func (x *ProductUpload) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_product_proto_msgTypes[26]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ProductUpload.ProtoReflect.Descriptor instead.
+func (*ProductUpload) Descriptor() ([]byte, []int) {
+	return file_hi_club_product_proto_rawDescGZIP(), []int{26}
+}
+
+func (x *ProductUpload) GetInfo() *ProductInfo {
+	if x != nil {
+		return x.Info
+	}
+	return nil
+}
+
+func (x *ProductUpload) GetQuantity() int64 {
+	if x != nil && x.Quantity != nil {
+		return *x.Quantity
+	}
+	return 0
+}
+
+func (x *ProductUpload) GetFulfillment() *ProductFulfillmentSpec {
+	if x != nil {
+		return x.Fulfillment
+	}
+	return nil
+}
+
+type BatchCreateProductsReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RequestUuid   *string                `protobuf:"bytes,1,opt,name=request_uuid,json=requestUuid,proto3,oneof" json:"request_uuid,omitempty"`
+	Stall         *string                `protobuf:"bytes,2,opt,name=stall,proto3,oneof" json:"stall,omitempty"`
+	Integration   *SupplierIntegration   `protobuf:"bytes,3,opt,name=integration,proto3" json:"integration,omitempty"` // 一批同供应链的回调只提供一次
+	Products      []*ProductUpload       `protobuf:"bytes,4,rep,name=products,proto3" json:"products,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BatchCreateProductsReq) Reset() {
+	*x = BatchCreateProductsReq{}
+	mi := &file_hi_club_product_proto_msgTypes[27]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BatchCreateProductsReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BatchCreateProductsReq) ProtoMessage() {}
+
+func (x *BatchCreateProductsReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_product_proto_msgTypes[27]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BatchCreateProductsReq.ProtoReflect.Descriptor instead.
+func (*BatchCreateProductsReq) Descriptor() ([]byte, []int) {
+	return file_hi_club_product_proto_rawDescGZIP(), []int{27}
+}
+
+func (x *BatchCreateProductsReq) GetRequestUuid() string {
+	if x != nil && x.RequestUuid != nil {
+		return *x.RequestUuid
+	}
+	return ""
+}
+
+func (x *BatchCreateProductsReq) GetStall() string {
+	if x != nil && x.Stall != nil {
+		return *x.Stall
+	}
+	return ""
+}
+
+func (x *BatchCreateProductsReq) GetIntegration() *SupplierIntegration {
+	if x != nil {
+		return x.Integration
+	}
+	return nil
+}
+
+func (x *BatchCreateProductsReq) GetProducts() []*ProductUpload {
+	if x != nil {
+		return x.Products
+	}
+	return nil
+}
+
 var File_hi_club_product_proto protoreflect.FileDescriptor
 
 const file_hi_club_product_proto_rawDesc = "" +
@@ -1648,7 +1869,7 @@ const file_hi_club_product_proto_rawDesc = "" +
 	"\aProduct\x12\x19\n" +
 	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x02id\x88\x01\x01\x12.\n" +
 	"\x04info\x18\x02 \x01(\v2\x14.hi.club.ProductInfoB\x04\x90\xb5\x18\x01R\x04info:\x04\x98\xb5\x18\x01B\x05\n" +
-	"\x03_id\"\x9c\x03\n" +
+	"\x03_id\"\xe2\x03\n" +
 	"\x14ProductInventoryItem\x120\n" +
 	"\aproduct\x18\x01 \x01(\v2\x10.hi.club.ProductB\x04\x90\xb5\x18\x01R\aproduct\x12&\n" +
 	"\x05stall\x18\x02 \x01(\v2\n" +
@@ -1660,7 +1881,8 @@ const file_hi_club_product_proto_rawDesc = "" +
 	"uploadedAt\x88\x01\x01\x128\n" +
 	"\x05stock\x18\x05 \x01(\v2\x1c.hi.club.ProductStockBalanceB\x04\x90\xb5\x18\x02R\x05stock\x12G\n" +
 	"\vfulfillment\x18\x06 \x01(\v2\x1f.hi.club.ProductFulfillmentSpecB\x04\x90\xb5\x18\x02R\vfulfillment\x12%\n" +
-	"\brevision\x18\a \x01(\x03B\x04\x90\xb5\x18\x02H\x01R\brevision\x88\x01\x01:\x04\x98\xb5\x18\x02B\x0e\n" +
+	"\brevision\x18\a \x01(\x03B\x04\x90\xb5\x18\x02H\x01R\brevision\x88\x01\x01\x12D\n" +
+	"\vintegration\x18\b \x01(\v2\x1c.hi.club.SupplierIntegrationB\x04\x90\xb5\x18\x02R\vintegration:\x04\x98\xb5\x18\x02B\x0e\n" +
 	"\f_uploaded_atB\v\n" +
 	"\t_revision\"\xeb\x04\n" +
 	"\x0eProductListing\x120\n" +
@@ -1699,7 +1921,7 @@ const file_hi_club_product_proto_rawDesc = "" +
 	"\x05stall\x18\x01 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\x05stall\x12.\n" +
 	"\rlisting_count\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x01H\x00R\flistingCount\x88\x01\x01:\x04\x98\xb5\x18\x01B\x10\n" +
-	"\x0e_listing_count\"\xbb\x02\n" +
+	"\x0e_listing_count\"\xfb\x02\n" +
 	"\x10CreateProductReq\x123\n" +
 	"\frequest_uuid\x18\x01 \x01(\tB\v\xbaH\b\xc8\x01\x01r\x03\xb0\x01\x01H\x00R\vrequestUuid\x88\x01\x01\x12%\n" +
 	"\x05stall\x18\x02 \x01(\tB\n" +
@@ -1707,7 +1929,8 @@ const file_hi_club_product_proto_rawDesc = "" +
 	"\x04info\x18\x03 \x01(\v2\x14.hi.club.ProductInfoB\x06\xbaH\x03\xc8\x01\x01R\x04info\x12.\n" +
 	"\bquantity\x18\x04 \x01(\x03B\r\xbaH\n" +
 	"\"\b\x18\x80\x94\xeb\xdc\x03(\x00H\x02R\bquantity\x88\x01\x01\x12A\n" +
-	"\vfulfillment\x18\x05 \x01(\v2\x1f.hi.club.ProductFulfillmentSpecR\vfulfillmentB\x0f\n" +
+	"\vfulfillment\x18\x05 \x01(\v2\x1f.hi.club.ProductFulfillmentSpecR\vfulfillment\x12>\n" +
+	"\vintegration\x18\x06 \x01(\v2\x1c.hi.club.SupplierIntegrationR\vintegrationB\x0f\n" +
 	"\r_request_uuidB\b\n" +
 	"\x06_stallB\v\n" +
 	"\t_quantity\"7\n" +
@@ -1785,14 +2008,15 @@ const file_hi_club_product_proto_rawDesc = "" +
 	"\xc8\x01\x01\x82\x01\x04\x10\x01 \x00\x90\xb5\x18\x01H\x00R\x04type\x88\x01\x01\x123\n" +
 	"\vdescription\x18\x02 \x01(\tB\f\xbaH\x05r\x03\x18\xd0\x0f\x90\xb5\x18\x01H\x01R\vdescription\x88\x01\x01:\x04\x98\xb5\x18\x01B\a\n" +
 	"\x05_typeB\x0e\n" +
-	"\f_description\"\xe4\x01\n" +
+	"\f_description\"\xa4\x02\n" +
 	"\x13ConfigureProductReq\x12\x1f\n" +
 	"\x02id\x18\x01 \x01(\tB\n" +
 	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\x02id\x88\x01\x01\x12+\n" +
 	"\brevision\x18\x02 \x01(\x03B\n" +
 	"\xbaH\a\xc8\x01\x01\"\x02(\x00H\x01R\brevision\x88\x01\x01\x12(\n" +
 	"\x04info\x18\x03 \x01(\v2\x14.hi.club.ProductInfoR\x04info\x12A\n" +
-	"\vfulfillment\x18\x04 \x01(\v2\x1f.hi.club.ProductFulfillmentSpecR\vfulfillmentB\x05\n" +
+	"\vfulfillment\x18\x04 \x01(\v2\x1f.hi.club.ProductFulfillmentSpecR\vfulfillment\x12>\n" +
+	"\vintegration\x18\x05 \x01(\v2\x1c.hi.club.SupplierIntegrationR\vintegrationB\x05\n" +
 	"\x03_idB\v\n" +
 	"\t_revision\"\xfc\x01\n" +
 	"\x15AdjustProductStockReq\x12\x1f\n" +
@@ -1805,7 +2029,32 @@ const file_hi_club_product_proto_rawDesc = "" +
 	"\x03_idB\x0f\n" +
 	"\r_request_uuidB\b\n" +
 	"\x06_deltaB\t\n" +
-	"\a_reason*\xa9\x01\n" +
+	"\a_reason\"\x8b\x02\n" +
+	"\x13SupplierIntegration\x12%\n" +
+	"\bendpoint\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\bendpoint\x88\x01\x01\x12/\n" +
+	"\rauthorization\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\rauthorization\x88\x01\x01\x12#\n" +
+	"\aenabled\x18\x04 \x01(\bB\x04\x90\xb5\x18\x02H\x02R\aenabled\x88\x01\x01\x122\n" +
+	"\x0fdetail_endpoint\x18\x06 \x01(\tB\x04\x90\xb5\x18\x02H\x03R\x0edetailEndpoint\x88\x01\x01:\x04\x98\xb5\x18\x02B\v\n" +
+	"\t_endpointB\x10\n" +
+	"\x0e_authorizationB\n" +
+	"\n" +
+	"\b_enabledB\x12\n" +
+	"\x10_detail_endpoint\"\xc1\x01\n" +
+	"\rProductUpload\x120\n" +
+	"\x04info\x18\x01 \x01(\v2\x14.hi.club.ProductInfoB\x06\xbaH\x03\xc8\x01\x01R\x04info\x12.\n" +
+	"\bquantity\x18\x02 \x01(\x03B\r\xbaH\n" +
+	"\"\b\x18\x80\x94\xeb\xdc\x03(\x00H\x00R\bquantity\x88\x01\x01\x12A\n" +
+	"\vfulfillment\x18\x03 \x01(\v2\x1f.hi.club.ProductFulfillmentSpecR\vfulfillmentB\v\n" +
+	"\t_quantity\"\x8f\x02\n" +
+	"\x16BatchCreateProductsReq\x123\n" +
+	"\frequest_uuid\x18\x01 \x01(\tB\v\xbaH\b\xc8\x01\x01r\x03\xb0\x01\x01H\x00R\vrequestUuid\x88\x01\x01\x12%\n" +
+	"\x05stall\x18\x02 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x01R\x05stall\x88\x01\x01\x12>\n" +
+	"\vintegration\x18\x03 \x01(\v2\x1c.hi.club.SupplierIntegrationR\vintegration\x12>\n" +
+	"\bproducts\x18\x04 \x03(\v2\x16.hi.club.ProductUploadB\n" +
+	"\xbaH\a\x92\x01\x04\b\x01\x10dR\bproductsB\x0f\n" +
+	"\r_request_uuidB\b\n" +
+	"\x06_stall*\xa9\x01\n" +
 	"\x14ProductListingStatus\x12&\n" +
 	"\"PRODUCT_LISTING_STATUS_UNSPECIFIED\x10\x00\x12!\n" +
 	"\x1dPRODUCT_LISTING_STATUS_LISTED\x10\x01\x12!\n" +
@@ -1814,8 +2063,9 @@ const file_hi_club_product_proto_rawDesc = "" +
 	"\x13ProductDeliveryType\x12%\n" +
 	"!PRODUCT_DELIVERY_TYPE_UNSPECIFIED\x10\x00\x12\"\n" +
 	"\x1ePRODUCT_DELIVERY_TYPE_PHYSICAL\x10\x01\x12!\n" +
-	"\x1dPRODUCT_DELIVERY_TYPE_DIGITAL\x10\x022\x94\x03\n" +
-	"\x10ProductInventory\x12I\n" +
+	"\x1dPRODUCT_DELIVERY_TYPE_DIGITAL\x10\x022\xee\x03\n" +
+	"\x10ProductInventory\x12X\n" +
+	"\vCreateBatch\x12\x1f.hi.club.BatchCreateProductsReq\x1a!.hi.club.ListProductInventoryResp\"\x05\x8a\xb5\x18\x01\x02\x12I\n" +
 	"\x06Create\x12\x19.hi.club.CreateProductReq\x1a\x1d.hi.club.ProductInventoryItem\"\x05\x8a\xb5\x18\x01\x02\x12C\n" +
 	"\x03Get\x12\x16.hi.club.GetProductReq\x1a\x1d.hi.club.ProductInventoryItem\"\x05\x8a\xb5\x18\x01\x02\x12O\n" +
 	"\tConfigure\x12\x1c.hi.club.ConfigureProductReq\x1a\x1d.hi.club.ProductInventoryItem\"\x05\x8a\xb5\x18\x01\x02\x12S\n" +
@@ -1848,7 +2098,7 @@ func file_hi_club_product_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_club_product_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_hi_club_product_proto_msgTypes = make([]protoimpl.MessageInfo, 25)
+var file_hi_club_product_proto_msgTypes = make([]protoimpl.MessageInfo, 28)
 var file_hi_club_product_proto_goTypes = []any{
 	(ProductListingStatus)(0),          // 0: hi.club.ProductListingStatus
 	(ProductDeliveryType)(0),           // 1: hi.club.ProductDeliveryType
@@ -1877,75 +2127,87 @@ var file_hi_club_product_proto_goTypes = []any{
 	(*ProductFulfillmentSpec)(nil),     // 24: hi.club.ProductFulfillmentSpec
 	(*ConfigureProductReq)(nil),        // 25: hi.club.ConfigureProductReq
 	(*AdjustProductStockReq)(nil),      // 26: hi.club.AdjustProductStockReq
-	(*did.CoinAmount)(nil),             // 27: hi.did.CoinAmount
-	(*hi.Entity)(nil),                  // 28: hi.Entity
-	(*hi.Pagination)(nil),              // 29: hi.Pagination
+	(*SupplierIntegration)(nil),        // 27: hi.club.SupplierIntegration
+	(*ProductUpload)(nil),              // 28: hi.club.ProductUpload
+	(*BatchCreateProductsReq)(nil),     // 29: hi.club.BatchCreateProductsReq
+	(*did.CoinAmount)(nil),             // 30: hi.did.CoinAmount
+	(*hi.Entity)(nil),                  // 31: hi.Entity
+	(*hi.Pagination)(nil),              // 32: hi.Pagination
 }
 var file_hi_club_product_proto_depIdxs = []int32{
-	27, // 0: hi.club.ProductPricing.digital:type_name -> hi.did.CoinAmount
+	30, // 0: hi.club.ProductPricing.digital:type_name -> hi.did.CoinAmount
 	2,  // 1: hi.club.ProductInfo.images:type_name -> hi.club.ProductImage
 	3,  // 2: hi.club.ProductInfo.pricing:type_name -> hi.club.ProductPricing
 	4,  // 3: hi.club.Product.info:type_name -> hi.club.ProductInfo
 	5,  // 4: hi.club.ProductInventoryItem.product:type_name -> hi.club.Product
-	28, // 5: hi.club.ProductInventoryItem.stall:type_name -> hi.Entity
-	28, // 6: hi.club.ProductInventoryItem.uploaded_by:type_name -> hi.Entity
+	31, // 5: hi.club.ProductInventoryItem.stall:type_name -> hi.Entity
+	31, // 6: hi.club.ProductInventoryItem.uploaded_by:type_name -> hi.Entity
 	23, // 7: hi.club.ProductInventoryItem.stock:type_name -> hi.club.ProductStockBalance
 	24, // 8: hi.club.ProductInventoryItem.fulfillment:type_name -> hi.club.ProductFulfillmentSpec
-	5,  // 9: hi.club.ProductListing.product:type_name -> hi.club.Product
-	28, // 10: hi.club.ProductListing.merchant:type_name -> hi.Entity
-	28, // 11: hi.club.ProductListing.stall:type_name -> hi.Entity
-	0,  // 12: hi.club.ProductListing.status:type_name -> hi.club.ProductListingStatus
-	24, // 13: hi.club.ProductListing.fulfillment:type_name -> hi.club.ProductFulfillmentSpec
-	7,  // 14: hi.club.ProductAnnouncement.listing:type_name -> hi.club.ProductListing
-	28, // 15: hi.club.ProductAnnouncement.group:type_name -> hi.Entity
-	28, // 16: hi.club.ProductSeller.seller:type_name -> hi.Entity
-	28, // 17: hi.club.ProductStall.stall:type_name -> hi.Entity
-	4,  // 18: hi.club.CreateProductReq.info:type_name -> hi.club.ProductInfo
-	24, // 19: hi.club.CreateProductReq.fulfillment:type_name -> hi.club.ProductFulfillmentSpec
-	29, // 20: hi.club.ListProductsReq.pagination:type_name -> hi.Pagination
-	0,  // 21: hi.club.SetProductListingStatusReq.status:type_name -> hi.club.ProductListingStatus
-	29, // 22: hi.club.SearchProductListingsReq.pagination:type_name -> hi.Pagination
-	29, // 23: hi.club.ListProductStallsReq.pagination:type_name -> hi.Pagination
-	6,  // 24: hi.club.ListProductInventoryResp.list:type_name -> hi.club.ProductInventoryItem
-	7,  // 25: hi.club.ListProductListingsResp.list:type_name -> hi.club.ProductListing
-	9,  // 26: hi.club.ListProductSellersResp.list:type_name -> hi.club.ProductSeller
-	10, // 27: hi.club.ListProductStallsResp.list:type_name -> hi.club.ProductStall
-	1,  // 28: hi.club.ProductFulfillmentSpec.type:type_name -> hi.club.ProductDeliveryType
-	4,  // 29: hi.club.ConfigureProductReq.info:type_name -> hi.club.ProductInfo
-	24, // 30: hi.club.ConfigureProductReq.fulfillment:type_name -> hi.club.ProductFulfillmentSpec
-	11, // 31: hi.club.ProductInventory.Create:input_type -> hi.club.CreateProductReq
-	12, // 32: hi.club.ProductInventory.Get:input_type -> hi.club.GetProductReq
-	25, // 33: hi.club.ProductInventory.Configure:input_type -> hi.club.ConfigureProductReq
-	26, // 34: hi.club.ProductInventory.AdjustStock:input_type -> hi.club.AdjustProductStockReq
-	13, // 35: hi.club.ProductInventory.List:input_type -> hi.club.ListProductsReq
-	12, // 36: hi.club.ProductMarket.Publish:input_type -> hi.club.GetProductReq
-	14, // 37: hi.club.ProductMarket.SetListingStatus:input_type -> hi.club.SetProductListingStatusReq
-	13, // 38: hi.club.ProductMarket.ListMyListings:input_type -> hi.club.ListProductsReq
-	29, // 39: hi.club.ProductMarketDirectory.ListSellers:input_type -> hi.Pagination
-	17, // 40: hi.club.ProductMarketDirectory.GetSeller:input_type -> hi.club.GetProductSellerReq
-	18, // 41: hi.club.ProductMarketDirectory.ListSellerStalls:input_type -> hi.club.ListProductStallsReq
-	13, // 42: hi.club.ProductMarketDirectory.ListStallListings:input_type -> hi.club.ListProductsReq
-	16, // 43: hi.club.ProductMarketDirectory.SearchListings:input_type -> hi.club.SearchProductListingsReq
-	15, // 44: hi.club.ProductMarketDirectory.GetListing:input_type -> hi.club.GetProductListingReq
-	6,  // 45: hi.club.ProductInventory.Create:output_type -> hi.club.ProductInventoryItem
-	6,  // 46: hi.club.ProductInventory.Get:output_type -> hi.club.ProductInventoryItem
-	6,  // 47: hi.club.ProductInventory.Configure:output_type -> hi.club.ProductInventoryItem
-	6,  // 48: hi.club.ProductInventory.AdjustStock:output_type -> hi.club.ProductInventoryItem
-	19, // 49: hi.club.ProductInventory.List:output_type -> hi.club.ListProductInventoryResp
-	7,  // 50: hi.club.ProductMarket.Publish:output_type -> hi.club.ProductListing
-	7,  // 51: hi.club.ProductMarket.SetListingStatus:output_type -> hi.club.ProductListing
-	20, // 52: hi.club.ProductMarket.ListMyListings:output_type -> hi.club.ListProductListingsResp
-	21, // 53: hi.club.ProductMarketDirectory.ListSellers:output_type -> hi.club.ListProductSellersResp
-	9,  // 54: hi.club.ProductMarketDirectory.GetSeller:output_type -> hi.club.ProductSeller
-	22, // 55: hi.club.ProductMarketDirectory.ListSellerStalls:output_type -> hi.club.ListProductStallsResp
-	20, // 56: hi.club.ProductMarketDirectory.ListStallListings:output_type -> hi.club.ListProductListingsResp
-	20, // 57: hi.club.ProductMarketDirectory.SearchListings:output_type -> hi.club.ListProductListingsResp
-	7,  // 58: hi.club.ProductMarketDirectory.GetListing:output_type -> hi.club.ProductListing
-	45, // [45:59] is the sub-list for method output_type
-	31, // [31:45] is the sub-list for method input_type
-	31, // [31:31] is the sub-list for extension type_name
-	31, // [31:31] is the sub-list for extension extendee
-	0,  // [0:31] is the sub-list for field type_name
+	27, // 9: hi.club.ProductInventoryItem.integration:type_name -> hi.club.SupplierIntegration
+	5,  // 10: hi.club.ProductListing.product:type_name -> hi.club.Product
+	31, // 11: hi.club.ProductListing.merchant:type_name -> hi.Entity
+	31, // 12: hi.club.ProductListing.stall:type_name -> hi.Entity
+	0,  // 13: hi.club.ProductListing.status:type_name -> hi.club.ProductListingStatus
+	24, // 14: hi.club.ProductListing.fulfillment:type_name -> hi.club.ProductFulfillmentSpec
+	7,  // 15: hi.club.ProductAnnouncement.listing:type_name -> hi.club.ProductListing
+	31, // 16: hi.club.ProductAnnouncement.group:type_name -> hi.Entity
+	31, // 17: hi.club.ProductSeller.seller:type_name -> hi.Entity
+	31, // 18: hi.club.ProductStall.stall:type_name -> hi.Entity
+	4,  // 19: hi.club.CreateProductReq.info:type_name -> hi.club.ProductInfo
+	24, // 20: hi.club.CreateProductReq.fulfillment:type_name -> hi.club.ProductFulfillmentSpec
+	27, // 21: hi.club.CreateProductReq.integration:type_name -> hi.club.SupplierIntegration
+	32, // 22: hi.club.ListProductsReq.pagination:type_name -> hi.Pagination
+	0,  // 23: hi.club.SetProductListingStatusReq.status:type_name -> hi.club.ProductListingStatus
+	32, // 24: hi.club.SearchProductListingsReq.pagination:type_name -> hi.Pagination
+	32, // 25: hi.club.ListProductStallsReq.pagination:type_name -> hi.Pagination
+	6,  // 26: hi.club.ListProductInventoryResp.list:type_name -> hi.club.ProductInventoryItem
+	7,  // 27: hi.club.ListProductListingsResp.list:type_name -> hi.club.ProductListing
+	9,  // 28: hi.club.ListProductSellersResp.list:type_name -> hi.club.ProductSeller
+	10, // 29: hi.club.ListProductStallsResp.list:type_name -> hi.club.ProductStall
+	1,  // 30: hi.club.ProductFulfillmentSpec.type:type_name -> hi.club.ProductDeliveryType
+	4,  // 31: hi.club.ConfigureProductReq.info:type_name -> hi.club.ProductInfo
+	24, // 32: hi.club.ConfigureProductReq.fulfillment:type_name -> hi.club.ProductFulfillmentSpec
+	27, // 33: hi.club.ConfigureProductReq.integration:type_name -> hi.club.SupplierIntegration
+	4,  // 34: hi.club.ProductUpload.info:type_name -> hi.club.ProductInfo
+	24, // 35: hi.club.ProductUpload.fulfillment:type_name -> hi.club.ProductFulfillmentSpec
+	27, // 36: hi.club.BatchCreateProductsReq.integration:type_name -> hi.club.SupplierIntegration
+	28, // 37: hi.club.BatchCreateProductsReq.products:type_name -> hi.club.ProductUpload
+	29, // 38: hi.club.ProductInventory.CreateBatch:input_type -> hi.club.BatchCreateProductsReq
+	11, // 39: hi.club.ProductInventory.Create:input_type -> hi.club.CreateProductReq
+	12, // 40: hi.club.ProductInventory.Get:input_type -> hi.club.GetProductReq
+	25, // 41: hi.club.ProductInventory.Configure:input_type -> hi.club.ConfigureProductReq
+	26, // 42: hi.club.ProductInventory.AdjustStock:input_type -> hi.club.AdjustProductStockReq
+	13, // 43: hi.club.ProductInventory.List:input_type -> hi.club.ListProductsReq
+	12, // 44: hi.club.ProductMarket.Publish:input_type -> hi.club.GetProductReq
+	14, // 45: hi.club.ProductMarket.SetListingStatus:input_type -> hi.club.SetProductListingStatusReq
+	13, // 46: hi.club.ProductMarket.ListMyListings:input_type -> hi.club.ListProductsReq
+	32, // 47: hi.club.ProductMarketDirectory.ListSellers:input_type -> hi.Pagination
+	17, // 48: hi.club.ProductMarketDirectory.GetSeller:input_type -> hi.club.GetProductSellerReq
+	18, // 49: hi.club.ProductMarketDirectory.ListSellerStalls:input_type -> hi.club.ListProductStallsReq
+	13, // 50: hi.club.ProductMarketDirectory.ListStallListings:input_type -> hi.club.ListProductsReq
+	16, // 51: hi.club.ProductMarketDirectory.SearchListings:input_type -> hi.club.SearchProductListingsReq
+	15, // 52: hi.club.ProductMarketDirectory.GetListing:input_type -> hi.club.GetProductListingReq
+	19, // 53: hi.club.ProductInventory.CreateBatch:output_type -> hi.club.ListProductInventoryResp
+	6,  // 54: hi.club.ProductInventory.Create:output_type -> hi.club.ProductInventoryItem
+	6,  // 55: hi.club.ProductInventory.Get:output_type -> hi.club.ProductInventoryItem
+	6,  // 56: hi.club.ProductInventory.Configure:output_type -> hi.club.ProductInventoryItem
+	6,  // 57: hi.club.ProductInventory.AdjustStock:output_type -> hi.club.ProductInventoryItem
+	19, // 58: hi.club.ProductInventory.List:output_type -> hi.club.ListProductInventoryResp
+	7,  // 59: hi.club.ProductMarket.Publish:output_type -> hi.club.ProductListing
+	7,  // 60: hi.club.ProductMarket.SetListingStatus:output_type -> hi.club.ProductListing
+	20, // 61: hi.club.ProductMarket.ListMyListings:output_type -> hi.club.ListProductListingsResp
+	21, // 62: hi.club.ProductMarketDirectory.ListSellers:output_type -> hi.club.ListProductSellersResp
+	9,  // 63: hi.club.ProductMarketDirectory.GetSeller:output_type -> hi.club.ProductSeller
+	22, // 64: hi.club.ProductMarketDirectory.ListSellerStalls:output_type -> hi.club.ListProductStallsResp
+	20, // 65: hi.club.ProductMarketDirectory.ListStallListings:output_type -> hi.club.ListProductListingsResp
+	20, // 66: hi.club.ProductMarketDirectory.SearchListings:output_type -> hi.club.ListProductListingsResp
+	7,  // 67: hi.club.ProductMarketDirectory.GetListing:output_type -> hi.club.ProductListing
+	53, // [53:68] is the sub-list for method output_type
+	38, // [38:53] is the sub-list for method input_type
+	38, // [38:38] is the sub-list for extension type_name
+	38, // [38:38] is the sub-list for extension extendee
+	0,  // [0:38] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_product_proto_init() }
@@ -1977,13 +2239,16 @@ func file_hi_club_product_proto_init() {
 	file_hi_club_product_proto_msgTypes[22].OneofWrappers = []any{}
 	file_hi_club_product_proto_msgTypes[23].OneofWrappers = []any{}
 	file_hi_club_product_proto_msgTypes[24].OneofWrappers = []any{}
+	file_hi_club_product_proto_msgTypes[25].OneofWrappers = []any{}
+	file_hi_club_product_proto_msgTypes[26].OneofWrappers = []any{}
+	file_hi_club_product_proto_msgTypes[27].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_product_proto_rawDesc), len(file_hi_club_product_proto_rawDesc)),
 			NumEnums:      2,
-			NumMessages:   25,
+			NumMessages:   28,
 			NumExtensions: 0,
 			NumServices:   3,
 		},

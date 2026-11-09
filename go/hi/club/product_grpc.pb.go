@@ -20,6 +20,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	ProductInventory_CreateBatch_FullMethodName = "/hi.club.ProductInventory/CreateBatch"
 	ProductInventory_Create_FullMethodName      = "/hi.club.ProductInventory/Create"
 	ProductInventory_Get_FullMethodName         = "/hi.club.ProductInventory/Get"
 	ProductInventory_Configure_FullMethodName   = "/hi.club.ProductInventory/Configure"
@@ -35,6 +36,7 @@ const (
 // 上传仅入本人硬件机器人的库，不能向任意机器人上传，也不能自动上架/广播。
 // 公开目录与管理面分开；采购、库存和履约契约见product_trade.proto。
 type ProductInventoryClient interface {
+	CreateBatch(ctx context.Context, in *BatchCreateProductsReq, opts ...grpc.CallOption) (*ListProductInventoryResp, error)
 	Create(ctx context.Context, in *CreateProductReq, opts ...grpc.CallOption) (*ProductInventoryItem, error)
 	Get(ctx context.Context, in *GetProductReq, opts ...grpc.CallOption) (*ProductInventoryItem, error)
 	Configure(ctx context.Context, in *ConfigureProductReq, opts ...grpc.CallOption) (*ProductInventoryItem, error)
@@ -48,6 +50,16 @@ type productInventoryClient struct {
 
 func NewProductInventoryClient(cc grpc.ClientConnInterface) ProductInventoryClient {
 	return &productInventoryClient{cc}
+}
+
+func (c *productInventoryClient) CreateBatch(ctx context.Context, in *BatchCreateProductsReq, opts ...grpc.CallOption) (*ListProductInventoryResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListProductInventoryResp)
+	err := c.cc.Invoke(ctx, ProductInventory_CreateBatch_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *productInventoryClient) Create(ctx context.Context, in *CreateProductReq, opts ...grpc.CallOption) (*ProductInventoryItem, error) {
@@ -108,6 +120,7 @@ func (c *productInventoryClient) List(ctx context.Context, in *ListProductsReq, 
 // 上传仅入本人硬件机器人的库，不能向任意机器人上传，也不能自动上架/广播。
 // 公开目录与管理面分开；采购、库存和履约契约见product_trade.proto。
 type ProductInventoryServer interface {
+	CreateBatch(context.Context, *BatchCreateProductsReq) (*ListProductInventoryResp, error)
 	Create(context.Context, *CreateProductReq) (*ProductInventoryItem, error)
 	Get(context.Context, *GetProductReq) (*ProductInventoryItem, error)
 	Configure(context.Context, *ConfigureProductReq) (*ProductInventoryItem, error)
@@ -122,6 +135,9 @@ type ProductInventoryServer interface {
 // pointer dereference when methods are called.
 type UnimplementedProductInventoryServer struct{}
 
+func (UnimplementedProductInventoryServer) CreateBatch(context.Context, *BatchCreateProductsReq) (*ListProductInventoryResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateBatch not implemented")
+}
 func (UnimplementedProductInventoryServer) Create(context.Context, *CreateProductReq) (*ProductInventoryItem, error) {
 	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
 }
@@ -155,6 +171,24 @@ func RegisterProductInventoryServer(s grpc.ServiceRegistrar, srv ProductInventor
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&ProductInventory_ServiceDesc, srv)
+}
+
+func _ProductInventory_CreateBatch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchCreateProductsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductInventoryServer).CreateBatch(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductInventory_CreateBatch_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductInventoryServer).CreateBatch(ctx, req.(*BatchCreateProductsReq))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _ProductInventory_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -254,6 +288,10 @@ var ProductInventory_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "hi.club.ProductInventory",
 	HandlerType: (*ProductInventoryServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateBatch",
+			Handler:    _ProductInventory_CreateBatch_Handler,
+		},
 		{
 			MethodName: "Create",
 			Handler:    _ProductInventory_Create_Handler,

@@ -17,16 +17,6 @@ class ProductSupplyStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.SetIntegration = channel.unary_unary(
-                '/hi.club.ProductSupply/SetIntegration',
-                request_serializer=hi_dot_club_dot_product__trade__pb2.SupplierIntegration.SerializeToString,
-                response_deserializer=hi_dot_club_dot_product__trade__pb2.SupplierIntegration.FromString,
-                _registered_method=True)
-        self.GetIntegration = channel.unary_unary(
-                '/hi.club.ProductSupply/GetIntegration',
-                request_serializer=hi_dot_club_dot_product__trade__pb2.ProductStallQuery.SerializeToString,
-                response_deserializer=hi_dot_club_dot_product__trade__pb2.SupplierIntegration.FromString,
-                _registered_method=True)
         self.GetDetail = channel.unary_unary(
                 '/hi.club.ProductSupply/GetDetail',
                 request_serializer=hi_dot_club_dot_product__pb2.GetProductReq.SerializeToString,
@@ -43,18 +33,6 @@ class ProductSupplyServicer(object):
     """标准API和Web共用；用户身份来自认证，摊位权限每次按当前关系复验。
     """
 
-    def SetIntegration(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def GetIntegration(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
     def GetDetail(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -70,16 +48,6 @@ class ProductSupplyServicer(object):
 
 def add_ProductSupplyServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'SetIntegration': grpc.unary_unary_rpc_method_handler(
-                    servicer.SetIntegration,
-                    request_deserializer=hi_dot_club_dot_product__trade__pb2.SupplierIntegration.FromString,
-                    response_serializer=hi_dot_club_dot_product__trade__pb2.SupplierIntegration.SerializeToString,
-            ),
-            'GetIntegration': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetIntegration,
-                    request_deserializer=hi_dot_club_dot_product__trade__pb2.ProductStallQuery.FromString,
-                    response_serializer=hi_dot_club_dot_product__trade__pb2.SupplierIntegration.SerializeToString,
-            ),
             'GetDetail': grpc.unary_unary_rpc_method_handler(
                     servicer.GetDetail,
                     request_deserializer=hi_dot_club_dot_product__pb2.GetProductReq.FromString,
@@ -101,60 +69,6 @@ def add_ProductSupplyServicer_to_server(servicer, server):
 class ProductSupply(object):
     """标准API和Web共用；用户身份来自认证，摊位权限每次按当前关系复验。
     """
-
-    @staticmethod
-    def SetIntegration(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/hi.club.ProductSupply/SetIntegration',
-            hi_dot_club_dot_product__trade__pb2.SupplierIntegration.SerializeToString,
-            hi_dot_club_dot_product__trade__pb2.SupplierIntegration.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def GetIntegration(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/hi.club.ProductSupply/GetIntegration',
-            hi_dot_club_dot_product__trade__pb2.ProductStallQuery.SerializeToString,
-            hi_dot_club_dot_product__trade__pb2.SupplierIntegration.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
 
     @staticmethod
     def GetDetail(request,
@@ -378,6 +292,11 @@ class ProductTradeStub(object):
         Args:
             channel: A grpc.Channel.
         """
+        self.Buy = channel.unary_unary(
+                '/hi.club.ProductTrade/Buy',
+                request_serializer=hi_dot_club_dot_product__trade__pb2.DirectProductPurchaseReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_product__trade__pb2.ProductPurchaseOrder.FromString,
+                _registered_method=True)
         self.Submit = channel.unary_unary(
                 '/hi.club.ProductTrade/Submit',
                 request_serializer=hi_dot_club_dot_product__trade__pb2.TerminalOrderSubmission.SerializeToString,
@@ -432,6 +351,13 @@ class ProductTradeStub(object):
 
 class ProductTradeServicer(object):
     """Missing associated documentation comment in .proto file."""
+
+    def Buy(self, request, context):
+        """直接消费者购买：调用用户就是买方，不要求机器人或承销关系。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def Submit(self, request, context):
         """Missing associated documentation comment in .proto file."""
@@ -496,6 +422,11 @@ class ProductTradeServicer(object):
 
 def add_ProductTradeServicer_to_server(servicer, server):
     rpc_method_handlers = {
+            'Buy': grpc.unary_unary_rpc_method_handler(
+                    servicer.Buy,
+                    request_deserializer=hi_dot_club_dot_product__trade__pb2.DirectProductPurchaseReq.FromString,
+                    response_serializer=hi_dot_club_dot_product__trade__pb2.ProductPurchaseOrder.SerializeToString,
+            ),
             'Submit': grpc.unary_unary_rpc_method_handler(
                     servicer.Submit,
                     request_deserializer=hi_dot_club_dot_product__trade__pb2.TerminalOrderSubmission.FromString,
@@ -556,6 +487,33 @@ def add_ProductTradeServicer_to_server(servicer, server):
  # This class is part of an EXPERIMENTAL API.
 class ProductTrade(object):
     """Missing associated documentation comment in .proto file."""
+
+    @staticmethod
+    def Buy(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.ProductTrade/Buy',
+            hi_dot_club_dot_product__trade__pb2.DirectProductPurchaseReq.SerializeToString,
+            hi_dot_club_dot_product__trade__pb2.ProductPurchaseOrder.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
 
     @staticmethod
     def Submit(request,

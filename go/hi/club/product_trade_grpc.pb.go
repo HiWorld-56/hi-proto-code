@@ -19,8 +19,6 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ProductSupply_SetIntegration_FullMethodName     = "/hi.club.ProductSupply/SetIntegration"
-	ProductSupply_GetIntegration_FullMethodName     = "/hi.club.ProductSupply/GetIntegration"
 	ProductSupply_GetDetail_FullMethodName          = "/hi.club.ProductSupply/GetDetail"
 	ProductSupply_ListStockMovements_FullMethodName = "/hi.club.ProductSupply/ListStockMovements"
 )
@@ -31,8 +29,6 @@ const (
 //
 // 标准API和Web共用；用户身份来自认证，摊位权限每次按当前关系复验。
 type ProductSupplyClient interface {
-	SetIntegration(ctx context.Context, in *SupplierIntegration, opts ...grpc.CallOption) (*SupplierIntegration, error)
-	GetIntegration(ctx context.Context, in *ProductStallQuery, opts ...grpc.CallOption) (*SupplierIntegration, error)
 	GetDetail(ctx context.Context, in *GetProductReq, opts ...grpc.CallOption) (*ProductDetail, error)
 	ListStockMovements(ctx context.Context, in *ProductRecordQuery, opts ...grpc.CallOption) (*ListProductStockMovementsResp, error)
 }
@@ -43,26 +39,6 @@ type productSupplyClient struct {
 
 func NewProductSupplyClient(cc grpc.ClientConnInterface) ProductSupplyClient {
 	return &productSupplyClient{cc}
-}
-
-func (c *productSupplyClient) SetIntegration(ctx context.Context, in *SupplierIntegration, opts ...grpc.CallOption) (*SupplierIntegration, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SupplierIntegration)
-	err := c.cc.Invoke(ctx, ProductSupply_SetIntegration_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *productSupplyClient) GetIntegration(ctx context.Context, in *ProductStallQuery, opts ...grpc.CallOption) (*SupplierIntegration, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SupplierIntegration)
-	err := c.cc.Invoke(ctx, ProductSupply_GetIntegration_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *productSupplyClient) GetDetail(ctx context.Context, in *GetProductReq, opts ...grpc.CallOption) (*ProductDetail, error) {
@@ -91,8 +67,6 @@ func (c *productSupplyClient) ListStockMovements(ctx context.Context, in *Produc
 //
 // 标准API和Web共用；用户身份来自认证，摊位权限每次按当前关系复验。
 type ProductSupplyServer interface {
-	SetIntegration(context.Context, *SupplierIntegration) (*SupplierIntegration, error)
-	GetIntegration(context.Context, *ProductStallQuery) (*SupplierIntegration, error)
 	GetDetail(context.Context, *GetProductReq) (*ProductDetail, error)
 	ListStockMovements(context.Context, *ProductRecordQuery) (*ListProductStockMovementsResp, error)
 }
@@ -104,12 +78,6 @@ type ProductSupplyServer interface {
 // pointer dereference when methods are called.
 type UnimplementedProductSupplyServer struct{}
 
-func (UnimplementedProductSupplyServer) SetIntegration(context.Context, *SupplierIntegration) (*SupplierIntegration, error) {
-	return nil, status.Error(codes.Unimplemented, "method SetIntegration not implemented")
-}
-func (UnimplementedProductSupplyServer) GetIntegration(context.Context, *ProductStallQuery) (*SupplierIntegration, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetIntegration not implemented")
-}
 func (UnimplementedProductSupplyServer) GetDetail(context.Context, *GetProductReq) (*ProductDetail, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetDetail not implemented")
 }
@@ -134,42 +102,6 @@ func RegisterProductSupplyServer(s grpc.ServiceRegistrar, srv ProductSupplyServe
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&ProductSupply_ServiceDesc, srv)
-}
-
-func _ProductSupply_SetIntegration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SupplierIntegration)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ProductSupplyServer).SetIntegration(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ProductSupply_SetIntegration_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProductSupplyServer).SetIntegration(ctx, req.(*SupplierIntegration))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ProductSupply_GetIntegration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ProductStallQuery)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ProductSupplyServer).GetIntegration(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ProductSupply_GetIntegration_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProductSupplyServer).GetIntegration(ctx, req.(*ProductStallQuery))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _ProductSupply_GetDetail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -215,14 +147,6 @@ var ProductSupply_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "hi.club.ProductSupply",
 	HandlerType: (*ProductSupplyServer)(nil),
 	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "SetIntegration",
-			Handler:    _ProductSupply_SetIntegration_Handler,
-		},
-		{
-			MethodName: "GetIntegration",
-			Handler:    _ProductSupply_GetIntegration_Handler,
-		},
 		{
 			MethodName: "GetDetail",
 			Handler:    _ProductSupply_GetDetail_Handler,
@@ -413,6 +337,7 @@ var ProductDistribution_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
+	ProductTrade_Buy_FullMethodName               = "/hi.club.ProductTrade/Buy"
 	ProductTrade_Submit_FullMethodName            = "/hi.club.ProductTrade/Submit"
 	ProductTrade_Confirm_FullMethodName           = "/hi.club.ProductTrade/Confirm"
 	ProductTrade_Get_FullMethodName               = "/hi.club.ProductTrade/Get"
@@ -429,6 +354,8 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ProductTradeClient interface {
+	// 直接消费者购买：调用用户就是买方，不要求机器人或承销关系。
+	Buy(ctx context.Context, in *DirectProductPurchaseReq, opts ...grpc.CallOption) (*ProductPurchaseOrder, error)
 	Submit(ctx context.Context, in *TerminalOrderSubmission, opts ...grpc.CallOption) (*ProductPurchaseGroup, error)
 	Confirm(ctx context.Context, in *ProductPurchaseQuery, opts ...grpc.CallOption) (*ProductPurchaseOrder, error)
 	Get(ctx context.Context, in *ProductPurchaseQuery, opts ...grpc.CallOption) (*ProductPurchaseOrder, error)
@@ -447,6 +374,16 @@ type productTradeClient struct {
 
 func NewProductTradeClient(cc grpc.ClientConnInterface) ProductTradeClient {
 	return &productTradeClient{cc}
+}
+
+func (c *productTradeClient) Buy(ctx context.Context, in *DirectProductPurchaseReq, opts ...grpc.CallOption) (*ProductPurchaseOrder, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ProductPurchaseOrder)
+	err := c.cc.Invoke(ctx, ProductTrade_Buy_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *productTradeClient) Submit(ctx context.Context, in *TerminalOrderSubmission, opts ...grpc.CallOption) (*ProductPurchaseGroup, error) {
@@ -553,6 +490,8 @@ func (c *productTradeClient) ListEvents(ctx context.Context, in *ProductPurchase
 // All implementations should embed UnimplementedProductTradeServer
 // for forward compatibility.
 type ProductTradeServer interface {
+	// 直接消费者购买：调用用户就是买方，不要求机器人或承销关系。
+	Buy(context.Context, *DirectProductPurchaseReq) (*ProductPurchaseOrder, error)
 	Submit(context.Context, *TerminalOrderSubmission) (*ProductPurchaseGroup, error)
 	Confirm(context.Context, *ProductPurchaseQuery) (*ProductPurchaseOrder, error)
 	Get(context.Context, *ProductPurchaseQuery) (*ProductPurchaseOrder, error)
@@ -572,6 +511,9 @@ type ProductTradeServer interface {
 // pointer dereference when methods are called.
 type UnimplementedProductTradeServer struct{}
 
+func (UnimplementedProductTradeServer) Buy(context.Context, *DirectProductPurchaseReq) (*ProductPurchaseOrder, error) {
+	return nil, status.Error(codes.Unimplemented, "method Buy not implemented")
+}
 func (UnimplementedProductTradeServer) Submit(context.Context, *TerminalOrderSubmission) (*ProductPurchaseGroup, error) {
 	return nil, status.Error(codes.Unimplemented, "method Submit not implemented")
 }
@@ -620,6 +562,24 @@ func RegisterProductTradeServer(s grpc.ServiceRegistrar, srv ProductTradeServer)
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&ProductTrade_ServiceDesc, srv)
+}
+
+func _ProductTrade_Buy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DirectProductPurchaseReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductTradeServer).Buy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductTrade_Buy_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductTradeServer).Buy(ctx, req.(*DirectProductPurchaseReq))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _ProductTrade_Submit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -809,6 +769,10 @@ var ProductTrade_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "hi.club.ProductTrade",
 	HandlerType: (*ProductTradeServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Buy",
+			Handler:    _ProductTrade_Buy_Handler,
+		},
 		{
 			MethodName: "Submit",
 			Handler:    _ProductTrade_Submit_Handler,

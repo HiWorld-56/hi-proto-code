@@ -16,8 +16,8 @@ import 'dart:core' as $core;
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'product.pb.dart' as $1;
-import 'product_trade.pb.dart' as $0;
+import 'product.pb.dart' as $0;
+import 'product_trade.pb.dart' as $1;
 import 'settlement.pb.dart' as $2;
 
 export 'product_trade.pb.dart';
@@ -35,29 +35,15 @@ class ProductSupplyClient extends $grpc.Client {
 
   ProductSupplyClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$0.SupplierIntegration> setIntegration(
-    $0.SupplierIntegration request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$setIntegration, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.SupplierIntegration> getIntegration(
-    $0.ProductStallQuery request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$getIntegration, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.ProductDetail> getDetail(
-    $1.GetProductReq request, {
+  $grpc.ResponseFuture<$1.ProductDetail> getDetail(
+    $0.GetProductReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$getDetail, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.ListProductStockMovementsResp> listStockMovements(
-    $0.ProductRecordQuery request, {
+  $grpc.ResponseFuture<$1.ListProductStockMovementsResp> listStockMovements(
+    $1.ProductRecordQuery request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$listStockMovements, request, options: options);
@@ -65,26 +51,16 @@ class ProductSupplyClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$setIntegration =
-      $grpc.ClientMethod<$0.SupplierIntegration, $0.SupplierIntegration>(
-          '/hi.club.ProductSupply/SetIntegration',
-          ($0.SupplierIntegration value) => value.writeToBuffer(),
-          $0.SupplierIntegration.fromBuffer);
-  static final _$getIntegration =
-      $grpc.ClientMethod<$0.ProductStallQuery, $0.SupplierIntegration>(
-          '/hi.club.ProductSupply/GetIntegration',
-          ($0.ProductStallQuery value) => value.writeToBuffer(),
-          $0.SupplierIntegration.fromBuffer);
   static final _$getDetail =
-      $grpc.ClientMethod<$1.GetProductReq, $0.ProductDetail>(
+      $grpc.ClientMethod<$0.GetProductReq, $1.ProductDetail>(
           '/hi.club.ProductSupply/GetDetail',
-          ($1.GetProductReq value) => value.writeToBuffer(),
-          $0.ProductDetail.fromBuffer);
-  static final _$listStockMovements = $grpc.ClientMethod<$0.ProductRecordQuery,
-          $0.ListProductStockMovementsResp>(
+          ($0.GetProductReq value) => value.writeToBuffer(),
+          $1.ProductDetail.fromBuffer);
+  static final _$listStockMovements = $grpc.ClientMethod<$1.ProductRecordQuery,
+          $1.ListProductStockMovementsResp>(
       '/hi.club.ProductSupply/ListStockMovements',
-      ($0.ProductRecordQuery value) => value.writeToBuffer(),
-      $0.ListProductStockMovementsResp.fromBuffer);
+      ($1.ProductRecordQuery value) => value.writeToBuffer(),
+      $1.ListProductStockMovementsResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.ProductSupply')
@@ -92,76 +68,40 @@ abstract class ProductSupplyServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.club.ProductSupply';
 
   ProductSupplyServiceBase() {
-    $addMethod(
-        $grpc.ServiceMethod<$0.SupplierIntegration, $0.SupplierIntegration>(
-            'SetIntegration',
-            setIntegration_Pre,
-            false,
-            false,
-            ($core.List<$core.int> value) =>
-                $0.SupplierIntegration.fromBuffer(value),
-            ($0.SupplierIntegration value) => value.writeToBuffer()));
-    $addMethod(
-        $grpc.ServiceMethod<$0.ProductStallQuery, $0.SupplierIntegration>(
-            'GetIntegration',
-            getIntegration_Pre,
-            false,
-            false,
-            ($core.List<$core.int> value) =>
-                $0.ProductStallQuery.fromBuffer(value),
-            ($0.SupplierIntegration value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.GetProductReq, $0.ProductDetail>(
+    $addMethod($grpc.ServiceMethod<$0.GetProductReq, $1.ProductDetail>(
         'GetDetail',
         getDetail_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.GetProductReq.fromBuffer(value),
-        ($0.ProductDetail value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ProductRecordQuery,
-            $0.ListProductStockMovementsResp>(
+        ($core.List<$core.int> value) => $0.GetProductReq.fromBuffer(value),
+        ($1.ProductDetail value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.ProductRecordQuery,
+            $1.ListProductStockMovementsResp>(
         'ListStockMovements',
         listStockMovements_Pre,
         false,
         false,
         ($core.List<$core.int> value) =>
-            $0.ProductRecordQuery.fromBuffer(value),
-        ($0.ListProductStockMovementsResp value) => value.writeToBuffer()));
+            $1.ProductRecordQuery.fromBuffer(value),
+        ($1.ListProductStockMovementsResp value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.SupplierIntegration> setIntegration_Pre(
-      $grpc.ServiceCall $call,
-      $async.Future<$0.SupplierIntegration> $request) async {
-    return setIntegration($call, await $request);
-  }
-
-  $async.Future<$0.SupplierIntegration> setIntegration(
-      $grpc.ServiceCall call, $0.SupplierIntegration request);
-
-  $async.Future<$0.SupplierIntegration> getIntegration_Pre(
-      $grpc.ServiceCall $call,
-      $async.Future<$0.ProductStallQuery> $request) async {
-    return getIntegration($call, await $request);
-  }
-
-  $async.Future<$0.SupplierIntegration> getIntegration(
-      $grpc.ServiceCall call, $0.ProductStallQuery request);
-
-  $async.Future<$0.ProductDetail> getDetail_Pre(
-      $grpc.ServiceCall $call, $async.Future<$1.GetProductReq> $request) async {
+  $async.Future<$1.ProductDetail> getDetail_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.GetProductReq> $request) async {
     return getDetail($call, await $request);
   }
 
-  $async.Future<$0.ProductDetail> getDetail(
-      $grpc.ServiceCall call, $1.GetProductReq request);
+  $async.Future<$1.ProductDetail> getDetail(
+      $grpc.ServiceCall call, $0.GetProductReq request);
 
-  $async.Future<$0.ListProductStockMovementsResp> listStockMovements_Pre(
+  $async.Future<$1.ListProductStockMovementsResp> listStockMovements_Pre(
       $grpc.ServiceCall $call,
-      $async.Future<$0.ProductRecordQuery> $request) async {
+      $async.Future<$1.ProductRecordQuery> $request) async {
     return listStockMovements($call, await $request);
   }
 
-  $async.Future<$0.ListProductStockMovementsResp> listStockMovements(
-      $grpc.ServiceCall call, $0.ProductRecordQuery request);
+  $async.Future<$1.ListProductStockMovementsResp> listStockMovements(
+      $grpc.ServiceCall call, $1.ProductRecordQuery request);
 }
 
 @$pb.GrpcServiceName('hi.club.ProductDistribution')
@@ -176,22 +116,22 @@ class ProductDistributionClient extends $grpc.Client {
 
   ProductDistributionClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$0.ProductDistributionAgreement> join(
-    $0.JoinProductDistributionReq request, {
+  $grpc.ResponseFuture<$1.ProductDistributionAgreement> join(
+    $1.JoinProductDistributionReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$join, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.ListProductDistributionResp> list(
-    $0.ProductStallQuery request, {
+  $grpc.ResponseFuture<$1.ListProductDistributionResp> list(
+    $1.ProductStallQuery request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$list, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.ProductDistributionAgreement> leave(
-    $0.ProductDistributionQuery request, {
+  $grpc.ResponseFuture<$1.ProductDistributionAgreement> leave(
+    $1.ProductDistributionQuery request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$leave, request, options: options);
@@ -199,21 +139,21 @@ class ProductDistributionClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$join = $grpc.ClientMethod<$0.JoinProductDistributionReq,
-          $0.ProductDistributionAgreement>(
+  static final _$join = $grpc.ClientMethod<$1.JoinProductDistributionReq,
+          $1.ProductDistributionAgreement>(
       '/hi.club.ProductDistribution/Join',
-      ($0.JoinProductDistributionReq value) => value.writeToBuffer(),
-      $0.ProductDistributionAgreement.fromBuffer);
+      ($1.JoinProductDistributionReq value) => value.writeToBuffer(),
+      $1.ProductDistributionAgreement.fromBuffer);
   static final _$list =
-      $grpc.ClientMethod<$0.ProductStallQuery, $0.ListProductDistributionResp>(
+      $grpc.ClientMethod<$1.ProductStallQuery, $1.ListProductDistributionResp>(
           '/hi.club.ProductDistribution/List',
-          ($0.ProductStallQuery value) => value.writeToBuffer(),
-          $0.ListProductDistributionResp.fromBuffer);
-  static final _$leave = $grpc.ClientMethod<$0.ProductDistributionQuery,
-          $0.ProductDistributionAgreement>(
+          ($1.ProductStallQuery value) => value.writeToBuffer(),
+          $1.ListProductDistributionResp.fromBuffer);
+  static final _$leave = $grpc.ClientMethod<$1.ProductDistributionQuery,
+          $1.ProductDistributionAgreement>(
       '/hi.club.ProductDistribution/Leave',
-      ($0.ProductDistributionQuery value) => value.writeToBuffer(),
-      $0.ProductDistributionAgreement.fromBuffer);
+      ($1.ProductDistributionQuery value) => value.writeToBuffer(),
+      $1.ProductDistributionAgreement.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.ProductDistribution')
@@ -221,60 +161,60 @@ abstract class ProductDistributionServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.club.ProductDistribution';
 
   ProductDistributionServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.JoinProductDistributionReq,
-            $0.ProductDistributionAgreement>(
+    $addMethod($grpc.ServiceMethod<$1.JoinProductDistributionReq,
+            $1.ProductDistributionAgreement>(
         'Join',
         join_Pre,
         false,
         false,
         ($core.List<$core.int> value) =>
-            $0.JoinProductDistributionReq.fromBuffer(value),
-        ($0.ProductDistributionAgreement value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ProductStallQuery,
-            $0.ListProductDistributionResp>(
+            $1.JoinProductDistributionReq.fromBuffer(value),
+        ($1.ProductDistributionAgreement value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.ProductStallQuery,
+            $1.ListProductDistributionResp>(
         'List',
         list_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.ProductStallQuery.fromBuffer(value),
-        ($0.ListProductDistributionResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ProductDistributionQuery,
-            $0.ProductDistributionAgreement>(
+        ($core.List<$core.int> value) => $1.ProductStallQuery.fromBuffer(value),
+        ($1.ListProductDistributionResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.ProductDistributionQuery,
+            $1.ProductDistributionAgreement>(
         'Leave',
         leave_Pre,
         false,
         false,
         ($core.List<$core.int> value) =>
-            $0.ProductDistributionQuery.fromBuffer(value),
-        ($0.ProductDistributionAgreement value) => value.writeToBuffer()));
+            $1.ProductDistributionQuery.fromBuffer(value),
+        ($1.ProductDistributionAgreement value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.ProductDistributionAgreement> join_Pre(
+  $async.Future<$1.ProductDistributionAgreement> join_Pre(
       $grpc.ServiceCall $call,
-      $async.Future<$0.JoinProductDistributionReq> $request) async {
+      $async.Future<$1.JoinProductDistributionReq> $request) async {
     return join($call, await $request);
   }
 
-  $async.Future<$0.ProductDistributionAgreement> join(
-      $grpc.ServiceCall call, $0.JoinProductDistributionReq request);
+  $async.Future<$1.ProductDistributionAgreement> join(
+      $grpc.ServiceCall call, $1.JoinProductDistributionReq request);
 
-  $async.Future<$0.ListProductDistributionResp> list_Pre(
+  $async.Future<$1.ListProductDistributionResp> list_Pre(
       $grpc.ServiceCall $call,
-      $async.Future<$0.ProductStallQuery> $request) async {
+      $async.Future<$1.ProductStallQuery> $request) async {
     return list($call, await $request);
   }
 
-  $async.Future<$0.ListProductDistributionResp> list(
-      $grpc.ServiceCall call, $0.ProductStallQuery request);
+  $async.Future<$1.ListProductDistributionResp> list(
+      $grpc.ServiceCall call, $1.ProductStallQuery request);
 
-  $async.Future<$0.ProductDistributionAgreement> leave_Pre(
+  $async.Future<$1.ProductDistributionAgreement> leave_Pre(
       $grpc.ServiceCall $call,
-      $async.Future<$0.ProductDistributionQuery> $request) async {
+      $async.Future<$1.ProductDistributionQuery> $request) async {
     return leave($call, await $request);
   }
 
-  $async.Future<$0.ProductDistributionAgreement> leave(
-      $grpc.ServiceCall call, $0.ProductDistributionQuery request);
+  $async.Future<$1.ProductDistributionAgreement> leave(
+      $grpc.ServiceCall call, $1.ProductDistributionQuery request);
 }
 
 @$pb.GrpcServiceName('hi.club.ProductTrade')
@@ -289,71 +229,79 @@ class ProductTradeClient extends $grpc.Client {
 
   ProductTradeClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$0.ProductPurchaseGroup> submit(
-    $0.TerminalOrderSubmission request, {
+  /// 直接消费者购买：调用用户就是买方，不要求机器人或承销关系。
+  $grpc.ResponseFuture<$1.ProductPurchaseOrder> buy(
+    $1.DirectProductPurchaseReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$buy, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$1.ProductPurchaseGroup> submit(
+    $1.TerminalOrderSubmission request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$submit, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.ProductPurchaseOrder> confirm(
-    $0.ProductPurchaseQuery request, {
+  $grpc.ResponseFuture<$1.ProductPurchaseOrder> confirm(
+    $1.ProductPurchaseQuery request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$confirm, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.ProductPurchaseOrder> get(
-    $0.ProductPurchaseQuery request, {
+  $grpc.ResponseFuture<$1.ProductPurchaseOrder> get(
+    $1.ProductPurchaseQuery request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$get, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.ListProductPurchasesResp> list(
-    $0.ListProductPurchasesReq request, {
+  $grpc.ResponseFuture<$1.ListProductPurchasesResp> list(
+    $1.ListProductPurchasesReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$list, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.ProductPurchaseOrder> cancel(
-    $0.ProductPurchaseQuery request, {
+  $grpc.ResponseFuture<$1.ProductPurchaseOrder> cancel(
+    $1.ProductPurchaseQuery request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$cancel, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.ProductPurchaseOrder> reportFulfillment(
-    $0.ProductFulfillmentReport request, {
+  $grpc.ResponseFuture<$1.ProductPurchaseOrder> reportFulfillment(
+    $1.ProductFulfillmentReport request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$reportFulfillment, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.ProductPurchaseOrder> requestRefund(
-    $0.ProductRefundRequest request, {
+  $grpc.ResponseFuture<$1.ProductPurchaseOrder> requestRefund(
+    $1.ProductRefundRequest request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$requestRefund, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.ProductPurchaseOrder> approveRefund(
-    $0.ProductPurchaseQuery request, {
+  $grpc.ResponseFuture<$1.ProductPurchaseOrder> approveRefund(
+    $1.ProductPurchaseQuery request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$approveRefund, request, options: options);
   }
 
   $grpc.ResponseFuture<$2.ListSettlementReceiptsResp> listTransactions(
-    $0.ProductOrderRecordsReq request, {
+    $1.ProductOrderRecordsReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$listTransactions, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.ListProductOrderEventsResp> listEvents(
-    $0.ProductPurchaseQuery request, {
+  $grpc.ResponseFuture<$1.ListProductOrderEventsResp> listEvents(
+    $1.ProductPurchaseQuery request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$listEvents, request, options: options);
@@ -361,56 +309,61 @@ class ProductTradeClient extends $grpc.Client {
 
   // method descriptors
 
+  static final _$buy =
+      $grpc.ClientMethod<$1.DirectProductPurchaseReq, $1.ProductPurchaseOrder>(
+          '/hi.club.ProductTrade/Buy',
+          ($1.DirectProductPurchaseReq value) => value.writeToBuffer(),
+          $1.ProductPurchaseOrder.fromBuffer);
   static final _$submit =
-      $grpc.ClientMethod<$0.TerminalOrderSubmission, $0.ProductPurchaseGroup>(
+      $grpc.ClientMethod<$1.TerminalOrderSubmission, $1.ProductPurchaseGroup>(
           '/hi.club.ProductTrade/Submit',
-          ($0.TerminalOrderSubmission value) => value.writeToBuffer(),
-          $0.ProductPurchaseGroup.fromBuffer);
+          ($1.TerminalOrderSubmission value) => value.writeToBuffer(),
+          $1.ProductPurchaseGroup.fromBuffer);
   static final _$confirm =
-      $grpc.ClientMethod<$0.ProductPurchaseQuery, $0.ProductPurchaseOrder>(
+      $grpc.ClientMethod<$1.ProductPurchaseQuery, $1.ProductPurchaseOrder>(
           '/hi.club.ProductTrade/Confirm',
-          ($0.ProductPurchaseQuery value) => value.writeToBuffer(),
-          $0.ProductPurchaseOrder.fromBuffer);
+          ($1.ProductPurchaseQuery value) => value.writeToBuffer(),
+          $1.ProductPurchaseOrder.fromBuffer);
   static final _$get =
-      $grpc.ClientMethod<$0.ProductPurchaseQuery, $0.ProductPurchaseOrder>(
+      $grpc.ClientMethod<$1.ProductPurchaseQuery, $1.ProductPurchaseOrder>(
           '/hi.club.ProductTrade/Get',
-          ($0.ProductPurchaseQuery value) => value.writeToBuffer(),
-          $0.ProductPurchaseOrder.fromBuffer);
-  static final _$list = $grpc.ClientMethod<$0.ListProductPurchasesReq,
-          $0.ListProductPurchasesResp>(
+          ($1.ProductPurchaseQuery value) => value.writeToBuffer(),
+          $1.ProductPurchaseOrder.fromBuffer);
+  static final _$list = $grpc.ClientMethod<$1.ListProductPurchasesReq,
+          $1.ListProductPurchasesResp>(
       '/hi.club.ProductTrade/List',
-      ($0.ListProductPurchasesReq value) => value.writeToBuffer(),
-      $0.ListProductPurchasesResp.fromBuffer);
+      ($1.ListProductPurchasesReq value) => value.writeToBuffer(),
+      $1.ListProductPurchasesResp.fromBuffer);
   static final _$cancel =
-      $grpc.ClientMethod<$0.ProductPurchaseQuery, $0.ProductPurchaseOrder>(
+      $grpc.ClientMethod<$1.ProductPurchaseQuery, $1.ProductPurchaseOrder>(
           '/hi.club.ProductTrade/Cancel',
-          ($0.ProductPurchaseQuery value) => value.writeToBuffer(),
-          $0.ProductPurchaseOrder.fromBuffer);
+          ($1.ProductPurchaseQuery value) => value.writeToBuffer(),
+          $1.ProductPurchaseOrder.fromBuffer);
   static final _$reportFulfillment =
-      $grpc.ClientMethod<$0.ProductFulfillmentReport, $0.ProductPurchaseOrder>(
+      $grpc.ClientMethod<$1.ProductFulfillmentReport, $1.ProductPurchaseOrder>(
           '/hi.club.ProductTrade/ReportFulfillment',
-          ($0.ProductFulfillmentReport value) => value.writeToBuffer(),
-          $0.ProductPurchaseOrder.fromBuffer);
+          ($1.ProductFulfillmentReport value) => value.writeToBuffer(),
+          $1.ProductPurchaseOrder.fromBuffer);
   static final _$requestRefund =
-      $grpc.ClientMethod<$0.ProductRefundRequest, $0.ProductPurchaseOrder>(
+      $grpc.ClientMethod<$1.ProductRefundRequest, $1.ProductPurchaseOrder>(
           '/hi.club.ProductTrade/RequestRefund',
-          ($0.ProductRefundRequest value) => value.writeToBuffer(),
-          $0.ProductPurchaseOrder.fromBuffer);
+          ($1.ProductRefundRequest value) => value.writeToBuffer(),
+          $1.ProductPurchaseOrder.fromBuffer);
   static final _$approveRefund =
-      $grpc.ClientMethod<$0.ProductPurchaseQuery, $0.ProductPurchaseOrder>(
+      $grpc.ClientMethod<$1.ProductPurchaseQuery, $1.ProductPurchaseOrder>(
           '/hi.club.ProductTrade/ApproveRefund',
-          ($0.ProductPurchaseQuery value) => value.writeToBuffer(),
-          $0.ProductPurchaseOrder.fromBuffer);
+          ($1.ProductPurchaseQuery value) => value.writeToBuffer(),
+          $1.ProductPurchaseOrder.fromBuffer);
   static final _$listTransactions = $grpc.ClientMethod<
-          $0.ProductOrderRecordsReq, $2.ListSettlementReceiptsResp>(
+          $1.ProductOrderRecordsReq, $2.ListSettlementReceiptsResp>(
       '/hi.club.ProductTrade/ListTransactions',
-      ($0.ProductOrderRecordsReq value) => value.writeToBuffer(),
+      ($1.ProductOrderRecordsReq value) => value.writeToBuffer(),
       $2.ListSettlementReceiptsResp.fromBuffer);
-  static final _$listEvents = $grpc.ClientMethod<$0.ProductPurchaseQuery,
-          $0.ListProductOrderEventsResp>(
+  static final _$listEvents = $grpc.ClientMethod<$1.ProductPurchaseQuery,
+          $1.ListProductOrderEventsResp>(
       '/hi.club.ProductTrade/ListEvents',
-      ($0.ProductPurchaseQuery value) => value.writeToBuffer(),
-      $0.ListProductOrderEventsResp.fromBuffer);
+      ($1.ProductPurchaseQuery value) => value.writeToBuffer(),
+      $1.ListProductOrderEventsResp.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.club.ProductTrade')
@@ -418,180 +371,197 @@ abstract class ProductTradeServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.club.ProductTrade';
 
   ProductTradeServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.TerminalOrderSubmission,
-            $0.ProductPurchaseGroup>(
+    $addMethod($grpc.ServiceMethod<$1.DirectProductPurchaseReq,
+            $1.ProductPurchaseOrder>(
+        'Buy',
+        buy_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $1.DirectProductPurchaseReq.fromBuffer(value),
+        ($1.ProductPurchaseOrder value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.TerminalOrderSubmission,
+            $1.ProductPurchaseGroup>(
         'Submit',
         submit_Pre,
         false,
         false,
         ($core.List<$core.int> value) =>
-            $0.TerminalOrderSubmission.fromBuffer(value),
-        ($0.ProductPurchaseGroup value) => value.writeToBuffer()));
+            $1.TerminalOrderSubmission.fromBuffer(value),
+        ($1.ProductPurchaseGroup value) => value.writeToBuffer()));
     $addMethod(
-        $grpc.ServiceMethod<$0.ProductPurchaseQuery, $0.ProductPurchaseOrder>(
+        $grpc.ServiceMethod<$1.ProductPurchaseQuery, $1.ProductPurchaseOrder>(
             'Confirm',
             confirm_Pre,
             false,
             false,
             ($core.List<$core.int> value) =>
-                $0.ProductPurchaseQuery.fromBuffer(value),
-            ($0.ProductPurchaseOrder value) => value.writeToBuffer()));
+                $1.ProductPurchaseQuery.fromBuffer(value),
+            ($1.ProductPurchaseOrder value) => value.writeToBuffer()));
     $addMethod(
-        $grpc.ServiceMethod<$0.ProductPurchaseQuery, $0.ProductPurchaseOrder>(
+        $grpc.ServiceMethod<$1.ProductPurchaseQuery, $1.ProductPurchaseOrder>(
             'Get',
             get_Pre,
             false,
             false,
             ($core.List<$core.int> value) =>
-                $0.ProductPurchaseQuery.fromBuffer(value),
-            ($0.ProductPurchaseOrder value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ListProductPurchasesReq,
-            $0.ListProductPurchasesResp>(
+                $1.ProductPurchaseQuery.fromBuffer(value),
+            ($1.ProductPurchaseOrder value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.ListProductPurchasesReq,
+            $1.ListProductPurchasesResp>(
         'List',
         list_Pre,
         false,
         false,
         ($core.List<$core.int> value) =>
-            $0.ListProductPurchasesReq.fromBuffer(value),
-        ($0.ListProductPurchasesResp value) => value.writeToBuffer()));
+            $1.ListProductPurchasesReq.fromBuffer(value),
+        ($1.ListProductPurchasesResp value) => value.writeToBuffer()));
     $addMethod(
-        $grpc.ServiceMethod<$0.ProductPurchaseQuery, $0.ProductPurchaseOrder>(
+        $grpc.ServiceMethod<$1.ProductPurchaseQuery, $1.ProductPurchaseOrder>(
             'Cancel',
             cancel_Pre,
             false,
             false,
             ($core.List<$core.int> value) =>
-                $0.ProductPurchaseQuery.fromBuffer(value),
-            ($0.ProductPurchaseOrder value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ProductFulfillmentReport,
-            $0.ProductPurchaseOrder>(
+                $1.ProductPurchaseQuery.fromBuffer(value),
+            ($1.ProductPurchaseOrder value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.ProductFulfillmentReport,
+            $1.ProductPurchaseOrder>(
         'ReportFulfillment',
         reportFulfillment_Pre,
         false,
         false,
         ($core.List<$core.int> value) =>
-            $0.ProductFulfillmentReport.fromBuffer(value),
-        ($0.ProductPurchaseOrder value) => value.writeToBuffer()));
+            $1.ProductFulfillmentReport.fromBuffer(value),
+        ($1.ProductPurchaseOrder value) => value.writeToBuffer()));
     $addMethod(
-        $grpc.ServiceMethod<$0.ProductRefundRequest, $0.ProductPurchaseOrder>(
+        $grpc.ServiceMethod<$1.ProductRefundRequest, $1.ProductPurchaseOrder>(
             'RequestRefund',
             requestRefund_Pre,
             false,
             false,
             ($core.List<$core.int> value) =>
-                $0.ProductRefundRequest.fromBuffer(value),
-            ($0.ProductPurchaseOrder value) => value.writeToBuffer()));
+                $1.ProductRefundRequest.fromBuffer(value),
+            ($1.ProductPurchaseOrder value) => value.writeToBuffer()));
     $addMethod(
-        $grpc.ServiceMethod<$0.ProductPurchaseQuery, $0.ProductPurchaseOrder>(
+        $grpc.ServiceMethod<$1.ProductPurchaseQuery, $1.ProductPurchaseOrder>(
             'ApproveRefund',
             approveRefund_Pre,
             false,
             false,
             ($core.List<$core.int> value) =>
-                $0.ProductPurchaseQuery.fromBuffer(value),
-            ($0.ProductPurchaseOrder value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ProductOrderRecordsReq,
+                $1.ProductPurchaseQuery.fromBuffer(value),
+            ($1.ProductPurchaseOrder value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.ProductOrderRecordsReq,
             $2.ListSettlementReceiptsResp>(
         'ListTransactions',
         listTransactions_Pre,
         false,
         false,
         ($core.List<$core.int> value) =>
-            $0.ProductOrderRecordsReq.fromBuffer(value),
+            $1.ProductOrderRecordsReq.fromBuffer(value),
         ($2.ListSettlementReceiptsResp value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ProductPurchaseQuery,
-            $0.ListProductOrderEventsResp>(
+    $addMethod($grpc.ServiceMethod<$1.ProductPurchaseQuery,
+            $1.ListProductOrderEventsResp>(
         'ListEvents',
         listEvents_Pre,
         false,
         false,
         ($core.List<$core.int> value) =>
-            $0.ProductPurchaseQuery.fromBuffer(value),
-        ($0.ListProductOrderEventsResp value) => value.writeToBuffer()));
+            $1.ProductPurchaseQuery.fromBuffer(value),
+        ($1.ListProductOrderEventsResp value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.ProductPurchaseGroup> submit_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.TerminalOrderSubmission> $request) async {
+  $async.Future<$1.ProductPurchaseOrder> buy_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.DirectProductPurchaseReq> $request) async {
+    return buy($call, await $request);
+  }
+
+  $async.Future<$1.ProductPurchaseOrder> buy(
+      $grpc.ServiceCall call, $1.DirectProductPurchaseReq request);
+
+  $async.Future<$1.ProductPurchaseGroup> submit_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.TerminalOrderSubmission> $request) async {
     return submit($call, await $request);
   }
 
-  $async.Future<$0.ProductPurchaseGroup> submit(
-      $grpc.ServiceCall call, $0.TerminalOrderSubmission request);
+  $async.Future<$1.ProductPurchaseGroup> submit(
+      $grpc.ServiceCall call, $1.TerminalOrderSubmission request);
 
-  $async.Future<$0.ProductPurchaseOrder> confirm_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.ProductPurchaseQuery> $request) async {
+  $async.Future<$1.ProductPurchaseOrder> confirm_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.ProductPurchaseQuery> $request) async {
     return confirm($call, await $request);
   }
 
-  $async.Future<$0.ProductPurchaseOrder> confirm(
-      $grpc.ServiceCall call, $0.ProductPurchaseQuery request);
+  $async.Future<$1.ProductPurchaseOrder> confirm(
+      $grpc.ServiceCall call, $1.ProductPurchaseQuery request);
 
-  $async.Future<$0.ProductPurchaseOrder> get_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.ProductPurchaseQuery> $request) async {
+  $async.Future<$1.ProductPurchaseOrder> get_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.ProductPurchaseQuery> $request) async {
     return get($call, await $request);
   }
 
-  $async.Future<$0.ProductPurchaseOrder> get(
-      $grpc.ServiceCall call, $0.ProductPurchaseQuery request);
+  $async.Future<$1.ProductPurchaseOrder> get(
+      $grpc.ServiceCall call, $1.ProductPurchaseQuery request);
 
-  $async.Future<$0.ListProductPurchasesResp> list_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.ListProductPurchasesReq> $request) async {
+  $async.Future<$1.ListProductPurchasesResp> list_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.ListProductPurchasesReq> $request) async {
     return list($call, await $request);
   }
 
-  $async.Future<$0.ListProductPurchasesResp> list(
-      $grpc.ServiceCall call, $0.ListProductPurchasesReq request);
+  $async.Future<$1.ListProductPurchasesResp> list(
+      $grpc.ServiceCall call, $1.ListProductPurchasesReq request);
 
-  $async.Future<$0.ProductPurchaseOrder> cancel_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.ProductPurchaseQuery> $request) async {
+  $async.Future<$1.ProductPurchaseOrder> cancel_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.ProductPurchaseQuery> $request) async {
     return cancel($call, await $request);
   }
 
-  $async.Future<$0.ProductPurchaseOrder> cancel(
-      $grpc.ServiceCall call, $0.ProductPurchaseQuery request);
+  $async.Future<$1.ProductPurchaseOrder> cancel(
+      $grpc.ServiceCall call, $1.ProductPurchaseQuery request);
 
-  $async.Future<$0.ProductPurchaseOrder> reportFulfillment_Pre(
+  $async.Future<$1.ProductPurchaseOrder> reportFulfillment_Pre(
       $grpc.ServiceCall $call,
-      $async.Future<$0.ProductFulfillmentReport> $request) async {
+      $async.Future<$1.ProductFulfillmentReport> $request) async {
     return reportFulfillment($call, await $request);
   }
 
-  $async.Future<$0.ProductPurchaseOrder> reportFulfillment(
-      $grpc.ServiceCall call, $0.ProductFulfillmentReport request);
+  $async.Future<$1.ProductPurchaseOrder> reportFulfillment(
+      $grpc.ServiceCall call, $1.ProductFulfillmentReport request);
 
-  $async.Future<$0.ProductPurchaseOrder> requestRefund_Pre(
+  $async.Future<$1.ProductPurchaseOrder> requestRefund_Pre(
       $grpc.ServiceCall $call,
-      $async.Future<$0.ProductRefundRequest> $request) async {
+      $async.Future<$1.ProductRefundRequest> $request) async {
     return requestRefund($call, await $request);
   }
 
-  $async.Future<$0.ProductPurchaseOrder> requestRefund(
-      $grpc.ServiceCall call, $0.ProductRefundRequest request);
+  $async.Future<$1.ProductPurchaseOrder> requestRefund(
+      $grpc.ServiceCall call, $1.ProductRefundRequest request);
 
-  $async.Future<$0.ProductPurchaseOrder> approveRefund_Pre(
+  $async.Future<$1.ProductPurchaseOrder> approveRefund_Pre(
       $grpc.ServiceCall $call,
-      $async.Future<$0.ProductPurchaseQuery> $request) async {
+      $async.Future<$1.ProductPurchaseQuery> $request) async {
     return approveRefund($call, await $request);
   }
 
-  $async.Future<$0.ProductPurchaseOrder> approveRefund(
-      $grpc.ServiceCall call, $0.ProductPurchaseQuery request);
+  $async.Future<$1.ProductPurchaseOrder> approveRefund(
+      $grpc.ServiceCall call, $1.ProductPurchaseQuery request);
 
   $async.Future<$2.ListSettlementReceiptsResp> listTransactions_Pre(
       $grpc.ServiceCall $call,
-      $async.Future<$0.ProductOrderRecordsReq> $request) async {
+      $async.Future<$1.ProductOrderRecordsReq> $request) async {
     return listTransactions($call, await $request);
   }
 
   $async.Future<$2.ListSettlementReceiptsResp> listTransactions(
-      $grpc.ServiceCall call, $0.ProductOrderRecordsReq request);
+      $grpc.ServiceCall call, $1.ProductOrderRecordsReq request);
 
-  $async.Future<$0.ListProductOrderEventsResp> listEvents_Pre(
+  $async.Future<$1.ListProductOrderEventsResp> listEvents_Pre(
       $grpc.ServiceCall $call,
-      $async.Future<$0.ProductPurchaseQuery> $request) async {
+      $async.Future<$1.ProductPurchaseQuery> $request) async {
     return listEvents($call, await $request);
   }
 
-  $async.Future<$0.ListProductOrderEventsResp> listEvents(
-      $grpc.ServiceCall call, $0.ProductPurchaseQuery request);
+  $async.Future<$1.ListProductOrderEventsResp> listEvents(
+      $grpc.ServiceCall call, $1.ProductPurchaseQuery request);
 }

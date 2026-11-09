@@ -36,6 +36,13 @@ class ProductInventoryClient extends $grpc.Client {
 
   ProductInventoryClient(super.channel, {super.options, super.interceptors});
 
+  $grpc.ResponseFuture<$0.ListProductInventoryResp> createBatch(
+    $0.BatchCreateProductsReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$createBatch, request, options: options);
+  }
+
   $grpc.ResponseFuture<$0.ProductInventoryItem> create(
     $0.CreateProductReq request, {
     $grpc.CallOptions? options,
@@ -73,6 +80,11 @@ class ProductInventoryClient extends $grpc.Client {
 
   // method descriptors
 
+  static final _$createBatch = $grpc.ClientMethod<$0.BatchCreateProductsReq,
+          $0.ListProductInventoryResp>(
+      '/hi.club.ProductInventory/CreateBatch',
+      ($0.BatchCreateProductsReq value) => value.writeToBuffer(),
+      $0.ListProductInventoryResp.fromBuffer);
   static final _$create =
       $grpc.ClientMethod<$0.CreateProductReq, $0.ProductInventoryItem>(
           '/hi.club.ProductInventory/Create',
@@ -105,6 +117,15 @@ abstract class ProductInventoryServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.club.ProductInventory';
 
   ProductInventoryServiceBase() {
+    $addMethod($grpc.ServiceMethod<$0.BatchCreateProductsReq,
+            $0.ListProductInventoryResp>(
+        'CreateBatch',
+        createBatch_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.BatchCreateProductsReq.fromBuffer(value),
+        ($0.ListProductInventoryResp value) => value.writeToBuffer()));
     $addMethod(
         $grpc.ServiceMethod<$0.CreateProductReq, $0.ProductInventoryItem>(
             'Create',
@@ -149,6 +170,15 @@ abstract class ProductInventoryServiceBase extends $grpc.Service {
                 $0.ListProductsReq.fromBuffer(value),
             ($0.ListProductInventoryResp value) => value.writeToBuffer()));
   }
+
+  $async.Future<$0.ListProductInventoryResp> createBatch_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.BatchCreateProductsReq> $request) async {
+    return createBatch($call, await $request);
+  }
+
+  $async.Future<$0.ListProductInventoryResp> createBatch(
+      $grpc.ServiceCall call, $0.BatchCreateProductsReq request);
 
   $async.Future<$0.ProductInventoryItem> create_Pre($grpc.ServiceCall $call,
       $async.Future<$0.CreateProductReq> $request) async {

@@ -1658,6 +1658,9 @@ pub struct ProductInventoryItem {
     pub fulfillment: ::core::option::Option<ProductFulfillmentSpec>,
     #[prost(int64, optional, tag = "7")]
     pub revision: ::core::option::Option<i64>,
+    /// 逐商品配置，凭据写入不回显
+    #[prost(message, optional, tag = "8")]
+    pub integration: ::core::option::Option<SupplierIntegration>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProductListing {
@@ -1726,6 +1729,8 @@ pub struct CreateProductReq {
     pub quantity: ::core::option::Option<i64>,
     #[prost(message, optional, tag = "5")]
     pub fulfillment: ::core::option::Option<ProductFulfillmentSpec>,
+    #[prost(message, optional, tag = "6")]
+    pub integration: ::core::option::Option<SupplierIntegration>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetProductReq {
@@ -1836,6 +1841,9 @@ pub struct ConfigureProductReq {
     pub info: ::core::option::Option<ProductInfo>,
     #[prost(message, optional, tag = "4")]
     pub fulfillment: ::core::option::Option<ProductFulfillmentSpec>,
+    /// presence更新；未提供不改原商品回调
+    #[prost(message, optional, tag = "5")]
+    pub integration: ::core::option::Option<SupplierIntegration>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct AdjustProductStockReq {
@@ -1847,6 +1855,42 @@ pub struct AdjustProductStockReq {
     pub delta: ::core::option::Option<i64>,
     #[prost(string, optional, tag = "4")]
     pub reason: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// 逐商品绑定。批量上传的同一配置仅在批请求传一次，创建时分别绑定，后续独立修改。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SupplierIntegration {
+    /// 可选履约服务，SupplierRequest/SupplierResponse
+    #[prost(string, optional, tag = "2")]
+    pub endpoint: ::core::option::Option<::prost::alloc::string::String>,
+    /// 专用Bearer凭据，仅写入，不回显
+    #[prost(string, optional, tag = "3")]
+    pub authorization: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(bool, optional, tag = "4")]
+    pub enabled: ::core::option::Option<bool>,
+    /// HTTPS详情方法：输入GetProductReq，仅平台id；返回ProductDetail
+    #[prost(string, optional, tag = "6")]
+    pub detail_endpoint: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProductUpload {
+    #[prost(message, optional, tag = "1")]
+    pub info: ::core::option::Option<ProductInfo>,
+    #[prost(int64, optional, tag = "2")]
+    pub quantity: ::core::option::Option<i64>,
+    #[prost(message, optional, tag = "3")]
+    pub fulfillment: ::core::option::Option<ProductFulfillmentSpec>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BatchCreateProductsReq {
+    #[prost(string, optional, tag = "1")]
+    pub request_uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub stall: ::core::option::Option<::prost::alloc::string::String>,
+    /// 一批同供应链的回调只提供一次
+    #[prost(message, optional, tag = "3")]
+    pub integration: ::core::option::Option<SupplierIntegration>,
+    #[prost(message, repeated, tag = "4")]
+    pub products: ::prost::alloc::vec::Vec<ProductUpload>,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -2002,6 +2046,30 @@ pub mod product_inventory_client {
         pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
+        }
+        pub async fn create_batch(
+            &mut self,
+            request: impl tonic::IntoRequest<super::BatchCreateProductsReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListProductInventoryResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductInventory/CreateBatch",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.ProductInventory", "CreateBatch"));
+            self.inner.unary(req, path, codec).await
         }
         pub async fn create(
             &mut self,
@@ -11819,7 +11887,7 @@ pub mod permission_manage_client {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ProductStallQuery {
-    /// 不传=当前用户名下全部；设置/取单个配置必须传
+    /// 不传=当前用户名下全部；仅按指定机器人过滤
     #[prost(string, optional, tag = "1")]
     pub stall: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
@@ -11831,21 +11899,6 @@ pub struct ProductRecordQuery {
     pub product_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct SupplierIntegration {
-    #[prost(message, optional, tag = "1")]
-    pub stall: ::core::option::Option<super::Entity>,
-    /// HTTPS服务地址，不用于库存同步
-    #[prost(string, optional, tag = "2")]
-    pub endpoint: ::core::option::Option<::prost::alloc::string::String>,
-    /// 供应链发给Club的回调凭据，仅配置写入/不回显
-    #[prost(string, optional, tag = "3")]
-    pub authorization: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(bool, optional, tag = "4")]
-    pub enabled: ::core::option::Option<bool>,
-    #[prost(int64, optional, tag = "5")]
-    pub revision: ::core::option::Option<i64>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProductDetail {
@@ -11985,6 +12038,15 @@ pub struct TerminalOrderSubmission {
     #[prost(message, optional, tag = "5")]
     pub target: ::core::option::Option<ProductDeliveryTarget>,
 }
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DirectProductPurchaseReq {
+    #[prost(string, optional, tag = "1")]
+    pub request_uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub item: ::core::option::Option<ProductPurchaseInput>,
+    #[prost(message, optional, tag = "3")]
+    pub target: ::core::option::Option<ProductDeliveryTarget>,
+}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProductPurchaseLine {
     /// 不可变成交快照
@@ -12007,7 +12069,7 @@ pub struct ProductPurchaseOrder {
     #[prost(string, optional, tag = "1")]
     pub id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
-    pub reseller: ::core::option::Option<super::Entity>,
+    pub buyer: ::core::option::Option<super::Entity>,
     #[prost(message, optional, tag = "3")]
     pub supplier: ::core::option::Option<super::Entity>,
     #[prost(message, optional, tag = "4")]
@@ -12034,6 +12096,9 @@ pub struct ProductPurchaseOrder {
     pub refund: ::core::option::Option<SettlementPayment>,
     #[prost(string, optional, tag = "15")]
     pub refund_reason: ::core::option::Option<::prost::alloc::string::String>,
+    /// 既有无此字段的订单均为承销采购
+    #[prost(enumeration = "ProductPurchaseChannel", optional, tag = "16")]
+    pub channel: ::core::option::Option<i32>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProductPurchaseGroup {
@@ -12168,7 +12233,7 @@ pub struct SupplierRequest {
     pub request_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(int64, optional, tag = "2")]
     pub created_at: ::core::option::Option<i64>,
-    #[prost(oneof = "supplier_request::Operation", tags = "3, 4, 5, 6")]
+    #[prost(oneof = "supplier_request::Operation", tags = "3, 5, 6")]
     pub operation: ::core::option::Option<supplier_request::Operation>,
 }
 /// Nested message and enum types in `SupplierRequest`.
@@ -12177,27 +12242,23 @@ pub mod supplier_request {
     pub enum Operation {
         #[prost(message, tag = "3")]
         ProductRegistered(super::Product),
-        #[prost(message, tag = "4")]
-        GetDetail(super::GetProductReq),
         #[prost(message, tag = "5")]
         FulfillOrder(super::ProductPurchaseOrder),
         #[prost(message, tag = "6")]
         GetFulfillment(super::ProductPurchaseQuery),
     }
 }
-#[derive(Clone, PartialEq, ::prost::Message)]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SupplierResponse {
     #[prost(string, optional, tag = "1")]
     pub request_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(oneof = "supplier_response::Result", tags = "2, 3, 4")]
+    #[prost(oneof = "supplier_response::Result", tags = "3, 4")]
     pub result: ::core::option::Option<supplier_response::Result>,
 }
 /// Nested message and enum types in `SupplierResponse`.
 pub mod supplier_response {
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
     pub enum Result {
-        #[prost(message, tag = "2")]
-        Detail(super::ProductDetail),
         #[prost(message, tag = "3")]
         Fulfillment(super::ProductFulfillmentReport),
         #[prost(message, tag = "4")]
@@ -12210,6 +12271,36 @@ pub struct ProductOrderRecordsReq {
     pub order_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::Pagination>,
+}
+/// 直接购买与承销采购共用库存、支付及履约，资格各自明确。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum ProductPurchaseChannel {
+    Unspecified = 0,
+    Distribution = 1,
+    Direct = 2,
+}
+impl ProductPurchaseChannel {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "PRODUCT_PURCHASE_CHANNEL_UNSPECIFIED",
+            Self::Distribution => "PRODUCT_PURCHASE_CHANNEL_DISTRIBUTION",
+            Self::Direct => "PRODUCT_PURCHASE_CHANNEL_DIRECT",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "PRODUCT_PURCHASE_CHANNEL_UNSPECIFIED" => Some(Self::Unspecified),
+            "PRODUCT_PURCHASE_CHANNEL_DISTRIBUTION" => Some(Self::Distribution),
+            "PRODUCT_PURCHASE_CHANNEL_DIRECT" => Some(Self::Direct),
+            _ => None,
+        }
+    }
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -12390,54 +12481,6 @@ pub mod product_supply_client {
         pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
-        }
-        pub async fn set_integration(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SupplierIntegration>,
-        ) -> std::result::Result<
-            tonic::Response<super::SupplierIntegration>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.ProductSupply/SetIntegration",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.ProductSupply", "SetIntegration"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn get_integration(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ProductStallQuery>,
-        ) -> std::result::Result<
-            tonic::Response<super::SupplierIntegration>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.club.ProductSupply/GetIntegration",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.club.ProductSupply", "GetIntegration"));
-            self.inner.unary(req, path, codec).await
         }
         pub async fn get_detail(
             &mut self,
@@ -12741,6 +12784,28 @@ pub mod product_trade_client {
         pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
+        }
+        /// 直接消费者购买：调用用户就是买方，不要求机器人或承销关系。
+        pub async fn buy(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DirectProductPurchaseReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ProductPurchaseOrder>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.club.ProductTrade/Buy");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.club.ProductTrade", "Buy"));
+            self.inner.unary(req, path, codec).await
         }
         pub async fn submit(
             &mut self,

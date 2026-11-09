@@ -14,6 +14,33 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+/// 直接购买与承销采购共用库存、支付及履约，资格各自明确。
+class ProductPurchaseChannel extends $pb.ProtobufEnum {
+  static const ProductPurchaseChannel PRODUCT_PURCHASE_CHANNEL_UNSPECIFIED =
+      ProductPurchaseChannel._(
+          0, _omitEnumNames ? '' : 'PRODUCT_PURCHASE_CHANNEL_UNSPECIFIED');
+  static const ProductPurchaseChannel PRODUCT_PURCHASE_CHANNEL_DISTRIBUTION =
+      ProductPurchaseChannel._(
+          1, _omitEnumNames ? '' : 'PRODUCT_PURCHASE_CHANNEL_DISTRIBUTION');
+  static const ProductPurchaseChannel PRODUCT_PURCHASE_CHANNEL_DIRECT =
+      ProductPurchaseChannel._(
+          2, _omitEnumNames ? '' : 'PRODUCT_PURCHASE_CHANNEL_DIRECT');
+
+  static const $core.List<ProductPurchaseChannel> values =
+      <ProductPurchaseChannel>[
+    PRODUCT_PURCHASE_CHANNEL_UNSPECIFIED,
+    PRODUCT_PURCHASE_CHANNEL_DISTRIBUTION,
+    PRODUCT_PURCHASE_CHANNEL_DIRECT,
+  ];
+
+  static final $core.List<ProductPurchaseChannel?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static ProductPurchaseChannel? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const ProductPurchaseChannel._(super.value, super.name);
+}
+
 class ProductPurchaseStatus extends $pb.ProtobufEnum {
   static const ProductPurchaseStatus PRODUCT_PURCHASE_STATUS_UNSPECIFIED =
       ProductPurchaseStatus._(

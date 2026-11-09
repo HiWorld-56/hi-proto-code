@@ -18,6 +18,11 @@ class ProductInventoryStub(object):
         Args:
             channel: A grpc.Channel.
         """
+        self.CreateBatch = channel.unary_unary(
+                '/hi.club.ProductInventory/CreateBatch',
+                request_serializer=hi_dot_club_dot_product__pb2.BatchCreateProductsReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_product__pb2.ListProductInventoryResp.FromString,
+                _registered_method=True)
         self.Create = channel.unary_unary(
                 '/hi.club.ProductInventory/Create',
                 request_serializer=hi_dot_club_dot_product__pb2.CreateProductReq.SerializeToString,
@@ -50,6 +55,12 @@ class ProductInventoryServicer(object):
     上传仅入本人硬件机器人的库，不能向任意机器人上传，也不能自动上架/广播。
     公开目录与管理面分开；采购、库存和履约契约见product_trade.proto。
     """
+
+    def CreateBatch(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def Create(self, request, context):
         """Missing associated documentation comment in .proto file."""
@@ -84,6 +95,11 @@ class ProductInventoryServicer(object):
 
 def add_ProductInventoryServicer_to_server(servicer, server):
     rpc_method_handlers = {
+            'CreateBatch': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateBatch,
+                    request_deserializer=hi_dot_club_dot_product__pb2.BatchCreateProductsReq.FromString,
+                    response_serializer=hi_dot_club_dot_product__pb2.ListProductInventoryResp.SerializeToString,
+            ),
             'Create': grpc.unary_unary_rpc_method_handler(
                     servicer.Create,
                     request_deserializer=hi_dot_club_dot_product__pb2.CreateProductReq.FromString,
@@ -122,6 +138,33 @@ class ProductInventory(object):
     上传仅入本人硬件机器人的库，不能向任意机器人上传，也不能自动上架/广播。
     公开目录与管理面分开；采购、库存和履约契约见product_trade.proto。
     """
+
+    @staticmethod
+    def CreateBatch(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.ProductInventory/CreateBatch',
+            hi_dot_club_dot_product__pb2.BatchCreateProductsReq.SerializeToString,
+            hi_dot_club_dot_product__pb2.ListProductInventoryResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
 
     @staticmethod
     def Create(request,

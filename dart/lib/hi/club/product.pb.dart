@@ -325,6 +325,7 @@ class ProductInventoryItem extends $pb.GeneratedMessage {
     ProductStockBalance? stock,
     ProductFulfillmentSpec? fulfillment,
     $fixnum.Int64? revision,
+    SupplierIntegration? integration,
   }) {
     final result = create();
     if (product != null) result.product = product;
@@ -334,6 +335,7 @@ class ProductInventoryItem extends $pb.GeneratedMessage {
     if (stock != null) result.stock = stock;
     if (fulfillment != null) result.fulfillment = fulfillment;
     if (revision != null) result.revision = revision;
+    if (integration != null) result.integration = integration;
     return result;
   }
 
@@ -362,6 +364,8 @@ class ProductInventoryItem extends $pb.GeneratedMessage {
     ..aOM<ProductFulfillmentSpec>(6, _omitFieldNames ? '' : 'fulfillment',
         subBuilder: ProductFulfillmentSpec.create)
     ..aInt64(7, _omitFieldNames ? '' : 'revision')
+    ..aOM<SupplierIntegration>(8, _omitFieldNames ? '' : 'integration',
+        subBuilder: SupplierIntegration.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -455,6 +459,17 @@ class ProductInventoryItem extends $pb.GeneratedMessage {
   $core.bool hasRevision() => $_has(6);
   @$pb.TagNumber(7)
   void clearRevision() => $_clearField(7);
+
+  @$pb.TagNumber(8)
+  SupplierIntegration get integration => $_getN(7);
+  @$pb.TagNumber(8)
+  set integration(SupplierIntegration value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasIntegration() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearIntegration() => $_clearField(8);
+  @$pb.TagNumber(8)
+  SupplierIntegration ensureIntegration() => $_ensure(7);
 }
 
 class ProductListing extends $pb.GeneratedMessage {
@@ -861,6 +876,7 @@ class CreateProductReq extends $pb.GeneratedMessage {
     ProductInfo? info,
     $fixnum.Int64? quantity,
     ProductFulfillmentSpec? fulfillment,
+    SupplierIntegration? integration,
   }) {
     final result = create();
     if (requestUuid != null) result.requestUuid = requestUuid;
@@ -868,6 +884,7 @@ class CreateProductReq extends $pb.GeneratedMessage {
     if (info != null) result.info = info;
     if (quantity != null) result.quantity = quantity;
     if (fulfillment != null) result.fulfillment = fulfillment;
+    if (integration != null) result.integration = integration;
     return result;
   }
 
@@ -891,6 +908,8 @@ class CreateProductReq extends $pb.GeneratedMessage {
     ..aInt64(4, _omitFieldNames ? '' : 'quantity')
     ..aOM<ProductFulfillmentSpec>(5, _omitFieldNames ? '' : 'fulfillment',
         subBuilder: ProductFulfillmentSpec.create)
+    ..aOM<SupplierIntegration>(6, _omitFieldNames ? '' : 'integration',
+        subBuilder: SupplierIntegration.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -960,6 +979,17 @@ class CreateProductReq extends $pb.GeneratedMessage {
   void clearFulfillment() => $_clearField(5);
   @$pb.TagNumber(5)
   ProductFulfillmentSpec ensureFulfillment() => $_ensure(4);
+
+  @$pb.TagNumber(6)
+  SupplierIntegration get integration => $_getN(5);
+  @$pb.TagNumber(6)
+  set integration(SupplierIntegration value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasIntegration() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearIntegration() => $_clearField(6);
+  @$pb.TagNumber(6)
+  SupplierIntegration ensureIntegration() => $_ensure(5);
 }
 
 class GetProductReq extends $pb.GeneratedMessage {
@@ -1838,12 +1868,14 @@ class ConfigureProductReq extends $pb.GeneratedMessage {
     $fixnum.Int64? revision,
     ProductInfo? info,
     ProductFulfillmentSpec? fulfillment,
+    SupplierIntegration? integration,
   }) {
     final result = create();
     if (id != null) result.id = id;
     if (revision != null) result.revision = revision;
     if (info != null) result.info = info;
     if (fulfillment != null) result.fulfillment = fulfillment;
+    if (integration != null) result.integration = integration;
     return result;
   }
 
@@ -1866,6 +1898,8 @@ class ConfigureProductReq extends $pb.GeneratedMessage {
         subBuilder: ProductInfo.create)
     ..aOM<ProductFulfillmentSpec>(4, _omitFieldNames ? '' : 'fulfillment',
         subBuilder: ProductFulfillmentSpec.create)
+    ..aOM<SupplierIntegration>(5, _omitFieldNames ? '' : 'integration',
+        subBuilder: SupplierIntegration.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1926,6 +1960,17 @@ class ConfigureProductReq extends $pb.GeneratedMessage {
   void clearFulfillment() => $_clearField(4);
   @$pb.TagNumber(4)
   ProductFulfillmentSpec ensureFulfillment() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  SupplierIntegration get integration => $_getN(4);
+  @$pb.TagNumber(5)
+  set integration(SupplierIntegration value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasIntegration() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearIntegration() => $_clearField(5);
+  @$pb.TagNumber(5)
+  SupplierIntegration ensureIntegration() => $_ensure(4);
 }
 
 class AdjustProductStockReq extends $pb.GeneratedMessage {
@@ -2017,6 +2062,270 @@ class AdjustProductStockReq extends $pb.GeneratedMessage {
   $core.bool hasReason() => $_has(3);
   @$pb.TagNumber(4)
   void clearReason() => $_clearField(4);
+}
+
+/// 逐商品绑定。批量上传的同一配置仅在批请求传一次，创建时分别绑定，后续独立修改。
+class SupplierIntegration extends $pb.GeneratedMessage {
+  factory SupplierIntegration({
+    $core.String? endpoint,
+    $core.String? authorization,
+    $core.bool? enabled,
+    $core.String? detailEndpoint,
+  }) {
+    final result = create();
+    if (endpoint != null) result.endpoint = endpoint;
+    if (authorization != null) result.authorization = authorization;
+    if (enabled != null) result.enabled = enabled;
+    if (detailEndpoint != null) result.detailEndpoint = detailEndpoint;
+    return result;
+  }
+
+  SupplierIntegration._();
+
+  factory SupplierIntegration.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SupplierIntegration.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SupplierIntegration',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(2, _omitFieldNames ? '' : 'endpoint')
+    ..aOS(3, _omitFieldNames ? '' : 'authorization')
+    ..aOB(4, _omitFieldNames ? '' : 'enabled')
+    ..aOS(6, _omitFieldNames ? '' : 'detailEndpoint')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SupplierIntegration clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SupplierIntegration copyWith(void Function(SupplierIntegration) updates) =>
+      super.copyWith((message) => updates(message as SupplierIntegration))
+          as SupplierIntegration;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SupplierIntegration create() => SupplierIntegration._();
+  @$core.override
+  SupplierIntegration createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static SupplierIntegration getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SupplierIntegration>(create);
+  static SupplierIntegration? _defaultInstance;
+
+  @$pb.TagNumber(2)
+  $core.String get endpoint => $_getSZ(0);
+  @$pb.TagNumber(2)
+  set endpoint($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(2)
+  $core.bool hasEndpoint() => $_has(0);
+  @$pb.TagNumber(2)
+  void clearEndpoint() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get authorization => $_getSZ(1);
+  @$pb.TagNumber(3)
+  set authorization($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(3)
+  $core.bool hasAuthorization() => $_has(1);
+  @$pb.TagNumber(3)
+  void clearAuthorization() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.bool get enabled => $_getBF(2);
+  @$pb.TagNumber(4)
+  set enabled($core.bool value) => $_setBool(2, value);
+  @$pb.TagNumber(4)
+  $core.bool hasEnabled() => $_has(2);
+  @$pb.TagNumber(4)
+  void clearEnabled() => $_clearField(4);
+
+  @$pb.TagNumber(6)
+  $core.String get detailEndpoint => $_getSZ(3);
+  @$pb.TagNumber(6)
+  set detailEndpoint($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(6)
+  $core.bool hasDetailEndpoint() => $_has(3);
+  @$pb.TagNumber(6)
+  void clearDetailEndpoint() => $_clearField(6);
+}
+
+class ProductUpload extends $pb.GeneratedMessage {
+  factory ProductUpload({
+    ProductInfo? info,
+    $fixnum.Int64? quantity,
+    ProductFulfillmentSpec? fulfillment,
+  }) {
+    final result = create();
+    if (info != null) result.info = info;
+    if (quantity != null) result.quantity = quantity;
+    if (fulfillment != null) result.fulfillment = fulfillment;
+    return result;
+  }
+
+  ProductUpload._();
+
+  factory ProductUpload.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ProductUpload.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ProductUpload',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOM<ProductInfo>(1, _omitFieldNames ? '' : 'info',
+        subBuilder: ProductInfo.create)
+    ..aInt64(2, _omitFieldNames ? '' : 'quantity')
+    ..aOM<ProductFulfillmentSpec>(3, _omitFieldNames ? '' : 'fulfillment',
+        subBuilder: ProductFulfillmentSpec.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductUpload clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductUpload copyWith(void Function(ProductUpload) updates) =>
+      super.copyWith((message) => updates(message as ProductUpload))
+          as ProductUpload;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ProductUpload create() => ProductUpload._();
+  @$core.override
+  ProductUpload createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ProductUpload getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ProductUpload>(create);
+  static ProductUpload? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  ProductInfo get info => $_getN(0);
+  @$pb.TagNumber(1)
+  set info(ProductInfo value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasInfo() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearInfo() => $_clearField(1);
+  @$pb.TagNumber(1)
+  ProductInfo ensureInfo() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get quantity => $_getI64(1);
+  @$pb.TagNumber(2)
+  set quantity($fixnum.Int64 value) => $_setInt64(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasQuantity() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearQuantity() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  ProductFulfillmentSpec get fulfillment => $_getN(2);
+  @$pb.TagNumber(3)
+  set fulfillment(ProductFulfillmentSpec value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasFulfillment() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearFulfillment() => $_clearField(3);
+  @$pb.TagNumber(3)
+  ProductFulfillmentSpec ensureFulfillment() => $_ensure(2);
+}
+
+class BatchCreateProductsReq extends $pb.GeneratedMessage {
+  factory BatchCreateProductsReq({
+    $core.String? requestUuid,
+    $core.String? stall,
+    SupplierIntegration? integration,
+    $core.Iterable<ProductUpload>? products,
+  }) {
+    final result = create();
+    if (requestUuid != null) result.requestUuid = requestUuid;
+    if (stall != null) result.stall = stall;
+    if (integration != null) result.integration = integration;
+    if (products != null) result.products.addAll(products);
+    return result;
+  }
+
+  BatchCreateProductsReq._();
+
+  factory BatchCreateProductsReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BatchCreateProductsReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BatchCreateProductsReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'requestUuid')
+    ..aOS(2, _omitFieldNames ? '' : 'stall')
+    ..aOM<SupplierIntegration>(3, _omitFieldNames ? '' : 'integration',
+        subBuilder: SupplierIntegration.create)
+    ..pPM<ProductUpload>(4, _omitFieldNames ? '' : 'products',
+        subBuilder: ProductUpload.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BatchCreateProductsReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BatchCreateProductsReq copyWith(
+          void Function(BatchCreateProductsReq) updates) =>
+      super.copyWith((message) => updates(message as BatchCreateProductsReq))
+          as BatchCreateProductsReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BatchCreateProductsReq create() => BatchCreateProductsReq._();
+  @$core.override
+  BatchCreateProductsReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static BatchCreateProductsReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BatchCreateProductsReq>(create);
+  static BatchCreateProductsReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get requestUuid => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set requestUuid($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRequestUuid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRequestUuid() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get stall => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set stall($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasStall() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearStall() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  SupplierIntegration get integration => $_getN(2);
+  @$pb.TagNumber(3)
+  set integration(SupplierIntegration value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasIntegration() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearIntegration() => $_clearField(3);
+  @$pb.TagNumber(3)
+  SupplierIntegration ensureIntegration() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  $pb.PbList<ProductUpload> get products => $_getList(3);
 }
 
 const $core.bool _omitFieldNames =

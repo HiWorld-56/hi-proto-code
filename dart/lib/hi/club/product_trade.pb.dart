@@ -18,7 +18,7 @@ import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $5;
 
 import '../common.pb.dart' as $3;
 import '../did/base.pb.dart' as $4;
-import 'product.pb.dart' as $1;
+import 'product.pb.dart' as $0;
 import 'product_trade.pbenum.dart';
 import 'settlement.pb.dart' as $2;
 
@@ -164,111 +164,6 @@ class ProductRecordQuery extends $pb.GeneratedMessage {
   $3.Pagination ensurePagination() => $_ensure(1);
 }
 
-class SupplierIntegration extends $pb.GeneratedMessage {
-  factory SupplierIntegration({
-    $3.Entity? stall,
-    $core.String? endpoint,
-    $core.String? authorization,
-    $core.bool? enabled,
-    $fixnum.Int64? revision,
-  }) {
-    final result = create();
-    if (stall != null) result.stall = stall;
-    if (endpoint != null) result.endpoint = endpoint;
-    if (authorization != null) result.authorization = authorization;
-    if (enabled != null) result.enabled = enabled;
-    if (revision != null) result.revision = revision;
-    return result;
-  }
-
-  SupplierIntegration._();
-
-  factory SupplierIntegration.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory SupplierIntegration.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'SupplierIntegration',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
-      createEmptyInstance: create)
-    ..aOM<$3.Entity>(1, _omitFieldNames ? '' : 'stall',
-        subBuilder: $3.Entity.create)
-    ..aOS(2, _omitFieldNames ? '' : 'endpoint')
-    ..aOS(3, _omitFieldNames ? '' : 'authorization')
-    ..aOB(4, _omitFieldNames ? '' : 'enabled')
-    ..aInt64(5, _omitFieldNames ? '' : 'revision')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SupplierIntegration clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SupplierIntegration copyWith(void Function(SupplierIntegration) updates) =>
-      super.copyWith((message) => updates(message as SupplierIntegration))
-          as SupplierIntegration;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static SupplierIntegration create() => SupplierIntegration._();
-  @$core.override
-  SupplierIntegration createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static SupplierIntegration getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<SupplierIntegration>(create);
-  static SupplierIntegration? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $3.Entity get stall => $_getN(0);
-  @$pb.TagNumber(1)
-  set stall($3.Entity value) => $_setField(1, value);
-  @$pb.TagNumber(1)
-  $core.bool hasStall() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearStall() => $_clearField(1);
-  @$pb.TagNumber(1)
-  $3.Entity ensureStall() => $_ensure(0);
-
-  @$pb.TagNumber(2)
-  $core.String get endpoint => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set endpoint($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasEndpoint() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearEndpoint() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.String get authorization => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set authorization($core.String value) => $_setString(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasAuthorization() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearAuthorization() => $_clearField(3);
-
-  @$pb.TagNumber(4)
-  $core.bool get enabled => $_getBF(3);
-  @$pb.TagNumber(4)
-  set enabled($core.bool value) => $_setBool(3, value);
-  @$pb.TagNumber(4)
-  $core.bool hasEnabled() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearEnabled() => $_clearField(4);
-
-  @$pb.TagNumber(5)
-  $fixnum.Int64 get revision => $_getI64(4);
-  @$pb.TagNumber(5)
-  set revision($fixnum.Int64 value) => $_setInt64(4, value);
-  @$pb.TagNumber(5)
-  $core.bool hasRevision() => $_has(4);
-  @$pb.TagNumber(5)
-  void clearRevision() => $_clearField(5);
-}
-
 class ProductDetail extends $pb.GeneratedMessage {
   factory ProductDetail({
     $core.String? productId,
@@ -360,7 +255,7 @@ class ProductDetailSection extends $pb.GeneratedMessage {
   factory ProductDetailSection({
     $core.String? title,
     $core.String? text,
-    $1.ProductImage? image,
+    $0.ProductImage? image,
     ProductSpecification? specification,
   }) {
     final result = create();
@@ -394,8 +289,8 @@ class ProductDetailSection extends $pb.GeneratedMessage {
     ..oo(0, [2, 3, 4])
     ..aOS(1, _omitFieldNames ? '' : 'title')
     ..aOS(2, _omitFieldNames ? '' : 'text')
-    ..aOM<$1.ProductImage>(3, _omitFieldNames ? '' : 'image',
-        subBuilder: $1.ProductImage.create)
+    ..aOM<$0.ProductImage>(3, _omitFieldNames ? '' : 'image',
+        subBuilder: $0.ProductImage.create)
     ..aOM<ProductSpecification>(4, _omitFieldNames ? '' : 'specification',
         subBuilder: ProductSpecification.create)
     ..hasRequiredFields = false;
@@ -448,15 +343,15 @@ class ProductDetailSection extends $pb.GeneratedMessage {
   void clearText() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $1.ProductImage get image => $_getN(2);
+  $0.ProductImage get image => $_getN(2);
   @$pb.TagNumber(3)
-  set image($1.ProductImage value) => $_setField(3, value);
+  set image($0.ProductImage value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasImage() => $_has(2);
   @$pb.TagNumber(3)
   void clearImage() => $_clearField(3);
   @$pb.TagNumber(3)
-  $1.ProductImage ensureImage() => $_ensure(2);
+  $0.ProductImage ensureImage() => $_ensure(2);
 
   @$pb.TagNumber(4)
   ProductSpecification get specification => $_getN(3);
@@ -541,7 +436,7 @@ class ProductDistributionAgreement extends $pb.GeneratedMessage {
     $core.String? id,
     $3.Entity? reseller,
     $3.Entity? supplier,
-    $1.Product? product,
+    $0.Product? product,
     $core.bool? active,
     $fixnum.Int64? createdAt,
   }) {
@@ -573,8 +468,8 @@ class ProductDistributionAgreement extends $pb.GeneratedMessage {
         subBuilder: $3.Entity.create)
     ..aOM<$3.Entity>(3, _omitFieldNames ? '' : 'supplier',
         subBuilder: $3.Entity.create)
-    ..aOM<$1.Product>(4, _omitFieldNames ? '' : 'product',
-        subBuilder: $1.Product.create)
+    ..aOM<$0.Product>(4, _omitFieldNames ? '' : 'product',
+        subBuilder: $0.Product.create)
     ..aOB(5, _omitFieldNames ? '' : 'active')
     ..aInt64(6, _omitFieldNames ? '' : 'createdAt')
     ..hasRequiredFields = false;
@@ -633,15 +528,15 @@ class ProductDistributionAgreement extends $pb.GeneratedMessage {
   $3.Entity ensureSupplier() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  $1.Product get product => $_getN(3);
+  $0.Product get product => $_getN(3);
   @$pb.TagNumber(4)
-  set product($1.Product value) => $_setField(4, value);
+  set product($0.Product value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasProduct() => $_has(3);
   @$pb.TagNumber(4)
   void clearProduct() => $_clearField(4);
   @$pb.TagNumber(4)
-  $1.Product ensureProduct() => $_ensure(3);
+  $0.Product ensureProduct() => $_ensure(3);
 
   @$pb.TagNumber(5)
   $core.bool get active => $_getBF(4);
@@ -1370,12 +1265,97 @@ class TerminalOrderSubmission extends $pb.GeneratedMessage {
   ProductDeliveryTarget ensureTarget() => $_ensure(4);
 }
 
+class DirectProductPurchaseReq extends $pb.GeneratedMessage {
+  factory DirectProductPurchaseReq({
+    $core.String? requestUuid,
+    ProductPurchaseInput? item,
+    ProductDeliveryTarget? target,
+  }) {
+    final result = create();
+    if (requestUuid != null) result.requestUuid = requestUuid;
+    if (item != null) result.item = item;
+    if (target != null) result.target = target;
+    return result;
+  }
+
+  DirectProductPurchaseReq._();
+
+  factory DirectProductPurchaseReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory DirectProductPurchaseReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DirectProductPurchaseReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'requestUuid')
+    ..aOM<ProductPurchaseInput>(2, _omitFieldNames ? '' : 'item',
+        subBuilder: ProductPurchaseInput.create)
+    ..aOM<ProductDeliveryTarget>(3, _omitFieldNames ? '' : 'target',
+        subBuilder: ProductDeliveryTarget.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DirectProductPurchaseReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DirectProductPurchaseReq copyWith(
+          void Function(DirectProductPurchaseReq) updates) =>
+      super.copyWith((message) => updates(message as DirectProductPurchaseReq))
+          as DirectProductPurchaseReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static DirectProductPurchaseReq create() => DirectProductPurchaseReq._();
+  @$core.override
+  DirectProductPurchaseReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static DirectProductPurchaseReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DirectProductPurchaseReq>(create);
+  static DirectProductPurchaseReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get requestUuid => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set requestUuid($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRequestUuid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRequestUuid() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  ProductPurchaseInput get item => $_getN(1);
+  @$pb.TagNumber(2)
+  set item(ProductPurchaseInput value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasItem() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearItem() => $_clearField(2);
+  @$pb.TagNumber(2)
+  ProductPurchaseInput ensureItem() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  ProductDeliveryTarget get target => $_getN(2);
+  @$pb.TagNumber(3)
+  set target(ProductDeliveryTarget value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasTarget() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearTarget() => $_clearField(3);
+  @$pb.TagNumber(3)
+  ProductDeliveryTarget ensureTarget() => $_ensure(2);
+}
+
 class ProductPurchaseLine extends $pb.GeneratedMessage {
   factory ProductPurchaseLine({
-    $1.Product? product,
+    $0.Product? product,
     $fixnum.Int64? quantity,
     $4.CoinAmount? total,
-    $1.ProductFulfillmentSpec? fulfillment,
+    $0.ProductFulfillmentSpec? fulfillment,
     ProductDetail? detail,
     $fixnum.Int64? supplyRevision,
   }) {
@@ -1402,13 +1382,13 @@ class ProductPurchaseLine extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'ProductPurchaseLine',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOM<$1.Product>(1, _omitFieldNames ? '' : 'product',
-        subBuilder: $1.Product.create)
+    ..aOM<$0.Product>(1, _omitFieldNames ? '' : 'product',
+        subBuilder: $0.Product.create)
     ..aInt64(2, _omitFieldNames ? '' : 'quantity')
     ..aOM<$4.CoinAmount>(3, _omitFieldNames ? '' : 'total',
         subBuilder: $4.CoinAmount.create)
-    ..aOM<$1.ProductFulfillmentSpec>(4, _omitFieldNames ? '' : 'fulfillment',
-        subBuilder: $1.ProductFulfillmentSpec.create)
+    ..aOM<$0.ProductFulfillmentSpec>(4, _omitFieldNames ? '' : 'fulfillment',
+        subBuilder: $0.ProductFulfillmentSpec.create)
     ..aOM<ProductDetail>(5, _omitFieldNames ? '' : 'detail',
         subBuilder: ProductDetail.create)
     ..aInt64(6, _omitFieldNames ? '' : 'supplyRevision')
@@ -1434,15 +1414,15 @@ class ProductPurchaseLine extends $pb.GeneratedMessage {
   static ProductPurchaseLine? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $1.Product get product => $_getN(0);
+  $0.Product get product => $_getN(0);
   @$pb.TagNumber(1)
-  set product($1.Product value) => $_setField(1, value);
+  set product($0.Product value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasProduct() => $_has(0);
   @$pb.TagNumber(1)
   void clearProduct() => $_clearField(1);
   @$pb.TagNumber(1)
-  $1.Product ensureProduct() => $_ensure(0);
+  $0.Product ensureProduct() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $fixnum.Int64 get quantity => $_getI64(1);
@@ -1465,15 +1445,15 @@ class ProductPurchaseLine extends $pb.GeneratedMessage {
   $4.CoinAmount ensureTotal() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  $1.ProductFulfillmentSpec get fulfillment => $_getN(3);
+  $0.ProductFulfillmentSpec get fulfillment => $_getN(3);
   @$pb.TagNumber(4)
-  set fulfillment($1.ProductFulfillmentSpec value) => $_setField(4, value);
+  set fulfillment($0.ProductFulfillmentSpec value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasFulfillment() => $_has(3);
   @$pb.TagNumber(4)
   void clearFulfillment() => $_clearField(4);
   @$pb.TagNumber(4)
-  $1.ProductFulfillmentSpec ensureFulfillment() => $_ensure(3);
+  $0.ProductFulfillmentSpec ensureFulfillment() => $_ensure(3);
 
   @$pb.TagNumber(5)
   ProductDetail get detail => $_getN(4);
@@ -1499,7 +1479,7 @@ class ProductPurchaseLine extends $pb.GeneratedMessage {
 class ProductPurchaseOrder extends $pb.GeneratedMessage {
   factory ProductPurchaseOrder({
     $core.String? id,
-    $3.Entity? reseller,
+    $3.Entity? buyer,
     $3.Entity? supplier,
     TerminalOrderRef? source,
     $core.String? sourceLineId,
@@ -1513,10 +1493,11 @@ class ProductPurchaseOrder extends $pb.GeneratedMessage {
     $fixnum.Int64? revision,
     $2.SettlementPayment? refund,
     $core.String? refundReason,
+    ProductPurchaseChannel? channel,
   }) {
     final result = create();
     if (id != null) result.id = id;
-    if (reseller != null) result.reseller = reseller;
+    if (buyer != null) result.buyer = buyer;
     if (supplier != null) result.supplier = supplier;
     if (source != null) result.source = source;
     if (sourceLineId != null) result.sourceLineId = sourceLineId;
@@ -1530,6 +1511,7 @@ class ProductPurchaseOrder extends $pb.GeneratedMessage {
     if (revision != null) result.revision = revision;
     if (refund != null) result.refund = refund;
     if (refundReason != null) result.refundReason = refundReason;
+    if (channel != null) result.channel = channel;
     return result;
   }
 
@@ -1547,7 +1529,7 @@ class ProductPurchaseOrder extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'id')
-    ..aOM<$3.Entity>(2, _omitFieldNames ? '' : 'reseller',
+    ..aOM<$3.Entity>(2, _omitFieldNames ? '' : 'buyer',
         subBuilder: $3.Entity.create)
     ..aOM<$3.Entity>(3, _omitFieldNames ? '' : 'supplier',
         subBuilder: $3.Entity.create)
@@ -1570,6 +1552,8 @@ class ProductPurchaseOrder extends $pb.GeneratedMessage {
     ..aOM<$2.SettlementPayment>(14, _omitFieldNames ? '' : 'refund',
         subBuilder: $2.SettlementPayment.create)
     ..aOS(15, _omitFieldNames ? '' : 'refundReason')
+    ..aE<ProductPurchaseChannel>(16, _omitFieldNames ? '' : 'channel',
+        enumValues: ProductPurchaseChannel.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1601,15 +1585,15 @@ class ProductPurchaseOrder extends $pb.GeneratedMessage {
   void clearId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $3.Entity get reseller => $_getN(1);
+  $3.Entity get buyer => $_getN(1);
   @$pb.TagNumber(2)
-  set reseller($3.Entity value) => $_setField(2, value);
+  set buyer($3.Entity value) => $_setField(2, value);
   @$pb.TagNumber(2)
-  $core.bool hasReseller() => $_has(1);
+  $core.bool hasBuyer() => $_has(1);
   @$pb.TagNumber(2)
-  void clearReseller() => $_clearField(2);
+  void clearBuyer() => $_clearField(2);
   @$pb.TagNumber(2)
-  $3.Entity ensureReseller() => $_ensure(1);
+  $3.Entity ensureBuyer() => $_ensure(1);
 
   @$pb.TagNumber(3)
   $3.Entity get supplier => $_getN(2);
@@ -1741,6 +1725,15 @@ class ProductPurchaseOrder extends $pb.GeneratedMessage {
   $core.bool hasRefundReason() => $_has(14);
   @$pb.TagNumber(15)
   void clearRefundReason() => $_clearField(15);
+
+  @$pb.TagNumber(16)
+  ProductPurchaseChannel get channel => $_getN(15);
+  @$pb.TagNumber(16)
+  set channel(ProductPurchaseChannel value) => $_setField(16, value);
+  @$pb.TagNumber(16)
+  $core.bool hasChannel() => $_has(15);
+  @$pb.TagNumber(16)
+  void clearChannel() => $_clearField(16);
 }
 
 class ProductPurchaseGroup extends $pb.GeneratedMessage {
@@ -2575,7 +2568,7 @@ class ProductStockMovement extends $pb.GeneratedMessage {
     $core.String? businessId,
     $core.String? kind,
     $fixnum.Int64? delta,
-    $1.ProductStockBalance? balance,
+    $0.ProductStockBalance? balance,
     $fixnum.Int64? createdAt,
     $core.String? reason,
   }) {
@@ -2609,8 +2602,8 @@ class ProductStockMovement extends $pb.GeneratedMessage {
     ..aOS(3, _omitFieldNames ? '' : 'businessId')
     ..aOS(4, _omitFieldNames ? '' : 'kind')
     ..aInt64(5, _omitFieldNames ? '' : 'delta')
-    ..aOM<$1.ProductStockBalance>(6, _omitFieldNames ? '' : 'balance',
-        subBuilder: $1.ProductStockBalance.create)
+    ..aOM<$0.ProductStockBalance>(6, _omitFieldNames ? '' : 'balance',
+        subBuilder: $0.ProductStockBalance.create)
     ..aInt64(7, _omitFieldNames ? '' : 'createdAt')
     ..aOS(8, _omitFieldNames ? '' : 'reason')
     ..hasRequiredFields = false;
@@ -2680,15 +2673,15 @@ class ProductStockMovement extends $pb.GeneratedMessage {
   void clearDelta() => $_clearField(5);
 
   @$pb.TagNumber(6)
-  $1.ProductStockBalance get balance => $_getN(5);
+  $0.ProductStockBalance get balance => $_getN(5);
   @$pb.TagNumber(6)
-  set balance($1.ProductStockBalance value) => $_setField(6, value);
+  set balance($0.ProductStockBalance value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasBalance() => $_has(5);
   @$pb.TagNumber(6)
   void clearBalance() => $_clearField(6);
   @$pb.TagNumber(6)
-  $1.ProductStockBalance ensureBalance() => $_ensure(5);
+  $0.ProductStockBalance ensureBalance() => $_ensure(5);
 
   @$pb.TagNumber(7)
   $fixnum.Int64 get createdAt => $_getI64(6);
@@ -2775,7 +2768,6 @@ class ListProductStockMovementsResp extends $pb.GeneratedMessage {
 
 enum SupplierRequest_Operation {
   productRegistered,
-  getDetail,
   fulfillOrder,
   getFulfillment,
   notSet
@@ -2788,8 +2780,7 @@ class SupplierRequest extends $pb.GeneratedMessage {
   factory SupplierRequest({
     $core.String? requestId,
     $fixnum.Int64? createdAt,
-    $1.Product? productRegistered,
-    $1.GetProductReq? getDetail,
+    $0.Product? productRegistered,
     ProductPurchaseOrder? fulfillOrder,
     ProductPurchaseQuery? getFulfillment,
   }) {
@@ -2797,7 +2788,6 @@ class SupplierRequest extends $pb.GeneratedMessage {
     if (requestId != null) result.requestId = requestId;
     if (createdAt != null) result.createdAt = createdAt;
     if (productRegistered != null) result.productRegistered = productRegistered;
-    if (getDetail != null) result.getDetail = getDetail;
     if (fulfillOrder != null) result.fulfillOrder = fulfillOrder;
     if (getFulfillment != null) result.getFulfillment = getFulfillment;
     return result;
@@ -2815,7 +2805,6 @@ class SupplierRequest extends $pb.GeneratedMessage {
   static const $core.Map<$core.int, SupplierRequest_Operation>
       _SupplierRequest_OperationByTag = {
     3: SupplierRequest_Operation.productRegistered,
-    4: SupplierRequest_Operation.getDetail,
     5: SupplierRequest_Operation.fulfillOrder,
     6: SupplierRequest_Operation.getFulfillment,
     0: SupplierRequest_Operation.notSet
@@ -2824,13 +2813,11 @@ class SupplierRequest extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'SupplierRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..oo(0, [3, 4, 5, 6])
+    ..oo(0, [3, 5, 6])
     ..aOS(1, _omitFieldNames ? '' : 'requestId')
     ..aInt64(2, _omitFieldNames ? '' : 'createdAt')
-    ..aOM<$1.Product>(3, _omitFieldNames ? '' : 'productRegistered',
-        subBuilder: $1.Product.create)
-    ..aOM<$1.GetProductReq>(4, _omitFieldNames ? '' : 'getDetail',
-        subBuilder: $1.GetProductReq.create)
+    ..aOM<$0.Product>(3, _omitFieldNames ? '' : 'productRegistered',
+        subBuilder: $0.Product.create)
     ..aOM<ProductPurchaseOrder>(5, _omitFieldNames ? '' : 'fulfillOrder',
         subBuilder: ProductPurchaseOrder.create)
     ..aOM<ProductPurchaseQuery>(6, _omitFieldNames ? '' : 'getFulfillment',
@@ -2857,13 +2844,11 @@ class SupplierRequest extends $pb.GeneratedMessage {
   static SupplierRequest? _defaultInstance;
 
   @$pb.TagNumber(3)
-  @$pb.TagNumber(4)
   @$pb.TagNumber(5)
   @$pb.TagNumber(6)
   SupplierRequest_Operation whichOperation() =>
       _SupplierRequest_OperationByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(3)
-  @$pb.TagNumber(4)
   @$pb.TagNumber(5)
   @$pb.TagNumber(6)
   void clearOperation() => $_clearField($_whichOneof(0));
@@ -2887,62 +2872,49 @@ class SupplierRequest extends $pb.GeneratedMessage {
   void clearCreatedAt() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $1.Product get productRegistered => $_getN(2);
+  $0.Product get productRegistered => $_getN(2);
   @$pb.TagNumber(3)
-  set productRegistered($1.Product value) => $_setField(3, value);
+  set productRegistered($0.Product value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasProductRegistered() => $_has(2);
   @$pb.TagNumber(3)
   void clearProductRegistered() => $_clearField(3);
   @$pb.TagNumber(3)
-  $1.Product ensureProductRegistered() => $_ensure(2);
-
-  @$pb.TagNumber(4)
-  $1.GetProductReq get getDetail => $_getN(3);
-  @$pb.TagNumber(4)
-  set getDetail($1.GetProductReq value) => $_setField(4, value);
-  @$pb.TagNumber(4)
-  $core.bool hasGetDetail() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearGetDetail() => $_clearField(4);
-  @$pb.TagNumber(4)
-  $1.GetProductReq ensureGetDetail() => $_ensure(3);
+  $0.Product ensureProductRegistered() => $_ensure(2);
 
   @$pb.TagNumber(5)
-  ProductPurchaseOrder get fulfillOrder => $_getN(4);
+  ProductPurchaseOrder get fulfillOrder => $_getN(3);
   @$pb.TagNumber(5)
   set fulfillOrder(ProductPurchaseOrder value) => $_setField(5, value);
   @$pb.TagNumber(5)
-  $core.bool hasFulfillOrder() => $_has(4);
+  $core.bool hasFulfillOrder() => $_has(3);
   @$pb.TagNumber(5)
   void clearFulfillOrder() => $_clearField(5);
   @$pb.TagNumber(5)
-  ProductPurchaseOrder ensureFulfillOrder() => $_ensure(4);
+  ProductPurchaseOrder ensureFulfillOrder() => $_ensure(3);
 
   @$pb.TagNumber(6)
-  ProductPurchaseQuery get getFulfillment => $_getN(5);
+  ProductPurchaseQuery get getFulfillment => $_getN(4);
   @$pb.TagNumber(6)
   set getFulfillment(ProductPurchaseQuery value) => $_setField(6, value);
   @$pb.TagNumber(6)
-  $core.bool hasGetFulfillment() => $_has(5);
+  $core.bool hasGetFulfillment() => $_has(4);
   @$pb.TagNumber(6)
   void clearGetFulfillment() => $_clearField(6);
   @$pb.TagNumber(6)
-  ProductPurchaseQuery ensureGetFulfillment() => $_ensure(5);
+  ProductPurchaseQuery ensureGetFulfillment() => $_ensure(4);
 }
 
-enum SupplierResponse_Result { detail, fulfillment, acknowledged, notSet }
+enum SupplierResponse_Result { fulfillment, acknowledged, notSet }
 
 class SupplierResponse extends $pb.GeneratedMessage {
   factory SupplierResponse({
     $core.String? requestId,
-    ProductDetail? detail,
     ProductFulfillmentReport? fulfillment,
     $5.Empty? acknowledged,
   }) {
     final result = create();
     if (requestId != null) result.requestId = requestId;
-    if (detail != null) result.detail = detail;
     if (fulfillment != null) result.fulfillment = fulfillment;
     if (acknowledged != null) result.acknowledged = acknowledged;
     return result;
@@ -2959,7 +2931,6 @@ class SupplierResponse extends $pb.GeneratedMessage {
 
   static const $core.Map<$core.int, SupplierResponse_Result>
       _SupplierResponse_ResultByTag = {
-    2: SupplierResponse_Result.detail,
     3: SupplierResponse_Result.fulfillment,
     4: SupplierResponse_Result.acknowledged,
     0: SupplierResponse_Result.notSet
@@ -2968,10 +2939,8 @@ class SupplierResponse extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'SupplierResponse',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3, 4])
+    ..oo(0, [3, 4])
     ..aOS(1, _omitFieldNames ? '' : 'requestId')
-    ..aOM<ProductDetail>(2, _omitFieldNames ? '' : 'detail',
-        subBuilder: ProductDetail.create)
     ..aOM<ProductFulfillmentReport>(3, _omitFieldNames ? '' : 'fulfillment',
         subBuilder: ProductFulfillmentReport.create)
     ..aOM<$5.Empty>(4, _omitFieldNames ? '' : 'acknowledged',
@@ -2997,12 +2966,10 @@ class SupplierResponse extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<SupplierResponse>(create);
   static SupplierResponse? _defaultInstance;
 
-  @$pb.TagNumber(2)
   @$pb.TagNumber(3)
   @$pb.TagNumber(4)
   SupplierResponse_Result whichResult() =>
       _SupplierResponse_ResultByTag[$_whichOneof(0)]!;
-  @$pb.TagNumber(2)
   @$pb.TagNumber(3)
   @$pb.TagNumber(4)
   void clearResult() => $_clearField($_whichOneof(0));
@@ -3016,38 +2983,27 @@ class SupplierResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearRequestId() => $_clearField(1);
 
-  @$pb.TagNumber(2)
-  ProductDetail get detail => $_getN(1);
-  @$pb.TagNumber(2)
-  set detail(ProductDetail value) => $_setField(2, value);
-  @$pb.TagNumber(2)
-  $core.bool hasDetail() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearDetail() => $_clearField(2);
-  @$pb.TagNumber(2)
-  ProductDetail ensureDetail() => $_ensure(1);
-
   @$pb.TagNumber(3)
-  ProductFulfillmentReport get fulfillment => $_getN(2);
+  ProductFulfillmentReport get fulfillment => $_getN(1);
   @$pb.TagNumber(3)
   set fulfillment(ProductFulfillmentReport value) => $_setField(3, value);
   @$pb.TagNumber(3)
-  $core.bool hasFulfillment() => $_has(2);
+  $core.bool hasFulfillment() => $_has(1);
   @$pb.TagNumber(3)
   void clearFulfillment() => $_clearField(3);
   @$pb.TagNumber(3)
-  ProductFulfillmentReport ensureFulfillment() => $_ensure(2);
+  ProductFulfillmentReport ensureFulfillment() => $_ensure(1);
 
   @$pb.TagNumber(4)
-  $5.Empty get acknowledged => $_getN(3);
+  $5.Empty get acknowledged => $_getN(2);
   @$pb.TagNumber(4)
   set acknowledged($5.Empty value) => $_setField(4, value);
   @$pb.TagNumber(4)
-  $core.bool hasAcknowledged() => $_has(3);
+  $core.bool hasAcknowledged() => $_has(2);
   @$pb.TagNumber(4)
   void clearAcknowledged() => $_clearField(4);
   @$pb.TagNumber(4)
-  $5.Empty ensureAcknowledged() => $_ensure(3);
+  $5.Empty ensureAcknowledged() => $_ensure(2);
 }
 
 class ProductOrderRecordsReq extends $pb.GeneratedMessage {

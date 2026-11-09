@@ -15,6 +15,22 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use productPurchaseChannelDescriptor instead')
+const ProductPurchaseChannel$json = {
+  '1': 'ProductPurchaseChannel',
+  '2': [
+    {'1': 'PRODUCT_PURCHASE_CHANNEL_UNSPECIFIED', '2': 0},
+    {'1': 'PRODUCT_PURCHASE_CHANNEL_DISTRIBUTION', '2': 1},
+    {'1': 'PRODUCT_PURCHASE_CHANNEL_DIRECT', '2': 2},
+  ],
+};
+
+/// Descriptor for `ProductPurchaseChannel`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List productPurchaseChannelDescriptor = $convert.base64Decode(
+    'ChZQcm9kdWN0UHVyY2hhc2VDaGFubmVsEigKJFBST0RVQ1RfUFVSQ0hBU0VfQ0hBTk5FTF9VTl'
+    'NQRUNJRklFRBAAEikKJVBST0RVQ1RfUFVSQ0hBU0VfQ0hBTk5FTF9ESVNUUklCVVRJT04QARIj'
+    'Ch9QUk9EVUNUX1BVUkNIQVNFX0NIQU5ORUxfRElSRUNUEAI=');
+
 @$core.Deprecated('Use productPurchaseStatusDescriptor instead')
 const ProductPurchaseStatus$json = {
   '1': 'ProductPurchaseStatus',
@@ -121,78 +137,6 @@ final $typed_data.Uint8List productRecordQueryDescriptor = $convert.base64Decode
     'ChJQcm9kdWN0UmVjb3JkUXVlcnkSLgoKcHJvZHVjdF9pZBgBIAEoCUIKukgHyAEBcgIQAUgAUg'
     'lwcm9kdWN0SWSIAQESLgoKcGFnaW5hdGlvbhgCIAEoCzIOLmhpLlBhZ2luYXRpb25SCnBhZ2lu'
     'YXRpb25CDQoLX3Byb2R1Y3RfaWQ=');
-
-@$core.Deprecated('Use supplierIntegrationDescriptor instead')
-const SupplierIntegration$json = {
-  '1': 'SupplierIntegration',
-  '2': [
-    {
-      '1': 'stall',
-      '3': 1,
-      '4': 1,
-      '5': 11,
-      '6': '.hi.Entity',
-      '8': {},
-      '10': 'stall'
-    },
-    {
-      '1': 'endpoint',
-      '3': 2,
-      '4': 1,
-      '5': 9,
-      '8': {},
-      '9': 0,
-      '10': 'endpoint',
-      '17': true
-    },
-    {
-      '1': 'authorization',
-      '3': 3,
-      '4': 1,
-      '5': 9,
-      '8': {},
-      '9': 1,
-      '10': 'authorization',
-      '17': true
-    },
-    {
-      '1': 'enabled',
-      '3': 4,
-      '4': 1,
-      '5': 8,
-      '8': {},
-      '9': 2,
-      '10': 'enabled',
-      '17': true
-    },
-    {
-      '1': 'revision',
-      '3': 5,
-      '4': 1,
-      '5': 3,
-      '8': {},
-      '9': 3,
-      '10': 'revision',
-      '17': true
-    },
-  ],
-  '7': {},
-  '8': [
-    {'1': '_endpoint'},
-    {'1': '_authorization'},
-    {'1': '_enabled'},
-    {'1': '_revision'},
-  ],
-};
-
-/// Descriptor for `SupplierIntegration`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List supplierIntegrationDescriptor = $convert.base64Decode(
-    'ChNTdXBwbGllckludGVncmF0aW9uEiYKBXN0YWxsGAEgASgLMgouaGkuRW50aXR5QgSQtRgDUg'
-    'VzdGFsbBIlCghlbmRwb2ludBgCIAEoCUIEkLUYA0gAUghlbmRwb2ludIgBARIvCg1hdXRob3Jp'
-    'emF0aW9uGAMgASgJQgSQtRgDSAFSDWF1dGhvcml6YXRpb26IAQESIwoHZW5hYmxlZBgEIAEoCE'
-    'IEkLUYA0gCUgdlbmFibGVkiAEBEiUKCHJldmlzaW9uGAUgASgDQgSQtRgDSANSCHJldmlzaW9u'
-    'iAEBOgSYtRgDQgsKCV9lbmRwb2ludEIQCg5fYXV0aG9yaXphdGlvbkIKCghfZW5hYmxlZEILCg'
-    'lfcmV2aXNpb24=');
 
 @$core.Deprecated('Use productDetailDescriptor instead')
 const ProductDetail$json = {
@@ -838,6 +782,51 @@ final $typed_data.Uint8List terminalOrderSubmissionDescriptor = $convert.base64D
     'R1Y3REZWxpdmVyeVRhcmdldEIGukgDyAEBUgZ0YXJnZXRCDwoNX3JlcXVlc3RfdXVpZEILCglf'
     'cmVzZWxsZXI=');
 
+@$core.Deprecated('Use directProductPurchaseReqDescriptor instead')
+const DirectProductPurchaseReq$json = {
+  '1': 'DirectProductPurchaseReq',
+  '2': [
+    {
+      '1': 'request_uuid',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'requestUuid',
+      '17': true
+    },
+    {
+      '1': 'item',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductPurchaseInput',
+      '8': {},
+      '10': 'item'
+    },
+    {
+      '1': 'target',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductDeliveryTarget',
+      '8': {},
+      '10': 'target'
+    },
+  ],
+  '8': [
+    {'1': '_request_uuid'},
+  ],
+};
+
+/// Descriptor for `DirectProductPurchaseReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List directProductPurchaseReqDescriptor = $convert.base64Decode(
+    'ChhEaXJlY3RQcm9kdWN0UHVyY2hhc2VSZXESMwoMcmVxdWVzdF91dWlkGAEgASgJQgu6SAjIAQ'
+    'FyA7ABAUgAUgtyZXF1ZXN0VXVpZIgBARI5CgRpdGVtGAIgASgLMh0uaGkuY2x1Yi5Qcm9kdWN0'
+    'UHVyY2hhc2VJbnB1dEIGukgDyAEBUgRpdGVtEj4KBnRhcmdldBgDIAEoCzIeLmhpLmNsdWIuUH'
+    'JvZHVjdERlbGl2ZXJ5VGFyZ2V0Qga6SAPIAQFSBnRhcmdldEIPCg1fcmVxdWVzdF91dWlk');
+
 @$core.Deprecated('Use productPurchaseLineDescriptor instead')
 const ProductPurchaseLine$json = {
   '1': 'ProductPurchaseLine',
@@ -931,13 +920,13 @@ const ProductPurchaseOrder$json = {
       '17': true
     },
     {
-      '1': 'reseller',
+      '1': 'buyer',
       '3': 2,
       '4': 1,
       '5': 11,
       '6': '.hi.Entity',
       '8': {},
-      '10': 'reseller'
+      '10': 'buyer'
     },
     {
       '1': 'supplier',
@@ -1063,6 +1052,17 @@ const ProductPurchaseOrder$json = {
       '10': 'refundReason',
       '17': true
     },
+    {
+      '1': 'channel',
+      '3': 16,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.club.ProductPurchaseChannel',
+      '8': {},
+      '9': 7,
+      '10': 'channel',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -1073,28 +1073,30 @@ const ProductPurchaseOrder$json = {
     {'1': '_expire_at'},
     {'1': '_revision'},
     {'1': '_refund_reason'},
+    {'1': '_channel'},
   ],
 };
 
 /// Descriptor for `ProductPurchaseOrder`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List productPurchaseOrderDescriptor = $convert.base64Decode(
-    'ChRQcm9kdWN0UHVyY2hhc2VPcmRlchIZCgJpZBgBIAEoCUIEkLUYAkgAUgJpZIgBARIsCghyZX'
-    'NlbGxlchgCIAEoCzIKLmhpLkVudGl0eUIEkLUYAlIIcmVzZWxsZXISLAoIc3VwcGxpZXIYAyAB'
-    'KAsyCi5oaS5FbnRpdHlCBJC1GAJSCHN1cHBsaWVyEjcKBnNvdXJjZRgEIAEoCzIZLmhpLmNsdW'
-    'IuVGVybWluYWxPcmRlclJlZkIEkLUYAlIGc291cmNlEi8KDnNvdXJjZV9saW5lX2lkGAUgASgJ'
-    'QgSQtRgCSAFSDHNvdXJjZUxpbmVJZIgBARI2CgRsaW5lGAYgASgLMhwuaGkuY2x1Yi5Qcm9kdW'
-    'N0UHVyY2hhc2VMaW5lQgSQtRgCUgRsaW5lEjwKBnRhcmdldBgHIAEoCzIeLmhpLmNsdWIuUHJv'
-    'ZHVjdERlbGl2ZXJ5VGFyZ2V0QgSQtRgCUgZ0YXJnZXQSQQoGc3RhdHVzGAggASgOMh4uaGkuY2'
-    'x1Yi5Qcm9kdWN0UHVyY2hhc2VTdGF0dXNCBJC1GAJIAlIGc3RhdHVziAEBEjoKB3BheW1lbnQY'
-    'CSABKAsyGi5oaS5jbHViLlNldHRsZW1lbnRQYXltZW50QgSQtRgCUgdwYXltZW50EkMKC2Z1bG'
-    'ZpbGxtZW50GAogASgLMhsuaGkuY2x1Yi5Qcm9kdWN0RnVsZmlsbG1lbnRCBJC1GAJSC2Z1bGZp'
-    'bGxtZW50EigKCmNyZWF0ZWRfYXQYCyABKANCBJC1GAJIA1IJY3JlYXRlZEF0iAEBEiYKCWV4cG'
-    'lyZV9hdBgMIAEoA0IEkLUYAkgEUghleHBpcmVBdIgBARIlCghyZXZpc2lvbhgNIAEoA0IEkLUY'
-    'AkgFUghyZXZpc2lvbogBARI4CgZyZWZ1bmQYDiABKAsyGi5oaS5jbHViLlNldHRsZW1lbnRQYX'
-    'ltZW50QgSQtRgCUgZyZWZ1bmQSLgoNcmVmdW5kX3JlYXNvbhgPIAEoCUIEkLUYAkgGUgxyZWZ1'
-    'bmRSZWFzb26IAQE6BJi1GAJCBQoDX2lkQhEKD19zb3VyY2VfbGluZV9pZEIJCgdfc3RhdHVzQg'
-    '0KC19jcmVhdGVkX2F0QgwKCl9leHBpcmVfYXRCCwoJX3JldmlzaW9uQhAKDl9yZWZ1bmRfcmVh'
-    'c29u');
+    'ChRQcm9kdWN0UHVyY2hhc2VPcmRlchIZCgJpZBgBIAEoCUIEkLUYAkgAUgJpZIgBARImCgVidX'
+    'llchgCIAEoCzIKLmhpLkVudGl0eUIEkLUYAlIFYnV5ZXISLAoIc3VwcGxpZXIYAyABKAsyCi5o'
+    'aS5FbnRpdHlCBJC1GAJSCHN1cHBsaWVyEjcKBnNvdXJjZRgEIAEoCzIZLmhpLmNsdWIuVGVybW'
+    'luYWxPcmRlclJlZkIEkLUYAlIGc291cmNlEi8KDnNvdXJjZV9saW5lX2lkGAUgASgJQgSQtRgC'
+    'SAFSDHNvdXJjZUxpbmVJZIgBARI2CgRsaW5lGAYgASgLMhwuaGkuY2x1Yi5Qcm9kdWN0UHVyY2'
+    'hhc2VMaW5lQgSQtRgCUgRsaW5lEjwKBnRhcmdldBgHIAEoCzIeLmhpLmNsdWIuUHJvZHVjdERl'
+    'bGl2ZXJ5VGFyZ2V0QgSQtRgCUgZ0YXJnZXQSQQoGc3RhdHVzGAggASgOMh4uaGkuY2x1Yi5Qcm'
+    '9kdWN0UHVyY2hhc2VTdGF0dXNCBJC1GAJIAlIGc3RhdHVziAEBEjoKB3BheW1lbnQYCSABKAsy'
+    'Gi5oaS5jbHViLlNldHRsZW1lbnRQYXltZW50QgSQtRgCUgdwYXltZW50EkMKC2Z1bGZpbGxtZW'
+    '50GAogASgLMhsuaGkuY2x1Yi5Qcm9kdWN0RnVsZmlsbG1lbnRCBJC1GAJSC2Z1bGZpbGxtZW50'
+    'EigKCmNyZWF0ZWRfYXQYCyABKANCBJC1GAJIA1IJY3JlYXRlZEF0iAEBEiYKCWV4cGlyZV9hdB'
+    'gMIAEoA0IEkLUYAkgEUghleHBpcmVBdIgBARIlCghyZXZpc2lvbhgNIAEoA0IEkLUYAkgFUghy'
+    'ZXZpc2lvbogBARI4CgZyZWZ1bmQYDiABKAsyGi5oaS5jbHViLlNldHRsZW1lbnRQYXltZW50Qg'
+    'SQtRgCUgZyZWZ1bmQSLgoNcmVmdW5kX3JlYXNvbhgPIAEoCUIEkLUYAkgGUgxyZWZ1bmRSZWFz'
+    'b26IAQESRAoHY2hhbm5lbBgQIAEoDjIfLmhpLmNsdWIuUHJvZHVjdFB1cmNoYXNlQ2hhbm5lbE'
+    'IEkLUYAkgHUgdjaGFubmVsiAEBOgSYtRgCQgUKA19pZEIRCg9fc291cmNlX2xpbmVfaWRCCQoH'
+    'X3N0YXR1c0INCgtfY3JlYXRlZF9hdEIMCgpfZXhwaXJlX2F0QgsKCV9yZXZpc2lvbkIQCg5fcm'
+    'VmdW5kX3JlYXNvbkIKCghfY2hhbm5lbA==');
 
 @$core.Deprecated('Use productPurchaseGroupDescriptor instead')
 const ProductPurchaseGroup$json = {
@@ -1730,15 +1732,6 @@ const SupplierRequest$json = {
       '10': 'productRegistered'
     },
     {
-      '1': 'get_detail',
-      '3': 4,
-      '4': 1,
-      '5': 11,
-      '6': '.hi.club.GetProductReq',
-      '9': 0,
-      '10': 'getDetail'
-    },
-    {
       '1': 'fulfill_order',
       '3': 5,
       '4': 1,
@@ -1768,12 +1761,11 @@ const SupplierRequest$json = {
 final $typed_data.Uint8List supplierRequestDescriptor = $convert.base64Decode(
     'Cg9TdXBwbGllclJlcXVlc3QSIgoKcmVxdWVzdF9pZBgBIAEoCUgBUglyZXF1ZXN0SWSIAQESIg'
     'oKY3JlYXRlZF9hdBgCIAEoA0gCUgljcmVhdGVkQXSIAQESQQoScHJvZHVjdF9yZWdpc3RlcmVk'
-    'GAMgASgLMhAuaGkuY2x1Yi5Qcm9kdWN0SABSEXByb2R1Y3RSZWdpc3RlcmVkEjcKCmdldF9kZX'
-    'RhaWwYBCABKAsyFi5oaS5jbHViLkdldFByb2R1Y3RSZXFIAFIJZ2V0RGV0YWlsEkQKDWZ1bGZp'
-    'bGxfb3JkZXIYBSABKAsyHS5oaS5jbHViLlByb2R1Y3RQdXJjaGFzZU9yZGVySABSDGZ1bGZpbG'
-    'xPcmRlchJICg9nZXRfZnVsZmlsbG1lbnQYBiABKAsyHS5oaS5jbHViLlByb2R1Y3RQdXJjaGFz'
-    'ZVF1ZXJ5SABSDmdldEZ1bGZpbGxtZW50QgsKCW9wZXJhdGlvbkINCgtfcmVxdWVzdF9pZEINCg'
-    'tfY3JlYXRlZF9hdA==');
+    'GAMgASgLMhAuaGkuY2x1Yi5Qcm9kdWN0SABSEXByb2R1Y3RSZWdpc3RlcmVkEkQKDWZ1bGZpbG'
+    'xfb3JkZXIYBSABKAsyHS5oaS5jbHViLlByb2R1Y3RQdXJjaGFzZU9yZGVySABSDGZ1bGZpbGxP'
+    'cmRlchJICg9nZXRfZnVsZmlsbG1lbnQYBiABKAsyHS5oaS5jbHViLlByb2R1Y3RQdXJjaGFzZV'
+    'F1ZXJ5SABSDmdldEZ1bGZpbGxtZW50QgsKCW9wZXJhdGlvbkINCgtfcmVxdWVzdF9pZEINCgtf'
+    'Y3JlYXRlZF9hdA==');
 
 @$core.Deprecated('Use supplierResponseDescriptor instead')
 const SupplierResponse$json = {
@@ -1787,15 +1779,6 @@ const SupplierResponse$json = {
       '9': 1,
       '10': 'requestId',
       '17': true
-    },
-    {
-      '1': 'detail',
-      '3': 2,
-      '4': 1,
-      '5': 11,
-      '6': '.hi.club.ProductDetail',
-      '9': 0,
-      '10': 'detail'
     },
     {
       '1': 'fulfillment',
@@ -1824,11 +1807,10 @@ const SupplierResponse$json = {
 
 /// Descriptor for `SupplierResponse`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List supplierResponseDescriptor = $convert.base64Decode(
-    'ChBTdXBwbGllclJlc3BvbnNlEiIKCnJlcXVlc3RfaWQYASABKAlIAVIJcmVxdWVzdElkiAEBEj'
-    'AKBmRldGFpbBgCIAEoCzIWLmhpLmNsdWIuUHJvZHVjdERldGFpbEgAUgZkZXRhaWwSRQoLZnVs'
-    'ZmlsbG1lbnQYAyABKAsyIS5oaS5jbHViLlByb2R1Y3RGdWxmaWxsbWVudFJlcG9ydEgAUgtmdW'
-    'xmaWxsbWVudBI8CgxhY2tub3dsZWRnZWQYBCABKAsyFi5nb29nbGUucHJvdG9idWYuRW1wdHlI'
-    'AFIMYWNrbm93bGVkZ2VkQggKBnJlc3VsdEINCgtfcmVxdWVzdF9pZA==');
+    'ChBTdXBwbGllclJlc3BvbnNlEiIKCnJlcXVlc3RfaWQYASABKAlIAVIJcmVxdWVzdElkiAEBEk'
+    'UKC2Z1bGZpbGxtZW50GAMgASgLMiEuaGkuY2x1Yi5Qcm9kdWN0RnVsZmlsbG1lbnRSZXBvcnRI'
+    'AFILZnVsZmlsbG1lbnQSPAoMYWNrbm93bGVkZ2VkGAQgASgLMhYuZ29vZ2xlLnByb3RvYnVmLk'
+    'VtcHR5SABSDGFja25vd2xlZGdlZEIICgZyZXN1bHRCDQoLX3JlcXVlc3RfaWQ=');
 
 @$core.Deprecated('Use productOrderRecordsReqDescriptor instead')
 const ProductOrderRecordsReq$json = {
