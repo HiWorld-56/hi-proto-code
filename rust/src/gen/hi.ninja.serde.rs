@@ -810,6 +810,9 @@ impl serde::Serialize for BrainToFace {
                 brain_to_face::Cmd::AudioStreamCancel(v) => {
                     struct_ser.serialize_field("audioStreamCancel", v)?;
                 }
+                brain_to_face::Cmd::ReceiptNotifications(v) => {
+                    struct_ser.serialize_field("receiptNotifications", v)?;
+                }
                 brain_to_face::Cmd::ManualMute(v) => {
                     struct_ser.serialize_field("manualMute", v)?;
                 }
@@ -930,6 +933,8 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
             "audioStream",
             "audio_stream_cancel",
             "audioStreamCancel",
+            "receipt_notifications",
+            "receiptNotifications",
             "manual_mute",
             "manualMute",
             "playback_permit",
@@ -1002,6 +1007,7 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
             Session,
             AudioStream,
             AudioStreamCancel,
+            ReceiptNotifications,
             ManualMute,
             PlaybackPermit,
             Control,
@@ -1059,6 +1065,7 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
                             "session" => Ok(GeneratedField::Session),
                             "audioStream" | "audio_stream" => Ok(GeneratedField::AudioStream),
                             "audioStreamCancel" | "audio_stream_cancel" => Ok(GeneratedField::AudioStreamCancel),
+                            "receiptNotifications" | "receipt_notifications" => Ok(GeneratedField::ReceiptNotifications),
                             "manualMute" | "manual_mute" => Ok(GeneratedField::ManualMute),
                             "playbackPermit" | "playback_permit" => Ok(GeneratedField::PlaybackPermit),
                             "control" => Ok(GeneratedField::Control),
@@ -1133,6 +1140,13 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
                                 return Err(serde::de::Error::duplicate_field("audioStreamCancel"));
                             }
                             cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_face::Cmd::AudioStreamCancel)
+;
+                        }
+                        GeneratedField::ReceiptNotifications => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("receiptNotifications"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_face::Cmd::ReceiptNotifications)
 ;
                         }
                         GeneratedField::ManualMute => {
@@ -2593,6 +2607,9 @@ impl serde::Serialize for FaceToBrain {
                 face_to_brain::Cmd::PlaybackEvent(v) => {
                     struct_ser.serialize_field("playbackEvent", v)?;
                 }
+                face_to_brain::Cmd::ReceiptNotifications(v) => {
+                    struct_ser.serialize_field("receiptNotifications", v)?;
+                }
                 face_to_brain::Cmd::ManualMute(v) => {
                     struct_ser.serialize_field("manualMute", v)?;
                 }
@@ -2644,6 +2661,8 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
             "productAction",
             "playback_event",
             "playbackEvent",
+            "receipt_notifications",
+            "receiptNotifications",
             "manual_mute",
             "manualMute",
             "control",
@@ -2671,6 +2690,7 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
             AudioStreamProgress,
             ProductAction,
             PlaybackEvent,
+            ReceiptNotifications,
             ManualMute,
             Control,
             VoiceState,
@@ -2706,6 +2726,7 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
                             "audioStreamProgress" | "audio_stream_progress" => Ok(GeneratedField::AudioStreamProgress),
                             "productAction" | "product_action" => Ok(GeneratedField::ProductAction),
                             "playbackEvent" | "playback_event" => Ok(GeneratedField::PlaybackEvent),
+                            "receiptNotifications" | "receipt_notifications" => Ok(GeneratedField::ReceiptNotifications),
                             "manualMute" | "manual_mute" => Ok(GeneratedField::ManualMute),
                             "control" => Ok(GeneratedField::Control),
                             "voiceState" | "voice_state" => Ok(GeneratedField::VoiceState),
@@ -2764,6 +2785,13 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
                                 return Err(serde::de::Error::duplicate_field("playbackEvent"));
                             }
                             cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(face_to_brain::Cmd::PlaybackEvent)
+;
+                        }
+                        GeneratedField::ReceiptNotifications => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("receiptNotifications"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(face_to_brain::Cmd::ReceiptNotifications)
 ;
                         }
                         GeneratedField::ManualMute => {
@@ -9441,6 +9469,97 @@ impl<'de> serde::Deserialize<'de> for QrCard {
             }
         }
         deserializer.deserialize_struct("hi.ninja.QrCard", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ReceiptNotifications {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.enabled.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.ReceiptNotifications", len)?;
+        if let Some(v) = self.enabled.as_ref() {
+            struct_ser.serialize_field("enabled", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ReceiptNotifications {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "enabled",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Enabled,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "enabled" => Ok(GeneratedField::Enabled),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ReceiptNotifications;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.ReceiptNotifications")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ReceiptNotifications, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut enabled__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Enabled => {
+                            if enabled__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("enabled"));
+                            }
+                            enabled__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ReceiptNotifications {
+                    enabled: enabled__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.ReceiptNotifications", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for RobotInit {

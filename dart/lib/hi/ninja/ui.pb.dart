@@ -830,6 +830,7 @@ enum BrainToFace_Cmd {
   audioStreamCancel,
   eventProductOrder,
   productActionResult,
+  receiptNotifications,
   control,
   notSet
 }
@@ -871,6 +872,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     AudioStreamCancel? audioStreamCancel,
     $10.ProductPurchaseOrder? eventProductOrder,
     ProductActionResult? productActionResult,
+    ReceiptNotifications? receiptNotifications,
     $11.ModuleSession? session,
     $11.BrainToModuleControl? control,
   }) {
@@ -914,6 +916,8 @@ class BrainToFace extends $pb.GeneratedMessage {
     if (eventProductOrder != null) result.eventProductOrder = eventProductOrder;
     if (productActionResult != null)
       result.productActionResult = productActionResult;
+    if (receiptNotifications != null)
+      result.receiptNotifications = receiptNotifications;
     if (session != null) result.session = session;
     if (control != null) result.control = control;
     return result;
@@ -963,6 +967,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     34: BrainToFace_Cmd.audioStreamCancel,
     40: BrainToFace_Cmd.eventProductOrder,
     41: BrainToFace_Cmd.productActionResult,
+    42: BrainToFace_Cmd.receiptNotifications,
     100: BrainToFace_Cmd.control,
     0: BrainToFace_Cmd.notSet
   };
@@ -1005,6 +1010,7 @@ class BrainToFace extends $pb.GeneratedMessage {
       34,
       40,
       41,
+      42,
       100
     ])
     ..aOM<RobotInit>(1, _omitFieldNames ? '' : 'initRobot',
@@ -1077,6 +1083,9 @@ class BrainToFace extends $pb.GeneratedMessage {
         subBuilder: $10.ProductPurchaseOrder.create)
     ..aOM<ProductActionResult>(41, _omitFieldNames ? '' : 'productActionResult',
         subBuilder: ProductActionResult.create)
+    ..aOM<ReceiptNotifications>(
+        42, _omitFieldNames ? '' : 'receiptNotifications',
+        subBuilder: ReceiptNotifications.create)
     ..aOM<$11.ModuleSession>(99, _omitFieldNames ? '' : 'session',
         subBuilder: $11.ModuleSession.create)
     ..aOM<$11.BrainToModuleControl>(100, _omitFieldNames ? '' : 'control',
@@ -1136,6 +1145,7 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(34)
   @$pb.TagNumber(40)
   @$pb.TagNumber(41)
+  @$pb.TagNumber(42)
   @$pb.TagNumber(100)
   BrainToFace_Cmd whichCmd() => _BrainToFace_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
@@ -1172,6 +1182,7 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(34)
   @$pb.TagNumber(40)
   @$pb.TagNumber(41)
+  @$pb.TagNumber(42)
   @$pb.TagNumber(100)
   void clearCmd() => $_clearField($_whichOneof(0));
 
@@ -1570,27 +1581,38 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(41)
   ProductActionResult ensureProductActionResult() => $_ensure(33);
 
+  @$pb.TagNumber(42)
+  ReceiptNotifications get receiptNotifications => $_getN(34);
+  @$pb.TagNumber(42)
+  set receiptNotifications(ReceiptNotifications value) => $_setField(42, value);
+  @$pb.TagNumber(42)
+  $core.bool hasReceiptNotifications() => $_has(34);
+  @$pb.TagNumber(42)
+  void clearReceiptNotifications() => $_clearField(42);
+  @$pb.TagNumber(42)
+  ReceiptNotifications ensureReceiptNotifications() => $_ensure(34);
+
   @$pb.TagNumber(99)
-  $11.ModuleSession get session => $_getN(34);
+  $11.ModuleSession get session => $_getN(35);
   @$pb.TagNumber(99)
   set session($11.ModuleSession value) => $_setField(99, value);
   @$pb.TagNumber(99)
-  $core.bool hasSession() => $_has(34);
+  $core.bool hasSession() => $_has(35);
   @$pb.TagNumber(99)
   void clearSession() => $_clearField(99);
   @$pb.TagNumber(99)
-  $11.ModuleSession ensureSession() => $_ensure(34);
+  $11.ModuleSession ensureSession() => $_ensure(35);
 
   @$pb.TagNumber(100)
-  $11.BrainToModuleControl get control => $_getN(35);
+  $11.BrainToModuleControl get control => $_getN(36);
   @$pb.TagNumber(100)
   set control($11.BrainToModuleControl value) => $_setField(100, value);
   @$pb.TagNumber(100)
-  $core.bool hasControl() => $_has(35);
+  $core.bool hasControl() => $_has(36);
   @$pb.TagNumber(100)
   void clearControl() => $_clearField(100);
   @$pb.TagNumber(100)
-  $11.BrainToModuleControl ensureControl() => $_ensure(35);
+  $11.BrainToModuleControl ensureControl() => $_ensure(36);
 }
 
 /// face -> brain:要一份屏幕放得了的视频。
@@ -1968,6 +1990,7 @@ enum FaceToBrain_Cmd {
   manualMute,
   audioStreamProgress,
   productAction,
+  receiptNotifications,
   control,
   notSet
 }
@@ -1987,6 +2010,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
     ManualMute? manualMute,
     AudioStreamProgress? audioStreamProgress,
     ProductAction? productAction,
+    ReceiptNotifications? receiptNotifications,
     $11.ModuleSession? session,
     $11.ModuleToBrainControl? control,
   }) {
@@ -2005,6 +2029,8 @@ class FaceToBrain extends $pb.GeneratedMessage {
     if (audioStreamProgress != null)
       result.audioStreamProgress = audioStreamProgress;
     if (productAction != null) result.productAction = productAction;
+    if (receiptNotifications != null)
+      result.receiptNotifications = receiptNotifications;
     if (session != null) result.session = session;
     if (control != null) result.control = control;
     return result;
@@ -2032,6 +2058,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
     10: FaceToBrain_Cmd.manualMute,
     33: FaceToBrain_Cmd.audioStreamProgress,
     40: FaceToBrain_Cmd.productAction,
+    42: FaceToBrain_Cmd.receiptNotifications,
     100: FaceToBrain_Cmd.control,
     0: FaceToBrain_Cmd.notSet
   };
@@ -2039,7 +2066,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'FaceToBrain',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..oo(0, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 33, 40, 100])
+    ..oo(0, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 33, 40, 42, 100])
     ..aE<StateToggle>(1, _omitFieldNames ? '' : 'voiceState',
         enumValues: StateToggle.values)
     ..aOM<UpdateAction>(2, _omitFieldNames ? '' : 'updateAction',
@@ -2064,6 +2091,9 @@ class FaceToBrain extends $pb.GeneratedMessage {
         subBuilder: AudioStreamProgress.create)
     ..aOM<ProductAction>(40, _omitFieldNames ? '' : 'productAction',
         subBuilder: ProductAction.create)
+    ..aOM<ReceiptNotifications>(
+        42, _omitFieldNames ? '' : 'receiptNotifications',
+        subBuilder: ReceiptNotifications.create)
     ..aOM<$11.ModuleSession>(99, _omitFieldNames ? '' : 'session',
         subBuilder: $11.ModuleSession.create)
     ..aOM<$11.ModuleToBrainControl>(100, _omitFieldNames ? '' : 'control',
@@ -2101,6 +2131,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   @$pb.TagNumber(33)
   @$pb.TagNumber(40)
+  @$pb.TagNumber(42)
   @$pb.TagNumber(100)
   FaceToBrain_Cmd whichCmd() => _FaceToBrain_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
@@ -2115,6 +2146,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   @$pb.TagNumber(33)
   @$pb.TagNumber(40)
+  @$pb.TagNumber(42)
   @$pb.TagNumber(100)
   void clearCmd() => $_clearField($_whichOneof(0));
 
@@ -2263,27 +2295,38 @@ class FaceToBrain extends $pb.GeneratedMessage {
   @$pb.TagNumber(40)
   ProductAction ensureProductAction() => $_ensure(11);
 
+  @$pb.TagNumber(42)
+  ReceiptNotifications get receiptNotifications => $_getN(12);
+  @$pb.TagNumber(42)
+  set receiptNotifications(ReceiptNotifications value) => $_setField(42, value);
+  @$pb.TagNumber(42)
+  $core.bool hasReceiptNotifications() => $_has(12);
+  @$pb.TagNumber(42)
+  void clearReceiptNotifications() => $_clearField(42);
+  @$pb.TagNumber(42)
+  ReceiptNotifications ensureReceiptNotifications() => $_ensure(12);
+
   @$pb.TagNumber(99)
-  $11.ModuleSession get session => $_getN(12);
+  $11.ModuleSession get session => $_getN(13);
   @$pb.TagNumber(99)
   set session($11.ModuleSession value) => $_setField(99, value);
   @$pb.TagNumber(99)
-  $core.bool hasSession() => $_has(12);
+  $core.bool hasSession() => $_has(13);
   @$pb.TagNumber(99)
   void clearSession() => $_clearField(99);
   @$pb.TagNumber(99)
-  $11.ModuleSession ensureSession() => $_ensure(12);
+  $11.ModuleSession ensureSession() => $_ensure(13);
 
   @$pb.TagNumber(100)
-  $11.ModuleToBrainControl get control => $_getN(13);
+  $11.ModuleToBrainControl get control => $_getN(14);
   @$pb.TagNumber(100)
   set control($11.ModuleToBrainControl value) => $_setField(100, value);
   @$pb.TagNumber(100)
-  $core.bool hasControl() => $_has(13);
+  $core.bool hasControl() => $_has(14);
   @$pb.TagNumber(100)
   void clearControl() => $_clearField(100);
   @$pb.TagNumber(100)
-  $11.ModuleToBrainControl ensureControl() => $_ensure(13);
+  $11.ModuleToBrainControl ensureControl() => $_ensure(14);
 }
 
 /// ── 跟单:开单卡 ──────────────────────────────────────────────
@@ -3025,6 +3068,62 @@ class ProductActionResult extends $pb.GeneratedMessage {
   $core.bool hasError() => $_has(4);
   @$pb.TagNumber(5)
   void clearError() => $_clearField(5);
+}
+
+/// 本机收款通知偏好，未配置默认开启；关闭后丢弃通知及其驱动的到账处理，不补放。
+/// 不影响付款、订单认款与其他通知。UI只显示brain保存后的权威状态，重连时重新同步。
+class ReceiptNotifications extends $pb.GeneratedMessage {
+  factory ReceiptNotifications({
+    $core.bool? enabled,
+  }) {
+    final result = create();
+    if (enabled != null) result.enabled = enabled;
+    return result;
+  }
+
+  ReceiptNotifications._();
+
+  factory ReceiptNotifications.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ReceiptNotifications.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ReceiptNotifications',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..aOB(1, _omitFieldNames ? '' : 'enabled')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReceiptNotifications clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReceiptNotifications copyWith(void Function(ReceiptNotifications) updates) =>
+      super.copyWith((message) => updates(message as ReceiptNotifications))
+          as ReceiptNotifications;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ReceiptNotifications create() => ReceiptNotifications._();
+  @$core.override
+  ReceiptNotifications createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ReceiptNotifications getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ReceiptNotifications>(create);
+  static ReceiptNotifications? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.bool get enabled => $_getBF(0);
+  @$pb.TagNumber(1)
+  set enabled($core.bool value) => $_setBool(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasEnabled() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearEnabled() => $_clearField(1);
 }
 
 const $core.bool _omitFieldNames =

@@ -1701,7 +1701,7 @@ pub struct BrainToFace {
     pub session: ::core::option::Option<ModuleSession>,
     #[prost(
         oneof = "brain_to_face::Cmd",
-        tags = "33, 34, 32, 31, 100, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21, 22, 24, 25, 26, 29, 30, 40, 41, 27"
+        tags = "33, 34, 42, 32, 31, 100, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21, 22, 24, 25, 26, 29, 30, 40, 41, 27"
     )]
     pub cmd: ::core::option::Option<brain_to_face::Cmd>,
 }
@@ -1713,6 +1713,9 @@ pub mod brain_to_face {
         AudioStream(super::AudioStreamPlay),
         #[prost(message, tag = "34")]
         AudioStreamCancel(super::AudioStreamCancel),
+        /// 设置/权威快照，brain持久保存
+        #[prost(message, tag = "42")]
+        ReceiptNotifications(super::ReceiptNotifications),
         /// brain持久设定，恢复初始化时重推
         #[prost(message, tag = "32")]
         ManualMute(super::ManualMute),
@@ -1897,7 +1900,7 @@ pub struct FaceToBrain {
     pub session: ::core::option::Option<ModuleSession>,
     #[prost(
         oneof = "face_to_brain::Cmd",
-        tags = "33, 40, 9, 10, 100, 1, 2, 3, 4, 5, 6, 7, 8"
+        tags = "33, 40, 9, 42, 10, 100, 1, 2, 3, 4, 5, 6, 7, 8"
     )]
     pub cmd: ::core::option::Option<face_to_brain::Cmd>,
 }
@@ -1912,6 +1915,9 @@ pub mod face_to_brain {
         ProductAction(super::ProductAction),
         #[prost(message, tag = "9")]
         PlaybackEvent(super::PlaybackEvent),
+        /// 设置/权威快照，brain持久保存
+        #[prost(message, tag = "42")]
+        ReceiptNotifications(super::ReceiptNotifications),
         #[prost(message, tag = "10")]
         ManualMute(super::ManualMute),
         #[prost(message, tag = "100")]
@@ -2219,6 +2225,13 @@ pub mod product_action_result {
         #[prost(string, tag = "5")]
         Error(::prost::alloc::string::String),
     }
+}
+/// 本机收款通知偏好，未配置默认开启；关闭后丢弃通知及其驱动的到账处理，不补放。
+/// 不影响付款、订单认款与其他通知。UI只显示brain保存后的权威状态，重连时重新同步。
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ReceiptNotifications {
+    #[prost(bool, optional, tag = "1")]
+    pub enabled: ::core::option::Option<bool>,
 }
 /// 二态开关：语音监听开始/结束、音频播放开始/结束等
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
