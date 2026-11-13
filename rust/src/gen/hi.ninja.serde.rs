@@ -810,6 +810,9 @@ impl serde::Serialize for BrainToFace {
                 brain_to_face::Cmd::AudioStreamCancel(v) => {
                     struct_ser.serialize_field("audioStreamCancel", v)?;
                 }
+                brain_to_face::Cmd::TerminalApplications(v) => {
+                    struct_ser.serialize_field("terminalApplications", v)?;
+                }
                 brain_to_face::Cmd::ReceiptNotifications(v) => {
                     struct_ser.serialize_field("receiptNotifications", v)?;
                 }
@@ -933,6 +936,8 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
             "audioStream",
             "audio_stream_cancel",
             "audioStreamCancel",
+            "terminal_applications",
+            "terminalApplications",
             "receipt_notifications",
             "receiptNotifications",
             "manual_mute",
@@ -1007,6 +1012,7 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
             Session,
             AudioStream,
             AudioStreamCancel,
+            TerminalApplications,
             ReceiptNotifications,
             ManualMute,
             PlaybackPermit,
@@ -1065,6 +1071,7 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
                             "session" => Ok(GeneratedField::Session),
                             "audioStream" | "audio_stream" => Ok(GeneratedField::AudioStream),
                             "audioStreamCancel" | "audio_stream_cancel" => Ok(GeneratedField::AudioStreamCancel),
+                            "terminalApplications" | "terminal_applications" => Ok(GeneratedField::TerminalApplications),
                             "receiptNotifications" | "receipt_notifications" => Ok(GeneratedField::ReceiptNotifications),
                             "manualMute" | "manual_mute" => Ok(GeneratedField::ManualMute),
                             "playbackPermit" | "playback_permit" => Ok(GeneratedField::PlaybackPermit),
@@ -1140,6 +1147,13 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
                                 return Err(serde::de::Error::duplicate_field("audioStreamCancel"));
                             }
                             cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_face::Cmd::AudioStreamCancel)
+;
+                        }
+                        GeneratedField::TerminalApplications => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("terminalApplications"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_face::Cmd::TerminalApplications)
 ;
                         }
                         GeneratedField::ReceiptNotifications => {
@@ -2598,6 +2612,9 @@ impl serde::Serialize for FaceToBrain {
         }
         if let Some(v) = self.cmd.as_ref() {
             match v {
+                face_to_brain::Cmd::TerminalApplications(v) => {
+                    struct_ser.serialize_field("terminalApplications", v)?;
+                }
                 face_to_brain::Cmd::AudioStreamProgress(v) => {
                     struct_ser.serialize_field("audioStreamProgress", v)?;
                 }
@@ -2655,6 +2672,8 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
     {
         const FIELDS: &[&str] = &[
             "session",
+            "terminal_applications",
+            "terminalApplications",
             "audio_stream_progress",
             "audioStreamProgress",
             "product_action",
@@ -2687,6 +2706,7 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Session,
+            TerminalApplications,
             AudioStreamProgress,
             ProductAction,
             PlaybackEvent,
@@ -2723,6 +2743,7 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
                     {
                         match value {
                             "session" => Ok(GeneratedField::Session),
+                            "terminalApplications" | "terminal_applications" => Ok(GeneratedField::TerminalApplications),
                             "audioStreamProgress" | "audio_stream_progress" => Ok(GeneratedField::AudioStreamProgress),
                             "productAction" | "product_action" => Ok(GeneratedField::ProductAction),
                             "playbackEvent" | "playback_event" => Ok(GeneratedField::PlaybackEvent),
@@ -2765,6 +2786,13 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
                                 return Err(serde::de::Error::duplicate_field("session"));
                             }
                             session__ = map_.next_value()?;
+                        }
+                        GeneratedField::TerminalApplications => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("terminalApplications"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(face_to_brain::Cmd::TerminalApplications)
+;
                         }
                         GeneratedField::AudioStreamProgress => {
                             if cmd__.is_some() {
@@ -9867,6 +9895,241 @@ impl<'de> serde::Deserialize<'de> for StatusEvent {
             }
         }
         deserializer.deserialize_struct("hi.ninja.StatusEvent", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for TerminalApplicationRequest {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.request_id.is_some() {
+            len += 1;
+        }
+        if self.pagination.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.TerminalApplicationRequest", len)?;
+        if let Some(v) = self.request_id.as_ref() {
+            struct_ser.serialize_field("requestId", v)?;
+        }
+        if let Some(v) = self.pagination.as_ref() {
+            struct_ser.serialize_field("pagination", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for TerminalApplicationRequest {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "request_id",
+            "requestId",
+            "pagination",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            RequestId,
+            Pagination,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
+                            "pagination" => Ok(GeneratedField::Pagination),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = TerminalApplicationRequest;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.TerminalApplicationRequest")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<TerminalApplicationRequest, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut request_id__ = None;
+                let mut pagination__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
+                            }
+                            request_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Pagination => {
+                            if pagination__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("pagination"));
+                            }
+                            pagination__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(TerminalApplicationRequest {
+                    request_id: request_id__,
+                    pagination: pagination__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.TerminalApplicationRequest", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for TerminalApplicationResult {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.request_id.is_some() {
+            len += 1;
+        }
+        if self.applications.is_some() {
+            len += 1;
+        }
+        if self.error.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.TerminalApplicationResult", len)?;
+        if let Some(v) = self.request_id.as_ref() {
+            struct_ser.serialize_field("requestId", v)?;
+        }
+        if let Some(v) = self.applications.as_ref() {
+            struct_ser.serialize_field("applications", v)?;
+        }
+        if let Some(v) = self.error.as_ref() {
+            struct_ser.serialize_field("error", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for TerminalApplicationResult {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "request_id",
+            "requestId",
+            "applications",
+            "error",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            RequestId,
+            Applications,
+            Error,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
+                            "applications" => Ok(GeneratedField::Applications),
+                            "error" => Ok(GeneratedField::Error),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = TerminalApplicationResult;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.TerminalApplicationResult")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<TerminalApplicationResult, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut request_id__ = None;
+                let mut applications__ = None;
+                let mut error__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
+                            }
+                            request_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Applications => {
+                            if applications__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("applications"));
+                            }
+                            applications__ = map_.next_value()?;
+                        }
+                        GeneratedField::Error => {
+                            if error__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("error"));
+                            }
+                            error__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(TerminalApplicationResult {
+                    request_id: request_id__,
+                    applications: applications__,
+                    error: error__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.TerminalApplicationResult", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for TextReply {

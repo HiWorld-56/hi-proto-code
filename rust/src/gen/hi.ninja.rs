@@ -1695,13 +1695,29 @@ pub struct BinanceRequest {
 }
 /// brain -> face：所有指令通过 oneof 路由
 #[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TerminalApplicationResult {
+    #[prost(string, optional, tag = "1")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub applications: ::core::option::Option<super::club::ListTerminalApplicationsResp>,
+    #[prost(string, optional, tag = "3")]
+    pub error: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TerminalApplicationRequest {
+    #[prost(string, optional, tag = "1")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::Pagination>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BrainToFace {
     /// Hello前不传；业务消息必须匹配当前接管会话
     #[prost(message, optional, tag = "99")]
     pub session: ::core::option::Option<ModuleSession>,
     #[prost(
         oneof = "brain_to_face::Cmd",
-        tags = "33, 34, 42, 32, 31, 100, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21, 22, 24, 25, 26, 29, 30, 40, 41, 27"
+        tags = "33, 34, 43, 42, 32, 31, 100, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21, 22, 24, 25, 26, 29, 30, 40, 41, 27"
     )]
     pub cmd: ::core::option::Option<brain_to_face::Cmd>,
 }
@@ -1713,6 +1729,8 @@ pub mod brain_to_face {
         AudioStream(super::AudioStreamPlay),
         #[prost(message, tag = "34")]
         AudioStreamCancel(super::AudioStreamCancel),
+        #[prost(message, tag = "43")]
+        TerminalApplications(super::TerminalApplicationResult),
         /// 设置/权威快照，brain持久保存
         #[prost(message, tag = "42")]
         ReceiptNotifications(super::ReceiptNotifications),
@@ -1900,7 +1918,7 @@ pub struct FaceToBrain {
     pub session: ::core::option::Option<ModuleSession>,
     #[prost(
         oneof = "face_to_brain::Cmd",
-        tags = "33, 40, 9, 42, 10, 100, 1, 2, 3, 4, 5, 6, 7, 8"
+        tags = "43, 33, 40, 9, 42, 10, 100, 1, 2, 3, 4, 5, 6, 7, 8"
     )]
     pub cmd: ::core::option::Option<face_to_brain::Cmd>,
 }
@@ -1908,6 +1926,8 @@ pub struct FaceToBrain {
 pub mod face_to_brain {
     #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
     pub enum Cmd {
+        #[prost(message, tag = "43")]
+        TerminalApplications(super::TerminalApplicationRequest),
         #[prost(message, tag = "33")]
         AudioStreamProgress(super::AudioStreamProgress),
         /// 当前face会话的商品业务操作，身份由brain决定
