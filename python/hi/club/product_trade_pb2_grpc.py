@@ -161,7 +161,8 @@ class ProductDistributionServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def List(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """仅查询指定/本人机器人主动承销的关系，不混入他人承销本机商品的供货关系。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')

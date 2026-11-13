@@ -6898,12 +6898,18 @@ impl serde::Serialize for GetProductListingReq {
         if self.product_id.is_some() {
             len += 1;
         }
+        if self.selling_stall.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.club.GetProductListingReq", len)?;
         if let Some(v) = self.uuid.as_ref() {
             struct_ser.serialize_field("uuid", v)?;
         }
         if let Some(v) = self.product_id.as_ref() {
             struct_ser.serialize_field("productId", v)?;
+        }
+        if let Some(v) = self.selling_stall.as_ref() {
+            struct_ser.serialize_field("sellingStall", v)?;
         }
         struct_ser.end()
     }
@@ -6918,12 +6924,15 @@ impl<'de> serde::Deserialize<'de> for GetProductListingReq {
             "uuid",
             "product_id",
             "productId",
+            "selling_stall",
+            "sellingStall",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Uuid,
             ProductId,
+            SellingStall,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -6947,6 +6956,7 @@ impl<'de> serde::Deserialize<'de> for GetProductListingReq {
                         match value {
                             "uuid" => Ok(GeneratedField::Uuid),
                             "productId" | "product_id" => Ok(GeneratedField::ProductId),
+                            "sellingStall" | "selling_stall" => Ok(GeneratedField::SellingStall),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -6968,6 +6978,7 @@ impl<'de> serde::Deserialize<'de> for GetProductListingReq {
             {
                 let mut uuid__ = None;
                 let mut product_id__ = None;
+                let mut selling_stall__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Uuid => {
@@ -6982,11 +6993,18 @@ impl<'de> serde::Deserialize<'de> for GetProductListingReq {
                             }
                             product_id__ = map_.next_value()?;
                         }
+                        GeneratedField::SellingStall => {
+                            if selling_stall__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sellingStall"));
+                            }
+                            selling_stall__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(GetProductListingReq {
                     uuid: uuid__,
                     product_id: product_id__,
+                    selling_stall: selling_stall__,
                 })
             }
         }

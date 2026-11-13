@@ -529,13 +529,14 @@ class ProductMarketDirectoryServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def ListStallListings(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """消费者看到的统一待售目录：自有已挂牌与有效承销且仍挂牌商品，统一去重分页。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def ListSellableListings(self, request, context):
-        """机器人的可销售目录：自有已挂牌商品 ∪ 有效承销且仍挂牌的商品。
+        """与ListStallListings共用同一待售目录；管理自有挂牌使用ProductMarket.ListMyListings。
         按平台商品ID去重后统一分页；不含未挂牌库存、隐藏/下架商品或已退出承销。
         Listing.stall仍是原供货机器人，不将承销关系伪造成自有库存或自加盟。
         """

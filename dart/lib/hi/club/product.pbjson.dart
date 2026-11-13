@@ -759,21 +759,33 @@ const GetProductListingReq$json = {
       '10': 'productId',
       '17': true
     },
+    {
+      '1': 'selling_stall',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'sellingStall',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
     {'1': '_uuid'},
     {'1': '_product_id'},
+    {'1': '_selling_stall'},
   ],
 };
 
 /// Descriptor for `GetProductListingReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List getProductListingReqDescriptor = $convert.base64Decode(
     'ChRHZXRQcm9kdWN0TGlzdGluZ1JlcRIgCgR1dWlkGAEgASgJQge6SARyAhABSABSBHV1aWSIAQ'
-    'ESKwoKcHJvZHVjdF9pZBgCIAEoCUIHukgEcgIQAUgBUglwcm9kdWN0SWSIAQE6crpIbxptChlw'
-    'cm9kdWN0Lmxpc3RpbmcucmVmZXJlbmNlEijor7fmj5DkvpvmjILniYxJROaIluW5s+WPsOWVhu'
-    'WTgUlE5LmL5LiAGiZoYXModGhpcy51dWlkKSAhPSBoYXModGhpcy5wcm9kdWN0X2lkKUIHCgVf'
-    'dXVpZEINCgtfcHJvZHVjdF9pZA==');
+    'ESKwoKcHJvZHVjdF9pZBgCIAEoCUIHukgEcgIQAUgBUglwcm9kdWN0SWSIAQESMQoNc2VsbGlu'
+    'Z19zdGFsbBgDIAEoCUIHukgEcgIQAUgCUgxzZWxsaW5nU3RhbGyIAQE6crpIbxptChlwcm9kdW'
+    'N0Lmxpc3RpbmcucmVmZXJlbmNlEijor7fmj5DkvpvmjILniYxJROaIluW5s+WPsOWVhuWTgUlE'
+    '5LmL5LiAGiZoYXModGhpcy51dWlkKSAhPSBoYXModGhpcy5wcm9kdWN0X2lkKUIHCgVfdXVpZE'
+    'INCgtfcHJvZHVjdF9pZEIQCg5fc2VsbGluZ19zdGFsbA==');
 
 @$core.Deprecated('Use searchProductListingsReqDescriptor instead')
 const SearchProductListingsReq$json = {

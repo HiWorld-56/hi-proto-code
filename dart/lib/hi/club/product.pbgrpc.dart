@@ -367,6 +367,7 @@ class ProductMarketDirectoryClient extends $grpc.Client {
     return $createUnaryCall(_$listSellerStalls, request, options: options);
   }
 
+  /// 消费者看到的统一待售目录：自有已挂牌与有效承销且仍挂牌商品，统一去重分页。
   $grpc.ResponseFuture<$0.ListProductListingsResp> listStallListings(
     $0.ListProductsReq request, {
     $grpc.CallOptions? options,
@@ -374,7 +375,7 @@ class ProductMarketDirectoryClient extends $grpc.Client {
     return $createUnaryCall(_$listStallListings, request, options: options);
   }
 
-  /// 机器人的可销售目录：自有已挂牌商品 ∪ 有效承销且仍挂牌的商品。
+  /// 与ListStallListings共用同一待售目录；管理自有挂牌使用ProductMarket.ListMyListings。
   /// 按平台商品ID去重后统一分页；不含未挂牌库存、隐藏/下架商品或已退出承销。
   /// Listing.stall仍是原供货机器人，不将承销关系伪造成自有库存或自加盟。
   $grpc.ResponseFuture<$0.ListProductListingsResp> listSellableListings(

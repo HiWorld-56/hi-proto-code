@@ -965,8 +965,9 @@ func (x *SetProductListingStatusReq) GetStatus() ProductListingStatus {
 
 type GetProductListingReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`                            // 定位挂牌
-	ProductId     *string                `protobuf:"bytes,2,opt,name=product_id,json=productId,proto3,oneof" json:"product_id,omitempty"` // 定位已上架平台商品，供承销后取当前供货信息
+	Uuid          *string                `protobuf:"bytes,1,opt,name=uuid,proto3,oneof" json:"uuid,omitempty"`                                     // 定位挂牌
+	ProductId     *string                `protobuf:"bytes,2,opt,name=product_id,json=productId,proto3,oneof" json:"product_id,omitempty"`          // 定位已上架平台商品，供承销后取当前供货信息
+	SellingStall  *string                `protobuf:"bytes,3,opt,name=selling_stall,json=sellingStall,proto3,oneof" json:"selling_stall,omitempty"` // 可选销售摊位；传入时必须是其自有挂牌或有效承销商品
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1011,6 +1012,13 @@ func (x *GetProductListingReq) GetUuid() string {
 func (x *GetProductListingReq) GetProductId() string {
 	if x != nil && x.ProductId != nil {
 		return *x.ProductId
+	}
+	return ""
+}
+
+func (x *GetProductListingReq) GetSellingStall() string {
+	if x != nil && x.SellingStall != nil {
+		return *x.SellingStall
 	}
 	return ""
 }
@@ -1949,14 +1957,16 @@ const file_hi_club_product_proto_rawDesc = "" +
 	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\x04uuid\x88\x01\x01\x12G\n" +
 	"\x06status\x18\x02 \x01(\x0e2\x1d.hi.club.ProductListingStatusB\v\xbaH\b\xc8\x01\x01\x82\x01\x02\x10\x01H\x01R\x06status\x88\x01\x01B\a\n" +
 	"\x05_uuidB\t\n" +
-	"\a_status\"\xf1\x01\n" +
+	"\a_status\"\xb6\x02\n" +
 	"\x14GetProductListingReq\x12 \n" +
 	"\x04uuid\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x00R\x04uuid\x88\x01\x01\x12+\n" +
 	"\n" +
-	"product_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x01R\tproductId\x88\x01\x01:r\xbaHo\x1am\n" +
+	"product_id\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x01R\tproductId\x88\x01\x01\x121\n" +
+	"\rselling_stall\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x02R\fsellingStall\x88\x01\x01:r\xbaHo\x1am\n" +
 	"\x19product.listing.reference\x12(请提供挂牌ID或平台商品ID之一\x1a&has(this.uuid) != has(this.product_id)B\a\n" +
 	"\x05_uuidB\r\n" +
-	"\v_product_id\"~\n" +
+	"\v_product_idB\x10\n" +
+	"\x0e_selling_stall\"~\n" +
 	"\x18SearchProductListingsReq\x12&\n" +
 	"\akeyword\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x00R\akeyword\x88\x01\x01\x12.\n" +
 	"\n" +

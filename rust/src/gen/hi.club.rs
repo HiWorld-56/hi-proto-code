@@ -1760,6 +1760,9 @@ pub struct GetProductListingReq {
     /// 定位已上架平台商品，供承销后取当前供货信息
     #[prost(string, optional, tag = "2")]
     pub product_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 可选销售摊位；传入时必须是其自有挂牌或有效承销商品
+    #[prost(string, optional, tag = "3")]
+    pub selling_stall: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SearchProductListingsReq {
@@ -2519,6 +2522,7 @@ pub mod product_market_directory_client {
                 );
             self.inner.unary(req, path, codec).await
         }
+        /// 消费者看到的统一待售目录：自有已挂牌与有效承销且仍挂牌商品，统一去重分页。
         pub async fn list_stall_listings(
             &mut self,
             request: impl tonic::IntoRequest<super::ListProductsReq>,
@@ -2548,7 +2552,7 @@ pub mod product_market_directory_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// 机器人的可销售目录：自有已挂牌商品 ∪ 有效承销且仍挂牌的商品。
+        /// 与ListStallListings共用同一待售目录；管理自有挂牌使用ProductMarket.ListMyListings。
         /// 按平台商品ID去重后统一分页；不含未挂牌库存、隐藏/下架商品或已退出承销。
         /// Listing.stall仍是原供货机器人，不将承销关系伪造成自有库存或自加盟。
         pub async fn list_sellable_listings(
@@ -13040,6 +13044,7 @@ pub mod product_distribution_client {
                 .insert(GrpcMethod::new("hi.club.ProductDistribution", "Join"));
             self.inner.unary(req, path, codec).await
         }
+        /// 仅查询指定/本人机器人主动承销的关系，不混入他人承销本机商品的供货关系。
         pub async fn list(
             &mut self,
             request: impl tonic::IntoRequest<super::ProductStallQuery>,

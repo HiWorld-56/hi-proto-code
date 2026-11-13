@@ -123,6 +123,7 @@ class ProductDistributionClient extends $grpc.Client {
     return $createUnaryCall(_$join, request, options: options);
   }
 
+  /// 仅查询指定/本人机器人主动承销的关系，不混入他人承销本机商品的供货关系。
   $grpc.ResponseFuture<$1.ListProductDistributionResp> list(
     $1.ProductStallQuery request, {
     $grpc.CallOptions? options,

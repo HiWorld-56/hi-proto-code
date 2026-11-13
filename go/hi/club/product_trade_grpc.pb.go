@@ -171,6 +171,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ProductDistributionClient interface {
 	Join(ctx context.Context, in *JoinProductDistributionReq, opts ...grpc.CallOption) (*ProductDistributionAgreement, error)
+	// 仅查询指定/本人机器人主动承销的关系，不混入他人承销本机商品的供货关系。
 	List(ctx context.Context, in *ProductStallQuery, opts ...grpc.CallOption) (*ListProductDistributionResp, error)
 	Leave(ctx context.Context, in *ProductDistributionQuery, opts ...grpc.CallOption) (*ProductDistributionAgreement, error)
 }
@@ -218,6 +219,7 @@ func (c *productDistributionClient) Leave(ctx context.Context, in *ProductDistri
 // for forward compatibility.
 type ProductDistributionServer interface {
 	Join(context.Context, *JoinProductDistributionReq) (*ProductDistributionAgreement, error)
+	// 仅查询指定/本人机器人主动承销的关系，不混入他人承销本机商品的供货关系。
 	List(context.Context, *ProductStallQuery) (*ListProductDistributionResp, error)
 	Leave(context.Context, *ProductDistributionQuery) (*ProductDistributionAgreement, error)
 }

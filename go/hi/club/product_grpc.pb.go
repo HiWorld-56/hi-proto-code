@@ -512,8 +512,9 @@ type ProductMarketDirectoryClient interface {
 	ListSellers(ctx context.Context, in *hi.Pagination, opts ...grpc.CallOption) (*ListProductSellersResp, error)
 	GetSeller(ctx context.Context, in *GetProductSellerReq, opts ...grpc.CallOption) (*ProductSeller, error)
 	ListSellerStalls(ctx context.Context, in *ListProductStallsReq, opts ...grpc.CallOption) (*ListProductStallsResp, error)
+	// 消费者看到的统一待售目录：自有已挂牌与有效承销且仍挂牌商品，统一去重分页。
 	ListStallListings(ctx context.Context, in *ListProductsReq, opts ...grpc.CallOption) (*ListProductListingsResp, error)
-	// 机器人的可销售目录：自有已挂牌商品 ∪ 有效承销且仍挂牌的商品。
+	// 与ListStallListings共用同一待售目录；管理自有挂牌使用ProductMarket.ListMyListings。
 	// 按平台商品ID去重后统一分页；不含未挂牌库存、隐藏/下架商品或已退出承销。
 	// Listing.stall仍是原供货机器人，不将承销关系伪造成自有库存或自加盟。
 	ListSellableListings(ctx context.Context, in *ListProductsReq, opts ...grpc.CallOption) (*ListProductListingsResp, error)
@@ -606,8 +607,9 @@ type ProductMarketDirectoryServer interface {
 	ListSellers(context.Context, *hi.Pagination) (*ListProductSellersResp, error)
 	GetSeller(context.Context, *GetProductSellerReq) (*ProductSeller, error)
 	ListSellerStalls(context.Context, *ListProductStallsReq) (*ListProductStallsResp, error)
+	// 消费者看到的统一待售目录：自有已挂牌与有效承销且仍挂牌商品，统一去重分页。
 	ListStallListings(context.Context, *ListProductsReq) (*ListProductListingsResp, error)
-	// 机器人的可销售目录：自有已挂牌商品 ∪ 有效承销且仍挂牌的商品。
+	// 与ListStallListings共用同一待售目录；管理自有挂牌使用ProductMarket.ListMyListings。
 	// 按平台商品ID去重后统一分页；不含未挂牌库存、隐藏/下架商品或已退出承销。
 	// Listing.stall仍是原供货机器人，不将承销关系伪造成自有库存或自加盟。
 	ListSellableListings(context.Context, *ListProductsReq) (*ListProductListingsResp, error)
