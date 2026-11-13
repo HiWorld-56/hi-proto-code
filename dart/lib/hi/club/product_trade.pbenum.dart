@@ -167,5 +167,77 @@ class ProductDeliveryStatus extends $pb.ProtobufEnum {
   const ProductDeliveryStatus._(super.value, super.name);
 }
 
+/// 缺失的历史直购销售来源无法还原，必须保留unknown，不把供货摊位猜填为销售摊位。
+class ProductAttributionStatus extends $pb.ProtobufEnum {
+  static const ProductAttributionStatus PRODUCT_ATTRIBUTION_STATUS_UNSPECIFIED =
+      ProductAttributionStatus._(
+          0, _omitEnumNames ? '' : 'PRODUCT_ATTRIBUTION_STATUS_UNSPECIFIED');
+  static const ProductAttributionStatus PRODUCT_ATTRIBUTION_STATUS_RECORDED =
+      ProductAttributionStatus._(
+          1, _omitEnumNames ? '' : 'PRODUCT_ATTRIBUTION_STATUS_RECORDED');
+  static const ProductAttributionStatus PRODUCT_ATTRIBUTION_STATUS_RECOVERED =
+      ProductAttributionStatus._(
+          2, _omitEnumNames ? '' : 'PRODUCT_ATTRIBUTION_STATUS_RECOVERED');
+  static const ProductAttributionStatus
+      PRODUCT_ATTRIBUTION_STATUS_UNKNOWN_LEGACY = ProductAttributionStatus._(
+          3, _omitEnumNames ? '' : 'PRODUCT_ATTRIBUTION_STATUS_UNKNOWN_LEGACY');
+
+  static const $core.List<ProductAttributionStatus> values =
+      <ProductAttributionStatus>[
+    PRODUCT_ATTRIBUTION_STATUS_UNSPECIFIED,
+    PRODUCT_ATTRIBUTION_STATUS_RECORDED,
+    PRODUCT_ATTRIBUTION_STATUS_RECOVERED,
+    PRODUCT_ATTRIBUTION_STATUS_UNKNOWN_LEGACY,
+  ];
+
+  static final $core.List<ProductAttributionStatus?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
+  static ProductAttributionStatus? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const ProductAttributionStatus._(super.value, super.name);
+}
+
+class ProductFiatSettlementKind extends $pb.ProtobufEnum {
+  static const ProductFiatSettlementKind
+      PRODUCT_FIAT_SETTLEMENT_KIND_UNSPECIFIED = ProductFiatSettlementKind._(
+          0, _omitEnumNames ? '' : 'PRODUCT_FIAT_SETTLEMENT_KIND_UNSPECIFIED');
+  static const ProductFiatSettlementKind
+      PRODUCT_FIAT_SETTLEMENT_KIND_RETAIL_RECEIPT = ProductFiatSettlementKind._(
+          1,
+          _omitEnumNames ? '' : 'PRODUCT_FIAT_SETTLEMENT_KIND_RETAIL_RECEIPT');
+  static const ProductFiatSettlementKind
+      PRODUCT_FIAT_SETTLEMENT_KIND_RETAIL_REFUND = ProductFiatSettlementKind._(
+          2,
+          _omitEnumNames ? '' : 'PRODUCT_FIAT_SETTLEMENT_KIND_RETAIL_REFUND');
+  static const ProductFiatSettlementKind
+      PRODUCT_FIAT_SETTLEMENT_KIND_SUPPLY_SETTLEMENT =
+      ProductFiatSettlementKind._(
+          3,
+          _omitEnumNames
+              ? ''
+              : 'PRODUCT_FIAT_SETTLEMENT_KIND_SUPPLY_SETTLEMENT');
+  static const ProductFiatSettlementKind
+      PRODUCT_FIAT_SETTLEMENT_KIND_SUPPLY_REVERSAL =
+      ProductFiatSettlementKind._(4,
+          _omitEnumNames ? '' : 'PRODUCT_FIAT_SETTLEMENT_KIND_SUPPLY_REVERSAL');
+
+  static const $core.List<ProductFiatSettlementKind> values =
+      <ProductFiatSettlementKind>[
+    PRODUCT_FIAT_SETTLEMENT_KIND_UNSPECIFIED,
+    PRODUCT_FIAT_SETTLEMENT_KIND_RETAIL_RECEIPT,
+    PRODUCT_FIAT_SETTLEMENT_KIND_RETAIL_REFUND,
+    PRODUCT_FIAT_SETTLEMENT_KIND_SUPPLY_SETTLEMENT,
+    PRODUCT_FIAT_SETTLEMENT_KIND_SUPPLY_REVERSAL,
+  ];
+
+  static final $core.List<ProductFiatSettlementKind?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 4);
+  static ProductFiatSettlementKind? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const ProductFiatSettlementKind._(super.value, super.name);
+}
+
 const $core.bool _omitEnumNames =
     $core.bool.fromEnvironment('protobuf.omit_enum_names');

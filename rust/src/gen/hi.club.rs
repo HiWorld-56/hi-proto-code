@@ -12440,6 +12440,9 @@ pub struct TerminalOrderSubmission {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DirectProductPurchaseReq {
+    /// 销售摊位必须随入口显式提交；后台校验自有挂牌或有效承销，不从收款方猜销售归属。
+    #[prost(string, optional, tag = "4")]
+    pub selling_stall: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "1")]
     pub request_uuid: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
@@ -12499,6 +12502,11 @@ pub struct ProductPurchaseOrder {
     /// 既有无此字段的订单均为承销采购
     #[prost(enumeration = "ProductPurchaseChannel", optional, tag = "16")]
     pub channel: ::core::option::Option<i32>,
+    /// 实际销售摊位；与supplier同DID表示自销，不影响payment.payer/payee
+    #[prost(message, optional, tag = "17")]
+    pub reseller: ::core::option::Option<super::Entity>,
+    #[prost(enumeration = "ProductAttributionStatus", optional, tag = "18")]
+    pub attribution_status: ::core::option::Option<i32>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProductPurchaseGroup {
@@ -12729,6 +12737,11 @@ pub struct ProductDeliveryOrder {
     pub created_at: ::core::option::Option<i64>,
     #[prost(int64, optional, tag = "9")]
     pub revision: ::core::option::Option<i64>,
+    /// 原供货摊位；本摊位自有履约必须与seller同DID
+    #[prost(message, optional, tag = "10")]
+    pub supplier: ::core::option::Option<super::Entity>,
+    #[prost(enumeration = "ProductAttributionStatus", optional, tag = "11")]
+    pub attribution_status: ::core::option::Option<i32>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ProductDeliveryQuery {
@@ -12741,6 +12754,91 @@ pub struct ListProductDeliveriesResp {
     pub list: ::prost::alloc::vec::Vec<ProductDeliveryOrder>,
     #[prost(int64, optional, tag = "2")]
     pub total: ::core::option::Option<i64>,
+}
+/// 外部法币账不冒充HiDID的代币付款。身份门面沿用Entity，非HiClub账户使用明确外部引用。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductExternalAccount {
+    #[prost(string, optional, tag = "1")]
+    pub system: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub account_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductSettlementParty {
+    #[prost(oneof = "product_settlement_party::Subject", tags = "1, 2")]
+    pub subject: ::core::option::Option<product_settlement_party::Subject>,
+}
+/// Nested message and enum types in `ProductSettlementParty`.
+pub mod product_settlement_party {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Subject {
+        #[prost(message, tag = "1")]
+        Entity(super::super::Entity),
+        #[prost(message, tag = "2")]
+        External(super::ProductExternalAccount),
+    }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductFiatAmount {
+    #[prost(string, optional, tag = "1")]
+    pub currency: ::core::option::Option<::prost::alloc::string::String>,
+    /// 精确十进制字符串，不使用浮点
+    #[prost(string, optional, tag = "2")]
+    pub amount: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductMarketOrderRef {
+    #[prost(oneof = "product_market_order_ref::Order", tags = "1, 2")]
+    pub order: ::core::option::Option<product_market_order_ref::Order>,
+}
+/// Nested message and enum types in `ProductMarketOrderRef`.
+pub mod product_market_order_ref {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Order {
+        #[prost(string, tag = "1")]
+        PurchaseId(::prost::alloc::string::String),
+        #[prost(string, tag = "2")]
+        DeliveryId(::prost::alloc::string::String),
+    }
+}
+/// 终端/供应外部系统的只增审计流水。模拟与真实标识显式保留；冲销关联原流水且反转资金双方。
+/// reseller/supplier是销售归属，payer/payee才是该笔钱的真实方向，两类事实不得相互替代。
+/// 跨机器人代币付款仍使用SettlementPayment与SettlementReceipt，通过market_order关联。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ProductFiatSettlement {
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub reference: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "3")]
+    pub source: ::core::option::Option<TerminalOrderRef>,
+    #[prost(message, optional, tag = "4")]
+    pub market_order: ::core::option::Option<ProductMarketOrderRef>,
+    #[prost(message, optional, tag = "5")]
+    pub reseller: ::core::option::Option<super::Entity>,
+    #[prost(message, optional, tag = "6")]
+    pub supplier: ::core::option::Option<super::Entity>,
+    #[prost(message, optional, tag = "7")]
+    pub payer: ::core::option::Option<ProductSettlementParty>,
+    #[prost(message, optional, tag = "8")]
+    pub payee: ::core::option::Option<ProductSettlementParty>,
+    #[prost(message, optional, tag = "9")]
+    pub total: ::core::option::Option<ProductFiatAmount>,
+    #[prost(enumeration = "ProductFiatSettlementKind", optional, tag = "10")]
+    pub kind: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "11")]
+    pub original_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(bool, optional, tag = "12")]
+    pub simulated: ::core::option::Option<bool>,
+    #[prost(int64, optional, tag = "13")]
+    pub created_at: ::core::option::Option<i64>,
+    #[prost(enumeration = "ProductAttributionStatus", optional, tag = "14")]
+    pub attribution_status: ::core::option::Option<i32>,
+    /// 纯定位，业务流转仍以平台商品ID为键
+    #[prost(string, optional, tag = "15")]
+    pub product_id: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 直接购买与承销采购共用库存、支付及履约，资格各自明确。
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -12891,6 +12989,76 @@ impl ProductDeliveryStatus {
             "PRODUCT_DELIVERY_STATUS_COMPLETE" => Some(Self::Complete),
             "PRODUCT_DELIVERY_STATUS_CANCELLED" => Some(Self::Cancelled),
             "PRODUCT_DELIVERY_STATUS_REVIEW" => Some(Self::Review),
+            _ => None,
+        }
+    }
+}
+/// 缺失的历史直购销售来源无法还原，必须保留unknown，不把供货摊位猜填为销售摊位。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum ProductAttributionStatus {
+    Unspecified = 0,
+    Recorded = 1,
+    Recovered = 2,
+    UnknownLegacy = 3,
+}
+impl ProductAttributionStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "PRODUCT_ATTRIBUTION_STATUS_UNSPECIFIED",
+            Self::Recorded => "PRODUCT_ATTRIBUTION_STATUS_RECORDED",
+            Self::Recovered => "PRODUCT_ATTRIBUTION_STATUS_RECOVERED",
+            Self::UnknownLegacy => "PRODUCT_ATTRIBUTION_STATUS_UNKNOWN_LEGACY",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "PRODUCT_ATTRIBUTION_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
+            "PRODUCT_ATTRIBUTION_STATUS_RECORDED" => Some(Self::Recorded),
+            "PRODUCT_ATTRIBUTION_STATUS_RECOVERED" => Some(Self::Recovered),
+            "PRODUCT_ATTRIBUTION_STATUS_UNKNOWN_LEGACY" => Some(Self::UnknownLegacy),
+            _ => None,
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum ProductFiatSettlementKind {
+    Unspecified = 0,
+    RetailReceipt = 1,
+    RetailRefund = 2,
+    SupplySettlement = 3,
+    SupplyReversal = 4,
+}
+impl ProductFiatSettlementKind {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "PRODUCT_FIAT_SETTLEMENT_KIND_UNSPECIFIED",
+            Self::RetailReceipt => "PRODUCT_FIAT_SETTLEMENT_KIND_RETAIL_RECEIPT",
+            Self::RetailRefund => "PRODUCT_FIAT_SETTLEMENT_KIND_RETAIL_REFUND",
+            Self::SupplySettlement => "PRODUCT_FIAT_SETTLEMENT_KIND_SUPPLY_SETTLEMENT",
+            Self::SupplyReversal => "PRODUCT_FIAT_SETTLEMENT_KIND_SUPPLY_REVERSAL",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "PRODUCT_FIAT_SETTLEMENT_KIND_UNSPECIFIED" => Some(Self::Unspecified),
+            "PRODUCT_FIAT_SETTLEMENT_KIND_RETAIL_RECEIPT" => Some(Self::RetailReceipt),
+            "PRODUCT_FIAT_SETTLEMENT_KIND_RETAIL_REFUND" => Some(Self::RetailRefund),
+            "PRODUCT_FIAT_SETTLEMENT_KIND_SUPPLY_SETTLEMENT" => {
+                Some(Self::SupplySettlement)
+            }
+            "PRODUCT_FIAT_SETTLEMENT_KIND_SUPPLY_REVERSAL" => Some(Self::SupplyReversal),
             _ => None,
         }
     }

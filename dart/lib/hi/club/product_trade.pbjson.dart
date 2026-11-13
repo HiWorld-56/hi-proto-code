@@ -99,6 +99,44 @@ final $typed_data.Uint8List productDeliveryStatusDescriptor = $convert.base64Dec
     'T0RVQ1RfREVMSVZFUllfU1RBVFVTX0NPTVBMRVRFEAISJQohUFJPRFVDVF9ERUxJVkVSWV9TVE'
     'FUVVNfQ0FOQ0VMTEVEEAMSIgoeUFJPRFVDVF9ERUxJVkVSWV9TVEFUVVNfUkVWSUVXEAQ=');
 
+@$core.Deprecated('Use productAttributionStatusDescriptor instead')
+const ProductAttributionStatus$json = {
+  '1': 'ProductAttributionStatus',
+  '2': [
+    {'1': 'PRODUCT_ATTRIBUTION_STATUS_UNSPECIFIED', '2': 0},
+    {'1': 'PRODUCT_ATTRIBUTION_STATUS_RECORDED', '2': 1},
+    {'1': 'PRODUCT_ATTRIBUTION_STATUS_RECOVERED', '2': 2},
+    {'1': 'PRODUCT_ATTRIBUTION_STATUS_UNKNOWN_LEGACY', '2': 3},
+  ],
+};
+
+/// Descriptor for `ProductAttributionStatus`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List productAttributionStatusDescriptor = $convert.base64Decode(
+    'ChhQcm9kdWN0QXR0cmlidXRpb25TdGF0dXMSKgomUFJPRFVDVF9BVFRSSUJVVElPTl9TVEFUVV'
+    'NfVU5TUEVDSUZJRUQQABInCiNQUk9EVUNUX0FUVFJJQlVUSU9OX1NUQVRVU19SRUNPUkRFRBAB'
+    'EigKJFBST0RVQ1RfQVRUUklCVVRJT05fU1RBVFVTX1JFQ09WRVJFRBACEi0KKVBST0RVQ1RfQV'
+    'RUUklCVVRJT05fU1RBVFVTX1VOS05PV05fTEVHQUNZEAM=');
+
+@$core.Deprecated('Use productFiatSettlementKindDescriptor instead')
+const ProductFiatSettlementKind$json = {
+  '1': 'ProductFiatSettlementKind',
+  '2': [
+    {'1': 'PRODUCT_FIAT_SETTLEMENT_KIND_UNSPECIFIED', '2': 0},
+    {'1': 'PRODUCT_FIAT_SETTLEMENT_KIND_RETAIL_RECEIPT', '2': 1},
+    {'1': 'PRODUCT_FIAT_SETTLEMENT_KIND_RETAIL_REFUND', '2': 2},
+    {'1': 'PRODUCT_FIAT_SETTLEMENT_KIND_SUPPLY_SETTLEMENT', '2': 3},
+    {'1': 'PRODUCT_FIAT_SETTLEMENT_KIND_SUPPLY_REVERSAL', '2': 4},
+  ],
+};
+
+/// Descriptor for `ProductFiatSettlementKind`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List productFiatSettlementKindDescriptor = $convert.base64Decode(
+    'ChlQcm9kdWN0RmlhdFNldHRsZW1lbnRLaW5kEiwKKFBST0RVQ1RfRklBVF9TRVRUTEVNRU5UX0'
+    'tJTkRfVU5TUEVDSUZJRUQQABIvCitQUk9EVUNUX0ZJQVRfU0VUVExFTUVOVF9LSU5EX1JFVEFJ'
+    'TF9SRUNFSVBUEAESLgoqUFJPRFVDVF9GSUFUX1NFVFRMRU1FTlRfS0lORF9SRVRBSUxfUkVGVU'
+    '5EEAISMgouUFJPRFVDVF9GSUFUX1NFVFRMRU1FTlRfS0lORF9TVVBQTFlfU0VUVExFTUVOVBAD'
+    'EjAKLFBST0RVQ1RfRklBVF9TRVRUTEVNRU5UX0tJTkRfU1VQUExZX1JFVkVSU0FMEAQ=');
+
 @$core.Deprecated('Use productStallQueryDescriptor instead')
 const ProductStallQuery$json = {
   '1': 'ProductStallQuery',
@@ -806,12 +844,22 @@ const DirectProductPurchaseReq$json = {
   '1': 'DirectProductPurchaseReq',
   '2': [
     {
+      '1': 'selling_stall',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'sellingStall',
+      '17': true
+    },
+    {
       '1': 'request_uuid',
       '3': 1,
       '4': 1,
       '5': 9,
       '8': {},
-      '9': 0,
+      '9': 1,
       '10': 'requestUuid',
       '17': true
     },
@@ -835,16 +883,19 @@ const DirectProductPurchaseReq$json = {
     },
   ],
   '8': [
+    {'1': '_selling_stall'},
     {'1': '_request_uuid'},
   ],
 };
 
 /// Descriptor for `DirectProductPurchaseReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List directProductPurchaseReqDescriptor = $convert.base64Decode(
-    'ChhEaXJlY3RQcm9kdWN0UHVyY2hhc2VSZXESMwoMcmVxdWVzdF91dWlkGAEgASgJQgu6SAjIAQ'
-    'FyA7ABAUgAUgtyZXF1ZXN0VXVpZIgBARI5CgRpdGVtGAIgASgLMh0uaGkuY2x1Yi5Qcm9kdWN0'
-    'UHVyY2hhc2VJbnB1dEIGukgDyAEBUgRpdGVtEj4KBnRhcmdldBgDIAEoCzIeLmhpLmNsdWIuUH'
-    'JvZHVjdERlbGl2ZXJ5VGFyZ2V0Qga6SAPIAQFSBnRhcmdldEIPCg1fcmVxdWVzdF91dWlk');
+    'ChhEaXJlY3RQcm9kdWN0UHVyY2hhc2VSZXESNAoNc2VsbGluZ19zdGFsbBgEIAEoCUIKukgHyA'
+    'EBcgIQAUgAUgxzZWxsaW5nU3RhbGyIAQESMwoMcmVxdWVzdF91dWlkGAEgASgJQgu6SAjIAQFy'
+    'A7ABAUgBUgtyZXF1ZXN0VXVpZIgBARI5CgRpdGVtGAIgASgLMh0uaGkuY2x1Yi5Qcm9kdWN0UH'
+    'VyY2hhc2VJbnB1dEIGukgDyAEBUgRpdGVtEj4KBnRhcmdldBgDIAEoCzIeLmhpLmNsdWIuUHJv'
+    'ZHVjdERlbGl2ZXJ5VGFyZ2V0Qga6SAPIAQFSBnRhcmdldEIQCg5fc2VsbGluZ19zdGFsbEIPCg'
+    '1fcmVxdWVzdF91dWlk');
 
 @$core.Deprecated('Use productPurchaseLineDescriptor instead')
 const ProductPurchaseLine$json = {
@@ -1082,6 +1133,26 @@ const ProductPurchaseOrder$json = {
       '10': 'channel',
       '17': true
     },
+    {
+      '1': 'reseller',
+      '3': 17,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'reseller'
+    },
+    {
+      '1': 'attribution_status',
+      '3': 18,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.club.ProductAttributionStatus',
+      '8': {},
+      '9': 8,
+      '10': 'attributionStatus',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -1093,6 +1164,7 @@ const ProductPurchaseOrder$json = {
     {'1': '_revision'},
     {'1': '_refund_reason'},
     {'1': '_channel'},
+    {'1': '_attribution_status'},
   ],
 };
 
@@ -1113,9 +1185,12 @@ final $typed_data.Uint8List productPurchaseOrderDescriptor = $convert.base64Deco
     'ZXZpc2lvbogBARI4CgZyZWZ1bmQYDiABKAsyGi5oaS5jbHViLlNldHRsZW1lbnRQYXltZW50Qg'
     'SQtRgCUgZyZWZ1bmQSLgoNcmVmdW5kX3JlYXNvbhgPIAEoCUIEkLUYAkgGUgxyZWZ1bmRSZWFz'
     'b26IAQESRAoHY2hhbm5lbBgQIAEoDjIfLmhpLmNsdWIuUHJvZHVjdFB1cmNoYXNlQ2hhbm5lbE'
-    'IEkLUYAkgHUgdjaGFubmVsiAEBOgSYtRgCQgUKA19pZEIRCg9fc291cmNlX2xpbmVfaWRCCQoH'
-    'X3N0YXR1c0INCgtfY3JlYXRlZF9hdEIMCgpfZXhwaXJlX2F0QgsKCV9yZXZpc2lvbkIQCg5fcm'
-    'VmdW5kX3JlYXNvbkIKCghfY2hhbm5lbA==');
+    'IEkLUYAkgHUgdjaGFubmVsiAEBEiwKCHJlc2VsbGVyGBEgASgLMgouaGkuRW50aXR5QgSQtRgC'
+    'UghyZXNlbGxlchJbChJhdHRyaWJ1dGlvbl9zdGF0dXMYEiABKA4yIS5oaS5jbHViLlByb2R1Y3'
+    'RBdHRyaWJ1dGlvblN0YXR1c0IEkLUYAkgIUhFhdHRyaWJ1dGlvblN0YXR1c4gBAToEmLUYAkIF'
+    'CgNfaWRCEQoPX3NvdXJjZV9saW5lX2lkQgkKB19zdGF0dXNCDQoLX2NyZWF0ZWRfYXRCDAoKX2'
+    'V4cGlyZV9hdEILCglfcmV2aXNpb25CEAoOX3JlZnVuZF9yZWFzb25CCgoIX2NoYW5uZWxCFQoT'
+    'X2F0dHJpYnV0aW9uX3N0YXR1cw==');
 
 @$core.Deprecated('Use productPurchaseGroupDescriptor instead')
 const ProductPurchaseGroup$json = {
@@ -2147,6 +2222,26 @@ const ProductDeliveryOrder$json = {
       '10': 'revision',
       '17': true
     },
+    {
+      '1': 'supplier',
+      '3': 10,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'supplier'
+    },
+    {
+      '1': 'attribution_status',
+      '3': 11,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.club.ProductAttributionStatus',
+      '8': {},
+      '9': 4,
+      '10': 'attributionStatus',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -2154,6 +2249,7 @@ const ProductDeliveryOrder$json = {
     {'1': '_status'},
     {'1': '_created_at'},
     {'1': '_revision'},
+    {'1': '_attribution_status'},
   ],
 };
 
@@ -2167,8 +2263,11 @@ final $typed_data.Uint8List productDeliveryOrderDescriptor = $convert.base64Deco
     'YgASgOMh4uaGkuY2x1Yi5Qcm9kdWN0RGVsaXZlcnlTdGF0dXNCBJC1GAJIAVIGc3RhdHVziAEB'
     'EkMKC2Z1bGZpbGxtZW50GAcgASgLMhsuaGkuY2x1Yi5Qcm9kdWN0RnVsZmlsbG1lbnRCBJC1GA'
     'JSC2Z1bGZpbGxtZW50EigKCmNyZWF0ZWRfYXQYCCABKANCBJC1GAJIAlIJY3JlYXRlZEF0iAEB'
-    'EiUKCHJldmlzaW9uGAkgASgDQgSQtRgCSANSCHJldmlzaW9uiAEBOgSYtRgCQgUKA19pZEIJCg'
-    'dfc3RhdHVzQg0KC19jcmVhdGVkX2F0QgsKCV9yZXZpc2lvbg==');
+    'EiUKCHJldmlzaW9uGAkgASgDQgSQtRgCSANSCHJldmlzaW9uiAEBEiwKCHN1cHBsaWVyGAogAS'
+    'gLMgouaGkuRW50aXR5QgSQtRgCUghzdXBwbGllchJbChJhdHRyaWJ1dGlvbl9zdGF0dXMYCyAB'
+    'KA4yIS5oaS5jbHViLlByb2R1Y3RBdHRyaWJ1dGlvblN0YXR1c0IEkLUYAkgEUhFhdHRyaWJ1dG'
+    'lvblN0YXR1c4gBAToEmLUYAkIFCgNfaWRCCQoHX3N0YXR1c0INCgtfY3JlYXRlZF9hdEILCglf'
+    'cmV2aXNpb25CFQoTX2F0dHJpYnV0aW9uX3N0YXR1cw==');
 
 @$core.Deprecated('Use productDeliveryQueryDescriptor instead')
 const ProductDeliveryQuery$json = {
@@ -2230,3 +2329,346 @@ final $typed_data.Uint8List listProductDeliveriesRespDescriptor = $convert.base6
     'ChlMaXN0UHJvZHVjdERlbGl2ZXJpZXNSZXNwEjcKBGxpc3QYASADKAsyHS5oaS5jbHViLlByb2'
     'R1Y3REZWxpdmVyeU9yZGVyQgSQtRgCUgRsaXN0Eh8KBXRvdGFsGAIgASgDQgSQtRgCSABSBXRv'
     'dGFsiAEBOgSYtRgCQggKBl90b3RhbA==');
+
+@$core.Deprecated('Use productExternalAccountDescriptor instead')
+const ProductExternalAccount$json = {
+  '1': 'ProductExternalAccount',
+  '2': [
+    {
+      '1': 'system',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'system',
+      '17': true
+    },
+    {
+      '1': 'account_id',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'accountId',
+      '17': true
+    },
+    {
+      '1': 'name',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'name',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_system'},
+    {'1': '_account_id'},
+    {'1': '_name'},
+  ],
+};
+
+/// Descriptor for `ProductExternalAccount`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List productExternalAccountDescriptor = $convert.base64Decode(
+    'ChZQcm9kdWN0RXh0ZXJuYWxBY2NvdW50EiEKBnN5c3RlbRgBIAEoCUIEkLUYAkgAUgZzeXN0ZW'
+    '2IAQESKAoKYWNjb3VudF9pZBgCIAEoCUIEkLUYAkgBUglhY2NvdW50SWSIAQESHQoEbmFtZRgD'
+    'IAEoCUIEkLUYAkgCUgRuYW1liAEBOgSYtRgCQgkKB19zeXN0ZW1CDQoLX2FjY291bnRfaWRCBw'
+    'oFX25hbWU=');
+
+@$core.Deprecated('Use productSettlementPartyDescriptor instead')
+const ProductSettlementParty$json = {
+  '1': 'ProductSettlementParty',
+  '2': [
+    {
+      '1': 'entity',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '9': 0,
+      '10': 'entity'
+    },
+    {
+      '1': 'external',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductExternalAccount',
+      '8': {},
+      '9': 0,
+      '10': 'external'
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': 'subject'},
+  ],
+};
+
+/// Descriptor for `ProductSettlementParty`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List productSettlementPartyDescriptor = $convert.base64Decode(
+    'ChZQcm9kdWN0U2V0dGxlbWVudFBhcnR5EioKBmVudGl0eRgBIAEoCzIKLmhpLkVudGl0eUIEkL'
+    'UYAkgAUgZlbnRpdHkSQwoIZXh0ZXJuYWwYAiABKAsyHy5oaS5jbHViLlByb2R1Y3RFeHRlcm5h'
+    'bEFjY291bnRCBJC1GAJIAFIIZXh0ZXJuYWw6BJi1GAJCCQoHc3ViamVjdA==');
+
+@$core.Deprecated('Use productFiatAmountDescriptor instead')
+const ProductFiatAmount$json = {
+  '1': 'ProductFiatAmount',
+  '2': [
+    {
+      '1': 'currency',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'currency',
+      '17': true
+    },
+    {
+      '1': 'amount',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'amount',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_currency'},
+    {'1': '_amount'},
+  ],
+};
+
+/// Descriptor for `ProductFiatAmount`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List productFiatAmountDescriptor = $convert.base64Decode(
+    'ChFQcm9kdWN0RmlhdEFtb3VudBIlCghjdXJyZW5jeRgBIAEoCUIEkLUYAkgAUghjdXJyZW5jeY'
+    'gBARIhCgZhbW91bnQYAiABKAlCBJC1GAJIAVIGYW1vdW50iAEBOgSYtRgCQgsKCV9jdXJyZW5j'
+    'eUIJCgdfYW1vdW50');
+
+@$core.Deprecated('Use productMarketOrderRefDescriptor instead')
+const ProductMarketOrderRef$json = {
+  '1': 'ProductMarketOrderRef',
+  '2': [
+    {
+      '1': 'purchase_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'purchaseId'
+    },
+    {
+      '1': 'delivery_id',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'deliveryId'
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': 'order'},
+  ],
+};
+
+/// Descriptor for `ProductMarketOrderRef`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List productMarketOrderRefDescriptor = $convert.base64Decode(
+    'ChVQcm9kdWN0TWFya2V0T3JkZXJSZWYSJwoLcHVyY2hhc2VfaWQYASABKAlCBJC1GAJIAFIKcH'
+    'VyY2hhc2VJZBInCgtkZWxpdmVyeV9pZBgCIAEoCUIEkLUYAkgAUgpkZWxpdmVyeUlkOgSYtRgC'
+    'QgcKBW9yZGVy');
+
+@$core.Deprecated('Use productFiatSettlementDescriptor instead')
+const ProductFiatSettlement$json = {
+  '1': 'ProductFiatSettlement',
+  '2': [
+    {
+      '1': 'id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'id',
+      '17': true
+    },
+    {
+      '1': 'reference',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'reference',
+      '17': true
+    },
+    {
+      '1': 'source',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.TerminalOrderRef',
+      '8': {},
+      '10': 'source'
+    },
+    {
+      '1': 'market_order',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductMarketOrderRef',
+      '8': {},
+      '10': 'marketOrder'
+    },
+    {
+      '1': 'reseller',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'reseller'
+    },
+    {
+      '1': 'supplier',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'supplier'
+    },
+    {
+      '1': 'payer',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductSettlementParty',
+      '8': {},
+      '10': 'payer'
+    },
+    {
+      '1': 'payee',
+      '3': 8,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductSettlementParty',
+      '8': {},
+      '10': 'payee'
+    },
+    {
+      '1': 'total',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductFiatAmount',
+      '8': {},
+      '10': 'total'
+    },
+    {
+      '1': 'kind',
+      '3': 10,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.club.ProductFiatSettlementKind',
+      '8': {},
+      '9': 2,
+      '10': 'kind',
+      '17': true
+    },
+    {
+      '1': 'original_id',
+      '3': 11,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 3,
+      '10': 'originalId',
+      '17': true
+    },
+    {
+      '1': 'simulated',
+      '3': 12,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 4,
+      '10': 'simulated',
+      '17': true
+    },
+    {
+      '1': 'created_at',
+      '3': 13,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 5,
+      '10': 'createdAt',
+      '17': true
+    },
+    {
+      '1': 'attribution_status',
+      '3': 14,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.club.ProductAttributionStatus',
+      '8': {},
+      '9': 6,
+      '10': 'attributionStatus',
+      '17': true
+    },
+    {
+      '1': 'product_id',
+      '3': 15,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 7,
+      '10': 'productId',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_id'},
+    {'1': '_reference'},
+    {'1': '_kind'},
+    {'1': '_original_id'},
+    {'1': '_simulated'},
+    {'1': '_created_at'},
+    {'1': '_attribution_status'},
+    {'1': '_product_id'},
+  ],
+};
+
+/// Descriptor for `ProductFiatSettlement`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List productFiatSettlementDescriptor = $convert.base64Decode(
+    'ChVQcm9kdWN0RmlhdFNldHRsZW1lbnQSGQoCaWQYASABKAlCBJC1GAJIAFICaWSIAQESJwoJcm'
+    'VmZXJlbmNlGAIgASgJQgSQtRgCSAFSCXJlZmVyZW5jZYgBARI3CgZzb3VyY2UYAyABKAsyGS5o'
+    'aS5jbHViLlRlcm1pbmFsT3JkZXJSZWZCBJC1GAJSBnNvdXJjZRJHCgxtYXJrZXRfb3JkZXIYBC'
+    'ABKAsyHi5oaS5jbHViLlByb2R1Y3RNYXJrZXRPcmRlclJlZkIEkLUYAlILbWFya2V0T3JkZXIS'
+    'LAoIcmVzZWxsZXIYBSABKAsyCi5oaS5FbnRpdHlCBJC1GAJSCHJlc2VsbGVyEiwKCHN1cHBsaW'
+    'VyGAYgASgLMgouaGkuRW50aXR5QgSQtRgCUghzdXBwbGllchI7CgVwYXllchgHIAEoCzIfLmhp'
+    'LmNsdWIuUHJvZHVjdFNldHRsZW1lbnRQYXJ0eUIEkLUYAlIFcGF5ZXISOwoFcGF5ZWUYCCABKA'
+    'syHy5oaS5jbHViLlByb2R1Y3RTZXR0bGVtZW50UGFydHlCBJC1GAJSBXBheWVlEjYKBXRvdGFs'
+    'GAkgASgLMhouaGkuY2x1Yi5Qcm9kdWN0RmlhdEFtb3VudEIEkLUYAlIFdG90YWwSQQoEa2luZB'
+    'gKIAEoDjIiLmhpLmNsdWIuUHJvZHVjdEZpYXRTZXR0bGVtZW50S2luZEIEkLUYAkgCUgRraW5k'
+    'iAEBEioKC29yaWdpbmFsX2lkGAsgASgJQgSQtRgCSANSCm9yaWdpbmFsSWSIAQESJwoJc2ltdW'
+    'xhdGVkGAwgASgIQgSQtRgCSARSCXNpbXVsYXRlZIgBARIoCgpjcmVhdGVkX2F0GA0gASgDQgSQ'
+    'tRgCSAVSCWNyZWF0ZWRBdIgBARJbChJhdHRyaWJ1dGlvbl9zdGF0dXMYDiABKA4yIS5oaS5jbH'
+    'ViLlByb2R1Y3RBdHRyaWJ1dGlvblN0YXR1c0IEkLUYAkgGUhFhdHRyaWJ1dGlvblN0YXR1c4gB'
+    'ARIoCgpwcm9kdWN0X2lkGA8gASgJQgSQtRgCSAdSCXByb2R1Y3RJZIgBAToEmLUYAkIFCgNfaW'
+    'RCDAoKX3JlZmVyZW5jZUIHCgVfa2luZEIOCgxfb3JpZ2luYWxfaWRCDAoKX3NpbXVsYXRlZEIN'
+    'CgtfY3JlYXRlZF9hdEIVChNfYXR0cmlidXRpb25fc3RhdHVzQg0KC19wcm9kdWN0X2lk');

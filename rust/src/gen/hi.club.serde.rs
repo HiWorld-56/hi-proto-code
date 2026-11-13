@@ -4789,6 +4789,9 @@ impl serde::Serialize for DirectProductPurchaseReq {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
+        if self.selling_stall.is_some() {
+            len += 1;
+        }
         if self.request_uuid.is_some() {
             len += 1;
         }
@@ -4799,6 +4802,9 @@ impl serde::Serialize for DirectProductPurchaseReq {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("hi.club.DirectProductPurchaseReq", len)?;
+        if let Some(v) = self.selling_stall.as_ref() {
+            struct_ser.serialize_field("sellingStall", v)?;
+        }
         if let Some(v) = self.request_uuid.as_ref() {
             struct_ser.serialize_field("requestUuid", v)?;
         }
@@ -4818,6 +4824,8 @@ impl<'de> serde::Deserialize<'de> for DirectProductPurchaseReq {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
+            "selling_stall",
+            "sellingStall",
             "request_uuid",
             "requestUuid",
             "item",
@@ -4826,6 +4834,7 @@ impl<'de> serde::Deserialize<'de> for DirectProductPurchaseReq {
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
+            SellingStall,
             RequestUuid,
             Item,
             Target,
@@ -4850,6 +4859,7 @@ impl<'de> serde::Deserialize<'de> for DirectProductPurchaseReq {
                         E: serde::de::Error,
                     {
                         match value {
+                            "sellingStall" | "selling_stall" => Ok(GeneratedField::SellingStall),
                             "requestUuid" | "request_uuid" => Ok(GeneratedField::RequestUuid),
                             "item" => Ok(GeneratedField::Item),
                             "target" => Ok(GeneratedField::Target),
@@ -4872,11 +4882,18 @@ impl<'de> serde::Deserialize<'de> for DirectProductPurchaseReq {
                 where
                     V: serde::de::MapAccess<'de>,
             {
+                let mut selling_stall__ = None;
                 let mut request_uuid__ = None;
                 let mut item__ = None;
                 let mut target__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
+                        GeneratedField::SellingStall => {
+                            if selling_stall__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sellingStall"));
+                            }
+                            selling_stall__ = map_.next_value()?;
+                        }
                         GeneratedField::RequestUuid => {
                             if request_uuid__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("requestUuid"));
@@ -4898,6 +4915,7 @@ impl<'de> serde::Deserialize<'de> for DirectProductPurchaseReq {
                     }
                 }
                 Ok(DirectProductPurchaseReq {
+                    selling_stall: selling_stall__,
                     request_uuid: request_uuid__,
                     item: item__,
                     target: target__,
@@ -23995,6 +24013,83 @@ impl<'de> serde::Deserialize<'de> for ProductAnnouncement {
         deserializer.deserialize_struct("hi.club.ProductAnnouncement", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for ProductAttributionStatus {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unspecified => "PRODUCT_ATTRIBUTION_STATUS_UNSPECIFIED",
+            Self::Recorded => "PRODUCT_ATTRIBUTION_STATUS_RECORDED",
+            Self::Recovered => "PRODUCT_ATTRIBUTION_STATUS_RECOVERED",
+            Self::UnknownLegacy => "PRODUCT_ATTRIBUTION_STATUS_UNKNOWN_LEGACY",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for ProductAttributionStatus {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "PRODUCT_ATTRIBUTION_STATUS_UNSPECIFIED",
+            "PRODUCT_ATTRIBUTION_STATUS_RECORDED",
+            "PRODUCT_ATTRIBUTION_STATUS_RECOVERED",
+            "PRODUCT_ATTRIBUTION_STATUS_UNKNOWN_LEGACY",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = ProductAttributionStatus;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "PRODUCT_ATTRIBUTION_STATUS_UNSPECIFIED" => Ok(ProductAttributionStatus::Unspecified),
+                    "PRODUCT_ATTRIBUTION_STATUS_RECORDED" => Ok(ProductAttributionStatus::Recorded),
+                    "PRODUCT_ATTRIBUTION_STATUS_RECOVERED" => Ok(ProductAttributionStatus::Recovered),
+                    "PRODUCT_ATTRIBUTION_STATUS_UNKNOWN_LEGACY" => Ok(ProductAttributionStatus::UnknownLegacy),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
 impl serde::Serialize for ProductDeliveryInput {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -24311,6 +24406,12 @@ impl serde::Serialize for ProductDeliveryOrder {
         if self.revision.is_some() {
             len += 1;
         }
+        if self.supplier.is_some() {
+            len += 1;
+        }
+        if self.attribution_status.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.club.ProductDeliveryOrder", len)?;
         if let Some(v) = self.id.as_ref() {
             struct_ser.serialize_field("id", v)?;
@@ -24345,6 +24446,14 @@ impl serde::Serialize for ProductDeliveryOrder {
             #[allow(clippy::needless_borrows_for_generic_args)]
             struct_ser.serialize_field("revision", ToString::to_string(&v).as_str())?;
         }
+        if let Some(v) = self.supplier.as_ref() {
+            struct_ser.serialize_field("supplier", v)?;
+        }
+        if let Some(v) = self.attribution_status.as_ref() {
+            let v = ProductAttributionStatus::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("attributionStatus", &v)?;
+        }
         struct_ser.end()
     }
 }
@@ -24365,6 +24474,9 @@ impl<'de> serde::Deserialize<'de> for ProductDeliveryOrder {
             "created_at",
             "createdAt",
             "revision",
+            "supplier",
+            "attribution_status",
+            "attributionStatus",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -24378,6 +24490,8 @@ impl<'de> serde::Deserialize<'de> for ProductDeliveryOrder {
             Fulfillment,
             CreatedAt,
             Revision,
+            Supplier,
+            AttributionStatus,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -24408,6 +24522,8 @@ impl<'de> serde::Deserialize<'de> for ProductDeliveryOrder {
                             "fulfillment" => Ok(GeneratedField::Fulfillment),
                             "createdAt" | "created_at" => Ok(GeneratedField::CreatedAt),
                             "revision" => Ok(GeneratedField::Revision),
+                            "supplier" => Ok(GeneratedField::Supplier),
+                            "attributionStatus" | "attribution_status" => Ok(GeneratedField::AttributionStatus),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -24436,6 +24552,8 @@ impl<'de> serde::Deserialize<'de> for ProductDeliveryOrder {
                 let mut fulfillment__ = None;
                 let mut created_at__ = None;
                 let mut revision__ = None;
+                let mut supplier__ = None;
+                let mut attribution_status__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Id => {
@@ -24496,6 +24614,18 @@ impl<'de> serde::Deserialize<'de> for ProductDeliveryOrder {
                                 map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
+                        GeneratedField::Supplier => {
+                            if supplier__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("supplier"));
+                            }
+                            supplier__ = map_.next_value()?;
+                        }
+                        GeneratedField::AttributionStatus => {
+                            if attribution_status__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("attributionStatus"));
+                            }
+                            attribution_status__ = map_.next_value::<::std::option::Option<ProductAttributionStatus>>()?.map(|x| x as i32);
+                        }
                     }
                 }
                 Ok(ProductDeliveryOrder {
@@ -24508,6 +24638,8 @@ impl<'de> serde::Deserialize<'de> for ProductDeliveryOrder {
                     fulfillment: fulfillment__,
                     created_at: created_at__,
                     revision: revision__,
+                    supplier: supplier__,
+                    attribution_status: attribution_status__,
                 })
             }
         }
@@ -25533,6 +25665,662 @@ impl<'de> serde::Deserialize<'de> for ProductDistributionQuery {
             }
         }
         deserializer.deserialize_struct("hi.club.ProductDistributionQuery", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ProductExternalAccount {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.system.is_some() {
+            len += 1;
+        }
+        if self.account_id.is_some() {
+            len += 1;
+        }
+        if self.name.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.ProductExternalAccount", len)?;
+        if let Some(v) = self.system.as_ref() {
+            struct_ser.serialize_field("system", v)?;
+        }
+        if let Some(v) = self.account_id.as_ref() {
+            struct_ser.serialize_field("accountId", v)?;
+        }
+        if let Some(v) = self.name.as_ref() {
+            struct_ser.serialize_field("name", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ProductExternalAccount {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "system",
+            "account_id",
+            "accountId",
+            "name",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            System,
+            AccountId,
+            Name,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "system" => Ok(GeneratedField::System),
+                            "accountId" | "account_id" => Ok(GeneratedField::AccountId),
+                            "name" => Ok(GeneratedField::Name),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ProductExternalAccount;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.ProductExternalAccount")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ProductExternalAccount, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut system__ = None;
+                let mut account_id__ = None;
+                let mut name__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::System => {
+                            if system__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("system"));
+                            }
+                            system__ = map_.next_value()?;
+                        }
+                        GeneratedField::AccountId => {
+                            if account_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("accountId"));
+                            }
+                            account_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Name => {
+                            if name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("name"));
+                            }
+                            name__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ProductExternalAccount {
+                    system: system__,
+                    account_id: account_id__,
+                    name: name__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.ProductExternalAccount", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ProductFiatAmount {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.currency.is_some() {
+            len += 1;
+        }
+        if self.amount.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.ProductFiatAmount", len)?;
+        if let Some(v) = self.currency.as_ref() {
+            struct_ser.serialize_field("currency", v)?;
+        }
+        if let Some(v) = self.amount.as_ref() {
+            struct_ser.serialize_field("amount", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ProductFiatAmount {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "currency",
+            "amount",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Currency,
+            Amount,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "currency" => Ok(GeneratedField::Currency),
+                            "amount" => Ok(GeneratedField::Amount),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ProductFiatAmount;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.ProductFiatAmount")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ProductFiatAmount, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut currency__ = None;
+                let mut amount__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Currency => {
+                            if currency__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("currency"));
+                            }
+                            currency__ = map_.next_value()?;
+                        }
+                        GeneratedField::Amount => {
+                            if amount__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("amount"));
+                            }
+                            amount__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ProductFiatAmount {
+                    currency: currency__,
+                    amount: amount__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.ProductFiatAmount", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ProductFiatSettlement {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.id.is_some() {
+            len += 1;
+        }
+        if self.reference.is_some() {
+            len += 1;
+        }
+        if self.source.is_some() {
+            len += 1;
+        }
+        if self.market_order.is_some() {
+            len += 1;
+        }
+        if self.reseller.is_some() {
+            len += 1;
+        }
+        if self.supplier.is_some() {
+            len += 1;
+        }
+        if self.payer.is_some() {
+            len += 1;
+        }
+        if self.payee.is_some() {
+            len += 1;
+        }
+        if self.total.is_some() {
+            len += 1;
+        }
+        if self.kind.is_some() {
+            len += 1;
+        }
+        if self.original_id.is_some() {
+            len += 1;
+        }
+        if self.simulated.is_some() {
+            len += 1;
+        }
+        if self.created_at.is_some() {
+            len += 1;
+        }
+        if self.attribution_status.is_some() {
+            len += 1;
+        }
+        if self.product_id.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.ProductFiatSettlement", len)?;
+        if let Some(v) = self.id.as_ref() {
+            struct_ser.serialize_field("id", v)?;
+        }
+        if let Some(v) = self.reference.as_ref() {
+            struct_ser.serialize_field("reference", v)?;
+        }
+        if let Some(v) = self.source.as_ref() {
+            struct_ser.serialize_field("source", v)?;
+        }
+        if let Some(v) = self.market_order.as_ref() {
+            struct_ser.serialize_field("marketOrder", v)?;
+        }
+        if let Some(v) = self.reseller.as_ref() {
+            struct_ser.serialize_field("reseller", v)?;
+        }
+        if let Some(v) = self.supplier.as_ref() {
+            struct_ser.serialize_field("supplier", v)?;
+        }
+        if let Some(v) = self.payer.as_ref() {
+            struct_ser.serialize_field("payer", v)?;
+        }
+        if let Some(v) = self.payee.as_ref() {
+            struct_ser.serialize_field("payee", v)?;
+        }
+        if let Some(v) = self.total.as_ref() {
+            struct_ser.serialize_field("total", v)?;
+        }
+        if let Some(v) = self.kind.as_ref() {
+            let v = ProductFiatSettlementKind::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("kind", &v)?;
+        }
+        if let Some(v) = self.original_id.as_ref() {
+            struct_ser.serialize_field("originalId", v)?;
+        }
+        if let Some(v) = self.simulated.as_ref() {
+            struct_ser.serialize_field("simulated", v)?;
+        }
+        if let Some(v) = self.created_at.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("createdAt", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.attribution_status.as_ref() {
+            let v = ProductAttributionStatus::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("attributionStatus", &v)?;
+        }
+        if let Some(v) = self.product_id.as_ref() {
+            struct_ser.serialize_field("productId", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ProductFiatSettlement {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "id",
+            "reference",
+            "source",
+            "market_order",
+            "marketOrder",
+            "reseller",
+            "supplier",
+            "payer",
+            "payee",
+            "total",
+            "kind",
+            "original_id",
+            "originalId",
+            "simulated",
+            "created_at",
+            "createdAt",
+            "attribution_status",
+            "attributionStatus",
+            "product_id",
+            "productId",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Id,
+            Reference,
+            Source,
+            MarketOrder,
+            Reseller,
+            Supplier,
+            Payer,
+            Payee,
+            Total,
+            Kind,
+            OriginalId,
+            Simulated,
+            CreatedAt,
+            AttributionStatus,
+            ProductId,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "id" => Ok(GeneratedField::Id),
+                            "reference" => Ok(GeneratedField::Reference),
+                            "source" => Ok(GeneratedField::Source),
+                            "marketOrder" | "market_order" => Ok(GeneratedField::MarketOrder),
+                            "reseller" => Ok(GeneratedField::Reseller),
+                            "supplier" => Ok(GeneratedField::Supplier),
+                            "payer" => Ok(GeneratedField::Payer),
+                            "payee" => Ok(GeneratedField::Payee),
+                            "total" => Ok(GeneratedField::Total),
+                            "kind" => Ok(GeneratedField::Kind),
+                            "originalId" | "original_id" => Ok(GeneratedField::OriginalId),
+                            "simulated" => Ok(GeneratedField::Simulated),
+                            "createdAt" | "created_at" => Ok(GeneratedField::CreatedAt),
+                            "attributionStatus" | "attribution_status" => Ok(GeneratedField::AttributionStatus),
+                            "productId" | "product_id" => Ok(GeneratedField::ProductId),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ProductFiatSettlement;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.ProductFiatSettlement")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ProductFiatSettlement, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut id__ = None;
+                let mut reference__ = None;
+                let mut source__ = None;
+                let mut market_order__ = None;
+                let mut reseller__ = None;
+                let mut supplier__ = None;
+                let mut payer__ = None;
+                let mut payee__ = None;
+                let mut total__ = None;
+                let mut kind__ = None;
+                let mut original_id__ = None;
+                let mut simulated__ = None;
+                let mut created_at__ = None;
+                let mut attribution_status__ = None;
+                let mut product_id__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Id => {
+                            if id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("id"));
+                            }
+                            id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Reference => {
+                            if reference__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("reference"));
+                            }
+                            reference__ = map_.next_value()?;
+                        }
+                        GeneratedField::Source => {
+                            if source__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("source"));
+                            }
+                            source__ = map_.next_value()?;
+                        }
+                        GeneratedField::MarketOrder => {
+                            if market_order__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("marketOrder"));
+                            }
+                            market_order__ = map_.next_value()?;
+                        }
+                        GeneratedField::Reseller => {
+                            if reseller__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("reseller"));
+                            }
+                            reseller__ = map_.next_value()?;
+                        }
+                        GeneratedField::Supplier => {
+                            if supplier__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("supplier"));
+                            }
+                            supplier__ = map_.next_value()?;
+                        }
+                        GeneratedField::Payer => {
+                            if payer__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("payer"));
+                            }
+                            payer__ = map_.next_value()?;
+                        }
+                        GeneratedField::Payee => {
+                            if payee__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("payee"));
+                            }
+                            payee__ = map_.next_value()?;
+                        }
+                        GeneratedField::Total => {
+                            if total__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("total"));
+                            }
+                            total__ = map_.next_value()?;
+                        }
+                        GeneratedField::Kind => {
+                            if kind__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("kind"));
+                            }
+                            kind__ = map_.next_value::<::std::option::Option<ProductFiatSettlementKind>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::OriginalId => {
+                            if original_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("originalId"));
+                            }
+                            original_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::Simulated => {
+                            if simulated__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("simulated"));
+                            }
+                            simulated__ = map_.next_value()?;
+                        }
+                        GeneratedField::CreatedAt => {
+                            if created_at__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("createdAt"));
+                            }
+                            created_at__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::AttributionStatus => {
+                            if attribution_status__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("attributionStatus"));
+                            }
+                            attribution_status__ = map_.next_value::<::std::option::Option<ProductAttributionStatus>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::ProductId => {
+                            if product_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("productId"));
+                            }
+                            product_id__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ProductFiatSettlement {
+                    id: id__,
+                    reference: reference__,
+                    source: source__,
+                    market_order: market_order__,
+                    reseller: reseller__,
+                    supplier: supplier__,
+                    payer: payer__,
+                    payee: payee__,
+                    total: total__,
+                    kind: kind__,
+                    original_id: original_id__,
+                    simulated: simulated__,
+                    created_at: created_at__,
+                    attribution_status: attribution_status__,
+                    product_id: product_id__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.ProductFiatSettlement", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ProductFiatSettlementKind {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unspecified => "PRODUCT_FIAT_SETTLEMENT_KIND_UNSPECIFIED",
+            Self::RetailReceipt => "PRODUCT_FIAT_SETTLEMENT_KIND_RETAIL_RECEIPT",
+            Self::RetailRefund => "PRODUCT_FIAT_SETTLEMENT_KIND_RETAIL_REFUND",
+            Self::SupplySettlement => "PRODUCT_FIAT_SETTLEMENT_KIND_SUPPLY_SETTLEMENT",
+            Self::SupplyReversal => "PRODUCT_FIAT_SETTLEMENT_KIND_SUPPLY_REVERSAL",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for ProductFiatSettlementKind {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "PRODUCT_FIAT_SETTLEMENT_KIND_UNSPECIFIED",
+            "PRODUCT_FIAT_SETTLEMENT_KIND_RETAIL_RECEIPT",
+            "PRODUCT_FIAT_SETTLEMENT_KIND_RETAIL_REFUND",
+            "PRODUCT_FIAT_SETTLEMENT_KIND_SUPPLY_SETTLEMENT",
+            "PRODUCT_FIAT_SETTLEMENT_KIND_SUPPLY_REVERSAL",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = ProductFiatSettlementKind;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "PRODUCT_FIAT_SETTLEMENT_KIND_UNSPECIFIED" => Ok(ProductFiatSettlementKind::Unspecified),
+                    "PRODUCT_FIAT_SETTLEMENT_KIND_RETAIL_RECEIPT" => Ok(ProductFiatSettlementKind::RetailReceipt),
+                    "PRODUCT_FIAT_SETTLEMENT_KIND_RETAIL_REFUND" => Ok(ProductFiatSettlementKind::RetailRefund),
+                    "PRODUCT_FIAT_SETTLEMENT_KIND_SUPPLY_SETTLEMENT" => Ok(ProductFiatSettlementKind::SupplySettlement),
+                    "PRODUCT_FIAT_SETTLEMENT_KIND_SUPPLY_REVERSAL" => Ok(ProductFiatSettlementKind::SupplyReversal),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
     }
 }
 impl serde::Serialize for ProductFulfillment {
@@ -26827,6 +27615,115 @@ impl<'de> serde::Deserialize<'de> for ProductListingStatus {
         deserializer.deserialize_any(GeneratedVisitor)
     }
 }
+impl serde::Serialize for ProductMarketOrderRef {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.order.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.ProductMarketOrderRef", len)?;
+        if let Some(v) = self.order.as_ref() {
+            match v {
+                product_market_order_ref::Order::PurchaseId(v) => {
+                    struct_ser.serialize_field("purchaseId", v)?;
+                }
+                product_market_order_ref::Order::DeliveryId(v) => {
+                    struct_ser.serialize_field("deliveryId", v)?;
+                }
+            }
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ProductMarketOrderRef {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "purchase_id",
+            "purchaseId",
+            "delivery_id",
+            "deliveryId",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            PurchaseId,
+            DeliveryId,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "purchaseId" | "purchase_id" => Ok(GeneratedField::PurchaseId),
+                            "deliveryId" | "delivery_id" => Ok(GeneratedField::DeliveryId),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ProductMarketOrderRef;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.ProductMarketOrderRef")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ProductMarketOrderRef, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut order__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::PurchaseId => {
+                            if order__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("purchaseId"));
+                            }
+                            order__ = map_.next_value::<::std::option::Option<_>>()?.map(product_market_order_ref::Order::PurchaseId);
+                        }
+                        GeneratedField::DeliveryId => {
+                            if order__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("deliveryId"));
+                            }
+                            order__ = map_.next_value::<::std::option::Option<_>>()?.map(product_market_order_ref::Order::DeliveryId);
+                        }
+                    }
+                }
+                Ok(ProductMarketOrderRef {
+                    order: order__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.ProductMarketOrderRef", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for ProductOrderEvent {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -27799,6 +28696,12 @@ impl serde::Serialize for ProductPurchaseOrder {
         if self.channel.is_some() {
             len += 1;
         }
+        if self.reseller.is_some() {
+            len += 1;
+        }
+        if self.attribution_status.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.club.ProductPurchaseOrder", len)?;
         if let Some(v) = self.id.as_ref() {
             struct_ser.serialize_field("id", v)?;
@@ -27858,6 +28761,14 @@ impl serde::Serialize for ProductPurchaseOrder {
                 .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
             struct_ser.serialize_field("channel", &v)?;
         }
+        if let Some(v) = self.reseller.as_ref() {
+            struct_ser.serialize_field("reseller", v)?;
+        }
+        if let Some(v) = self.attribution_status.as_ref() {
+            let v = ProductAttributionStatus::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("attributionStatus", &v)?;
+        }
         struct_ser.end()
     }
 }
@@ -27888,6 +28799,9 @@ impl<'de> serde::Deserialize<'de> for ProductPurchaseOrder {
             "refund_reason",
             "refundReason",
             "channel",
+            "reseller",
+            "attribution_status",
+            "attributionStatus",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -27908,6 +28822,8 @@ impl<'de> serde::Deserialize<'de> for ProductPurchaseOrder {
             Refund,
             RefundReason,
             Channel,
+            Reseller,
+            AttributionStatus,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -27945,6 +28861,8 @@ impl<'de> serde::Deserialize<'de> for ProductPurchaseOrder {
                             "refund" => Ok(GeneratedField::Refund),
                             "refundReason" | "refund_reason" => Ok(GeneratedField::RefundReason),
                             "channel" => Ok(GeneratedField::Channel),
+                            "reseller" => Ok(GeneratedField::Reseller),
+                            "attributionStatus" | "attribution_status" => Ok(GeneratedField::AttributionStatus),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -27980,6 +28898,8 @@ impl<'de> serde::Deserialize<'de> for ProductPurchaseOrder {
                 let mut refund__ = None;
                 let mut refund_reason__ = None;
                 let mut channel__ = None;
+                let mut reseller__ = None;
+                let mut attribution_status__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Id => {
@@ -28084,6 +29004,18 @@ impl<'de> serde::Deserialize<'de> for ProductPurchaseOrder {
                             }
                             channel__ = map_.next_value::<::std::option::Option<ProductPurchaseChannel>>()?.map(|x| x as i32);
                         }
+                        GeneratedField::Reseller => {
+                            if reseller__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("reseller"));
+                            }
+                            reseller__ = map_.next_value()?;
+                        }
+                        GeneratedField::AttributionStatus => {
+                            if attribution_status__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("attributionStatus"));
+                            }
+                            attribution_status__ = map_.next_value::<::std::option::Option<ProductAttributionStatus>>()?.map(|x| x as i32);
+                        }
                     }
                 }
                 Ok(ProductPurchaseOrder {
@@ -28103,6 +29035,8 @@ impl<'de> serde::Deserialize<'de> for ProductPurchaseOrder {
                     refund: refund__,
                     refund_reason: refund_reason__,
                     channel: channel__,
+                    reseller: reseller__,
+                    attribution_status: attribution_status__,
                 })
             }
         }
@@ -28646,6 +29580,115 @@ impl<'de> serde::Deserialize<'de> for ProductSeller {
             }
         }
         deserializer.deserialize_struct("hi.club.ProductSeller", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ProductSettlementParty {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.subject.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.ProductSettlementParty", len)?;
+        if let Some(v) = self.subject.as_ref() {
+            match v {
+                product_settlement_party::Subject::Entity(v) => {
+                    struct_ser.serialize_field("entity", v)?;
+                }
+                product_settlement_party::Subject::External(v) => {
+                    struct_ser.serialize_field("external", v)?;
+                }
+            }
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ProductSettlementParty {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "entity",
+            "external",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Entity,
+            External,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "entity" => Ok(GeneratedField::Entity),
+                            "external" => Ok(GeneratedField::External),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ProductSettlementParty;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.ProductSettlementParty")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ProductSettlementParty, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut subject__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Entity => {
+                            if subject__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("entity"));
+                            }
+                            subject__ = map_.next_value::<::std::option::Option<_>>()?.map(product_settlement_party::Subject::Entity)
+;
+                        }
+                        GeneratedField::External => {
+                            if subject__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("external"));
+                            }
+                            subject__ = map_.next_value::<::std::option::Option<_>>()?.map(product_settlement_party::Subject::External)
+;
+                        }
+                    }
+                }
+                Ok(ProductSettlementParty {
+                    subject: subject__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.ProductSettlementParty", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for ProductShipment {

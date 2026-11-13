@@ -1270,11 +1270,13 @@ class DirectProductPurchaseReq extends $pb.GeneratedMessage {
     $core.String? requestUuid,
     ProductPurchaseInput? item,
     ProductDeliveryTarget? target,
+    $core.String? sellingStall,
   }) {
     final result = create();
     if (requestUuid != null) result.requestUuid = requestUuid;
     if (item != null) result.item = item;
     if (target != null) result.target = target;
+    if (sellingStall != null) result.sellingStall = sellingStall;
     return result;
   }
 
@@ -1296,6 +1298,7 @@ class DirectProductPurchaseReq extends $pb.GeneratedMessage {
         subBuilder: ProductPurchaseInput.create)
     ..aOM<ProductDeliveryTarget>(3, _omitFieldNames ? '' : 'target',
         subBuilder: ProductDeliveryTarget.create)
+    ..aOS(4, _omitFieldNames ? '' : 'sellingStall')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1348,6 +1351,16 @@ class DirectProductPurchaseReq extends $pb.GeneratedMessage {
   void clearTarget() => $_clearField(3);
   @$pb.TagNumber(3)
   ProductDeliveryTarget ensureTarget() => $_ensure(2);
+
+  /// 销售摊位必须随入口显式提交；后台校验自有挂牌或有效承销，不从收款方猜销售归属。
+  @$pb.TagNumber(4)
+  $core.String get sellingStall => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set sellingStall($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasSellingStall() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearSellingStall() => $_clearField(4);
 }
 
 class ProductPurchaseLine extends $pb.GeneratedMessage {
@@ -1494,6 +1507,8 @@ class ProductPurchaseOrder extends $pb.GeneratedMessage {
     $2.SettlementPayment? refund,
     $core.String? refundReason,
     ProductPurchaseChannel? channel,
+    $3.Entity? reseller,
+    ProductAttributionStatus? attributionStatus,
   }) {
     final result = create();
     if (id != null) result.id = id;
@@ -1512,6 +1527,8 @@ class ProductPurchaseOrder extends $pb.GeneratedMessage {
     if (refund != null) result.refund = refund;
     if (refundReason != null) result.refundReason = refundReason;
     if (channel != null) result.channel = channel;
+    if (reseller != null) result.reseller = reseller;
+    if (attributionStatus != null) result.attributionStatus = attributionStatus;
     return result;
   }
 
@@ -1554,6 +1571,11 @@ class ProductPurchaseOrder extends $pb.GeneratedMessage {
     ..aOS(15, _omitFieldNames ? '' : 'refundReason')
     ..aE<ProductPurchaseChannel>(16, _omitFieldNames ? '' : 'channel',
         enumValues: ProductPurchaseChannel.values)
+    ..aOM<$3.Entity>(17, _omitFieldNames ? '' : 'reseller',
+        subBuilder: $3.Entity.create)
+    ..aE<ProductAttributionStatus>(
+        18, _omitFieldNames ? '' : 'attributionStatus',
+        enumValues: ProductAttributionStatus.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1734,6 +1756,27 @@ class ProductPurchaseOrder extends $pb.GeneratedMessage {
   $core.bool hasChannel() => $_has(15);
   @$pb.TagNumber(16)
   void clearChannel() => $_clearField(16);
+
+  @$pb.TagNumber(17)
+  $3.Entity get reseller => $_getN(16);
+  @$pb.TagNumber(17)
+  set reseller($3.Entity value) => $_setField(17, value);
+  @$pb.TagNumber(17)
+  $core.bool hasReseller() => $_has(16);
+  @$pb.TagNumber(17)
+  void clearReseller() => $_clearField(17);
+  @$pb.TagNumber(17)
+  $3.Entity ensureReseller() => $_ensure(16);
+
+  @$pb.TagNumber(18)
+  ProductAttributionStatus get attributionStatus => $_getN(17);
+  @$pb.TagNumber(18)
+  set attributionStatus(ProductAttributionStatus value) =>
+      $_setField(18, value);
+  @$pb.TagNumber(18)
+  $core.bool hasAttributionStatus() => $_has(17);
+  @$pb.TagNumber(18)
+  void clearAttributionStatus() => $_clearField(18);
 }
 
 class ProductPurchaseGroup extends $pb.GeneratedMessage {
@@ -3414,6 +3457,8 @@ class ProductDeliveryOrder extends $pb.GeneratedMessage {
     ProductFulfillment? fulfillment,
     $fixnum.Int64? createdAt,
     $fixnum.Int64? revision,
+    $3.Entity? supplier,
+    ProductAttributionStatus? attributionStatus,
   }) {
     final result = create();
     if (id != null) result.id = id;
@@ -3425,6 +3470,8 @@ class ProductDeliveryOrder extends $pb.GeneratedMessage {
     if (fulfillment != null) result.fulfillment = fulfillment;
     if (createdAt != null) result.createdAt = createdAt;
     if (revision != null) result.revision = revision;
+    if (supplier != null) result.supplier = supplier;
+    if (attributionStatus != null) result.attributionStatus = attributionStatus;
     return result;
   }
 
@@ -3456,6 +3503,11 @@ class ProductDeliveryOrder extends $pb.GeneratedMessage {
         subBuilder: ProductFulfillment.create)
     ..aInt64(8, _omitFieldNames ? '' : 'createdAt')
     ..aInt64(9, _omitFieldNames ? '' : 'revision')
+    ..aOM<$3.Entity>(10, _omitFieldNames ? '' : 'supplier',
+        subBuilder: $3.Entity.create)
+    ..aE<ProductAttributionStatus>(
+        11, _omitFieldNames ? '' : 'attributionStatus',
+        enumValues: ProductAttributionStatus.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3567,6 +3619,27 @@ class ProductDeliveryOrder extends $pb.GeneratedMessage {
   $core.bool hasRevision() => $_has(8);
   @$pb.TagNumber(9)
   void clearRevision() => $_clearField(9);
+
+  @$pb.TagNumber(10)
+  $3.Entity get supplier => $_getN(9);
+  @$pb.TagNumber(10)
+  set supplier($3.Entity value) => $_setField(10, value);
+  @$pb.TagNumber(10)
+  $core.bool hasSupplier() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearSupplier() => $_clearField(10);
+  @$pb.TagNumber(10)
+  $3.Entity ensureSupplier() => $_ensure(9);
+
+  @$pb.TagNumber(11)
+  ProductAttributionStatus get attributionStatus => $_getN(10);
+  @$pb.TagNumber(11)
+  set attributionStatus(ProductAttributionStatus value) =>
+      $_setField(11, value);
+  @$pb.TagNumber(11)
+  $core.bool hasAttributionStatus() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearAttributionStatus() => $_clearField(11);
 }
 
 class ProductDeliveryQuery extends $pb.GeneratedMessage {
@@ -3683,6 +3756,577 @@ class ListProductDeliveriesResp extends $pb.GeneratedMessage {
   $core.bool hasTotal() => $_has(1);
   @$pb.TagNumber(2)
   void clearTotal() => $_clearField(2);
+}
+
+/// 外部法币账不冒充HiDID的代币付款。身份门面沿用Entity，非HiClub账户使用明确外部引用。
+class ProductExternalAccount extends $pb.GeneratedMessage {
+  factory ProductExternalAccount({
+    $core.String? system,
+    $core.String? accountId,
+    $core.String? name,
+  }) {
+    final result = create();
+    if (system != null) result.system = system;
+    if (accountId != null) result.accountId = accountId;
+    if (name != null) result.name = name;
+    return result;
+  }
+
+  ProductExternalAccount._();
+
+  factory ProductExternalAccount.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ProductExternalAccount.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ProductExternalAccount',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'system')
+    ..aOS(2, _omitFieldNames ? '' : 'accountId')
+    ..aOS(3, _omitFieldNames ? '' : 'name')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductExternalAccount clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductExternalAccount copyWith(
+          void Function(ProductExternalAccount) updates) =>
+      super.copyWith((message) => updates(message as ProductExternalAccount))
+          as ProductExternalAccount;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ProductExternalAccount create() => ProductExternalAccount._();
+  @$core.override
+  ProductExternalAccount createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ProductExternalAccount getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ProductExternalAccount>(create);
+  static ProductExternalAccount? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get system => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set system($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSystem() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSystem() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get accountId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set accountId($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAccountId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAccountId() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get name => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set name($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasName() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearName() => $_clearField(3);
+}
+
+enum ProductSettlementParty_Subject { entity, external, notSet }
+
+class ProductSettlementParty extends $pb.GeneratedMessage {
+  factory ProductSettlementParty({
+    $3.Entity? entity,
+    ProductExternalAccount? external,
+  }) {
+    final result = create();
+    if (entity != null) result.entity = entity;
+    if (external != null) result.external = external;
+    return result;
+  }
+
+  ProductSettlementParty._();
+
+  factory ProductSettlementParty.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ProductSettlementParty.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, ProductSettlementParty_Subject>
+      _ProductSettlementParty_SubjectByTag = {
+    1: ProductSettlementParty_Subject.entity,
+    2: ProductSettlementParty_Subject.external,
+    0: ProductSettlementParty_Subject.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ProductSettlementParty',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..oo(0, [1, 2])
+    ..aOM<$3.Entity>(1, _omitFieldNames ? '' : 'entity',
+        subBuilder: $3.Entity.create)
+    ..aOM<ProductExternalAccount>(2, _omitFieldNames ? '' : 'external',
+        subBuilder: ProductExternalAccount.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductSettlementParty clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductSettlementParty copyWith(
+          void Function(ProductSettlementParty) updates) =>
+      super.copyWith((message) => updates(message as ProductSettlementParty))
+          as ProductSettlementParty;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ProductSettlementParty create() => ProductSettlementParty._();
+  @$core.override
+  ProductSettlementParty createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ProductSettlementParty getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ProductSettlementParty>(create);
+  static ProductSettlementParty? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
+  ProductSettlementParty_Subject whichSubject() =>
+      _ProductSettlementParty_SubjectByTag[$_whichOneof(0)]!;
+  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
+  void clearSubject() => $_clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  $3.Entity get entity => $_getN(0);
+  @$pb.TagNumber(1)
+  set entity($3.Entity value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasEntity() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearEntity() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $3.Entity ensureEntity() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  ProductExternalAccount get external => $_getN(1);
+  @$pb.TagNumber(2)
+  set external(ProductExternalAccount value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasExternal() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearExternal() => $_clearField(2);
+  @$pb.TagNumber(2)
+  ProductExternalAccount ensureExternal() => $_ensure(1);
+}
+
+class ProductFiatAmount extends $pb.GeneratedMessage {
+  factory ProductFiatAmount({
+    $core.String? currency,
+    $core.String? amount,
+  }) {
+    final result = create();
+    if (currency != null) result.currency = currency;
+    if (amount != null) result.amount = amount;
+    return result;
+  }
+
+  ProductFiatAmount._();
+
+  factory ProductFiatAmount.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ProductFiatAmount.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ProductFiatAmount',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'currency')
+    ..aOS(2, _omitFieldNames ? '' : 'amount')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductFiatAmount clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductFiatAmount copyWith(void Function(ProductFiatAmount) updates) =>
+      super.copyWith((message) => updates(message as ProductFiatAmount))
+          as ProductFiatAmount;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ProductFiatAmount create() => ProductFiatAmount._();
+  @$core.override
+  ProductFiatAmount createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ProductFiatAmount getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ProductFiatAmount>(create);
+  static ProductFiatAmount? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get currency => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set currency($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasCurrency() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCurrency() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get amount => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set amount($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAmount() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAmount() => $_clearField(2);
+}
+
+enum ProductMarketOrderRef_Order { purchaseId, deliveryId, notSet }
+
+class ProductMarketOrderRef extends $pb.GeneratedMessage {
+  factory ProductMarketOrderRef({
+    $core.String? purchaseId,
+    $core.String? deliveryId,
+  }) {
+    final result = create();
+    if (purchaseId != null) result.purchaseId = purchaseId;
+    if (deliveryId != null) result.deliveryId = deliveryId;
+    return result;
+  }
+
+  ProductMarketOrderRef._();
+
+  factory ProductMarketOrderRef.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ProductMarketOrderRef.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, ProductMarketOrderRef_Order>
+      _ProductMarketOrderRef_OrderByTag = {
+    1: ProductMarketOrderRef_Order.purchaseId,
+    2: ProductMarketOrderRef_Order.deliveryId,
+    0: ProductMarketOrderRef_Order.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ProductMarketOrderRef',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..oo(0, [1, 2])
+    ..aOS(1, _omitFieldNames ? '' : 'purchaseId')
+    ..aOS(2, _omitFieldNames ? '' : 'deliveryId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductMarketOrderRef clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductMarketOrderRef copyWith(
+          void Function(ProductMarketOrderRef) updates) =>
+      super.copyWith((message) => updates(message as ProductMarketOrderRef))
+          as ProductMarketOrderRef;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ProductMarketOrderRef create() => ProductMarketOrderRef._();
+  @$core.override
+  ProductMarketOrderRef createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ProductMarketOrderRef getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ProductMarketOrderRef>(create);
+  static ProductMarketOrderRef? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
+  ProductMarketOrderRef_Order whichOrder() =>
+      _ProductMarketOrderRef_OrderByTag[$_whichOneof(0)]!;
+  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
+  void clearOrder() => $_clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  $core.String get purchaseId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set purchaseId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPurchaseId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPurchaseId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get deliveryId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set deliveryId($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasDeliveryId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearDeliveryId() => $_clearField(2);
+}
+
+/// 终端/供应外部系统的只增审计流水。模拟与真实标识显式保留；冲销关联原流水且反转资金双方。
+/// reseller/supplier是销售归属，payer/payee才是该笔钱的真实方向，两类事实不得相互替代。
+/// 跨机器人代币付款仍使用SettlementPayment与SettlementReceipt，通过market_order关联。
+class ProductFiatSettlement extends $pb.GeneratedMessage {
+  factory ProductFiatSettlement({
+    $core.String? id,
+    $core.String? reference,
+    TerminalOrderRef? source,
+    ProductMarketOrderRef? marketOrder,
+    $3.Entity? reseller,
+    $3.Entity? supplier,
+    ProductSettlementParty? payer,
+    ProductSettlementParty? payee,
+    ProductFiatAmount? total,
+    ProductFiatSettlementKind? kind,
+    $core.String? originalId,
+    $core.bool? simulated,
+    $fixnum.Int64? createdAt,
+    ProductAttributionStatus? attributionStatus,
+    $core.String? productId,
+  }) {
+    final result = create();
+    if (id != null) result.id = id;
+    if (reference != null) result.reference = reference;
+    if (source != null) result.source = source;
+    if (marketOrder != null) result.marketOrder = marketOrder;
+    if (reseller != null) result.reseller = reseller;
+    if (supplier != null) result.supplier = supplier;
+    if (payer != null) result.payer = payer;
+    if (payee != null) result.payee = payee;
+    if (total != null) result.total = total;
+    if (kind != null) result.kind = kind;
+    if (originalId != null) result.originalId = originalId;
+    if (simulated != null) result.simulated = simulated;
+    if (createdAt != null) result.createdAt = createdAt;
+    if (attributionStatus != null) result.attributionStatus = attributionStatus;
+    if (productId != null) result.productId = productId;
+    return result;
+  }
+
+  ProductFiatSettlement._();
+
+  factory ProductFiatSettlement.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ProductFiatSettlement.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ProductFiatSettlement',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'id')
+    ..aOS(2, _omitFieldNames ? '' : 'reference')
+    ..aOM<TerminalOrderRef>(3, _omitFieldNames ? '' : 'source',
+        subBuilder: TerminalOrderRef.create)
+    ..aOM<ProductMarketOrderRef>(4, _omitFieldNames ? '' : 'marketOrder',
+        subBuilder: ProductMarketOrderRef.create)
+    ..aOM<$3.Entity>(5, _omitFieldNames ? '' : 'reseller',
+        subBuilder: $3.Entity.create)
+    ..aOM<$3.Entity>(6, _omitFieldNames ? '' : 'supplier',
+        subBuilder: $3.Entity.create)
+    ..aOM<ProductSettlementParty>(7, _omitFieldNames ? '' : 'payer',
+        subBuilder: ProductSettlementParty.create)
+    ..aOM<ProductSettlementParty>(8, _omitFieldNames ? '' : 'payee',
+        subBuilder: ProductSettlementParty.create)
+    ..aOM<ProductFiatAmount>(9, _omitFieldNames ? '' : 'total',
+        subBuilder: ProductFiatAmount.create)
+    ..aE<ProductFiatSettlementKind>(10, _omitFieldNames ? '' : 'kind',
+        enumValues: ProductFiatSettlementKind.values)
+    ..aOS(11, _omitFieldNames ? '' : 'originalId')
+    ..aOB(12, _omitFieldNames ? '' : 'simulated')
+    ..aInt64(13, _omitFieldNames ? '' : 'createdAt')
+    ..aE<ProductAttributionStatus>(
+        14, _omitFieldNames ? '' : 'attributionStatus',
+        enumValues: ProductAttributionStatus.values)
+    ..aOS(15, _omitFieldNames ? '' : 'productId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductFiatSettlement clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductFiatSettlement copyWith(
+          void Function(ProductFiatSettlement) updates) =>
+      super.copyWith((message) => updates(message as ProductFiatSettlement))
+          as ProductFiatSettlement;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ProductFiatSettlement create() => ProductFiatSettlement._();
+  @$core.override
+  ProductFiatSettlement createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ProductFiatSettlement getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ProductFiatSettlement>(create);
+  static ProductFiatSettlement? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get id => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set id($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get reference => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set reference($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasReference() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearReference() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  TerminalOrderRef get source => $_getN(2);
+  @$pb.TagNumber(3)
+  set source(TerminalOrderRef value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSource() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSource() => $_clearField(3);
+  @$pb.TagNumber(3)
+  TerminalOrderRef ensureSource() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  ProductMarketOrderRef get marketOrder => $_getN(3);
+  @$pb.TagNumber(4)
+  set marketOrder(ProductMarketOrderRef value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasMarketOrder() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearMarketOrder() => $_clearField(4);
+  @$pb.TagNumber(4)
+  ProductMarketOrderRef ensureMarketOrder() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  $3.Entity get reseller => $_getN(4);
+  @$pb.TagNumber(5)
+  set reseller($3.Entity value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasReseller() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearReseller() => $_clearField(5);
+  @$pb.TagNumber(5)
+  $3.Entity ensureReseller() => $_ensure(4);
+
+  @$pb.TagNumber(6)
+  $3.Entity get supplier => $_getN(5);
+  @$pb.TagNumber(6)
+  set supplier($3.Entity value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasSupplier() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearSupplier() => $_clearField(6);
+  @$pb.TagNumber(6)
+  $3.Entity ensureSupplier() => $_ensure(5);
+
+  @$pb.TagNumber(7)
+  ProductSettlementParty get payer => $_getN(6);
+  @$pb.TagNumber(7)
+  set payer(ProductSettlementParty value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasPayer() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearPayer() => $_clearField(7);
+  @$pb.TagNumber(7)
+  ProductSettlementParty ensurePayer() => $_ensure(6);
+
+  @$pb.TagNumber(8)
+  ProductSettlementParty get payee => $_getN(7);
+  @$pb.TagNumber(8)
+  set payee(ProductSettlementParty value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasPayee() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearPayee() => $_clearField(8);
+  @$pb.TagNumber(8)
+  ProductSettlementParty ensurePayee() => $_ensure(7);
+
+  @$pb.TagNumber(9)
+  ProductFiatAmount get total => $_getN(8);
+  @$pb.TagNumber(9)
+  set total(ProductFiatAmount value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasTotal() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearTotal() => $_clearField(9);
+  @$pb.TagNumber(9)
+  ProductFiatAmount ensureTotal() => $_ensure(8);
+
+  @$pb.TagNumber(10)
+  ProductFiatSettlementKind get kind => $_getN(9);
+  @$pb.TagNumber(10)
+  set kind(ProductFiatSettlementKind value) => $_setField(10, value);
+  @$pb.TagNumber(10)
+  $core.bool hasKind() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearKind() => $_clearField(10);
+
+  @$pb.TagNumber(11)
+  $core.String get originalId => $_getSZ(10);
+  @$pb.TagNumber(11)
+  set originalId($core.String value) => $_setString(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasOriginalId() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearOriginalId() => $_clearField(11);
+
+  @$pb.TagNumber(12)
+  $core.bool get simulated => $_getBF(11);
+  @$pb.TagNumber(12)
+  set simulated($core.bool value) => $_setBool(11, value);
+  @$pb.TagNumber(12)
+  $core.bool hasSimulated() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearSimulated() => $_clearField(12);
+
+  @$pb.TagNumber(13)
+  $fixnum.Int64 get createdAt => $_getI64(12);
+  @$pb.TagNumber(13)
+  set createdAt($fixnum.Int64 value) => $_setInt64(12, value);
+  @$pb.TagNumber(13)
+  $core.bool hasCreatedAt() => $_has(12);
+  @$pb.TagNumber(13)
+  void clearCreatedAt() => $_clearField(13);
+
+  @$pb.TagNumber(14)
+  ProductAttributionStatus get attributionStatus => $_getN(13);
+  @$pb.TagNumber(14)
+  set attributionStatus(ProductAttributionStatus value) =>
+      $_setField(14, value);
+  @$pb.TagNumber(14)
+  $core.bool hasAttributionStatus() => $_has(13);
+  @$pb.TagNumber(14)
+  void clearAttributionStatus() => $_clearField(14);
+
+  @$pb.TagNumber(15)
+  $core.String get productId => $_getSZ(14);
+  @$pb.TagNumber(15)
+  set productId($core.String value) => $_setString(14, value);
+  @$pb.TagNumber(15)
+  $core.bool hasProductId() => $_has(14);
+  @$pb.TagNumber(15)
+  void clearProductId() => $_clearField(15);
 }
 
 const $core.bool _omitFieldNames =

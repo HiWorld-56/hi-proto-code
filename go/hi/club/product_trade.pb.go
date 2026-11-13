@@ -258,6 +258,114 @@ func (ProductDeliveryStatus) EnumDescriptor() ([]byte, []int) {
 	return file_hi_club_product_trade_proto_rawDescGZIP(), []int{3}
 }
 
+// 缺失的历史直购销售来源无法还原，必须保留unknown，不把供货摊位猜填为销售摊位。
+type ProductAttributionStatus int32
+
+const (
+	ProductAttributionStatus_PRODUCT_ATTRIBUTION_STATUS_UNSPECIFIED    ProductAttributionStatus = 0
+	ProductAttributionStatus_PRODUCT_ATTRIBUTION_STATUS_RECORDED       ProductAttributionStatus = 1
+	ProductAttributionStatus_PRODUCT_ATTRIBUTION_STATUS_RECOVERED      ProductAttributionStatus = 2
+	ProductAttributionStatus_PRODUCT_ATTRIBUTION_STATUS_UNKNOWN_LEGACY ProductAttributionStatus = 3
+)
+
+// Enum value maps for ProductAttributionStatus.
+var (
+	ProductAttributionStatus_name = map[int32]string{
+		0: "PRODUCT_ATTRIBUTION_STATUS_UNSPECIFIED",
+		1: "PRODUCT_ATTRIBUTION_STATUS_RECORDED",
+		2: "PRODUCT_ATTRIBUTION_STATUS_RECOVERED",
+		3: "PRODUCT_ATTRIBUTION_STATUS_UNKNOWN_LEGACY",
+	}
+	ProductAttributionStatus_value = map[string]int32{
+		"PRODUCT_ATTRIBUTION_STATUS_UNSPECIFIED":    0,
+		"PRODUCT_ATTRIBUTION_STATUS_RECORDED":       1,
+		"PRODUCT_ATTRIBUTION_STATUS_RECOVERED":      2,
+		"PRODUCT_ATTRIBUTION_STATUS_UNKNOWN_LEGACY": 3,
+	}
+)
+
+func (x ProductAttributionStatus) Enum() *ProductAttributionStatus {
+	p := new(ProductAttributionStatus)
+	*p = x
+	return p
+}
+
+func (x ProductAttributionStatus) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ProductAttributionStatus) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_club_product_trade_proto_enumTypes[4].Descriptor()
+}
+
+func (ProductAttributionStatus) Type() protoreflect.EnumType {
+	return &file_hi_club_product_trade_proto_enumTypes[4]
+}
+
+func (x ProductAttributionStatus) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ProductAttributionStatus.Descriptor instead.
+func (ProductAttributionStatus) EnumDescriptor() ([]byte, []int) {
+	return file_hi_club_product_trade_proto_rawDescGZIP(), []int{4}
+}
+
+type ProductFiatSettlementKind int32
+
+const (
+	ProductFiatSettlementKind_PRODUCT_FIAT_SETTLEMENT_KIND_UNSPECIFIED       ProductFiatSettlementKind = 0
+	ProductFiatSettlementKind_PRODUCT_FIAT_SETTLEMENT_KIND_RETAIL_RECEIPT    ProductFiatSettlementKind = 1
+	ProductFiatSettlementKind_PRODUCT_FIAT_SETTLEMENT_KIND_RETAIL_REFUND     ProductFiatSettlementKind = 2
+	ProductFiatSettlementKind_PRODUCT_FIAT_SETTLEMENT_KIND_SUPPLY_SETTLEMENT ProductFiatSettlementKind = 3
+	ProductFiatSettlementKind_PRODUCT_FIAT_SETTLEMENT_KIND_SUPPLY_REVERSAL   ProductFiatSettlementKind = 4
+)
+
+// Enum value maps for ProductFiatSettlementKind.
+var (
+	ProductFiatSettlementKind_name = map[int32]string{
+		0: "PRODUCT_FIAT_SETTLEMENT_KIND_UNSPECIFIED",
+		1: "PRODUCT_FIAT_SETTLEMENT_KIND_RETAIL_RECEIPT",
+		2: "PRODUCT_FIAT_SETTLEMENT_KIND_RETAIL_REFUND",
+		3: "PRODUCT_FIAT_SETTLEMENT_KIND_SUPPLY_SETTLEMENT",
+		4: "PRODUCT_FIAT_SETTLEMENT_KIND_SUPPLY_REVERSAL",
+	}
+	ProductFiatSettlementKind_value = map[string]int32{
+		"PRODUCT_FIAT_SETTLEMENT_KIND_UNSPECIFIED":       0,
+		"PRODUCT_FIAT_SETTLEMENT_KIND_RETAIL_RECEIPT":    1,
+		"PRODUCT_FIAT_SETTLEMENT_KIND_RETAIL_REFUND":     2,
+		"PRODUCT_FIAT_SETTLEMENT_KIND_SUPPLY_SETTLEMENT": 3,
+		"PRODUCT_FIAT_SETTLEMENT_KIND_SUPPLY_REVERSAL":   4,
+	}
+)
+
+func (x ProductFiatSettlementKind) Enum() *ProductFiatSettlementKind {
+	p := new(ProductFiatSettlementKind)
+	*p = x
+	return p
+}
+
+func (x ProductFiatSettlementKind) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ProductFiatSettlementKind) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_club_product_trade_proto_enumTypes[5].Descriptor()
+}
+
+func (ProductFiatSettlementKind) Type() protoreflect.EnumType {
+	return &file_hi_club_product_trade_proto_enumTypes[5]
+}
+
+func (x ProductFiatSettlementKind) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ProductFiatSettlementKind.Descriptor instead.
+func (ProductFiatSettlementKind) EnumDescriptor() ([]byte, []int) {
+	return file_hi_club_product_trade_proto_rawDescGZIP(), []int{5}
+}
+
 type ProductStallQuery struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Stall         *string                `protobuf:"bytes,1,opt,name=stall,proto3,oneof" json:"stall,omitempty"` // 不传=当前用户名下全部；仅按指定机器人过滤
@@ -1227,7 +1335,9 @@ func (x *TerminalOrderSubmission) GetTarget() *ProductDeliveryTarget {
 }
 
 type DirectProductPurchaseReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 销售摊位必须随入口显式提交；后台校验自有挂牌或有效承销，不从收款方猜销售归属。
+	SellingStall  *string                `protobuf:"bytes,4,opt,name=selling_stall,json=sellingStall,proto3,oneof" json:"selling_stall,omitempty"`
 	RequestUuid   *string                `protobuf:"bytes,1,opt,name=request_uuid,json=requestUuid,proto3,oneof" json:"request_uuid,omitempty"`
 	Item          *ProductPurchaseInput  `protobuf:"bytes,2,opt,name=item,proto3" json:"item,omitempty"`
 	Target        *ProductDeliveryTarget `protobuf:"bytes,3,opt,name=target,proto3" json:"target,omitempty"`
@@ -1263,6 +1373,13 @@ func (x *DirectProductPurchaseReq) ProtoReflect() protoreflect.Message {
 // Deprecated: Use DirectProductPurchaseReq.ProtoReflect.Descriptor instead.
 func (*DirectProductPurchaseReq) Descriptor() ([]byte, []int) {
 	return file_hi_club_product_trade_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *DirectProductPurchaseReq) GetSellingStall() string {
+	if x != nil && x.SellingStall != nil {
+		return *x.SellingStall
+	}
+	return ""
 }
 
 func (x *DirectProductPurchaseReq) GetRequestUuid() string {
@@ -1371,25 +1488,27 @@ func (x *ProductPurchaseLine) GetSupplyRevision() int64 {
 }
 
 type ProductPurchaseOrder struct {
-	state         protoimpl.MessageState  `protogen:"open.v1"`
-	Id            *string                 `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	Buyer         *hi.Entity              `protobuf:"bytes,2,opt,name=buyer,proto3" json:"buyer,omitempty"`
-	Supplier      *hi.Entity              `protobuf:"bytes,3,opt,name=supplier,proto3" json:"supplier,omitempty"`
-	Source        *TerminalOrderRef       `protobuf:"bytes,4,opt,name=source,proto3" json:"source,omitempty"`
-	SourceLineId  *string                 `protobuf:"bytes,5,opt,name=source_line_id,json=sourceLineId,proto3,oneof" json:"source_line_id,omitempty"`
-	Line          *ProductPurchaseLine    `protobuf:"bytes,6,opt,name=line,proto3" json:"line,omitempty"`
-	Target        *ProductDeliveryTarget  `protobuf:"bytes,7,opt,name=target,proto3" json:"target,omitempty"`
-	Status        *ProductPurchaseStatus  `protobuf:"varint,8,opt,name=status,proto3,enum=hi.club.ProductPurchaseStatus,oneof" json:"status,omitempty"`
-	Payment       *SettlementPayment      `protobuf:"bytes,9,opt,name=payment,proto3" json:"payment,omitempty"`
-	Fulfillment   *ProductFulfillment     `protobuf:"bytes,10,opt,name=fulfillment,proto3" json:"fulfillment,omitempty"`
-	CreatedAt     *int64                  `protobuf:"varint,11,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
-	ExpireAt      *int64                  `protobuf:"varint,12,opt,name=expire_at,json=expireAt,proto3,oneof" json:"expire_at,omitempty"`
-	Revision      *int64                  `protobuf:"varint,13,opt,name=revision,proto3,oneof" json:"revision,omitempty"`
-	Refund        *SettlementPayment      `protobuf:"bytes,14,opt,name=refund,proto3" json:"refund,omitempty"`
-	RefundReason  *string                 `protobuf:"bytes,15,opt,name=refund_reason,json=refundReason,proto3,oneof" json:"refund_reason,omitempty"`
-	Channel       *ProductPurchaseChannel `protobuf:"varint,16,opt,name=channel,proto3,enum=hi.club.ProductPurchaseChannel,oneof" json:"channel,omitempty"` // 既有无此字段的订单均为承销采购
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state             protoimpl.MessageState    `protogen:"open.v1"`
+	Id                *string                   `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	Buyer             *hi.Entity                `protobuf:"bytes,2,opt,name=buyer,proto3" json:"buyer,omitempty"`
+	Supplier          *hi.Entity                `protobuf:"bytes,3,opt,name=supplier,proto3" json:"supplier,omitempty"`
+	Source            *TerminalOrderRef         `protobuf:"bytes,4,opt,name=source,proto3" json:"source,omitempty"`
+	SourceLineId      *string                   `protobuf:"bytes,5,opt,name=source_line_id,json=sourceLineId,proto3,oneof" json:"source_line_id,omitempty"`
+	Line              *ProductPurchaseLine      `protobuf:"bytes,6,opt,name=line,proto3" json:"line,omitempty"`
+	Target            *ProductDeliveryTarget    `protobuf:"bytes,7,opt,name=target,proto3" json:"target,omitempty"`
+	Status            *ProductPurchaseStatus    `protobuf:"varint,8,opt,name=status,proto3,enum=hi.club.ProductPurchaseStatus,oneof" json:"status,omitempty"`
+	Payment           *SettlementPayment        `protobuf:"bytes,9,opt,name=payment,proto3" json:"payment,omitempty"`
+	Fulfillment       *ProductFulfillment       `protobuf:"bytes,10,opt,name=fulfillment,proto3" json:"fulfillment,omitempty"`
+	CreatedAt         *int64                    `protobuf:"varint,11,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
+	ExpireAt          *int64                    `protobuf:"varint,12,opt,name=expire_at,json=expireAt,proto3,oneof" json:"expire_at,omitempty"`
+	Revision          *int64                    `protobuf:"varint,13,opt,name=revision,proto3,oneof" json:"revision,omitempty"`
+	Refund            *SettlementPayment        `protobuf:"bytes,14,opt,name=refund,proto3" json:"refund,omitempty"`
+	RefundReason      *string                   `protobuf:"bytes,15,opt,name=refund_reason,json=refundReason,proto3,oneof" json:"refund_reason,omitempty"`
+	Channel           *ProductPurchaseChannel   `protobuf:"varint,16,opt,name=channel,proto3,enum=hi.club.ProductPurchaseChannel,oneof" json:"channel,omitempty"` // 既有无此字段的订单均为承销采购
+	Reseller          *hi.Entity                `protobuf:"bytes,17,opt,name=reseller,proto3" json:"reseller,omitempty"`                                          // 实际销售摊位；与supplier同DID表示自销，不影响payment.payer/payee
+	AttributionStatus *ProductAttributionStatus `protobuf:"varint,18,opt,name=attribution_status,json=attributionStatus,proto3,enum=hi.club.ProductAttributionStatus,oneof" json:"attribution_status,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
 }
 
 func (x *ProductPurchaseOrder) Reset() {
@@ -1532,6 +1651,20 @@ func (x *ProductPurchaseOrder) GetChannel() ProductPurchaseChannel {
 		return *x.Channel
 	}
 	return ProductPurchaseChannel_PRODUCT_PURCHASE_CHANNEL_UNSPECIFIED
+}
+
+func (x *ProductPurchaseOrder) GetReseller() *hi.Entity {
+	if x != nil {
+		return x.Reseller
+	}
+	return nil
+}
+
+func (x *ProductPurchaseOrder) GetAttributionStatus() ProductAttributionStatus {
+	if x != nil && x.AttributionStatus != nil {
+		return *x.AttributionStatus
+	}
+	return ProductAttributionStatus_PRODUCT_ATTRIBUTION_STATUS_UNSPECIFIED
 }
 
 type ProductPurchaseGroup struct {
@@ -2832,18 +2965,20 @@ func (x *ProductDeliveryLine) GetSupplyRevision() int64 {
 }
 
 type ProductDeliveryOrder struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	Seller        *hi.Entity             `protobuf:"bytes,2,opt,name=seller,proto3" json:"seller,omitempty"`
-	Source        *TerminalOrderRef      `protobuf:"bytes,3,opt,name=source,proto3" json:"source,omitempty"`
-	Line          *ProductDeliveryLine   `protobuf:"bytes,4,opt,name=line,proto3" json:"line,omitempty"`
-	Target        *ProductDeliveryTarget `protobuf:"bytes,5,opt,name=target,proto3" json:"target,omitempty"`
-	Status        *ProductDeliveryStatus `protobuf:"varint,6,opt,name=status,proto3,enum=hi.club.ProductDeliveryStatus,oneof" json:"status,omitempty"`
-	Fulfillment   *ProductFulfillment    `protobuf:"bytes,7,opt,name=fulfillment,proto3" json:"fulfillment,omitempty"`
-	CreatedAt     *int64                 `protobuf:"varint,8,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
-	Revision      *int64                 `protobuf:"varint,9,opt,name=revision,proto3,oneof" json:"revision,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state             protoimpl.MessageState    `protogen:"open.v1"`
+	Id                *string                   `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	Seller            *hi.Entity                `protobuf:"bytes,2,opt,name=seller,proto3" json:"seller,omitempty"`
+	Source            *TerminalOrderRef         `protobuf:"bytes,3,opt,name=source,proto3" json:"source,omitempty"`
+	Line              *ProductDeliveryLine      `protobuf:"bytes,4,opt,name=line,proto3" json:"line,omitempty"`
+	Target            *ProductDeliveryTarget    `protobuf:"bytes,5,opt,name=target,proto3" json:"target,omitempty"`
+	Status            *ProductDeliveryStatus    `protobuf:"varint,6,opt,name=status,proto3,enum=hi.club.ProductDeliveryStatus,oneof" json:"status,omitempty"`
+	Fulfillment       *ProductFulfillment       `protobuf:"bytes,7,opt,name=fulfillment,proto3" json:"fulfillment,omitempty"`
+	CreatedAt         *int64                    `protobuf:"varint,8,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
+	Revision          *int64                    `protobuf:"varint,9,opt,name=revision,proto3,oneof" json:"revision,omitempty"`
+	Supplier          *hi.Entity                `protobuf:"bytes,10,opt,name=supplier,proto3" json:"supplier,omitempty"` // 原供货摊位；本摊位自有履约必须与seller同DID
+	AttributionStatus *ProductAttributionStatus `protobuf:"varint,11,opt,name=attribution_status,json=attributionStatus,proto3,enum=hi.club.ProductAttributionStatus,oneof" json:"attribution_status,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
 }
 
 func (x *ProductDeliveryOrder) Reset() {
@@ -2937,6 +3072,20 @@ func (x *ProductDeliveryOrder) GetRevision() int64 {
 		return *x.Revision
 	}
 	return 0
+}
+
+func (x *ProductDeliveryOrder) GetSupplier() *hi.Entity {
+	if x != nil {
+		return x.Supplier
+	}
+	return nil
+}
+
+func (x *ProductDeliveryOrder) GetAttributionStatus() ProductAttributionStatus {
+	if x != nil && x.AttributionStatus != nil {
+		return *x.AttributionStatus
+	}
+	return ProductAttributionStatus_PRODUCT_ATTRIBUTION_STATUS_UNSPECIFIED
 }
 
 type ProductDeliveryQuery struct {
@@ -3033,6 +3182,442 @@ func (x *ListProductDeliveriesResp) GetTotal() int64 {
 		return *x.Total
 	}
 	return 0
+}
+
+// 外部法币账不冒充HiDID的代币付款。身份门面沿用Entity，非HiClub账户使用明确外部引用。
+type ProductExternalAccount struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	System        *string                `protobuf:"bytes,1,opt,name=system,proto3,oneof" json:"system,omitempty"`
+	AccountId     *string                `protobuf:"bytes,2,opt,name=account_id,json=accountId,proto3,oneof" json:"account_id,omitempty"`
+	Name          *string                `protobuf:"bytes,3,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ProductExternalAccount) Reset() {
+	*x = ProductExternalAccount{}
+	mi := &file_hi_club_product_trade_proto_msgTypes[40]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ProductExternalAccount) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ProductExternalAccount) ProtoMessage() {}
+
+func (x *ProductExternalAccount) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_product_trade_proto_msgTypes[40]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ProductExternalAccount.ProtoReflect.Descriptor instead.
+func (*ProductExternalAccount) Descriptor() ([]byte, []int) {
+	return file_hi_club_product_trade_proto_rawDescGZIP(), []int{40}
+}
+
+func (x *ProductExternalAccount) GetSystem() string {
+	if x != nil && x.System != nil {
+		return *x.System
+	}
+	return ""
+}
+
+func (x *ProductExternalAccount) GetAccountId() string {
+	if x != nil && x.AccountId != nil {
+		return *x.AccountId
+	}
+	return ""
+}
+
+func (x *ProductExternalAccount) GetName() string {
+	if x != nil && x.Name != nil {
+		return *x.Name
+	}
+	return ""
+}
+
+type ProductSettlementParty struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Types that are valid to be assigned to Subject:
+	//
+	//	*ProductSettlementParty_Entity
+	//	*ProductSettlementParty_External
+	Subject       isProductSettlementParty_Subject `protobuf_oneof:"subject"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ProductSettlementParty) Reset() {
+	*x = ProductSettlementParty{}
+	mi := &file_hi_club_product_trade_proto_msgTypes[41]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ProductSettlementParty) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ProductSettlementParty) ProtoMessage() {}
+
+func (x *ProductSettlementParty) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_product_trade_proto_msgTypes[41]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ProductSettlementParty.ProtoReflect.Descriptor instead.
+func (*ProductSettlementParty) Descriptor() ([]byte, []int) {
+	return file_hi_club_product_trade_proto_rawDescGZIP(), []int{41}
+}
+
+func (x *ProductSettlementParty) GetSubject() isProductSettlementParty_Subject {
+	if x != nil {
+		return x.Subject
+	}
+	return nil
+}
+
+func (x *ProductSettlementParty) GetEntity() *hi.Entity {
+	if x != nil {
+		if x, ok := x.Subject.(*ProductSettlementParty_Entity); ok {
+			return x.Entity
+		}
+	}
+	return nil
+}
+
+func (x *ProductSettlementParty) GetExternal() *ProductExternalAccount {
+	if x != nil {
+		if x, ok := x.Subject.(*ProductSettlementParty_External); ok {
+			return x.External
+		}
+	}
+	return nil
+}
+
+type isProductSettlementParty_Subject interface {
+	isProductSettlementParty_Subject()
+}
+
+type ProductSettlementParty_Entity struct {
+	Entity *hi.Entity `protobuf:"bytes,1,opt,name=entity,proto3,oneof"`
+}
+
+type ProductSettlementParty_External struct {
+	External *ProductExternalAccount `protobuf:"bytes,2,opt,name=external,proto3,oneof"`
+}
+
+func (*ProductSettlementParty_Entity) isProductSettlementParty_Subject() {}
+
+func (*ProductSettlementParty_External) isProductSettlementParty_Subject() {}
+
+type ProductFiatAmount struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Currency      *string                `protobuf:"bytes,1,opt,name=currency,proto3,oneof" json:"currency,omitempty"`
+	Amount        *string                `protobuf:"bytes,2,opt,name=amount,proto3,oneof" json:"amount,omitempty"` // 精确十进制字符串，不使用浮点
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ProductFiatAmount) Reset() {
+	*x = ProductFiatAmount{}
+	mi := &file_hi_club_product_trade_proto_msgTypes[42]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ProductFiatAmount) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ProductFiatAmount) ProtoMessage() {}
+
+func (x *ProductFiatAmount) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_product_trade_proto_msgTypes[42]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ProductFiatAmount.ProtoReflect.Descriptor instead.
+func (*ProductFiatAmount) Descriptor() ([]byte, []int) {
+	return file_hi_club_product_trade_proto_rawDescGZIP(), []int{42}
+}
+
+func (x *ProductFiatAmount) GetCurrency() string {
+	if x != nil && x.Currency != nil {
+		return *x.Currency
+	}
+	return ""
+}
+
+func (x *ProductFiatAmount) GetAmount() string {
+	if x != nil && x.Amount != nil {
+		return *x.Amount
+	}
+	return ""
+}
+
+type ProductMarketOrderRef struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Types that are valid to be assigned to Order:
+	//
+	//	*ProductMarketOrderRef_PurchaseId
+	//	*ProductMarketOrderRef_DeliveryId
+	Order         isProductMarketOrderRef_Order `protobuf_oneof:"order"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ProductMarketOrderRef) Reset() {
+	*x = ProductMarketOrderRef{}
+	mi := &file_hi_club_product_trade_proto_msgTypes[43]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ProductMarketOrderRef) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ProductMarketOrderRef) ProtoMessage() {}
+
+func (x *ProductMarketOrderRef) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_product_trade_proto_msgTypes[43]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ProductMarketOrderRef.ProtoReflect.Descriptor instead.
+func (*ProductMarketOrderRef) Descriptor() ([]byte, []int) {
+	return file_hi_club_product_trade_proto_rawDescGZIP(), []int{43}
+}
+
+func (x *ProductMarketOrderRef) GetOrder() isProductMarketOrderRef_Order {
+	if x != nil {
+		return x.Order
+	}
+	return nil
+}
+
+func (x *ProductMarketOrderRef) GetPurchaseId() string {
+	if x != nil {
+		if x, ok := x.Order.(*ProductMarketOrderRef_PurchaseId); ok {
+			return x.PurchaseId
+		}
+	}
+	return ""
+}
+
+func (x *ProductMarketOrderRef) GetDeliveryId() string {
+	if x != nil {
+		if x, ok := x.Order.(*ProductMarketOrderRef_DeliveryId); ok {
+			return x.DeliveryId
+		}
+	}
+	return ""
+}
+
+type isProductMarketOrderRef_Order interface {
+	isProductMarketOrderRef_Order()
+}
+
+type ProductMarketOrderRef_PurchaseId struct {
+	PurchaseId string `protobuf:"bytes,1,opt,name=purchase_id,json=purchaseId,proto3,oneof"`
+}
+
+type ProductMarketOrderRef_DeliveryId struct {
+	DeliveryId string `protobuf:"bytes,2,opt,name=delivery_id,json=deliveryId,proto3,oneof"`
+}
+
+func (*ProductMarketOrderRef_PurchaseId) isProductMarketOrderRef_Order() {}
+
+func (*ProductMarketOrderRef_DeliveryId) isProductMarketOrderRef_Order() {}
+
+// 终端/供应外部系统的只增审计流水。模拟与真实标识显式保留；冲销关联原流水且反转资金双方。
+// reseller/supplier是销售归属，payer/payee才是该笔钱的真实方向，两类事实不得相互替代。
+// 跨机器人代币付款仍使用SettlementPayment与SettlementReceipt，通过market_order关联。
+type ProductFiatSettlement struct {
+	state             protoimpl.MessageState     `protogen:"open.v1"`
+	Id                *string                    `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	Reference         *string                    `protobuf:"bytes,2,opt,name=reference,proto3,oneof" json:"reference,omitempty"`
+	Source            *TerminalOrderRef          `protobuf:"bytes,3,opt,name=source,proto3" json:"source,omitempty"`
+	MarketOrder       *ProductMarketOrderRef     `protobuf:"bytes,4,opt,name=market_order,json=marketOrder,proto3" json:"market_order,omitempty"`
+	Reseller          *hi.Entity                 `protobuf:"bytes,5,opt,name=reseller,proto3" json:"reseller,omitempty"`
+	Supplier          *hi.Entity                 `protobuf:"bytes,6,opt,name=supplier,proto3" json:"supplier,omitempty"`
+	Payer             *ProductSettlementParty    `protobuf:"bytes,7,opt,name=payer,proto3" json:"payer,omitempty"`
+	Payee             *ProductSettlementParty    `protobuf:"bytes,8,opt,name=payee,proto3" json:"payee,omitempty"`
+	Total             *ProductFiatAmount         `protobuf:"bytes,9,opt,name=total,proto3" json:"total,omitempty"`
+	Kind              *ProductFiatSettlementKind `protobuf:"varint,10,opt,name=kind,proto3,enum=hi.club.ProductFiatSettlementKind,oneof" json:"kind,omitempty"`
+	OriginalId        *string                    `protobuf:"bytes,11,opt,name=original_id,json=originalId,proto3,oneof" json:"original_id,omitempty"`
+	Simulated         *bool                      `protobuf:"varint,12,opt,name=simulated,proto3,oneof" json:"simulated,omitempty"`
+	CreatedAt         *int64                     `protobuf:"varint,13,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
+	AttributionStatus *ProductAttributionStatus  `protobuf:"varint,14,opt,name=attribution_status,json=attributionStatus,proto3,enum=hi.club.ProductAttributionStatus,oneof" json:"attribution_status,omitempty"`
+	ProductId         *string                    `protobuf:"bytes,15,opt,name=product_id,json=productId,proto3,oneof" json:"product_id,omitempty"` // 纯定位，业务流转仍以平台商品ID为键
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *ProductFiatSettlement) Reset() {
+	*x = ProductFiatSettlement{}
+	mi := &file_hi_club_product_trade_proto_msgTypes[44]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ProductFiatSettlement) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ProductFiatSettlement) ProtoMessage() {}
+
+func (x *ProductFiatSettlement) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_product_trade_proto_msgTypes[44]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ProductFiatSettlement.ProtoReflect.Descriptor instead.
+func (*ProductFiatSettlement) Descriptor() ([]byte, []int) {
+	return file_hi_club_product_trade_proto_rawDescGZIP(), []int{44}
+}
+
+func (x *ProductFiatSettlement) GetId() string {
+	if x != nil && x.Id != nil {
+		return *x.Id
+	}
+	return ""
+}
+
+func (x *ProductFiatSettlement) GetReference() string {
+	if x != nil && x.Reference != nil {
+		return *x.Reference
+	}
+	return ""
+}
+
+func (x *ProductFiatSettlement) GetSource() *TerminalOrderRef {
+	if x != nil {
+		return x.Source
+	}
+	return nil
+}
+
+func (x *ProductFiatSettlement) GetMarketOrder() *ProductMarketOrderRef {
+	if x != nil {
+		return x.MarketOrder
+	}
+	return nil
+}
+
+func (x *ProductFiatSettlement) GetReseller() *hi.Entity {
+	if x != nil {
+		return x.Reseller
+	}
+	return nil
+}
+
+func (x *ProductFiatSettlement) GetSupplier() *hi.Entity {
+	if x != nil {
+		return x.Supplier
+	}
+	return nil
+}
+
+func (x *ProductFiatSettlement) GetPayer() *ProductSettlementParty {
+	if x != nil {
+		return x.Payer
+	}
+	return nil
+}
+
+func (x *ProductFiatSettlement) GetPayee() *ProductSettlementParty {
+	if x != nil {
+		return x.Payee
+	}
+	return nil
+}
+
+func (x *ProductFiatSettlement) GetTotal() *ProductFiatAmount {
+	if x != nil {
+		return x.Total
+	}
+	return nil
+}
+
+func (x *ProductFiatSettlement) GetKind() ProductFiatSettlementKind {
+	if x != nil && x.Kind != nil {
+		return *x.Kind
+	}
+	return ProductFiatSettlementKind_PRODUCT_FIAT_SETTLEMENT_KIND_UNSPECIFIED
+}
+
+func (x *ProductFiatSettlement) GetOriginalId() string {
+	if x != nil && x.OriginalId != nil {
+		return *x.OriginalId
+	}
+	return ""
+}
+
+func (x *ProductFiatSettlement) GetSimulated() bool {
+	if x != nil && x.Simulated != nil {
+		return *x.Simulated
+	}
+	return false
+}
+
+func (x *ProductFiatSettlement) GetCreatedAt() int64 {
+	if x != nil && x.CreatedAt != nil {
+		return *x.CreatedAt
+	}
+	return 0
+}
+
+func (x *ProductFiatSettlement) GetAttributionStatus() ProductAttributionStatus {
+	if x != nil && x.AttributionStatus != nil {
+		return *x.AttributionStatus
+	}
+	return ProductAttributionStatus_PRODUCT_ATTRIBUTION_STATUS_UNSPECIFIED
+}
+
+func (x *ProductFiatSettlement) GetProductId() string {
+	if x != nil && x.ProductId != nil {
+		return *x.ProductId
+	}
+	return ""
 }
 
 var File_hi_club_product_trade_proto protoreflect.FileDescriptor
@@ -3156,11 +3741,14 @@ const file_hi_club_product_trade_proto_rawDesc = "" +
 	"\xbaH\a\x92\x01\x04\b\x01\x10\x14R\x05lines\x12>\n" +
 	"\x06target\x18\x05 \x01(\v2\x1e.hi.club.ProductDeliveryTargetB\x06\xbaH\x03\xc8\x01\x01R\x06targetB\x0f\n" +
 	"\r_request_uuidB\v\n" +
-	"\t_reseller\"\xdb\x01\n" +
-	"\x18DirectProductPurchaseReq\x123\n" +
-	"\frequest_uuid\x18\x01 \x01(\tB\v\xbaH\b\xc8\x01\x01r\x03\xb0\x01\x01H\x00R\vrequestUuid\x88\x01\x01\x129\n" +
+	"\t_reseller\"\xa3\x02\n" +
+	"\x18DirectProductPurchaseReq\x124\n" +
+	"\rselling_stall\x18\x04 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\fsellingStall\x88\x01\x01\x123\n" +
+	"\frequest_uuid\x18\x01 \x01(\tB\v\xbaH\b\xc8\x01\x01r\x03\xb0\x01\x01H\x01R\vrequestUuid\x88\x01\x01\x129\n" +
 	"\x04item\x18\x02 \x01(\v2\x1d.hi.club.ProductPurchaseInputB\x06\xbaH\x03\xc8\x01\x01R\x04item\x12>\n" +
-	"\x06target\x18\x03 \x01(\v2\x1e.hi.club.ProductDeliveryTargetB\x06\xbaH\x03\xc8\x01\x01R\x06targetB\x0f\n" +
+	"\x06target\x18\x03 \x01(\v2\x1e.hi.club.ProductDeliveryTargetB\x06\xbaH\x03\xc8\x01\x01R\x06targetB\x10\n" +
+	"\x0e_selling_stallB\x0f\n" +
 	"\r_request_uuid\"\xf8\x02\n" +
 	"\x13ProductPurchaseLine\x120\n" +
 	"\aproduct\x18\x01 \x01(\v2\x10.hi.club.ProductB\x04\x90\xb5\x18\x02R\aproduct\x12%\n" +
@@ -3170,7 +3758,7 @@ const file_hi_club_product_trade_proto_rawDesc = "" +
 	"\x06detail\x18\x05 \x01(\v2\x16.hi.club.ProductDetailB\x04\x90\xb5\x18\x02R\x06detail\x122\n" +
 	"\x0fsupply_revision\x18\x06 \x01(\x03B\x04\x90\xb5\x18\x02H\x01R\x0esupplyRevision\x88\x01\x01:\x04\x98\xb5\x18\x02B\v\n" +
 	"\t_quantityB\x12\n" +
-	"\x10_supply_revision\"\xc7\a\n" +
+	"\x10_supply_revision\"\xe9\b\n" +
 	"\x14ProductPurchaseOrder\x12\x19\n" +
 	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x02id\x88\x01\x01\x12&\n" +
 	"\x05buyer\x18\x02 \x01(\v2\n" +
@@ -3191,7 +3779,10 @@ const file_hi_club_product_trade_proto_rawDesc = "" +
 	"\brevision\x18\r \x01(\x03B\x04\x90\xb5\x18\x02H\x05R\brevision\x88\x01\x01\x128\n" +
 	"\x06refund\x18\x0e \x01(\v2\x1a.hi.club.SettlementPaymentB\x04\x90\xb5\x18\x02R\x06refund\x12.\n" +
 	"\rrefund_reason\x18\x0f \x01(\tB\x04\x90\xb5\x18\x02H\x06R\frefundReason\x88\x01\x01\x12D\n" +
-	"\achannel\x18\x10 \x01(\x0e2\x1f.hi.club.ProductPurchaseChannelB\x04\x90\xb5\x18\x02H\aR\achannel\x88\x01\x01:\x04\x98\xb5\x18\x02B\x05\n" +
+	"\achannel\x18\x10 \x01(\x0e2\x1f.hi.club.ProductPurchaseChannelB\x04\x90\xb5\x18\x02H\aR\achannel\x88\x01\x01\x12,\n" +
+	"\breseller\x18\x11 \x01(\v2\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x02R\breseller\x12[\n" +
+	"\x12attribution_status\x18\x12 \x01(\x0e2!.hi.club.ProductAttributionStatusB\x04\x90\xb5\x18\x02H\bR\x11attributionStatus\x88\x01\x01:\x04\x98\xb5\x18\x02B\x05\n" +
 	"\x03_idB\x11\n" +
 	"\x0f_source_line_idB\t\n" +
 	"\a_statusB\r\n" +
@@ -3201,7 +3792,8 @@ const file_hi_club_product_trade_proto_rawDesc = "" +
 	"\t_revisionB\x10\n" +
 	"\x0e_refund_reasonB\n" +
 	"\n" +
-	"\b_channel\"\x92\x01\n" +
+	"\b_channelB\x15\n" +
+	"\x13_attribution_status\"\x92\x01\n" +
 	"\x14ProductPurchaseGroup\x127\n" +
 	"\x06source\x18\x01 \x01(\v2\x19.hi.club.TerminalOrderRefB\x04\x90\xb5\x18\x02R\x06source\x12;\n" +
 	"\x06orders\x18\x02 \x03(\v2\x1d.hi.club.ProductPurchaseOrderB\x04\x90\xb5\x18\x02R\x06orders:\x04\x98\xb5\x18\x02\">\n" +
@@ -3344,7 +3936,7 @@ const file_hi_club_product_trade_proto_rawDesc = "" +
 	"\x06detail\x18\x04 \x01(\v2\x16.hi.club.ProductDetailB\x04\x90\xb5\x18\x02R\x06detail\x122\n" +
 	"\x0fsupply_revision\x18\x05 \x01(\x03B\x04\x90\xb5\x18\x02H\x01R\x0esupplyRevision\x88\x01\x01:\x04\x98\xb5\x18\x02B\v\n" +
 	"\t_quantityB\x12\n" +
-	"\x10_supply_revision\"\x97\x04\n" +
+	"\x10_supply_revision\"\xb9\x05\n" +
 	"\x14ProductDeliveryOrder\x12\x19\n" +
 	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x02id\x88\x01\x01\x12(\n" +
 	"\x06seller\x18\x02 \x01(\v2\n" +
@@ -3356,11 +3948,16 @@ const file_hi_club_product_trade_proto_rawDesc = "" +
 	"\vfulfillment\x18\a \x01(\v2\x1b.hi.club.ProductFulfillmentB\x04\x90\xb5\x18\x02R\vfulfillment\x12(\n" +
 	"\n" +
 	"created_at\x18\b \x01(\x03B\x04\x90\xb5\x18\x02H\x02R\tcreatedAt\x88\x01\x01\x12%\n" +
-	"\brevision\x18\t \x01(\x03B\x04\x90\xb5\x18\x02H\x03R\brevision\x88\x01\x01:\x04\x98\xb5\x18\x02B\x05\n" +
+	"\brevision\x18\t \x01(\x03B\x04\x90\xb5\x18\x02H\x03R\brevision\x88\x01\x01\x12,\n" +
+	"\bsupplier\x18\n" +
+	" \x01(\v2\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x02R\bsupplier\x12[\n" +
+	"\x12attribution_status\x18\v \x01(\x0e2!.hi.club.ProductAttributionStatusB\x04\x90\xb5\x18\x02H\x04R\x11attributionStatus\x88\x01\x01:\x04\x98\xb5\x18\x02B\x05\n" +
 	"\x03_idB\t\n" +
 	"\a_statusB\r\n" +
 	"\v_created_atB\v\n" +
-	"\t_revision\">\n" +
+	"\t_revisionB\x15\n" +
+	"\x13_attribution_status\">\n" +
 	"\x14ProductDeliveryQuery\x12\x1f\n" +
 	"\x02id\x18\x01 \x01(\tB\n" +
 	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\x02id\x88\x01\x01B\x05\n" +
@@ -3368,7 +3965,63 @@ const file_hi_club_product_trade_proto_rawDesc = "" +
 	"\x19ListProductDeliveriesResp\x127\n" +
 	"\x04list\x18\x01 \x03(\v2\x1d.hi.club.ProductDeliveryOrderB\x04\x90\xb5\x18\x02R\x04list\x12\x1f\n" +
 	"\x05total\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x02H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x02B\b\n" +
-	"\x06_total*\x92\x01\n" +
+	"\x06_total\"\xad\x01\n" +
+	"\x16ProductExternalAccount\x12!\n" +
+	"\x06system\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x06system\x88\x01\x01\x12(\n" +
+	"\n" +
+	"account_id\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\taccountId\x88\x01\x01\x12\x1d\n" +
+	"\x04name\x18\x03 \x01(\tB\x04\x90\xb5\x18\x02H\x02R\x04name\x88\x01\x01:\x04\x98\xb5\x18\x02B\t\n" +
+	"\a_systemB\r\n" +
+	"\v_account_idB\a\n" +
+	"\x05_name\"\x9a\x01\n" +
+	"\x16ProductSettlementParty\x12*\n" +
+	"\x06entity\x18\x01 \x01(\v2\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x02H\x00R\x06entity\x12C\n" +
+	"\bexternal\x18\x02 \x01(\v2\x1f.hi.club.ProductExternalAccountB\x04\x90\xb5\x18\x02H\x00R\bexternal:\x04\x98\xb5\x18\x02B\t\n" +
+	"\asubject\"{\n" +
+	"\x11ProductFiatAmount\x12%\n" +
+	"\bcurrency\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\bcurrency\x88\x01\x01\x12!\n" +
+	"\x06amount\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x06amount\x88\x01\x01:\x04\x98\xb5\x18\x02B\v\n" +
+	"\t_currencyB\t\n" +
+	"\a_amount\"x\n" +
+	"\x15ProductMarketOrderRef\x12'\n" +
+	"\vpurchase_id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\n" +
+	"purchaseId\x12'\n" +
+	"\vdelivery_id\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\n" +
+	"deliveryId:\x04\x98\xb5\x18\x02B\a\n" +
+	"\x05order\"\xab\a\n" +
+	"\x15ProductFiatSettlement\x12\x19\n" +
+	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x02id\x88\x01\x01\x12'\n" +
+	"\treference\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\treference\x88\x01\x01\x127\n" +
+	"\x06source\x18\x03 \x01(\v2\x19.hi.club.TerminalOrderRefB\x04\x90\xb5\x18\x02R\x06source\x12G\n" +
+	"\fmarket_order\x18\x04 \x01(\v2\x1e.hi.club.ProductMarketOrderRefB\x04\x90\xb5\x18\x02R\vmarketOrder\x12,\n" +
+	"\breseller\x18\x05 \x01(\v2\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x02R\breseller\x12,\n" +
+	"\bsupplier\x18\x06 \x01(\v2\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x02R\bsupplier\x12;\n" +
+	"\x05payer\x18\a \x01(\v2\x1f.hi.club.ProductSettlementPartyB\x04\x90\xb5\x18\x02R\x05payer\x12;\n" +
+	"\x05payee\x18\b \x01(\v2\x1f.hi.club.ProductSettlementPartyB\x04\x90\xb5\x18\x02R\x05payee\x126\n" +
+	"\x05total\x18\t \x01(\v2\x1a.hi.club.ProductFiatAmountB\x04\x90\xb5\x18\x02R\x05total\x12A\n" +
+	"\x04kind\x18\n" +
+	" \x01(\x0e2\".hi.club.ProductFiatSettlementKindB\x04\x90\xb5\x18\x02H\x02R\x04kind\x88\x01\x01\x12*\n" +
+	"\voriginal_id\x18\v \x01(\tB\x04\x90\xb5\x18\x02H\x03R\n" +
+	"originalId\x88\x01\x01\x12'\n" +
+	"\tsimulated\x18\f \x01(\bB\x04\x90\xb5\x18\x02H\x04R\tsimulated\x88\x01\x01\x12(\n" +
+	"\n" +
+	"created_at\x18\r \x01(\x03B\x04\x90\xb5\x18\x02H\x05R\tcreatedAt\x88\x01\x01\x12[\n" +
+	"\x12attribution_status\x18\x0e \x01(\x0e2!.hi.club.ProductAttributionStatusB\x04\x90\xb5\x18\x02H\x06R\x11attributionStatus\x88\x01\x01\x12(\n" +
+	"\n" +
+	"product_id\x18\x0f \x01(\tB\x04\x90\xb5\x18\x02H\aR\tproductId\x88\x01\x01:\x04\x98\xb5\x18\x02B\x05\n" +
+	"\x03_idB\f\n" +
+	"\n" +
+	"_referenceB\a\n" +
+	"\x05_kindB\x0e\n" +
+	"\f_original_idB\f\n" +
+	"\n" +
+	"_simulatedB\r\n" +
+	"\v_created_atB\x15\n" +
+	"\x13_attribution_statusB\r\n" +
+	"\v_product_id*\x92\x01\n" +
 	"\x16ProductPurchaseChannel\x12(\n" +
 	"$PRODUCT_PURCHASE_CHANNEL_UNSPECIFIED\x10\x00\x12)\n" +
 	"%PRODUCT_PURCHASE_CHANNEL_DISTRIBUTION\x10\x01\x12#\n" +
@@ -3396,7 +4049,18 @@ const file_hi_club_product_trade_proto_rawDesc = "" +
 	"#PRODUCT_DELIVERY_STATUS_FULFILLMENT\x10\x01\x12$\n" +
 	" PRODUCT_DELIVERY_STATUS_COMPLETE\x10\x02\x12%\n" +
 	"!PRODUCT_DELIVERY_STATUS_CANCELLED\x10\x03\x12\"\n" +
-	"\x1ePRODUCT_DELIVERY_STATUS_REVIEW\x10\x042\xb5\x01\n" +
+	"\x1ePRODUCT_DELIVERY_STATUS_REVIEW\x10\x04*\xc8\x01\n" +
+	"\x18ProductAttributionStatus\x12*\n" +
+	"&PRODUCT_ATTRIBUTION_STATUS_UNSPECIFIED\x10\x00\x12'\n" +
+	"#PRODUCT_ATTRIBUTION_STATUS_RECORDED\x10\x01\x12(\n" +
+	"$PRODUCT_ATTRIBUTION_STATUS_RECOVERED\x10\x02\x12-\n" +
+	")PRODUCT_ATTRIBUTION_STATUS_UNKNOWN_LEGACY\x10\x03*\x90\x02\n" +
+	"\x19ProductFiatSettlementKind\x12,\n" +
+	"(PRODUCT_FIAT_SETTLEMENT_KIND_UNSPECIFIED\x10\x00\x12/\n" +
+	"+PRODUCT_FIAT_SETTLEMENT_KIND_RETAIL_RECEIPT\x10\x01\x12.\n" +
+	"*PRODUCT_FIAT_SETTLEMENT_KIND_RETAIL_REFUND\x10\x02\x122\n" +
+	".PRODUCT_FIAT_SETTLEMENT_KIND_SUPPLY_SETTLEMENT\x10\x03\x120\n" +
+	",PRODUCT_FIAT_SETTLEMENT_KIND_SUPPLY_REVERSAL\x10\x042\xb5\x01\n" +
 	"\rProductSupply\x12B\n" +
 	"\tGetDetail\x12\x16.hi.club.GetProductReq\x1a\x16.hi.club.ProductDetail\"\x05\x8a\xb5\x18\x01\x02\x12`\n" +
 	"\x12ListStockMovements\x12\x1b.hi.club.ProductRecordQuery\x1a&.hi.club.ListProductStockMovementsResp\"\x05\x8a\xb5\x18\x01\x022\x9b\x02\n" +
@@ -3439,179 +4103,201 @@ func file_hi_club_product_trade_proto_rawDescGZIP() []byte {
 	return file_hi_club_product_trade_proto_rawDescData
 }
 
-var file_hi_club_product_trade_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
-var file_hi_club_product_trade_proto_msgTypes = make([]protoimpl.MessageInfo, 40)
+var file_hi_club_product_trade_proto_enumTypes = make([]protoimpl.EnumInfo, 6)
+var file_hi_club_product_trade_proto_msgTypes = make([]protoimpl.MessageInfo, 45)
 var file_hi_club_product_trade_proto_goTypes = []any{
 	(ProductPurchaseChannel)(0),           // 0: hi.club.ProductPurchaseChannel
 	(ProductPurchaseStatus)(0),            // 1: hi.club.ProductPurchaseStatus
 	(ProductFulfillmentStatus)(0),         // 2: hi.club.ProductFulfillmentStatus
 	(ProductDeliveryStatus)(0),            // 3: hi.club.ProductDeliveryStatus
-	(*ProductStallQuery)(nil),             // 4: hi.club.ProductStallQuery
-	(*ProductRecordQuery)(nil),            // 5: hi.club.ProductRecordQuery
-	(*ProductDetail)(nil),                 // 6: hi.club.ProductDetail
-	(*ProductDetailSection)(nil),          // 7: hi.club.ProductDetailSection
-	(*ProductSpecification)(nil),          // 8: hi.club.ProductSpecification
-	(*ProductDistributionAgreement)(nil),  // 9: hi.club.ProductDistributionAgreement
-	(*JoinProductDistributionReq)(nil),    // 10: hi.club.JoinProductDistributionReq
-	(*ProductDistributionQuery)(nil),      // 11: hi.club.ProductDistributionQuery
-	(*ListProductDistributionResp)(nil),   // 12: hi.club.ListProductDistributionResp
-	(*PhysicalRecipient)(nil),             // 13: hi.club.PhysicalRecipient
-	(*DigitalRecipient)(nil),              // 14: hi.club.DigitalRecipient
-	(*ProductDeliveryTarget)(nil),         // 15: hi.club.ProductDeliveryTarget
-	(*TerminalOrderRef)(nil),              // 16: hi.club.TerminalOrderRef
-	(*ProductPurchaseInput)(nil),          // 17: hi.club.ProductPurchaseInput
-	(*TerminalOrderSubmission)(nil),       // 18: hi.club.TerminalOrderSubmission
-	(*DirectProductPurchaseReq)(nil),      // 19: hi.club.DirectProductPurchaseReq
-	(*ProductPurchaseLine)(nil),           // 20: hi.club.ProductPurchaseLine
-	(*ProductPurchaseOrder)(nil),          // 21: hi.club.ProductPurchaseOrder
-	(*ProductPurchaseGroup)(nil),          // 22: hi.club.ProductPurchaseGroup
-	(*ProductPurchaseQuery)(nil),          // 23: hi.club.ProductPurchaseQuery
-	(*ListProductPurchasesReq)(nil),       // 24: hi.club.ListProductPurchasesReq
-	(*ListProductPurchasesResp)(nil),      // 25: hi.club.ListProductPurchasesResp
-	(*ProductShipment)(nil),               // 26: hi.club.ProductShipment
-	(*ProductDigitalDelivery)(nil),        // 27: hi.club.ProductDigitalDelivery
-	(*ProductFulfillment)(nil),            // 28: hi.club.ProductFulfillment
-	(*ProductFulfillmentReport)(nil),      // 29: hi.club.ProductFulfillmentReport
-	(*ProductRefundRequest)(nil),          // 30: hi.club.ProductRefundRequest
-	(*ProductOrderEvent)(nil),             // 31: hi.club.ProductOrderEvent
-	(*ListProductOrderEventsResp)(nil),    // 32: hi.club.ListProductOrderEventsResp
-	(*ProductStockMovement)(nil),          // 33: hi.club.ProductStockMovement
-	(*ListProductStockMovementsResp)(nil), // 34: hi.club.ListProductStockMovementsResp
-	(*SupplierRequest)(nil),               // 35: hi.club.SupplierRequest
-	(*SupplierResponse)(nil),              // 36: hi.club.SupplierResponse
-	(*ProductOrderRecordsReq)(nil),        // 37: hi.club.ProductOrderRecordsReq
-	(*ProductDeliveryInput)(nil),          // 38: hi.club.ProductDeliveryInput
-	(*SubmitProductDeliveryReq)(nil),      // 39: hi.club.SubmitProductDeliveryReq
-	(*ProductDeliveryLine)(nil),           // 40: hi.club.ProductDeliveryLine
-	(*ProductDeliveryOrder)(nil),          // 41: hi.club.ProductDeliveryOrder
-	(*ProductDeliveryQuery)(nil),          // 42: hi.club.ProductDeliveryQuery
-	(*ListProductDeliveriesResp)(nil),     // 43: hi.club.ListProductDeliveriesResp
-	(*hi.Pagination)(nil),                 // 44: hi.Pagination
-	(*ProductImage)(nil),                  // 45: hi.club.ProductImage
-	(*hi.Entity)(nil),                     // 46: hi.Entity
-	(*Product)(nil),                       // 47: hi.club.Product
-	(*did.CoinAmount)(nil),                // 48: hi.did.CoinAmount
-	(*ProductFulfillmentSpec)(nil),        // 49: hi.club.ProductFulfillmentSpec
-	(*SettlementPayment)(nil),             // 50: hi.club.SettlementPayment
-	(*ProductStockBalance)(nil),           // 51: hi.club.ProductStockBalance
-	(*emptypb.Empty)(nil),                 // 52: google.protobuf.Empty
-	(*GetProductReq)(nil),                 // 53: hi.club.GetProductReq
-	(*ListSettlementReceiptsResp)(nil),    // 54: hi.club.ListSettlementReceiptsResp
+	(ProductAttributionStatus)(0),         // 4: hi.club.ProductAttributionStatus
+	(ProductFiatSettlementKind)(0),        // 5: hi.club.ProductFiatSettlementKind
+	(*ProductStallQuery)(nil),             // 6: hi.club.ProductStallQuery
+	(*ProductRecordQuery)(nil),            // 7: hi.club.ProductRecordQuery
+	(*ProductDetail)(nil),                 // 8: hi.club.ProductDetail
+	(*ProductDetailSection)(nil),          // 9: hi.club.ProductDetailSection
+	(*ProductSpecification)(nil),          // 10: hi.club.ProductSpecification
+	(*ProductDistributionAgreement)(nil),  // 11: hi.club.ProductDistributionAgreement
+	(*JoinProductDistributionReq)(nil),    // 12: hi.club.JoinProductDistributionReq
+	(*ProductDistributionQuery)(nil),      // 13: hi.club.ProductDistributionQuery
+	(*ListProductDistributionResp)(nil),   // 14: hi.club.ListProductDistributionResp
+	(*PhysicalRecipient)(nil),             // 15: hi.club.PhysicalRecipient
+	(*DigitalRecipient)(nil),              // 16: hi.club.DigitalRecipient
+	(*ProductDeliveryTarget)(nil),         // 17: hi.club.ProductDeliveryTarget
+	(*TerminalOrderRef)(nil),              // 18: hi.club.TerminalOrderRef
+	(*ProductPurchaseInput)(nil),          // 19: hi.club.ProductPurchaseInput
+	(*TerminalOrderSubmission)(nil),       // 20: hi.club.TerminalOrderSubmission
+	(*DirectProductPurchaseReq)(nil),      // 21: hi.club.DirectProductPurchaseReq
+	(*ProductPurchaseLine)(nil),           // 22: hi.club.ProductPurchaseLine
+	(*ProductPurchaseOrder)(nil),          // 23: hi.club.ProductPurchaseOrder
+	(*ProductPurchaseGroup)(nil),          // 24: hi.club.ProductPurchaseGroup
+	(*ProductPurchaseQuery)(nil),          // 25: hi.club.ProductPurchaseQuery
+	(*ListProductPurchasesReq)(nil),       // 26: hi.club.ListProductPurchasesReq
+	(*ListProductPurchasesResp)(nil),      // 27: hi.club.ListProductPurchasesResp
+	(*ProductShipment)(nil),               // 28: hi.club.ProductShipment
+	(*ProductDigitalDelivery)(nil),        // 29: hi.club.ProductDigitalDelivery
+	(*ProductFulfillment)(nil),            // 30: hi.club.ProductFulfillment
+	(*ProductFulfillmentReport)(nil),      // 31: hi.club.ProductFulfillmentReport
+	(*ProductRefundRequest)(nil),          // 32: hi.club.ProductRefundRequest
+	(*ProductOrderEvent)(nil),             // 33: hi.club.ProductOrderEvent
+	(*ListProductOrderEventsResp)(nil),    // 34: hi.club.ListProductOrderEventsResp
+	(*ProductStockMovement)(nil),          // 35: hi.club.ProductStockMovement
+	(*ListProductStockMovementsResp)(nil), // 36: hi.club.ListProductStockMovementsResp
+	(*SupplierRequest)(nil),               // 37: hi.club.SupplierRequest
+	(*SupplierResponse)(nil),              // 38: hi.club.SupplierResponse
+	(*ProductOrderRecordsReq)(nil),        // 39: hi.club.ProductOrderRecordsReq
+	(*ProductDeliveryInput)(nil),          // 40: hi.club.ProductDeliveryInput
+	(*SubmitProductDeliveryReq)(nil),      // 41: hi.club.SubmitProductDeliveryReq
+	(*ProductDeliveryLine)(nil),           // 42: hi.club.ProductDeliveryLine
+	(*ProductDeliveryOrder)(nil),          // 43: hi.club.ProductDeliveryOrder
+	(*ProductDeliveryQuery)(nil),          // 44: hi.club.ProductDeliveryQuery
+	(*ListProductDeliveriesResp)(nil),     // 45: hi.club.ListProductDeliveriesResp
+	(*ProductExternalAccount)(nil),        // 46: hi.club.ProductExternalAccount
+	(*ProductSettlementParty)(nil),        // 47: hi.club.ProductSettlementParty
+	(*ProductFiatAmount)(nil),             // 48: hi.club.ProductFiatAmount
+	(*ProductMarketOrderRef)(nil),         // 49: hi.club.ProductMarketOrderRef
+	(*ProductFiatSettlement)(nil),         // 50: hi.club.ProductFiatSettlement
+	(*hi.Pagination)(nil),                 // 51: hi.Pagination
+	(*ProductImage)(nil),                  // 52: hi.club.ProductImage
+	(*hi.Entity)(nil),                     // 53: hi.Entity
+	(*Product)(nil),                       // 54: hi.club.Product
+	(*did.CoinAmount)(nil),                // 55: hi.did.CoinAmount
+	(*ProductFulfillmentSpec)(nil),        // 56: hi.club.ProductFulfillmentSpec
+	(*SettlementPayment)(nil),             // 57: hi.club.SettlementPayment
+	(*ProductStockBalance)(nil),           // 58: hi.club.ProductStockBalance
+	(*emptypb.Empty)(nil),                 // 59: google.protobuf.Empty
+	(*GetProductReq)(nil),                 // 60: hi.club.GetProductReq
+	(*ListSettlementReceiptsResp)(nil),    // 61: hi.club.ListSettlementReceiptsResp
 }
 var file_hi_club_product_trade_proto_depIdxs = []int32{
-	44, // 0: hi.club.ProductStallQuery.pagination:type_name -> hi.Pagination
-	44, // 1: hi.club.ProductRecordQuery.pagination:type_name -> hi.Pagination
-	7,  // 2: hi.club.ProductDetail.sections:type_name -> hi.club.ProductDetailSection
-	45, // 3: hi.club.ProductDetailSection.image:type_name -> hi.club.ProductImage
-	8,  // 4: hi.club.ProductDetailSection.specification:type_name -> hi.club.ProductSpecification
-	46, // 5: hi.club.ProductDistributionAgreement.reseller:type_name -> hi.Entity
-	46, // 6: hi.club.ProductDistributionAgreement.supplier:type_name -> hi.Entity
-	47, // 7: hi.club.ProductDistributionAgreement.product:type_name -> hi.club.Product
-	9,  // 8: hi.club.ListProductDistributionResp.list:type_name -> hi.club.ProductDistributionAgreement
-	13, // 9: hi.club.ProductDeliveryTarget.physical:type_name -> hi.club.PhysicalRecipient
-	14, // 10: hi.club.ProductDeliveryTarget.digital:type_name -> hi.club.DigitalRecipient
-	48, // 11: hi.club.ProductPurchaseInput.maximum_total:type_name -> hi.did.CoinAmount
-	16, // 12: hi.club.TerminalOrderSubmission.source:type_name -> hi.club.TerminalOrderRef
-	17, // 13: hi.club.TerminalOrderSubmission.lines:type_name -> hi.club.ProductPurchaseInput
-	15, // 14: hi.club.TerminalOrderSubmission.target:type_name -> hi.club.ProductDeliveryTarget
-	17, // 15: hi.club.DirectProductPurchaseReq.item:type_name -> hi.club.ProductPurchaseInput
-	15, // 16: hi.club.DirectProductPurchaseReq.target:type_name -> hi.club.ProductDeliveryTarget
-	47, // 17: hi.club.ProductPurchaseLine.product:type_name -> hi.club.Product
-	48, // 18: hi.club.ProductPurchaseLine.total:type_name -> hi.did.CoinAmount
-	49, // 19: hi.club.ProductPurchaseLine.fulfillment:type_name -> hi.club.ProductFulfillmentSpec
-	6,  // 20: hi.club.ProductPurchaseLine.detail:type_name -> hi.club.ProductDetail
-	46, // 21: hi.club.ProductPurchaseOrder.buyer:type_name -> hi.Entity
-	46, // 22: hi.club.ProductPurchaseOrder.supplier:type_name -> hi.Entity
-	16, // 23: hi.club.ProductPurchaseOrder.source:type_name -> hi.club.TerminalOrderRef
-	20, // 24: hi.club.ProductPurchaseOrder.line:type_name -> hi.club.ProductPurchaseLine
-	15, // 25: hi.club.ProductPurchaseOrder.target:type_name -> hi.club.ProductDeliveryTarget
-	1,  // 26: hi.club.ProductPurchaseOrder.status:type_name -> hi.club.ProductPurchaseStatus
-	50, // 27: hi.club.ProductPurchaseOrder.payment:type_name -> hi.club.SettlementPayment
-	28, // 28: hi.club.ProductPurchaseOrder.fulfillment:type_name -> hi.club.ProductFulfillment
-	50, // 29: hi.club.ProductPurchaseOrder.refund:type_name -> hi.club.SettlementPayment
-	0,  // 30: hi.club.ProductPurchaseOrder.channel:type_name -> hi.club.ProductPurchaseChannel
-	16, // 31: hi.club.ProductPurchaseGroup.source:type_name -> hi.club.TerminalOrderRef
-	21, // 32: hi.club.ProductPurchaseGroup.orders:type_name -> hi.club.ProductPurchaseOrder
-	44, // 33: hi.club.ListProductPurchasesReq.pagination:type_name -> hi.Pagination
-	21, // 34: hi.club.ListProductPurchasesResp.list:type_name -> hi.club.ProductPurchaseOrder
-	2,  // 35: hi.club.ProductFulfillment.status:type_name -> hi.club.ProductFulfillmentStatus
-	26, // 36: hi.club.ProductFulfillment.shipment:type_name -> hi.club.ProductShipment
-	27, // 37: hi.club.ProductFulfillment.digital:type_name -> hi.club.ProductDigitalDelivery
-	28, // 38: hi.club.ProductFulfillmentReport.fulfillment:type_name -> hi.club.ProductFulfillment
-	46, // 39: hi.club.ProductOrderEvent.actor:type_name -> hi.Entity
-	31, // 40: hi.club.ListProductOrderEventsResp.list:type_name -> hi.club.ProductOrderEvent
-	51, // 41: hi.club.ProductStockMovement.balance:type_name -> hi.club.ProductStockBalance
-	33, // 42: hi.club.ListProductStockMovementsResp.list:type_name -> hi.club.ProductStockMovement
-	47, // 43: hi.club.SupplierRequest.product_registered:type_name -> hi.club.Product
-	21, // 44: hi.club.SupplierRequest.fulfill_order:type_name -> hi.club.ProductPurchaseOrder
-	23, // 45: hi.club.SupplierRequest.get_fulfillment:type_name -> hi.club.ProductPurchaseQuery
-	41, // 46: hi.club.SupplierRequest.fulfill_delivery:type_name -> hi.club.ProductDeliveryOrder
-	42, // 47: hi.club.SupplierRequest.get_delivery:type_name -> hi.club.ProductDeliveryQuery
-	29, // 48: hi.club.SupplierResponse.fulfillment:type_name -> hi.club.ProductFulfillmentReport
-	52, // 49: hi.club.SupplierResponse.acknowledged:type_name -> google.protobuf.Empty
-	44, // 50: hi.club.ProductOrderRecordsReq.pagination:type_name -> hi.Pagination
-	16, // 51: hi.club.SubmitProductDeliveryReq.source:type_name -> hi.club.TerminalOrderRef
-	38, // 52: hi.club.SubmitProductDeliveryReq.item:type_name -> hi.club.ProductDeliveryInput
-	15, // 53: hi.club.SubmitProductDeliveryReq.target:type_name -> hi.club.ProductDeliveryTarget
-	47, // 54: hi.club.ProductDeliveryLine.product:type_name -> hi.club.Product
-	49, // 55: hi.club.ProductDeliveryLine.fulfillment:type_name -> hi.club.ProductFulfillmentSpec
-	6,  // 56: hi.club.ProductDeliveryLine.detail:type_name -> hi.club.ProductDetail
-	46, // 57: hi.club.ProductDeliveryOrder.seller:type_name -> hi.Entity
-	16, // 58: hi.club.ProductDeliveryOrder.source:type_name -> hi.club.TerminalOrderRef
-	40, // 59: hi.club.ProductDeliveryOrder.line:type_name -> hi.club.ProductDeliveryLine
-	15, // 60: hi.club.ProductDeliveryOrder.target:type_name -> hi.club.ProductDeliveryTarget
-	3,  // 61: hi.club.ProductDeliveryOrder.status:type_name -> hi.club.ProductDeliveryStatus
-	28, // 62: hi.club.ProductDeliveryOrder.fulfillment:type_name -> hi.club.ProductFulfillment
-	41, // 63: hi.club.ListProductDeliveriesResp.list:type_name -> hi.club.ProductDeliveryOrder
-	53, // 64: hi.club.ProductSupply.GetDetail:input_type -> hi.club.GetProductReq
-	5,  // 65: hi.club.ProductSupply.ListStockMovements:input_type -> hi.club.ProductRecordQuery
-	10, // 66: hi.club.ProductDistribution.Join:input_type -> hi.club.JoinProductDistributionReq
-	4,  // 67: hi.club.ProductDistribution.List:input_type -> hi.club.ProductStallQuery
-	11, // 68: hi.club.ProductDistribution.Leave:input_type -> hi.club.ProductDistributionQuery
-	19, // 69: hi.club.ProductTrade.Buy:input_type -> hi.club.DirectProductPurchaseReq
-	18, // 70: hi.club.ProductTrade.Submit:input_type -> hi.club.TerminalOrderSubmission
-	23, // 71: hi.club.ProductTrade.Confirm:input_type -> hi.club.ProductPurchaseQuery
-	23, // 72: hi.club.ProductTrade.Get:input_type -> hi.club.ProductPurchaseQuery
-	24, // 73: hi.club.ProductTrade.List:input_type -> hi.club.ListProductPurchasesReq
-	23, // 74: hi.club.ProductTrade.Cancel:input_type -> hi.club.ProductPurchaseQuery
-	29, // 75: hi.club.ProductTrade.ReportFulfillment:input_type -> hi.club.ProductFulfillmentReport
-	30, // 76: hi.club.ProductTrade.RequestRefund:input_type -> hi.club.ProductRefundRequest
-	23, // 77: hi.club.ProductTrade.ApproveRefund:input_type -> hi.club.ProductPurchaseQuery
-	37, // 78: hi.club.ProductTrade.ListTransactions:input_type -> hi.club.ProductOrderRecordsReq
-	23, // 79: hi.club.ProductTrade.ListEvents:input_type -> hi.club.ProductPurchaseQuery
-	39, // 80: hi.club.ProductDelivery.Submit:input_type -> hi.club.SubmitProductDeliveryReq
-	42, // 81: hi.club.ProductDelivery.Get:input_type -> hi.club.ProductDeliveryQuery
-	4,  // 82: hi.club.ProductDelivery.List:input_type -> hi.club.ProductStallQuery
-	42, // 83: hi.club.ProductDelivery.Cancel:input_type -> hi.club.ProductDeliveryQuery
-	29, // 84: hi.club.ProductDelivery.ReportFulfillment:input_type -> hi.club.ProductFulfillmentReport
-	42, // 85: hi.club.ProductDelivery.ListEvents:input_type -> hi.club.ProductDeliveryQuery
-	6,  // 86: hi.club.ProductSupply.GetDetail:output_type -> hi.club.ProductDetail
-	34, // 87: hi.club.ProductSupply.ListStockMovements:output_type -> hi.club.ListProductStockMovementsResp
-	9,  // 88: hi.club.ProductDistribution.Join:output_type -> hi.club.ProductDistributionAgreement
-	12, // 89: hi.club.ProductDistribution.List:output_type -> hi.club.ListProductDistributionResp
-	9,  // 90: hi.club.ProductDistribution.Leave:output_type -> hi.club.ProductDistributionAgreement
-	21, // 91: hi.club.ProductTrade.Buy:output_type -> hi.club.ProductPurchaseOrder
-	22, // 92: hi.club.ProductTrade.Submit:output_type -> hi.club.ProductPurchaseGroup
-	21, // 93: hi.club.ProductTrade.Confirm:output_type -> hi.club.ProductPurchaseOrder
-	21, // 94: hi.club.ProductTrade.Get:output_type -> hi.club.ProductPurchaseOrder
-	25, // 95: hi.club.ProductTrade.List:output_type -> hi.club.ListProductPurchasesResp
-	21, // 96: hi.club.ProductTrade.Cancel:output_type -> hi.club.ProductPurchaseOrder
-	21, // 97: hi.club.ProductTrade.ReportFulfillment:output_type -> hi.club.ProductPurchaseOrder
-	21, // 98: hi.club.ProductTrade.RequestRefund:output_type -> hi.club.ProductPurchaseOrder
-	21, // 99: hi.club.ProductTrade.ApproveRefund:output_type -> hi.club.ProductPurchaseOrder
-	54, // 100: hi.club.ProductTrade.ListTransactions:output_type -> hi.club.ListSettlementReceiptsResp
-	32, // 101: hi.club.ProductTrade.ListEvents:output_type -> hi.club.ListProductOrderEventsResp
-	41, // 102: hi.club.ProductDelivery.Submit:output_type -> hi.club.ProductDeliveryOrder
-	41, // 103: hi.club.ProductDelivery.Get:output_type -> hi.club.ProductDeliveryOrder
-	43, // 104: hi.club.ProductDelivery.List:output_type -> hi.club.ListProductDeliveriesResp
-	41, // 105: hi.club.ProductDelivery.Cancel:output_type -> hi.club.ProductDeliveryOrder
-	41, // 106: hi.club.ProductDelivery.ReportFulfillment:output_type -> hi.club.ProductDeliveryOrder
-	32, // 107: hi.club.ProductDelivery.ListEvents:output_type -> hi.club.ListProductOrderEventsResp
-	86, // [86:108] is the sub-list for method output_type
-	64, // [64:86] is the sub-list for method input_type
-	64, // [64:64] is the sub-list for extension type_name
-	64, // [64:64] is the sub-list for extension extendee
-	0,  // [0:64] is the sub-list for field type_name
+	51,  // 0: hi.club.ProductStallQuery.pagination:type_name -> hi.Pagination
+	51,  // 1: hi.club.ProductRecordQuery.pagination:type_name -> hi.Pagination
+	9,   // 2: hi.club.ProductDetail.sections:type_name -> hi.club.ProductDetailSection
+	52,  // 3: hi.club.ProductDetailSection.image:type_name -> hi.club.ProductImage
+	10,  // 4: hi.club.ProductDetailSection.specification:type_name -> hi.club.ProductSpecification
+	53,  // 5: hi.club.ProductDistributionAgreement.reseller:type_name -> hi.Entity
+	53,  // 6: hi.club.ProductDistributionAgreement.supplier:type_name -> hi.Entity
+	54,  // 7: hi.club.ProductDistributionAgreement.product:type_name -> hi.club.Product
+	11,  // 8: hi.club.ListProductDistributionResp.list:type_name -> hi.club.ProductDistributionAgreement
+	15,  // 9: hi.club.ProductDeliveryTarget.physical:type_name -> hi.club.PhysicalRecipient
+	16,  // 10: hi.club.ProductDeliveryTarget.digital:type_name -> hi.club.DigitalRecipient
+	55,  // 11: hi.club.ProductPurchaseInput.maximum_total:type_name -> hi.did.CoinAmount
+	18,  // 12: hi.club.TerminalOrderSubmission.source:type_name -> hi.club.TerminalOrderRef
+	19,  // 13: hi.club.TerminalOrderSubmission.lines:type_name -> hi.club.ProductPurchaseInput
+	17,  // 14: hi.club.TerminalOrderSubmission.target:type_name -> hi.club.ProductDeliveryTarget
+	19,  // 15: hi.club.DirectProductPurchaseReq.item:type_name -> hi.club.ProductPurchaseInput
+	17,  // 16: hi.club.DirectProductPurchaseReq.target:type_name -> hi.club.ProductDeliveryTarget
+	54,  // 17: hi.club.ProductPurchaseLine.product:type_name -> hi.club.Product
+	55,  // 18: hi.club.ProductPurchaseLine.total:type_name -> hi.did.CoinAmount
+	56,  // 19: hi.club.ProductPurchaseLine.fulfillment:type_name -> hi.club.ProductFulfillmentSpec
+	8,   // 20: hi.club.ProductPurchaseLine.detail:type_name -> hi.club.ProductDetail
+	53,  // 21: hi.club.ProductPurchaseOrder.buyer:type_name -> hi.Entity
+	53,  // 22: hi.club.ProductPurchaseOrder.supplier:type_name -> hi.Entity
+	18,  // 23: hi.club.ProductPurchaseOrder.source:type_name -> hi.club.TerminalOrderRef
+	22,  // 24: hi.club.ProductPurchaseOrder.line:type_name -> hi.club.ProductPurchaseLine
+	17,  // 25: hi.club.ProductPurchaseOrder.target:type_name -> hi.club.ProductDeliveryTarget
+	1,   // 26: hi.club.ProductPurchaseOrder.status:type_name -> hi.club.ProductPurchaseStatus
+	57,  // 27: hi.club.ProductPurchaseOrder.payment:type_name -> hi.club.SettlementPayment
+	30,  // 28: hi.club.ProductPurchaseOrder.fulfillment:type_name -> hi.club.ProductFulfillment
+	57,  // 29: hi.club.ProductPurchaseOrder.refund:type_name -> hi.club.SettlementPayment
+	0,   // 30: hi.club.ProductPurchaseOrder.channel:type_name -> hi.club.ProductPurchaseChannel
+	53,  // 31: hi.club.ProductPurchaseOrder.reseller:type_name -> hi.Entity
+	4,   // 32: hi.club.ProductPurchaseOrder.attribution_status:type_name -> hi.club.ProductAttributionStatus
+	18,  // 33: hi.club.ProductPurchaseGroup.source:type_name -> hi.club.TerminalOrderRef
+	23,  // 34: hi.club.ProductPurchaseGroup.orders:type_name -> hi.club.ProductPurchaseOrder
+	51,  // 35: hi.club.ListProductPurchasesReq.pagination:type_name -> hi.Pagination
+	23,  // 36: hi.club.ListProductPurchasesResp.list:type_name -> hi.club.ProductPurchaseOrder
+	2,   // 37: hi.club.ProductFulfillment.status:type_name -> hi.club.ProductFulfillmentStatus
+	28,  // 38: hi.club.ProductFulfillment.shipment:type_name -> hi.club.ProductShipment
+	29,  // 39: hi.club.ProductFulfillment.digital:type_name -> hi.club.ProductDigitalDelivery
+	30,  // 40: hi.club.ProductFulfillmentReport.fulfillment:type_name -> hi.club.ProductFulfillment
+	53,  // 41: hi.club.ProductOrderEvent.actor:type_name -> hi.Entity
+	33,  // 42: hi.club.ListProductOrderEventsResp.list:type_name -> hi.club.ProductOrderEvent
+	58,  // 43: hi.club.ProductStockMovement.balance:type_name -> hi.club.ProductStockBalance
+	35,  // 44: hi.club.ListProductStockMovementsResp.list:type_name -> hi.club.ProductStockMovement
+	54,  // 45: hi.club.SupplierRequest.product_registered:type_name -> hi.club.Product
+	23,  // 46: hi.club.SupplierRequest.fulfill_order:type_name -> hi.club.ProductPurchaseOrder
+	25,  // 47: hi.club.SupplierRequest.get_fulfillment:type_name -> hi.club.ProductPurchaseQuery
+	43,  // 48: hi.club.SupplierRequest.fulfill_delivery:type_name -> hi.club.ProductDeliveryOrder
+	44,  // 49: hi.club.SupplierRequest.get_delivery:type_name -> hi.club.ProductDeliveryQuery
+	31,  // 50: hi.club.SupplierResponse.fulfillment:type_name -> hi.club.ProductFulfillmentReport
+	59,  // 51: hi.club.SupplierResponse.acknowledged:type_name -> google.protobuf.Empty
+	51,  // 52: hi.club.ProductOrderRecordsReq.pagination:type_name -> hi.Pagination
+	18,  // 53: hi.club.SubmitProductDeliveryReq.source:type_name -> hi.club.TerminalOrderRef
+	40,  // 54: hi.club.SubmitProductDeliveryReq.item:type_name -> hi.club.ProductDeliveryInput
+	17,  // 55: hi.club.SubmitProductDeliveryReq.target:type_name -> hi.club.ProductDeliveryTarget
+	54,  // 56: hi.club.ProductDeliveryLine.product:type_name -> hi.club.Product
+	56,  // 57: hi.club.ProductDeliveryLine.fulfillment:type_name -> hi.club.ProductFulfillmentSpec
+	8,   // 58: hi.club.ProductDeliveryLine.detail:type_name -> hi.club.ProductDetail
+	53,  // 59: hi.club.ProductDeliveryOrder.seller:type_name -> hi.Entity
+	18,  // 60: hi.club.ProductDeliveryOrder.source:type_name -> hi.club.TerminalOrderRef
+	42,  // 61: hi.club.ProductDeliveryOrder.line:type_name -> hi.club.ProductDeliveryLine
+	17,  // 62: hi.club.ProductDeliveryOrder.target:type_name -> hi.club.ProductDeliveryTarget
+	3,   // 63: hi.club.ProductDeliveryOrder.status:type_name -> hi.club.ProductDeliveryStatus
+	30,  // 64: hi.club.ProductDeliveryOrder.fulfillment:type_name -> hi.club.ProductFulfillment
+	53,  // 65: hi.club.ProductDeliveryOrder.supplier:type_name -> hi.Entity
+	4,   // 66: hi.club.ProductDeliveryOrder.attribution_status:type_name -> hi.club.ProductAttributionStatus
+	43,  // 67: hi.club.ListProductDeliveriesResp.list:type_name -> hi.club.ProductDeliveryOrder
+	53,  // 68: hi.club.ProductSettlementParty.entity:type_name -> hi.Entity
+	46,  // 69: hi.club.ProductSettlementParty.external:type_name -> hi.club.ProductExternalAccount
+	18,  // 70: hi.club.ProductFiatSettlement.source:type_name -> hi.club.TerminalOrderRef
+	49,  // 71: hi.club.ProductFiatSettlement.market_order:type_name -> hi.club.ProductMarketOrderRef
+	53,  // 72: hi.club.ProductFiatSettlement.reseller:type_name -> hi.Entity
+	53,  // 73: hi.club.ProductFiatSettlement.supplier:type_name -> hi.Entity
+	47,  // 74: hi.club.ProductFiatSettlement.payer:type_name -> hi.club.ProductSettlementParty
+	47,  // 75: hi.club.ProductFiatSettlement.payee:type_name -> hi.club.ProductSettlementParty
+	48,  // 76: hi.club.ProductFiatSettlement.total:type_name -> hi.club.ProductFiatAmount
+	5,   // 77: hi.club.ProductFiatSettlement.kind:type_name -> hi.club.ProductFiatSettlementKind
+	4,   // 78: hi.club.ProductFiatSettlement.attribution_status:type_name -> hi.club.ProductAttributionStatus
+	60,  // 79: hi.club.ProductSupply.GetDetail:input_type -> hi.club.GetProductReq
+	7,   // 80: hi.club.ProductSupply.ListStockMovements:input_type -> hi.club.ProductRecordQuery
+	12,  // 81: hi.club.ProductDistribution.Join:input_type -> hi.club.JoinProductDistributionReq
+	6,   // 82: hi.club.ProductDistribution.List:input_type -> hi.club.ProductStallQuery
+	13,  // 83: hi.club.ProductDistribution.Leave:input_type -> hi.club.ProductDistributionQuery
+	21,  // 84: hi.club.ProductTrade.Buy:input_type -> hi.club.DirectProductPurchaseReq
+	20,  // 85: hi.club.ProductTrade.Submit:input_type -> hi.club.TerminalOrderSubmission
+	25,  // 86: hi.club.ProductTrade.Confirm:input_type -> hi.club.ProductPurchaseQuery
+	25,  // 87: hi.club.ProductTrade.Get:input_type -> hi.club.ProductPurchaseQuery
+	26,  // 88: hi.club.ProductTrade.List:input_type -> hi.club.ListProductPurchasesReq
+	25,  // 89: hi.club.ProductTrade.Cancel:input_type -> hi.club.ProductPurchaseQuery
+	31,  // 90: hi.club.ProductTrade.ReportFulfillment:input_type -> hi.club.ProductFulfillmentReport
+	32,  // 91: hi.club.ProductTrade.RequestRefund:input_type -> hi.club.ProductRefundRequest
+	25,  // 92: hi.club.ProductTrade.ApproveRefund:input_type -> hi.club.ProductPurchaseQuery
+	39,  // 93: hi.club.ProductTrade.ListTransactions:input_type -> hi.club.ProductOrderRecordsReq
+	25,  // 94: hi.club.ProductTrade.ListEvents:input_type -> hi.club.ProductPurchaseQuery
+	41,  // 95: hi.club.ProductDelivery.Submit:input_type -> hi.club.SubmitProductDeliveryReq
+	44,  // 96: hi.club.ProductDelivery.Get:input_type -> hi.club.ProductDeliveryQuery
+	6,   // 97: hi.club.ProductDelivery.List:input_type -> hi.club.ProductStallQuery
+	44,  // 98: hi.club.ProductDelivery.Cancel:input_type -> hi.club.ProductDeliveryQuery
+	31,  // 99: hi.club.ProductDelivery.ReportFulfillment:input_type -> hi.club.ProductFulfillmentReport
+	44,  // 100: hi.club.ProductDelivery.ListEvents:input_type -> hi.club.ProductDeliveryQuery
+	8,   // 101: hi.club.ProductSupply.GetDetail:output_type -> hi.club.ProductDetail
+	36,  // 102: hi.club.ProductSupply.ListStockMovements:output_type -> hi.club.ListProductStockMovementsResp
+	11,  // 103: hi.club.ProductDistribution.Join:output_type -> hi.club.ProductDistributionAgreement
+	14,  // 104: hi.club.ProductDistribution.List:output_type -> hi.club.ListProductDistributionResp
+	11,  // 105: hi.club.ProductDistribution.Leave:output_type -> hi.club.ProductDistributionAgreement
+	23,  // 106: hi.club.ProductTrade.Buy:output_type -> hi.club.ProductPurchaseOrder
+	24,  // 107: hi.club.ProductTrade.Submit:output_type -> hi.club.ProductPurchaseGroup
+	23,  // 108: hi.club.ProductTrade.Confirm:output_type -> hi.club.ProductPurchaseOrder
+	23,  // 109: hi.club.ProductTrade.Get:output_type -> hi.club.ProductPurchaseOrder
+	27,  // 110: hi.club.ProductTrade.List:output_type -> hi.club.ListProductPurchasesResp
+	23,  // 111: hi.club.ProductTrade.Cancel:output_type -> hi.club.ProductPurchaseOrder
+	23,  // 112: hi.club.ProductTrade.ReportFulfillment:output_type -> hi.club.ProductPurchaseOrder
+	23,  // 113: hi.club.ProductTrade.RequestRefund:output_type -> hi.club.ProductPurchaseOrder
+	23,  // 114: hi.club.ProductTrade.ApproveRefund:output_type -> hi.club.ProductPurchaseOrder
+	61,  // 115: hi.club.ProductTrade.ListTransactions:output_type -> hi.club.ListSettlementReceiptsResp
+	34,  // 116: hi.club.ProductTrade.ListEvents:output_type -> hi.club.ListProductOrderEventsResp
+	43,  // 117: hi.club.ProductDelivery.Submit:output_type -> hi.club.ProductDeliveryOrder
+	43,  // 118: hi.club.ProductDelivery.Get:output_type -> hi.club.ProductDeliveryOrder
+	45,  // 119: hi.club.ProductDelivery.List:output_type -> hi.club.ListProductDeliveriesResp
+	43,  // 120: hi.club.ProductDelivery.Cancel:output_type -> hi.club.ProductDeliveryOrder
+	43,  // 121: hi.club.ProductDelivery.ReportFulfillment:output_type -> hi.club.ProductDeliveryOrder
+	34,  // 122: hi.club.ProductDelivery.ListEvents:output_type -> hi.club.ListProductOrderEventsResp
+	101, // [101:123] is the sub-list for method output_type
+	79,  // [79:101] is the sub-list for method input_type
+	79,  // [79:79] is the sub-list for extension type_name
+	79,  // [79:79] is the sub-list for extension extendee
+	0,   // [0:79] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_product_trade_proto_init() }
@@ -3678,13 +4364,24 @@ func file_hi_club_product_trade_proto_init() {
 	file_hi_club_product_trade_proto_msgTypes[37].OneofWrappers = []any{}
 	file_hi_club_product_trade_proto_msgTypes[38].OneofWrappers = []any{}
 	file_hi_club_product_trade_proto_msgTypes[39].OneofWrappers = []any{}
+	file_hi_club_product_trade_proto_msgTypes[40].OneofWrappers = []any{}
+	file_hi_club_product_trade_proto_msgTypes[41].OneofWrappers = []any{
+		(*ProductSettlementParty_Entity)(nil),
+		(*ProductSettlementParty_External)(nil),
+	}
+	file_hi_club_product_trade_proto_msgTypes[42].OneofWrappers = []any{}
+	file_hi_club_product_trade_proto_msgTypes[43].OneofWrappers = []any{
+		(*ProductMarketOrderRef_PurchaseId)(nil),
+		(*ProductMarketOrderRef_DeliveryId)(nil),
+	}
+	file_hi_club_product_trade_proto_msgTypes[44].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_product_trade_proto_rawDesc), len(file_hi_club_product_trade_proto_rawDesc)),
-			NumEnums:      4,
-			NumMessages:   40,
+			NumEnums:      6,
+			NumMessages:   45,
 			NumExtensions: 0,
 			NumServices:   4,
 		},
