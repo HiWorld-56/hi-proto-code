@@ -490,6 +490,11 @@ class ProductMarketDirectoryStub(object):
                 request_serializer=hi_dot_club_dot_product__pb2.ListProductsReq.SerializeToString,
                 response_deserializer=hi_dot_club_dot_product__pb2.ListProductListingsResp.FromString,
                 _registered_method=True)
+        self.ListSellableListings = channel.unary_unary(
+                '/hi.club.ProductMarketDirectory/ListSellableListings',
+                request_serializer=hi_dot_club_dot_product__pb2.ListProductsReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_product__pb2.ListProductListingsResp.FromString,
+                _registered_method=True)
         self.SearchListings = channel.unary_unary(
                 '/hi.club.ProductMarketDirectory/SearchListings',
                 request_serializer=hi_dot_club_dot_product__pb2.SearchProductListingsReq.SerializeToString,
@@ -529,6 +534,15 @@ class ProductMarketDirectoryServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ListSellableListings(self, request, context):
+        """机器人的可销售目录：自有已挂牌商品 ∪ 有效承销且仍挂牌的商品。
+        按平台商品ID去重后统一分页；不含未挂牌库存、隐藏/下架商品或已退出承销。
+        Listing.stall仍是原供货机器人，不将承销关系伪造成自有库存或自加盟。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def SearchListings(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -561,6 +575,11 @@ def add_ProductMarketDirectoryServicer_to_server(servicer, server):
             ),
             'ListStallListings': grpc.unary_unary_rpc_method_handler(
                     servicer.ListStallListings,
+                    request_deserializer=hi_dot_club_dot_product__pb2.ListProductsReq.FromString,
+                    response_serializer=hi_dot_club_dot_product__pb2.ListProductListingsResp.SerializeToString,
+            ),
+            'ListSellableListings': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListSellableListings,
                     request_deserializer=hi_dot_club_dot_product__pb2.ListProductsReq.FromString,
                     response_serializer=hi_dot_club_dot_product__pb2.ListProductListingsResp.SerializeToString,
             ),
@@ -681,6 +700,33 @@ class ProductMarketDirectory(object):
             request,
             target,
             '/hi.club.ProductMarketDirectory/ListStallListings',
+            hi_dot_club_dot_product__pb2.ListProductsReq.SerializeToString,
+            hi_dot_club_dot_product__pb2.ListProductListingsResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ListSellableListings(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.ProductMarketDirectory/ListSellableListings',
             hi_dot_club_dot_product__pb2.ListProductsReq.SerializeToString,
             hi_dot_club_dot_product__pb2.ListProductListingsResp.FromString,
             options,

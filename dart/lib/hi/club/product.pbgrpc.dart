@@ -374,6 +374,16 @@ class ProductMarketDirectoryClient extends $grpc.Client {
     return $createUnaryCall(_$listStallListings, request, options: options);
   }
 
+  /// 机器人的可销售目录：自有已挂牌商品 ∪ 有效承销且仍挂牌的商品。
+  /// 按平台商品ID去重后统一分页；不含未挂牌库存、隐藏/下架商品或已退出承销。
+  /// Listing.stall仍是原供货机器人，不将承销关系伪造成自有库存或自加盟。
+  $grpc.ResponseFuture<$0.ListProductListingsResp> listSellableListings(
+    $0.ListProductsReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listSellableListings, request, options: options);
+  }
+
   $grpc.ResponseFuture<$0.ListProductListingsResp> searchListings(
     $0.SearchProductListingsReq request, {
     $grpc.CallOptions? options,
@@ -408,6 +418,11 @@ class ProductMarketDirectoryClient extends $grpc.Client {
   static final _$listStallListings =
       $grpc.ClientMethod<$0.ListProductsReq, $0.ListProductListingsResp>(
           '/hi.club.ProductMarketDirectory/ListStallListings',
+          ($0.ListProductsReq value) => value.writeToBuffer(),
+          $0.ListProductListingsResp.fromBuffer);
+  static final _$listSellableListings =
+      $grpc.ClientMethod<$0.ListProductsReq, $0.ListProductListingsResp>(
+          '/hi.club.ProductMarketDirectory/ListSellableListings',
           ($0.ListProductsReq value) => value.writeToBuffer(),
           $0.ListProductListingsResp.fromBuffer);
   static final _$searchListings = $grpc.ClientMethod<
@@ -455,6 +470,15 @@ abstract class ProductMarketDirectoryServiceBase extends $grpc.Service {
         $grpc.ServiceMethod<$0.ListProductsReq, $0.ListProductListingsResp>(
             'ListStallListings',
             listStallListings_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $0.ListProductsReq.fromBuffer(value),
+            ($0.ListProductListingsResp value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$0.ListProductsReq, $0.ListProductListingsResp>(
+            'ListSellableListings',
+            listSellableListings_Pre,
             false,
             false,
             ($core.List<$core.int> value) =>
@@ -511,6 +535,15 @@ abstract class ProductMarketDirectoryServiceBase extends $grpc.Service {
   }
 
   $async.Future<$0.ListProductListingsResp> listStallListings(
+      $grpc.ServiceCall call, $0.ListProductsReq request);
+
+  $async.Future<$0.ListProductListingsResp> listSellableListings_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.ListProductsReq> $request) async {
+    return listSellableListings($call, await $request);
+  }
+
+  $async.Future<$0.ListProductListingsResp> listSellableListings(
       $grpc.ServiceCall call, $0.ListProductsReq request);
 
   $async.Future<$0.ListProductListingsResp> searchListings_Pre(

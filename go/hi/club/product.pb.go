@@ -2074,12 +2074,13 @@ const file_hi_club_product_proto_rawDesc = "" +
 	"\rProductMarket\x12A\n" +
 	"\aPublish\x12\x16.hi.club.GetProductReq\x1a\x17.hi.club.ProductListing\"\x05\x8a\xb5\x18\x01\x02\x12W\n" +
 	"\x10SetListingStatus\x12#.hi.club.SetProductListingStatusReq\x1a\x17.hi.club.ProductListing\"\x05\x8a\xb5\x18\x01\x02\x12S\n" +
-	"\x0eListMyListings\x12\x18.hi.club.ListProductsReq\x1a .hi.club.ListProductListingsResp\"\x05\x8a\xb5\x18\x01\x022\x86\x04\n" +
+	"\x0eListMyListings\x12\x18.hi.club.ListProductsReq\x1a .hi.club.ListProductListingsResp\"\x05\x8a\xb5\x18\x01\x022\xe1\x04\n" +
 	"\x16ProductMarketDirectory\x12E\n" +
 	"\vListSellers\x12\x0e.hi.Pagination\x1a\x1f.hi.club.ListProductSellersResp\"\x05\x8a\xb5\x18\x01\x01\x12H\n" +
 	"\tGetSeller\x12\x1c.hi.club.GetProductSellerReq\x1a\x16.hi.club.ProductSeller\"\x05\x8a\xb5\x18\x01\x01\x12X\n" +
 	"\x10ListSellerStalls\x12\x1d.hi.club.ListProductStallsReq\x1a\x1e.hi.club.ListProductStallsResp\"\x05\x8a\xb5\x18\x01\x01\x12V\n" +
-	"\x11ListStallListings\x12\x18.hi.club.ListProductsReq\x1a .hi.club.ListProductListingsResp\"\x05\x8a\xb5\x18\x01\x01\x12\\\n" +
+	"\x11ListStallListings\x12\x18.hi.club.ListProductsReq\x1a .hi.club.ListProductListingsResp\"\x05\x8a\xb5\x18\x01\x01\x12Y\n" +
+	"\x14ListSellableListings\x12\x18.hi.club.ListProductsReq\x1a .hi.club.ListProductListingsResp\"\x05\x8a\xb5\x18\x01\x01\x12\\\n" +
 	"\x0eSearchListings\x12!.hi.club.SearchProductListingsReq\x1a .hi.club.ListProductListingsResp\"\x05\x8a\xb5\x18\x01\x01\x12K\n" +
 	"\n" +
 	"GetListing\x12\x1d.hi.club.GetProductListingReq\x1a\x17.hi.club.ProductListing\"\x05\x8a\xb5\x18\x01\x01B\x83\x01\n" +
@@ -2186,25 +2187,27 @@ var file_hi_club_product_proto_depIdxs = []int32{
 	17, // 48: hi.club.ProductMarketDirectory.GetSeller:input_type -> hi.club.GetProductSellerReq
 	18, // 49: hi.club.ProductMarketDirectory.ListSellerStalls:input_type -> hi.club.ListProductStallsReq
 	13, // 50: hi.club.ProductMarketDirectory.ListStallListings:input_type -> hi.club.ListProductsReq
-	16, // 51: hi.club.ProductMarketDirectory.SearchListings:input_type -> hi.club.SearchProductListingsReq
-	15, // 52: hi.club.ProductMarketDirectory.GetListing:input_type -> hi.club.GetProductListingReq
-	19, // 53: hi.club.ProductInventory.CreateBatch:output_type -> hi.club.ListProductInventoryResp
-	6,  // 54: hi.club.ProductInventory.Create:output_type -> hi.club.ProductInventoryItem
-	6,  // 55: hi.club.ProductInventory.Get:output_type -> hi.club.ProductInventoryItem
-	6,  // 56: hi.club.ProductInventory.Configure:output_type -> hi.club.ProductInventoryItem
-	6,  // 57: hi.club.ProductInventory.AdjustStock:output_type -> hi.club.ProductInventoryItem
-	19, // 58: hi.club.ProductInventory.List:output_type -> hi.club.ListProductInventoryResp
-	7,  // 59: hi.club.ProductMarket.Publish:output_type -> hi.club.ProductListing
-	7,  // 60: hi.club.ProductMarket.SetListingStatus:output_type -> hi.club.ProductListing
-	20, // 61: hi.club.ProductMarket.ListMyListings:output_type -> hi.club.ListProductListingsResp
-	21, // 62: hi.club.ProductMarketDirectory.ListSellers:output_type -> hi.club.ListProductSellersResp
-	9,  // 63: hi.club.ProductMarketDirectory.GetSeller:output_type -> hi.club.ProductSeller
-	22, // 64: hi.club.ProductMarketDirectory.ListSellerStalls:output_type -> hi.club.ListProductStallsResp
-	20, // 65: hi.club.ProductMarketDirectory.ListStallListings:output_type -> hi.club.ListProductListingsResp
-	20, // 66: hi.club.ProductMarketDirectory.SearchListings:output_type -> hi.club.ListProductListingsResp
-	7,  // 67: hi.club.ProductMarketDirectory.GetListing:output_type -> hi.club.ProductListing
-	53, // [53:68] is the sub-list for method output_type
-	38, // [38:53] is the sub-list for method input_type
+	13, // 51: hi.club.ProductMarketDirectory.ListSellableListings:input_type -> hi.club.ListProductsReq
+	16, // 52: hi.club.ProductMarketDirectory.SearchListings:input_type -> hi.club.SearchProductListingsReq
+	15, // 53: hi.club.ProductMarketDirectory.GetListing:input_type -> hi.club.GetProductListingReq
+	19, // 54: hi.club.ProductInventory.CreateBatch:output_type -> hi.club.ListProductInventoryResp
+	6,  // 55: hi.club.ProductInventory.Create:output_type -> hi.club.ProductInventoryItem
+	6,  // 56: hi.club.ProductInventory.Get:output_type -> hi.club.ProductInventoryItem
+	6,  // 57: hi.club.ProductInventory.Configure:output_type -> hi.club.ProductInventoryItem
+	6,  // 58: hi.club.ProductInventory.AdjustStock:output_type -> hi.club.ProductInventoryItem
+	19, // 59: hi.club.ProductInventory.List:output_type -> hi.club.ListProductInventoryResp
+	7,  // 60: hi.club.ProductMarket.Publish:output_type -> hi.club.ProductListing
+	7,  // 61: hi.club.ProductMarket.SetListingStatus:output_type -> hi.club.ProductListing
+	20, // 62: hi.club.ProductMarket.ListMyListings:output_type -> hi.club.ListProductListingsResp
+	21, // 63: hi.club.ProductMarketDirectory.ListSellers:output_type -> hi.club.ListProductSellersResp
+	9,  // 64: hi.club.ProductMarketDirectory.GetSeller:output_type -> hi.club.ProductSeller
+	22, // 65: hi.club.ProductMarketDirectory.ListSellerStalls:output_type -> hi.club.ListProductStallsResp
+	20, // 66: hi.club.ProductMarketDirectory.ListStallListings:output_type -> hi.club.ListProductListingsResp
+	20, // 67: hi.club.ProductMarketDirectory.ListSellableListings:output_type -> hi.club.ListProductListingsResp
+	20, // 68: hi.club.ProductMarketDirectory.SearchListings:output_type -> hi.club.ListProductListingsResp
+	7,  // 69: hi.club.ProductMarketDirectory.GetListing:output_type -> hi.club.ProductListing
+	54, // [54:70] is the sub-list for method output_type
+	38, // [38:54] is the sub-list for method input_type
 	38, // [38:38] is the sub-list for extension type_name
 	38, // [38:38] is the sub-list for extension extendee
 	0,  // [0:38] is the sub-list for field type_name

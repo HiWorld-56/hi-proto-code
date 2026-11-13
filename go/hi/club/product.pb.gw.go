@@ -387,6 +387,33 @@ func local_request_ProductMarketDirectory_ListStallListings_0(ctx context.Contex
 	return msg, metadata, err
 }
 
+func request_ProductMarketDirectory_ListSellableListings_0(ctx context.Context, marshaler runtime.Marshaler, client ProductMarketDirectoryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq ListProductsReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	msg, err := client.ListSellableListings(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_ProductMarketDirectory_ListSellableListings_0(ctx context.Context, marshaler runtime.Marshaler, server ProductMarketDirectoryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq ListProductsReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.ListSellableListings(ctx, &protoReq)
+	return msg, metadata, err
+}
+
 func request_ProductMarketDirectory_SearchListings_0(ctx context.Context, marshaler runtime.Marshaler, client ProductMarketDirectoryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq SearchProductListingsReq
@@ -726,6 +753,26 @@ func RegisterProductMarketDirectoryHandlerServer(ctx context.Context, mux *runti
 			return
 		}
 		forward_ProductMarketDirectory_ListStallListings_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPost, pattern_ProductMarketDirectory_ListSellableListings_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.ProductMarketDirectory/ListSellableListings", runtime.WithHTTPPathPattern("/api/v1/product_market_directory/list_sellable_listings"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_ProductMarketDirectory_ListSellableListings_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_ProductMarketDirectory_ListSellableListings_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodPost, pattern_ProductMarketDirectory_SearchListings_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -1136,6 +1183,23 @@ func RegisterProductMarketDirectoryHandlerClient(ctx context.Context, mux *runti
 		}
 		forward_ProductMarketDirectory_ListStallListings_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
+	mux.Handle(http.MethodPost, pattern_ProductMarketDirectory_ListSellableListings_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.ProductMarketDirectory/ListSellableListings", runtime.WithHTTPPathPattern("/api/v1/product_market_directory/list_sellable_listings"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_ProductMarketDirectory_ListSellableListings_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_ProductMarketDirectory_ListSellableListings_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
 	mux.Handle(http.MethodPost, pattern_ProductMarketDirectory_SearchListings_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -1174,19 +1238,21 @@ func RegisterProductMarketDirectoryHandlerClient(ctx context.Context, mux *runti
 }
 
 var (
-	pattern_ProductMarketDirectory_ListSellers_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "product_market_directory", "list_sellers"}, ""))
-	pattern_ProductMarketDirectory_GetSeller_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "product_market_directory", "get_seller"}, ""))
-	pattern_ProductMarketDirectory_ListSellerStalls_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "product_market_directory", "list_seller_stalls"}, ""))
-	pattern_ProductMarketDirectory_ListStallListings_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "product_market_directory", "list_stall_listings"}, ""))
-	pattern_ProductMarketDirectory_SearchListings_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "product_market_directory", "search_listings"}, ""))
-	pattern_ProductMarketDirectory_GetListing_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "product_market_directory", "get_listing"}, ""))
+	pattern_ProductMarketDirectory_ListSellers_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "product_market_directory", "list_sellers"}, ""))
+	pattern_ProductMarketDirectory_GetSeller_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "product_market_directory", "get_seller"}, ""))
+	pattern_ProductMarketDirectory_ListSellerStalls_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "product_market_directory", "list_seller_stalls"}, ""))
+	pattern_ProductMarketDirectory_ListStallListings_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "product_market_directory", "list_stall_listings"}, ""))
+	pattern_ProductMarketDirectory_ListSellableListings_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "product_market_directory", "list_sellable_listings"}, ""))
+	pattern_ProductMarketDirectory_SearchListings_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "product_market_directory", "search_listings"}, ""))
+	pattern_ProductMarketDirectory_GetListing_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "product_market_directory", "get_listing"}, ""))
 )
 
 var (
-	forward_ProductMarketDirectory_ListSellers_0       = runtime.ForwardResponseMessage
-	forward_ProductMarketDirectory_GetSeller_0         = runtime.ForwardResponseMessage
-	forward_ProductMarketDirectory_ListSellerStalls_0  = runtime.ForwardResponseMessage
-	forward_ProductMarketDirectory_ListStallListings_0 = runtime.ForwardResponseMessage
-	forward_ProductMarketDirectory_SearchListings_0    = runtime.ForwardResponseMessage
-	forward_ProductMarketDirectory_GetListing_0        = runtime.ForwardResponseMessage
+	forward_ProductMarketDirectory_ListSellers_0          = runtime.ForwardResponseMessage
+	forward_ProductMarketDirectory_GetSeller_0            = runtime.ForwardResponseMessage
+	forward_ProductMarketDirectory_ListSellerStalls_0     = runtime.ForwardResponseMessage
+	forward_ProductMarketDirectory_ListStallListings_0    = runtime.ForwardResponseMessage
+	forward_ProductMarketDirectory_ListSellableListings_0 = runtime.ForwardResponseMessage
+	forward_ProductMarketDirectory_SearchListings_0       = runtime.ForwardResponseMessage
+	forward_ProductMarketDirectory_GetListing_0           = runtime.ForwardResponseMessage
 )

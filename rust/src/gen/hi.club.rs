@@ -2548,6 +2548,38 @@ pub mod product_market_directory_client {
                 );
             self.inner.unary(req, path, codec).await
         }
+        /// 机器人的可销售目录：自有已挂牌商品 ∪ 有效承销且仍挂牌的商品。
+        /// 按平台商品ID去重后统一分页；不含未挂牌库存、隐藏/下架商品或已退出承销。
+        /// Listing.stall仍是原供货机器人，不将承销关系伪造成自有库存或自加盟。
+        pub async fn list_sellable_listings(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListProductsReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListProductListingsResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.ProductMarketDirectory/ListSellableListings",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "hi.club.ProductMarketDirectory",
+                        "ListSellableListings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
         pub async fn search_listings(
             &mut self,
             request: impl tonic::IntoRequest<super::SearchProductListingsReq>,

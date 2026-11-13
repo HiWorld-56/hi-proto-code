@@ -496,12 +496,13 @@ var ProductMarket_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	ProductMarketDirectory_ListSellers_FullMethodName       = "/hi.club.ProductMarketDirectory/ListSellers"
-	ProductMarketDirectory_GetSeller_FullMethodName         = "/hi.club.ProductMarketDirectory/GetSeller"
-	ProductMarketDirectory_ListSellerStalls_FullMethodName  = "/hi.club.ProductMarketDirectory/ListSellerStalls"
-	ProductMarketDirectory_ListStallListings_FullMethodName = "/hi.club.ProductMarketDirectory/ListStallListings"
-	ProductMarketDirectory_SearchListings_FullMethodName    = "/hi.club.ProductMarketDirectory/SearchListings"
-	ProductMarketDirectory_GetListing_FullMethodName        = "/hi.club.ProductMarketDirectory/GetListing"
+	ProductMarketDirectory_ListSellers_FullMethodName          = "/hi.club.ProductMarketDirectory/ListSellers"
+	ProductMarketDirectory_GetSeller_FullMethodName            = "/hi.club.ProductMarketDirectory/GetSeller"
+	ProductMarketDirectory_ListSellerStalls_FullMethodName     = "/hi.club.ProductMarketDirectory/ListSellerStalls"
+	ProductMarketDirectory_ListStallListings_FullMethodName    = "/hi.club.ProductMarketDirectory/ListStallListings"
+	ProductMarketDirectory_ListSellableListings_FullMethodName = "/hi.club.ProductMarketDirectory/ListSellableListings"
+	ProductMarketDirectory_SearchListings_FullMethodName       = "/hi.club.ProductMarketDirectory/SearchListings"
+	ProductMarketDirectory_GetListing_FullMethodName           = "/hi.club.ProductMarketDirectory/GetListing"
 )
 
 // ProductMarketDirectoryClient is the client API for ProductMarketDirectory service.
@@ -512,6 +513,10 @@ type ProductMarketDirectoryClient interface {
 	GetSeller(ctx context.Context, in *GetProductSellerReq, opts ...grpc.CallOption) (*ProductSeller, error)
 	ListSellerStalls(ctx context.Context, in *ListProductStallsReq, opts ...grpc.CallOption) (*ListProductStallsResp, error)
 	ListStallListings(ctx context.Context, in *ListProductsReq, opts ...grpc.CallOption) (*ListProductListingsResp, error)
+	// 机器人的可销售目录：自有已挂牌商品 ∪ 有效承销且仍挂牌的商品。
+	// 按平台商品ID去重后统一分页；不含未挂牌库存、隐藏/下架商品或已退出承销。
+	// Listing.stall仍是原供货机器人，不将承销关系伪造成自有库存或自加盟。
+	ListSellableListings(ctx context.Context, in *ListProductsReq, opts ...grpc.CallOption) (*ListProductListingsResp, error)
 	SearchListings(ctx context.Context, in *SearchProductListingsReq, opts ...grpc.CallOption) (*ListProductListingsResp, error)
 	GetListing(ctx context.Context, in *GetProductListingReq, opts ...grpc.CallOption) (*ProductListing, error)
 }
@@ -564,6 +569,16 @@ func (c *productMarketDirectoryClient) ListStallListings(ctx context.Context, in
 	return out, nil
 }
 
+func (c *productMarketDirectoryClient) ListSellableListings(ctx context.Context, in *ListProductsReq, opts ...grpc.CallOption) (*ListProductListingsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListProductListingsResp)
+	err := c.cc.Invoke(ctx, ProductMarketDirectory_ListSellableListings_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *productMarketDirectoryClient) SearchListings(ctx context.Context, in *SearchProductListingsReq, opts ...grpc.CallOption) (*ListProductListingsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListProductListingsResp)
@@ -592,6 +607,10 @@ type ProductMarketDirectoryServer interface {
 	GetSeller(context.Context, *GetProductSellerReq) (*ProductSeller, error)
 	ListSellerStalls(context.Context, *ListProductStallsReq) (*ListProductStallsResp, error)
 	ListStallListings(context.Context, *ListProductsReq) (*ListProductListingsResp, error)
+	// 机器人的可销售目录：自有已挂牌商品 ∪ 有效承销且仍挂牌的商品。
+	// 按平台商品ID去重后统一分页；不含未挂牌库存、隐藏/下架商品或已退出承销。
+	// Listing.stall仍是原供货机器人，不将承销关系伪造成自有库存或自加盟。
+	ListSellableListings(context.Context, *ListProductsReq) (*ListProductListingsResp, error)
 	SearchListings(context.Context, *SearchProductListingsReq) (*ListProductListingsResp, error)
 	GetListing(context.Context, *GetProductListingReq) (*ProductListing, error)
 }
@@ -614,6 +633,9 @@ func (UnimplementedProductMarketDirectoryServer) ListSellerStalls(context.Contex
 }
 func (UnimplementedProductMarketDirectoryServer) ListStallListings(context.Context, *ListProductsReq) (*ListProductListingsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListStallListings not implemented")
+}
+func (UnimplementedProductMarketDirectoryServer) ListSellableListings(context.Context, *ListProductsReq) (*ListProductListingsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListSellableListings not implemented")
 }
 func (UnimplementedProductMarketDirectoryServer) SearchListings(context.Context, *SearchProductListingsReq) (*ListProductListingsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method SearchListings not implemented")
@@ -713,6 +735,24 @@ func _ProductMarketDirectory_ListStallListings_Handler(srv interface{}, ctx cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ProductMarketDirectory_ListSellableListings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListProductsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductMarketDirectoryServer).ListSellableListings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductMarketDirectory_ListSellableListings_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductMarketDirectoryServer).ListSellableListings(ctx, req.(*ListProductsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ProductMarketDirectory_SearchListings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SearchProductListingsReq)
 	if err := dec(in); err != nil {
@@ -771,6 +811,10 @@ var ProductMarketDirectory_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListStallListings",
 			Handler:    _ProductMarketDirectory_ListStallListings_Handler,
+		},
+		{
+			MethodName: "ListSellableListings",
+			Handler:    _ProductMarketDirectory_ListSellableListings_Handler,
 		},
 		{
 			MethodName: "SearchListings",
