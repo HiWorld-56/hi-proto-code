@@ -566,3 +566,206 @@ abstract class ProductTradeServiceBase extends $grpc.Service {
   $async.Future<$1.ListProductOrderEventsResp> listEvents(
       $grpc.ServiceCall call, $1.ProductPurchaseQuery request);
 }
+
+/// 本摊位自有商品的终端销售履约。外部收款归终端系统，不产生机器人间采购或链上自付款。
+/// 订单、库存和记录归seller机器人；当前主人仅负责授权操作。
+@$pb.GrpcServiceName('hi.club.ProductDelivery')
+class ProductDeliveryClient extends $grpc.Client {
+  /// The hostname for this service.
+  static const $core.String defaultHost = '';
+
+  /// OAuth scopes needed for the client.
+  static const $core.List<$core.String> oauthScopes = [
+    '',
+  ];
+
+  ProductDeliveryClient(super.channel, {super.options, super.interceptors});
+
+  $grpc.ResponseFuture<$1.ProductDeliveryOrder> submit(
+    $1.SubmitProductDeliveryReq request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$submit, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$1.ProductDeliveryOrder> get(
+    $1.ProductDeliveryQuery request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$get, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$1.ListProductDeliveriesResp> list(
+    $1.ProductStallQuery request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$list, request, options: options);
+  }
+
+  /// 供应链报告停止履约(FAILED)且尚未出库后才允许取消并释放库存。
+  $grpc.ResponseFuture<$1.ProductDeliveryOrder> cancel(
+    $1.ProductDeliveryQuery request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$cancel, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$1.ProductDeliveryOrder> reportFulfillment(
+    $1.ProductFulfillmentReport request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$reportFulfillment, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$1.ListProductOrderEventsResp> listEvents(
+    $1.ProductDeliveryQuery request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listEvents, request, options: options);
+  }
+
+  // method descriptors
+
+  static final _$submit =
+      $grpc.ClientMethod<$1.SubmitProductDeliveryReq, $1.ProductDeliveryOrder>(
+          '/hi.club.ProductDelivery/Submit',
+          ($1.SubmitProductDeliveryReq value) => value.writeToBuffer(),
+          $1.ProductDeliveryOrder.fromBuffer);
+  static final _$get =
+      $grpc.ClientMethod<$1.ProductDeliveryQuery, $1.ProductDeliveryOrder>(
+          '/hi.club.ProductDelivery/Get',
+          ($1.ProductDeliveryQuery value) => value.writeToBuffer(),
+          $1.ProductDeliveryOrder.fromBuffer);
+  static final _$list =
+      $grpc.ClientMethod<$1.ProductStallQuery, $1.ListProductDeliveriesResp>(
+          '/hi.club.ProductDelivery/List',
+          ($1.ProductStallQuery value) => value.writeToBuffer(),
+          $1.ListProductDeliveriesResp.fromBuffer);
+  static final _$cancel =
+      $grpc.ClientMethod<$1.ProductDeliveryQuery, $1.ProductDeliveryOrder>(
+          '/hi.club.ProductDelivery/Cancel',
+          ($1.ProductDeliveryQuery value) => value.writeToBuffer(),
+          $1.ProductDeliveryOrder.fromBuffer);
+  static final _$reportFulfillment =
+      $grpc.ClientMethod<$1.ProductFulfillmentReport, $1.ProductDeliveryOrder>(
+          '/hi.club.ProductDelivery/ReportFulfillment',
+          ($1.ProductFulfillmentReport value) => value.writeToBuffer(),
+          $1.ProductDeliveryOrder.fromBuffer);
+  static final _$listEvents = $grpc.ClientMethod<$1.ProductDeliveryQuery,
+          $1.ListProductOrderEventsResp>(
+      '/hi.club.ProductDelivery/ListEvents',
+      ($1.ProductDeliveryQuery value) => value.writeToBuffer(),
+      $1.ListProductOrderEventsResp.fromBuffer);
+}
+
+@$pb.GrpcServiceName('hi.club.ProductDelivery')
+abstract class ProductDeliveryServiceBase extends $grpc.Service {
+  $core.String get $name => 'hi.club.ProductDelivery';
+
+  ProductDeliveryServiceBase() {
+    $addMethod($grpc.ServiceMethod<$1.SubmitProductDeliveryReq,
+            $1.ProductDeliveryOrder>(
+        'Submit',
+        submit_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $1.SubmitProductDeliveryReq.fromBuffer(value),
+        ($1.ProductDeliveryOrder value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$1.ProductDeliveryQuery, $1.ProductDeliveryOrder>(
+            'Get',
+            get_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $1.ProductDeliveryQuery.fromBuffer(value),
+            ($1.ProductDeliveryOrder value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$1.ProductStallQuery, $1.ListProductDeliveriesResp>(
+            'List',
+            list_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $1.ProductStallQuery.fromBuffer(value),
+            ($1.ListProductDeliveriesResp value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$1.ProductDeliveryQuery, $1.ProductDeliveryOrder>(
+            'Cancel',
+            cancel_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $1.ProductDeliveryQuery.fromBuffer(value),
+            ($1.ProductDeliveryOrder value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.ProductFulfillmentReport,
+            $1.ProductDeliveryOrder>(
+        'ReportFulfillment',
+        reportFulfillment_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $1.ProductFulfillmentReport.fromBuffer(value),
+        ($1.ProductDeliveryOrder value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.ProductDeliveryQuery,
+            $1.ListProductOrderEventsResp>(
+        'ListEvents',
+        listEvents_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $1.ProductDeliveryQuery.fromBuffer(value),
+        ($1.ListProductOrderEventsResp value) => value.writeToBuffer()));
+  }
+
+  $async.Future<$1.ProductDeliveryOrder> submit_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.SubmitProductDeliveryReq> $request) async {
+    return submit($call, await $request);
+  }
+
+  $async.Future<$1.ProductDeliveryOrder> submit(
+      $grpc.ServiceCall call, $1.SubmitProductDeliveryReq request);
+
+  $async.Future<$1.ProductDeliveryOrder> get_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.ProductDeliveryQuery> $request) async {
+    return get($call, await $request);
+  }
+
+  $async.Future<$1.ProductDeliveryOrder> get(
+      $grpc.ServiceCall call, $1.ProductDeliveryQuery request);
+
+  $async.Future<$1.ListProductDeliveriesResp> list_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.ProductStallQuery> $request) async {
+    return list($call, await $request);
+  }
+
+  $async.Future<$1.ListProductDeliveriesResp> list(
+      $grpc.ServiceCall call, $1.ProductStallQuery request);
+
+  $async.Future<$1.ProductDeliveryOrder> cancel_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.ProductDeliveryQuery> $request) async {
+    return cancel($call, await $request);
+  }
+
+  $async.Future<$1.ProductDeliveryOrder> cancel(
+      $grpc.ServiceCall call, $1.ProductDeliveryQuery request);
+
+  $async.Future<$1.ProductDeliveryOrder> reportFulfillment_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$1.ProductFulfillmentReport> $request) async {
+    return reportFulfillment($call, await $request);
+  }
+
+  $async.Future<$1.ProductDeliveryOrder> reportFulfillment(
+      $grpc.ServiceCall call, $1.ProductFulfillmentReport request);
+
+  $async.Future<$1.ListProductOrderEventsResp> listEvents_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$1.ProductDeliveryQuery> $request) async {
+    return listEvents($call, await $request);
+  }
+
+  $async.Future<$1.ListProductOrderEventsResp> listEvents(
+      $grpc.ServiceCall call, $1.ProductDeliveryQuery request);
+}

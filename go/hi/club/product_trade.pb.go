@@ -203,6 +203,61 @@ func (ProductFulfillmentStatus) EnumDescriptor() ([]byte, []int) {
 	return file_hi_club_product_trade_proto_rawDescGZIP(), []int{2}
 }
 
+type ProductDeliveryStatus int32
+
+const (
+	ProductDeliveryStatus_PRODUCT_DELIVERY_STATUS_UNSPECIFIED ProductDeliveryStatus = 0
+	ProductDeliveryStatus_PRODUCT_DELIVERY_STATUS_FULFILLMENT ProductDeliveryStatus = 1
+	ProductDeliveryStatus_PRODUCT_DELIVERY_STATUS_COMPLETE    ProductDeliveryStatus = 2
+	ProductDeliveryStatus_PRODUCT_DELIVERY_STATUS_CANCELLED   ProductDeliveryStatus = 3
+	ProductDeliveryStatus_PRODUCT_DELIVERY_STATUS_REVIEW      ProductDeliveryStatus = 4
+)
+
+// Enum value maps for ProductDeliveryStatus.
+var (
+	ProductDeliveryStatus_name = map[int32]string{
+		0: "PRODUCT_DELIVERY_STATUS_UNSPECIFIED",
+		1: "PRODUCT_DELIVERY_STATUS_FULFILLMENT",
+		2: "PRODUCT_DELIVERY_STATUS_COMPLETE",
+		3: "PRODUCT_DELIVERY_STATUS_CANCELLED",
+		4: "PRODUCT_DELIVERY_STATUS_REVIEW",
+	}
+	ProductDeliveryStatus_value = map[string]int32{
+		"PRODUCT_DELIVERY_STATUS_UNSPECIFIED": 0,
+		"PRODUCT_DELIVERY_STATUS_FULFILLMENT": 1,
+		"PRODUCT_DELIVERY_STATUS_COMPLETE":    2,
+		"PRODUCT_DELIVERY_STATUS_CANCELLED":   3,
+		"PRODUCT_DELIVERY_STATUS_REVIEW":      4,
+	}
+)
+
+func (x ProductDeliveryStatus) Enum() *ProductDeliveryStatus {
+	p := new(ProductDeliveryStatus)
+	*p = x
+	return p
+}
+
+func (x ProductDeliveryStatus) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ProductDeliveryStatus) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_club_product_trade_proto_enumTypes[3].Descriptor()
+}
+
+func (ProductDeliveryStatus) Type() protoreflect.EnumType {
+	return &file_hi_club_product_trade_proto_enumTypes[3]
+}
+
+func (x ProductDeliveryStatus) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ProductDeliveryStatus.Descriptor instead.
+func (ProductDeliveryStatus) EnumDescriptor() ([]byte, []int) {
+	return file_hi_club_product_trade_proto_rawDescGZIP(), []int{3}
+}
+
 type ProductStallQuery struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Stall         *string                `protobuf:"bytes,1,opt,name=stall,proto3,oneof" json:"stall,omitempty"` // 不传=当前用户名下全部；仅按指定机器人过滤
@@ -2293,6 +2348,8 @@ type SupplierRequest struct {
 	//	*SupplierRequest_ProductRegistered
 	//	*SupplierRequest_FulfillOrder
 	//	*SupplierRequest_GetFulfillment
+	//	*SupplierRequest_FulfillDelivery
+	//	*SupplierRequest_GetDelivery
 	Operation     isSupplierRequest_Operation `protobuf_oneof:"operation"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -2376,6 +2433,24 @@ func (x *SupplierRequest) GetGetFulfillment() *ProductPurchaseQuery {
 	return nil
 }
 
+func (x *SupplierRequest) GetFulfillDelivery() *ProductDeliveryOrder {
+	if x != nil {
+		if x, ok := x.Operation.(*SupplierRequest_FulfillDelivery); ok {
+			return x.FulfillDelivery
+		}
+	}
+	return nil
+}
+
+func (x *SupplierRequest) GetGetDelivery() *ProductDeliveryQuery {
+	if x != nil {
+		if x, ok := x.Operation.(*SupplierRequest_GetDelivery); ok {
+			return x.GetDelivery
+		}
+	}
+	return nil
+}
+
 type isSupplierRequest_Operation interface {
 	isSupplierRequest_Operation()
 }
@@ -2392,11 +2467,23 @@ type SupplierRequest_GetFulfillment struct {
 	GetFulfillment *ProductPurchaseQuery `protobuf:"bytes,6,opt,name=get_fulfillment,json=getFulfillment,proto3,oneof"`
 }
 
+type SupplierRequest_FulfillDelivery struct {
+	FulfillDelivery *ProductDeliveryOrder `protobuf:"bytes,7,opt,name=fulfill_delivery,json=fulfillDelivery,proto3,oneof"`
+}
+
+type SupplierRequest_GetDelivery struct {
+	GetDelivery *ProductDeliveryQuery `protobuf:"bytes,8,opt,name=get_delivery,json=getDelivery,proto3,oneof"`
+}
+
 func (*SupplierRequest_ProductRegistered) isSupplierRequest_Operation() {}
 
 func (*SupplierRequest_FulfillOrder) isSupplierRequest_Operation() {}
 
 func (*SupplierRequest_GetFulfillment) isSupplierRequest_Operation() {}
+
+func (*SupplierRequest_FulfillDelivery) isSupplierRequest_Operation() {}
+
+func (*SupplierRequest_GetDelivery) isSupplierRequest_Operation() {}
 
 type SupplierResponse struct {
 	state     protoimpl.MessageState `protogen:"open.v1"`
@@ -2538,6 +2625,414 @@ func (x *ProductOrderRecordsReq) GetPagination() *hi.Pagination {
 		return x.Pagination
 	}
 	return nil
+}
+
+type ProductDeliveryInput struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ProductId     *string                `protobuf:"bytes,1,opt,name=product_id,json=productId,proto3,oneof" json:"product_id,omitempty"`
+	Quantity      *int64                 `protobuf:"varint,2,opt,name=quantity,proto3,oneof" json:"quantity,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ProductDeliveryInput) Reset() {
+	*x = ProductDeliveryInput{}
+	mi := &file_hi_club_product_trade_proto_msgTypes[34]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ProductDeliveryInput) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ProductDeliveryInput) ProtoMessage() {}
+
+func (x *ProductDeliveryInput) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_product_trade_proto_msgTypes[34]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ProductDeliveryInput.ProtoReflect.Descriptor instead.
+func (*ProductDeliveryInput) Descriptor() ([]byte, []int) {
+	return file_hi_club_product_trade_proto_rawDescGZIP(), []int{34}
+}
+
+func (x *ProductDeliveryInput) GetProductId() string {
+	if x != nil && x.ProductId != nil {
+		return *x.ProductId
+	}
+	return ""
+}
+
+func (x *ProductDeliveryInput) GetQuantity() int64 {
+	if x != nil && x.Quantity != nil {
+		return *x.Quantity
+	}
+	return 0
+}
+
+type SubmitProductDeliveryReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RequestUuid   *string                `protobuf:"bytes,1,opt,name=request_uuid,json=requestUuid,proto3,oneof" json:"request_uuid,omitempty"`
+	Seller        *string                `protobuf:"bytes,2,opt,name=seller,proto3,oneof" json:"seller,omitempty"`
+	Source        *TerminalOrderRef      `protobuf:"bytes,3,opt,name=source,proto3" json:"source,omitempty"`
+	Item          *ProductDeliveryInput  `protobuf:"bytes,4,opt,name=item,proto3" json:"item,omitempty"`
+	Target        *ProductDeliveryTarget `protobuf:"bytes,5,opt,name=target,proto3" json:"target,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SubmitProductDeliveryReq) Reset() {
+	*x = SubmitProductDeliveryReq{}
+	mi := &file_hi_club_product_trade_proto_msgTypes[35]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SubmitProductDeliveryReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SubmitProductDeliveryReq) ProtoMessage() {}
+
+func (x *SubmitProductDeliveryReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_product_trade_proto_msgTypes[35]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SubmitProductDeliveryReq.ProtoReflect.Descriptor instead.
+func (*SubmitProductDeliveryReq) Descriptor() ([]byte, []int) {
+	return file_hi_club_product_trade_proto_rawDescGZIP(), []int{35}
+}
+
+func (x *SubmitProductDeliveryReq) GetRequestUuid() string {
+	if x != nil && x.RequestUuid != nil {
+		return *x.RequestUuid
+	}
+	return ""
+}
+
+func (x *SubmitProductDeliveryReq) GetSeller() string {
+	if x != nil && x.Seller != nil {
+		return *x.Seller
+	}
+	return ""
+}
+
+func (x *SubmitProductDeliveryReq) GetSource() *TerminalOrderRef {
+	if x != nil {
+		return x.Source
+	}
+	return nil
+}
+
+func (x *SubmitProductDeliveryReq) GetItem() *ProductDeliveryInput {
+	if x != nil {
+		return x.Item
+	}
+	return nil
+}
+
+func (x *SubmitProductDeliveryReq) GetTarget() *ProductDeliveryTarget {
+	if x != nil {
+		return x.Target
+	}
+	return nil
+}
+
+type ProductDeliveryLine struct {
+	state          protoimpl.MessageState  `protogen:"open.v1"`
+	Product        *Product                `protobuf:"bytes,1,opt,name=product,proto3" json:"product,omitempty"`
+	Quantity       *int64                  `protobuf:"varint,2,opt,name=quantity,proto3,oneof" json:"quantity,omitempty"`
+	Fulfillment    *ProductFulfillmentSpec `protobuf:"bytes,3,opt,name=fulfillment,proto3" json:"fulfillment,omitempty"`
+	Detail         *ProductDetail          `protobuf:"bytes,4,opt,name=detail,proto3" json:"detail,omitempty"`
+	SupplyRevision *int64                  `protobuf:"varint,5,opt,name=supply_revision,json=supplyRevision,proto3,oneof" json:"supply_revision,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *ProductDeliveryLine) Reset() {
+	*x = ProductDeliveryLine{}
+	mi := &file_hi_club_product_trade_proto_msgTypes[36]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ProductDeliveryLine) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ProductDeliveryLine) ProtoMessage() {}
+
+func (x *ProductDeliveryLine) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_product_trade_proto_msgTypes[36]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ProductDeliveryLine.ProtoReflect.Descriptor instead.
+func (*ProductDeliveryLine) Descriptor() ([]byte, []int) {
+	return file_hi_club_product_trade_proto_rawDescGZIP(), []int{36}
+}
+
+func (x *ProductDeliveryLine) GetProduct() *Product {
+	if x != nil {
+		return x.Product
+	}
+	return nil
+}
+
+func (x *ProductDeliveryLine) GetQuantity() int64 {
+	if x != nil && x.Quantity != nil {
+		return *x.Quantity
+	}
+	return 0
+}
+
+func (x *ProductDeliveryLine) GetFulfillment() *ProductFulfillmentSpec {
+	if x != nil {
+		return x.Fulfillment
+	}
+	return nil
+}
+
+func (x *ProductDeliveryLine) GetDetail() *ProductDetail {
+	if x != nil {
+		return x.Detail
+	}
+	return nil
+}
+
+func (x *ProductDeliveryLine) GetSupplyRevision() int64 {
+	if x != nil && x.SupplyRevision != nil {
+		return *x.SupplyRevision
+	}
+	return 0
+}
+
+type ProductDeliveryOrder struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	Seller        *hi.Entity             `protobuf:"bytes,2,opt,name=seller,proto3" json:"seller,omitempty"`
+	Source        *TerminalOrderRef      `protobuf:"bytes,3,opt,name=source,proto3" json:"source,omitempty"`
+	Line          *ProductDeliveryLine   `protobuf:"bytes,4,opt,name=line,proto3" json:"line,omitempty"`
+	Target        *ProductDeliveryTarget `protobuf:"bytes,5,opt,name=target,proto3" json:"target,omitempty"`
+	Status        *ProductDeliveryStatus `protobuf:"varint,6,opt,name=status,proto3,enum=hi.club.ProductDeliveryStatus,oneof" json:"status,omitempty"`
+	Fulfillment   *ProductFulfillment    `protobuf:"bytes,7,opt,name=fulfillment,proto3" json:"fulfillment,omitempty"`
+	CreatedAt     *int64                 `protobuf:"varint,8,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
+	Revision      *int64                 `protobuf:"varint,9,opt,name=revision,proto3,oneof" json:"revision,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ProductDeliveryOrder) Reset() {
+	*x = ProductDeliveryOrder{}
+	mi := &file_hi_club_product_trade_proto_msgTypes[37]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ProductDeliveryOrder) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ProductDeliveryOrder) ProtoMessage() {}
+
+func (x *ProductDeliveryOrder) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_product_trade_proto_msgTypes[37]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ProductDeliveryOrder.ProtoReflect.Descriptor instead.
+func (*ProductDeliveryOrder) Descriptor() ([]byte, []int) {
+	return file_hi_club_product_trade_proto_rawDescGZIP(), []int{37}
+}
+
+func (x *ProductDeliveryOrder) GetId() string {
+	if x != nil && x.Id != nil {
+		return *x.Id
+	}
+	return ""
+}
+
+func (x *ProductDeliveryOrder) GetSeller() *hi.Entity {
+	if x != nil {
+		return x.Seller
+	}
+	return nil
+}
+
+func (x *ProductDeliveryOrder) GetSource() *TerminalOrderRef {
+	if x != nil {
+		return x.Source
+	}
+	return nil
+}
+
+func (x *ProductDeliveryOrder) GetLine() *ProductDeliveryLine {
+	if x != nil {
+		return x.Line
+	}
+	return nil
+}
+
+func (x *ProductDeliveryOrder) GetTarget() *ProductDeliveryTarget {
+	if x != nil {
+		return x.Target
+	}
+	return nil
+}
+
+func (x *ProductDeliveryOrder) GetStatus() ProductDeliveryStatus {
+	if x != nil && x.Status != nil {
+		return *x.Status
+	}
+	return ProductDeliveryStatus_PRODUCT_DELIVERY_STATUS_UNSPECIFIED
+}
+
+func (x *ProductDeliveryOrder) GetFulfillment() *ProductFulfillment {
+	if x != nil {
+		return x.Fulfillment
+	}
+	return nil
+}
+
+func (x *ProductDeliveryOrder) GetCreatedAt() int64 {
+	if x != nil && x.CreatedAt != nil {
+		return *x.CreatedAt
+	}
+	return 0
+}
+
+func (x *ProductDeliveryOrder) GetRevision() int64 {
+	if x != nil && x.Revision != nil {
+		return *x.Revision
+	}
+	return 0
+}
+
+type ProductDeliveryQuery struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ProductDeliveryQuery) Reset() {
+	*x = ProductDeliveryQuery{}
+	mi := &file_hi_club_product_trade_proto_msgTypes[38]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ProductDeliveryQuery) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ProductDeliveryQuery) ProtoMessage() {}
+
+func (x *ProductDeliveryQuery) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_product_trade_proto_msgTypes[38]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ProductDeliveryQuery.ProtoReflect.Descriptor instead.
+func (*ProductDeliveryQuery) Descriptor() ([]byte, []int) {
+	return file_hi_club_product_trade_proto_rawDescGZIP(), []int{38}
+}
+
+func (x *ProductDeliveryQuery) GetId() string {
+	if x != nil && x.Id != nil {
+		return *x.Id
+	}
+	return ""
+}
+
+type ListProductDeliveriesResp struct {
+	state         protoimpl.MessageState  `protogen:"open.v1"`
+	List          []*ProductDeliveryOrder `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	Total         *int64                  `protobuf:"varint,2,opt,name=total,proto3,oneof" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListProductDeliveriesResp) Reset() {
+	*x = ListProductDeliveriesResp{}
+	mi := &file_hi_club_product_trade_proto_msgTypes[39]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListProductDeliveriesResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListProductDeliveriesResp) ProtoMessage() {}
+
+func (x *ListProductDeliveriesResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_club_product_trade_proto_msgTypes[39]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListProductDeliveriesResp.ProtoReflect.Descriptor instead.
+func (*ListProductDeliveriesResp) Descriptor() ([]byte, []int) {
+	return file_hi_club_product_trade_proto_rawDescGZIP(), []int{39}
+}
+
+func (x *ListProductDeliveriesResp) GetList() []*ProductDeliveryOrder {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
+func (x *ListProductDeliveriesResp) GetTotal() int64 {
+	if x != nil && x.Total != nil {
+		return *x.Total
+	}
+	return 0
 }
 
 var File_hi_club_product_trade_proto protoreflect.FileDescriptor
@@ -2798,7 +3293,7 @@ const file_hi_club_product_trade_proto_rawDesc = "" +
 	"\x1dListProductStockMovementsResp\x127\n" +
 	"\x04list\x18\x01 \x03(\v2\x1d.hi.club.ProductStockMovementB\x04\x90\xb5\x18\x02R\x04list\x12\x1f\n" +
 	"\x05total\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x02H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x02B\b\n" +
-	"\x06_total\"\xd7\x02\n" +
+	"\x06_total\"\xe7\x03\n" +
 	"\x0fSupplierRequest\x12\"\n" +
 	"\n" +
 	"request_id\x18\x01 \x01(\tH\x01R\trequestId\x88\x01\x01\x12\"\n" +
@@ -2806,7 +3301,9 @@ const file_hi_club_product_trade_proto_rawDesc = "" +
 	"created_at\x18\x02 \x01(\x03H\x02R\tcreatedAt\x88\x01\x01\x12A\n" +
 	"\x12product_registered\x18\x03 \x01(\v2\x10.hi.club.ProductH\x00R\x11productRegistered\x12D\n" +
 	"\rfulfill_order\x18\x05 \x01(\v2\x1d.hi.club.ProductPurchaseOrderH\x00R\ffulfillOrder\x12H\n" +
-	"\x0fget_fulfillment\x18\x06 \x01(\v2\x1d.hi.club.ProductPurchaseQueryH\x00R\x0egetFulfillmentB\v\n" +
+	"\x0fget_fulfillment\x18\x06 \x01(\v2\x1d.hi.club.ProductPurchaseQueryH\x00R\x0egetFulfillment\x12J\n" +
+	"\x10fulfill_delivery\x18\a \x01(\v2\x1d.hi.club.ProductDeliveryOrderH\x00R\x0ffulfillDelivery\x12B\n" +
+	"\fget_delivery\x18\b \x01(\v2\x1d.hi.club.ProductDeliveryQueryH\x00R\vgetDeliveryB\v\n" +
 	"\toperationB\r\n" +
 	"\v_request_idB\r\n" +
 	"\v_created_at\"\xd4\x01\n" +
@@ -2823,7 +3320,55 @@ const file_hi_club_product_trade_proto_rawDesc = "" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x0e.hi.PaginationR\n" +
 	"paginationB\v\n" +
-	"\t_order_id*\x92\x01\n" +
+	"\t_order_id\"\x95\x01\n" +
+	"\x14ProductDeliveryInput\x12.\n" +
+	"\n" +
+	"product_id\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\tproductId\x88\x01\x01\x121\n" +
+	"\bquantity\x18\x02 \x01(\x03B\x10\xbaH\r\xc8\x01\x01\"\b\x18\x80\x94\xeb\xdc\x03 \x00H\x01R\bquantity\x88\x01\x01B\r\n" +
+	"\v_product_idB\v\n" +
+	"\t_quantity\"\xca\x02\n" +
+	"\x18SubmitProductDeliveryReq\x123\n" +
+	"\frequest_uuid\x18\x01 \x01(\tB\v\xbaH\b\xc8\x01\x01r\x03\xb0\x01\x01H\x00R\vrequestUuid\x88\x01\x01\x12'\n" +
+	"\x06seller\x18\x02 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x01R\x06seller\x88\x01\x01\x129\n" +
+	"\x06source\x18\x03 \x01(\v2\x19.hi.club.TerminalOrderRefB\x06\xbaH\x03\xc8\x01\x01R\x06source\x129\n" +
+	"\x04item\x18\x04 \x01(\v2\x1d.hi.club.ProductDeliveryInputB\x06\xbaH\x03\xc8\x01\x01R\x04item\x12>\n" +
+	"\x06target\x18\x05 \x01(\v2\x1e.hi.club.ProductDeliveryTargetB\x06\xbaH\x03\xc8\x01\x01R\x06targetB\x0f\n" +
+	"\r_request_uuidB\t\n" +
+	"\a_seller\"\xc8\x02\n" +
+	"\x13ProductDeliveryLine\x120\n" +
+	"\aproduct\x18\x01 \x01(\v2\x10.hi.club.ProductB\x04\x90\xb5\x18\x02R\aproduct\x12%\n" +
+	"\bquantity\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x02H\x00R\bquantity\x88\x01\x01\x12G\n" +
+	"\vfulfillment\x18\x03 \x01(\v2\x1f.hi.club.ProductFulfillmentSpecB\x04\x90\xb5\x18\x02R\vfulfillment\x124\n" +
+	"\x06detail\x18\x04 \x01(\v2\x16.hi.club.ProductDetailB\x04\x90\xb5\x18\x02R\x06detail\x122\n" +
+	"\x0fsupply_revision\x18\x05 \x01(\x03B\x04\x90\xb5\x18\x02H\x01R\x0esupplyRevision\x88\x01\x01:\x04\x98\xb5\x18\x02B\v\n" +
+	"\t_quantityB\x12\n" +
+	"\x10_supply_revision\"\x97\x04\n" +
+	"\x14ProductDeliveryOrder\x12\x19\n" +
+	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x02id\x88\x01\x01\x12(\n" +
+	"\x06seller\x18\x02 \x01(\v2\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x02R\x06seller\x127\n" +
+	"\x06source\x18\x03 \x01(\v2\x19.hi.club.TerminalOrderRefB\x04\x90\xb5\x18\x02R\x06source\x126\n" +
+	"\x04line\x18\x04 \x01(\v2\x1c.hi.club.ProductDeliveryLineB\x04\x90\xb5\x18\x02R\x04line\x12<\n" +
+	"\x06target\x18\x05 \x01(\v2\x1e.hi.club.ProductDeliveryTargetB\x04\x90\xb5\x18\x02R\x06target\x12A\n" +
+	"\x06status\x18\x06 \x01(\x0e2\x1e.hi.club.ProductDeliveryStatusB\x04\x90\xb5\x18\x02H\x01R\x06status\x88\x01\x01\x12C\n" +
+	"\vfulfillment\x18\a \x01(\v2\x1b.hi.club.ProductFulfillmentB\x04\x90\xb5\x18\x02R\vfulfillment\x12(\n" +
+	"\n" +
+	"created_at\x18\b \x01(\x03B\x04\x90\xb5\x18\x02H\x02R\tcreatedAt\x88\x01\x01\x12%\n" +
+	"\brevision\x18\t \x01(\x03B\x04\x90\xb5\x18\x02H\x03R\brevision\x88\x01\x01:\x04\x98\xb5\x18\x02B\x05\n" +
+	"\x03_idB\t\n" +
+	"\a_statusB\r\n" +
+	"\v_created_atB\v\n" +
+	"\t_revision\">\n" +
+	"\x14ProductDeliveryQuery\x12\x1f\n" +
+	"\x02id\x18\x01 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\x01H\x00R\x02id\x88\x01\x01B\x05\n" +
+	"\x03_id\"\x85\x01\n" +
+	"\x19ListProductDeliveriesResp\x127\n" +
+	"\x04list\x18\x01 \x03(\v2\x1d.hi.club.ProductDeliveryOrderB\x04\x90\xb5\x18\x02R\x04list\x12\x1f\n" +
+	"\x05total\x18\x02 \x01(\x03B\x04\x90\xb5\x18\x02H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x02B\b\n" +
+	"\x06_total*\x92\x01\n" +
 	"\x16ProductPurchaseChannel\x12(\n" +
 	"$PRODUCT_PURCHASE_CHANNEL_UNSPECIFIED\x10\x00\x12)\n" +
 	"%PRODUCT_PURCHASE_CHANNEL_DISTRIBUTION\x10\x01\x12#\n" +
@@ -2845,7 +3390,13 @@ const file_hi_club_product_trade_proto_rawDesc = "" +
 	"#PRODUCT_FULFILLMENT_STATUS_ACCEPTED\x10\x02\x12&\n" +
 	"\"PRODUCT_FULFILLMENT_STATUS_SHIPPED\x10\x03\x12'\n" +
 	"#PRODUCT_FULFILLMENT_STATUS_COMPLETE\x10\x04\x12%\n" +
-	"!PRODUCT_FULFILLMENT_STATUS_FAILED\x10\x052\xb5\x01\n" +
+	"!PRODUCT_FULFILLMENT_STATUS_FAILED\x10\x05*\xda\x01\n" +
+	"\x15ProductDeliveryStatus\x12'\n" +
+	"#PRODUCT_DELIVERY_STATUS_UNSPECIFIED\x10\x00\x12'\n" +
+	"#PRODUCT_DELIVERY_STATUS_FULFILLMENT\x10\x01\x12$\n" +
+	" PRODUCT_DELIVERY_STATUS_COMPLETE\x10\x02\x12%\n" +
+	"!PRODUCT_DELIVERY_STATUS_CANCELLED\x10\x03\x12\"\n" +
+	"\x1ePRODUCT_DELIVERY_STATUS_REVIEW\x10\x042\xb5\x01\n" +
 	"\rProductSupply\x12B\n" +
 	"\tGetDetail\x12\x16.hi.club.GetProductReq\x1a\x16.hi.club.ProductDetail\"\x05\x8a\xb5\x18\x01\x02\x12`\n" +
 	"\x12ListStockMovements\x12\x1b.hi.club.ProductRecordQuery\x1a&.hi.club.ListProductStockMovementsResp\"\x05\x8a\xb5\x18\x01\x022\x9b\x02\n" +
@@ -2865,7 +3416,15 @@ const file_hi_club_product_trade_proto_rawDesc = "" +
 	"\rApproveRefund\x12\x1d.hi.club.ProductPurchaseQuery\x1a\x1d.hi.club.ProductPurchaseOrder\"\x05\x8a\xb5\x18\x01\x02\x12_\n" +
 	"\x10ListTransactions\x12\x1f.hi.club.ProductOrderRecordsReq\x1a#.hi.club.ListSettlementReceiptsResp\"\x05\x8a\xb5\x18\x01\x02\x12W\n" +
 	"\n" +
-	"ListEvents\x12\x1d.hi.club.ProductPurchaseQuery\x1a#.hi.club.ListProductOrderEventsResp\"\x05\x8a\xb5\x18\x01\x02B\x88\x01\n" +
+	"ListEvents\x12\x1d.hi.club.ProductPurchaseQuery\x1a#.hi.club.ListProductOrderEventsResp\"\x05\x8a\xb5\x18\x01\x022\x85\x04\n" +
+	"\x0fProductDelivery\x12Q\n" +
+	"\x06Submit\x12!.hi.club.SubmitProductDeliveryReq\x1a\x1d.hi.club.ProductDeliveryOrder\"\x05\x8a\xb5\x18\x01\x02\x12J\n" +
+	"\x03Get\x12\x1d.hi.club.ProductDeliveryQuery\x1a\x1d.hi.club.ProductDeliveryOrder\"\x05\x8a\xb5\x18\x01\x02\x12M\n" +
+	"\x04List\x12\x1a.hi.club.ProductStallQuery\x1a\".hi.club.ListProductDeliveriesResp\"\x05\x8a\xb5\x18\x01\x02\x12M\n" +
+	"\x06Cancel\x12\x1d.hi.club.ProductDeliveryQuery\x1a\x1d.hi.club.ProductDeliveryOrder\"\x05\x8a\xb5\x18\x01\x02\x12\\\n" +
+	"\x11ReportFulfillment\x12!.hi.club.ProductFulfillmentReport\x1a\x1d.hi.club.ProductDeliveryOrder\"\x05\x8a\xb5\x18\x01\x02\x12W\n" +
+	"\n" +
+	"ListEvents\x12\x1d.hi.club.ProductDeliveryQuery\x1a#.hi.club.ListProductOrderEventsResp\"\x05\x8a\xb5\x18\x01\x02B\x88\x01\n" +
 	"\vcom.hi.clubB\x11ProductTradeProtoP\x01Z)github.com/HiWorld-56/hi-proto/go/hi/club\xa2\x02\x03HCX\xaa\x02\aHi.Club\xca\x02\aHi\\Club\xe2\x02\x13Hi\\Club\\GPBMetadata\xea\x02\bHi::Clubb\x06proto3"
 
 var (
@@ -2880,145 +3439,179 @@ func file_hi_club_product_trade_proto_rawDescGZIP() []byte {
 	return file_hi_club_product_trade_proto_rawDescData
 }
 
-var file_hi_club_product_trade_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_hi_club_product_trade_proto_msgTypes = make([]protoimpl.MessageInfo, 34)
+var file_hi_club_product_trade_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
+var file_hi_club_product_trade_proto_msgTypes = make([]protoimpl.MessageInfo, 40)
 var file_hi_club_product_trade_proto_goTypes = []any{
 	(ProductPurchaseChannel)(0),           // 0: hi.club.ProductPurchaseChannel
 	(ProductPurchaseStatus)(0),            // 1: hi.club.ProductPurchaseStatus
 	(ProductFulfillmentStatus)(0),         // 2: hi.club.ProductFulfillmentStatus
-	(*ProductStallQuery)(nil),             // 3: hi.club.ProductStallQuery
-	(*ProductRecordQuery)(nil),            // 4: hi.club.ProductRecordQuery
-	(*ProductDetail)(nil),                 // 5: hi.club.ProductDetail
-	(*ProductDetailSection)(nil),          // 6: hi.club.ProductDetailSection
-	(*ProductSpecification)(nil),          // 7: hi.club.ProductSpecification
-	(*ProductDistributionAgreement)(nil),  // 8: hi.club.ProductDistributionAgreement
-	(*JoinProductDistributionReq)(nil),    // 9: hi.club.JoinProductDistributionReq
-	(*ProductDistributionQuery)(nil),      // 10: hi.club.ProductDistributionQuery
-	(*ListProductDistributionResp)(nil),   // 11: hi.club.ListProductDistributionResp
-	(*PhysicalRecipient)(nil),             // 12: hi.club.PhysicalRecipient
-	(*DigitalRecipient)(nil),              // 13: hi.club.DigitalRecipient
-	(*ProductDeliveryTarget)(nil),         // 14: hi.club.ProductDeliveryTarget
-	(*TerminalOrderRef)(nil),              // 15: hi.club.TerminalOrderRef
-	(*ProductPurchaseInput)(nil),          // 16: hi.club.ProductPurchaseInput
-	(*TerminalOrderSubmission)(nil),       // 17: hi.club.TerminalOrderSubmission
-	(*DirectProductPurchaseReq)(nil),      // 18: hi.club.DirectProductPurchaseReq
-	(*ProductPurchaseLine)(nil),           // 19: hi.club.ProductPurchaseLine
-	(*ProductPurchaseOrder)(nil),          // 20: hi.club.ProductPurchaseOrder
-	(*ProductPurchaseGroup)(nil),          // 21: hi.club.ProductPurchaseGroup
-	(*ProductPurchaseQuery)(nil),          // 22: hi.club.ProductPurchaseQuery
-	(*ListProductPurchasesReq)(nil),       // 23: hi.club.ListProductPurchasesReq
-	(*ListProductPurchasesResp)(nil),      // 24: hi.club.ListProductPurchasesResp
-	(*ProductShipment)(nil),               // 25: hi.club.ProductShipment
-	(*ProductDigitalDelivery)(nil),        // 26: hi.club.ProductDigitalDelivery
-	(*ProductFulfillment)(nil),            // 27: hi.club.ProductFulfillment
-	(*ProductFulfillmentReport)(nil),      // 28: hi.club.ProductFulfillmentReport
-	(*ProductRefundRequest)(nil),          // 29: hi.club.ProductRefundRequest
-	(*ProductOrderEvent)(nil),             // 30: hi.club.ProductOrderEvent
-	(*ListProductOrderEventsResp)(nil),    // 31: hi.club.ListProductOrderEventsResp
-	(*ProductStockMovement)(nil),          // 32: hi.club.ProductStockMovement
-	(*ListProductStockMovementsResp)(nil), // 33: hi.club.ListProductStockMovementsResp
-	(*SupplierRequest)(nil),               // 34: hi.club.SupplierRequest
-	(*SupplierResponse)(nil),              // 35: hi.club.SupplierResponse
-	(*ProductOrderRecordsReq)(nil),        // 36: hi.club.ProductOrderRecordsReq
-	(*hi.Pagination)(nil),                 // 37: hi.Pagination
-	(*ProductImage)(nil),                  // 38: hi.club.ProductImage
-	(*hi.Entity)(nil),                     // 39: hi.Entity
-	(*Product)(nil),                       // 40: hi.club.Product
-	(*did.CoinAmount)(nil),                // 41: hi.did.CoinAmount
-	(*ProductFulfillmentSpec)(nil),        // 42: hi.club.ProductFulfillmentSpec
-	(*SettlementPayment)(nil),             // 43: hi.club.SettlementPayment
-	(*ProductStockBalance)(nil),           // 44: hi.club.ProductStockBalance
-	(*emptypb.Empty)(nil),                 // 45: google.protobuf.Empty
-	(*GetProductReq)(nil),                 // 46: hi.club.GetProductReq
-	(*ListSettlementReceiptsResp)(nil),    // 47: hi.club.ListSettlementReceiptsResp
+	(ProductDeliveryStatus)(0),            // 3: hi.club.ProductDeliveryStatus
+	(*ProductStallQuery)(nil),             // 4: hi.club.ProductStallQuery
+	(*ProductRecordQuery)(nil),            // 5: hi.club.ProductRecordQuery
+	(*ProductDetail)(nil),                 // 6: hi.club.ProductDetail
+	(*ProductDetailSection)(nil),          // 7: hi.club.ProductDetailSection
+	(*ProductSpecification)(nil),          // 8: hi.club.ProductSpecification
+	(*ProductDistributionAgreement)(nil),  // 9: hi.club.ProductDistributionAgreement
+	(*JoinProductDistributionReq)(nil),    // 10: hi.club.JoinProductDistributionReq
+	(*ProductDistributionQuery)(nil),      // 11: hi.club.ProductDistributionQuery
+	(*ListProductDistributionResp)(nil),   // 12: hi.club.ListProductDistributionResp
+	(*PhysicalRecipient)(nil),             // 13: hi.club.PhysicalRecipient
+	(*DigitalRecipient)(nil),              // 14: hi.club.DigitalRecipient
+	(*ProductDeliveryTarget)(nil),         // 15: hi.club.ProductDeliveryTarget
+	(*TerminalOrderRef)(nil),              // 16: hi.club.TerminalOrderRef
+	(*ProductPurchaseInput)(nil),          // 17: hi.club.ProductPurchaseInput
+	(*TerminalOrderSubmission)(nil),       // 18: hi.club.TerminalOrderSubmission
+	(*DirectProductPurchaseReq)(nil),      // 19: hi.club.DirectProductPurchaseReq
+	(*ProductPurchaseLine)(nil),           // 20: hi.club.ProductPurchaseLine
+	(*ProductPurchaseOrder)(nil),          // 21: hi.club.ProductPurchaseOrder
+	(*ProductPurchaseGroup)(nil),          // 22: hi.club.ProductPurchaseGroup
+	(*ProductPurchaseQuery)(nil),          // 23: hi.club.ProductPurchaseQuery
+	(*ListProductPurchasesReq)(nil),       // 24: hi.club.ListProductPurchasesReq
+	(*ListProductPurchasesResp)(nil),      // 25: hi.club.ListProductPurchasesResp
+	(*ProductShipment)(nil),               // 26: hi.club.ProductShipment
+	(*ProductDigitalDelivery)(nil),        // 27: hi.club.ProductDigitalDelivery
+	(*ProductFulfillment)(nil),            // 28: hi.club.ProductFulfillment
+	(*ProductFulfillmentReport)(nil),      // 29: hi.club.ProductFulfillmentReport
+	(*ProductRefundRequest)(nil),          // 30: hi.club.ProductRefundRequest
+	(*ProductOrderEvent)(nil),             // 31: hi.club.ProductOrderEvent
+	(*ListProductOrderEventsResp)(nil),    // 32: hi.club.ListProductOrderEventsResp
+	(*ProductStockMovement)(nil),          // 33: hi.club.ProductStockMovement
+	(*ListProductStockMovementsResp)(nil), // 34: hi.club.ListProductStockMovementsResp
+	(*SupplierRequest)(nil),               // 35: hi.club.SupplierRequest
+	(*SupplierResponse)(nil),              // 36: hi.club.SupplierResponse
+	(*ProductOrderRecordsReq)(nil),        // 37: hi.club.ProductOrderRecordsReq
+	(*ProductDeliveryInput)(nil),          // 38: hi.club.ProductDeliveryInput
+	(*SubmitProductDeliveryReq)(nil),      // 39: hi.club.SubmitProductDeliveryReq
+	(*ProductDeliveryLine)(nil),           // 40: hi.club.ProductDeliveryLine
+	(*ProductDeliveryOrder)(nil),          // 41: hi.club.ProductDeliveryOrder
+	(*ProductDeliveryQuery)(nil),          // 42: hi.club.ProductDeliveryQuery
+	(*ListProductDeliveriesResp)(nil),     // 43: hi.club.ListProductDeliveriesResp
+	(*hi.Pagination)(nil),                 // 44: hi.Pagination
+	(*ProductImage)(nil),                  // 45: hi.club.ProductImage
+	(*hi.Entity)(nil),                     // 46: hi.Entity
+	(*Product)(nil),                       // 47: hi.club.Product
+	(*did.CoinAmount)(nil),                // 48: hi.did.CoinAmount
+	(*ProductFulfillmentSpec)(nil),        // 49: hi.club.ProductFulfillmentSpec
+	(*SettlementPayment)(nil),             // 50: hi.club.SettlementPayment
+	(*ProductStockBalance)(nil),           // 51: hi.club.ProductStockBalance
+	(*emptypb.Empty)(nil),                 // 52: google.protobuf.Empty
+	(*GetProductReq)(nil),                 // 53: hi.club.GetProductReq
+	(*ListSettlementReceiptsResp)(nil),    // 54: hi.club.ListSettlementReceiptsResp
 }
 var file_hi_club_product_trade_proto_depIdxs = []int32{
-	37, // 0: hi.club.ProductStallQuery.pagination:type_name -> hi.Pagination
-	37, // 1: hi.club.ProductRecordQuery.pagination:type_name -> hi.Pagination
-	6,  // 2: hi.club.ProductDetail.sections:type_name -> hi.club.ProductDetailSection
-	38, // 3: hi.club.ProductDetailSection.image:type_name -> hi.club.ProductImage
-	7,  // 4: hi.club.ProductDetailSection.specification:type_name -> hi.club.ProductSpecification
-	39, // 5: hi.club.ProductDistributionAgreement.reseller:type_name -> hi.Entity
-	39, // 6: hi.club.ProductDistributionAgreement.supplier:type_name -> hi.Entity
-	40, // 7: hi.club.ProductDistributionAgreement.product:type_name -> hi.club.Product
-	8,  // 8: hi.club.ListProductDistributionResp.list:type_name -> hi.club.ProductDistributionAgreement
-	12, // 9: hi.club.ProductDeliveryTarget.physical:type_name -> hi.club.PhysicalRecipient
-	13, // 10: hi.club.ProductDeliveryTarget.digital:type_name -> hi.club.DigitalRecipient
-	41, // 11: hi.club.ProductPurchaseInput.maximum_total:type_name -> hi.did.CoinAmount
-	15, // 12: hi.club.TerminalOrderSubmission.source:type_name -> hi.club.TerminalOrderRef
-	16, // 13: hi.club.TerminalOrderSubmission.lines:type_name -> hi.club.ProductPurchaseInput
-	14, // 14: hi.club.TerminalOrderSubmission.target:type_name -> hi.club.ProductDeliveryTarget
-	16, // 15: hi.club.DirectProductPurchaseReq.item:type_name -> hi.club.ProductPurchaseInput
-	14, // 16: hi.club.DirectProductPurchaseReq.target:type_name -> hi.club.ProductDeliveryTarget
-	40, // 17: hi.club.ProductPurchaseLine.product:type_name -> hi.club.Product
-	41, // 18: hi.club.ProductPurchaseLine.total:type_name -> hi.did.CoinAmount
-	42, // 19: hi.club.ProductPurchaseLine.fulfillment:type_name -> hi.club.ProductFulfillmentSpec
-	5,  // 20: hi.club.ProductPurchaseLine.detail:type_name -> hi.club.ProductDetail
-	39, // 21: hi.club.ProductPurchaseOrder.buyer:type_name -> hi.Entity
-	39, // 22: hi.club.ProductPurchaseOrder.supplier:type_name -> hi.Entity
-	15, // 23: hi.club.ProductPurchaseOrder.source:type_name -> hi.club.TerminalOrderRef
-	19, // 24: hi.club.ProductPurchaseOrder.line:type_name -> hi.club.ProductPurchaseLine
-	14, // 25: hi.club.ProductPurchaseOrder.target:type_name -> hi.club.ProductDeliveryTarget
+	44, // 0: hi.club.ProductStallQuery.pagination:type_name -> hi.Pagination
+	44, // 1: hi.club.ProductRecordQuery.pagination:type_name -> hi.Pagination
+	7,  // 2: hi.club.ProductDetail.sections:type_name -> hi.club.ProductDetailSection
+	45, // 3: hi.club.ProductDetailSection.image:type_name -> hi.club.ProductImage
+	8,  // 4: hi.club.ProductDetailSection.specification:type_name -> hi.club.ProductSpecification
+	46, // 5: hi.club.ProductDistributionAgreement.reseller:type_name -> hi.Entity
+	46, // 6: hi.club.ProductDistributionAgreement.supplier:type_name -> hi.Entity
+	47, // 7: hi.club.ProductDistributionAgreement.product:type_name -> hi.club.Product
+	9,  // 8: hi.club.ListProductDistributionResp.list:type_name -> hi.club.ProductDistributionAgreement
+	13, // 9: hi.club.ProductDeliveryTarget.physical:type_name -> hi.club.PhysicalRecipient
+	14, // 10: hi.club.ProductDeliveryTarget.digital:type_name -> hi.club.DigitalRecipient
+	48, // 11: hi.club.ProductPurchaseInput.maximum_total:type_name -> hi.did.CoinAmount
+	16, // 12: hi.club.TerminalOrderSubmission.source:type_name -> hi.club.TerminalOrderRef
+	17, // 13: hi.club.TerminalOrderSubmission.lines:type_name -> hi.club.ProductPurchaseInput
+	15, // 14: hi.club.TerminalOrderSubmission.target:type_name -> hi.club.ProductDeliveryTarget
+	17, // 15: hi.club.DirectProductPurchaseReq.item:type_name -> hi.club.ProductPurchaseInput
+	15, // 16: hi.club.DirectProductPurchaseReq.target:type_name -> hi.club.ProductDeliveryTarget
+	47, // 17: hi.club.ProductPurchaseLine.product:type_name -> hi.club.Product
+	48, // 18: hi.club.ProductPurchaseLine.total:type_name -> hi.did.CoinAmount
+	49, // 19: hi.club.ProductPurchaseLine.fulfillment:type_name -> hi.club.ProductFulfillmentSpec
+	6,  // 20: hi.club.ProductPurchaseLine.detail:type_name -> hi.club.ProductDetail
+	46, // 21: hi.club.ProductPurchaseOrder.buyer:type_name -> hi.Entity
+	46, // 22: hi.club.ProductPurchaseOrder.supplier:type_name -> hi.Entity
+	16, // 23: hi.club.ProductPurchaseOrder.source:type_name -> hi.club.TerminalOrderRef
+	20, // 24: hi.club.ProductPurchaseOrder.line:type_name -> hi.club.ProductPurchaseLine
+	15, // 25: hi.club.ProductPurchaseOrder.target:type_name -> hi.club.ProductDeliveryTarget
 	1,  // 26: hi.club.ProductPurchaseOrder.status:type_name -> hi.club.ProductPurchaseStatus
-	43, // 27: hi.club.ProductPurchaseOrder.payment:type_name -> hi.club.SettlementPayment
-	27, // 28: hi.club.ProductPurchaseOrder.fulfillment:type_name -> hi.club.ProductFulfillment
-	43, // 29: hi.club.ProductPurchaseOrder.refund:type_name -> hi.club.SettlementPayment
+	50, // 27: hi.club.ProductPurchaseOrder.payment:type_name -> hi.club.SettlementPayment
+	28, // 28: hi.club.ProductPurchaseOrder.fulfillment:type_name -> hi.club.ProductFulfillment
+	50, // 29: hi.club.ProductPurchaseOrder.refund:type_name -> hi.club.SettlementPayment
 	0,  // 30: hi.club.ProductPurchaseOrder.channel:type_name -> hi.club.ProductPurchaseChannel
-	15, // 31: hi.club.ProductPurchaseGroup.source:type_name -> hi.club.TerminalOrderRef
-	20, // 32: hi.club.ProductPurchaseGroup.orders:type_name -> hi.club.ProductPurchaseOrder
-	37, // 33: hi.club.ListProductPurchasesReq.pagination:type_name -> hi.Pagination
-	20, // 34: hi.club.ListProductPurchasesResp.list:type_name -> hi.club.ProductPurchaseOrder
+	16, // 31: hi.club.ProductPurchaseGroup.source:type_name -> hi.club.TerminalOrderRef
+	21, // 32: hi.club.ProductPurchaseGroup.orders:type_name -> hi.club.ProductPurchaseOrder
+	44, // 33: hi.club.ListProductPurchasesReq.pagination:type_name -> hi.Pagination
+	21, // 34: hi.club.ListProductPurchasesResp.list:type_name -> hi.club.ProductPurchaseOrder
 	2,  // 35: hi.club.ProductFulfillment.status:type_name -> hi.club.ProductFulfillmentStatus
-	25, // 36: hi.club.ProductFulfillment.shipment:type_name -> hi.club.ProductShipment
-	26, // 37: hi.club.ProductFulfillment.digital:type_name -> hi.club.ProductDigitalDelivery
-	27, // 38: hi.club.ProductFulfillmentReport.fulfillment:type_name -> hi.club.ProductFulfillment
-	39, // 39: hi.club.ProductOrderEvent.actor:type_name -> hi.Entity
-	30, // 40: hi.club.ListProductOrderEventsResp.list:type_name -> hi.club.ProductOrderEvent
-	44, // 41: hi.club.ProductStockMovement.balance:type_name -> hi.club.ProductStockBalance
-	32, // 42: hi.club.ListProductStockMovementsResp.list:type_name -> hi.club.ProductStockMovement
-	40, // 43: hi.club.SupplierRequest.product_registered:type_name -> hi.club.Product
-	20, // 44: hi.club.SupplierRequest.fulfill_order:type_name -> hi.club.ProductPurchaseOrder
-	22, // 45: hi.club.SupplierRequest.get_fulfillment:type_name -> hi.club.ProductPurchaseQuery
-	28, // 46: hi.club.SupplierResponse.fulfillment:type_name -> hi.club.ProductFulfillmentReport
-	45, // 47: hi.club.SupplierResponse.acknowledged:type_name -> google.protobuf.Empty
-	37, // 48: hi.club.ProductOrderRecordsReq.pagination:type_name -> hi.Pagination
-	46, // 49: hi.club.ProductSupply.GetDetail:input_type -> hi.club.GetProductReq
-	4,  // 50: hi.club.ProductSupply.ListStockMovements:input_type -> hi.club.ProductRecordQuery
-	9,  // 51: hi.club.ProductDistribution.Join:input_type -> hi.club.JoinProductDistributionReq
-	3,  // 52: hi.club.ProductDistribution.List:input_type -> hi.club.ProductStallQuery
-	10, // 53: hi.club.ProductDistribution.Leave:input_type -> hi.club.ProductDistributionQuery
-	18, // 54: hi.club.ProductTrade.Buy:input_type -> hi.club.DirectProductPurchaseReq
-	17, // 55: hi.club.ProductTrade.Submit:input_type -> hi.club.TerminalOrderSubmission
-	22, // 56: hi.club.ProductTrade.Confirm:input_type -> hi.club.ProductPurchaseQuery
-	22, // 57: hi.club.ProductTrade.Get:input_type -> hi.club.ProductPurchaseQuery
-	23, // 58: hi.club.ProductTrade.List:input_type -> hi.club.ListProductPurchasesReq
-	22, // 59: hi.club.ProductTrade.Cancel:input_type -> hi.club.ProductPurchaseQuery
-	28, // 60: hi.club.ProductTrade.ReportFulfillment:input_type -> hi.club.ProductFulfillmentReport
-	29, // 61: hi.club.ProductTrade.RequestRefund:input_type -> hi.club.ProductRefundRequest
-	22, // 62: hi.club.ProductTrade.ApproveRefund:input_type -> hi.club.ProductPurchaseQuery
-	36, // 63: hi.club.ProductTrade.ListTransactions:input_type -> hi.club.ProductOrderRecordsReq
-	22, // 64: hi.club.ProductTrade.ListEvents:input_type -> hi.club.ProductPurchaseQuery
-	5,  // 65: hi.club.ProductSupply.GetDetail:output_type -> hi.club.ProductDetail
-	33, // 66: hi.club.ProductSupply.ListStockMovements:output_type -> hi.club.ListProductStockMovementsResp
-	8,  // 67: hi.club.ProductDistribution.Join:output_type -> hi.club.ProductDistributionAgreement
-	11, // 68: hi.club.ProductDistribution.List:output_type -> hi.club.ListProductDistributionResp
-	8,  // 69: hi.club.ProductDistribution.Leave:output_type -> hi.club.ProductDistributionAgreement
-	20, // 70: hi.club.ProductTrade.Buy:output_type -> hi.club.ProductPurchaseOrder
-	21, // 71: hi.club.ProductTrade.Submit:output_type -> hi.club.ProductPurchaseGroup
-	20, // 72: hi.club.ProductTrade.Confirm:output_type -> hi.club.ProductPurchaseOrder
-	20, // 73: hi.club.ProductTrade.Get:output_type -> hi.club.ProductPurchaseOrder
-	24, // 74: hi.club.ProductTrade.List:output_type -> hi.club.ListProductPurchasesResp
-	20, // 75: hi.club.ProductTrade.Cancel:output_type -> hi.club.ProductPurchaseOrder
-	20, // 76: hi.club.ProductTrade.ReportFulfillment:output_type -> hi.club.ProductPurchaseOrder
-	20, // 77: hi.club.ProductTrade.RequestRefund:output_type -> hi.club.ProductPurchaseOrder
-	20, // 78: hi.club.ProductTrade.ApproveRefund:output_type -> hi.club.ProductPurchaseOrder
-	47, // 79: hi.club.ProductTrade.ListTransactions:output_type -> hi.club.ListSettlementReceiptsResp
-	31, // 80: hi.club.ProductTrade.ListEvents:output_type -> hi.club.ListProductOrderEventsResp
-	65, // [65:81] is the sub-list for method output_type
-	49, // [49:65] is the sub-list for method input_type
-	49, // [49:49] is the sub-list for extension type_name
-	49, // [49:49] is the sub-list for extension extendee
-	0,  // [0:49] is the sub-list for field type_name
+	26, // 36: hi.club.ProductFulfillment.shipment:type_name -> hi.club.ProductShipment
+	27, // 37: hi.club.ProductFulfillment.digital:type_name -> hi.club.ProductDigitalDelivery
+	28, // 38: hi.club.ProductFulfillmentReport.fulfillment:type_name -> hi.club.ProductFulfillment
+	46, // 39: hi.club.ProductOrderEvent.actor:type_name -> hi.Entity
+	31, // 40: hi.club.ListProductOrderEventsResp.list:type_name -> hi.club.ProductOrderEvent
+	51, // 41: hi.club.ProductStockMovement.balance:type_name -> hi.club.ProductStockBalance
+	33, // 42: hi.club.ListProductStockMovementsResp.list:type_name -> hi.club.ProductStockMovement
+	47, // 43: hi.club.SupplierRequest.product_registered:type_name -> hi.club.Product
+	21, // 44: hi.club.SupplierRequest.fulfill_order:type_name -> hi.club.ProductPurchaseOrder
+	23, // 45: hi.club.SupplierRequest.get_fulfillment:type_name -> hi.club.ProductPurchaseQuery
+	41, // 46: hi.club.SupplierRequest.fulfill_delivery:type_name -> hi.club.ProductDeliveryOrder
+	42, // 47: hi.club.SupplierRequest.get_delivery:type_name -> hi.club.ProductDeliveryQuery
+	29, // 48: hi.club.SupplierResponse.fulfillment:type_name -> hi.club.ProductFulfillmentReport
+	52, // 49: hi.club.SupplierResponse.acknowledged:type_name -> google.protobuf.Empty
+	44, // 50: hi.club.ProductOrderRecordsReq.pagination:type_name -> hi.Pagination
+	16, // 51: hi.club.SubmitProductDeliveryReq.source:type_name -> hi.club.TerminalOrderRef
+	38, // 52: hi.club.SubmitProductDeliveryReq.item:type_name -> hi.club.ProductDeliveryInput
+	15, // 53: hi.club.SubmitProductDeliveryReq.target:type_name -> hi.club.ProductDeliveryTarget
+	47, // 54: hi.club.ProductDeliveryLine.product:type_name -> hi.club.Product
+	49, // 55: hi.club.ProductDeliveryLine.fulfillment:type_name -> hi.club.ProductFulfillmentSpec
+	6,  // 56: hi.club.ProductDeliveryLine.detail:type_name -> hi.club.ProductDetail
+	46, // 57: hi.club.ProductDeliveryOrder.seller:type_name -> hi.Entity
+	16, // 58: hi.club.ProductDeliveryOrder.source:type_name -> hi.club.TerminalOrderRef
+	40, // 59: hi.club.ProductDeliveryOrder.line:type_name -> hi.club.ProductDeliveryLine
+	15, // 60: hi.club.ProductDeliveryOrder.target:type_name -> hi.club.ProductDeliveryTarget
+	3,  // 61: hi.club.ProductDeliveryOrder.status:type_name -> hi.club.ProductDeliveryStatus
+	28, // 62: hi.club.ProductDeliveryOrder.fulfillment:type_name -> hi.club.ProductFulfillment
+	41, // 63: hi.club.ListProductDeliveriesResp.list:type_name -> hi.club.ProductDeliveryOrder
+	53, // 64: hi.club.ProductSupply.GetDetail:input_type -> hi.club.GetProductReq
+	5,  // 65: hi.club.ProductSupply.ListStockMovements:input_type -> hi.club.ProductRecordQuery
+	10, // 66: hi.club.ProductDistribution.Join:input_type -> hi.club.JoinProductDistributionReq
+	4,  // 67: hi.club.ProductDistribution.List:input_type -> hi.club.ProductStallQuery
+	11, // 68: hi.club.ProductDistribution.Leave:input_type -> hi.club.ProductDistributionQuery
+	19, // 69: hi.club.ProductTrade.Buy:input_type -> hi.club.DirectProductPurchaseReq
+	18, // 70: hi.club.ProductTrade.Submit:input_type -> hi.club.TerminalOrderSubmission
+	23, // 71: hi.club.ProductTrade.Confirm:input_type -> hi.club.ProductPurchaseQuery
+	23, // 72: hi.club.ProductTrade.Get:input_type -> hi.club.ProductPurchaseQuery
+	24, // 73: hi.club.ProductTrade.List:input_type -> hi.club.ListProductPurchasesReq
+	23, // 74: hi.club.ProductTrade.Cancel:input_type -> hi.club.ProductPurchaseQuery
+	29, // 75: hi.club.ProductTrade.ReportFulfillment:input_type -> hi.club.ProductFulfillmentReport
+	30, // 76: hi.club.ProductTrade.RequestRefund:input_type -> hi.club.ProductRefundRequest
+	23, // 77: hi.club.ProductTrade.ApproveRefund:input_type -> hi.club.ProductPurchaseQuery
+	37, // 78: hi.club.ProductTrade.ListTransactions:input_type -> hi.club.ProductOrderRecordsReq
+	23, // 79: hi.club.ProductTrade.ListEvents:input_type -> hi.club.ProductPurchaseQuery
+	39, // 80: hi.club.ProductDelivery.Submit:input_type -> hi.club.SubmitProductDeliveryReq
+	42, // 81: hi.club.ProductDelivery.Get:input_type -> hi.club.ProductDeliveryQuery
+	4,  // 82: hi.club.ProductDelivery.List:input_type -> hi.club.ProductStallQuery
+	42, // 83: hi.club.ProductDelivery.Cancel:input_type -> hi.club.ProductDeliveryQuery
+	29, // 84: hi.club.ProductDelivery.ReportFulfillment:input_type -> hi.club.ProductFulfillmentReport
+	42, // 85: hi.club.ProductDelivery.ListEvents:input_type -> hi.club.ProductDeliveryQuery
+	6,  // 86: hi.club.ProductSupply.GetDetail:output_type -> hi.club.ProductDetail
+	34, // 87: hi.club.ProductSupply.ListStockMovements:output_type -> hi.club.ListProductStockMovementsResp
+	9,  // 88: hi.club.ProductDistribution.Join:output_type -> hi.club.ProductDistributionAgreement
+	12, // 89: hi.club.ProductDistribution.List:output_type -> hi.club.ListProductDistributionResp
+	9,  // 90: hi.club.ProductDistribution.Leave:output_type -> hi.club.ProductDistributionAgreement
+	21, // 91: hi.club.ProductTrade.Buy:output_type -> hi.club.ProductPurchaseOrder
+	22, // 92: hi.club.ProductTrade.Submit:output_type -> hi.club.ProductPurchaseGroup
+	21, // 93: hi.club.ProductTrade.Confirm:output_type -> hi.club.ProductPurchaseOrder
+	21, // 94: hi.club.ProductTrade.Get:output_type -> hi.club.ProductPurchaseOrder
+	25, // 95: hi.club.ProductTrade.List:output_type -> hi.club.ListProductPurchasesResp
+	21, // 96: hi.club.ProductTrade.Cancel:output_type -> hi.club.ProductPurchaseOrder
+	21, // 97: hi.club.ProductTrade.ReportFulfillment:output_type -> hi.club.ProductPurchaseOrder
+	21, // 98: hi.club.ProductTrade.RequestRefund:output_type -> hi.club.ProductPurchaseOrder
+	21, // 99: hi.club.ProductTrade.ApproveRefund:output_type -> hi.club.ProductPurchaseOrder
+	54, // 100: hi.club.ProductTrade.ListTransactions:output_type -> hi.club.ListSettlementReceiptsResp
+	32, // 101: hi.club.ProductTrade.ListEvents:output_type -> hi.club.ListProductOrderEventsResp
+	41, // 102: hi.club.ProductDelivery.Submit:output_type -> hi.club.ProductDeliveryOrder
+	41, // 103: hi.club.ProductDelivery.Get:output_type -> hi.club.ProductDeliveryOrder
+	43, // 104: hi.club.ProductDelivery.List:output_type -> hi.club.ListProductDeliveriesResp
+	41, // 105: hi.club.ProductDelivery.Cancel:output_type -> hi.club.ProductDeliveryOrder
+	41, // 106: hi.club.ProductDelivery.ReportFulfillment:output_type -> hi.club.ProductDeliveryOrder
+	32, // 107: hi.club.ProductDelivery.ListEvents:output_type -> hi.club.ListProductOrderEventsResp
+	86, // [86:108] is the sub-list for method output_type
+	64, // [64:86] is the sub-list for method input_type
+	64, // [64:64] is the sub-list for extension type_name
+	64, // [64:64] is the sub-list for extension extendee
+	0,  // [0:64] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_product_trade_proto_init() }
@@ -3071,21 +3664,29 @@ func file_hi_club_product_trade_proto_init() {
 		(*SupplierRequest_ProductRegistered)(nil),
 		(*SupplierRequest_FulfillOrder)(nil),
 		(*SupplierRequest_GetFulfillment)(nil),
+		(*SupplierRequest_FulfillDelivery)(nil),
+		(*SupplierRequest_GetDelivery)(nil),
 	}
 	file_hi_club_product_trade_proto_msgTypes[32].OneofWrappers = []any{
 		(*SupplierResponse_Fulfillment)(nil),
 		(*SupplierResponse_Acknowledged)(nil),
 	}
 	file_hi_club_product_trade_proto_msgTypes[33].OneofWrappers = []any{}
+	file_hi_club_product_trade_proto_msgTypes[34].OneofWrappers = []any{}
+	file_hi_club_product_trade_proto_msgTypes[35].OneofWrappers = []any{}
+	file_hi_club_product_trade_proto_msgTypes[36].OneofWrappers = []any{}
+	file_hi_club_product_trade_proto_msgTypes[37].OneofWrappers = []any{}
+	file_hi_club_product_trade_proto_msgTypes[38].OneofWrappers = []any{}
+	file_hi_club_product_trade_proto_msgTypes[39].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_club_product_trade_proto_rawDesc), len(file_hi_club_product_trade_proto_rawDesc)),
-			NumEnums:      3,
-			NumMessages:   34,
+			NumEnums:      4,
+			NumMessages:   40,
 			NumExtensions: 0,
-			NumServices:   3,
+			NumServices:   4,
 		},
 		GoTypes:           file_hi_club_product_trade_proto_goTypes,
 		DependencyIndexes: file_hi_club_product_trade_proto_depIdxs,

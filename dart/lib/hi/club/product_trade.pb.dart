@@ -2770,6 +2770,8 @@ enum SupplierRequest_Operation {
   productRegistered,
   fulfillOrder,
   getFulfillment,
+  fulfillDelivery,
+  getDelivery,
   notSet
 }
 
@@ -2783,6 +2785,8 @@ class SupplierRequest extends $pb.GeneratedMessage {
     $0.Product? productRegistered,
     ProductPurchaseOrder? fulfillOrder,
     ProductPurchaseQuery? getFulfillment,
+    ProductDeliveryOrder? fulfillDelivery,
+    ProductDeliveryQuery? getDelivery,
   }) {
     final result = create();
     if (requestId != null) result.requestId = requestId;
@@ -2790,6 +2794,8 @@ class SupplierRequest extends $pb.GeneratedMessage {
     if (productRegistered != null) result.productRegistered = productRegistered;
     if (fulfillOrder != null) result.fulfillOrder = fulfillOrder;
     if (getFulfillment != null) result.getFulfillment = getFulfillment;
+    if (fulfillDelivery != null) result.fulfillDelivery = fulfillDelivery;
+    if (getDelivery != null) result.getDelivery = getDelivery;
     return result;
   }
 
@@ -2807,13 +2813,15 @@ class SupplierRequest extends $pb.GeneratedMessage {
     3: SupplierRequest_Operation.productRegistered,
     5: SupplierRequest_Operation.fulfillOrder,
     6: SupplierRequest_Operation.getFulfillment,
+    7: SupplierRequest_Operation.fulfillDelivery,
+    8: SupplierRequest_Operation.getDelivery,
     0: SupplierRequest_Operation.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'SupplierRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..oo(0, [3, 5, 6])
+    ..oo(0, [3, 5, 6, 7, 8])
     ..aOS(1, _omitFieldNames ? '' : 'requestId')
     ..aInt64(2, _omitFieldNames ? '' : 'createdAt')
     ..aOM<$0.Product>(3, _omitFieldNames ? '' : 'productRegistered',
@@ -2822,6 +2830,10 @@ class SupplierRequest extends $pb.GeneratedMessage {
         subBuilder: ProductPurchaseOrder.create)
     ..aOM<ProductPurchaseQuery>(6, _omitFieldNames ? '' : 'getFulfillment',
         subBuilder: ProductPurchaseQuery.create)
+    ..aOM<ProductDeliveryOrder>(7, _omitFieldNames ? '' : 'fulfillDelivery',
+        subBuilder: ProductDeliveryOrder.create)
+    ..aOM<ProductDeliveryQuery>(8, _omitFieldNames ? '' : 'getDelivery',
+        subBuilder: ProductDeliveryQuery.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2846,11 +2858,15 @@ class SupplierRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   @$pb.TagNumber(5)
   @$pb.TagNumber(6)
+  @$pb.TagNumber(7)
+  @$pb.TagNumber(8)
   SupplierRequest_Operation whichOperation() =>
       _SupplierRequest_OperationByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(3)
   @$pb.TagNumber(5)
   @$pb.TagNumber(6)
+  @$pb.TagNumber(7)
+  @$pb.TagNumber(8)
   void clearOperation() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -2903,6 +2919,28 @@ class SupplierRequest extends $pb.GeneratedMessage {
   void clearGetFulfillment() => $_clearField(6);
   @$pb.TagNumber(6)
   ProductPurchaseQuery ensureGetFulfillment() => $_ensure(4);
+
+  @$pb.TagNumber(7)
+  ProductDeliveryOrder get fulfillDelivery => $_getN(5);
+  @$pb.TagNumber(7)
+  set fulfillDelivery(ProductDeliveryOrder value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasFulfillDelivery() => $_has(5);
+  @$pb.TagNumber(7)
+  void clearFulfillDelivery() => $_clearField(7);
+  @$pb.TagNumber(7)
+  ProductDeliveryOrder ensureFulfillDelivery() => $_ensure(5);
+
+  @$pb.TagNumber(8)
+  ProductDeliveryQuery get getDelivery => $_getN(6);
+  @$pb.TagNumber(8)
+  set getDelivery(ProductDeliveryQuery value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasGetDelivery() => $_has(6);
+  @$pb.TagNumber(8)
+  void clearGetDelivery() => $_clearField(8);
+  @$pb.TagNumber(8)
+  ProductDeliveryQuery ensureGetDelivery() => $_ensure(6);
 }
 
 enum SupplierResponse_Result { fulfillment, acknowledged, notSet }
@@ -3074,6 +3112,577 @@ class ProductOrderRecordsReq extends $pb.GeneratedMessage {
   void clearPagination() => $_clearField(2);
   @$pb.TagNumber(2)
   $3.Pagination ensurePagination() => $_ensure(1);
+}
+
+class ProductDeliveryInput extends $pb.GeneratedMessage {
+  factory ProductDeliveryInput({
+    $core.String? productId,
+    $fixnum.Int64? quantity,
+  }) {
+    final result = create();
+    if (productId != null) result.productId = productId;
+    if (quantity != null) result.quantity = quantity;
+    return result;
+  }
+
+  ProductDeliveryInput._();
+
+  factory ProductDeliveryInput.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ProductDeliveryInput.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ProductDeliveryInput',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'productId')
+    ..aInt64(2, _omitFieldNames ? '' : 'quantity')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductDeliveryInput clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductDeliveryInput copyWith(void Function(ProductDeliveryInput) updates) =>
+      super.copyWith((message) => updates(message as ProductDeliveryInput))
+          as ProductDeliveryInput;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ProductDeliveryInput create() => ProductDeliveryInput._();
+  @$core.override
+  ProductDeliveryInput createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ProductDeliveryInput getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ProductDeliveryInput>(create);
+  static ProductDeliveryInput? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get productId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set productId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasProductId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearProductId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get quantity => $_getI64(1);
+  @$pb.TagNumber(2)
+  set quantity($fixnum.Int64 value) => $_setInt64(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasQuantity() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearQuantity() => $_clearField(2);
+}
+
+class SubmitProductDeliveryReq extends $pb.GeneratedMessage {
+  factory SubmitProductDeliveryReq({
+    $core.String? requestUuid,
+    $core.String? seller,
+    TerminalOrderRef? source,
+    ProductDeliveryInput? item,
+    ProductDeliveryTarget? target,
+  }) {
+    final result = create();
+    if (requestUuid != null) result.requestUuid = requestUuid;
+    if (seller != null) result.seller = seller;
+    if (source != null) result.source = source;
+    if (item != null) result.item = item;
+    if (target != null) result.target = target;
+    return result;
+  }
+
+  SubmitProductDeliveryReq._();
+
+  factory SubmitProductDeliveryReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SubmitProductDeliveryReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SubmitProductDeliveryReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'requestUuid')
+    ..aOS(2, _omitFieldNames ? '' : 'seller')
+    ..aOM<TerminalOrderRef>(3, _omitFieldNames ? '' : 'source',
+        subBuilder: TerminalOrderRef.create)
+    ..aOM<ProductDeliveryInput>(4, _omitFieldNames ? '' : 'item',
+        subBuilder: ProductDeliveryInput.create)
+    ..aOM<ProductDeliveryTarget>(5, _omitFieldNames ? '' : 'target',
+        subBuilder: ProductDeliveryTarget.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SubmitProductDeliveryReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SubmitProductDeliveryReq copyWith(
+          void Function(SubmitProductDeliveryReq) updates) =>
+      super.copyWith((message) => updates(message as SubmitProductDeliveryReq))
+          as SubmitProductDeliveryReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SubmitProductDeliveryReq create() => SubmitProductDeliveryReq._();
+  @$core.override
+  SubmitProductDeliveryReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static SubmitProductDeliveryReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SubmitProductDeliveryReq>(create);
+  static SubmitProductDeliveryReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get requestUuid => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set requestUuid($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRequestUuid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRequestUuid() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get seller => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set seller($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSeller() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSeller() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  TerminalOrderRef get source => $_getN(2);
+  @$pb.TagNumber(3)
+  set source(TerminalOrderRef value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSource() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSource() => $_clearField(3);
+  @$pb.TagNumber(3)
+  TerminalOrderRef ensureSource() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  ProductDeliveryInput get item => $_getN(3);
+  @$pb.TagNumber(4)
+  set item(ProductDeliveryInput value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasItem() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearItem() => $_clearField(4);
+  @$pb.TagNumber(4)
+  ProductDeliveryInput ensureItem() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  ProductDeliveryTarget get target => $_getN(4);
+  @$pb.TagNumber(5)
+  set target(ProductDeliveryTarget value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasTarget() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearTarget() => $_clearField(5);
+  @$pb.TagNumber(5)
+  ProductDeliveryTarget ensureTarget() => $_ensure(4);
+}
+
+class ProductDeliveryLine extends $pb.GeneratedMessage {
+  factory ProductDeliveryLine({
+    $0.Product? product,
+    $fixnum.Int64? quantity,
+    $0.ProductFulfillmentSpec? fulfillment,
+    ProductDetail? detail,
+    $fixnum.Int64? supplyRevision,
+  }) {
+    final result = create();
+    if (product != null) result.product = product;
+    if (quantity != null) result.quantity = quantity;
+    if (fulfillment != null) result.fulfillment = fulfillment;
+    if (detail != null) result.detail = detail;
+    if (supplyRevision != null) result.supplyRevision = supplyRevision;
+    return result;
+  }
+
+  ProductDeliveryLine._();
+
+  factory ProductDeliveryLine.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ProductDeliveryLine.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ProductDeliveryLine',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOM<$0.Product>(1, _omitFieldNames ? '' : 'product',
+        subBuilder: $0.Product.create)
+    ..aInt64(2, _omitFieldNames ? '' : 'quantity')
+    ..aOM<$0.ProductFulfillmentSpec>(3, _omitFieldNames ? '' : 'fulfillment',
+        subBuilder: $0.ProductFulfillmentSpec.create)
+    ..aOM<ProductDetail>(4, _omitFieldNames ? '' : 'detail',
+        subBuilder: ProductDetail.create)
+    ..aInt64(5, _omitFieldNames ? '' : 'supplyRevision')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductDeliveryLine clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductDeliveryLine copyWith(void Function(ProductDeliveryLine) updates) =>
+      super.copyWith((message) => updates(message as ProductDeliveryLine))
+          as ProductDeliveryLine;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ProductDeliveryLine create() => ProductDeliveryLine._();
+  @$core.override
+  ProductDeliveryLine createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ProductDeliveryLine getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ProductDeliveryLine>(create);
+  static ProductDeliveryLine? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.Product get product => $_getN(0);
+  @$pb.TagNumber(1)
+  set product($0.Product value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasProduct() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearProduct() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.Product ensureProduct() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get quantity => $_getI64(1);
+  @$pb.TagNumber(2)
+  set quantity($fixnum.Int64 value) => $_setInt64(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasQuantity() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearQuantity() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $0.ProductFulfillmentSpec get fulfillment => $_getN(2);
+  @$pb.TagNumber(3)
+  set fulfillment($0.ProductFulfillmentSpec value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasFulfillment() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearFulfillment() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $0.ProductFulfillmentSpec ensureFulfillment() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  ProductDetail get detail => $_getN(3);
+  @$pb.TagNumber(4)
+  set detail(ProductDetail value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasDetail() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearDetail() => $_clearField(4);
+  @$pb.TagNumber(4)
+  ProductDetail ensureDetail() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  $fixnum.Int64 get supplyRevision => $_getI64(4);
+  @$pb.TagNumber(5)
+  set supplyRevision($fixnum.Int64 value) => $_setInt64(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasSupplyRevision() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearSupplyRevision() => $_clearField(5);
+}
+
+class ProductDeliveryOrder extends $pb.GeneratedMessage {
+  factory ProductDeliveryOrder({
+    $core.String? id,
+    $3.Entity? seller,
+    TerminalOrderRef? source,
+    ProductDeliveryLine? line,
+    ProductDeliveryTarget? target,
+    ProductDeliveryStatus? status,
+    ProductFulfillment? fulfillment,
+    $fixnum.Int64? createdAt,
+    $fixnum.Int64? revision,
+  }) {
+    final result = create();
+    if (id != null) result.id = id;
+    if (seller != null) result.seller = seller;
+    if (source != null) result.source = source;
+    if (line != null) result.line = line;
+    if (target != null) result.target = target;
+    if (status != null) result.status = status;
+    if (fulfillment != null) result.fulfillment = fulfillment;
+    if (createdAt != null) result.createdAt = createdAt;
+    if (revision != null) result.revision = revision;
+    return result;
+  }
+
+  ProductDeliveryOrder._();
+
+  factory ProductDeliveryOrder.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ProductDeliveryOrder.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ProductDeliveryOrder',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'id')
+    ..aOM<$3.Entity>(2, _omitFieldNames ? '' : 'seller',
+        subBuilder: $3.Entity.create)
+    ..aOM<TerminalOrderRef>(3, _omitFieldNames ? '' : 'source',
+        subBuilder: TerminalOrderRef.create)
+    ..aOM<ProductDeliveryLine>(4, _omitFieldNames ? '' : 'line',
+        subBuilder: ProductDeliveryLine.create)
+    ..aOM<ProductDeliveryTarget>(5, _omitFieldNames ? '' : 'target',
+        subBuilder: ProductDeliveryTarget.create)
+    ..aE<ProductDeliveryStatus>(6, _omitFieldNames ? '' : 'status',
+        enumValues: ProductDeliveryStatus.values)
+    ..aOM<ProductFulfillment>(7, _omitFieldNames ? '' : 'fulfillment',
+        subBuilder: ProductFulfillment.create)
+    ..aInt64(8, _omitFieldNames ? '' : 'createdAt')
+    ..aInt64(9, _omitFieldNames ? '' : 'revision')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductDeliveryOrder clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductDeliveryOrder copyWith(void Function(ProductDeliveryOrder) updates) =>
+      super.copyWith((message) => updates(message as ProductDeliveryOrder))
+          as ProductDeliveryOrder;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ProductDeliveryOrder create() => ProductDeliveryOrder._();
+  @$core.override
+  ProductDeliveryOrder createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ProductDeliveryOrder getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ProductDeliveryOrder>(create);
+  static ProductDeliveryOrder? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get id => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set id($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $3.Entity get seller => $_getN(1);
+  @$pb.TagNumber(2)
+  set seller($3.Entity value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSeller() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSeller() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $3.Entity ensureSeller() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  TerminalOrderRef get source => $_getN(2);
+  @$pb.TagNumber(3)
+  set source(TerminalOrderRef value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSource() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSource() => $_clearField(3);
+  @$pb.TagNumber(3)
+  TerminalOrderRef ensureSource() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  ProductDeliveryLine get line => $_getN(3);
+  @$pb.TagNumber(4)
+  set line(ProductDeliveryLine value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasLine() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearLine() => $_clearField(4);
+  @$pb.TagNumber(4)
+  ProductDeliveryLine ensureLine() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  ProductDeliveryTarget get target => $_getN(4);
+  @$pb.TagNumber(5)
+  set target(ProductDeliveryTarget value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasTarget() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearTarget() => $_clearField(5);
+  @$pb.TagNumber(5)
+  ProductDeliveryTarget ensureTarget() => $_ensure(4);
+
+  @$pb.TagNumber(6)
+  ProductDeliveryStatus get status => $_getN(5);
+  @$pb.TagNumber(6)
+  set status(ProductDeliveryStatus value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasStatus() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearStatus() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  ProductFulfillment get fulfillment => $_getN(6);
+  @$pb.TagNumber(7)
+  set fulfillment(ProductFulfillment value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasFulfillment() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearFulfillment() => $_clearField(7);
+  @$pb.TagNumber(7)
+  ProductFulfillment ensureFulfillment() => $_ensure(6);
+
+  @$pb.TagNumber(8)
+  $fixnum.Int64 get createdAt => $_getI64(7);
+  @$pb.TagNumber(8)
+  set createdAt($fixnum.Int64 value) => $_setInt64(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasCreatedAt() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearCreatedAt() => $_clearField(8);
+
+  @$pb.TagNumber(9)
+  $fixnum.Int64 get revision => $_getI64(8);
+  @$pb.TagNumber(9)
+  set revision($fixnum.Int64 value) => $_setInt64(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasRevision() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearRevision() => $_clearField(9);
+}
+
+class ProductDeliveryQuery extends $pb.GeneratedMessage {
+  factory ProductDeliveryQuery({
+    $core.String? id,
+  }) {
+    final result = create();
+    if (id != null) result.id = id;
+    return result;
+  }
+
+  ProductDeliveryQuery._();
+
+  factory ProductDeliveryQuery.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ProductDeliveryQuery.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ProductDeliveryQuery',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'id')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductDeliveryQuery clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProductDeliveryQuery copyWith(void Function(ProductDeliveryQuery) updates) =>
+      super.copyWith((message) => updates(message as ProductDeliveryQuery))
+          as ProductDeliveryQuery;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ProductDeliveryQuery create() => ProductDeliveryQuery._();
+  @$core.override
+  ProductDeliveryQuery createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ProductDeliveryQuery getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ProductDeliveryQuery>(create);
+  static ProductDeliveryQuery? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get id => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set id($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+}
+
+class ListProductDeliveriesResp extends $pb.GeneratedMessage {
+  factory ListProductDeliveriesResp({
+    $core.Iterable<ProductDeliveryOrder>? list,
+    $fixnum.Int64? total,
+  }) {
+    final result = create();
+    if (list != null) result.list.addAll(list);
+    if (total != null) result.total = total;
+    return result;
+  }
+
+  ListProductDeliveriesResp._();
+
+  factory ListProductDeliveriesResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListProductDeliveriesResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListProductDeliveriesResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..pPM<ProductDeliveryOrder>(1, _omitFieldNames ? '' : 'list',
+        subBuilder: ProductDeliveryOrder.create)
+    ..aInt64(2, _omitFieldNames ? '' : 'total')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListProductDeliveriesResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListProductDeliveriesResp copyWith(
+          void Function(ListProductDeliveriesResp) updates) =>
+      super.copyWith((message) => updates(message as ListProductDeliveriesResp))
+          as ListProductDeliveriesResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListProductDeliveriesResp create() => ListProductDeliveriesResp._();
+  @$core.override
+  ListProductDeliveriesResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ListProductDeliveriesResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListProductDeliveriesResp>(create);
+  static ListProductDeliveriesResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<ProductDeliveryOrder> get list => $_getList(0);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get total => $_getI64(1);
+  @$pb.TagNumber(2)
+  set total($fixnum.Int64 value) => $_setInt64(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasTotal() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearTotal() => $_clearField(2);
 }
 
 const $core.bool _omitFieldNames =

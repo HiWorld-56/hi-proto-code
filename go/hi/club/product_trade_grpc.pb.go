@@ -819,3 +819,301 @@ var ProductTrade_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "hi/club/product_trade.proto",
 }
+
+const (
+	ProductDelivery_Submit_FullMethodName            = "/hi.club.ProductDelivery/Submit"
+	ProductDelivery_Get_FullMethodName               = "/hi.club.ProductDelivery/Get"
+	ProductDelivery_List_FullMethodName              = "/hi.club.ProductDelivery/List"
+	ProductDelivery_Cancel_FullMethodName            = "/hi.club.ProductDelivery/Cancel"
+	ProductDelivery_ReportFulfillment_FullMethodName = "/hi.club.ProductDelivery/ReportFulfillment"
+	ProductDelivery_ListEvents_FullMethodName        = "/hi.club.ProductDelivery/ListEvents"
+)
+
+// ProductDeliveryClient is the client API for ProductDelivery service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 本摊位自有商品的终端销售履约。外部收款归终端系统，不产生机器人间采购或链上自付款。
+// 订单、库存和记录归seller机器人；当前主人仅负责授权操作。
+type ProductDeliveryClient interface {
+	Submit(ctx context.Context, in *SubmitProductDeliveryReq, opts ...grpc.CallOption) (*ProductDeliveryOrder, error)
+	Get(ctx context.Context, in *ProductDeliveryQuery, opts ...grpc.CallOption) (*ProductDeliveryOrder, error)
+	List(ctx context.Context, in *ProductStallQuery, opts ...grpc.CallOption) (*ListProductDeliveriesResp, error)
+	// 供应链报告停止履约(FAILED)且尚未出库后才允许取消并释放库存。
+	Cancel(ctx context.Context, in *ProductDeliveryQuery, opts ...grpc.CallOption) (*ProductDeliveryOrder, error)
+	ReportFulfillment(ctx context.Context, in *ProductFulfillmentReport, opts ...grpc.CallOption) (*ProductDeliveryOrder, error)
+	ListEvents(ctx context.Context, in *ProductDeliveryQuery, opts ...grpc.CallOption) (*ListProductOrderEventsResp, error)
+}
+
+type productDeliveryClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewProductDeliveryClient(cc grpc.ClientConnInterface) ProductDeliveryClient {
+	return &productDeliveryClient{cc}
+}
+
+func (c *productDeliveryClient) Submit(ctx context.Context, in *SubmitProductDeliveryReq, opts ...grpc.CallOption) (*ProductDeliveryOrder, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ProductDeliveryOrder)
+	err := c.cc.Invoke(ctx, ProductDelivery_Submit_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *productDeliveryClient) Get(ctx context.Context, in *ProductDeliveryQuery, opts ...grpc.CallOption) (*ProductDeliveryOrder, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ProductDeliveryOrder)
+	err := c.cc.Invoke(ctx, ProductDelivery_Get_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *productDeliveryClient) List(ctx context.Context, in *ProductStallQuery, opts ...grpc.CallOption) (*ListProductDeliveriesResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListProductDeliveriesResp)
+	err := c.cc.Invoke(ctx, ProductDelivery_List_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *productDeliveryClient) Cancel(ctx context.Context, in *ProductDeliveryQuery, opts ...grpc.CallOption) (*ProductDeliveryOrder, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ProductDeliveryOrder)
+	err := c.cc.Invoke(ctx, ProductDelivery_Cancel_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *productDeliveryClient) ReportFulfillment(ctx context.Context, in *ProductFulfillmentReport, opts ...grpc.CallOption) (*ProductDeliveryOrder, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ProductDeliveryOrder)
+	err := c.cc.Invoke(ctx, ProductDelivery_ReportFulfillment_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *productDeliveryClient) ListEvents(ctx context.Context, in *ProductDeliveryQuery, opts ...grpc.CallOption) (*ListProductOrderEventsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListProductOrderEventsResp)
+	err := c.cc.Invoke(ctx, ProductDelivery_ListEvents_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ProductDeliveryServer is the server API for ProductDelivery service.
+// All implementations should embed UnimplementedProductDeliveryServer
+// for forward compatibility.
+//
+// 本摊位自有商品的终端销售履约。外部收款归终端系统，不产生机器人间采购或链上自付款。
+// 订单、库存和记录归seller机器人；当前主人仅负责授权操作。
+type ProductDeliveryServer interface {
+	Submit(context.Context, *SubmitProductDeliveryReq) (*ProductDeliveryOrder, error)
+	Get(context.Context, *ProductDeliveryQuery) (*ProductDeliveryOrder, error)
+	List(context.Context, *ProductStallQuery) (*ListProductDeliveriesResp, error)
+	// 供应链报告停止履约(FAILED)且尚未出库后才允许取消并释放库存。
+	Cancel(context.Context, *ProductDeliveryQuery) (*ProductDeliveryOrder, error)
+	ReportFulfillment(context.Context, *ProductFulfillmentReport) (*ProductDeliveryOrder, error)
+	ListEvents(context.Context, *ProductDeliveryQuery) (*ListProductOrderEventsResp, error)
+}
+
+// UnimplementedProductDeliveryServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedProductDeliveryServer struct{}
+
+func (UnimplementedProductDeliveryServer) Submit(context.Context, *SubmitProductDeliveryReq) (*ProductDeliveryOrder, error) {
+	return nil, status.Error(codes.Unimplemented, "method Submit not implemented")
+}
+func (UnimplementedProductDeliveryServer) Get(context.Context, *ProductDeliveryQuery) (*ProductDeliveryOrder, error) {
+	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
+}
+func (UnimplementedProductDeliveryServer) List(context.Context, *ProductStallQuery) (*ListProductDeliveriesResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method List not implemented")
+}
+func (UnimplementedProductDeliveryServer) Cancel(context.Context, *ProductDeliveryQuery) (*ProductDeliveryOrder, error) {
+	return nil, status.Error(codes.Unimplemented, "method Cancel not implemented")
+}
+func (UnimplementedProductDeliveryServer) ReportFulfillment(context.Context, *ProductFulfillmentReport) (*ProductDeliveryOrder, error) {
+	return nil, status.Error(codes.Unimplemented, "method ReportFulfillment not implemented")
+}
+func (UnimplementedProductDeliveryServer) ListEvents(context.Context, *ProductDeliveryQuery) (*ListProductOrderEventsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListEvents not implemented")
+}
+func (UnimplementedProductDeliveryServer) testEmbeddedByValue() {}
+
+// UnsafeProductDeliveryServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ProductDeliveryServer will
+// result in compilation errors.
+type UnsafeProductDeliveryServer interface {
+	mustEmbedUnimplementedProductDeliveryServer()
+}
+
+func RegisterProductDeliveryServer(s grpc.ServiceRegistrar, srv ProductDeliveryServer) {
+	// If the following call panics, it indicates UnimplementedProductDeliveryServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&ProductDelivery_ServiceDesc, srv)
+}
+
+func _ProductDelivery_Submit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SubmitProductDeliveryReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductDeliveryServer).Submit(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductDelivery_Submit_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductDeliveryServer).Submit(ctx, req.(*SubmitProductDeliveryReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProductDelivery_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProductDeliveryQuery)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductDeliveryServer).Get(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductDelivery_Get_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductDeliveryServer).Get(ctx, req.(*ProductDeliveryQuery))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProductDelivery_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProductStallQuery)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductDeliveryServer).List(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductDelivery_List_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductDeliveryServer).List(ctx, req.(*ProductStallQuery))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProductDelivery_Cancel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProductDeliveryQuery)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductDeliveryServer).Cancel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductDelivery_Cancel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductDeliveryServer).Cancel(ctx, req.(*ProductDeliveryQuery))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProductDelivery_ReportFulfillment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProductFulfillmentReport)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductDeliveryServer).ReportFulfillment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductDelivery_ReportFulfillment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductDeliveryServer).ReportFulfillment(ctx, req.(*ProductFulfillmentReport))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProductDelivery_ListEvents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProductDeliveryQuery)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductDeliveryServer).ListEvents(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductDelivery_ListEvents_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductDeliveryServer).ListEvents(ctx, req.(*ProductDeliveryQuery))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// ProductDelivery_ServiceDesc is the grpc.ServiceDesc for ProductDelivery service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var ProductDelivery_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hi.club.ProductDelivery",
+	HandlerType: (*ProductDeliveryServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Submit",
+			Handler:    _ProductDelivery_Submit_Handler,
+		},
+		{
+			MethodName: "Get",
+			Handler:    _ProductDelivery_Get_Handler,
+		},
+		{
+			MethodName: "List",
+			Handler:    _ProductDelivery_List_Handler,
+		},
+		{
+			MethodName: "Cancel",
+			Handler:    _ProductDelivery_Cancel_Handler,
+		},
+		{
+			MethodName: "ReportFulfillment",
+			Handler:    _ProductDelivery_ReportFulfillment_Handler,
+		},
+		{
+			MethodName: "ListEvents",
+			Handler:    _ProductDelivery_ListEvents_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "hi/club/product_trade.proto",
+}

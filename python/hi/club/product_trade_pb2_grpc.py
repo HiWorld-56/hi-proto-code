@@ -785,3 +785,297 @@ class ProductTrade(object):
             timeout,
             metadata,
             _registered_method=True)
+
+
+class ProductDeliveryStub(object):
+    """本摊位自有商品的终端销售履约。外部收款归终端系统，不产生机器人间采购或链上自付款。
+    订单、库存和记录归seller机器人；当前主人仅负责授权操作。
+    """
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.Submit = channel.unary_unary(
+                '/hi.club.ProductDelivery/Submit',
+                request_serializer=hi_dot_club_dot_product__trade__pb2.SubmitProductDeliveryReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_product__trade__pb2.ProductDeliveryOrder.FromString,
+                _registered_method=True)
+        self.Get = channel.unary_unary(
+                '/hi.club.ProductDelivery/Get',
+                request_serializer=hi_dot_club_dot_product__trade__pb2.ProductDeliveryQuery.SerializeToString,
+                response_deserializer=hi_dot_club_dot_product__trade__pb2.ProductDeliveryOrder.FromString,
+                _registered_method=True)
+        self.List = channel.unary_unary(
+                '/hi.club.ProductDelivery/List',
+                request_serializer=hi_dot_club_dot_product__trade__pb2.ProductStallQuery.SerializeToString,
+                response_deserializer=hi_dot_club_dot_product__trade__pb2.ListProductDeliveriesResp.FromString,
+                _registered_method=True)
+        self.Cancel = channel.unary_unary(
+                '/hi.club.ProductDelivery/Cancel',
+                request_serializer=hi_dot_club_dot_product__trade__pb2.ProductDeliveryQuery.SerializeToString,
+                response_deserializer=hi_dot_club_dot_product__trade__pb2.ProductDeliveryOrder.FromString,
+                _registered_method=True)
+        self.ReportFulfillment = channel.unary_unary(
+                '/hi.club.ProductDelivery/ReportFulfillment',
+                request_serializer=hi_dot_club_dot_product__trade__pb2.ProductFulfillmentReport.SerializeToString,
+                response_deserializer=hi_dot_club_dot_product__trade__pb2.ProductDeliveryOrder.FromString,
+                _registered_method=True)
+        self.ListEvents = channel.unary_unary(
+                '/hi.club.ProductDelivery/ListEvents',
+                request_serializer=hi_dot_club_dot_product__trade__pb2.ProductDeliveryQuery.SerializeToString,
+                response_deserializer=hi_dot_club_dot_product__trade__pb2.ListProductOrderEventsResp.FromString,
+                _registered_method=True)
+
+
+class ProductDeliveryServicer(object):
+    """本摊位自有商品的终端销售履约。外部收款归终端系统，不产生机器人间采购或链上自付款。
+    订单、库存和记录归seller机器人；当前主人仅负责授权操作。
+    """
+
+    def Submit(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def Get(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def List(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def Cancel(self, request, context):
+        """供应链报告停止履约(FAILED)且尚未出库后才允许取消并释放库存。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ReportFulfillment(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListEvents(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_ProductDeliveryServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'Submit': grpc.unary_unary_rpc_method_handler(
+                    servicer.Submit,
+                    request_deserializer=hi_dot_club_dot_product__trade__pb2.SubmitProductDeliveryReq.FromString,
+                    response_serializer=hi_dot_club_dot_product__trade__pb2.ProductDeliveryOrder.SerializeToString,
+            ),
+            'Get': grpc.unary_unary_rpc_method_handler(
+                    servicer.Get,
+                    request_deserializer=hi_dot_club_dot_product__trade__pb2.ProductDeliveryQuery.FromString,
+                    response_serializer=hi_dot_club_dot_product__trade__pb2.ProductDeliveryOrder.SerializeToString,
+            ),
+            'List': grpc.unary_unary_rpc_method_handler(
+                    servicer.List,
+                    request_deserializer=hi_dot_club_dot_product__trade__pb2.ProductStallQuery.FromString,
+                    response_serializer=hi_dot_club_dot_product__trade__pb2.ListProductDeliveriesResp.SerializeToString,
+            ),
+            'Cancel': grpc.unary_unary_rpc_method_handler(
+                    servicer.Cancel,
+                    request_deserializer=hi_dot_club_dot_product__trade__pb2.ProductDeliveryQuery.FromString,
+                    response_serializer=hi_dot_club_dot_product__trade__pb2.ProductDeliveryOrder.SerializeToString,
+            ),
+            'ReportFulfillment': grpc.unary_unary_rpc_method_handler(
+                    servicer.ReportFulfillment,
+                    request_deserializer=hi_dot_club_dot_product__trade__pb2.ProductFulfillmentReport.FromString,
+                    response_serializer=hi_dot_club_dot_product__trade__pb2.ProductDeliveryOrder.SerializeToString,
+            ),
+            'ListEvents': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListEvents,
+                    request_deserializer=hi_dot_club_dot_product__trade__pb2.ProductDeliveryQuery.FromString,
+                    response_serializer=hi_dot_club_dot_product__trade__pb2.ListProductOrderEventsResp.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'hi.club.ProductDelivery', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('hi.club.ProductDelivery', rpc_method_handlers)
+
+
+ # This class is part of an EXPERIMENTAL API.
+class ProductDelivery(object):
+    """本摊位自有商品的终端销售履约。外部收款归终端系统，不产生机器人间采购或链上自付款。
+    订单、库存和记录归seller机器人；当前主人仅负责授权操作。
+    """
+
+    @staticmethod
+    def Submit(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.ProductDelivery/Submit',
+            hi_dot_club_dot_product__trade__pb2.SubmitProductDeliveryReq.SerializeToString,
+            hi_dot_club_dot_product__trade__pb2.ProductDeliveryOrder.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def Get(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.ProductDelivery/Get',
+            hi_dot_club_dot_product__trade__pb2.ProductDeliveryQuery.SerializeToString,
+            hi_dot_club_dot_product__trade__pb2.ProductDeliveryOrder.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def List(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.ProductDelivery/List',
+            hi_dot_club_dot_product__trade__pb2.ProductStallQuery.SerializeToString,
+            hi_dot_club_dot_product__trade__pb2.ListProductDeliveriesResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def Cancel(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.ProductDelivery/Cancel',
+            hi_dot_club_dot_product__trade__pb2.ProductDeliveryQuery.SerializeToString,
+            hi_dot_club_dot_product__trade__pb2.ProductDeliveryOrder.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ReportFulfillment(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.ProductDelivery/ReportFulfillment',
+            hi_dot_club_dot_product__trade__pb2.ProductFulfillmentReport.SerializeToString,
+            hi_dot_club_dot_product__trade__pb2.ProductDeliveryOrder.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ListEvents(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.ProductDelivery/ListEvents',
+            hi_dot_club_dot_product__trade__pb2.ProductDeliveryQuery.SerializeToString,
+            hi_dot_club_dot_product__trade__pb2.ListProductOrderEventsResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)

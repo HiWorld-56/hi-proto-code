@@ -80,6 +80,25 @@ final $typed_data.Uint8List productFulfillmentStatusDescriptor = $convert.base64
     'ZJTExNRU5UX1NUQVRVU19TSElQUEVEEAMSJwojUFJPRFVDVF9GVUxGSUxMTUVOVF9TVEFUVVNf'
     'Q09NUExFVEUQBBIlCiFQUk9EVUNUX0ZVTEZJTExNRU5UX1NUQVRVU19GQUlMRUQQBQ==');
 
+@$core.Deprecated('Use productDeliveryStatusDescriptor instead')
+const ProductDeliveryStatus$json = {
+  '1': 'ProductDeliveryStatus',
+  '2': [
+    {'1': 'PRODUCT_DELIVERY_STATUS_UNSPECIFIED', '2': 0},
+    {'1': 'PRODUCT_DELIVERY_STATUS_FULFILLMENT', '2': 1},
+    {'1': 'PRODUCT_DELIVERY_STATUS_COMPLETE', '2': 2},
+    {'1': 'PRODUCT_DELIVERY_STATUS_CANCELLED', '2': 3},
+    {'1': 'PRODUCT_DELIVERY_STATUS_REVIEW', '2': 4},
+  ],
+};
+
+/// Descriptor for `ProductDeliveryStatus`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List productDeliveryStatusDescriptor = $convert.base64Decode(
+    'ChVQcm9kdWN0RGVsaXZlcnlTdGF0dXMSJwojUFJPRFVDVF9ERUxJVkVSWV9TVEFUVVNfVU5TUE'
+    'VDSUZJRUQQABInCiNQUk9EVUNUX0RFTElWRVJZX1NUQVRVU19GVUxGSUxMTUVOVBABEiQKIFBS'
+    'T0RVQ1RfREVMSVZFUllfU1RBVFVTX0NPTVBMRVRFEAISJQohUFJPRFVDVF9ERUxJVkVSWV9TVE'
+    'FUVVNfQ0FOQ0VMTEVEEAMSIgoeUFJPRFVDVF9ERUxJVkVSWV9TVEFUVVNfUkVWSUVXEAQ=');
+
 @$core.Deprecated('Use productStallQueryDescriptor instead')
 const ProductStallQuery$json = {
   '1': 'ProductStallQuery',
@@ -1749,6 +1768,24 @@ const SupplierRequest$json = {
       '9': 0,
       '10': 'getFulfillment'
     },
+    {
+      '1': 'fulfill_delivery',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductDeliveryOrder',
+      '9': 0,
+      '10': 'fulfillDelivery'
+    },
+    {
+      '1': 'get_delivery',
+      '3': 8,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductDeliveryQuery',
+      '9': 0,
+      '10': 'getDelivery'
+    },
   ],
   '8': [
     {'1': 'operation'},
@@ -1764,8 +1801,10 @@ final $typed_data.Uint8List supplierRequestDescriptor = $convert.base64Decode(
     'GAMgASgLMhAuaGkuY2x1Yi5Qcm9kdWN0SABSEXByb2R1Y3RSZWdpc3RlcmVkEkQKDWZ1bGZpbG'
     'xfb3JkZXIYBSABKAsyHS5oaS5jbHViLlByb2R1Y3RQdXJjaGFzZU9yZGVySABSDGZ1bGZpbGxP'
     'cmRlchJICg9nZXRfZnVsZmlsbG1lbnQYBiABKAsyHS5oaS5jbHViLlByb2R1Y3RQdXJjaGFzZV'
-    'F1ZXJ5SABSDmdldEZ1bGZpbGxtZW50QgsKCW9wZXJhdGlvbkINCgtfcmVxdWVzdF9pZEINCgtf'
-    'Y3JlYXRlZF9hdA==');
+    'F1ZXJ5SABSDmdldEZ1bGZpbGxtZW50EkoKEGZ1bGZpbGxfZGVsaXZlcnkYByABKAsyHS5oaS5j'
+    'bHViLlByb2R1Y3REZWxpdmVyeU9yZGVySABSD2Z1bGZpbGxEZWxpdmVyeRJCCgxnZXRfZGVsaX'
+    'ZlcnkYCCABKAsyHS5oaS5jbHViLlByb2R1Y3REZWxpdmVyeVF1ZXJ5SABSC2dldERlbGl2ZXJ5'
+    'QgsKCW9wZXJhdGlvbkINCgtfcmVxdWVzdF9pZEINCgtfY3JlYXRlZF9hdA==');
 
 @$core.Deprecated('Use supplierResponseDescriptor instead')
 const SupplierResponse$json = {
@@ -1845,3 +1884,349 @@ final $typed_data.Uint8List productOrderRecordsReqDescriptor = $convert.base64De
     'ChZQcm9kdWN0T3JkZXJSZWNvcmRzUmVxEioKCG9yZGVyX2lkGAEgASgJQgq6SAfIAQFyAhABSA'
     'BSB29yZGVySWSIAQESLgoKcGFnaW5hdGlvbhgCIAEoCzIOLmhpLlBhZ2luYXRpb25SCnBhZ2lu'
     'YXRpb25CCwoJX29yZGVyX2lk');
+
+@$core.Deprecated('Use productDeliveryInputDescriptor instead')
+const ProductDeliveryInput$json = {
+  '1': 'ProductDeliveryInput',
+  '2': [
+    {
+      '1': 'product_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'productId',
+      '17': true
+    },
+    {
+      '1': 'quantity',
+      '3': 2,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 1,
+      '10': 'quantity',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_product_id'},
+    {'1': '_quantity'},
+  ],
+};
+
+/// Descriptor for `ProductDeliveryInput`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List productDeliveryInputDescriptor = $convert.base64Decode(
+    'ChRQcm9kdWN0RGVsaXZlcnlJbnB1dBIuCgpwcm9kdWN0X2lkGAEgASgJQgq6SAfIAQFyAhABSA'
+    'BSCXByb2R1Y3RJZIgBARIxCghxdWFudGl0eRgCIAEoA0IQukgNyAEBIggYgJTr3AMgAEgBUghx'
+    'dWFudGl0eYgBAUINCgtfcHJvZHVjdF9pZEILCglfcXVhbnRpdHk=');
+
+@$core.Deprecated('Use submitProductDeliveryReqDescriptor instead')
+const SubmitProductDeliveryReq$json = {
+  '1': 'SubmitProductDeliveryReq',
+  '2': [
+    {
+      '1': 'request_uuid',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'requestUuid',
+      '17': true
+    },
+    {
+      '1': 'seller',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 1,
+      '10': 'seller',
+      '17': true
+    },
+    {
+      '1': 'source',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.TerminalOrderRef',
+      '8': {},
+      '10': 'source'
+    },
+    {
+      '1': 'item',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductDeliveryInput',
+      '8': {},
+      '10': 'item'
+    },
+    {
+      '1': 'target',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductDeliveryTarget',
+      '8': {},
+      '10': 'target'
+    },
+  ],
+  '8': [
+    {'1': '_request_uuid'},
+    {'1': '_seller'},
+  ],
+};
+
+/// Descriptor for `SubmitProductDeliveryReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List submitProductDeliveryReqDescriptor = $convert.base64Decode(
+    'ChhTdWJtaXRQcm9kdWN0RGVsaXZlcnlSZXESMwoMcmVxdWVzdF91dWlkGAEgASgJQgu6SAjIAQ'
+    'FyA7ABAUgAUgtyZXF1ZXN0VXVpZIgBARInCgZzZWxsZXIYAiABKAlCCrpIB8gBAXICEAFIAVIG'
+    'c2VsbGVyiAEBEjkKBnNvdXJjZRgDIAEoCzIZLmhpLmNsdWIuVGVybWluYWxPcmRlclJlZkIGuk'
+    'gDyAEBUgZzb3VyY2USOQoEaXRlbRgEIAEoCzIdLmhpLmNsdWIuUHJvZHVjdERlbGl2ZXJ5SW5w'
+    'dXRCBrpIA8gBAVIEaXRlbRI+CgZ0YXJnZXQYBSABKAsyHi5oaS5jbHViLlByb2R1Y3REZWxpdm'
+    'VyeVRhcmdldEIGukgDyAEBUgZ0YXJnZXRCDwoNX3JlcXVlc3RfdXVpZEIJCgdfc2VsbGVy');
+
+@$core.Deprecated('Use productDeliveryLineDescriptor instead')
+const ProductDeliveryLine$json = {
+  '1': 'ProductDeliveryLine',
+  '2': [
+    {
+      '1': 'product',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.Product',
+      '8': {},
+      '10': 'product'
+    },
+    {
+      '1': 'quantity',
+      '3': 2,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 0,
+      '10': 'quantity',
+      '17': true
+    },
+    {
+      '1': 'fulfillment',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductFulfillmentSpec',
+      '8': {},
+      '10': 'fulfillment'
+    },
+    {
+      '1': 'detail',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductDetail',
+      '8': {},
+      '10': 'detail'
+    },
+    {
+      '1': 'supply_revision',
+      '3': 5,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 1,
+      '10': 'supplyRevision',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_quantity'},
+    {'1': '_supply_revision'},
+  ],
+};
+
+/// Descriptor for `ProductDeliveryLine`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List productDeliveryLineDescriptor = $convert.base64Decode(
+    'ChNQcm9kdWN0RGVsaXZlcnlMaW5lEjAKB3Byb2R1Y3QYASABKAsyEC5oaS5jbHViLlByb2R1Y3'
+    'RCBJC1GAJSB3Byb2R1Y3QSJQoIcXVhbnRpdHkYAiABKANCBJC1GAJIAFIIcXVhbnRpdHmIAQES'
+    'RwoLZnVsZmlsbG1lbnQYAyABKAsyHy5oaS5jbHViLlByb2R1Y3RGdWxmaWxsbWVudFNwZWNCBJ'
+    'C1GAJSC2Z1bGZpbGxtZW50EjQKBmRldGFpbBgEIAEoCzIWLmhpLmNsdWIuUHJvZHVjdERldGFp'
+    'bEIEkLUYAlIGZGV0YWlsEjIKD3N1cHBseV9yZXZpc2lvbhgFIAEoA0IEkLUYAkgBUg5zdXBwbH'
+    'lSZXZpc2lvbogBAToEmLUYAkILCglfcXVhbnRpdHlCEgoQX3N1cHBseV9yZXZpc2lvbg==');
+
+@$core.Deprecated('Use productDeliveryOrderDescriptor instead')
+const ProductDeliveryOrder$json = {
+  '1': 'ProductDeliveryOrder',
+  '2': [
+    {
+      '1': 'id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'id',
+      '17': true
+    },
+    {
+      '1': 'seller',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'seller'
+    },
+    {
+      '1': 'source',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.TerminalOrderRef',
+      '8': {},
+      '10': 'source'
+    },
+    {
+      '1': 'line',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductDeliveryLine',
+      '8': {},
+      '10': 'line'
+    },
+    {
+      '1': 'target',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductDeliveryTarget',
+      '8': {},
+      '10': 'target'
+    },
+    {
+      '1': 'status',
+      '3': 6,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.club.ProductDeliveryStatus',
+      '8': {},
+      '9': 1,
+      '10': 'status',
+      '17': true
+    },
+    {
+      '1': 'fulfillment',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.ProductFulfillment',
+      '8': {},
+      '10': 'fulfillment'
+    },
+    {
+      '1': 'created_at',
+      '3': 8,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 2,
+      '10': 'createdAt',
+      '17': true
+    },
+    {
+      '1': 'revision',
+      '3': 9,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 3,
+      '10': 'revision',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_id'},
+    {'1': '_status'},
+    {'1': '_created_at'},
+    {'1': '_revision'},
+  ],
+};
+
+/// Descriptor for `ProductDeliveryOrder`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List productDeliveryOrderDescriptor = $convert.base64Decode(
+    'ChRQcm9kdWN0RGVsaXZlcnlPcmRlchIZCgJpZBgBIAEoCUIEkLUYAkgAUgJpZIgBARIoCgZzZW'
+    'xsZXIYAiABKAsyCi5oaS5FbnRpdHlCBJC1GAJSBnNlbGxlchI3CgZzb3VyY2UYAyABKAsyGS5o'
+    'aS5jbHViLlRlcm1pbmFsT3JkZXJSZWZCBJC1GAJSBnNvdXJjZRI2CgRsaW5lGAQgASgLMhwuaG'
+    'kuY2x1Yi5Qcm9kdWN0RGVsaXZlcnlMaW5lQgSQtRgCUgRsaW5lEjwKBnRhcmdldBgFIAEoCzIe'
+    'LmhpLmNsdWIuUHJvZHVjdERlbGl2ZXJ5VGFyZ2V0QgSQtRgCUgZ0YXJnZXQSQQoGc3RhdHVzGA'
+    'YgASgOMh4uaGkuY2x1Yi5Qcm9kdWN0RGVsaXZlcnlTdGF0dXNCBJC1GAJIAVIGc3RhdHVziAEB'
+    'EkMKC2Z1bGZpbGxtZW50GAcgASgLMhsuaGkuY2x1Yi5Qcm9kdWN0RnVsZmlsbG1lbnRCBJC1GA'
+    'JSC2Z1bGZpbGxtZW50EigKCmNyZWF0ZWRfYXQYCCABKANCBJC1GAJIAlIJY3JlYXRlZEF0iAEB'
+    'EiUKCHJldmlzaW9uGAkgASgDQgSQtRgCSANSCHJldmlzaW9uiAEBOgSYtRgCQgUKA19pZEIJCg'
+    'dfc3RhdHVzQg0KC19jcmVhdGVkX2F0QgsKCV9yZXZpc2lvbg==');
+
+@$core.Deprecated('Use productDeliveryQueryDescriptor instead')
+const ProductDeliveryQuery$json = {
+  '1': 'ProductDeliveryQuery',
+  '2': [
+    {
+      '1': 'id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'id',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_id'},
+  ],
+};
+
+/// Descriptor for `ProductDeliveryQuery`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List productDeliveryQueryDescriptor = $convert.base64Decode(
+    'ChRQcm9kdWN0RGVsaXZlcnlRdWVyeRIfCgJpZBgBIAEoCUIKukgHyAEBcgIQAUgAUgJpZIgBAU'
+    'IFCgNfaWQ=');
+
+@$core.Deprecated('Use listProductDeliveriesRespDescriptor instead')
+const ListProductDeliveriesResp$json = {
+  '1': 'ListProductDeliveriesResp',
+  '2': [
+    {
+      '1': 'list',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.club.ProductDeliveryOrder',
+      '8': {},
+      '10': 'list'
+    },
+    {
+      '1': 'total',
+      '3': 2,
+      '4': 1,
+      '5': 3,
+      '8': {},
+      '9': 0,
+      '10': 'total',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_total'},
+  ],
+};
+
+/// Descriptor for `ListProductDeliveriesResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listProductDeliveriesRespDescriptor = $convert.base64Decode(
+    'ChlMaXN0UHJvZHVjdERlbGl2ZXJpZXNSZXNwEjcKBGxpc3QYASADKAsyHS5oaS5jbHViLlByb2'
+    'R1Y3REZWxpdmVyeU9yZGVyQgSQtRgCUgRsaXN0Eh8KBXRvdGFsGAIgASgDQgSQtRgCSABSBXRv'
+    'dGFsiAEBOgSYtRgCQggKBl90b3RhbA==');

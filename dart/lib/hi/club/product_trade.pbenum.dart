@@ -133,5 +133,39 @@ class ProductFulfillmentStatus extends $pb.ProtobufEnum {
   const ProductFulfillmentStatus._(super.value, super.name);
 }
 
+class ProductDeliveryStatus extends $pb.ProtobufEnum {
+  static const ProductDeliveryStatus PRODUCT_DELIVERY_STATUS_UNSPECIFIED =
+      ProductDeliveryStatus._(
+          0, _omitEnumNames ? '' : 'PRODUCT_DELIVERY_STATUS_UNSPECIFIED');
+  static const ProductDeliveryStatus PRODUCT_DELIVERY_STATUS_FULFILLMENT =
+      ProductDeliveryStatus._(
+          1, _omitEnumNames ? '' : 'PRODUCT_DELIVERY_STATUS_FULFILLMENT');
+  static const ProductDeliveryStatus PRODUCT_DELIVERY_STATUS_COMPLETE =
+      ProductDeliveryStatus._(
+          2, _omitEnumNames ? '' : 'PRODUCT_DELIVERY_STATUS_COMPLETE');
+  static const ProductDeliveryStatus PRODUCT_DELIVERY_STATUS_CANCELLED =
+      ProductDeliveryStatus._(
+          3, _omitEnumNames ? '' : 'PRODUCT_DELIVERY_STATUS_CANCELLED');
+  static const ProductDeliveryStatus PRODUCT_DELIVERY_STATUS_REVIEW =
+      ProductDeliveryStatus._(
+          4, _omitEnumNames ? '' : 'PRODUCT_DELIVERY_STATUS_REVIEW');
+
+  static const $core.List<ProductDeliveryStatus> values =
+      <ProductDeliveryStatus>[
+    PRODUCT_DELIVERY_STATUS_UNSPECIFIED,
+    PRODUCT_DELIVERY_STATUS_FULFILLMENT,
+    PRODUCT_DELIVERY_STATUS_COMPLETE,
+    PRODUCT_DELIVERY_STATUS_CANCELLED,
+    PRODUCT_DELIVERY_STATUS_REVIEW,
+  ];
+
+  static final $core.List<ProductDeliveryStatus?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 4);
+  static ProductDeliveryStatus? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const ProductDeliveryStatus._(super.value, super.name);
+}
+
 const $core.bool _omitEnumNames =
     $core.bool.fromEnvironment('protobuf.omit_enum_names');
