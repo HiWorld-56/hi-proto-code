@@ -1660,6 +1660,87 @@ pub struct AudioStreamProgress {
     #[prost(uint32, optional, tag = "4")]
     pub capacity_samples: ::core::option::Option<u32>,
 }
+/// One accepted microphone turn. BEGIN opens thinking UI without declaring a final answer.
+/// CANCEL revokes queued/playing speech; no replay after module reset.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VoiceTurn {
+    #[prost(string, optional, tag = "1")]
+    pub turn_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "voice_turn::Phase", optional, tag = "2")]
+    pub phase: ::core::option::Option<i32>,
+}
+/// Nested message and enum types in `VoiceTurn`.
+pub mod voice_turn {
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Phase {
+        Unknown = 0,
+        Begin = 1,
+        Cancel = 2,
+    }
+    impl Phase {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Self::Unknown => "PHASE_UNKNOWN",
+                Self::Begin => "PHASE_BEGIN",
+                Self::Cancel => "PHASE_CANCEL",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "PHASE_UNKNOWN" => Some(Self::Unknown),
+                "PHASE_BEGIN" => Some(Self::Begin),
+                "PHASE_CANCEL" => Some(Self::Cancel),
+                _ => None,
+            }
+        }
+    }
+}
+/// Short, preinstalled acknowledgement. Its actual playback still uses PlaybackEvent/Permit.
+/// The same playback_id is used to cancel a pending cue when the final answer is ready.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VoiceCue {
+    #[prost(string, optional, tag = "1")]
+    pub turn_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub playback_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(oneof = "voice_cue::Action", tags = "3, 4")]
+    pub action: ::core::option::Option<voice_cue::Action>,
+}
+/// Nested message and enum types in `VoiceCue`.
+pub mod voice_cue {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Action {
+        #[prost(string, tag = "3")]
+        AssetId(::prost::alloc::string::String),
+        #[prost(message, tag = "4")]
+        Cancel(::pbjson_types::Empty),
+    }
+}
+/// Only successfully decoded local assets are advertised after each Ready session.
+/// This is availability, not a request for brain to download or synthesize in the critical path.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VoiceAssets {
+    #[prost(string, repeated, tag = "1")]
+    pub asset_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub pack_hash: ::core::option::Option<::prost::alloc::string::String>,
+}
 /// 币安接入设置。**密钥不在这里** —— 2026-09-20 起密钥一个字都不出 brain：
 /// face 不再自己连币安，要数据就发 `BinanceRequest`（见下），brain 替它去。
 ///
@@ -1717,7 +1798,7 @@ pub struct BrainToFace {
     pub session: ::core::option::Option<ModuleSession>,
     #[prost(
         oneof = "brain_to_face::Cmd",
-        tags = "33, 34, 43, 42, 32, 31, 100, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21, 22, 24, 25, 26, 29, 30, 40, 41, 27"
+        tags = "44, 45, 33, 34, 43, 42, 32, 31, 100, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21, 22, 24, 25, 26, 29, 30, 40, 41, 27"
     )]
     pub cmd: ::core::option::Option<brain_to_face::Cmd>,
 }
@@ -1725,6 +1806,10 @@ pub struct BrainToFace {
 pub mod brain_to_face {
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Cmd {
+        #[prost(message, tag = "44")]
+        VoiceTurn(super::VoiceTurn),
+        #[prost(message, tag = "45")]
+        VoiceCue(super::VoiceCue),
         #[prost(message, tag = "33")]
         AudioStream(super::AudioStreamPlay),
         #[prost(message, tag = "34")]
@@ -1918,7 +2003,7 @@ pub struct FaceToBrain {
     pub session: ::core::option::Option<ModuleSession>,
     #[prost(
         oneof = "face_to_brain::Cmd",
-        tags = "43, 33, 40, 9, 42, 10, 100, 1, 2, 3, 4, 5, 6, 7, 8"
+        tags = "44, 45, 43, 33, 40, 9, 42, 10, 100, 1, 2, 3, 4, 5, 6, 7, 8"
     )]
     pub cmd: ::core::option::Option<face_to_brain::Cmd>,
 }
@@ -1926,6 +2011,11 @@ pub struct FaceToBrain {
 pub mod face_to_brain {
     #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
     pub enum Cmd {
+        #[prost(message, tag = "44")]
+        VoiceAssets(super::VoiceAssets),
+        /// face sends CANCEL when the local dialogue is closed
+        #[prost(message, tag = "45")]
+        VoiceTurn(super::VoiceTurn),
         #[prost(message, tag = "43")]
         TerminalApplications(super::TerminalApplicationRequest),
         #[prost(message, tag = "33")]

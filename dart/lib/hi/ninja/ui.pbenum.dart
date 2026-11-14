@@ -63,6 +63,28 @@ class Emotion extends $pb.ProtobufEnum {
   const Emotion._(super.value, super.name);
 }
 
+class VoiceTurn_Phase extends $pb.ProtobufEnum {
+  static const VoiceTurn_Phase PHASE_UNKNOWN =
+      VoiceTurn_Phase._(0, _omitEnumNames ? '' : 'PHASE_UNKNOWN');
+  static const VoiceTurn_Phase PHASE_BEGIN =
+      VoiceTurn_Phase._(1, _omitEnumNames ? '' : 'PHASE_BEGIN');
+  static const VoiceTurn_Phase PHASE_CANCEL =
+      VoiceTurn_Phase._(2, _omitEnumNames ? '' : 'PHASE_CANCEL');
+
+  static const $core.List<VoiceTurn_Phase> values = <VoiceTurn_Phase>[
+    PHASE_UNKNOWN,
+    PHASE_BEGIN,
+    PHASE_CANCEL,
+  ];
+
+  static final $core.List<VoiceTurn_Phase?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static VoiceTurn_Phase? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const VoiceTurn_Phase._(super.value, super.name);
+}
+
 class PluginProgress_State extends $pb.ProtobufEnum {
   static const PluginProgress_State STATE_UNKNOWN =
       PluginProgress_State._(0, _omitEnumNames ? '' : 'STATE_UNKNOWN');
