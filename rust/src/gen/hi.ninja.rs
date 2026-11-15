@@ -1719,15 +1719,23 @@ pub struct VoiceCue {
     pub turn_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
     pub playback_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(oneof = "voice_cue::Action", tags = "3, 4")]
+    #[prost(oneof = "voice_cue::Action", tags = "5, 4")]
     pub action: ::core::option::Option<voice_cue::Action>,
 }
 /// Nested message and enum types in `VoiceCue`.
 pub mod voice_cue {
+    /// One ordered utterance, one playback permission and one terminal event.
+    /// The caller chooses all parts; face must not infer titles or add business content.
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+    pub struct Play {
+        #[prost(string, repeated, tag = "1")]
+        pub asset_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    }
     #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
     pub enum Action {
-        #[prost(string, tag = "3")]
-        AssetId(::prost::alloc::string::String),
+        /// No single asset_id: a one-part utterance is also a Play list.
+        #[prost(message, tag = "5")]
+        Play(Play),
         #[prost(message, tag = "4")]
         Cancel(::pbjson_types::Empty),
     }

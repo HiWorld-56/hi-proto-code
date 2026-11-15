@@ -332,7 +332,15 @@ const VoiceCue$json = {
       '10': 'playbackId',
       '17': true
     },
-    {'1': 'asset_id', '3': 3, '4': 1, '5': 9, '8': {}, '9': 0, '10': 'assetId'},
+    {
+      '1': 'play',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.VoiceCue.Play',
+      '9': 0,
+      '10': 'play'
+    },
     {
       '1': 'cancel',
       '3': 4,
@@ -343,20 +351,30 @@ const VoiceCue$json = {
       '10': 'cancel'
     },
   ],
+  '3': [VoiceCue_Play$json],
   '8': [
-    {'1': 'action'},
+    {'1': 'action', '2': {}},
     {'1': '_turn_id'},
     {'1': '_playback_id'},
+  ],
+};
+
+@$core.Deprecated('Use voiceCueDescriptor instead')
+const VoiceCue_Play$json = {
+  '1': 'Play',
+  '2': [
+    {'1': 'asset_ids', '3': 1, '4': 3, '5': 9, '8': {}, '10': 'assetIds'},
   ],
 };
 
 /// Descriptor for `VoiceCue`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List voiceCueDescriptor = $convert.base64Decode(
     'CghWb2ljZUN1ZRIrCgd0dXJuX2lkGAEgASgJQg26SArIAQFyBRABGIABSAFSBnR1cm5JZIgBAR'
-    'IzCgtwbGF5YmFja19pZBgCIAEoCUINukgKyAEBcgUQARiAAUgCUgpwbGF5YmFja0lkiAEBEicK'
-    'CGFzc2V0X2lkGAMgASgJQgq6SAdyBRABGIABSABSB2Fzc2V0SWQSMAoGY2FuY2VsGAQgASgLMh'
-    'YuZ29vZ2xlLnByb3RvYnVmLkVtcHR5SABSBmNhbmNlbEIICgZhY3Rpb25CCgoIX3R1cm5faWRC'
-    'DgoMX3BsYXliYWNrX2lk');
+    'IzCgtwbGF5YmFja19pZBgCIAEoCUINukgKyAEBcgUQARiAAUgCUgpwbGF5YmFja0lkiAEBEi0K'
+    'BHBsYXkYBSABKAsyFy5oaS5uaW5qYS5Wb2ljZUN1ZS5QbGF5SABSBHBsYXkSMAoGY2FuY2VsGA'
+    'QgASgLMhYuZ29vZ2xlLnByb3RvYnVmLkVtcHR5SABSBmNhbmNlbBpLCgRQbGF5EkMKCWFzc2V0'
+    'X2lkcxgBIAMoCUImukgjkgEgCAEQAyIachgyFl5bQS1aYS16MC05Xy1dezEsMTI4fSRSCGFzc2'
+    'V0SWRzQg8KBmFjdGlvbhIFukgCCAFCCgoIX3R1cm5faWRCDgoMX3BsYXliYWNrX2lk');
 
 @$core.Deprecated('Use voiceAssetsDescriptor instead')
 const VoiceAssets$json = {

@@ -903,7 +903,7 @@ type VoiceCue struct {
 	PlaybackId *string                `protobuf:"bytes,2,opt,name=playback_id,json=playbackId,proto3,oneof" json:"playback_id,omitempty"`
 	// Types that are valid to be assigned to Action:
 	//
-	//	*VoiceCue_AssetId
+	//	*VoiceCue_Play_
 	//	*VoiceCue_Cancel
 	Action        isVoiceCue_Action `protobuf_oneof:"action"`
 	unknownFields protoimpl.UnknownFields
@@ -961,13 +961,13 @@ func (x *VoiceCue) GetAction() isVoiceCue_Action {
 	return nil
 }
 
-func (x *VoiceCue) GetAssetId() string {
+func (x *VoiceCue) GetPlay() *VoiceCue_Play {
 	if x != nil {
-		if x, ok := x.Action.(*VoiceCue_AssetId); ok {
-			return x.AssetId
+		if x, ok := x.Action.(*VoiceCue_Play_); ok {
+			return x.Play
 		}
 	}
-	return ""
+	return nil
 }
 
 func (x *VoiceCue) GetCancel() *emptypb.Empty {
@@ -983,15 +983,16 @@ type isVoiceCue_Action interface {
 	isVoiceCue_Action()
 }
 
-type VoiceCue_AssetId struct {
-	AssetId string `protobuf:"bytes,3,opt,name=asset_id,json=assetId,proto3,oneof"`
+type VoiceCue_Play_ struct {
+	// No single asset_id: a one-part utterance is also a Play list.
+	Play *VoiceCue_Play `protobuf:"bytes,5,opt,name=play,proto3,oneof"`
 }
 
 type VoiceCue_Cancel struct {
 	Cancel *emptypb.Empty `protobuf:"bytes,4,opt,name=cancel,proto3,oneof"`
 }
 
-func (*VoiceCue_AssetId) isVoiceCue_Action() {}
+func (*VoiceCue_Play_) isVoiceCue_Action() {}
 
 func (*VoiceCue_Cancel) isVoiceCue_Action() {}
 
@@ -3274,6 +3275,52 @@ func (x *ReceiptNotifications) GetEnabled() bool {
 	return false
 }
 
+// One ordered utterance, one playback permission and one terminal event.
+// The caller chooses all parts; face must not infer titles or add business content.
+type VoiceCue_Play struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AssetIds      []string               `protobuf:"bytes,1,rep,name=asset_ids,json=assetIds,proto3" json:"asset_ids,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *VoiceCue_Play) Reset() {
+	*x = VoiceCue_Play{}
+	mi := &file_hi_ninja_ui_proto_msgTypes[32]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *VoiceCue_Play) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*VoiceCue_Play) ProtoMessage() {}
+
+func (x *VoiceCue_Play) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_ninja_ui_proto_msgTypes[32]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use VoiceCue_Play.ProtoReflect.Descriptor instead.
+func (*VoiceCue_Play) Descriptor() ([]byte, []int) {
+	return file_hi_ninja_ui_proto_rawDescGZIP(), []int{10, 0}
+}
+
+func (x *VoiceCue_Play) GetAssetIds() []string {
+	if x != nil {
+		return x.AssetIds
+	}
+	return nil
+}
+
 var File_hi_ninja_ui_proto protoreflect.FileDescriptor
 
 const file_hi_ninja_ui_proto_rawDesc = "" +
@@ -3339,17 +3386,18 @@ const file_hi_ninja_ui_proto_rawDesc = "" +
 	"\fPHASE_CANCEL\x10\x02B\n" +
 	"\n" +
 	"\b_turn_idB\b\n" +
-	"\x06_phase\"\xed\x01\n" +
+	"\x06_phase\"\xc7\x02\n" +
 	"\bVoiceCue\x12+\n" +
 	"\aturn_id\x18\x01 \x01(\tB\r\xbaH\n" +
 	"\xc8\x01\x01r\x05\x10\x01\x18\x80\x01H\x01R\x06turnId\x88\x01\x01\x123\n" +
 	"\vplayback_id\x18\x02 \x01(\tB\r\xbaH\n" +
 	"\xc8\x01\x01r\x05\x10\x01\x18\x80\x01H\x02R\n" +
-	"playbackId\x88\x01\x01\x12'\n" +
-	"\basset_id\x18\x03 \x01(\tB\n" +
-	"\xbaH\ar\x05\x10\x01\x18\x80\x01H\x00R\aassetId\x120\n" +
-	"\x06cancel\x18\x04 \x01(\v2\x16.google.protobuf.EmptyH\x00R\x06cancelB\b\n" +
-	"\x06actionB\n" +
+	"playbackId\x88\x01\x01\x12-\n" +
+	"\x04play\x18\x05 \x01(\v2\x17.hi.ninja.VoiceCue.PlayH\x00R\x04play\x120\n" +
+	"\x06cancel\x18\x04 \x01(\v2\x16.google.protobuf.EmptyH\x00R\x06cancel\x1aK\n" +
+	"\x04Play\x12C\n" +
+	"\tasset_ids\x18\x01 \x03(\tB&\xbaH#\x92\x01 \b\x01\x10\x03\"\x1ar\x182\x16^[A-Za-z0-9_-]{1,128}$R\bassetIdsB\x0f\n" +
+	"\x06action\x12\x05\xbaH\x02\b\x01B\n" +
 	"\n" +
 	"\b_turn_idB\x0e\n" +
 	"\f_playback_id\"s\n" +
@@ -3604,7 +3652,7 @@ func file_hi_ninja_ui_proto_rawDescGZIP() []byte {
 }
 
 var file_hi_ninja_ui_proto_enumTypes = make([]protoimpl.EnumInfo, 6)
-var file_hi_ninja_ui_proto_msgTypes = make([]protoimpl.MessageInfo, 32)
+var file_hi_ninja_ui_proto_msgTypes = make([]protoimpl.MessageInfo, 33)
 var file_hi_ninja_ui_proto_goTypes = []any{
 	(StateToggle)(0),                          // 0: hi.ninja.StateToggle
 	(Emotion)(0),                              // 1: hi.ninja.Emotion
@@ -3644,115 +3692,117 @@ var file_hi_ninja_ui_proto_goTypes = []any{
 	(*ProductAction)(nil),                     // 35: hi.ninja.ProductAction
 	(*ProductActionResult)(nil),               // 36: hi.ninja.ProductActionResult
 	(*ReceiptNotifications)(nil),              // 37: hi.ninja.ReceiptNotifications
-	(*hi.Entity)(nil),                         // 38: hi.Entity
-	(*club.GroupInfo)(nil),                    // 39: hi.club.GroupInfo
-	(*hi.AudioStreamEvent)(nil),               // 40: hi.AudioStreamEvent
-	(*emptypb.Empty)(nil),                     // 41: google.protobuf.Empty
-	(*club.ListTerminalApplicationsResp)(nil), // 42: hi.club.ListTerminalApplicationsResp
-	(*hi.Pagination)(nil),                     // 43: hi.Pagination
-	(*ModuleSession)(nil),                     // 44: hi.ninja.ModuleSession
-	(*BrainToModuleControl)(nil),              // 45: hi.ninja.BrainToModuleControl
-	(*club.Message)(nil),                      // 46: hi.club.Message
-	(*ai.PluginView)(nil),                     // 47: hi.ai.PluginView
-	(*did.Transaction)(nil),                   // 48: hi.did.Transaction
-	(*UpdateStatus)(nil),                      // 49: hi.ninja.UpdateStatus
-	(*binance.BinanceResult)(nil),             // 50: hi.binance.BinanceResult
-	(*club.ProductInventoryItem)(nil),         // 51: hi.club.ProductInventoryItem
-	(*club.ProductAnnouncement)(nil),          // 52: hi.club.ProductAnnouncement
-	(*club.ProductPurchaseOrder)(nil),         // 53: hi.club.ProductPurchaseOrder
-	(*ModuleToBrainControl)(nil),              // 54: hi.ninja.ModuleToBrainControl
-	(*binance.BinanceOfferReply)(nil),         // 55: hi.binance.BinanceOfferReply
-	(*binance.BinanceOffer)(nil),              // 56: hi.binance.BinanceOffer
-	(*club.GetProductReq)(nil),                // 57: hi.club.GetProductReq
-	(*club.ProductPurchaseQuery)(nil),         // 58: hi.club.ProductPurchaseQuery
-	(*club.ProductDistributionAgreement)(nil), // 59: hi.club.ProductDistributionAgreement
-	(*club.ProductDetail)(nil),                // 60: hi.club.ProductDetail
+	(*VoiceCue_Play)(nil),                     // 38: hi.ninja.VoiceCue.Play
+	(*hi.Entity)(nil),                         // 39: hi.Entity
+	(*club.GroupInfo)(nil),                    // 40: hi.club.GroupInfo
+	(*hi.AudioStreamEvent)(nil),               // 41: hi.AudioStreamEvent
+	(*emptypb.Empty)(nil),                     // 42: google.protobuf.Empty
+	(*club.ListTerminalApplicationsResp)(nil), // 43: hi.club.ListTerminalApplicationsResp
+	(*hi.Pagination)(nil),                     // 44: hi.Pagination
+	(*ModuleSession)(nil),                     // 45: hi.ninja.ModuleSession
+	(*BrainToModuleControl)(nil),              // 46: hi.ninja.BrainToModuleControl
+	(*club.Message)(nil),                      // 47: hi.club.Message
+	(*ai.PluginView)(nil),                     // 48: hi.ai.PluginView
+	(*did.Transaction)(nil),                   // 49: hi.did.Transaction
+	(*UpdateStatus)(nil),                      // 50: hi.ninja.UpdateStatus
+	(*binance.BinanceResult)(nil),             // 51: hi.binance.BinanceResult
+	(*club.ProductInventoryItem)(nil),         // 52: hi.club.ProductInventoryItem
+	(*club.ProductAnnouncement)(nil),          // 53: hi.club.ProductAnnouncement
+	(*club.ProductPurchaseOrder)(nil),         // 54: hi.club.ProductPurchaseOrder
+	(*ModuleToBrainControl)(nil),              // 55: hi.ninja.ModuleToBrainControl
+	(*binance.BinanceOfferReply)(nil),         // 56: hi.binance.BinanceOfferReply
+	(*binance.BinanceOffer)(nil),              // 57: hi.binance.BinanceOffer
+	(*club.GetProductReq)(nil),                // 58: hi.club.GetProductReq
+	(*club.ProductPurchaseQuery)(nil),         // 59: hi.club.ProductPurchaseQuery
+	(*club.ProductDistributionAgreement)(nil), // 60: hi.club.ProductDistributionAgreement
+	(*club.ProductDetail)(nil),                // 61: hi.club.ProductDetail
 }
 var file_hi_ninja_ui_proto_depIdxs = []int32{
-	38, // 0: hi.ninja.RobotInit.robot:type_name -> hi.Entity
-	38, // 1: hi.ninja.RobotInit.master:type_name -> hi.Entity
-	38, // 2: hi.ninja.FriendList.list:type_name -> hi.Entity
-	39, // 3: hi.ninja.GroupInfoList.list:type_name -> hi.club.GroupInfo
-	38, // 4: hi.ninja.MasterEvent.master:type_name -> hi.Entity
-	40, // 5: hi.ninja.AudioStreamPlay.event:type_name -> hi.AudioStreamEvent
+	39, // 0: hi.ninja.RobotInit.robot:type_name -> hi.Entity
+	39, // 1: hi.ninja.RobotInit.master:type_name -> hi.Entity
+	39, // 2: hi.ninja.FriendList.list:type_name -> hi.Entity
+	40, // 3: hi.ninja.GroupInfoList.list:type_name -> hi.club.GroupInfo
+	39, // 4: hi.ninja.MasterEvent.master:type_name -> hi.Entity
+	41, // 5: hi.ninja.AudioStreamPlay.event:type_name -> hi.AudioStreamEvent
 	2,  // 6: hi.ninja.VoiceTurn.phase:type_name -> hi.ninja.VoiceTurn.Phase
-	41, // 7: hi.ninja.VoiceCue.cancel:type_name -> google.protobuf.Empty
-	42, // 8: hi.ninja.TerminalApplicationResult.applications:type_name -> hi.club.ListTerminalApplicationsResp
-	43, // 9: hi.ninja.TerminalApplicationRequest.pagination:type_name -> hi.Pagination
-	44, // 10: hi.ninja.BrainToFace.session:type_name -> hi.ninja.ModuleSession
-	15, // 11: hi.ninja.BrainToFace.voice_turn:type_name -> hi.ninja.VoiceTurn
-	16, // 12: hi.ninja.BrainToFace.voice_cue:type_name -> hi.ninja.VoiceCue
-	12, // 13: hi.ninja.BrainToFace.audio_stream:type_name -> hi.ninja.AudioStreamPlay
-	13, // 14: hi.ninja.BrainToFace.audio_stream_cancel:type_name -> hi.ninja.AudioStreamCancel
-	20, // 15: hi.ninja.BrainToFace.terminal_applications:type_name -> hi.ninja.TerminalApplicationResult
-	37, // 16: hi.ninja.BrainToFace.receipt_notifications:type_name -> hi.ninja.ReceiptNotifications
-	34, // 17: hi.ninja.BrainToFace.manual_mute:type_name -> hi.ninja.ManualMute
-	33, // 18: hi.ninja.BrainToFace.playback_permit:type_name -> hi.ninja.PlaybackPermit
-	45, // 19: hi.ninja.BrainToFace.control:type_name -> hi.ninja.BrainToModuleControl
-	6,  // 20: hi.ninja.BrainToFace.init_robot:type_name -> hi.ninja.RobotInit
-	0,  // 21: hi.ninja.BrainToFace.show_listen:type_name -> hi.ninja.StateToggle
-	1,  // 22: hi.ninja.BrainToFace.show_emotion:type_name -> hi.ninja.Emotion
-	46, // 23: hi.ninja.BrainToFace.show_im_request:type_name -> hi.club.Message
-	10, // 24: hi.ninja.BrainToFace.show_im_reply:type_name -> hi.ninja.TextReply
-	10, // 25: hi.ninja.BrainToFace.show_voice_reply:type_name -> hi.ninja.TextReply
-	41, // 26: hi.ninja.BrainToFace.show_qr_code:type_name -> google.protobuf.Empty
-	38, // 27: hi.ninja.BrainToFace.event_robot:type_name -> hi.Entity
-	9,  // 28: hi.ninja.BrainToFace.event_master:type_name -> hi.ninja.MasterEvent
-	39, // 29: hi.ninja.BrainToFace.event_members:type_name -> hi.club.GroupInfo
-	47, // 30: hi.ninja.BrainToFace.event_plugin:type_name -> hi.ai.PluginView
-	30, // 31: hi.ninja.BrainToFace.event_plugin_progress:type_name -> hi.ninja.PluginProgress
-	48, // 32: hi.ninja.BrainToFace.event_transaction:type_name -> hi.did.Transaction
-	11, // 33: hi.ninja.BrainToFace.play_audio:type_name -> hi.ninja.AudioPlay
-	7,  // 34: hi.ninja.BrainToFace.event_friends:type_name -> hi.ninja.FriendList
-	38, // 35: hi.ninja.BrainToFace.event_friend_delete:type_name -> hi.Entity
-	38, // 36: hi.ninja.BrainToFace.event_friend_add:type_name -> hi.Entity
-	8,  // 37: hi.ninja.BrainToFace.members_init:type_name -> hi.ninja.GroupInfoList
-	27, // 38: hi.ninja.BrainToFace.event_status:type_name -> hi.ninja.StatusEvent
-	49, // 39: hi.ninja.BrainToFace.event_update:type_name -> hi.ninja.UpdateStatus
-	18, // 40: hi.ninja.BrainToFace.event_binance_settings:type_name -> hi.ninja.BinanceSettings
-	50, // 41: hi.ninja.BrainToFace.binance_result:type_name -> hi.binance.BinanceResult
-	26, // 42: hi.ninja.BrainToFace.show_tip:type_name -> hi.ninja.Tip
-	25, // 43: hi.ninja.BrainToFace.show_qr:type_name -> hi.ninja.QrCard
-	29, // 44: hi.ninja.BrainToFace.binance_offers:type_name -> hi.ninja.BinanceOffers
-	51, // 45: hi.ninja.BrainToFace.event_product_uploaded:type_name -> hi.club.ProductInventoryItem
-	52, // 46: hi.ninja.BrainToFace.event_product_listed:type_name -> hi.club.ProductAnnouncement
-	53, // 47: hi.ninja.BrainToFace.event_product_order:type_name -> hi.club.ProductPurchaseOrder
-	36, // 48: hi.ninja.BrainToFace.product_action_result:type_name -> hi.ninja.ProductActionResult
-	24, // 49: hi.ninja.BrainToFace.video_ready:type_name -> hi.ninja.VideoReady
-	44, // 50: hi.ninja.FaceToBrain.session:type_name -> hi.ninja.ModuleSession
-	17, // 51: hi.ninja.FaceToBrain.voice_assets:type_name -> hi.ninja.VoiceAssets
-	15, // 52: hi.ninja.FaceToBrain.voice_turn:type_name -> hi.ninja.VoiceTurn
-	21, // 53: hi.ninja.FaceToBrain.terminal_applications:type_name -> hi.ninja.TerminalApplicationRequest
-	14, // 54: hi.ninja.FaceToBrain.audio_stream_progress:type_name -> hi.ninja.AudioStreamProgress
-	35, // 55: hi.ninja.FaceToBrain.product_action:type_name -> hi.ninja.ProductAction
-	32, // 56: hi.ninja.FaceToBrain.playback_event:type_name -> hi.ninja.PlaybackEvent
-	37, // 57: hi.ninja.FaceToBrain.receipt_notifications:type_name -> hi.ninja.ReceiptNotifications
-	34, // 58: hi.ninja.FaceToBrain.manual_mute:type_name -> hi.ninja.ManualMute
-	54, // 59: hi.ninja.FaceToBrain.control:type_name -> hi.ninja.ModuleToBrainControl
-	0,  // 60: hi.ninja.FaceToBrain.voice_state:type_name -> hi.ninja.StateToggle
-	31, // 61: hi.ninja.FaceToBrain.update_action:type_name -> hi.ninja.UpdateAction
-	41, // 62: hi.ninja.FaceToBrain.get_binance_settings:type_name -> google.protobuf.Empty
-	41, // 63: hi.ninja.FaceToBrain.request_init:type_name -> google.protobuf.Empty
-	19, // 64: hi.ninja.FaceToBrain.binance_request:type_name -> hi.ninja.BinanceRequest
-	55, // 65: hi.ninja.FaceToBrain.binance_offer_reply:type_name -> hi.binance.BinanceOfferReply
-	41, // 66: hi.ninja.FaceToBrain.get_binance_offers:type_name -> google.protobuf.Empty
-	23, // 67: hi.ninja.FaceToBrain.video_request:type_name -> hi.ninja.VideoRequest
-	56, // 68: hi.ninja.BinanceOffers.list:type_name -> hi.binance.BinanceOffer
-	3,  // 69: hi.ninja.PluginProgress.state:type_name -> hi.ninja.PluginProgress.State
-	4,  // 70: hi.ninja.UpdateAction.action:type_name -> hi.ninja.UpdateAction.Action
-	5,  // 71: hi.ninja.PlaybackEvent.state:type_name -> hi.ninja.PlaybackEvent.State
-	57, // 72: hi.ninja.ProductAction.join_product:type_name -> hi.club.GetProductReq
-	57, // 73: hi.ninja.ProductAction.get_detail:type_name -> hi.club.GetProductReq
-	58, // 74: hi.ninja.ProductAction.confirm_purchase:type_name -> hi.club.ProductPurchaseQuery
-	58, // 75: hi.ninja.ProductAction.get_order:type_name -> hi.club.ProductPurchaseQuery
-	59, // 76: hi.ninja.ProductActionResult.joined:type_name -> hi.club.ProductDistributionAgreement
-	60, // 77: hi.ninja.ProductActionResult.detail:type_name -> hi.club.ProductDetail
-	53, // 78: hi.ninja.ProductActionResult.order:type_name -> hi.club.ProductPurchaseOrder
-	79, // [79:79] is the sub-list for method output_type
-	79, // [79:79] is the sub-list for method input_type
-	79, // [79:79] is the sub-list for extension type_name
-	79, // [79:79] is the sub-list for extension extendee
-	0,  // [0:79] is the sub-list for field type_name
+	38, // 7: hi.ninja.VoiceCue.play:type_name -> hi.ninja.VoiceCue.Play
+	42, // 8: hi.ninja.VoiceCue.cancel:type_name -> google.protobuf.Empty
+	43, // 9: hi.ninja.TerminalApplicationResult.applications:type_name -> hi.club.ListTerminalApplicationsResp
+	44, // 10: hi.ninja.TerminalApplicationRequest.pagination:type_name -> hi.Pagination
+	45, // 11: hi.ninja.BrainToFace.session:type_name -> hi.ninja.ModuleSession
+	15, // 12: hi.ninja.BrainToFace.voice_turn:type_name -> hi.ninja.VoiceTurn
+	16, // 13: hi.ninja.BrainToFace.voice_cue:type_name -> hi.ninja.VoiceCue
+	12, // 14: hi.ninja.BrainToFace.audio_stream:type_name -> hi.ninja.AudioStreamPlay
+	13, // 15: hi.ninja.BrainToFace.audio_stream_cancel:type_name -> hi.ninja.AudioStreamCancel
+	20, // 16: hi.ninja.BrainToFace.terminal_applications:type_name -> hi.ninja.TerminalApplicationResult
+	37, // 17: hi.ninja.BrainToFace.receipt_notifications:type_name -> hi.ninja.ReceiptNotifications
+	34, // 18: hi.ninja.BrainToFace.manual_mute:type_name -> hi.ninja.ManualMute
+	33, // 19: hi.ninja.BrainToFace.playback_permit:type_name -> hi.ninja.PlaybackPermit
+	46, // 20: hi.ninja.BrainToFace.control:type_name -> hi.ninja.BrainToModuleControl
+	6,  // 21: hi.ninja.BrainToFace.init_robot:type_name -> hi.ninja.RobotInit
+	0,  // 22: hi.ninja.BrainToFace.show_listen:type_name -> hi.ninja.StateToggle
+	1,  // 23: hi.ninja.BrainToFace.show_emotion:type_name -> hi.ninja.Emotion
+	47, // 24: hi.ninja.BrainToFace.show_im_request:type_name -> hi.club.Message
+	10, // 25: hi.ninja.BrainToFace.show_im_reply:type_name -> hi.ninja.TextReply
+	10, // 26: hi.ninja.BrainToFace.show_voice_reply:type_name -> hi.ninja.TextReply
+	42, // 27: hi.ninja.BrainToFace.show_qr_code:type_name -> google.protobuf.Empty
+	39, // 28: hi.ninja.BrainToFace.event_robot:type_name -> hi.Entity
+	9,  // 29: hi.ninja.BrainToFace.event_master:type_name -> hi.ninja.MasterEvent
+	40, // 30: hi.ninja.BrainToFace.event_members:type_name -> hi.club.GroupInfo
+	48, // 31: hi.ninja.BrainToFace.event_plugin:type_name -> hi.ai.PluginView
+	30, // 32: hi.ninja.BrainToFace.event_plugin_progress:type_name -> hi.ninja.PluginProgress
+	49, // 33: hi.ninja.BrainToFace.event_transaction:type_name -> hi.did.Transaction
+	11, // 34: hi.ninja.BrainToFace.play_audio:type_name -> hi.ninja.AudioPlay
+	7,  // 35: hi.ninja.BrainToFace.event_friends:type_name -> hi.ninja.FriendList
+	39, // 36: hi.ninja.BrainToFace.event_friend_delete:type_name -> hi.Entity
+	39, // 37: hi.ninja.BrainToFace.event_friend_add:type_name -> hi.Entity
+	8,  // 38: hi.ninja.BrainToFace.members_init:type_name -> hi.ninja.GroupInfoList
+	27, // 39: hi.ninja.BrainToFace.event_status:type_name -> hi.ninja.StatusEvent
+	50, // 40: hi.ninja.BrainToFace.event_update:type_name -> hi.ninja.UpdateStatus
+	18, // 41: hi.ninja.BrainToFace.event_binance_settings:type_name -> hi.ninja.BinanceSettings
+	51, // 42: hi.ninja.BrainToFace.binance_result:type_name -> hi.binance.BinanceResult
+	26, // 43: hi.ninja.BrainToFace.show_tip:type_name -> hi.ninja.Tip
+	25, // 44: hi.ninja.BrainToFace.show_qr:type_name -> hi.ninja.QrCard
+	29, // 45: hi.ninja.BrainToFace.binance_offers:type_name -> hi.ninja.BinanceOffers
+	52, // 46: hi.ninja.BrainToFace.event_product_uploaded:type_name -> hi.club.ProductInventoryItem
+	53, // 47: hi.ninja.BrainToFace.event_product_listed:type_name -> hi.club.ProductAnnouncement
+	54, // 48: hi.ninja.BrainToFace.event_product_order:type_name -> hi.club.ProductPurchaseOrder
+	36, // 49: hi.ninja.BrainToFace.product_action_result:type_name -> hi.ninja.ProductActionResult
+	24, // 50: hi.ninja.BrainToFace.video_ready:type_name -> hi.ninja.VideoReady
+	45, // 51: hi.ninja.FaceToBrain.session:type_name -> hi.ninja.ModuleSession
+	17, // 52: hi.ninja.FaceToBrain.voice_assets:type_name -> hi.ninja.VoiceAssets
+	15, // 53: hi.ninja.FaceToBrain.voice_turn:type_name -> hi.ninja.VoiceTurn
+	21, // 54: hi.ninja.FaceToBrain.terminal_applications:type_name -> hi.ninja.TerminalApplicationRequest
+	14, // 55: hi.ninja.FaceToBrain.audio_stream_progress:type_name -> hi.ninja.AudioStreamProgress
+	35, // 56: hi.ninja.FaceToBrain.product_action:type_name -> hi.ninja.ProductAction
+	32, // 57: hi.ninja.FaceToBrain.playback_event:type_name -> hi.ninja.PlaybackEvent
+	37, // 58: hi.ninja.FaceToBrain.receipt_notifications:type_name -> hi.ninja.ReceiptNotifications
+	34, // 59: hi.ninja.FaceToBrain.manual_mute:type_name -> hi.ninja.ManualMute
+	55, // 60: hi.ninja.FaceToBrain.control:type_name -> hi.ninja.ModuleToBrainControl
+	0,  // 61: hi.ninja.FaceToBrain.voice_state:type_name -> hi.ninja.StateToggle
+	31, // 62: hi.ninja.FaceToBrain.update_action:type_name -> hi.ninja.UpdateAction
+	42, // 63: hi.ninja.FaceToBrain.get_binance_settings:type_name -> google.protobuf.Empty
+	42, // 64: hi.ninja.FaceToBrain.request_init:type_name -> google.protobuf.Empty
+	19, // 65: hi.ninja.FaceToBrain.binance_request:type_name -> hi.ninja.BinanceRequest
+	56, // 66: hi.ninja.FaceToBrain.binance_offer_reply:type_name -> hi.binance.BinanceOfferReply
+	42, // 67: hi.ninja.FaceToBrain.get_binance_offers:type_name -> google.protobuf.Empty
+	23, // 68: hi.ninja.FaceToBrain.video_request:type_name -> hi.ninja.VideoRequest
+	57, // 69: hi.ninja.BinanceOffers.list:type_name -> hi.binance.BinanceOffer
+	3,  // 70: hi.ninja.PluginProgress.state:type_name -> hi.ninja.PluginProgress.State
+	4,  // 71: hi.ninja.UpdateAction.action:type_name -> hi.ninja.UpdateAction.Action
+	5,  // 72: hi.ninja.PlaybackEvent.state:type_name -> hi.ninja.PlaybackEvent.State
+	58, // 73: hi.ninja.ProductAction.join_product:type_name -> hi.club.GetProductReq
+	58, // 74: hi.ninja.ProductAction.get_detail:type_name -> hi.club.GetProductReq
+	59, // 75: hi.ninja.ProductAction.confirm_purchase:type_name -> hi.club.ProductPurchaseQuery
+	59, // 76: hi.ninja.ProductAction.get_order:type_name -> hi.club.ProductPurchaseQuery
+	60, // 77: hi.ninja.ProductActionResult.joined:type_name -> hi.club.ProductDistributionAgreement
+	61, // 78: hi.ninja.ProductActionResult.detail:type_name -> hi.club.ProductDetail
+	54, // 79: hi.ninja.ProductActionResult.order:type_name -> hi.club.ProductPurchaseOrder
+	80, // [80:80] is the sub-list for method output_type
+	80, // [80:80] is the sub-list for method input_type
+	80, // [80:80] is the sub-list for extension type_name
+	80, // [80:80] is the sub-list for extension extendee
+	0,  // [0:80] is the sub-list for field type_name
 }
 
 func init() { file_hi_ninja_ui_proto_init() }
@@ -3770,7 +3820,7 @@ func file_hi_ninja_ui_proto_init() {
 	file_hi_ninja_ui_proto_msgTypes[8].OneofWrappers = []any{}
 	file_hi_ninja_ui_proto_msgTypes[9].OneofWrappers = []any{}
 	file_hi_ninja_ui_proto_msgTypes[10].OneofWrappers = []any{
-		(*VoiceCue_AssetId)(nil),
+		(*VoiceCue_Play_)(nil),
 		(*VoiceCue_Cancel)(nil),
 	}
 	file_hi_ninja_ui_proto_msgTypes[11].OneofWrappers = []any{}
@@ -3866,7 +3916,7 @@ func file_hi_ninja_ui_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_ninja_ui_proto_rawDesc), len(file_hi_ninja_ui_proto_rawDesc)),
 			NumEnums:      6,
-			NumMessages:   32,
+			NumMessages:   33,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

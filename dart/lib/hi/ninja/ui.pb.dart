@@ -719,7 +719,57 @@ class VoiceTurn extends $pb.GeneratedMessage {
   void clearPhase() => $_clearField(2);
 }
 
-enum VoiceCue_Action { assetId, cancel, notSet }
+/// One ordered utterance, one playback permission and one terminal event.
+/// The caller chooses all parts; face must not infer titles or add business content.
+class VoiceCue_Play extends $pb.GeneratedMessage {
+  factory VoiceCue_Play({
+    $core.Iterable<$core.String>? assetIds,
+  }) {
+    final result = create();
+    if (assetIds != null) result.assetIds.addAll(assetIds);
+    return result;
+  }
+
+  VoiceCue_Play._();
+
+  factory VoiceCue_Play.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory VoiceCue_Play.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'VoiceCue.Play',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..pPS(1, _omitFieldNames ? '' : 'assetIds')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  VoiceCue_Play clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  VoiceCue_Play copyWith(void Function(VoiceCue_Play) updates) =>
+      super.copyWith((message) => updates(message as VoiceCue_Play))
+          as VoiceCue_Play;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static VoiceCue_Play create() => VoiceCue_Play._();
+  @$core.override
+  VoiceCue_Play createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static VoiceCue_Play getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<VoiceCue_Play>(create);
+  static VoiceCue_Play? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<$core.String> get assetIds => $_getList(0);
+}
+
+enum VoiceCue_Action { cancel, play, notSet }
 
 /// Short, preinstalled acknowledgement. Its actual playback still uses PlaybackEvent/Permit.
 /// The same playback_id is used to cancel a pending cue when the final answer is ready.
@@ -727,14 +777,14 @@ class VoiceCue extends $pb.GeneratedMessage {
   factory VoiceCue({
     $core.String? turnId,
     $core.String? playbackId,
-    $core.String? assetId,
     $3.Empty? cancel,
+    VoiceCue_Play? play,
   }) {
     final result = create();
     if (turnId != null) result.turnId = turnId;
     if (playbackId != null) result.playbackId = playbackId;
-    if (assetId != null) result.assetId = assetId;
     if (cancel != null) result.cancel = cancel;
+    if (play != null) result.play = play;
     return result;
   }
 
@@ -748,20 +798,21 @@ class VoiceCue extends $pb.GeneratedMessage {
       create()..mergeFromJson(json, registry);
 
   static const $core.Map<$core.int, VoiceCue_Action> _VoiceCue_ActionByTag = {
-    3: VoiceCue_Action.assetId,
     4: VoiceCue_Action.cancel,
+    5: VoiceCue_Action.play,
     0: VoiceCue_Action.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'VoiceCue',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..oo(0, [3, 4])
+    ..oo(0, [4, 5])
     ..aOS(1, _omitFieldNames ? '' : 'turnId')
     ..aOS(2, _omitFieldNames ? '' : 'playbackId')
-    ..aOS(3, _omitFieldNames ? '' : 'assetId')
     ..aOM<$3.Empty>(4, _omitFieldNames ? '' : 'cancel',
         subBuilder: $3.Empty.create)
+    ..aOM<VoiceCue_Play>(5, _omitFieldNames ? '' : 'play',
+        subBuilder: VoiceCue_Play.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -782,11 +833,11 @@ class VoiceCue extends $pb.GeneratedMessage {
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<VoiceCue>(create);
   static VoiceCue? _defaultInstance;
 
-  @$pb.TagNumber(3)
   @$pb.TagNumber(4)
+  @$pb.TagNumber(5)
   VoiceCue_Action whichAction() => _VoiceCue_ActionByTag[$_whichOneof(0)]!;
-  @$pb.TagNumber(3)
   @$pb.TagNumber(4)
+  @$pb.TagNumber(5)
   void clearAction() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -807,25 +858,28 @@ class VoiceCue extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearPlaybackId() => $_clearField(2);
 
-  @$pb.TagNumber(3)
-  $core.String get assetId => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set assetId($core.String value) => $_setString(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasAssetId() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearAssetId() => $_clearField(3);
-
   @$pb.TagNumber(4)
-  $3.Empty get cancel => $_getN(3);
+  $3.Empty get cancel => $_getN(2);
   @$pb.TagNumber(4)
   set cancel($3.Empty value) => $_setField(4, value);
   @$pb.TagNumber(4)
-  $core.bool hasCancel() => $_has(3);
+  $core.bool hasCancel() => $_has(2);
   @$pb.TagNumber(4)
   void clearCancel() => $_clearField(4);
   @$pb.TagNumber(4)
-  $3.Empty ensureCancel() => $_ensure(3);
+  $3.Empty ensureCancel() => $_ensure(2);
+
+  /// No single asset_id: a one-part utterance is also a Play list.
+  @$pb.TagNumber(5)
+  VoiceCue_Play get play => $_getN(3);
+  @$pb.TagNumber(5)
+  set play(VoiceCue_Play value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasPlay() => $_has(3);
+  @$pb.TagNumber(5)
+  void clearPlay() => $_clearField(5);
+  @$pb.TagNumber(5)
+  VoiceCue_Play ensurePlay() => $_ensure(3);
 }
 
 /// Only successfully decoded local assets are advertised after each Ready session.
