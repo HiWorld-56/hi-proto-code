@@ -17,6 +17,16 @@ class AgentStub(object):
         Args:
             channel: A grpc.Channel.
         """
+        self.GetDeviceSettings = channel.unary_unary(
+                '/hi.club.Agent/GetDeviceSettings',
+                request_serializer=hi_dot_club_dot_agent__pb2.AgentDeviceSettingsQuery.SerializeToString,
+                response_deserializer=hi_dot_club_dot_agent__pb2.AgentDeviceSettings.FromString,
+                _registered_method=True)
+        self.SetDeviceSettings = channel.unary_unary(
+                '/hi.club.Agent/SetDeviceSettings',
+                request_serializer=hi_dot_club_dot_agent__pb2.SetAgentDeviceSettingsReq.SerializeToString,
+                response_deserializer=hi_dot_club_dot_agent__pb2.AgentDeviceSettings.FromString,
+                _registered_method=True)
         self.List = channel.unary_unary(
                 '/hi.club.Agent/List',
                 request_serializer=hi_dot_ai_dot_agent__pb2.ListAgentsReq.SerializeToString,
@@ -81,6 +91,19 @@ class AgentStub(object):
 
 class AgentServicer(object):
     """Missing associated documentation comment in .proto file."""
+
+    def GetDeviceSettings(self, request, context):
+        """当前主人可读写；硬件机器人本人只读。权限归 club 现有主从关系，不按 hi.ai creator 判断。
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def SetDeviceSettings(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def List(self, request, context):
         """列我的机器人。归属**只看 club 自己的 relation(master 关系)** —— club 的机器人关系
@@ -168,6 +191,16 @@ class AgentServicer(object):
 
 def add_AgentServicer_to_server(servicer, server):
     rpc_method_handlers = {
+            'GetDeviceSettings': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetDeviceSettings,
+                    request_deserializer=hi_dot_club_dot_agent__pb2.AgentDeviceSettingsQuery.FromString,
+                    response_serializer=hi_dot_club_dot_agent__pb2.AgentDeviceSettings.SerializeToString,
+            ),
+            'SetDeviceSettings': grpc.unary_unary_rpc_method_handler(
+                    servicer.SetDeviceSettings,
+                    request_deserializer=hi_dot_club_dot_agent__pb2.SetAgentDeviceSettingsReq.FromString,
+                    response_serializer=hi_dot_club_dot_agent__pb2.AgentDeviceSettings.SerializeToString,
+            ),
             'List': grpc.unary_unary_rpc_method_handler(
                     servicer.List,
                     request_deserializer=hi_dot_ai_dot_agent__pb2.ListAgentsReq.FromString,
@@ -238,6 +271,60 @@ def add_AgentServicer_to_server(servicer, server):
  # This class is part of an EXPERIMENTAL API.
 class Agent(object):
     """Missing associated documentation comment in .proto file."""
+
+    @staticmethod
+    def GetDeviceSettings(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.Agent/GetDeviceSettings',
+            hi_dot_club_dot_agent__pb2.AgentDeviceSettingsQuery.SerializeToString,
+            hi_dot_club_dot_agent__pb2.AgentDeviceSettings.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def SetDeviceSettings(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.Agent/SetDeviceSettings',
+            hi_dot_club_dot_agent__pb2.SetAgentDeviceSettingsReq.SerializeToString,
+            hi_dot_club_dot_agent__pb2.AgentDeviceSettings.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
 
     @staticmethod
     def List(request,

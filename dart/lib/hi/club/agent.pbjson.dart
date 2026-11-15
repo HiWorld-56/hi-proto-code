@@ -333,3 +333,113 @@ const GetAgentMomentResp$json = {
 final $typed_data.Uint8List getAgentMomentRespDescriptor = $convert.base64Decode(
     'ChJHZXRBZ2VudE1vbWVudFJlc3ASIQoGbW9tZW50GAEgASgJQgSQtRgBSABSBm1vbWVudIgBAT'
     'oEmLUYAUIJCgdfbW9tZW50');
+
+@$core.Deprecated('Use agentDeviceSettingsDescriptor instead')
+const AgentDeviceSettings$json = {
+  '1': 'AgentDeviceSettings',
+  '2': [
+    {
+      '1': 'agent',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.Entity',
+      '8': {},
+      '10': 'agent'
+    },
+    {
+      '1': 'voice_reply_enabled',
+      '3': 2,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 0,
+      '10': 'voiceReplyEnabled',
+      '17': true
+    },
+    {
+      '1': 'revision',
+      '3': 3,
+      '4': 1,
+      '5': 4,
+      '8': {},
+      '9': 1,
+      '10': 'revision',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_voice_reply_enabled'},
+    {'1': '_revision'},
+  ],
+};
+
+/// Descriptor for `AgentDeviceSettings`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List agentDeviceSettingsDescriptor = $convert.base64Decode(
+    'ChNBZ2VudERldmljZVNldHRpbmdzEiYKBWFnZW50GAEgASgLMgouaGkuRW50aXR5QgSQtRgBUg'
+    'VhZ2VudBI5ChN2b2ljZV9yZXBseV9lbmFibGVkGAIgASgIQgSQtRgDSABSEXZvaWNlUmVwbHlF'
+    'bmFibGVkiAEBEiUKCHJldmlzaW9uGAMgASgEQgSQtRgDSAFSCHJldmlzaW9uiAEBOgSYtRgDQh'
+    'YKFF92b2ljZV9yZXBseV9lbmFibGVkQgsKCV9yZXZpc2lvbg==');
+
+@$core.Deprecated('Use agentDeviceSettingsQueryDescriptor instead')
+const AgentDeviceSettingsQuery$json = {
+  '1': 'AgentDeviceSettingsQuery',
+  '2': [
+    {
+      '1': 'agent',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'agent',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_agent'},
+  ],
+};
+
+/// Descriptor for `AgentDeviceSettingsQuery`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List agentDeviceSettingsQueryDescriptor =
+    $convert.base64Decode(
+        'ChhBZ2VudERldmljZVNldHRpbmdzUXVlcnkSKgoFYWdlbnQYASABKAlCD7pIDMgBAXIHMgVeXF'
+        'MrJEgAUgVhZ2VudIgBAUIICgZfYWdlbnQ=');
+
+@$core.Deprecated('Use setAgentDeviceSettingsReqDescriptor instead')
+const SetAgentDeviceSettingsReq$json = {
+  '1': 'SetAgentDeviceSettingsReq',
+  '2': [
+    {
+      '1': 'agent',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'agent',
+      '17': true
+    },
+    {
+      '1': 'voice_reply_enabled',
+      '3': 2,
+      '4': 1,
+      '5': 8,
+      '9': 1,
+      '10': 'voiceReplyEnabled',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_agent'},
+    {'1': '_voice_reply_enabled'},
+  ],
+};
+
+/// Descriptor for `SetAgentDeviceSettingsReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setAgentDeviceSettingsReqDescriptor = $convert.base64Decode(
+    'ChlTZXRBZ2VudERldmljZVNldHRpbmdzUmVxEioKBWFnZW50GAEgASgJQg+6SAzIAQFyBzIFXl'
+    'xTKyRIAFIFYWdlbnSIAQESMwoTdm9pY2VfcmVwbHlfZW5hYmxlZBgCIAEoCEgBUhF2b2ljZVJl'
+    'cGx5RW5hYmxlZIgBAUIICgZfYWdlbnRCFgoUX3ZvaWNlX3JlcGx5X2VuYWJsZWQ=');

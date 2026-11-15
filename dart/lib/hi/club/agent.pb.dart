@@ -12,9 +12,10 @@
 
 import 'dart:core' as $core;
 
+import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../ai/agent.pb.dart' as $0;
+import '../ai/agent.pb.dart' as $1;
 import '../common.pb.dart' as $2;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -551,7 +552,7 @@ class ListAgentsByUsersReq extends $pb.GeneratedMessage {
 class ListAgentsResp extends $pb.GeneratedMessage {
   factory ListAgentsResp({
     $core.int? total,
-    $core.Iterable<$0.AgentInfo>? agents,
+    $core.Iterable<$1.AgentInfo>? agents,
   }) {
     final result = create();
     if (total != null) result.total = total;
@@ -573,8 +574,8 @@ class ListAgentsResp extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aI(1, _omitFieldNames ? '' : 'total')
-    ..pPM<$0.AgentInfo>(2, _omitFieldNames ? '' : 'agents',
-        subBuilder: $0.AgentInfo.create)
+    ..pPM<$1.AgentInfo>(2, _omitFieldNames ? '' : 'agents',
+        subBuilder: $1.AgentInfo.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -606,7 +607,7 @@ class ListAgentsResp extends $pb.GeneratedMessage {
   void clearTotal() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $pb.PbList<$0.AgentInfo> get agents => $_getList(1);
+  $pb.PbList<$1.AgentInfo> get agents => $_getList(1);
 }
 
 /// 设置机器人的**动态**(个性签名那一栏)。
@@ -799,6 +800,214 @@ class GetAgentMomentResp extends $pb.GeneratedMessage {
   $core.bool hasMoment() => $_has(0);
   @$pb.TagNumber(1)
   void clearMoment() => $_clearField(1);
+}
+
+/// 硬件机器人的设备交互设置；由 club 保存，设备负责执行，不属于 hi.ai 的模型配置。
+/// 未保存过的机器人默认关闭语音回复、revision=0；读取总是返回明确的布尔值及版本。
+/// 设置从下一轮面对面提问生效；HiClub文字聊天与屏幕文字不受影响。
+class AgentDeviceSettings extends $pb.GeneratedMessage {
+  factory AgentDeviceSettings({
+    $2.Entity? agent,
+    $core.bool? voiceReplyEnabled,
+    $fixnum.Int64? revision,
+  }) {
+    final result = create();
+    if (agent != null) result.agent = agent;
+    if (voiceReplyEnabled != null) result.voiceReplyEnabled = voiceReplyEnabled;
+    if (revision != null) result.revision = revision;
+    return result;
+  }
+
+  AgentDeviceSettings._();
+
+  factory AgentDeviceSettings.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory AgentDeviceSettings.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'AgentDeviceSettings',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'agent',
+        subBuilder: $2.Entity.create)
+    ..aOB(2, _omitFieldNames ? '' : 'voiceReplyEnabled')
+    ..a<$fixnum.Int64>(
+        3, _omitFieldNames ? '' : 'revision', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AgentDeviceSettings clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AgentDeviceSettings copyWith(void Function(AgentDeviceSettings) updates) =>
+      super.copyWith((message) => updates(message as AgentDeviceSettings))
+          as AgentDeviceSettings;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static AgentDeviceSettings create() => AgentDeviceSettings._();
+  @$core.override
+  AgentDeviceSettings createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static AgentDeviceSettings getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<AgentDeviceSettings>(create);
+  static AgentDeviceSettings? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $2.Entity get agent => $_getN(0);
+  @$pb.TagNumber(1)
+  set agent($2.Entity value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAgent() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAgent() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $2.Entity ensureAgent() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.bool get voiceReplyEnabled => $_getBF(1);
+  @$pb.TagNumber(2)
+  set voiceReplyEnabled($core.bool value) => $_setBool(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasVoiceReplyEnabled() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearVoiceReplyEnabled() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $fixnum.Int64 get revision => $_getI64(2);
+  @$pb.TagNumber(3)
+  set revision($fixnum.Int64 value) => $_setInt64(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasRevision() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearRevision() => $_clearField(3);
+}
+
+class AgentDeviceSettingsQuery extends $pb.GeneratedMessage {
+  factory AgentDeviceSettingsQuery({
+    $core.String? agent,
+  }) {
+    final result = create();
+    if (agent != null) result.agent = agent;
+    return result;
+  }
+
+  AgentDeviceSettingsQuery._();
+
+  factory AgentDeviceSettingsQuery.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory AgentDeviceSettingsQuery.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'AgentDeviceSettingsQuery',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'agent')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AgentDeviceSettingsQuery clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AgentDeviceSettingsQuery copyWith(
+          void Function(AgentDeviceSettingsQuery) updates) =>
+      super.copyWith((message) => updates(message as AgentDeviceSettingsQuery))
+          as AgentDeviceSettingsQuery;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static AgentDeviceSettingsQuery create() => AgentDeviceSettingsQuery._();
+  @$core.override
+  AgentDeviceSettingsQuery createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static AgentDeviceSettingsQuery getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<AgentDeviceSettingsQuery>(create);
+  static AgentDeviceSettingsQuery? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get agent => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set agent($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAgent() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAgent() => $_clearField(1);
+}
+
+class SetAgentDeviceSettingsReq extends $pb.GeneratedMessage {
+  factory SetAgentDeviceSettingsReq({
+    $core.String? agent,
+    $core.bool? voiceReplyEnabled,
+  }) {
+    final result = create();
+    if (agent != null) result.agent = agent;
+    if (voiceReplyEnabled != null) result.voiceReplyEnabled = voiceReplyEnabled;
+    return result;
+  }
+
+  SetAgentDeviceSettingsReq._();
+
+  factory SetAgentDeviceSettingsReq.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SetAgentDeviceSettingsReq.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SetAgentDeviceSettingsReq',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'agent')
+    ..aOB(2, _omitFieldNames ? '' : 'voiceReplyEnabled')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetAgentDeviceSettingsReq clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetAgentDeviceSettingsReq copyWith(
+          void Function(SetAgentDeviceSettingsReq) updates) =>
+      super.copyWith((message) => updates(message as SetAgentDeviceSettingsReq))
+          as SetAgentDeviceSettingsReq;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SetAgentDeviceSettingsReq create() => SetAgentDeviceSettingsReq._();
+  @$core.override
+  SetAgentDeviceSettingsReq createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static SetAgentDeviceSettingsReq getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetAgentDeviceSettingsReq>(create);
+  static SetAgentDeviceSettingsReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get agent => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set agent($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAgent() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAgent() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.bool get voiceReplyEnabled => $_getBF(1);
+  @$pb.TagNumber(2)
+  set voiceReplyEnabled($core.bool value) => $_setBool(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasVoiceReplyEnabled() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearVoiceReplyEnabled() => $_clearField(2);
 }
 
 const $core.bool _omitFieldNames =

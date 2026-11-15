@@ -110,48 +110,7 @@ class Packet extends $pb.GeneratedMessage {
   Message ensureMessage() => $_ensure(1);
 }
 
-///
-/// ## status:这条通知的状态 —— **每条通知都有,发送方在发出时写好**
-///
-/// | 值 | 含义 | 谁写 |
-/// |---|---|---|
-/// | `not_processed` | 需要收方处理,还没处理 | 发送方(需要处理的通知) |
-/// | `processed`     | 不需要处理 / 已处理 | 发送方(纯告知的通知);或收方调 `User.MarkNoticeProcessed` |
-/// | `accept` / `reject` | 邀请已被同意 / 拒绝 | 后端(`User.HandleNotice`) |
-/// | `invalid`       | 邀请的对象已不存在(如群已解散) | 后端 |
-/// | `expired`       | 过了 `expiration` 还是 `not_processed` | **不存储,后端在读取时现算** |
-///
-/// `expiration` 是**绝对时刻(微秒)**,与 `timestamp` 同一把尺;不带 = 不过期。
-///
-/// ## 终态:除了 `not_processed`,其余都是终态
-///
-/// *未达终态 = `not_processed` 且没过期**,别的都是终态(`processed` / `accept` / `reject` /
-/// `invalid` / `expired`)。这条判据有两个用处,端上两处都必须按它来:
-///
-/// 1. **端上删本地通知,只许删终态的。** 还欠着的那条在后端(或对方)那里挂着等一个答复,
-/// 本地删掉 = 那件事永远没人回,而且零报错(`core` 的 `delete_notice` 会拒,
-/// `clear_notices` 只清终态的)。
-/// 2. **还欠着的通知与游标无关**:端上每轮同步用 `User.ListPendingNotices` 拿全量,
-/// 所以它不会因为换设备、重装、重新登录而丢。
-///
-/// 纯告知的通知(群通知、`robot-update`、`plugin-load`、授权结果……)**发出时就是 `processed`**,
-/// 于是所有通知都按同一套状态处理,没有"这类通知有没有状态"的分支。
-///
-/// ## 后端只如实记录,新不新、要不要处理由端上判断
-///
-/// 单聊通知由后端在 **MQTT 收到时**记进历史(不管是谁发的),保存 30 天。端上用
-/// `User.ListNotices` 按游标增量拉**全部**通知,自己判断哪些是新的;
-/// 状态会变的(没处理完的那些),端上定期 + 下拉刷新时用 `User.ListNoticeStatuses` 按 uuid 查最新状态。
-///
-/// *游标不传 = 由服务端定起点**(重装 / 重新登录 / 换设备),与 `Group.ListMessages` 同一套;
-/// 服务端那个位置每拉一页只许前进。**端上删掉的通知不会被同步再拉回来**,靠的就是它 ——
-/// 本地游标在重新登录时随本地数据一起清空,那时若回到"最早一条",删掉的会整批回来。
-///
-/// ⚠️ 实时收到的那条是**发出时的快照**,之后的状态以 `ListNotices` / `ListNoticeStatuses` 为准。
-///
-/// 典型:`friend-add` —— 我把 A 删了、A 又加回来、我又是"自动同意",
-/// 那么这条通知就是我唯一能知道"好友回来了"的信号。离线期间发生的,上线增量同步拿到它
-/// (状态 `not_processed`),处理完(清掉会话的 severed)回执一下。
+/// agent-device-settings-changed: extra=hi.Entity（机器人完整名片），仅通知该机器人本人重新认证拉取设备设置；不在Notice中附带私有配置。
 class Notice extends $pb.GeneratedMessage {
   factory Notice({
     $core.String? uuid,

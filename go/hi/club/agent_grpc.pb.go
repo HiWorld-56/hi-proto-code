@@ -22,24 +22,29 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Agent_List_FullMethodName             = "/hi.club.Agent/List"
-	Agent_CreateAssistant_FullMethodName  = "/hi.club.Agent/CreateAssistant"
-	Agent_Edit_FullMethodName             = "/hi.club.Agent/Edit"
-	Agent_Delete_FullMethodName           = "/hi.club.Agent/Delete"
-	Agent_Get_FullMethodName              = "/hi.club.Agent/Get"
-	Agent_GetUsage_FullMethodName         = "/hi.club.Agent/GetUsage"
-	Agent_GetDefaultConfig_FullMethodName = "/hi.club.Agent/GetDefaultConfig"
-	Agent_BindMaster_FullMethodName       = "/hi.club.Agent/BindMaster"
-	Agent_UnbindMaster_FullMethodName     = "/hi.club.Agent/UnbindMaster"
-	Agent_BindStatus_FullMethodName       = "/hi.club.Agent/BindStatus"
-	Agent_Transfer_FullMethodName         = "/hi.club.Agent/Transfer"
-	Agent_SetMoment_FullMethodName        = "/hi.club.Agent/SetMoment"
+	Agent_GetDeviceSettings_FullMethodName = "/hi.club.Agent/GetDeviceSettings"
+	Agent_SetDeviceSettings_FullMethodName = "/hi.club.Agent/SetDeviceSettings"
+	Agent_List_FullMethodName              = "/hi.club.Agent/List"
+	Agent_CreateAssistant_FullMethodName   = "/hi.club.Agent/CreateAssistant"
+	Agent_Edit_FullMethodName              = "/hi.club.Agent/Edit"
+	Agent_Delete_FullMethodName            = "/hi.club.Agent/Delete"
+	Agent_Get_FullMethodName               = "/hi.club.Agent/Get"
+	Agent_GetUsage_FullMethodName          = "/hi.club.Agent/GetUsage"
+	Agent_GetDefaultConfig_FullMethodName  = "/hi.club.Agent/GetDefaultConfig"
+	Agent_BindMaster_FullMethodName        = "/hi.club.Agent/BindMaster"
+	Agent_UnbindMaster_FullMethodName      = "/hi.club.Agent/UnbindMaster"
+	Agent_BindStatus_FullMethodName        = "/hi.club.Agent/BindStatus"
+	Agent_Transfer_FullMethodName          = "/hi.club.Agent/Transfer"
+	Agent_SetMoment_FullMethodName         = "/hi.club.Agent/SetMoment"
 )
 
 // AgentClient is the client API for Agent service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AgentClient interface {
+	// 当前主人可读写；硬件机器人本人只读。权限归 club 现有主从关系，不按 hi.ai creator 判断。
+	GetDeviceSettings(ctx context.Context, in *AgentDeviceSettingsQuery, opts ...grpc.CallOption) (*AgentDeviceSettings, error)
+	SetDeviceSettings(ctx context.Context, in *SetAgentDeviceSettingsReq, opts ...grpc.CallOption) (*AgentDeviceSettings, error)
 	// 列我的机器人。归属**只看 club 自己的 relation(master 关系)** —— club 的机器人关系
 	// 由 club 自己管理,与 hiai 无关(hiai 那边所有 club 机器人的 creator 都是 club 商户,
 	// 根本表达不了"谁的机器人")。did 取自 token,不接受入参指定;
@@ -71,6 +76,26 @@ type agentClient struct {
 
 func NewAgentClient(cc grpc.ClientConnInterface) AgentClient {
 	return &agentClient{cc}
+}
+
+func (c *agentClient) GetDeviceSettings(ctx context.Context, in *AgentDeviceSettingsQuery, opts ...grpc.CallOption) (*AgentDeviceSettings, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AgentDeviceSettings)
+	err := c.cc.Invoke(ctx, Agent_GetDeviceSettings_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) SetDeviceSettings(ctx context.Context, in *SetAgentDeviceSettingsReq, opts ...grpc.CallOption) (*AgentDeviceSettings, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AgentDeviceSettings)
+	err := c.cc.Invoke(ctx, Agent_SetDeviceSettings_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *agentClient) List(ctx context.Context, in *ai.ListAgentsReq, opts ...grpc.CallOption) (*ListAgentsResp, error) {
@@ -197,6 +222,9 @@ func (c *agentClient) SetMoment(ctx context.Context, in *SetAgentMomentReq, opts
 // All implementations should embed UnimplementedAgentServer
 // for forward compatibility.
 type AgentServer interface {
+	// 当前主人可读写；硬件机器人本人只读。权限归 club 现有主从关系，不按 hi.ai creator 判断。
+	GetDeviceSettings(context.Context, *AgentDeviceSettingsQuery) (*AgentDeviceSettings, error)
+	SetDeviceSettings(context.Context, *SetAgentDeviceSettingsReq) (*AgentDeviceSettings, error)
 	// 列我的机器人。归属**只看 club 自己的 relation(master 关系)** —— club 的机器人关系
 	// 由 club 自己管理,与 hiai 无关(hiai 那边所有 club 机器人的 creator 都是 club 商户,
 	// 根本表达不了"谁的机器人")。did 取自 token,不接受入参指定;
@@ -229,6 +257,12 @@ type AgentServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAgentServer struct{}
 
+func (UnimplementedAgentServer) GetDeviceSettings(context.Context, *AgentDeviceSettingsQuery) (*AgentDeviceSettings, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetDeviceSettings not implemented")
+}
+func (UnimplementedAgentServer) SetDeviceSettings(context.Context, *SetAgentDeviceSettingsReq) (*AgentDeviceSettings, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetDeviceSettings not implemented")
+}
 func (UnimplementedAgentServer) List(context.Context, *ai.ListAgentsReq) (*ListAgentsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
@@ -283,6 +317,42 @@ func RegisterAgentServer(s grpc.ServiceRegistrar, srv AgentServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&Agent_ServiceDesc, srv)
+}
+
+func _Agent_GetDeviceSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AgentDeviceSettingsQuery)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).GetDeviceSettings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_GetDeviceSettings_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).GetDeviceSettings(ctx, req.(*AgentDeviceSettingsQuery))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_SetDeviceSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetAgentDeviceSettingsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).SetDeviceSettings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_SetDeviceSettings_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).SetDeviceSettings(ctx, req.(*SetAgentDeviceSettingsReq))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Agent_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -508,6 +578,14 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "hi.club.Agent",
 	HandlerType: (*AgentServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetDeviceSettings",
+			Handler:    _Agent_GetDeviceSettings_Handler,
+		},
+		{
+			MethodName: "SetDeviceSettings",
+			Handler:    _Agent_SetDeviceSettings_Handler,
+		},
 		{
 			MethodName: "List",
 			Handler:    _Agent_List_Handler,

@@ -346,6 +346,227 @@ impl<'de> serde::Deserialize<'de> for AdjustProductStockReq {
         deserializer.deserialize_struct("hi.club.AdjustProductStockReq", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for AgentDeviceSettings {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.agent.is_some() {
+            len += 1;
+        }
+        if self.voice_reply_enabled.is_some() {
+            len += 1;
+        }
+        if self.revision.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.AgentDeviceSettings", len)?;
+        if let Some(v) = self.agent.as_ref() {
+            struct_ser.serialize_field("agent", v)?;
+        }
+        if let Some(v) = self.voice_reply_enabled.as_ref() {
+            struct_ser.serialize_field("voiceReplyEnabled", v)?;
+        }
+        if let Some(v) = self.revision.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("revision", ToString::to_string(&v).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for AgentDeviceSettings {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "agent",
+            "voice_reply_enabled",
+            "voiceReplyEnabled",
+            "revision",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Agent,
+            VoiceReplyEnabled,
+            Revision,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "agent" => Ok(GeneratedField::Agent),
+                            "voiceReplyEnabled" | "voice_reply_enabled" => Ok(GeneratedField::VoiceReplyEnabled),
+                            "revision" => Ok(GeneratedField::Revision),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = AgentDeviceSettings;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.AgentDeviceSettings")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<AgentDeviceSettings, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut agent__ = None;
+                let mut voice_reply_enabled__ = None;
+                let mut revision__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Agent => {
+                            if agent__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("agent"));
+                            }
+                            agent__ = map_.next_value()?;
+                        }
+                        GeneratedField::VoiceReplyEnabled => {
+                            if voice_reply_enabled__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("voiceReplyEnabled"));
+                            }
+                            voice_reply_enabled__ = map_.next_value()?;
+                        }
+                        GeneratedField::Revision => {
+                            if revision__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("revision"));
+                            }
+                            revision__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(AgentDeviceSettings {
+                    agent: agent__,
+                    voice_reply_enabled: voice_reply_enabled__,
+                    revision: revision__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.AgentDeviceSettings", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for AgentDeviceSettingsQuery {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.agent.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.AgentDeviceSettingsQuery", len)?;
+        if let Some(v) = self.agent.as_ref() {
+            struct_ser.serialize_field("agent", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for AgentDeviceSettingsQuery {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "agent",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Agent,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "agent" => Ok(GeneratedField::Agent),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = AgentDeviceSettingsQuery;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.AgentDeviceSettingsQuery")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<AgentDeviceSettingsQuery, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut agent__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Agent => {
+                            if agent__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("agent"));
+                            }
+                            agent__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(AgentDeviceSettingsQuery {
+                    agent: agent__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.AgentDeviceSettingsQuery", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for ApiKeyInfo {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -32442,6 +32663,115 @@ impl<'de> serde::Deserialize<'de> for SearchProductListingsReq {
             }
         }
         deserializer.deserialize_struct("hi.club.SearchProductListingsReq", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for SetAgentDeviceSettingsReq {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.agent.is_some() {
+            len += 1;
+        }
+        if self.voice_reply_enabled.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.club.SetAgentDeviceSettingsReq", len)?;
+        if let Some(v) = self.agent.as_ref() {
+            struct_ser.serialize_field("agent", v)?;
+        }
+        if let Some(v) = self.voice_reply_enabled.as_ref() {
+            struct_ser.serialize_field("voiceReplyEnabled", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for SetAgentDeviceSettingsReq {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "agent",
+            "voice_reply_enabled",
+            "voiceReplyEnabled",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Agent,
+            VoiceReplyEnabled,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "agent" => Ok(GeneratedField::Agent),
+                            "voiceReplyEnabled" | "voice_reply_enabled" => Ok(GeneratedField::VoiceReplyEnabled),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = SetAgentDeviceSettingsReq;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.club.SetAgentDeviceSettingsReq")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SetAgentDeviceSettingsReq, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut agent__ = None;
+                let mut voice_reply_enabled__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Agent => {
+                            if agent__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("agent"));
+                            }
+                            agent__ = map_.next_value()?;
+                        }
+                        GeneratedField::VoiceReplyEnabled => {
+                            if voice_reply_enabled__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("voiceReplyEnabled"));
+                            }
+                            voice_reply_enabled__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(SetAgentDeviceSettingsReq {
+                    agent: agent__,
+                    voice_reply_enabled: voice_reply_enabled__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.club.SetAgentDeviceSettingsReq", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for SetAgentMomentReq {
