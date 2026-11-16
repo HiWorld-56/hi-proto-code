@@ -654,6 +654,371 @@ pub mod super_admin_client {
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct Transaction {
+    #[prost(string, optional, tag = "1")]
+    pub hash: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub amount: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "3")]
+    pub coin: ::core::option::Option<Coin>,
+    #[prost(message, optional, tag = "4")]
+    pub from: ::core::option::Option<super::Entity>,
+    #[prost(message, optional, tag = "5")]
+    pub to: ::core::option::Option<super::Entity>,
+    #[prost(string, optional, tag = "6")]
+    pub remark: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct HistoryReq {
+    #[prost(string, optional, tag = "1")]
+    pub coin: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub address: ::core::option::Option<::prost::alloc::string::String>,
+    /// 分页游标，第一页不传
+    #[prost(string, optional, tag = "3")]
+    pub cursor: ::core::option::Option<::prost::alloc::string::String>,
+    /// 最大返回数
+    #[prost(int32, optional, tag = "4")]
+    pub limit: ::core::option::Option<i32>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct HistoryResp {
+    #[prost(message, repeated, tag = "1")]
+    pub list: ::prost::alloc::vec::Vec<history_resp::Unit>,
+    /// 下一页游标
+    #[prost(string, optional, tag = "2")]
+    pub next_cursor: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// Nested message and enum types in `HistoryResp`.
+pub mod history_resp {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+    pub struct Unit {
+        #[prost(message, optional, tag = "1")]
+        pub trans: ::core::option::Option<super::Transaction>,
+        /// in（转入）/ out（转出）/ self（自转）
+        #[prost(string, optional, tag = "2")]
+        pub direction: ::core::option::Option<::prost::alloc::string::String>,
+        /// pending / confirming / success / failed / notfound
+        #[prost(string, optional, tag = "3")]
+        pub status: ::core::option::Option<::prost::alloc::string::String>,
+        #[prost(int64, optional, tag = "4")]
+        pub timestamp: ::core::option::Option<i64>,
+    }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TxStatusReq {
+    #[prost(string, optional, tag = "1")]
+    pub coin: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub hash: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TxStatusResp {
+    /// pending / confirming / success / failed / notfound
+    #[prost(string, optional, tag = "1")]
+    pub state: ::core::option::Option<::prost::alloc::string::String>,
+    /// 进度，0-100
+    #[prost(uint32, optional, tag = "2")]
+    pub progress: ::core::option::Option<u32>,
+}
+/// 取一笔链上交易的明细。**只报事实,不做判断。**
+///
+/// 与 VerifyTransaction 的分工:
+/// · VerifyTransaction —— 你把**完整的**预期(币种/金额/付款方/收款方)交给它,它替你比对。
+/// 信息必须完整,它不替调用方做假设。
+/// · TxDetail          —— 你只说"哪条链的哪笔交易",它把链上事实原样给你,
+/// **比对规则由你自己定**。
+///
+/// 为什么需要后者:有的业务判据里**没有付款方**这一项。插件市场就是这样 ——
+/// 它按**订单**认款(订单号定履约内容),谁掏的钱不进判据。这种业务不该逼着
+/// 通用验证器变松(那会让对付款方敏感的业务在漏传字段时无声失去检查),
+/// 而应该拿到事实自己比。
+///
+/// 返回的都是链上公开数据,故与同 service 的其它方法同档(AUTH_NONE)。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TxDetailReq {
+    /// 用来定位链/合约/精度
+    #[prost(string, optional, tag = "1")]
+    pub coin: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub hash: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TxDetailResp {
+    /// pending / confirming / success / failed / notfound
+    #[prost(string, optional, tag = "1")]
+    pub state: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "2")]
+    pub confirmed_blocks: ::core::option::Option<i64>,
+    /// 交易时间(ms)。业务侧据此做时限校验
+    #[prost(int64, optional, tag = "3")]
+    pub timestamp: ::core::option::Option<i64>,
+    /// 链上地址(不是 DID)
+    #[prost(string, optional, tag = "4")]
+    pub from: ::core::option::Option<::prost::alloc::string::String>,
+    /// 链上地址(不是 DID)
+    #[prost(string, optional, tag = "5")]
+    pub to: ::core::option::Option<::prost::alloc::string::String>,
+    /// **人类可读**,已按币种精度换算
+    #[prost(string, optional, tag = "6")]
+    pub amount: ::core::option::Option<::prost::alloc::string::String>,
+    /// 合约地址;不传=原生币
+    #[prost(string, optional, tag = "7")]
+    pub contract: ::core::option::Option<::prost::alloc::string::String>,
+    /// 该 hash 在缓存窗口内被**成功且合法地核验**过几次。业务侧据此防伪。
+    /// ⚠️ 别拿它当硬闸:响应丢了导致的重试、崩在中途导致的重试,都会让它变大 ——
+    /// 早期设计里 >1 是直接报错的,正因为会误杀真实付款才改成返回次数。
+    #[prost(uint32, optional, tag = "8")]
+    pub query_count: ::core::option::Option<u32>,
+    /// hidid-core按链规范的交易定位键，业务唯一认领使用它，不自行折叠大小写
+    #[prost(string, optional, tag = "9")]
+    pub canonical_hash: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VerifyTransactionReq {
+    /// 预期币种（did 据此定位链/合约/精度）
+    #[prost(string, optional, tag = "1")]
+    pub coin: ::core::option::Option<::prost::alloc::string::String>,
+    /// 链上交易 hash
+    #[prost(string, optional, tag = "2")]
+    pub hash: ::core::option::Option<::prost::alloc::string::String>,
+    /// 预期金额（**人类可读**，如 "0.101"；did 内部按币种精度换算成链上口径比对）
+    #[prost(string, optional, tag = "3")]
+    pub amount: ::core::option::Option<::prost::alloc::string::String>,
+    /// 预期付款方 **DID**（did 内部按币种链解析成地址比对）。
+    ///
+    /// ⚠️ **必填,不要改成 optional。** 曾经为了插件市场("按订单认款,不关心谁付的")
+    /// 想把它改成"不传即跳过" —— 那是**把业务层的判断塞进通用帮助方法**。
+    /// VerifyTransaction 是给三方用的独立工具,它不该替调用方做假设:
+    /// **既然要验,信息就必须完整**。开了这个口子,对 from 敏感的业务哪天漏传一个字段,
+    /// 检查就无声消失了,而这是笔钱的事。
+    ///
+    /// ```text
+    /// 不关心付款方的业务应当去查**交易明细**,自己按业务规则比对,
+    /// 而不是让公用的验证器变松。
+    /// ```
+    #[prost(string, optional, tag = "4")]
+    pub from: ::core::option::Option<::prost::alloc::string::String>,
+    /// 预期收款方 **DID**（同上）
+    #[prost(string, optional, tag = "5")]
+    pub to: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VerifyTransactionResp {
+    /// pending / confirming / success / failed / notfound
+    #[prost(string, optional, tag = "1")]
+    pub state: ::core::option::Option<::prost::alloc::string::String>,
+    /// 业务校验是否通过（仅 state=success 有意义）
+    #[prost(bool, optional, tag = "2")]
+    pub passed: ::core::option::Option<bool>,
+    /// 未过原因：AMOUNT_ERR / FROM_ERR / TO_ERR / CONTRACTADDRESS_ERR
+    #[prost(string, optional, tag = "3")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
+    /// 链上确认数
+    #[prost(int64, optional, tag = "4")]
+    pub confirmed_blocks: ::core::option::Option<i64>,
+    /// 交易时间（ms）；调用方据此自行做时限校验（业务层解耦）
+    #[prost(int64, optional, tag = "5")]
+    pub timestamp: ::core::option::Option<i64>,
+    /// 该 hash 在缓存窗口内被查询次数（业务侧据此防伪）
+    #[prost(uint32, optional, tag = "6")]
+    pub query_count: ::core::option::Option<u32>,
+}
+/// Generated client implementations.
+pub mod transfer_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Transfer —— 一组**helper 方法**:都是查链上数据 / 验签,给三方(尤其没能力自己做
+    /// 链上查询或 web3 验签的)用。全部公开或 web3(web3 视为无鉴权),档位一致。
+    #[derive(Debug, Clone)]
+    pub struct TransferClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl TransferClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> TransferClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> TransferClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            TransferClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn history(
+            &mut self,
+            request: impl tonic::IntoRequest<super::HistoryReq>,
+        ) -> std::result::Result<tonic::Response<super::HistoryResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.did.Transfer/History");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.Transfer", "History"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn tx_status(
+            &mut self,
+            request: impl tonic::IntoRequest<super::TxStatusReq>,
+        ) -> std::result::Result<tonic::Response<super::TxStatusResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.did.Transfer/TxStatus");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.Transfer", "TxStatus"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn verify_transaction(
+            &mut self,
+            request: impl tonic::IntoRequest<super::VerifyTransactionReq>,
+        ) -> std::result::Result<
+            tonic::Response<super::VerifyTransactionResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.Transfer/VerifyTransaction",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.Transfer", "VerifyTransaction"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn tx_detail(
+            &mut self,
+            request: impl tonic::IntoRequest<super::TxDetailReq>,
+        ) -> std::result::Result<tonic::Response<super::TxDetailResp>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.did.Transfer/TxDetail");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.Transfer", "TxDetail"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn verify_signature(
+            &mut self,
+            request: impl tonic::IntoRequest<super::super::SignedData>,
+        ) -> std::result::Result<tonic::Response<super::super::Did>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.did.Transfer/VerifySignature",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.did.Transfer", "VerifySignature"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetPriceReq {
     #[prost(string, optional, tag = "1")]
     pub coin: ::core::option::Option<::prost::alloc::string::String>,
@@ -2169,371 +2534,6 @@ pub mod merchant_granted_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.did.MerchantGranted", "AddUsers"));
-            self.inner.unary(req, path, codec).await
-        }
-    }
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct Transaction {
-    #[prost(string, optional, tag = "1")]
-    pub hash: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub amount: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(message, optional, tag = "3")]
-    pub coin: ::core::option::Option<Coin>,
-    #[prost(message, optional, tag = "4")]
-    pub from: ::core::option::Option<super::Entity>,
-    #[prost(message, optional, tag = "5")]
-    pub to: ::core::option::Option<super::Entity>,
-    #[prost(string, optional, tag = "6")]
-    pub remark: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct HistoryReq {
-    #[prost(string, optional, tag = "1")]
-    pub coin: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub address: ::core::option::Option<::prost::alloc::string::String>,
-    /// 分页游标，第一页不传
-    #[prost(string, optional, tag = "3")]
-    pub cursor: ::core::option::Option<::prost::alloc::string::String>,
-    /// 最大返回数
-    #[prost(int32, optional, tag = "4")]
-    pub limit: ::core::option::Option<i32>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct HistoryResp {
-    #[prost(message, repeated, tag = "1")]
-    pub list: ::prost::alloc::vec::Vec<history_resp::Unit>,
-    /// 下一页游标
-    #[prost(string, optional, tag = "2")]
-    pub next_cursor: ::core::option::Option<::prost::alloc::string::String>,
-}
-/// Nested message and enum types in `HistoryResp`.
-pub mod history_resp {
-    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-    pub struct Unit {
-        #[prost(message, optional, tag = "1")]
-        pub trans: ::core::option::Option<super::Transaction>,
-        /// in（转入）/ out（转出）/ self（自转）
-        #[prost(string, optional, tag = "2")]
-        pub direction: ::core::option::Option<::prost::alloc::string::String>,
-        /// pending / confirming / success / failed / notfound
-        #[prost(string, optional, tag = "3")]
-        pub status: ::core::option::Option<::prost::alloc::string::String>,
-        #[prost(int64, optional, tag = "4")]
-        pub timestamp: ::core::option::Option<i64>,
-    }
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct TxStatusReq {
-    #[prost(string, optional, tag = "1")]
-    pub coin: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub hash: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct TxStatusResp {
-    /// pending / confirming / success / failed / notfound
-    #[prost(string, optional, tag = "1")]
-    pub state: ::core::option::Option<::prost::alloc::string::String>,
-    /// 进度，0-100
-    #[prost(uint32, optional, tag = "2")]
-    pub progress: ::core::option::Option<u32>,
-}
-/// 取一笔链上交易的明细。**只报事实,不做判断。**
-///
-/// 与 VerifyTransaction 的分工:
-/// · VerifyTransaction —— 你把**完整的**预期(币种/金额/付款方/收款方)交给它,它替你比对。
-/// 信息必须完整,它不替调用方做假设。
-/// · TxDetail          —— 你只说"哪条链的哪笔交易",它把链上事实原样给你,
-/// **比对规则由你自己定**。
-///
-/// 为什么需要后者:有的业务判据里**没有付款方**这一项。插件市场就是这样 ——
-/// 它按**订单**认款(订单号定履约内容),谁掏的钱不进判据。这种业务不该逼着
-/// 通用验证器变松(那会让对付款方敏感的业务在漏传字段时无声失去检查),
-/// 而应该拿到事实自己比。
-///
-/// 返回的都是链上公开数据,故与同 service 的其它方法同档(AUTH_NONE)。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct TxDetailReq {
-    /// 用来定位链/合约/精度
-    #[prost(string, optional, tag = "1")]
-    pub coin: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub hash: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct TxDetailResp {
-    /// pending / confirming / success / failed / notfound
-    #[prost(string, optional, tag = "1")]
-    pub state: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(int64, optional, tag = "2")]
-    pub confirmed_blocks: ::core::option::Option<i64>,
-    /// 交易时间(ms)。业务侧据此做时限校验
-    #[prost(int64, optional, tag = "3")]
-    pub timestamp: ::core::option::Option<i64>,
-    /// 链上地址(不是 DID)
-    #[prost(string, optional, tag = "4")]
-    pub from: ::core::option::Option<::prost::alloc::string::String>,
-    /// 链上地址(不是 DID)
-    #[prost(string, optional, tag = "5")]
-    pub to: ::core::option::Option<::prost::alloc::string::String>,
-    /// **人类可读**,已按币种精度换算
-    #[prost(string, optional, tag = "6")]
-    pub amount: ::core::option::Option<::prost::alloc::string::String>,
-    /// 合约地址;不传=原生币
-    #[prost(string, optional, tag = "7")]
-    pub contract: ::core::option::Option<::prost::alloc::string::String>,
-    /// 该 hash 在缓存窗口内被**成功且合法地核验**过几次。业务侧据此防伪。
-    /// ⚠️ 别拿它当硬闸:响应丢了导致的重试、崩在中途导致的重试,都会让它变大 ——
-    /// 早期设计里 >1 是直接报错的,正因为会误杀真实付款才改成返回次数。
-    #[prost(uint32, optional, tag = "8")]
-    pub query_count: ::core::option::Option<u32>,
-    /// hidid-core按链规范的交易定位键，业务唯一认领使用它，不自行折叠大小写
-    #[prost(string, optional, tag = "9")]
-    pub canonical_hash: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct VerifyTransactionReq {
-    /// 预期币种（did 据此定位链/合约/精度）
-    #[prost(string, optional, tag = "1")]
-    pub coin: ::core::option::Option<::prost::alloc::string::String>,
-    /// 链上交易 hash
-    #[prost(string, optional, tag = "2")]
-    pub hash: ::core::option::Option<::prost::alloc::string::String>,
-    /// 预期金额（**人类可读**，如 "0.101"；did 内部按币种精度换算成链上口径比对）
-    #[prost(string, optional, tag = "3")]
-    pub amount: ::core::option::Option<::prost::alloc::string::String>,
-    /// 预期付款方 **DID**（did 内部按币种链解析成地址比对）。
-    ///
-    /// ⚠️ **必填,不要改成 optional。** 曾经为了插件市场("按订单认款,不关心谁付的")
-    /// 想把它改成"不传即跳过" —— 那是**把业务层的判断塞进通用帮助方法**。
-    /// VerifyTransaction 是给三方用的独立工具,它不该替调用方做假设:
-    /// **既然要验,信息就必须完整**。开了这个口子,对 from 敏感的业务哪天漏传一个字段,
-    /// 检查就无声消失了,而这是笔钱的事。
-    ///
-    /// ```text
-    /// 不关心付款方的业务应当去查**交易明细**,自己按业务规则比对,
-    /// 而不是让公用的验证器变松。
-    /// ```
-    #[prost(string, optional, tag = "4")]
-    pub from: ::core::option::Option<::prost::alloc::string::String>,
-    /// 预期收款方 **DID**（同上）
-    #[prost(string, optional, tag = "5")]
-    pub to: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct VerifyTransactionResp {
-    /// pending / confirming / success / failed / notfound
-    #[prost(string, optional, tag = "1")]
-    pub state: ::core::option::Option<::prost::alloc::string::String>,
-    /// 业务校验是否通过（仅 state=success 有意义）
-    #[prost(bool, optional, tag = "2")]
-    pub passed: ::core::option::Option<bool>,
-    /// 未过原因：AMOUNT_ERR / FROM_ERR / TO_ERR / CONTRACTADDRESS_ERR
-    #[prost(string, optional, tag = "3")]
-    pub reason: ::core::option::Option<::prost::alloc::string::String>,
-    /// 链上确认数
-    #[prost(int64, optional, tag = "4")]
-    pub confirmed_blocks: ::core::option::Option<i64>,
-    /// 交易时间（ms）；调用方据此自行做时限校验（业务层解耦）
-    #[prost(int64, optional, tag = "5")]
-    pub timestamp: ::core::option::Option<i64>,
-    /// 该 hash 在缓存窗口内被查询次数（业务侧据此防伪）
-    #[prost(uint32, optional, tag = "6")]
-    pub query_count: ::core::option::Option<u32>,
-}
-/// Generated client implementations.
-pub mod transfer_client {
-    #![allow(
-        unused_variables,
-        dead_code,
-        missing_docs,
-        clippy::wildcard_imports,
-        clippy::let_unit_value,
-    )]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Transfer —— 一组**helper 方法**:都是查链上数据 / 验签,给三方(尤其没能力自己做
-    /// 链上查询或 web3 验签的)用。全部公开或 web3(web3 视为无鉴权),档位一致。
-    #[derive(Debug, Clone)]
-    pub struct TransferClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl TransferClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> TransferClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::Body>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> TransferClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
-        {
-            TransferClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        pub async fn history(
-            &mut self,
-            request: impl tonic::IntoRequest<super::HistoryReq>,
-        ) -> std::result::Result<tonic::Response<super::HistoryResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.did.Transfer/History");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.did.Transfer", "History"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn tx_status(
-            &mut self,
-            request: impl tonic::IntoRequest<super::TxStatusReq>,
-        ) -> std::result::Result<tonic::Response<super::TxStatusResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.did.Transfer/TxStatus");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.did.Transfer", "TxStatus"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn verify_transaction(
-            &mut self,
-            request: impl tonic::IntoRequest<super::VerifyTransactionReq>,
-        ) -> std::result::Result<
-            tonic::Response<super::VerifyTransactionResp>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.Transfer/VerifyTransaction",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.did.Transfer", "VerifyTransaction"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn tx_detail(
-            &mut self,
-            request: impl tonic::IntoRequest<super::TxDetailReq>,
-        ) -> std::result::Result<tonic::Response<super::TxDetailResp>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/hi.did.Transfer/TxDetail");
-            let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("hi.did.Transfer", "TxDetail"));
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn verify_signature(
-            &mut self,
-            request: impl tonic::IntoRequest<super::super::SignedData>,
-        ) -> std::result::Result<tonic::Response<super::super::Did>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/hi.did.Transfer/VerifySignature",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("hi.did.Transfer", "VerifySignature"));
             self.inner.unary(req, path, codec).await
         }
     }

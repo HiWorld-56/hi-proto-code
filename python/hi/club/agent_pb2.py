@@ -27,9 +27,10 @@ from buf.validate import validate_pb2 as buf_dot_validate_dot_validate__pb2
 from hi import common_pb2 as hi_dot_common__pb2
 from hi.ai import agent_pb2 as hi_dot_ai_dot_agent__pb2
 from hi import options_pb2 as hi_dot_options__pb2
+from hi.club import agent_device_pb2 as hi_dot_club_dot_agent__device__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13hi/club/agent.proto\x12\x07hi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1b\x62uf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x11hi/ai/agent.proto\x1a\x10hi/options.proto\"E\n\rMasterBindReq\x12*\n\x05\x61gent\x18\x01 \x01(\tB\x0f\xbaH\x0cr\x07\x32\x05^\\S+$\xc8\x01\x01H\x00R\x05\x61gent\x88\x01\x01\x42\x08\n\x06_agent\"4\n\rBindStatusReq\x12\x19\n\x05\x61gent\x18\x01 \x01(\tH\x00R\x05\x61gent\x88\x01\x01\x42\x08\n\x06_agent\"@\n\x0e\x42indStatusResp\x12(\n\x06master\x18\x01 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x06master:\x04\x98\xb5\x18\x01\"N\n\x0bTransferReq\x12\x19\n\x05\x61gent\x18\x01 \x01(\tH\x00R\x05\x61gent\x88\x01\x01\x12\x13\n\x02to\x18\x02 \x01(\tH\x01R\x02to\x88\x01\x01\x42\x08\n\x06_agentB\x05\n\x03_to\"o\n\rListOnlineReq\x12 \n\towner_did\x18\x01 \x01(\tH\x00R\x08ownerDid\x88\x01\x01\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npaginationB\x0c\n\n_owner_did\"m\n\x0fOnlineAgentInfo\x12&\n\x05\x61gent\x18\x01 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x05\x61gent\x12!\n\x06moment\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x06moment\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\t\n\x07_moment\"w\n\x0eListOnlineResp\x12\x1f\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x01H\x00R\x05total\x88\x01\x01\x12\x34\n\x05infos\x18\x02 \x03(\x0b\x32\x18.hi.club.OnlineAgentInfoB\x04\x90\xb5\x18\x01R\x05infos:\x04\x98\xb5\x18\x01\x42\x08\n\x06_total\"\\\n\x14ListAgentsByUsersReq\x12\x14\n\x05users\x18\x01 \x03(\tR\x05users\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npagination\"q\n\x0eListAgentsResp\x12\x1f\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12.\n\x06\x61gents\x18\x02 \x03(\x0b\x32\x10.hi.ai.AgentInfoB\x04\x90\xb5\x18\x03R\x06\x61gents:\x04\x98\xb5\x18\x03\x42\x08\n\x06_total\"q\n\x11SetAgentMomentReq\x12*\n\x05\x61gent\x18\x01 \x01(\tB\x0f\xbaH\x0cr\x07\x32\x05^\\S+$\xc8\x01\x01H\x00R\x05\x61gent\x88\x01\x01\x12\x1b\n\x06moment\x18\x02 \x01(\tH\x01R\x06moment\x88\x01\x01\x42\x08\n\x06_agentB\t\n\x07_moment\"I\n\x11GetAgentMomentReq\x12*\n\x05\x61gent\x18\x01 \x01(\tB\x0f\xbaH\x0cr\x07\x32\x05^\\S+$\xc8\x01\x01H\x00R\x05\x61gent\x88\x01\x01\x42\x08\n\x06_agent\"H\n\x12GetAgentMomentResp\x12!\n\x06moment\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x06moment\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\t\n\x07_moment\"\xca\x01\n\x13\x41gentDeviceSettings\x12&\n\x05\x61gent\x18\x01 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x05\x61gent\x12\x39\n\x13voice_reply_enabled\x18\x02 \x01(\x08\x42\x04\x90\xb5\x18\x03H\x00R\x11voiceReplyEnabled\x88\x01\x01\x12%\n\x08revision\x18\x03 \x01(\x04\x42\x04\x90\xb5\x18\x03H\x01R\x08revision\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x16\n\x14_voice_reply_enabledB\x0b\n\t_revision\"P\n\x18\x41gentDeviceSettingsQuery\x12*\n\x05\x61gent\x18\x01 \x01(\tB\x0f\xbaH\x0cr\x07\x32\x05^\\S+$\xc8\x01\x01H\x00R\x05\x61gent\x88\x01\x01\x42\x08\n\x06_agent\"\x9e\x01\n\x19SetAgentDeviceSettingsReq\x12*\n\x05\x61gent\x18\x01 \x01(\tB\x0f\xbaH\x0cr\x07\x32\x05^\\S+$\xc8\x01\x01H\x00R\x05\x61gent\x88\x01\x01\x12\x33\n\x13voice_reply_enabled\x18\x02 \x01(\x08H\x01R\x11voiceReplyEnabled\x88\x01\x01\x42\x08\n\x06_agentB\x16\n\x14_voice_reply_enabled2\xdc\x07\n\x05\x41gent\x12[\n\x11GetDeviceSettings\x12!.hi.club.AgentDeviceSettingsQuery\x1a\x1c.hi.club.AgentDeviceSettings\"\x05\x8a\xb5\x18\x01\x02\x12\\\n\x11SetDeviceSettings\x12\".hi.club.SetAgentDeviceSettingsReq\x1a\x1c.hi.club.AgentDeviceSettings\"\x05\x8a\xb5\x18\x01\x02\x12<\n\x04List\x12\x14.hi.ai.ListAgentsReq\x1a\x17.hi.club.ListAgentsResp\"\x05\x8a\xb5\x18\x01\x02\x12K\n\x0f\x43reateAssistant\x12\x19.hi.ai.CreateAssistantReq\x1a\x16.hi.ai.CreateAgentResp\"\x05\x8a\xb5\x18\x01\x02\x12.\n\x04\x45\x64it\x12\x13.hi.ai.EditAgentReq\x1a\n.hi.Entity\"\x05\x8a\xb5\x18\x01\x02\x12>\n\x06\x44\x65lete\x12\x15.hi.ai.DeleteAgentReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12\x35\n\x03Get\x12\x12.hi.ai.GetAgentReq\x1a\x13.hi.ai.GetAgentResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n\x08GetUsage\x12\x14.hi.ai.AgentUsageReq\x1a\x15.hi.ai.AgentUsageResp\"\x05\x8a\xb5\x18\x01\x02\x12K\n\x10GetDefaultConfig\x12\x16.google.protobuf.Empty\x1a\x18.hi.ai.DefaultConfigResp\"\x05\x8a\xb5\x18\x01\x02\x12\x43\n\nBindMaster\x12\x16.hi.club.MasterBindReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12\x45\n\x0cUnbindMaster\x12\x16.hi.club.MasterBindReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12\x44\n\nBindStatus\x12\x16.hi.club.BindStatusReq\x1a\x17.hi.club.BindStatusResp\"\x05\x8a\xb5\x18\x01\x02\x12?\n\x08Transfer\x12\x14.hi.club.TransferReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12\x46\n\tSetMoment\x12\x1a.hi.club.SetAgentMomentReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x32\xa3\x01\n\x0e\x41gentDirectory\x12\x44\n\nListOnline\x12\x16.hi.club.ListOnlineReq\x1a\x17.hi.club.ListOnlineResp\"\x05\x8a\xb5\x18\x01\x01\x12K\n\tGetMoment\x12\x1a.hi.club.GetAgentMomentReq\x1a\x1b.hi.club.GetAgentMomentResp\"\x05\x8a\xb5\x18\x01\x01\x32T\n\x0b\x41gentManage\x12\x45\n\x04List\x12\x1d.hi.club.ListAgentsByUsersReq\x1a\x17.hi.club.ListAgentsResp\"\x05\x8a\xb5\x18\x01\x04\x42+Z)github.com/HiWorld-56/hi-proto/go/hi/clubb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13hi/club/agent.proto\x12\x07hi.club\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1b\x62uf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x11hi/ai/agent.proto\x1a\x10hi/options.proto\x1a\x1ahi/club/agent_device.proto\"E\n\rMasterBindReq\x12*\n\x05\x61gent\x18\x01 \x01(\tB\x0f\xbaH\x0cr\x07\x32\x05^\\S+$\xc8\x01\x01H\x00R\x05\x61gent\x88\x01\x01\x42\x08\n\x06_agent\"4\n\rBindStatusReq\x12\x19\n\x05\x61gent\x18\x01 \x01(\tH\x00R\x05\x61gent\x88\x01\x01\x42\x08\n\x06_agent\"@\n\x0e\x42indStatusResp\x12(\n\x06master\x18\x01 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x06master:\x04\x98\xb5\x18\x01\"N\n\x0bTransferReq\x12\x19\n\x05\x61gent\x18\x01 \x01(\tH\x00R\x05\x61gent\x88\x01\x01\x12\x13\n\x02to\x18\x02 \x01(\tH\x01R\x02to\x88\x01\x01\x42\x08\n\x06_agentB\x05\n\x03_to\"o\n\rListOnlineReq\x12 \n\towner_did\x18\x01 \x01(\tH\x00R\x08ownerDid\x88\x01\x01\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npaginationB\x0c\n\n_owner_did\"m\n\x0fOnlineAgentInfo\x12&\n\x05\x61gent\x18\x01 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x05\x61gent\x12!\n\x06moment\x18\x02 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x06moment\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\t\n\x07_moment\"w\n\x0eListOnlineResp\x12\x1f\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x01H\x00R\x05total\x88\x01\x01\x12\x34\n\x05infos\x18\x02 \x03(\x0b\x32\x18.hi.club.OnlineAgentInfoB\x04\x90\xb5\x18\x01R\x05infos:\x04\x98\xb5\x18\x01\x42\x08\n\x06_total\"\\\n\x14ListAgentsByUsersReq\x12\x14\n\x05users\x18\x01 \x03(\tR\x05users\x12.\n\npagination\x18\x02 \x01(\x0b\x32\x0e.hi.PaginationR\npagination\"q\n\x0eListAgentsResp\x12\x1f\n\x05total\x18\x01 \x01(\x05\x42\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01\x12.\n\x06\x61gents\x18\x02 \x03(\x0b\x32\x10.hi.ai.AgentInfoB\x04\x90\xb5\x18\x03R\x06\x61gents:\x04\x98\xb5\x18\x03\x42\x08\n\x06_total\"q\n\x11SetAgentMomentReq\x12*\n\x05\x61gent\x18\x01 \x01(\tB\x0f\xbaH\x0cr\x07\x32\x05^\\S+$\xc8\x01\x01H\x00R\x05\x61gent\x88\x01\x01\x12\x1b\n\x06moment\x18\x02 \x01(\tH\x01R\x06moment\x88\x01\x01\x42\x08\n\x06_agentB\t\n\x07_moment\"I\n\x11GetAgentMomentReq\x12*\n\x05\x61gent\x18\x01 \x01(\tB\x0f\xbaH\x0cr\x07\x32\x05^\\S+$\xc8\x01\x01H\x00R\x05\x61gent\x88\x01\x01\x42\x08\n\x06_agent\"H\n\x12GetAgentMomentResp\x12!\n\x06moment\x18\x01 \x01(\tB\x04\x90\xb5\x18\x01H\x00R\x06moment\x88\x01\x01:\x04\x98\xb5\x18\x01\x42\t\n\x07_moment\"\xe7\x03\n\x13\x41gentDeviceSettings\x12&\n\x05\x61gent\x18\x01 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x05\x61gent\x12\x39\n\x13voice_reply_enabled\x18\x02 \x01(\x08\x42\x04\x90\xb5\x18\x03H\x00R\x11voiceReplyEnabled\x88\x01\x01\x12%\n\x08revision\x18\x03 \x01(\x04\x42\x04\x90\xb5\x18\x03H\x01R\x08revision\x88\x01\x01\x12\x34\n\x04wake\x18\x04 \x01(\x0b\x32\x1a.hi.club.AgentWakeSettingsB\x04\x90\xb5\x18\x03R\x04wake\x12\x45\n\x19owner_recognition_enabled\x18\x05 \x01(\x08\x42\x04\x90\xb5\x18\x03H\x02R\x17ownerRecognitionEnabled\x88\x01\x01\x12\x43\n\nowner_face\x18\x06 \x01(\x0b\x32\x1e.hi.club.AgentOwnerFaceProfileB\x04\x90\xb5\x18\x03R\townerFace\x12;\n\x07runtime\x18\x07 \x01(\x0b\x32\x1b.hi.club.AgentDeviceRuntimeB\x04\x90\xb5\x18\x03R\x07runtime:\x04\x98\xb5\x18\x03\x42\x16\n\x14_voice_reply_enabledB\x0b\n\t_revisionB\x1c\n\x1a_owner_recognition_enabled\"P\n\x18\x41gentDeviceSettingsQuery\x12*\n\x05\x61gent\x18\x01 \x01(\tB\x0f\xbaH\x0cr\x07\x32\x05^\\S+$\xc8\x01\x01H\x00R\x05\x61gent\x88\x01\x01\x42\x08\n\x06_agent\"\xeb\x02\n\x19SetAgentDeviceSettingsReq\x12*\n\x05\x61gent\x18\x01 \x01(\tB\x0f\xbaH\x0cr\x07\x32\x05^\\S+$\xc8\x01\x01H\x00R\x05\x61gent\x88\x01\x01\x12\x33\n\x13voice_reply_enabled\x18\x02 \x01(\x08H\x01R\x11voiceReplyEnabled\x88\x01\x01\x12.\n\x04wake\x18\x03 \x01(\x0b\x32\x1a.hi.club.AgentWakeSettingsR\x04wake\x12?\n\x19owner_recognition_enabled\x18\x04 \x01(\x08H\x02R\x17ownerRecognitionEnabled\x88\x01\x01\x12<\n\nowner_face\x18\x05 \x01(\x0b\x32\x1d.hi.club.AgentOwnerFaceUploadR\townerFaceB\x08\n\x06_agentB\x16\n\x14_voice_reply_enabledB\x1c\n\x1a_owner_recognition_enabled2\x96\t\n\x05\x41gent\x12[\n\x11GetDeviceSettings\x12!.hi.club.AgentDeviceSettingsQuery\x1a\x1c.hi.club.AgentDeviceSettings\"\x05\x8a\xb5\x18\x01\x02\x12\\\n\x11SetDeviceSettings\x12\".hi.club.SetAgentDeviceSettingsReq\x1a\x1c.hi.club.AgentDeviceSettings\"\x05\x8a\xb5\x18\x01\x02\x12_\n\x11GetOwnerFacePhoto\x12!.hi.club.AgentOwnerFacePhotoQuery\x1a .hi.club.AgentOwnerFacePhotoData\"\x05\x8a\xb5\x18\x01\x02\x12W\n\x13ReportDeviceRuntime\x12!.hi.club.AgentDeviceRuntimeReport\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12<\n\x04List\x12\x14.hi.ai.ListAgentsReq\x1a\x17.hi.club.ListAgentsResp\"\x05\x8a\xb5\x18\x01\x02\x12K\n\x0f\x43reateAssistant\x12\x19.hi.ai.CreateAssistantReq\x1a\x16.hi.ai.CreateAgentResp\"\x05\x8a\xb5\x18\x01\x02\x12.\n\x04\x45\x64it\x12\x13.hi.ai.EditAgentReq\x1a\n.hi.Entity\"\x05\x8a\xb5\x18\x01\x02\x12>\n\x06\x44\x65lete\x12\x15.hi.ai.DeleteAgentReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12\x35\n\x03Get\x12\x12.hi.ai.GetAgentReq\x1a\x13.hi.ai.GetAgentResp\"\x05\x8a\xb5\x18\x01\x02\x12>\n\x08GetUsage\x12\x14.hi.ai.AgentUsageReq\x1a\x15.hi.ai.AgentUsageResp\"\x05\x8a\xb5\x18\x01\x02\x12K\n\x10GetDefaultConfig\x12\x16.google.protobuf.Empty\x1a\x18.hi.ai.DefaultConfigResp\"\x05\x8a\xb5\x18\x01\x02\x12\x43\n\nBindMaster\x12\x16.hi.club.MasterBindReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12\x45\n\x0cUnbindMaster\x12\x16.hi.club.MasterBindReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12\x44\n\nBindStatus\x12\x16.hi.club.BindStatusReq\x1a\x17.hi.club.BindStatusResp\"\x05\x8a\xb5\x18\x01\x02\x12?\n\x08Transfer\x12\x14.hi.club.TransferReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x12\x46\n\tSetMoment\x12\x1a.hi.club.SetAgentMomentReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x02\x32\xa3\x01\n\x0e\x41gentDirectory\x12\x44\n\nListOnline\x12\x16.hi.club.ListOnlineReq\x1a\x17.hi.club.ListOnlineResp\"\x05\x8a\xb5\x18\x01\x01\x12K\n\tGetMoment\x12\x1a.hi.club.GetAgentMomentReq\x1a\x1b.hi.club.GetAgentMomentResp\"\x05\x8a\xb5\x18\x01\x01\x32T\n\x0b\x41gentManage\x12\x45\n\x04List\x12\x1d.hi.club.ListAgentsByUsersReq\x1a\x17.hi.club.ListAgentsResp\"\x05\x8a\xb5\x18\x01\x04\x42+Z)github.com/HiWorld-56/hi-proto/go/hi/clubb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -75,6 +76,14 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_AGENTDEVICESETTINGS'].fields_by_name['voice_reply_enabled']._serialized_options = b'\220\265\030\003'
   _globals['_AGENTDEVICESETTINGS'].fields_by_name['revision']._loaded_options = None
   _globals['_AGENTDEVICESETTINGS'].fields_by_name['revision']._serialized_options = b'\220\265\030\003'
+  _globals['_AGENTDEVICESETTINGS'].fields_by_name['wake']._loaded_options = None
+  _globals['_AGENTDEVICESETTINGS'].fields_by_name['wake']._serialized_options = b'\220\265\030\003'
+  _globals['_AGENTDEVICESETTINGS'].fields_by_name['owner_recognition_enabled']._loaded_options = None
+  _globals['_AGENTDEVICESETTINGS'].fields_by_name['owner_recognition_enabled']._serialized_options = b'\220\265\030\003'
+  _globals['_AGENTDEVICESETTINGS'].fields_by_name['owner_face']._loaded_options = None
+  _globals['_AGENTDEVICESETTINGS'].fields_by_name['owner_face']._serialized_options = b'\220\265\030\003'
+  _globals['_AGENTDEVICESETTINGS'].fields_by_name['runtime']._loaded_options = None
+  _globals['_AGENTDEVICESETTINGS'].fields_by_name['runtime']._serialized_options = b'\220\265\030\003'
   _globals['_AGENTDEVICESETTINGS']._loaded_options = None
   _globals['_AGENTDEVICESETTINGS']._serialized_options = b'\230\265\030\003'
   _globals['_AGENTDEVICESETTINGSQUERY'].fields_by_name['agent']._loaded_options = None
@@ -85,6 +94,10 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_AGENT'].methods_by_name['GetDeviceSettings']._serialized_options = b'\212\265\030\001\002'
   _globals['_AGENT'].methods_by_name['SetDeviceSettings']._loaded_options = None
   _globals['_AGENT'].methods_by_name['SetDeviceSettings']._serialized_options = b'\212\265\030\001\002'
+  _globals['_AGENT'].methods_by_name['GetOwnerFacePhoto']._loaded_options = None
+  _globals['_AGENT'].methods_by_name['GetOwnerFacePhoto']._serialized_options = b'\212\265\030\001\002'
+  _globals['_AGENT'].methods_by_name['ReportDeviceRuntime']._loaded_options = None
+  _globals['_AGENT'].methods_by_name['ReportDeviceRuntime']._serialized_options = b'\212\265\030\001\002'
   _globals['_AGENT'].methods_by_name['List']._loaded_options = None
   _globals['_AGENT'].methods_by_name['List']._serialized_options = b'\212\265\030\001\002'
   _globals['_AGENT'].methods_by_name['CreateAssistant']._loaded_options = None
@@ -115,40 +128,40 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_AGENTDIRECTORY'].methods_by_name['GetMoment']._serialized_options = b'\212\265\030\001\001'
   _globals['_AGENTMANAGE'].methods_by_name['List']._loaded_options = None
   _globals['_AGENTMANAGE'].methods_by_name['List']._serialized_options = b'\212\265\030\001\004'
-  _globals['_MASTERBINDREQ']._serialized_start=144
-  _globals['_MASTERBINDREQ']._serialized_end=213
-  _globals['_BINDSTATUSREQ']._serialized_start=215
-  _globals['_BINDSTATUSREQ']._serialized_end=267
-  _globals['_BINDSTATUSRESP']._serialized_start=269
-  _globals['_BINDSTATUSRESP']._serialized_end=333
-  _globals['_TRANSFERREQ']._serialized_start=335
-  _globals['_TRANSFERREQ']._serialized_end=413
-  _globals['_LISTONLINEREQ']._serialized_start=415
-  _globals['_LISTONLINEREQ']._serialized_end=526
-  _globals['_ONLINEAGENTINFO']._serialized_start=528
-  _globals['_ONLINEAGENTINFO']._serialized_end=637
-  _globals['_LISTONLINERESP']._serialized_start=639
-  _globals['_LISTONLINERESP']._serialized_end=758
-  _globals['_LISTAGENTSBYUSERSREQ']._serialized_start=760
-  _globals['_LISTAGENTSBYUSERSREQ']._serialized_end=852
-  _globals['_LISTAGENTSRESP']._serialized_start=854
-  _globals['_LISTAGENTSRESP']._serialized_end=967
-  _globals['_SETAGENTMOMENTREQ']._serialized_start=969
-  _globals['_SETAGENTMOMENTREQ']._serialized_end=1082
-  _globals['_GETAGENTMOMENTREQ']._serialized_start=1084
-  _globals['_GETAGENTMOMENTREQ']._serialized_end=1157
-  _globals['_GETAGENTMOMENTRESP']._serialized_start=1159
-  _globals['_GETAGENTMOMENTRESP']._serialized_end=1231
-  _globals['_AGENTDEVICESETTINGS']._serialized_start=1234
-  _globals['_AGENTDEVICESETTINGS']._serialized_end=1436
-  _globals['_AGENTDEVICESETTINGSQUERY']._serialized_start=1438
-  _globals['_AGENTDEVICESETTINGSQUERY']._serialized_end=1518
-  _globals['_SETAGENTDEVICESETTINGSREQ']._serialized_start=1521
-  _globals['_SETAGENTDEVICESETTINGSREQ']._serialized_end=1679
-  _globals['_AGENT']._serialized_start=1682
-  _globals['_AGENT']._serialized_end=2670
-  _globals['_AGENTDIRECTORY']._serialized_start=2673
-  _globals['_AGENTDIRECTORY']._serialized_end=2836
-  _globals['_AGENTMANAGE']._serialized_start=2838
-  _globals['_AGENTMANAGE']._serialized_end=2922
+  _globals['_MASTERBINDREQ']._serialized_start=172
+  _globals['_MASTERBINDREQ']._serialized_end=241
+  _globals['_BINDSTATUSREQ']._serialized_start=243
+  _globals['_BINDSTATUSREQ']._serialized_end=295
+  _globals['_BINDSTATUSRESP']._serialized_start=297
+  _globals['_BINDSTATUSRESP']._serialized_end=361
+  _globals['_TRANSFERREQ']._serialized_start=363
+  _globals['_TRANSFERREQ']._serialized_end=441
+  _globals['_LISTONLINEREQ']._serialized_start=443
+  _globals['_LISTONLINEREQ']._serialized_end=554
+  _globals['_ONLINEAGENTINFO']._serialized_start=556
+  _globals['_ONLINEAGENTINFO']._serialized_end=665
+  _globals['_LISTONLINERESP']._serialized_start=667
+  _globals['_LISTONLINERESP']._serialized_end=786
+  _globals['_LISTAGENTSBYUSERSREQ']._serialized_start=788
+  _globals['_LISTAGENTSBYUSERSREQ']._serialized_end=880
+  _globals['_LISTAGENTSRESP']._serialized_start=882
+  _globals['_LISTAGENTSRESP']._serialized_end=995
+  _globals['_SETAGENTMOMENTREQ']._serialized_start=997
+  _globals['_SETAGENTMOMENTREQ']._serialized_end=1110
+  _globals['_GETAGENTMOMENTREQ']._serialized_start=1112
+  _globals['_GETAGENTMOMENTREQ']._serialized_end=1185
+  _globals['_GETAGENTMOMENTRESP']._serialized_start=1187
+  _globals['_GETAGENTMOMENTRESP']._serialized_end=1259
+  _globals['_AGENTDEVICESETTINGS']._serialized_start=1262
+  _globals['_AGENTDEVICESETTINGS']._serialized_end=1749
+  _globals['_AGENTDEVICESETTINGSQUERY']._serialized_start=1751
+  _globals['_AGENTDEVICESETTINGSQUERY']._serialized_end=1831
+  _globals['_SETAGENTDEVICESETTINGSREQ']._serialized_start=1834
+  _globals['_SETAGENTDEVICESETTINGSREQ']._serialized_end=2197
+  _globals['_AGENT']._serialized_start=2200
+  _globals['_AGENT']._serialized_end=3374
+  _globals['_AGENTDIRECTORY']._serialized_start=3377
+  _globals['_AGENTDIRECTORY']._serialized_end=3540
+  _globals['_AGENTMANAGE']._serialized_start=3542
+  _globals['_AGENTMANAGE']._serialized_end=3626
 # @@protoc_insertion_point(module_scope)

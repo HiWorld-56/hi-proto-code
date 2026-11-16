@@ -99,6 +99,68 @@ func local_request_Agent_SetDeviceSettings_0(ctx context.Context, marshaler runt
 	return msg, metadata, err
 }
 
+var filter_Agent_GetOwnerFacePhoto_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+
+func request_Agent_GetOwnerFacePhoto_0(ctx context.Context, marshaler runtime.Marshaler, client AgentClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq AgentOwnerFacePhotoQuery
+		metadata runtime.ServerMetadata
+	)
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Agent_GetOwnerFacePhoto_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := client.GetOwnerFacePhoto(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_Agent_GetOwnerFacePhoto_0(ctx context.Context, marshaler runtime.Marshaler, server AgentServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq AgentOwnerFacePhotoQuery
+		metadata runtime.ServerMetadata
+	)
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Agent_GetOwnerFacePhoto_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.GetOwnerFacePhoto(ctx, &protoReq)
+	return msg, metadata, err
+}
+
+func request_Agent_ReportDeviceRuntime_0(ctx context.Context, marshaler runtime.Marshaler, client AgentClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq AgentDeviceRuntimeReport
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	msg, err := client.ReportDeviceRuntime(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_Agent_ReportDeviceRuntime_0(ctx context.Context, marshaler runtime.Marshaler, server AgentServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq AgentDeviceRuntimeReport
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.ReportDeviceRuntime(ctx, &protoReq)
+	return msg, metadata, err
+}
+
 func request_Agent_List_0(ctx context.Context, marshaler runtime.Marshaler, client AgentClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq ai.ListAgentsReq
@@ -552,6 +614,46 @@ func RegisterAgentHandlerServer(ctx context.Context, mux *runtime.ServeMux, serv
 		}
 		forward_Agent_SetDeviceSettings_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
+	mux.Handle(http.MethodGet, pattern_Agent_GetOwnerFacePhoto_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Agent/GetOwnerFacePhoto", runtime.WithHTTPPathPattern("/api/v1/agent/get_owner_face_photo"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_Agent_GetOwnerFacePhoto_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_Agent_GetOwnerFacePhoto_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPost, pattern_Agent_ReportDeviceRuntime_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.club.Agent/ReportDeviceRuntime", runtime.WithHTTPPathPattern("/api/v1/agent/report_device_runtime"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_Agent_ReportDeviceRuntime_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_Agent_ReportDeviceRuntime_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
 	mux.Handle(http.MethodPost, pattern_Agent_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -946,6 +1048,40 @@ func RegisterAgentHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 		}
 		forward_Agent_SetDeviceSettings_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
+	mux.Handle(http.MethodGet, pattern_Agent_GetOwnerFacePhoto_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Agent/GetOwnerFacePhoto", runtime.WithHTTPPathPattern("/api/v1/agent/get_owner_face_photo"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_Agent_GetOwnerFacePhoto_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_Agent_GetOwnerFacePhoto_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPost, pattern_Agent_ReportDeviceRuntime_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.club.Agent/ReportDeviceRuntime", runtime.WithHTTPPathPattern("/api/v1/agent/report_device_runtime"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_Agent_ReportDeviceRuntime_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_Agent_ReportDeviceRuntime_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
 	mux.Handle(http.MethodPost, pattern_Agent_List_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -1154,37 +1290,41 @@ func RegisterAgentHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 }
 
 var (
-	pattern_Agent_GetDeviceSettings_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "get_device_settings"}, ""))
-	pattern_Agent_SetDeviceSettings_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "set_device_settings"}, ""))
-	pattern_Agent_List_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "list"}, ""))
-	pattern_Agent_CreateAssistant_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "create_assistant"}, ""))
-	pattern_Agent_Edit_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "edit"}, ""))
-	pattern_Agent_Delete_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "delete"}, ""))
-	pattern_Agent_Get_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "get"}, ""))
-	pattern_Agent_GetUsage_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "get_usage"}, ""))
-	pattern_Agent_GetDefaultConfig_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "get_default_config"}, ""))
-	pattern_Agent_BindMaster_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "bind_master"}, ""))
-	pattern_Agent_UnbindMaster_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "unbind_master"}, ""))
-	pattern_Agent_BindStatus_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Agent", "BindStatus"}, ""))
-	pattern_Agent_Transfer_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "transfer"}, ""))
-	pattern_Agent_SetMoment_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "set_moment"}, ""))
+	pattern_Agent_GetDeviceSettings_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "get_device_settings"}, ""))
+	pattern_Agent_SetDeviceSettings_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "set_device_settings"}, ""))
+	pattern_Agent_GetOwnerFacePhoto_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "get_owner_face_photo"}, ""))
+	pattern_Agent_ReportDeviceRuntime_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "report_device_runtime"}, ""))
+	pattern_Agent_List_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "list"}, ""))
+	pattern_Agent_CreateAssistant_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "create_assistant"}, ""))
+	pattern_Agent_Edit_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "edit"}, ""))
+	pattern_Agent_Delete_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "delete"}, ""))
+	pattern_Agent_Get_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "get"}, ""))
+	pattern_Agent_GetUsage_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "get_usage"}, ""))
+	pattern_Agent_GetDefaultConfig_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "get_default_config"}, ""))
+	pattern_Agent_BindMaster_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "bind_master"}, ""))
+	pattern_Agent_UnbindMaster_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "unbind_master"}, ""))
+	pattern_Agent_BindStatus_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.club.Agent", "BindStatus"}, ""))
+	pattern_Agent_Transfer_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "transfer"}, ""))
+	pattern_Agent_SetMoment_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "agent", "set_moment"}, ""))
 )
 
 var (
-	forward_Agent_GetDeviceSettings_0 = runtime.ForwardResponseMessage
-	forward_Agent_SetDeviceSettings_0 = runtime.ForwardResponseMessage
-	forward_Agent_List_0              = runtime.ForwardResponseMessage
-	forward_Agent_CreateAssistant_0   = runtime.ForwardResponseMessage
-	forward_Agent_Edit_0              = runtime.ForwardResponseMessage
-	forward_Agent_Delete_0            = runtime.ForwardResponseMessage
-	forward_Agent_Get_0               = runtime.ForwardResponseMessage
-	forward_Agent_GetUsage_0          = runtime.ForwardResponseMessage
-	forward_Agent_GetDefaultConfig_0  = runtime.ForwardResponseMessage
-	forward_Agent_BindMaster_0        = runtime.ForwardResponseMessage
-	forward_Agent_UnbindMaster_0      = runtime.ForwardResponseMessage
-	forward_Agent_BindStatus_0        = runtime.ForwardResponseMessage
-	forward_Agent_Transfer_0          = runtime.ForwardResponseMessage
-	forward_Agent_SetMoment_0         = runtime.ForwardResponseMessage
+	forward_Agent_GetDeviceSettings_0   = runtime.ForwardResponseMessage
+	forward_Agent_SetDeviceSettings_0   = runtime.ForwardResponseMessage
+	forward_Agent_GetOwnerFacePhoto_0   = runtime.ForwardResponseMessage
+	forward_Agent_ReportDeviceRuntime_0 = runtime.ForwardResponseMessage
+	forward_Agent_List_0                = runtime.ForwardResponseMessage
+	forward_Agent_CreateAssistant_0     = runtime.ForwardResponseMessage
+	forward_Agent_Edit_0                = runtime.ForwardResponseMessage
+	forward_Agent_Delete_0              = runtime.ForwardResponseMessage
+	forward_Agent_Get_0                 = runtime.ForwardResponseMessage
+	forward_Agent_GetUsage_0            = runtime.ForwardResponseMessage
+	forward_Agent_GetDefaultConfig_0    = runtime.ForwardResponseMessage
+	forward_Agent_BindMaster_0          = runtime.ForwardResponseMessage
+	forward_Agent_UnbindMaster_0        = runtime.ForwardResponseMessage
+	forward_Agent_BindStatus_0          = runtime.ForwardResponseMessage
+	forward_Agent_Transfer_0            = runtime.ForwardResponseMessage
+	forward_Agent_SetMoment_0           = runtime.ForwardResponseMessage
 )
 
 // RegisterAgentDirectoryHandlerFromEndpoint is same as RegisterAgentDirectoryHandler but

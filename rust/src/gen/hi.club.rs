@@ -2633,6 +2633,72 @@ pub mod product_market_directory_client {
         }
     }
 }
+/// 设备端执行；默认 enabled=false，phrases=\[\]，续聊30秒。不是 hi.ai 的推理配置。
+/// enabled=true 时必须有1～3个中文短语；有效问答刷新续聊窗口，噪声和空转写不刷新。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct AgentWakeSettings {
+    #[prost(bool, optional, tag = "1")]
+    pub enabled: ::core::option::Option<bool>,
+    #[prost(string, repeated, tag = "2")]
+    pub phrases: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    #[prost(uint32, optional, tag = "3")]
+    pub conversation_window_seconds: ::core::option::Option<u32>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct AgentOwnerFacePhoto {
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub sha256: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AgentOwnerFaceProfile {
+    #[prost(message, optional, tag = "1")]
+    pub owner: ::core::option::Option<super::Entity>,
+    #[prost(message, repeated, tag = "2")]
+    pub photos: ::prost::alloc::vec::Vec<AgentOwnerFacePhoto>,
+}
+/// 整体替换1～3张JPEG；空列表清除。服务端限制大小、解码尺寸并校验归属。
+/// 原片通过鉴权RPC读取，禁止把主人照片转成公开头像/公开URL。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct AgentOwnerFaceUpload {
+    #[prost(bytes = "vec", repeated, tag = "1")]
+    pub jpeg: ::prost::alloc::vec::Vec<::prost::alloc::vec::Vec<u8>>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct AgentOwnerFacePhotoQuery {
+    #[prost(string, optional, tag = "1")]
+    pub agent: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct AgentOwnerFacePhotoData {
+    #[prost(message, optional, tag = "1")]
+    pub photo: ::core::option::Option<AgentOwnerFacePhoto>,
+    #[prost(bytes = "vec", optional, tag = "2")]
+    pub jpeg: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct AgentDeviceRuntime {
+    #[prost(uint64, optional, tag = "1")]
+    pub settings_revision: ::core::option::Option<u64>,
+    #[prost(bool, optional, tag = "2")]
+    pub wake_ready: ::core::option::Option<bool>,
+    #[prost(bool, optional, tag = "3")]
+    pub owner_face_ready: ::core::option::Option<bool>,
+    /// 仅配置/加载错误，不含原片或特征向量
+    #[prost(string, optional, tag = "4")]
+    pub error: ::core::option::Option<::prost::alloc::string::String>,
+    /// 服务端UTC秒
+    #[prost(int64, optional, tag = "5")]
+    pub updated_at: ::core::option::Option<i64>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct AgentDeviceRuntimeReport {
+    #[prost(message, optional, tag = "1")]
+    pub runtime: ::core::option::Option<AgentDeviceRuntime>,
+}
 /// 绑定/解绑机器人的主人。
 ///
 /// ⚠️ **没有 master 字段** —— 主人恒是 token 里的人。原先收 `master` 并靠 handler
@@ -2775,7 +2841,7 @@ pub struct GetAgentMomentResp {
 /// 硬件机器人的设备交互设置；由 club 保存，设备负责执行，不属于 hi.ai 的模型配置。
 /// 未保存过的机器人默认关闭语音回复、revision=0；读取总是返回明确的布尔值及版本。
 /// 设置从下一轮面对面提问生效；HiClub文字聊天与屏幕文字不受影响。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AgentDeviceSettings {
     #[prost(message, optional, tag = "1")]
     pub agent: ::core::option::Option<super::Entity>,
@@ -2783,6 +2849,15 @@ pub struct AgentDeviceSettings {
     pub voice_reply_enabled: ::core::option::Option<bool>,
     #[prost(uint64, optional, tag = "3")]
     pub revision: ::core::option::Option<u64>,
+    #[prost(message, optional, tag = "4")]
+    pub wake: ::core::option::Option<AgentWakeSettings>,
+    /// 默认关闭；只是一对一主人在场校验，不赋予语音身份
+    #[prost(bool, optional, tag = "5")]
+    pub owner_recognition_enabled: ::core::option::Option<bool>,
+    #[prost(message, optional, tag = "6")]
+    pub owner_face: ::core::option::Option<AgentOwnerFaceProfile>,
+    #[prost(message, optional, tag = "7")]
+    pub runtime: ::core::option::Option<AgentDeviceRuntime>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct AgentDeviceSettingsQuery {
@@ -2796,6 +2871,15 @@ pub struct SetAgentDeviceSettingsReq {
     /// 不传=不改，false=明确关闭
     #[prost(bool, optional, tag = "2")]
     pub voice_reply_enabled: ::core::option::Option<bool>,
+    /// 不传=不改；传入时整体替换，含开关、词表、续聊时间
+    #[prost(message, optional, tag = "3")]
+    pub wake: ::core::option::Option<AgentWakeSettings>,
+    /// 不传=不改，false=明确关闭
+    #[prost(bool, optional, tag = "4")]
+    pub owner_recognition_enabled: ::core::option::Option<bool>,
+    /// 不传=不改；空列表=清除；照片仅供本机一对一校验，不进入公开资源库
+    #[prost(message, optional, tag = "5")]
+    pub owner_face: ::core::option::Option<AgentOwnerFaceUpload>,
 }
 /// Generated client implementations.
 pub mod agent_client {
@@ -2935,6 +3019,52 @@ pub mod agent_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("hi.club.Agent", "SetDeviceSettings"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get_owner_face_photo(
+            &mut self,
+            request: impl tonic::IntoRequest<super::AgentOwnerFacePhotoQuery>,
+        ) -> std::result::Result<
+            tonic::Response<super::AgentOwnerFacePhotoData>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Agent/GetOwnerFacePhoto",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Agent", "GetOwnerFacePhoto"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 只有机器人本人能报告；配置已保存与设备已成功加载分开表达。
+        pub async fn report_device_runtime(
+            &mut self,
+            request: impl tonic::IntoRequest<super::AgentDeviceRuntimeReport>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/hi.club.Agent/ReportDeviceRuntime",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("hi.club.Agent", "ReportDeviceRuntime"));
             self.inner.unary(req, path, codec).await
         }
         /// 列我的机器人。归属**只看 club 自己的 relation(master 关系)** —— club 的机器人关系
@@ -3452,6 +3582,104 @@ pub mod agent_manage_client {
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.club.AgentManage", "List"));
             self.inner.unary(req, path, codec).await
+        }
+    }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct OwnerWithdrawal {
+    /// 确切金额；第一版不支持语音“全提”
+    #[prost(message, optional, tag = "1")]
+    pub amount: ::core::option::Option<super::did::CoinAmount>,
+    /// 恒为创建请求时的主人
+    #[prost(message, optional, tag = "2")]
+    pub payee: ::core::option::Option<super::Entity>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct OwnerAction {
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub agent: ::core::option::Option<super::Entity>,
+    #[prost(message, optional, tag = "3")]
+    pub owner: ::core::option::Option<super::Entity>,
+    #[prost(uint64, optional, tag = "4")]
+    pub revision: ::core::option::Option<u64>,
+    #[prost(enumeration = "OwnerActionState", optional, tag = "5")]
+    pub state: ::core::option::Option<i32>,
+    /// UTC秒
+    #[prost(int64, optional, tag = "6")]
+    pub created_at: ::core::option::Option<i64>,
+    /// UTC秒
+    #[prost(int64, optional, tag = "7")]
+    pub expires_at: ::core::option::Option<i64>,
+    /// 只有实际交易产生后才有值
+    #[prost(message, optional, tag = "9")]
+    pub result: ::core::option::Option<super::did::Transaction>,
+    #[prost(string, optional, tag = "10")]
+    pub error: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(oneof = "owner_action::Action", tags = "8")]
+    pub action: ::core::option::Option<owner_action::Action>,
+}
+/// Nested message and enum types in `OwnerAction`.
+pub mod owner_action {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Action {
+        #[prost(message, tag = "8")]
+        Withdrawal(super::OwnerWithdrawal),
+    }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct OwnerActionReply {
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    /// 不传非法；false=明确拒绝
+    #[prost(bool, optional, tag = "2")]
+    pub confirm: ::core::option::Option<bool>,
+}
+/// 主人在场只允许创建请求；真正授权来自当前主人认证发送的单聊回复。
+/// 请求在 brain 落盘，UUID 与消息信封UUID不同；冻结参数，不重新调用LLM解释“确认”。
+/// 同一id按revision合并；终态不可恢复到待确认。执行结果未知不得自动重付。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum OwnerActionState {
+    Unspecified = 0,
+    Pending = 1,
+    Executing = 2,
+    Done = 3,
+    Cancelled = 4,
+    Expired = 5,
+    Failed = 6,
+    Unknown = 7,
+}
+impl OwnerActionState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "OWNER_ACTION_STATE_UNSPECIFIED",
+            Self::Pending => "OWNER_ACTION_STATE_PENDING",
+            Self::Executing => "OWNER_ACTION_STATE_EXECUTING",
+            Self::Done => "OWNER_ACTION_STATE_DONE",
+            Self::Cancelled => "OWNER_ACTION_STATE_CANCELLED",
+            Self::Expired => "OWNER_ACTION_STATE_EXPIRED",
+            Self::Failed => "OWNER_ACTION_STATE_FAILED",
+            Self::Unknown => "OWNER_ACTION_STATE_UNKNOWN",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "OWNER_ACTION_STATE_UNSPECIFIED" => Some(Self::Unspecified),
+            "OWNER_ACTION_STATE_PENDING" => Some(Self::Pending),
+            "OWNER_ACTION_STATE_EXECUTING" => Some(Self::Executing),
+            "OWNER_ACTION_STATE_DONE" => Some(Self::Done),
+            "OWNER_ACTION_STATE_CANCELLED" => Some(Self::Cancelled),
+            "OWNER_ACTION_STATE_EXPIRED" => Some(Self::Expired),
+            "OWNER_ACTION_STATE_FAILED" => Some(Self::Failed),
+            "OWNER_ACTION_STATE_UNKNOWN" => Some(Self::Unknown),
+            _ => None,
         }
     }
 }
@@ -5018,6 +5246,8 @@ pub struct Member {
 /// binance_signal 币安跟单信号     kind=binance_signal(hi.binance.BinanceSignal)—— 信号源机器人发、@所有人,见 hi/binance/signal.proto
 /// binance_offer 币安开单卡       kind=binance_offer(hi.binance.BinanceOffer)—— 跟单方机器人发给主人,同一 id 叠成一张,见 hi/binance/offer.proto
 /// binance_offer_reply 开单卡回复  kind=binance_offer_reply(hi.binance.BinanceOfferReply)—— 主人发给机器人,只认主人
+/// owner_action 主人逐项确认卡 kind=owner_action(hi.club.OwnerAction)
+/// owner_action_reply 主人确认回执 kind=owner_action_reply(hi.club.OwnerActionReply)
 /// chat_record 聊天记录(合并转发)  kind=record(hi.club.ChatRecord)—— 原样内嵌被转发的那几条完整消息
 ///
 /// ⚠️ **注意是 `image_url` 不是 `image`、`audio_url` 不是 `audio`。**
@@ -5063,7 +5293,7 @@ pub struct Content {
     /// 用途:引用消息里的某一段 —— `<消息 uuid>#<id>`,见下面「引用」那段。
     #[prost(uint32, optional, tag = "8")]
     pub id: ::core::option::Option<u32>,
-    #[prost(oneof = "content::Kind", tags = "2, 3, 5, 6, 7, 9, 10, 11")]
+    #[prost(oneof = "content::Kind", tags = "12, 13, 2, 3, 5, 6, 7, 9, 10, 11")]
     pub kind: ::core::option::Option<content::Kind>,
 }
 /// Nested message and enum types in `Content`.
@@ -5092,6 +5322,10 @@ pub mod content {
     }
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Kind {
+        #[prost(message, tag = "12")]
+        OwnerAction(super::OwnerAction),
+        #[prost(message, tag = "13")]
+        OwnerActionReply(super::OwnerActionReply),
         #[prost(message, tag = "2")]
         Chat(Chat),
         /// Transaction=公开

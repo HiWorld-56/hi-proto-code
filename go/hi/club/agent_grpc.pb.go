@@ -22,20 +22,22 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Agent_GetDeviceSettings_FullMethodName = "/hi.club.Agent/GetDeviceSettings"
-	Agent_SetDeviceSettings_FullMethodName = "/hi.club.Agent/SetDeviceSettings"
-	Agent_List_FullMethodName              = "/hi.club.Agent/List"
-	Agent_CreateAssistant_FullMethodName   = "/hi.club.Agent/CreateAssistant"
-	Agent_Edit_FullMethodName              = "/hi.club.Agent/Edit"
-	Agent_Delete_FullMethodName            = "/hi.club.Agent/Delete"
-	Agent_Get_FullMethodName               = "/hi.club.Agent/Get"
-	Agent_GetUsage_FullMethodName          = "/hi.club.Agent/GetUsage"
-	Agent_GetDefaultConfig_FullMethodName  = "/hi.club.Agent/GetDefaultConfig"
-	Agent_BindMaster_FullMethodName        = "/hi.club.Agent/BindMaster"
-	Agent_UnbindMaster_FullMethodName      = "/hi.club.Agent/UnbindMaster"
-	Agent_BindStatus_FullMethodName        = "/hi.club.Agent/BindStatus"
-	Agent_Transfer_FullMethodName          = "/hi.club.Agent/Transfer"
-	Agent_SetMoment_FullMethodName         = "/hi.club.Agent/SetMoment"
+	Agent_GetDeviceSettings_FullMethodName   = "/hi.club.Agent/GetDeviceSettings"
+	Agent_SetDeviceSettings_FullMethodName   = "/hi.club.Agent/SetDeviceSettings"
+	Agent_GetOwnerFacePhoto_FullMethodName   = "/hi.club.Agent/GetOwnerFacePhoto"
+	Agent_ReportDeviceRuntime_FullMethodName = "/hi.club.Agent/ReportDeviceRuntime"
+	Agent_List_FullMethodName                = "/hi.club.Agent/List"
+	Agent_CreateAssistant_FullMethodName     = "/hi.club.Agent/CreateAssistant"
+	Agent_Edit_FullMethodName                = "/hi.club.Agent/Edit"
+	Agent_Delete_FullMethodName              = "/hi.club.Agent/Delete"
+	Agent_Get_FullMethodName                 = "/hi.club.Agent/Get"
+	Agent_GetUsage_FullMethodName            = "/hi.club.Agent/GetUsage"
+	Agent_GetDefaultConfig_FullMethodName    = "/hi.club.Agent/GetDefaultConfig"
+	Agent_BindMaster_FullMethodName          = "/hi.club.Agent/BindMaster"
+	Agent_UnbindMaster_FullMethodName        = "/hi.club.Agent/UnbindMaster"
+	Agent_BindStatus_FullMethodName          = "/hi.club.Agent/BindStatus"
+	Agent_Transfer_FullMethodName            = "/hi.club.Agent/Transfer"
+	Agent_SetMoment_FullMethodName           = "/hi.club.Agent/SetMoment"
 )
 
 // AgentClient is the client API for Agent service.
@@ -45,6 +47,9 @@ type AgentClient interface {
 	// 当前主人可读写；硬件机器人本人只读。权限归 club 现有主从关系，不按 hi.ai creator 判断。
 	GetDeviceSettings(ctx context.Context, in *AgentDeviceSettingsQuery, opts ...grpc.CallOption) (*AgentDeviceSettings, error)
 	SetDeviceSettings(ctx context.Context, in *SetAgentDeviceSettingsReq, opts ...grpc.CallOption) (*AgentDeviceSettings, error)
+	GetOwnerFacePhoto(ctx context.Context, in *AgentOwnerFacePhotoQuery, opts ...grpc.CallOption) (*AgentOwnerFacePhotoData, error)
+	// 只有机器人本人能报告；配置已保存与设备已成功加载分开表达。
+	ReportDeviceRuntime(ctx context.Context, in *AgentDeviceRuntimeReport, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 列我的机器人。归属**只看 club 自己的 relation(master 关系)** —— club 的机器人关系
 	// 由 club 自己管理,与 hiai 无关(hiai 那边所有 club 机器人的 creator 都是 club 商户,
 	// 根本表达不了"谁的机器人")。did 取自 token,不接受入参指定;
@@ -92,6 +97,26 @@ func (c *agentClient) SetDeviceSettings(ctx context.Context, in *SetAgentDeviceS
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(AgentDeviceSettings)
 	err := c.cc.Invoke(ctx, Agent_SetDeviceSettings_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) GetOwnerFacePhoto(ctx context.Context, in *AgentOwnerFacePhotoQuery, opts ...grpc.CallOption) (*AgentOwnerFacePhotoData, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AgentOwnerFacePhotoData)
+	err := c.cc.Invoke(ctx, Agent_GetOwnerFacePhoto_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) ReportDeviceRuntime(ctx context.Context, in *AgentDeviceRuntimeReport, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Agent_ReportDeviceRuntime_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -225,6 +250,9 @@ type AgentServer interface {
 	// 当前主人可读写；硬件机器人本人只读。权限归 club 现有主从关系，不按 hi.ai creator 判断。
 	GetDeviceSettings(context.Context, *AgentDeviceSettingsQuery) (*AgentDeviceSettings, error)
 	SetDeviceSettings(context.Context, *SetAgentDeviceSettingsReq) (*AgentDeviceSettings, error)
+	GetOwnerFacePhoto(context.Context, *AgentOwnerFacePhotoQuery) (*AgentOwnerFacePhotoData, error)
+	// 只有机器人本人能报告；配置已保存与设备已成功加载分开表达。
+	ReportDeviceRuntime(context.Context, *AgentDeviceRuntimeReport) (*emptypb.Empty, error)
 	// 列我的机器人。归属**只看 club 自己的 relation(master 关系)** —— club 的机器人关系
 	// 由 club 自己管理,与 hiai 无关(hiai 那边所有 club 机器人的 creator 都是 club 商户,
 	// 根本表达不了"谁的机器人")。did 取自 token,不接受入参指定;
@@ -262,6 +290,12 @@ func (UnimplementedAgentServer) GetDeviceSettings(context.Context, *AgentDeviceS
 }
 func (UnimplementedAgentServer) SetDeviceSettings(context.Context, *SetAgentDeviceSettingsReq) (*AgentDeviceSettings, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetDeviceSettings not implemented")
+}
+func (UnimplementedAgentServer) GetOwnerFacePhoto(context.Context, *AgentOwnerFacePhotoQuery) (*AgentOwnerFacePhotoData, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetOwnerFacePhoto not implemented")
+}
+func (UnimplementedAgentServer) ReportDeviceRuntime(context.Context, *AgentDeviceRuntimeReport) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method ReportDeviceRuntime not implemented")
 }
 func (UnimplementedAgentServer) List(context.Context, *ai.ListAgentsReq) (*ListAgentsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
@@ -351,6 +385,42 @@ func _Agent_SetDeviceSettings_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AgentServer).SetDeviceSettings(ctx, req.(*SetAgentDeviceSettingsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_GetOwnerFacePhoto_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AgentOwnerFacePhotoQuery)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).GetOwnerFacePhoto(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_GetOwnerFacePhoto_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).GetOwnerFacePhoto(ctx, req.(*AgentOwnerFacePhotoQuery))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_ReportDeviceRuntime_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AgentDeviceRuntimeReport)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).ReportDeviceRuntime(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_ReportDeviceRuntime_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).ReportDeviceRuntime(ctx, req.(*AgentDeviceRuntimeReport))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -585,6 +655,14 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetDeviceSettings",
 			Handler:    _Agent_SetDeviceSettings_Handler,
+		},
+		{
+			MethodName: "GetOwnerFacePhoto",
+			Handler:    _Agent_GetOwnerFacePhoto_Handler,
+		},
+		{
+			MethodName: "ReportDeviceRuntime",
+			Handler:    _Agent_ReportDeviceRuntime_Handler,
 		},
 		{
 			MethodName: "List",

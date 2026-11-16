@@ -15,8 +15,9 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../ai/agent.pb.dart' as $1;
-import '../common.pb.dart' as $2;
+import '../ai/agent.pb.dart' as $3;
+import '../common.pb.dart' as $4;
+import 'agent_device.pb.dart' as $1;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -145,7 +146,7 @@ class BindStatusReq extends $pb.GeneratedMessage {
 
 class BindStatusResp extends $pb.GeneratedMessage {
   factory BindStatusResp({
-    $2.Entity? master,
+    $4.Entity? master,
   }) {
     final result = create();
     if (master != null) result.master = master;
@@ -165,8 +166,8 @@ class BindStatusResp extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'BindStatusResp',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'master',
-        subBuilder: $2.Entity.create)
+    ..aOM<$4.Entity>(1, _omitFieldNames ? '' : 'master',
+        subBuilder: $4.Entity.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -189,15 +190,15 @@ class BindStatusResp extends $pb.GeneratedMessage {
   static BindStatusResp? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.Entity get master => $_getN(0);
+  $4.Entity get master => $_getN(0);
   @$pb.TagNumber(1)
-  set master($2.Entity value) => $_setField(1, value);
+  set master($4.Entity value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasMaster() => $_has(0);
   @$pb.TagNumber(1)
   void clearMaster() => $_clearField(1);
   @$pb.TagNumber(1)
-  $2.Entity ensureMaster() => $_ensure(0);
+  $4.Entity ensureMaster() => $_ensure(0);
 }
 
 /// 转让机器人 = **换 master**。club 侧不存在"机器人创建者"的概念。
@@ -275,7 +276,7 @@ class TransferReq extends $pb.GeneratedMessage {
 class ListOnlineReq extends $pb.GeneratedMessage {
   factory ListOnlineReq({
     $core.String? ownerDid,
-    $2.Pagination? pagination,
+    $4.Pagination? pagination,
   }) {
     final result = create();
     if (ownerDid != null) result.ownerDid = ownerDid;
@@ -297,8 +298,8 @@ class ListOnlineReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'ownerDid')
-    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $2.Pagination.create)
+    ..aOM<$4.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $4.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -330,22 +331,22 @@ class ListOnlineReq extends $pb.GeneratedMessage {
   void clearOwnerDid() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $2.Pagination get pagination => $_getN(1);
+  $4.Pagination get pagination => $_getN(1);
   @$pb.TagNumber(2)
-  set pagination($2.Pagination value) => $_setField(2, value);
+  set pagination($4.Pagination value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasPagination() => $_has(1);
   @$pb.TagNumber(2)
   void clearPagination() => $_clearField(2);
   @$pb.TagNumber(2)
-  $2.Pagination ensurePagination() => $_ensure(1);
+  $4.Pagination ensurePagination() => $_ensure(1);
 }
 
 /// 在线机器人目录的一项。基础名片与动态分开:Entity 是跨业务共用的身份门面,
 /// moment 是 club 自己的数据,不应为了这个目录塞进公共 Entity。
 class OnlineAgentInfo extends $pb.GeneratedMessage {
   factory OnlineAgentInfo({
-    $2.Entity? agent,
+    $4.Entity? agent,
     $core.String? moment,
   }) {
     final result = create();
@@ -367,8 +368,8 @@ class OnlineAgentInfo extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'OnlineAgentInfo',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'agent',
-        subBuilder: $2.Entity.create)
+    ..aOM<$4.Entity>(1, _omitFieldNames ? '' : 'agent',
+        subBuilder: $4.Entity.create)
     ..aOS(2, _omitFieldNames ? '' : 'moment')
     ..hasRequiredFields = false;
 
@@ -392,15 +393,15 @@ class OnlineAgentInfo extends $pb.GeneratedMessage {
   static OnlineAgentInfo? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.Entity get agent => $_getN(0);
+  $4.Entity get agent => $_getN(0);
   @$pb.TagNumber(1)
-  set agent($2.Entity value) => $_setField(1, value);
+  set agent($4.Entity value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasAgent() => $_has(0);
   @$pb.TagNumber(1)
   void clearAgent() => $_clearField(1);
   @$pb.TagNumber(1)
-  $2.Entity ensureAgent() => $_ensure(0);
+  $4.Entity ensureAgent() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $core.String get moment => $_getSZ(1);
@@ -481,7 +482,7 @@ class ListOnlineResp extends $pb.GeneratedMessage {
 class ListAgentsByUsersReq extends $pb.GeneratedMessage {
   factory ListAgentsByUsersReq({
     $core.Iterable<$core.String>? users,
-    $2.Pagination? pagination,
+    $4.Pagination? pagination,
   }) {
     final result = create();
     if (users != null) result.users.addAll(users);
@@ -503,8 +504,8 @@ class ListAgentsByUsersReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..pPS(1, _omitFieldNames ? '' : 'users')
-    ..aOM<$2.Pagination>(2, _omitFieldNames ? '' : 'pagination',
-        subBuilder: $2.Pagination.create)
+    ..aOM<$4.Pagination>(2, _omitFieldNames ? '' : 'pagination',
+        subBuilder: $4.Pagination.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -530,15 +531,15 @@ class ListAgentsByUsersReq extends $pb.GeneratedMessage {
   $pb.PbList<$core.String> get users => $_getList(0);
 
   @$pb.TagNumber(2)
-  $2.Pagination get pagination => $_getN(1);
+  $4.Pagination get pagination => $_getN(1);
   @$pb.TagNumber(2)
-  set pagination($2.Pagination value) => $_setField(2, value);
+  set pagination($4.Pagination value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasPagination() => $_has(1);
   @$pb.TagNumber(2)
   void clearPagination() => $_clearField(2);
   @$pb.TagNumber(2)
-  $2.Pagination ensurePagination() => $_ensure(1);
+  $4.Pagination ensurePagination() => $_ensure(1);
 }
 
 /// 机器人列表。**列表项直接用 hi.ai.AgentInfo,不自定义** ——
@@ -552,7 +553,7 @@ class ListAgentsByUsersReq extends $pb.GeneratedMessage {
 class ListAgentsResp extends $pb.GeneratedMessage {
   factory ListAgentsResp({
     $core.int? total,
-    $core.Iterable<$1.AgentInfo>? agents,
+    $core.Iterable<$3.AgentInfo>? agents,
   }) {
     final result = create();
     if (total != null) result.total = total;
@@ -574,8 +575,8 @@ class ListAgentsResp extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
     ..aI(1, _omitFieldNames ? '' : 'total')
-    ..pPM<$1.AgentInfo>(2, _omitFieldNames ? '' : 'agents',
-        subBuilder: $1.AgentInfo.create)
+    ..pPM<$3.AgentInfo>(2, _omitFieldNames ? '' : 'agents',
+        subBuilder: $3.AgentInfo.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -607,7 +608,7 @@ class ListAgentsResp extends $pb.GeneratedMessage {
   void clearTotal() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $pb.PbList<$1.AgentInfo> get agents => $_getList(1);
+  $pb.PbList<$3.AgentInfo> get agents => $_getList(1);
 }
 
 /// 设置机器人的**动态**(个性签名那一栏)。
@@ -807,14 +808,23 @@ class GetAgentMomentResp extends $pb.GeneratedMessage {
 /// 设置从下一轮面对面提问生效；HiClub文字聊天与屏幕文字不受影响。
 class AgentDeviceSettings extends $pb.GeneratedMessage {
   factory AgentDeviceSettings({
-    $2.Entity? agent,
+    $4.Entity? agent,
     $core.bool? voiceReplyEnabled,
     $fixnum.Int64? revision,
+    $1.AgentWakeSettings? wake,
+    $core.bool? ownerRecognitionEnabled,
+    $1.AgentOwnerFaceProfile? ownerFace,
+    $1.AgentDeviceRuntime? runtime,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
     if (voiceReplyEnabled != null) result.voiceReplyEnabled = voiceReplyEnabled;
     if (revision != null) result.revision = revision;
+    if (wake != null) result.wake = wake;
+    if (ownerRecognitionEnabled != null)
+      result.ownerRecognitionEnabled = ownerRecognitionEnabled;
+    if (ownerFace != null) result.ownerFace = ownerFace;
+    if (runtime != null) result.runtime = runtime;
     return result;
   }
 
@@ -831,12 +841,19 @@ class AgentDeviceSettings extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'AgentDeviceSettings',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..aOM<$2.Entity>(1, _omitFieldNames ? '' : 'agent',
-        subBuilder: $2.Entity.create)
+    ..aOM<$4.Entity>(1, _omitFieldNames ? '' : 'agent',
+        subBuilder: $4.Entity.create)
     ..aOB(2, _omitFieldNames ? '' : 'voiceReplyEnabled')
     ..a<$fixnum.Int64>(
         3, _omitFieldNames ? '' : 'revision', $pb.PbFieldType.OU6,
         defaultOrMaker: $fixnum.Int64.ZERO)
+    ..aOM<$1.AgentWakeSettings>(4, _omitFieldNames ? '' : 'wake',
+        subBuilder: $1.AgentWakeSettings.create)
+    ..aOB(5, _omitFieldNames ? '' : 'ownerRecognitionEnabled')
+    ..aOM<$1.AgentOwnerFaceProfile>(6, _omitFieldNames ? '' : 'ownerFace',
+        subBuilder: $1.AgentOwnerFaceProfile.create)
+    ..aOM<$1.AgentDeviceRuntime>(7, _omitFieldNames ? '' : 'runtime',
+        subBuilder: $1.AgentDeviceRuntime.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -859,15 +876,15 @@ class AgentDeviceSettings extends $pb.GeneratedMessage {
   static AgentDeviceSettings? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.Entity get agent => $_getN(0);
+  $4.Entity get agent => $_getN(0);
   @$pb.TagNumber(1)
-  set agent($2.Entity value) => $_setField(1, value);
+  set agent($4.Entity value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasAgent() => $_has(0);
   @$pb.TagNumber(1)
   void clearAgent() => $_clearField(1);
   @$pb.TagNumber(1)
-  $2.Entity ensureAgent() => $_ensure(0);
+  $4.Entity ensureAgent() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $core.bool get voiceReplyEnabled => $_getBF(1);
@@ -886,6 +903,48 @@ class AgentDeviceSettings extends $pb.GeneratedMessage {
   $core.bool hasRevision() => $_has(2);
   @$pb.TagNumber(3)
   void clearRevision() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $1.AgentWakeSettings get wake => $_getN(3);
+  @$pb.TagNumber(4)
+  set wake($1.AgentWakeSettings value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasWake() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearWake() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $1.AgentWakeSettings ensureWake() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  $core.bool get ownerRecognitionEnabled => $_getBF(4);
+  @$pb.TagNumber(5)
+  set ownerRecognitionEnabled($core.bool value) => $_setBool(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasOwnerRecognitionEnabled() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearOwnerRecognitionEnabled() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $1.AgentOwnerFaceProfile get ownerFace => $_getN(5);
+  @$pb.TagNumber(6)
+  set ownerFace($1.AgentOwnerFaceProfile value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasOwnerFace() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearOwnerFace() => $_clearField(6);
+  @$pb.TagNumber(6)
+  $1.AgentOwnerFaceProfile ensureOwnerFace() => $_ensure(5);
+
+  @$pb.TagNumber(7)
+  $1.AgentDeviceRuntime get runtime => $_getN(6);
+  @$pb.TagNumber(7)
+  set runtime($1.AgentDeviceRuntime value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasRuntime() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearRuntime() => $_clearField(7);
+  @$pb.TagNumber(7)
+  $1.AgentDeviceRuntime ensureRuntime() => $_ensure(6);
 }
 
 class AgentDeviceSettingsQuery extends $pb.GeneratedMessage {
@@ -947,10 +1006,17 @@ class SetAgentDeviceSettingsReq extends $pb.GeneratedMessage {
   factory SetAgentDeviceSettingsReq({
     $core.String? agent,
     $core.bool? voiceReplyEnabled,
+    $1.AgentWakeSettings? wake,
+    $core.bool? ownerRecognitionEnabled,
+    $1.AgentOwnerFaceUpload? ownerFace,
   }) {
     final result = create();
     if (agent != null) result.agent = agent;
     if (voiceReplyEnabled != null) result.voiceReplyEnabled = voiceReplyEnabled;
+    if (wake != null) result.wake = wake;
+    if (ownerRecognitionEnabled != null)
+      result.ownerRecognitionEnabled = ownerRecognitionEnabled;
+    if (ownerFace != null) result.ownerFace = ownerFace;
     return result;
   }
 
@@ -969,6 +1035,11 @@ class SetAgentDeviceSettingsReq extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'agent')
     ..aOB(2, _omitFieldNames ? '' : 'voiceReplyEnabled')
+    ..aOM<$1.AgentWakeSettings>(3, _omitFieldNames ? '' : 'wake',
+        subBuilder: $1.AgentWakeSettings.create)
+    ..aOB(4, _omitFieldNames ? '' : 'ownerRecognitionEnabled')
+    ..aOM<$1.AgentOwnerFaceUpload>(5, _omitFieldNames ? '' : 'ownerFace',
+        subBuilder: $1.AgentOwnerFaceUpload.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1008,6 +1079,37 @@ class SetAgentDeviceSettingsReq extends $pb.GeneratedMessage {
   $core.bool hasVoiceReplyEnabled() => $_has(1);
   @$pb.TagNumber(2)
   void clearVoiceReplyEnabled() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $1.AgentWakeSettings get wake => $_getN(2);
+  @$pb.TagNumber(3)
+  set wake($1.AgentWakeSettings value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasWake() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearWake() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $1.AgentWakeSettings ensureWake() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  $core.bool get ownerRecognitionEnabled => $_getBF(3);
+  @$pb.TagNumber(4)
+  set ownerRecognitionEnabled($core.bool value) => $_setBool(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasOwnerRecognitionEnabled() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearOwnerRecognitionEnabled() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $1.AgentOwnerFaceUpload get ownerFace => $_getN(4);
+  @$pb.TagNumber(5)
+  set ownerFace($1.AgentOwnerFaceUpload value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasOwnerFace() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearOwnerFace() => $_clearField(5);
+  @$pb.TagNumber(5)
+  $1.AgentOwnerFaceUpload ensureOwnerFace() => $_ensure(4);
 }
 
 const $core.bool _omitFieldNames =

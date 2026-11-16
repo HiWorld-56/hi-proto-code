@@ -4,6 +4,7 @@ import grpc
 
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from hi.ai import agent_pb2 as hi_dot_ai_dot_agent__pb2
+from hi.club import agent_device_pb2 as hi_dot_club_dot_agent__device__pb2
 from hi.club import agent_pb2 as hi_dot_club_dot_agent__pb2
 from hi import common_pb2 as hi_dot_common__pb2
 
@@ -26,6 +27,16 @@ class AgentStub(object):
                 '/hi.club.Agent/SetDeviceSettings',
                 request_serializer=hi_dot_club_dot_agent__pb2.SetAgentDeviceSettingsReq.SerializeToString,
                 response_deserializer=hi_dot_club_dot_agent__pb2.AgentDeviceSettings.FromString,
+                _registered_method=True)
+        self.GetOwnerFacePhoto = channel.unary_unary(
+                '/hi.club.Agent/GetOwnerFacePhoto',
+                request_serializer=hi_dot_club_dot_agent__device__pb2.AgentOwnerFacePhotoQuery.SerializeToString,
+                response_deserializer=hi_dot_club_dot_agent__device__pb2.AgentOwnerFacePhotoData.FromString,
+                _registered_method=True)
+        self.ReportDeviceRuntime = channel.unary_unary(
+                '/hi.club.Agent/ReportDeviceRuntime',
+                request_serializer=hi_dot_club_dot_agent__device__pb2.AgentDeviceRuntimeReport.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
         self.List = channel.unary_unary(
                 '/hi.club.Agent/List',
@@ -101,6 +112,19 @@ class AgentServicer(object):
 
     def SetDeviceSettings(self, request, context):
         """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetOwnerFacePhoto(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ReportDeviceRuntime(self, request, context):
+        """只有机器人本人能报告；配置已保存与设备已成功加载分开表达。
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -200,6 +224,16 @@ def add_AgentServicer_to_server(servicer, server):
                     servicer.SetDeviceSettings,
                     request_deserializer=hi_dot_club_dot_agent__pb2.SetAgentDeviceSettingsReq.FromString,
                     response_serializer=hi_dot_club_dot_agent__pb2.AgentDeviceSettings.SerializeToString,
+            ),
+            'GetOwnerFacePhoto': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetOwnerFacePhoto,
+                    request_deserializer=hi_dot_club_dot_agent__device__pb2.AgentOwnerFacePhotoQuery.FromString,
+                    response_serializer=hi_dot_club_dot_agent__device__pb2.AgentOwnerFacePhotoData.SerializeToString,
+            ),
+            'ReportDeviceRuntime': grpc.unary_unary_rpc_method_handler(
+                    servicer.ReportDeviceRuntime,
+                    request_deserializer=hi_dot_club_dot_agent__device__pb2.AgentDeviceRuntimeReport.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'List': grpc.unary_unary_rpc_method_handler(
                     servicer.List,
@@ -316,6 +350,60 @@ class Agent(object):
             '/hi.club.Agent/SetDeviceSettings',
             hi_dot_club_dot_agent__pb2.SetAgentDeviceSettingsReq.SerializeToString,
             hi_dot_club_dot_agent__pb2.AgentDeviceSettings.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetOwnerFacePhoto(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.Agent/GetOwnerFacePhoto',
+            hi_dot_club_dot_agent__device__pb2.AgentOwnerFacePhotoQuery.SerializeToString,
+            hi_dot_club_dot_agent__device__pb2.AgentOwnerFacePhotoData.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ReportDeviceRuntime(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.club.Agent/ReportDeviceRuntime',
+            hi_dot_club_dot_agent__device__pb2.AgentDeviceRuntimeReport.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,
             insecure,

@@ -367,11 +367,49 @@ const AgentDeviceSettings$json = {
       '10': 'revision',
       '17': true
     },
+    {
+      '1': 'wake',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.AgentWakeSettings',
+      '8': {},
+      '10': 'wake'
+    },
+    {
+      '1': 'owner_recognition_enabled',
+      '3': 5,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 2,
+      '10': 'ownerRecognitionEnabled',
+      '17': true
+    },
+    {
+      '1': 'owner_face',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.AgentOwnerFaceProfile',
+      '8': {},
+      '10': 'ownerFace'
+    },
+    {
+      '1': 'runtime',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.AgentDeviceRuntime',
+      '8': {},
+      '10': 'runtime'
+    },
   ],
   '7': {},
   '8': [
     {'1': '_voice_reply_enabled'},
     {'1': '_revision'},
+    {'1': '_owner_recognition_enabled'},
   ],
 };
 
@@ -379,8 +417,13 @@ const AgentDeviceSettings$json = {
 final $typed_data.Uint8List agentDeviceSettingsDescriptor = $convert.base64Decode(
     'ChNBZ2VudERldmljZVNldHRpbmdzEiYKBWFnZW50GAEgASgLMgouaGkuRW50aXR5QgSQtRgBUg'
     'VhZ2VudBI5ChN2b2ljZV9yZXBseV9lbmFibGVkGAIgASgIQgSQtRgDSABSEXZvaWNlUmVwbHlF'
-    'bmFibGVkiAEBEiUKCHJldmlzaW9uGAMgASgEQgSQtRgDSAFSCHJldmlzaW9uiAEBOgSYtRgDQh'
-    'YKFF92b2ljZV9yZXBseV9lbmFibGVkQgsKCV9yZXZpc2lvbg==');
+    'bmFibGVkiAEBEiUKCHJldmlzaW9uGAMgASgEQgSQtRgDSAFSCHJldmlzaW9uiAEBEjQKBHdha2'
+    'UYBCABKAsyGi5oaS5jbHViLkFnZW50V2FrZVNldHRpbmdzQgSQtRgDUgR3YWtlEkUKGW93bmVy'
+    'X3JlY29nbml0aW9uX2VuYWJsZWQYBSABKAhCBJC1GANIAlIXb3duZXJSZWNvZ25pdGlvbkVuYW'
+    'JsZWSIAQESQwoKb3duZXJfZmFjZRgGIAEoCzIeLmhpLmNsdWIuQWdlbnRPd25lckZhY2VQcm9m'
+    'aWxlQgSQtRgDUglvd25lckZhY2USOwoHcnVudGltZRgHIAEoCzIbLmhpLmNsdWIuQWdlbnREZX'
+    'ZpY2VSdW50aW1lQgSQtRgDUgdydW50aW1lOgSYtRgDQhYKFF92b2ljZV9yZXBseV9lbmFibGVk'
+    'QgsKCV9yZXZpc2lvbkIcChpfb3duZXJfcmVjb2duaXRpb25fZW5hYmxlZA==');
 
 @$core.Deprecated('Use agentDeviceSettingsQueryDescriptor instead')
 const AgentDeviceSettingsQuery$json = {
@@ -431,10 +474,36 @@ const SetAgentDeviceSettingsReq$json = {
       '10': 'voiceReplyEnabled',
       '17': true
     },
+    {
+      '1': 'wake',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.AgentWakeSettings',
+      '10': 'wake'
+    },
+    {
+      '1': 'owner_recognition_enabled',
+      '3': 4,
+      '4': 1,
+      '5': 8,
+      '9': 2,
+      '10': 'ownerRecognitionEnabled',
+      '17': true
+    },
+    {
+      '1': 'owner_face',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.AgentOwnerFaceUpload',
+      '10': 'ownerFace'
+    },
   ],
   '8': [
     {'1': '_agent'},
     {'1': '_voice_reply_enabled'},
+    {'1': '_owner_recognition_enabled'},
   ],
 };
 
@@ -442,4 +511,8 @@ const SetAgentDeviceSettingsReq$json = {
 final $typed_data.Uint8List setAgentDeviceSettingsReqDescriptor = $convert.base64Decode(
     'ChlTZXRBZ2VudERldmljZVNldHRpbmdzUmVxEioKBWFnZW50GAEgASgJQg+6SAzIAQFyBzIFXl'
     'xTKyRIAFIFYWdlbnSIAQESMwoTdm9pY2VfcmVwbHlfZW5hYmxlZBgCIAEoCEgBUhF2b2ljZVJl'
-    'cGx5RW5hYmxlZIgBAUIICgZfYWdlbnRCFgoUX3ZvaWNlX3JlcGx5X2VuYWJsZWQ=');
+    'cGx5RW5hYmxlZIgBARIuCgR3YWtlGAMgASgLMhouaGkuY2x1Yi5BZ2VudFdha2VTZXR0aW5nc1'
+    'IEd2FrZRI/Chlvd25lcl9yZWNvZ25pdGlvbl9lbmFibGVkGAQgASgISAJSF293bmVyUmVjb2du'
+    'aXRpb25FbmFibGVkiAEBEjwKCm93bmVyX2ZhY2UYBSABKAsyHS5oaS5jbHViLkFnZW50T3duZX'
+    'JGYWNlVXBsb2FkUglvd25lckZhY2VCCAoGX2FnZW50QhYKFF92b2ljZV9yZXBseV9lbmFibGVk'
+    'QhwKGl9vd25lcl9yZWNvZ25pdGlvbl9lbmFibGVk');

@@ -584,6 +584,8 @@ func (x *Member) GetUser() *hi.Entity {
 // binance_signal 币安跟单信号     kind=binance_signal(hi.binance.BinanceSignal)—— 信号源机器人发、@所有人,见 hi/binance/signal.proto
 // binance_offer 币安开单卡       kind=binance_offer(hi.binance.BinanceOffer)—— 跟单方机器人发给主人,同一 id 叠成一张,见 hi/binance/offer.proto
 // binance_offer_reply 开单卡回复  kind=binance_offer_reply(hi.binance.BinanceOfferReply)—— 主人发给机器人,只认主人
+// owner_action 主人逐项确认卡 kind=owner_action(hi.club.OwnerAction)
+// owner_action_reply 主人确认回执 kind=owner_action_reply(hi.club.OwnerActionReply)
 // chat_record 聊天记录(合并转发)  kind=record(hi.club.ChatRecord)—— 原样内嵌被转发的那几条完整消息
 //
 // ⚠️ **注意是 `image_url` 不是 `image`、`audio_url` 不是 `audio`。**
@@ -624,6 +626,8 @@ type Content struct {
 	Type  *string                `protobuf:"bytes,1,opt,name=type,proto3,oneof" json:"type,omitempty"`
 	// Types that are valid to be assigned to Kind:
 	//
+	//	*Content_OwnerAction
+	//	*Content_OwnerActionReply
 	//	*Content_Chat_
 	//	*Content_Trans
 	//	*Content_Binance
@@ -682,6 +686,24 @@ func (x *Content) GetType() string {
 func (x *Content) GetKind() isContent_Kind {
 	if x != nil {
 		return x.Kind
+	}
+	return nil
+}
+
+func (x *Content) GetOwnerAction() *OwnerAction {
+	if x != nil {
+		if x, ok := x.Kind.(*Content_OwnerAction); ok {
+			return x.OwnerAction
+		}
+	}
+	return nil
+}
+
+func (x *Content) GetOwnerActionReply() *OwnerActionReply {
+	if x != nil {
+		if x, ok := x.Kind.(*Content_OwnerActionReply); ok {
+			return x.OwnerActionReply
+		}
 	}
 	return nil
 }
@@ -769,6 +791,14 @@ type isContent_Kind interface {
 	isContent_Kind()
 }
 
+type Content_OwnerAction struct {
+	OwnerAction *OwnerAction `protobuf:"bytes,12,opt,name=owner_action,json=ownerAction,proto3,oneof"`
+}
+
+type Content_OwnerActionReply struct {
+	OwnerActionReply *OwnerActionReply `protobuf:"bytes,13,opt,name=owner_action_reply,json=ownerActionReply,proto3,oneof"`
+}
+
 type Content_Chat_ struct {
 	Chat *Content_Chat `protobuf:"bytes,2,opt,name=chat,proto3,oneof"`
 }
@@ -810,6 +840,10 @@ type Content_BinanceOfferReply struct {
 	// 主人对开单卡的回复(确认 / 取消),发给那台机器人。只认主人。见 hi/binance/offer.proto。
 	BinanceOfferReply *binance.BinanceOfferReply `protobuf:"bytes,11,opt,name=binance_offer_reply,json=binanceOfferReply,proto3,oneof"`
 }
+
+func (*Content_OwnerAction) isContent_Kind() {}
+
+func (*Content_OwnerActionReply) isContent_Kind() {}
 
 func (*Content_Chat_) isContent_Kind() {}
 
@@ -1000,7 +1034,7 @@ var File_hi_club_messaging_proto protoreflect.FileDescriptor
 
 const file_hi_club_messaging_proto_rawDesc = "" +
 	"\n" +
-	"\x17hi/club/messaging.proto\x12\ahi.club\x1a\x19google/protobuf/any.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/transfer.proto\x1a\x18hi/binance/binance.proto\x1a\x18hi/binance/command.proto\x1a\x16hi/binance/offer.proto\x1a\x17hi/binance/signal.proto\x1a\x10hi/options.proto\"{\n" +
+	"\x17hi/club/messaging.proto\x12\ahi.club\x1a\x19google/protobuf/any.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/transfer.proto\x1a\x18hi/binance/binance.proto\x1a\x18hi/binance/command.proto\x1a\x16hi/binance/offer.proto\x1a\x17hi/binance/signal.proto\x1a\x10hi/options.proto\x1a\x1ahi/club/owner_action.proto\"{\n" +
 	"\x06Packet\x12/\n" +
 	"\x06notice\x18\x01 \x01(\v2\x0f.hi.club.NoticeB\x04\x90\xb5\x18\x02H\x00R\x06notice\x122\n" +
 	"\amessage\x18\x02 \x01(\v2\x10.hi.club.MessageB\x04\x90\xb5\x18\x02H\x00R\amessage:\x04\x98\xb5\x18\x02B\x06\n" +
@@ -1067,9 +1101,11 @@ const file_hi_club_messaging_proto_rawDesc = "" +
 	"\x05group\x18\x01 \x01(\v2\n" +
 	".hi.EntityR\x05group\x12\x1e\n" +
 	"\x04user\x18\x02 \x01(\v2\n" +
-	".hi.EntityR\x04user\"\xae\a\n" +
+	".hi.EntityR\x04user\"\xc0\b\n" +
 	"\aContent\x12\x1d\n" +
-	"\x04type\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x04type\x88\x01\x01\x121\n" +
+	"\x04type\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x04type\x88\x01\x01\x12?\n" +
+	"\fowner_action\x18\f \x01(\v2\x14.hi.club.OwnerActionB\x04\x90\xb5\x18\x02H\x00R\vownerAction\x12O\n" +
+	"\x12owner_action_reply\x18\r \x01(\v2\x19.hi.club.OwnerActionReplyB\x04\x90\xb5\x18\x02H\x00R\x10ownerActionReply\x121\n" +
 	"\x04chat\x18\x02 \x01(\v2\x15.hi.club.Content.ChatB\x04\x90\xb5\x18\x02H\x00R\x04chat\x121\n" +
 	"\x05trans\x18\x03 \x01(\v2\x13.hi.did.TransactionB\x04\x90\xb5\x18\x01H\x00R\x05trans\x12;\n" +
 	"\abinance\x18\x05 \x01(\v2\x19.hi.binance.BinanceResultB\x04\x90\xb5\x18\x02H\x00R\abinance\x12C\n" +
@@ -1133,12 +1169,14 @@ var file_hi_club_messaging_proto_goTypes = []any{
 	(*Content_Chat)(nil),              // 9: hi.club.Content.Chat
 	(*hi.Entity)(nil),                 // 10: hi.Entity
 	(*anypb.Any)(nil),                 // 11: google.protobuf.Any
-	(*did.Transaction)(nil),           // 12: hi.did.Transaction
-	(*binance.BinanceResult)(nil),     // 13: hi.binance.BinanceResult
-	(*binance.BinanceCommand)(nil),    // 14: hi.binance.BinanceCommand
-	(*binance.BinanceSignal)(nil),     // 15: hi.binance.BinanceSignal
-	(*binance.BinanceOffer)(nil),      // 16: hi.binance.BinanceOffer
-	(*binance.BinanceOfferReply)(nil), // 17: hi.binance.BinanceOfferReply
+	(*OwnerAction)(nil),               // 12: hi.club.OwnerAction
+	(*OwnerActionReply)(nil),          // 13: hi.club.OwnerActionReply
+	(*did.Transaction)(nil),           // 14: hi.did.Transaction
+	(*binance.BinanceResult)(nil),     // 15: hi.binance.BinanceResult
+	(*binance.BinanceCommand)(nil),    // 16: hi.binance.BinanceCommand
+	(*binance.BinanceSignal)(nil),     // 17: hi.binance.BinanceSignal
+	(*binance.BinanceOffer)(nil),      // 18: hi.binance.BinanceOffer
+	(*binance.BinanceOfferReply)(nil), // 19: hi.binance.BinanceOfferReply
 }
 var file_hi_club_messaging_proto_depIdxs = []int32{
 	1,  // 0: hi.club.Packet.notice:type_name -> hi.club.Notice
@@ -1154,20 +1192,22 @@ var file_hi_club_messaging_proto_depIdxs = []int32{
 	10, // 10: hi.club.Mention.list:type_name -> hi.Entity
 	10, // 11: hi.club.Member.group:type_name -> hi.Entity
 	10, // 12: hi.club.Member.user:type_name -> hi.Entity
-	9,  // 13: hi.club.Content.chat:type_name -> hi.club.Content.Chat
-	12, // 14: hi.club.Content.trans:type_name -> hi.did.Transaction
-	13, // 15: hi.club.Content.binance:type_name -> hi.binance.BinanceResult
-	14, // 16: hi.club.Content.binance_cmd:type_name -> hi.binance.BinanceCommand
-	8,  // 17: hi.club.Content.record:type_name -> hi.club.ChatRecord
-	15, // 18: hi.club.Content.binance_signal:type_name -> hi.binance.BinanceSignal
-	16, // 19: hi.club.Content.binance_offer:type_name -> hi.binance.BinanceOffer
-	17, // 20: hi.club.Content.binance_offer_reply:type_name -> hi.binance.BinanceOfferReply
-	3,  // 21: hi.club.ChatRecord.list:type_name -> hi.club.Message
-	22, // [22:22] is the sub-list for method output_type
-	22, // [22:22] is the sub-list for method input_type
-	22, // [22:22] is the sub-list for extension type_name
-	22, // [22:22] is the sub-list for extension extendee
-	0,  // [0:22] is the sub-list for field type_name
+	12, // 13: hi.club.Content.owner_action:type_name -> hi.club.OwnerAction
+	13, // 14: hi.club.Content.owner_action_reply:type_name -> hi.club.OwnerActionReply
+	9,  // 15: hi.club.Content.chat:type_name -> hi.club.Content.Chat
+	14, // 16: hi.club.Content.trans:type_name -> hi.did.Transaction
+	15, // 17: hi.club.Content.binance:type_name -> hi.binance.BinanceResult
+	16, // 18: hi.club.Content.binance_cmd:type_name -> hi.binance.BinanceCommand
+	8,  // 19: hi.club.Content.record:type_name -> hi.club.ChatRecord
+	17, // 20: hi.club.Content.binance_signal:type_name -> hi.binance.BinanceSignal
+	18, // 21: hi.club.Content.binance_offer:type_name -> hi.binance.BinanceOffer
+	19, // 22: hi.club.Content.binance_offer_reply:type_name -> hi.binance.BinanceOfferReply
+	3,  // 23: hi.club.ChatRecord.list:type_name -> hi.club.Message
+	24, // [24:24] is the sub-list for method output_type
+	24, // [24:24] is the sub-list for method input_type
+	24, // [24:24] is the sub-list for extension type_name
+	24, // [24:24] is the sub-list for extension extendee
+	0,  // [0:24] is the sub-list for field type_name
 }
 
 func init() { file_hi_club_messaging_proto_init() }
@@ -1175,6 +1215,7 @@ func file_hi_club_messaging_proto_init() {
 	if File_hi_club_messaging_proto != nil {
 		return
 	}
+	file_hi_club_owner_action_proto_init()
 	file_hi_club_messaging_proto_msgTypes[0].OneofWrappers = []any{
 		(*Packet_Notice)(nil),
 		(*Packet_Message)(nil),
@@ -1184,6 +1225,8 @@ func file_hi_club_messaging_proto_init() {
 	file_hi_club_messaging_proto_msgTypes[3].OneofWrappers = []any{}
 	file_hi_club_messaging_proto_msgTypes[5].OneofWrappers = []any{}
 	file_hi_club_messaging_proto_msgTypes[7].OneofWrappers = []any{
+		(*Content_OwnerAction)(nil),
+		(*Content_OwnerActionReply)(nil),
 		(*Content_Chat_)(nil),
 		(*Content_Trans)(nil),
 		(*Content_Binance)(nil),

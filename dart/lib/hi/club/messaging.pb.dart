@@ -22,6 +22,7 @@ import '../binance/offer.pb.dart' as $6;
 import '../binance/signal.pb.dart' as $5;
 import '../common.pb.dart' as $0;
 import '../did/transfer.pb.dart' as $2;
+import 'owner_action.pb.dart' as $7;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -863,6 +864,8 @@ enum Content_Kind {
   binanceSignal,
   binanceOffer,
   binanceOfferReply,
+  ownerAction,
+  ownerActionReply,
   notSet
 }
 
@@ -881,6 +884,8 @@ enum Content_Kind {
 /// binance_signal 币安跟单信号     kind=binance_signal(hi.binance.BinanceSignal)—— 信号源机器人发、@所有人,见 hi/binance/signal.proto
 /// binance_offer 币安开单卡       kind=binance_offer(hi.binance.BinanceOffer)—— 跟单方机器人发给主人,同一 id 叠成一张,见 hi/binance/offer.proto
 /// binance_offer_reply 开单卡回复  kind=binance_offer_reply(hi.binance.BinanceOfferReply)—— 主人发给机器人,只认主人
+/// owner_action 主人逐项确认卡 kind=owner_action(hi.club.OwnerAction)
+/// owner_action_reply 主人确认回执 kind=owner_action_reply(hi.club.OwnerActionReply)
 /// chat_record 聊天记录(合并转发)  kind=record(hi.club.ChatRecord)—— 原样内嵌被转发的那几条完整消息
 ///
 /// ⚠️ **注意是 `image_url` 不是 `image`、`audio_url` 不是 `audio`。**
@@ -928,6 +933,8 @@ class Content extends $pb.GeneratedMessage {
     $5.BinanceSignal? binanceSignal,
     $6.BinanceOffer? binanceOffer,
     $6.BinanceOfferReply? binanceOfferReply,
+    $7.OwnerAction? ownerAction,
+    $7.OwnerActionReply? ownerActionReply,
   }) {
     final result = create();
     if (type != null) result.type = type;
@@ -940,6 +947,8 @@ class Content extends $pb.GeneratedMessage {
     if (binanceSignal != null) result.binanceSignal = binanceSignal;
     if (binanceOffer != null) result.binanceOffer = binanceOffer;
     if (binanceOfferReply != null) result.binanceOfferReply = binanceOfferReply;
+    if (ownerAction != null) result.ownerAction = ownerAction;
+    if (ownerActionReply != null) result.ownerActionReply = ownerActionReply;
     return result;
   }
 
@@ -961,13 +970,15 @@ class Content extends $pb.GeneratedMessage {
     9: Content_Kind.binanceSignal,
     10: Content_Kind.binanceOffer,
     11: Content_Kind.binanceOfferReply,
+    12: Content_Kind.ownerAction,
+    13: Content_Kind.ownerActionReply,
     0: Content_Kind.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Content',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3, 5, 6, 7, 9, 10, 11])
+    ..oo(0, [2, 3, 5, 6, 7, 9, 10, 11, 12, 13])
     ..aOS(1, _omitFieldNames ? '' : 'type')
     ..aOM<Content_Chat>(2, _omitFieldNames ? '' : 'chat',
         subBuilder: Content_Chat.create)
@@ -986,6 +997,10 @@ class Content extends $pb.GeneratedMessage {
         subBuilder: $6.BinanceOffer.create)
     ..aOM<$6.BinanceOfferReply>(11, _omitFieldNames ? '' : 'binanceOfferReply',
         subBuilder: $6.BinanceOfferReply.create)
+    ..aOM<$7.OwnerAction>(12, _omitFieldNames ? '' : 'ownerAction',
+        subBuilder: $7.OwnerAction.create)
+    ..aOM<$7.OwnerActionReply>(13, _omitFieldNames ? '' : 'ownerActionReply',
+        subBuilder: $7.OwnerActionReply.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1014,6 +1029,8 @@ class Content extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   @$pb.TagNumber(10)
   @$pb.TagNumber(11)
+  @$pb.TagNumber(12)
+  @$pb.TagNumber(13)
   Content_Kind whichKind() => _Content_KindByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
@@ -1023,6 +1040,8 @@ class Content extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   @$pb.TagNumber(10)
   @$pb.TagNumber(11)
+  @$pb.TagNumber(12)
+  @$pb.TagNumber(13)
   void clearKind() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -1142,6 +1161,28 @@ class Content extends $pb.GeneratedMessage {
   void clearBinanceOfferReply() => $_clearField(11);
   @$pb.TagNumber(11)
   $6.BinanceOfferReply ensureBinanceOfferReply() => $_ensure(9);
+
+  @$pb.TagNumber(12)
+  $7.OwnerAction get ownerAction => $_getN(10);
+  @$pb.TagNumber(12)
+  set ownerAction($7.OwnerAction value) => $_setField(12, value);
+  @$pb.TagNumber(12)
+  $core.bool hasOwnerAction() => $_has(10);
+  @$pb.TagNumber(12)
+  void clearOwnerAction() => $_clearField(12);
+  @$pb.TagNumber(12)
+  $7.OwnerAction ensureOwnerAction() => $_ensure(10);
+
+  @$pb.TagNumber(13)
+  $7.OwnerActionReply get ownerActionReply => $_getN(11);
+  @$pb.TagNumber(13)
+  set ownerActionReply($7.OwnerActionReply value) => $_setField(13, value);
+  @$pb.TagNumber(13)
+  $core.bool hasOwnerActionReply() => $_has(11);
+  @$pb.TagNumber(13)
+  void clearOwnerActionReply() => $_clearField(13);
+  @$pb.TagNumber(13)
+  $7.OwnerActionReply ensureOwnerActionReply() => $_ensure(11);
 }
 
 /// 聊天记录 —— **合并转发**出来的那一条(类似微信「聊天记录」卡片)。`Content.type = "chat_record"`。
