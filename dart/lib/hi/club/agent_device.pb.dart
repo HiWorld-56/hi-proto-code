@@ -20,7 +20,9 @@ import '../common.pb.dart' as $0;
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 /// 设备端执行；默认 enabled=false，phrases=[]，续聊30秒。不是 hi.ai 的推理配置。
-/// enabled=true 时必须有1～3个中文短语；有效问答刷新续聊窗口，噪声和空转写不刷新。
+/// enabled=true 须先开启 AgentDeviceSettings.voice_reply_enabled，且有1～3个中文短语。
+/// 关闭语音回复同时关闭唤醒开关、保留短语与续聊时间；再次开启语音不自动开启唤醒。
+/// 有效问答刷新续聊窗口，噪声和空转写不刷新。
 class AgentWakeSettings extends $pb.GeneratedMessage {
   factory AgentWakeSettings({
     $core.bool? enabled,

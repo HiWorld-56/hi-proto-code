@@ -814,8 +814,8 @@ func (x *AgentDeviceSettingsQuery) GetAgent() string {
 type SetAgentDeviceSettingsReq struct {
 	state                   protoimpl.MessageState `protogen:"open.v1"`
 	Agent                   *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"`
-	VoiceReplyEnabled       *bool                  `protobuf:"varint,2,opt,name=voice_reply_enabled,json=voiceReplyEnabled,proto3,oneof" json:"voice_reply_enabled,omitempty"`                   // 不传=不改，false=明确关闭
-	Wake                    *AgentWakeSettings     `protobuf:"bytes,3,opt,name=wake,proto3" json:"wake,omitempty"`                                                                               // 不传=不改；传入时整体替换，含开关、词表、续聊时间
+	VoiceReplyEnabled       *bool                  `protobuf:"varint,2,opt,name=voice_reply_enabled,json=voiceReplyEnabled,proto3,oneof" json:"voice_reply_enabled,omitempty"`                   // 不传=不改；false=关闭语音并原子关闭wake.enabled，保留词表/时间
+	Wake                    *AgentWakeSettings     `protobuf:"bytes,3,opt,name=wake,proto3" json:"wake,omitempty"`                                                                               // 不传=不改；传入时整体替换；enabled=true要求最终voice_reply_enabled=true
 	OwnerRecognitionEnabled *bool                  `protobuf:"varint,4,opt,name=owner_recognition_enabled,json=ownerRecognitionEnabled,proto3,oneof" json:"owner_recognition_enabled,omitempty"` // 不传=不改，false=明确关闭
 	OwnerFace               *AgentOwnerFaceUpload  `protobuf:"bytes,5,opt,name=owner_face,json=ownerFace,proto3" json:"owner_face,omitempty"`                                                    // 不传=不改；空列表=清除；照片仅供本机一对一校验，不进入公开资源库
 	unknownFields           protoimpl.UnknownFields

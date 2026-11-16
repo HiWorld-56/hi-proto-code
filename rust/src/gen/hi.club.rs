@@ -2634,7 +2634,9 @@ pub mod product_market_directory_client {
     }
 }
 /// 设备端执行；默认 enabled=false，phrases=\[\]，续聊30秒。不是 hi.ai 的推理配置。
-/// enabled=true 时必须有1～3个中文短语；有效问答刷新续聊窗口，噪声和空转写不刷新。
+/// enabled=true 须先开启 AgentDeviceSettings.voice_reply_enabled，且有1～3个中文短语。
+/// 关闭语音回复同时关闭唤醒开关、保留短语与续聊时间；再次开启语音不自动开启唤醒。
+/// 有效问答刷新续聊窗口，噪声和空转写不刷新。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct AgentWakeSettings {
     #[prost(bool, optional, tag = "1")]
@@ -2868,10 +2870,10 @@ pub struct AgentDeviceSettingsQuery {
 pub struct SetAgentDeviceSettingsReq {
     #[prost(string, optional, tag = "1")]
     pub agent: ::core::option::Option<::prost::alloc::string::String>,
-    /// 不传=不改，false=明确关闭
+    /// 不传=不改；false=关闭语音并原子关闭wake.enabled，保留词表/时间
     #[prost(bool, optional, tag = "2")]
     pub voice_reply_enabled: ::core::option::Option<bool>,
-    /// 不传=不改；传入时整体替换，含开关、词表、续聊时间
+    /// 不传=不改；传入时整体替换；enabled=true要求最终voice_reply_enabled=true
     #[prost(message, optional, tag = "3")]
     pub wake: ::core::option::Option<AgentWakeSettings>,
     /// 不传=不改，false=明确关闭
