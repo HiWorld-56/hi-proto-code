@@ -3406,6 +3406,8 @@ pub struct ChatReq {
     /// **客户端自己能执行的工具**;空 = 全交服务端跑完
     #[prost(message, repeated, tag = "4")]
     pub tools: ::prost::alloc::vec::Vec<ToolSupply>,
+    /// auto/none/required，或JSON字符串 {"type":"function","function":{"name":"工具名"}}。
+    /// 指定/要求调用仅约束首个模型请求；取得真实工具调用后Resume恢复auto，避免重复强制调用。
     #[prost(string, optional, tag = "5")]
     pub tool_choice: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "6")]

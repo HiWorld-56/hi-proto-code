@@ -553,15 +553,17 @@ func (x *GetContextResp) GetList() []*QA {
 // 模态(文/语音、输出音色)由 conts + style 决定 —— 合并原 TextToText/SpeechToText/SpeechToSpeech。
 // 命名读作模态转换但**不是字面格式转换**;真 STT/TTS 在 Speech service(Transcribe/Synthesize)。
 type ChatReq struct {
-	state      protoimpl.MessageState `protogen:"open.v1"`
-	Agent      *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"`
-	Cid        *string                `protobuf:"bytes,2,opt,name=cid,proto3,oneof" json:"cid,omitempty"`
-	Conts      []*Content             `protobuf:"bytes,3,rep,name=conts,proto3" json:"conts,omitempty"`
-	Tools      []*ToolSupply          `protobuf:"bytes,4,rep,name=tools,proto3" json:"tools,omitempty"` // **客户端自己能执行的工具**;空 = 全交服务端跑完
-	ToolChoice *string                `protobuf:"bytes,5,opt,name=tool_choice,json=toolChoice,proto3,oneof" json:"tool_choice,omitempty"`
-	Custom     *string                `protobuf:"bytes,6,opt,name=custom,proto3,oneof" json:"custom,omitempty"`
-	State      *string                `protobuf:"bytes,7,opt,name=state,proto3,oneof" json:"state,omitempty"`
-	Style      *string                `protobuf:"bytes,8,opt,name=style,proto3,oneof" json:"style,omitempty"` // 语音出的音色等;纯文本场景不传
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Agent *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"`
+	Cid   *string                `protobuf:"bytes,2,opt,name=cid,proto3,oneof" json:"cid,omitempty"`
+	Conts []*Content             `protobuf:"bytes,3,rep,name=conts,proto3" json:"conts,omitempty"`
+	Tools []*ToolSupply          `protobuf:"bytes,4,rep,name=tools,proto3" json:"tools,omitempty"` // **客户端自己能执行的工具**;空 = 全交服务端跑完
+	// auto/none/required，或JSON字符串 {"type":"function","function":{"name":"工具名"}}。
+	// 指定/要求调用仅约束首个模型请求；取得真实工具调用后Resume恢复auto，避免重复强制调用。
+	ToolChoice *string `protobuf:"bytes,5,opt,name=tool_choice,json=toolChoice,proto3,oneof" json:"tool_choice,omitempty"`
+	Custom     *string `protobuf:"bytes,6,opt,name=custom,proto3,oneof" json:"custom,omitempty"`
+	State      *string `protobuf:"bytes,7,opt,name=state,proto3,oneof" json:"state,omitempty"`
+	Style      *string `protobuf:"bytes,8,opt,name=style,proto3,oneof" json:"style,omitempty"` // 语音出的音色等;纯文本场景不传
 	// ── 过程回显开关:要不要把中间过程一并流给调用方(**只管输出,不管行为**)──────────
 	//
 	// 一律 `echo_` 前缀,对应流式帧 `echoXxx`。**仅流式(ConverseStream/ResumeStream)有意义。**

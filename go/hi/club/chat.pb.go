@@ -291,15 +291,17 @@ func (x *AppendContextReq) GetAssistant() string {
 //	ai 会把该 agent 的插件工具追加在它后面一起喂模型,返回后按名字分流。
 //	不上报(app / hiclub web)= 全部由服务端跑完 = 一次调用拿到最终答复。
 type ChatReq struct {
-	state      protoimpl.MessageState `protogen:"open.v1"`
-	Agent      *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"`
-	Cid        *string                `protobuf:"bytes,2,opt,name=cid,proto3,oneof" json:"cid,omitempty"`
-	Conts      []*Content             `protobuf:"bytes,3,rep,name=conts,proto3" json:"conts,omitempty"`
-	Tools      []*ai.ToolSupply       `protobuf:"bytes,4,rep,name=tools,proto3" json:"tools,omitempty"` // **客户端自己能执行的工具**;空 = 全交服务端跑完
-	ToolChoice *string                `protobuf:"bytes,5,opt,name=tool_choice,json=toolChoice,proto3,oneof" json:"tool_choice,omitempty"`
-	Custom     *string                `protobuf:"bytes,6,opt,name=custom,proto3,oneof" json:"custom,omitempty"`
-	State      *string                `protobuf:"bytes,7,opt,name=state,proto3,oneof" json:"state,omitempty"`
-	Style      *string                `protobuf:"bytes,8,opt,name=style,proto3,oneof" json:"style,omitempty"` // 语音出音色等;纯文本不传
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Agent *string                `protobuf:"bytes,1,opt,name=agent,proto3,oneof" json:"agent,omitempty"`
+	Cid   *string                `protobuf:"bytes,2,opt,name=cid,proto3,oneof" json:"cid,omitempty"`
+	Conts []*Content             `protobuf:"bytes,3,rep,name=conts,proto3" json:"conts,omitempty"`
+	Tools []*ai.ToolSupply       `protobuf:"bytes,4,rep,name=tools,proto3" json:"tools,omitempty"` // **客户端自己能执行的工具**;空 = 全交服务端跑完
+	// auto/none/required，或JSON字符串 {"type":"function","function":{"name":"工具名"}}。
+	// 指定/要求调用仅约束首个模型请求；取得真实工具调用后Resume恢复auto，避免重复强制调用。
+	ToolChoice *string `protobuf:"bytes,5,opt,name=tool_choice,json=toolChoice,proto3,oneof" json:"tool_choice,omitempty"`
+	Custom     *string `protobuf:"bytes,6,opt,name=custom,proto3,oneof" json:"custom,omitempty"`
+	State      *string `protobuf:"bytes,7,opt,name=state,proto3,oneof" json:"state,omitempty"`
+	Style      *string `protobuf:"bytes,8,opt,name=style,proto3,oneof" json:"style,omitempty"` // 语音出音色等;纯文本不传
 	// ── 过程回显开关(**只管输出,不管行为**)──────────────────────────────────────
 	// 与 hi.ai.ChatReq 的同名字段一一对应,club 原样透传。**仅流式有意义。**
 	// ⚠️ 别读成"要不要调插件":**调不调是模型决定的**(标准 function call);这几个只决定
