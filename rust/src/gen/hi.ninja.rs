@@ -1068,6 +1068,12 @@ pub struct LuaCtx {
     /// Reject host effects from cancelled/replaced deliveries.
     #[prost(string, optional, tag = "8")]
     pub subscription_revision: ::core::option::Option<::prost::alloc::string::String>,
+    /// 原始麦克风问答与工具调用的关联；brain生成、runner原样带回，不暴露给Lua脚本。
+    /// 唤醒/人脸不构成asker身份；仅供主人逐项确认请求验证来源、幂等去重。
+    #[prost(string, optional, tag = "9")]
+    pub voice_turn_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "10")]
+    pub tool_call_id: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// OpenReq 装一个插件：跑一遍顶层，读出 manifest。
 ///

@@ -33,6 +33,8 @@ class LuaCtx extends $pb.GeneratedMessage {
     $core.String? conv,
     $core.String? subscriptionId,
     $core.String? subscriptionRevision,
+    $core.String? voiceTurnId,
+    $core.String? toolCallId,
   }) {
     final result = create();
     if (me != null) result.me = me;
@@ -43,6 +45,8 @@ class LuaCtx extends $pb.GeneratedMessage {
     if (subscriptionId != null) result.subscriptionId = subscriptionId;
     if (subscriptionRevision != null)
       result.subscriptionRevision = subscriptionRevision;
+    if (voiceTurnId != null) result.voiceTurnId = voiceTurnId;
+    if (toolCallId != null) result.toolCallId = toolCallId;
     return result;
   }
 
@@ -66,6 +70,8 @@ class LuaCtx extends $pb.GeneratedMessage {
     ..aOS(6, _omitFieldNames ? '' : 'conv')
     ..aOS(7, _omitFieldNames ? '' : 'subscriptionId')
     ..aOS(8, _omitFieldNames ? '' : 'subscriptionRevision')
+    ..aOS(9, _omitFieldNames ? '' : 'voiceTurnId')
+    ..aOS(10, _omitFieldNames ? '' : 'toolCallId')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -158,6 +164,26 @@ class LuaCtx extends $pb.GeneratedMessage {
   $core.bool hasSubscriptionRevision() => $_has(6);
   @$pb.TagNumber(8)
   void clearSubscriptionRevision() => $_clearField(8);
+
+  /// 原始麦克风问答与工具调用的关联；brain生成、runner原样带回，不暴露给Lua脚本。
+  /// 唤醒/人脸不构成asker身份；仅供主人逐项确认请求验证来源、幂等去重。
+  @$pb.TagNumber(9)
+  $core.String get voiceTurnId => $_getSZ(7);
+  @$pb.TagNumber(9)
+  set voiceTurnId($core.String value) => $_setString(7, value);
+  @$pb.TagNumber(9)
+  $core.bool hasVoiceTurnId() => $_has(7);
+  @$pb.TagNumber(9)
+  void clearVoiceTurnId() => $_clearField(9);
+
+  @$pb.TagNumber(10)
+  $core.String get toolCallId => $_getSZ(8);
+  @$pb.TagNumber(10)
+  set toolCallId($core.String value) => $_setString(8, value);
+  @$pb.TagNumber(10)
+  $core.bool hasToolCallId() => $_has(8);
+  @$pb.TagNumber(10)
+  void clearToolCallId() => $_clearField(10);
 }
 
 /// OpenReq 装一个插件：跑一遍顶层，读出 manifest。

@@ -42,6 +42,24 @@ const LuaCtx$json = {
       '10': 'subscriptionRevision',
       '17': true
     },
+    {
+      '1': 'voice_turn_id',
+      '3': 9,
+      '4': 1,
+      '5': 9,
+      '9': 7,
+      '10': 'voiceTurnId',
+      '17': true
+    },
+    {
+      '1': 'tool_call_id',
+      '3': 10,
+      '4': 1,
+      '5': 9,
+      '9': 8,
+      '10': 'toolCallId',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_me'},
@@ -51,6 +69,8 @@ const LuaCtx$json = {
     {'1': '_conv'},
     {'1': '_subscription_id'},
     {'1': '_subscription_revision'},
+    {'1': '_voice_turn_id'},
+    {'1': '_tool_call_id'},
   ],
 };
 
@@ -60,8 +80,11 @@ final $typed_data.Uint8List luaCtxDescriptor = $convert.base64Decode(
     'gBARIZCgVhc2tlchgDIAEoCUgCUgVhc2tlcogBARIXCgRkYXJrGAQgASgNSANSBGRhcmuIAQES'
     'FwoEY29udhgGIAEoCUgEUgRjb252iAEBEiwKD3N1YnNjcmlwdGlvbl9pZBgHIAEoCUgFUg5zdW'
     'JzY3JpcHRpb25JZIgBARI4ChVzdWJzY3JpcHRpb25fcmV2aXNpb24YCCABKAlIBlIUc3Vic2Ny'
-    'aXB0aW9uUmV2aXNpb26IAQFCBQoDX21lQgkKB19tYXN0ZXJCCAoGX2Fza2VyQgcKBV9kYXJrQg'
-    'cKBV9jb252QhIKEF9zdWJzY3JpcHRpb25faWRCGAoWX3N1YnNjcmlwdGlvbl9yZXZpc2lvbg==');
+    'aXB0aW9uUmV2aXNpb26IAQESJwoNdm9pY2VfdHVybl9pZBgJIAEoCUgHUgt2b2ljZVR1cm5JZI'
+    'gBARIlCgx0b29sX2NhbGxfaWQYCiABKAlICFIKdG9vbENhbGxJZIgBAUIFCgNfbWVCCQoHX21h'
+    'c3RlckIICgZfYXNrZXJCBwoFX2RhcmtCBwoFX2NvbnZCEgoQX3N1YnNjcmlwdGlvbl9pZEIYCh'
+    'Zfc3Vic2NyaXB0aW9uX3JldmlzaW9uQhAKDl92b2ljZV90dXJuX2lkQg8KDV90b29sX2NhbGxf'
+    'aWQ=');
 
 @$core.Deprecated('Use openReqDescriptor instead')
 const OpenReq$json = {

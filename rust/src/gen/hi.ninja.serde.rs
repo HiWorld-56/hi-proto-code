@@ -5497,6 +5497,12 @@ impl serde::Serialize for LuaCtx {
         if self.subscription_revision.is_some() {
             len += 1;
         }
+        if self.voice_turn_id.is_some() {
+            len += 1;
+        }
+        if self.tool_call_id.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.LuaCtx", len)?;
         if let Some(v) = self.me.as_ref() {
             struct_ser.serialize_field("me", v)?;
@@ -5519,6 +5525,12 @@ impl serde::Serialize for LuaCtx {
         if let Some(v) = self.subscription_revision.as_ref() {
             struct_ser.serialize_field("subscriptionRevision", v)?;
         }
+        if let Some(v) = self.voice_turn_id.as_ref() {
+            struct_ser.serialize_field("voiceTurnId", v)?;
+        }
+        if let Some(v) = self.tool_call_id.as_ref() {
+            struct_ser.serialize_field("toolCallId", v)?;
+        }
         struct_ser.end()
     }
 }
@@ -5538,6 +5550,10 @@ impl<'de> serde::Deserialize<'de> for LuaCtx {
             "subscriptionId",
             "subscription_revision",
             "subscriptionRevision",
+            "voice_turn_id",
+            "voiceTurnId",
+            "tool_call_id",
+            "toolCallId",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -5549,6 +5565,8 @@ impl<'de> serde::Deserialize<'de> for LuaCtx {
             Conv,
             SubscriptionId,
             SubscriptionRevision,
+            VoiceTurnId,
+            ToolCallId,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -5577,6 +5595,8 @@ impl<'de> serde::Deserialize<'de> for LuaCtx {
                             "conv" => Ok(GeneratedField::Conv),
                             "subscriptionId" | "subscription_id" => Ok(GeneratedField::SubscriptionId),
                             "subscriptionRevision" | "subscription_revision" => Ok(GeneratedField::SubscriptionRevision),
+                            "voiceTurnId" | "voice_turn_id" => Ok(GeneratedField::VoiceTurnId),
+                            "toolCallId" | "tool_call_id" => Ok(GeneratedField::ToolCallId),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -5603,6 +5623,8 @@ impl<'de> serde::Deserialize<'de> for LuaCtx {
                 let mut conv__ = None;
                 let mut subscription_id__ = None;
                 let mut subscription_revision__ = None;
+                let mut voice_turn_id__ = None;
+                let mut tool_call_id__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Me => {
@@ -5649,6 +5671,18 @@ impl<'de> serde::Deserialize<'de> for LuaCtx {
                             }
                             subscription_revision__ = map_.next_value()?;
                         }
+                        GeneratedField::VoiceTurnId => {
+                            if voice_turn_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("voiceTurnId"));
+                            }
+                            voice_turn_id__ = map_.next_value()?;
+                        }
+                        GeneratedField::ToolCallId => {
+                            if tool_call_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("toolCallId"));
+                            }
+                            tool_call_id__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(LuaCtx {
@@ -5659,6 +5693,8 @@ impl<'de> serde::Deserialize<'de> for LuaCtx {
                     conv: conv__,
                     subscription_id: subscription_id__,
                     subscription_revision: subscription_revision__,
+                    voice_turn_id: voice_turn_id__,
+                    tool_call_id: tool_call_id__,
                 })
             }
         }

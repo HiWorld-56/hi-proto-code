@@ -48,8 +48,12 @@ type LuaCtx struct {
 	Conv                 *string `protobuf:"bytes,6,opt,name=conv,proto3,oneof" json:"conv,omitempty"`
 	SubscriptionId       *string `protobuf:"bytes,7,opt,name=subscription_id,json=subscriptionId,proto3,oneof" json:"subscription_id,omitempty"`                   // Host-owned cancellation guard, not exposed to scripts.
 	SubscriptionRevision *string `protobuf:"bytes,8,opt,name=subscription_revision,json=subscriptionRevision,proto3,oneof" json:"subscription_revision,omitempty"` // Reject host effects from cancelled/replaced deliveries.
-	unknownFields        protoimpl.UnknownFields
-	sizeCache            protoimpl.SizeCache
+	// 原始麦克风问答与工具调用的关联；brain生成、runner原样带回，不暴露给Lua脚本。
+	// 唤醒/人脸不构成asker身份；仅供主人逐项确认请求验证来源、幂等去重。
+	VoiceTurnId   *string `protobuf:"bytes,9,opt,name=voice_turn_id,json=voiceTurnId,proto3,oneof" json:"voice_turn_id,omitempty"`
+	ToolCallId    *string `protobuf:"bytes,10,opt,name=tool_call_id,json=toolCallId,proto3,oneof" json:"tool_call_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *LuaCtx) Reset() {
@@ -127,6 +131,20 @@ func (x *LuaCtx) GetSubscriptionId() string {
 func (x *LuaCtx) GetSubscriptionRevision() string {
 	if x != nil && x.SubscriptionRevision != nil {
 		return *x.SubscriptionRevision
+	}
+	return ""
+}
+
+func (x *LuaCtx) GetVoiceTurnId() string {
+	if x != nil && x.VoiceTurnId != nil {
+		return *x.VoiceTurnId
+	}
+	return ""
+}
+
+func (x *LuaCtx) GetToolCallId() string {
+	if x != nil && x.ToolCallId != nil {
+		return *x.ToolCallId
 	}
 	return ""
 }
@@ -981,7 +999,7 @@ var File_hi_ninja_lua_proto protoreflect.FileDescriptor
 
 const file_hi_ninja_lua_proto_rawDesc = "" +
 	"\n" +
-	"\x12hi/ninja/lua.proto\x12\bhi.ninja\x1a\x15hi/ninja/common.proto\x1a\x1bbuf/validate/validate.proto\"\xcb\x02\n" +
+	"\x12hi/ninja/lua.proto\x12\bhi.ninja\x1a\x15hi/ninja/common.proto\x1a\x1bbuf/validate/validate.proto\"\xbe\x03\n" +
 	"\x06LuaCtx\x12\x13\n" +
 	"\x02me\x18\x01 \x01(\tH\x00R\x02me\x88\x01\x01\x12\x1b\n" +
 	"\x06master\x18\x02 \x01(\tH\x01R\x06master\x88\x01\x01\x12\x19\n" +
@@ -989,14 +1007,20 @@ const file_hi_ninja_lua_proto_rawDesc = "" +
 	"\x04dark\x18\x04 \x01(\rH\x03R\x04dark\x88\x01\x01\x12\x17\n" +
 	"\x04conv\x18\x06 \x01(\tH\x04R\x04conv\x88\x01\x01\x12,\n" +
 	"\x0fsubscription_id\x18\a \x01(\tH\x05R\x0esubscriptionId\x88\x01\x01\x128\n" +
-	"\x15subscription_revision\x18\b \x01(\tH\x06R\x14subscriptionRevision\x88\x01\x01B\x05\n" +
+	"\x15subscription_revision\x18\b \x01(\tH\x06R\x14subscriptionRevision\x88\x01\x01\x12'\n" +
+	"\rvoice_turn_id\x18\t \x01(\tH\aR\vvoiceTurnId\x88\x01\x01\x12%\n" +
+	"\ftool_call_id\x18\n" +
+	" \x01(\tH\bR\n" +
+	"toolCallId\x88\x01\x01B\x05\n" +
 	"\x03_meB\t\n" +
 	"\a_masterB\b\n" +
 	"\x06_askerB\a\n" +
 	"\x05_darkB\a\n" +
 	"\x05_convB\x12\n" +
 	"\x10_subscription_idB\x18\n" +
-	"\x16_subscription_revision\"\xa5\x01\n" +
+	"\x16_subscription_revisionB\x10\n" +
+	"\x0e_voice_turn_idB\x0f\n" +
+	"\r_tool_call_id\"\xa5\x01\n" +
 	"\aOpenReq\x12\x17\n" +
 	"\x04uuid\x18\x01 \x01(\tH\x00R\x04uuid\x88\x01\x01\x12\x1d\n" +
 	"\aversion\x18\x02 \x01(\tH\x01R\aversion\x88\x01\x01\x12\x1b\n" +
