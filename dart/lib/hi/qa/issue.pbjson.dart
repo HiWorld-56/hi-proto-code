@@ -81,6 +81,15 @@ const Report$json = {
       '10': 'receivedAt',
       '17': true
     },
+    {
+      '1': 'display_contents',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.club.Contents',
+      '8': {},
+      '10': 'displayContents'
+    },
   ],
   '7': {},
   '8': [
@@ -93,8 +102,9 @@ const Report$json = {
 final $typed_data.Uint8List reportDescriptor = $convert.base64Decode(
     'CgZSZXBvcnQSLQoMY29udmVyc2F0aW9uGAEgASgJQgSQtRgDSABSDGNvbnZlcnNhdGlvbogBAR'
     'IwCgdtZXNzYWdlGAIgASgLMhAuaGkuY2x1Yi5NZXNzYWdlQgSQtRgCUgdtZXNzYWdlEioKC3Jl'
-    'Y2VpdmVkX2F0GAMgASgDQgSQtRgDSAFSCnJlY2VpdmVkQXSIAQE6BJi1GANCDwoNX2NvbnZlcn'
-    'NhdGlvbkIOCgxfcmVjZWl2ZWRfYXQ=');
+    'Y2VpdmVkX2F0GAMgASgDQgSQtRgDSAFSCnJlY2VpdmVkQXSIAQESQgoQZGlzcGxheV9jb250ZW'
+    '50cxgEIAEoCzIRLmhpLmNsdWIuQ29udGVudHNCBJC1GAJSD2Rpc3BsYXlDb250ZW50czoEmLUY'
+    'A0IPCg1fY29udmVyc2F0aW9uQg4KDF9yZWNlaXZlZF9hdA==');
 
 @$core.Deprecated('Use issueEventDescriptor instead')
 const IssueEvent$json = {

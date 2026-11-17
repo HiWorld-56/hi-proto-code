@@ -28,11 +28,13 @@ class Report extends $pb.GeneratedMessage {
     $core.String? conversation,
     $0.Message? message,
     $fixnum.Int64? receivedAt,
+    $0.Contents? displayContents,
   }) {
     final result = create();
     if (conversation != null) result.conversation = conversation;
     if (message != null) result.message = message;
     if (receivedAt != null) result.receivedAt = receivedAt;
+    if (displayContents != null) result.displayContents = displayContents;
     return result;
   }
 
@@ -53,6 +55,8 @@ class Report extends $pb.GeneratedMessage {
     ..aOM<$0.Message>(2, _omitFieldNames ? '' : 'message',
         subBuilder: $0.Message.create)
     ..aInt64(3, _omitFieldNames ? '' : 'receivedAt')
+    ..aOM<$0.Contents>(4, _omitFieldNames ? '' : 'displayContents',
+        subBuilder: $0.Contents.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -101,6 +105,17 @@ class Report extends $pb.GeneratedMessage {
   $core.bool hasReceivedAt() => $_has(2);
   @$pb.TagNumber(3)
   void clearReceivedAt() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $0.Contents get displayContents => $_getN(3);
+  @$pb.TagNumber(4)
+  set displayContents($0.Contents value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasDisplayContents() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearDisplayContents() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $0.Contents ensureDisplayContents() => $_ensure(3);
 }
 
 class IssueEvent extends $pb.GeneratedMessage {

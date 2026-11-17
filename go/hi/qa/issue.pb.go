@@ -131,12 +131,13 @@ func (Environment) EnumDescriptor() ([]byte, []int) {
 }
 
 type Report struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Conversation  *string                `protobuf:"bytes,1,opt,name=conversation,proto3,oneof" json:"conversation,omitempty"`
-	Message       *club.Message          `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
-	ReceivedAt    *int64                 `protobuf:"varint,3,opt,name=received_at,json=receivedAt,proto3,oneof" json:"received_at,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Conversation    *string                `protobuf:"bytes,1,opt,name=conversation,proto3,oneof" json:"conversation,omitempty"`
+	Message         *club.Message          `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	ReceivedAt      *int64                 `protobuf:"varint,3,opt,name=received_at,json=receivedAt,proto3,oneof" json:"received_at,omitempty"`
+	DisplayContents *club.Contents         `protobuf:"bytes,4,opt,name=display_contents,json=displayContents,proto3" json:"display_contents,omitempty"` // derived view; original message bytes remain authoritative
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *Report) Reset() {
@@ -188,6 +189,13 @@ func (x *Report) GetReceivedAt() int64 {
 		return *x.ReceivedAt
 	}
 	return 0
+}
+
+func (x *Report) GetDisplayContents() *club.Contents {
+	if x != nil {
+		return x.DisplayContents
+	}
+	return nil
 }
 
 type IssueEvent struct {
@@ -885,12 +893,13 @@ var File_hi_qa_issue_proto protoreflect.FileDescriptor
 
 const file_hi_qa_issue_proto_rawDesc = "" +
 	"\n" +
-	"\x11hi/qa/issue.proto\x12\x05hi.qa\x1a\x0fhi/common.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\"\xbc\x01\n" +
+	"\x11hi/qa/issue.proto\x12\x05hi.qa\x1a\x0fhi/common.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\"\x80\x02\n" +
 	"\x06Report\x12-\n" +
 	"\fconversation\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\fconversation\x88\x01\x01\x120\n" +
 	"\amessage\x18\x02 \x01(\v2\x10.hi.club.MessageB\x04\x90\xb5\x18\x02R\amessage\x12*\n" +
 	"\vreceived_at\x18\x03 \x01(\x03B\x04\x90\xb5\x18\x03H\x01R\n" +
-	"receivedAt\x88\x01\x01:\x04\x98\xb5\x18\x03B\x0f\n" +
+	"receivedAt\x88\x01\x01\x12B\n" +
+	"\x10display_contents\x18\x04 \x01(\v2\x11.hi.club.ContentsB\x04\x90\xb5\x18\x02R\x0fdisplayContents:\x04\x98\xb5\x18\x03B\x0f\n" +
 	"\r_conversationB\x0e\n" +
 	"\f_received_at\"\xc1\x01\n" +
 	"\n" +
@@ -1029,31 +1038,33 @@ var file_hi_qa_issue_proto_goTypes = []any{
 	(*Session)(nil),        // 11: hi.qa.Session
 	(*WorkerResult)(nil),   // 12: hi.qa.WorkerResult
 	(*club.Message)(nil),   // 13: hi.club.Message
-	(*hi.Entity)(nil),      // 14: hi.Entity
+	(*club.Contents)(nil),  // 14: hi.club.Contents
+	(*hi.Entity)(nil),      // 15: hi.Entity
 }
 var file_hi_qa_issue_proto_depIdxs = []int32{
 	13, // 0: hi.qa.Report.message:type_name -> hi.club.Message
-	14, // 1: hi.qa.IssueEvent.actor:type_name -> hi.Entity
-	14, // 2: hi.qa.Confirmation.requested_from:type_name -> hi.Entity
-	0,  // 3: hi.qa.Issue.status:type_name -> hi.qa.IssueStatus
-	1,  // 4: hi.qa.Issue.environment:type_name -> hi.qa.Environment
-	14, // 5: hi.qa.Issue.reporter:type_name -> hi.Entity
-	2,  // 6: hi.qa.Issue.reports:type_name -> hi.qa.Report
-	3,  // 7: hi.qa.Issue.events:type_name -> hi.qa.IssueEvent
-	4,  // 8: hi.qa.Issue.confirmation:type_name -> hi.qa.Confirmation
-	0,  // 9: hi.qa.ListIssuesReq.status:type_name -> hi.qa.IssueStatus
-	1,  // 10: hi.qa.ListIssuesReq.environment:type_name -> hi.qa.Environment
-	5,  // 11: hi.qa.ListIssuesResp.issues:type_name -> hi.qa.Issue
-	0,  // 12: hi.qa.UpdateIssueReq.status:type_name -> hi.qa.IssueStatus
-	1,  // 13: hi.qa.UpdateIssueReq.environment:type_name -> hi.qa.Environment
-	14, // 14: hi.qa.Session.operator:type_name -> hi.Entity
-	0,  // 15: hi.qa.WorkerResult.status:type_name -> hi.qa.IssueStatus
-	1,  // 16: hi.qa.WorkerResult.verified_environment:type_name -> hi.qa.Environment
-	17, // [17:17] is the sub-list for method output_type
-	17, // [17:17] is the sub-list for method input_type
-	17, // [17:17] is the sub-list for extension type_name
-	17, // [17:17] is the sub-list for extension extendee
-	0,  // [0:17] is the sub-list for field type_name
+	14, // 1: hi.qa.Report.display_contents:type_name -> hi.club.Contents
+	15, // 2: hi.qa.IssueEvent.actor:type_name -> hi.Entity
+	15, // 3: hi.qa.Confirmation.requested_from:type_name -> hi.Entity
+	0,  // 4: hi.qa.Issue.status:type_name -> hi.qa.IssueStatus
+	1,  // 5: hi.qa.Issue.environment:type_name -> hi.qa.Environment
+	15, // 6: hi.qa.Issue.reporter:type_name -> hi.Entity
+	2,  // 7: hi.qa.Issue.reports:type_name -> hi.qa.Report
+	3,  // 8: hi.qa.Issue.events:type_name -> hi.qa.IssueEvent
+	4,  // 9: hi.qa.Issue.confirmation:type_name -> hi.qa.Confirmation
+	0,  // 10: hi.qa.ListIssuesReq.status:type_name -> hi.qa.IssueStatus
+	1,  // 11: hi.qa.ListIssuesReq.environment:type_name -> hi.qa.Environment
+	5,  // 12: hi.qa.ListIssuesResp.issues:type_name -> hi.qa.Issue
+	0,  // 13: hi.qa.UpdateIssueReq.status:type_name -> hi.qa.IssueStatus
+	1,  // 14: hi.qa.UpdateIssueReq.environment:type_name -> hi.qa.Environment
+	15, // 15: hi.qa.Session.operator:type_name -> hi.Entity
+	0,  // 16: hi.qa.WorkerResult.status:type_name -> hi.qa.IssueStatus
+	1,  // 17: hi.qa.WorkerResult.verified_environment:type_name -> hi.qa.Environment
+	18, // [18:18] is the sub-list for method output_type
+	18, // [18:18] is the sub-list for method input_type
+	18, // [18:18] is the sub-list for extension type_name
+	18, // [18:18] is the sub-list for extension extendee
+	0,  // [0:18] is the sub-list for field type_name
 }
 
 func init() { file_hi_qa_issue_proto_init() }

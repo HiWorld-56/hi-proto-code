@@ -1206,6 +1206,9 @@ impl serde::Serialize for Report {
         if self.received_at.is_some() {
             len += 1;
         }
+        if self.display_contents.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.qa.Report", len)?;
         if let Some(v) = self.conversation.as_ref() {
             struct_ser.serialize_field("conversation", v)?;
@@ -1217,6 +1220,9 @@ impl serde::Serialize for Report {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
             struct_ser.serialize_field("receivedAt", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.display_contents.as_ref() {
+            struct_ser.serialize_field("displayContents", v)?;
         }
         struct_ser.end()
     }
@@ -1232,6 +1238,8 @@ impl<'de> serde::Deserialize<'de> for Report {
             "message",
             "received_at",
             "receivedAt",
+            "display_contents",
+            "displayContents",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -1239,6 +1247,7 @@ impl<'de> serde::Deserialize<'de> for Report {
             Conversation,
             Message,
             ReceivedAt,
+            DisplayContents,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1263,6 +1272,7 @@ impl<'de> serde::Deserialize<'de> for Report {
                             "conversation" => Ok(GeneratedField::Conversation),
                             "message" => Ok(GeneratedField::Message),
                             "receivedAt" | "received_at" => Ok(GeneratedField::ReceivedAt),
+                            "displayContents" | "display_contents" => Ok(GeneratedField::DisplayContents),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -1285,6 +1295,7 @@ impl<'de> serde::Deserialize<'de> for Report {
                 let mut conversation__ = None;
                 let mut message__ = None;
                 let mut received_at__ = None;
+                let mut display_contents__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Conversation => {
@@ -1307,12 +1318,19 @@ impl<'de> serde::Deserialize<'de> for Report {
                                 map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
+                        GeneratedField::DisplayContents => {
+                            if display_contents__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("displayContents"));
+                            }
+                            display_contents__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(Report {
                     conversation: conversation__,
                     message: message__,
                     received_at: received_at__,
+                    display_contents: display_contents__,
                 })
             }
         }
