@@ -22123,6 +22123,9 @@ impl serde::Serialize for Message {
         if self.contents.is_some() {
             len += 1;
         }
+        if self.request_respond_id.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.club.Message", len)?;
         if let Some(v) = self.uuid.as_ref() {
             struct_ser.serialize_field("uuid", v)?;
@@ -22155,6 +22158,9 @@ impl serde::Serialize for Message {
             #[allow(clippy::needless_borrows_for_generic_args)]
             struct_ser.serialize_field("contents", pbjson::private::base64::encode(&v).as_str())?;
         }
+        if let Some(v) = self.request_respond_id.as_ref() {
+            struct_ser.serialize_field("requestRespondId", v)?;
+        }
         struct_ser.end()
     }
 }
@@ -22175,6 +22181,8 @@ impl<'de> serde::Deserialize<'de> for Message {
             "ghost",
             "dark",
             "contents",
+            "request_respond_id",
+            "requestRespondId",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -22188,6 +22196,7 @@ impl<'de> serde::Deserialize<'de> for Message {
             Ghost,
             Dark,
             Contents,
+            RequestRespondId,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -22218,6 +22227,7 @@ impl<'de> serde::Deserialize<'de> for Message {
                             "ghost" => Ok(GeneratedField::Ghost),
                             "dark" => Ok(GeneratedField::Dark),
                             "contents" => Ok(GeneratedField::Contents),
+                            "requestRespondId" | "request_respond_id" => Ok(GeneratedField::RequestRespondId),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -22246,6 +22256,7 @@ impl<'de> serde::Deserialize<'de> for Message {
                 let mut ghost__ = None;
                 let mut dark__ = None;
                 let mut contents__ = None;
+                let mut request_respond_id__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Uuid => {
@@ -22308,6 +22319,12 @@ impl<'de> serde::Deserialize<'de> for Message {
                                 map_.next_value::<::std::option::Option<::pbjson::private::BytesDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
+                        GeneratedField::RequestRespondId => {
+                            if request_respond_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestRespondId"));
+                            }
+                            request_respond_id__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(Message {
@@ -22320,6 +22337,7 @@ impl<'de> serde::Deserialize<'de> for Message {
                     ghost: ghost__,
                     dark: dark__,
                     contents: contents__,
+                    request_respond_id: request_respond_id__,
                 })
             }
         }

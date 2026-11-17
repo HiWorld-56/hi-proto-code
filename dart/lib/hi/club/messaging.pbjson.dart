@@ -296,6 +296,16 @@ const Message$json = {
       '10': 'contents',
       '17': true
     },
+    {
+      '1': 'request_respond_id',
+      '3': 12,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 6,
+      '10': 'requestRespondId',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -305,6 +315,7 @@ const Message$json = {
     {'1': '_ex_type'},
     {'1': '_dark'},
     {'1': '_contents'},
+    {'1': '_request_respond_id'},
   ],
 };
 
@@ -316,8 +327,9 @@ final $typed_data.Uint8List messageDescriptor = $convert.base64Decode(
     'QuZ29vZ2xlLnByb3RvYnVmLkFueUIEkLUYAlIFZXh0cmESIgoHZXhfdHlwZRgHIAEoCUIEkLUY'
     'AkgDUgZleFR5cGWIAQESJgoFZ2hvc3QYCCABKAsyCi5oaS5FbnRpdHlCBJC1GAFSBWdob3N0Eh'
     '0KBGRhcmsYCiABKA1CBJC1GAJIBFIEZGFya4gBARIlCghjb250ZW50cxgLIAEoDEIEkLUYAkgF'
-    'Ughjb250ZW50c4gBAToEmLUYAkIHCgVfdXVpZEIHCgVfdHlwZUIMCgpfdGltZXN0YW1wQgoKCF'
-    '9leF90eXBlQgcKBV9kYXJrQgsKCV9jb250ZW50cw==');
+    'Ughjb250ZW50c4gBARI3ChJyZXF1ZXN0X3Jlc3BvbmRfaWQYDCABKAlCBJC1GAJIBlIQcmVxdW'
+    'VzdFJlc3BvbmRJZIgBAToEmLUYAkIHCgVfdXVpZEIHCgVfdHlwZUIMCgpfdGltZXN0YW1wQgoK'
+    'CF9leF90eXBlQgcKBV9kYXJrQgsKCV9jb250ZW50c0IVChNfcmVxdWVzdF9yZXNwb25kX2lk');
 
 @$core.Deprecated('Use contentsDescriptor instead')
 const Contents$json = {

@@ -368,6 +368,7 @@ class Message extends $pb.GeneratedMessage {
     $0.Entity? ghost,
     $core.int? dark,
     $core.List<$core.int>? contents,
+    $core.String? requestRespondId,
   }) {
     final result = create();
     if (uuid != null) result.uuid = uuid;
@@ -379,6 +380,7 @@ class Message extends $pb.GeneratedMessage {
     if (ghost != null) result.ghost = ghost;
     if (dark != null) result.dark = dark;
     if (contents != null) result.contents = contents;
+    if (requestRespondId != null) result.requestRespondId = requestRespondId;
     return result;
   }
 
@@ -407,6 +409,7 @@ class Message extends $pb.GeneratedMessage {
     ..aI(10, _omitFieldNames ? '' : 'dark', fieldType: $pb.PbFieldType.OU3)
     ..a<$core.List<$core.int>>(
         11, _omitFieldNames ? '' : 'contents', $pb.PbFieldType.OY)
+    ..aOS(12, _omitFieldNames ? '' : 'requestRespondId')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -514,6 +517,18 @@ class Message extends $pb.GeneratedMessage {
   $core.bool hasContents() => $_has(8);
   @$pb.TagNumber(11)
   void clearContents() => $_clearField(11);
+
+  /// 业务请求与回复的关联号。不传 = 无关联，普通消息不作特殊处理；保留presence，不用零值代替未传。
+  /// 由业务层生成、解释；接收触发的回复流程原样传递并在回复消息中回带（人工确认仅暂停该流程）。
+  /// 不改变既有回复条件或权限。消息引擎只随信封保存、传输，不据此触发行为或路由。
+  @$pb.TagNumber(12)
+  $core.String get requestRespondId => $_getSZ(9);
+  @$pb.TagNumber(12)
+  set requestRespondId($core.String value) => $_setString(9, value);
+  @$pb.TagNumber(12)
+  $core.bool hasRequestRespondId() => $_has(9);
+  @$pb.TagNumber(12)
+  void clearRequestRespondId() => $_clearField(12);
 }
 
 /// 消息的可变部分(`Message.contents` 里装的就是它序列化后的字节)。

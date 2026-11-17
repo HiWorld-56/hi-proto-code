@@ -305,9 +305,13 @@ type Message struct {
 	Ghost     *hi.Entity             `protobuf:"bytes,8,opt,name=ghost,proto3" json:"ghost,omitempty"`       // Entity=公开门面
 	Dark      *uint32                `protobuf:"varint,10,opt,name=dark,proto3,oneof" json:"dark,omitempty"` // 暗语等级,不带 = 0 = 普通;见上面「暗语」那段
 	// 可变部分:序列化后的 `Contents`。中间层原样存、原样转,只有 UI / brain 解(见上方说明)
-	Contents      []byte `protobuf:"bytes,11,opt,name=contents,proto3,oneof" json:"contents,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	Contents []byte `protobuf:"bytes,11,opt,name=contents,proto3,oneof" json:"contents,omitempty"`
+	// 业务请求与回复的关联号。不传 = 无关联，普通消息不作特殊处理；保留presence，不用零值代替未传。
+	// 由业务层生成、解释；接收触发的回复流程原样传递并在回复消息中回带（人工确认仅暂停该流程）。
+	// 不改变既有回复条件或权限。消息引擎只随信封保存、传输，不据此触发行为或路由。
+	RequestRespondId *string `protobuf:"bytes,12,opt,name=request_respond_id,json=requestRespondId,proto3,oneof" json:"request_respond_id,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
 }
 
 func (x *Message) Reset() {
@@ -401,6 +405,13 @@ func (x *Message) GetContents() []byte {
 		return x.Contents
 	}
 	return nil
+}
+
+func (x *Message) GetRequestRespondId() string {
+	if x != nil && x.RequestRespondId != nil {
+		return *x.RequestRespondId
+	}
+	return ""
 }
 
 // 消息的可变部分(`Message.contents` 里装的就是它序列化后的字节)。
@@ -1065,7 +1076,7 @@ const file_hi_club_messaging_proto_rawDesc = "" +
 	"\x06custom\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x06custom\x88\x01\x01\x12\x1f\n" +
 	"\x05state\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x05state\x88\x01\x01:\x04\x98\xb5\x18\x02B\t\n" +
 	"\a_customB\b\n" +
-	"\x06_state\"\xa2\x03\n" +
+	"\x06_state\"\xf2\x03\n" +
 	"\aMessage\x12\x1d\n" +
 	"\x04uuid\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x00R\x04uuid\x88\x01\x01\x12\x1d\n" +
 	"\x04type\x18\x02 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x04type\x88\x01\x01\x12$\n" +
@@ -1078,7 +1089,8 @@ const file_hi_club_messaging_proto_rawDesc = "" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\x05ghost\x12\x1d\n" +
 	"\x04dark\x18\n" +
 	" \x01(\rB\x04\x90\xb5\x18\x02H\x04R\x04dark\x88\x01\x01\x12%\n" +
-	"\bcontents\x18\v \x01(\fB\x04\x90\xb5\x18\x02H\x05R\bcontents\x88\x01\x01:\x04\x98\xb5\x18\x02B\a\n" +
+	"\bcontents\x18\v \x01(\fB\x04\x90\xb5\x18\x02H\x05R\bcontents\x88\x01\x01\x127\n" +
+	"\x12request_respond_id\x18\f \x01(\tB\x04\x90\xb5\x18\x02H\x06R\x10requestRespondId\x88\x01\x01:\x04\x98\xb5\x18\x02B\a\n" +
 	"\x05_uuidB\a\n" +
 	"\x05_typeB\f\n" +
 	"\n" +
@@ -1086,7 +1098,8 @@ const file_hi_club_messaging_proto_rawDesc = "" +
 	"\n" +
 	"\b_ex_typeB\a\n" +
 	"\x05_darkB\v\n" +
-	"\t_contents\"k\n" +
+	"\t_contentsB\x15\n" +
+	"\x13_request_respond_id\"k\n" +
 	"\bContents\x12*\n" +
 	"\x04list\x18\x01 \x03(\v2\x10.hi.club.ContentB\x04\x90\xb5\x18\x02R\x04list\x12-\n" +
 	"\x06prompt\x18\x02 \x01(\v2\x0f.hi.club.PromptB\x04\x90\xb5\x18\x02R\x06prompt:\x04\x98\xb5\x18\x02\"j\n" +

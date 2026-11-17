@@ -5205,6 +5205,11 @@ pub struct Message {
     /// 可变部分:序列化后的 `Contents`。中间层原样存、原样转,只有 UI / brain 解(见上方说明)
     #[prost(bytes = "vec", optional, tag = "11")]
     pub contents: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
+    /// 业务请求与回复的关联号。不传 = 无关联，普通消息不作特殊处理；保留presence，不用零值代替未传。
+    /// 由业务层生成、解释；接收触发的回复流程原样传递并在回复消息中回带（人工确认仅暂停该流程）。
+    /// 不改变既有回复条件或权限。消息引擎只随信封保存、传输，不据此触发行为或路由。
+    #[prost(string, optional, tag = "12")]
+    pub request_respond_id: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// 消息的可变部分(`Message.contents` 里装的就是它序列化后的字节)。
 /// **只由发送方编码、接收方解析**;中间层不认识它也不需要认识它。
