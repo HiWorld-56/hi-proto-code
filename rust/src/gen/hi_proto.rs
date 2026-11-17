@@ -36,6 +36,10 @@ pub mod hi {
         include!("hi.ninja.rs");
         include!("hi.ninja.serde.rs");
     }
+    pub mod qa {
+        include!("hi.qa.rs");
+        include!("hi.qa.serde.rs");
+    }
     pub mod source {
         include!("hi.source.rs");
         include!("hi.source.serde.rs");
