@@ -22,12 +22,13 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
+from buf.validate import validate_pb2 as buf_dot_validate_dot_validate__pb2
 from hi import common_pb2 as hi_dot_common__pb2
 from hi.club import messaging_pb2 as hi_dot_club_dot_messaging__pb2
 from hi import options_pb2 as hi_dot_options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11hi/qa/issue.proto\x12\x05hi.qa\x1a\x0fhi/common.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\"\x80\x02\n\x06Report\x12-\n\x0c\x63onversation\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x0c\x63onversation\x88\x01\x01\x12\x30\n\x07message\x18\x02 \x01(\x0b\x32\x10.hi.club.MessageB\x04\x90\xb5\x18\x02R\x07message\x12*\n\x0breceived_at\x18\x03 \x01(\x03\x42\x04\x90\xb5\x18\x03H\x01R\nreceivedAt\x88\x01\x01\x12\x42\n\x10\x64isplay_contents\x18\x04 \x01(\x0b\x32\x11.hi.club.ContentsB\x04\x90\xb5\x18\x02R\x0f\x64isplayContents:\x04\x98\xb5\x18\x03\x42\x0f\n\r_conversationB\x0e\n\x0c_received_at\"\xc1\x01\n\nIssueEvent\x12\x1d\n\x04kind\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04kind\x88\x01\x01\x12&\n\x05\x61\x63tor\x18\x02 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x05\x61\x63tor\x12\x1d\n\x04text\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x04text\x88\x01\x01\x12\'\n\ttimestamp\x18\x04 \x01(\x03\x42\x04\x90\xb5\x18\x03H\x02R\ttimestamp\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x07\n\x05_kindB\x07\n\x05_textB\x0c\n\n_timestamp\"\xc0\x01\n\x0c\x43onfirmation\x12%\n\x08question\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x08question\x88\x01\x01\x12\x37\n\x0erequested_from\x18\x02 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\rrequestedFrom\x12,\n\x0cmessage_uuid\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x0bmessageUuid\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x0b\n\t_questionB\x0f\n\r_message_uuid\"\x9c\x05\n\x05Issue\x12\x19\n\x02id\x18\x01 \x01(\x04\x42\x04\x90\xb5\x18\x03H\x00R\x02id\x88\x01\x01\x12\x1f\n\x05title\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x05title\x88\x01\x01\x12\x35\n\x06status\x18\x03 \x01(\x0e\x32\x12.hi.qa.IssueStatusB\x04\x90\xb5\x18\x03H\x02R\x06status\x88\x01\x01\x12?\n\x0b\x65nvironment\x18\x04 \x01(\x0e\x32\x12.hi.qa.EnvironmentB\x04\x90\xb5\x18\x03H\x03R\x0b\x65nvironment\x88\x01\x01\x12,\n\x08reporter\x18\x05 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x08reporter\x12-\n\x07reports\x18\x06 \x03(\x0b\x32\r.hi.qa.ReportB\x04\x90\xb5\x18\x03R\x07reports\x12/\n\x06\x65vents\x18\x07 \x03(\x0b\x32\x11.hi.qa.IssueEventB\x04\x90\xb5\x18\x03R\x06\x65vents\x12=\n\x0c\x63onfirmation\x18\x08 \x01(\x0b\x32\x13.hi.qa.ConfirmationB\x04\x90\xb5\x18\x03R\x0c\x63onfirmation\x12(\n\ncreated_at\x18\t \x01(\x03\x42\x04\x90\xb5\x18\x03H\x04R\tcreatedAt\x88\x01\x01\x12(\n\nupdated_at\x18\n \x01(\x03\x42\x04\x90\xb5\x18\x03H\x05R\tupdatedAt\x88\x01\x01\x12%\n\x08revision\x18\x0b \x01(\x04\x42\x04\x90\xb5\x18\x03H\x06R\x08revision\x88\x01\x01\x12*\n\x0blast_result\x18\x0c \x01(\tB\x04\x90\xb5\x18\x03H\x07R\nlastResult\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x05\n\x03_idB\x08\n\x06_titleB\t\n\x07_statusB\x0e\n\x0c_environmentB\r\n\x0b_created_atB\r\n\x0b_updated_atB\x0b\n\t_revisionB\x0e\n\x0c_last_result\"\x8b\x02\n\rListIssuesReq\x12/\n\x06status\x18\x01 \x01(\x0e\x32\x12.hi.qa.IssueStatusH\x00R\x06status\x88\x01\x01\x12\x39\n\x0b\x65nvironment\x18\x02 \x01(\x0e\x32\x12.hi.qa.EnvironmentH\x01R\x0b\x65nvironment\x88\x01\x01\x12\x1b\n\x06search\x18\x03 \x01(\tH\x02R\x06search\x88\x01\x01\x12\x1b\n\x06offset\x18\x04 \x01(\rH\x03R\x06offset\x88\x01\x01\x12\x19\n\x05limit\x18\x05 \x01(\rH\x04R\x05limit\x88\x01\x01\x42\t\n\x07_statusB\x0e\n\x0c_environmentB\t\n\x07_searchB\t\n\x07_offsetB\x08\n\x06_limit\"m\n\x0eListIssuesResp\x12*\n\x06issues\x18\x01 \x03(\x0b\x32\x0c.hi.qa.IssueB\x04\x90\xb5\x18\x03R\x06issues\x12\x1f\n\x05total\x18\x02 \x01(\rB\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x08\n\x06_total\"&\n\x08IssueRef\x12\x13\n\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x42\x05\n\x03_id\"\xd1\x02\n\x0eUpdateIssueReq\x12\x13\n\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1f\n\x08revision\x18\x02 \x01(\x04H\x01R\x08revision\x88\x01\x01\x12/\n\x06status\x18\x03 \x01(\x0e\x32\x12.hi.qa.IssueStatusH\x02R\x06status\x88\x01\x01\x12\x39\n\x0b\x65nvironment\x18\x04 \x01(\x0e\x32\x12.hi.qa.EnvironmentH\x03R\x0b\x65nvironment\x88\x01\x01\x12\x30\n\x11\x63lear_environment\x18\x05 \x01(\x08H\x04R\x10\x63learEnvironment\x88\x01\x01\x12\x1b\n\x06reason\x18\x06 \x01(\tH\x05R\x06reason\x88\x01\x01\x42\x05\n\x03_idB\x0b\n\t_revisionB\t\n\x07_statusB\x0e\n\x0c_environmentB\x14\n\x12_clear_environmentB\t\n\x07_reason\"2\n\x0bLoginTicket\x12\x19\n\x05token\x18\x01 \x01(\tH\x00R\x05token\x88\x01\x01\x42\x08\n\x06_token\"=\n\x07Session\x12,\n\x08operator\x18\x01 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x08operator:\x04\x98\xb5\x18\x03\"\xf2\x02\n\x0cWorkerResult\x12/\n\x06status\x18\x01 \x01(\x0e\x32\x12.hi.qa.IssueStatusH\x00R\x06status\x88\x01\x01\x12\x1d\n\x07summary\x18\x02 \x01(\tH\x01R\x07summary\x88\x01\x01\x12\x1f\n\x08question\x18\x03 \x01(\tH\x02R\x08question\x88\x01\x01\x12\x1a\n\x08\x65vidence\x18\x04 \x03(\tR\x08\x65vidence\x12\x34\n\x13\x61rchitecture_review\x18\x05 \x01(\tH\x03R\x12\x61rchitectureReview\x88\x01\x01\x12J\n\x14verified_environment\x18\x06 \x01(\x0e\x32\x12.hi.qa.EnvironmentH\x04R\x13verifiedEnvironment\x88\x01\x01\x42\t\n\x07_statusB\n\n\x08_summaryB\x0b\n\t_questionB\x16\n\x14_architecture_reviewB\x17\n\x15_verified_environment*\x9d\x01\n\x0bIssueStatus\x12\x1c\n\x18ISSUE_STATUS_UNSPECIFIED\x10\x00\x12\x1c\n\x18ISSUE_STATUS_NOT_STARTED\x10\x01\x12\x1c\n\x18ISSUE_STATUS_IN_PROGRESS\x10\x02\x12\x19\n\x15ISSUE_STATUS_DEFERRED\x10\x03\x12\x19\n\x15ISSUE_STATUS_RESOLVED\x10\x04*c\n\x0b\x45nvironment\x12\x1b\n\x17\x45NVIRONMENT_UNSPECIFIED\x10\x00\x12\x1a\n\x16\x45NVIRONMENT_PRODUCTION\x10\x01\x12\x1b\n\x17\x45NVIRONMENT_DEVELOPMENT\x10\x02\x42)Z\'github.com/HiWorld-56/hi-proto/go/hi/qab\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11hi/qa/issue.proto\x12\x05hi.qa\x1a\x1b\x62uf/validate/validate.proto\x1a\x0fhi/common.proto\x1a\x17hi/club/messaging.proto\x1a\x10hi/options.proto\"\x80\x02\n\x06Report\x12-\n\x0c\x63onversation\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x0c\x63onversation\x88\x01\x01\x12\x30\n\x07message\x18\x02 \x01(\x0b\x32\x10.hi.club.MessageB\x04\x90\xb5\x18\x02R\x07message\x12*\n\x0breceived_at\x18\x03 \x01(\x03\x42\x04\x90\xb5\x18\x03H\x01R\nreceivedAt\x88\x01\x01\x12\x42\n\x10\x64isplay_contents\x18\x04 \x01(\x0b\x32\x11.hi.club.ContentsB\x04\x90\xb5\x18\x02R\x0f\x64isplayContents:\x04\x98\xb5\x18\x03\x42\x0f\n\r_conversationB\x0e\n\x0c_received_at\"\xc1\x01\n\nIssueEvent\x12\x1d\n\x04kind\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x04kind\x88\x01\x01\x12&\n\x05\x61\x63tor\x18\x02 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x05\x61\x63tor\x12\x1d\n\x04text\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x04text\x88\x01\x01\x12\'\n\ttimestamp\x18\x04 \x01(\x03\x42\x04\x90\xb5\x18\x03H\x02R\ttimestamp\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x07\n\x05_kindB\x07\n\x05_textB\x0c\n\n_timestamp\"\xc0\x01\n\x0c\x43onfirmation\x12%\n\x08question\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x08question\x88\x01\x01\x12\x37\n\x0erequested_from\x18\x02 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\rrequestedFrom\x12,\n\x0cmessage_uuid\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x0bmessageUuid\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x0b\n\t_questionB\x0f\n\r_message_uuid\"\x9c\x05\n\x05Issue\x12\x19\n\x02id\x18\x01 \x01(\x04\x42\x04\x90\xb5\x18\x03H\x00R\x02id\x88\x01\x01\x12\x1f\n\x05title\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x05title\x88\x01\x01\x12\x35\n\x06status\x18\x03 \x01(\x0e\x32\x12.hi.qa.IssueStatusB\x04\x90\xb5\x18\x03H\x02R\x06status\x88\x01\x01\x12?\n\x0b\x65nvironment\x18\x04 \x01(\x0e\x32\x12.hi.qa.EnvironmentB\x04\x90\xb5\x18\x03H\x03R\x0b\x65nvironment\x88\x01\x01\x12,\n\x08reporter\x18\x05 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x08reporter\x12-\n\x07reports\x18\x06 \x03(\x0b\x32\r.hi.qa.ReportB\x04\x90\xb5\x18\x03R\x07reports\x12/\n\x06\x65vents\x18\x07 \x03(\x0b\x32\x11.hi.qa.IssueEventB\x04\x90\xb5\x18\x03R\x06\x65vents\x12=\n\x0c\x63onfirmation\x18\x08 \x01(\x0b\x32\x13.hi.qa.ConfirmationB\x04\x90\xb5\x18\x03R\x0c\x63onfirmation\x12(\n\ncreated_at\x18\t \x01(\x03\x42\x04\x90\xb5\x18\x03H\x04R\tcreatedAt\x88\x01\x01\x12(\n\nupdated_at\x18\n \x01(\x03\x42\x04\x90\xb5\x18\x03H\x05R\tupdatedAt\x88\x01\x01\x12%\n\x08revision\x18\x0b \x01(\x04\x42\x04\x90\xb5\x18\x03H\x06R\x08revision\x88\x01\x01\x12*\n\x0blast_result\x18\x0c \x01(\tB\x04\x90\xb5\x18\x03H\x07R\nlastResult\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x05\n\x03_idB\x08\n\x06_titleB\t\n\x07_statusB\x0e\n\x0c_environmentB\r\n\x0b_created_atB\r\n\x0b_updated_atB\x0b\n\t_revisionB\x0e\n\x0c_last_result\"\xbc\x02\n\rListIssuesReq\x12?\n\x06status\x18\x01 \x01(\x0e\x32\x12.hi.qa.IssueStatusB\x0e\xbaH\x0b\x82\x01\x08\x18\x01\x18\x02\x18\x03\x18\x04H\x00R\x06status\x88\x01\x01\x12\x45\n\x0b\x65nvironment\x18\x02 \x01(\x0e\x32\x12.hi.qa.EnvironmentB\n\xbaH\x07\x82\x01\x04\x18\x01\x18\x02H\x01R\x0b\x65nvironment\x88\x01\x01\x12%\n\x06search\x18\x03 \x01(\tB\x08\xbaH\x05r\x03\x18\xc8\x01H\x02R\x06search\x88\x01\x01\x12\x1b\n\x06offset\x18\x04 \x01(\rH\x03R\x06offset\x88\x01\x01\x12$\n\x05limit\x18\x05 \x01(\rB\t\xbaH\x06*\x04\x18\x64 \x00H\x04R\x05limit\x88\x01\x01\x42\t\n\x07_statusB\x0e\n\x0c_environmentB\t\n\x07_searchB\t\n\x07_offsetB\x08\n\x06_limit\"m\n\x0eListIssuesResp\x12*\n\x06issues\x18\x01 \x03(\x0b\x32\x0c.hi.qa.IssueB\x04\x90\xb5\x18\x03R\x06issues\x12\x1f\n\x05total\x18\x02 \x01(\rB\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x08\n\x06_total\"2\n\x08IssueRef\x12\x1f\n\x02id\x18\x01 \x01(\x04\x42\n\xbaH\x07\x32\x02 \x00\xc8\x01\x01H\x00R\x02id\x88\x01\x01\x42\x05\n\x03_id\"\x94\x03\n\x0eUpdateIssueReq\x12\x1f\n\x02id\x18\x01 \x01(\x04\x42\n\xbaH\x07\x32\x02 \x00\xc8\x01\x01H\x00R\x02id\x88\x01\x01\x12+\n\x08revision\x18\x02 \x01(\x04\x42\n\xbaH\x07\x32\x02 \x00\xc8\x01\x01H\x01R\x08revision\x88\x01\x01\x12?\n\x06status\x18\x03 \x01(\x0e\x32\x12.hi.qa.IssueStatusB\x0e\xbaH\x0b\x82\x01\x08\x18\x01\x18\x02\x18\x03\x18\x04H\x02R\x06status\x88\x01\x01\x12\x45\n\x0b\x65nvironment\x18\x04 \x01(\x0e\x32\x12.hi.qa.EnvironmentB\n\xbaH\x07\x82\x01\x04\x18\x01\x18\x02H\x03R\x0b\x65nvironment\x88\x01\x01\x12\x30\n\x11\x63lear_environment\x18\x05 \x01(\x08H\x04R\x10\x63learEnvironment\x88\x01\x01\x12*\n\x06reason\x18\x06 \x01(\tB\r\xbaH\nr\x05\x10\x01\x18\xa0\x1f\xc8\x01\x01H\x05R\x06reason\x88\x01\x01\x42\x05\n\x03_idB\x0b\n\t_revisionB\t\n\x07_statusB\x0e\n\x0c_environmentB\x14\n\x12_clear_environmentB\t\n\x07_reason\"L\n\x0bLoginTicket\x12\x33\n\x05token\x18\x01 \x01(\tB\x18\xbaH\x15r\x10\x32\x0e^[0-9a-f]{64}$\xc8\x01\x01H\x00R\x05token\x88\x01\x01\x42\x08\n\x06_token\"=\n\x07Session\x12,\n\x08operator\x18\x01 \x01(\x0b\x32\n.hi.EntityB\x04\x90\xb5\x18\x01R\x08operator:\x04\x98\xb5\x18\x03\"\xc1\x03\n\x0cWorkerResult\x12>\n\x06status\x18\x01 \x01(\x0e\x32\x12.hi.qa.IssueStatusB\r\xbaH\n\x82\x01\x04\x18\x03\x18\x04\xc8\x01\x01H\x00R\x06status\x88\x01\x01\x12,\n\x07summary\x18\x02 \x01(\tB\r\xbaH\nr\x05\x10\x01\x18\xc0>\xc8\x01\x01H\x01R\x07summary\x88\x01\x01\x12)\n\x08question\x18\x03 \x01(\tB\x08\xbaH\x05r\x03\x18\xa0\x1fH\x02R\x08question\x88\x01\x01\x12+\n\x08\x65vidence\x18\x04 \x03(\tB\x0f\xbaH\x0c\x92\x01\t\x10@\"\x05r\x03\x18\xc0>R\x08\x65vidence\x12>\n\x13\x61rchitecture_review\x18\x05 \x01(\tB\x08\xbaH\x05r\x03\x18\xc0>H\x03R\x12\x61rchitectureReview\x88\x01\x01\x12V\n\x14verified_environment\x18\x06 \x01(\x0e\x32\x12.hi.qa.EnvironmentB\n\xbaH\x07\x82\x01\x04\x18\x01\x18\x02H\x04R\x13verifiedEnvironment\x88\x01\x01\x42\t\n\x07_statusB\n\n\x08_summaryB\x0b\n\t_questionB\x16\n\x14_architecture_reviewB\x17\n\x15_verified_environment*\x9d\x01\n\x0bIssueStatus\x12\x1c\n\x18ISSUE_STATUS_UNSPECIFIED\x10\x00\x12\x1c\n\x18ISSUE_STATUS_NOT_STARTED\x10\x01\x12\x1c\n\x18ISSUE_STATUS_IN_PROGRESS\x10\x02\x12\x19\n\x15ISSUE_STATUS_DEFERRED\x10\x03\x12\x19\n\x15ISSUE_STATUS_RESOLVED\x10\x04*c\n\x0b\x45nvironment\x12\x1b\n\x17\x45NVIRONMENT_UNSPECIFIED\x10\x00\x12\x1a\n\x16\x45NVIRONMENT_PRODUCTION\x10\x01\x12\x1b\n\x17\x45NVIRONMENT_DEVELOPMENT\x10\x02\x42)Z\'github.com/HiWorld-56/hi-proto/go/hi/qab\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -89,40 +90,74 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_ISSUE'].fields_by_name['last_result']._serialized_options = b'\220\265\030\003'
   _globals['_ISSUE']._loaded_options = None
   _globals['_ISSUE']._serialized_options = b'\230\265\030\003'
+  _globals['_LISTISSUESREQ'].fields_by_name['status']._loaded_options = None
+  _globals['_LISTISSUESREQ'].fields_by_name['status']._serialized_options = b'\272H\013\202\001\010\030\001\030\002\030\003\030\004'
+  _globals['_LISTISSUESREQ'].fields_by_name['environment']._loaded_options = None
+  _globals['_LISTISSUESREQ'].fields_by_name['environment']._serialized_options = b'\272H\007\202\001\004\030\001\030\002'
+  _globals['_LISTISSUESREQ'].fields_by_name['search']._loaded_options = None
+  _globals['_LISTISSUESREQ'].fields_by_name['search']._serialized_options = b'\272H\005r\003\030\310\001'
+  _globals['_LISTISSUESREQ'].fields_by_name['limit']._loaded_options = None
+  _globals['_LISTISSUESREQ'].fields_by_name['limit']._serialized_options = b'\272H\006*\004\030d \000'
   _globals['_LISTISSUESRESP'].fields_by_name['issues']._loaded_options = None
   _globals['_LISTISSUESRESP'].fields_by_name['issues']._serialized_options = b'\220\265\030\003'
   _globals['_LISTISSUESRESP'].fields_by_name['total']._loaded_options = None
   _globals['_LISTISSUESRESP'].fields_by_name['total']._serialized_options = b'\220\265\030\003'
   _globals['_LISTISSUESRESP']._loaded_options = None
   _globals['_LISTISSUESRESP']._serialized_options = b'\230\265\030\003'
+  _globals['_ISSUEREF'].fields_by_name['id']._loaded_options = None
+  _globals['_ISSUEREF'].fields_by_name['id']._serialized_options = b'\272H\0072\002 \000\310\001\001'
+  _globals['_UPDATEISSUEREQ'].fields_by_name['id']._loaded_options = None
+  _globals['_UPDATEISSUEREQ'].fields_by_name['id']._serialized_options = b'\272H\0072\002 \000\310\001\001'
+  _globals['_UPDATEISSUEREQ'].fields_by_name['revision']._loaded_options = None
+  _globals['_UPDATEISSUEREQ'].fields_by_name['revision']._serialized_options = b'\272H\0072\002 \000\310\001\001'
+  _globals['_UPDATEISSUEREQ'].fields_by_name['status']._loaded_options = None
+  _globals['_UPDATEISSUEREQ'].fields_by_name['status']._serialized_options = b'\272H\013\202\001\010\030\001\030\002\030\003\030\004'
+  _globals['_UPDATEISSUEREQ'].fields_by_name['environment']._loaded_options = None
+  _globals['_UPDATEISSUEREQ'].fields_by_name['environment']._serialized_options = b'\272H\007\202\001\004\030\001\030\002'
+  _globals['_UPDATEISSUEREQ'].fields_by_name['reason']._loaded_options = None
+  _globals['_UPDATEISSUEREQ'].fields_by_name['reason']._serialized_options = b'\272H\nr\005\020\001\030\240\037\310\001\001'
+  _globals['_LOGINTICKET'].fields_by_name['token']._loaded_options = None
+  _globals['_LOGINTICKET'].fields_by_name['token']._serialized_options = b'\272H\025r\0202\016^[0-9a-f]{64}$\310\001\001'
   _globals['_SESSION'].fields_by_name['operator']._loaded_options = None
   _globals['_SESSION'].fields_by_name['operator']._serialized_options = b'\220\265\030\001'
   _globals['_SESSION']._loaded_options = None
   _globals['_SESSION']._serialized_options = b'\230\265\030\003'
-  _globals['_ISSUESTATUS']._serialized_start=2659
-  _globals['_ISSUESTATUS']._serialized_end=2816
-  _globals['_ENVIRONMENT']._serialized_start=2818
-  _globals['_ENVIRONMENT']._serialized_end=2917
-  _globals['_REPORT']._serialized_start=89
-  _globals['_REPORT']._serialized_end=345
-  _globals['_ISSUEEVENT']._serialized_start=348
-  _globals['_ISSUEEVENT']._serialized_end=541
-  _globals['_CONFIRMATION']._serialized_start=544
-  _globals['_CONFIRMATION']._serialized_end=736
-  _globals['_ISSUE']._serialized_start=739
-  _globals['_ISSUE']._serialized_end=1407
-  _globals['_LISTISSUESREQ']._serialized_start=1410
-  _globals['_LISTISSUESREQ']._serialized_end=1677
-  _globals['_LISTISSUESRESP']._serialized_start=1679
-  _globals['_LISTISSUESRESP']._serialized_end=1788
-  _globals['_ISSUEREF']._serialized_start=1790
-  _globals['_ISSUEREF']._serialized_end=1828
-  _globals['_UPDATEISSUEREQ']._serialized_start=1831
-  _globals['_UPDATEISSUEREQ']._serialized_end=2168
-  _globals['_LOGINTICKET']._serialized_start=2170
-  _globals['_LOGINTICKET']._serialized_end=2220
-  _globals['_SESSION']._serialized_start=2222
-  _globals['_SESSION']._serialized_end=2283
-  _globals['_WORKERRESULT']._serialized_start=2286
-  _globals['_WORKERRESULT']._serialized_end=2656
+  _globals['_WORKERRESULT'].fields_by_name['status']._loaded_options = None
+  _globals['_WORKERRESULT'].fields_by_name['status']._serialized_options = b'\272H\n\202\001\004\030\003\030\004\310\001\001'
+  _globals['_WORKERRESULT'].fields_by_name['summary']._loaded_options = None
+  _globals['_WORKERRESULT'].fields_by_name['summary']._serialized_options = b'\272H\nr\005\020\001\030\300>\310\001\001'
+  _globals['_WORKERRESULT'].fields_by_name['question']._loaded_options = None
+  _globals['_WORKERRESULT'].fields_by_name['question']._serialized_options = b'\272H\005r\003\030\240\037'
+  _globals['_WORKERRESULT'].fields_by_name['evidence']._loaded_options = None
+  _globals['_WORKERRESULT'].fields_by_name['evidence']._serialized_options = b'\272H\014\222\001\t\020@\"\005r\003\030\300>'
+  _globals['_WORKERRESULT'].fields_by_name['architecture_review']._loaded_options = None
+  _globals['_WORKERRESULT'].fields_by_name['architecture_review']._serialized_options = b'\272H\005r\003\030\300>'
+  _globals['_WORKERRESULT'].fields_by_name['verified_environment']._loaded_options = None
+  _globals['_WORKERRESULT'].fields_by_name['verified_environment']._serialized_options = b'\272H\007\202\001\004\030\001\030\002'
+  _globals['_ISSUESTATUS']._serialized_start=2921
+  _globals['_ISSUESTATUS']._serialized_end=3078
+  _globals['_ENVIRONMENT']._serialized_start=3080
+  _globals['_ENVIRONMENT']._serialized_end=3179
+  _globals['_REPORT']._serialized_start=118
+  _globals['_REPORT']._serialized_end=374
+  _globals['_ISSUEEVENT']._serialized_start=377
+  _globals['_ISSUEEVENT']._serialized_end=570
+  _globals['_CONFIRMATION']._serialized_start=573
+  _globals['_CONFIRMATION']._serialized_end=765
+  _globals['_ISSUE']._serialized_start=768
+  _globals['_ISSUE']._serialized_end=1436
+  _globals['_LISTISSUESREQ']._serialized_start=1439
+  _globals['_LISTISSUESREQ']._serialized_end=1755
+  _globals['_LISTISSUESRESP']._serialized_start=1757
+  _globals['_LISTISSUESRESP']._serialized_end=1866
+  _globals['_ISSUEREF']._serialized_start=1868
+  _globals['_ISSUEREF']._serialized_end=1918
+  _globals['_UPDATEISSUEREQ']._serialized_start=1921
+  _globals['_UPDATEISSUEREQ']._serialized_end=2325
+  _globals['_LOGINTICKET']._serialized_start=2327
+  _globals['_LOGINTICKET']._serialized_end=2403
+  _globals['_SESSION']._serialized_start=2405
+  _globals['_SESSION']._serialized_end=2466
+  _globals['_WORKERRESULT']._serialized_start=2469
+  _globals['_WORKERRESULT']._serialized_end=2918
 # @@protoc_insertion_point(module_scope)

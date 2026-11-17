@@ -375,6 +375,7 @@ const ListIssuesReq$json = {
       '4': 1,
       '5': 14,
       '6': '.hi.qa.IssueStatus',
+      '8': {},
       '9': 0,
       '10': 'status',
       '17': true
@@ -385,11 +386,21 @@ const ListIssuesReq$json = {
       '4': 1,
       '5': 14,
       '6': '.hi.qa.Environment',
+      '8': {},
       '9': 1,
       '10': 'environment',
       '17': true
     },
-    {'1': 'search', '3': 3, '4': 1, '5': 9, '9': 2, '10': 'search', '17': true},
+    {
+      '1': 'search',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 2,
+      '10': 'search',
+      '17': true
+    },
     {
       '1': 'offset',
       '3': 4,
@@ -399,7 +410,16 @@ const ListIssuesReq$json = {
       '10': 'offset',
       '17': true
     },
-    {'1': 'limit', '3': 5, '4': 1, '5': 13, '9': 4, '10': 'limit', '17': true},
+    {
+      '1': 'limit',
+      '3': 5,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 4,
+      '10': 'limit',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_status'},
@@ -412,11 +432,12 @@ const ListIssuesReq$json = {
 
 /// Descriptor for `ListIssuesReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List listIssuesReqDescriptor = $convert.base64Decode(
-    'Cg1MaXN0SXNzdWVzUmVxEi8KBnN0YXR1cxgBIAEoDjISLmhpLnFhLklzc3VlU3RhdHVzSABSBn'
-    'N0YXR1c4gBARI5CgtlbnZpcm9ubWVudBgCIAEoDjISLmhpLnFhLkVudmlyb25tZW50SAFSC2Vu'
-    'dmlyb25tZW50iAEBEhsKBnNlYXJjaBgDIAEoCUgCUgZzZWFyY2iIAQESGwoGb2Zmc2V0GAQgAS'
-    'gNSANSBm9mZnNldIgBARIZCgVsaW1pdBgFIAEoDUgEUgVsaW1pdIgBAUIJCgdfc3RhdHVzQg4K'
-    'DF9lbnZpcm9ubWVudEIJCgdfc2VhcmNoQgkKB19vZmZzZXRCCAoGX2xpbWl0');
+    'Cg1MaXN0SXNzdWVzUmVxEj8KBnN0YXR1cxgBIAEoDjISLmhpLnFhLklzc3VlU3RhdHVzQg66SA'
+    'uCAQgYARgCGAMYBEgAUgZzdGF0dXOIAQESRQoLZW52aXJvbm1lbnQYAiABKA4yEi5oaS5xYS5F'
+    'bnZpcm9ubWVudEIKukgHggEEGAEYAkgBUgtlbnZpcm9ubWVudIgBARIlCgZzZWFyY2gYAyABKA'
+    'lCCLpIBXIDGMgBSAJSBnNlYXJjaIgBARIbCgZvZmZzZXQYBCABKA1IA1IGb2Zmc2V0iAEBEiQK'
+    'BWxpbWl0GAUgASgNQgm6SAYqBBhkIABIBFIFbGltaXSIAQFCCQoHX3N0YXR1c0IOCgxfZW52aX'
+    'Jvbm1lbnRCCQoHX3NlYXJjaEIJCgdfb2Zmc2V0QggKBl9saW1pdA==');
 
 @$core.Deprecated('Use listIssuesRespDescriptor instead')
 const ListIssuesResp$json = {
@@ -457,7 +478,16 @@ final $typed_data.Uint8List listIssuesRespDescriptor = $convert.base64Decode(
 const IssueRef$json = {
   '1': 'IssueRef',
   '2': [
-    {'1': 'id', '3': 1, '4': 1, '5': 4, '9': 0, '10': 'id', '17': true},
+    {
+      '1': 'id',
+      '3': 1,
+      '4': 1,
+      '5': 4,
+      '8': {},
+      '9': 0,
+      '10': 'id',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_id'},
@@ -465,19 +495,29 @@ const IssueRef$json = {
 };
 
 /// Descriptor for `IssueRef`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List issueRefDescriptor = $convert
-    .base64Decode('CghJc3N1ZVJlZhITCgJpZBgBIAEoBEgAUgJpZIgBAUIFCgNfaWQ=');
+final $typed_data.Uint8List issueRefDescriptor = $convert.base64Decode(
+    'CghJc3N1ZVJlZhIfCgJpZBgBIAEoBEIKukgHyAEBMgIgAEgAUgJpZIgBAUIFCgNfaWQ=');
 
 @$core.Deprecated('Use updateIssueReqDescriptor instead')
 const UpdateIssueReq$json = {
   '1': 'UpdateIssueReq',
   '2': [
-    {'1': 'id', '3': 1, '4': 1, '5': 4, '9': 0, '10': 'id', '17': true},
+    {
+      '1': 'id',
+      '3': 1,
+      '4': 1,
+      '5': 4,
+      '8': {},
+      '9': 0,
+      '10': 'id',
+      '17': true
+    },
     {
       '1': 'revision',
       '3': 2,
       '4': 1,
       '5': 4,
+      '8': {},
       '9': 1,
       '10': 'revision',
       '17': true
@@ -488,6 +528,7 @@ const UpdateIssueReq$json = {
       '4': 1,
       '5': 14,
       '6': '.hi.qa.IssueStatus',
+      '8': {},
       '9': 2,
       '10': 'status',
       '17': true
@@ -498,6 +539,7 @@ const UpdateIssueReq$json = {
       '4': 1,
       '5': 14,
       '6': '.hi.qa.Environment',
+      '8': {},
       '9': 3,
       '10': 'environment',
       '17': true
@@ -511,7 +553,16 @@ const UpdateIssueReq$json = {
       '10': 'clearEnvironment',
       '17': true
     },
-    {'1': 'reason', '3': 6, '4': 1, '5': 9, '9': 5, '10': 'reason', '17': true},
+    {
+      '1': 'reason',
+      '3': 6,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 5,
+      '10': 'reason',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_id'},
@@ -525,19 +576,29 @@ const UpdateIssueReq$json = {
 
 /// Descriptor for `UpdateIssueReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List updateIssueReqDescriptor = $convert.base64Decode(
-    'Cg5VcGRhdGVJc3N1ZVJlcRITCgJpZBgBIAEoBEgAUgJpZIgBARIfCghyZXZpc2lvbhgCIAEoBE'
-    'gBUghyZXZpc2lvbogBARIvCgZzdGF0dXMYAyABKA4yEi5oaS5xYS5Jc3N1ZVN0YXR1c0gCUgZz'
-    'dGF0dXOIAQESOQoLZW52aXJvbm1lbnQYBCABKA4yEi5oaS5xYS5FbnZpcm9ubWVudEgDUgtlbn'
-    'Zpcm9ubWVudIgBARIwChFjbGVhcl9lbnZpcm9ubWVudBgFIAEoCEgEUhBjbGVhckVudmlyb25t'
-    'ZW50iAEBEhsKBnJlYXNvbhgGIAEoCUgFUgZyZWFzb26IAQFCBQoDX2lkQgsKCV9yZXZpc2lvbk'
-    'IJCgdfc3RhdHVzQg4KDF9lbnZpcm9ubWVudEIUChJfY2xlYXJfZW52aXJvbm1lbnRCCQoHX3Jl'
-    'YXNvbg==');
+    'Cg5VcGRhdGVJc3N1ZVJlcRIfCgJpZBgBIAEoBEIKukgHyAEBMgIgAEgAUgJpZIgBARIrCghyZX'
+    'Zpc2lvbhgCIAEoBEIKukgHyAEBMgIgAEgBUghyZXZpc2lvbogBARI/CgZzdGF0dXMYAyABKA4y'
+    'Ei5oaS5xYS5Jc3N1ZVN0YXR1c0IOukgLggEIGAEYAhgDGARIAlIGc3RhdHVziAEBEkUKC2Vudm'
+    'lyb25tZW50GAQgASgOMhIuaGkucWEuRW52aXJvbm1lbnRCCrpIB4IBBBgBGAJIA1ILZW52aXJv'
+    'bm1lbnSIAQESMAoRY2xlYXJfZW52aXJvbm1lbnQYBSABKAhIBFIQY2xlYXJFbnZpcm9ubWVudI'
+    'gBARIqCgZyZWFzb24YBiABKAlCDbpICsgBAXIFEAEYoB9IBVIGcmVhc29uiAEBQgUKA19pZEIL'
+    'CglfcmV2aXNpb25CCQoHX3N0YXR1c0IOCgxfZW52aXJvbm1lbnRCFAoSX2NsZWFyX2Vudmlyb2'
+    '5tZW50QgkKB19yZWFzb24=');
 
 @$core.Deprecated('Use loginTicketDescriptor instead')
 const LoginTicket$json = {
   '1': 'LoginTicket',
   '2': [
-    {'1': 'token', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'token', '17': true},
+    {
+      '1': 'token',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'token',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_token'},
@@ -546,7 +607,8 @@ const LoginTicket$json = {
 
 /// Descriptor for `LoginTicket`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List loginTicketDescriptor = $convert.base64Decode(
-    'CgtMb2dpblRpY2tldBIZCgV0b2tlbhgBIAEoCUgAUgV0b2tlbogBAUIICgZfdG9rZW4=');
+    'CgtMb2dpblRpY2tldBIzCgV0b2tlbhgBIAEoCUIYukgVyAEBchAyDl5bMC05YS1mXXs2NH0kSA'
+    'BSBXRva2VuiAEBQggKBl90b2tlbg==');
 
 @$core.Deprecated('Use sessionDescriptor instead')
 const Session$json = {
@@ -580,6 +642,7 @@ const WorkerResult$json = {
       '4': 1,
       '5': 14,
       '6': '.hi.qa.IssueStatus',
+      '8': {},
       '9': 0,
       '10': 'status',
       '17': true
@@ -589,6 +652,7 @@ const WorkerResult$json = {
       '3': 2,
       '4': 1,
       '5': 9,
+      '8': {},
       '9': 1,
       '10': 'summary',
       '17': true
@@ -598,16 +662,18 @@ const WorkerResult$json = {
       '3': 3,
       '4': 1,
       '5': 9,
+      '8': {},
       '9': 2,
       '10': 'question',
       '17': true
     },
-    {'1': 'evidence', '3': 4, '4': 3, '5': 9, '10': 'evidence'},
+    {'1': 'evidence', '3': 4, '4': 3, '5': 9, '8': {}, '10': 'evidence'},
     {
       '1': 'architecture_review',
       '3': 5,
       '4': 1,
       '5': 9,
+      '8': {},
       '9': 3,
       '10': 'architectureReview',
       '17': true
@@ -618,6 +684,7 @@ const WorkerResult$json = {
       '4': 1,
       '5': 14,
       '6': '.hi.qa.Environment',
+      '8': {},
       '9': 4,
       '10': 'verifiedEnvironment',
       '17': true
@@ -634,10 +701,12 @@ const WorkerResult$json = {
 
 /// Descriptor for `WorkerResult`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List workerResultDescriptor = $convert.base64Decode(
-    'CgxXb3JrZXJSZXN1bHQSLwoGc3RhdHVzGAEgASgOMhIuaGkucWEuSXNzdWVTdGF0dXNIAFIGc3'
-    'RhdHVziAEBEh0KB3N1bW1hcnkYAiABKAlIAVIHc3VtbWFyeYgBARIfCghxdWVzdGlvbhgDIAEo'
-    'CUgCUghxdWVzdGlvbogBARIaCghldmlkZW5jZRgEIAMoCVIIZXZpZGVuY2USNAoTYXJjaGl0ZW'
-    'N0dXJlX3JldmlldxgFIAEoCUgDUhJhcmNoaXRlY3R1cmVSZXZpZXeIAQESSgoUdmVyaWZpZWRf'
-    'ZW52aXJvbm1lbnQYBiABKA4yEi5oaS5xYS5FbnZpcm9ubWVudEgEUhN2ZXJpZmllZEVudmlyb2'
-    '5tZW50iAEBQgkKB19zdGF0dXNCCgoIX3N1bW1hcnlCCwoJX3F1ZXN0aW9uQhYKFF9hcmNoaXRl'
-    'Y3R1cmVfcmV2aWV3QhcKFV92ZXJpZmllZF9lbnZpcm9ubWVudA==');
+    'CgxXb3JrZXJSZXN1bHQSPgoGc3RhdHVzGAEgASgOMhIuaGkucWEuSXNzdWVTdGF0dXNCDbpICs'
+    'gBAYIBBBgDGARIAFIGc3RhdHVziAEBEiwKB3N1bW1hcnkYAiABKAlCDbpICsgBAXIFEAEYwD5I'
+    'AVIHc3VtbWFyeYgBARIpCghxdWVzdGlvbhgDIAEoCUIIukgFcgMYoB9IAlIIcXVlc3Rpb26IAQ'
+    'ESKwoIZXZpZGVuY2UYBCADKAlCD7pIDJIBCRBAIgVyAxjAPlIIZXZpZGVuY2USPgoTYXJjaGl0'
+    'ZWN0dXJlX3JldmlldxgFIAEoCUIIukgFcgMYwD5IA1ISYXJjaGl0ZWN0dXJlUmV2aWV3iAEBEl'
+    'YKFHZlcmlmaWVkX2Vudmlyb25tZW50GAYgASgOMhIuaGkucWEuRW52aXJvbm1lbnRCCrpIB4IB'
+    'BBgBGAJIBFITdmVyaWZpZWRFbnZpcm9ubWVudIgBAUIJCgdfc3RhdHVzQgoKCF9zdW1tYXJ5Qg'
+    'sKCV9xdWVzdGlvbkIWChRfYXJjaGl0ZWN0dXJlX3Jldmlld0IXChVfdmVyaWZpZWRfZW52aXJv'
+    'bm1lbnQ=');
