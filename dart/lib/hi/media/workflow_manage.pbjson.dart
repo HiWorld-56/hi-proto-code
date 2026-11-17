@@ -709,6 +709,44 @@ final $typed_data.Uint8List workflowQwenDynamicImageInputsDescriptor =
         'X2lkGAIgASgJQg66SAfIAQFyAhABkLUYA0gBUg1lbmNvZGVyTm9kZUlkiAEBOgSYtRgDQhMKEV'
         '90ZW1wbGF0ZV9ub2RlX2lkQhIKEF9lbmNvZGVyX25vZGVfaWQ=');
 
+@$core.Deprecated('Use workflowMiniMaxDynamicImageInputsDescriptor instead')
+const WorkflowMiniMaxDynamicImageInputs$json = {
+  '1': 'WorkflowMiniMaxDynamicImageInputs',
+  '2': [
+    {
+      '1': 'target_image',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.WorkflowInputBinding',
+      '8': {},
+      '10': 'targetImage'
+    },
+    {
+      '1': 'conditioning_node_id',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'conditioningNodeId',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_conditioning_node_id'},
+  ],
+};
+
+/// Descriptor for `WorkflowMiniMaxDynamicImageInputs`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List workflowMiniMaxDynamicImageInputsDescriptor =
+    $convert.base64Decode(
+        'CiFXb3JrZmxvd01pbmlNYXhEeW5hbWljSW1hZ2VJbnB1dHMSTQoMdGFyZ2V0X2ltYWdlGAEgAS'
+        'gLMh4uaGkubWVkaWEuV29ya2Zsb3dJbnB1dEJpbmRpbmdCCrpIA8gBAZC1GANSC3RhcmdldElt'
+        'YWdlEkUKFGNvbmRpdGlvbmluZ19ub2RlX2lkGAIgASgJQg66SAfIAQFyAhABkLUYA0gAUhJjb2'
+        '5kaXRpb25pbmdOb2RlSWSIAQE6BJi1GANCFwoVX2NvbmRpdGlvbmluZ19ub2RlX2lk');
+
 @$core.Deprecated('Use workflowMultipleImageInputsDescriptor instead')
 const WorkflowMultipleImageInputs$json = {
   '1': 'WorkflowMultipleImageInputs',
@@ -742,6 +780,16 @@ const WorkflowMultipleImageInputs$json = {
       '9': 0,
       '10': 'qwenDynamic'
     },
+    {
+      '1': 'minimax_dynamic',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.media.WorkflowMiniMaxDynamicImageInputs',
+      '8': {},
+      '9': 0,
+      '10': 'minimaxDynamic'
+    },
   ],
   '7': {},
   '8': [
@@ -755,7 +803,15 @@ final $typed_data.Uint8List workflowMultipleImageInputsDescriptor = $convert.bas
     '5JbnB1dEltYWdlc0NvbmZpZ0IKukgDyAEBkLUYA1IFY291bnQSQAoFZml4ZWQYAiABKAsyIi5o'
     'aS5tZWRpYS5Xb3JrZmxvd0ZpeGVkSW1hZ2VJbnB1dHNCBJC1GANIAFIFZml4ZWQSUwoMcXdlbl'
     '9keW5hbWljGAMgASgLMiguaGkubWVkaWEuV29ya2Zsb3dRd2VuRHluYW1pY0ltYWdlSW5wdXRz'
-    'QgSQtRgDSABSC3F3ZW5EeW5hbWljOgSYtRgDQg0KBG1vZGUSBbpIAggB');
+    'QgSQtRgDSABSC3F3ZW5EeW5hbWljElwKD21pbmltYXhfZHluYW1pYxgEIAEoCzIrLmhpLm1lZG'
+    'lhLldvcmtmbG93TWluaU1heER5bmFtaWNJbWFnZUlucHV0c0IEkLUYA0gAUg5taW5pbWF4RHlu'
+    'YW1pYzrOArpIxgIaiwEKIm11bHRpcGxlX2ltYWdlX2lucHV0cy5leGlzdGluZ19tYXgSMmZpeG'
+    'VkIGFuZCBRd2VuIGltYWdlIGlucHV0cyBhbGxvdyBhdCBtb3N0IDQgaW1hZ2VzGjFoYXModGhp'
+    'cy5taW5pbWF4X2R5bmFtaWMpIHx8IHRoaXMuY291bnQubWF4IDw9IDR1GrUBCiNtdWx0aXBsZV'
+    '9pbWFnZV9pbnB1dHMubWluaW1heF9jb3VudBJATWluaU1heCBIMyBkeW5hbWljIGltYWdlIGlu'
+    'cHV0cyByZXF1aXJlIGEgcmFuZ2Ugb2YgMiB0byA4IGltYWdlcxpMIWhhcyh0aGlzLm1pbmltYX'
+    'hfZHluYW1pYykgfHwgKHRoaXMuY291bnQubWluID09IDJ1ICYmIHRoaXMuY291bnQubWF4ID09'
+    'IDh1KZi1GANCDQoEbW9kZRIFukgCCAE=');
 
 @$core.Deprecated('Use textToImageWorkflowConfigDescriptor instead')
 const TextToImageWorkflowConfig$json = {
@@ -2707,7 +2763,7 @@ final $typed_data.Uint8List testWorkflowReqDescriptor = $convert.base64Decode(
     'F1ZXN0SWSIAQESMAoLd29ya2Zsb3dfaWQYAiABKAlCCrpIB8gBAXICEAFIAVIKd29ya2Zsb3dJ'
     'ZIgBARInCgZwcm9tcHQYAyABKAlCCrpIB8gBAXICEAFIAlIGcHJvbXB0iAEBEjIKDmlucHV0X2'
     'Fzc2V0X2lkGAQgASgJQge6SARyAhABSANSDGlucHV0QXNzZXRJZIgBARI2Cg9pbnB1dF9hc3Nl'
-    'dF9pZHMYBSADKAlCDrpIC5IBCBAEIgRyAhABUg1pbnB1dEFzc2V0SWRzEj0KFGlucHV0X3ZpZG'
+    'dF9pZHMYBSADKAlCDrpIC5IBCBAIIgRyAhABUg1pbnB1dEFzc2V0SWRzEj0KFGlucHV0X3ZpZG'
     'VvX2Fzc2V0X2lkGAYgASgJQge6SARyAhABSARSEWlucHV0VmlkZW9Bc3NldElkiAEBEj0KFGZp'
     'cnN0X2ZyYW1lX2Fzc2V0X2lkGAcgASgJQge6SARyAhABSAVSEWZpcnN0RnJhbWVBc3NldElkiA'
     'EBEjsKE2xhc3RfZnJhbWVfYXNzZXRfaWQYCCABKAlCB7pIBHICEAFIBlIQbGFzdEZyYW1lQXNz'

@@ -258,7 +258,7 @@ const InputImagesConfig$json = {
 /// Descriptor for `InputImagesConfig`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List inputImagesConfigDescriptor = $convert.base64Decode(
     'ChFJbnB1dEltYWdlc0NvbmZpZxIhCgNtaW4YASABKA1CCrpIA8gBAZC1GAFIAFIDbWluiAEBEi'
-    'cKA21heBgCIAEoDUIQukgJyAEBKgQYBCAAkLUYAUgBUgNtYXiIAQE6TbpIRhpEChNpbnB1dF9p'
+    'cKA21heBgCIAEoDUIQukgJyAEBKgQYCCAAkLUYAUgBUgNtYXiIAQE6TbpIRhpEChNpbnB1dF9p'
     'bWFnZXMuYm91bmRzEhdtaW4gbXVzdCBub3QgZXhjZWVkIG1heBoUdGhpcy5taW4gPD0gdGhpcy'
     '5tYXiYtRgBQgYKBF9taW5CBgoEX21heA==');
 

@@ -427,8 +427,9 @@ class InputImagesConfig extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearMin() => $_clearField(1);
 
-  /// FLUX 多图为 2，Qwen 多图为 4；首尾帧为 2，模仿为 1，MiniMax 参考图为 4。
-  /// 图片功能原有数量约束不变，创建时按目标功能和工作流配置强校验。
+  /// FLUX 多图为 2，Qwen 多图最多 4，MiniMax H3 图片多图最多 8。
+  /// 首尾帧为 2，模仿为 1，MiniMax 视频参考图最多 4。
+  /// 这里声明共享上限，创建和试跑按目标功能及工作流配置校验实际数量。
   @$pb.TagNumber(2)
   $core.int get max => $_getIZ(1);
   @$pb.TagNumber(2)

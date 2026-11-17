@@ -1251,19 +1251,105 @@ class WorkflowQwenDynamicImageInputs extends $pb.GeneratedMessage {
   void clearEncoderNodeId() => $_clearField(2);
 }
 
-enum WorkflowMultipleImageInputs_Mode { fixed, qwenDynamic, notSet }
+/// MiniMax H3 多图接入。API JSON 预接 images.image_1 至 images.image_8。
+class WorkflowMiniMaxDynamicImageInputs extends $pb.GeneratedMessage {
+  factory WorkflowMiniMaxDynamicImageInputs({
+    WorkflowInputBinding? targetImage,
+    $core.String? conditioningNodeId,
+  }) {
+    final result = create();
+    if (targetImage != null) result.targetImage = targetImage;
+    if (conditioningNodeId != null)
+      result.conditioningNodeId = conditioningNodeId;
+    return result;
+  }
 
-/// 多图数量与接入方式；FLUX 为固定 2/2，Qwen 为动态 2/4。
+  WorkflowMiniMaxDynamicImageInputs._();
+
+  factory WorkflowMiniMaxDynamicImageInputs.fromBuffer(
+          $core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory WorkflowMiniMaxDynamicImageInputs.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'WorkflowMiniMaxDynamicImageInputs',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
+      createEmptyInstance: create)
+    ..aOM<WorkflowInputBinding>(1, _omitFieldNames ? '' : 'targetImage',
+        subBuilder: WorkflowInputBinding.create)
+    ..aOS(2, _omitFieldNames ? '' : 'conditioningNodeId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  WorkflowMiniMaxDynamicImageInputs clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  WorkflowMiniMaxDynamicImageInputs copyWith(
+          void Function(WorkflowMiniMaxDynamicImageInputs) updates) =>
+      super.copyWith((message) =>
+              updates(message as WorkflowMiniMaxDynamicImageInputs))
+          as WorkflowMiniMaxDynamicImageInputs;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static WorkflowMiniMaxDynamicImageInputs create() =>
+      WorkflowMiniMaxDynamicImageInputs._();
+  @$core.override
+  WorkflowMiniMaxDynamicImageInputs createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static WorkflowMiniMaxDynamicImageInputs getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<WorkflowMiniMaxDynamicImageInputs>(
+          create);
+  static WorkflowMiniMaxDynamicImageInputs? _defaultInstance;
+
+  /// 图1的 LoadImage.image；原有缩放链连接到条件节点的 images.image_1。
+  @$pb.TagNumber(1)
+  WorkflowInputBinding get targetImage => $_getN(0);
+  @$pb.TagNumber(1)
+  set targetImage(WorkflowInputBinding value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasTargetImage() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTargetImage() => $_clearField(1);
+  @$pb.TagNumber(1)
+  WorkflowInputBinding ensureTargetImage() => $_ensure(0);
+
+  /// MiniMaxH3ImageConditioning 节点 ID。图2～8的独立加载节点从现有连线读取。
+  /// 执行时移除超出实际图片数量的连线和加载节点，原始工作流保持不变。
+  @$pb.TagNumber(2)
+  $core.String get conditioningNodeId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set conditioningNodeId($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasConditioningNodeId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearConditioningNodeId() => $_clearField(2);
+}
+
+enum WorkflowMultipleImageInputs_Mode {
+  fixed,
+  qwenDynamic,
+  minimaxDynamic,
+  notSet
+}
+
+/// 多图数量与接入方式；FLUX 为固定 2/2，Qwen 为动态 2/4，MiniMax H3 为动态 2/8。
 class WorkflowMultipleImageInputs extends $pb.GeneratedMessage {
   factory WorkflowMultipleImageInputs({
     $1.InputImagesConfig? count,
     WorkflowFixedImageInputs? fixed,
     WorkflowQwenDynamicImageInputs? qwenDynamic,
+    WorkflowMiniMaxDynamicImageInputs? minimaxDynamic,
   }) {
     final result = create();
     if (count != null) result.count = count;
     if (fixed != null) result.fixed = fixed;
     if (qwenDynamic != null) result.qwenDynamic = qwenDynamic;
+    if (minimaxDynamic != null) result.minimaxDynamic = minimaxDynamic;
     return result;
   }
 
@@ -1280,13 +1366,14 @@ class WorkflowMultipleImageInputs extends $pb.GeneratedMessage {
       _WorkflowMultipleImageInputs_ModeByTag = {
     2: WorkflowMultipleImageInputs_Mode.fixed,
     3: WorkflowMultipleImageInputs_Mode.qwenDynamic,
+    4: WorkflowMultipleImageInputs_Mode.minimaxDynamic,
     0: WorkflowMultipleImageInputs_Mode.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'WorkflowMultipleImageInputs',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.media'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3])
+    ..oo(0, [2, 3, 4])
     ..aOM<$1.InputImagesConfig>(1, _omitFieldNames ? '' : 'count',
         subBuilder: $1.InputImagesConfig.create)
     ..aOM<WorkflowFixedImageInputs>(2, _omitFieldNames ? '' : 'fixed',
@@ -1294,6 +1381,9 @@ class WorkflowMultipleImageInputs extends $pb.GeneratedMessage {
     ..aOM<WorkflowQwenDynamicImageInputs>(
         3, _omitFieldNames ? '' : 'qwenDynamic',
         subBuilder: WorkflowQwenDynamicImageInputs.create)
+    ..aOM<WorkflowMiniMaxDynamicImageInputs>(
+        4, _omitFieldNames ? '' : 'minimaxDynamic',
+        subBuilder: WorkflowMiniMaxDynamicImageInputs.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1320,10 +1410,12 @@ class WorkflowMultipleImageInputs extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
+  @$pb.TagNumber(4)
   WorkflowMultipleImageInputs_Mode whichMode() =>
       _WorkflowMultipleImageInputs_ModeByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
+  @$pb.TagNumber(4)
   void clearMode() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -1358,6 +1450,18 @@ class WorkflowMultipleImageInputs extends $pb.GeneratedMessage {
   void clearQwenDynamic() => $_clearField(3);
   @$pb.TagNumber(3)
   WorkflowQwenDynamicImageInputs ensureQwenDynamic() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  WorkflowMiniMaxDynamicImageInputs get minimaxDynamic => $_getN(3);
+  @$pb.TagNumber(4)
+  set minimaxDynamic(WorkflowMiniMaxDynamicImageInputs value) =>
+      $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasMinimaxDynamic() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearMinimaxDynamic() => $_clearField(4);
+  @$pb.TagNumber(4)
+  WorkflowMiniMaxDynamicImageInputs ensureMinimaxDynamic() => $_ensure(3);
 }
 
 enum TextToImageWorkflowConfig_Size { dimensions, resolution, notSet }
@@ -4488,8 +4592,9 @@ class TestWorkflowReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearInputAssetId() => $_clearField(4);
 
-  /// 多图修改及三个新增 MiniMax 功能使用，提交顺序即图1至图N；最多四张。
-  /// FLUX 为2张，Qwen 为2～4张，MiniMax 为0～4张，由目标功能校验。
+  /// 多图修改和 MiniMax 引导生成、参考生成、高级替换使用，提交顺序即图1至图N。
+  /// FLUX 为2张，Qwen 为2～4张，MiniMax H3 图片修改为2～8张，MiniMax 视频参考图为0～4张。
+  /// 共享请求允许最多8张，服务端按目标功能和工作流配置校验实际数量。
   @$pb.TagNumber(5)
   $pb.PbList<$core.String> get inputAssetIds => $_getList(4);
 

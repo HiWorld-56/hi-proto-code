@@ -381,8 +381,9 @@ type InputImagesConfig struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 单图修改与角色生成为 1，多图修改最少 2；首尾帧为 2，模仿及 MiniMax 参考图可为 0。
 	Min *uint32 `protobuf:"varint,1,opt,name=min,proto3,oneof" json:"min,omitempty"`
-	// FLUX 多图为 2，Qwen 多图为 4；首尾帧为 2，模仿为 1，MiniMax 参考图为 4。
-	// 图片功能原有数量约束不变，创建时按目标功能和工作流配置强校验。
+	// FLUX 多图为 2，Qwen 多图最多 4，MiniMax H3 图片多图最多 8。
+	// 首尾帧为 2，模仿为 1，MiniMax 视频参考图最多 4。
+	// 这里声明共享上限，创建和试跑按目标功能及工作流配置校验实际数量。
 	Max           *uint32 `protobuf:"varint,2,opt,name=max,proto3,oneof" json:"max,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1261,7 +1262,7 @@ const file_hi_media_function_proto_rawDesc = "" +
 	"\x11InputImagesConfig\x12!\n" +
 	"\x03min\x18\x01 \x01(\rB\n" +
 	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x01H\x00R\x03min\x88\x01\x01\x12'\n" +
-	"\x03max\x18\x02 \x01(\rB\x10\xbaH\t\xc8\x01\x01*\x04\x18\x04 \x00\x90\xb5\x18\x01H\x01R\x03max\x88\x01\x01:M\xbaHF\x1aD\n" +
+	"\x03max\x18\x02 \x01(\rB\x10\xbaH\t\xc8\x01\x01*\x04\x18\b \x00\x90\xb5\x18\x01H\x01R\x03max\x88\x01\x01:M\xbaHF\x1aD\n" +
 	"\x13input_images.bounds\x12\x17min must not exceed max\x1a\x14this.min <= this.max\x98\xb5\x18\x01B\x06\n" +
 	"\x04_minB\x06\n" +
 	"\x04_max\"\xcf\x03\n" +
