@@ -844,9 +844,13 @@ func (x *AudioStreamProgress) GetCapacitySamples() uint32 {
 // One accepted microphone turn. BEGIN opens thinking UI without declaring a final answer.
 // CANCEL revokes queued/playing speech; no replay after module reset.
 type VoiceTurn struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	TurnId        *string                `protobuf:"bytes,1,opt,name=turn_id,json=turnId,proto3,oneof" json:"turn_id,omitempty"`
-	Phase         *VoiceTurn_Phase       `protobuf:"varint,2,opt,name=phase,proto3,enum=hi.ninja.VoiceTurn_Phase,oneof" json:"phase,omitempty"`
+	state  protoimpl.MessageState `protogen:"open.v1"`
+	TurnId *string                `protobuf:"bytes,1,opt,name=turn_id,json=turnId,proto3,oneof" json:"turn_id,omitempty"`
+	Phase  *VoiceTurn_Phase       `protobuf:"varint,2,opt,name=phase,proto3,enum=hi.ninja.VoiceTurn_Phase,oneof" json:"phase,omitempty"`
+	// BEGIN always identifies the current microphone reply, including text-only replies.
+	// Explicit false keeps ordinary typing audio; absent retains the original spoken BEGIN.
+	// CANCEL does not change the output policy.
+	SpeechOutput  *bool `protobuf:"varint,3,opt,name=speech_output,json=speechOutput,proto3,oneof" json:"speech_output,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -893,6 +897,13 @@ func (x *VoiceTurn) GetPhase() VoiceTurn_Phase {
 		return *x.Phase
 	}
 	return VoiceTurn_PHASE_UNKNOWN
+}
+
+func (x *VoiceTurn) GetSpeechOutput() bool {
+	if x != nil && x.SpeechOutput != nil {
+		return *x.SpeechOutput
+	}
+	return false
 }
 
 // Short, preinstalled acknowledgement. Its actual playback still uses PlaybackEvent/Permit.
@@ -3375,18 +3386,20 @@ const file_hi_ninja_ui_proto_rawDesc = "" +
 	"_stream_idB\b\n" +
 	"\x06_readyB\x13\n" +
 	"\x11_consumed_samplesB\x13\n" +
-	"\x11_capacity_samples\"\xd0\x01\n" +
+	"\x11_capacity_samples\"\x8c\x02\n" +
 	"\tVoiceTurn\x12+\n" +
 	"\aturn_id\x18\x01 \x01(\tB\r\xbaH\n" +
 	"\xc8\x01\x01r\x05\x10\x01\x18\x80\x01H\x00R\x06turnId\x88\x01\x01\x12A\n" +
-	"\x05phase\x18\x02 \x01(\x0e2\x19.hi.ninja.VoiceTurn.PhaseB\v\xbaH\b\xc8\x01\x01\x82\x01\x02\x10\x01H\x01R\x05phase\x88\x01\x01\"=\n" +
+	"\x05phase\x18\x02 \x01(\x0e2\x19.hi.ninja.VoiceTurn.PhaseB\v\xbaH\b\xc8\x01\x01\x82\x01\x02\x10\x01H\x01R\x05phase\x88\x01\x01\x12(\n" +
+	"\rspeech_output\x18\x03 \x01(\bH\x02R\fspeechOutput\x88\x01\x01\"=\n" +
 	"\x05Phase\x12\x11\n" +
 	"\rPHASE_UNKNOWN\x10\x00\x12\x0f\n" +
 	"\vPHASE_BEGIN\x10\x01\x12\x10\n" +
 	"\fPHASE_CANCEL\x10\x02B\n" +
 	"\n" +
 	"\b_turn_idB\b\n" +
-	"\x06_phase\"\xc7\x02\n" +
+	"\x06_phaseB\x10\n" +
+	"\x0e_speech_output\"\xc7\x02\n" +
 	"\bVoiceCue\x12+\n" +
 	"\aturn_id\x18\x01 \x01(\tB\r\xbaH\n" +
 	"\xc8\x01\x01r\x05\x10\x01\x18\x80\x01H\x01R\x06turnId\x88\x01\x01\x123\n" +

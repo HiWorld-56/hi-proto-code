@@ -283,11 +283,21 @@ const VoiceTurn$json = {
       '10': 'phase',
       '17': true
     },
+    {
+      '1': 'speech_output',
+      '3': 3,
+      '4': 1,
+      '5': 8,
+      '9': 2,
+      '10': 'speechOutput',
+      '17': true
+    },
   ],
   '4': [VoiceTurn_Phase$json],
   '8': [
     {'1': '_turn_id'},
     {'1': '_phase'},
+    {'1': '_speech_output'},
   ],
 };
 
@@ -305,8 +315,9 @@ const VoiceTurn_Phase$json = {
 final $typed_data.Uint8List voiceTurnDescriptor = $convert.base64Decode(
     'CglWb2ljZVR1cm4SKwoHdHVybl9pZBgBIAEoCUINukgKyAEBcgUQARiAAUgAUgZ0dXJuSWSIAQ'
     'ESQQoFcGhhc2UYAiABKA4yGS5oaS5uaW5qYS5Wb2ljZVR1cm4uUGhhc2VCC7pICMgBAYIBAhAB'
-    'SAFSBXBoYXNliAEBIj0KBVBoYXNlEhEKDVBIQVNFX1VOS05PV04QABIPCgtQSEFTRV9CRUdJTh'
-    'ABEhAKDFBIQVNFX0NBTkNFTBACQgoKCF90dXJuX2lkQggKBl9waGFzZQ==');
+    'SAFSBXBoYXNliAEBEigKDXNwZWVjaF9vdXRwdXQYAyABKAhIAlIMc3BlZWNoT3V0cHV0iAEBIj'
+    '0KBVBoYXNlEhEKDVBIQVNFX1VOS05PV04QABIPCgtQSEFTRV9CRUdJThABEhAKDFBIQVNFX0NB'
+    'TkNFTBACQgoKCF90dXJuX2lkQggKBl9waGFzZUIQCg5fc3BlZWNoX291dHB1dA==');
 
 @$core.Deprecated('Use voiceCueDescriptor instead')
 const VoiceCue$json = {

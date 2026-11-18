@@ -657,10 +657,12 @@ class VoiceTurn extends $pb.GeneratedMessage {
   factory VoiceTurn({
     $core.String? turnId,
     VoiceTurn_Phase? phase,
+    $core.bool? speechOutput,
   }) {
     final result = create();
     if (turnId != null) result.turnId = turnId;
     if (phase != null) result.phase = phase;
+    if (speechOutput != null) result.speechOutput = speechOutput;
     return result;
   }
 
@@ -680,6 +682,7 @@ class VoiceTurn extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'turnId')
     ..aE<VoiceTurn_Phase>(2, _omitFieldNames ? '' : 'phase',
         enumValues: VoiceTurn_Phase.values)
+    ..aOB(3, _omitFieldNames ? '' : 'speechOutput')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -717,6 +720,18 @@ class VoiceTurn extends $pb.GeneratedMessage {
   $core.bool hasPhase() => $_has(1);
   @$pb.TagNumber(2)
   void clearPhase() => $_clearField(2);
+
+  /// BEGIN always identifies the current microphone reply, including text-only replies.
+  /// Explicit false keeps ordinary typing audio; absent retains the original spoken BEGIN.
+  /// CANCEL does not change the output policy.
+  @$pb.TagNumber(3)
+  $core.bool get speechOutput => $_getBF(2);
+  @$pb.TagNumber(3)
+  set speechOutput($core.bool value) => $_setBool(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSpeechOutput() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSpeechOutput() => $_clearField(3);
 }
 
 /// One ordered utterance, one playback permission and one terminal event.

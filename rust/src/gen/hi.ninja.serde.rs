@@ -14042,6 +14042,9 @@ impl serde::Serialize for VoiceTurn {
         if self.phase.is_some() {
             len += 1;
         }
+        if self.speech_output.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.ninja.VoiceTurn", len)?;
         if let Some(v) = self.turn_id.as_ref() {
             struct_ser.serialize_field("turnId", v)?;
@@ -14050,6 +14053,9 @@ impl serde::Serialize for VoiceTurn {
             let v = voice_turn::Phase::try_from(*v)
                 .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
             struct_ser.serialize_field("phase", &v)?;
+        }
+        if let Some(v) = self.speech_output.as_ref() {
+            struct_ser.serialize_field("speechOutput", v)?;
         }
         struct_ser.end()
     }
@@ -14064,12 +14070,15 @@ impl<'de> serde::Deserialize<'de> for VoiceTurn {
             "turn_id",
             "turnId",
             "phase",
+            "speech_output",
+            "speechOutput",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             TurnId,
             Phase,
+            SpeechOutput,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -14093,6 +14102,7 @@ impl<'de> serde::Deserialize<'de> for VoiceTurn {
                         match value {
                             "turnId" | "turn_id" => Ok(GeneratedField::TurnId),
                             "phase" => Ok(GeneratedField::Phase),
+                            "speechOutput" | "speech_output" => Ok(GeneratedField::SpeechOutput),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -14114,6 +14124,7 @@ impl<'de> serde::Deserialize<'de> for VoiceTurn {
             {
                 let mut turn_id__ = None;
                 let mut phase__ = None;
+                let mut speech_output__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::TurnId => {
@@ -14128,11 +14139,18 @@ impl<'de> serde::Deserialize<'de> for VoiceTurn {
                             }
                             phase__ = map_.next_value::<::std::option::Option<voice_turn::Phase>>()?.map(|x| x as i32);
                         }
+                        GeneratedField::SpeechOutput => {
+                            if speech_output__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("speechOutput"));
+                            }
+                            speech_output__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(VoiceTurn {
                     turn_id: turn_id__,
                     phase: phase__,
+                    speech_output: speech_output__,
                 })
             }
         }

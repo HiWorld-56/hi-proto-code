@@ -475,6 +475,798 @@ impl ModuleId {
         }
     }
 }
+/// brain是唯一调度者。IO本机采样/VAD/切句，brain调用STT，face播放。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BrainToIo {
+    #[prost(message, optional, tag = "1")]
+    pub session: ::core::option::Option<ModuleSession>,
+    /// 控制握手可不传；业务请求必须给非零值
+    #[prost(uint64, optional, tag = "2")]
+    pub request_id: ::core::option::Option<u64>,
+    #[prost(oneof = "brain_to_io::Cmd", tags = "3, 4, 5, 6, 7, 8, 9, 10")]
+    pub cmd: ::core::option::Option<brain_to_io::Cmd>,
+}
+/// Nested message and enum types in `BrainToIo`.
+pub mod brain_to_io {
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Cmd {
+        #[prost(message, tag = "3")]
+        Control(super::BrainToModuleControl),
+        #[prost(message, tag = "4")]
+        SetHearing(super::IoHearing),
+        #[prost(message, tag = "5")]
+        GetStatus(::pbjson_types::Empty),
+        #[prost(message, tag = "6")]
+        CameraOpen(super::IoCameraOpen),
+        #[prost(message, tag = "7")]
+        CameraClose(super::IoCameraRef),
+        #[prost(message, tag = "8")]
+        NextFrame(super::IoCameraRef),
+        #[prost(message, tag = "9")]
+        Capture(super::IoCameraOpen),
+        #[prost(message, tag = "10")]
+        Cancel(super::IoCancel),
+    }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct IoToBrain {
+    #[prost(message, optional, tag = "1")]
+    pub session: ::core::option::Option<ModuleSession>,
+    #[prost(uint64, optional, tag = "2")]
+    pub request_id: ::core::option::Option<u64>,
+    #[prost(oneof = "io_to_brain::Cmd", tags = "3, 4, 5, 6, 7")]
+    pub cmd: ::core::option::Option<io_to_brain::Cmd>,
+}
+/// Nested message and enum types in `IoToBrain`.
+pub mod io_to_brain {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Cmd {
+        #[prost(message, tag = "3")]
+        Control(super::ModuleToBrainControl),
+        #[prost(message, tag = "4")]
+        Response(super::IoResponse),
+        #[prost(message, tag = "5")]
+        EventStatus(super::IoStatus),
+        #[prost(message, tag = "6")]
+        EventRecording(super::IoRecording),
+        /// stream_id=recording_id；仅brain启用时发送，补齐起声前缀
+        #[prost(message, tag = "7")]
+        EventAudio(super::super::AudioStreamEvent),
+    }
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct IoHearing {
+    #[prost(bool, optional, tag = "1")]
+    pub enabled: ::core::option::Option<bool>,
+    #[prost(uint64, optional, tag = "2")]
+    pub revision: ::core::option::Option<u64>,
+    /// 不传/false保留整句WAV；true同时推送有序PCM供提前转写
+    #[prost(bool, optional, tag = "4")]
+    pub stream_audio: ::core::option::Option<bool>,
+    /// 不传=立即；只在恢复时使用，新revision使旧延时命令失效
+    #[prost(uint32, optional, tag = "3")]
+    pub resume_delay_ms: ::core::option::Option<u32>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct IoStatus {
+    #[prost(bool, optional, tag = "1")]
+    pub microphone_ready: ::core::option::Option<bool>,
+    #[prost(bool, optional, tag = "2")]
+    pub camera_ready: ::core::option::Option<bool>,
+    #[prost(bool, optional, tag = "3")]
+    pub hearing_enabled: ::core::option::Option<bool>,
+    #[prost(uint64, optional, tag = "4")]
+    pub hearing_revision: ::core::option::Option<u64>,
+    #[prost(string, optional, tag = "5")]
+    pub microphone_error: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "6")]
+    pub camera_error: ::core::option::Option<::prost::alloc::string::String>,
+    /// 实际采集模式，启停确认包含此值
+    #[prost(bool, optional, tag = "7")]
+    pub stream_audio: ::core::option::Option<bool>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct IoRecording {
+    #[prost(string, optional, tag = "1")]
+    pub recording_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "io_recording::State", optional, tag = "2")]
+    pub state: ::core::option::Option<i32>,
+    /// 仅COMPLETED给完整文件；VAD在IO对原始采样执行
+    #[prost(bytes = "vec", optional, tag = "3")]
+    pub wav: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
+    #[prost(uint32, optional, tag = "4")]
+    pub sample_rate: ::core::option::Option<u32>,
+    #[prost(uint32, optional, tag = "5")]
+    pub channels: ::core::option::Option<u32>,
+    /// 每声道样本数；时长不得由网络到达节奏计算
+    #[prost(uint64, optional, tag = "6")]
+    pub sample_count: ::core::option::Option<u64>,
+    #[prost(message, optional, tag = "7")]
+    pub failure: ::core::option::Option<ModuleFailure>,
+}
+/// Nested message and enum types in `IoRecording`.
+pub mod io_recording {
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        Unknown = 0,
+        Started = 1,
+        Completed = 2,
+        Cancelled = 3,
+        Failed = 4,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Self::Unknown => "STATE_UNKNOWN",
+                Self::Started => "STATE_STARTED",
+                Self::Completed => "STATE_COMPLETED",
+                Self::Cancelled => "STATE_CANCELLED",
+                Self::Failed => "STATE_FAILED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNKNOWN" => Some(Self::Unknown),
+                "STATE_STARTED" => Some(Self::Started),
+                "STATE_COMPLETED" => Some(Self::Completed),
+                "STATE_CANCELLED" => Some(Self::Cancelled),
+                "STATE_FAILED" => Some(Self::Failed),
+                _ => None,
+            }
+        }
+    }
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct IoCameraOpen {
+    /// 不传=IO配置默认值，返回相机实际接受的尺寸
+    #[prost(uint32, optional, tag = "1")]
+    pub width: ::core::option::Option<u32>,
+    #[prost(uint32, optional, tag = "2")]
+    pub height: ::core::option::Option<u32>,
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct IoCameraRef {
+    #[prost(uint64, optional, tag = "1")]
+    pub lease_id: ::core::option::Option<u64>,
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct IoCameraLease {
+    #[prost(uint64, optional, tag = "1")]
+    pub lease_id: ::core::option::Option<u64>,
+    #[prost(uint32, optional, tag = "2")]
+    pub width: ::core::option::Option<u32>,
+    #[prost(uint32, optional, tag = "3")]
+    pub height: ::core::option::Option<u32>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct IoImage {
+    /// Shared-video clients require source-frame identity and capture time.
+    #[prost(message, optional, tag = "2")]
+    pub frame: ::core::option::Option<IoFrameInfo>,
+    #[prost(bytes = "vec", optional, tag = "1")]
+    pub jpeg: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct IoCancel {
+    #[prost(uint64, optional, tag = "1")]
+    pub request_id: ::core::option::Option<u64>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct IoResponse {
+    #[prost(oneof = "io_response::Result", tags = "1, 2, 3, 4, 5")]
+    pub result: ::core::option::Option<io_response::Result>,
+}
+/// Nested message and enum types in `IoResponse`.
+pub mod io_response {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Result {
+        #[prost(message, tag = "1")]
+        Ok(::pbjson_types::Empty),
+        #[prost(message, tag = "2")]
+        Status(super::IoStatus),
+        #[prost(message, tag = "3")]
+        Camera(super::IoCameraLease),
+        #[prost(message, tag = "4")]
+        Image(super::IoImage),
+        #[prost(message, tag = "5")]
+        Failure(super::ModuleFailure),
+    }
+}
+/// Identity and capture clock of one immutable source frame. The module session
+/// scopes stream_id; sequence and captured_monotonic_ns increase within a stream.
+/// Capture timestamp is libcamera metadata, not network-arrival/wall-clock time.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct IoFrameInfo {
+    #[prost(uint64, optional, tag = "1")]
+    pub stream_id: ::core::option::Option<u64>,
+    #[prost(uint64, optional, tag = "2")]
+    pub sequence: ::core::option::Option<u64>,
+    #[prost(uint64, optional, tag = "3")]
+    pub captured_monotonic_ns: ::core::option::Option<u64>,
+    #[prost(uint32, optional, tag = "4")]
+    pub width: ::core::option::Option<u32>,
+    #[prost(uint32, optional, tag = "5")]
+    pub height: ::core::option::Option<u32>,
+}
+/// Class names use the COCO80 canonical English labels (person, cat, dog, ...).
+/// A category is an observation, never a business identity or authorization.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VisionObject {
+    #[prost(string, optional, tag = "1")]
+    pub category: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(float, optional, tag = "2")]
+    pub confidence: ::core::option::Option<f32>,
+    #[prost(message, optional, tag = "3")]
+    pub bounds: ::core::option::Option<VisionBox>,
+}
+/// Coordinates in the original frame, normalized to \[0,1\]. No resized-input pixels.
+#[derive(Clone, Copy, PartialEq, ::prost::Message)]
+pub struct VisionBox {
+    #[prost(float, optional, tag = "1")]
+    pub x: ::core::option::Option<f32>,
+    #[prost(float, optional, tag = "2")]
+    pub y: ::core::option::Option<f32>,
+    #[prost(float, optional, tag = "3")]
+    pub width: ::core::option::Option<f32>,
+    #[prost(float, optional, tag = "4")]
+    pub height: ::core::option::Option<f32>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VisionObservation {
+    /// IO node boot and brain generation scope the source stream.
+    #[prost(message, optional, tag = "4")]
+    pub source_session: ::core::option::Option<ModuleSession>,
+    #[prost(message, optional, tag = "1")]
+    pub frame: ::core::option::Option<IoFrameInfo>,
+    #[prost(string, optional, tag = "2")]
+    pub model: ::core::option::Option<::prost::alloc::string::String>,
+    /// Empty means this successfully processed frame has no detections.
+    #[prost(message, repeated, tag = "3")]
+    pub objects: ::prost::alloc::vec::Vec<VisionObject>,
+}
+/// Brain produces these events; IO never runs classification or decides visibility.
+/// APPEARED/DISAPPEARED refer to category presence, not individual object tracking.
+/// Interrupted input/inference invalidates presence; it must not manufacture DISAPPEARED.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VisionEvent {
+    #[prost(string, optional, tag = "1")]
+    pub session_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(uint64, optional, tag = "2")]
+    pub sequence: ::core::option::Option<u64>,
+    #[prost(enumeration = "vision_event::Kind", optional, tag = "3")]
+    pub kind: ::core::option::Option<i32>,
+    /// OBSERVED/APPEARED/DISAPPEARED carry the deciding successful frame.
+    #[prost(message, optional, tag = "4")]
+    pub observation: ::core::option::Option<VisionObservation>,
+    /// APPEARED/DISAPPEARED only; canonical category.
+    #[prost(string, optional, tag = "5")]
+    pub category: ::core::option::Option<::prost::alloc::string::String>,
+    /// APPEARED actual count; DISAPPEARED zero. Not an identity count.
+    #[prost(uint32, optional, tag = "6")]
+    pub count: ::core::option::Option<u32>,
+    /// INTERRUPTED only.
+    #[prost(string, optional, tag = "7")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// Nested message and enum types in `VisionEvent`.
+pub mod vision_event {
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Kind {
+        Unknown = 0,
+        Observed = 1,
+        Appeared = 2,
+        Disappeared = 3,
+        Interrupted = 4,
+        Resumed = 5,
+    }
+    impl Kind {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Self::Unknown => "KIND_UNKNOWN",
+                Self::Observed => "KIND_OBSERVED",
+                Self::Appeared => "KIND_APPEARED",
+                Self::Disappeared => "KIND_DISAPPEARED",
+                Self::Interrupted => "KIND_INTERRUPTED",
+                Self::Resumed => "KIND_RESUMED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "KIND_UNKNOWN" => Some(Self::Unknown),
+                "KIND_OBSERVED" => Some(Self::Observed),
+                "KIND_APPEARED" => Some(Self::Appeared),
+                "KIND_DISAPPEARED" => Some(Self::Disappeared),
+                "KIND_INTERRUPTED" => Some(Self::Interrupted),
+                "KIND_RESUMED" => Some(Self::Resumed),
+                _ => None,
+            }
+        }
+    }
+}
+/// Face attributes are appearance estimates, never identity, permission or verified age.
+/// Every snapshot explicitly replaces the previous one; UNKNOWN must clear old values.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VisionFaceAttributes {
+    #[prost(enumeration = "vision_face_attributes::State", optional, tag = "1")]
+    pub state: ::core::option::Option<i32>,
+    /// Stable multi-frame label; absent until confirmed.
+    #[prost(enumeration = "vision_face_attributes::Gender", optional, tag = "2")]
+    pub gender: ::core::option::Option<i32>,
+    #[prost(float, optional, tag = "3")]
+    pub female_probability: ::core::option::Option<f32>,
+    #[prost(float, optional, tag = "4")]
+    pub male_probability: ::core::option::Option<f32>,
+    /// Optional estimate; this model supplies NO age confidence.
+    #[prost(float, optional, tag = "5")]
+    pub age_years: ::core::option::Option<f32>,
+    #[prost(string, optional, tag = "6")]
+    pub model: ::core::option::Option<::prost::alloc::string::String>,
+    /// Disabled, small/ambiguous face, uncertainty or failure.
+    #[prost(string, optional, tag = "7")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// Nested message and enum types in `VisionFaceAttributes`.
+pub mod vision_face_attributes {
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        Unknown = 0,
+        Disabled = 1,
+        Uncertain = 2,
+        Available = 3,
+        Error = 4,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Self::Unknown => "STATE_UNKNOWN",
+                Self::Disabled => "STATE_DISABLED",
+                Self::Uncertain => "STATE_UNCERTAIN",
+                Self::Available => "STATE_AVAILABLE",
+                Self::Error => "STATE_ERROR",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNKNOWN" => Some(Self::Unknown),
+                "STATE_DISABLED" => Some(Self::Disabled),
+                "STATE_UNCERTAIN" => Some(Self::Uncertain),
+                "STATE_AVAILABLE" => Some(Self::Available),
+                "STATE_ERROR" => Some(Self::Error),
+                _ => None,
+            }
+        }
+    }
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Gender {
+        Unknown = 0,
+        Female = 1,
+        Male = 2,
+    }
+    impl Gender {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Self::Unknown => "GENDER_UNKNOWN",
+                Self::Female => "GENDER_FEMALE",
+                Self::Male => "GENDER_MALE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "GENDER_UNKNOWN" => Some(Self::Unknown),
+                "GENDER_FEMALE" => Some(Self::Female),
+                "GENDER_MALE" => Some(Self::Male),
+                _ => None,
+            }
+        }
+    }
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VisionFace {
+    #[prost(string, optional, tag = "1")]
+    pub target_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub bounds: ::core::option::Option<VisionBox>,
+    #[prost(float, optional, tag = "3")]
+    pub confidence: ::core::option::Option<f32>,
+    /// Same-frame body association, when unambiguous. Not a DID.
+    #[prost(message, optional, tag = "4")]
+    pub person: ::core::option::Option<VisionObject>,
+    #[prost(message, optional, tag = "5")]
+    pub attributes: ::core::option::Option<VisionFaceAttributes>,
+    /// Visibility hysteresis has completed.
+    #[prost(bool, optional, tag = "6")]
+    pub confirmed: ::core::option::Option<bool>,
+    /// Bounds/confidence provenance when temporarily hidden.
+    #[prost(message, optional, tag = "7")]
+    pub last_observed_frame: ::core::option::Option<IoFrameInfo>,
+    /// Actually detected in this observation, not just retained by hysteresis.
+    #[prost(bool, optional, tag = "8")]
+    pub visible: ::core::option::Option<bool>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VisionFaceObservation {
+    #[prost(message, optional, tag = "1")]
+    pub source_session: ::core::option::Option<ModuleSession>,
+    #[prost(message, optional, tag = "2")]
+    pub frame: ::core::option::Option<IoFrameInfo>,
+    #[prost(string, optional, tag = "3")]
+    pub model: ::core::option::Option<::prost::alloc::string::String>,
+    /// Current and briefly retained targets; visible=false clears attributes. Empty differs from interruption.
+    #[prost(message, repeated, tag = "4")]
+    pub faces: ::prost::alloc::vec::Vec<VisionFace>,
+}
+/// Targets are anonymous short-lived tracks scoped by session_id, NOT identities.
+/// Losing a face does not prove that its body left. Interruptions invalidate all tracks.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VisionFaceEvent {
+    #[prost(string, optional, tag = "1")]
+    pub session_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(uint64, optional, tag = "2")]
+    pub sequence: ::core::option::Option<u64>,
+    #[prost(enumeration = "vision_face_event::Kind", optional, tag = "3")]
+    pub kind: ::core::option::Option<i32>,
+    /// Successful deciding frame; absent only on interruption.
+    #[prost(message, optional, tag = "4")]
+    pub observation: ::core::option::Option<VisionFaceObservation>,
+    /// APPEARED, DISAPPEARED, ATTRIBUTES_UPDATED.
+    #[prost(string, optional, tag = "5")]
+    pub target_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "6")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// Nested message and enum types in `VisionFaceEvent`.
+pub mod vision_face_event {
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Kind {
+        Unknown = 0,
+        Observed = 1,
+        Appeared = 2,
+        Disappeared = 3,
+        AttributesUpdated = 4,
+        Interrupted = 5,
+        Resumed = 6,
+    }
+    impl Kind {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Self::Unknown => "KIND_UNKNOWN",
+                Self::Observed => "KIND_OBSERVED",
+                Self::Appeared => "KIND_APPEARED",
+                Self::Disappeared => "KIND_DISAPPEARED",
+                Self::AttributesUpdated => "KIND_ATTRIBUTES_UPDATED",
+                Self::Interrupted => "KIND_INTERRUPTED",
+                Self::Resumed => "KIND_RESUMED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "KIND_UNKNOWN" => Some(Self::Unknown),
+                "KIND_OBSERVED" => Some(Self::Observed),
+                "KIND_APPEARED" => Some(Self::Appeared),
+                "KIND_DISAPPEARED" => Some(Self::Disappeared),
+                "KIND_ATTRIBUTES_UPDATED" => Some(Self::AttributesUpdated),
+                "KIND_INTERRUPTED" => Some(Self::Interrupted),
+                "KIND_RESUMED" => Some(Self::Resumed),
+                _ => None,
+            }
+        }
+    }
+}
+/// LuaCtx 一次调用的上下文。**这些字段一个都不在 manifest 里** ——
+/// 模型看不见，也就传不了；插件读到的只可能是 brain 填的。
+///
+/// 🔴 没主人 / 匿名时**不要给值**（proto3 optional 的 presence），不是空串 ——
+/// 空串会让 `if ctx.master then` 判成真，而那正是"提款只认主人"的判据。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct LuaCtx {
+    /// 机器人自己的 did
+    #[prost(string, optional, tag = "1")]
+    pub me: ::core::option::Option<::prost::alloc::string::String>,
+    /// 主人；没有就不给
+    #[prost(string, optional, tag = "2")]
+    pub master: ::core::option::Option<::prost::alloc::string::String>,
+    /// 这一次是谁在问；匿名就不给
+    #[prost(string, optional, tag = "3")]
+    pub asker: ::core::option::Option<::prost::alloc::string::String>,
+    /// 引起这次调用的那条消息的暗语等级(hi.club.Message.dark;不带 = 0 = 普通)。
+    /// **只给宿主用,不给 lua 脚本看**:执行器随 HostCallReq.ctx 原样带回,宿主发消息
+    /// (host.send_message)就沿用这个等级 —— 问题是哪一级,发出去的就是哪一级。插件不能自己选。
+    #[prost(uint32, optional, tag = "4")]
+    pub dark: ::core::option::Option<u32>,
+    /// ⚠️ **没有 `attachments`(消息里的媒体),不要加回来**(v1.5.27-dev.1 加过,10-07 删):
+    /// 模型手上没有图的地址、转发时只能编一个 —— 这件事改由附件列表解决(club 整理、hi.ai 拼进问答,
+    /// 见 hi/ai/chat.proto `Attachment`),模型从列表里抄「引用 + 名字」填进插件参数。只有一套机制,不留两条路。
+    /// 引起这次调用的那条消息所在的**会话号**(群号 / 单聊会话号);语音路、币安指令那类没有会话的不给。
+    /// **只给宿主用,不给 lua 脚本看**(同 `dark`):插件带附件发消息时(sdk `send_with_attachments`),
+    /// `<消息 uuid>#<段 id>` 这种引用只在这个会话里找(hi/club/messaging.proto「引用」)。
+    /// 号用 6 不用 5:5 是 dev.1 ~ dev.2 那几天的 `attachments`(消息型),复用会让还没换的执行器把它解坏。
+    #[prost(string, optional, tag = "6")]
+    pub conv: ::core::option::Option<::prost::alloc::string::String>,
+    /// Host-owned cancellation guard, not exposed to scripts.
+    #[prost(string, optional, tag = "7")]
+    pub subscription_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// Reject host effects from cancelled/replaced deliveries.
+    #[prost(string, optional, tag = "8")]
+    pub subscription_revision: ::core::option::Option<::prost::alloc::string::String>,
+    /// 原始麦克风问答与工具调用的关联；brain生成、runner原样带回，不暴露给Lua脚本。
+    /// 唤醒/人脸不构成asker身份；仅供主人逐项确认请求验证来源、幂等去重。
+    #[prost(string, optional, tag = "9")]
+    pub voice_turn_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "10")]
+    pub tool_call_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// OpenReq 装一个插件：跑一遍顶层，读出 manifest。
+///
+/// 兼容与否(SDK 版本头)由 brain 在发过来之前就判完了,执行器不再管版本。
+///
+/// **脚本按字节传，不传路径。** 插件产物是 brain 下载并校验过的，执行器不该也
+/// 够不着那个目录（它只需要 `/opt/hinj/luadeps/`）。现在制品是 KB 量级
+/// （依赖不再内联），传字节比共享一个目录干净。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OpenReq {
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
+    /// main.lua 合并后的那一个文件
+    #[prost(bytes = "vec", optional, tag = "3")]
+    pub script: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
+    /// deps **这一版声明了哪些 rock** —— 执行器据此决定 `__native` / `__luasrc`
+    /// 允许装哪些 C 模块与依赖自带的 lua 源码。
+    ///
+    /// 🔴 **它是一道权限闸，不是一份提示。**
+    ///
+    /// `/opt/hinj/luadeps/` 是**全机共用的集合**（同一个 rock 被五个插件用到只存一份），
+    /// 而 `__native(rock, 版本, 模块)` 的三个分量是插件自己写的字符串。没有这份清单的话，
+    /// 一个**依赖一个都没声明**的插件可以直接去 dlopen 别的插件装上去的 `.so` ——
+    /// 2026-09-02 在 `.66` 上实测：拿到了 `luafilesystem` 与 `luasocket`，
+    /// 列出了 `/opt/hinj`、建出了 TCP socket。**文件系统与网络，都在沙箱之外。**
+    ///
+    /// 而这条路**验收侧结构上看不见**：verify-lua 的集合是按本插件的依赖现搭的，
+    /// 别人的 rock 不在那台机器上，同一段代码在验收里必然报"没装上"，只有到设备上才成立。
+    ///
+    /// ⚠️ **空 = 一个都不许，不是"不限制"。** 别为了兼容老 sidecar 把空当成放行 ——
+    /// 那等于把闸门拆了，而且零报错。
+    #[prost(message, repeated, tag = "4")]
+    pub deps: ::prost::alloc::vec::Vec<LuaRock>,
+}
+/// LuaRock 一个依赖的坐标。**版本是键的一部分** —— 集合按
+/// `<rock>/<版本>/` 落盘，只对 rock 名不对版本等于放行同名的另一个版本。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct LuaRock {
+    #[prost(string, optional, tag = "1")]
+    pub rock: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct OpenResp {
+    #[prost(bool, optional, tag = "1")]
+    pub ok: ::core::option::Option<bool>,
+    /// 原始字符串，由 brain 按与 .so 同一条路径解析
+    #[prost(string, optional, tag = "3")]
+    pub manifest: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub error: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// InvokeReq 调一个方法。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct InvokeReq {
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub method: ::core::option::Option<::prost::alloc::string::String>,
+    /// 模型给的参数，原样是 JSON
+    #[prost(string, optional, tag = "4")]
+    pub args_json: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "5")]
+    pub ctx: ::core::option::Option<LuaCtx>,
+    /// 超时就掐断并**丢掉整个解释器**
+    #[prost(uint32, optional, tag = "6")]
+    pub timeout_ms: ::core::option::Option<u32>,
+}
+/// InvokeResp 结果。
+///
+/// ⚠️ **插件失败不是 rpc 失败。** 掐断、报错、撑爆内存，都是 `ok=false` + 一句话，
+/// 交给模型看；只有"执行器本身出事"才该让这条消息发不出来。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct InvokeResp {
+    #[prost(bool, optional, tag = "1")]
+    pub ok: ::core::option::Option<bool>,
+    /// 插件返回的那张表
+    #[prost(string, optional, tag = "2")]
+    pub result_json: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub error: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// CloseReq 卸掉一个插件（撤权、换版本）。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CloseReq {
+    #[prost(string, optional, tag = "1")]
+    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub version: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// HostCallReq **执行器回头找 brain 要能力** —— 插件里的 `host.call`。
+///
+/// 🔴 这条是**反向**的：brain 正等着 InvokeResp 的时候，执行器会先发这个过来。
+/// 所以两边都得能在等一个回复的同时处理对方的请求，靠 `req_id` 配对。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct HostCallReq {
+    /// 能力名，与 `.so` 插件那条路同一份白名单
+    #[prost(string, optional, tag = "1")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub args_json: ::core::option::Option<::prost::alloc::string::String>,
+    /// 送字节的那几个（upload_image）
+    #[prost(bytes = "vec", optional, tag = "3")]
+    pub input: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
+    /// 🔴 **这次调用是在谁的环境里发生的** —— 执行器把 `InvokeReq.ctx` 原样带回来。
+    ///
+    /// 为什么必须由执行器带:brain 收到这条时**已经不知道它属于哪次 invoke** 了
+    /// (host call 是执行器反过来发起的，走的是另一个 req_id)。而有些能力要认这个环境 ——
+    /// 比如"记一件事等条件到了再做"，登记的就是**此刻这份环境**，触发时照它执行。
+    ///
+    /// ⚠️ 不能让**插件**把环境当参数传进来:lua 脚本是三方代码，它可以填一个假的 asker，
+    /// 把"别人让我做的"说成"主人让我做的"。执行器不是三方代码，它手里那份来自
+    /// brain 发过去的 InvokeReq，脚本碰不到。
+    #[prost(message, optional, tag = "4")]
+    pub ctx: ::core::option::Option<LuaCtx>,
+    /// Runner-owned InvokeReq.uuid; scripts cannot choose subscription ownership.
+    #[prost(string, optional, tag = "5")]
+    pub plugin_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct HostCallResp {
+    /// 三种形态照 host 那侧的原样：纯结构化 / 取字节（next_frame）/ 失败。
+    #[prost(string, optional, tag = "1")]
+    pub json: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(bytes = "vec", optional, tag = "2")]
+    pub bytes: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
+    #[prost(string, optional, tag = "3")]
+    pub error: ::core::option::Option<::prost::alloc::string::String>,
+    /// 失败时的错误码，与 host::HostErr 同一套
+    #[prost(uint32, optional, tag = "4")]
+    pub code: ::core::option::Option<u32>,
+}
+/// BrainToLua brain 发给执行器的。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BrainToLua {
+    /// Hello前不传；业务消息必须匹配当前接管会话
+    #[prost(message, optional, tag = "99")]
+    pub session: ::core::option::Option<ModuleSession>,
+    /// req_id 与回复配对。**两个方向各有一套编号**，互不相干 ——
+    /// 回复的类型就说明了该去哪张表里找。
+    #[prost(uint64, optional, tag = "1")]
+    pub req_id: ::core::option::Option<u64>,
+    #[prost(oneof = "brain_to_lua::Cmd", tags = "100, 2, 3, 4, 5")]
+    pub cmd: ::core::option::Option<brain_to_lua::Cmd>,
+}
+/// Nested message and enum types in `BrainToLua`.
+pub mod brain_to_lua {
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Cmd {
+        #[prost(message, tag = "100")]
+        Control(super::BrainToModuleControl),
+        #[prost(message, tag = "2")]
+        Open(super::OpenReq),
+        #[prost(message, tag = "3")]
+        Invoke(super::InvokeReq),
+        #[prost(message, tag = "4")]
+        Close(super::CloseReq),
+        /// 回执行器发起的那条 HostCallReq
+        #[prost(message, tag = "5")]
+        HostResp(super::HostCallResp),
+    }
+}
+/// LuaToBrain 执行器发给 brain 的。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct LuaToBrain {
+    /// Hello前不传；业务消息必须匹配当前接管会话
+    #[prost(message, optional, tag = "99")]
+    pub session: ::core::option::Option<ModuleSession>,
+    #[prost(uint64, optional, tag = "1")]
+    pub req_id: ::core::option::Option<u64>,
+    #[prost(oneof = "lua_to_brain::Cmd", tags = "100, 2, 3, 4")]
+    pub cmd: ::core::option::Option<lua_to_brain::Cmd>,
+}
+/// Nested message and enum types in `LuaToBrain`.
+pub mod lua_to_brain {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Cmd {
+        #[prost(message, tag = "100")]
+        Control(super::ModuleToBrainControl),
+        #[prost(message, tag = "2")]
+        Open(super::OpenResp),
+        #[prost(message, tag = "3")]
+        Invoke(super::InvokeResp),
+        /// 反向：插件调 host 能力
+        #[prost(message, tag = "4")]
+        HostCall(super::HostCallReq),
+    }
+}
 /// 更新状态快照。**updater 是唯一的写方**，brain 与 face 都只读。
 ///
 /// 它同时是三个地方的同一份东西：updater 落盘的 `status.json`、
@@ -882,6 +1674,11 @@ pub struct VoiceTurn {
     pub turn_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(enumeration = "voice_turn::Phase", optional, tag = "2")]
     pub phase: ::core::option::Option<i32>,
+    /// BEGIN always identifies the current microphone reply, including text-only replies.
+    /// Explicit false keeps ordinary typing audio; absent retains the original spoken BEGIN.
+    /// CANCEL does not change the output policy.
+    #[prost(bool, optional, tag = "3")]
+    pub speech_output: ::core::option::Option<bool>,
 }
 /// Nested message and enum types in `VoiceTurn`.
 pub mod voice_turn {
@@ -1625,798 +2422,6 @@ impl Emotion {
             "EMOTION_LAUGH" => Some(Self::Laugh),
             "EMOTION_FRUSTRATE" => Some(Self::Frustrate),
             _ => None,
-        }
-    }
-}
-/// LuaCtx 一次调用的上下文。**这些字段一个都不在 manifest 里** ——
-/// 模型看不见，也就传不了；插件读到的只可能是 brain 填的。
-///
-/// 🔴 没主人 / 匿名时**不要给值**（proto3 optional 的 presence），不是空串 ——
-/// 空串会让 `if ctx.master then` 判成真，而那正是"提款只认主人"的判据。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct LuaCtx {
-    /// 机器人自己的 did
-    #[prost(string, optional, tag = "1")]
-    pub me: ::core::option::Option<::prost::alloc::string::String>,
-    /// 主人；没有就不给
-    #[prost(string, optional, tag = "2")]
-    pub master: ::core::option::Option<::prost::alloc::string::String>,
-    /// 这一次是谁在问；匿名就不给
-    #[prost(string, optional, tag = "3")]
-    pub asker: ::core::option::Option<::prost::alloc::string::String>,
-    /// 引起这次调用的那条消息的暗语等级(hi.club.Message.dark;不带 = 0 = 普通)。
-    /// **只给宿主用,不给 lua 脚本看**:执行器随 HostCallReq.ctx 原样带回,宿主发消息
-    /// (host.send_message)就沿用这个等级 —— 问题是哪一级,发出去的就是哪一级。插件不能自己选。
-    #[prost(uint32, optional, tag = "4")]
-    pub dark: ::core::option::Option<u32>,
-    /// ⚠️ **没有 `attachments`(消息里的媒体),不要加回来**(v1.5.27-dev.1 加过,10-07 删):
-    /// 模型手上没有图的地址、转发时只能编一个 —— 这件事改由附件列表解决(club 整理、hi.ai 拼进问答,
-    /// 见 hi/ai/chat.proto `Attachment`),模型从列表里抄「引用 + 名字」填进插件参数。只有一套机制,不留两条路。
-    /// 引起这次调用的那条消息所在的**会话号**(群号 / 单聊会话号);语音路、币安指令那类没有会话的不给。
-    /// **只给宿主用,不给 lua 脚本看**(同 `dark`):插件带附件发消息时(sdk `send_with_attachments`),
-    /// `<消息 uuid>#<段 id>` 这种引用只在这个会话里找(hi/club/messaging.proto「引用」)。
-    /// 号用 6 不用 5:5 是 dev.1 ~ dev.2 那几天的 `attachments`(消息型),复用会让还没换的执行器把它解坏。
-    #[prost(string, optional, tag = "6")]
-    pub conv: ::core::option::Option<::prost::alloc::string::String>,
-    /// Host-owned cancellation guard, not exposed to scripts.
-    #[prost(string, optional, tag = "7")]
-    pub subscription_id: ::core::option::Option<::prost::alloc::string::String>,
-    /// Reject host effects from cancelled/replaced deliveries.
-    #[prost(string, optional, tag = "8")]
-    pub subscription_revision: ::core::option::Option<::prost::alloc::string::String>,
-    /// 原始麦克风问答与工具调用的关联；brain生成、runner原样带回，不暴露给Lua脚本。
-    /// 唤醒/人脸不构成asker身份；仅供主人逐项确认请求验证来源、幂等去重。
-    #[prost(string, optional, tag = "9")]
-    pub voice_turn_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "10")]
-    pub tool_call_id: ::core::option::Option<::prost::alloc::string::String>,
-}
-/// OpenReq 装一个插件：跑一遍顶层，读出 manifest。
-///
-/// 兼容与否(SDK 版本头)由 brain 在发过来之前就判完了,执行器不再管版本。
-///
-/// **脚本按字节传，不传路径。** 插件产物是 brain 下载并校验过的，执行器不该也
-/// 够不着那个目录（它只需要 `/opt/hinj/luadeps/`）。现在制品是 KB 量级
-/// （依赖不再内联），传字节比共享一个目录干净。
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OpenReq {
-    #[prost(string, optional, tag = "1")]
-    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub version: ::core::option::Option<::prost::alloc::string::String>,
-    /// main.lua 合并后的那一个文件
-    #[prost(bytes = "vec", optional, tag = "3")]
-    pub script: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
-    /// deps **这一版声明了哪些 rock** —— 执行器据此决定 `__native` / `__luasrc`
-    /// 允许装哪些 C 模块与依赖自带的 lua 源码。
-    ///
-    /// 🔴 **它是一道权限闸，不是一份提示。**
-    ///
-    /// `/opt/hinj/luadeps/` 是**全机共用的集合**（同一个 rock 被五个插件用到只存一份），
-    /// 而 `__native(rock, 版本, 模块)` 的三个分量是插件自己写的字符串。没有这份清单的话，
-    /// 一个**依赖一个都没声明**的插件可以直接去 dlopen 别的插件装上去的 `.so` ——
-    /// 2026-09-02 在 `.66` 上实测：拿到了 `luafilesystem` 与 `luasocket`，
-    /// 列出了 `/opt/hinj`、建出了 TCP socket。**文件系统与网络，都在沙箱之外。**
-    ///
-    /// 而这条路**验收侧结构上看不见**：verify-lua 的集合是按本插件的依赖现搭的，
-    /// 别人的 rock 不在那台机器上，同一段代码在验收里必然报"没装上"，只有到设备上才成立。
-    ///
-    /// ⚠️ **空 = 一个都不许，不是"不限制"。** 别为了兼容老 sidecar 把空当成放行 ——
-    /// 那等于把闸门拆了，而且零报错。
-    #[prost(message, repeated, tag = "4")]
-    pub deps: ::prost::alloc::vec::Vec<LuaRock>,
-}
-/// LuaRock 一个依赖的坐标。**版本是键的一部分** —— 集合按
-/// `<rock>/<版本>/` 落盘，只对 rock 名不对版本等于放行同名的另一个版本。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct LuaRock {
-    #[prost(string, optional, tag = "1")]
-    pub rock: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub version: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct OpenResp {
-    #[prost(bool, optional, tag = "1")]
-    pub ok: ::core::option::Option<bool>,
-    /// 原始字符串，由 brain 按与 .so 同一条路径解析
-    #[prost(string, optional, tag = "3")]
-    pub manifest: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "4")]
-    pub error: ::core::option::Option<::prost::alloc::string::String>,
-}
-/// InvokeReq 调一个方法。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct InvokeReq {
-    #[prost(string, optional, tag = "1")]
-    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub version: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "3")]
-    pub method: ::core::option::Option<::prost::alloc::string::String>,
-    /// 模型给的参数，原样是 JSON
-    #[prost(string, optional, tag = "4")]
-    pub args_json: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(message, optional, tag = "5")]
-    pub ctx: ::core::option::Option<LuaCtx>,
-    /// 超时就掐断并**丢掉整个解释器**
-    #[prost(uint32, optional, tag = "6")]
-    pub timeout_ms: ::core::option::Option<u32>,
-}
-/// InvokeResp 结果。
-///
-/// ⚠️ **插件失败不是 rpc 失败。** 掐断、报错、撑爆内存，都是 `ok=false` + 一句话，
-/// 交给模型看；只有"执行器本身出事"才该让这条消息发不出来。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct InvokeResp {
-    #[prost(bool, optional, tag = "1")]
-    pub ok: ::core::option::Option<bool>,
-    /// 插件返回的那张表
-    #[prost(string, optional, tag = "2")]
-    pub result_json: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "3")]
-    pub error: ::core::option::Option<::prost::alloc::string::String>,
-}
-/// CloseReq 卸掉一个插件（撤权、换版本）。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct CloseReq {
-    #[prost(string, optional, tag = "1")]
-    pub uuid: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub version: ::core::option::Option<::prost::alloc::string::String>,
-}
-/// HostCallReq **执行器回头找 brain 要能力** —— 插件里的 `host.call`。
-///
-/// 🔴 这条是**反向**的：brain 正等着 InvokeResp 的时候，执行器会先发这个过来。
-/// 所以两边都得能在等一个回复的同时处理对方的请求，靠 `req_id` 配对。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct HostCallReq {
-    /// 能力名，与 `.so` 插件那条路同一份白名单
-    #[prost(string, optional, tag = "1")]
-    pub name: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub args_json: ::core::option::Option<::prost::alloc::string::String>,
-    /// 送字节的那几个（upload_image）
-    #[prost(bytes = "vec", optional, tag = "3")]
-    pub input: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
-    /// 🔴 **这次调用是在谁的环境里发生的** —— 执行器把 `InvokeReq.ctx` 原样带回来。
-    ///
-    /// 为什么必须由执行器带:brain 收到这条时**已经不知道它属于哪次 invoke** 了
-    /// (host call 是执行器反过来发起的，走的是另一个 req_id)。而有些能力要认这个环境 ——
-    /// 比如"记一件事等条件到了再做"，登记的就是**此刻这份环境**，触发时照它执行。
-    ///
-    /// ⚠️ 不能让**插件**把环境当参数传进来:lua 脚本是三方代码，它可以填一个假的 asker，
-    /// 把"别人让我做的"说成"主人让我做的"。执行器不是三方代码，它手里那份来自
-    /// brain 发过去的 InvokeReq，脚本碰不到。
-    #[prost(message, optional, tag = "4")]
-    pub ctx: ::core::option::Option<LuaCtx>,
-    /// Runner-owned InvokeReq.uuid; scripts cannot choose subscription ownership.
-    #[prost(string, optional, tag = "5")]
-    pub plugin_id: ::core::option::Option<::prost::alloc::string::String>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct HostCallResp {
-    /// 三种形态照 host 那侧的原样：纯结构化 / 取字节（next_frame）/ 失败。
-    #[prost(string, optional, tag = "1")]
-    pub json: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(bytes = "vec", optional, tag = "2")]
-    pub bytes: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
-    #[prost(string, optional, tag = "3")]
-    pub error: ::core::option::Option<::prost::alloc::string::String>,
-    /// 失败时的错误码，与 host::HostErr 同一套
-    #[prost(uint32, optional, tag = "4")]
-    pub code: ::core::option::Option<u32>,
-}
-/// BrainToLua brain 发给执行器的。
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BrainToLua {
-    /// Hello前不传；业务消息必须匹配当前接管会话
-    #[prost(message, optional, tag = "99")]
-    pub session: ::core::option::Option<ModuleSession>,
-    /// req_id 与回复配对。**两个方向各有一套编号**，互不相干 ——
-    /// 回复的类型就说明了该去哪张表里找。
-    #[prost(uint64, optional, tag = "1")]
-    pub req_id: ::core::option::Option<u64>,
-    #[prost(oneof = "brain_to_lua::Cmd", tags = "100, 2, 3, 4, 5")]
-    pub cmd: ::core::option::Option<brain_to_lua::Cmd>,
-}
-/// Nested message and enum types in `BrainToLua`.
-pub mod brain_to_lua {
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Cmd {
-        #[prost(message, tag = "100")]
-        Control(super::BrainToModuleControl),
-        #[prost(message, tag = "2")]
-        Open(super::OpenReq),
-        #[prost(message, tag = "3")]
-        Invoke(super::InvokeReq),
-        #[prost(message, tag = "4")]
-        Close(super::CloseReq),
-        /// 回执行器发起的那条 HostCallReq
-        #[prost(message, tag = "5")]
-        HostResp(super::HostCallResp),
-    }
-}
-/// LuaToBrain 执行器发给 brain 的。
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct LuaToBrain {
-    /// Hello前不传；业务消息必须匹配当前接管会话
-    #[prost(message, optional, tag = "99")]
-    pub session: ::core::option::Option<ModuleSession>,
-    #[prost(uint64, optional, tag = "1")]
-    pub req_id: ::core::option::Option<u64>,
-    #[prost(oneof = "lua_to_brain::Cmd", tags = "100, 2, 3, 4")]
-    pub cmd: ::core::option::Option<lua_to_brain::Cmd>,
-}
-/// Nested message and enum types in `LuaToBrain`.
-pub mod lua_to_brain {
-    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
-    pub enum Cmd {
-        #[prost(message, tag = "100")]
-        Control(super::ModuleToBrainControl),
-        #[prost(message, tag = "2")]
-        Open(super::OpenResp),
-        #[prost(message, tag = "3")]
-        Invoke(super::InvokeResp),
-        /// 反向：插件调 host 能力
-        #[prost(message, tag = "4")]
-        HostCall(super::HostCallReq),
-    }
-}
-/// brain是唯一调度者。IO本机采样/VAD/切句，brain调用STT，face播放。
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BrainToIo {
-    #[prost(message, optional, tag = "1")]
-    pub session: ::core::option::Option<ModuleSession>,
-    /// 控制握手可不传；业务请求必须给非零值
-    #[prost(uint64, optional, tag = "2")]
-    pub request_id: ::core::option::Option<u64>,
-    #[prost(oneof = "brain_to_io::Cmd", tags = "3, 4, 5, 6, 7, 8, 9, 10")]
-    pub cmd: ::core::option::Option<brain_to_io::Cmd>,
-}
-/// Nested message and enum types in `BrainToIo`.
-pub mod brain_to_io {
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Cmd {
-        #[prost(message, tag = "3")]
-        Control(super::BrainToModuleControl),
-        #[prost(message, tag = "4")]
-        SetHearing(super::IoHearing),
-        #[prost(message, tag = "5")]
-        GetStatus(::pbjson_types::Empty),
-        #[prost(message, tag = "6")]
-        CameraOpen(super::IoCameraOpen),
-        #[prost(message, tag = "7")]
-        CameraClose(super::IoCameraRef),
-        #[prost(message, tag = "8")]
-        NextFrame(super::IoCameraRef),
-        #[prost(message, tag = "9")]
-        Capture(super::IoCameraOpen),
-        #[prost(message, tag = "10")]
-        Cancel(super::IoCancel),
-    }
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct IoToBrain {
-    #[prost(message, optional, tag = "1")]
-    pub session: ::core::option::Option<ModuleSession>,
-    #[prost(uint64, optional, tag = "2")]
-    pub request_id: ::core::option::Option<u64>,
-    #[prost(oneof = "io_to_brain::Cmd", tags = "3, 4, 5, 6, 7")]
-    pub cmd: ::core::option::Option<io_to_brain::Cmd>,
-}
-/// Nested message and enum types in `IoToBrain`.
-pub mod io_to_brain {
-    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
-    pub enum Cmd {
-        #[prost(message, tag = "3")]
-        Control(super::ModuleToBrainControl),
-        #[prost(message, tag = "4")]
-        Response(super::IoResponse),
-        #[prost(message, tag = "5")]
-        EventStatus(super::IoStatus),
-        #[prost(message, tag = "6")]
-        EventRecording(super::IoRecording),
-        /// stream_id=recording_id；仅brain启用时发送，补齐起声前缀
-        #[prost(message, tag = "7")]
-        EventAudio(super::super::AudioStreamEvent),
-    }
-}
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct IoHearing {
-    #[prost(bool, optional, tag = "1")]
-    pub enabled: ::core::option::Option<bool>,
-    #[prost(uint64, optional, tag = "2")]
-    pub revision: ::core::option::Option<u64>,
-    /// 不传/false保留整句WAV；true同时推送有序PCM供提前转写
-    #[prost(bool, optional, tag = "4")]
-    pub stream_audio: ::core::option::Option<bool>,
-    /// 不传=立即；只在恢复时使用，新revision使旧延时命令失效
-    #[prost(uint32, optional, tag = "3")]
-    pub resume_delay_ms: ::core::option::Option<u32>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct IoStatus {
-    #[prost(bool, optional, tag = "1")]
-    pub microphone_ready: ::core::option::Option<bool>,
-    #[prost(bool, optional, tag = "2")]
-    pub camera_ready: ::core::option::Option<bool>,
-    #[prost(bool, optional, tag = "3")]
-    pub hearing_enabled: ::core::option::Option<bool>,
-    #[prost(uint64, optional, tag = "4")]
-    pub hearing_revision: ::core::option::Option<u64>,
-    #[prost(string, optional, tag = "5")]
-    pub microphone_error: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "6")]
-    pub camera_error: ::core::option::Option<::prost::alloc::string::String>,
-    /// 实际采集模式，启停确认包含此值
-    #[prost(bool, optional, tag = "7")]
-    pub stream_audio: ::core::option::Option<bool>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct IoRecording {
-    #[prost(string, optional, tag = "1")]
-    pub recording_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(enumeration = "io_recording::State", optional, tag = "2")]
-    pub state: ::core::option::Option<i32>,
-    /// 仅COMPLETED给完整文件；VAD在IO对原始采样执行
-    #[prost(bytes = "vec", optional, tag = "3")]
-    pub wav: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
-    #[prost(uint32, optional, tag = "4")]
-    pub sample_rate: ::core::option::Option<u32>,
-    #[prost(uint32, optional, tag = "5")]
-    pub channels: ::core::option::Option<u32>,
-    /// 每声道样本数；时长不得由网络到达节奏计算
-    #[prost(uint64, optional, tag = "6")]
-    pub sample_count: ::core::option::Option<u64>,
-    #[prost(message, optional, tag = "7")]
-    pub failure: ::core::option::Option<ModuleFailure>,
-}
-/// Nested message and enum types in `IoRecording`.
-pub mod io_recording {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum State {
-        Unknown = 0,
-        Started = 1,
-        Completed = 2,
-        Cancelled = 3,
-        Failed = 4,
-    }
-    impl State {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Self::Unknown => "STATE_UNKNOWN",
-                Self::Started => "STATE_STARTED",
-                Self::Completed => "STATE_COMPLETED",
-                Self::Cancelled => "STATE_CANCELLED",
-                Self::Failed => "STATE_FAILED",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "STATE_UNKNOWN" => Some(Self::Unknown),
-                "STATE_STARTED" => Some(Self::Started),
-                "STATE_COMPLETED" => Some(Self::Completed),
-                "STATE_CANCELLED" => Some(Self::Cancelled),
-                "STATE_FAILED" => Some(Self::Failed),
-                _ => None,
-            }
-        }
-    }
-}
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct IoCameraOpen {
-    /// 不传=IO配置默认值，返回相机实际接受的尺寸
-    #[prost(uint32, optional, tag = "1")]
-    pub width: ::core::option::Option<u32>,
-    #[prost(uint32, optional, tag = "2")]
-    pub height: ::core::option::Option<u32>,
-}
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct IoCameraRef {
-    #[prost(uint64, optional, tag = "1")]
-    pub lease_id: ::core::option::Option<u64>,
-}
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct IoCameraLease {
-    #[prost(uint64, optional, tag = "1")]
-    pub lease_id: ::core::option::Option<u64>,
-    #[prost(uint32, optional, tag = "2")]
-    pub width: ::core::option::Option<u32>,
-    #[prost(uint32, optional, tag = "3")]
-    pub height: ::core::option::Option<u32>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct IoImage {
-    /// Shared-video clients require source-frame identity and capture time.
-    #[prost(message, optional, tag = "2")]
-    pub frame: ::core::option::Option<IoFrameInfo>,
-    #[prost(bytes = "vec", optional, tag = "1")]
-    pub jpeg: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
-}
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct IoCancel {
-    #[prost(uint64, optional, tag = "1")]
-    pub request_id: ::core::option::Option<u64>,
-}
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct IoResponse {
-    #[prost(oneof = "io_response::Result", tags = "1, 2, 3, 4, 5")]
-    pub result: ::core::option::Option<io_response::Result>,
-}
-/// Nested message and enum types in `IoResponse`.
-pub mod io_response {
-    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
-    pub enum Result {
-        #[prost(message, tag = "1")]
-        Ok(::pbjson_types::Empty),
-        #[prost(message, tag = "2")]
-        Status(super::IoStatus),
-        #[prost(message, tag = "3")]
-        Camera(super::IoCameraLease),
-        #[prost(message, tag = "4")]
-        Image(super::IoImage),
-        #[prost(message, tag = "5")]
-        Failure(super::ModuleFailure),
-    }
-}
-/// Identity and capture clock of one immutable source frame. The module session
-/// scopes stream_id; sequence and captured_monotonic_ns increase within a stream.
-/// Capture timestamp is libcamera metadata, not network-arrival/wall-clock time.
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct IoFrameInfo {
-    #[prost(uint64, optional, tag = "1")]
-    pub stream_id: ::core::option::Option<u64>,
-    #[prost(uint64, optional, tag = "2")]
-    pub sequence: ::core::option::Option<u64>,
-    #[prost(uint64, optional, tag = "3")]
-    pub captured_monotonic_ns: ::core::option::Option<u64>,
-    #[prost(uint32, optional, tag = "4")]
-    pub width: ::core::option::Option<u32>,
-    #[prost(uint32, optional, tag = "5")]
-    pub height: ::core::option::Option<u32>,
-}
-/// Class names use the COCO80 canonical English labels (person, cat, dog, ...).
-/// A category is an observation, never a business identity or authorization.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VisionObject {
-    #[prost(string, optional, tag = "1")]
-    pub category: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(float, optional, tag = "2")]
-    pub confidence: ::core::option::Option<f32>,
-    #[prost(message, optional, tag = "3")]
-    pub bounds: ::core::option::Option<VisionBox>,
-}
-/// Coordinates in the original frame, normalized to \[0,1\]. No resized-input pixels.
-#[derive(Clone, Copy, PartialEq, ::prost::Message)]
-pub struct VisionBox {
-    #[prost(float, optional, tag = "1")]
-    pub x: ::core::option::Option<f32>,
-    #[prost(float, optional, tag = "2")]
-    pub y: ::core::option::Option<f32>,
-    #[prost(float, optional, tag = "3")]
-    pub width: ::core::option::Option<f32>,
-    #[prost(float, optional, tag = "4")]
-    pub height: ::core::option::Option<f32>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VisionObservation {
-    /// IO node boot and brain generation scope the source stream.
-    #[prost(message, optional, tag = "4")]
-    pub source_session: ::core::option::Option<ModuleSession>,
-    #[prost(message, optional, tag = "1")]
-    pub frame: ::core::option::Option<IoFrameInfo>,
-    #[prost(string, optional, tag = "2")]
-    pub model: ::core::option::Option<::prost::alloc::string::String>,
-    /// Empty means this successfully processed frame has no detections.
-    #[prost(message, repeated, tag = "3")]
-    pub objects: ::prost::alloc::vec::Vec<VisionObject>,
-}
-/// Brain produces these events; IO never runs classification or decides visibility.
-/// APPEARED/DISAPPEARED refer to category presence, not individual object tracking.
-/// Interrupted input/inference invalidates presence; it must not manufacture DISAPPEARED.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VisionEvent {
-    #[prost(string, optional, tag = "1")]
-    pub session_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(uint64, optional, tag = "2")]
-    pub sequence: ::core::option::Option<u64>,
-    #[prost(enumeration = "vision_event::Kind", optional, tag = "3")]
-    pub kind: ::core::option::Option<i32>,
-    /// OBSERVED/APPEARED/DISAPPEARED carry the deciding successful frame.
-    #[prost(message, optional, tag = "4")]
-    pub observation: ::core::option::Option<VisionObservation>,
-    /// APPEARED/DISAPPEARED only; canonical category.
-    #[prost(string, optional, tag = "5")]
-    pub category: ::core::option::Option<::prost::alloc::string::String>,
-    /// APPEARED actual count; DISAPPEARED zero. Not an identity count.
-    #[prost(uint32, optional, tag = "6")]
-    pub count: ::core::option::Option<u32>,
-    /// INTERRUPTED only.
-    #[prost(string, optional, tag = "7")]
-    pub reason: ::core::option::Option<::prost::alloc::string::String>,
-}
-/// Nested message and enum types in `VisionEvent`.
-pub mod vision_event {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Kind {
-        Unknown = 0,
-        Observed = 1,
-        Appeared = 2,
-        Disappeared = 3,
-        Interrupted = 4,
-        Resumed = 5,
-    }
-    impl Kind {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Self::Unknown => "KIND_UNKNOWN",
-                Self::Observed => "KIND_OBSERVED",
-                Self::Appeared => "KIND_APPEARED",
-                Self::Disappeared => "KIND_DISAPPEARED",
-                Self::Interrupted => "KIND_INTERRUPTED",
-                Self::Resumed => "KIND_RESUMED",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "KIND_UNKNOWN" => Some(Self::Unknown),
-                "KIND_OBSERVED" => Some(Self::Observed),
-                "KIND_APPEARED" => Some(Self::Appeared),
-                "KIND_DISAPPEARED" => Some(Self::Disappeared),
-                "KIND_INTERRUPTED" => Some(Self::Interrupted),
-                "KIND_RESUMED" => Some(Self::Resumed),
-                _ => None,
-            }
-        }
-    }
-}
-/// Face attributes are appearance estimates, never identity, permission or verified age.
-/// Every snapshot explicitly replaces the previous one; UNKNOWN must clear old values.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VisionFaceAttributes {
-    #[prost(enumeration = "vision_face_attributes::State", optional, tag = "1")]
-    pub state: ::core::option::Option<i32>,
-    /// Stable multi-frame label; absent until confirmed.
-    #[prost(enumeration = "vision_face_attributes::Gender", optional, tag = "2")]
-    pub gender: ::core::option::Option<i32>,
-    #[prost(float, optional, tag = "3")]
-    pub female_probability: ::core::option::Option<f32>,
-    #[prost(float, optional, tag = "4")]
-    pub male_probability: ::core::option::Option<f32>,
-    /// Optional estimate; this model supplies NO age confidence.
-    #[prost(float, optional, tag = "5")]
-    pub age_years: ::core::option::Option<f32>,
-    #[prost(string, optional, tag = "6")]
-    pub model: ::core::option::Option<::prost::alloc::string::String>,
-    /// Disabled, small/ambiguous face, uncertainty or failure.
-    #[prost(string, optional, tag = "7")]
-    pub reason: ::core::option::Option<::prost::alloc::string::String>,
-}
-/// Nested message and enum types in `VisionFaceAttributes`.
-pub mod vision_face_attributes {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum State {
-        Unknown = 0,
-        Disabled = 1,
-        Uncertain = 2,
-        Available = 3,
-        Error = 4,
-    }
-    impl State {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Self::Unknown => "STATE_UNKNOWN",
-                Self::Disabled => "STATE_DISABLED",
-                Self::Uncertain => "STATE_UNCERTAIN",
-                Self::Available => "STATE_AVAILABLE",
-                Self::Error => "STATE_ERROR",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "STATE_UNKNOWN" => Some(Self::Unknown),
-                "STATE_DISABLED" => Some(Self::Disabled),
-                "STATE_UNCERTAIN" => Some(Self::Uncertain),
-                "STATE_AVAILABLE" => Some(Self::Available),
-                "STATE_ERROR" => Some(Self::Error),
-                _ => None,
-            }
-        }
-    }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Gender {
-        Unknown = 0,
-        Female = 1,
-        Male = 2,
-    }
-    impl Gender {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Self::Unknown => "GENDER_UNKNOWN",
-                Self::Female => "GENDER_FEMALE",
-                Self::Male => "GENDER_MALE",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "GENDER_UNKNOWN" => Some(Self::Unknown),
-                "GENDER_FEMALE" => Some(Self::Female),
-                "GENDER_MALE" => Some(Self::Male),
-                _ => None,
-            }
-        }
-    }
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VisionFace {
-    #[prost(string, optional, tag = "1")]
-    pub target_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(message, optional, tag = "2")]
-    pub bounds: ::core::option::Option<VisionBox>,
-    #[prost(float, optional, tag = "3")]
-    pub confidence: ::core::option::Option<f32>,
-    /// Same-frame body association, when unambiguous. Not a DID.
-    #[prost(message, optional, tag = "4")]
-    pub person: ::core::option::Option<VisionObject>,
-    #[prost(message, optional, tag = "5")]
-    pub attributes: ::core::option::Option<VisionFaceAttributes>,
-    /// Visibility hysteresis has completed.
-    #[prost(bool, optional, tag = "6")]
-    pub confirmed: ::core::option::Option<bool>,
-    /// Bounds/confidence provenance when temporarily hidden.
-    #[prost(message, optional, tag = "7")]
-    pub last_observed_frame: ::core::option::Option<IoFrameInfo>,
-    /// Actually detected in this observation, not just retained by hysteresis.
-    #[prost(bool, optional, tag = "8")]
-    pub visible: ::core::option::Option<bool>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VisionFaceObservation {
-    #[prost(message, optional, tag = "1")]
-    pub source_session: ::core::option::Option<ModuleSession>,
-    #[prost(message, optional, tag = "2")]
-    pub frame: ::core::option::Option<IoFrameInfo>,
-    #[prost(string, optional, tag = "3")]
-    pub model: ::core::option::Option<::prost::alloc::string::String>,
-    /// Current and briefly retained targets; visible=false clears attributes. Empty differs from interruption.
-    #[prost(message, repeated, tag = "4")]
-    pub faces: ::prost::alloc::vec::Vec<VisionFace>,
-}
-/// Targets are anonymous short-lived tracks scoped by session_id, NOT identities.
-/// Losing a face does not prove that its body left. Interruptions invalidate all tracks.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VisionFaceEvent {
-    #[prost(string, optional, tag = "1")]
-    pub session_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(uint64, optional, tag = "2")]
-    pub sequence: ::core::option::Option<u64>,
-    #[prost(enumeration = "vision_face_event::Kind", optional, tag = "3")]
-    pub kind: ::core::option::Option<i32>,
-    /// Successful deciding frame; absent only on interruption.
-    #[prost(message, optional, tag = "4")]
-    pub observation: ::core::option::Option<VisionFaceObservation>,
-    /// APPEARED, DISAPPEARED, ATTRIBUTES_UPDATED.
-    #[prost(string, optional, tag = "5")]
-    pub target_id: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "6")]
-    pub reason: ::core::option::Option<::prost::alloc::string::String>,
-}
-/// Nested message and enum types in `VisionFaceEvent`.
-pub mod vision_face_event {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Kind {
-        Unknown = 0,
-        Observed = 1,
-        Appeared = 2,
-        Disappeared = 3,
-        AttributesUpdated = 4,
-        Interrupted = 5,
-        Resumed = 6,
-    }
-    impl Kind {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Self::Unknown => "KIND_UNKNOWN",
-                Self::Observed => "KIND_OBSERVED",
-                Self::Appeared => "KIND_APPEARED",
-                Self::Disappeared => "KIND_DISAPPEARED",
-                Self::AttributesUpdated => "KIND_ATTRIBUTES_UPDATED",
-                Self::Interrupted => "KIND_INTERRUPTED",
-                Self::Resumed => "KIND_RESUMED",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "KIND_UNKNOWN" => Some(Self::Unknown),
-                "KIND_OBSERVED" => Some(Self::Observed),
-                "KIND_APPEARED" => Some(Self::Appeared),
-                "KIND_DISAPPEARED" => Some(Self::Disappeared),
-                "KIND_ATTRIBUTES_UPDATED" => Some(Self::AttributesUpdated),
-                "KIND_INTERRUPTED" => Some(Self::Interrupted),
-                "KIND_RESUMED" => Some(Self::Resumed),
-                _ => None,
-            }
         }
     }
 }
