@@ -22,6 +22,108 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// Device output compatibility only; independent of content playback and microphone policy.
+type AudioKeepAwakeMode int32
+
+const (
+	AudioKeepAwakeMode_AUDIO_KEEP_AWAKE_INHERIT  AudioKeepAwakeMode = 0
+	AudioKeepAwakeMode_AUDIO_KEEP_AWAKE_ENABLED  AudioKeepAwakeMode = 1
+	AudioKeepAwakeMode_AUDIO_KEEP_AWAKE_DISABLED AudioKeepAwakeMode = 2
+)
+
+// Enum value maps for AudioKeepAwakeMode.
+var (
+	AudioKeepAwakeMode_name = map[int32]string{
+		0: "AUDIO_KEEP_AWAKE_INHERIT",
+		1: "AUDIO_KEEP_AWAKE_ENABLED",
+		2: "AUDIO_KEEP_AWAKE_DISABLED",
+	}
+	AudioKeepAwakeMode_value = map[string]int32{
+		"AUDIO_KEEP_AWAKE_INHERIT":  0,
+		"AUDIO_KEEP_AWAKE_ENABLED":  1,
+		"AUDIO_KEEP_AWAKE_DISABLED": 2,
+	}
+)
+
+func (x AudioKeepAwakeMode) Enum() *AudioKeepAwakeMode {
+	p := new(AudioKeepAwakeMode)
+	*p = x
+	return p
+}
+
+func (x AudioKeepAwakeMode) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (AudioKeepAwakeMode) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_audio_proto_enumTypes[0].Descriptor()
+}
+
+func (AudioKeepAwakeMode) Type() protoreflect.EnumType {
+	return &file_hi_audio_proto_enumTypes[0]
+}
+
+func (x AudioKeepAwakeMode) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use AudioKeepAwakeMode.Descriptor instead.
+func (AudioKeepAwakeMode) EnumDescriptor() ([]byte, []int) {
+	return file_hi_audio_proto_rawDescGZIP(), []int{0}
+}
+
+type AudioKeepAwakeSource int32
+
+const (
+	AudioKeepAwakeSource_AUDIO_KEEP_AWAKE_SOURCE_UNKNOWN  AudioKeepAwakeSource = 0
+	AudioKeepAwakeSource_AUDIO_KEEP_AWAKE_SOURCE_GLOBAL   AudioKeepAwakeSource = 1
+	AudioKeepAwakeSource_AUDIO_KEEP_AWAKE_SOURCE_NODE     AudioKeepAwakeSource = 2
+	AudioKeepAwakeSource_AUDIO_KEEP_AWAKE_SOURCE_OVERRIDE AudioKeepAwakeSource = 3
+)
+
+// Enum value maps for AudioKeepAwakeSource.
+var (
+	AudioKeepAwakeSource_name = map[int32]string{
+		0: "AUDIO_KEEP_AWAKE_SOURCE_UNKNOWN",
+		1: "AUDIO_KEEP_AWAKE_SOURCE_GLOBAL",
+		2: "AUDIO_KEEP_AWAKE_SOURCE_NODE",
+		3: "AUDIO_KEEP_AWAKE_SOURCE_OVERRIDE",
+	}
+	AudioKeepAwakeSource_value = map[string]int32{
+		"AUDIO_KEEP_AWAKE_SOURCE_UNKNOWN":  0,
+		"AUDIO_KEEP_AWAKE_SOURCE_GLOBAL":   1,
+		"AUDIO_KEEP_AWAKE_SOURCE_NODE":     2,
+		"AUDIO_KEEP_AWAKE_SOURCE_OVERRIDE": 3,
+	}
+)
+
+func (x AudioKeepAwakeSource) Enum() *AudioKeepAwakeSource {
+	p := new(AudioKeepAwakeSource)
+	*p = x
+	return p
+}
+
+func (x AudioKeepAwakeSource) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (AudioKeepAwakeSource) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_audio_proto_enumTypes[1].Descriptor()
+}
+
+func (AudioKeepAwakeSource) Type() protoreflect.EnumType {
+	return &file_hi_audio_proto_enumTypes[1]
+}
+
+func (x AudioKeepAwakeSource) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use AudioKeepAwakeSource.Descriptor instead.
+func (AudioKeepAwakeSource) EnumDescriptor() ([]byte, []int) {
+	return file_hi_audio_proto_rawDescGZIP(), []int{1}
+}
+
 type AudioFormat_Encoding int32
 
 const (
@@ -52,11 +154,11 @@ func (x AudioFormat_Encoding) String() string {
 }
 
 func (AudioFormat_Encoding) Descriptor() protoreflect.EnumDescriptor {
-	return file_hi_audio_proto_enumTypes[0].Descriptor()
+	return file_hi_audio_proto_enumTypes[2].Descriptor()
 }
 
 func (AudioFormat_Encoding) Type() protoreflect.EnumType {
-	return &file_hi_audio_proto_enumTypes[0]
+	return &file_hi_audio_proto_enumTypes[2]
 }
 
 func (x AudioFormat_Encoding) Number() protoreflect.EnumNumber {
@@ -385,6 +487,176 @@ func (*AudioStreamEvent_Chunk) isAudioStreamEvent_Event() {}
 
 func (*AudioStreamEvent_End) isAudioStreamEvent_Event() {}
 
+type AudioKeepAwakePolicy struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	DefaultRevision *uint64                `protobuf:"varint,1,opt,name=default_revision,json=defaultRevision,proto3,oneof" json:"default_revision,omitempty"`
+	DeviceRevision  *uint64                `protobuf:"varint,2,opt,name=device_revision,json=deviceRevision,proto3,oneof" json:"device_revision,omitempty"`
+	DefaultEnabled  *bool                  `protobuf:"varint,3,opt,name=default_enabled,json=defaultEnabled,proto3,oneof" json:"default_enabled,omitempty"`
+	Mode            *AudioKeepAwakeMode    `protobuf:"varint,4,opt,name=mode,proto3,enum=hi.AudioKeepAwakeMode,oneof" json:"mode,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *AudioKeepAwakePolicy) Reset() {
+	*x = AudioKeepAwakePolicy{}
+	mi := &file_hi_audio_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AudioKeepAwakePolicy) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AudioKeepAwakePolicy) ProtoMessage() {}
+
+func (x *AudioKeepAwakePolicy) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_audio_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AudioKeepAwakePolicy.ProtoReflect.Descriptor instead.
+func (*AudioKeepAwakePolicy) Descriptor() ([]byte, []int) {
+	return file_hi_audio_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *AudioKeepAwakePolicy) GetDefaultRevision() uint64 {
+	if x != nil && x.DefaultRevision != nil {
+		return *x.DefaultRevision
+	}
+	return 0
+}
+
+func (x *AudioKeepAwakePolicy) GetDeviceRevision() uint64 {
+	if x != nil && x.DeviceRevision != nil {
+		return *x.DeviceRevision
+	}
+	return 0
+}
+
+func (x *AudioKeepAwakePolicy) GetDefaultEnabled() bool {
+	if x != nil && x.DefaultEnabled != nil {
+		return *x.DefaultEnabled
+	}
+	return false
+}
+
+func (x *AudioKeepAwakePolicy) GetMode() AudioKeepAwakeMode {
+	if x != nil && x.Mode != nil {
+		return *x.Mode
+	}
+	return AudioKeepAwakeMode_AUDIO_KEEP_AWAKE_INHERIT
+}
+
+// Versions identify the attempted policy. applied=false reports failure, never confirmation.
+// enabled/source describe the actual source after the attempt; absent means unknown.
+type AudioKeepAwakeState struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Applied         *bool                  `protobuf:"varint,1,opt,name=applied,proto3,oneof" json:"applied,omitempty"`
+	Enabled         *bool                  `protobuf:"varint,2,opt,name=enabled,proto3,oneof" json:"enabled,omitempty"`
+	Source          *AudioKeepAwakeSource  `protobuf:"varint,3,opt,name=source,proto3,enum=hi.AudioKeepAwakeSource,oneof" json:"source,omitempty"`
+	DefaultRevision *uint64                `protobuf:"varint,4,opt,name=default_revision,json=defaultRevision,proto3,oneof" json:"default_revision,omitempty"`
+	DeviceRevision  *uint64                `protobuf:"varint,5,opt,name=device_revision,json=deviceRevision,proto3,oneof" json:"device_revision,omitempty"`
+	Error           *string                `protobuf:"bytes,6,opt,name=error,proto3,oneof" json:"error,omitempty"`
+	FrequencyHz     *uint32                `protobuf:"varint,7,opt,name=frequency_hz,json=frequencyHz,proto3,oneof" json:"frequency_hz,omitempty"`
+	LevelDbfs       *float32               `protobuf:"fixed32,8,opt,name=level_dbfs,json=levelDbfs,proto3,oneof" json:"level_dbfs,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *AudioKeepAwakeState) Reset() {
+	*x = AudioKeepAwakeState{}
+	mi := &file_hi_audio_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AudioKeepAwakeState) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AudioKeepAwakeState) ProtoMessage() {}
+
+func (x *AudioKeepAwakeState) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_audio_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AudioKeepAwakeState.ProtoReflect.Descriptor instead.
+func (*AudioKeepAwakeState) Descriptor() ([]byte, []int) {
+	return file_hi_audio_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *AudioKeepAwakeState) GetApplied() bool {
+	if x != nil && x.Applied != nil {
+		return *x.Applied
+	}
+	return false
+}
+
+func (x *AudioKeepAwakeState) GetEnabled() bool {
+	if x != nil && x.Enabled != nil {
+		return *x.Enabled
+	}
+	return false
+}
+
+func (x *AudioKeepAwakeState) GetSource() AudioKeepAwakeSource {
+	if x != nil && x.Source != nil {
+		return *x.Source
+	}
+	return AudioKeepAwakeSource_AUDIO_KEEP_AWAKE_SOURCE_UNKNOWN
+}
+
+func (x *AudioKeepAwakeState) GetDefaultRevision() uint64 {
+	if x != nil && x.DefaultRevision != nil {
+		return *x.DefaultRevision
+	}
+	return 0
+}
+
+func (x *AudioKeepAwakeState) GetDeviceRevision() uint64 {
+	if x != nil && x.DeviceRevision != nil {
+		return *x.DeviceRevision
+	}
+	return 0
+}
+
+func (x *AudioKeepAwakeState) GetError() string {
+	if x != nil && x.Error != nil {
+		return *x.Error
+	}
+	return ""
+}
+
+func (x *AudioKeepAwakeState) GetFrequencyHz() uint32 {
+	if x != nil && x.FrequencyHz != nil {
+		return *x.FrequencyHz
+	}
+	return 0
+}
+
+func (x *AudioKeepAwakeState) GetLevelDbfs() float32 {
+	if x != nil && x.LevelDbfs != nil {
+		return *x.LevelDbfs
+	}
+	return 0
+}
+
 var File_hi_audio_proto protoreflect.FileDescriptor
 
 const file_hi_audio_proto_rawDesc = "" +
@@ -425,7 +697,52 @@ const file_hi_audio_proto_rawDesc = "" +
 	"\x03end\x18\x04 \x01(\v2\x12.hi.AudioStreamEndB\x04\x90\xb5\x18\x03H\x00R\x03end:\x04\x98\xb5\x18\x03B\x0e\n" +
 	"\x05event\x12\x05\xbaH\x02\b\x01B\f\n" +
 	"\n" +
-	"_stream_idBb\n" +
+	"_stream_id\"\xd8\x02\n" +
+	"\x14AudioKeepAwakePolicy\x12>\n" +
+	"\x10default_revision\x18\x01 \x01(\x04B\x0e\xbaH\a\xc8\x01\x012\x02 \x00\x90\xb5\x18\x03H\x00R\x0fdefaultRevision\x88\x01\x01\x128\n" +
+	"\x0fdevice_revision\x18\x02 \x01(\x04B\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03H\x01R\x0edeviceRevision\x88\x01\x01\x128\n" +
+	"\x0fdefault_enabled\x18\x03 \x01(\bB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03H\x02R\x0edefaultEnabled\x88\x01\x01\x12@\n" +
+	"\x04mode\x18\x04 \x01(\x0e2\x16.hi.AudioKeepAwakeModeB\x0f\xbaH\b\xc8\x01\x01\x82\x01\x02\x10\x01\x90\xb5\x18\x03H\x03R\x04mode\x88\x01\x01:\x04\x98\xb5\x18\x03B\x13\n" +
+	"\x11_default_revisionB\x12\n" +
+	"\x10_device_revisionB\x12\n" +
+	"\x10_default_enabledB\a\n" +
+	"\x05_mode\"\xb9\x04\n" +
+	"\x13AudioKeepAwakeState\x12)\n" +
+	"\aapplied\x18\x01 \x01(\bB\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03H\x00R\aapplied\x88\x01\x01\x12#\n" +
+	"\aenabled\x18\x02 \x01(\bB\x04\x90\xb5\x18\x03H\x01R\aenabled\x88\x01\x01\x12C\n" +
+	"\x06source\x18\x03 \x01(\x0e2\x18.hi.AudioKeepAwakeSourceB\f\xbaH\x05\x82\x01\x02\x10\x01\x90\xb5\x18\x03H\x02R\x06source\x88\x01\x01\x12>\n" +
+	"\x10default_revision\x18\x04 \x01(\x04B\x0e\xbaH\a\xc8\x01\x012\x02 \x00\x90\xb5\x18\x03H\x03R\x0fdefaultRevision\x88\x01\x01\x128\n" +
+	"\x0fdevice_revision\x18\x05 \x01(\x04B\n" +
+	"\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03H\x04R\x0edeviceRevision\x88\x01\x01\x12'\n" +
+	"\x05error\x18\x06 \x01(\tB\f\xbaH\x05r\x03\x18\x80\x04\x90\xb5\x18\x03H\x05R\x05error\x88\x01\x01\x125\n" +
+	"\ffrequency_hz\x18\a \x01(\rB\r\xbaH\x06*\x04\x18\x1e(\n" +
+	"\x90\xb5\x18\x03H\x06R\vfrequencyHz\x88\x01\x01\x127\n" +
+	"\n" +
+	"level_dbfs\x18\b \x01(\x02B\x13\xbaH\f\n" +
+	"\n" +
+	"\x1d\x00\x00 \xc2-\x00\x00\xa0\u0090\xb5\x18\x03H\aR\tlevelDbfs\x88\x01\x01:\x04\x98\xb5\x18\x03B\n" +
+	"\n" +
+	"\b_appliedB\n" +
+	"\n" +
+	"\b_enabledB\t\n" +
+	"\a_sourceB\x13\n" +
+	"\x11_default_revisionB\x12\n" +
+	"\x10_device_revisionB\b\n" +
+	"\x06_errorB\x0f\n" +
+	"\r_frequency_hzB\r\n" +
+	"\v_level_dbfs*o\n" +
+	"\x12AudioKeepAwakeMode\x12\x1c\n" +
+	"\x18AUDIO_KEEP_AWAKE_INHERIT\x10\x00\x12\x1c\n" +
+	"\x18AUDIO_KEEP_AWAKE_ENABLED\x10\x01\x12\x1d\n" +
+	"\x19AUDIO_KEEP_AWAKE_DISABLED\x10\x02*\xa7\x01\n" +
+	"\x14AudioKeepAwakeSource\x12#\n" +
+	"\x1fAUDIO_KEEP_AWAKE_SOURCE_UNKNOWN\x10\x00\x12\"\n" +
+	"\x1eAUDIO_KEEP_AWAKE_SOURCE_GLOBAL\x10\x01\x12 \n" +
+	"\x1cAUDIO_KEEP_AWAKE_SOURCE_NODE\x10\x02\x12$\n" +
+	" AUDIO_KEEP_AWAKE_SOURCE_OVERRIDE\x10\x03Bb\n" +
 	"\x06com.hiB\n" +
 	"AudioProtoP\x01Z$github.com/HiWorld-56/hi-proto/go/hi\xa2\x02\x03HXX\xaa\x02\x02Hi\xca\x02\x02Hi\xe2\x02\x0eHi\\GPBMetadata\xea\x02\x02Hib\x06proto3"
 
@@ -441,27 +758,33 @@ func file_hi_audio_proto_rawDescGZIP() []byte {
 	return file_hi_audio_proto_rawDescData
 }
 
-var file_hi_audio_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_hi_audio_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_hi_audio_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
+var file_hi_audio_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_hi_audio_proto_goTypes = []any{
-	(AudioFormat_Encoding)(0), // 0: hi.AudioFormat.Encoding
-	(*AudioFormat)(nil),       // 1: hi.AudioFormat
-	(*AudioStreamStart)(nil),  // 2: hi.AudioStreamStart
-	(*AudioStreamChunk)(nil),  // 3: hi.AudioStreamChunk
-	(*AudioStreamEnd)(nil),    // 4: hi.AudioStreamEnd
-	(*AudioStreamEvent)(nil),  // 5: hi.AudioStreamEvent
+	(AudioKeepAwakeMode)(0),      // 0: hi.AudioKeepAwakeMode
+	(AudioKeepAwakeSource)(0),    // 1: hi.AudioKeepAwakeSource
+	(AudioFormat_Encoding)(0),    // 2: hi.AudioFormat.Encoding
+	(*AudioFormat)(nil),          // 3: hi.AudioFormat
+	(*AudioStreamStart)(nil),     // 4: hi.AudioStreamStart
+	(*AudioStreamChunk)(nil),     // 5: hi.AudioStreamChunk
+	(*AudioStreamEnd)(nil),       // 6: hi.AudioStreamEnd
+	(*AudioStreamEvent)(nil),     // 7: hi.AudioStreamEvent
+	(*AudioKeepAwakePolicy)(nil), // 8: hi.AudioKeepAwakePolicy
+	(*AudioKeepAwakeState)(nil),  // 9: hi.AudioKeepAwakeState
 }
 var file_hi_audio_proto_depIdxs = []int32{
-	0, // 0: hi.AudioFormat.encoding:type_name -> hi.AudioFormat.Encoding
-	1, // 1: hi.AudioStreamStart.format:type_name -> hi.AudioFormat
-	2, // 2: hi.AudioStreamEvent.start:type_name -> hi.AudioStreamStart
-	3, // 3: hi.AudioStreamEvent.chunk:type_name -> hi.AudioStreamChunk
-	4, // 4: hi.AudioStreamEvent.end:type_name -> hi.AudioStreamEnd
-	5, // [5:5] is the sub-list for method output_type
-	5, // [5:5] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	2, // 0: hi.AudioFormat.encoding:type_name -> hi.AudioFormat.Encoding
+	3, // 1: hi.AudioStreamStart.format:type_name -> hi.AudioFormat
+	4, // 2: hi.AudioStreamEvent.start:type_name -> hi.AudioStreamStart
+	5, // 3: hi.AudioStreamEvent.chunk:type_name -> hi.AudioStreamChunk
+	6, // 4: hi.AudioStreamEvent.end:type_name -> hi.AudioStreamEnd
+	0, // 5: hi.AudioKeepAwakePolicy.mode:type_name -> hi.AudioKeepAwakeMode
+	1, // 6: hi.AudioKeepAwakeState.source:type_name -> hi.AudioKeepAwakeSource
+	7, // [7:7] is the sub-list for method output_type
+	7, // [7:7] is the sub-list for method input_type
+	7, // [7:7] is the sub-list for extension type_name
+	7, // [7:7] is the sub-list for extension extendee
+	0, // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_hi_audio_proto_init() }
@@ -478,13 +801,15 @@ func file_hi_audio_proto_init() {
 		(*AudioStreamEvent_Chunk)(nil),
 		(*AudioStreamEvent_End)(nil),
 	}
+	file_hi_audio_proto_msgTypes[5].OneofWrappers = []any{}
+	file_hi_audio_proto_msgTypes[6].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_audio_proto_rawDesc), len(file_hi_audio_proto_rawDesc)),
-			NumEnums:      1,
-			NumMessages:   5,
+			NumEnums:      3,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -14,6 +14,59 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+/// Device output compatibility only; independent of content playback and microphone policy.
+class AudioKeepAwakeMode extends $pb.ProtobufEnum {
+  static const AudioKeepAwakeMode AUDIO_KEEP_AWAKE_INHERIT =
+      AudioKeepAwakeMode._(0, _omitEnumNames ? '' : 'AUDIO_KEEP_AWAKE_INHERIT');
+  static const AudioKeepAwakeMode AUDIO_KEEP_AWAKE_ENABLED =
+      AudioKeepAwakeMode._(1, _omitEnumNames ? '' : 'AUDIO_KEEP_AWAKE_ENABLED');
+  static const AudioKeepAwakeMode AUDIO_KEEP_AWAKE_DISABLED =
+      AudioKeepAwakeMode._(
+          2, _omitEnumNames ? '' : 'AUDIO_KEEP_AWAKE_DISABLED');
+
+  static const $core.List<AudioKeepAwakeMode> values = <AudioKeepAwakeMode>[
+    AUDIO_KEEP_AWAKE_INHERIT,
+    AUDIO_KEEP_AWAKE_ENABLED,
+    AUDIO_KEEP_AWAKE_DISABLED,
+  ];
+
+  static final $core.List<AudioKeepAwakeMode?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static AudioKeepAwakeMode? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const AudioKeepAwakeMode._(super.value, super.name);
+}
+
+class AudioKeepAwakeSource extends $pb.ProtobufEnum {
+  static const AudioKeepAwakeSource AUDIO_KEEP_AWAKE_SOURCE_UNKNOWN =
+      AudioKeepAwakeSource._(
+          0, _omitEnumNames ? '' : 'AUDIO_KEEP_AWAKE_SOURCE_UNKNOWN');
+  static const AudioKeepAwakeSource AUDIO_KEEP_AWAKE_SOURCE_GLOBAL =
+      AudioKeepAwakeSource._(
+          1, _omitEnumNames ? '' : 'AUDIO_KEEP_AWAKE_SOURCE_GLOBAL');
+  static const AudioKeepAwakeSource AUDIO_KEEP_AWAKE_SOURCE_NODE =
+      AudioKeepAwakeSource._(
+          2, _omitEnumNames ? '' : 'AUDIO_KEEP_AWAKE_SOURCE_NODE');
+  static const AudioKeepAwakeSource AUDIO_KEEP_AWAKE_SOURCE_OVERRIDE =
+      AudioKeepAwakeSource._(
+          3, _omitEnumNames ? '' : 'AUDIO_KEEP_AWAKE_SOURCE_OVERRIDE');
+
+  static const $core.List<AudioKeepAwakeSource> values = <AudioKeepAwakeSource>[
+    AUDIO_KEEP_AWAKE_SOURCE_UNKNOWN,
+    AUDIO_KEEP_AWAKE_SOURCE_GLOBAL,
+    AUDIO_KEEP_AWAKE_SOURCE_NODE,
+    AUDIO_KEEP_AWAKE_SOURCE_OVERRIDE,
+  ];
+
+  static final $core.List<AudioKeepAwakeSource?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
+  static AudioKeepAwakeSource? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const AudioKeepAwakeSource._(super.value, super.name);
+}
+
 class AudioFormat_Encoding extends $pb.ProtobufEnum {
   static const AudioFormat_Encoding ENCODING_UNKNOWN =
       AudioFormat_Encoding._(0, _omitEnumNames ? '' : 'ENCODING_UNKNOWN');

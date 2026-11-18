@@ -425,3 +425,97 @@ pub mod audio_stream_event {
         End(super::AudioStreamEnd),
     }
 }
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct AudioKeepAwakePolicy {
+    #[prost(uint64, optional, tag = "1")]
+    pub default_revision: ::core::option::Option<u64>,
+    #[prost(uint64, optional, tag = "2")]
+    pub device_revision: ::core::option::Option<u64>,
+    #[prost(bool, optional, tag = "3")]
+    pub default_enabled: ::core::option::Option<bool>,
+    #[prost(enumeration = "AudioKeepAwakeMode", optional, tag = "4")]
+    pub mode: ::core::option::Option<i32>,
+}
+/// Versions identify the attempted policy. applied=false reports failure, never confirmation.
+/// enabled/source describe the actual source after the attempt; absent means unknown.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AudioKeepAwakeState {
+    #[prost(bool, optional, tag = "1")]
+    pub applied: ::core::option::Option<bool>,
+    #[prost(bool, optional, tag = "2")]
+    pub enabled: ::core::option::Option<bool>,
+    #[prost(enumeration = "AudioKeepAwakeSource", optional, tag = "3")]
+    pub source: ::core::option::Option<i32>,
+    #[prost(uint64, optional, tag = "4")]
+    pub default_revision: ::core::option::Option<u64>,
+    #[prost(uint64, optional, tag = "5")]
+    pub device_revision: ::core::option::Option<u64>,
+    #[prost(string, optional, tag = "6")]
+    pub error: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(uint32, optional, tag = "7")]
+    pub frequency_hz: ::core::option::Option<u32>,
+    #[prost(float, optional, tag = "8")]
+    pub level_dbfs: ::core::option::Option<f32>,
+}
+/// Device output compatibility only; independent of content playback and microphone policy.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum AudioKeepAwakeMode {
+    AudioKeepAwakeInherit = 0,
+    AudioKeepAwakeEnabled = 1,
+    AudioKeepAwakeDisabled = 2,
+}
+impl AudioKeepAwakeMode {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::AudioKeepAwakeInherit => "AUDIO_KEEP_AWAKE_INHERIT",
+            Self::AudioKeepAwakeEnabled => "AUDIO_KEEP_AWAKE_ENABLED",
+            Self::AudioKeepAwakeDisabled => "AUDIO_KEEP_AWAKE_DISABLED",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "AUDIO_KEEP_AWAKE_INHERIT" => Some(Self::AudioKeepAwakeInherit),
+            "AUDIO_KEEP_AWAKE_ENABLED" => Some(Self::AudioKeepAwakeEnabled),
+            "AUDIO_KEEP_AWAKE_DISABLED" => Some(Self::AudioKeepAwakeDisabled),
+            _ => None,
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum AudioKeepAwakeSource {
+    Unknown = 0,
+    Global = 1,
+    Node = 2,
+    Override = 3,
+}
+impl AudioKeepAwakeSource {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unknown => "AUDIO_KEEP_AWAKE_SOURCE_UNKNOWN",
+            Self::Global => "AUDIO_KEEP_AWAKE_SOURCE_GLOBAL",
+            Self::Node => "AUDIO_KEEP_AWAKE_SOURCE_NODE",
+            Self::Override => "AUDIO_KEEP_AWAKE_SOURCE_OVERRIDE",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "AUDIO_KEEP_AWAKE_SOURCE_UNKNOWN" => Some(Self::Unknown),
+            "AUDIO_KEEP_AWAKE_SOURCE_GLOBAL" => Some(Self::Global),
+            "AUDIO_KEEP_AWAKE_SOURCE_NODE" => Some(Self::Node),
+            "AUDIO_KEEP_AWAKE_SOURCE_OVERRIDE" => Some(Self::Override),
+            _ => None,
+        }
+    }
+}

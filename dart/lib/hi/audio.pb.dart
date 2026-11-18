@@ -418,6 +418,247 @@ class AudioStreamEvent extends $pb.GeneratedMessage {
   AudioStreamEnd ensureEnd() => $_ensure(3);
 }
 
+class AudioKeepAwakePolicy extends $pb.GeneratedMessage {
+  factory AudioKeepAwakePolicy({
+    $fixnum.Int64? defaultRevision,
+    $fixnum.Int64? deviceRevision,
+    $core.bool? defaultEnabled,
+    AudioKeepAwakeMode? mode,
+  }) {
+    final result = create();
+    if (defaultRevision != null) result.defaultRevision = defaultRevision;
+    if (deviceRevision != null) result.deviceRevision = deviceRevision;
+    if (defaultEnabled != null) result.defaultEnabled = defaultEnabled;
+    if (mode != null) result.mode = mode;
+    return result;
+  }
+
+  AudioKeepAwakePolicy._();
+
+  factory AudioKeepAwakePolicy.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory AudioKeepAwakePolicy.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'AudioKeepAwakePolicy',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi'),
+      createEmptyInstance: create)
+    ..a<$fixnum.Int64>(
+        1, _omitFieldNames ? '' : 'defaultRevision', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$fixnum.Int64>(
+        2, _omitFieldNames ? '' : 'deviceRevision', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..aOB(3, _omitFieldNames ? '' : 'defaultEnabled')
+    ..aE<AudioKeepAwakeMode>(4, _omitFieldNames ? '' : 'mode',
+        enumValues: AudioKeepAwakeMode.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AudioKeepAwakePolicy clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AudioKeepAwakePolicy copyWith(void Function(AudioKeepAwakePolicy) updates) =>
+      super.copyWith((message) => updates(message as AudioKeepAwakePolicy))
+          as AudioKeepAwakePolicy;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static AudioKeepAwakePolicy create() => AudioKeepAwakePolicy._();
+  @$core.override
+  AudioKeepAwakePolicy createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static AudioKeepAwakePolicy getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<AudioKeepAwakePolicy>(create);
+  static AudioKeepAwakePolicy? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $fixnum.Int64 get defaultRevision => $_getI64(0);
+  @$pb.TagNumber(1)
+  set defaultRevision($fixnum.Int64 value) => $_setInt64(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasDefaultRevision() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDefaultRevision() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get deviceRevision => $_getI64(1);
+  @$pb.TagNumber(2)
+  set deviceRevision($fixnum.Int64 value) => $_setInt64(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasDeviceRevision() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearDeviceRevision() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.bool get defaultEnabled => $_getBF(2);
+  @$pb.TagNumber(3)
+  set defaultEnabled($core.bool value) => $_setBool(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasDefaultEnabled() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearDefaultEnabled() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  AudioKeepAwakeMode get mode => $_getN(3);
+  @$pb.TagNumber(4)
+  set mode(AudioKeepAwakeMode value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasMode() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearMode() => $_clearField(4);
+}
+
+/// Versions identify the attempted policy. applied=false reports failure, never confirmation.
+/// enabled/source describe the actual source after the attempt; absent means unknown.
+class AudioKeepAwakeState extends $pb.GeneratedMessage {
+  factory AudioKeepAwakeState({
+    $core.bool? applied,
+    $core.bool? enabled,
+    AudioKeepAwakeSource? source,
+    $fixnum.Int64? defaultRevision,
+    $fixnum.Int64? deviceRevision,
+    $core.String? error,
+    $core.int? frequencyHz,
+    $core.double? levelDbfs,
+  }) {
+    final result = create();
+    if (applied != null) result.applied = applied;
+    if (enabled != null) result.enabled = enabled;
+    if (source != null) result.source = source;
+    if (defaultRevision != null) result.defaultRevision = defaultRevision;
+    if (deviceRevision != null) result.deviceRevision = deviceRevision;
+    if (error != null) result.error = error;
+    if (frequencyHz != null) result.frequencyHz = frequencyHz;
+    if (levelDbfs != null) result.levelDbfs = levelDbfs;
+    return result;
+  }
+
+  AudioKeepAwakeState._();
+
+  factory AudioKeepAwakeState.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory AudioKeepAwakeState.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'AudioKeepAwakeState',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi'),
+      createEmptyInstance: create)
+    ..aOB(1, _omitFieldNames ? '' : 'applied')
+    ..aOB(2, _omitFieldNames ? '' : 'enabled')
+    ..aE<AudioKeepAwakeSource>(3, _omitFieldNames ? '' : 'source',
+        enumValues: AudioKeepAwakeSource.values)
+    ..a<$fixnum.Int64>(
+        4, _omitFieldNames ? '' : 'defaultRevision', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$fixnum.Int64>(
+        5, _omitFieldNames ? '' : 'deviceRevision', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..aOS(6, _omitFieldNames ? '' : 'error')
+    ..aI(7, _omitFieldNames ? '' : 'frequencyHz',
+        fieldType: $pb.PbFieldType.OU3)
+    ..aD(8, _omitFieldNames ? '' : 'levelDbfs', fieldType: $pb.PbFieldType.OF)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AudioKeepAwakeState clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AudioKeepAwakeState copyWith(void Function(AudioKeepAwakeState) updates) =>
+      super.copyWith((message) => updates(message as AudioKeepAwakeState))
+          as AudioKeepAwakeState;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static AudioKeepAwakeState create() => AudioKeepAwakeState._();
+  @$core.override
+  AudioKeepAwakeState createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static AudioKeepAwakeState getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<AudioKeepAwakeState>(create);
+  static AudioKeepAwakeState? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.bool get applied => $_getBF(0);
+  @$pb.TagNumber(1)
+  set applied($core.bool value) => $_setBool(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasApplied() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearApplied() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.bool get enabled => $_getBF(1);
+  @$pb.TagNumber(2)
+  set enabled($core.bool value) => $_setBool(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasEnabled() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearEnabled() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  AudioKeepAwakeSource get source => $_getN(2);
+  @$pb.TagNumber(3)
+  set source(AudioKeepAwakeSource value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSource() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSource() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $fixnum.Int64 get defaultRevision => $_getI64(3);
+  @$pb.TagNumber(4)
+  set defaultRevision($fixnum.Int64 value) => $_setInt64(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasDefaultRevision() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearDefaultRevision() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $fixnum.Int64 get deviceRevision => $_getI64(4);
+  @$pb.TagNumber(5)
+  set deviceRevision($fixnum.Int64 value) => $_setInt64(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasDeviceRevision() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearDeviceRevision() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.String get error => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set error($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasError() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearError() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.int get frequencyHz => $_getIZ(6);
+  @$pb.TagNumber(7)
+  set frequencyHz($core.int value) => $_setUnsignedInt32(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasFrequencyHz() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearFrequencyHz() => $_clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.double get levelDbfs => $_getN(7);
+  @$pb.TagNumber(8)
+  set levelDbfs($core.double value) => $_setFloat(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasLevelDbfs() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearLevelDbfs() => $_clearField(8);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

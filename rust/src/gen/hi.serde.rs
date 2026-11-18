@@ -201,6 +201,540 @@ impl<'de> serde::Deserialize<'de> for audio_format::Encoding {
         deserializer.deserialize_any(GeneratedVisitor)
     }
 }
+impl serde::Serialize for AudioKeepAwakeMode {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::AudioKeepAwakeInherit => "AUDIO_KEEP_AWAKE_INHERIT",
+            Self::AudioKeepAwakeEnabled => "AUDIO_KEEP_AWAKE_ENABLED",
+            Self::AudioKeepAwakeDisabled => "AUDIO_KEEP_AWAKE_DISABLED",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for AudioKeepAwakeMode {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "AUDIO_KEEP_AWAKE_INHERIT",
+            "AUDIO_KEEP_AWAKE_ENABLED",
+            "AUDIO_KEEP_AWAKE_DISABLED",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = AudioKeepAwakeMode;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "AUDIO_KEEP_AWAKE_INHERIT" => Ok(AudioKeepAwakeMode::AudioKeepAwakeInherit),
+                    "AUDIO_KEEP_AWAKE_ENABLED" => Ok(AudioKeepAwakeMode::AudioKeepAwakeEnabled),
+                    "AUDIO_KEEP_AWAKE_DISABLED" => Ok(AudioKeepAwakeMode::AudioKeepAwakeDisabled),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for AudioKeepAwakePolicy {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.default_revision.is_some() {
+            len += 1;
+        }
+        if self.device_revision.is_some() {
+            len += 1;
+        }
+        if self.default_enabled.is_some() {
+            len += 1;
+        }
+        if self.mode.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.AudioKeepAwakePolicy", len)?;
+        if let Some(v) = self.default_revision.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("defaultRevision", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.device_revision.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("deviceRevision", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.default_enabled.as_ref() {
+            struct_ser.serialize_field("defaultEnabled", v)?;
+        }
+        if let Some(v) = self.mode.as_ref() {
+            let v = AudioKeepAwakeMode::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("mode", &v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for AudioKeepAwakePolicy {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "default_revision",
+            "defaultRevision",
+            "device_revision",
+            "deviceRevision",
+            "default_enabled",
+            "defaultEnabled",
+            "mode",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            DefaultRevision,
+            DeviceRevision,
+            DefaultEnabled,
+            Mode,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "defaultRevision" | "default_revision" => Ok(GeneratedField::DefaultRevision),
+                            "deviceRevision" | "device_revision" => Ok(GeneratedField::DeviceRevision),
+                            "defaultEnabled" | "default_enabled" => Ok(GeneratedField::DefaultEnabled),
+                            "mode" => Ok(GeneratedField::Mode),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = AudioKeepAwakePolicy;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.AudioKeepAwakePolicy")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<AudioKeepAwakePolicy, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut default_revision__ = None;
+                let mut device_revision__ = None;
+                let mut default_enabled__ = None;
+                let mut mode__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::DefaultRevision => {
+                            if default_revision__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("defaultRevision"));
+                            }
+                            default_revision__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::DeviceRevision => {
+                            if device_revision__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("deviceRevision"));
+                            }
+                            device_revision__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::DefaultEnabled => {
+                            if default_enabled__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("defaultEnabled"));
+                            }
+                            default_enabled__ = map_.next_value()?;
+                        }
+                        GeneratedField::Mode => {
+                            if mode__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("mode"));
+                            }
+                            mode__ = map_.next_value::<::std::option::Option<AudioKeepAwakeMode>>()?.map(|x| x as i32);
+                        }
+                    }
+                }
+                Ok(AudioKeepAwakePolicy {
+                    default_revision: default_revision__,
+                    device_revision: device_revision__,
+                    default_enabled: default_enabled__,
+                    mode: mode__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.AudioKeepAwakePolicy", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for AudioKeepAwakeSource {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Unknown => "AUDIO_KEEP_AWAKE_SOURCE_UNKNOWN",
+            Self::Global => "AUDIO_KEEP_AWAKE_SOURCE_GLOBAL",
+            Self::Node => "AUDIO_KEEP_AWAKE_SOURCE_NODE",
+            Self::Override => "AUDIO_KEEP_AWAKE_SOURCE_OVERRIDE",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for AudioKeepAwakeSource {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "AUDIO_KEEP_AWAKE_SOURCE_UNKNOWN",
+            "AUDIO_KEEP_AWAKE_SOURCE_GLOBAL",
+            "AUDIO_KEEP_AWAKE_SOURCE_NODE",
+            "AUDIO_KEEP_AWAKE_SOURCE_OVERRIDE",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl serde::de::Visitor<'_> for GeneratedVisitor {
+            type Value = AudioKeepAwakeSource;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "AUDIO_KEEP_AWAKE_SOURCE_UNKNOWN" => Ok(AudioKeepAwakeSource::Unknown),
+                    "AUDIO_KEEP_AWAKE_SOURCE_GLOBAL" => Ok(AudioKeepAwakeSource::Global),
+                    "AUDIO_KEEP_AWAKE_SOURCE_NODE" => Ok(AudioKeepAwakeSource::Node),
+                    "AUDIO_KEEP_AWAKE_SOURCE_OVERRIDE" => Ok(AudioKeepAwakeSource::Override),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for AudioKeepAwakeState {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.applied.is_some() {
+            len += 1;
+        }
+        if self.enabled.is_some() {
+            len += 1;
+        }
+        if self.source.is_some() {
+            len += 1;
+        }
+        if self.default_revision.is_some() {
+            len += 1;
+        }
+        if self.device_revision.is_some() {
+            len += 1;
+        }
+        if self.error.is_some() {
+            len += 1;
+        }
+        if self.frequency_hz.is_some() {
+            len += 1;
+        }
+        if self.level_dbfs.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.AudioKeepAwakeState", len)?;
+        if let Some(v) = self.applied.as_ref() {
+            struct_ser.serialize_field("applied", v)?;
+        }
+        if let Some(v) = self.enabled.as_ref() {
+            struct_ser.serialize_field("enabled", v)?;
+        }
+        if let Some(v) = self.source.as_ref() {
+            let v = AudioKeepAwakeSource::try_from(*v)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", *v)))?;
+            struct_ser.serialize_field("source", &v)?;
+        }
+        if let Some(v) = self.default_revision.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("defaultRevision", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.device_revision.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("deviceRevision", ToString::to_string(&v).as_str())?;
+        }
+        if let Some(v) = self.error.as_ref() {
+            struct_ser.serialize_field("error", v)?;
+        }
+        if let Some(v) = self.frequency_hz.as_ref() {
+            struct_ser.serialize_field("frequencyHz", v)?;
+        }
+        if let Some(v) = self.level_dbfs.as_ref() {
+            struct_ser.serialize_field("levelDbfs", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for AudioKeepAwakeState {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "applied",
+            "enabled",
+            "source",
+            "default_revision",
+            "defaultRevision",
+            "device_revision",
+            "deviceRevision",
+            "error",
+            "frequency_hz",
+            "frequencyHz",
+            "level_dbfs",
+            "levelDbfs",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Applied,
+            Enabled,
+            Source,
+            DefaultRevision,
+            DeviceRevision,
+            Error,
+            FrequencyHz,
+            LevelDbfs,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "applied" => Ok(GeneratedField::Applied),
+                            "enabled" => Ok(GeneratedField::Enabled),
+                            "source" => Ok(GeneratedField::Source),
+                            "defaultRevision" | "default_revision" => Ok(GeneratedField::DefaultRevision),
+                            "deviceRevision" | "device_revision" => Ok(GeneratedField::DeviceRevision),
+                            "error" => Ok(GeneratedField::Error),
+                            "frequencyHz" | "frequency_hz" => Ok(GeneratedField::FrequencyHz),
+                            "levelDbfs" | "level_dbfs" => Ok(GeneratedField::LevelDbfs),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = AudioKeepAwakeState;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.AudioKeepAwakeState")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<AudioKeepAwakeState, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut applied__ = None;
+                let mut enabled__ = None;
+                let mut source__ = None;
+                let mut default_revision__ = None;
+                let mut device_revision__ = None;
+                let mut error__ = None;
+                let mut frequency_hz__ = None;
+                let mut level_dbfs__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Applied => {
+                            if applied__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("applied"));
+                            }
+                            applied__ = map_.next_value()?;
+                        }
+                        GeneratedField::Enabled => {
+                            if enabled__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("enabled"));
+                            }
+                            enabled__ = map_.next_value()?;
+                        }
+                        GeneratedField::Source => {
+                            if source__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("source"));
+                            }
+                            source__ = map_.next_value::<::std::option::Option<AudioKeepAwakeSource>>()?.map(|x| x as i32);
+                        }
+                        GeneratedField::DefaultRevision => {
+                            if default_revision__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("defaultRevision"));
+                            }
+                            default_revision__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::DeviceRevision => {
+                            if device_revision__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("deviceRevision"));
+                            }
+                            device_revision__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Error => {
+                            if error__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("error"));
+                            }
+                            error__ = map_.next_value()?;
+                        }
+                        GeneratedField::FrequencyHz => {
+                            if frequency_hz__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("frequencyHz"));
+                            }
+                            frequency_hz__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::LevelDbfs => {
+                            if level_dbfs__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("levelDbfs"));
+                            }
+                            level_dbfs__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(AudioKeepAwakeState {
+                    applied: applied__,
+                    enabled: enabled__,
+                    source: source__,
+                    default_revision: default_revision__,
+                    device_revision: device_revision__,
+                    error: error__,
+                    frequency_hz: frequency_hz__,
+                    level_dbfs: level_dbfs__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.AudioKeepAwakeState", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for AudioStreamChunk {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>

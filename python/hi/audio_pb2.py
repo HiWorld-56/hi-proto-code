@@ -26,7 +26,7 @@ from hi import options_pb2 as hi_dot_options__pb2
 from buf.validate import validate_pb2 as buf_dot_validate_dot_validate__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0ehi/audio.proto\x12\x02hi\x1a\x10hi/options.proto\x1a\x1b\x62uf/validate/validate.proto\"\xb3\x02\n\x0b\x41udioFormat\x12L\n\x08\x65ncoding\x18\x01 \x01(\x0e\x32\x18.hi.AudioFormat.EncodingB\x11\xbaH\n\x82\x01\x04\x10\x01 \x00\xc8\x01\x01\x90\xb5\x18\x03H\x00R\x08\x65ncoding\x88\x01\x01\x12\x39\n\x0bsample_rate\x18\x02 \x01(\rB\x13\xbaH\x0c*\x07\x18\x80\xee\x05(\xc0>\xc8\x01\x01\x90\xb5\x18\x03H\x01R\nsampleRate\x88\x01\x01\x12\x31\n\x08\x63hannels\x18\x03 \x01(\rB\x10\xbaH\t*\x04\x18\x02(\x01\xc8\x01\x01\x90\xb5\x18\x03H\x02R\x08\x63hannels\x88\x01\x01\"8\n\x08\x45ncoding\x12\x14\n\x10\x45NCODING_UNKNOWN\x10\x00\x12\x16\n\x12\x45NCODING_PCM_S16LE\x10\x01:\x04\x98\xb5\x18\x03\x42\x0b\n\t_encodingB\x0e\n\x0c_sample_rateB\x0b\n\t_channels\"M\n\x10\x41udioStreamStart\x12\x33\n\x06\x66ormat\x18\x01 \x01(\x0b\x32\x0f.hi.AudioFormatB\n\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\x06\x66ormat:\x04\x98\xb5\x18\x03\"\xcd\x01\n\x10\x41udioStreamChunk\x12+\n\x08sequence\x18\x01 \x01(\x04\x42\n\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03H\x00R\x08sequence\x88\x01\x01\x12\x34\n\rsample_offset\x18\x02 \x01(\x04\x42\n\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03H\x01R\x0csampleOffset\x88\x01\x01\x12)\n\x03pcm\x18\x03 \x01(\x0c\x42\x12\xbaH\x0bz\x06\x10\x01\x18\x80\x80\x04\xc8\x01\x01\x90\xb5\x18\x03H\x02R\x03pcm\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x0b\n\t_sequenceB\x10\n\x0e_sample_offsetB\x06\n\x04_pcm\"b\n\x0e\x41udioStreamEnd\x12\x38\n\rtotal_samples\x18\x01 \x01(\x04\x42\x0e\xbaH\x07\x32\x02 \x00\xc8\x01\x01\x90\xb5\x18\x03H\x00R\x0ctotalSamples\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x10\n\x0e_total_samples\"\x81\x02\n\x10\x41udioStreamEvent\x12\x33\n\tstream_id\x18\x01 \x01(\tB\x11\xbaH\nr\x05\x10\x01\x18\x80\x01\xc8\x01\x01\x90\xb5\x18\x03H\x01R\x08streamId\x88\x01\x01\x12\x32\n\x05start\x18\x02 \x01(\x0b\x32\x14.hi.AudioStreamStartB\x04\x90\xb5\x18\x03H\x00R\x05start\x12\x32\n\x05\x63hunk\x18\x03 \x01(\x0b\x32\x14.hi.AudioStreamChunkB\x04\x90\xb5\x18\x03H\x00R\x05\x63hunk\x12,\n\x03\x65nd\x18\x04 \x01(\x0b\x32\x12.hi.AudioStreamEndB\x04\x90\xb5\x18\x03H\x00R\x03\x65nd:\x04\x98\xb5\x18\x03\x42\x0e\n\x05\x65vent\x12\x05\xbaH\x02\x08\x01\x42\x0c\n\n_stream_idB&Z$github.com/HiWorld-56/hi-proto/go/hib\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0ehi/audio.proto\x12\x02hi\x1a\x10hi/options.proto\x1a\x1b\x62uf/validate/validate.proto\"\xb3\x02\n\x0b\x41udioFormat\x12L\n\x08\x65ncoding\x18\x01 \x01(\x0e\x32\x18.hi.AudioFormat.EncodingB\x11\xbaH\n\x82\x01\x04\x10\x01 \x00\xc8\x01\x01\x90\xb5\x18\x03H\x00R\x08\x65ncoding\x88\x01\x01\x12\x39\n\x0bsample_rate\x18\x02 \x01(\rB\x13\xbaH\x0c*\x07\x18\x80\xee\x05(\xc0>\xc8\x01\x01\x90\xb5\x18\x03H\x01R\nsampleRate\x88\x01\x01\x12\x31\n\x08\x63hannels\x18\x03 \x01(\rB\x10\xbaH\t*\x04\x18\x02(\x01\xc8\x01\x01\x90\xb5\x18\x03H\x02R\x08\x63hannels\x88\x01\x01\"8\n\x08\x45ncoding\x12\x14\n\x10\x45NCODING_UNKNOWN\x10\x00\x12\x16\n\x12\x45NCODING_PCM_S16LE\x10\x01:\x04\x98\xb5\x18\x03\x42\x0b\n\t_encodingB\x0e\n\x0c_sample_rateB\x0b\n\t_channels\"M\n\x10\x41udioStreamStart\x12\x33\n\x06\x66ormat\x18\x01 \x01(\x0b\x32\x0f.hi.AudioFormatB\n\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03R\x06\x66ormat:\x04\x98\xb5\x18\x03\"\xcd\x01\n\x10\x41udioStreamChunk\x12+\n\x08sequence\x18\x01 \x01(\x04\x42\n\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03H\x00R\x08sequence\x88\x01\x01\x12\x34\n\rsample_offset\x18\x02 \x01(\x04\x42\n\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03H\x01R\x0csampleOffset\x88\x01\x01\x12)\n\x03pcm\x18\x03 \x01(\x0c\x42\x12\xbaH\x0bz\x06\x10\x01\x18\x80\x80\x04\xc8\x01\x01\x90\xb5\x18\x03H\x02R\x03pcm\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x0b\n\t_sequenceB\x10\n\x0e_sample_offsetB\x06\n\x04_pcm\"b\n\x0e\x41udioStreamEnd\x12\x38\n\rtotal_samples\x18\x01 \x01(\x04\x42\x0e\xbaH\x07\x32\x02 \x00\xc8\x01\x01\x90\xb5\x18\x03H\x00R\x0ctotalSamples\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x10\n\x0e_total_samples\"\x81\x02\n\x10\x41udioStreamEvent\x12\x33\n\tstream_id\x18\x01 \x01(\tB\x11\xbaH\nr\x05\x10\x01\x18\x80\x01\xc8\x01\x01\x90\xb5\x18\x03H\x01R\x08streamId\x88\x01\x01\x12\x32\n\x05start\x18\x02 \x01(\x0b\x32\x14.hi.AudioStreamStartB\x04\x90\xb5\x18\x03H\x00R\x05start\x12\x32\n\x05\x63hunk\x18\x03 \x01(\x0b\x32\x14.hi.AudioStreamChunkB\x04\x90\xb5\x18\x03H\x00R\x05\x63hunk\x12,\n\x03\x65nd\x18\x04 \x01(\x0b\x32\x12.hi.AudioStreamEndB\x04\x90\xb5\x18\x03H\x00R\x03\x65nd:\x04\x98\xb5\x18\x03\x42\x0e\n\x05\x65vent\x12\x05\xbaH\x02\x08\x01\x42\x0c\n\n_stream_id\"\xd8\x02\n\x14\x41udioKeepAwakePolicy\x12>\n\x10\x64\x65\x66\x61ult_revision\x18\x01 \x01(\x04\x42\x0e\xbaH\x07\x32\x02 \x00\xc8\x01\x01\x90\xb5\x18\x03H\x00R\x0f\x64\x65\x66\x61ultRevision\x88\x01\x01\x12\x38\n\x0f\x64\x65vice_revision\x18\x02 \x01(\x04\x42\n\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03H\x01R\x0e\x64\x65viceRevision\x88\x01\x01\x12\x38\n\x0f\x64\x65\x66\x61ult_enabled\x18\x03 \x01(\x08\x42\n\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03H\x02R\x0e\x64\x65\x66\x61ultEnabled\x88\x01\x01\x12@\n\x04mode\x18\x04 \x01(\x0e\x32\x16.hi.AudioKeepAwakeModeB\x0f\xbaH\x08\x82\x01\x02\x10\x01\xc8\x01\x01\x90\xb5\x18\x03H\x03R\x04mode\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x13\n\x11_default_revisionB\x12\n\x10_device_revisionB\x12\n\x10_default_enabledB\x07\n\x05_mode\"\xb9\x04\n\x13\x41udioKeepAwakeState\x12)\n\x07\x61pplied\x18\x01 \x01(\x08\x42\n\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03H\x00R\x07\x61pplied\x88\x01\x01\x12#\n\x07\x65nabled\x18\x02 \x01(\x08\x42\x04\x90\xb5\x18\x03H\x01R\x07\x65nabled\x88\x01\x01\x12\x43\n\x06source\x18\x03 \x01(\x0e\x32\x18.hi.AudioKeepAwakeSourceB\x0c\xbaH\x05\x82\x01\x02\x10\x01\x90\xb5\x18\x03H\x02R\x06source\x88\x01\x01\x12>\n\x10\x64\x65\x66\x61ult_revision\x18\x04 \x01(\x04\x42\x0e\xbaH\x07\x32\x02 \x00\xc8\x01\x01\x90\xb5\x18\x03H\x03R\x0f\x64\x65\x66\x61ultRevision\x88\x01\x01\x12\x38\n\x0f\x64\x65vice_revision\x18\x05 \x01(\x04\x42\n\xbaH\x03\xc8\x01\x01\x90\xb5\x18\x03H\x04R\x0e\x64\x65viceRevision\x88\x01\x01\x12\'\n\x05\x65rror\x18\x06 \x01(\tB\x0c\xbaH\x05r\x03\x18\x80\x04\x90\xb5\x18\x03H\x05R\x05\x65rror\x88\x01\x01\x12\x35\n\x0c\x66requency_hz\x18\x07 \x01(\rB\r\xbaH\x06*\x04\x18\x1e(\n\x90\xb5\x18\x03H\x06R\x0b\x66requencyHz\x88\x01\x01\x12\x37\n\nlevel_dbfs\x18\x08 \x01(\x02\x42\x13\xbaH\x0c\n\n\x1d\x00\x00 \xc2-\x00\x00\xa0\xc2\x90\xb5\x18\x03H\x07R\tlevelDbfs\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\n\n\x08_appliedB\n\n\x08_enabledB\t\n\x07_sourceB\x13\n\x11_default_revisionB\x12\n\x10_device_revisionB\x08\n\x06_errorB\x0f\n\r_frequency_hzB\r\n\x0b_level_dbfs*o\n\x12\x41udioKeepAwakeMode\x12\x1c\n\x18\x41UDIO_KEEP_AWAKE_INHERIT\x10\x00\x12\x1c\n\x18\x41UDIO_KEEP_AWAKE_ENABLED\x10\x01\x12\x1d\n\x19\x41UDIO_KEEP_AWAKE_DISABLED\x10\x02*\xa7\x01\n\x14\x41udioKeepAwakeSource\x12#\n\x1f\x41UDIO_KEEP_AWAKE_SOURCE_UNKNOWN\x10\x00\x12\"\n\x1e\x41UDIO_KEEP_AWAKE_SOURCE_GLOBAL\x10\x01\x12 \n\x1c\x41UDIO_KEEP_AWAKE_SOURCE_NODE\x10\x02\x12$\n AUDIO_KEEP_AWAKE_SOURCE_OVERRIDE\x10\x03\x42&Z$github.com/HiWorld-56/hi-proto/go/hib\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -70,6 +70,38 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_AUDIOSTREAMEVENT'].fields_by_name['end']._serialized_options = b'\220\265\030\003'
   _globals['_AUDIOSTREAMEVENT']._loaded_options = None
   _globals['_AUDIOSTREAMEVENT']._serialized_options = b'\230\265\030\003'
+  _globals['_AUDIOKEEPAWAKEPOLICY'].fields_by_name['default_revision']._loaded_options = None
+  _globals['_AUDIOKEEPAWAKEPOLICY'].fields_by_name['default_revision']._serialized_options = b'\272H\0072\002 \000\310\001\001\220\265\030\003'
+  _globals['_AUDIOKEEPAWAKEPOLICY'].fields_by_name['device_revision']._loaded_options = None
+  _globals['_AUDIOKEEPAWAKEPOLICY'].fields_by_name['device_revision']._serialized_options = b'\272H\003\310\001\001\220\265\030\003'
+  _globals['_AUDIOKEEPAWAKEPOLICY'].fields_by_name['default_enabled']._loaded_options = None
+  _globals['_AUDIOKEEPAWAKEPOLICY'].fields_by_name['default_enabled']._serialized_options = b'\272H\003\310\001\001\220\265\030\003'
+  _globals['_AUDIOKEEPAWAKEPOLICY'].fields_by_name['mode']._loaded_options = None
+  _globals['_AUDIOKEEPAWAKEPOLICY'].fields_by_name['mode']._serialized_options = b'\272H\010\202\001\002\020\001\310\001\001\220\265\030\003'
+  _globals['_AUDIOKEEPAWAKEPOLICY']._loaded_options = None
+  _globals['_AUDIOKEEPAWAKEPOLICY']._serialized_options = b'\230\265\030\003'
+  _globals['_AUDIOKEEPAWAKESTATE'].fields_by_name['applied']._loaded_options = None
+  _globals['_AUDIOKEEPAWAKESTATE'].fields_by_name['applied']._serialized_options = b'\272H\003\310\001\001\220\265\030\003'
+  _globals['_AUDIOKEEPAWAKESTATE'].fields_by_name['enabled']._loaded_options = None
+  _globals['_AUDIOKEEPAWAKESTATE'].fields_by_name['enabled']._serialized_options = b'\220\265\030\003'
+  _globals['_AUDIOKEEPAWAKESTATE'].fields_by_name['source']._loaded_options = None
+  _globals['_AUDIOKEEPAWAKESTATE'].fields_by_name['source']._serialized_options = b'\272H\005\202\001\002\020\001\220\265\030\003'
+  _globals['_AUDIOKEEPAWAKESTATE'].fields_by_name['default_revision']._loaded_options = None
+  _globals['_AUDIOKEEPAWAKESTATE'].fields_by_name['default_revision']._serialized_options = b'\272H\0072\002 \000\310\001\001\220\265\030\003'
+  _globals['_AUDIOKEEPAWAKESTATE'].fields_by_name['device_revision']._loaded_options = None
+  _globals['_AUDIOKEEPAWAKESTATE'].fields_by_name['device_revision']._serialized_options = b'\272H\003\310\001\001\220\265\030\003'
+  _globals['_AUDIOKEEPAWAKESTATE'].fields_by_name['error']._loaded_options = None
+  _globals['_AUDIOKEEPAWAKESTATE'].fields_by_name['error']._serialized_options = b'\272H\005r\003\030\200\004\220\265\030\003'
+  _globals['_AUDIOKEEPAWAKESTATE'].fields_by_name['frequency_hz']._loaded_options = None
+  _globals['_AUDIOKEEPAWAKESTATE'].fields_by_name['frequency_hz']._serialized_options = b'\272H\006*\004\030\036(\n\220\265\030\003'
+  _globals['_AUDIOKEEPAWAKESTATE'].fields_by_name['level_dbfs']._loaded_options = None
+  _globals['_AUDIOKEEPAWAKESTATE'].fields_by_name['level_dbfs']._serialized_options = b'\272H\014\n\n\035\000\000 \302-\000\000\240\302\220\265\030\003'
+  _globals['_AUDIOKEEPAWAKESTATE']._loaded_options = None
+  _globals['_AUDIOKEEPAWAKESTATE']._serialized_options = b'\230\265\030\003'
+  _globals['_AUDIOKEEPAWAKEMODE']._serialized_start=1945
+  _globals['_AUDIOKEEPAWAKEMODE']._serialized_end=2056
+  _globals['_AUDIOKEEPAWAKESOURCE']._serialized_start=2059
+  _globals['_AUDIOKEEPAWAKESOURCE']._serialized_end=2226
   _globals['_AUDIOFORMAT']._serialized_start=70
   _globals['_AUDIOFORMAT']._serialized_end=377
   _globals['_AUDIOFORMAT_ENCODING']._serialized_start=273
@@ -82,4 +114,8 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_AUDIOSTREAMEND']._serialized_end=764
   _globals['_AUDIOSTREAMEVENT']._serialized_start=767
   _globals['_AUDIOSTREAMEVENT']._serialized_end=1024
+  _globals['_AUDIOKEEPAWAKEPOLICY']._serialized_start=1027
+  _globals['_AUDIOKEEPAWAKEPOLICY']._serialized_end=1371
+  _globals['_AUDIOKEEPAWAKESTATE']._serialized_start=1374
+  _globals['_AUDIOKEEPAWAKESTATE']._serialized_end=1943
 # @@protoc_insertion_point(module_scope)

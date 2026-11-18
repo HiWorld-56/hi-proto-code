@@ -1817,7 +1817,7 @@ pub struct BrainToFace {
     pub session: ::core::option::Option<ModuleSession>,
     #[prost(
         oneof = "brain_to_face::Cmd",
-        tags = "44, 45, 33, 34, 43, 42, 32, 31, 100, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21, 22, 24, 25, 26, 29, 30, 40, 41, 27"
+        tags = "46, 44, 45, 33, 34, 43, 42, 32, 31, 100, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21, 22, 24, 25, 26, 29, 30, 40, 41, 27"
     )]
     pub cmd: ::core::option::Option<brain_to_face::Cmd>,
 }
@@ -1825,6 +1825,8 @@ pub struct BrainToFace {
 pub mod brain_to_face {
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Cmd {
+        #[prost(message, tag = "46")]
+        AudioKeepAwake(super::AudioKeepAwakeSet),
         #[prost(message, tag = "44")]
         VoiceTurn(super::VoiceTurn),
         #[prost(message, tag = "45")]
@@ -2015,21 +2017,23 @@ pub struct StatusEvent {
     pub usb: ::core::option::Option<bool>,
 }
 /// face -> brain
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FaceToBrain {
     /// Hello前不传；业务消息必须匹配当前接管会话
     #[prost(message, optional, tag = "99")]
     pub session: ::core::option::Option<ModuleSession>,
     #[prost(
         oneof = "face_to_brain::Cmd",
-        tags = "44, 45, 43, 33, 40, 9, 42, 10, 100, 1, 2, 3, 4, 5, 6, 7, 8"
+        tags = "46, 44, 45, 43, 33, 40, 9, 42, 10, 100, 1, 2, 3, 4, 5, 6, 7, 8"
     )]
     pub cmd: ::core::option::Option<face_to_brain::Cmd>,
 }
 /// Nested message and enum types in `FaceToBrain`.
 pub mod face_to_brain {
-    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Cmd {
+        #[prost(message, tag = "46")]
+        AudioKeepAwake(super::AudioKeepAwakeAck),
         #[prost(message, tag = "44")]
         VoiceAssets(super::VoiceAssets),
         /// face sends CANCEL when the local dialogue is closed
@@ -2361,6 +2365,20 @@ pub mod product_action_result {
 pub struct ReceiptNotifications {
     #[prost(bool, optional, tag = "1")]
     pub enabled: ::core::option::Option<bool>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct AudioKeepAwakeSet {
+    #[prost(string, optional, tag = "1")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub policy: ::core::option::Option<super::AudioKeepAwakePolicy>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AudioKeepAwakeAck {
+    #[prost(string, optional, tag = "1")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub state: ::core::option::Option<super::AudioKeepAwakeState>,
 }
 /// 二态开关：语音监听开始/结束、音频播放开始/结束等
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]

@@ -1299,6 +1299,7 @@ enum BrainToFace_Cmd {
   terminalApplications,
   voiceTurn,
   voiceCue,
+  audioKeepAwake,
   control,
   notSet
 }
@@ -1343,6 +1344,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     TerminalApplicationResult? terminalApplications,
     VoiceTurn? voiceTurn,
     VoiceCue? voiceCue,
+    AudioKeepAwakeSet? audioKeepAwake,
     $12.ModuleSession? session,
     $12.BrainToModuleControl? control,
   }) {
@@ -1392,6 +1394,7 @@ class BrainToFace extends $pb.GeneratedMessage {
       result.terminalApplications = terminalApplications;
     if (voiceTurn != null) result.voiceTurn = voiceTurn;
     if (voiceCue != null) result.voiceCue = voiceCue;
+    if (audioKeepAwake != null) result.audioKeepAwake = audioKeepAwake;
     if (session != null) result.session = session;
     if (control != null) result.control = control;
     return result;
@@ -1445,6 +1448,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     43: BrainToFace_Cmd.terminalApplications,
     44: BrainToFace_Cmd.voiceTurn,
     45: BrainToFace_Cmd.voiceCue,
+    46: BrainToFace_Cmd.audioKeepAwake,
     100: BrainToFace_Cmd.control,
     0: BrainToFace_Cmd.notSet
   };
@@ -1491,6 +1495,7 @@ class BrainToFace extends $pb.GeneratedMessage {
       43,
       44,
       45,
+      46,
       100
     ])
     ..aOM<RobotInit>(1, _omitFieldNames ? '' : 'initRobot',
@@ -1573,6 +1578,8 @@ class BrainToFace extends $pb.GeneratedMessage {
         subBuilder: VoiceTurn.create)
     ..aOM<VoiceCue>(45, _omitFieldNames ? '' : 'voiceCue',
         subBuilder: VoiceCue.create)
+    ..aOM<AudioKeepAwakeSet>(46, _omitFieldNames ? '' : 'audioKeepAwake',
+        subBuilder: AudioKeepAwakeSet.create)
     ..aOM<$12.ModuleSession>(99, _omitFieldNames ? '' : 'session',
         subBuilder: $12.ModuleSession.create)
     ..aOM<$12.BrainToModuleControl>(100, _omitFieldNames ? '' : 'control',
@@ -1636,6 +1643,7 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(43)
   @$pb.TagNumber(44)
   @$pb.TagNumber(45)
+  @$pb.TagNumber(46)
   @$pb.TagNumber(100)
   BrainToFace_Cmd whichCmd() => _BrainToFace_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
@@ -1676,6 +1684,7 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(43)
   @$pb.TagNumber(44)
   @$pb.TagNumber(45)
+  @$pb.TagNumber(46)
   @$pb.TagNumber(100)
   void clearCmd() => $_clearField($_whichOneof(0));
 
@@ -2120,27 +2129,38 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(45)
   VoiceCue ensureVoiceCue() => $_ensure(37);
 
+  @$pb.TagNumber(46)
+  AudioKeepAwakeSet get audioKeepAwake => $_getN(38);
+  @$pb.TagNumber(46)
+  set audioKeepAwake(AudioKeepAwakeSet value) => $_setField(46, value);
+  @$pb.TagNumber(46)
+  $core.bool hasAudioKeepAwake() => $_has(38);
+  @$pb.TagNumber(46)
+  void clearAudioKeepAwake() => $_clearField(46);
+  @$pb.TagNumber(46)
+  AudioKeepAwakeSet ensureAudioKeepAwake() => $_ensure(38);
+
   @$pb.TagNumber(99)
-  $12.ModuleSession get session => $_getN(38);
+  $12.ModuleSession get session => $_getN(39);
   @$pb.TagNumber(99)
   set session($12.ModuleSession value) => $_setField(99, value);
   @$pb.TagNumber(99)
-  $core.bool hasSession() => $_has(38);
+  $core.bool hasSession() => $_has(39);
   @$pb.TagNumber(99)
   void clearSession() => $_clearField(99);
   @$pb.TagNumber(99)
-  $12.ModuleSession ensureSession() => $_ensure(38);
+  $12.ModuleSession ensureSession() => $_ensure(39);
 
   @$pb.TagNumber(100)
-  $12.BrainToModuleControl get control => $_getN(39);
+  $12.BrainToModuleControl get control => $_getN(40);
   @$pb.TagNumber(100)
   set control($12.BrainToModuleControl value) => $_setField(100, value);
   @$pb.TagNumber(100)
-  $core.bool hasControl() => $_has(39);
+  $core.bool hasControl() => $_has(40);
   @$pb.TagNumber(100)
   void clearControl() => $_clearField(100);
   @$pb.TagNumber(100)
-  $12.BrainToModuleControl ensureControl() => $_ensure(39);
+  $12.BrainToModuleControl ensureControl() => $_ensure(40);
 }
 
 /// face -> brain:要一份屏幕放得了的视频。
@@ -2522,6 +2542,7 @@ enum FaceToBrain_Cmd {
   terminalApplications,
   voiceAssets,
   voiceTurn,
+  audioKeepAwake,
   control,
   notSet
 }
@@ -2545,6 +2566,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
     TerminalApplicationRequest? terminalApplications,
     VoiceAssets? voiceAssets,
     VoiceTurn? voiceTurn,
+    AudioKeepAwakeAck? audioKeepAwake,
     $12.ModuleSession? session,
     $12.ModuleToBrainControl? control,
   }) {
@@ -2569,6 +2591,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
       result.terminalApplications = terminalApplications;
     if (voiceAssets != null) result.voiceAssets = voiceAssets;
     if (voiceTurn != null) result.voiceTurn = voiceTurn;
+    if (audioKeepAwake != null) result.audioKeepAwake = audioKeepAwake;
     if (session != null) result.session = session;
     if (control != null) result.control = control;
     return result;
@@ -2600,6 +2623,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
     43: FaceToBrain_Cmd.terminalApplications,
     44: FaceToBrain_Cmd.voiceAssets,
     45: FaceToBrain_Cmd.voiceTurn,
+    46: FaceToBrain_Cmd.audioKeepAwake,
     100: FaceToBrain_Cmd.control,
     0: FaceToBrain_Cmd.notSet
   };
@@ -2607,7 +2631,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'FaceToBrain',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..oo(0, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 33, 40, 42, 43, 44, 45, 100])
+    ..oo(0, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 33, 40, 42, 43, 44, 45, 46, 100])
     ..aE<StateToggle>(1, _omitFieldNames ? '' : 'voiceState',
         enumValues: StateToggle.values)
     ..aOM<UpdateAction>(2, _omitFieldNames ? '' : 'updateAction',
@@ -2642,6 +2666,8 @@ class FaceToBrain extends $pb.GeneratedMessage {
         subBuilder: VoiceAssets.create)
     ..aOM<VoiceTurn>(45, _omitFieldNames ? '' : 'voiceTurn',
         subBuilder: VoiceTurn.create)
+    ..aOM<AudioKeepAwakeAck>(46, _omitFieldNames ? '' : 'audioKeepAwake',
+        subBuilder: AudioKeepAwakeAck.create)
     ..aOM<$12.ModuleSession>(99, _omitFieldNames ? '' : 'session',
         subBuilder: $12.ModuleSession.create)
     ..aOM<$12.ModuleToBrainControl>(100, _omitFieldNames ? '' : 'control',
@@ -2683,6 +2709,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
   @$pb.TagNumber(43)
   @$pb.TagNumber(44)
   @$pb.TagNumber(45)
+  @$pb.TagNumber(46)
   @$pb.TagNumber(100)
   FaceToBrain_Cmd whichCmd() => _FaceToBrain_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
@@ -2701,6 +2728,7 @@ class FaceToBrain extends $pb.GeneratedMessage {
   @$pb.TagNumber(43)
   @$pb.TagNumber(44)
   @$pb.TagNumber(45)
+  @$pb.TagNumber(46)
   @$pb.TagNumber(100)
   void clearCmd() => $_clearField($_whichOneof(0));
 
@@ -2894,27 +2922,38 @@ class FaceToBrain extends $pb.GeneratedMessage {
   @$pb.TagNumber(45)
   VoiceTurn ensureVoiceTurn() => $_ensure(15);
 
+  @$pb.TagNumber(46)
+  AudioKeepAwakeAck get audioKeepAwake => $_getN(16);
+  @$pb.TagNumber(46)
+  set audioKeepAwake(AudioKeepAwakeAck value) => $_setField(46, value);
+  @$pb.TagNumber(46)
+  $core.bool hasAudioKeepAwake() => $_has(16);
+  @$pb.TagNumber(46)
+  void clearAudioKeepAwake() => $_clearField(46);
+  @$pb.TagNumber(46)
+  AudioKeepAwakeAck ensureAudioKeepAwake() => $_ensure(16);
+
   @$pb.TagNumber(99)
-  $12.ModuleSession get session => $_getN(16);
+  $12.ModuleSession get session => $_getN(17);
   @$pb.TagNumber(99)
   set session($12.ModuleSession value) => $_setField(99, value);
   @$pb.TagNumber(99)
-  $core.bool hasSession() => $_has(16);
+  $core.bool hasSession() => $_has(17);
   @$pb.TagNumber(99)
   void clearSession() => $_clearField(99);
   @$pb.TagNumber(99)
-  $12.ModuleSession ensureSession() => $_ensure(16);
+  $12.ModuleSession ensureSession() => $_ensure(17);
 
   @$pb.TagNumber(100)
-  $12.ModuleToBrainControl get control => $_getN(17);
+  $12.ModuleToBrainControl get control => $_getN(18);
   @$pb.TagNumber(100)
   set control($12.ModuleToBrainControl value) => $_setField(100, value);
   @$pb.TagNumber(100)
-  $core.bool hasControl() => $_has(17);
+  $core.bool hasControl() => $_has(18);
   @$pb.TagNumber(100)
   void clearControl() => $_clearField(100);
   @$pb.TagNumber(100)
-  $12.ModuleToBrainControl ensureControl() => $_ensure(17);
+  $12.ModuleToBrainControl ensureControl() => $_ensure(18);
 }
 
 /// ── 跟单:开单卡 ──────────────────────────────────────────────
@@ -3712,6 +3751,144 @@ class ReceiptNotifications extends $pb.GeneratedMessage {
   $core.bool hasEnabled() => $_has(0);
   @$pb.TagNumber(1)
   void clearEnabled() => $_clearField(1);
+}
+
+class AudioKeepAwakeSet extends $pb.GeneratedMessage {
+  factory AudioKeepAwakeSet({
+    $core.String? requestId,
+    $2.AudioKeepAwakePolicy? policy,
+  }) {
+    final result = create();
+    if (requestId != null) result.requestId = requestId;
+    if (policy != null) result.policy = policy;
+    return result;
+  }
+
+  AudioKeepAwakeSet._();
+
+  factory AudioKeepAwakeSet.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory AudioKeepAwakeSet.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'AudioKeepAwakeSet',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'requestId')
+    ..aOM<$2.AudioKeepAwakePolicy>(2, _omitFieldNames ? '' : 'policy',
+        subBuilder: $2.AudioKeepAwakePolicy.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AudioKeepAwakeSet clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AudioKeepAwakeSet copyWith(void Function(AudioKeepAwakeSet) updates) =>
+      super.copyWith((message) => updates(message as AudioKeepAwakeSet))
+          as AudioKeepAwakeSet;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static AudioKeepAwakeSet create() => AudioKeepAwakeSet._();
+  @$core.override
+  AudioKeepAwakeSet createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static AudioKeepAwakeSet getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<AudioKeepAwakeSet>(create);
+  static AudioKeepAwakeSet? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get requestId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set requestId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRequestId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRequestId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $2.AudioKeepAwakePolicy get policy => $_getN(1);
+  @$pb.TagNumber(2)
+  set policy($2.AudioKeepAwakePolicy value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPolicy() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPolicy() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $2.AudioKeepAwakePolicy ensurePolicy() => $_ensure(1);
+}
+
+class AudioKeepAwakeAck extends $pb.GeneratedMessage {
+  factory AudioKeepAwakeAck({
+    $core.String? requestId,
+    $2.AudioKeepAwakeState? state,
+  }) {
+    final result = create();
+    if (requestId != null) result.requestId = requestId;
+    if (state != null) result.state = state;
+    return result;
+  }
+
+  AudioKeepAwakeAck._();
+
+  factory AudioKeepAwakeAck.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory AudioKeepAwakeAck.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'AudioKeepAwakeAck',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'requestId')
+    ..aOM<$2.AudioKeepAwakeState>(2, _omitFieldNames ? '' : 'state',
+        subBuilder: $2.AudioKeepAwakeState.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AudioKeepAwakeAck clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AudioKeepAwakeAck copyWith(void Function(AudioKeepAwakeAck) updates) =>
+      super.copyWith((message) => updates(message as AudioKeepAwakeAck))
+          as AudioKeepAwakeAck;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static AudioKeepAwakeAck create() => AudioKeepAwakeAck._();
+  @$core.override
+  AudioKeepAwakeAck createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static AudioKeepAwakeAck getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<AudioKeepAwakeAck>(create);
+  static AudioKeepAwakeAck? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get requestId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set requestId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRequestId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRequestId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $2.AudioKeepAwakeState get state => $_getN(1);
+  @$pb.TagNumber(2)
+  set state($2.AudioKeepAwakeState value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasState() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearState() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $2.AudioKeepAwakeState ensureState() => $_ensure(1);
 }
 
 const $core.bool _omitFieldNames =

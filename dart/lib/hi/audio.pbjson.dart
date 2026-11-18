@@ -15,6 +15,39 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use audioKeepAwakeModeDescriptor instead')
+const AudioKeepAwakeMode$json = {
+  '1': 'AudioKeepAwakeMode',
+  '2': [
+    {'1': 'AUDIO_KEEP_AWAKE_INHERIT', '2': 0},
+    {'1': 'AUDIO_KEEP_AWAKE_ENABLED', '2': 1},
+    {'1': 'AUDIO_KEEP_AWAKE_DISABLED', '2': 2},
+  ],
+};
+
+/// Descriptor for `AudioKeepAwakeMode`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List audioKeepAwakeModeDescriptor = $convert.base64Decode(
+    'ChJBdWRpb0tlZXBBd2FrZU1vZGUSHAoYQVVESU9fS0VFUF9BV0FLRV9JTkhFUklUEAASHAoYQV'
+    'VESU9fS0VFUF9BV0FLRV9FTkFCTEVEEAESHQoZQVVESU9fS0VFUF9BV0FLRV9ESVNBQkxFRBAC');
+
+@$core.Deprecated('Use audioKeepAwakeSourceDescriptor instead')
+const AudioKeepAwakeSource$json = {
+  '1': 'AudioKeepAwakeSource',
+  '2': [
+    {'1': 'AUDIO_KEEP_AWAKE_SOURCE_UNKNOWN', '2': 0},
+    {'1': 'AUDIO_KEEP_AWAKE_SOURCE_GLOBAL', '2': 1},
+    {'1': 'AUDIO_KEEP_AWAKE_SOURCE_NODE', '2': 2},
+    {'1': 'AUDIO_KEEP_AWAKE_SOURCE_OVERRIDE', '2': 3},
+  ],
+};
+
+/// Descriptor for `AudioKeepAwakeSource`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List audioKeepAwakeSourceDescriptor = $convert.base64Decode(
+    'ChRBdWRpb0tlZXBBd2FrZVNvdXJjZRIjCh9BVURJT19LRUVQX0FXQUtFX1NPVVJDRV9VTktOT1'
+    'dOEAASIgoeQVVESU9fS0VFUF9BV0FLRV9TT1VSQ0VfR0xPQkFMEAESIAocQVVESU9fS0VFUF9B'
+    'V0FLRV9TT1VSQ0VfTk9ERRACEiQKIEFVRElPX0tFRVBfQVdBS0VfU09VUkNFX09WRVJSSURFEA'
+    'M=');
+
 @$core.Deprecated('Use audioFormatDescriptor instead')
 const AudioFormat$json = {
   '1': 'AudioFormat',
@@ -235,3 +268,181 @@ final $typed_data.Uint8List audioStreamEventDescriptor = $convert.base64Decode(
     'tRgDSABSBXN0YXJ0EjIKBWNodW5rGAMgASgLMhQuaGkuQXVkaW9TdHJlYW1DaHVua0IEkLUYA0'
     'gAUgVjaHVuaxIsCgNlbmQYBCABKAsyEi5oaS5BdWRpb1N0cmVhbUVuZEIEkLUYA0gAUgNlbmQ6'
     'BJi1GANCDgoFZXZlbnQSBbpIAggBQgwKCl9zdHJlYW1faWQ=');
+
+@$core.Deprecated('Use audioKeepAwakePolicyDescriptor instead')
+const AudioKeepAwakePolicy$json = {
+  '1': 'AudioKeepAwakePolicy',
+  '2': [
+    {
+      '1': 'default_revision',
+      '3': 1,
+      '4': 1,
+      '5': 4,
+      '8': {},
+      '9': 0,
+      '10': 'defaultRevision',
+      '17': true
+    },
+    {
+      '1': 'device_revision',
+      '3': 2,
+      '4': 1,
+      '5': 4,
+      '8': {},
+      '9': 1,
+      '10': 'deviceRevision',
+      '17': true
+    },
+    {
+      '1': 'default_enabled',
+      '3': 3,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 2,
+      '10': 'defaultEnabled',
+      '17': true
+    },
+    {
+      '1': 'mode',
+      '3': 4,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.AudioKeepAwakeMode',
+      '8': {},
+      '9': 3,
+      '10': 'mode',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_default_revision'},
+    {'1': '_device_revision'},
+    {'1': '_default_enabled'},
+    {'1': '_mode'},
+  ],
+};
+
+/// Descriptor for `AudioKeepAwakePolicy`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List audioKeepAwakePolicyDescriptor = $convert.base64Decode(
+    'ChRBdWRpb0tlZXBBd2FrZVBvbGljeRI+ChBkZWZhdWx0X3JldmlzaW9uGAEgASgEQg66SAfIAQ'
+    'EyAiAAkLUYA0gAUg9kZWZhdWx0UmV2aXNpb26IAQESOAoPZGV2aWNlX3JldmlzaW9uGAIgASgE'
+    'Qgq6SAPIAQGQtRgDSAFSDmRldmljZVJldmlzaW9uiAEBEjgKD2RlZmF1bHRfZW5hYmxlZBgDIA'
+    'EoCEIKukgDyAEBkLUYA0gCUg5kZWZhdWx0RW5hYmxlZIgBARJACgRtb2RlGAQgASgOMhYuaGku'
+    'QXVkaW9LZWVwQXdha2VNb2RlQg+6SAjIAQGCAQIQAZC1GANIA1IEbW9kZYgBAToEmLUYA0ITCh'
+    'FfZGVmYXVsdF9yZXZpc2lvbkISChBfZGV2aWNlX3JldmlzaW9uQhIKEF9kZWZhdWx0X2VuYWJs'
+    'ZWRCBwoFX21vZGU=');
+
+@$core.Deprecated('Use audioKeepAwakeStateDescriptor instead')
+const AudioKeepAwakeState$json = {
+  '1': 'AudioKeepAwakeState',
+  '2': [
+    {
+      '1': 'applied',
+      '3': 1,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 0,
+      '10': 'applied',
+      '17': true
+    },
+    {
+      '1': 'enabled',
+      '3': 2,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 1,
+      '10': 'enabled',
+      '17': true
+    },
+    {
+      '1': 'source',
+      '3': 3,
+      '4': 1,
+      '5': 14,
+      '6': '.hi.AudioKeepAwakeSource',
+      '8': {},
+      '9': 2,
+      '10': 'source',
+      '17': true
+    },
+    {
+      '1': 'default_revision',
+      '3': 4,
+      '4': 1,
+      '5': 4,
+      '8': {},
+      '9': 3,
+      '10': 'defaultRevision',
+      '17': true
+    },
+    {
+      '1': 'device_revision',
+      '3': 5,
+      '4': 1,
+      '5': 4,
+      '8': {},
+      '9': 4,
+      '10': 'deviceRevision',
+      '17': true
+    },
+    {
+      '1': 'error',
+      '3': 6,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 5,
+      '10': 'error',
+      '17': true
+    },
+    {
+      '1': 'frequency_hz',
+      '3': 7,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 6,
+      '10': 'frequencyHz',
+      '17': true
+    },
+    {
+      '1': 'level_dbfs',
+      '3': 8,
+      '4': 1,
+      '5': 2,
+      '8': {},
+      '9': 7,
+      '10': 'levelDbfs',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_applied'},
+    {'1': '_enabled'},
+    {'1': '_source'},
+    {'1': '_default_revision'},
+    {'1': '_device_revision'},
+    {'1': '_error'},
+    {'1': '_frequency_hz'},
+    {'1': '_level_dbfs'},
+  ],
+};
+
+/// Descriptor for `AudioKeepAwakeState`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List audioKeepAwakeStateDescriptor = $convert.base64Decode(
+    'ChNBdWRpb0tlZXBBd2FrZVN0YXRlEikKB2FwcGxpZWQYASABKAhCCrpIA8gBAZC1GANIAFIHYX'
+    'BwbGllZIgBARIjCgdlbmFibGVkGAIgASgIQgSQtRgDSAFSB2VuYWJsZWSIAQESQwoGc291cmNl'
+    'GAMgASgOMhguaGkuQXVkaW9LZWVwQXdha2VTb3VyY2VCDLpIBYIBAhABkLUYA0gCUgZzb3VyY2'
+    'WIAQESPgoQZGVmYXVsdF9yZXZpc2lvbhgEIAEoBEIOukgHyAEBMgIgAJC1GANIA1IPZGVmYXVs'
+    'dFJldmlzaW9uiAEBEjgKD2RldmljZV9yZXZpc2lvbhgFIAEoBEIKukgDyAEBkLUYA0gEUg5kZX'
+    'ZpY2VSZXZpc2lvbogBARInCgVlcnJvchgGIAEoCUIMukgFcgMYgASQtRgDSAVSBWVycm9yiAEB'
+    'EjUKDGZyZXF1ZW5jeV9oehgHIAEoDUINukgGKgQYHigKkLUYA0gGUgtmcmVxdWVuY3lIeogBAR'
+    'I3CgpsZXZlbF9kYmZzGAggASgCQhO6SAwKCh0AACDCLQAAoMKQtRgDSAdSCWxldmVsRGJmc4gB'
+    'AToEmLUYA0IKCghfYXBwbGllZEIKCghfZW5hYmxlZEIJCgdfc291cmNlQhMKEV9kZWZhdWx0X3'
+    'JldmlzaW9uQhIKEF9kZXZpY2VfcmV2aXNpb25CCAoGX2Vycm9yQg8KDV9mcmVxdWVuY3lfaHpC'
+    'DQoLX2xldmVsX2RiZnM=');
