@@ -61,6 +61,9 @@ pub struct Issue {
     pub revision: ::core::option::Option<u64>,
     #[prost(string, optional, tag = "12")]
     pub last_result: ::core::option::Option<::prost::alloc::string::String>,
+    /// absent/false: normal list; true: recoverable trash
+    #[prost(bool, optional, tag = "13")]
+    pub trashed: ::core::option::Option<bool>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ListIssuesReq {
@@ -74,6 +77,9 @@ pub struct ListIssuesReq {
     pub offset: ::core::option::Option<u32>,
     #[prost(uint32, optional, tag = "5")]
     pub limit: ::core::option::Option<u32>,
+    /// absent/false: normal list only; true: trash only
+    #[prost(bool, optional, tag = "6")]
+    pub trashed: ::core::option::Option<bool>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListIssuesResp {
@@ -102,6 +108,9 @@ pub struct UpdateIssueReq {
     pub clear_environment: ::core::option::Option<bool>,
     #[prost(string, optional, tag = "6")]
     pub reason: ::core::option::Option<::prost::alloc::string::String>,
+    /// absent: unchanged; true: trash + HANDLED; false: restore without auto-execution
+    #[prost(bool, optional, tag = "7")]
+    pub trashed: ::core::option::Option<bool>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct LoginTicket {
@@ -419,6 +428,8 @@ pub enum IssueStatus {
     InProgress = 2,
     Deferred = 3,
     Resolved = 4,
+    /// non-issue processed; distinct from a verified repair
+    Handled = 5,
 }
 impl IssueStatus {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -432,6 +443,7 @@ impl IssueStatus {
             Self::InProgress => "ISSUE_STATUS_IN_PROGRESS",
             Self::Deferred => "ISSUE_STATUS_DEFERRED",
             Self::Resolved => "ISSUE_STATUS_RESOLVED",
+            Self::Handled => "ISSUE_STATUS_HANDLED",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -442,6 +454,7 @@ impl IssueStatus {
             "ISSUE_STATUS_IN_PROGRESS" => Some(Self::InProgress),
             "ISSUE_STATUS_DEFERRED" => Some(Self::Deferred),
             "ISSUE_STATUS_RESOLVED" => Some(Self::Resolved),
+            "ISSUE_STATUS_HANDLED" => Some(Self::Handled),
             _ => None,
         }
     }
@@ -484,6 +497,8 @@ pub enum WorkKind {
     Feature = 2,
     Mixed = 3,
     Clarification = 4,
+    /// no actionable product question or reported defect
+    NonIssue = 5,
 }
 impl WorkKind {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -497,6 +512,7 @@ impl WorkKind {
             Self::Feature => "WORK_KIND_FEATURE",
             Self::Mixed => "WORK_KIND_MIXED",
             Self::Clarification => "WORK_KIND_CLARIFICATION",
+            Self::NonIssue => "WORK_KIND_NON_ISSUE",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -507,6 +523,7 @@ impl WorkKind {
             "WORK_KIND_FEATURE" => Some(Self::Feature),
             "WORK_KIND_MIXED" => Some(Self::Mixed),
             "WORK_KIND_CLARIFICATION" => Some(Self::Clarification),
+            "WORK_KIND_NON_ISSUE" => Some(Self::NonIssue),
             _ => None,
         }
     }

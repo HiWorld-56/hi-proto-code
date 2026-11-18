@@ -329,6 +329,7 @@ class Issue extends $pb.GeneratedMessage {
     $fixnum.Int64? updatedAt,
     $fixnum.Int64? revision,
     $core.String? lastResult,
+    $core.bool? trashed,
   }) {
     final result = create();
     if (id != null) result.id = id;
@@ -343,6 +344,7 @@ class Issue extends $pb.GeneratedMessage {
     if (updatedAt != null) result.updatedAt = updatedAt;
     if (revision != null) result.revision = revision;
     if (lastResult != null) result.lastResult = lastResult;
+    if (trashed != null) result.trashed = trashed;
     return result;
   }
 
@@ -380,6 +382,7 @@ class Issue extends $pb.GeneratedMessage {
         11, _omitFieldNames ? '' : 'revision', $pb.PbFieldType.OU6,
         defaultOrMaker: $fixnum.Int64.ZERO)
     ..aOS(12, _omitFieldNames ? '' : 'lastResult')
+    ..aOB(13, _omitFieldNames ? '' : 'trashed')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -499,6 +502,15 @@ class Issue extends $pb.GeneratedMessage {
   $core.bool hasLastResult() => $_has(11);
   @$pb.TagNumber(12)
   void clearLastResult() => $_clearField(12);
+
+  @$pb.TagNumber(13)
+  $core.bool get trashed => $_getBF(12);
+  @$pb.TagNumber(13)
+  set trashed($core.bool value) => $_setBool(12, value);
+  @$pb.TagNumber(13)
+  $core.bool hasTrashed() => $_has(12);
+  @$pb.TagNumber(13)
+  void clearTrashed() => $_clearField(13);
 }
 
 class ListIssuesReq extends $pb.GeneratedMessage {
@@ -508,6 +520,7 @@ class ListIssuesReq extends $pb.GeneratedMessage {
     $core.String? search,
     $core.int? offset,
     $core.int? limit,
+    $core.bool? trashed,
   }) {
     final result = create();
     if (status != null) result.status = status;
@@ -515,6 +528,7 @@ class ListIssuesReq extends $pb.GeneratedMessage {
     if (search != null) result.search = search;
     if (offset != null) result.offset = offset;
     if (limit != null) result.limit = limit;
+    if (trashed != null) result.trashed = trashed;
     return result;
   }
 
@@ -538,6 +552,7 @@ class ListIssuesReq extends $pb.GeneratedMessage {
     ..aOS(3, _omitFieldNames ? '' : 'search')
     ..aI(4, _omitFieldNames ? '' : 'offset', fieldType: $pb.PbFieldType.OU3)
     ..aI(5, _omitFieldNames ? '' : 'limit', fieldType: $pb.PbFieldType.OU3)
+    ..aOB(6, _omitFieldNames ? '' : 'trashed')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -603,6 +618,15 @@ class ListIssuesReq extends $pb.GeneratedMessage {
   $core.bool hasLimit() => $_has(4);
   @$pb.TagNumber(5)
   void clearLimit() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.bool get trashed => $_getBF(5);
+  @$pb.TagNumber(6)
+  set trashed($core.bool value) => $_setBool(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasTrashed() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearTrashed() => $_clearField(6);
 }
 
 class ListIssuesResp extends $pb.GeneratedMessage {
@@ -727,6 +751,7 @@ class UpdateIssueReq extends $pb.GeneratedMessage {
     Environment? environment,
     $core.bool? clearEnvironment_5,
     $core.String? reason,
+    $core.bool? trashed,
   }) {
     final result = create();
     if (id != null) result.id = id;
@@ -736,6 +761,7 @@ class UpdateIssueReq extends $pb.GeneratedMessage {
     if (clearEnvironment_5 != null)
       result.clearEnvironment_5 = clearEnvironment_5;
     if (reason != null) result.reason = reason;
+    if (trashed != null) result.trashed = trashed;
     return result;
   }
 
@@ -763,6 +789,7 @@ class UpdateIssueReq extends $pb.GeneratedMessage {
         enumValues: Environment.values)
     ..aOB(5, _omitFieldNames ? '' : 'clearEnvironment')
     ..aOS(6, _omitFieldNames ? '' : 'reason')
+    ..aOB(7, _omitFieldNames ? '' : 'trashed')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -837,6 +864,15 @@ class UpdateIssueReq extends $pb.GeneratedMessage {
   $core.bool hasReason() => $_has(5);
   @$pb.TagNumber(6)
   void clearReason() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.bool get trashed => $_getBF(6);
+  @$pb.TagNumber(7)
+  set trashed($core.bool value) => $_setBool(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasTrashed() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearTrashed() => $_clearField(7);
 }
 
 class LoginTicket extends $pb.GeneratedMessage {

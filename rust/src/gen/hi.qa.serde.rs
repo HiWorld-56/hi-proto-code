@@ -2473,6 +2473,9 @@ impl serde::Serialize for Issue {
         if self.last_result.is_some() {
             len += 1;
         }
+        if self.trashed.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.qa.Issue", len)?;
         if let Some(v) = self.id.as_ref() {
             #[allow(clippy::needless_borrow)]
@@ -2522,6 +2525,9 @@ impl serde::Serialize for Issue {
         if let Some(v) = self.last_result.as_ref() {
             struct_ser.serialize_field("lastResult", v)?;
         }
+        if let Some(v) = self.trashed.as_ref() {
+            struct_ser.serialize_field("trashed", v)?;
+        }
         struct_ser.end()
     }
 }
@@ -2547,6 +2553,7 @@ impl<'de> serde::Deserialize<'de> for Issue {
             "revision",
             "last_result",
             "lastResult",
+            "trashed",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -2563,6 +2570,7 @@ impl<'de> serde::Deserialize<'de> for Issue {
             UpdatedAt,
             Revision,
             LastResult,
+            Trashed,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -2596,6 +2604,7 @@ impl<'de> serde::Deserialize<'de> for Issue {
                             "updatedAt" | "updated_at" => Ok(GeneratedField::UpdatedAt),
                             "revision" => Ok(GeneratedField::Revision),
                             "lastResult" | "last_result" => Ok(GeneratedField::LastResult),
+                            "trashed" => Ok(GeneratedField::Trashed),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -2627,6 +2636,7 @@ impl<'de> serde::Deserialize<'de> for Issue {
                 let mut updated_at__ = None;
                 let mut revision__ = None;
                 let mut last_result__ = None;
+                let mut trashed__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Id => {
@@ -2709,6 +2719,12 @@ impl<'de> serde::Deserialize<'de> for Issue {
                             }
                             last_result__ = map_.next_value()?;
                         }
+                        GeneratedField::Trashed => {
+                            if trashed__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("trashed"));
+                            }
+                            trashed__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(Issue {
@@ -2724,6 +2740,7 @@ impl<'de> serde::Deserialize<'de> for Issue {
                     updated_at: updated_at__,
                     revision: revision__,
                     last_result: last_result__,
+                    trashed: trashed__,
                 })
             }
         }
@@ -2983,6 +3000,7 @@ impl serde::Serialize for IssueStatus {
             Self::InProgress => "ISSUE_STATUS_IN_PROGRESS",
             Self::Deferred => "ISSUE_STATUS_DEFERRED",
             Self::Resolved => "ISSUE_STATUS_RESOLVED",
+            Self::Handled => "ISSUE_STATUS_HANDLED",
         };
         serializer.serialize_str(variant)
     }
@@ -2999,6 +3017,7 @@ impl<'de> serde::Deserialize<'de> for IssueStatus {
             "ISSUE_STATUS_IN_PROGRESS",
             "ISSUE_STATUS_DEFERRED",
             "ISSUE_STATUS_RESOLVED",
+            "ISSUE_STATUS_HANDLED",
         ];
 
         struct GeneratedVisitor;
@@ -3044,6 +3063,7 @@ impl<'de> serde::Deserialize<'de> for IssueStatus {
                     "ISSUE_STATUS_IN_PROGRESS" => Ok(IssueStatus::InProgress),
                     "ISSUE_STATUS_DEFERRED" => Ok(IssueStatus::Deferred),
                     "ISSUE_STATUS_RESOLVED" => Ok(IssueStatus::Resolved),
+                    "ISSUE_STATUS_HANDLED" => Ok(IssueStatus::Handled),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }
@@ -3514,6 +3534,9 @@ impl serde::Serialize for ListIssuesReq {
         if self.limit.is_some() {
             len += 1;
         }
+        if self.trashed.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.qa.ListIssuesReq", len)?;
         if let Some(v) = self.status.as_ref() {
             let v = IssueStatus::try_from(*v)
@@ -3534,6 +3557,9 @@ impl serde::Serialize for ListIssuesReq {
         if let Some(v) = self.limit.as_ref() {
             struct_ser.serialize_field("limit", v)?;
         }
+        if let Some(v) = self.trashed.as_ref() {
+            struct_ser.serialize_field("trashed", v)?;
+        }
         struct_ser.end()
     }
 }
@@ -3549,6 +3575,7 @@ impl<'de> serde::Deserialize<'de> for ListIssuesReq {
             "search",
             "offset",
             "limit",
+            "trashed",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -3558,6 +3585,7 @@ impl<'de> serde::Deserialize<'de> for ListIssuesReq {
             Search,
             Offset,
             Limit,
+            Trashed,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -3584,6 +3612,7 @@ impl<'de> serde::Deserialize<'de> for ListIssuesReq {
                             "search" => Ok(GeneratedField::Search),
                             "offset" => Ok(GeneratedField::Offset),
                             "limit" => Ok(GeneratedField::Limit),
+                            "trashed" => Ok(GeneratedField::Trashed),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -3608,6 +3637,7 @@ impl<'de> serde::Deserialize<'de> for ListIssuesReq {
                 let mut search__ = None;
                 let mut offset__ = None;
                 let mut limit__ = None;
+                let mut trashed__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Status => {
@@ -3644,6 +3674,12 @@ impl<'de> serde::Deserialize<'de> for ListIssuesReq {
                                 map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
                             ;
                         }
+                        GeneratedField::Trashed => {
+                            if trashed__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("trashed"));
+                            }
+                            trashed__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(ListIssuesReq {
@@ -3652,6 +3688,7 @@ impl<'de> serde::Deserialize<'de> for ListIssuesReq {
                     search: search__,
                     offset: offset__,
                     limit: limit__,
+                    trashed: trashed__,
                 })
             }
         }
@@ -4895,6 +4932,9 @@ impl serde::Serialize for UpdateIssueReq {
         if self.reason.is_some() {
             len += 1;
         }
+        if self.trashed.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("hi.qa.UpdateIssueReq", len)?;
         if let Some(v) = self.id.as_ref() {
             #[allow(clippy::needless_borrow)]
@@ -4922,6 +4962,9 @@ impl serde::Serialize for UpdateIssueReq {
         if let Some(v) = self.reason.as_ref() {
             struct_ser.serialize_field("reason", v)?;
         }
+        if let Some(v) = self.trashed.as_ref() {
+            struct_ser.serialize_field("trashed", v)?;
+        }
         struct_ser.end()
     }
 }
@@ -4939,6 +4982,7 @@ impl<'de> serde::Deserialize<'de> for UpdateIssueReq {
             "clear_environment",
             "clearEnvironment",
             "reason",
+            "trashed",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -4949,6 +4993,7 @@ impl<'de> serde::Deserialize<'de> for UpdateIssueReq {
             Environment,
             ClearEnvironment,
             Reason,
+            Trashed,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -4976,6 +5021,7 @@ impl<'de> serde::Deserialize<'de> for UpdateIssueReq {
                             "environment" => Ok(GeneratedField::Environment),
                             "clearEnvironment" | "clear_environment" => Ok(GeneratedField::ClearEnvironment),
                             "reason" => Ok(GeneratedField::Reason),
+                            "trashed" => Ok(GeneratedField::Trashed),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -5001,6 +5047,7 @@ impl<'de> serde::Deserialize<'de> for UpdateIssueReq {
                 let mut environment__ = None;
                 let mut clear_environment__ = None;
                 let mut reason__ = None;
+                let mut trashed__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Id => {
@@ -5043,6 +5090,12 @@ impl<'de> serde::Deserialize<'de> for UpdateIssueReq {
                             }
                             reason__ = map_.next_value()?;
                         }
+                        GeneratedField::Trashed => {
+                            if trashed__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("trashed"));
+                            }
+                            trashed__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(UpdateIssueReq {
@@ -5052,6 +5105,7 @@ impl<'de> serde::Deserialize<'de> for UpdateIssueReq {
                     environment: environment__,
                     clear_environment: clear_environment__,
                     reason: reason__,
+                    trashed: trashed__,
                 })
             }
         }
@@ -5302,6 +5356,7 @@ impl serde::Serialize for WorkKind {
             Self::Feature => "WORK_KIND_FEATURE",
             Self::Mixed => "WORK_KIND_MIXED",
             Self::Clarification => "WORK_KIND_CLARIFICATION",
+            Self::NonIssue => "WORK_KIND_NON_ISSUE",
         };
         serializer.serialize_str(variant)
     }
@@ -5318,6 +5373,7 @@ impl<'de> serde::Deserialize<'de> for WorkKind {
             "WORK_KIND_FEATURE",
             "WORK_KIND_MIXED",
             "WORK_KIND_CLARIFICATION",
+            "WORK_KIND_NON_ISSUE",
         ];
 
         struct GeneratedVisitor;
@@ -5363,6 +5419,7 @@ impl<'de> serde::Deserialize<'de> for WorkKind {
                     "WORK_KIND_FEATURE" => Ok(WorkKind::Feature),
                     "WORK_KIND_MIXED" => Ok(WorkKind::Mixed),
                     "WORK_KIND_CLARIFICATION" => Ok(WorkKind::Clarification),
+                    "WORK_KIND_NON_ISSUE" => Ok(WorkKind::NonIssue),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }

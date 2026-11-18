@@ -28,6 +28,8 @@ class IssueStatus extends $pb.ProtobufEnum {
       IssueStatus._(3, _omitEnumNames ? '' : 'ISSUE_STATUS_DEFERRED');
   static const IssueStatus ISSUE_STATUS_RESOLVED =
       IssueStatus._(4, _omitEnumNames ? '' : 'ISSUE_STATUS_RESOLVED');
+  static const IssueStatus ISSUE_STATUS_HANDLED =
+      IssueStatus._(5, _omitEnumNames ? '' : 'ISSUE_STATUS_HANDLED');
 
   static const $core.List<IssueStatus> values = <IssueStatus>[
     ISSUE_STATUS_UNSPECIFIED,
@@ -35,10 +37,11 @@ class IssueStatus extends $pb.ProtobufEnum {
     ISSUE_STATUS_IN_PROGRESS,
     ISSUE_STATUS_DEFERRED,
     ISSUE_STATUS_RESOLVED,
+    ISSUE_STATUS_HANDLED,
   ];
 
   static final $core.List<IssueStatus?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 4);
+      $pb.ProtobufEnum.$_initByValueList(values, 5);
   static IssueStatus? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
@@ -79,6 +82,8 @@ class WorkKind extends $pb.ProtobufEnum {
       WorkKind._(3, _omitEnumNames ? '' : 'WORK_KIND_MIXED');
   static const WorkKind WORK_KIND_CLARIFICATION =
       WorkKind._(4, _omitEnumNames ? '' : 'WORK_KIND_CLARIFICATION');
+  static const WorkKind WORK_KIND_NON_ISSUE =
+      WorkKind._(5, _omitEnumNames ? '' : 'WORK_KIND_NON_ISSUE');
 
   static const $core.List<WorkKind> values = <WorkKind>[
     WORK_KIND_UNSPECIFIED,
@@ -86,10 +91,11 @@ class WorkKind extends $pb.ProtobufEnum {
     WORK_KIND_FEATURE,
     WORK_KIND_MIXED,
     WORK_KIND_CLARIFICATION,
+    WORK_KIND_NON_ISSUE,
   ];
 
   static final $core.List<WorkKind?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 4);
+      $pb.ProtobufEnum.$_initByValueList(values, 5);
   static WorkKind? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

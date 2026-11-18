@@ -35,6 +35,7 @@ const (
 	IssueStatus_ISSUE_STATUS_IN_PROGRESS IssueStatus = 2
 	IssueStatus_ISSUE_STATUS_DEFERRED    IssueStatus = 3
 	IssueStatus_ISSUE_STATUS_RESOLVED    IssueStatus = 4
+	IssueStatus_ISSUE_STATUS_HANDLED     IssueStatus = 5 // non-issue processed; distinct from a verified repair
 )
 
 // Enum value maps for IssueStatus.
@@ -45,6 +46,7 @@ var (
 		2: "ISSUE_STATUS_IN_PROGRESS",
 		3: "ISSUE_STATUS_DEFERRED",
 		4: "ISSUE_STATUS_RESOLVED",
+		5: "ISSUE_STATUS_HANDLED",
 	}
 	IssueStatus_value = map[string]int32{
 		"ISSUE_STATUS_UNSPECIFIED": 0,
@@ -52,6 +54,7 @@ var (
 		"ISSUE_STATUS_IN_PROGRESS": 2,
 		"ISSUE_STATUS_DEFERRED":    3,
 		"ISSUE_STATUS_RESOLVED":    4,
+		"ISSUE_STATUS_HANDLED":     5,
 	}
 )
 
@@ -140,6 +143,7 @@ const (
 	WorkKind_WORK_KIND_FEATURE       WorkKind = 2
 	WorkKind_WORK_KIND_MIXED         WorkKind = 3
 	WorkKind_WORK_KIND_CLARIFICATION WorkKind = 4
+	WorkKind_WORK_KIND_NON_ISSUE     WorkKind = 5 // no actionable product question or reported defect
 )
 
 // Enum value maps for WorkKind.
@@ -150,6 +154,7 @@ var (
 		2: "WORK_KIND_FEATURE",
 		3: "WORK_KIND_MIXED",
 		4: "WORK_KIND_CLARIFICATION",
+		5: "WORK_KIND_NON_ISSUE",
 	}
 	WorkKind_value = map[string]int32{
 		"WORK_KIND_UNSPECIFIED":   0,
@@ -157,6 +162,7 @@ var (
 		"WORK_KIND_FEATURE":       2,
 		"WORK_KIND_MIXED":         3,
 		"WORK_KIND_CLARIFICATION": 4,
+		"WORK_KIND_NON_ISSUE":     5,
 	}
 )
 
@@ -676,6 +682,7 @@ type Issue struct {
 	UpdatedAt     *int64                 `protobuf:"varint,10,opt,name=updated_at,json=updatedAt,proto3,oneof" json:"updated_at,omitempty"`
 	Revision      *uint64                `protobuf:"varint,11,opt,name=revision,proto3,oneof" json:"revision,omitempty"`
 	LastResult    *string                `protobuf:"bytes,12,opt,name=last_result,json=lastResult,proto3,oneof" json:"last_result,omitempty"`
+	Trashed       *bool                  `protobuf:"varint,13,opt,name=trashed,proto3,oneof" json:"trashed,omitempty"` // absent/false: normal list; true: recoverable trash
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -794,6 +801,13 @@ func (x *Issue) GetLastResult() string {
 	return ""
 }
 
+func (x *Issue) GetTrashed() bool {
+	if x != nil && x.Trashed != nil {
+		return *x.Trashed
+	}
+	return false
+}
+
 type ListIssuesReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Status        *IssueStatus           `protobuf:"varint,1,opt,name=status,proto3,enum=hi.qa.IssueStatus,oneof" json:"status,omitempty"`
@@ -801,6 +815,7 @@ type ListIssuesReq struct {
 	Search        *string                `protobuf:"bytes,3,opt,name=search,proto3,oneof" json:"search,omitempty"`
 	Offset        *uint32                `protobuf:"varint,4,opt,name=offset,proto3,oneof" json:"offset,omitempty"`
 	Limit         *uint32                `protobuf:"varint,5,opt,name=limit,proto3,oneof" json:"limit,omitempty"`
+	Trashed       *bool                  `protobuf:"varint,6,opt,name=trashed,proto3,oneof" json:"trashed,omitempty"` // absent/false: normal list only; true: trash only
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -868,6 +883,13 @@ func (x *ListIssuesReq) GetLimit() uint32 {
 		return *x.Limit
 	}
 	return 0
+}
+
+func (x *ListIssuesReq) GetTrashed() bool {
+	if x != nil && x.Trashed != nil {
+		return *x.Trashed
+	}
+	return false
 }
 
 type ListIssuesResp struct {
@@ -974,6 +996,7 @@ type UpdateIssueReq struct {
 	Environment      *Environment           `protobuf:"varint,4,opt,name=environment,proto3,enum=hi.qa.Environment,oneof" json:"environment,omitempty"`
 	ClearEnvironment *bool                  `protobuf:"varint,5,opt,name=clear_environment,json=clearEnvironment,proto3,oneof" json:"clear_environment,omitempty"` // explicit clear; ProtoJSON null is absent
 	Reason           *string                `protobuf:"bytes,6,opt,name=reason,proto3,oneof" json:"reason,omitempty"`
+	Trashed          *bool                  `protobuf:"varint,7,opt,name=trashed,proto3,oneof" json:"trashed,omitempty"` // absent: unchanged; true: trash + HANDLED; false: restore without auto-execution
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -1048,6 +1071,13 @@ func (x *UpdateIssueReq) GetReason() string {
 		return *x.Reason
 	}
 	return ""
+}
+
+func (x *UpdateIssueReq) GetTrashed() bool {
+	if x != nil && x.Trashed != nil {
+		return *x.Trashed
+	}
+	return false
 }
 
 type LoginTicket struct {
@@ -2776,7 +2806,7 @@ const file_hi_qa_issue_proto_rawDesc = "" +
 	"\r_message_uuidB\n" +
 	"\n" +
 	"\b_plan_idB\x14\n" +
-	"\x12_approval_required\"\x9c\x05\n" +
+	"\x12_approval_required\"\xcd\x05\n" +
 	"\x05Issue\x12\x19\n" +
 	"\x02id\x18\x01 \x01(\x04B\x04\x90\xb5\x18\x03H\x00R\x02id\x88\x01\x01\x12\x1f\n" +
 	"\x05title\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x05title\x88\x01\x01\x125\n" +
@@ -2794,7 +2824,8 @@ const file_hi_qa_issue_proto_rawDesc = "" +
 	" \x01(\x03B\x04\x90\xb5\x18\x03H\x05R\tupdatedAt\x88\x01\x01\x12%\n" +
 	"\brevision\x18\v \x01(\x04B\x04\x90\xb5\x18\x03H\x06R\brevision\x88\x01\x01\x12*\n" +
 	"\vlast_result\x18\f \x01(\tB\x04\x90\xb5\x18\x03H\aR\n" +
-	"lastResult\x88\x01\x01:\x04\x98\xb5\x18\x03B\x05\n" +
+	"lastResult\x88\x01\x01\x12#\n" +
+	"\atrashed\x18\r \x01(\bB\x04\x90\xb5\x18\x03H\bR\atrashed\x88\x01\x01:\x04\x98\xb5\x18\x03B\x05\n" +
 	"\x03_idB\b\n" +
 	"\x06_titleB\t\n" +
 	"\a_statusB\x0e\n" +
@@ -2802,19 +2833,25 @@ const file_hi_qa_issue_proto_rawDesc = "" +
 	"\v_created_atB\r\n" +
 	"\v_updated_atB\v\n" +
 	"\t_revisionB\x0e\n" +
-	"\f_last_result\"\xbc\x02\n" +
-	"\rListIssuesReq\x12?\n" +
-	"\x06status\x18\x01 \x01(\x0e2\x12.hi.qa.IssueStatusB\x0e\xbaH\v\x82\x01\b\x18\x01\x18\x02\x18\x03\x18\x04H\x00R\x06status\x88\x01\x01\x12E\n" +
+	"\f_last_resultB\n" +
+	"\n" +
+	"\b_trashed\"\xe9\x02\n" +
+	"\rListIssuesReq\x12A\n" +
+	"\x06status\x18\x01 \x01(\x0e2\x12.hi.qa.IssueStatusB\x10\xbaH\r\x82\x01\n" +
+	"\x18\x01\x18\x02\x18\x03\x18\x04\x18\x05H\x00R\x06status\x88\x01\x01\x12E\n" +
 	"\venvironment\x18\x02 \x01(\x0e2\x12.hi.qa.EnvironmentB\n" +
 	"\xbaH\a\x82\x01\x04\x18\x01\x18\x02H\x01R\venvironment\x88\x01\x01\x12%\n" +
 	"\x06search\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\xc8\x01H\x02R\x06search\x88\x01\x01\x12\x1b\n" +
 	"\x06offset\x18\x04 \x01(\rH\x03R\x06offset\x88\x01\x01\x12$\n" +
-	"\x05limit\x18\x05 \x01(\rB\t\xbaH\x06*\x04\x18d \x00H\x04R\x05limit\x88\x01\x01B\t\n" +
+	"\x05limit\x18\x05 \x01(\rB\t\xbaH\x06*\x04\x18d \x00H\x04R\x05limit\x88\x01\x01\x12\x1d\n" +
+	"\atrashed\x18\x06 \x01(\bH\x05R\atrashed\x88\x01\x01B\t\n" +
 	"\a_statusB\x0e\n" +
 	"\f_environmentB\t\n" +
 	"\a_searchB\t\n" +
 	"\a_offsetB\b\n" +
-	"\x06_limit\"m\n" +
+	"\x06_limitB\n" +
+	"\n" +
+	"\b_trashed\"m\n" +
 	"\x0eListIssuesResp\x12*\n" +
 	"\x06issues\x18\x01 \x03(\v2\f.hi.qa.IssueB\x04\x90\xb5\x18\x03R\x06issues\x12\x1f\n" +
 	"\x05total\x18\x02 \x01(\rB\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x03B\b\n" +
@@ -2822,33 +2859,36 @@ const file_hi_qa_issue_proto_rawDesc = "" +
 	"\bIssueRef\x12\x1f\n" +
 	"\x02id\x18\x01 \x01(\x04B\n" +
 	"\xbaH\a\xc8\x01\x012\x02 \x00H\x00R\x02id\x88\x01\x01B\x05\n" +
-	"\x03_id\"\x94\x03\n" +
+	"\x03_id\"\xc1\x03\n" +
 	"\x0eUpdateIssueReq\x12\x1f\n" +
 	"\x02id\x18\x01 \x01(\x04B\n" +
 	"\xbaH\a\xc8\x01\x012\x02 \x00H\x00R\x02id\x88\x01\x01\x12+\n" +
 	"\brevision\x18\x02 \x01(\x04B\n" +
-	"\xbaH\a\xc8\x01\x012\x02 \x00H\x01R\brevision\x88\x01\x01\x12?\n" +
-	"\x06status\x18\x03 \x01(\x0e2\x12.hi.qa.IssueStatusB\x0e\xbaH\v\x82\x01\b\x18\x01\x18\x02\x18\x03\x18\x04H\x02R\x06status\x88\x01\x01\x12E\n" +
+	"\xbaH\a\xc8\x01\x012\x02 \x00H\x01R\brevision\x88\x01\x01\x12A\n" +
+	"\x06status\x18\x03 \x01(\x0e2\x12.hi.qa.IssueStatusB\x10\xbaH\r\x82\x01\n" +
+	"\x18\x01\x18\x02\x18\x03\x18\x04\x18\x05H\x02R\x06status\x88\x01\x01\x12E\n" +
 	"\venvironment\x18\x04 \x01(\x0e2\x12.hi.qa.EnvironmentB\n" +
 	"\xbaH\a\x82\x01\x04\x18\x01\x18\x02H\x03R\venvironment\x88\x01\x01\x120\n" +
 	"\x11clear_environment\x18\x05 \x01(\bH\x04R\x10clearEnvironment\x88\x01\x01\x12*\n" +
 	"\x06reason\x18\x06 \x01(\tB\r\xbaH\n" +
-	"\xc8\x01\x01r\x05\x10\x01\x18\xa0\x1fH\x05R\x06reason\x88\x01\x01B\x05\n" +
+	"\xc8\x01\x01r\x05\x10\x01\x18\xa0\x1fH\x05R\x06reason\x88\x01\x01\x12\x1d\n" +
+	"\atrashed\x18\a \x01(\bH\x06R\atrashed\x88\x01\x01B\x05\n" +
 	"\x03_idB\v\n" +
 	"\t_revisionB\t\n" +
 	"\a_statusB\x0e\n" +
 	"\f_environmentB\x14\n" +
 	"\x12_clear_environmentB\t\n" +
-	"\a_reason\"L\n" +
+	"\a_reasonB\n" +
+	"\n" +
+	"\b_trashed\"L\n" +
 	"\vLoginTicket\x123\n" +
 	"\x05token\x18\x01 \x01(\tB\x18\xbaH\x15\xc8\x01\x01r\x102\x0e^[0-9a-f]{64}$H\x00R\x05token\x88\x01\x01B\b\n" +
 	"\x06_token\"=\n" +
 	"\aSession\x12,\n" +
 	"\boperator\x18\x01 \x01(\v2\n" +
-	".hi.EntityB\x04\x90\xb5\x18\x01R\boperator:\x04\x98\xb5\x18\x03\"\xf5\x05\n" +
-	"\fWorkerResult\x12>\n" +
-	"\x06status\x18\x01 \x01(\x0e2\x12.hi.qa.IssueStatusB\r\xbaH\n" +
-	"\xc8\x01\x01\x82\x01\x04\x18\x03\x18\x04H\x00R\x06status\x88\x01\x01\x12,\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\boperator:\x04\x98\xb5\x18\x03\"\xf7\x05\n" +
+	"\fWorkerResult\x12@\n" +
+	"\x06status\x18\x01 \x01(\x0e2\x12.hi.qa.IssueStatusB\x0f\xbaH\f\xc8\x01\x01\x82\x01\x06\x18\x03\x18\x04\x18\x05H\x00R\x06status\x88\x01\x01\x12,\n" +
 	"\asummary\x18\x02 \x01(\tB\r\xbaH\n" +
 	"\xc8\x01\x01r\x05\x10\x01\x18\xc0>H\x01R\asummary\x88\x01\x01\x12)\n" +
 	"\bquestion\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\xa0\x1fH\x02R\bquestion\x88\x01\x01\x12+\n" +
@@ -2870,10 +2910,10 @@ const file_hi_qa_issue_proto_rawDesc = "" +
 	"\x15_verified_environmentB\x11\n" +
 	"\x0f_user_unblockedB\x14\n" +
 	"\x12_new_functionalityB\x11\n" +
-	"\x0f_requires_proto\"\xc4\x04\n" +
+	"\x0f_requires_proto\"\xc6\x04\n" +
 	"\bWorkItem\x12'\n" +
-	"\x05title\x18\x01 \x01(\tB\f\xbaH\x05r\x03\x18\xc8\x01\x90\xb5\x18\x03H\x00R\x05title\x88\x01\x01\x12=\n" +
-	"\x04kind\x18\x02 \x01(\x0e2\x0f.hi.qa.WorkKindB\x13\xbaH\f\xc8\x01\x01\x82\x01\x06\x18\x01\x18\x02\x18\x04\x90\xb5\x18\x03H\x01R\x04kind\x88\x01\x01\x12.\n" +
+	"\x05title\x18\x01 \x01(\tB\f\xbaH\x05r\x03\x18\xc8\x01\x90\xb5\x18\x03H\x00R\x05title\x88\x01\x01\x12?\n" +
+	"\x04kind\x18\x02 \x01(\x0e2\x0f.hi.qa.WorkKindB\x15\xbaH\x0e\xc8\x01\x01\x82\x01\b\x18\x01\x18\x02\x18\x04\x18\x05\x90\xb5\x18\x03H\x01R\x04kind\x88\x01\x01\x12.\n" +
 	"\x06reason\x18\x03 \x01(\tB\x11\xbaH\n" +
 	"\xc8\x01\x01r\x05\x10\x01\x18\xc0>\x90\xb5\x18\x03H\x02R\x06reason\x88\x01\x01\x12+\n" +
 	"\x04plan\x18\x04 \x01(\tB\x12\xbaH\v\xc8\x01\x01r\x06\x10\x01\x18\xc0\xbb\x01\x90\xb5\x18\x03H\x03R\x04plan\x88\x01\x01\x126\n" +
@@ -2891,9 +2931,10 @@ const file_hi_qa_issue_proto_rawDesc = "" +
 	"\x05_planB\x11\n" +
 	"\x0f_requires_protoB\x16\n" +
 	"\x14_requires_productionB\x15\n" +
-	"\x13_requires_sensitive\"\x8d\x03\n" +
-	"\x10AssessmentResult\x12?\n" +
-	"\x04kind\x18\x01 \x01(\x0e2\x0f.hi.qa.WorkKindB\x15\xbaH\x0e\xc8\x01\x01\x82\x01\b\x18\x01\x18\x02\x18\x03\x18\x04\x90\xb5\x18\x03H\x00R\x04kind\x88\x01\x01\x12/\n" +
+	"\x13_requires_sensitive\"\x8f\x03\n" +
+	"\x10AssessmentResult\x12A\n" +
+	"\x04kind\x18\x01 \x01(\x0e2\x0f.hi.qa.WorkKindB\x17\xbaH\x10\xc8\x01\x01\x82\x01\n" +
+	"\x18\x01\x18\x02\x18\x03\x18\x04\x18\x05\x90\xb5\x18\x03H\x00R\x04kind\x88\x01\x01\x12/\n" +
 	"\x06reason\x18\x02 \x01(\tB\x12\xbaH\v\xc8\x01\x01r\x06\x10\x01\x18\xc0\xbb\x01\x90\xb5\x18\x03H\x01R\x06reason\x88\x01\x01\x126\n" +
 	"\x11expected_behavior\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x10expectedBehavior\x88\x01\x01\x122\n" +
 	"\x0factual_behavior\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x0eactualBehavior\x88\x01\x01\x12 \n" +
@@ -3131,23 +3172,25 @@ const file_hi_qa_issue_proto_rawDesc = "" +
 	"\b_plan_idB\v\n" +
 	"\t_decisionB\r\n" +
 	"\v_request_idB\a\n" +
-	"\x05_note*\x9d\x01\n" +
+	"\x05_note*\xb7\x01\n" +
 	"\vIssueStatus\x12\x1c\n" +
 	"\x18ISSUE_STATUS_UNSPECIFIED\x10\x00\x12\x1c\n" +
 	"\x18ISSUE_STATUS_NOT_STARTED\x10\x01\x12\x1c\n" +
 	"\x18ISSUE_STATUS_IN_PROGRESS\x10\x02\x12\x19\n" +
 	"\x15ISSUE_STATUS_DEFERRED\x10\x03\x12\x19\n" +
-	"\x15ISSUE_STATUS_RESOLVED\x10\x04*c\n" +
+	"\x15ISSUE_STATUS_RESOLVED\x10\x04\x12\x18\n" +
+	"\x14ISSUE_STATUS_HANDLED\x10\x05*c\n" +
 	"\vEnvironment\x12\x1b\n" +
 	"\x17ENVIRONMENT_UNSPECIFIED\x10\x00\x12\x1a\n" +
 	"\x16ENVIRONMENT_PRODUCTION\x10\x01\x12\x1b\n" +
-	"\x17ENVIRONMENT_DEVELOPMENT\x10\x02*\x85\x01\n" +
+	"\x17ENVIRONMENT_DEVELOPMENT\x10\x02*\x9e\x01\n" +
 	"\bWorkKind\x12\x19\n" +
 	"\x15WORK_KIND_UNSPECIFIED\x10\x00\x12\x15\n" +
 	"\x11WORK_KIND_BUG_FIX\x10\x01\x12\x15\n" +
 	"\x11WORK_KIND_FEATURE\x10\x02\x12\x13\n" +
 	"\x0fWORK_KIND_MIXED\x10\x03\x12\x1b\n" +
-	"\x17WORK_KIND_CLARIFICATION\x10\x04*\xa1\x01\n" +
+	"\x17WORK_KIND_CLARIFICATION\x10\x04\x12\x17\n" +
+	"\x13WORK_KIND_NON_ISSUE\x10\x05*\xa1\x01\n" +
 	"\x0eExecutionPhase\x12\x1f\n" +
 	"\x1bEXECUTION_PHASE_UNSPECIFIED\x10\x00\x12\x1a\n" +
 	"\x16EXECUTION_PHASE_ASSESS\x10\x01\x12\x1a\n" +
