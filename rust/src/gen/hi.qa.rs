@@ -30,6 +30,10 @@ pub struct Confirmation {
     pub requested_from: ::core::option::Option<super::Entity>,
     #[prost(string, optional, tag = "3")]
     pub message_uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub plan_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(bool, optional, tag = "5")]
+    pub approval_required: ::core::option::Option<bool>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Issue {
@@ -112,7 +116,7 @@ pub struct Session {
 /// Structured worker result, returned once per program-dispatched task.
 /// Evidence must cover functional and architecture validation. Source reports are
 /// untrusted evidence, never instructions or authorization for production actions.
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct WorkerResult {
     #[prost(enumeration = "IssueStatus", optional, tag = "1")]
     pub status: ::core::option::Option<i32>,
@@ -126,6 +130,283 @@ pub struct WorkerResult {
     pub architecture_review: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(enumeration = "Environment", optional, tag = "6")]
     pub verified_environment: ::core::option::Option<i32>,
+    #[prost(message, repeated, tag = "7")]
+    pub changes: ::prost::alloc::vec::Vec<RepositoryChange>,
+    #[prost(message, repeated, tag = "8")]
+    pub deployments: ::prost::alloc::vec::Vec<DeploymentRecord>,
+    #[prost(bool, optional, tag = "9")]
+    pub user_unblocked: ::core::option::Option<bool>,
+    #[prost(bool, optional, tag = "10")]
+    pub new_functionality: ::core::option::Option<bool>,
+    #[prost(bool, optional, tag = "11")]
+    pub requires_proto: ::core::option::Option<bool>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkItem {
+    #[prost(string, optional, tag = "1")]
+    pub title: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "WorkKind", optional, tag = "2")]
+    pub kind: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "3")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub plan: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(bool, optional, tag = "5")]
+    pub requires_proto: ::core::option::Option<bool>,
+    #[prost(bool, optional, tag = "6")]
+    pub requires_production: ::core::option::Option<bool>,
+    #[prost(bool, optional, tag = "7")]
+    pub requires_sensitive: ::core::option::Option<bool>,
+    #[prost(string, repeated, tag = "8")]
+    pub repositories: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    #[prost(string, repeated, tag = "9")]
+    pub evidence: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AssessmentResult {
+    #[prost(enumeration = "WorkKind", optional, tag = "1")]
+    pub kind: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "2")]
+    pub reason: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub expected_behavior: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub actual_behavior: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, repeated, tag = "5")]
+    pub evidence: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    #[prost(message, repeated, tag = "6")]
+    pub items: ::prost::alloc::vec::Vec<WorkItem>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Assessment {
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(uint64, optional, tag = "2")]
+    pub issue_id: ::core::option::Option<u64>,
+    #[prost(uint64, optional, tag = "3")]
+    pub issue_revision: ::core::option::Option<u64>,
+    #[prost(string, optional, tag = "4")]
+    pub docs_commit: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "5")]
+    pub result: ::core::option::Option<AssessmentResult>,
+    #[prost(int64, optional, tag = "6")]
+    pub created_at: ::core::option::Option<i64>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct RepositoryChange {
+    #[prost(string, optional, tag = "1")]
+    pub repository: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub origin: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub base_commit: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub result_commit: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, repeated, tag = "5")]
+    pub commits: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    #[prost(string, repeated, tag = "6")]
+    pub files: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "7")]
+    pub diff: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "8")]
+    pub worktree: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(bool, optional, tag = "9")]
+    pub verified: ::core::option::Option<bool>,
+    #[prost(string, optional, tag = "10")]
+    pub verification_error: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DeploymentRecord {
+    #[prost(string, optional, tag = "1")]
+    pub repository: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "Environment", optional, tag = "2")]
+    pub environment: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "3")]
+    pub before_version: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub after_version: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, repeated, tag = "5")]
+    pub evidence: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    #[prost(bool, optional, tag = "6")]
+    pub verified: ::core::option::Option<bool>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ExecutionRecord {
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(uint64, optional, tag = "2")]
+    pub issue_id: ::core::option::Option<u64>,
+    #[prost(enumeration = "ExecutionPhase", optional, tag = "3")]
+    pub phase: ::core::option::Option<i32>,
+    #[prost(enumeration = "ExecutionState", optional, tag = "4")]
+    pub state: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "5")]
+    pub plan_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "6")]
+    pub review_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "7")]
+    pub docs_commit: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "8")]
+    pub started_at: ::core::option::Option<i64>,
+    #[prost(int64, optional, tag = "9")]
+    pub ended_at: ::core::option::Option<i64>,
+    #[prost(int32, optional, tag = "10")]
+    pub exit_code: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "11")]
+    pub summary: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, repeated, tag = "12")]
+    pub change_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChangeRecord {
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(uint64, optional, tag = "2")]
+    pub issue_id: ::core::option::Option<u64>,
+    #[prost(string, optional, tag = "3")]
+    pub execution_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "ExecutionPhase", optional, tag = "4")]
+    pub phase: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "5")]
+    pub summary: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, repeated, tag = "6")]
+    pub repositories: ::prost::alloc::vec::Vec<RepositoryChange>,
+    #[prost(message, repeated, tag = "7")]
+    pub deployments: ::prost::alloc::vec::Vec<DeploymentRecord>,
+    #[prost(string, repeated, tag = "8")]
+    pub evidence: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "9")]
+    pub architecture_review: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "Environment", optional, tag = "10")]
+    pub verified_environment: ::core::option::Option<i32>,
+    #[prost(bool, optional, tag = "11")]
+    pub user_unblocked: ::core::option::Option<bool>,
+    #[prost(enumeration = "ExecutionState", optional, tag = "12")]
+    pub state: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "13")]
+    pub reverses_change: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "14")]
+    pub review_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "15")]
+    pub created_at: ::core::option::Option<i64>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ReviewRequest {
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(uint64, optional, tag = "2")]
+    pub issue_id: ::core::option::Option<u64>,
+    #[prost(string, optional, tag = "3")]
+    pub change_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "ReviewAction", optional, tag = "4")]
+    pub action: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "5")]
+    pub opinion: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "6")]
+    pub actor: ::core::option::Option<super::Entity>,
+    #[prost(enumeration = "ReviewState", optional, tag = "7")]
+    pub state: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "8")]
+    pub execution_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "9")]
+    pub created_at: ::core::option::Option<i64>,
+    #[prost(string, optional, tag = "10")]
+    pub result: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ApprovalRecord {
+    #[prost(string, optional, tag = "1")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(uint64, optional, tag = "2")]
+    pub issue_id: ::core::option::Option<u64>,
+    #[prost(string, optional, tag = "3")]
+    pub plan_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "Decision", optional, tag = "4")]
+    pub decision: ::core::option::Option<i32>,
+    #[prost(message, optional, tag = "5")]
+    pub scope: ::core::option::Option<WorkItem>,
+    #[prost(message, optional, tag = "6")]
+    pub actor: ::core::option::Option<super::Entity>,
+    #[prost(string, optional, tag = "7")]
+    pub source_message_uuid: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(int64, optional, tag = "8")]
+    pub created_at: ::core::option::Option<i64>,
+    #[prost(string, optional, tag = "9")]
+    pub note: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct HistoryReq {
+    #[prost(uint64, optional, tag = "1")]
+    pub issue_id: ::core::option::Option<u64>,
+    #[prost(uint32, optional, tag = "2")]
+    pub offset: ::core::option::Option<u32>,
+    #[prost(uint32, optional, tag = "3")]
+    pub limit: ::core::option::Option<u32>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListAssessmentsResp {
+    #[prost(message, repeated, tag = "1")]
+    pub items: ::prost::alloc::vec::Vec<Assessment>,
+    #[prost(uint32, optional, tag = "2")]
+    pub total: ::core::option::Option<u32>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListExecutionsResp {
+    #[prost(message, repeated, tag = "1")]
+    pub items: ::prost::alloc::vec::Vec<ExecutionRecord>,
+    #[prost(uint32, optional, tag = "2")]
+    pub total: ::core::option::Option<u32>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListChangesResp {
+    #[prost(message, repeated, tag = "1")]
+    pub items: ::prost::alloc::vec::Vec<ChangeRecord>,
+    #[prost(uint32, optional, tag = "2")]
+    pub total: ::core::option::Option<u32>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListReviewsResp {
+    #[prost(message, repeated, tag = "1")]
+    pub items: ::prost::alloc::vec::Vec<ReviewRequest>,
+    #[prost(uint32, optional, tag = "2")]
+    pub total: ::core::option::Option<u32>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListApprovalsResp {
+    #[prost(message, repeated, tag = "1")]
+    pub items: ::prost::alloc::vec::Vec<ApprovalRecord>,
+    #[prost(uint32, optional, tag = "2")]
+    pub total: ::core::option::Option<u32>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CreateReviewReq {
+    #[prost(uint64, optional, tag = "1")]
+    pub issue_id: ::core::option::Option<u64>,
+    #[prost(uint64, optional, tag = "2")]
+    pub revision: ::core::option::Option<u64>,
+    #[prost(string, optional, tag = "3")]
+    pub change_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "ReviewAction", optional, tag = "4")]
+    pub action: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "5")]
+    pub opinion: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "6")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DecideReq {
+    #[prost(uint64, optional, tag = "1")]
+    pub issue_id: ::core::option::Option<u64>,
+    #[prost(uint64, optional, tag = "2")]
+    pub revision: ::core::option::Option<u64>,
+    #[prost(string, optional, tag = "3")]
+    pub plan_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "Decision", optional, tag = "4")]
+    pub decision: ::core::option::Option<i32>,
+    #[prost(string, optional, tag = "5")]
+    pub request_id: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "6")]
+    pub note: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// brain QA application contracts; independent of the message engine and AI QA history.
 /// HTTP adapters use these ProtoJSON bodies. Authentication is a QA session issued
@@ -190,6 +471,205 @@ impl Environment {
             "ENVIRONMENT_UNSPECIFIED" => Some(Self::Unspecified),
             "ENVIRONMENT_PRODUCTION" => Some(Self::Production),
             "ENVIRONMENT_DEVELOPMENT" => Some(Self::Development),
+            _ => None,
+        }
+    }
+}
+/// Explicit AI assessment and immutable per-attempt audit; QA owns these facts.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum WorkKind {
+    Unspecified = 0,
+    BugFix = 1,
+    Feature = 2,
+    Mixed = 3,
+    Clarification = 4,
+}
+impl WorkKind {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "WORK_KIND_UNSPECIFIED",
+            Self::BugFix => "WORK_KIND_BUG_FIX",
+            Self::Feature => "WORK_KIND_FEATURE",
+            Self::Mixed => "WORK_KIND_MIXED",
+            Self::Clarification => "WORK_KIND_CLARIFICATION",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "WORK_KIND_UNSPECIFIED" => Some(Self::Unspecified),
+            "WORK_KIND_BUG_FIX" => Some(Self::BugFix),
+            "WORK_KIND_FEATURE" => Some(Self::Feature),
+            "WORK_KIND_MIXED" => Some(Self::Mixed),
+            "WORK_KIND_CLARIFICATION" => Some(Self::Clarification),
+            _ => None,
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum ExecutionPhase {
+    Unspecified = 0,
+    Assess = 1,
+    Repair = 2,
+    Rework = 3,
+    Revert = 4,
+}
+impl ExecutionPhase {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "EXECUTION_PHASE_UNSPECIFIED",
+            Self::Assess => "EXECUTION_PHASE_ASSESS",
+            Self::Repair => "EXECUTION_PHASE_REPAIR",
+            Self::Rework => "EXECUTION_PHASE_REWORK",
+            Self::Revert => "EXECUTION_PHASE_REVERT",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "EXECUTION_PHASE_UNSPECIFIED" => Some(Self::Unspecified),
+            "EXECUTION_PHASE_ASSESS" => Some(Self::Assess),
+            "EXECUTION_PHASE_REPAIR" => Some(Self::Repair),
+            "EXECUTION_PHASE_REWORK" => Some(Self::Rework),
+            "EXECUTION_PHASE_REVERT" => Some(Self::Revert),
+            _ => None,
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum ExecutionState {
+    Unspecified = 0,
+    Running = 1,
+    Succeeded = 2,
+    Failed = 3,
+    Interrupted = 4,
+}
+impl ExecutionState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "EXECUTION_STATE_UNSPECIFIED",
+            Self::Running => "EXECUTION_STATE_RUNNING",
+            Self::Succeeded => "EXECUTION_STATE_SUCCEEDED",
+            Self::Failed => "EXECUTION_STATE_FAILED",
+            Self::Interrupted => "EXECUTION_STATE_INTERRUPTED",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "EXECUTION_STATE_UNSPECIFIED" => Some(Self::Unspecified),
+            "EXECUTION_STATE_RUNNING" => Some(Self::Running),
+            "EXECUTION_STATE_SUCCEEDED" => Some(Self::Succeeded),
+            "EXECUTION_STATE_FAILED" => Some(Self::Failed),
+            "EXECUTION_STATE_INTERRUPTED" => Some(Self::Interrupted),
+            _ => None,
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum ReviewAction {
+    Unspecified = 0,
+    Rework = 1,
+    Revert = 2,
+}
+impl ReviewAction {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "REVIEW_ACTION_UNSPECIFIED",
+            Self::Rework => "REVIEW_ACTION_REWORK",
+            Self::Revert => "REVIEW_ACTION_REVERT",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "REVIEW_ACTION_UNSPECIFIED" => Some(Self::Unspecified),
+            "REVIEW_ACTION_REWORK" => Some(Self::Rework),
+            "REVIEW_ACTION_REVERT" => Some(Self::Revert),
+            _ => None,
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum ReviewState {
+    Unspecified = 0,
+    Queued = 1,
+    Running = 2,
+    Succeeded = 3,
+    Failed = 4,
+}
+impl ReviewState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "REVIEW_STATE_UNSPECIFIED",
+            Self::Queued => "REVIEW_STATE_QUEUED",
+            Self::Running => "REVIEW_STATE_RUNNING",
+            Self::Succeeded => "REVIEW_STATE_SUCCEEDED",
+            Self::Failed => "REVIEW_STATE_FAILED",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "REVIEW_STATE_UNSPECIFIED" => Some(Self::Unspecified),
+            "REVIEW_STATE_QUEUED" => Some(Self::Queued),
+            "REVIEW_STATE_RUNNING" => Some(Self::Running),
+            "REVIEW_STATE_SUCCEEDED" => Some(Self::Succeeded),
+            "REVIEW_STATE_FAILED" => Some(Self::Failed),
+            _ => None,
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum Decision {
+    Unspecified = 0,
+    Approve = 1,
+    Reject = 2,
+}
+impl Decision {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "DECISION_UNSPECIFIED",
+            Self::Approve => "DECISION_APPROVE",
+            Self::Reject => "DECISION_REJECT",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "DECISION_UNSPECIFIED" => Some(Self::Unspecified),
+            "DECISION_APPROVE" => Some(Self::Approve),
+            "DECISION_REJECT" => Some(Self::Reject),
             _ => None,
         }
     }

@@ -131,6 +131,325 @@ func (Environment) EnumDescriptor() ([]byte, []int) {
 	return file_hi_qa_issue_proto_rawDescGZIP(), []int{1}
 }
 
+// Explicit AI assessment and immutable per-attempt audit; QA owns these facts.
+type WorkKind int32
+
+const (
+	WorkKind_WORK_KIND_UNSPECIFIED   WorkKind = 0
+	WorkKind_WORK_KIND_BUG_FIX       WorkKind = 1
+	WorkKind_WORK_KIND_FEATURE       WorkKind = 2
+	WorkKind_WORK_KIND_MIXED         WorkKind = 3
+	WorkKind_WORK_KIND_CLARIFICATION WorkKind = 4
+)
+
+// Enum value maps for WorkKind.
+var (
+	WorkKind_name = map[int32]string{
+		0: "WORK_KIND_UNSPECIFIED",
+		1: "WORK_KIND_BUG_FIX",
+		2: "WORK_KIND_FEATURE",
+		3: "WORK_KIND_MIXED",
+		4: "WORK_KIND_CLARIFICATION",
+	}
+	WorkKind_value = map[string]int32{
+		"WORK_KIND_UNSPECIFIED":   0,
+		"WORK_KIND_BUG_FIX":       1,
+		"WORK_KIND_FEATURE":       2,
+		"WORK_KIND_MIXED":         3,
+		"WORK_KIND_CLARIFICATION": 4,
+	}
+)
+
+func (x WorkKind) Enum() *WorkKind {
+	p := new(WorkKind)
+	*p = x
+	return p
+}
+
+func (x WorkKind) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (WorkKind) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_qa_issue_proto_enumTypes[2].Descriptor()
+}
+
+func (WorkKind) Type() protoreflect.EnumType {
+	return &file_hi_qa_issue_proto_enumTypes[2]
+}
+
+func (x WorkKind) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use WorkKind.Descriptor instead.
+func (WorkKind) EnumDescriptor() ([]byte, []int) {
+	return file_hi_qa_issue_proto_rawDescGZIP(), []int{2}
+}
+
+type ExecutionPhase int32
+
+const (
+	ExecutionPhase_EXECUTION_PHASE_UNSPECIFIED ExecutionPhase = 0
+	ExecutionPhase_EXECUTION_PHASE_ASSESS      ExecutionPhase = 1
+	ExecutionPhase_EXECUTION_PHASE_REPAIR      ExecutionPhase = 2
+	ExecutionPhase_EXECUTION_PHASE_REWORK      ExecutionPhase = 3
+	ExecutionPhase_EXECUTION_PHASE_REVERT      ExecutionPhase = 4
+)
+
+// Enum value maps for ExecutionPhase.
+var (
+	ExecutionPhase_name = map[int32]string{
+		0: "EXECUTION_PHASE_UNSPECIFIED",
+		1: "EXECUTION_PHASE_ASSESS",
+		2: "EXECUTION_PHASE_REPAIR",
+		3: "EXECUTION_PHASE_REWORK",
+		4: "EXECUTION_PHASE_REVERT",
+	}
+	ExecutionPhase_value = map[string]int32{
+		"EXECUTION_PHASE_UNSPECIFIED": 0,
+		"EXECUTION_PHASE_ASSESS":      1,
+		"EXECUTION_PHASE_REPAIR":      2,
+		"EXECUTION_PHASE_REWORK":      3,
+		"EXECUTION_PHASE_REVERT":      4,
+	}
+)
+
+func (x ExecutionPhase) Enum() *ExecutionPhase {
+	p := new(ExecutionPhase)
+	*p = x
+	return p
+}
+
+func (x ExecutionPhase) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ExecutionPhase) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_qa_issue_proto_enumTypes[3].Descriptor()
+}
+
+func (ExecutionPhase) Type() protoreflect.EnumType {
+	return &file_hi_qa_issue_proto_enumTypes[3]
+}
+
+func (x ExecutionPhase) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ExecutionPhase.Descriptor instead.
+func (ExecutionPhase) EnumDescriptor() ([]byte, []int) {
+	return file_hi_qa_issue_proto_rawDescGZIP(), []int{3}
+}
+
+type ExecutionState int32
+
+const (
+	ExecutionState_EXECUTION_STATE_UNSPECIFIED ExecutionState = 0
+	ExecutionState_EXECUTION_STATE_RUNNING     ExecutionState = 1
+	ExecutionState_EXECUTION_STATE_SUCCEEDED   ExecutionState = 2
+	ExecutionState_EXECUTION_STATE_FAILED      ExecutionState = 3
+	ExecutionState_EXECUTION_STATE_INTERRUPTED ExecutionState = 4
+)
+
+// Enum value maps for ExecutionState.
+var (
+	ExecutionState_name = map[int32]string{
+		0: "EXECUTION_STATE_UNSPECIFIED",
+		1: "EXECUTION_STATE_RUNNING",
+		2: "EXECUTION_STATE_SUCCEEDED",
+		3: "EXECUTION_STATE_FAILED",
+		4: "EXECUTION_STATE_INTERRUPTED",
+	}
+	ExecutionState_value = map[string]int32{
+		"EXECUTION_STATE_UNSPECIFIED": 0,
+		"EXECUTION_STATE_RUNNING":     1,
+		"EXECUTION_STATE_SUCCEEDED":   2,
+		"EXECUTION_STATE_FAILED":      3,
+		"EXECUTION_STATE_INTERRUPTED": 4,
+	}
+)
+
+func (x ExecutionState) Enum() *ExecutionState {
+	p := new(ExecutionState)
+	*p = x
+	return p
+}
+
+func (x ExecutionState) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ExecutionState) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_qa_issue_proto_enumTypes[4].Descriptor()
+}
+
+func (ExecutionState) Type() protoreflect.EnumType {
+	return &file_hi_qa_issue_proto_enumTypes[4]
+}
+
+func (x ExecutionState) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ExecutionState.Descriptor instead.
+func (ExecutionState) EnumDescriptor() ([]byte, []int) {
+	return file_hi_qa_issue_proto_rawDescGZIP(), []int{4}
+}
+
+type ReviewAction int32
+
+const (
+	ReviewAction_REVIEW_ACTION_UNSPECIFIED ReviewAction = 0
+	ReviewAction_REVIEW_ACTION_REWORK      ReviewAction = 1
+	ReviewAction_REVIEW_ACTION_REVERT      ReviewAction = 2
+)
+
+// Enum value maps for ReviewAction.
+var (
+	ReviewAction_name = map[int32]string{
+		0: "REVIEW_ACTION_UNSPECIFIED",
+		1: "REVIEW_ACTION_REWORK",
+		2: "REVIEW_ACTION_REVERT",
+	}
+	ReviewAction_value = map[string]int32{
+		"REVIEW_ACTION_UNSPECIFIED": 0,
+		"REVIEW_ACTION_REWORK":      1,
+		"REVIEW_ACTION_REVERT":      2,
+	}
+)
+
+func (x ReviewAction) Enum() *ReviewAction {
+	p := new(ReviewAction)
+	*p = x
+	return p
+}
+
+func (x ReviewAction) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ReviewAction) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_qa_issue_proto_enumTypes[5].Descriptor()
+}
+
+func (ReviewAction) Type() protoreflect.EnumType {
+	return &file_hi_qa_issue_proto_enumTypes[5]
+}
+
+func (x ReviewAction) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ReviewAction.Descriptor instead.
+func (ReviewAction) EnumDescriptor() ([]byte, []int) {
+	return file_hi_qa_issue_proto_rawDescGZIP(), []int{5}
+}
+
+type ReviewState int32
+
+const (
+	ReviewState_REVIEW_STATE_UNSPECIFIED ReviewState = 0
+	ReviewState_REVIEW_STATE_QUEUED      ReviewState = 1
+	ReviewState_REVIEW_STATE_RUNNING     ReviewState = 2
+	ReviewState_REVIEW_STATE_SUCCEEDED   ReviewState = 3
+	ReviewState_REVIEW_STATE_FAILED      ReviewState = 4
+)
+
+// Enum value maps for ReviewState.
+var (
+	ReviewState_name = map[int32]string{
+		0: "REVIEW_STATE_UNSPECIFIED",
+		1: "REVIEW_STATE_QUEUED",
+		2: "REVIEW_STATE_RUNNING",
+		3: "REVIEW_STATE_SUCCEEDED",
+		4: "REVIEW_STATE_FAILED",
+	}
+	ReviewState_value = map[string]int32{
+		"REVIEW_STATE_UNSPECIFIED": 0,
+		"REVIEW_STATE_QUEUED":      1,
+		"REVIEW_STATE_RUNNING":     2,
+		"REVIEW_STATE_SUCCEEDED":   3,
+		"REVIEW_STATE_FAILED":      4,
+	}
+)
+
+func (x ReviewState) Enum() *ReviewState {
+	p := new(ReviewState)
+	*p = x
+	return p
+}
+
+func (x ReviewState) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ReviewState) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_qa_issue_proto_enumTypes[6].Descriptor()
+}
+
+func (ReviewState) Type() protoreflect.EnumType {
+	return &file_hi_qa_issue_proto_enumTypes[6]
+}
+
+func (x ReviewState) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ReviewState.Descriptor instead.
+func (ReviewState) EnumDescriptor() ([]byte, []int) {
+	return file_hi_qa_issue_proto_rawDescGZIP(), []int{6}
+}
+
+type Decision int32
+
+const (
+	Decision_DECISION_UNSPECIFIED Decision = 0
+	Decision_DECISION_APPROVE     Decision = 1
+	Decision_DECISION_REJECT      Decision = 2
+)
+
+// Enum value maps for Decision.
+var (
+	Decision_name = map[int32]string{
+		0: "DECISION_UNSPECIFIED",
+		1: "DECISION_APPROVE",
+		2: "DECISION_REJECT",
+	}
+	Decision_value = map[string]int32{
+		"DECISION_UNSPECIFIED": 0,
+		"DECISION_APPROVE":     1,
+		"DECISION_REJECT":      2,
+	}
+)
+
+func (x Decision) Enum() *Decision {
+	p := new(Decision)
+	*p = x
+	return p
+}
+
+func (x Decision) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (Decision) Descriptor() protoreflect.EnumDescriptor {
+	return file_hi_qa_issue_proto_enumTypes[7].Descriptor()
+}
+
+func (Decision) Type() protoreflect.EnumType {
+	return &file_hi_qa_issue_proto_enumTypes[7]
+}
+
+func (x Decision) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use Decision.Descriptor instead.
+func (Decision) EnumDescriptor() ([]byte, []int) {
+	return file_hi_qa_issue_proto_rawDescGZIP(), []int{7}
+}
+
 type Report struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	Conversation    *string                `protobuf:"bytes,1,opt,name=conversation,proto3,oneof" json:"conversation,omitempty"`
@@ -268,12 +587,14 @@ func (x *IssueEvent) GetTimestamp() int64 {
 }
 
 type Confirmation struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Question      *string                `protobuf:"bytes,1,opt,name=question,proto3,oneof" json:"question,omitempty"`
-	RequestedFrom *hi.Entity             `protobuf:"bytes,2,opt,name=requested_from,json=requestedFrom,proto3" json:"requested_from,omitempty"`
-	MessageUuid   *string                `protobuf:"bytes,3,opt,name=message_uuid,json=messageUuid,proto3,oneof" json:"message_uuid,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	Question         *string                `protobuf:"bytes,1,opt,name=question,proto3,oneof" json:"question,omitempty"`
+	RequestedFrom    *hi.Entity             `protobuf:"bytes,2,opt,name=requested_from,json=requestedFrom,proto3" json:"requested_from,omitempty"`
+	MessageUuid      *string                `protobuf:"bytes,3,opt,name=message_uuid,json=messageUuid,proto3,oneof" json:"message_uuid,omitempty"`
+	PlanId           *string                `protobuf:"bytes,4,opt,name=plan_id,json=planId,proto3,oneof" json:"plan_id,omitempty"`
+	ApprovalRequired *bool                  `protobuf:"varint,5,opt,name=approval_required,json=approvalRequired,proto3,oneof" json:"approval_required,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
 }
 
 func (x *Confirmation) Reset() {
@@ -325,6 +646,20 @@ func (x *Confirmation) GetMessageUuid() string {
 		return *x.MessageUuid
 	}
 	return ""
+}
+
+func (x *Confirmation) GetPlanId() string {
+	if x != nil && x.PlanId != nil {
+		return *x.PlanId
+	}
+	return ""
+}
+
+func (x *Confirmation) GetApprovalRequired() bool {
+	if x != nil && x.ApprovalRequired != nil {
+		return *x.ApprovalRequired
+	}
+	return false
 }
 
 type Issue struct {
@@ -814,6 +1149,11 @@ type WorkerResult struct {
 	Evidence            []string               `protobuf:"bytes,4,rep,name=evidence,proto3" json:"evidence,omitempty"`
 	ArchitectureReview  *string                `protobuf:"bytes,5,opt,name=architecture_review,json=architectureReview,proto3,oneof" json:"architecture_review,omitempty"`
 	VerifiedEnvironment *Environment           `protobuf:"varint,6,opt,name=verified_environment,json=verifiedEnvironment,proto3,enum=hi.qa.Environment,oneof" json:"verified_environment,omitempty"`
+	Changes             []*RepositoryChange    `protobuf:"bytes,7,rep,name=changes,proto3" json:"changes,omitempty"`
+	Deployments         []*DeploymentRecord    `protobuf:"bytes,8,rep,name=deployments,proto3" json:"deployments,omitempty"`
+	UserUnblocked       *bool                  `protobuf:"varint,9,opt,name=user_unblocked,json=userUnblocked,proto3,oneof" json:"user_unblocked,omitempty"`
+	NewFunctionality    *bool                  `protobuf:"varint,10,opt,name=new_functionality,json=newFunctionality,proto3,oneof" json:"new_functionality,omitempty"`
+	RequiresProto       *bool                  `protobuf:"varint,11,opt,name=requires_proto,json=requiresProto,proto3,oneof" json:"requires_proto,omitempty"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -890,6 +1230,1517 @@ func (x *WorkerResult) GetVerifiedEnvironment() Environment {
 	return Environment_ENVIRONMENT_UNSPECIFIED
 }
 
+func (x *WorkerResult) GetChanges() []*RepositoryChange {
+	if x != nil {
+		return x.Changes
+	}
+	return nil
+}
+
+func (x *WorkerResult) GetDeployments() []*DeploymentRecord {
+	if x != nil {
+		return x.Deployments
+	}
+	return nil
+}
+
+func (x *WorkerResult) GetUserUnblocked() bool {
+	if x != nil && x.UserUnblocked != nil {
+		return *x.UserUnblocked
+	}
+	return false
+}
+
+func (x *WorkerResult) GetNewFunctionality() bool {
+	if x != nil && x.NewFunctionality != nil {
+		return *x.NewFunctionality
+	}
+	return false
+}
+
+func (x *WorkerResult) GetRequiresProto() bool {
+	if x != nil && x.RequiresProto != nil {
+		return *x.RequiresProto
+	}
+	return false
+}
+
+type WorkItem struct {
+	state              protoimpl.MessageState `protogen:"open.v1"`
+	Title              *string                `protobuf:"bytes,1,opt,name=title,proto3,oneof" json:"title,omitempty"`
+	Kind               *WorkKind              `protobuf:"varint,2,opt,name=kind,proto3,enum=hi.qa.WorkKind,oneof" json:"kind,omitempty"`
+	Reason             *string                `protobuf:"bytes,3,opt,name=reason,proto3,oneof" json:"reason,omitempty"`
+	Plan               *string                `protobuf:"bytes,4,opt,name=plan,proto3,oneof" json:"plan,omitempty"`
+	RequiresProto      *bool                  `protobuf:"varint,5,opt,name=requires_proto,json=requiresProto,proto3,oneof" json:"requires_proto,omitempty"`
+	RequiresProduction *bool                  `protobuf:"varint,6,opt,name=requires_production,json=requiresProduction,proto3,oneof" json:"requires_production,omitempty"`
+	RequiresSensitive  *bool                  `protobuf:"varint,7,opt,name=requires_sensitive,json=requiresSensitive,proto3,oneof" json:"requires_sensitive,omitempty"`
+	Repositories       []string               `protobuf:"bytes,8,rep,name=repositories,proto3" json:"repositories,omitempty"`
+	Evidence           []string               `protobuf:"bytes,9,rep,name=evidence,proto3" json:"evidence,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
+}
+
+func (x *WorkItem) Reset() {
+	*x = WorkItem{}
+	mi := &file_hi_qa_issue_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WorkItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WorkItem) ProtoMessage() {}
+
+func (x *WorkItem) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_qa_issue_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use WorkItem.ProtoReflect.Descriptor instead.
+func (*WorkItem) Descriptor() ([]byte, []int) {
+	return file_hi_qa_issue_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *WorkItem) GetTitle() string {
+	if x != nil && x.Title != nil {
+		return *x.Title
+	}
+	return ""
+}
+
+func (x *WorkItem) GetKind() WorkKind {
+	if x != nil && x.Kind != nil {
+		return *x.Kind
+	}
+	return WorkKind_WORK_KIND_UNSPECIFIED
+}
+
+func (x *WorkItem) GetReason() string {
+	if x != nil && x.Reason != nil {
+		return *x.Reason
+	}
+	return ""
+}
+
+func (x *WorkItem) GetPlan() string {
+	if x != nil && x.Plan != nil {
+		return *x.Plan
+	}
+	return ""
+}
+
+func (x *WorkItem) GetRequiresProto() bool {
+	if x != nil && x.RequiresProto != nil {
+		return *x.RequiresProto
+	}
+	return false
+}
+
+func (x *WorkItem) GetRequiresProduction() bool {
+	if x != nil && x.RequiresProduction != nil {
+		return *x.RequiresProduction
+	}
+	return false
+}
+
+func (x *WorkItem) GetRequiresSensitive() bool {
+	if x != nil && x.RequiresSensitive != nil {
+		return *x.RequiresSensitive
+	}
+	return false
+}
+
+func (x *WorkItem) GetRepositories() []string {
+	if x != nil {
+		return x.Repositories
+	}
+	return nil
+}
+
+func (x *WorkItem) GetEvidence() []string {
+	if x != nil {
+		return x.Evidence
+	}
+	return nil
+}
+
+type AssessmentResult struct {
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	Kind             *WorkKind              `protobuf:"varint,1,opt,name=kind,proto3,enum=hi.qa.WorkKind,oneof" json:"kind,omitempty"`
+	Reason           *string                `protobuf:"bytes,2,opt,name=reason,proto3,oneof" json:"reason,omitempty"`
+	ExpectedBehavior *string                `protobuf:"bytes,3,opt,name=expected_behavior,json=expectedBehavior,proto3,oneof" json:"expected_behavior,omitempty"`
+	ActualBehavior   *string                `protobuf:"bytes,4,opt,name=actual_behavior,json=actualBehavior,proto3,oneof" json:"actual_behavior,omitempty"`
+	Evidence         []string               `protobuf:"bytes,5,rep,name=evidence,proto3" json:"evidence,omitempty"`
+	Items            []*WorkItem            `protobuf:"bytes,6,rep,name=items,proto3" json:"items,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
+}
+
+func (x *AssessmentResult) Reset() {
+	*x = AssessmentResult{}
+	mi := &file_hi_qa_issue_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AssessmentResult) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AssessmentResult) ProtoMessage() {}
+
+func (x *AssessmentResult) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_qa_issue_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AssessmentResult.ProtoReflect.Descriptor instead.
+func (*AssessmentResult) Descriptor() ([]byte, []int) {
+	return file_hi_qa_issue_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *AssessmentResult) GetKind() WorkKind {
+	if x != nil && x.Kind != nil {
+		return *x.Kind
+	}
+	return WorkKind_WORK_KIND_UNSPECIFIED
+}
+
+func (x *AssessmentResult) GetReason() string {
+	if x != nil && x.Reason != nil {
+		return *x.Reason
+	}
+	return ""
+}
+
+func (x *AssessmentResult) GetExpectedBehavior() string {
+	if x != nil && x.ExpectedBehavior != nil {
+		return *x.ExpectedBehavior
+	}
+	return ""
+}
+
+func (x *AssessmentResult) GetActualBehavior() string {
+	if x != nil && x.ActualBehavior != nil {
+		return *x.ActualBehavior
+	}
+	return ""
+}
+
+func (x *AssessmentResult) GetEvidence() []string {
+	if x != nil {
+		return x.Evidence
+	}
+	return nil
+}
+
+func (x *AssessmentResult) GetItems() []*WorkItem {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+type Assessment struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	IssueId       *uint64                `protobuf:"varint,2,opt,name=issue_id,json=issueId,proto3,oneof" json:"issue_id,omitempty"`
+	IssueRevision *uint64                `protobuf:"varint,3,opt,name=issue_revision,json=issueRevision,proto3,oneof" json:"issue_revision,omitempty"`
+	DocsCommit    *string                `protobuf:"bytes,4,opt,name=docs_commit,json=docsCommit,proto3,oneof" json:"docs_commit,omitempty"`
+	Result        *AssessmentResult      `protobuf:"bytes,5,opt,name=result,proto3" json:"result,omitempty"`
+	CreatedAt     *int64                 `protobuf:"varint,6,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Assessment) Reset() {
+	*x = Assessment{}
+	mi := &file_hi_qa_issue_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Assessment) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Assessment) ProtoMessage() {}
+
+func (x *Assessment) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_qa_issue_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Assessment.ProtoReflect.Descriptor instead.
+func (*Assessment) Descriptor() ([]byte, []int) {
+	return file_hi_qa_issue_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *Assessment) GetId() string {
+	if x != nil && x.Id != nil {
+		return *x.Id
+	}
+	return ""
+}
+
+func (x *Assessment) GetIssueId() uint64 {
+	if x != nil && x.IssueId != nil {
+		return *x.IssueId
+	}
+	return 0
+}
+
+func (x *Assessment) GetIssueRevision() uint64 {
+	if x != nil && x.IssueRevision != nil {
+		return *x.IssueRevision
+	}
+	return 0
+}
+
+func (x *Assessment) GetDocsCommit() string {
+	if x != nil && x.DocsCommit != nil {
+		return *x.DocsCommit
+	}
+	return ""
+}
+
+func (x *Assessment) GetResult() *AssessmentResult {
+	if x != nil {
+		return x.Result
+	}
+	return nil
+}
+
+func (x *Assessment) GetCreatedAt() int64 {
+	if x != nil && x.CreatedAt != nil {
+		return *x.CreatedAt
+	}
+	return 0
+}
+
+type RepositoryChange struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	Repository        *string                `protobuf:"bytes,1,opt,name=repository,proto3,oneof" json:"repository,omitempty"`
+	Origin            *string                `protobuf:"bytes,2,opt,name=origin,proto3,oneof" json:"origin,omitempty"`
+	BaseCommit        *string                `protobuf:"bytes,3,opt,name=base_commit,json=baseCommit,proto3,oneof" json:"base_commit,omitempty"`
+	ResultCommit      *string                `protobuf:"bytes,4,opt,name=result_commit,json=resultCommit,proto3,oneof" json:"result_commit,omitempty"`
+	Commits           []string               `protobuf:"bytes,5,rep,name=commits,proto3" json:"commits,omitempty"`
+	Files             []string               `protobuf:"bytes,6,rep,name=files,proto3" json:"files,omitempty"`
+	Diff              *string                `protobuf:"bytes,7,opt,name=diff,proto3,oneof" json:"diff,omitempty"`
+	Worktree          *string                `protobuf:"bytes,8,opt,name=worktree,proto3,oneof" json:"worktree,omitempty"`
+	Verified          *bool                  `protobuf:"varint,9,opt,name=verified,proto3,oneof" json:"verified,omitempty"`
+	VerificationError *string                `protobuf:"bytes,10,opt,name=verification_error,json=verificationError,proto3,oneof" json:"verification_error,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *RepositoryChange) Reset() {
+	*x = RepositoryChange{}
+	mi := &file_hi_qa_issue_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RepositoryChange) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RepositoryChange) ProtoMessage() {}
+
+func (x *RepositoryChange) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_qa_issue_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RepositoryChange.ProtoReflect.Descriptor instead.
+func (*RepositoryChange) Descriptor() ([]byte, []int) {
+	return file_hi_qa_issue_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *RepositoryChange) GetRepository() string {
+	if x != nil && x.Repository != nil {
+		return *x.Repository
+	}
+	return ""
+}
+
+func (x *RepositoryChange) GetOrigin() string {
+	if x != nil && x.Origin != nil {
+		return *x.Origin
+	}
+	return ""
+}
+
+func (x *RepositoryChange) GetBaseCommit() string {
+	if x != nil && x.BaseCommit != nil {
+		return *x.BaseCommit
+	}
+	return ""
+}
+
+func (x *RepositoryChange) GetResultCommit() string {
+	if x != nil && x.ResultCommit != nil {
+		return *x.ResultCommit
+	}
+	return ""
+}
+
+func (x *RepositoryChange) GetCommits() []string {
+	if x != nil {
+		return x.Commits
+	}
+	return nil
+}
+
+func (x *RepositoryChange) GetFiles() []string {
+	if x != nil {
+		return x.Files
+	}
+	return nil
+}
+
+func (x *RepositoryChange) GetDiff() string {
+	if x != nil && x.Diff != nil {
+		return *x.Diff
+	}
+	return ""
+}
+
+func (x *RepositoryChange) GetWorktree() string {
+	if x != nil && x.Worktree != nil {
+		return *x.Worktree
+	}
+	return ""
+}
+
+func (x *RepositoryChange) GetVerified() bool {
+	if x != nil && x.Verified != nil {
+		return *x.Verified
+	}
+	return false
+}
+
+func (x *RepositoryChange) GetVerificationError() string {
+	if x != nil && x.VerificationError != nil {
+		return *x.VerificationError
+	}
+	return ""
+}
+
+type DeploymentRecord struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Repository    *string                `protobuf:"bytes,1,opt,name=repository,proto3,oneof" json:"repository,omitempty"`
+	Environment   *Environment           `protobuf:"varint,2,opt,name=environment,proto3,enum=hi.qa.Environment,oneof" json:"environment,omitempty"`
+	BeforeVersion *string                `protobuf:"bytes,3,opt,name=before_version,json=beforeVersion,proto3,oneof" json:"before_version,omitempty"`
+	AfterVersion  *string                `protobuf:"bytes,4,opt,name=after_version,json=afterVersion,proto3,oneof" json:"after_version,omitempty"`
+	Evidence      []string               `protobuf:"bytes,5,rep,name=evidence,proto3" json:"evidence,omitempty"`
+	Verified      *bool                  `protobuf:"varint,6,opt,name=verified,proto3,oneof" json:"verified,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeploymentRecord) Reset() {
+	*x = DeploymentRecord{}
+	mi := &file_hi_qa_issue_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeploymentRecord) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeploymentRecord) ProtoMessage() {}
+
+func (x *DeploymentRecord) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_qa_issue_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeploymentRecord.ProtoReflect.Descriptor instead.
+func (*DeploymentRecord) Descriptor() ([]byte, []int) {
+	return file_hi_qa_issue_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *DeploymentRecord) GetRepository() string {
+	if x != nil && x.Repository != nil {
+		return *x.Repository
+	}
+	return ""
+}
+
+func (x *DeploymentRecord) GetEnvironment() Environment {
+	if x != nil && x.Environment != nil {
+		return *x.Environment
+	}
+	return Environment_ENVIRONMENT_UNSPECIFIED
+}
+
+func (x *DeploymentRecord) GetBeforeVersion() string {
+	if x != nil && x.BeforeVersion != nil {
+		return *x.BeforeVersion
+	}
+	return ""
+}
+
+func (x *DeploymentRecord) GetAfterVersion() string {
+	if x != nil && x.AfterVersion != nil {
+		return *x.AfterVersion
+	}
+	return ""
+}
+
+func (x *DeploymentRecord) GetEvidence() []string {
+	if x != nil {
+		return x.Evidence
+	}
+	return nil
+}
+
+func (x *DeploymentRecord) GetVerified() bool {
+	if x != nil && x.Verified != nil {
+		return *x.Verified
+	}
+	return false
+}
+
+type ExecutionRecord struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	IssueId       *uint64                `protobuf:"varint,2,opt,name=issue_id,json=issueId,proto3,oneof" json:"issue_id,omitempty"`
+	Phase         *ExecutionPhase        `protobuf:"varint,3,opt,name=phase,proto3,enum=hi.qa.ExecutionPhase,oneof" json:"phase,omitempty"`
+	State         *ExecutionState        `protobuf:"varint,4,opt,name=state,proto3,enum=hi.qa.ExecutionState,oneof" json:"state,omitempty"`
+	PlanId        *string                `protobuf:"bytes,5,opt,name=plan_id,json=planId,proto3,oneof" json:"plan_id,omitempty"`
+	ReviewId      *string                `protobuf:"bytes,6,opt,name=review_id,json=reviewId,proto3,oneof" json:"review_id,omitempty"`
+	DocsCommit    *string                `protobuf:"bytes,7,opt,name=docs_commit,json=docsCommit,proto3,oneof" json:"docs_commit,omitempty"`
+	StartedAt     *int64                 `protobuf:"varint,8,opt,name=started_at,json=startedAt,proto3,oneof" json:"started_at,omitempty"`
+	EndedAt       *int64                 `protobuf:"varint,9,opt,name=ended_at,json=endedAt,proto3,oneof" json:"ended_at,omitempty"`
+	ExitCode      *int32                 `protobuf:"varint,10,opt,name=exit_code,json=exitCode,proto3,oneof" json:"exit_code,omitempty"`
+	Summary       *string                `protobuf:"bytes,11,opt,name=summary,proto3,oneof" json:"summary,omitempty"`
+	ChangeIds     []string               `protobuf:"bytes,12,rep,name=change_ids,json=changeIds,proto3" json:"change_ids,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ExecutionRecord) Reset() {
+	*x = ExecutionRecord{}
+	mi := &file_hi_qa_issue_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ExecutionRecord) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ExecutionRecord) ProtoMessage() {}
+
+func (x *ExecutionRecord) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_qa_issue_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ExecutionRecord.ProtoReflect.Descriptor instead.
+func (*ExecutionRecord) Descriptor() ([]byte, []int) {
+	return file_hi_qa_issue_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *ExecutionRecord) GetId() string {
+	if x != nil && x.Id != nil {
+		return *x.Id
+	}
+	return ""
+}
+
+func (x *ExecutionRecord) GetIssueId() uint64 {
+	if x != nil && x.IssueId != nil {
+		return *x.IssueId
+	}
+	return 0
+}
+
+func (x *ExecutionRecord) GetPhase() ExecutionPhase {
+	if x != nil && x.Phase != nil {
+		return *x.Phase
+	}
+	return ExecutionPhase_EXECUTION_PHASE_UNSPECIFIED
+}
+
+func (x *ExecutionRecord) GetState() ExecutionState {
+	if x != nil && x.State != nil {
+		return *x.State
+	}
+	return ExecutionState_EXECUTION_STATE_UNSPECIFIED
+}
+
+func (x *ExecutionRecord) GetPlanId() string {
+	if x != nil && x.PlanId != nil {
+		return *x.PlanId
+	}
+	return ""
+}
+
+func (x *ExecutionRecord) GetReviewId() string {
+	if x != nil && x.ReviewId != nil {
+		return *x.ReviewId
+	}
+	return ""
+}
+
+func (x *ExecutionRecord) GetDocsCommit() string {
+	if x != nil && x.DocsCommit != nil {
+		return *x.DocsCommit
+	}
+	return ""
+}
+
+func (x *ExecutionRecord) GetStartedAt() int64 {
+	if x != nil && x.StartedAt != nil {
+		return *x.StartedAt
+	}
+	return 0
+}
+
+func (x *ExecutionRecord) GetEndedAt() int64 {
+	if x != nil && x.EndedAt != nil {
+		return *x.EndedAt
+	}
+	return 0
+}
+
+func (x *ExecutionRecord) GetExitCode() int32 {
+	if x != nil && x.ExitCode != nil {
+		return *x.ExitCode
+	}
+	return 0
+}
+
+func (x *ExecutionRecord) GetSummary() string {
+	if x != nil && x.Summary != nil {
+		return *x.Summary
+	}
+	return ""
+}
+
+func (x *ExecutionRecord) GetChangeIds() []string {
+	if x != nil {
+		return x.ChangeIds
+	}
+	return nil
+}
+
+type ChangeRecord struct {
+	state               protoimpl.MessageState `protogen:"open.v1"`
+	Id                  *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	IssueId             *uint64                `protobuf:"varint,2,opt,name=issue_id,json=issueId,proto3,oneof" json:"issue_id,omitempty"`
+	ExecutionId         *string                `protobuf:"bytes,3,opt,name=execution_id,json=executionId,proto3,oneof" json:"execution_id,omitempty"`
+	Phase               *ExecutionPhase        `protobuf:"varint,4,opt,name=phase,proto3,enum=hi.qa.ExecutionPhase,oneof" json:"phase,omitempty"`
+	Summary             *string                `protobuf:"bytes,5,opt,name=summary,proto3,oneof" json:"summary,omitempty"`
+	Repositories        []*RepositoryChange    `protobuf:"bytes,6,rep,name=repositories,proto3" json:"repositories,omitempty"`
+	Deployments         []*DeploymentRecord    `protobuf:"bytes,7,rep,name=deployments,proto3" json:"deployments,omitempty"`
+	Evidence            []string               `protobuf:"bytes,8,rep,name=evidence,proto3" json:"evidence,omitempty"`
+	ArchitectureReview  *string                `protobuf:"bytes,9,opt,name=architecture_review,json=architectureReview,proto3,oneof" json:"architecture_review,omitempty"`
+	VerifiedEnvironment *Environment           `protobuf:"varint,10,opt,name=verified_environment,json=verifiedEnvironment,proto3,enum=hi.qa.Environment,oneof" json:"verified_environment,omitempty"`
+	UserUnblocked       *bool                  `protobuf:"varint,11,opt,name=user_unblocked,json=userUnblocked,proto3,oneof" json:"user_unblocked,omitempty"`
+	State               *ExecutionState        `protobuf:"varint,12,opt,name=state,proto3,enum=hi.qa.ExecutionState,oneof" json:"state,omitempty"`
+	ReversesChange      *string                `protobuf:"bytes,13,opt,name=reverses_change,json=reversesChange,proto3,oneof" json:"reverses_change,omitempty"`
+	ReviewId            *string                `protobuf:"bytes,14,opt,name=review_id,json=reviewId,proto3,oneof" json:"review_id,omitempty"`
+	CreatedAt           *int64                 `protobuf:"varint,15,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
+}
+
+func (x *ChangeRecord) Reset() {
+	*x = ChangeRecord{}
+	mi := &file_hi_qa_issue_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ChangeRecord) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChangeRecord) ProtoMessage() {}
+
+func (x *ChangeRecord) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_qa_issue_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChangeRecord.ProtoReflect.Descriptor instead.
+func (*ChangeRecord) Descriptor() ([]byte, []int) {
+	return file_hi_qa_issue_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *ChangeRecord) GetId() string {
+	if x != nil && x.Id != nil {
+		return *x.Id
+	}
+	return ""
+}
+
+func (x *ChangeRecord) GetIssueId() uint64 {
+	if x != nil && x.IssueId != nil {
+		return *x.IssueId
+	}
+	return 0
+}
+
+func (x *ChangeRecord) GetExecutionId() string {
+	if x != nil && x.ExecutionId != nil {
+		return *x.ExecutionId
+	}
+	return ""
+}
+
+func (x *ChangeRecord) GetPhase() ExecutionPhase {
+	if x != nil && x.Phase != nil {
+		return *x.Phase
+	}
+	return ExecutionPhase_EXECUTION_PHASE_UNSPECIFIED
+}
+
+func (x *ChangeRecord) GetSummary() string {
+	if x != nil && x.Summary != nil {
+		return *x.Summary
+	}
+	return ""
+}
+
+func (x *ChangeRecord) GetRepositories() []*RepositoryChange {
+	if x != nil {
+		return x.Repositories
+	}
+	return nil
+}
+
+func (x *ChangeRecord) GetDeployments() []*DeploymentRecord {
+	if x != nil {
+		return x.Deployments
+	}
+	return nil
+}
+
+func (x *ChangeRecord) GetEvidence() []string {
+	if x != nil {
+		return x.Evidence
+	}
+	return nil
+}
+
+func (x *ChangeRecord) GetArchitectureReview() string {
+	if x != nil && x.ArchitectureReview != nil {
+		return *x.ArchitectureReview
+	}
+	return ""
+}
+
+func (x *ChangeRecord) GetVerifiedEnvironment() Environment {
+	if x != nil && x.VerifiedEnvironment != nil {
+		return *x.VerifiedEnvironment
+	}
+	return Environment_ENVIRONMENT_UNSPECIFIED
+}
+
+func (x *ChangeRecord) GetUserUnblocked() bool {
+	if x != nil && x.UserUnblocked != nil {
+		return *x.UserUnblocked
+	}
+	return false
+}
+
+func (x *ChangeRecord) GetState() ExecutionState {
+	if x != nil && x.State != nil {
+		return *x.State
+	}
+	return ExecutionState_EXECUTION_STATE_UNSPECIFIED
+}
+
+func (x *ChangeRecord) GetReversesChange() string {
+	if x != nil && x.ReversesChange != nil {
+		return *x.ReversesChange
+	}
+	return ""
+}
+
+func (x *ChangeRecord) GetReviewId() string {
+	if x != nil && x.ReviewId != nil {
+		return *x.ReviewId
+	}
+	return ""
+}
+
+func (x *ChangeRecord) GetCreatedAt() int64 {
+	if x != nil && x.CreatedAt != nil {
+		return *x.CreatedAt
+	}
+	return 0
+}
+
+type ReviewRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	IssueId       *uint64                `protobuf:"varint,2,opt,name=issue_id,json=issueId,proto3,oneof" json:"issue_id,omitempty"`
+	ChangeId      *string                `protobuf:"bytes,3,opt,name=change_id,json=changeId,proto3,oneof" json:"change_id,omitempty"`
+	Action        *ReviewAction          `protobuf:"varint,4,opt,name=action,proto3,enum=hi.qa.ReviewAction,oneof" json:"action,omitempty"`
+	Opinion       *string                `protobuf:"bytes,5,opt,name=opinion,proto3,oneof" json:"opinion,omitempty"`
+	Actor         *hi.Entity             `protobuf:"bytes,6,opt,name=actor,proto3" json:"actor,omitempty"`
+	State         *ReviewState           `protobuf:"varint,7,opt,name=state,proto3,enum=hi.qa.ReviewState,oneof" json:"state,omitempty"`
+	ExecutionId   *string                `protobuf:"bytes,8,opt,name=execution_id,json=executionId,proto3,oneof" json:"execution_id,omitempty"`
+	CreatedAt     *int64                 `protobuf:"varint,9,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
+	Result        *string                `protobuf:"bytes,10,opt,name=result,proto3,oneof" json:"result,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ReviewRequest) Reset() {
+	*x = ReviewRequest{}
+	mi := &file_hi_qa_issue_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ReviewRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ReviewRequest) ProtoMessage() {}
+
+func (x *ReviewRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_qa_issue_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ReviewRequest.ProtoReflect.Descriptor instead.
+func (*ReviewRequest) Descriptor() ([]byte, []int) {
+	return file_hi_qa_issue_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *ReviewRequest) GetId() string {
+	if x != nil && x.Id != nil {
+		return *x.Id
+	}
+	return ""
+}
+
+func (x *ReviewRequest) GetIssueId() uint64 {
+	if x != nil && x.IssueId != nil {
+		return *x.IssueId
+	}
+	return 0
+}
+
+func (x *ReviewRequest) GetChangeId() string {
+	if x != nil && x.ChangeId != nil {
+		return *x.ChangeId
+	}
+	return ""
+}
+
+func (x *ReviewRequest) GetAction() ReviewAction {
+	if x != nil && x.Action != nil {
+		return *x.Action
+	}
+	return ReviewAction_REVIEW_ACTION_UNSPECIFIED
+}
+
+func (x *ReviewRequest) GetOpinion() string {
+	if x != nil && x.Opinion != nil {
+		return *x.Opinion
+	}
+	return ""
+}
+
+func (x *ReviewRequest) GetActor() *hi.Entity {
+	if x != nil {
+		return x.Actor
+	}
+	return nil
+}
+
+func (x *ReviewRequest) GetState() ReviewState {
+	if x != nil && x.State != nil {
+		return *x.State
+	}
+	return ReviewState_REVIEW_STATE_UNSPECIFIED
+}
+
+func (x *ReviewRequest) GetExecutionId() string {
+	if x != nil && x.ExecutionId != nil {
+		return *x.ExecutionId
+	}
+	return ""
+}
+
+func (x *ReviewRequest) GetCreatedAt() int64 {
+	if x != nil && x.CreatedAt != nil {
+		return *x.CreatedAt
+	}
+	return 0
+}
+
+func (x *ReviewRequest) GetResult() string {
+	if x != nil && x.Result != nil {
+		return *x.Result
+	}
+	return ""
+}
+
+type ApprovalRecord struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	Id                *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	IssueId           *uint64                `protobuf:"varint,2,opt,name=issue_id,json=issueId,proto3,oneof" json:"issue_id,omitempty"`
+	PlanId            *string                `protobuf:"bytes,3,opt,name=plan_id,json=planId,proto3,oneof" json:"plan_id,omitempty"`
+	Decision          *Decision              `protobuf:"varint,4,opt,name=decision,proto3,enum=hi.qa.Decision,oneof" json:"decision,omitempty"`
+	Scope             *WorkItem              `protobuf:"bytes,5,opt,name=scope,proto3" json:"scope,omitempty"`
+	Actor             *hi.Entity             `protobuf:"bytes,6,opt,name=actor,proto3" json:"actor,omitempty"`
+	SourceMessageUuid *string                `protobuf:"bytes,7,opt,name=source_message_uuid,json=sourceMessageUuid,proto3,oneof" json:"source_message_uuid,omitempty"`
+	CreatedAt         *int64                 `protobuf:"varint,8,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
+	Note              *string                `protobuf:"bytes,9,opt,name=note,proto3,oneof" json:"note,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *ApprovalRecord) Reset() {
+	*x = ApprovalRecord{}
+	mi := &file_hi_qa_issue_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ApprovalRecord) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ApprovalRecord) ProtoMessage() {}
+
+func (x *ApprovalRecord) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_qa_issue_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ApprovalRecord.ProtoReflect.Descriptor instead.
+func (*ApprovalRecord) Descriptor() ([]byte, []int) {
+	return file_hi_qa_issue_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *ApprovalRecord) GetId() string {
+	if x != nil && x.Id != nil {
+		return *x.Id
+	}
+	return ""
+}
+
+func (x *ApprovalRecord) GetIssueId() uint64 {
+	if x != nil && x.IssueId != nil {
+		return *x.IssueId
+	}
+	return 0
+}
+
+func (x *ApprovalRecord) GetPlanId() string {
+	if x != nil && x.PlanId != nil {
+		return *x.PlanId
+	}
+	return ""
+}
+
+func (x *ApprovalRecord) GetDecision() Decision {
+	if x != nil && x.Decision != nil {
+		return *x.Decision
+	}
+	return Decision_DECISION_UNSPECIFIED
+}
+
+func (x *ApprovalRecord) GetScope() *WorkItem {
+	if x != nil {
+		return x.Scope
+	}
+	return nil
+}
+
+func (x *ApprovalRecord) GetActor() *hi.Entity {
+	if x != nil {
+		return x.Actor
+	}
+	return nil
+}
+
+func (x *ApprovalRecord) GetSourceMessageUuid() string {
+	if x != nil && x.SourceMessageUuid != nil {
+		return *x.SourceMessageUuid
+	}
+	return ""
+}
+
+func (x *ApprovalRecord) GetCreatedAt() int64 {
+	if x != nil && x.CreatedAt != nil {
+		return *x.CreatedAt
+	}
+	return 0
+}
+
+func (x *ApprovalRecord) GetNote() string {
+	if x != nil && x.Note != nil {
+		return *x.Note
+	}
+	return ""
+}
+
+type HistoryReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	IssueId       *uint64                `protobuf:"varint,1,opt,name=issue_id,json=issueId,proto3,oneof" json:"issue_id,omitempty"`
+	Offset        *uint32                `protobuf:"varint,2,opt,name=offset,proto3,oneof" json:"offset,omitempty"`
+	Limit         *uint32                `protobuf:"varint,3,opt,name=limit,proto3,oneof" json:"limit,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *HistoryReq) Reset() {
+	*x = HistoryReq{}
+	mi := &file_hi_qa_issue_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *HistoryReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*HistoryReq) ProtoMessage() {}
+
+func (x *HistoryReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_qa_issue_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use HistoryReq.ProtoReflect.Descriptor instead.
+func (*HistoryReq) Descriptor() ([]byte, []int) {
+	return file_hi_qa_issue_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *HistoryReq) GetIssueId() uint64 {
+	if x != nil && x.IssueId != nil {
+		return *x.IssueId
+	}
+	return 0
+}
+
+func (x *HistoryReq) GetOffset() uint32 {
+	if x != nil && x.Offset != nil {
+		return *x.Offset
+	}
+	return 0
+}
+
+func (x *HistoryReq) GetLimit() uint32 {
+	if x != nil && x.Limit != nil {
+		return *x.Limit
+	}
+	return 0
+}
+
+type ListAssessmentsResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Items         []*Assessment          `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	Total         *uint32                `protobuf:"varint,2,opt,name=total,proto3,oneof" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListAssessmentsResp) Reset() {
+	*x = ListAssessmentsResp{}
+	mi := &file_hi_qa_issue_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListAssessmentsResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListAssessmentsResp) ProtoMessage() {}
+
+func (x *ListAssessmentsResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_qa_issue_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListAssessmentsResp.ProtoReflect.Descriptor instead.
+func (*ListAssessmentsResp) Descriptor() ([]byte, []int) {
+	return file_hi_qa_issue_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *ListAssessmentsResp) GetItems() []*Assessment {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+func (x *ListAssessmentsResp) GetTotal() uint32 {
+	if x != nil && x.Total != nil {
+		return *x.Total
+	}
+	return 0
+}
+
+type ListExecutionsResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Items         []*ExecutionRecord     `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	Total         *uint32                `protobuf:"varint,2,opt,name=total,proto3,oneof" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListExecutionsResp) Reset() {
+	*x = ListExecutionsResp{}
+	mi := &file_hi_qa_issue_proto_msgTypes[22]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListExecutionsResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListExecutionsResp) ProtoMessage() {}
+
+func (x *ListExecutionsResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_qa_issue_proto_msgTypes[22]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListExecutionsResp.ProtoReflect.Descriptor instead.
+func (*ListExecutionsResp) Descriptor() ([]byte, []int) {
+	return file_hi_qa_issue_proto_rawDescGZIP(), []int{22}
+}
+
+func (x *ListExecutionsResp) GetItems() []*ExecutionRecord {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+func (x *ListExecutionsResp) GetTotal() uint32 {
+	if x != nil && x.Total != nil {
+		return *x.Total
+	}
+	return 0
+}
+
+type ListChangesResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Items         []*ChangeRecord        `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	Total         *uint32                `protobuf:"varint,2,opt,name=total,proto3,oneof" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListChangesResp) Reset() {
+	*x = ListChangesResp{}
+	mi := &file_hi_qa_issue_proto_msgTypes[23]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListChangesResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListChangesResp) ProtoMessage() {}
+
+func (x *ListChangesResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_qa_issue_proto_msgTypes[23]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListChangesResp.ProtoReflect.Descriptor instead.
+func (*ListChangesResp) Descriptor() ([]byte, []int) {
+	return file_hi_qa_issue_proto_rawDescGZIP(), []int{23}
+}
+
+func (x *ListChangesResp) GetItems() []*ChangeRecord {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+func (x *ListChangesResp) GetTotal() uint32 {
+	if x != nil && x.Total != nil {
+		return *x.Total
+	}
+	return 0
+}
+
+type ListReviewsResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Items         []*ReviewRequest       `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	Total         *uint32                `protobuf:"varint,2,opt,name=total,proto3,oneof" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListReviewsResp) Reset() {
+	*x = ListReviewsResp{}
+	mi := &file_hi_qa_issue_proto_msgTypes[24]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListReviewsResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListReviewsResp) ProtoMessage() {}
+
+func (x *ListReviewsResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_qa_issue_proto_msgTypes[24]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListReviewsResp.ProtoReflect.Descriptor instead.
+func (*ListReviewsResp) Descriptor() ([]byte, []int) {
+	return file_hi_qa_issue_proto_rawDescGZIP(), []int{24}
+}
+
+func (x *ListReviewsResp) GetItems() []*ReviewRequest {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+func (x *ListReviewsResp) GetTotal() uint32 {
+	if x != nil && x.Total != nil {
+		return *x.Total
+	}
+	return 0
+}
+
+type ListApprovalsResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Items         []*ApprovalRecord      `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	Total         *uint32                `protobuf:"varint,2,opt,name=total,proto3,oneof" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListApprovalsResp) Reset() {
+	*x = ListApprovalsResp{}
+	mi := &file_hi_qa_issue_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListApprovalsResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListApprovalsResp) ProtoMessage() {}
+
+func (x *ListApprovalsResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_qa_issue_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListApprovalsResp.ProtoReflect.Descriptor instead.
+func (*ListApprovalsResp) Descriptor() ([]byte, []int) {
+	return file_hi_qa_issue_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *ListApprovalsResp) GetItems() []*ApprovalRecord {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+func (x *ListApprovalsResp) GetTotal() uint32 {
+	if x != nil && x.Total != nil {
+		return *x.Total
+	}
+	return 0
+}
+
+type CreateReviewReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	IssueId       *uint64                `protobuf:"varint,1,opt,name=issue_id,json=issueId,proto3,oneof" json:"issue_id,omitempty"`
+	Revision      *uint64                `protobuf:"varint,2,opt,name=revision,proto3,oneof" json:"revision,omitempty"`
+	ChangeId      *string                `protobuf:"bytes,3,opt,name=change_id,json=changeId,proto3,oneof" json:"change_id,omitempty"`
+	Action        *ReviewAction          `protobuf:"varint,4,opt,name=action,proto3,enum=hi.qa.ReviewAction,oneof" json:"action,omitempty"`
+	Opinion       *string                `protobuf:"bytes,5,opt,name=opinion,proto3,oneof" json:"opinion,omitempty"`
+	RequestId     *string                `protobuf:"bytes,6,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateReviewReq) Reset() {
+	*x = CreateReviewReq{}
+	mi := &file_hi_qa_issue_proto_msgTypes[26]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateReviewReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateReviewReq) ProtoMessage() {}
+
+func (x *CreateReviewReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_qa_issue_proto_msgTypes[26]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateReviewReq.ProtoReflect.Descriptor instead.
+func (*CreateReviewReq) Descriptor() ([]byte, []int) {
+	return file_hi_qa_issue_proto_rawDescGZIP(), []int{26}
+}
+
+func (x *CreateReviewReq) GetIssueId() uint64 {
+	if x != nil && x.IssueId != nil {
+		return *x.IssueId
+	}
+	return 0
+}
+
+func (x *CreateReviewReq) GetRevision() uint64 {
+	if x != nil && x.Revision != nil {
+		return *x.Revision
+	}
+	return 0
+}
+
+func (x *CreateReviewReq) GetChangeId() string {
+	if x != nil && x.ChangeId != nil {
+		return *x.ChangeId
+	}
+	return ""
+}
+
+func (x *CreateReviewReq) GetAction() ReviewAction {
+	if x != nil && x.Action != nil {
+		return *x.Action
+	}
+	return ReviewAction_REVIEW_ACTION_UNSPECIFIED
+}
+
+func (x *CreateReviewReq) GetOpinion() string {
+	if x != nil && x.Opinion != nil {
+		return *x.Opinion
+	}
+	return ""
+}
+
+func (x *CreateReviewReq) GetRequestId() string {
+	if x != nil && x.RequestId != nil {
+		return *x.RequestId
+	}
+	return ""
+}
+
+type DecideReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	IssueId       *uint64                `protobuf:"varint,1,opt,name=issue_id,json=issueId,proto3,oneof" json:"issue_id,omitempty"`
+	Revision      *uint64                `protobuf:"varint,2,opt,name=revision,proto3,oneof" json:"revision,omitempty"`
+	PlanId        *string                `protobuf:"bytes,3,opt,name=plan_id,json=planId,proto3,oneof" json:"plan_id,omitempty"`
+	Decision      *Decision              `protobuf:"varint,4,opt,name=decision,proto3,enum=hi.qa.Decision,oneof" json:"decision,omitempty"`
+	RequestId     *string                `protobuf:"bytes,5,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
+	Note          *string                `protobuf:"bytes,6,opt,name=note,proto3,oneof" json:"note,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DecideReq) Reset() {
+	*x = DecideReq{}
+	mi := &file_hi_qa_issue_proto_msgTypes[27]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DecideReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DecideReq) ProtoMessage() {}
+
+func (x *DecideReq) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_qa_issue_proto_msgTypes[27]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DecideReq.ProtoReflect.Descriptor instead.
+func (*DecideReq) Descriptor() ([]byte, []int) {
+	return file_hi_qa_issue_proto_rawDescGZIP(), []int{27}
+}
+
+func (x *DecideReq) GetIssueId() uint64 {
+	if x != nil && x.IssueId != nil {
+		return *x.IssueId
+	}
+	return 0
+}
+
+func (x *DecideReq) GetRevision() uint64 {
+	if x != nil && x.Revision != nil {
+		return *x.Revision
+	}
+	return 0
+}
+
+func (x *DecideReq) GetPlanId() string {
+	if x != nil && x.PlanId != nil {
+		return *x.PlanId
+	}
+	return ""
+}
+
+func (x *DecideReq) GetDecision() Decision {
+	if x != nil && x.Decision != nil {
+		return *x.Decision
+	}
+	return Decision_DECISION_UNSPECIFIED
+}
+
+func (x *DecideReq) GetRequestId() string {
+	if x != nil && x.RequestId != nil {
+		return *x.RequestId
+	}
+	return ""
+}
+
+func (x *DecideReq) GetNote() string {
+	if x != nil && x.Note != nil {
+		return *x.Note
+	}
+	return ""
+}
+
 var File_hi_qa_issue_proto protoreflect.FileDescriptor
 
 const file_hi_qa_issue_proto_rawDesc = "" +
@@ -913,14 +2764,19 @@ const file_hi_qa_issue_proto_rawDesc = "" +
 	"\x05_kindB\a\n" +
 	"\x05_textB\f\n" +
 	"\n" +
-	"_timestamp\"\xc0\x01\n" +
+	"_timestamp\"\xbe\x02\n" +
 	"\fConfirmation\x12%\n" +
 	"\bquestion\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\bquestion\x88\x01\x01\x127\n" +
 	"\x0erequested_from\x18\x02 \x01(\v2\n" +
 	".hi.EntityB\x04\x90\xb5\x18\x01R\rrequestedFrom\x12,\n" +
-	"\fmessage_uuid\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\vmessageUuid\x88\x01\x01:\x04\x98\xb5\x18\x03B\v\n" +
+	"\fmessage_uuid\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\vmessageUuid\x88\x01\x01\x12\"\n" +
+	"\aplan_id\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x06planId\x88\x01\x01\x126\n" +
+	"\x11approval_required\x18\x05 \x01(\bB\x04\x90\xb5\x18\x03H\x03R\x10approvalRequired\x88\x01\x01:\x04\x98\xb5\x18\x03B\v\n" +
 	"\t_questionB\x0f\n" +
-	"\r_message_uuid\"\x9c\x05\n" +
+	"\r_message_uuidB\n" +
+	"\n" +
+	"\b_plan_idB\x14\n" +
+	"\x12_approval_required\"\x9c\x05\n" +
 	"\x05Issue\x12\x19\n" +
 	"\x02id\x18\x01 \x01(\x04B\x04\x90\xb5\x18\x03H\x00R\x02id\x88\x01\x01\x12\x1f\n" +
 	"\x05title\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x05title\x88\x01\x01\x125\n" +
@@ -989,7 +2845,7 @@ const file_hi_qa_issue_proto_rawDesc = "" +
 	"\x06_token\"=\n" +
 	"\aSession\x12,\n" +
 	"\boperator\x18\x01 \x01(\v2\n" +
-	".hi.EntityB\x04\x90\xb5\x18\x01R\boperator:\x04\x98\xb5\x18\x03\"\xc1\x03\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x01R\boperator:\x04\x98\xb5\x18\x03\"\xf5\x05\n" +
 	"\fWorkerResult\x12>\n" +
 	"\x06status\x18\x01 \x01(\x0e2\x12.hi.qa.IssueStatusB\r\xbaH\n" +
 	"\xc8\x01\x01\x82\x01\x04\x18\x03\x18\x04H\x00R\x06status\x88\x01\x01\x12,\n" +
@@ -999,13 +2855,272 @@ const file_hi_qa_issue_proto_rawDesc = "" +
 	"\bevidence\x18\x04 \x03(\tB\x0f\xbaH\f\x92\x01\t\x10@\"\x05r\x03\x18\xc0>R\bevidence\x12>\n" +
 	"\x13architecture_review\x18\x05 \x01(\tB\b\xbaH\x05r\x03\x18\xc0>H\x03R\x12architectureReview\x88\x01\x01\x12V\n" +
 	"\x14verified_environment\x18\x06 \x01(\x0e2\x12.hi.qa.EnvironmentB\n" +
-	"\xbaH\a\x82\x01\x04\x18\x01\x18\x02H\x04R\x13verifiedEnvironment\x88\x01\x01B\t\n" +
+	"\xbaH\a\x82\x01\x04\x18\x01\x18\x02H\x04R\x13verifiedEnvironment\x88\x01\x01\x121\n" +
+	"\achanges\x18\a \x03(\v2\x17.hi.qa.RepositoryChangeR\achanges\x129\n" +
+	"\vdeployments\x18\b \x03(\v2\x17.hi.qa.DeploymentRecordR\vdeployments\x12*\n" +
+	"\x0euser_unblocked\x18\t \x01(\bH\x05R\ruserUnblocked\x88\x01\x01\x120\n" +
+	"\x11new_functionality\x18\n" +
+	" \x01(\bH\x06R\x10newFunctionality\x88\x01\x01\x12*\n" +
+	"\x0erequires_proto\x18\v \x01(\bH\aR\rrequiresProto\x88\x01\x01B\t\n" +
 	"\a_statusB\n" +
 	"\n" +
 	"\b_summaryB\v\n" +
 	"\t_questionB\x16\n" +
 	"\x14_architecture_reviewB\x17\n" +
-	"\x15_verified_environment*\x9d\x01\n" +
+	"\x15_verified_environmentB\x11\n" +
+	"\x0f_user_unblockedB\x14\n" +
+	"\x12_new_functionalityB\x11\n" +
+	"\x0f_requires_proto\"\x80\x04\n" +
+	"\bWorkItem\x12\x1f\n" +
+	"\x05title\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x05title\x88\x01\x01\x12.\n" +
+	"\x04kind\x18\x02 \x01(\x0e2\x0f.hi.qa.WorkKindB\x04\x90\xb5\x18\x03H\x01R\x04kind\x88\x01\x01\x12!\n" +
+	"\x06reason\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x06reason\x88\x01\x01\x12\x1d\n" +
+	"\x04plan\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x04plan\x88\x01\x01\x120\n" +
+	"\x0erequires_proto\x18\x05 \x01(\bB\x04\x90\xb5\x18\x03H\x04R\rrequiresProto\x88\x01\x01\x12:\n" +
+	"\x13requires_production\x18\x06 \x01(\bB\x04\x90\xb5\x18\x03H\x05R\x12requiresProduction\x88\x01\x01\x128\n" +
+	"\x12requires_sensitive\x18\a \x01(\bB\x04\x90\xb5\x18\x03H\x06R\x11requiresSensitive\x88\x01\x01\x12(\n" +
+	"\frepositories\x18\b \x03(\tB\x04\x90\xb5\x18\x03R\frepositories\x12 \n" +
+	"\bevidence\x18\t \x03(\tB\x04\x90\xb5\x18\x03R\bevidence:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_titleB\a\n" +
+	"\x05_kindB\t\n" +
+	"\a_reasonB\a\n" +
+	"\x05_planB\x11\n" +
+	"\x0f_requires_protoB\x16\n" +
+	"\x14_requires_productionB\x15\n" +
+	"\x13_requires_sensitive\"\xe4\x02\n" +
+	"\x10AssessmentResult\x12.\n" +
+	"\x04kind\x18\x01 \x01(\x0e2\x0f.hi.qa.WorkKindB\x04\x90\xb5\x18\x03H\x00R\x04kind\x88\x01\x01\x12!\n" +
+	"\x06reason\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x06reason\x88\x01\x01\x126\n" +
+	"\x11expected_behavior\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x10expectedBehavior\x88\x01\x01\x122\n" +
+	"\x0factual_behavior\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\x0eactualBehavior\x88\x01\x01\x12 \n" +
+	"\bevidence\x18\x05 \x03(\tB\x04\x90\xb5\x18\x03R\bevidence\x12+\n" +
+	"\x05items\x18\x06 \x03(\v2\x0f.hi.qa.WorkItemB\x04\x90\xb5\x18\x03R\x05items:\x04\x98\xb5\x18\x03B\a\n" +
+	"\x05_kindB\t\n" +
+	"\a_reasonB\x14\n" +
+	"\x12_expected_behaviorB\x12\n" +
+	"\x10_actual_behavior\"\xd8\x02\n" +
+	"\n" +
+	"Assessment\x12\x19\n" +
+	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x02id\x88\x01\x01\x12$\n" +
+	"\bissue_id\x18\x02 \x01(\x04B\x04\x90\xb5\x18\x03H\x01R\aissueId\x88\x01\x01\x120\n" +
+	"\x0eissue_revision\x18\x03 \x01(\x04B\x04\x90\xb5\x18\x03H\x02R\rissueRevision\x88\x01\x01\x12*\n" +
+	"\vdocs_commit\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\n" +
+	"docsCommit\x88\x01\x01\x125\n" +
+	"\x06result\x18\x05 \x01(\v2\x17.hi.qa.AssessmentResultB\x04\x90\xb5\x18\x03R\x06result\x12(\n" +
+	"\n" +
+	"created_at\x18\x06 \x01(\x03B\x04\x90\xb5\x18\x03H\x04R\tcreatedAt\x88\x01\x01:\x04\x98\xb5\x18\x03B\x05\n" +
+	"\x03_idB\v\n" +
+	"\t_issue_idB\x11\n" +
+	"\x0f_issue_revisionB\x0e\n" +
+	"\f_docs_commitB\r\n" +
+	"\v_created_at\"\x9b\x04\n" +
+	"\x10RepositoryChange\x12)\n" +
+	"\n" +
+	"repository\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\n" +
+	"repository\x88\x01\x01\x12!\n" +
+	"\x06origin\x18\x02 \x01(\tB\x04\x90\xb5\x18\x03H\x01R\x06origin\x88\x01\x01\x12*\n" +
+	"\vbase_commit\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\n" +
+	"baseCommit\x88\x01\x01\x12.\n" +
+	"\rresult_commit\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\fresultCommit\x88\x01\x01\x12\x1e\n" +
+	"\acommits\x18\x05 \x03(\tB\x04\x90\xb5\x18\x03R\acommits\x12\x1a\n" +
+	"\x05files\x18\x06 \x03(\tB\x04\x90\xb5\x18\x03R\x05files\x12\x1d\n" +
+	"\x04diff\x18\a \x01(\tB\x04\x90\xb5\x18\x03H\x04R\x04diff\x88\x01\x01\x12%\n" +
+	"\bworktree\x18\b \x01(\tB\x04\x90\xb5\x18\x03H\x05R\bworktree\x88\x01\x01\x12%\n" +
+	"\bverified\x18\t \x01(\bB\x04\x90\xb5\x18\x03H\x06R\bverified\x88\x01\x01\x128\n" +
+	"\x12verification_error\x18\n" +
+	" \x01(\tB\x04\x90\xb5\x18\x03H\aR\x11verificationError\x88\x01\x01:\x04\x98\xb5\x18\x03B\r\n" +
+	"\v_repositoryB\t\n" +
+	"\a_originB\x0e\n" +
+	"\f_base_commitB\x10\n" +
+	"\x0e_result_commitB\a\n" +
+	"\x05_diffB\v\n" +
+	"\t_worktreeB\v\n" +
+	"\t_verifiedB\x15\n" +
+	"\x13_verification_error\"\x80\x03\n" +
+	"\x10DeploymentRecord\x12)\n" +
+	"\n" +
+	"repository\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\n" +
+	"repository\x88\x01\x01\x12?\n" +
+	"\venvironment\x18\x02 \x01(\x0e2\x12.hi.qa.EnvironmentB\x04\x90\xb5\x18\x03H\x01R\venvironment\x88\x01\x01\x120\n" +
+	"\x0ebefore_version\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\rbeforeVersion\x88\x01\x01\x12.\n" +
+	"\rafter_version\x18\x04 \x01(\tB\x04\x90\xb5\x18\x03H\x03R\fafterVersion\x88\x01\x01\x12 \n" +
+	"\bevidence\x18\x05 \x03(\tB\x04\x90\xb5\x18\x03R\bevidence\x12%\n" +
+	"\bverified\x18\x06 \x01(\bB\x04\x90\xb5\x18\x03H\x04R\bverified\x88\x01\x01:\x04\x98\xb5\x18\x03B\r\n" +
+	"\v_repositoryB\x0e\n" +
+	"\f_environmentB\x11\n" +
+	"\x0f_before_versionB\x10\n" +
+	"\x0e_after_versionB\v\n" +
+	"\t_verified\"\x8a\x05\n" +
+	"\x0fExecutionRecord\x12\x19\n" +
+	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x02id\x88\x01\x01\x12$\n" +
+	"\bissue_id\x18\x02 \x01(\x04B\x04\x90\xb5\x18\x03H\x01R\aissueId\x88\x01\x01\x126\n" +
+	"\x05phase\x18\x03 \x01(\x0e2\x15.hi.qa.ExecutionPhaseB\x04\x90\xb5\x18\x03H\x02R\x05phase\x88\x01\x01\x126\n" +
+	"\x05state\x18\x04 \x01(\x0e2\x15.hi.qa.ExecutionStateB\x04\x90\xb5\x18\x03H\x03R\x05state\x88\x01\x01\x12\"\n" +
+	"\aplan_id\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x04R\x06planId\x88\x01\x01\x12&\n" +
+	"\treview_id\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03H\x05R\breviewId\x88\x01\x01\x12*\n" +
+	"\vdocs_commit\x18\a \x01(\tB\x04\x90\xb5\x18\x03H\x06R\n" +
+	"docsCommit\x88\x01\x01\x12(\n" +
+	"\n" +
+	"started_at\x18\b \x01(\x03B\x04\x90\xb5\x18\x03H\aR\tstartedAt\x88\x01\x01\x12$\n" +
+	"\bended_at\x18\t \x01(\x03B\x04\x90\xb5\x18\x03H\bR\aendedAt\x88\x01\x01\x12&\n" +
+	"\texit_code\x18\n" +
+	" \x01(\x05B\x04\x90\xb5\x18\x03H\tR\bexitCode\x88\x01\x01\x12#\n" +
+	"\asummary\x18\v \x01(\tB\x04\x90\xb5\x18\x03H\n" +
+	"R\asummary\x88\x01\x01\x12#\n" +
+	"\n" +
+	"change_ids\x18\f \x03(\tB\x04\x90\xb5\x18\x03R\tchangeIds:\x04\x98\xb5\x18\x03B\x05\n" +
+	"\x03_idB\v\n" +
+	"\t_issue_idB\b\n" +
+	"\x06_phaseB\b\n" +
+	"\x06_stateB\n" +
+	"\n" +
+	"\b_plan_idB\f\n" +
+	"\n" +
+	"_review_idB\x0e\n" +
+	"\f_docs_commitB\r\n" +
+	"\v_started_atB\v\n" +
+	"\t_ended_atB\f\n" +
+	"\n" +
+	"_exit_codeB\n" +
+	"\n" +
+	"\b_summary\"\xbe\a\n" +
+	"\fChangeRecord\x12\x19\n" +
+	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x02id\x88\x01\x01\x12$\n" +
+	"\bissue_id\x18\x02 \x01(\x04B\x04\x90\xb5\x18\x03H\x01R\aissueId\x88\x01\x01\x12,\n" +
+	"\fexecution_id\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\vexecutionId\x88\x01\x01\x126\n" +
+	"\x05phase\x18\x04 \x01(\x0e2\x15.hi.qa.ExecutionPhaseB\x04\x90\xb5\x18\x03H\x03R\x05phase\x88\x01\x01\x12#\n" +
+	"\asummary\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x04R\asummary\x88\x01\x01\x12A\n" +
+	"\frepositories\x18\x06 \x03(\v2\x17.hi.qa.RepositoryChangeB\x04\x90\xb5\x18\x03R\frepositories\x12?\n" +
+	"\vdeployments\x18\a \x03(\v2\x17.hi.qa.DeploymentRecordB\x04\x90\xb5\x18\x03R\vdeployments\x12 \n" +
+	"\bevidence\x18\b \x03(\tB\x04\x90\xb5\x18\x03R\bevidence\x12:\n" +
+	"\x13architecture_review\x18\t \x01(\tB\x04\x90\xb5\x18\x03H\x05R\x12architectureReview\x88\x01\x01\x12P\n" +
+	"\x14verified_environment\x18\n" +
+	" \x01(\x0e2\x12.hi.qa.EnvironmentB\x04\x90\xb5\x18\x03H\x06R\x13verifiedEnvironment\x88\x01\x01\x120\n" +
+	"\x0euser_unblocked\x18\v \x01(\bB\x04\x90\xb5\x18\x03H\aR\ruserUnblocked\x88\x01\x01\x126\n" +
+	"\x05state\x18\f \x01(\x0e2\x15.hi.qa.ExecutionStateB\x04\x90\xb5\x18\x03H\bR\x05state\x88\x01\x01\x122\n" +
+	"\x0freverses_change\x18\r \x01(\tB\x04\x90\xb5\x18\x03H\tR\x0ereversesChange\x88\x01\x01\x12&\n" +
+	"\treview_id\x18\x0e \x01(\tB\x04\x90\xb5\x18\x03H\n" +
+	"R\breviewId\x88\x01\x01\x12(\n" +
+	"\n" +
+	"created_at\x18\x0f \x01(\x03B\x04\x90\xb5\x18\x03H\vR\tcreatedAt\x88\x01\x01:\x04\x98\xb5\x18\x03B\x05\n" +
+	"\x03_idB\v\n" +
+	"\t_issue_idB\x0f\n" +
+	"\r_execution_idB\b\n" +
+	"\x06_phaseB\n" +
+	"\n" +
+	"\b_summaryB\x16\n" +
+	"\x14_architecture_reviewB\x17\n" +
+	"\x15_verified_environmentB\x11\n" +
+	"\x0f_user_unblockedB\b\n" +
+	"\x06_stateB\x12\n" +
+	"\x10_reverses_changeB\f\n" +
+	"\n" +
+	"_review_idB\r\n" +
+	"\v_created_at\"\xa1\x04\n" +
+	"\rReviewRequest\x12\x19\n" +
+	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x02id\x88\x01\x01\x12$\n" +
+	"\bissue_id\x18\x02 \x01(\x04B\x04\x90\xb5\x18\x03H\x01R\aissueId\x88\x01\x01\x12&\n" +
+	"\tchange_id\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\bchangeId\x88\x01\x01\x126\n" +
+	"\x06action\x18\x04 \x01(\x0e2\x13.hi.qa.ReviewActionB\x04\x90\xb5\x18\x03H\x03R\x06action\x88\x01\x01\x12#\n" +
+	"\aopinion\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x04R\aopinion\x88\x01\x01\x12&\n" +
+	"\x05actor\x18\x06 \x01(\v2\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x03R\x05actor\x123\n" +
+	"\x05state\x18\a \x01(\x0e2\x12.hi.qa.ReviewStateB\x04\x90\xb5\x18\x03H\x05R\x05state\x88\x01\x01\x12,\n" +
+	"\fexecution_id\x18\b \x01(\tB\x04\x90\xb5\x18\x03H\x06R\vexecutionId\x88\x01\x01\x12(\n" +
+	"\n" +
+	"created_at\x18\t \x01(\x03B\x04\x90\xb5\x18\x03H\aR\tcreatedAt\x88\x01\x01\x12!\n" +
+	"\x06result\x18\n" +
+	" \x01(\tB\x04\x90\xb5\x18\x03H\bR\x06result\x88\x01\x01:\x04\x98\xb5\x18\x03B\x05\n" +
+	"\x03_idB\v\n" +
+	"\t_issue_idB\f\n" +
+	"\n" +
+	"_change_idB\t\n" +
+	"\a_actionB\n" +
+	"\n" +
+	"\b_opinionB\b\n" +
+	"\x06_stateB\x0f\n" +
+	"\r_execution_idB\r\n" +
+	"\v_created_atB\t\n" +
+	"\a_result\"\xe9\x03\n" +
+	"\x0eApprovalRecord\x12\x19\n" +
+	"\x02id\x18\x01 \x01(\tB\x04\x90\xb5\x18\x03H\x00R\x02id\x88\x01\x01\x12$\n" +
+	"\bissue_id\x18\x02 \x01(\x04B\x04\x90\xb5\x18\x03H\x01R\aissueId\x88\x01\x01\x12\"\n" +
+	"\aplan_id\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x06planId\x88\x01\x01\x126\n" +
+	"\bdecision\x18\x04 \x01(\x0e2\x0f.hi.qa.DecisionB\x04\x90\xb5\x18\x03H\x03R\bdecision\x88\x01\x01\x12+\n" +
+	"\x05scope\x18\x05 \x01(\v2\x0f.hi.qa.WorkItemB\x04\x90\xb5\x18\x03R\x05scope\x12&\n" +
+	"\x05actor\x18\x06 \x01(\v2\n" +
+	".hi.EntityB\x04\x90\xb5\x18\x03R\x05actor\x129\n" +
+	"\x13source_message_uuid\x18\a \x01(\tB\x04\x90\xb5\x18\x03H\x04R\x11sourceMessageUuid\x88\x01\x01\x12(\n" +
+	"\n" +
+	"created_at\x18\b \x01(\x03B\x04\x90\xb5\x18\x03H\x05R\tcreatedAt\x88\x01\x01\x12\x1d\n" +
+	"\x04note\x18\t \x01(\tB\x04\x90\xb5\x18\x03H\x06R\x04note\x88\x01\x01:\x04\x98\xb5\x18\x03B\x05\n" +
+	"\x03_idB\v\n" +
+	"\t_issue_idB\n" +
+	"\n" +
+	"\b_plan_idB\v\n" +
+	"\t_decisionB\x16\n" +
+	"\x14_source_message_uuidB\r\n" +
+	"\v_created_atB\a\n" +
+	"\x05_note\"\x9e\x01\n" +
+	"\n" +
+	"HistoryReq\x12$\n" +
+	"\bissue_id\x18\x01 \x01(\x04B\x04\x90\xb5\x18\x03H\x00R\aissueId\x88\x01\x01\x12!\n" +
+	"\x06offset\x18\x02 \x01(\rB\x04\x90\xb5\x18\x03H\x01R\x06offset\x88\x01\x01\x12\x1f\n" +
+	"\x05limit\x18\x03 \x01(\rB\x04\x90\xb5\x18\x03H\x02R\x05limit\x88\x01\x01:\x04\x98\xb5\x18\x03B\v\n" +
+	"\t_issue_idB\t\n" +
+	"\a_offsetB\b\n" +
+	"\x06_limit\"u\n" +
+	"\x13ListAssessmentsResp\x12-\n" +
+	"\x05items\x18\x01 \x03(\v2\x11.hi.qa.AssessmentB\x04\x90\xb5\x18\x03R\x05items\x12\x1f\n" +
+	"\x05total\x18\x02 \x01(\rB\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_total\"y\n" +
+	"\x12ListExecutionsResp\x122\n" +
+	"\x05items\x18\x01 \x03(\v2\x16.hi.qa.ExecutionRecordB\x04\x90\xb5\x18\x03R\x05items\x12\x1f\n" +
+	"\x05total\x18\x02 \x01(\rB\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_total\"s\n" +
+	"\x0fListChangesResp\x12/\n" +
+	"\x05items\x18\x01 \x03(\v2\x13.hi.qa.ChangeRecordB\x04\x90\xb5\x18\x03R\x05items\x12\x1f\n" +
+	"\x05total\x18\x02 \x01(\rB\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_total\"t\n" +
+	"\x0fListReviewsResp\x120\n" +
+	"\x05items\x18\x01 \x03(\v2\x14.hi.qa.ReviewRequestB\x04\x90\xb5\x18\x03R\x05items\x12\x1f\n" +
+	"\x05total\x18\x02 \x01(\rB\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_total\"w\n" +
+	"\x11ListApprovalsResp\x121\n" +
+	"\x05items\x18\x01 \x03(\v2\x15.hi.qa.ApprovalRecordB\x04\x90\xb5\x18\x03R\x05items\x12\x1f\n" +
+	"\x05total\x18\x02 \x01(\rB\x04\x90\xb5\x18\x03H\x00R\x05total\x88\x01\x01:\x04\x98\xb5\x18\x03B\b\n" +
+	"\x06_total\"\xe1\x02\n" +
+	"\x0fCreateReviewReq\x12$\n" +
+	"\bissue_id\x18\x01 \x01(\x04B\x04\x90\xb5\x18\x03H\x00R\aissueId\x88\x01\x01\x12%\n" +
+	"\brevision\x18\x02 \x01(\x04B\x04\x90\xb5\x18\x03H\x01R\brevision\x88\x01\x01\x12&\n" +
+	"\tchange_id\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\bchangeId\x88\x01\x01\x126\n" +
+	"\x06action\x18\x04 \x01(\x0e2\x13.hi.qa.ReviewActionB\x04\x90\xb5\x18\x03H\x03R\x06action\x88\x01\x01\x12#\n" +
+	"\aopinion\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x04R\aopinion\x88\x01\x01\x12(\n" +
+	"\n" +
+	"request_id\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03H\x05R\trequestId\x88\x01\x01:\x04\x98\xb5\x18\x03B\v\n" +
+	"\t_issue_idB\v\n" +
+	"\t_revisionB\f\n" +
+	"\n" +
+	"_change_idB\t\n" +
+	"\a_actionB\n" +
+	"\n" +
+	"\b_opinionB\r\n" +
+	"\v_request_id\"\xce\x02\n" +
+	"\tDecideReq\x12$\n" +
+	"\bissue_id\x18\x01 \x01(\x04B\x04\x90\xb5\x18\x03H\x00R\aissueId\x88\x01\x01\x12%\n" +
+	"\brevision\x18\x02 \x01(\x04B\x04\x90\xb5\x18\x03H\x01R\brevision\x88\x01\x01\x12\"\n" +
+	"\aplan_id\x18\x03 \x01(\tB\x04\x90\xb5\x18\x03H\x02R\x06planId\x88\x01\x01\x126\n" +
+	"\bdecision\x18\x04 \x01(\x0e2\x0f.hi.qa.DecisionB\x04\x90\xb5\x18\x03H\x03R\bdecision\x88\x01\x01\x12(\n" +
+	"\n" +
+	"request_id\x18\x05 \x01(\tB\x04\x90\xb5\x18\x03H\x04R\trequestId\x88\x01\x01\x12\x1d\n" +
+	"\x04note\x18\x06 \x01(\tB\x04\x90\xb5\x18\x03H\x05R\x04note\x88\x01\x01:\x04\x98\xb5\x18\x03B\v\n" +
+	"\t_issue_idB\v\n" +
+	"\t_revisionB\n" +
+	"\n" +
+	"\b_plan_idB\v\n" +
+	"\t_decisionB\r\n" +
+	"\v_request_idB\a\n" +
+	"\x05_note*\x9d\x01\n" +
 	"\vIssueStatus\x12\x1c\n" +
 	"\x18ISSUE_STATUS_UNSPECIFIED\x10\x00\x12\x1c\n" +
 	"\x18ISSUE_STATUS_NOT_STARTED\x10\x01\x12\x1c\n" +
@@ -1015,7 +3130,39 @@ const file_hi_qa_issue_proto_rawDesc = "" +
 	"\vEnvironment\x12\x1b\n" +
 	"\x17ENVIRONMENT_UNSPECIFIED\x10\x00\x12\x1a\n" +
 	"\x16ENVIRONMENT_PRODUCTION\x10\x01\x12\x1b\n" +
-	"\x17ENVIRONMENT_DEVELOPMENT\x10\x02Bu\n" +
+	"\x17ENVIRONMENT_DEVELOPMENT\x10\x02*\x85\x01\n" +
+	"\bWorkKind\x12\x19\n" +
+	"\x15WORK_KIND_UNSPECIFIED\x10\x00\x12\x15\n" +
+	"\x11WORK_KIND_BUG_FIX\x10\x01\x12\x15\n" +
+	"\x11WORK_KIND_FEATURE\x10\x02\x12\x13\n" +
+	"\x0fWORK_KIND_MIXED\x10\x03\x12\x1b\n" +
+	"\x17WORK_KIND_CLARIFICATION\x10\x04*\xa1\x01\n" +
+	"\x0eExecutionPhase\x12\x1f\n" +
+	"\x1bEXECUTION_PHASE_UNSPECIFIED\x10\x00\x12\x1a\n" +
+	"\x16EXECUTION_PHASE_ASSESS\x10\x01\x12\x1a\n" +
+	"\x16EXECUTION_PHASE_REPAIR\x10\x02\x12\x1a\n" +
+	"\x16EXECUTION_PHASE_REWORK\x10\x03\x12\x1a\n" +
+	"\x16EXECUTION_PHASE_REVERT\x10\x04*\xaa\x01\n" +
+	"\x0eExecutionState\x12\x1f\n" +
+	"\x1bEXECUTION_STATE_UNSPECIFIED\x10\x00\x12\x1b\n" +
+	"\x17EXECUTION_STATE_RUNNING\x10\x01\x12\x1d\n" +
+	"\x19EXECUTION_STATE_SUCCEEDED\x10\x02\x12\x1a\n" +
+	"\x16EXECUTION_STATE_FAILED\x10\x03\x12\x1f\n" +
+	"\x1bEXECUTION_STATE_INTERRUPTED\x10\x04*a\n" +
+	"\fReviewAction\x12\x1d\n" +
+	"\x19REVIEW_ACTION_UNSPECIFIED\x10\x00\x12\x18\n" +
+	"\x14REVIEW_ACTION_REWORK\x10\x01\x12\x18\n" +
+	"\x14REVIEW_ACTION_REVERT\x10\x02*\x93\x01\n" +
+	"\vReviewState\x12\x1c\n" +
+	"\x18REVIEW_STATE_UNSPECIFIED\x10\x00\x12\x17\n" +
+	"\x13REVIEW_STATE_QUEUED\x10\x01\x12\x18\n" +
+	"\x14REVIEW_STATE_RUNNING\x10\x02\x12\x1a\n" +
+	"\x16REVIEW_STATE_SUCCEEDED\x10\x03\x12\x17\n" +
+	"\x13REVIEW_STATE_FAILED\x10\x04*O\n" +
+	"\bDecision\x12\x18\n" +
+	"\x14DECISION_UNSPECIFIED\x10\x00\x12\x14\n" +
+	"\x10DECISION_APPROVE\x10\x01\x12\x13\n" +
+	"\x0fDECISION_REJECT\x10\x02Bu\n" +
 	"\tcom.hi.qaB\n" +
 	"IssueProtoP\x01Z'github.com/HiWorld-56/hi-proto/go/hi/qa\xa2\x02\x03HQX\xaa\x02\x05Hi.Qa\xca\x02\x05Hi\\Qa\xe2\x02\x11Hi\\Qa\\GPBMetadata\xea\x02\x06Hi::Qab\x06proto3"
 
@@ -1031,50 +3178,100 @@ func file_hi_qa_issue_proto_rawDescGZIP() []byte {
 	return file_hi_qa_issue_proto_rawDescData
 }
 
-var file_hi_qa_issue_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_hi_qa_issue_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_hi_qa_issue_proto_enumTypes = make([]protoimpl.EnumInfo, 8)
+var file_hi_qa_issue_proto_msgTypes = make([]protoimpl.MessageInfo, 28)
 var file_hi_qa_issue_proto_goTypes = []any{
-	(IssueStatus)(0),       // 0: hi.qa.IssueStatus
-	(Environment)(0),       // 1: hi.qa.Environment
-	(*Report)(nil),         // 2: hi.qa.Report
-	(*IssueEvent)(nil),     // 3: hi.qa.IssueEvent
-	(*Confirmation)(nil),   // 4: hi.qa.Confirmation
-	(*Issue)(nil),          // 5: hi.qa.Issue
-	(*ListIssuesReq)(nil),  // 6: hi.qa.ListIssuesReq
-	(*ListIssuesResp)(nil), // 7: hi.qa.ListIssuesResp
-	(*IssueRef)(nil),       // 8: hi.qa.IssueRef
-	(*UpdateIssueReq)(nil), // 9: hi.qa.UpdateIssueReq
-	(*LoginTicket)(nil),    // 10: hi.qa.LoginTicket
-	(*Session)(nil),        // 11: hi.qa.Session
-	(*WorkerResult)(nil),   // 12: hi.qa.WorkerResult
-	(*club.Message)(nil),   // 13: hi.club.Message
-	(*club.Contents)(nil),  // 14: hi.club.Contents
-	(*hi.Entity)(nil),      // 15: hi.Entity
+	(IssueStatus)(0),            // 0: hi.qa.IssueStatus
+	(Environment)(0),            // 1: hi.qa.Environment
+	(WorkKind)(0),               // 2: hi.qa.WorkKind
+	(ExecutionPhase)(0),         // 3: hi.qa.ExecutionPhase
+	(ExecutionState)(0),         // 4: hi.qa.ExecutionState
+	(ReviewAction)(0),           // 5: hi.qa.ReviewAction
+	(ReviewState)(0),            // 6: hi.qa.ReviewState
+	(Decision)(0),               // 7: hi.qa.Decision
+	(*Report)(nil),              // 8: hi.qa.Report
+	(*IssueEvent)(nil),          // 9: hi.qa.IssueEvent
+	(*Confirmation)(nil),        // 10: hi.qa.Confirmation
+	(*Issue)(nil),               // 11: hi.qa.Issue
+	(*ListIssuesReq)(nil),       // 12: hi.qa.ListIssuesReq
+	(*ListIssuesResp)(nil),      // 13: hi.qa.ListIssuesResp
+	(*IssueRef)(nil),            // 14: hi.qa.IssueRef
+	(*UpdateIssueReq)(nil),      // 15: hi.qa.UpdateIssueReq
+	(*LoginTicket)(nil),         // 16: hi.qa.LoginTicket
+	(*Session)(nil),             // 17: hi.qa.Session
+	(*WorkerResult)(nil),        // 18: hi.qa.WorkerResult
+	(*WorkItem)(nil),            // 19: hi.qa.WorkItem
+	(*AssessmentResult)(nil),    // 20: hi.qa.AssessmentResult
+	(*Assessment)(nil),          // 21: hi.qa.Assessment
+	(*RepositoryChange)(nil),    // 22: hi.qa.RepositoryChange
+	(*DeploymentRecord)(nil),    // 23: hi.qa.DeploymentRecord
+	(*ExecutionRecord)(nil),     // 24: hi.qa.ExecutionRecord
+	(*ChangeRecord)(nil),        // 25: hi.qa.ChangeRecord
+	(*ReviewRequest)(nil),       // 26: hi.qa.ReviewRequest
+	(*ApprovalRecord)(nil),      // 27: hi.qa.ApprovalRecord
+	(*HistoryReq)(nil),          // 28: hi.qa.HistoryReq
+	(*ListAssessmentsResp)(nil), // 29: hi.qa.ListAssessmentsResp
+	(*ListExecutionsResp)(nil),  // 30: hi.qa.ListExecutionsResp
+	(*ListChangesResp)(nil),     // 31: hi.qa.ListChangesResp
+	(*ListReviewsResp)(nil),     // 32: hi.qa.ListReviewsResp
+	(*ListApprovalsResp)(nil),   // 33: hi.qa.ListApprovalsResp
+	(*CreateReviewReq)(nil),     // 34: hi.qa.CreateReviewReq
+	(*DecideReq)(nil),           // 35: hi.qa.DecideReq
+	(*club.Message)(nil),        // 36: hi.club.Message
+	(*club.Contents)(nil),       // 37: hi.club.Contents
+	(*hi.Entity)(nil),           // 38: hi.Entity
 }
 var file_hi_qa_issue_proto_depIdxs = []int32{
-	13, // 0: hi.qa.Report.message:type_name -> hi.club.Message
-	14, // 1: hi.qa.Report.display_contents:type_name -> hi.club.Contents
-	15, // 2: hi.qa.IssueEvent.actor:type_name -> hi.Entity
-	15, // 3: hi.qa.Confirmation.requested_from:type_name -> hi.Entity
+	36, // 0: hi.qa.Report.message:type_name -> hi.club.Message
+	37, // 1: hi.qa.Report.display_contents:type_name -> hi.club.Contents
+	38, // 2: hi.qa.IssueEvent.actor:type_name -> hi.Entity
+	38, // 3: hi.qa.Confirmation.requested_from:type_name -> hi.Entity
 	0,  // 4: hi.qa.Issue.status:type_name -> hi.qa.IssueStatus
 	1,  // 5: hi.qa.Issue.environment:type_name -> hi.qa.Environment
-	15, // 6: hi.qa.Issue.reporter:type_name -> hi.Entity
-	2,  // 7: hi.qa.Issue.reports:type_name -> hi.qa.Report
-	3,  // 8: hi.qa.Issue.events:type_name -> hi.qa.IssueEvent
-	4,  // 9: hi.qa.Issue.confirmation:type_name -> hi.qa.Confirmation
+	38, // 6: hi.qa.Issue.reporter:type_name -> hi.Entity
+	8,  // 7: hi.qa.Issue.reports:type_name -> hi.qa.Report
+	9,  // 8: hi.qa.Issue.events:type_name -> hi.qa.IssueEvent
+	10, // 9: hi.qa.Issue.confirmation:type_name -> hi.qa.Confirmation
 	0,  // 10: hi.qa.ListIssuesReq.status:type_name -> hi.qa.IssueStatus
 	1,  // 11: hi.qa.ListIssuesReq.environment:type_name -> hi.qa.Environment
-	5,  // 12: hi.qa.ListIssuesResp.issues:type_name -> hi.qa.Issue
+	11, // 12: hi.qa.ListIssuesResp.issues:type_name -> hi.qa.Issue
 	0,  // 13: hi.qa.UpdateIssueReq.status:type_name -> hi.qa.IssueStatus
 	1,  // 14: hi.qa.UpdateIssueReq.environment:type_name -> hi.qa.Environment
-	15, // 15: hi.qa.Session.operator:type_name -> hi.Entity
+	38, // 15: hi.qa.Session.operator:type_name -> hi.Entity
 	0,  // 16: hi.qa.WorkerResult.status:type_name -> hi.qa.IssueStatus
 	1,  // 17: hi.qa.WorkerResult.verified_environment:type_name -> hi.qa.Environment
-	18, // [18:18] is the sub-list for method output_type
-	18, // [18:18] is the sub-list for method input_type
-	18, // [18:18] is the sub-list for extension type_name
-	18, // [18:18] is the sub-list for extension extendee
-	0,  // [0:18] is the sub-list for field type_name
+	22, // 18: hi.qa.WorkerResult.changes:type_name -> hi.qa.RepositoryChange
+	23, // 19: hi.qa.WorkerResult.deployments:type_name -> hi.qa.DeploymentRecord
+	2,  // 20: hi.qa.WorkItem.kind:type_name -> hi.qa.WorkKind
+	2,  // 21: hi.qa.AssessmentResult.kind:type_name -> hi.qa.WorkKind
+	19, // 22: hi.qa.AssessmentResult.items:type_name -> hi.qa.WorkItem
+	20, // 23: hi.qa.Assessment.result:type_name -> hi.qa.AssessmentResult
+	1,  // 24: hi.qa.DeploymentRecord.environment:type_name -> hi.qa.Environment
+	3,  // 25: hi.qa.ExecutionRecord.phase:type_name -> hi.qa.ExecutionPhase
+	4,  // 26: hi.qa.ExecutionRecord.state:type_name -> hi.qa.ExecutionState
+	3,  // 27: hi.qa.ChangeRecord.phase:type_name -> hi.qa.ExecutionPhase
+	22, // 28: hi.qa.ChangeRecord.repositories:type_name -> hi.qa.RepositoryChange
+	23, // 29: hi.qa.ChangeRecord.deployments:type_name -> hi.qa.DeploymentRecord
+	1,  // 30: hi.qa.ChangeRecord.verified_environment:type_name -> hi.qa.Environment
+	4,  // 31: hi.qa.ChangeRecord.state:type_name -> hi.qa.ExecutionState
+	5,  // 32: hi.qa.ReviewRequest.action:type_name -> hi.qa.ReviewAction
+	38, // 33: hi.qa.ReviewRequest.actor:type_name -> hi.Entity
+	6,  // 34: hi.qa.ReviewRequest.state:type_name -> hi.qa.ReviewState
+	7,  // 35: hi.qa.ApprovalRecord.decision:type_name -> hi.qa.Decision
+	19, // 36: hi.qa.ApprovalRecord.scope:type_name -> hi.qa.WorkItem
+	38, // 37: hi.qa.ApprovalRecord.actor:type_name -> hi.Entity
+	21, // 38: hi.qa.ListAssessmentsResp.items:type_name -> hi.qa.Assessment
+	24, // 39: hi.qa.ListExecutionsResp.items:type_name -> hi.qa.ExecutionRecord
+	25, // 40: hi.qa.ListChangesResp.items:type_name -> hi.qa.ChangeRecord
+	26, // 41: hi.qa.ListReviewsResp.items:type_name -> hi.qa.ReviewRequest
+	27, // 42: hi.qa.ListApprovalsResp.items:type_name -> hi.qa.ApprovalRecord
+	5,  // 43: hi.qa.CreateReviewReq.action:type_name -> hi.qa.ReviewAction
+	7,  // 44: hi.qa.DecideReq.decision:type_name -> hi.qa.Decision
+	45, // [45:45] is the sub-list for method output_type
+	45, // [45:45] is the sub-list for method input_type
+	45, // [45:45] is the sub-list for extension type_name
+	45, // [45:45] is the sub-list for extension extendee
+	0,  // [0:45] is the sub-list for field type_name
 }
 
 func init() { file_hi_qa_issue_proto_init() }
@@ -1092,13 +3289,30 @@ func file_hi_qa_issue_proto_init() {
 	file_hi_qa_issue_proto_msgTypes[7].OneofWrappers = []any{}
 	file_hi_qa_issue_proto_msgTypes[8].OneofWrappers = []any{}
 	file_hi_qa_issue_proto_msgTypes[10].OneofWrappers = []any{}
+	file_hi_qa_issue_proto_msgTypes[11].OneofWrappers = []any{}
+	file_hi_qa_issue_proto_msgTypes[12].OneofWrappers = []any{}
+	file_hi_qa_issue_proto_msgTypes[13].OneofWrappers = []any{}
+	file_hi_qa_issue_proto_msgTypes[14].OneofWrappers = []any{}
+	file_hi_qa_issue_proto_msgTypes[15].OneofWrappers = []any{}
+	file_hi_qa_issue_proto_msgTypes[16].OneofWrappers = []any{}
+	file_hi_qa_issue_proto_msgTypes[17].OneofWrappers = []any{}
+	file_hi_qa_issue_proto_msgTypes[18].OneofWrappers = []any{}
+	file_hi_qa_issue_proto_msgTypes[19].OneofWrappers = []any{}
+	file_hi_qa_issue_proto_msgTypes[20].OneofWrappers = []any{}
+	file_hi_qa_issue_proto_msgTypes[21].OneofWrappers = []any{}
+	file_hi_qa_issue_proto_msgTypes[22].OneofWrappers = []any{}
+	file_hi_qa_issue_proto_msgTypes[23].OneofWrappers = []any{}
+	file_hi_qa_issue_proto_msgTypes[24].OneofWrappers = []any{}
+	file_hi_qa_issue_proto_msgTypes[25].OneofWrappers = []any{}
+	file_hi_qa_issue_proto_msgTypes[26].OneofWrappers = []any{}
+	file_hi_qa_issue_proto_msgTypes[27].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_qa_issue_proto_rawDesc), len(file_hi_qa_issue_proto_rawDesc)),
-			NumEnums:      2,
-			NumMessages:   11,
+			NumEnums:      8,
+			NumMessages:   28,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
