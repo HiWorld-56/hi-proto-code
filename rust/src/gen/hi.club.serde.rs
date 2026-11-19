@@ -3448,6 +3448,9 @@ impl serde::Serialize for Content {
                 content::Kind::OwnerActionReply(v) => {
                     struct_ser.serialize_field("ownerActionReply", v)?;
                 }
+                content::Kind::Quote(v) => {
+                    struct_ser.serialize_field("quote", v)?;
+                }
                 content::Kind::Chat(v) => {
                     struct_ser.serialize_field("chat", v)?;
                 }
@@ -3490,6 +3493,7 @@ impl<'de> serde::Deserialize<'de> for Content {
             "ownerAction",
             "owner_action_reply",
             "ownerActionReply",
+            "quote",
             "chat",
             "trans",
             "binance",
@@ -3510,6 +3514,7 @@ impl<'de> serde::Deserialize<'de> for Content {
             Id,
             OwnerAction,
             OwnerActionReply,
+            Quote,
             Chat,
             Trans,
             Binance,
@@ -3543,6 +3548,7 @@ impl<'de> serde::Deserialize<'de> for Content {
                             "id" => Ok(GeneratedField::Id),
                             "ownerAction" | "owner_action" => Ok(GeneratedField::OwnerAction),
                             "ownerActionReply" | "owner_action_reply" => Ok(GeneratedField::OwnerActionReply),
+                            "quote" => Ok(GeneratedField::Quote),
                             "chat" => Ok(GeneratedField::Chat),
                             "trans" => Ok(GeneratedField::Trans),
                             "binance" => Ok(GeneratedField::Binance),
@@ -3602,6 +3608,12 @@ impl<'de> serde::Deserialize<'de> for Content {
                             }
                             kind__ = map_.next_value::<::std::option::Option<_>>()?.map(content::Kind::OwnerActionReply)
 ;
+                        }
+                        GeneratedField::Quote => {
+                            if kind__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("quote"));
+                            }
+                            kind__ = map_.next_value::<::std::option::Option<_>>()?.map(content::Kind::Quote);
                         }
                         GeneratedField::Chat => {
                             if kind__.is_some() {

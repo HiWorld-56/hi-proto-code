@@ -7,6 +7,7 @@
 package club
 
 import (
+	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	hi "github.com/HiWorld-56/hi-proto/go/hi"
 	binance "github.com/HiWorld-56/hi-proto/go/hi/binance"
 	did "github.com/HiWorld-56/hi-proto/go/hi/did"
@@ -597,6 +598,7 @@ func (x *Member) GetUser() *hi.Entity {
 // binance_offer_reply 开单卡回复  kind=binance_offer_reply(hi.binance.BinanceOfferReply)—— 主人发给机器人,只认主人
 // owner_action 主人逐项确认卡 kind=owner_action(hi.club.OwnerAction)
 // owner_action_reply 主人确认回执 kind=owner_action_reply(hi.club.OwnerActionReply)
+// quote       通用引用/回复 kind=quote(string，当前会话原消息完整UUID)，可与文字/附件组合，不含QA语义
 // chat_record 聊天记录(合并转发)  kind=record(hi.club.ChatRecord)—— 原样内嵌被转发的那几条完整消息
 //
 // ⚠️ **注意是 `image_url` 不是 `image`、`audio_url` 不是 `audio`。**
@@ -639,6 +641,7 @@ type Content struct {
 	//
 	//	*Content_OwnerAction
 	//	*Content_OwnerActionReply
+	//	*Content_Quote
 	//	*Content_Chat_
 	//	*Content_Trans
 	//	*Content_Binance
@@ -717,6 +720,15 @@ func (x *Content) GetOwnerActionReply() *OwnerActionReply {
 		}
 	}
 	return nil
+}
+
+func (x *Content) GetQuote() string {
+	if x != nil {
+		if x, ok := x.Kind.(*Content_Quote); ok {
+			return x.Quote
+		}
+	}
+	return ""
 }
 
 func (x *Content) GetChat() *Content_Chat {
@@ -810,6 +822,13 @@ type Content_OwnerActionReply struct {
 	OwnerActionReply *OwnerActionReply `protobuf:"bytes,13,opt,name=owner_action_reply,json=ownerActionReply,proto3,oneof"`
 }
 
+type Content_Quote struct {
+	// 通用聊天引用/回复：数据仅为当前会话内被引用消息的完整 UUID。
+	// type="quote"；一条正常回复最多一段，展示在正文前。它只定位内容，不授予业务权限。
+	// 原消息不可用时显示“原消息不可用”，不跨会话/转发记录猜测，也不触发历史补收。
+	Quote string `protobuf:"bytes,14,opt,name=quote,proto3,oneof"`
+}
+
 type Content_Chat_ struct {
 	Chat *Content_Chat `protobuf:"bytes,2,opt,name=chat,proto3,oneof"`
 }
@@ -855,6 +874,8 @@ type Content_BinanceOfferReply struct {
 func (*Content_OwnerAction) isContent_Kind() {}
 
 func (*Content_OwnerActionReply) isContent_Kind() {}
+
+func (*Content_Quote) isContent_Kind() {}
 
 func (*Content_Chat_) isContent_Kind() {}
 
@@ -1045,7 +1066,7 @@ var File_hi_club_messaging_proto protoreflect.FileDescriptor
 
 const file_hi_club_messaging_proto_rawDesc = "" +
 	"\n" +
-	"\x17hi/club/messaging.proto\x12\ahi.club\x1a\x19google/protobuf/any.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/transfer.proto\x1a\x18hi/binance/binance.proto\x1a\x18hi/binance/command.proto\x1a\x16hi/binance/offer.proto\x1a\x17hi/binance/signal.proto\x1a\x10hi/options.proto\x1a\x1ahi/club/owner_action.proto\"{\n" +
+	"\x17hi/club/messaging.proto\x12\ahi.club\x1a\x1bbuf/validate/validate.proto\x1a\x19google/protobuf/any.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/transfer.proto\x1a\x18hi/binance/binance.proto\x1a\x18hi/binance/command.proto\x1a\x16hi/binance/offer.proto\x1a\x17hi/binance/signal.proto\x1a\x10hi/options.proto\x1a\x1ahi/club/owner_action.proto\"{\n" +
 	"\x06Packet\x12/\n" +
 	"\x06notice\x18\x01 \x01(\v2\x0f.hi.club.NoticeB\x04\x90\xb5\x18\x02H\x00R\x06notice\x122\n" +
 	"\amessage\x18\x02 \x01(\v2\x10.hi.club.MessageB\x04\x90\xb5\x18\x02H\x00R\amessage:\x04\x98\xb5\x18\x02B\x06\n" +
@@ -1114,11 +1135,12 @@ const file_hi_club_messaging_proto_rawDesc = "" +
 	"\x05group\x18\x01 \x01(\v2\n" +
 	".hi.EntityR\x05group\x12\x1e\n" +
 	"\x04user\x18\x02 \x01(\v2\n" +
-	".hi.EntityR\x04user\"\xc0\b\n" +
+	".hi.EntityR\x04user\"\xe6\b\n" +
 	"\aContent\x12\x1d\n" +
 	"\x04type\x18\x01 \x01(\tB\x04\x90\xb5\x18\x02H\x01R\x04type\x88\x01\x01\x12?\n" +
 	"\fowner_action\x18\f \x01(\v2\x14.hi.club.OwnerActionB\x04\x90\xb5\x18\x02H\x00R\vownerAction\x12O\n" +
-	"\x12owner_action_reply\x18\r \x01(\v2\x19.hi.club.OwnerActionReplyB\x04\x90\xb5\x18\x02H\x00R\x10ownerActionReply\x121\n" +
+	"\x12owner_action_reply\x18\r \x01(\v2\x19.hi.club.OwnerActionReplyB\x04\x90\xb5\x18\x02H\x00R\x10ownerActionReply\x12$\n" +
+	"\x05quote\x18\x0e \x01(\tB\f\xbaH\x05r\x03\xb0\x01\x01\x90\xb5\x18\x02H\x00R\x05quote\x121\n" +
 	"\x04chat\x18\x02 \x01(\v2\x15.hi.club.Content.ChatB\x04\x90\xb5\x18\x02H\x00R\x04chat\x121\n" +
 	"\x05trans\x18\x03 \x01(\v2\x13.hi.did.TransactionB\x04\x90\xb5\x18\x01H\x00R\x05trans\x12;\n" +
 	"\abinance\x18\x05 \x01(\v2\x19.hi.binance.BinanceResultB\x04\x90\xb5\x18\x02H\x00R\abinance\x12C\n" +
@@ -1240,6 +1262,7 @@ func file_hi_club_messaging_proto_init() {
 	file_hi_club_messaging_proto_msgTypes[7].OneofWrappers = []any{
 		(*Content_OwnerAction)(nil),
 		(*Content_OwnerActionReply)(nil),
+		(*Content_Quote)(nil),
 		(*Content_Chat_)(nil),
 		(*Content_Trans)(nil),
 		(*Content_Binance)(nil),

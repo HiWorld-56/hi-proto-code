@@ -881,6 +881,7 @@ enum Content_Kind {
   binanceOfferReply,
   ownerAction,
   ownerActionReply,
+  quote,
   notSet
 }
 
@@ -901,6 +902,7 @@ enum Content_Kind {
 /// binance_offer_reply 开单卡回复  kind=binance_offer_reply(hi.binance.BinanceOfferReply)—— 主人发给机器人,只认主人
 /// owner_action 主人逐项确认卡 kind=owner_action(hi.club.OwnerAction)
 /// owner_action_reply 主人确认回执 kind=owner_action_reply(hi.club.OwnerActionReply)
+/// quote       通用引用/回复 kind=quote(string，当前会话原消息完整UUID)，可与文字/附件组合，不含QA语义
 /// chat_record 聊天记录(合并转发)  kind=record(hi.club.ChatRecord)—— 原样内嵌被转发的那几条完整消息
 ///
 /// ⚠️ **注意是 `image_url` 不是 `image`、`audio_url` 不是 `audio`。**
@@ -950,6 +952,7 @@ class Content extends $pb.GeneratedMessage {
     $6.BinanceOfferReply? binanceOfferReply,
     $7.OwnerAction? ownerAction,
     $7.OwnerActionReply? ownerActionReply,
+    $core.String? quote,
   }) {
     final result = create();
     if (type != null) result.type = type;
@@ -964,6 +967,7 @@ class Content extends $pb.GeneratedMessage {
     if (binanceOfferReply != null) result.binanceOfferReply = binanceOfferReply;
     if (ownerAction != null) result.ownerAction = ownerAction;
     if (ownerActionReply != null) result.ownerActionReply = ownerActionReply;
+    if (quote != null) result.quote = quote;
     return result;
   }
 
@@ -987,13 +991,14 @@ class Content extends $pb.GeneratedMessage {
     11: Content_Kind.binanceOfferReply,
     12: Content_Kind.ownerAction,
     13: Content_Kind.ownerActionReply,
+    14: Content_Kind.quote,
     0: Content_Kind.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Content',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.club'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3, 5, 6, 7, 9, 10, 11, 12, 13])
+    ..oo(0, [2, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14])
     ..aOS(1, _omitFieldNames ? '' : 'type')
     ..aOM<Content_Chat>(2, _omitFieldNames ? '' : 'chat',
         subBuilder: Content_Chat.create)
@@ -1016,6 +1021,7 @@ class Content extends $pb.GeneratedMessage {
         subBuilder: $7.OwnerAction.create)
     ..aOM<$7.OwnerActionReply>(13, _omitFieldNames ? '' : 'ownerActionReply',
         subBuilder: $7.OwnerActionReply.create)
+    ..aOS(14, _omitFieldNames ? '' : 'quote')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1046,6 +1052,7 @@ class Content extends $pb.GeneratedMessage {
   @$pb.TagNumber(11)
   @$pb.TagNumber(12)
   @$pb.TagNumber(13)
+  @$pb.TagNumber(14)
   Content_Kind whichKind() => _Content_KindByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
@@ -1057,6 +1064,7 @@ class Content extends $pb.GeneratedMessage {
   @$pb.TagNumber(11)
   @$pb.TagNumber(12)
   @$pb.TagNumber(13)
+  @$pb.TagNumber(14)
   void clearKind() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -1198,6 +1206,18 @@ class Content extends $pb.GeneratedMessage {
   void clearOwnerActionReply() => $_clearField(13);
   @$pb.TagNumber(13)
   $7.OwnerActionReply ensureOwnerActionReply() => $_ensure(11);
+
+  /// 通用聊天引用/回复：数据仅为当前会话内被引用消息的完整 UUID。
+  /// type="quote"；一条正常回复最多一段，展示在正文前。它只定位内容，不授予业务权限。
+  /// 原消息不可用时显示“原消息不可用”，不跨会话/转发记录猜测，也不触发历史补收。
+  @$pb.TagNumber(14)
+  $core.String get quote => $_getSZ(12);
+  @$pb.TagNumber(14)
+  set quote($core.String value) => $_setString(12, value);
+  @$pb.TagNumber(14)
+  $core.bool hasQuote() => $_has(12);
+  @$pb.TagNumber(14)
+  void clearQuote() => $_clearField(14);
 }
 
 /// 聊天记录 —— **合并转发**出来的那一条(类似微信「聊天记录」卡片)。`Content.type = "chat_record"`。

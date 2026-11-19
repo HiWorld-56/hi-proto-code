@@ -5634,6 +5634,7 @@ pub struct Member {
 /// binance_offer_reply 开单卡回复  kind=binance_offer_reply(hi.binance.BinanceOfferReply)—— 主人发给机器人,只认主人
 /// owner_action 主人逐项确认卡 kind=owner_action(hi.club.OwnerAction)
 /// owner_action_reply 主人确认回执 kind=owner_action_reply(hi.club.OwnerActionReply)
+/// quote       通用引用/回复 kind=quote(string，当前会话原消息完整UUID)，可与文字/附件组合，不含QA语义
 /// chat_record 聊天记录(合并转发)  kind=record(hi.club.ChatRecord)—— 原样内嵌被转发的那几条完整消息
 ///
 /// ⚠️ **注意是 `image_url` 不是 `image`、`audio_url` 不是 `audio`。**
@@ -5679,7 +5680,7 @@ pub struct Content {
     /// 用途:引用消息里的某一段 —— `<消息 uuid>#<id>`,见下面「引用」那段。
     #[prost(uint32, optional, tag = "8")]
     pub id: ::core::option::Option<u32>,
-    #[prost(oneof = "content::Kind", tags = "12, 13, 2, 3, 5, 6, 7, 9, 10, 11")]
+    #[prost(oneof = "content::Kind", tags = "12, 13, 14, 2, 3, 5, 6, 7, 9, 10, 11")]
     pub kind: ::core::option::Option<content::Kind>,
 }
 /// Nested message and enum types in `Content`.
@@ -5712,6 +5713,11 @@ pub mod content {
         OwnerAction(super::OwnerAction),
         #[prost(message, tag = "13")]
         OwnerActionReply(super::OwnerActionReply),
+        /// 通用聊天引用/回复：数据仅为当前会话内被引用消息的完整 UUID。
+        /// type="quote"；一条正常回复最多一段，展示在正文前。它只定位内容，不授予业务权限。
+        /// 原消息不可用时显示“原消息不可用”，不跨会话/转发记录猜测，也不触发历史补收。
+        #[prost(string, tag = "14")]
+        Quote(::prost::alloc::string::String),
         #[prost(message, tag = "2")]
         Chat(Chat),
         /// Transaction=公开
