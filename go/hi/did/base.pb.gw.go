@@ -41,9 +41,6 @@ func request_Base_ListCoins_0(ctx context.Context, marshaler runtime.Marshaler, 
 		protoReq emptypb.Empty
 		metadata runtime.ServerMetadata
 	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
@@ -56,9 +53,6 @@ func local_request_Base_ListCoins_0(ctx context.Context, marshaler runtime.Marsh
 		protoReq emptypb.Empty
 		metadata runtime.ServerMetadata
 	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
 	msg, err := server.ListCoins(ctx, &protoReq)
 	return msg, metadata, err
 }
@@ -138,13 +132,13 @@ func local_request_SuperAdmin_List_0(ctx context.Context, marshaler runtime.Mars
 // Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterBaseHandlerFromEndpoint instead.
 // GRPC interceptors will not work for this type of registration. To use interceptors, you must use the "runtime.WithMiddlewares" option in the "runtime.NewServeMux" call.
 func RegisterBaseHandlerServer(ctx context.Context, mux *runtime.ServeMux, server BaseServer) error {
-	mux.Handle(http.MethodPost, pattern_Base_ListCoins_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodGet, pattern_Base_ListCoins_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Base/ListCoins", runtime.WithHTTPPathPattern("/hi.did.Base/ListCoins"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/hi.did.Base/ListCoins", runtime.WithHTTPPathPattern("/api/v1/base/list_coins"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -268,11 +262,11 @@ func RegisterBaseHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
 // "BaseClient" to call the correct interceptors. This client ignores the HTTP middlewares.
 func RegisterBaseHandlerClient(ctx context.Context, mux *runtime.ServeMux, client BaseClient) error {
-	mux.Handle(http.MethodPost, pattern_Base_ListCoins_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodGet, pattern_Base_ListCoins_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Base/ListCoins", runtime.WithHTTPPathPattern("/hi.did.Base/ListCoins"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/hi.did.Base/ListCoins", runtime.WithHTTPPathPattern("/api/v1/base/list_coins"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -323,7 +317,7 @@ func RegisterBaseHandlerClient(ctx context.Context, mux *runtime.ServeMux, clien
 }
 
 var (
-	pattern_Base_ListCoins_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Base", "ListCoins"}, ""))
+	pattern_Base_ListCoins_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "base", "list_coins"}, ""))
 	pattern_Base_ServerVersion_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"hi.did.Base", "ServerVersion"}, ""))
 	pattern_Base_UserTotal_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "base", "user_total"}, ""))
 )

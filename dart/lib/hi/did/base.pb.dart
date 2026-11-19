@@ -16,9 +16,9 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
-/// 一个币种。**`name` 就是它的标识**(全生态用它指代币种:挂牌定价、付款、余额查询),
-/// 所以带链后缀 —— `USDT-TRC20` / `USDT-ERC20` / `WHDS-APTOS` 是三个不同的币,
-/// 光写 `USDT` 说不清往哪条链上转。
+/// 一个币种。目录身份为chain+contract；未传contract表示该链原生币。
+/// name保留为生态付款/行情使用的规范名（如USDT-TRC20），不能因展示或排序修改已有业务键。
+/// category是业务分类(public/custom)，不表示客户端来源；后台目录也可以包含custom币。
 class Coin extends $pb.GeneratedMessage {
   factory Coin({
     $core.String? icon,

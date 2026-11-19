@@ -315,9 +315,9 @@ pub mod auth_client {
         }
     }
 }
-/// 一个币种。**`name` 就是它的标识**(全生态用它指代币种:挂牌定价、付款、余额查询),
-/// 所以带链后缀 —— `USDT-TRC20` / `USDT-ERC20` / `WHDS-APTOS` 是三个不同的币,
-/// 光写 `USDT` 说不清往哪条链上转。
+/// 一个币种。目录身份为chain+contract；未传contract表示该链原生币。
+/// name保留为生态付款/行情使用的规范名（如USDT-TRC20），不能因展示或排序修改已有业务键。
+/// category是业务分类(public/custom)，不表示客户端来源；后台目录也可以包含custom币。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Coin {
     #[prost(string, optional, tag = "1")]
@@ -4163,6 +4163,158 @@ pub mod source_client {
             let path = http::uri::PathAndQuery::from_static("/hi.did.Source/Delete");
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new("hi.did.Source", "Delete"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// 纯定位键。合约按链规则规范化；不传表示原生币，传空串为错误。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CoinKey {
+    #[prost(string, optional, tag = "1")]
+    pub chain: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub contract: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SetCoinReq {
+    /// 完整替换该身份的目录资料；name/chain/decimals/category必填，icon不传表示清除。
+    /// 现有身份的name保持不变，避免重写付款/行情业务键。
+    #[prost(message, optional, tag = "1")]
+    pub coin: ::core::option::Option<Coin>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DeleteCoinReq {
+    #[prost(message, optional, tag = "1")]
+    pub coin: ::core::option::Option<CoinKey>,
+}
+/// Generated client implementations.
+pub mod coin_admin_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// 公共读复用Base.ListCoins；完整成功响应为权威快照。
+    /// 客户端持久化比较：后台删除转本地，重新加入覆盖本地资料，保留本地标记。
+    /// 本地币种及标记/展开不上传。管理面只允许超管，由统一拦截器鉴权。
+    #[derive(Debug, Clone)]
+    pub struct CoinAdminClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl CoinAdminClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> CoinAdminClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> CoinAdminClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            CoinAdminClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn set(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SetCoinReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.did.CoinAdmin/Set");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.CoinAdmin", "Set"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn delete(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteCoinReq>,
+        ) -> std::result::Result<tonic::Response<::pbjson_types::Empty>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.did.CoinAdmin/Delete");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.CoinAdmin", "Delete"));
             self.inner.unary(req, path, codec).await
         }
     }
